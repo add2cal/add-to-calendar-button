@@ -1,0 +1,12 @@
+﻿# Visual Studio Code from https://github.com/github/gitignore/blob/master/Global/VisualStudioCode.gitignore
+# Adjust to your needs.
+
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+*.code-workspace
+
+# Local History for Visual Studio Code.
+.history/
