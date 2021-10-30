@@ -116,7 +116,7 @@ Within this placeholder, you can easily configure the button, by placing a respe
 * 1 option is required. You can add as many as you want. The supported formats are listed above.
 * If you want to rename (or translate) a label, use the following schema at the options: optionName + Pipe + yourLabel. "Google|Google Kalender" would generate a Google Calendar option, but label it as "Google Kalender".
 * If no timeZone and no timeZoneOffset is provided, the date refers to UTC time.
-* You can add a timeZoneOffset or timeZone (TZ name). You can find a list of them at [Wikipedia](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones){:target="_blank"}.
+* You can add a timeZoneOffset or timeZone (TZ name). You can find a list of them at [Wikipedia](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones).
 * If the timeZoneOffset is set, it will always override the timeZone. It is recommended to only use 1 of them at a time.
 * The timeZone might not work in very old browsers, but also considers dynamic changes like summer/winter time.
 * timeZoneOffset works with older browsers, but is quite static.
@@ -144,5 +144,5 @@ v1.0.0 : initial release
  
 
 # Kudos go to
-* [github.com/dudewheresmycode](https://github.com/dudewheresmycodee){:target="_blank"}
-* [uxwing.com](https://uxwing.com){:target="_blank"}
+* [github.com/dudewheresmycode](https://github.com/dudewheresmycodee)
+* [uxwing.com](https://uxwing.com)
