@@ -24,6 +24,11 @@ The problems with AddEvent.com:
 *Bottom line:* Pay for features, which I do not need - at additional privacy "cost" - that made me create this solution (for you).
  
 
+# DEMO
+
+See [jekuer.github.io/add-to-calendar-button](https://jekuer.github.io/add-to-calendar-button/) for a live demo.
+ 
+
 # Features
 
 * Simple and convenient integration of multiple buttons - configure them directly within the HTML code.
