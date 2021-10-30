@@ -32,6 +32,7 @@
   line-height: 24px;
   margin: 10px auto;
   max-width: 300px;
+  min-width: 150px;
   padding: 10px 16px 11px 16px;
   position: relative;
   text-align: center;
