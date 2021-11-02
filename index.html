@@ -19,13 +19,18 @@
         height: 100%;
         line-height: 1.5rem;
         margin: 0;
-        padding: 100px 10%;
+        padding: 100px 0;
         text-align: center;
         width: 100%;
       }
       h1 {
         font-size: 2em;
         line-height: 1.2em;
+      }
+      h1 #tinyVersion {
+        color: rgb(150, 150, 150);
+        font-size: 0.4em;
+        font-weight: 400;
       }
       h2 {
         color: rgb(90, 90, 90);
@@ -34,6 +39,18 @@
         margin: 35px auto;
         max-width: 600px;
         width: 100%;
+      }
+      h3 {
+        text-align: left;
+      }
+      @media only screen and (max-width: 800px) {
+        h3 {
+          text-align:center;
+        }
+      }
+      .description {
+        text-align: left;
+        padding-bottom: 40px;
       }
       a, a:focus, a:active {
         color: rgb(28, 1, 77);
@@ -47,6 +64,12 @@
       a:hover svg {
         fill: rgb(90, 56, 155);
       }
+      .container {
+        margin: auto;
+        max-width: 1000px;
+        padding: 0 25px;
+        width: 100%;
+      }
       hr {
         border: 0;
         border-bottom: 1px solid rgb(207, 207, 207);
@@ -56,12 +79,37 @@
       .github {
         margin-bottom:80px;
       }
+      .example {
+        align-items: start;
+        display: grid;
+        gap: 20px;
+        grid-template-columns: 280px auto;
+        justify-items: center;
+      }
+      @media only screen and (max-width: 800px) {
+        .example {
+          grid-template-columns: 1fr;
+        }
+      }
+      .example_right {
+        color: rgb(150, 150, 150);
+        background-color:rgb(255, 255, 255);
+        border: 1px solid rgb(150, 150, 150);
+        border-radius: 6px;
+        font-family: 'Consolas', Arial, sans-serif;
+        font-size: 0.8em;
+        padding: 20px;
+        text-align: left;
+      }
+      .example_right code {
+        white-space: pre-wrap;
+      }
       #legal {
-        color: rgb(158, 158, 158);
+        color: rgb(150, 150, 150);
         font-size: 0.8em;
       }
       #legal a {
-        color: rgb(158, 158, 158);
+        color: rgb(150, 150, 150);
       }
     </style>
 
@@ -70,75 +118,336 @@
 
   </head>
   <body>
+    <div class="container">
 
-    <h1>Add-to-Calendar Button</h1>
-    <h2>A convenient JavaScript snippet, which lets you create beautiful buttons, where people can add events to their calendars.</h2>
-    <p class="github">
-      <a target="_blank" href="https://github.com/jekuer/add-to-calendar-button">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" height="50px" width="50px"><path d="M256 0C115.39 0 0 115.39 0 256c0 119.988 84.195 228.984 196 256v-84.695c-11.078 2.426-21.273 2.496-32.55-.828-15.13-4.465-27.422-14.543-36.547-29.9-5.816-9.812-16.125-20.453-26.88-19.672l-2.637-29.883c23.254-1.992 43.37 14.168 55.313 34.23 5.305 8.922 11.4 14.152 19.246 16.465 7.574 2.23 15.707 1.16 25.184-2.187 2.38-18.973 11.07-26.074 17.637-36.074v-.016c-66.68-9.945-93.254-45.32-103.8-73.242-13.977-37.074-6.477-83.39 18.238-112.66.48-.57 1.348-2.062 1.012-3.105-11.332-34.23 2.477-62.547 2.984-65.55 13.078 3.867 15.203-3.89 56.81 21.387l7.19 4.32c3.008 1.793 2.063.77 5.07.543 17.37-4.72 35.684-7.324 53.727-7.56 18.18.234 36.375 2.84 54.465 7.75l2.328.234c-.203-.03.633-.148 2.035-.984 51.973-31.48 50.105-21.19 64.043-25.723.504 3.008 14.13 31.785 2.918 65.582-1.512 4.656 45.06 47.3 19.246 115.754-10.547 27.934-37.117 63.31-103.797 73.254v.016c8.547 13.027 18.816 19.957 18.762 46.832V512c111.81-27.016 196-136.012 196-256C512 115.39 396.61 0 256 0zm0 0"/></svg><br>
-        Get the code at GitHub!
-      </a>
-    </p>
+      <h1>Add-to-Calendar Button <span id="tinyVersion"></span></h1>
+      <h2>A convenient JavaScript snippet, which lets you create beautiful buttons, where people can add events to their calendars.</h2>
+      <p class="github">
+        <a target="_blank" href="https://github.com/jekuer/add-to-calendar-button">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" height="50px" width="50px"><path d="M256 0C115.39 0 0 115.39 0 256c0 119.988 84.195 228.984 196 256v-84.695c-11.078 2.426-21.273 2.496-32.55-.828-15.13-4.465-27.422-14.543-36.547-29.9-5.816-9.812-16.125-20.453-26.88-19.672l-2.637-29.883c23.254-1.992 43.37 14.168 55.313 34.23 5.305 8.922 11.4 14.152 19.246 16.465 7.574 2.23 15.707 1.16 25.184-2.187 2.38-18.973 11.07-26.074 17.637-36.074v-.016c-66.68-9.945-93.254-45.32-103.8-73.242-13.977-37.074-6.477-83.39 18.238-112.66.48-.57 1.348-2.062 1.012-3.105-11.332-34.23 2.477-62.547 2.984-65.55 13.078 3.867 15.203-3.89 56.81 21.387l7.19 4.32c3.008 1.793 2.063.77 5.07.543 17.37-4.72 35.684-7.324 53.727-7.56 18.18.234 36.375 2.84 54.465 7.75l2.328.234c-.203-.03.633-.148 2.035-.984 51.973-31.48 50.105-21.19 64.043-25.723.504 3.008 14.13 31.785 2.918 65.582-1.512 4.656 45.06 47.3 19.246 115.754-10.547 27.934-37.117 63.31-103.797 73.254v.016c8.547 13.027 18.816 19.957 18.762 46.832V512c111.81-27.016 196-136.012 196-256C512 115.39 396.61 0 256 0zm0 0"/></svg><br>
+          Get the code at GitHub!
+        </a>
+      </p>
 
-    <hr>
+      <hr>
 
-    <p>This is one button</p>
-    <!-- that is how you generate a button - isn't it easy?! You can even use dynamic logic as long as the value is readable for the JS -->
-    <div class="atcb">
-      {
-        "label":"Add me to Calendar",
-        "title":"Reminder to check the add-to-calendar-button repo",
-        "description":"Check out the maybe easiest way to include add-to-calendar-buttons to your website at: https://github.com/jekuer/add-to-calendar-button",
-        "dateStart":"today+2",
-        "dateEnd":"today+3",
-        "timeStart":"10:13",
-        "timeEnd":"02:14",
-        "location":"World Wide Web",
-        "options":[
-          "Apple",
-          "Google",
-          "iCal",
-          "Microsoft365",
-          "Outlook.com",
-          "Yahoo"
-        ],
-        "timeZone":"Europe/Berlin",
-        "iCalFileName":"Reminder-Event"
-      }
+      <h3>Example 1: The usual One</h3>
+      <p class="description">
+        This is a more or less standard setup with all available calendar types, a custom iCal/ics file name and a time zone set.
+      </p>
+      <div class="example">
+        <div class="example_left">
+
+          <!-- start of button code -->
+          <div class="atcb">
+            {
+              "title":"Reminder to check the add-to-calendar-button repo",
+              "description":"Check out the maybe easiest way to include add-to-calendar-buttons to your website at: https://github.com/jekuer/add-to-calendar-button",
+              "dateStart":"01-14-2022",
+              "dateEnd":"01-18-2022",
+              "timeStart":"10:15",
+              "timeEnd":"23:30",
+              "location":"World Wide Web",
+              "options":[
+                "Apple",
+                "Google",
+                "iCal",
+                "Microsoft365",
+                "Outlook.com",
+                "Yahoo"
+              ],
+              "timeZone":"Europe/Berlin",
+              "iCalFileName":"Reminder-Event"
+            }
+          </div>
+          <!-- end of button code -->
+
+        </div>
+        <div class="example_right">
+<code>{
+  "title":"Reminder to check the add-to-calendar-button repo",
+  "description":"Check out the maybe easiest way to include add-to-calendar-buttons to your website at: https://github.com/jekuer/add-to-calendar-button",
+  "dateStart":"01-14-2022",
+  "dateEnd":"01-18-2022",
+  "timeStart":"10:15",
+  "timeEnd":"23:30",
+  "location":"World Wide Web",
+  "options":[
+    "Apple",
+    "Google",
+    "iCal",
+    "Microsoft365",
+    "Outlook.com",
+    "Yahoo"
+  ],
+  "timeZone":"Europe/Berlin",
+  "iCalFileName":"Reminder-Event"
+}</code>
+        </div>
+      </div>
+
+      <hr>
+
+      <h3>Example 2: Going All-Day</h3>
+      <p class="description">
+        For an all-day event, you would simply leave out the time information.
+      </p>
+      <div class="example">
+        <div class="example_left">
+
+          <!-- start of button code -->
+          <div class="atcb">
+            {
+              "title":"Reminder to check the add-to-calendar-button repo",
+              "description":"Check out the maybe easiest way to include add-to-calendar-buttons to your website at: https://github.com/jekuer/add-to-calendar-button",
+              "dateStart":"01-14-2022",
+              "dateEnd":"01-18-2022",
+              "location":"World Wide Web",
+              "options":[
+                "Apple",
+                "Google",
+                "iCal",
+                "Microsoft365",
+                "Outlook.com",
+                "Yahoo"
+              ],
+              "timeZone":"Europe/Berlin",
+              "iCalFileName":"Reminder-Event"
+            }
+          </div>
+          <!-- end of button code -->
+
+        </div>
+        <div class="example_right">
+<code>{
+  "title":"Reminder to check the add-to-calendar-button repo",
+  "description":"Check out the maybe easiest way to include add-to-calendar-buttons to your website at: https://github.com/jekuer/add-to-calendar-button",
+  "dateStart":"01-14-2022",
+  "dateEnd":"01-18-2022",
+  "location":"World Wide Web",
+  "options":[
+    "Apple",
+    "Google",
+    "iCal",
+    "Microsoft365",
+    "Outlook.com",
+    "Yahoo"
+  ],
+  "timeZone":"Europe/Berlin",
+  "iCalFileName":"Reminder-Event"
+}</code>
+        </div>
+      </div>
+
+      <hr>
+
+      <h3>Example 3: Customizing Labels</h3>
+      <p class="description">
+        You can customize the button text as well as each option label.<br>
+        Here, we also used less options and removed the custom iCal/ics name.
+      </p>
+      <div class="example">
+        <div class="example_left">
+
+          <!-- start of button code -->
+          <div class="atcb">
+            {
+              "label":"Click me to remember!",
+              "title":"Reminder to check the add-to-calendar-button repo",
+              "description":"Check out the maybe easiest way to include add-to-calendar-buttons to your website at: https://github.com/jekuer/add-to-calendar-button",
+              "dateStart":"01-14-2022",
+              "dateEnd":"01-18-2022",
+              "location":"World Wide Web",
+              "options":[
+                "Google|Add to Google Calendar",
+                "Microsoft365|Use Microsoft instead",
+                "Yahoo|Yahoo, really?"
+              ],
+              "timeZone":"Europe/Berlin"
+            }
+          </div>
+          <!-- end of button code -->
+
+        </div>
+        <div class="example_right">
+<code>{
+  "label":"Click me to remember!",
+  "title":"Reminder to check the add-to-calendar-button repo",
+  "description":"Check out the maybe easiest way to include add-to-calendar-buttons to your website at: https://github.com/jekuer/add-to-calendar-button",
+  "dateStart":"01-14-2022",
+  "dateEnd":"01-18-2022",
+  "location":"World Wide Web",
+  "options":[
+    "Google|Add to Google Calendar",
+    "Microsoft365|Use Microsoft instead",
+    "Yahoo|Yahoo, really?"
+  ],
+  "timeZone":"Europe/Berlin"
+}</code>
+        </div>
+      </div>
+
+      <hr>
+
+      <h3>Example 4: Dynamic Dates</h3>
+      <p class="description">
+        Instead of using a fixed date, you can also go with dynamic ones.<br>
+        Here, the date will also use the current day + 2 days; with the end date 2 days later.
+      </p>
+      <div class="example">
+        <div class="example_left">
+
+          <!-- start of button code -->
+          <div class="atcb">
+            {
+              "title":"Reminder to check the add-to-calendar-button repo",
+              "description":"Check out the maybe easiest way to include add-to-calendar-buttons to your website at: https://github.com/jekuer/add-to-calendar-button",
+              "dateStart":"today+2",
+              "dateEnd":"today+4",
+              "location":"World Wide Web",
+              "options":[
+                "Google",
+                "Microsoft365",
+                "Yahoo"
+              ],
+              "timeZone":"Europe/Berlin"
+            }
+          </div>
+          <!-- end of button code -->
+
+        </div>
+        <div class="example_right">
+<code>{
+  "title":"Reminder to check the add-to-calendar-button repo",
+  "description":"Check out the maybe easiest way to include add-to-calendar-buttons to your website at: https://github.com/jekuer/add-to-calendar-button",
+  "dateStart":"today+2",
+  "dateEnd":"today+4",
+  "location":"World Wide Web",
+  "options":[
+    "Google",
+    "Microsoft365",
+    "Yahoo"
+  ],
+  "timeZone":"Europe/Berlin"
+}</code>
+        </div>
+      </div>
+
+      <hr>
+
+      <h3>Example 5: Click Trigger</h3>
+      <p class="description">
+        Per default, the options unfold on hover, when you are on a desktop device.<br>
+        You can opt for triggering on click, if you want to. Mind that on touch devices, of course, it will be always on tap.
+      </p>
+      <div class="example">
+        <div class="example_left">
+
+          <!-- start of button code -->
+          <div class="atcb">
+            {
+              "title":"Reminder to check the add-to-calendar-button repo",
+              "description":"Check out the maybe easiest way to include add-to-calendar-buttons to your website at: https://github.com/jekuer/add-to-calendar-button",
+              "dateStart":"today+2",
+              "dateEnd":"today+4",
+              "location":"World Wide Web",
+              "options":[
+                "Google",
+                "Microsoft365",
+                "Yahoo"
+              ],
+              "timeZone":"Europe/Berlin",
+              "trigger":"click"
+            }
+          </div>
+          <!-- end of button code -->
+
+        </div>
+        <div class="example_right">
+<code>{
+  "title":"Reminder to check the add-to-calendar-button repo",
+  "description":"Check out the maybe easiest way to include add-to-calendar-buttons to your website at: https://github.com/jekuer/add-to-calendar-button",
+  "dateStart":"today+2",
+  "dateEnd":"today+4",
+  "location":"World Wide Web",
+  "options":[
+    "Google",
+    "Microsoft365",
+    "Yahoo"
+  ],
+  "timeZone":"Europe/Berlin",
+  "trigger":"click"
+}</code>
+        </div>
+      </div>
+
+      <hr>
+
+      <h3>Example 6: Timezone Offset</h3>
+      <p class="description">
+        Last but not least, an example, which uses a timezone offset instead of the TZ name.<br>
+        This has better compatibility with older browsers, but does not consider things like summer/winter time.<br>
+        timeZoneOffset will always override timeZone, while not using either of them would default to UTC time.
+      </p>
+      <div class="example">
+        <div class="example_left">
+
+          <!-- start of button code -->
+          <div class="atcb">
+            {
+              "title":"Reminder to check the add-to-calendar-button repo",
+              "description":"Check out the maybe easiest way to include add-to-calendar-buttons to your website at: https://github.com/jekuer/add-to-calendar-button",
+              "dateStart":"today+2",
+              "dateEnd":"today+4",
+              "timeStart":"10:15",
+              "timeEnd":"23:30",
+              "location":"World Wide Web",
+              "options":[
+                "Google",
+                "Microsoft365",
+                "Yahoo"
+              ],
+              "timeZoneOffset":"+02:00"
+            }
+          </div>
+          <!-- end of button code -->
+
+        </div>
+        <div class="example_right">
+<code>{
+  "title":"Reminder to check the add-to-calendar-button repo",
+  "description":"Check out the maybe easiest way to include add-to-calendar-buttons to your website at: https://github.com/jekuer/add-to-calendar-button",
+  "dateStart":"today+2",
+  "dateEnd":"today+4",
+  "timeStart":"10:15",
+  "timeEnd":"23:30",
+  "location":"World Wide Web",
+  "options":[
+    "Google",
+    "Microsoft365",
+    "Yahoo"
+  ],
+  "timeZoneOffset":"+02:00"
+}</code>
+        </div>
+      </div>
+
+      <hr>
+
+      <div id="legal">
+        This page has been built and is maintained by Jens Kürschner. See <a target="_blank" href="https://jenskuerschner.de/legal-notice/">jenskuerschner.de/legal-notice</a> for a full legal notice.<br>
+        This page is hosted via "GitHub Pages". It does not hold any specific cookies and/or tracking. However, the GitHub privacy policy applies (<a target="_blank" href="https://docs.github.com/en/github/site-policy/github-privacy-statement">click here for details</a>).
+      </div>
+
+
+      <!-- load the button js -->
+      <script src="./assets/js/atcb.min.js"></script>
+
+      <!-- just some more stuff for the demo page -->
+      <script>
+        document.getElementById('tinyVersion').innerHTML = "(" + atcbVersion + ")";
+      </script>
+
     </div>
-
-    <hr>
-
-    <!-- but you can add as many as you want - mind that leaving out the time generates a whole-day-event -->
-    <p>And here comes another one, with less options and onClick trigger</p>
-    <div class="atcb">
-      {
-        "title":"Another reminder to the add-to-calendar-button repo",
-        "description":"Check out the maybe easiest way to include add-to-calendar-buttons to your website at: https://github.com/jekuer/add-to-calendar-button",
-        "dateStart":"today+20",
-        "dateEnd":"today+20",
-        "location":"GitHub",
-        "options":[
-          "Google",
-          "Yahoo",
-          "iCal|Others",
-          "Microsoft365"
-        ],
-        "trigger":"click",
-        "timeZoneOffset":"+01:00"
-      }
-    </div>
-
-    <hr>
-
-    <div id="legal">
-      This page has been built and is maintained by Jens Kürschner. See <a target="_blank" href="https://jenskuerschner.de/legal-notice/">jenskuerschner.de/legal-notice</a> for a full legal notice.<br>
-      This page is hosted via "GitHub Pages". It does not hold any specific cookies and/or tracking. However, the GitHub privacy policy applies (<a target="_blank" href="https://docs.github.com/en/github/site-policy/github-privacy-statement">click here for details</a>).
-    </div>
-
-
-    <!-- load the button js -->
-    <script src="./assets/js/atcb.min.js"></script>
-
   </body>
 </html>
