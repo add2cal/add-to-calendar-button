@@ -3,7 +3,7 @@
  * Add-to-Calendar Button
  * ++++++++++++++++++++++
  */
-const atcbVersion = '1.1.0';
+const atcbVersion = '1.1.1';
 /* Creator: Jens Kuerschner (https://jenskuerschner.de)
  * Project: https://github.com/jekuer/add-to-calendar-button
  * License: GNU General Public License v3.0	(gpl-3.0)
