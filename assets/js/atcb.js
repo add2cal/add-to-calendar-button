@@ -3,7 +3,7 @@
  * Add-to-Calendar Button
  * ++++++++++++++++++++++
  */
-const atcbVersion = '1.1.1';
+const atcbVersion = '1.1.2';
 /* Creator: Jens Kuerschner (https://jenskuerschner.de)
  * Project: https://github.com/jekuer/add-to-calendar-button
  * License: GNU General Public License v3.0	(gpl-3.0)
@@ -32,14 +32,6 @@ function atcb_init() {
       if (atcb_validate(atcbConfig)) {
         // ... and generate the button on success
         atcb_generate(atcButtons[i], i, atcbConfig);
-        // create the background overlay, which also acts as trigger to close any dropdowns
-        let bgOverlay = document.createElement('div');
-        bgOverlay.id = 'atcb_bgoverlay';
-        bgOverlay.style.display = 'none';
-        document.body.appendChild(bgOverlay);
-        bgOverlay.addEventListener('click', atcb_close_all, {passive: true});
-        bgOverlay.addEventListener('touchstart', atcb_close_all, {passive: true});
-        bgOverlay.addEventListener('mouseenter', atcb_close_all, false);
       }
     }
   }
@@ -256,6 +248,15 @@ function atcb_generate(button, buttonId, data) {
         break;
     }
   });
+  // create the background overlay, which also acts as trigger to close any dropdowns
+  let bgOverlay = document.createElement('div');
+  bgOverlay.id = 'atcb_bgoverlay_' + buttonId;
+  bgOverlay.classList.add('atcb_bgoverlay');
+  bgOverlay.style.display = 'none';
+  button.appendChild(bgOverlay);
+  bgOverlay.addEventListener('click', atcb_close_all, {passive: true});
+  bgOverlay.addEventListener('touchstart', atcb_close_all, {passive: true});
+  bgOverlay.addEventListener('mouseenter', atcb_close_all, false);
   // show the placeholder div
   button.style.display = 'block';
   // console log
@@ -279,7 +280,7 @@ function atcb_open() {
   this.classList.add('active');
   let list = document.getElementById('atcb_list_' + this.dataset.atcbtn);
   list.style.display = 'block';
-  document.getElementById('atcb_bgoverlay').style.display = 'block';
+  document.getElementById('atcb_bgoverlay_' + this.dataset.atcbtn).style.display = 'block';
 }
 
 function atcb_close() {
@@ -287,8 +288,9 @@ function atcb_close() {
   this.classList.remove('active');
   let list = document.getElementById('atcb_list_' + this.dataset.atcbtn);
   list.style.display = 'none';
-  document.getElementById('atcb_bgoverlay').style.display = 'none';
+  document.getElementById('atcb_bgoverlay_' + this.dataset.atcbtn).style.display = 'none';
 }
+
 
 function atcb_close_all() {
   // get all buttons

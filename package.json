@@ -1,6 +1,6 @@
 {
   "name": "add-to-calendar-button",
-  "version": "1.1.1",
+  "version": "1.1.2",
   "description": "A convenient JavaScript snippet, which lets you create beautiful buttons, where people can add events to their calendars.",
   "main": "assets/js/atcb.js",
   "types": "index.d.ts",
