@@ -148,9 +148,9 @@ Mind that with Angular, you might need to escape the { with `{{ '{' }}` and } wi
 
 Anyone is welcome to contribute, but mind the [guidelines](.github/CONTRIBUTING.md):
 
--   [Bug reports](.github/CONTRIBUTING.md#bugs)
--   [Feature requests](.github/CONTRIBUTING.md#features)
--   [Pull requests](.github/CONTRIBUTING.md#pull-requests)
+* [Bug reports](.github/CONTRIBUTING.md#bugs)
+* [Feature requests](.github/CONTRIBUTING.md#features)
+* [Pull requests](.github/CONTRIBUTING.md#pull-requests)
  
 
 ## License
@@ -160,8 +160,8 @@ The code is available under the [GPU 3.0 license](LICENSE.txt).
 
 ## Changelog (major only)
 
-v1.1.0 : npm functionality
-v1.0.0 : initial release
+* v1.1.0 : npm functionality
+* v1.0.0 : initial release
  
 
 ## Kudos go to
