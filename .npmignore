@@ -1,0 +1,18 @@
+﻿# THE .gitignore
+
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+*.code-workspace
+.history/
+
+
+
+# PLUS what else should not be on npm
+
+.github/
+*.png
+*.ico
+index.html

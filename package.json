@@ -1,0 +1,45 @@
+{
+  "name": "add-to-calendar-button",
+  "version": "1.0.2",
+  "description": "A convenient JavaScript snippet, which lets you create beautiful buttons, where people can add events to their calendars.",
+  "main": "assets/js/atcb.js",
+  "types": "index.d.ts",
+  "style": "assets/css/atcb.css",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jekuer/add-to-calendar-button.git"
+  },
+  "keywords": [
+    "button",
+    "microsoft",
+    "light",
+    "open-source",
+    "apple",
+    "google",
+    "generator",
+    "component",
+    "simple",
+    "vanilla-js",
+    "free",
+    "snippet",
+    "outlook",
+    "easy",
+    "vanillajs",
+    "add-to-calendar",
+    "addevent",
+    "add-to-calendar-button",
+    "calendar"
+  ],
+  "author": {
+    "name": "Jens Kuerschner",
+    "url": "https://jenskuerschner.de/"
+  },
+  "license": "GPL-3.0",
+  "bugs": {
+    "url": "https://github.com/jekuer/add-to-calendar-button/issues"
+  },
+  "homepage": "https://github.com/jekuer/add-to-calendar-button"
+}

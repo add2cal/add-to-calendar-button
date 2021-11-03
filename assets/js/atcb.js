@@ -3,7 +3,7 @@
  * Add-to-Calendar Button
  * ++++++++++++++++++++++
  */
-const atcbVersion = '1.0.1';
+const atcbVersion = '1.1.0';
 /* Creator: Jens Kuerschner (https://jenskuerschner.de)
  * Project: https://github.com/jekuer/add-to-calendar-button
  * License: GNU General Public License v3.0	(gpl-3.0)
@@ -103,7 +103,7 @@ function atcb_validate(data) {
   const dates = ['dateStart', 'dateEnd'];
   let newDate = dates;
   if (!dates.every(function(date) {
-    dateParts = data[date].split('-');
+    const dateParts = data[date].split('-');
     if (dateParts.length < 3 || dateParts.length > 3) {
       console.log("add-to-calendar button generation failed: date misspelled [" + date + ": " + data[date] + "]");
       return false;
@@ -164,7 +164,7 @@ function atcb_generate(button, buttonId, data) {
   button.innerHTML = '';
   // generate the wrapper div
   let buttonTriggerWrapper = document.createElement('div');
-  buttonTriggerWrapper.id = 'atcb_button_wrapper';
+  buttonTriggerWrapper.classList.add('atcb_button_wrapper');
   button.appendChild(buttonTriggerWrapper);
   // generate the button trigger div
   let buttonTrigger = document.createElement('div');
@@ -186,7 +186,7 @@ function atcb_generate(button, buttonId, data) {
   optionsList.id = 'atcb_list_' + buttonId;
   optionsList.classList.add('atcb_list');
   optionsList.style.display = 'none';
-  button.appendChild(optionsList);
+  buttonTriggerWrapper.appendChild(optionsList);
   // generate the list items
   data['options'].forEach(function(option) {
     let optionParts = option.split('|');
@@ -278,7 +278,7 @@ function atcb_open() {
   // add open class and show the list (+ the background overlay)
   this.classList.add('active');
   let list = document.getElementById('atcb_list_' + this.dataset.atcbtn);
-  list.style.display = 'inline-block';
+  list.style.display = 'block';
   document.getElementById('atcb_bgoverlay').style.display = 'block';
 }
 
@@ -495,3 +495,8 @@ function atcb_generate_time(data, style = 'delimiters', targetCal = 'general') {
 
 // START THE MAGIC AS SOON AS THE DOM HAS BEEN LOADED
 document.addEventListener('DOMContentLoaded', atcb_init, false);
+
+
+
+// EXPORT FOR USE IN NODEJS
+export { atcb_init };
