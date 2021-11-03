@@ -61,7 +61,7 @@ See [jekuer.github.io/add-to-calendar-button](https://jekuer.github.io/add-to-ca
 ### Option 2: NodeJS
 
 1. Requires NodeJS and a project, which builds on it (e.g. React or Angular).
-2. Rund **`npm install add-tocalendar-button`**.
+2. Rund **`npm install add-to-calendar-button`**.
 3. Import the module into your project/component. For example with Angular: `import { atcb_init } from 'add-to-calendar-button';`.
 4. Init the js with `atcb_init();`.
 5. Include the css. For example with Angular, add the following to the global style.css: `@import 'add-to-calendar-button/assets/css/atcb.min'`;
