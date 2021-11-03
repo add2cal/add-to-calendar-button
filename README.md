@@ -48,12 +48,25 @@ See [jekuer.github.io/add-to-calendar-button](https://jekuer.github.io/add-to-ca
  
 
 ## Setup
+ 
+### Option 1: Simple
+ 
+1. Simply **download** the code from GitHub **or clone** the git repository.
+2. Copy the css (atcb.min.css) and js (atcb.min.js) files from the assets folders into your project (the **.min.** files are required, but it is recommended to also copy the raw and map files).
+3. Include those files in your project. As usual, the css goes into the <head> (`<link rel="stylesheet" href="./assets/css/atcb.min.css">`), the js into the <body> footer (`<script type="module" src="./assets/js/atcb.min.js"></script>`). You can also combine them with other files, if you want to.
+4. Mind that when using this in a Vanilla JS style, you need to either include `type="module"` within the script tag **or** remove the last line from the js file (*module.exports*), since this is only relevant for Option 2 and throws a console error otherwise.
+5. Create your button as can be seen in the "Configuration" section below.
+6. That is it. The script takes care of all the rest. :)
 
-1. Simply download the code from GitHub or clone the repository.
-2. Copy the css (atcb.min.css) and js (atcb.min.js) files into your project (the \*.min.\* files are required, but it is recommended to also copy the raw and map files).
-3. Include those files in your project.
-4. Create your button as can be seen in the "Configuration" section below.
-5. That is it. The script takes care of all the rest. :)
+### Option 2: NodeJS
+
+1. Requires NodeJS and a project, which builds on it (e.g. React or Angular).
+2. Rund **`npm install add-tocalendar-button`**.
+3. Import the module into your project/component. For example with Angular: `import { atcb_init } from 'add-to-calendar-button';`.
+4. Init the js with `atcb_init();`.
+5. Include the css. For example with Angular, add the following to the global style.css: `@import 'add-to-calendar-button/assets/css/atcb.min'`;
+6. Create your button as can be seen in the "Configuration" section below.
+7. That is it. The script takes care of all the rest. :)
  
 
 ## Configuration
@@ -64,7 +77,8 @@ A button can be easily created by placing a respective placeholder, wherever you
   (...)
 </div>
 ```
-Within this placeholder, you can easily configure the button, by placing a respective JSON structure.
+Within this placeholder, you can easily configure the button, by placing a respective JSON structure. 
+Mind that with Angular, you might need to escape the { with `{{ '{' }}` and } with `{{ '}' }}`.
 
 ### Minimal structure (required)
 
@@ -146,6 +160,7 @@ The code is available under the [GPU 3.0 license](LICENSE.txt).
 
 ## Changelog (major only)
 
+v1.1.0 : npm functionality
 v1.0.0 : initial release
  
 
