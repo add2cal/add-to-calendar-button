@@ -3,7 +3,7 @@
  * Add-to-Calendar Button
  * ++++++++++++++++++++++
  */
-const atcbVersion = '1.1.2';
+const atcbVersion = '1.1.3';
 /* Creator: Jens Kuerschner (https://jenskuerschner.de)
  * Project: https://github.com/jekuer/add-to-calendar-button
  * License: GNU General Public License v3.0	(gpl-3.0)
@@ -382,22 +382,7 @@ function atcb_generate_microsoft(data, type = '365') {
 
 
 // FUNCTION TO GENERATE THE iCAL FILE (also for the Apple option)
-function atcb_generate_ical(data) {
-  this._save = function(fileURL) {
-    if (!window.ActiveXObject) {
-        let save = document.createElement('a');
-        save.href = fileURL;
-        save.target = '_blank';
-        save.download = data['iCalFileName'] || 'event-to-save-in-my-calendar';
-        let evt = new MouseEvent('click', {
-            'view': window,
-            'bubbles': true,
-            'cancelable': false
-        });
-        save.dispatchEvent(evt);  
-        (window.URL || window.webkitURL).revokeObjectURL(save.href);
-    }
-  }    
+function atcb_generate_ical(data) {   
   let now = new Date();
   now = now.toISOString().replace(/\-/g, '').replace(/\:/g, '').replace(/\..../g, '');
   let formattedDate = atcb_generate_time(data, 'clean', 'ical');
@@ -424,7 +409,19 @@ function atcb_generate_ical(data) {
   ];
   let dlurl = 'data:text/calendar;base64,'+btoa(ics_lines.join('\r\n'));  
   try {
-    this._save(dlurl);
+    if (!window.ActiveXObject) {
+      let save = document.createElement('a');
+      save.href = dlurl;
+      save.target = '_blank';
+      save.download = data['iCalFileName'] || 'event-to-save-in-my-calendar';
+      let evt = new MouseEvent('click', {
+          'view': window,
+          'bubbles': true,
+          'cancelable': false
+      });
+      save.dispatchEvent(evt);  
+      (window.URL || window.webkitURL).revokeObjectURL(save.href);
+    }
   } catch(e) {
     console.log(e);
   }
@@ -501,4 +498,4 @@ document.addEventListener('DOMContentLoaded', atcb_init, false);
 
 
 // EXPORT FOR USE IN NODEJS
-export { atcb_init };
+export { atcb_init, atcbVersion };
