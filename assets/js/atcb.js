@@ -3,7 +3,7 @@
  * Add-to-Calendar Button
  * ++++++++++++++++++++++
  */
-const atcbVersion = '1.1.4';
+const atcbVersion = '1.1.5';
 /* Creator: Jens Kuerschner (https://jenskuerschner.de)
  * Project: https://github.com/jekuer/add-to-calendar-button
  * License: GNU General Public License v3.0	(gpl-3.0)
@@ -494,8 +494,3 @@ function atcb_generate_time(data, style = 'delimiters', targetCal = 'general') {
 
 // START THE MAGIC AS SOON AS THE DOM HAS BEEN LOADED
 document.addEventListener('DOMContentLoaded', atcb_init, false);
-
-
-
-// EXPORT FOR USE IN NODEJS
-export { atcb_init };
