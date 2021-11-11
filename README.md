@@ -44,7 +44,7 @@ See [jekuer.github.io/add-to-calendar-button](https://jekuer.github.io/add-to-ca
 * Translatable labels and dynamic.
 * Well documented code, to easily understand the processes.
 
-![Screenshot](https://github.com/jekuer/add-to-calendar-button/blob/main/screenshot.png?raw=true)
+![Demo Screenshot](https://github.com/jekuer/add-to-calendar-button/blob/main/demo.gif?raw=true)
  
 
 ## Setup
@@ -52,18 +52,19 @@ See [jekuer.github.io/add-to-calendar-button](https://jekuer.github.io/add-to-ca
 ### Option 1: Simple
  
 1. Simply **download** the code from GitHub **or clone** the git repository.
-2. Copy the css (atcb.min.css) and js (atcb.min.js) files from the assets folders into your project (the **.min.** files are required, but it is recommended to also copy the raw and map files).
-3. Include those files in your project. As usual, the css goes into the <head> (`<link rel="stylesheet" href="./assets/css/atcb.min.css">`), the js into the <body> footer (`<script type="module" src="./assets/js/atcb.min.js"></script>`). You can also combine them with other files, if you want to.
-4. Mind that when using this in a Vanilla JS style, you need to either include `type="module"` within the script tag **or** remove the last line from the js file (*module.exports*), since this is only relevant for Option 2 and throws a console error otherwise.
-5. Create your button as can be seen in the "Configuration" section below.
-6. That is it. The script takes care of all the rest. :)
+2. Copy the css (atcb.min.css) and js (atcb.min.js) files from the assets (not the "npm_dist"!) folders into your project (the **.min.** files are required, but it is recommended to also copy the raw and map files).
+3. Include those files in your project. As usual, the css goes into the <head> (`<link rel="stylesheet" href="./assets/css/atcb.min.css">`), the js into the <body> footer (`<script src="./assets/js/atcb.min.js" defer></script>`). You can also combine them with other files, if you want to.
+4. Create your button as can be seen in the "Configuration" section below.
+5. That is it. The script takes care of all the rest. :)
 
 ### Option 2: NodeJS
 
 1. Requires NodeJS and a project, which builds on it (e.g. React or Angular).
 2. Rund **`npm install add-to-calendar-button`**.
 3. Import the module into your project/component. For example with Angular/React: `import { atcb_init } from 'add-to-calendar-button';`.
-4. Init the js with `atcb_init();`.
+4. Init the js after the DOM has been loaded. To determine the right moment and execute, ...
+  1. with Angular, you would use `ngAfterViewInit()` with `atcb_init();`; 
+  2. with React, you might want to include an event listener like `document.addEventListener('DOMContentLoaded', atcb_init, false);`.
 5. Include the css. For example with Angular or React, add the following to the global style.css: `@import 'add-to-calendar-button/assets/css/atcb.min'`;
 6. Create your button as can be seen in the "Configuration" section below.
 7. That is it. The script takes care of all the rest. :)
@@ -71,9 +72,10 @@ See [jekuer.github.io/add-to-calendar-button](https://jekuer.github.io/add-to-ca
 
 ## Configuration
 
-A button can be easily created by placing a respective placeholder, wherever you want the button to appear.
+A button can be easily created by placing a respective placeholder, wherever you want the button to appear. 
+(The `style="display:none;"` theoretically is not necessary, but should be used for better compatibility.)
 ```html
-<div class="atcb">
+<div class="atcb" style="display:none;">
   (...)
 </div>
 ```
@@ -83,7 +85,7 @@ Mind that with Angular, you might need to escape the { with `{{ '{' }}` and } wi
 ### Minimal structure (required)
 
 ```html
-<div class="atcb">
+<div class="atcb" style="display:none;">
   {
     "title":"Add the title of your event",
     "dateStart":"02-21-2022",
@@ -98,7 +100,7 @@ Mind that with Angular, you might need to escape the { with `{{ '{' }}` and } wi
 ### Full structure
 
 ```html
-<div class="atcb">
+<div class="atcb" style="display:none;">
   {
     "label":"Add to Calendar",
     "title":"Add the title of your event",
