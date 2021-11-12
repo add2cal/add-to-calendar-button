@@ -13,7 +13,7 @@ It is for this simple use case. No strings attached.
 
 ## Background // Why this repo exists
 
-While building a personal wedding page, I was confronted with the task to include a button, where invited people could save the event to their calenders.
+While building a personal wedding page, I was confronted with the task to include a button, where invited people could save the event to their calendars.
 I did not want to build this from scratch (first) and therefore started the usual web research.
 Unfortunately, all I found where some extremely outdated code snippets, which did not really fit all the modern systems and calendar tools.
 Beside that, there was only the solution by AddEvent.com - all over the place. I was looking at CodePen and all I found where thousands of pens, which basically only included the AddEvent tool.
