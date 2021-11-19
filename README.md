@@ -160,7 +160,7 @@ Anyone is welcome to contribute, but mind the [guidelines](.github/CONTRIBUTING.
 The code is available under the [GPU 3.0 license](LICENSE.txt).
  
 
-## Changelog (major only)
+## Changelog (without bug fixes)
 
 * v1.1.0 : npm functionality
 * v1.0.0 : initial release
