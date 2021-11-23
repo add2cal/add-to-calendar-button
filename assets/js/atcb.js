@@ -3,7 +3,7 @@
  * Add-to-Calendar Button
  * ++++++++++++++++++++++
  */
-const atcbVersion = '1.1.6';
+const atcbVersion = '1.2.0';
 /* Creator: Jens Kuerschner (https://jenskuerschner.de)
  * Project: https://github.com/jekuer/add-to-calendar-button
  * License: GNU General Public License v3.0	(gpl-3.0)
@@ -173,6 +173,8 @@ function atcb_generate(button, buttonId, data) {
     buttonTrigger.addEventListener('touchstart', atcb_toggle, {passive: true});
     buttonTrigger.addEventListener('mouseenter', atcb_open, false);
   }
+  // standardize any line breaks in the description
+  data['description'] = data['description'].replace(/<br\s*\/?>/gmi, '\n');
   // generate the options list
   let optionsList = document.createElement('div');
   optionsList.id = 'atcb_list_' + buttonId;
@@ -258,7 +260,11 @@ function atcb_generate(button, buttonId, data) {
   bgOverlay.addEventListener('touchstart', atcb_close_all, {passive: true});
   bgOverlay.addEventListener('mouseenter', atcb_close_all, false);
   // show the placeholder div
-  button.style.display = 'block';
+  if (data['inline']) {
+    button.style.display = 'inline-block';
+  } else {
+    button.style.display = 'block';
+  }
   // console log
   console.log("add-to-calendar button #" + (buttonId + 1) + " created");
 }
@@ -398,7 +404,7 @@ function atcb_generate_ical(data) {
    "DTSTAMP:" + formattedDate['start'],
    "DTSTART" + timeslot + ":" + formattedDate['start'],
    "DTEND" + timeslot + ":" + formattedDate['end'],
-   "DESCRIPTION:" + data['description'],
+   "DESCRIPTION:" + data['description'].replace(/\n/g, '\\n'),
    "SUMMARY:" + data['title'],
    "LOCATION:" + data['location'],
    "STATUS:CONFIRMED",

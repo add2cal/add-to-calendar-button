@@ -49,7 +49,7 @@ See [jekuer.github.io/add-to-calendar-button](https://jekuer.github.io/add-to-ca
 
 ## Setup
  
-### Option 1: Simple
+### Option 1: simple
  
 1. Simply **download** the code from GitHub **or clone** the git repository.
 2. Copy the css (atcb.min.css) and js (atcb.min.js) files from the assets (not the "npm_dist"!) folders into your project (the **.min.** files are required, but it is recommended to also copy the raw and map files).
@@ -144,6 +144,8 @@ Mind that with Angular, you might need to escape the { with `{{ '{' }}` and } wi
 * timeZoneOffset works with older browsers, but is quite static.
 * You can set the trigger to "click". This makes the button open on click at desktop. Otherwise, the default would be to open on hover. On touch devices, this makes no difference.
 * If you want to define a specific name for any generated ics file (iCal), you can specify it via the "iCalFileName" option. The default would be "event-to-save-in-my-calendar".
+* You can use the option "inline":true in order to make the button appear with inline-block instead of block style.
+* If you require line breaks within the description, use `\n` or `<br>`.
  
 
 ## Contributing
@@ -162,6 +164,7 @@ The code is available under the [GPU 3.0 license](LICENSE.txt).
 
 ## Changelog (without bug fixes)
 
+* v1.2.0 : inline and line break support
 * v1.1.0 : npm functionality
 * v1.0.0 : initial release
  
