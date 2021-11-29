@@ -3,7 +3,7 @@
  * Add-to-Calendar Button
  * ++++++++++++++++++++++
  */
-const atcbVersion = '1.2.0';
+const atcbVersion = '1.2.1';
 /* Creator: Jens Kuerschner (https://jenskuerschner.de)
  * Project: https://github.com/jekuer/add-to-calendar-button
  * License: GNU General Public License v3.0	(gpl-3.0)
@@ -259,6 +259,9 @@ function atcb_generate(button, buttonId, data) {
   bgOverlay.addEventListener('click', atcb_close_all, {passive: true});
   bgOverlay.addEventListener('touchstart', atcb_close_all, {passive: true});
   bgOverlay.addEventListener('mouseenter', atcb_close_all, false);
+  // update the placeholder class to prevent multiple initializations
+  button.classList.remove('atcb');
+  button.classList.add('atcb_initialized');
   // show the placeholder div
   if (data['inline']) {
     button.style.display = 'inline-block';

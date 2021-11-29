@@ -63,7 +63,7 @@ See [jekuer.github.io/add-to-calendar-button](https://jekuer.github.io/add-to-ca
 2. Run **`npm install add-to-calendar-button`**.
 3. Import the module into your project/component. For example with Angular/React: `import { atcb_init } from 'add-to-calendar-button';`.
 4. Init the js after the DOM has been loaded. To determine the right moment and execute, ...
-  1. with Angular, you would use `ngAfterViewInit()` with `atcb_init();`; 
+  1. with Angular, you would use `ngAfterViewInit()` with `atcb_init();` (mind that, depending on your app, other hooks might be better); 
   2. with React, you might want to include an event listener like `document.addEventListener('DOMContentLoaded', atcb_init, false);`.
 5. Include the css. For example with Angular or React, add the following to the global style.css: `@import 'add-to-calendar-button/assets/css/atcb.min'`;
 6. Create your button as can be seen in the "Configuration" section below.
