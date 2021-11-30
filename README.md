@@ -164,6 +164,7 @@ The code is available under the [GPU 3.0 license](LICENSE.txt).
 
 ## Changelog (without bug fixes)
 
+* v1.3.0 : new license (MIT with “Commons Clause”)
 * v1.2.0 : inline and line break support
 * v1.1.0 : npm functionality
 * v1.0.0 : initial release
