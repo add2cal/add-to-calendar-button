@@ -3,7 +3,7 @@
  * Add-to-Calendar Button
  * ++++++++++++++++++++++
  */
-const atcbVersion = '1.3.0';
+const atcbVersion = '1.3.1';
 /* Creator: Jens Kuerschner (https://jenskuerschner.de)
  * Project: https://github.com/jekuer/add-to-calendar-button
  * License: MIT with “Commons Clause” License Condition v1.0
@@ -17,21 +17,30 @@ function atcb_init() {
   // let's get started
   console.log("add-to-calendar button initialized (version " + atcbVersion + ")");
   console.log ("See https://github.com/jekuer/add-to-calendar-button for details");
-  // get all placeholders ...
+  // get all placeholders
   let atcButtons = document.querySelectorAll('.atcb');
-  // ... and generate the buttons one by one
-	for (let i = 0; i < atcButtons.length; i++) {
-    // get their JSON content first
-    const atcbConfig = JSON.parse(atcButtons[i].innerHTML);
-    // check, if all required data is available
-    if (atcb_check_required(atcbConfig)) {
-      // calculate the real date values in case that there are some special rules included (e.g. adding days dynamically)
-      atcbConfig['dateStart'] = atcb_date_calculation(atcbConfig['dateStart']);
-      atcbConfig['dateEnd'] = atcb_date_calculation(atcbConfig['dateEnd']);
-      // validate the JSON ...
-      if (atcb_validate(atcbConfig)) {
-        // ... and generate the button on success
-        atcb_generate(atcButtons[i], i, atcbConfig);
+  // if there are some, move on
+  if (atcButtons.length > 0) {
+    // get the amount of already initialized ones first
+    let atcButtonsInitialized = document.querySelectorAll('.atcb_initialized');
+    // generate the buttons one by one
+    for (let i = 0; i < atcButtons.length; i++) {
+      // skip already initialized ones
+      if (atcButtons[i].classList.contains('atcb_initialized')) {
+        continue;
+      }
+      // get their JSON content first
+      const atcbConfig = JSON.parse(atcButtons[i].innerHTML);
+      // check, if all required data is available
+      if (atcb_check_required(atcbConfig)) {
+        // calculate the real date values in case that there are some special rules included (e.g. adding days dynamically)
+        atcbConfig['dateStart'] = atcb_date_calculation(atcbConfig['dateStart']);
+        atcbConfig['dateEnd'] = atcb_date_calculation(atcbConfig['dateEnd']);
+        // validate the JSON ...
+        if (atcb_validate(atcbConfig)) {
+          // ... and generate the button on success
+          atcb_generate(atcButtons[i], i + atcButtonsInitialized.length, atcbConfig);
+        }
       }
     }
   }
