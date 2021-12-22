@@ -87,9 +87,9 @@ Mind that with Angular, you might need to escape the { with `{{ '{' }}` and } wi
 ```html
 <div class="atcb" style="display:none;">
   {
-    "title":"Add the title of your event",
-    "dateStart":"02-21-2022",
-    "dateEnd":"03-24-2022",
+    "name":"Add the title of your event",
+    "startDate":"02-21-2022",
+    "endDate":"03-24-2022",
     "options":[
       "Google"
     ]
@@ -97,19 +97,19 @@ Mind that with Angular, you might need to escape the { with `{{ '{' }}` and } wi
 </div>
 ```
 
-### Full structure
+### Full structure (without schema.org markup)
 
 ```html
 <div class="atcb" style="display:none;">
   {
-    "label":"Add to Calendar",
-    "title":"Add the title of your event",
+    "name":"Add the title of your event",
     "description":"A nice description does not hurt",
-    "dateStart":"02-21-2022",
-    "dateEnd":"03-24-2022",
-    "timeStart":"10:13",
-    "timeEnd":"17:57",
+    "startDate":"02-21-2022",
+    "endDate":"03-24-2022",
+    "startTime":"10:13",
+    "endTime":"17:57",
     "location":"Somewhere over the rainbow",
+    "label":"Add to Calendar",
     "options":[
       "Apple",
       "Google",
@@ -123,6 +123,41 @@ Mind that with Angular, you might need to escape the { with `{{ '{' }}` and } wi
     "trigger":"click",
     "iCalFileName":"Reminder-Event"
   }
+</div>
+```
+
+### Full structure (with schema.org markup)
+You can save on the `style="display:none;"`, but mind that you should not use dynamic dates (e.g. "today" or "+1") here!
+You can use startTime and endTime in the event block, but it is recommended to rather add it to startDate and endDate with "T" as delimiter here.
+
+```html
+<div class="atcb">
+  <script type="application/ld+json">
+    {
+      "event": {
+        "@context":"https://schema.org",
+        "@type":"Event",
+        "name":"Add the title of your event",
+        "description":"A nice description does not hurt",
+        "startDate":"02-21-2022T10:13",
+        "endDate":"03-24-2022T17:57",
+        "location":"Somewhere over the rainbow"
+      },
+      "label":"Add to Calendar",
+      "options":[
+        "Apple",
+        "Google",
+        "iCal",
+        "Microsoft365",
+        "Outlook.com",
+        "Yahoo"
+      ],
+      "timeZone":"Europe/Berlin",
+      "timeZoneOffset":"+01:00",
+      "trigger":"click",
+      "iCalFileName":"Reminder-Event"
+    }
+  </script>
 </div>
 ```
  
@@ -164,10 +199,11 @@ The code is available under the [GPU 3.0 license](LICENSE.txt).
 
 ## Changelog (without bug fixes)
 
-* v1.3.0 : new license (MIT with “Commons Clause”)
-* v1.2.0 : inline and line break support
-* v1.1.0 : npm functionality
-* v1.0.0 : initial release
+* v1.4 : schema.org support (also changed some keys in the JSON!)
+* v1.3 : new license (MIT with “Commons Clause”)
+* v1.2 : inline and line break support
+* v1.1 : npm functionality
+* v1.0 : initial release
  
 
 ## Kudos go to
