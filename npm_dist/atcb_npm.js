@@ -3,7 +3,7 @@
  * Add-to-Calendar Button
  * ++++++++++++++++++++++
  */
-const atcbVersion = '1.3.1';
+const atcbVersion = '1.4.0';
 /* Creator: Jens Kuerschner (https://jenskuerschner.de)
  * Project: https://github.com/jekuer/add-to-calendar-button
  * License: MIT with “Commons Clause” License Condition v1.0
@@ -29,13 +29,29 @@ function atcb_init() {
       if (atcButtons[i].classList.contains('atcb_initialized')) {
         continue;
       }
+      let atcbConfig;
+      // check if schema.org markup is present
+      let schema = atcButtons[i].querySelector('script');
       // get their JSON content first
-      const atcbConfig = JSON.parse(atcButtons[i].innerHTML);
+      if (schema && schema.innerHTML) {
+        // get schema.org event markup and flatten the event block
+        atcbConfig = JSON.parse(schema.innerHTML);
+        atcbConfig = atcb_clean_schema_json(atcbConfig);
+        // set flag to not delete HTML content later
+        atcbConfig['deleteJSON'] = false;
+      } else {
+        // get JSON from HTML block
+        atcbConfig = JSON.parse(atcButtons[i].innerHTML);
+        // set flag to delete HTML content later
+        atcbConfig['deleteJSON'] = true;
+      }
+      // rewrite config for backwards compatibility - you can remove this, if you did not use this script before v1.4.0.
+      atcbConfig = atcb_rewrite_config(atcbConfig);
       // check, if all required data is available
       if (atcb_check_required(atcbConfig)) {
         // calculate the real date values in case that there are some special rules included (e.g. adding days dynamically)
-        atcbConfig['dateStart'] = atcb_date_calculation(atcbConfig['dateStart']);
-        atcbConfig['dateEnd'] = atcb_date_calculation(atcbConfig['dateEnd']);
+        atcbConfig['startDate'] = atcb_date_calculation(atcbConfig['startDate']);
+        atcbConfig['endDate'] = atcb_date_calculation(atcbConfig['endDate']);
         // validate the JSON ...
         if (atcb_validate(atcbConfig)) {
           // ... and generate the button on success
@@ -48,6 +64,51 @@ function atcb_init() {
 
 
 
+// CLEAN/NORMALIZE JSON FROM SCHEMA.ORG MARKUP
+function atcb_clean_schema_json(atcbConfig) {
+  Object.keys(atcbConfig['event']).forEach(key => {
+    // move entries one level up, but skip schema types
+    if (key.charAt(0) !== '@') {
+      atcbConfig[key] = atcbConfig['event'][key]; 
+    } 
+  });
+  // clean schema date+time format
+  const endpoints = ['start', 'end'];
+  endpoints.forEach(function(point) {
+    if (atcbConfig[point + 'Date'] != null) {
+      let tmpSplitStartDate = atcbConfig[point + 'Date'].split('T');
+      if (tmpSplitStartDate[1] != null) {
+        atcbConfig[point + 'Date'] = tmpSplitStartDate[0];
+        atcbConfig[point + 'Time'] = tmpSplitStartDate[1];
+      }
+    }
+  });
+  // drop the event block and return
+  delete atcbConfig.event;
+  return atcbConfig;
+}
+
+
+
+// BACKWARDS COMPATIBILITY REWRITE - you can remove this, if you did not use this script before v1.4.0.
+function atcb_rewrite_config(atcbConfig) {
+  const keyChanges = {
+    'title':      'name',
+    'dateStart':  'startDate',
+    'dateEnd':    'endDate',
+    'timeStart':  'startTime',
+    'timeEnd':    'endTime',
+  };
+  Object.keys(keyChanges).forEach(key => {
+    if (atcbConfig[keyChanges[key]] == null && atcbConfig[key] != null) {
+      atcbConfig[keyChanges[key]] = atcbConfig[key];
+    }
+  });  
+  return atcbConfig;
+}
+
+
+
 // CHECK FOR REQUIRED FIELDS
 function atcb_check_required(data) {
   // check for at least 1 option
@@ -56,7 +117,7 @@ function atcb_check_required(data) {
     return false;
   }
   // check for min required data (without "options")
-  const requiredField = ['title', 'dateStart', 'dateEnd']
+  const requiredField = ['name', 'startDate', 'endDate']
   return requiredField.every(function(field) {
     if (data[field] == null || data[field] == "") {
       console.log("add-to-calendar button generation failed: required setting missing [" + field + "]");
@@ -101,7 +162,7 @@ function atcb_validate(data) {
     return false;
   }
   // validate date
-  const dates = ['dateStart', 'dateEnd'];
+  const dates = ['startDate', 'endDate'];
   let newDate = dates;
   if (!dates.every(function(date) {
     const dateParts = data[date].split('-');
@@ -115,7 +176,7 @@ function atcb_validate(data) {
     return false;
   }
   // validate time
-  const times = ['timeStart', 'timeEnd'];
+  const times = ['startTime', 'endTime'];
   if (!times.every(function(time) {
     if (data[time] != null) {
       const timeParts = data[time].split(':');
@@ -133,23 +194,23 @@ function atcb_validate(data) {
         return false;
       }
       // update the date with the time for further validation steps
-      if (time == 'timeStart') {
-        newDate['dateStart'] = new Date(newDate['dateStart'].getTime() + (timeParts[0] * 3600000) + (timeParts[1] * 60000))
+      if (time == 'startTime') {
+        newDate['startDate'] = new Date(newDate['startDate'].getTime() + (timeParts[0] * 3600000) + (timeParts[1] * 60000))
       }
-      if (time == 'timeEnd') {
-        newDate['dateEnd'] = new Date(newDate['dateEnd'].getTime() + (timeParts[0] * 3600000) + (timeParts[1] * 60000))      
+      if (time == 'endTime') {
+        newDate['endDate'] = new Date(newDate['endDate'].getTime() + (timeParts[0] * 3600000) + (timeParts[1] * 60000))      
       }
     }
     return true;
   })) {
     return false;
   }
-  if ((data['timeStart'] != null && data['timeEnd'] == null) || (data['timeStart'] == null && data['timeEnd'] != null)) {
+  if ((data['startTime'] != null && data['endTime'] == null) || (data['startTime'] == null && data['endTime'] != null)) {
     console.log("add-to-calendar button generation failed: if you set a starting time, you also need to define an end time");
     return false;
   }
   // validate whether end is not before start
-  if (newDate['dateEnd'] < newDate['dateStart']) {
+  if (newDate['endDate'] < newDate['startDate']) {
     console.log("add-to-calendar button generation failed: end date before start date");
     return false;
   }
@@ -161,8 +222,10 @@ function atcb_validate(data) {
 
 // GENERATE THE ACTUAL BUTTON
 function atcb_generate(button, buttonId, data) {
-  // clean the placeholder
-  button.innerHTML = '';
+  // clean the placeholder, if flagged that way
+  if (data['deleteJSON']) {
+    button.innerHTML = '';
+  }
   // generate the wrapper div
   let buttonTriggerWrapper = document.createElement('div');
   buttonTriggerWrapper.classList.add('atcb_button_wrapper');
@@ -335,8 +398,8 @@ function atcb_generate_google(data) {
   if (data['location'] != null && data['location'] != '') {
     url += '&location=' + encodeURIComponent(data['location']);
   }
-  if (data['title'] != null && data['title'] != '') {
-    url += '&text=' + encodeURIComponent(data['title']);
+  if (data['name'] != null && data['name'] != '') {
+    url += '&text=' + encodeURIComponent(data['name']);
   }
   window.open(url, '_blank').focus();
 }
@@ -360,8 +423,8 @@ function atcb_generate_yahoo(data) {
   if (data['location'] != null && data['location'] != '') {
     url += '&in_loc=' + encodeURIComponent(data['location']);
   }
-  if (data['title'] != null && data['title'] != '') {
-    url += '&title=' + encodeURIComponent(data['title']);
+  if (data['name'] != null && data['name'] != '') {
+    url += '&title=' + encodeURIComponent(data['name']);
   }
   window.open(url, '_blank').focus();
 }
@@ -391,8 +454,8 @@ function atcb_generate_microsoft(data, type = '365') {
   if (data['location'] != null && data['location'] != '') {
     url += '&location=' + encodeURIComponent(data['location']);
   }
-  if (data['title'] != null && data['title'] != '') {
-    url += '&subject=' + encodeURIComponent(data['title']);
+  if (data['name'] != null && data['name'] != '') {
+    url += '&subject=' + encodeURIComponent(data['name']);
   }
   window.open(url, '_blank').focus();
 }
@@ -417,7 +480,7 @@ function atcb_generate_ical(data) {
    "DTSTART" + timeslot + ":" + formattedDate['start'],
    "DTEND" + timeslot + ":" + formattedDate['end'],
    "DESCRIPTION:" + data['description'].replace(/\n/g, '\\n'),
-   "SUMMARY:" + data['title'],
+   "SUMMARY:" + data['name'],
    "LOCATION:" + data['location'],
    "STATUS:CONFIRMED",
    "LAST-MODIFIED:" + now,
@@ -449,17 +512,17 @@ function atcb_generate_ical(data) {
 
 // SHARED FUNCTION TO GENERATE A TIME STRING
 function atcb_generate_time(data, style = 'delimiters', targetCal = 'general') {
-  let dateStart = data['dateStart'].split('-');
-  let dateEnd = data['dateEnd'].split('-');
+  let startDate = data['startDate'].split('-');
+  let endDate = data['endDate'].split('-');
   let start = '';
   let end = '';
   let allday = false;
-  if (data['timeStart'] != null && data['timeEnd'] != null) {
+  if (data['startTime'] != null && data['endTime'] != null) {
     // Adjust for timezone, if set (see https://en.wikipedia.org/wiki/List_of_tz_database_time_zones for either the TZ name or the offset)
     if (data['timeZoneOffset'] != null && data['timeZoneOffset'] != '') {
       // if we have a timezone offset given, consider it
-      start = new Date( dateStart[2] + '-' + dateStart[0] + '-' + dateStart[1] + 'T' + data['timeStart'] + ':00.000' + data['timeZoneOffset'] );
-      end = new Date( dateEnd[2] + '-' + dateEnd[0] + '-' + dateEnd[1] + 'T' + data['timeEnd'] + ':00.000' + data['timeZoneOffset'] );
+      start = new Date( startDate[2] + '-' + startDate[0] + '-' + startDate[1] + 'T' + data['startTime'] + ':00.000' + data['timeZoneOffset'] );
+      end = new Date( endDate[2] + '-' + endDate[0] + '-' + endDate[1] + 'T' + data['endTime'] + ':00.000' + data['timeZoneOffset'] );
       start = start.toISOString().replace('.000', '');
       end = end.toISOString().replace('.000', '');
       if (style == 'clean') {
@@ -468,8 +531,8 @@ function atcb_generate_time(data, style = 'delimiters', targetCal = 'general') {
       }
     } else {
       // if there is no offset, we prepare the time, assuming it is UTC formatted
-      start = new Date( dateStart[2] + '-' + dateStart[0] + '-' + dateStart[1] + 'T' + data['timeStart'] + ':00.000+00:00' );
-      end = new Date( dateEnd[2] + '-' + dateEnd[0] + '-' + dateEnd[1] + 'T' + data['timeEnd'] + ':00.000+00:00' );
+      start = new Date( startDate[2] + '-' + startDate[0] + '-' + startDate[1] + 'T' + data['startTime'] + ':00.000+00:00' );
+      end = new Date( endDate[2] + '-' + endDate[0] + '-' + endDate[1] + 'T' + data['endTime'] + ':00.000+00:00' );
       if (data['timeZone'] != null && data['timeZone'] != '') {
         // if a timezone is given, we adjust dynamically with the modern toLocaleString function
         let utcDate = new Date(start.toLocaleString('en-US', { timeZone: "UTC" }));
@@ -487,10 +550,10 @@ function atcb_generate_time(data, style = 'delimiters', targetCal = 'general') {
     }
   } else { // would be an allday event then
     allday = true;
-    start = new Date( dateStart[2], dateStart[0] - 1, dateStart[1]);
+    start = new Date( startDate[2], startDate[0] - 1, startDate[1]);
     start.setDate(start.getDate() + 1); // increment the day by 1
     let breakStart = start.toISOString().split('T');
-    end = new Date( dateEnd[2], dateEnd[0] - 1, dateEnd[1]);
+    end = new Date( endDate[2], endDate[0] - 1, endDate[1]);
     if (targetCal == 'google' || targetCal == 'microsoft' || targetCal == 'ical') {
       end.setDate(end.getDate() + 2); // increment the day by 2 for Google Calendar, iCal and Outlook
     } else {
