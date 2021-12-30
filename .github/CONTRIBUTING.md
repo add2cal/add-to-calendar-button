@@ -98,11 +98,11 @@ included in the project:
 
     ```bash
     # Clone your fork of the repo into the current directory
-    git clone https://github.com/<your-username>/php-microsite-boilerplate.git
+    git clone https://github.com/<your-username>/add-to-calendar-button.git
     # Navigate to the newly cloned directory
-    cd php-microsite-boilerplate
+    cd add-to-calendar-button
     # Assign the original repo to a remote called "upstream"
-    git remote add upstream https://github.com/jekuer/php-microsite-boilerplate.git
+    git remote add upstream https://github.com/jekuer/add-to-calendar-button.git
     ```
 
 2.  If you cloned a while ago, get the latest changes from upstream:
@@ -141,4 +141,4 @@ included in the project:
     with a clear title and description.
 
 **IMPORTANT**: By submitting a patch, you agree to allow the project
-owners to license your work under the terms of the [GPU 3.0 license](LICENSE.txt).
+owners to license your work under the terms of the [MIT license (with “Commons Clause” License Condition v1.0)](LICENSE.txt).

@@ -194,7 +194,7 @@ Anyone is welcome to contribute, but mind the [guidelines](.github/CONTRIBUTING.
 
 ## License
 
-The code is available under the [GPU 3.0 license](LICENSE.txt).
+The code is available under the [MIT license (with “Commons Clause” License Condition v1.0)](LICENSE.txt).
  
 
 ## Changelog (without bug fixes)
