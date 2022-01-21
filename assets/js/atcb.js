@@ -530,16 +530,16 @@ function atcb_generate_time(data, style = 'delimiters', targetCal = 'general') {
         end = end.replace(/\-/g, '').replace(/\:/g, '');
       }
     } else {
-      // if there is no offset, we prepare the time, assuming it is UTC formatted
+      // if there is no offset, we prepare the time, letting the browser set the local timzone
       start = new Date( startDate[2] + '-' + startDate[0] + '-' + startDate[1] + 'T' + data['startTime'] + ':00.000+00:00' );
       end = new Date( endDate[2] + '-' + endDate[0] + '-' + endDate[1] + 'T' + data['endTime'] + ':00.000+00:00' );
       if (data['timeZone'] != null && data['timeZone'] != '') {
         // if a timezone is given, we adjust dynamically with the modern toLocaleString function
         let utcDate = new Date(start.toLocaleString('en-US', { timeZone: "UTC" }));
         let tzDate = new Date(start.toLocaleString('en-US', { timeZone: data['timeZone'] }));
-        let offset = utcDate.getTime() - tzDate.getTime();
-        start.setTime( start.getTime() + offset );
-        end.setTime( end.getTime() + offset );
+        // let offset = utcDate.getTime() - tzDate.getTime();
+        start.setTime( start.getTime() );
+        end.setTime( end.getTime() );
       }
       start = start.toISOString().replace('.000', '');
       end = end.toISOString().replace('.000', '');
