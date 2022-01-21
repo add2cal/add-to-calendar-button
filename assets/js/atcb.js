@@ -543,6 +543,8 @@ function atcb_generate_time(data, style = 'delimiters', targetCal = 'general') {
       }
       start = start.toISOString().replace('.000', '');
       end = end.toISOString().replace('.000', '');
+      start = start.toISOString().replace('Z', '');
+      end = end.toISOString().replace('Z', '');
       if (style == 'clean') {
         start = start.replace(/\-/g, '').replace(/\:/g, '');
         end = end.replace(/\-/g, '').replace(/\:/g, '');
