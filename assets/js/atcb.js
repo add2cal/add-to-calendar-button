@@ -540,15 +540,14 @@ function atcb_generate_time(data, style = 'delimiters', targetCal = 'general') {
         let offset = utcDate.getTime() - tzDate.getTime();
         start.setTime( start.getTime() + offset );
         end.setTime( end.getTime() + offset );
-      } else {
-        // If we want to use the browser's timezone, remove the UTC timezone mark
-        if (data['browserTz'] == true) {
-          start = start.replace('Z', '');
-          end = end.replace('Z', '');
-        }
       }
       start = start.toISOString().replace('.000', '');
       end = end.toISOString().replace('.000', '');
+      // If we want to use the browser's timezone, remove the UTC timezone mark
+      if (data['browserTz'] == true) {
+        start = start.replace('Z', '');
+        end = end.replace('Z', '');
+      }
       if (style == 'clean') {
         start = start.replace(/\-/g, '').replace(/\:/g, '');
         end = end.replace(/\-/g, '').replace(/\:/g, '');
