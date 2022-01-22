@@ -540,6 +540,9 @@ function atcb_generate_time(data, style = 'delimiters', targetCal = 'general') {
         let offset = utcDate.getTime() - tzDate.getTime();
         start.setTime( start.getTime() + offset );
         end.setTime( end.getTime() + offset );
+      } else {
+        start.setTime( start.getTime() );
+        end.setTime( end.getTime() );
       }
       start = start.toISOString().replace('.000', '');
       end = end.toISOString().replace('.000', '');
