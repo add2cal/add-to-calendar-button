@@ -181,7 +181,7 @@ You can use startTime and endTime in the event block, but it is recommended to r
 * If you want to define a specific name for any generated ics file (iCal), you can specify it via the "iCalFileName" option. The default would be "event-to-save-in-my-calendar".
 * You can use the option "inline":true in order to make the button appear with inline-block instead of block style.
 * If you require line breaks within the description, use `\n` or `<br>`.
-* If you use the option *browserTz* then it will override the options *timeZone* and *timeZoneOffset* and assume the time specified is in the local user's timezone. Requires you to also have options *startTime* and *endTime*
+* If you use the option *browserTz* then it will override the options *timeZone* and *timeZoneOffset* and assume the time specified is in the local user's timezone. Requires you to also have options *startTime* and *endTime*.
  
 
 ## Contributing
