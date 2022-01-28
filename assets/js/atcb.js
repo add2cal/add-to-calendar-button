@@ -3,7 +3,7 @@
  * Add-to-Calendar Button
  * ++++++++++++++++++++++
  */
-const atcbVersion = '1.4.1';
+const atcbVersion = '1.4.2';
 /* Creator: Jens Kuerschner (https://jenskuerschner.de)
  * Project: https://github.com/jekuer/add-to-calendar-button
  * License: MIT with “Commons Clause” License Condition v1.0
@@ -488,7 +488,7 @@ function atcb_generate_ical(data) {
    "END:VEVENT",
    "END:VCALENDAR"
   ];
-  let dlurl = 'data:text/calendar;base64,'+btoa(ics_lines.join('\r\n'));  
+  let dlurl = 'data:text/calendar;base64,'+btoa(ics_lines.join('\r\n').replace(/[\u00A0-\u2666]/g, function(c) { return '&#' + c.charCodeAt(0) + ';'; })); // includes a fix to not throw an error with non-Latin1 characters. However, still needs improvement, since it shows up encoded in the iCal file.
   try {
     if (!window.ActiveXObject) {
       let save = document.createElement('a');
@@ -573,5 +573,7 @@ function atcb_generate_time(data, style = 'delimiters', targetCal = 'general') {
 
 
 
-// START THE MAGIC AS SOON AS THE DOM HAS BEEN LOADED
-document.addEventListener('DOMContentLoaded', atcb_init, false);
+// START INIT
+document.addEventListener('DOMContentLoaded', atcb_init, false); // init the magic as soon as the DOM has been loaded
+//export { atcb_init }; // export statement - requires explicit init somewhere else. Remove the line above, if you want to use this one here
+// END INIT
