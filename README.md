@@ -177,6 +177,7 @@ You can use startTime and endTime in the event block, but it is recommended to r
 * If the timeZoneOffset is set, it will always override the timeZone. It is recommended to only use 1 of them at a time.
 * The timeZone might not work in very old browsers, but also considers dynamic changes like summer/winter time.
 * timeZoneOffset works with older browsers, but is quite static.
+* Use "currentBrowser" as value for timeZone to dynamically use the time of the user's browser. Use this with caution, since it would mean that the date and time will differ per user, which should not be the usual case! (Requires all times to be set.)
 * You can set the trigger to "click". This makes the button open on click at desktop. Otherwise, the default would be to open on hover. On touch devices, this makes no difference.
 * If you want to define a specific name for any generated ics file (iCal), you can specify it via the "iCalFileName" option. The default would be "event-to-save-in-my-calendar".
 * You can use the option "inline":true in order to make the button appear with inline-block instead of block style.

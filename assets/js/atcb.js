@@ -3,7 +3,7 @@
  * Add-to-Calendar Button
  * ++++++++++++++++++++++
  */
-const atcbVersion = '1.4.2';
+const atcbVersion = '1.4.3';
 /* Creator: Jens Kuerschner (https://jenskuerschner.de)
  * Project: https://github.com/jekuer/add-to-calendar-button
  * License: MIT with “Commons Clause” License Condition v1.0
@@ -536,6 +536,9 @@ function atcb_generate_time(data, style = 'delimiters', targetCal = 'general') {
       if (data['timeZone'] != null && data['timeZone'] != '') {
         // if a timezone is given, we adjust dynamically with the modern toLocaleString function
         let utcDate = new Date(start.toLocaleString('en-US', { timeZone: "UTC" }));
+        if (data['timeZone'] == 'currentBrowser') {
+          data['timeZone'] = Intl.DateTimeFormat().resolvedOptions().timeZone;
+        }
         let tzDate = new Date(start.toLocaleString('en-US', { timeZone: data['timeZone'] }));
         let offset = utcDate.getTime() - tzDate.getTime();
         start.setTime( start.getTime() + offset );
