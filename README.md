@@ -160,7 +160,28 @@ You can use startTime and endTime in the event block, but it is recommended to r
   </script>
 </div>
 ```
- 
+
+### React example
+
+A simpler method uses `JSON.stringify()` where you define your config in an external file or variable and then
+convert it to a string to be passed into the div.
+
+```js
+const AddToCalendar = () => {
+
+    useEffect(() => atcb_init());
+
+    const event = { /* Event data */}
+
+    return (
+        <div className='atcb'>
+            <script type="application/ld+json">
+                {JSON.stringify(event)}
+            </script>
+        </div>
+    );
+}
+```
 
 ### Important information and hidden features
 
