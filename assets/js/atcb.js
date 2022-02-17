@@ -3,7 +3,7 @@
  * Add-to-Calendar Button
  * ++++++++++++++++++++++
  */
-const atcbVersion = '1.4.3';
+const atcbVersion = '1.5.0';
 /* Creator: Jens Kuerschner (https://jenskuerschner.de)
  * Project: https://github.com/jekuer/add-to-calendar-button
  * License: MIT with “Commons Clause” License Condition v1.0
@@ -46,7 +46,7 @@ function atcb_init() {
         atcbConfig['deleteJSON'] = true;
       }
       // rewrite config for backwards compatibility - you can remove this, if you did not use this script before v1.4.0.
-      atcbConfig = atcb_rewrite_config(atcbConfig);
+      atcbConfig = atcb_patch_config(atcbConfig);
       // check, if all required data is available
       if (atcb_check_required(atcbConfig)) {
         // calculate the real date values in case that there are some special rules included (e.g. adding days dynamically)
@@ -91,7 +91,7 @@ function atcb_clean_schema_json(atcbConfig) {
 
 
 // BACKWARDS COMPATIBILITY REWRITE - you can remove this, if you did not use this script before v1.4.0.
-function atcb_rewrite_config(atcbConfig) {
+function atcb_patch_config(atcbConfig) {
   const keyChanges = {
     'title':      'name',
     'dateStart':  'startDate',
@@ -138,11 +138,15 @@ function atcb_date_calculation(dateString) {
   // check for any dynamic additions and adjust
   const dateStringParts = dateString.split('+');
   const dateParts = dateStringParts[0].split('-');
-  let newDate = new Date(dateParts[2], dateParts[0] - 1, dateParts[1]);
+  let newDate = new Date(dateParts[0], dateParts[1] - 1, dateParts[2]);
+  if (dateParts[0].length < 4) {
+    // backwards compatibility for version <1.5.0
+    newDate = new Date(dateParts[2], dateParts[0] - 1, dateParts[1]);
+  }
   if (dateStringParts[1] != null && dateStringParts[1] > 0) {
     newDate.setDate(newDate.getDate() + parseInt(dateStringParts[1]));
   }
-  return (((newDate.getMonth() + 1) < 10 ? '0' : '') + (newDate.getMonth() + 1)) + '-' + (newDate.getDate() < 10 ? '0' : '') + newDate.getDate() + '-' + newDate.getFullYear();
+  return newDate.getFullYear() + '-' + (((newDate.getMonth() + 1) < 10 ? '0' : '') + (newDate.getMonth() + 1)) + '-' + (newDate.getDate() < 10 ? '0' : '') + newDate.getDate();
 }
 
 
@@ -170,7 +174,7 @@ function atcb_validate(data) {
       console.log("add-to-calendar button generation failed: date misspelled [" + date + ": " + data[date] + "]");
       return false;
     }
-    newDate[date] = new Date(dateParts[2], dateParts[0] - 1, dateParts[1]);
+    newDate[date] = new Date(dateParts[0], dateParts[1] - 1, dateParts[2]);
     return true;
   })) {
     return false;
@@ -231,7 +235,7 @@ function atcb_generate(button, buttonId, data) {
   buttonTriggerWrapper.classList.add('atcb_button_wrapper');
   button.appendChild(buttonTriggerWrapper);
   // generate the button trigger div
-  let buttonTrigger = document.createElement('div');
+  let buttonTrigger = document.createElement('button');
   buttonTrigger.id = 'atcb_button_' + buttonId;
   buttonTrigger.classList.add('atcb_button');
   buttonTrigger.dataset.atcbtn = buttonId;
@@ -240,13 +244,21 @@ function atcb_generate(button, buttonId, data) {
   buttonTrigger.innerHTML += '<span class="atcb_text">' + (data['label'] || 'Add to Calendar') + '</span>';
   // set event listeners for the button trigger
   if (data['trigger'] == 'click') {
-    buttonTrigger.addEventListener('click', atcb_toggle, {passive: true});
+    buttonTrigger.addEventListener('mousedown', atcb_toggle);
   } else {
     buttonTrigger.addEventListener('touchstart', atcb_toggle, {passive: true});
-    buttonTrigger.addEventListener('mouseenter', atcb_open, false);
+    buttonTrigger.addEventListener('mouseenter', atcb_open);
   }
-  // standardize any line breaks in the description
+  buttonTrigger.addEventListener('focus', atcb_open);
+  buttonTrigger.addEventListener('keydown', function(event) { // trigger click on enter as well
+    if (event.key == 'Enter') {
+      atcb_toggle.call(event.target);
+    }
+  });
+  // standardize any line breaks in the description and transform URLs (but keep a clean copy without the URL magic for iCal)
   data['description'] = data['description'].replace(/<br\s*\/?>/gmi, '\n');
+  data['description_iCal'] = data['description'].replace('[url]','').replace('[/url]','');
+  data['description'] = data['description'].replace(/\[url\](.*?)\[\/url\]/g, "<a href='$1' target='_blank' rel='noopener'>$1</a>");
   // generate the options list
   let optionsList = document.createElement('div');
   optionsList.id = 'atcb_list_' + buttonId;
@@ -257,7 +269,8 @@ function atcb_generate(button, buttonId, data) {
   data['options'].forEach(function(option) {
     let optionParts = option.split('|');
     let optionItem = document.createElement('div');
-    optionItem.classList.add('atcb_list_item');    
+    optionItem.classList.add('atcb_list_item');
+    optionItem.tabIndex = 0;
     optionsList.appendChild(optionItem);
     switch (optionParts[0]) {
       case "Apple":
@@ -268,7 +281,7 @@ function atcb_generate(button, buttonId, data) {
         optionItem.addEventListener('click', function() {
           atcb_generate_ical(data);
           atcb_close_all();
-        }, false);
+        });
         break;
       case "Google":
         optionItem.innerHTML = '<span class="atcb_icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 122.88 122.88"><path d="M93.78 29.1H29.1v64.68h64.68V29.1z" fill="#fff"/><path d="M93.78 122.88l29.1-29.1h-29.1v29.1z" fill="#f72a25"/><path d="M122.88 29.1h-29.1v64.68h29.1V29.1z" fill="#fbbc04"/><path d="M93.78 93.78H29.1v29.1h64.68v-29.1z" fill="#34a853"/><path d="M0 93.78v19.4c0 5.36 4.34 9.7 9.7 9.7h19.4v-29.1H0h0z" fill="#188038"/><path d="M122.88 29.1V9.7c0-5.36-4.34-9.7-9.7-9.7h-19.4v29.1h29.1 0z" fill="#1967d2"/><path d="M93.78 0H9.7C4.34 0 0 4.34 0 9.7v84.08h29.1V29.1h64.67V0h.01z" fill="#4285f4"/><path d="M42.37 79.27c-2.42-1.63-4.09-4.02-5-7.17l5.61-2.31c.51 1.94 1.4 3.44 2.67 4.51 1.26 1.07 2.8 1.59 4.59 1.59 1.84 0 3.41-.56 4.73-1.67 1.32-1.12 1.98-2.54 1.98-4.26 0-1.76-.7-3.2-2.09-4.32s-3.14-1.67-5.22-1.67H46.4v-5.55h2.91c1.79 0 3.31-.48 4.54-1.46 1.23-.97 1.84-2.3 1.84-3.99 0-1.5-.55-2.7-1.65-3.6s-2.49-1.35-4.18-1.35c-1.65 0-2.96.44-3.93 1.32s-1.7 2-2.12 3.24l-5.55-2.31c.74-2.09 2.09-3.93 4.07-5.52s4.51-2.39 7.58-2.39c2.27 0 4.32.44 6.13 1.32s3.23 2.1 4.26 3.65c1.03 1.56 1.54 3.31 1.54 5.25 0 1.98-.48 3.65-1.43 5.03-.95 1.37-2.13 2.43-3.52 3.16v.33c1.79.74 3.36 1.96 4.51 3.52 1.17 1.58 1.76 3.46 1.76 5.66s-.56 4.16-1.67 5.88c-1.12 1.72-2.66 3.08-4.62 4.07s-4.17 1.49-6.62 1.49c-2.84 0-5.46-.81-7.88-2.45h0 0zm34.46-27.84l-6.16 4.45-3.08-4.67 11.05-7.97h4.24v37.6h-6.05V51.43h0z" fill="#1a73e8"/></svg></span>';
@@ -278,7 +291,7 @@ function atcb_generate(button, buttonId, data) {
         optionItem.addEventListener('click', function() {
           atcb_generate_google(data);
           atcb_close_all();
-        }, false);
+        });
         break;
       case "iCal":
         optionItem.innerHTML = '<span class="atcb_icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 122.88 122.88"><path d="M81.61 4.73c0-2.61 2.58-4.73 5.77-4.73s5.77 2.12 5.77 4.73v20.72c0 2.61-2.58 4.73-5.77 4.73s-5.77-2.12-5.77-4.73V4.73h0zm-15.5 99.08c-.34 0-.61-1.43-.61-3.2s.27-3.2.61-3.2H81.9c.34 0 .61 1.43.61 3.2s-.27 3.2-.61 3.2H66.11h0zM15.85 67.09c-.34 0-.61-1.43-.61-3.2s.27-3.2.61-3.2h15.79c.34 0 .61 1.43.61 3.2s-.27 3.2-.61 3.2H15.85h0zm25.13 0c-.34 0-.61-1.43-.61-3.2s.27-3.2.61-3.2h15.79c.34 0 .61 1.43.61 3.2s-.27 3.2-.61 3.2H40.98h0zm25.13 0c-.34 0-.61-1.43-.61-3.2s.27-3.2.61-3.2H81.9c.34 0 .61 1.43.61 3.2s-.27 3.2-.61 3.2H66.11h0zm25.14 0c-.34 0-.61-1.43-.61-3.2s.27-3.2.61-3.2h15.79c.34 0 .61 1.43.61 3.2s-.27 3.2-.61 3.2H91.25h0zm-75.4 18.36c-.34 0-.61-1.43-.61-3.2s.27-3.2.61-3.2h15.79c.34 0 .61 1.43.61 3.2s-.27 3.2-.61 3.2H15.85h0zm25.13 0c-.34 0-.61-1.43-.61-3.2s.27-3.2.61-3.2h15.79c.34 0 .61 1.43.61 3.2s-.27 3.2-.61 3.2H40.98h0zm25.13 0c-.34 0-.61-1.43-.61-3.2s.27-3.2.61-3.2H81.9c.34 0 .61 1.43.61 3.2s-.27 3.2-.61 3.2H66.11h0zm25.14 0c-.34 0-.61-1.43-.61-3.2s.27-3.2.61-3.2h15.79c.34 0 .61 1.43.61 3.2s-.27 3.2-.61 3.2H91.25h0zm-75.4 18.36c-.34 0-.61-1.43-.61-3.2s.27-3.2.61-3.2h15.79c.34 0 .61 1.43.61 3.2s-.27 3.2-.61 3.2H15.85h0zm25.13 0c-.34 0-.61-1.43-.61-3.2s.27-3.2.61-3.2h15.79c.34 0 .61 1.43.61 3.2s-.27 3.2-.61 3.2H40.98h0zM29.61 4.73c0-2.61 2.58-4.73 5.77-4.73s5.77 2.12 5.77 4.73v20.72c0 2.61-2.58 4.73-5.77 4.73s-5.77-2.12-5.77-4.73V4.73h0zM6.4 45.32h110.07V21.47c0-.8-.33-1.53-.86-2.07-.53-.53-1.26-.86-2.07-.86H103c-1.77 0-3.2-1.43-3.2-3.2s1.43-3.2 3.2-3.2h10.55c2.57 0 4.9 1.05 6.59 2.74s2.74 4.02 2.74 6.59v27.06 65.03c0 2.57-1.05 4.9-2.74 6.59s-4.02 2.74-6.59 2.74H9.33c-2.57 0-4.9-1.05-6.59-2.74-1.69-1.7-2.74-4.03-2.74-6.6V48.52 21.47c0-2.57 1.05-4.9 2.74-6.59s4.02-2.74 6.59-2.74H20.6c1.77 0 3.2 1.43 3.2 3.2s-1.43 3.2-3.2 3.2H9.33c-.8 0-1.53.33-2.07.86-.53.53-.86 1.26-.86 2.07v23.85h0zm110.08 6.41H6.4v61.82c0 .8.33 1.53.86 2.07.53.53 1.26.86 2.07.86h104.22c.8 0 1.53-.33 2.07-.86.53-.53.86-1.26.86-2.07V51.73h0zM50.43 18.54c-1.77 0-3.2-1.43-3.2-3.2s1.43-3.2 3.2-3.2h21.49c1.77 0 3.2 1.43 3.2 3.2s-1.43 3.2-3.2 3.2H50.43h0z"/></svg></span>';
@@ -288,7 +301,7 @@ function atcb_generate(button, buttonId, data) {
         optionItem.addEventListener('click', function() {
           atcb_generate_ical(data);
           atcb_close_all();
-        }, false);
+        });
         break;
       case "Microsoft365":
         optionItem.innerHTML = '<span class="atcb_icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 278050 333334" shape-rendering="geometricPrecision" image-rendering="optimizeQuality" fill-rule="evenodd"><path fill="#ea3e23" d="M278050 305556l-29-16V28627L178807 0 448 66971l-448 87 22 200227 60865-23821V80555l117920-28193-17 239519L122 267285l178668 65976v73l99231-27462v-316z"/></svg></span>';
@@ -298,7 +311,7 @@ function atcb_generate(button, buttonId, data) {
         optionItem.addEventListener('click', function() {
           atcb_generate_microsoft(data, '365');
           atcb_close_all();
-        }, false);
+        });
         break;
       case "Outlook.com":
         optionItem.innerHTML = '<span class="atcb_icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="-0.129793726981 0 33.251996719421 32" width="2500" height="2397"><path d="M28.596 2H11.404A1.404 1.404 0 0 0 10 3.404V5l9.69 3L30 5V3.404A1.404 1.404 0 0 0 28.596 2z" fill="#0364b8"/><path d="M31.65 17.405A11.341 11.341 0 0 0 32 16a.666.666 0 0 0-.333-.576l-.013-.008-.004-.002L20.812 9.24a1.499 1.499 0 0 0-1.479-.083 1.49 1.49 0 0 0-.145.082L8.35 15.415l-.004.002-.012.007A.666.666 0 0 0 8 16a11.344 11.344 0 0 0 .35 1.405l11.492 8.405z" fill="#0a2767"/><path d="M24 5h-7l-2.021 3L17 11l7 6h6v-6z" fill="#28a8ea"/><path d="M10 5h7v6h-7z" fill="#0078d4"/><path d="M24 5h6v6h-6z" fill="#50d9ff"/><path d="M24 17l-7-6h-7v6l7 6 10.832 1.768z" fill="#0364b8"/><path d="M17 11h7v6h-7z" fill="#0078d4"/><path d="M10 17h7v6h-7z" fill="#064a8c"/><path d="M24 17h6v6h-6z" fill="#0078d4"/><path d="M20.19 25.218l-11.793-8.6.495-.87 10.909 6.212a.528.528 0 0 0 .42-.012l10.933-6.23.496.869z" fill="#0a2767" opacity=".5"/><path d="M31.667 16.577l-.014.008-.003.002-10.838 6.174a1.497 1.497 0 0 1-1.46.091l3.774 5.061 8.254 1.797v.004A1.498 1.498 0 0 0 32 28.5V16a.666.666 0 0 1-.333.577z" fill="#1490df"/><path d="M32 28.5v-.738l-9.983-5.688-1.205.687a1.497 1.497 0 0 1-1.46.091l3.774 5.061 8.254 1.797v.004A1.498 1.498 0 0 0 32 28.5z" opacity=".05"/><path d="M31.95 28.883L21.007 22.65l-.195.11a1.497 1.497 0 0 1-1.46.092l3.774 5.061 8.254 1.797v.004a1.501 1.501 0 0 0 .57-.83z" opacity=".1"/><path d="M8.35 16.59v-.01h-.01l-.03-.02A.65.65 0 0 1 8 16v12.5A1.498 1.498 0 0 0 9.5 30h21a1.503 1.503 0 0 0 .37-.05.637.637 0 0 0 .18-.06.142.142 0 0 0 .06-.02 1.048 1.048 0 0 0 .23-.13c.02-.01.03-.01.04-.03z" fill="#28a8ea"/><path d="M18 24.667V8.333A1.337 1.337 0 0 0 16.667 7H10.03v7.456l-1.68.958-.005.002-.012.007A.666.666 0 0 0 8 16v.005V16v10h8.667A1.337 1.337 0 0 0 18 24.667z" opacity=".1"/><path d="M17 25.667V9.333A1.337 1.337 0 0 0 15.667 8H10.03v6.456l-1.68.958-.005.002-.012.007A.666.666 0 0 0 8 16v.005V16v11h7.667A1.337 1.337 0 0 0 17 25.667z" opacity=".2"/><path d="M17 23.667V9.333A1.337 1.337 0 0 0 15.667 8H10.03v6.456l-1.68.958-.005.002-.012.007A.666.666 0 0 0 8 16v.005V16v9h7.667A1.337 1.337 0 0 0 17 23.667z" opacity=".2"/><path d="M16 23.667V9.333A1.337 1.337 0 0 0 14.667 8H10.03v6.456l-1.68.958-.005.002-.012.007A.666.666 0 0 0 8 16v.005V16v9h6.667A1.337 1.337 0 0 0 16 23.667z" opacity=".2"/><path d="M1.333 8h13.334A1.333 1.333 0 0 1 16 9.333v13.334A1.333 1.333 0 0 1 14.667 24H1.333A1.333 1.333 0 0 1 0 22.667V9.333A1.333 1.333 0 0 1 1.333 8z" fill="#0078d4"/><path d="M3.867 13.468a4.181 4.181 0 0 1 1.642-1.814A4.965 4.965 0 0 1 8.119 11a4.617 4.617 0 0 1 2.413.62 4.14 4.14 0 0 1 1.598 1.733 5.597 5.597 0 0 1 .56 2.55 5.901 5.901 0 0 1-.577 2.666 4.239 4.239 0 0 1-1.645 1.794A4.8 4.8 0 0 1 7.963 21a4.729 4.729 0 0 1-2.468-.627 4.204 4.204 0 0 1-1.618-1.736 5.459 5.459 0 0 1-.567-2.519 6.055 6.055 0 0 1 .557-2.65zm1.75 4.258a2.716 2.716 0 0 0 .923 1.194 2.411 2.411 0 0 0 1.443.435 2.533 2.533 0 0 0 1.541-.449 2.603 2.603 0 0 0 .897-1.197 4.626 4.626 0 0 0 .286-1.665 5.063 5.063 0 0 0-.27-1.686 2.669 2.669 0 0 0-.866-1.24 2.387 2.387 0 0 0-1.527-.473 2.493 2.493 0 0 0-1.477.439 2.741 2.741 0 0 0-.944 1.203 4.776 4.776 0 0 0-.007 3.44z" fill="#fff"/></svg></span>';
@@ -308,7 +321,7 @@ function atcb_generate(button, buttonId, data) {
         optionItem.addEventListener('click', function() {
           atcb_generate_microsoft(data, 'outlook');
           atcb_close_all();
-        }, false);
+        });
         break;
       case "Yahoo":
         optionItem.innerHTML = '<span class="atcb_icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 3386.34 3010.5" shape-rendering="geometricPrecision" image-rendering="optimizeQuality" fill-rule="evenodd"><path d="M0 732.88h645.84l376.07 962.1 380.96-962.1h628.76l-946.8 2277.62H451.98l259.19-603.53L.02 732.88zm2763.84 768.75h-704.26L2684.65 0l701.69.03-622.5 1501.6zm-519.78 143.72c216.09 0 391.25 175.17 391.25 391.22 0 216.06-175.16 391.23-391.25 391.23-216.06 0-391.19-175.17-391.19-391.23 0-216.05 175.16-391.22 391.19-391.22z" fill="#5f01d1" fill-rule="nonzero"/></svg></span>';
@@ -318,19 +331,26 @@ function atcb_generate(button, buttonId, data) {
         optionItem.addEventListener('click', function() {
           atcb_generate_yahoo(data);
           atcb_close_all();
-        }, false);
+        });
         break;
     }
+    optionItem.addEventListener('keydown', function(event) { // trigger click on enter as well
+      if (event.key == 'Enter') {
+        this.click();
+      }
+    });
   });
   // create the background overlay, which also acts as trigger to close any dropdowns
   let bgOverlay = document.createElement('div');
   bgOverlay.id = 'atcb_bgoverlay_' + buttonId;
   bgOverlay.classList.add('atcb_bgoverlay');
-  bgOverlay.style.display = 'none';
+  bgOverlay.style.display = 'none'; 
+  bgOverlay.tabIndex = 0;
   button.appendChild(bgOverlay);
-  bgOverlay.addEventListener('click', atcb_close_all, {passive: true});
+  bgOverlay.addEventListener('click', atcb_close_all);
   bgOverlay.addEventListener('touchstart', atcb_close_all, {passive: true});
-  bgOverlay.addEventListener('mouseenter', atcb_close_all, false);
+  bgOverlay.addEventListener('mousemove', atcb_close_all);
+  bgOverlay.addEventListener('focus', atcb_close_all);
   // update the placeholder class to prevent multiple initializations
   button.classList.remove('atcb');
   button.classList.add('atcb_initialized');
@@ -371,7 +391,6 @@ function atcb_close() {
   list.style.display = 'none';
   document.getElementById('atcb_bgoverlay_' + this.dataset.atcbtn).style.display = 'none';
 }
-
 
 function atcb_close_all() {
   // get all buttons
@@ -479,7 +498,7 @@ function atcb_generate_ical(data) {
    "DTSTAMP:" + formattedDate['start'],
    "DTSTART" + timeslot + ":" + formattedDate['start'],
    "DTEND" + timeslot + ":" + formattedDate['end'],
-   "DESCRIPTION:" + data['description'].replace(/\n/g, '\\n'),
+   "DESCRIPTION:" + data['description_iCal'].replace(/\n/g, '\\n'),
    "SUMMARY:" + data['name'],
    "LOCATION:" + data['location'],
    "STATUS:CONFIRMED",
@@ -500,7 +519,7 @@ function atcb_generate_ical(data) {
           'bubbles': true,
           'cancelable': false
       });
-      save.dispatchEvent(evt);  
+      save.dispatchEvent(evt);
       (window.URL || window.webkitURL).revokeObjectURL(save.href);
     }
   } catch(e) {
@@ -521,8 +540,8 @@ function atcb_generate_time(data, style = 'delimiters', targetCal = 'general') {
     // Adjust for timezone, if set (see https://en.wikipedia.org/wiki/List_of_tz_database_time_zones for either the TZ name or the offset)
     if (data['timeZoneOffset'] != null && data['timeZoneOffset'] != '') {
       // if we have a timezone offset given, consider it
-      start = new Date( startDate[2] + '-' + startDate[0] + '-' + startDate[1] + 'T' + data['startTime'] + ':00.000' + data['timeZoneOffset'] );
-      end = new Date( endDate[2] + '-' + endDate[0] + '-' + endDate[1] + 'T' + data['endTime'] + ':00.000' + data['timeZoneOffset'] );
+      start = new Date( startDate[0] + '-' + startDate[1] + '-' + startDate[2] + 'T' + data['startTime'] + ':00.000' + data['timeZoneOffset'] );
+      end = new Date( endDate[0] + '-' + endDate[1] + '-' + endDate[2] + 'T' + data['endTime'] + ':00.000' + data['timeZoneOffset'] );
       start = start.toISOString().replace('.000', '');
       end = end.toISOString().replace('.000', '');
       if (style == 'clean') {
@@ -531,8 +550,8 @@ function atcb_generate_time(data, style = 'delimiters', targetCal = 'general') {
       }
     } else {
       // if there is no offset, we prepare the time, assuming it is UTC formatted
-      start = new Date( startDate[2] + '-' + startDate[0] + '-' + startDate[1] + 'T' + data['startTime'] + ':00.000+00:00' );
-      end = new Date( endDate[2] + '-' + endDate[0] + '-' + endDate[1] + 'T' + data['endTime'] + ':00.000+00:00' );
+      start = new Date( startDate[0] + '-' + startDate[1] + '-' + startDate[2] + 'T' + data['startTime'] + ':00.000+00:00' );
+      end = new Date( endDate[0] + '-' + endDate[1] + '-' + endDate[2] + 'T' + data['endTime'] + ':00.000+00:00' );
       if (data['timeZone'] != null && data['timeZone'] != '') {
         // if a timezone is given, we adjust dynamically with the modern toLocaleString function
         let utcDate = new Date(start.toLocaleString('en-US', { timeZone: "UTC" }));
@@ -553,10 +572,10 @@ function atcb_generate_time(data, style = 'delimiters', targetCal = 'general') {
     }
   } else { // would be an allday event then
     allday = true;
-    start = new Date( startDate[2], startDate[0] - 1, startDate[1]);
+    start = new Date( startDate[0], startDate[1] - 1, startDate[2]);
     start.setDate(start.getDate() + 1); // increment the day by 1
     let breakStart = start.toISOString().split('T');
-    end = new Date( endDate[2], endDate[0] - 1, endDate[1]);
+    end = new Date( endDate[0], endDate[1] - 1, endDate[2]);
     if (targetCal == 'google' || targetCal == 'microsoft' || targetCal == 'ical') {
       end.setDate(end.getDate() + 2); // increment the day by 2 for Google Calendar, iCal and Outlook
     } else {
