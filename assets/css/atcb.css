@@ -3,7 +3,7 @@
  * Add-to-Calendar Button
  * ++++++++++++++++++++++
  * 
- * Version: 1.4.3
+ * Version: 1.5.0
  * Creator: Jens Kuerschner (https://jenskuerschner.de)
  * Project: https://github.com/jekuer/add-to-calendar-button
  * License: MIT with “Commons Clause” License Condition v1.0
@@ -44,6 +44,9 @@
   user-select: none;
   -webkit-tap-highlight-color: transparent;
   width: auto;
+}
+.atcb_button:hover {
+  background: rgb(255, 255, 255);
 }
 @media only screen and (max-width: 575px) {
   .atcb_button {

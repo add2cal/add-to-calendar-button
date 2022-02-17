@@ -88,8 +88,8 @@ Mind that with Angular, you might need to escape the { with `{{ '{' }}` and } wi
 <div class="atcb" style="display:none;">
   {
     "name":"Add the title of your event",
-    "startDate":"02-21-2022",
-    "endDate":"03-24-2022",
+    "startDate":"2022-02-21",
+    "endDate":"2022-03-24",
     "options":[
       "Google"
     ]
@@ -104,8 +104,8 @@ Mind that with Angular, you might need to escape the { with `{{ '{' }}` and } wi
   {
     "name":"Add the title of your event",
     "description":"A nice description does not hurt",
-    "startDate":"02-21-2022",
-    "endDate":"03-24-2022",
+    "startDate":"2022-02-21",
+    "endDate":"2022-03-24",
     "startTime":"10:13",
     "endTime":"17:57",
     "location":"Somewhere over the rainbow",
@@ -139,8 +139,8 @@ You can use startTime and endTime in the event block, but it is recommended to r
         "@type":"Event",
         "name":"Add the title of your event",
         "description":"A nice description does not hurt",
-        "startDate":"02-21-2022T10:13",
-        "endDate":"03-24-2022T17:57",
+        "startDate":"2022-02-21T10:13",
+        "endDate":"2022-03-24T17:57",
         "location":"Somewhere over the rainbow"
       },
       "label":"Add to Calendar",
@@ -186,9 +186,9 @@ const AddToCalendar = () => {
 ### Important information and hidden features
 
 * The "label" is optional, but enables you to customize the button text. Default: "Add to Calendar".
-* Dates need to be formatted as MM-DD-YYYY.
+* Dates need to be formatted as YYYY-MM-DD ([ISO-8601](https://en.wikipedia.org/wiki/ISO_8601)).
 * You can also use the word "today" as date. It will then dynamically use the current day at click.
-* Add "+5" at the end of the date to dynamically add 5 days (or any other number). "01-30-2022+12" would generate the 11th of February 2022. This can be interesting, when combined with "today".
+* Add "+5" at the end of the date to dynamically add 5 days (or any other number). "2022-01-30+12" would generate the 11th of February 2022. This can be interesting, when combined with "today".
 * Times need to be formatted as HH:MM.
 * Times are optional. If not set, the button generates all-day events.
 * 1 option is required. You can add as many as you want. The supported formats are listed above.
@@ -202,6 +202,7 @@ const AddToCalendar = () => {
 * You can set the trigger to "click". This makes the button open on click at desktop. Otherwise, the default would be to open on hover. On touch devices, this makes no difference.
 * If you want to define a specific name for any generated ics file (iCal), you can specify it via the "iCalFileName" option. The default would be "event-to-save-in-my-calendar".
 * You can use the option "inline":true in order to make the button appear with inline-block instead of block style.
+* Formatting a URL in the description like `[url]https://....[/url]` makes it clickable.
 * If you require line breaks within the description, use `\n` or `<br>`.
 
 
@@ -223,6 +224,7 @@ The code is available under the [MIT license (with “Commons Clause” License 
 
 ## Changelog (without bug fixes)
 
+* v1.5 : update to date format and better accesibility
 * v1.4 : schema.org support (also changed some keys in the JSON!)
 * v1.3 : new license (MIT with “Commons Clause”)
 * v1.2 : inline and line break support
