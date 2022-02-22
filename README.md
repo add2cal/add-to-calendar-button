@@ -38,7 +38,7 @@ See [jekuer.github.io/add-to-calendar-button](https://jekuer.github.io/add-to-ca
 * Up-to-date integration of all popular calendars:
   * Google Calendar.
   * Yahoo Calender.
-  * Microsoft 365 (and Outlook).
+  * Microsoft 365, Outlook and Teams.
   * Automatically generated iCal/ics files (for all other calendars, like Apple).
 * Timed and all-day events.
 * Translatable labels and dynamic.
@@ -115,6 +115,7 @@ Mind that with Angular, you might need to escape the { with `{{ '{' }}` and } wi
       "Google",
       "iCal",
       "Microsoft365",
+      "Microsoft Teams",
       "Outlook.com",
       "Yahoo"
     ],
@@ -149,6 +150,7 @@ You can use startTime and endTime in the event block, but it is recommended to r
         "Google",
         "iCal",
         "Microsoft365",
+        "Microsoft Teams",
         "Outlook.com",
         "Yahoo"
       ],
