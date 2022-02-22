@@ -354,7 +354,7 @@ function atcb_generate(button, buttonId, data) {
   let bgOverlay = document.createElement('div');
   bgOverlay.id = 'atcb_bgoverlay_' + buttonId;
   bgOverlay.classList.add('atcb_bgoverlay');
-  bgOverlay.style.display = 'none'; 
+  bgOverlay.style.display = 'none';
   bgOverlay.tabIndex = 0;
   button.appendChild(bgOverlay);
   bgOverlay.addEventListener('click', atcb_close_all);
@@ -471,7 +471,7 @@ function atcb_generate_microsoft(data, type = '365') {
   }
   url += '/calendar/0/deeplink/compose?path=%2Fcalendar%2Faction%2Fcompose&rru=addevent';
   // generate and add date
-  let formattedDate = atcb_generate_time(data, 'delimiters', 'microsoft');  
+  let formattedDate = atcb_generate_time(data, 'delimiters', 'microsoft');
   url += '&startdt=' + formattedDate['start'] + '&enddt=' + formattedDate['end'];
   if (formattedDate['allday']) {
     url += '&allday=true';
@@ -499,12 +499,13 @@ function atcb_generate_teams(data) {
   let formattedDate = atcb_generate_time(data, 'delimiters', 'microsoft');
   url += '&startTime=' + formattedDate['start'] + '&endTime=' + formattedDate['end'];
   // add details (if set)
-  let content=null;
+  // put location and description in content as location parameter is not supported yet
+  let content = null;
   if (data['location'] != null && data['location'] != '') {
     content = data['location']
   }
   if (data['description'] != null && data['description'] != '') {
-    content = (content?content+' ---- ':'') + data['description']
+    content = (content ? content + ' ---- ' : '') + data['description']
   }
   if (content != null && content != '') {
     url += '&content=' + encodeURIComponent(content);
@@ -521,14 +522,14 @@ function atcb_generate_teams(data) {
 
 
 // FUNCTION TO GENERATE THE iCAL FILE (also for the Apple option)
-function atcb_generate_ical(data) {   
+function atcb_generate_ical(data) {
   let now = new Date();
   now = now.toISOString().replace(/\-/g, '').replace(/\:/g, '').replace(/\..../g, '');
   let formattedDate = atcb_generate_time(data, 'clean', 'ical');
   let timeslot = '';
   if (formattedDate['allday']) {
     timeslot = ';VALUE=DATE';
-  } 
+  }
   let ics_lines = [
    "BEGIN:VCALENDAR",
    "VERSION:2.0",
