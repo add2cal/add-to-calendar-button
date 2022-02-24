@@ -226,6 +226,7 @@ The code is available under the [MIT license (with “Commons Clause” License 
 
 ## Changelog (without bug fixes)
 
+* v1.6 : supporting Microsoft Teams
 * v1.5 : update to date format and better accesibility
 * v1.4 : schema.org support (also changed some keys in the JSON!)
 * v1.3 : new license (MIT with “Commons Clause”)
@@ -237,3 +238,4 @@ The code is available under the [MIT license (with “Commons Clause” License 
 ## Kudos go to
 * [github.com/dudewheresmycode](https://github.com/dudewheresmycodee)
 * [uxwing.com](https://uxwing.com)
+* all contributors!
