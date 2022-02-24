@@ -154,7 +154,7 @@ function atcb_date_calculation(dateString) {
 // VALIDATE THE JSON DATA
 function atcb_validate(data) {
   // validate options
-  const options = ['Apple', 'Google', 'iCal', 'Microsoft365', 'Outlook.com', 'Yahoo']
+  const options = ['Apple', 'Google', 'iCal', 'Microsoft365', 'Outlook.com', 'MicrosoftTeams', 'Yahoo']
   if (!data['options'].every(function(option) {
     let cleanOption = option.split('|');
     if (!options.includes(cleanOption[0])) {
@@ -303,6 +303,16 @@ function atcb_generate(button, buttonId, data) {
           atcb_close_all();
         });
         break;
+      case "MicrosoftTeams":
+        optionItem.innerHTML = '<span class="atcb_icon"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 2228.833 2073.333"><g fill="#5059c9"><path d="M1554.637 777.5h575.713c54.391 0 98.483 44.092 98.483 98.483v524.398c0 199.901-162.051 361.952-361.952 361.952h0-1.711c-199.901.028-361.975-162-362.004-361.901v-.052-571.409c.001-28.427 23.045-51.471 51.471-51.471h0z"/><circle cx="1943.75" cy="440.583" r="233.25"/></g><g fill="#7b83eb"><circle cx="1218.083" cy="336.917" r="336.917"/><path d="M1667.323 777.5H717.01c-53.743 1.33-96.257 45.931-95.01 99.676v598.105c-7.505 322.519 247.657 590.16 570.167 598.053 322.51-7.893 577.671-275.534 570.167-598.053V877.176c1.245-53.745-41.268-98.346-95.011-99.676z"/></g><path opacity=".1" d="M1244 777.5v838.145c-.258 38.435-23.549 72.964-59.09 87.598-11.316 4.787-23.478 7.254-35.765 7.257H667.613c-6.738-17.105-12.958-34.21-18.142-51.833-18.144-59.477-27.402-121.307-27.472-183.49V877.02c-1.246-53.659 41.198-98.19 94.855-99.52H1244z"/><path opacity=".2" d="M1192.167 777.5v889.978a91.84 91.84 0 0 1-7.257 35.765c-14.634 35.541-49.163 58.833-87.598 59.09H691.975c-8.812-17.105-17.105-34.21-24.362-51.833s-12.958-34.21-18.142-51.833a631.28 631.28 0 0 1-27.472-183.49V877.02c-1.246-53.659 41.198-98.19 94.855-99.52h475.313z"/><path opacity=".2" d="M1192.167 777.5v786.312c-.395 52.223-42.632 94.46-94.855 94.855h-447.84A631.28 631.28 0 0 1 622 1475.177V877.02c-1.246-53.659 41.198-98.19 94.855-99.52h475.312z"/><path opacity=".2" d="M1140.333 777.5v786.312c-.395 52.223-42.632 94.46-94.855 94.855H649.472A631.28 631.28 0 0 1 622 1475.177V877.02c-1.246-53.659 41.198-98.19 94.855-99.52h423.478z"/><path opacity=".1" d="M1244 509.522v163.275c-8.812.518-17.105 1.037-25.917 1.037s-17.105-.518-25.917-1.037c-17.496-1.161-34.848-3.937-51.833-8.293a336.92 336.92 0 0 1-233.25-198.003 288.02 288.02 0 0 1-16.587-51.833h258.648c52.305.198 94.657 42.549 94.856 94.854z"/><use xlink:href="#C" opacity=".2"/><use xlink:href="#C" opacity=".2"/><path opacity=".2" d="M1140.333 561.355v103.148A336.92 336.92 0 0 1 907.083 466.5h138.395c52.305.199 94.656 42.551 94.855 94.855z"/><linearGradient id="A" gradientUnits="userSpaceOnUse" x1="198.099" y1="392.261" x2="942.234" y2="1681.073"><stop offset="0" stop-color="#5a62c3"/><stop offset=".5" stop-color="#4d55bd"/><stop offset="1" stop-color="#3940ab"/></linearGradient><path fill="url(#A)" d="M95.01 466.5h950.312c52.473 0 95.01 42.538 95.01 95.01v950.312c0 52.473-42.538 95.01-95.01 95.01H95.01c-52.473 0-95.01-42.538-95.01-95.01V561.51c0-52.472 42.538-95.01 95.01-95.01z"/><path fill="#fff" d="M820.211,828.193H630.241v517.297H509.211V828.193H320.123V727.844h500.088V828.193z"/><defs ><path id="C" d="M1192.167 561.355v111.442c-17.496-1.161-34.848-3.937-51.833-8.293a336.92 336.92 0 0 1-233.25-198.003h190.228c52.304.198 94.656 42.55 94.855 94.854z"/></defs></svg></span>';
+        optionItem.innerHTML += '<span class="atcb_text">';
+        optionItem.innerHTML += optionParts[1] || 'Microsoft Teams';
+        optionItem.innerHTML += '</span>';
+        optionItem.addEventListener('click', function() {
+          atcb_generate_teams(data);
+          atcb_close_all();
+        });
+        break;
       case "Microsoft365":
         optionItem.innerHTML = '<span class="atcb_icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 278050 333334" shape-rendering="geometricPrecision" image-rendering="optimizeQuality" fill-rule="evenodd"><path fill="#ea3e23" d="M278050 305556l-29-16V28627L178807 0 448 66971l-448 87 22 200227 60865-23821V80555l117920-28193-17 239519L122 267285l178668 65976v73l99231-27462v-316z"/></svg></span>';
         optionItem.innerHTML += '<span class="atcb_text">';
@@ -344,7 +354,7 @@ function atcb_generate(button, buttonId, data) {
   let bgOverlay = document.createElement('div');
   bgOverlay.id = 'atcb_bgoverlay_' + buttonId;
   bgOverlay.classList.add('atcb_bgoverlay');
-  bgOverlay.style.display = 'none'; 
+  bgOverlay.style.display = 'none';
   bgOverlay.tabIndex = 0;
   button.appendChild(bgOverlay);
   bgOverlay.addEventListener('click', atcb_close_all);
@@ -461,14 +471,14 @@ function atcb_generate_microsoft(data, type = '365') {
   }
   url += '/calendar/0/deeplink/compose?path=%2Fcalendar%2Faction%2Fcompose&rru=addevent';
   // generate and add date
-  let formattedDate = atcb_generate_time(data, 'delimiters', 'microsoft');  
+  let formattedDate = atcb_generate_time(data, 'delimiters', 'microsoft');
   url += '&startdt=' + formattedDate['start'] + '&enddt=' + formattedDate['end'];
   if (formattedDate['allday']) {
     url += '&allday=true';
   }
   // add details (if set)
   if (data['description'] != null && data['description'] != '') {
-    url += '&body=' + encodeURIComponent(data['description']);
+    url += '&body=' + encodeURIComponent(data['description'].replace(/\n/g, '<br>'));
   }
   if (data['location'] != null && data['location'] != '') {
     url += '&location=' + encodeURIComponent(data['location']);
@@ -481,15 +491,41 @@ function atcb_generate_microsoft(data, type = '365') {
 
 
 
+// FUNCTION TO GENERATE THE MICROSOFT TEAMS URL
+// Mind that this is still in development mode by Microsoft! (https://docs.microsoft.com/en-us/microsoftteams/platform/concepts/build-and-test/deep-links#deep-linking-to-the-scheduling-dialog)
+// Location, html tags and linebreaks in the description are not supported yet.
+function atcb_generate_teams(data) {
+  // base url
+  let url = 'https://teams.microsoft.com/l/meeting/new?';
+  // generate and add date
+  let formattedDate = atcb_generate_time(data, 'delimiters', 'microsoft');
+  url += '&startTime=' + formattedDate['start'] + '&endTime=' + formattedDate['end'];
+  // add details (if set)
+  if (data['location'] != null && data['location'] != '') {
+    let locationString = encodeURIComponent(data['location']);
+    url += '&location=' + locationString; // workaround putting the location into the description, since the native field is not supported yet
+    locationString += ' // ';
+  }
+  if (data['description_iCal'] != null && data['description_iCal'] != '') { // using description_iCal instead of description, since Teams does not support html tags
+    url += '&content=' + locationString + encodeURIComponent(data['description_iCal']);
+  }
+  if (data['name'] != null && data['name'] != '') {
+    url += '&subject=' + encodeURIComponent(data['name']);
+  }
+  window.open(url, '_blank').focus();
+}
+
+
+
 // FUNCTION TO GENERATE THE iCAL FILE (also for the Apple option)
-function atcb_generate_ical(data) {   
+function atcb_generate_ical(data) {
   let now = new Date();
   now = now.toISOString().replace(/\-/g, '').replace(/\:/g, '').replace(/\..../g, '');
   let formattedDate = atcb_generate_time(data, 'clean', 'ical');
   let timeslot = '';
   if (formattedDate['allday']) {
     timeslot = ';VALUE=DATE';
-  } 
+  }
   let ics_lines = [
    "BEGIN:VCALENDAR",
    "VERSION:2.0",
