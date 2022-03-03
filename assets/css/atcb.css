@@ -31,7 +31,6 @@
   font-size: 16px;
   font-weight: 600;
   line-height: 24px;
-  margin: 10px auto;
   max-width: 300px;
   min-width: 150px;
   padding: 10px 16px 11px 16px;
@@ -45,6 +44,7 @@
   -webkit-tap-highlight-color: transparent;
   width: auto;
 }
+.atcb_button:focus,
 .atcb_button:hover {
   background: rgb(255, 255, 255);
 }
@@ -57,10 +57,10 @@
 .atcb_button.active {
   background: rgb(255, 255, 255);
   border-radius: 6px 6px 3px 3px;
-  -webkit-box-shadow: 1px 5px 15px 0px rgba(0,0,0,.5); 
+  -webkit-box-shadow: 1px 5px 15px 0px rgba(0,0,0,.5);
   box-shadow: 1px 5px 15px 0px rgba(0,0,0,.5);
-  margin: 7px auto 9px auto;
-  padding: 12px 20px 13px 20px;  
+  padding: 12px 20px 13px 20px;
+  margin-bottom: -4px;
   z-index: 90;
 }
 
@@ -80,8 +80,7 @@
 .atcb_list {
   box-sizing: border-box;
   color: rgb(51, 51, 51);
-  display: block;  
-  margin: -10px auto 0 auto;
+  display: block;
   max-width: 100%;
   position: absolute;
   padding: 0 3px;
@@ -90,7 +89,16 @@
   -ms-user-select: none;
   user-select: none;
   width: 100%;
+  min-width: 12em;
   z-index: 80;
+}
+
+.atcb_list.atcb_modal {
+  position: fixed;
+  width: 12em;
+  left: 50%;
+  top: 50%;
+  transform: translateY(-50%) translateX(-50%);
 }
 
 .atcb_list_item {
@@ -110,6 +118,7 @@
   touch-action: manipulation;
   -webkit-tap-highlight-color: transparent;
 }
+.atcb_list_item:focus,
 .atcb_list_item:hover {
   background: rgb(255, 255, 255);
   -webkit-box-shadow: 1px 2px 10px 0px rgba(0,0,0,.4); 
@@ -122,8 +131,12 @@
   }
 }
 
-.atcb_list_item:first-child {
+.atcb_list:not(.atcb_modal) .atcb_list_item:first-child {
   padding-top: 25px;
+}
+
+.atcb_list.atcb_modal .atcb_list_item:first-child {
+  border-radius: 6px 6px 0 0;
 }
 
 .atcb_list_item:last-child {

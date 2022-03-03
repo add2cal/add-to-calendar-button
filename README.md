@@ -61,8 +61,8 @@ See [jekuer.github.io/add-to-calendar-button](https://jekuer.github.io/add-to-ca
 
 1. Requires Node.js, npm, and a project, which builds on it (e.g. React or Angular).
 2. Run **`npm install add-to-calendar-button`**.
-3. Import the module into your project/component. For example with Angular/React: `import { atcb_init } from 'add-to-calendar-button';`.
-4. Init the js after the DOM has been loaded. To determine the right moment and execute, ...
+3. Import the module into your project/component. For example with Angular/React: `import { addToCalendar, atcb_init } from 'add-to-calendar-button';`.
+4. Either use `addToCalendar` with your own buttons/forms/etc, or run `atcb_init` after the DOM has been loaded. To determine the right moment and execute, ...
   1. with Angular, you would use `ngAfterViewInit()` with `atcb_init();` (mind that, depending on your app, other hooks might be better);
   2. with React, you might want to include an event listener like `document.addEventListener('DOMContentLoaded', atcb_init, false);` or using hooks in a functional component like `useEffect(() => atcb_init());`
 5. Include the css. For example with Angular or React, add the following to the global style.css: `@import 'add-to-calendar-button/assets/css/atcb.min'`;
@@ -163,25 +163,57 @@ You can use startTime and endTime in the event block, but it is recommended to r
 </div>
 ```
 
-### React example
+### `addToCalendar` example with React
 
-A simpler method uses `JSON.stringify()` where you define your config in an external file or variable and then
-convert it to a string to be passed into the div.
+If you can't or don't want to use `atcb_init`, you can use the `addToCalendar` import with your own buttons or other elements/components. If you omit the second argument, the dropdown list will display as a modal in the middle of the viewport.
+
+This may work better with React and other frontend frameworks.
 
 ```js
+import React from 'react'
+import { addToCalendar } from 'add-to-calendar-button'
+
 const AddToCalendar = () => {
+  const [name, setName] = React.useState('Some event')
+  return (
+      <form onSubmit={e => {
+        e.preventDefault()
+        addToCalendar({
+          name,
+          startDate: "2022-01-14",
+          endDate: "2022-01-18",
+          options: ['Apple', 'Google', 'iCal', 'Microsoft365', 'Outlook.com', 'MicrosoftTeams', 'Yahoo'],
+          trigger: "click",
+          iCalFileName: "Reminder-Event",
+        })
+      }}>
+        <input value={name} onChange={setName} />
+        <input type="submit" value="save">
+      </form>
+  );
+}
+```
 
-    useEffect(() => atcb_init());
+Alternatively, you could use `atcb_init` with a `useEffect` hook:
 
-    const event = { /* Event data */}
+```js
+import React from 'react'
+import { atcb_init } from 'add-to-calendar-button'
 
-    return (
-        <div className='atcb'>
-            <script type="application/ld+json">
-                {JSON.stringify(event)}
-            </script>
-        </div>
-    );
+const AddToCalendar = () => {
+  React.useEffect(atcb_init, [])
+  return (
+    <div className='atcb' style={{display: 'none'}}>
+      {JSON.stringify({
+          name: "Some event",
+          startDate: "2022-01-14",
+          endDate: "2022-01-18",
+          options: ['Apple', 'Google', 'iCal', 'Microsoft365', 'Outlook.com', 'MicrosoftTeams', 'Yahoo'],
+          trigger: "click",
+          iCalFileName: "Reminder-Event",
+        })}
+    </div>
+  );
 }
 ```
 

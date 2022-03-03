@@ -1,7 +1,8 @@
 const npmDelimiter = /\/\/ START INIT[\s\S]*?\/\/ END INIT/gm
 
 function process(content, exportPhrase) {
-  return content.replace(npmDelimiter, `${exportPhrase} { atcb_init };`);
+  content = content.replace('atcb_addToCalendar', 'addToCalendar');
+  return content.replace(npmDelimiter, `${exportPhrase} { addToCalendar, atcb_init };`);
 }
 module.exports = function(grunt) {
 
