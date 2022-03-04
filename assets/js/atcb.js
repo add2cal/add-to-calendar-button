@@ -3,7 +3,7 @@
  * Add-to-Calendar Button
  * ++++++++++++++++++++++
  */
-const atcbVersion = '1.6.1';
+const atcbVersion = '1.6.2';
 /* Creator: Jens Kuerschner (https://jenskuerschner.de)
  * Project: https://github.com/jekuer/add-to-calendar-button
  * License: MIT with “Commons Clause” License Condition v1.0
@@ -35,13 +35,13 @@ function atcb_init() {
       // get their JSON content first
       if (schema && schema.innerHTML) {
         // get schema.org event markup and flatten the event block
-        atcbConfig = JSON.parse(schema.innerHTML);
+        atcbConfig = JSON.parse(schema.innerHTML.replace(/(\r\n|\n|\r)/gm, "")); // we also remove any real code line breaks from the JSON before parsing it. Use <br> or \n explicitely in the description to create a line break
         atcbConfig = atcb_clean_schema_json(atcbConfig);
         // set flag to not delete HTML content later
         atcbConfig['deleteJSON'] = false;
       } else {
         // get JSON from HTML block
-        atcbConfig = JSON.parse(atcButtons[i].innerHTML);
+        atcbConfig = JSON.parse(atcButtons[i].innerHTML.replace(/(\r\n|\n|\r)/gm, "")); // we also remove any real code line breaks from the JSON before parsing it. Use <br> or \n explicitely in the description to create a line break
         // set flag to delete HTML content later
         atcbConfig['deleteJSON'] = true;
       }
