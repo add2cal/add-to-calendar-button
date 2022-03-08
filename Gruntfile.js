@@ -10,7 +10,7 @@ module.exports = function(grunt) {
     clean: { // cleans old built files
       oldBuildFiles: ['assets/js/atcb.min.js', 'assets/js/atcb.min.js.map', 'assets/css/atcb.min.css', 'assets/css/atcb.min.css.map', 'npm_dist/']
     },
-    copy: {
+    copy: { // creates the source files for the npm versionm supporting CommonJS and ES Module (https://www.sensedeep.com/blog/posts/2021/how-to-create-single-source-npm-module.html)
       mjs_dist: {
         src: 'assets/js/atcb.js',
         dest: 'npm_dist/mjs/index.js',
@@ -34,7 +34,7 @@ module.exports = function(grunt) {
         }
       }
     },
-    cssmin: {
+    cssmin: { // minifies the main css file
       options: {
         sourceMap: true
       },
