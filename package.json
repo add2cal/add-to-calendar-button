@@ -2,7 +2,14 @@
   "name": "add-to-calendar-button",
   "version": "1.6.2",
   "description": "A convenient JavaScript snippet, which lets you create beautiful buttons, where people can add events to their calendars.",
-  "main": "npm_dist/atcb_npm.js",
+  "main": "npm_dist/cjs/index.js",
+  "module": "npm_dist/mjs/index.js",
+  "exports": {
+    ".": {
+      "import": "./npm_dist/mjs/index.js",
+      "require": "./npm_dist/cjs/index.js"
+    }
+  },
   "types": "index.d.ts",
   "style": "assets/css/atcb.css",
   "repository": {
