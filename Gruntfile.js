@@ -1,3 +1,8 @@
+const npmDelimiter = /\/\/ START INIT[\s\S]*?\/\/ END INIT/gm
+
+function process(content, exportPhrase) {
+  return content.replace(npmDelimiter, `${exportPhrase} { atcb_init };`);
+}
 module.exports = function(grunt) {
 
   // The config.
@@ -6,14 +11,15 @@ module.exports = function(grunt) {
       oldBuildFiles: ['assets/js/atcb.min.js', 'assets/js/atcb.min.js.map', 'assets/css/atcb.min.css', 'assets/css/atcb.min.css.map', 'npm_dist/']
     },
     copy: {
-      npm_dist: { // creates the source file for the npm version
-        src: 'assets/js/atcb.js', 
-        dest: 'npm_dist/atcb_npm.js',
-        options: {
-          process: function (content) {
-            return content.replace(/\/\/ START INIT[\s\S]*?\/\/ END INIT/g,"export { atcb_init };");
-          }
-        }
+      mjs_dist: {
+        src: 'assets/js/atcb.js',
+        dest: 'npm_dist/mjs/index.js',
+        options: { process: content => process(content, "export") }
+      },
+      cjs_dist: {
+        src: 'assets/js/atcb.js',
+        dest: 'npm_dist/cjs/index.js',
+        options: { process: content => process(content, "module.exports =") }
       }
     },
     uglify: { // minifies the main js file
