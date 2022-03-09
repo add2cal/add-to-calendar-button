@@ -1,4 +1,4 @@
-﻿# THE .gitignore
+# THE .gitignore
 
 .vscode/*
 !.vscode/settings.json
@@ -18,3 +18,4 @@ assets/js/
 *.ico
 *.gif
 index.html
+security.md
