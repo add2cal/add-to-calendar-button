@@ -172,7 +172,8 @@
 
         </div>
         <div class="example_right">
-<code>{
+<code>&lt;div class="atcb" style="display:none;"&gt;
+{
   "name":"Reminder to check the add-to-calendar-button repo",
   "description":"Check out the maybe easiest way to include add-to-calendar-buttons to your website at: [url]https://github.com/jekuer/add-to-calendar-button[/url]",
   "startDate":"2022-01-14",
@@ -191,7 +192,8 @@
   ],
   "timeZone":"Europe/Berlin",
   "iCalFileName":"Reminder-Event"
-}</code>
+}
+&lt;/div&gt;</code>
         </div>
       </div>
 
@@ -226,7 +228,8 @@
 
         </div>
         <div class="example_right">
-<code>{
+<code>&lt;div class="atcb" style="display:none;"&gt;
+{
   "name":"Reminder to check the add-to-calendar-button repo",
   "description":"Check out the maybe easiest way to include add-to-calendar-buttons to your website at: [url]https://github.com/jekuer/add-to-calendar-button[/url]",
   "startDate":"2022-01-14",
@@ -240,7 +243,8 @@
   ],
   "timeZone":"Europe/Berlin",
   "iCalFileName":"Reminder-Event"
-}</code>
+}
+&lt;/div&gt;</code>
         </div>
       </div>
 
@@ -275,7 +279,8 @@
 
         </div>
         <div class="example_right">
-<code>{
+<code>&lt;div class="atcb" style="display:none;"&gt;
+{
   "name":"Reminder to check the add-to-calendar-button repo",
   "description":"Check out the maybe easiest way to include add-to-calendar-buttons to your website at: [url]https://github.com/jekuer/add-to-calendar-button[/url]",
   "startDate":"2022-01-14",
@@ -288,7 +293,8 @@
     "Yahoo|Yahoo, really?"
   ],
   "timeZone":"Europe/Berlin"
-}</code>
+}
+&lt;/div&gt;</code>
         </div>
       </div>
 
@@ -322,7 +328,8 @@
 
         </div>
         <div class="example_right">
-<code>{
+<code>&lt;div class="atcb" style="display:none;"&gt;
+{
   "name":"Reminder to check the add-to-calendar-button repo",
   "description":"Check out the maybe easiest way to include add-to-calendar-buttons to your website at: [url]https://github.com/jekuer/add-to-calendar-button[/url]",
   "startDate":"today+2",
@@ -334,7 +341,8 @@
     "Yahoo"
   ],
   "timeZone":"Europe/Berlin"
-}</code>
+}
+&lt;/div&gt;</code>
         </div>
       </div>
 
@@ -370,7 +378,8 @@
 
         </div>
         <div class="example_right">
-<code>{
+<code>&lt;div class="atcb" style="display:none;"&gt;
+{
   "name":"Reminder to check the add-to-calendar-button repo",
   "description":"Check out the maybe easiest way to include add-to-calendar-buttons to your website at: [url]https://github.com/jekuer/add-to-calendar-button[/url]",
   "startDate":"today+2",
@@ -384,7 +393,8 @@
   ],
   "timeZone":"Europe/Berlin",
   "trigger":"click"
-}</code>
+}
+&lt;/div&gt;</code>
         </div>
       </div>
 
@@ -421,7 +431,8 @@
 
         </div>
         <div class="example_right">
-<code>{
+<code>&lt;div class="atcb" style="display:none;"&gt;
+{
   "name":"Reminder to check the add-to-calendar-button repo",
   "description":"Check out the maybe easiest way to include add-to-calendar-buttons to your website at: [url]https://github.com/jekuer/add-to-calendar-button[/url]",
   "startDate":"today+2",
@@ -435,7 +446,8 @@
     "Yahoo"
   ],
   "timeZoneOffset":"+02:00"
-}</code>
+}
+&lt;/div&gt;</code>
         </div>
       </div>
 
@@ -443,7 +455,7 @@
 
       <h3>Example 7: Schema.org Event Markup</h3>
       <p class="description">
-        Last but not least, an example, which holds the event information in a schema.org markup context (requires an additional script tag).<br>
+        This example holds the event information in a schema.org markup context (requires an additional script tag).<br>
         This makes the event readable by bots and can help a little bit with your site's SEO.<br>
         Mind that this does not work well with dynamic dates from example #4!<br>
         You can use startTime and endTime in the event block, but it is recommended to rather add it to startDate and endDate with "T" as delimiter here.<br>
@@ -480,7 +492,8 @@
 
         </div>
         <div class="example_right">
-<code>&#60;script type="application/ld+json"&#62;
+<code>&lt;div class="atcb" style="display:none;"&gt;
+  &#60;script type="application/ld+json"&#62;
   {
     "event": {
       "@context":"https://schema.org",
@@ -500,7 +513,118 @@
     "timeZone":"Europe/Berlin",
     "iCalFileName":"Reminder-Event"
   }
-  &#60;/script&#62;</code>
+  &#60;/script&#62;
+&lt;/div&gt;</code>
+        </div>
+      </div>
+
+      <hr>
+
+      <h3>Example 8: BYO Button</h3>
+      <p class="description">
+        If you can't or don't want to use "atcb_init", you can use the "atcb_addToCalendar" function.
+        (In the NPM package, this is exported simply as "addToCalendar").
+      </p>
+      <div class="example">
+        <div class="example_left">
+
+          <!-- start of button code -->
+          <button id="normal-button">
+            Add to calendar
+          </button>
+          <script type="application/javascript">
+            const config = {
+              name: "Reminder to check the add-to-calendar-button repo",
+              startDate: "2022-01-14",
+              endDate: "2022-01-18",
+              options: ['Apple', 'Google', 'iCal', 'Microsoft365', 'Outlook.com', 'MicrosoftTeams', 'Yahoo'],
+              trigger: "click",
+              iCalFileName: "Reminder-Event",
+            }
+            const button = document.querySelector('#normal-button')
+            button.addEventListener('click', () => atcb_addToCalendar(config, button))
+          </script>
+          <!-- end of button code -->
+
+        </div>
+        <div class="example_right">
+<code>&lt;button id="normal-button"&gt;Add to calendar&lt;/button&gt;
+&lt;script type="application/javascript"&gt;
+  const config = {
+    name: "Reminder to check the add-to-calendar-button repo",
+    startDate: "2022-01-14",
+    endDate: "2022-01-18",
+    options: ["Google", "iCal"],
+    trigger: "click",
+    iCalFileName: "Reminder-Event",
+  }
+  const button = document.querySelector('#normal-button')
+  button.addEventListener('click', () => atcb_addToCalendar(config, button))
+&lt;/script&gt;</code>
+        </div>
+      </div>
+
+      <hr>
+
+      <h3>Example 9: BYO Anything</h3>
+      <p class="description">
+        When using "atcb_addToCalendar" (again, if importing from the NPM
+        package, just import "addToCalendar"), you don't need to use a button. A
+        form, a link, an image — whatever element you want to trigger the Add
+        To Calendar dropdown, you can use it. (Though not all of them are good
+        for accessibility!) And if you don't provide a second argument, the
+        dropdown list will appear as a modal in the middle of the viewport.
+      </p>
+      <div class="example">
+        <div class="example_left">
+
+          <!-- start of button code -->
+          <form id="event-form">
+            <label>
+              Event name:
+              <input name="name" value="Some cool event" />
+            </label>
+            <input type="submit" value="Save" />
+          </form>
+          <script type="application/javascript">
+            document.querySelector('#event-form')
+              .addEventListener('submit', (e) => {
+                e.preventDefault();
+                atcb_addToCalendar({
+                  name: e.currentTarget.elements.name.value,
+                  startDate: "2022-01-14",
+                  endDate: "2022-01-18",
+                  options: ['Apple', 'Google', 'iCal', 'Microsoft365', 'Outlook.com', 'MicrosoftTeams', 'Yahoo'],
+                  trigger: "click",
+                  iCalFileName: "Reminder-Event",
+                })
+              })
+          </script>
+          <!-- end of button code -->
+
+        </div>
+        <div class="example_right">
+<code>&lt;form id="event-form"&gt;
+  &lt;label&gt;
+    Event name:
+    &lt;input name="name" value="Some cool event" /&gt;
+  &lt;/label&gt;
+  &lt;input type="submit" value="Save" /&gt;
+&lt;/form&gt;
+&lt;script type="application/javascript"&gt;
+  document.querySelector('#event-form')
+    .addEventListener('submit', (e) =&gt; {
+      e.preventDefault();
+      atcb_addToCalendar({
+        name: e.currentTarget.elements.name.value,
+        startDate: "2022-01-14",
+        endDate: "2022-01-18",
+        options: ['Apple', 'Google', 'iCal', 'Microsoft365', 'Outlook.com', 'MicrosoftTeams', 'Yahoo'],
+        trigger: "click",
+        iCalFileName: "Reminder-Event",
+      })
+    })
+&lt;/script&gt;</code>
         </div>
       </div>
 
@@ -515,8 +639,7 @@
 
 
     <!-- load the button js -->
-    <script type="application/javascript" src="./assets/js/atcb.min.js?v=1.6.3" defer></script>
+    <script type="application/javascript" src="./assets/js/atcb.min.js?v=1.7.0" defer></script>
 
-    
   </body>
 </html>
