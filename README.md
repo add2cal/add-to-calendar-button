@@ -268,6 +268,7 @@ The code is available under the [MIT license (with “Commons Clause” License 
 
 
 ## Kudos go to
-* [github.com/dudewheresmycode](https://github.com/dudewheresmycodee)
 * [uxwing.com](https://uxwing.com)
-* all contributors!
+* [Brian R (dudewheresmycode)](https://github.com/dudewheresmycode)
+* [Chad Ostrowski (chadoh)](https://github.com/chadoh)
+* ... and all other contributors!
