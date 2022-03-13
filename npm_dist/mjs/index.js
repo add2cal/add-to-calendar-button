@@ -115,9 +115,11 @@ function atcb_decorate_config(atcbConfig) {
   // make a copy of the given argument rather than mutating in place
   const data = Object.assign({}, atcbConfig);
   // standardize any line breaks in the description and transform URLs (but keep a clean copy without the URL magic for iCal)
-  data.description = data.description.replace(/<br\s*\/?>/gmi, '\n');
-  data.description_iCal = data.description.replace('[url]','').replace('[/url]','');
-  data.description = data.description.replace(/\[url\](.*?)\[\/url\]/g, "<a href='$1' target='_blank' rel='noopener'>$1</a>");
+  if (data['description'] != null) {
+    data.description = data.description.replace(/<br\s*\/?>/gmi, '\n');
+    data.description_iCal = data.description.replace('[url]','').replace('[/url]','');
+    data.description = data.description.replace(/\[url\](.*?)\[\/url\]/g, "<a href='$1' target='_blank' rel='noopener'>$1</a>");
+  }
   return data
 }
 
@@ -562,22 +564,28 @@ function atcb_generate_ical(data) {
     timeslot = ';VALUE=DATE';
   }
   let ics_lines = [
-   "BEGIN:VCALENDAR",
-   "VERSION:2.0",
-   "CALSCALE:GREGORIAN",
-   "BEGIN:VEVENT",
-   "DTSTAMP:" + formattedDate['start'],
-   "DTSTART" + timeslot + ":" + formattedDate['start'],
-   "DTEND" + timeslot + ":" + formattedDate['end'],
-   "DESCRIPTION:" + data['description_iCal'].replace(/\n/g, '\\n'),
-   "SUMMARY:" + data['name'],
-   "LOCATION:" + data['location'],
-   "STATUS:CONFIRMED",
-   "LAST-MODIFIED:" + now,
-   "SEQUENCE:0",
-   "END:VEVENT",
-   "END:VCALENDAR"
-  ];
+    "BEGIN:VCALENDAR",
+    "VERSION:2.0",
+    "CALSCALE:GREGORIAN",
+    "BEGIN:VEVENT",
+    "DTSTAMP:" + formattedDate['start'],
+    "DTSTART" + timeslot + ":" + formattedDate['start'],
+    "DTEND" + timeslot + ":" + formattedDate['end'],
+    "SUMMARY:" + data['name']
+   ];
+   if (data['description_iCal'] != null && data['description_iCal'] != '') {
+     ics_lines.push("DESCRIPTION:" + data['description_iCal'].replace(/\n/g, '\\n'));
+   }
+   if (data['location'] != null && data['location'] != '') {
+     ics_lines.push("LOCATION:" + data['location']);
+   }
+   ics_lines.push(
+    "STATUS:CONFIRMED",
+    "LAST-MODIFIED:" + now,
+    "SEQUENCE:0",
+    "END:VEVENT",
+    "END:VCALENDAR"
+   );
   let dlurl = 'data:text/calendar;charset=utf-8,'+encodeURIComponent(ics_lines.join('\r\n'));
   try {
     if (!window.ActiveXObject) {
