@@ -269,7 +269,7 @@ The code is available under the [MIT license (with “Commons Clause” License 
 
 <br />
 
-## ⚡ Changelog (without bug fixes)
+## ⚡ Changelog (without minor changes and fixes)
 
 * v1.6 : supporting Microsoft Teams
 * v1.5 : update to date format and better accesibility
