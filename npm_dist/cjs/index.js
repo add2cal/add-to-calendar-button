@@ -3,7 +3,7 @@
  * Add-to-Calendar Button
  * ++++++++++++++++++++++
  */
-const atcbVersion = '1.6.4';
+const atcbVersion = '1.7.0';
 /* Creator: Jens Kuerschner (https://jenskuerschner.de)
  * Project: https://github.com/jekuer/add-to-calendar-button
  * License: MIT with “Commons Clause” License Condition v1.0
@@ -36,7 +36,7 @@ function atcb_init() {
       if (schema && schema.innerHTML) {
         // get schema.org event markup and flatten the event block
         atcbConfig = JSON.parse(schema.innerHTML.replace(/(\r\n|\n|\r)/gm, "")); // we also remove any real code line breaks from the JSON before parsing it. Use <br> or \n explicitely in the description to create a line break
-        atcbConfig = atcb_clean_schema_json(atcbConfig);
+        atcbConfig = atcb_parse_schema_json(atcbConfig);
         // set flag to not delete HTML content later
         atcbConfig['deleteJSON'] = false;
       } else {
@@ -49,6 +49,8 @@ function atcb_init() {
       atcbConfig = atcb_patch_config(atcbConfig);
       // check, if all required data is available
       if (atcb_check_required(atcbConfig)) {
+        // standardize line breaks and transform urls in the description
+        atcbConfig = atcb_decorate_description(atcbConfig);
         // calculate the real date values in case that there are some special rules included (e.g. adding days dynamically)
         atcbConfig['startDate'] = atcb_date_calculation(atcbConfig['startDate']);
         atcbConfig['endDate'] = atcb_date_calculation(atcbConfig['endDate']);
@@ -64,27 +66,32 @@ function atcb_init() {
 
 
 
-// CLEAN/NORMALIZE JSON FROM SCHEMA.ORG MARKUP
-function atcb_clean_schema_json(atcbConfig) {
-  Object.keys(atcbConfig['event']).forEach(key => {
-    // move entries one level up, but skip schema types
-    if (key.charAt(0) !== '@') {
-      atcbConfig[key] = atcbConfig['event'][key]; 
-    } 
-  });
-  // clean schema date+time format
-  const endpoints = ['start', 'end'];
-  endpoints.forEach(function(point) {
-    if (atcbConfig[point + 'Date'] != null) {
-      let tmpSplitStartDate = atcbConfig[point + 'Date'].split('T');
-      if (tmpSplitStartDate[1] != null) {
-        atcbConfig[point + 'Date'] = tmpSplitStartDate[0];
-        atcbConfig[point + 'Time'] = tmpSplitStartDate[1];
+// NORMALIZE AND PARSE JSON FROM SCHEMA.ORG MARKUP
+function atcb_parse_schema_json(atcbConfig) {
+  try {
+    Object.keys(atcbConfig['event']).forEach(key => {
+      // move entries one level up, but skip schema types
+      if (key.charAt(0) !== '@') {
+        atcbConfig[key] = atcbConfig['event'][key]; 
+      } 
+    });
+    // parse schema date+time format
+    const endpoints = ['start', 'end'];
+    endpoints.forEach(function(point) {
+      if (atcbConfig[point + 'Date'] != null) {
+        let tmpSplitStartDate = atcbConfig[point + 'Date'].split('T');
+        if (tmpSplitStartDate[1] != null) {
+          atcbConfig[point + 'Date'] = tmpSplitStartDate[0];
+          atcbConfig[point + 'Time'] = tmpSplitStartDate[1];
+        }
       }
-    }
-  });
-  // drop the event block and return
-  delete atcbConfig.event;
+    });
+    // drop the event block and return
+    delete atcbConfig.event;
+  }
+  catch(err) {
+    console.error("add-to-calendar button problem: it seems like you use the schema.org style, but did not define it properly");
+  }
   return atcbConfig;
 }
 
@@ -103,24 +110,36 @@ function atcb_patch_config(atcbConfig) {
     if (atcbConfig[keyChanges[key]] == null && atcbConfig[key] != null) {
       atcbConfig[keyChanges[key]] = atcbConfig[key];
     }
-  });  
+  });
   return atcbConfig;
 }
 
+function atcb_decorate_description(atcbConfig) {
+  // if no description or already decorated, return early
+  if (!atcbConfig.description || atcbConfig.description_iCal) return atcbConfig;
+
+  // make a copy of the given argument rather than mutating in place
+  const data = Object.assign({}, atcbConfig);
+  // standardize any line breaks in the description and transform URLs (but keep a clean copy without the URL magic for iCal)
+  data.description = data.description.replace(/<br\s*\/?>/gmi, '\n');
+  data.description_iCal = data.description.replace('[url]','').replace('[/url]','');
+  data.description = data.description.replace(/\[url\](.*?)\[\/url\]/g, "<a href='$1' target='_blank' rel='noopener'>$1</a>");
+  return data
+}
 
 
 // CHECK FOR REQUIRED FIELDS
 function atcb_check_required(data) {
   // check for at least 1 option
   if (data['options'] == null || data['options'].length < 1) {
-    console.log("add-to-calendar button generation failed: no options set");
+    console.error("add-to-calendar button generation failed: no options set");
     return false;
   }
   // check for min required data (without "options")
   const requiredField = ['name', 'startDate', 'endDate']
   return requiredField.every(function(field) {
     if (data[field] == null || data[field] == "") {
-      console.log("add-to-calendar button generation failed: required setting missing [" + field + "]");
+      console.error("add-to-calendar button generation failed: required setting missing [" + field + "]");
       return false;
     }
     return true;
@@ -158,7 +177,7 @@ function atcb_validate(data) {
   if (!data['options'].every(function(option) {
     let cleanOption = option.split('|');
     if (!options.includes(cleanOption[0])) {
-      console.log("add-to-calendar button generation failed: invalid option [" + cleanOption[0] + "]");
+      console.error("add-to-calendar button generation failed: invalid option [" + cleanOption[0] + "]");
       return false;
     }
     return true;
@@ -171,7 +190,7 @@ function atcb_validate(data) {
   if (!dates.every(function(date) {
     const dateParts = data[date].split('-');
     if (dateParts.length < 3 || dateParts.length > 3) {
-      console.log("add-to-calendar button generation failed: date misspelled [" + date + ": " + data[date] + "]");
+      console.error("add-to-calendar button generation failed: date misspelled [" + date + ": " + data[date] + "]");
       return false;
     }
     newDate[date] = new Date(dateParts[0], dateParts[1] - 1, dateParts[2]);
@@ -238,35 +257,38 @@ function atcb_generate(button, buttonId, data) {
   let buttonTrigger = document.createElement('button');
   buttonTrigger.id = 'atcb_button_' + buttonId;
   buttonTrigger.classList.add('atcb_button');
-  buttonTrigger.dataset.atcbtn = buttonId;
   buttonTriggerWrapper.appendChild(buttonTrigger);
   buttonTrigger.innerHTML = '<span class="atcb_icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 122.88 122.88"><path d="M81.61 4.73c0-2.61 2.58-4.73 5.77-4.73s5.77 2.12 5.77 4.73v20.72c0 2.61-2.58 4.73-5.77 4.73s-5.77-2.12-5.77-4.73V4.73h0zm-3.65 76.03c1.83 0 3.32 1.49 3.32 3.32s-1.49 3.32-3.32 3.32l-12.95-.04-.04 12.93c0 1.83-1.49 3.32-3.32 3.32s-3.32-1.49-3.32-3.32l.04-12.94-12.93-.05c-1.83 0-3.32-1.49-3.32-3.32s1.49-3.32 3.32-3.32l12.94.04.04-12.93c0-1.83 1.49-3.32 3.32-3.32s3.32 1.49 3.32 3.32l-.04 12.95 12.94.04h0zM29.61 4.73c0-2.61 2.58-4.73 5.77-4.73s5.77 2.12 5.77 4.73v20.72c0 2.61-2.58 4.73-5.77 4.73s-5.77-2.12-5.77-4.73V4.73h0zM6.4 45.32h110.08V21.47c0-.8-.33-1.53-.86-2.07-.53-.53-1.26-.86-2.07-.86H103c-1.77 0-3.2-1.43-3.2-3.2s1.43-3.2 3.2-3.2h10.55c2.57 0 4.9 1.05 6.59 2.74s2.74 4.02 2.74 6.59v27.06 65.03c0 2.57-1.05 4.9-2.74 6.59s-4.02 2.74-6.59 2.74H9.33c-2.57 0-4.9-1.05-6.59-2.74-1.69-1.7-2.74-4.03-2.74-6.6V48.53 21.47c0-2.57 1.05-4.9 2.74-6.59s4.02-2.74 6.59-2.74H20.6c1.77 0 3.2 1.43 3.2 3.2s-1.43 3.2-3.2 3.2H9.33c-.8 0-1.53.33-2.07.86-.53.53-.86 1.26-.86 2.07v23.85h0zm110.08 6.41H6.4v61.82c0 .8.33 1.53.86 2.07.53.53 1.26.86 2.07.86h104.22c.8 0 1.53-.33 2.07-.86.53-.53.86-1.26.86-2.07V51.73h0zM50.43 18.54c-1.77 0-3.2-1.43-3.2-3.2s1.43-3.2 3.2-3.2h21.49c1.77 0 3.2 1.43 3.2 3.2s-1.43 3.2-3.2 3.2H50.43h0z"/></svg></span>';
   buttonTrigger.innerHTML += '<span class="atcb_text">' + (data['label'] || 'Add to Calendar') + '</span>';
   // set event listeners for the button trigger
   if (data['trigger'] == 'click') {
-    buttonTrigger.addEventListener('mousedown', atcb_toggle);
+    buttonTrigger.addEventListener('mousedown', () => atcb_toggle(data, buttonTrigger, true, false));
   } else {
-    buttonTrigger.addEventListener('touchstart', atcb_toggle, {passive: true});
-    buttonTrigger.addEventListener('mouseenter', atcb_open);
+    buttonTrigger.addEventListener('touchstart', () => atcb_toggle(data, buttonTrigger, true, false), {passive: true});
+    buttonTrigger.addEventListener('mouseenter', () => addToCalendar(data, buttonTrigger, true, false));
   }
-  buttonTrigger.addEventListener('focus', atcb_open);
   buttonTrigger.addEventListener('keydown', function(event) { // trigger click on enter as well
     if (event.key == 'Enter') {
-      atcb_toggle.call(event.target);
+      atcb_toggle(data, buttonTrigger, true);
     }
   });
-  // standardize any line breaks in the description and transform URLs (but keep a clean copy without the URL magic for iCal)
-  if (data['description'] != null) {
-    data['description'] = data['description'].replace(/<br\s*\/?>/gmi, '\n');
-    data['description_iCal'] = data['description'].replace('[url]','').replace('[/url]','');
-    data['description'] = data['description'].replace(/\[url\](.*?)\[\/url\]/g, "<a href='$1' target='_blank' rel='noopener'>$1</a>");
+  // update the placeholder class to prevent multiple initializations
+  button.classList.remove('atcb');
+  button.classList.add('atcb_initialized');
+  // show the placeholder div
+  if (data['inline']) {
+    button.style.display = 'inline-block';
+  } else {
+    button.style.display = 'block';
   }
-  // generate the options list
-  let optionsList = document.createElement('div');
-  optionsList.id = 'atcb_list_' + buttonId;
+  // console log
+  console.log("add-to-calendar button #" + (buttonId + 1) + " created");
+}
+
+
+function atcb_generate_dropdown_list(data) {
+  const optionsList = document.createElement('div');
   optionsList.classList.add('atcb_list');
-  optionsList.style.display = 'none';
-  buttonTriggerWrapper.appendChild(optionsList);
   // generate the list items
   data['options'].forEach(function(option) {
     let optionParts = option.split('|');
@@ -282,7 +304,7 @@ function atcb_generate(button, buttonId, data) {
         optionItem.innerHTML += '</span>';
         optionItem.addEventListener('click', function() {
           atcb_generate_ical(data);
-          atcb_close_all();
+          atcb_close();
         });
         break;
       case "Google":
@@ -292,7 +314,7 @@ function atcb_generate(button, buttonId, data) {
         optionItem.innerHTML += '</span>';
         optionItem.addEventListener('click', function() {
           atcb_generate_google(data);
-          atcb_close_all();
+          atcb_close();
         });
         break;
       case "iCal":
@@ -302,7 +324,7 @@ function atcb_generate(button, buttonId, data) {
         optionItem.innerHTML += '</span>';
         optionItem.addEventListener('click', function() {
           atcb_generate_ical(data);
-          atcb_close_all();
+          atcb_close();
         });
         break;
       case "MicrosoftTeams":
@@ -312,7 +334,7 @@ function atcb_generate(button, buttonId, data) {
         optionItem.innerHTML += '</span>';
         optionItem.addEventListener('click', function() {
           atcb_generate_teams(data);
-          atcb_close_all();
+          atcb_close();
         });
         break;
       case "Microsoft365":
@@ -322,7 +344,7 @@ function atcb_generate(button, buttonId, data) {
         optionItem.innerHTML += '</span>';
         optionItem.addEventListener('click', function() {
           atcb_generate_microsoft(data, '365');
-          atcb_close_all();
+          atcb_close();
         });
         break;
       case "Outlook.com":
@@ -332,7 +354,7 @@ function atcb_generate(button, buttonId, data) {
         optionItem.innerHTML += '</span>';
         optionItem.addEventListener('click', function() {
           atcb_generate_microsoft(data, 'outlook');
-          atcb_close_all();
+          atcb_close();
         });
         break;
       case "Yahoo":
@@ -342,7 +364,7 @@ function atcb_generate(button, buttonId, data) {
         optionItem.innerHTML += '</span>';
         optionItem.addEventListener('click', function() {
           atcb_generate_yahoo(data);
-          atcb_close_all();
+          atcb_close();
         });
         break;
     }
@@ -352,65 +374,100 @@ function atcb_generate(button, buttonId, data) {
       }
     });
   });
-  // create the background overlay, which also acts as trigger to close any dropdowns
-  let bgOverlay = document.createElement('div');
-  bgOverlay.id = 'atcb_bgoverlay_' + buttonId;
+  return optionsList;
+}
+
+// create the background overlay, which also acts as trigger to close any dropdowns
+function atcb_generate_bg_overlay(data) {
+  const bgOverlay = document.createElement('div');
   bgOverlay.classList.add('atcb_bgoverlay');
-  bgOverlay.style.display = 'none';
   bgOverlay.tabIndex = 0;
-  button.appendChild(bgOverlay);
-  bgOverlay.addEventListener('click', atcb_close_all);
-  bgOverlay.addEventListener('touchstart', atcb_close_all, {passive: true});
-  bgOverlay.addEventListener('mousemove', atcb_close_all);
-  bgOverlay.addEventListener('focus', atcb_close_all);
-  // update the placeholder class to prevent multiple initializations
-  button.classList.remove('atcb');
-  button.classList.add('atcb_initialized');
-  // show the placeholder div
-  if (data['inline']) {
-    button.style.display = 'inline-block';
-  } else {
-    button.style.display = 'block';
+  bgOverlay.addEventListener('click', () => atcb_close(true));
+  bgOverlay.addEventListener('touchstart', () => atcb_close(true), {passive: true});
+  bgOverlay.addEventListener('focus', () => atcb_close(false));
+  if (data['trigger'] !== 'click') {
+    bgOverlay.addEventListener('mousemove', () => atcb_close(true));
+  } else {    
+    bgOverlay.classList.add('atcb_click');
   }
-  // console log
-  console.log("add-to-calendar button #" + (buttonId + 1) + " created");
+  return bgOverlay;
 }
 
 
 
 // FUNCTIONS TO CONTROL THE INTERACTION
-function atcb_toggle() {
+function atcb_toggle(data, button, buttonGenerated, keyboardTrigger = true) {
   // check for state and adjust accordingly
-  if (this.classList.contains('active')) {
-    atcb_close.call(this);
+  if (button.classList.contains('atcb_active')) {
+    atcb_close();
   } else {
-    atcb_open.call(this);
+    atcb_addToCalendar(data, button, buttonGenerated, keyboardTrigger);
   }
 }
 
-function atcb_open() {
-  // add open class and show the list (+ the background overlay)
-  this.classList.add('active');
-  let list = document.getElementById('atcb_list_' + this.dataset.atcbtn);
-  list.style.display = 'block';
-  document.getElementById('atcb_bgoverlay_' + this.dataset.atcbtn).style.display = 'block';
-}
+// show the dropdown list + background overlay
+function atcb_addToCalendar(data, button, buttonGenerated = false, keyboardTrigger = true) {
+  // abort early if an add-to-calendar dropdown already opened
+  if (document.querySelector('.atcb_list')) return
 
-function atcb_close() {
-  // remove the active class, hide the list and the background overlay
-  this.classList.remove('active');
-  let list = document.getElementById('atcb_list_' + this.dataset.atcbtn);
-  list.style.display = 'none';
-  document.getElementById('atcb_bgoverlay_' + this.dataset.atcbtn).style.display = 'none';
-}
-
-function atcb_close_all() {
-  // get all buttons
-  let atcButtons = document.querySelectorAll('.atcb_button');
-  // and close them one by one
-	for (let i = 0; i < atcButtons.length; i++) {
-    atcb_close.call(atcButtons[i]);
+  // validate & decorate data
+  if (!atcb_check_required(data) || !atcb_validate(data)) {
+    throw new Error("Invalid data; see logs")
   }
+  data = atcb_decorate_description(data);
+
+  // generate list
+  const list = atcb_generate_dropdown_list(data, buttonGenerated);
+
+  // set list styles, set possible button to atcb_active and go for modal mode if no button is set
+  if (button) {
+    button.classList.add('atcb_active');
+
+    const rect = button.getBoundingClientRect();
+    list.style.width = rect.width + 'px';
+    list.style.top = rect.bottom + window.scrollY + 'px';
+    list.style.right = document.body.offsetWidth - rect.right + 'px';
+  } else {
+    list.classList.add('atcb_modal')
+  }
+  if (buttonGenerated) {
+    list.classList.add('atcb_generated_button');
+  }
+
+  // add list to DOM
+  document.body.appendChild(list);
+
+  // add background overlay right after, so tabbing past last option closes list
+  document.body.appendChild(atcb_generate_bg_overlay(data));
+
+  // give keyboard focus to first item in list, if not blocked, because there is definitely no keyboard trigger
+  if (keyboardTrigger) {
+    list.firstChild.focus();
+  }
+  
+}
+
+function atcb_close(blockFocus = false) {
+  // 1. Focus triggering button (if not existing, try a custom element)
+  if (!blockFocus) {
+    let newFocusEl = document.querySelector('.atcb_active');
+    if (newFocusEl) {
+      newFocusEl.focus();
+    } else {
+      newFocusEl = document.querySelector('.atcb_customTrigger');
+      if (newFocusEl) {
+        newFocusEl.focus();
+      }
+    }
+  }
+  // 2. Inactivate all buttons
+  Array.from(document.querySelectorAll('.atcb_active')).forEach(button => {
+    button.classList.remove('atcb_active');
+  })
+  // 3. Remove dropdowns & bg overlays (should only be one of each)
+  Array.from(document.querySelectorAll('.atcb_list')).concat(
+    Array.from(document.querySelectorAll('.atcb_bgoverlay'))
+  ).forEach(el => el.remove());
 }
 
 
@@ -523,35 +580,35 @@ function atcb_generate_teams(data) {
 // FUNCTION TO GENERATE THE iCAL FILE (also for the Apple option)
 function atcb_generate_ical(data) {
   let now = new Date();
-  now = now.toISOString().replace(/\-/g, '').replace(/\:/g, '').replace(/\..../g, '');
+  now = now.toISOString().replace(/\..../g, '').replace(/[^a-z0-9]/gi,'');
   let formattedDate = atcb_generate_time(data, 'clean', 'ical');
   let timeslot = '';
   if (formattedDate['allday']) {
     timeslot = ';VALUE=DATE';
   }
   let ics_lines = [
-   "BEGIN:VCALENDAR",
-   "VERSION:2.0",
-   "CALSCALE:GREGORIAN",
-   "BEGIN:VEVENT",
-   "DTSTAMP:" + formattedDate['start'],
-   "DTSTART" + timeslot + ":" + formattedDate['start'],
-   "DTEND" + timeslot + ":" + formattedDate['end'],
-   "SUMMARY:" + data['name']
-  ];
-  if (data['description_iCal'] != null && data['description_iCal'] != '') {
-    ics_lines.push("DESCRIPTION:" + data['description_iCal'].replace(/\n/g, '\\n'));
-  }
-  if (data['location'] != null && data['location'] != '') {
-    ics_lines.push("LOCATION:" + data['location']);
-  }
-  ics_lines.push(
-   "STATUS:CONFIRMED",
-   "LAST-MODIFIED:" + now,
-   "SEQUENCE:0",
-   "END:VEVENT",
-   "END:VCALENDAR"
-  );
+    "BEGIN:VCALENDAR",
+    "VERSION:2.0",
+    "CALSCALE:GREGORIAN",
+    "BEGIN:VEVENT",
+    "DTSTAMP:" + formattedDate['start'],
+    "DTSTART" + timeslot + ":" + formattedDate['start'],
+    "DTEND" + timeslot + ":" + formattedDate['end'],
+    "SUMMARY:" + data['name']
+   ];
+   if (data['description_iCal'] != null && data['description_iCal'] != '') {
+     ics_lines.push("DESCRIPTION:" + data['description_iCal'].replace(/\n/g, '\\n'));
+   }
+   if (data['location'] != null && data['location'] != '') {
+     ics_lines.push("LOCATION:" + data['location']);
+   }
+   ics_lines.push(
+    "STATUS:CONFIRMED",
+    "LAST-MODIFIED:" + now,
+    "SEQUENCE:0",
+    "END:VEVENT",
+    "END:VCALENDAR"
+   );
   let dlurl = 'data:text/calendar;charset=utf-8,'+encodeURIComponent(ics_lines.join('\r\n'));
   try {
     if (!window.ActiveXObject) {
@@ -640,4 +697,13 @@ function atcb_generate_time(data, style = 'delimiters', targetCal = 'general') {
 
 
 
-module.exports = { atcb_init };
+// Global listener to ESC key to close dropdown
+document.addEventListener('keydown', evt => {
+  if (evt.key === 'Escape') {
+    atcb_close();
+  }
+});
+
+
+
+module.exports = { addToCalendar, atcb_init };
