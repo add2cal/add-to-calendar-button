@@ -175,9 +175,9 @@ You can use startTime and endTime in the event block, but it is recommended to r
 
 ### `addToCalendar` example with React
 
-If you can't or don't want to use `atcb_init`, you can use the `addToCalendar` import with your own buttons or other elements/components. If you omit the second argument, the dropdown list will display as a modal in the middle of the viewport.
+If you can't or don't want to use `atcb_init`, you can use the `addToCalendar` import with your own buttons or other elements/components. If you omit the second argument, the dropdown list will display as a modal in the middle of the viewport - in this case, add the "atcb_customTrigger" class to the submitting element for better keyboard support.
 
-This may work better with React and other frontend frameworks.
+This may work better with React and other frontend frameworks. 
 
 ```js
 import React from 'react'
@@ -198,7 +198,7 @@ const AddToCalendar = () => {
         })
       }}>
         <input value={name} onChange={setName} />
-        <input type="submit" value="save">
+        <input class="atcb_customTrigger" type="submit" value="save">
       </form>
   );
 }
@@ -231,8 +231,8 @@ const AddToCalendar = () => {
 
 * The "label" is optional, but enables you to customize the button text. Default: "Add to Calendar".
 * Dates need to be formatted as YYYY-MM-DD ([ISO-8601](https://en.wikipedia.org/wiki/ISO_8601)).
-* You can also use the word "today" as date. It will then dynamically use the current day at click.
-* Add "+5" at the end of the date to dynamically add 5 days (or any other number). "2022-01-30+12" would generate the 11th of February 2022. This can be interesting, when combined with "today".
+* You can also use the word "today" as date. It will then dynamically use the current day at click (not supported with schema.org style).
+* Add "+5" at the end of the date to dynamically add 5 days (or any other number). "2022-01-30+12" would generate the 11th of February 2022. This can be interesting, when combined with "today". 
 * Times need to be formatted as HH:MM.
 * Times are optional. If not set, the button generates all-day events.
 * 1 option is required. You can add as many as you want. The supported formats are listed above.
@@ -271,6 +271,7 @@ The code is available under the [MIT license (with “Commons Clause” License 
 
 ## ⚡ Changelog (without minor changes and fixes)
 
+* v1.7 : new code structure and options + tons of optimizations
 * v1.6 : supporting Microsoft Teams
 * v1.5 : update to date format and better accesibility
 * v1.4 : schema.org support (also changed some keys in the JSON!)
