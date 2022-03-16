@@ -580,7 +580,7 @@ function atcb_generate_teams(data) {
 // FUNCTION TO GENERATE THE iCAL FILE (also for the Apple option)
 function atcb_generate_ical(data) {
   let now = new Date();
-  now = now.toISOString().replace(/\-/g, '').replace(/\:/g, '').replace(/\..../g, '');
+  now = now.toISOString().replace(/\-/g, '').replace(/\:/g, '').replace(/\..../g, '').replace(/\/\.\.\//g, '');
   let formattedDate = atcb_generate_time(data, 'clean', 'ical');
   let timeslot = '';
   if (formattedDate['allday']) {
