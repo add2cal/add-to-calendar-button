@@ -426,7 +426,7 @@ function atcb_action(data, button, buttonGenerated = false, keyboardTrigger = tr
     const rect = button.getBoundingClientRect();
     list.style.width = rect.width + 'px';
     list.style.top = rect.bottom + window.scrollY + 'px';
-    list.style.right = document.body.offsetWidth - rect.right + 'px';
+    list.style.left = rect.left + 'px';
   } else {
     list.classList.add('atcb_modal')
   }
