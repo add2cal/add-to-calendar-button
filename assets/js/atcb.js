@@ -3,7 +3,7 @@
  * Add-to-Calendar Button
  * ++++++++++++++++++++++
  */
-const atcbVersion = '1.7.1';
+const atcbVersion = '1.7.2';
 /* Creator: Jens Kuerschner (https://jenskuerschner.de)
  * Project: https://github.com/jekuer/add-to-calendar-button
  * License: MIT with “Commons Clause” License Condition v1.0
@@ -50,11 +50,8 @@ function atcb_init() {
       // check, if all required data is available
       if (atcb_check_required(atcbConfig)) {
         // standardize line breaks and transform urls in the description
-        atcbConfig = atcb_decorate_description(atcbConfig);
-        // calculate the real date values in case that there are some special rules included (e.g. adding days dynamically)
-        atcbConfig['startDate'] = atcb_date_calculation(atcbConfig['startDate']);
-        atcbConfig['endDate'] = atcb_date_calculation(atcbConfig['endDate']);
-        // validate the JSON ...
+        atcbConfig = atcb_decorate_data(atcbConfig);
+        // validate the config (JSON iput) ...
         if (atcb_validate(atcbConfig)) {
           // ... and generate the button on success
           atcb_generate(atcButtons[i], i + atcButtonsInitialized.length, atcbConfig);
@@ -114,7 +111,11 @@ function atcb_patch_config(atcbConfig) {
   return atcbConfig;
 }
 
-function atcb_decorate_description(atcbConfig) {
+function atcb_decorate_data(atcbConfig) {
+  // calculate the real date values in case that there are some special rules included (e.g. adding days dynamically)
+  atcbConfig['startDate'] = atcb_date_calculation(atcbConfig['startDate']);
+  atcbConfig['endDate'] = atcb_date_calculation(atcbConfig['endDate']);
+  
   // if no description or already decorated, return early
   if (!atcbConfig.description || atcbConfig.description_iCal) return atcbConfig;
 
@@ -265,7 +266,7 @@ function atcb_generate(button, buttonId, data) {
     buttonTrigger.addEventListener('mousedown', () => atcb_toggle(data, buttonTrigger, true, false));
   } else {
     buttonTrigger.addEventListener('touchstart', () => atcb_toggle(data, buttonTrigger, true, false), {passive: true});
-    buttonTrigger.addEventListener('mouseenter', () => atcb_action(data, buttonTrigger, true, false));
+    buttonTrigger.addEventListener('mouseenter', () => atcb_open(data, buttonTrigger, true, false));
   }
   buttonTrigger.addEventListener('keydown', function(event) { // trigger click on enter as well
     if (event.key == 'Enter') {
@@ -401,20 +402,14 @@ function atcb_toggle(data, button, buttonGenerated, keyboardTrigger = true) {
   if (button.classList.contains('atcb_active')) {
     atcb_close();
   } else {
-    atcb_action(data, button, buttonGenerated, keyboardTrigger);
+    atcb_open(data, button, buttonGenerated, keyboardTrigger);
   }
 }
 
 // show the dropdown list + background overlay
-function atcb_action(data, button, buttonGenerated = false, keyboardTrigger = true) {
+function atcb_open(data, button, buttonGenerated = false, keyboardTrigger = true) {
   // abort early if an add-to-calendar dropdown already opened
   if (document.querySelector('.atcb_list')) return
-
-  // validate & decorate data
-  if (!atcb_check_required(data) || !atcb_validate(data)) {
-    throw new Error("Invalid data; see logs")
-  }
-  data = atcb_decorate_description(data);
 
   // generate list
   const list = atcb_generate_dropdown_list(data, buttonGenerated);
@@ -426,7 +421,7 @@ function atcb_action(data, button, buttonGenerated = false, keyboardTrigger = tr
     const rect = button.getBoundingClientRect();
     list.style.width = rect.width + 'px';
     list.style.top = rect.bottom + window.scrollY + 'px';
-    list.style.right = document.body.offsetWidth - rect.right + 'px';
+    list.style.left = rect.left + 'px';
   } else {
     list.classList.add('atcb_modal')
   }
@@ -444,7 +439,6 @@ function atcb_action(data, button, buttonGenerated = false, keyboardTrigger = tr
   if (keyboardTrigger) {
     list.firstChild.focus();
   }
-  
 }
 
 function atcb_close(blockFocus = false) {
@@ -468,6 +462,19 @@ function atcb_close(blockFocus = false) {
   Array.from(document.querySelectorAll('.atcb_list')).concat(
     Array.from(document.querySelectorAll('.atcb_bgoverlay'))
   ).forEach(el => el.remove());
+}
+
+// prepare data when not using the init function
+function atcb_action(data, button) {
+  // validate & decorate data
+  if (!atcb_check_required(data)) {
+    throw new Error("data missing; see logs")
+  }
+  data = atcb_decorate_data(data);
+  if (!atcb_validate(data)) {
+    throw new Error("Invalid data; see logs")
+  }
+  atcb_open(data, button);
 }
 
 
