@@ -14,7 +14,7 @@
   "style": "assets/css/atcb.css",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/jekuer/add-to-calendar-button.git"
+    "url": "https://github.com/jekuer/add-to-calendar-button.git"
   },
   "keywords": [
     "button",
