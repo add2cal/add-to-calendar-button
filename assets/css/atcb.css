@@ -3,7 +3,7 @@
  * Add-to-Calendar Button
  * ++++++++++++++++++++++
  * 
- * Version: 1.7.1
+ * Version: 1.7.2
  * Creator: Jens Kuerschner (https://jenskuerschner.de)
  * Project: https://github.com/jekuer/add-to-calendar-button
  * License: MIT with “Commons Clause” License Condition v1.0
@@ -16,6 +16,7 @@
 
 .atcb_button_wrapper {
   display: inline-block;
+  padding: 5px;
   position: relative;
 }
 
@@ -61,8 +62,8 @@
   border-radius: 6px 6px 3px 3px;
   -webkit-box-shadow: 1px 5px 15px 0px rgba(0,0,0,.5);
   box-shadow: 1px 5px 15px 0px rgba(0,0,0,.5);
+  margin: -2px -4px;
   padding: 12px 20px 13px 20px;
-  margin-bottom: -4px;
   z-index: 90;
 }
 
