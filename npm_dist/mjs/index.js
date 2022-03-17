@@ -3,7 +3,7 @@
  * Add-to-Calendar Button
  * ++++++++++++++++++++++
  */
-const atcbVersion = '1.7.0';
+const atcbVersion = '1.7.1';
 /* Creator: Jens Kuerschner (https://jenskuerschner.de)
  * Project: https://github.com/jekuer/add-to-calendar-button
  * License: MIT with “Commons Clause” License Condition v1.0
@@ -265,7 +265,7 @@ function atcb_generate(button, buttonId, data) {
     buttonTrigger.addEventListener('mousedown', () => atcb_toggle(data, buttonTrigger, true, false));
   } else {
     buttonTrigger.addEventListener('touchstart', () => atcb_toggle(data, buttonTrigger, true, false), {passive: true});
-    buttonTrigger.addEventListener('mouseenter', () => addToCalendar(data, buttonTrigger, true, false));
+    buttonTrigger.addEventListener('mouseenter', () => atcb_action(data, buttonTrigger, true, false));
   }
   buttonTrigger.addEventListener('keydown', function(event) { // trigger click on enter as well
     if (event.key == 'Enter') {
@@ -401,12 +401,12 @@ function atcb_toggle(data, button, buttonGenerated, keyboardTrigger = true) {
   if (button.classList.contains('atcb_active')) {
     atcb_close();
   } else {
-    atcb_addToCalendar(data, button, buttonGenerated, keyboardTrigger);
+    atcb_action(data, button, buttonGenerated, keyboardTrigger);
   }
 }
 
 // show the dropdown list + background overlay
-function atcb_addToCalendar(data, button, buttonGenerated = false, keyboardTrigger = true) {
+function atcb_action(data, button, buttonGenerated = false, keyboardTrigger = true) {
   // abort early if an add-to-calendar dropdown already opened
   if (document.querySelector('.atcb_list')) return
 
@@ -706,4 +706,4 @@ document.addEventListener('keydown', evt => {
 
 
 
-export { addToCalendar, atcb_init };
+export { atcb_action, atcb_init };
