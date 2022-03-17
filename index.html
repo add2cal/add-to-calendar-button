@@ -124,13 +124,13 @@
     </style>
 
     <!-- load the general button css -->
-    <link rel="stylesheet" href="./assets/css/atcb.min.css?v=1.7.0">
+    <link rel="stylesheet" href="./assets/css/atcb.min.css?v=1.7.1">
 
   </head>
   <body>
     <div class="container">
 
-      <h1>Add-to-Calendar Button <span id="tinyVersion">v1.7.0</span></h1>
+      <h1>Add-to-Calendar Button <span id="tinyVersion">v1.7.1</span></h1>
       <h2>A convenient JavaScript snippet, which lets you create beautiful buttons, where people can add events to their calendars.</h2>
       <p class="github">
         <a target="_blank" href="https://github.com/jekuer/add-to-calendar-button" class="clean">
@@ -525,8 +525,7 @@
 
       <h3>Example 8: Bring-Your-Own Button</h3>
       <p class="description">
-        If you can't or don't want to use "atcb_init", you can use the "atcb_addToCalendar" function and apply it to your own button.<br>
-        <em>In the NPM package, this is exported simply as "addToCalendar"!</em><br>
+        If you can't or don't want to use "atcb_init", you can use the "atcb_action" function and apply it to your own button.<br>
         For a good look, the element should be at least 160px wide; or remove the second argument to go for a modal dropdown.
       </p>
       <div class="example">
@@ -547,7 +546,7 @@
               iCalFileName: "Reminder-Event",
             }
             const button = document.querySelector('#default-button')
-            button.addEventListener('click', () => atcb_addToCalendar(config, button))
+            button.addEventListener('click', () => atcb_action(config, button))
           </script>
           <!-- end of button code -->
 
@@ -565,7 +564,7 @@
     iCalFileName: "Reminder-Event",
   }
   const button = document.querySelector('#default-button')
-  button.addEventListener('click', () => atcb_addToCalendar(config, button))
+  button.addEventListener('click', () => atcb_action(config, button))
 &lt;/script&gt;</code>
         </div>
       </div>
@@ -574,7 +573,7 @@
 
       <h3>Example 9: Bring-Your-Own Anything</h3>
       <p class="description">
-        When using "atcb_addToCalendar" (again, if importing from the NPM package, just import "addToCalendar"), you don't need to use a button. A form, a link, an image — whatever element you want to trigger the dropdown, you can use it (though not all of them are good for accessibility).<br>
+        When using "atcb_action", you don't need to use a button. A form, a link, an image — whatever element you want to trigger the dropdown, you can use it (though not all of them are good for accessibility).<br>
         If you don't provide a second argument, the dropdown list will appear as a modal in the middle of the viewport.<br>
         Use of the 'click' trigger is highly recommended here.
       </p>
@@ -593,7 +592,7 @@
             document.querySelector('#event-form')
               .addEventListener('submit', (e) => {
                 e.preventDefault();
-                atcb_addToCalendar({
+                atcb_action({
                   name: e.currentTarget.elements.name.value,
                   startDate: "2022-01-14",
                   endDate: "2022-01-18",
@@ -618,7 +617,7 @@
   document.querySelector('#event-form')
     .addEventListener('submit', (e) =&gt; {
       e.preventDefault();
-      atcb_addToCalendar({
+      atcb_action({
         name: e.currentTarget.elements.name.value,
         startDate: "2022-01-14",
         endDate: "2022-01-18",
@@ -651,7 +650,7 @@
 
 
     <!-- load the button js -->
-    <script type="application/javascript" src="./assets/js/atcb.min.js?v=1.7.0" defer></script>
+    <script type="application/javascript" src="./assets/js/atcb.min.js?v=1.7.1" defer></script>
 
   </body>
 </html>
