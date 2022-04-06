@@ -1,0 +1,17 @@
+name: Tests
+on: push
+jobs:
+  tests:
+    strategy:
+      matrix:
+        platform: [ubuntu-latest]
+        node-version: ['16']
+        toolchain: [stable]
+    runs-on: ${{ matrix.platform }}
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v2
+        with:
+          node-version: ${{ matrix.node-version }}
+      - name: Run tests
+        run: npm i && npm run test
