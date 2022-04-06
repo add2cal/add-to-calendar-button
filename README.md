@@ -185,7 +185,7 @@ This may work better with React and other frontend frameworks, but it misses the
 import React from 'react'
 import { atcb_action } from 'add-to-calendar-button'
 
-const atcb_action = () => {
+const MyComponent = () => {
   const [name, setName] = React.useState('Some event')
   return (
       <form onSubmit={e => {
