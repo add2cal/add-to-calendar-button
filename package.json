@@ -5,13 +5,14 @@
   "main": "npm_dist/cjs/index.js",
   "module": "npm_dist/mjs/index.js",
   "exports": {
+    "./assets/css/": "./assets/css/",
     ".": {
       "import": "./npm_dist/mjs/index.js",
       "require": "./npm_dist/cjs/index.js"
     }
   },
   "types": "index.d.ts",
-  "style": "assets/css/atcb.css",
+  "style": "assets/css/atcb.min.css",
   "repository": {
     "type": "git",
     "url": "https://github.com/jekuer/add-to-calendar-button.git"
