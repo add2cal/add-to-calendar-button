@@ -1,5 +1,7 @@
 name: Tests
+
 on: push
+
 jobs:
   tests:
     strategy:
