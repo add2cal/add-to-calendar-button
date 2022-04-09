@@ -702,14 +702,16 @@ function atcb_generate_time(data, style = 'delimiters', targetCal = 'general') {
   return returnObject;
 }
 
+const isBrowser=new Function("try {return this===window;}catch(e){ return false;}");
 
-
-// Global listener to ESC key to close dropdown
-document.addEventListener('keydown', evt => {
-  if (evt.key === 'Escape') {
-    atcb_close();
-  }
-});
+if (isBrowser()) {
+  // Global listener to ESC key to close dropdown
+  document.addEventListener('keydown', evt => {
+    if (evt.key === 'Escape') {
+      atcb_close();
+    }
+  });
+}
 
 
 

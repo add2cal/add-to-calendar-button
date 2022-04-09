@@ -702,17 +702,21 @@ function atcb_generate_time(data, style = 'delimiters', targetCal = 'general') {
   return returnObject;
 }
 
+const isBrowser=new Function("try {return this===window;}catch(e){ return false;}");
 
-
-// Global listener to ESC key to close dropdown
-document.addEventListener('keydown', evt => {
-  if (evt.key === 'Escape') {
-    atcb_close();
-  }
-});
+if (isBrowser()) {
+  // Global listener to ESC key to close dropdown
+  document.addEventListener('keydown', evt => {
+    if (evt.key === 'Escape') {
+      atcb_close();
+    }
+  });
+}
 
 
 
 // START INIT
-document.addEventListener('DOMContentLoaded', atcb_init, false); // init the magic as soon as the DOM has been loaded
+if (isBrowser()) {
+  document.addEventListener('DOMContentLoaded', atcb_init, false); // init the magic as soon as the DOM has been loaded
+}
 // END INIT
