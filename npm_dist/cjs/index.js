@@ -49,7 +49,7 @@ function atcb_init() {
       atcbConfig = atcb_patch_config(atcbConfig);
       // check, if all required data is available
       if (atcb_check_required(atcbConfig)) {
-        // standardize line breaks and transform urls in the description
+        // Rewrite dynamic dates, standardize line breaks and transform urls in the description
         atcbConfig = atcb_decorate_data(atcbConfig);
         // validate the config (JSON iput) ...
         if (atcb_validate(atcbConfig)) {
@@ -71,17 +71,6 @@ function atcb_parse_schema_json(atcbConfig) {
       if (key.charAt(0) !== '@') {
         atcbConfig[key] = atcbConfig['event'][key]; 
       } 
-    });
-    // parse schema date+time format
-    const endpoints = ['start', 'end'];
-    endpoints.forEach(function(point) {
-      if (atcbConfig[point + 'Date'] != null) {
-        let tmpSplitStartDate = atcbConfig[point + 'Date'].split('T');
-        if (tmpSplitStartDate[1] != null) {
-          atcbConfig[point + 'Date'] = tmpSplitStartDate[0];
-          atcbConfig[point + 'Time'] = tmpSplitStartDate[1];
-        }
-      }
     });
     // drop the event block and return
     delete atcbConfig.event;
@@ -111,7 +100,12 @@ function atcb_patch_config(atcbConfig) {
   return atcbConfig;
 }
 
+
+
+// CLEAN DATA BEFORE FURTHER VALIDATION (CONSIDERING SPECIAL RULES AND SCHEMES)
 function atcb_decorate_data(atcbConfig) {
+  // cleanup different date-time formats
+  atcbConfig = atcb_date_cleanup(atcbConfig);
   // calculate the real date values in case that there are some special rules included (e.g. adding days dynamically)
   atcbConfig['startDate'] = atcb_date_calculation(atcbConfig['startDate']);
   atcbConfig['endDate'] = atcb_date_calculation(atcbConfig['endDate']);
@@ -127,6 +121,7 @@ function atcb_decorate_data(atcbConfig) {
   data.description = data.description.replace(/\[url\](.*?)\[\/url\]/g, "<a href='$1' target='_blank' rel='noopener'>$1</a>");
   return data
 }
+
 
 
 // CHECK FOR REQUIRED FIELDS
@@ -150,6 +145,29 @@ function atcb_check_required(data) {
 
 
 // CALCULATE AND CLEAN UP THE ACTUAL DATES
+function atcb_date_cleanup(data) {
+  // parse date+time format (default with Schema.org, but also an unofficial alternative to other implementation)
+  const endpoints = ['start', 'end'];
+  endpoints.forEach(function(point) {
+    if (data[point + 'Date'] != null) {
+      // remove any milliseconds information
+      data[point + 'Date'] = data[point + 'Date'].replace(/\..../, '').replace('Z', '');
+      // identify a possible time information within the date string
+      let tmpSplitStartDate = data[point + 'Date'].split('T');
+      if (tmpSplitStartDate[1] != null) {
+        data[point + 'Date'] = tmpSplitStartDate[0];
+        data[point + 'Time'] = tmpSplitStartDate[1];
+      }
+    }
+    // remove any seconds from time information
+    if (data[point + 'Time'] != null && data[point + 'Time'].length == 8) {
+      let timeStr = data[point + 'Time'];
+      data[point + 'Time'] = timeStr.substring(0, timeStr.length - 3);
+    }
+  });
+  return data;
+}
+
 function atcb_date_calculation(dateString) {
   // replace "today" with the current date first
   let today = new Date();
@@ -189,6 +207,10 @@ function atcb_validate(data) {
   const dates = ['startDate', 'endDate'];
   let newDate = dates;
   if (!dates.every(function(date) {
+    if (data[date].length != 10) {
+      console.error("add-to-calendar button generation failed: date misspelled [-> YYYY-MM-DD]");
+      return false;
+    }
     const dateParts = data[date].split('-');
     if (dateParts.length < 3 || dateParts.length > 3) {
       console.error("add-to-calendar button generation failed: date misspelled [" + date + ": " + data[date] + "]");
@@ -203,18 +225,22 @@ function atcb_validate(data) {
   const times = ['startTime', 'endTime'];
   if (!times.every(function(time) {
     if (data[time] != null) {
+      if (data[time].length != 5) {
+        console.error("add-to-calendar button generation failed: time misspelled [-> HH:MM]");
+        return false;
+      }
       const timeParts = data[time].split(':');
       // validate the time parts
       if (timeParts.length < 2 || timeParts.length > 2) {
-        console.log("add-to-calendar button generation failed: time misspelled [" + time + ": " + data[time] + "]");
+        console.error("add-to-calendar button generation failed: time misspelled [" + time + ": " + data[time] + "]");
         return false;
       }
       if (timeParts[0] > 23) {
-        console.log("add-to-calendar button generation failed: time misspelled - hours number too high [" + time + ": " + timeParts[0] + "]");
+        console.error("add-to-calendar button generation failed: time misspelled - hours number too high [" + time + ": " + timeParts[0] + "]");
         return false;
       }
       if (timeParts[1] > 59) {
-        console.log("add-to-calendar button generation failed: time misspelled - minutes number too high [" + time + ": " + timeParts[1] + "]");
+        console.error("add-to-calendar button generation failed: time misspelled - minutes number too high [" + time + ": " + timeParts[1] + "]");
         return false;
       }
       // update the date with the time for further validation steps
@@ -230,12 +256,12 @@ function atcb_validate(data) {
     return false;
   }
   if ((data['startTime'] != null && data['endTime'] == null) || (data['startTime'] == null && data['endTime'] != null)) {
-    console.log("add-to-calendar button generation failed: if you set a starting time, you also need to define an end time");
+    console.error("add-to-calendar button generation failed: if you set a starting time, you also need to define an end time");
     return false;
   }
   // validate whether end is not before start
   if (newDate['endDate'] < newDate['startDate']) {
-    console.log("add-to-calendar button generation failed: end date before start date");
+    console.error("add-to-calendar button generation failed: end date before start date");
     return false;
   }
   // on passing the validation, return true
@@ -632,7 +658,7 @@ function atcb_generate_ical(data) {
       (window.URL || window.webkitURL).revokeObjectURL(save.href);
     }
   } catch(e) {
-    console.log(e);
+    console.error(e);
   }
 }
 
