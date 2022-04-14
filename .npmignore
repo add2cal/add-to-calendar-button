@@ -13,7 +13,6 @@
 # PLUS what else should not be on npm
 
 .github/
-assets/js/
 *.png
 *.ico
 *.gif
