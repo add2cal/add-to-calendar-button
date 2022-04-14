@@ -58,15 +58,22 @@ See [jekuer.github.io/add-to-calendar-button](https://jekuer.github.io/add-to-ca
 
 ## 🌱 Setup
 
-### Option 1: simple
+### Option 1: simple (self-hosted)
 
 1. Simply **download** the code from GitHub **or clone** the git repository.
 2. Copy the css (atcb.min.css) and js (atcb.min.js) files from the assets (not the "npm_dist"!) folders into your project (the **.min.** files are required, but it is recommended to also copy the raw and map files).
 3. Include those files in your project. As usual, the css goes into the <head> (`<link rel="stylesheet" href="./assets/css/atcb.min.css">`), the js into the <body> footer (`<script src="./assets/js/atcb.min.js" defer></script>`). You can also combine them with other files, if you want to.
 4. Create your button as can be seen in the "Configuration" section below.
-5. That is it. The script takes care of all the rest. :)
+5. That is it. The script takes care of all the rest.
 
-### Option 2: npm
+### Option 2: simple (CDN)
+
+1. Instead of downloading the files, you can use the jsDeliver CDN.
+3. Put `<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/add-to-calendar-button@1.4/assets/css/atcb.min.css">` into the <head> and `<script src="https://cdn.jsdelivr.net/npm/add-to-calendar-button@1.7" defer></script>` into the <body> footer of your website.
+4. Create your button as can be seen in the "Configuration" section below.
+5. Done. And this setup also automatically keeps track of any bug fixes and minor updates!
+
+### Option 3: npm
 
 1. Requires Node, npm, and a project, which builds on it (e.g. React or Angular).
 2. Run **`npm install add-to-calendar-button`**.
@@ -76,7 +83,7 @@ See [jekuer.github.io/add-to-calendar-button](https://jekuer.github.io/add-to-ca
   2. with React, you might want to include an event listener like `document.addEventListener('DOMContentLoaded', atcb_init, false);` or using hooks in a functional component like `useEffect(() => atcb_init());`
 5. Include the css. For example with Angular or React, add the following to the global style.css: `@import 'add-to-calendar-button/assets/css/atcb.min'`;
 6. Create your button as can be seen in the "Configuration" section below.
-7. That is it. The script takes care of all the rest. :)
+7. You're all done.
 
 <br />
 
