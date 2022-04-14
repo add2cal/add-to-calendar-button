@@ -69,7 +69,7 @@ See [jekuer.github.io/add-to-calendar-button](https://jekuer.github.io/add-to-ca
 ### Option 2: simple (CDN)
 
 1. Instead of downloading the files, you can use the jsDeliver CDN.
-3. Put `<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/add-to-calendar-button@1.4/assets/css/atcb.min.css">` into the <head> and `<script src="https://cdn.jsdelivr.net/npm/add-to-calendar-button@1.7" defer></script>` into the <body> footer of your website.
+3. Put `<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/add-to-calendar-button@1.7/assets/css/atcb.min.css">` into the <head> and `<script src="https://cdn.jsdelivr.net/npm/add-to-calendar-button@1.7" defer></script>` into the <body> footer of your website.
 4. Create your button as can be seen in the "Configuration" section below.
 5. Done. And this setup also automatically keeps track of any bug fixes and minor updates!
 
