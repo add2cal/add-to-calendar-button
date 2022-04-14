@@ -3,7 +3,7 @@
  * Add-to-Calendar Button
  * ++++++++++++++++++++++
  */
-const atcbVersion = '1.7.6';
+const atcbVersion = '1.7.7';
 /* Creator: Jens Kuerschner (https://jenskuerschner.de)
  * Project: https://github.com/jekuer/add-to-calendar-button
  * License: MIT with “Commons Clause” License Condition v1.0
@@ -405,12 +405,20 @@ function atcb_generate_dropdown_list(data) {
 }
 
 // create the background overlay, which also acts as trigger to close any dropdowns
+
 function atcb_generate_bg_overlay(data) {
   const bgOverlay = document.createElement('div');
   bgOverlay.classList.add('atcb_bgoverlay');
   bgOverlay.tabIndex = 0;
   bgOverlay.addEventListener('click', () => atcb_close(true));
-  bgOverlay.addEventListener('touchstart', () => atcb_close(true), {passive: true});
+  let fingerMoved = false;
+  bgOverlay.addEventListener('touchstart', () => fingerMoved = false, {passive: true});
+  bgOverlay.addEventListener('touchmove', () => fingerMoved = true, {passive: true});
+  bgOverlay.addEventListener('touchend', function() {
+    if (fingerMoved == false) {
+      atcb_close(true);
+    }
+  }, {passive: true});
   bgOverlay.addEventListener('focus', () => atcb_close(false));
   if (data['trigger'] !== 'click') {
     bgOverlay.addEventListener('mousemove', () => atcb_close(true));
