@@ -282,6 +282,7 @@ The code is available under the [MIT license (with “Commons Clause” License 
 
 ## ⚡ Changelog (without minor changes and fixes)
 
+* v1.8 : new button style
 * v1.7 : new code structure and options + tons of optimizations
 * v1.6 : supporting Microsoft Teams
 * v1.5 : update to date format and better accesibility
