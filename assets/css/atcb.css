@@ -17,6 +17,7 @@
 .atcb_button_wrapper {
   display: inline-block;
   padding: 5px;
+  perspective: 300px;
   position: relative;
 }
 
@@ -65,7 +66,6 @@
   margin: 0 -4px;
   padding: 10px 20px 12px 20px;
   transform: perspective(100px) rotateX(12deg);
-  transform-style: preserve-3d;
   z-index: 100;
 }
 
@@ -164,7 +164,7 @@
   backdrop-filter: blur(2px);
   height: 150%;
   left: 0;
-  perspective: 120px;
+  perspective: 250px;
   position: fixed;
   right: 0;
   top: 0;
