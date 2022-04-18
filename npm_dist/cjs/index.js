@@ -3,12 +3,17 @@
  * Add-to-Calendar Button
  * ++++++++++++++++++++++
  */
-const atcbVersion = '1.7.8';
+const atcbVersion = '1.8.0';
 /* Creator: Jens Kuerschner (https://jenskuerschner.de)
  * Project: https://github.com/jekuer/add-to-calendar-button
  * License: MIT with “Commons Clause” License Condition v1.0
  * 
  */
+
+
+
+const isBrowser=new Function("try {return this===window;}catch(e){ return false;}");
+const isiOS=new Function("try {return ((/iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1));}catch(e){ return false;}");
 
 
 
@@ -521,14 +526,23 @@ function atcb_generate_google(data) {
   let formattedDate = atcb_generate_time(data, 'clean', 'google');
   url += '&dates=' + formattedDate['start'] + '%2F' + formattedDate['end'];
   // add details (if set)
-  if (data['description'] != null && data['description'] != '') {
-    url += '&details=' + encodeURIComponent(data['description']);
+  if (data['name'] != null && data['name'] != '') {
+    url += '&text=' + encodeURIComponent(data['name']);
   }
   if (data['location'] != null && data['location'] != '') {
     url += '&location=' + encodeURIComponent(data['location']);
+    // TODO: Find a better solution for the next temporary workaround.
+    if (isiOS) { // workaround to cover a bug, where, when using Google Calendar on an iPhone, the location is not recognized. So, for the moment, we simply add it to the description.
+      if (data['description'] == null || data['description'] == '') {
+        data['description'] = '';
+      } else {
+        data['description'] += '<br><br>';
+      }
+      data['description'] += '&#128205;: ' + data['location'];
+    }
   }
-  if (data['name'] != null && data['name'] != '') {
-    url += '&text=' + encodeURIComponent(data['name']);
+  if (data['description'] != null && data['description'] != '') {
+    url += '&details=' + encodeURIComponent(data['description']);
   }
   window.open(url, '_blank').focus();
 }
@@ -546,14 +560,14 @@ function atcb_generate_yahoo(data) {
     url += '&dur=allday';
   }
   // add details (if set)
-  if (data['description'] != null && data['description'] != '') {
-    url += '&desc=' + encodeURIComponent(data['description']);
+  if (data['name'] != null && data['name'] != '') {
+    url += '&title=' + encodeURIComponent(data['name']);
   }
   if (data['location'] != null && data['location'] != '') {
     url += '&in_loc=' + encodeURIComponent(data['location']);
   }
-  if (data['name'] != null && data['name'] != '') {
-    url += '&title=' + encodeURIComponent(data['name']);
+  if (data['description'] != null && data['description'] != '') {
+    url += '&desc=' + encodeURIComponent(data['description']);
   }
   window.open(url, '_blank').focus();
 }
@@ -577,14 +591,14 @@ function atcb_generate_microsoft(data, type = '365') {
     url += '&allday=true';
   }
   // add details (if set)
-  if (data['description'] != null && data['description'] != '') {
-    url += '&body=' + encodeURIComponent(data['description'].replace(/\n/g, '<br>'));
+  if (data['name'] != null && data['name'] != '') {
+    url += '&subject=' + encodeURIComponent(data['name']);
   }
   if (data['location'] != null && data['location'] != '') {
     url += '&location=' + encodeURIComponent(data['location']);
   }
-  if (data['name'] != null && data['name'] != '') {
-    url += '&subject=' + encodeURIComponent(data['name']);
+  if (data['description'] != null && data['description'] != '') {
+    url += '&body=' + encodeURIComponent(data['description'].replace(/\n/g, '<br>'));
   }
   window.open(url, '_blank').focus();
 }
@@ -602,6 +616,9 @@ function atcb_generate_teams(data) {
   url += '&startTime=' + formattedDate['start'] + '&endTime=' + formattedDate['end'];
   // add details (if set)
   let locationString = '';
+  if (data['name'] != null && data['name'] != '') {
+    url += '&subject=' + encodeURIComponent(data['name']);
+  }
   if (data['location'] != null && data['location'] != '') {
     locationString = encodeURIComponent(data['location']);
     url += '&location=' + locationString; // workaround putting the location into the description, since the native field is not supported yet
@@ -609,9 +626,6 @@ function atcb_generate_teams(data) {
   }
   if (data['description_iCal'] != null && data['description_iCal'] != '') { // using description_iCal instead of description, since Teams does not support html tags
     url += '&content=' + locationString + encodeURIComponent(data['description_iCal']);
-  }
-  if (data['name'] != null && data['name'] != '') {
-    url += '&subject=' + encodeURIComponent(data['name']);
   }
   window.open(url, '_blank').focus();
 }
@@ -735,8 +749,6 @@ function atcb_generate_time(data, style = 'delimiters', targetCal = 'general') {
   let returnObject = {'start':start, 'end':end, 'allday':allday};
   return returnObject;
 }
-
-const isBrowser=new Function("try {return this===window;}catch(e){ return false;}");
 
 if (isBrowser()) {
   // Global listener to ESC key to close dropdown
