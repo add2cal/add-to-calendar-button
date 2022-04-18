@@ -12,10 +12,10 @@ const atcbVersion = '1.8.0';
 
 
 
-const isBrowser=new Function("try {return this===window;}catch(e){ return false;}");
-const isiOS=new Function("try {return ((/iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1));}catch(e){ return false;}");
+const isBrowser=new Function("try { return this===window; }catch(e){ return false; }");
+const isiOS=new Function("if ((/iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1)){ return true; }else{ return false; }");
 
-
+console.log(isiOS());
 
 // INITIALIZE THE SCRIPT AND FUNCTIONALITY
 function atcb_init() {
@@ -532,7 +532,7 @@ function atcb_generate_google(data) {
   if (data['location'] != null && data['location'] != '') {
     url += '&location=' + encodeURIComponent(data['location']);
     // TODO: Find a better solution for the next temporary workaround.
-    if (isiOS) { // workaround to cover a bug, where, when using Google Calendar on an iPhone, the location is not recognized. So, for the moment, we simply add it to the description.
+    if (isiOS()) { // workaround to cover a bug, where, when using Google Calendar on an iPhone, the location is not recognized. So, for the moment, we simply add it to the description.
       if (data['description'] == null || data['description'] == '') {
         data['description'] = '';
       } else {
