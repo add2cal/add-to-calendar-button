@@ -42,6 +42,9 @@
   padding: 10px 16px 11px 16px;
   position: relative;
   text-align: center;
+  -webkit-transform-style: flat;
+  -moz-transform-style: flat;
+  transform-style: flat;
   touch-action: manipulation;  
   -webkit-user-select: none;
   -moz-user-select: none;
