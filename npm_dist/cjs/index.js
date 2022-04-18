@@ -16,10 +16,8 @@ const isBrowser = new Function("try { return this===window; }catch(e){ return fa
 if (isBrowser()) {
   const isiOS = new Function("if ((/iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1)){ return true; }else{ return false; }");
 } else {
-  const isiOS = false;
+  const isiOS = new Function("return false;");
 }
-
-console.log(isiOS());
 
 // INITIALIZE THE SCRIPT AND FUNCTIONALITY
 function atcb_init() {
