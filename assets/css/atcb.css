@@ -64,6 +64,7 @@
   box-shadow: 1px 8px 12px 0px rgba(0,0,0,.5);
   margin: 0 -4px;
   padding: 10px 20px 12px 20px;
+  perspective: 200px;
   transform: perspective(100px) rotateX(12deg);
   z-index: 160;
 }
@@ -162,7 +163,6 @@
   backdrop-filter: blur(2px);
   height: 150%;
   left: 0;
-  perspective: 500px;
   position: fixed;
   right: 0;
   top: 0;
