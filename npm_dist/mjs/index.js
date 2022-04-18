@@ -3,7 +3,7 @@
  * Add-to-Calendar Button
  * ++++++++++++++++++++++
  */
-const atcbVersion = '1.8.0';
+const atcbVersion = '1.8.1';
 /* Creator: Jens Kuerschner (https://jenskuerschner.de)
  * Project: https://github.com/jekuer/add-to-calendar-button
  * License: MIT with “Commons Clause” License Condition v1.0
@@ -461,7 +461,7 @@ function atcb_open(data, button, buttonGenerated = false, keyboardTrigger = true
 
     const rect = button.getBoundingClientRect();
     list.style.width = rect.width + 'px';
-    list.style.top = rect.bottom + window.scrollY + 'px';
+    list.style.top = rect.bottom + window.scrollY -3 + 'px';
     list.style.left = rect.left + 'px';
   } else {
     list.classList.add('atcb_modal')
