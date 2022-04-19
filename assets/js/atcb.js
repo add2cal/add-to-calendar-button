@@ -13,11 +13,7 @@ const atcbVersion = '1.8.1';
 
 
 const isBrowser = new Function("try { return this===window; }catch(e){ return false; }");
-if (isBrowser()) {
-  const isiOS = new Function("if ((/iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1)){ return true; }else{ return false; }");
-} else {
-  const isiOS = new Function("return false;");
-}
+const isiOS = isBrowser() ? new Function("if ((/iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1)){ return true; }else{ return false; }") : new Function("return false;");
 
 // INITIALIZE THE SCRIPT AND FUNCTIONALITY
 function atcb_init() {
