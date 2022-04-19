@@ -3,7 +3,7 @@
  * Add-to-Calendar Button
  * ++++++++++++++++++++++
  */
-const atcbVersion = '1.8.1';
+const atcbVersion = '1.8.2';
 /* Creator: Jens Kuerschner (https://jenskuerschner.de)
  * Project: https://github.com/jekuer/add-to-calendar-button
  * License: MIT with “Commons Clause” License Condition v1.0
@@ -19,7 +19,7 @@ const isiOS = isBrowser() ? new Function("if ((/iPad|iPhone|iPod/.test(navigator
 function atcb_init() {
   // let's get started
   console.log("add-to-calendar button initialized (version " + atcbVersion + ")");
-  console.log ("See https://github.com/jekuer/add-to-calendar-button for details");
+  console.log("See https://github.com/jekuer/add-to-calendar-button for details");
   // get all placeholders
   let atcButtons = document.querySelectorAll('.atcb');
   // if there are some, move on
@@ -413,6 +413,7 @@ function atcb_generate_bg_overlay(data) {
   const bgOverlay = document.createElement('div');
   bgOverlay.classList.add('atcb_bgoverlay');
   bgOverlay.tabIndex = 0;
+  bgOverlay.style.opacity = 1;
   bgOverlay.addEventListener('click', () => atcb_close(true));
   let fingerMoved = false;
   bgOverlay.addEventListener('touchstart', () => fingerMoved = false, {passive: true});
@@ -454,7 +455,6 @@ function atcb_open(data, button, buttonGenerated = false, keyboardTrigger = true
   // set list styles, set possible button to atcb_active and go for modal mode if no button is set
   if (button) {
     button.classList.add('atcb_active');
-
     const rect = button.getBoundingClientRect();
     list.style.width = rect.width + 'px';
     list.style.top = rect.bottom + window.scrollY -3 + 'px';

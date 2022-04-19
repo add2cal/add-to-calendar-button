@@ -3,7 +3,7 @@
  * Add-to-Calendar Button
  * ++++++++++++++++++++++
  * 
- * Version: 1.8.1
+ * Version: 1.8.2
  * Creator: Jens Kuerschner (https://jenskuerschner.de)
  * Project: https://github.com/jekuer/add-to-calendar-button
  * License: MIT with “Commons Clause” License Condition v1.0
@@ -63,9 +63,10 @@
   border-radius: 6px 6px 3px 3px;
   -webkit-box-shadow: 1px 8px 12px 0px rgba(0,0,0,.5);
   box-shadow: 1px 8px 12px 0px rgba(0,0,0,.5);
-  margin: 0 -4px;
+  margin: 0 -4px -1px -4px;
   padding: 10px 20px 12px 20px;
   transform: perspective(100px) rotateX(12deg) translateZ(0px);
+  transition: margin .1s ease-out, padding .1s ease-out, transform .1s ease-out;
   z-index: 160;
 }
 
@@ -99,6 +100,24 @@
   z-index: 150;
 }
 
+.atcb_list.atcb_generated_button {
+  animation: atcb_list_slide .4s ease .05s 1 normal forwards;
+  opacity: 0;
+}
+@keyframes atcb_list_slide {
+	0% {
+		opacity: 0;
+		transform: rotateX(-100deg);
+		transform-origin: top;
+	}
+
+	100% {
+		opacity: 1;
+		transform: rotateX(0deg);
+		transform-origin: top;
+	}
+}
+
 .atcb_list.atcb_modal {
   position: fixed;
   width: 16em;
@@ -109,9 +128,8 @@
 
 .atcb_list_item {
   align-items: center;
-  background: rgb(250, 250, 250);
+  background: rgb(245, 245, 245);
   border: 1px solid rgb(210, 210, 210);
-  border-top: 0;
   -webkit-box-shadow: 1px 2px 8px 0px rgba(0,0,0,.3); 
   box-shadow: 1px 2px 8px 0px rgba(0,0,0,.3);
   box-sizing: border-box;
@@ -119,6 +137,7 @@
   display: flex;
   font-size: 16px;
   left: 50%;
+  margin-top: -1px;
   position: relative;
   padding: 12px 18px;
   text-align: left;
@@ -151,7 +170,6 @@
   border-radius: 0 0 6px 6px;
 }
 
-
 .atcb_list_item .atcb_icon {
   margin-right: 8px;
   width: 18px;
@@ -164,10 +182,13 @@
   backdrop-filter: blur(2px);
   height: 150%;
   left: 0;
+  opacity: 0;
   position: fixed;
   right: 0;
   top: 0;
   transform: translateZ(-10px);
+  transition: opacity .3s ease-out;
+  transition-delay: .1s;
   width: 100%;
   z-index: 120;
 }
