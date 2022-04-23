@@ -34,12 +34,14 @@
   font-size: 16px;
   font-weight: 600;
   line-height: 24px;
+  margin: 0 4px 2px 4px;
   max-width: 300px;
   min-width: 150px;
-  padding: 10px 16px 11px 16px;
+  padding: 10px 16px;
   position: relative;
   text-align: center;
   touch-action: manipulation;  
+  transform: translateZ(0px);
   -webkit-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;
@@ -60,12 +62,11 @@
 
 .atcb_button.atcb_active {
   background: rgb(255, 255, 255);
-  border-radius: 6px 6px 3px 3px;
   -webkit-box-shadow: 1px 8px 12px 0px rgba(0,0,0,.5);
   box-shadow: 1px 8px 12px 0px rgba(0,0,0,.5);
-  margin: 0 -4px -1px -4px;
+  margin: 0;
   padding: 10px 20px 12px 20px;
-  transform: perspective(100px) rotateX(12deg) translateZ(0px);
+  transform: perspective(100px) rotateX(12deg) translateZ(1px);
   transition: margin .1s ease-out, padding .1s ease-out, transform .1s ease-out;
   z-index: 160;
 }
@@ -88,9 +89,9 @@
   display: block;
   font-family:Arial, Helvetica, sans-serif;
   max-width: 100%;
-  padding: 0 6px;
+  padding: 0 4px;
   position: absolute;
-  transform: translateZ(-1px);
+  transform: translateZ(0px);
   -webkit-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;
@@ -137,9 +138,9 @@
   display: flex;
   font-size: 16px;
   left: 50%;
-  margin-top: -1px;
+  margin-top: -1px; /* ugly, but prevents a glitch in some cases */
   position: relative;
-  padding: 12px 18px;
+  padding: 13px 15px;
   text-align: left;
   transform: translate(-50%);
   touch-action: manipulation;

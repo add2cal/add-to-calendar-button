@@ -619,8 +619,8 @@ function atcb_generate_teams(data) {
   }
   if (data['location'] != null && data['location'] != '') {
     locationString = encodeURIComponent(data['location']);
-    url += '&location=' + locationString; // workaround putting the location into the description, since the native field is not supported yet
-    locationString += ' // ';
+    url += '&location=' + locationString;
+    locationString += ' // '; // preparing the workaround putting the location into the description, since the native field is not supported yet
   }
   if (data['description_iCal'] != null && data['description_iCal'] != '') { // using description_iCal instead of description, since Teams does not support html tags
     url += '&content=' + locationString + encodeURIComponent(data['description_iCal']);
@@ -754,6 +754,10 @@ if (isBrowser()) {
     if (evt.key === 'Escape') {
       atcb_close();
     }
+  });
+  // Global listener to any screen changes, where we need to close all buttons in order to prevent any bad renderings (more "expensive" alternative would be to re-render them)
+  window.addEventListener('resize', () => {
+      atcb_close(true);
   });
 }
 
