@@ -3,7 +3,7 @@
  * Add-to-Calendar Button
  * ++++++++++++++++++++++
  */
-const atcbVersion = '1.8.4';
+const atcbVersion = '1.8.5';
 /* Creator: Jens Kuerschner (https://jenskuerschner.de)
  * Project: https://github.com/jekuer/add-to-calendar-button
  * License: MIT with “Commons Clause” License Condition v1.0
@@ -174,7 +174,7 @@ function atcb_date_cleanup(data) {
 function atcb_date_calculation(dateString) {
   // replace "today" with the current date first
   let today = new Date();
-  let todayString = (today.getMonth() + 1) + '-' + today.getDate() + '-' + today.getFullYear();
+  let todayString = (today.getUTCMonth() + 1) + '-' + today.getUTCDate() + '-' + today.getUTCFullYear();
   dateString = dateString.replace(/today/ig, todayString);
   // check for any dynamic additions and adjust
   const dateStringParts = dateString.split('+');
@@ -727,22 +727,19 @@ function atcb_generate_time(data, style = 'delimiters', targetCal = 'general') {
     }
   } else { // would be an allday event then
     allday = true;
-    start = new Date( startDate[0], startDate[1] - 1, startDate[2]);
-    start.setDate(start.getDate() + 1); // increment the day by 1
-    let breakStart = start.toISOString().split('T');
-    end = new Date( endDate[0], endDate[1] - 1, endDate[2]);
+    start = new Date(Date.UTC(startDate[0], startDate[1] - 1, startDate[2]));
+    let breakStart = start.toISOString().replace(/T(.+)Z/g, '');
+    end = new Date(Date.UTC(endDate[0], endDate[1] - 1, endDate[2]));
     if (targetCal == 'google' || targetCal == 'microsoft' || targetCal == 'ical') {
-      end.setDate(end.getDate() + 2); // increment the day by 2 for Google Calendar, iCal and Outlook
-    } else {
-      end.setDate(end.getDate() + 1); // otherwise by 1
+      end.setDate(end.getDate() + 1); // increment the day by 1 for Google Calendar, iCal and Outlook
     }
-    let breakEnd = end.toISOString().split('T');
+    let breakEnd = end.toISOString().replace(/T(.+)Z/g, '');
     if (style == 'clean') {
-      breakStart[0] = breakStart[0].replace(/\-/g, '');
-      breakEnd[0] = breakEnd[0].replace(/\-/g, '');
+      breakStart = breakStart.replace(/\-/g, '');
+      breakEnd = breakEnd.replace(/\-/g, '');
     }
-    start = breakStart[0];
-    end = breakEnd[0];
+    start = breakStart;
+    end = breakEnd;
   }
   let returnObject = {'start':start, 'end':end, 'allday':allday};
   return returnObject;
