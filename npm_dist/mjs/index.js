@@ -3,7 +3,7 @@
  * Add-to-Calendar Button
  * ++++++++++++++++++++++
  */
-const atcbVersion = '1.8.5';
+const atcbVersion = '1.8.6';
 /* Creator: Jens Kuerschner (https://jenskuerschner.de)
  * Project: https://github.com/jekuer/add-to-calendar-button
  * License: MIT with “Commons Clause” License Condition v1.0
@@ -413,7 +413,6 @@ function atcb_generate_bg_overlay(data) {
   const bgOverlay = document.createElement('div');
   bgOverlay.classList.add('atcb_bgoverlay');
   bgOverlay.tabIndex = 0;
-  bgOverlay.style.opacity = 1;
   bgOverlay.addEventListener('click', () => atcb_close(true));
   let fingerMoved = false;
   bgOverlay.addEventListener('touchstart', () => fingerMoved = false, {passive: true});

@@ -1,6 +1,6 @@
 {
   "name": "add-to-calendar-button",
-  "version": "1.8.5",
+  "version": "1.8.6",
   "description": "A convenient JavaScript snippet, which lets you create beautiful buttons, where people can add events to their calendars.",
   "main": "npm_dist/cjs/index.js",
   "module": "npm_dist/mjs/index.js",
