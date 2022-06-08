@@ -3,7 +3,7 @@
  * Add-to-Calendar Button
  * ++++++++++++++++++++++
  * 
- * Version: 1.8.7
+ * Version: 1.8.8
  * Creator: Jens Kuerschner (https://jenskuerschner.de)
  * Project: https://github.com/jekuer/add-to-calendar-button
  * License: MIT with “Commons Clause” License Condition v1.0
@@ -25,7 +25,6 @@
   background: rgb(245, 245, 245);
   border: 1px solid rgb(210, 210, 210);
   border-radius: 6px;
-  -webkit-box-shadow: 1px 2px 10px 0px rgba(0,0,0,.4); 
   box-shadow: 1px 2px 10px 0px rgba(0,0,0,.4);
   color: rgb(51, 51, 51);
   cursor: pointer;
@@ -40,11 +39,8 @@
   padding: 10px 16px;
   position: relative;
   text-align: center;
-  touch-action: manipulation;  
-  transform: translateZ(0px);
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
+  touch-action: manipulation;
+  transform: translate3d(0,0,0);
   user-select: none;
   -webkit-tap-highlight-color: transparent;
   width: auto;
@@ -54,6 +50,9 @@
 .atcb_button:hover {
   background: rgb(255, 255, 255);
 }
+.atcb_button:focus-visible {
+  outline: 2px solid dodgerblue;
+}
 @media only screen and (max-width: 575px) {
   .atcb_button {
     font-size: 14px;
@@ -62,11 +61,10 @@
 
 .atcb_button.atcb_active {
   background: rgb(255, 255, 255);
-  -webkit-box-shadow: 1px 8px 12px 0px rgba(0,0,0,.5);
   box-shadow: 1px 8px 12px 0px rgba(0,0,0,.5);
   margin: 0;
   padding: 10px 20px 12px 20px;
-  transform: perspective(100px) rotateX(12deg) translateZ(1px);
+  transform: perspective(100px) rotateX(12deg) translate3d(0,0,1px);
   transition: margin .1s ease-out, padding .1s ease-out, transform .1s ease-out;
   z-index: 160;
 }
@@ -91,10 +89,7 @@
   max-width: 100%;
   padding: 0 4px;
   position: absolute;
-  transform: translateZ(0px);
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
+  transform: translate3d(0,0,0);
   user-select: none;
   width: 100%;
   min-width: 10em;
@@ -131,7 +126,6 @@
   align-items: center;
   background: rgb(245, 245, 245);
   border: 1px solid rgb(210, 210, 210);
-  -webkit-box-shadow: 1px 2px 8px 0px rgba(0,0,0,.3); 
   box-shadow: 1px 2px 8px 0px rgba(0,0,0,.3);
   box-sizing: border-box;
   cursor: pointer;
@@ -149,9 +143,13 @@
 .atcb_list_item:focus,
 .atcb_list_item:hover {
   background: rgb(255, 255, 255);
-  -webkit-box-shadow: 1px 2px 10px 0px rgba(0,0,0,.4); 
   box-shadow: 1px 2px 10px 0px rgba(0,0,0,.4);
   color: rgb(0, 0, 0);
+}
+.atcb_list_item:focus-visible {
+  color: dodgerblue;
+  font-weight: 600;
+  outline: none;
 }
 @media only screen and (max-width: 575px) {
   .atcb_list_item {
@@ -188,7 +186,7 @@
   position: fixed;
   right: 0;
   top: 0;
-  transform: translateZ(-10px);
+  transform: translate3d(0,0,-10px);
   width: 100%;
   z-index: 120;
 }
