@@ -1,6 +1,6 @@
 {
   "name": "add-to-calendar-button",
-  "version": "1.8.9",
+  "version": "1.8.10",
   "description": "A convenient JavaScript snippet, which lets you create beautiful buttons, where people can add events to their calendars.",
   "main": "npm_dist/cjs/index.js",
   "module": "npm_dist/mjs/index.js",
@@ -49,6 +49,7 @@
   },
   "homepage": "https://jekuer.github.io/add-to-calendar-button/",
   "scripts": {
+    "release": "grunt -c %npm_config_set% && npm install && npm run build",
     "test": "node test/server-side-rendering.js",
     "build": "grunt"
   },
@@ -57,6 +58,7 @@
     "grunt-contrib-clean": "^2.0.0",
     "grunt-contrib-copy": "^1.0.0",
     "grunt-contrib-cssmin": "^4.0.0",
-    "grunt-contrib-uglify": "^5.0.1"
+    "grunt-contrib-uglify": "^5.0.1",
+    "grunt-version": "^3.0.0"
   }
 }
