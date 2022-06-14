@@ -1,12 +1,35 @@
-const npmDelimiter = /\/\/ START INIT[\s\S]*?\/\/ END INIT/gm
+const initCodeDelimiter = /\/\/ START INIT[\s\S]*?\/\/ END INIT/gm
 
 function process(content, exportPhrase) {
-  return content.replace(npmDelimiter, `${exportPhrase} { atcb_action, atcb_init };`);
+  return content.replace(initCodeDelimiter, `${exportPhrase} { atcb_action, atcb_init };`);
 }
 module.exports = function(grunt) {
 
   // The config.
   grunt.initConfig({
+    version: { // update version. Either use via `npm run release --set=version::patch`, `npm run release --set=version::minor`, `npm run release --set=version::major`, or `npm run release --set=version::x.x.x` (with x.x.x being the exact version number)
+      package: {
+        src: ['package.json']
+      },
+      demoHtml: {
+        options: {
+          prefix: '.(tinyVersion">v|.\?v=)'
+        },
+        src: ['index.html']
+      },
+      js: {
+        options: {
+        prefix: 'Version.=..'
+        },
+        src: ['assets/js/atcb.js']
+      },
+      css: {
+        options: {
+          prefix: 'Version:.'
+        },
+        src: ['assets/css/atcb.css']
+      },
+    },
     clean: { // cleans old built files
       oldBuildFiles: ['assets/js/atcb.min.js', 'assets/js/atcb.min.js.map', 'assets/css/atcb.min.css', 'assets/css/atcb.min.css.map', 'npm_dist/']
     },
@@ -51,6 +74,7 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-clean');
   grunt.loadNpmTasks('grunt-contrib-uglify');
   grunt.loadNpmTasks('grunt-contrib-cssmin');
+  grunt.loadNpmTasks('grunt-version');
 
   // Register task(s).
   grunt.registerTask('default', ['clean', 'copy', 'uglify', 'cssmin']);
