@@ -1,9 +1,13 @@
-# 📅 Your next Add-to-Calendar Button!
+# Your next Add-to-Calendar Button!
 ![Add-to-Calendar Button](https://github.com/jekuer/add-to-calendar-button/blob/main/repo_image.png?raw=true)
 
-_A convenient JavaScript snippet, which lets you create beautiful buttons, where people can add events to their calendars._ 
+_A convenient JavaScript snippet (VanillaJS, React, Angular, ...), which lets you create beautiful buttons, where people can add events to their calendars._ 
 
 ![#1 Product of the Day on ProductHunt](https://api.producthunt.com/widgets/embed-image/v1/top-post-badge.svg?post_id=319458&theme=dark&period=daily) 
+![Build Status](https://img.shields.io/github/workflow/status/jekuer/add-to-calendar-button/Node.js%20Package?style=for-the-badge) 
+![GitHub Downloads](https://img.shields.io/github/downloads/jekuer/add-to-calendar-button/total?label=GitHub%20Downloads&style=for-the-badge) 
+![npm Downloads](https://img.shields.io/npm/dt/add-to-calendar-button?label=npm%20Downloads&style=for-the-badge) 
+![jsDelivr npm Hits](https://img.shields.io/jsdelivr/npm/hm/add-to-calendar-button?label=jsDelivr%20npm%20hits&style=for-the-badge) 
 
 <br /><br />
 
