@@ -710,8 +710,8 @@ function atcb_generate_time(data, style = 'delimiters', targetCal = 'general') {
       start = start.toISOString().replace('.000', '');
       end = end.toISOString().replace('.000', '');
       if (style == 'clean') {
-        start = start.replace(/\-/g, '').replace(/\:/g, '');
-        end = end.replace(/\-/g, '').replace(/\:/g, '');
+        start = start.replace(/-/g, '').replace(/:/g, '');
+        end = end.replace(/-/g, '').replace(/:/g, '');
       }
     } else {
       // if there is no offset, we prepare the time, assuming it is UTC formatted
@@ -731,8 +731,8 @@ function atcb_generate_time(data, style = 'delimiters', targetCal = 'general') {
       start = start.toISOString().replace('.000', '');
       end = end.toISOString().replace('.000', '');
       if (style == 'clean') {
-        start = start.replace(/\-/g, '').replace(/\:/g, '');
-        end = end.replace(/\-/g, '').replace(/\:/g, '');
+        start = start.replace(/-/g, '').replace(/:/g, '');
+        end = end.replace(/-/g, '').replace(/:/g, '');
       }
     }
   } else { // would be an allday event then
@@ -745,8 +745,8 @@ function atcb_generate_time(data, style = 'delimiters', targetCal = 'general') {
     }
     let breakEnd = end.toISOString().replace(/T(.+)Z/g, '');
     if (style == 'clean') {
-      breakStart = breakStart.replace(/\-/g, '');
-      breakEnd = breakEnd.replace(/\-/g, '');
+      breakStart = breakStart.replace(/-/g, '');
+      breakEnd = breakEnd.replace(/-/g, '');
     }
     start = breakStart;
     end = breakEnd;
