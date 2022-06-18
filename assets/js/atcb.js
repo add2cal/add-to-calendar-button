@@ -121,7 +121,10 @@ function atcb_decorate_data(atcbConfig) {
   // standardize any line breaks in the description and transform URLs (but keep a clean copy without the URL magic for iCal)
   data.description = data.description.replace(/<br\s*\/?>/gmi, '\n');
   data.description_iCal = data.description.replace('[url]','').replace('[/url]','');
-  data.description = data.description.replace(/\[url\]([a-zA-Z0-9&$\+\.,:;=\-_~\!*'\?@\#\s\(\)|\/\^%]*?)\[\/url\]/g, "<a href='$1' target='_blank' rel='noopener'>$1</a>");
+  data.description = data.description.replace(
+    /\[url\]([a-zA-Z0-9&$+.,:;=_~!*'?@#\s\-\(\)|\/^%]*?)\[\/url\]/g, 
+    "<a href='$1' target='_blank' rel='noopener'>$1</a>"
+  );
   return data
 }
 
@@ -296,7 +299,8 @@ function atcb_generate(button, buttonId, data) {
   let buttonTriggerText = document.createElement('span');
   buttonTriggerText.classList.add('atcb_text');
   buttonTriggerText.textContent = data['label'] || 'Add to Calendar';
-  buttonTrigger.appendChild(buttonTriggerIcon).appendChild(buttonTriggerText);
+  buttonTrigger.appendChild(buttonTriggerIcon);
+  buttonTrigger.appendChild(buttonTriggerText);
   // set event listeners for the button trigger
   if (data['trigger'] == 'click') {
     buttonTrigger.addEventListener('mousedown', () => atcb_toggle(data, buttonTrigger, true, false));

@@ -6,7 +6,7 @@
 -   [ ] New feature (non-breaking change which adds functionality)
 -   [ ] Breaking change (fix or feature that would cause existing functionality to change)
 
-## Checklist:
+## Checklist
 
 <!--- Go over all the following points, and put an `x` in all the boxes that apply. -->
 

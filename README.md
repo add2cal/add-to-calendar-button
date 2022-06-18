@@ -27,6 +27,7 @@ Unfortunately, all I found where some extremely outdated code snippets, which di
 Beside that, there was only the solution by AddEvent.com - all over the place. I was looking at CodePen and all I found where thousands of pens, which basically only included the AddEvent tool. 
 
 The problems with AddEvent.com:
+
 * it holds tons of features, which I did not need. I do not want to track my button. I just want it to work.
 * it limits the free tier to 50 event adds per month (consider the wedding case - this is way too less).
 * it brings some data privacy issues, since you basically send your users to their service. GDPR alert!
