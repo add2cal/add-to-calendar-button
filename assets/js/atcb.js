@@ -121,7 +121,7 @@ function atcb_decorate_data(atcbConfig) {
   // standardize any line breaks in the description and transform URLs (but keep a clean copy without the URL magic for iCal)
   data.description = data.description.replace(/<br\s*\/?>/gmi, '\n');
   data.description_iCal = data.description.replace('[url]','').replace('[/url]','');
-  data.description = data.description.replace(/\[url\](.*?)\[\/url\]/g, "<a href='$1' target='_blank' rel='noopener'>$1</a>");
+  data.description = data.description.replace(/\[url\]([a-zA-Z0-9&$\+\.,:;=\-_~\!*'\?@\#\s\(\)|\/\^%]*?)\[\/url\]/g, "<a href='$1' target='_blank' rel='noopener'>$1</a>");
   return data
 }
 
