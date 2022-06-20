@@ -47,8 +47,8 @@ See [jekuer.github.io/add-to-calendar-button](https://jekuer.github.io/add-to-ca
 
 ## ✨ Features
 
--   Simple and convenient integration of multiple buttons - configure them directly within the HTML code.
--   Optimized UX (for desktop and mobile) - adjustable.
+-   Simple and convenient integration of multiple buttons, configurable directly within the HTML code.
+-   Optimized and adjustable UX (for desktop and mobile).
 -   Beautiful UI (the best combined from experts around the world).
 -   Up-to-date integration of all popular calendars:
     -   Google Calendar.
