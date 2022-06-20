@@ -54,6 +54,7 @@ See [jekuer.github.io/add-to-calendar-button](https://jekuer.github.io/add-to-ca
    *  Yahoo Calender.
    *  Microsoft 365, Outlook, and Teams.
    *  Automatically generated iCal/ics files (for all other calendars, like Apple).
+   
 *  Timed and all-day events.
 *  Translatable labels and dynamic dates.
 *  Well documented code, to easily understand the processes and build on top of it.
@@ -95,7 +96,6 @@ See [jekuer.github.io/add-to-calendar-button](https://jekuer.github.io/add-to-ca
 3.  Import the module into your project/component. For example with Angular/React: `import { atcb_action, atcb_init } from 'add-to-calendar-button';`.
 
 4.  Either use `atcb_action` with your own buttons/forms/etc, or run `atcb_init` after the DOM has been loaded. To determine the right moment and execute, ...
-
     1.  with Angular, you would use `ngAfterViewInit()` with `atcb_init();` (mind that, depending on your app, other hooks might be better);
 
     2.  with React, you might want to include an event listener like `document.addEventListener('DOMContentLoaded', atcb_init, false);` or using hooks in a functional component like `useEffect(() => atcb_init());`
