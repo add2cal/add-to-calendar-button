@@ -77,9 +77,9 @@ module.exports = function(grunt) {
       newBuild: {
         files: {
           "assets/css/atcb.min.css": ["assets/css/atcb.css"],
-        }
-      }
-    }
+        },
+      },
+    },
   });
 
   // Load the plugins.
