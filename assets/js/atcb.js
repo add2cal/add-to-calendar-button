@@ -707,12 +707,6 @@ function atcb_generate_time(data, style = 'delimiters', targetCal = 'general') {
       // if we have a timezone offset given, consider it
       start = new Date( startDate[0] + '-' + startDate[1] + '-' + startDate[2] + 'T' + data['startTime'] + ':00.000' + data['timeZoneOffset'] );
       end = new Date( endDate[0] + '-' + endDate[1] + '-' + endDate[2] + 'T' + data['endTime'] + ':00.000' + data['timeZoneOffset'] );
-      start = start.toISOString().replace('.000', '');
-      end = end.toISOString().replace('.000', '');
-      if (style == 'clean') {
-        start = start.replace(/-/g, '').replace(/:/g, '');
-        end = end.replace(/-/g, '').replace(/:/g, '');
-      }
     } else {
       // if there is no offset, we prepare the time, assuming it is UTC formatted
       start = new Date( startDate[0] + '-' + startDate[1] + '-' + startDate[2] + 'T' + data['startTime'] + ':00.000+00:00' );
@@ -728,12 +722,12 @@ function atcb_generate_time(data, style = 'delimiters', targetCal = 'general') {
         start.setTime( start.getTime() + offset );
         end.setTime( end.getTime() + offset );
       }
-      start = start.toISOString().replace('.000', '');
-      end = end.toISOString().replace('.000', '');
-      if (style == 'clean') {
-        start = start.replace(/-/g, '').replace(/:/g, '');
-        end = end.replace(/-/g, '').replace(/:/g, '');
-      }
+    }
+    start = start.toISOString().replace('.000', '');
+    end = end.toISOString().replace('.000', '');
+    if (style == 'clean') {
+      start = start.replace(/-/g, '').replace(/:/g, '');
+      end = end.replace(/-/g, '').replace(/:/g, '');
     }
   } else { // would be an allday event then
     allday = true;
