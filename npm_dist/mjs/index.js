@@ -166,7 +166,7 @@ function atcb_date_cleanup(data) {
       }
     }
     // remove any seconds from time information
-    if (data[point + 'Time'] != null && data[point + 'Time'].length == 8) {
+    if (data[point + 'Time'] != null && data[point + 'Time'].length === 8) {
       let timeStr = data[point + 'Time'];
       data[point + 'Time'] = timeStr.substring(0, timeStr.length - 3);
     }
@@ -213,7 +213,7 @@ function atcb_validate(data) {
   const dates = ['startDate', 'endDate'];
   let newDate = dates;
   if (!dates.every(function(date) {
-    if (data[date].length != 10) {
+    if (data[date].length !== 10) {
       console.error("add-to-calendar button generation failed: date misspelled [-> YYYY-MM-DD]");
       return false;
     }
@@ -231,7 +231,7 @@ function atcb_validate(data) {
   const times = ['startTime', 'endTime'];
   if (!times.every(function(time) {
     if (data[time] != null) {
-      if (data[time].length != 5) {
+      if (data[time].length !== 5) {
         console.error("add-to-calendar button generation failed: time misspelled [-> HH:MM]");
         return false;
       }
@@ -429,7 +429,7 @@ function atcb_generate_bg_overlay(data) {
   bgOverlay.addEventListener('touchstart', () => fingerMoved = false, {passive: true});
   bgOverlay.addEventListener('touchmove', () => fingerMoved = true, {passive: true});
   bgOverlay.addEventListener('touchend', function() {
-    if (fingerMoved == false) {
+    if (fingerMoved === false) {
       atcb_close(true);
     }
   }, {passive: true});
@@ -707,12 +707,6 @@ function atcb_generate_time(data, style = 'delimiters', targetCal = 'general') {
       // if we have a timezone offset given, consider it
       start = new Date( startDate[0] + '-' + startDate[1] + '-' + startDate[2] + 'T' + data['startTime'] + ':00.000' + data['timeZoneOffset'] );
       end = new Date( endDate[0] + '-' + endDate[1] + '-' + endDate[2] + 'T' + data['endTime'] + ':00.000' + data['timeZoneOffset'] );
-      start = start.toISOString().replace('.000', '');
-      end = end.toISOString().replace('.000', '');
-      if (style == 'clean') {
-        start = start.replace(/-/g, '').replace(/:/g, '');
-        end = end.replace(/-/g, '').replace(/:/g, '');
-      }
     } else {
       // if there is no offset, we prepare the time, assuming it is UTC formatted
       start = new Date( startDate[0] + '-' + startDate[1] + '-' + startDate[2] + 'T' + data['startTime'] + ':00.000+00:00' );
@@ -728,12 +722,12 @@ function atcb_generate_time(data, style = 'delimiters', targetCal = 'general') {
         start.setTime( start.getTime() + offset );
         end.setTime( end.getTime() + offset );
       }
-      start = start.toISOString().replace('.000', '');
-      end = end.toISOString().replace('.000', '');
-      if (style == 'clean') {
-        start = start.replace(/-/g, '').replace(/:/g, '');
-        end = end.replace(/-/g, '').replace(/:/g, '');
-      }
+    }
+    start = start.toISOString().replace('.000', '');
+    end = end.toISOString().replace('.000', '');
+    if (style == 'clean') {
+      start = start.replace(/-/g, '').replace(/:/g, '');
+      end = end.replace(/-/g, '').replace(/:/g, '');
     }
   } else { // would be an allday event then
     allday = true;
