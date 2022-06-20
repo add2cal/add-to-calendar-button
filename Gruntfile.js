@@ -1,51 +1,59 @@
-const initCodeDelimiter = /\/\/ START INIT[\s\S]*?\/\/ END INIT/g
+const initCodeDelimiter = /\/\/ START INIT[\s\S]*?\/\/ END INIT/g;
 
 function process(content, exportPhrase) {
-  return content.replace(initCodeDelimiter, `${exportPhrase} { atcb_action, atcb_init };`);
+  return content.replace(
+    initCodeDelimiter, 
+    `${exportPhrase} { atcb_action, atcb_init };`
+  );
 }
 module.exports = function(grunt) {
-
   // The config.
   grunt.initConfig({
     // update version. Either use via `npm run release --set=version::patch`, `npm run release --set=version::minor`, `npm run release --set=version::major`, or `npm run release --set=version::x.x.x` (with x.x.x being the exact version number)
     version: {
       package: {
-        src: ['package.json']
+        src: ["package.json"],
       },
       demoHtml: {
         options: {
-          prefix: '.(tinyVersion">v|.\?v=)'
+          prefix: '.(tinyVersion">v|.?v=)'
         },
-        src: ['index.html']
+        src: ["index.html"],
       },
       js: {
         options: {
-        prefix: 'Version.=..'
+        prefix: "Version.=.."
         },
-        src: ['assets/js/atcb.js']
+        src: ["assets/js/atcb.js"],
       },
       css: {
         options: {
-          prefix: 'Version:.'
+          prefix: "Version:."
         },
-        src: ['assets/css/atcb.css']
+        src: ["assets/css/atcb.css"],
       },
     },
     // cleans old built files
     clean: {
-      oldBuildFiles: ['assets/js/atcb.min.js', 'assets/js/atcb.min.js.map', 'assets/css/atcb.min.css', 'assets/css/atcb.min.css.map', 'npm_dist/']
+      oldBuildFiles: [
+        "assets/js/atcb.min.js",
+        "assets/js/atcb.min.js.map",
+        "assets/css/atcb.min.css",
+        "assets/css/atcb.min.css.map",
+        "npm_dist/"
+      ]
     },
     // creates the source files for the npm versionm supporting CommonJS and ES Module (https://www.sensedeep.com/blog/posts/2021/how-to-create-single-source-npm-module.html)
     copy: {
       mjs_dist: {
-        src: 'assets/js/atcb.js',
-        dest: 'npm_dist/mjs/index.js',
-        options: { process: content => process(content, "export") }
+        src: "assets/js/atcb.js",
+        dest: "npm_dist/mjs/index.js",
+        options: { process: (content) => process(content, "export"), }
       },
       cjs_dist: {
-        src: 'assets/js/atcb.js',
-        dest: 'npm_dist/cjs/index.js',
-        options: { process: content => process(content, "module.exports =") }
+        src: "assets/js/atcb.js",
+        dest: "npm_dist/cjs/index.js",
+        options: { process: (content) => process(content, "module.exports ="), }
       }
     },
     // minifies the main js file
@@ -53,22 +61,22 @@ module.exports = function(grunt) {
       options: {
         compress: true,
         mangle: true,
-        sourceMap: true
+        sourceMap: true,
       },
       newBuild: {
         files: {
-          'assets/js/atcb.min.js': ['assets/js/atcb.js']
+          "assets/js/atcb.min.js": ["assets/js/atcb.js"],
         }
       }
     },
     // minifies the main css file
     cssmin: {
       options: {
-        sourceMap: true
+        sourceMap: true,
       },
       newBuild: {
         files: {
-          'assets/css/atcb.min.css': ['assets/css/atcb.css']
+          "assets/css/atcb.min.css": ["assets/css/atcb.css"],
         }
       }
     }
