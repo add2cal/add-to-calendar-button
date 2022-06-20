@@ -6,8 +6,7 @@ function process(content, exportPhrase) {
     `${exportPhrase} { atcb_action, atcb_init };`
   );
 }
-module.exports = function(grunt) {
-  // The config.
+module.exports = function(grunt) { // The config.
   grunt.initConfig({
     // update version. Either use via `npm run release --set=version::patch`, `npm run release --set=version::minor`, `npm run release --set=version::major`, or `npm run release --set=version::x.x.x` (with x.x.x being the exact version number)
     version: {
@@ -22,7 +21,7 @@ module.exports = function(grunt) {
       },
       js: {
         options: {
-        prefix: "Version.=..",
+          prefix: "Version.=..",
         },
         src: ["assets/js/atcb.js"],
       },
@@ -40,7 +39,7 @@ module.exports = function(grunt) {
         "assets/js/atcb.min.js.map",
         "assets/css/atcb.min.css",
         "assets/css/atcb.min.css.map",
-        "npm_dist/"
+        "npm_dist/",
       ],
     },
     // creates the source files for the npm versionm supporting CommonJS and ES Module (https://www.sensedeep.com/blog/posts/2021/how-to-create-single-source-npm-module.html)
@@ -54,7 +53,7 @@ module.exports = function(grunt) {
         src: "assets/js/atcb.js",
         dest: "npm_dist/cjs/index.js",
         options: { process: (content) => process(content, "module.exports =") },
-      }
+      },
     },
     // minifies the main js file
     uglify: {
@@ -90,5 +89,5 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks("grunt-version");
 
   // Register task(s).
-  grunt.registerTask('default', ['clean', 'copy', 'uglify', 'cssmin']);
+  grunt.registerTask("default", ["clean", "copy", "uglify", "cssmin"]);
 };
