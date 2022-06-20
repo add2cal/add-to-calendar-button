@@ -91,5 +91,4 @@ module.exports = function(grunt) {
 
   // Register task(s).
   grunt.registerTask('default', ['clean', 'copy', 'uglify', 'cssmin']);
-
 };
