@@ -2,10 +2,11 @@
 
 ![Add-to-Calendar Button](https://github.com/jekuer/add-to-calendar-button/blob/main/repo_image.png?raw=true)
 
-_A convenient JavaScript snippet (VanillaJS, React, Angular, ...), which lets you create beautiful buttons, where people can add events to their calendars._ 
+A convenient JavaScript snippet (VanillaJS, React, Angular, ...), which lets you create beautiful buttons, where people can add events to their calendars.
 
 ![#1 Product of the Day on ProductHunt](https://api.producthunt.com/widgets/embed-image/v1/top-post-badge.svg?post_id=319458&theme=dark&period=daily) 
 
+![Code Quality](https://img.shields.io/codacy/grade/5c7c0bac087c4dfdb0669e8284f0459a/main?style=for-the-badge)
 ![Build Status](https://img.shields.io/github/workflow/status/jekuer/add-to-calendar-button/Node.js%20Package?style=for-the-badge) 
 ![npm Downloads](https://img.shields.io/npm/dt/add-to-calendar-button?label=npm%20Downloads&style=for-the-badge) 
 ![jsDelivr npm Hits](https://img.shields.io/jsdelivr/npm/hm/add-to-calendar-button?label=jsDelivr%20npm%20hits&style=for-the-badge) 
@@ -29,10 +30,10 @@ Beside that, there was only the solution by AddEvent.com - all over the place. I
 
 The problems with AddEvent.com:
 
-*  it holds tons of features, which I did not need. I do not want to track my button. I just want it to work.
-*  it limits the free tier to 50 event adds per month (consider the wedding case - this is way too less).
-*  it brings some data privacy issues, since you basically send your users to their service. GDPR alert!
-*  the UX/UI is not ideal (imho). 
+-  it holds tons of features, which I did not need. I do not want to track my button. I just want it to work.
+-  it limits the free tier to 50 event adds per month (consider the wedding case - this is way too less).
+-  it brings some data privacy issues, since you basically send your users to their service. GDPR alert!
+-  the UX/UI is not ideal (imho). 
 
 **Bottom line:** Paying for features, which I did not need - at additional privacy concerns - that made me create this solution (for you).
 
@@ -46,18 +47,26 @@ See [jekuer.github.io/add-to-calendar-button](https://jekuer.github.io/add-to-ca
 
 ## ✨ Features
 
-*  Simple and convenient integration of multiple buttons - configure them directly within the HTML code.
-*  Optimized UX (for desktop and mobile) - adjustable.
-*  Beautiful UI (the best combined from experts around the world).
-*  Up-to-date integration of all popular calendars:
-   *  Google Calendar.
-   *  Yahoo Calender.
-   *  Microsoft 365, Outlook, and Teams.
-   *  Automatically generated iCal/ics files (for all other calendars, like Apple).
+-  Simple and convenient integration of multiple buttons - configure them directly within the HTML code.
+
+-  Optimized UX (for desktop and mobile) - adjustable.
+
+-  Beautiful UI (the best combined from experts around the world).
+
+-  Up-to-date integration of all popular calendars:
+   -  Google Calendar.
+
+   -  Yahoo Calender.
+
+   -  Microsoft 365, Outlook, and Teams.
+
+   -  Automatically generated iCal/ics files (for all other calendars, like Apple).
    
-*  Timed and all-day events.
-*  Translatable labels and dynamic dates.
-*  Well documented code, to easily understand the processes and build on top of it.
+-  Timed and all-day events.
+
+-  Translatable labels and dynamic dates.
+
+-  Well documented code, to easily understand the processes and build on top of it.
 
 ![Demo Screenshot](https://github.com/jekuer/add-to-calendar-button/blob/main/demo.gif?raw=true)
 
@@ -68,23 +77,16 @@ See [jekuer.github.io/add-to-calendar-button](https://jekuer.github.io/add-to-ca
 ### Option 1: simple (self-hosted)
 
 1.  Simply **download** the code from GitHub **or clone** the git repository.
-
 2.  Copy the css (atcb.min.css) and js (atcb.min.js) files from the assets (not the "npm_dist"!) folders into your project (the **.min.** files are required, but it is recommended to also copy the raw and map files).
-
 3.  Include those files in your project. As usual, the css goes into the <head> (`<link rel="stylesheet" href="./assets/css/atcb.min.css">`), the js into the <body> footer (`<script src="./assets/js/atcb.min.js" defer></script>`). You can also combine them with other files, if you want to.
-
 4.  Create your button as can be seen in the "Configuration" section below.
-
 5.  That is it. The script takes care of all the rest.
 
 ### Option 2: simple (CDN)
 
 1.  Instead of downloading the files, you can use the jsDeliver CDN.
-
 2.  Put `<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/add-to-calendar-button@1.8/assets/css/atcb.min.css">` into the <head> and `<script src="https://cdn.jsdelivr.net/npm/add-to-calendar-button@1.8" defer></script>` into the <body> footer of your website.
-
 3.  Create your button as can be seen in the "Configuration" section below.
-
 4.  Done. And this setup also automatically keeps track of any bug fixes and minor updates!
 
 ### Option 3: npm
@@ -96,9 +98,8 @@ See [jekuer.github.io/add-to-calendar-button](https://jekuer.github.io/add-to-ca
 3.  Import the module into your project/component. For example with Angular/React: `import { atcb_action, atcb_init } from 'add-to-calendar-button';`.
 
 4.  Either use `atcb_action` with your own buttons/forms/etc, or run `atcb_init` after the DOM has been loaded. To determine the right moment and execute, ...
-    1.  with Angular, you would use `ngAfterViewInit()` with `atcb_init();` (mind that, depending on your app, other hooks might be better);
-
-    2.  with React, you might want to include an event listener like `document.addEventListener('DOMContentLoaded', atcb_init, false);` or using hooks in a functional component like `useEffect(() => atcb_init());`
+    -  with Angular, you would use `ngAfterViewInit()` with `atcb_init();` (mind that, depending on your app, other hooks might be better);
+    -  with React, you might want to include an event listener like `document.addEventListener('DOMContentLoaded', atcb_init, false);` or using hooks in a functional component like `useEffect(() => atcb_init());`
 
 5.  Include the css. For example with Angular or React, add the following to the global style.css: `@import 'add-to-calendar-button/assets/css/atcb.min'`;
 
@@ -261,43 +262,25 @@ const atcb_action = () => {
 
 ### Important information and hidden features
 
-*  The "label" is optional, but enables you to customize the button text. Default: "Add to Calendar".
-
-*  Dates need to be formatted as YYYY-MM-DD ([ISO-8601](https://en.wikipedia.org/wiki/ISO_8601)).
-
-*  You can also use the word "today" as date. It will then dynamically use the current day at click (not supported with schema.org style).
-
-*  Add "+5" at the end of the date to dynamically add 5 days (or any other number). "2022-01-30+12" would generate the 11th of February 2022. This can be interesting, when combined with "today". 
-
-*  Times need to be formatted as HH:MM.
-
-*  Times are optional. If not set, the button generates all-day events.
-
-*  1 option is required. You can add as many as you want. The supported formats are listed above.
-
-*  If you want to rename (or translate) a label, use the following schema at the options: optionName + Pipe + yourLabel. "Google|Google Kalender" would generate a Google Calendar option, but label it as "Google Kalender".
-
-*  If no timeZone and no timeZoneOffset is provided, the date refers to UTC time.
-
-*  You can add a timeZoneOffset or timeZone (TZ name). You can find a list of them at [Wikipedia](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones).
-
-*  If the timeZoneOffset is set, it will always override the timeZone. It is recommended to only use 1 of them at a time.
-
-*  The timeZone might not work in very old browsers, but also considers dynamic changes like summer/winter time.
-
-*  timeZoneOffset works with older browsers, but is quite static.
-
-*  Use "currentBrowser" as value for timeZone to dynamically use the time of the user's browser. Use this with caution, since it would mean that the date and time will differ per user, which should not be the usual case! (Requires all times to be set.)
-
-*  You can set the trigger to "click". This makes the button open on click at desktop. Otherwise, the default would be to open on hover. On touch devices, this makes no difference.
-
-*  If you want to define a specific name for any generated ics file (iCal), you can specify it via the "iCalFileName" option. The default would be "event-to-save-in-my-calendar".
-
-*  You can use the option "inline":true in order to make the button appear with inline-block instead of block style.
-
-*  Formatting a URL in the description like `[url]https://....[/url]` makes it clickable.
-
-*  If you require line breaks within the description, use `\n` or `<br>`.
+-  The "label" is optional, but enables you to customize the button text. Default: "Add to Calendar".
+-  Dates need to be formatted as YYYY-MM-DD ([ISO-8601](https://en.wikipedia.org/wiki/ISO_8601)).
+-  You can also use the word "today" as date. It will then dynamically use the current day at click (not supported with schema.org style).
+-  Add "+5" at the end of the date to dynamically add 5 days (or any other number). "2022-01-30+12" would generate the 11th of February 2022. This can be interesting, when combined with "today". 
+-  Times need to be formatted as HH:MM.
+-  Times are optional. If not set, the button generates all-day events.
+-  1 option is required. You can add as many as you want. The supported formats are listed above.
+-  If you want to rename (or translate) a label, use the following schema at the options: optionName + Pipe + yourLabel. "Google|Google Kalender" would generate a Google Calendar option, but label it as "Google Kalender".
+-  If no timeZone and no timeZoneOffset is provided, the date refers to UTC time.
+-  You can add a timeZoneOffset or timeZone (TZ name). You can find a list of them at [Wikipedia](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones).
+-  If the timeZoneOffset is set, it will always override the timeZone. It is recommended to only use 1 of them at a time.
+-  The timeZone might not work in very old browsers, but also considers dynamic changes like summer/winter time.
+-  timeZoneOffset works with older browsers, but is quite static.
+-  Use "currentBrowser" as value for timeZone to dynamically use the time of the user's browser. Use this with caution, since it would mean that the date and time will differ per user, which should not be the usual case! (Requires all times to be set.)
+-  You can set the trigger to "click". This makes the button open on click at desktop. Otherwise, the default would be to open on hover. On touch devices, this makes no difference.
+-  If you want to define a specific name for any generated ics file (iCal), you can specify it via the "iCalFileName" option. The default would be "event-to-save-in-my-calendar".
+-  You can use the option "inline":true in order to make the button appear with inline-block instead of block style.
+-  Formatting a URL in the description like `[url]https://....[/url]` makes it clickable.
+-  If you require line breaks within the description, use `\n` or `<br>`.
 
 <br />
 
@@ -305,9 +288,9 @@ const atcb_action = () => {
 
 Anyone is welcome to contribute, but mind the [guidelines](.github/CONTRIBUTING.md):
 
-*  [Bug reports](.github/CONTRIBUTING.md#bugs)
-*  [Feature requests](.github/CONTRIBUTING.md#features)
-*  [Pull requests](.github/CONTRIBUTING.md#pull-requests)
+-  [Bug reports](.github/CONTRIBUTING.md#bugs)
+-  [Feature requests](.github/CONTRIBUTING.md#features)
+-  [Pull requests](.github/CONTRIBUTING.md#pull-requests)
 
 **IMPORTANT NOTE:** Run `npm install` and `npm run build` to create the minified js and css file, its sourcemap files as well as the npm_dist/ folder and content!
 
@@ -321,20 +304,20 @@ Copyright (c) [Jens Kuerschner](https://jenskuerschner.de). Licensed under [MIT 
 
 ## ⚡ Changelog (without minor changes and fixes)
 
-*  v1.8 : new button style
-*  v1.7 : new code structure and options + tons of optimizations
-*  v1.6 : supporting Microsoft Teams
-*  v1.5 : update to date format and better accesibility
-*  v1.4 : schema.org support (also changed some keys in the JSON!)
-*  v1.3 : new license (MIT with “Commons Clause”)
-*  v1.2 : inline and line break support
-*  v1.1 : npm functionality
-*  v1.0 : initial release
+-  v1.8 : new button style
+-  v1.7 : new code structure and options + tons of optimizations
+-  v1.6 : supporting Microsoft Teams
+-  v1.5 : update to date format and better accesibility
+-  v1.4 : schema.org support (also changed some keys in the JSON!)
+-  v1.3 : new license (MIT with “Commons Clause”)
+-  v1.2 : inline and line break support
+-  v1.1 : npm functionality
+-  v1.0 : initial release
 
 <br />
 
 ## 💜 Kudos go to
 
-*  [uxwing.com](https://uxwing.com)
-*  [Chad Ostrowski (chadoh)](https://github.com/chadoh)
-*  ... and all other contributors!
+-  [uxwing.com](https://uxwing.com)
+-  [Chad Ostrowski (chadoh)](https://github.com/chadoh)
+-  ... and all other contributors!

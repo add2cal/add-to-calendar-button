@@ -6,7 +6,8 @@ function process(content, exportPhrase) {
     `${exportPhrase} { atcb_action, atcb_init };`
   );
 }
-module.exports = function(grunt) { // The config.
+module.exports = function(grunt) {
+  // The config.
   grunt.initConfig({
     // update version. Either use via `npm run release --set=version::patch`, `npm run release --set=version::minor`, `npm run release --set=version::major`, or `npm run release --set=version::x.x.x` (with x.x.x being the exact version number)
     version: {
@@ -65,7 +66,7 @@ module.exports = function(grunt) { // The config.
       newBuild: {
         files: {
           "assets/js/atcb.min.js": ["assets/js/atcb.js"],
-        }
+        },
       }
     },
     // minifies the main css file
