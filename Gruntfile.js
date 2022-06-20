@@ -2,7 +2,7 @@ const initCodeDelimiter = /\/\/ START INIT[\s\S]*?\/\/ END INIT/g;
 
 function process(content, exportPhrase) {
   return content.replace(
-    initCodeDelimiter, 
+    initCodeDelimiter,
     `${exportPhrase} { atcb_action, atcb_init };`
   );
 }
@@ -16,19 +16,19 @@ module.exports = function(grunt) {
       },
       demoHtml: {
         options: {
-          prefix: '.(tinyVersion">v|.?v=)'
+          prefix: '.(tinyVersion">v|.?v=)',
         },
         src: ["index.html"],
       },
       js: {
         options: {
-        prefix: "Version.=.."
+        prefix: "Version.=..",
         },
         src: ["assets/js/atcb.js"],
       },
       css: {
         options: {
-          prefix: "Version:."
+          prefix: "Version:.",
         },
         src: ["assets/css/atcb.css"],
       },
@@ -41,19 +41,19 @@ module.exports = function(grunt) {
         "assets/css/atcb.min.css",
         "assets/css/atcb.min.css.map",
         "npm_dist/"
-      ]
+      ],
     },
     // creates the source files for the npm versionm supporting CommonJS and ES Module (https://www.sensedeep.com/blog/posts/2021/how-to-create-single-source-npm-module.html)
     copy: {
       mjs_dist: {
         src: "assets/js/atcb.js",
         dest: "npm_dist/mjs/index.js",
-        options: { process: (content) => process(content, "export"), }
+        options: { process: (content) => process(content, "export") },
       },
       cjs_dist: {
         src: "assets/js/atcb.js",
         dest: "npm_dist/cjs/index.js",
-        options: { process: (content) => process(content, "module.exports ="), }
+        options: { process: (content) => process(content, "module.exports =") },
       }
     },
     // minifies the main js file
