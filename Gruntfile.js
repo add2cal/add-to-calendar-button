@@ -67,7 +67,7 @@ module.exports = function(grunt) {
         files: {
           "assets/js/atcb.min.js": ["assets/js/atcb.js"],
         },
-      }
+      },
     },
     // minifies the main css file
     cssmin: {
