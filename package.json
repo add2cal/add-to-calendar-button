@@ -51,6 +51,21 @@
     "url": "https://github.com/jekuer/add-to-calendar-button/issues"
   },
   "homepage": "https://jekuer.github.io/add-to-calendar-button/",
+  "rules": {
+    "node/no-unsupported-features/es-syntax": [
+      "error",
+      {
+        "version": ">=13.0.0",
+        "ignores": ["modules"]
+      }
+    ],
+    "import/extensions": [
+      "error",
+      {
+        "js": "ignorePackages"
+      }
+    ]
+  },
   "scripts": {
     "release": "grunt -c %npm_config_set% && npm install && npm run build",
     "test": "node test/server-side-rendering.js",
