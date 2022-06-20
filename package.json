@@ -52,19 +52,14 @@
   },
   "homepage": "https://jekuer.github.io/add-to-calendar-button/",
   "rules": {
-    "node/no-unsupported-features/es-syntax": [
-      "error",
-      {
-        "version": ">=13.0.0",
-        "ignores": ["modules"]
-      }
-    ],
-    "import/extensions": [
-      "error",
-      {
-        "js": "ignorePackages"
-      }
-    ]
+    "node/no-unsupported-features/es-syntax": ["error", {"ignores": ["modules"] }],
+    "import/extensions": ["error", {"js": "ignorePackages"}]
+  },
+  "settings": {
+    "node": {
+      "resolvePaths": ["node_modules/@types"],
+      "tryExtensions": [".js", ".json", ".node", ".ts", ".d.ts"]
+    }
   },
   "scripts": {
     "release": "grunt -c %npm_config_set% && npm install && npm run build",
