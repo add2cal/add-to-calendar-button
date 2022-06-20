@@ -166,7 +166,7 @@ function atcb_date_cleanup(data) {
       }
     }
     // remove any seconds from time information
-    if (data[point + 'Time'] != null && data[point + 'Time'].length == 8) {
+    if (data[point + 'Time'] != null && data[point + 'Time'].length === 8) {
       let timeStr = data[point + 'Time'];
       data[point + 'Time'] = timeStr.substring(0, timeStr.length - 3);
     }
@@ -213,7 +213,7 @@ function atcb_validate(data) {
   const dates = ['startDate', 'endDate'];
   let newDate = dates;
   if (!dates.every(function(date) {
-    if (data[date].length != 10) {
+    if (data[date].length !== 10) {
       console.error("add-to-calendar button generation failed: date misspelled [-> YYYY-MM-DD]");
       return false;
     }
@@ -231,7 +231,7 @@ function atcb_validate(data) {
   const times = ['startTime', 'endTime'];
   if (!times.every(function(time) {
     if (data[time] != null) {
-      if (data[time].length != 5) {
+      if (data[time].length !== 5) {
         console.error("add-to-calendar button generation failed: time misspelled [-> HH:MM]");
         return false;
       }
@@ -429,7 +429,7 @@ function atcb_generate_bg_overlay(data) {
   bgOverlay.addEventListener('touchstart', () => fingerMoved = false, {passive: true});
   bgOverlay.addEventListener('touchmove', () => fingerMoved = true, {passive: true});
   bgOverlay.addEventListener('touchend', function() {
-    if (fingerMoved == false) {
+    if (fingerMoved === false) {
       atcb_close(true);
     }
   }, {passive: true});
