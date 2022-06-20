@@ -50,10 +50,10 @@ See [jekuer.github.io/add-to-calendar-button](https://jekuer.github.io/add-to-ca
 *  Optimized UX (for desktop and mobile) - adjustable.
 *  Beautiful UI (the best combined from experts around the world).
 *  Up-to-date integration of all popular calendars:
-  *  Google Calendar.
-  *  Yahoo Calender.
-  *  Microsoft 365, Outlook, and Teams.
-  *  Automatically generated iCal/ics files (for all other calendars, like Apple).
+   *  Google Calendar.
+   *  Yahoo Calender.
+   *  Microsoft 365, Outlook, and Teams.
+   *  Automatically generated iCal/ics files (for all other calendars, like Apple).
 *  Timed and all-day events.
 *  Translatable labels and dynamic dates.
 *  Well documented code, to easily understand the processes and build on top of it.
@@ -96,9 +96,9 @@ See [jekuer.github.io/add-to-calendar-button](https://jekuer.github.io/add-to-ca
 
 4.  Either use `atcb_action` with your own buttons/forms/etc, or run `atcb_init` after the DOM has been loaded. To determine the right moment and execute, ...
 
-  1.  with Angular, you would use `ngAfterViewInit()` with `atcb_init();` (mind that, depending on your app, other hooks might be better);
+    1.  with Angular, you would use `ngAfterViewInit()` with `atcb_init();` (mind that, depending on your app, other hooks might be better);
 
-  2.  with React, you might want to include an event listener like `document.addEventListener('DOMContentLoaded', atcb_init, false);` or using hooks in a functional component like `useEffect(() => atcb_init());`
+    2.  with React, you might want to include an event listener like `document.addEventListener('DOMContentLoaded', atcb_init, false);` or using hooks in a functional component like `useEffect(() => atcb_init());`
 
 5.  Include the css. For example with Angular or React, add the following to the global style.css: `@import 'add-to-calendar-button/assets/css/atcb.min'`;
 
