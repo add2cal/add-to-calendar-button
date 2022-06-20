@@ -7,5 +7,5 @@ A [GitHub Security Advisory](https://github.com/directus/directus/security/advis
 Any support is highly appreciated and will be credited within the respective fix note. 
 For properly handling the case, the following best practice behavior is inevitable:
 
-- Do not publish any information about the vulnerability prior to the release of the respective fix, in order to give everybody the chance to update.
-- Do not disclose the details of your findings even afterwards. We want to make the world safer, not burn it down.
+-   Do not publish any information about the vulnerability prior to the release of the respective fix, in order to give everybody the chance to update.
+-   Do not disclose the details of your findings even afterwards. We want to make the world safer, not burn it down.
