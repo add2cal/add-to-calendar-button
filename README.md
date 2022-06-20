@@ -48,21 +48,15 @@ See [jekuer.github.io/add-to-calendar-button](https://jekuer.github.io/add-to-ca
 ## ✨ Features
 
 -   Simple and convenient integration of multiple buttons - configure them directly within the HTML code.
-
 -   Optimized UX (for desktop and mobile) - adjustable.
-
 -   Beautiful UI (the best combined from experts around the world).
-
 -   Up-to-date integration of all popular calendars:
-   -   Google Calendar.
-   -   Yahoo Calender.
-   -   Microsoft 365, Outlook, and Teams.
-   -   Automatically generated iCal/ics files (for all other calendars, like Apple).
-   
+    -   Google Calendar.
+    -   Yahoo Calender.
+    -   Microsoft 365, Outlook, and Teams.
+    -   Automatically generated iCal/ics files (for all other calendars, like Apple).   
 -   Timed and all-day events.
-
 -   Translatable labels and dynamic dates.
-
 -   Well documented code, to easily understand the processes and build on top of it.
 
 ![Demo Screenshot](https://github.com/jekuer/add-to-calendar-button/blob/main/demo.gif?raw=true)
