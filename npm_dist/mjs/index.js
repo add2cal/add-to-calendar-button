@@ -679,6 +679,7 @@ function atcb_generate_ical(data) {
       save.download = filename;
       let evt = new MouseEvent('click', {
           'view': window,
+          'button': 0,
           'bubbles': true,
           'cancelable': false
       });
