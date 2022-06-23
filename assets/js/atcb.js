@@ -21,11 +21,11 @@ function atcb_init() {
   console.log("add-to-calendar button initialized (version " + atcbVersion + ")");
   console.log("See https://github.com/jekuer/add-to-calendar-button for details");
   // get all placeholders
-  let atcButtons = document.querySelectorAll('.atcb');
+  const atcButtons = document.querySelectorAll('.atcb');
   // if there are some, move on
   if (atcButtons.length > 0) {
     // get the amount of already initialized ones first
-    let atcButtonsInitialized = document.querySelectorAll('.atcb_initialized');
+    const atcButtonsInitialized = document.querySelectorAll('.atcb_initialized');
     // generate the buttons one by one
     for (let i = 0; i < atcButtons.length; i++) {
       // skip already initialized ones
@@ -34,19 +34,19 @@ function atcb_init() {
       }
       let atcbConfig;
       // check if schema.org markup is present
-      let schema = atcButtons[i].querySelector('script');
+      const schema = atcButtons[i].querySelector('script');
       // get their JSON content first
       if (schema && schema.innerHTML) {
         // get schema.org event markup and flatten the event block
         atcbConfig = JSON.parse(schema.innerHTML.replace(/(\r\n|\n|\r)/gm, "").replace(/(<(?!br)([^>]+)>)/gi, "")); // remove real code line breaks before parsing. Use <br> or \n explicitely in the description to create a line break. Also strip HTML tags (especially since stupid Safari adds stuff).
         atcbConfig = atcb_parse_schema_json(atcbConfig);
         // set flag to not delete HTML content later
-        atcbConfig['deleteJSON'] = false;
+        atcbConfig.deleteJSON = false;
       } else {
         // get JSON from HTML block
         atcbConfig = JSON.parse(atcButtons[i].innerHTML.replace(/(\r\n|\n|\r)/gm, "").replace(/(<(?!br)([^>]+)>)/gi, "")); // remove real code line breaks before parsing. Use <br> or \n explicitely in the description to create a line break. Also strip HTML tags (especially since stupid Safari adds stuff).
         // set flag to delete HTML content later
-        atcbConfig['deleteJSON'] = true;
+        atcbConfig.deleteJSON = true;
       }
       // rewrite config for backwards compatibility - you can remove this, if you did not use this script before v1.4.0.
       atcbConfig = atcb_patch_config(atcbConfig);
@@ -69,10 +69,10 @@ function atcb_init() {
 // NORMALIZE AND PARSE JSON FROM SCHEMA.ORG MARKUP
 function atcb_parse_schema_json(atcbConfig) {
   try {
-    Object.keys(atcbConfig['event']).forEach(key => {
+    Object.keys(atcbConfig.event).forEach(key => {
       // move entries one level up, but skip schema types
       if (key.charAt(0) !== '@') {
-        atcbConfig[key] = atcbConfig['event'][key]; 
+        atcbConfig[key] = atcbConfig.event[key]; 
       } 
     });
     // drop the event block and return
@@ -110,8 +110,8 @@ function atcb_decorate_data(atcbConfig) {
   // cleanup different date-time formats
   atcbConfig = atcb_date_cleanup(atcbConfig);
   // calculate the real date values in case that there are some special rules included (e.g. adding days dynamically)
-  atcbConfig['startDate'] = atcb_date_calculation(atcbConfig['startDate']);
-  atcbConfig['endDate'] = atcb_date_calculation(atcbConfig['endDate']);
+  atcbConfig.startDate = atcb_date_calculation(atcbConfig.startDate);
+  atcbConfig.endDate = atcb_date_calculation(atcbConfig.endDate);
   
   // if no description or already decorated, return early
   if (!atcbConfig.description || atcbConfig.description_iCal) return atcbConfig;
@@ -133,7 +133,7 @@ function atcb_decorate_data(atcbConfig) {
 // CHECK FOR REQUIRED FIELDS
 function atcb_check_required(data) {
   // check for at least 1 option
-  if (data['options'] == null || data['options'].length < 1) {
+  if (data.options == null || data.options.length < 1) {
     console.error("add-to-calendar button generation failed: no options set");
     return false;
   }
@@ -159,7 +159,7 @@ function atcb_date_cleanup(data) {
       // remove any milliseconds information
       data[point + 'Date'] = data[point + 'Date'].replace(/\..../, '').replace('Z', '');
       // identify a possible time information within the date string
-      let tmpSplitStartDate = data[point + 'Date'].split('T');
+      const tmpSplitStartDate = data[point + 'Date'].split('T');
       if (tmpSplitStartDate[1] != null) {
         data[point + 'Date'] = tmpSplitStartDate[0];
         data[point + 'Time'] = tmpSplitStartDate[1];
@@ -167,7 +167,7 @@ function atcb_date_cleanup(data) {
     }
     // remove any seconds from time information
     if (data[point + 'Time'] != null && data[point + 'Time'].length === 8) {
-      let timeStr = data[point + 'Time'];
+      const timeStr = data[point + 'Time'];
       data[point + 'Time'] = timeStr.substring(0, timeStr.length - 3);
     }
   });
@@ -176,8 +176,8 @@ function atcb_date_cleanup(data) {
 
 function atcb_date_calculation(dateString) {
   // replace "today" with the current date first
-  let today = new Date();
-  let todayString = (today.getUTCMonth() + 1) + '-' + today.getUTCDate() + '-' + today.getUTCFullYear();
+  const today = new Date();
+  const todayString = (today.getUTCMonth() + 1) + '-' + today.getUTCDate() + '-' + today.getUTCFullYear();
   dateString = dateString.replace(/today/ig, todayString);
   // check for any dynamic additions and adjust
   const dateStringParts = dateString.split('+');
@@ -199,8 +199,8 @@ function atcb_date_calculation(dateString) {
 function atcb_validate(data) {
   // validate options
   const options = ['Apple', 'Google', 'iCal', 'Microsoft365', 'Outlook.com', 'MicrosoftTeams', 'Yahoo']
-  if (!data['options'].every(function(option) {
-    let cleanOption = option.split('|');
+  if (!data.options.every(function(option) {
+    const cleanOption = option.split('|');
     if (!options.includes(cleanOption[0])) {
       console.error("add-to-calendar button generation failed: invalid option [" + cleanOption[0] + "]");
       return false;
@@ -211,7 +211,7 @@ function atcb_validate(data) {
   }
   // validate date
   const dates = ['startDate', 'endDate'];
-  let newDate = dates;
+  const newDate = dates;
   if (!dates.every(function(date) {
     if (data[date].length !== 10) {
       console.error("add-to-calendar button generation failed: date misspelled [-> YYYY-MM-DD]");
@@ -251,22 +251,22 @@ function atcb_validate(data) {
       }
       // update the date with the time for further validation steps
       if (time == 'startTime') {
-        newDate['startDate'] = new Date(newDate['startDate'].getTime() + (timeParts[0] * 3600000) + (timeParts[1] * 60000))
+        newDate.startDate = new Date(newDate.startDate.getTime() + (timeParts[0] * 3600000) + (timeParts[1] * 60000))
       }
       if (time == 'endTime') {
-        newDate['endDate'] = new Date(newDate['endDate'].getTime() + (timeParts[0] * 3600000) + (timeParts[1] * 60000))      
+        newDate.endDate = new Date(newDate.endDate.getTime() + (timeParts[0] * 3600000) + (timeParts[1] * 60000))      
       }
     }
     return true;
   })) {
     return false;
   }
-  if ((data['startTime'] != null && data['endTime'] == null) || (data['startTime'] == null && data['endTime'] != null)) {
+  if ((data.startTime != null && data.endTime == null) || (data.startTime == null && data.endTime != null)) {
     console.error("add-to-calendar button generation failed: if you set a starting time, you also need to define an end time");
     return false;
   }
   // validate whether end is not before start
-  if (newDate['endDate'] < newDate['startDate']) {
+  if (newDate.endDate < newDate.startDate) {
     console.error("add-to-calendar button generation failed: end date before start date");
     return false;
   }
@@ -280,39 +280,39 @@ function atcb_validate(data) {
 function atcb_generate_label(parent, icon, text) {
   // helper function to generate the labels for the button and list options
   if (icon != "") {
-    let iconEl = document.createElement('span');
+    const iconEl = document.createElement('span');
     iconEl.classList.add('atcb_icon');
     iconEl.innerHTML = icon;
+    parent.appendChild(iconEl);
   }
   if (text != "") {
-    let textEl = document.createElement('span');
+    const textEl = document.createElement('span');
     textEl.classList.add('atcb_text');
     textEl.textContent = text;
-    parent.appendChild(iconEl);
     parent.appendChild(textEl);
   }
 }
 
 function atcb_generate(button, buttonId, data) {
   // clean the placeholder, if flagged that way
-  if (data['deleteJSON']) {
+  if (data.deleteJSON) {
     button.innerHTML = '';
   }
   // generate the wrapper div
-  let buttonTriggerWrapper = document.createElement('div');
+  const buttonTriggerWrapper = document.createElement('div');
   buttonTriggerWrapper.classList.add('atcb_button_wrapper');
   button.appendChild(buttonTriggerWrapper);
   // generate the button trigger div
-  let buttonTrigger = document.createElement('button');
+  const buttonTrigger = document.createElement('button');
   buttonTrigger.id = 'atcb_button_' + buttonId;
   buttonTrigger.classList.add('atcb_button');
   buttonTrigger.setAttribute('type', 'button');
   buttonTriggerWrapper.appendChild(buttonTrigger);
   // generate the icon and text within the button
-  let labelIcon = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 122.88 122.88"><path d="M81.61 4.73c0-2.61 2.58-4.73 5.77-4.73s5.77 2.12 5.77 4.73v20.72c0 2.61-2.58 4.73-5.77 4.73s-5.77-2.12-5.77-4.73V4.73h0zm-3.65 76.03c1.83 0 3.32 1.49 3.32 3.32s-1.49 3.32-3.32 3.32l-12.95-.04-.04 12.93c0 1.83-1.49 3.32-3.32 3.32s-3.32-1.49-3.32-3.32l.04-12.94-12.93-.05c-1.83 0-3.32-1.49-3.32-3.32s1.49-3.32 3.32-3.32l12.94.04.04-12.93c0-1.83 1.49-3.32 3.32-3.32s3.32 1.49 3.32 3.32l-.04 12.95 12.94.04h0zM29.61 4.73c0-2.61 2.58-4.73 5.77-4.73s5.77 2.12 5.77 4.73v20.72c0 2.61-2.58 4.73-5.77 4.73s-5.77-2.12-5.77-4.73V4.73h0zM6.4 45.32h110.08V21.47c0-.8-.33-1.53-.86-2.07-.53-.53-1.26-.86-2.07-.86H103c-1.77 0-3.2-1.43-3.2-3.2s1.43-3.2 3.2-3.2h10.55c2.57 0 4.9 1.05 6.59 2.74s2.74 4.02 2.74 6.59v27.06 65.03c0 2.57-1.05 4.9-2.74 6.59s-4.02 2.74-6.59 2.74H9.33c-2.57 0-4.9-1.05-6.59-2.74-1.69-1.7-2.74-4.03-2.74-6.6V48.53 21.47c0-2.57 1.05-4.9 2.74-6.59s4.02-2.74 6.59-2.74H20.6c1.77 0 3.2 1.43 3.2 3.2s-1.43 3.2-3.2 3.2H9.33c-.8 0-1.53.33-2.07.86-.53.53-.86 1.26-.86 2.07v23.85h0zm110.08 6.41H6.4v61.82c0 .8.33 1.53.86 2.07.53.53 1.26.86 2.07.86h104.22c.8 0 1.53-.33 2.07-.86.53-.53.86-1.26.86-2.07V51.73h0zM50.43 18.54c-1.77 0-3.2-1.43-3.2-3.2s1.43-3.2 3.2-3.2h21.49c1.77 0 3.2 1.43 3.2 3.2s-1.43 3.2-3.2 3.2H50.43h0z"/></svg>';
-  atcb_generate_label(buttonTrigger, labelIcon, data['label'] || 'Add to Calendar');
+  const labelIcon = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 122.88 122.88"><path d="M81.61 4.73c0-2.61 2.58-4.73 5.77-4.73s5.77 2.12 5.77 4.73v20.72c0 2.61-2.58 4.73-5.77 4.73s-5.77-2.12-5.77-4.73V4.73h0zm-3.65 76.03c1.83 0 3.32 1.49 3.32 3.32s-1.49 3.32-3.32 3.32l-12.95-.04-.04 12.93c0 1.83-1.49 3.32-3.32 3.32s-3.32-1.49-3.32-3.32l.04-12.94-12.93-.05c-1.83 0-3.32-1.49-3.32-3.32s1.49-3.32 3.32-3.32l12.94.04.04-12.93c0-1.83 1.49-3.32 3.32-3.32s3.32 1.49 3.32 3.32l-.04 12.95 12.94.04h0zM29.61 4.73c0-2.61 2.58-4.73 5.77-4.73s5.77 2.12 5.77 4.73v20.72c0 2.61-2.58 4.73-5.77 4.73s-5.77-2.12-5.77-4.73V4.73h0zM6.4 45.32h110.08V21.47c0-.8-.33-1.53-.86-2.07-.53-.53-1.26-.86-2.07-.86H103c-1.77 0-3.2-1.43-3.2-3.2s1.43-3.2 3.2-3.2h10.55c2.57 0 4.9 1.05 6.59 2.74s2.74 4.02 2.74 6.59v27.06 65.03c0 2.57-1.05 4.9-2.74 6.59s-4.02 2.74-6.59 2.74H9.33c-2.57 0-4.9-1.05-6.59-2.74-1.69-1.7-2.74-4.03-2.74-6.6V48.53 21.47c0-2.57 1.05-4.9 2.74-6.59s4.02-2.74 6.59-2.74H20.6c1.77 0 3.2 1.43 3.2 3.2s-1.43 3.2-3.2 3.2H9.33c-.8 0-1.53.33-2.07.86-.53.53-.86 1.26-.86 2.07v23.85h0zm110.08 6.41H6.4v61.82c0 .8.33 1.53.86 2.07.53.53 1.26.86 2.07.86h104.22c.8 0 1.53-.33 2.07-.86.53-.53.86-1.26.86-2.07V51.73h0zM50.43 18.54c-1.77 0-3.2-1.43-3.2-3.2s1.43-3.2 3.2-3.2h21.49c1.77 0 3.2 1.43 3.2 3.2s-1.43 3.2-3.2 3.2H50.43h0z"/></svg>';
+  atcb_generate_label(buttonTrigger, labelIcon, data.label || 'Add to Calendar');
   // set event listeners for the button trigger
-  if (data['trigger'] == 'click') {
+  if (data.trigger == 'click') {
     buttonTrigger.addEventListener('mousedown', () => atcb_toggle(data, buttonTrigger, true, false));
   } else {
     buttonTrigger.addEventListener('touchstart', () => atcb_toggle(data, buttonTrigger, true, false), {passive: true});
@@ -327,7 +327,7 @@ function atcb_generate(button, buttonId, data) {
   button.classList.remove('atcb');
   button.classList.add('atcb_initialized');
   // show the placeholder div
-  if (data['inline']) {
+  if (data.inline) {
     button.style.display = 'inline-block';
   } else {
     button.style.display = 'block';
@@ -341,9 +341,9 @@ function atcb_generate_dropdown_list(data) {
   const optionsList = document.createElement('div');
   optionsList.classList.add('atcb_list');
   // generate the list items
-  data['options'].forEach(function(option) {
-    let optionParts = option.split('|');
-    let optionItem = document.createElement('div');
+  data.options.forEach(function(option) {
+    const optionParts = option.split('|');
+    const optionItem = document.createElement('div');
     optionItem.classList.add('atcb_list_item');
     optionItem.tabIndex = 0;
     optionsList.appendChild(optionItem);
@@ -431,7 +431,7 @@ function atcb_generate_bg_overlay(data) {
     }
   }, {passive: true});
   bgOverlay.addEventListener('focus', () => atcb_close(false));
-  if (data['trigger'] !== 'click') {
+  if (data.trigger !== 'click') {
     bgOverlay.addEventListener('mousemove', () => atcb_close(true));
   } else {    
     bgOverlay.classList.add('atcb_click');
@@ -528,26 +528,26 @@ function atcb_generate_google(data) {
   // base url
   let url = 'https://calendar.google.com/calendar/render?action=TEMPLATE';
   // generate and add date
-  let formattedDate = atcb_generate_time(data, 'clean', 'google');
-  url += '&dates=' + formattedDate['start'] + '%2F' + formattedDate['end'];
+  const formattedDate = atcb_generate_time(data, 'clean', 'google');
+  url += '&dates=' + formattedDate.start + '%2F' + formattedDate.end;
   // add details (if set)
-  if (data['name'] != null && data['name'] != '') {
-    url += '&text=' + encodeURIComponent(data['name']);
+  if (data.name != null && data.name != '') {
+    url += '&text=' + encodeURIComponent(data.name);
   }
-  if (data['location'] != null && data['location'] != '') {
-    url += '&location=' + encodeURIComponent(data['location']);
+  if (data.location != null && data.location != '') {
+    url += '&location=' + encodeURIComponent(data.location);
     // TODO: Find a better solution for the next temporary workaround.
     if (isiOS()) { // workaround to cover a bug, where, when using Google Calendar on an iPhone, the location is not recognized. So, for the moment, we simply add it to the description.
-      if (data['description'] == null || data['description'] == '') {
-        data['description'] = '';
+      if (data.description == null || data.description == '') {
+        data.description = '';
       } else {
-        data['description'] += '<br><br>';
+        data.description += '<br><br>';
       }
-      data['description'] += '&#128205;: ' + data['location'];
+      data.description += '&#128205;: ' + data.location;
     }
   }
-  if (data['description'] != null && data['description'] != '') {
-    url += '&details=' + encodeURIComponent(data['description']);
+  if (data.description != null && data.description != '') {
+    url += '&details=' + encodeURIComponent(data.description);
   }
   window.open(url, '_blank').focus();
 }
@@ -559,20 +559,20 @@ function atcb_generate_yahoo(data) {
   // base url
   let url = 'https://calendar.yahoo.com/?v=60';
   // generate and add date
-  let formattedDate = atcb_generate_time(data, 'clean');
-  url += '&st=' + formattedDate['start'] + '&et=' + formattedDate['end'];
-  if (formattedDate['allday']) {
+  const formattedDate = atcb_generate_time(data, 'clean');
+  url += '&st=' + formattedDate.start + '&et=' + formattedDate.end;
+  if (formattedDate.allday) {
     url += '&dur=allday';
   }
   // add details (if set)
-  if (data['name'] != null && data['name'] != '') {
-    url += '&title=' + encodeURIComponent(data['name']);
+  if (data.name != null && data.name != '') {
+    url += '&title=' + encodeURIComponent(data.name);
   }
-  if (data['location'] != null && data['location'] != '') {
-    url += '&in_loc=' + encodeURIComponent(data['location']);
+  if (data.location != null && data.location != '') {
+    url += '&in_loc=' + encodeURIComponent(data.location);
   }
-  if (data['description'] != null && data['description'] != '') {
-    url += '&desc=' + encodeURIComponent(data['description']);
+  if (data.description != null && data.description != '') {
+    url += '&desc=' + encodeURIComponent(data.description);
   }
   window.open(url, '_blank').focus();
 }
@@ -590,20 +590,20 @@ function atcb_generate_microsoft(data, type = '365') {
   }
   url += '/calendar/0/deeplink/compose?path=%2Fcalendar%2Faction%2Fcompose&rru=addevent';
   // generate and add date
-  let formattedDate = atcb_generate_time(data, 'delimiters', 'microsoft');
-  url += '&startdt=' + formattedDate['start'] + '&enddt=' + formattedDate['end'];
-  if (formattedDate['allday']) {
+  const formattedDate = atcb_generate_time(data, 'delimiters', 'microsoft');
+  url += '&startdt=' + formattedDate.start + '&enddt=' + formattedDate.end;
+  if (formattedDate.allday) {
     url += '&allday=true';
   }
   // add details (if set)
-  if (data['name'] != null && data['name'] != '') {
-    url += '&subject=' + encodeURIComponent(data['name']);
+  if (data.name != null && data.name != '') {
+    url += '&subject=' + encodeURIComponent(data.name);
   }
-  if (data['location'] != null && data['location'] != '') {
-    url += '&location=' + encodeURIComponent(data['location']);
+  if (data.location != null && data.location != '') {
+    url += '&location=' + encodeURIComponent(data.location);
   }
-  if (data['description'] != null && data['description'] != '') {
-    url += '&body=' + encodeURIComponent(data['description'].replace(/\n/g, '<br>'));
+  if (data.description != null && data.description != '') {
+    url += '&body=' + encodeURIComponent(data.description.replace(/\n/g, '<br>'));
   }
   window.open(url, '_blank').focus();
 }
@@ -617,20 +617,20 @@ function atcb_generate_teams(data) {
   // base url
   let url = 'https://teams.microsoft.com/l/meeting/new?';
   // generate and add date
-  let formattedDate = atcb_generate_time(data, 'delimiters', 'microsoft');
-  url += '&startTime=' + formattedDate['start'] + '&endTime=' + formattedDate['end'];
+  const formattedDate = atcb_generate_time(data, 'delimiters', 'microsoft');
+  url += '&startTime=' + formattedDate.start + '&endTime=' + formattedDate.end;
   // add details (if set)
   let locationString = '';
-  if (data['name'] != null && data['name'] != '') {
-    url += '&subject=' + encodeURIComponent(data['name']);
+  if (data.name != null && data.name != '') {
+    url += '&subject=' + encodeURIComponent(data.name);
   }
-  if (data['location'] != null && data['location'] != '') {
-    locationString = encodeURIComponent(data['location']);
+  if (data.location != null && data.location != '') {
+    locationString = encodeURIComponent(data.location);
     url += '&location=' + locationString;
     locationString += ' // '; // preparing the workaround putting the location into the description, since the native field is not supported yet
   }
-  if (data['description_iCal'] != null && data['description_iCal'] != '') { // using description_iCal instead of description, since Teams does not support html tags
-    url += '&content=' + locationString + encodeURIComponent(data['description_iCal']);
+  if (data.description_iCal != null && data.description_iCal != '') { // using description_iCal instead of description, since Teams does not support html tags
+    url += '&content=' + locationString + encodeURIComponent(data.description_iCal);
   }
   window.open(url, '_blank').focus();
 }
@@ -641,26 +641,26 @@ function atcb_generate_teams(data) {
 function atcb_generate_ical(data) {
   let now = new Date();
   now = now.toISOString().replace(/\..../g, '').replace(/[^a-z0-9]/gi,'');
-  let formattedDate = atcb_generate_time(data, 'clean', 'ical');
+  const formattedDate = atcb_generate_time(data, 'clean', 'ical');
   let timeslot = '';
-  if (formattedDate['allday']) {
+  if (formattedDate.allday) {
     timeslot = ';VALUE=DATE';
   }
-  let ics_lines = [
+  const ics_lines = [
     "BEGIN:VCALENDAR",
     "VERSION:2.0",
     "CALSCALE:GREGORIAN",
     "BEGIN:VEVENT",
-    "DTSTAMP:" + formattedDate['start'],
-    "DTSTART" + timeslot + ":" + formattedDate['start'],
-    "DTEND" + timeslot + ":" + formattedDate['end'],
-    "SUMMARY:" + data['name']
+    "DTSTAMP:" + formattedDate.start,
+    "DTSTART" + timeslot + ":" + formattedDate.start,
+    "DTEND" + timeslot + ":" + formattedDate.end,
+    "SUMMARY:" + data.name
    ];
-   if (data['description_iCal'] != null && data['description_iCal'] != '') {
-     ics_lines.push("DESCRIPTION:" + data['description_iCal'].replace(/\n/g, '\\n'));
+   if (data.description_iCal != null && data.description_iCal != '') {
+     ics_lines.push("DESCRIPTION:" + data.description_iCal.replace(/\n/g, '\\n'));
    }
-   if (data['location'] != null && data['location'] != '') {
-     ics_lines.push("LOCATION:" + data['location']);
+   if (data.location != null && data.location != '') {
+     ics_lines.push("LOCATION:" + data.location);
    }
    ics_lines.push(
     "STATUS:CONFIRMED",
@@ -669,15 +669,15 @@ function atcb_generate_ical(data) {
     "END:VEVENT",
     "END:VCALENDAR"
    );
-  let dlurl = 'data:text/calendar;charset=utf-8,'+encodeURIComponent(ics_lines.join('\r\n'));
-  let filename = data['iCalFileName'] || 'event-to-save-in-my-calendar';
+  const dlurl = 'data:text/calendar;charset=utf-8,'+encodeURIComponent(ics_lines.join('\r\n'));
+  const filename = data.iCalFileName || 'event-to-save-in-my-calendar';
   try {
     if (!window.ActiveXObject) {
-      let save = document.createElement('a');
+      const save = document.createElement('a');
       save.href = dlurl;
       save.target = '_blank';
       save.download = filename;
-      let evt = new MouseEvent('click', {
+      const evt = new MouseEvent('click', {
           'view': window,
           'button': 0,
           'bubbles': true,
@@ -688,7 +688,7 @@ function atcb_generate_ical(data) {
     }
     // for IE < 11 (even no longer officially supported)
     else if ( !! window.ActiveXObject && document.execCommand) {
-      var _window = window.open(dlurl, '_blank');
+      const _window = window.open(dlurl, '_blank');
       _window.document.close();
       _window.document.execCommand('SaveAs', true, filename || dlurl)
       _window.close();
@@ -702,29 +702,29 @@ function atcb_generate_ical(data) {
 
 // SHARED FUNCTION TO GENERATE A TIME STRING
 function atcb_generate_time(data, style = 'delimiters', targetCal = 'general') {
-  let startDate = data['startDate'].split('-');
-  let endDate = data['endDate'].split('-');
+  const startDate = data.startDate.split('-');
+  const endDate = data.endDate.split('-');
   let start = '';
   let end = '';
   let allday = false;
-  if (data['startTime'] != null && data['endTime'] != null) {
+  if (data.startTime != null && data.endTime != null) {
     // Adjust for timezone, if set (see https://en.wikipedia.org/wiki/List_of_tz_database_time_zones for either the TZ name or the offset)
-    if (data['timeZoneOffset'] != null && data['timeZoneOffset'] != '') {
+    if (data.timeZoneOffset != null && data.timeZoneOffset != '') {
       // if we have a timezone offset given, consider it
-      start = new Date( startDate[0] + '-' + startDate[1] + '-' + startDate[2] + 'T' + data['startTime'] + ':00.000' + data['timeZoneOffset'] );
-      end = new Date( endDate[0] + '-' + endDate[1] + '-' + endDate[2] + 'T' + data['endTime'] + ':00.000' + data['timeZoneOffset'] );
+      start = new Date( startDate[0] + '-' + startDate[1] + '-' + startDate[2] + 'T' + data.startTime + ':00.000' + data.timeZoneOffset );
+      end = new Date( endDate[0] + '-' + endDate[1] + '-' + endDate[2] + 'T' + data.endTime + ':00.000' + data.timeZoneOffset );
     } else {
       // if there is no offset, we prepare the time, assuming it is UTC formatted
-      start = new Date( startDate[0] + '-' + startDate[1] + '-' + startDate[2] + 'T' + data['startTime'] + ':00.000+00:00' );
-      end = new Date( endDate[0] + '-' + endDate[1] + '-' + endDate[2] + 'T' + data['endTime'] + ':00.000+00:00' );
-      if (data['timeZone'] != null && data['timeZone'] != '') {
+      start = new Date( startDate[0] + '-' + startDate[1] + '-' + startDate[2] + 'T' + data.startTime + ':00.000+00:00' );
+      end = new Date( endDate[0] + '-' + endDate[1] + '-' + endDate[2] + 'T' + data.endTime + ':00.000+00:00' );
+      if (data.timeZone != null && data.timeZone != '') {
         // if a timezone is given, we adjust dynamically with the modern toLocaleString function
-        let utcDate = new Date(start.toLocaleString('en-US', { timeZone: "UTC" }));
-        if (data['timeZone'] == 'currentBrowser') {
-          data['timeZone'] = Intl.DateTimeFormat().resolvedOptions().timeZone;
+        const utcDate = new Date(start.toLocaleString('en-US', { timeZone: "UTC" }));
+        if (data.timeZone == 'currentBrowser') {
+          data.timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
         }
-        let tzDate = new Date(start.toLocaleString('en-US', { timeZone: data['timeZone'] }));
-        let offset = utcDate.getTime() - tzDate.getTime();
+        const tzDate = new Date(start.toLocaleString('en-US', { timeZone: data.timeZone }));
+        const offset = utcDate.getTime() - tzDate.getTime();
         start.setTime( start.getTime() + offset );
         end.setTime( end.getTime() + offset );
       }
@@ -751,7 +751,7 @@ function atcb_generate_time(data, style = 'delimiters', targetCal = 'general') {
     start = breakStart;
     end = breakEnd;
   }
-  let returnObject = {'start':start, 'end':end, 'allday':allday};
+  const returnObject = {start, end, allday};
   return returnObject;
 }
 
