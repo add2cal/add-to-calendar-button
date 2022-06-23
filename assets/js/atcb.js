@@ -670,19 +670,28 @@ function atcb_generate_ical(data) {
     "END:VCALENDAR"
    );
   let dlurl = 'data:text/calendar;charset=utf-8,'+encodeURIComponent(ics_lines.join('\r\n'));
+  let filename = data['iCalFileName'] || 'event-to-save-in-my-calendar';
   try {
     if (!window.ActiveXObject) {
       let save = document.createElement('a');
       save.href = dlurl;
       save.target = '_blank';
-      save.download = data['iCalFileName'] || 'event-to-save-in-my-calendar';
+      save.download = filename;
       let evt = new MouseEvent('click', {
           'view': window,
+          'button': 0,
           'bubbles': true,
           'cancelable': false
       });
       save.dispatchEvent(evt);
       (window.URL || window.webkitURL).revokeObjectURL(save.href);
+    }
+    // for IE < 11 (even no longer officially supported)
+    else if ( !! window.ActiveXObject && document.execCommand) {
+      var _window = window.open(dlurl, '_blank');
+      _window.document.close();
+      _window.document.execCommand('SaveAs', true, filename || dlurl)
+      _window.close();
     }
   } catch(e) {
     console.error(e);
