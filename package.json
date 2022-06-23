@@ -2,7 +2,7 @@
   "name": "add-to-calendar-button",
   "version": "1.8.10",
   "engines": {
-    "node": ">=12.0.0"
+    "node": ">=12.22.0"
   },
   "description": "A convenient JavaScript snippet, which lets you create beautiful buttons, where people can add events to their calendars.",
   "main": "npm_dist/cjs/index.js",
@@ -51,27 +51,21 @@
     "url": "https://github.com/jekuer/add-to-calendar-button/issues"
   },
   "homepage": "https://jekuer.github.io/add-to-calendar-button/",
-  "rules": {
-    "node/no-unsupported-features/es-syntax": [
-      "error",
-      {
-        "version": ">=13.0.0",
-        "ignores": ["modules"]
-      }
-    ],
-    "import/extensions": [
-      "error",
-      {
-        "js": "ignorePackages"
-      }
-    ]
-  },
   "scripts": {
     "release": "grunt -c %npm_config_set% && npm install && npm run build",
+    "lint": "npx eslint assets/js/atcb.js",
     "test": "node test/server-side-rendering.js",
     "build": "grunt"
   },
   "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^5.29.0",
+    "@typescript-eslint/parser": "^5.29.0",
+    "eslint": "^8.18.0",
+    "eslint-config-prettier": "^8.5.0",
+    "eslint-config-standard": "^17.0.0",
+    "eslint-plugin-import": "^2.26.0",
+    "eslint-plugin-n": "^15.2.3",
+    "eslint-plugin-promise": "^6.0.0",
     "grunt": ">=1.5.3",
     "grunt-contrib-clean": "^2.0.0",
     "grunt-contrib-copy": "^1.0.0",
