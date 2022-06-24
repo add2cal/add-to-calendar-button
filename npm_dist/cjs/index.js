@@ -59,7 +59,7 @@ function atcb_init() {
         // get JSON from HTML block
         atcbConfig = JSON.parse(
           atcButtons[i].innerHTML
-            .replace(/(\r\n|\n|\r)/gm, "")
+            .replace(/(\r\n|\n|\r)/g, "")
             .replace(/(<(?!br)([^>]+)>)/gi, "")
         ); // remove real code line breaks before parsing. Use <br> or \n explicitely in the description to create a line break. Also strip HTML tags (especially since stupid Safari adds stuff).
         // set flag to delete HTML content later
