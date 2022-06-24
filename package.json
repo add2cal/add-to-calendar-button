@@ -56,10 +56,10 @@
     "stylelint": "npx stylelint assets/css/*.css",
     "stylelint:fix": "npm run stylelint -- --fix",
     "eslint": "npx eslint .",
-    "eslint:fix": "npm run lint -- --fix",
+    "eslint:fix": "npm run eslint -- --fix",
     "prettier": "npx prettier . --check",
     "prettier:fix": "npm run prettier -- --write",
-    "format": "npm run stylelint:fix && npm run lint:fix && npm run prettier:fix",
+    "format": "npm run eslint:fix && npm run prettier:fix && npm run stylelint:fix",
     "test": "node test/server-side-rendering.js",
     "build": "grunt"
   },
