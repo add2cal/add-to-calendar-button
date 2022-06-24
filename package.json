@@ -53,8 +53,10 @@
   "homepage": "https://jekuer.github.io/add-to-calendar-button/",
   "scripts": {
     "release": "grunt -c %npm_config_set% && npm install && npm run build",
-    "lint": "npx eslint .",
-    "lint:fix": "npm run lint -- --fix",
+    "stylelint": "npx stylelint assets/css/*.css",
+    "stylelint:fix": "npm run stylelint -- --fix",
+    "eslint": "npx eslint .",
+    "eslint:fix": "npm run lint -- --fix",
     "prettier": "npx prettier . --check",
     "prettier:fix": "npm run prettier -- --write",
     "format": "npm run lint:fix && npm run prettier:fix",
@@ -73,6 +75,9 @@
     "grunt-contrib-cssmin": "^4.0.0",
     "grunt-contrib-uglify": "^5.0.1",
     "grunt-version": "^3.0.0",
-    "prettier": "2.7.1"
+    "prettier": "2.7.1",
+    "stylelint": "^14.9.1",
+    "stylelint-config-prettier": "^9.0.3",
+    "stylelint-config-standard": "^26.0.0"
   }
 }
