@@ -509,6 +509,7 @@ function atcb_close(blockFocus = false) {
 }
 
 // prepare data when not using the init function
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 function atcb_action(data, button) {
   // validate & decorate data
   if (!atcb_check_required(data)) {

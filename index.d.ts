@@ -1,7 +1,7 @@
 declare module 'add-to-calendar-button' {
   export type ISO8601Date = string;
   export type ISO8601Time = string;
-  export function atcb_init(): any;
+  export function atcb_init(): void;
   export function atcb_action (
     config: {
       name?: string;
