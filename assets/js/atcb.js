@@ -49,7 +49,7 @@ function atcb_init() {
         // get schema.org event markup and flatten the event block
         atcbConfig = JSON.parse(
           schema.innerHTML
-            .replace(/(\r\n|\n|\r)/gm, "")
+            .replace(/(\r\n|\n|\r)/g, "")
             .replace(/(<(?!br)([^>]+)>)/gi, "")
         ); // remove real code line breaks before parsing. Use <br> or \n explicitely in the description to create a line break. Also strip HTML tags (especially since stupid Safari adds stuff).
         atcbConfig = atcb_parse_schema_json(atcbConfig);
@@ -135,13 +135,13 @@ function atcb_decorate_data(atcbConfig) {
   // make a copy of the given argument rather than mutating in place
   const data = Object.assign({}, atcbConfig);
   // standardize any line breaks in the description and transform URLs (but keep a clean copy without the URL magic for iCal)
-  data.description = data.description.replace(/<br\s*\/?>/gim, "\n");
+  data.description = data.description.replace(/<br\s*\/?>/gi, "\n");
   data.description_iCal = data.description
     .replace("[url]", "")
     .replace("[/url]", "");
   data.description = data.description.replace(
-    /\[url\]([a-zA-Z0-9&$+.,:;=_~!*'?@#\s\-()|/^%]*?)\[\/url\]/g,
-    "<a href='$1' target='_blank' rel='noopener'>$1</a>"
+    /\[url\]([a-zA-Z\d&$+.,:;=_~!*'?@#\s\-()|/^%]*?)\[\/url\]/g,
+    "<a href%3D%27$1%27 target%3D%27_blank%27 rel%3D%27noopener%27>$1</a>"
   );
   return data;
 }
@@ -679,7 +679,7 @@ function atcb_generate_google(data) {
       if (data.description == null || data.description == "") {
         data.description = "";
       } else {
-        data.description += "<br><br>";
+        data.description += "%0A%0A";
       }
       data.description += "&#128205;: " + data.location;
     }
@@ -739,7 +739,7 @@ function atcb_generate_microsoft(data, type = "365") {
   }
   if (data.description != null && data.description != "") {
     url +=
-      "&body=" + encodeURIComponent(data.description.replace(/\n/g, "<br>"));
+      "&body=" + encodeURIComponent(data.description.replace(/\n/g, "%0A"));
   }
   window.open(url, "_blank").focus();
 }
@@ -777,7 +777,7 @@ function atcb_generate_ical(data) {
   now = now
     .toISOString()
     .replace(/\..../g, "")
-    .replace(/[^a-z0-9]/gi, "");
+    .replace(/[^a-z\d]/gi, "");
   const formattedDate = atcb_generate_time(data, "clean", "ical");
   let timeslot = "";
   if (formattedDate.allday) {
