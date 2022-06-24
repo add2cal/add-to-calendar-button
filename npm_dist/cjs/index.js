@@ -122,7 +122,7 @@ function atcb_decorate_data(atcbConfig) {
   data.description = data.description.replace(/<br\s*\/?>/gmi, '\n');
   data.description_iCal = data.description.replace('[url]','').replace('[/url]','');
   data.description = data.description.replace(
-    /\[url\]([a-zA-Z0-9&$+.,:;=_~!*'?@#\s\-\(\)|\/^%]*?)\[\/url\]/g, 
+    /\[url\]([a-zA-Z0-9&$+.,:;=_~!*'?@#\s\-()|/^%]*?)\[\/url\]/g, 
     "<a href='$1' target='_blank' rel='noopener'>$1</a>"
   );
   return data
