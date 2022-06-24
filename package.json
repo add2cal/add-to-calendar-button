@@ -59,7 +59,7 @@
     "eslint:fix": "npm run lint -- --fix",
     "prettier": "npx prettier . --check",
     "prettier:fix": "npm run prettier -- --write",
-    "format": "npm run lint:fix && npm run prettier:fix",
+    "format": "npm run stylelint:fix && npm run lint:fix && npm run prettier:fix",
     "test": "node test/server-side-rendering.js",
     "build": "grunt"
   },
