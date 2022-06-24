@@ -21,24 +21,6 @@ It is for this simple use case. No strings attached.
 
 <br />
 
-## 🔎 Background // Why this repo exists
-
-While building a personal wedding page, I was confronted with the task to include a button, where invited people could save the event to their calendars.
-I did not want to build this from scratch (first) and therefore started the usual web research.
-Unfortunately, all I found where some extremely outdated code snippets, which did not really fit all the modern systems and calendar tools.
-Beside that, there was only the solution by AddEvent.com - all over the place. I was looking at CodePen and all I found where thousands of pens, which basically only included the AddEvent tool.
-
-The problems with AddEvent.com:
-
-- it holds tons of features, which I did not need. I do not want to track my button. I just want it to work.
-- it limits the free tier to 50 event adds per month (consider the wedding case - this is way too less).
-- it brings some data privacy issues, since you basically send your users to their service. GDPR alert!
-- the UX/UI is not ideal (imho).
-
-**Bottom line:** Paying for features, which I did not need - at additional privacy concerns - that made me create this solution (for you).
-
-<br />
-
 ## ▶️ Demo
 
 See [jekuer.github.io/add-to-calendar-button](https://jekuer.github.io/add-to-calendar-button/) for a live demo.
@@ -300,3 +282,23 @@ Copyright (c) [Jens Kuerschner](https://jenskuerschner.de). Licensed under [MIT 
 - [uxwing.com](https://uxwing.com)
 - [Chad Ostrowski (chadoh)](https://github.com/chadoh)
 - ... and all other contributors!
+
+<br />
+
+## 🔎 Background // Why this repo exists
+
+While building a personal wedding page, I was confronted with the task to include a button, where invited people could save the event to their calendars.
+I did not want to build this from scratch (first) and therefore started the usual web research.
+Unfortunately, all I found where some extremely outdated code snippets, which did not really fit all the modern systems and calendar tools.
+Beside that, there was only the solution by AddEvent.com - all over the place. I was looking at CodePen and all I found where thousands of pens, which basically only included the AddEvent tool.
+
+The problems with AddEvent.com:
+
+- it holds tons of features, which I did not need. I do not want to track my button. I just want it to work.
+- it limits the free tier to 50 event adds per month (consider the wedding case - this is way too less).
+- it brings some data privacy issues, since you basically send your users to their service. GDPR alert!
+- the UX/UI is not ideal (imho).
+
+**Bottom line:** Paying for features, which I did not need - at additional privacy concerns - that made me create this solution (for you).
+
+<br />
