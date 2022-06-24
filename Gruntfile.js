@@ -6,7 +6,7 @@ function process(content, exportPhrase) {
     `${exportPhrase} { atcb_action, atcb_init };`
   );
 }
-module.exports = function(grunt) {
+module.exports = function (grunt) {
   // The config.
   grunt.initConfig({
     // update version. Either use via `npm run release --set=version::patch`, `npm run release --set=version::minor`, `npm run release --set=version::major`, or `npm run release --set=version::x.x.x` (with x.x.x being the exact version number)
@@ -40,7 +40,8 @@ module.exports = function(grunt) {
         "assets/js/atcb.min.js.map",
         "assets/css/atcb.min.css",
         "assets/css/atcb.min.css.map",
-        "npm_dist/",
+        "npm_dist/cjs/*.js",
+        "npm_dist/mjs/",
       ],
     },
     // creates the source files for the npm versionm supporting CommonJS and ES Module (https://www.sensedeep.com/blog/posts/2021/how-to-create-single-source-npm-module.html)

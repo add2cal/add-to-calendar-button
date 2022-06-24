@@ -1,5 +1,5 @@
 {
-  "root":true,
+  "root": true,
   "env": {
     "browser": true,
     "es2021": true
@@ -14,13 +14,7 @@
     "ecmaVersion": "latest",
     "sourceType": "module"
   },
-  "plugins": [
-    "@typescript-eslint"
-  ],
-  "ignorePatterns": [
-    "*.min.*", 
-    "Gruntfile.js"
-  ],
-  "rules": {
-  }
+  "plugins": ["@typescript-eslint"],
+  "ignorePatterns": ["*.min.*", "Gruntfile.js"],
+  "rules": {}
 }
