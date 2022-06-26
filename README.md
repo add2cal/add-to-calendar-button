@@ -99,8 +99,8 @@ Mind that with Angular, you might need to escape the { with `{{ '{' }}` and } wi
 
 ```html
 <div class="atcb" style="display:none;">
-  { "name":"Add the title of your event", "startDate":"2022-02-21",
-  "endDate":"2022-03-24", "options":[ "Google" ] }
+  { "name":"Add the title of your event", "startDate":"2022-02-21", "endDate":"2022-03-24", "options":[
+  "Google" ] }
 </div>
 ```
 
@@ -108,13 +108,11 @@ Mind that with Angular, you might need to escape the { with `{{ '{' }}` and } wi
 
 ```html
 <div class="atcb" style="display:none;">
-  { "name":"Add the title of your event", "description":"A nice description does
-  not hurt", "startDate":"2022-02-21", "endDate":"2022-03-24",
-  "startTime":"10:13", "endTime":"17:57", "location":"Somewhere over the
-  rainbow", "label":"Add to Calendar", "options":[ "Apple", "Google", "iCal",
-  "Microsoft365", "MicrosoftTeams", "Outlook.com", "Yahoo" ],
-  "timeZone":"Europe/Berlin", "timeZoneOffset":"+01:00", "trigger":"click",
-  "iCalFileName":"Reminder-Event" }
+  { "name":"Add the title of your event", "description":"A nice description does not hurt",
+  "startDate":"2022-02-21", "endDate":"2022-03-24", "startTime":"10:13", "endTime":"17:57",
+  "location":"Somewhere over the rainbow", "label":"Add to Calendar", "options":[ "Apple", "Google", "iCal",
+  "Microsoft365", "MicrosoftTeams", "Outlook.com", "Yahoo" ], "timeZone":"Europe/Berlin",
+  "timeZoneOffset":"+01:00", "trigger":"click", "iCalFileName":"Reminder-Event" }
 </div>
 ```
 
@@ -137,15 +135,7 @@ You can use startTime and endTime in the event block, but it is recommended to r
         "location": "Somewhere over the rainbow"
       },
       "label": "Add to Calendar",
-      "options": [
-        "Apple",
-        "Google",
-        "iCal",
-        "Microsoft365",
-        "MicrosoftTeams",
-        "Outlook.com",
-        "Yahoo"
-      ],
+      "options": ["Apple", "Google", "iCal", "Microsoft365", "MicrosoftTeams", "Outlook.com", "Yahoo"],
       "timeZone": "Europe/Berlin",
       "timeZoneOffset": "+01:00",
       "trigger": "click",
@@ -204,15 +194,7 @@ const atcb_action = () => {
         name: "Some event",
         startDate: "2022-01-14",
         endDate: "2022-01-18",
-        options: [
-          "Apple",
-          "Google",
-          "iCal",
-          "Microsoft365",
-          "Outlook.com",
-          "MicrosoftTeams",
-          "Yahoo",
-        ],
+        options: ["Apple", "Google", "iCal", "Microsoft365", "Outlook.com", "MicrosoftTeams", "Yahoo"],
         trigger: "click",
         iCalFileName: "Reminder-Event",
       })}
@@ -223,23 +205,24 @@ const atcb_action = () => {
 
 ### Important information and hidden features
 
-- The "label" is optional, but enables you to customize the button text. Default: "Add to Calendar".
+- The `label` is optional, but enables you to customize the button text. Default: "Add to Calendar".
 - Dates need to be formatted as YYYY-MM-DD ([ISO-8601](https://en.wikipedia.org/wiki/ISO_8601)).
-- You can also use the word "today" as date. It will then dynamically use the current day at click (not supported with schema.org style).
-- Add "+5" at the end of the date to dynamically add 5 days (or any other number). "2022-01-30+12" would generate the 11th of February 2022. This can be interesting, when combined with "today".
+- You can also use the word `today` as date. It will then dynamically use the current day at click (not supported with schema.org style).
+- Add `+5` at the end of the date to dynamically add 5 days (or any other number). `2022-01-30+12` would generate the 11th of February 2022. This can be interesting, when combined with `today`.
 - Times need to be formatted as HH:MM.
 - Times are optional. If not set, the button generates all-day events.
 - 1 option is required. You can add as many as you want. The supported formats are listed above.
-- If you want to rename (or translate) a label, use the following schema at the options: optionName + Pipe + yourLabel. "Google|Google Kalender" would generate a Google Calendar option, but label it as "Google Kalender".
+- If you want to rename (or translate) a label, use the following schema at the options: optionName + Pipe + yourLabel. `Google|Google Kalender` would generate a Google Calendar option, but label it as "Google Kalender".
 - If no timeZone and no timeZoneOffset is provided, the date refers to UTC time.
-- You can add a timeZoneOffset or timeZone (TZ name). You can find a list of them at [Wikipedia](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones).
-- If the timeZoneOffset is set, it will always override the timeZone. It is recommended to only use 1 of them at a time.
-- The timeZone might not work in very old browsers, but also considers dynamic changes like summer/winter time.
-- timeZoneOffset works with older browsers, but is quite static.
-- Use "currentBrowser" as value for timeZone to dynamically use the time of the user's browser. Use this with caution, since it would mean that the date and time will differ per user, which should not be the usual case! (Requires all times to be set.)
-- You can set the trigger to "click". This makes the button open on click at desktop. Otherwise, the default would be to open on hover. On touch devices, this makes no difference.
-- If you want to define a specific name for any generated ics file (iCal), you can specify it via the "iCalFileName" option. The default would be "event-to-save-in-my-calendar".
-- You can use the option "inline":true in order to make the button appear with inline-block instead of block style.
+- You can add a `timeZoneOffset` or `timeZone` (TZ name). You can find a list of them at [Wikipedia](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones).
+- If the `timeZoneOffset` is set, it will always override the `timeZone`. It is recommended to only use 1 of them at a time.
+- The `timeZone` option might not work in very old browsers, but also considers dynamic changes like summer/winter time.
+- `timeZoneOffset` works with older browsers, but is quite static.
+- Use `currentBrowser` as value for timeZone to dynamically use the time of the user's browser. Use this with caution, since it would mean that the date and time will differ per user, which should not be the usual case! (Requires all times to be set.)
+- You can set the `trigger` to `click`. This makes the button open on click at desktop. Otherwise, the default would be to open on hover. On touch devices, this makes no difference.
+- If you want to define a specific name for any generated ics file (iCal), you can specify it via the `iCalFileName` option. The default would be "event-to-save-in-my-calendar".
+- You can use the option `"inline":true` in order to make the button appear with inline-block instead of block style.
+- The default style for the options list, using the regular button, would be a dropdown. You can set the option `listStyle` to `modal`in order to force the modal version.
 - Formatting a URL in the description like `[url]https://....[/url]` makes it clickable.
 - If you require line breaks within the description, use `\n` or `<br>`.
 

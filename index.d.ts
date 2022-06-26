@@ -11,15 +11,7 @@ declare module "add-to-calendar-button" {
       startTime?: ISO8601Time;
       endTime?: ISO8601Time;
       location?: string;
-      options: (
-        | "Apple"
-        | "Google"
-        | "iCal"
-        | "Microsoft365"
-        | "MicrosoftTeams"
-        | "Outlook.com"
-        | "Yahoo"
-      )[];
+      options: ("Apple" | "Google" | "iCal" | "Microsoft365" | "MicrosoftTeams" | "Outlook.com" | "Yahoo")[];
       timeZone?: string;
       timeZoneOffset?: string;
       iCalFileName?: string;

@@ -1,10 +1,7 @@
 const initCodeDelimiter = /\/\/ START INIT[\s\S]*?\/\/ END INIT/g;
 
 function process(content, exportPhrase) {
-  return content.replace(
-    initCodeDelimiter,
-    `${exportPhrase} { atcb_action, atcb_init };`
-  );
+  return content.replace(initCodeDelimiter, `${exportPhrase} { atcb_action, atcb_init };`);
 }
 module.exports = function (grunt) {
   // The config.

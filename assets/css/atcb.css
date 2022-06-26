@@ -183,7 +183,6 @@
 }
 
 .atcb_bgoverlay {
-  animation: atcb-bgoverlay-animate 0.4s ease 0.2s 1 normal forwards;
   background: rgb(20 20 20 / 20%);
   bottom: 0;
   backdrop-filter: blur(2px);
@@ -196,6 +195,10 @@
   transform: translate3d(0, 0, -10px);
   width: 100%;
   z-index: 120;
+}
+
+.atcb_bgoverlay.atcb_animate_bg {
+  animation: atcb-bgoverlay-animate 0.4s ease 0.2s 1 normal forwards;
 }
 
 @keyframes atcb-bgoverlay-animate {
