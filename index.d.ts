@@ -18,6 +18,7 @@ declare module "add-to-calendar-button" {
       trigger?: "hover" | "click";
       listStyle?: "dropdown" | "modal";
     },
-    placeBelow?: HTMLElement
+    triggerElement?: HTMLElement,
+    keyboardTrigger?: boolean
   ): void;
 }

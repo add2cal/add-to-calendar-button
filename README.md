@@ -149,7 +149,7 @@ You can use startTime and endTime in the event block, but it is recommended to r
 
 #### atcb_action
 
-If you can't or don't want to use `atcb_init`, you can use the `atcb_action` import with your own buttons or other elements/components. If you omit the second argument, the dropdown list will display as a modal in the middle of the viewport - in this case, add the "atcb_customTrigger" class to the submitting element for better keyboard support.
+If you can't or don't want to use `atcb_init`, you can use the `atcb_action` import with your own buttons or other elements/components.
 
 This may work better with React and other frontend frameworks, but it misses the Schema.org and button specific functionalities.
 
@@ -172,7 +172,7 @@ const MyComponent = () => {
         })
       }}>
         <input value={name} onChange={setName} />
-        <input class="atcb_customTrigger" type="submit" value="save">
+        <input type="submit" value="save">
       </form>
   );
 }

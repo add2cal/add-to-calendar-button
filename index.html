@@ -550,9 +550,9 @@
               timeZone: "Europe/Berlin",
               trigger: "click",
               iCalFileName: "Reminder-Event",
-            }
-            const button = document.querySelector('#default-button')
-            button.addEventListener('click', () => atcb_action(config, button))
+            };
+            const button = document.querySelector('#default-button');
+            button.addEventListener('click', () => atcb_action(config, button));
           </script>
           <!-- end of button code -->
 
@@ -569,9 +569,9 @@
     timeZone: "Europe/Berlin",
     trigger: "click",
     iCalFileName: "Reminder-Event",
-  }
-  const button = document.querySelector('#default-button')
-  button.addEventListener('click', () => atcb_action(config, button))
+  };
+  const button = document.querySelector('#default-button');
+  button.addEventListener('click', () => atcb_action(config, button));
 &lt;/script&gt;</code>
         </div>
       </div>
@@ -582,6 +582,7 @@
       <p class="description">
         When using "atcb_action", you don't need to use a button. A form, a link, an image — whatever element you want to trigger the dropdown, you can use it (though not all of them are good for accessibility).<br>
         If you don't provide a second argument, the dropdown list will appear as a modal in the middle of the viewport.<br>
+        However, for better compatibility and stability, define a triggering element, wich then gets focused on closing the modal; and set the listStyle option to "modal".<br>
         Use of the 'click' trigger is highly recommended here.
       </p>
       <div class="example">
@@ -593,9 +594,10 @@
               Event name:
               <input name="name" value="Some cool event" />
             </label>
-            <input class="atcb_customTrigger" type="submit" value="Save" />
+            <input id="myTriggerElement" type="submit" value="Save" />
           </form>
           <script type="application/javascript">
+            const triggerEl = document.querySelector('#myTriggerElement');
             document.querySelector('#event-form')
               .addEventListener('submit', (e) => {
                 e.preventDefault();
@@ -606,9 +608,10 @@
                   options: ["Apple", "Google", "iCal", "Microsoft365", "Outlook.com", "MicrosoftTeams", "Yahoo"],
                   timeZone: "Europe/Berlin",
                   trigger: "click",
+                  listStyle: "modal",
                   iCalFileName: "Reminder-Event",
-                })
-              })
+                }, triggerEl);
+              });
           </script>
           <!-- end of button code -->
 
@@ -619,9 +622,10 @@
     Event name:
     &lt;input name="name" value="Some cool event" /&gt;
   &lt;/label&gt;
-  &lt;input class="atcb_customTrigger" type="submit" value="Save" /&gt;
+  &lt;input id="myTriggerElement" type="submit" value="Save" /&gt;
 &lt;/form&gt;
 &lt;script type="application/javascript"&gt;
+  const triggerEl = document.querySelector('#myTriggerElement');
   document.querySelector('#event-form')
     .addEventListener('submit', (e) =&gt; {
       e.preventDefault();
@@ -632,9 +636,10 @@
         options: ["Apple", "Google", "iCal", "Microsoft365", "Outlook.com", "MicrosoftTeams", "Yahoo"],
         timeZone: "Europe/Berlin",
         trigger: "click",
+        listStyle: "modal",
         iCalFileName: "Reminder-Event",
-      })
-    })
+      }, triggerEl);
+    });
 &lt;/script&gt;</code>
         </div>
       </div>
