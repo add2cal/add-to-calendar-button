@@ -470,9 +470,7 @@ function atcb_generate_bg_overlay(data) {
   bgOverlay.addEventListener("touchmove", () => (fingerMoved = true), {
     passive: true,
   });
-  bgOverlay.addEventListener(
-    "touchend",
-    function () {
+  bgOverlay.addEventListener("touchend", function () {
       if (fingerMoved === false) {
         atcb_close(true);
       }
@@ -489,7 +487,7 @@ function atcb_generate_bg_overlay(data) {
 }
 
 // FUNCTIONS TO CONTROL THE INTERACTION
-function atcb_toggle(data, button, buttonGenerated, keyboardTrigger = true) {
+function atcb_toggle(data, button, buttonGenerated = false, keyboardTrigger = true) {
   // check for state and adjust accordingly
   if (button.classList.contains("atcb_active")) {
     atcb_close();
@@ -504,7 +502,7 @@ function atcb_open(data, button, buttonGenerated = false, keyboardTrigger = true
   if (document.querySelector(".atcb_list")) return;
 
   // generate list
-  const list = atcb_generate_dropdown_list(data, buttonGenerated);
+  const list = atcb_generate_dropdown_list(data);
 
   // set list styles, set possible button to atcb_active and go for modal mode if no button is set
   if (!button || data.listStyle === "modal") {
@@ -517,8 +515,8 @@ function atcb_open(data, button, buttonGenerated = false, keyboardTrigger = true
     list.style.top = rect.bottom + window.scrollY - 3 + "px";
     list.style.left = rect.left + "px";
   }
-  if (buttonGenerated) {
-    list.classList.add("atcb_generated_button");
+  if (buttonGenerated && data.listStyle !== "modal") {
+    list.classList.add("atcb_dropdown");
   }
 
   // add list to DOM

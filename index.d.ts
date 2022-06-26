@@ -15,13 +15,8 @@ declare module "add-to-calendar-button" {
       timeZone?: string;
       timeZoneOffset?: string;
       iCalFileName?: string;
-      /**
-       * By default, the dropdown list will be opened on hover and closed as
-       * soon as you mouse over the background overlay. If you want it to
-       * instead close only when thebackground overlay is clicked, set this
-       * to `"click"`.
-       */
-      trigger?: "click";
+      trigger?: "hover" | "click";
+      listStyle?: "dropdown" | "modal";
     },
     placeBelow?: HTMLElement
   ): void;
