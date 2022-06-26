@@ -505,18 +505,19 @@ function atcb_open(data, button, buttonGenerated = false, keyboardTrigger = true
   const list = atcb_generate_dropdown_list(data);
 
   // set list styles, set possible button to atcb_active and go for modal mode if no button is set
-  if (!button || data.listStyle === "modal") {
+  if (button) {
+    button.classList.add("atcb_active");    
+    if (data.listStyle === "modal") {
+      list.classList.add("atcb_modal");
+    } else {
+      const rect = button.getBoundingClientRect();
+      list.style.width = rect.width + "px";
+      list.style.top = rect.bottom + window.scrollY - 3 + "px";
+      list.style.left = rect.left + "px";
+    }
+  } else { // non-buttons always use listStyle "modal"
     data.listStyle = "modal";
     list.classList.add("atcb_modal");
-  } else {
-    button.classList.add("atcb_active");
-    const rect = button.getBoundingClientRect();
-    list.style.width = rect.width + "px";
-    list.style.top = rect.bottom + window.scrollY - 3 + "px";
-    list.style.left = rect.left + "px";
-  }
-  if (buttonGenerated && data.listStyle !== "modal") {
-    list.classList.add("atcb_dropdown");
   }
 
   // add list to DOM
