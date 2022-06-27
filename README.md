@@ -100,8 +100,14 @@ Mind that with Angular, you might need to escape the { with `{{ '{' }}` and } wi
 
 ```html
 <div class="atcb" style="display:none;">
-  { "name":"Add the title of your event", "startDate":"2022-02-21", "endDate":"2022-03-24", "options":[
-  "Google" ] }
+  {
+    "name":"Add the title of your event",
+    "startDate":"2022-02-21",
+    "endDate":"2022-03-24",
+    "options":[
+      "Google"
+    ]
+  }
 </div>
 ```
 
@@ -109,11 +115,28 @@ Mind that with Angular, you might need to escape the { with `{{ '{' }}` and } wi
 
 ```html
 <div class="atcb" style="display:none;">
-  { "name":"Add the title of your event", "description":"A nice description does not hurt",
-  "startDate":"2022-02-21", "endDate":"2022-03-24", "startTime":"10:13", "endTime":"17:57",
-  "location":"Somewhere over the rainbow", "label":"Add to Calendar", "options":[ "Apple", "Google", "iCal",
-  "Microsoft365", "MicrosoftTeams", "Outlook.com", "Yahoo" ], "timeZone":"Europe/Berlin",
-  "timeZoneOffset":"+01:00", "trigger":"click", "iCalFileName":"Reminder-Event" }
+  {
+    "name":"Add the title of your event",
+    "description":"A nice description does not hurt",
+    "startDate":"2022-02-21",
+    "endDate":"2022-03-24",
+    "startTime":"10:13",
+    "endTime":"17:57",
+    "location":"Somewhere over the rainbow",
+    "label":"Add to Calendar",
+    "options":[
+      "Apple",
+      "Google",
+      "iCal",
+      "Microsoft365",
+      "MicrosoftTeams",
+      "Outlook.com",
+      "Yahoo"
+    ], 
+    "timeZone":"Europe/Berlin",
+    "trigger":"click",
+    "iCalFileName":"Reminder-Event"
+  }
 </div>
 ```
 
@@ -138,7 +161,6 @@ You can use startTime and endTime in the event block, but it is recommended to r
       "label": "Add to Calendar",
       "options": ["Apple", "Google", "iCal", "Microsoft365", "MicrosoftTeams", "Outlook.com", "Yahoo"],
       "timeZone": "Europe/Berlin",
-      "timeZoneOffset": "+01:00",
       "trigger": "click",
       "iCalFileName": "Reminder-Event"
     }
@@ -155,22 +177,23 @@ If you can't or don't want to use `atcb_init`, you can use the `atcb_action` imp
 This may work better with React and other frontend frameworks, but it misses the Schema.org and button specific functionalities.
 
 ```js
-import React from 'react'
-import { atcb_action } from 'add-to-calendar-button'
+import React from 'react';
+import { atcb_action } from 'add-to-calendar-button';
 
 const MyComponent = () => {
-  const [name, setName] = React.useState('Some event')
+  const [name, setName] = React.useState('Some event');
   return (
       <form onSubmit={e => {
-        e.preventDefault()
+        e.preventDefault();
         atcb_action({
           name,
           startDate: "2022-01-14",
           endDate: "2022-01-18",
           options: ['Apple', 'Google', 'iCal', 'Microsoft365', 'Outlook.com', 'MicrosoftTeams', 'Yahoo'],
+          timeZone: "Europe/Berlin",
           trigger: "click",
           iCalFileName: "Reminder-Event",
-        })
+        }, triggerEl);
       }}>
         <input value={name} onChange={setName} />
         <input type="submit" value="save">
@@ -196,6 +219,7 @@ const atcb_action = () => {
         startDate: "2022-01-14",
         endDate: "2022-01-18",
         options: ["Apple", "Google", "iCal", "Microsoft365", "Outlook.com", "MicrosoftTeams", "Yahoo"],
+        timeZone: "Europe/Berlin",
         trigger: "click",
         iCalFileName: "Reminder-Event",
       })}

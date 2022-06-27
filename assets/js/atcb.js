@@ -690,10 +690,7 @@ function atcb_generate_ical(data) {
   if (formattedDate.allday) {
     timeslot = ";VALUE=DATE";
   }
-  const ics_lines = [
-    "BEGIN:VCALENDAR",
-    "VERSION:2.0"
-  ];
+  const ics_lines = ["BEGIN:VCALENDAR", "VERSION:2.0"];
   const corp = "github.com/jekuer/add-to-calendar-button";
   ics_lines.push("PRODID:-// " + corp + " // atcb v" + atcbVersion + " //EN");
   ics_lines.push("CALSCALE:GREGORIAN");
@@ -703,14 +700,16 @@ function atcb_generate_ical(data) {
     "DTSTAMP:" + formattedDate.start,
     "DTSTART" + timeslot + ":" + formattedDate.start,
     "DTEND" + timeslot + ":" + formattedDate.end,
-    "SUMMARY:" + data.name.replace(/.{65}/g, "$&" + "\r\n "), // making sure it does not exceed 75 characters per line
+    "SUMMARY:" + data.name.replace(/.{65}/g, "$&" + "\r\n ") // making sure it does not exceed 75 characters per line
   );
   if (data.description_iCal != null && data.description_iCal != "") {
-    ics_lines.push("DESCRIPTION:" + data.description_iCal.replace(/\n/g, "\\n").replace(/.{60}/g, "$&" + "\r\n ")); // adjusting for intended line breaks + making sure it does not exceed 75 characters per line
+    ics_lines.push(
+      "DESCRIPTION:" + data.description_iCal.replace(/\n/g, "\\n").replace(/.{60}/g, "$&" + "\r\n ")
+    ); // adjusting for intended line breaks + making sure it does not exceed 75 characters per line
   }
   if (data.location != null && data.location != "") {
     ics_lines.push("LOCATION:" + data.location);
-  }  
+  }
   now = now.replace(/\..../g, "").replace(/[^a-z\d]/gi, "");
   ics_lines.push("STATUS:CONFIRMED", "LAST-MODIFIED:" + now, "SEQUENCE:0", "END:VEVENT", "END:VCALENDAR");
   const dlurl = "data:text/calendar;charset=utf-8," + encodeURIComponent(ics_lines.join("\r\n"));
