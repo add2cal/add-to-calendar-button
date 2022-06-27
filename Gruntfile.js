@@ -29,6 +29,12 @@ module.exports = function (grunt) {
         },
         src: ["assets/css/atcb.css"],
       },
+      README: {
+        options: {
+          prefix: "add-to-calendar-button@",
+        },
+        src: ["README.md"],
+      },
     },
     // cleans old built files
     clean: {

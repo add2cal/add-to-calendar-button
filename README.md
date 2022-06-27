@@ -49,16 +49,17 @@ See [jekuer.github.io/add-to-calendar-button](https://jekuer.github.io/add-to-ca
 
 ### Option 1: simple (self-hosted)
 
-1.  Simply **download** the code from GitHub **or clone** the git repository.
-2.  Copy the css (atcb.min.css) and js (atcb.min.js) files from the assets (not the "npm_dist"!) folders into your project (the **.min.** files are required, but it is recommended to also copy the raw and map files).
-3.  Include those files in your project. As usual, the css goes into the <head> (`<link rel="stylesheet" href="./assets/css/atcb.min.css">`), the js into the <body> footer (`<script src="./assets/js/atcb.min.js" defer></script>`). You can also combine them with other files, if you want to.
-4.  Create your button as can be seen in the "Configuration" section below.
-5.  That is it. The script takes care of all the rest.
+1.  Check whether you are looking at the original and therefore up-to-date code at ![github.com/jekuer/add-to-calendar-button](https://github.com/jekuer/add-to-calendar-button).
+2.  **Download** the code directly from GitHub **or clone** the git repository.
+3.  Copy the css (atcb.min.css) and js (atcb.min.js) files from the assets (not the "npm_dist"!) folders into your project (the **.min.** files are required, but it is recommended to also copy the raw and map files).
+4.  Include those files in your project. As usual, the css goes into the <head> (`<link rel="stylesheet" href="./assets/css/atcb.min.css">`), the js into the <body> footer (`<script src="./assets/js/atcb.min.js" defer></script>`). You can also combine them with other files, if you want to.
+5.  Create your button as can be seen in the "Configuration" section below.
+6.  That is it. The script takes care of all the rest.
 
 ### Option 2: simple (CDN)
 
 1.  Instead of downloading the files, you can use the jsDeliver CDN.
-2.  Put `<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/add-to-calendar-button@1.8/assets/css/atcb.min.css">` into the <head> and `<script src="https://cdn.jsdelivr.net/npm/add-to-calendar-button@1.8" defer></script>` into the <body> footer of your website.
+2.  Put `<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/add-to-calendar-button@1.8/assets/css/atcb.min.css">` into the <head> and `<script src="https://cdn.jsdelivr.net/npm/add-to-calendar-button@1.8" defer></script>` into the <body> footer of your website. Leave out the patch number at the version ("1.9" instead of "1.9.2") to automatically pull the latest patched version. See ![jsDeliver.com](https://www.jsdelivr.com/features#npm) for more options.
 3.  Create your button as can be seen in the "Configuration" section below.
 4.  Done. And this setup also automatically keeps track of any bug fixes and minor updates!
 
@@ -212,17 +213,15 @@ const atcb_action = () => {
 - Times need to be formatted as HH:MM.
 - Times are optional. If not set, the button generates all-day events.
 - 1 option is required. You can add as many as you want. The supported formats are listed above.
-- If you want to rename (or translate) a label, use the following schema at the options: optionName + Pipe + yourLabel. `Google|Google Kalender` would generate a Google Calendar option, but label it as "Google Kalender".
-- If no timeZone and no timeZoneOffset is provided, the date refers to UTC time.
-- You can add a `timeZoneOffset` or `timeZone` (TZ name). You can find a list of them at [Wikipedia](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones).
-- If the `timeZoneOffset` is set, it will always override the `timeZone`. It is recommended to only use 1 of them at a time.
-- The `timeZone` option might not work in very old browsers, but also considers dynamic changes like summer/winter time.
-- `timeZoneOffset` works with older browsers, but is quite static.
-- Use `currentBrowser` as value for timeZone to dynamically use the time of the user's browser. Use this with caution, since it would mean that the date and time will differ per user, which should not be the usual case! (Requires all times to be set.)
+- If you want to rename (or translate) a label, use the following schema at the options: optionName + Pipe + yourLabel. "Google|Google Kalender" would generate a Google Calendar option, but label it as "Google Kalender".
+- You can add a `timeZone` (TZ name) or explicit `timeZoneOffset`. You can find a list of them at [Wikipedia](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones).
+- If the `timeZoneOffset` is set, it will always override the `timeZone`. If none is set, the date refers to UTC time.
+- The `timeZone` option is recommended since it considers things like summer/winter time, but might not work in very old browsers. `timeZoneOffset` works with older browsers, but is quite static.
+- Use "currentBrowser" as value for `timeZone` to dynamically use the time of the user's browser. Use this with caution, since it would mean that the date and time will differ per user, which should not be the usual case! (Requires all times to be set.)
 - You can set the `trigger` to `click`. This makes the button open on click at desktop. Otherwise, the default would be to open on hover. On touch devices, this makes no difference.
 - If you want to define a specific name for any generated ics file (iCal), you can specify it via the `iCalFileName` option. The default would be "event-to-save-in-my-calendar".
 - You can use the option `"inline":true` in order to make the button appear with inline-block instead of block style.
-- The default style for the options list, using the regular button, would be a dropdown. You can set the option `listStyle` to `modal`in order to force the modal version.
+- The default style for the options list, using the regular button, would be a dropdown. You can set the option `listStyle` to "modal" in order to force the modal version.
 - Formatting a URL in the description like `[url]https://....[/url]` makes it clickable.
 - If you require line breaks within the description, use `\n` or `<br>`.
 
