@@ -704,8 +704,8 @@ function atcb_generate_ical(data) {
   );
   if (data.description_iCal != null && data.description_iCal != "") {
     ics_lines.push(
-      "DESCRIPTION:" + data.description_iCal.replace(/\n/g, "\\n").replace(/.{60}/g, "$&" + "\r\n ")
-    ); // adjusting for intended line breaks + making sure it does not exceed 75 characters per line
+      "DESCRIPTION:" + data.description_iCal.replace(/\n/g, "\\n").replace(/.{60}/g, "$&" + "\r\n ") // adjusting for intended line breaks + making sure it does not exceed 75 characters per line
+    );
   }
   if (data.location != null && data.location != "") {
     ics_lines.push("LOCATION:" + data.location);
