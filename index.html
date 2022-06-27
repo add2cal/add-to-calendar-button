@@ -408,60 +408,7 @@
 
       <hr>
 
-      <h3>Example 6: Timezone Offset</h3>
-      <p class="description">
-        This example uses a timezone offset instead of the TZ name.<br>
-        This has better compatibility with older browsers, but does not consider things like summer/winter time.<br>
-        timeZoneOffset will always override timeZone, while not using either of them would default to UTC time.
-      </p>
-      <div class="example">
-        <div class="example_left">
-
-          <!-- start of button code -->
-          <div class="atcb" style="display:none;">
-            {
-              "name":"Reminder to check the add-to-calendar-button repo",
-              "description":"Check out the maybe easiest way to include add-to-calendar-buttons to your website at:<br>&#8594; [url]https://github.com/jekuer/add-to-calendar-button[/url]",
-              "startDate":"today+2",
-              "endDate":"today+4",
-              "startTime":"10:15",
-              "endTime":"23:30",
-              "location":"World Wide Web",
-              "options":[
-                "Google",
-                "iCal",
-                "Yahoo"
-              ],
-              "timeZoneOffset":"+02:00"
-            }
-          </div>
-          <!-- end of button code -->
-
-        </div>
-        <div class="example_right">
-<code>&lt;div class="atcb" style="display:none;"&gt;
-{
-  "name":"Reminder to check the add-to-calendar-button repo",
-  "description":"Check out the maybe easiest way to include add-to-calendar-buttons to your website at:&lt;br&gt;&#8594; [url]https://github.com/jekuer/add-to-calendar-button[/url]",
-  "startDate":"today+2",
-  "endDate":"today+4",
-  "startTime":"10:15",
-  "endTime":"23:30",
-  "location":"World Wide Web",
-  "options":[
-    "Google",
-    "iCal",
-    "Yahoo"
-  ],
-  "timeZoneOffset":"+02:00"
-}
-&lt;/div&gt;</code>
-        </div>
-      </div>
-
-      <hr>
-
-      <h3>Example 7: Schema.org Event Markup</h3>
+      <h3>Example 6: Schema.org Event Markup</h3>
       <p class="description">
         This example holds the event information in a schema.org markup context (requires an additional script tag).<br>
         This makes the event readable by bots and can help a little bit with your site's SEO.<br>
@@ -528,7 +475,7 @@
 
       <hr>
 
-      <h3>Example 8: Bring-Your-Own Button</h3>
+      <h3>Example 7: Bring-Your-Own Button</h3>
       <p class="description">
         If you can't or don't want to use "atcb_init", you can use the "atcb_action" function and apply it to your own button.<br>
         For a good look, the element should be at least 160px wide; or remove the second argument to go for a modal dropdown.
@@ -578,7 +525,7 @@
 
       <hr>
 
-      <h3>Example 9: Bring-Your-Own Anything</h3>
+      <h3>Example 8: Bring-Your-Own Anything</h3>
       <p class="description">
         When using "atcb_action", you don't need to use a button. A form, a link, an image — whatever element you want to trigger the dropdown, you can use it (though not all of them are good for accessibility).<br>
         If you don't provide a second argument, the dropdown list will appear as a modal in the middle of the viewport.<br>
