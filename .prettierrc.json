@@ -1,4 +1,5 @@
 {
   "proseWrap": "preserve",
-  "printWidth": 110
+  "printWidth": 110,
+  "embeddedLanguageFormatting": "off"
 }

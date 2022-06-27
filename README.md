@@ -132,7 +132,7 @@ Mind that with Angular, you might need to escape the { with `{{ '{' }}` and } wi
       "MicrosoftTeams",
       "Outlook.com",
       "Yahoo"
-    ], 
+    ],
     "timeZone":"Europe/Berlin",
     "trigger":"click",
     "iCalFileName":"Reminder-Event"
