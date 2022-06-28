@@ -704,8 +704,8 @@ function atcb_generate_ical(data) {
   );
   if (data.description_iCal != null && data.description_iCal != "") {
     ics_lines.push(
-      "DESCRIPTION:" + data.description_iCal.replace(/\n/g, "\\n").replace(/.{60}/g, "$&" + "\r\n ")
-    ); // adjusting for intended line breaks + making sure it does not exceed 75 characters per line
+      "DESCRIPTION:" + data.description_iCal.replace(/\n/g, "\\n").replace(/.{60}/g, "$&" + "\r\n ") // adjusting for intended line breaks + making sure it does not exceed 75 characters per line
+    );
   }
   if (data.location != null && data.location != "") {
     ics_lines.push("LOCATION:" + data.location);
@@ -826,9 +826,15 @@ if (isBrowser()) {
       atcb_close();
     }
   });
-  // Global listener to any screen changes, where we need to close all buttons in order to prevent any bad renderings (more "expensive" alternative would be to re-render them)
+  // Global listener to any screen changes
+  // Closing all buttons in order to prevent any bad renderings (more "expensive" alternative would be to re-render them)
+  // Checking for width change to prevent resize on mobile scroll, where a disappearing browser bar could trigger it
+  let windowWidth = window.innerWidth;
   window.addEventListener("resize", () => {
-    atcb_close(true);
+    if (window.innerWidth != windowWidth) {
+      windowWidth = window.innerWidth;
+      atcb_close(true);
+    }
   });
 }
 
