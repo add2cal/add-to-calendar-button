@@ -1,6 +1,6 @@
 {
   "name": "add-to-calendar-button",
-  "version": "1.8.11",
+  "version": "1.9.0",
   "engines": {
     "node": ">=12.22.0"
   },
@@ -52,7 +52,7 @@
   },
   "homepage": "https://jekuer.github.io/add-to-calendar-button/",
   "scripts": {
-    "release": "npx grunt version::$npm_config_r && npm install && npm run build",
+    "release": "node set-release.js",
     "stylelint": "npx stylelint assets/css/*.css",
     "stylelint:fix": "npm run stylelint -- --fix",
     "eslint": "npx eslint .",

@@ -11,6 +11,6 @@
     "sourceType": "module"
   },
   "plugins": ["@typescript-eslint"],
-  "ignorePatterns": ["*.min.*", "Gruntfile.js"],
+  "ignorePatterns": ["*.min.*", "Gruntfile.js", "set-release.js"],
   "rules": {}
 }

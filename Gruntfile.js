@@ -6,7 +6,7 @@ function process(content, exportPhrase) {
 module.exports = function (grunt) {
   // The config.
   grunt.initConfig({
-    // update version. Either use via `npm run release --r=patch`, `npm run release --r=minor`, `npm run release --r=major`, or `npm run release --r=x.x.x` (with x.x.x being the exact version number)
+    // update version. Either use via `npm run release -- patch` (default), `npm run release -- minor`, `npm run release -- major`, or `npm run release -- x.x.x` (with x.x.x being the exact version number)
     version: {
       package: {
         src: ["package.json"],
