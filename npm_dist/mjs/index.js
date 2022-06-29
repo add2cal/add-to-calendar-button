@@ -663,7 +663,7 @@ function atcb_generate_ical(data) {
      ics_lines.push("LOCATION:" + data['location']);
    }   
    if (data['recurrence'] != null && data['recurrence'] != '') {
-     ics_lines.push("RRULE:" + data['recurrence']);
+     ics_lines.push(data['recurrence']);
    }
    ics_lines.push(
     "STATUS:CONFIRMED",
