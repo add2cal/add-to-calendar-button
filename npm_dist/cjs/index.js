@@ -542,6 +542,10 @@ function atcb_generate_google(data) {
   if (data['description'] != null && data['description'] != '') {
     url += '&details=' + encodeURIComponent(data['description']);
   }
+  if (data['recurrence'] != null && data['recurrence'] != '') {
+    url += '&recur=' + encodeURIComponent(data['recurrence']);
+  }
+
   window.open(url, '_blank').focus();
 }
 
@@ -657,6 +661,9 @@ function atcb_generate_ical(data) {
    }
    if (data['location'] != null && data['location'] != '') {
      ics_lines.push("LOCATION:" + data['location']);
+   }   
+   if (data['recurrence'] != null && data['recurrence'] != '') {
+     ics_lines.push("RRULE:" + data['recurrence']);
    }
    ics_lines.push(
     "STATUS:CONFIRMED",
