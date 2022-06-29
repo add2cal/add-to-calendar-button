@@ -14,7 +14,7 @@
       {
         "functions": {
           ".encodeURIComponent": {
-            "passthrough": { "obj": true, "args": true }
+            "htmlInput": true,
           }
         }
       }
