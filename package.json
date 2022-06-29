@@ -1,6 +1,6 @@
 {
   "name": "add-to-calendar-button",
-  "version": "1.8.10",
+  "version": "1.8.11",
   "engines": {
     "node": ">=12.22.0"
   },
@@ -52,7 +52,7 @@
   },
   "homepage": "https://jekuer.github.io/add-to-calendar-button/",
   "scripts": {
-    "release": "grunt -c %npm_config_set% && npm install && npm run build",
+    "release": "npx grunt version::$npm_config_r && npm install && npm run build",
     "stylelint": "npx stylelint assets/css/*.css",
     "stylelint:fix": "npm run stylelint -- --fix",
     "eslint": "npx eslint .",
@@ -61,7 +61,7 @@
     "prettier:fix": "npm run prettier -- --write",
     "format": "npm run eslint:fix && npm run prettier:fix && npm run stylelint:fix",
     "test": "node test/server-side-rendering.js",
-    "build": "grunt"
+    "build": "npx grunt"
   },
   "devDependencies": {
     "@typescript-eslint/eslint-plugin": "^5.29.0",
