@@ -2,7 +2,7 @@ declare module 'add-to-calendar-button' {
   export type ISO8601Date = string;
   export type ISO8601Time = string;
   export function atcb_init(): any;
-  export function atcb_action (
+  export function atcb_action(
     config: {
       name?: string;
       description?: string;
@@ -11,6 +11,7 @@ declare module 'add-to-calendar-button' {
       startTime?: ISO8601Time;
       endTime?: ISO8601Time;
       location?: string;
+      recurrence?: string;
       options: ("Apple" | "Google" | "iCal" | "Microsoft365" | "MicrosoftTeams" | "Outlook.com" | "Yahoo")[],
       timeZone?: string;
       timeZoneOffset?: string;

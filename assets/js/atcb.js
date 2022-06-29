@@ -566,6 +566,9 @@ function atcb_generate_yahoo(data) {
   }
   if (data['description'] != null && data['description'] != '') {
     url += '&desc=' + encodeURIComponent(data['description']);
+  } 
+  if (data['recurrence'] != null && data['recurrence'] != '') {
+    url += '&recur=' + encodeURIComponent(data['recurrence']);
   }
   window.open(url, '_blank').focus();
 }
