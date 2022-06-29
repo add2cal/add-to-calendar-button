@@ -154,7 +154,7 @@ function atcb_date_cleanup(data) {
   endpoints.forEach(function (point) {
     if (data[point + "Date"] != null) {
       // remove any milliseconds information
-      data[point + "Date"] = data[point + "Date"].replace(/\..../, "").replace("Z", "");
+      data[point + "Date"] = data[point + "Date"].replace(/\.\d{3}/, "").replace("Z", "");
       // identify a possible time information within the date string
       const tmpSplitStartDate = data[point + "Date"].split("T");
       if (tmpSplitStartDate[1] != null) {
@@ -710,7 +710,7 @@ function atcb_generate_ical(data) {
   if (data.location != null && data.location != "") {
     ics_lines.push("LOCATION:" + data.location);
   }
-  now = now.replace(/\..../g, "").replace(/[^a-z\d]/gi, "");
+  now = now.replace(/\.\d{3}/g, "").replace(/[^a-z\d]/gi, "");
   ics_lines.push("STATUS:CONFIRMED", "LAST-MODIFIED:" + now, "SEQUENCE:0", "END:VEVENT", "END:VCALENDAR");
   const dlurl = "data:text/calendar;charset=utf-8," + encodeURIComponent(ics_lines.join("\r\n"));
   const filename = data.iCalFileName || "event-to-save-in-my-calendar";
