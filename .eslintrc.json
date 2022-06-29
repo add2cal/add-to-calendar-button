@@ -8,7 +8,17 @@
   "parser": "@typescript-eslint/parser",
   "parserOptions": {
     "ecmaVersion": "latest",
-    "sourceType": "module"
+    "sourceType": "module",
+    "xss/no-mixed-html": [
+      2,
+      {
+        "functions": {
+          ".encodeURIComponent": {
+            "passthrough": { "obj": true, "args": true }
+          }
+        }
+      }
+    ]
   },
   "plugins": ["@typescript-eslint"],
   "ignorePatterns": ["*.min.*", "Gruntfile.js", "set-release.js"],
