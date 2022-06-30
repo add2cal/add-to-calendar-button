@@ -4,12 +4,12 @@
 
 A convenient JavaScript snippet (VanillaJS, React, Angular, ...), which lets you create beautiful buttons, where people can add events to their calendars.
 
-![#1 Product of the Day on ProductHunt](https://api.producthunt.com/widgets/embed-image/v1/top-post-badge.svg?post_id=319458&theme=dark&period=daily)
+[![#1 Product of the Day on ProductHunt](https://api.producthunt.com/widgets/embed-image/v1/top-post-badge.svg?post_id=319458&theme=dark&period=daily)](https://www.producthunt.com/products/add-to-calendar-button-generator)
 
-![Code Quality](https://img.shields.io/codacy/grade/5c7c0bac087c4dfdb0669e8284f0459a/main?style=for-the-badge)
-![Build Status](https://img.shields.io/github/workflow/status/jekuer/add-to-calendar-button/Node.js%20Package?style=for-the-badge)
-![npm Downloads](https://img.shields.io/npm/dt/add-to-calendar-button?label=npm%20Downloads&style=for-the-badge)
-![jsDelivr npm Hits](https://img.shields.io/jsdelivr/npm/hm/add-to-calendar-button?label=jsDelivr%20npm%20hits&style=for-the-badge)
+[![Code Quality](https://img.shields.io/codacy/grade/5c7c0bac087c4dfdb0669e8284f0459a/main?style=for-the-badge)](https://app.codacy.com/gh/jekuer/add-to-calendar-button/dashboard)
+[![Build Status](https://img.shields.io/github/workflow/status/jekuer/add-to-calendar-button/Node.js%20Package?style=for-the-badge)](https://github.com/jekuer/add-to-calendar-button/actions/workflows/npm-publish.yml)
+[![npm Downloads](https://img.shields.io/npm/dt/add-to-calendar-button?label=npm%20Downloads&style=for-the-badge)](https://www.npmjs.com/package/add-to-calendar-button)
+[![jsDelivr npm Hits](https://img.shields.io/jsdelivr/npm/hm/add-to-calendar-button?label=jsDelivr%20npm%20hits&style=for-the-badge)](https://www.jsdelivr.com/package/npm/add-to-calendar-button)
 
 <br /><br />
 
@@ -41,7 +41,7 @@ See [jekuer.github.io/add-to-calendar-button](https://jekuer.github.io/add-to-ca
 - Translatable labels and dynamic dates.
 - Well documented code, to easily understand the processes and build on top of it.
 
-![Demo Screenshot](https://github.com/jekuer/add-to-calendar-button/blob/main/demo.gif?raw=true)
+[Demo Screenshot](https://github.com/jekuer/add-to-calendar-button/blob/main/demo.gif?raw=true)
 
 <br />
 
@@ -49,7 +49,7 @@ See [jekuer.github.io/add-to-calendar-button](https://jekuer.github.io/add-to-ca
 
 ### Option 1: simple (self-hosted)
 
-1.  Check whether you are looking at the original and therefore up-to-date code at ![github.com/jekuer/add-to-calendar-button](https://github.com/jekuer/add-to-calendar-button).
+1.  Check whether you are looking at the original and therefore up-to-date code at [github.com/jekuer/add-to-calendar-button](https://github.com/jekuer/add-to-calendar-button).
 2.  **Download** the code directly from GitHub **or clone** the git repository.
 3.  Copy the css (atcb.min.css) and js (atcb.min.js) files from the assets (not the "npm_dist"!) folders into your project (the **.min.** files are required, but it is recommended to also copy the raw and map files).
 4.  Include those files in your project. As usual, the css goes into the <head> (`<link rel="stylesheet" href="./assets/css/atcb.min.css">`), the js into the <body> footer (`<script src="./assets/js/atcb.min.js" defer></script>`). You can also combine them with other files, if you want to.
@@ -59,7 +59,7 @@ See [jekuer.github.io/add-to-calendar-button](https://jekuer.github.io/add-to-ca
 ### Option 2: simple (CDN)
 
 1.  Instead of downloading the files, you can use the jsDeliver CDN.
-2.  Put `<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/add-to-calendar-button@1.9.0/assets/css/atcb.min.css">` into the <head> and `<script src="https://cdn.jsdelivr.net/npm/add-to-calendar-button@1.9.0" defer></script>` into the <body> footer of your website. Leave out the patch number at the version ("1.9" instead of "1.9.2") to automatically pull the latest patched version. See ![jsDeliver.com](https://www.jsdelivr.com/features#npm) for more options.
+2.  Put `<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/add-to-calendar-button@1.9.0/assets/css/atcb.min.css">` into the <head> and `<script src="https://cdn.jsdelivr.net/npm/add-to-calendar-button@1.9.0" defer></script>` into the <body> footer of your website. Leave out the patch number at the version ("1.9" instead of "1.9.2") to automatically pull the latest patched version. See [jsDeliver.com](https://www.jsdelivr.com/features#npm) for more options.
 3.  Create your button as can be seen in the "Configuration" section below.
 4.  Done. And this setup also automatically keeps track of any bug fixes and minor updates!
 
