@@ -271,6 +271,7 @@ Copyright (c) [Jens Kuerschner](https://jenskuerschner.de). Licensed under [MIT 
 
 ## ⚡ Changelog (without minor changes and fixes)
 
+- v1.9 : big code style update + linter setup
 - v1.8 : new button style
 - v1.7 : new code structure and options + tons of optimizations
 - v1.6 : supporting Microsoft Teams
