@@ -41,7 +41,7 @@ See [jekuer.github.io/add-to-calendar-button](https://jekuer.github.io/add-to-ca
 - Translatable labels and dynamic dates.
 - Well documented code, to easily understand the processes and build on top of it.
 
-[Demo Screenshot](https://github.com/jekuer/add-to-calendar-button/blob/main/demo.gif?raw=true)
+![Demo Screenshot](https://github.com/jekuer/add-to-calendar-button/blob/main/demo.gif?raw=true)
 
 <br />
 
