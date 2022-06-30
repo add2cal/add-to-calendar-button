@@ -571,8 +571,8 @@ function atcb_generate_yahoo(data) {
   if (data['description'] != null && data['description'] != '') {
     url += '&desc=' + encodeURIComponent(data['description']);
   } 
-  if (data['recurrence'] != null && data['recurrence'] != '') {
-    url += '&recur=' + encodeURIComponent(data['recurrence']);
+  if (data["recurrence"] != null && data["recurrence"] != "") {
+    url += "&recur=" + encodeURIComponent(data["recurrence"]);
   }
   window.open(url, '_blank').focus();
 }
@@ -663,7 +663,7 @@ function atcb_generate_ical(data) {
      ics_lines.push("LOCATION:" + data['location']);
    }   
    if (data['recurrence'] != null && data['recurrence'] != '') {
-     ics_lines.push(data['recurrence']);
+    ics_lines.push(data["recurrence"]);
    }
    ics_lines.push(
     "STATUS:CONFIRMED",
