@@ -31,26 +31,28 @@ function atcb_init() {
     // generate the buttons one by one
     for (let i = 0; i < atcButtons.length; i++) {
       // skip already initialized ones
-      if (atcButtons[i].classList.contains("atcb_initialized")) {
+      if (atcButtons[parseInt(i)].classList.contains("atcb_initialized")) {
         continue;
       }
       let atcbConfig;
       // check if schema.org markup is present
-      const schema = atcButtons[i].querySelector("script");
+      const schema = atcButtons[parseInt(i)].querySelector("script");
       // get their JSON content first
       if (schema && schema.innerHTML) {
-        // get schema.org event markup and flatten the event block
+        // get schema.org event markup and flatten the event block, plus
+        // remove real code line breaks before parsing. Use <br> or \n explicitely in the description to create a line break. Also strip HTML tags (especially since stupid Safari adds stuff).
         atcbConfig = JSON.parse(
           schema.innerHTML.replace(/(\r\n|\n|\r)/g, "").replace(/(<(?!br)([^>]+)>)/gi, "")
-        ); // remove real code line breaks before parsing. Use <br> or \n explicitely in the description to create a line break. Also strip HTML tags (especially since stupid Safari adds stuff).
+        );
         atcbConfig = atcb_parse_schema_json(atcbConfig);
         // set flag to not delete HTML content later
         atcbConfig.deleteJSON = false;
       } else {
-        // get JSON from HTML block
+        // get JSON from HTML block, but
+        // remove real code line breaks before parsing. Use <br> or \n explicitely in the description to create a line break. Also strip HTML tags (especially since stupid Safari adds stuff).
         atcbConfig = JSON.parse(
-          atcButtons[i].innerHTML.replace(/(\r\n|\n|\r)/g, "").replace(/(<(?!br)([^>]+)>)/gi, "")
-        ); // remove real code line breaks before parsing. Use <br> or \n explicitely in the description to create a line break. Also strip HTML tags (especially since stupid Safari adds stuff).
+          atcButtons[parseInt(i)].innerHTML.replace(/(\r\n|\n|\r)/g, "").replace(/(<(?!br)([^>]+)>)/gi, "")
+        );
         // set flag to delete HTML content later
         atcbConfig.deleteJSON = true;
       }
@@ -63,7 +65,7 @@ function atcb_init() {
         // validate the config (JSON iput) ...
         if (atcb_validate(atcbConfig)) {
           // ... and generate the button on success
-          atcb_generate(atcButtons[i], i + atcButtonsInitialized.length, atcbConfig);
+          atcb_generate(atcButtons[parseInt(i)], i + atcButtonsInitialized.length, atcbConfig);
         }
       }
     }
@@ -76,7 +78,7 @@ function atcb_parse_schema_json(atcbConfig) {
     Object.keys(atcbConfig.event).forEach((key) => {
       // move entries one level up, but skip schema types
       if (key.charAt(0) !== "@") {
-        atcbConfig[key] = atcbConfig.event[key];
+        atcbConfig[`${key}`] = atcbConfig.event[`${key}`];
       }
     });
     // drop the event block and return
@@ -99,8 +101,8 @@ function atcb_patch_config(atcbConfig) {
     timeEnd: "endTime",
   };
   Object.keys(keyChanges).forEach((key) => {
-    if (atcbConfig[keyChanges[key]] == null && atcbConfig[key] != null) {
-      atcbConfig[keyChanges[key]] = atcbConfig[key];
+    if (atcbConfig[keyChanges[`${key}`]] == null && atcbConfig[`${key}`] != null) {
+      atcbConfig[keyChanges[`${key}`]] = atcbConfig[`${key}`];
     }
   });
   return atcbConfig;
@@ -121,12 +123,10 @@ function atcb_decorate_data(atcbConfig) {
   const data = Object.assign({}, atcbConfig);
   // standardize any line breaks in the description and transform URLs (but keep a clean copy without the URL magic for iCal)
   data.description = data.description.replace(/<br\s*\/?>/gi, "\n");
-  data.description_iCal = data.description.replace(/\[url\]/g, "").replace(/\[\/url\]/g, "");
-  data.description = decodeURIComponent(
-    data.description.replace(
-      /\[url\]([\w&$+.,:;=~!*'?@#\s\-()|/^%]*)\[\/url\]/g,
-      encodeURIComponent('<a href="$1" target="_blank" rel="noopener">$1</a>')
-    )
+  data.description_iCal = data.description.replace(/\[url\]/gi, "").replace(/\[\/url\]/gi, "");
+  data.description = data.description.replace(
+    /\[url\]([\w&$+.,:;=~!*'?@#\s\-()|/^%]*)\[\/url\]/gi,
+    '<a href="$1" target="_blank" rel="noopener">$1</a>'
   );
   return data;
 }
@@ -141,7 +141,7 @@ function atcb_check_required(data) {
   // check for min required data (without "options")
   const requiredField = ["name", "startDate", "endDate"];
   return requiredField.every(function (field) {
-    if (data[field] == null || data[field] == "") {
+    if (data[`${field}`] == null || data[`${field}`] == "") {
       console.error("add-to-calendar button generation failed: required setting missing [" + field + "]");
       return false;
     }
@@ -220,18 +220,18 @@ function atcb_validate(data) {
   const newDate = dates;
   if (
     !dates.every(function (date) {
-      if (data[date].length !== 10) {
+      if (data[`${date}`].length !== 10) {
         console.error("add-to-calendar button generation failed: date misspelled [-> YYYY-MM-DD]");
         return false;
       }
-      const dateParts = data[date].split("-");
+      const dateParts = data[`${date}`].split("-");
       if (dateParts.length < 3 || dateParts.length > 3) {
         console.error(
-          "add-to-calendar button generation failed: date misspelled [" + date + ": " + data[date] + "]"
+          "add-to-calendar button generation failed: date misspelled [" + date + ": " + data[`${date}`] + "]"
         );
         return false;
       }
-      newDate[date] = new Date(dateParts[0], dateParts[1] - 1, dateParts[2]);
+      newDate[`${date}`] = new Date(dateParts[0], dateParts[1] - 1, dateParts[2]);
       return true;
     })
   ) {
@@ -241,16 +241,20 @@ function atcb_validate(data) {
   const times = ["startTime", "endTime"];
   if (
     !times.every(function (time) {
-      if (data[time] != null) {
-        if (data[time].length !== 5) {
+      if (data[`${time}`] != null) {
+        if (data[`${time}`].length !== 5) {
           console.error("add-to-calendar button generation failed: time misspelled [-> HH:MM]");
           return false;
         }
-        const timeParts = data[time].split(":");
+        const timeParts = data[`${time}`].split(":");
         // validate the time parts
         if (timeParts.length < 2 || timeParts.length > 2) {
           console.error(
-            "add-to-calendar button generation failed: time misspelled [" + time + ": " + data[time] + "]"
+            "add-to-calendar button generation failed: time misspelled [" +
+              time +
+              ": " +
+              data[`${time}`] +
+              "]"
           );
           return false;
         }
@@ -535,7 +539,7 @@ function atcb_open(data, button, keyboardTrigger = true, generatedButton = false
   document.body.appendChild(atcb_generate_bg_overlay(data));
 
   // give keyboard focus to first item in list, if not blocked, because there is definitely no keyboard trigger.
-  // Mintd that with custom atcb_action function, this might get triggered as well, if the custom function does not provide a proper value.
+  // Mind that with custom atcb_action function, this might get triggered as well, if the custom function does not provide a proper value.
   if (keyboardTrigger) {
     list.firstChild.focus();
   }
