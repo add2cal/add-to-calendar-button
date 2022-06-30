@@ -607,8 +607,10 @@ function atcb_generate_google(data) {
     url += "&details=" + encodeURIComponent(tmpDataDescription);
   }
   tmpDataDescription += "hhh";
-  // eslint-disable-next-line security/detect-non-literal-fs-filename
-  window.open(atcb_secure_url(url), "_blank").focus();
+  if (atcb_secure_url(url)) {
+    // eslint-disable-next-line security/detect-non-literal-fs-filename
+    window.open(url, "_blank").focus();
+  }
 }
 
 // FUNCTION TO GENERATE THE YAHOO URL
@@ -632,8 +634,10 @@ function atcb_generate_yahoo(data) {
     // using descriptionHtmlFree instead of description, since Yahoo does not support html tags in a stable way
     url += "&desc=" + encodeURIComponent(data.descriptionHtmlFree);
   }
-  // eslint-disable-next-line security/detect-non-literal-fs-filename
-  window.open(atcb_secure_url(url), "_blank").focus();
+  if (atcb_secure_url(url)) {
+    // eslint-disable-next-line security/detect-non-literal-fs-filename
+    window.open(url, "_blank").focus();
+  }
 }
 
 // FUNCTION TO GENERATE THE MICROSOFT 365 OR OUTLOOK WEB URL
@@ -662,8 +666,10 @@ function atcb_generate_microsoft(data, type = "365") {
   if (data.description != null && data.description != "") {
     url += "&body=" + encodeURIComponent(data.description.replace(/\n/g, "<br>"));
   }
-  // eslint-disable-next-line security/detect-non-literal-fs-filename
-  window.open(atcb_secure_url(url), "_blank").focus();
+  if (atcb_secure_url(url)) {
+    // eslint-disable-next-line security/detect-non-literal-fs-filename
+    window.open(url, "_blank").focus();
+  }
 }
 
 // FUNCTION TO GENERATE THE MICROSOFT TEAMS URL
@@ -689,8 +695,10 @@ function atcb_generate_teams(data) {
     // using descriptionHtmlFree instead of description, since Teams does not support html tags
     url += "&content=" + locationString + encodeURIComponent(data.descriptionHtmlFree);
   }
-  // eslint-disable-next-line security/detect-non-literal-fs-filename
-  window.open(atcb_secure_url(url), "_blank").focus();
+  if (atcb_secure_url(url)) {
+    // eslint-disable-next-line security/detect-non-literal-fs-filename
+    window.open(url, "_blank").focus();
+  }
 }
 
 // FUNCTION TO GENERATE THE iCAL FILE (also for the Apple option)
@@ -712,21 +720,21 @@ function atcb_generate_ical(data) {
     "DTSTAMP:" + formattedDate.start,
     "DTSTART" + timeslot + ":" + formattedDate.start,
     "DTEND" + timeslot + ":" + formattedDate.end,
-    "SUMMARY:" + atcb_secure_url(data.name.replace(/.{65}/g, "$&" + "\r\n ")) // making sure it does not exceed 75 characters per line
+    "SUMMARY:" + data.name.replace(/.{65}/g, "$&" + "\r\n ") // making sure it does not exceed 75 characters per line
   );
   if (data.descriptionHtmlFree != null && data.descriptionHtmlFree != "") {
     ics_lines.push(
       "DESCRIPTION:" +
-        atcb_secure_url(data.descriptionHtmlFree.replace(/\n/g, "\\n").replace(/.{60}/g, "$&" + "\r\n ")) // adjusting for intended line breaks + making sure it does not exceed 75 characters per line
+        data.descriptionHtmlFree.replace(/\n/g, "\\n").replace(/.{60}/g, "$&" + "\r\n ") // adjusting for intended line breaks + making sure it does not exceed 75 characters per line
     );
   }
   if (data.location != null && data.location != "") {
-    ics_lines.push("LOCATION:" + atcb_secure_url(data.location));
+    ics_lines.push("LOCATION:" + data.location);
   }
   now = now.replace(/\.\d{3}/g, "").replace(/[^a-z\d]/gi, "");
   ics_lines.push("STATUS:CONFIRMED", "LAST-MODIFIED:" + now, "SEQUENCE:0", "END:VEVENT", "END:VCALENDAR");
   const dlurl = "data:text/calendar;charset=utf-8," + encodeURIComponent(ics_lines.join("\r\n"));
-  const filename = atcb_secure_url(data.iCalFileName) || "event-to-save-in-my-calendar";
+  const filename = data.iCalFileName || "event-to-save-in-my-calendar";
   try {
     if (!window.ActiveXObject) {
       const save = document.createElement("a");
@@ -745,7 +753,7 @@ function atcb_generate_ical(data) {
     // for IE < 11 (even no longer officially supported)
     else if (!!window.ActiveXObject && document.execCommand) {
       // eslint-disable-next-line security/detect-non-literal-fs-filename
-      const _window = window.open(atcb_secure_url(dlurl), "_blank");
+      const _window = window.open(dlurl, "_blank");
       _window.document.close();
       _window.document.execCommand("SaveAs", true, filename || dlurl);
       _window.close();
@@ -834,10 +842,12 @@ function atcb_generate_time(data, style = "delimiters", targetCal = "general") {
 }
 
 function atcb_secure_url(url) {
-  return url.replace(
-    /((\.\.+\/)|(\.\.+\\)|(%2e(%2e)+%2f)|(%252e(%252e)+%252f)|(%2e(%2e)+\/)|(%252e(%252e)+\/)|(\.\.+%2f)|(\.\.+%252f)|(%2e(%2e)+%5c)|(%252e(%252e)+%255c)|(%2e(%2e)+\\)|(%252e(%252e)+\\)|(\.\.+%5c)|(\.\.+%255c)|(\.\.+%c0%af)|(\.\.+%25c0%25af)|(\.\.+%c1%9c)|(\.\.+%25c1%259c))/gi,
-    ""
-  );
+  if (url.match(/((\.\.\/)|(\.\.\\)|(%2e%2e%2f)|(%252e%252e%252f)|(%2e%2e\/)|(%252e%252e\/)|(\.\.%2f)|(\.\.%252f)|(%2e%2e%5c)|(%252e%252e%255c)|(%2e%2e\\)|(%252e%252e\\)|(\.\.%5c)|(\.\.%255c)|(\.\.%c0%af)|(\.\.%25c0%25af)|(\.\.%c1%9c)|(\.\.%25c1%259c))/gi)) {
+    console.error("Seems like the generated URL includes at least one security issue and got blocked. Please check the calendar button parameters!");
+    return false;
+  } else {
+    return true;
+  }
 }
 
 if (isBrowser()) {
