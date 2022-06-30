@@ -3,7 +3,7 @@
  * Add-to-Calendar Button
  * ++++++++++++++++++++++
  */
-const atcbVersion = "1.9.0";
+const atcbVersion = "1.9.1";
 /* Creator: Jens Kuerschner (https://jenskuerschner.de)
  * Project: https://github.com/jekuer/add-to-calendar-button
  * License: MIT with “Commons Clause” License Condition v1.0
@@ -117,13 +117,13 @@ function atcb_decorate_data(atcbConfig) {
   atcbConfig.endDate = atcb_date_calculation(atcbConfig.endDate);
 
   // if no description or already decorated, return early
-  if (!atcbConfig.description || atcbConfig.description_iCal) return atcbConfig;
+  if (!atcbConfig.description || atcbConfig.descriptionHtmlFree) return atcbConfig;
 
   // make a copy of the given argument rather than mutating in place
   const data = Object.assign({}, atcbConfig);
   // standardize any line breaks in the description and transform URLs (but keep a clean copy without the URL magic for iCal)
   data.description = data.description.replace(/<br\s*\/?>/gi, "\n");
-  data.description_iCal = data.description.replace(/\[url\]/gi, "").replace(/\[\/url\]/gi, "");
+  data.descriptionHtmlFree = data.description.replace(/\[url\]/gi, "").replace(/\[\/url\]/gi, "");
   data.description = data.description.replace(
     /\[url\]([\w&$+.,:;=~!*'?@#\s\-()|/^%]*)\[\/url\]/gi,
     '<a href="$1" target="_blank" rel="noopener">$1</a>'
@@ -588,23 +588,27 @@ function atcb_generate_google(data) {
   if (data.name != null && data.name != "") {
     url += "&text=" + encodeURIComponent(data.name);
   }
+  let tmpDataDescription = "";
+  if (data.description != null && data.description != "") {
+    tmpDataDescription = data.description;
+  }
   if (data.location != null && data.location != "") {
     url += "&location=" + encodeURIComponent(data.location);
     // TODO: Find a better solution for the next temporary workaround.
     if (isiOS()) {
       // workaround to cover a bug, where, when using Google Calendar on an iPhone, the location is not recognized. So, for the moment, we simply add it to the description.
-      if (data.description == null || data.description == "") {
-        data.description = "";
-      } else {
-        data.description += "%0A%0A";
+      if (tmpDataDescription != "") {
+        tmpDataDescription += "<br><br>";
       }
-      data.description += "&#128205;: " + data.location;
+      tmpDataDescription += "&#128205;: " + data.location;
     }
   }
-  if (data.description != null && data.description != "") {
-    url += "&details=" + encodeURIComponent(data.description);
+  if (tmpDataDescription != "") {
+    url += "&details=" + encodeURIComponent(tmpDataDescription);
   }
-  window.open(url, "_blank").focus();
+  tmpDataDescription += "hhh";
+  // eslint-disable-next-line security/detect-non-literal-fs-filename
+  window.open(atcb_secure_url(url), "_blank").focus();
 }
 
 // FUNCTION TO GENERATE THE YAHOO URL
@@ -624,10 +628,12 @@ function atcb_generate_yahoo(data) {
   if (data.location != null && data.location != "") {
     url += "&in_loc=" + encodeURIComponent(data.location);
   }
-  if (data.description != null && data.description != "") {
-    url += "&desc=" + encodeURIComponent(data.description);
+  if (data.descriptionHtmlFree != null && data.descriptionHtmlFree != "") {
+    // using descriptionHtmlFree instead of description, since Yahoo does not support html tags in a stable way
+    url += "&desc=" + encodeURIComponent(data.descriptionHtmlFree);
   }
-  window.open(url, "_blank").focus();
+  // eslint-disable-next-line security/detect-non-literal-fs-filename
+  window.open(atcb_secure_url(url), "_blank").focus();
 }
 
 // FUNCTION TO GENERATE THE MICROSOFT 365 OR OUTLOOK WEB URL
@@ -654,9 +660,10 @@ function atcb_generate_microsoft(data, type = "365") {
     url += "&location=" + encodeURIComponent(data.location);
   }
   if (data.description != null && data.description != "") {
-    url += "&body=" + encodeURIComponent(data.description.replace(/\n/g, "%0A"));
+    url += "&body=" + encodeURIComponent(data.description.replace(/\n/g, "<br>"));
   }
-  window.open(url, "_blank").focus();
+  // eslint-disable-next-line security/detect-non-literal-fs-filename
+  window.open(atcb_secure_url(url), "_blank").focus();
 }
 
 // FUNCTION TO GENERATE THE MICROSOFT TEAMS URL
@@ -678,11 +685,12 @@ function atcb_generate_teams(data) {
     url += "&location=" + locationString;
     locationString += " // "; // preparing the workaround putting the location into the description, since the native field is not supported yet
   }
-  if (data.description_iCal != null && data.description_iCal != "") {
-    // using description_iCal instead of description, since Teams does not support html tags
-    url += "&content=" + locationString + encodeURIComponent(data.description_iCal);
+  if (data.descriptionHtmlFree != null && data.descriptionHtmlFree != "") {
+    // using descriptionHtmlFree instead of description, since Teams does not support html tags
+    url += "&content=" + locationString + encodeURIComponent(data.descriptionHtmlFree);
   }
-  window.open(url, "_blank").focus();
+  // eslint-disable-next-line security/detect-non-literal-fs-filename
+  window.open(atcb_secure_url(url), "_blank").focus();
 }
 
 // FUNCTION TO GENERATE THE iCAL FILE (also for the Apple option)
@@ -704,20 +712,21 @@ function atcb_generate_ical(data) {
     "DTSTAMP:" + formattedDate.start,
     "DTSTART" + timeslot + ":" + formattedDate.start,
     "DTEND" + timeslot + ":" + formattedDate.end,
-    "SUMMARY:" + data.name.replace(/.{65}/g, "$&" + "\r\n ") // making sure it does not exceed 75 characters per line
+    "SUMMARY:" + atcb_secure_url(data.name.replace(/.{65}/g, "$&" + "\r\n ")) // making sure it does not exceed 75 characters per line
   );
-  if (data.description_iCal != null && data.description_iCal != "") {
+  if (data.descriptionHtmlFree != null && data.descriptionHtmlFree != "") {
     ics_lines.push(
-      "DESCRIPTION:" + data.description_iCal.replace(/\n/g, "\\n").replace(/.{60}/g, "$&" + "\r\n ") // adjusting for intended line breaks + making sure it does not exceed 75 characters per line
+      "DESCRIPTION:" +
+        atcb_secure_url(data.descriptionHtmlFree.replace(/\n/g, "\\n").replace(/.{60}/g, "$&" + "\r\n ")) // adjusting for intended line breaks + making sure it does not exceed 75 characters per line
     );
   }
   if (data.location != null && data.location != "") {
-    ics_lines.push("LOCATION:" + data.location);
+    ics_lines.push("LOCATION:" + atcb_secure_url(data.location));
   }
   now = now.replace(/\.\d{3}/g, "").replace(/[^a-z\d]/gi, "");
   ics_lines.push("STATUS:CONFIRMED", "LAST-MODIFIED:" + now, "SEQUENCE:0", "END:VEVENT", "END:VCALENDAR");
   const dlurl = "data:text/calendar;charset=utf-8," + encodeURIComponent(ics_lines.join("\r\n"));
-  const filename = data.iCalFileName || "event-to-save-in-my-calendar";
+  const filename = atcb_secure_url(data.iCalFileName) || "event-to-save-in-my-calendar";
   try {
     if (!window.ActiveXObject) {
       const save = document.createElement("a");
@@ -735,7 +744,8 @@ function atcb_generate_ical(data) {
     }
     // for IE < 11 (even no longer officially supported)
     else if (!!window.ActiveXObject && document.execCommand) {
-      const _window = window.open(dlurl, "_blank");
+      // eslint-disable-next-line security/detect-non-literal-fs-filename
+      const _window = window.open(atcb_secure_url(dlurl), "_blank");
       _window.document.close();
       _window.document.execCommand("SaveAs", true, filename || dlurl);
       _window.close();
@@ -821,6 +831,13 @@ function atcb_generate_time(data, style = "delimiters", targetCal = "general") {
   }
   const returnObject = { start, end, allday };
   return returnObject;
+}
+
+function atcb_secure_url(url) {
+  return url.replace(
+    /((\.\.\/)|(\.\.\\)|(%2e%2e%2f)|(%252e%252e%252f)|(%2e%2e\/)|(%252e%252e\/)|(\.\.%2f)|(\.\.%252f)|(%2e%2e%5c)|(%252e%252e%255c)|(%2e%2e\\)|(%252e%252e\\)|(\.\.%5c)|(\.\.%255c)|(\.\.%c0%af)|(\.\.%25c0%25af)|(\.\.%c1%9c)|(\.\.%25c1%259c))/gi,
+    ""
+  );
 }
 
 if (isBrowser()) {
