@@ -542,8 +542,8 @@ function atcb_generate_google(data) {
   if (data['description'] != null && data['description'] != '') {
     url += '&details=' + encodeURIComponent(data['description']);
   }
-  if (data['recurrence'] != null && data['recurrence'] != '') {
-    url += '&recur=' + encodeURIComponent(data['recurrence']);
+  if (data["recurrence"] != null && data["recurrence"] != "") {
+    url += "&recur=" + encodeURIComponent(data["recurrence"]);
   }
 
   window.open(url, '_blank').focus();
