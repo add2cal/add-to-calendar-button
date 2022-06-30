@@ -3,7 +3,7 @@
  * Add-to-Calendar Button
  * ++++++++++++++++++++++
  */
-const atcbVersion = "1.9.0";
+const atcbVersion = "1.9.1";
 /* Creator: Jens Kuerschner (https://jenskuerschner.de)
  * Project: https://github.com/jekuer/add-to-calendar-button
  * License: MIT with “Commons Clause” License Condition v1.0
@@ -31,26 +31,28 @@ function atcb_init() {
     // generate the buttons one by one
     for (let i = 0; i < atcButtons.length; i++) {
       // skip already initialized ones
-      if (atcButtons[i].classList.contains("atcb_initialized")) {
+      if (atcButtons[parseInt(i)].classList.contains("atcb_initialized")) {
         continue;
       }
       let atcbConfig;
       // check if schema.org markup is present
-      const schema = atcButtons[i].querySelector("script");
+      const schema = atcButtons[parseInt(i)].querySelector("script");
       // get their JSON content first
       if (schema && schema.innerHTML) {
-        // get schema.org event markup and flatten the event block
+        // get schema.org event markup and flatten the event block, plus
+        // remove real code line breaks before parsing. Use <br> or \n explicitely in the description to create a line break. Also strip HTML tags (especially since stupid Safari adds stuff).
         atcbConfig = JSON.parse(
           schema.innerHTML.replace(/(\r\n|\n|\r)/g, "").replace(/(<(?!br)([^>]+)>)/gi, "")
-        ); // remove real code line breaks before parsing. Use <br> or \n explicitely in the description to create a line break. Also strip HTML tags (especially since stupid Safari adds stuff).
+        );
         atcbConfig = atcb_parse_schema_json(atcbConfig);
         // set flag to not delete HTML content later
         atcbConfig.deleteJSON = false;
       } else {
-        // get JSON from HTML block
+        // get JSON from HTML block, but
+        // remove real code line breaks before parsing. Use <br> or \n explicitely in the description to create a line break. Also strip HTML tags (especially since stupid Safari adds stuff).
         atcbConfig = JSON.parse(
-          atcButtons[i].innerHTML.replace(/(\r\n|\n|\r)/g, "").replace(/(<(?!br)([^>]+)>)/gi, "")
-        ); // remove real code line breaks before parsing. Use <br> or \n explicitely in the description to create a line break. Also strip HTML tags (especially since stupid Safari adds stuff).
+          atcButtons[parseInt(i)].innerHTML.replace(/(\r\n|\n|\r)/g, "").replace(/(<(?!br)([^>]+)>)/gi, "")
+        );
         // set flag to delete HTML content later
         atcbConfig.deleteJSON = true;
       }
@@ -63,7 +65,7 @@ function atcb_init() {
         // validate the config (JSON iput) ...
         if (atcb_validate(atcbConfig)) {
           // ... and generate the button on success
-          atcb_generate(atcButtons[i], i + atcButtonsInitialized.length, atcbConfig);
+          atcb_generate(atcButtons[parseInt(i)], i + atcButtonsInitialized.length, atcbConfig);
         }
       }
     }
@@ -76,7 +78,7 @@ function atcb_parse_schema_json(atcbConfig) {
     Object.keys(atcbConfig.event).forEach((key) => {
       // move entries one level up, but skip schema types
       if (key.charAt(0) !== "@") {
-        atcbConfig[key] = atcbConfig.event[key];
+        atcbConfig[`${key}`] = atcbConfig.event[`${key}`];
       }
     });
     // drop the event block and return
@@ -99,8 +101,8 @@ function atcb_patch_config(atcbConfig) {
     timeEnd: "endTime",
   };
   Object.keys(keyChanges).forEach((key) => {
-    if (atcbConfig[keyChanges[key]] == null && atcbConfig[key] != null) {
-      atcbConfig[keyChanges[key]] = atcbConfig[key];
+    if (atcbConfig[keyChanges[`${key}`]] == null && atcbConfig[`${key}`] != null) {
+      atcbConfig[keyChanges[`${key}`]] = atcbConfig[`${key}`];
     }
   });
   return atcbConfig;
@@ -115,18 +117,16 @@ function atcb_decorate_data(atcbConfig) {
   atcbConfig.endDate = atcb_date_calculation(atcbConfig.endDate);
 
   // if no description or already decorated, return early
-  if (!atcbConfig.description || atcbConfig.description_iCal) return atcbConfig;
+  if (!atcbConfig.description || atcbConfig.descriptionHtmlFree) return atcbConfig;
 
   // make a copy of the given argument rather than mutating in place
   const data = Object.assign({}, atcbConfig);
   // standardize any line breaks in the description and transform URLs (but keep a clean copy without the URL magic for iCal)
   data.description = data.description.replace(/<br\s*\/?>/gi, "\n");
-  data.description_iCal = data.description.replace(/\[url\]/g, "").replace(/\[\/url\]/g, "");
-  data.description = decodeURIComponent(
-    data.description.replace(
-      /\[url\]([\w&$+.,:;=~!*'?@#\s\-()|/^%]*)\[\/url\]/g,
-      encodeURIComponent('<a href="$1" target="_blank" rel="noopener">$1</a>')
-    )
+  data.descriptionHtmlFree = data.description.replace(/\[url\]/gi, "").replace(/\[\/url\]/gi, "");
+  data.description = data.description.replace(
+    /\[url\]([\w&$+.,:;=~!*'?@#\s\-()|/^%]*)\[\/url\]/gi,
+    '<a href="$1" target="_blank" rel="noopener">$1</a>'
   );
   return data;
 }
@@ -141,7 +141,7 @@ function atcb_check_required(data) {
   // check for min required data (without "options")
   const requiredField = ["name", "startDate", "endDate"];
   return requiredField.every(function (field) {
-    if (data[field] == null || data[field] == "") {
+    if (data[`${field}`] == null || data[`${field}`] == "") {
       console.error("add-to-calendar button generation failed: required setting missing [" + field + "]");
       return false;
     }
@@ -220,18 +220,18 @@ function atcb_validate(data) {
   const newDate = dates;
   if (
     !dates.every(function (date) {
-      if (data[date].length !== 10) {
+      if (data[`${date}`].length !== 10) {
         console.error("add-to-calendar button generation failed: date misspelled [-> YYYY-MM-DD]");
         return false;
       }
-      const dateParts = data[date].split("-");
+      const dateParts = data[`${date}`].split("-");
       if (dateParts.length < 3 || dateParts.length > 3) {
         console.error(
-          "add-to-calendar button generation failed: date misspelled [" + date + ": " + data[date] + "]"
+          "add-to-calendar button generation failed: date misspelled [" + date + ": " + data[`${date}`] + "]"
         );
         return false;
       }
-      newDate[date] = new Date(dateParts[0], dateParts[1] - 1, dateParts[2]);
+      newDate[`${date}`] = new Date(dateParts[0], dateParts[1] - 1, dateParts[2]);
       return true;
     })
   ) {
@@ -241,16 +241,20 @@ function atcb_validate(data) {
   const times = ["startTime", "endTime"];
   if (
     !times.every(function (time) {
-      if (data[time] != null) {
-        if (data[time].length !== 5) {
+      if (data[`${time}`] != null) {
+        if (data[`${time}`].length !== 5) {
           console.error("add-to-calendar button generation failed: time misspelled [-> HH:MM]");
           return false;
         }
-        const timeParts = data[time].split(":");
+        const timeParts = data[`${time}`].split(":");
         // validate the time parts
         if (timeParts.length < 2 || timeParts.length > 2) {
           console.error(
-            "add-to-calendar button generation failed: time misspelled [" + time + ": " + data[time] + "]"
+            "add-to-calendar button generation failed: time misspelled [" +
+              time +
+              ": " +
+              data[`${time}`] +
+              "]"
           );
           return false;
         }
@@ -535,7 +539,7 @@ function atcb_open(data, button, keyboardTrigger = true, generatedButton = false
   document.body.appendChild(atcb_generate_bg_overlay(data));
 
   // give keyboard focus to first item in list, if not blocked, because there is definitely no keyboard trigger.
-  // Mintd that with custom atcb_action function, this might get triggered as well, if the custom function does not provide a proper value.
+  // Mind that with custom atcb_action function, this might get triggered as well, if the custom function does not provide a proper value.
   if (keyboardTrigger) {
     list.firstChild.focus();
   }
@@ -584,23 +588,29 @@ function atcb_generate_google(data) {
   if (data.name != null && data.name != "") {
     url += "&text=" + encodeURIComponent(data.name);
   }
+  let tmpDataDescription = "";
+  if (data.description != null && data.description != "") {
+    tmpDataDescription = data.description;
+  }
   if (data.location != null && data.location != "") {
     url += "&location=" + encodeURIComponent(data.location);
     // TODO: Find a better solution for the next temporary workaround.
     if (isiOS()) {
       // workaround to cover a bug, where, when using Google Calendar on an iPhone, the location is not recognized. So, for the moment, we simply add it to the description.
-      if (data.description == null || data.description == "") {
-        data.description = "";
-      } else {
-        data.description += "%0A%0A";
+      if (tmpDataDescription != "") {
+        tmpDataDescription += "<br><br>";
       }
-      data.description += "&#128205;: " + data.location;
+      tmpDataDescription += "&#128205;: " + data.location;
     }
   }
-  if (data.description != null && data.description != "") {
-    url += "&details=" + encodeURIComponent(data.description);
+  if (tmpDataDescription != "") {
+    url += "&details=" + encodeURIComponent(tmpDataDescription);
   }
-  window.open(url, "_blank").focus();
+  tmpDataDescription += "hhh";
+  if (atcb_secure_url(url)) {
+    // eslint-disable-next-line security/detect-non-literal-fs-filename
+    window.open(url, "_blank").focus();
+  }
 }
 
 // FUNCTION TO GENERATE THE YAHOO URL
@@ -620,10 +630,14 @@ function atcb_generate_yahoo(data) {
   if (data.location != null && data.location != "") {
     url += "&in_loc=" + encodeURIComponent(data.location);
   }
-  if (data.description != null && data.description != "") {
-    url += "&desc=" + encodeURIComponent(data.description);
+  if (data.descriptionHtmlFree != null && data.descriptionHtmlFree != "") {
+    // using descriptionHtmlFree instead of description, since Yahoo does not support html tags in a stable way
+    url += "&desc=" + encodeURIComponent(data.descriptionHtmlFree);
   }
-  window.open(url, "_blank").focus();
+  if (atcb_secure_url(url)) {
+    // eslint-disable-next-line security/detect-non-literal-fs-filename
+    window.open(url, "_blank").focus();
+  }
 }
 
 // FUNCTION TO GENERATE THE MICROSOFT 365 OR OUTLOOK WEB URL
@@ -650,9 +664,12 @@ function atcb_generate_microsoft(data, type = "365") {
     url += "&location=" + encodeURIComponent(data.location);
   }
   if (data.description != null && data.description != "") {
-    url += "&body=" + encodeURIComponent(data.description.replace(/\n/g, "%0A"));
+    url += "&body=" + encodeURIComponent(data.description.replace(/\n/g, "<br>"));
   }
-  window.open(url, "_blank").focus();
+  if (atcb_secure_url(url)) {
+    // eslint-disable-next-line security/detect-non-literal-fs-filename
+    window.open(url, "_blank").focus();
+  }
 }
 
 // FUNCTION TO GENERATE THE MICROSOFT TEAMS URL
@@ -674,11 +691,14 @@ function atcb_generate_teams(data) {
     url += "&location=" + locationString;
     locationString += " // "; // preparing the workaround putting the location into the description, since the native field is not supported yet
   }
-  if (data.description_iCal != null && data.description_iCal != "") {
-    // using description_iCal instead of description, since Teams does not support html tags
-    url += "&content=" + locationString + encodeURIComponent(data.description_iCal);
+  if (data.descriptionHtmlFree != null && data.descriptionHtmlFree != "") {
+    // using descriptionHtmlFree instead of description, since Teams does not support html tags
+    url += "&content=" + locationString + encodeURIComponent(data.descriptionHtmlFree);
   }
-  window.open(url, "_blank").focus();
+  if (atcb_secure_url(url)) {
+    // eslint-disable-next-line security/detect-non-literal-fs-filename
+    window.open(url, "_blank").focus();
+  }
 }
 
 // FUNCTION TO GENERATE THE iCAL FILE (also for the Apple option)
@@ -702,9 +722,10 @@ function atcb_generate_ical(data) {
     "DTEND" + timeslot + ":" + formattedDate.end,
     "SUMMARY:" + data.name.replace(/.{65}/g, "$&" + "\r\n ") // making sure it does not exceed 75 characters per line
   );
-  if (data.description_iCal != null && data.description_iCal != "") {
+  if (data.descriptionHtmlFree != null && data.descriptionHtmlFree != "") {
     ics_lines.push(
-      "DESCRIPTION:" + data.description_iCal.replace(/\n/g, "\\n").replace(/.{60}/g, "$&" + "\r\n ") // adjusting for intended line breaks + making sure it does not exceed 75 characters per line
+      "DESCRIPTION:" +
+        data.descriptionHtmlFree.replace(/\n/g, "\\n").replace(/.{60}/g, "$&" + "\r\n ") // adjusting for intended line breaks + making sure it does not exceed 75 characters per line
     );
   }
   if (data.location != null && data.location != "") {
@@ -731,6 +752,7 @@ function atcb_generate_ical(data) {
     }
     // for IE < 11 (even no longer officially supported)
     else if (!!window.ActiveXObject && document.execCommand) {
+      // eslint-disable-next-line security/detect-non-literal-fs-filename
       const _window = window.open(dlurl, "_blank");
       _window.document.close();
       _window.document.execCommand("SaveAs", true, filename || dlurl);
@@ -817,6 +839,15 @@ function atcb_generate_time(data, style = "delimiters", targetCal = "general") {
   }
   const returnObject = { start, end, allday };
   return returnObject;
+}
+
+function atcb_secure_url(url) {
+  if (url.match(/((\.\.\/)|(\.\.\\)|(%2e%2e%2f)|(%252e%252e%252f)|(%2e%2e\/)|(%252e%252e\/)|(\.\.%2f)|(\.\.%252f)|(%2e%2e%5c)|(%252e%252e%255c)|(%2e%2e\\)|(%252e%252e\\)|(\.\.%5c)|(\.\.%255c)|(\.\.%c0%af)|(\.\.%25c0%25af)|(\.\.%c1%9c)|(\.\.%25c1%259c))/gi)) {
+    console.error("Seems like the generated URL includes at least one security issue and got blocked. Please check the calendar button parameters!");
+    return false;
+  } else {
+    return true;
+  }
 }
 
 if (isBrowser()) {
