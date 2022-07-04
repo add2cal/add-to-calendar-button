@@ -39,6 +39,7 @@ See [jekuer.github.io/add-to-calendar-button](https://jekuer.github.io/add-to-ca
   - Automatically generated iCal/ics files (for all other calendars, like Apple).
 - Timed and all-day events.
 - Translatable labels and dynamic dates.
+- Auto-generated Schema.org rich (structured) data for better SEO.
 - Well documented code, to easily understand the processes and build on top of it.
 
 ![Demo Screenshot](https://github.com/jekuer/add-to-calendar-button/blob/main/demo.gif?raw=true)
@@ -51,7 +52,7 @@ See [jekuer.github.io/add-to-calendar-button](https://jekuer.github.io/add-to-ca
 
 1.  Check whether you are looking at the original and therefore up-to-date code at [github.com/jekuer/add-to-calendar-button](https://github.com/jekuer/add-to-calendar-button).
 2.  **Download** the code directly from GitHub **or clone** the git repository.
-3.  Copy the css (atcb.min.css) and js (atcb.min.js) files from the assets (not the "npm_dist"!) folders into your project (the **.min.** files are required, but it is recommended to also copy the raw and map files).
+3.  Copy the css (atcb.min.css) and js (atcb.min.js) files from the assets (not the "npm_dist"!) folders into your project.
 4.  Include those files in your project. As usual, the css goes into the <head> (`<link rel="stylesheet" href="./assets/css/atcb.min.css">`), the js into the <body> footer (`<script src="./assets/js/atcb.min.js" defer></script>`). You can also combine them with other files, if you want to.
 5.  Create your button as can be seen in the "Configuration" section below.
 6.  That is it. The script takes care of all the rest.
@@ -59,27 +60,20 @@ See [jekuer.github.io/add-to-calendar-button](https://jekuer.github.io/add-to-ca
 ### Option 2: simple (CDN)
 
 1.  Instead of downloading the files, you can use the jsDeliver CDN.
-2.  Put `<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/add-to-calendar-button@1.9.1/assets/css/atcb.min.css">` into the <head> and `<script src="https://cdn.jsdelivr.net/npm/add-to-calendar-button@1.9.1" defer></script>` into the <body> footer of your website. Leave out the patch number at the version ("1.9" instead of "1.9.2") to automatically pull the latest patched version. See [jsDeliver.com](https://www.jsdelivr.com/features#npm) for more options.
+2.  Put `<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/add-to-calendar-button@1.10.0/assets/css/atcb.min.css">` into the <head> and `<script src="https://cdn.jsdelivr.net/npm/add-to-calendar-button@1.10.0" defer></script>` into the <body> footer of your website. Leave out the patch number at the version ("1.9" instead of "1.9.2") to automatically pull the latest patched version. See [jsDeliver.com](https://www.jsdelivr.com/features#npm) for more options.
 3.  Create your button as can be seen in the "Configuration" section below.
-4.  Done. And this setup also automatically keeps track of any bug fixes and minor updates!
+4.  Done. And this setup can also automatically keep track of any bug fixes and minor updates!
 
 ### Option 3: npm
 
 1.  Requires Node, npm, and a project, which builds on it (e.g. React or Angular).
-
 2.  Run **`npm install add-to-calendar-button`**.
-
 3.  Import the module into your project/component. For example with Angular/React: `import { atcb_action, atcb_init } from 'add-to-calendar-button';`.
-
-4.  Either use `atcb_action` with your own buttons/forms/etc, or run `atcb_init` after the DOM has been loaded. To determine the right moment and execute, ...
-
+4.  Either use `atcb_action` with your own buttons/forms/etc, or run `atcb_init` after the DOM has been loaded. To determine the right moment to execute, ...
     - with Angular, you would use `ngAfterViewInit()` with `atcb_init();` (mind that, depending on your app, other hooks might be better);
     - with React, you might want to include an event listener like `document.addEventListener('DOMContentLoaded', atcb_init, false);` or using hooks in a functional component like `useEffect(() => atcb_init());`
-
-5.  Include the css. For example with Angular or React, add the following to the global style.css: `@import 'add-to-calendar-button/assets/css/atcb.min'`;
-
+5.  Include the css. For example with Angular or React, add `@import 'add-to-calendar-button/assets/css/atcb.min'` to some other css file - or include it in other more direct ways.
 6.  Create your button as can be seen in the "Configuration" section below.
-
 7.  You're all done.
 
 <br />
@@ -98,6 +92,8 @@ Mind that with Angular, you might need to escape the { with `{{ '{' }}` and } wi
 
 ### Minimal structure (required)
 
+Mind that for auto-generating rich snippets, a location would be mandatory as well.
+
 ```html
 <div class="atcb" style="display:none;">
   {
@@ -111,7 +107,7 @@ Mind that with Angular, you might need to escape the { with `{{ '{' }}` and } wi
 </div>
 ```
 
-### Full structure (without schema.org markup)
+### Full structure
 
 ```html
 <div class="atcb" style="display:none;">
@@ -135,36 +131,10 @@ Mind that with Angular, you might need to escape the { with `{{ '{' }}` and } wi
     ],
     "timeZone":"Europe/Berlin",
     "trigger":"click",
+    "inline":"true",
+    "listStyle":"modal",
     "iCalFileName":"Reminder-Event"
   }
-</div>
-```
-
-### Full structure (with schema.org markup)
-
-You can save on the `style="display:none;"`, but mind that you should not use dynamic dates (e.g. "today" or "+1") here!
-You can use startTime and endTime in the event block, but it is recommended to rather add it to startDate and endDate with "T" as delimiter here.
-
-```html
-<div class="atcb">
-  <script type="application/ld+json">
-    {
-      "event": {
-        "@context": "https://schema.org",
-        "@type": "Event",
-        "name": "Add the title of your event",
-        "description": "A nice description does not hurt",
-        "startDate": "2022-02-21T10:13",
-        "endDate": "2022-03-24T17:57",
-        "location": "Somewhere over the rainbow"
-      },
-      "label": "Add to Calendar",
-      "options": ["Apple", "Google", "iCal", "Microsoft365", "MicrosoftTeams", "Outlook.com", "Yahoo"],
-      "timeZone": "Europe/Berlin",
-      "trigger": "click",
-      "iCalFileName": "Reminder-Event"
-    }
-  </script>
 </div>
 ```
 
@@ -187,16 +157,16 @@ const MyComponent = () => {
         e.preventDefault();
         atcb_action({
           name,
-          startDate: "2022-01-14",
-          endDate: "2022-01-18",
+          startDate: "2022-10-14",
+          endDate: "2022-10-18",
           options: ['Apple', 'Google', 'iCal', 'Microsoft365', 'Outlook.com', 'MicrosoftTeams', 'Yahoo'],
           timeZone: "Europe/Berlin",
           trigger: "click",
           iCalFileName: "Reminder-Event",
-        }, triggerEl);
+        });
       }}>
         <input value={name} onChange={setName} />
-        <input type="submit" value="save">
+        <input type="submit" value="save" />
       </form>
   );
 }
@@ -209,30 +179,38 @@ Alternatively, you could use `atcb_init` with a `useEffect` hook:
 ```js
 import React from "react";
 import { atcb_init } from "add-to-calendar-button";
+import 'add-to-calendar-button/assets/css/atcb.css';
 
-const atcb_action = () => {
-  React.useEffect(atcb_init, []);
+const MyComponent = () => {
+  const [name, setName] = React.useState("Some event");
+  const changeName = e => {
+    setName(e.target.value);
+  };
   return (
-    <div className="atcb" style={{ display: "none" }}>
-      {JSON.stringify({
-        name: "Some event",
-        startDate: "2022-01-14",
-        endDate: "2022-01-18",
-        options: ["Apple", "Google", "iCal", "Microsoft365", "Outlook.com", "MicrosoftTeams", "Yahoo"],
+    <form onSubmit={e => {
+      e.preventDefault();
+      atcb_action({
+        name,
+        startDate: "2022-10-14",
+        endDate: "2022-10-18",
+        options: ['Apple', 'Google', 'iCal', 'Microsoft365', 'Outlook.com', 'MicrosoftTeams', 'Yahoo'],
         timeZone: "Europe/Berlin",
         trigger: "click",
         iCalFileName: "Reminder-Event",
-      })}
-    </div>
+      });
+    }}>
+      <input value={name} onChange={changeName} />
+      <input type="submit" value="save" />
+    </form>
   );
-};
+}
 ```
 
 ### Important information and hidden features
 
 - The `label` is optional, but enables you to customize the button text. Default: "Add to Calendar".
 - Dates need to be formatted as YYYY-MM-DD ([ISO-8601](https://en.wikipedia.org/wiki/ISO_8601)).
-- You can also use the word `today` as date. It will then dynamically use the current day at click (not supported with schema.org style).
+- You can also use the word `today` as date. It will then dynamically use the current day at click.
 - Add `+5` at the end of the date to dynamically add 5 days (or any other number). `2022-01-30+12` would generate the 11th of February 2022. This can be interesting, when combined with `today`.
 - Times need to be formatted as HH:MM.
 - Times are optional. If not set, the button generates all-day events.
@@ -248,6 +226,7 @@ const atcb_action = () => {
 - The default style for the options list, using the regular button, would be a dropdown. You can set the option `listStyle` to "modal" in order to force the modal version.
 - Formatting a URL in the description like `[url]https://....[/url]` makes it clickable.
 - If you require line breaks within the description, use `\n` or `<br>`.
+- If you set at least a name, startDate, and location, the script automatically generates schema.org rich data. Use a URL for the location and it will be labeled as online event.
 
 <br />
 
@@ -271,6 +250,7 @@ Copyright (c) [Jens Kuerschner](https://jenskuerschner.de). Licensed under [MIT 
 
 ## ⚡ Changelog (without minor changes and fixes)
 
+- v1.10 : auto-generating schema.org and dropping support for its input
 - v1.9 : big code style update + linter setup
 - v1.8 : new button style
 - v1.7 : new code structure and options + tons of optimizations
