@@ -163,10 +163,10 @@ const MyComponent = () => {
           timeZone: "Europe/Berlin",
           trigger: "click",
           iCalFileName: "Reminder-Event",
-        }, triggerEl);
+        });
       }}>
         <input value={name} onChange={setName} />
-        <input type="submit" value="save">
+        <input type="submit" value="save" />
       </form>
   );
 }
@@ -180,7 +180,7 @@ Alternatively, you could use `atcb_init` with a `useEffect` hook:
 import React from "react";
 import { atcb_init } from "add-to-calendar-button";
 
-const atcb_action = () => {
+const MyComponent = () => {
   React.useEffect(atcb_init, []);
   return (
     <div className="atcb" style={{ display: "none" }}>
