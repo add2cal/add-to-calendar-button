@@ -408,74 +408,7 @@
 
       <hr>
 
-      <h3>Example 6: Schema.org Event Markup</h3>
-      <p class="description">
-        This example holds the event information in a schema.org markup context (requires an additional script tag).<br>
-        This makes the event readable by bots and can help a little bit with your site's SEO.<br>
-        Mind that this does not work well with dynamic dates from example #4!<br>
-        You can use startTime and endTime in the event block, but it is recommended to rather add it to startDate and endDate with "T" as delimiter here.<br>
-        See the <a href="https://validator.schema.org/" target="_blank">schema.org validator</a> for testing your code - it might highlight some elements outside the event block, which is not problematic.
-      </p>
-      <div class="example">
-        <div class="example_left">
-
-          <!-- start of button code -->
-          <div class="atcb">
-            <script type="application/ld+json">
-              {
-                "event": {
-                  "@context":"https://schema.org",
-                  "@type":"Event",
-                  "name":"Reminder to check the add-to-calendar-button repo",
-                  "description":"Check out the maybe easiest way to include add-to-calendar-buttons to your website at:<br>&#8594; [url]https://github.com/jekuer/add-to-calendar-button[/url]",
-                  "startDate":"2022-01-14T10:15",
-                  "endDate":"2022-01-18T23:30",
-                  "location":"World Wide Web"
-                },
-                "options":[
-                  "Apple",
-                  "Google",
-                  "iCal",
-                  "Yahoo"
-                ],
-                "timeZone":"Europe/Berlin",
-                "iCalFileName":"Reminder-Event"
-              }
-            </script>
-          </div>
-          <!-- end of button code -->
-
-        </div>
-        <div class="example_right">
-<code>&lt;div class="atcb"&gt;
-  &#60;script type="application/ld+json"&#62;
-  {
-    "event": {
-      "@context":"https://schema.org",
-      "@type":"Event",
-      "name":"Reminder to check the add-to-calendar-button repo",
-      "description":"Check out the maybe easiest way to include add-to-calendar-buttons to your website at:&lt;br&gt;&#8594; [url]https://github.com/jekuer/add-to-calendar-button[/url]",
-      "startDate":"2022-01-14T10:15",
-      "endDate":"2022-01-18T23:30",
-      "location":"World Wide Web"
-    },
-    "options":[
-      "Apple",
-      "Google",
-      "iCal",
-      "Yahoo"
-    ],
-    "timeZone":"Europe/Berlin",
-    "iCalFileName":"Reminder-Event"
-  }
-  &#60;/script&#62;
-&lt;/div&gt;</code>
-        </div>
-      </div>
-
-      <hr>
-
-      <h3>Example 7: Bring-Your-Own Button</h3>
+      <h3>Example 6: Bring-Your-Own Button</h3>
       <p class="description">
         If you can't or don't want to use "atcb_init", you can use the "atcb_action" function and apply it to your own button.<br>
         For a good look, the element should be at least 160px wide; or remove the second argument to go for a modal dropdown.
@@ -525,7 +458,7 @@
 
       <hr>
 
-      <h3>Example 8: Bring-Your-Own Anything</h3>
+      <h3>Example 7: Bring-Your-Own Anything</h3>
       <p class="description">
         When using "atcb_action", you don't need to use a button. A form, a link, an image — whatever element you want to trigger the dropdown, you can use it (though not all of them are good for accessibility).<br>
         If you don't provide a second argument, the dropdown list will appear as a modal in the middle of the viewport.<br>

@@ -35,27 +35,11 @@ function atcb_init() {
         continue;
       }
       let atcbConfig;
-      // check if schema.org markup is present
-      const schema = atcButtons[parseInt(i)].querySelector("script");
-      // get their JSON content first
-      if (schema && schema.innerHTML) {
-        // get schema.org event markup and flatten the event block, plus
-        // remove real code line breaks before parsing. Use <br> or \n explicitely in the description to create a line break. Also strip HTML tags (especially since stupid Safari adds stuff).
-        atcbConfig = JSON.parse(
-          schema.innerHTML.replace(/(\r\n|\n|\r)/g, "").replace(/(<(?!br)([^>]+)>)/gi, "")
-        );
-        atcbConfig = atcb_parse_schema_json(atcbConfig);
-        // set flag to not delete HTML content later
-        atcbConfig.deleteJSON = false;
-      } else {
-        // get JSON from HTML block, but
-        // remove real code line breaks before parsing. Use <br> or \n explicitely in the description to create a line break. Also strip HTML tags (especially since stupid Safari adds stuff).
-        atcbConfig = JSON.parse(
-          atcButtons[parseInt(i)].innerHTML.replace(/(\r\n|\n|\r)/g, "").replace(/(<(?!br)([^>]+)>)/gi, "")
-        );
-        // set flag to delete HTML content later
-        atcbConfig.deleteJSON = true;
-      }
+      // get JSON from HTML block, but
+      // remove real code line breaks before parsing. Use <br> or \n explicitely in the description to create a line break. Also strip HTML tags (especially since stupid Safari adds stuff).
+      atcbConfig = JSON.parse(
+        atcButtons[parseInt(i)].innerHTML.replace(/(\r\n|\n|\r)/g, "").replace(/(<(?!br)([^>]+)>)/gi, "")
+      );
       // rewrite config for backwards compatibility - you can remove this, if you did not use this script before v1.4.0.
       atcbConfig = atcb_patch_config(atcbConfig);
       // check, if all required data is available
@@ -70,25 +54,6 @@ function atcb_init() {
       }
     }
   }
-}
-
-// NORMALIZE AND PARSE JSON FROM SCHEMA.ORG MARKUP
-function atcb_parse_schema_json(atcbConfig) {
-  try {
-    Object.keys(atcbConfig.event).forEach((key) => {
-      // move entries one level up, but skip schema types
-      if (key.charAt(0) !== "@") {
-        atcbConfig[`${key}`] = atcbConfig.event[`${key}`];
-      }
-    });
-    // drop the event block and return
-    delete atcbConfig.event;
-  } catch (err) {
-    console.error(
-      "add-to-calendar button problem: it seems like you use the schema.org style, but did not define it properly"
-    );
-  }
-  return atcbConfig;
 }
 
 // BACKWARDS COMPATIBILITY REWRITE - you can remove this, if you did not use this script before v1.4.0.
@@ -151,7 +116,7 @@ function atcb_check_required(data) {
 
 // CALCULATE AND CLEAN UP THE ACTUAL DATES
 function atcb_date_cleanup(data) {
-  // parse date+time format (default with Schema.org, but also an unofficial alternative to other implementation)
+  // parse date+time format (unofficial alternative to the main implementation)
   const endpoints = ["start", "end"];
   endpoints.forEach(function (point) {
     if (data[point + "Date"] != null) {
@@ -371,9 +336,26 @@ function atcb_generate_label(parent, type, icon = false, text = "") {
 
 // generate the triggering button
 function atcb_generate(button, buttonId, data) {
-  // clean the placeholder, if flagged that way
-  if (data.deleteJSON) {
-    button.innerHTML = "";
+  // clean the placeholder
+  button.textContent = "";
+  // create schema.org data, if possible (https://schema.org/Event)
+  // TODO: support recurring events
+  if (data.name && data.location && data.startDate) {
+    const schemaEl = document.createElement("script");
+    schemaEl.setAttribute("type", "application/ld+json");
+    schemaEl.textContent = '{ "event": { "@context":"https://schema.org", "@type":"Event", ';
+    schemaEl.textContent += '"name":"' + data.name + '", ';
+    if (data.descriptionHtmlFree)
+      schemaEl.textContent += '"description":"' + data.descriptionHtmlFree + '", ';
+    schemaEl.textContent += '"startDate":"' + data.startDate;
+    if (data.startTime) schemaEl.textContent += "T" + data.startTime.slice(0, 5);
+    schemaEl.textContent += '", ';
+    if (data.endDate) schemaEl.textContent += '"endDate":"' + data.endDate;
+    if (data.endTime) schemaEl.textContent += "T" + data.endTime.slice(0, 5);
+    schemaEl.textContent += '", ';
+    schemaEl.textContent += '"location":"' + data.location + '" ';
+    schemaEl.textContent += "} }";
+    button.appendChild(schemaEl);
   }
   // generate the wrapper div
   const buttonTriggerWrapper = document.createElement("div");

@@ -39,6 +39,7 @@ See [jekuer.github.io/add-to-calendar-button](https://jekuer.github.io/add-to-ca
   - Automatically generated iCal/ics files (for all other calendars, like Apple).
 - Timed and all-day events.
 - Translatable labels and dynamic dates.
+- Auto-generated Schema.org rich results (structured data) for better SEO.
 - Well documented code, to easily understand the processes and build on top of it.
 
 ![Demo Screenshot](https://github.com/jekuer/add-to-calendar-button/blob/main/demo.gif?raw=true)
@@ -98,6 +99,8 @@ Mind that with Angular, you might need to escape the { with `{{ '{' }}` and } wi
 
 ### Minimal structure (required)
 
+Mind that for auto-generating rich snippets, a location would be mandatory as well.
+
 ```html
 <div class="atcb" style="display:none;">
   {
@@ -111,7 +114,7 @@ Mind that with Angular, you might need to escape the { with `{{ '{' }}` and } wi
 </div>
 ```
 
-### Full structure (without schema.org markup)
+### Full structure
 
 ```html
 <div class="atcb" style="display:none;">
@@ -135,36 +138,10 @@ Mind that with Angular, you might need to escape the { with `{{ '{' }}` and } wi
     ],
     "timeZone":"Europe/Berlin",
     "trigger":"click",
+    "inline":"true",
+    "listStyle":"modal",
     "iCalFileName":"Reminder-Event"
   }
-</div>
-```
-
-### Full structure (with schema.org markup)
-
-You can save on the `style="display:none;"`, but mind that you should not use dynamic dates (e.g. "today" or "+1") here!
-You can use startTime and endTime in the event block, but it is recommended to rather add it to startDate and endDate with "T" as delimiter here.
-
-```html
-<div class="atcb">
-  <script type="application/ld+json">
-    {
-      "event": {
-        "@context": "https://schema.org",
-        "@type": "Event",
-        "name": "Add the title of your event",
-        "description": "A nice description does not hurt",
-        "startDate": "2022-02-21T10:13",
-        "endDate": "2022-03-24T17:57",
-        "location": "Somewhere over the rainbow"
-      },
-      "label": "Add to Calendar",
-      "options": ["Apple", "Google", "iCal", "Microsoft365", "MicrosoftTeams", "Outlook.com", "Yahoo"],
-      "timeZone": "Europe/Berlin",
-      "trigger": "click",
-      "iCalFileName": "Reminder-Event"
-    }
-  </script>
 </div>
 ```
 
@@ -232,7 +209,7 @@ const atcb_action = () => {
 
 - The `label` is optional, but enables you to customize the button text. Default: "Add to Calendar".
 - Dates need to be formatted as YYYY-MM-DD ([ISO-8601](https://en.wikipedia.org/wiki/ISO_8601)).
-- You can also use the word `today` as date. It will then dynamically use the current day at click (not supported with schema.org style).
+- You can also use the word `today` as date. It will then dynamically use the current day at click.
 - Add `+5` at the end of the date to dynamically add 5 days (or any other number). `2022-01-30+12` would generate the 11th of February 2022. This can be interesting, when combined with `today`.
 - Times need to be formatted as HH:MM.
 - Times are optional. If not set, the button generates all-day events.
@@ -271,16 +248,17 @@ Copyright (c) [Jens Kuerschner](https://jenskuerschner.de). Licensed under [MIT 
 
 ## ⚡ Changelog (without minor changes and fixes)
 
-- v1.9 : big code style update + linter setup
-- v1.8 : new button style
-- v1.7 : new code structure and options + tons of optimizations
-- v1.6 : supporting Microsoft Teams
-- v1.5 : update to date format and better accesibility
-- v1.4 : schema.org support (also changed some keys in the JSON!)
-- v1.3 : new license (MIT with “Commons Clause”)
-- v1.2 : inline and line break support
-- v1.1 : npm functionality
-- v1.0 : initial release
+- v1.10 : auto-generating schema.org and dropping support for its input
+- v1.9  : big code style update + linter setup
+- v1.8  : new button style
+- v1.7  : new code structure and options + tons of optimizations
+- v1.6  : supporting Microsoft Teams
+- v1.5  : update to date format and better accesibility
+- v1.4  : schema.org support (also changed some keys in the JSON!)
+- v1.3  : new license (MIT with “Commons Clause”)
+- v1.2  : inline and line break support
+- v1.1  : npm functionality
+- v1.0  : initial release
 
 <br />
 
