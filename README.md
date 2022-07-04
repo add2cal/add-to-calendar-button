@@ -90,6 +90,8 @@ A button can be easily created by placing a respective placeholder, wherever you
 Within this placeholder, you can easily configure the button, by placing a respective JSON structure.
 Mind that with Angular, you might need to escape the { with `{{ '{' }}` and } with `{{ '}' }}`; with React it would be `{ '{' }` and `{ '}' }`.
 
+<br />
+
 ### Minimal structure (required)
 
 Mind that for auto-generating rich snippets, a location would be mandatory as well.
@@ -106,6 +108,8 @@ Mind that for auto-generating rich snippets, a location would be mandatory as we
   }
 </div>
 ```
+
+<br />
 
 ### Full structure
 
@@ -137,6 +141,8 @@ Mind that for auto-generating rich snippets, a location would be mandatory as we
   }
 </div>
 ```
+
+<br />
 
 ### React examples
 
@@ -205,6 +211,8 @@ const MyComponent = () => {
   );
 }
 ```
+
+<br />
 
 ### Important information and hidden features
 
