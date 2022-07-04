@@ -353,7 +353,12 @@ function atcb_generate(button, buttonId, data) {
     if (data.endDate) schemaEl.textContent += '"endDate":"' + data.endDate;
     if (data.endTime) schemaEl.textContent += "T" + data.endTime.slice(0, 5);
     schemaEl.textContent += '", ';
-    schemaEl.textContent += '"location":"' + data.location + '" ';
+    if (data.location.startsWith("http")) {
+      schemaEl.textContent += '"eventAttendanceMode":"https://schema.org/OnlineEventAttendanceMode", ';
+      schemaEl.textContent += '"location": { "@type":"VirtualLocation", "url":"' + data.location + '" } ';
+    } else {
+      schemaEl.textContent += '"location":"' + data.location + '" ';
+    }
     schemaEl.textContent += "} }";
     button.appendChild(schemaEl);
   }

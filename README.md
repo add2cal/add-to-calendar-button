@@ -39,7 +39,7 @@ See [jekuer.github.io/add-to-calendar-button](https://jekuer.github.io/add-to-ca
   - Automatically generated iCal/ics files (for all other calendars, like Apple).
 - Timed and all-day events.
 - Translatable labels and dynamic dates.
-- Auto-generated Schema.org rich results (structured data) for better SEO.
+- Auto-generated Schema.org rich (structured) data for better SEO.
 - Well documented code, to easily understand the processes and build on top of it.
 
 ![Demo Screenshot](https://github.com/jekuer/add-to-calendar-button/blob/main/demo.gif?raw=true)
@@ -67,20 +67,13 @@ See [jekuer.github.io/add-to-calendar-button](https://jekuer.github.io/add-to-ca
 ### Option 3: npm
 
 1.  Requires Node, npm, and a project, which builds on it (e.g. React or Angular).
-
 2.  Run **`npm install add-to-calendar-button`**.
-
 3.  Import the module into your project/component. For example with Angular/React: `import { atcb_action, atcb_init } from 'add-to-calendar-button';`.
-
 4.  Either use `atcb_action` with your own buttons/forms/etc, or run `atcb_init` after the DOM has been loaded. To determine the right moment and execute, ...
-
     - with Angular, you would use `ngAfterViewInit()` with `atcb_init();` (mind that, depending on your app, other hooks might be better);
     - with React, you might want to include an event listener like `document.addEventListener('DOMContentLoaded', atcb_init, false);` or using hooks in a functional component like `useEffect(() => atcb_init());`
-
 5.  Include the css. For example with Angular or React, add the following to the global style.css: `@import 'add-to-calendar-button/assets/css/atcb.min'`;
-
 6.  Create your button as can be seen in the "Configuration" section below.
-
 7.  You're all done.
 
 <br />
@@ -225,6 +218,7 @@ const atcb_action = () => {
 - The default style for the options list, using the regular button, would be a dropdown. You can set the option `listStyle` to "modal" in order to force the modal version.
 - Formatting a URL in the description like `[url]https://....[/url]` makes it clickable.
 - If you require line breaks within the description, use `\n` or `<br>`.
+- If you set at least a name, startDate, and location, the script automatically generates schema.org rich data. Use a URL for the location and it will be labeled as online event.
 
 <br />
 
@@ -249,16 +243,16 @@ Copyright (c) [Jens Kuerschner](https://jenskuerschner.de). Licensed under [MIT 
 ## ⚡ Changelog (without minor changes and fixes)
 
 - v1.10 : auto-generating schema.org and dropping support for its input
-- v1.9  : big code style update + linter setup
-- v1.8  : new button style
-- v1.7  : new code structure and options + tons of optimizations
-- v1.6  : supporting Microsoft Teams
-- v1.5  : update to date format and better accesibility
-- v1.4  : schema.org support (also changed some keys in the JSON!)
-- v1.3  : new license (MIT with “Commons Clause”)
-- v1.2  : inline and line break support
-- v1.1  : npm functionality
-- v1.0  : initial release
+- v1.9 : big code style update + linter setup
+- v1.8 : new button style
+- v1.7 : new code structure and options + tons of optimizations
+- v1.6 : supporting Microsoft Teams
+- v1.5 : update to date format and better accesibility
+- v1.4 : schema.org support (also changed some keys in the JSON!)
+- v1.3 : new license (MIT with “Commons Clause”)
+- v1.2 : inline and line break support
+- v1.1 : npm functionality
+- v1.0 : initial release
 
 <br />
 
