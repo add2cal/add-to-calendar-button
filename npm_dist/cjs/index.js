@@ -627,6 +627,11 @@ function atcb_generate_google(data) {
     // eslint-disable-next-line security/detect-non-literal-fs-filename
     window.open(url, "_blank").focus();
   }
+  if (data['recurrence'] != null && data['recurrence'] != '') {
+    url += '&recur=' + encodeURIComponent(data['recurrence']);
+  }
+
+  window.open(url, '_blank').focus();
 }
 
 // FUNCTION TO GENERATE THE YAHOO URL
@@ -646,13 +651,11 @@ function atcb_generate_yahoo(data) {
   if (data.location != null && data.location != "") {
     url += "&in_loc=" + encodeURIComponent(data.location);
   }
-  if (data.descriptionHtmlFree != null && data.descriptionHtmlFree != "") {
-    // using descriptionHtmlFree instead of description, since Yahoo does not support html tags in a stable way
-    url += "&desc=" + encodeURIComponent(data.descriptionHtmlFree);
-  }
-  if (atcb_secure_url(url)) {
-    // eslint-disable-next-line security/detect-non-literal-fs-filename
-    window.open(url, "_blank").focus();
+  if (data['description'] != null && data['description'] != '') {
+    url += '&desc=' + encodeURIComponent(data['description']);
+  } 
+  if (data['recurrence'] != null && data['recurrence'] != '') {
+    url += '&recur=' + encodeURIComponent(data['recurrence']);
   }
 }
 
@@ -720,36 +723,39 @@ function atcb_generate_teams(data) {
 // FUNCTION TO GENERATE THE iCAL FILE (also for the Apple option)
 function atcb_generate_ical(data) {
   let now = new Date();
-  now = now.toISOString();
-  const formattedDate = atcb_generate_time(data, "clean", "ical");
-  let timeslot = "";
-  if (formattedDate.allday) {
-    timeslot = ";VALUE=DATE";
+  now = now.toISOString().replace(/\..../g, '').replace(/[^a-z0-9]/gi,'');
+  let formattedDate = atcb_generate_time(data, 'clean', 'ical');
+  let timeslot = '';
+  if (formattedDate['allday']) {
+    timeslot = ';VALUE=DATE';
   }
-  const ics_lines = ["BEGIN:VCALENDAR", "VERSION:2.0"];
-  const corp = "github.com/jekuer/add-to-calendar-button";
-  ics_lines.push("PRODID:-// " + corp + " // atcb v" + atcbVersion + " //EN");
-  ics_lines.push("CALSCALE:GREGORIAN");
-  ics_lines.push("BEGIN:VEVENT");
-  ics_lines.push("UID:" + now + "@add-to-calendar-button");
-  ics_lines.push(
-    "DTSTAMP:" + formattedDate.start,
-    "DTSTART" + timeslot + ":" + formattedDate.start,
-    "DTEND" + timeslot + ":" + formattedDate.end,
-    "SUMMARY:" + data.name.replace(/.{65}/g, "$&" + "\r\n ") // making sure it does not exceed 75 characters per line
-  );
-  if (data.descriptionHtmlFree != null && data.descriptionHtmlFree != "") {
-    ics_lines.push(
-      "DESCRIPTION:" + data.descriptionHtmlFree.replace(/\n/g, "\\n").replace(/.{60}/g, "$&" + "\r\n ") // adjusting for intended line breaks + making sure it does not exceed 75 characters per line
-    );
-  }
-  if (data.location != null && data.location != "") {
-    ics_lines.push("LOCATION:" + data.location);
-  }
-  now = now.replace(/\.\d{3}/g, "").replace(/[^a-z\d]/gi, "");
-  ics_lines.push("STATUS:CONFIRMED", "LAST-MODIFIED:" + now, "SEQUENCE:0", "END:VEVENT", "END:VCALENDAR");
-  const dlurl = "data:text/calendar;charset=utf-8," + encodeURIComponent(ics_lines.join("\r\n"));
-  const filename = data.iCalFileName || "event-to-save-in-my-calendar";
+  let ics_lines = [
+    "BEGIN:VCALENDAR",
+    "VERSION:2.0",
+    "CALSCALE:GREGORIAN",
+    "BEGIN:VEVENT",
+    "DTSTAMP:" + formattedDate['start'],
+    "DTSTART" + timeslot + ":" + formattedDate['start'],
+    "DTEND" + timeslot + ":" + formattedDate['end'],
+    "SUMMARY:" + data['name']
+   ];
+   if (data['description_iCal'] != null && data['description_iCal'] != '') {
+     ics_lines.push("DESCRIPTION:" + data['description_iCal'].replace(/\n/g, '\\n'));
+   }
+   if (data['location'] != null && data['location'] != '') {
+     ics_lines.push("LOCATION:" + data['location']);
+   }   
+   if (data['recurrence'] != null && data['recurrence'] != '') {
+     ics_lines.push(data['recurrence']);
+   }
+   ics_lines.push(
+    "STATUS:CONFIRMED",
+    "LAST-MODIFIED:" + now,
+    "SEQUENCE:0",
+    "END:VEVENT",
+    "END:VCALENDAR"
+   );
+  let dlurl = 'data:text/calendar;charset=utf-8,'+encodeURIComponent(ics_lines.join('\r\n'));
   try {
     if (!window.ActiveXObject) {
       const save = document.createElement("a");

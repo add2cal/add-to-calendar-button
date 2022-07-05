@@ -627,6 +627,13 @@ function atcb_generate_google(data) {
     // eslint-disable-next-line security/detect-non-literal-fs-filename
     window.open(url, "_blank").focus();
   }
+  if (data.recurrence != null && data.recurrence != "") {
+    url += "&recur=" + encodeURIComponent(data.recurrence);
+  }
+  if (atcb_secure_url(url)) {
+    // eslint-disable-next-line security/detect-non-literal-fs-filename
+    window.open(url, "_blank").focus();
+  }
 }
 
 // FUNCTION TO GENERATE THE YAHOO URL
@@ -648,7 +655,10 @@ function atcb_generate_yahoo(data) {
   }
   if (data.descriptionHtmlFree != null && data.descriptionHtmlFree != "") {
     // using descriptionHtmlFree instead of description, since Yahoo does not support html tags in a stable way
-    url += "&desc=" + encodeURIComponent(data.descriptionHtmlFree);
+    url += '&desc=' + encodeURIComponent(data['description']);
+  }
+  if (data.recurrence != null && data.recurrence != "") {
+    url += "&recur=" + encodeURIComponent(data.recurrence);
   }
   if (atcb_secure_url(url)) {
     // eslint-disable-next-line security/detect-non-literal-fs-filename
@@ -745,6 +755,9 @@ function atcb_generate_ical(data) {
   }
   if (data.location != null && data.location != "") {
     ics_lines.push("LOCATION:" + data.location);
+  }
+  if (data.recurrence != null && data.recurrence != '') {
+    ics_lines.push(data.recurrence);
   }
   now = now.replace(/\.\d{3}/g, "").replace(/[^a-z\d]/gi, "");
   ics_lines.push("STATUS:CONFIRMED", "LAST-MODIFIED:" + now, "SEQUENCE:0", "END:VEVENT", "END:VCALENDAR");
