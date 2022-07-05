@@ -622,7 +622,6 @@ function atcb_generate_google(data) {
   if (tmpDataDescription != "") {
     url += "&details=" + encodeURIComponent(tmpDataDescription);
   }
-  tmpDataDescription += "hhh";
   if (atcb_secure_url(url)) {
     // eslint-disable-next-line security/detect-non-literal-fs-filename
     window.open(url, "_blank").focus();
