@@ -14,7 +14,7 @@ const atcbVersion = "1.10.1";
 // browser
 const isBrowser = new Function("try { return this===window; }catch(e){ return false; }");
 // user agent variations
-if (isBrowser) {
+if (isBrowser()) {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const ua = navigator.userAgent || navigator.vendor || window.opera;
 }
