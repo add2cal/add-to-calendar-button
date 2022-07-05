@@ -455,25 +455,37 @@ function atcb_generate_dropdown_list(data) {
         });
         break;
       case "MicrosoftTeams":
-        atcb_generate_label(optionItem, "MicrosoftTeams", true, optionParts[1]);
-        optionItem.addEventListener("click", function () {
-          atcb_generate_teams(data);
-          atcb_close();
-        });
+        if (data.recurrence == null || data.recurrence == "") {
+          atcb_generate_label(optionItem, "MicrosoftTeams", true, optionParts[1]);
+          optionItem.addEventListener("click", function () {
+            atcb_generate_teams(data);
+            atcb_close();
+          });
+        } else {
+          optionItem.remove();
+        }
         break;
       case "Microsoft365":
-        atcb_generate_label(optionItem, "Microsoft365", true, optionParts[1]);
-        optionItem.addEventListener("click", function () {
-          atcb_generate_microsoft(data, "365");
-          atcb_close();
-        });
+        if (data.recurrence == null || data.recurrence == "") {
+          atcb_generate_label(optionItem, "Microsoft365", true, optionParts[1]);
+          optionItem.addEventListener("click", function () {
+            atcb_generate_microsoft(data, "365");
+            atcb_close();
+          });
+        } else {
+          optionItem.remove();
+        }
         break;
       case "Outlook.com":
-        atcb_generate_label(optionItem, "Outlook.com", true, optionParts[1]);
-        optionItem.addEventListener("click", function () {
-          atcb_generate_microsoft(data, "outlook");
-          atcb_close();
-        });
+        if (data.recurrence == null || data.recurrence == "") {
+          atcb_generate_label(optionItem, "Outlook.com", true, optionParts[1]);
+          optionItem.addEventListener("click", function () {
+            atcb_generate_microsoft(data, "outlook");
+            atcb_close();
+          });
+        } else {
+          optionItem.remove();
+        }
         break;
       case "Yahoo":
         atcb_generate_label(optionItem, "Yahoo", true, optionParts[1]);
