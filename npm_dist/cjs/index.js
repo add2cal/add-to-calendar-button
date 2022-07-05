@@ -10,12 +10,19 @@ const atcbVersion = "1.10.1";
  *
  */
 
+// CHECKING FOR SPECIFIC DEVICED AND SYSTEMS
+// user agent variations
+const ua = navigator.userAgent || navigator.vendor || window.opera;
+// browser
 const isBrowser = new Function("try { return this===window; }catch(e){ return false; }");
+// iOS
 const isiOS = isBrowser()
   ? new Function(
-      "if ((/iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1)){ return true; }else{ return false; }"
+      "if ((/iPad|iPhone|iPod/.test(ua) && !window.MSStream) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1)){ return true; }else{ return false; }"
     )
   : new Function("return false;");
+// Instagram
+const isInstagram = /Instagram/.test(ua) ? true : false;
 
 // INITIALIZE THE SCRIPT AND FUNCTIONALITY
 function atcb_init() {
