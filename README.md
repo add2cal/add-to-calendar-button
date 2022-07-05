@@ -8,7 +8,7 @@ A convenient JavaScript snippet (VanillaJS, React, Angular, ...), which lets you
 
 [![Code Quality](https://img.shields.io/codacy/grade/5c7c0bac087c4dfdb0669e8284f0459a/main?style=for-the-badge)](https://app.codacy.com/gh/jekuer/add-to-calendar-button/dashboard)
 [![Build Status](https://img.shields.io/github/workflow/status/jekuer/add-to-calendar-button/Node.js%20Package?style=for-the-badge)](https://github.com/jekuer/add-to-calendar-button/actions/workflows/npm-publish.yml)
-[![npm Downloads](https://img.shields.io/npm/dt/add-to-calendar-button?label=npm%20Downloads&style=for-the-badge)](https://www.npmjs.com/package/add-to-calendar-button)
+[![npm Installations](https://img.shields.io/npm/dt/add-to-calendar-button?label=npm%20Installations&style=for-the-badge)](https://www.npmjs.com/package/add-to-calendar-button)
 [![jsDelivr npm Hits](https://img.shields.io/jsdelivr/npm/hm/add-to-calendar-button?label=jsDelivr%20npm%20hits&style=for-the-badge)](https://www.jsdelivr.com/package/npm/add-to-calendar-button)
 
 <br /><br />
@@ -60,7 +60,7 @@ See [jekuer.github.io/add-to-calendar-button](https://jekuer.github.io/add-to-ca
 ### Option 2: simple (CDN)
 
 1.  Instead of downloading the files, you can use the jsDeliver CDN.
-2.  Put `<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/add-to-calendar-button@1.10.0/assets/css/atcb.min.css">` into the <head> and `<script src="https://cdn.jsdelivr.net/npm/add-to-calendar-button@1.10.0" defer></script>` into the <body> footer of your website. Leave out the patch number at the version ("1.9" instead of "1.9.2") to automatically pull the latest patched version. See [jsDeliver.com](https://www.jsdelivr.com/features#npm) for more options.
+2.  Put `<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/add-to-calendar-button@1.10.1/assets/css/atcb.min.css">` into the <head> and `<script src="https://cdn.jsdelivr.net/npm/add-to-calendar-button@1.10.1" defer></script>` into the <body> footer of your website. Leave out the patch number at the version ("1.9" instead of "1.9.2") to automatically pull the latest patched version. See [jsDeliver.com](https://www.jsdelivr.com/features#npm) for more options.
 3.  Create your button as can be seen in the "Configuration" section below.
 4.  Done. And this setup can also automatically keep track of any bug fixes and minor updates!
 
@@ -157,23 +157,26 @@ import React from 'react';
 import { atcb_action } from 'add-to-calendar-button';
 
 const MyComponent = () => {
-  const [name, setName] = React.useState('Some event');
+  const [name, setName] = React.useState("Some event");
+  const changeName = e => {
+    setName(e.target.value);
+  };
   return (
-      <form onSubmit={e => {
-        e.preventDefault();
-        atcb_action({
-          name,
-          startDate: "2022-10-14",
-          endDate: "2022-10-18",
-          options: ['Apple', 'Google', 'iCal', 'Microsoft365', 'Outlook.com', 'MicrosoftTeams', 'Yahoo'],
-          timeZone: "Europe/Berlin",
-          trigger: "click",
-          iCalFileName: "Reminder-Event",
-        });
-      }}>
-        <input value={name} onChange={setName} />
-        <input type="submit" value="save" />
-      </form>
+    <form onSubmit={e => {
+      e.preventDefault();
+      atcb_action({
+        name,
+        startDate: "2022-10-14",
+        endDate: "2022-10-18",
+        options: ['Apple', 'Google', 'iCal', 'Microsoft365', 'Outlook.com', 'Yahoo'],
+        timeZone: "Europe/Berlin",
+        trigger: "click",
+        iCalFileName: "Reminder-Event",
+      });
+    }}>
+      <input value={name} onChange={changeName} />
+      <input type="submit" value="save" />
+    </form>
   );
 }
 ```
@@ -188,26 +191,31 @@ import { atcb_init } from "add-to-calendar-button";
 import 'add-to-calendar-button/assets/css/atcb.css';
 
 const MyComponent = () => {
-  const [name, setName] = React.useState("Some event");
-  const changeName = e => {
-    setName(e.target.value);
-  };
+  React.useEffect(atcb_init, []);
   return (
-    <form onSubmit={e => {
-      e.preventDefault();
-      atcb_action({
-        name,
-        startDate: "2022-10-14",
-        endDate: "2022-10-18",
-        options: ['Apple', 'Google', 'iCal', 'Microsoft365', 'Outlook.com', 'MicrosoftTeams', 'Yahoo'],
-        timeZone: "Europe/Berlin",
-        trigger: "click",
-        iCalFileName: "Reminder-Event",
-      });
-    }}>
-      <input value={name} onChange={changeName} />
-      <input type="submit" value="save" />
-    </form>
+    <div className="atcb">
+      { '{' }
+        "name":"Add the title of your event",
+        "description":"A nice description does not hurt",
+        "startDate":"2022-02-21",
+        "endDate":"2022-03-24",
+        "startTime":"10:13",
+        "endTime":"17:57",
+        "location":"Somewhere over the rainbow",
+        "label":"Add to Calendar",
+        "options":[
+          "Apple",
+          "Google",
+          "iCal",
+          "Microsoft365",
+          "Outlook.com",
+          "Yahoo"
+        ],
+        "timeZone":"Europe/Berlin",
+        "trigger":"click",
+        "iCalFileName":"Reminder-Event"
+      { '}' }
+    </div>
   );
 }
 ```
