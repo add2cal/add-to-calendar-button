@@ -1,0 +1,8 @@
+# Ignore html files
+*.html
+
+# Ignore css files
+*.css
+
+# Ignore minified files
+*.min.*
