@@ -11,10 +11,13 @@ const atcbVersion = "1.10.1";
  */
 
 // CHECKING FOR SPECIFIC DEVICED AND SYSTEMS
-// user agent variations
-const ua = navigator.userAgent || navigator.vendor || window.opera;
 // browser
 const isBrowser = new Function("try { return this===window; }catch(e){ return false; }");
+// user agent variations
+if (isBrowser) {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const ua = navigator.userAgent || navigator.vendor || window.opera;
+}
 // iOS
 const isiOS = isBrowser()
   ? new Function(
@@ -22,7 +25,9 @@ const isiOS = isBrowser()
     )
   : new Function("return false;");
 // Instagram
-const isInstagram = /Instagram/.test(ua) ? true : false;
+const isInstagram = isBrowser()
+  ? new Function("if (/Instagram/.test(ua)){ return true; }else{ return false; }")
+  : new Function("return false;");
 
 // INITIALIZE THE SCRIPT AND FUNCTIONALITY
 function atcb_init() {
@@ -41,10 +46,10 @@ function atcb_init() {
       if (atcButtons[parseInt(i)].classList.contains("atcb_initialized")) {
         continue;
       }
-      let atcbConfig;
-      // get JSON from HTML block, but
-      // remove real code line breaks before parsing. Use <br> or \n explicitely in the description to create a line break. Also strip HTML tags (especially since stupid Safari adds stuff).
-      atcbConfig = JSON.parse(
+      // get JSON from HTML block, but remove real code line breaks before parsing.
+      // use <br> or \n explicitely in the description to create a line break.
+      // also strip HTML tags (especially since stupid Safari adds stuff).
+      let atcbConfig = JSON.parse(
         atcButtons[parseInt(i)].innerHTML.replace(/(\r\n|\n|\r)/g, "").replace(/(<(?!br)([^>]+)>)/gi, "")
       );
       // rewrite config for backwards compatibility - you can remove this, if you did not use this script before v1.4.0.
@@ -277,6 +282,13 @@ function atcb_validate(data) {
   if (newDate.endDate < newDate.startDate) {
     console.error("add-to-calendar button generation failed: end date before start date");
     return false;
+  }
+  // validate any given RRULE (or respective other parameters)
+  if (data.recurrence != null && data.recurrence != "") {
+    if (!/^[\w=;:*+-/\\]+$/.test(data.recurrence)) {
+      console.error("add-to-calendar button generation failed: RRULE data misspelled");
+      return false;
+    }
   }
   // on passing the validation, return true
   return true;
