@@ -21,12 +21,12 @@ if (isBrowser()) {
 // iOS
 const isiOS = isBrowser()
   ? new Function(
-      "if ((/iPad|iPhone|iPod/.test(ua) && !window.MSStream) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1)){ return true; }else{ return false; }"
+      "if ((/iPad|iPhone|iPod/.test(navigator.userAgent || navigator.vendor || window.opera) && !window.MSStream) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1)){ return true; }else{ return false; }"
     )
   : new Function("return false;");
 // Instagram
 const isInstagram = isBrowser()
-  ? new Function("if (/Instagram/.test(ua)){ return true; }else{ return false; }")
+  ? new Function("if (/Instagram/.test(navigator.userAgent || navigator.vendor || window.opera)){ return true; }else{ return false; }")
   : new Function("return false;");
 
 // INITIALIZE THE SCRIPT AND FUNCTIONALITY
@@ -681,7 +681,7 @@ function atcb_generate_yahoo(data) {
   }
   if (data.descriptionHtmlFree != null && data.descriptionHtmlFree != "") {
     // using descriptionHtmlFree instead of description, since Yahoo does not support html tags in a stable way
-    url += "&desc=" + encodeURIComponent(data["description"]);
+    url += "&desc=" + encodeURIComponent(data.descriptionHtmlFree);
   }
   if (data.recurrence != null && data.recurrence != "") {
     url += "&recur=" + encodeURIComponent(data.recurrence);
