@@ -375,12 +375,9 @@ function atcb_generate(button, buttonId, data) {
     schemaEl.textContent += '"name":"' + data.name + '", ';
     if (data.descriptionHtmlFree)
       schemaEl.textContent += '"description":"' + data.descriptionHtmlFree + '", ';
-    schemaEl.textContent += '"startDate":"' + data.startDate;
-    if (data.startTime) schemaEl.textContent += "T" + data.startTime;
-    schemaEl.textContent += '", ';
-    if (data.endDate) schemaEl.textContent += '"endDate":"' + data.endDate;
-    if (data.endTime) schemaEl.textContent += "T" + data.endTime;
-    schemaEl.textContent += '", ';
+    const formattedDate = atcb_generate_time(data, "delimiters", "general", true);
+    schemaEl.textContent += '"startDate":"' + formattedDate.start + '", ';
+    schemaEl.textContent += '"endDate":"' + formattedDate.end + '", ';
     if (data.location.startsWith("http")) {
       schemaEl.textContent += '"eventAttendanceMode":"https://schema.org/OnlineEventAttendanceMode", ';
       schemaEl.textContent += '"location": { "@type":"VirtualLocation", "url":"' + data.location + '" } ';
@@ -828,7 +825,7 @@ function atcb_generate_ical(data) {
 }
 
 // SHARED FUNCTION TO GENERATE A TIME STRING
-function atcb_generate_time(data, style = "delimiters", targetCal = "general") {
+function atcb_generate_time(data, style = "delimiters", targetCal = "general", addTimeZoneOffset = false) {
   const startDate = data.startDate.split("-");
   const endDate = data.endDate.split("-");
   let start = "";
@@ -873,9 +870,9 @@ function atcb_generate_time(data, style = "delimiters", targetCal = "general") {
           data.timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
         }
         const tzDate = new Date(start.toLocaleString("en-US", { timeZone: data.timeZone }));
-        const offset = utcDate.getTime() - tzDate.getTime();
-        start.setTime(start.getTime() + offset);
-        end.setTime(end.getTime() + offset);
+        const calcOffset = utcDate.getTime() - tzDate.getTime();
+        start.setTime(start.getTime() + calcOffset);
+        end.setTime(end.getTime() + calcOffset);
       }
     }
     start = start.toISOString().replace(".000", "");
@@ -883,6 +880,23 @@ function atcb_generate_time(data, style = "delimiters", targetCal = "general") {
     if (style == "clean") {
       start = start.replace(/-/g, "").replace(/:/g, "");
       end = end.replace(/-/g, "").replace(/:/g, "");
+    }
+    if (addTimeZoneOffset) {
+      let tzOffsetStart = "";
+      let tzOffsetEnd = "";
+      if (data.timeZoneOffset != null && data.timeZoneOffset != "") {
+        tzOffsetStart = data.timeZoneOffset;
+        tzOffsetEnd = data.timeZoneOffset;
+      } else if (data.timeZone != null && data.timeZone != "") {
+        let tzOffsetDateStart = new Date(start.toLocaleString("sv", { timeZone: data.timeZone }));
+        let tzOffsetStartSearch = tzOffsetDateStart.toString().match(/GMT(.{5})/g);
+        tzOffsetStart = tzOffsetStartSearch[0].replace(/GMT(.{3})(.{2})/g,"$1:$2");
+        let tzOffsetDateEnd = new Date(end.toLocaleString("sv", { timeZone: data.timeZone }));
+        let tzOffsetEndSearch = tzOffsetDateEnd.toString().match(/GMT(.{5})/g);
+        tzOffsetEnd = tzOffsetEndSearch[0].replace(/GMT(.{3})(.{2})/g,"$1:$2");
+      }
+      start = start.slice(0, -1) + tzOffsetStart;
+      end = end.slice(0, -1) + tzOffsetEnd;
     }
   } else {
     // would be an allday event then
