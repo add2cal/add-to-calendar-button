@@ -13,7 +13,6 @@ body:
       label: What happened?
       description: A clear and concise description of what the bug is.
       placeholder: Tell us what your expectation would have been and what you actually experience ...
-      value: ""
     validations:
       required: true
   - type: textarea
@@ -22,7 +21,6 @@ body:
       label: How to reproduce?
       description: Steps to reproduce the behavior.
       placeholder: List the steps to reproduce the issue ...
-      value: ""
     validations:
       required: false
   - type: textarea
@@ -30,8 +28,6 @@ body:
     attributes:
       label: Screenshots & more
       description: Add any additional material, which helps to better understand the problem.
-      placeholder: ""
-      value: ""
     validations:
       required: false
   - type: textarea
@@ -39,7 +35,9 @@ body:
     attributes:
       label: System & Environment
       description: Describe your system.
-      placeholder: List the device and OS (e.g. iPhone, iOS 15), browser (e.g. Chrome), and version number of the application (e.g. 1.9.1) ...
-      value: ""
+      placeholder: |
+      1. Device and OS (e.g. iPhone, iOS 15)
+      2. Browser (e.g. Chrome)
+      3. Version number of the application (e.g. 1.9.1)
     validations:
       required: true
