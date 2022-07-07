@@ -36,8 +36,8 @@ body:
       label: System & Environment
       description: Describe your system.
       placeholder: |
-      1. Device and OS (e.g. iPhone, iOS 15)
-      2. Browser (e.g. Chrome)
-      3. Version number of the application (e.g. 1.9.1)
+        1. Device and OS (e.g. iPhone, iOS 15)
+        2. Browser (e.g. Chrome)
+        3. Version number of the application (e.g. 1.9.1)
     validations:
       required: true
