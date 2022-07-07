@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Start a Discussion
+    url: https://github.com/jekuer/add-to-calendar-button/discussions
+    about: Questions, rough ideas, or rather unprecise feature requests go here.
+  - name: Security Bug Process
+    url: https://github.com/jekuer/add-to-calendar-button/security/policy
+    about: Please report security vulnerabilities here.
