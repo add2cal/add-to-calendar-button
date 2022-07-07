@@ -376,10 +376,10 @@ function atcb_generate(button, buttonId, data) {
     if (data.descriptionHtmlFree)
       schemaEl.textContent += '"description":"' + data.descriptionHtmlFree + '", ';
     schemaEl.textContent += '"startDate":"' + data.startDate;
-    if (data.startTime) schemaEl.textContent += "T" + data.startTime.slice(0, 5);
+    if (data.startTime) schemaEl.textContent += "T" + data.startTime;
     schemaEl.textContent += '", ';
     if (data.endDate) schemaEl.textContent += '"endDate":"' + data.endDate;
-    if (data.endTime) schemaEl.textContent += "T" + data.endTime.slice(0, 5);
+    if (data.endTime) schemaEl.textContent += "T" + data.endTime;
     schemaEl.textContent += '", ';
     if (data.location.startsWith("http")) {
       schemaEl.textContent += '"eventAttendanceMode":"https://schema.org/OnlineEventAttendanceMode", ';

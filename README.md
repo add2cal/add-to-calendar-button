@@ -232,8 +232,8 @@ const MyComponent = () => {
 - Times are optional. If not set, the button generates all-day events.
 - 1 option is required. You can add as many as you want. The supported formats are listed above.
 - If you want to rename (or translate) a label, use the following schema at the options: optionName + Pipe + yourLabel. "Google|Google Kalender" would generate a Google Calendar option, but label it as "Google Kalender".
-- You can add a `timeZone` (TZ name) or explicit `timeZoneOffset`. You can find a list of them at [Wikipedia](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones).
-- If the `timeZoneOffset` is set, it will always override the `timeZone`. If none is set, the date refers to UTC time.
+- You can and should add a `timeZone` (TZ name). Find a list of them at [Wikipedia](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones).
+- Alternatively, you can set the `timeZoneOffset`, which will always override the `timeZone`. If neither of them is set, the date refers to UTC time.
 - The `timeZone` option is recommended since it considers things like summer/winter time, but might not work in very old browsers. `timeZoneOffset` works with older browsers, but is quite static.
 - Use "currentBrowser" as value for `timeZone` to dynamically use the time of the user's browser. Use this with caution, since it would mean that the date and time will differ per user, which should not be the usual case! (Requires all times to be set.)
 - Use "recurrence" to define recurring events. Use can use any **valid** [RRULE](https://www.rfc-editor.org/rfc/rfc5545) to define the respective rule ([click here](https://icalendar.org/rrule-tool.html) for a generator). But mind that this will deactivate the Yahoo, Microsoft365, Teams, and Outlook options, since they do not support it at the moment (users could still use iCal in this case).
