@@ -21,7 +21,9 @@ const isiOS = isBrowser()
   : new Function("return false;");
 // Instagram
 const isInstagram = isBrowser()
-  ? new Function("if (/Instagram/.test(navigator.userAgent || navigator.vendor || window.opera)){ return true; }else{ return false; }")
+  ? new Function(
+      "if (/Instagram/.test(navigator.userAgent || navigator.vendor || window.opera)){ return true; }else{ return false; }"
+    )
   : new Function("return false;");
 
 // INITIALIZE THE SCRIPT AND FUNCTIONALITY
@@ -95,10 +97,22 @@ function atcb_decorate_data(atcbConfig) {
   const data = Object.assign({}, atcbConfig);
   // standardize any line breaks in the description and transform URLs (but keep a clean copy without the URL magic for iCal)
   data.description = data.description.replace(/<br\s*\/?>/gi, "\n");
-  data.descriptionHtmlFree = data.description.replace(/\[url\]/gi, "").replace(/\[\/url\]/gi, "");
+  data.descriptionHtmlFree = data.description
+    .replace(/\[url\]/gi, "")
+    .replace(/(\|.*)\[\/url\]/gi, "")
+    .replace(/\[\/url\]/gi, "");
   data.description = data.description.replace(
-    /\[url\]([\w&$+.,:;=~!*'?@#\s\-()|/^%]*)\[\/url\]/gi,
-    '<a href="$1" target="_blank" rel="noopener">$1</a>'
+    /\[url\]([\w&$+.,:;=~!*'?@^%#|\s\-()/]*)\[\/url\]/gi,
+    function (match, p1) {
+      const urlText = p1.split("|");
+      let link = '<a href="' + urlText[0] + '" target="_blank" rel="noopener">';
+      if (urlText.length > 1 && urlText[1] != "") {
+        link += urlText[1];
+      } else {
+        link += urlText[0];
+      }
+      return link + "</a>";
+    }
   );
   return data;
 }
@@ -483,11 +497,15 @@ function atcb_generate_dropdown_list(data) {
         }
         break;
       case "Yahoo":
-        atcb_generate_label(optionItem, "Yahoo", true, optionParts[1]);
-        optionItem.addEventListener("click", function () {
-          atcb_generate_yahoo(data);
-          atcb_close();
-        });
+        if (data.recurrence == null || data.recurrence == "") {
+          atcb_generate_label(optionItem, "Yahoo", true, optionParts[1]);
+          optionItem.addEventListener("click", function () {
+            atcb_generate_yahoo(data);
+            atcb_close();
+          });
+        } else {
+          optionItem.remove();
+        }
         break;
     }
     optionItem.addEventListener("keydown", function (event) {
@@ -677,9 +695,6 @@ function atcb_generate_yahoo(data) {
   if (data.descriptionHtmlFree != null && data.descriptionHtmlFree != "") {
     // using descriptionHtmlFree instead of description, since Yahoo does not support html tags in a stable way
     url += "&desc=" + encodeURIComponent(data.descriptionHtmlFree);
-  }
-  if (data.recurrence != null && data.recurrence != "") {
-    url += "&recur=" + encodeURIComponent(data.recurrence);
   }
   if (atcb_secure_url(url)) {
     // eslint-disable-next-line security/detect-non-literal-fs-filename
