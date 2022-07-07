@@ -1,0 +1,43 @@
+name: Bug Report
+description: Create a BUG issue to help us improve
+title: "[Bug]: "
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to fill out this bug report!
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: What happened?
+      description: A clear and concise description of what the bug is.
+      placeholder: Tell us what your expectation would have been and what you actually experience ...
+    validations:
+      required: true
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: How to reproduce?
+      description: Steps to reproduce the behavior.
+      placeholder: List the steps to reproduce the issue ...
+    validations:
+      required: false
+  - type: textarea
+    id: attachements
+    attributes:
+      label: Screenshots & more
+      description: Add any additional material, which helps to better understand the problem.
+    validations:
+      required: false
+  - type: textarea
+    id: system
+    attributes:
+      label: System & Environment
+      description: Describe your system.
+      placeholder: |
+        1. Device and OS (e.g. iPhone, iOS 15)
+        2. Browser (e.g. Chrome)
+        3. Version number of the application (e.g. 1.9.1)
+    validations:
+      required: true
