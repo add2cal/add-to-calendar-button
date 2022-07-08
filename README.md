@@ -1,6 +1,6 @@
 # Your next Add-to-Calendar Button
 
-![Add-to-Calendar Button](https://github.com/jekuer/add-to-calendar-button/blob/main/repo_image.png?raw=true)
+![Add-to-Calendar Button](https://github.com/jekuer/add-to-calendar-button/blob/main/img/repo_image.png?raw=true)
 
 A convenient JavaScript snippet (VanillaJS, React, Angular, ...), which lets you create beautiful buttons, where people can add events to their calendars.
 
@@ -46,7 +46,7 @@ And remember to ⭐**star** this repository in order to save it for later! 🤗
 - Auto-generated Schema.org rich (structured) data for better SEO.
 - Well documented code, to easily understand the processes and build on top of it.
 
-![Demo Screenshot](https://github.com/jekuer/add-to-calendar-button/blob/main/demo.gif?raw=true)
+![Demo Screenshot](https://github.com/jekuer/add-to-calendar-button/blob/main/img/demo.gif?raw=true)
 
 <br />
 
