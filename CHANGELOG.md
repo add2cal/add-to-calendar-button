@@ -1,0 +1,14 @@
+# ⚡ Changelog (without minor changes and fixes)
+
+## Version 1
+- v1.10 : auto-generating schema.org and dropping support for its input
+- v1.9 : big code style update + linter setup
+- v1.8 : new button style
+- v1.7 : new code structure and options + tons of optimizations
+- v1.6 : supporting Microsoft Teams
+- v1.5 : update to date format and better accesibility
+- v1.4 : schema.org support (also changed some keys in the JSON!)
+- v1.3 : new license (MIT with “Commons Clause”)
+- v1.2 : inline and line break support
+- v1.1 : npm functionality
+- v1.0 : initial release

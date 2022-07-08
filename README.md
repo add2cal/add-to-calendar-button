@@ -265,23 +265,14 @@ Anyone is welcome to contribute, but mind the [guidelines](.github/CONTRIBUTING.
 
 ## 📃 License
 
-Copyright (c) [Jens Kuerschner](https://jenskuerschner.de). Licensed under [MIT license (with “Commons Clause” License Condition v1.0)](LICENSE.txt).
+Copyright (c) [Jens Kuerschner](https://jenskuerschner.de).
+Licensed under [MIT license (with “Commons Clause” License Condition v1.0)](LICENSE.txt).
 
 <br />
 
 ## ⚡ Changelog (without minor changes and fixes)
 
-- v1.10 : auto-generating schema.org and dropping support for its input
-- v1.9 : big code style update + linter setup
-- v1.8 : new button style
-- v1.7 : new code structure and options + tons of optimizations
-- v1.6 : supporting Microsoft Teams
-- v1.5 : update to date format and better accesibility
-- v1.4 : schema.org support (also changed some keys in the JSON!)
-- v1.3 : new license (MIT with “Commons Clause”)
-- v1.2 : inline and line break support
-- v1.1 : npm functionality
-- v1.0 : initial release
+Find all changes in the dedicated file at [CHANGELOG.md](CHANGELOG.md).
 
 <br />
 
@@ -302,9 +293,9 @@ Beside that, there was only the solution by AddEvent.com - all over the place. I
 
 The problems with AddEvent.com:
 
-- it holds tons of features, which I did not need. I do not want to track my button. I just want it to work.
-- it limits the free tier to 50 event adds per month (consider the wedding case - this is way too less).
-- it brings some data privacy issues, since you basically send your users to their service. GDPR alert!
+- it holds tons of features, which I did not need. They make sense for companies, but not for most personal projects.
+- it limits the free tier to 50 event adds per month (consider the wedding case - this is way too less - they upgraded that in the meantime, but still).
+- it brings some data privacy issues, since you basically send your users to their not really data secured service. GDPR alert!
 - the UX/UI is not ideal (imho).
 
 **Bottom line:** Paying for features, which I did not need - at additional privacy concerns - that made me create this solution (for you).
