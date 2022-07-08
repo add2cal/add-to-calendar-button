@@ -266,11 +266,12 @@ Anyone is welcome to contribute, but mind the [guidelines](.github/CONTRIBUTING.
 ## 📃 License
 
 Copyright (c) [Jens Kuerschner](https://jenskuerschner.de).
+
 Licensed under [MIT license (with “Commons Clause” License Condition v1.0)](LICENSE.txt).
 
 <br />
 
-## ⚡ Changelog (without minor changes and fixes)
+## ⚡ Changelog
 
 Find all changes in the dedicated file at [CHANGELOG.md](CHANGELOG.md).
 
@@ -284,7 +285,7 @@ Find all changes in the dedicated file at [CHANGELOG.md](CHANGELOG.md).
 
 <br />
 
-## 🔎 Background // Why this repo exists
+## 🔎 Why this repo exists
 
 While building a personal wedding page, I was confronted with the task to include a button, where invited people could save the event to their calendars.
 I did not want to build this from scratch (first) and therefore started the usual web research.
