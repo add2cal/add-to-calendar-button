@@ -44,6 +44,7 @@ And remember to ⭐**star** this repository in order to save it for later! 🤗
 - Translatable labels and dynamic dates.
 - Dynamic dates and timezone.
 - Auto-generated Schema.org rich (structured) data for better SEO.
+- Full support for mouse, touch, or keyboard input.
 - Well documented code, to easily understand the processes and build on top of it.
 
 ![Demo Screenshot](https://github.com/jekuer/add-to-calendar-button/blob/main/img/demo.gif?raw=true)

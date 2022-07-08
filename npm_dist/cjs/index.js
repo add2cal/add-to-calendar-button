@@ -10,10 +10,6 @@ const atcbVersion = "1.10.1";
  *
  */
 
-// REFERENCE TO ACTIVE ELEMENTS
-let activeButton = "";
-let activeList = "";
-
 // CHECKING FOR SPECIFIC DEVICED AND SYSTEMS
 // browser
 const isBrowser = new Function("try { return this===window; }catch(e){ return false; }");
@@ -334,7 +330,7 @@ function atcb_generate_label(data, parent, type, icon = false, text = "", oneOpt
     case "Apple":
       parent.addEventListener("click", function () {
         atcb_generate_ical(data);
-        atcb_close();
+        oneOption ? parent.blur() : atcb_close();
       });
       text = text || "Apple";
       iconSvg =
@@ -343,7 +339,7 @@ function atcb_generate_label(data, parent, type, icon = false, text = "", oneOpt
     case "Google":
       parent.addEventListener("click", function () {
         atcb_generate_google(data);
-        atcb_close();
+        oneOption ? parent.blur() : atcb_close();
       });
       text = text || "Google";
       iconSvg =
@@ -352,7 +348,7 @@ function atcb_generate_label(data, parent, type, icon = false, text = "", oneOpt
     case "iCal":
       parent.addEventListener("click", function () {
         atcb_generate_ical(data);
-        atcb_close();
+        oneOption ? parent.blur() : atcb_close();
       });
       text = text || "iCal File";
       iconSvg =
@@ -362,7 +358,7 @@ function atcb_generate_label(data, parent, type, icon = false, text = "", oneOpt
       if (data.recurrence == null || data.recurrence == "") {
         parent.addEventListener("click", function () {
           atcb_generate_teams(data);
-          atcb_close();
+          oneOption ? parent.blur() : atcb_close();
         });
       } else {
         parent.remove();
@@ -376,7 +372,7 @@ function atcb_generate_label(data, parent, type, icon = false, text = "", oneOpt
       if (data.recurrence == null || data.recurrence == "") {
         parent.addEventListener("click", function () {
           atcb_generate_microsoft(data, "365");
-          atcb_close();
+          oneOption ? parent.blur() : atcb_close();
         });
       } else {
         parent.remove();
@@ -390,7 +386,7 @@ function atcb_generate_label(data, parent, type, icon = false, text = "", oneOpt
       if (data.recurrence == null || data.recurrence == "") {
         parent.addEventListener("click", function () {
           atcb_generate_microsoft(data, "outlook");
-          atcb_close();
+          oneOption ? parent.blur() : atcb_close();
         });
       } else {
         parent.remove();
@@ -404,7 +400,7 @@ function atcb_generate_label(data, parent, type, icon = false, text = "", oneOpt
       if (data.recurrence == null || data.recurrence == "") {
         parent.addEventListener("click", function () {
           atcb_generate_yahoo(data);
-          atcb_close();
+          oneOption ? parent.blur() : atcb_close();
         });
       } else {
         parent.remove();
@@ -418,7 +414,11 @@ function atcb_generate_label(data, parent, type, icon = false, text = "", oneOpt
   // trigger click on enter as well
   parent.addEventListener("keydown", function (event) {
     if (event.key == "Enter") {
-      this.click();
+      if (!oneOption && type === "Trigger") {
+        atcb_toggle(data, parent, true, true);
+      } else {
+        this.click();
+      }
     }
   });
   // add icon and text label
@@ -557,9 +557,6 @@ function atcb_open(data, button, keyboardTrigger = true, generatedButton = false
   if (document.querySelector(".atcb_list")) return;
   // generate list
   const list = atcb_generate_dropdown_list(data);
-  // set global variables
-  activeButton = button;
-  activeList = list;
   // set list styles, set button to atcb_active and force modal listStyle if no button is set
   if (button) {
     button.classList.add("atcb_active");
@@ -591,8 +588,8 @@ function atcb_open(data, button, keyboardTrigger = true, generatedButton = false
 
 function atcb_close(blockFocus = false) {
   // focus triggering button - especially relevant for keyboard navigation
+  let newFocusEl = document.querySelector(".atcb_active");
   if (!blockFocus) {
-    let newFocusEl = document.querySelector(".atcb_active");
     if (newFocusEl) {
       newFocusEl.focus();
     }
@@ -605,9 +602,6 @@ function atcb_close(blockFocus = false) {
   Array.from(document.querySelectorAll(".atcb_list"))
     .concat(Array.from(document.querySelectorAll(".atcb_bgoverlay")))
     .forEach((el) => el.remove());
-  // reset global variables
-  activeButton = "";
-  activeList = "";
 }
 
 // prepare data when not using the init function
@@ -942,15 +936,12 @@ if (isBrowser()) {
     }
   });
   // Global listener to any screen changes
-  // Closing all buttons in order to prevent any bad renderings (more "expensive" alternative would be to re-render them)
-  // Checking for width change to prevent resize on mobile scroll, where a disappearing browser bar could trigger it
-  //let windowWidth = window.innerWidth;
   window.addEventListener("resize", () => {
-    atcb_position_list(activeButton, activeList);
-    /*if (window.innerWidth != windowWidth) {
-      windowWidth = window.innerWidth;
-      atcb_close(true);
-    }*/
+    let activeButton = document.querySelector(".atcb_active");
+    let activeList = document.querySelector(".atcb_dropdown");
+    if (activeButton != null && activeList != null) {
+      atcb_position_list(activeButton, activeList);
+    }
   });
 }
 
