@@ -25,6 +25,8 @@ It is for this simple use case. No strings attached.
 
 See [jekuer.github.io/add-to-calendar-button](https://jekuer.github.io/add-to-calendar-button/) for a live demo.
 
+And remember to ⭐**star** this repository in order to save it for later! 🤗
+
 <br />
 
 ## ✨ Features
