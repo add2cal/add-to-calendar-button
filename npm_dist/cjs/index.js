@@ -305,7 +305,12 @@ function atcb_validate(data) {
 
 // GENERATE THE ACTUAL BUTTON
 // helper function to generate the labels for the button and list options
-function atcb_generate_label(data, parent, type, icon = false, text = "") {
+function atcb_generate_label(data, parent, type, icon = false, text = "", oneOption = false) {
+  let defaultTriggerText = "Add to Calendar";
+  // if there is only 1 option, we use the trigger text on the option label. Therefore, forcing it here
+  if (oneOption && text == "") {
+    text = defaultTriggerText;
+  }
   let iconSvg = "";
   switch (type) {
     case "Trigger":
@@ -318,7 +323,7 @@ function atcb_generate_label(data, parent, type, icon = false, text = "") {
         });
         parent.addEventListener("mouseenter", () => atcb_open(data, parent, false, true));
       }
-      text = text || "Add to Calendar";
+      text = text || defaultTriggerText;
       iconSvg =
         '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 122.88 122.88"><path d="M81.61 4.73c0-2.61 2.58-4.73 5.77-4.73s5.77 2.12 5.77 4.73v20.72c0 2.61-2.58 4.73-5.77 4.73s-5.77-2.12-5.77-4.73V4.73h0zm-3.65 76.03c1.83 0 3.32 1.49 3.32 3.32s-1.49 3.32-3.32 3.32l-12.95-.04-.04 12.93c0 1.83-1.49 3.32-3.32 3.32s-3.32-1.49-3.32-3.32l.04-12.94-12.93-.05c-1.83 0-3.32-1.49-3.32-3.32s1.49-3.32 3.32-3.32l12.94.04.04-12.93c0-1.83 1.49-3.32 3.32-3.32s3.32 1.49 3.32 3.32l-.04 12.95 12.94.04h0zM29.61 4.73c0-2.61 2.58-4.73 5.77-4.73s5.77 2.12 5.77 4.73v20.72c0 2.61-2.58 4.73-5.77 4.73s-5.77-2.12-5.77-4.73V4.73h0zM6.4 45.32h110.08V21.47c0-.8-.33-1.53-.86-2.07-.53-.53-1.26-.86-2.07-.86H103c-1.77 0-3.2-1.43-3.2-3.2s1.43-3.2 3.2-3.2h10.55c2.57 0 4.9 1.05 6.59 2.74s2.74 4.02 2.74 6.59v27.06 65.03c0 2.57-1.05 4.9-2.74 6.59s-4.02 2.74-6.59 2.74H9.33c-2.57 0-4.9-1.05-6.59-2.74-1.69-1.7-2.74-4.03-2.74-6.6V48.53 21.47c0-2.57 1.05-4.9 2.74-6.59s4.02-2.74 6.59-2.74H20.6c1.77 0 3.2 1.43 3.2 3.2s-1.43 3.2-3.2 3.2H9.33c-.8 0-1.53.33-2.07.86-.53.53-.86 1.26-.86 2.07v23.85h0zm110.08 6.41H6.4v61.82c0 .8.33 1.53.86 2.07.53.53 1.26.86 2.07.86h104.22c.8 0 1.53-.33 2.07-.86.53-.53.86-1.26.86-2.07V51.73h0zM50.43 18.54c-1.77 0-3.2-1.43-3.2-3.2s1.43-3.2 3.2-3.2h21.49c1.77 0 3.2 1.43 3.2 3.2s-1.43 3.2-3.2 3.2H50.43h0z"/></svg>';
       break;
@@ -461,7 +466,13 @@ function atcb_generate(button, buttonId, data) {
   buttonTrigger.setAttribute("type", "button");
   buttonTriggerWrapper.appendChild(buttonTrigger);
   // generate the label incl. eventListeners
-  atcb_generate_label(data, buttonTrigger, "Trigger", true, data.label);
+  // if there is only 1 calendar option, we directly show this at the button, but with the trigger's label text
+  if (data.options.length === 1) {
+    const optionParts = data.options[0].split("|");
+    atcb_generate_label(data, buttonTrigger, optionParts[0], true, data.label, true);
+  } else {
+    atcb_generate_label(data, buttonTrigger, "Trigger", true, data.label);
+  }
   // update the placeholder class to prevent multiple initializations
   button.classList.remove("atcb");
   button.classList.add("atcb_initialized");

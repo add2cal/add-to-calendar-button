@@ -1,6 +1,7 @@
 # ⚡ Changelog (without minor changes and fixes)
 
 ## Version 1
+
 - v1.10 : auto-generating schema.org and dropping support for its input
 - v1.9 : big code style update + linter setup
 - v1.8 : new button style
