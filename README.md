@@ -38,7 +38,9 @@ See [jekuer.github.io/add-to-calendar-button](https://jekuer.github.io/add-to-ca
   - Microsoft 365, Outlook, and Teams.
   - Automatically generated iCal/ics files (for all other calendars, like Apple).
 - Timed and all-day events.
+- Recurring events (where supported by the calendar)
 - Translatable labels and dynamic dates.
+- Dynamic dates and timezone.
 - Auto-generated Schema.org rich (structured) data for better SEO.
 - Well documented code, to easily understand the processes and build on top of it.
 
