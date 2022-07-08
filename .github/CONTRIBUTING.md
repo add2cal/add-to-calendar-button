@@ -8,7 +8,9 @@ Please take a moment to review this document in order to make the contribution p
 Following these guidelines helps to communicate that you respect the time of the developers managing and developing this open source project. 
 In return, they should reciprocate that respect in addressing your issue or assessing patches and features.
 
-## Using the issue tracker
+<br />
+
+## 📄 Using the issue tracker
 
 The [issue tracker](https://github.com/jekuer/add-to-calendar-button/issues) is the preferred channel for [bug reports](#bugs), [precise features requests](#features) and [submitting pull requests](#pull-requests), but please respect the following restrictions:
 
@@ -18,9 +20,11 @@ The [issue tracker](https://github.com/jekuer/add-to-calendar-button/issues) is 
 
 - Have a look at the [Discussions area](https://github.com/jekuer/add-to-calendar-button/discussions) for everything else, like Q&A, rough ideas, or other requests.
 
+<br />
+
 <a name="bugs"></a>
 
-## Bug reports
+## 🐞 Bug reports
 
 A bug is a _demonstrable problem_ that is caused by the code in the repository.
 Good bug reports are extremely helpful - thank you!
@@ -37,18 +41,22 @@ All these details will help people to fix any potential bugs.
 
 Therefore, use the official bug issue optione and fill out all the provided fields
 
+<br />
+
 <a name="features"></a>
 
-## Feature requests
+## ✨ Feature requests
 
 Feature requests are welcome. But take a moment to find out whether your idea fits with the scope and aims of the project. 
 It's up to _you_ to make a strong case to convince the project's developers of the merits of this feature. 
 Please provide as much detail and context as possible.
 **Feature requests** usually belong into the [Discussions area](https://github.com/jekuer/add-to-calendar-button/discussions) unless they are completely specified.
 
+<br />
+
 <a name="pull-requests"></a>
 
-## Pull requests
+## 🧰 Pull requests
 
 Good pull requests - patches, improvements, new features - are a fantastic help.
 They should remain focused in scope and avoid containing unrelated commits.
@@ -100,5 +108,7 @@ Adhering to the following process is the best way to get your work included in t
     ```
 
 7.  [Open a Pull Request](https://help.github.com/articles/using-pull-requests/) with a clear title and description.
+
+<br />
 
 **IMPORTANT**: By submitting a patch, you agree to allow the project owners to license your work under the terms of the [MIT license (with “Commons Clause” License Condition v1.0)](LICENSE.txt).
