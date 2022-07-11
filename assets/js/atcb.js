@@ -324,12 +324,22 @@ function atcb_generate_label(data, parent, type, icon = false, text = "", oneOpt
     case "Trigger":
     default:
       if (data.trigger == "click") {
-        parent.addEventListener("click", atcb_debounce_leading(() => atcb_toggle(data, parent, false, true)));
+        parent.addEventListener(
+          "click",
+          atcb_debounce_leading(() => atcb_toggle(data, parent, false, true))
+        );
       } else {
-        parent.addEventListener("touchstart", atcb_debounce_leading(() => atcb_toggle(data, parent, false, true)), {
-          passive: true,
-        });
-        parent.addEventListener("mouseenter", atcb_debounce_leading(() => atcb_open(data, parent, false, true)));
+        parent.addEventListener(
+          "touchstart",
+          atcb_debounce_leading(() => atcb_toggle(data, parent, false, true)),
+          {
+            passive: true,
+          }
+        );
+        parent.addEventListener(
+          "mouseenter",
+          atcb_debounce_leading(() => atcb_open(data, parent, false, true))
+        );
       }
       text = text || defaultTriggerText;
       iconSvg =
@@ -486,7 +496,7 @@ function atcb_generate(button, buttonId, data) {
     atcb_generate_label(data, buttonTrigger, "Trigger", true, data.label);
     // create an empty anchor div to place the dropdown, while the position can be defined via CSS
     const buttonDropdownAnchor = document.createElement("div");
-    buttonDropdownAnchor.classList.add("atcb_dropdown_anchor");    
+    buttonDropdownAnchor.classList.add("atcb_dropdown_anchor");
     buttonTriggerWrapper.appendChild(buttonDropdownAnchor);
   }
   // update the placeholder class to prevent multiple initializations
@@ -527,14 +537,21 @@ function atcb_generate_bg_overlay(data) {
     bgOverlay.classList.add("atcb_animate_bg");
   }
   bgOverlay.tabIndex = 0;
-  bgOverlay.addEventListener("click", atcb_debounce_leading(() => atcb_close(true)));
+  bgOverlay.addEventListener(
+    "click",
+    atcb_debounce_leading(() => atcb_close(true))
+  );
   let fingerMoved = false;
   bgOverlay.addEventListener("touchstart", () => (fingerMoved = false), {
     passive: true,
-  });  
-  bgOverlay.addEventListener("touchmove", atcb_debounce(() => (fingerMoved = true)), {
-    passive: true,
   });
+  bgOverlay.addEventListener(
+    "touchmove",
+    atcb_debounce(() => (fingerMoved = true)),
+    {
+      passive: true,
+    }
+  );
   bgOverlay.addEventListener(
     "touchend",
     function () {
@@ -544,9 +561,15 @@ function atcb_generate_bg_overlay(data) {
     },
     { passive: true }
   );
-  bgOverlay.addEventListener("focus", atcb_debounce_leading(() => atcb_close(false)));
+  bgOverlay.addEventListener(
+    "focus",
+    atcb_debounce_leading(() => atcb_close(false))
+  );
   if (data.trigger !== "click") {
-    bgOverlay.addEventListener("mousemove", atcb_debounce_leading(() => atcb_close(true)));
+    bgOverlay.addEventListener(
+      "mousemove",
+      atcb_debounce_leading(() => atcb_close(true))
+    );
   } else {
     // if trigger is not set to 'click', we render a close icon, when hovering over the background
     bgOverlay.classList.add("atcb_click");
@@ -936,7 +959,7 @@ function atcb_secure_url(url) {
 function atcb_position_list(trigger, list) {
   let anchorSet = false;
   if (trigger.nextElementSibling !== null) {
-    if (trigger.nextElementSibling.classList.contains('atcb_dropdown_anchor')) {
+    if (trigger.nextElementSibling.classList.contains("atcb_dropdown_anchor")) {
       trigger = trigger.nextSibling;
       anchorSet = true;
     }
@@ -953,11 +976,13 @@ function atcb_position_list(trigger, list) {
 
 // SHARED DEBOUNCE AND THROTTLE FUNCTIONS
 // going for last call debounce
-function atcb_debounce(func, timeout = 200){
+function atcb_debounce(func, timeout = 200) {
   let timer;
   return (...args) => {
     clearTimeout(timer);
-    timer = setTimeout(() => { func.apply(this, args); }, timeout);
+    timer = setTimeout(() => {
+      func.apply(this, args);
+    }, timeout);
   };
 }
 // dropping subsequent calls debounce
@@ -974,23 +999,23 @@ function atcb_debounce_leading(func, timeout = 200) {
   };
 }
 // throttle
-function atcb_throttle (func, limit = 25) {
+function atcb_throttle(func, limit = 25) {
   let lastFunc;
   let lastRan;
   return (...args) => {
     if (!lastRan) {
-      func.apply(this, args)
+      func.apply(this, args);
       lastRan = Date.now();
     } else {
       clearTimeout(lastFunc);
-      lastFunc = setTimeout(function() {
-          if ((Date.now() - lastRan) >= limit) {
-            func.apply(this, args);
-            lastRan = Date.now();
-          }
-       }, limit - (Date.now() - lastRan));
+      lastFunc = setTimeout(function () {
+        if (Date.now() - lastRan >= limit) {
+          func.apply(this, args);
+          lastRan = Date.now();
+        }
+      }, limit - (Date.now() - lastRan));
     }
-  }
+  };
 }
 
 // GLOBAL LISTENERS
@@ -1002,13 +1027,16 @@ if (isBrowser()) {
     }
   });
   // Global listener to any screen changes
-  window.addEventListener("resize", atcb_throttle(() => {
-    let activeButton = document.querySelector(".atcb_active");
-    let activeList = document.querySelector(".atcb_dropdown");
-    if (activeButton != null && activeList != null) {
-      atcb_position_list(activeButton, activeList);
-    }
-  }));
+  window.addEventListener(
+    "resize",
+    atcb_throttle(() => {
+      let activeButton = document.querySelector(".atcb_active");
+      let activeList = document.querySelector(".atcb_dropdown");
+      if (activeButton != null && activeList != null) {
+        atcb_position_list(activeButton, activeList);
+      }
+    })
+  );
 }
 
 // START INIT
