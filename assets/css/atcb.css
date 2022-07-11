@@ -85,6 +85,11 @@
   width: auto;
 }
 
+.atcb_dropdown_anchor {
+  position: relative;
+  top: -3px;
+}
+
 .atcb_list {
   box-sizing: border-box;
   color: rgb(51 51 51);

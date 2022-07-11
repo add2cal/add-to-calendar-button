@@ -484,6 +484,10 @@ function atcb_generate(button, buttonId, data) {
     atcb_generate_label(data, buttonTrigger, optionParts[0], true, data.label, true);
   } else {
     atcb_generate_label(data, buttonTrigger, "Trigger", true, data.label);
+    // create an empty anchor div to place the dropdown, while the position can be defined via CSS
+    const buttonDropdownAnchor = document.createElement("div");
+    buttonDropdownAnchor.classList.add("atcb_dropdown_anchor");    
+    buttonTriggerWrapper.appendChild(buttonDropdownAnchor);
   }
   // update the placeholder class to prevent multiple initializations
   button.classList.remove("atcb");
@@ -930,22 +934,33 @@ function atcb_secure_url(url) {
 
 // SHARED FUNCTION TO CALCULATE THE POSITION OF THE DROPDOWN LIST
 function atcb_position_list(trigger, list) {
+  let anchorSet = false;
+  if (trigger.nextElementSibling !== null) {
+    if (trigger.nextElementSibling.classList.contains('atcb_dropdown_anchor')) {
+      trigger = trigger.nextSibling;
+      anchorSet = true;
+    }
+  }
   const rect = trigger.getBoundingClientRect();
   list.style.width = rect.width + "px";
-  list.style.top = rect.bottom + window.scrollY - 3 + "px";
+  if (anchorSet === true) {
+    list.style.top = rect.top + window.scrollY + "px";
+  } else {
+    list.style.top = rect.bottom + window.scrollY + "px";
+  }
   list.style.left = rect.left + "px";
 }
 
-// SHARED DEBOUNCE FUNCTION
-// going for last call
-function atcb_debounce(func, timeout = 300){
+// SHARED DEBOUNCE AND THROTTLE FUNCTIONS
+// going for last call debounce
+function atcb_debounce(func, timeout = 200){
   let timer;
   return (...args) => {
     clearTimeout(timer);
     timer = setTimeout(() => { func.apply(this, args); }, timeout);
   };
 }
-// dropping subsequent calls
+// dropping subsequent calls debounce
 function atcb_debounce_leading(func, timeout = 200) {
   let timer;
   return (...args) => {
@@ -958,6 +973,25 @@ function atcb_debounce_leading(func, timeout = 200) {
     }, timeout);
   };
 }
+// throttle
+function atcb_throttle (func, limit = 50) {
+  let lastFunc;
+  let lastRan;
+  return (...args) => {
+    if (!lastRan) {
+      func.apply(this, args)
+      lastRan = Date.now();
+    } else {
+      clearTimeout(lastFunc);
+      lastFunc = setTimeout(function() {
+          if ((Date.now() - lastRan) >= limit) {
+            func.apply(this, args);
+            lastRan = Date.now();
+          }
+       }, limit - (Date.now() - lastRan));
+    }
+  }
+}
 
 // GLOBAL LISTENERS
 if (isBrowser()) {
@@ -968,13 +1002,13 @@ if (isBrowser()) {
     }
   });
   // Global listener to any screen changes
-  window.addEventListener("resize", () => {
+  window.addEventListener("resize", atcb_throttle(() => {
     let activeButton = document.querySelector(".atcb_active");
     let activeList = document.querySelector(".atcb_dropdown");
     if (activeButton != null && activeList != null) {
       atcb_position_list(activeButton, activeList);
     }
-  });
+  }));
 }
 
 module.exports = { atcb_action, atcb_init };
