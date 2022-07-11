@@ -177,6 +177,10 @@
   border-radius: 6px 6px 0 0;
 }
 
+.atcb_list:not(.atcb_generated_button) .atcb_list_item:only-child {
+  border-radius: 6px;
+}
+
 .atcb_list_item .atcb_icon {
   margin-right: 8px;
   width: 18px;

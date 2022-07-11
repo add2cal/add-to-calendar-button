@@ -175,7 +175,6 @@ const MyComponent = () => {
         endDate: "2022-10-18",
         options: ['Apple', 'Google', 'iCal', 'Microsoft365', 'Outlook.com', 'Yahoo'],
         timeZone: "Europe/Berlin",
-        trigger: "click",
         iCalFileName: "Reminder-Event",
       });
     }}>
@@ -217,7 +216,6 @@ const MyComponent = () => {
           "Yahoo"
         ],
         "timeZone":"Europe/Berlin",
-        "trigger":"click",
         "iCalFileName":"Reminder-Event"
       { '}' }
     </div>
@@ -245,7 +243,7 @@ const MyComponent = () => {
 - You can set the `trigger` to `click`. This makes the button open on click at desktop. Otherwise, the default would be to open on hover. On touch devices, this makes no difference.
 - If you want to define a specific name for any generated ics file (iCal), you can specify it via the `iCalFileName` option. The default would be "event-to-save-in-my-calendar".
 - You can use the option `"inline":true` in order to make the button appear with inline-block instead of block style.
-- The default style for the options list, using the regular button, would be a dropdown. You can set the option `listStyle` to "modal" in order to force the modal version.
+- The default style for the options list, using the regular button, would be a dropdown. You can set the option `listStyle` to "modal" in order to force the modal version (this would also force the click trigger).
 - Formatting a URL in the description like `[url]https://....[/url]` makes it clickable. `[url]https://....|URL Text[/url]` defines a linked textblock saying "URL Text" (not supported by Apple, iCal, and Yahoo; not supporting special characters).
 - If you require line breaks within the description, use `\n` or `<br>`.
 - If you set at least a name, startDate, and location, the script automatically generates schema.org rich data. Use a URL for the location and it will be labeled as online event.

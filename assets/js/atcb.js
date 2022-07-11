@@ -89,8 +89,16 @@ function atcb_decorate_data(atcbConfig) {
   // calculate the real date values in case that there are some special rules included (e.g. adding days dynamically)
   atcbConfig.startDate = atcb_date_calculation(atcbConfig.startDate);
   atcbConfig.endDate = atcb_date_calculation(atcbConfig.endDate);
+  // force click trigger on modal style
+  if (atcbConfig.listStyle === "modal") {
+    atcbConfig.trigger = "click";
+  }
+  // format RRULE (remove spaces)
+  if (atcbConfig.recurrence != null && atcbConfig.recurrence != "") {
+    atcbConfig.recurrence = atcbConfig.recurrence.replace(/\s+/g, "");
+  }
 
-  // if no description or already decorated, return early
+  // if no description or already decorated, return early here
   if (!atcbConfig.description || atcbConfig.descriptionHtmlFree) return atcbConfig;
 
   // make a copy of the given argument rather than mutating in place
@@ -316,12 +324,12 @@ function atcb_generate_label(data, parent, type, icon = false, text = "", oneOpt
     case "Trigger":
     default:
       if (data.trigger == "click") {
-        parent.addEventListener("mousedown", () => atcb_toggle(data, parent, false, true));
+        parent.addEventListener("click", atcb_debounce_leading(() => atcb_toggle(data, parent, false, true)));
       } else {
-        parent.addEventListener("touchstart", () => atcb_toggle(data, parent, false, true), {
+        parent.addEventListener("touchstart", atcb_debounce_leading(() => atcb_toggle(data, parent, false, true)), {
           passive: true,
         });
-        parent.addEventListener("mouseenter", () => atcb_open(data, parent, false, true));
+        parent.addEventListener("mouseenter", atcb_debounce_leading(() => atcb_open(data, parent, false, true)));
       }
       text = text || defaultTriggerText;
       iconSvg =
@@ -415,7 +423,7 @@ function atcb_generate_label(data, parent, type, icon = false, text = "", oneOpt
   parent.addEventListener("keydown", function (event) {
     if (event.key == "Enter") {
       if (!oneOption && type === "Trigger") {
-        atcb_toggle(data, parent, true, true);
+        atcb_debounce_leading(() => atcb_toggle(data, parent, true, true));
       } else {
         this.click();
       }
@@ -515,27 +523,28 @@ function atcb_generate_bg_overlay(data) {
     bgOverlay.classList.add("atcb_animate_bg");
   }
   bgOverlay.tabIndex = 0;
-  bgOverlay.addEventListener("click", () => atcb_close(true));
+  bgOverlay.addEventListener("click", atcb_debounce_leading(() => atcb_close(true)));
   let fingerMoved = false;
   bgOverlay.addEventListener("touchstart", () => (fingerMoved = false), {
     passive: true,
-  });
-  bgOverlay.addEventListener("touchmove", () => (fingerMoved = true), {
+  });  
+  bgOverlay.addEventListener("touchmove", atcb_debounce(() => (fingerMoved = true)), {
     passive: true,
   });
   bgOverlay.addEventListener(
     "touchend",
     function () {
       if (fingerMoved === false) {
-        atcb_close(true);
+        atcb_debounce_leading(() => atcb_close(true));
       }
     },
     { passive: true }
   );
-  bgOverlay.addEventListener("focus", () => atcb_close(false));
+  bgOverlay.addEventListener("focus", atcb_debounce_leading(() => atcb_close(false)));
   if (data.trigger !== "click") {
-    bgOverlay.addEventListener("mousemove", () => atcb_close(true));
+    bgOverlay.addEventListener("mousemove", atcb_debounce_leading(() => atcb_close(true)));
   } else {
+    // if trigger is not set to 'click', we render a close icon, when hovering over the background
     bgOverlay.classList.add("atcb_click");
   }
   return bgOverlay;
@@ -927,12 +936,35 @@ function atcb_position_list(trigger, list) {
   list.style.left = rect.left + "px";
 }
 
+// SHARED DEBOUNCE FUNCTION
+// going for last call
+function atcb_debounce(func, timeout = 300){
+  let timer;
+  return (...args) => {
+    clearTimeout(timer);
+    timer = setTimeout(() => { func.apply(this, args); }, timeout);
+  };
+}
+// dropping subsequent calls
+function atcb_debounce_leading(func, timeout = 200) {
+  let timer;
+  return (...args) => {
+    if (!timer) {
+      func.apply(this, args);
+    }
+    clearTimeout(timer);
+    timer = setTimeout(() => {
+      timer = undefined;
+    }, timeout);
+  };
+}
+
 // GLOBAL LISTENERS
 if (isBrowser()) {
   // Global listener to ESC key to close dropdown
   document.addEventListener("keydown", (evt) => {
     if (evt.key === "Escape") {
-      atcb_close();
+      atcb_debounce_leading(() => atcb_close());
     }
   });
   // Global listener to any screen changes
