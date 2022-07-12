@@ -262,14 +262,6 @@ Anyone is welcome to contribute, but mind the [guidelines](.github/CONTRIBUTING.
 
 <br />
 
-## 📃 License
-
-Copyright (c) [Jens Kuerschner](https://jenskuerschner.de).
-
-Licensed under [MIT license (with “Commons Clause” License Condition v1.0)](LICENSE.txt).
-
-<br />
-
 ## ⚡ Changelog
 
 Find all changes in the dedicated file at [CHANGELOG.md](CHANGELOG.md).
@@ -281,6 +273,14 @@ Find all changes in the dedicated file at [CHANGELOG.md](CHANGELOG.md).
 - [uxwing.com](https://uxwing.com)
 - [Chad Ostrowski (chadoh)](https://github.com/chadoh)
 - ... and all other contributors!
+
+<br />
+
+## 📃 License
+
+Copyright (c) [Jens Kuerschner](https://jenskuerschner.de).
+
+Licensed under [MIT license (with “Commons Clause” License Condition v1.0)](LICENSE.txt).
 
 <br />
 
