@@ -247,7 +247,7 @@ const MyComponent = () => {
 - Formatting a URL in the description like `[url]https://....[/url]` makes it clickable. `[url]https://....|URL Text[/url]` defines a linked textblock saying "URL Text" (not supported by Apple, iCal, and Yahoo; not supporting special characters).
 - If you require line breaks within the description, use `\n` or `<br>`.
 - If you set at least a name, startDate, and location, the script automatically generates schema.org rich data. Use a URL for the location and it will be labeled as online event.
-- Each button and option has a speaking class to be used for any tracking methods. Scheme: "button-_IDENTIFIER_" or "button-_IDENTIFIER_-google" (for the Google option) respectively. The _IDENTIFIER_ will be the an automatic number, but can be overridden by providing the option `"identifier":"xyz"` (no special characters allowed).
+- Each button and option has a speaking class to be used for any tracking methods. Scheme: "button-_IDENTIFIER_" or "button-_IDENTIFIER_-google" (for the Google option) respectively. The _IDENTIFIER_ will be an automatic number, but can be overridden by providing the option `"identifier":"xyz"` (no special characters allowed).
 
 <br />
 
