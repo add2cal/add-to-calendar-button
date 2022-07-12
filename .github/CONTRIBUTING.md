@@ -86,7 +86,7 @@ Adhering to the following process is the best way to get your work included in t
     git pull upstream master
     ```
 
-    *Also check any dev or dev_x branch. In doubt, especially if there is a lot of unmerged stuff in them, ask how to proceed!*
+    **Also check any dev or dev_x branch. In doubt, especially if there is a lot of unmerged stuff in them, ask how to proceed!**
 
 3.  Create a new topic branch (off the main project development branch) to contain your feature, change, or fix:
 
