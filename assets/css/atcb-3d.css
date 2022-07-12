@@ -40,6 +40,7 @@
   position: relative;
   text-align: center;
   touch-action: manipulation;
+  transform: translate3d(0, 0, -12px);
   user-select: none;
   -webkit-tap-highlight-color: transparent;
   width: auto;
@@ -66,6 +67,8 @@
   box-shadow: 1px 8px 12px 0 rgb(0 0 0 / 50%);
   margin: 0;
   padding: 10px 18px;
+  transform: perspective(100px) rotateX(12deg) translate3d(0, 0, 2px);
+  transition: margin 0.15s ease-out, padding 0.15s ease-out, transform 0.1s ease-out;
   z-index: 160;
 }
 
@@ -95,10 +98,30 @@
   max-width: 100%;
   padding: 0 4px;
   position: absolute;
+  transform: translate3d(0, 0, 0);
   user-select: none;
   width: 100%;
   min-width: 10em;
   z-index: 150;
+}
+
+.atcb-list.atcb-dropdown {
+  animation: atcb-list-slide 0.4s ease 0.05s 1 normal forwards;
+  opacity: 0;
+}
+
+@keyframes atcb-list-slide {
+  0% {
+    opacity: 0;
+    transform: rotateX(-100deg);
+    transform-origin: top;
+  }
+
+  100% {
+    opacity: 1;
+    transform: rotateX(0deg);
+    transform-origin: top;
+  }
 }
 
 .atcb-list.atcb-modal {
@@ -179,12 +202,13 @@
   position: fixed;
   right: 0;
   top: 0;
+  transform: translate3d(0, 0, -10px);
   width: 100%;
   z-index: 120;
 }
 
 .atcb-bgoverlay.atcb-animate-bg {
-  animation: atcb-bgoverlay-animate 0.3s ease 0s 1 normal forwards;
+  animation: atcb-bgoverlay-animate 0.4s ease 0.2s 1 normal forwards;
 }
 
 @keyframes atcb-bgoverlay-animate {

@@ -21,13 +21,13 @@ module.exports = function (grunt) {
         options: {
           prefix: 'Version.=..',
         },
-        src: ['assets/js/atcb.js'],
+        src: ['assets/js/*.js'],
       },
       css: {
         options: {
           prefix: 'Version:.',
         },
-        src: ['assets/css/atcb.css'],
+        src: ['assets/css/*.css'],
       },
       README: {
         options: {
@@ -39,13 +39,30 @@ module.exports = function (grunt) {
     // cleans old built files
     clean: {
       oldBuildFiles: [
-        'assets/js/atcb.min.js',
-        'assets/js/atcb.min.js.map',
-        'assets/css/atcb.min.css',
-        'assets/css/atcb.min.css.map',
+        'assets/js/*.min.js',
+        'assets/js/*.min.js.map',
+        'assets/css/*.min.css',
+        'assets/css/*.min.css.map',
         'npm_dist/cjs/*.js',
         'npm_dist/mjs/',
       ],
+    },
+    // minifies the css file
+    cssmin: {
+      options: {
+        sourceMap: true,
+      },
+      newBuild: {
+        files: [
+          {
+            expand: true,
+            cwd: 'assets/css',
+            src: ['*.css', '!*.min.css'],
+            dest: 'assets/css',
+            ext: '.min.css',
+          },
+        ],
+      },
     },
     // creates the source files for the npm versionm supporting CommonJS and ES Module (https://www.sensedeep.com/blog/posts/2021/how-to-create-single-source-npm-module.html)
     copy: {
@@ -70,17 +87,6 @@ module.exports = function (grunt) {
       newBuild: {
         files: {
           'assets/js/atcb.min.js': ['assets/js/atcb.js'],
-        },
-      },
-    },
-    // minifies the main css file
-    cssmin: {
-      options: {
-        sourceMap: true,
-      },
-      newBuild: {
-        files: {
-          'assets/css/atcb.min.css': ['assets/css/atcb.css'],
         },
       },
     },
