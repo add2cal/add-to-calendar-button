@@ -58,7 +58,12 @@ function atcb_init() {
         // validate the config (JSON iput) ...
         if (atcb_validate(atcbConfig)) {
           // ... and generate the button on success
-          atcb_generate(atcButtons[parseInt(i)], i + atcButtonsInitialized.length, atcbConfig);
+          // set identifier
+          if (atcbConfig.identifier == null || atcbConfig.identifier == '') {
+            atcbConfig.identifier = i + atcButtonsInitialized.length + 1;
+          }
+          // generate the button
+          atcb_generate(atcButtons[parseInt(i)], atcbConfig);
         }
       }
     }
@@ -466,13 +471,9 @@ function atcb_generate_label(data, parent, type, icon = false, text = '', oneOpt
 }
 
 // generate the triggering button
-function atcb_generate(button, buttonId, data) {
+function atcb_generate(button, data) {
   // clean the placeholder
   button.textContent = '';
-  // update identifier
-  if (data.identifier == null || data.identifier == '') {
-    data.identifier = buttonId + 1;
-  }
   // create schema.org data, if possible (https://schema.org/Event)
   // TODO: support recurring events
   if (data.name && data.location && data.startDate) {
@@ -500,7 +501,6 @@ function atcb_generate(button, buttonId, data) {
   button.appendChild(buttonTriggerWrapper);
   // generate the button trigger div
   const buttonTrigger = document.createElement('button');
-  buttonTrigger.id = 'atcb-button-' + buttonId;
   buttonTrigger.classList.add('atcb-button');
   buttonTrigger.setAttribute('type', 'button');
   buttonTriggerWrapper.appendChild(buttonTrigger);
