@@ -256,7 +256,7 @@
       <h3>Example 3: Customizing Labels</h3>
       <p class="description">
         You can customize the button text as well as each option label.<br>
-        Here, we also used less options and removed the custom iCal/ics name.<br>
+        Here, we also removed the custom iCal/ics name and explicitly set a static downloadable ics file instead.<br>
       </p>
       <div class="example">
         <div class="example-left">
@@ -273,8 +273,10 @@
               "options":[
                 "Google|Add to Google Cal",
                 "Microsoft365|Use Microsoft instead",
-                "Yahoo|Yahoo, really?"
+                "Yahoo|Yahoo, really?",
+                "iCal|iCall ftw!"
               ],
+              "icsFile":"./demo-event.ics",
               "timeZone":"Europe/Berlin"
             }
           </div>
@@ -293,8 +295,10 @@
   "options":[
     "Google|Add to Google Cal",
     "Microsoft365|Use Microsoft instead",
-    "Yahoo|Yahoo, really?"
+    "Yahoo|Yahoo, really?",
+    "iCal|iCall ftw!"
   ],
+  "icsFile":"./demo-event.ifcs",
   "timeZone":"Europe/Berlin"
 }
 &lt;/div&gt;</code>

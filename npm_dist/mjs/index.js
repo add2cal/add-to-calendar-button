@@ -201,9 +201,18 @@ function atcb_date_calculation(dateString) {
 // VALIDATE THE INPUT DATA
 function atcb_validate(data) {
   // validate prefix
-  if (!/^[\w-]+$/.test(data.identifier)) {
-    data.identifier = '';
-    console.error('add-to-calendar button generation: identifier invalid - using auto numbers instead');
+  if (data.identifier != null && data.identifier != '') {
+    if (!/^[\w-]+$/.test(data.identifier)) {
+      data.identifier = '';
+      console.error('add-to-calendar button generation: identifier invalid - using auto numbers instead');
+    }
+  }
+  // validate explicit ics file
+  if (data.icsFile != null && data.icsFile != '') {
+    if (!atcb_secure_url(data.icsFile, false) || !/\.ics$/.test(data.icsFile)) {
+      console.error('add-to-calendar button generation failed: explicit ics file path not valid');
+      return false;
+    }
   }
   // validate options
   const options = ['Apple', 'Google', 'iCal', 'Microsoft365', 'Outlook.com', 'MicrosoftTeams', 'Yahoo'];
@@ -799,6 +808,13 @@ function atcb_generate_teams(data) {
 
 // FUNCTION TO GENERATE THE iCAL FILE (also for the Apple option)
 function atcb_generate_ical(data) {
+  // check for a given explicit file
+  if (data.icsFile != null && data.icsFile != '') {
+    // eslint-disable-next-line security/detect-non-literal-fs-filename
+    window.open(data.icsFile, '_self');
+    return;
+  }
+  // otherwise, generate one on the fly
   let now = new Date();
   now = now.toISOString();
   const formattedDate = atcb_generate_time(data, 'clean', 'ical');
@@ -957,15 +973,17 @@ function atcb_generate_time(data, style = 'delimiters', targetCal = 'general', a
 }
 
 // SHARED FUNCTION TO SECURE URLS
-function atcb_secure_url(url) {
+function atcb_secure_url(url, throwError = true) {
   if (
     url.match(
       /((\.\.\/)|(\.\.\\)|(%2e%2e%2f)|(%252e%252e%252f)|(%2e%2e\/)|(%252e%252e\/)|(\.\.%2f)|(\.\.%252f)|(%2e%2e%5c)|(%252e%252e%255c)|(%2e%2e\\)|(%252e%252e\\)|(\.\.%5c)|(\.\.%255c)|(\.\.%c0%af)|(\.\.%25c0%25af)|(\.\.%c1%9c)|(\.\.%25c1%259c))/gi
     )
   ) {
-    console.error(
-      'Seems like the generated URL includes at least one security issue and got blocked. Please check the calendar button parameters!'
-    );
+    if (throwError) {
+      console.error(
+        'Seems like the generated URL includes at least one security issue and got blocked. Please check the calendar button parameters!'
+      );
+    }
     return false;
   } else {
     return true;

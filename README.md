@@ -250,6 +250,7 @@ const MyComponent = () => {
 - Use "recurrence" to define recurring events. Use can use any **valid** [RRULE](https://www.rfc-editor.org/rfc/rfc5545) to define the respective rule ([click here](https://icalendar.org/rrule-tool.html) for a generator). But mind that this will deactivate the Yahoo, Microsoft365, Teams, and Outlook options, since they do not support it at the moment (users could still use iCal in this case).
 - You can set the `trigger` to `click`. This makes the button open on click at desktop. Otherwise, the default would be to open on hover. On touch devices, this makes no difference.
 - If you want to define a specific name for any generated ics file (iCal), you can specify it via the `iCalFileName` option. The default would be "event-to-save-in-my-calendar".
+- ics files are generated on the fly. However, if you want to go more stable, you can also explicitly define a self-hosted file, setting its path with the `icsFile` option.
 - You can use the option `"inline":true` in order to make the button appear with inline-block instead of block style.
 - The default style for the options list, using the regular button, would be a dropdown. You can set the option `listStyle` to "modal" in order to force the modal version (this would also force the click trigger).
 - Formatting a URL in the description like `[url]https://....[/url]` makes it clickable. `[url]https://....|URL Text[/url]` defines a linked textblock saying "URL Text" (not supported by Apple, iCal, and Yahoo; not supporting special characters).
