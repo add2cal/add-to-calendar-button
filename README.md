@@ -55,6 +55,10 @@ And remember to ⭐**star** this repository in order to save it for later! 🤗
 
 <br />
 
+---
+
+<br />
+
 ## 📦 Installation / Setup
 
 ### Option 1: simple (self-hosted)
@@ -255,6 +259,10 @@ const MyComponent = () => {
 
 <br />
 
+---
+
+<br />
+
 ## 🙌 Contributing
 
 Anyone is welcome to contribute, but mind the [guidelines](.github/CONTRIBUTING.md):
@@ -286,6 +294,10 @@ Find all changes in the dedicated file at [CHANGELOG.md](CHANGELOG.md).
 Copyright (c) [Jens Kuerschner](https://jenskuerschner.de).
 
 Licensed under [MIT license (with “Commons Clause” License Condition v1.0)](LICENSE.txt).
+
+<br />
+
+---
 
 <br />
 
