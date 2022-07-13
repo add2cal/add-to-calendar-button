@@ -51,7 +51,7 @@ And remember to ⭐**star** this repository in order to save it for later! 🤗
 
 <br />
 
-## 🌱 Setup
+## 📦 Installation / Setup
 
 ### Option 1: simple (self-hosted)
 
@@ -277,7 +277,7 @@ Find all changes in the dedicated file at [CHANGELOG.md](CHANGELOG.md).
 
 <br />
 
-## 📃 License
+## 📃 Copyright and License
 
 Copyright (c) [Jens Kuerschner](https://jenskuerschner.de).
 
