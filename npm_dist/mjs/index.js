@@ -345,7 +345,7 @@ function atcb_generate_label(data, parent, type, icon = false, text = '', oneOpt
       if (data.trigger == 'click') {
         parent.addEventListener(
           'click',
-          atcb_debounce_leading(() => atcb_toggle(data, parent, false, true))
+          atcb_debounce(() => atcb_toggle(data, parent, false, true))
         );
       } else {
         parent.addEventListener(
@@ -366,30 +366,30 @@ function atcb_generate_label(data, parent, type, icon = false, text = '', oneOpt
         '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 122.88 122.88"><path d="M81.61 4.73c0-2.61 2.58-4.73 5.77-4.73s5.77 2.12 5.77 4.73v20.72c0 2.61-2.58 4.73-5.77 4.73s-5.77-2.12-5.77-4.73V4.73h0zm-3.65 76.03c1.83 0 3.32 1.49 3.32 3.32s-1.49 3.32-3.32 3.32l-12.95-.04-.04 12.93c0 1.83-1.49 3.32-3.32 3.32s-3.32-1.49-3.32-3.32l.04-12.94-12.93-.05c-1.83 0-3.32-1.49-3.32-3.32s1.49-3.32 3.32-3.32l12.94.04.04-12.93c0-1.83 1.49-3.32 3.32-3.32s3.32 1.49 3.32 3.32l-.04 12.95 12.94.04h0zM29.61 4.73c0-2.61 2.58-4.73 5.77-4.73s5.77 2.12 5.77 4.73v20.72c0 2.61-2.58 4.73-5.77 4.73s-5.77-2.12-5.77-4.73V4.73h0zM6.4 45.32h110.08V21.47c0-.8-.33-1.53-.86-2.07-.53-.53-1.26-.86-2.07-.86H103c-1.77 0-3.2-1.43-3.2-3.2s1.43-3.2 3.2-3.2h10.55c2.57 0 4.9 1.05 6.59 2.74s2.74 4.02 2.74 6.59v27.06 65.03c0 2.57-1.05 4.9-2.74 6.59s-4.02 2.74-6.59 2.74H9.33c-2.57 0-4.9-1.05-6.59-2.74-1.69-1.7-2.74-4.03-2.74-6.6V48.53 21.47c0-2.57 1.05-4.9 2.74-6.59s4.02-2.74 6.59-2.74H20.6c1.77 0 3.2 1.43 3.2 3.2s-1.43 3.2-3.2 3.2H9.33c-.8 0-1.53.33-2.07.86-.53.53-.86 1.26-.86 2.07v23.85h0zm110.08 6.41H6.4v61.82c0 .8.33 1.53.86 2.07.53.53 1.26.86 2.07.86h104.22c.8 0 1.53-.33 2.07-.86.53-.53.86-1.26.86-2.07V51.73h0zM50.43 18.54c-1.77 0-3.2-1.43-3.2-3.2s1.43-3.2 3.2-3.2h21.49c1.77 0 3.2 1.43 3.2 3.2s-1.43 3.2-3.2 3.2H50.43h0z"/></svg>';
       break;
     case 'Apple':
-      parent.addEventListener('click', function () {
+      parent.addEventListener('click', atcb_debounce(() => {
         oneOption ? parent.blur() : atcb_close();
         atcb_generate_ical(data);
-      });
+      }));
       parent.setAttribute('id', 'atcb-btn-' + data.identifier + '-apple');
       text = text || 'Apple';
       iconSvg =
         '<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" shape-rendering="geometricPrecision" image-rendering="optimizeQuality" fill-rule="evenodd" viewBox="0 0 640 640"><path d="M494.782 340.02c-.803-81.025 66.084-119.907 69.072-121.832-37.595-54.993-96.167-62.552-117.037-63.402-49.843-5.032-97.242 29.362-122.565 29.362-25.253 0-64.277-28.607-105.604-27.85-54.32.803-104.4 31.594-132.403 80.245C29.81 334.457 71.81 479.58 126.816 558.976c26.87 38.882 58.914 82.56 100.997 81 40.512-1.594 55.843-26.244 104.848-26.244 48.993 0 62.753 26.245 105.64 25.406 43.606-.803 71.232-39.638 97.925-78.65 30.887-45.12 43.548-88.75 44.316-90.994-.969-.437-85.029-32.634-85.879-129.439l.118-.035zM414.23 102.178C436.553 75.095 451.636 37.5 447.514-.024c-32.162 1.311-71.163 21.437-94.253 48.485-20.729 24.012-38.836 62.28-33.993 99.036 35.918 2.8 72.591-18.248 94.926-45.272l.036-.047z"/></svg>';
       break;
     case 'Google':
-      parent.addEventListener('click', function () {
+      parent.addEventListener('click', atcb_debounce(() => {
         oneOption ? parent.blur() : atcb_close();
         atcb_generate_google(data);
-      });
+      }));
       parent.setAttribute('id', 'atcb-btn-' + data.identifier + '-google');
       text = text || 'Google';
       iconSvg =
         '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 122.88 122.88"><path d="M93.78 29.1H29.1v64.68h64.68V29.1z" fill="#fff"/><path d="M93.78 122.88l29.1-29.1h-29.1v29.1z" fill="#f72a25"/><path d="M122.88 29.1h-29.1v64.68h29.1V29.1z" fill="#fbbc04"/><path d="M93.78 93.78H29.1v29.1h64.68v-29.1z" fill="#34a853"/><path d="M0 93.78v19.4c0 5.36 4.34 9.7 9.7 9.7h19.4v-29.1H0h0z" fill="#188038"/><path d="M122.88 29.1V9.7c0-5.36-4.34-9.7-9.7-9.7h-19.4v29.1h29.1 0z" fill="#1967d2"/><path d="M93.78 0H9.7C4.34 0 0 4.34 0 9.7v84.08h29.1V29.1h64.67V0h.01z" fill="#4285f4"/><path d="M42.37 79.27c-2.42-1.63-4.09-4.02-5-7.17l5.61-2.31c.51 1.94 1.4 3.44 2.67 4.51 1.26 1.07 2.8 1.59 4.59 1.59 1.84 0 3.41-.56 4.73-1.67 1.32-1.12 1.98-2.54 1.98-4.26 0-1.76-.7-3.2-2.09-4.32s-3.14-1.67-5.22-1.67H46.4v-5.55h2.91c1.79 0 3.31-.48 4.54-1.46 1.23-.97 1.84-2.3 1.84-3.99 0-1.5-.55-2.7-1.65-3.6s-2.49-1.35-4.18-1.35c-1.65 0-2.96.44-3.93 1.32s-1.7 2-2.12 3.24l-5.55-2.31c.74-2.09 2.09-3.93 4.07-5.52s4.51-2.39 7.58-2.39c2.27 0 4.32.44 6.13 1.32s3.23 2.1 4.26 3.65c1.03 1.56 1.54 3.31 1.54 5.25 0 1.98-.48 3.65-1.43 5.03-.95 1.37-2.13 2.43-3.52 3.16v.33c1.79.74 3.36 1.96 4.51 3.52 1.17 1.58 1.76 3.46 1.76 5.66s-.56 4.16-1.67 5.88c-1.12 1.72-2.66 3.08-4.62 4.07s-4.17 1.49-6.62 1.49c-2.84 0-5.46-.81-7.88-2.45h0 0zm34.46-27.84l-6.16 4.45-3.08-4.67 11.05-7.97h4.24v37.6h-6.05V51.43h0z" fill="#1a73e8"/></svg>';
       break;
     case 'iCal':
-      parent.addEventListener('click', function () {
+      parent.addEventListener('click', atcb_debounce(() => {
         oneOption ? parent.blur() : atcb_close();
         atcb_generate_ical(data);
-      });
+      }));
       parent.setAttribute('id', 'atcb-btn-' + data.identifier + '-ical');
       text = text || 'iCal File';
       iconSvg =
@@ -397,10 +397,10 @@ function atcb_generate_label(data, parent, type, icon = false, text = '', oneOpt
       break;
     case 'MicrosoftTeams':
       if (data.recurrence == null || data.recurrence == '') {
-        parent.addEventListener('click', function () {
+        parent.addEventListener('click', atcb_debounce(() =>{
           oneOption ? parent.blur() : atcb_close();
           atcb_generate_teams(data);
-        });
+        }));
       } else {
         parent.remove();
         return;
@@ -412,10 +412,10 @@ function atcb_generate_label(data, parent, type, icon = false, text = '', oneOpt
       break;
     case 'Microsoft365':
       if (data.recurrence == null || data.recurrence == '') {
-        parent.addEventListener('click', function () {
+        parent.addEventListener('click', atcb_debounce(() => {
           oneOption ? parent.blur() : atcb_close();
           atcb_generate_microsoft(data, '365');
-        });
+        }));
       } else {
         parent.remove();
         return;
@@ -427,10 +427,10 @@ function atcb_generate_label(data, parent, type, icon = false, text = '', oneOpt
       break;
     case 'Outlook.com':
       if (data.recurrence == null || data.recurrence == '') {
-        parent.addEventListener('click', function () {
+        parent.addEventListener('click', atcb_debounce(() => {
           oneOption ? parent.blur() : atcb_close();
           atcb_generate_microsoft(data, 'outlook');
-        });
+        }));
       } else {
         parent.remove();
         return;
@@ -442,10 +442,10 @@ function atcb_generate_label(data, parent, type, icon = false, text = '', oneOpt
       break;
     case 'Yahoo':
       if (data.recurrence == null || data.recurrence == '') {
-        parent.addEventListener('click', function () {
+        parent.addEventListener('click', atcb_debounce(() => {
           oneOption ? parent.blur() : atcb_close();
           atcb_generate_yahoo(data);
-        });
+        }));
       } else {
         parent.remove();
         return;
@@ -457,15 +457,15 @@ function atcb_generate_label(data, parent, type, icon = false, text = '', oneOpt
       break;
   }
   // trigger click on enter as well
-  parent.addEventListener('keydown', function (event) {
+  parent.addEventListener('keydown', atcb_debounce((event) => {
     if (event.key == 'Enter') {
       if (!oneOption && type === 'Trigger') {
         atcb_toggle(data, parent, true, true);
       } else {
-        this.click();
+        parent.click();
       }
     }
-  });
+  }));
   // add icon and text label
   if (icon) {
     const iconEl = document.createElement('span');
@@ -568,7 +568,7 @@ function atcb_generate_bg_overlay(listStyle = 'dropdown', trigger = '', darken =
   bgOverlay.tabIndex = 0;
   bgOverlay.addEventListener(
     'click',
-    atcb_debounce_leading(() => atcb_close(true))
+    atcb_debounce(() => atcb_close(true))
   );
   let fingerMoved = false;
   bgOverlay.addEventListener('touchstart', () => (fingerMoved = false), {
@@ -592,7 +592,7 @@ function atcb_generate_bg_overlay(listStyle = 'dropdown', trigger = '', darken =
   );
   bgOverlay.addEventListener(
     'focus',
-    atcb_debounce_leading(() => atcb_close(false))
+    atcb_debounce(() => atcb_close(false))
   );
   if (trigger !== 'click') {
     bgOverlay.addEventListener(
@@ -618,8 +618,8 @@ function atcb_toggle(data, button, keyboardTrigger = true, generatedButton = fal
 
 // show the dropdown list + background overlay
 function atcb_open(data, button, keyboardTrigger = true, generatedButton = false) {
-  // abort early if an add-to-calendar dropdown already opened
-  if (document.querySelector('.atcb-list')) return;
+  // abort early if an add-to-calendar dropdown or modal already opened
+  if (document.querySelector('.atcb-list') || document.querySelector('.atcb-modal')) return;
   // generate list
   const list = atcb_generate_dropdown_list(data);
   // set list styles, set button to atcb-active and force modal listStyle if no button is set
@@ -653,8 +653,8 @@ function atcb_open(data, button, keyboardTrigger = true, generatedButton = false
 
 function atcb_close(blockFocus = false) {
   // focus triggering button - especially relevant for keyboard navigation
-  let newFocusEl = document.querySelector('.atcb-active');
   if (!blockFocus) {
+    let newFocusEl = document.querySelector('.atcb-active, .atcb-active-modal');
     if (newFocusEl) {
       newFocusEl.focus();
     }
@@ -662,6 +662,9 @@ function atcb_close(blockFocus = false) {
   // inactivate all buttons
   Array.from(document.querySelectorAll('.atcb-active')).forEach((button) => {
     button.classList.remove('atcb-active');
+  });
+  Array.from(document.querySelectorAll('.atcb-active-modal')).forEach((button) => {
+    button.classList.remove('atcb-active-modal');
   });
   // remove dropdowns, modals, and bg overlays (should only be one of each at max)
   Array.from(document.querySelectorAll('.atcb-list'))
@@ -854,13 +857,44 @@ function atcb_generate_ical(data) {
   const dlurl = 'data:text/calendar;charset=utf-8,' + encodeURIComponent(ics_lines.join('\r\n'));
   const filename = data.iCalFileName || 'event-to-save-in-my-calendar';
   // in the Instagram in-app browser case, we offer a copy option, since the on-the-fly client side generation is not supported at the moment
-  if (isInstagram()) {
+  //if (isInstagram()) {
+  if (1 === 1) {
+    // putting the download url to the clipboard
+    navigator.clipboard.writeText(dlurl);
+    // creating the modal
     const infoModalWrapper = document.createElement('div');
     infoModalWrapper.classList.add('atcb-modal', 'atcb-info-modal');
     const infoModal = document.createElement('div');
-    infoModal.classList.add('atcb-modal-box');
+    infoModal.classList.add('atcb-modal-box', 'atcb-modal-instagram');
     infoModalWrapper.appendChild(infoModal);
+    // adding headline
+    const infoModalHeadline = document.createElement('div');
+    infoModalHeadline.classList.add('atcb-modal-headline');
+    infoModalHeadline.textContent = 'Instagram iCal';
+    infoModal.appendChild(infoModalHeadline);
+    // and text content
+    const infoModalText = document.createElement('div');
+    infoModalText.classList.add('atcb-modal-text');
+    infoModalText.innerHTML = 'Unfortunately, the Instagram browser has its problems with the way we generate the calendar file.<br>We automatically put a magical URL into your phone\'s clipboard.<br><ol><li>Close this note, ...</li><li><strong>Open any other browser</strong> on your phone, ...</li><li><strong>Paste</strong> the clipboard content and go.';
+    infoModal.appendChild(infoModalText);
+    // and a close button
+    const infoModalButton= document.createElement('button');
+    infoModalButton.setAttribute('type', 'button');
+    infoModalButton.classList.add('atcb-modal-btn');
+    infoModalButton.textContent = 'Close note';
+    infoModal.appendChild(infoModalButton);
+    // bringing it live, together with the background
     document.body.appendChild(infoModalWrapper);
+    const parentButton = document.getElementById('atcb-btn-' + data.identifier);
+    if (parentButton != null) {
+      parentButton.blur();
+      parentButton.classList.add('atcb-active-modal');
+    }
+    infoModalButton.focus();
+    infoModalButton.addEventListener(
+      'click',
+      atcb_debounce_leading(() => atcb_close())
+    );
     document.body.appendChild(atcb_generate_bg_overlay('modal', 'click', data.background));
   } else {
     try {
@@ -1071,11 +1105,11 @@ function atcb_throttle(func, limit = 25) {
 // GLOBAL LISTENERS
 if (isBrowser()) {
   // Global listener to ESC key to close dropdown
-  document.addEventListener('keydown', (evt) => {
-    if (evt.key === 'Escape') {
-      atcb_close();
+  document.addEventListener('keydown', atcb_debounce((event) => {
+    if (event.key === 'Escape') {
+      atcb_close()
     }
-  });
+  }));
   // Global listener to any screen changes
   window.addEventListener(
     'resize',

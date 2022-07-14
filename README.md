@@ -73,7 +73,7 @@ And remember to ⭐**star** this repository in order to save it for later! 🤗
 
 You can use the jsDeliver CDN and load the respective ressources into your web project.
 
-Put the css into the `<head>`:
+Put the css (use atcb-3d for an alternative style) into the `<head>`:
 
 ```
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/add-to-calendar-button/assets/css/atcb.min.css">
@@ -106,7 +106,7 @@ import { atcb_action, atcb_init } from 'add-to-calendar-button';
 
 Either use `atcb_action` with your own buttons/forms/etc, or run `atcb_init` after the DOM has been loaded. To determine the right moment to execute, ... - with Angular, you would use `ngAfterViewInit()` with `atcb_init();` (mind that, depending on your app, other hooks might be better); - with React, you might want to include an event listener like `document.addEventListener('DOMContentLoaded', atcb_init, false);` or using hooks in a functional component like `useEffect(() => atcb_init());`
 
-Include the css. For example with Angular or React, add `@import 'add-to-calendar-button/assets/css/atcb.min'` to some other css file - or include it in other more direct ways (like adding `import 'add-to-calendar-button/assets/css/atcb.css';` to the respective component).
+Include the css. For example with Angular or React, add `@import 'add-to-calendar-button/assets/css/atcb.min'` to some other css file - or include it in other more direct ways (like adding `import 'add-to-calendar-button/assets/css/atcb.css';` to the respective component) (use atcb-3d for an alternative style).
 
 <br /><br />
 
