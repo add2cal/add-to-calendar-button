@@ -31,6 +31,10 @@ In terms of system support, **all modern browsers** (Chrome, Edge, Firefox, Safa
 
 <br /><br />
 
+---
+
+<br />
+
 ## ▶️ Demo
 
 See [jekuer.github.io/add-to-calendar-button](https://jekuer.github.io/add-to-calendar-button/) for a live demo.
@@ -67,29 +71,22 @@ And remember to ⭐**star** this repository in order to save it for later! 🤗
 
 ## 📦 Installation / Setup
 
-### Option 1: simple (self-hosted)
+### Option 1: simple (CDN)
+You can use the jsDeliver CDN and load the respective ressources into your web project.
 
-1.  Check whether you are looking at the original and therefore up-to-date code at [github.com/jekuer/add-to-calendar-button](https://github.com/jekuer/add-to-calendar-button).
-2.  **Download** the code directly from GitHub **or clone** the git repository.
-3.  Copy the css (atcb.min.css) and js (atcb.min.js) files from the assets (not the "npm_dist") folders.
-4.  Include those files in your project. The css goes into the `<head>`, the js into the `<body>` footer.
-
-### Option 2: simple (CDN)
-
-Instead of downloading the files, you can use the jsDeliver CDN.
-Put 
+Put the css into the `<head>`:
 ```
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/add-to-calendar-button@1.10.1/assets/css/atcb.min.css">
 ```
-into the `<head>` and 
+... and the javascript into the `<body>` footer:
 ```
 <script src="https://cdn.jsdelivr.net/npm/add-to-calendar-button@1.10.1" defer></script>
 ``` 
-into the `<body>` footer. 
 
-Leave out the patch number at the version ("1.9" instead of "1.9.2") to automatically pull the latest patched version. See [jsDeliver.com](https://www.jsdelivr.com/features#npm) for more options.
+Leave out the patch number at the version (e.g. "1.9" instead of "1.9.2") to automatically pull the latest patched version. See [jsDeliver.com](https://www.jsdelivr.com/features#npm) for more options.
+If you want to host it yourself, you could also download the source files or clone the repository (mind to take the original one at [github.com/jekuer/add-to-calendar-button](https://github.com/jekuer/add-to-calendar-button))
 
-### Option 3: npm
+### Option 2: npm
 Import the package using the following npm command:
 ```
 npm install add-to-calendar-button
