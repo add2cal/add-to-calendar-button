@@ -70,36 +70,41 @@ And remember to ⭐**star** this repository in order to save it for later! 🤗
 ## 📦 Installation / Setup
 
 ### Option 1: simple (CDN)
+
 You can use the jsDeliver CDN and load the respective ressources into your web project.
 
 Put the css into the `<head>`:
+
 ```
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/add-to-calendar-button/assets/css/atcb.min.css">
 ```
+
 ... and the javascript into the `<body>` footer:
+
 ```
 <script src="https://cdn.jsdelivr.net/npm/add-to-calendar-button" defer></script>
-``` 
+```
 
-*Mind that this always pulls the latest version! You can pin a specific one by adding "@" + the version number after "button" - see [jsDeliver.com](https://www.jsdelivr.com/features#npm) for details.*
+_Mind that this always pulls the latest version! You can pin a specific one by adding "@" + the version number after "button" - see [jsDeliver.com](https://www.jsdelivr.com/features#npm) for details._
 If you want to rather host it yourself, you could also download the source files or clone the repository (mind to take the original one at [github.com/jekuer/add-to-calendar-button](https://github.com/jekuer/add-to-calendar-button)) and maintain/update it manually.
 
 <br />
 
 ### Option 2: npm
+
 Import the package using the following npm command:
+
 ```
 npm install add-to-calendar-button
 ```
 
-Import the module into your project/component. For example with Angular/React: 
+Import the module into your project/component. For example with Angular/React:
+
 ```
 import { atcb_action, atcb_init } from 'add-to-calendar-button';
 ```
 
-Either use `atcb_action` with your own buttons/forms/etc, or run `atcb_init` after the DOM has been loaded. To determine the right moment to execute, ...
-    - with Angular, you would use `ngAfterViewInit()` with `atcb_init();` (mind that, depending on your app, other hooks might be better);
-    - with React, you might want to include an event listener like `document.addEventListener('DOMContentLoaded', atcb_init, false);` or using hooks in a functional component like `useEffect(() => atcb_init());`
+Either use `atcb_action` with your own buttons/forms/etc, or run `atcb_init` after the DOM has been loaded. To determine the right moment to execute, ... - with Angular, you would use `ngAfterViewInit()` with `atcb_init();` (mind that, depending on your app, other hooks might be better); - with React, you might want to include an event listener like `document.addEventListener('DOMContentLoaded', atcb_init, false);` or using hooks in a functional component like `useEffect(() => atcb_init());`
 
 Include the css. For example with Angular or React, add `@import 'add-to-calendar-button/assets/css/atcb.min'` to some other css file - or include it in other more direct ways (like adding `import 'add-to-calendar-button/assets/css/atcb.css';` to the respective component).
 
@@ -140,6 +145,8 @@ Mind that for auto-generating rich snippets, a location would be mandatory as we
 
 ### Full structure
 
+_(More hidden options are described further below.)_
+
 ```html
 <div class="atcb" style="display:none;">
   {
@@ -162,7 +169,7 @@ Mind that for auto-generating rich snippets, a location would be mandatory as we
     ],
     "timeZone":"Europe/Berlin",
     "trigger":"click",
-    "inline":"true",
+    "inline":true,
     "listStyle":"modal",
     "iCalFileName":"Reminder-Event"
   }
@@ -266,6 +273,7 @@ const MyComponent = () => {
 - If you want to define a specific name for any generated ics file (iCal), you can specify it via the `iCalFileName` option. The default would be "event-to-save-in-my-calendar".
 - ics files are generated on the fly. However, if you want to go more stable, you can also explicitly define a self-hosted file, setting its path with the `icsFile` option.
 - You can use the option `"inline":true` in order to make the button appear with inline-block instead of block style.
+- Use `"background":false` if you want to be the background overlay to be fully transparent.
 - The default style for the options list, using the regular button, would be a dropdown. You can set the option `listStyle` to "modal" in order to force the modal version (this would also force the click trigger).
 - Formatting a URL in the description like `[url]https://....[/url]` makes it clickable. `[url]https://....|URL Text[/url]` defines a linked textblock saying "URL Text" (not supported by Apple, iCal, and Yahoo; not supporting special characters).
 - If you require line breaks within the description, use `\n` or `<br>`.

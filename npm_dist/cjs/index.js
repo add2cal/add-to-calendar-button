@@ -367,8 +367,8 @@ function atcb_generate_label(data, parent, type, icon = false, text = '', oneOpt
       break;
     case 'Apple':
       parent.addEventListener('click', function () {
-        atcb_generate_ical(data);
         oneOption ? parent.blur() : atcb_close();
+        atcb_generate_ical(data);
       });
       parent.setAttribute('id', 'atcb-btn-' + data.identifier + '-apple');
       text = text || 'Apple';
@@ -377,8 +377,8 @@ function atcb_generate_label(data, parent, type, icon = false, text = '', oneOpt
       break;
     case 'Google':
       parent.addEventListener('click', function () {
-        atcb_generate_google(data);
         oneOption ? parent.blur() : atcb_close();
+        atcb_generate_google(data);
       });
       parent.setAttribute('id', 'atcb-btn-' + data.identifier + '-google');
       text = text || 'Google';
@@ -387,8 +387,8 @@ function atcb_generate_label(data, parent, type, icon = false, text = '', oneOpt
       break;
     case 'iCal':
       parent.addEventListener('click', function () {
-        atcb_generate_ical(data);
         oneOption ? parent.blur() : atcb_close();
+        atcb_generate_ical(data);
       });
       parent.setAttribute('id', 'atcb-btn-' + data.identifier + '-ical');
       text = text || 'iCal File';
@@ -398,8 +398,8 @@ function atcb_generate_label(data, parent, type, icon = false, text = '', oneOpt
     case 'MicrosoftTeams':
       if (data.recurrence == null || data.recurrence == '') {
         parent.addEventListener('click', function () {
-          atcb_generate_teams(data);
           oneOption ? parent.blur() : atcb_close();
+          atcb_generate_teams(data);
         });
       } else {
         parent.remove();
@@ -413,8 +413,8 @@ function atcb_generate_label(data, parent, type, icon = false, text = '', oneOpt
     case 'Microsoft365':
       if (data.recurrence == null || data.recurrence == '') {
         parent.addEventListener('click', function () {
-          atcb_generate_microsoft(data, '365');
           oneOption ? parent.blur() : atcb_close();
+          atcb_generate_microsoft(data, '365');
         });
       } else {
         parent.remove();
@@ -428,8 +428,8 @@ function atcb_generate_label(data, parent, type, icon = false, text = '', oneOpt
     case 'Outlook.com':
       if (data.recurrence == null || data.recurrence == '') {
         parent.addEventListener('click', function () {
-          atcb_generate_microsoft(data, 'outlook');
           oneOption ? parent.blur() : atcb_close();
+          atcb_generate_microsoft(data, 'outlook');
         });
       } else {
         parent.remove();
@@ -443,8 +443,8 @@ function atcb_generate_label(data, parent, type, icon = false, text = '', oneOpt
     case 'Yahoo':
       if (data.recurrence == null || data.recurrence == '') {
         parent.addEventListener('click', function () {
-          atcb_generate_yahoo(data);
           oneOption ? parent.blur() : atcb_close();
+          atcb_generate_yahoo(data);
         });
       } else {
         parent.remove();
@@ -460,7 +460,7 @@ function atcb_generate_label(data, parent, type, icon = false, text = '', oneOpt
   parent.addEventListener('keydown', function (event) {
     if (event.key == 'Enter') {
       if (!oneOption && type === 'Trigger') {
-        atcb_debounce_leading(() => atcb_toggle(data, parent, true, true));
+        atcb_toggle(data, parent, true, true);
       } else {
         this.click();
       }
@@ -556,11 +556,14 @@ function atcb_generate_dropdown_list(data) {
 }
 
 // create the background overlay, which also acts as trigger to close any dropdowns
-function atcb_generate_bg_overlay(data) {
+function atcb_generate_bg_overlay(listStyle = 'dropdown', trigger = '', darken = true) {
   const bgOverlay = document.createElement('div');
   bgOverlay.classList.add('atcb-bgoverlay');
-  if (data.listStyle !== 'modal') {
+  if (listStyle !== 'modal' && darken) {
     bgOverlay.classList.add('atcb-animate-bg');
+  }
+  if (!darken) {
+    bgOverlay.classList.add('atcb-no-bg');
   }
   bgOverlay.tabIndex = 0;
   bgOverlay.addEventListener(
@@ -591,7 +594,7 @@ function atcb_generate_bg_overlay(data) {
     'focus',
     atcb_debounce_leading(() => atcb_close(false))
   );
-  if (data.trigger !== 'click') {
+  if (trigger !== 'click') {
     bgOverlay.addEventListener(
       'mousemove',
       atcb_debounce_leading(() => atcb_close(true))
@@ -640,7 +643,7 @@ function atcb_open(data, button, keyboardTrigger = true, generatedButton = false
   // add list to DOM
   document.body.appendChild(list);
   // add background overlay right after, so tabbing past last option closes list
-  document.body.appendChild(atcb_generate_bg_overlay(data));
+  document.body.appendChild(atcb_generate_bg_overlay(data.listStyle, data.trigger, data.background));
   // give keyboard focus to first item in list, if not blocked, because there is definitely no keyboard trigger.
   // Mind that with custom atcb_action function, this might get triggered as well, if the custom function does not provide a proper value.
   if (keyboardTrigger) {
@@ -660,9 +663,10 @@ function atcb_close(blockFocus = false) {
   Array.from(document.querySelectorAll('.atcb-active')).forEach((button) => {
     button.classList.remove('atcb-active');
   });
-  // remove dropdowns & bg overlays (should only be one of each)
+  // remove dropdowns, modals, and bg overlays (should only be one of each at max)
   Array.from(document.querySelectorAll('.atcb-list'))
     .concat(Array.from(document.querySelectorAll('.atcb-bgoverlay')))
+    .concat(Array.from(document.querySelectorAll('.atcb-info-modal')))
     .forEach((el) => el.remove());
 }
 
@@ -849,31 +853,42 @@ function atcb_generate_ical(data) {
   ics_lines.push('STATUS:CONFIRMED', 'LAST-MODIFIED:' + now, 'SEQUENCE:0', 'END:VEVENT', 'END:VCALENDAR');
   const dlurl = 'data:text/calendar;charset=utf-8,' + encodeURIComponent(ics_lines.join('\r\n'));
   const filename = data.iCalFileName || 'event-to-save-in-my-calendar';
-  try {
-    if (!window.ActiveXObject) {
-      const save = document.createElement('a');
-      save.href = dlurl;
-      save.target = '_blank';
-      save.download = filename;
-      const evt = new MouseEvent('click', {
-        view: window,
-        button: 0,
-        bubbles: true,
-        cancelable: false,
-      });
-      save.dispatchEvent(evt);
-      (window.URL || window.webkitURL).revokeObjectURL(save.href);
+  // in the Instagram in-app browser case, we offer a copy option, since the on-the-fly client side generation is not supported at the moment
+  if (isInstagram()) {
+    const infoModalWrapper = document.createElement('div');
+    infoModalWrapper.classList.add('atcb-modal', 'atcb-info-modal');
+    const infoModal = document.createElement('div');
+    infoModal.classList.add('atcb-modal-box');
+    infoModalWrapper.appendChild(infoModal);
+    document.body.appendChild(infoModalWrapper);
+    document.body.appendChild(atcb_generate_bg_overlay('modal', 'click', data.background));
+  } else {
+    try {
+      if (!window.ActiveXObject) {
+        const save = document.createElement('a');
+        save.href = dlurl;
+        save.target = '_blank';
+        save.download = filename;
+        const evt = new MouseEvent('click', {
+          view: window,
+          button: 0,
+          bubbles: true,
+          cancelable: false,
+        });
+        save.dispatchEvent(evt);
+        (window.URL || window.webkitURL).revokeObjectURL(save.href);
+      }
+      // for IE < 11 (even no longer officially supported)
+      else if (!!window.ActiveXObject && document.execCommand) {
+        // eslint-disable-next-line security/detect-non-literal-fs-filename
+        const _window = window.open(dlurl, '_blank');
+        _window.document.close();
+        _window.document.execCommand('SaveAs', true, filename || dlurl);
+        _window.close();
+      }
+    } catch (e) {
+      console.error(e);
     }
-    // for IE < 11 (even no longer officially supported)
-    else if (!!window.ActiveXObject && document.execCommand) {
-      // eslint-disable-next-line security/detect-non-literal-fs-filename
-      const _window = window.open(dlurl, '_blank');
-      _window.document.close();
-      _window.document.execCommand('SaveAs', true, filename || dlurl);
-      _window.close();
-    }
-  } catch (e) {
-    console.error(e);
   }
 }
 
@@ -1058,7 +1073,7 @@ if (isBrowser()) {
   // Global listener to ESC key to close dropdown
   document.addEventListener('keydown', (evt) => {
     if (evt.key === 'Escape') {
-      atcb_debounce_leading(() => atcb_close());
+      atcb_close();
     }
   });
   // Global listener to any screen changes

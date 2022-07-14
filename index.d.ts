@@ -4,7 +4,8 @@ declare module 'add-to-calendar-button' {
   export function atcb_init(): void;
   export function atcb_action(
     config: {
-      name?: string;
+      identifier?: string;
+      name: string;
       description?: string;
       startDate: ISO8601Date | 'today';
       endDate: ISO8601Date;
@@ -18,6 +19,9 @@ declare module 'add-to-calendar-button' {
       iCalFileName?: string;
       trigger?: 'hover' | 'click';
       listStyle?: 'dropdown' | 'modal';
+      inline?: boolean;
+      background?: boolean;
+      icsFile?: string;
     },
     triggerElement?: HTMLElement,
     keyboardTrigger?: boolean
