@@ -74,15 +74,15 @@ You can use the jsDeliver CDN and load the respective ressources into your web p
 
 Put the css into the `<head>`:
 ```
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/add-to-calendar-button@1.10.1/assets/css/atcb.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/add-to-calendar-button/assets/css/atcb.min.css">
 ```
 ... and the javascript into the `<body>` footer:
 ```
-<script src="https://cdn.jsdelivr.net/npm/add-to-calendar-button@1.10.1" defer></script>
+<script src="https://cdn.jsdelivr.net/npm/add-to-calendar-button" defer></script>
 ``` 
 
-Leave out the patch number at the version (e.g. "1.9" instead of "1.9.2") to automatically pull the latest patched version. See [jsDeliver.com](https://www.jsdelivr.com/features#npm) for more options.
-If you want to host it yourself, you could also download the source files or clone the repository (mind to take the original one at [github.com/jekuer/add-to-calendar-button](https://github.com/jekuer/add-to-calendar-button))
+*Mind that this always pulls the latest version! You can pin a specific one by adding "@" + the version number after "button" - see [jsDeliver.com](https://www.jsdelivr.com/features#npm) for details.*
+If you want to rather host it yourself, you could also download the source files or clone the repository (mind to take the original one at [github.com/jekuer/add-to-calendar-button](https://github.com/jekuer/add-to-calendar-button)) and maintain/update it manually.
 
 <br />
 
