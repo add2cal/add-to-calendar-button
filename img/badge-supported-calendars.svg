@@ -2,9 +2,9 @@
 <!-- Created with Inkscape (http://www.inkscape.org/) -->
 
 <svg
-   width="90.131599mm"
-   height="8.4667206mm"
-   viewBox="0 0 90.131599 8.4667206"
+   width="380"
+   height="33"
+   viewBox="0 0 100.54166 8.7312504"
    version="1.1"
    id="svg5"
    inkscape:version="1.1 (c68e22c387, 2021-05-23)"
@@ -25,14 +25,16 @@
      inkscape:document-units="mm"
      showgrid="false"
      inkscape:zoom="3.6203867"
-     inkscape:cx="345.95752"
+     inkscape:cx="301.76334"
      inkscape:cy="120.42912"
      inkscape:window-width="3840"
      inkscape:window-height="2054"
      inkscape:window-x="2293"
      inkscape:window-y="-11"
      inkscape:window-maximized="1"
-     inkscape:current-layer="layer2" />
+     inkscape:current-layer="layer1"
+     width="130mm"
+     units="px" />
   <defs
      id="defs2">
     <rect
@@ -78,7 +80,7 @@
     <g
        style="fill:#000000;fill-opacity:1;fill-rule:evenodd;stroke:#ffffff;stroke-width:42.6694;stroke-linejoin:round;stroke-miterlimit:1;stroke-dasharray:none;stroke-opacity:1;paint-order:markers stroke fill;image-rendering:optimizeQuality;shape-rendering:geometricPrecision"
        id="g64"
-       transform="matrix(0.01240156,0,0,0.01240156,34.52283,34.052085)">
+       transform="matrix(0.01240156,0,0,0.01240156,39.727865,34.18435)">
       <path
          d="m 494.782,340.02 c -0.803,-81.025 66.084,-119.907 69.072,-121.832 -37.595,-54.993 -96.167,-62.552 -117.037,-63.402 -49.843,-5.032 -97.242,29.362 -122.565,29.362 -25.253,0 -64.277,-28.607 -105.604,-27.85 -54.32,0.803 -104.4,31.594 -132.403,80.245 -56.435,97.914 -14.435,243.037 40.571,322.433 26.87,38.882 58.914,82.56 100.997,81 40.512,-1.594 55.843,-26.244 104.848,-26.244 48.993,0 62.753,26.245 105.64,25.406 43.606,-0.803 71.232,-39.638 97.925,-78.65 30.887,-45.12 43.548,-88.75 44.316,-90.994 -0.969,-0.437 -85.029,-32.634 -85.879,-129.439 l 0.118,-0.035 z M 414.23,102.178 C 436.553,75.095 451.636,37.5 447.514,-0.024 c -32.162,1.311 -71.163,21.437 -94.253,48.485 -20.729,24.012 -38.836,62.28 -33.993,99.036 35.918,2.8 72.591,-18.248 94.926,-45.272 z"
          id="path55"
@@ -86,7 +88,7 @@
     </g>
     <g
        id="g135"
-       transform="matrix(0.06459554,0,0,0.06459554,47.490552,34.051842)">
+       transform="matrix(0.06459554,0,0,0.06459554,52.695587,34.184107)">
       <path
          d="M 93.78,29.1 H 29.1 v 64.68 h 64.68 z"
          fill="#ffffff"
@@ -123,7 +125,7 @@
     <g
        style="fill-rule:evenodd;image-rendering:optimizeQuality;shape-rendering:geometricPrecision"
        id="g1248"
-       transform="matrix(0.00263661,0,0,0.00263661,102.22254,34.051835)">
+       transform="matrix(0.00263661,0,0,0.00263661,107.42757,34.1841)">
       <path
          d="m 0,732.88 h 645.84 l 376.07,962.1 380.96,-962.1 h 628.76 L 1084.83,3010.5 H 451.98 L 711.17,2406.97 0.02,732.88 Z m 2763.84,768.75 H 2059.58 L 2684.65,0 3386.34,0.03 Z m -519.78,143.72 c 216.09,0 391.25,175.17 391.25,391.22 0,216.06 -175.16,391.23 -391.25,391.23 -216.06,0 -391.19,-175.17 -391.19,-391.23 0,-216.05 175.16,-391.22 391.19,-391.22 z"
          fill="#5f01d1"
@@ -132,7 +134,7 @@
     </g>
     <g
        id="g1362"
-       transform="matrix(0.28348213,0,0,0.28348213,73.333654,33.484878)">
+       transform="matrix(0.28348213,0,0,0.28348213,78.538689,33.617143)">
       <path
          d="M 28.596,2 H 11.404 A 1.404,1.404 0 0 0 10,3.404 V 5 L 19.69,8 30,5 V 3.404 A 1.404,1.404 0 0 0 28.596,2 Z"
          fill="#0364b8"
@@ -218,7 +220,7 @@
     <g
        style="fill-rule:evenodd;image-rendering:optimizeQuality;shape-rendering:geometricPrecision"
        id="g1572"
-       transform="matrix(2.3812024e-5,0,0,2.3812024e-5,61.070384,34.051914)">
+       transform="matrix(2.3812024e-5,0,0,2.3812024e-5,66.275419,34.184179)">
       <path
          fill="#ea3e23"
          d="m 278050,305556 -29,-16 V 28627 L 178807,0 448,66971 0,67058 22,267285 60887,243464 V 80555 L 178807,52362 178790,291881 122,267285 178790,333261 v 73 l 99231,-27462 v -316 z"
@@ -226,7 +228,7 @@
     </g>
     <g
        id="g94"
-       transform="matrix(0.00382837,0,0,0.00382837,88.047412,34.051847)">
+       transform="matrix(0.00382837,0,0,0.00382837,93.252447,34.184112)">
       <g
          fill="#5059c9"
          id="g6">
@@ -302,7 +304,8 @@
          id="path39" />
     </g>
     <g
-       id="g17735">
+       id="g17735"
+       transform="translate(5.2050347,0.13226486)">
       <rect
          style="fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:0.264583;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;paint-order:stroke markers fill"
          id="rect17051"
