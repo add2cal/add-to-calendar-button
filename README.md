@@ -27,8 +27,6 @@ The script integrates easily with any usual HTML webpage (**VanillaJS** way) as 
 
 In terms of system support, **all modern browsers** (Chrome, Edge, Firefox, Safari) on **Windows, Mac, Android, and iOS** as well as rather restricted environments like the **Instagram** in-app browser are supported.
 
-![Supported Systems](https://github.com/jekuer/add-to-calendar-button/blob/v1.11/img/badge-supported-systems.svg)
-
 <br /><br />
 
 ---
@@ -86,6 +84,8 @@ Put the css into the `<head>`:
 Leave out the patch number at the version (e.g. "1.9" instead of "1.9.2") to automatically pull the latest patched version. See [jsDeliver.com](https://www.jsdelivr.com/features#npm) for more options.
 If you want to host it yourself, you could also download the source files or clone the repository (mind to take the original one at [github.com/jekuer/add-to-calendar-button](https://github.com/jekuer/add-to-calendar-button))
 
+<br />
+
 ### Option 2: npm
 Import the package using the following npm command:
 ```
@@ -103,7 +103,7 @@ Either use `atcb_action` with your own buttons/forms/etc, or run `atcb_init` aft
 
 Include the css. For example with Angular or React, add `@import 'add-to-calendar-button/assets/css/atcb.min'` to some other css file - or include it in other more direct ways (like adding `import 'add-to-calendar-button/assets/css/atcb.css';` to the respective component).
 
-<br />
+<br /><br />
 
 ## 🎛️ Configuration
 
@@ -245,7 +245,7 @@ const MyComponent = () => {
 }
 ```
 
-<br />
+<br /><br />
 
 ### Important information and hidden features
 
