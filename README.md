@@ -67,13 +67,11 @@ And remember to ⭐**star** this repository in order to save it for later! 🤗
 2.  **Download** the code directly from GitHub **or clone** the git repository.
 3.  Copy the css (atcb.min.css) and js (atcb.min.js) files from the assets (not the "npm_dist") folders.
 4.  Include those files in your project. The css goes into the <head> (`<link rel="stylesheet" href="./assets/css/atcb.min.css">`), the js into the <body> footer (`<script src="./assets/js/atcb.min.js" defer></script>`).
-5.  Create your button as can be seen in the "Configuration" section below.
 
 ### Option 2: simple (CDN)
 
 1.  Instead of downloading the files, you can use the jsDeliver CDN.
 2.  Put `<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/add-to-calendar-button@1.10.1/assets/css/atcb.min.css">` into the <head> and `<script src="https://cdn.jsdelivr.net/npm/add-to-calendar-button@1.10.1" defer></script>` into the <body> footer of your website. Leave out the patch number at the version ("1.9" instead of "1.9.2") to automatically pull the latest patched version. See [jsDeliver.com](https://www.jsdelivr.com/features#npm) for more options.
-3.  Create your button as can be seen in the "Configuration" section below.
 
 ### Option 3: npm
 
@@ -83,8 +81,7 @@ And remember to ⭐**star** this repository in order to save it for later! 🤗
 4.  Either use `atcb_action` with your own buttons/forms/etc, or run `atcb_init` after the DOM has been loaded. To determine the right moment to execute, ...
     - with Angular, you would use `ngAfterViewInit()` with `atcb_init();` (mind that, depending on your app, other hooks might be better);
     - with React, you might want to include an event listener like `document.addEventListener('DOMContentLoaded', atcb_init, false);` or using hooks in a functional component like `useEffect(() => atcb_init());`
-5.  Include the css. For example with Angular or React, add `@import 'add-to-calendar-button/assets/css/atcb.min'` to some other css file - or include it in other more direct ways.
-6.  Create your button as can be seen in the "Configuration" section below.
+5.  Include the css. For example with Angular or React, add `@import 'add-to-calendar-button/assets/css/atcb.min'` to some other css file - or include it in other more direct ways (like adding `import 'add-to-calendar-button/assets/css/atcb.css';` to the respective component).
 
 <br />
 
