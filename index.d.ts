@@ -22,6 +22,8 @@ declare module 'add-to-calendar-button' {
       inline?: boolean;
       background?: boolean;
       icsFile?: string;
+      style?: '3d' | 'flat' | 'round' | 'neumorphism' | 'none';
+      language?: 'en' | 'de';
     },
     triggerElement?: HTMLElement,
     keyboardTrigger?: boolean

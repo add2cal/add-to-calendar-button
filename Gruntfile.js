@@ -52,7 +52,7 @@ module.exports = function (grunt) {
       options: {
         sourceMap: true,
       },
-      newBuild: {
+      minify: {
         files: [
           {
             expand: true,
@@ -100,5 +100,5 @@ module.exports = function (grunt) {
   grunt.loadNpmTasks('grunt-version');
 
   // Register task(s).
-  grunt.registerTask('default', ['clean', 'copy', 'uglify', 'cssmin']);
+  grunt.registerTask('default', ['clean', 'cssmin', 'copy', 'uglify']);
 };
