@@ -3,7 +3,7 @@
  * Add-to-Calendar Button
  * ++++++++++++++++++++++
  */
-const atcbVersion = '1.11.0';
+const atcbVersion = '1.11.1';
 /* Creator: Jens Kuerschner (https://jenskuerschner.de)
  * Project: https://github.com/jekuer/add-to-calendar-button
  * License: MIT with “Commons Clause” License Condition v1.0
@@ -725,6 +725,8 @@ function atcb_open(data, button, keyboardTrigger = false, generatedButton = fals
     document.body.appendChild(list);
     document.body.appendChild(bgOverlay);
   }
+  // set overlay size just to be sure  
+  atcb_set_fullsize(bgOverlay);
   // give keyboard focus to first item in list, if not blocked, because there is definitely no keyboard trigger
   if (keyboardTrigger) {
     list.firstChild.focus();
@@ -1138,6 +1140,8 @@ function atcb_create_modal(data, headline, content, buttons, type = '') {
       break;
   }
   infoModalWrapper.appendChild(infoModal);
+  // set overlay size just to be sure
+  atcb_set_fullsize(bgOverlay);
   // adding headline
   const infoModalHeadline = document.createElement('div');
   infoModalHeadline.classList.add('atcb-modal-headline');
@@ -1196,6 +1200,12 @@ function atcb_position_list(trigger, list) {
     list.style.top = rect.bottom + window.scrollY + 'px';
   }
   list.style.left = rect.left + 'px';
+}
+
+// SHARED FUNCTION TO DEFINE WIDTH AND HEIGHT FOR "FULLSCREEN" FULLSIZE ELEMENTS
+function atcb_set_fullsize(el) {
+  el.style.width = window.innerWidth + 'px';
+  el.style.height = window.innerHeight + 'px';
 }
 
 // SHARED DEBOUNCE AND THROTTLE FUNCTIONS
@@ -1257,6 +1267,10 @@ if (isBrowser()) {
   window.addEventListener(
     'resize',
     atcb_throttle(() => {
+      let activeOverlay = document.getElementById('atcb-bgoverlay');
+      if (activeOverlay != null) {
+        atcb_set_fullsize(activeOverlay);
+      }
       let activeButton = document.querySelector('.atcb-active');
       let activeList = document.querySelector('.atcb-dropdown');
       if (activeButton != null && activeList != null) {
