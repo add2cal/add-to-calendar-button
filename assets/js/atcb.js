@@ -725,7 +725,7 @@ function atcb_open(data, button, keyboardTrigger = false, generatedButton = fals
     document.body.appendChild(list);
     document.body.appendChild(bgOverlay);
   }
-  // set overlay size just to be sure  
+  // set overlay size just to be sure
   atcb_set_fullsize(bgOverlay);
   // give keyboard focus to first item in list, if not blocked, because there is definitely no keyboard trigger
   if (keyboardTrigger) {
@@ -945,28 +945,29 @@ function atcb_generate_ical(data) {
   const filename = data.iCalFileName || 'event-to-save-in-my-calendar';
   // in the Instagram in-app browser case, we offer a copy option, since the on-the-fly client side generation is not supported at the moment
   if (isInstagram()) {
-    // putting the download url to the clipboard (with some big workaround for iOS)
+    // putting the download url to the clipboard
+    const tmpInput = document.createElement('input');
+    document.body.appendChild(tmpInput);
+    var editable = tmpInput.contentEditable;
+    var readOnly = tmpInput.readOnly;
+    tmpInput.value = dlurl;
+    tmpInput.contentEditable = true;
+    tmpInput.readOnly = false;
     if (isiOS()) {
-      const tmpInput = document.createElement('input');
-      document.body.appendChild(tmpInput);
-      var editable = tmpInput.contentEditable;
-      var readOnly = tmpInput.readOnly;
-      tmpInput.value = dlurl;
-      tmpInput.contentEditable = true;
-      tmpInput.readOnly = false;
       var range = document.createRange();
       range.selectNodeContents(tmpInput);
       var selection = window.getSelection();
       selection.removeAllRanges();
       selection.addRange(range);
       tmpInput.setSelectionRange(0, 999999);
-      tmpInput.contentEditable = editable;
-      tmpInput.readOnly = readOnly;
-      document.execCommand('copy');
-      tmpInput.remove();
     } else {
       navigator.clipboard.writeText(dlurl);
+      tmpInput.select();
     }
+    tmpInput.contentEditable = editable;
+    tmpInput.readOnly = readOnly;
+    document.execCommand('copy');
+    tmpInput.remove();
     // creating the modal
     const buttons = [{ label: atcb_translate('Close note', data.language), type: 'close' }];
     atcb_create_modal(
