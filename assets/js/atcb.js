@@ -1335,6 +1335,12 @@ function atcb_translate(identifier, language) {
 
 // START INIT
 if (isBrowser()) {
-  document.addEventListener('DOMContentLoaded', atcb_init, false); // init the magic as soon as the DOM has been loaded
+  if (document.readyState !== 'loading') {
+    // if the script is loaded after the page has been loaded, run the initilization
+    atcb_init();
+  } else {
+    // otherwise, init the magic as soon as the DOM has been loaded
+    document.addEventListener('DOMContentLoaded', atcb_init, false);
+  }
 }
 // END INIT
