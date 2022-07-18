@@ -1272,20 +1272,22 @@ if (isBrowser()) {
     })
   );
   // Global listener to any screen changes
-  window.addEventListener(
-    'resize',
-    atcb_throttle(() => {
-      let activeOverlay = document.getElementById('atcb-bgoverlay');
-      if (activeOverlay != null) {
-        atcb_set_fullsize(activeOverlay);
-      }
-      let activeButton = document.querySelector('.atcb-active');
-      let activeList = document.querySelector('.atcb-dropdown');
-      if (activeButton != null && activeList != null) {
-        atcb_position_list(activeButton, activeList);
-      }
-    })
-  );
+  ['resize', 'touchmove'].forEach(function (event) {
+    window.addEventListener(
+      event,
+      atcb_throttle(() => {
+        let activeOverlay = document.getElementById('atcb-bgoverlay');
+        if (activeOverlay != null) {
+          atcb_set_fullsize(activeOverlay);
+        }
+        let activeButton = document.querySelector('.atcb-active');
+        let activeList = document.querySelector('.atcb-dropdown');
+        if (activeButton != null && activeList != null) {
+          atcb_position_list(activeButton, activeList);
+        }
+      })
+    );
+  });
 }
 
 // TRANSLATIONS
