@@ -721,6 +721,7 @@ function atcb_open(data, button, keyboardTrigger = false, generatedButton = fals
   if (data.listStyle === 'modal') {
     document.body.appendChild(bgOverlay);
     bgOverlay.appendChild(list);
+    document.body.classList.add('atcb-modal-no-scroll');
   } else {
     document.body.appendChild(list);
     document.body.appendChild(bgOverlay);
@@ -752,6 +753,8 @@ function atcb_close(blockFocus = false) {
   Array.from(document.querySelectorAll('.atcb-active-modal')).forEach((button) => {
     button.classList.remove('atcb-active-modal');
   });
+  // make body scrollable again
+  document.body.classList.remove('atcb-modal-no-scroll');
   // remove dropdowns, modals, and bg overlays (should only be one of each at max)
   Array.from(document.querySelectorAll('.atcb-list'))
     .concat(Array.from(document.querySelectorAll('.atcb-info-modal')))
@@ -1129,6 +1132,7 @@ function atcb_create_modal(data, headline, content, buttons, type = '') {
   infoModalWrapper.tabIndex = 0;
   bgOverlay.appendChild(infoModalWrapper);
   document.body.appendChild(bgOverlay);
+  document.body.classList.add('atcb-modal-no-scroll');
   const parentButton = document.getElementById(data.identifier);
   if (parentButton != null) {
     parentButton.classList.add('atcb-active-modal');
