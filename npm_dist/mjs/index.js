@@ -1234,22 +1234,29 @@ function atcb_debounce_leading(func, timeout = 200) {
   };
 }
 // throttle
-function atcb_throttle(func, limit = 5) {
-  let lastFunc;
-  let lastRan;
+function atcb_throttle(func, delay = 10) {
+  let result;
+  let timeout = null;
+  let previous = 0;
+  let later = (...args) => {
+    previous = Date.now();
+    timeout = null;
+    result = func.apply(this, args);
+  };
   return (...args) => {
-    if (!lastRan) {
-      func.apply(this, args);
-      lastRan = Date.now();
-    } else {
-      clearTimeout(lastFunc);
-      lastFunc = setTimeout(function () {
-        if (Date.now() - lastRan >= limit) {
-          func.apply(this, args);
-          lastRan = Date.now();
-        }
-      }, limit - (Date.now() - lastRan));
+    let now = Date.now();
+    let remaining = delay - (now - previous);
+    if (remaining <= 0 || remaining > delay) {
+      if (timeout) {
+        clearTimeout(timeout);
+        timeout = null;
+      }
+      previous = now;
+      result = func.apply(this, args);
+    } else if (!timeout) {
+      timeout = setTimeout(later, remaining);
     }
+    return result;
   };
 }
 
