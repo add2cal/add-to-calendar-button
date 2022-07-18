@@ -5,7 +5,7 @@
  *
  * Style: Default
  *
- * Version: 1.11.0
+ * Version: 1.11.1
  * Creator: Jens Kuerschner (https://jenskuerschner.de)
  * Project: https://github.com/jekuer/add-to-calendar-button
  * License: MIT with “Commons Clause” License Condition v1.0
@@ -187,10 +187,19 @@
  * Modal
  */
 
+/* we disable scrolling only on small screens - only there, the case is relevant and at the same time, they have no scrollbars and therefore no "jumping" */
+@media only screen and (max-width: 575px) {
+  .atcb-modal-no-scroll {
+    overflow-y: hidden;
+  }
+}
+
 .atcb-modal {
   display: block;
+  margin: auto;
   min-width: 250px;
   width: auto;
+  position: relative;
   z-index: 150;
 }
 
@@ -265,18 +274,22 @@
  */
 
 #atcb-bgoverlay {
-  align-items: center;
   animation: atcb-bgoverlay-animate 0.1s ease 0s 1 normal forwards;
   backdrop-filter: blur(2px);
   background: rgb(20 20 20 / 20%);
-  bottom: 0;
   box-sizing: border-box;
   display: flex;
-  height: 100vh;
-  justify-content: center;
+  height: calc(100vh + 100px);
   left: 0;
+  min-height: available;
+  min-height: fill-available;
+  min-height: fill-available;
+  min-width: available;
+  min-width: fill-available;
+  min-width: fill-available;
   opacity: 0;
-  padding: 15px;
+  overflow-y: scroll;
+  padding: 30px 15px 130px;
   position: fixed;
   right: 0;
   top: 0;

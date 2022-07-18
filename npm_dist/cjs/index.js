@@ -3,7 +3,7 @@
  * Add-to-Calendar Button
  * ++++++++++++++++++++++
  */
-const atcbVersion = '1.11.0';
+const atcbVersion = '1.11.1';
 /* Creator: Jens Kuerschner (https://jenskuerschner.de)
  * Project: https://github.com/jekuer/add-to-calendar-button
  * License: MIT with “Commons Clause” License Condition v1.0
@@ -721,10 +721,13 @@ function atcb_open(data, button, keyboardTrigger = false, generatedButton = fals
   if (data.listStyle === 'modal') {
     document.body.appendChild(bgOverlay);
     bgOverlay.appendChild(list);
+    document.body.classList.add('atcb-modal-no-scroll');
   } else {
     document.body.appendChild(list);
     document.body.appendChild(bgOverlay);
   }
+  // set overlay size just to be sure
+  atcb_set_fullsize(bgOverlay);
   // give keyboard focus to first item in list, if not blocked, because there is definitely no keyboard trigger
   if (keyboardTrigger) {
     list.firstChild.focus();
@@ -750,6 +753,8 @@ function atcb_close(blockFocus = false) {
   Array.from(document.querySelectorAll('.atcb-active-modal')).forEach((button) => {
     button.classList.remove('atcb-active-modal');
   });
+  // make body scrollable again
+  document.body.classList.remove('atcb-modal-no-scroll');
   // remove dropdowns, modals, and bg overlays (should only be one of each at max)
   Array.from(document.querySelectorAll('.atcb-list'))
     .concat(Array.from(document.querySelectorAll('.atcb-info-modal')))
@@ -943,28 +948,29 @@ function atcb_generate_ical(data) {
   const filename = data.iCalFileName || 'event-to-save-in-my-calendar';
   // in the Instagram in-app browser case, we offer a copy option, since the on-the-fly client side generation is not supported at the moment
   if (isInstagram()) {
-    // putting the download url to the clipboard (with some big workaround for iOS)
+    // putting the download url to the clipboard
+    const tmpInput = document.createElement('input');
+    document.body.appendChild(tmpInput);
+    var editable = tmpInput.contentEditable;
+    var readOnly = tmpInput.readOnly;
+    tmpInput.value = dlurl;
+    tmpInput.contentEditable = true;
+    tmpInput.readOnly = false;
     if (isiOS()) {
-      const tmpInput = document.createElement('input');
-      document.body.appendChild(tmpInput);
-      var editable = tmpInput.contentEditable;
-      var readOnly = tmpInput.readOnly;
-      tmpInput.value = dlurl;
-      tmpInput.contentEditable = true;
-      tmpInput.readOnly = false;
       var range = document.createRange();
       range.selectNodeContents(tmpInput);
       var selection = window.getSelection();
       selection.removeAllRanges();
       selection.addRange(range);
       tmpInput.setSelectionRange(0, 999999);
-      tmpInput.contentEditable = editable;
-      tmpInput.readOnly = readOnly;
-      document.execCommand('copy');
-      tmpInput.remove();
     } else {
       navigator.clipboard.writeText(dlurl);
+      tmpInput.select();
     }
+    tmpInput.contentEditable = editable;
+    tmpInput.readOnly = readOnly;
+    document.execCommand('copy');
+    tmpInput.remove();
     // creating the modal
     const buttons = [{ label: atcb_translate('Close note', data.language), type: 'close' }];
     atcb_create_modal(
@@ -1126,6 +1132,7 @@ function atcb_create_modal(data, headline, content, buttons, type = '') {
   infoModalWrapper.tabIndex = 0;
   bgOverlay.appendChild(infoModalWrapper);
   document.body.appendChild(bgOverlay);
+  document.body.classList.add('atcb-modal-no-scroll');
   const parentButton = document.getElementById(data.identifier);
   if (parentButton != null) {
     parentButton.classList.add('atcb-active-modal');
@@ -1138,6 +1145,8 @@ function atcb_create_modal(data, headline, content, buttons, type = '') {
       break;
   }
   infoModalWrapper.appendChild(infoModal);
+  // set overlay size just to be sure
+  atcb_set_fullsize(bgOverlay);
   // adding headline
   const infoModalHeadline = document.createElement('div');
   infoModalHeadline.classList.add('atcb-modal-headline');
@@ -1198,6 +1207,12 @@ function atcb_position_list(trigger, list) {
   list.style.left = rect.left + 'px';
 }
 
+// SHARED FUNCTION TO DEFINE WIDTH AND HEIGHT FOR "FULLSCREEN" FULLSIZE ELEMENTS
+function atcb_set_fullsize(el) {
+  el.style.width = window.innerWidth + 'px';
+  el.style.height = window.innerHeight + 100 + 'px';
+}
+
 // SHARED DEBOUNCE AND THROTTLE FUNCTIONS
 // going for last call debounce
 function atcb_debounce(func, timeout = 200) {
@@ -1223,22 +1238,29 @@ function atcb_debounce_leading(func, timeout = 200) {
   };
 }
 // throttle
-function atcb_throttle(func, limit = 5) {
-  let lastFunc;
-  let lastRan;
+function atcb_throttle(func, delay = 10) {
+  let result;
+  let timeout = null;
+  let previous = 0;
+  let later = (...args) => {
+    previous = Date.now();
+    timeout = null;
+    result = func.apply(this, args);
+  };
   return (...args) => {
-    if (!lastRan) {
-      func.apply(this, args);
-      lastRan = Date.now();
-    } else {
-      clearTimeout(lastFunc);
-      lastFunc = setTimeout(function () {
-        if (Date.now() - lastRan >= limit) {
-          func.apply(this, args);
-          lastRan = Date.now();
-        }
-      }, limit - (Date.now() - lastRan));
+    let now = Date.now();
+    let remaining = delay - (now - previous);
+    if (remaining <= 0 || remaining > delay) {
+      if (timeout) {
+        clearTimeout(timeout);
+        timeout = null;
+      }
+      previous = now;
+      result = func.apply(this, args);
+    } else if (!timeout) {
+      timeout = setTimeout(later, remaining);
     }
+    return result;
   };
 }
 
@@ -1257,6 +1279,10 @@ if (isBrowser()) {
   window.addEventListener(
     'resize',
     atcb_throttle(() => {
+      let activeOverlay = document.getElementById('atcb-bgoverlay');
+      if (activeOverlay != null) {
+        atcb_set_fullsize(activeOverlay);
+      }
       let activeButton = document.querySelector('.atcb-active');
       let activeList = document.querySelector('.atcb-dropdown');
       if (activeButton != null && activeList != null) {
