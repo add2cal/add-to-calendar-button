@@ -302,7 +302,7 @@
   background: rgb(20 20 20 / 20%);
   box-sizing: border-box;
   display: flex;
-  height: calc(100vh + 50px);
+  height: calc(100vh + 100px);
   left: 0;
   min-height: available;
   min-height: fill-available;
@@ -312,7 +312,7 @@
   min-width: fill-available;
   opacity: 0;
   overflow-y: scroll;
-  padding: 30px 15px 80px;
+  padding: 30px 15px 130px;
   position: fixed;
   right: 0;
   top: 0;
