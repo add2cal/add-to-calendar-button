@@ -1210,7 +1210,7 @@ function atcb_position_list(trigger, list) {
 // SHARED FUNCTION TO DEFINE WIDTH AND HEIGHT FOR "FULLSCREEN" FULLSIZE ELEMENTS
 function atcb_set_fullsize(el) {
   el.style.width = window.innerWidth + 'px';
-  el.style.height = window.innerHeight + 'px';
+  el.style.height = window.innerHeight + 50 + 'px';
 }
 
 // SHARED DEBOUNCE AND THROTTLE FUNCTIONS
