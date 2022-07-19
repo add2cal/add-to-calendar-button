@@ -142,7 +142,7 @@ function atcb_check_required(data) {
     return false;
   }
   // check for min required data (without "options")
-  const requiredField = ['name', 'startDate', 'endDate'];
+  const requiredField = ['name', 'startDate'];
   return requiredField.every(function (field) {
     if (data[`${field}`] == null || data[`${field}`] == '') {
       console.error('add-to-calendar button generation failed: required setting missing [' + field + ']');
@@ -154,6 +154,10 @@ function atcb_check_required(data) {
 
 // CALCULATE AND CLEAN UP THE ACTUAL DATES
 function atcb_date_cleanup(data) {
+  // set endDate = startDate, if not provided
+  if ((data.endDate == null || data.endDate == '') && data.startDate != null) {
+    data.endDate = data.startDate;
+  }
   // parse date+time format (unofficial alternative to the main implementation)
   const endpoints = ['start', 'end'];
   endpoints.forEach(function (point) {

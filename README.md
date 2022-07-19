@@ -124,6 +124,8 @@ Mind that with Angular, you might need to escape the { with `{{ '{' }}` and } wi
 
 ### Minimal structure (required)
 
+If there is no endDate set, the script assumes that it is the same as startDate.
+
 Mind that for auto-generating rich snippets, a location would be mandatory as well.
 
 ```html
@@ -131,7 +133,6 @@ Mind that for auto-generating rich snippets, a location would be mandatory as we
   {
     "name":"Add the title of your event",
     "startDate":"2022-02-21",
-    "endDate":"2022-03-24",
     "options":[
       "Google"
     ]
