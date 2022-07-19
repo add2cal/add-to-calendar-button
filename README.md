@@ -80,7 +80,7 @@ Put the css (use atcb-3d for an alternative style) into the `<head>`:
 ... and the javascript into the `<body>` footer:
 
 ```
-<script src="https://cdn.jsdelivr.net/npm/add-to-calendar-button" asynch defer></script>
+<script src="https://cdn.jsdelivr.net/npm/add-to-calendar-button" async defer></script>
 ```
 
 _Mind that this always pulls the latest version! You can pin a specific one by adding "@" + the version number after "button" - see [jsDeliver.com](https://www.jsdelivr.com/features#npm) for details._
