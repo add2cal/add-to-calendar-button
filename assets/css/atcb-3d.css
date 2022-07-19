@@ -5,7 +5,7 @@
  *
  * Style: 3D
  *
- * Version: 1.11.1
+ * Version: 1.11.2
  * Creator: Jens Kuerschner (https://jenskuerschner.de)
  * Project: https://github.com/jekuer/add-to-calendar-button
  * License: MIT with “Commons Clause” License Condition v1.0
@@ -223,6 +223,7 @@
   min-width: 250px;
   width: auto;
   position: relative;
+  transform: translate3d(0, 0, 0);
   z-index: 150;
 }
 
@@ -302,20 +303,19 @@
   background: rgb(20 20 20 / 20%);
   box-sizing: border-box;
   display: flex;
+
+  /* could become simply 100dvh in the future - with regular padding then */
   height: calc(100vh + 100px);
   left: 0;
-  min-height: available;
-  min-height: fill-available;
-  min-height: fill-available;
-  min-width: available;
-  min-width: fill-available;
-  min-width: fill-available;
+  right: 0;
+  top: 0;
+  min-height: 100%;
+  min-width: 100%;
   opacity: 0;
   overflow-y: scroll;
   padding: 30px 15px 130px;
   position: fixed;
-  right: 0;
-  top: 0;
+  transform: translate3d(0, 0, -10px);
   width: 100vw;
   z-index: 120;
 }
