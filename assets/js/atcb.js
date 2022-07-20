@@ -3,7 +3,7 @@
  * Add-to-Calendar Button
  * ++++++++++++++++++++++
  */
-const atcbVersion = '1.11.2';
+const atcbVersion = '1.11.3';
 /* Creator: Jens Kuerschner (https://jenskuerschner.de)
  * Project: https://github.com/jekuer/add-to-calendar-button
  * License: MIT with “Commons Clause” License Condition v1.0
@@ -142,7 +142,7 @@ function atcb_check_required(data) {
     return false;
   }
   // check for min required data (without "options")
-  const requiredField = ['name', 'startDate', 'endDate'];
+  const requiredField = ['name', 'startDate'];
   return requiredField.every(function (field) {
     if (data[`${field}`] == null || data[`${field}`] == '') {
       console.error('add-to-calendar button generation failed: required setting missing [' + field + ']');
@@ -154,6 +154,10 @@ function atcb_check_required(data) {
 
 // CALCULATE AND CLEAN UP THE ACTUAL DATES
 function atcb_date_cleanup(data) {
+  // set endDate = startDate, if not provided
+  if ((data.endDate == null || data.endDate == '') && data.startDate != null) {
+    data.endDate = data.startDate;
+  }
   // parse date+time format (unofficial alternative to the main implementation)
   const endpoints = ['start', 'end'];
   endpoints.forEach(function (point) {
@@ -633,7 +637,7 @@ function atcb_generate_bg_overlay(listStyle = 'dropdown', trigger = '', darken =
   bgOverlay.tabIndex = 0;
   bgOverlay.addEventListener(
     'click',
-    atcb_debounce_leading((e) => {
+    atcb_debounce((e) => {
       if (e.target !== e.currentTarget) return;
       atcb_close(true);
     })
@@ -653,7 +657,7 @@ function atcb_generate_bg_overlay(listStyle = 'dropdown', trigger = '', darken =
   );
   bgOverlay.addEventListener(
     'touchend',
-    atcb_debounce_leading((e) => {
+    atcb_debounce((e) => {
       if (fingerMoved !== false || e.target !== e.currentTarget) return;
       atcb_close(true);
     }),
@@ -711,8 +715,6 @@ function atcb_open(data, button, keyboardTrigger = false, generatedButton = fals
       }
     }
   } else {
-    // if no button is defined, fallback to listStyle "modal"
-    data.listStyle = 'modal';
     list.classList.add('atcb-modal');
   }
   // define background overlay
@@ -773,7 +775,14 @@ function atcb_action(data, triggerElement, keyboardTrigger = true) {
   if (!atcb_validate(data)) {
     throw new Error('Invalid data; see logs');
   }
-  data.identifier = triggerElement.id;
+  if (triggerElement) {
+    data.identifier = triggerElement.id;
+  } else {
+    data.identifier = 'atcb-btn-custom';
+    // if no button is defined, fallback to listStyle "modal" and "click" trigger
+    data.listStyle = 'modal';
+    data.trigger = 'click';
+  }
   atcb_open(data, triggerElement, keyboardTrigger);
 }
 
