@@ -28,7 +28,7 @@
 
 .atcb-button {
   align-items: center;
-  background: rgb(245 245 245);
+  background-color: rgb(245 245 245);
   border: 1px solid rgb(210 210 210);
   border-radius: 6px;
   box-shadow: 1px 2px 10px 0 rgb(0 0 0 / 40%);
@@ -55,7 +55,7 @@
 
 .atcb-button:focus,
 .atcb-button:hover {
-  background: rgb(255 255 255);
+  background-color: rgb(255 255 255);
 }
 
 .atcb-button:focus-visible {
@@ -69,7 +69,7 @@
 }
 
 .atcb-button.atcb-active:not(.atcb-modal-style) {
-  background: rgb(255 255 255);
+  background-color: rgb(255 255 255);
   box-shadow: 1px 8px 12px 0 rgb(0 0 0 / 50%);
   margin: 0;
   padding: 10px 18px;
@@ -140,7 +140,7 @@
 
 .atcb-list-item {
   align-items: center;
-  background: rgb(245 245 245);
+  background-color: rgb(245 245 245);
   border: 1px solid rgb(210 210 210);
   box-shadow: 1px 2px 8px 0 rgb(0 0 0 / 30%);
   box-sizing: border-box;
@@ -158,13 +158,13 @@
 }
 
 .atcb-list-item:hover {
-  background: rgb(255 255 255);
+  background-color: rgb(255 255 255);
   box-shadow: 1px 2px 10px 0 rgb(0 0 0 / 40%);
   color: rgb(0 0 0);
 }
 
 .atcb-list-item:focus-visible {
-  background: rgb(255 255 255);
+  background-color: rgb(255 255 255);
   box-shadow: 1px 2px 10px 0 rgb(0 0 0 / 40%);
   color: dodgerblue;
   font-weight: 600;
@@ -198,6 +198,10 @@
   width: 18px;
 }
 
+.atcb-list-item-close {
+  background-color: #e5e5e5;
+}
+
 .atcb-list-item.atcb-list-item-close {
   color: #777;
 }
@@ -228,7 +232,7 @@
 }
 
 .atcb-modal-box {
-  background: rgb(255 255 255);
+  background-color: rgb(255 255 255);
   box-shadow: 1px 2px 12px 2px rgba(0 0 0 / 60%);
   color: rgb(0 0 0);
   cursor: default;
@@ -264,7 +268,7 @@
 }
 
 .atcb-modal-btn {
-  background: rgb(245 245 245);
+  background-color: rgb(245 245 245);
   border: 1px solid rgb(210 210 210);
   border-radius: 6px;
   box-shadow: 1px 2px 10px 0 rgb(0 0 0 / 40%);
@@ -285,11 +289,11 @@
 }
 
 .atcb-modal-btn:hover {
-  background: rgb(255 255 255);
+  background-color: rgb(255 255 255);
 }
 
 .atcb-modal-btn:focus-visible {
-  background: rgb(255 255 255);
+  background-color: rgb(255 255 255);
   outline: 2px solid dodgerblue;
 }
 
@@ -300,7 +304,7 @@
 #atcb-bgoverlay {
   animation: atcb-bgoverlay-animate 0.1s ease 0s 1 normal forwards;
   backdrop-filter: blur(2px);
-  background: rgb(20 20 20 / 20%);
+  background-color: rgb(20 20 20 / 20%);
   box-sizing: border-box;
   display: flex;
 
@@ -326,7 +330,7 @@
 
 #atcb-bgoverlay.atcb-no-bg {
   animation: none;
-  background: rgb(20 20 20 / 20%);
+  background-color: rgb(20 20 20 / 20%);
   backdrop-filter: blur(2px);
   opacity: 0;
 }
