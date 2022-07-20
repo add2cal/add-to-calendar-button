@@ -3,7 +3,7 @@
  * Add-to-Calendar Button
  * ++++++++++++++++++++++
  */
-const atcbVersion = '1.11.2';
+const atcbVersion = '1.11.3';
 /* Creator: Jens Kuerschner (https://jenskuerschner.de)
  * Project: https://github.com/jekuer/add-to-calendar-button
  * License: MIT with “Commons Clause” License Condition v1.0
@@ -715,8 +715,6 @@ function atcb_open(data, button, keyboardTrigger = false, generatedButton = fals
       }
     }
   } else {
-    // if no button is defined, fallback to listStyle "modal"
-    data.listStyle = 'modal';
     list.classList.add('atcb-modal');
   }
   // define background overlay
@@ -777,7 +775,14 @@ function atcb_action(data, triggerElement, keyboardTrigger = true) {
   if (!atcb_validate(data)) {
     throw new Error('Invalid data; see logs');
   }
-  data.identifier = triggerElement.id;
+  if (triggerElement) {
+    data.identifier = triggerElement.id;
+  } else {
+    data.identifier = 'atcb-btn-custom';
+    // if no button is defined, fallback to listStyle "modal" and "click" trigger
+    data.listStyle = 'modal';
+    data.trigger = 'click';
+  }
   atcb_open(data, triggerElement, keyboardTrigger);
 }
 

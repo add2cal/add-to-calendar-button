@@ -5,7 +5,7 @@
  *
  * Style: Default
  *
- * Version: 1.11.2
+ * Version: 1.11.3
  * Creator: Jens Kuerschner (https://jenskuerschner.de)
  * Project: https://github.com/jekuer/add-to-calendar-button
  * License: MIT with “Commons Clause” License Condition v1.0
@@ -134,7 +134,6 @@
   -webkit-tap-highlight-color: transparent;
 }
 
-.atcb-list-item:hover,
 .atcb-list-item:hover {
   background-color: #fff;
   box-shadow: 1px 2px 10px 0 rgb(0 0 0 / 40%);
