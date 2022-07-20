@@ -637,7 +637,7 @@ function atcb_generate_bg_overlay(listStyle = 'dropdown', trigger = '', darken =
   bgOverlay.tabIndex = 0;
   bgOverlay.addEventListener(
     'click',
-    atcb_debounce_leading((e) => {
+    atcb_debounce((e) => {
       if (e.target !== e.currentTarget) return;
       atcb_close(true);
     })
@@ -657,7 +657,7 @@ function atcb_generate_bg_overlay(listStyle = 'dropdown', trigger = '', darken =
   );
   bgOverlay.addEventListener(
     'touchend',
-    atcb_debounce_leading((e) => {
+    atcb_debounce((e) => {
       if (fingerMoved !== false || e.target !== e.currentTarget) return;
       atcb_close(true);
     }),
