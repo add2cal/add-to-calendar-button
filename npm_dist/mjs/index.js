@@ -914,8 +914,8 @@ function atcb_generate_teams(data) {
 
 // FUNCTION TO GENERATE THE iCAL FILE (also for the Apple option)
 function atcb_generate_ical(data) {
-  // check for a given explicit file
-  if (data.icsFile != null && data.icsFile != '') {
+  // check for a given explicit file (not if iOS and Instagram - will catched further down)
+  if (data.icsFile != null && data.icsFile != '' && (!isiOS() || !isInstagram())) {
     // eslint-disable-next-line security/detect-non-literal-fs-filename
     window.open(data.icsFile, '_self');
     return;
@@ -960,8 +960,14 @@ function atcb_generate_ical(data) {
   }
   now = now.replace(/\.\d{3}/g, '').replace(/[^a-z\d]/gi, '');
   ics_lines.push('STATUS:CONFIRMED', 'LAST-MODIFIED:' + now, 'SEQUENCE:0', 'END:VEVENT', 'END:VCALENDAR');
-  const dlurl = 'data:text/calendar;charset=utf-8,' + encodeURIComponent(ics_lines.join('\r\n'));
+  let dlurl = 'data:text/calendar;charset=utf-8,' + encodeURIComponent(ics_lines.join('\r\n'));
   const filename = data.iCalFileName || 'event-to-save-in-my-calendar';
+  // if we got to this point with an explicitely given iCal file, we are on an iOS device within the Instagram in-app browser. If the provided URL is save, we override the dlurl
+  if (data.icsFile != null && data.icsFile != '') {
+    if (atcb_secure_url(data.icsFile) && data.icsFile.startsWith('https://')) {
+      dlurl = data.icsFile;
+    }
+  }
   // in the Instagram in-app browser case, we offer a copy option, since the on-the-fly client side generation is not supported at the moment
   if (isInstagram()) {
     // putting the download url to the clipboard
