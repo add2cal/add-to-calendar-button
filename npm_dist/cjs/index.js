@@ -3,7 +3,7 @@
  * Add-to-Calendar Button
  * ++++++++++++++++++++++
  */
-const atcbVersion = '1.11.3';
+const atcbVersion = '1.11.4';
 /* Creator: Jens Kuerschner (https://jenskuerschner.de)
  * Project: https://github.com/jekuer/add-to-calendar-button
  * License: MIT with “Commons Clause” License Condition v1.0
@@ -943,6 +943,13 @@ function atcb_generate_ical(data) {
   if (data.descriptionHtmlFree != null && data.descriptionHtmlFree != '') {
     ics_lines.push(
       'DESCRIPTION:' + data.descriptionHtmlFree.replace(/\n/g, '\\n').replace(/.{60}/g, '$&' + '\r\n ') // adjusting for intended line breaks + making sure it does not exceed 75 characters per line
+    );
+  }
+  if (data.description != null && data.description != '') {
+    ics_lines.push(
+      'X-ALT-DESC;FMTTYPE=text/html:\r\n <!DOCTYPE HTML PUBLIC ""-//W3C//DTD HTML 3.2//EN"">\r\n <HTML><BODY>\r\n ' +
+        data.description.replace(/\n/g, '<br>').replace(/.{60}/g, '$&' + '\r\n ') +
+        '\r\n </BODY></HTML>'
     );
   }
   if (data.location != null && data.location != '') {
