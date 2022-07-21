@@ -945,6 +945,13 @@ function atcb_generate_ical(data) {
       'DESCRIPTION:' + data.descriptionHtmlFree.replace(/\n/g, '\\n').replace(/.{60}/g, '$&' + '\r\n ') // adjusting for intended line breaks + making sure it does not exceed 75 characters per line
     );
   }
+  if (data.description != null && data.description != '') {
+    ics_lines.push(
+      'X-ALT-DESC;FMTTYPE=text/html:\r\n <!DOCTYPE HTML PUBLIC ""-//W3C//DTD HTML 3.2//EN"">\r\n <HTML><BODY>\r\n ' +
+        data.description.replace(/\n/g, '<br>').replace(/.{60}/g, '$&' + '\r\n ') +
+        '\r\n </BODY></HTML>'
+    );
+  }
   if (data.location != null && data.location != '') {
     ics_lines.push('LOCATION:' + data.location);
   }
