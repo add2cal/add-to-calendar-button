@@ -45,10 +45,8 @@ function atcb_init() {
       }
       // get JSON from HTML block, but remove real code line breaks before parsing.
       // use <br> or \n explicitely in the description to create a line break.
-      // also strip HTML tags (especially since stupid Safari adds stuff).
-      let atcbConfig = JSON.parse(
-        atcButtons[parseInt(i)].innerHTML.replace(/(\r\n|\n|\r)/g, '').replace(/(<(?!br)([^>]+)>)/gi, '')
-      );
+      let atcbConfig = JSON.parse(atcButtons[parseInt(i)].innerHTML.replace(/(\r\n|\n|\r)/g, ''));
+      atcbConfig = atcb_seure_content(atcbConfig);
       // rewrite config for backwards compatibility - you can remove this, if you did not use this script before v1.4.0.
       atcbConfig = atcb_patch_config(atcbConfig);
       // check, if all required data is available
@@ -112,25 +110,10 @@ function atcb_decorate_data(atcbConfig) {
 
   // make a copy of the given argument rather than mutating in place
   const data = Object.assign({}, atcbConfig);
-  // standardize any line breaks in the description and transform URLs (but keep a clean copy without the URL magic for iCal)
-  data.description = data.description.replace(/<br\s*\/?>/gi, '\n');
-  data.descriptionHtmlFree = data.description
-    .replace(/\[url\]/gi, '')
-    .replace(/(\|.*)\[\/url\]/gi, '')
-    .replace(/\[\/url\]/gi, '');
-  data.description = data.description.replace(
-    /\[url\]([\w&$+.,:;=~!*'?@^%#|\s\-()/]*)\[\/url\]/gi,
-    function (match, p1) {
-      const urlText = p1.split('|');
-      let link = '<a href="' + urlText[0] + '" target="_blank" rel="noopener">';
-      if (urlText.length > 1 && urlText[1] != '') {
-        link += urlText[1];
-      } else {
-        link += urlText[0];
-      }
-      return link + '</a>';
-    }
-  );
+  // store a clean description copy without the URL magic for iCal
+  data.descriptionHtmlFree = atcb_rewrite_html_elements(data.description, true);
+  // ...and transform pseudo elements for the regular one
+  data.description = atcb_rewrite_html_elements(data.description);
   return data;
 }
 
@@ -341,7 +324,7 @@ function atcb_validate(data) {
 // GENERATE THE ACTUAL BUTTON
 // helper function to generate the labels for the button and list options
 function atcb_generate_label(data, parent, type, icon = false, text = '', oneOption = false) {
-  let defaultTriggerText = atcb_translate('Add to Calendar', data.language);
+  let defaultTriggerText = atcb_translate_hook('Add to Calendar', data.language, data);
   // if there is only 1 option, we use the trigger text on the option label. Therefore, forcing it here
   if (oneOption && text == '') {
     text = defaultTriggerText;
@@ -408,7 +391,7 @@ function atcb_generate_label(data, parent, type, icon = false, text = '', oneOpt
         })
       );
       parent.setAttribute('id', data.identifier + '-ical');
-      text = text || atcb_translate('iCal File', data.language);
+      text = text || atcb_translate_hook('iCal File', data.language, data);
       iconSvg =
         '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 122.88 122.88"><path d="M81.61 4.73c0-2.61 2.58-4.73 5.77-4.73s5.77 2.12 5.77 4.73v20.72c0 2.61-2.58 4.73-5.77 4.73s-5.77-2.12-5.77-4.73V4.73h0zm-15.5 99.08c-.34 0-.61-1.43-.61-3.2s.27-3.2.61-3.2H81.9c.34 0 .61 1.43.61 3.2s-.27 3.2-.61 3.2H66.11h0zM15.85 67.09c-.34 0-.61-1.43-.61-3.2s.27-3.2.61-3.2h15.79c.34 0 .61 1.43.61 3.2s-.27 3.2-.61 3.2H15.85h0zm25.13 0c-.34 0-.61-1.43-.61-3.2s.27-3.2.61-3.2h15.79c.34 0 .61 1.43.61 3.2s-.27 3.2-.61 3.2H40.98h0zm25.13 0c-.34 0-.61-1.43-.61-3.2s.27-3.2.61-3.2H81.9c.34 0 .61 1.43.61 3.2s-.27 3.2-.61 3.2H66.11h0zm25.14 0c-.34 0-.61-1.43-.61-3.2s.27-3.2.61-3.2h15.79c.34 0 .61 1.43.61 3.2s-.27 3.2-.61 3.2H91.25h0zm-75.4 18.36c-.34 0-.61-1.43-.61-3.2s.27-3.2.61-3.2h15.79c.34 0 .61 1.43.61 3.2s-.27 3.2-.61 3.2H15.85h0zm25.13 0c-.34 0-.61-1.43-.61-3.2s.27-3.2.61-3.2h15.79c.34 0 .61 1.43.61 3.2s-.27 3.2-.61 3.2H40.98h0zm25.13 0c-.34 0-.61-1.43-.61-3.2s.27-3.2.61-3.2H81.9c.34 0 .61 1.43.61 3.2s-.27 3.2-.61 3.2H66.11h0zm25.14 0c-.34 0-.61-1.43-.61-3.2s.27-3.2.61-3.2h15.79c.34 0 .61 1.43.61 3.2s-.27 3.2-.61 3.2H91.25h0zm-75.4 18.36c-.34 0-.61-1.43-.61-3.2s.27-3.2.61-3.2h15.79c.34 0 .61 1.43.61 3.2s-.27 3.2-.61 3.2H15.85h0zm25.13 0c-.34 0-.61-1.43-.61-3.2s.27-3.2.61-3.2h15.79c.34 0 .61 1.43.61 3.2s-.27 3.2-.61 3.2H40.98h0zM29.61 4.73c0-2.61 2.58-4.73 5.77-4.73s5.77 2.12 5.77 4.73v20.72c0 2.61-2.58 4.73-5.77 4.73s-5.77-2.12-5.77-4.73V4.73h0zM6.4 45.32h110.07V21.47c0-.8-.33-1.53-.86-2.07-.53-.53-1.26-.86-2.07-.86H103c-1.77 0-3.2-1.43-3.2-3.2s1.43-3.2 3.2-3.2h10.55c2.57 0 4.9 1.05 6.59 2.74s2.74 4.02 2.74 6.59v27.06 65.03c0 2.57-1.05 4.9-2.74 6.59s-4.02 2.74-6.59 2.74H9.33c-2.57 0-4.9-1.05-6.59-2.74-1.69-1.7-2.74-4.03-2.74-6.6V48.52 21.47c0-2.57 1.05-4.9 2.74-6.59s4.02-2.74 6.59-2.74H20.6c1.77 0 3.2 1.43 3.2 3.2s-1.43 3.2-3.2 3.2H9.33c-.8 0-1.53.33-2.07.86-.53.53-.86 1.26-.86 2.07v23.85h0zm110.08 6.41H6.4v61.82c0 .8.33 1.53.86 2.07.53.53 1.26.86 2.07.86h104.22c.8 0 1.53-.33 2.07-.86.53-.53.86-1.26.86-2.07V51.73h0zM50.43 18.54c-1.77 0-3.2-1.43-3.2-3.2s1.43-3.2 3.2-3.2h21.49c1.77 0 3.2 1.43 3.2 3.2s-1.43 3.2-3.2 3.2H50.43h0z"/></svg>';
       break;
@@ -496,7 +479,7 @@ function atcb_generate_label(data, parent, type, icon = false, text = '', oneOpt
         atcb_debounce(() => atcb_close(false))
       );
       parent.setAttribute('id', data.identifier + '-close');
-      text = atcb_translate('Close', data.language);
+      text = atcb_translate_hook('Close', data.language, data);
       iconSvg =
         '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"><path fill-rule="evenodd" d="M11.991.69a2.35 2.35 0 0 1 3.318-.009c.918.911.922 2.392.009 3.307l-4.009 4.014 4.013 4.018c.906.909.893 2.38-.027 3.287a2.35 2.35 0 0 1-3.307-.004l-3.985-3.99-3.993 3.997a2.35 2.35 0 0 1-3.318.009c-.918-.911-.922-2.392-.009-3.307l4.009-4.014L.678 3.98C-.228 3.072-.215 1.6.706.693a2.35 2.35 0 0 1 3.307.004l3.985 3.99z"/></svg>';
       break;
@@ -767,6 +750,7 @@ function atcb_close(blockFocus = false) {
 // prepare data when not using the init function
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 function atcb_action(data, triggerElement, keyboardTrigger = true) {
+  data = atcb_seure_content(data);
   // validate & decorate data
   if (!atcb_check_required(data)) {
     throw new Error('data missing; see logs');
@@ -994,11 +978,11 @@ function atcb_generate_ical(data) {
     document.execCommand('copy');
     tmpInput.remove();
     // creating the modal
-    const buttons = [{ label: atcb_translate('Close note', data.language), type: 'close' }];
+    const buttons = [{ label: atcb_translate_hook('Close note', data.language, data), type: 'close' }];
     atcb_create_modal(
       data,
-      atcb_translate('Instagram iCal', data.language),
-      atcb_translate('Instagram info description', data.language),
+      atcb_translate_hook('Instagram iCal', data.language, data),
+      atcb_translate_hook('Instagram info description', data.language, data),
       buttons,
       'instagram'
     );
@@ -1127,6 +1111,14 @@ function atcb_generate_time(data, style = 'delimiters', targetCal = 'general', a
   return returnObject;
 }
 
+// SHARED FUNCTION TO SECURE DATA
+function atcb_seure_content(data) {
+  // strip HTML tags (especially since stupid Safari adds stuff) - except for <br>.
+  let tmpJSON = JSON.stringify(data);
+  tmpJSON = tmpJSON.replace(/(<(?!br)([^>]+)>)/gi, '');
+  return JSON.parse(tmpJSON);
+}
+
 // SHARED FUNCTION TO SECURE URLS
 function atcb_secure_url(url, throwError = true) {
   if (
@@ -1143,6 +1135,31 @@ function atcb_secure_url(url, throwError = true) {
   } else {
     return true;
   }
+}
+
+// SHARED FUNCTION TO REPLACE HTML PSEUDO ELEMENTS
+function atcb_rewrite_html_elements(content, clear = false) {
+  // standardize any line breaks
+  content = content.replace(/<br\s*\/?>/gi, '\n');
+  // remove any pseudo elements, if necessary
+  if (clear) {
+    content = content.replace(/\[(|\/)(url|br|hr|p|b|strong|u|i|em|li|ul|ol|h\d)\]|((\|.*)\[\/url\])/gi, '');
+    // and build html for the rest
+    // supporting: br, hr, p, strong, u, i, em, li, ul, ol, h (like h1, h2, h3, ...), url (= a)
+  } else {
+    content = content.replace(/\[(\/|)(br|hr|p|b|strong|u|i|em|li|ul|ol|h\d)\]/gi, '<$1$2>');
+    content = content.replace(/\[url\]([\w&$+.,:;=~!*'?@^%#|\s\-()/]*)\[\/url\]/gi, function (match, p1) {
+      const urlText = p1.split('|');
+      let link = '<a href="' + urlText[0] + '" target="_blank" rel="noopener">';
+      if (urlText.length > 1 && urlText[1] != '') {
+        link += urlText[1];
+      } else {
+        link += urlText[0];
+      }
+      return link + '</a>';
+    });
+  }
+  return content;
 }
 
 // SHARED FUNCTION TO CREATE INFO MODALS
@@ -1315,6 +1332,17 @@ if (isBrowser()) {
 }
 
 // TRANSLATIONS
+// hook, which can be used to override all potential "hard" strings by setting customLabel_ + the key (without spaces) as option key and the intended string as value
+function atcb_translate_hook(identifier, language, data) {
+  const searchKey = identifier.replace(' ', '');
+  if (data['customLabel_' + searchKey] != null && data['customLabel_' + searchKey] != null) {
+    const returnVal = atcb_rewrite_html_elements(data['customLabel_' + searchKey]);
+    return returnVal;
+  } else {
+    return atcb_translate(identifier, language);
+  }
+}
+
 function atcb_translate(identifier, language) {
   switch (language) {
     case 'en':
