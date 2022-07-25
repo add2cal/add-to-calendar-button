@@ -25,6 +25,11 @@ const isWebView = isBrowser()
       'if (/(Version/d+.*/d+.0.0.0 Mobile|; ?wv|(iPhone|iPod|iPad).*AppleWebKit(?!.*Safari))/i.test(navigator.userAgent || navigator.vendor)) { return true; } else { return false; }'
     )
   : new Function('return false;');
+// define default link target
+let atcb_default_target = '_blank';
+if (isWebView()) {
+  atcb_default_target = '_system';
+}
 // Instagram
 const isInstagram = isBrowser()
   ? new Function(
@@ -810,7 +815,7 @@ function atcb_generate_google(data) {
   }
   if (atcb_secure_url(url)) {
     // eslint-disable-next-line security/detect-non-literal-fs-filename
-    window.open(url, '_blank').focus();
+    window.open(url, atcb_default_target).focus();
   }
 }
 
@@ -837,7 +842,7 @@ function atcb_generate_yahoo(data) {
   }
   if (atcb_secure_url(url)) {
     // eslint-disable-next-line security/detect-non-literal-fs-filename
-    window.open(url, '_blank').focus();
+    window.open(url, atcb_default_target).focus();
   }
 }
 
@@ -869,7 +874,7 @@ function atcb_generate_microsoft(data, type = '365') {
   }
   if (atcb_secure_url(url)) {
     // eslint-disable-next-line security/detect-non-literal-fs-filename
-    window.open(url, '_blank').focus();
+    window.open(url, atcb_default_target).focus();
   }
 }
 
@@ -898,16 +903,21 @@ function atcb_generate_teams(data) {
   }
   if (atcb_secure_url(url)) {
     // eslint-disable-next-line security/detect-non-literal-fs-filename
-    window.open(url, '_blank').focus();
+    window.open(url, atcb_default_target).focus();
   }
 }
 
 // FUNCTION TO GENERATE THE iCAL FILE (also for the Apple option)
 function atcb_generate_ical(data) {
-  // check for a given explicit file (not if iOS and Instagram - will catched further down)
-  if (data.icsFile != null && data.icsFile != '' && (!isiOS() || !isInstagram())) {
+  // check for a given explicit file
+  if (
+    data.icsFile != null &&
+    data.icsFile != '' &&
+    atcb_secure_url(data.icsFile) &&
+    data.icsFile.startsWith('https://')
+  ) {
     // eslint-disable-next-line security/detect-non-literal-fs-filename
-    window.open(data.icsFile, '_self');
+    window.open(data.icsFile, atcb_default_target);
     return;
   }
   // otherwise, generate one on the fly
@@ -952,72 +962,31 @@ function atcb_generate_ical(data) {
   ics_lines.push('STATUS:CONFIRMED', 'LAST-MODIFIED:' + now, 'SEQUENCE:0', 'END:VEVENT', 'END:VCALENDAR');
   let dlurl = 'data:text/calendar;charset=utf-8,' + encodeURIComponent(ics_lines.join('\r\n'));
   const filename = data.iCalFileName || 'event-to-save-in-my-calendar';
-  // if we got to this point with an explicitely given iCal file, we are on an iOS device within the Instagram in-app browser. If the provided URL is save, we override the dlurl
-  if (data.icsFile != null && data.icsFile != '') {
-    if (atcb_secure_url(data.icsFile) && data.icsFile.startsWith('https://')) {
-      dlurl = data.icsFile;
+  try {
+    if (!window.ActiveXObject) {
+      const save = document.createElement('a');
+      save.href = dlurl;
+      save.target = atcb_default_target;
+      save.download = filename;
+      const evt = new MouseEvent('click', {
+        view: window,
+        button: 0,
+        bubbles: true,
+        cancelable: false,
+      });
+      save.dispatchEvent(evt);
+      (window.URL || window.webkitURL).revokeObjectURL(save.href);
     }
-  }
-  // in the Instagram in-app browser case, we offer a copy option, since the on-the-fly client side generation is not supported at the moment
-  if (isInstagram()) {
-    // putting the download url to the clipboard
-    const tmpInput = document.createElement('input');
-    document.body.appendChild(tmpInput);
-    var editable = tmpInput.contentEditable;
-    var readOnly = tmpInput.readOnly;
-    tmpInput.value = dlurl;
-    tmpInput.contentEditable = true;
-    tmpInput.readOnly = false;
-    if (isiOS()) {
-      var range = document.createRange();
-      range.selectNodeContents(tmpInput);
-      var selection = window.getSelection();
-      selection.removeAllRanges();
-      selection.addRange(range);
-      tmpInput.setSelectionRange(0, 999999);
-    } else {
-      navigator.clipboard.writeText(dlurl);
-      tmpInput.select();
+    // for IE < 11 (even no longer officially supported)
+    else if (!!window.ActiveXObject && document.execCommand) {
+      // eslint-disable-next-line security/detect-non-literal-fs-filename
+      const _window = window.open(dlurl, atcb_default_target);
+      _window.document.close();
+      _window.document.execCommand('SaveAs', true, filename || dlurl);
+      _window.close();
     }
-    tmpInput.contentEditable = editable;
-    tmpInput.readOnly = readOnly;
-    document.execCommand('copy');
-    tmpInput.remove();
-    // creating the modal
-    const buttons = [{ label: atcb_translate_hook('Close note', data.language, data), type: 'close' }];
-    atcb_create_modal(
-      data,
-      atcb_translate_hook('Instagram iCal', data.language, data),
-      atcb_translate_hook('Instagram info description', data.language, data),
-      buttons
-    );
-  } else {
-    try {
-      if (!window.ActiveXObject) {
-        const save = document.createElement('a');
-        save.href = dlurl;
-        save.target = '_blank';
-        save.download = filename;
-        const evt = new MouseEvent('click', {
-          view: window,
-          button: 0,
-          bubbles: true,
-          cancelable: false,
-        });
-        save.dispatchEvent(evt);
-        (window.URL || window.webkitURL).revokeObjectURL(save.href);
-      }
-      // for IE < 11 (even no longer officially supported)
-      else if (!!window.ActiveXObject && document.execCommand) {
-        // eslint-disable-next-line security/detect-non-literal-fs-filename
-        const _window = window.open(dlurl, '_blank');
-        _window.document.close();
-        _window.document.execCommand('SaveAs', true, filename || dlurl);
-        _window.close();
-      }
-    } catch (e) {
-      console.error(e);
-    }
+  } catch (e) {
+    console.error(e);
   }
 }
 
@@ -1155,7 +1124,7 @@ function atcb_rewrite_html_elements(content, clear = false) {
     content = content.replace(/\[(\/|)(br|hr|p|b|strong|u|i|em|li|ul|ol|h\d)\]/gi, '<$1$2>');
     content = content.replace(/\[url\]([\w&$+.,:;=~!*'?@^%#|\s\-()/]*)\[\/url\]/gi, function (match, p1) {
       const urlText = p1.split('|');
-      let link = '<a href="' + urlText[0] + '" target="_blank" rel="noopener">';
+      let link = '<a href="' + urlText[0] + '" target="' + atcb_default_target + '" rel="noopener">';
       if (urlText.length > 1 && urlText[1] != '') {
         link += urlText[1];
       } else {
