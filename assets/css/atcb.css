@@ -31,7 +31,7 @@
   background-color: #f5f5f5;
   border: 1px solid #d2d2d2;
   border-radius: 6px;
-  box-shadow: 1px 2px 10px 0 rgb(0 0 0 / 40%);
+  box-shadow: 1px 2px 10px 0 rgba(0 0 0 / 40%);
   color: #333;
   cursor: pointer;
   display: flex;
@@ -41,7 +41,7 @@
   line-height: 24px;
   margin: 0 2px;
   max-width: 300px;
-  min-width: 150px;
+  min-width: 160px;
   padding: 10px 16px;
   position: relative;
   text-align: center;
@@ -69,8 +69,9 @@
 
 .atcb-button.atcb-active:not(.atcb-modal-style) {
   background-color: #fff;
-  box-shadow: 1px 8px 12px 0 rgb(0 0 0 / 50%);
+  box-shadow: 1px 8px 12px 0 rgba(0 0 0 / 50%);
   margin: 0;
+  min-width: 164px;
   padding: 10px 18px;
   z-index: 160;
 }
@@ -119,7 +120,7 @@
   align-items: center;
   background-color: #f5f5f5;
   border: 1px solid #d2d2d2;
-  box-shadow: 1px 2px 8px 0 rgb(0 0 0 / 30%);
+  box-shadow: 1px 2px 8px 0 rgba(0 0 0 / 30%);
   box-sizing: border-box;
   cursor: pointer;
   display: flex;
@@ -136,13 +137,13 @@
 
 .atcb-list-item:hover {
   background-color: #fff;
-  box-shadow: 1px 2px 10px 0 rgb(0 0 0 / 40%);
+  box-shadow: 1px 2px 10px 0 rgba(0 0 0 / 40%);
   color: #000;
 }
 
 .atcb-list-item:focus-visible {
   background-color: #fff;
-  box-shadow: 1px 2px 10px 0 rgb(0 0 0 / 40%);
+  box-shadow: 1px 2px 10px 0 rgba(0 0 0 / 40%);
   color: dodgerblue;
   font-weight: 600;
   outline: none;
@@ -228,9 +229,9 @@
 }
 
 .atcb-modal-headline {
-  font-size: 24px;
+  font-size: 22px;
   font-weight: 600;
-  line-height: 36px;
+  line-height: 33px;
   margin: 20px 15px;
   text-transform: uppercase;
 }
@@ -239,32 +240,53 @@
   margin: 30px 15px;
 }
 
-.atcb-modal-btn {
+.atcb-modal-buttons {  
+  padding: 15px 0;
+  text-align: center;
+  width: 100%;
+}
+
+button.atcb-modal-btn,
+a.atcb-modal-btn {
   background-color: #f5f5f5;
-  border: 1px solid #d2d2d2;
+  border: 1px solid #dfdfdf;
   border-radius: 6px;
-  box-shadow: 1px 2px 10px 0 rgb(0 0 0 / 40%);
-  color: #333;
+  box-shadow: 1px 2px 8px 0 rgba(0 0 0 / 30%);
+  color: #4f4f4f;
   cursor: pointer;
-  display: block;
+  display: inline-block;
   font-family: Arial, Helvetica, sans-serif;
   font-size: 16px;
   font-weight: 600;
   line-height: 24px;
-  margin: 25px auto;
+  margin: 10px;
   padding: 10px 20px;
   position: relative;
   text-align: center;
+  text-decoration: none;
   touch-action: manipulation;
   user-select: none;
   -webkit-tap-highlight-color: transparent;
 }
 
-.atcb-modal-btn:hover {
-  background-color: #fff;
+button.atcb-modal-btn.atcb-modal-btn-primary,
+a.atcb-modal-btn.atcb-modal-btn-primary {
+  background-color: #f5f5f5;
+  border: 2px solid #d2d2d2;
+  box-shadow: 1px 2px 8px 0 rgba(0 0 0 / 35%);
+  color: #161616;
 }
 
-.atcb-modal-btn:focus-visible {
+button.atcb-modal-btn:hover,
+a.atcb-modal-btn:hover {
+  background-color: #fff;
+  box-shadow: 1px 2px 10px 0 rgba(0 0 0 / 40%);
+  color: #333;
+  text-decoration: none;
+}
+
+button.atcb-modal-btn:focus-visible,
+a.atcb-modal-btn:focus-visible {
   background-color: #fff;
   outline: 2px solid dodgerblue;
 }
@@ -276,7 +298,7 @@
 #atcb-bgoverlay {
   animation: atcb-bgoverlay-animate 0.1s ease 0s 1 normal forwards;
   backdrop-filter: blur(2px);
-  background-color: rgb(20 20 20 / 20%);
+  background-color: rgba(20 20 20 / 20%);
   box-sizing: border-box;
   display: flex;
 
@@ -301,7 +323,7 @@
 
 #atcb-bgoverlay.atcb-no-bg {
   animation: none;
-  background-color: rgb(20 20 20 / 20%);
+  background-color: rgba(20 20 20 / 20%);
   backdrop-filter: blur(2px);
   opacity: 0;
 }

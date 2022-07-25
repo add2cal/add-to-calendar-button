@@ -19,10 +19,22 @@ const isiOS = isBrowser()
       'if ((/iPad|iPhone|iPod/i.test(navigator.userAgent || navigator.vendor || window.opera) && !window.MSStream) || (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1)) { return true; } else { return false; }'
     )
   : new Function('return false;');
+// Android
+const isAndroid = isBrowser()
+  ? new Function(
+      'if (/android/i.test(navigator.userAgent || navigator.vendor || window.opera) && !window.MSStream) { return true; } else { return false; }'
+    )
+  : new Function('return false;');
 // WebView (iOS and Android)
 const isWebView = isBrowser()
   ? new Function(
       'if (/(; ?wv|(iPhone|iPod|iPad).*AppleWebKit(?!.*Safari))/i.test(navigator.userAgent || navigator.vendor)) { return true; } else { return false; }'
+    )
+  : new Function('return false;');
+// checking for problematic apps
+const isProblematicWebView = isBrowser()
+  ? new Function(
+      'if (/(Instagram)/i.test(navigator.userAgent || navigator.vendor || window.opera)) { return true; } else { return false; }'
     )
   : new Function('return false;');
 // define default link target
@@ -30,12 +42,6 @@ let atcb_default_target = '_blank';
 if (isWebView()) {
   atcb_default_target = '_system';
 }
-// Instagram
-const isInstagram = isBrowser()
-  ? new Function(
-      'if (/Instagram/i.test(navigator.userAgent || navigator.vendor || window.opera)) { return true; } else { return false; }'
-    )
-  : new Function('return false;');
 
 // INITIALIZE THE SCRIPT AND FUNCTIONALITY
 function atcb_init() {
@@ -909,12 +915,13 @@ function atcb_generate_teams(data) {
 
 // FUNCTION TO GENERATE THE iCAL FILE (also for the Apple option)
 function atcb_generate_ical(data) {
-  // check for a given explicit file
+  // check for a given explicit file (not if iOS and WebView - will catched further down)
   if (
     data.icsFile != null &&
     data.icsFile != '' &&
     atcb_secure_url(data.icsFile) &&
-    data.icsFile.startsWith('https://')
+    data.icsFile.startsWith('https://') &&
+    (!isiOS() || !isWebView())
   ) {
     // eslint-disable-next-line security/detect-non-literal-fs-filename
     window.open(data.icsFile, atcb_default_target);
@@ -962,31 +969,77 @@ function atcb_generate_ical(data) {
   ics_lines.push('STATUS:CONFIRMED', 'LAST-MODIFIED:' + now, 'SEQUENCE:0', 'END:VEVENT', 'END:VCALENDAR');
   let dlurl = 'data:text/calendar;charset=utf-8,' + encodeURIComponent(ics_lines.join('\r\n'));
   const filename = data.iCalFileName || 'event-to-save-in-my-calendar';
-  try {
-    if (!window.ActiveXObject) {
-      const save = document.createElement('a');
-      save.href = dlurl;
-      save.target = atcb_default_target;
-      save.download = filename;
-      const evt = new MouseEvent('click', {
-        view: window,
-        button: 0,
-        bubbles: true,
-        cancelable: false,
-      });
-      save.dispatchEvent(evt);
-      (window.URL || window.webkitURL).revokeObjectURL(save.href);
+  // if we got to this point with an explicitely given iCal file, we are on an iOS device within an in-app browser (WebView). If the provided URL is save, we override the dlurl
+  if (data.icsFile != null && data.icsFile != '') {
+    if (atcb_secure_url(data.icsFile) && data.icsFile.startsWith('https://')) {
+      dlurl = data.icsFile;
     }
-    // for IE < 11 (even no longer officially supported)
-    else if (!!window.ActiveXObject && document.execCommand) {
-      // eslint-disable-next-line security/detect-non-literal-fs-filename
-      const _window = window.open(dlurl, atcb_default_target);
-      _window.document.close();
-      _window.document.execCommand('SaveAs', true, filename || dlurl);
-      _window.close();
+  }
+  // in in-app browser cases (WebView), we offer a copy option, since the on-the-fly client side generation is usually not supported
+  // for Android, we are more specific and only go for specific apps at the moment
+  if (isWebView() && (isiOS() || (isAndroid() && isProblematicWebView()))) {
+    // putting the download url to the clipboard
+    const tmpInput = document.createElement('input');
+    document.body.appendChild(tmpInput);
+    var editable = tmpInput.contentEditable;
+    var readOnly = tmpInput.readOnly;
+    tmpInput.value = dlurl;
+    tmpInput.contentEditable = true;
+    tmpInput.readOnly = false;
+    if (isiOS()) {
+      var range = document.createRange();
+      range.selectNodeContents(tmpInput);
+      var selection = window.getSelection();
+      selection.removeAllRanges();
+      selection.addRange(range);
+      tmpInput.setSelectionRange(0, 999999);
+    } else {
+      // the next 2 lines are basically doing the same in different ways (just to be sure)
+      navigator.clipboard.writeText(dlurl);
+      tmpInput.select();
     }
-  } catch (e) {
-    console.error(e);
+    tmpInput.contentEditable = editable;
+    tmpInput.readOnly = readOnly;
+    document.execCommand('copy');
+    tmpInput.remove();
+    // creating the modal
+    const buttons = [
+      { label: atcb_translate_hook('Close note', data.language, data), type: 'close' },
+      { label: atcb_translate_hook('Open Browser', data.language, data), href: dlurl, primary: true },
+    ];
+    atcb_create_modal(
+      data,
+      atcb_translate_hook('WebView iCal', data.language, data),
+      atcb_translate_hook('WebView info description', data.language, data),
+      buttons
+    );
+  } else {
+    try {
+      if (!window.ActiveXObject) {
+        const save = document.createElement('a');
+        save.href = dlurl;
+        save.target = atcb_default_target;
+        save.download = filename;
+        const evt = new MouseEvent('click', {
+          view: window,
+          button: 0,
+          bubbles: true,
+          cancelable: false,
+        });
+        save.dispatchEvent(evt);
+        (window.URL || window.webkitURL).revokeObjectURL(save.href);
+      }
+      // for IE < 11 (even no longer officially supported)
+      else if (!!window.ActiveXObject && document.execCommand) {
+        // eslint-disable-next-line security/detect-non-literal-fs-filename
+        const _window = window.open(dlurl, atcb_default_target);
+        _window.document.close();
+        _window.document.execCommand('SaveAs', true, filename || dlurl);
+        _window.close();
+      }
+    } catch (e) {
+      console.error(e);
+    }
   }
 }
 
@@ -1165,19 +1218,47 @@ function atcb_create_modal(data, headline, content, buttons) {
   infoModalContent.classList.add('atcb-modal-content');
   infoModalContent.innerHTML = content;
   infoModal.appendChild(infoModalContent);
-  // and a buttons
+  // and a buttons (attributes: href, type, label, primary)
+  const infoModalButtons = document.createElement('div');
+  infoModalButtons.classList.add('atcb-modal-buttons');
+  infoModal.appendChild(infoModalButtons);
   buttons.forEach((button, index) => {
-    let infoModalButton = document.createElement('button');
-    infoModalButton.setAttribute('type', 'button');
+    let infoModalButton;
+    if (button.href != null && button.href != '') {
+      infoModalButton = document.createElement('a');
+      infoModalButton.setAttribute('target', atcb_default_target);
+      infoModalButton.setAttribute('href', button.href);
+      infoModalButton.setAttribute('rel', 'noopener');
+      //TODO: href, etc.
+    } else {
+      infoModalButton = document.createElement('button');
+      infoModalButton.setAttribute('type', 'button');
+    }
     infoModalButton.classList.add('atcb-modal-btn');
+    if (button.primary) {
+      infoModalButton.classList.add('atcb-modal-btn-primary');
+    }
     infoModalButton.textContent = button.label;
-    infoModal.appendChild(infoModalButton);
+    infoModalButtons.appendChild(infoModalButton);
     if (index == 0) {
       infoModalButton.focus();
     }
     switch (button.type) {
-      case 'close':
       default:
+        infoModalButton.addEventListener(
+          'click',
+          atcb_debounce(() => atcb_close())
+        );
+        infoModalButton.addEventListener(
+          'keydown',
+          atcb_debounce((event) => {
+            if (event.key == 'Enter') {
+              atcb_close();
+            }
+          })
+        );
+        break;
+      case 'close':
         infoModalButton.addEventListener(
           'click',
           atcb_debounce(() => atcb_close())
@@ -1303,10 +1384,13 @@ if (isBrowser()) {
 // TRANSLATIONS
 // hook, which can be used to override all potential "hard" strings by setting customLabel_ + the key (without spaces) as option key and the intended string as value
 function atcb_translate_hook(identifier, language, data) {
-  const searchKey = identifier.replace(' ', '');
-  if (data['customLabel_' + searchKey] != null && data['customLabel_' + searchKey] != null) {
-    const returnVal = atcb_rewrite_html_elements(data['customLabel_' + searchKey]);
-    return returnVal;
+  let searchKey = identifier.replace(/\s+/g, '').toLowerCase();
+  if (
+    data.customLabels != null &&
+    data.customLabels[`${searchKey}`] != null &&
+    data.customLabels[`${searchKey}`] != ''
+  ) {
+    return atcb_rewrite_html_elements(data.customLabels[`${searchKey}`]);
   } else {
     return atcb_translate(identifier, language);
   }
@@ -1327,10 +1411,10 @@ function atcb_translate(identifier, language) {
           return 'Close Selection';
         case 'Close note':
           return 'Close note';
-        case 'Instagram iCal':
-          return 'Instagram iCal';
-        case 'Instagram info description':
-          return "Unfortunately, the Instagram browser has its problems with the way we generate the calendar file.<br>We automatically put a magical URL into your phone's clipboard.<br><ol><li>Close this note, ...</li><li><strong>Open any other browser</strong> on your phone, ...</li><li><strong>Paste</strong> the clipboard content and go.";
+        case 'WebView iCal':
+          return 'Open your browser';
+        case 'WebView info description':
+          return "Unfortunately, in-app browsers have problems with the way we generate the calendar file.<br>We automatically put a magical URL into your phone's clipboard.<br><ol><li>Close this note, ...</li><li><strong>Open any other browser</strong> on your phone, ...</li><li><strong>Paste</strong> the clipboard content and go.";
       }
       break;
     case 'de':
@@ -1345,10 +1429,10 @@ function atcb_translate(identifier, language) {
           return 'Auswahl schließen';
         case 'Close note':
           return 'Fenster schließen';
-        case 'Instagram iCal':
-          return 'Instagram iCal';
-        case 'Instagram info description':
-          return 'Leider hat der Instagram-Browser so seine Probleme mit der Art, wie wir Kalender-Dateien erzeugen.<br>Wir haben automatisch eine magische URL in die Zwischenablage deines Smartphones kopiert.<br><ol><li>Schließe dieses Fenster, ...</li><li><strong>Öffne einen anderen Browser</strong> auf deinem Smartphone, ...</li><li>Nutze die <strong>Einfügen</strong>-Funktion, um fortzufahren.';
+        case 'WebView iCal':
+          return 'Öffne deinen Browser';
+        case 'WebView info description':
+          return 'Leider haben In-App-Browser Probleme mit der Art, wie wir Kalender-Dateien erzeugen.<br>Wir haben automatisch eine magische URL in die Zwischenablage deines Smartphones kopiert.<br><ol><li>Schließe dieses Fenster, ...</li><li><strong>Öffne einen anderen Browser</strong> auf deinem Smartphone, ...</li><li>Nutze die <strong>Einfügen</strong>-Funktion, um fortzufahren.';
       }
       break;
   }
