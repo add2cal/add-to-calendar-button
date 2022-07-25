@@ -52,6 +52,11 @@
   z-index: 1;
 }
 
+.atcb-dark .atcb-button {
+  background-color: #252525;
+  border: 1px solid #1c1c1c;
+}
+
 .atcb-button:focus,
 .atcb-button:hover {
   background-color: #fff;
