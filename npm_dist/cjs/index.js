@@ -116,6 +116,13 @@ function atcb_decorate_data(atcbConfig) {
   // determine dark mode
   if (atcbConfig.lightMode == null || atcbConfig.lightMode == '') {
     atcbConfig.lightMode = 'light';
+  } else if (atcbConfig.lightMode != null && atcbConfig.lightMode == 'system') {
+    const prefersDarkScheme = window.matchMedia("(prefers-color-scheme: dark)");
+    if (prefersDarkScheme.matches) {
+      atcbConfig.lightMode = 'dark';
+    } else {
+      atcbConfig.lightMode = 'light';
+    }
   }
   // set language if not set
   if (atcbConfig.language == null || atcbConfig.language == '') {
