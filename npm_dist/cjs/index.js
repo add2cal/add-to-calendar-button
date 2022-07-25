@@ -498,7 +498,7 @@ function atcb_generate_label(data, parent, type, icon = false, text = '', oneOpt
       parent.setAttribute('id', data.identifier + '-close');
       text = atcb_translate_hook('Close', data.language, data);
       iconSvg =
-        '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"><path fill-rule="evenodd" d="M11.991.69a2.35 2.35 0 0 1 3.318-.009c.918.911.922 2.392.009 3.307l-4.009 4.014 4.013 4.018c.906.909.893 2.38-.027 3.287a2.35 2.35 0 0 1-3.307-.004l-3.985-3.99-3.993 3.997a2.35 2.35 0 0 1-3.318.009c-.918-.911-.922-2.392-.009-3.307l4.009-4.014L.678 3.98C-.228 3.072-.215 1.6.706.693a2.35 2.35 0 0 1 3.307.004l3.985 3.99z"/></svg>';
+        '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 122.878 122.88"><path d="M1.426 8.313a4.87 4.87 0 0 1 0-6.886 4.87 4.87 0 0 1 6.886 0l53.127 53.127 53.127-53.127a4.87 4.87 0 0 1 6.887 0 4.87 4.87 0 0 1 0 6.886L68.324 61.439l53.128 53.128a4.87 4.87 0 0 1-6.887 6.886L61.438 68.326 8.312 121.453a4.87 4.87 0 0 1-6.886 0 4.87 4.87 0 0 1 0-6.886l53.127-53.128L1.426 8.313h0z"/></svg>';
       break;
   }
   // override the id for the oneOption button, since the button always needs to have the button id
@@ -1003,14 +1003,11 @@ function atcb_generate_ical(data) {
     document.execCommand('copy');
     tmpInput.remove();
     // creating the modal
-    const buttons = [
-      { label: atcb_translate_hook('Close note', data.language, data), type: 'close', primary: true }
-    ];
     atcb_create_modal(
       data,
+      'browser',
       atcb_translate_hook('WebView iCal', data.language, data),
-      atcb_translate_hook('WebView info description', data.language, data),
-      buttons
+      atcb_translate_hook('WebView info description', data.language, data)
     );
   } else {
     try {
@@ -1189,9 +1186,9 @@ function atcb_rewrite_html_elements(content, clear = false) {
 }
 
 // SHARED FUNCTION TO CREATE INFO MODALS
-function atcb_create_modal(data, headline, content, buttons) {
+function atcb_create_modal(data, icon = '', headline, content, buttons) {
   // setting the stage
-  const bgOverlay = atcb_generate_bg_overlay('modal', 'click', data.background);
+  const bgOverlay = atcb_generate_bg_overlay('modal', 'click');
   const infoModalWrapper = document.createElement('div');
   infoModalWrapper.classList.add('atcb-modal', 'atcb-info-modal');
   infoModalWrapper.tabIndex = 0;
@@ -1207,73 +1204,105 @@ function atcb_create_modal(data, headline, content, buttons) {
   infoModalWrapper.appendChild(infoModal);
   // set overlay size just to be sure
   atcb_set_fullsize(bgOverlay);
-  // adding headline
+  // adding closing button
+  const infoModalClose = document.createElement('div');
+  infoModalClose.classList.add('atcb-modal-close');
+  infoModal.appendChild(infoModalClose);
+  infoModalClose.addEventListener(
+    'click',
+    atcb_debounce(() => atcb_close())
+  );
+  infoModalClose.addEventListener(
+    'keydown',
+    atcb_debounce_leading((event) => {
+      if (event.key == 'Enter') {
+        event.preventDefault();
+        atcb_close();
+      }
+    })
+  );
+  if (buttons == null || buttons.length == 0) {
+    infoModalClose.tabIndex = 0;
+    infoModalClose.focus();
+  }
+  // adding headline (incl. icon)
   const infoModalHeadline = document.createElement('div');
   infoModalHeadline.classList.add('atcb-modal-headline');
-  infoModalHeadline.textContent = headline;
   infoModal.appendChild(infoModalHeadline);
+  if (icon != '') {
+    const infoModalHeadlineIcon = document.createElement('span');
+    infoModalHeadlineIcon.classList.add('atcb-modal-headline-icon');
+    infoModalHeadlineIcon.dataset.icon = icon;
+    infoModalHeadline.appendChild(infoModalHeadlineIcon);
+  }
+  let infoModalHeadlineText = document.createTextNode(headline);
+  infoModalHeadline.appendChild(infoModalHeadlineText);
   // and text content
   const infoModalContent = document.createElement('div');
   infoModalContent.classList.add('atcb-modal-content');
   infoModalContent.innerHTML = content;
   infoModal.appendChild(infoModalContent);
-  // and a buttons (attributes: href, type, label, primary)
-  const infoModalButtons = document.createElement('div');
-  infoModalButtons.classList.add('atcb-modal-buttons');
-  infoModal.appendChild(infoModalButtons);
-  buttons.forEach((button, index) => {
-    let infoModalButton;
-    if (button.href != null && button.href != '') {
-      infoModalButton = document.createElement('a');
-      infoModalButton.setAttribute('target', atcb_default_target);
-      infoModalButton.setAttribute('href', button.href);
-      infoModalButton.setAttribute('rel', 'noopener');
-      //TODO: href, etc.
-    } else {
-      infoModalButton = document.createElement('button');
-      infoModalButton.setAttribute('type', 'button');
-    }
-    infoModalButton.classList.add('atcb-modal-btn');
-    if (button.primary) {
-      infoModalButton.classList.add('atcb-modal-btn-primary');
-    }
-    infoModalButton.textContent = button.label;
-    infoModalButtons.appendChild(infoModalButton);
-    if (index == 0) {
-      infoModalButton.focus();
-    }
-    switch (button.type) {
-      default:
-        infoModalButton.addEventListener(
-          'click',
-          atcb_debounce(() => atcb_close())
-        );
-        infoModalButton.addEventListener(
-          'keydown',
-          atcb_debounce((event) => {
-            if (event.key == 'Enter') {
-              atcb_close();
-            }
-          })
-        );
-        break;
-      case 'close':
-        infoModalButton.addEventListener(
-          'click',
-          atcb_debounce(() => atcb_close())
-        );
-        infoModalButton.addEventListener(
-          'keydown',
-          atcb_debounce_leading((event) => {
-            if (event.key == 'Enter') {
-              event.preventDefault();
-              atcb_close();
-            }
-          })
-        );
-        break;
-    }
-  });
+  // and buttons (array of objects; attributes: href, type, label, primary(boolean))
+  if (buttons != null && buttons.length > 0) {
+    const infoModalButtons = document.createElement('div');
+    infoModalButtons.classList.add('atcb-modal-buttons');
+    infoModal.appendChild(infoModalButtons);
+    buttons.forEach((button, index) => {
+      let infoModalButton;
+      if (button.href != null && button.href != '') {
+        infoModalButton = document.createElement('a');
+        infoModalButton.setAttribute('target', atcb_default_target);
+        infoModalButton.setAttribute('href', button.href);
+        infoModalButton.setAttribute('rel', 'noopener');
+      } else {
+        infoModalButton = document.createElement('button');
+        infoModalButton.setAttribute('type', 'button');
+      }
+      infoModalButton.classList.add('atcb-modal-btn');
+      if (button.primary) {
+        infoModalButton.classList.add('atcb-modal-btn-primary');
+      }
+      if (button.label == null || button.label == '') {
+        button.label = atcb_translate_hook('Click me', data.language, data);
+      }
+      infoModalButton.textContent = button.label;
+      infoModalButtons.appendChild(infoModalButton);
+      if (index == 0) {
+        infoModalButton.focus();
+      }
+      switch (button.type) {
+        default:
+          infoModalButton.addEventListener(
+            'click',
+            atcb_debounce(() => atcb_close())
+          );
+          infoModalButton.addEventListener(
+            'keydown',
+            atcb_debounce((event) => {
+              if (event.key == 'Enter') {
+                atcb_close();
+              }
+            })
+          );
+          break;
+        case 'close':
+          infoModalButton.addEventListener(
+            'click',
+            atcb_debounce(() => atcb_close())
+          );
+          infoModalButton.addEventListener(
+            'keydown',
+            atcb_debounce_leading((event) => {
+              if (event.key == 'Enter') {
+                event.preventDefault();
+                atcb_close();
+              }
+            })
+          );
+          break;
+      }
+    });
+  }
 }
 
 // SHARED FUNCTION TO CALCULATE THE POSITION OF THE DROPDOWN LIST
@@ -1408,12 +1437,12 @@ function atcb_translate(identifier, language) {
           return 'Close';
         case 'Close Selection':
           return 'Close Selection';
-        case 'Close note':
-          return 'Close note';
+        case 'Click me':
+          return 'Click me';
         case 'WebView iCal':
           return 'Open your browser';
         case 'WebView info description':
-          return "Unfortunately, in-app browsers have problems with the way we generate the calendar file.<br>We automatically put a magical URL into your phone's clipboard.<br><ol><li>Close this note, ...</li><li><strong>Open any other browser</strong> on your phone, ...</li><li><strong>Paste</strong> the clipboard content and go.";
+          return "Unfortunately, in-app browsers have problems with the way we generate the calendar file.<br>We automatically put a magical URL into your phone's clipboard.<br><ol><li><strong>Open any other browser</strong> on your phone, ...</li><li><strong>Paste</strong> the clipboard content and go.";
       }
       break;
     case 'de':
@@ -1426,12 +1455,12 @@ function atcb_translate(identifier, language) {
           return 'Schließen';
         case 'Close Selection':
           return 'Auswahl schließen';
-        case 'Close note':
-          return 'Fenster schließen';
+        case 'Click me':
+          return 'Klick mich';
         case 'WebView iCal':
           return 'Öffne deinen Browser';
         case 'WebView info description':
-          return 'Leider haben In-App-Browser Probleme mit der Art, wie wir Kalender-Dateien erzeugen.<br>Wir haben automatisch eine magische URL in die Zwischenablage deines Smartphones kopiert.<br><ol><li>Schließe dieses Fenster, ...</li><li><strong>Öffne einen anderen Browser</strong> auf deinem Smartphone, ...</li><li>Nutze die <strong>Einfügen</strong>-Funktion, um fortzufahren.';
+          return 'Leider haben In-App-Browser Probleme mit der Art, wie wir Kalender-Dateien erzeugen.<br>Wir haben automatisch eine magische URL in die Zwischenablage deines Smartphones kopiert.<br><ol><li><strong>Öffne einen anderen Browser</strong> auf deinem Smartphone, ...</li><li>Nutze die <strong>Einfügen</strong>-Funktion, um fortzufahren.';
       }
       break;
   }
