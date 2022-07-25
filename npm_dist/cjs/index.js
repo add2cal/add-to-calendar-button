@@ -113,6 +113,10 @@ function atcb_decorate_data(atcbConfig) {
   if (atcbConfig.listStyle === 'modal') {
     atcbConfig.trigger = 'click';
   }
+  // determine dark mode
+  if (atcbConfig.lightMode == null || atcbConfig.lightMode == '') {
+    atcbConfig.lightMode = 'light';
+  }
   // set language if not set
   if (atcbConfig.language == null || atcbConfig.language == '') {
     atcbConfig.language = 'en';
@@ -568,6 +572,7 @@ function atcb_generate(button, data) {
   // generate the wrapper div
   const buttonTriggerWrapper = document.createElement('div');
   buttonTriggerWrapper.classList.add('atcb-button-wrapper');
+  buttonTriggerWrapper.classList.add('atcb-' + data.lightMode);
   button.appendChild(buttonTriggerWrapper);
   // generate the button trigger div
   const buttonTrigger = document.createElement('button');
@@ -603,6 +608,7 @@ function atcb_generate(button, data) {
 function atcb_generate_dropdown_list(data) {
   const optionsList = document.createElement('div');
   optionsList.classList.add('atcb-list');
+  optionsList.classList.add('atcb-' + data.lightMode);
   // generate the list items
   data.options.forEach(function (option) {
     const optionParts = option.split('|');

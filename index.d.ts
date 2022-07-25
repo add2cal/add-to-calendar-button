@@ -22,6 +22,7 @@ declare module 'add-to-calendar-button' {
       icsFile?: string;
       style?: '3d' | 'flat' | 'round' | 'neumorphism' | 'none';
       customLabels?: object;
+      lightMode?: 'system' | 'dark' | 'light'
       language?: 'en' | 'de';
     },
     triggerElement?: HTMLElement,
