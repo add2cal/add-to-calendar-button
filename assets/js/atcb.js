@@ -12,17 +12,23 @@ const atcbVersion = '1.11.4';
 
 // CHECKING FOR SPECIFIC DEVICED AND SYSTEMS
 // browser
-const isBrowser = new Function('try { return this===window; }catch(e){ return false; }');
+const isBrowser = new Function('try { return this===window; } catch(e) { return false; }');
 // iOS
 const isiOS = isBrowser()
   ? new Function(
-      "if ((/iPad|iPhone|iPod/.test(navigator.userAgent || navigator.vendor || window.opera) && !window.MSStream) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1)){ return true; }else{ return false; }"
+      "if ((/iPad|iPhone|iPod/.test(navigator.userAgent || navigator.vendor || window.opera) && !window.MSStream) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1)) { return true; } else { return false; }"
+    )
+  : new Function('return false;');
+// WebView (iOS and Android)
+const isWebView = isBrowser()
+  ? new Function(
+      'if (/(Version/d+.*/d+.0.0.0 Mobile|; ?wv|(iPhone|iPod|iPad).*AppleWebKit(?!.*Safari))/i.test(navigator.userAgent || navigator.vendor)) { return true; } else { return false; }'
     )
   : new Function('return false;');
 // Instagram
 const isInstagram = isBrowser()
   ? new Function(
-      'if (/Instagram/.test(navigator.userAgent || navigator.vendor || window.opera)){ return true; }else{ return false; }'
+      'if (/Instagram/.test(navigator.userAgent || navigator.vendor || window.opera)) { return true; } else { return false; }'
     )
   : new Function('return false;');
 
@@ -983,8 +989,7 @@ function atcb_generate_ical(data) {
       data,
       atcb_translate_hook('Instagram iCal', data.language, data),
       atcb_translate_hook('Instagram info description', data.language, data),
-      buttons,
-      'instagram'
+      buttons
     );
   } else {
     try {
@@ -1163,7 +1168,7 @@ function atcb_rewrite_html_elements(content, clear = false) {
 }
 
 // SHARED FUNCTION TO CREATE INFO MODALS
-function atcb_create_modal(data, headline, content, buttons, type = '') {
+function atcb_create_modal(data, headline, content, buttons) {
   // setting the stage
   const bgOverlay = atcb_generate_bg_overlay('modal', 'click', data.background);
   const infoModalWrapper = document.createElement('div');
@@ -1178,11 +1183,6 @@ function atcb_create_modal(data, headline, content, buttons, type = '') {
   }
   const infoModal = document.createElement('div');
   infoModal.classList.add('atcb-modal-box');
-  switch (type) {
-    case 'instagram':
-      infoModal.classList.add('atcb-modal-instagram');
-      break;
-  }
   infoModalWrapper.appendChild(infoModal);
   // set overlay size just to be sure
   atcb_set_fullsize(bgOverlay);
