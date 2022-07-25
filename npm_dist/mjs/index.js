@@ -1004,8 +1004,7 @@ function atcb_generate_ical(data) {
     tmpInput.remove();
     // creating the modal
     const buttons = [
-      { label: atcb_translate_hook('Close note', data.language, data), type: 'close' },
-      { label: atcb_translate_hook('Open Browser', data.language, data), href: dlurl, primary: true },
+      { label: atcb_translate_hook('Close note', data.language, data), type: 'close', primary: true }
     ];
     atcb_create_modal(
       data,
