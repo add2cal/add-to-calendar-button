@@ -16,13 +16,13 @@ const isBrowser = new Function('try { return this===window; } catch(e) { return 
 // iOS
 const isiOS = isBrowser()
   ? new Function(
-      "if ((/iPad|iPhone|iPod/.test(navigator.userAgent || navigator.vendor || window.opera) && !window.MSStream) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1)) { return true; } else { return false; }"
+      'if ((/iPad|iPhone|iPod/i.test(navigator.userAgent || navigator.vendor || window.opera) && !window.MSStream) || (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1)) { return true; } else { return false; }'
     )
   : new Function('return false;');
 // WebView (iOS and Android)
 const isWebView = isBrowser()
   ? new Function(
-      'if (/(Version/d+.*/d+.0.0.0 Mobile|; ?wv|(iPhone|iPod|iPad).*AppleWebKit(?!.*Safari))/i.test(navigator.userAgent || navigator.vendor)) { return true; } else { return false; }'
+      'if (/(; ?wv|(iPhone|iPod|iPad).*AppleWebKit(?!.*Safari))/i.test(navigator.userAgent || navigator.vendor)) { return true; } else { return false; }'
     )
   : new Function('return false;');
 // define default link target
@@ -33,7 +33,7 @@ if (isWebView()) {
 // Instagram
 const isInstagram = isBrowser()
   ? new Function(
-      'if (/Instagram/.test(navigator.userAgent || navigator.vendor || window.opera)) { return true; } else { return false; }'
+      'if (/Instagram/i.test(navigator.userAgent || navigator.vendor || window.opera)) { return true; } else { return false; }'
     )
   : new Function('return false;');
 
