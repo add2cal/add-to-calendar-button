@@ -33,7 +33,7 @@ In terms of system support, **all modern browsers** (Chrome, Edge, Firefox, Safa
 
 ## ▶️ Demo
 
-See [add2cal.github.io/add-to-calendar-button](https://add2cal.github.io/add-to-calendar-button/) for a live demo.
+See [add-to-calendar-button.com](https://add-to-calendar-button.com/) for a live demo.
 
 And remember to ⭐**star** this repository in order to save it for later! 🤗
 

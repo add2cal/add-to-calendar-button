@@ -50,7 +50,7 @@
   "bugs": {
     "url": "https://github.com/add2cal/add-to-calendar-button/issues"
   },
-  "homepage": "https://add2cal.github.io/add-to-calendar-button/",
+  "homepage": "https://add-to-calendar-button.com/",
   "scripts": {
     "release": "node set-release.js",
     "stylelint": "npx stylelint assets/css/*.css",
