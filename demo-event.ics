@@ -1,6 +1,6 @@
 BEGIN:VCALENDAR
 VERSION:2.0
-PRODID:-// github.com/jekuer/add-to-calendar-button // atcb v1.10.1 //EN
+PRODID:-// github.com/add2cal/add-to-calendar-button // atcb v1.10.1 //EN
 CALSCALE:GREGORIAN
 BEGIN:VEVENT
 UID:2022-07-13T17:17:04.106Z@add-to-calendar-button
@@ -9,7 +9,7 @@ DTSTART;VALUE=DATE:20220114
 DTEND;VALUE=DATE:20220119
 SUMMARY:Reminder to star the add-to-calendar-button repo
 DESCRIPTION:Check out the maybe easiest way to include add-to-calendar-b
- uttons to your website at:\n→ https://github.com/jekuer/add-
+ uttons to your website at:\n→ https://github.com/add2cal/add-
  to-calendar-button
 LOCATION:World Wide Web
 STATUS:CONFIRMED

@@ -2,6 +2,7 @@
 
 ## Version 1
 
+- v1.12 : style updates, sanitization, webView edge case support, text block overwrite option, change of repo ownership
 - v1.11 : 1-option support, static ics support, instagram browser support, multi-lang, hide background option, recurring events, and more
 - v1.10 : auto-generating schema.org and dropping support for its input
 - v1.9 : big code style update + linter setup

@@ -12,13 +12,13 @@ In return, they should reciprocate that respect in addressing your issue or asse
 
 ## 📄 Using the issue tracker
 
-The [issue tracker](https://github.com/jekuer/add-to-calendar-button/issues) is the preferred channel for [bug reports](#bugs), [precise features requests](#features) and [submitting pull requests](#pull-requests), but please respect the following restrictions:
+The [issue tracker](https://github.com/add2cal/add-to-calendar-button/issues) is the preferred channel for [bug reports](#bugs), [precise features requests](#features) and [submitting pull requests](#pull-requests), but please respect the following restrictions:
 
 - Please **do not** use the issue tracker for personal support requests.
 
 - Please **do not** derail or troll issues. Keep the discussion on topic and respect the opinions of others.
 
-- Have a look at the [Discussions area](https://github.com/jekuer/add-to-calendar-button/discussions) for everything else, like Q&A, rough ideas, or other requests.
+- Have a look at the [Discussions area](https://github.com/add2cal/add-to-calendar-button/discussions) for everything else, like Q&A, rough ideas, or other requests.
 
 <br />
 
@@ -50,7 +50,7 @@ Therefore, use the official bug issue optione and fill out all the provided fiel
 Feature requests are welcome. But take a moment to find out whether your idea fits with the scope and aims of the project.
 It's up to _you_ to make a strong case to convince the project's developers of the merits of this feature.
 Please provide as much detail and context as possible.
-**Feature requests** usually belong into the [Discussions area](https://github.com/jekuer/add-to-calendar-button/discussions) unless they are completely specified.
+**Feature requests** usually belong into the [Discussions area](https://github.com/add2cal/add-to-calendar-button/discussions) unless they are completely specified.
 
 <br />
 
@@ -76,7 +76,7 @@ Adhering to the following process is the best way to get your work included in t
     # Navigate to the newly cloned directory
     cd add-to-calendar-button
     # Assign the original repo to a remote called "upstream"
-    git remote add upstream https://github.com/jekuer/add-to-calendar-button.git
+    git remote add upstream https://github.com/add2cal/add-to-calendar-button.git
     ```
 
 2.  If you cloned a while ago, get the latest changes from upstream:

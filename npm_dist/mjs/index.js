@@ -3,34 +3,51 @@
  * Add-to-Calendar Button
  * ++++++++++++++++++++++
  */
-const atcbVersion = '1.11.4';
+const atcbVersion = '1.12.0';
 /* Creator: Jens Kuerschner (https://jenskuerschner.de)
- * Project: https://github.com/jekuer/add-to-calendar-button
+ * Project: https://github.com/add2cal/add-to-calendar-button
  * License: MIT with “Commons Clause” License Condition v1.0
  *
  */
 
 // CHECKING FOR SPECIFIC DEVICED AND SYSTEMS
 // browser
-const isBrowser = new Function('try { return this===window; }catch(e){ return false; }');
+const isBrowser = new Function('try { return this===window; } catch(e) { return false; }');
 // iOS
 const isiOS = isBrowser()
   ? new Function(
-      "if ((/iPad|iPhone|iPod/.test(navigator.userAgent || navigator.vendor || window.opera) && !window.MSStream) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1)){ return true; }else{ return false; }"
+      'if ((/iPad|iPhone|iPod/i.test(navigator.userAgent || navigator.vendor || window.opera) && !window.MSStream) || (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1)) { return true; } else { return false; }'
     )
   : new Function('return false;');
-// Instagram
-const isInstagram = isBrowser()
+// Android
+const isAndroid = isBrowser()
   ? new Function(
-      'if (/Instagram/.test(navigator.userAgent || navigator.vendor || window.opera)){ return true; }else{ return false; }'
+      'if (/android/i.test(navigator.userAgent || navigator.vendor || window.opera) && !window.MSStream) { return true; } else { return false; }'
     )
   : new Function('return false;');
+// WebView (iOS and Android)
+const isWebView = isBrowser()
+  ? new Function(
+      'if (/(; ?wv|(iPhone|iPod|iPad).*AppleWebKit(?!.*Safari))/i.test(navigator.userAgent || navigator.vendor)) { return true; } else { return false; }'
+    )
+  : new Function('return false;');
+// checking for problematic apps
+const isProblematicWebView = isBrowser()
+  ? new Function(
+      'if (/(Instagram)/i.test(navigator.userAgent || navigator.vendor || window.opera)) { return true; } else { return false; }'
+    )
+  : new Function('return false;');
+// define default link target
+let atcb_default_target = '_blank';
+if (isWebView()) {
+  atcb_default_target = '_system';
+}
 
 // INITIALIZE THE SCRIPT AND FUNCTIONALITY
 function atcb_init() {
   // let's get started
   console.log('add-to-calendar button initialized (version ' + atcbVersion + ')');
-  console.log('See https://github.com/jekuer/add-to-calendar-button for details');
+  console.log('See https://github.com/add2cal/add-to-calendar-button for details');
   // get all placeholders
   const atcButtons = document.querySelectorAll('.atcb');
   // if there are some, move on
@@ -45,10 +62,8 @@ function atcb_init() {
       }
       // get JSON from HTML block, but remove real code line breaks before parsing.
       // use <br> or \n explicitely in the description to create a line break.
-      // also strip HTML tags (especially since stupid Safari adds stuff).
-      let atcbConfig = JSON.parse(
-        atcButtons[parseInt(i)].innerHTML.replace(/(\r\n|\n|\r)/g, '').replace(/(<(?!br)([^>]+)>)/gi, '')
-      );
+      let atcbConfig = JSON.parse(atcButtons[parseInt(i)].innerHTML.replace(/(\r\n|\n|\r)/g, ''));
+      atcbConfig = atcb_seure_content(atcbConfig);
       // rewrite config for backwards compatibility - you can remove this, if you did not use this script before v1.4.0.
       atcbConfig = atcb_patch_config(atcbConfig);
       // check, if all required data is available
@@ -98,6 +113,17 @@ function atcb_decorate_data(atcbConfig) {
   if (atcbConfig.listStyle === 'modal') {
     atcbConfig.trigger = 'click';
   }
+  // determine dark mode
+  if (atcbConfig.lightMode == null || atcbConfig.lightMode == '') {
+    atcbConfig.lightMode = 'light';
+  } else if (atcbConfig.lightMode != null && atcbConfig.lightMode == 'system') {
+    const prefersDarkScheme = window.matchMedia("(prefers-color-scheme: dark)");
+    if (prefersDarkScheme.matches) {
+      atcbConfig.lightMode = 'dark';
+    } else {
+      atcbConfig.lightMode = 'light';
+    }
+  }
   // set language if not set
   if (atcbConfig.language == null || atcbConfig.language == '') {
     atcbConfig.language = 'en';
@@ -112,25 +138,10 @@ function atcb_decorate_data(atcbConfig) {
 
   // make a copy of the given argument rather than mutating in place
   const data = Object.assign({}, atcbConfig);
-  // standardize any line breaks in the description and transform URLs (but keep a clean copy without the URL magic for iCal)
-  data.description = data.description.replace(/<br\s*\/?>/gi, '\n');
-  data.descriptionHtmlFree = data.description
-    .replace(/\[url\]/gi, '')
-    .replace(/(\|.*)\[\/url\]/gi, '')
-    .replace(/\[\/url\]/gi, '');
-  data.description = data.description.replace(
-    /\[url\]([\w&$+.,:;=~!*'?@^%#|\s\-()/]*)\[\/url\]/gi,
-    function (match, p1) {
-      const urlText = p1.split('|');
-      let link = '<a href="' + urlText[0] + '" target="_blank" rel="noopener">';
-      if (urlText.length > 1 && urlText[1] != '') {
-        link += urlText[1];
-      } else {
-        link += urlText[0];
-      }
-      return link + '</a>';
-    }
-  );
+  // store a clean description copy without the URL magic for iCal
+  data.descriptionHtmlFree = atcb_rewrite_html_elements(data.description, true);
+  // ...and transform pseudo elements for the regular one
+  data.description = atcb_rewrite_html_elements(data.description);
   return data;
 }
 
@@ -341,7 +352,7 @@ function atcb_validate(data) {
 // GENERATE THE ACTUAL BUTTON
 // helper function to generate the labels for the button and list options
 function atcb_generate_label(data, parent, type, icon = false, text = '', oneOption = false) {
-  let defaultTriggerText = atcb_translate('Add to Calendar', data.language);
+  let defaultTriggerText = atcb_translate_hook('Add to Calendar', data.language, data);
   // if there is only 1 option, we use the trigger text on the option label. Therefore, forcing it here
   if (oneOption && text == '') {
     text = defaultTriggerText;
@@ -408,7 +419,7 @@ function atcb_generate_label(data, parent, type, icon = false, text = '', oneOpt
         })
       );
       parent.setAttribute('id', data.identifier + '-ical');
-      text = text || atcb_translate('iCal File', data.language);
+      text = text || atcb_translate_hook('iCal File', data.language, data);
       iconSvg =
         '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 122.88 122.88"><path d="M81.61 4.73c0-2.61 2.58-4.73 5.77-4.73s5.77 2.12 5.77 4.73v20.72c0 2.61-2.58 4.73-5.77 4.73s-5.77-2.12-5.77-4.73V4.73h0zm-15.5 99.08c-.34 0-.61-1.43-.61-3.2s.27-3.2.61-3.2H81.9c.34 0 .61 1.43.61 3.2s-.27 3.2-.61 3.2H66.11h0zM15.85 67.09c-.34 0-.61-1.43-.61-3.2s.27-3.2.61-3.2h15.79c.34 0 .61 1.43.61 3.2s-.27 3.2-.61 3.2H15.85h0zm25.13 0c-.34 0-.61-1.43-.61-3.2s.27-3.2.61-3.2h15.79c.34 0 .61 1.43.61 3.2s-.27 3.2-.61 3.2H40.98h0zm25.13 0c-.34 0-.61-1.43-.61-3.2s.27-3.2.61-3.2H81.9c.34 0 .61 1.43.61 3.2s-.27 3.2-.61 3.2H66.11h0zm25.14 0c-.34 0-.61-1.43-.61-3.2s.27-3.2.61-3.2h15.79c.34 0 .61 1.43.61 3.2s-.27 3.2-.61 3.2H91.25h0zm-75.4 18.36c-.34 0-.61-1.43-.61-3.2s.27-3.2.61-3.2h15.79c.34 0 .61 1.43.61 3.2s-.27 3.2-.61 3.2H15.85h0zm25.13 0c-.34 0-.61-1.43-.61-3.2s.27-3.2.61-3.2h15.79c.34 0 .61 1.43.61 3.2s-.27 3.2-.61 3.2H40.98h0zm25.13 0c-.34 0-.61-1.43-.61-3.2s.27-3.2.61-3.2H81.9c.34 0 .61 1.43.61 3.2s-.27 3.2-.61 3.2H66.11h0zm25.14 0c-.34 0-.61-1.43-.61-3.2s.27-3.2.61-3.2h15.79c.34 0 .61 1.43.61 3.2s-.27 3.2-.61 3.2H91.25h0zm-75.4 18.36c-.34 0-.61-1.43-.61-3.2s.27-3.2.61-3.2h15.79c.34 0 .61 1.43.61 3.2s-.27 3.2-.61 3.2H15.85h0zm25.13 0c-.34 0-.61-1.43-.61-3.2s.27-3.2.61-3.2h15.79c.34 0 .61 1.43.61 3.2s-.27 3.2-.61 3.2H40.98h0zM29.61 4.73c0-2.61 2.58-4.73 5.77-4.73s5.77 2.12 5.77 4.73v20.72c0 2.61-2.58 4.73-5.77 4.73s-5.77-2.12-5.77-4.73V4.73h0zM6.4 45.32h110.07V21.47c0-.8-.33-1.53-.86-2.07-.53-.53-1.26-.86-2.07-.86H103c-1.77 0-3.2-1.43-3.2-3.2s1.43-3.2 3.2-3.2h10.55c2.57 0 4.9 1.05 6.59 2.74s2.74 4.02 2.74 6.59v27.06 65.03c0 2.57-1.05 4.9-2.74 6.59s-4.02 2.74-6.59 2.74H9.33c-2.57 0-4.9-1.05-6.59-2.74-1.69-1.7-2.74-4.03-2.74-6.6V48.52 21.47c0-2.57 1.05-4.9 2.74-6.59s4.02-2.74 6.59-2.74H20.6c1.77 0 3.2 1.43 3.2 3.2s-1.43 3.2-3.2 3.2H9.33c-.8 0-1.53.33-2.07.86-.53.53-.86 1.26-.86 2.07v23.85h0zm110.08 6.41H6.4v61.82c0 .8.33 1.53.86 2.07.53.53 1.26.86 2.07.86h104.22c.8 0 1.53-.33 2.07-.86.53-.53.86-1.26.86-2.07V51.73h0zM50.43 18.54c-1.77 0-3.2-1.43-3.2-3.2s1.43-3.2 3.2-3.2h21.49c1.77 0 3.2 1.43 3.2 3.2s-1.43 3.2-3.2 3.2H50.43h0z"/></svg>';
       break;
@@ -496,9 +507,9 @@ function atcb_generate_label(data, parent, type, icon = false, text = '', oneOpt
         atcb_debounce(() => atcb_close(false))
       );
       parent.setAttribute('id', data.identifier + '-close');
-      text = atcb_translate('Close', data.language);
+      text = atcb_translate_hook('Close', data.language, data);
       iconSvg =
-        '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"><path fill-rule="evenodd" d="M11.991.69a2.35 2.35 0 0 1 3.318-.009c.918.911.922 2.392.009 3.307l-4.009 4.014 4.013 4.018c.906.909.893 2.38-.027 3.287a2.35 2.35 0 0 1-3.307-.004l-3.985-3.99-3.993 3.997a2.35 2.35 0 0 1-3.318.009c-.918-.911-.922-2.392-.009-3.307l4.009-4.014L.678 3.98C-.228 3.072-.215 1.6.706.693a2.35 2.35 0 0 1 3.307.004l3.985 3.99z"/></svg>';
+        '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 122.878 122.88"><path d="M1.426 8.313a4.87 4.87 0 0 1 0-6.886 4.87 4.87 0 0 1 6.886 0l53.127 53.127 53.127-53.127a4.87 4.87 0 0 1 6.887 0 4.87 4.87 0 0 1 0 6.886L68.324 61.439l53.128 53.128a4.87 4.87 0 0 1-6.887 6.886L61.438 68.326 8.312 121.453a4.87 4.87 0 0 1-6.886 0 4.87 4.87 0 0 1 0-6.886l53.127-53.128L1.426 8.313h0z"/></svg>';
       break;
   }
   // override the id for the oneOption button, since the button always needs to have the button id
@@ -568,6 +579,7 @@ function atcb_generate(button, data) {
   // generate the wrapper div
   const buttonTriggerWrapper = document.createElement('div');
   buttonTriggerWrapper.classList.add('atcb-button-wrapper');
+  buttonTriggerWrapper.classList.add('atcb-' + data.lightMode);
   button.appendChild(buttonTriggerWrapper);
   // generate the button trigger div
   const buttonTrigger = document.createElement('button');
@@ -603,6 +615,7 @@ function atcb_generate(button, data) {
 function atcb_generate_dropdown_list(data) {
   const optionsList = document.createElement('div');
   optionsList.classList.add('atcb-list');
+  optionsList.classList.add('atcb-' + data.lightMode);
   // generate the list items
   data.options.forEach(function (option) {
     const optionParts = option.split('|');
@@ -767,6 +780,7 @@ function atcb_close(blockFocus = false) {
 // prepare data when not using the init function
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 function atcb_action(data, triggerElement, keyboardTrigger = true) {
+  data = atcb_seure_content(data);
   // validate & decorate data
   if (!atcb_check_required(data)) {
     throw new Error('data missing; see logs');
@@ -820,7 +834,7 @@ function atcb_generate_google(data) {
   }
   if (atcb_secure_url(url)) {
     // eslint-disable-next-line security/detect-non-literal-fs-filename
-    window.open(url, '_blank').focus();
+    window.open(url, atcb_default_target).focus();
   }
 }
 
@@ -847,7 +861,7 @@ function atcb_generate_yahoo(data) {
   }
   if (atcb_secure_url(url)) {
     // eslint-disable-next-line security/detect-non-literal-fs-filename
-    window.open(url, '_blank').focus();
+    window.open(url, atcb_default_target).focus();
   }
 }
 
@@ -879,7 +893,7 @@ function atcb_generate_microsoft(data, type = '365') {
   }
   if (atcb_secure_url(url)) {
     // eslint-disable-next-line security/detect-non-literal-fs-filename
-    window.open(url, '_blank').focus();
+    window.open(url, atcb_default_target).focus();
   }
 }
 
@@ -908,16 +922,22 @@ function atcb_generate_teams(data) {
   }
   if (atcb_secure_url(url)) {
     // eslint-disable-next-line security/detect-non-literal-fs-filename
-    window.open(url, '_blank').focus();
+    window.open(url, atcb_default_target).focus();
   }
 }
 
 // FUNCTION TO GENERATE THE iCAL FILE (also for the Apple option)
 function atcb_generate_ical(data) {
-  // check for a given explicit file
-  if (data.icsFile != null && data.icsFile != '') {
+  // check for a given explicit file (not if iOS and WebView - will catched further down)
+  if (
+    data.icsFile != null &&
+    data.icsFile != '' &&
+    atcb_secure_url(data.icsFile) &&
+    data.icsFile.startsWith('https://') &&
+    (!isiOS() || !isWebView())
+  ) {
     // eslint-disable-next-line security/detect-non-literal-fs-filename
-    window.open(data.icsFile, '_self');
+    window.open(data.icsFile, atcb_default_target);
     return;
   }
   // otherwise, generate one on the fly
@@ -929,7 +949,7 @@ function atcb_generate_ical(data) {
     timeslot = ';VALUE=DATE';
   }
   const ics_lines = ['BEGIN:VCALENDAR', 'VERSION:2.0'];
-  const corp = 'github.com/jekuer/add-to-calendar-button';
+  const corp = 'github.com/add2cal/add-to-calendar-button';
   ics_lines.push('PRODID:-// ' + corp + ' // atcb v' + atcbVersion + ' //EN');
   ics_lines.push('CALSCALE:GREGORIAN');
   ics_lines.push('BEGIN:VEVENT');
@@ -960,10 +980,17 @@ function atcb_generate_ical(data) {
   }
   now = now.replace(/\.\d{3}/g, '').replace(/[^a-z\d]/gi, '');
   ics_lines.push('STATUS:CONFIRMED', 'LAST-MODIFIED:' + now, 'SEQUENCE:0', 'END:VEVENT', 'END:VCALENDAR');
-  const dlurl = 'data:text/calendar;charset=utf-8,' + encodeURIComponent(ics_lines.join('\r\n'));
+  let dlurl = 'data:text/calendar;charset=utf-8,' + encodeURIComponent(ics_lines.join('\r\n'));
   const filename = data.iCalFileName || 'event-to-save-in-my-calendar';
-  // in the Instagram in-app browser case, we offer a copy option, since the on-the-fly client side generation is not supported at the moment
-  if (isInstagram()) {
+  // if we got to this point with an explicitely given iCal file, we are on an iOS device within an in-app browser (WebView). If the provided URL is save, we override the dlurl
+  if (data.icsFile != null && data.icsFile != '') {
+    if (atcb_secure_url(data.icsFile) && data.icsFile.startsWith('https://')) {
+      dlurl = data.icsFile;
+    }
+  }
+  // in in-app browser cases (WebView), we offer a copy option, since the on-the-fly client side generation is usually not supported
+  // for Android, we are more specific and only go for specific apps at the moment
+  if (isWebView() && (isiOS() || (isAndroid() && isProblematicWebView()))) {
     // putting the download url to the clipboard
     const tmpInput = document.createElement('input');
     document.body.appendChild(tmpInput);
@@ -980,6 +1007,7 @@ function atcb_generate_ical(data) {
       selection.addRange(range);
       tmpInput.setSelectionRange(0, 999999);
     } else {
+      // the next 2 lines are basically doing the same in different ways (just to be sure)
       navigator.clipboard.writeText(dlurl);
       tmpInput.select();
     }
@@ -988,20 +1016,18 @@ function atcb_generate_ical(data) {
     document.execCommand('copy');
     tmpInput.remove();
     // creating the modal
-    const buttons = [{ label: atcb_translate('Close note', data.language), type: 'close' }];
     atcb_create_modal(
       data,
-      atcb_translate('Instagram iCal', data.language),
-      atcb_translate('Instagram info description', data.language),
-      buttons,
-      'instagram'
+      'browser',
+      atcb_translate_hook('WebView iCal', data.language, data),
+      atcb_translate_hook('WebView info description', data.language, data)
     );
   } else {
     try {
       if (!window.ActiveXObject) {
         const save = document.createElement('a');
         save.href = dlurl;
-        save.target = '_blank';
+        save.target = atcb_default_target;
         save.download = filename;
         const evt = new MouseEvent('click', {
           view: window,
@@ -1015,7 +1041,7 @@ function atcb_generate_ical(data) {
       // for IE < 11 (even no longer officially supported)
       else if (!!window.ActiveXObject && document.execCommand) {
         // eslint-disable-next-line security/detect-non-literal-fs-filename
-        const _window = window.open(dlurl, '_blank');
+        const _window = window.open(dlurl, atcb_default_target);
         _window.document.close();
         _window.document.execCommand('SaveAs', true, filename || dlurl);
         _window.close();
@@ -1121,6 +1147,14 @@ function atcb_generate_time(data, style = 'delimiters', targetCal = 'general', a
   return returnObject;
 }
 
+// SHARED FUNCTION TO SECURE DATA
+function atcb_seure_content(data) {
+  // strip HTML tags (especially since stupid Safari adds stuff) - except for <br>.
+  let tmpJSON = JSON.stringify(data);
+  tmpJSON = tmpJSON.replace(/(<(?!br)([^>]+)>)/gi, '');
+  return JSON.parse(tmpJSON);
+}
+
 // SHARED FUNCTION TO SECURE URLS
 function atcb_secure_url(url, throwError = true) {
   if (
@@ -1139,10 +1173,35 @@ function atcb_secure_url(url, throwError = true) {
   }
 }
 
+// SHARED FUNCTION TO REPLACE HTML PSEUDO ELEMENTS
+function atcb_rewrite_html_elements(content, clear = false) {
+  // standardize any line breaks
+  content = content.replace(/<br\s*\/?>/gi, '\n');
+  // remove any pseudo elements, if necessary
+  if (clear) {
+    content = content.replace(/\[(|\/)(url|br|hr|p|b|strong|u|i|em|li|ul|ol|h\d)\]|((\|.*)\[\/url\])/gi, '');
+    // and build html for the rest
+    // supporting: br, hr, p, strong, u, i, em, li, ul, ol, h (like h1, h2, h3, ...), url (= a)
+  } else {
+    content = content.replace(/\[(\/|)(br|hr|p|b|strong|u|i|em|li|ul|ol|h\d)\]/gi, '<$1$2>');
+    content = content.replace(/\[url\]([\w&$+.,:;=~!*'?@^%#|\s\-()/]*)\[\/url\]/gi, function (match, p1) {
+      const urlText = p1.split('|');
+      let link = '<a href="' + urlText[0] + '" target="' + atcb_default_target + '" rel="noopener">';
+      if (urlText.length > 1 && urlText[1] != '') {
+        link += urlText[1];
+      } else {
+        link += urlText[0];
+      }
+      return link + '</a>';
+    });
+  }
+  return content;
+}
+
 // SHARED FUNCTION TO CREATE INFO MODALS
-function atcb_create_modal(data, headline, content, buttons, type = '') {
+function atcb_create_modal(data, icon = '', headline, content, buttons) {
   // setting the stage
-  const bgOverlay = atcb_generate_bg_overlay('modal', 'click', data.background);
+  const bgOverlay = atcb_generate_bg_overlay('modal', 'click');
   const infoModalWrapper = document.createElement('div');
   infoModalWrapper.classList.add('atcb-modal', 'atcb-info-modal');
   infoModalWrapper.tabIndex = 0;
@@ -1155,53 +1214,108 @@ function atcb_create_modal(data, headline, content, buttons, type = '') {
   }
   const infoModal = document.createElement('div');
   infoModal.classList.add('atcb-modal-box');
-  switch (type) {
-    case 'instagram':
-      infoModal.classList.add('atcb-modal-instagram');
-      break;
-  }
   infoModalWrapper.appendChild(infoModal);
   // set overlay size just to be sure
   atcb_set_fullsize(bgOverlay);
-  // adding headline
+  // adding closing button
+  const infoModalClose = document.createElement('div');
+  infoModalClose.classList.add('atcb-modal-close');
+  infoModal.appendChild(infoModalClose);
+  infoModalClose.addEventListener(
+    'click',
+    atcb_debounce(() => atcb_close())
+  );
+  infoModalClose.addEventListener(
+    'keydown',
+    atcb_debounce_leading((event) => {
+      if (event.key == 'Enter') {
+        event.preventDefault();
+        atcb_close();
+      }
+    })
+  );
+  if (buttons == null || buttons.length == 0) {
+    infoModalClose.tabIndex = 0;
+    infoModalClose.focus();
+  }
+  // adding headline (incl. icon)
   const infoModalHeadline = document.createElement('div');
   infoModalHeadline.classList.add('atcb-modal-headline');
-  infoModalHeadline.textContent = headline;
   infoModal.appendChild(infoModalHeadline);
+  if (icon != '') {
+    const infoModalHeadlineIcon = document.createElement('span');
+    infoModalHeadlineIcon.classList.add('atcb-modal-headline-icon');
+    infoModalHeadlineIcon.dataset.icon = icon;
+    infoModalHeadline.appendChild(infoModalHeadlineIcon);
+  }
+  let infoModalHeadlineText = document.createTextNode(headline);
+  infoModalHeadline.appendChild(infoModalHeadlineText);
   // and text content
   const infoModalContent = document.createElement('div');
   infoModalContent.classList.add('atcb-modal-content');
   infoModalContent.innerHTML = content;
   infoModal.appendChild(infoModalContent);
-  // and a buttons
-  buttons.forEach((button, index) => {
-    let infoModalButton = document.createElement('button');
-    infoModalButton.setAttribute('type', 'button');
-    infoModalButton.classList.add('atcb-modal-btn');
-    infoModalButton.textContent = button.label;
-    infoModal.appendChild(infoModalButton);
-    if (index == 0) {
-      infoModalButton.focus();
-    }
-    switch (button.type) {
-      case 'close':
-      default:
-        infoModalButton.addEventListener(
-          'click',
-          atcb_debounce(() => atcb_close())
-        );
-        infoModalButton.addEventListener(
-          'keydown',
-          atcb_debounce_leading((event) => {
-            if (event.key == 'Enter') {
-              event.preventDefault();
-              atcb_close();
-            }
-          })
-        );
-        break;
-    }
-  });
+  // and buttons (array of objects; attributes: href, type, label, primary(boolean))
+  if (buttons != null && buttons.length > 0) {
+    const infoModalButtons = document.createElement('div');
+    infoModalButtons.classList.add('atcb-modal-buttons');
+    infoModal.appendChild(infoModalButtons);
+    buttons.forEach((button, index) => {
+      let infoModalButton;
+      if (button.href != null && button.href != '') {
+        infoModalButton = document.createElement('a');
+        infoModalButton.setAttribute('target', atcb_default_target);
+        infoModalButton.setAttribute('href', button.href);
+        infoModalButton.setAttribute('rel', 'noopener');
+      } else {
+        infoModalButton = document.createElement('button');
+        infoModalButton.setAttribute('type', 'button');
+      }
+      infoModalButton.classList.add('atcb-modal-btn');
+      if (button.primary) {
+        infoModalButton.classList.add('atcb-modal-btn-primary');
+      }
+      if (button.label == null || button.label == '') {
+        button.label = atcb_translate_hook('Click me', data.language, data);
+      }
+      infoModalButton.textContent = button.label;
+      infoModalButtons.appendChild(infoModalButton);
+      if (index == 0) {
+        infoModalButton.focus();
+      }
+      switch (button.type) {
+        default:
+          infoModalButton.addEventListener(
+            'click',
+            atcb_debounce(() => atcb_close())
+          );
+          infoModalButton.addEventListener(
+            'keydown',
+            atcb_debounce((event) => {
+              if (event.key == 'Enter') {
+                atcb_close();
+              }
+            })
+          );
+          break;
+        case 'close':
+          infoModalButton.addEventListener(
+            'click',
+            atcb_debounce(() => atcb_close())
+          );
+          infoModalButton.addEventListener(
+            'keydown',
+            atcb_debounce_leading((event) => {
+              if (event.key == 'Enter') {
+                event.preventDefault();
+                atcb_close();
+              }
+            })
+          );
+          break;
+      }
+    });
+  }
 }
 
 // SHARED FUNCTION TO CALCULATE THE POSITION OF THE DROPDOWN LIST
@@ -1309,6 +1423,20 @@ if (isBrowser()) {
 }
 
 // TRANSLATIONS
+// hook, which can be used to override all potential "hard" strings by setting customLabel_ + the key (without spaces) as option key and the intended string as value
+function atcb_translate_hook(identifier, language, data) {
+  let searchKey = identifier.replace(/\s+/g, '').toLowerCase();
+  if (
+    data.customLabels != null &&
+    data.customLabels[`${searchKey}`] != null &&
+    data.customLabels[`${searchKey}`] != ''
+  ) {
+    return atcb_rewrite_html_elements(data.customLabels[`${searchKey}`]);
+  } else {
+    return atcb_translate(identifier, language);
+  }
+}
+
 function atcb_translate(identifier, language) {
   switch (language) {
     case 'en':
@@ -1322,12 +1450,12 @@ function atcb_translate(identifier, language) {
           return 'Close';
         case 'Close Selection':
           return 'Close Selection';
-        case 'Close note':
-          return 'Close note';
-        case 'Instagram iCal':
-          return 'Instagram iCal';
-        case 'Instagram info description':
-          return "Unfortunately, the Instagram browser has its problems with the way we generate the calendar file.<br>We automatically put a magical URL into your phone's clipboard.<br><ol><li>Close this note, ...</li><li><strong>Open any other browser</strong> on your phone, ...</li><li><strong>Paste</strong> the clipboard content and go.";
+        case 'Click me':
+          return 'Click me';
+        case 'WebView iCal':
+          return 'Open your browser';
+        case 'WebView info description':
+          return "Unfortunately, in-app browsers have problems with the way we generate the calendar file.<br>We automatically put a magical URL into your phone's clipboard.<br><ol><li><strong>Open any other browser</strong> on your phone, ...</li><li><strong>Paste</strong> the clipboard content and go.";
       }
       break;
     case 'de':
@@ -1340,12 +1468,12 @@ function atcb_translate(identifier, language) {
           return 'Schließen';
         case 'Close Selection':
           return 'Auswahl schließen';
-        case 'Close note':
-          return 'Fenster schließen';
-        case 'Instagram iCal':
-          return 'Instagram iCal';
-        case 'Instagram info description':
-          return 'Leider hat der Instagram-Browser so seine Probleme mit der Art, wie wir Kalender-Dateien erzeugen.<br>Wir haben automatisch eine magische URL in die Zwischenablage deines Smartphones kopiert.<br><ol><li>Schließe dieses Fenster, ...</li><li><strong>Öffne einen anderen Browser</strong> auf deinem Smartphone, ...</li><li>Nutze die <strong>Einfügen</strong>-Funktion, um fortzufahren.';
+        case 'Click me':
+          return 'Klick mich';
+        case 'WebView iCal':
+          return 'Öffne deinen Browser';
+        case 'WebView info description':
+          return 'Leider haben In-App-Browser Probleme mit der Art, wie wir Kalender-Dateien erzeugen.<br>Wir haben automatisch eine magische URL in die Zwischenablage deines Smartphones kopiert.<br><ol><li><strong>Öffne einen anderen Browser</strong> auf deinem Smartphone, ...</li><li>Nutze die <strong>Einfügen</strong>-Funktion, um fortzufahren.';
       }
       break;
   }
