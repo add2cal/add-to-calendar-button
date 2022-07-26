@@ -31,7 +31,7 @@
   background-color: #f5f5f5;
   border: 1px solid #d2d2d2;
   border-radius: 6px;
-  box-shadow: rgba(0 0 0 / 0%) 0 0 0 0, rgba(0 0 0 / 0%) 0 0 0 0, rgba(0 0 0 / 30%) 2px 5px 18px -1px, rgba(0 0 0 / 25%) 2px 2px 10px -3px;
+  box-shadow: rgba(0 0 0 / 30%) 2px 5px 18px -1px, rgba(0 0 0 / 25%) 2px 2px 10px -3px;
   color: #333;
   cursor: pointer;
   display: flex;
@@ -53,13 +53,21 @@
 }
 
 .atcb-dark .atcb-button {
-  background-color: #252525;
-  border: 1px solid #1c1c1c;
+  background-color: #323232;
+  border: 1px solid #2c2c2c;
+  color: #bebebe;
+  box-shadow: rgba(255 255 255 / 5%) -12px -5px 20px -8px, rgba(255 255 255 / 6%) -7px -5px 15px -3px, rgba(0 0 0 / 50%) 2px 5px 18px -1px, rgba(0 0 0 / 40%) 3px 3px 20px -3px;
 }
 
 .atcb-button:focus,
 .atcb-button:hover {
   background-color: #fff;
+}
+
+.atcb-dark .atcb-button:focus,
+.atcb-dark .atcb-button:hover {
+  background-color: #3c3c3c;
+  color: #e8e8e8;
 }
 
 .atcb-button:focus-visible {
@@ -79,6 +87,12 @@
   min-width: 164px;
   padding: 10px 18px;
   z-index: 160;
+}
+
+.atcb-dark .atcb-button.atcb-active:not(.atcb-modal-style) {
+  background-color: #3c3c3c;
+  box-shadow: rgba(255 255 255 / 7%) -12px -5px 23px -8px, rgba(255 255 255 / 8%) -7px -5px 18px -3px, rgba(0 0 0 / 70%) 2px 5px 19px -1px, rgba(0 0 0 / 60%) 3px 3px 22px -3px;
+  color: #e8e8e8;
 }
 
 /**
@@ -125,7 +139,7 @@
   align-items: center;
   background-color: #f5f5f5;
   border: 1px solid #d2d2d2;
-  box-shadow: rgba(0 0 0 / 0%) 0 0 0 0, rgba(0 0 0 / 0%) 0 0 0 0, rgba(0 0 0 / 20%) 2px 5px 18px -1px, rgba(0 0 0 / 40%) 2px 2px 10px -3px;
+  box-shadow: rgba(0 0 0 / 20%) 2px 5px 18px -1px, rgba(0 0 0 / 40%) 2px 2px 10px -3px;
   box-sizing: border-box;
   cursor: pointer;
   display: flex;
@@ -291,7 +305,7 @@ a.atcb-modal-btn {
   background-color: #f5f5f5;
   border: 1px solid #dfdfdf;
   border-radius: 6px;
-  box-shadow: rgba(0 0 0 / 0%) 0 0 0 0, rgba(0 0 0 / 0%) 0 0 0 0, rgba(0 0 0 / 30%) 2px 3px 10px -1px, rgba(0 0 0 / 25%) 2px 2px 8px -3px;
+  box-shadow: rgba(0 0 0 / 30%) 2px 3px 10px -1px, rgba(0 0 0 / 25%) 2px 2px 8px -3px;
   color: #4f4f4f;
   cursor: pointer;
   display: inline-block;
@@ -313,14 +327,14 @@ button.atcb-modal-btn.atcb-modal-btn-primary,
 a.atcb-modal-btn.atcb-modal-btn-primary {
   background-color: #f5f5f5;
   border: 1px solid #d2d2d2;
-  box-shadow: rgba(0 0 0 / 0%) 0 0 0 0, rgba(0 0 0 / 0%) 0 0 0 0, rgba(0 0 0 / 40%) 2px 3px 10px -1px, rgba(0 0 0 / 35%) 2px 2px 8px -3px;
+  box-shadow: rgba(0 0 0 / 40%) 2px 3px 10px -1px, rgba(0 0 0 / 35%) 2px 2px 8px -3px;
   color: #161616;
 }
 
 button.atcb-modal-btn:hover,
 a.atcb-modal-btn:hover {
   background-color: #fff;
-  box-shadow: rgba(0 0 0 / 0%) 0 0 0 0, rgba(0 0 0 / 0%) 0 0 0 0, rgba(0 0 0 / 45%) 5px 8px 20px -1px, rgba(0 0 0 / 30%) 2px 4px 10px -3px;
+  box-shadow: rgba(0 0 0 / 45%) 5px 8px 20px -1px, rgba(0 0 0 / 30%) 2px 4px 10px -3px;
   color: #333;
   text-decoration: none;
 }
