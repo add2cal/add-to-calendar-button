@@ -2,7 +2,7 @@
 
 # Your next Add-to-Calendar Button
 
-A convenient JavaScript snippet (VanillaJS, React, Angular, ...), which lets you create beautiful buttons, where people can add events to their calendars.
+The convenient JavaScript snippet, which lets you reliably create beautiful buttons, where people can add events to their calendars.
 
 [![#1 Product of the Day on ProductHunt](https://api.producthunt.com/widgets/embed-image/v1/top-post-badge.svg?post_id=319458&theme=dark&period=daily)](https://www.producthunt.com/products/add-to-calendar-button-generator)
 
