@@ -1,7 +1,7 @@
 # Reporting Security Vulnerabilities
 
 **If you believe you have discovered a security issue within this repository's latest release, please reach out directly via email:
-[security@peltmongerprojects.com](mailto:security@peltmongerprojects.com).**
+[security@add-to-calendar-pro.com](mailto:security@add-to-calendar-pro.com).**
 A [GitHub Security Advisory](https://github.com/directus/directus/security/advisories) case will be opened for tracking the fix.
 
 Any support is highly appreciated and will be credited within the respective fix note.
