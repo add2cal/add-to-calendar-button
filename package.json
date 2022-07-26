@@ -19,7 +19,7 @@
   "jsdelivr": "./assets/js/atcb.min.js",
   "repository": {
     "type": "git",
-    "url": "https://github.com/jekuer/add-to-calendar-button.git"
+    "url": "https://github.com/add2cal/add-to-calendar-button.git"
   },
   "keywords": [
     "button",
@@ -48,9 +48,9 @@
   },
   "license": "SEE LICENSE IN LICENSE.txt",
   "bugs": {
-    "url": "https://github.com/jekuer/add-to-calendar-button/issues"
+    "url": "https://github.com/add2cal/add-to-calendar-button/issues"
   },
-  "homepage": "https://jekuer.github.io/add-to-calendar-button/",
+  "homepage": "https://add2cal.github.io/add-to-calendar-button/",
   "scripts": {
     "release": "node set-release.js",
     "stylelint": "npx stylelint assets/css/*.css",

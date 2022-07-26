@@ -5,7 +5,7 @@
  */
 const atcbVersion = '1.11.4';
 /* Creator: Jens Kuerschner (https://jenskuerschner.de)
- * Project: https://github.com/jekuer/add-to-calendar-button
+ * Project: https://github.com/add2cal/add-to-calendar-button
  * License: MIT with “Commons Clause” License Condition v1.0
  *
  */
@@ -47,7 +47,7 @@ if (isWebView()) {
 function atcb_init() {
   // let's get started
   console.log('add-to-calendar button initialized (version ' + atcbVersion + ')');
-  console.log('See https://github.com/jekuer/add-to-calendar-button for details');
+  console.log('See https://github.com/add2cal/add-to-calendar-button for details');
   // get all placeholders
   const atcButtons = document.querySelectorAll('.atcb');
   // if there are some, move on
@@ -949,7 +949,7 @@ function atcb_generate_ical(data) {
     timeslot = ';VALUE=DATE';
   }
   const ics_lines = ['BEGIN:VCALENDAR', 'VERSION:2.0'];
-  const corp = 'github.com/jekuer/add-to-calendar-button';
+  const corp = 'github.com/add2cal/add-to-calendar-button';
   ics_lines.push('PRODID:-// ' + corp + ' // atcb v' + atcbVersion + ' //EN');
   ics_lines.push('CALSCALE:GREGORIAN');
   ics_lines.push('BEGIN:VEVENT');
