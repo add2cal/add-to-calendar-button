@@ -329,15 +329,18 @@ Licensed under [MIT license (with “Commons Clause” License Condition v1.0)](
 While building a personal wedding page, I was confronted with the task to include a button, where invited people could save the event to their calendars.
 I did not want to build this from scratch (first) and therefore started the usual web research.
 Unfortunately, all I found where some extremely outdated code snippets, which did not really fit all the modern systems and calendar tools.
-Beside that, there was only the solution by AddEvent.com - all over the place. I was looking at CodePen and all I found where thousands of pens, which basically only included the AddEvent tool.
+Beside that, there was only the solution by AddEvent.com - all over the place. I was looking at CodePen and all I found where thousands of pens, which basically only included the AddEvent tool, which is hardly connected to their paid services.
 
-The problems with AddEvent.com:
+The problems with this and other solutions:
 
-- it holds tons of features, which I did not need. They make sense for companies, but not for most personal projects.
-- it limits the free tier to 50 event adds per month (consider the wedding case - this is way too less - they upgraded that in the meantime, but still).
-- it brings some data privacy issues, since you basically send your users to their not really data secured service. GDPR alert!
-- the UX/UI is not ideal (imho).
+- It holds tons of features, which I did not need. They make sense for companies (also because a server-based solution is more reliable), but not for most small personal dev projects.
+- It limited the free tier to 50 event adds per month (consider the wedding case - this is way too less).
+- It brings some data privacy issues, since you basically send your users to their not fully data secured service. GDPR alert, if you do not inform people about this fact and the underlying Google services!
+- I did not like the UX/UI.
+- Other solutions where no longer up-to-date or have never been fully functional (there are so many edge cases).
 
 **Bottom line:** Paying for features, which I did not need - at additional privacy concerns - that made me create this solution (for you).
+
+**Fun fact:** AddEvent changed a lot in the meantime. They slightly increased the free tier and also published some code on GitHub (but still require their service and also not open source!). This might be cool for businesses, but a killer for smaller projects. Anyhow, it is moving into the right direction 😊.
 
 <br />
