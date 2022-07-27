@@ -16,7 +16,7 @@
   display: none;
 }
 
-/**
+/******************************
  * The triggering button
  */
 
@@ -52,22 +52,9 @@
   z-index: 1;
 }
 
-.atcb-dark .atcb-button {
-  background-color: #323232;
-  border: 1px solid #2c2c2c;
-  color: #bebebe;
-  box-shadow: rgba(255 255 255 / 5%) -12px -5px 20px -8px, rgba(255 255 255 / 6%) -7px -5px 15px -3px, rgba(0 0 0 / 50%) 2px 5px 18px -1px, rgba(0 0 0 / 40%) 3px 3px 20px -3px;
-}
-
 .atcb-button:focus,
 .atcb-button:hover {
   background-color: #fff;
-}
-
-.atcb-dark .atcb-button:focus,
-.atcb-dark .atcb-button:hover {
-  background-color: #3c3c3c;
-  color: #e8e8e8;
 }
 
 .atcb-button:focus-visible {
@@ -89,13 +76,28 @@
   z-index: 160;
 }
 
+/* Dark mode */ 
+
+.atcb-dark .atcb-button {
+  background-color: #323232;
+  border: 1px solid #2c2c2c;
+  color: #bebebe;
+  box-shadow: rgba(255 255 255 / 5%) -12px -5px 20px -8px, rgba(255 255 255 / 6%) -7px -5px 15px -3px, rgba(0 0 0 / 50%) 2px 5px 18px -1px, rgba(0 0 0 / 40%) 3px 3px 20px -3px;
+}
+
+.atcb-dark .atcb-button:focus,
+.atcb-dark .atcb-button:hover {
+  background-color: #3c3c3c;
+  color: #e8e8e8;
+}
+
 .atcb-dark .atcb-button.atcb-active:not(.atcb-modal-style) {
   background-color: #3c3c3c;
   box-shadow: rgba(255 255 255 / 7%) -12px -5px 23px -8px, rgba(255 255 255 / 8%) -7px -5px 18px -3px, rgba(0 0 0 / 70%) 2px 5px 19px -1px, rgba(0 0 0 / 60%) 3px 3px 22px -3px;
   color: #e8e8e8;
 }
 
-/**
+/******************************
  * Button Icons
  */
 
@@ -112,7 +114,7 @@
   width: auto;
 }
 
-/**
+/******************************
  * Options List
  */
 
@@ -208,7 +210,7 @@
   fill: #777;
 }
 
-/**
+/******************************
  * Modal
  */
 
@@ -345,7 +347,7 @@ a.atcb-modal-btn:focus-visible {
   outline: 2px solid dodgerblue;
 }
 
-/**
+/******************************
  * Background Overlay
  */
 

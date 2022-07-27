@@ -16,7 +16,7 @@
   display: none;
 }
 
-/**
+/******************************
  * The triggering button
  */
 
@@ -79,7 +79,7 @@
   z-index: 160;
 }
 
-/**
+/******************************
  * Button Icons
  */
 
@@ -96,7 +96,7 @@
   width: auto;
 }
 
-/**
+/******************************
  * Options List
  */
 
@@ -212,7 +212,7 @@
   fill: #777;
 }
 
-/**
+/******************************
  * Modal
  */
 
@@ -350,7 +350,7 @@ a.atcb-modal-btn:focus-visible {
   outline: 2px solid dodgerblue;
 }
 
-/**
+/******************************
  * Background Overlay
  */
 
