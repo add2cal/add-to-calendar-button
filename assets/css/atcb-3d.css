@@ -56,6 +56,7 @@
 .atcb-button:focus,
 .atcb-button:hover {
   background-color: #fff;
+  box-shadow: rgba(0 0 0 / 40%) 2px 5px 18px -1px, rgba(0 0 0 / 35%) 2px 2px 10px -3px;
 }
 
 .atcb-button:focus-visible {
@@ -80,7 +81,7 @@
 }
 
 /******************************
- * Button Icons
+ * Button Icon (also base for list icons)
  */
 
 .atcb-icon {
@@ -105,22 +106,27 @@
   top: -3px;
 }
 
-.atcb-list {
+.atcb-list-wrapper {
+  padding: 0 4px;
+  position: absolute;
   box-sizing: border-box;
+  transform: translate3d(0, 0, 0);
+  z-index: 150;
+}
+
+.atcb-list {
+  border-radius: 0 0 6px 6px;
+  box-sizing: border-box;
+  box-shadow: rgba(0 0 0 / 20%) 2px 5px 18px -1px, rgba(0 0 0 / 40%) 2px 2px 10px -3px;
   color: #333;
   display: block;
   font-family: Arial, Helvetica, sans-serif;
   max-width: 100%;
-  padding: 0 4px;
-  position: absolute;
-  transform: translate3d(0, 0, 0);
   user-select: none;
   width: 100%;
-  min-width: 10em;
-  z-index: 150;
 }
 
-.atcb-list.atcb-dropdown {
+.atcb-list-wrapper.atcb-dropdown {
   animation: atcb-list-slide 0.4s ease 0.05s 1 normal forwards;
   opacity: 0;
 }
@@ -142,8 +148,6 @@
 .atcb-list-item {
   align-items: center;
   background-color: #f5f5f5;
-  border: 1px solid #d2d2d2;
-  box-shadow: rgba(0 0 0 / 20%) 2px 5px 18px -1px, rgba(0 0 0 / 40%) 2px 2px 10px -3px;
   box-sizing: border-box;
   cursor: pointer;
   display: flex;
@@ -160,13 +164,11 @@
 
 .atcb-list-item:hover {
   background-color: #fff;
-  box-shadow: 1px 2px 10px 0 rgba(0 0 0 / 40%);
   color: #000;
 }
 
 .atcb-list-item:focus-visible {
   background-color: #fff;
-  box-shadow: 1px 2px 10px 0 rgba(0 0 0 / 40%);
   color: dodgerblue;
   font-weight: 600;
   outline: none;
@@ -186,12 +188,23 @@
   padding-top: 20px;
 }
 
-.atcb-list:not(.atcb-generated-button) .atcb-list-item:first-child {
+.atcb-list:not(.atcb-generated-button) .atcb-list-item:first-child,
+.atcb-list.atcb-modal .atcb-list-item:first-child {
   border-radius: 6px 6px 0 0;
 }
 
-.atcb-list:not(.atcb-generated-button) .atcb-list-item:only-child {
+.atcb-list:not(.atcb-generated-button) .atcb-list-item:only-child,
+.atcb-list.atcb-modal .atcb-list-item:only-child {
   border-radius: 6px;
+}
+
+.atcb-list .atcb-list-item:not(:first-child) {
+  border-top: 1px solid #d2d2d2;
+}
+
+.atcb-list.atcb-modal {
+  border-radius: 6px;
+  box-shadow: rgb(0 0 0 / 0%) 0 0 0 0, rgb(0 0 0 / 0%) 0 0 0 0, rgb(0 0 0 / 60%) 3px 6px 40px -5px, rgb(0 0 0 / 60%) 3px 3px 15px -4px;
 }
 
 .atcb-list-item .atcb-icon {

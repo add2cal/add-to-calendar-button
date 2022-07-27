@@ -10,9 +10,9 @@
     <!-- some basic css just for this sample site here -->
     <style>
       body {
-        background: rgb(245, 245, 245);
+        background: #f5f5f5;
         box-sizing: border-box;
-        color: rgb(51, 51, 51);
+        color: #333333;
         font-family: Arial, sans-serif;
         font-size: 16px;
         font-weight: 400;
@@ -23,22 +23,32 @@
         text-align: center;
         width: 100%;
       }
+      body.atcb-dark {
+        background: #1f1f1f;
+        color: #f5f5f5;
+      }
       h1 {
         font-size: 2em;
         line-height: 1.2em;
       }
       h1 #tinyVersion {
-        color: rgb(150, 150, 150);
+        color: #969696;
         font-size: 0.4em;
         font-weight: 400;
       }
+      body.atcb-dark h2 {
+        color: #5a5a5a;
+      }
       h2 {
-        color: rgb(90, 90, 90);
+        color: #5a5a5a;
         font-size: 1.2em;
         line-height: 1.5em;
         margin: 35px auto;
         max-width: 600px;
         width: 100%;
+      }
+      body.atcb-dark h2 {
+        color: #969696;
       }
       h3 {
         text-align: left;
@@ -53,22 +63,31 @@
         padding-bottom: 40px;
       }
       a, a:focus, a:active {
-        color: rgb(28, 1, 77);
+        color: #1c014d;
         text-decoration: none;
       }
+      body.atcb-dark a,
+      body.atcb-dark a:focus,
+      body.atcb-dark a:active {
+        color: #c5b1ea;
+      }
       a:not(.clean) {
-        background-color: rgb(228, 217, 247);
         text-decoration: underline;
       }
-      a:hover {
-        color: rgb(90, 56, 155);
+      a:hover,
+      body.atcb-dark a:hover {
+        color: #5a389b;
         text-decoration: none;
       }
       a svg {
-        fill: rgb(28, 1, 77);
+        fill: #1c014d;
       }
-      a:hover svg {
-        fill: rgb(90, 56, 155);
+      body.atcb-dark a svg {
+        fill: #c5b1ea;
+      }
+      a:hover svg,
+      body.atcb-dark a:hover svg {
+        fill: #5a389b;
       }
       .container {
         box-sizing: border-box;
@@ -76,6 +95,63 @@
         max-width: 1000px;
         padding: 0 25px;
         width: 100%;
+      }
+      #light-mode-switch {
+        background: transparent;
+        cursor: pointer;
+        border: 0;
+        display: flex;
+        justify-content: center;
+        margin: 20px auto;
+        padding: 20px 0;
+      }      
+      #light-mode-switch div {
+        position: relative;
+        width: 20px;
+        height: 20px;
+        transition: transform 0.45s ease;
+        border-radius: 50%;
+        background: #1f1f1f;
+      }      
+      #light-mode-switch div::before {
+        content: "";
+        position: absolute;
+        width: 6px;
+        height: 6px;
+        left: 50%;
+        top: 50%;
+        transform: translateX(-50%) translateY(-50%);
+        border-radius: 50%;
+        background: inherit;
+        z-index: -1;
+        opacity: 0;
+        transition: box-shadow 0.4s 0s ease;
+      }      
+      #light-mode-switch div::after {
+        content: "";
+        position: absolute;
+        width: 90%;
+        height: 90%;
+        top: -20%;
+        left: 30%;
+        border-radius: 50%;
+        background: #f5f5f5;
+        transition: transform 0.45s ease;
+      }
+      body.atcb-dark #light-mode-switch div {
+        transform: scale(0.5);
+        background: #f5f5f5;
+      }
+      body.atcb-dark #light-mode-switch div::before {
+        opacity: 1;        
+        box-shadow: 0 -20px 0 0 white, 0 20px 0 0 white, -20px 0 0 0 white,
+          20px 0 0 0 white, 15px 15px 0 0 white, 15px -15px 0 0 white,
+          -15px 15px 0 0 white, -15px -15px 0 0 white;
+      }
+      body.atcb-dark #light-mode-switch div::after {
+        opacity: 0;
+        transition: background 0.45s ease;
+        transform: translateX(50%) translateY(-50%);
       }
       hr {
         border: 0;
@@ -602,6 +678,9 @@
       <hr>
 
       <div id="legal">
+        <button id="light-mode-switch">
+          <div></div>
+        </button>
         This page has been built and is maintained by Jens K&uuml;rschner. See <a target="_blank" rel="noopener" href="https://jenskuerschner.de/legal-notice/">jenskuerschner.de/legal-notice</a> for a full legal notice.<br>
         This page is hosted via "GitHub Pages". It does not hold any specific cookies and/or tracking. However, the GitHub privacy policy applies (<a target="_blank" rel="noopener" href="https://docs.github.com/en/github/site-policy/github-privacy-statement">click here for details</a>).
       </div>
@@ -609,8 +688,32 @@
     </div>
 
 
-    <!-- load the button js -->
-    <script src="./assets/js/atcb.min.js?v=1.12.0" async defer></script>
+    <!-- load the button js and more -->
+    <script>
+      const lightModeButton = document.getElementById('light-mode-switch');
+      const cval = document.cookie.match('(^|;)\\s*atcb-light-mode\\s*=\\s*([^;]+)')?.pop() || '';
+      if (cval == '') {
+        if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+          document.body.classList.toggle('atcb-dark');
+        }
+      } else {
+        if (cval == 'dark') {
+          document.body.classList.toggle('atcb-dark');
+        }
+      }
+      lightModeButton.addEventListener('click', () => {
+        document.body.classList.toggle('atcb-dark');
+        // also save as cookie
+        let newCval = 'light';
+        if (document.body.classList.contains('atcb-dark')) {
+          newCval = 'dark';
+        }
+        const d = new Date();
+        d.setTime(d.getTime() + (90*24*60*60*1000));
+        document.cookie = 'atcb-light-mode=' + newCval + ';expires=' + d.toUTCString();
+      });
+    </script>
+    <script type="application/javascript" src="./assets/js/atcb.min.js?v=1.12.0" async defer></script>
     <script type="application/javascript" src="https://buttons.github.io/buttons.js" async defer></script>
 
   </body>
