@@ -1,6 +1,6 @@
 {
   "name": "add-to-calendar-button",
-  "version": "1.12.0",
+  "version": "1.13.0",
   "engines": {
     "node": ">=14.20.0"
   },
@@ -50,7 +50,7 @@
   "bugs": {
     "url": "https://github.com/add2cal/add-to-calendar-button/issues"
   },
-  "homepage": "https://add2cal.github.io/add-to-calendar-button/",
+  "homepage": "https://add-to-calendar-button.com/",
   "scripts": {
     "release": "node set-release.js",
     "stylelint": "npx stylelint assets/css/*.css",
@@ -66,6 +66,7 @@
   "devDependencies": {
     "@typescript-eslint/eslint-plugin": "^5.30.7",
     "@typescript-eslint/parser": "^5.30.7",
+    "contributor-faces": "^1.1.0",
     "eslint": "^8.20.0",
     "eslint-config-prettier": "^8.5.0",
     "eslint-plugin-commonjs": "^1.0.2",

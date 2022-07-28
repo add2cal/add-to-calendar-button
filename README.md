@@ -2,11 +2,11 @@
 
 # Your next Add-to-Calendar Button
 
-A convenient JavaScript snippet (VanillaJS, React, Angular, ...), which lets you create beautiful buttons, where people can add events to their calendars.
+The convenient JavaScript snippet, which lets you reliably create beautiful buttons, where people can add events to their calendars.
 
 [![#1 Product of the Day on ProductHunt](https://api.producthunt.com/widgets/embed-image/v1/top-post-badge.svg?post_id=319458&theme=dark&period=daily)](https://www.producthunt.com/products/add-to-calendar-button-generator)
 
-[![Code Quality](https://img.shields.io/codacy/grade/5c7c0bac087c4dfdb0669e8284f0459a/main?style=for-the-badge)](https://app.codacy.com/gh/add2cal/add-to-calendar-button/dashboard)
+[![Code Quality](https://img.shields.io/codacy/grade/572c0a102d7b4f39b792439dcd2e8aad/main?style=for-the-badge)](https://app.codacy.com/gh/add2cal/add-to-calendar-button/dashboard)
 [![Build Status](https://img.shields.io/github/workflow/status/add2cal/add-to-calendar-button/Node.js%20Package?style=for-the-badge)](https://github.com/add2cal/add-to-calendar-button/actions/workflows/npm-publish.yml)
 [![npm Installations](https://img.shields.io/npm/dt/add-to-calendar-button?label=npm%20Installations&style=for-the-badge)](https://www.npmjs.com/package/add-to-calendar-button)
 [![jsDelivr npm Hits](https://img.shields.io/jsdelivr/npm/hm/add-to-calendar-button?label=jsDelivr%20npm%20hits&style=for-the-badge)](https://www.jsdelivr.com/package/npm/add-to-calendar-button)
@@ -33,7 +33,7 @@ In terms of system support, **all modern browsers** (Chrome, Edge, Firefox, Safa
 
 ## ▶️ Demo
 
-See [add2cal.github.io/add-to-calendar-button](https://add2cal.github.io/add-to-calendar-button/) for a live demo.
+See [add-to-calendar-button.com](https://add-to-calendar-button.com/) for a live demo.
 
 And remember to ⭐**star** this repository in order to save it for later! 🤗
 
@@ -264,10 +264,10 @@ const MyComponent = () => {
 - Alternatively, you can set the `timeZoneOffset`, which will always override the `timeZone`. If neither of them is set, the date refers to UTC time.
 - The `timeZone` option is recommended since it considers things like summer/winter time, but might not work in very old browsers. `timeZoneOffset` works with older browsers, but is quite static.
 - Use "currentBrowser" as value for `timeZone` to dynamically use the time of the user's browser. Use this with caution, since it would mean that the date and time will differ per user, which should not be the usual case! (Requires all times to be set.)
-- Use "recurrence" to define recurring events. Use can use any **valid** [RRULE](https://www.rfc-editor.org/rfc/rfc5545) to define the respective rule ([click here](https://icalendar.org/rrule-tool.html) for a generator). But mind that this will deactivate the Yahoo, Microsoft365, Teams, and Outlook options, since they do not support it at the moment (users could still use iCal in this case).
+- Use the `recurrence` option to define recurring events. Use can use any **valid** [RRULE](https://www.rfc-editor.org/rfc/rfc5545) to define the respective rule ([click here](https://icalendar.org/rrule-tool.html) for a generator). But mind that this will deactivate the Yahoo, Microsoft365, Teams, and Outlook options, since they do not support it at the moment (users could still use iCal in this case).
 - If you want to rename a label, use the following schema at the options: optionName + Pipe + yourLabel. "Google|Google Kalender" would generate a Google Calendar option, but label it as "Google Kalender".
 - There is almost no static text block. For the tiny little rest, you can define a translation by using the `language` option. Supported options and therefore languages: en (default), de.
-- In case you want to customize them, you can alternatively set the option `customLabels` and provide a JSON object where the key would be the text block's identifier (lower case without spaces). See the bottom of the js file for possible text blocks. You can use HTML pseudo tags, which get transformed automatically. Suported ones: [url] (see next point), [br], [hr], [p], [strong], [u], [i], [em], [li], [ul], [ol], [h*] (like h1, h2, h3, ...).
+- In case you want to customize them, you can alternatively set the option `customLabels` and provide a JSON object where the key would be the text block's identifier (lower case without spaces). See the bottom of the js file for possible text blocks. You can use HTML pseudo tags, which get transformed automatically (but not for styled labels). Suported ones: [url] (see next point), [br], [hr], [p], [strong], [u], [i], [em], [li], [ul], [ol], [h*] (like h1, h2, h3, ...).
 - Formatting a URL in the description like `[url]https://....[/url]` makes it clickable. `[url]https://....|URL Text[/url]` defines a linked textblock saying "URL Text" (not supported by Apple, iCal, and Yahoo; not supporting special characters).
 - You can set the `trigger` to `click`. This makes the button open on click at desktop. Otherwise, the default would be to open on hover. On touch devices, this makes no difference.
 - If you want to define a specific name for any generated ics file (iCal), you can specify it via the `iCalFileName` option. The default would be "event-to-save-in-my-calendar".
@@ -278,11 +278,18 @@ const MyComponent = () => {
 - If you require line breaks within the description, use `\n` or `<br>`.
 - If you set at least a name, startDate, and location, the script automatically generates schema.org rich data. Use a URL for the location and it will be labeled as online event.
 - Each generated button and option has a speaking id to be used for any tracking methods. Scheme: "atcb-btn-_IDENTIFIER_" or "atcb-btn-_IDENTIFIER_-google" (for the Google option) respectively. The _IDENTIFIER_ will be an automatic number, but can be overridden by providing the option `"identifier":"xyz"` (no special characters allowed; needs to be unique).
+- Each button comes with a dark and light mode. Set the option `lightMode` to "dark" or "light" explicitly, or use "system" to automatically adapt to the user's default setting. You can also use "bodyScheme" to look for the class "atcb-dark" at the body tag and connect the button dynamically to the style of your website.
 - The default layout is more or less basic. Load the atcb-3d.min.css instead to have some more animations and depth.
 
 <br />
 
 ---
+
+<br />
+
+## ⚡ Changelog
+
+Find all changes in the dedicated file at [CHANGELOG.md](CHANGELOG.md).
 
 <br />
 
@@ -295,20 +302,6 @@ Anyone is welcome to contribute, but mind the [guidelines](.github/CONTRIBUTING.
 - [Pull requests](.github/CONTRIBUTING.md#pull-requests)
 
 **IMPORTANT NOTE:** Run `npm install`, `npm run format`, and `npm run build` to auto-lint, create the minified js and css files, its sourcemap files as well as the npm_dist/ folder and content!
-
-<br />
-
-## ⚡ Changelog
-
-Find all changes in the dedicated file at [CHANGELOG.md](CHANGELOG.md).
-
-<br />
-
-## 💜 Kudos go to
-
-- [uxwing.com](https://uxwing.com)
-- [Chad Ostrowski (chadoh)](https://github.com/chadoh)
-- ... and all other contributors!
 
 <br />
 
@@ -342,5 +335,28 @@ The problems with this and other solutions:
 **Bottom line:** Paying for features, which I did not need - at additional privacy concerns - that made me create this solution (for you).
 
 **Fun fact:** AddEvent changed a lot in the meantime. They slightly increased the free tier and also published some code on GitHub (but still require their service and also not open source!). This might be cool for businesses, but a killer for smaller projects. Anyhow, it is moving into the right direction 😊.
+
+<br />
+
+---
+
+<br />
+
+## 💜 Kudos go to
+
+[uxwing.com](https://uxwing.com) as well as all contributors:
+
+[//]: contributor-faces
+<a href="https://github.com/jekuer"><img src="https://avatars.githubusercontent.com/u/8572883?v=4" title="jekuer" width="80" height="80"></a>
+<a href="https://github.com/chadoh"><img src="https://avatars.githubusercontent.com/u/221614?v=4" title="chadoh" width="80" height="80"></a>
+<a href="https://github.com/bryan-brancotte"><img src="https://avatars.githubusercontent.com/u/11556772?v=4" title="bryan-brancotte" width="80" height="80"></a>
+<a href="https://github.com/nticaric"><img src="https://avatars.githubusercontent.com/u/824840?v=4" title="nticaric" width="80" height="80"></a>
+<a href="https://github.com/Ortovoxx"><img src="https://avatars.githubusercontent.com/u/56805259?v=4" title="Ortovoxx" width="80" height="80"></a>
+<a href="https://github.com/ssaaiidd"><img src="https://avatars.githubusercontent.com/u/29234802?v=4" title="ssaaiidd" width="80" height="80"></a>
+<a href="https://github.com/killerrin"><img src="https://avatars.githubusercontent.com/u/3269687?v=4" title="killerrin" width="80" height="80"></a>
+<a href="https://github.com/acm-will"><img src="https://avatars.githubusercontent.com/u/103984058?v=4" title="acm-will" width="80" height="80"></a>
+<a href="https://github.com/apps/dependabot"><img src="https://avatars.githubusercontent.com/in/29110?v=4" title="dependabot[bot]" width="80" height="80"></a>
+
+[//]: contributor-faces
 
 <br />
