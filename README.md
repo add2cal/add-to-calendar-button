@@ -346,7 +346,6 @@ The problems with this and other solutions:
 
 [uxwing.com](https://uxwing.com) as well as all contributors:
 
-[//]: contributor-faces
 <a href="https://github.com/jekuer"><img src="https://avatars.githubusercontent.com/u/8572883?v=4" title="jekuer" width="80" height="80"></a>
 <a href="https://github.com/chadoh"><img src="https://avatars.githubusercontent.com/u/221614?v=4" title="chadoh" width="80" height="80"></a>
 <a href="https://github.com/bryan-brancotte"><img src="https://avatars.githubusercontent.com/u/11556772?v=4" title="bryan-brancotte" width="80" height="80"></a>
@@ -356,7 +355,5 @@ The problems with this and other solutions:
 <a href="https://github.com/killerrin"><img src="https://avatars.githubusercontent.com/u/3269687?v=4" title="killerrin" width="80" height="80"></a>
 <a href="https://github.com/acm-will"><img src="https://avatars.githubusercontent.com/u/103984058?v=4" title="acm-will" width="80" height="80"></a>
 <a href="https://github.com/apps/dependabot"><img src="https://avatars.githubusercontent.com/in/29110?v=4" title="dependabot[bot]" width="80" height="80"></a>
-
-[//]: contributor-faces
 
 <br />
