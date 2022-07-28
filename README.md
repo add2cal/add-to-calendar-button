@@ -278,7 +278,7 @@ const MyComponent = () => {
 - If you require line breaks within the description, use `\n` or `<br>`.
 - If you set at least a name, startDate, and location, the script automatically generates schema.org rich data. Use a URL for the location and it will be labeled as online event.
 - Each generated button and option has a speaking id to be used for any tracking methods. Scheme: "atcb-btn-_IDENTIFIER_" or "atcb-btn-_IDENTIFIER_-google" (for the Google option) respectively. The _IDENTIFIER_ will be an automatic number, but can be overridden by providing the option `"identifier":"xyz"` (no special characters allowed; needs to be unique).
-- Each button comes with a dark and light mode. Set the option `lightMode` to "dark" or "light" explicitly, or use "system" to automatically adapt to the user's default setting, or use "bodyScheme" to look for the class "atcb-dark" at the body tag.
+- Each button comes with a dark and light mode. Set the option `lightMode` to "dark" or "light" explicitly, or use "system" to automatically adapt to the user's default setting. You can also use "bodyScheme" to look for the class "atcb-dark" at the body tag and connect the button dynamically to the style of your website.
 - The default layout is more or less basic. Load the atcb-3d.min.css instead to have some more animations and depth.
 
 <br />
