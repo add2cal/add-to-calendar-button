@@ -278,11 +278,18 @@ const MyComponent = () => {
 - If you require line breaks within the description, use `\n` or `<br>`.
 - If you set at least a name, startDate, and location, the script automatically generates schema.org rich data. Use a URL for the location and it will be labeled as online event.
 - Each generated button and option has a speaking id to be used for any tracking methods. Scheme: "atcb-btn-_IDENTIFIER_" or "atcb-btn-_IDENTIFIER_-google" (for the Google option) respectively. The _IDENTIFIER_ will be an automatic number, but can be overridden by providing the option `"identifier":"xyz"` (no special characters allowed; needs to be unique).
+- Each button comes with a dark and light mode. Set the option `lightMode` to "dark" or "light" explicitly, or use "system" to automatically adapt to the user's default setting, or use "bodyScheme" to look for the class "atcb-dark" at the body tag.
 - The default layout is more or less basic. Load the atcb-3d.min.css instead to have some more animations and depth.
 
 <br />
 
 ---
+
+<br />
+
+## ⚡ Changelog
+
+Find all changes in the dedicated file at [CHANGELOG.md](CHANGELOG.md).
 
 <br />
 
@@ -295,12 +302,6 @@ Anyone is welcome to contribute, but mind the [guidelines](.github/CONTRIBUTING.
 - [Pull requests](.github/CONTRIBUTING.md#pull-requests)
 
 **IMPORTANT NOTE:** Run `npm install`, `npm run format`, and `npm run build` to auto-lint, create the minified js and css files, its sourcemap files as well as the npm_dist/ folder and content!
-
-<br />
-
-## ⚡ Changelog
-
-Find all changes in the dedicated file at [CHANGELOG.md](CHANGELOG.md).
 
 <br />
 
@@ -343,7 +344,7 @@ The problems with this and other solutions:
 
 ## 💜 Kudos go to
 
-[uxwing.com](https://uxwing.com) as well as all contributors
+[uxwing.com](https://uxwing.com) as well as all contributors:
 
 [//]: contributor-faces
 <a href="https://github.com/jekuer"><img src="https://avatars.githubusercontent.com/u/8572883?v=4" title="jekuer" width="80" height="80"></a>

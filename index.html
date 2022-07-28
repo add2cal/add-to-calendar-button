@@ -24,8 +24,8 @@
         width: 100%;
       }
       body.atcb-dark {
-        background: #1f1f1f;
-        color: #f5f5f5;
+        background: #0D1117;
+        color: #e6e2ed;
       }
       h1 {
         font-size: 2em;
@@ -69,25 +69,30 @@
       body.atcb-dark a,
       body.atcb-dark a:focus,
       body.atcb-dark a:active {
-        color: #c5b1ea;
+        color: #7d3da7;
       }
       a:not(.clean) {
         text-decoration: underline;
       }
-      a:hover,
+      a:hover {
+        color: #7b5a92;
+        text-decoration: none;
+      }
       body.atcb-dark a:hover {
-        color: #5a389b;
+        color: #7b5a92;
         text-decoration: none;
       }
       a svg {
-        fill: #1c014d;
+        fill: #6D0BAC;
       }
       body.atcb-dark a svg {
-        fill: #c5b1ea;
+        fill: #7d3da7;
       }
-      a:hover svg,
+      a:hover svg {
+        fill: #7b5a92;
+      }
       body.atcb-dark a:hover svg {
-        fill: #5a389b;
+        fill: #7b5a92;
       }
       .container {
         box-sizing: border-box;
@@ -200,13 +205,13 @@
     </style>
 
     <!-- load the general button css -->
-    <link rel="stylesheet" href="./assets/css/atcb.min.css?v=1.12.0">
+    <link rel="stylesheet" href="./assets/css/atcb.min.css?v=1.13.0">
 
   </head>
   <body>
     <div class="container">
 
-      <h1>Add-to-Calendar Button <span id="tinyVersion">v1.12.0</span></h1>
+      <h1>Add-to-Calendar Button <span id="tinyVersion">v1.13.0</span></h1>
       <h2>A convenient JavaScript snippet, which lets you create beautiful buttons, where people can add events to their calendars.</h2>
       <p class="github">
         <a target="_blank" rel="noopener" href="https://github.com/add2cal/add-to-calendar-button" class="clean">
@@ -282,7 +287,8 @@
 
       <h3>Example 2: Going All-Day</h3>
       <p class="description">
-        For an all-day event, you would simply leave out the time information.
+        For an all-day event, you would simply leave out the time information.<br>
+        Here, we also let the button adapt to the page's dark/light mode.
       </p>
       <div class="example">
         <div class="example-left">
@@ -302,6 +308,7 @@
                 "Yahoo"
               ],
               "timeZone":"Europe/Berlin",
+              "lightMode":"bodyScheme",
               "iCalFileName":"Reminder-Event"
             }
           </div>
@@ -713,7 +720,7 @@
         document.cookie = 'atcb-light-mode=' + newCval + ';expires=' + d.toUTCString();
       });
     </script>
-    <script type="application/javascript" src="./assets/js/atcb.min.js?v=1.12.0" async defer></script>
+    <script type="application/javascript" src="./assets/js/atcb.min.js?v=1.13.0" async defer></script>
     <script type="application/javascript" src="https://buttons.github.io/buttons.js" async defer></script>
 
   </body>
