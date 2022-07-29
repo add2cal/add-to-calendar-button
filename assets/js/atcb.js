@@ -3,7 +3,7 @@
  * Add-to-Calendar Button
  * ++++++++++++++++++++++
  */
-const atcbVersion = '1.13.1';
+const atcbVersion = '1.13.2';
 /* Creator: Jens Kuerschner (https://jenskuerschner.de)
  * Project: https://github.com/add2cal/add-to-calendar-button
  * License: MIT with “Commons Clause” License Condition v1.0
@@ -113,13 +113,15 @@ function atcb_init() {
 function atcb_patch_config(atcbConfig) {
   // you can remove this, if you did not use this script before v1.10.0
   // adjusts any old schema.org structure
-  Object.keys(atcbConfig.event).forEach((key) => {
-    // move entries one level up, but skip schema types
-    if (key.charAt(0) !== '@') {
-      atcbConfig[`${key}`] = atcbConfig.event[`${key}`];
-    }
-  });
-  delete atcbConfig.event;
+  if (atcbConfig.event != null) {
+    Object.keys(atcbConfig.event).forEach((key) => {
+      // move entries one level up, but skip schema types
+      if (key.charAt(0) !== '@') {
+        atcbConfig[`${key}`] = atcbConfig.event[`${key}`];
+      }
+    });
+    delete atcbConfig.event;
+  }
   // you can remove this, if you did not use this script before v1.4.0
   // adjust deprecated config options
   const keyChanges = {
