@@ -3,7 +3,7 @@
  * Add-to-Calendar Button
  * ++++++++++++++++++++++
  */
-const atcbVersion = '1.13.0';
+const atcbVersion = '1.13.1';
 /* Creator: Jens Kuerschner (https://jenskuerschner.de)
  * Project: https://github.com/add2cal/add-to-calendar-button
  * License: MIT with “Commons Clause” License Condition v1.0
@@ -85,9 +85,10 @@ function atcb_init() {
       }
       // get JSON from HTML block, but remove real code line breaks before parsing.
       // use <br> or \n explicitely in the description to create a line break.
-      let atcbConfig = JSON.parse(atcButtons[parseInt(i)].innerHTML.replace(/(\r\n|\n|\r)/g, ''));
-      atcbConfig = atcb_seure_content(atcbConfig);
-      // rewrite config for backwards compatibility - you can remove this, if you did not use this script before v1.4.0.
+      let atcbConfig = JSON.parse(
+        atcb_seure_content(atcButtons[parseInt(i)].innerHTML.replace(/(\r\n|\n|\r)/g, ''), false)
+      );
+      // rewrite config for backwards compatibility
       atcbConfig = atcb_patch_config(atcbConfig);
       // check, if all required data is available
       if (atcb_check_required(atcbConfig)) {
@@ -108,8 +109,19 @@ function atcb_init() {
   }
 }
 
-// BACKWARDS COMPATIBILITY REWRITE - you can remove this, if you did not use this script before v1.4.0.
+// BACKWARDS COMPATIBILITY REWRITE
 function atcb_patch_config(atcbConfig) {
+  // you can remove this, if you did not use this script before v1.10.0
+  // adjusts any old schema.org structure
+  Object.keys(atcbConfig.event).forEach((key) => {
+    // move entries one level up, but skip schema types
+    if (key.charAt(0) !== '@') {
+      atcbConfig[`${key}`] = atcbConfig.event[`${key}`];
+    }
+  });
+  delete atcbConfig.event;
+  // you can remove this, if you did not use this script before v1.4.0
+  // adjust deprecated config options
   const keyChanges = {
     title: 'name',
     dateStart: 'startDate',
@@ -746,7 +758,6 @@ function atcb_open(data, button, keyboardTrigger = false, generatedButton = fals
       list.classList.add('atcb-modal');
     } else {
       listWrapper.appendChild(list);
-      atcb_position_list(button, listWrapper);
       listWrapper.classList.add('atcb-dropdown');
     }
     if (generatedButton) {
@@ -765,6 +776,7 @@ function atcb_open(data, button, keyboardTrigger = false, generatedButton = fals
   } else {
     document.body.appendChild(listWrapper);
     listWrapper.appendChild(list);
+    atcb_position_list(button, listWrapper);
     document.body.appendChild(bgOverlay);
   }
   // set overlay size just to be sure
@@ -1175,11 +1187,21 @@ function atcb_generate_time(data, style = 'delimiters', targetCal = 'general', a
 }
 
 // SHARED FUNCTION TO SECURE DATA
-function atcb_seure_content(data) {
-  // strip HTML tags (especially since stupid Safari adds stuff) - except for <br>.
-  let tmpJSON = JSON.stringify(data);
-  tmpJSON = tmpJSON.replace(/(<(?!br)([^>]+)>)/gi, '');
-  return JSON.parse(tmpJSON);
+function atcb_seure_content(data, isJSON = true) {
+  // strip HTML tags (especially since stupid Safari adds stuff) - except for <br>
+  let toClean;
+  // differentiates between JSON and string input
+  if (isJSON) {
+    toClean = JSON.stringify(data);
+  } else {
+    toClean = data;
+  }
+  toClean = toClean.replace(/(<(?!br)([^>]+)>)/gi, '');
+  if (isJSON) {
+    return JSON.parse(toClean);
+  } else {
+    return toClean;
+  }
 }
 
 // SHARED FUNCTION TO SECURE URLS
@@ -1356,14 +1378,17 @@ function atcb_position_list(trigger, list) {
       anchorSet = true;
     }
   }
-  const rect = trigger.getBoundingClientRect();
-  list.style.width = rect.width + 'px';
+  const btnDim = trigger.getBoundingClientRect();
+  const listDim = list.getBoundingClientRect();
   if (anchorSet === true) {
-    list.style.top = rect.top + window.scrollY + 'px';
+    list.style.width = btnDim.width + 'px';
+    list.style.top = btnDim.top + window.scrollY + 'px';
+    list.style.left = btnDim.left + 'px';
   } else {
-    list.style.top = rect.bottom + window.scrollY + 'px';
+    list.style.width = btnDim.width + 10 + 'px';
+    list.style.top = btnDim.top + btnDim.height / 2 - listDim.height / 2 + window.scrollY + 'px';
+    list.style.left = btnDim.left - 5 + 'px';
   }
-  list.style.left = rect.left + 'px';
 }
 
 // SHARED FUNCTION TO DEFINE WIDTH AND HEIGHT FOR "FULLSCREEN" FULLSIZE ELEMENTS

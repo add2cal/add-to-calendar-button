@@ -5,7 +5,7 @@
  *
  * Style: Default
  *
- * Version: 1.13.0
+ * Version: 1.13.1
  * Creator: Jens Kuerschner (https://jenskuerschner.de)
  * Project: https://github.com/add2cal/add-to-calendar-button
  * License: MIT with “Commons Clause” License Condition v1.0
@@ -98,9 +98,9 @@ body.atcb-dark .atcb-modal-box.atcb-bodyScheme {
   font-weight: 600;
   gap: 10px;
   line-height: 24px;
-  margin: 0 2px;
+  margin: 2px;
   max-width: 300px;
-  min-width: 160px;
+  min-width: 170px;
   padding: 10px 16px;
   position: relative;
   text-align: center;
@@ -121,18 +121,12 @@ body.atcb-dark .atcb-modal-box.atcb-bodyScheme {
   outline: 2px solid var(--atcb-keyboard-focus);
 }
 
-@media only screen and (max-width: 575px) {
-  .atcb-button {
-    font-size: 14px;
-  }
-}
-
 .atcb-button.atcb-active:not(.atcb-modal-style) {
   background-color: var(--atcb-background-2);
   box-shadow: var(--atcb-shadow-button-active);
   margin: 0;
-  min-width: 164px;
-  padding: 10px 18px;
+  min-width: 172px;
+  padding: 12px 18px;
   z-index: 160;
 }
 
@@ -161,9 +155,9 @@ body.atcb-dark .atcb-modal-box.atcb-bodyScheme {
 }
 
 .atcb-list-wrapper {
+  box-sizing: border-box;
   padding: 0 4px;
   position: absolute;
-  box-sizing: border-box;
   z-index: 150;
 }
 
@@ -174,7 +168,9 @@ body.atcb-dark .atcb-modal-box.atcb-bodyScheme {
   color: var(--atcb-text);
   display: block;
   font-family: Arial, Helvetica, sans-serif;
+  font-size: 16px;
   max-width: 100%;
+  position: relative;
   user-select: none;
   width: 100%;
 }
@@ -186,15 +182,12 @@ body.atcb-dark .atcb-modal-box.atcb-bodyScheme {
   box-sizing: border-box;
   cursor: pointer;
   display: flex;
-  font-size: 16px;
+  font-size: 1em;
   gap: 8px;
   left: 50%;
-  line-height: 28px;
-  margin-top: -1px; /* ugly, but prevents a glitch in some cases */
-  position: relative;
+  line-height: 1.75em;
   padding: 13px 15px;
   text-align: left;
-  transform: translate(-50%);
   touch-action: manipulation;
   -webkit-tap-highlight-color: transparent;
 }
@@ -207,15 +200,9 @@ body.atcb-dark .atcb-modal-box.atcb-bodyScheme {
 .atcb-list-item:focus-visible {
   background-color: var(--atcb-background-2);
   color: var(--atcb-keyboard-focus);
-  font-size: 15px;
+  font-size: .95em;
   font-weight: 600;
   outline: none;
-}
-
-@media only screen and (max-width: 575px) {
-  .atcb-list-item {
-    font-size: 14px;
-  }
 }
 
 .atcb-list-item:last-child {
@@ -247,7 +234,7 @@ body.atcb-dark .atcb-modal-box.atcb-bodyScheme {
 }
 
 .atcb-list-item .atcb-icon {
-  margin-bottom: 6px;
+  margin-bottom: 7px;
   width: 18px;
 }
 
@@ -328,10 +315,10 @@ body.atcb-dark .atcb-modal-box.atcb-bodyScheme {
 .atcb-modal-headline {
   align-items: center;
   display: flex;
-  font-size: 22px;
+  font-size: 1.38em;
   font-weight: 600;
   gap: 15px;
-  line-height: 33px;
+  line-height: 2em;
   margin: 20px 15px;
   text-transform: uppercase;
 }
@@ -369,7 +356,7 @@ a.atcb-modal-btn {
   font-family: Arial, Helvetica, sans-serif;
   font-size: 16px;
   font-weight: 600;
-  line-height: 24px;
+  line-height: 1.5em;
   margin: 10px;
   padding: 10px 20px;
   position: relative;
