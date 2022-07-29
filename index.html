@@ -63,13 +63,13 @@
         padding-bottom: 40px;
       }
       a, a:focus, a:active {
-        color: #1c014d;
+        color: #7d3da7;
         text-decoration: none;
       }
       body.atcb-dark a,
       body.atcb-dark a:focus,
       body.atcb-dark a:active {
-        color: #7d3da7;
+        color: #864fab;
       }
       a:not(.clean) {
         text-decoration: underline;
@@ -79,20 +79,20 @@
         text-decoration: none;
       }
       body.atcb-dark a:hover {
-        color: #7b5a92;
+        color: #816694;
         text-decoration: none;
       }
       a svg {
         fill: #6D0BAC;
       }
       body.atcb-dark a svg {
-        fill: #7d3da7;
+        fill: #864fab;
       }
       a:hover svg {
         fill: #7b5a92;
       }
       body.atcb-dark a:hover svg {
-        fill: #7b5a92;
+        fill: #816694;
       }
       .container {
         box-sizing: border-box;
@@ -109,6 +109,7 @@
         justify-content: center;
         margin: 20px auto;
         padding: 20px 0;
+        -webkit-tap-highlight-color: transparent;
       }      
       #light-mode-switch div {
         position: relative;
@@ -160,9 +161,12 @@
       }
       hr {
         border: 0;
-        border-bottom: 1px solid rgb(207, 207, 207);
+        border-bottom: 1px solid #cfcfcf;
         height: 1px;
         margin: 80px auto;
+      }
+      body.atcb-dark hr {
+        border-bottom: 1px solid #5e5c61;
       }
       .github {
         margin-bottom:80px;
@@ -180,9 +184,9 @@
         }
       }
       .example-right {
-        color: rgb(150, 150, 150);
-        background-color:rgb(255, 255, 255);
-        border: 1px solid rgb(150, 150, 150);
+        color: #969696;
+        background-color:#ffffff;
+        border: 1px solid #969696;
         border-radius: 6px;
         font-family: 'Consolas', Arial, sans-serif;
         font-size: 0.8em;
@@ -190,15 +194,20 @@
         text-align: left;
         word-break: break-all;
       }
+      body.atcb-dark .example-right {        
+        color: #bcbabe;
+        background-color:#3d3d3d;
+        border: 1px solid #797979;
+      }
       .example-right code {
         white-space: pre-wrap;
       }
       #legal {
-        color: rgb(150, 150, 150);
+        color: #969696;
         font-size: 0.8em;
       }
       #legal a {
-        color: rgb(150, 150, 150);
+        color: #969696;
       }
       button {
         min-width: 160px;

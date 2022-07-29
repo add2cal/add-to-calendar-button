@@ -98,9 +98,9 @@ body.atcb-dark .atcb-modal-box.atcb-bodyScheme {
   font-weight: 600;
   gap: 10px;
   line-height: 24px;
-  margin: 0 2px;
+  margin: 2px;
   max-width: 300px;
-  min-width: 160px;
+  min-width: 170px;
   padding: 10px 16px;
   position: relative;
   text-align: center;
@@ -121,18 +121,12 @@ body.atcb-dark .atcb-modal-box.atcb-bodyScheme {
   outline: 2px solid var(--atcb-keyboard-focus);
 }
 
-@media only screen and (max-width: 575px) {
-  .atcb-button {
-    font-size: 14px;
-  }
-}
-
 .atcb-button.atcb-active:not(.atcb-modal-style) {
   background-color: var(--atcb-background-2);
   box-shadow: var(--atcb-shadow-button-active);
   margin: 0;
-  min-width: 164px;
-  padding: 10px 18px;
+  min-width: 172px;
+  padding: 12px 18px;
   z-index: 160;
 }
 
@@ -190,7 +184,6 @@ body.atcb-dark .atcb-modal-box.atcb-bodyScheme {
   gap: 8px;
   left: 50%;
   line-height: 28px;
-  margin-top: -1px; /* ugly, but prevents a glitch in some cases */
   position: relative;
   padding: 13px 15px;
   text-align: left;
@@ -210,12 +203,6 @@ body.atcb-dark .atcb-modal-box.atcb-bodyScheme {
   font-size: 15px;
   font-weight: 600;
   outline: none;
-}
-
-@media only screen and (max-width: 575px) {
-  .atcb-list-item {
-    font-size: 14px;
-  }
 }
 
 .atcb-list-item:last-child {
@@ -247,7 +234,7 @@ body.atcb-dark .atcb-modal-box.atcb-bodyScheme {
 }
 
 .atcb-list-item .atcb-icon {
-  margin-bottom: 6px;
+  margin-bottom: 7px;
   width: 18px;
 }
 

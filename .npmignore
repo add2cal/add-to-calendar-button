@@ -17,5 +17,6 @@
 *.ico
 *.gif
 *.svg
+*.map
 index.html
 security.md
