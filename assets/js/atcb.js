@@ -113,7 +113,7 @@ function atcb_init() {
 function atcb_patch_config(atcbConfig) {
   // you can remove this, if you did not use this script before v1.10.0
   // adjusts any old schema.org structure
-  if (atcbConfig.even != null) {
+  if (atcbConfig.event != null) {
     Object.keys(atcbConfig.event).forEach((key) => {
       // move entries one level up, but skip schema types
       if (key.charAt(0) !== '@') {
