@@ -25,7 +25,6 @@
   --atcb-background: #f5f5f5;
   --atcb-background-2: #fff;
   --atcb-border: #d2d2d2;
-  --atcb-border-2: #d2d2d2;
   --atcb-text: #333;
   --atcb-text-2: #000;
   --atcb-close-background: #e5e5e5;
@@ -60,8 +59,7 @@ body.atcb-dark .atcb-list.atcb-bodyScheme,
 body.atcb-dark .atcb-modal-box.atcb-bodyScheme {
   --atcb-background: #2e2e2e;
   --atcb-background-2: #373737;
-  --atcb-border: #333;
-  --atcb-border-2: #4d4d4d;
+  --atcb-border: #4d4d4d;
   --atcb-text: #bebebe;
   --atcb-text-2: #e8e8e8;
   --atcb-close-background: #282828;
@@ -199,7 +197,7 @@ body.atcb-dark .atcb-modal-box.atcb-bodyScheme {
 .atcb-list-item {
   align-items: center;
   background-color: var(--atcb-background);
-  border-color: var(--atcb-border-2);
+  border: 1px solid var(--atcb-border);
   box-sizing: border-box;
   cursor: pointer;
   display: flex;
@@ -231,8 +229,7 @@ body.atcb-dark .atcb-modal-box.atcb-bodyScheme {
 }
 
 .atcb-list .atcb-list-item:not(:first-child) {
-  border-top-style: solid;
-  border-width: 1px;
+  border-top-style: none;
 }
 
 .atcb-list:not(.atcb-generated-button) .atcb-list-item:first-child,
@@ -249,8 +246,12 @@ body.atcb-dark .atcb-modal-box.atcb-bodyScheme {
   padding-top: 20px;
 }
 
+.atcb-list:not(.atcb-generated-button),
 .atcb-list.atcb-modal {
   border-radius: 6px;
+}
+
+.atcb-list.atcb-modal {
   box-shadow: var(--atcb-shadow-list-modal);
 }
 
@@ -298,7 +299,7 @@ body.atcb-dark .atcb-modal-box.atcb-bodyScheme {
   color: var(--atcb-text-2);
   cursor: default;
   border-radius: 6px;
-  border: 1px solid var(--atcb-border-2);
+  border: 1px solid var(--atcb-border);
   box-sizing: border-box;  
   font-family: Arial, Helvetica, sans-serif;
   font-size: 16px;
