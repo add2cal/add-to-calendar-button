@@ -74,16 +74,16 @@ You can use the jsDeliver CDN and load the respective ressources into your web p
 Put the css (use atcb-3d for an alternative style) into the `<head>`:
 
 ```
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/add-to-calendar-button/assets/css/atcb.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/add-to-calendar-button@1/assets/css/atcb.min.css">
 ```
 
 ... and the javascript into the `<body>` footer:
 
 ```
-<script src="https://cdn.jsdelivr.net/npm/add-to-calendar-button" async defer></script>
+<script src="https://cdn.jsdelivr.net/npm/add-to-calendar-button@1" async defer></script>
 ```
 
-_Mind that this always pulls the latest version! You can pin a specific one by adding "@" + the version number after "button" - see [jsDeliver.com](https://www.jsdelivr.com/features#npm) for details._
+_Mind that this always pulls the latest release of v1! You can pin a more specific version one by adding the exact version number after the "@" - see [jsDeliver.com](https://www.jsdelivr.com/features#npm) for details._
 If you want to rather host it yourself, you could also download the source files or clone the repository (mind to take the original one at [github.com/add2cal/add-to-calendar-button](https://github.com/add2cal/add-to-calendar-button)) and maintain/update it manually.
 
 <br />
