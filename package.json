@@ -61,9 +61,8 @@
     "prettier:fix": "npm run prettier -- --write",
     "format": "npm run eslint:fix && npm run prettier:fix && npm run stylelint:fix",
     "test": "node test/server-side-rendering.js",
-    "build-full": "npx grunt",
-    "clean-npm": "npx grunt cleanNpm",
-    "build": "npm run build-full && npm run clean-npm"
+    "build-npm": "npx grunt npm",
+    "build": "npx grunt"
   },
   "devDependencies": {
     "@typescript-eslint/eslint-plugin": "^5.32.0",

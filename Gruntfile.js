@@ -5,7 +5,7 @@ function prepareExport(content, exportPhrase) {
 }
 
 function eslintAdjustment(content) {
-  return content.replace("../", "../../");
+  return content.replace('../', '../../');
 }
 
 module.exports = function (grunt) {
@@ -37,10 +37,8 @@ module.exports = function (grunt) {
     },
     // cleans old built files
     clean: {
-      npmFolder: [
+      oldBuildFiles: [
         'npm_dist/',
-      ],
-      otherBuildFiles: [
         'assets/js/*.min.js',
         'assets/js/*.min.js.map',
         'assets/css/*.min.css',
@@ -91,7 +89,7 @@ module.exports = function (grunt) {
         src: 'test/.eslintrc.json',
         dest: 'npm_dist/cjs/.eslintrc.json',
         options: { process: (content) => eslintAdjustment(content) },
-      }
+      },
     },
     // minifies the main js file
     uglify: {
@@ -117,6 +115,7 @@ module.exports = function (grunt) {
   grunt.loadNpmTasks('grunt-version');
 
   // Register task(s).
-  grunt.registerTask('default', ['clean', 'cssmin', 'copy', 'uglify']);
+  grunt.registerTask('default', ['clean', 'cssmin', 'uglify']);
+  grunt.registerTask('npm', ['clean', 'cssmin', 'copy', 'uglify']);
   grunt.registerTask('cleanNpm', ['clean:npmFolder']);
 };
