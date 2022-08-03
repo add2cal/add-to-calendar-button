@@ -40,6 +40,7 @@
   --atcb-shadow-button: rgba(0 0 0 / 30%) 2px 5px 18px -1px, rgba(0 0 0 / 25%) 2px 2px 10px -3px;
   --atcb-shadow-button-hover: rgba(0 0 0 / 40%) 2px 5px 18px -1px, rgba(0 0 0 / 35%) 2px 2px 10px -3px;
   --atcb-shadow-button-active: rgba(0 0 0 / 50%) 2px 10px 20px -2px, rgba(0 0 0 / 45%) 2px 4px 12px -3px;
+  --atcb-shadow-button-active-up: rgba(0 0 0 / 40%) 2px -8px 15px -2px, rgba(0 0 0 / 50%) 2px 4px 12px -3px;
   --atcb-shadow-list: rgba(0 0 0 / 20%) 2px 5px 18px -1px, rgba(0 0 0 / 40%) 2px 2px 10px -3px;
   --atcb-shadow-list-modal: rgba(0 0 0 / 60%) 3px 6px 40px -5px, rgba(0 0 0 / 60%) 3px 3px 15px -4px;
   --atcb-shadow-modal: rgba(0 0 0 / 0%) 0 0 0 0, rgba(0 0 0 / 0%) 0 0 0 0, rgba(0 0 0 / 60%) 3px 6px 40px -5px, rgba(0 0 0 / 60%) 3px 3px 15px -4px;
@@ -67,6 +68,7 @@ body.atcb-dark .atcb-modal-box.atcb-bodyScheme {
   --atcb-shadow-button: rgba(255 255 255 / 5%) -12px -5px 20px -8px, rgba(255 255 255 / 6%) -7px -5px 15px -3px, rgba(0 0 0 / 50%) 2px 5px 18px -1px, rgba(0 0 0 / 40%) 3px 3px 20px -3px;
   --atcb-shadow-button-hover: rgba(255 255 255 / 6%) -12px -5px 23px -8px, rgba(255 255 255 / 7%) -7px -5px 18px -3px, rgba(0 0 0 / 60%) 2px 5px 19px -1px, rgba(0 0 0 / 50%) 3px 3px 22px -3px;
   --atcb-shadow-button-active: rgba(255 255 255 / 7%) -12px -5px 23px -8px, rgba(255 255 255 / 8%) -7px -5px 18px -3px, rgba(0 0 0 / 70%) 2px 10px 20px -1px, rgba(0 0 0 / 60%) 3px 5px 25px -3px;
+  --atcb-shadow-button-active-up: rgba(255 255 255 / 7%) -12px 5px 23px -8px, rgba(255 255 255 / 8%) -7px 5px 18px -3px, rgba(0 0 0 / 60%) 2px -8px 15px -1px, rgba(0 0 0 / 60%) 3px 5px 25px -3px;
   --atcb-shadow-list: rgba(255 255 255 / 5%) -12px -5px 20px -8px, rgba(255 255 255 / 6%) -7px -5px 15px -3px, rgba(0 0 0 / 50%) 2px 5px 18px -1px, rgba(0 0 0 / 40%) 3px 3px 20px -3px;
   --atcb-shadow-list-modal: rgba(255 255 255 / 8%) -12px -5px 30px -8px, rgba(255 255 255 / 8%) -7px -5px 15px -3px, rgba(0 0 0 / 60%) 4px 6px 50px -4px, rgba(0 0 0 / 90%) 8px 12px 40px -2px;
   --atcb-shadow-modal: rgba(255 255 255 / 8%) -12px -5px 30px -8px, rgba(255 255 255 / 8%) -7px -5px 15px -3px, rgba(0 0 0 / 60%) 4px 6px 50px -4px, rgba(0 0 0 / 90%) 8px 12px 40px -2px;
@@ -122,11 +124,20 @@ body.atcb-dark .atcb-modal-box.atcb-bodyScheme {
 
 .atcb-button.atcb-active:not(.atcb-modal-style) {
   background-color: var(--atcb-background-2);
-  box-shadow: var(--atcb-shadow-button-active);
   min-width: 174px;
+  z-index: 160;
+}
+
+.atcb-button.atcb-active:not(.atcb-modal-style, .atcb-dropup) {
+  box-shadow: var(--atcb-shadow-button-active);
   transform: perspective(100px) rotateX(12deg) translate3d(0, 0, 2px);
   transition: transform 0.1s linear;
-  z-index: 160;
+}
+
+.atcb-button.atcb-active.atcb-dropup:not(.atcb-modal-style) {
+  box-shadow: var(--atcb-shadow-button-active-up);
+  transform: perspective(100px) rotateX(348deg) translate3d(0, 0, 2px);
+  transition: transform 0.1s linear;
 }
 
 /******************************
@@ -150,11 +161,12 @@ body.atcb-dark .atcb-modal-box.atcb-bodyScheme {
 
 .atcb-dropdown-anchor {
   position: relative;
-  top: -3px;
+  top: -6px;
 }
 
 .atcb-list-wrapper {
   box-sizing: border-box;
+  min-width: 170px;
   padding: 0 4px;
   position: absolute;
   transform: translate3d(0, 0, 0);
@@ -175,12 +187,17 @@ body.atcb-dark .atcb-modal-box.atcb-bodyScheme {
   width: 100%;
 }
 
-.atcb-list-wrapper.atcb-dropdown {
-  animation: atcb-list-slide 0.4s ease 0.05s 1 normal forwards;
+.atcb-list-wrapper.atcb-dropdown:not(.atcb-dropup) {
+  animation: atcb-list-slide-down 0.4s ease 0.05s 1 normal forwards;
   opacity: 0;
 }
 
-@keyframes atcb-list-slide {
+.atcb-list-wrapper.atcb-dropup {
+  animation: atcb-list-slide-up 0.4s ease 0.05s 1 normal forwards;
+  opacity: 0;
+}
+
+@keyframes atcb-list-slide-down {
   0% {
     opacity: 0;
     transform: rotateX(-100deg);
@@ -191,6 +208,20 @@ body.atcb-dark .atcb-modal-box.atcb-bodyScheme {
     opacity: 1;
     transform: rotateX(0deg);
     transform-origin: top;
+  }
+}
+
+@keyframes atcb-list-slide-up {
+  0% {
+    opacity: 0;
+    transform: rotateX(-100deg);
+    transform-origin: bottom;
+  }
+
+  100% {
+    opacity: 1;
+    transform: rotateX(0deg);
+    transform-origin: bottom;
   }
 }
 
@@ -232,6 +263,12 @@ body.atcb-dark .atcb-modal-box.atcb-bodyScheme {
   border-top-style: none;
 }
 
+.atcb-dropup .atcb-list-item:last-child {
+  border-radius: 0;
+  padding-bottom: 25px;
+}
+
+.atcb-dropup .atcb-list-item:first-child,
 .atcb-list:not(.atcb-generated-button) .atcb-list-item:first-child,
 .atcb-list.atcb-modal .atcb-list-item:first-child {
   border-radius: 6px 6px 0 0;
@@ -243,7 +280,11 @@ body.atcb-dark .atcb-modal-box.atcb-bodyScheme {
 }
 
 .atcb-list.atcb-generated-button:not(.atcb-modal) .atcb-list-item:first-child {
-  padding-top: 20px;
+  padding-top: 25px;
+}
+
+.atcb-dropup .atcb-list.atcb-generated-button:not(.atcb-modal) .atcb-list-item:first-child {
+  padding-top: 13px;
 }
 
 .atcb-list:not(.atcb-generated-button),

@@ -438,19 +438,25 @@ function atcb_generate_label(data, parent, type, icon = false, text = '', oneOpt
       if (data.trigger === 'click') {
         parent.addEventListener(
           'click',
-          atcb_debounce_leading(() => atcb_toggle(data, parent, false, true))
+          atcb_debounce_leading((event) => {
+            event.preventDefault();
+            atcb_toggle('auto', data, parent, false, true);
+          })
         );
       } else {
         parent.addEventListener(
           'touchstart',
-          atcb_debounce_leading(() => atcb_toggle(data, parent, false, true)),
-          {
-            passive: true,
-          }
+          atcb_debounce_leading((event) => {
+            event.preventDefault();
+            atcb_toggle('auto', data, parent, false, true);
+          })
         );
         parent.addEventListener(
           'mouseenter',
-          atcb_debounce_leading(() => atcb_open(data, parent, false, true))
+          atcb_debounce_leading((event) => {
+            event.preventDefault();
+            atcb_toggle('open', data, parent, false, true);
+          })
         );
       }
       parent.setAttribute('id', data.identifier);
@@ -460,7 +466,7 @@ function atcb_generate_label(data, parent, type, icon = false, text = '', oneOpt
       parent.addEventListener(
         'click',
         atcb_debounce(() => {
-          oneOption ? parent.blur() : atcb_close();
+          oneOption ? parent.blur() : atcb_toggle('close');
           atcb_generate_ical(data);
         })
       );
@@ -471,7 +477,7 @@ function atcb_generate_label(data, parent, type, icon = false, text = '', oneOpt
       parent.addEventListener(
         'click',
         atcb_debounce(() => {
-          oneOption ? parent.blur() : atcb_close();
+          oneOption ? parent.blur() : atcb_toggle('close');
           atcb_generate_google(data);
         })
       );
@@ -482,7 +488,7 @@ function atcb_generate_label(data, parent, type, icon = false, text = '', oneOpt
       parent.addEventListener(
         'click',
         atcb_debounce(() => {
-          oneOption ? parent.blur() : atcb_close();
+          oneOption ? parent.blur() : atcb_toggle('close');
           atcb_generate_ical(data);
         })
       );
@@ -493,7 +499,7 @@ function atcb_generate_label(data, parent, type, icon = false, text = '', oneOpt
       parent.addEventListener(
         'click',
         atcb_debounce(() => {
-          oneOption ? parent.blur() : atcb_close();
+          oneOption ? parent.blur() : atcb_toggle('close');
           atcb_generate_teams(data);
         })
       );
@@ -504,7 +510,7 @@ function atcb_generate_label(data, parent, type, icon = false, text = '', oneOpt
       parent.addEventListener(
         'click',
         atcb_debounce(() => {
-          oneOption ? parent.blur() : atcb_close();
+          oneOption ? parent.blur() : atcb_toggle('close');
           atcb_generate_microsoft(data, '365');
         })
       );
@@ -515,7 +521,7 @@ function atcb_generate_label(data, parent, type, icon = false, text = '', oneOpt
       parent.addEventListener(
         'click',
         atcb_debounce(() => {
-          oneOption ? parent.blur() : atcb_close();
+          oneOption ? parent.blur() : atcb_toggle('close');
           atcb_generate_microsoft(data, 'outlook');
         })
       );
@@ -526,7 +532,7 @@ function atcb_generate_label(data, parent, type, icon = false, text = '', oneOpt
       parent.addEventListener(
         'click',
         atcb_debounce(() => {
-          oneOption ? parent.blur() : atcb_close();
+          oneOption ? parent.blur() : atcb_toggle('close');
           atcb_generate_yahoo(data);
         })
       );
@@ -537,7 +543,7 @@ function atcb_generate_label(data, parent, type, icon = false, text = '', oneOpt
       parent.addEventListener(
         'click',
         atcb_debounce(() => {
-          oneOption ? parent.blur() : atcb_close();
+          oneOption ? parent.blur() : atcb_toggle('close');
         })
       );
       parent.addEventListener(
@@ -555,17 +561,17 @@ function atcb_generate_label(data, parent, type, icon = false, text = '', oneOpt
   // support keyboard input
   if (!oneOption && type === 'trigger') {
     parent.addEventListener(
-      'keydown',
+      'keyup',
       atcb_debounce_leading((event) => {
         if (event.key == 'Enter') {
           event.preventDefault();
-          atcb_toggle(data, parent, true, true);
+          atcb_toggle('auto', data, parent, true, true);
         }
       })
     );
   } else {
     parent.addEventListener(
-      'keydown',
+      'keyup',
       atcb_debounce_leading((event) => {
         if (event.key == 'Enter') {
           event.preventDefault();
@@ -688,7 +694,7 @@ function atcb_generate_bg_overlay(listStyle = 'dropdown', trigger = '', darken =
     'click',
     atcb_debounce((e) => {
       if (e.target !== e.currentTarget) return;
-      atcb_close(true);
+      atcb_toggle('close');
     })
   );
   let fingerMoved = false;
@@ -708,7 +714,7 @@ function atcb_generate_bg_overlay(listStyle = 'dropdown', trigger = '', darken =
     'touchend',
     atcb_debounce((e) => {
       if (fingerMoved !== false || e.target !== e.currentTarget) return;
-      atcb_close(true);
+      atcb_toggle('close');
     }),
     { passive: true }
   );
@@ -716,7 +722,7 @@ function atcb_generate_bg_overlay(listStyle = 'dropdown', trigger = '', darken =
     'focus',
     atcb_debounce_leading((e) => {
       if (e.target !== e.currentTarget) return;
-      atcb_close();
+      atcb_toggle('close');
     })
   );
   if (trigger !== 'click') {
@@ -724,7 +730,7 @@ function atcb_generate_bg_overlay(listStyle = 'dropdown', trigger = '', darken =
       'mousemove',
       atcb_debounce_leading((e) => {
         if (e.target !== e.currentTarget) return;
-        atcb_close(true);
+        atcb_toggle('close');
       })
     );
   } else {
@@ -735,9 +741,16 @@ function atcb_generate_bg_overlay(listStyle = 'dropdown', trigger = '', darken =
 }
 
 // FUNCTIONS TO CONTROL THE INTERACTION
-function atcb_toggle(data, button, keyboardTrigger = false, generatedButton = false) {
+function atcb_toggle(action, data = '', button = '', keyboardTrigger = false, generatedButton = false) {
   // check for state and adjust accordingly
-  if (button.classList.contains('atcb-active') || document.querySelector('.atcb-active-modal')) {
+  // action can be 'open', 'close', or 'auto'
+  if (action == 'open') {
+    atcb_open(data, button, keyboardTrigger, generatedButton);
+  } else if (
+    action == 'close' ||
+    button.classList.contains('atcb-active') ||
+    document.querySelector('.atcb-active-modal')
+  ) {
     atcb_close();
   } else {
     atcb_open(data, button, keyboardTrigger, generatedButton);
@@ -788,18 +801,16 @@ function atcb_open(data, button, keyboardTrigger = false, generatedButton = fals
     list.firstChild.focus();
   } else {
     // for everything else, we focus as well, but blur immediately to only set the pointer
-    list.firstChild.focus();
+    list.firstChild.focus({ preventScroll: true });
     list.firstChild.blur();
   }
 }
 
-function atcb_close(blockFocus = false) {
-  // focus triggering button - especially relevant for keyboard navigation
-  if (!blockFocus) {
-    let newFocusEl = document.querySelector('.atcb-active, .atcb-active-modal');
-    if (newFocusEl) {
-      newFocusEl.focus();
-    }
+function atcb_close() {
+  // focus triggering button if available - especially relevant for keyboard navigation
+  let newFocusEl = document.querySelector('.atcb-active, .atcb-active-modal');
+  if (newFocusEl) {
+    newFocusEl.focus({ preventScroll: true });
   }
   // inactivate all buttons
   Array.from(document.querySelectorAll('.atcb-active')).forEach((button) => {
@@ -838,7 +849,7 @@ function atcb_action(data, triggerElement, keyboardTrigger = true) {
     data.listStyle = 'modal';
     data.trigger = 'click';
   }
-  atcb_open(data, triggerElement, keyboardTrigger);
+  atcb_toggle('open', data, triggerElement, keyboardTrigger);
 }
 
 // FUNCTION TO GENERATE THE GOOGLE URL
@@ -1279,11 +1290,11 @@ function atcb_create_modal(data, icon = '', headline, content, buttons) {
     atcb_debounce(() => atcb_close())
   );
   infoModalClose.addEventListener(
-    'keydown',
+    'keyup',
     atcb_debounce_leading((event) => {
       if (event.key == 'Enter') {
         event.preventDefault();
-        atcb_close();
+        atcb_toggle('close');
       }
     })
   );
@@ -1343,10 +1354,10 @@ function atcb_create_modal(data, icon = '', headline, content, buttons) {
             atcb_debounce(() => atcb_close())
           );
           infoModalButton.addEventListener(
-            'keydown',
+            'keyup',
             atcb_debounce((event) => {
               if (event.key == 'Enter') {
-                atcb_close();
+                atcb_toggle('close');
               }
             })
           );
@@ -1357,11 +1368,11 @@ function atcb_create_modal(data, icon = '', headline, content, buttons) {
             atcb_debounce(() => atcb_close())
           );
           infoModalButton.addEventListener(
-            'keydown',
+            'keyup',
             atcb_debounce_leading((event) => {
               if (event.key == 'Enter') {
                 event.preventDefault();
-                atcb_close();
+                atcb_toggle('close');
               }
             })
           );
@@ -1372,24 +1383,46 @@ function atcb_create_modal(data, icon = '', headline, content, buttons) {
 }
 
 // SHARED FUNCTION TO CALCULATE THE POSITION OF THE DROPDOWN LIST
-function atcb_position_list(trigger, list) {
+function atcb_position_list(trigger, list, resize = false) {
+  // check for position anchor
   let anchorSet = false;
+  const originalTrigger = trigger;
   if (trigger.nextElementSibling !== null) {
     if (trigger.nextElementSibling.classList.contains('atcb-dropdown-anchor')) {
       trigger = trigger.nextSibling;
       anchorSet = true;
     }
   }
-  const btnDim = trigger.getBoundingClientRect();
+  // calculate position
+  const triggerDim = trigger.getBoundingClientRect();
   const listDim = list.getBoundingClientRect();
   if (anchorSet === true) {
-    list.style.width = btnDim.width + 'px';
-    list.style.top = btnDim.top + window.scrollY + 'px';
-    list.style.left = btnDim.left + 'px';
+    // in the regular case, we also check for the ideal direction (not in the resize case)
+    const btnDim = originalTrigger.getBoundingClientRect();
+    if (
+      (list.classList.contains('atcb-dropup') && resize) ||
+      (triggerDim.top + listDim.height > window.innerHeight - 20 &&
+        window.innerHeight - 20 > listDim.height + btnDim.height)
+    ) {
+      originalTrigger.classList.add('atcb-dropup');
+      list.classList.add('atcb-dropup');
+      list.style.top =
+        window.scrollY + 2 * btnDim.top + btnDim.height - triggerDim.top - listDim.height + 'px';
+    } else {
+      list.style.top = window.scrollY + triggerDim.top + 'px';
+      if (originalTrigger.classList.contains('atcb-dropup')) {
+        originalTrigger.classList.remove('atcb-dropup');
+      }
+    }
+    list.style.width = triggerDim.width + 'px';
+    list.style.left = triggerDim.left + 'px';
   } else {
-    list.style.width = btnDim.width + 10 + 'px';
-    list.style.top = btnDim.top + btnDim.height / 2 - listDim.height / 2 + window.scrollY + 'px';
-    list.style.left = btnDim.left - 5 + 'px';
+    // when there is no anchor set (only the case with custom implementations), we render the modal centered above the trigger
+    // make sure the trigger is not moved over it via CSS in this case!
+    list.style.width = triggerDim.width + 10 + 'px';
+    const listDimNew = list.getBoundingClientRect();
+    list.style.top = window.scrollY + triggerDim.top + triggerDim.height / 2 - listDim.height / 2 + 'px';
+    list.style.left = triggerDim.left - 5 - (listDimNew.width - triggerDim.width) / 2 + 'px';
   }
 }
 
@@ -1411,7 +1444,7 @@ function atcb_debounce(func, timeout = 200) {
   };
 }
 // dropping subsequent calls debounce
-function atcb_debounce_leading(func, timeout = 200) {
+function atcb_debounce_leading(func, timeout = 300) {
   let timer;
   return (...args) => {
     if (!timer) {
@@ -1454,10 +1487,10 @@ function atcb_throttle(func, delay = 10) {
 if (isBrowser()) {
   // Global listener to ESC key to close dropdown
   document.addEventListener(
-    'keydown',
+    'keyup',
     atcb_debounce_leading((event) => {
       if (event.key === 'Escape') {
-        atcb_close();
+        atcb_toggle('close');
       }
     })
   );
@@ -1472,7 +1505,7 @@ if (isBrowser()) {
       let activeButton = document.querySelector('.atcb-active');
       let activeList = document.querySelector('.atcb-dropdown');
       if (activeButton != null && activeList != null) {
-        atcb_position_list(activeButton, activeList);
+        atcb_position_list(activeButton, activeList, true);
       }
     })
   );

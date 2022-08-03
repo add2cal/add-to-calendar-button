@@ -71,7 +71,7 @@ Adhering to the following process is the best way to get your work included in t
 1.  [Fork](https://help.github.com/articles/fork-a-repo/) the project, clone your fork, and configure the remotes:
 
     ```bash
-    # Clone your fork of the repo into the current directory
+    # Clone your fork of the repo
     git clone https://github.com/<your-username>/add-to-calendar-button.git
     # Navigate to the newly cloned directory
     cd add-to-calendar-button
@@ -82,8 +82,8 @@ Adhering to the following process is the best way to get your work included in t
 2.  If you cloned a while ago, get the latest changes from upstream:
 
     ```bash
-    git checkout master
-    git pull upstream master
+    git checkout main
+    git pull upstream main
     ```
 
     **Also check any dev or dev_x branch. In doubt, especially if there is a lot of unmerged stuff in them, ask how to proceed!**
@@ -100,7 +100,7 @@ Adhering to the following process is the best way to get your work included in t
 5.  Locally merge (or rebase) the upstream development branch into your topic branch:
 
     ```bash
-    git pull [--rebase] upstream master
+    git pull [--rebase] upstream main
     ```
 
 6.  Push your topic branch up to your fork:

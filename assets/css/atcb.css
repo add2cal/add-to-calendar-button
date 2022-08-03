@@ -149,11 +149,12 @@ body.atcb-dark .atcb-modal-box.atcb-bodyScheme {
 
 .atcb-dropdown-anchor {
   position: relative;
-  top: -3px;
+  top: -4px;
 }
 
 .atcb-list-wrapper {
   box-sizing: border-box;
+  min-width: 170px;
   padding: 0 4px;
   position: absolute;
   z-index: 150;
@@ -211,6 +212,12 @@ body.atcb-dark .atcb-modal-box.atcb-bodyScheme {
   border-top-style: none;
 }
 
+.atcb-dropup .atcb-list-item:last-child {
+  border-radius: 0;
+  padding-bottom: 20px;
+}
+
+.atcb-dropup .atcb-list-item:first-child,
 .atcb-list:not(.atcb-generated-button) .atcb-list-item:first-child,
 .atcb-list.atcb-modal .atcb-list-item:first-child {
   border-radius: 6px 6px 0 0;
@@ -223,6 +230,10 @@ body.atcb-dark .atcb-modal-box.atcb-bodyScheme {
 
 .atcb-list.atcb-generated-button:not(.atcb-modal) .atcb-list-item:first-child {
   padding-top: 20px;
+}
+
+.atcb-dropup .atcb-list.atcb-generated-button:not(.atcb-modal) .atcb-list-item:first-child {
+  padding-top: 13px;
 }
 
 .atcb-list:not(.atcb-generated-button),
