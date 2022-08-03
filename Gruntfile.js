@@ -39,6 +39,10 @@ module.exports = function (grunt) {
         'assets/css/*.min.css.map',
         'npm_dist/cjs/*.js',
         'npm_dist/mjs/',
+        'demo_assets/css/*.min.css',
+        'demo_assets/css/*.min.css.map',
+        'demo_assets/js/*.js.css',
+        'demo_assets/js/*.min.js.map',
       ],
     },
     // minifies the css file
@@ -53,6 +57,13 @@ module.exports = function (grunt) {
             cwd: 'assets/css',
             src: ['*.css', '!*.min.css'],
             dest: 'assets/css',
+            ext: '.min.css',
+          },
+          {
+            expand: true,
+            cwd: 'demo_assets/css',
+            src: ['*.css', '!*.min.css'],
+            dest: 'demo_assets/css',
             ext: '.min.css',
           },
         ],
@@ -81,6 +92,7 @@ module.exports = function (grunt) {
       newBuild: {
         files: {
           'assets/js/atcb.min.js': ['assets/js/atcb.js'],
+          'demo_assets/js/demopage.min.js': ['demo_assets/js/demopage.js'],
         },
       },
     },
