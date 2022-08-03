@@ -64,7 +64,7 @@ They should remain focused in scope and avoid containing unrelated commits.
 **Please ask first** before embarking on any significant pull request (e.g. implementing features, refactoring code, porting to a different language).
 Otherwise you risk spending a lot of time working on something that the project's developers might not want to merge into the project.
 
-Mind to run `npm install`, `npm format`, and `npm run build` to auto-lint, create the minified js and css files, its sourcemap files as well as the npm_dist/ folder and content!
+Mind to run `npm install`, `npm format`, and `npm run build` to auto-lint and create the minified js, css, as well as its sourcemap files!
 
 Adhering to the following process is the best way to get your work included in the project:
 

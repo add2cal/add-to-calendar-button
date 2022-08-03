@@ -1,8 +1,13 @@
 const initCodeDelimiter = /\/\/ START INIT[\s\S]*?\/\/ END INIT/g;
 
-function process(content, exportPhrase) {
+function prepareExport(content, exportPhrase) {
   return content.replace(initCodeDelimiter, `${exportPhrase} { atcb_action, atcb_init };`);
 }
+
+function eslintAdjustment(content) {
+  return content.replace("../", "../../");
+}
+
 module.exports = function (grunt) {
   // The config.
   grunt.initConfig({
@@ -32,13 +37,14 @@ module.exports = function (grunt) {
     },
     // cleans old built files
     clean: {
-      oldBuildFiles: [
+      npmFolder: [
+        'npm_dist/',
+      ],
+      otherBuildFiles: [
         'assets/js/*.min.js',
         'assets/js/*.min.js.map',
         'assets/css/*.min.css',
         'assets/css/*.min.css.map',
-        'npm_dist/cjs/*.js',
-        'npm_dist/mjs/',
         'demo_assets/css/*.min.css',
         'demo_assets/css/*.min.css.map',
         'demo_assets/js/*.js.css',
@@ -74,13 +80,18 @@ module.exports = function (grunt) {
       mjs_dist: {
         src: 'assets/js/atcb.js',
         dest: 'npm_dist/mjs/index.js',
-        options: { process: (content) => process(content, 'export') },
+        options: { process: (content) => prepareExport(content, 'export') },
       },
       cjs_dist: {
         src: 'assets/js/atcb.js',
         dest: 'npm_dist/cjs/index.js',
-        options: { process: (content) => process(content, 'module.exports =') },
+        options: { process: (content) => prepareExport(content, 'module.exports =') },
       },
+      eslintAdd: {
+        src: 'test/.eslintrc.json',
+        dest: 'npm_dist/cjs/.eslintrc.json',
+        options: { process: (content) => eslintAdjustment(content) },
+      }
     },
     // minifies the main js file
     uglify: {
@@ -107,4 +118,5 @@ module.exports = function (grunt) {
 
   // Register task(s).
   grunt.registerTask('default', ['clean', 'cssmin', 'copy', 'uglify']);
+  grunt.registerTask('cleanNpm', ['clean:npmFolder']);
 };
