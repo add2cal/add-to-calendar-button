@@ -16,7 +16,7 @@ declare module 'add-to-calendar-button' {
       timeZoneOffset?: string;
       iCalFileName?: string;
       trigger?: 'hover' | 'click';
-      listStyle?: 'dropdown' | 'modal';
+      listStyle?: 'dropdown' | 'dropdown-static' | 'overlay' | 'modal';
       inline?: boolean;
       background?: boolean;
       icsFile?: string;

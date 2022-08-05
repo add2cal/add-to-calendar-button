@@ -119,7 +119,9 @@ body.atcb-dark .atcb-modal-box.atcb-bodyScheme {
   outline: 2px solid var(--atcb-keyboard-focus);
 }
 
-.atcb-button.atcb-active:not(.atcb-modal-style) {
+.atcb-button.atcb-active:not(.atcb-modal-style, .atcb-dropoverlay),
+.atcb-button.atcb-single:focus,
+.atcb-button.atcb-single:hover {
   background-color: var(--atcb-background-2);
   box-shadow: var(--atcb-shadow-button-active);
   margin: 0;
@@ -128,8 +130,13 @@ body.atcb-dark .atcb-modal-box.atcb-bodyScheme {
   z-index: 160;
 }
 
+.atcb-button.atcb-active.atcb-dropoverlay {
+  min-width: 172px;
+  z-index: 150;
+}
+
 /******************************
- * Button Icon (also base for list icons)
+ * Button Icon (also base for list icons) & Text
  */
 
 .atcb-icon {
@@ -141,6 +148,10 @@ body.atcb-dark .atcb-modal-box.atcb-bodyScheme {
   height: 100%;
   fill: var(--atcb-text);
   width: auto;
+}
+
+.atcb-text {
+  overflow-wrap: anywhere;
 }
 
 /******************************
@@ -158,6 +169,10 @@ body.atcb-dark .atcb-modal-box.atcb-bodyScheme {
   padding: 0 4px;
   position: absolute;
   z-index: 150;
+}
+
+.atcb-list-wrapper.atcb-dropoverlay {
+  z-index: 160;
 }
 
 .atcb-list {
@@ -218,12 +233,12 @@ body.atcb-dark .atcb-modal-box.atcb-bodyScheme {
 }
 
 .atcb-dropup .atcb-list-item:first-child,
-.atcb-list:not(.atcb-generated-button) .atcb-list-item:first-child,
+.atcb-dropoverlay .atcb-list .atcb-list-item:first-child,
 .atcb-list.atcb-modal .atcb-list-item:first-child {
   border-radius: 6px 6px 0 0;
 }
 
-.atcb-list:not(.atcb-generated-button) .atcb-list-item:only-child,
+.atcb-dropoverlay .atcb-list .atcb-list-item:only-child,
 .atcb-list.atcb-modal .atcb-list-item:only-child {
   border-radius: 6px;
 }
@@ -232,11 +247,12 @@ body.atcb-dark .atcb-modal-box.atcb-bodyScheme {
   padding-top: 20px;
 }
 
-.atcb-dropup .atcb-list.atcb-generated-button:not(.atcb-modal) .atcb-list-item:first-child {
+.atcb-dropup .atcb-list.atcb-generated-button:not(.atcb-modal) .atcb-list-item:first-child,
+.atcb-dropoverlay .atcb-list.atcb-generated-button:not(.atcb-modal) .atcb-list-item:first-child {
   padding-top: 13px;
 }
 
-.atcb-list:not(.atcb-generated-button),
+.atcb-dropoverlay .atcb-list,
 .atcb-list.atcb-modal {
   border-radius: 6px;
 }

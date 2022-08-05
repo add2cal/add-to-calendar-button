@@ -274,7 +274,7 @@ const MyComponent = () => {
 - ics files are generated on the fly. However, if you want to go more stable, you can also explicitly define a self-hosted file, setting its absolute path with the `icsFile` option.
 - You can use the option `"inline":true` in order to make the button appear with inline-block instead of block style.
 - Use `"background":false` if you want to be the background overlay to be fully transparent.
-- The default style for the options list, using the regular button, would be a dropdown. You can set the option `listStyle` to "modal" in order to force the modal version (this would also force the click trigger).
+- The default style for the options list, using the regular button, would be a dropdown. You can set the option `listStyle` to "modal" in order to force the modal version (this would also force the click trigger) or `overlay` to show the list right above the button. The default would also show the dropdown upwards, if this better fits the current viewport. You can block this behavior with the option `dropdown-static`.
 - If you require line breaks within the description, use `\n` or `<br>`.
 - If you set at least a name, startDate, and location, the script automatically generates schema.org rich data. Use a URL for the location and it will be labeled as online event.
 - Each generated button and option has a speaking id to be used for any tracking methods. Scheme: "atcb-btn-_IDENTIFIER_" or "atcb-btn-_IDENTIFIER_-google" (for the Google option) respectively. The _IDENTIFIER_ will be an automatic number, but can be overridden by providing the option `"identifier":"xyz"` (no special characters allowed; needs to be unique).
