@@ -96,7 +96,6 @@ body.atcb-dark .atcb-modal-box.atcb-bodyScheme {
   font-family: Arial, Helvetica, sans-serif;
   font-size: 16px;
   font-weight: 600;
-  gap: 10px;
   line-height: 24px;
   margin: 0;
   max-width: 300px;
@@ -155,6 +154,7 @@ body.atcb-dark .atcb-modal-box.atcb-bodyScheme {
 .atcb-icon {
   height: 16px;
   margin-bottom: 4px;
+  margin-right: 10px;
 }
 
 .atcb-icon svg {
@@ -272,7 +272,6 @@ body.atcb-dark .atcb-modal-box.atcb-bodyScheme {
   cursor: pointer;
   display: flex;
   font-size: 1em;
-  gap: 8px;
   left: 50%;
   line-height: 1.75em;
   padding: 13px 15px;
@@ -338,6 +337,7 @@ body.atcb-dark .atcb-modal-box.atcb-bodyScheme {
 
 .atcb-list-item .atcb-icon {
   margin-bottom: 7px;
+  margin-right: 8px;
   width: 18px;
 }
 
@@ -421,7 +421,6 @@ body.atcb-dark .atcb-modal-box.atcb-bodyScheme {
   display: flex;
   font-size: 1.38em;
   font-weight: 600;
-  gap: 15px;
   line-height: 2em;
   margin: 20px 15px;
   text-transform: uppercase;
@@ -430,6 +429,7 @@ body.atcb-dark .atcb-modal-box.atcb-bodyScheme {
 .atcb-modal-headline-icon {
   height: 26px;
   margin-bottom: 2px;
+  margin-right: 15px;
 }
 
 .atcb-modal-hedline-icon svg {

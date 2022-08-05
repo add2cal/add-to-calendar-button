@@ -424,13 +424,6 @@ function atcb_validate(data) {
 // GENERATE THE ACTUAL BUTTON
 // helper function to generate the labels for the button and list options
 function atcb_generate_label(data, parent, type, icon = false, text = '', oneOption = false) {
-  // kill the label if not supported
-  if (data.recurrence != null && data.recurrence != '') {
-    if (type == 'msteams' || type == 'ms365' || type == 'outlookcom' || type == 'yahoo') {
-      parent.remove();
-      return;
-    }
-  }
   let defaultTriggerText = atcb_translate_hook('Add to Calendar', data.language, data);
   // if there is only 1 option, we use the trigger text on the option label. Therefore, forcing it here
   if (oneOption && text == '') {
@@ -463,7 +456,7 @@ function atcb_generate_label(data, parent, type, icon = false, text = '', oneOpt
           })
         );
       }
-      parent.setAttribute('id', data.identifier);
+      parent.id = data.identifier;
       text = text || defaultTriggerText;
       break;
     case 'apple':
@@ -474,7 +467,7 @@ function atcb_generate_label(data, parent, type, icon = false, text = '', oneOpt
           atcb_generate_ical(data);
         })
       );
-      parent.setAttribute('id', data.identifier + '-apple');
+      parent.id = data.identifier + '-apple';
       text = text || 'Apple';
       break;
     case 'google':
@@ -485,7 +478,7 @@ function atcb_generate_label(data, parent, type, icon = false, text = '', oneOpt
           atcb_generate_google(data);
         })
       );
-      parent.setAttribute('id', data.identifier + '-google');
+      parent.id = data.identifier + '-google';
       text = text || 'Google';
       break;
     case 'ical':
@@ -496,7 +489,7 @@ function atcb_generate_label(data, parent, type, icon = false, text = '', oneOpt
           atcb_generate_ical(data);
         })
       );
-      parent.setAttribute('id', data.identifier + '-ical');
+      parent.id = data.identifier + '-ical';
       text = text || atcb_translate_hook('iCal File', data.language, data);
       break;
     case 'msteams':
@@ -507,7 +500,7 @@ function atcb_generate_label(data, parent, type, icon = false, text = '', oneOpt
           atcb_generate_teams(data);
         })
       );
-      parent.setAttribute('id', data.identifier + '-msteams');
+      parent.id = data.identifier + '-msteams';
       text = text || 'Microsoft Teams';
       break;
     case 'ms365':
@@ -518,7 +511,7 @@ function atcb_generate_label(data, parent, type, icon = false, text = '', oneOpt
           atcb_generate_microsoft(data, '365');
         })
       );
-      parent.setAttribute('id', data.identifier + '-ms365');
+      parent.id = data.identifier + '-ms365';
       text = text || 'Microsoft 365';
       break;
     case 'outlookcom':
@@ -529,7 +522,7 @@ function atcb_generate_label(data, parent, type, icon = false, text = '', oneOpt
           atcb_generate_microsoft(data, 'outlook');
         })
       );
-      parent.setAttribute('id', data.identifier + '-outlook');
+      parent.id = data.identifier + '-outlook';
       text = text || 'Outlook.com';
       break;
     case 'yahoo':
@@ -540,7 +533,7 @@ function atcb_generate_label(data, parent, type, icon = false, text = '', oneOpt
           atcb_generate_yahoo(data);
         })
       );
-      parent.setAttribute('id', data.identifier + '-yahoo');
+      parent.id = data.identifier + '-yahoo';
       text = text || 'Yahoo';
       break;
     case 'close':
@@ -554,13 +547,13 @@ function atcb_generate_label(data, parent, type, icon = false, text = '', oneOpt
         'focus',
         atcb_debounce(() => atcb_close(false))
       );
-      parent.setAttribute('id', data.identifier + '-close');
+      parent.id = data.identifier + '-close';
       text = atcb_translate_hook('Close', data.language, data);
       break;
   }
   // override the id for the oneOption button, since the button always needs to have the button id
   if (oneOption) {
-    parent.setAttribute('id', data.identifier);
+    parent.id = data.identifier;
   }
   // support keyboard input
   if (!oneOption && type === 'trigger') {
@@ -605,7 +598,7 @@ function atcb_generate(button, data) {
   // TODO: support recurring events
   if (data.name && data.location && data.startDate) {
     const schemaEl = document.createElement('script');
-    schemaEl.setAttribute('type', 'application/ld+json');
+    schemaEl.type = 'application/ld+json';
     schemaEl.textContent = '{ "event": { "@context":"https://schema.org", "@type":"Event", ';
     schemaEl.textContent += '"name":"' + data.name + '", ';
     if (data.descriptionHtmlFree)
@@ -633,7 +626,7 @@ function atcb_generate(button, data) {
   if (data.listStyle === 'overlay') {
     buttonTrigger.classList.add('atcb-dropoverlay');
   }
-  buttonTrigger.setAttribute('type', 'button');
+  buttonTrigger.type = 'button';
   buttonTriggerWrapper.appendChild(buttonTrigger);
   // generate the label incl. eventListeners
   // if there is only 1 calendar option, we directly show this at the button, but with the trigger's label text
@@ -667,11 +660,20 @@ function atcb_generate_dropdown_list(data) {
   optionsList.classList.add('atcb-list');
   optionsList.classList.add('atcb-' + data.lightMode);
   // generate the list items
+  let listCount = 0;
   data.options.forEach(function (option) {
     const optionParts = option.split('|');
+    // skip the option if not supported
+    if (data.recurrence != null && data.recurrence != '') {
+      if (optionParts[0] == 'msteams' || optionParts[0] == 'ms365' || optionParts[0] == 'outlookcom' || optionParts[0] == 'yahoo') {
+        return;
+      }
+    }
     const optionItem = document.createElement('div');
     optionItem.classList.add('atcb-list-item');
     optionItem.tabIndex = 0;
+    listCount++;
+    optionItem.dataset.optionNumber = listCount;
     optionsList.appendChild(optionItem);
     // generate the label incl. individual eventListener
     atcb_generate_label(data, optionItem, optionParts[0], true, optionParts[1]);
@@ -690,7 +692,7 @@ function atcb_generate_dropdown_list(data) {
 // create the background overlay, which also acts as trigger to close any dropdowns
 function atcb_generate_bg_overlay(listStyle = 'dropdown', trigger = '', darken = true) {
   const bgOverlay = document.createElement('div');
-  bgOverlay.setAttribute('id', 'atcb-bgoverlay');
+  bgOverlay.id = 'atcb-bgoverlay';
   if (listStyle !== 'modal' && darken) {
     bgOverlay.classList.add('atcb-animate-bg');
   }
@@ -793,7 +795,7 @@ function atcb_open(data, button, keyboardTrigger = false, generatedButton = fals
     list.classList.add('atcb-modal');
   }
   // define background overlay
-  const bgOverlay = atcb_generate_bg_overlay(data.listStyle, data.trigger, data.background);
+  const bgOverlay = atcb_generate_bg_overlay(data.listStyle, data.trigger, data.background);  
   // render the items depending on the liststyle
   if (data.listStyle === 'modal') {
     document.body.appendChild(bgOverlay);
@@ -816,10 +818,9 @@ function atcb_open(data, button, keyboardTrigger = false, generatedButton = fals
   if (keyboardTrigger) {
     list.firstChild.focus();
   } else {
-    // for everything else, we focus as well, but blur immediately to only set the pointer
     list.firstChild.focus({ preventScroll: true });
-    list.firstChild.blur();
   }
+  list.firstChild.blur();
 }
 
 function atcb_close(keyboardTrigger = false) {
@@ -1356,7 +1357,7 @@ function atcb_create_modal(data, icon = '', headline, content, buttons) {
         infoModalButton.setAttribute('rel', 'noopener');
       } else {
         infoModalButton = document.createElement('button');
-        infoModalButton.setAttribute('type', 'button');
+        infoModalButton.type = 'button';
       }
       infoModalButton.classList.add('atcb-modal-btn');
       if (button.primary) {
@@ -1406,7 +1407,7 @@ function atcb_create_modal(data, icon = '', headline, content, buttons) {
 }
 
 // SHARED FUNCTION TO CALCULATE THE POSITION OF THE DROPDOWN LIST
-function atcb_position_list(trigger, list, updateDirection = false) {
+function atcb_position_list(trigger, list, blockUpwards = false, resize = false) {
   // check for position anchor
   let anchorSet = false;
   const originalTrigger = trigger;
@@ -1421,16 +1422,18 @@ function atcb_position_list(trigger, list, updateDirection = false) {
   const listDim = list.getBoundingClientRect();
   const btnDim = originalTrigger.getBoundingClientRect();
   if (anchorSet === true && !list.classList.contains('atcb-dropoverlay')) {
-    // in the regular case, we also check for the ideal direction (not in the !updateDirection case)
+    // in the regular case, we also check for the ideal direction
+    // not in the !updateDirection case and not if there is not enough space above
+    const viewportHeight = document.documentElement.clientHeight;
     if (
-      (list.classList.contains('atcb-dropup') && updateDirection) ||
-      (!updateDirection && triggerDim.top + listDim.height > window.innerHeight - 20 &&
+      (list.classList.contains('atcb-dropup') && resize) ||
+      (!blockUpwards && triggerDim.top + listDim.height > viewportHeight - 20 &&
         2 * btnDim.top + btnDim.height - triggerDim.top - listDim.height > 20)
     ) {
       originalTrigger.classList.add('atcb-dropup');
       list.classList.add('atcb-dropup');
-      list.style.bottom =
-        (2 * window.innerHeight) - (window.innerHeight + (btnDim.bottom - btnDim.height - (triggerDim.bottom - btnDim.bottom))) - window.scrollY + 'px';
+      list.style.bottom = 
+        (2 * viewportHeight) - (viewportHeight + (btnDim.top + (btnDim.top + btnDim.height - triggerDim.top))) - window.scrollY + 'px';
     } else {
       list.style.top = window.scrollY + triggerDim.top + 'px';
       if (originalTrigger.classList.contains('atcb-dropup')) {
@@ -1510,16 +1513,46 @@ function atcb_throttle(func, delay = 10) {
   };
 }
 
-// GLOBAL LISTENERS
+// GLOBAL KEYBOARD AND DEVICE LISTENERS
 if (isBrowser()) {
-  // Global listener to ESC key to close dropdown
+  // global listener to ESC key to close dropdown
   document.addEventListener(
     'keyup',
-    atcb_debounce_leading((event) => {
+    atcb_debounce_leading((event) => {      
       if (event.key === 'Escape') {
         atcb_toggle('close', '', '', true);
       }
     })
+  );
+  // global listener to arrow key optionlist navigation
+  document.addEventListener(
+    'keydown',
+    (event) => {
+      if (document.querySelector('.atcb-list') && (event.key === 'ArrowDown' || event.key === 'ArrowUp' || event.key === 'Tab')) {        
+        let targetFocus = 0;
+        let currFocusOption = document.activeElement;
+        const optionListCount = document.querySelectorAll('.atcb-list-item').length;
+        if (currFocusOption.classList.contains('atcb-list-item')) {
+          if (event.key === 'ArrowDown' && currFocusOption.dataset.optionNumber < optionListCount) {
+            event.preventDefault();
+            targetFocus = parseInt(currFocusOption.dataset.optionNumber) + 1;
+          } else if (event.key === 'ArrowUp' && currFocusOption.dataset.optionNumber >= 1) {
+            event.preventDefault();
+            targetFocus = parseInt(currFocusOption.dataset.optionNumber) - 1;
+          }       
+          if (targetFocus > 0) {
+            document.querySelector('.atcb-list-item[data-option-number="' + targetFocus + '"]').focus();
+          }
+        } else {
+          event.preventDefault();
+          if (document.querySelector('.atcb-list-wrapper.atcb-dropup') && (event.key === 'ArrowDown' || event.key === 'ArrowUp')) {
+            document.querySelector('.atcb-list-item[data-option-number="' + optionListCount + '"]').focus();
+          } else {
+            document.querySelector('.atcb-list-item[data-option-number="1"]').focus();
+          }
+        }
+      }
+    }
   );
   // Global listener to any screen changes
   window.addEventListener(
@@ -1532,7 +1565,7 @@ if (isBrowser()) {
       let activeButton = document.querySelector('.atcb-active');
       let activeList = document.querySelector('.atcb-dropdown');
       if (activeButton != null && activeList != null) {
-        atcb_position_list(activeButton, activeList, true);
+        atcb_position_list(activeButton, activeList, false, true);
       }
     })
   );
