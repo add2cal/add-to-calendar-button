@@ -20,7 +20,7 @@
   --text-subline: #5a5a5a;
   --hr: #cfcfcf;
   --light-mode-switch: #0D1117;
-  --example-background: #ffffff;
+  --example-background: #fff;
   --example-color: #969696;
   --example-border: #c1c1c1;
 }
@@ -81,7 +81,7 @@ h1 {
   line-height: 1.2em;
 }
 
-h1 #tinyVersion {
+h1 #tiny-version {
   color: var(--text-secondary);
   font-size: 0.4em;
   font-weight: 400;
@@ -116,18 +116,19 @@ a, a:focus, a:active {
   text-decoration: none;
 }
 
+a:not(.clean) {
+  text-decoration: underline;
+}
+
+a:hover {
+  color: #7b5a92;
+  text-decoration: none;
+}
+
 body.atcb-dark a,
 body.atcb-dark a:focus,
 body.atcb-dark a:active {
   color: #864fab;
-}
-
-a:not(.clean) {
-  text-decoration: underline;
-}
-a:hover {
-  color: #7b5a92;
-  text-decoration: none;
 }
 
 body.atcb-dark a:hover {
@@ -139,12 +140,12 @@ a svg {
   fill: #6D0BAC;
 }
 
-body.atcb-dark a svg {
-  fill: #864fab;
-}
-
 a:hover svg {
   fill: #7b5a92;
+}
+
+body.atcb-dark a svg {
+  fill: #864fab;
 }
 
 body.atcb-dark a:hover svg {
@@ -256,7 +257,7 @@ body.atcb-dark #light-mode-switch div::after {
   background-color: var(--example-background);
   border: 1px solid var(--example-border);
   border-radius: 6px;
-  font-family: 'Consolas', Arial, sans-serif;
+  font-family: Consolas, Arial, sans-serif;
   font-size: 0.8em;
   padding: 20px;
   text-align: left;

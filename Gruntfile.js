@@ -5,7 +5,7 @@ function prepareExport(content, exportPhrase) {
 }
 
 function eslintAdjustment(content) {
-  return content.replace('../', '../../');
+  return content.replace(/\.\.\//g, '../../');
 }
 
 module.exports = function (grunt) {
