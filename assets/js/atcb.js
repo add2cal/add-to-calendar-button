@@ -895,7 +895,7 @@ function atcb_generate_google(data) {
   let url = 'https://calendar.google.com/calendar/render?action=TEMPLATE';
   // generate and add date
   const formattedDate = atcb_generate_time(data, 'clean', 'google');
-  url += '&dates=' + formattedDate.start + '%2F' + formattedDate.end;
+  url += '&dates=' + encodeURIComponent(formattedDate.start) + '%2F' + encodeURIComponent(formattedDate.end);
   // add details (if set)
   if (data.name != null && data.name != '') {
     url += '&text=' + encodeURIComponent(data.name);
@@ -933,7 +933,7 @@ function atcb_generate_yahoo(data) {
   let url = 'https://calendar.yahoo.com/?v=60';
   // generate and add date
   const formattedDate = atcb_generate_time(data, 'clean');
-  url += '&st=' + formattedDate.start + '&et=' + formattedDate.end;
+  url += '&st=' + encodeURIComponent(formattedDate.start) + '&et=' + encodeURIComponent(formattedDate.end);
   if (formattedDate.allday) {
     url += '&dur=allday';
   }
@@ -966,7 +966,8 @@ function atcb_generate_microsoft(data, type = '365') {
   url += '/calendar/0/deeplink/compose?path=%2Fcalendar%2Faction%2Fcompose&rru=addevent';
   // generate and add date
   const formattedDate = atcb_generate_time(data, 'delimiters', 'microsoft');
-  url += '&startdt=' + formattedDate.start + '&enddt=' + formattedDate.end;
+  url +=
+    '&startdt=' + encodeURIComponent(formattedDate.start) + '&enddt=' + encodeURIComponent(formattedDate.end);
   if (formattedDate.allday) {
     url += '&allday=true';
   }
@@ -994,7 +995,11 @@ function atcb_generate_teams(data) {
   let url = 'https://teams.microsoft.com/l/meeting/new?';
   // generate and add date
   const formattedDate = atcb_generate_time(data, 'delimiters', 'microsoft');
-  url += '&startTime=' + formattedDate.start + '&endTime=' + formattedDate.end;
+  url +=
+    '&startTime=' +
+    encodeURIComponent(formattedDate.start) +
+    '&endTime=' +
+    encodeURIComponent(formattedDate.end);
   // add details (if set)
   let locationString = '';
   if (data.name != null && data.name != '') {
