@@ -90,7 +90,7 @@ Adhering to the following process is the best way to get your work included in t
 
     **Also check any other dev_x branch. In doubt, especially if there is a lot of unmerged stuff in them, ask how to proceed!**
 
-3.  Create a new topic branch (off the main project dev branch) to contain your feature, change, or fix. The name should start with "dev_", followed by your individual title.
+3.  Create a new topic branch (off the main project dev branch) to contain your feature, change, or fix. The name should start with "dev\_", followed by your individual title.
 
     ```bash
     git checkout -b <topic-branch-name>

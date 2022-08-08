@@ -625,7 +625,7 @@ function atcb_generate(button, data) {
   const buttonTriggerWrapper = document.createElement('div');
   buttonTriggerWrapper.classList.add('atcb-button-wrapper');
   buttonTriggerWrapper.classList.add('atcb-' + data.lightMode);
-  buttonTriggerWrapper.style.fontSize = data.size + "px";
+  buttonTriggerWrapper.style.fontSize = data.size + 'px';
   button.appendChild(buttonTriggerWrapper);
   // generate the button trigger div
   const buttonTrigger = document.createElement('button');
@@ -666,14 +666,19 @@ function atcb_generate_dropdown_list(data) {
   const optionsList = document.createElement('div');
   optionsList.classList.add('atcb-list');
   optionsList.classList.add('atcb-' + data.lightMode);
-  optionsList.style.fontSize = data.size + "px";
+  optionsList.style.fontSize = data.size + 'px';
   // generate the list items
   let listCount = 0;
   data.options.forEach(function (option) {
     const optionParts = option.split('|');
     // skip the option if not supported
     if (data.recurrence != null && data.recurrence != '') {
-      if (optionParts[0] == 'msteams' || optionParts[0] == 'ms365' || optionParts[0] == 'outlookcom' || optionParts[0] == 'yahoo') {
+      if (
+        optionParts[0] == 'msteams' ||
+        optionParts[0] == 'ms365' ||
+        optionParts[0] == 'outlookcom' ||
+        optionParts[0] == 'yahoo'
+      ) {
         return;
       }
     }
@@ -803,7 +808,7 @@ function atcb_open(data, button, keyboardTrigger = false, generatedButton = fals
     list.classList.add('atcb-modal');
   }
   // define background overlay
-  const bgOverlay = atcb_generate_bg_overlay(data.listStyle, data.trigger, data.background);  
+  const bgOverlay = atcb_generate_bg_overlay(data.listStyle, data.trigger, data.background);
   // render the items depending on the liststyle
   if (data.listStyle === 'modal') {
     document.body.appendChild(bgOverlay);
@@ -817,7 +822,7 @@ function atcb_open(data, button, keyboardTrigger = false, generatedButton = fals
       atcb_position_list(button, listWrapper, true);
     } else {
       atcb_position_list(button, listWrapper);
-    }    
+    }
     document.body.appendChild(bgOverlay);
   }
   // set overlay size just to be sure
@@ -1012,14 +1017,6 @@ function atcb_generate_teams(data) {
 
 // FUNCTION TO GENERATE THE iCAL FILE (also for the Apple option)
 function atcb_generate_ical(data) {
-  atcb_create_modal(
-    data,
-    'browser',
-    atcb_translate_hook('WebView iCal', data.language, data),
-    atcb_translate_hook('WebView info description', data.language, data),
-    [{"asa":"fdsf"}]
-  );
-  return;
   // check for a given explicit file (not if iOS and WebView - will catched further down)
   if (
     data.icsFile != null &&
@@ -1316,8 +1313,8 @@ function atcb_create_modal(data, icon = '', headline, content, buttons) {
   }
   const infoModal = document.createElement('div');
   infoModal.classList.add('atcb-modal-box');
-  infoModal.classList.add('atcb-' + data.lightMode);  
-  infoModal.style.fontSize = data.size + "px";
+  infoModal.classList.add('atcb-' + data.lightMode);
+  infoModal.style.fontSize = data.size + 'px';
   infoModalWrapper.appendChild(infoModal);
   // set overlay size just to be sure
   atcb_set_fullsize(bgOverlay);
@@ -1444,13 +1441,17 @@ function atcb_position_list(trigger, list, blockUpwards = false, resize = false)
     const viewportHeight = document.documentElement.clientHeight;
     if (
       (list.classList.contains('atcb-dropup') && resize) ||
-      (!blockUpwards && triggerDim.top + listDim.height > viewportHeight - 20 &&
+      (!blockUpwards &&
+        triggerDim.top + listDim.height > viewportHeight - 20 &&
         2 * btnDim.top + btnDim.height - triggerDim.top - listDim.height > 20)
     ) {
       originalTrigger.classList.add('atcb-dropup');
       list.classList.add('atcb-dropup');
-      list.style.bottom = 
-        (2 * viewportHeight) - (viewportHeight + (btnDim.top + (btnDim.top + btnDim.height - triggerDim.top))) - window.scrollY + 'px';
+      list.style.bottom =
+        2 * viewportHeight -
+        (viewportHeight + (btnDim.top + (btnDim.top + btnDim.height - triggerDim.top))) -
+        window.scrollY +
+        'px';
     } else {
       list.style.top = window.scrollY + triggerDim.top + 'px';
       if (originalTrigger.classList.contains('atcb-dropup')) {
@@ -1461,12 +1462,12 @@ function atcb_position_list(trigger, list, blockUpwards = false, resize = false)
     list.style.left = triggerDim.left + 'px';
   } else {
     // when there is no anchor set (only the case with custom implementations) or the listStyle is set respectively (overlay), we render the modal centered above the trigger
-    // make sure the trigger is not moved over it via CSS in this case!    
+    // make sure the trigger is not moved over it via CSS in this case!
     let listWidth = triggerDim.width + 20 + 'px';
-    list.style.minWidth = listWidth;  
+    list.style.minWidth = listWidth;
     const listDimNew = list.getBoundingClientRect();
     list.style.top = window.scrollY + btnDim.top + btnDim.height / 2 - listDimNew.height / 2 + 'px';
-    list.style.left = triggerDim.left - ((listDimNew.width - triggerDim.width) / 2) + 'px';
+    list.style.left = triggerDim.left - (listDimNew.width - triggerDim.width) / 2 + 'px';
   }
 }
 
@@ -1532,42 +1533,45 @@ if (isBrowser()) {
   // global listener to ESC key to close dropdown
   document.addEventListener(
     'keyup',
-    atcb_debounce_leading((event) => {      
+    atcb_debounce_leading((event) => {
       if (event.key === 'Escape') {
         atcb_toggle('close', '', '', true);
       }
     })
   );
   // global listener to arrow key optionlist navigation
-  document.addEventListener(
-    'keydown',
-    (event) => {
-      if (document.querySelector('.atcb-list') && (event.key === 'ArrowDown' || event.key === 'ArrowUp' || event.key === 'Tab')) {        
-        let targetFocus = 0;
-        let currFocusOption = document.activeElement;
-        const optionListCount = document.querySelectorAll('.atcb-list-item').length;
-        if (currFocusOption.classList.contains('atcb-list-item')) {
-          if (event.key === 'ArrowDown' && currFocusOption.dataset.optionNumber < optionListCount) {
-            event.preventDefault();
-            targetFocus = parseInt(currFocusOption.dataset.optionNumber) + 1;
-          } else if (event.key === 'ArrowUp' && currFocusOption.dataset.optionNumber >= 1) {
-            event.preventDefault();
-            targetFocus = parseInt(currFocusOption.dataset.optionNumber) - 1;
-          }       
-          if (targetFocus > 0) {
-            document.querySelector('.atcb-list-item[data-option-number="' + targetFocus + '"]').focus();
-          }
-        } else {
+  document.addEventListener('keydown', (event) => {
+    if (
+      document.querySelector('.atcb-list') &&
+      (event.key === 'ArrowDown' || event.key === 'ArrowUp' || event.key === 'Tab')
+    ) {
+      let targetFocus = 0;
+      let currFocusOption = document.activeElement;
+      const optionListCount = document.querySelectorAll('.atcb-list-item').length;
+      if (currFocusOption.classList.contains('atcb-list-item')) {
+        if (event.key === 'ArrowDown' && currFocusOption.dataset.optionNumber < optionListCount) {
           event.preventDefault();
-          if (document.querySelector('.atcb-list-wrapper.atcb-dropup') && (event.key === 'ArrowDown' || event.key === 'ArrowUp')) {
-            document.querySelector('.atcb-list-item[data-option-number="' + optionListCount + '"]').focus();
-          } else {
-            document.querySelector('.atcb-list-item[data-option-number="1"]').focus();
-          }
+          targetFocus = parseInt(currFocusOption.dataset.optionNumber) + 1;
+        } else if (event.key === 'ArrowUp' && currFocusOption.dataset.optionNumber >= 1) {
+          event.preventDefault();
+          targetFocus = parseInt(currFocusOption.dataset.optionNumber) - 1;
+        }
+        if (targetFocus > 0) {
+          document.querySelector('.atcb-list-item[data-option-number="' + targetFocus + '"]').focus();
+        }
+      } else {
+        event.preventDefault();
+        if (
+          document.querySelector('.atcb-list-wrapper.atcb-dropup') &&
+          (event.key === 'ArrowDown' || event.key === 'ArrowUp')
+        ) {
+          document.querySelector('.atcb-list-item[data-option-number="' + optionListCount + '"]').focus();
+        } else {
+          document.querySelector('.atcb-list-item[data-option-number="1"]').focus();
         }
       }
     }
-  );
+  });
   // Global listener to any screen changes
   window.addEventListener(
     'resize',

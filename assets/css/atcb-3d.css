@@ -185,11 +185,6 @@ body.atcb-dark .atcb-modal-box.atcb-bodyScheme {
   z-index: 150;
 }
 
-.atcb-list-wrapper.atcb-dropoverlay {
-  transform: translate3d(0, 0, 2px);
-  z-index: 160;
-}
-
 .atcb-list {
   border-radius: 0 0 6px 6px;
   box-sizing: border-box;
@@ -215,6 +210,8 @@ body.atcb-dark .atcb-modal-box.atcb-bodyScheme {
 }
 
 .atcb-list-wrapper.atcb-dropoverlay {
+  transform: translate3d(0, 0, 2px);
+  z-index: 160;
   animation: atcb-list-slide-center 0.3s ease 0s 1 normal forwards;
   opacity: 0;
 }
