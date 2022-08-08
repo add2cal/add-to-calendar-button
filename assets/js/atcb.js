@@ -3,7 +3,7 @@
  * Add-to-Calendar Button
  * ++++++++++++++++++++++
  */
-const atcbVersion = '1.13.2';
+const atcbVersion = '1.14.0';
 /* Creator: Jens Kuerschner (https://jenskuerschner.de)
  * Project: https://github.com/add2cal/add-to-calendar-button
  * License: MIT with “Commons Clause” License Condition v1.0
@@ -26,9 +26,7 @@ const isAndroid = isBrowser()
     )
   : new Function('return false;');
 // Mobile
-const isMobile = isAndroid() || isiOS()
-    ? new Function('return true;')
-    : new Function('return false;');
+const isMobile = new Function('if (isAndroid() || isiOS()) { return true; } else { return false; }');
 // WebView (iOS and Android)
 const isWebView = isBrowser()
   ? new Function(
@@ -41,7 +39,8 @@ const isProblematicWebView = isBrowser()
       'if (/(Instagram)/i.test(navigator.userAgent || navigator.vendor || window.opera)) { return true; } else { return false; }'
     )
   : new Function('return false;');
-// define default link target
+
+// DEFINE DEFAULT LINK TARGET
 let atcbDefaultTarget = '_blank';
 if (isWebView()) {
   atcbDefaultTarget = '_system';
@@ -894,6 +893,7 @@ function atcb_action(data, triggerElement, keyboardTrigger = true) {
 }
 
 // FUNCTION TO GENERATE THE GOOGLE URL
+// See specs at: TODO
 function atcb_generate_google(data) {
   // base url
   let url = 'https://calendar.google.com/calendar/render?action=TEMPLATE';
@@ -932,6 +932,7 @@ function atcb_generate_google(data) {
 }
 
 // FUNCTION TO GENERATE THE YAHOO URL
+// See specs at: TODO
 function atcb_generate_yahoo(data) {
   // base url
   let url = 'https://calendar.yahoo.com/?v=60';
@@ -959,6 +960,7 @@ function atcb_generate_yahoo(data) {
 }
 
 // FUNCTION TO GENERATE THE MICROSOFT 365 OR OUTLOOK WEB URL
+// See specs at: TODO
 function atcb_generate_microsoft(data, type = '365') {
   // redirect to iCal solution on mobile devices, since the Microsoft web apps are buggy on mobile devices (see https://github.com/add2cal/add-to-calendar-button/discussions/113)
   if (isMobile()) {
@@ -997,8 +999,8 @@ function atcb_generate_microsoft(data, type = '365') {
 }
 
 // FUNCTION TO GENERATE THE MICROSOFT TEAMS URL
-// Mind that this is still in development mode by Microsoft! (https://docs.microsoft.com/en-us/microsoftteams/platform/concepts/build-and-test/deep-links#deep-linking-to-the-scheduling-dialog)
-// Location, html tags and linebreaks in the description are not supported yet.
+// See specs at: https://docs.microsoft.com/en-us/microsoftteams/platform/concepts/build-and-test/deep-links#deep-linking-to-the-scheduling-dialog
+// Mind that this is still in development mode by Microsoft! Location, html tags and linebreaks in the description are not supported yet.
 function atcb_generate_teams(data) {
   // base url
   let url = 'https://teams.microsoft.com/l/meeting/new?';
@@ -1030,6 +1032,7 @@ function atcb_generate_teams(data) {
 }
 
 // FUNCTION TO GENERATE THE iCAL FILE (also for the Apple option)
+// See specs at: https://www.rfc-editor.org/rfc/rfc5545.html
 function atcb_generate_ical(data) {
   // check for a given explicit file (not if iOS and WebView - will catched further down)
   if (
