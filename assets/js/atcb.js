@@ -25,6 +25,10 @@ const isAndroid = isBrowser()
       'if (/android/i.test(navigator.userAgent || navigator.vendor || window.opera) && !window.MSStream) { return true; } else { return false; }'
     )
   : new Function('return false;');
+// Mobile
+const isMobile = isAndroid() || isiOS()
+    ? new Function('return true;')
+    : new Function('return false;');
 // WebView (iOS and Android)
 const isWebView = isBrowser()
   ? new Function(
@@ -956,6 +960,11 @@ function atcb_generate_yahoo(data) {
 
 // FUNCTION TO GENERATE THE MICROSOFT 365 OR OUTLOOK WEB URL
 function atcb_generate_microsoft(data, type = '365') {
+  // redirect to iCal solution on mobile devices, since the Microsoft web apps are buggy on mobile devices (see https://github.com/add2cal/add-to-calendar-button/discussions/113)
+  if (isMobile()) {
+    atcb_generate_ical(data);
+    return;
+  }
   // base url
   let url = 'https://';
   if (type == 'outlook') {
