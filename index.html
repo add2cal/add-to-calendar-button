@@ -4,224 +4,25 @@
     <meta http-equiv="content-type" content="text/html; charset=utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
     <link rel="shortcut icon" href="favicon.ico">
-    <title>Add to Calendar Button | JavaScript Auto-Generator Snippet</title>
-    <meta name="description" content="This is an example page to demonstrate the convenient functionality of the add-to-calendar-button JavaScript snippet.">
+    <link rel="dns-prefetch" href="https://a.add-to-calendar-button.com/">
+    <link rel="dns-prefetch" href="https://add-to-calendar-pro.com/">
+    <link rel="dns-prefetch" href="https://a.add-to-calendar-pro.com/">
+    <link rel="dns-prefetch" href="https://add-to-calendar-assistant.com/">
+    <link rel="dns-prefetch" href="https://add-to-calendar-technology.com/">
+    <title>Add to Calendar Button | The Open Source tool for more convenient event sharing</title>
+    <meta name="description" content="Check out the demo page for the maybe most convenient way of to enable your users adding events to their calendars. Fully open source. Used by thousands of projects.">
+    <script async defer data-website-id="a94d2790-d17a-48fd-85df-086399cdb1e5" src="./demo_assets/js/a.min.js" data-host-url="https://a.add-to-calendar-button.com" data-domains="add-to-calendar-button.com"></script>
 
-    <!-- some basic css just for this sample site here -->
-    <style>
-      body {
-        background: #f5f5f5;
-        box-sizing: border-box;
-        color: #333333;
-        font-family: Arial, sans-serif;
-        font-size: 16px;
-        font-weight: 400;
-        height: 100%;
-        line-height: 1.5rem;
-        margin: 0;
-        padding: 100px 0;
-        text-align: center;
-        width: 100%;
-      }
-      body.atcb-dark {
-        background: #0D1117;
-        color: #e6e2ed;
-      }
-      h1 {
-        font-size: 2em;
-        line-height: 1.2em;
-      }
-      h1 #tinyVersion {
-        color: #969696;
-        font-size: 0.4em;
-        font-weight: 400;
-      }
-      body.atcb-dark h2 {
-        color: #5a5a5a;
-      }
-      h2 {
-        color: #5a5a5a;
-        font-size: 1.2em;
-        line-height: 1.5em;
-        margin: 35px auto;
-        max-width: 600px;
-        width: 100%;
-      }
-      body.atcb-dark h2 {
-        color: #969696;
-      }
-      h3 {
-        text-align: left;
-      }
-      @media only screen and (max-width: 800px) {
-        h3 {
-          text-align:center;
-        }
-      }
-      .description {
-        text-align: left;
-        padding-bottom: 40px;
-      }
-      a, a:focus, a:active {
-        color: #7d3da7;
-        text-decoration: none;
-      }
-      body.atcb-dark a,
-      body.atcb-dark a:focus,
-      body.atcb-dark a:active {
-        color: #864fab;
-      }
-      a:not(.clean) {
-        text-decoration: underline;
-      }
-      a:hover {
-        color: #7b5a92;
-        text-decoration: none;
-      }
-      body.atcb-dark a:hover {
-        color: #816694;
-        text-decoration: none;
-      }
-      a svg {
-        fill: #6D0BAC;
-      }
-      body.atcb-dark a svg {
-        fill: #864fab;
-      }
-      a:hover svg {
-        fill: #7b5a92;
-      }
-      body.atcb-dark a:hover svg {
-        fill: #816694;
-      }
-      .container {
-        box-sizing: border-box;
-        margin: auto;
-        max-width: 1000px;
-        padding: 0 25px;
-        width: 100%;
-      }
-      #light-mode-switch {
-        background: transparent;
-        cursor: pointer;
-        border: 0;
-        display: flex;
-        justify-content: center;
-        margin: 20px auto;
-        padding: 20px 0;
-        -webkit-tap-highlight-color: transparent;
-      }      
-      #light-mode-switch div {
-        position: relative;
-        width: 20px;
-        height: 20px;
-        transition: transform 0.45s ease;
-        border-radius: 50%;
-        background: #1f1f1f;
-      }      
-      #light-mode-switch div::before {
-        content: "";
-        position: absolute;
-        width: 6px;
-        height: 6px;
-        left: 50%;
-        top: 50%;
-        transform: translateX(-50%) translateY(-50%);
-        border-radius: 50%;
-        background: inherit;
-        z-index: -1;
-        opacity: 0;
-        transition: box-shadow 0.4s 0s ease;
-      }      
-      #light-mode-switch div::after {
-        content: "";
-        position: absolute;
-        width: 90%;
-        height: 90%;
-        top: -20%;
-        left: 30%;
-        border-radius: 50%;
-        background: #f5f5f5;
-        transition: transform 0.45s ease;
-      }
-      body.atcb-dark #light-mode-switch div {
-        transform: scale(0.5);
-        background: #f5f5f5;
-      }
-      body.atcb-dark #light-mode-switch div::before {
-        opacity: 1;        
-        box-shadow: 0 -20px 0 0 white, 0 20px 0 0 white, -20px 0 0 0 white,
-          20px 0 0 0 white, 15px 15px 0 0 white, 15px -15px 0 0 white,
-          -15px 15px 0 0 white, -15px -15px 0 0 white;
-      }
-      body.atcb-dark #light-mode-switch div::after {
-        opacity: 0;
-        transition: background 0.45s ease;
-        transform: translateX(50%) translateY(-50%);
-      }
-      hr {
-        border: 0;
-        border-bottom: 1px solid #cfcfcf;
-        height: 1px;
-        margin: 80px auto;
-      }
-      body.atcb-dark hr {
-        border-bottom: 1px solid #5e5c61;
-      }
-      .github {
-        margin-bottom:80px;
-      }
-      .example {
-        align-items: start;
-        display: grid;
-        gap: 20px;
-        grid-template-columns: 280px auto;
-        justify-items: center;
-      }
-      @media only screen and (max-width: 800px) {
-        .example {
-          grid-template-columns: 1fr;
-        }
-      }
-      .example-right {
-        color: #969696;
-        background-color:#ffffff;
-        border: 1px solid #969696;
-        border-radius: 6px;
-        font-family: 'Consolas', Arial, sans-serif;
-        font-size: 0.8em;
-        padding: 20px;
-        text-align: left;
-        word-break: break-all;
-      }
-      body.atcb-dark .example-right {        
-        color: #bcbabe;
-        background-color:#3d3d3d;
-        border: 1px solid #797979;
-      }
-      .example-right code {
-        white-space: pre-wrap;
-      }
-      #legal {
-        color: #969696;
-        font-size: 0.8em;
-      }
-      #legal a {
-        color: #969696;
-      }
-      button {
-        min-width: 160px;
-      }
-    </style>
-
+    <!-- load some basic css just for this demo page here -->
+    <link rel="stylesheet" href="./demo_assets/css/demopage.min.css?v=1.14.0">
     <!-- load the general button css -->
-    <link rel="stylesheet" href="./assets/css/atcb.min.css?v=1.13.2">
+    <link rel="stylesheet" href="./assets/css/atcb.min.css?v=1.14.0">
 
   </head>
   <body>
     <div class="container">
 
-      <h1>Add-to-Calendar Button <span id="tinyVersion">v1.13.2</span></h1>
+      <h1>Add-to-Calendar Button <span id="tiny-version">v1.14.0</span></h1>
       <h2>A convenient JavaScript snippet, which lets you create beautiful buttons, where people can add events to their calendars.</h2>
       <p class="github">
         <a target="_blank" rel="noopener" href="https://github.com/add2cal/add-to-calendar-button" class="clean">
@@ -246,8 +47,8 @@
             {
               "name":"Reminder to star the add-to-calendar-button repo",
               "description":"Check out the maybe easiest way to include add-to-calendar-buttons to your website at:<br>&#8594; [url]https://github.com/add2cal/add-to-calendar-button[/url]",
-              "startDate":"2022-07-14",
-              "endDate":"2022-07-18",
+              "startDate":"2023-02-14",
+              "endDate":"2023-02-18",
               "startTime":"10:15",
               "endTime":"23:30",
               "location":"World Wide Web",
@@ -272,8 +73,8 @@
 {
   "name":"Reminder to star the add-to-calendar-button repo",
   "description":"Check out the maybe easiest way to include add-to-calendar-buttons to your website at:&lt;br&gt;&#8594; [url]https://github.com/add2cal/add-to-calendar-button[/url]",
-  "startDate":"2022-07-14",
-  "endDate":"2022-07-18",
+  "startDate":"2023-02-14",
+  "endDate":"2023-02-18",
   "startTime":"10:15",
   "endTime":"23:30",
   "location":"World Wide Web",
@@ -351,7 +152,7 @@
       <h3>Example 3: Customizing Labels</h3>
       <p class="description">
         You can customize the button text as well as each option label.<br>
-        Here, we also removed the custom iCal/ics name and explicitly set a static downloadable ics file instead.<br>
+        Here, we also set the listStyle to an overlay list, reduced the size, as well as removed the custom iCal/ics name and explicitly set a static downloadable ics file instead.<br>
       </p>
       <div class="example">
         <div class="example-left">
@@ -360,7 +161,7 @@
           <div class="atcb" style="display:none;">
             {
               "name":"Reminder to star the add-to-calendar-button repo",
-              "description":"Check out the maybe easiest way to include add-to-calendar-buttons to your website at:<br>&#8594; [url]https://github.com/add2cal/add-to-calendar-button[/url]",
+              "description":"Check out the maybe easiest way to include add-to-calendar-buttons to your website at:<br>&#8594; [url]https://github.com/add2cal/add-to-calendar-button|Click here![/url]",
               "startDate":"2022-01-14",
               "endDate":"2022-01-18",
               "location":"World Wide Web",
@@ -372,6 +173,8 @@
                 "iCal|iCall ftw!"
               ],
               "icsFile":"https://add-to-calendar-button.com/demo-event.ics",
+              "listStyle":"overlay",
+              "size":"4",
               "timeZone":"Europe/Berlin"
             }
           </div>
@@ -382,7 +185,7 @@
 <code>&lt;div class="atcb" style="display:none;"&gt;
 {
   "name":"Reminder to star the add-to-calendar-button repo",
-  "description":"Check out the maybe easiest way to include add-to-calendar-buttons to your website at:&lt;br&gt;&#8594; [url]https://github.com/add2cal/add-to-calendar-button[/url]",
+  "description":"Check out the maybe easiest way to include add-to-calendar-buttons to your website at:&lt;br&gt;&#8594; [url]https://github.com/add2cal/add-to-calendar-button|Click here![/url]",
   "startDate":"2022-01-14",
   "endDate":"2022-01-18",
   "location":"World Wide Web",
@@ -394,6 +197,8 @@
     "iCal|iCall ftw!"
   ],
   "icsFile":"https://add-to-calendar-button.com/demo-event.ifcs",
+  "listStyle":"overlay",
+  "size":"4",
   "timeZone":"Europe/Berlin"
 }
 &lt;/div&gt;</code>
@@ -530,8 +335,8 @@
               "options":[
                 "Apple",
                 "Google",
-                "iCal",
-                "Yahoo"
+                "Yahoo",
+                "iCal"
               ],
               "timeZone":"Europe/Berlin",
               "recurrence":"RRULE: FREQ=WEEKLY; INTERVAL=1; WKST=MO; BYDAY=WE,FR",
@@ -554,8 +359,8 @@
   "options":[
     "Apple",
     "Google",
-    "iCal",
-    "Yahoo"
+    "Yahoo",
+    "iCal"
   ],
   "timeZone":"Europe/Berlin",
   "recurrence":"RRULE: FREQ=WEEKLY; INTERVAL=1; WKST=MO; BYDAY=WE,FR",
@@ -699,38 +504,15 @@
           <div></div>
         </button>
         This page has been built and is maintained by Jens K&uuml;rschner. See <a target="_blank" rel="noopener" href="https://jenskuerschner.de/legal-notice/">jenskuerschner.de/legal-notice</a> for a full legal notice.<br>
-        This page is hosted via "GitHub Pages". It does not hold any specific cookies and/or tracking. However, the GitHub privacy policy applies (<a target="_blank" rel="noopener" href="https://docs.github.com/en/github/site-policy/github-privacy-statement">click here for details</a>).
+        This page is hosted via "GitHub Pages". It includes some very basic analytics, that still preserves your anonymity and does not use any cookies. However, mind that the GitHub privacy policy applies additionally (<a target="_blank" rel="noopener" href="https://docs.github.com/en/github/site-policy/github-privacy-statement">click here for details</a>).
       </div>
 
     </div>
 
 
     <!-- load the button js and more -->
-    <script>
-      const lightModeButton = document.getElementById('light-mode-switch');
-      const cval = document.cookie.match('(^|;)\\s*atcb-light-mode\\s*=\\s*([^;]+)')?.pop() || '';
-      if (cval == '') {
-        if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
-          document.body.classList.toggle('atcb-dark');
-        }
-      } else {
-        if (cval == 'dark') {
-          document.body.classList.toggle('atcb-dark');
-        }
-      }
-      lightModeButton.addEventListener('click', () => {
-        document.body.classList.toggle('atcb-dark');
-        // also save as cookie
-        let newCval = 'light';
-        if (document.body.classList.contains('atcb-dark')) {
-          newCval = 'dark';
-        }
-        const d = new Date();
-        d.setTime(d.getTime() + (90*24*60*60*1000));
-        document.cookie = 'atcb-light-mode=' + newCval + ';expires=' + d.toUTCString();
-      });
-    </script>
-    <script type="application/javascript" src="./assets/js/atcb.min.js?v=1.13.2" async defer></script>
+    <script type="application/javascript" src="./demo_assets/js/demopage.min.js?v=1.14.0" defer></script>
+    <script type="application/javascript" src="./assets/js/atcb.min.js?v=1.14.0" async defer></script>
     <script type="application/javascript" src="https://buttons.github.io/buttons.js" async defer></script>
 
   </body>

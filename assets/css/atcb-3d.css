@@ -5,7 +5,7 @@
  *
  * Style: 3D
  *
- * Version: 1.13.2
+ * Version: 1.14.0
  * Creator: Jens Kuerschner (https://jenskuerschner.de)
  * Project: https://github.com/add2cal/add-to-calendar-button
  * License: MIT with “Commons Clause” License Condition v1.0
@@ -21,11 +21,11 @@
  */
 
  :root {
+  --base-font-size: 16px;
   --atcb-keyboard-focus: #1e90ff;
   --atcb-background: #f5f5f5;
   --atcb-background-2: #fff;
   --atcb-border: #d2d2d2;
-  --atcb-border-2: #d2d2d2;
   --atcb-text: #333;
   --atcb-text-2: #000;
   --atcb-close-background: #e5e5e5;
@@ -41,6 +41,7 @@
   --atcb-shadow-button: rgba(0 0 0 / 30%) 2px 5px 18px -1px, rgba(0 0 0 / 25%) 2px 2px 10px -3px;
   --atcb-shadow-button-hover: rgba(0 0 0 / 40%) 2px 5px 18px -1px, rgba(0 0 0 / 35%) 2px 2px 10px -3px;
   --atcb-shadow-button-active: rgba(0 0 0 / 50%) 2px 10px 20px -2px, rgba(0 0 0 / 45%) 2px 4px 12px -3px;
+  --atcb-shadow-button-active-up: rgba(0 0 0 / 40%) 2px -8px 15px -2px, rgba(0 0 0 / 50%) 2px 4px 12px -3px;
   --atcb-shadow-list: rgba(0 0 0 / 20%) 2px 5px 18px -1px, rgba(0 0 0 / 40%) 2px 2px 10px -3px;
   --atcb-shadow-list-modal: rgba(0 0 0 / 60%) 3px 6px 40px -5px, rgba(0 0 0 / 60%) 3px 3px 15px -4px;
   --atcb-shadow-modal: rgba(0 0 0 / 0%) 0 0 0 0, rgba(0 0 0 / 0%) 0 0 0 0, rgba(0 0 0 / 60%) 3px 6px 40px -5px, rgba(0 0 0 / 60%) 3px 3px 15px -4px;
@@ -60,8 +61,7 @@ body.atcb-dark .atcb-list.atcb-bodyScheme,
 body.atcb-dark .atcb-modal-box.atcb-bodyScheme {
   --atcb-background: #2e2e2e;
   --atcb-background-2: #373737;
-  --atcb-border: #333;
-  --atcb-border-2: #4d4d4d;
+  --atcb-border: #4d4d4d;
   --atcb-text: #bebebe;
   --atcb-text-2: #e8e8e8;
   --atcb-close-background: #282828;
@@ -69,6 +69,7 @@ body.atcb-dark .atcb-modal-box.atcb-bodyScheme {
   --atcb-shadow-button: rgba(255 255 255 / 5%) -12px -5px 20px -8px, rgba(255 255 255 / 6%) -7px -5px 15px -3px, rgba(0 0 0 / 50%) 2px 5px 18px -1px, rgba(0 0 0 / 40%) 3px 3px 20px -3px;
   --atcb-shadow-button-hover: rgba(255 255 255 / 6%) -12px -5px 23px -8px, rgba(255 255 255 / 7%) -7px -5px 18px -3px, rgba(0 0 0 / 60%) 2px 5px 19px -1px, rgba(0 0 0 / 50%) 3px 3px 22px -3px;
   --atcb-shadow-button-active: rgba(255 255 255 / 7%) -12px -5px 23px -8px, rgba(255 255 255 / 8%) -7px -5px 18px -3px, rgba(0 0 0 / 70%) 2px 10px 20px -1px, rgba(0 0 0 / 60%) 3px 5px 25px -3px;
+  --atcb-shadow-button-active-up: rgba(255 255 255 / 7%) -12px 5px 23px -8px, rgba(255 255 255 / 8%) -7px 5px 18px -3px, rgba(0 0 0 / 60%) 2px -8px 15px -1px, rgba(0 0 0 / 60%) 3px 5px 25px -3px;
   --atcb-shadow-list: rgba(255 255 255 / 5%) -12px -5px 20px -8px, rgba(255 255 255 / 6%) -7px -5px 15px -3px, rgba(0 0 0 / 50%) 2px 5px 18px -1px, rgba(0 0 0 / 40%) 3px 3px 20px -3px;
   --atcb-shadow-list-modal: rgba(255 255 255 / 8%) -12px -5px 30px -8px, rgba(255 255 255 / 8%) -7px -5px 15px -3px, rgba(0 0 0 / 60%) 4px 6px 50px -4px, rgba(0 0 0 / 90%) 8px 12px 40px -2px;
   --atcb-shadow-modal: rgba(255 255 255 / 8%) -12px -5px 30px -8px, rgba(255 255 255 / 8%) -7px -5px 15px -3px, rgba(0 0 0 / 60%) 4px 6px 50px -4px, rgba(0 0 0 / 90%) 8px 12px 40px -2px;
@@ -80,6 +81,7 @@ body.atcb-dark .atcb-modal-box.atcb-bodyScheme {
 
 .atcb-button-wrapper {
   display: inline-block;
+  font-size: var(--base-font-size);
   padding: 5px;
   position: relative;
 }
@@ -94,14 +96,13 @@ body.atcb-dark .atcb-modal-box.atcb-bodyScheme {
   cursor: pointer;
   display: flex;
   font-family: Arial, Helvetica, sans-serif;
-  font-size: 16px;
+  font-size: 1em;
   font-weight: 600;
-  gap: 10px;
-  line-height: 24px;
+  justify-content: center;
+  line-height: 1.5em;
   margin: 0;
-  max-width: 300px;
-  min-width: 170px;
-  padding: 10px 16px;
+  max-width: 350px;
+  padding: .65em 1em;
   position: relative;
   text-align: center;
   touch-action: manipulation;
@@ -122,22 +123,39 @@ body.atcb-dark .atcb-modal-box.atcb-bodyScheme {
   outline: 2px solid var(--atcb-keyboard-focus);
 }
 
-.atcb-button.atcb-active:not(.atcb-modal-style) {
+.atcb-button.atcb-active:not(.atcb-modal-style, .atcb-dropoverlay),
+.atcb-button.atcb-single:focus,
+.atcb-button.atcb-single:hover {
   background-color: var(--atcb-background-2);
-  box-shadow: var(--atcb-shadow-button-active);
-  min-width: 174px;
-  transform: perspective(100px) rotateX(12deg) translate3d(0, 0, 2px);
-  transition: transform 0.1s linear;
   z-index: 160;
 }
 
+.atcb-button.atcb-active:not(.atcb-modal-style, .atcb-dropup, .atcb-dropoverlay) {
+  box-shadow: var(--atcb-shadow-button-active);
+  transform: perspective(100px) rotateX(12deg) translate3d(0, 0, 2px);
+  transition: transform 0.1s linear;
+}
+
+.atcb-button.atcb-active.atcb-dropup:not(.atcb-modal-style, .atcb-dropoverlay) {
+  box-shadow: var(--atcb-shadow-button-active-up);
+  transform: perspective(100px) rotateX(348deg) translate3d(0, 0, 2px);
+  transition: transform 0.1s linear;
+}
+
+.atcb-button.atcb-active.atcb-dropoverlay {
+  min-width: 174px;
+  transform: translate3d(0, 0, 0);
+  z-index: 150;
+}
+
 /******************************
- * Button Icon (also base for list icons)
+ * Button Icon (also base for list icons) & Text
  */
 
 .atcb-icon {
-  height: 16px;
-  margin-bottom: 4px;
+  height: 1em;
+  margin-bottom: .3em;
+  margin-right: .65em;
 }
 
 .atcb-icon svg {
@@ -146,13 +164,17 @@ body.atcb-dark .atcb-modal-box.atcb-bodyScheme {
   width: auto;
 }
 
+.atcb-text {
+  overflow-wrap: anywhere;
+}
+
 /******************************
  * Options List
  */
 
 .atcb-dropdown-anchor {
   position: relative;
-  top: -3px;
+  top: -6px;
 }
 
 .atcb-list-wrapper {
@@ -170,19 +192,31 @@ body.atcb-dark .atcb-modal-box.atcb-bodyScheme {
   color: var(--atcb-text);
   display: block;
   font-family: Arial, Helvetica, sans-serif;
-  font-size: 16px;
+  font-size: var(--base-font-size);
   max-width: 100%;
   position: relative;
   user-select: none;
   width: 100%;
 }
 
-.atcb-list-wrapper.atcb-dropdown {
-  animation: atcb-list-slide 0.4s ease 0.05s 1 normal forwards;
+.atcb-list-wrapper.atcb-dropdown:not(.atcb-dropup, .atcb-dropoverlay) {
+  animation: atcb-list-slide-down 0.4s ease 0.05s 1 normal forwards;
   opacity: 0;
 }
 
-@keyframes atcb-list-slide {
+.atcb-list-wrapper.atcb-dropup:not(.atcb-dropoverlay) {
+  animation: atcb-list-slide-up 0.4s ease 0.05s 1 normal forwards;
+  opacity: 0;
+}
+
+.atcb-list-wrapper.atcb-dropoverlay {
+  transform: translate3d(0, 0, 2px);
+  z-index: 160;
+  animation: atcb-list-slide-center 0.3s ease 0s 1 normal forwards;
+  opacity: 0;
+}
+
+@keyframes atcb-list-slide-down {
   0% {
     opacity: 0;
     transform: rotateX(-100deg);
@@ -196,18 +230,48 @@ body.atcb-dark .atcb-modal-box.atcb-bodyScheme {
   }
 }
 
+@keyframes atcb-list-slide-up {
+  0% {
+    opacity: 0;
+    transform: rotateX(-100deg);
+    transform-origin: bottom;
+  }
+
+  100% {
+    opacity: 1;
+    transform: rotateX(0deg);
+    transform-origin: bottom;
+  }
+}
+
+@keyframes atcb-list-slide-center {
+  0% {
+    opacity: 0;
+    transform: scaleY(1);
+  }
+  
+  1% {
+    opacity: 1;
+    transform: scaleY(0);
+  }
+
+  100% {
+    opacity: 1;
+    transform: scaleY(1);
+  }
+}
+
 .atcb-list-item {
   align-items: center;
   background-color: var(--atcb-background);
-  border-color: var(--atcb-border-2);
+  border: 1px solid var(--atcb-border);
   box-sizing: border-box;
   cursor: pointer;
   display: flex;
   font-size: 1em;
-  gap: 8px;
   left: 50%;
   line-height: 1.75em;
-  padding: 13px 15px;
+  padding: .8em .9em;
   text-align: left;
   touch-action: manipulation;
   -webkit-tap-highlight-color: transparent;
@@ -231,32 +295,47 @@ body.atcb-dark .atcb-modal-box.atcb-bodyScheme {
 }
 
 .atcb-list .atcb-list-item:not(:first-child) {
-  border-top-style: solid;
-  border-width: 1px;
+  border-top-style: none;
 }
 
-.atcb-list:not(.atcb-generated-button) .atcb-list-item:first-child,
+.atcb-dropup .atcb-list-item:last-child {
+  border-radius: 0;
+  padding-bottom: 1.5em;
+}
+
+.atcb-dropup .atcb-list-item:first-child,
+.atcb-dropoverlay .atcb-list .atcb-list-item:first-child,
 .atcb-list.atcb-modal .atcb-list-item:first-child {
   border-radius: 6px 6px 0 0;
 }
 
-.atcb-list:not(.atcb-generated-button) .atcb-list-item:only-child,
+.atcb-dropoverlay .atcb-list .atcb-list-item:only-child,
 .atcb-list.atcb-modal .atcb-list-item:only-child {
   border-radius: 6px;
 }
 
 .atcb-list.atcb-generated-button:not(.atcb-modal) .atcb-list-item:first-child {
-  padding-top: 20px;
+  padding-top: 1.5em;
+}
+
+.atcb-dropup .atcb-list.atcb-generated-button:not(.atcb-modal) .atcb-list-item:first-child,
+.atcb-dropoverlay .atcb-list.atcb-generated-button:not(.atcb-modal) .atcb-list-item:first-child {
+  padding-top: .8em;
+}
+
+.atcb-dropoverlay .atcb-list,
+.atcb-list.atcb-modal {
+  border-radius: 6px;
 }
 
 .atcb-list.atcb-modal {
-  border-radius: 6px;
   box-shadow: var(--atcb-shadow-list-modal);
 }
 
 .atcb-list-item .atcb-icon {
-  margin-bottom: 7px;
-  width: 18px;
+  margin-bottom: .44em;
+  margin-right: .5em;
+  width: 1.125em;
 }
 
 .atcb-list-item-close {
@@ -298,26 +377,26 @@ body.atcb-dark .atcb-modal-box.atcb-bodyScheme {
   color: var(--atcb-text-2);
   cursor: default;
   border-radius: 6px;
-  border: 1px solid var(--atcb-border-2);
+  border: 1px solid var(--atcb-border);
   box-sizing: border-box;  
   font-family: Arial, Helvetica, sans-serif;
-  font-size: 16px;
-  line-height: 24px;
-  padding: 20px 25px;
+  font-size: var(--base-font-size);
+  line-height: 1.5em;
+  padding: 1.25em 1.5em;
   text-align: left;
   user-select: none;
   touch-action: manipulation;
   width: 100%;
-  max-width: 500px;
+  max-width: 32em;
   -webkit-tap-highlight-color: transparent;
 }
 
 .atcb-modal-close {
   cursor: pointer;
   display: inline-block;
-  height: 18px;
+  height: 1.125em;
   position: absolute;
-  right: 20px;
+  right: 1.25em;
 }
 
 .atcb-modal-close svg {
@@ -337,17 +416,17 @@ body.atcb-dark .atcb-modal-box.atcb-bodyScheme {
 .atcb-modal-headline {
   align-items: center;
   display: flex;
-  font-size: 1.38em;
+  font-size: 1.3em;
   font-weight: 600;
-  gap: 15px;
-  line-height: 2em;
-  margin: 20px 15px;
+  line-height: 1.5em;
+  margin: 1.25em .9em;
   text-transform: uppercase;
 }
 
 .atcb-modal-headline-icon {
-  height: 26px;
-  margin-bottom: 2px;
+  height: 1.625em;
+  margin-bottom: .125em;
+  margin-right: .9em;
 }
 
 .atcb-modal-hedline-icon svg {
@@ -360,8 +439,8 @@ body.atcb-dark .atcb-modal-box.atcb-bodyScheme {
   margin: 30px 15px;
 }
 
-.atcb-modal-buttons {  
-  padding: 15px 0;
+.atcb-modal-buttons {
+  padding: .9em 0;
   text-align: center;
   width: 100%;
 }
@@ -376,11 +455,11 @@ a.atcb-modal-btn {
   cursor: pointer;
   display: inline-block;
   font-family: Arial, Helvetica, sans-serif;
-  font-size: 16px;
+  font-size: 1em;
   font-weight: 600;
-  line-height: 24px;
-  margin: 10px;
-  padding: 10px 20px;
+  line-height: 1.5em;
+  margin: .625em;
+  padding: .625em 1.25em;
   position: relative;
   text-align: center;
   text-decoration: none;

@@ -64,14 +64,16 @@ They should remain focused in scope and avoid containing unrelated commits.
 **Please ask first** before embarking on any significant pull request (e.g. implementing features, refactoring code, porting to a different language).
 Otherwise you risk spending a lot of time working on something that the project's developers might not want to merge into the project.
 
-Mind to run `npm install`, `npm format`, and `npm run build` to auto-lint, create the minified js and css files, its sourcemap files as well as the npm_dist/ folder and content!
+New development happens on the dev branch first. It is the only branch which gets merged into main!
+
+Mind to run `npm install`, `npm format`, and `npm run build` to auto-lint and create the minified js, css, as well as its sourcemap files!
 
 Adhering to the following process is the best way to get your work included in the project:
 
 1.  [Fork](https://help.github.com/articles/fork-a-repo/) the project, clone your fork, and configure the remotes:
 
     ```bash
-    # Clone your fork of the repo into the current directory
+    # Clone your fork of the repo
     git clone https://github.com/<your-username>/add-to-calendar-button.git
     # Navigate to the newly cloned directory
     cd add-to-calendar-button
@@ -82,13 +84,13 @@ Adhering to the following process is the best way to get your work included in t
 2.  If you cloned a while ago, get the latest changes from upstream:
 
     ```bash
-    git checkout master
-    git pull upstream master
+    git checkout dev
+    git pull upstream dev
     ```
 
-    **Also check any dev or dev_x branch. In doubt, especially if there is a lot of unmerged stuff in them, ask how to proceed!**
+    **Also check any other dev_x branch. In doubt, especially if there is a lot of unmerged stuff in them, ask how to proceed!**
 
-3.  Create a new topic branch (off the main project development branch) to contain your feature, change, or fix:
+3.  Create a new topic branch (off the main project dev branch) to contain your feature, change, or fix. The name should start with "dev\_", followed by your individual title.
 
     ```bash
     git checkout -b <topic-branch-name>
@@ -100,7 +102,7 @@ Adhering to the following process is the best way to get your work included in t
 5.  Locally merge (or rebase) the upstream development branch into your topic branch:
 
     ```bash
-    git pull [--rebase] upstream master
+    git pull [--rebase] upstream dev
     ```
 
 6.  Push your topic branch up to your fork:

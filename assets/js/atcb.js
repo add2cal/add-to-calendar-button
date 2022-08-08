@@ -3,7 +3,7 @@
  * Add-to-Calendar Button
  * ++++++++++++++++++++++
  */
-const atcbVersion = '1.13.2';
+const atcbVersion = '1.14.0';
 /* Creator: Jens Kuerschner (https://jenskuerschner.de)
  * Project: https://github.com/add2cal/add-to-calendar-button
  * License: MIT with “Commons Clause” License Condition v1.0
@@ -25,6 +25,8 @@ const isAndroid = isBrowser()
       'if (/android/i.test(navigator.userAgent || navigator.vendor || window.opera) && !window.MSStream) { return true; } else { return false; }'
     )
   : new Function('return false;');
+// Mobile
+const isMobile = new Function('if (isAndroid() || isiOS()) { return true; } else { return false; }');
 // WebView (iOS and Android)
 const isWebView = isBrowser()
   ? new Function(
@@ -37,7 +39,8 @@ const isProblematicWebView = isBrowser()
       'if (/(Instagram)/i.test(navigator.userAgent || navigator.vendor || window.opera)) { return true; } else { return false; }'
     )
   : new Function('return false;');
-// define default link target
+
+// DEFINE DEFAULT LINK TARGET
 let atcbDefaultTarget = '_blank';
 if (isWebView()) {
   atcbDefaultTarget = '_system';
@@ -151,9 +154,19 @@ function atcb_decorate_data(atcbConfig) {
   // calculate the real date values in case that there are some special rules included (e.g. adding days dynamically)
   atcbConfig.startDate = atcb_date_calculation(atcbConfig.startDate);
   atcbConfig.endDate = atcb_date_calculation(atcbConfig.endDate);
+  // set default listStyle
+  if (atcbConfig.listStyle == null || atcbConfig.listStyle == '') {
+    atcbConfig.listStyle = 'dropdown';
+  }
   // force click trigger on modal style
   if (atcbConfig.listStyle === 'modal') {
     atcbConfig.trigger = 'click';
+  }
+  // set size
+  if (atcbConfig.size != null && atcbConfig.size != '' && atcbConfig.size >= 0 && atcbConfig.size < 11) {
+    atcbConfig.size = 10 + parseInt(atcbConfig.size);
+  } else {
+    atcbConfig.size = 16;
   }
   // determine dark mode
   if (atcbConfig.lightMode == null || atcbConfig.lightMode == '') {
@@ -420,13 +433,6 @@ function atcb_validate(data) {
 // GENERATE THE ACTUAL BUTTON
 // helper function to generate the labels for the button and list options
 function atcb_generate_label(data, parent, type, icon = false, text = '', oneOption = false) {
-  // kill the label if not supported
-  if (data.recurrence != null && data.recurrence != '') {
-    if (type == 'msteams' || type == 'ms365' || type == 'outlookcom' || type == 'yahoo') {
-      parent.remove();
-      return;
-    }
-  }
   let defaultTriggerText = atcb_translate_hook('Add to Calendar', data.language, data);
   // if there is only 1 option, we use the trigger text on the option label. Therefore, forcing it here
   if (oneOption && text == '') {
@@ -438,134 +444,140 @@ function atcb_generate_label(data, parent, type, icon = false, text = '', oneOpt
       if (data.trigger === 'click') {
         parent.addEventListener(
           'click',
-          atcb_debounce_leading(() => atcb_toggle(data, parent, false, true))
+          atcb_debounce_leading((event) => {
+            event.preventDefault();
+            atcb_toggle('auto', data, parent, false, true);
+          })
         );
       } else {
         parent.addEventListener(
           'touchstart',
-          atcb_debounce_leading(() => atcb_toggle(data, parent, false, true)),
-          {
-            passive: true,
-          }
+          atcb_debounce_leading((event) => {
+            event.preventDefault();
+            atcb_toggle('auto', data, parent, false, true);
+          })
         );
         parent.addEventListener(
           'mouseenter',
-          atcb_debounce_leading(() => atcb_open(data, parent, false, true))
+          atcb_debounce_leading((event) => {
+            event.preventDefault();
+            atcb_toggle('open', data, parent, false, true);
+          })
         );
       }
-      parent.setAttribute('id', data.identifier);
+      parent.id = data.identifier;
       text = text || defaultTriggerText;
       break;
     case 'apple':
       parent.addEventListener(
         'click',
         atcb_debounce(() => {
-          oneOption ? parent.blur() : atcb_close();
+          oneOption ? parent.blur() : atcb_toggle('close');
           atcb_generate_ical(data);
         })
       );
-      parent.setAttribute('id', data.identifier + '-apple');
+      parent.id = data.identifier + '-apple';
       text = text || 'Apple';
       break;
     case 'google':
       parent.addEventListener(
         'click',
         atcb_debounce(() => {
-          oneOption ? parent.blur() : atcb_close();
+          oneOption ? parent.blur() : atcb_toggle('close');
           atcb_generate_google(data);
         })
       );
-      parent.setAttribute('id', data.identifier + '-google');
+      parent.id = data.identifier + '-google';
       text = text || 'Google';
       break;
     case 'ical':
       parent.addEventListener(
         'click',
         atcb_debounce(() => {
-          oneOption ? parent.blur() : atcb_close();
+          oneOption ? parent.blur() : atcb_toggle('close');
           atcb_generate_ical(data);
         })
       );
-      parent.setAttribute('id', data.identifier + '-ical');
+      parent.id = data.identifier + '-ical';
       text = text || atcb_translate_hook('iCal File', data.language, data);
       break;
     case 'msteams':
       parent.addEventListener(
         'click',
         atcb_debounce(() => {
-          oneOption ? parent.blur() : atcb_close();
+          oneOption ? parent.blur() : atcb_toggle('close');
           atcb_generate_teams(data);
         })
       );
-      parent.setAttribute('id', data.identifier + '-msteams');
+      parent.id = data.identifier + '-msteams';
       text = text || 'Microsoft Teams';
       break;
     case 'ms365':
       parent.addEventListener(
         'click',
         atcb_debounce(() => {
-          oneOption ? parent.blur() : atcb_close();
+          oneOption ? parent.blur() : atcb_toggle('close');
           atcb_generate_microsoft(data, '365');
         })
       );
-      parent.setAttribute('id', data.identifier + '-ms365');
+      parent.id = data.identifier + '-ms365';
       text = text || 'Microsoft 365';
       break;
     case 'outlookcom':
       parent.addEventListener(
         'click',
         atcb_debounce(() => {
-          oneOption ? parent.blur() : atcb_close();
+          oneOption ? parent.blur() : atcb_toggle('close');
           atcb_generate_microsoft(data, 'outlook');
         })
       );
-      parent.setAttribute('id', data.identifier + '-outlook');
+      parent.id = data.identifier + '-outlook';
       text = text || 'Outlook.com';
       break;
     case 'yahoo':
       parent.addEventListener(
         'click',
         atcb_debounce(() => {
-          oneOption ? parent.blur() : atcb_close();
+          oneOption ? parent.blur() : atcb_toggle('close');
           atcb_generate_yahoo(data);
         })
       );
-      parent.setAttribute('id', data.identifier + '-yahoo');
+      parent.id = data.identifier + '-yahoo';
       text = text || 'Yahoo';
       break;
     case 'close':
       parent.addEventListener(
         'click',
         atcb_debounce(() => {
-          oneOption ? parent.blur() : atcb_close();
+          oneOption ? parent.blur() : atcb_toggle('close');
         })
       );
       parent.addEventListener(
         'focus',
         atcb_debounce(() => atcb_close(false))
       );
-      parent.setAttribute('id', data.identifier + '-close');
+      parent.id = data.identifier + '-close';
       text = atcb_translate_hook('Close', data.language, data);
       break;
   }
   // override the id for the oneOption button, since the button always needs to have the button id
   if (oneOption) {
-    parent.setAttribute('id', data.identifier);
+    parent.id = data.identifier;
   }
   // support keyboard input
   if (!oneOption && type === 'trigger') {
     parent.addEventListener(
-      'keydown',
+      'keyup',
       atcb_debounce_leading((event) => {
         if (event.key == 'Enter') {
           event.preventDefault();
-          atcb_toggle(data, parent, true, true);
+          atcb_toggle('auto', data, parent, true, true);
         }
       })
     );
   } else {
     parent.addEventListener(
-      'keydown',
+      'keyup',
       atcb_debounce_leading((event) => {
         if (event.key == 'Enter') {
           event.preventDefault();
@@ -595,7 +607,7 @@ function atcb_generate(button, data) {
   // TODO: support recurring events
   if (data.name && data.location && data.startDate) {
     const schemaEl = document.createElement('script');
-    schemaEl.setAttribute('type', 'application/ld+json');
+    schemaEl.type = 'application/ld+json';
     schemaEl.textContent = '{ "event": { "@context":"https://schema.org", "@type":"Event", ';
     schemaEl.textContent += '"name":"' + data.name + '", ';
     if (data.descriptionHtmlFree)
@@ -616,16 +628,21 @@ function atcb_generate(button, data) {
   const buttonTriggerWrapper = document.createElement('div');
   buttonTriggerWrapper.classList.add('atcb-button-wrapper');
   buttonTriggerWrapper.classList.add('atcb-' + data.lightMode);
+  buttonTriggerWrapper.style.fontSize = data.size + 'px';
   button.appendChild(buttonTriggerWrapper);
   // generate the button trigger div
   const buttonTrigger = document.createElement('button');
   buttonTrigger.classList.add('atcb-button');
-  buttonTrigger.setAttribute('type', 'button');
+  if (data.listStyle === 'overlay') {
+    buttonTrigger.classList.add('atcb-dropoverlay');
+  }
+  buttonTrigger.type = 'button';
   buttonTriggerWrapper.appendChild(buttonTrigger);
   // generate the label incl. eventListeners
   // if there is only 1 calendar option, we directly show this at the button, but with the trigger's label text
   if (data.options.length === 1) {
     const optionParts = data.options[0].split('|');
+    buttonTrigger.classList.add('atcb-single');
     atcb_generate_label(data, buttonTrigger, optionParts[0], true, data.label, true);
   } else {
     atcb_generate_label(data, buttonTrigger, 'trigger', true, data.label);
@@ -652,12 +669,27 @@ function atcb_generate_dropdown_list(data) {
   const optionsList = document.createElement('div');
   optionsList.classList.add('atcb-list');
   optionsList.classList.add('atcb-' + data.lightMode);
+  optionsList.style.fontSize = data.size + 'px';
   // generate the list items
+  let listCount = 0;
   data.options.forEach(function (option) {
     const optionParts = option.split('|');
+    // skip the option if not supported
+    if (data.recurrence != null && data.recurrence != '') {
+      if (
+        optionParts[0] == 'msteams' ||
+        optionParts[0] == 'ms365' ||
+        optionParts[0] == 'outlookcom' ||
+        optionParts[0] == 'yahoo'
+      ) {
+        return;
+      }
+    }
     const optionItem = document.createElement('div');
     optionItem.classList.add('atcb-list-item');
     optionItem.tabIndex = 0;
+    listCount++;
+    optionItem.dataset.optionNumber = listCount;
     optionsList.appendChild(optionItem);
     // generate the label incl. individual eventListener
     atcb_generate_label(data, optionItem, optionParts[0], true, optionParts[1]);
@@ -676,7 +708,7 @@ function atcb_generate_dropdown_list(data) {
 // create the background overlay, which also acts as trigger to close any dropdowns
 function atcb_generate_bg_overlay(listStyle = 'dropdown', trigger = '', darken = true) {
   const bgOverlay = document.createElement('div');
-  bgOverlay.setAttribute('id', 'atcb-bgoverlay');
+  bgOverlay.id = 'atcb-bgoverlay';
   if (listStyle !== 'modal' && darken) {
     bgOverlay.classList.add('atcb-animate-bg');
   }
@@ -688,7 +720,7 @@ function atcb_generate_bg_overlay(listStyle = 'dropdown', trigger = '', darken =
     'click',
     atcb_debounce((e) => {
       if (e.target !== e.currentTarget) return;
-      atcb_close(true);
+      atcb_toggle('close');
     })
   );
   let fingerMoved = false;
@@ -708,7 +740,7 @@ function atcb_generate_bg_overlay(listStyle = 'dropdown', trigger = '', darken =
     'touchend',
     atcb_debounce((e) => {
       if (fingerMoved !== false || e.target !== e.currentTarget) return;
-      atcb_close(true);
+      atcb_toggle('close');
     }),
     { passive: true }
   );
@@ -716,7 +748,7 @@ function atcb_generate_bg_overlay(listStyle = 'dropdown', trigger = '', darken =
     'focus',
     atcb_debounce_leading((e) => {
       if (e.target !== e.currentTarget) return;
-      atcb_close();
+      atcb_toggle('close');
     })
   );
   if (trigger !== 'click') {
@@ -724,7 +756,7 @@ function atcb_generate_bg_overlay(listStyle = 'dropdown', trigger = '', darken =
       'mousemove',
       atcb_debounce_leading((e) => {
         if (e.target !== e.currentTarget) return;
-        atcb_close(true);
+        atcb_toggle('close');
       })
     );
   } else {
@@ -735,10 +767,17 @@ function atcb_generate_bg_overlay(listStyle = 'dropdown', trigger = '', darken =
 }
 
 // FUNCTIONS TO CONTROL THE INTERACTION
-function atcb_toggle(data, button, keyboardTrigger = false, generatedButton = false) {
+function atcb_toggle(action, data = '', button = '', keyboardTrigger = false, generatedButton = false) {
   // check for state and adjust accordingly
-  if (button.classList.contains('atcb-active') || document.querySelector('.atcb-active-modal')) {
-    atcb_close();
+  // action can be 'open', 'close', or 'auto'
+  if (action == 'open') {
+    atcb_open(data, button, keyboardTrigger, generatedButton);
+  } else if (
+    action == 'close' ||
+    button.classList.contains('atcb-active') ||
+    document.querySelector('.atcb-active-modal')
+  ) {
+    atcb_close(keyboardTrigger);
   } else {
     atcb_open(data, button, keyboardTrigger, generatedButton);
   }
@@ -761,6 +800,9 @@ function atcb_open(data, button, keyboardTrigger = false, generatedButton = fals
     } else {
       listWrapper.appendChild(list);
       listWrapper.classList.add('atcb-dropdown');
+      if (data.listStyle === 'overlay') {
+        listWrapper.classList.add('atcb-dropoverlay');
+      }
     }
     if (generatedButton) {
       list.classList.add('atcb-generated-button'); // if the button has been generated by the script, we add some more specifics
@@ -778,7 +820,12 @@ function atcb_open(data, button, keyboardTrigger = false, generatedButton = fals
   } else {
     document.body.appendChild(listWrapper);
     listWrapper.appendChild(list);
-    atcb_position_list(button, listWrapper);
+    if (data.listStyle === 'dropdown-static') {
+      // in the dropdown-static case, we do not dynamically adjust whether we show the dropdown upwards
+      atcb_position_list(button, listWrapper, true);
+    } else {
+      atcb_position_list(button, listWrapper);
+    }
     document.body.appendChild(bgOverlay);
   }
   // set overlay size just to be sure
@@ -787,18 +834,18 @@ function atcb_open(data, button, keyboardTrigger = false, generatedButton = fals
   if (keyboardTrigger) {
     list.firstChild.focus();
   } else {
-    // for everything else, we focus as well, but blur immediately to only set the pointer
-    list.firstChild.focus();
-    list.firstChild.blur();
+    list.firstChild.focus({ preventScroll: true });
   }
+  list.firstChild.blur();
 }
 
-function atcb_close(blockFocus = false) {
-  // focus triggering button - especially relevant for keyboard navigation
-  if (!blockFocus) {
-    let newFocusEl = document.querySelector('.atcb-active, .atcb-active-modal');
-    if (newFocusEl) {
-      newFocusEl.focus();
+function atcb_close(keyboardTrigger = false) {
+  // focus triggering button if available - especially relevant for keyboard navigation
+  let newFocusEl = document.querySelector('.atcb-active, .atcb-active-modal');
+  if (newFocusEl) {
+    newFocusEl.focus({ preventScroll: true });
+    if (!keyboardTrigger) {
+      newFocusEl.blur();
     }
   }
   // inactivate all buttons
@@ -832,22 +879,27 @@ function atcb_action(data, triggerElement, keyboardTrigger = true) {
   }
   if (triggerElement) {
     data.identifier = triggerElement.id;
+    // if listStyle some dropdown one, force overlay
+    if (data.listStyle != 'modal') {
+      data.listStyle = 'overlay';
+    }
   } else {
     data.identifier = 'atcb-btn-custom';
     // if no button is defined, fallback to listStyle "modal" and "click" trigger
     data.listStyle = 'modal';
     data.trigger = 'click';
   }
-  atcb_open(data, triggerElement, keyboardTrigger);
+  atcb_toggle('open', data, triggerElement, keyboardTrigger);
 }
 
 // FUNCTION TO GENERATE THE GOOGLE URL
+// See specs at: TODO
 function atcb_generate_google(data) {
   // base url
   let url = 'https://calendar.google.com/calendar/render?action=TEMPLATE';
   // generate and add date
   const formattedDate = atcb_generate_time(data, 'clean', 'google');
-  url += '&dates=' + formattedDate.start + '%2F' + formattedDate.end;
+  url += '&dates=' + encodeURIComponent(formattedDate.start) + '%2F' + encodeURIComponent(formattedDate.end);
   // add details (if set)
   if (data.name != null && data.name != '') {
     url += '&text=' + encodeURIComponent(data.name);
@@ -880,12 +932,13 @@ function atcb_generate_google(data) {
 }
 
 // FUNCTION TO GENERATE THE YAHOO URL
+// See specs at: TODO
 function atcb_generate_yahoo(data) {
   // base url
   let url = 'https://calendar.yahoo.com/?v=60';
   // generate and add date
   const formattedDate = atcb_generate_time(data, 'clean');
-  url += '&st=' + formattedDate.start + '&et=' + formattedDate.end;
+  url += '&st=' + encodeURIComponent(formattedDate.start) + '&et=' + encodeURIComponent(formattedDate.end);
   if (formattedDate.allday) {
     url += '&dur=allday';
   }
@@ -907,7 +960,13 @@ function atcb_generate_yahoo(data) {
 }
 
 // FUNCTION TO GENERATE THE MICROSOFT 365 OR OUTLOOK WEB URL
+// See specs at: TODO
 function atcb_generate_microsoft(data, type = '365') {
+  // redirect to iCal solution on mobile devices, since the Microsoft web apps are buggy on mobile devices (see https://github.com/add2cal/add-to-calendar-button/discussions/113)
+  if (isMobile()) {
+    atcb_generate_ical(data);
+    return;
+  }
   // base url
   let url = 'https://';
   if (type == 'outlook') {
@@ -918,7 +977,8 @@ function atcb_generate_microsoft(data, type = '365') {
   url += '/calendar/0/deeplink/compose?path=%2Fcalendar%2Faction%2Fcompose&rru=addevent';
   // generate and add date
   const formattedDate = atcb_generate_time(data, 'delimiters', 'microsoft');
-  url += '&startdt=' + formattedDate.start + '&enddt=' + formattedDate.end;
+  url +=
+    '&startdt=' + encodeURIComponent(formattedDate.start) + '&enddt=' + encodeURIComponent(formattedDate.end);
   if (formattedDate.allday) {
     url += '&allday=true';
   }
@@ -939,14 +999,18 @@ function atcb_generate_microsoft(data, type = '365') {
 }
 
 // FUNCTION TO GENERATE THE MICROSOFT TEAMS URL
-// Mind that this is still in development mode by Microsoft! (https://docs.microsoft.com/en-us/microsoftteams/platform/concepts/build-and-test/deep-links#deep-linking-to-the-scheduling-dialog)
-// Location, html tags and linebreaks in the description are not supported yet.
+// See specs at: https://docs.microsoft.com/en-us/microsoftteams/platform/concepts/build-and-test/deep-links#deep-linking-to-the-scheduling-dialog
+// Mind that this is still in development mode by Microsoft! Location, html tags and linebreaks in the description are not supported yet.
 function atcb_generate_teams(data) {
   // base url
   let url = 'https://teams.microsoft.com/l/meeting/new?';
   // generate and add date
   const formattedDate = atcb_generate_time(data, 'delimiters', 'microsoft');
-  url += '&startTime=' + formattedDate.start + '&endTime=' + formattedDate.end;
+  url +=
+    '&startTime=' +
+    encodeURIComponent(formattedDate.start) +
+    '&endTime=' +
+    encodeURIComponent(formattedDate.end);
   // add details (if set)
   let locationString = '';
   if (data.name != null && data.name != '') {
@@ -968,6 +1032,7 @@ function atcb_generate_teams(data) {
 }
 
 // FUNCTION TO GENERATE THE iCAL FILE (also for the Apple option)
+// See specs at: https://www.rfc-editor.org/rfc/rfc5545.html
 function atcb_generate_ical(data) {
   // check for a given explicit file (not if iOS and WebView - will catched further down)
   if (
@@ -1266,6 +1331,7 @@ function atcb_create_modal(data, icon = '', headline, content, buttons) {
   const infoModal = document.createElement('div');
   infoModal.classList.add('atcb-modal-box');
   infoModal.classList.add('atcb-' + data.lightMode);
+  infoModal.style.fontSize = data.size + 'px';
   infoModalWrapper.appendChild(infoModal);
   // set overlay size just to be sure
   atcb_set_fullsize(bgOverlay);
@@ -1279,11 +1345,11 @@ function atcb_create_modal(data, icon = '', headline, content, buttons) {
     atcb_debounce(() => atcb_close())
   );
   infoModalClose.addEventListener(
-    'keydown',
+    'keyup',
     atcb_debounce_leading((event) => {
       if (event.key == 'Enter') {
         event.preventDefault();
-        atcb_close();
+        atcb_toggle('close', '', '', true);
       }
     })
   );
@@ -1322,7 +1388,7 @@ function atcb_create_modal(data, icon = '', headline, content, buttons) {
         infoModalButton.setAttribute('rel', 'noopener');
       } else {
         infoModalButton = document.createElement('button');
-        infoModalButton.setAttribute('type', 'button');
+        infoModalButton.type = 'button';
       }
       infoModalButton.classList.add('atcb-modal-btn');
       if (button.primary) {
@@ -1343,10 +1409,10 @@ function atcb_create_modal(data, icon = '', headline, content, buttons) {
             atcb_debounce(() => atcb_close())
           );
           infoModalButton.addEventListener(
-            'keydown',
+            'keyup',
             atcb_debounce((event) => {
               if (event.key == 'Enter') {
-                atcb_close();
+                atcb_toggle('close', '', '', true);
               }
             })
           );
@@ -1357,11 +1423,11 @@ function atcb_create_modal(data, icon = '', headline, content, buttons) {
             atcb_debounce(() => atcb_close())
           );
           infoModalButton.addEventListener(
-            'keydown',
+            'keyup',
             atcb_debounce_leading((event) => {
               if (event.key == 'Enter') {
                 event.preventDefault();
-                atcb_close();
+                atcb_toggle('close', '', '', true);
               }
             })
           );
@@ -1372,24 +1438,53 @@ function atcb_create_modal(data, icon = '', headline, content, buttons) {
 }
 
 // SHARED FUNCTION TO CALCULATE THE POSITION OF THE DROPDOWN LIST
-function atcb_position_list(trigger, list) {
+function atcb_position_list(trigger, list, blockUpwards = false, resize = false) {
+  // check for position anchor
   let anchorSet = false;
+  const originalTrigger = trigger;
   if (trigger.nextElementSibling !== null) {
     if (trigger.nextElementSibling.classList.contains('atcb-dropdown-anchor')) {
       trigger = trigger.nextSibling;
       anchorSet = true;
     }
   }
-  const btnDim = trigger.getBoundingClientRect();
+  // calculate position
+  const triggerDim = trigger.getBoundingClientRect();
   const listDim = list.getBoundingClientRect();
-  if (anchorSet === true) {
-    list.style.width = btnDim.width + 'px';
-    list.style.top = btnDim.top + window.scrollY + 'px';
-    list.style.left = btnDim.left + 'px';
+  const btnDim = originalTrigger.getBoundingClientRect();
+  if (anchorSet === true && !list.classList.contains('atcb-dropoverlay')) {
+    // in the regular case, we also check for the ideal direction
+    // not in the !updateDirection case and not if there is not enough space above
+    const viewportHeight = document.documentElement.clientHeight;
+    if (
+      (list.classList.contains('atcb-dropup') && resize) ||
+      (!blockUpwards &&
+        triggerDim.top + listDim.height > viewportHeight - 20 &&
+        2 * btnDim.top + btnDim.height - triggerDim.top - listDim.height > 20)
+    ) {
+      originalTrigger.classList.add('atcb-dropup');
+      list.classList.add('atcb-dropup');
+      list.style.bottom =
+        2 * viewportHeight -
+        (viewportHeight + (btnDim.top + (btnDim.top + btnDim.height - triggerDim.top))) -
+        window.scrollY +
+        'px';
+    } else {
+      list.style.top = window.scrollY + triggerDim.top + 'px';
+      if (originalTrigger.classList.contains('atcb-dropup')) {
+        originalTrigger.classList.remove('atcb-dropup');
+      }
+    }
+    list.style.width = triggerDim.width + 'px';
+    list.style.left = triggerDim.left + 'px';
   } else {
-    list.style.width = btnDim.width + 10 + 'px';
-    list.style.top = btnDim.top + btnDim.height / 2 - listDim.height / 2 + window.scrollY + 'px';
-    list.style.left = btnDim.left - 5 + 'px';
+    // when there is no anchor set (only the case with custom implementations) or the listStyle is set respectively (overlay), we render the modal centered above the trigger
+    // make sure the trigger is not moved over it via CSS in this case!
+    let listWidth = triggerDim.width + 20 + 'px';
+    list.style.minWidth = listWidth;
+    const listDimNew = list.getBoundingClientRect();
+    list.style.top = window.scrollY + btnDim.top + btnDim.height / 2 - listDimNew.height / 2 + 'px';
+    list.style.left = triggerDim.left - (listDimNew.width - triggerDim.width) / 2 + 'px';
   }
 }
 
@@ -1411,7 +1506,7 @@ function atcb_debounce(func, timeout = 200) {
   };
 }
 // dropping subsequent calls debounce
-function atcb_debounce_leading(func, timeout = 200) {
+function atcb_debounce_leading(func, timeout = 300) {
   let timer;
   return (...args) => {
     if (!timer) {
@@ -1450,17 +1545,50 @@ function atcb_throttle(func, delay = 10) {
   };
 }
 
-// GLOBAL LISTENERS
+// GLOBAL KEYBOARD AND DEVICE LISTENERS
 if (isBrowser()) {
-  // Global listener to ESC key to close dropdown
+  // global listener to ESC key to close dropdown
   document.addEventListener(
-    'keydown',
+    'keyup',
     atcb_debounce_leading((event) => {
       if (event.key === 'Escape') {
-        atcb_close();
+        atcb_toggle('close', '', '', true);
       }
     })
   );
+  // global listener to arrow key optionlist navigation
+  document.addEventListener('keydown', (event) => {
+    if (
+      document.querySelector('.atcb-list') &&
+      (event.key === 'ArrowDown' || event.key === 'ArrowUp' || event.key === 'Tab')
+    ) {
+      let targetFocus = 0;
+      let currFocusOption = document.activeElement;
+      const optionListCount = document.querySelectorAll('.atcb-list-item').length;
+      if (currFocusOption.classList.contains('atcb-list-item')) {
+        if (event.key === 'ArrowDown' && currFocusOption.dataset.optionNumber < optionListCount) {
+          event.preventDefault();
+          targetFocus = parseInt(currFocusOption.dataset.optionNumber) + 1;
+        } else if (event.key === 'ArrowUp' && currFocusOption.dataset.optionNumber >= 1) {
+          event.preventDefault();
+          targetFocus = parseInt(currFocusOption.dataset.optionNumber) - 1;
+        }
+        if (targetFocus > 0) {
+          document.querySelector('.atcb-list-item[data-option-number="' + targetFocus + '"]').focus();
+        }
+      } else {
+        event.preventDefault();
+        if (
+          document.querySelector('.atcb-list-wrapper.atcb-dropup') &&
+          (event.key === 'ArrowDown' || event.key === 'ArrowUp')
+        ) {
+          document.querySelector('.atcb-list-item[data-option-number="' + optionListCount + '"]').focus();
+        } else {
+          document.querySelector('.atcb-list-item[data-option-number="1"]').focus();
+        }
+      }
+    }
+  });
   // Global listener to any screen changes
   window.addEventListener(
     'resize',
@@ -1472,7 +1600,7 @@ if (isBrowser()) {
       let activeButton = document.querySelector('.atcb-active');
       let activeList = document.querySelector('.atcb-dropdown');
       if (activeButton != null && activeList != null) {
-        atcb_position_list(activeButton, activeList);
+        atcb_position_list(activeButton, activeList, false, true);
       }
     })
   );

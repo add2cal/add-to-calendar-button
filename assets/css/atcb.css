@@ -5,7 +5,7 @@
  *
  * Style: Default
  *
- * Version: 1.13.2
+ * Version: 1.14.0
  * Creator: Jens Kuerschner (https://jenskuerschner.de)
  * Project: https://github.com/add2cal/add-to-calendar-button
  * License: MIT with “Commons Clause” License Condition v1.0
@@ -21,11 +21,11 @@
  */
 
 :root {
+  --base-font-size: 16px;
   --atcb-keyboard-focus: #1e90ff;
   --atcb-background: #f5f5f5;
   --atcb-background-2: #fff;
   --atcb-border: #d2d2d2;
-  --atcb-border-2: #d2d2d2;
   --atcb-text: #333;
   --atcb-text-2: #000;
   --atcb-close-background: #e5e5e5;
@@ -60,8 +60,7 @@ body.atcb-dark .atcb-list.atcb-bodyScheme,
 body.atcb-dark .atcb-modal-box.atcb-bodyScheme {
   --atcb-background: #2e2e2e;
   --atcb-background-2: #373737;
-  --atcb-border: #333;
-  --atcb-border-2: #4d4d4d;
+  --atcb-border: #4d4d4d;
   --atcb-text: #bebebe;
   --atcb-text-2: #e8e8e8;
   --atcb-close-background: #282828;
@@ -80,6 +79,7 @@ body.atcb-dark .atcb-modal-box.atcb-bodyScheme {
 
 .atcb-button-wrapper {
   display: inline-block;
+  font-size: var(--base-font-size);
   padding: 5px;
   position: relative;
 }
@@ -94,14 +94,13 @@ body.atcb-dark .atcb-modal-box.atcb-bodyScheme {
   cursor: pointer;
   display: flex;
   font-family: Arial, Helvetica, sans-serif;
-  font-size: 16px;
+  font-size: 1em;
   font-weight: 600;
-  gap: 10px;
-  line-height: 24px;
-  margin: 2px;
-  max-width: 300px;
-  min-width: 170px;
-  padding: 10px 16px;
+  justify-content: center;
+  line-height: 1.5em;
+  margin: .13em;
+  max-width: 350px;
+  padding: .65em 1em;
   position: relative;
   text-align: center;
   touch-action: manipulation;
@@ -121,22 +120,29 @@ body.atcb-dark .atcb-modal-box.atcb-bodyScheme {
   outline: 2px solid var(--atcb-keyboard-focus);
 }
 
-.atcb-button.atcb-active:not(.atcb-modal-style) {
+.atcb-button.atcb-active:not(.atcb-modal-style, .atcb-dropoverlay),
+.atcb-button.atcb-single:focus,
+.atcb-button.atcb-single:hover {
   background-color: var(--atcb-background-2);
   box-shadow: var(--atcb-shadow-button-active);
   margin: 0;
-  min-width: 172px;
-  padding: 12px 18px;
+  padding: .78em 1.13em;
   z-index: 160;
 }
 
+.atcb-button.atcb-active.atcb-dropoverlay {
+  min-width: 172px;
+  z-index: 150;
+}
+
 /******************************
- * Button Icon (also base for list icons)
+ * Button Icon (also base for list icons) & Text
  */
 
 .atcb-icon {
-  height: 16px;
-  margin-bottom: 4px;
+  height: 1em;
+  margin-bottom: .3em;
+  margin-right: .65em;
 }
 
 .atcb-icon svg {
@@ -145,13 +151,17 @@ body.atcb-dark .atcb-modal-box.atcb-bodyScheme {
   width: auto;
 }
 
+.atcb-text {
+  overflow-wrap: anywhere;
+}
+
 /******************************
  * Options List
  */
 
 .atcb-dropdown-anchor {
   position: relative;
-  top: -3px;
+  top: -4px;
 }
 
 .atcb-list-wrapper {
@@ -161,6 +171,10 @@ body.atcb-dark .atcb-modal-box.atcb-bodyScheme {
   z-index: 150;
 }
 
+.atcb-list-wrapper.atcb-dropoverlay {
+  z-index: 160;
+}
+
 .atcb-list {
   border-radius: 0 0 6px 6px;
   box-sizing: border-box;
@@ -168,7 +182,7 @@ body.atcb-dark .atcb-modal-box.atcb-bodyScheme {
   color: var(--atcb-text);
   display: block;
   font-family: Arial, Helvetica, sans-serif;
-  font-size: 16px;
+  font-size: var(--base-font-size);
   max-width: 100%;
   position: relative;
   user-select: none;
@@ -178,15 +192,14 @@ body.atcb-dark .atcb-modal-box.atcb-bodyScheme {
 .atcb-list-item {
   align-items: center;
   background-color: var(--atcb-background);
-  border-color: var(--atcb-border-2);
+  border: 1px solid var(--atcb-border);
   box-sizing: border-box;
   cursor: pointer;
   display: flex;
   font-size: 1em;
-  gap: 8px;
   left: 50%;
   line-height: 1.75em;
-  padding: 13px 15px;
+  padding: .8em .9em;
   text-align: left;
   touch-action: manipulation;
   -webkit-tap-highlight-color: transparent;
@@ -210,32 +223,47 @@ body.atcb-dark .atcb-modal-box.atcb-bodyScheme {
 }
 
 .atcb-list .atcb-list-item:not(:first-child) {
-  border-top-style: solid;
-  border-width: 1px;
+  border-top-style: none;
 }
 
-.atcb-list:not(.atcb-generated-button) .atcb-list-item:first-child,
+.atcb-dropup .atcb-list-item:last-child {
+  border-radius: 0;
+  padding-bottom: 1.25em;
+}
+
+.atcb-dropup .atcb-list-item:first-child,
+.atcb-dropoverlay .atcb-list .atcb-list-item:first-child,
 .atcb-list.atcb-modal .atcb-list-item:first-child {
   border-radius: 6px 6px 0 0;
 }
 
-.atcb-list:not(.atcb-generated-button) .atcb-list-item:only-child,
+.atcb-dropoverlay .atcb-list .atcb-list-item:only-child,
 .atcb-list.atcb-modal .atcb-list-item:only-child {
   border-radius: 6px;
 }
 
 .atcb-list.atcb-generated-button:not(.atcb-modal) .atcb-list-item:first-child {
-  padding-top: 20px;
+  padding-top: 1.25em;
+}
+
+.atcb-dropup .atcb-list.atcb-generated-button:not(.atcb-modal) .atcb-list-item:first-child,
+.atcb-dropoverlay .atcb-list.atcb-generated-button:not(.atcb-modal) .atcb-list-item:first-child {
+  padding-top: .8em;
+}
+
+.atcb-dropoverlay .atcb-list,
+.atcb-list.atcb-modal {
+  border-radius: 6px;
 }
 
 .atcb-list.atcb-modal {
-  border-radius: 6px;
   box-shadow: var(--atcb-shadow-list-modal);
 }
 
 .atcb-list-item .atcb-icon {
-  margin-bottom: 7px;
-  width: 18px;
+  margin-bottom: .44em;
+  margin-right: .5em;
+  width: 1.125em;
 }
 
 .atcb-list-item-close {
@@ -276,26 +304,26 @@ body.atcb-dark .atcb-modal-box.atcb-bodyScheme {
   color: var(--atcb-text-2);
   cursor: default;
   border-radius: 6px;
-  border: 1px solid var(--atcb-border-2);
+  border: 1px solid var(--atcb-border);
   box-sizing: border-box;  
   font-family: Arial, Helvetica, sans-serif;
-  font-size: 16px;
-  line-height: 24px;
-  padding: 20px 25px;
+  font-size: var(--base-font-size);
+  line-height: 1.5em;
+  padding: 1.25em 1.5em;
   text-align: left;
   user-select: none;
   touch-action: manipulation;
   width: 100%;
-  max-width: 500px;
+  max-width: 32em;
   -webkit-tap-highlight-color: transparent;
 }
 
 .atcb-modal-close {
   cursor: pointer;
   display: inline-block;
-  height: 18px;
+  height: 1.125em;
   position: absolute;
-  right: 20px;
+  right: 1.25em;
 }
 
 .atcb-modal-close svg {
@@ -315,17 +343,17 @@ body.atcb-dark .atcb-modal-box.atcb-bodyScheme {
 .atcb-modal-headline {
   align-items: center;
   display: flex;
-  font-size: 1.38em;
+  font-size: 1.3em;
   font-weight: 600;
-  gap: 15px;
-  line-height: 2em;
-  margin: 20px 15px;
+  line-height: 1.5em;
+  margin: 1.25em .9em;
   text-transform: uppercase;
 }
 
 .atcb-modal-headline-icon {
-  height: 26px;
-  margin-bottom: 2px;
+  height: 1.625em;
+  margin-bottom: .125em;
+  margin-right: .9em;
 }
 
 .atcb-modal-headline-icon svg {
@@ -338,8 +366,8 @@ body.atcb-dark .atcb-modal-box.atcb-bodyScheme {
   margin: 30px 15px;
 }
 
-.atcb-modal-buttons {  
-  padding: 15px 0;
+.atcb-modal-buttons {
+  padding: .9em 0;
   text-align: center;
   width: 100%;
 }
@@ -354,11 +382,11 @@ a.atcb-modal-btn {
   cursor: pointer;
   display: inline-block;
   font-family: Arial, Helvetica, sans-serif;
-  font-size: 16px;
+  font-size: 1em;
   font-weight: 600;
   line-height: 1.5em;
-  margin: 10px;
-  padding: 10px 20px;
+  margin: .625em;
+  padding: .625em 1.25em;
   position: relative;
   text-align: center;
   text-decoration: none;
