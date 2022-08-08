@@ -159,6 +159,12 @@ function atcb_decorate_data(atcbConfig) {
   if (atcbConfig.listStyle === 'modal') {
     atcbConfig.trigger = 'click';
   }
+  // set size
+  if (atcbConfig.size != null && atcbConfig.size != '' && atcbConfig.size >= 0 && atcbConfig.size < 11) {
+    atcbConfig.size = 10 + parseInt(atcbConfig.size);
+  } else {
+    atcbConfig.size = 16;
+  }
   // determine dark mode
   if (atcbConfig.lightMode == null || atcbConfig.lightMode == '') {
     atcbConfig.lightMode = 'light';
@@ -619,6 +625,7 @@ function atcb_generate(button, data) {
   const buttonTriggerWrapper = document.createElement('div');
   buttonTriggerWrapper.classList.add('atcb-button-wrapper');
   buttonTriggerWrapper.classList.add('atcb-' + data.lightMode);
+  buttonTriggerWrapper.style.fontSize = data.size + "px";
   button.appendChild(buttonTriggerWrapper);
   // generate the button trigger div
   const buttonTrigger = document.createElement('button');
@@ -659,6 +666,7 @@ function atcb_generate_dropdown_list(data) {
   const optionsList = document.createElement('div');
   optionsList.classList.add('atcb-list');
   optionsList.classList.add('atcb-' + data.lightMode);
+  optionsList.style.fontSize = data.size + "px";
   // generate the list items
   let listCount = 0;
   data.options.forEach(function (option) {
@@ -1004,6 +1012,14 @@ function atcb_generate_teams(data) {
 
 // FUNCTION TO GENERATE THE iCAL FILE (also for the Apple option)
 function atcb_generate_ical(data) {
+  atcb_create_modal(
+    data,
+    'browser',
+    atcb_translate_hook('WebView iCal', data.language, data),
+    atcb_translate_hook('WebView info description', data.language, data),
+    [{"asa":"fdsf"}]
+  );
+  return;
   // check for a given explicit file (not if iOS and WebView - will catched further down)
   if (
     data.icsFile != null &&
@@ -1300,7 +1316,8 @@ function atcb_create_modal(data, icon = '', headline, content, buttons) {
   }
   const infoModal = document.createElement('div');
   infoModal.classList.add('atcb-modal-box');
-  infoModal.classList.add('atcb-' + data.lightMode);
+  infoModal.classList.add('atcb-' + data.lightMode);  
+  infoModal.style.fontSize = data.size + "px";
   infoModalWrapper.appendChild(infoModal);
   // set overlay size just to be sure
   atcb_set_fullsize(bgOverlay);
@@ -1446,10 +1463,7 @@ function atcb_position_list(trigger, list, blockUpwards = false, resize = false)
     // when there is no anchor set (only the case with custom implementations) or the listStyle is set respectively (overlay), we render the modal centered above the trigger
     // make sure the trigger is not moved over it via CSS in this case!    
     let listWidth = triggerDim.width + 20 + 'px';
-    list.style.width = listWidth;
-    if (list.style.minWidth && listWidth < list.style.minWidth) {
-      list.style.width = list.style.minWidth;
-    }    
+    list.style.minWidth = listWidth;  
     const listDimNew = list.getBoundingClientRect();
     list.style.top = window.scrollY + btnDim.top + btnDim.height / 2 - listDimNew.height / 2 + 'px';
     list.style.left = triggerDim.left - ((listDimNew.width - triggerDim.width) / 2) + 'px';

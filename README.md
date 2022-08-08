@@ -273,6 +273,7 @@ const MyComponent = () => {
 - If you want to define a specific name for any generated ics file (iCal), you can specify it via the `iCalFileName` option. The default would be "event-to-save-in-my-calendar".
 - ics files are generated on the fly. However, if you want to go more stable, you can also explicitly define a self-hosted file, setting its absolute path with the `icsFile` option.
 - You can use the option `"inline":true` in order to make the button appear with inline-block instead of block style.
+- Change the relative size of the rendering by using hte option `size` with a value between 0 and 10 (default: 6, which equals 16px font-size).
 - Use `"background":false` if you want to be the background overlay to be fully transparent.
 - The default style for the options list, using the regular button, would be a dropdown. You can set the option `listStyle` to "modal" in order to force the modal version (this would also force the click trigger) or `overlay` to show the list right above the button. The default would also show the dropdown upwards, if this better fits the current viewport. You can block this behavior with the option `dropdown-static`.
 - If you require line breaks within the description, use `\n` or `<br>`.

@@ -21,6 +21,7 @@ declare module 'add-to-calendar-button' {
       background?: boolean;
       icsFile?: string;
       style?: '3d' | 'flat' | 'round' | 'neumorphism' | 'none';
+      size?: bigint;
       customLabels?: object;
       lightMode?: 'system' | 'dark' | 'light' | 'bodyScheme';
       language?: 'en' | 'de';
