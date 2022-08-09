@@ -2,6 +2,7 @@
 
 ## Version 1
 
+- v1.14 : dynamical dropdown/up, adjustable size
 - v1.13 : dark mode
 - v1.12 : style updates, sanitization, webView edge case support, text block overwrite option, change of repo ownership
 - v1.11 : 1-option support, static ics support, instagram browser support, multi-lang, hide background option, recurring events, and more
