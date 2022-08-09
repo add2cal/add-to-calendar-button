@@ -1,4 +1,4 @@
-![Add-to-Calendar Button](https://github.com/add2cal/add-to-calendar-button/blob/main/img/readme-header.png?raw=true)
+![Add-to-Calendar Button](https://github.com/add2cal/add-to-calendar-button/blob/dev/img/readme-header.png?raw=true)
 
 # Your next Add-to-Calendar Button
 
