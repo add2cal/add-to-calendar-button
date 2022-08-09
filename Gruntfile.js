@@ -18,7 +18,7 @@ module.exports = function (grunt) {
       },
       demoHtml: {
         options: {
-          prefix: '.(tinyVersion">v|.?v=)',
+          prefix: '.(tiny-version">v|.?v=)',
         },
         src: ['index.html'],
       },
