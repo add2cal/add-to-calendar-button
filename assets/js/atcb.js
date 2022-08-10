@@ -3,7 +3,7 @@
  * Add-to-Calendar Button
  * ++++++++++++++++++++++
  */
-const atcbVersion = '1.14.2';
+const atcbVersion = '1.14.3';
 /* Creator: Jens Kuerschner (https://jenskuerschner.de)
  * Project: https://github.com/add2cal/add-to-calendar-button
  * License: MIT with “Commons Clause” License Condition v1.0
@@ -26,7 +26,13 @@ const isAndroid = isBrowser()
     )
   : new Function('return false;');
 // Mobile
-const isMobile = new Function('if (isAndroid() || isiOS()) { return true; } else { return false; }');
+const isMobile = () => {
+  if (isAndroid() || isiOS()) {
+    return true;
+  } else {
+    return false;
+  }
+};
 // WebView (iOS and Android)
 const isWebView = isBrowser()
   ? new Function(
@@ -442,21 +448,15 @@ function atcb_generate_label(data, parent, type, icon = false, text = '', oneOpt
     case 'trigger':
     default:
       if (data.trigger === 'click') {
-        parent.addEventListener(
-          'click',
-          atcb_debounce_leading((event) => {
-            event.preventDefault();
-            atcb_toggle('auto', data, parent, false, true);
-          })
-        );
+        parent.addEventListener('click', (event) => {
+          event.preventDefault();
+          atcb_toggle('auto', data, parent, false, true);
+        });
       } else {
-        parent.addEventListener(
-          'touchstart',
-          atcb_debounce_leading((event) => {
-            event.preventDefault();
-            atcb_toggle('auto', data, parent, false, true);
-          })
-        );
+        parent.addEventListener('touchend', (event) => {
+          event.preventDefault();
+          atcb_toggle('auto', data, parent, false, true);
+        });
         parent.addEventListener(
           'mouseenter',
           atcb_debounce_leading((event) => {
@@ -727,9 +727,7 @@ function atcb_generate_bg_overlay(listStyle = 'dropdown', trigger = '', darken =
   bgOverlay.addEventListener(
     'touchstart',
     atcb_debounce_leading(() => (fingerMoved = false)),
-    {
-      passive: true,
-    }
+    { passive: true }
   );
   bgOverlay.addEventListener(
     'touchmove',
