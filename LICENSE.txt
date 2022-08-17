@@ -18,9 +18,7 @@ the License must also include this Commons Clause License
 Condition notice.
 
 Software: add-to-calendar-button
-
 License: MIT
-
 Licensor: Jens Kuerschner (www.jenskuerschner.de)
 
 

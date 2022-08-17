@@ -20,7 +20,7 @@ declare module 'add-to-calendar-button' {
       inline?: boolean;
       background?: boolean;
       icsFile?: string;
-      style?: '3d' | 'flat' | 'round' | 'neumorphism' | 'none';
+      buttonStyle?: 'default' | '3d' | 'flat' | 'round' | 'neumorphism' | 'none';
       size?: bigint;
       customLabels?: object;
       lightMode?: 'system' | 'dark' | 'light' | 'bodyScheme';
