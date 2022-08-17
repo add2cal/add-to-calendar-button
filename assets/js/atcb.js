@@ -80,6 +80,11 @@ function atcb_init() {
   // let's get started
   console.log('add-to-calendar button initialized (version ' + atcbVersion + ')');
   console.log('See https://github.com/add2cal/add-to-calendar-button for details');
+  // abort if not in a browser
+  if (!isBrowser()) {
+    console.error('no further initialization due to wrong environment (no browser)');
+    return;
+  }
   // get all placeholders
   const atcButtons = document.querySelectorAll('.atcb');
   // if there are some, move on
@@ -95,7 +100,7 @@ function atcb_init() {
       // get JSON from HTML block, but remove real code line breaks before parsing.
       // use <br> or \n explicitely in the description to create a line break.
       let atcbConfig = JSON.parse(
-        atcb_seure_content(atcButtons[parseInt(i)].innerHTML.replace(/(\r\n|\n|\r)/g, ''), false)
+        atcb_secure_content(atcButtons[parseInt(i)].innerHTML.replace(/(\r\n|\n|\r)/g, ''), false)
       );
       // rewrite config for backwards compatibility
       atcbConfig = atcb_patch_config(atcbConfig);
@@ -866,7 +871,7 @@ function atcb_close(keyboardTrigger = false) {
 // prepare data when not using the init function
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 function atcb_action(data, triggerElement, keyboardTrigger = true) {
-  data = atcb_seure_content(data);
+  data = atcb_secure_content(data);
   // validate & decorate data
   if (!atcb_check_required(data)) {
     throw new Error('data missing; see logs');
@@ -1252,7 +1257,7 @@ function atcb_generate_time(data, style = 'delimiters', targetCal = 'general', a
 }
 
 // SHARED FUNCTION TO SECURE DATA
-function atcb_seure_content(data, isJSON = true) {
+function atcb_secure_content(data, isJSON = true) {
   // strip HTML tags (especially since stupid Safari adds stuff) - except for <br>
   let toClean;
   // differentiates between JSON and string input
