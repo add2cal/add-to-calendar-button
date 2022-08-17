@@ -4,10 +4,6 @@ function prepareExport(content, exportPhrase) {
   return content.replace(initCodeDelimiter, `${exportPhrase} { atcb_action, atcb_init };`);
 }
 
-function eslintAdjustment(content) {
-  return content.replace(/\.\.\//g, '../../');
-}
-
 module.exports = function (grunt) {
   // The config.
   grunt.initConfig({
@@ -85,10 +81,28 @@ module.exports = function (grunt) {
         dest: 'npm_dist/cjs/index.js',
         options: { process: (content) => prepareExport(content, 'module.exports =') },
       },
-      eslintAdd: {
-        src: 'test/.eslintrc.json',
-        dest: 'npm_dist/cjs/.eslintrc.json',
-        options: { process: (content) => eslintAdjustment(content) },
+    },
+    'file-creator': {
+      'package.json ES Module': {
+        'npm_dist/mjs/package.json': function (fs, fd, done) {
+          fs.writeSync(fd, '{ "type": "module" }');
+          done();
+        },
+      },
+      'package.json commonJS': {
+        'npm_dist/cjs/package.json': function (fs, fd, done) {
+          fs.writeSync(fd, '{ "type": "commonjs" }');
+          done();
+        },
+      },
+      '.eslintrc.json commonJS': {
+        'npm_dist/cjs/.eslintrc.json': function (fs, fd, done) {
+          fs.writeSync(
+            fd,
+            '{ "extends": "../../.eslintrc.json", "env": { "node": true }, "plugins": ["commonjs"] }'
+          );
+          done();
+        },
       },
     },
     // minifies the main js file
@@ -112,10 +126,11 @@ module.exports = function (grunt) {
   grunt.loadNpmTasks('grunt-contrib-clean');
   grunt.loadNpmTasks('grunt-contrib-uglify');
   grunt.loadNpmTasks('grunt-contrib-cssmin');
+  grunt.loadNpmTasks('grunt-file-creator');
   grunt.loadNpmTasks('grunt-version');
 
   // Register task(s).
   grunt.registerTask('default', ['clean', 'cssmin', 'uglify']);
-  grunt.registerTask('npm', ['clean', 'cssmin', 'copy', 'uglify']);
+  grunt.registerTask('npm', ['clean', 'cssmin', 'copy', 'file-creator', 'uglify']);
   grunt.registerTask('cleanNpm', ['clean:npmFolder']);
 };
