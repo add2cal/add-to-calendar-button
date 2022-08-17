@@ -14,6 +14,10 @@
 */
 
 :root {
+  --primary-color: #9755ff;
+  --primary-color-light: #cbaaff;
+  --secondary-color: #ffa255;
+  --secondary-color-light: #ffd0aa;
   --page-background: #f5f5f5;
   --text: #333;
   --text-secondary: #969696;
@@ -60,7 +64,7 @@ body.atcb-dark {
 /* nunito-regular - latin */
 @font-face {
   font-display: swap;
-  font-family: 'Nunito';
+  font-family: Nunito;
   font-style: normal;
   font-weight: 400;
   src: url('../fonts/nunito-v25-latin-regular.eot'); /* IE9 Compat Modes */
@@ -71,10 +75,11 @@ body.atcb-dark {
        url('../fonts/nunito-v25-latin-regular.ttf') format('truetype'), /* Safari, Android, iOS */
        url('../fonts/nunito-v25-latin-regular.svg#Nunito') format('svg'); /* Legacy iOS */
 }
+
 /* nunito-600 - latin */
 @font-face {
   font-display: swap;
-  font-family: 'Nunito';
+  font-family: Nunito;
   font-style: normal;
   font-weight: 600;
   src: url('../fonts/nunito-v25-latin-600.eot'); /* IE9 Compat Modes */
@@ -85,10 +90,11 @@ body.atcb-dark {
        url('../fonts/nunito-v25-latin-600.ttf') format('truetype'), /* Safari, Android, iOS */
        url('../fonts/nunito-v25-latin-600.svg#Nunito') format('svg'); /* Legacy iOS */
 }
+
 /* nunito-800 - latin */
 @font-face {
   font-display: swap;
-  font-family: 'Nunito';
+  font-family: Nunito;
   font-style: normal;
   font-weight: 800;
   src: url('../fonts/nunito-v25-latin-800.eot'); /* IE9 Compat Modes */
@@ -99,10 +105,11 @@ body.atcb-dark {
        url('../fonts/nunito-v25-latin-800.ttf') format('truetype'), /* Safari, Android, iOS */
        url('../fonts/nunito-v25-latin-800.svg#Nunito') format('svg'); /* Legacy iOS */
 }
+
 /* nunito-900 - latin */
 @font-face {
   font-display: swap;
-  font-family: 'Nunito';
+  font-family: Nunito;
   font-style: normal;
   font-weight: 900;
   src: url('../fonts/nunito-v25-latin-900.eot'); /* IE9 Compat Modes */
@@ -127,6 +134,7 @@ body.atcb-dark {
        url('../fonts/fira-mono-v14-latin-regular.ttf') format('truetype'), /* Safari, Android, iOS */
        url('../fonts/fira-mono-v14-latin-regular.svg#FiraMono') format('svg'); /* Legacy iOS */
 }
+
 /* fira-mono-700 - latin */
 @font-face {
   font-family: 'Fira Mono';
@@ -145,7 +153,17 @@ body.atcb-dark {
  * Basics
  */
 
- body {
+::selection {
+  background: var(--primary-color);
+  color: #fff;
+}
+
+::selection {
+  background: var(--primary-color);
+  color: #fff;
+}
+
+body {
   background: var(--page-background);
   box-sizing: border-box;
   color: var(--text);
@@ -155,7 +173,7 @@ body.atcb-dark {
   height: 100%;
   line-height: 1.5rem;
   margin: 0;
-  padding: 100px 0;
+  padding: 30px 0 100px;
   text-align: center;
   width: 100%;
 }
@@ -185,19 +203,12 @@ h1 {
   line-height: 1.2em;
 }
 
-#tiny-version {
-  color: var(--text-secondary);
-  font-size: 0.4em;
-  font-weight: 400;
-}
-
 h2 {
-  font-family: "Paytone One", Arial, sans-serif;
   color: var(--text-subline);
   font-size: 1.2em;
   line-height: 1.5em;
   margin: 35px auto;
-  max-width: 600px;
+  max-width: 800px;
   width: 100%;
 }
 
@@ -217,7 +228,7 @@ h3 {
 }
 
 a, a:focus, a:active {
-  color: #7d3da7;
+  color: var(--primary-color);
   text-decoration: none;
 }
 
@@ -226,35 +237,40 @@ a:not(.clean) {
 }
 
 a:hover {
-  color: #7b5a92;
+  color: var(--secondary-color);
   text-decoration: none;
 }
 
 body.atcb-dark a,
 body.atcb-dark a:focus,
 body.atcb-dark a:active {
-  color: #864fab;
+  color: var(--primary-color);
 }
 
 body.atcb-dark a:hover {
-  color: #816694;
-  text-decoration: none;
+  color: var(--primary-color-light);
 }
 
 a svg {
-  fill: #6D0BAC;
+  fill: var(--primary-color);
 }
 
 a:hover svg {
-  fill: #7b5a92;
+  fill: var(--secondary-color);
 }
 
 body.atcb-dark a svg {
-  fill: #864fab;
+  fill: var(--primary-color);
 }
 
 body.atcb-dark a:hover svg {
-  fill: #816694;
+  fill: var(--primary-color-light);
+}
+
+#tiny-version {
+  color: var(--text-secondary);
+  font-size: 0.9em;
+  margin-top: 30px;
 }
 
 #legal {
@@ -264,6 +280,28 @@ body.atcb-dark a:hover svg {
 
 #legal a {
   color: var(--text-secondary);
+}
+
+/******************************
+ * Logo
+ */
+
+#logo {
+  display: block;
+  margin: auto;
+  width: 500px;
+}
+
+#logo svg {
+  height: auto;
+  width: 100%;
+}
+
+@media (max-width: 767px) {
+  #logo {
+    height: 177px;
+    width: 299px;
+  }
 }
 
 /******************************
@@ -362,13 +400,18 @@ body.atcb-dark #light-mode-switch div::after {
   background-color: var(--example-background);
   border: 1px solid var(--example-border);
   border-radius: 6px;
-  font-family: "Fira Mono", Consolas, sans-serif;
   font-size: 0.8em;
-  padding: 20px;
+  padding: 12px 20px;
   text-align: left;
   word-break: break-all;
 }
 
-.example-right code {
+body.atcb-dark .example-right {
+  box-shadow: inset 3px 3px 15px 0 rgb(0 0 0 / 30%); 
+  box-shadow: inset 3px 3px 15px 0 rgb(0 0 0 / 30%);
+}
+
+.example-right pre {
+  font-family: "Fira Mono", Consolas, sans-serif;
   white-space: pre-wrap;
 }
