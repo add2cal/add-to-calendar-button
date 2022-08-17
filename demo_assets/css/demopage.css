@@ -158,11 +158,6 @@ body.atcb-dark {
   color: #fff;
 }
 
-::selection {
-  background: var(--primary-color);
-  color: #fff;
-}
-
 body {
   background: var(--page-background);
   box-sizing: border-box;
@@ -407,7 +402,6 @@ body.atcb-dark #light-mode-switch div::after {
 }
 
 body.atcb-dark .example-right {
-  box-shadow: inset 3px 3px 15px 0 rgb(0 0 0 / 30%); 
   box-shadow: inset 3px 3px 15px 0 rgb(0 0 0 / 30%);
 }
 
