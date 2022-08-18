@@ -224,12 +224,15 @@ h3 {
   padding-bottom: 40px;
 }
 
-a, a:focus, a:active {
+a,
+a:focus,
+a:active {
   color: var(--primary-color);
+  font-weight: 800;
   text-decoration: none;
 }
 
-a:not(.clean) {
+a:not(.github) {
   text-decoration: underline;
 }
 
@@ -248,20 +251,31 @@ body.atcb-dark a:hover {
   color: var(--primary-color-light);
 }
 
-a svg {
+a.github,
+a.github:focus,
+a.github:active {
+  background: #f5f5f5;
+  border-radius: 71% 29% 70% 30% / 50% 66% 34% 50%;
+  box-shadow: 0.5px 0.2px 3.4px -14px rgba(0, 0, 0, 0.094), 1px 0.4px 9.5px -14px rgba(0, 0, 0, 0.135), 1.8px 0.7px 22.9px -14px rgba(0, 0, 0, 0.176), 5px 2px 76px -14px rgba(0, 0, 0, 0.27);
+  color: var(--primary-color);
+  display: inline-block;
+  padding: 20px 25px;
+}
+
+a.github:hover {
+  background: linear-gradient(45deg, var(--secondary-color), var(--secondary-color-light));
+  border-radius: 67% 33% 66% 33% / 45% 70% 30% 56%;
+  box-shadow: 0.5px 0.2px 6.2px -4px rgba(0, 0, 0, 0.125), 1px 0.4px 17.2px -4px rgba(0, 0, 0, 0.18), 1.8px 0.7px 41.3px -4px rgba(0, 0, 0, 0.235), 5px 2px 137px -4px rgba(0, 0, 0, 0.36);
+  color: #fff;
+  cursor: pointer;
+}
+
+a.github svg {
   fill: var(--primary-color);
 }
 
-a:hover svg {
-  fill: var(--secondary-color);
-}
-
-body.atcb-dark a svg {
-  fill: var(--primary-color);
-}
-
-body.atcb-dark a:hover svg {
-  fill: var(--primary-color-light);
+a.github:hover svg {
+  fill: #fff;
 }
 
 #tiny-version {
@@ -373,10 +387,6 @@ body.atcb-dark #light-mode-switch div::after {
 /******************************
  * Special elements
  */
-
-.github {
-  margin-bottom:80px;
-}
 
 .example {
   align-items: start;
