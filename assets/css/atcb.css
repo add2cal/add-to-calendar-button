@@ -64,8 +64,8 @@ body.atcb-dark .atcb-modal-box.atcb-bodyScheme {
   --atcb-background: #2e2e2e;
   --atcb-background-2: #373737;
   --atcb-border: #4d4d4d;
-  --atcb-text: #bebebe;
-  --atcb-text-2: #e8e8e8;
+  --atcb-text: #dedede;
+  --atcb-text-2: #f1f1f1;
   --atcb-close-background: #282828;
   --atcb-overlay-background: rgba(20 20 20 / 60%);
   --atcb-shadow-button: rgba(255 255 255 / 5%) -12px -5px 20px -8px, rgba(255 255 255 / 6%) -7px -5px 15px -3px, rgba(0 0 0 / 50%) 2px 5px 18px -1px, rgba(0 0 0 / 40%) 3px 3px 20px -3px;
@@ -483,7 +483,6 @@ a.atcb-modal-btn:focus-visible {
 
 #atcb-bgoverlay.atcb-no-bg {
   animation: none;
-  background-color: var(--atcb-text-2);
   backdrop-filter: none;
   opacity: 0;
 }

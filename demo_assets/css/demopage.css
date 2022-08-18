@@ -201,6 +201,7 @@ h1 {
 h2 {
   color: var(--text-subline);
   font-size: 1.2em;
+  font-weight: 800;
   line-height: 1.5em;
   margin: 35px auto;
   max-width: 800px;
@@ -208,6 +209,7 @@ h2 {
 }
 
 h3 {
+  font-weight: 800;
   text-align: left;
 }
 
