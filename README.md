@@ -37,7 +37,9 @@ In terms of system support, **all modern browsers** (Chrome, Edge, Firefox, Safa
 
 See [add-to-calendar-button.com](https://add-to-calendar-button.com/) for a live demo.
 
-And remember to ⭐**star** this repository in order to save it for later! 🤗
+And remember to [⭐**star** this repository](#) in order to save it for later! 🤗
+
+[![Remember to star this repository!](https://github.com/add2cal/add-to-calendar-button/blob/dev/img/starring.gif?raw=true)](#)
 
 <br /><br />
 
