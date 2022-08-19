@@ -204,6 +204,12 @@ function atcb_decorate_data(atcbConfig) {
   if (atcbConfig.language == null || atcbConfig.language == '') {
     atcbConfig.language = 'en';
   }
+  // set right-to-left for relevant languages
+  if (atcbConfig.language == 'ar') {
+    atcbConfig.rtl = true;
+  } else {
+    atcbConfig.rtl = false;
+  }
   // format RRULE (remove spaces)
   if (atcbConfig.recurrence != null && atcbConfig.recurrence != '') {
     atcbConfig.recurrence = atcbConfig.recurrence.replace(/\s+/g, '');
@@ -633,6 +639,9 @@ function atcb_generate(button, data) {
   const buttonTriggerWrapper = document.createElement('div');
   buttonTriggerWrapper.classList.add('atcb-button-wrapper');
   buttonTriggerWrapper.classList.add('atcb-' + data.lightMode);
+  if (data.rtl) {
+    buttonTriggerWrapper.classList.add('atcb-rtl');
+  }
   buttonTriggerWrapper.style.fontSize = data.size + 'px';
   button.appendChild(buttonTriggerWrapper);
   // generate the button trigger div
@@ -674,6 +683,9 @@ function atcb_generate_dropdown_list(data) {
   const optionsList = document.createElement('div');
   optionsList.classList.add('atcb-list');
   optionsList.classList.add('atcb-' + data.lightMode);
+  if (data.rtl) {
+    optionsList.classList.add('atcb-rtl');
+  }
   optionsList.style.fontSize = data.size + 'px';
   // generate the list items
   let listCount = 0;
@@ -1334,6 +1346,9 @@ function atcb_create_modal(data, icon = '', headline, content, buttons) {
   const infoModal = document.createElement('div');
   infoModal.classList.add('atcb-modal-box');
   infoModal.classList.add('atcb-' + data.lightMode);
+  if (data.rtl) {
+    infoModal.classList.add('atcb-rtl');
+  }
   infoModal.style.fontSize = data.size + 'px';
   infoModalWrapper.appendChild(infoModal);
   // set overlay size just to be sure
@@ -1662,6 +1677,132 @@ function atcb_translate(identifier, language) {
           return 'Öffne deinen Browser';
         case 'WebView info description':
           return 'Leider haben In-App-Browser Probleme mit der Art, wie wir Kalender-Dateien erzeugen.<br>Wir haben automatisch eine magische URL in die Zwischenablage deines Smartphones kopiert.<br><ol><li><strong>Öffne einen anderen Browser</strong> auf deinem Smartphone, ...</li><li>Nutze die <strong>Einfügen</strong>-Funktion, um fortzufahren.';
+      }
+      break;
+    case 'es':
+      switch (identifier) {
+        case 'Add to Calendar':
+          return 'Añadir al Calendario';
+        case 'iCal File':
+          return 'iCal Ficha';
+        case 'Close':
+          return 'Ciérralo';
+        case 'Close Selection':
+          return 'Cerrar Selección';
+        case 'Click me':
+          return 'Haz clic mí';
+        case 'WebView iCal':
+          return 'Abra su browser';
+        case 'WebView info description':
+          return 'Lamentablemente, los browsers in-app tienen problemas con la forma en que generamos el archivo del calendario.<br>Hemos copiado automáticamente una URL mágica en el portapapeles de tu smartphone.<br><ol><li><strong>Abre otro browser</strong> en tu smartphone, ...</li><li>Utilice la función de <strong>pegar</strong> para continuar.';
+      }
+      break;
+    case 'pt':
+      switch (identifier) {
+        case 'Add to Calendar':
+          return 'Incluir no Calendário';
+        case 'iCal File':
+          return 'Ficheiro iCal';
+        case 'Close':
+          return 'Fechar';
+        case 'Close Selection':
+          return 'Fechar selecção';
+        case 'Click me':
+          return 'Clicar-me';
+        case 'WebView iCal':
+          return 'Abra o seu browser';
+        case 'WebView info description':
+          return 'Infelizmente, os navegadores em tampas têm problemas com a forma como geramos o ficheiro de calendário.<br>Copiámos automaticamente um URL mágico para a área de transferência do seu smartphone.<br><ol><li><strong>Abrir outro browser</strong> en tu smartphone, ...</li><li>Use a função <forte>colar</strong> para continuar.';
+      }
+      break;
+    case 'fr':
+      switch (identifier) {
+        case 'Add to Calendar':
+          return 'Ajout au Calendrier';
+        case 'iCal File':
+          return 'iCal Fichier';
+        case 'Close':
+          return 'Fermez';
+        case 'Close Selection':
+          return 'Fermez la sélection';
+        case 'Click me':
+          return 'Cliquez-moi';
+        case 'WebView iCal':
+          return 'Ouvrez votre navigateur';
+        case 'WebView info description':
+          return 'Malheureusement, les navigateurs in-app ont des problèmes avec la manière dont nous créons les fichiers de calendrier.<br>Nous avons automatiquement copié une URL magique dans le presse-papiers de ton smartphone.<br><ol><li><strong>Ouvre un autre navigateur</strong> sur ton smartphone, ...</li><li>Utilise la fonction <strong>insérer</strong> pour continuer.';
+      }
+      break;
+    case 'nl':
+      switch (identifier) {
+        case 'Add to Calendar':
+          return 'Opslaan in Kalender';
+        case 'iCal File':
+          return 'iCal File';
+        case 'Close':
+          return 'Sluiten';
+        case 'Close Selection':
+          return 'Sluit selectie';
+        case 'Click me':
+          return 'Klik me';
+        case 'WebView iCal':
+          return 'Open uw browser';
+        case 'WebView info description':
+          return 'Helaas hebben in-app browsers problemen met de manier waarop wij kalenderbestanden maken.<br>We hebben automatisch een magische URL naar het klembord van uw smartphone gekopieerd.<br><ol><li><strong>Open een andere browser</strong> op uw smartphone, ...</li><li>Gebruik de <strong>insert</strong> functie om verder te gaan.';
+      }
+      break;
+    case 'tr':
+      switch (identifier) {
+        case 'Add to Calendar':
+          return 'Takvime Ekle';
+        case 'iCal File':
+          return 'iCal Dosyası';
+        case 'Close':
+          return 'Kapat';
+        case 'Close Selection':
+          return 'Seçimi kapat';
+        case 'Click me':
+          return 'Beni tıklayın';
+        case 'WebView iCal':
+          return 'Tarayıcınızı açın';
+        case 'WebView info description':
+          return 'Ne yazık ki, uygulama içi tarayıcılar takvim dosyalarını oluşturma şeklimizle ilgili sorunlar yaşıyor.<br>Akıllı telefonunuzun panosuna otomatik olarak sihirli bir URL kopyaladık.<br><ol><li><strong>Akıllı telefonunuzda başka bir tarayıcı açın</strong>, ...</li><li>Devam etmek için <strong>insert</strong> fonksiyonunu kullanın.';
+      }
+      break;
+    case 'zh':
+      switch (identifier) {
+        case 'Add to Calendar':
+          return '添加到日历';
+        case 'iCal File':
+          return 'iCal 文件';
+        case 'Close':
+          return '关';
+        case 'Close Selection':
+          return '关闭选择';
+        case 'Click me':
+          return '点我';
+        case 'WebView iCal':
+          return '打开浏览器';
+        case 'WebView info description':
+          return "不幸的是，应用内浏览器在我们生成日历文件的方式上存在问题.<br>我们会自动将一个神奇的 URL 放入您手机的剪贴板.<br><ol><li>打开手机上的任何其他浏览器, ...</li><li>粘贴剪贴板内容并开始.";
+      }
+      break;
+    case 'ar':
+      switch (identifier) {
+        case 'Add to Calendar':
+          return 'إضافة إلى التقويم';
+        case 'iCal File':
+          return 'ملف iCal';
+        case 'Close':
+          return 'قريب';
+        case 'Close Selection':
+          return 'إغلاق التحديد';
+        case 'Click me':
+          return 'انقر فوق لي';
+        case 'WebView iCal':
+          return 'افتح المستعرض الخاص بك';
+        case 'WebView info description':
+          return 'لسوء الحظ ، تواجه المتصفحات داخل التطبيق مشاكل في طريقة إنشاء ملف التقويم..<br>نضع تلقائيًا عنوان ويب سحريًا في حافظة هاتفك.<br><ol><li>افتح أي متصفح آخر على هاتفك الذكي, ...</li><li>الصق محتوى الحافظة واذهب.';
       }
       break;
   }
