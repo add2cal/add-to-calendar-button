@@ -14,9 +14,12 @@
 
 .github/
 demo_assets/
+img/
 *.png
 *.ico
 *.gif
 *.svg
 index.html
 security.md
+browserconfig.xml
+manifest.json

@@ -1,6 +1,7 @@
 {
   "name": "Add to Calendar Button",
   "short_name": "Add2Cal",
+  "description": "The convenient JavaScript snippet, which lets you create beautiful buttons, where people can add events to their calendars",
   "icons": [
     {
       "src": "./demo_assets/favicons/android-chrome-36x36.png",
@@ -60,5 +61,6 @@
   "theme_color": "#9755ff",
   "background_color": "#9755ff",
   "display": "standalone",
-  "start_url": "./"
+  "start_url": "/",
+  "scope": "/"
 }

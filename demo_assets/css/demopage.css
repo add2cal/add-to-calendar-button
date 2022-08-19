@@ -21,12 +21,20 @@
   --page-background: #f5f5f5;
   --text: #333;
   --text-secondary: #969696;
-  --text-subline: #5a5a5a;
+  --text-subline: #fff;
   --hr: #cfcfcf;
   --light-mode-switch: #0D1117;
-  --example-background: #fff;
-  --example-color: #969696;
-  --example-border: #c1c1c1;
+  --example-background: #f5f5f5;
+  --example-color: #7d7d7d;
+  --example-border: #ababab;
+  --code-comment: #708090;
+  --code-punctuation: #999;
+  --code-tag: #905;
+  --code-selector: #690;
+  --code-operator: #9a6e3a;
+  --code-keyword: #07a;
+  --code-function: #DD4A68;
+  --code-regex: #e90;
 }
 
 /* Dark mode */
@@ -34,12 +42,19 @@
 body.atcb-dark {
   --page-background: #0D1117;
   --text: #e6e2ed;
-  --text-subline: #969696;
   --hr: #5e5c61;
   --light-mode-switch: #f5f5f5;
-  --example-background: #3d3d3d;
+  --example-background: #2D2D2D;
   --example-color: #bcbabe;
   --example-border: #797979;
+  --code-comment: #999;
+  --code-punctuation: #ccc;
+  --code-tag: #e2777a;
+  --code-selector: #cc99cd;
+  --code-operator: #67cdcc;
+  --code-keyword: #99a2cd;
+  --code-function: #f08d49;
+  --code-regex: #7ec699;
 }
 
 /******************************
@@ -168,7 +183,7 @@ body {
   height: 100%;
   line-height: 1.5rem;
   margin: 0;
-  padding: 30px 0 100px;
+  padding: 0 0 100px;
   text-align: center;
   width: 100%;
 }
@@ -203,8 +218,9 @@ h2 {
   font-size: 1.2em;
   font-weight: 800;
   line-height: 1.5em;
-  margin: 35px auto;
-  max-width: 800px;
+  max-width: 650px;
+  margin: auto;
+  opacity: .8;
   width: 100%;
 }
 
@@ -256,16 +272,18 @@ a.github:focus,
 a.github:active {
   background: #f5f5f5;
   border-radius: 71% 29% 70% 30% / 50% 66% 34% 50%;
-  box-shadow: 0.5px 0.2px 3.4px -14px rgba(0, 0, 0, 0.094), 1px 0.4px 9.5px -14px rgba(0, 0, 0, 0.135), 1.8px 0.7px 22.9px -14px rgba(0, 0, 0, 0.176), 5px 2px 76px -14px rgba(0, 0, 0, 0.27);
+  box-shadow: 0.5px 0.2px 3.4px -14px rgb(0 0 0 / 10%), 1px 0.4px 9.5px -14px rgb(0 0 0 / 14%), 1.8px 0.7px 22.9px -14px rgb(0 0 0 / 18%), 5px 2px 76px -14px rgb(0 0 0 / 27%);
   color: var(--primary-color);
   display: inline-block;
   padding: 20px 25px;
+  user-select: none;
 }
 
-a.github:hover {
+a.github:hover,
+body.atcb-dark a.github:hover {
   background: linear-gradient(45deg, var(--secondary-color), var(--secondary-color-light));
   border-radius: 67% 33% 66% 33% / 45% 70% 30% 56%;
-  box-shadow: 0.5px 0.2px 6.2px -4px rgba(0, 0, 0, 0.125), 1px 0.4px 17.2px -4px rgba(0, 0, 0, 0.18), 1.8px 0.7px 41.3px -4px rgba(0, 0, 0, 0.235), 5px 2px 137px -4px rgba(0, 0, 0, 0.36);
+  box-shadow: 0.5px 0.2px 6.2px -4px rgb(0 0 0 / 13%), 1px 0.4px 17.2px -4px rgb(0 0 0 / 18%), 1.8px 0.7px 41.3px -4px rgb(0 0 0 / 35%), 5px 2px 137px -4px rgb(0 0 0 / 36%);
   color: #fff;
   cursor: pointer;
 }
@@ -299,8 +317,8 @@ a.github:hover svg {
 
 #logo {
   display: block;
-  margin: auto;
-  width: 500px;
+  width: 400px;
+  padding: 30px 0;
 }
 
 #logo svg {
@@ -308,10 +326,12 @@ a.github:hover svg {
   width: 100%;
 }
 
-@media (max-width: 767px) {
+@media (max-width: 991px) {
   #logo {
     height: 177px;
     width: 299px;
+    padding: 0;
+    margin: auto;
   }
 }
 
@@ -319,7 +339,7 @@ a.github:hover svg {
  * Light mode switch
  */
 
-#light-mode-switch {
+.light-mode-switch {
   background: transparent;
   cursor: pointer;
   border: 0;
@@ -330,7 +350,13 @@ a.github:hover svg {
   -webkit-tap-highlight-color: transparent;
 }
 
-#light-mode-switch div {
+#light-mode-switch-header {
+  position: absolute;
+  top: 0;
+  right: 50px;
+}
+
+.light-mode-switch div {
   position: relative;
   width: 20px;
   height: 20px;
@@ -339,7 +365,7 @@ a.github:hover svg {
   background: var(--light-mode-switch);
 }
 
-#light-mode-switch div::before {
+.light-mode-switch div::before {
   content: "";
   position: absolute;
   width: 6px;
@@ -354,7 +380,7 @@ a.github:hover svg {
   transition: box-shadow 0.4s 0s ease;
 }
 
-#light-mode-switch div::after {
+.light-mode-switch div::after {
   content: "";
   position: absolute;
   width: 90%;
@@ -366,27 +392,54 @@ a.github:hover svg {
   transition: transform 0.45s ease;
 }
 
-body.atcb-dark #light-mode-switch div {
+body.atcb-dark .light-mode-switch div {
   transform: scale(0.5);
   background: var(--light-mode-switch);
 }
 
-body.atcb-dark #light-mode-switch div::before {
+body.atcb-dark .light-mode-switch div::before {
   opacity: 1;
   box-shadow: 0 -20px 0 0 var(--light-mode-switch), 0 20px 0 0 var(--light-mode-switch), -20px 0 0 0 var(--light-mode-switch),
     20px 0 0 0 var(--light-mode-switch), 15px 15px 0 0 var(--light-mode-switch), 15px -15px 0 0 var(--light-mode-switch),
     -15px 15px 0 0 var(--light-mode-switch), -15px -15px 0 0 var(--light-mode-switch);
 }
 
-body.atcb-dark #light-mode-switch div::after {
+body.atcb-dark .light-mode-switch div::after {
   opacity: 0;
   transition: background 0.45s ease;
   transform: translateX(50%) translateY(-50%);
 }
 
+#light-mode-switch-header div::after {
+  background: var(--primary-color-light);
+}
+
+@media (max-width: 991px) {
+  #light-mode-switch-header div::after {
+    background: var(--primary-color);
+  }
+}
+
 /******************************
- * Special elements
+ * Special elements and structure
  */
+
+#header {
+  background: linear-gradient(45deg, var(--primary-color), var(--primary-color), var(--primary-color-light), var(--primary-color-light));
+  box-shadow: 0 6px 7px -6px rgb(0 0 0 / 15%), 0 12px 20px -6px rgb(0 0 0 / 18%), 0 31px 70px -6px rgb(0 0 0 / 34%);
+  display: flex;
+  justify-content: center;
+  padding: 0 25px 50px;
+  margin-bottom: 80px;
+}
+
+#header-left {
+  text-align: left;
+}
+
+#header-right {
+  margin: 80px;
+}
 
 .example {
   align-items: start;
@@ -396,28 +449,201 @@ body.atcb-dark #light-mode-switch div::after {
   justify-items: center;
 }
 
-@media only screen and (max-width: 800px) {
+.example-right {
+  background-color: var(--example-background);
+  border: 1px solid var(--example-border);
+  border-radius: 6px;
+  font-size: 0.8em;
+  text-align: left;
+}
+
+@media (max-width: 991px) {
+  #header {
+    background: linear-gradient(180deg, var(--primary-color), var(--primary-color), var(--primary-color-light));
+    flex-direction: column;
+  }
+
+  #header-left {
+    margin-top: 30px;
+    text-align: center;
+  }
+
+  #header-right {
+    margin: 80px 25px 30px;
+  }
+
   .example {
     grid-template-columns: 1fr;
   }
 }
 
-.example-right {
+/******************************
+ * PrismJS 1.28.0
+ * https://prismjs.com/download.html#themes=prism&languages=markup+clike+javascript
+ * prism.js default theme for JavaScript, CSS and HTML
+ * Based on dabblet (http://dabblet.com)
+ * @author Lea Verou
+ */
+
+code[class*="language-"],
+pre[class*="language-"] {
   color: var(--example-color);
-  background-color: var(--example-background);
-  border: 1px solid var(--example-border);
-  border-radius: 6px;
-  font-size: 0.8em;
-  padding: 12px 20px;
-  text-align: left;
-  word-break: break-all;
-}
-
-body.atcb-dark .example-right {
-  box-shadow: inset 3px 3px 15px 0 rgb(0 0 0 / 30%);
-}
-
-.example-right pre {
+  background: none;
   font-family: "Fira Mono", Consolas, sans-serif;
+  font-size: 1em;
+  text-align: left;
   white-space: pre-wrap;
+  word-spacing: normal;
+  word-break: break-all;
+  word-wrap: normal;
+  line-height: 1.5; 
+  tab-size: 4;
+  hyphens: none;
+}
+
+/* Code blocks */
+pre[class*="language-"] {
+  padding: 1em;
+  margin: .5em;
+  overflow: auto;
+}
+
+:not(pre) > code[class*="language-"],
+pre[class*="language-"] {
+  background-color: var(--example-background);
+}
+
+/* Inline code */
+:not(pre) > code[class*="language-"] {
+  padding: .1em;
+  border-radius: .3em;
+  white-space: normal;
+}
+
+.token.comment,
+.token.prolog,
+.token.doctype,
+.token.cdata {
+  color: var(--code-comment);
+}
+
+.token.punctuation {
+  color: var(--code-punctuation);
+}
+
+.token.namespace {
+  opacity: .7;
+}
+
+.token.property,
+.token.tag,
+.token.boolean,
+.token.number,
+.token.constant,
+.token.symbol,
+.token.deleted {
+  color: var(--code-tag);
+}
+
+.token.selector,
+.token.attr-name,
+.token.string,
+.token.char,
+.token.builtin,
+.token.inserted {
+  color: var(--code-selector);
+}
+
+.token.operator,
+.token.entity,
+.token.url,
+.language-css .token.string,
+.style .token.string {
+  color: var(--code-operator);
+}
+
+.token.atrule,
+.token.attr-value,
+.token.keyword {
+  color: var(--code-keyword);
+}
+
+.token.function,
+.token.class-name {
+  color: var(--code-function);
+}
+
+.token.regex,
+.token.important,
+.token.variable {
+  color: var(--code-regex);
+}
+
+.token.important,
+.token.bold {
+  font-weight: bold;
+}
+
+.token.italic {
+  font-style: italic;
+}
+
+div.code-toolbar {
+	position: relative;
+}
+
+div.code-toolbar > .toolbar {
+	position: absolute;
+	z-index: 10;
+	top: 0;
+	right: .4em;
+	transition: opacity 0.3s ease-in-out;
+	opacity: 0;
+}
+
+div.code-toolbar:hover > .toolbar {
+	opacity: 1;
+}
+
+/* Separate line b/c rules are thrown out if selector is invalid.
+   IE11 and old Edge versions don't support :focus-within. */
+div.code-toolbar:focus-within > .toolbar {
+	opacity: 1;
+}
+
+div.code-toolbar > .toolbar > .toolbar-item {
+	display: inline-block;
+}
+
+div.code-toolbar > .toolbar > .toolbar-item > button {
+	background: none;
+	border: 0;
+	color: inherit;
+  cursor: pointer;
+	font: inherit;
+	line-height: normal;
+	overflow: visible;
+	padding: 0;
+	user-select: none;
+}
+
+div.code-toolbar > .toolbar > .toolbar-item > button,
+div.code-toolbar > .toolbar > .toolbar-item > span {
+	color: var(--example-background);
+  font-weight: 800;
+	font-size: 1em;
+  line-height: 1em;
+	padding: 8px 12px;
+	background: var(--example-border);
+	box-shadow: -2px 3px 6px 0 rgb(0 0 0 / 30%);
+	border-radius: 6px;
+}
+
+div.code-toolbar > .toolbar > .toolbar-item > button:hover,
+div.code-toolbar > .toolbar > .toolbar-item > button:focus,
+div.code-toolbar > .toolbar > .toolbar-item > span:hover,
+div.code-toolbar > .toolbar > .toolbar-item > span:focus {
+	color: inherit;
+	text-decoration: none;
+  opacity: .9;
 }
