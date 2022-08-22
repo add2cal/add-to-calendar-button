@@ -1,3 +1,4 @@
 package-lock.json linguist-generated=true -diff
 assets/*/*.min.* linguist-generated=true -diff
+demo_assets/*/*.min.* linguist-generated=true -diff
 npm_dist/**/* linguist-generated=true -diff
