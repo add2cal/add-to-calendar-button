@@ -115,4 +115,4 @@ Adhering to the following process is the best way to get your work included in t
 
 <br />
 
-**IMPORTANT**: By submitting a patch, you agree to allow the project owners to license your work under the terms of the [MIT license (with “Commons Clause” License Condition v1.0)](LICENSE.txt).
+**IMPORTANT**: By submitting a patch, you agree to allow the project owners to license your work under the terms of the [MIT license (with “Commons Clause” License Condition v1.0)](../LICENSE.txt).
