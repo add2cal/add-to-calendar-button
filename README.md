@@ -1,4 +1,4 @@
-![Add-to-Calendar Button](https://github.com/add2cal/add-to-calendar-button/blob/main/img/readme-header.png?raw=true)
+![Add to Calendar Button](https://github.com/add2cal/add-to-calendar-button/blob/main/img/readme-header.png?raw=true)
 
 [![Code Quality](https://img.shields.io/codacy/grade/572c0a102d7b4f39b792439dcd2e8aad/main?style=for-the-badge)](https://app.codacy.com/gh/add2cal/add-to-calendar-button/dashboard)
 [![Build Status](https://img.shields.io/github/workflow/status/add2cal/add-to-calendar-button/Node.js%20Package?style=for-the-badge)](https://github.com/add2cal/add-to-calendar-button/actions/workflows/npm-publish.yml)
