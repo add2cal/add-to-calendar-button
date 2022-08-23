@@ -23,19 +23,10 @@ if (cval == '') {
   }
 }
 
-lightModeButtonHeader.addEventListener('click', () => {
-  document.body.classList.toggle('atcb-dark');
-  // also save as cookie
-  let newCval = 'light';
-  if (document.body.classList.contains('atcb-dark')) {
-    newCval = 'dark';
-  }
-  const d = new Date();
-  d.setTime(d.getTime() + 90 * 24 * 60 * 60 * 1000);
-  document.cookie = 'atcb-light-mode=' + newCval + ';expires=' + d.toUTCString();
-});
+lightModeButtonHeader.addEventListener('click', toggle_atcb_light_mode);
+lightModeButtonFooter.addEventListener('click', toggle_atcb_light_mode);
 
-lightModeButtonFooter.addEventListener('click', () => {
+function toggle_atcb_light_mode() {
   document.body.classList.toggle('atcb-dark');
   // also save as cookie
   let newCval = 'light';
@@ -45,7 +36,7 @@ lightModeButtonFooter.addEventListener('click', () => {
   const d = new Date();
   d.setTime(d.getTime() + 90 * 24 * 60 * 60 * 1000);
   document.cookie = 'atcb-light-mode=' + newCval + ';expires=' + d.toUTCString();
-});
+}
 
 /** PrismJS 1.28.0
  *https://prismjs.com/download.html#themes=prism&languages=markup+clike+javascript&plugins=toolbar+copy-to-clipboard
