@@ -65,8 +65,8 @@
     "build": "npx grunt"
   },
   "devDependencies": {
-    "@typescript-eslint/eslint-plugin": "^5.33.1",
-    "@typescript-eslint/parser": "^5.33.1",
+    "@typescript-eslint/eslint-plugin": "^5.34.0",
+    "@typescript-eslint/parser": "^5.34.0",
     "eslint": "^8.22.0",
     "eslint-config-prettier": "^8.5.0",
     "eslint-plugin-commonjs": "^1.0.2",
@@ -79,7 +79,7 @@
     "grunt-file-creator": "^0.1.3",
     "grunt-version": "^3.0.0",
     "prettier": "2.7.1",
-    "stylelint": "^14.10.0",
+    "stylelint": "^14.11.0",
     "stylelint-config-prettier": "^9.0.3",
     "stylelint-config-standard": "^28.0.0"
   }
