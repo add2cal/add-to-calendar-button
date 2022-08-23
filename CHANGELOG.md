@@ -1,4 +1,4 @@
-# ⚡ Changelog (without minor changes and fixes)
+# ⚡ Changelog (without patches)
 
 ## Version 1
 

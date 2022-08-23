@@ -1,4 +1,4 @@
-![Add-to-Calendar Button](https://github.com/add2cal/add-to-calendar-button/blob/main/img/readme-header.png?raw=true)
+![Add to Calendar Button](https://github.com/add2cal/add-to-calendar-button/blob/main/img/readme-header.png?raw=true)
 
 [![Code Quality](https://img.shields.io/codacy/grade/572c0a102d7b4f39b792439dcd2e8aad/main?style=for-the-badge)](https://app.codacy.com/gh/add2cal/add-to-calendar-button/dashboard)
 [![Build Status](https://img.shields.io/github/workflow/status/add2cal/add-to-calendar-button/Node.js%20Package?style=for-the-badge)](https://github.com/add2cal/add-to-calendar-button/actions/workflows/npm-publish.yml)
@@ -37,9 +37,9 @@ In terms of system support, **all modern browsers** (Chrome, Edge, Firefox, Safa
 
 See [add-to-calendar-button.com](https://add-to-calendar-button.com/) for a live demo.
 
-And remember to ⭐**star** this repository in order to save it for later! 🤗
+And remember to [⭐ **star** this repository](#) in order to stay up-to-date and save it for later! 🤗
 
-<br /><br />
+[![Remember to star this repository!](https://github.com/add2cal/add-to-calendar-button/blob/dev/img/starring.gif?raw=true)](#)
 
 ## ✨ Features
 
@@ -268,7 +268,7 @@ const MyComponent = () => {
 - Use "currentBrowser" as value for `timeZone` to dynamically use the time of the user's browser. Use this with caution, since it would mean that the date and time will differ per user, which should not be the usual case! (Requires all times to be set.)
 - Use the `recurrence` option to define recurring events. Use can use any **valid** [RRULE](https://www.rfc-editor.org/rfc/rfc5545) to define the respective rule ([click here](https://icalendar.org/rrule-tool.html) for a generator). But mind that this will deactivate the Yahoo, Microsoft365, Teams, and Outlook options, since they do not support it at the moment (users could still use iCal in this case).
 - If you want to rename a label, use the following schema at the options: optionName + Pipe + yourLabel. "Google|Google Kalender" would generate a Google Calendar option, but label it as "Google Kalender".
-- There is almost no static text block. For the tiny little rest, you can define a translation by using the `language` option. Supported options and therefore languages: en (default), de.
+- There is almost no static text block. For the tiny little rest, you can define a translation by using the `language` option. Supported options and therefore languages: English (en, default), German (de), Dutch (nl), French (fr), Spanish (es), Portugese (pt), Turkish (tr), Chinese (zh), Arabic (ar, incl RTL).
 - In case you want to customize them, you can alternatively set the option `customLabels` and provide a JSON object where the key would be the text block's identifier (lower case without spaces). See the bottom of the js file for possible text blocks. You can use HTML pseudo tags, which get transformed automatically (but not for styled labels). Suported ones: [url] (see next point), [br], [hr], [p], [strong], [u], [i], [em], [li], [ul], [ol], [h*] (like h1, h2, h3, ...).
 - Formatting a URL in the description like `[url]https://....[/url]` makes it clickable. `[url]https://....|URL Text[/url]` defines a linked textblock saying "URL Text" (not supported by Apple, iCal, and Yahoo; not supporting special characters).
 - You can set the `trigger` to `click`. This makes the button open on click at desktop. Otherwise, the default would be to open on hover. On touch devices, this makes no difference.
