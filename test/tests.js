@@ -39,4 +39,5 @@ try {
   });
 } catch (error) {
   console.log('FAILED: Something went wrong with the npm build script while testing');
+  throw error;
 }
