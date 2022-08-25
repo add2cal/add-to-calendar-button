@@ -35,9 +35,10 @@ try {
     if (error) {
       throw error;
     }
-    console.log(`${dirToDrop} deleted again\n`);
+    console.log(`${dirToDrop} deleted again`);
+    console.log('All Tests SUCCESSFUL!\n');
   });
 } catch (error) {
-  console.log('FAILED: Something went wrong with the npm build script while testing');
+  console.log('FAILED: Something went wrong with the npm build script while testing\n');
   throw error;
 }
