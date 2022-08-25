@@ -273,7 +273,7 @@ const MyComponent = () => {
 - Formatting a URL in the description like `[url]https://....[/url]` makes it clickable. `[url]https://....|URL Text[/url]` defines a linked textblock saying "URL Text" (not supported by Apple, iCal, and Yahoo; not supporting special characters).
 - You can set the `trigger` to `click`. This makes the button open on click at desktop. Otherwise, the default would be to open on hover. On touch devices, this makes no difference.
 - If you want to define a specific name for any generated ics file (iCal), you can specify it via the `iCalFileName` option. The default would be "event-to-save-in-my-calendar".
-- ics files are generated on the fly. However, if you want to go more stable, you can also explicitly define a self-hosted file, setting its absolute path with the `icsFile` option.
+- ics files are generated on the fly. However, if you want to go more stable, you can also explicitly define a self-hosted file, setting its absolute path with the `icsFile` option. Mind that the custom file name would not work in that case.
 - You can use the option `"inline":true` in order to make the button appear with inline-block instead of block style.
 - Change the relative size of the rendering by using hte option `size` with a value between 0 and 10 (default: 6, which equals 16px font-size).
 - Use `"background":false` if you want to be the background overlay to be fully transparent.
