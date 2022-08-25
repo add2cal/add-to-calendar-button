@@ -132,5 +132,4 @@ module.exports = function (grunt) {
   // Register task(s).
   grunt.registerTask('default', ['clean', 'cssmin', 'uglify']);
   grunt.registerTask('npm', ['clean', 'cssmin', 'copy', 'file-creator', 'uglify']);
-  grunt.registerTask('cleanNpm', ['clean:npmFolder']);
 };
