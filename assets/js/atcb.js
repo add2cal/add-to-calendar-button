@@ -3,7 +3,7 @@
  * Add-to-Calendar Button
  * ++++++++++++++++++++++
  */
-const atcbVersion = '1.14.5';
+const atcbVersion = '1.14.6';
 /* Creator: Jens Kuerschner (https://jenskuerschner.de)
  * Project: https://github.com/add2cal/add-to-calendar-button
  * License: MIT with “Commons Clause” License Condition v1.0
@@ -310,7 +310,11 @@ function atcb_validate(data) {
   }
   // validate explicit ics file
   if (data.icsFile != null && data.icsFile != '') {
-    if (!atcb_secure_url(data.icsFile, false) || !/\.ics$/.test(data.icsFile)) {
+    if (
+      !atcb_secure_url(data.icsFile, false) ||
+      !/\.ics$/.test(data.icsFile) ||
+      !data.icsFile.startsWith('https://')
+    ) {
       console.error('add-to-calendar button generation failed: explicit ics file path not valid');
       return false;
     }
@@ -1049,16 +1053,19 @@ function atcb_generate_teams(data) {
 // FUNCTION TO GENERATE THE iCAL FILE (also for the Apple option)
 // See specs at: https://www.rfc-editor.org/rfc/rfc5545.html
 function atcb_generate_ical(data) {
-  // check for a given explicit file (not if iOS and WebView - will catched further down)
-  if (
-    data.icsFile != null &&
-    data.icsFile != '' &&
-    atcb_secure_url(data.icsFile) &&
-    data.icsFile.startsWith('https://') &&
-    (!isiOS() || !isWebView())
-  ) {
-    // eslint-disable-next-line security/detect-non-literal-fs-filename
-    window.open(data.icsFile, atcbDefaultTarget);
+  // define the right filename
+  let filename = 'event-to-save-in-my-calendar';
+  if (data.iCalFileName != null && data.iCalFileName != '') {
+    filename = data.iCalFileName;
+  } else if (data.icsFile != null && data.icsFile != '') {
+    const filenamePart = data.icsFile.split('/').pop().split('.')[0];
+    if (filenamePart != '') {
+      filename = filenamePart;
+    }
+  }
+  // check for a given explicit file (not if iOS and WebView - will be catched further down)
+  if (data.icsFile != null && data.icsFile != '' && (!isiOS() || !isWebView())) {
+    atcb_save_file(data.icsFile, filename);
     return;
   }
   // otherwise, generate one on the fly
@@ -1101,13 +1108,10 @@ function atcb_generate_ical(data) {
   }
   now = now.replace(/\.\d{3}/g, '').replace(/[^a-z\d]/gi, '');
   ics_lines.push('STATUS:CONFIRMED', 'LAST-MODIFIED:' + now, 'SEQUENCE:0', 'END:VEVENT', 'END:VCALENDAR');
-  let dlurl = 'data:text/calendar;charset=utf-8,' + encodeURIComponent(ics_lines.join('\r\n'));
-  const filename = data.iCalFileName || 'event-to-save-in-my-calendar';
-  // if we got to this point with an explicitely given iCal file, we are on an iOS device within an in-app browser (WebView). If the provided URL is save, we override the dlurl
+  let dataUrl = 'data:text/calendar;charset=utf-8,' + encodeURIComponent(ics_lines.join('\r\n'));
+  // if we got to this point with an explicitely given iCal file, we are on an iOS device within an in-app browser (WebView). In this case, we override the dataUrl
   if (data.icsFile != null && data.icsFile != '') {
-    if (atcb_secure_url(data.icsFile) && data.icsFile.startsWith('https://')) {
-      dlurl = data.icsFile;
-    }
+    dataUrl = data.icsFile;
   }
   // in in-app browser cases (WebView), we offer a copy option, since the on-the-fly client side generation is usually not supported
   // for Android, we are more specific and only go for specific apps at the moment
@@ -1117,7 +1121,7 @@ function atcb_generate_ical(data) {
     document.body.appendChild(tmpInput);
     var editable = tmpInput.contentEditable;
     var readOnly = tmpInput.readOnly;
-    tmpInput.value = dlurl;
+    tmpInput.value = dataUrl;
     tmpInput.contentEditable = true;
     tmpInput.readOnly = false;
     if (isiOS()) {
@@ -1129,7 +1133,7 @@ function atcb_generate_ical(data) {
       tmpInput.setSelectionRange(0, 999999);
     } else {
       // the next 2 lines are basically doing the same in different ways (just to be sure)
-      navigator.clipboard.writeText(dlurl);
+      navigator.clipboard.writeText(dataUrl);
       tmpInput.select();
     }
     tmpInput.contentEditable = editable;
@@ -1144,32 +1148,33 @@ function atcb_generate_ical(data) {
       atcb_translate_hook('WebView info description', data.language, data)
     );
   } else {
-    try {
-      if (!window.ActiveXObject) {
-        const save = document.createElement('a');
-        save.href = dlurl;
-        save.target = atcbDefaultTarget;
-        save.download = filename;
-        const evt = new MouseEvent('click', {
-          view: window,
-          button: 0,
-          bubbles: true,
-          cancelable: false,
-        });
-        save.dispatchEvent(evt);
-        (window.URL || window.webkitURL).revokeObjectURL(save.href);
-      }
-      // for IE < 11 (even no longer officially supported)
-      else if (!!window.ActiveXObject && document.execCommand) {
-        // eslint-disable-next-line security/detect-non-literal-fs-filename
-        const _window = window.open(dlurl, atcbDefaultTarget);
-        _window.document.close();
-        _window.document.execCommand('SaveAs', true, filename || dlurl);
-        _window.close();
-      }
-    } catch (e) {
-      console.error(e);
+    atcb_save_file(dataUrl, filename);
+  }
+}
+
+// SHARED FUNCTION TO SAVE A FILE
+function atcb_save_file(file, filename) {
+  try {
+    const save = document.createElementNS('http://www.w3.org/1999/xhtml', 'a');
+    save.rel = 'noopener';
+    save.href = file;
+    // not using default target here, since this needs to happen _self on iOS (abstracted to mobile in general) and _blank at Firefox (abstracted to other setups) due to potential cross-origin restrictions
+    if (isMobile()) {
+      save.target = '_self';
+    } else {
+      save.target = '_blank';
     }
+    save.download = filename + '.ics';
+    const evt = new MouseEvent('click', {
+      view: window,
+      button: 0,
+      bubbles: true,
+      cancelable: false,
+    });
+    save.dispatchEvent(evt);
+    (window.URL || window.webkitURL).revokeObjectURL(save.href);
+  } catch (e) {
+    console.error(e);
   }
 }
 
@@ -1636,7 +1641,7 @@ const i18nStrings = {
     'Click me': 'Click me',
     'WebView iCal': 'Open your browser',
     'WebView info description':
-      "Unfortunately, in-app browsers have problems with the way we generate the calendar file.<br>We automatically put a magical URL into your phone's clipboard.<br><ol><li><strong>Open any other browser</strong> on your phone, ...</li><li><strong>Paste</strong> the clipboard content and go.",
+      "Unfortunately, in-app browsers have problems with the way we generate the calendar file.<br>We automatically put a magical URL into your phone's clipboard.<br><ol><li><strong>Open another browser</strong> on your phone, ...</li><li><strong>Paste</strong> the clipboard content and go.",
   },
   de: {
     'Add to Calendar': 'Im Kalender speichern',

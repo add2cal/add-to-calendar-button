@@ -61,19 +61,16 @@ body.atcb-dark {
  * Fonts
  */
 
- /* paytone-one-regular - latin */
+/* paytone-one-regular - latin */
 @font-face {
   font-display: swap;
   font-family: 'Paytone One';
   font-style: normal;
   font-weight: 400;
-  src: url('../fonts/paytone-one-v18-latin-regular.eot'); /* IE9 Compat Modes */
   src: local(''),
-       url('../fonts/paytone-one-v18-latin-regular.eot?#iefix') format('embedded-opentype'), /* IE6-IE8 */
        url('../fonts/paytone-one-v18-latin-regular.woff2') format('woff2'), /* Super Modern Browsers */
        url('../fonts/paytone-one-v18-latin-regular.woff') format('woff'), /* Modern Browsers */
        url('../fonts/paytone-one-v18-latin-regular.ttf') format('truetype'), /* Safari, Android, iOS */
-       url('../fonts/paytone-one-v18-latin-regular.svg#PaytoneOne') format('svg'); /* Legacy iOS */
 }
 
 /* nunito-regular - latin */
@@ -82,13 +79,10 @@ body.atcb-dark {
   font-family: Nunito;
   font-style: normal;
   font-weight: 400;
-  src: url('../fonts/nunito-v25-latin-regular.eot'); /* IE9 Compat Modes */
   src: local(''),
-       url('../fonts/nunito-v25-latin-regular.eot?#iefix') format('embedded-opentype'), /* IE6-IE8 */
        url('../fonts/nunito-v25-latin-regular.woff2') format('woff2'), /* Super Modern Browsers */
        url('../fonts/nunito-v25-latin-regular.woff') format('woff'), /* Modern Browsers */
        url('../fonts/nunito-v25-latin-regular.ttf') format('truetype'), /* Safari, Android, iOS */
-       url('../fonts/nunito-v25-latin-regular.svg#Nunito') format('svg'); /* Legacy iOS */
 }
 
 /* nunito-600 - latin */
@@ -97,13 +91,10 @@ body.atcb-dark {
   font-family: Nunito;
   font-style: normal;
   font-weight: 600;
-  src: url('../fonts/nunito-v25-latin-600.eot'); /* IE9 Compat Modes */
   src: local(''),
-       url('../fonts/nunito-v25-latin-600.eot?#iefix') format('embedded-opentype'), /* IE6-IE8 */
        url('../fonts/nunito-v25-latin-600.woff2') format('woff2'), /* Super Modern Browsers */
        url('../fonts/nunito-v25-latin-600.woff') format('woff'), /* Modern Browsers */
        url('../fonts/nunito-v25-latin-600.ttf') format('truetype'), /* Safari, Android, iOS */
-       url('../fonts/nunito-v25-latin-600.svg#Nunito') format('svg'); /* Legacy iOS */
 }
 
 /* nunito-800 - latin */
@@ -112,13 +103,10 @@ body.atcb-dark {
   font-family: Nunito;
   font-style: normal;
   font-weight: 800;
-  src: url('../fonts/nunito-v25-latin-800.eot'); /* IE9 Compat Modes */
   src: local(''),
-       url('../fonts/nunito-v25-latin-800.eot?#iefix') format('embedded-opentype'), /* IE6-IE8 */
        url('../fonts/nunito-v25-latin-800.woff2') format('woff2'), /* Super Modern Browsers */
        url('../fonts/nunito-v25-latin-800.woff') format('woff'), /* Modern Browsers */
        url('../fonts/nunito-v25-latin-800.ttf') format('truetype'), /* Safari, Android, iOS */
-       url('../fonts/nunito-v25-latin-800.svg#Nunito') format('svg'); /* Legacy iOS */
 }
 
 /* nunito-900 - latin */
@@ -127,13 +115,10 @@ body.atcb-dark {
   font-family: Nunito;
   font-style: normal;
   font-weight: 900;
-  src: url('../fonts/nunito-v25-latin-900.eot'); /* IE9 Compat Modes */
   src: local(''),
-       url('../fonts/nunito-v25-latin-900.eot?#iefix') format('embedded-opentype'), /* IE6-IE8 */
        url('../fonts/nunito-v25-latin-900.woff2') format('woff2'), /* Super Modern Browsers */
        url('../fonts/nunito-v25-latin-900.woff') format('woff'), /* Modern Browsers */
        url('../fonts/nunito-v25-latin-900.ttf') format('truetype'), /* Safari, Android, iOS */
-       url('../fonts/nunito-v25-latin-900.svg#Nunito') format('svg'); /* Legacy iOS */
 }
 
 /* fira-mono-regular - latin */
@@ -141,13 +126,10 @@ body.atcb-dark {
   font-family: 'Fira Mono';
   font-style: normal;
   font-weight: 400;
-  src: url('../fonts/fira-mono-v14-latin-regular.eot'); /* IE9 Compat Modes */
   src: local(''),
-       url('../fonts/fira-mono-v14-latin-regular.eot?#iefix') format('embedded-opentype'), /* IE6-IE8 */
        url('../fonts/fira-mono-v14-latin-regular.woff2') format('woff2'), /* Super Modern Browsers */
        url('../fonts/fira-mono-v14-latin-regular.woff') format('woff'), /* Modern Browsers */
        url('../fonts/fira-mono-v14-latin-regular.ttf') format('truetype'), /* Safari, Android, iOS */
-       url('../fonts/fira-mono-v14-latin-regular.svg#FiraMono') format('svg'); /* Legacy iOS */
 }
 
 /* fira-mono-700 - latin */
@@ -155,13 +137,10 @@ body.atcb-dark {
   font-family: 'Fira Mono';
   font-style: normal;
   font-weight: 700;
-  src: url('../fonts/fira-mono-v14-latin-700.eot'); /* IE9 Compat Modes */
   src: local(''),
-       url('../fonts/fira-mono-v14-latin-700.eot?#iefix') format('embedded-opentype'), /* IE6-IE8 */
        url('../fonts/fira-mono-v14-latin-700.woff2') format('woff2'), /* Super Modern Browsers */
        url('../fonts/fira-mono-v14-latin-700.woff') format('woff'), /* Modern Browsers */
        url('../fonts/fira-mono-v14-latin-700.ttf') format('truetype'), /* Safari, Android, iOS */
-       url('../fonts/fira-mono-v14-latin-700.svg#FiraMono') format('svg'); /* Legacy iOS */
 }
 
 /******************************
