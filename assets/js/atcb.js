@@ -360,9 +360,7 @@ function atcb_validate(data) {
       }
       const dateParts = data[`${date}`].split('-');
       if (dateParts.length < 3 || dateParts.length > 3) {
-        console.error(
-          'add-to-calendar button generation failed: date misspelled [' + date + ': ' + data[`${date}`] + ']'
-        );
+        console.error('add-to-calendar button generation failed: date misspelled [' + date + ': ' + data[`${date}`] + ']');
         return false;
       }
       newDate[`${date}`] = new Date(dateParts[0], dateParts[1] - 1, dateParts[2]);

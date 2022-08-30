@@ -29,10 +29,7 @@ lightModeButtonFooter.addEventListener('click', toggle_atcb_light_mode);
 function toggle_atcb_light_mode() {
   document.body.classList.toggle('atcb-dark');
   // also save as cookie
-  let newCval = 'light';
-  if (document.body.classList.contains('atcb-dark')) {
-    newCval = 'dark';
-  }
+  const newCval = document.body.classList.contains('atcb-dark') ? 'dark' : 'light';
   const d = new Date();
   d.setTime(d.getTime() + 90 * 24 * 60 * 60 * 1000);
   document.cookie = 'atcb-light-mode=' + newCval + ';expires=' + d.toUTCString();
