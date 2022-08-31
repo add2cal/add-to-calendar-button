@@ -1,12 +1,12 @@
-/**
- * ++++++++++++++++++++++
- * Add-to-Calendar Button
- * ++++++++++++++++++++++
+/*!
+ *  ++++++++++++++++++++++
+ *  Add to Calendar Button
+ *  ++++++++++++++++++++++
  */
 const atcbVersion = '1.14.6';
-/* Creator: Jens Kuerschner (https://jenskuerschner.de)
- * Project: https://github.com/add2cal/add-to-calendar-button
- * License: MIT with “Commons Clause” License Condition v1.0
+/*! Creator: Jens Kuerschner (https://jenskuerschner.de)
+ *  Project: https://github.com/add2cal/add-to-calendar-button
+ *  License: MIT with “Commons Clause” License Condition v1.0
  *
  */
 
@@ -47,10 +47,7 @@ const isProblematicWebView = isBrowser()
   : new Function('return false;');
 
 // DEFINE DEFAULT LINK TARGET
-let atcbDefaultTarget = '_blank';
-if (isWebView()) {
-  atcbDefaultTarget = '_system';
-}
+const atcbDefaultTarget = isWebView() ? '_system' : '_blank';
 
 // DEFINING GLOBAL ICONS
 const atcbIcon = {
@@ -99,15 +96,15 @@ function atcb_init() {
       }
       // get JSON from HTML block, but remove real code line breaks before parsing.
       // use <br> or \n explicitely in the description to create a line break.
-      let atcbConfig = JSON.parse(
+      const atcbJsonInput = JSON.parse(
         atcb_secure_content(atcButtons[parseInt(i)].innerHTML.replace(/(\r\n|\n|\r)/g, ''), false)
       );
       // rewrite config for backwards compatibility
-      atcbConfig = atcb_patch_config(atcbConfig);
+      const atcbJsonInputPatched = atcb_patch_config(atcbJsonInput);
       // check, if all required data is available
-      if (atcb_check_required(atcbConfig)) {
+      if (atcb_check_required(atcbJsonInputPatched)) {
         // Rewrite dynamic dates, standardize line breaks and transform urls in the description
-        atcbConfig = atcb_decorate_data(atcbConfig);
+        const atcbConfig = atcb_decorate_data(atcbJsonInputPatched);
         // validate the config (JSON iput) ...
         if (atcb_validate(atcbConfig)) {
           // ... and generate the button on success
@@ -124,17 +121,17 @@ function atcb_init() {
 }
 
 // BACKWARDS COMPATIBILITY REWRITE
-function atcb_patch_config(atcbConfig) {
+function atcb_patch_config(configData) {
   // you can remove this, if you did not use this script before v1.10.0
   // adjusts any old schema.org structure
-  if (atcbConfig.event != null) {
-    Object.keys(atcbConfig.event).forEach((key) => {
+  if (configData.event != null) {
+    Object.keys(configData.event).forEach((key) => {
       // move entries one level up, but skip schema types
       if (key.charAt(0) !== '@') {
-        atcbConfig[`${key}`] = atcbConfig.event[`${key}`];
+        configData[`${key}`] = configData.event[`${key}`];
       }
     });
-    delete atcbConfig.event;
+    delete configData.event;
   }
   // you can remove this, if you did not use this script before v1.4.0
   // adjust deprecated config options
@@ -146,80 +143,78 @@ function atcb_patch_config(atcbConfig) {
     timeEnd: 'endTime',
   };
   Object.keys(keyChanges).forEach((key) => {
-    if (atcbConfig[keyChanges[`${key}`]] == null && atcbConfig[`${key}`] != null) {
-      atcbConfig[keyChanges[`${key}`]] = atcbConfig[`${key}`];
+    if (configData[keyChanges[`${key}`]] == null && configData[`${key}`] != null) {
+      configData[keyChanges[`${key}`]] = configData[`${key}`];
     }
   });
-  return atcbConfig;
+  return configData;
 }
 
 // CLEAN DATA BEFORE FURTHER VALIDATION (CONSIDERING SPECIAL RULES AND SCHEMES)
-function atcb_decorate_data(atcbConfig) {
+function atcb_decorate_data(data) {
   // cleanup options
-  for (let i = 0; i < atcbConfig.options.length; i++) {
-    let cleanOption = atcbConfig.options[`${i}`].split('|');
-    atcbConfig.options[`${i}`] = cleanOption[0].toLowerCase().replace('microsoft', 'ms').replace('.', '');
+  for (let i = 0; i < data.options.length; i++) {
+    let cleanOption = data.options[`${i}`].split('|');
+    data.options[`${i}`] = cleanOption[0].toLowerCase().replace('microsoft', 'ms').replace('.', '');
   }
   // cleanup different date-time formats
-  atcbConfig = atcb_date_cleanup(atcbConfig);
+  data = atcb_date_cleanup(data);
   // calculate the real date values in case that there are some special rules included (e.g. adding days dynamically)
-  atcbConfig.startDate = atcb_date_calculation(atcbConfig.startDate);
-  atcbConfig.endDate = atcb_date_calculation(atcbConfig.endDate);
+  data.startDate = atcb_date_calculation(data.startDate);
+  data.endDate = atcb_date_calculation(data.endDate);
   // set default listStyle
-  if (atcbConfig.listStyle == null || atcbConfig.listStyle == '') {
-    atcbConfig.listStyle = 'dropdown';
+  if (data.listStyle == null || data.listStyle == '') {
+    data.listStyle = 'dropdown';
   }
   // force click trigger on modal style
-  if (atcbConfig.listStyle === 'modal') {
-    atcbConfig.trigger = 'click';
+  if (data.listStyle === 'modal') {
+    data.trigger = 'click';
   }
   // set size
-  if (atcbConfig.size != null && atcbConfig.size != '' && atcbConfig.size >= 0 && atcbConfig.size < 11) {
-    atcbConfig.size = 10 + parseInt(atcbConfig.size);
+  if (data.size != null && data.size != '' && data.size >= 0 && data.size < 11) {
+    data.size = 10 + parseInt(data.size);
   } else {
-    atcbConfig.size = 16;
+    data.size = 16;
   }
   // determine dark mode
-  if (atcbConfig.lightMode == null || atcbConfig.lightMode == '') {
-    atcbConfig.lightMode = 'light';
-  } else if (atcbConfig.lightMode != null && atcbConfig.lightMode != '') {
+  if (data.lightMode == null || data.lightMode == '') {
+    data.lightMode = 'light';
+  } else if (data.lightMode != null && data.lightMode != '') {
     const prefersDarkScheme = window.matchMedia('(prefers-color-scheme: dark)');
-    switch (atcbConfig.lightMode) {
+    switch (data.lightMode) {
       case 'system':
         if (prefersDarkScheme.matches) {
-          atcbConfig.lightMode = 'dark';
+          data.lightMode = 'dark';
         } else {
-          atcbConfig.lightMode = 'light';
+          data.lightMode = 'light';
         }
         break;
       case 'bodyScheme':
       case 'dark':
         break;
       default:
-        atcbConfig.lightMode = 'light';
+        data.lightMode = 'light';
         break;
     }
   }
   // set language if not set
-  if (atcbConfig.language == null || atcbConfig.language == '') {
-    atcbConfig.language = 'en';
+  if (data.language == null || data.language == '') {
+    data.language = 'en';
   }
   // set right-to-left for relevant languages
-  if (atcbConfig.language == 'ar') {
-    atcbConfig.rtl = true;
+  if (data.language == 'ar') {
+    data.rtl = true;
   } else {
-    atcbConfig.rtl = false;
+    data.rtl = false;
   }
   // format RRULE (remove spaces)
-  if (atcbConfig.recurrence != null && atcbConfig.recurrence != '') {
-    atcbConfig.recurrence = atcbConfig.recurrence.replace(/\s+/g, '');
+  if (data.recurrence != null && data.recurrence != '') {
+    data.recurrence = data.recurrence.replace(/\s+/g, '');
   }
 
   // if no description or already decorated, return early here
-  if (!atcbConfig.description || atcbConfig.descriptionHtmlFree) return atcbConfig;
+  if (!data.description || data.descriptionHtmlFree) return data;
 
-  // make a copy of the given argument rather than mutating in place
-  const data = Object.assign({}, atcbConfig);
   // store a clean description copy without the URL magic for iCal
   data.descriptionHtmlFree = atcb_rewrite_html_elements(data.description, true);
   // ...and transform pseudo elements for the regular one
@@ -281,11 +276,13 @@ function atcb_date_calculation(dateString) {
   // check for any dynamic additions and adjust
   const dateStringParts = dateString.split('+');
   const dateParts = dateStringParts[0].split('-');
-  let newDate = new Date(dateParts[0], dateParts[1] - 1, dateParts[2]);
-  if (dateParts[0].length < 4) {
+  const newDate = (function () { 
     // backwards compatibility for version <1.5.0
-    newDate = new Date(dateParts[2], dateParts[0] - 1, dateParts[1]);
-  }
+    if (dateParts[0].length < 4) { 
+      return new Date(dateParts[2], dateParts[0] - 1, dateParts[1]);
+    } 
+    return new Date(dateParts[0], dateParts[1] - 1, dateParts[2]);
+  })();
   if (dateStringParts[1] != null && dateStringParts[1] > 0) {
     newDate.setDate(newDate.getDate() + parseInt(dateStringParts[1]));
   }
@@ -858,7 +855,7 @@ function atcb_open(data, button, keyboardTrigger = false, generatedButton = fals
 
 function atcb_close(keyboardTrigger = false) {
   // focus triggering button if available - especially relevant for keyboard navigation
-  let newFocusEl = document.querySelector('.atcb-active, .atcb-active-modal');
+  const newFocusEl = document.querySelector('.atcb-active, .atcb-active-modal');
   if (newFocusEl) {
     newFocusEl.focus({ preventScroll: true });
     if (!keyboardTrigger) {

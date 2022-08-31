@@ -1,7 +1,7 @@
 /**
- * +++++++++++++++++++++++++++++++++++++++++
- * Add-to-Calendar Button - Demo Page Style
- * +++++++++++++++++++++++++++++++++++++++++
+ * ++++++++++++++++++++++++++++++++++++++++
+ * Add to Calendar Button - Demo Page Style
+ * ++++++++++++++++++++++++++++++++++++++++
  *
  * Creator: Jens Kuerschner (https://jenskuerschner.de)
  * Project: https://github.com/add2cal/add-to-calendar-button
@@ -73,7 +73,7 @@ body.atcb-dark {
   src: local(''),
        url('https://add-to-calendar-button.com/demo_assets/fonts/paytone-one-v18-latin-regular.woff2') format('woff2'), /* Super Modern Browsers */
        url('https://add-to-calendar-button.com/demo_assets/fonts/paytone-one-v18-latin-regular.woff') format('woff'), /* Modern Browsers */
-       url('https://add-to-calendar-button.com/demo_assets/fonts/paytone-one-v18-latin-regular.ttf') format('truetype'), /* Safari, Android, iOS */
+       url('https://add-to-calendar-button.com/demo_assets/fonts/paytone-one-v18-latin-regular.ttf') format('truetype'); /* Safari, Android, iOS */
 }
 
 /* inter-300 - latin */
@@ -85,7 +85,7 @@ body.atcb-dark {
   src: local(''),
        url('https://add-to-calendar-button.com/demo_assets/fonts/inter-v12-latin-300.woff2') format('woff2'), /* Super Modern Browsers */
        url('https://add-to-calendar-button.com/demo_assets/fonts/inter-v12-latin-300.woff') format('woff'), /* Modern Browsers */
-       url('https://add-to-calendar-button.com/demo_assets/fonts/inter-v12-latin-300.ttf') format('truetype'), /* Safari, Android, iOS */
+       url('https://add-to-calendar-button.com/demo_assets/fonts/inter-v12-latin-300.ttf') format('truetype'); /* Safari, Android, iOS */
 }
 
 /* inter-regular - latin */
@@ -97,7 +97,7 @@ body.atcb-dark {
   src: local(''),
        url('https://add-to-calendar-button.com/demo_assets/fonts/inter-v12-latin-regular.woff2') format('woff2'), /* Super Modern Browsers */
        url('https://add-to-calendar-button.com/demo_assets/fonts/inter-v12-latin-regular.woff') format('woff'), /* Modern Browsers */
-       url('https://add-to-calendar-button.com/demo_assets/fonts/inter-v12-latin-regular.ttf') format('truetype'), /* Safari, Android, iOS */
+       url('https://add-to-calendar-button.com/demo_assets/fonts/inter-v12-latin-regular.ttf') format('truetype'); /* Safari, Android, iOS */
 }
 
 /* inter-600 - latin */
@@ -109,7 +109,7 @@ body.atcb-dark {
   src: local(''),
        url('https://add-to-calendar-button.com/demo_assets/fonts/inter-v12-latin-600.woff2') format('woff2'), /* Super Modern Browsers */
        url('https://add-to-calendar-button.com/demo_assets/fonts/inter-v12-latin-600.woff') format('woff'), /* Modern Browsers */
-       url('https://add-to-calendar-button.com/demo_assets/fonts/inter-v12-latin-600.ttf') format('truetype'), /* Safari, Android, iOS */
+       url('https://add-to-calendar-button.com/demo_assets/fonts/inter-v12-latin-600.ttf') format('truetype'); /* Safari, Android, iOS */
 }
 
 /* inter-800 - latin */
@@ -121,7 +121,7 @@ body.atcb-dark {
   src: local(''),
        url('https://add-to-calendar-button.com/demo_assets/fonts/inter-v12-latin-800.woff2') format('woff2'), /* Super Modern Browsers */
        url('https://add-to-calendar-button.com/demo_assets/fonts/inter-v12-latin-800.woff') format('woff'), /* Modern Browsers */
-       url('https://add-to-calendar-button.com/demo_assets/fonts/inter-v12-latin-800.ttf') format('truetype'), /* Safari, Android, iOS */
+       url('https://add-to-calendar-button.com/demo_assets/fonts/inter-v12-latin-800.ttf') format('truetype'); /* Safari, Android, iOS */
 }
 
 /* fira-mono-regular - latin */
@@ -133,7 +133,7 @@ body.atcb-dark {
   src: local(''),
        url('https://add-to-calendar-button.com/demo_assets/fonts/fira-mono-v14-latin-regular.woff2') format('woff2'), /* Super Modern Browsers */
        url('https://add-to-calendar-button.com/demo_assets/fonts/fira-mono-v14-latin-regular.woff') format('woff'), /* Modern Browsers */
-       url('https://add-to-calendar-button.com/demo_assets/fonts/fira-mono-v14-latin-regular.ttf') format('truetype'), /* Safari, Android, iOS */
+       url('https://add-to-calendar-button.com/demo_assets/fonts/fira-mono-v14-latin-regular.ttf') format('truetype'); /* Safari, Android, iOS */
 }
 
 /* fira-mono-700 - latin */
@@ -145,7 +145,7 @@ body.atcb-dark {
   src: local(''),
        url('https://add-to-calendar-button.com/demo_assets/fonts/fira-mono-v14-latin-700.woff2') format('woff2'), /* Super Modern Browsers */
        url('https://add-to-calendar-button.com/demo_assets/fonts/fira-mono-v14-latin-700.woff') format('woff'), /* Modern Browsers */
-       url('https://add-to-calendar-button.com/demo_assets/fonts/fira-mono-v14-latin-700.ttf') format('truetype'), /* Safari, Android, iOS */
+       url('https://add-to-calendar-button.com/demo_assets/fonts/fira-mono-v14-latin-700.ttf') format('truetype'); /* Safari, Android, iOS */
 }
 
 /******************************
