@@ -1922,48 +1922,21 @@ function atcb_generate_time(data, style = 'delimiters', targetCal = 'general', a
   let end = '';
   let allday = false;
   if (data.startTime != null && data.endTime != null) {
-    // Adjust for timezone, if set (see https://en.wikipedia.org/wiki/List_of_tz_database_time_zones for either the TZ name or the offset)
-    if (data.timeZoneOffset != null && data.timeZoneOffset != '') {
-      // if we have a timezone offset given, consider it
-      start = new Date(
-        startDate[0] +
-          '-' +
-          startDate[1] +
-          '-' +
-          startDate[2] +
-          'T' +
-          data.startTime +
-          ':00.000' +
-          data.timeZoneOffset
-      );
-      end = new Date(
-        endDate[0] +
-          '-' +
-          endDate[1] +
-          '-' +
-          endDate[2] +
-          'T' +
-          data.endTime +
-          ':00.000' +
-          data.timeZoneOffset
-      );
-    } else {
-      // if there is no offset, we prepare the time, assuming it is UTC formatted
-      start = new Date(
-        startDate[0] + '-' + startDate[1] + '-' + startDate[2] + 'T' + data.startTime + ':00.000+00:00'
-      );
-      end = new Date(endDate[0] + '-' + endDate[1] + '-' + endDate[2] + 'T' + data.endTime + ':00.000+00:00');
-      if (data.timeZone != null && data.timeZone != '') {
-        // if a timezone is given, we adjust dynamically with the modern toLocaleString function
-        const utcDate = new Date(start.toLocaleString('en-US', { timeZone: 'UTC' }));
-        if (data.timeZone == 'currentBrowser') {
-          data.timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
-        }
-        const tzDate = new Date(start.toLocaleString('en-US', { timeZone: data.timeZone }));
-        const calcOffset = utcDate.getTime() - tzDate.getTime();
-        start.setTime(start.getTime() + calcOffset);
-        end.setTime(end.getTime() + calcOffset);
+    // Adjust for timezone, if set (see https://tz.add-to-calendar-technology.com/ for available TZ names)
+    start = new Date(
+      startDate[0] + '-' + startDate[1] + '-' + startDate[2] + 'T' + data.startTime + ':00.000+00:00'
+    );
+    end = new Date(endDate[0] + '-' + endDate[1] + '-' + endDate[2] + 'T' + data.endTime + ':00.000+00:00');
+    if (data.timeZone != null && data.timeZone != '') {
+      // if a timezone is given, we adjust dynamically with the modern toLocaleString function
+      const utcDate = new Date(start.toLocaleString('en-US', { timeZone: 'UTC' }));
+      if (data.timeZone == 'currentBrowser') {
+        data.timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
       }
+      const tzDate = new Date(start.toLocaleString('en-US', { timeZone: data.timeZone }));
+      const calcOffset = utcDate.getTime() - tzDate.getTime();
+      start.setTime(start.getTime() + calcOffset);
+      end.setTime(end.getTime() + calcOffset);
     }
     start = start.toISOString().replace('.000', '');
     end = end.toISOString().replace('.000', '');
@@ -1974,10 +1947,7 @@ function atcb_generate_time(data, style = 'delimiters', targetCal = 'general', a
     if (addTimeZoneOffset) {
       let tzOffsetStart = '';
       let tzOffsetEnd = '';
-      if (data.timeZoneOffset != null && data.timeZoneOffset != '') {
-        tzOffsetStart = data.timeZoneOffset;
-        tzOffsetEnd = data.timeZoneOffset;
-      } else if (data.timeZone != null && data.timeZone != '') {
+      if (data.timeZone != null && data.timeZone != '') {
         let tzOffsetDateStart = new Date(start.toLocaleString('sv', { timeZone: data.timeZone }));
         let tzOffsetStartSearch = tzOffsetDateStart.toString().match(/GMT(.{5})/g);
         tzOffsetStart = tzOffsetStartSearch[0].replace(/GMT(.{3})(.{2})/g, '$1:$2');
