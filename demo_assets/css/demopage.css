@@ -349,6 +349,10 @@ a.github:hover svg {
   background: var(--light-mode-switch);
 }
 
+body.atcb-dark .light-mode-switch div {
+  transform: scale(0.5);
+}
+
 #light-mode-switch-header.light-mode-switch div {
   background: var(--light-mode-switch-header);
 }
@@ -378,10 +382,6 @@ a.github:hover svg {
   border-radius: 50%;
   background: var(--page-background);
   transition: transform 0.45s ease;
-}
-
-body.atcb-dark .light-mode-switch div {
-  transform: scale(0.5);
 }
 
 body.atcb-dark .light-mode-switch div::before {

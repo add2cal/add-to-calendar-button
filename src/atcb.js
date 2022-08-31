@@ -264,6 +264,10 @@ function atcb_date_cleanup(data) {
       const timeStr = data[point + 'Time'];
       data[point + 'Time'] = timeStr.substring(0, timeStr.length - 3);
     }
+    // update time zone, if special case set to go for the user's browser
+    if (data.timeZone == 'currentBrowser') {
+      data.timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+    }
   });
   return data;
 }
@@ -276,11 +280,11 @@ function atcb_date_calculation(dateString) {
   // check for any dynamic additions and adjust
   const dateStringParts = dateString.split('+');
   const dateParts = dateStringParts[0].split('-');
-  const newDate = (function () { 
+  const newDate = (function () {
     // backwards compatibility for version <1.5.0
-    if (dateParts[0].length < 4) { 
+    if (dateParts[0].length < 4) {
       return new Date(dateParts[2], dateParts[0] - 1, dateParts[1]);
-    } 
+    }
     return new Date(dateParts[0], dateParts[1] - 1, dateParts[2]);
   })();
   if (dateStringParts[1] != null && dateStringParts[1] > 0) {
@@ -331,7 +335,7 @@ function atcb_validate(data) {
   ) {
     return false;
   }
-  if ((data.recurrence != null) & (data.recurrence != '')) {
+  if (data.recurrence != null && data.recurrence != '') {
     let oneValidOption = false;
     data.options.forEach(function (option) {
       const cleanOption = option.split('|');
@@ -346,6 +350,15 @@ function atcb_validate(data) {
       return false;
     }
   }
+  // validate time zone
+  if (data.timeZone != null && data.timeZone != '') {
+    // eslint-disable-next-line no-undef
+    const validTimeZones = tzlib_get_timezones();
+    if (!validTimeZones.includes(data.timeZone)) {
+      console.error('add-to-calendar button generation failed: invalid time zone given');
+      return false;
+    }
+  }
   // validate date
   const dates = ['startDate', 'endDate'];
   const newDate = dates;
@@ -357,7 +370,9 @@ function atcb_validate(data) {
       }
       const dateParts = data[`${date}`].split('-');
       if (dateParts.length < 3 || dateParts.length > 3) {
-        console.error('add-to-calendar button generation failed: date misspelled [' + date + ': ' + data[`${date}`] + ']');
+        console.error(
+          'add-to-calendar button generation failed: date misspelled [' + date + ': ' + data[`${date}`] + ']'
+        );
         return false;
       }
       newDate[`${date}`] = new Date(dateParts[0], dateParts[1] - 1, dateParts[2]);
@@ -1075,6 +1090,11 @@ function atcb_generate_ical(data) {
   const corp = 'github.com/add2cal/add-to-calendar-button';
   ics_lines.push('PRODID:-// ' + corp + ' // atcb v' + atcbVersion + ' //EN');
   ics_lines.push('CALSCALE:GREGORIAN');
+  if (data.timeZone != null && data.timeZone != '') {
+    // eslint-disable-next-line no-undef
+    const timeZoneBlock = tzlib_get_ical_block(data.timeZone);
+    ics_lines.push(timeZoneBlock);
+  }
   ics_lines.push('BEGIN:VEVENT');
   ics_lines.push('UID:' + now + '@add-to-calendar-button');
   ics_lines.push(
@@ -1181,17 +1201,14 @@ function atcb_generate_time(data, style = 'delimiters', targetCal = 'general', a
   let end = '';
   let allday = false;
   if (data.startTime != null && data.endTime != null) {
-    // Adjust for timezone, if set (see https://tz.add-to-calendar-technology.com/ for available TZ names)
+    // Adjust for time zone, if set (see https://tz.add-to-calendar-technology.com/ for available TZ names)
     start = new Date(
       startDate[0] + '-' + startDate[1] + '-' + startDate[2] + 'T' + data.startTime + ':00.000+00:00'
     );
     end = new Date(endDate[0] + '-' + endDate[1] + '-' + endDate[2] + 'T' + data.endTime + ':00.000+00:00');
     if (data.timeZone != null && data.timeZone != '') {
-      // if a timezone is given, we adjust dynamically with the modern toLocaleString function
+      // if a time zone is given, we adjust dynamically with the modern toLocaleString function
       const utcDate = new Date(start.toLocaleString('en-US', { timeZone: 'UTC' }));
-      if (data.timeZone == 'currentBrowser') {
-        data.timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
-      }
       const tzDate = new Date(start.toLocaleString('en-US', { timeZone: data.timeZone }));
       const calcOffset = utcDate.getTime() - tzDate.getTime();
       start.setTime(start.getTime() + calcOffset);

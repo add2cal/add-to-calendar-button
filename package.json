@@ -83,6 +83,6 @@
     "stylelint": "^14.11.0",
     "stylelint-config-prettier": "^9.0.3",
     "stylelint-config-standard": "^28.0.0",
-    "timezones-ical-library": "^1.1.4"
+    "timezones-ical-library": "^1.1.5"
   }
 }

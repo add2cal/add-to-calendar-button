@@ -140,5 +140,5 @@ module.exports = function (grunt) {
 
   // Register task(s).
   grunt.registerTask('default', ['clean', 'cssmin', 'concat', 'uglify']);
-  grunt.registerTask('npm', ['clean', 'cssmin', 'concat','copy', 'file-creator', 'uglify']);
+  grunt.registerTask('npm', ['clean', 'cssmin', 'concat', 'copy', 'file-creator', 'uglify']);
 };

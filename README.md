@@ -263,8 +263,6 @@ const MyComponent = () => {
 - Add `+5` at the end of the date to dynamically add 5 days (or any other number). `2022-01-30+12` would generate the 11th of February 2022. This can be interesting, when combined with `today`.
 - Times are optional. If not set, the button generates all-day events. If set, they need to be formatted as HH:MM
 - You can and should add a `timeZone` (TZ name). Find a list of them at [Wikipedia](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones).
-- Alternatively, you can set the `timeZoneOffset`, which will always override the `timeZone`. If neither of them is set, the date refers to UTC time.
-- The `timeZone` option is recommended since it considers things like summer/winter time, but might not work in very old browsers. `timeZoneOffset` works with older browsers, but is quite static.
 - Use "currentBrowser" as value for `timeZone` to dynamically use the time of the user's browser. Use this with caution, since it would mean that the date and time will differ per user, which should not be the usual case! (Requires all times to be set.)
 - Use the `recurrence` option to define recurring events. Use can use any **valid** [RRULE](https://www.rfc-editor.org/rfc/rfc5545) to define the respective rule ([click here](https://icalendar.org/rrule-tool.html) for a generator). But mind that this will deactivate the Yahoo, Microsoft365, Teams, and Outlook options, since they do not support it at the moment (users could still use iCal in this case).
 - If you want to rename a label, use the following schema at the options: optionName + Pipe + yourLabel. "Google|Google Kalender" would generate a Google Calendar option, but label it as "Google Kalender".
