@@ -3,7 +3,7 @@
  * Add to Calendar TimeZones iCal Library
  * ++++++++++++++++++++++++++++++++++++++
  */
- const tzlibVersion = '1.2.0';
+ const tzlibVersion = '1.2.1';
 /* Creator: Jens Kuerschner (https://jenskuerschner.de)
  * Project: https://github.com/add2cal/timezones-ical-library
  * License: Apache-2.0
@@ -618,7 +618,7 @@ function tzlib_get_ical_block(tzName, jsonType = false) {
   }
   // otherwise, create the output
   const tzBlock = tzlibZonesDB[`${tzName}`].replace(/[^\w_\-:,;=\+\/<br>]/g,'').replace(/<br>/g, '\r\n');
-  const tzidLine = tzBlock.split('\r\n')[0];
+  const tzidLine = tzBlock.split('\r\n')[0].replace(':', '=');
   const output = ['BEGIN:VTIMEZONE\r\n' + tzBlock + '\r\nEND:VTIMEZONE', tzidLine];
   // return
   if (jsonType) {
@@ -1665,36 +1665,38 @@ function atcb_action(data, triggerElement, keyboardTrigger = true) {
 // FUNCTION TO GENERATE THE GOOGLE URL
 // See specs at: TODO
 function atcb_generate_google(data) {
-  // base url
-  let url = 'https://calendar.google.com/calendar/render?action=TEMPLATE';
+  // url parts
+  const urlParts = [];
+  urlParts.push('https://calendar.google.com/calendar/render?action=TEMPLATE');
   // generate and add date
   const formattedDate = atcb_generate_time(data, 'clean', 'google');
-  url += '&dates=' + encodeURIComponent(formattedDate.start) + '%2F' + encodeURIComponent(formattedDate.end);
+  urlParts.push('dates=' + encodeURIComponent(formattedDate.start) + '%2F' + encodeURIComponent(formattedDate.end));
   // add details (if set)
   if (data.name != null && data.name != '') {
-    url += '&text=' + encodeURIComponent(data.name);
+    urlParts.push('text=' + encodeURIComponent(data.name));
   }
-  let tmpDataDescription = '';
+  const tmpDataDescription = [];
   if (data.description != null && data.description != '') {
-    tmpDataDescription = data.description;
+    tmpDataDescription.push(data.description);
   }
   if (data.location != null && data.location != '') {
-    url += '&location=' + encodeURIComponent(data.location);
+    urlParts.push('location=' + encodeURIComponent(data.location));
     // TODO: Find a better solution for the next temporary workaround.
     if (isiOS()) {
       // workaround to cover a bug, where, when using Google Calendar on an iPhone, the location is not recognized. So, for the moment, we simply add it to the description.
-      if (tmpDataDescription != '') {
-        tmpDataDescription += '<br><br>';
+      if (tmpDataDescription.length > 0) {
+        tmpDataDescription.push('<br><br>');
       }
-      tmpDataDescription += '&#128205;: ' + data.location;
+      tmpDataDescription.push('&#128205;: ' + data.location);
     }
   }
-  if (tmpDataDescription != '') {
-    url += '&details=' + encodeURIComponent(tmpDataDescription);
+  if (tmpDataDescription.length > 0) {
+    urlParts.push('details=' + encodeURIComponent(tmpDataDescription.join()));
   }
   if (data.recurrence != null && data.recurrence != '') {
-    url += '&recur=' + encodeURIComponent(data.recurrence);
+    urlParts.push('recur=' + encodeURIComponent(data.recurrence));
   }
+  const url = urlParts.join('&');
   if (atcb_secure_url(url)) {
     // eslint-disable-next-line security/detect-non-literal-fs-filename
     window.open(url, atcbDefaultTarget).focus();
@@ -1704,25 +1706,27 @@ function atcb_generate_google(data) {
 // FUNCTION TO GENERATE THE YAHOO URL
 // See specs at: TODO
 function atcb_generate_yahoo(data) {
-  // base url
-  let url = 'https://calendar.yahoo.com/?v=60';
+  // url parts
+  const urlParts = [];
+  urlParts.push('https://calendar.yahoo.com/?v=60');
   // generate and add date
   const formattedDate = atcb_generate_time(data, 'clean');
-  url += '&st=' + encodeURIComponent(formattedDate.start) + '&et=' + encodeURIComponent(formattedDate.end);
+  urlParts.push('st=' + encodeURIComponent(formattedDate.start) + '&et=' + encodeURIComponent(formattedDate.end));
   if (formattedDate.allday) {
-    url += '&dur=allday';
+    urlParts.push('dur=allday');
   }
   // add details (if set)
   if (data.name != null && data.name != '') {
-    url += '&title=' + encodeURIComponent(data.name);
+    urlParts.push('title=' + encodeURIComponent(data.name));
   }
   if (data.location != null && data.location != '') {
-    url += '&in_loc=' + encodeURIComponent(data.location);
+    urlParts.push('in_loc=' + encodeURIComponent(data.location));
   }
   if (data.descriptionHtmlFree != null && data.descriptionHtmlFree != '') {
     // using descriptionHtmlFree instead of description, since Yahoo does not support html tags in a stable way
-    url += '&desc=' + encodeURIComponent(data.descriptionHtmlFree);
+    urlParts.push('desc=' + encodeURIComponent(data.descriptionHtmlFree));
   }
+  const url = urlParts.join('&');
   if (atcb_secure_url(url)) {
     // eslint-disable-next-line security/detect-non-literal-fs-filename
     window.open(url, atcbDefaultTarget).focus();
@@ -1737,31 +1741,35 @@ function atcb_generate_microsoft(data, type = '365') {
     atcb_generate_ical(data);
     return;
   }
-  // base url
-  let url = 'https://';
-  if (type == 'outlook') {
-    url += 'outlook.live.com';
-  } else {
-    url += 'outlook.office.com';
-  }
-  url += '/calendar/0/deeplink/compose?path=%2Fcalendar%2Faction%2Fcompose&rru=addevent';
+  // url parts
+  const urlParts = [];
+  const basePath = '/calendar/0/deeplink/compose?path=%2Fcalendar%2Faction%2Fcompose&rru=addevent';
+  const baseUrl = (function () {
+    if (type == 'outlook') {
+      return 'https://outlook.live.com' + basePath;
+    } else {
+      return 'https://outlook.office.com' + basePath;
+    }
+  })();
+  urlParts.push(baseUrl);
   // generate and add date
   const formattedDate = atcb_generate_time(data, 'delimiters', 'microsoft');
-  url +=
-    '&startdt=' + encodeURIComponent(formattedDate.start) + '&enddt=' + encodeURIComponent(formattedDate.end);
+  urlParts.push('startdt=' + encodeURIComponent(formattedDate.start));
+  urlParts.push('enddt=' + encodeURIComponent(formattedDate.end));
   if (formattedDate.allday) {
-    url += '&allday=true';
+    urlParts.push('allday=true');
   }
   // add details (if set)
   if (data.name != null && data.name != '') {
-    url += '&subject=' + encodeURIComponent(data.name);
+    urlParts.push('subject=' + encodeURIComponent(data.name));
   }
   if (data.location != null && data.location != '') {
-    url += '&location=' + encodeURIComponent(data.location);
+    urlParts.push('location=' + encodeURIComponent(data.location));
   }
   if (data.description != null && data.description != '') {
-    url += '&body=' + encodeURIComponent(data.description.replace(/\n/g, '<br>'));
+    urlParts.push('body=' + encodeURIComponent(data.description.replace(/\n/g, '<br>')));
   }
+  const url = urlParts.join('&');
   if (atcb_secure_url(url)) {
     // eslint-disable-next-line security/detect-non-literal-fs-filename
     window.open(url, atcbDefaultTarget).focus();
@@ -1772,29 +1780,28 @@ function atcb_generate_microsoft(data, type = '365') {
 // See specs at: https://docs.microsoft.com/en-us/microsoftteams/platform/concepts/build-and-test/deep-links#deep-linking-to-the-scheduling-dialog
 // Mind that this is still in development mode by Microsoft! Location, html tags and linebreaks in the description are not supported yet.
 function atcb_generate_teams(data) {
-  // base url
-  let url = 'https://teams.microsoft.com/l/meeting/new?';
+  // url parts
+  const urlParts = [];
+  const baseUrl = 'https://teams.microsoft.com/l/meeting/new?';
   // generate and add date
   const formattedDate = atcb_generate_time(data, 'delimiters', 'microsoft');
-  url +=
-    '&startTime=' +
-    encodeURIComponent(formattedDate.start) +
-    '&endTime=' +
-    encodeURIComponent(formattedDate.end);
+  urlParts.push('startTime=' + encodeURIComponent(formattedDate.start));
+  urlParts.push('endTime=' + encodeURIComponent(formattedDate.end));
   // add details (if set)
-  let locationString = '';
   if (data.name != null && data.name != '') {
-    url += '&subject=' + encodeURIComponent(data.name);
+    urlParts.push('subject=' + encodeURIComponent(data.name));
   }
+  let locationString = '';
   if (data.location != null && data.location != '') {
     locationString = encodeURIComponent(data.location);
-    url += '&location=' + locationString;
+    urlParts.push('location=' + locationString);
     locationString += ' // '; // preparing the workaround putting the location into the description, since the native field is not supported yet
   }
   if (data.descriptionHtmlFree != null && data.descriptionHtmlFree != '') {
     // using descriptionHtmlFree instead of description, since Teams does not support html tags
-    url += '&content=' + locationString + encodeURIComponent(data.descriptionHtmlFree);
+    urlParts.push('content=' + locationString + encodeURIComponent(data.descriptionHtmlFree));
   }
+  const url = baseUrl + urlParts.join('&');
   if (atcb_secure_url(url)) {
     // eslint-disable-next-line security/detect-non-literal-fs-filename
     window.open(url, atcbDefaultTarget).focus();
@@ -1820,26 +1827,29 @@ function atcb_generate_ical(data) {
     return;
   }
   // otherwise, generate one on the fly
-  let now = new Date();
-  now = now.toISOString();
+  const now = new Date();
+  const nowISO = now.toISOString();
   const formattedDate = atcb_generate_time(data, 'clean', 'ical');
-  let timeslot = '';
-  if (formattedDate.allday) {
-    timeslot = ';VALUE=DATE';
-  }
   const ics_lines = ['BEGIN:VCALENDAR', 'VERSION:2.0'];
   const corp = 'github.com/add2cal/add-to-calendar-button';
   ics_lines.push('PRODID:-// ' + corp + ' // atcb v' + atcbVersion + ' //EN');
   ics_lines.push('CALSCALE:GREGORIAN');
-  if (data.timeZone != null && data.timeZone != '') {
-    const timeZoneBlock = tzlib_get_ical_block(data.timeZone);
-    ics_lines.push(timeZoneBlock[0]);
-  }
+  // include time zone information, if set and if not allday (not necessary in that case)
+  const timeAddon = (function() {
+    if (formattedDate.allday) {
+      return ';VALUE=DATE';
+    }
+    if (data.timeZone != null && data.timeZone != '') {
+      const timeZoneBlock = tzlib_get_ical_block(data.timeZone);
+      ics_lines.push(timeZoneBlock[0]);
+      return ';' + timeZoneBlock[1];
+    }
+  })();
   ics_lines.push('BEGIN:VEVENT');
-  ics_lines.push('UID:' + now + '@add-to-calendar-button');
-  ics_lines.push('DTSTAMP:' + formattedDate.start);
-  ics_lines.push('DTSTART' + timeslot + ':' + formattedDate.start);
-  ics_lines.push('DTEND' + timeslot + ':' + formattedDate.end);
+  ics_lines.push('UID:' + nowISO + '@add-to-calendar-button');
+  ics_lines.push('DTSTAMP:' + atcb_format_datetime(now, 'clean', true));
+  ics_lines.push('DTSTART' + timeAddon + ':' + formattedDate.start);
+  ics_lines.push('DTEND' + timeAddon + ':' + formattedDate.end);
   ics_lines.push('SUMMARY:' + data.name.replace(/.{65}/g, '$&' + '\r\n ')); // making sure it does not exceed 75 characters per line
   if (data.descriptionHtmlFree != null && data.descriptionHtmlFree != '') {
     ics_lines.push(
@@ -1859,21 +1869,24 @@ function atcb_generate_ical(data) {
   if (data.recurrence != null && data.recurrence != '') {
     ics_lines.push(data.recurrence);
   }
-  now = now.replace(/\.\d{3}/g, '').replace(/[^a-z\d]/gi, '');
-  ics_lines.push('STATUS:CONFIRMED', 'LAST-MODIFIED:' + now, 'SEQUENCE:0', 'END:VEVENT', 'END:VCALENDAR');
-  let dataUrl = 'data:text/calendar;charset=utf-8,' + encodeURIComponent(ics_lines.join('\r\n'));
-  // if we got to this point with an explicitely given iCal file, we are on an iOS device within an in-app browser (WebView). In this case, we override the dataUrl
-  if (data.icsFile != null && data.icsFile != '') {
-    dataUrl = data.icsFile;
-  }
+  const nowClean = nowISO.replace(/(-|:|\.\d{3})/gi, '');
+  ics_lines.push('STATUS:CONFIRMED', 'LAST-MODIFIED:' + nowClean, 'SEQUENCE:0', 'END:VEVENT', 'END:VCALENDAR');
+  const dataUrl = (function () {
+    // if we got to this point with an explicitely given iCal file, we are on an iOS device within an in-app browser (WebView). In this case, we use this as dataUrl
+    if (data.icsFile != null && data.icsFile != '') {
+      return data.icsFile;
+    }
+    // otherwise, we generate it from the array
+    return 'data:text/calendar;charset=utf-8,' + encodeURIComponent(ics_lines.join('\r\n'));
+  })();  
   // in in-app browser cases (WebView), we offer a copy option, since the on-the-fly client side generation is usually not supported
   // for Android, we are more specific and only go for specific apps at the moment
   if (isWebView() && (isiOS() || (isAndroid() && isProblematicWebView()))) {
     // putting the download url to the clipboard
     const tmpInput = document.createElement('input');
     document.body.appendChild(tmpInput);
-    var editable = tmpInput.contentEditable;
-    var readOnly = tmpInput.readOnly;
+    const editable = tmpInput.contentEditable;
+    const readOnly = tmpInput.readOnly;
     tmpInput.value = dataUrl;
     tmpInput.contentEditable = true;
     tmpInput.readOnly = false;
@@ -1935,79 +1948,102 @@ function atcb_save_file(file, filename) {
 function atcb_generate_time(data, style = 'delimiters', targetCal = 'general', addTimeZoneOffset = false) {
   const startDate = data.startDate.split('-');
   const endDate = data.endDate.split('-');
-  let start = '';
-  let end = '';
-  let allday = false;
   if (data.startTime != null && data.endTime != null) {
-    // Adjust for time zone, if set (see https://tz.add-to-calendar-technology.com/ for available TZ names)
-    start = new Date(
-      startDate[0] + '-' + startDate[1] + '-' + startDate[2] + 'T' + data.startTime + ':00.000+00:00'
-    );
-    end = new Date(endDate[0] + '-' + endDate[1] + '-' + endDate[2] + 'T' + data.endTime + ':00.000+00:00');
+    // for the input, we assume UTC per default
+    const newStartDate = new Date(startDate[0] + '-' + startDate[1] + '-' + startDate[2] + 'T' + data.startTime + ':00.000+0000');
+    const newEndDate = new Date(endDate[0] + '-' + endDate[1] + '-' + endDate[2] + 'T' + data.endTime + ':00.000+0000');
+    // if no time zone is given and we need to add the offset to the datetime string, do so directly and return
+    if ((data.timeZone == null || (data.timeZone != null  && data.timeZone == '')) && addTimeZoneOffset) {
+      return {
+        start: newStartDate.toISOString().replace('.000Z', '+0000'), 
+        end: newEndDate.toISOString().replace('.000Z', '+0000'), 
+        allday: false
+      };
+    }
+    // if a time zone is given, we adjust the diverse cases
+    // (see https://tz.add-to-calendar-technology.com/ for available TZ names)
     if (data.timeZone != null && data.timeZone != '') {
-      // if a time zone is given, we adjust dynamically with the modern toLocaleString function
-      const utcDate = new Date(start.toLocaleString('en-US', { timeZone: 'UTC' }));
-      const tzDate = new Date(start.toLocaleString('en-US', { timeZone: data.timeZone }));
-      const calcOffset = utcDate.getTime() - tzDate.getTime();
-      start.setTime(start.getTime() + calcOffset);
-      end.setTime(end.getTime() + calcOffset);
-    }
-    start = start.toISOString().replace('.000', '');
-    end = end.toISOString().replace('.000', '');
-    if (style == 'clean') {
-      start = start.replace(/-/g, '').replace(/:/g, '');
-      end = end.replace(/-/g, '').replace(/:/g, '');
-    }
-    if (addTimeZoneOffset) {
-      let tzOffsetStart = '';
-      let tzOffsetEnd = '';
-      if (data.timeZone != null && data.timeZone != '') {
-        let tzOffsetDateStart = new Date(start.toLocaleString('sv', { timeZone: data.timeZone }));
-        let tzOffsetStartSearch = tzOffsetDateStart.toString().match(/GMT(.{5})/g);
-        tzOffsetStart = tzOffsetStartSearch[0].replace(/GMT(.{3})(.{2})/g, '$1:$2');
-        let tzOffsetDateEnd = new Date(end.toLocaleString('sv', { timeZone: data.timeZone }));
-        let tzOffsetEndSearch = tzOffsetDateEnd.toString().match(/GMT(.{5})/g);
-        tzOffsetEnd = tzOffsetEndSearch[0].replace(/GMT(.{3})(.{2})/g, '$1:$2');
+      if (targetCal == 'ical') {
+        // in the iCal case, we simply return and cut off the Z
+        // everything else will be done by injecting the VTIMEZONE block at the iCal function
+        return {
+          start: atcb_format_datetime(newStartDate, 'clean', true, true), 
+          end: atcb_format_datetime(newEndDate, 'clean', true, true), 
+          allday: false
+        };
       }
-      start = start.slice(0, -1) + tzOffsetStart;
-      end = end.slice(0, -1) + tzOffsetEnd;
+      // we get the correct offset via the timeZones iCal Library
+      const offsetStart = tzlib_get_offset(data.timeZone, data.startDate, data.startTime);
+      const offsetEnd = tzlib_get_offset(data.timeZone, data.endDate, data.endTime);
+      // if we need to add the offset to the datetime string, do so respectively
+      if (addTimeZoneOffset) {
+        return {
+          start: newStartDate.toISOString().replace('.000Z', offsetStart), 
+          end: newEndDate.toISOString().replace('.000Z', offsetEnd), 
+          allday: false
+        };
+      }
+      // in other cases, we substract the offset from the dates
+      // (substraction to reflect the fact that the user assumed his timezone and to convert to UTC; since calendars assume UTC and add offsets again)
+      const calcOffsetStart = parseInt(offsetStart[0] + 1) * -1 * (((parseInt(offsetStart.substr(1,2)) * 60) + parseInt(offsetStart.substr(3,2))) * 60 * 1000);
+      const calcOffsetEnd = parseInt(offsetEnd[0] + 1) * -1 * (((parseInt(offsetEnd.substr(1,2)) * 60) + parseInt(offsetEnd.substr(3,2))) * 60 * 1000);
+      newStartDate.setTime(newStartDate.getTime() + calcOffsetStart);
+      newEndDate.setTime(newEndDate.getTime() + calcOffsetEnd);
     }
+    const formattedStartDate = atcb_format_datetime(newStartDate, style);
+    const formattedEndDate = atcb_format_datetime(newEndDate, style);
+    // return data
+    return {
+      start: formattedStartDate, 
+      end: formattedEndDate, 
+      allday: false
+    };
   } else {
     // would be an allday event then
-    allday = true;
-    start = new Date(Date.UTC(startDate[0], startDate[1] - 1, startDate[2]));
-    let breakStart = start.toISOString().replace(/T(.+)Z/g, '');
-    end = new Date(Date.UTC(endDate[0], endDate[1] - 1, endDate[2]));
+    const newStartDate = new Date(Date.UTC(startDate[0], startDate[1] - 1, startDate[2]));   
+    const newEndDate = new Date(Date.UTC(endDate[0], endDate[1] - 1, endDate[2]));
+    // increment the end day by 1 for Google Calendar, iCal and Outlook
     if (targetCal == 'google' || targetCal == 'microsoft' || targetCal == 'ical') {
-      end.setDate(end.getDate() + 1); // increment the day by 1 for Google Calendar, iCal and Outlook
+      newEndDate.setDate(newEndDate.getDate() + 1);
     }
-    let breakEnd = end.toISOString().replace(/T(.+)Z/g, '');
-    if (style == 'clean') {
-      breakStart = breakStart.replace(/-/g, '');
-      breakEnd = breakEnd.replace(/-/g, '');
-    }
-    start = breakStart;
-    end = breakEnd;
+    // format the output
+    const formattedStartDate = atcb_format_datetime(newStartDate, style, false);
+    const formattedEndDate = atcb_format_datetime(newEndDate, style, false);
+    // return data
+    return {
+      start: formattedStartDate, 
+      end: formattedEndDate, 
+      allday: true
+    };
   }
-  const returnObject = { start, end, allday };
-  return returnObject;
+}
+
+function atcb_format_datetime(datetime, style = 'delimiters', includeTime = true, removeZ = false) {
+  const regex = (function () {
+    if (includeTime) {
+      if (style == 'clean') {
+        return /(-|:|(\.\d{3}))/g;
+      }
+      return /(\.\d{3})/g;
+    }
+    if (style == 'clean') {
+      return /(-|T(\d{2}:\d{2}:\d{2}\.\d{3})Z)/g;
+    }
+    return /T(\d{2}:\d{2}:\d{2}\.\d{3})Z/g;
+  })();
+  const output = (removeZ) ? datetime.toISOString().replace(regex, '').replace('Z', '') : datetime.toISOString().replace(regex, '');
+  return output;
 }
 
 // SHARED FUNCTION TO SECURE DATA
 function atcb_secure_content(data, isJSON = true) {
   // strip HTML tags (especially since stupid Safari adds stuff) - except for <br>
-  let toClean;
-  // differentiates between JSON and string input
+  const toClean = (isJSON) ? JSON.stringify(data) : data;
+  const cleanedUp = toClean.replace(/(<(?!br)([^>]+)>)/gi, '');
   if (isJSON) {
-    toClean = JSON.stringify(data);
+    return JSON.parse(cleanedUp);
   } else {
-    toClean = data;
-  }
-  toClean = toClean.replace(/(<(?!br)([^>]+)>)/gi, '');
-  if (isJSON) {
-    return JSON.parse(toClean);
-  } else {
-    return toClean;
+    return cleanedUp;
   }
 }
 
@@ -2042,13 +2078,14 @@ function atcb_rewrite_html_elements(content, clear = false) {
     content = content.replace(/\[(\/|)(br|hr|p|b|strong|u|i|em|li|ul|ol|h\d)\]/gi, '<$1$2>');
     content = content.replace(/\[url\]([\w&$+.,:;=~!*'?@^%#|\s\-()/]*)\[\/url\]/gi, function (match, p1) {
       const urlText = p1.split('|');
-      let link = '<a href="' + urlText[0] + '" target="' + atcbDefaultTarget + '" rel="noopener">';
-      if (urlText.length > 1 && urlText[1] != '') {
-        link += urlText[1];
-      } else {
-        link += urlText[0];
-      }
-      return link + '</a>';
+      const text = (function () {
+        if (urlText.length > 1 && urlText[1] != '') {
+          return urlText[1];
+        } else {
+          return urlText[0];
+        }
+      })();      
+      return '<a href="' + urlText[0] + '" target="' + atcbDefaultTarget + '" rel="noopener">' + text + '</a>';
     });
   }
   return content;
@@ -2337,12 +2374,12 @@ if (isBrowser()) {
   window.addEventListener(
     'resize',
     atcb_throttle(() => {
-      let activeOverlay = document.getElementById('atcb-bgoverlay');
+      const activeOverlay = document.getElementById('atcb-bgoverlay');
       if (activeOverlay != null) {
         atcb_set_fullsize(activeOverlay);
       }
-      let activeButton = document.querySelector('.atcb-active');
-      let activeList = document.querySelector('.atcb-dropdown');
+      const activeButton = document.querySelector('.atcb-active');
+      const activeList = document.querySelector('.atcb-dropdown');
       if (activeButton != null && activeList != null) {
         atcb_position_list(activeButton, activeList, false, true);
       }
@@ -2447,7 +2484,7 @@ const i18nStrings = {
 
 // hook, which can be used to override all potential "hard" strings by setting customLabel_ + the key (without spaces) as option key and the intended string as value
 function atcb_translate_hook(identifier, language, data) {
-  let searchKey = identifier.replace(/\s+/g, '').toLowerCase();
+  const searchKey = identifier.replace(/\s+/g, '').toLowerCase();
   if (
     data.customLabels != null &&
     data.customLabels[`${searchKey}`] != null &&
