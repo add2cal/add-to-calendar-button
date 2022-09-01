@@ -1,7 +1,14 @@
-const initCodeDelimiter = /\/\/ START INIT[\s\S]*?\/\/ END INIT/g;
-
-function prepareFinalFile(content, exportPhrase) {
-  return content.replace(initCodeDelimiter, `${exportPhrase} { atcb_action, atcb_init };`);
+function prepareFinalFile(content, stripImport = true, newExportPhrase = '') {
+  if (stripImport) {
+    content = content.replace(/^import[\w\s{}\+-_,'"`\/\\.]*';/gim, '');
+  }
+  if (newExportPhrase != '') {
+    content = content.replace(
+      /\/\/ START INIT[\s\S]*?\/\/ END INIT/g,
+      `${newExportPhrase} { atcb_action, atcb_init };`
+    );
+  }
+  return content;
 }
 
 module.exports = function (grunt) {
@@ -73,6 +80,7 @@ module.exports = function (grunt) {
       dist: {
         src: ['node_modules/timezones-ical-library/dist/tzlib.js', 'src/atcb.js'],
         dest: 'dist/atcb.js',
+        options: { process: (content) => prepareFinalFile(content) },
       },
     },
     // creates the source files for the npm versionm supporting CommonJS and ES Module (https://www.sensedeep.com/blog/posts/2021/how-to-create-single-source-npm-module.html)
@@ -81,13 +89,13 @@ module.exports = function (grunt) {
         nonull: true,
         src: 'dist/atcb.js',
         dest: 'npm_dist/mjs/index.js',
-        options: { process: (content) => prepareFinalFile(content, 'export') },
+        options: { process: (content) => prepareFinalFile(content, false, 'export') },
       },
       cjs_dist: {
         nonull: true,
         src: 'dist/atcb.js',
         dest: 'npm_dist/cjs/index.js',
-        options: { process: (content) => prepareFinalFile(content, 'module.exports =') },
+        options: { process: (content) => prepareFinalFile(content, false, 'module.exports =') },
       },
     },
     'file-creator': {

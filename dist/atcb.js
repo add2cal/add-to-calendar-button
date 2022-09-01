@@ -3,7 +3,7 @@
  * Add to Calendar TimeZones iCal Library
  * ++++++++++++++++++++++++++++++++++++++
  */
- const tzlibVersion = '1.1.5';
+ const tzlibVersion = '1.2.0';
 /* Creator: Jens Kuerschner (https://jenskuerschner.de)
  * Project: https://github.com/add2cal/timezones-ical-library
  * License: Apache-2.0
@@ -610,14 +610,21 @@ const tzlibZonesDB = {
 
 
 // LOADING THE RIGHT CODE BLOCK
-function tzlib_get_ical_block(tzName) {  
+function tzlib_get_ical_block(tzName, jsonType = false) {  
   // validate timezone
   if (!tzlibZonesDB[`${tzName}`]) {
     console.error('Given timezone not valid.');
     return '';
   }
   // otherwise, create the output
-  return 'BEGIN:VTIMEZONE\r\n' + tzlibZonesDB[`${tzName}`].replace(/[^\w_\-:,;=\+\/<br>]/g,'').replace(/<br>/g, '\r\n') + '\r\nEND:VTIMEZONE';
+  const tzBlock = tzlibZonesDB[`${tzName}`].replace(/[^\w_\-:,;=\+\/<br>]/g,'').replace(/<br>/g, '\r\n');
+  const tzidLine = tzBlock.split('\r\n')[0];
+  const output = ['BEGIN:VTIMEZONE\r\n' + tzBlock + '\r\nEND:VTIMEZONE', tzidLine];
+  // return
+  if (jsonType) {
+    return JSON.stringify(output);
+  }
+  return output;
 }
 
 // PROVIDING THE OFFSET BASED ON A GIVEN DATE AND TIME (YYYY-MM-DD and hh:mm as per ISO-8601).
@@ -742,6 +749,8 @@ const atcbVersion = '1.14.6';
  *  License: MIT with “Commons Clause” License Condition v1.0
  *
  */
+
+
 
 // CHECKING FOR SPECIFIC DEVICED AND SYSTEMS
 // browser
@@ -1085,7 +1094,6 @@ function atcb_validate(data) {
   }
   // validate time zone
   if (data.timeZone != null && data.timeZone != '') {
-    // eslint-disable-next-line no-undef
     const validTimeZones = tzlib_get_timezones();
     if (!validTimeZones.includes(data.timeZone)) {
       console.error('add-to-calendar button generation failed: invalid time zone given');
@@ -1824,18 +1832,15 @@ function atcb_generate_ical(data) {
   ics_lines.push('PRODID:-// ' + corp + ' // atcb v' + atcbVersion + ' //EN');
   ics_lines.push('CALSCALE:GREGORIAN');
   if (data.timeZone != null && data.timeZone != '') {
-    // eslint-disable-next-line no-undef
     const timeZoneBlock = tzlib_get_ical_block(data.timeZone);
-    ics_lines.push(timeZoneBlock);
+    ics_lines.push(timeZoneBlock[0]);
   }
   ics_lines.push('BEGIN:VEVENT');
   ics_lines.push('UID:' + now + '@add-to-calendar-button');
-  ics_lines.push(
-    'DTSTAMP:' + formattedDate.start,
-    'DTSTART' + timeslot + ':' + formattedDate.start,
-    'DTEND' + timeslot + ':' + formattedDate.end,
-    'SUMMARY:' + data.name.replace(/.{65}/g, '$&' + '\r\n ') // making sure it does not exceed 75 characters per line
-  );
+  ics_lines.push('DTSTAMP:' + formattedDate.start);
+  ics_lines.push('DTSTART' + timeslot + ':' + formattedDate.start);
+  ics_lines.push('DTEND' + timeslot + ':' + formattedDate.end);
+  ics_lines.push('SUMMARY:' + data.name.replace(/.{65}/g, '$&' + '\r\n ')); // making sure it does not exceed 75 characters per line
   if (data.descriptionHtmlFree != null && data.descriptionHtmlFree != '') {
     ics_lines.push(
       'DESCRIPTION:' + data.descriptionHtmlFree.replace(/\n/g, '\\n').replace(/.{60}/g, '$&' + '\r\n ') // adjusting for intended line breaks + making sure it does not exceed 75 characters per line

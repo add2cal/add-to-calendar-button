@@ -14,7 +14,7 @@
 
 .github/
 demo_assets/
-img/
+assets/img/
 test/
 src/
 *.png
