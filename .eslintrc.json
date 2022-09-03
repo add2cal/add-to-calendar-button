@@ -26,6 +26,6 @@
     ]
   },
   "plugins": ["@typescript-eslint"],
-  "ignorePatterns": ["*.min.*", "Gruntfile.js", "set-release.js", "npm_dist/"],
+  "ignorePatterns": ["*.min.*", "Gruntfile.js", "set-release.js", "npm_dist/", "dist/"],
   "rules": {}
 }

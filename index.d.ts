@@ -25,6 +25,7 @@ declare module 'add-to-calendar-button' {
       customLabels?: object;
       lightMode?: 'system' | 'dark' | 'light' | 'bodyScheme';
       language?: 'en' | 'de';
+      sequence?: bigint;
     },
     triggerElement?: HTMLElement,
     keyboardTrigger?: boolean
