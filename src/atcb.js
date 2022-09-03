@@ -1464,6 +1464,7 @@ function atcb_create_modal(data, icon = '', headline, content, buttons) {
       }
       switch (button.type) {
         default:
+        case 'close':
           infoModalButton.addEventListener(
             'click',
             atcb_debounce(() => atcb_close())
@@ -1472,21 +1473,6 @@ function atcb_create_modal(data, icon = '', headline, content, buttons) {
             'keyup',
             atcb_debounce((event) => {
               if (event.key == 'Enter') {
-                atcb_toggle('close', '', '', true);
-              }
-            })
-          );
-          break;
-        case 'close':
-          infoModalButton.addEventListener(
-            'click',
-            atcb_debounce(() => atcb_close())
-          );
-          infoModalButton.addEventListener(
-            'keyup',
-            atcb_debounce_leading((event) => {
-              if (event.key == 'Enter') {
-                event.preventDefault();
                 atcb_toggle('close', '', '', true);
               }
             })
