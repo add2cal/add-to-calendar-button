@@ -817,7 +817,7 @@ const atcbIcon = {
 // INITIALIZE THE SCRIPT AND FUNCTIONALITY
 function atcb_init() {
   // let's get started
-  console.log('add-to-calendar button initialized (version ' + atcbVersion + ')');
+  console.log('add to calendar button initialized (version ' + atcbVersion + ')');
   console.log('See https://github.com/add2cal/add-to-calendar-button for details');
   // abort if not in a browser
   if (!isBrowser()) {
@@ -847,14 +847,13 @@ function atcb_init() {
       if (atcb_check_required(atcbJsonInputPatched)) {
         // Rewrite dynamic dates, standardize line breaks and transform urls in the description
         const atcbConfig = atcb_decorate_data(atcbJsonInputPatched);
+        // set identifier
+        if (atcbConfig.identifier == null || atcbConfig.identifier == '') {
+          atcbConfig.identifier = 'atcb-btn-' + (i + atcButtonsInitialized.length + 1);
+        }
         // validate the config (JSON iput) ...
         if (atcb_validate(atcbConfig)) {
           // ... and generate the button on success
-          // set identifier
-          if (atcbConfig.identifier == null || atcbConfig.identifier == '') {
-            atcbConfig.identifier = 'atcb-btn-' + (i + atcButtonsInitialized.length + 1);
-          }
-          // generate the button
           atcb_generate(atcButtons[parseInt(i)], atcbConfig);
         }
       }
@@ -968,14 +967,14 @@ function atcb_decorate_data(data) {
 function atcb_check_required(data) {
   // check for at least 1 option
   if (data.options == null || data.options.length < 1) {
-    console.error('add-to-calendar button generation failed: no options set');
+    console.error('add to calendar button generation failed: no options set');
     return false;
   }
   // check for min required data (without "options")
   const requiredField = ['name', 'startDate'];
   return requiredField.every(function (field) {
     if (data[`${field}`] == null || data[`${field}`] == '') {
-      console.error('add-to-calendar button generation failed: required setting missing [' + field + ']');
+      console.error('add to calendar button generation failed: required setting missing [' + field + ']');
       return false;
     }
     return true;
@@ -1048,9 +1047,10 @@ function atcb_validate(data) {
   if (data.identifier != null && data.identifier != '') {
     if (!/^[\w-]+$/.test(data.identifier)) {
       data.identifier = '';
-      console.error('add-to-calendar button generation: identifier invalid - using auto numbers instead');
+      console.error('add to calendar button generation: identifier invalid - using auto numbers instead');
     }
   }
+  const msgPrefix = 'add to calendar button generation (' + data.identifier + ')';
   // validate explicit ics file
   if (data.icsFile != null && data.icsFile != '') {
     if (
@@ -1058,9 +1058,18 @@ function atcb_validate(data) {
       !/\.ics$/.test(data.icsFile) ||
       !data.icsFile.startsWith('https://')
     ) {
-      console.error('add-to-calendar button generation failed: explicit ics file path not valid');
+      console.error(msgPrefix + ' failed: explicit ics file path not valid');
       return false;
     }
+  }
+  // validate sequence number if given and set it 0 if not
+  if (data.sequence != null && data.sequence != '') {
+    if (!/^\d+$/.test(data.sequence)) {
+      console.log(msgPrefix + ': sequence needs to be a number. Used the default 0 instead');
+      data.sequence = 0;
+    }
+  } else {
+    data.sequence = 0;
   }
   // validate options
   const options = ['apple', 'google', 'ical', 'ms365', 'outlookcom', 'msteams', 'yahoo'];
@@ -1069,7 +1078,7 @@ function atcb_validate(data) {
     !data.options.every(function (option) {
       const cleanOption = option.split('|');
       if (!options.includes(cleanOption[0])) {
-        console.error('add-to-calendar button generation failed: invalid option [' + cleanOption[0] + ']');
+        console.error(msgPrefix + ' failed: invalid option [' + cleanOption[0] + ']');
         return false;
       }
       return true;
@@ -1086,9 +1095,7 @@ function atcb_validate(data) {
       }
     });
     if (!oneValidOption) {
-      console.error(
-        'add-to-calendar button generation failed: no supported valid option for recurring events'
-      );
+      console.error(msgPrefix + ' failed: no supported valid option for recurring events');
       return false;
     }
   }
@@ -1096,7 +1103,7 @@ function atcb_validate(data) {
   if (data.timeZone != null && data.timeZone != '') {
     const validTimeZones = tzlib_get_timezones();
     if (!validTimeZones.includes(data.timeZone)) {
-      console.error('add-to-calendar button generation failed: invalid time zone given');
+      console.error(msgPrefix + ' failed: invalid time zone given');
       return false;
     }
   }
@@ -1106,14 +1113,12 @@ function atcb_validate(data) {
   if (
     !dates.every(function (date) {
       if (data[`${date}`].length !== 10) {
-        console.error('add-to-calendar button generation failed: date misspelled [-> YYYY-MM-DD]');
+        console.error(msgPrefix + ' failed: date misspelled [-> YYYY-MM-DD]');
         return false;
       }
       const dateParts = data[`${date}`].split('-');
       if (dateParts.length < 3 || dateParts.length > 3) {
-        console.error(
-          'add-to-calendar button generation failed: date misspelled [' + date + ': ' + data[`${date}`] + ']'
-        );
+        console.error(msgPrefix + ' failed: date misspelled [' + date + ': ' + data[`${date}`] + ']');
         return false;
       }
       newDate[`${date}`] = new Date(dateParts[0], dateParts[1] - 1, dateParts[2]);
@@ -1128,24 +1133,19 @@ function atcb_validate(data) {
     !times.every(function (time) {
       if (data[`${time}`] != null) {
         if (data[`${time}`].length !== 5) {
-          console.error('add-to-calendar button generation failed: time misspelled [-> HH:MM]');
+          console.error(msgPrefix + ' failed: time misspelled [-> HH:MM]');
           return false;
         }
         const timeParts = data[`${time}`].split(':');
         // validate the time parts
         if (timeParts.length < 2 || timeParts.length > 2) {
-          console.error(
-            'add-to-calendar button generation failed: time misspelled [' +
-              time +
-              ': ' +
-              data[`${time}`] +
-              ']'
-          );
+          console.error(msgPrefix + ' failed: time misspelled [' + time + ': ' + data[`${time}`] + ']');
           return false;
         }
         if (timeParts[0] > 23) {
           console.error(
-            'add-to-calendar button generation failed: time misspelled - hours number too high [' +
+            msgPrefix +
+              ' failed: time misspelled - hours number too high [' +
               time +
               ': ' +
               timeParts[0] +
@@ -1155,7 +1155,8 @@ function atcb_validate(data) {
         }
         if (timeParts[1] > 59) {
           console.error(
-            'add-to-calendar button generation failed: time misspelled - minutes number too high [' +
+            msgPrefix +
+              ' failed: time misspelled - minutes number too high [' +
               time +
               ': ' +
               timeParts[1] +
@@ -1181,20 +1182,18 @@ function atcb_validate(data) {
     return false;
   }
   if ((data.startTime != null && data.endTime == null) || (data.startTime == null && data.endTime != null)) {
-    console.error(
-      'add-to-calendar button generation failed: if you set a starting time, you also need to define an end time'
-    );
+    console.error(msgPrefix + ' failed: if you set a starting time, you also need to define an end time');
     return false;
   }
   // validate whether end is not before start
   if (newDate.endDate < newDate.startDate) {
-    console.error('add-to-calendar button generation failed: end date before start date');
+    console.error(msgPrefix + ' failed: end date before start date');
     return false;
   }
   // validate any given RRULE (or respective other parameters)
   if (data.recurrence != null && data.recurrence != '') {
     if (!/^[\w=;:*+-/\\]+$/.test(data.recurrence)) {
-      console.error('add-to-calendar button generation failed: RRULE data misspelled');
+      console.error(msgPrefix + ' failed: RRULE data misspelled');
       return false;
     }
   }
@@ -1430,7 +1429,7 @@ function atcb_generate(button, data) {
     button.style.display = 'block';
   }
   // console log
-  console.log('add-to-calendar button "' + data.identifier + '" created');
+  console.log('add to calendar button "' + data.identifier + '" created');
 }
 
 // generate the dropdown list (can also appear wihtin a modal, if option is set)
@@ -1555,7 +1554,7 @@ function atcb_toggle(action, data = '', button = '', keyboardTrigger = false, ge
 
 // show the dropdown list + background overlay
 function atcb_open(data, button, keyboardTrigger = false, generatedButton = false) {
-  // abort early if an add-to-calendar dropdown or modal already opened
+  // abort early if an add to calendar dropdown or modal already opened
   if (document.querySelector('.atcb-list') || document.querySelector('.atcb-modal')) return;
   // generate list and prepare wrapper
   const list = atcb_generate_dropdown_list(data);
@@ -1639,14 +1638,11 @@ function atcb_close(keyboardTrigger = false) {
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 function atcb_action(data, triggerElement, keyboardTrigger = true) {
   data = atcb_secure_content(data);
-  // validate & decorate data
+  // decorate & validate data
   if (!atcb_check_required(data)) {
-    throw new Error('data missing; see logs');
+    throw new Error('add to calendar button generation failed: required data missing; see console logs');
   }
   data = atcb_decorate_data(data);
-  if (!atcb_validate(data)) {
-    throw new Error('Invalid data; see logs');
-  }
   if (triggerElement) {
     data.identifier = triggerElement.id;
     // if listStyle some dropdown one, force overlay
@@ -1659,6 +1655,12 @@ function atcb_action(data, triggerElement, keyboardTrigger = true) {
     data.listStyle = 'modal';
     data.trigger = 'click';
   }
+  if (!atcb_validate(data)) {
+    throw new Error(
+      'add to calendar button generation (' + data.identifier + ') failed: invalid data; see console logs'
+    );
+  }
+  // if all is fine, open the options list
   atcb_toggle('open', data, triggerElement, keyboardTrigger);
 }
 
@@ -1670,7 +1672,9 @@ function atcb_generate_google(data) {
   urlParts.push('https://calendar.google.com/calendar/render?action=TEMPLATE');
   // generate and add date
   const formattedDate = atcb_generate_time(data, 'clean', 'google');
-  urlParts.push('dates=' + encodeURIComponent(formattedDate.start) + '%2F' + encodeURIComponent(formattedDate.end));
+  urlParts.push(
+    'dates=' + encodeURIComponent(formattedDate.start) + '%2F' + encodeURIComponent(formattedDate.end)
+  );
   // add details (if set)
   if (data.name != null && data.name != '') {
     urlParts.push('text=' + encodeURIComponent(data.name));
@@ -1711,7 +1715,9 @@ function atcb_generate_yahoo(data) {
   urlParts.push('https://calendar.yahoo.com/?v=60');
   // generate and add date
   const formattedDate = atcb_generate_time(data, 'clean');
-  urlParts.push('st=' + encodeURIComponent(formattedDate.start) + '&et=' + encodeURIComponent(formattedDate.end));
+  urlParts.push(
+    'st=' + encodeURIComponent(formattedDate.start) + '&et=' + encodeURIComponent(formattedDate.end)
+  );
   if (formattedDate.allday) {
     urlParts.push('dur=allday');
   }
@@ -1835,7 +1841,7 @@ function atcb_generate_ical(data) {
   ics_lines.push('PRODID:-// ' + corp + ' // atcb v' + atcbVersion + ' //EN');
   ics_lines.push('CALSCALE:GREGORIAN');
   // include time zone information, if set and if not allday (not necessary in that case)
-  const timeAddon = (function() {
+  const timeAddon = (function () {
     if (formattedDate.allday) {
       return ';VALUE=DATE';
     }
@@ -1869,8 +1875,11 @@ function atcb_generate_ical(data) {
   if (data.recurrence != null && data.recurrence != '') {
     ics_lines.push(data.recurrence);
   }
-  const nowClean = nowISO.replace(/(-|:|\.\d{3})/gi, '');
-  ics_lines.push('STATUS:CONFIRMED', 'LAST-MODIFIED:' + nowClean, 'SEQUENCE:0', 'END:VEVENT', 'END:VCALENDAR');
+  ics_lines.push('STATUS:CONFIRMED');
+  ics_lines.push('LAST-MODIFIED:' + atcb_format_datetime(now, 'clean', true));
+  ics_lines.push('SEQUENCE:' + data.sequence);
+  ics_lines.push('END:VEVENT');
+  ics_lines.push('END:VCALENDAR');
   const dataUrl = (function () {
     // if we got to this point with an explicitely given iCal file, we are on an iOS device within an in-app browser (WebView). In this case, we use this as dataUrl
     if (data.icsFile != null && data.icsFile != '') {
@@ -1878,7 +1887,7 @@ function atcb_generate_ical(data) {
     }
     // otherwise, we generate it from the array
     return 'data:text/calendar;charset=utf-8,' + encodeURIComponent(ics_lines.join('\r\n'));
-  })();  
+  })();
   // in in-app browser cases (WebView), we offer a copy option, since the on-the-fly client side generation is usually not supported
   // for Android, we are more specific and only go for specific apps at the moment
   if (isWebView() && (isiOS() || (isAndroid() && isProblematicWebView()))) {
@@ -1950,14 +1959,18 @@ function atcb_generate_time(data, style = 'delimiters', targetCal = 'general', a
   const endDate = data.endDate.split('-');
   if (data.startTime != null && data.endTime != null) {
     // for the input, we assume UTC per default
-    const newStartDate = new Date(startDate[0] + '-' + startDate[1] + '-' + startDate[2] + 'T' + data.startTime + ':00.000+0000');
-    const newEndDate = new Date(endDate[0] + '-' + endDate[1] + '-' + endDate[2] + 'T' + data.endTime + ':00.000+0000');
+    const newStartDate = new Date(
+      startDate[0] + '-' + startDate[1] + '-' + startDate[2] + 'T' + data.startTime + ':00.000+00:00'
+    );
+    const newEndDate = new Date(
+      endDate[0] + '-' + endDate[1] + '-' + endDate[2] + 'T' + data.endTime + ':00.000+00:00'
+    );
     // if no time zone is given and we need to add the offset to the datetime string, do so directly and return
-    if ((data.timeZone == null || (data.timeZone != null  && data.timeZone == '')) && addTimeZoneOffset) {
+    if ((data.timeZone == null || (data.timeZone != null && data.timeZone == '')) && addTimeZoneOffset) {
       return {
-        start: newStartDate.toISOString().replace('.000Z', '+0000'), 
-        end: newEndDate.toISOString().replace('.000Z', '+0000'), 
-        allday: false
+        start: newStartDate.toISOString().replace('.000Z', '+00:00'),
+        end: newEndDate.toISOString().replace('.000Z', '+00:00'),
+        allday: false,
       };
     }
     // if a time zone is given, we adjust the diverse cases
@@ -1967,9 +1980,9 @@ function atcb_generate_time(data, style = 'delimiters', targetCal = 'general', a
         // in the iCal case, we simply return and cut off the Z
         // everything else will be done by injecting the VTIMEZONE block at the iCal function
         return {
-          start: atcb_format_datetime(newStartDate, 'clean', true, true), 
-          end: atcb_format_datetime(newEndDate, 'clean', true, true), 
-          allday: false
+          start: atcb_format_datetime(newStartDate, 'clean', true, true),
+          end: atcb_format_datetime(newEndDate, 'clean', true, true),
+          allday: false,
         };
       }
       // we get the correct offset via the timeZones iCal Library
@@ -1977,43 +1990,46 @@ function atcb_generate_time(data, style = 'delimiters', targetCal = 'general', a
       const offsetEnd = tzlib_get_offset(data.timeZone, data.endDate, data.endTime);
       // if we need to add the offset to the datetime string, do so respectively
       if (addTimeZoneOffset) {
+        const formattedOffsetStart = offsetStart.slice(0, 3) + ':' + offsetStart.slice(3);
+        const formattedOffsetEnd = offsetEnd.slice(0, 3) + ':' + offsetEnd.slice(3);
         return {
-          start: newStartDate.toISOString().replace('.000Z', offsetStart), 
-          end: newEndDate.toISOString().replace('.000Z', offsetEnd), 
-          allday: false
+          start: newStartDate.toISOString().replace('.000Z', formattedOffsetStart),
+          end: newEndDate.toISOString().replace('.000Z', formattedOffsetEnd),
+          allday: false,
         };
       }
       // in other cases, we substract the offset from the dates
       // (substraction to reflect the fact that the user assumed his timezone and to convert to UTC; since calendars assume UTC and add offsets again)
-      const calcOffsetStart = parseInt(offsetStart[0] + 1) * -1 * (((parseInt(offsetStart.substr(1,2)) * 60) + parseInt(offsetStart.substr(3,2))) * 60 * 1000);
-      const calcOffsetEnd = parseInt(offsetEnd[0] + 1) * -1 * (((parseInt(offsetEnd.substr(1,2)) * 60) + parseInt(offsetEnd.substr(3,2))) * 60 * 1000);
+      const calcOffsetStart =
+        parseInt(offsetStart[0] + 1) *
+        -1 *
+        ((parseInt(offsetStart.substr(1, 2)) * 60 + parseInt(offsetStart.substr(3, 2))) * 60 * 1000);
+      const calcOffsetEnd =
+        parseInt(offsetEnd[0] + 1) *
+        -1 *
+        ((parseInt(offsetEnd.substr(1, 2)) * 60 + parseInt(offsetEnd.substr(3, 2))) * 60 * 1000);
       newStartDate.setTime(newStartDate.getTime() + calcOffsetStart);
       newEndDate.setTime(newEndDate.getTime() + calcOffsetEnd);
     }
-    const formattedStartDate = atcb_format_datetime(newStartDate, style);
-    const formattedEndDate = atcb_format_datetime(newEndDate, style);
-    // return data
+    // return formatted data
     return {
-      start: formattedStartDate, 
-      end: formattedEndDate, 
-      allday: false
+      start: atcb_format_datetime(newStartDate, style),
+      end: atcb_format_datetime(newEndDate, style),
+      allday: false,
     };
   } else {
     // would be an allday event then
-    const newStartDate = new Date(Date.UTC(startDate[0], startDate[1] - 1, startDate[2]));   
+    const newStartDate = new Date(Date.UTC(startDate[0], startDate[1] - 1, startDate[2]));
     const newEndDate = new Date(Date.UTC(endDate[0], endDate[1] - 1, endDate[2]));
     // increment the end day by 1 for Google Calendar, iCal and Outlook
     if (targetCal == 'google' || targetCal == 'microsoft' || targetCal == 'ical') {
       newEndDate.setDate(newEndDate.getDate() + 1);
     }
-    // format the output
-    const formattedStartDate = atcb_format_datetime(newStartDate, style, false);
-    const formattedEndDate = atcb_format_datetime(newEndDate, style, false);
-    // return data
+    // return formatted data
     return {
-      start: formattedStartDate, 
-      end: formattedEndDate, 
-      allday: true
+      start: atcb_format_datetime(newStartDate, style, false),
+      end: atcb_format_datetime(newEndDate, style, false),
+      allday: true,
     };
   }
 }
@@ -2031,14 +2047,16 @@ function atcb_format_datetime(datetime, style = 'delimiters', includeTime = true
     }
     return /T(\d{2}:\d{2}:\d{2}\.\d{3})Z/g;
   })();
-  const output = (removeZ) ? datetime.toISOString().replace(regex, '').replace('Z', '') : datetime.toISOString().replace(regex, '');
+  const output = removeZ
+    ? datetime.toISOString().replace(regex, '').replace('Z', '')
+    : datetime.toISOString().replace(regex, '');
   return output;
 }
 
 // SHARED FUNCTION TO SECURE DATA
 function atcb_secure_content(data, isJSON = true) {
   // strip HTML tags (especially since stupid Safari adds stuff) - except for <br>
-  const toClean = (isJSON) ? JSON.stringify(data) : data;
+  const toClean = isJSON ? JSON.stringify(data) : data;
   const cleanedUp = toClean.replace(/(<(?!br)([^>]+)>)/gi, '');
   if (isJSON) {
     return JSON.parse(cleanedUp);
@@ -2084,8 +2102,10 @@ function atcb_rewrite_html_elements(content, clear = false) {
         } else {
           return urlText[0];
         }
-      })();      
-      return '<a href="' + urlText[0] + '" target="' + atcbDefaultTarget + '" rel="noopener">' + text + '</a>';
+      })();
+      return (
+        '<a href="' + urlText[0] + '" target="' + atcbDefaultTarget + '" rel="noopener">' + text + '</a>'
+      );
     });
   }
   return content;
