@@ -2,7 +2,6 @@ declare module 'add-to-calendar-button' {
   export function atcb_init(): void;
   export function atcb_action(
     config: {
-      identifier?: string;
       name: string;
       description?: string;
       startDate: string;
@@ -10,22 +9,48 @@ declare module 'add-to-calendar-button' {
       endDate?: string;
       endTime?: string;
       location?: string;
+      icsFile?: string;
       recurrence?: string;
+      recurrence_interval?: bigint;
+      recurrence_until?: string;
+      recurrence_count?: string;
+      recurrence_byDay?: string;
+      recurrence_byMonth?: string;
+      recurrence_byMonthDay?: string;
+      recurrence_weekstart?: string;
+      sequence?: bigint;
+      identifier?: string;
       options: ('Apple' | 'Google' | 'iCal' | 'Microsoft365' | 'MicrosoftTeams' | 'Outlook.com' | 'Yahoo')[];
-      timeZone?: string;
-      timeZoneOffset?: string;
       iCalFileName?: string;
+      timeZone?: string;
       trigger?: 'hover' | 'click';
       listStyle?: 'dropdown' | 'dropdown-static' | 'overlay' | 'modal';
-      inline?: boolean;
       background?: boolean;
-      icsFile?: string;
       buttonStyle?: 'default' | '3d' | 'flat' | 'round' | 'neumorphism' | 'none';
       size?: bigint;
       customLabels?: object;
       lightMode?: 'system' | 'dark' | 'light' | 'bodyScheme';
-      language?: 'en' | 'de';
-      sequence?: bigint;
+      language?:
+        | 'en'
+        | 'de'
+        | 'nl'
+        | 'fr'
+        | 'es'
+        | 'pt'
+        | 'tr'
+        | 'zh'
+        | 'ar'
+        | 'hi'
+        | 'pl'
+        | 'id'
+        | 'no'
+        | 'fi'
+        | 'sv'
+        | 'cs'
+        | 'ja'
+        | 'it'
+        | 'ko'
+        | 'vi';
     },
     triggerElement?: HTMLElement,
     keyboardTrigger?: boolean

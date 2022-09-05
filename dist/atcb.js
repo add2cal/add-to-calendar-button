@@ -948,9 +948,80 @@ function atcb_decorate_data(data) {
   } else {
     data.rtl = false;
   }
-  // format RRULE (remove spaces)
+  // format RRULE
   if (data.recurrence != null && data.recurrence != '') {
-    data.recurrence = data.recurrence.replace(/\s+/g, '');
+    // remove spaces and force upper case
+    data.recurrence = data.recurrence.replace(/\s+/g, '').toUpperCase();
+    // pre-validate
+    if (!/^(RRULE:[\w=;,:+-/\\]+|daily|weekly|monthly|yearly)$/im.test(data.recurrence)) {
+      data.recurrence = '!wrong rrule format!';
+    } else {
+      // check if RRULE already
+      if (/^RRULE:/i.test(data.recurrence)) {
+        // draw easy rules from RRULE if possible
+        const rruleParts = data.recurrence.substr(6).split(';');
+        const rruleObj = new Object();
+        rruleParts.forEach(function (rule) {
+          rruleObj[rule.split('=')[0]] = rule.split('=')[1];
+        });
+        data.recurrence_until = rruleObj.UNTIL ? rruleObj.UNTIL : '';
+        data.recurrence_count = rruleObj.COUNT ? rruleObj.COUNT : '';
+        data.recurrence_byDay = rruleObj.BYDAY ? rruleObj.BYDAY : '';
+        data.recurrence_byMonth = rruleObj.BYMONTH ? rruleObj.BYMONTH : '';
+        data.recurrence_byMonthDay = rruleObj.BYMONTHDAY ? rruleObj.BYMONTHDAY : '';
+        data.recurrence_interval = rruleObj.INTERVAL ? rruleObj.INTERVAL : 1;
+        data.recurrence_frequency = rruleObj.FREQ ? rruleObj.FREQ : '';
+      } else {
+        // set interval if not given
+        if (data.recurrence_interval == null || data.recurrence_interval == '') {
+          data.recurrence_interval = 1;
+        }
+        // set weekstart if not given
+        if (
+          data.recurrence_weekstart == null ||
+          (data.recurrence_weekstart == '') | (data.recurrence_weekstart.length > 2)
+        ) {
+          data.recurrence_weekstart = 'MO';
+        }
+        // save frequency before overriding the main recurrence data
+        data.recurrence_frequency = data.recurrence;
+        // generate the RRULE from easy rules
+        data.recurrence =
+          'RRULE:FREQ=' +
+          data.recurrence +
+          ';WKST=' +
+          data.recurrence_weekstart +
+          ';INTERVAL=' +
+          data.recurrence_interval;
+        // TODO: If "until" is given, translate it into a "count" and remove the "until" (here and in the above block). This would be way more stable!
+        if (data.recurrence_until != null && data.recurrence_until != '') {
+          if (data.endTime != null && data.endTime != '') {
+            data.recurrence =
+              data.recurrence +
+              ';UNTIL=' +
+              data.recurrence_until.replace(/-/g, '').slice(0, 8) +
+              'T' +
+              data.endTime.replace(':', '') +
+              '00';
+          } else {
+            data.recurrence =
+              data.recurrence + ';UNTIL=' + data.recurrence_until.replace(/-/g, '').slice(0, 8);
+          }
+        }
+        if (data.recurrence_count != null && data.recurrence_count != '') {
+          data.recurrence = data.recurrence + ';COUNT=' + data.recurrence_count;
+        }
+        if (data.recurrence_byDay != null && data.recurrence_byDay != '') {
+          data.recurrence = data.recurrence + ';BYDAY=' + data.recurrence_byDay;
+        }
+        if (data.recurrence_byMonth != null && data.recurrence_byMonth != '') {
+          data.recurrence = data.recurrence + ';BYMONTH=' + data.recurrence_byMonth;
+        }
+        if (data.recurrence_byMonthDay != null && data.recurrence_byMonthDay != '') {
+          data.recurrence = data.recurrence + ';BYMONTHDAY=' + data.recurrence_byMonthDay;
+        }
+      }
+    }
   }
 
   // if no description or already decorated, return early here
@@ -1059,6 +1130,21 @@ function atcb_validate(data) {
       !data.icsFile.startsWith('https://')
     ) {
       console.error(msgPrefix + ' failed: explicit ics file path not valid');
+      return false;
+    }
+  }
+  // validate organizer
+  if (data.organizer != null && data.organizer != '') {
+    const organizerParts = data.organizer.split('|');
+    if (
+      organizerParts.length != 2 ||
+      organizerParts[0].length > 50 ||
+      organizerParts[1].length > 80 ||
+      !atcb_validEmail(organizerParts[1])
+    ) {
+      console.error(
+        msgPrefix + ' failed: organizer needs to match the schema "NAME|EMAIL" with a valid email address'
+      );
       return false;
     }
   }
@@ -1190,12 +1276,63 @@ function atcb_validate(data) {
     console.error(msgPrefix + ' failed: end date before start date');
     return false;
   }
-  // validate any given RRULE (or respective other parameters)
-  if (data.recurrence != null && data.recurrence != '') {
-    if (!/^[\w=;:*+-/\\]+$/.test(data.recurrence)) {
-      console.error(msgPrefix + ' failed: RRULE data misspelled');
-      return false;
-    }
+  // validate any given RRULE
+  if (data.recurrence != null && data.recurrence != '' && !/^RRULE:[\w=;,:+-/\\]+$/i.test(data.recurrence)) {
+    console.error(msgPrefix + ' failed: RRULE data misspelled');
+    return false;
+  }
+  // also validate the more easy recurrence settings, since any error there would be also hidden in the RRULE
+  if (
+    data.recurrence_interval != null &&
+    data.recurrence_interval != '' &&
+    !/^\d+$/.test(data.recurrence_interval)
+  ) {
+    console.error(msgPrefix + ' failed: recurrence data (interval) misspelled');
+    return false;
+  }
+  if (
+    data.recurrence_until != null &&
+    data.recurrence_until != '' &&
+    !/^(\d|-|:)+$/i.test(data.recurrence_until)
+  ) {
+    console.error(msgPrefix + ' failed: recurrence data (until) misspelled');
+    return false;
+  }
+  if (data.recurrence_count != null && data.recurrence_count != '' && !/^\d+$/.test(data.recurrence_count)) {
+    console.error(msgPrefix + ' failed: recurrence data (interval) misspelled');
+    return false;
+  }
+  if (
+    data.recurrence_byMonth != null &&
+    data.recurrence_byMonth != '' &&
+    !/^(\d|,)+$/.test(data.recurrence_byMonth)
+  ) {
+    console.error(msgPrefix + ' failed: recurrence data (byMonth) misspelled');
+    return false;
+  }
+  if (
+    data.recurrence_byMonthDay != null &&
+    data.recurrence_byMonthDay != '' &&
+    !/^(\d|,)+$/.test(data.recurrence_byMonthDay)
+  ) {
+    console.error(msgPrefix + ' failed: recurrence data (byMonthDay) misspelled');
+    return false;
+  }
+  if (
+    data.recurrence_byDay != null &&
+    data.recurrence_byDay != '' &&
+    !/^(\d|-|MO|TU|WE|TH|FR|SA|SU|,)+$/im.test(data.recurrence_byDay)
+  ) {
+    console.error(msgPrefix + ' failed: recurrence data (byDay) misspelled');
+    return false;
+  }
+  if (
+    data.recurrence_weekstart != null &&
+    data.recurrence_weekstart != '' &&
+    !/^(MO|TU|WE|TH|FR|SA|SU)$/im.test(data.recurrence_weekstart)
+  ) {
+    console.error(msgPrefix + ' failed: recurrence data (weekstart) misspelled');
+    return false;
   }
   // on passing the validation, return true
   return true;
@@ -1369,24 +1506,92 @@ function atcb_generate(button, data) {
   // clean the placeholder
   button.textContent = '';
   // create schema.org data, if possible (https://schema.org/Event)
-  // TODO: support recurring events
   if (data.name && data.location && data.startDate) {
     const schemaEl = document.createElement('script');
     schemaEl.type = 'application/ld+json';
-    schemaEl.textContent = '{ "event": { "@context":"https://schema.org", "@type":"Event", ';
-    schemaEl.textContent += '"name":"' + data.name + '", ';
-    if (data.descriptionHtmlFree)
-      schemaEl.textContent += '"description":"' + data.descriptionHtmlFree + '", ';
+    const schemaContent = [];
+    schemaContent.push('{\r\n"event": {\r\n"@context":"https://schema.org",\r\n"@type":"Event"');
+    schemaContent.push('"name":"' + data.name + '"');
+    schemaContent.push(data.descriptionHtmlFree ? '"description":"' + data.descriptionHtmlFree + '"' : '');
     const formattedDate = atcb_generate_time(data, 'delimiters', 'general', true);
-    schemaEl.textContent += '"startDate":"' + formattedDate.start + '", ';
-    schemaEl.textContent += '"endDate":"' + formattedDate.end + '", ';
-    if (data.location.startsWith('http')) {
-      schemaEl.textContent += '"eventAttendanceMode":"https://schema.org/OnlineEventAttendanceMode", ';
-      schemaEl.textContent += '"location": { "@type":"VirtualLocation", "url":"' + data.location + '" } ';
+    if (data.recurrence != null && data.recurrence != '') {
+      schemaContent.push('"eventSchedule": { "@type": "Schedule"');
+      if (data.timeZone != null && data.timeZone != '') {
+        schemaContent.push('"scheduleTimezone":"' + data.timeZone + '"');
+      }
+      const repeatFrequency = 'P' + data.recurrence_interval + data.recurrence_frequency.substr(0, 1);
+      schemaContent.push('"repeatFrequency":"' + repeatFrequency + '"');
+      if (data.recurrence_byDay != null && data.recurrence_byDay != '') {
+        const byDayString = (function () {
+          if (/\d/.test(data.recurrence_byDay)) {
+            return '"' + data.recurrence_byDay + '"';
+          } else {
+            const byDays = data.recurrence_byDay.split(',');
+            const helperMap = {
+              MO: 'https://schema.org/Monday',
+              TU: 'https://schema.org/Tuesday',
+              WE: 'https://schema.org/Wednesday',
+              TH: 'https://schema.org/Thursday',
+              FR: 'https://schema.org/Friday',
+              SA: 'https://schema.org/Saturday',
+              SU: 'https://schema.org/Sunday',
+            };
+            const output = [];
+            for (let i = 0; i < byDays.length; i++) {
+              output.push('"' + helperMap[byDays[`${i}`]] + '"');
+            }
+            return '[' + output.join(',') + ']';
+          }
+        })();
+        schemaContent.push('"byDay":' + byDayString);
+      }
+      if (data.recurrence_byMonth != null && data.recurrence_byMonth != '') {
+        const byMonthString = data.recurrence_byMonth.includes(',')
+          ? '[' + data.recurrence_byMonth + ']'
+          : data.recurrence_byMonth;
+        schemaContent.push('"byMonth":"' + byMonthString + '"');
+      }
+      if (data.recurrence_byMonthDay != null && data.recurrence_byMonthDay != '') {
+        const byMonthDayString = data.recurrence_byMonthDay.includes(',')
+          ? '[' + data.recurrence_byMonthDay + ']'
+          : data.recurrence_byMonthDay;
+        schemaContent.push('"byMonthDay":"' + byMonthDayString + '"');
+      }
+      if (data.recurrence_count != null && data.recurrence_count != '') {
+        schemaContent.push('"repeatCount":"' + data.recurrence_count + '"');
+      }
+      schemaContent.push('"startDate":"' + data.startDate + '"');
+      if (data.recurrence_until != null && data.recurrence_until != '') {
+        schemaContent.push('"endDate":"' + data.recurrence_until + '"');
+      }
+      if (data.startTime != null && data.startTime != '' && data.endTime != null && data.endTime != '') {
+        schemaContent.push('"startTime":"' + data.startTime + ':00"');
+        schemaContent.push('"endTime":"' + data.endTime + ':00"');
+        schemaContent.push('"duration":"' + formattedDate.duration + '" }');
+      }
     } else {
-      schemaEl.textContent += '"location":"' + data.location + '" ';
+      schemaContent.push('"startDate":"' + formattedDate.start + '"');
+      schemaContent.push('"endDate":"' + formattedDate.end + '"');
+      schemaContent.push('"duration":"' + formattedDate.duration + '"');
     }
-    schemaEl.textContent += '} }';
+    schemaContent.push(
+      data.location.startsWith('http')
+        ? '"eventAttendanceMode":"https://schema.org/OnlineEventAttendanceMode",\r\n"location": {\r\n"@type":"VirtualLocation",\r\n"url":"' +
+            data.location +
+            '"\r\n}'
+        : '"location":"' + data.location + '"'
+    );
+    if (data.organizer != null && data.organizer != '') {
+      const organizerParts = data.organizer.split('|');
+      schemaContent.push(
+        '"organizer":{\r\n"@type":"Person",\r\n"name":"' +
+          organizerParts[0] +
+          '",\r\n"email":"' +
+          organizerParts[1] +
+          '"\r\n}'
+      );
+    }
+    schemaEl.textContent = schemaContent.join(',\r\n') + '\r\n}\r\n}';
     button.appendChild(schemaEl);
   }
   // generate the wrapper div
@@ -1453,6 +1658,10 @@ function atcb_generate_dropdown_list(data) {
         optionParts[0] == 'outlookcom' ||
         optionParts[0] == 'yahoo'
       ) {
+        return;
+      }
+      // also skip iCal for rrules with "until"
+      if (data.recurrence_until != null && data.recurrence_until != '' && optionParts[0] == 'ical') {
         return;
       }
     }
@@ -1675,6 +1884,9 @@ function atcb_generate_google(data) {
   urlParts.push(
     'dates=' + encodeURIComponent(formattedDate.start) + '%2F' + encodeURIComponent(formattedDate.end)
   );
+  if (data.timeZone != null && data.timeZone != '') {
+    urlParts.push('ctz=' + data.timeZone);
+  }
   // add details (if set)
   if (data.name != null && data.name != '') {
     urlParts.push('text=' + encodeURIComponent(data.name));
@@ -1872,6 +2084,10 @@ function atcb_generate_ical(data) {
   if (data.location != null && data.location != '') {
     ics_lines.push('LOCATION:' + data.location);
   }
+  if (data.organizer != null && data.organizer != '') {
+    const organizerParts = data.organizer.split('|');
+    ics_lines.push('ORGANIZER;CN=' + organizerParts[0] + ':MAILTO:' + organizerParts[1]);
+  }
   if (data.recurrence != null && data.recurrence != '') {
     ics_lines.push(data.recurrence);
   }
@@ -1965,23 +2181,34 @@ function atcb_generate_time(data, style = 'delimiters', targetCal = 'general', a
     const newEndDate = new Date(
       endDate[0] + '-' + endDate[1] + '-' + endDate[2] + 'T' + data.endTime + ':00.000+00:00'
     );
+    const durationMS = newEndDate - newStartDate;
+    const durationHours = Math.floor(durationMS / 1000 / 60 / 60);
+    const durationMinutes = Math.floor(((durationMS - durationHours * 60 * 60 * 1000) / 1000 / 60) % 60);
+    const durationString = (function () {
+      if (durationHours < 10) {
+        return '0' + durationHours + ':' + ('0' + durationMinutes).slice(-2);
+      }
+      return durationHours + ':' + ('0' + durationMinutes).slice(-2);
+    })();
     // if no time zone is given and we need to add the offset to the datetime string, do so directly and return
     if ((data.timeZone == null || (data.timeZone != null && data.timeZone == '')) && addTimeZoneOffset) {
       return {
         start: newStartDate.toISOString().replace('.000Z', '+00:00'),
         end: newEndDate.toISOString().replace('.000Z', '+00:00'),
+        duration: durationString,
         allday: false,
       };
     }
     // if a time zone is given, we adjust the diverse cases
     // (see https://tz.add-to-calendar-technology.com/ for available TZ names)
     if (data.timeZone != null && data.timeZone != '') {
-      if (targetCal == 'ical') {
+      if (targetCal == 'ical' || targetCal == 'google') {
         // in the iCal case, we simply return and cut off the Z
         // everything else will be done by injecting the VTIMEZONE block at the iCal function
         return {
           start: atcb_format_datetime(newStartDate, 'clean', true, true),
           end: atcb_format_datetime(newEndDate, 'clean', true, true),
+          duration: durationString,
           allday: false,
         };
       }
@@ -1995,6 +2222,7 @@ function atcb_generate_time(data, style = 'delimiters', targetCal = 'general', a
         return {
           start: newStartDate.toISOString().replace('.000Z', formattedOffsetStart),
           end: newEndDate.toISOString().replace('.000Z', formattedOffsetEnd),
+          duration: durationString,
           allday: false,
         };
       }
@@ -2015,6 +2243,7 @@ function atcb_generate_time(data, style = 'delimiters', targetCal = 'general', a
     return {
       start: atcb_format_datetime(newStartDate, style),
       end: atcb_format_datetime(newEndDate, style),
+      duration: durationString,
       allday: false,
     };
   } else {
@@ -2081,6 +2310,19 @@ function atcb_secure_url(url, throwError = true) {
   } else {
     return true;
   }
+}
+
+// SHARED FUNCTION TO VALIDATE EMAIL ADDRESSES
+function atcb_validEmail(email, mx = false) {
+  // rough format check first
+  if (!/^.{0,70}@.{1,30}\.[\w.]{2,9}$/.test(email)) {
+    return false;
+  }
+  // testing for mx records second, if activated
+  if (mx) {
+    // TODO: call external service to validate email address
+  }
+  return true;
 }
 
 // SHARED FUNCTION TO REPLACE HTML PSEUDO ELEMENTS
