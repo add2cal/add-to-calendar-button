@@ -10,6 +10,7 @@ declare module 'add-to-calendar-button' {
       endTime?: string;
       location?: string;
       icsFile?: string;
+      images?: string[];
       recurrence?: string;
       recurrence_interval?: bigint;
       recurrence_until?: string;

@@ -766,6 +766,7 @@ function atcb_generate(button, data) {
   // clean the placeholder
   button.textContent = '';
   // create schema.org data, if possible (https://schema.org/Event)
+  // see https://developers.google.com/search/docs/advanced/structured-data/event for more details on how this affects Google search results
   if (data.name && data.location && data.startDate) {
     const schemaEl = document.createElement('script');
     schemaEl.type = 'application/ld+json';
@@ -851,6 +852,19 @@ function atcb_generate(button, data) {
           '"\r\n}'
       );
     }
+    const imageData = [];
+    if (data.images != null && Array.isArray(data.images) && data.images.length > 0) {
+      for (let i = 0; i < data.images.length; i++) {
+        if (atcb_secure_url(data.images[`${i}`]) && data.images[`${i}`].startsWith('http')) {
+          imageData.push('"' + data.images[`${i}`] + '"');
+        }
+      }
+    } else {
+      imageData.push('"https://add-to-calendar-button.com/demo_assets/img/1x1.png"');
+      imageData.push('"https://add-to-calendar-button.com/demo_assets/img/4x3.png"');
+      imageData.push('"https://add-to-calendar-button.com/demo_assets/img/16x9.png"');
+    }
+    schemaContent.push('"image":[\r\n' + imageData.join(',\r\n') + ']');
     schemaEl.textContent = schemaContent.join(',\r\n') + '\r\n}\r\n}';
     button.appendChild(schemaEl);
   }
