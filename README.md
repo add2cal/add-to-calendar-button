@@ -44,20 +44,26 @@ And remember to [⭐ **star** this repository](#) in order to stay up-to-date an
 ## ✨ Features
 
 - Simple and convenient integration of multiple buttons, configurable directly within the HTML code.
-- Optimized and adjustable UX (for desktop and mobile).
-- Beautiful UI (the best combined from experts around the world).
+- Optimized and adjustable UX (for desktop and mobile) with dynamic dropdown positioning.
+- Beautiful and adjustable UI with light and dark mode (the best combined from experts around the world).
 - Up-to-date integration of all popular calendars:
   - **Google** Calendar.
   - **Yahoo** Calender.
   - **Microsoft 365, Outlook, and Teams**.
   - Automatically generated **iCal/ics** files (for all other calendars, like **Apple**).
 - Timed and all-day events.
-- Recurring events (where supported by the calendar)
+- One-time, recurring, or fluid.
+- Most robust time zone and daylight saving management (via our own [TimeZones iCal Library](https://github.com/add2cal/timezones-ical-library)).
+- Dynamic dates (like "today + 3").
+- Taking care of all those edge cases, where some scenarios do not support specific setups (like WebView blocking downloads); utilizing beautiful user guidance workarounds.
 - Translatable labels and dynamic dates.
-- Dynamic dates and timezone.
 - Auto-generated Schema.org rich (structured) data for better SEO.
-- Full support for mouse, touch, or keyboard input.
+- Full support for mouse, touch, or keyboard input (W3C WAI compliant).
+- Supporting 20+ languages, incl. RTL text for Arabic.
 - Well documented code, to easily understand the processes and build on top of it.
+- No external dependencies (not even some server backend or paid service required for all core operations).
+- Therefore, fully GDPR, CCPA, and LGPD compliant - without the need of signing some data processing agreement.
+- FREE and open source.
 
 ![Demo Screenshot](https://github.com/add2cal/add-to-calendar-button/blob/main/assets/img/demo.gif?raw=true)
 

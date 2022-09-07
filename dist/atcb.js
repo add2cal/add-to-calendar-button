@@ -743,7 +743,7 @@ console.log('Add to Calendar TimeZones iCal Library loaded (version ' + tzlibVer
  *  Add to Calendar Button
  *  ++++++++++++++++++++++
  */
-const atcbVersion = '1.14.6';
+const atcbVersion = '1.15.0';
 /*! Creator: Jens Kuerschner (https://jenskuerschner.de)
  *  Project: https://github.com/add2cal/add-to-calendar-button
  *  License: MIT with “Commons Clause” License Condition v1.0
@@ -765,6 +765,12 @@ const isiOS = isBrowser()
 const isAndroid = isBrowser()
   ? new Function(
       'if (/android/i.test(navigator.userAgent || navigator.vendor || window.opera) && !window.MSStream) { return true; } else { return false; }'
+    )
+  : new Function('return false;');
+// Chrome
+const isChrome = isBrowser()
+  ? new Function(
+      'if (/chrome|chromium|crios/i.test(navigator.userAgent)) { return true; } else { return false; }'
     )
   : new Function('return false;');
 // Mobile
@@ -2120,7 +2126,8 @@ function atcb_generate_ical(data) {
   })();
   // in in-app browser cases (WebView), we offer a copy option, since the on-the-fly client side generation is usually not supported
   // for Android, we are more specific and only go for specific apps at the moment
-  if (isWebView() && (isiOS() || (isAndroid() && isProblematicWebView()))) {
+  // for Chrome on iOS we basically do the same
+  if ((isiOS() && isChrome()) || (isWebView() && (isiOS() || (isAndroid() && isProblematicWebView())))) {
     // putting the download url to the clipboard
     const tmpInput = document.createElement('input');
     document.body.appendChild(tmpInput);
@@ -2146,12 +2153,29 @@ function atcb_generate_ical(data) {
     document.execCommand('copy');
     tmpInput.remove();
     // creating the modal
-    atcb_create_modal(
-      data,
-      'browser',
-      atcb_translate_hook('WebView iCal', data.language, data),
-      atcb_translate_hook('WebView info description', data.language, data)
-    );
+    if (isiOS() && isChrome()) {
+      atcb_create_modal(
+        data,
+        'browser',
+        atcb_translate_hook('Crios iCal headline', data.language, data),
+        atcb_translate_hook('Crios iCal info', data.language, data) +
+          '<br>' +
+          atcb_translate_hook('WebView iCal solution 1', data.language, data) +
+          '<br>' +
+          atcb_translate_hook('Crios iCal solution 2', data.language, data)
+      );
+    } else {
+      atcb_create_modal(
+        data,
+        'browser',
+        atcb_translate_hook('WebView iCal headline', data.language, data),
+        atcb_translate_hook('WebView iCal info', data.language, data) +
+          '<br>' +
+          atcb_translate_hook('WebView iCal solution 1', data.language, data) +
+          '<br>' +
+          atcb_translate_hook('WebView iCal solution 2', data.language, data)
+      );
+    }
   } else {
     atcb_save_file(dataUrl, filename);
   }
@@ -2658,9 +2682,17 @@ const i18nStrings = {
     Close: 'Close',
     'Close Selection': 'Close Selection',
     'Click me': 'Click me',
-    'WebView iCal': 'Open your browser',
-    'WebView info description':
-      "Unfortunately, in-app browsers have problems with the way we generate the calendar file.<br>We automatically put a magical URL into your phone's clipboard.<br><ol><li><strong>Open another browser</strong> on your phone, ...</li><li><strong>Paste</strong> the clipboard content and go.",
+    'WebView iCal headline': 'Open your browser',
+    'WebView iCal info':
+      'Unfortunately, in-app browsers have problems with the way we generate the calendar file.',
+    'WebView iCal solution 1': "We automatically put a magical URL into your phone's clipboard.",
+    'WebView iCal solution 2':
+      '<ol><li><strong>Open another browser</strong> on your phone, ...</li><li><strong>Paste</strong> the clipboard content and go.</li></ol>',
+    'Crios iCal headline': 'Open Safari',
+    'Crios iCal info':
+      'Unfortunately, Chrome on iOS has problems with the way we generate the calendar file.',
+    'Crios iCal solution 2':
+      '<ol><li><strong>Open Safari</strong>, ...</li><li><strong>Paste</strong> the clipboard content and go.</li></ol>',
   },
   de: {
     'Add to Calendar': 'Im Kalender speichern',
@@ -2668,9 +2700,17 @@ const i18nStrings = {
     Close: 'Schließen',
     'Close Selection': 'Auswahl schließen',
     'Click me': 'Klick mich',
-    'WebView iCal': 'Öffne deinen Browser',
-    'WebView info description':
-      'Leider haben In-App-Browser Probleme mit der Art, wie wir Kalender-Dateien erzeugen.<br>Wir haben automatisch eine magische URL in die Zwischenablage deines Smartphones kopiert.<br><ol><li><strong>Öffne einen anderen Browser</strong> auf deinem Smartphone, ...</li><li>Nutze die <strong>Einfügen</strong>-Funktion, um fortzufahren.',
+    'WebView iCal headline': 'Öffne deinen Browser',
+    'WebView iCal info':
+      'Leider haben In-App-Browser Probleme mit der Art, wie wir Kalender-Dateien erzeugen.',
+    'WebView iCal solution 1':
+      'Wir haben automatisch eine magische URL in die Zwischenablage deines Smartphones kopiert.',
+    'WebView iCal solution 2':
+      '<ol><li><strong>Öffne einen anderen Browser</strong> auf deinem Smartphone, ...</li><li>Nutze die <strong>Einfügen</strong>-Funktion, um fortzufahren.</li></ol>',
+    'Crios iCal headline': 'Öffne Safari',
+    'Crios iCal info': 'Leider Chrome unter iOS Probleme mit der Art, wie wir Kalender-Dateien erzeugen.',
+    'Crios iCal solution 2':
+      '<ol><li><strong>Öffne Safari</strong>, ...</li><li>Nutze die <strong>Einfügen</strong>-Funktion, um fortzufahren.</li></ol>',
   },
   es: {
     'Add to Calendar': 'Añadir al Calendario',
@@ -2678,9 +2718,18 @@ const i18nStrings = {
     Close: 'Ciérralo',
     'Close Selection': 'Cerrar Selección',
     'Click me': 'Haz clic mí',
-    'WebView iCal': 'Abra su browser',
-    'WebView info description':
-      'Lamentablemente, los browsers in-app tienen problemas con la forma en que generamos el archivo del calendario.<br>Hemos copiado automáticamente una URL mágica en el portapapeles de tu smartphone.<br><ol><li><strong>Abre otro browser</strong> en tu smartphone, ...</li><li>Utilice la función de <strong>pegar</strong> para continuar.',
+    'WebView iCal headline': 'Abra su browser',
+    'WebView iCal info':
+      'Lamentablemente, los browsers in-app tienen problemas con la forma en que generamos el archivo del calendario.',
+    'WebView iCal solution 1':
+      'Hemos copiado automáticamente una URL mágica en el portapapeles de tu smartphone.',
+    'WebView iCal solution 2':
+      '<ol><li><strong>Abre otro browser</strong> en tu smartphone, ...</li><li>Utilice la función de <strong>pegar</strong> para continuar.</li></ol>',
+    'Crios iCal headline': 'Abrir Safari',
+    'Crios iCal info':
+      'Lamentablemente, Chrome en iOS tiene problemas con la forma de generar el archivo de calendario.',
+    'Crios iCal solution 2':
+      '<ol><li><strong>Abrir Safari</strong>, ...</li><li>Utilice la función de <strong>pegar</strong> para continuar.</li></ol>',
   },
   pt: {
     'Add to Calendar': 'Incluir no Calendário',
@@ -2688,9 +2737,18 @@ const i18nStrings = {
     Close: 'Fechar',
     'Close Selection': 'Fechar selecção',
     'Click me': 'Clicar-me',
-    'WebView iCal': 'Abra o seu browser',
-    'WebView info description':
-      'Infelizmente, os navegadores em tampas têm problemas com a forma como geramos o ficheiro de calendário.<br>Copiámos automaticamente um URL mágico para a área de transferência do seu smartphone.<br><ol><li><strong>Abrir outro browser</strong> en tu smartphone, ...</li><li>Use a função <forte>colar</strong> para continuar.',
+    'WebView iCal headline': 'Abra o seu browser',
+    'WebView iCal info':
+      'Infelizmente, os navegadores em tampas têm problemas com a forma como geramos o ficheiro de calendário.',
+    'WebView iCal solution 1':
+      'Copiámos automaticamente um URL mágico para a área de transferência do seu smartphone.',
+    'WebView iCal solution 2':
+      '<ol><li><strong>Abrir outro browser</strong> en tu smartphone, ...</li><li>Use a função <forte>colar</strong> para continuar.</li></ol>',
+    'Crios iCal headline': 'Safari aberto',
+    'Crios iCal info':
+      'Infelizmente, o cromado no iOS tem problemas com a forma como geramos o ficheiro do calendário.',
+    'Crios iCal solution 2':
+      '<ol><li><strong>Safari aberto</strong>, ...</li><li>Use a função <forte>colar</strong> para continuar.</li></ol>',
   },
   fr: {
     'Add to Calendar': 'Ajout au Calendrier',
@@ -2698,9 +2756,18 @@ const i18nStrings = {
     Close: 'Fermez',
     'Close Selection': 'Fermez la sélection',
     'Click me': 'Cliquez-moi',
-    'WebView iCal': 'Ouvrez votre navigateur',
-    'WebView info description':
-      'Malheureusement, les navigateurs in-app ont des problèmes avec la manière dont nous créons les fichiers de calendrier.<br>Nous avons automatiquement copié une URL magique dans le presse-papiers de ton smartphone.<br><ol><li><strong>Ouvre un autre navigateur</strong> sur ton smartphone, ...</li><li>Utilise la fonction <strong>insérer</strong> pour continuer.',
+    'WebView iCal headline': 'Ouvrez votre navigateur',
+    'WebView iCal info':
+      'Malheureusement, les navigateurs in-app ont des problèmes avec la manière dont nous créons les fichiers de calendrier.',
+    'WebView iCal solution 1':
+      'Nous avons automatiquement copié une URL magique dans le presse-papiers de ton smartphone.',
+    'WebView iCal solution 2':
+      '<ol><li><strong>Ouvre un autre navigateur</strong> sur ton smartphone, ...</li><li>Utilise la fonction <strong>insérer</strong> pour continuer.</li></ol>',
+    'Crios iCal headline': 'Ouvre Safari',
+    'Crios iCal info':
+      'Malheureusement, Chrome sur iOS a des problèmes avec la façon dont nous générons le fichier du calendrier.',
+    'Crios iCal solution 2':
+      '<ol><li><strong>Ouvre Safari</strong>, ...</li><li>Utilise la fonction <strong>insérer</strong> pour continuer.</li></ol>',
   },
   nl: {
     'Add to Calendar': 'Opslaan in Kalender',
@@ -2708,9 +2775,18 @@ const i18nStrings = {
     Close: 'Sluiten',
     'Close Selection': 'Sluit selectie',
     'Click me': 'Klik me',
-    'WebView iCal': 'Open uw browser',
-    'WebView info description':
-      'Helaas hebben in-app browsers problemen met de manier waarop wij kalenderbestanden maken.<br>We hebben automatisch een magische URL naar het klembord van uw smartphone gekopieerd.<br><ol><li><strong>Open een andere browser</strong> op uw smartphone, ...</li><li>Gebruik de <strong>insert</strong> functie om verder te gaan.',
+    'WebView iCal headline': 'Open uw browser',
+    'WebView iCal info':
+      'Helaas hebben in-app browsers problemen met de manier waarop wij kalenderbestanden maken.',
+    'WebView iCal solution 1':
+      'We hebben automatisch een magische URL naar het klembord van uw smartphone gekopieerd.',
+    'WebView iCal solution 2':
+      '<ol><li><strong>Open een andere browser</strong> op uw smartphone, ...</li><li>Gebruik de <strong>insert</strong> functie om verder te gaan.</li></ol>',
+    'Crios iCal headline': 'Open Safari',
+    'Crios iCal info':
+      'Helaas heeft Chrome op iOS problemen met de manier waarop we het kalenderbestand genereren.',
+    'Crios iCal solution 2':
+      '<ol><li><strong>Open Safari</strong>, ...</li><li>Gebruik de <strong>insert</strong> functie om verder te gaan.</li></ol>',
   },
   tr: {
     'Add to Calendar': 'Takvime Ekle',
@@ -2718,9 +2794,17 @@ const i18nStrings = {
     Close: 'Kapat',
     'Close Selection': 'Seçimi kapat',
     'Click me': 'Beni tıklayın',
-    'WebView iCal': 'Tarayıcınızı açın',
-    'WebView info description':
-      'Ne yazık ki, uygulama içi tarayıcılar takvim dosyalarını oluşturma şeklimizle ilgili sorunlar yaşıyor.<br>Akıllı telefonunuzun panosuna otomatik olarak sihirli bir URL kopyaladık.<br><ol><li><strong>Akıllı telefonunuzda başka bir tarayıcı açın</strong>, ...</li><li>Devam etmek için <strong>insert</strong> fonksiyonunu kullanın.',
+    'WebView iCal headline': 'Tarayıcınızı açın',
+    'WebView iCal info':
+      'Ne yazık ki, uygulama içi tarayıcılar takvim dosyalarını oluşturma şeklimizle ilgili sorunlar yaşıyor.',
+    'WebView iCal solution 1': 'Akıllı telefonunuzun panosuna otomatik olarak sihirli bir URL kopyaladık.',
+    'WebView iCal solution 2':
+      '<ol><li><strong>Akıllı telefonunuzda başka bir tarayıcı açın</strong>, ...</li><li>Devam etmek için <strong>insert</strong> fonksiyonunu kullanın.</li></ol>',
+    'Crios iCal headline': 'Açık Safari',
+    'Crios iCal info':
+      "Ne yazık ki iOS'ta Chrome'un takvim dosyası oluşturma yöntemiyle ilgili sorunları var.",
+    'Crios iCal solution 2':
+      '<ol><li><strong>Açık Safari</strong>, ...</li><li>Devam etmek için <strong>insert</strong> fonksiyonunu kullanın.</li></ol>',
   },
   zh: {
     'Add to Calendar': '添加到日历',
@@ -2728,9 +2812,15 @@ const i18nStrings = {
     Close: '关',
     'Close Selection': '关闭选择',
     'Click me': '点我',
-    'WebView iCal': '打开浏览器',
-    'WebView info description':
-      '不幸的是，应用内浏览器在我们生成日历文件的方式上存在问题.<br>我们会自动将一个神奇的 URL 放入您手机的剪贴板.<br><ol><li>打开手机上的任何其他浏览器, ...</li><li>粘贴剪贴板内容并开始.',
+    'WebView iCal headline': '打开浏览器',
+    'WebView iCal info': '不幸的是，应用内浏览器在我们生成日历文件的方式上存在问题.',
+    'WebView iCal solution 1': '我们会自动将一个神奇的 URL 放入您手机的剪贴板.',
+    'WebView iCal solution 2':
+      '<ol><li>打开手机上的任何其他浏览器, ...</li><li>粘贴剪贴板内容并开始.</li></ol>',
+    'Crios iCal headline': '打开 Safari',
+    'Crios iCal info': '不幸的是，iOS 上的 Chrome 在我们生成日历文件的方式上存在问题.',
+    'Crios iCal solution 2':
+      '<ol><li><strong>打开 Safari</strong>, ...</li><li>粘贴剪贴板内容并开始.</li></ol>',
   },
   ar: {
     'Add to Calendar': 'إضافة إلى التقويم',
@@ -2738,9 +2828,202 @@ const i18nStrings = {
     Close: 'قريب',
     'Close Selection': 'إغلاق التحديد',
     'Click me': 'انقر فوق لي',
-    'WebView iCal': 'افتح المستعرض الخاص بك',
-    'WebView info description':
-      'لسوء الحظ ، تواجه المتصفحات داخل التطبيق مشاكل في طريقة إنشاء ملف التقويم..<br>نضع تلقائيًا عنوان ويب سحريًا في حافظة هاتفك.<br><ol><li>افتح أي متصفح آخر على هاتفك الذكي, ...</li><li>الصق محتوى الحافظة واذهب.',
+    'WebView iCal headline': 'افتح المستعرض الخاص بك',
+    'WebView iCal info': 'لسوء الحظ ، تواجه المتصفحات داخل التطبيق مشاكل في طريقة إنشاء ملف التقويم.',
+    'WebView iCal solution 1': 'نضع تلقائيًا عنوان ويب سحريًا في حافظة هاتفك.',
+    'WebView iCal solution 2':
+      '<ol><li>افتح أي متصفح آخر على هاتفك الذكي, ...</li><li>الصق محتوى الحافظة واذهب.</li></ol>',
+    'Crios iCal headline': 'افتح Safari',
+    'Crios iCal info': 'لسوء الحظ ، يواجه Chrome على iOS مشاكل في طريقة إنشاء ملف التقويم.',
+    'Crios iCal solution 2':
+      '<ol><li><strong>افتح Safari</strong>, ...</li><li>الصق محتوى الحافظة واذهب.</li></ol>',
+  },
+  hi: {
+    'Add to Calendar': 'कैलेंडर में जोड़ें',
+    'iCal File': 'iCal फ़ाइल',
+    Close: 'बंद करना',
+    'Close Selection': 'चयन बंद करें',
+    'Click me': 'मुझे क्लिक करें',
+    'WebView iCal headline': 'अपना ब्राउज़र खोलें',
+    'WebView iCal info': 'दुर्भाग्य से, इन-ऐप ब्राउज़र में कैलेंडर फ़ाइल बनाने के तरीके में समस्याएँ हैं।',
+    'WebView iCal solution 1': 'हम स्वचालित रूप से आपके फ़ोन के क्लिपबोर्ड में एक जादुई URL डालते हैं।',
+    'WebView iCal solution 2':
+      '<ol><li>अपने फ़ोन पर <strong>दूसरा ब्राउज़र खोलें</strong>, ...</li><li>क्लिपबोर्ड सामग्री <strong>चिपकाएं</strong> और जाएं।</li></ol>',
+    'Crios iCal headline': 'सफारी खोलें',
+    'Crios iCal info':
+      'दुर्भाग्य से, iOS पर Chrome को कैलेंडर फ़ाइल जेनरेट करने के हमारे तरीके में समस्या है।',
+    'Crios iCal solution 2':
+      '<ol><li><strong>सफारी खोलें</strong>, ...</li><li>क्लिपबोर्ड सामग्री <strong>चिपकाएं</strong> और जाएं।</li></ol>',
+  },
+  pl: {
+    'Add to Calendar': 'Dodaj do kalendarza',
+    'iCal File': 'Plik iCal',
+    Close: 'Zamknij',
+    'Close Selection': 'Zamknij wybór',
+    'Click me': 'Kliknij mnie',
+    'WebView iCal headline': 'Otwórz przeglądarkę',
+    'WebView iCal info':
+      'Niestety, przeglądarki in-app mają problemy ze sposobem, w jaki generujemy plik kalendarza.',
+    'WebView iCal solution 1': 'Automatycznie umieszczamy magiczny adres URL w schowku telefonu.',
+    'WebView iCal solution 2':
+      '<ol><li><strong>Otwórz inną przeglądarkę</strong> w swoim telefonie, ...</li><li><strong>Wklej</strong> zawartość schowka i ruszaj.</li></ol>',
+    'Crios iCal headline': 'Otwórz Safari',
+    'Crios iCal info': 'Niestety, Chrome na iOS ma problemy ze sposobem generowania pliku kalendarza.',
+    'Crios iCal solution 2':
+      '<ol><li><strong>Otwórz Safari</strong>, ...</li><li><strong>Wklej</strong> zawartość schowka i ruszaj.</li></ol>',
+  },
+  id: {
+    'Add to Calendar': 'Tambahkan ke Kalender',
+    'iCal File': 'File iCal',
+    Close: 'Tutup',
+    'Close Selection': 'Seleksi Tutup',
+    'Click me': 'Klik saya',
+    'WebView iCal headline': 'Buka browser Anda',
+    'WebView iCal info':
+      'Sayangnya, browser dalam aplikasi memiliki masalah dengan cara kami menghasilkan file kalender.',
+    'WebView iCal solution 1': 'Kami secara otomatis memasukkan URL ajaib ke clipboard ponsel Anda.',
+    'WebView iCal solution 2':
+      '<ol><li><strong>Buka peramban lain</strong> pada ponsel Anda, ...</li><li>Tempelkan konten clipboard dan pergi.</li></ol>',
+    'Crios iCal headline': 'Buka Safari',
+    'Crios iCal info':
+      'Sayangnya, Chrome di iOS memiliki masalah dengan cara kami menghasilkan file kalender.',
+    'Crios iCal solution 2':
+      '<ol><li><strong>Buka Safari</strong>, ...</li><li>Tempelkan konten clipboard dan pergi.</li></ol>',
+  },
+  no: {
+    'Add to Calendar': 'Legg til i kalenderen',
+    'iCal File': 'iCal-fil',
+    Close: 'Lukk',
+    'Close Selection': 'Lukk utvalg',
+    'Click me': 'Klikk på meg',
+    'WebView iCal headline': 'Åpne nettleseren din',
+    'WebView iCal info':
+      'Dessverre har nettlesere i appen problemer med måten vi genererer kalenderfilen på.',
+    'WebView iCal solution 1': 'Vi legger automatisk inn en magisk URL i telefonens utklippstavle.',
+    'WebView iCal solution 2':
+      '<ol><li><strong>Åpne en annen nettleser</strong> på telefonen, ...</li><li><strong>Lim inn</strong> innholdet på utklippstavlen og gå.</li></ol>',
+    'Crios iCal headline': 'Åpne Safari',
+    'Crios iCal info': 'Dessverre har Chrome på iOS problemer med måten vi genererer kalenderfilen på.',
+    'Crios iCal solution 2':
+      '<ol><li><strong>Åpne Safari</strong>, ...</li><li><strong>Lim inn</strong> innholdet på utklippstavlen og gå.</li></ol>',
+  },
+  fi: {
+    'Add to Calendar': 'Lisää kalenteriin',
+    'iCal File': 'iCal-tiedosto',
+    Close: 'Sulje',
+    'Close Selection': 'Sulje valinta',
+    'Click me': 'Klikkaa minua',
+    'WebView iCal headline': 'Avaa selain',
+    'WebView iCal info':
+      'Valitettavasti sovelluksen sisäisillä selaimilla on ongelmia kalenteritiedoston luomisessa.',
+    'WebView iCal solution 1': 'Laitamme automaattisesti maagisen URL-osoitteen puhelimesi leikepöydälle.',
+    'WebView iCal solution 2':
+      '<ol><li><strong>Avaa toinen selain</strong> puhelimessasi., ...</li><li><strong>liitä</strong> leikepöydän sisältö ja lähde.</li></ol>',
+    'Crios iCal headline': 'Avaa Safari',
+    'Crios iCal info': 'Valitettavasti iOS:n Chromessa on ongelmia kalenteritiedoston luomisessa.',
+    'Crios iCal solution 2':
+      '<ol><li><strong>Avaa Safari</strong>, ...</li><li><strong>liitä</strong> leikepöydän sisältö ja lähde.</li></ol>',
+  },
+  sv: {
+    'Add to Calendar': 'Lägg till i kalender',
+    'iCal File': 'iCal-fil',
+    Close: 'Stäng',
+    'Close Selection': 'Stäng urvalet',
+    'Click me': 'Klicka på mig',
+    'WebView iCal headline': 'Öppna din webbläsare',
+    'WebView iCal info': 'Tyvärr har webbläsare i appen problem med hur vi genererar kalenderfilen.',
+    'WebView iCal solution 1': 'Vi lägger automatiskt in en magisk webbadress i telefonens klippbräda.',
+    'WebView iCal solution 2':
+      '<ol><li><strong>Öppna en annan webbläsare</strong> på telefonen, ...</li><li><strong>Insätt</strong> innehållet i klippbordet och kör.</li></ol>',
+    'Crios iCal headline': 'Öppna Safari',
+    'Crios iCal info': 'Tyvärr har Chrome på iOS problem med hur vi genererar kalenderfilen.',
+    'Crios iCal solution 2':
+      '<ol><li><strong>Öppna Safari</strong>, ...</li><li><strong>Insätt</strong> innehållet i klippbordet och kör.</li></ol>',
+  },
+  cs: {
+    'Add to Calendar': 'Přidat do kalendáře',
+    'iCal File': 'Soubor iCal',
+    Close: 'Zavřít',
+    'Close Selection': 'Zavřít výběr',
+    'Click me': 'Klikněte na mě',
+    'WebView iCal headline': 'Otevřete prohlížeč',
+    'WebView iCal info':
+      'Prohlížeče v aplikacích mají bohužel problémy se způsobem generování souboru kalendáře.',
+    'WebView iCal solution 1': 'Do schránky telefonu automaticky vložíme kouzelnou adresu URL.',
+    'WebView iCal solution 2':
+      '<ol><li><strong>Otevření jiného prohlížeče</strong> v telefonu, ...</li><li><strong>Vložte</strong> obsah schránky a přejděte.</li></ol>',
+    'Crios iCal headline': 'Otevřít Safari',
+    'Crios iCal info': 'Chrome v systému iOS má bohužel problémy se způsobem generování souboru kalendáře.',
+    'Crios iCal solution 2':
+      '<ol><li><strong>Otevřít Safari</strong>, ...</li><li><strong>Vložte</strong> obsah schránky a přejděte.</li></ol>',
+  },
+  ja: {
+    'Add to Calendar': 'カレンダーに追加',
+    'iCal File': 'iCalファイル',
+    Close: '閉じる',
+    'Close Selection': 'クローズ選択',
+    'Click me': 'クリックしてください',
+    'WebView iCal headline': 'ブラウザを起動する',
+    'WebView iCal info': '残念ながら、アプリ内ブラウザは、カレンダーファイルの生成方法に問題があります。',
+    'WebView iCal solution 1': 'あなたの携帯電話のクリップボードに、魔法のようなURLを自動的に入れます。',
+    'WebView iCal solution 2':
+      '<ol><li>スマートフォンで別のブラウザを起動する, ...</li><li>クリップボードの内容を貼り付けて行く。</li></ol>',
+    'Crios iCal headline': 'オープンSafari',
+    'Crios iCal info': '残念ながら、iOS版Chromeでは、カレンダーファイルの生成方法に問題があります。',
+    'Crios iCal solution 2':
+      '<ol><li><strong>オープンSafari</strong>, ...</li><li>クリップボードの内容を貼り付けて行く。</li></ol>',
+  },
+  it: {
+    'Add to Calendar': 'Aggiungi al calendario',
+    'iCal File': 'File iCal',
+    Close: 'Chiudere',
+    'Close Selection': 'Chiudere la selezione',
+    'Click me': 'Clicca su di me',
+    'WebView iCal headline': 'Aprire il browser',
+    'WebView iCal info':
+      'Purtroppo i browser in-app hanno problemi con il modo in cui generiamo il file del calendario.',
+    'WebView iCal solution 1': 'Inseriamo automaticamente un URL magico negli appunti del telefono.',
+    'WebView iCal solution 2':
+      '<ol><li><strong>Aprire un altro browser</strong> sul cellulare, ...</li><li><strong>Incollare</strong> il contenuto degli appunti e partire.</li></ol>',
+    'Crios iCal headline': 'Aprire Safari',
+    'Crios iCal info':
+      'Purtroppo, Chrome su iOS ha problemi con il modo in cui generiamo il file del calendario.',
+    'Crios iCal solution 2':
+      '<ol><li><strong>Aprire Safari</strong>, ...</li><li><strong>Incollare</strong> il contenuto degli appunti e partire.</li></ol>',
+  },
+  ko: {
+    'Add to Calendar': '캘린더에 추가',
+    'iCal File': 'iCal 파일',
+    Close: '닫다',
+    'Close Selection': '선택 닫기',
+    'Click me': '클릭 해주세요',
+    'WebView iCal headline': '브라우저 열기',
+    'WebView iCal info': '불행히도 인앱 브라우저는 캘린더 파일을 생성하는 방식에 문제가 있습니다.',
+    'WebView iCal solution 1': '자동으로 마법의 URL을 휴대전화의 클립보드에 넣습니다.',
+    'WebView iCal solution 2':
+      '<ol><li>휴대전화에서 다른 브라우저 열기, ...</li><li>클립보드 내용을 붙여넣고 이동합니다.</li></ol>',
+    'Crios iCal headline': 'Safari 열기',
+    'Crios iCal info': '불행히도 iOS의 Chrome은 캘린더 파일을 생성하는 방식에 문제가 있습니다.',
+    'Crios iCal solution 2':
+      '<ol><li><strong>Safari 열기</strong>, ...</li><li>클립보드 내용을 붙여넣고 이동합니다.</li></ol>',
+  },
+  vi: {
+    'Add to Calendar': 'Thêm vào Lịch',
+    'iCal File': 'Tệp iCal',
+    Close: 'Đóng',
+    'Close Selection': 'Đóng lựa chọn',
+    'Click me': 'Nhấp vào đây',
+    'WebView iCal headline': 'Mở trình duyệt của bạn',
+    'WebView iCal info':
+      'Rất tiếc, các trình duyệt trong ứng dụng gặp sự cố với cách chúng tôi tạo tệp lịch.',
+    'WebView iCal solution 1':
+      'Chúng tôi tự động đặt một URL kỳ diệu vào khay nhớ tạm thời trên điện thoại của bạn.',
+    'WebView iCal solution 2':
+      '<ol><li><strong> Mở trình duyệt khác </strong> trên điện thoại của bạn, ...</li><li><strong> Dán </strong> nội dung khay nhớ tạm và bắt đầu.</li></ol>',
+    'Crios iCal headline': 'Mở Safari',
+    'Crios iCal info': 'Rất tiếc, Chrome trên iOS gặp sự cố với cách chúng tôi tạo tệp lịch.',
+    'Crios iCal solution 2':
+      '<ol><li><strong>Mở Safari</strong>, ...</li><li><strong> Dán </strong> nội dung khay nhớ tạm và bắt đầu.</li></ol>',
   },
 };
 
