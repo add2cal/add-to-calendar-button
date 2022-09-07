@@ -1,14 +1,16 @@
-/**
- * ++++++++++++++++++++++
- * Add-to-Calendar Button
- * ++++++++++++++++++++++
+/*!
+ *  ++++++++++++++++++++++
+ *  Add to Calendar Button
+ *  ++++++++++++++++++++++
  */
-const atcbVersion = '1.14.6';
-/* Creator: Jens Kuerschner (https://jenskuerschner.de)
- * Project: https://github.com/add2cal/add-to-calendar-button
- * License: MIT with “Commons Clause” License Condition v1.0
+const atcbVersion = '1.15.0';
+/*! Creator: Jens Kuerschner (https://jenskuerschner.de)
+ *  Project: https://github.com/add2cal/add-to-calendar-button
+ *  License: MIT with “Commons Clause” License Condition v1.0
  *
  */
+
+import { tzlib_get_ical_block, tzlib_get_offset, tzlib_get_timezones } from 'timezones-ical-library';
 
 // CHECKING FOR SPECIFIC DEVICED AND SYSTEMS
 // browser
@@ -23,6 +25,12 @@ const isiOS = isBrowser()
 const isAndroid = isBrowser()
   ? new Function(
       'if (/android/i.test(navigator.userAgent || navigator.vendor || window.opera) && !window.MSStream) { return true; } else { return false; }'
+    )
+  : new Function('return false;');
+// Chrome
+const isChrome = isBrowser()
+  ? new Function(
+      'if (/chrome|chromium|crios/i.test(navigator.userAgent)) { return true; } else { return false; }'
     )
   : new Function('return false;');
 // Mobile
@@ -47,10 +55,7 @@ const isProblematicWebView = isBrowser()
   : new Function('return false;');
 
 // DEFINE DEFAULT LINK TARGET
-let atcbDefaultTarget = '_blank';
-if (isWebView()) {
-  atcbDefaultTarget = '_system';
-}
+const atcbDefaultTarget = isWebView() ? '_system' : '_blank';
 
 // DEFINING GLOBAL ICONS
 const atcbIcon = {
@@ -78,7 +83,7 @@ const atcbIcon = {
 // INITIALIZE THE SCRIPT AND FUNCTIONALITY
 function atcb_init() {
   // let's get started
-  console.log('add-to-calendar button initialized (version ' + atcbVersion + ')');
+  console.log('add to calendar button initialized (version ' + atcbVersion + ')');
   console.log('See https://github.com/add2cal/add-to-calendar-button for details');
   // abort if not in a browser
   if (!isBrowser()) {
@@ -99,23 +104,22 @@ function atcb_init() {
       }
       // get JSON from HTML block, but remove real code line breaks before parsing.
       // use <br> or \n explicitely in the description to create a line break.
-      let atcbConfig = JSON.parse(
+      const atcbJsonInput = JSON.parse(
         atcb_secure_content(atcButtons[parseInt(i)].innerHTML.replace(/(\r\n|\n|\r)/g, ''), false)
       );
       // rewrite config for backwards compatibility
-      atcbConfig = atcb_patch_config(atcbConfig);
+      const atcbJsonInputPatched = atcb_patch_config(atcbJsonInput);
       // check, if all required data is available
-      if (atcb_check_required(atcbConfig)) {
+      if (atcb_check_required(atcbJsonInputPatched)) {
         // Rewrite dynamic dates, standardize line breaks and transform urls in the description
-        atcbConfig = atcb_decorate_data(atcbConfig);
+        const atcbConfig = atcb_decorate_data(atcbJsonInputPatched);
+        // set identifier
+        if (atcbConfig.identifier == null || atcbConfig.identifier == '') {
+          atcbConfig.identifier = 'atcb-btn-' + (i + atcButtonsInitialized.length + 1);
+        }
         // validate the config (JSON iput) ...
         if (atcb_validate(atcbConfig)) {
           // ... and generate the button on success
-          // set identifier
-          if (atcbConfig.identifier == null || atcbConfig.identifier == '') {
-            atcbConfig.identifier = 'atcb-btn-' + (i + atcButtonsInitialized.length + 1);
-          }
-          // generate the button
           atcb_generate(atcButtons[parseInt(i)], atcbConfig);
         }
       }
@@ -124,17 +128,17 @@ function atcb_init() {
 }
 
 // BACKWARDS COMPATIBILITY REWRITE
-function atcb_patch_config(atcbConfig) {
+function atcb_patch_config(configData) {
   // you can remove this, if you did not use this script before v1.10.0
   // adjusts any old schema.org structure
-  if (atcbConfig.event != null) {
-    Object.keys(atcbConfig.event).forEach((key) => {
+  if (configData.event != null) {
+    Object.keys(configData.event).forEach((key) => {
       // move entries one level up, but skip schema types
       if (key.charAt(0) !== '@') {
-        atcbConfig[`${key}`] = atcbConfig.event[`${key}`];
+        configData[`${key}`] = configData.event[`${key}`];
       }
     });
-    delete atcbConfig.event;
+    delete configData.event;
   }
   // you can remove this, if you did not use this script before v1.4.0
   // adjust deprecated config options
@@ -146,80 +150,149 @@ function atcb_patch_config(atcbConfig) {
     timeEnd: 'endTime',
   };
   Object.keys(keyChanges).forEach((key) => {
-    if (atcbConfig[keyChanges[`${key}`]] == null && atcbConfig[`${key}`] != null) {
-      atcbConfig[keyChanges[`${key}`]] = atcbConfig[`${key}`];
+    if (configData[keyChanges[`${key}`]] == null && configData[`${key}`] != null) {
+      configData[keyChanges[`${key}`]] = configData[`${key}`];
     }
   });
-  return atcbConfig;
+  return configData;
 }
 
 // CLEAN DATA BEFORE FURTHER VALIDATION (CONSIDERING SPECIAL RULES AND SCHEMES)
-function atcb_decorate_data(atcbConfig) {
+function atcb_decorate_data(data) {
   // cleanup options
-  for (let i = 0; i < atcbConfig.options.length; i++) {
-    let cleanOption = atcbConfig.options[`${i}`].split('|');
-    atcbConfig.options[`${i}`] = cleanOption[0].toLowerCase().replace('microsoft', 'ms').replace('.', '');
+  for (let i = 0; i < data.options.length; i++) {
+    let cleanOption = data.options[`${i}`].split('|');
+    data.options[`${i}`] = cleanOption[0].toLowerCase().replace('microsoft', 'ms').replace('.', '');
   }
   // cleanup different date-time formats
-  atcbConfig = atcb_date_cleanup(atcbConfig);
+  data = atcb_date_cleanup(data);
   // calculate the real date values in case that there are some special rules included (e.g. adding days dynamically)
-  atcbConfig.startDate = atcb_date_calculation(atcbConfig.startDate);
-  atcbConfig.endDate = atcb_date_calculation(atcbConfig.endDate);
+  data.startDate = atcb_date_calculation(data.startDate);
+  data.endDate = atcb_date_calculation(data.endDate);
   // set default listStyle
-  if (atcbConfig.listStyle == null || atcbConfig.listStyle == '') {
-    atcbConfig.listStyle = 'dropdown';
+  if (data.listStyle == null || data.listStyle == '') {
+    data.listStyle = 'dropdown';
   }
   // force click trigger on modal style
-  if (atcbConfig.listStyle === 'modal') {
-    atcbConfig.trigger = 'click';
+  if (data.listStyle === 'modal') {
+    data.trigger = 'click';
   }
   // set size
-  if (atcbConfig.size != null && atcbConfig.size != '' && atcbConfig.size >= 0 && atcbConfig.size < 11) {
-    atcbConfig.size = 10 + parseInt(atcbConfig.size);
+  if (data.size != null && data.size != '' && data.size >= 0 && data.size < 11) {
+    data.size = 10 + parseInt(data.size);
   } else {
-    atcbConfig.size = 16;
+    data.size = 16;
   }
   // determine dark mode
-  if (atcbConfig.lightMode == null || atcbConfig.lightMode == '') {
-    atcbConfig.lightMode = 'light';
-  } else if (atcbConfig.lightMode != null && atcbConfig.lightMode != '') {
+  if (data.lightMode == null || data.lightMode == '') {
+    data.lightMode = 'light';
+  } else if (data.lightMode != null && data.lightMode != '') {
     const prefersDarkScheme = window.matchMedia('(prefers-color-scheme: dark)');
-    switch (atcbConfig.lightMode) {
+    switch (data.lightMode) {
       case 'system':
         if (prefersDarkScheme.matches) {
-          atcbConfig.lightMode = 'dark';
+          data.lightMode = 'dark';
         } else {
-          atcbConfig.lightMode = 'light';
+          data.lightMode = 'light';
         }
         break;
       case 'bodyScheme':
       case 'dark':
         break;
       default:
-        atcbConfig.lightMode = 'light';
+        data.lightMode = 'light';
         break;
     }
   }
   // set language if not set
-  if (atcbConfig.language == null || atcbConfig.language == '') {
-    atcbConfig.language = 'en';
+  if (data.language == null || data.language == '') {
+    data.language = 'en';
   }
   // set right-to-left for relevant languages
-  if (atcbConfig.language == 'ar') {
-    atcbConfig.rtl = true;
+  if (data.language == 'ar') {
+    data.rtl = true;
   } else {
-    atcbConfig.rtl = false;
+    data.rtl = false;
   }
-  // format RRULE (remove spaces)
-  if (atcbConfig.recurrence != null && atcbConfig.recurrence != '') {
-    atcbConfig.recurrence = atcbConfig.recurrence.replace(/\s+/g, '');
+  // format RRULE
+  if (data.recurrence != null && data.recurrence != '') {
+    // remove spaces and force upper case
+    data.recurrence = data.recurrence.replace(/\s+/g, '').toUpperCase();
+    // pre-validate
+    if (!/^(RRULE:[\w=;,:+-/\\]+|daily|weekly|monthly|yearly)$/im.test(data.recurrence)) {
+      data.recurrence = '!wrong rrule format!';
+    } else {
+      // check if RRULE already
+      if (/^RRULE:/i.test(data.recurrence)) {
+        // draw easy rules from RRULE if possible
+        const rruleParts = data.recurrence.substr(6).split(';');
+        const rruleObj = new Object();
+        rruleParts.forEach(function (rule) {
+          rruleObj[rule.split('=')[0]] = rule.split('=')[1];
+        });
+        data.recurrence_until = rruleObj.UNTIL ? rruleObj.UNTIL : '';
+        data.recurrence_count = rruleObj.COUNT ? rruleObj.COUNT : '';
+        data.recurrence_byDay = rruleObj.BYDAY ? rruleObj.BYDAY : '';
+        data.recurrence_byMonth = rruleObj.BYMONTH ? rruleObj.BYMONTH : '';
+        data.recurrence_byMonthDay = rruleObj.BYMONTHDAY ? rruleObj.BYMONTHDAY : '';
+        data.recurrence_interval = rruleObj.INTERVAL ? rruleObj.INTERVAL : 1;
+        data.recurrence_frequency = rruleObj.FREQ ? rruleObj.FREQ : '';
+      } else {
+        // set interval if not given
+        if (data.recurrence_interval == null || data.recurrence_interval == '') {
+          data.recurrence_interval = 1;
+        }
+        // set weekstart if not given
+        if (
+          data.recurrence_weekstart == null ||
+          (data.recurrence_weekstart == '') | (data.recurrence_weekstart.length > 2)
+        ) {
+          data.recurrence_weekstart = 'MO';
+        }
+        // save frequency before overriding the main recurrence data
+        data.recurrence_frequency = data.recurrence;
+        // generate the RRULE from easy rules
+        data.recurrence =
+          'RRULE:FREQ=' +
+          data.recurrence +
+          ';WKST=' +
+          data.recurrence_weekstart +
+          ';INTERVAL=' +
+          data.recurrence_interval;
+        // TODO: If "until" is given, translate it into a "count" and remove the "until" (here and in the above block). This would be way more stable!
+        if (data.recurrence_until != null && data.recurrence_until != '') {
+          if (data.endTime != null && data.endTime != '') {
+            data.recurrence =
+              data.recurrence +
+              ';UNTIL=' +
+              data.recurrence_until.replace(/-/g, '').slice(0, 8) +
+              'T' +
+              data.endTime.replace(':', '') +
+              '00';
+          } else {
+            data.recurrence =
+              data.recurrence + ';UNTIL=' + data.recurrence_until.replace(/-/g, '').slice(0, 8);
+          }
+        }
+        if (data.recurrence_count != null && data.recurrence_count != '') {
+          data.recurrence = data.recurrence + ';COUNT=' + data.recurrence_count;
+        }
+        if (data.recurrence_byDay != null && data.recurrence_byDay != '') {
+          data.recurrence = data.recurrence + ';BYDAY=' + data.recurrence_byDay;
+        }
+        if (data.recurrence_byMonth != null && data.recurrence_byMonth != '') {
+          data.recurrence = data.recurrence + ';BYMONTH=' + data.recurrence_byMonth;
+        }
+        if (data.recurrence_byMonthDay != null && data.recurrence_byMonthDay != '') {
+          data.recurrence = data.recurrence + ';BYMONTHDAY=' + data.recurrence_byMonthDay;
+        }
+      }
+    }
   }
 
   // if no description or already decorated, return early here
-  if (!atcbConfig.description || atcbConfig.descriptionHtmlFree) return atcbConfig;
+  if (!data.description || data.descriptionHtmlFree) return data;
 
-  // make a copy of the given argument rather than mutating in place
-  const data = Object.assign({}, atcbConfig);
   // store a clean description copy without the URL magic for iCal
   data.descriptionHtmlFree = atcb_rewrite_html_elements(data.description, true);
   // ...and transform pseudo elements for the regular one
@@ -231,14 +304,14 @@ function atcb_decorate_data(atcbConfig) {
 function atcb_check_required(data) {
   // check for at least 1 option
   if (data.options == null || data.options.length < 1) {
-    console.error('add-to-calendar button generation failed: no options set');
+    console.error('add to calendar button generation failed: no options set');
     return false;
   }
   // check for min required data (without "options")
   const requiredField = ['name', 'startDate'];
   return requiredField.every(function (field) {
     if (data[`${field}`] == null || data[`${field}`] == '') {
-      console.error('add-to-calendar button generation failed: required setting missing [' + field + ']');
+      console.error('add to calendar button generation failed: required setting missing [' + field + ']');
       return false;
     }
     return true;
@@ -269,6 +342,10 @@ function atcb_date_cleanup(data) {
       const timeStr = data[point + 'Time'];
       data[point + 'Time'] = timeStr.substring(0, timeStr.length - 3);
     }
+    // update time zone, if special case set to go for the user's browser
+    if (data.timeZone == 'currentBrowser') {
+      data.timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+    }
   });
   return data;
 }
@@ -281,11 +358,13 @@ function atcb_date_calculation(dateString) {
   // check for any dynamic additions and adjust
   const dateStringParts = dateString.split('+');
   const dateParts = dateStringParts[0].split('-');
-  let newDate = new Date(dateParts[0], dateParts[1] - 1, dateParts[2]);
-  if (dateParts[0].length < 4) {
+  const newDate = (function () {
     // backwards compatibility for version <1.5.0
-    newDate = new Date(dateParts[2], dateParts[0] - 1, dateParts[1]);
-  }
+    if (dateParts[0].length < 4) {
+      return new Date(dateParts[2], dateParts[0] - 1, dateParts[1]);
+    }
+    return new Date(dateParts[0], dateParts[1] - 1, dateParts[2]);
+  })();
   if (dateStringParts[1] != null && dateStringParts[1] > 0) {
     newDate.setDate(newDate.getDate() + parseInt(dateStringParts[1]));
   }
@@ -305,9 +384,10 @@ function atcb_validate(data) {
   if (data.identifier != null && data.identifier != '') {
     if (!/^[\w-]+$/.test(data.identifier)) {
       data.identifier = '';
-      console.error('add-to-calendar button generation: identifier invalid - using auto numbers instead');
+      console.error('add to calendar button generation: identifier invalid - using auto numbers instead');
     }
   }
+  const msgPrefix = 'add to calendar button generation (' + data.identifier + ')';
   // validate explicit ics file
   if (data.icsFile != null && data.icsFile != '') {
     if (
@@ -315,9 +395,33 @@ function atcb_validate(data) {
       !/\.ics$/.test(data.icsFile) ||
       !data.icsFile.startsWith('https://')
     ) {
-      console.error('add-to-calendar button generation failed: explicit ics file path not valid');
+      console.error(msgPrefix + ' failed: explicit ics file path not valid');
       return false;
     }
+  }
+  // validate organizer
+  if (data.organizer != null && data.organizer != '') {
+    const organizerParts = data.organizer.split('|');
+    if (
+      organizerParts.length != 2 ||
+      organizerParts[0].length > 50 ||
+      organizerParts[1].length > 80 ||
+      !atcb_validEmail(organizerParts[1])
+    ) {
+      console.error(
+        msgPrefix + ' failed: organizer needs to match the schema "NAME|EMAIL" with a valid email address'
+      );
+      return false;
+    }
+  }
+  // validate sequence number if given and set it 0 if not
+  if (data.sequence != null && data.sequence != '') {
+    if (!/^\d+$/.test(data.sequence)) {
+      console.log(msgPrefix + ': sequence needs to be a number. Used the default 0 instead');
+      data.sequence = 0;
+    }
+  } else {
+    data.sequence = 0;
   }
   // validate options
   const options = ['apple', 'google', 'ical', 'ms365', 'outlookcom', 'msteams', 'yahoo'];
@@ -326,7 +430,7 @@ function atcb_validate(data) {
     !data.options.every(function (option) {
       const cleanOption = option.split('|');
       if (!options.includes(cleanOption[0])) {
-        console.error('add-to-calendar button generation failed: invalid option [' + cleanOption[0] + ']');
+        console.error(msgPrefix + ' failed: invalid option [' + cleanOption[0] + ']');
         return false;
       }
       return true;
@@ -334,7 +438,7 @@ function atcb_validate(data) {
   ) {
     return false;
   }
-  if ((data.recurrence != null) & (data.recurrence != '')) {
+  if (data.recurrence != null && data.recurrence != '') {
     let oneValidOption = false;
     data.options.forEach(function (option) {
       const cleanOption = option.split('|');
@@ -343,9 +447,15 @@ function atcb_validate(data) {
       }
     });
     if (!oneValidOption) {
-      console.error(
-        'add-to-calendar button generation failed: no supported valid option for recurring events'
-      );
+      console.error(msgPrefix + ' failed: no supported valid option for recurring events');
+      return false;
+    }
+  }
+  // validate time zone
+  if (data.timeZone != null && data.timeZone != '') {
+    const validTimeZones = tzlib_get_timezones();
+    if (!validTimeZones.includes(data.timeZone)) {
+      console.error(msgPrefix + ' failed: invalid time zone given');
       return false;
     }
   }
@@ -355,14 +465,12 @@ function atcb_validate(data) {
   if (
     !dates.every(function (date) {
       if (data[`${date}`].length !== 10) {
-        console.error('add-to-calendar button generation failed: date misspelled [-> YYYY-MM-DD]');
+        console.error(msgPrefix + ' failed: date misspelled [-> YYYY-MM-DD]');
         return false;
       }
       const dateParts = data[`${date}`].split('-');
       if (dateParts.length < 3 || dateParts.length > 3) {
-        console.error(
-          'add-to-calendar button generation failed: date misspelled [' + date + ': ' + data[`${date}`] + ']'
-        );
+        console.error(msgPrefix + ' failed: date misspelled [' + date + ': ' + data[`${date}`] + ']');
         return false;
       }
       newDate[`${date}`] = new Date(dateParts[0], dateParts[1] - 1, dateParts[2]);
@@ -377,24 +485,19 @@ function atcb_validate(data) {
     !times.every(function (time) {
       if (data[`${time}`] != null) {
         if (data[`${time}`].length !== 5) {
-          console.error('add-to-calendar button generation failed: time misspelled [-> HH:MM]');
+          console.error(msgPrefix + ' failed: time misspelled [-> HH:MM]');
           return false;
         }
         const timeParts = data[`${time}`].split(':');
         // validate the time parts
         if (timeParts.length < 2 || timeParts.length > 2) {
-          console.error(
-            'add-to-calendar button generation failed: time misspelled [' +
-              time +
-              ': ' +
-              data[`${time}`] +
-              ']'
-          );
+          console.error(msgPrefix + ' failed: time misspelled [' + time + ': ' + data[`${time}`] + ']');
           return false;
         }
         if (timeParts[0] > 23) {
           console.error(
-            'add-to-calendar button generation failed: time misspelled - hours number too high [' +
+            msgPrefix +
+              ' failed: time misspelled - hours number too high [' +
               time +
               ': ' +
               timeParts[0] +
@@ -404,7 +507,8 @@ function atcb_validate(data) {
         }
         if (timeParts[1] > 59) {
           console.error(
-            'add-to-calendar button generation failed: time misspelled - minutes number too high [' +
+            msgPrefix +
+              ' failed: time misspelled - minutes number too high [' +
               time +
               ': ' +
               timeParts[1] +
@@ -430,22 +534,71 @@ function atcb_validate(data) {
     return false;
   }
   if ((data.startTime != null && data.endTime == null) || (data.startTime == null && data.endTime != null)) {
-    console.error(
-      'add-to-calendar button generation failed: if you set a starting time, you also need to define an end time'
-    );
+    console.error(msgPrefix + ' failed: if you set a starting time, you also need to define an end time');
     return false;
   }
   // validate whether end is not before start
   if (newDate.endDate < newDate.startDate) {
-    console.error('add-to-calendar button generation failed: end date before start date');
+    console.error(msgPrefix + ' failed: end date before start date');
     return false;
   }
-  // validate any given RRULE (or respective other parameters)
-  if (data.recurrence != null && data.recurrence != '') {
-    if (!/^[\w=;:*+-/\\]+$/.test(data.recurrence)) {
-      console.error('add-to-calendar button generation failed: RRULE data misspelled');
-      return false;
-    }
+  // validate any given RRULE
+  if (data.recurrence != null && data.recurrence != '' && !/^RRULE:[\w=;,:+-/\\]+$/i.test(data.recurrence)) {
+    console.error(msgPrefix + ' failed: RRULE data misspelled');
+    return false;
+  }
+  // also validate the more easy recurrence settings, since any error there would be also hidden in the RRULE
+  if (
+    data.recurrence_interval != null &&
+    data.recurrence_interval != '' &&
+    !/^\d+$/.test(data.recurrence_interval)
+  ) {
+    console.error(msgPrefix + ' failed: recurrence data (interval) misspelled');
+    return false;
+  }
+  if (
+    data.recurrence_until != null &&
+    data.recurrence_until != '' &&
+    !/^(\d|-|:)+$/i.test(data.recurrence_until)
+  ) {
+    console.error(msgPrefix + ' failed: recurrence data (until) misspelled');
+    return false;
+  }
+  if (data.recurrence_count != null && data.recurrence_count != '' && !/^\d+$/.test(data.recurrence_count)) {
+    console.error(msgPrefix + ' failed: recurrence data (interval) misspelled');
+    return false;
+  }
+  if (
+    data.recurrence_byMonth != null &&
+    data.recurrence_byMonth != '' &&
+    !/^(\d|,)+$/.test(data.recurrence_byMonth)
+  ) {
+    console.error(msgPrefix + ' failed: recurrence data (byMonth) misspelled');
+    return false;
+  }
+  if (
+    data.recurrence_byMonthDay != null &&
+    data.recurrence_byMonthDay != '' &&
+    !/^(\d|,)+$/.test(data.recurrence_byMonthDay)
+  ) {
+    console.error(msgPrefix + ' failed: recurrence data (byMonthDay) misspelled');
+    return false;
+  }
+  if (
+    data.recurrence_byDay != null &&
+    data.recurrence_byDay != '' &&
+    !/^(\d|-|MO|TU|WE|TH|FR|SA|SU|,)+$/im.test(data.recurrence_byDay)
+  ) {
+    console.error(msgPrefix + ' failed: recurrence data (byDay) misspelled');
+    return false;
+  }
+  if (
+    data.recurrence_weekstart != null &&
+    data.recurrence_weekstart != '' &&
+    !/^(MO|TU|WE|TH|FR|SA|SU)$/im.test(data.recurrence_weekstart)
+  ) {
+    console.error(msgPrefix + ' failed: recurrence data (weekstart) misspelled');
+    return false;
   }
   // on passing the validation, return true
   return true;
@@ -619,24 +772,106 @@ function atcb_generate(button, data) {
   // clean the placeholder
   button.textContent = '';
   // create schema.org data, if possible (https://schema.org/Event)
-  // TODO: support recurring events
+  // see https://developers.google.com/search/docs/advanced/structured-data/event for more details on how this affects Google search results
   if (data.name && data.location && data.startDate) {
     const schemaEl = document.createElement('script');
     schemaEl.type = 'application/ld+json';
-    schemaEl.textContent = '{ "event": { "@context":"https://schema.org", "@type":"Event", ';
-    schemaEl.textContent += '"name":"' + data.name + '", ';
-    if (data.descriptionHtmlFree)
-      schemaEl.textContent += '"description":"' + data.descriptionHtmlFree + '", ';
+    const schemaContent = [];
+    schemaContent.push('{\r\n"event": {\r\n"@context":"https://schema.org",\r\n"@type":"Event"');
+    schemaContent.push('"name":"' + data.name + '"');
+    schemaContent.push(data.descriptionHtmlFree ? '"description":"' + data.descriptionHtmlFree + '"' : '');
     const formattedDate = atcb_generate_time(data, 'delimiters', 'general', true);
-    schemaEl.textContent += '"startDate":"' + formattedDate.start + '", ';
-    schemaEl.textContent += '"endDate":"' + formattedDate.end + '", ';
-    if (data.location.startsWith('http')) {
-      schemaEl.textContent += '"eventAttendanceMode":"https://schema.org/OnlineEventAttendanceMode", ';
-      schemaEl.textContent += '"location": { "@type":"VirtualLocation", "url":"' + data.location + '" } ';
+    if (data.recurrence != null && data.recurrence != '') {
+      schemaContent.push('"eventSchedule": { "@type": "Schedule"');
+      if (data.timeZone != null && data.timeZone != '') {
+        schemaContent.push('"scheduleTimezone":"' + data.timeZone + '"');
+      }
+      const repeatFrequency = 'P' + data.recurrence_interval + data.recurrence_frequency.substr(0, 1);
+      schemaContent.push('"repeatFrequency":"' + repeatFrequency + '"');
+      if (data.recurrence_byDay != null && data.recurrence_byDay != '') {
+        const byDayString = (function () {
+          if (/\d/.test(data.recurrence_byDay)) {
+            return '"' + data.recurrence_byDay + '"';
+          } else {
+            const byDays = data.recurrence_byDay.split(',');
+            const helperMap = {
+              MO: 'https://schema.org/Monday',
+              TU: 'https://schema.org/Tuesday',
+              WE: 'https://schema.org/Wednesday',
+              TH: 'https://schema.org/Thursday',
+              FR: 'https://schema.org/Friday',
+              SA: 'https://schema.org/Saturday',
+              SU: 'https://schema.org/Sunday',
+            };
+            const output = [];
+            for (let i = 0; i < byDays.length; i++) {
+              output.push('"' + helperMap[byDays[`${i}`]] + '"');
+            }
+            return '[' + output.join(',') + ']';
+          }
+        })();
+        schemaContent.push('"byDay":' + byDayString);
+      }
+      if (data.recurrence_byMonth != null && data.recurrence_byMonth != '') {
+        const byMonthString = data.recurrence_byMonth.includes(',')
+          ? '[' + data.recurrence_byMonth + ']'
+          : data.recurrence_byMonth;
+        schemaContent.push('"byMonth":"' + byMonthString + '"');
+      }
+      if (data.recurrence_byMonthDay != null && data.recurrence_byMonthDay != '') {
+        const byMonthDayString = data.recurrence_byMonthDay.includes(',')
+          ? '[' + data.recurrence_byMonthDay + ']'
+          : data.recurrence_byMonthDay;
+        schemaContent.push('"byMonthDay":"' + byMonthDayString + '"');
+      }
+      if (data.recurrence_count != null && data.recurrence_count != '') {
+        schemaContent.push('"repeatCount":"' + data.recurrence_count + '"');
+      }
+      schemaContent.push('"startDate":"' + data.startDate + '"');
+      if (data.recurrence_until != null && data.recurrence_until != '') {
+        schemaContent.push('"endDate":"' + data.recurrence_until + '"');
+      }
+      if (data.startTime != null && data.startTime != '' && data.endTime != null && data.endTime != '') {
+        schemaContent.push('"startTime":"' + data.startTime + ':00"');
+        schemaContent.push('"endTime":"' + data.endTime + ':00"');
+        schemaContent.push('"duration":"' + formattedDate.duration + '" }');
+      }
     } else {
-      schemaEl.textContent += '"location":"' + data.location + '" ';
+      schemaContent.push('"startDate":"' + formattedDate.start + '"');
+      schemaContent.push('"endDate":"' + formattedDate.end + '"');
+      schemaContent.push('"duration":"' + formattedDate.duration + '"');
     }
-    schemaEl.textContent += '} }';
+    schemaContent.push(
+      data.location.startsWith('http')
+        ? '"eventAttendanceMode":"https://schema.org/OnlineEventAttendanceMode",\r\n"location": {\r\n"@type":"VirtualLocation",\r\n"url":"' +
+            data.location +
+            '"\r\n}'
+        : '"location":"' + data.location + '"'
+    );
+    if (data.organizer != null && data.organizer != '') {
+      const organizerParts = data.organizer.split('|');
+      schemaContent.push(
+        '"organizer":{\r\n"@type":"Person",\r\n"name":"' +
+          organizerParts[0] +
+          '",\r\n"email":"' +
+          organizerParts[1] +
+          '"\r\n}'
+      );
+    }
+    const imageData = [];
+    if (data.images != null && Array.isArray(data.images) && data.images.length > 0) {
+      for (let i = 0; i < data.images.length; i++) {
+        if (atcb_secure_url(data.images[`${i}`]) && data.images[`${i}`].startsWith('http')) {
+          imageData.push('"' + data.images[`${i}`] + '"');
+        }
+      }
+    } else {
+      imageData.push('"https://add-to-calendar-button.com/demo_assets/img/1x1.png"');
+      imageData.push('"https://add-to-calendar-button.com/demo_assets/img/4x3.png"');
+      imageData.push('"https://add-to-calendar-button.com/demo_assets/img/16x9.png"');
+    }
+    schemaContent.push('"image":[\r\n' + imageData.join(',\r\n') + ']');
+    schemaEl.textContent = schemaContent.join(',\r\n') + '\r\n}\r\n}';
     button.appendChild(schemaEl);
   }
   // generate the wrapper div
@@ -679,7 +914,7 @@ function atcb_generate(button, data) {
     button.style.display = 'block';
   }
   // console log
-  console.log('add-to-calendar button "' + data.identifier + '" created');
+  console.log('add to calendar button "' + data.identifier + '" created');
 }
 
 // generate the dropdown list (can also appear wihtin a modal, if option is set)
@@ -703,6 +938,10 @@ function atcb_generate_dropdown_list(data) {
         optionParts[0] == 'outlookcom' ||
         optionParts[0] == 'yahoo'
       ) {
+        return;
+      }
+      // also skip iCal for rrules with "until"
+      if (data.recurrence_until != null && data.recurrence_until != '' && optionParts[0] == 'ical') {
         return;
       }
     }
@@ -804,7 +1043,7 @@ function atcb_toggle(action, data = '', button = '', keyboardTrigger = false, ge
 
 // show the dropdown list + background overlay
 function atcb_open(data, button, keyboardTrigger = false, generatedButton = false) {
-  // abort early if an add-to-calendar dropdown or modal already opened
+  // abort early if an add to calendar dropdown or modal already opened
   if (document.querySelector('.atcb-list') || document.querySelector('.atcb-modal')) return;
   // generate list and prepare wrapper
   const list = atcb_generate_dropdown_list(data);
@@ -860,7 +1099,7 @@ function atcb_open(data, button, keyboardTrigger = false, generatedButton = fals
 
 function atcb_close(keyboardTrigger = false) {
   // focus triggering button if available - especially relevant for keyboard navigation
-  let newFocusEl = document.querySelector('.atcb-active, .atcb-active-modal');
+  const newFocusEl = document.querySelector('.atcb-active, .atcb-active-modal');
   if (newFocusEl) {
     newFocusEl.focus({ preventScroll: true });
     if (!keyboardTrigger) {
@@ -888,14 +1127,11 @@ function atcb_close(keyboardTrigger = false) {
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 function atcb_action(data, triggerElement, keyboardTrigger = true) {
   data = atcb_secure_content(data);
-  // validate & decorate data
+  // decorate & validate data
   if (!atcb_check_required(data)) {
-    throw new Error('data missing; see logs');
+    throw new Error('add to calendar button generation failed: required data missing; see console logs');
   }
   data = atcb_decorate_data(data);
-  if (!atcb_validate(data)) {
-    throw new Error('Invalid data; see logs');
-  }
   if (triggerElement) {
     data.identifier = triggerElement.id;
     // if listStyle some dropdown one, force overlay
@@ -908,42 +1144,55 @@ function atcb_action(data, triggerElement, keyboardTrigger = true) {
     data.listStyle = 'modal';
     data.trigger = 'click';
   }
+  if (!atcb_validate(data)) {
+    throw new Error(
+      'add to calendar button generation (' + data.identifier + ') failed: invalid data; see console logs'
+    );
+  }
+  // if all is fine, open the options list
   atcb_toggle('open', data, triggerElement, keyboardTrigger);
 }
 
 // FUNCTION TO GENERATE THE GOOGLE URL
 // See specs at: TODO
 function atcb_generate_google(data) {
-  // base url
-  let url = 'https://calendar.google.com/calendar/render?action=TEMPLATE';
+  // url parts
+  const urlParts = [];
+  urlParts.push('https://calendar.google.com/calendar/render?action=TEMPLATE');
   // generate and add date
   const formattedDate = atcb_generate_time(data, 'clean', 'google');
-  url += '&dates=' + encodeURIComponent(formattedDate.start) + '%2F' + encodeURIComponent(formattedDate.end);
+  urlParts.push(
+    'dates=' + encodeURIComponent(formattedDate.start) + '%2F' + encodeURIComponent(formattedDate.end)
+  );
+  if (data.timeZone != null && data.timeZone != '') {
+    urlParts.push('ctz=' + data.timeZone);
+  }
   // add details (if set)
   if (data.name != null && data.name != '') {
-    url += '&text=' + encodeURIComponent(data.name);
+    urlParts.push('text=' + encodeURIComponent(data.name));
   }
-  let tmpDataDescription = '';
+  const tmpDataDescription = [];
   if (data.description != null && data.description != '') {
-    tmpDataDescription = data.description;
+    tmpDataDescription.push(data.description);
   }
   if (data.location != null && data.location != '') {
-    url += '&location=' + encodeURIComponent(data.location);
+    urlParts.push('location=' + encodeURIComponent(data.location));
     // TODO: Find a better solution for the next temporary workaround.
     if (isiOS()) {
       // workaround to cover a bug, where, when using Google Calendar on an iPhone, the location is not recognized. So, for the moment, we simply add it to the description.
-      if (tmpDataDescription != '') {
-        tmpDataDescription += '<br><br>';
+      if (tmpDataDescription.length > 0) {
+        tmpDataDescription.push('<br><br>');
       }
-      tmpDataDescription += '&#128205;: ' + data.location;
+      tmpDataDescription.push('&#128205;: ' + data.location);
     }
   }
-  if (tmpDataDescription != '') {
-    url += '&details=' + encodeURIComponent(tmpDataDescription);
+  if (tmpDataDescription.length > 0) {
+    urlParts.push('details=' + encodeURIComponent(tmpDataDescription.join()));
   }
   if (data.recurrence != null && data.recurrence != '') {
-    url += '&recur=' + encodeURIComponent(data.recurrence);
+    urlParts.push('recur=' + encodeURIComponent(data.recurrence));
   }
+  const url = urlParts.join('&');
   if (atcb_secure_url(url)) {
     // eslint-disable-next-line security/detect-non-literal-fs-filename
     window.open(url, atcbDefaultTarget).focus();
@@ -953,25 +1202,29 @@ function atcb_generate_google(data) {
 // FUNCTION TO GENERATE THE YAHOO URL
 // See specs at: TODO
 function atcb_generate_yahoo(data) {
-  // base url
-  let url = 'https://calendar.yahoo.com/?v=60';
+  // url parts
+  const urlParts = [];
+  urlParts.push('https://calendar.yahoo.com/?v=60');
   // generate and add date
   const formattedDate = atcb_generate_time(data, 'clean');
-  url += '&st=' + encodeURIComponent(formattedDate.start) + '&et=' + encodeURIComponent(formattedDate.end);
+  urlParts.push(
+    'st=' + encodeURIComponent(formattedDate.start) + '&et=' + encodeURIComponent(formattedDate.end)
+  );
   if (formattedDate.allday) {
-    url += '&dur=allday';
+    urlParts.push('dur=allday');
   }
   // add details (if set)
   if (data.name != null && data.name != '') {
-    url += '&title=' + encodeURIComponent(data.name);
+    urlParts.push('title=' + encodeURIComponent(data.name));
   }
   if (data.location != null && data.location != '') {
-    url += '&in_loc=' + encodeURIComponent(data.location);
+    urlParts.push('in_loc=' + encodeURIComponent(data.location));
   }
   if (data.descriptionHtmlFree != null && data.descriptionHtmlFree != '') {
     // using descriptionHtmlFree instead of description, since Yahoo does not support html tags in a stable way
-    url += '&desc=' + encodeURIComponent(data.descriptionHtmlFree);
+    urlParts.push('desc=' + encodeURIComponent(data.descriptionHtmlFree));
   }
+  const url = urlParts.join('&');
   if (atcb_secure_url(url)) {
     // eslint-disable-next-line security/detect-non-literal-fs-filename
     window.open(url, atcbDefaultTarget).focus();
@@ -986,31 +1239,35 @@ function atcb_generate_microsoft(data, type = '365') {
     atcb_generate_ical(data);
     return;
   }
-  // base url
-  let url = 'https://';
-  if (type == 'outlook') {
-    url += 'outlook.live.com';
-  } else {
-    url += 'outlook.office.com';
-  }
-  url += '/calendar/0/deeplink/compose?path=%2Fcalendar%2Faction%2Fcompose&rru=addevent';
+  // url parts
+  const urlParts = [];
+  const basePath = '/calendar/0/deeplink/compose?path=%2Fcalendar%2Faction%2Fcompose&rru=addevent';
+  const baseUrl = (function () {
+    if (type == 'outlook') {
+      return 'https://outlook.live.com' + basePath;
+    } else {
+      return 'https://outlook.office.com' + basePath;
+    }
+  })();
+  urlParts.push(baseUrl);
   // generate and add date
   const formattedDate = atcb_generate_time(data, 'delimiters', 'microsoft');
-  url +=
-    '&startdt=' + encodeURIComponent(formattedDate.start) + '&enddt=' + encodeURIComponent(formattedDate.end);
+  urlParts.push('startdt=' + encodeURIComponent(formattedDate.start));
+  urlParts.push('enddt=' + encodeURIComponent(formattedDate.end));
   if (formattedDate.allday) {
-    url += '&allday=true';
+    urlParts.push('allday=true');
   }
   // add details (if set)
   if (data.name != null && data.name != '') {
-    url += '&subject=' + encodeURIComponent(data.name);
+    urlParts.push('subject=' + encodeURIComponent(data.name));
   }
   if (data.location != null && data.location != '') {
-    url += '&location=' + encodeURIComponent(data.location);
+    urlParts.push('location=' + encodeURIComponent(data.location));
   }
   if (data.description != null && data.description != '') {
-    url += '&body=' + encodeURIComponent(data.description.replace(/\n/g, '<br>'));
+    urlParts.push('body=' + encodeURIComponent(data.description.replace(/\n/g, '<br>')));
   }
+  const url = urlParts.join('&');
   if (atcb_secure_url(url)) {
     // eslint-disable-next-line security/detect-non-literal-fs-filename
     window.open(url, atcbDefaultTarget).focus();
@@ -1021,29 +1278,28 @@ function atcb_generate_microsoft(data, type = '365') {
 // See specs at: https://docs.microsoft.com/en-us/microsoftteams/platform/concepts/build-and-test/deep-links#deep-linking-to-the-scheduling-dialog
 // Mind that this is still in development mode by Microsoft! Location, html tags and linebreaks in the description are not supported yet.
 function atcb_generate_teams(data) {
-  // base url
-  let url = 'https://teams.microsoft.com/l/meeting/new?';
+  // url parts
+  const urlParts = [];
+  const baseUrl = 'https://teams.microsoft.com/l/meeting/new?';
   // generate and add date
   const formattedDate = atcb_generate_time(data, 'delimiters', 'microsoft');
-  url +=
-    '&startTime=' +
-    encodeURIComponent(formattedDate.start) +
-    '&endTime=' +
-    encodeURIComponent(formattedDate.end);
+  urlParts.push('startTime=' + encodeURIComponent(formattedDate.start));
+  urlParts.push('endTime=' + encodeURIComponent(formattedDate.end));
   // add details (if set)
-  let locationString = '';
   if (data.name != null && data.name != '') {
-    url += '&subject=' + encodeURIComponent(data.name);
+    urlParts.push('subject=' + encodeURIComponent(data.name));
   }
+  let locationString = '';
   if (data.location != null && data.location != '') {
     locationString = encodeURIComponent(data.location);
-    url += '&location=' + locationString;
+    urlParts.push('location=' + locationString);
     locationString += ' // '; // preparing the workaround putting the location into the description, since the native field is not supported yet
   }
   if (data.descriptionHtmlFree != null && data.descriptionHtmlFree != '') {
     // using descriptionHtmlFree instead of description, since Teams does not support html tags
-    url += '&content=' + locationString + encodeURIComponent(data.descriptionHtmlFree);
+    urlParts.push('content=' + locationString + encodeURIComponent(data.descriptionHtmlFree));
   }
+  const url = baseUrl + urlParts.join('&');
   if (atcb_secure_url(url)) {
     // eslint-disable-next-line security/detect-non-literal-fs-filename
     window.open(url, atcbDefaultTarget).focus();
@@ -1069,25 +1325,30 @@ function atcb_generate_ical(data) {
     return;
   }
   // otherwise, generate one on the fly
-  let now = new Date();
-  now = now.toISOString();
+  const now = new Date();
+  const nowISO = now.toISOString();
   const formattedDate = atcb_generate_time(data, 'clean', 'ical');
-  let timeslot = '';
-  if (formattedDate.allday) {
-    timeslot = ';VALUE=DATE';
-  }
   const ics_lines = ['BEGIN:VCALENDAR', 'VERSION:2.0'];
   const corp = 'github.com/add2cal/add-to-calendar-button';
   ics_lines.push('PRODID:-// ' + corp + ' // atcb v' + atcbVersion + ' //EN');
   ics_lines.push('CALSCALE:GREGORIAN');
+  // include time zone information, if set and if not allday (not necessary in that case)
+  const timeAddon = (function () {
+    if (formattedDate.allday) {
+      return ';VALUE=DATE';
+    }
+    if (data.timeZone != null && data.timeZone != '') {
+      const timeZoneBlock = tzlib_get_ical_block(data.timeZone);
+      ics_lines.push(timeZoneBlock[0]);
+      return ';' + timeZoneBlock[1];
+    }
+  })();
   ics_lines.push('BEGIN:VEVENT');
-  ics_lines.push('UID:' + now + '@add-to-calendar-button');
-  ics_lines.push(
-    'DTSTAMP:' + formattedDate.start,
-    'DTSTART' + timeslot + ':' + formattedDate.start,
-    'DTEND' + timeslot + ':' + formattedDate.end,
-    'SUMMARY:' + data.name.replace(/.{65}/g, '$&' + '\r\n ') // making sure it does not exceed 75 characters per line
-  );
+  ics_lines.push('UID:' + nowISO + '@add-to-calendar-button');
+  ics_lines.push('DTSTAMP:' + atcb_format_datetime(now, 'clean', true));
+  ics_lines.push('DTSTART' + timeAddon + ':' + formattedDate.start);
+  ics_lines.push('DTEND' + timeAddon + ':' + formattedDate.end);
+  ics_lines.push('SUMMARY:' + data.name.replace(/.{65}/g, '$&' + '\r\n ')); // making sure it does not exceed 75 characters per line
   if (data.descriptionHtmlFree != null && data.descriptionHtmlFree != '') {
     ics_lines.push(
       'DESCRIPTION:' + data.descriptionHtmlFree.replace(/\n/g, '\\n').replace(/.{60}/g, '$&' + '\r\n ') // adjusting for intended line breaks + making sure it does not exceed 75 characters per line
@@ -1103,24 +1364,35 @@ function atcb_generate_ical(data) {
   if (data.location != null && data.location != '') {
     ics_lines.push('LOCATION:' + data.location);
   }
+  if (data.organizer != null && data.organizer != '') {
+    const organizerParts = data.organizer.split('|');
+    ics_lines.push('ORGANIZER;CN=' + organizerParts[0] + ':MAILTO:' + organizerParts[1]);
+  }
   if (data.recurrence != null && data.recurrence != '') {
     ics_lines.push(data.recurrence);
   }
-  now = now.replace(/\.\d{3}/g, '').replace(/[^a-z\d]/gi, '');
-  ics_lines.push('STATUS:CONFIRMED', 'LAST-MODIFIED:' + now, 'SEQUENCE:0', 'END:VEVENT', 'END:VCALENDAR');
-  let dataUrl = 'data:text/calendar;charset=utf-8,' + encodeURIComponent(ics_lines.join('\r\n'));
-  // if we got to this point with an explicitely given iCal file, we are on an iOS device within an in-app browser (WebView). In this case, we override the dataUrl
-  if (data.icsFile != null && data.icsFile != '') {
-    dataUrl = data.icsFile;
-  }
+  ics_lines.push('STATUS:CONFIRMED');
+  ics_lines.push('LAST-MODIFIED:' + atcb_format_datetime(now, 'clean', true));
+  ics_lines.push('SEQUENCE:' + data.sequence);
+  ics_lines.push('END:VEVENT');
+  ics_lines.push('END:VCALENDAR');
+  const dataUrl = (function () {
+    // if we got to this point with an explicitely given iCal file, we are on an iOS device within an in-app browser (WebView). In this case, we use this as dataUrl
+    if (data.icsFile != null && data.icsFile != '') {
+      return data.icsFile;
+    }
+    // otherwise, we generate it from the array
+    return 'data:text/calendar;charset=utf-8,' + encodeURIComponent(ics_lines.join('\r\n'));
+  })();
   // in in-app browser cases (WebView), we offer a copy option, since the on-the-fly client side generation is usually not supported
   // for Android, we are more specific and only go for specific apps at the moment
-  if (isWebView() && (isiOS() || (isAndroid() && isProblematicWebView()))) {
+  // for Chrome on iOS we basically do the same
+  if ((isiOS() && isChrome()) || (isWebView() && (isiOS() || (isAndroid() && isProblematicWebView())))) {
     // putting the download url to the clipboard
     const tmpInput = document.createElement('input');
     document.body.appendChild(tmpInput);
-    var editable = tmpInput.contentEditable;
-    var readOnly = tmpInput.readOnly;
+    const editable = tmpInput.contentEditable;
+    const readOnly = tmpInput.readOnly;
     tmpInput.value = dataUrl;
     tmpInput.contentEditable = true;
     tmpInput.readOnly = false;
@@ -1141,12 +1413,29 @@ function atcb_generate_ical(data) {
     document.execCommand('copy');
     tmpInput.remove();
     // creating the modal
-    atcb_create_modal(
-      data,
-      'browser',
-      atcb_translate_hook('WebView iCal', data.language, data),
-      atcb_translate_hook('WebView info description', data.language, data)
-    );
+    if (isiOS() && isChrome()) {
+      atcb_create_modal(
+        data,
+        'browser',
+        atcb_translate_hook('Crios iCal headline', data.language, data),
+        atcb_translate_hook('Crios iCal info', data.language, data) +
+          '<br>' +
+          atcb_translate_hook('WebView iCal solution 1', data.language, data) +
+          '<br>' +
+          atcb_translate_hook('Crios iCal solution 2', data.language, data)
+      );
+    } else {
+      atcb_create_modal(
+        data,
+        'browser',
+        atcb_translate_hook('WebView iCal headline', data.language, data),
+        atcb_translate_hook('WebView iCal info', data.language, data) +
+          '<br>' +
+          atcb_translate_hook('WebView iCal solution 1', data.language, data) +
+          '<br>' +
+          atcb_translate_hook('WebView iCal solution 2', data.language, data)
+      );
+    }
   } else {
     atcb_save_file(dataUrl, filename);
   }
@@ -1182,112 +1471,124 @@ function atcb_save_file(file, filename) {
 function atcb_generate_time(data, style = 'delimiters', targetCal = 'general', addTimeZoneOffset = false) {
   const startDate = data.startDate.split('-');
   const endDate = data.endDate.split('-');
-  let start = '';
-  let end = '';
-  let allday = false;
   if (data.startTime != null && data.endTime != null) {
-    // Adjust for timezone, if set (see https://en.wikipedia.org/wiki/List_of_tz_database_time_zones for either the TZ name or the offset)
-    if (data.timeZoneOffset != null && data.timeZoneOffset != '') {
-      // if we have a timezone offset given, consider it
-      start = new Date(
-        startDate[0] +
-          '-' +
-          startDate[1] +
-          '-' +
-          startDate[2] +
-          'T' +
-          data.startTime +
-          ':00.000' +
-          data.timeZoneOffset
-      );
-      end = new Date(
-        endDate[0] +
-          '-' +
-          endDate[1] +
-          '-' +
-          endDate[2] +
-          'T' +
-          data.endTime +
-          ':00.000' +
-          data.timeZoneOffset
-      );
-    } else {
-      // if there is no offset, we prepare the time, assuming it is UTC formatted
-      start = new Date(
-        startDate[0] + '-' + startDate[1] + '-' + startDate[2] + 'T' + data.startTime + ':00.000+00:00'
-      );
-      end = new Date(endDate[0] + '-' + endDate[1] + '-' + endDate[2] + 'T' + data.endTime + ':00.000+00:00');
-      if (data.timeZone != null && data.timeZone != '') {
-        // if a timezone is given, we adjust dynamically with the modern toLocaleString function
-        const utcDate = new Date(start.toLocaleString('en-US', { timeZone: 'UTC' }));
-        if (data.timeZone == 'currentBrowser') {
-          data.timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
-        }
-        const tzDate = new Date(start.toLocaleString('en-US', { timeZone: data.timeZone }));
-        const calcOffset = utcDate.getTime() - tzDate.getTime();
-        start.setTime(start.getTime() + calcOffset);
-        end.setTime(end.getTime() + calcOffset);
+    // for the input, we assume UTC per default
+    const newStartDate = new Date(
+      startDate[0] + '-' + startDate[1] + '-' + startDate[2] + 'T' + data.startTime + ':00.000+00:00'
+    );
+    const newEndDate = new Date(
+      endDate[0] + '-' + endDate[1] + '-' + endDate[2] + 'T' + data.endTime + ':00.000+00:00'
+    );
+    const durationMS = newEndDate - newStartDate;
+    const durationHours = Math.floor(durationMS / 1000 / 60 / 60);
+    const durationMinutes = Math.floor(((durationMS - durationHours * 60 * 60 * 1000) / 1000 / 60) % 60);
+    const durationString = (function () {
+      if (durationHours < 10) {
+        return '0' + durationHours + ':' + ('0' + durationMinutes).slice(-2);
       }
+      return durationHours + ':' + ('0' + durationMinutes).slice(-2);
+    })();
+    // if no time zone is given and we need to add the offset to the datetime string, do so directly and return
+    if ((data.timeZone == null || (data.timeZone != null && data.timeZone == '')) && addTimeZoneOffset) {
+      return {
+        start: newStartDate.toISOString().replace('.000Z', '+00:00'),
+        end: newEndDate.toISOString().replace('.000Z', '+00:00'),
+        duration: durationString,
+        allday: false,
+      };
     }
-    start = start.toISOString().replace('.000', '');
-    end = end.toISOString().replace('.000', '');
-    if (style == 'clean') {
-      start = start.replace(/-/g, '').replace(/:/g, '');
-      end = end.replace(/-/g, '').replace(/:/g, '');
-    }
-    if (addTimeZoneOffset) {
-      let tzOffsetStart = '';
-      let tzOffsetEnd = '';
-      if (data.timeZoneOffset != null && data.timeZoneOffset != '') {
-        tzOffsetStart = data.timeZoneOffset;
-        tzOffsetEnd = data.timeZoneOffset;
-      } else if (data.timeZone != null && data.timeZone != '') {
-        let tzOffsetDateStart = new Date(start.toLocaleString('sv', { timeZone: data.timeZone }));
-        let tzOffsetStartSearch = tzOffsetDateStart.toString().match(/GMT(.{5})/g);
-        tzOffsetStart = tzOffsetStartSearch[0].replace(/GMT(.{3})(.{2})/g, '$1:$2');
-        let tzOffsetDateEnd = new Date(end.toLocaleString('sv', { timeZone: data.timeZone }));
-        let tzOffsetEndSearch = tzOffsetDateEnd.toString().match(/GMT(.{5})/g);
-        tzOffsetEnd = tzOffsetEndSearch[0].replace(/GMT(.{3})(.{2})/g, '$1:$2');
+    // if a time zone is given, we adjust the diverse cases
+    // (see https://tz.add-to-calendar-technology.com/ for available TZ names)
+    if (data.timeZone != null && data.timeZone != '') {
+      if (targetCal == 'ical' || targetCal == 'google') {
+        // in the iCal case, we simply return and cut off the Z
+        // everything else will be done by injecting the VTIMEZONE block at the iCal function
+        return {
+          start: atcb_format_datetime(newStartDate, 'clean', true, true),
+          end: atcb_format_datetime(newEndDate, 'clean', true, true),
+          duration: durationString,
+          allday: false,
+        };
       }
-      start = start.slice(0, -1) + tzOffsetStart;
-      end = end.slice(0, -1) + tzOffsetEnd;
+      // we get the correct offset via the timeZones iCal Library
+      const offsetStart = tzlib_get_offset(data.timeZone, data.startDate, data.startTime);
+      const offsetEnd = tzlib_get_offset(data.timeZone, data.endDate, data.endTime);
+      // if we need to add the offset to the datetime string, do so respectively
+      if (addTimeZoneOffset) {
+        const formattedOffsetStart = offsetStart.slice(0, 3) + ':' + offsetStart.slice(3);
+        const formattedOffsetEnd = offsetEnd.slice(0, 3) + ':' + offsetEnd.slice(3);
+        return {
+          start: newStartDate.toISOString().replace('.000Z', formattedOffsetStart),
+          end: newEndDate.toISOString().replace('.000Z', formattedOffsetEnd),
+          duration: durationString,
+          allday: false,
+        };
+      }
+      // in other cases, we substract the offset from the dates
+      // (substraction to reflect the fact that the user assumed his timezone and to convert to UTC; since calendars assume UTC and add offsets again)
+      const calcOffsetStart =
+        parseInt(offsetStart[0] + 1) *
+        -1 *
+        ((parseInt(offsetStart.substr(1, 2)) * 60 + parseInt(offsetStart.substr(3, 2))) * 60 * 1000);
+      const calcOffsetEnd =
+        parseInt(offsetEnd[0] + 1) *
+        -1 *
+        ((parseInt(offsetEnd.substr(1, 2)) * 60 + parseInt(offsetEnd.substr(3, 2))) * 60 * 1000);
+      newStartDate.setTime(newStartDate.getTime() + calcOffsetStart);
+      newEndDate.setTime(newEndDate.getTime() + calcOffsetEnd);
     }
+    // return formatted data
+    return {
+      start: atcb_format_datetime(newStartDate, style),
+      end: atcb_format_datetime(newEndDate, style),
+      duration: durationString,
+      allday: false,
+    };
   } else {
     // would be an allday event then
-    allday = true;
-    start = new Date(Date.UTC(startDate[0], startDate[1] - 1, startDate[2]));
-    let breakStart = start.toISOString().replace(/T(.+)Z/g, '');
-    end = new Date(Date.UTC(endDate[0], endDate[1] - 1, endDate[2]));
+    const newStartDate = new Date(Date.UTC(startDate[0], startDate[1] - 1, startDate[2]));
+    const newEndDate = new Date(Date.UTC(endDate[0], endDate[1] - 1, endDate[2]));
+    // increment the end day by 1 for Google Calendar, iCal and Outlook
     if (targetCal == 'google' || targetCal == 'microsoft' || targetCal == 'ical') {
-      end.setDate(end.getDate() + 1); // increment the day by 1 for Google Calendar, iCal and Outlook
+      newEndDate.setDate(newEndDate.getDate() + 1);
     }
-    let breakEnd = end.toISOString().replace(/T(.+)Z/g, '');
-    if (style == 'clean') {
-      breakStart = breakStart.replace(/-/g, '');
-      breakEnd = breakEnd.replace(/-/g, '');
-    }
-    start = breakStart;
-    end = breakEnd;
+    // return formatted data
+    return {
+      start: atcb_format_datetime(newStartDate, style, false),
+      end: atcb_format_datetime(newEndDate, style, false),
+      allday: true,
+    };
   }
-  const returnObject = { start, end, allday };
-  return returnObject;
+}
+
+function atcb_format_datetime(datetime, style = 'delimiters', includeTime = true, removeZ = false) {
+  const regex = (function () {
+    if (includeTime) {
+      if (style == 'clean') {
+        return /(-|:|(\.\d{3}))/g;
+      }
+      return /(\.\d{3})/g;
+    }
+    if (style == 'clean') {
+      return /(-|T(\d{2}:\d{2}:\d{2}\.\d{3})Z)/g;
+    }
+    return /T(\d{2}:\d{2}:\d{2}\.\d{3})Z/g;
+  })();
+  const output = removeZ
+    ? datetime.toISOString().replace(regex, '').replace('Z', '')
+    : datetime.toISOString().replace(regex, '');
+  return output;
 }
 
 // SHARED FUNCTION TO SECURE DATA
 function atcb_secure_content(data, isJSON = true) {
   // strip HTML tags (especially since stupid Safari adds stuff) - except for <br>
-  let toClean;
-  // differentiates between JSON and string input
+  const toClean = isJSON ? JSON.stringify(data) : data;
+  const cleanedUp = toClean.replace(/(<(?!br)([^>]+)>)/gi, '');
   if (isJSON) {
-    toClean = JSON.stringify(data);
+    return JSON.parse(cleanedUp);
   } else {
-    toClean = data;
-  }
-  toClean = toClean.replace(/(<(?!br)([^>]+)>)/gi, '');
-  if (isJSON) {
-    return JSON.parse(toClean);
-  } else {
-    return toClean;
+    return cleanedUp;
   }
 }
 
@@ -1309,6 +1610,19 @@ function atcb_secure_url(url, throwError = true) {
   }
 }
 
+// SHARED FUNCTION TO VALIDATE EMAIL ADDRESSES
+function atcb_validEmail(email, mx = false) {
+  // rough format check first
+  if (!/^.{0,70}@.{1,30}\.[\w.]{2,9}$/.test(email)) {
+    return false;
+  }
+  // testing for mx records second, if activated
+  if (mx) {
+    // TODO: call external service to validate email address
+  }
+  return true;
+}
+
 // SHARED FUNCTION TO REPLACE HTML PSEUDO ELEMENTS
 function atcb_rewrite_html_elements(content, clear = false) {
   // standardize any line breaks
@@ -1322,13 +1636,16 @@ function atcb_rewrite_html_elements(content, clear = false) {
     content = content.replace(/\[(\/|)(br|hr|p|b|strong|u|i|em|li|ul|ol|h\d)\]/gi, '<$1$2>');
     content = content.replace(/\[url\]([\w&$+.,:;=~!*'?@^%#|\s\-()/]*)\[\/url\]/gi, function (match, p1) {
       const urlText = p1.split('|');
-      let link = '<a href="' + urlText[0] + '" target="' + atcbDefaultTarget + '" rel="noopener">';
-      if (urlText.length > 1 && urlText[1] != '') {
-        link += urlText[1];
-      } else {
-        link += urlText[0];
-      }
-      return link + '</a>';
+      const text = (function () {
+        if (urlText.length > 1 && urlText[1] != '') {
+          return urlText[1];
+        } else {
+          return urlText[0];
+        }
+      })();
+      return (
+        '<a href="' + urlText[0] + '" target="' + atcbDefaultTarget + '" rel="noopener">' + text + '</a>'
+      );
     });
   }
   return content;
@@ -1427,6 +1744,7 @@ function atcb_create_modal(data, icon = '', headline, content, buttons) {
       }
       switch (button.type) {
         default:
+        case 'close':
           infoModalButton.addEventListener(
             'click',
             atcb_debounce(() => atcb_close())
@@ -1435,21 +1753,6 @@ function atcb_create_modal(data, icon = '', headline, content, buttons) {
             'keyup',
             atcb_debounce((event) => {
               if (event.key == 'Enter') {
-                atcb_toggle('close', '', '', true);
-              }
-            })
-          );
-          break;
-        case 'close':
-          infoModalButton.addEventListener(
-            'click',
-            atcb_debounce(() => atcb_close())
-          );
-          infoModalButton.addEventListener(
-            'keyup',
-            atcb_debounce_leading((event) => {
-              if (event.key == 'Enter') {
-                event.preventDefault();
                 atcb_toggle('close', '', '', true);
               }
             })
@@ -1617,12 +1920,12 @@ if (isBrowser()) {
   window.addEventListener(
     'resize',
     atcb_throttle(() => {
-      let activeOverlay = document.getElementById('atcb-bgoverlay');
+      const activeOverlay = document.getElementById('atcb-bgoverlay');
       if (activeOverlay != null) {
         atcb_set_fullsize(activeOverlay);
       }
-      let activeButton = document.querySelector('.atcb-active');
-      let activeList = document.querySelector('.atcb-dropdown');
+      const activeButton = document.querySelector('.atcb-active');
+      const activeList = document.querySelector('.atcb-dropdown');
       if (activeButton != null && activeList != null) {
         atcb_position_list(activeButton, activeList, false, true);
       }
@@ -1639,9 +1942,17 @@ const i18nStrings = {
     Close: 'Close',
     'Close Selection': 'Close Selection',
     'Click me': 'Click me',
-    'WebView iCal': 'Open your browser',
-    'WebView info description':
-      "Unfortunately, in-app browsers have problems with the way we generate the calendar file.<br>We automatically put a magical URL into your phone's clipboard.<br><ol><li><strong>Open another browser</strong> on your phone, ...</li><li><strong>Paste</strong> the clipboard content and go.",
+    'WebView iCal headline': 'Open your browser',
+    'WebView iCal info':
+      'Unfortunately, in-app browsers have problems with the way we generate the calendar file.',
+    'WebView iCal solution 1': "We automatically put a magical URL into your phone's clipboard.",
+    'WebView iCal solution 2':
+      '<ol><li><strong>Open another browser</strong> on your phone, ...</li><li><strong>Paste</strong> the clipboard content and go.</li></ol>',
+    'Crios iCal headline': 'Open Safari',
+    'Crios iCal info':
+      'Unfortunately, Chrome on iOS has problems with the way we generate the calendar file.',
+    'Crios iCal solution 2':
+      '<ol><li><strong>Open Safari</strong>, ...</li><li><strong>Paste</strong> the clipboard content and go.</li></ol>',
   },
   de: {
     'Add to Calendar': 'Im Kalender speichern',
@@ -1649,9 +1960,17 @@ const i18nStrings = {
     Close: 'Schließen',
     'Close Selection': 'Auswahl schließen',
     'Click me': 'Klick mich',
-    'WebView iCal': 'Öffne deinen Browser',
-    'WebView info description':
-      'Leider haben In-App-Browser Probleme mit der Art, wie wir Kalender-Dateien erzeugen.<br>Wir haben automatisch eine magische URL in die Zwischenablage deines Smartphones kopiert.<br><ol><li><strong>Öffne einen anderen Browser</strong> auf deinem Smartphone, ...</li><li>Nutze die <strong>Einfügen</strong>-Funktion, um fortzufahren.',
+    'WebView iCal headline': 'Öffne deinen Browser',
+    'WebView iCal info':
+      'Leider haben In-App-Browser Probleme mit der Art, wie wir Kalender-Dateien erzeugen.',
+    'WebView iCal solution 1':
+      'Wir haben automatisch eine magische URL in die Zwischenablage deines Smartphones kopiert.',
+    'WebView iCal solution 2':
+      '<ol><li><strong>Öffne einen anderen Browser</strong> auf deinem Smartphone, ...</li><li>Nutze die <strong>Einfügen</strong>-Funktion, um fortzufahren.</li></ol>',
+    'Crios iCal headline': 'Öffne Safari',
+    'Crios iCal info': 'Leider Chrome unter iOS Probleme mit der Art, wie wir Kalender-Dateien erzeugen.',
+    'Crios iCal solution 2':
+      '<ol><li><strong>Öffne Safari</strong>, ...</li><li>Nutze die <strong>Einfügen</strong>-Funktion, um fortzufahren.</li></ol>',
   },
   es: {
     'Add to Calendar': 'Añadir al Calendario',
@@ -1659,9 +1978,18 @@ const i18nStrings = {
     Close: 'Ciérralo',
     'Close Selection': 'Cerrar Selección',
     'Click me': 'Haz clic mí',
-    'WebView iCal': 'Abra su browser',
-    'WebView info description':
-      'Lamentablemente, los browsers in-app tienen problemas con la forma en que generamos el archivo del calendario.<br>Hemos copiado automáticamente una URL mágica en el portapapeles de tu smartphone.<br><ol><li><strong>Abre otro browser</strong> en tu smartphone, ...</li><li>Utilice la función de <strong>pegar</strong> para continuar.',
+    'WebView iCal headline': 'Abra su browser',
+    'WebView iCal info':
+      'Lamentablemente, los browsers in-app tienen problemas con la forma en que generamos el archivo del calendario.',
+    'WebView iCal solution 1':
+      'Hemos copiado automáticamente una URL mágica en el portapapeles de tu smartphone.',
+    'WebView iCal solution 2':
+      '<ol><li><strong>Abre otro browser</strong> en tu smartphone, ...</li><li>Utilice la función de <strong>pegar</strong> para continuar.</li></ol>',
+    'Crios iCal headline': 'Abrir Safari',
+    'Crios iCal info':
+      'Lamentablemente, Chrome en iOS tiene problemas con la forma de generar el archivo de calendario.',
+    'Crios iCal solution 2':
+      '<ol><li><strong>Abrir Safari</strong>, ...</li><li>Utilice la función de <strong>pegar</strong> para continuar.</li></ol>',
   },
   pt: {
     'Add to Calendar': 'Incluir no Calendário',
@@ -1669,9 +1997,18 @@ const i18nStrings = {
     Close: 'Fechar',
     'Close Selection': 'Fechar selecção',
     'Click me': 'Clicar-me',
-    'WebView iCal': 'Abra o seu browser',
-    'WebView info description':
-      'Infelizmente, os navegadores em tampas têm problemas com a forma como geramos o ficheiro de calendário.<br>Copiámos automaticamente um URL mágico para a área de transferência do seu smartphone.<br><ol><li><strong>Abrir outro browser</strong> en tu smartphone, ...</li><li>Use a função <forte>colar</strong> para continuar.',
+    'WebView iCal headline': 'Abra o seu browser',
+    'WebView iCal info':
+      'Infelizmente, os navegadores em tampas têm problemas com a forma como geramos o ficheiro de calendário.',
+    'WebView iCal solution 1':
+      'Copiámos automaticamente um URL mágico para a área de transferência do seu smartphone.',
+    'WebView iCal solution 2':
+      '<ol><li><strong>Abrir outro browser</strong> en tu smartphone, ...</li><li>Use a função <forte>colar</strong> para continuar.</li></ol>',
+    'Crios iCal headline': 'Safari aberto',
+    'Crios iCal info':
+      'Infelizmente, o cromado no iOS tem problemas com a forma como geramos o ficheiro do calendário.',
+    'Crios iCal solution 2':
+      '<ol><li><strong>Safari aberto</strong>, ...</li><li>Use a função <forte>colar</strong> para continuar.</li></ol>',
   },
   fr: {
     'Add to Calendar': 'Ajout au Calendrier',
@@ -1679,9 +2016,18 @@ const i18nStrings = {
     Close: 'Fermez',
     'Close Selection': 'Fermez la sélection',
     'Click me': 'Cliquez-moi',
-    'WebView iCal': 'Ouvrez votre navigateur',
-    'WebView info description':
-      'Malheureusement, les navigateurs in-app ont des problèmes avec la manière dont nous créons les fichiers de calendrier.<br>Nous avons automatiquement copié une URL magique dans le presse-papiers de ton smartphone.<br><ol><li><strong>Ouvre un autre navigateur</strong> sur ton smartphone, ...</li><li>Utilise la fonction <strong>insérer</strong> pour continuer.',
+    'WebView iCal headline': 'Ouvrez votre navigateur',
+    'WebView iCal info':
+      'Malheureusement, les navigateurs in-app ont des problèmes avec la manière dont nous créons les fichiers de calendrier.',
+    'WebView iCal solution 1':
+      'Nous avons automatiquement copié une URL magique dans le presse-papiers de ton smartphone.',
+    'WebView iCal solution 2':
+      '<ol><li><strong>Ouvre un autre navigateur</strong> sur ton smartphone, ...</li><li>Utilise la fonction <strong>insérer</strong> pour continuer.</li></ol>',
+    'Crios iCal headline': 'Ouvre Safari',
+    'Crios iCal info':
+      'Malheureusement, Chrome sur iOS a des problèmes avec la façon dont nous générons le fichier du calendrier.',
+    'Crios iCal solution 2':
+      '<ol><li><strong>Ouvre Safari</strong>, ...</li><li>Utilise la fonction <strong>insérer</strong> pour continuer.</li></ol>',
   },
   nl: {
     'Add to Calendar': 'Opslaan in Kalender',
@@ -1689,9 +2035,18 @@ const i18nStrings = {
     Close: 'Sluiten',
     'Close Selection': 'Sluit selectie',
     'Click me': 'Klik me',
-    'WebView iCal': 'Open uw browser',
-    'WebView info description':
-      'Helaas hebben in-app browsers problemen met de manier waarop wij kalenderbestanden maken.<br>We hebben automatisch een magische URL naar het klembord van uw smartphone gekopieerd.<br><ol><li><strong>Open een andere browser</strong> op uw smartphone, ...</li><li>Gebruik de <strong>insert</strong> functie om verder te gaan.',
+    'WebView iCal headline': 'Open uw browser',
+    'WebView iCal info':
+      'Helaas hebben in-app browsers problemen met de manier waarop wij kalenderbestanden maken.',
+    'WebView iCal solution 1':
+      'We hebben automatisch een magische URL naar het klembord van uw smartphone gekopieerd.',
+    'WebView iCal solution 2':
+      '<ol><li><strong>Open een andere browser</strong> op uw smartphone, ...</li><li>Gebruik de <strong>insert</strong> functie om verder te gaan.</li></ol>',
+    'Crios iCal headline': 'Open Safari',
+    'Crios iCal info':
+      'Helaas heeft Chrome op iOS problemen met de manier waarop we het kalenderbestand genereren.',
+    'Crios iCal solution 2':
+      '<ol><li><strong>Open Safari</strong>, ...</li><li>Gebruik de <strong>insert</strong> functie om verder te gaan.</li></ol>',
   },
   tr: {
     'Add to Calendar': 'Takvime Ekle',
@@ -1699,9 +2054,17 @@ const i18nStrings = {
     Close: 'Kapat',
     'Close Selection': 'Seçimi kapat',
     'Click me': 'Beni tıklayın',
-    'WebView iCal': 'Tarayıcınızı açın',
-    'WebView info description':
-      'Ne yazık ki, uygulama içi tarayıcılar takvim dosyalarını oluşturma şeklimizle ilgili sorunlar yaşıyor.<br>Akıllı telefonunuzun panosuna otomatik olarak sihirli bir URL kopyaladık.<br><ol><li><strong>Akıllı telefonunuzda başka bir tarayıcı açın</strong>, ...</li><li>Devam etmek için <strong>insert</strong> fonksiyonunu kullanın.',
+    'WebView iCal headline': 'Tarayıcınızı açın',
+    'WebView iCal info':
+      'Ne yazık ki, uygulama içi tarayıcılar takvim dosyalarını oluşturma şeklimizle ilgili sorunlar yaşıyor.',
+    'WebView iCal solution 1': 'Akıllı telefonunuzun panosuna otomatik olarak sihirli bir URL kopyaladık.',
+    'WebView iCal solution 2':
+      '<ol><li><strong>Akıllı telefonunuzda başka bir tarayıcı açın</strong>, ...</li><li>Devam etmek için <strong>insert</strong> fonksiyonunu kullanın.</li></ol>',
+    'Crios iCal headline': 'Açık Safari',
+    'Crios iCal info':
+      "Ne yazık ki iOS'ta Chrome'un takvim dosyası oluşturma yöntemiyle ilgili sorunları var.",
+    'Crios iCal solution 2':
+      '<ol><li><strong>Açık Safari</strong>, ...</li><li>Devam etmek için <strong>insert</strong> fonksiyonunu kullanın.</li></ol>',
   },
   zh: {
     'Add to Calendar': '添加到日历',
@@ -1709,9 +2072,15 @@ const i18nStrings = {
     Close: '关',
     'Close Selection': '关闭选择',
     'Click me': '点我',
-    'WebView iCal': '打开浏览器',
-    'WebView info description':
-      '不幸的是，应用内浏览器在我们生成日历文件的方式上存在问题.<br>我们会自动将一个神奇的 URL 放入您手机的剪贴板.<br><ol><li>打开手机上的任何其他浏览器, ...</li><li>粘贴剪贴板内容并开始.',
+    'WebView iCal headline': '打开浏览器',
+    'WebView iCal info': '不幸的是，应用内浏览器在我们生成日历文件的方式上存在问题.',
+    'WebView iCal solution 1': '我们会自动将一个神奇的 URL 放入您手机的剪贴板.',
+    'WebView iCal solution 2':
+      '<ol><li>打开手机上的任何其他浏览器, ...</li><li>粘贴剪贴板内容并开始.</li></ol>',
+    'Crios iCal headline': '打开 Safari',
+    'Crios iCal info': '不幸的是，iOS 上的 Chrome 在我们生成日历文件的方式上存在问题.',
+    'Crios iCal solution 2':
+      '<ol><li><strong>打开 Safari</strong>, ...</li><li>粘贴剪贴板内容并开始.</li></ol>',
   },
   ar: {
     'Add to Calendar': 'إضافة إلى التقويم',
@@ -1719,15 +2088,208 @@ const i18nStrings = {
     Close: 'قريب',
     'Close Selection': 'إغلاق التحديد',
     'Click me': 'انقر فوق لي',
-    'WebView iCal': 'افتح المستعرض الخاص بك',
-    'WebView info description':
-      'لسوء الحظ ، تواجه المتصفحات داخل التطبيق مشاكل في طريقة إنشاء ملف التقويم..<br>نضع تلقائيًا عنوان ويب سحريًا في حافظة هاتفك.<br><ol><li>افتح أي متصفح آخر على هاتفك الذكي, ...</li><li>الصق محتوى الحافظة واذهب.',
+    'WebView iCal headline': 'افتح المستعرض الخاص بك',
+    'WebView iCal info': 'لسوء الحظ ، تواجه المتصفحات داخل التطبيق مشاكل في طريقة إنشاء ملف التقويم.',
+    'WebView iCal solution 1': 'نضع تلقائيًا عنوان ويب سحريًا في حافظة هاتفك.',
+    'WebView iCal solution 2':
+      '<ol><li>افتح أي متصفح آخر على هاتفك الذكي, ...</li><li>الصق محتوى الحافظة واذهب.</li></ol>',
+    'Crios iCal headline': 'افتح Safari',
+    'Crios iCal info': 'لسوء الحظ ، يواجه Chrome على iOS مشاكل في طريقة إنشاء ملف التقويم.',
+    'Crios iCal solution 2':
+      '<ol><li><strong>افتح Safari</strong>, ...</li><li>الصق محتوى الحافظة واذهب.</li></ol>',
+  },
+  hi: {
+    'Add to Calendar': 'कैलेंडर में जोड़ें',
+    'iCal File': 'iCal फ़ाइल',
+    Close: 'बंद करना',
+    'Close Selection': 'चयन बंद करें',
+    'Click me': 'मुझे क्लिक करें',
+    'WebView iCal headline': 'अपना ब्राउज़र खोलें',
+    'WebView iCal info': 'दुर्भाग्य से, इन-ऐप ब्राउज़र में कैलेंडर फ़ाइल बनाने के तरीके में समस्याएँ हैं।',
+    'WebView iCal solution 1': 'हम स्वचालित रूप से आपके फ़ोन के क्लिपबोर्ड में एक जादुई URL डालते हैं।',
+    'WebView iCal solution 2':
+      '<ol><li>अपने फ़ोन पर <strong>दूसरा ब्राउज़र खोलें</strong>, ...</li><li>क्लिपबोर्ड सामग्री <strong>चिपकाएं</strong> और जाएं।</li></ol>',
+    'Crios iCal headline': 'सफारी खोलें',
+    'Crios iCal info':
+      'दुर्भाग्य से, iOS पर Chrome को कैलेंडर फ़ाइल जेनरेट करने के हमारे तरीके में समस्या है।',
+    'Crios iCal solution 2':
+      '<ol><li><strong>सफारी खोलें</strong>, ...</li><li>क्लिपबोर्ड सामग्री <strong>चिपकाएं</strong> और जाएं।</li></ol>',
+  },
+  pl: {
+    'Add to Calendar': 'Dodaj do kalendarza',
+    'iCal File': 'Plik iCal',
+    Close: 'Zamknij',
+    'Close Selection': 'Zamknij wybór',
+    'Click me': 'Kliknij mnie',
+    'WebView iCal headline': 'Otwórz przeglądarkę',
+    'WebView iCal info':
+      'Niestety, przeglądarki in-app mają problemy ze sposobem, w jaki generujemy plik kalendarza.',
+    'WebView iCal solution 1': 'Automatycznie umieszczamy magiczny adres URL w schowku telefonu.',
+    'WebView iCal solution 2':
+      '<ol><li><strong>Otwórz inną przeglądarkę</strong> w swoim telefonie, ...</li><li><strong>Wklej</strong> zawartość schowka i ruszaj.</li></ol>',
+    'Crios iCal headline': 'Otwórz Safari',
+    'Crios iCal info': 'Niestety, Chrome na iOS ma problemy ze sposobem generowania pliku kalendarza.',
+    'Crios iCal solution 2':
+      '<ol><li><strong>Otwórz Safari</strong>, ...</li><li><strong>Wklej</strong> zawartość schowka i ruszaj.</li></ol>',
+  },
+  id: {
+    'Add to Calendar': 'Tambahkan ke Kalender',
+    'iCal File': 'File iCal',
+    Close: 'Tutup',
+    'Close Selection': 'Seleksi Tutup',
+    'Click me': 'Klik saya',
+    'WebView iCal headline': 'Buka browser Anda',
+    'WebView iCal info':
+      'Sayangnya, browser dalam aplikasi memiliki masalah dengan cara kami menghasilkan file kalender.',
+    'WebView iCal solution 1': 'Kami secara otomatis memasukkan URL ajaib ke clipboard ponsel Anda.',
+    'WebView iCal solution 2':
+      '<ol><li><strong>Buka peramban lain</strong> pada ponsel Anda, ...</li><li>Tempelkan konten clipboard dan pergi.</li></ol>',
+    'Crios iCal headline': 'Buka Safari',
+    'Crios iCal info':
+      'Sayangnya, Chrome di iOS memiliki masalah dengan cara kami menghasilkan file kalender.',
+    'Crios iCal solution 2':
+      '<ol><li><strong>Buka Safari</strong>, ...</li><li>Tempelkan konten clipboard dan pergi.</li></ol>',
+  },
+  no: {
+    'Add to Calendar': 'Legg til i kalenderen',
+    'iCal File': 'iCal-fil',
+    Close: 'Lukk',
+    'Close Selection': 'Lukk utvalg',
+    'Click me': 'Klikk på meg',
+    'WebView iCal headline': 'Åpne nettleseren din',
+    'WebView iCal info':
+      'Dessverre har nettlesere i appen problemer med måten vi genererer kalenderfilen på.',
+    'WebView iCal solution 1': 'Vi legger automatisk inn en magisk URL i telefonens utklippstavle.',
+    'WebView iCal solution 2':
+      '<ol><li><strong>Åpne en annen nettleser</strong> på telefonen, ...</li><li><strong>Lim inn</strong> innholdet på utklippstavlen og gå.</li></ol>',
+    'Crios iCal headline': 'Åpne Safari',
+    'Crios iCal info': 'Dessverre har Chrome på iOS problemer med måten vi genererer kalenderfilen på.',
+    'Crios iCal solution 2':
+      '<ol><li><strong>Åpne Safari</strong>, ...</li><li><strong>Lim inn</strong> innholdet på utklippstavlen og gå.</li></ol>',
+  },
+  fi: {
+    'Add to Calendar': 'Lisää kalenteriin',
+    'iCal File': 'iCal-tiedosto',
+    Close: 'Sulje',
+    'Close Selection': 'Sulje valinta',
+    'Click me': 'Klikkaa minua',
+    'WebView iCal headline': 'Avaa selain',
+    'WebView iCal info':
+      'Valitettavasti sovelluksen sisäisillä selaimilla on ongelmia kalenteritiedoston luomisessa.',
+    'WebView iCal solution 1': 'Laitamme automaattisesti maagisen URL-osoitteen puhelimesi leikepöydälle.',
+    'WebView iCal solution 2':
+      '<ol><li><strong>Avaa toinen selain</strong> puhelimessasi., ...</li><li><strong>liitä</strong> leikepöydän sisältö ja lähde.</li></ol>',
+    'Crios iCal headline': 'Avaa Safari',
+    'Crios iCal info': 'Valitettavasti iOS:n Chromessa on ongelmia kalenteritiedoston luomisessa.',
+    'Crios iCal solution 2':
+      '<ol><li><strong>Avaa Safari</strong>, ...</li><li><strong>liitä</strong> leikepöydän sisältö ja lähde.</li></ol>',
+  },
+  sv: {
+    'Add to Calendar': 'Lägg till i kalender',
+    'iCal File': 'iCal-fil',
+    Close: 'Stäng',
+    'Close Selection': 'Stäng urvalet',
+    'Click me': 'Klicka på mig',
+    'WebView iCal headline': 'Öppna din webbläsare',
+    'WebView iCal info': 'Tyvärr har webbläsare i appen problem med hur vi genererar kalenderfilen.',
+    'WebView iCal solution 1': 'Vi lägger automatiskt in en magisk webbadress i telefonens klippbräda.',
+    'WebView iCal solution 2':
+      '<ol><li><strong>Öppna en annan webbläsare</strong> på telefonen, ...</li><li><strong>Insätt</strong> innehållet i klippbordet och kör.</li></ol>',
+    'Crios iCal headline': 'Öppna Safari',
+    'Crios iCal info': 'Tyvärr har Chrome på iOS problem med hur vi genererar kalenderfilen.',
+    'Crios iCal solution 2':
+      '<ol><li><strong>Öppna Safari</strong>, ...</li><li><strong>Insätt</strong> innehållet i klippbordet och kör.</li></ol>',
+  },
+  cs: {
+    'Add to Calendar': 'Přidat do kalendáře',
+    'iCal File': 'Soubor iCal',
+    Close: 'Zavřít',
+    'Close Selection': 'Zavřít výběr',
+    'Click me': 'Klikněte na mě',
+    'WebView iCal headline': 'Otevřete prohlížeč',
+    'WebView iCal info':
+      'Prohlížeče v aplikacích mají bohužel problémy se způsobem generování souboru kalendáře.',
+    'WebView iCal solution 1': 'Do schránky telefonu automaticky vložíme kouzelnou adresu URL.',
+    'WebView iCal solution 2':
+      '<ol><li><strong>Otevření jiného prohlížeče</strong> v telefonu, ...</li><li><strong>Vložte</strong> obsah schránky a přejděte.</li></ol>',
+    'Crios iCal headline': 'Otevřít Safari',
+    'Crios iCal info': 'Chrome v systému iOS má bohužel problémy se způsobem generování souboru kalendáře.',
+    'Crios iCal solution 2':
+      '<ol><li><strong>Otevřít Safari</strong>, ...</li><li><strong>Vložte</strong> obsah schránky a přejděte.</li></ol>',
+  },
+  ja: {
+    'Add to Calendar': 'カレンダーに追加',
+    'iCal File': 'iCalファイル',
+    Close: '閉じる',
+    'Close Selection': 'クローズ選択',
+    'Click me': 'クリックしてください',
+    'WebView iCal headline': 'ブラウザを起動する',
+    'WebView iCal info': '残念ながら、アプリ内ブラウザは、カレンダーファイルの生成方法に問題があります。',
+    'WebView iCal solution 1': 'あなたの携帯電話のクリップボードに、魔法のようなURLを自動的に入れます。',
+    'WebView iCal solution 2':
+      '<ol><li>スマートフォンで別のブラウザを起動する, ...</li><li>クリップボードの内容を貼り付けて行く。</li></ol>',
+    'Crios iCal headline': 'オープンSafari',
+    'Crios iCal info': '残念ながら、iOS版Chromeでは、カレンダーファイルの生成方法に問題があります。',
+    'Crios iCal solution 2':
+      '<ol><li><strong>オープンSafari</strong>, ...</li><li>クリップボードの内容を貼り付けて行く。</li></ol>',
+  },
+  it: {
+    'Add to Calendar': 'Aggiungi al calendario',
+    'iCal File': 'File iCal',
+    Close: 'Chiudere',
+    'Close Selection': 'Chiudere la selezione',
+    'Click me': 'Clicca su di me',
+    'WebView iCal headline': 'Aprire il browser',
+    'WebView iCal info':
+      'Purtroppo i browser in-app hanno problemi con il modo in cui generiamo il file del calendario.',
+    'WebView iCal solution 1': 'Inseriamo automaticamente un URL magico negli appunti del telefono.',
+    'WebView iCal solution 2':
+      '<ol><li><strong>Aprire un altro browser</strong> sul cellulare, ...</li><li><strong>Incollare</strong> il contenuto degli appunti e partire.</li></ol>',
+    'Crios iCal headline': 'Aprire Safari',
+    'Crios iCal info':
+      'Purtroppo, Chrome su iOS ha problemi con il modo in cui generiamo il file del calendario.',
+    'Crios iCal solution 2':
+      '<ol><li><strong>Aprire Safari</strong>, ...</li><li><strong>Incollare</strong> il contenuto degli appunti e partire.</li></ol>',
+  },
+  ko: {
+    'Add to Calendar': '캘린더에 추가',
+    'iCal File': 'iCal 파일',
+    Close: '닫다',
+    'Close Selection': '선택 닫기',
+    'Click me': '클릭 해주세요',
+    'WebView iCal headline': '브라우저 열기',
+    'WebView iCal info': '불행히도 인앱 브라우저는 캘린더 파일을 생성하는 방식에 문제가 있습니다.',
+    'WebView iCal solution 1': '자동으로 마법의 URL을 휴대전화의 클립보드에 넣습니다.',
+    'WebView iCal solution 2':
+      '<ol><li>휴대전화에서 다른 브라우저 열기, ...</li><li>클립보드 내용을 붙여넣고 이동합니다.</li></ol>',
+    'Crios iCal headline': 'Safari 열기',
+    'Crios iCal info': '불행히도 iOS의 Chrome은 캘린더 파일을 생성하는 방식에 문제가 있습니다.',
+    'Crios iCal solution 2':
+      '<ol><li><strong>Safari 열기</strong>, ...</li><li>클립보드 내용을 붙여넣고 이동합니다.</li></ol>',
+  },
+  vi: {
+    'Add to Calendar': 'Thêm vào Lịch',
+    'iCal File': 'Tệp iCal',
+    Close: 'Đóng',
+    'Close Selection': 'Đóng lựa chọn',
+    'Click me': 'Nhấp vào đây',
+    'WebView iCal headline': 'Mở trình duyệt của bạn',
+    'WebView iCal info':
+      'Rất tiếc, các trình duyệt trong ứng dụng gặp sự cố với cách chúng tôi tạo tệp lịch.',
+    'WebView iCal solution 1':
+      'Chúng tôi tự động đặt một URL kỳ diệu vào khay nhớ tạm thời trên điện thoại của bạn.',
+    'WebView iCal solution 2':
+      '<ol><li><strong> Mở trình duyệt khác </strong> trên điện thoại của bạn, ...</li><li><strong> Dán </strong> nội dung khay nhớ tạm và bắt đầu.</li></ol>',
+    'Crios iCal headline': 'Mở Safari',
+    'Crios iCal info': 'Rất tiếc, Chrome trên iOS gặp sự cố với cách chúng tôi tạo tệp lịch.',
+    'Crios iCal solution 2':
+      '<ol><li><strong>Mở Safari</strong>, ...</li><li><strong> Dán </strong> nội dung khay nhớ tạm và bắt đầu.</li></ol>',
   },
 };
 
 // hook, which can be used to override all potential "hard" strings by setting customLabel_ + the key (without spaces) as option key and the intended string as value
 function atcb_translate_hook(identifier, language, data) {
-  let searchKey = identifier.replace(/\s+/g, '').toLowerCase();
+  const searchKey = identifier.replace(/\s+/g, '').toLowerCase();
   if (
     data.customLabels != null &&
     data.customLabels[`${searchKey}`] != null &&

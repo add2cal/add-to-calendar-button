@@ -27,7 +27,7 @@
     <meta name="msapplication-TileImage" content="./demo_assets/favicons/mstile-144x144.png">    
     <meta name="msapplication-config" content="./browserconfig.xml">
     <meta name="mobile-web-app-capable" content="yes">
-    <link rel="manifest" href="./manifest.json" crossOrigin="use-credentials">
+    <link rel="manifest" href="https://add-to-calendar-button.com/manifest.json" crossOrigin="use-credentials">
     <meta name="theme-color" content="#9755ff">
     <meta name="apple-mobile-web-app-title" content="Add to Calendar Button">
     <meta name="application-name" content="Add to Calendar Button">
@@ -40,28 +40,24 @@
     <meta property="og:title" content="Add to Calendar Button | The free open source tool for more convenient event sharing">
     <meta property="og:site_name" content="Add to Calendar Button">
     <meta property="og:description" content="Check out the demo page for the maybe most convenient way of to enable your users adding events to their calendars. Free and open source. Used by thousands of projects.">
-    <meta property="og:image" content="./demo_assets/img/fb.png">
+    <meta property="og:image" content="https://add-to-calendar-button.com/demo_assets/img/fb.png">
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:site" content="https://add-to-calendar-button.com">
     <meta name="twitter:creator" content="add2calendar">
     <meta name="twitter:title" content="Add to Calendar Button | The free open source tool for more convenient event sharing">
     <meta name="twitter:description" content="Check out the demo page for the maybe most convenient way of to enable your users adding events to their calendars. Free and open source. Used by thousands of projects.">
-    <meta name="twitter:image" content="./demo_assets/img/tw.png">
+    <meta name="twitter:image" content="https://add-to-calendar-button.com/demo_assets/img/tw.png">
 
     <link rel="dns-prefetch" href="https://a.add-to-calendar-button.com/">
-    <link rel="dns-prefetch" href="https://add-to-calendar-pro.com/">
-    <link rel="dns-prefetch" href="https://a.add-to-calendar-pro.com/">
-    <link rel="dns-prefetch" href="https://add-to-calendar-assistant.com/">
     <link rel="dns-prefetch" href="https://caldn.net/">
-    <link rel="preload" href="./demo_assets/fonts/paytone-one-v18-latin-regular.woff2" as="font" type="font/woff2" crossorigin>
-    <link rel="preload" href="./demo_assets/fonts/nunito-v25-latin-regular.woff2" as="font" type="font/woff2" crossorigin>
-    <link rel="preload" href="./demo_assets/fonts/fira-mono-v14-latin-regular.woff2" as="font" type="font/woff2" crossorigin>
+    <link rel="preload" href="https://add-to-calendar-button.com/demo_assets/fonts/inter-v12-latin-regular.woff2" as="font" type="font/woff2" crossorigin>
+    <link rel="preload" href="https://add-to-calendar-button.com/demo_assets/fonts/fira-mono-v14-latin-regular.woff2" as="font" type="font/woff2" crossorigin>
     <script async defer data-website-id="a94d2790-d17a-48fd-85df-086399cdb1e5" src="./demo_assets/js/a.min.js" data-host-url="https://a.add-to-calendar-button.com" data-domains="add-to-calendar-button.com"></script>
 
     <!-- load some basic css just for this demo page here -->
-    <link rel="stylesheet" href="./demo_assets/css/demopage.min.css?v=1.14.6">
+    <link rel="stylesheet" href="./demo_assets/css/demopage.min.css?v=1.15.0">
     <!-- load the general button css -->
-    <link rel="stylesheet" href="./assets/css/atcb.min.css?v=1.14.6">
+    <link rel="stylesheet" href="./assets/css/atcb.min.css?v=1.15.0">
 
   </head>
   <body itemscope itemtype="http://schema.org/WebSite">
@@ -95,7 +91,7 @@
         </a>
       </div>      
     </div>
-    <button id="light-mode-switch-header" class="light-mode-switch">
+    <button id="light-mode-switch-header" class="light-mode-switch" aria-label="Light/Dark Mode Switch">
       <div></div>
     </button>
 
@@ -114,7 +110,7 @@
               "name":"Reminder to star the add to calendar button repo",
               "description":"Check out the maybe easiest way to include add to calendar buttons to your website at:<br>&#8594; [url]https://github.com/add2cal/add-to-calendar-button[/url]",
               "startDate":"2023-02-14",
-              "endDate":"2023-02-18",
+              "endDate":"2023-02-14",
               "startTime":"10:15",
               "endTime":"23:30",
               "location":"World Wide Web",
@@ -140,7 +136,7 @@
   "name":"Reminder to star the add to calendar button repo",
   "description":"Check out the maybe easiest way to include add to calendar buttons to your website at:&lt;br&gt;&#8594; [url]https://github.com/add2cal/add-to-calendar-button[/url]",
   "startDate":"2023-02-14",
-  "endDate":"2023-02-18",
+  "endDate":"2023-02-14",
   "startTime":"10:15",
   "endTime":"23:30",
   "location":"World Wide Web",
@@ -224,7 +220,7 @@
       <h3>Example 3: Customizing Labels</h3>
       <p class="description">
         You can customize the button text as well as each option label.<br>
-        Here, we also set the listStyle to an overlay list, reduced the size, as well as removed the custom iCal/ics name and explicitly set a static downloadable ics file instead.<br>
+        Here, we also set the listStyle to an overlay list, enlarge the size, as well as removed the custom iCal/ics name and explicitly set a static downloadable ics file instead.<br>
       </p>
       <div class="example">
         <div class="example-left">
@@ -237,7 +233,7 @@
               "startDate":"2022-01-14",
               "endDate":"2022-01-18",
               "location":"World Wide Web",
-              "label":"Hit me to remember!",
+              "label":"Hit me to save!",
               "options":[
                 "Google|Add to Google Cal",
                 "Microsoft365|Use Microsoft instead",
@@ -246,7 +242,7 @@
               ],
               "icsFile":"https://add-to-calendar-button.com/demo-event.ics",
               "listStyle":"overlay",
-              "size":"4",
+              "size":"8",
               "timeZone":"Europe/Berlin"
             }
           </div>
@@ -261,16 +257,16 @@
   "startDate":"2022-01-14",
   "endDate":"2022-01-18",
   "location":"World Wide Web",
-  "label":"Hit me to remember!",
+  "label":"Hit me to save!",
   "options":[
     "Google|Add to Google Cal",
     "Microsoft365|Use Microsoft instead",
     "Yahoo|Yahoo, really?",
     "iCal|iCall ftw!"
   ],
-  "icsFile":"https://add-to-calendar-button.com/demo-event.ifcs",
+  "icsFile":"https://add-to-calendar-button.com/demo-event.ics",
   "listStyle":"overlay",
-  "size":"4",
+  "size":"8",
   "timeZone":"Europe/Berlin"
 }
 &lt;/div&gt;</code></pre>
@@ -389,6 +385,7 @@
       <p class="description">
         You can define recurring events by setting an <a href="https://www.rfc-editor.org/rfc/rfc5545" target="_blank" rel="noopener">RRULE</a>.<br>
         Mind that the rule needs to be valid (technically and logically) and that it is not supported by all calendar types - in this example, the specified Yahoo option won't show up for that reason.<br>
+        You can also specify the rule in more simple terms. Check the <a href="https://github.com/add2cal/add-to-calendar-button#important-information-and-hidden-features" target="_blank" rel="noopener"></a>README</a> for more details on that<br>
         (Setting a URL as location makes it an online event from a data point of view.)
       </p>
       <div class="example">
@@ -411,7 +408,7 @@
                 "iCal"
               ],
               "timeZone":"Europe/Berlin",
-              "recurrence":"RRULE: FREQ=WEEKLY; INTERVAL=1; WKST=MO; BYDAY=WE,FR",
+              "recurrence":"RRULE:FREQ=WEEKLY;INTERVAL=1;WKST=MO;BYDAY=WE,FR;COUNT=10",
               "iCalFileName":"Reminder-Event"
             }
           </div>
@@ -435,7 +432,7 @@
     "iCal"
   ],
   "timeZone":"Europe/Berlin",
-  "recurrence":"RRULE: FREQ=WEEKLY; INTERVAL=1; WKST=MO; BYDAY=WE,FR",
+  "recurrence":"RRULE:FREQ=WEEKLY;INTERVAL=1;WKST=MO;BYDAY=WE,FR;COUNT=10",
   "iCalFileName":"Reminder-Event"
 }
 &lt;/div&gt;</code></pre>
@@ -567,7 +564,7 @@
       <hr>
 
       <div id="legal">
-        <button id="light-mode-switch-footer" class="light-mode-switch">
+        <button id="light-mode-switch-footer" class="light-mode-switch" aria-label="Light/Dark Mode Switch">
           <div></div>
         </button>
         <p>
@@ -575,14 +572,14 @@
           This page is hosted via "GitHub Pages". It includes some very basic analytics, that still preserves your anonymity and does not use any cookies. However, mind that the GitHub privacy policy applies additionally (<a target="_blank" rel="noopener" href="https://docs.github.com/en/github/site-policy/github-privacy-statement">click here for details</a>).
         </p>
       </div>
-      <div id="tiny-version">v1.14.6</div>
+      <div id="tiny-version">v1.15.0</div>
 
     </div>
 
 
     <!-- load the button js and more -->
-    <script type="application/javascript" src="./demo_assets/js/demopage.min.js?v=1.14.6" defer></script>
-    <script type="application/javascript" src="./assets/js/atcb.min.js?v=1.14.6" async defer></script>
+    <script type="application/javascript" src="./demo_assets/js/demopage.min.js?v=1.15.0" defer></script>
+    <script type="application/javascript" src="./dist/atcb.min.js?v=1.15.0" async defer></script>
 
   </body>
 </html>

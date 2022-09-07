@@ -1,6 +1,6 @@
 {
   "name": "add-to-calendar-button",
-  "version": "1.14.6",
+  "version": "1.15.0",
   "engines": {
     "node": ">=14.20.0"
   },
@@ -16,7 +16,7 @@
   },
   "types": "index.d.ts",
   "style": "assets/css/atcb.min.css",
-  "jsdelivr": "./assets/js/atcb.min.js",
+  "jsdelivr": "./dist/atcb.min.js",
   "repository": {
     "type": "git",
     "url": "https://github.com/add2cal/add-to-calendar-button.git"
@@ -46,7 +46,7 @@
     "name": "Jens Kuerschner",
     "url": "https://jenskuerschner.de/"
   },
-  "license": "SEE LICENSE IN LICENSE.txt",
+  "license": "SEE LICENSE.txt",
   "bugs": {
     "url": "https://github.com/add2cal/add-to-calendar-button/issues"
   },
@@ -65,14 +65,15 @@
     "build": "npx grunt"
   },
   "devDependencies": {
-    "@typescript-eslint/eslint-plugin": "^5.34.0",
-    "@typescript-eslint/parser": "^5.34.0",
-    "eslint": "^8.22.0",
+    "@typescript-eslint/eslint-plugin": "^5.36.2",
+    "@typescript-eslint/parser": "^5.36.2",
+    "eslint": "^8.23.0",
     "eslint-config-prettier": "^8.5.0",
     "eslint-plugin-commonjs": "^1.0.2",
     "eslint-plugin-security": "^1.5.0",
     "grunt": ">=1.5.3",
     "grunt-contrib-clean": "^2.0.1",
+    "grunt-contrib-concat": "^2.1.0",
     "grunt-contrib-copy": "^1.0.0",
     "grunt-contrib-cssmin": "^4.0.0",
     "grunt-contrib-uglify": "^5.2.2",
@@ -81,6 +82,7 @@
     "prettier": "2.7.1",
     "stylelint": "^14.11.0",
     "stylelint-config-prettier": "^9.0.3",
-    "stylelint-config-standard": "^28.0.0"
+    "stylelint-config-standard": "^28.0.0",
+    "timezones-ical-library": "^1.2.1"
   }
 }

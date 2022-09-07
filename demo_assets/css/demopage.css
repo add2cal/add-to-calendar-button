@@ -1,7 +1,7 @@
 /**
- * +++++++++++++++++++++++++++++++++++++++++
- * Add-to-Calendar Button - Demo Page Style
- * +++++++++++++++++++++++++++++++++++++++++
+ * ++++++++++++++++++++++++++++++++++++++++
+ * Add to Calendar Button - Demo Page Style
+ * ++++++++++++++++++++++++++++++++++++++++
  *
  * Creator: Jens Kuerschner (https://jenskuerschner.de)
  * Project: https://github.com/add2cal/add-to-calendar-button
@@ -16,36 +16,42 @@
 :root {
   --primary-color: #9755ff;
   --primary-color-light: #cbaaff;
+  --primary-color-dark: #7644c6;
   --secondary-color: #ffa255;
   --secondary-color-light: #ffd0aa;
   --page-background: #f5f5f5;
   --text: #333;
   --text-secondary: #969696;
   --text-subline: #fff;
+  --github: #333;
   --hr: #cfcfcf;
-  --light-mode-switch: #0D1117;
+  --light-mode-switch: #282232;
+  --light-mode-switch-header: #f1e8fe;
   --example-background: #f5f5f5;
-  --example-color: #7d7d7d;
+  --example-color: #6a6a6a;
   --example-border: #ababab;
   --code-comment: #708090;
   --code-punctuation: #999;
   --code-tag: #905;
-  --code-selector: #690;
+  --code-selector: rgb(83 117 16);
   --code-operator: #9a6e3a;
   --code-keyword: #07a;
-  --code-function: #DD4A68;
+  --code-function: #ae3c53;
   --code-regex: #e90;
+  --header-shadow: 0 6px 7px -6px rgb(0 0 0 / 10%), 0 12px 10px -6px rgb(0 0 0 / 12%), 0 31px 40px -6px rgb(0 0 0 / 20%);
+  --header-bg: linear-gradient(45deg, var(--primary-color), var(--primary-color), var(--primary-color-light), var(--primary-color-light));
 }
 
 /* Dark mode */
 
 body.atcb-dark {
-  --page-background: #0D1117;
+  --page-background: #1b1d21;
   --text: #e6e2ed;
+  --github: #222;
   --hr: #5e5c61;
   --light-mode-switch: #f5f5f5;
   --example-background: #2D2D2D;
-  --example-color: #bcbabe;
+  --example-color: #cacaca;
   --example-border: #797979;
   --code-comment: #999;
   --code-punctuation: #ccc;
@@ -55,6 +61,8 @@ body.atcb-dark {
   --code-keyword: #99a2cd;
   --code-function: #f08d49;
   --code-regex: #7ec699;
+  --header-shadow: 0 6px 7px -6px rgb(0 0 0 / 15%), 0 12px 20px -6px rgb(0 0 0 / 18%), 0 31px 70px -6px rgb(0 0 0 / 34%);
+  --header-bg: linear-gradient(45deg, var(--primary-color-dark), var(--primary-color-dark), var(--primary-color), var(--primary-color-light));
 }
 
 /******************************
@@ -67,80 +75,81 @@ body.atcb-dark {
   font-family: 'Paytone One';
   font-style: normal;
   font-weight: 400;
-  src: local(''),
-       url('../fonts/paytone-one-v18-latin-regular.woff2') format('woff2'), /* Super Modern Browsers */
-       url('../fonts/paytone-one-v18-latin-regular.woff') format('woff'), /* Modern Browsers */
-       url('../fonts/paytone-one-v18-latin-regular.ttf') format('truetype'), /* Safari, Android, iOS */
+  src: local('Paytone One'),
+       url('https://add-to-calendar-button.com/demo_assets/fonts/paytone-one-v18-latin-regular.woff2') format('woff2'), /* Super Modern Browsers */
+       url('https://add-to-calendar-button.com/demo_assets/fonts/paytone-one-v18-latin-regular.woff') format('woff'), /* Modern Browsers */
+       url('https://add-to-calendar-button.com/demo_assets/fonts/paytone-one-v18-latin-regular.ttf') format('truetype'); /* Safari, Android, iOS */
 }
 
-/* nunito-regular - latin */
+/* inter-300 - latin */
 @font-face {
   font-display: swap;
-  font-family: Nunito;
+  font-family: Inter;
+  font-style: normal;
+  font-weight: 300;
+  src: local('Inter Light'),
+       url('https://add-to-calendar-button.com/demo_assets/fonts/inter-v12-latin-300.woff2') format('woff2'), /* Super Modern Browsers */
+       url('https://add-to-calendar-button.com/demo_assets/fonts/inter-v12-latin-300.woff') format('woff'), /* Modern Browsers */
+       url('https://add-to-calendar-button.com/demo_assets/fonts/inter-v12-latin-300.ttf') format('truetype'); /* Safari, Android, iOS */
+}
+
+/* inter-regular - latin */
+@font-face {
+  font-display: swap;
+  font-family: Inter;
   font-style: normal;
   font-weight: 400;
-  src: local(''),
-       url('../fonts/nunito-v25-latin-regular.woff2') format('woff2'), /* Super Modern Browsers */
-       url('../fonts/nunito-v25-latin-regular.woff') format('woff'), /* Modern Browsers */
-       url('../fonts/nunito-v25-latin-regular.ttf') format('truetype'), /* Safari, Android, iOS */
+  src: local('Inter'),
+       url('https://add-to-calendar-button.com/demo_assets/fonts/inter-v12-latin-regular.woff2') format('woff2'), /* Super Modern Browsers */
+       url('https://add-to-calendar-button.com/demo_assets/fonts/inter-v12-latin-regular.woff') format('woff'), /* Modern Browsers */
+       url('https://add-to-calendar-button.com/demo_assets/fonts/inter-v12-latin-regular.ttf') format('truetype'); /* Safari, Android, iOS */
 }
 
-/* nunito-600 - latin */
+/* inter-600 - latin */
 @font-face {
   font-display: swap;
-  font-family: Nunito;
+  font-family: Inter;
   font-style: normal;
   font-weight: 600;
-  src: local(''),
-       url('../fonts/nunito-v25-latin-600.woff2') format('woff2'), /* Super Modern Browsers */
-       url('../fonts/nunito-v25-latin-600.woff') format('woff'), /* Modern Browsers */
-       url('../fonts/nunito-v25-latin-600.ttf') format('truetype'), /* Safari, Android, iOS */
+  src: local('Inter SemiBold'),
+       url('https://add-to-calendar-button.com/demo_assets/fonts/inter-v12-latin-600.woff2') format('woff2'), /* Super Modern Browsers */
+       url('https://add-to-calendar-button.com/demo_assets/fonts/inter-v12-latin-600.woff') format('woff'), /* Modern Browsers */
+       url('https://add-to-calendar-button.com/demo_assets/fonts/inter-v12-latin-600.ttf') format('truetype'); /* Safari, Android, iOS */
 }
 
-/* nunito-800 - latin */
+/* inter-800 - latin */
 @font-face {
   font-display: swap;
-  font-family: Nunito;
+  font-family: Inter;
   font-style: normal;
   font-weight: 800;
-  src: local(''),
-       url('../fonts/nunito-v25-latin-800.woff2') format('woff2'), /* Super Modern Browsers */
-       url('../fonts/nunito-v25-latin-800.woff') format('woff'), /* Modern Browsers */
-       url('../fonts/nunito-v25-latin-800.ttf') format('truetype'), /* Safari, Android, iOS */
-}
-
-/* nunito-900 - latin */
-@font-face {
-  font-display: swap;
-  font-family: Nunito;
-  font-style: normal;
-  font-weight: 900;
-  src: local(''),
-       url('../fonts/nunito-v25-latin-900.woff2') format('woff2'), /* Super Modern Browsers */
-       url('../fonts/nunito-v25-latin-900.woff') format('woff'), /* Modern Browsers */
-       url('../fonts/nunito-v25-latin-900.ttf') format('truetype'), /* Safari, Android, iOS */
+  src: local('Inter ExtraBold'),
+       url('https://add-to-calendar-button.com/demo_assets/fonts/inter-v12-latin-800.woff2') format('woff2'), /* Super Modern Browsers */
+       url('https://add-to-calendar-button.com/demo_assets/fonts/inter-v12-latin-800.woff') format('woff'), /* Modern Browsers */
+       url('https://add-to-calendar-button.com/demo_assets/fonts/inter-v12-latin-800.ttf') format('truetype'); /* Safari, Android, iOS */
 }
 
 /* fira-mono-regular - latin */
 @font-face {
+  font-display: swap;
   font-family: 'Fira Mono';
   font-style: normal;
   font-weight: 400;
-  src: local(''),
-       url('../fonts/fira-mono-v14-latin-regular.woff2') format('woff2'), /* Super Modern Browsers */
-       url('../fonts/fira-mono-v14-latin-regular.woff') format('woff'), /* Modern Browsers */
-       url('../fonts/fira-mono-v14-latin-regular.ttf') format('truetype'), /* Safari, Android, iOS */
+  src: local('Fira Mono'),
+       url('https://add-to-calendar-button.com/demo_assets/fonts/fira-mono-v14-latin-regular.woff2') format('woff2'), /* Super Modern Browsers */
+       url('https://add-to-calendar-button.com/demo_assets/fonts/fira-mono-v14-latin-regular.woff') format('woff'), /* Modern Browsers */
+       url('https://add-to-calendar-button.com/demo_assets/fonts/fira-mono-v14-latin-regular.ttf') format('truetype'); /* Safari, Android, iOS */
 }
 
 /* fira-mono-700 - latin */
 @font-face {
+  font-display: swap;
   font-family: 'Fira Mono';
   font-style: normal;
   font-weight: 700;
-  src: local(''),
-       url('../fonts/fira-mono-v14-latin-700.woff2') format('woff2'), /* Super Modern Browsers */
-       url('../fonts/fira-mono-v14-latin-700.woff') format('woff'), /* Modern Browsers */
-       url('../fonts/fira-mono-v14-latin-700.ttf') format('truetype'), /* Safari, Android, iOS */
+  src: url('https://add-to-calendar-button.com/demo_assets/fonts/fira-mono-v14-latin-700.woff2') format('woff2'), /* Super Modern Browsers */
+       url('https://add-to-calendar-button.com/demo_assets/fonts/fira-mono-v14-latin-700.woff') format('woff'), /* Modern Browsers */
+       url('https://add-to-calendar-button.com/demo_assets/fonts/fira-mono-v14-latin-700.ttf') format('truetype'); /* Safari, Android, iOS */
 }
 
 /******************************
@@ -156,7 +165,7 @@ body {
   background: var(--page-background);
   box-sizing: border-box;
   color: var(--text);
-  font-family: Nunito, Arial, sans-serif;
+  font-family: Inter, Arial, sans-serif;
   font-size: 16px;
   font-weight: 400;
   height: 100%;
@@ -246,35 +255,6 @@ body.atcb-dark a:hover {
   color: var(--primary-color-light);
 }
 
-a.github,
-a.github:focus,
-a.github:active {
-  background: #f5f5f5;
-  border-radius: 71% 29% 70% 30% / 50% 66% 34% 50%;
-  box-shadow: 0.5px 0.2px 3.4px -14px rgb(0 0 0 / 10%), 1px 0.4px 9.5px -14px rgb(0 0 0 / 14%), 1.8px 0.7px 22.9px -14px rgb(0 0 0 / 18%), 5px 2px 76px -14px rgb(0 0 0 / 27%);
-  color: var(--primary-color);
-  display: inline-block;
-  padding: 20px 25px;
-  user-select: none;
-}
-
-a.github:hover,
-body.atcb-dark a.github:hover {
-  background: linear-gradient(45deg, var(--secondary-color), var(--secondary-color-light));
-  border-radius: 67% 33% 66% 33% / 45% 70% 30% 56%;
-  box-shadow: 0.5px 0.2px 6.2px -4px rgb(0 0 0 / 13%), 1px 0.4px 17.2px -4px rgb(0 0 0 / 18%), 1.8px 0.7px 41.3px -4px rgb(0 0 0 / 35%), 5px 2px 137px -4px rgb(0 0 0 / 36%);
-  color: #fff;
-  cursor: pointer;
-}
-
-a.github svg {
-  fill: var(--primary-color);
-}
-
-a.github:hover svg {
-  fill: #fff;
-}
-
 #tiny-version {
   color: var(--text-secondary);
   font-size: 0.9em;
@@ -291,13 +271,45 @@ a.github:hover svg {
 }
 
 /******************************
- * Logo
+ * Logos
  */
 
-#logo {
-  display: block;
-  width: 400px;
-  padding: 30px 0;
+a.github,
+a.github:focus,
+a.github:active {
+  background: #f5f5f5;
+  border-radius: 71% 29% 70% 30% / 50% 66% 34% 50%;
+  box-shadow: 0.5px 0.2px 3.4px -14px rgb(0 0 0 / 10%), 1px 0.4px 9.5px -14px rgb(0 0 0 / 14%), 1.8px 0.7px 22.9px -14px rgb(0 0 0 / 18%), 5px 2px 76px -14px rgb(0 0 0 / 27%);
+  color: var(--github);
+  display: inline-block;
+  padding: 20px 25px;
+  user-select: none;
+}
+
+a.github:hover {
+  background: linear-gradient(45deg, var(--secondary-color), var(--secondary-color-light));
+  border-radius: 67% 33% 66% 33% / 45% 70% 30% 56%;
+  box-shadow: 0.5px 0.2px 6.2px -4px rgb(0 0 0 / 13%), 1px 0.4px 17.2px -4px rgb(0 0 0 / 18%), 1.8px 0.7px 41.3px -4px rgb(0 0 0 / 35%), 5px 2px 137px -4px rgb(0 0 0 / 36%);
+  color: #fff;
+  cursor: pointer;
+}
+
+body.atcb-dark a.github,
+body.atcb-dark a.github:focus,
+body.atcb-dark a.github:active {
+  color: var(--github);
+}
+
+body.atcb-dark a.github:hover {
+  color: #fff;
+}
+
+a.github svg {
+  fill: var(--github);
+}
+
+a.github:hover svg {
+  fill: #fff;
 }
 
 #logo svg {
@@ -305,10 +317,33 @@ a.github:hover svg {
   width: 100%;
 }
 
+#header a.github svg {
+  fill: var(--primary-color-dark);
+}
+
+#header a.github:hover svg {
+  fill: #fff;
+}
+
+#header a.github,
+#header a.github:focus,
+#header a.github:active {
+  color: var(--primary-color-dark);
+}
+
+#header a.github:hover {
+  color: #fff;
+}
+
+#logo {
+  display: block;
+  width: 400px;
+  padding: 30px 0;
+}
+
 @media (max-width: 991px) {
   #logo {
-    height: 177px;
-    width: 299px;
+    width: 300px;
     padding: 0;
     margin: auto;
   }
@@ -344,6 +379,14 @@ a.github:hover svg {
   background: var(--light-mode-switch);
 }
 
+body.atcb-dark .light-mode-switch div {
+  transform: scale(0.5);
+}
+
+#light-mode-switch-header.light-mode-switch div {
+  background: var(--light-mode-switch-header);
+}
+
 .light-mode-switch div::before {
   content: "";
   position: absolute;
@@ -369,11 +412,6 @@ a.github:hover svg {
   border-radius: 50%;
   background: var(--page-background);
   transition: transform 0.45s ease;
-}
-
-body.atcb-dark .light-mode-switch div {
-  transform: scale(0.5);
-  background: var(--light-mode-switch);
 }
 
 body.atcb-dark .light-mode-switch div::before {
@@ -404,8 +442,8 @@ body.atcb-dark .light-mode-switch div::after {
  */
 
 #header {
-  background: linear-gradient(45deg, var(--primary-color), var(--primary-color), var(--primary-color-light), var(--primary-color-light));
-  box-shadow: 0 6px 7px -6px rgb(0 0 0 / 15%), 0 12px 20px -6px rgb(0 0 0 / 18%), 0 31px 70px -6px rgb(0 0 0 / 34%);
+  background: var(--header-bg);
+  box-shadow: var(--header-shadow);
   display: flex;
   justify-content: center;
   padding: 0 25px 50px;

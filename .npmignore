@@ -14,12 +14,20 @@
 
 .github/
 demo_assets/
-img/
+assets/img/
+test/
+src/
 *.png
 *.ico
 *.gif
 *.svg
+*.ics
 index.html
 security.md
 browserconfig.xml
 manifest.json
+CNAME
+Gruntfile.js
+set-release.js
+package-lock.json
+sitemap.xml

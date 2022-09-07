@@ -2,6 +2,7 @@
 
 ## Version 1
 
+- v1.15 : more stable time zone management via the [TimeZones iCal Library](https://tz.add-to-calendar-technology.com/), more languages, easier recurrence, better schema.org support, organizer and image information
 - v1.14 : dynamical dropdown/up, adjustable size
 - v1.13 : dark mode
 - v1.12 : style updates, sanitization, webView edge case support, text block overwrite option, change of repo ownership
