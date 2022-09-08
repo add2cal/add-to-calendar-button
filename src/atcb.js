@@ -3,7 +3,7 @@
  *  Add to Calendar Button
  *  ++++++++++++++++++++++
  */
-const atcbVersion = '1.15.0';
+const atcbVersion = '1.15.1';
 /*! Creator: Jens Kuerschner (https://jenskuerschner.de)
  *  Project: https://github.com/add2cal/add-to-calendar-button
  *  License: MIT with “Commons Clause” License Condition v1.0
@@ -104,9 +104,22 @@ function atcb_init() {
       }
       // get JSON from HTML block, but remove real code line breaks before parsing.
       // use <br> or \n explicitely in the description to create a line break.
-      const atcbJsonInput = JSON.parse(
-        atcb_secure_content(atcButtons[parseInt(i)].innerHTML.replace(/(\r\n|\n|\r)/g, ''), false)
-      );
+      const atcbJsonInput = (function () {
+        try {
+          return JSON.parse(
+            atcb_secure_content(atcButtons[parseInt(i)].innerHTML.replace(/(\r\n|\n|\r)/g, ''), false)
+          );
+        } catch (e) {
+          console.error(
+            'add to calendar button generation failed: JSON content provided, but badly formatted (in doubt, try some tool like https://jsonformatter.org/ to validate).\r\nError message: ' +
+              e
+          );
+          return '';
+        }
+      })();
+      if (atcbJsonInput === '') {
+        continue;
+      }
       // rewrite config for backwards compatibility
       const atcbJsonInputPatched = atcb_patch_config(atcbJsonInput);
       // check, if all required data is available
@@ -781,6 +794,8 @@ function atcb_generate(button, data) {
     schemaContent.push('"name":"' + data.name + '"');
     schemaContent.push(data.descriptionHtmlFree ? '"description":"' + data.descriptionHtmlFree + '"' : '');
     const formattedDate = atcb_generate_time(data, 'delimiters', 'general', true);
+    schemaContent.push('"startDate":"' + formattedDate.start + '"');
+    schemaContent.push('"duration":"' + formattedDate.duration + '"');
     if (data.recurrence != null && data.recurrence != '') {
       schemaContent.push('"eventSchedule": { "@type": "Schedule"');
       if (data.timeZone != null && data.timeZone != '') {
@@ -837,9 +852,7 @@ function atcb_generate(button, data) {
         schemaContent.push('"duration":"' + formattedDate.duration + '" }');
       }
     } else {
-      schemaContent.push('"startDate":"' + formattedDate.start + '"');
       schemaContent.push('"endDate":"' + formattedDate.end + '"');
-      schemaContent.push('"duration":"' + formattedDate.duration + '"');
     }
     schemaContent.push(
       data.location.startsWith('http')

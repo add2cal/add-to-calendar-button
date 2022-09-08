@@ -5,7 +5,7 @@
  *
  * Style: Default
  *
- * Version: 1.15.0
+ * Version: 1.15.1
  * Creator: Jens Kuerschner (https://jenskuerschner.de)
  * Project: https://github.com/add2cal/add-to-calendar-button
  * License: MIT with “Commons Clause” License Condition v1.0
@@ -154,12 +154,12 @@ body.atcb-dark .atcb-modal-box.atcb-bodyScheme {
 .atcb-icon {
   height: 1em;
   margin-bottom: .3em;
-  margin-right: .65em;
+  margin-right: .8em;
 }
 
 .atcb-rtl .atcb-icon {
   margin-right: 0;
-  margin-left: .65em;
+  margin-left: .8em;
 }
 
 .atcb-icon svg {
