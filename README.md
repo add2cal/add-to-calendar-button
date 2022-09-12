@@ -46,23 +46,27 @@ And remember to [⭐ **star** this repository](#) in order to stay up-to-date an
 Simple and convenient integration of 1 or many buttons, configurable directly within the HTML code.
 
 ### Supported Calendars
+
 - **Google** Calendar.
 - **Yahoo** Calender.
 - **Microsoft 365, Outlook, and Teams**.
 - Automatically generated **iCal/ics** files (for all other calendars, like **Apple**).
 
 ### Event Types
+
 - Timed and all-day events.
 - One-time, recurring, or fluid.
 - Most robust time zone and daylight saving management (via our own [TimeZones iCal Library](https://github.com/add2cal/timezones-ical-library)).
 - Dynamic dates (like "today + 3").
 
 ### Look
+
 - Beautiful and adjustable UI.
 - Light and dark mode.
 - Multiple themes.
 
 ### Accessibility
+
 - Optimized and adjustable UX (for desktop and mobile).
 - Dynamic dropdown positioning.
 - Taking care of all those edge cases, where some scenarios do not support specific setups (like WebView blocking downloads); utilizing beautiful user guidance workarounds.
@@ -71,6 +75,7 @@ Simple and convenient integration of 1 or many buttons, configurable directly wi
 - Supporting 20+ languages, incl. RTL text for Arabic; but also custom labels and text blocks.
 
 ### And much more
+
 - Well documented code, to easily understand the processes and build on top of it.
 - No external module or backend dependencies.
 - Therefore, fully GDPR, CCPA, and LGPD compliant - without the need of signing some data processing agreement.

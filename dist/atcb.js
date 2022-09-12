@@ -743,7 +743,7 @@ console.log('Add to Calendar TimeZones iCal Library loaded (version ' + tzlibVer
  *  Add to Calendar Button
  *  ++++++++++++++++++++++
  */
-const atcbVersion = '1.15.1';
+const atcbVersion = '1.15.2';
 /*! Creator: Jens Kuerschner (https://jenskuerschner.de)
  *  Project: https://github.com/add2cal/add-to-calendar-button
  *  License: MIT with “Commons Clause” License Condition v1.0

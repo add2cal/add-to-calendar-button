@@ -5,7 +5,7 @@
  *
  * Style: 3D
  *
- * Version: 1.15.1
+ * Version: 1.15.2
  * Creator: Jens Kuerschner (https://jenskuerschner.de)
  * Project: https://github.com/add2cal/add-to-calendar-button
  * License: MIT with “Commons Clause” License Condition v1.0
@@ -22,6 +22,7 @@
 
  :root {
   --base-font-size: 16px;
+  --font: Arial, Helvetica, sans-serif;
   --atcb-keyboard-focus: #1e90ff;
   --atcb-background: #f5f5f5;
   --atcb-background-2: #fff;
@@ -101,7 +102,7 @@ body.atcb-dark .atcb-modal-box.atcb-bodyScheme {
   color: var(--atcb-text);
   cursor: pointer;
   display: flex;
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font);
   font-size: 1em;
   font-weight: 600;
   justify-content: center;
@@ -115,6 +116,7 @@ body.atcb-dark .atcb-modal-box.atcb-bodyScheme {
   touch-action: manipulation;
   transform: translate3d(0, 0, -12px);
   user-select: none;
+  -webkit-user-select: none;
   -webkit-tap-highlight-color: transparent;
   width: auto;
   z-index: 1;
@@ -211,11 +213,12 @@ body.atcb-dark .atcb-modal-box.atcb-bodyScheme {
   box-shadow: var(--atcb-shadow-list);
   color: var(--atcb-text);
   display: block;
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font);
   font-size: var(--base-font-size);
   max-width: 100%;
   position: relative;
   user-select: none;
+  -webkit-user-select: none;
   width: 100%;
 }
 
@@ -435,12 +438,13 @@ body.atcb-dark .atcb-modal-box.atcb-bodyScheme {
   border-radius: 6px;
   border: 1px solid var(--atcb-border);
   box-sizing: border-box;  
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font);
   font-size: var(--base-font-size);
   line-height: 1.5em;
   padding: 1.25em 1.5em;
   text-align: left;
   user-select: none;
+  -webkit-user-select: none;
   touch-action: manipulation;
   width: 100%;
   max-width: 32em;
@@ -530,7 +534,7 @@ a.atcb-modal-btn {
   color: var(--atcb-modal-btn-sec-text);
   cursor: pointer;
   display: inline-block;
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font);
   font-size: 1em;
   font-weight: 600;
   line-height: 1.5em;
@@ -541,6 +545,7 @@ a.atcb-modal-btn {
   text-decoration: none;
   touch-action: manipulation;
   user-select: none;
+  -webkit-user-select: none;
   -webkit-tap-highlight-color: transparent;
 }
 
@@ -572,6 +577,7 @@ a.atcb-modal-btn:focus-visible {
 #atcb-bgoverlay {
   animation: atcb-bgoverlay-animate 0.1s ease 0s 1 normal forwards;
   backdrop-filter: blur(2px);
+  -webkit-backdrop-filter: blur(2px);
   background-color: var(--atcb-overlay-background);
   box-sizing: border-box;
   display: flex;
@@ -599,6 +605,7 @@ a.atcb-modal-btn:focus-visible {
 #atcb-bgoverlay.atcb-no-bg {
   animation: none;
   backdrop-filter: none;
+  -webkit-backdrop-filter: none;
   opacity: 0;
 }
 
