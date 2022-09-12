@@ -139,12 +139,12 @@ body.atcb-dark .atcb-modal-box.atcb-bodyScheme {
   box-shadow: var(--atcb-shadow-button-active);
   margin: 0;
   padding: .78em 1.13em;
-  z-index: 160;
+  z-index: 15000000;
 }
 
 .atcb-button.atcb-active.atcb-dropoverlay {
   min-width: 172px;
-  z-index: 150;
+  z-index: 14000090;
 }
 
 /******************************
@@ -188,11 +188,11 @@ body.atcb-dark .atcb-modal-box.atcb-bodyScheme {
   box-sizing: border-box;
   padding: 0 4px;
   position: absolute;
-  z-index: 150;
+  z-index: 14000090;
 }
 
 .atcb-list-wrapper.atcb-dropoverlay {
-  z-index: 160;
+  z-index: 15000000;
 }
 
 .atcb-list {
@@ -351,7 +351,7 @@ body.atcb-dark .atcb-modal-box.atcb-bodyScheme {
   min-width: 250px;
   width: auto;
   position: relative;
-  z-index: 150;
+  z-index: 14000090;
 }
 
 .atcb-modal-box {
@@ -515,7 +515,7 @@ a.atcb-modal-btn:focus-visible {
   padding: 30px 20px 130px;
   position: fixed;
   width: 100vw;
-  z-index: 120;
+  z-index: 14000000;
 }
 
 #atcb-bgoverlay.atcb-animate-bg {

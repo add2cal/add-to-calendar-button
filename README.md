@@ -43,25 +43,36 @@ And remember to [⭐ **star** this repository](#) in order to stay up-to-date an
 
 ## ✨ Features
 
-- Simple and convenient integration of multiple buttons, configurable directly within the HTML code.
-- Optimized and adjustable UX (for desktop and mobile) with dynamic dropdown positioning.
-- Beautiful and adjustable UI with light and dark mode (the best combined from experts around the world).
-- Up-to-date integration of all popular calendars:
-  - **Google** Calendar.
-  - **Yahoo** Calender.
-  - **Microsoft 365, Outlook, and Teams**.
-  - Automatically generated **iCal/ics** files (for all other calendars, like **Apple**).
+Simple and convenient integration of 1 or many buttons, configurable directly within the HTML code.
+
+### Supported Calendars
+- **Google** Calendar.
+- **Yahoo** Calender.
+- **Microsoft 365, Outlook, and Teams**.
+- Automatically generated **iCal/ics** files (for all other calendars, like **Apple**).
+
+### Event Types
 - Timed and all-day events.
 - One-time, recurring, or fluid.
 - Most robust time zone and daylight saving management (via our own [TimeZones iCal Library](https://github.com/add2cal/timezones-ical-library)).
 - Dynamic dates (like "today + 3").
+
+### Look
+- Beautiful and adjustable UI.
+- Light and dark mode.
+- Multiple themes.
+
+### Accessibility
+- Optimized and adjustable UX (for desktop and mobile).
+- Dynamic dropdown positioning.
 - Taking care of all those edge cases, where some scenarios do not support specific setups (like WebView blocking downloads); utilizing beautiful user guidance workarounds.
-- Translatable labels and dynamic dates.
 - Auto-generated Schema.org rich (structured) data for better SEO.
 - Full support for mouse, touch, or keyboard input (W3C WAI compliant).
-- Supporting 20+ languages, incl. RTL text for Arabic.
+- Supporting 20+ languages, incl. RTL text for Arabic; but also custom labels and text blocks.
+
+### And much more
 - Well documented code, to easily understand the processes and build on top of it.
-- No external dependencies (not even some server backend or paid service required for all core operations).
+- No external module or backend dependencies.
 - Therefore, fully GDPR, CCPA, and LGPD compliant - without the need of signing some data processing agreement.
 - FREE and open source.
 
