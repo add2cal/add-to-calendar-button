@@ -43,25 +43,41 @@ And remember to [⭐ **star** this repository](#) in order to stay up-to-date an
 
 ## ✨ Features
 
-- Simple and convenient integration of multiple buttons, configurable directly within the HTML code.
-- Optimized and adjustable UX (for desktop and mobile) with dynamic dropdown positioning.
-- Beautiful and adjustable UI with light and dark mode (the best combined from experts around the world).
-- Up-to-date integration of all popular calendars:
-  - **Google** Calendar.
-  - **Yahoo** Calender.
-  - **Microsoft 365, Outlook, and Teams**.
-  - Automatically generated **iCal/ics** files (for all other calendars, like **Apple**).
+Simple and convenient integration of 1 or many buttons, configurable directly within the HTML code.
+
+### Supported Calendars
+
+- **Google** Calendar.
+- **Yahoo** Calender.
+- **Microsoft 365, Outlook, and Teams**.
+- Automatically generated **iCal/ics** files (for all other calendars, like **Apple**).
+
+### Event Types
+
 - Timed and all-day events.
 - One-time, recurring, or fluid.
 - Most robust time zone and daylight saving management (via our own [TimeZones iCal Library](https://github.com/add2cal/timezones-ical-library)).
 - Dynamic dates (like "today + 3").
+
+### Look
+
+- Beautiful and adjustable UI.
+- Light and dark mode.
+- Multiple themes.
+
+### Accessibility
+
+- Optimized and adjustable UX (for desktop and mobile).
+- Dynamic dropdown positioning.
 - Taking care of all those edge cases, where some scenarios do not support specific setups (like WebView blocking downloads); utilizing beautiful user guidance workarounds.
-- Translatable labels and dynamic dates.
 - Auto-generated Schema.org rich (structured) data for better SEO.
 - Full support for mouse, touch, or keyboard input (W3C WAI compliant).
-- Supporting 20+ languages, incl. RTL text for Arabic.
+- Supporting 20+ languages, incl. RTL text for Arabic; but also custom labels and text blocks.
+
+### And much more
+
 - Well documented code, to easily understand the processes and build on top of it.
-- No external dependencies (not even some server backend or paid service required for all core operations).
+- No external module or backend dependencies.
 - Therefore, fully GDPR, CCPA, and LGPD compliant - without the need of signing some data processing agreement.
 - FREE and open source.
 
@@ -91,7 +107,7 @@ Put the css (use atcb-3d for an alternative style) into the `<head>`:
 <script src="https://cdn.jsdelivr.net/npm/add-to-calendar-button@1" async defer></script>
 ```
 
-_Mind that this always pulls the latest release of v1! You can pin a more specific version one by adding the exact version number after the "@" - see [jsDeliver.com](https://www.jsdelivr.com/features#npm) for details._
+_Mind that this always pulls the latest release of v1! You can pin a more specific version by adding the exact version number after the "@" - see [jsDeliver.com](https://www.jsdelivr.com/features#npm) for details._
 If you want to rather host it yourself, you could also download the source files or clone the repository (mind to take the original one at [github.com/add2cal/add-to-calendar-button](https://github.com/add2cal/add-to-calendar-button)) and maintain/update it manually.
 
 <br />
@@ -110,9 +126,12 @@ Import the module into your project/component. For example with Angular/React:
 import { atcb_action, atcb_init } from 'add-to-calendar-button';
 ```
 
-Either use `atcb_action` with your own buttons/forms/etc, or run `atcb_init` after the DOM has been loaded. To determine the right moment to execute, ... - with Angular, you would use `ngAfterViewInit()` with `atcb_init();` (mind that, depending on your app, other hooks might be better); - with React, you might want to include an event listener like `document.addEventListener('DOMContentLoaded', atcb_init, false);` or using hooks in a functional component like `useEffect(() => atcb_init());`
+Either use `atcb_action` with your own buttons/forms/etc, or run `atcb_init` after the DOM has been loaded. To determine the right moment to execute the `atcb_init`, ...
 
-Include the css. For example with Angular or React, add `@import 'add-to-calendar-button/assets/css/atcb.min'` to some other css file - or include it in other more direct ways (like adding `import 'add-to-calendar-button/assets/css/atcb.css';` to the respective component) (use atcb-3d for an alternative style).
+- with Angular, you would use `ngAfterViewInit()` with `atcb_init();` (mind that, depending on your app, other hooks might be better);
+- with React, you might want to include an event listener for `DOMContentLoaded` or use a hook in a functional component like `useEffect(() => atcb_init());`.
+
+Include the css. For example with Angular or React, add `@import 'add-to-calendar-button/assets/css/atcb.css'` to some other css file - or include it in other more direct ways (like adding `import 'add-to-calendar-button/assets/css/atcb.css';` to the respective component) (use atcb-3d for an alternative style).
 
 <br /><br />
 
