@@ -33,8 +33,8 @@ function prepareFinalFile(
   return content;
 }
 
+// The config.
 module.exports = function (grunt) {
-  // The config.
   grunt.initConfig({
     // update version. Either use via `npm run release -- patch` (default), `npm run release -- minor`, `npm run release -- major`, or `npm run release -- x.x.x` (with x.x.x being the exact version number)
     version: {
@@ -97,29 +97,26 @@ module.exports = function (grunt) {
         ],
       },
     },
-    // generate the distributable JavaScript file
+    // generate the distributable JavaScript files
+    // for the npm version supporting CommonJS and ES Module (https://www.sensedeep.com/blog/posts/2021/how-to-create-single-source-npm-module.html)
     concat: {
       dist: {
         src: ['node_modules/timezones-ical-library/dist/tzlib.js', 'src/atcb.js'],
         dest: 'dist/atcb.js',
         options: { process: (content) => prepareFinalFile(content, false, true) },
       },
-    },
-    // creates the source files for the npm versionm supporting CommonJS and ES Module (https://www.sensedeep.com/blog/posts/2021/how-to-create-single-source-npm-module.html)
-    copy: {
       mjs_dist: {
-        nonull: true,
         src: 'src/atcb.js',
         dest: 'npm_dist/mjs/index.js',
         options: { process: (content) => prepareFinalFile(content, true, false, 'export') },
       },
       cjs_dist: {
-        nonull: true,
         src: 'src/atcb.js',
         dest: 'npm_dist/cjs/index.js',
         options: { process: (content) => prepareFinalFile(content, true, false, 'module.exports =', true) },
       },
     },
+    // creates files to support the npm dist structure
     'file-creator': {
       'package.json ES Module': {
         'npm_dist/mjs/package.json': function (fs, fd, done) {
@@ -160,7 +157,6 @@ module.exports = function (grunt) {
   });
 
   // Load the plugins.
-  grunt.loadNpmTasks('grunt-contrib-copy');
   grunt.loadNpmTasks('grunt-contrib-clean');
   grunt.loadNpmTasks('grunt-contrib-uglify');
   grunt.loadNpmTasks('grunt-contrib-cssmin');
@@ -169,6 +165,6 @@ module.exports = function (grunt) {
   grunt.loadNpmTasks('grunt-version');
 
   // Register task(s).
-  grunt.registerTask('default', ['clean', 'cssmin', 'concat', 'uglify']);
-  grunt.registerTask('npm', ['clean', 'cssmin', 'concat', 'copy', 'file-creator', 'uglify']);
+  grunt.registerTask('default', ['clean', 'cssmin', 'concat:dist', 'uglify']);
+  grunt.registerTask('npm', ['clean', 'cssmin', 'concat', 'file-creator', 'uglify']);
 };

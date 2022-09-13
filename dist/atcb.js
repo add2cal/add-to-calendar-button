@@ -743,7 +743,7 @@ console.log('Add to Calendar TimeZones iCal Library loaded (version ' + tzlibVer
  *  Add to Calendar Button
  *  ++++++++++++++++++++++
  */
-const atcbVersion = '1.15.2';
+const atcbVersion = '1.15.3';
 /*! Creator: Jens Kuerschner (https://jenskuerschner.de)
  *  Project: https://github.com/add2cal/add-to-calendar-button
  *  License: MIT with “Commons Clause” License Condition v1.0
@@ -1917,7 +1917,8 @@ function atcb_generate_google(data) {
   urlParts.push(
     'dates=' + encodeURIComponent(formattedDate.start) + '%2F' + encodeURIComponent(formattedDate.end)
   );
-  if (data.timeZone != null && data.timeZone != '') {
+  // setting time zone if given and not GMT +/- something, since this is not supported by Google Calendar
+  if (data.timeZone != null && data.timeZone != '' && !/GMT[+|-]\d{1,2}/i.test(data.timeZone)) {
     urlParts.push('ctz=' + data.timeZone);
   }
   // add details (if set)
@@ -2253,8 +2254,8 @@ function atcb_generate_time(data, style = 'delimiters', targetCal = 'general', a
     // if a time zone is given, we adjust the diverse cases
     // (see https://tz.add-to-calendar-technology.com/ for available TZ names)
     if (data.timeZone != null && data.timeZone != '') {
-      if (targetCal == 'ical' || targetCal == 'google') {
-        // in the iCal case, we simply return and cut off the Z
+      if (targetCal == 'ical' || (targetCal == 'google' && !/GMT[+|-]\d{1,2}/i.test(data.timeZone))) {
+        // in the iCal case, we simply return and cut off the Z. Same applies to Google, except for GMT +/- time zones, which are not supported there.
         // everything else will be done by injecting the VTIMEZONE block at the iCal function
         return {
           start: atcb_format_datetime(newStartDate, 'clean', true, true),

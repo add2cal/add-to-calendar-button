@@ -153,7 +153,7 @@ Mind that with Angular, you might need to escape the { with `{{ '{' }}` and } wi
 
 If there is no endDate set, the script assumes that it is the same as startDate.
 
-Mind that for auto-generating rich snippets, a location would be mandatory as well. Even a timezone is not required, it is recommended! Otherwise the script will assume UTC.
+Mind that for auto-generating rich snippets, a location would be mandatory as well. Even a timezone is not required, but recommended - if not given, the script will assume UTC.
 
 ```html
 <div class="atcb" style="display:none;">
