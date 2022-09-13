@@ -5,7 +5,7 @@
  *
  * Style: 3D
  *
- * Version: 1.15.2
+ * Version: 1.15.3
  * Creator: Jens Kuerschner (https://jenskuerschner.de)
  * Project: https://github.com/add2cal/add-to-calendar-button
  * License: MIT with “Commons Clause” License Condition v1.0
@@ -22,7 +22,7 @@
 
  :root {
   --base-font-size: 16px;
-  --font: Arial, Helvetica, sans-serif;
+  --font: arial, helvetica, sans-serif;
   --atcb-keyboard-focus: #1e90ff;
   --atcb-background: #f5f5f5;
   --atcb-background-2: #fff;
