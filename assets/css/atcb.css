@@ -5,7 +5,7 @@
  *
  * Style: Default
  *
- * Version: 1.15.3
+ * Version: 1.15.4
  * Creator: Jens Kuerschner (https://jenskuerschner.de)
  * Project: https://github.com/add2cal/add-to-calendar-button
  * License: MIT with “Commons Clause” License Condition v1.0
@@ -312,32 +312,6 @@ body.atcb-dark .atcb-modal-box.atcb-bodyScheme {
 }
 
 /******************************
- * Icon specifics
- */
-
-.atcb-icon svg.atcb-icon-apple {
-  fill: var(--atcb-text);
-}
-
-.atcb-icon svg.atcb-icon-ical {
-  fill: var(--atcb-text);
-}
-
-.atcb-icon svg.atcb-icon-ms365 {
-  fill: var(--icon-ms365-color);
-}
-
-.atcb-icon svg.atcb-icon-yahoo {
-  fill: var(--icon-yahoo-color);
-}
-
-.atcb-icon svg.atcb-icon-google,
-.atcb-icon svg.atcb-icon-msteams,
-.atcb-icon svg.atcb-icon-outlookcom {
-  filter: var(--icon-filter);
-}
-
-/******************************
  * Modal
  */
 
@@ -547,4 +521,30 @@ a.atcb-modal-btn:focus-visible {
 
 #atcb-bgoverlay.atcb-click:hover {
   cursor: var(--bg-cursor);
+}
+
+/******************************
+ * Icon specifics
+ */
+
+.atcb-icon .atcb-icon-apple svg {
+  fill: var(--atcb-text);
+}
+
+.atcb-icon .atcb-icon-ical svg {
+  fill: var(--atcb-text);
+}
+
+.atcb-icon .atcb-icon-ms365 svg {
+  fill: var(--icon-ms365-color);
+}
+
+.atcb-icon .atcb-icon-yahoo svg {
+  fill: var(--icon-yahoo-color);
+}
+
+.atcb-icon .atcb-icon-google svg,
+.atcb-icon .atcb-icon-msteams svg,
+.atcb-icon .atcb-icon-outlookcom svg {
+  filter: var(--icon-filter);
 }
