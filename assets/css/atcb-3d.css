@@ -103,7 +103,7 @@ body.atcb-dark .atcb-modal-box.atcb-bodyScheme {
   cursor: pointer;
   display: flex;
   font-family: var(--font);
-  font-size: 1em;
+  font-size: var(--base-font-size);
   font-weight: 600;
   justify-content: center;
   line-height: 1.5em;
@@ -167,7 +167,7 @@ body.atcb-dark .atcb-modal-box.atcb-bodyScheme {
  */
 
 .atcb-icon {
-  height: 1em;
+  height: var(--base-font-size);
   margin-bottom: .3em;
   margin-right: .8em;
 }
@@ -291,7 +291,7 @@ body.atcb-dark .atcb-modal-box.atcb-bodyScheme {
   box-sizing: border-box;
   cursor: pointer;
   display: flex;
-  font-size: 1em;
+  font-size: var(--base-font-size);
   left: 50%;
   line-height: 1.75em;
   padding: .8em;
@@ -380,7 +380,7 @@ body.atcb-dark .atcb-modal-box.atcb-bodyScheme {
 }
 
 .atcb-list-item-close svg {
-  fill: var(--atcb-close-text);
+  fill: currentcolor;
 }
 
 /******************************
@@ -535,7 +535,7 @@ a.atcb-modal-btn {
   cursor: pointer;
   display: inline-block;
   font-family: var(--font);
-  font-size: 1em;
+  font-size: var(--base-font-size);
   font-weight: 600;
   line-height: 1.5em;
   margin: .625em;

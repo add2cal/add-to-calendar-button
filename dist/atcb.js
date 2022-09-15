@@ -1042,14 +1042,12 @@ function atcb_decorate_data(data) {
       }
     }
   }
-
-  // if no description or already decorated, return early here
-  if (!data.description || data.descriptionHtmlFree) return data;
-
-  // store a clean description copy without the URL magic for iCal
-  data.descriptionHtmlFree = atcb_rewrite_html_elements(data.description, true);
-  // ...and transform pseudo elements for the regular one
-  data.description = atcb_rewrite_html_elements(data.description);
+  if (data.description != null && data.description != '') {
+    // store a clean description copy without the URL magic for iCal
+    data.descriptionHtmlFree = atcb_rewrite_html_elements(data.description, true);
+    // ...and transform pseudo elements for the regular one
+    data.description = atcb_rewrite_html_elements(data.description);
+  }
   return data;
 }
 
@@ -1639,6 +1637,9 @@ function atcb_generate(button, data) {
   // generate the button trigger div
   const buttonTrigger = document.createElement('button');
   buttonTrigger.classList.add('atcb-button');
+  if (data.trigger === 'click') {
+    buttonTrigger.classList.add('atcb-click');
+  }
   if (data.listStyle === 'overlay') {
     buttonTrigger.classList.add('atcb-dropoverlay');
   }
