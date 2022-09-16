@@ -1051,6 +1051,14 @@ function atcb_decorate_data(data) {
   if (data.listStyle === 'modal') {
     data.trigger = 'click';
   }
+  // set button style and force click on styles, where the dropdown is not attached to the button
+  if (data.buttonStyle != null && data.buttonStyle != '' && data.buttonStyle != 'default') {
+    if (data.buttonStyle == 'round' || data.buttonStyle == 'text') {
+      data.trigger = 'click';
+    }
+  } else {
+    data.buttonStyle = '';
+  }
   // set size
   if (data.size != null && data.size != '' && data.size >= 0 && data.size < 11) {
     data.size = 10 + parseInt(data.size);
@@ -1736,7 +1744,7 @@ function atcb_generate_dropdown_list(data) {
 }
 
 // create the background overlay, which also acts as trigger to close any dropdowns
-function atcb_generate_bg_overlay(listStyle = 'dropdown', trigger = '', darken = true) {
+function atcb_generate_bg_overlay(listStyle = 'dropdown', trigger = '', lightMode = 'light', darken = true) {
   const bgOverlay = document.createElement('div');
   bgOverlay.id = 'atcb-bgoverlay';
   if (listStyle !== 'modal' && darken) {
@@ -1744,7 +1752,8 @@ function atcb_generate_bg_overlay(listStyle = 'dropdown', trigger = '', darken =
   }
   if (!darken) {
     bgOverlay.classList.add('atcb-no-bg');
-  }
+  }  
+  bgOverlay.classList.add('atcb-' + lightMode);
   bgOverlay.tabIndex = 0;
   bgOverlay.addEventListener(
     'click',
@@ -1839,7 +1848,7 @@ function atcb_open(data, button, keyboardTrigger = false, generatedButton = fals
     list.classList.add('atcb-modal');
   }
   // define background overlay
-  const bgOverlay = atcb_generate_bg_overlay(data.listStyle, data.trigger, data.background);
+  const bgOverlay = atcb_generate_bg_overlay(data.listStyle, data.trigger, data.lightMode, data.background);
   // render the items depending on the liststyle
   if (data.listStyle === 'modal') {
     document.body.appendChild(bgOverlay);
@@ -1848,6 +1857,7 @@ function atcb_open(data, button, keyboardTrigger = false, generatedButton = fals
   } else {
     document.body.appendChild(listWrapper);
     listWrapper.appendChild(list);
+    listWrapper.classList.add('atcb-style-' + data.buttonStyle);
     document.body.appendChild(bgOverlay);
     if (data.listStyle === 'dropdown-static') {
       // in the dropdown-static case, we do not dynamically adjust whether we show the dropdown upwards
@@ -2425,7 +2435,7 @@ function atcb_rewrite_html_elements(content, clear = false) {
 // SHARED FUNCTION TO CREATE INFO MODALS
 function atcb_create_modal(data, icon = '', headline, content, buttons) {
   // setting the stage
-  const bgOverlay = atcb_generate_bg_overlay('modal', 'click');
+  const bgOverlay = atcb_generate_bg_overlay('modal', 'click', data.lightMode);
   const infoModalWrapper = document.createElement('div');
   infoModalWrapper.classList.add('atcb-modal', 'atcb-info-modal');
   infoModalWrapper.tabIndex = 0;
@@ -2572,8 +2582,14 @@ function atcb_position_list(trigger, list, blockUpwards = false, resize = false)
     }
     // read trigger dimensions again, since after adjusting the top value of the list, something might have changed (e.g. re-adjustment due to missing scrollbars at this point in time)
     triggerDim = trigger.getBoundingClientRect();
-    list.style.width = triggerDim.width + 'px';
-    list.style.left = triggerDim.left + 'px';
+    if (list.classList.contains('atcb-style-round') || list.classList.contains('atcb-style-text')) {
+      list.style.minWidth = triggerDim.width + 'px';
+    } else {
+      list.style.width = triggerDim.width + 'px';
+    }
+    // read list dimensions again, since we altered the width in the step before
+    listDim = list.getBoundingClientRect();
+    list.style.left = triggerDim.left - (listDim.width - triggerDim.width) / 2 + 'px';
   } else {
     // when there is no anchor set (only the case with custom implementations) or the listStyle is set respectively (overlay), we render the modal centered above the trigger
     // make sure the trigger is not moved over it via CSS in this case!

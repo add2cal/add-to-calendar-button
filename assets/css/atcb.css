@@ -61,7 +61,9 @@ body.atcb-dark .atcb-button-wrapper.atcb-bodyScheme,
 .atcb-list.atcb-dark,
 body.atcb-dark .atcb-list.atcb-bodyScheme,
 .atcb-modal-box.atcb-dark,
-body.atcb-dark .atcb-modal-box.atcb-bodyScheme {
+body.atcb-dark .atcb-modal-box.atcb-bodyScheme,
+#atcb-bgoverlay.atcb-dark,
+body.atcb-dark #atcb-bgoverlay.atcb-bodyScheme {
   --atcb-background: #2e2e2e;
   --atcb-background-2: #373737;
   --atcb-border: #4d4d4d;
@@ -145,7 +147,6 @@ body.atcb-dark .atcb-modal-box.atcb-bodyScheme {
 }
 
 .atcb-button.atcb-active.atcb-dropoverlay {
-  min-width: 172px;
   z-index: 14000090;
 }
 
@@ -166,7 +167,7 @@ body.atcb-dark .atcb-modal-box.atcb-bodyScheme {
 
 .atcb-icon svg {
   height: 100%;
-  fill: var(--atcb-text);
+  fill: currentcolor;
   width: auto;
 }
 
@@ -412,7 +413,7 @@ body.atcb-dark .atcb-modal-box.atcb-bodyScheme {
 
 .atcb-modal-headline-icon svg {
   height: 100%;
-  fill: var(--atcb-text-2);
+  fill: currentcolor;
   width: auto;
 }
 
@@ -528,11 +529,11 @@ a.atcb-modal-btn:focus-visible {
  */
 
 .atcb-icon .atcb-icon-apple svg {
-  fill: var(--atcb-text);
+  fill: currentcolor;
 }
 
 .atcb-icon .atcb-icon-ical svg {
-  fill: var(--atcb-text);
+  fill: currentcolor;
 }
 
 .atcb-icon .atcb-icon-ms365 svg {

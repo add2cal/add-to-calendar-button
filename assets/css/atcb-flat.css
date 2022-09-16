@@ -56,7 +56,9 @@ body.atcb-dark .atcb-button-wrapper.atcb-bodyScheme,
 .atcb-list.atcb-dark,
 body.atcb-dark .atcb-list.atcb-bodyScheme,
 .atcb-modal-box.atcb-dark,
-body.atcb-dark .atcb-modal-box.atcb-bodyScheme {
+body.atcb-dark .atcb-modal-box.atcb-bodyScheme,
+#atcb-bgoverlay.atcb-dark,
+body.atcb-dark #atcb-bgoverlay.atcb-bodyScheme {
   --atcb-background: #222;
   --atcb-background-2: #373737;
   --atcb-border: #515151;
@@ -146,7 +148,6 @@ body.atcb-dark .atcb-modal-box.atcb-bodyScheme {
 }
 
 .atcb-button.atcb-active.atcb-dropoverlay {
-  min-width: 172px;
   z-index: 14000090;
 }
 
@@ -156,8 +157,8 @@ body.atcb-dark .atcb-modal-box.atcb-bodyScheme {
 
 .atcb-icon {
   height: var(--base-font-size);
-  margin-bottom: 0.3em;
   margin-right: 1em;
+  line-height: 1em;
 }
 
 .atcb-rtl .atcb-icon {
@@ -167,7 +168,7 @@ body.atcb-dark .atcb-modal-box.atcb-bodyScheme {
 
 .atcb-icon svg {
   height: 100%;
-  fill: var(--atcb-text);
+  fill: currentcolor;
   width: auto;
 }
 
@@ -178,7 +179,6 @@ body.atcb-dark .atcb-modal-box.atcb-bodyScheme {
 .atcb-button .atcb-icon-trigger::after {
   content: "+";
   font-size: 1.5em;
-  line-height: 0.9em;
 }
 
 .atcb-text {
@@ -199,7 +199,7 @@ body.atcb-dark .atcb-modal-box.atcb-bodyScheme {
 
 .atcb-list-wrapper {
   box-sizing: border-box;
-  padding: 0 2px 0 4px;
+  padding: 0 2px 0 6px;
   position: absolute;
   z-index: 16000090;
 }
@@ -402,7 +402,7 @@ body.atcb-dark .atcb-modal-box.atcb-bodyScheme {
 
 .atcb-modal-headline-icon svg {
   height: 100%;
-  fill: var(--atcb-text-2);
+  fill: currentcolor;
   width: auto;
 }
 
@@ -510,11 +510,11 @@ a.atcb-modal-btn:focus-visible {
  */
 
 .atcb-icon .atcb-icon-apple svg {
-  fill: var(--atcb-text);
+  fill: currentcolor;
 }
 
 .atcb-icon .atcb-icon-ical svg {
-  fill: var(--atcb-text);
+  fill: currentcolor;
 }
 
 .atcb-icon .atcb-icon-ms365 svg {
