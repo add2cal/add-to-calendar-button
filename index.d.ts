@@ -27,7 +27,7 @@ declare module 'add-to-calendar-button' {
       trigger?: 'hover' | 'click';
       listStyle?: 'dropdown' | 'dropdown-static' | 'overlay' | 'modal';
       background?: boolean;
-      buttonStyle?: 'default' | '3d' | 'flat' | 'round' | 'neumorphism' | 'none';
+      buttonStyle?: 'default' | '3d' | 'flat' | 'round' | 'neumorphism' | 'text' | 'none';
       size?: bigint;
       customLabels?: object;
       lightMode?: 'system' | 'dark' | 'light' | 'bodyScheme';
