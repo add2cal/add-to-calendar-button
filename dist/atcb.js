@@ -743,7 +743,7 @@ console.log('Add to Calendar TimeZones iCal Library loaded (version ' + tzlibVer
  *  Add to Calendar Button
  *  ++++++++++++++++++++++
  */
-const atcbVersion = '1.15.4';
+const atcbVersion = '1.15.5';
 /*! Creator: Jens Kuerschner (https://jenskuerschner.de)
  *  Project: https://github.com/add2cal/add-to-calendar-button
  *  License: MIT with “Commons Clause” License Condition v1.0
@@ -1569,7 +1569,9 @@ function atcb_generate(button, data) {
     const schemaContent = [];
     schemaContent.push('{\r\n"event": {\r\n"@context":"https://schema.org",\r\n"@type":"Event"');
     schemaContent.push('"name":"' + data.name + '"');
-    schemaContent.push(data.descriptionHtmlFree ? '"description":"' + data.descriptionHtmlFree + '"' : '');
+    if (data.descriptionHtmlFree) {
+      schemaContent.push('"description":"' + data.descriptionHtmlFree + '"');
+    }
     const formattedDate = atcb_generate_time(data, 'delimiters', 'general', true);
     schemaContent.push('"startDate":"' + formattedDate.start + '"');
     schemaContent.push('"duration":"' + formattedDate.duration + '"');
@@ -1619,15 +1621,15 @@ function atcb_generate(button, data) {
       if (data.recurrence_count != null && data.recurrence_count != '') {
         schemaContent.push('"repeatCount":"' + data.recurrence_count + '"');
       }
-      schemaContent.push('"startDate":"' + data.startDate + '"');
       if (data.recurrence_until != null && data.recurrence_until != '') {
         schemaContent.push('"endDate":"' + data.recurrence_until + '"');
       }
       if (data.startTime != null && data.startTime != '' && data.endTime != null && data.endTime != '') {
         schemaContent.push('"startTime":"' + data.startTime + ':00"');
         schemaContent.push('"endTime":"' + data.endTime + ':00"');
-        schemaContent.push('"duration":"' + formattedDate.duration + '" }');
+        schemaContent.push('"duration":"' + formattedDate.duration + '"');
       }
+      schemaContent.push('"startDate":"' + data.startDate + '" }');
     } else {
       schemaContent.push('"endDate":"' + formattedDate.end + '"');
     }
