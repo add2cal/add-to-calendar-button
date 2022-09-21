@@ -14,25 +14,25 @@ import { tzlib_get_ical_block, tzlib_get_offset, tzlib_get_timezones } from 'tim
 
 // CHECKING FOR SPECIFIC DEVICED AND SYSTEMS
 // browser
-const isBrowser = new Function('try { return this===window; } catch(e) { return false; }');
+const isBrowser = ()=>{try { return this===window; } catch(e) { return false; }}
 // iOS
 const isiOS = isBrowser()
-  ? new Function(
-      'if ((/iPad|iPhone|iPod/i.test(navigator.userAgent || navigator.vendor || window.opera) && !window.MSStream) || (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1)) { return true; } else { return false; }'
-    )
-  : new Function('return false;');
+  ? ()=>{
+      if ((/iPad|iPhone|iPod/i.test(navigator.userAgent || navigator.vendor || window.opera) && !window.MSStream) || (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1)) { return true; } else { return false; }
+    }
+  : ()=>{return false;}
 // Android
 const isAndroid = isBrowser()
-  ? new Function(
-      'if (/android/i.test(navigator.userAgent || navigator.vendor || window.opera) && !window.MSStream) { return true; } else { return false; }'
-    )
-  : new Function('return false;');
+  ? ()=>{
+      if (/android/i.test(navigator.userAgent || navigator.vendor || window.opera) && !window.MSStream) { return true; } else { return false; }
+    }
+  : ()=>{return false;};
 // Chrome
 const isChrome = isBrowser()
-  ? new Function(
-      'if (/chrome|chromium|crios/i.test(navigator.userAgent)) { return true; } else { return false; }'
-    )
-  : new Function('return false;');
+  ? ()=>{
+      if (/chrome|chromium|crios/i.test(navigator.userAgent)) { return true; } else { return false; }
+    }
+  : ()=>{return false;};
 // Mobile
 const isMobile = () => {
   if (isAndroid() || isiOS()) {
@@ -43,16 +43,16 @@ const isMobile = () => {
 };
 // WebView (iOS and Android)
 const isWebView = isBrowser()
-  ? new Function(
-      'if (/(; ?wv|(iPhone|iPod|iPad).*AppleWebKit(?!.*Safari))/i.test(navigator.userAgent || navigator.vendor)) { return true; } else { return false; }'
-    )
-  : new Function('return false;');
+  ? ()=>{
+      if (/(; ?wv|(iPhone|iPod|iPad).*AppleWebKit(?!.*Safari))/i.test(navigator.userAgent || navigator.vendor)) { return true; } else { return false; }
+    }
+  : ()=>{return false;};
 // checking for problematic apps
 const isProblematicWebView = isBrowser()
-  ? new Function(
-      'if (/(Instagram)/i.test(navigator.userAgent || navigator.vendor || window.opera)) { return true; } else { return false; }'
-    )
-  : new Function('return false;');
+  ? ()=>{
+      if (/(Instagram)/i.test(navigator.userAgent || navigator.vendor || window.opera)) { return true; } else { return false; }
+    }
+  : ()=>{return false;};
 
 // DEFINE GLOBAL VARIABLES
 const atcbDefaultTarget = isWebView() ? '_system' : '_blank';
