@@ -3,7 +3,7 @@
  *  Add to Calendar Button
  *  ++++++++++++++++++++++
  */
-const atcbVersion = '1.15.5';
+const atcbVersion = '1.16.0';
 /*! Creator: Jens Kuerschner (https://jenskuerschner.de)
  *  Project: https://github.com/add2cal/add-to-calendar-button
  *  License: MIT with “Commons Clause” License Condition v1.0
@@ -14,25 +14,53 @@ import { tzlib_get_ical_block, tzlib_get_offset, tzlib_get_timezones } from 'tim
 
 // CHECKING FOR SPECIFIC DEVICED AND SYSTEMS
 // browser
-const isBrowser = ()=>{try { return this===window; } catch(e) { return false; }}
+const isBrowser = () => {
+  try {
+    return this === window;
+  } catch (e) {
+    return false;
+  }
+};
 // iOS
 const isiOS = isBrowser()
-  ? ()=>{
-      if ((/iPad|iPhone|iPod/i.test(navigator.userAgent || navigator.vendor || window.opera) && !window.MSStream) || (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1)) { return true; } else { return false; }
+  ? () => {
+      if (
+        (/iPad|iPhone|iPod/i.test(navigator.userAgent || navigator.vendor || window.opera) &&
+          !window.MSStream) ||
+        (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1)
+      ) {
+        return true;
+      } else {
+        return false;
+      }
     }
-  : ()=>{return false;}
+  : () => {
+      return false;
+    };
 // Android
 const isAndroid = isBrowser()
-  ? ()=>{
-      if (/android/i.test(navigator.userAgent || navigator.vendor || window.opera) && !window.MSStream) { return true; } else { return false; }
+  ? () => {
+      if (/android/i.test(navigator.userAgent || navigator.vendor || window.opera) && !window.MSStream) {
+        return true;
+      } else {
+        return false;
+      }
     }
-  : ()=>{return false;};
+  : () => {
+      return false;
+    };
 // Chrome
 const isChrome = isBrowser()
-  ? ()=>{
-      if (/chrome|chromium|crios/i.test(navigator.userAgent)) { return true; } else { return false; }
+  ? () => {
+      if (/chrome|chromium|crios/i.test(navigator.userAgent)) {
+        return true;
+      } else {
+        return false;
+      }
     }
-  : ()=>{return false;};
+  : () => {
+      return false;
+    };
 // Mobile
 const isMobile = () => {
   if (isAndroid() || isiOS()) {
@@ -43,18 +71,33 @@ const isMobile = () => {
 };
 // WebView (iOS and Android)
 const isWebView = isBrowser()
-  ? ()=>{
-      if (/(; ?wv|(iPhone|iPod|iPad).*AppleWebKit(?!.*Safari))/i.test(navigator.userAgent || navigator.vendor)) { return true; } else { return false; }
+  ? () => {
+      if (
+        /(; ?wv|(iPhone|iPod|iPad).*AppleWebKit(?!.*Safari))/i.test(navigator.userAgent || navigator.vendor)
+      ) {
+        return true;
+      } else {
+        return false;
+      }
     }
-  : ()=>{return false;};
+  : () => {
+      return false;
+    };
 // checking for problematic apps
 const isProblematicWebView = isBrowser()
-  ? ()=>{
-      if (/(Instagram)/i.test(navigator.userAgent || navigator.vendor || window.opera)) { return true; } else { return false; }
+  ? () => {
+      if (/(Instagram)/i.test(navigator.userAgent || navigator.vendor || window.opera)) {
+        return true;
+      } else {
+        return false;
+      }
     }
-  : ()=>{return false;};
+  : () => {
+      return false;
+    };
 
 // DEFINE GLOBAL VARIABLES
+let atcbConsoleInit = false;
 const atcbDefaultTarget = isWebView() ? '_system' : '_blank';
 const atcbOptions = ['apple', 'google', 'ical', 'ms365', 'outlookcom', 'msteams', 'yahoo'];
 const atcbValidRecurrOptions = ['apple', 'google', 'ical'];
@@ -77,6 +120,7 @@ const atcbIcon = {
     '<span class="atcb-icon-outlookcom"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 175"><path d="M178.725 0H71.275A8.775 8.775 0 0 0 62.5 8.775v9.975l60.563 18.75L187.5 18.75V8.775A8.775 8.775 0 0 0 178.725 0z" fill="#0364b8"/><path d="M197.813 96.281c.915-2.878 2.187-5.855 2.187-8.781-.002-1.485-.795-2.857-1.491-3.26l-68.434-38.99a9.37 9.37 0 0 0-9.244-.519c-.312.154-.614.325-.906.512l-67.737 38.6-.025.013-.075.044a4.16 4.16 0 0 0-2.088 3.6c.541 2.971 1.272 5.904 2.188 8.781l71.825 52.532z" fill="#0a2767"/><path d="M150 18.75h-43.75L93.619 37.5l12.631 18.75L150 93.75h37.5v-37.5z" fill="#28a8ea"/><path d="M150 18.75h37.5v37.5H150z" fill="#50d9ff"/><path d="M150 93.75l-43.75-37.5H62.5v37.5l43.75 37.5 67.7 11.05z" fill="#0364b8"/><path d="M106.25 56.25v37.5H150v-37.5zM150 93.75v37.5h37.5v-37.5zm-87.5-75h43.75v37.5H62.5z" fill="#0078d4"/><path d="M62.5 93.75h43.75v37.5H62.5z" fill="#064a8c"/><path d="M126.188 145.113l-73.706-53.75 3.094-5.438 68.181 38.825a3.3 3.3 0 0 0 2.625-.075l68.331-38.937 3.1 5.431z" fill="#0a2767" opacity=".5"/><path d="M197.919 91.106l-.088.05-.019.013-67.738 38.588c-2.736 1.764-6.192 1.979-9.125.569l23.588 31.631 51.588 11.257v-.001c2.434-1.761 3.876-4.583 3.875-7.587V87.5c.001 1.488-.793 2.862-2.081 3.606z" fill="#1490df"/><path d="M200 165.625v-4.613l-62.394-35.55-7.531 4.294a9.356 9.356 0 0 1-9.125.569l23.588 31.631 51.588 11.231v.025a9.362 9.362 0 0 0 3.875-7.588z" opacity=".05"/><path d="M199.688 168.019l-68.394-38.956-1.219.688c-2.734 1.766-6.19 1.984-9.125.575l23.588 31.631 51.587 11.256v.001a9.38 9.38 0 0 0 3.562-5.187z" opacity=".1"/><path d="M51.455 90.721c-.733-.467-1.468-1.795-1.455-3.221v78.125c-.007 5.181 4.194 9.382 9.375 9.375h131.25c1.395-.015 2.614-.366 3.813-.813.638-.258 1.252-.652 1.687-.974z" fill="#28a8ea"/><path d="M112.5 141.669V39.581a8.356 8.356 0 0 0-8.331-8.331H62.687v46.6l-10.5 5.987-.031.012-.075.044A4.162 4.162 0 0 0 50 87.5v.031-.031V150h54.169a8.356 8.356 0 0 0 8.331-8.331z" opacity=".1"/><path d="M106.25 147.919V45.831a8.356 8.356 0 0 0-8.331-8.331H62.687v40.35l-10.5 5.987-.031.012-.075.044A4.162 4.162 0 0 0 50 87.5v.031-.031 68.75h47.919a8.356 8.356 0 0 0 8.331-8.331z" opacity=".2"/><path d="M106.25 135.419V45.831a8.356 8.356 0 0 0-8.331-8.331H62.687v40.35l-10.5 5.987-.031.012-.075.044A4.162 4.162 0 0 0 50 87.5v.031-.031 56.25h47.919a8.356 8.356 0 0 0 8.331-8.331z" opacity=".2"/><path d="M100 135.419V45.831a8.356 8.356 0 0 0-8.331-8.331H62.687v40.35l-10.5 5.987-.031.012-.075.044A4.162 4.162 0 0 0 50 87.5v.031-.031 56.25h41.669a8.356 8.356 0 0 0 8.331-8.331z" opacity=".2"/><path d="M8.331 37.5h83.337A8.331 8.331 0 0 1 100 45.831v83.338a8.331 8.331 0 0 1-8.331 8.331H8.331A8.331 8.331 0 0 1 0 129.169V45.831A8.331 8.331 0 0 1 8.331 37.5z" fill="#0078d4"/><path d="M24.169 71.675a26.131 26.131 0 0 1 10.263-11.337 31.031 31.031 0 0 1 16.313-4.087 28.856 28.856 0 0 1 15.081 3.875 25.875 25.875 0 0 1 9.988 10.831 34.981 34.981 0 0 1 3.5 15.938 36.881 36.881 0 0 1-3.606 16.662 26.494 26.494 0 0 1-10.281 11.213 30 30 0 0 1-15.656 3.981 29.556 29.556 0 0 1-15.425-3.919 26.275 26.275 0 0 1-10.112-10.85 34.119 34.119 0 0 1-3.544-15.744 37.844 37.844 0 0 1 3.481-16.563zm10.938 26.613a16.975 16.975 0 0 0 5.769 7.463 15.069 15.069 0 0 0 9.019 2.719 15.831 15.831 0 0 0 9.631-2.806 16.269 16.269 0 0 0 5.606-7.481 28.913 28.913 0 0 0 1.787-10.406 31.644 31.644 0 0 0-1.687-10.538 16.681 16.681 0 0 0-5.413-7.75 14.919 14.919 0 0 0-9.544-2.956 15.581 15.581 0 0 0-9.231 2.744 17.131 17.131 0 0 0-5.9 7.519 29.85 29.85 0 0 0-.044 21.5z" fill="#fff"/></svg></span>',
   yahoo:
     '<span class="atcb-icon-yahoo"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 177.803"><path d="M0 43.284h38.144l22.211 56.822 22.5-56.822h37.135L64.071 177.803H26.694l15.308-35.645L.001 43.284zm163.235 45.403H121.64L158.558 0 200 .002zm-30.699 8.488c12.762 0 23.108 10.346 23.108 23.106s-10.345 23.106-23.108 23.106a23.11 23.11 0 0 1-23.104-23.106 23.11 23.11 0 0 1 23.104-23.106z"/></svg></span>',
+  atcb: '<svg version="1.1" viewBox="0 0 150 8.5002" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"><g transform="matrix(1.3333 0 0 -1.3333 -2427.5 1757.9)"><g transform="matrix(.22189 0 0 -.22189 1822.6 1374.6)" fill="#9a9a9a" style="paint-order:stroke markers fill;shape-inside:url(#rect2441);white-space:pre" aria-label="Add-to-Calendar-PRO.com"><path d="m-1.2773 253.99h12.148l7.9688 27.5h-9.4141l-1.0547-5.2734h-7.1094l-1.1328 5.2734h-9.0234zm8.7109 17.305-2.6172-12.031-2.6953 12.031z" style="paint-order:stroke markers fill"/><path d="m29.66 261.16q2.2656 0 3.9062 0.9375t2.6562 3.1055v-10.078l8.4375-1.25v27.617h-8.4375v-3.7109q-0.9375 2.0117-2.5586 3.0273-1.6211 0.9961-4.043 0.9961-2.0898 0-3.8672-0.83985-1.7773-0.85937-3.0859-2.2852-1.2891-1.4258-2.0312-3.2812-0.74219-1.875-0.74219-3.9062 0-2.1875 0.78125-4.082 0.80078-1.8945 2.1484-3.2812 1.3477-1.3867 3.1055-2.168 1.7773-0.80078 3.7305-0.80078zm6.5625 10.176q-0.03906-0.78125-0.37109-1.4844-0.33203-0.70312-0.87891-1.2109-0.52734-0.52735-1.2305-0.82032-0.70312-0.3125-1.4648-0.3125-0.85938 0-1.6016 0.33203-0.72266 0.3125-1.25 0.85938-0.52734 0.54687-0.83984 1.2695-0.29297 0.72266-0.29297 1.5234 0 0.85937 0.3125 1.582 0.33203 0.72266 0.87891 1.2695 0.54688 0.52734 1.2695 0.83984 0.72266 0.29297 1.5234 0.29297 0.83984 0 1.5625-0.33203 0.72266-0.33203 1.25-0.8789 0.52734-0.54688 0.82031-1.2695 0.3125-0.72265 0.3125-1.5039z" style="paint-order:stroke markers fill"/><path d="m57.551 261.16q2.2656 0 3.9062 0.9375t2.6562 3.1055v-10.078l8.4375-1.25v27.617h-8.4375v-3.7109q-0.9375 2.0117-2.5586 3.0273-1.6211 0.9961-4.043 0.9961-2.0898 0-3.8672-0.83985-1.7773-0.85937-3.0859-2.2852-1.2891-1.4258-2.0312-3.2812-0.74219-1.875-0.74219-3.9062 0-2.1875 0.78125-4.082 0.80078-1.8945 2.1484-3.2812 1.3477-1.3867 3.1055-2.168 1.7773-0.80078 3.7305-0.80078zm6.5625 10.176q-0.03906-0.78125-0.37109-1.4844-0.33203-0.70312-0.87891-1.2109-0.52734-0.52735-1.2305-0.82032-0.70312-0.3125-1.4648-0.3125-0.85938 0-1.6016 0.33203-0.72266 0.3125-1.25 0.85938-0.52734 0.54687-0.83984 1.2695-0.29297 0.72266-0.29297 1.5234 0 0.85937 0.3125 1.582 0.33203 0.72266 0.87891 1.2695 0.54688 0.52734 1.2695 0.83984 0.72266 0.29297 1.5234 0.29297 0.83984 0 1.5625-0.33203 0.72266-0.33203 1.25-0.8789 0.52734-0.54688 0.82031-1.2695 0.3125-0.72265 0.3125-1.5039z" style="paint-order:stroke markers fill"/><path d="m76.496 268.8h10.742v4.7266h-10.742z" style="paint-order:stroke markers fill"/><path d="m104.8 280.44q-2.7148 1.3672-6.0156 1.3672-1.6992 0-3.0273-0.54688-1.3281-0.5664-2.2461-1.6016-0.89844-1.0547-1.3672-2.5195-0.46875-1.4844-0.46875-3.3398l0.03906-7.3828h-2.5391v-4.9609h3.1641l3.7109-7.5781h4.0625v7.5781h4.6094v4.9609h-4.6094v6.7969q0 1.0547 0.68359 1.582t1.8555 0.52734q0.91797 0 1.8359-0.46875z" style="paint-order:stroke markers fill"/><path d="m114.62 271.45q0 1.0938 0.3125 1.9141 0.33204 0.82031 0.85938 1.3672 0.52734 0.54687 1.2109 0.82031 0.68359 0.27344 1.3867 0.27344 0.70312 0 1.3672-0.27344 0.6836-0.27344 1.2109-0.82031 0.54688-0.54688 0.85938-1.3672 0.33203-0.82031 0.33203-1.9141t-0.33203-1.9141q-0.3125-0.82031-0.85938-1.3476-0.52734-0.54688-1.2109-0.82032-0.66406-0.27343-1.3672-0.27343-0.70313 0-1.3867 0.27343-0.6836 0.27344-1.2109 0.82032-0.52734 0.52734-0.85938 1.3476-0.3125 0.82032-0.3125 1.9141zm-7.8125 0q0.0977-2.5195 1.0352-4.4336 0.95703-1.9141 2.5195-3.2226 1.5625-1.3086 3.6133-1.9727 2.0703-0.66406 4.3945-0.66406 2.5391 0 4.6484 0.76172 2.1094 0.76171 3.6328 2.1289 1.5234 1.3477 2.3633 3.2422 0.83985 1.8945 0.83985 4.1602 0 1.8359-0.48828 3.3203-0.46875 1.4844-1.2891 2.6367-0.82031 1.1328-1.9336 1.9726-1.1133 0.83985-2.4023 1.3867-1.2891 0.52735-2.6758 0.78125-1.3672 0.25391-2.7344 0.25391-2.5781 0-4.707-0.74219-2.1094-0.76172-3.6328-2.1289-1.5234-1.3672-2.3633-3.2617-0.82032-1.9141-0.82032-4.2188z" style="paint-order:stroke markers fill"/><path d="m132.73 268.8h10.742v4.7266h-10.742z" style="paint-order:stroke markers fill"/><path d="m162.41 274.89q0.6836 0 1.2695-0.0586 0.58594-0.0781 1.1524-0.21484 0.58593-0.13672 1.1914-0.35156 0.60547-0.21485 1.3477-0.50782l1.0938 6.3477q-3.4766 2.0117-7.5781 2.0117-5.8008 0-9.9414-3.9062-4.3359-4.0625-4.3945-10.488 0-3.125 1.0742-5.7617 1.0742-2.6367 2.9688-4.5312 1.8945-1.9141 4.4726-2.9688 2.5781-1.0742 5.5859-1.0742 4.2773 0 7.7734 1.9922l-1.0547 6.2109q-2.8711-1.0938-5.1953-1.0938-3.2617 0-4.9609 1.8945-1.6797 1.875-1.6797 5.293 0 1.6992 0.44922 3.0469 0.46875 1.3281 1.3477 2.2656 0.8789 0.91797 2.1484 1.4062 1.2891 0.48829 2.9297 0.48829z" style="paint-order:stroke markers fill"/><path d="m186.52 277.78q-0.9375 1.9531-2.5391 2.9883-1.6016 1.0352-4.0234 1.0352-1.9531 0-3.7305-0.78125-1.7774-0.80078-3.125-2.1875-1.3477-1.4062-2.1484-3.3203-0.80078-1.9141-0.80078-4.1602 0-2.2266 0.80078-4.1016 0.82031-1.875 2.168-3.2227 1.3672-1.3672 3.125-2.1094 1.7773-0.76172 3.7109-0.76172 0.9961 0 1.9531 0.27343 0.97656 0.25391 1.8359 0.83985 0.8789 0.5664 1.582 1.4453 0.72265 0.87891 1.1914 2.1094v-4.668h8.3984v20.332h-8.3984zm0-6.4453q-0.0391-0.78125-0.37109-1.4844-0.33203-0.70312-0.87891-1.2109-0.52734-0.52735-1.2305-0.82032-0.70313-0.3125-1.4648-0.3125-0.85937 0-1.6016 0.33203-0.72266 0.3125-1.2695 0.85938-0.52735 0.52734-0.83985 1.25t-0.3125 1.543q0 0.85937 0.33204 1.6016 0.33203 0.72266 0.8789 1.25 0.56641 0.52734 1.2891 0.83984 0.72266 0.29297 1.5234 0.29297 0.82031 0 1.5234-0.3125 0.70312-0.3125 1.2305-0.83984 0.52734-0.52734 0.83984-1.2109 0.3125-0.70312 0.35156-1.4648z" style="paint-order:stroke markers fill"/><path d="m212.02 280.44q-2.7148 1.3672-6.0156 1.3672-1.6992 0-3.0273-0.54688-1.3281-0.5664-2.2461-1.6016-0.89843-1.0547-1.3672-2.5195-0.46875-1.4844-0.46875-3.3398v-18.672l8.4375-1.25v19.336q0 1.0742 0.68359 1.6016 0.68359 0.50781 1.8555 0.50781 0.89844 0 1.8359-0.46875z" style="paint-order:stroke markers fill"/><path d="m225.71 276.2q2.7344 0 5.8984-1.4062l0.97656 5.3711q-3.6328 1.6406-8.1641 1.6406-2.5195 0-4.6094-0.76172-2.0703-0.78125-3.5742-2.1484-1.4844-1.3867-2.3242-3.2812-0.82031-1.8945-0.82031-4.1211 0-2.3438 0.85937-4.2383 0.87891-1.9141 2.3828-3.2617 1.5039-1.3672 3.5156-2.0898 2.0117-0.74218 4.2969-0.74218 2.3047 0 4.043 0.78125 1.7383 0.76172 2.8906 2.1094 1.1719 1.3281 1.7383 3.125 0.58594 1.7774 0.58594 3.8086 0 0.27343-0.0195 0.52734t-0.0586 0.48828l-11.992 1.5625q0.46875 1.4062 1.5625 2.0312 1.0938 0.60547 2.8125 0.60547zm1.4844-7.6758q-0.6836-2.5-3.0469-2.5-0.74218 0-1.3281 0.29297t-0.9961 0.82031q-0.39062 0.50781-0.60546 1.2305-0.21485 0.70312-0.23438 1.5234z" style="paint-order:stroke markers fill"/><path d="m236.3 261.75h8.0469v4.082q1.1719-2.3633 3.0078-3.5156 1.8555-1.1523 4.3359-1.1523 1.9922 0 3.5156 0.74218 1.5234 0.74219 2.5586 2.1094 1.0547 1.3477 1.582 3.2617 0.54687 1.8945 0.54687 4.2188v10h-8.3984v-10.82q0-0.78125-0.15625-1.4453-0.13672-0.66406-0.46875-1.1328-0.3125-0.48828-0.80078-0.74219-0.48828-0.27343-1.1914-0.27343-0.85938 0-1.582 0.42968-0.72265 0.41016-1.2695 1.0156-0.52734 0.60547-0.85937 1.2695-0.33203 0.64453-0.42969 1.1133v10.586h-8.4375z" style="paint-order:stroke markers fill"/><path d="m272.59 261.16q2.2656 0 3.9062 0.9375 1.6406 0.9375 2.6562 3.1055v-10.078l8.4375-1.25v27.617h-8.4375v-3.7109q-0.9375 2.0117-2.5586 3.0273-1.6211 0.9961-4.043 0.9961-2.0898 0-3.8672-0.83985-1.7773-0.85937-3.0859-2.2852-1.2891-1.4258-2.0312-3.2812-0.74219-1.875-0.74219-3.9062 0-2.1875 0.78125-4.082 0.80078-1.8945 2.1484-3.2812 1.3476-1.3867 3.1055-2.168 1.7774-0.80078 3.7305-0.80078zm6.5625 10.176q-0.0391-0.78125-0.37109-1.4844-0.33203-0.70312-0.87891-1.2109-0.52734-0.52735-1.2305-0.82032-0.70312-0.3125-1.4648-0.3125-0.85937 0-1.6016 0.33203-0.72266 0.3125-1.25 0.85938-0.52735 0.54687-0.83985 1.2695-0.29296 0.72266-0.29296 1.5234 0 0.85937 0.3125 1.582 0.33203 0.72266 0.8789 1.2695 0.54688 0.52734 1.2695 0.83984 0.72266 0.29297 1.5234 0.29297 0.83984 0 1.5625-0.33203t1.25-0.8789q0.52734-0.54688 0.82031-1.2695 0.3125-0.72265 0.3125-1.5039z" style="paint-order:stroke markers fill"/><path d="m307.06 277.78q-0.9375 1.9531-2.5391 2.9883-1.6016 1.0352-4.0234 1.0352-1.9531 0-3.7305-0.78125-1.7773-0.80078-3.125-2.1875-1.3477-1.4062-2.1484-3.3203-0.80078-1.9141-0.80078-4.1602 0-2.2266 0.80078-4.1016 0.82032-1.875 2.168-3.2227 1.3672-1.3672 3.125-2.1094 1.7774-0.76172 3.7109-0.76172 0.99609 0 1.9531 0.27343 0.97657 0.25391 1.8359 0.83985 0.87891 0.5664 1.582 1.4453 0.72266 0.87891 1.1914 2.1094v-4.668h8.3984v20.332h-8.3984zm0-6.4453q-0.0391-0.78125-0.37109-1.4844-0.33204-0.70312-0.87891-1.2109-0.52734-0.52735-1.2305-0.82032-0.70312-0.3125-1.4648-0.3125-0.85938 0-1.6016 0.33203-0.72265 0.3125-1.2695 0.85938-0.52734 0.52734-0.83984 1.25t-0.3125 1.543q0 0.85937 0.33203 1.6016 0.33203 0.72266 0.87891 1.25 0.5664 0.52734 1.2891 0.83984 0.72266 0.29297 1.5234 0.29297 0.82031 0 1.5234-0.3125 0.70313-0.3125 1.2305-0.83984 0.52735-0.52734 0.83985-1.2109 0.3125-0.70312 0.35156-1.4648z" style="paint-order:stroke markers fill"/><path d="m319.5 261.75h8.4375v4.082q0.95703-2.4219 2.5391-3.5352 1.6016-1.1328 3.6719-1.1328l1.1719 6.543q-3.8086 0-5.6055 0.82031-1.7773 0.80078-1.7773 2.5781v10.391h-8.4375z" style="paint-order:stroke markers fill"/><path d="m337.22 268.8h10.742v4.7266h-10.742z" style="paint-order:stroke markers fill"/><path d="m352.43 253.99h9.9219q3.0859 0 5.4883 0.60547t4.043 1.7773q1.6406 1.1719 2.5 2.8711 0.85937 1.6797 0.85937 3.8477 0 2.1094-0.97656 3.7695-0.97656 1.6602-2.6758 2.832-1.6992 1.1524-3.9844 1.7774-2.2656 0.60547-4.8633 0.60547h-1.6797v9.4141h-8.6328zm10.352 12.539q2.0703 0 3.2422-0.85937 1.1719-0.85938 1.1719-2.5781 0-0.83984-0.35156-1.4648-0.33204-0.625-0.9375-1.0352-0.58594-0.42969-1.3867-0.64453t-1.7383-0.21484h-1.7188v6.7188q0.27343 0.0391 0.70312 0.0586t1.0156 0.0195z" style="paint-order:stroke markers fill"/><path d="m402.92 281.41q-2.5586 0.70313-3.6914 0.70313-7.2461 0-9.1016-6.6016l-1.0938-4.4531h-1.875v10.43h-8.75v-27.5h12.227q2.3828 0 4.4726 0.54687 2.0898 0.52735 3.6328 1.5625 1.5625 1.0156 2.4414 2.5195 0.89844 1.5039 0.89844 3.457 0 1.4453-0.37109 2.5976-0.35157 1.1328-1.0352 2.0508-0.68359 0.89844-1.6797 1.6016-0.97656 0.70312-2.2266 1.25l0.17578 0.95703q0.0586 0.33203 0.11719 0.5664 0.0586 0.23438 0.0977 0.39063l0.21484 0.83984q0.23437 0.74219 0.52734 1.2695 0.3125 0.50782 0.78125 0.83985 0.46875 0.3125 1.1524 0.46875 0.70312 0.13672 1.6992 0.13672 0.15625 0 0.48828-0.0391 0.35156-0.0391 0.89843-0.11718zm-8.8476-18.945q0-0.76172-0.33203-1.25-0.3125-0.50781-0.87891-0.78125-0.56641-0.29297-1.3281-0.39062-0.76172-0.11719-1.6406-0.11719h-2.7344v5.5078h1.5234l1.2891-0.0586q0.76171-0.0586 1.4844-0.19532 0.74219-0.15625 1.3281-0.46875 0.58593-0.33203 0.9375-0.85937 0.35156-0.54688 0.35156-1.3867z" style="paint-order:stroke markers fill"/><path d="m404.76 267.78q0-5.957 3.7891-10.039 4.043-4.3555 10.938-4.3555 3.3594 0 6.0742 1.0938 2.7148 1.0742 4.6289 2.9883t2.9492 4.5703q1.0352 2.6367 1.0352 5.7422 0 1.875-0.42968 3.6719-0.42969 1.7969-1.2891 3.3984-0.83984 1.582-2.0898 2.9297-1.25 1.3281-2.8906 2.3047-1.6211 0.95703-3.6328 1.4844-1.9922 0.54688-4.3555 0.54688-2.4219 0-4.4531-0.54688-2.0117-0.54687-3.6523-1.5234-1.6406-0.97657-2.8906-2.3242-1.2305-1.3477-2.0703-2.9297-0.82031-1.6016-1.25-3.3789-0.41016-1.7773-0.41016-3.6328zm14.727 7.0703q1.543 0 2.6172-0.64453 1.0938-0.66406 1.7774-1.6797 0.70312-1.0352 1.0156-2.3047 0.33203-1.2695 0.33203-2.4805 0-1.582-0.41015-2.8906-0.39063-1.3281-1.1524-2.2852-0.74219-0.97657-1.8164-1.543-1.0547-0.56641-2.3633-0.625-1.5625 0.0391-2.6562 0.70312-1.0938 0.66407-1.7969 1.7188-0.68359 1.0352-1.0156 2.3438-0.3125 1.2891-0.3125 2.5781 0 1.5234 0.39063 2.832 0.41016 1.2891 1.1523 2.2461 0.76172 0.9375 1.8359 1.4844 1.0742 0.54687 2.4023 0.54687z" style="paint-order:stroke markers fill"/><path d="m436.18 279.2q0-0.58594 0.2474-1.0807 0.26042-0.49479 0.67708-0.84636 0.41667-0.35156 0.95053-0.54687 0.54687-0.20834 1.1198-0.20834 0.59896 0 1.1458 0.22136 0.54688 0.20833 0.95053 0.58594 0.41666 0.36458 0.65104 0.84635 0.2474 0.48177 0.2474 1.0286 0 0.61198-0.26042 1.1068-0.2474 0.49479-0.66407 0.85938-0.41666 0.35156-0.96354 0.54687-0.53385 0.19531-1.1068 0.19531-0.625 0-1.1719-0.20833-0.54687-0.20833-0.95052-0.57292-0.40365-0.36458-0.63802-0.85937-0.23438-0.49479-0.23438-1.0677z" style="paint-order:stroke markers fill"/><path d="m454.38 272.56q-1.4062-0.4427-2.6042-0.4427-0.61198 0-1.1068 0.19531-0.48177 0.19531-0.83333 0.54687-0.33855 0.35157-0.53386 0.85938-0.18229 0.49479-0.18229 1.1068t0.18229 1.1198q0.19531 0.49479 0.54688 0.85937 0.35156 0.36459 0.84635 0.5599 0.50782 0.19531 1.1328 0.19531 1.1849 0 2.5-0.44271l0.52083 3.724q-1.0026 0.52083-1.9661 0.6901-0.95053 0.16927-2.0703 0.16927-1.5755 0-2.9036-0.49479t-2.2917-1.3932-1.5104-2.1615q-0.53385-1.276-0.53385-2.8255t0.58594-2.8125q0.58593-1.276 1.5755-2.1745 1.0026-0.91146 2.3177-1.4062 1.3151-0.4948 2.7604-0.4948 0.63802 0 1.1458 0.0521 0.52084 0.0391 0.98959 0.16927 0.46875 0.11718 0.9375 0.32552 0.46875 0.20833 1.0156 0.53385z" style="paint-order:stroke markers fill"/><path d="m461.18 274.8q0 0.72917 0.20833 1.276 0.22136 0.54688 0.57292 0.91146 0.35157 0.36459 0.80729 0.54688 0.45573 0.18229 0.92449 0.18229 0.46875 0 0.91145-0.18229 0.45573-0.18229 0.8073-0.54688 0.36458-0.36458 0.57291-0.91146 0.22136-0.54687 0.22136-1.276t-0.22136-1.276q-0.20833-0.54688-0.57291-0.89844-0.35157-0.36458-0.8073-0.54688-0.4427-0.18229-0.91145-0.18229-0.46876 0-0.92449 0.18229-0.45572 0.1823-0.80729 0.54688-0.35156 0.35156-0.57292 0.89844-0.20833 0.54687-0.20833 1.276zm-5.2083 0q0.0651-1.6797 0.69011-2.9557 0.63802-1.276 1.6797-2.1484 1.0417-0.8724 2.4088-1.3151 1.3802-0.44271 2.9297-0.44271 1.6927 0 3.099 0.50782 1.4062 0.50781 2.4219 1.4193 1.0156 0.89844 1.5755 2.1615 0.55989 1.263 0.55989 2.7734 0 1.224-0.32552 2.2136-0.3125 0.98958-0.85937 1.7578-0.54688 0.75521-1.2891 1.3151-0.74219 0.55989-1.6016 0.92448-0.85938 0.35156-1.7839 0.52083-0.91146 0.16927-1.8229 0.16927-1.7188 0-3.138-0.49479-1.4062-0.50781-2.4219-1.4193t-1.5755-2.1745q-0.54688-1.276-0.54688-2.8125z" style="paint-order:stroke markers fill"/><path d="m488.16 271.26q0.54688-1.6536 1.7578-2.487 1.2109-0.83334 3.138-0.83334 1.0938 0 2.0182 0.50782 0.92448 0.50781 1.6016 1.4193 0.67708 0.91146 1.0547 2.1745 0.3776 1.263 0.3776 2.7865v6.6667h-5.625v-6.6667q0-0.55989-0.13021-1.0286-0.11718-0.48178-0.35156-0.83334-0.23437-0.35156-0.57292-0.54687-0.33854-0.19532-0.76823-0.19532-0.55989 0-0.96354 0.26042-0.40364 0.2474-0.66406 0.63802-0.26042 0.37761-0.39063 0.84636-0.11718 0.45573-0.11718 0.85937v6.6667h-5.5729v-6.6667q0-0.54687-0.13021-1.0156-0.11718-0.48178-0.36458-0.83334-0.23438-0.35156-0.58594-0.54687-0.35156-0.20834-0.79427-0.20834-0.48177 0-0.8724 0.19532-0.3776 0.19531-0.65104 0.54687-0.27344 0.33854-0.42969 0.79427-0.14323 0.45573-0.15625 0.96355v6.7708h-5.625v-13.164h5.625v2.7214q0.74219-1.6536 1.875-2.3828 1.1458-0.72917 2.6823-0.72917 0.74219 0 1.4323 0.19532 0.69011 0.18229 1.2891 0.58593 0.61198 0.40365 1.0938 1.0417 0.49479 0.625 0.82031 1.4974z" style="paint-order:stroke markers fill"/></g></g></svg>',
   close:
     '<span class="atcb-icon-close"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200"><path d="M2.321 13.529a7.927 7.927 0 0 1 0-11.208 7.927 7.927 0 0 1 11.208 0l86.471 86.471L186.47 2.321a7.927 7.927 0 0 1 11.209 0 7.927 7.927 0 0 1 0 11.208l-86.474 86.469 86.472 86.473a7.927 7.927 0 0 1-11.209 11.208l-86.471-86.471-86.469 86.471a7.927 7.927 0 0 1-11.208-11.208l86.471-86.473z"/></svg></span>',
   browser:
@@ -86,8 +130,11 @@ const atcbIcon = {
 // INITIALIZE THE SCRIPT AND FUNCTIONALITY
 function atcb_init() {
   // let's get started
-  console.log('add to calendar button initialized (version ' + atcbVersion + ')');
-  console.log('See https://github.com/add2cal/add-to-calendar-button for details');
+  if (!atcbConsoleInit) {
+    console.log('Add to Calendar Button Script initialized (version ' + atcbVersion + ')');
+    console.log('See https://github.com/add2cal/add-to-calendar-button for details');
+    atcbConsoleInit = true;
+  }
   // abort if not in a browser
   if (!isBrowser()) {
     console.error('no further initialization due to wrong environment (no browser)');
@@ -114,7 +161,7 @@ function atcb_init() {
           );
         } catch (e) {
           console.error(
-            'add to calendar button generation failed: JSON content provided, but badly formatted (in doubt, try some tool like https://jsonformatter.org/ to validate).\r\nError message: ' +
+            'Add to Calendar Button generation failed: JSON content provided, but badly formatted (in doubt, try some tool like https://jsonformatter.org/ to validate).\r\nError message: ' +
               e
           );
           return '';
@@ -175,6 +222,7 @@ function atcb_patch_config(configData) {
 
 // CLEAN DATA BEFORE FURTHER VALIDATION (CONSIDERING SPECIAL RULES AND SCHEMES)
 function atcb_decorate_data(data) {
+  const now = new Date();
   // format RRULE
   if (data.recurrence != null && data.recurrence != '') {
     // remove spaces and force upper case
@@ -272,7 +320,7 @@ function atcb_decorate_data(data) {
     if (isiOS() && atcbiOSInvalidOptions.includes(data.options[`${i}`])) {
       data.options.splice(i, 1);
       if (data.optionLabels[`${i}`] != null) {
-        delete data.optionLabels[`${i}`] ;
+        delete data.optionLabels[`${i}`];
       }
       continue;
     }
@@ -281,7 +329,7 @@ function atcb_decorate_data(data) {
       if (!atcbValidRecurrOptions.includes(data.options[`${i}`])) {
         data.options.splice(i, 1);
         if (data.optionLabels[`${i}`] != null) {
-          delete data.optionLabels[`${i}`] ;
+          delete data.optionLabels[`${i}`];
         }
         continue;
       }
@@ -293,7 +341,7 @@ function atcb_decorate_data(data) {
       ) {
         data.options.splice(i, 1);
         if (data.optionLabels[`${i}`] != null) {
-          delete data.optionLabels[`${i}`] ;
+          delete data.optionLabels[`${i}`];
         }
       }
     }
@@ -324,6 +372,28 @@ function atcb_decorate_data(data) {
     data.size = 10 + parseInt(data.size);
   } else {
     data.size = 16;
+  }
+  // set sequence
+  if (data.sequence == null || data.sequence == '') {
+    data.sequence = 0;
+  }
+  // set UID
+  if (data.uid == null || data.uid == '') {
+    data.uid = atcb_generate_uuid();
+  }
+  // set created date
+  if (data.created == null || data.created == '') {
+    data.created = atcb_format_datetime(now, 'clean', true);
+  }
+  // set updated date
+  if (data.updated == null || data.updated == '') {
+    data.updated = atcb_format_datetime(now, 'clean', true);
+  }
+  // set status
+  if (data.status == null || data.status == '') {
+    data.status = 'CONFIRMED';
+  } else {
+    data.status = data.status.toUpperCase();
   }
   // determine dark mode
   if (data.lightMode == null || data.lightMode == '') {
@@ -370,14 +440,14 @@ function atcb_decorate_data(data) {
 function atcb_check_required(data) {
   // check for at least 1 option
   if (data.options == null || data.options.length < 1) {
-    console.error('add to calendar button generation failed: no valid options set');
+    console.error('Add to Calendar Button generation failed: no valid options set');
     return false;
   }
   // check for min required data (without "options")
   const requiredField = ['name', 'startDate'];
   return requiredField.every(function (field) {
     if (data[`${field}`] == null || data[`${field}`] == '') {
-      console.error('add to calendar button generation failed: required setting missing [' + field + ']');
+      console.error('Add to Calendar Button generation failed: required setting missing [' + field + ']');
       return false;
     }
     return true;
@@ -450,10 +520,10 @@ function atcb_validate(data) {
   if (data.identifier != null && data.identifier != '') {
     if (!/^[\w-]+$/.test(data.identifier)) {
       data.identifier = '';
-      console.error('add to calendar button generation: identifier invalid - using auto numbers instead');
+      console.error('Add to Calendar Button generation: identifier invalid - using auto numbers instead');
     }
   }
-  const msgPrefix = 'add to calendar button generation (' + data.identifier + ')';
+  const msgPrefix = 'Add to Calendar Button generation (' + data.identifier + ')';
   // validate explicit ics file
   if (data.icsFile != null && data.icsFile != '') {
     if (
@@ -480,14 +550,46 @@ function atcb_validate(data) {
       return false;
     }
   }
-  // validate sequence number if given and set it 0 if not
-  if (data.sequence != null && data.sequence != '') {
-    if (!/^\d+$/.test(data.sequence)) {
-      console.log(msgPrefix + ': sequence needs to be a number. Used the default 0 instead');
-      data.sequence = 0;
-    }
-  } else {
+  // validate UID (must have less then 255 characters and only allowes for ; see )
+  if (!/^(\w|-){1,254}$/.test(data.uid)) {
+    console.error(
+      msgPrefix +
+        ': UID not valid. May only contain alpha, digits, and dashes; and be less than 255 characters'
+    );
+    return false;
+  }
+  // validate UID for the recommended form, which is not forced, but show throw a warning
+  if (!/^[0-9a-f]{8}-[0-9a-f]{4}-[0-5][0-9a-f]{3}-[089ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(data.uid)) {
+    console.warn(
+      msgPrefix +
+        ': UID is strictly recommended to be a hex-encoded random Universally Unique Identifier (UUID)!'
+    );
     data.sequence = 0;
+  }
+  // validate sequence number if given and set it 0 if not
+  if (!/^\d+$/.test(data.sequence)) {
+    console.log(msgPrefix + ': sequence needs to be a number. Used the default 0 instead');
+    data.sequence = 0;
+  }
+  // validate created and updated input
+  if (!/^\d{8}T\d{6}Z$/.test(data.created)) {
+    console.error(
+      msgPrefix +
+        ': created date format not valid. Needs to be a full ISO-8601 UTC date and time string, formatted YYYYMMDDTHHMMSSZ'
+    );
+    return false;
+  }
+  if (!/^\d{8}T\d{6}Z$/.test(data.updated)) {
+    console.error(
+      msgPrefix +
+        ': updated date format not valid. Needs to be a full ISO-8601 UTC date and time string, formatted YYYYMMDDTHHMMSSZ'
+    );
+    return false;
+  }
+  // validate status
+  if (data.status != 'TENTATIVE' && data.status != 'CONFIRMED' && data.status != 'CANCELLED') {
+    console.error(msgPrefix + ': event status needs to be TENTATIVE, CONFIRMED, or CANCELLED');
+    return false;
   }
   // validate options
   if (
@@ -828,6 +930,9 @@ function atcb_generate(button, data) {
     schemaEl.type = 'application/ld+json';
     const schemaContent = [];
     schemaContent.push('{\r\n"event": {\r\n"@context":"https://schema.org",\r\n"@type":"Event"');
+    if (data.status == 'CANCELLED') {
+      schemaContent.push('"eventStatus":"https://schema.org/EventCancelled"');
+    }
     schemaContent.push('"name":"' + data.name + '"');
     if (data.descriptionHtmlFree) {
       schemaContent.push('"description":"' + data.descriptionHtmlFree + '"');
@@ -970,7 +1075,7 @@ function atcb_generate(button, data) {
     button.style.display = 'block';
   }
   // console log
-  console.log('add to calendar button "' + data.identifier + '" created');
+  console.log('Add to Calendar Button "' + data.identifier + '" created');
 }
 
 // generate the dropdown list (can also appear wihtin a modal, if option is set)
@@ -1014,7 +1119,7 @@ function atcb_generate_bg_overlay(listStyle = 'dropdown', trigger = '', lightMod
   }
   if (!darken) {
     bgOverlay.classList.add('atcb-no-bg');
-  }  
+  }
   bgOverlay.classList.add('atcb-' + lightMode);
   bgOverlay.tabIndex = 0;
   bgOverlay.addEventListener(
@@ -1112,14 +1217,33 @@ function atcb_open(data, button, keyboardTrigger = false, generatedButton = fals
   // define background overlay
   const bgOverlay = atcb_generate_bg_overlay(data.listStyle, data.trigger, data.lightMode, data.background);
   // render the items depending on the liststyle
+  const atcbL = document.createElement('div');
+  atcbL.id = 'add-to-calendar-button-reference';
+  atcbL.style.width = '150px';
+  atcbL.style.padding = '10px 0';
+  atcbL.style.height = 'auto';
+  atcbL.style.transform = 'translate3d(0, 0, 0)';
+  atcbL.style.zIndex = '15000000';
+  setTimeout(() => {
+    atcbL.innerHTML =
+      '<a href="https://add-to-calendar-button.com" target="_blank" rel="noopener">' +
+      atcbIcon['atcb'] +
+      '</a>';
+  }, 500);
   if (data.listStyle === 'modal') {
     document.body.appendChild(bgOverlay);
     bgOverlay.appendChild(list);
+    //document.body.appendChild(atcbL);
+    atcbL.style.position = 'fixed';
+    atcbL.style.bottom = '15px';
+    atcbL.style.right = '30px';
     document.body.classList.add('atcb-modal-no-scroll');
   } else {
+    atcbL.style.position = 'absolute';
     document.body.appendChild(listWrapper);
     listWrapper.appendChild(list);
     listWrapper.classList.add('atcb-style-' + data.buttonStyle);
+    //document.body.appendChild(atcbL);
     document.body.appendChild(bgOverlay);
     if (data.listStyle === 'dropdown-static') {
       // in the dropdown-static case, we do not dynamically adjust whether we show the dropdown upwards
@@ -1161,6 +1285,7 @@ function atcb_close(keyboardTrigger = false) {
   Array.from(document.querySelectorAll('.atcb-list-wrapper'))
     .concat(Array.from(document.querySelectorAll('.atcb-list')))
     .concat(Array.from(document.querySelectorAll('.atcb-info-modal')))
+    .concat(Array.from(document.querySelectorAll('#add-to-calendar-button-reference')))
     .concat(Array.from(document.querySelectorAll('#atcb-bgoverlay')))
     .forEach((el) => el.remove());
 }
@@ -1168,10 +1293,15 @@ function atcb_close(keyboardTrigger = false) {
 // prepare data when not using the init function
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 function atcb_action(data, triggerElement, keyboardTrigger = true) {
+  if (!atcbConsoleInit) {
+    console.log('Add to Calendar Button Script initialized (version ' + atcbVersion + ')');
+    console.log('See https://github.com/add2cal/add-to-calendar-button for details');
+    atcbConsoleInit = true;
+  }
   data = atcb_secure_content(data);
   // decorate & validate data
   if (!atcb_check_required(data)) {
-    throw new Error('add to calendar button generation failed: required data missing; see console logs');
+    throw new Error('Add to Calendar Button generation failed: required data missing; see console logs');
   }
   data = atcb_decorate_data(data);
   if (triggerElement) {
@@ -1188,7 +1318,7 @@ function atcb_action(data, triggerElement, keyboardTrigger = true) {
   }
   if (!atcb_validate(data)) {
     throw new Error(
-      'add to calendar button generation (' + data.identifier + ') failed: invalid data; see console logs'
+      'Add to Calendar Button generation (' + data.identifier + ') failed: invalid data; see console logs'
     );
   }
   // if all is fine, open the options list
@@ -1235,6 +1365,8 @@ function atcb_generate_google(data) {
   if (data.recurrence != null && data.recurrence != '') {
     urlParts.push('recur=' + encodeURIComponent(data.recurrence));
   }
+  // We also push the UID. It has no real effect, but at least becomes part of the url that way
+  urlParts.push('uid=' + encodeURIComponent(data.uid));
   const url = urlParts.join('&');
   if (atcb_secure_url(url)) {
     // eslint-disable-next-line security/detect-non-literal-fs-filename
@@ -1267,6 +1399,8 @@ function atcb_generate_yahoo(data) {
     // using descriptionHtmlFree instead of description, since Yahoo does not support html tags in a stable way
     urlParts.push('desc=' + encodeURIComponent(data.descriptionHtmlFree));
   }
+  // We also push the UID. It has no real effect, but at least becomes part of the url that way
+  urlParts.push('uid=' + encodeURIComponent(data.uid));
   const url = urlParts.join('&');
   if (atcb_secure_url(url)) {
     // eslint-disable-next-line security/detect-non-literal-fs-filename
@@ -1310,6 +1444,8 @@ function atcb_generate_microsoft(data, type = '365') {
   if (data.description != null && data.description != '') {
     urlParts.push('body=' + encodeURIComponent(data.description.replace(/\n/g, '<br>')));
   }
+  // We also push the UID. It has no real effect, but at least becomes part of the url that way
+  urlParts.push('uid=' + encodeURIComponent(data.uid));
   const url = urlParts.join('&');
   if (atcb_secure_url(url)) {
     // eslint-disable-next-line security/detect-non-literal-fs-filename
@@ -1342,6 +1478,8 @@ function atcb_generate_teams(data) {
     // using descriptionHtmlFree instead of description, since Teams does not support html tags
     urlParts.push('content=' + locationString + encodeURIComponent(data.descriptionHtmlFree));
   }
+  // We also push the UID. It has no real effect, but at least becomes part of the url that way
+  urlParts.push('uid=' + encodeURIComponent(data.uid));
   const url = baseUrl + urlParts.join('&');
   if (atcb_secure_url(url)) {
     // eslint-disable-next-line security/detect-non-literal-fs-filename
@@ -1369,12 +1507,22 @@ function atcb_generate_ical(data) {
   }
   // otherwise, generate one on the fly
   const now = new Date();
-  const nowISO = now.toISOString();
   const formattedDate = atcb_generate_time(data, 'clean', 'ical');
   const ics_lines = ['BEGIN:VCALENDAR', 'VERSION:2.0'];
-  const corp = 'github.com/add2cal/add-to-calendar-button';
-  ics_lines.push('PRODID:-// ' + corp + ' // atcb v' + atcbVersion + ' //EN');
+  ics_lines.push('PRODID:-// https://add-to-calendar-pro.com // button v' + atcbVersion + ' //EN');
   ics_lines.push('CALSCALE:GREGORIAN');
+  // we set CANCEL, whenever the status says so
+  if (data.status == 'CANCELLED') {
+    ics_lines.push('METHOD:CANCEL');
+  } else {
+    // for all other cases, we use REQUEST for organized/hosted events
+    if (data.organizer != null && data.organizer != '') {
+      ics_lines.push('METHOD:REQUEST');
+    } else {
+      // and PUBLISH for events without a host
+      ics_lines.push('METHOD:PUBLISH');
+    }
+  }
   // include time zone information, if set and if not allday (not necessary in that case)
   const timeAddon = (function () {
     if (formattedDate.allday) {
@@ -1387,7 +1535,7 @@ function atcb_generate_ical(data) {
     }
   })();
   ics_lines.push('BEGIN:VEVENT');
-  ics_lines.push('UID:' + nowISO + '@add-to-calendar-button');
+  ics_lines.push('UID:' + data.uid);
   ics_lines.push('DTSTAMP:' + atcb_format_datetime(now, 'clean', true));
   ics_lines.push('DTSTART' + timeAddon + ':' + formattedDate.start);
   ics_lines.push('DTEND' + timeAddon + ':' + formattedDate.end);
@@ -1414,8 +1562,9 @@ function atcb_generate_ical(data) {
   if (data.recurrence != null && data.recurrence != '') {
     ics_lines.push(data.recurrence);
   }
-  ics_lines.push('STATUS:CONFIRMED');
-  ics_lines.push('LAST-MODIFIED:' + atcb_format_datetime(now, 'clean', true));
+  ics_lines.push('STATUS:' + data.status);
+  ics_lines.push('CREATED:' + data.created);
+  ics_lines.push('LAST-MODIFIED:' + data.updated);
   ics_lines.push('SEQUENCE:' + data.sequence);
   ics_lines.push('END:VEVENT');
   ics_lines.push('END:VCALENDAR');
@@ -1862,12 +2011,35 @@ function atcb_position_list(trigger, list, blockUpwards = false, resize = false)
     list.style.top = window.scrollY + btnDim.top + btnDim.height / 2 - listDim.height / 2 + 'px';
     list.style.left = triggerDim.left - (listDim.width - triggerDim.width) / 2 + 'px';
   }
+  const atcbL = document.getElementById('add-to-calendar-button-reference');
+  if (atcbL) {
+    if (originalTrigger.classList.contains('atcb-dropup')) {
+      atcbL.style.top = window.scrollY + btnDim.top + btnDim.height + 'px';
+      atcbL.style.left = btnDim.left + (btnDim.width - 150) / 2 + 'px';
+    } else {
+      listDim = list.getBoundingClientRect();
+      if (originalTrigger.classList.contains('atcb-dropoverlay') || !anchorSet) {
+        atcbL.style.top = window.scrollY + listDim.top + listDim.height + 'px';
+      } else {
+        atcbL.style.top = window.scrollY + triggerDim.top + listDim.height + 'px';
+      }
+      atcbL.style.left = listDim.left + (listDim.width - 150) / 2 + 'px';
+    }
+  }
 }
 
 // SHARED FUNCTION TO DEFINE WIDTH AND HEIGHT FOR "FULLSCREEN" FULLSIZE ELEMENTS
 function atcb_set_fullsize(el) {
   el.style.width = window.innerWidth + 'px';
   el.style.height = window.innerHeight + 100 + 'px';
+}
+
+// SHARED FUNCTION TO GENERATE UUIDs
+function atcb_generate_uuid() {
+  //return crypto.randomUUID(); // lacking support of Safari < 15.4 and Firefox < 95, which is to important for now
+  return ([1e7] + -1e3 + -4e3 + -8e3 + -1e11).replace(/[018]/g, (c) =>
+    (c ^ (crypto.getRandomValues(new Uint8Array(1))[0] & (15 >> (c / 4)))).toString(16)
+  );
 }
 
 // SHARED DEBOUNCE AND THROTTLE FUNCTIONS
