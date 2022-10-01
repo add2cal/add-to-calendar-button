@@ -5,6 +5,11 @@ function prepareFinalFile(
   newExportPhrase = '',
   transformToCommonJS = false
 ) {
+  // remove TimeZones iCal Library version output (do not do this, if your are using the time zone library standalone!)
+  content = content.replace(
+    /^console\.log\('Add to Calendar TimeZones iCal Library loaded \(version ' \+ tzlibVersion \+ '\)'\);$/m,
+    ''
+  );
   if (stripImport) {
     // remove import statements, except for our TimeZones iCal Library
     content = content.replace(/^import[\w\s{}\+-_,"`\/\\.]*'((?!timezones-ical-library).)*';$/gim, '');

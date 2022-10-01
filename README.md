@@ -289,7 +289,6 @@ const MyComponent = () => {
 - Times are optional. If not set, the button generates all-day events. If set, they need to be formatted as HH:MM
 - You can and should add a `timeZone` (TZ name). Find a list of them at [Wikipedia](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones).
 - Use "currentBrowser" as value for `timeZone` to dynamically use the time of the user's browser. Use this with caution, since it would mean that the date and time will differ per user, which should not be the usual case! (Requires all times to be set.)
-- Optionally define an organizer for the event with the `organizer` option. Use the schema "NAME|EMAIL" (e.g. "John Doe|john.doe@gmail.com") and mind that this information will be public. Only supported by iCal at the moment.
 - Use the `recurrence` option to define recurring events. But mind that this will deactivate the Yahoo, Microsoft365, Teams, and Outlook options, since they do not support it at the moment (users could still use iCal in this case).
   - You can use any **valid** [RRULE](https://www.rfc-editor.org/rfc/rfc5545) to define the respective rule ([click here](https://icalendar.org/rrule-tool.html) for a generator).
   - Or you define one of the following more simple rules: daily, weekly, monthly, yearly. If you go that way, you can enrich your rule with one of the following specifics:
@@ -316,7 +315,9 @@ const MyComponent = () => {
 - You can also define images to be set for the event's rich data. This needs to be an array. Define at least 1 image via an absolute url with at least 720px width. Recommended would be 3 images with a width of 1920px each. One with an aspect ration 1x1, one with 4x3, and one with 16x9. If not set, a default fallback image will be used.
 - Each generated button and option has a speaking id to be used for any tracking methods. Scheme: "atcb-btn-_IDENTIFIER_" or "atcb-btn-_IDENTIFIER_-google" (for the Google option) respectively. The _IDENTIFIER_ will be an automatic number, but can be overridden by providing the option `"identifier":"xyz"` (no special characters allowed; needs to be unique).
 - Each button comes with a dark and light mode. Set the option `lightMode` to "dark" or "light" explicitly, or use "system" to automatically adapt to the user's default setting. You can also use "bodyScheme" to look for the class "atcb-dark" at the body tag and connect the button dynamically to the style of your website.
-- The default layout is more or less basic. Load the atcb-3d.min.css instead to have some more animations and depth.
+- Optionally define an organizer for the event with the `organizer` option. Use the schema "NAME|EMAIL" (e.g. "John Doe|john.doe@gmail.com") and mind that this information will be public. Only supported by iCal at the moment.
+- Theoretically, you can also use the options `uid`, `sequence`, `created`, `updated`, and `status` (TENTATIVE, CONFIRMED, CANCELLED) to override the default values and especially to manage event updates. Warning: You should only play with those settings, if you know what you are doing! This is also only supported by the iCal format (and even there not recognized by all calendars). To update an existing event, you would need to have a growing sequence number and also the organizer field (name and email) set.
+- The default layout is more or less basic. You can use different style by loading different css files: atcb-3d.min.css, atcb-flat.min.css, and atcb-text.min.css are available.
 
 <br />
 
@@ -383,15 +384,16 @@ The problems with this and other solutions:
 
 [uxwing.com](https://uxwing.com) as well as all contributors:
 
-<a href="https://github.com/jekuer"><img src="https://avatars.githubusercontent.com/u/8572883?v=4" title="jekuer" width="80" height="80"></a>
-<a href="https://github.com/add-to-calendar"><img src="https://avatars.githubusercontent.com/u/110406429?s=96&v=4" title="add-to-calendar" width="80" height="80"></a>
-<a href="https://github.com/chadoh"><img src="https://avatars.githubusercontent.com/u/221614?v=4" title="chadoh" width="80" height="80"></a>
-<a href="https://github.com/bryan-brancotte"><img src="https://avatars.githubusercontent.com/u/11556772?v=4" title="bryan-brancotte" width="80" height="80"></a>
-<a href="https://github.com/nticaric"><img src="https://avatars.githubusercontent.com/u/824840?v=4" title="nticaric" width="80" height="80"></a>
-<a href="https://github.com/Ortovoxx"><img src="https://avatars.githubusercontent.com/u/56805259?v=4" title="Ortovoxx" width="80" height="80"></a>
-<a href="https://github.com/ssaaiidd"><img src="https://avatars.githubusercontent.com/u/29234802?v=4" title="ssaaiidd" width="80" height="80"></a>
-<a href="https://github.com/killerrin"><img src="https://avatars.githubusercontent.com/u/3269687?v=4" title="killerrin" width="80" height="80"></a>
-<a href="https://github.com/acm-will"><img src="https://avatars.githubusercontent.com/u/103984058?v=4" title="acm-will" width="80" height="80"></a>
-<a href="https://github.com/apps/dependabot"><img src="https://avatars.githubusercontent.com/in/29110?v=4" title="dependabot[bot]" width="80" height="80"></a>
+<a href="https://github.com/jekuer"><img src="https://avatars.githubusercontent.com/u/8572883?v=4" title="jekuer" width="60" height="60"></a>
+<a href="https://github.com/add-to-calendar"><img src="https://avatars.githubusercontent.com/u/110406429?s=96&v=4" title="add-to-calendar" width="60" height="60"></a>
+<a href="https://github.com/chadoh"><img src="https://avatars.githubusercontent.com/u/221614?v=4" title="chadoh" width="60" height="60"></a>
+<a href="https://github.com/bryan-brancotte"><img src="https://avatars.githubusercontent.com/u/11556772?v=4" title="bryan-brancotte" width="60" height="60"></a>
+<a href="https://github.com/nticaric"><img src="https://avatars.githubusercontent.com/u/824840?v=4" title="nticaric" width="60" height="60"></a>
+<a href="https://github.com/Ortovoxx"><img src="https://avatars.githubusercontent.com/u/56805259?v=4" title="Ortovoxx" width="60" height="60"></a>
+<a href="https://github.com/emilebosch"><img src="https://avatars.githubusercontent.com/u/303135?v=4" title="emilebosch" width="60" height="60"></a>
+<a href="https://github.com/killerrin"><img src="https://avatars.githubusercontent.com/u/3269687?v=4" title="killerrin" width="60" height="60"></a>
+<a href="https://github.com/acm-will"><img src="https://avatars.githubusercontent.com/u/103984058?v=4" title="acm-will" width="60" height="60"></a>
+<a href="https://github.com/ssaaiidd"><img src="https://avatars.githubusercontent.com/u/29234802?v=4" title="ssaaiidd" width="60" height="60"></a>
+<a href="https://github.com/apps/dependabot"><img src="https://avatars.githubusercontent.com/in/29110?v=4" title="dependabot[bot]" width="60" height="60"></a>
 
 <br />
