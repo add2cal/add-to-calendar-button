@@ -1,14 +1,17 @@
 /*!
+ *  @preserve
+ *
  *  ++++++++++++++++++++++
  *  Add to Calendar Button
  *  ++++++++++++++++++++++
- */
-const atcbVersion = '1.16.0';
-/*! Creator: Jens Kuerschner (https://jenskuerschner.de)
+ *
+ *  Creator: Jens Kuerschner (https://jenskuerschner.de)
  *  Project: https://github.com/add2cal/add-to-calendar-button
- *  License: MIT with “Commons Clause” License Condition v1.0
+ *  License: Apache-2.0 with “Commons Clause” License Condition v1.0
+ *  Note:    DO NOT REMOVE THE COPYRIGHT NOTICE ABOVE!
  *
  */
+const atcbVersion = '1.17.0';
 
 import { tzlib_get_ical_block, tzlib_get_offset, tzlib_get_timezones } from 'timezones-ical-library';
 

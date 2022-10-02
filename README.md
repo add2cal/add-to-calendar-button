@@ -347,7 +347,7 @@ Anyone is welcome to contribute, but mind the [guidelines](.github/CONTRIBUTING.
 
 Copyright (c) [Jens Kuerschner](https://jenskuerschner.de).
 
-Licensed under [MIT license (with “Commons Clause” License Condition v1.0)](LICENSE.txt).
+Licensed under [Apache-2.0 (with “Commons Clause” License Condition v1.0)](LICENSE.txt).
 
 <br />
 
