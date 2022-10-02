@@ -18,10 +18,10 @@ import { tzlib_get_ical_block, tzlib_get_offset, tzlib_get_timezones } from 'tim
 // CHECKING FOR SPECIFIC DEVICED AND SYSTEMS
 // browser
 const isBrowser = () => {
-  try {
-    return this === window;
-  } catch (e) {
+  if (typeof window === 'undefined') {
     return false;
+  } else {
+    return true;
   }
 };
 // iOS

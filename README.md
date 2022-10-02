@@ -79,7 +79,7 @@ Simple and convenient integration of 1 or many buttons, configurable directly wi
 - Well documented code, to easily understand the processes and build on top of it.
 - No external module or backend dependencies.
 - Therefore, fully GDPR, CCPA, and LGPD compliant - without the need of signing some data processing agreement.
-- FREE and open source.
+- FREE and easy.
 
 ![Demo Screenshot](https://github.com/add2cal/add-to-calendar-button/blob/main/assets/img/demo.gif?raw=true)
 
@@ -372,7 +372,7 @@ The problems with this and other solutions:
 
 **Bottom line:** Paying for features, which I did not need - at additional privacy concerns - that made me create this solution (for you).
 
-**Fun fact:** AddEvent changed a lot in the meantime. They slightly increased the free tier and also published some code on GitHub (but still require their service and also not open source!). This might be cool for businesses, but a killer for smaller projects. Anyhow, it is moving into the right direction 😊.
+**Fun fact:** AddEvent changed a lot in the meantime. They slightly increased the free tier and also published some code on GitHub (but still require their service and also not open source at all!). This might be cool for businesses, but a killer for smaller projects. Anyhow, it is moving into the right direction 😊.
 
 <br />
 

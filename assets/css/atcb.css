@@ -224,7 +224,6 @@ body.atcb-dark #atcb-bgoverlay.atcb-bodyScheme {
   cursor: pointer;
   display: flex;
   font-size: var(--base-font-size);
-  left: 50%;
   line-height: 1.75em;
   padding: .8em;
   text-align: left;

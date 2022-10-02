@@ -1554,10 +1554,10 @@ const atcbVersion = '1.17.0';
 // CHECKING FOR SPECIFIC DEVICED AND SYSTEMS
 // browser
 const isBrowser = () => {
-  try {
-    return this === window;
-  } catch (e) {
+  if (typeof window === 'undefined') {
     return false;
+  } else {
+    return true;
   }
 };
 // iOS
