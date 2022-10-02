@@ -3,7 +3,7 @@
  * Add to Calendar TimeZones iCal Library
  * ++++++++++++++++++++++++++++++++++++++
  */
-const tzlibVersion = '1.3.0';
+const tzlibVersion = '1.3.2';
 /* Creator: Jens Kuerschner (https://jenskuerschner.de)
  * Project: https://github.com/add2cal/timezones-ical-library
  * License: Apache-2.0
@@ -1535,26 +1535,29 @@ function tzlib_get_timezones(jsonType = false) {
 
 
 /*!
+ *  @preserve
+ *
  *  ++++++++++++++++++++++
  *  Add to Calendar Button
  *  ++++++++++++++++++++++
- */
-const atcbVersion = '1.16.0';
-/*! Creator: Jens Kuerschner (https://jenskuerschner.de)
+ *
+ *  Creator: Jens Kuerschner (https://jenskuerschner.de)
  *  Project: https://github.com/add2cal/add-to-calendar-button
- *  License: MIT with “Commons Clause” License Condition v1.0
+ *  License: Apache-2.0 with “Commons Clause” License Condition v1.0
+ *  Note:    DO NOT REMOVE THE COPYRIGHT NOTICE ABOVE!
  *
  */
+const atcbVersion = '1.17.0';
 
 
 
 // CHECKING FOR SPECIFIC DEVICED AND SYSTEMS
 // browser
 const isBrowser = () => {
-  try {
-    return this === window;
-  } catch (e) {
+  if (typeof window === 'undefined') {
     return false;
+  } else {
+    return true;
   }
 };
 // iOS

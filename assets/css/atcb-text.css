@@ -1,14 +1,17 @@
-/**
+/*!
+ * @preserve
+ *
  * ++++++++++++++++++++++
  * Add to Calendar Button
  * ++++++++++++++++++++++
  *
  * Style: Text
  *
- * Version: 1.16.0
+ * Version: 1.17.0
  * Creator: Jens Kuerschner (https://jenskuerschner.de)
  * Project: https://github.com/add2cal/add-to-calendar-button
- * License: MIT with “Commons Clause” License Condition v1.0
+ * License: Apache-2.0 with “Commons Clause” License Condition v1.0
+ * Note:    DO NOT REMOVE THE COPYRIGHT NOTICE ABOVE!
  * 
  */
 
@@ -332,7 +335,6 @@ body.atcb-dark #atcb-bgoverlay.atcb-bodyScheme {
   cursor: pointer;
   display: flex;
   font-size: var(--base-font-size);
-  left: 50%;
   line-height: 1.75em;
   padding: 0.8em 1em;
   text-align: left;

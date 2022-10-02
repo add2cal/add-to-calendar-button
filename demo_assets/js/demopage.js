@@ -1,11 +1,16 @@
-/**
+/*!
+ * @preserve
+ *
  * +++++++++++++++++++++++++++++++++++++++++
  * Add-to-Calendar Button - Demo Page Script
  * +++++++++++++++++++++++++++++++++++++++++
  *
  * Creator: Jens Kuerschner (https://jenskuerschner.de)
  * Project: https://github.com/add2cal/add-to-calendar-button
- * License: MIT with “Commons Clause” License Condition v1.0
+ * License: Apache-2.0 with “Commons Clause” License Condition v1.0
+ * Note:    DO NOT REMOVE THE COPYRIGHT NOTICE ABOVE!
+ * 
+ * Including the awesome PrismJS by Lea Verou (licensed MIT)
  *
  */
 
@@ -35,15 +40,13 @@ function toggle_atcb_light_mode() {
   document.cookie = 'atcb-light-mode=' + newCval + ';expires=' + d.toUTCString();
 }
 
-/** PrismJS 1.28.0
+/*! PrismJS 1.28.0
  *https://prismjs.com/download.html#themes=prism&languages=markup+clike+javascript&plugins=toolbar+copy-to-clipboard
  *
  * Prism: Lightweight, robust, elegant syntax highlighting
  *
  * @license MIT <https://opensource.org/licenses/MIT>
  * @author Lea Verou <https://lea.verou.me>
- * @namespace
- * @public
  *
  */
 

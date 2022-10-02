@@ -151,6 +151,9 @@ module.exports = function (grunt) {
         compress: true,
         mangle: true,
         sourceMap: true,
+        output: {
+          comments: 'some',
+        },
       },
       newBuild: {
         files: {
