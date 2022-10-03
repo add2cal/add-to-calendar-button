@@ -55,7 +55,7 @@ Simple and convenient integration of 1 or many buttons, configurable directly wi
 ### Event Types
 
 - Timed and all-day events.
-- One-time, recurring, or fluid.
+- One-time, multi-date, recurring, or fluid.
 - Most robust time zone and daylight saving management (via our own [TimeZones iCal Library](https://github.com/add2cal/timezones-ical-library)).
 - Dynamic dates (like "today + 3").
 
@@ -289,6 +289,7 @@ const MyComponent = () => {
 - Times are optional. If not set, the button generates all-day events. If set, they need to be formatted as HH:MM
 - You can and should add a `timeZone` (TZ name). Find a list of them at [Wikipedia](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones).
 - Use "currentBrowser" as value for `timeZone` to dynamically use the time of the user's browser. Use this with caution, since it would mean that the date and time will differ per user, which should not be the usual case! (Requires all times to be set.)
+- Define multi-date events by using the `dates` option, which holds an array of objects, which need to hold the date and time information of the sub-event. The can optionally also hold their own name, description, location, and status. Mind that in this case, the name at the top level becomes the name of the event series and is still required.
 - Use the `recurrence` option to define recurring events. But mind that this will deactivate the Yahoo, Microsoft365, Teams, and Outlook options, since they do not support it at the moment (users could still use iCal in this case).
   - You can use any **valid** [RRULE](https://www.rfc-editor.org/rfc/rfc5545) to define the respective rule ([click here](https://icalendar.org/rrule-tool.html) for a generator).
   - Or you define one of the following more simple rules: daily, weekly, monthly, yearly. If you go that way, you can enrich your rule with one of the following specifics:
