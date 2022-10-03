@@ -392,14 +392,6 @@ function atcb_decorate_data(data) {
   } else {
     data.size = 16;
   }
-  // set sequence
-  if (data.sequence == null || data.sequence == '') {
-    data.sequence = 0;
-  }
-  // set UID
-  if (data.uid == null || data.uid == '') {
-    data.uid = atcb_generate_uuid();
-  }
   // set created date
   if (data.created == null || data.created == '') {
     data.created = atcb_format_datetime(now, 'clean', true);
@@ -407,12 +399,6 @@ function atcb_decorate_data(data) {
   // set updated date
   if (data.updated == null || data.updated == '') {
     data.updated = atcb_format_datetime(now, 'clean', true);
-  }
-  // set status
-  if (data.status == null || data.status == '') {
-    data.status = 'CONFIRMED';
-  } else {
-    data.status = data.status.toUpperCase();
   }
   // determine dark mode
   if (data.lightMode == null || data.lightMode == '') {
@@ -444,9 +430,21 @@ function atcb_decorate_data(data) {
     data.rtl = true;
   } else {
     data.rtl = false;
+  }  
+  // set default status on top level
+  if (data.status == null || data.status == '') {
+    data.status = 'CONFIRMED';
+  }
+  // set  default sequence on top level
+  if (data.sequence == null || data.sequence == '') {
+    data.sequence = 0;
+  }
+  // set UID of first event, if "wrongly" specified on top level
+  if ((data.dates[0].uid == null || data.dates[0].uid == '') && data.dates.length == 1 && (data.uid != null && data.uid != '')) {
+    data.dates[0].uid = data.uid;
   }
   // decorate description
-  // in that step, we also copy global values (description, name, location) to date objects, if not set nested - mind that above, we even moved a single date item into this array for better conistency
+  // in that step, we also copy global values to date objects, if not set nested - mind that above, we even moved a single date item into this array for better consistency
   for (let i = 0; i < data.dates.length; i++) {
     if (data.dates[`${i}`].description != null && data.dates[`${i}`].description != '') {
       // store a clean description copy without the URL magic for iCal
@@ -459,7 +457,8 @@ function atcb_decorate_data(data) {
         data.dates[`${i}`].description = atcb_rewrite_html_elements(data.description);
       }
     }
-    // to save on loops, we also do the copying for name (here, we also check for empty, because it is required), status, and location here as well
+    // to save on loops, we also do the copying for name, status, uid, sequence, and location here as well
+    // for name, we also check for empty, because it is required
     if (data.dates[`${i}`].name == null || data.dates[`${i}`].name == '') {
       data.dates[`${i}`].name = data.name;
     }
@@ -468,9 +467,23 @@ function atcb_decorate_data(data) {
     } else {
       data.dates[`${i}`].status = data.dates[`${i}`].status.toUpperCase();
     }
+    if (data.dates[`${i}`].sequence == null && data.sequence != null) {
+      data.dates[`${i}`].sequence = data.sequence;
+    }
     if (data.dates[`${i}`].location == null && data.location != null) {
       data.dates[`${i}`].location = data.location;
     }
+    if (data.dates[`${i}`].organizer == null && data.organizer != null) {
+      data.dates[`${i}`].organizer = data.organizer;
+    }
+    // for the uid, we do not copy from the top level, but rather generate it per event
+    if (data.dates[`${i}`].uid == null) {
+      data.dates[`${i}`].uid = atcb_generate_uuid();
+    }
+  }
+  // we also copy recurrence, but just for easier access and only for the first array element. Multi-date events cannot be recurrent
+  if (data.recurrence != null && data.recurrence != '') {
+    data.dates[0].recurrence = data.recurrence;
   }
   return data;
 }
@@ -610,42 +623,6 @@ function atcb_validate(data) {
       return false;
     }
   }
-  // validate organizer
-  if (data.organizer != null && data.organizer != '') {
-    const organizerParts = data.organizer.split('|');
-    if (
-      organizerParts.length != 2 ||
-      organizerParts[0].length > 50 ||
-      organizerParts[1].length > 80 ||
-      !atcb_validEmail(organizerParts[1])
-    ) {
-      console.error(
-        msgPrefix + ' failed: organizer needs to match the schema "NAME|EMAIL" with a valid email address'
-      );
-      return false;
-    }
-  }
-  // validate UID (must have less then 255 characters and only allowes for ; see )
-  if (!/^(\w|-){1,254}$/.test(data.uid)) {
-    console.error(
-      msgPrefix +
-        ': UID not valid. May only contain alpha, digits, and dashes; and be less than 255 characters'
-    );
-    return false;
-  }
-  // validate UID for the recommended form, which is not forced, but show throw a warning
-  if (!/^[0-9a-f]{8}-[0-9a-f]{4}-[0-5][0-9a-f]{3}-[089ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(data.uid)) {
-    console.warn(
-      msgPrefix +
-        ': UID is strictly recommended to be a hex-encoded random Universally Unique Identifier (UUID)!'
-    );
-    data.sequence = 0;
-  }
-  // validate sequence number if given and set it 0 if not
-  if (!/^\d+$/.test(data.sequence)) {
-    console.log(msgPrefix + ': sequence needs to be a number. Used the default 0 instead');
-    data.sequence = 0;
-  }
   // validate created and updated input
   if (!/^\d{8}T\d{6}Z$/.test(data.created)) {
     console.error(
@@ -686,6 +663,41 @@ function atcb_validate(data) {
     if (data.dates[`${i}`].status != 'TENTATIVE' && data.dates[`${i}`].status != 'CONFIRMED' && data.dates[`${i}`].status != 'CANCELLED') {
       console.error(msgPrefix + ': event status needs to be TENTATIVE, CONFIRMED, or CANCELLED' + datesBlock);
       return false;
+    }
+    // validate organizer
+    if (data.dates[`${i}`].organizer != null && data.dates[`${i}`].organizer != '') {
+      const organizerParts = data.dates[`${i}`].organizer.split('|');
+      if (
+        organizerParts.length != 2 ||
+        organizerParts[0].length > 50 ||
+        organizerParts[1].length > 80 ||
+        !atcb_validEmail(organizerParts[1])
+      ) {
+        console.error(
+          msgPrefix + ' failed: organizer needs to match the schema "NAME|EMAIL" with a valid email address' + datesBlock
+        );
+        return false;
+      }
+    }
+    // validate UID (must have less then 255 characters and only allowes for ; see )
+    if (!/^(\w|-){1,254}$/.test(data.dates[`${i}`].uid)) {
+      console.error(
+        msgPrefix +
+          ': UID not valid. May only contain alpha, digits, and dashes; and be less than 255 characters' + datesBlock
+      );
+      return false;
+    }
+    // validate UID for the recommended form, which is not forced, but show throw a warning
+    if (!/^[0-9a-f]{8}-[0-9a-f]{4}-[0-5][0-9a-f]{3}-[089ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(data.dates[`${i}`].uid)) {
+      console.warn(
+        msgPrefix +
+          ': UID is strictly recommended to be a hex-encoded random Universally Unique Identifier (UUID)!' + datesBlock
+      );
+    }
+    // validate sequence number if given and set it 0 if not
+    if (!/^\d+$/.test(data.dates[`${i}`].sequence)) {
+      console.log(msgPrefix + ': sequence needs to be a number. Used the default 0 instead' + datesBlock);
+      data.dates[`${i}`].sequence = 0;
     }
     // validate time zone
     if (data.dates[`${i}`].timeZone != null && data.dates[`${i}`].timeZone != '') {
@@ -854,6 +866,7 @@ function atcb_generate_label(data, parent, type, icon = false, text = '', oneOpt
   if (oneOption && text == '') {
     text = defaultTriggerText;
   }
+  // adding event listeners
   switch (type) {
     case 'trigger':
     default:
@@ -875,85 +888,21 @@ function atcb_generate_label(data, parent, type, icon = false, text = '', oneOpt
           })
         );
       }
-      parent.id = data.identifier;
-      text = text || defaultTriggerText;
       break;
     case 'apple':
-      parent.addEventListener(
-        'click',
-        atcb_debounce(() => {
-          oneOption ? parent.blur() : atcb_toggle('close');
-          atcb_generate_ical(data);
-        })
-      );
-      parent.id = data.identifier + '-apple';
-      text = text || 'Apple';
-      break;
     case 'google':
-      parent.addEventListener(
-        'click',
-        atcb_debounce(() => {
-          oneOption ? parent.blur() : atcb_toggle('close');
-          atcb_generate_google(data);
-        })
-      );
-      parent.id = data.identifier + '-google';
-      text = text || 'Google';
-      break;
     case 'ical':
-      parent.addEventListener(
-        'click',
-        atcb_debounce(() => {
-          oneOption ? parent.blur() : atcb_toggle('close');
-          atcb_generate_ical(data);
-        })
-      );
-      parent.id = data.identifier + '-ical';
-      text = text || atcb_translate_hook('iCal File', data.language, data);
-      break;
     case 'msteams':
-      parent.addEventListener(
-        'click',
-        atcb_debounce(() => {
-          oneOption ? parent.blur() : atcb_toggle('close');
-          atcb_generate_teams(data);
-        })
-      );
-      parent.id = data.identifier + '-msteams';
-      text = text || 'Microsoft Teams';
-      break;
     case 'ms365':
-      parent.addEventListener(
-        'click',
-        atcb_debounce(() => {
-          oneOption ? parent.blur() : atcb_toggle('close');
-          atcb_generate_microsoft(data, '365');
-        })
-      );
-      parent.id = data.identifier + '-ms365';
-      text = text || 'Microsoft 365';
-      break;
     case 'outlookcom':
-      parent.addEventListener(
-        'click',
-        atcb_debounce(() => {
-          oneOption ? parent.blur() : atcb_toggle('close');
-          atcb_generate_microsoft(data, 'outlook');
-        })
-      );
-      parent.id = data.identifier + '-outlook';
-      text = text || 'Outlook.com';
-      break;
     case 'yahoo':
       parent.addEventListener(
         'click',
         atcb_debounce(() => {
           oneOption ? parent.blur() : atcb_toggle('close');
-          atcb_generate_yahoo(data);
+          atcb_generate_links(type, data);
         })
       );
-      parent.id = data.identifier + '-yahoo';
-      text = text || 'Yahoo';
       break;
     case 'close':
       parent.addEventListener(
@@ -966,6 +915,44 @@ function atcb_generate_label(data, parent, type, icon = false, text = '', oneOpt
         'focus',
         atcb_debounce(() => atcb_close(false))
       );
+      break;
+  }
+  // defining IDs and text
+  switch (type) {
+    case 'trigger':
+    default:
+      parent.id = data.identifier;
+      text = text || defaultTriggerText;
+      break;
+    case 'apple':
+      parent.id = data.identifier + '-apple';
+      text = text || 'Apple';
+      break;
+    case 'google':
+      parent.id = data.identifier + '-google';
+      text = text || 'Google';
+      break;
+    case 'ical':
+      parent.id = data.identifier + '-ical';
+      text = text || atcb_translate_hook('iCal File', data.language, data);
+      break;
+    case 'msteams':
+      parent.id = data.identifier + '-msteams';
+      text = text || 'Microsoft Teams';
+      break;
+    case 'ms365':
+      parent.id = data.identifier + '-ms365';
+      text = text || 'Microsoft 365';
+      break;
+    case 'outlookcom':
+      parent.id = data.identifier + '-outlook';
+      text = text || 'Outlook.com';
+      break;
+    case 'yahoo':
+      parent.id = data.identifier + '-yahoo';
+      text = text || 'Yahoo';
+      break;
+    case 'close':
       parent.id = data.identifier + '-close';
       text = atcb_translate_hook('Close', data.language, data);
       break;
@@ -1113,8 +1100,8 @@ function atcb_generate(button, data) {
       } else {
         schemaContent.push('"endDate":"' + formattedDate.end + '"');
       }
-      if (data.organizer != null && data.organizer != '') {
-        const organizerParts = data.organizer.split('|');
+      if (data.dates[`${i}`].organizer != null && data.dates[`${i}`].organizer != '') {
+        const organizerParts = data.dates[`${i}`].organizer.split('|');
         schemaContent.push(
           '"organizer":{\r\n"@type":"Person",\r\n"name":"' +
             organizerParts[0] +
@@ -1437,10 +1424,77 @@ function atcb_action(data, triggerElement, keyboardTrigger = true) {
   atcb_toggle('open', data, triggerElement, keyboardTrigger);
 }
 
+// MIDDLEWARE FUNCTION TO GENERATE THE CALENDAR LINKS
+function atcb_generate_links(type, data, subEvent = 'all') {
+  if (subEvent != 'all') {
+    subEvent = parseInt(subEvent) - 1;
+  } else if (data.dates.length == 1) {
+    subEvent = 0;
+  }
+  // TMP WORKAROUND: redirect to iCal solution on mobile devices for msteams, ms365, and outlookcom, since the Microsoft web apps are buggy on mobile devices (see https://github.com/add2cal/add-to-calendar-button/discussions/113)
+  if (isMobile() && (type == 'msteams' || type == 'ms365' || type == 'outlookcom')) {
+    type = 'ical';
+  }  
+  // in the Apple case, we also always simply generate an iCal file
+  if (type == 'apple') {
+    type = 'ical';
+  }
+  // for single-date events or if a specific subEvent is given, we can simply call the respective endpoints
+  if (subEvent != 'all') {
+    console.log('single '+ subEvent);
+    switch (type) {
+      case 'ical':
+        atcb_generate_ical(data, subEvent);
+        return;
+      case 'google':
+        atcb_generate_google(data.dates[`${subEvent}`]);
+        return;
+      case 'msteams':
+        atcb_generate_msteams(data.dates[`${subEvent}`]);
+        return;
+      case 'ms365':
+        atcb_generate_microsoft(data.dates[`${subEvent}`]);
+        return;
+      case 'outlookcom':
+        atcb_generate_microsoft(data.dates[`${subEvent}`], 'outlook');
+        return;
+      case 'yahoo':
+        atcb_generate_yahoo(data.dates[`${subEvent}`]);
+        return;
+    }
+  }
+  // in the multi-date event case, when all sub-events have no organizer AND are not cancelled, we can also go the short way
+  if (type == 'ical' && data.dates.every(function (theSubEvent) {
+      if (theSubEvent.status == 'CANCELLED' || (theSubEvent.organizer != null && theSubEvent.organizer != '')) {
+        return false;
+      }
+      return true;
+    })
+  ) {
+    atcb_generate_ical(data);
+    return;
+  }
+  // for multi-date events in all other cases, we show an intermediate layer (except for clean iCal cases)
+  const individualButtons = [];
+  for (let i = 0; i < data.dates.length; i++) {
+    individualButtons.push({
+      'type': type,
+      'label': atcb_translate_hook('Event', data.language, data) + ' ' + (i + 1),
+      'subEvent': (i + 1)
+    });
+  }
+  atcb_create_modal(
+    data,
+    type,
+    atcb_translate_hook('MultiDate headline', data.language, data),
+    atcb_translate_hook('MultiDate info', data.language, data),
+    individualButtons
+  );
+}
+
 // FUNCTION TO GENERATE THE GOOGLE URL
 // See specs at: TODO
 function atcb_generate_google(data) {
-  // url parts
   const urlParts = [];
   urlParts.push('https://calendar.google.com/calendar/render?action=TEMPLATE');
   // generate and add date
@@ -1489,7 +1543,6 @@ function atcb_generate_google(data) {
 // FUNCTION TO GENERATE THE YAHOO URL
 // See specs at: TODO
 function atcb_generate_yahoo(data) {
-  // url parts
   const urlParts = [];
   urlParts.push('https://calendar.yahoo.com/?v=60');
   // generate and add date
@@ -1523,12 +1576,6 @@ function atcb_generate_yahoo(data) {
 // FUNCTION TO GENERATE THE MICROSOFT 365 OR OUTLOOK WEB URL
 // See specs at: TODO
 function atcb_generate_microsoft(data, type = '365') {
-  // redirect to iCal solution on mobile devices, since the Microsoft web apps are buggy on mobile devices (see https://github.com/add2cal/add-to-calendar-button/discussions/113)
-  if (isMobile()) {
-    atcb_generate_ical(data);
-    return;
-  }
-  // url parts
   const urlParts = [];
   const basePath = '/calendar/0/deeplink/compose?path=%2Fcalendar%2Faction%2Fcompose&rru=addevent';
   const baseUrl = (function () {
@@ -1568,8 +1615,7 @@ function atcb_generate_microsoft(data, type = '365') {
 // FUNCTION TO GENERATE THE MICROSOFT TEAMS URL
 // See specs at: https://docs.microsoft.com/en-us/microsoftteams/platform/concepts/build-and-test/deep-links#deep-linking-to-the-scheduling-dialog
 // Mind that this is still in development mode by Microsoft! Location, html tags and linebreaks in the description are not supported yet.
-function atcb_generate_teams(data) {
-  // url parts
+function atcb_generate_msteams(data) {
   const urlParts = [];
   const baseUrl = 'https://teams.microsoft.com/l/meeting/new?';
   // generate and add date
@@ -1601,7 +1647,10 @@ function atcb_generate_teams(data) {
 
 // FUNCTION TO GENERATE THE iCAL FILE (also for the Apple option)
 // See specs at: https://www.rfc-editor.org/rfc/rfc5545.html
-function atcb_generate_ical(data) {
+function atcb_generate_ical(data, subEvent = 'all') {
+  if (subEvent != 'all') {
+    subEvent = parseInt(subEvent) - 1;
+  }
   // define the right filename
   let filename = 'event-to-save-in-my-calendar';
   if (data.iCalFileName != null && data.iCalFileName != '') {
@@ -1619,66 +1668,89 @@ function atcb_generate_ical(data) {
   }
   // otherwise, generate one on the fly
   const now = new Date();
-  const formattedDate = atcb_generate_time(data, 'clean', 'ical');
   const ics_lines = ['BEGIN:VCALENDAR', 'VERSION:2.0'];
   ics_lines.push('PRODID:-// https://add-to-calendar-pro.com // button v' + atcbVersion + ' //EN');
   ics_lines.push('CALSCALE:GREGORIAN');
   // we set CANCEL, whenever the status says so
-  if (data.status == 'CANCELLED') {
-    ics_lines.push('METHOD:CANCEL');
+  // mind that in the multi-date case (where we create 1 ics file), it will always be PUBLISH
+  if (subEvent == 'all') {
+    ics_lines.push('METHOD:PUBLISH');
   } else {
-    // for all other cases, we use REQUEST for organized/hosted events
-    if (data.organizer != null && data.organizer != '') {
-      ics_lines.push('METHOD:REQUEST');
+    if (data.dates[`${subEvent}`].status == 'CANCELLED') {
+      ics_lines.push('METHOD:CANCEL');
     } else {
-      // and PUBLISH for events without a host
-      ics_lines.push('METHOD:PUBLISH');
+      // for all other cases, we use REQUEST for organized/hosted events, ...
+      if (data.dates[`${subEvent}`].organizer != null && data.dates[`${subEvent}`].organizer != '') {
+        ics_lines.push('METHOD:REQUEST');
+      } else {
+        // and PUBLISH for events without a host
+        ics_lines.push('METHOD:PUBLISH');
+      }
     }
   }
-  // include time zone information, if set and if not allday (not necessary in that case)
-  const timeAddon = (function () {
-    if (formattedDate.allday) {
-      return ';VALUE=DATE';
+  const usedTimeZones = [];
+  const loopStart = (function () {
+    if (subEvent != 'all') {
+      return subEvent;
     }
-    if (data.timeZone != null && data.timeZone != '') {
-      const timeZoneBlock = tzlib_get_ical_block(data.timeZone);
-      ics_lines.push(timeZoneBlock[0]);
-      return ';' + timeZoneBlock[1];
-    }
+    return 0;
   })();
-  ics_lines.push('BEGIN:VEVENT');
-  ics_lines.push('UID:' + data.uid);
-  ics_lines.push('DTSTAMP:' + atcb_format_datetime(now, 'clean', true));
-  ics_lines.push('DTSTART' + timeAddon + ':' + formattedDate.start);
-  ics_lines.push('DTEND' + timeAddon + ':' + formattedDate.end);
-  ics_lines.push('SUMMARY:' + data.name.replace(/.{65}/g, '$&' + '\r\n ')); // making sure it does not exceed 75 characters per line
-  if (data.descriptionHtmlFree != null && data.descriptionHtmlFree != '') {
-    ics_lines.push(
-      'DESCRIPTION:' + data.descriptionHtmlFree.replace(/\n/g, '\\n').replace(/.{60}/g, '$&' + '\r\n ') // adjusting for intended line breaks + making sure it does not exceed 75 characters per line
-    );
+  const loopEnd = (function () {
+    if (subEvent != 'all') {
+      return subEvent;
+    }
+    return data.dates.length - 1;
+  })();
+  for (let i = loopStart; i <= loopEnd; i++) {
+    const formattedDate = atcb_generate_time(data.dates[`${i}`], 'clean', 'ical');
+    // get the timezone addon string for dates and include time zone information, if set and if not allday (not necessary in that case)
+    const timeAddon = (function () {
+      if (formattedDate.allday) {
+        return ';VALUE=DATE';
+      }
+      if (data.dates[`${i}`].timeZone != null && data.dates[`${i}`].timeZone != '') {
+        const timeZoneBlock = tzlib_get_ical_block(data.dates[`${i}`].timeZone);
+        if (!usedTimeZones.includes(data.dates[`${i}`].timeZone)) {
+          ics_lines.push(timeZoneBlock[0]);
+        }
+        usedTimeZones.push(data.dates[`${i}`].timeZone);
+        return ';' + timeZoneBlock[1];
+      }
+    })();
+    ics_lines.push('BEGIN:VEVENT');
+    ics_lines.push('UID:' + data.dates[`${i}`].uid);
+    ics_lines.push('DTSTAMP:' + atcb_format_datetime(now, 'clean', true));
+    ics_lines.push('DTSTART' + timeAddon + ':' + formattedDate.start);
+    ics_lines.push('DTEND' + timeAddon + ':' + formattedDate.end);
+    ics_lines.push('SUMMARY:' + data.dates[`${i}`].name.replace(/.{65}/g, '$&' + '\r\n ')); // making sure it does not exceed 75 characters per line
+    if (data.dates[`${i}`].descriptionHtmlFree != null && data.dates[`${i}`].descriptionHtmlFree != '') {
+      ics_lines.push(
+        'DESCRIPTION:' + data.dates[`${i}`].descriptionHtmlFree.replace(/\n/g, '\\n').replace(/.{60}/g, '$&' + '\r\n ') // adjusting for intended line breaks + making sure it does not exceed 75 characters per line
+      );
+    }
+    if (data.dates[`${i}`].description != null && data.dates[`${i}`].description != '') {
+      ics_lines.push(
+        'X-ALT-DESC;FMTTYPE=text/html:\r\n <!DOCTYPE HTML PUBLIC ""-//W3C//DTD HTML 3.2//EN"">\r\n <HTML><BODY>\r\n ' +
+          data.dates[`${i}`].description.replace(/\n/g, '<br>').replace(/.{60}/g, '$&' + '\r\n ') +
+          '\r\n </BODY></HTML>'
+      );
+    }
+    if (data.dates[`${i}`].location != null && data.dates[`${i}`].location != '') {
+      ics_lines.push('LOCATION:' + data.dates[`${i}`].location);
+    }
+    if (data.dates[`${i}`].organizer != null && data.dates[`${i}`].organizer != '') {
+      const organizerParts = data.dates[`${i}`].organizer.split('|');
+      ics_lines.push('ORGANIZER;CN=' + organizerParts[0] + ':MAILTO:' + organizerParts[1]);
+    }
+    if (data.recurrence != null && data.recurrence != '') {
+      ics_lines.push(data.recurrence);
+    }
+    ics_lines.push('SEQUENCE:' + data.dates[`${i}`].sequence);
+    ics_lines.push('STATUS:' + data.dates[`${i}`].status);
+    ics_lines.push('CREATED:' + data.created);
+    ics_lines.push('LAST-MODIFIED:' + data.updated);
+    ics_lines.push('END:VEVENT');
   }
-  if (data.description != null && data.description != '') {
-    ics_lines.push(
-      'X-ALT-DESC;FMTTYPE=text/html:\r\n <!DOCTYPE HTML PUBLIC ""-//W3C//DTD HTML 3.2//EN"">\r\n <HTML><BODY>\r\n ' +
-        data.description.replace(/\n/g, '<br>').replace(/.{60}/g, '$&' + '\r\n ') +
-        '\r\n </BODY></HTML>'
-    );
-  }
-  if (data.location != null && data.location != '') {
-    ics_lines.push('LOCATION:' + data.location);
-  }
-  if (data.organizer != null && data.organizer != '') {
-    const organizerParts = data.organizer.split('|');
-    ics_lines.push('ORGANIZER;CN=' + organizerParts[0] + ':MAILTO:' + organizerParts[1]);
-  }
-  if (data.recurrence != null && data.recurrence != '') {
-    ics_lines.push(data.recurrence);
-  }
-  ics_lines.push('STATUS:' + data.status);
-  ics_lines.push('CREATED:' + data.created);
-  ics_lines.push('LAST-MODIFIED:' + data.updated);
-  ics_lines.push('SEQUENCE:' + data.sequence);
-  ics_lines.push('END:VEVENT');
   ics_lines.push('END:VCALENDAR');
   const dataUrl = (function () {
     // if we got to this point with an explicitely given iCal file, we are on an iOS device within an in-app browser (WebView). In this case, we use this as dataUrl
@@ -2018,7 +2090,7 @@ function atcb_create_modal(data, icon = '', headline, content, buttons) {
   infoModalContent.classList.add('atcb-modal-content');
   infoModalContent.innerHTML = content;
   infoModal.appendChild(infoModalContent);
-  // and buttons (array of objects; attributes: href, type, label, primary(boolean))
+  // and buttons (array of objects; attributes: href, type, subEvent, label, primary(boolean))
   if (buttons != null && buttons.length > 0) {
     const infoModalButtons = document.createElement('div');
     infoModalButtons.classList.add('atcb-modal-buttons');
@@ -2061,6 +2133,22 @@ function atcb_create_modal(data, icon = '', headline, content, buttons) {
               }
             })
           );
+          break;
+        case 'apple':
+        case 'google':
+        case 'ical':
+        case 'msteams':
+        case 'ms365':
+        case 'outlookcom':
+        case 'yahoo':
+          if (button.subEvent != null && button.subEvent != '') {
+            infoModalButton.addEventListener(
+              'click',
+              atcb_debounce(() => {
+                atcb_generate_links(button.type, data, button.subEvent);
+              })
+            );
+          }
           break;
       }
     });
@@ -2295,6 +2383,9 @@ const i18nStrings = {
       'Unfortunately, Chrome on iOS has problems with the way we generate the calendar file.',
     'Crios iCal solution 2':
       '<ol><li><strong>Open Safari</strong>, ...</li><li><strong>Paste</strong> the clipboard content and go.</li></ol>',
+    'MultiDate headline': 'This is an event series',
+    'MultiDate info': 'Add the individual events one by one.',
+    'Event': 'Event',
   },
   de: {
     'Add to Calendar': 'Im Kalender speichern',
@@ -2313,6 +2404,9 @@ const i18nStrings = {
     'Crios iCal info': 'Leider Chrome unter iOS Probleme mit der Art, wie wir Kalender-Dateien erzeugen.',
     'Crios iCal solution 2':
       '<ol><li><strong>Öffne Safari</strong>, ...</li><li>Nutze die <strong>Einfügen</strong>-Funktion, um fortzufahren.</li></ol>',
+    'MultiDate headline': 'Dies is eine Termin-Reihe',
+    'MultiDate info': 'Füge die einzelnen Termine der Reihe nach deinem Kalender hinzu.',
+    'Event': 'Termin',
   },
   es: {
     'Add to Calendar': 'Añadir al Calendario',
@@ -2332,6 +2426,9 @@ const i18nStrings = {
       'Lamentablemente, Chrome en iOS tiene problemas con la forma de generar el archivo de calendario.',
     'Crios iCal solution 2':
       '<ol><li><strong>Abrir Safari</strong>, ...</li><li>Utilice la función de <strong>pegar</strong> para continuar.</li></ol>',
+    'MultiDate headline': 'This is an event series',
+    'MultiDate info': 'Add the individual parts one by one.',
+    'Event': 'Event',
   },
   pt: {
     'Add to Calendar': 'Incluir no Calendário',
@@ -2351,6 +2448,9 @@ const i18nStrings = {
       'Infelizmente, o cromado no iOS tem problemas com a forma como geramos o ficheiro do calendário.',
     'Crios iCal solution 2':
       '<ol><li><strong>Safari aberto</strong>, ...</li><li>Use a função <forte>colar</strong> para continuar.</li></ol>',
+    'MultiDate headline': 'This is an event series',
+    'MultiDate info': 'Add the individual parts one by one.',
+    'Event': 'Event',
   },
   fr: {
     'Add to Calendar': 'Ajout au Calendrier',
@@ -2370,6 +2470,9 @@ const i18nStrings = {
       'Malheureusement, Chrome sur iOS a des problèmes avec la façon dont nous générons le fichier du calendrier.',
     'Crios iCal solution 2':
       '<ol><li><strong>Ouvre Safari</strong>, ...</li><li>Utilise la fonction <strong>insérer</strong> pour continuer.</li></ol>',
+    'MultiDate headline': 'This is an event series',
+    'MultiDate info': 'Add the individual parts one by one.',
+    'Event': 'Event',
   },
   nl: {
     'Add to Calendar': 'Opslaan in Kalender',
@@ -2389,6 +2492,9 @@ const i18nStrings = {
       'Helaas heeft Chrome op iOS problemen met de manier waarop we het kalenderbestand genereren.',
     'Crios iCal solution 2':
       '<ol><li><strong>Open Safari</strong>, ...</li><li>Gebruik de <strong>insert</strong> functie om verder te gaan.</li></ol>',
+    'MultiDate headline': 'This is an event series',
+    'MultiDate info': 'Add the individual parts one by one.',
+    'Event': 'Event',
   },
   tr: {
     'Add to Calendar': 'Takvime Ekle',
@@ -2407,6 +2513,9 @@ const i18nStrings = {
       "Ne yazık ki iOS'ta Chrome'un takvim dosyası oluşturma yöntemiyle ilgili sorunları var.",
     'Crios iCal solution 2':
       '<ol><li><strong>Açık Safari</strong>, ...</li><li>Devam etmek için <strong>insert</strong> fonksiyonunu kullanın.</li></ol>',
+    'MultiDate headline': 'This is an event series',
+    'MultiDate info': 'Add the individual parts one by one.',
+    'Event': 'Event',
   },
   zh: {
     'Add to Calendar': '添加到日历',
@@ -2423,6 +2532,9 @@ const i18nStrings = {
     'Crios iCal info': '不幸的是，iOS 上的 Chrome 在我们生成日历文件的方式上存在问题.',
     'Crios iCal solution 2':
       '<ol><li><strong>打开 Safari</strong>, ...</li><li>粘贴剪贴板内容并开始.</li></ol>',
+    'MultiDate headline': 'This is an event series',
+    'MultiDate info': 'Add the individual parts one by one.',
+    'Event': 'Event',
   },
   ar: {
     'Add to Calendar': 'إضافة إلى التقويم',
@@ -2439,6 +2551,9 @@ const i18nStrings = {
     'Crios iCal info': 'لسوء الحظ ، يواجه Chrome على iOS مشاكل في طريقة إنشاء ملف التقويم.',
     'Crios iCal solution 2':
       '<ol><li><strong>افتح Safari</strong>, ...</li><li>الصق محتوى الحافظة واذهب.</li></ol>',
+    'MultiDate headline': 'This is an event series',
+    'MultiDate info': 'Add the individual parts one by one.',
+    'Event': 'Event',
   },
   hi: {
     'Add to Calendar': 'कैलेंडर में जोड़ें',
@@ -2456,6 +2571,9 @@ const i18nStrings = {
       'दुर्भाग्य से, iOS पर Chrome को कैलेंडर फ़ाइल जेनरेट करने के हमारे तरीके में समस्या है।',
     'Crios iCal solution 2':
       '<ol><li><strong>सफारी खोलें</strong>, ...</li><li>क्लिपबोर्ड सामग्री <strong>चिपकाएं</strong> और जाएं।</li></ol>',
+    'MultiDate headline': 'This is an event series',
+    'MultiDate info': 'Add the individual parts one by one.',
+    'Event': 'Event',
   },
   pl: {
     'Add to Calendar': 'Dodaj do kalendarza',
@@ -2473,6 +2591,9 @@ const i18nStrings = {
     'Crios iCal info': 'Niestety, Chrome na iOS ma problemy ze sposobem generowania pliku kalendarza.',
     'Crios iCal solution 2':
       '<ol><li><strong>Otwórz Safari</strong>, ...</li><li><strong>Wklej</strong> zawartość schowka i ruszaj.</li></ol>',
+    'MultiDate headline': 'This is an event series',
+    'MultiDate info': 'Add the individual parts one by one.',
+    'Event': 'Event',
   },
   id: {
     'Add to Calendar': 'Tambahkan ke Kalender',
@@ -2491,6 +2612,9 @@ const i18nStrings = {
       'Sayangnya, Chrome di iOS memiliki masalah dengan cara kami menghasilkan file kalender.',
     'Crios iCal solution 2':
       '<ol><li><strong>Buka Safari</strong>, ...</li><li>Tempelkan konten clipboard dan pergi.</li></ol>',
+    'MultiDate headline': 'This is an event series',
+    'MultiDate info': 'Add the individual parts one by one.',
+    'Event': 'Event',
   },
   no: {
     'Add to Calendar': 'Legg til i kalenderen',
@@ -2508,6 +2632,9 @@ const i18nStrings = {
     'Crios iCal info': 'Dessverre har Chrome på iOS problemer med måten vi genererer kalenderfilen på.',
     'Crios iCal solution 2':
       '<ol><li><strong>Åpne Safari</strong>, ...</li><li><strong>Lim inn</strong> innholdet på utklippstavlen og gå.</li></ol>',
+    'MultiDate headline': 'This is an event series',
+    'MultiDate info': 'Add the individual parts one by one.',
+    'Event': 'Event',
   },
   fi: {
     'Add to Calendar': 'Lisää kalenteriin',
@@ -2525,6 +2652,9 @@ const i18nStrings = {
     'Crios iCal info': 'Valitettavasti iOS:n Chromessa on ongelmia kalenteritiedoston luomisessa.',
     'Crios iCal solution 2':
       '<ol><li><strong>Avaa Safari</strong>, ...</li><li><strong>liitä</strong> leikepöydän sisältö ja lähde.</li></ol>',
+    'MultiDate headline': 'This is an event series',
+    'MultiDate info': 'Add the individual parts one by one.',
+    'Event': 'Event',
   },
   sv: {
     'Add to Calendar': 'Lägg till i kalender',
@@ -2541,6 +2671,9 @@ const i18nStrings = {
     'Crios iCal info': 'Tyvärr har Chrome på iOS problem med hur vi genererar kalenderfilen.',
     'Crios iCal solution 2':
       '<ol><li><strong>Öppna Safari</strong>, ...</li><li><strong>Insätt</strong> innehållet i klippbordet och kör.</li></ol>',
+    'MultiDate headline': 'This is an event series',
+    'MultiDate info': 'Add the individual parts one by one.',
+    'Event': 'Event',
   },
   cs: {
     'Add to Calendar': 'Přidat do kalendáře',
@@ -2558,6 +2691,9 @@ const i18nStrings = {
     'Crios iCal info': 'Chrome v systému iOS má bohužel problémy se způsobem generování souboru kalendáře.',
     'Crios iCal solution 2':
       '<ol><li><strong>Otevřít Safari</strong>, ...</li><li><strong>Vložte</strong> obsah schránky a přejděte.</li></ol>',
+    'MultiDate headline': 'This is an event series',
+    'MultiDate info': 'Add the individual parts one by one.',
+    'Event': 'Event',
   },
   ja: {
     'Add to Calendar': 'カレンダーに追加',
@@ -2574,6 +2710,9 @@ const i18nStrings = {
     'Crios iCal info': '残念ながら、iOS版Chromeでは、カレンダーファイルの生成方法に問題があります。',
     'Crios iCal solution 2':
       '<ol><li><strong>オープンSafari</strong>, ...</li><li>クリップボードの内容を貼り付けて行く。</li></ol>',
+    'MultiDate headline': 'This is an event series',
+    'MultiDate info': 'Add the individual parts one by one.',
+    'Event': 'Event',
   },
   it: {
     'Add to Calendar': 'Aggiungi al calendario',
@@ -2592,6 +2731,9 @@ const i18nStrings = {
       'Purtroppo, Chrome su iOS ha problemi con il modo in cui generiamo il file del calendario.',
     'Crios iCal solution 2':
       '<ol><li><strong>Aprire Safari</strong>, ...</li><li><strong>Incollare</strong> il contenuto degli appunti e partire.</li></ol>',
+    'MultiDate headline': 'This is an event series',
+    'MultiDate info': 'Add the individual parts one by one.',
+    'Event': 'Event',
   },
   ko: {
     'Add to Calendar': '캘린더에 추가',
@@ -2608,6 +2750,9 @@ const i18nStrings = {
     'Crios iCal info': '불행히도 iOS의 Chrome은 캘린더 파일을 생성하는 방식에 문제가 있습니다.',
     'Crios iCal solution 2':
       '<ol><li><strong>Safari 열기</strong>, ...</li><li>클립보드 내용을 붙여넣고 이동합니다.</li></ol>',
+    'MultiDate headline': 'This is an event series',
+    'MultiDate info': 'Add the individual parts one by one.',
+    'Event': 'Event',
   },
   vi: {
     'Add to Calendar': 'Thêm vào Lịch',
@@ -2626,6 +2771,9 @@ const i18nStrings = {
     'Crios iCal info': 'Rất tiếc, Chrome trên iOS gặp sự cố với cách chúng tôi tạo tệp lịch.',
     'Crios iCal solution 2':
       '<ol><li><strong>Mở Safari</strong>, ...</li><li><strong> Dán </strong> nội dung khay nhớ tạm và bắt đầu.</li></ol>',
+    'MultiDate headline': 'This is an event series',
+    'MultiDate info': 'Add the individual parts one by one.',
+    'Event': 'Event',
   },
 };
 

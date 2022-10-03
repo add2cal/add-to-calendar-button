@@ -13,6 +13,9 @@ declare module 'add-to-calendar-button' {
         timeZone?: string;
         location?: string;
         status?: 'TENTATIVE' | 'CONFIRMED' | 'CANCELLED';
+        sequence?: bigint;
+        uid?: string;
+        organizer?: string;
       }[];
       description?: string;
       startDate?: string;
@@ -22,6 +25,9 @@ declare module 'add-to-calendar-button' {
       timeZone?: string;
       location?: string;
       status?: 'TENTATIVE' | 'CONFIRMED' | 'CANCELLED';
+      sequence?: bigint;
+      uid?: string;
+      organizer?: string;
       icsFile?: string;
       images?: string[];
       recurrence?: string;
@@ -32,12 +38,8 @@ declare module 'add-to-calendar-button' {
       recurrence_byMonth?: string;
       recurrence_byMonthDay?: string;
       recurrence_weekstart?: string;
-      sequence?: bigint;
-      uid?: string;
-      sequence?: bigint;
       created?: string;
       updated?: string;
-      organizer?: string;
       identifier?: string;
       options: ('Apple' | 'Google' | 'iCal' | 'Microsoft365' | 'MicrosoftTeams' | 'Outlook.com' | 'Yahoo')[];
       iCalFileName?: string;
