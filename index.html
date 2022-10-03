@@ -452,7 +452,90 @@
 
       <hr>
 
-      <h3>Example 7: Bring-Your-Own Button</h3>
+      <h3>Example 7: Multi-Date Events</h3>
+      <p class="description">
+        Events can also have multiple dates, which are not recurring. For example, a workshop, consisting of 2 parts.<br>
+        You define those parts by placing them as separate objects in a dates array.<br>
+        Each part can have his own name, description, and location. If not given, a global one will be used (in the example, we use the location globally).<br>
+        Individual date and time information would be required - global ones will be ignored.<br>
+        <em>(Mind that in the example, we left out the endDate, since we do not want to span >1 day per date.)</em>
+      </p>
+      <div class="example">
+        <div class="example-left">
+
+          <!-- start of button code -->
+          <div class="atcb" style="display:none;">
+            {
+              "name":"Event Series",
+              "dates":[
+                {
+                  "name":"Event #1/2 to star the add to calendar button repo",
+                  "description":"This is the first part to check the calendar button repository:<br>&#8594; [url]https://github.com/add2cal/add-to-calendar-button[/url]",
+                  "startDate":"today+3",
+                  "startTime":"10:15",
+                  "endTime":"23:30"
+                },
+                {
+                  "name":"Event #2/2 to star the add to calendar button repo",
+                  "description":"This is the second part to check the calendar button repository:<br>&#8594; [url]https://github.com/add2cal/add-to-calendar-button[/url]",
+                  "startDate":"today+5",
+                  "startTime":"13:15",
+                  "endTime":"15:05"
+                }
+              ],
+              "location":"World Wide Web",
+              "options":[
+                "Apple",
+                "Google",
+                "iCal",
+                "Outlook.com",
+                "Yahoo"
+              ],
+              "timeZone":"Europe/Berlin",
+              "iCalFileName":"Multi-Date-Event"
+            }
+          </div>
+          <!-- end of button code -->
+
+        </div>
+        <div class="example-right">
+<pre><code class="language-html">&lt;div class="atcb" style="display:none;"&gt;
+{
+  "name":"Event Series",
+  "dates":[
+    {
+      "name":"Event #1/2 to star the add to calendar button repo",
+      "description":"This is the first part to check the calendar button repository:<br>&#8594; [url]https://github.com/add2cal/add-to-calendar-button[/url]",
+      "startDate":"today+3",
+      "startTime":"10:15",
+      "endTime":"23:30"
+    },
+    {
+      "name":"Event #2/2 to star the add to calendar button repo",
+      "description":"This is the second part to check the calendar button repository:<br>&#8594; [url]https://github.com/add2cal/add-to-calendar-button[/url]",
+      "startDate":"today+5",
+      "startTime":"13:15",
+      "endTime":"15:05"
+    }
+  ],
+  "location":"World Wide Web",
+  "options":[
+    "Apple",
+    "Google",
+    "iCal",
+    "Outlook.com",
+    "Yahoo"
+  ],
+  "timeZone":"Europe/Berlin",
+  "iCalFileName":"Multi-Date-Event"
+}
+&lt;/div&gt;</code></pre>
+        </div>
+      </div>
+
+      <hr>
+
+      <h3>Example 8: Bring-Your-Own Button</h3>
       <p class="description">
         If you can't or don't want to use "atcb_init", you can use the "atcb_action" function and apply it to your own button.
       </p>
@@ -501,7 +584,7 @@
 
       <hr>
 
-      <h3>Example 8: Bring-Your-Own Anything</h3>
+      <h3>Example 9: Bring-Your-Own Anything</h3>
       <p class="description">
         When using "atcb_action", you don't need to use a button. A form, a link, an image — whatever element you want to trigger the dropdown, you can use it (though not all of them are good for accessibility).<br>
         If you don't provide a second argument, the dropdown list will appear as a modal in the middle of the viewport.<br>

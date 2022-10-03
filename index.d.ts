@@ -3,12 +3,25 @@ declare module 'add-to-calendar-button' {
   export function atcb_action(
     config: {
       name: string;
+      dates?: {
+        name?: string;
+        description?: string;
+        startDate?: string;
+        startTime?: string;
+        endDate?: string;
+        endTime?: string;
+        timeZone?: string;
+        location?: string;
+        status?: 'TENTATIVE' | 'CONFIRMED' | 'CANCELLED';
+      }[];
       description?: string;
-      startDate: string;
+      startDate?: string;
       startTime?: string;
       endDate?: string;
       endTime?: string;
+      timeZone?: string;
       location?: string;
+      status?: 'TENTATIVE' | 'CONFIRMED' | 'CANCELLED';
       icsFile?: string;
       images?: string[];
       recurrence?: string;
@@ -21,7 +34,6 @@ declare module 'add-to-calendar-button' {
       recurrence_weekstart?: string;
       sequence?: bigint;
       uid?: string;
-      status?: 'TENTATIVE' | 'CONFIRMED' | 'CANCELLED';
       sequence?: bigint;
       created?: string;
       updated?: string;
@@ -29,7 +41,6 @@ declare module 'add-to-calendar-button' {
       identifier?: string;
       options: ('Apple' | 'Google' | 'iCal' | 'Microsoft365' | 'MicrosoftTeams' | 'Outlook.com' | 'Yahoo')[];
       iCalFileName?: string;
-      timeZone?: string;
       trigger?: 'hover' | 'click';
       listStyle?: 'dropdown' | 'dropdown-static' | 'overlay' | 'modal';
       background?: boolean;

@@ -132,20 +132,13 @@ const atcbIcon = {
 
 // INITIALIZE THE SCRIPT AND FUNCTIONALITY
 function atcb_init() {
-  // let's get started
-  if (!atcbConsoleInit) {
-    console.log('Add to Calendar Button Script initialized (version ' + atcbVersion + ')');
-    console.log('See https://github.com/add2cal/add-to-calendar-button for details');
-    atcbConsoleInit = true;
-  }
-  // abort if not in a browser
+  atcb_init_log_msg();
+  // abort early, if not in a browser
   if (!isBrowser()) {
-    console.error('no further initialization due to wrong environment (no browser)');
-    return;
+    throw new Error('no further initialization due to wrong environment (no browser)');
   }
   // get all placeholders
   const atcButtons = document.querySelectorAll('.atcb');
-  // if there are some, move on
   if (atcButtons.length > 0) {
     // get the amount of already initialized ones first
     const atcButtonsInitialized = document.querySelectorAll('.atcb-initialized');
@@ -349,11 +342,34 @@ function atcb_decorate_data(data) {
       }
     }
   }
-  // cleanup different date-time formats
-  data = atcb_date_cleanup(data);
-  // calculate the real date values in case that there are some special rules included (e.g. adding days dynamically)
-  data.startDate = atcb_date_calculation(data.startDate);
-  data.endDate = atcb_date_calculation(data.endDate);
+  // optimize date and time information
+  if (data.dates != null && data.dates.length > 0) {
+    for (let i = 0; i < data.dates.length; i++) {
+      // get global time zone, if not set within the date block, but globally
+      if (data.dates[`${i}`].timeZone == null && data.timeZone != null) {
+        data.dates[`${i}`].timeZone = data.timeZone;
+      }
+      // cleanup different date-time formats
+      const cleanedUpDates = atcb_date_cleanup(data.dates[`${i}`]);
+      data.dates[`${i}`].startTime = cleanedUpDates.startTime;
+      data.dates[`${i}`].endTime = cleanedUpDates.endTime;
+      data.dates[`${i}`].timeZone = cleanedUpDates.timeZone;
+      // calculate the real date values in case that there are some special rules included (e.g. adding days dynamically)
+      data.dates[`${i}`].startDate = atcb_date_calculation(cleanedUpDates.startDate);
+      data.dates[`${i}`].endDate = atcb_date_calculation(cleanedUpDates.endDate);
+    }
+  } else {
+    // in the single case, we do the same, but without the looping
+    const cleanedUpDates = atcb_date_cleanup(data);
+    // in addition, we directly move this information into the dates array block for better consistency at the next steps
+    data.dates = [];
+    data.dates[0] = new Object;
+    data.startTime = data.dates[0].startTime = cleanedUpDates.startTime;
+    data.endTime = data.dates[0].endTime = cleanedUpDates.endTime;
+    data.timeZone = data.dates[0].timeZone = cleanedUpDates.timeZone;
+    data.startDate = data.dates[0].startDate = atcb_date_calculation(cleanedUpDates.startDate);
+    data.endDate = data.dates[0].endDate = atcb_date_calculation(cleanedUpDates.endDate);
+  }
   // set default listStyle
   if (data.listStyle == null || data.listStyle == '') {
     data.listStyle = 'dropdown';
@@ -430,74 +446,130 @@ function atcb_decorate_data(data) {
     data.rtl = false;
   }
   // decorate description
-  if (data.description != null && data.description != '') {
-    // store a clean description copy without the URL magic for iCal
-    data.descriptionHtmlFree = atcb_rewrite_html_elements(data.description, true);
-    // ...and transform pseudo elements for the regular one
-    data.description = atcb_rewrite_html_elements(data.description);
+  // in that step, we also copy global values (description, name, location) to date objects, if not set nested - mind that above, we even moved a single date item into this array for better conistency
+  for (let i = 0; i < data.dates.length; i++) {
+    if (data.dates[`${i}`].description != null && data.dates[`${i}`].description != '') {
+      // store a clean description copy without the URL magic for iCal
+      data.dates[`${i}`].descriptionHtmlFree = atcb_rewrite_html_elements(data.dates[`${i}`].description, true);
+      // ...and transform pseudo elements for the regular one
+      data.dates[`${i}`].description = atcb_rewrite_html_elements(data.dates[`${i}`].description);
+    } else {
+      if (data.dates[`${i}`].description == null && data.description != null && data.description != '') {
+        data.dates[`${i}`].descriptionHtmlFree = atcb_rewrite_html_elements(data.description, true);
+        data.dates[`${i}`].description = atcb_rewrite_html_elements(data.description);
+      }
+    }
+    // to save on loops, we also do the copying for name (here, we also check for empty, because it is required), status, and location here as well
+    if (data.dates[`${i}`].name == null || data.dates[`${i}`].name == '') {
+      data.dates[`${i}`].name = data.name;
+    }
+    if (data.dates[`${i}`].status == null && data.status != null) {
+      data.dates[`${i}`].status = data.status;
+    } else {
+      data.dates[`${i}`].status = data.dates[`${i}`].status.toUpperCase();
+    }
+    if (data.dates[`${i}`].location == null && data.location != null) {
+      data.dates[`${i}`].location = data.location;
+    }
   }
   return data;
 }
 
 // CHECK FOR REQUIRED FIELDS
 function atcb_check_required(data) {
+  // in this first step, we only check for the bare minimum, so we can abort early on really broken setups. We will do further validation later.
   // check for at least 1 option
   if (data.options == null || data.options.length < 1) {
     console.error('Add to Calendar Button generation failed: no valid options set');
     return false;
   }
   // check for min required data (without "options")
-  const requiredField = ['name', 'startDate'];
-  return requiredField.every(function (field) {
-    if (data[`${field}`] == null || data[`${field}`] == '') {
-      console.error('Add to Calendar Button generation failed: required setting missing [' + field + ']');
-      return false;
-    }
-    return true;
-  });
+  // name is always required on top level (in the multi-date setup this would be the name of the event series)
+  if (data.name == null || data.name == '') {
+    console.error('Add to Calendar Button generation failed: required name information missing');
+    return false;
+  }
+  // regarding event specifics, we start by checking for multi-date setups
+  if (data.dates != null && data.dates.length > 0) {
+    const requiredMultiField = ['name', 'startDate'];
+    const requiredMultiFieldFlex = ['name'];
+    return requiredMultiField.every(function (field) {
+      for (let i = 0; i < data.dates.length; i++) {
+        // if a field is missing, for flexible fields, we also need to check, whether they might be present globally (fallback for them)
+        if (
+          (!requiredMultiFieldFlex.includes(`${field}`) &&
+            (data.dates[`${i}`][`${field}`] == null || data.dates[`${i}`][`${field}`] == '')) ||
+          (requiredMultiFieldFlex.includes(`${field}`) &&
+            (data.dates[`${i}`][`${field}`] == null || data.dates[`${i}`][`${field}`] == '') &&
+            (data[`${field}`] == null || data[`${field}`] == ''))
+        ) {
+          console.error(
+            'Add to Calendar Button generation failed: required setting missing [dates array object #' +
+              (i + 1) +
+              '/' +
+              data.dates.length +
+              '] => [' +
+              field +
+              ']'
+          );
+          return false;
+        }
+      }
+      return true;
+    });
+  } else {
+    const requiredSingleField = ['startDate'];
+    return requiredSingleField.every(function (field) {
+      if (data[`${field}`] == null || data[`${field}`] == '') {
+        console.error('Add to Calendar Button generation failed: required setting missing [' + field + ']');
+        return false;
+      }
+      return true;
+    });
+  }
 }
 
 // CALCULATE AND CLEAN UP THE ACTUAL DATES
-function atcb_date_cleanup(data) {
+function atcb_date_cleanup(dateTimeData) {
   // set endDate = startDate, if not provided
-  if ((data.endDate == null || data.endDate == '') && data.startDate != null) {
-    data.endDate = data.startDate;
+  if (dateTimeData.endDate == null || dateTimeData.endDate == '') {
+    dateTimeData.endDate = dateTimeData.startDate;
   }
   // parse date+time format (unofficial alternative to the main implementation)
   const endpoints = ['start', 'end'];
   endpoints.forEach(function (point) {
-    if (data[point + 'Date'] != null) {
+    if (dateTimeData[point + 'Date'] != null) {
       // remove any milliseconds information
-      data[point + 'Date'] = data[point + 'Date'].replace(/\.\d{3}/, '').replace('Z', '');
+      dateTimeData[point + 'Date'] = dateTimeData[point + 'Date'].replace(/\.\d{3}/, '').replace('Z', '');
       // identify a possible time information within the date string
-      const tmpSplitStartDate = data[point + 'Date'].split('T');
+      const tmpSplitStartDate = dateTimeData[point + 'Date'].split('T');
       if (tmpSplitStartDate[1] != null) {
-        data[point + 'Date'] = tmpSplitStartDate[0];
-        data[point + 'Time'] = tmpSplitStartDate[1];
+        dateTimeData[point + 'Date'] = tmpSplitStartDate[0];
+        dateTimeData[point + 'Time'] = tmpSplitStartDate[1];
       }
     }
     // remove any seconds from time information
-    if (data[point + 'Time'] != null && data[point + 'Time'].length === 8) {
-      const timeStr = data[point + 'Time'];
-      data[point + 'Time'] = timeStr.substring(0, timeStr.length - 3);
+    if (dateTimeData[point + 'Time'] != null && dateTimeData[point + 'Time'].length === 8) {
+      const timeStr = dateTimeData[point + 'Time'];
+      dateTimeData[point + 'Time'] = timeStr.substring(0, timeStr.length - 3);
     }
     // update time zone, if special case set to go for the user's browser
-    if (data.timeZone == 'currentBrowser') {
-      data.timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+    if (dateTimeData.timeZone == 'currentBrowser') {
+      dateTimeData.timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
     }
   });
-  return data;
+  return dateTimeData;
 }
 
 function atcb_date_calculation(dateString) {
   // replace "today" with the current date first
   const today = new Date();
-  const todayString = today.getUTCMonth() + 1 + '-' + today.getUTCDate() + '-' + today.getUTCFullYear();
+  const todayString = today.getUTCFullYear() + '-' + (today.getUTCMonth() + 1) + '-' + today.getUTCDate();
   dateString = dateString.replace(/today/gi, todayString);
   // check for any dynamic additions and adjust
   const dateStringParts = dateString.split('+');
   const dateParts = dateStringParts[0].split('-');
-  const newDate = (function () {
+  let newDate = (function () {
     // backwards compatibility for version <1.5.0
     if (dateParts[0].length < 4) {
       return new Date(dateParts[2], dateParts[0] - 1, dateParts[1]);
@@ -523,7 +595,7 @@ function atcb_validate(data) {
   if (data.identifier != null && data.identifier != '') {
     if (!/^[\w-]+$/.test(data.identifier)) {
       data.identifier = '';
-      console.error('Add to Calendar Button generation: identifier invalid - using auto numbers instead');
+      console.warn('Add to Calendar Button generation: identifier invalid - using auto numbers instead');
     }
   }
   const msgPrefix = 'Add to Calendar Button generation (' + data.identifier + ')';
@@ -589,11 +661,6 @@ function atcb_validate(data) {
     );
     return false;
   }
-  // validate status
-  if (data.status != 'TENTATIVE' && data.status != 'CONFIRMED' && data.status != 'CANCELLED') {
-    console.error(msgPrefix + ': event status needs to be TENTATIVE, CONFIRMED, or CANCELLED');
-    return false;
-  }
   // validate options
   if (
     !data.options.every(function (option) {
@@ -606,95 +673,115 @@ function atcb_validate(data) {
   ) {
     return false;
   }
-  // validate time zone
-  if (data.timeZone != null && data.timeZone != '') {
-    const validTimeZones = tzlib_get_timezones();
-    if (!validTimeZones.includes(data.timeZone)) {
-      console.error(msgPrefix + ' failed: invalid time zone given');
+  // next goes for all date blocks
+  for (let i = 0; i < data.dates.length; i++) {
+    const datesBlock = (function () {
+      if (data.dates.length == 1) {
+        return '';
+      } else {
+        return ' [dates array object #' + (i + 1) + '/' + data.dates.length + '] ';
+      }
+    })();
+    // validate status
+    if (data.dates[`${i}`].status != 'TENTATIVE' && data.dates[`${i}`].status != 'CONFIRMED' && data.dates[`${i}`].status != 'CANCELLED') {
+      console.error(msgPrefix + ': event status needs to be TENTATIVE, CONFIRMED, or CANCELLED' + datesBlock);
+      return false;
+    }
+    // validate time zone
+    if (data.dates[`${i}`].timeZone != null && data.dates[`${i}`].timeZone != '') {
+      const validTimeZones = tzlib_get_timezones();
+      if (!validTimeZones.includes(data.dates[`${i}`].timeZone)) {
+        console.error(msgPrefix + ' failed: invalid time zone given' + datesBlock);
+        return false;
+      }
+    }
+    // validate date
+    const dates = ['startDate', 'endDate'];
+    const newDate = dates;
+    if (
+      !dates.every(function (date) {
+        if (data.dates[`${i}`][`${date}`].length !== 10) {
+          console.error(msgPrefix + ' failed: date misspelled [-> YYYY-MM-DD]' + datesBlock);
+          return false;
+        }
+        const dateParts = data.dates[`${i}`][`${date}`].split('-');
+        if (dateParts.length < 3 || dateParts.length > 3) {
+          console.error(msgPrefix + ' failed: date misspelled [' + date + ': ' + data.dates[`${i}`][`${date}`] + ']' + datesBlock);
+          return false;
+        }
+        newDate[`${date}`] = new Date(dateParts[0], dateParts[1] - 1, dateParts[2]);
+        return true;
+      })
+    ) {
+      return false;
+    }
+    // validate time
+    const times = ['startTime', 'endTime'];
+    if (
+      !times.every(function (time) {
+        if (data.dates[`${i}`][`${time}`] != null) {
+          if (data.dates[`${i}`][`${time}`].length !== 5) {
+            console.error(msgPrefix + ' failed: time misspelled [-> HH:MM]' + datesBlock);
+            return false;
+          }
+          const timeParts = data.dates[`${i}`][`${time}`].split(':');
+          // validate the time parts
+          if (timeParts.length < 2 || timeParts.length > 2) {
+            console.error(msgPrefix + ' failed: time misspelled [' + time + ': ' + data.dates[`${i}`][`${time}`] + ']' + datesBlock);
+            return false;
+          }
+          if (timeParts[0] > 23) {
+            console.error(
+              msgPrefix +
+                ' failed: time misspelled - hours number too high [' +
+                time +
+                ': ' +
+                timeParts[0] +
+                ']' + datesBlock
+            );
+            return false;
+          }
+          if (timeParts[1] > 59) {
+            console.error(
+              msgPrefix +
+                ' failed: time misspelled - minutes number too high [' +
+                time +
+                ': ' +
+                timeParts[1] +
+                ']' + datesBlock
+            );
+            return false;
+          }
+          // update the date with the time for further validation steps
+          if (time == 'startTime') {
+            newDate.startDate = new Date(
+              newDate.startDate.getTime() + timeParts[0] * 3600000 + timeParts[1] * 60000
+            );
+          }
+          if (time == 'endTime') {
+            newDate.endDate = new Date(
+              newDate.endDate.getTime() + timeParts[0] * 3600000 + timeParts[1] * 60000
+            );
+          }
+        }
+        return true;
+      })
+    ) {
+      return false;
+    }
+    if ((data.dates[`${i}`].startTime != null && data.dates[`${i}`].endTime == null) || (data.dates[`${i}`].startTime == null && data.dates[`${i}`].endTime != null)) {
+      console.error(msgPrefix + ' failed: if you set a starting time, you also need to define an end time' + datesBlock);
+      return false;
+    }
+    // validate whether end is not before start
+    if (newDate.endDate < newDate.startDate) {
+      console.error(msgPrefix + ' failed: end date before start date' + datesBlock);
       return false;
     }
   }
-  // validate date
-  const dates = ['startDate', 'endDate'];
-  const newDate = dates;
-  if (
-    !dates.every(function (date) {
-      if (data[`${date}`].length !== 10) {
-        console.error(msgPrefix + ' failed: date misspelled [-> YYYY-MM-DD]');
-        return false;
-      }
-      const dateParts = data[`${date}`].split('-');
-      if (dateParts.length < 3 || dateParts.length > 3) {
-        console.error(msgPrefix + ' failed: date misspelled [' + date + ': ' + data[`${date}`] + ']');
-        return false;
-      }
-      newDate[`${date}`] = new Date(dateParts[0], dateParts[1] - 1, dateParts[2]);
-      return true;
-    })
-  ) {
-    return false;
-  }
-  // validate time
-  const times = ['startTime', 'endTime'];
-  if (
-    !times.every(function (time) {
-      if (data[`${time}`] != null) {
-        if (data[`${time}`].length !== 5) {
-          console.error(msgPrefix + ' failed: time misspelled [-> HH:MM]');
-          return false;
-        }
-        const timeParts = data[`${time}`].split(':');
-        // validate the time parts
-        if (timeParts.length < 2 || timeParts.length > 2) {
-          console.error(msgPrefix + ' failed: time misspelled [' + time + ': ' + data[`${time}`] + ']');
-          return false;
-        }
-        if (timeParts[0] > 23) {
-          console.error(
-            msgPrefix +
-              ' failed: time misspelled - hours number too high [' +
-              time +
-              ': ' +
-              timeParts[0] +
-              ']'
-          );
-          return false;
-        }
-        if (timeParts[1] > 59) {
-          console.error(
-            msgPrefix +
-              ' failed: time misspelled - minutes number too high [' +
-              time +
-              ': ' +
-              timeParts[1] +
-              ']'
-          );
-          return false;
-        }
-        // update the date with the time for further validation steps
-        if (time == 'startTime') {
-          newDate.startDate = new Date(
-            newDate.startDate.getTime() + timeParts[0] * 3600000 + timeParts[1] * 60000
-          );
-        }
-        if (time == 'endTime') {
-          newDate.endDate = new Date(
-            newDate.endDate.getTime() + timeParts[0] * 3600000 + timeParts[1] * 60000
-          );
-        }
-      }
-      return true;
-    })
-  ) {
-    return false;
-  }
-  if ((data.startTime != null && data.endTime == null) || (data.startTime == null && data.endTime != null)) {
-    console.error(msgPrefix + ' failed: if you set a starting time, you also need to define an end time');
-    return false;
-  }
-  // validate whether end is not before start
-  if (newDate.endDate < newDate.startDate) {
-    console.error(msgPrefix + ' failed: end date before start date');
+  // validate RRULE with multi-date (which is not allowed)
+  if (data.recurrence != null && data.recurrence != '' && data.dates.length > 1) {
+    console.error(msgPrefix + ' failed: RRULE and multi-date set at the same time');
     return false;
   }
   // validate any given RRULE
@@ -928,112 +1015,138 @@ function atcb_generate(button, data) {
   button.textContent = '';
   // create schema.org data, if possible (https://schema.org/Event)
   // see https://developers.google.com/search/docs/advanced/structured-data/event for more details on how this affects Google search results
-  if (data.name && data.location && data.startDate) {
+  // multi-date events are not 100% compliant with schema.org, since this is still a little broken and not supported by Google
+  if (data.name && data.dates[0].location && data.dates[0].startDate) {
     const schemaEl = document.createElement('script');
     schemaEl.type = 'application/ld+json';
-    const schemaContent = [];
-    schemaContent.push('{\r\n"event": {\r\n"@context":"https://schema.org",\r\n"@type":"Event"');
-    if (data.status == 'CANCELLED') {
-      schemaContent.push('"eventStatus":"https://schema.org/EventCancelled"');
+    const schemaContentMulti = [];
+    if (data.dates.length > 1) {
+      const parts = [];
+      parts.push('"@context":"https://schema.org"');
+      parts.push('"@type":"EventSeries"');
+      parts.push('"@id":"' + data.name.replace(/\s/g,'') + '"');
+      parts.push('"name":"' + data.name + '",');
+      schemaContentMulti.push('{\r\n' + parts.join(',\r\n') + '\r\n');
     }
-    schemaContent.push('"name":"' + data.name + '"');
-    if (data.descriptionHtmlFree) {
-      schemaContent.push('"description":"' + data.descriptionHtmlFree + '"');
-    }
-    const formattedDate = atcb_generate_time(data, 'delimiters', 'general', true);
-    schemaContent.push('"startDate":"' + formattedDate.start + '"');
-    schemaContent.push('"duration":"' + formattedDate.duration + '"');
-    if (data.recurrence != null && data.recurrence != '') {
-      schemaContent.push('"eventSchedule": { "@type": "Schedule"');
-      if (data.timeZone != null && data.timeZone != '') {
-        schemaContent.push('"scheduleTimezone":"' + data.timeZone + '"');
+    const schemaContentFull = [];
+    for (let i = 0; i < data.dates.length; i++) {
+      const schemaContent = [];
+      schemaContent.push('"@context":"https://schema.org"');
+      schemaContent.push('"@type":"Event"');
+      if (data.dates.length > 1) {
+        schemaContent.push('"@id":"' + data.name.replace(/\s/g,'') + '-' + (i + 1) + '"');
       }
-      const repeatFrequency = 'P' + data.recurrence_interval + data.recurrence_frequency.substr(0, 1);
-      schemaContent.push('"repeatFrequency":"' + repeatFrequency + '"');
-      if (data.recurrence_byDay != null && data.recurrence_byDay != '') {
-        const byDayString = (function () {
-          if (/\d/.test(data.recurrence_byDay)) {
-            return '"' + data.recurrence_byDay + '"';
-          } else {
-            const byDays = data.recurrence_byDay.split(',');
-            const helperMap = {
-              MO: 'https://schema.org/Monday',
-              TU: 'https://schema.org/Tuesday',
-              WE: 'https://schema.org/Wednesday',
-              TH: 'https://schema.org/Thursday',
-              FR: 'https://schema.org/Friday',
-              SA: 'https://schema.org/Saturday',
-              SU: 'https://schema.org/Sunday',
-            };
-            const output = [];
-            for (let i = 0; i < byDays.length; i++) {
-              output.push('"' + helperMap[byDays[`${i}`]] + '"');
-            }
-            return '[' + output.join(',') + ']';
-          }
-        })();
-        schemaContent.push('"byDay":' + byDayString);
+      if (data.dates[`${i}`].status == 'CANCELLED') {
+        schemaContent.push('"eventStatus":"https://schema.org/EventCancelled"');
       }
-      if (data.recurrence_byMonth != null && data.recurrence_byMonth != '') {
-        const byMonthString = data.recurrence_byMonth.includes(',')
-          ? '[' + data.recurrence_byMonth + ']'
-          : data.recurrence_byMonth;
-        schemaContent.push('"byMonth":"' + byMonthString + '"');
+      schemaContent.push('"name":"' + data.dates[`${i}`].name + '"');
+      if (data.dates[`${i}`].descriptionHtmlFree) {
+        schemaContent.push('"description":"' + data.dates[`${i}`].descriptionHtmlFree + '"');
       }
-      if (data.recurrence_byMonthDay != null && data.recurrence_byMonthDay != '') {
-        const byMonthDayString = data.recurrence_byMonthDay.includes(',')
-          ? '[' + data.recurrence_byMonthDay + ']'
-          : data.recurrence_byMonthDay;
-        schemaContent.push('"byMonthDay":"' + byMonthDayString + '"');
-      }
-      if (data.recurrence_count != null && data.recurrence_count != '') {
-        schemaContent.push('"repeatCount":"' + data.recurrence_count + '"');
-      }
-      if (data.recurrence_until != null && data.recurrence_until != '') {
-        schemaContent.push('"endDate":"' + data.recurrence_until + '"');
-      }
-      if (data.startTime != null && data.startTime != '' && data.endTime != null && data.endTime != '') {
-        schemaContent.push('"startTime":"' + data.startTime + ':00"');
-        schemaContent.push('"endTime":"' + data.endTime + ':00"');
+      const formattedDate = atcb_generate_time(data.dates[`${i}`], 'delimiters', 'general', true);
+      schemaContent.push('"startDate":"' + formattedDate.start + '"');
+      if (formattedDate.duration != null) {
         schemaContent.push('"duration":"' + formattedDate.duration + '"');
       }
-      schemaContent.push('"startDate":"' + data.startDate + '" }');
-    } else {
-      schemaContent.push('"endDate":"' + formattedDate.end + '"');
-    }
-    schemaContent.push(
-      data.location.startsWith('http')
-        ? '"eventAttendanceMode":"https://schema.org/OnlineEventAttendanceMode",\r\n"location": {\r\n"@type":"VirtualLocation",\r\n"url":"' +
-            data.location +
-            '"\r\n}'
-        : '"location":"' + data.location + '"'
-    );
-    if (data.organizer != null && data.organizer != '') {
-      const organizerParts = data.organizer.split('|');
       schemaContent.push(
-        '"organizer":{\r\n"@type":"Person",\r\n"name":"' +
-          organizerParts[0] +
-          '",\r\n"email":"' +
-          organizerParts[1] +
-          '"\r\n}'
+        data.dates[`${i}`].location.startsWith('http')
+          ? '"eventAttendanceMode":"https://schema.org/OnlineEventAttendanceMode",\r\n"location": {\r\n"@type":"VirtualLocation",\r\n"url":"' +
+              data.dates[`${i}`].location +
+              '"\r\n}'
+          : '"location":"' + data.dates[`${i}`].location + '"'
       );
-    }
-    const imageData = [];
-    if (data.images != null) {
-      if (Array.isArray(data.images)) {
-        for (let i = 0; i < data.images.length; i++) {
-          if (atcb_secure_url(data.images[`${i}`]) && data.images[`${i}`].startsWith('http')) {
-            imageData.push('"' + data.images[`${i}`] + '"');
+      if (data.recurrence != null && data.recurrence != '') {
+        schemaContent.push('"eventSchedule": { "@type": "Schedule"');
+        if (data.dates[0].timeZone != null && data.dates[0].timeZone != '') {
+          schemaContent.push('"scheduleTimezone":"' + data.dates[0].timeZone + '"');
+        }
+        const repeatFrequency = 'P' + data.recurrence_interval + data.recurrence_frequency.substr(0, 1);
+        schemaContent.push('"repeatFrequency":"' + repeatFrequency + '"');
+        if (data.recurrence_byDay != null && data.recurrence_byDay != '') {
+          const byDayString = (function () {
+            if (/\d/.test(data.recurrence_byDay)) {
+              return '"' + data.recurrence_byDay + '"';
+            } else {
+              const byDays = data.recurrence_byDay.split(',');
+              const helperMap = {
+                MO: 'https://schema.org/Monday',
+                TU: 'https://schema.org/Tuesday',
+                WE: 'https://schema.org/Wednesday',
+                TH: 'https://schema.org/Thursday',
+                FR: 'https://schema.org/Friday',
+                SA: 'https://schema.org/Saturday',
+                SU: 'https://schema.org/Sunday',
+              };
+              const output = [];
+              for (let i = 0; i < byDays.length; i++) {
+                output.push('"' + helperMap[byDays[`${i}`]] + '"');
+              }
+              return '[' + output.join(',') + ']';
+            }
+          })();
+          schemaContent.push('"byDay":' + byDayString);
+        }
+        if (data.recurrence_byMonth != null && data.recurrence_byMonth != '') {
+          const byMonthString = data.recurrence_byMonth.includes(',')
+            ? '[' + data.recurrence_byMonth + ']'
+            : data.recurrence_byMonth;
+          schemaContent.push('"byMonth":"' + byMonthString + '"');
+        }
+        if (data.recurrence_byMonthDay != null && data.recurrence_byMonthDay != '') {
+          const byMonthDayString = data.recurrence_byMonthDay.includes(',')
+            ? '[' + data.recurrence_byMonthDay + ']'
+            : data.recurrence_byMonthDay;
+          schemaContent.push('"byMonthDay":"' + byMonthDayString + '"');
+        }
+        if (data.recurrence_count != null && data.recurrence_count != '') {
+          schemaContent.push('"repeatCount":"' + data.recurrence_count + '"');
+        }
+        if (data.recurrence_until != null && data.recurrence_until != '') {
+          schemaContent.push('"endDate":"' + data.recurrence_until + '"');
+        }
+        if (data.startTime != null && data.startTime != '' && data.endTime != null && data.endTime != '') {
+          schemaContent.push('"startTime":"' + data.startTime + ':00"');
+          schemaContent.push('"endTime":"' + data.endTime + ':00"');
+          schemaContent.push('"duration":"' + formattedDate.duration + '"');
+        }
+        schemaContent.push('"startDate":"' + data.startDate + '" }');
+      } else {
+        schemaContent.push('"endDate":"' + formattedDate.end + '"');
+      }
+      if (data.organizer != null && data.organizer != '') {
+        const organizerParts = data.organizer.split('|');
+        schemaContent.push(
+          '"organizer":{\r\n"@type":"Person",\r\n"name":"' +
+            organizerParts[0] +
+            '",\r\n"email":"' +
+            organizerParts[1] +
+            '"\r\n}'
+        );
+      }
+      const imageData = [];
+      if (data.images != null) {
+        if (Array.isArray(data.images)) {
+          for (let i = 0; i < data.images.length; i++) {
+            if (atcb_secure_url(data.images[`${i}`]) && data.images[`${i}`].startsWith('http')) {
+              imageData.push('"' + data.images[`${i}`] + '"');
+            }
           }
         }
+      } else {
+        imageData.push('"https://add-to-calendar-button.com/demo_assets/img/1x1.png"');
+        imageData.push('"https://add-to-calendar-button.com/demo_assets/img/4x3.png"');
+        imageData.push('"https://add-to-calendar-button.com/demo_assets/img/16x9.png"');
       }
-    } else {
-      imageData.push('"https://add-to-calendar-button.com/demo_assets/img/1x1.png"');
-      imageData.push('"https://add-to-calendar-button.com/demo_assets/img/4x3.png"');
-      imageData.push('"https://add-to-calendar-button.com/demo_assets/img/16x9.png"');
+      if (imageData.length > 0) {
+        schemaContent.push('"image":[\r\n' + imageData.join(',\r\n') + ']');
+      }
+      schemaContentFull.push('{\r\n' + schemaContent.join(',\r\n') + '\r\n}');
     }
-    schemaContent.push('"image":[\r\n' + imageData.join(',\r\n') + ']');
-    schemaEl.textContent = schemaContent.join(',\r\n') + '\r\n}\r\n}';
+    if (data.dates.length > 1) {
+      schemaEl.textContent = schemaContentMulti.join(',\r\n') + '"subEvents":[\r\n' + schemaContentFull.join(',\r\n') + '\r\n]\r\n}';
+    } else {
+      schemaEl.textContent = schemaContentFull[0];
+    }
     button.appendChild(schemaEl);
   }
   // generate the wrapper div
@@ -1296,11 +1409,7 @@ function atcb_close(keyboardTrigger = false) {
 // prepare data when not using the init function
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 function atcb_action(data, triggerElement, keyboardTrigger = true) {
-  if (!atcbConsoleInit) {
-    console.log('Add to Calendar Button Script initialized (version ' + atcbVersion + ')');
-    console.log('See https://github.com/add2cal/add-to-calendar-button for details');
-    atcbConsoleInit = true;
-  }
+  atcbConsoleInit();
   data = atcb_secure_content(data);
   // decorate & validate data
   if (!atcb_check_required(data)) {
@@ -1666,7 +1775,7 @@ function atcb_save_file(file, filename) {
 function atcb_generate_time(data, style = 'delimiters', targetCal = 'general', addTimeZoneOffset = false) {
   const startDate = data.startDate.split('-');
   const endDate = data.endDate.split('-');
-  if (data.startTime != null && data.endTime != null) {
+  if ((data.startTime != null && data.startTime != '') && (data.endTime != null && data.endTime != '')) {
     // for the input, we assume UTC per default
     const newStartDate = new Date(
       startDate[0] + '-' + startDate[1] + '-' + startDate[2] + 'T' + data.startTime + ':00.000+00:00'
@@ -1693,7 +1802,7 @@ function atcb_generate_time(data, style = 'delimiters', targetCal = 'general', a
       };
     }
     // if a time zone is given, we adjust the diverse cases
-    // (see https://tz.add-to-calendar-technology.com/ for available TZ names)
+    // (see https://tz.add-to-calendar-technology.com/api/zones.json for available TZ names)
     if (data.timeZone != null && data.timeZone != '') {
       if (targetCal == 'ical' || (targetCal == 'google' && !/GMT[+|-]\d{1,2}/i.test(data.timeZone))) {
         // in the iCal case, we simply return and cut off the Z. Same applies to Google, except for GMT +/- time zones, which are not supported there.
@@ -2043,6 +2152,15 @@ function atcb_generate_uuid() {
   return ([1e7] + -1e3 + -4e3 + -8e3 + -1e11).replace(/[018]/g, (c) =>
     (c ^ (crypto.getRandomValues(new Uint8Array(1))[0] & (15 >> (c / 4)))).toString(16)
   );
+}
+
+// SHARED FUNCTION TO GENERATE THE INIT LOG MESSAGE
+function atcb_init_log_msg() {
+  if (!atcbConsoleInit) {
+    console.log('Add to Calendar Button Script initialized (version ' + atcbVersion + ')');
+    console.log('See https://github.com/add2cal/add-to-calendar-button for details');
+    atcbConsoleInit = true;
+  }
 }
 
 // SHARED DEBOUNCE AND THROTTLE FUNCTIONS
