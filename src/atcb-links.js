@@ -54,8 +54,8 @@ function atcb_generate_links(type, data, subEvent = 'all', keyboardTrigger = fal
       atcb_create_modal(
         data,
         'warning',
-        atcb_translate_hook('Cancelled Date', data.language, data),
-        atcb_translate_hook('Delete from Calendar', data.language, data),
+        atcb_translate_hook('Cancelled Date', data),
+        atcb_translate_hook('Delete from Calendar', data),
         [],
         [],
         keyboardTrigger
@@ -128,8 +128,8 @@ function atcb_generate_links(type, data, subEvent = 'all', keyboardTrigger = fal
     atcb_create_modal(
       data,
       type,
-      atcb_translate_hook('MultiDate headline', data.language, data),
-      atcb_translate_hook('MultiDate info', data.language, data),
+      atcb_translate_hook('MultiDate headline', data),
+      atcb_translate_hook('MultiDate info', data),
       [],
       individualButtons,
       keyboardTrigger
@@ -418,41 +418,45 @@ function atcb_generate_ical(data, subEvent = 'all', keyboardTrigger = false) {
   // for Android, we are more specific and only go for specific apps at the moment
   // for Chrome on iOS we basically do the same
   if ((isiOS() && isChrome()) || (isWebView() && (isiOS() || (isAndroid() && isProblematicWebView())))) {
-    // putting the download url to the clipboard
-    atcb_copy_to_clipboard(dataUrl);
-    // creating the modal
-    if (isiOS() && isChrome()) {
-      atcb_create_modal(
-        data,
-        'warning',
-        atcb_translate_hook('Crios iCal headline', data.language, data),
-        atcb_translate_hook('Crios iCal info', data.language, data) +
-          '<br>' +
-          atcb_translate_hook('WebView iCal solution 1', data.language, data) +
-          '<br>' +
-          atcb_translate_hook('Crios iCal solution 2', data.language, data),
-        [],
-        [],
-        keyboardTrigger
-      );
-      return;
-    }
+    atcb_ical_copy_note(dataUrl, data, keyboardTrigger);
+    return;
+  }
+  atcb_save_file(dataUrl, filename);
+}
+
+function atcb_ical_copy_note(dataUrl, data, keyboardTrigger) {
+  // putting the download url to the clipboard
+  atcb_copy_to_clipboard(dataUrl);
+  // creating the modal
+  if (isiOS() && isChrome()) {
     atcb_create_modal(
       data,
       'warning',
-      atcb_translate_hook('WebView iCal headline', data.language, data),
-      atcb_translate_hook('WebView iCal info', data.language, data) +
+      atcb_translate_hook('Crios iCal headline', data),
+      atcb_translate_hook('Crios iCal info', data) +
         '<br>' +
-        atcb_translate_hook('WebView iCal solution 1', data.language, data) +
+        atcb_translate_hook('WebView iCal solution 1', data) +
         '<br>' +
-        atcb_translate_hook('WebView iCal solution 2', data.language, data),
+        atcb_translate_hook('Crios iCal solution 2', data),
       [],
       [],
       keyboardTrigger
     );
     return;
   }
-  atcb_save_file(dataUrl, filename);
+  atcb_create_modal(
+    data,
+    'warning',
+    atcb_translate_hook('WebView iCal headline', data),
+    atcb_translate_hook('WebView iCal info', data) +
+      '<br>' +
+      atcb_translate_hook('WebView iCal solution 1', data) +
+      '<br>' +
+      atcb_translate_hook('WebView iCal solution 2', data),
+    [],
+    [],
+    keyboardTrigger
+  );
 }
 
 export { atcb_generate_links };

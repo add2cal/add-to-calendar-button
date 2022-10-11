@@ -468,7 +468,7 @@ const i18nStrings = {
 };
 
 // hook, which can be used to override all potential "hard" strings by setting customLabel_ + the key (without spaces) as option key and the intended string as value
-function atcb_translate_hook(identifier, language, data) {
+function atcb_translate_hook(identifier, data) {
   const searchKey = identifier.replace(/\s+/g, '').toLowerCase();
   if (
     data.customLabels != null &&
@@ -477,7 +477,7 @@ function atcb_translate_hook(identifier, language, data) {
   ) {
     return atcb_rewrite_html_elements(data.customLabels[`${searchKey}`]);
   } else {
-    return atcb_translate(identifier, language);
+    return atcb_translate(identifier, data.language);
   }
 }
 

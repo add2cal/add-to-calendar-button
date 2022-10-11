@@ -2397,7 +2397,7 @@ function atcb_close(keyboardTrigger = false) {
 
 
 function atcb_generate_label(data, parent, type, icon = false, text = '', oneOption = false) {
-  let defaultTriggerText = atcb_translate_hook('Add to Calendar', data.language, data);
+  let defaultTriggerText = atcb_translate_hook('Add to Calendar', data);
   if (oneOption && text == '') {
     text = defaultTriggerText;
   }
@@ -2484,7 +2484,7 @@ function atcb_generate_label(data, parent, type, icon = false, text = '', oneOpt
       text = text || 'Google';
       break;
     case 'ical':
-      text = text || atcb_translate_hook('iCal File', data.language, data);
+      text = text || atcb_translate_hook('iCal File', data);
       break;
     case 'msteams':
       text = text || 'Microsoft Teams';
@@ -2499,7 +2499,7 @@ function atcb_generate_label(data, parent, type, icon = false, text = '', oneOpt
       text = text || 'Yahoo';
       break;
     case 'close':
-      text = atcb_translate_hook('Close', data.language, data);
+      text = atcb_translate_hook('Close', data);
       break;
   }
   if (data.buttonStyle == 'date' && (type == 'trigger' || oneOption)) {
@@ -2873,7 +2873,7 @@ function atcb_create_modal(
     }
   }
   if (buttons.length == 0) {
-    buttons.push({ type: 'close', label: atcb_translate_hook('Close', data.language, data) });
+    buttons.push({ type: 'close', label: atcb_translate_hook('Close', data) });
   }
   const modalButtons = document.createElement('div');
   modalButtons.classList.add('atcb-modal-buttons');
@@ -2894,7 +2894,7 @@ function atcb_create_modal(
       modalButton.classList.add('atcb-modal-btn-primary');
     }
     if (button.label == null || button.label == '') {
-      button.label = atcb_translate_hook('Click me', data.language, data);
+      button.label = atcb_translate_hook('Click me', data);
     }
     modalButton.textContent = button.label;
     modalButtons.appendChild(modalButton);
@@ -2989,16 +2989,16 @@ function atcb_generate_date_button(data, parent, subEvent = 'all') {
   const hoverText = (function () {
     if (subEvent != 'all' && data.dates[`${subEvent}`].status == 'CANCELLED') {
       return (
-        atcb_translate_hook('Cancelled Date', data.language, data) +
+        atcb_translate_hook('Cancelled Date', data) +
         '<br>' +
-        atcb_translate_hook('Delete from Calendar', data.language, data)
+        atcb_translate_hook('Delete from Calendar', data)
       );
     }
-    return '+ ' + atcb_translate_hook('Add to Calendar', data.language, data);
+    return '+ ' + atcb_translate_hook('Add to Calendar', data);
   })();
   const cancelledInfo = (function () {
     if (subEvent != 'all' && data.dates[`${subEvent}`].status == 'CANCELLED') {
-      return atcb_translate_hook('Cancelled Date', data.language, data);
+      return atcb_translate_hook('Cancelled Date', data);
     }
     return '';
   })();
@@ -3084,8 +3084,8 @@ function atcb_generate_links(type, data, subEvent = 'all', keyboardTrigger = fal
       atcb_create_modal(
         data,
         'warning',
-        atcb_translate_hook('Cancelled Date', data.language, data),
-        atcb_translate_hook('Delete from Calendar', data.language, data),
+        atcb_translate_hook('Cancelled Date', data),
+        atcb_translate_hook('Delete from Calendar', data),
         [],
         [],
         keyboardTrigger
@@ -3154,8 +3154,8 @@ function atcb_generate_links(type, data, subEvent = 'all', keyboardTrigger = fal
     atcb_create_modal(
       data,
       type,
-      atcb_translate_hook('MultiDate headline', data.language, data),
-      atcb_translate_hook('MultiDate info', data.language, data),
+      atcb_translate_hook('MultiDate headline', data),
+      atcb_translate_hook('MultiDate info', data),
       [],
       individualButtons,
       keyboardTrigger
@@ -3397,39 +3397,42 @@ function atcb_generate_ical(data, subEvent = 'all', keyboardTrigger = false) {
     return 'data:text/calendar;charset=utf-8,' + encodeURIComponent(ics_lines.join('\r\n'));
   })();
   if ((isiOS() && isChrome()) || (isWebView() && (isiOS() || (isAndroid() && isProblematicWebView())))) {
-    atcb_copy_to_clipboard(dataUrl);
-    if (isiOS() && isChrome()) {
-      atcb_create_modal(
-        data,
-        'warning',
-        atcb_translate_hook('Crios iCal headline', data.language, data),
-        atcb_translate_hook('Crios iCal info', data.language, data) +
-          '<br>' +
-          atcb_translate_hook('WebView iCal solution 1', data.language, data) +
-          '<br>' +
-          atcb_translate_hook('Crios iCal solution 2', data.language, data),
-        [],
-        [],
-        keyboardTrigger
-      );
-      return;
-    }
+    atcb_ical_copy_note(dataUrl, data, keyboardTrigger);
+    return;
+  }
+  atcb_save_file(dataUrl, filename);
+}
+function atcb_ical_copy_note(dataUrl, data, keyboardTrigger) {
+  atcb_copy_to_clipboard(dataUrl);
+  if (isiOS() && isChrome()) {
     atcb_create_modal(
       data,
       'warning',
-      atcb_translate_hook('WebView iCal headline', data.language, data),
-      atcb_translate_hook('WebView iCal info', data.language, data) +
+      atcb_translate_hook('Crios iCal headline', data),
+      atcb_translate_hook('Crios iCal info', data) +
         '<br>' +
-        atcb_translate_hook('WebView iCal solution 1', data.language, data) +
+        atcb_translate_hook('WebView iCal solution 1', data) +
         '<br>' +
-        atcb_translate_hook('WebView iCal solution 2', data.language, data),
+        atcb_translate_hook('Crios iCal solution 2', data),
       [],
       [],
       keyboardTrigger
     );
     return;
   }
-  atcb_save_file(dataUrl, filename);
+  atcb_create_modal(
+    data,
+    'warning',
+    atcb_translate_hook('WebView iCal headline', data),
+    atcb_translate_hook('WebView iCal info', data) +
+      '<br>' +
+      atcb_translate_hook('WebView iCal solution 1', data) +
+      '<br>' +
+      atcb_translate_hook('WebView iCal solution 2', data),
+    [],
+    [],
+    keyboardTrigger
+  );
 }
 
 
@@ -4226,7 +4229,7 @@ const i18nStrings = {
     'Delete from Calendar': 'Cập nhật lịch của bạn!',
   },
 };
-function atcb_translate_hook(identifier, language, data) {
+function atcb_translate_hook(identifier, data) {
   const searchKey = identifier.replace(/\s+/g, '').toLowerCase();
   if (
     data.customLabels != null &&
@@ -4235,7 +4238,7 @@ function atcb_translate_hook(identifier, language, data) {
   ) {
     return atcb_rewrite_html_elements(data.customLabels[`${searchKey}`]);
   } else {
-    return atcb_translate(identifier, language);
+    return atcb_translate(identifier, data.language);
   }
 }
 function atcb_translate(identifier, language) {
