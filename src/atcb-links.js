@@ -37,7 +37,6 @@ import { atcb_translate_hook } from './atcb-i18n.js';
 
 // MIDDLEWARE FUNCTION TO GENERATE THE CALENDAR LINKS
 function atcb_generate_links(type, data, subEvent = 'all', keyboardTrigger = false, multiDateModal = false) {
-  let fullySuccessful = false;
   if (subEvent != 'all') {
     subEvent = parseInt(subEvent) - 1;
   } else if (data.dates.length == 1) {
@@ -94,22 +93,25 @@ function atcb_generate_links(type, data, subEvent = 'all', keyboardTrigger = fal
     });
     if (filteredStates.length == 0) {
       document.getElementById(data.identifier).classList.add('atcb-saved');
-      fullySuccessful = true;
+      atcb_set_fully_successful(multiDateModal);
     }
+    return;
   }
+  // if not a single date case, we continue for multi-date
+  atcb_generate_multidate_links(type, data, keyboardTrigger, multiDateModal);
+}
+
+function atcb_generate_multidate_links(type, data, keyboardTrigger, multiDateModal) {
   // in the multi-date event case, when all sub-events have no organizer AND are not cancelled, we can also go the short way (for iCal)
-  if (
-    !fullySuccessful &&
-    (type == 'ical' || type == 'apple') &&
-    data.dates.every(function (theSubEvent) {
-      if (
-        (theSubEvent.status != null && theSubEvent.status == 'CANCELLED') ||
-        (theSubEvent.organizer != null && theSubEvent.organizer != '')
-      ) {
-        return false;
-      }
-      return true;
-    })
+  if ((type == 'ical' || type == 'apple') && data.dates.every(function (theSubEvent) {
+    if (
+      (theSubEvent.status == 'CANCELLED') ||
+      (theSubEvent.organizer != null && theSubEvent.organizer != '')
+    ) {
+      return false;
+    }
+    return true;
+  })
   ) {
     atcb_generate_ical(data, 'all', keyboardTrigger);
     // we mark the whole event as clicked
@@ -117,10 +119,11 @@ function atcb_generate_links(type, data, subEvent = 'all', keyboardTrigger = fal
       atcbStates[`${data.identifier}`][`${type}`][`${i}`]++;
     }
     document.getElementById(data.identifier).classList.add('atcb-saved');
-    fullySuccessful = true;
+    atcb_set_fully_successful(multiDateModal);
+    return;
   }
   // for multi-date events in all other cases, we show an intermediate layer
-  if (!fullySuccessful && !multiDateModal) {
+  if (!multiDateModal) {
     const individualButtons = [type];
     for (let i = 0; i < data.dates.length; i++) {
       individualButtons.push(i + 1);
@@ -134,19 +137,18 @@ function atcb_generate_links(type, data, subEvent = 'all', keyboardTrigger = fal
       individualButtons,
       keyboardTrigger
     );
-    return;
   }
-  // in the success case, we can give the user a thank you
-  if (fullySuccessful) {
-    atcb_saved_hook();
-    if (multiDateModal && document.querySelectorAll('.atcb-modal[data-modal-nr]').length < 2) {
-      atcb_toggle('close');
-    }
+}
+
+function atcb_set_fully_successful(multiDateModal) {
+  atcb_saved_hook();
+  if (multiDateModal && document.querySelectorAll('.atcb-modal[data-modal-nr]').length < 2) {
+    atcb_toggle('close');
   }
 }
 
 // FUNCTION TO GENERATE THE GOOGLE URL
-// See specs at: TODO
+// See specs at: TODO: add some documentation here, if it exists
 function atcb_generate_google(data) {
   const urlParts = [];
   urlParts.push('https://calendar.google.com/calendar/render?action=TEMPLATE');
@@ -194,7 +196,7 @@ function atcb_generate_google(data) {
 }
 
 // FUNCTION TO GENERATE THE YAHOO URL
-// See specs at: TODO
+// See specs at: TODO: add some documentation here, if it exists
 function atcb_generate_yahoo(data) {
   const urlParts = [];
   urlParts.push('https://calendar.yahoo.com/?v=60');
@@ -227,7 +229,7 @@ function atcb_generate_yahoo(data) {
 }
 
 // FUNCTION TO GENERATE THE MICROSOFT 365 OR OUTLOOK WEB URL
-// See specs at: TODO
+// See specs at: TODO: add some documentation here, if it exists
 function atcb_generate_microsoft(data, type = '365') {
   const urlParts = [];
   const basePath = '/calendar/0/deeplink/compose?path=%2Fcalendar%2Faction%2Fcompose&rru=addevent';
@@ -305,15 +307,7 @@ function atcb_generate_ical(data, subEvent = 'all', keyboardTrigger = false) {
     subEvent = parseInt(subEvent);
   }
   // define the right filename
-  let filename = 'event-to-save-in-my-calendar';
-  if (data.iCalFileName != null && data.iCalFileName != '') {
-    filename = data.iCalFileName;
-  } else if (data.icsFile != null && data.icsFile != '') {
-    const filenamePart = data.icsFile.split('/').pop().split('.')[0];
-    if (filenamePart != '') {
-      filename = filenamePart;
-    }
-  }
+  const filename = atcb_determine_ical_filename(data, subEvent);
   // check for a given explicit file (not if iOS and WebView - will be catched further down)
   if (data.icsFile != null && data.icsFile != '' && (!isiOS() || !isWebView())) {
     atcb_save_file(data.icsFile, filename);
@@ -422,6 +416,25 @@ function atcb_generate_ical(data, subEvent = 'all', keyboardTrigger = false) {
     return;
   }
   atcb_save_file(dataUrl, filename);
+}
+
+function atcb_determine_ical_filename (data, subEvent) {
+  const filenameSlug = (function () {
+    if (subEvent != 'all' && subEvent != 0) {
+      return '-' + parseInt(subEvent) + 1;
+    }
+    return '';
+  })();
+  if (data.iCalFileName != null && data.iCalFileName != '') {
+    return data.iCalFileName + filenameSlug;
+  }
+  if (data.icsFile != null && data.icsFile != '') {
+    const filenamePart = data.icsFile.split('/').pop().split('.')[0];
+    if (filenamePart != '') {
+      return filenamePart + filenameSlug;
+    }
+  }
+  return 'event-to-save-in-my-calendar' + filenameSlug;
 }
 
 function atcb_ical_copy_note(dataUrl, data, keyboardTrigger) {

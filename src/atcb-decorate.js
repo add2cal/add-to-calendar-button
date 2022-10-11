@@ -325,12 +325,12 @@ function atcb_decorate_data(data) {
     if (data.dates[`${i}`].name == null || data.dates[`${i}`].name == '') {
       data.dates[`${i}`].name = data.name;
     }
-    if (data.dates[`${i}`].status == null && data.status != null) {
+    if (data.dates[`${i}`].status == null) {
       data.dates[`${i}`].status = data.status.toUpperCase();
     } else {
       data.dates[`${i}`].status = data.dates[`${i}`].status.toUpperCase();
     }
-    if (data.dates[`${i}`].sequence == null && data.sequence != null) {
+    if (data.dates[`${i}`].sequence == null) {
       data.dates[`${i}`].sequence = data.sequence;
     }
     if (data.dates[`${i}`].location == null && data.location != null) {

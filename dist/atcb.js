@@ -1874,12 +1874,12 @@ function atcb_decorate_data(data) {
     if (data.dates[`${i}`].name == null || data.dates[`${i}`].name == '') {
       data.dates[`${i}`].name = data.name;
     }
-    if (data.dates[`${i}`].status == null && data.status != null) {
+    if (data.dates[`${i}`].status == null) {
       data.dates[`${i}`].status = data.status.toUpperCase();
     } else {
       data.dates[`${i}`].status = data.dates[`${i}`].status.toUpperCase();
     }
-    if (data.dates[`${i}`].sequence == null && data.sequence != null) {
+    if (data.dates[`${i}`].sequence == null) {
       data.dates[`${i}`].sequence = data.sequence;
     }
     if (data.dates[`${i}`].location == null && data.location != null) {
@@ -2397,10 +2397,6 @@ function atcb_close(keyboardTrigger = false) {
 
 
 function atcb_generate_label(data, parent, type, icon = false, text = '', oneOption = false) {
-  let defaultTriggerText = atcb_translate_hook('Add to Calendar', data);
-  if (oneOption && text == '') {
-    text = defaultTriggerText;
-  }
   switch (type) {
     case 'trigger':
     default:
@@ -2472,6 +2468,13 @@ function atcb_generate_label(data, parent, type, icon = false, text = '', oneOpt
   if (oneOption) {
     parent.id = data.identifier;
   }
+  atcb_generate_label_text(data, parent, type, icon, text, oneOption)
+}
+function atcb_generate_label_text(data, parent, type, icon, text, oneOption) {
+  const defaultTriggerText = atcb_translate_hook('Add to Calendar', data);
+  if (oneOption && text == '') {
+    text = defaultTriggerText;
+  }
   switch (type) {
     case 'trigger':
     default:
@@ -2519,141 +2522,7 @@ function atcb_generate_label(data, parent, type, icon = false, text = '', oneOpt
 function atcb_generate_button(button, data) {
   button.textContent = '';
   if (data.richData && data.name && data.dates[0].location && data.dates[0].startDate) {
-    const schemaEl = document.createElement('script');
-    schemaEl.type = 'application/ld+json';
-    const schemaContentMulti = [];
-    if (data.dates.length > 1) {
-      const parts = [];
-      parts.push('"@context":"https://schema.org"');
-      parts.push('"@type":"EventSeries"');
-      parts.push('"@id":"' + data.name.replace(/\s/g, '') + '"');
-      parts.push('"name":"' + data.name + '",');
-      schemaContentMulti.push('{\r\n' + parts.join(',\r\n') + '\r\n');
-    }
-    const schemaContentFull = [];
-    for (let i = 0; i < data.dates.length; i++) {
-      const schemaContent = [];
-      schemaContent.push('"@context":"https://schema.org"');
-      schemaContent.push('"@type":"Event"');
-      if (data.dates.length > 1) {
-        schemaContent.push('"@id":"' + data.name.replace(/\s/g, '') + '-' + (i + 1) + '"');
-      }
-      if (data.dates[`${i}`].status == 'CANCELLED') {
-        schemaContent.push('"eventStatus":"https://schema.org/EventCancelled"');
-      }
-      schemaContent.push('"name":"' + data.dates[`${i}`].name + '"');
-      if (data.dates[`${i}`].descriptionHtmlFree) {
-        schemaContent.push('"description":"' + data.dates[`${i}`].descriptionHtmlFree + '"');
-      }
-      const formattedDate = atcb_generate_time(data.dates[`${i}`], 'delimiters', 'general', true);
-      schemaContent.push('"startDate":"' + formattedDate.start + '"');
-      if (formattedDate.duration != null) {
-        schemaContent.push('"duration":"' + formattedDate.duration + '"');
-      }
-      schemaContent.push(
-        data.dates[`${i}`].location.startsWith('http')
-          ? '"eventAttendanceMode":"https://schema.org/OnlineEventAttendanceMode",\r\n"location": {\r\n"@type":"VirtualLocation",\r\n"url":"' +
-              data.dates[`${i}`].location +
-              '"\r\n}'
-          : '"location":"' + data.dates[`${i}`].location + '"'
-      );
-      if (data.recurrence != null && data.recurrence != '') {
-        schemaContent.push('"eventSchedule": { "@type": "Schedule"');
-        if (data.dates[0].timeZone != null && data.dates[0].timeZone != '') {
-          schemaContent.push('"scheduleTimezone":"' + data.dates[0].timeZone + '"');
-        }
-        const repeatFrequency = 'P' + data.recurrence_interval + data.recurrence_frequency.substr(0, 1);
-        schemaContent.push('"repeatFrequency":"' + repeatFrequency + '"');
-        if (data.recurrence_byDay != null && data.recurrence_byDay != '') {
-          const byDayString = (function () {
-            if (/\d/.test(data.recurrence_byDay)) {
-              return '"' + data.recurrence_byDay + '"';
-            } else {
-              const byDays = data.recurrence_byDay.split(',');
-              const helperMap = {
-                MO: 'https://schema.org/Monday',
-                TU: 'https://schema.org/Tuesday',
-                WE: 'https://schema.org/Wednesday',
-                TH: 'https://schema.org/Thursday',
-                FR: 'https://schema.org/Friday',
-                SA: 'https://schema.org/Saturday',
-                SU: 'https://schema.org/Sunday',
-              };
-              const output = [];
-              for (let i = 0; i < byDays.length; i++) {
-                output.push('"' + helperMap[byDays[`${i}`]] + '"');
-              }
-              return '[' + output.join(',') + ']';
-            }
-          })();
-          schemaContent.push('"byDay":' + byDayString);
-        }
-        if (data.recurrence_byMonth != null && data.recurrence_byMonth != '') {
-          const byMonthString = data.recurrence_byMonth.includes(',')
-            ? '[' + data.recurrence_byMonth + ']'
-            : data.recurrence_byMonth;
-          schemaContent.push('"byMonth":"' + byMonthString + '"');
-        }
-        if (data.recurrence_byMonthDay != null && data.recurrence_byMonthDay != '') {
-          const byMonthDayString = data.recurrence_byMonthDay.includes(',')
-            ? '[' + data.recurrence_byMonthDay + ']'
-            : data.recurrence_byMonthDay;
-          schemaContent.push('"byMonthDay":"' + byMonthDayString + '"');
-        }
-        if (data.recurrence_count != null && data.recurrence_count != '') {
-          schemaContent.push('"repeatCount":"' + data.recurrence_count + '"');
-        }
-        if (data.recurrence_until != null && data.recurrence_until != '') {
-          schemaContent.push('"endDate":"' + data.recurrence_until + '"');
-        }
-        if (data.startTime != null && data.startTime != '' && data.endTime != null && data.endTime != '') {
-          schemaContent.push('"startTime":"' + data.startTime + ':00"');
-          schemaContent.push('"endTime":"' + data.endTime + ':00"');
-          schemaContent.push('"duration":"' + formattedDate.duration + '"');
-        }
-        schemaContent.push('"startDate":"' + data.startDate + '" }');
-      } else {
-        schemaContent.push('"endDate":"' + formattedDate.end + '"');
-      }
-      if (data.dates[`${i}`].organizer != null && data.dates[`${i}`].organizer != '') {
-        const organizerParts = data.dates[`${i}`].organizer.split('|');
-        schemaContent.push(
-          '"organizer":{\r\n"@type":"Person",\r\n"name":"' +
-            organizerParts[0] +
-            '",\r\n"email":"' +
-            organizerParts[1] +
-            '"\r\n}'
-        );
-      }
-      const imageData = [];
-      if (data.images != null) {
-        if (Array.isArray(data.images)) {
-          for (let i = 0; i < data.images.length; i++) {
-            if (atcb_secure_url(data.images[`${i}`]) && data.images[`${i}`].startsWith('http')) {
-              imageData.push('"' + data.images[`${i}`] + '"');
-            }
-          }
-        }
-      } else {
-        imageData.push('"https://add-to-calendar-button.com/demo_assets/img/1x1.png"');
-        imageData.push('"https://add-to-calendar-button.com/demo_assets/img/4x3.png"');
-        imageData.push('"https://add-to-calendar-button.com/demo_assets/img/16x9.png"');
-      }
-      if (imageData.length > 0) {
-        schemaContent.push('"image":[\r\n' + imageData.join(',\r\n') + ']');
-      }
-      schemaContentFull.push('{\r\n' + schemaContent.join(',\r\n') + '\r\n}');
-    }
-    if (data.dates.length > 1) {
-      schemaEl.textContent =
-        schemaContentMulti.join(',\r\n') +
-        '"subEvents":[\r\n' +
-        schemaContentFull.join(',\r\n') +
-        '\r\n]\r\n}';
-    } else {
-      schemaEl.textContent = schemaContentFull[0];
-    }
-    button.appendChild(schemaEl);
+    atcb_generate_rich_data(data, button)
   }
   const buttonTriggerWrapper = document.createElement('div');
   buttonTriggerWrapper.classList.add('atcb-button-wrapper');
@@ -2697,6 +2566,143 @@ function atcb_generate_button(button, data) {
     button.style.display = 'block';
   }
   console.log('Add to Calendar Button "' + data.identifier + '" created');
+}
+function atcb_generate_rich_data(data, button) {
+  const schemaEl = document.createElement('script');
+  schemaEl.type = 'application/ld+json';
+  const schemaContentMulti = [];
+  if (data.dates.length > 1) {
+    const parts = [];
+    parts.push('"@context":"https://schema.org"');
+    parts.push('"@type":"EventSeries"');
+    parts.push('"@id":"' + data.name.replace(/\s/g, '') + '"');
+    parts.push('"name":"' + data.name + '",');
+    schemaContentMulti.push('{\r\n' + parts.join(',\r\n') + '\r\n');
+  }
+  const schemaContentFull = [];
+  for (let i = 0; i < data.dates.length; i++) {
+    const schemaContent = [];
+    schemaContent.push('"@context":"https://schema.org"');
+    schemaContent.push('"@type":"Event"');
+    if (data.dates.length > 1) {
+      schemaContent.push('"@id":"' + data.name.replace(/\s/g, '') + '-' + (i + 1) + '"');
+    }
+    if (data.dates[`${i}`].status == 'CANCELLED') {
+      schemaContent.push('"eventStatus":"https://schema.org/EventCancelled"');
+    }
+    schemaContent.push('"name":"' + data.dates[`${i}`].name + '"');
+    if (data.dates[`${i}`].descriptionHtmlFree) {
+      schemaContent.push('"description":"' + data.dates[`${i}`].descriptionHtmlFree + '"');
+    }
+    const formattedDate = atcb_generate_time(data.dates[`${i}`], 'delimiters', 'general', true);
+    schemaContent.push('"startDate":"' + formattedDate.start + '"');
+    if (formattedDate.duration != null) {
+      schemaContent.push('"duration":"' + formattedDate.duration + '"');
+    }
+    schemaContent.push(
+      data.dates[`${i}`].location.startsWith('http')
+        ? '"eventAttendanceMode":"https://schema.org/OnlineEventAttendanceMode",\r\n"location": {\r\n"@type":"VirtualLocation",\r\n"url":"' +
+            data.dates[`${i}`].location +
+            '"\r\n}'
+        : '"location":"' + data.dates[`${i}`].location + '"'
+    );
+    if (data.recurrence != null && data.recurrence != '') {
+      schemaContent.push('"eventSchedule": { "@type": "Schedule"');
+      if (data.dates[0].timeZone != null && data.dates[0].timeZone != '') {
+        schemaContent.push('"scheduleTimezone":"' + data.dates[0].timeZone + '"');
+      }
+      const repeatFrequency = 'P' + data.recurrence_interval + data.recurrence_frequency.substr(0, 1);
+      schemaContent.push('"repeatFrequency":"' + repeatFrequency + '"');
+      if (data.recurrence_byDay != null && data.recurrence_byDay != '') {
+        const byDayString = (function () {
+          if (/\d/.test(data.recurrence_byDay)) {
+            return '"' + data.recurrence_byDay + '"';
+          } else {
+            const byDays = data.recurrence_byDay.split(',');
+            const helperMap = {
+              MO: 'https://schema.org/Monday',
+              TU: 'https://schema.org/Tuesday',
+              WE: 'https://schema.org/Wednesday',
+              TH: 'https://schema.org/Thursday',
+              FR: 'https://schema.org/Friday',
+              SA: 'https://schema.org/Saturday',
+              SU: 'https://schema.org/Sunday',
+            };
+            const output = [];
+            for (let i = 0; i < byDays.length; i++) {
+              output.push('"' + helperMap[byDays[`${i}`]] + '"');
+            }
+            return '[' + output.join(',') + ']';
+          }
+        })();
+        schemaContent.push('"byDay":' + byDayString);
+      }
+      if (data.recurrence_byMonth != null && data.recurrence_byMonth != '') {
+        const byMonthString = data.recurrence_byMonth.includes(',')
+          ? '[' + data.recurrence_byMonth + ']'
+          : data.recurrence_byMonth;
+        schemaContent.push('"byMonth":"' + byMonthString + '"');
+      }
+      if (data.recurrence_byMonthDay != null && data.recurrence_byMonthDay != '') {
+        const byMonthDayString = data.recurrence_byMonthDay.includes(',')
+          ? '[' + data.recurrence_byMonthDay + ']'
+          : data.recurrence_byMonthDay;
+        schemaContent.push('"byMonthDay":"' + byMonthDayString + '"');
+      }
+      if (data.recurrence_count != null && data.recurrence_count != '') {
+        schemaContent.push('"repeatCount":"' + data.recurrence_count + '"');
+      }
+      if (data.recurrence_until != null && data.recurrence_until != '') {
+        schemaContent.push('"endDate":"' + data.recurrence_until + '"');
+      }
+      if (data.startTime != null && data.startTime != '' && data.endTime != null && data.endTime != '') {
+        schemaContent.push('"startTime":"' + data.startTime + ':00"');
+        schemaContent.push('"endTime":"' + data.endTime + ':00"');
+        schemaContent.push('"duration":"' + formattedDate.duration + '"');
+      }
+      schemaContent.push('"startDate":"' + data.startDate + '" }');
+    } else {
+      schemaContent.push('"endDate":"' + formattedDate.end + '"');
+    }
+    if (data.dates[`${i}`].organizer != null && data.dates[`${i}`].organizer != '') {
+      const organizerParts = data.dates[`${i}`].organizer.split('|');
+      schemaContent.push(
+        '"organizer":{\r\n"@type":"Person",\r\n"name":"' +
+          organizerParts[0] +
+          '",\r\n"email":"' +
+          organizerParts[1] +
+          '"\r\n}'
+      );
+    }
+    const imageData = [];
+    if (data.images != null) {
+      if (Array.isArray(data.images)) {
+        for (let i = 0; i < data.images.length; i++) {
+          if (atcb_secure_url(data.images[`${i}`]) && data.images[`${i}`].startsWith('http')) {
+            imageData.push('"' + data.images[`${i}`] + '"');
+          }
+        }
+      }
+    } else {
+      imageData.push('"https://add-to-calendar-button.com/demo_assets/img/1x1.png"');
+      imageData.push('"https://add-to-calendar-button.com/demo_assets/img/4x3.png"');
+      imageData.push('"https://add-to-calendar-button.com/demo_assets/img/16x9.png"');
+    }
+    if (imageData.length > 0) {
+      schemaContent.push('"image":[\r\n' + imageData.join(',\r\n') + ']');
+    }
+    schemaContentFull.push('{\r\n' + schemaContent.join(',\r\n') + '\r\n}');
+  }
+  if (data.dates.length > 1) {
+    schemaEl.textContent =
+      schemaContentMulti.join(',\r\n') +
+      '"subEvents":[\r\n' +
+      schemaContentFull.join(',\r\n') +
+      '\r\n]\r\n}';
+  } else {
+    schemaEl.textContent = schemaContentFull[0];
+  }
+  button.appendChild(schemaEl);
 }
 function atcb_generate_dropdown_list(data) {
   const optionsList = document.createElement('div');
@@ -3070,7 +3076,6 @@ function atcb_generate_date_button(data, parent, subEvent = 'all') {
 
 
 function atcb_generate_links(type, data, subEvent = 'all', keyboardTrigger = false, multiDateModal = false) {
-  let fullySuccessful = false;
   if (subEvent != 'all') {
     subEvent = parseInt(subEvent) - 1;
   } else if (data.dates.length == 1) {
@@ -3123,30 +3128,32 @@ function atcb_generate_links(type, data, subEvent = 'all', keyboardTrigger = fal
     });
     if (filteredStates.length == 0) {
       document.getElementById(data.identifier).classList.add('atcb-saved');
-      fullySuccessful = true;
+      atcb_set_fully_successful(multiDateModal);
     }
+    return;
   }
-  if (
-    !fullySuccessful &&
-    (type == 'ical' || type == 'apple') &&
-    data.dates.every(function (theSubEvent) {
-      if (
-        (theSubEvent.status != null && theSubEvent.status == 'CANCELLED') ||
-        (theSubEvent.organizer != null && theSubEvent.organizer != '')
-      ) {
-        return false;
-      }
-      return true;
-    })
+  atcb_generate_multidate_links(type, data, keyboardTrigger, multiDateModal);
+}
+function atcb_generate_multidate_links(type, data, keyboardTrigger, multiDateModal) {
+  if ((type == 'ical' || type == 'apple') && data.dates.every(function (theSubEvent) {
+    if (
+      (theSubEvent.status == 'CANCELLED') ||
+      (theSubEvent.organizer != null && theSubEvent.organizer != '')
+    ) {
+      return false;
+    }
+    return true;
+  })
   ) {
     atcb_generate_ical(data, 'all', keyboardTrigger);
     for (let i = 0; i < atcbStates[`${data.identifier}`][`${type}`].length; i++) {
       atcbStates[`${data.identifier}`][`${type}`][`${i}`]++;
     }
     document.getElementById(data.identifier).classList.add('atcb-saved');
-    fullySuccessful = true;
+    atcb_set_fully_successful(multiDateModal);
+    return;
   }
-  if (!fullySuccessful && !multiDateModal) {
+  if (!multiDateModal) {
     const individualButtons = [type];
     for (let i = 0; i < data.dates.length; i++) {
       individualButtons.push(i + 1);
@@ -3160,13 +3167,12 @@ function atcb_generate_links(type, data, subEvent = 'all', keyboardTrigger = fal
       individualButtons,
       keyboardTrigger
     );
-    return;
   }
-  if (fullySuccessful) {
-    atcb_saved_hook();
-    if (multiDateModal && document.querySelectorAll('.atcb-modal[data-modal-nr]').length < 2) {
-      atcb_toggle('close');
-    }
+}
+function atcb_set_fully_successful(multiDateModal) {
+  atcb_saved_hook();
+  if (multiDateModal && document.querySelectorAll('.atcb-modal[data-modal-nr]').length < 2) {
+    atcb_toggle('close');
   }
 }
 function atcb_generate_google(data) {
@@ -3296,15 +3302,7 @@ function atcb_generate_ical(data, subEvent = 'all', keyboardTrigger = false) {
   if (subEvent != 'all') {
     subEvent = parseInt(subEvent);
   }
-  let filename = 'event-to-save-in-my-calendar';
-  if (data.iCalFileName != null && data.iCalFileName != '') {
-    filename = data.iCalFileName;
-  } else if (data.icsFile != null && data.icsFile != '') {
-    const filenamePart = data.icsFile.split('/').pop().split('.')[0];
-    if (filenamePart != '') {
-      filename = filenamePart;
-    }
-  }
+  const filename = atcb_determine_ical_filename(data, subEvent);
   if (data.icsFile != null && data.icsFile != '' && (!isiOS() || !isWebView())) {
     atcb_save_file(data.icsFile, filename);
     return;
@@ -3401,6 +3399,24 @@ function atcb_generate_ical(data, subEvent = 'all', keyboardTrigger = false) {
     return;
   }
   atcb_save_file(dataUrl, filename);
+}
+function atcb_determine_ical_filename (data, subEvent) {
+  const filenameSlug = (function () {
+    if (subEvent != 'all' && subEvent != 0) {
+      return '-' + parseInt(subEvent) + 1;
+    }
+    return '';
+  })();
+  if (data.iCalFileName != null && data.iCalFileName != '') {
+    return data.iCalFileName + filenameSlug;
+  }
+  if (data.icsFile != null && data.icsFile != '') {
+    const filenamePart = data.icsFile.split('/').pop().split('.')[0];
+    if (filenamePart != '') {
+      return filenamePart + filenameSlug;
+    }
+  }
+  return 'event-to-save-in-my-calendar' + filenameSlug;
 }
 function atcb_ical_copy_note(dataUrl, data, keyboardTrigger) {
   atcb_copy_to_clipboard(dataUrl);
