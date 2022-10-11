@@ -12,7 +12,7 @@
  */
 
 import { tzlib_get_offset } from '../node_modules/timezones-ical-library/npm_dist/mjs/index.js';
-import { isMobile, atcbDefaultTarget } from './atcb-globals.js';
+import { isMobile, isiOS, atcbDefaultTarget } from './atcb-globals.js';
 
 // SHARED FUNCTION HOOK FOR WHEN EVENT GOT SAVED
 function atcb_saved_hook() {
@@ -197,7 +197,7 @@ function atcb_validEmail(email, mx = false) {
   // testing for mx records second, if activated
   // TODO: call external service to validate email address
   if (mx) {    
-    console.log('testing for MX records not yet available');
+    console.log('Testing for MX records not yet available');
   }
   return true;
 }
@@ -344,6 +344,33 @@ function atcb_generate_uuid() {
   );
 }
 
+// SHARED FUNCTION TO COPY TO CLIPBOARD
+function atcb_copy_to_clipboard(dataString) {
+  const tmpInput = document.createElement('input');
+  document.body.appendChild(tmpInput);
+  const editable = tmpInput.contentEditable;
+  const readOnly = tmpInput.readOnly;
+  tmpInput.value = dataString;
+  tmpInput.contentEditable = true;
+  tmpInput.readOnly = false;
+  if (isiOS()) {
+    var range = document.createRange();
+    range.selectNodeContents(tmpInput);
+    var selection = window.getSelection();
+    selection.removeAllRanges();
+    selection.addRange(range);
+    tmpInput.setSelectionRange(0, 999999);
+  } else {
+    // the next 2 lines are basically doing the same in different ways (just to be sure)
+    navigator.clipboard.writeText(dataString);
+    tmpInput.select();
+  }
+  tmpInput.contentEditable = editable;
+  tmpInput.readOnly = readOnly;
+  document.execCommand('copy');
+  tmpInput.remove();
+}
+
 // SHARED DEBOUNCE AND THROTTLE FUNCTIONS
 // going for last call debounce
 function atcb_debounce(func, timeout = 200) {
@@ -409,6 +436,7 @@ export {
   atcb_set_fullsize,
   atcb_set_sizes,
   atcb_generate_uuid,
+  atcb_copy_to_clipboard,
   atcb_debounce,
   atcb_debounce_leading,
   atcb_throttle,

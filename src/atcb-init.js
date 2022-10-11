@@ -72,24 +72,24 @@ function atcb_init() {
       // check, if all required data is available
       if (atcb_check_required(atcbJsonInputPatched)) {
         // Rewrite dynamic dates, standardize line breaks and transform urls in the description
-        const atcbConfig = atcb_decorate_data(atcbJsonInputPatched);
+        const data = atcb_decorate_data(atcbJsonInputPatched);
         // set identifier
-        if (atcbConfig.identifier == null || atcbConfig.identifier == '') {
-          atcbConfig.identifier = 'atcb-btn-' + (i + atcButtonsInitialized.length + 1);
+        if (data.identifier == null || data.identifier == '') {
+          data.identifier = 'atcb-btn-' + (i + atcButtonsInitialized.length + 1);
         }
         // validate the config (JSON iput) ...
-        if (atcb_validate(atcbConfig)) {
+        if (atcb_validate(data)) {
           // ... and generate the button on success
-          atcb_generate_button(atcButtons[parseInt(i)], atcbConfig);
+          atcb_generate_button(atcButtons[parseInt(i)], data);
           // add to global state management
           const singleDates = [];
-          for (let i = 0; i < atcbConfig.options.length; i++) {
-            singleDates[atcbConfig.options[`${i}`]] = [];
-            for (let id = 1; id <= atcbConfig.dates.length; id++) {
-              singleDates[atcbConfig.options[`${i}`]].push(0);
+          for (let i = 0; i < data.options.length; i++) {
+            singleDates[data.options[`${i}`]] = [];
+            for (let id = 1; id <= data.dates.length; id++) {
+              singleDates[data.options[`${i}`]].push(0);
             }
           }
-          atcbStates[atcbConfig.identifier] = singleDates;
+          atcbStates[data.identifier] = singleDates;
         }
       }
     }
@@ -151,62 +151,68 @@ function atcb_init_log_msg() {
 
 // GLOBAL KEYBOARD AND DEVICE LISTENERS
 function atcb_set_global_event_listener() {
-  if (isBrowser()) {
-    // global listener to ESC key to close dropdown
-    document.addEventListener('keyup', function (event) {
-      if (event.key === 'Escape') {
-        atcb_toggle('close', '', '', true);
-      }
-    });
-    // global listener to arrow key optionlist navigation
-    document.addEventListener('keydown', (event) => {
-      if (
-        document.querySelector('.atcb-list') &&
-        (event.key === 'ArrowDown' || event.key === 'ArrowUp' || event.key === 'Tab')
-      ) {
-        let targetFocus = 0;
-        let currFocusOption = document.activeElement;
-        const optionListCount = document.querySelectorAll('.atcb-list-item').length;
-        if (currFocusOption.classList.contains('atcb-list-item')) {
-          if (event.key === 'ArrowDown' && currFocusOption.dataset.optionNumber < optionListCount) {
-            event.preventDefault();
-            targetFocus = parseInt(currFocusOption.dataset.optionNumber) + 1;
-          } else if (event.key === 'ArrowUp' && currFocusOption.dataset.optionNumber >= 1) {
-            event.preventDefault();
-            targetFocus = parseInt(currFocusOption.dataset.optionNumber) - 1;
-          }
-          if (targetFocus > 0) {
-            document.querySelector('.atcb-list-item[data-option-number="' + targetFocus + '"]').focus();
-          }
-        } else {
-          event.preventDefault();
-          if (event.key === 'ArrowDown') {
-            document.querySelector('.atcb-list-item[data-option-number="1"]').focus();
-          } else if (event.key === 'ArrowUp') {
-            document.querySelector('.atcb-list-item[data-option-number="' + optionListCount + '"]').focus();
-          } else {
-            document.querySelector('.atcb-list-item[data-option-number="1"]').focus();
-          }
-        }
-      }
-    });
-    // Global listener to any screen changes
-    window.addEventListener(
-      'resize',
-      atcb_throttle(() => {
-        const activeOverlay = document.getElementById('atcb-bgoverlay');
-        if (activeOverlay != null) {
-          atcb_set_fullsize(activeOverlay);
-          atcb_manage_body_scroll();
-        }
-        const activeButton = document.querySelector('.atcb-active');
-        const activeList = document.querySelector('.atcb-dropdown');
-        if (activeButton != null && activeList != null) {
-          atcb_position_list(activeButton, activeList, false, true);
-        }
-      })
-    );
+  // return, if we are not in a browser
+  if (!isBrowser()) {
+    return;
   }
+  // global listener for ESC key to close dropdown
+  document.addEventListener('keyup', function (event) {
+    if (event.key === 'Escape') {
+      atcb_toggle('close', '', '', true);
+    }
+  });
+  // global listener for arrow key optionlist navigation
+  document.addEventListener('keydown', (event) => {
+    if (
+      document.querySelector('.atcb-list') &&
+      (event.key === 'ArrowDown' || event.key === 'ArrowUp' || event.key === 'Tab')
+    ) {
+      let targetFocus = 0;
+      let currFocusOption = document.activeElement;
+      const optionListCount = document.querySelectorAll('.atcb-list-item').length;
+      if (currFocusOption.classList.contains('atcb-list-item')) {
+        if (event.key === 'ArrowDown' && currFocusOption.dataset.optionNumber < optionListCount) {
+          event.preventDefault();
+          targetFocus = parseInt(currFocusOption.dataset.optionNumber) + 1;
+        } else if (event.key === 'ArrowUp' && currFocusOption.dataset.optionNumber >= 1) {
+          event.preventDefault();
+          targetFocus = parseInt(currFocusOption.dataset.optionNumber) - 1;
+        }
+        if (targetFocus > 0) {
+          document.querySelector('.atcb-list-item[data-option-number="' + targetFocus + '"]').focus();
+        }
+      } else {
+        event.preventDefault();
+        switch (event.key) {
+          case 'ArrowDown':
+            document.querySelector('.atcb-list-item[data-option-number="1"]').focus();
+            break;
+          case 'ArrowUp':
+            document.querySelector('.atcb-list-item[data-option-number="' + optionListCount + '"]').focus();
+            break;
+          default:
+            document.querySelector('.atcb-list-item[data-option-number="1"]').focus();
+            break;
+        }
+      }
+    }
+  });
+  // Global listener for any screen changes
+  window.addEventListener(
+    'resize',
+    atcb_throttle(() => {
+      const activeOverlay = document.getElementById('atcb-bgoverlay');
+      if (activeOverlay != null) {
+        atcb_set_fullsize(activeOverlay);
+        atcb_manage_body_scroll();
+      }
+      const activeButton = document.querySelector('.atcb-active');
+      const activeList = document.querySelector('.atcb-dropdown');
+      if (activeButton != null && activeList != null) {
+        atcb_position_list(activeButton, activeList, false, true);
+      }
+    })
+  );
 }
 
 export { atcb_init, atcb_action };

@@ -3397,28 +3397,7 @@ function atcb_generate_ical(data, subEvent = 'all', keyboardTrigger = false) {
     return 'data:text/calendar;charset=utf-8,' + encodeURIComponent(ics_lines.join('\r\n'));
   })();
   if ((isiOS() && isChrome()) || (isWebView() && (isiOS() || (isAndroid() && isProblematicWebView())))) {
-    const tmpInput = document.createElement('input');
-    document.body.appendChild(tmpInput);
-    const editable = tmpInput.contentEditable;
-    const readOnly = tmpInput.readOnly;
-    tmpInput.value = dataUrl;
-    tmpInput.contentEditable = true;
-    tmpInput.readOnly = false;
-    if (isiOS()) {
-      var range = document.createRange();
-      range.selectNodeContents(tmpInput);
-      var selection = window.getSelection();
-      selection.removeAllRanges();
-      selection.addRange(range);
-      tmpInput.setSelectionRange(0, 999999);
-    } else {
-      navigator.clipboard.writeText(dataUrl);
-      tmpInput.select();
-    }
-    tmpInput.contentEditable = editable;
-    tmpInput.readOnly = readOnly;
-    document.execCommand('copy');
-    tmpInput.remove();
+    atcb_copy_to_clipboard(dataUrl);
     if (isiOS() && isChrome()) {
       atcb_create_modal(
         data,
@@ -3433,24 +3412,24 @@ function atcb_generate_ical(data, subEvent = 'all', keyboardTrigger = false) {
         [],
         keyboardTrigger
       );
-    } else {
-      atcb_create_modal(
-        data,
-        'warning',
-        atcb_translate_hook('WebView iCal headline', data.language, data),
-        atcb_translate_hook('WebView iCal info', data.language, data) +
-          '<br>' +
-          atcb_translate_hook('WebView iCal solution 1', data.language, data) +
-          '<br>' +
-          atcb_translate_hook('WebView iCal solution 2', data.language, data),
-        [],
-        [],
-        keyboardTrigger
-      );
+      return;
     }
-  } else {
-    atcb_save_file(dataUrl, filename);
+    atcb_create_modal(
+      data,
+      'warning',
+      atcb_translate_hook('WebView iCal headline', data.language, data),
+      atcb_translate_hook('WebView iCal info', data.language, data) +
+        '<br>' +
+        atcb_translate_hook('WebView iCal solution 1', data.language, data) +
+        '<br>' +
+        atcb_translate_hook('WebView iCal solution 2', data.language, data),
+      [],
+      [],
+      keyboardTrigger
+    );
+    return;
   }
+  atcb_save_file(dataUrl, filename);
 }
 
 
@@ -3606,7 +3585,7 @@ function atcb_validEmail(email, mx = false) {
     return false;
   }
   if (mx) {    
-    console.log('testing for MX records not yet available');
+    console.log('Testing for MX records not yet available');
   }
   return true;
 }
@@ -3723,6 +3702,30 @@ function atcb_generate_uuid() {
   return ([1e7] + -1e3 + -4e3 + -8e3 + -1e11).replace(/[018]/g, (c) =>
     (c ^ (crypto.getRandomValues(new Uint8Array(1))[0] & (15 >> (c / 4)))).toString(16)
   );
+}
+function atcb_copy_to_clipboard(dataString) {
+  const tmpInput = document.createElement('input');
+  document.body.appendChild(tmpInput);
+  const editable = tmpInput.contentEditable;
+  const readOnly = tmpInput.readOnly;
+  tmpInput.value = dataString;
+  tmpInput.contentEditable = true;
+  tmpInput.readOnly = false;
+  if (isiOS()) {
+    var range = document.createRange();
+    range.selectNodeContents(tmpInput);
+    var selection = window.getSelection();
+    selection.removeAllRanges();
+    selection.addRange(range);
+    tmpInput.setSelectionRange(0, 999999);
+  } else {
+    navigator.clipboard.writeText(dataString);
+    tmpInput.select();
+  }
+  tmpInput.contentEditable = editable;
+  tmpInput.readOnly = readOnly;
+  document.execCommand('copy');
+  tmpInput.remove();
 }
 function atcb_debounce(func, timeout = 200) {
   let timer;
@@ -4281,20 +4284,20 @@ function atcb_init() {
       }
       const atcbJsonInputPatched = atcb_patch_config(atcbJsonInput);
       if (atcb_check_required(atcbJsonInputPatched)) {
-        const atcbConfig = atcb_decorate_data(atcbJsonInputPatched);
-        if (atcbConfig.identifier == null || atcbConfig.identifier == '') {
-          atcbConfig.identifier = 'atcb-btn-' + (i + atcButtonsInitialized.length + 1);
+        const data = atcb_decorate_data(atcbJsonInputPatched);
+        if (data.identifier == null || data.identifier == '') {
+          data.identifier = 'atcb-btn-' + (i + atcButtonsInitialized.length + 1);
         }
-        if (atcb_validate(atcbConfig)) {
-          atcb_generate_button(atcButtons[parseInt(i)], atcbConfig);
+        if (atcb_validate(data)) {
+          atcb_generate_button(atcButtons[parseInt(i)], data);
           const singleDates = [];
-          for (let i = 0; i < atcbConfig.options.length; i++) {
-            singleDates[atcbConfig.options[`${i}`]] = [];
-            for (let id = 1; id <= atcbConfig.dates.length; id++) {
-              singleDates[atcbConfig.options[`${i}`]].push(0);
+          for (let i = 0; i < data.options.length; i++) {
+            singleDates[data.options[`${i}`]] = [];
+            for (let id = 1; id <= data.dates.length; id++) {
+              singleDates[data.options[`${i}`]].push(0);
             }
           }
-          atcbStates[atcbConfig.identifier] = singleDates;
+          atcbStates[data.identifier] = singleDates;
         }
       }
     }
@@ -4344,59 +4347,64 @@ function atcb_init_log_msg() {
   }
 }
 function atcb_set_global_event_listener() {
-  if (isBrowser()) {
-    document.addEventListener('keyup', function (event) {
-      if (event.key === 'Escape') {
-        atcb_toggle('close', '', '', true);
-      }
-    });
-    document.addEventListener('keydown', (event) => {
-      if (
-        document.querySelector('.atcb-list') &&
-        (event.key === 'ArrowDown' || event.key === 'ArrowUp' || event.key === 'Tab')
-      ) {
-        let targetFocus = 0;
-        let currFocusOption = document.activeElement;
-        const optionListCount = document.querySelectorAll('.atcb-list-item').length;
-        if (currFocusOption.classList.contains('atcb-list-item')) {
-          if (event.key === 'ArrowDown' && currFocusOption.dataset.optionNumber < optionListCount) {
-            event.preventDefault();
-            targetFocus = parseInt(currFocusOption.dataset.optionNumber) + 1;
-          } else if (event.key === 'ArrowUp' && currFocusOption.dataset.optionNumber >= 1) {
-            event.preventDefault();
-            targetFocus = parseInt(currFocusOption.dataset.optionNumber) - 1;
-          }
-          if (targetFocus > 0) {
-            document.querySelector('.atcb-list-item[data-option-number="' + targetFocus + '"]').focus();
-          }
-        } else {
-          event.preventDefault();
-          if (event.key === 'ArrowDown') {
-            document.querySelector('.atcb-list-item[data-option-number="1"]').focus();
-          } else if (event.key === 'ArrowUp') {
-            document.querySelector('.atcb-list-item[data-option-number="' + optionListCount + '"]').focus();
-          } else {
-            document.querySelector('.atcb-list-item[data-option-number="1"]').focus();
-          }
-        }
-      }
-    });
-    window.addEventListener(
-      'resize',
-      atcb_throttle(() => {
-        const activeOverlay = document.getElementById('atcb-bgoverlay');
-        if (activeOverlay != null) {
-          atcb_set_fullsize(activeOverlay);
-          atcb_manage_body_scroll();
-        }
-        const activeButton = document.querySelector('.atcb-active');
-        const activeList = document.querySelector('.atcb-dropdown');
-        if (activeButton != null && activeList != null) {
-          atcb_position_list(activeButton, activeList, false, true);
-        }
-      })
-    );
+  if (!isBrowser()) {
+    return;
   }
+  document.addEventListener('keyup', function (event) {
+    if (event.key === 'Escape') {
+      atcb_toggle('close', '', '', true);
+    }
+  });
+  document.addEventListener('keydown', (event) => {
+    if (
+      document.querySelector('.atcb-list') &&
+      (event.key === 'ArrowDown' || event.key === 'ArrowUp' || event.key === 'Tab')
+    ) {
+      let targetFocus = 0;
+      let currFocusOption = document.activeElement;
+      const optionListCount = document.querySelectorAll('.atcb-list-item').length;
+      if (currFocusOption.classList.contains('atcb-list-item')) {
+        if (event.key === 'ArrowDown' && currFocusOption.dataset.optionNumber < optionListCount) {
+          event.preventDefault();
+          targetFocus = parseInt(currFocusOption.dataset.optionNumber) + 1;
+        } else if (event.key === 'ArrowUp' && currFocusOption.dataset.optionNumber >= 1) {
+          event.preventDefault();
+          targetFocus = parseInt(currFocusOption.dataset.optionNumber) - 1;
+        }
+        if (targetFocus > 0) {
+          document.querySelector('.atcb-list-item[data-option-number="' + targetFocus + '"]').focus();
+        }
+      } else {
+        event.preventDefault();
+        switch (event.key) {
+          case 'ArrowDown':
+            document.querySelector('.atcb-list-item[data-option-number="1"]').focus();
+            break;
+          case 'ArrowUp':
+            document.querySelector('.atcb-list-item[data-option-number="' + optionListCount + '"]').focus();
+            break;
+          default:
+            document.querySelector('.atcb-list-item[data-option-number="1"]').focus();
+            break;
+        }
+      }
+    }
+  });
+  window.addEventListener(
+    'resize',
+    atcb_throttle(() => {
+      const activeOverlay = document.getElementById('atcb-bgoverlay');
+      if (activeOverlay != null) {
+        atcb_set_fullsize(activeOverlay);
+        atcb_manage_body_scroll();
+      }
+      const activeButton = document.querySelector('.atcb-active');
+      const activeList = document.querySelector('.atcb-dropdown');
+      if (activeButton != null && activeList != null) {
+        atcb_position_list(activeButton, activeList, false, true);
+      }
+    })
+  );
 }
 
 
