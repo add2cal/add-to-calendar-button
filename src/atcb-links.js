@@ -148,7 +148,7 @@ function atcb_set_fully_successful(multiDateModal) {
 }
 
 // FUNCTION TO GENERATE THE GOOGLE URL
-// See specs at: TODO: add some documentation here, if it exists
+// See specs at: https://github.com/InteractionDesignFoundation/add-event-to-calendar-docs/blob/main/services/google.md (unofficial)
 function atcb_generate_google(data) {
   const urlParts = [];
   urlParts.push('https://calendar.google.com/calendar/render?action=TEMPLATE');

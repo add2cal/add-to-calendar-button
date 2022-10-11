@@ -1638,7 +1638,17 @@ function atcb_patch_config(configData) {
   return configData;
 }
 function atcb_decorate_data(data) {
-  const now = new Date();
+  data = atcb_decorate_data_rrule(data);
+  data = atcb_decorate_data_options(data);
+  data = atcb_decorate_data_rich_data(data);
+  data = atcb_decorate_data_style(data);
+  data = atcb_decorate_data_i18n(data);
+  data = atcb_decorate_data_dates(data);
+  data = atcb_decorate_data_meta(data);
+  data = atcb_decorate_data_extend(data);
+  return data;
+}
+function atcb_decorate_data_rrule(data) {
   if (data.recurrence != null && data.recurrence != '') {
     data.recurrence = data.recurrence.replace(/\s+/g, '').toUpperCase();
     if (!/^(RRULE:[\w=;,:+-/\\]+|daily|weekly|monthly|yearly)$/im.test(data.recurrence)) {
@@ -1704,6 +1714,9 @@ function atcb_decorate_data(data) {
       }
     }
   }
+  return data;
+}
+function atcb_decorate_data_options(data) {
   data.optionLabels = [];
   for (let i = 0; i < data.options.length; i++) {
     let cleanOption = data.options[`${i}`].split('|');
@@ -1745,32 +1758,15 @@ function atcb_decorate_data(data) {
       }
     }
   }
+  return data;
+}
+function atcb_decorate_data_rich_data(data) {
   if (data.richData == null || data.richData == '') {
     data.richData = true;
   }
-  if (data.dates != null && data.dates.length > 0) {
-    for (let i = 0; i < data.dates.length; i++) {
-      if (data.dates[`${i}`].timeZone == null && data.timeZone != null) {
-        data.dates[`${i}`].timeZone = data.timeZone;
-      }
-      const cleanedUpDates = atcb_date_cleanup(data.dates[`${i}`]);
-      data.dates[`${i}`].startTime = cleanedUpDates.startTime;
-      data.dates[`${i}`].endTime = cleanedUpDates.endTime;
-      data.dates[`${i}`].timeZone = cleanedUpDates.timeZone;
-      data.dates[`${i}`].timestamp = cleanedUpDates.startTimestamp;
-      data.dates[`${i}`].startDate = atcb_date_calculation(cleanedUpDates.startDate);
-      data.dates[`${i}`].endDate = atcb_date_calculation(cleanedUpDates.endDate);
-    }
-  } else {
-    const cleanedUpDates = atcb_date_cleanup(data);
-    data.dates = [];
-    data.dates[0] = new Object();
-    data.startTime = data.dates[0].startTime = cleanedUpDates.startTime;
-    data.endTime = data.dates[0].endTime = cleanedUpDates.endTime;
-    data.timeZone = data.dates[0].timeZone = cleanedUpDates.timeZone;
-    data.startDate = data.dates[0].startDate = atcb_date_calculation(cleanedUpDates.startDate);
-    data.endDate = data.dates[0].endDate = atcb_date_calculation(cleanedUpDates.endDate);
-  }
+  return data;
+}
+function atcb_decorate_data_style(data) {
   if (data.listStyle == null || data.listStyle == '') {
     data.listStyle = 'dropdown';
   }
@@ -1810,12 +1806,6 @@ function atcb_decorate_data(data) {
       }
     }
   }
-  if (data.created == null || data.created == '') {
-    data.created = atcb_format_datetime(now, 'clean', true);
-  }
-  if (data.updated == null || data.updated == '') {
-    data.updated = atcb_format_datetime(now, 'clean', true);
-  }
   if (data.lightMode == null || data.lightMode == '') {
     data.lightMode = 'light';
   } else if (data.lightMode != null && data.lightMode != '') {
@@ -1836,6 +1826,9 @@ function atcb_decorate_data(data) {
         break;
     }
   }
+  return data;
+}
+function atcb_decorate_data_i18n(data) {
   if (data.language == null || data.language == '') {
     data.language = 'en';
   }
@@ -1844,6 +1837,42 @@ function atcb_decorate_data(data) {
   } else {
     data.rtl = false;
   }
+  return data;
+}
+function atcb_decorate_data_dates(data) {
+  if (data.dates != null && data.dates.length > 0) {
+    for (let i = 0; i < data.dates.length; i++) {
+      if (data.dates[`${i}`].timeZone == null && data.timeZone != null) {
+        data.dates[`${i}`].timeZone = data.timeZone;
+      }
+      const cleanedUpDates = atcb_date_cleanup(data.dates[`${i}`]);
+      data.dates[`${i}`].startTime = cleanedUpDates.startTime;
+      data.dates[`${i}`].endTime = cleanedUpDates.endTime;
+      data.dates[`${i}`].timeZone = cleanedUpDates.timeZone;
+      data.dates[`${i}`].timestamp = cleanedUpDates.startTimestamp;
+      data.dates[`${i}`].startDate = atcb_date_calculation(cleanedUpDates.startDate);
+      data.dates[`${i}`].endDate = atcb_date_calculation(cleanedUpDates.endDate);
+    }
+  } else {
+    const cleanedUpDates = atcb_date_cleanup(data);
+    data.dates = [];
+    data.dates[0] = new Object();
+    data.startTime = data.dates[0].startTime = cleanedUpDates.startTime;
+    data.endTime = data.dates[0].endTime = cleanedUpDates.endTime;
+    data.timeZone = data.dates[0].timeZone = cleanedUpDates.timeZone;
+    data.startDate = data.dates[0].startDate = atcb_date_calculation(cleanedUpDates.startDate);
+    data.endDate = data.dates[0].endDate = atcb_date_calculation(cleanedUpDates.endDate);
+  }
+  const now = new Date();
+  if (data.created == null || data.created == '') {
+    data.created = atcb_format_datetime(now, 'clean', true);
+  }
+  if (data.updated == null || data.updated == '') {
+    data.updated = atcb_format_datetime(now, 'clean', true);
+  }
+  return data;
+}
+function atcb_decorate_data_meta(data) {
   if (data.status == null || data.status == '') {
     data.status = 'CONFIRMED';
   }
@@ -1858,19 +1887,25 @@ function atcb_decorate_data(data) {
   ) {
     data.dates[0].uid = data.uid;
   }
-  for (let i = 0; i < data.dates.length; i++) {
-    if (data.dates[`${i}`].description != null && data.dates[`${i}`].description != '') {
-      data.dates[`${i}`].descriptionHtmlFree = atcb_rewrite_html_elements(
-        data.dates[`${i}`].description,
-        true
-      );
-      data.dates[`${i}`].description = atcb_rewrite_html_elements(data.dates[`${i}`].description);
+  return data;
+}
+function atcb_decorate_data_description(data, i) {
+  if (data.dates[`${i}`].description != null && data.dates[`${i}`].description != '') {
+    data.dates[`${i}`].descriptionHtmlFree = atcb_rewrite_html_elements(data.dates[`${i}`].description, true);
+    data.dates[`${i}`].description = atcb_rewrite_html_elements(data.dates[`${i}`].description);
+  } else {
+    if (data.dates[`${i}`].description == null && data.description != null && data.description != '') {
+      data.dates[`${i}`].descriptionHtmlFree = atcb_rewrite_html_elements(data.description, true);
+      data.dates[`${i}`].description = atcb_rewrite_html_elements(data.description);
     } else {
-      if (data.dates[`${i}`].description == null && data.description != null && data.description != '') {
-        data.dates[`${i}`].descriptionHtmlFree = atcb_rewrite_html_elements(data.description, true);
-        data.dates[`${i}`].description = atcb_rewrite_html_elements(data.description);
-      }
+      data.dates[`${i}`].descriptionHtmlFree = data.dates[`${i}`].description = '';
     }
+  }
+  return data;
+}
+function atcb_decorate_data_extend(data) {
+  for (let i = 0; i < data.dates.length; i++) {
+    data = atcb_decorate_data_description(data, i);
     if (data.dates[`${i}`].name == null || data.dates[`${i}`].name == '') {
       data.dates[`${i}`].name = data.name;
     }

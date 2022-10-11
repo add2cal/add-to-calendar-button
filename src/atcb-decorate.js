@@ -46,8 +46,19 @@ function atcb_patch_config(configData) {
 
 // CLEAN DATA BEFORE FURTHER VALIDATION (CONSIDERING SPECIAL RULES AND SCHEMES)
 function atcb_decorate_data(data) {
-  const now = new Date();
-  // format RRULE
+  data = atcb_decorate_data_rrule(data);
+  data = atcb_decorate_data_options(data);
+  data = atcb_decorate_data_rich_data(data);
+  data = atcb_decorate_data_style(data);
+  data = atcb_decorate_data_i18n(data);
+  data = atcb_decorate_data_dates(data);
+  data = atcb_decorate_data_meta(data);
+  data = atcb_decorate_data_extend(data);
+  return data;
+}
+
+// format RRULE
+function atcb_decorate_data_rrule(data) {
   if (data.recurrence != null && data.recurrence != '') {
     // remove spaces and force upper case
     data.recurrence = data.recurrence.replace(/\s+/g, '').toUpperCase();
@@ -122,7 +133,11 @@ function atcb_decorate_data(data) {
       }
     }
   }
-  // cleanup options, standardizing names and splitting off custom labels
+  return data;
+}
+
+// cleanup options, standardizing names and splitting off custom labels
+function atcb_decorate_data_options(data) {
   data.optionLabels = [];
   for (let i = 0; i < data.options.length; i++) {
     let cleanOption = data.options[`${i}`].split('|');
@@ -170,39 +185,18 @@ function atcb_decorate_data(data) {
       }
     }
   }
-  // set rich data / schema.org
+  return data;
+}
+
+// set rich data / schema.org
+function atcb_decorate_data_rich_data(data) {
   if (data.richData == null || data.richData == '') {
     data.richData = true;
   }
-  // optimize date and time information
-  if (data.dates != null && data.dates.length > 0) {
-    for (let i = 0; i < data.dates.length; i++) {
-      // get global time zone, if not set within the date block, but globally
-      if (data.dates[`${i}`].timeZone == null && data.timeZone != null) {
-        data.dates[`${i}`].timeZone = data.timeZone;
-      }
-      // cleanup different date-time formats
-      const cleanedUpDates = atcb_date_cleanup(data.dates[`${i}`]);
-      data.dates[`${i}`].startTime = cleanedUpDates.startTime;
-      data.dates[`${i}`].endTime = cleanedUpDates.endTime;
-      data.dates[`${i}`].timeZone = cleanedUpDates.timeZone;
-      data.dates[`${i}`].timestamp = cleanedUpDates.startTimestamp;
-      // calculate the real date values in case that there are some special rules included (e.g. adding days dynamically)
-      data.dates[`${i}`].startDate = atcb_date_calculation(cleanedUpDates.startDate);
-      data.dates[`${i}`].endDate = atcb_date_calculation(cleanedUpDates.endDate);
-    }
-  } else {
-    // in the single case, we do the same, but without the looping
-    const cleanedUpDates = atcb_date_cleanup(data);
-    // in addition, we directly move this information into the dates array block for better consistency at the next steps
-    data.dates = [];
-    data.dates[0] = new Object();
-    data.startTime = data.dates[0].startTime = cleanedUpDates.startTime;
-    data.endTime = data.dates[0].endTime = cleanedUpDates.endTime;
-    data.timeZone = data.dates[0].timeZone = cleanedUpDates.timeZone;
-    data.startDate = data.dates[0].startDate = atcb_date_calculation(cleanedUpDates.startDate);
-    data.endDate = data.dates[0].endDate = atcb_date_calculation(cleanedUpDates.endDate);
-  }
+  return data;
+}
+
+function atcb_decorate_data_style(data) {
   // set default listStyle
   if (data.listStyle == null || data.listStyle == '') {
     data.listStyle = 'dropdown';
@@ -247,14 +241,6 @@ function atcb_decorate_data(data) {
       }
     }
   }
-  // set created date
-  if (data.created == null || data.created == '') {
-    data.created = atcb_format_datetime(now, 'clean', true);
-  }
-  // set updated date
-  if (data.updated == null || data.updated == '') {
-    data.updated = atcb_format_datetime(now, 'clean', true);
-  }
   // determine dark mode
   if (data.lightMode == null || data.lightMode == '') {
     data.lightMode = 'light';
@@ -276,6 +262,10 @@ function atcb_decorate_data(data) {
         break;
     }
   }
+  return data;
+}
+
+function atcb_decorate_data_i18n(data) {
   // set language if not set
   if (data.language == null || data.language == '') {
     data.language = 'en';
@@ -286,6 +276,53 @@ function atcb_decorate_data(data) {
   } else {
     data.rtl = false;
   }
+  return data;
+}
+
+// optimize date and time information
+function atcb_decorate_data_dates(data) {
+  if (data.dates != null && data.dates.length > 0) {
+    for (let i = 0; i < data.dates.length; i++) {
+      // get global time zone, if not set within the date block, but globally
+      if (data.dates[`${i}`].timeZone == null && data.timeZone != null) {
+        data.dates[`${i}`].timeZone = data.timeZone;
+      }
+      // cleanup different date-time formats
+      const cleanedUpDates = atcb_date_cleanup(data.dates[`${i}`]);
+      data.dates[`${i}`].startTime = cleanedUpDates.startTime;
+      data.dates[`${i}`].endTime = cleanedUpDates.endTime;
+      data.dates[`${i}`].timeZone = cleanedUpDates.timeZone;
+      data.dates[`${i}`].timestamp = cleanedUpDates.startTimestamp;
+      // calculate the real date values in case that there are some special rules included (e.g. adding days dynamically)
+      data.dates[`${i}`].startDate = atcb_date_calculation(cleanedUpDates.startDate);
+      data.dates[`${i}`].endDate = atcb_date_calculation(cleanedUpDates.endDate);
+    }
+  } else {
+    // in the single case, we do the same, but without the looping
+    const cleanedUpDates = atcb_date_cleanup(data);
+    // in addition, we directly move this information into the dates array block for better consistency at the next steps
+    data.dates = [];
+    data.dates[0] = new Object();
+    data.startTime = data.dates[0].startTime = cleanedUpDates.startTime;
+    data.endTime = data.dates[0].endTime = cleanedUpDates.endTime;
+    data.timeZone = data.dates[0].timeZone = cleanedUpDates.timeZone;
+    data.startDate = data.dates[0].startDate = atcb_date_calculation(cleanedUpDates.startDate);
+    data.endDate = data.dates[0].endDate = atcb_date_calculation(cleanedUpDates.endDate);
+  }
+  // calculate current time
+  const now = new Date();
+  // set created date
+  if (data.created == null || data.created == '') {
+    data.created = atcb_format_datetime(now, 'clean', true);
+  }
+  // set updated date
+  if (data.updated == null || data.updated == '') {
+    data.updated = atcb_format_datetime(now, 'clean', true);
+  }
+  return data;
+}
+
+function atcb_decorate_data_meta(data) {
   // set default status on top level
   if (data.status == null || data.status == '') {
     data.status = 'CONFIRMED';
@@ -303,24 +340,31 @@ function atcb_decorate_data(data) {
   ) {
     data.dates[0].uid = data.uid;
   }
-  // decorate description
-  // in that step, we also copy global values to date objects, if not set nested - mind that above, we even moved a single date item into this array for better consistency
-  for (let i = 0; i < data.dates.length; i++) {
-    if (data.dates[`${i}`].description != null && data.dates[`${i}`].description != '') {
-      // store a clean description copy without the URL magic for iCal
-      data.dates[`${i}`].descriptionHtmlFree = atcb_rewrite_html_elements(
-        data.dates[`${i}`].description,
-        true
-      );
-      // ...and transform pseudo elements for the regular one
-      data.dates[`${i}`].description = atcb_rewrite_html_elements(data.dates[`${i}`].description);
+  return data;
+}
+
+function atcb_decorate_data_description(data, i) {
+  if (data.dates[`${i}`].description != null && data.dates[`${i}`].description != '') {
+    // store a clean description copy without the URL magic for iCal
+    data.dates[`${i}`].descriptionHtmlFree = atcb_rewrite_html_elements(data.dates[`${i}`].description, true);
+    // ...and transform pseudo elements for the regular one
+    data.dates[`${i}`].description = atcb_rewrite_html_elements(data.dates[`${i}`].description);
+  } else {
+    // if not given per sub-date, we copy from the global one or set '', if not provided at all
+    if (data.dates[`${i}`].description == null && data.description != null && data.description != '') {
+      data.dates[`${i}`].descriptionHtmlFree = atcb_rewrite_html_elements(data.description, true);
+      data.dates[`${i}`].description = atcb_rewrite_html_elements(data.description);
     } else {
-      if (data.dates[`${i}`].description == null && data.description != null && data.description != '') {
-        data.dates[`${i}`].descriptionHtmlFree = atcb_rewrite_html_elements(data.description, true);
-        data.dates[`${i}`].description = atcb_rewrite_html_elements(data.description);
-      }
+      data.dates[`${i}`].descriptionHtmlFree = data.dates[`${i}`].description = '';
     }
-    // to save on loops, we also do the copying for name, status, uid, sequence, and location here as well
+  }
+  return data;
+}
+
+function atcb_decorate_data_extend(data) {
+  // in that step, we also copy global values to date objects, if not set nested
+  for (let i = 0; i < data.dates.length; i++) {
+    data = atcb_decorate_data_description(data, i);
     // for name, we also check for empty, because it is required
     if (data.dates[`${i}`].name == null || data.dates[`${i}`].name == '') {
       data.dates[`${i}`].name = data.name;
