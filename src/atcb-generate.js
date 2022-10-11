@@ -102,7 +102,7 @@ function atcb_generate_label(data, parent, type, icon = false, text = '', oneOpt
     parent.id = data.identifier;
   }
   // set icon and text
-  atcb_generate_label_text(data, parent, type, icon, text, oneOption)
+  atcb_generate_label_text(data, parent, type, icon, text, oneOption);
 }
 
 function atcb_generate_label_text(data, parent, type, icon, text, oneOption) {
@@ -164,7 +164,7 @@ function atcb_generate_button(button, data) {
   button.textContent = '';
   // create schema.org data, if possible (https://schema.org/Event)
   if (data.richData && data.name && data.dates[0].location && data.dates[0].startDate) {
-    atcb_generate_rich_data(data, button)
+    atcb_generate_rich_data(data, button);
   }
   // generate the wrapper div
   const buttonTriggerWrapper = document.createElement('div');
@@ -350,10 +350,7 @@ function atcb_generate_rich_data(data, button) {
   }
   if (data.dates.length > 1) {
     schemaEl.textContent =
-      schemaContentMulti.join(',\r\n') +
-      '"subEvents":[\r\n' +
-      schemaContentFull.join(',\r\n') +
-      '\r\n]\r\n}';
+      schemaContentMulti.join(',\r\n') + '"subEvents":[\r\n' + schemaContentFull.join(',\r\n') + '\r\n]\r\n}';
   } else {
     schemaEl.textContent = schemaContentFull[0];
   }

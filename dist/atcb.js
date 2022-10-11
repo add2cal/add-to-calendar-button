@@ -1731,31 +1731,20 @@ function atcb_decorate_data_options(data) {
     data.options.push('apple');
   }
   for (let i = 0; i < data.options.length; i++) {
-    if (isiOS() && atcbiOSInvalidOptions.includes(data.options[`${i}`])) {
+    if (
+      (isiOS() && atcbiOSInvalidOptions.includes(data.options[`${i}`])) ||
+      (data.recurrence != null &&
+        data.recurrence != '' &&
+        (!atcbValidRecurrOptions.includes(data.options[`${i}`]) ||
+          (data.recurrence_until != null &&
+            data.recurrence_until != '' &&
+            (data.options[`${i}`] == 'apple' || data.options[`${i}`] == 'ical'))))
+    ) {
       data.options.splice(i, 1);
       if (data.optionLabels[`${i}`] != null) {
         delete data.optionLabels[`${i}`];
       }
       continue;
-    }
-    if (data.recurrence != null && data.recurrence != '') {
-      if (!atcbValidRecurrOptions.includes(data.options[`${i}`])) {
-        data.options.splice(i, 1);
-        if (data.optionLabels[`${i}`] != null) {
-          delete data.optionLabels[`${i}`];
-        }
-        continue;
-      }
-      if (
-        data.recurrence_until != null &&
-        data.recurrence_until != '' &&
-        (data.options[`${i}`] == 'apple' || data.options[`${i}`] == 'ical')
-      ) {
-        data.options.splice(i, 1);
-        if (data.optionLabels[`${i}`] != null) {
-          delete data.optionLabels[`${i}`];
-        }
-      }
     }
   }
   return data;
@@ -2503,7 +2492,7 @@ function atcb_generate_label(data, parent, type, icon = false, text = '', oneOpt
   if (oneOption) {
     parent.id = data.identifier;
   }
-  atcb_generate_label_text(data, parent, type, icon, text, oneOption)
+  atcb_generate_label_text(data, parent, type, icon, text, oneOption);
 }
 function atcb_generate_label_text(data, parent, type, icon, text, oneOption) {
   const defaultTriggerText = atcb_translate_hook('Add to Calendar', data);
@@ -2557,7 +2546,7 @@ function atcb_generate_label_text(data, parent, type, icon, text, oneOption) {
 function atcb_generate_button(button, data) {
   button.textContent = '';
   if (data.richData && data.name && data.dates[0].location && data.dates[0].startDate) {
-    atcb_generate_rich_data(data, button)
+    atcb_generate_rich_data(data, button);
   }
   const buttonTriggerWrapper = document.createElement('div');
   buttonTriggerWrapper.classList.add('atcb-button-wrapper');
@@ -2730,10 +2719,7 @@ function atcb_generate_rich_data(data, button) {
   }
   if (data.dates.length > 1) {
     schemaEl.textContent =
-      schemaContentMulti.join(',\r\n') +
-      '"subEvents":[\r\n' +
-      schemaContentFull.join(',\r\n') +
-      '\r\n]\r\n}';
+      schemaContentMulti.join(',\r\n') + '"subEvents":[\r\n' + schemaContentFull.join(',\r\n') + '\r\n]\r\n}';
   } else {
     schemaEl.textContent = schemaContentFull[0];
   }
@@ -3170,15 +3156,17 @@ function atcb_generate_links(type, data, subEvent = 'all', keyboardTrigger = fal
   atcb_generate_multidate_links(type, data, keyboardTrigger, multiDateModal);
 }
 function atcb_generate_multidate_links(type, data, keyboardTrigger, multiDateModal) {
-  if ((type == 'ical' || type == 'apple') && data.dates.every(function (theSubEvent) {
-    if (
-      (theSubEvent.status == 'CANCELLED') ||
-      (theSubEvent.organizer != null && theSubEvent.organizer != '')
-    ) {
-      return false;
-    }
-    return true;
-  })
+  if (
+    (type == 'ical' || type == 'apple') &&
+    data.dates.every(function (theSubEvent) {
+      if (
+        theSubEvent.status == 'CANCELLED' ||
+        (theSubEvent.organizer != null && theSubEvent.organizer != '')
+      ) {
+        return false;
+      }
+      return true;
+    })
   ) {
     atcb_generate_ical(data, 'all', keyboardTrigger);
     for (let i = 0; i < atcbStates[`${data.identifier}`][`${type}`].length; i++) {
@@ -3435,7 +3423,7 @@ function atcb_generate_ical(data, subEvent = 'all', keyboardTrigger = false) {
   }
   atcb_save_file(dataUrl, filename);
 }
-function atcb_determine_ical_filename (data, subEvent) {
+function atcb_determine_ical_filename(data, subEvent) {
   const filenameSlug = (function () {
     if (subEvent != 'all' && subEvent != 0) {
       return '-' + parseInt(subEvent) + 1;
@@ -3638,7 +3626,7 @@ function atcb_validEmail(email, mx = false) {
   if (!/^.{0,70}@.{1,30}\.[\w.]{2,9}$/.test(email)) {
     return false;
   }
-  if (mx) {    
+  if (mx) {
     console.log('Testing for MX records not yet available');
   }
   return true;

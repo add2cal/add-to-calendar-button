@@ -196,7 +196,7 @@ function atcb_validEmail(email, mx = false) {
   }
   // testing for mx records second, if activated
   // TODO: call external service to validate email address
-  if (mx) {    
+  if (mx) {
     console.log('Testing for MX records not yet available');
   }
   return true;

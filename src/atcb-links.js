@@ -103,15 +103,17 @@ function atcb_generate_links(type, data, subEvent = 'all', keyboardTrigger = fal
 
 function atcb_generate_multidate_links(type, data, keyboardTrigger, multiDateModal) {
   // in the multi-date event case, when all sub-events have no organizer AND are not cancelled, we can also go the short way (for iCal)
-  if ((type == 'ical' || type == 'apple') && data.dates.every(function (theSubEvent) {
-    if (
-      (theSubEvent.status == 'CANCELLED') ||
-      (theSubEvent.organizer != null && theSubEvent.organizer != '')
-    ) {
-      return false;
-    }
-    return true;
-  })
+  if (
+    (type == 'ical' || type == 'apple') &&
+    data.dates.every(function (theSubEvent) {
+      if (
+        theSubEvent.status == 'CANCELLED' ||
+        (theSubEvent.organizer != null && theSubEvent.organizer != '')
+      ) {
+        return false;
+      }
+      return true;
+    })
   ) {
     atcb_generate_ical(data, 'all', keyboardTrigger);
     // we mark the whole event as clicked
@@ -418,7 +420,7 @@ function atcb_generate_ical(data, subEvent = 'all', keyboardTrigger = false) {
   atcb_save_file(dataUrl, filename);
 }
 
-function atcb_determine_ical_filename (data, subEvent) {
+function atcb_determine_ical_filename(data, subEvent) {
   const filenameSlug = (function () {
     if (subEvent != 'all' && subEvent != 0) {
       return '-' + parseInt(subEvent) + 1;

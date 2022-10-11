@@ -155,34 +155,22 @@ function atcb_decorate_data_options(data) {
   }
   // next, iterrate over the options
   for (let i = 0; i < data.options.length; i++) {
-    // remove iCal for iOS as mentioned above (and potentially others)
-    if (isiOS() && atcbiOSInvalidOptions.includes(data.options[`${i}`])) {
+    // remove option, which should not appear on iOS (e.g. iCal, since we have the Apple option instead
+    // also, in the recurrence case, we strip out all options, which do not support it in general, as well as Apple and iCal for rrules with "until"
+    if (
+      (isiOS() && atcbiOSInvalidOptions.includes(data.options[`${i}`])) ||
+      (data.recurrence != null &&
+        data.recurrence != '' &&
+        (!atcbValidRecurrOptions.includes(data.options[`${i}`]) ||
+          (data.recurrence_until != null &&
+            data.recurrence_until != '' &&
+            (data.options[`${i}`] == 'apple' || data.options[`${i}`] == 'ical'))))
+    ) {
       data.options.splice(i, 1);
       if (data.optionLabels[`${i}`] != null) {
         delete data.optionLabels[`${i}`];
       }
       continue;
-    }
-    // in the recurrence case, we strip out all options, which do not support it
-    if (data.recurrence != null && data.recurrence != '') {
-      if (!atcbValidRecurrOptions.includes(data.options[`${i}`])) {
-        data.options.splice(i, 1);
-        if (data.optionLabels[`${i}`] != null) {
-          delete data.optionLabels[`${i}`];
-        }
-        continue;
-      }
-      // also skip Apple and iCal for rrules with "until"
-      if (
-        data.recurrence_until != null &&
-        data.recurrence_until != '' &&
-        (data.options[`${i}`] == 'apple' || data.options[`${i}`] == 'ical')
-      ) {
-        data.options.splice(i, 1);
-        if (data.optionLabels[`${i}`] != null) {
-          delete data.optionLabels[`${i}`];
-        }
-      }
     }
   }
   return data;
