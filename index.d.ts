@@ -43,11 +43,11 @@ declare module 'add-to-calendar-button' {
       identifier?: string;
       options: ('Apple' | 'Google' | 'iCal' | 'Microsoft365' | 'MicrosoftTeams' | 'Outlook.com' | 'Yahoo')[];
       iCalFileName?: string;
-      trigger?: 'hover' | 'click';
       listStyle?: 'dropdown' | 'dropdown-static' | 'overlay' | 'modal';
+      buttonStyle?: 'default' | '3d' | 'flat' | 'round' | 'neumorphism' | 'text' | 'date' | 'custom' | 'none';
+      trigger?: 'hover' | 'click';
       background?: boolean;
-      buttonStyle?: 'default' | '3d' | 'flat' | 'round' | 'neumorphism' | 'text' | 'none';
-      size?: bigint;
+      size?: string;
       customLabels?: object;
       lightMode?: 'system' | 'dark' | 'light' | 'bodyScheme';
       language?:

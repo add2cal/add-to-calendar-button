@@ -1,19 +1,29 @@
 BEGIN:VCALENDAR
 VERSION:2.0
-PRODID:-// github.com/add2cal/add-to-calendar-button // atcb v1.10.1 //EN
+PRODID:-// https://add-to-calendar-pro.com // button v1.17.0 //EN
 CALSCALE:GREGORIAN
+METHOD:PUBLISH
 BEGIN:VEVENT
-UID:2022-07-13T17:17:04.106Z@add-to-calendar-button
-DTSTAMP:20220114
-DTSTART;VALUE=DATE:20220114
-DTEND;VALUE=DATE:20220119
-SUMMARY:Reminder to star the add-to-calendar-button repo
-DESCRIPTION:Check out the maybe easiest way to include add-to-calendar-b
- uttons to your website at:\n→ https://github.com/add2cal/add-
- to-calendar-button
+UID:43c1de2d-7ba0-46aa-a201-7eb51b7f8ab4
+DTSTAMP:20221007T133559Z
+DTSTART;VALUE=DATE:20230114
+DTEND;VALUE=DATE:20230119
+SUMMARY:Reminder to star the add to calendar button repo
+DESCRIPTION:Check out the maybe easiest way to include add to calendar b
+ uttons to your website at:\n→ https://github.com/add2cal/add
+ -to-calendar-button
+X-ALT-DESC;FMTTYPE=text/html:
+ <!DOCTYPE HTML PUBLIC ""-//W3C//DTD HTML 3.2//EN"">
+ <HTML><BODY>
+ Check out the maybe easiest way to include add to calendar b
+ uttons to your website at:<br>→ <a href="https://github.com/
+ add2cal/add-to-calendar-button" target="_blank" rel="noopene
+ r">Click here!</a>
+ </BODY></HTML>
 LOCATION:World Wide Web
-STATUS:CONFIRMED
-LAST-MODIFIED:20220713T171704Z
 SEQUENCE:0
+STATUS:CONFIRMED
+CREATED:20221007T133553Z
+LAST-MODIFIED:20221007T133553Z
 END:VEVENT
 END:VCALENDAR

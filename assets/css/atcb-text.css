@@ -24,13 +24,15 @@
  */
 
 :root {
-  --base-font-size: 16px;
+  --base-font-size-l: 16px;
+  --base-font-size-m: 16px;
+  --base-font-size-s: 16px;
   --font: arial, helvetica, sans-serif;
   --atcb-keyboard-focus: #1e90ff;
   --atcb-underline: #a9ceff;
   --atcb-border: #a8a8a8;
   --atcb-background: #f5f5f5;
-  --atcb-background-2: #fff;
+  --atcb-background-hover: #fff;
   --atcb-text: #333;
   --atcb-text-2: #000;
   --atcb-text-hover: #000;
@@ -78,7 +80,7 @@ body.atcb-dark #atcb-bgoverlay.atcb-bodyScheme {
   --atcb-underline: #336db9;
   --atcb-border: #888;
   --atcb-background: #2e2e2e;
-  --atcb-background-2: #373737;
+  --atcb-background-hover: #373737;
   --atcb-text: #dedede;
   --atcb-text-2: #f1f1f1;
   --atcb-text-hover: #fff;
@@ -99,13 +101,39 @@ body.atcb-dark #atcb-bgoverlay.atcb-bodyScheme {
   --icon-filter: grayscale(0.2);
 }
 
+/* Size Breakpoints */
+
+/* large */
+.atcb-button-wrapper,
+.atcb-list,
+.atcb-modal-box {
+  font-size: var(--base-font-size-l);
+}
+
+/* medium */
+@media (max-width: 991px) {
+  .atcb-button-wrapper,
+  .atcb-list,
+  .atcb-modal-box {
+    font-size: var(--base-font-size-m);
+  }
+}
+
+/* small */
+@media (max-width: 575px) {
+  .atcb-button-wrapper,
+  .atcb-list,
+  .atcb-modal-box {
+    font-size: var(--base-font-size-s);
+  }
+}
+
 /******************************
  * The triggering button
  */
 
 .atcb-button-wrapper {
   display: inline-block;
-  font-size: var(--base-font-size);
   padding: 5px;
   position: relative;
 }
@@ -128,7 +156,7 @@ body.atcb-dark #atcb-bgoverlay.atcb-bodyScheme {
   cursor: pointer;
   display: flex;
   font-family: var(--font);
-  font-size: var(--base-font-size);
+  font-size: 1em;
   font-weight: 600;
   justify-content: center;
   line-height: 1.2em;
@@ -210,7 +238,7 @@ body.atcb-dark #atcb-bgoverlay.atcb-bodyScheme {
  */
 
 .atcb-icon {
-  height: var(--base-font-size);
+  height: 1em;
   margin-right: 1em;
   line-height: 1em;
 }
@@ -320,7 +348,6 @@ body.atcb-dark #atcb-bgoverlay.atcb-bodyScheme {
   color: var(--atcb-text);
   display: block;
   font-family: var(--font);
-  font-size: var(--base-font-size);
   max-width: 100%;
   position: relative;
   user-select: none;
@@ -334,7 +361,7 @@ body.atcb-dark #atcb-bgoverlay.atcb-bodyScheme {
   box-sizing: border-box;
   cursor: pointer;
   display: flex;
-  font-size: var(--base-font-size);
+  font-size: 1em;
   line-height: 1.75em;
   padding: 0.8em 1em;
   text-align: left;
@@ -348,12 +375,12 @@ body.atcb-dark #atcb-bgoverlay.atcb-bodyScheme {
 }
 
 .atcb-list-item:hover {
-  background-color: var(--atcb-background-2);
+  background-color: var(--atcb-background-hover);
   color: var(--atcb-text-2);
 }
 
 .atcb-list-item:focus-visible {
-  background-color: var(--atcb-background-2);
+  background-color: var(--atcb-background-hover);
   color: var(--atcb-keyboard-focus);
   font-size: 0.95em;
   font-weight: 600;
@@ -420,14 +447,13 @@ body.atcb-dark #atcb-bgoverlay.atcb-bodyScheme {
 }
 
 .atcb-modal-box {
-  background-color: var(--atcb-background-2);
+  background-color: var(--atcb-background-hover);
   box-shadow: var(--atcb-shadow-modal);
   color: var(--atcb-text-2);
   cursor: default;
   border-radius: 6px;
   box-sizing: border-box;
   font-family: var(--font);
-  font-size: var(--base-font-size);
   line-height: 1.5em;
   padding: 1.25em 1.5em;
   text-align: left;
@@ -523,7 +549,7 @@ a.atcb-modal-btn {
   cursor: pointer;
   display: inline-block;
   font-family: var(--font);
-  font-size: var(--base-font-size);
+  font-size: 1em;
   font-weight: 600;
   line-height: 1.5em;
   margin: 0.625em;
@@ -579,7 +605,7 @@ a.atcb-modal-btn:focus-visible {
   min-width: 100%;
   opacity: 0;
   overflow-y: auto;
-  padding: 30px 20px 130px;
+  padding: 20px 20px 130px;
   position: fixed;
   width: 100vw;
   z-index: 14000000;
