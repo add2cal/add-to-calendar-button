@@ -37,6 +37,7 @@
   --atcb-close-background: #e5e5e5;
   --atcb-close-text: #777;
   --atcb-overlay-background: rgba(20 20 20 / 25%);
+  --atcb-modal-background: #f5f5f5;
   --atcb-modal-buttons-bar: #c6c8cd;
   --atcb-modal-btn-background: #f5f5f5;
   --atcb-modal-btn-sec-background: #e2e1e6;
@@ -85,6 +86,7 @@ body.atcb-dark #atcb-bgoverlay.atcb-bodyScheme {
   --atcb-text-2: #f1f1f1;
   --atcb-close-background: #282828;
   --atcb-overlay-background: rgba(20 20 20 / 60%);
+  --atcb-modal-background: #242424;
   --atcb-modal-buttons-bar: #38383a;
   --atcb-modal-btn-background: #181819;
   --atcb-modal-btn-sec-background: #2e2d30;
@@ -107,7 +109,7 @@ body.atcb-dark #atcb-bgoverlay.atcb-bodyScheme {
   --atcb-shadow-modal: drop-shadow(5px 6px 15px rgba(0 0 0 / 40%)) drop-shadow(15px 20px 20px rgba(0 0 0 / 50%)) drop-shadow(12px 20px 50px rgba(0 0 0 / 40%));
   --atcb-shadow-modal-date-btn: rgba(255 255 255 / 10%) -8px -6px 20px, rgba(0 0 0 / 50%) 1px 3px 25px -8px,rgba(0 0 0 / 50%) 1px 1px 10px -3px;
   --atcb-shadow-modal-button: rgba(255 255 255 / 5%) -2px -2px 10px,rgba(0 0 0 / 30%) 1px 2px 8px -1px;
-  --atcb-checkmark-background: radial-gradient(circle,rgba(0 0 0 / 60%) 0,rgba(0 0 0 / 40%) 40%,rgba(0 0 0 / 0%) 70%);
+  --atcb-checkmark-background: radial-gradient(circle,rgba(0 0 0 / 50%) 0,rgba(0 0 0 / 30%) 40%,rgba(0 0 0 / 0%) 70%);
   --icon-ms365-color: #ea3e23;
   --icon-yahoo-color: #bebebe;
   --icon-filter: grayscale(.2);
@@ -214,12 +216,14 @@ body.atcb-dark #atcb-bgoverlay.atcb-bodyScheme {
 .atcb-icon {
   height: 1em;
   margin-bottom: .3em;
-  margin-right: .8em;
+  padding-right: .8em;
+  flex-grow: 0;
+  flex-shrink: 0;
 }
 
 .atcb-rtl .atcb-icon {
-  margin-right: 0;
-  margin-left: .8em;
+  padding-right: 0;
+  padding-left: .8em;
 }
 
 .atcb-icon svg {
@@ -346,13 +350,13 @@ body.atcb-dark #atcb-bgoverlay.atcb-bodyScheme {
 
 .atcb-list-item .atcb-icon {
   margin-bottom: .5em;
-  margin-right: .6em;
+  padding-right: .6em;
   width: 1.125em;
 }
 
 .atcb-rtl .atcb-list-item .atcb-icon {
-  margin-right: 0;
-  margin-left: .6em;
+  padding-right: 0;
+  padding-left: .6em;
 }
 
 .atcb-list-item-close {
@@ -412,7 +416,7 @@ body.atcb-dark #atcb-bgoverlay.atcb-bodyScheme {
   height: 2.5em;
   width: 2.5em;
   border-radius: 100%;
-  background-color: var(--atcb-background);
+  background-color: var(--atcb-modal-background);
   padding: 1.75em;
   margin: auto;
 }
@@ -425,7 +429,7 @@ body.atcb-dark #atcb-bgoverlay.atcb-bodyScheme {
 
 /* content */
 .atcb-modal-headline {
-  background-color: var(--atcb-background);
+  background-color: var(--atcb-modal-background);
   border-radius: 6px 6px 0 0;
   font-size: 1.3em;
   font-weight: 600;
@@ -441,7 +445,7 @@ body.atcb-dark #atcb-bgoverlay.atcb-bodyScheme {
 }
 
 .atcb-modal-content {  
-  background-color: var(--atcb-background);
+  background-color: var(--atcb-modal-background);
   padding: .3em 2.5em 2.25em;
 }
 
@@ -633,10 +637,19 @@ a.atcb-modal-btn:focus-visible {
   color: var(--atcb-modal-date-btn-text-2);
 }
 
+.atcb-date-btn-content-location {
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
+  word-break: break-all;
+}
+
 .atcb-date-btn-content-icon {
   display: inline-block;
-  height: .8em;
-  margin-right: .5em;
+  height: 0.8em;
+  width: 1.3em;
+  flex: 0 0 1.3em;
 }
 
 .atcb-rtl .atcb-date-btn-content-icon {
@@ -654,6 +667,10 @@ a.atcb-modal-btn:focus-visible {
   margin-top: .3em;
 }
 
+.atcb-date-btn-content-recurr-icon {
+  padding-left: .3em;
+}
+
 /******************************
  * Checkmark Overlay
  */
@@ -663,6 +680,7 @@ a.atcb-modal-btn:focus-visible {
 }
 
 .atcb-saved .atcb-checkmark {
+  color: var(--atcb-text);
   display: block;
   position: absolute;
   top: -1.2em;

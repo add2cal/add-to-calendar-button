@@ -292,7 +292,7 @@ function atcb_generate_msteams(data) {
   }
   // We also push the UID. It has no real effect, but at least becomes part of the url that way
   urlParts.push('uid=' + encodeURIComponent(data.uid));
-  atcb_open_cal_url(urlParts.join('&'));
+  atcb_open_cal_url(baseUrl + urlParts.join('&'));
 }
 
 // FUNCTION TO OPEN THE URL

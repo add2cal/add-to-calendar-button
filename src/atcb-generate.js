@@ -476,7 +476,6 @@ function atcb_create_modal(
   modalWrapper.tabIndex = 0;
   modalWrapper.focus({ preventScroll: true });
   modalWrapper.blur();
-  atcb_manage_body_scroll(modalCount);
   const parentButton = document.getElementById(data.identifier);
   if (parentButton != null) {
     parentButton.classList.add('atcb-active-modal');
@@ -597,6 +596,8 @@ function atcb_create_modal(
     const prevModal = document.querySelectorAll('.atcb-modal[data-modal-nr="' + (modalCount - 1) + '"]')[0];
     prevModal.style.display = 'none';
   }
+  // set scroll behavior
+  atcb_manage_body_scroll(modalWrapper);
 }
 
 // FUNCTION TO GENERATE A MORE DETAILED DATE BUTTON
@@ -717,25 +718,31 @@ function atcb_generate_date_button(data, parent, subEvent = 'all') {
       btnLocation.style.fontWeight = '600';
       btnLocation.style.color = '#9c1a23';
     } else {
-      btnLocation.textContent = data.location;
+      btnLocation.classList.add('atcb-date-btn-content-location');
       const btnLocationIcon = document.createElement('span');
       btnLocationIcon.classList.add('atcb-date-btn-content-icon');
       btnLocationIcon.innerHTML = atcbIcon['location'];
-      btnLocation.insertBefore(btnLocationIcon, btnLocation.firstChild);
+      btnLocation.appendChild(btnLocationIcon);
+      const btnLocationText = document.createElement('span');
+      btnLocationText.textContent = data.location;
+      btnLocation.appendChild(btnLocationText);
     }
   }
   const btnDateTime = document.createElement('div');
   btnDateTime.classList.add('atcb-date-btn-content');
   btnDetails.appendChild(btnDateTime);
-  btnDateTime.textContent = fullTimeInfo;
   const btnDateTimeIcon = document.createElement('span');
   btnDateTimeIcon.classList.add('atcb-date-btn-content-icon');
   btnDateTimeIcon.innerHTML = atcbIcon['ical'];
-  btnDateTime.insertBefore(btnDateTimeIcon, btnDateTime.firstChild);
+  btnDateTime.appendChild(btnDateTimeIcon);
+  const btnDateTimeText = document.createElement('span');
+  btnDateTimeText.textContent = fullTimeInfo;
+  btnDateTime.appendChild(btnDateTimeText);
   if (data.recurrence != null && data.recurrence != '') {
     const recurSign = document.createElement('span');
+    recurSign.classList.add('atcb-date-btn-content-recurr-icon');
     btnDateTime.appendChild(recurSign);
-    recurSign.innerHTML = ' &#x27F3;';
+    recurSign.innerHTML = '&#x27F3;';
   }
   const btnHover = document.createElement('div');
   btnHover.classList.add('atcb-date-btn-hover');

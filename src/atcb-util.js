@@ -304,11 +304,11 @@ function atcb_position_list(trigger, list, blockUpwards = false, resize = false)
 }
 
 // SHARED FUNCTION TO CALCULATE WHETHER WE BLOCK SCROLLING OR NOT (WHEN MODAL OR LIST IS LARGER THAN THE SCREEN HEIGHT)
-function atcb_manage_body_scroll(modalNr = 0) {
+function atcb_manage_body_scroll(modalObj = null) {
   const modal = (function () {
     // if a specific modal is defined, we take it. Otherwise we go for the latest one
-    if (modalNr != 0) {
-      return document.querySelectorAll('.atcb-modal[data-modal-nr="' + modalNr + '"]')[0];
+    if (modalObj != null) {
+      return modalObj;
     } else {
       const allModals = document.querySelectorAll('.atcb-modal');
       return allModals[allModals.length - 1];

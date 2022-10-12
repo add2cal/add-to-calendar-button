@@ -39,16 +39,23 @@
   --atcb-close-text: #b0b0b0;
   --atcb-close-text-hover: #777;
   --atcb-overlay-background: rgba(20 20 20 / 40%);
+  --atcb-modal-background: #f5f5f5;
+  --atcb-modal-buttons-bar: #bababa;
   --atcb-modal-btn-background: #f5f5f5;
-  --atcb-modal-btn-background-2: #fff;
-  --atcb-modal-btn-border: #dfdfdf;
-  --atcb-modal-btn-border-2: #d2d2d2;
-  --atcb-modal-btn-text: #333;
-  --atcb-modal-btn-text-2: #161616;
-  --atcb-modal-btn-sec-text: #4f4f4f;
-  --bg-cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='%23777' width='16' height='16' viewBox='0 0 122.878 122.88'%3E%3Cpath d='M1.426 8.313a4.87 4.87 0 0 1 0-6.886 4.87 4.87 0 0 1 6.886 0l53.127 53.127 53.127-53.127a4.87 4.87 0 0 1 6.887 0 4.87 4.87 0 0 1 0 6.886L68.324 61.439l53.128 53.128a4.87 4.87 0 0 1-6.887 6.886L61.438 68.326 8.312 121.453a4.87 4.87 0 0 1-6.886 0 4.87 4.87 0 0 1 0-6.886l53.127-53.128L1.426 8.313h0z'/%3E%3C/svg%3E")
-      16 16,
-    crosshair;
+  --atcb-modal-btn-sec-background: #e2e1e6;
+  --atcb-modal-btn-background-hover: #fff;
+  --atcb-modal-btn-text: #2e2e2e;
+  --atcb-modal-btn-text-hover: #161616;
+  --atcb-modal-btn-sec-text: #676767;
+  --atcb-modal-date-btn-text: #1d1d1e;
+  --atcb-modal-date-btn-text-2: #414141;
+  --atcb-modal-date-btn-cal-text: #fff;
+  --atcb-modal-date-btn-cal-text-2: #d3d2d7;
+  --atcb-modal-date-btn-cal-background: #313132;
+  --atcb-modal-date-btn-background: #eae9ed;
+  --atcb-modal-date-btn-background-hover: #fff;
+  --atcb-checkmark-background: radial-gradient(circle,#fff 0,rgba(255 255 255 / 80%) 40%,rgba(255 255 255 / 0%) 70%);
+  --bg-cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='%23777' width='16' height='16' viewBox='0 0 122.878 122.88'%3E%3Cpath d='M1.426 8.313a4.87 4.87 0 0 1 0-6.886 4.87 4.87 0 0 1 6.886 0l53.127 53.127 53.127-53.127a4.87 4.87 0 0 1 6.887 0 4.87 4.87 0 0 1 0 6.886L68.324 61.439l53.128 53.128a4.87 4.87 0 0 1-6.887 6.886L61.438 68.326 8.312 121.453a4.87 4.87 0 0 1-6.886 0 4.87 4.87 0 0 1 0-6.886l53.127-53.128L1.426 8.313h0z'/%3E%3C/svg%3E") 16 16, crosshair;
   --icon-ms365-color: #ea3e23;
   --icon-yahoo-color: #5f01d1;
   --icon-filter: none;
@@ -74,6 +81,22 @@ body.atcb-dark #atcb-bgoverlay.atcb-bodyScheme {
   --atcb-close-text: #777;
   --atcb-close-text-hover: #f1f1f1;
   --atcb-overlay-background: rgba(20 20 20 / 75%);
+  --atcb-modal-background: #242424;
+  --atcb-modal-buttons-bar: #313131;
+  --atcb-modal-btn-background: #181819;
+  --atcb-modal-btn-sec-background: #2e2d30;
+  --atcb-modal-btn-background-hover: #434246;
+  --atcb-modal-btn-text: #dbdbdb;
+  --atcb-modal-btn-text-hover: #fff;
+  --atcb-modal-btn-sec-text: #b8b8b8;
+  --atcb-modal-date-btn-text: #ebebf0;
+  --atcb-modal-date-btn-text-2: #b5b5bd;
+  --atcb-modal-date-btn-cal-text: #101010;
+  --atcb-modal-date-btn-cal-text-2: #414141;
+  --atcb-modal-date-btn-cal-background: #c7c7cd;
+  --atcb-modal-date-btn-background: #2d2d2d;
+  --atcb-modal-date-btn-background-hover: #474747;
+  --atcb-checkmark-background: radial-gradient(circle,rgba(0 0 0 / 50%) 0,rgba(0 0 0 / 30%) 40%,rgba(0 0 0 / 0%) 70%);
   --icon-ms365-color: #ea3e23;
   --icon-yahoo-color: #bebebe;
   --icon-filter: grayscale(0.2);
@@ -188,13 +211,15 @@ body.atcb-dark #atcb-bgoverlay.atcb-bodyScheme {
 
 .atcb-icon {
   height: 1em;
-  margin-right: 1em;
+  padding-right: 1em;
   line-height: 1em;
+  flex-grow: 0;
+  flex-shrink: 0;
 }
 
 .atcb-rtl .atcb-icon {
-  margin-right: 0;
-  margin-left: 1em;
+  padding-right: 0;
+  padding-left: 1em;
 }
 
 .atcb-icon svg {
@@ -221,7 +246,7 @@ body.atcb-dark #atcb-bgoverlay.atcb-bodyScheme {
  */
 
 .atcb-dropdown-anchor {
-  bottom: -0.2em;
+  bottom: 0;
   height: 0;
   width: 100%;
   opacity: 0;
@@ -241,6 +266,7 @@ body.atcb-dark #atcb-bgoverlay.atcb-bodyScheme {
 
 .atcb-list {
   box-sizing: border-box;
+  border: 0.15em solid var(--atcb-border);
   color: var(--atcb-text);
   display: block;
   font-family: var(--font);
@@ -254,7 +280,6 @@ body.atcb-dark #atcb-bgoverlay.atcb-bodyScheme {
 .atcb-list-item {
   align-items: center;
   background-color: var(--atcb-background);
-  border: 0.15em solid var(--atcb-border);
   box-sizing: border-box;
   cursor: pointer;
   display: flex;
@@ -307,13 +332,13 @@ body.atcb-dark #atcb-bgoverlay.atcb-bodyScheme {
 
 .atcb-list-item .atcb-icon {
   margin-bottom: 0.1em;
-  margin-right: 0.6em;
+  padding-right: 0.6em;
   width: 1.125em;
 }
 
 .atcb-rtl .atcb-list-item .atcb-icon {
-  margin-right: 0;
-  margin-left: 0.6em;
+  padding-right: 0;
+  padding-left: 0.6em;
 }
 
 .atcb-list-item-close {
@@ -336,11 +361,8 @@ body.atcb-dark #atcb-bgoverlay.atcb-bodyScheme {
  * Modal
  */
 
-/* we disable scrolling only on small screens - only there, the case is relevant and at the same time, they have no scrollbars and therefore no "jumping" */
-@media only screen and (max-width: 575px) {
-  .atcb-modal-no-scroll {
-    overflow-y: hidden;
-  }
+ .atcb-modal-no-scroll {
+  overflow-y: hidden;
 }
 
 .atcb-modal {
@@ -353,19 +375,19 @@ body.atcb-dark #atcb-bgoverlay.atcb-bodyScheme {
 }
 
 .atcb-modal-box {
-  background-color: var(--atcb-background-hover);
+  border: .15em solid var(--atcb-border);
+  background-color: var(--atcb-modal-background);
   color: var(--atcb-text-2);
   cursor: default;
-  border: 1px solid var(--atcb-border);
-  box-sizing: border-box;
+  box-sizing: border-box;  
   font-family: var(--font);
   line-height: 1.5em;
-  padding: 1.25em 1.5em;
   text-align: left;
   user-select: none;
   -webkit-user-select: none;
   touch-action: manipulation;
   width: 100%;
+  margin-bottom: 20px;
   max-width: 32em;
   -webkit-tap-highlight-color: transparent;
 }
@@ -373,90 +395,73 @@ body.atcb-dark #atcb-bgoverlay.atcb-bodyScheme {
 .atcb-modal-box.atcb-rtl {
   text-align: right;
   direction: rtl;
+  padding: 1.25em 1em 1.25em 2em;
 }
 
-.atcb-modal-close {
-  cursor: pointer;
-  display: inline-block;
-  height: 1.125em;
-  position: absolute;
-  right: 1.25em;
+/* icon */
+.atcb-modal-icon {
+  height: 2.5em;
+  width: 2.5em;
+  padding: 1.75em;
+  margin: auto;
 }
 
-.atcb-rtl .atcb-modal-close {
-  left: 1.25em;
-  right: auto;
+.atcb-modal-icon svg {
+  height: auto;
+  fill: currentcolor;
+  width: 100%;
 }
 
-.atcb-modal-close svg {
-  height: 100%;
-  fill: var(--atcb-close-text);
-  width: auto;
-}
-
-.atcb-modal-close:hover {
-  opacity: 0.6;
-}
-
-.atcb-modal-close:focus-visible {
-  outline: 2px solid var(--atcb-keyboard-focus);
-}
-
+/* content */
 .atcb-modal-headline {
-  align-items: center;
-  display: flex;
   font-size: 1.3em;
   font-weight: 600;
   line-height: 1.5em;
-  margin: 1em 0.9em 1.25em;
+  padding: 1.8em 2em 1.3em;
   text-transform: uppercase;
+  text-align: center;
 }
 
-.atcb-rtl .atcb-modal-headline {
-  direction: rtl;
-  text-align: right;
-}
-
-.atcb-modal-headline-icon {
-  height: 1.625em;
-  margin-top: 0.125em;
-  margin-right: 0.9em;
-}
-
-.atcb-rtl .atcb-modal-headline-icon {
-  margin-right: 0;
-  margin-left: 0.9em;
-}
-
-.atcb-modal-headline-icon svg {
-  height: 100%;
-  fill: currentcolor;
-  width: auto;
+.atcb-modal-icon + .atcb-modal-headline {
+  padding-top: 0;
 }
 
 .atcb-modal-content {
-  margin: 30px 15px;
+  padding: .3em 2.5em 2.25em;
 }
 
+@media (max-width: 575px) {
+  .atcb-modal-headline {
+    padding: 1.8em 1em 1em;
+  }
+  
+  .atcb-modal-content {  
+    padding: .3em 1em 2em;
+  }
+}
+
+/* buttons */
 .atcb-modal-buttons {
-  padding: 0.9em 0;
+  background-color: var(--atcb-modal-buttons-bar);
+  box-sizing: border-box;
+  padding: .8em 1em;
   text-align: center;
   width: 100%;
 }
 
 button.atcb-modal-btn,
 a.atcb-modal-btn {
-  background-color: var(--atcb-modal-btn-background);
-  border: 1px solid var(--atcb-modal-btn-border);
+  border: .2em solid var(--atcb-border);
+  background-color: var(--atcb-modal-btn-sec-background);
   color: var(--atcb-modal-btn-sec-text);
   cursor: pointer;
   display: inline-block;
   font-family: var(--font);
-  font-size: 1em;
+  font-size: .9em;
   font-weight: 600;
   line-height: 1.5em;
-  margin: 0.625em;
-  padding: 0.625em 1.25em;
+  margin: .625em;
+  padding: .625em 1.25em;
   position: relative;
   text-align: center;
   text-decoration: none;
@@ -464,39 +469,227 @@ a.atcb-modal-btn {
   user-select: none;
   -webkit-user-select: none;
   -webkit-tap-highlight-color: transparent;
+  text-transform: uppercase;
+  top: 0;
+  left: 0;
+  box-shadow: 0 0 0 0 var(--atcb-button-shadow);
 }
 
 button.atcb-modal-btn.atcb-modal-btn-primary,
 a.atcb-modal-btn.atcb-modal-btn-primary {
-  border: 1px solid var(--atcb-modal-btn-border-2);
+  background-color: var(--atcb-modal-btn-background);
   color: var(--atcb-modal-btn-text);
 }
 
 button.atcb-modal-btn:hover,
 a.atcb-modal-btn:hover {
-  background-color: var(--atcb-modal-btn-background-2);
-  color: var(--atcb-modal-btn-text-2);
+  background-color: var(--atcb-modal-btn-background-hover);
+  color: var(--atcb-modal-btn-text-hover);
   text-decoration: none;
+  top: -3px;
+  left: -3px;
+  box-shadow: 3px 3px 0 0 var(--atcb-button-shadow);
 }
 
 button.atcb-modal-btn:focus-visible,
 a.atcb-modal-btn:focus-visible {
-  background-color: var(--atcb-modal-btn-background-2);
+  background-color: var(--atcb-modal-btn-background-hover);
   outline: 2px solid var(--atcb-keyboard-focus);
+}
+
+/******************************
+ * Date Buttons
+ */
+
+.atcb-subevent-btn {
+  border: .15em solid var(--atcb-border);
+  display: flex;
+  align-items: flex-start;
+  cursor: pointer;
+  font-family: var(--font);
+  font-size: 1em;
+  background-color: var(--atcb-modal-date-btn-background);
+  padding: 0;
+  margin: 0;
+  touch-action: manipulation;
+  position: relative;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-tap-highlight-color: transparent;
+  top: 0;
+  left: 0;
+  box-shadow: 0 0 0 0 var(--atcb-button-shadow);
+}
+
+.atcb-subevent-btn:hover {
+  align-items: center;
+  top: -3px;
+  left: -3px;
+  box-shadow: 3px 3px 0 0 var(--atcb-button-shadow);
+}
+
+.atcb-subevent-btn:hover,
+.atcb-subevent-btn:focus {
+  background-color: var(--atcb-modal-date-btn-background-hover);
+}
+
+.atcb-subevent-btn:focus-visible {
+  outline: 2px solid var(--atcb-keyboard-focus);
+}
+
+.atcb-subevent-btn + .atcb-subevent-btn {
+  margin-top: 30px;
+}
+
+.atcb-date-btn-left {
+  align-self: stretch;
+  background-color: var(--atcb-modal-date-btn-cal-background);
+  color: var(--atcb-modal-date-btn-background-hover);
+  padding: 15px;
+  width: 2.7em;
+  text-align: center;
+}
+
+.atcb-subevent-btn:hover .atcb-date-btn-left {
+  opacity: .8;
+}
+
+.atcb-date-btn-day {
+  color: var(--atcb-modal-date-btn-cal-text);
+  font-weight: 300;
+  font-size: 2em;
+}
+
+.atcb-date-btn-month {
+  color: var(--atcb-modal-date-btn-cal-text-2);
+  font-weight: 600;
+  font-size: 1em;
+}
+
+.atcb-date-btn-right {
+  position: relative;
+  color: var(--atcb-modal-date-btn-text);
+}
+
+.atcb-date-btn-details {
+  opacity: 1;
+  padding: .8em;
+  text-align: left;
+}
+
+.atcb-rtl .atcb-date-btn-details {
+  text-align: right;
+}
+
+.atcb-date-btn-hover {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  opacity: 0;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+  font-size: 1em;
+}
+
+.atcb-subevent-btn:hover .atcb-date-btn-details {
+  opacity: 0;
+}
+
+.atcb-subevent-btn:hover .atcb-date-btn-hover {
+  opacity: 1;
+}
+
+.atcb-date-btn-headline {
+  font-weight: 600;
+  font-size: .9em;
+  margin-bottom: .5em;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
+}
+
+.atcb-date-btn-content {
+  font-size: .8em;
+  color: var(--atcb-modal-date-btn-text-2);
+}
+
+.atcb-date-btn-content-location {
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
+  word-break: break-all;
+}
+
+.atcb-date-btn-content-icon {
+  display: inline-block;
+  height: 0.8em;
+  width: 1.3em;
+  flex: 0 0 1.3em;
+}
+
+.atcb-rtl .atcb-date-btn-content-icon {
+  margin-right: 0;
+  margin-left: .5em;
+}
+
+.atcb-date-btn-content-icon svg {
+  height: 100%;
+  fill: currentcolor;
+  width: auto;
+}
+
+.atcb-date-btn-content + .atcb-date-btn-content {
+  margin-top: .3em;
+}
+
+.atcb-date-btn-content-recurr-icon {
+  padding-left: .3em;
+}
+
+/******************************
+ * Checkmark Overlay
+ */
+
+.atcb-checkmark {
+  display: none;
+}
+
+.atcb-saved .atcb-checkmark {
+  color: var(--atcb-text);
+  display: block;
+  position: absolute;
+  top: -1.2em;
+  right: -.3em;
+  padding: .5em;
+  background: var(--atcb-checkmark-background);
+  border-radius: 100%;
+  height: 2em;
+}
+
+.atcb-checkmark svg {
+  height: 100%;
+  fill: currentcolor;
+  width: auto;
 }
 
 /******************************
  * Background Overlay
  */
 
-#atcb-bgoverlay {
-  animation: atcb-bgoverlay-animate 0.2s ease 0s 1 normal forwards;
+ #atcb-bgoverlay {
+  animation: atcb-bgoverlay-animate 0.1s ease 0s 1 normal forwards;
   backdrop-filter: blur(2px);
   -webkit-backdrop-filter: blur(2px);
   background-color: var(--atcb-overlay-background);
   box-sizing: border-box;
   display: flex;
-
+  
   /* could become simply 100dvh in the future - with regular padding then */
   height: calc(100vh + 100px);
   left: 0;
@@ -510,6 +703,10 @@ a.atcb-modal-btn:focus-visible {
   position: fixed;
   width: 100vw;
   z-index: 14000000;
+}
+
+#atcb-bgoverlay.atcb-animate-bg {
+  animation: atcb-bgoverlay-animate 0.3s ease 0s 1 normal forwards;
 }
 
 #atcb-bgoverlay.atcb-no-bg {
