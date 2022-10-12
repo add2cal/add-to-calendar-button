@@ -81,15 +81,7 @@ function atcb_init() {
         if (atcb_validate(data)) {
           // ... and generate the button on success
           atcb_generate_button(atcButtons[parseInt(i)], data);
-          // add to global state management
-          const singleDates = [];
-          for (let i = 0; i < data.options.length; i++) {
-            singleDates[data.options[`${i}`]] = [];
-            for (let id = 1; id <= data.dates.length; id++) {
-              singleDates[data.options[`${i}`]].push(0);
-            }
-          }
-          atcbStates[data.identifier] = singleDates;
+          atcb_update_state_management(data);
         }
       }
     }
@@ -127,7 +119,13 @@ function atcb_action(data, triggerElement, keyboardTrigger = true) {
       'Add to Calendar Button generation (' + data.identifier + ') failed: invalid data; see console logs'
     );
   }
-  // add to global state management
+  atcb_update_state_management(data);
+  // if all is fine, open the options list
+  atcb_toggle('open', data, triggerElement, keyboardTrigger);
+}
+
+// update global state management
+function atcb_update_state_management(data) {
   const singleDates = [];
   for (let i = 0; i < data.options.length; i++) {
     singleDates[data.options[`${i}`]] = [];
@@ -136,8 +134,6 @@ function atcb_action(data, triggerElement, keyboardTrigger = true) {
     }
   }
   atcbStates[data.identifier] = singleDates;
-  // if all is fine, open the options list
-  atcb_toggle('open', data, triggerElement, keyboardTrigger);
 }
 
 // SHARED FUNCTION TO GENERATE THE INIT LOG MESSAGE

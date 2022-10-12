@@ -199,11 +199,7 @@ function atcb_generate_google(data) {
   }
   // We also push the UID. It has no real effect, but at least becomes part of the url that way
   urlParts.push('uid=' + encodeURIComponent(data.uid));
-  const url = urlParts.join('&');
-  if (atcb_secure_url(url)) {
-    // eslint-disable-next-line security/detect-non-literal-fs-filename
-    window.open(url, atcbDefaultTarget).focus();
-  }
+  atcb_open_cal_url(urlParts.join('&'));
 }
 
 // FUNCTION TO GENERATE THE YAHOO URL
@@ -232,11 +228,7 @@ function atcb_generate_yahoo(data) {
   }
   // We also push the UID. It has no real effect, but at least becomes part of the url that way
   urlParts.push('uid=' + encodeURIComponent(data.uid));
-  const url = urlParts.join('&');
-  if (atcb_secure_url(url)) {
-    // eslint-disable-next-line security/detect-non-literal-fs-filename
-    window.open(url, atcbDefaultTarget).focus();
-  }
+  atcb_open_cal_url(urlParts.join('&'));
 }
 
 // FUNCTION TO GENERATE THE MICROSOFT 365 OR OUTLOOK WEB URL
@@ -271,11 +263,7 @@ function atcb_generate_microsoft(data, type = '365') {
   }
   // We also push the UID. It has no real effect, but at least becomes part of the url that way
   urlParts.push('uid=' + encodeURIComponent(data.uid));
-  const url = urlParts.join('&');
-  if (atcb_secure_url(url)) {
-    // eslint-disable-next-line security/detect-non-literal-fs-filename
-    window.open(url, atcbDefaultTarget).focus();
-  }
+  atcb_open_cal_url(urlParts.join('&'));
 }
 
 // FUNCTION TO GENERATE THE MICROSOFT TEAMS URL
@@ -304,7 +292,11 @@ function atcb_generate_msteams(data) {
   }
   // We also push the UID. It has no real effect, but at least becomes part of the url that way
   urlParts.push('uid=' + encodeURIComponent(data.uid));
-  const url = baseUrl + urlParts.join('&');
+  atcb_open_cal_url(urlParts.join('&'));
+}
+
+// FUNCTION TO OPEN THE URL
+function atcb_open_cal_url(url) {
   if (atcb_secure_url(url)) {
     // eslint-disable-next-line security/detect-non-literal-fs-filename
     window.open(url, atcbDefaultTarget).focus();
