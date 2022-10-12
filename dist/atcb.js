@@ -888,603 +888,602 @@ function tzlib_get_offset(tzName, isoDate, isoTime) {
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 function tzlib_get_timezones(jsonType = false) {
   const tzlibZoneNames = [
-  "Africa/Abidjan",
-  "Africa/Accra",
-  "Africa/Addis_Ababa",
-  "Africa/Algiers",
-  "Africa/Asmara",
-  "Africa/Asmera",
-  "Africa/Bamako",
-  "Africa/Bangui",
-  "Africa/Banjul",
-  "Africa/Bissau",
-  "Africa/Blantyre",
-  "Africa/Brazzaville",
-  "Africa/Bujumbura",
-  "Africa/Cairo",
-  "Africa/Casablanca",
-  "Africa/Ceuta",
-  "Africa/Conakry",
-  "Africa/Dakar",
-  "Africa/Dar_es_Salaam",
-  "Africa/Djibouti",
-  "Africa/Douala",
-  "Africa/El_Aaiun",
-  "Africa/Freetown",
-  "Africa/Gaborone",
-  "Africa/Harare",
-  "Africa/Johannesburg",
-  "Africa/Juba",
-  "Africa/Kampala",
-  "Africa/Khartoum",
-  "Africa/Kigali",
-  "Africa/Kinshasa",
-  "Africa/Lagos",
-  "Africa/Libreville",
-  "Africa/Lome",
-  "Africa/Luanda",
-  "Africa/Lubumbashi",
-  "Africa/Lusaka",
-  "Africa/Malabo",
-  "Africa/Maputo",
-  "Africa/Maseru",
-  "Africa/Mbabane",
-  "Africa/Mogadishu",
-  "Africa/Monrovia",
-  "Africa/Nairobi",
-  "Africa/Ndjamena",
-  "Africa/Niamey",
-  "Africa/Nouakchott",
-  "Africa/Ouagadougou",
-  "Africa/Porto-Novo",
-  "Africa/Sao_Tome",
-  "Africa/Timbuktu",
-  "Africa/Tripoli",
-  "Africa/Tunis",
-  "Africa/Windhoek",
-  "America/Adak",
-  "America/Anchorage",
-  "America/Anguilla",
-  "America/Antigua",
-  "America/Araguaina",
-  "America/Argentina/Buenos_Aires",
-  "America/Argentina/Catamarca",
-  "America/Argentina/ComodRivadavia",
-  "America/Argentina/Cordoba",
-  "America/Argentina/Jujuy",
-  "America/Argentina/La_Rioja",
-  "America/Argentina/Mendoza",
-  "America/Argentina/Rio_Gallegos",
-  "America/Argentina/Salta",
-  "America/Argentina/San_Juan",
-  "America/Argentina/San_Luis",
-  "America/Argentina/Tucuman",
-  "America/Argentina/Ushuaia",
-  "America/Aruba",
-  "America/Asuncion",
-  "America/Atikokan",
-  "America/Atka",
-  "America/Bahia_Banderas",
-  "America/Bahia",
-  "America/Barbados",
-  "America/Belem",
-  "America/Belize",
-  "America/Blanc-Sablon",
-  "America/Boa_Vista",
-  "America/Bogota",
-  "America/Boise",
-  "America/Buenos_Aires",
-  "America/Cambridge_Bay",
-  "America/Campo_Grande",
-  "America/Cancun",
-  "America/Caracas",
-  "America/Catamarca",
-  "America/Cayenne",
-  "America/Cayman",
-  "America/Chicago",
-  "America/Chihuahua",
-  "America/Coral_Harbour",
-  "America/Cordoba",
-  "America/Costa_Rica",
-  "America/Creston",
-  "America/Cuiaba",
-  "America/Curacao",
-  "America/Danmarkshavn",
-  "America/Dawson_Creek",
-  "America/Dawson",
-  "America/Denver",
-  "America/Detroit",
-  "America/Dominica",
-  "America/Edmonton",
-  "America/Eirunepe",
-  "America/El_Salvador",
-  "America/Ensenada",
-  "America/Fort_Nelson",
-  "America/Fort_Wayne",
-  "America/Fortaleza",
-  "America/Glace_Bay",
-  "America/Godthab",
-  "America/Goose_Bay",
-  "America/Grand_Turk",
-  "America/Grenada",
-  "America/Guadeloupe",
-  "America/Guatemala",
-  "America/Guayaquil",
-  "America/Guyana",
-  "America/Halifax",
-  "America/Havana",
-  "America/Hermosillo",
-  "America/Indiana/Indianapolis",
-  "America/Indiana/Knox",
-  "America/Indiana/Marengo",
-  "America/Indiana/Petersburg",
-  "America/Indiana/Tell_City",
-  "America/Indiana/Vevay",
-  "America/Indiana/Vincennes",
-  "America/Indiana/Winamac",
-  "America/Indianapolis",
-  "America/Inuvik",
-  "America/Iqaluit",
-  "America/Jamaica",
-  "America/Jujuy",
-  "America/Juneau",
-  "America/Kentucky/Louisville",
-  "America/Kentucky/Monticello",
-  "America/Knox_IN",
-  "America/Kralendijk",
-  "America/La_Paz",
-  "America/Lima",
-  "America/Los_Angeles",
-  "America/Louisville",
-  "America/Lower_Princes",
-  "America/Maceio",
-  "America/Managua",
-  "America/Manaus",
-  "America/Marigot",
-  "America/Martinique",
-  "America/Matamoros",
-  "America/Mazatlan",
-  "America/Mendoza",
-  "America/Menominee",
-  "America/Merida",
-  "America/Metlakatla",
-  "America/Mexico_City",
-  "America/Miquelon",
-  "America/Moncton",
-  "America/Monterrey",
-  "America/Montevideo",
-  "America/Montreal",
-  "America/Montserrat",
-  "America/Nassau",
-  "America/New_York",
-  "America/Nipigon",
-  "America/Nome",
-  "America/Noronha",
-  "America/North_Dakota/Beulah",
-  "America/North_Dakota/Center",
-  "America/North_Dakota/New_Salem",
-  "America/Nuuk",
-  "America/Ojinaga",
-  "America/Panama",
-  "America/Pangnirtung",
-  "America/Paramaribo",
-  "America/Phoenix",
-  "America/Port_of_Spain",
-  "America/Port-au-Prince",
-  "America/Porto_Acre",
-  "America/Porto_Velho",
-  "America/Puerto_Rico",
-  "America/Punta_Arenas",
-  "America/Rainy_River",
-  "America/Rankin_Inlet",
-  "America/Recife",
-  "America/Regina",
-  "America/Resolute",
-  "America/Rio_Branco",
-  "America/Rosario",
-  "America/Santa_Isabel",
-  "America/Santarem",
-  "America/Santiago",
-  "America/Santo_Domingo",
-  "America/Sao_Paulo",
-  "America/Scoresbysund",
-  "America/Shiprock",
-  "America/Sitka",
-  "America/St_Barthelemy",
-  "America/St_Johns",
-  "America/St_Kitts",
-  "America/St_Lucia",
-  "America/St_Thomas",
-  "America/St_Vincent",
-  "America/Swift_Current",
-  "America/Tegucigalpa",
-  "America/Thule",
-  "America/Thunder_Bay",
-  "America/Tijuana",
-  "America/Toronto",
-  "America/Tortola",
-  "America/Vancouver",
-  "America/Virgin",
-  "America/Whitehorse",
-  "America/Winnipeg",
-  "America/Yakutat",
-  "America/Yellowknife",
-  "Antarctica/Casey",
-  "Antarctica/Davis",
-  "Antarctica/DumontDUrville",
-  "Antarctica/Macquarie",
-  "Antarctica/Mawson",
-  "Antarctica/McMurdo",
-  "Antarctica/Palmer",
-  "Antarctica/Rothera",
-  "Antarctica/South_Pole",
-  "Antarctica/Syowa",
-  "Antarctica/Troll",
-  "Antarctica/Vostok",
-  "Arctic/Longyearbyen",
-  "Asia/Aden",
-  "Asia/Almaty",
-  "Asia/Amman",
-  "Asia/Anadyr",
-  "Asia/Aqtau",
-  "Asia/Aqtobe",
-  "Asia/Ashgabat",
-  "Asia/Ashkhabad",
-  "Asia/Atyrau",
-  "Asia/Baghdad",
-  "Asia/Bahrain",
-  "Asia/Baku",
-  "Asia/Bangkok",
-  "Asia/Barnaul",
-  "Asia/Beirut",
-  "Asia/Bishkek",
-  "Asia/Brunei",
-  "Asia/Calcutta",
-  "Asia/Chita",
-  "Asia/Choibalsan",
-  "Asia/Chongqing",
-  "Asia/Chungking",
-  "Asia/Colombo",
-  "Asia/Dacca",
-  "Asia/Damascus",
-  "Asia/Dhaka",
-  "Asia/Dili",
-  "Asia/Dubai",
-  "Asia/Dushanbe",
-  "Asia/Famagusta",
-  "Asia/Gaza",
-  "Asia/Harbin",
-  "Asia/Hebron",
-  "Asia/Ho_Chi_Minh",
-  "Asia/Hong_Kong",
-  "Asia/Hovd",
-  "Asia/Irkutsk",
-  "Asia/Istanbul",
-  "Asia/Jakarta",
-  "Asia/Jayapura",
-  "Asia/Jerusalem",
-  "Asia/Kabul",
-  "Asia/Kamchatka",
-  "Asia/Karachi",
-  "Asia/Kashgar",
-  "Asia/Kathmandu",
-  "Asia/Katmandu",
-  "Asia/Khandyga",
-  "Asia/Kolkata",
-  "Asia/Krasnoyarsk",
-  "Asia/Kuala_Lumpur",
-  "Asia/Kuching",
-  "Asia/Kuwait",
-  "Asia/Macao",
-  "Asia/Macau",
-  "Asia/Magadan",
-  "Asia/Makassar",
-  "Asia/Manila",
-  "Asia/Muscat",
-  "Asia/Nicosia",
-  "Asia/Novokuznetsk",
-  "Asia/Novosibirsk",
-  "Asia/Omsk",
-  "Asia/Oral",
-  "Asia/Phnom_Penh",
-  "Asia/Pontianak",
-  "Asia/Pyongyang",
-  "Asia/Qatar",
-  "Asia/Qostanay",
-  "Asia/Qyzylorda",
-  "Asia/Rangoon",
-  "Asia/Riyadh",
-  "Asia/Saigon",
-  "Asia/Sakhalin",
-  "Asia/Samarkand",
-  "Asia/Seoul",
-  "Asia/Shanghai",
-  "Asia/Singapore",
-  "Asia/Srednekolymsk",
-  "Asia/Taipei",
-  "Asia/Tashkent",
-  "Asia/Tbilisi",
-  "Asia/Tehran",
-  "Asia/Tel_Aviv",
-  "Asia/Thimbu",
-  "Asia/Thimphu",
-  "Asia/Tokyo",
-  "Asia/Tomsk",
-  "Asia/Ujung_Pandang",
-  "Asia/Ulaanbaatar",
-  "Asia/Ulan_Bator",
-  "Asia/Urumqi",
-  "Asia/Ust-Nera",
-  "Asia/Vientiane",
-  "Asia/Vladivostok",
-  "Asia/Yakutsk",
-  "Asia/Yangon",
-  "Asia/Yekaterinburg",
-  "Asia/Yerevan",
-  "Atlantic/Azores",
-  "Atlantic/Bermuda",
-  "Atlantic/Canary",
-  "Atlantic/Cape_Verde",
-  "Atlantic/Faeroe",
-  "Atlantic/Faroe",
-  "Atlantic/Jan_Mayen",
-  "Atlantic/Madeira",
-  "Atlantic/Reykjavik",
-  "Atlantic/South_Georgia",
-  "Atlantic/St_Helena",
-  "Atlantic/Stanley",
-  "Australia/ACT",
-  "Australia/Adelaide",
-  "Australia/Brisbane",
-  "Australia/Broken_Hill",
-  "Australia/Canberra",
-  "Australia/Currie",
-  "Australia/Darwin",
-  "Australia/Eucla",
-  "Australia/Hobart",
-  "Australia/LHI",
-  "Australia/Lindeman",
-  "Australia/Lord_Howe",
-  "Australia/Melbourne",
-  "Australia/North",
-  "Australia/NSW",
-  "Australia/Perth",
-  "Australia/Queensland",
-  "Australia/South",
-  "Australia/Sydney",
-  "Australia/Tasmania",
-  "Australia/Victoria",
-  "Australia/West",
-  "Australia/Yancowinna",
-  "Brazil/Acre",
-  "Brazil/DeNoronha",
-  "Brazil/East",
-  "Brazil/West",
-  "Canada/Atlantic",
-  "Canada/Central",
-  "Canada/Eastern",
-  "Canada/Mountain",
-  "Canada/Newfoundland",
-  "Canada/Pacific",
-  "Canada/Saskatchewan",
-  "Canada/Yukon",
-  "CET",
-  "Chile/Continental",
-  "Chile/EasterIsland",
-  "CST6CDT",
-  "Cuba",
-  "EET",
-  "Egypt",
-  "Eire",
-  "EST",
-  "EST5EDT",
-  "Etc/GMT-0",
-  "Etc/GMT-1",
-  "Etc/GMT-10",
-  "Etc/GMT-11",
-  "Etc/GMT-12",
-  "Etc/GMT-13",
-  "Etc/GMT-14",
-  "Etc/GMT-2",
-  "Etc/GMT-3",
-  "Etc/GMT-4",
-  "Etc/GMT-5",
-  "Etc/GMT-6",
-  "Etc/GMT-7",
-  "Etc/GMT-8",
-  "Etc/GMT-9",
-  "Etc/GMT",
-  "Etc/GMT+0",
-  "Etc/GMT+1",
-  "Etc/GMT+10",
-  "Etc/GMT+11",
-  "Etc/GMT+12",
-  "Etc/GMT+2",
-  "Etc/GMT+3",
-  "Etc/GMT+4",
-  "Etc/GMT+5",
-  "Etc/GMT+6",
-  "Etc/GMT+7",
-  "Etc/GMT+8",
-  "Etc/GMT+9",
-  "Etc/GMT0",
-  "Etc/Greenwich",
-  "Etc/UCT",
-  "Etc/Universal",
-  "Etc/UTC",
-  "Etc/Zulu",
-  "Europe/Amsterdam",
-  "Europe/Andorra",
-  "Europe/Astrakhan",
-  "Europe/Athens",
-  "Europe/Belfast",
-  "Europe/Belgrade",
-  "Europe/Berlin",
-  "Europe/Bratislava",
-  "Europe/Brussels",
-  "Europe/Bucharest",
-  "Europe/Budapest",
-  "Europe/Busingen",
-  "Europe/Chisinau",
-  "Europe/Copenhagen",
-  "Europe/Dublin",
-  "Europe/Gibraltar",
-  "Europe/Guernsey",
-  "Europe/Helsinki",
-  "Europe/Isle_of_Man",
-  "Europe/Istanbul",
-  "Europe/Jersey",
-  "Europe/Kaliningrad",
-  "Europe/Kiev",
-  "Europe/Kirov",
-  "Europe/Kyiv",
-  "Europe/Lisbon",
-  "Europe/Ljubljana",
-  "Europe/London",
-  "Europe/Luxembourg",
-  "Europe/Madrid",
-  "Europe/Malta",
-  "Europe/Mariehamn",
-  "Europe/Minsk",
-  "Europe/Monaco",
-  "Europe/Moscow",
-  "Europe/Nicosia",
-  "Europe/Oslo",
-  "Europe/Paris",
-  "Europe/Podgorica",
-  "Europe/Prague",
-  "Europe/Riga",
-  "Europe/Rome",
-  "Europe/Samara",
-  "Europe/San_Marino",
-  "Europe/Sarajevo",
-  "Europe/Saratov",
-  "Europe/Simferopol",
-  "Europe/Skopje",
-  "Europe/Sofia",
-  "Europe/Stockholm",
-  "Europe/Tallinn",
-  "Europe/Tirane",
-  "Europe/Tiraspol",
-  "Europe/Ulyanovsk",
-  "Europe/Uzhgorod",
-  "Europe/Vaduz",
-  "Europe/Vatican",
-  "Europe/Vienna",
-  "Europe/Vilnius",
-  "Europe/Volgograd",
-  "Europe/Warsaw",
-  "Europe/Zagreb",
-  "Europe/Zaporozhye",
-  "Europe/Zurich",
-  "GB-Eire",
-  "GB",
-  "GMT-0",
-  "GMT",
-  "GMT+0",
-  "GMT0",
-  "Greenwich",
-  "Hongkong",
-  "HST",
-  "Iceland",
-  "Indian/Antananarivo",
-  "Indian/Chagos",
-  "Indian/Christmas",
-  "Indian/Cocos",
-  "Indian/Comoro",
-  "Indian/Kerguelen",
-  "Indian/Mahe",
-  "Indian/Maldives",
-  "Indian/Mauritius",
-  "Indian/Mayotte",
-  "Indian/Reunion",
-  "Iran",
-  "Israel",
-  "Jamaica",
-  "Japan",
-  "Kwajalein",
-  "Libya",
-  "MET",
-  "Mexico/BajaNorte",
-  "Mexico/BajaSur",
-  "Mexico/General",
-  "MST",
-  "MST7MDT",
-  "Navajo",
-  "NZ-CHAT",
-  "NZ",
-  "Pacific/Apia",
-  "Pacific/Auckland",
-  "Pacific/Bougainville",
-  "Pacific/Chatham",
-  "Pacific/Chuuk",
-  "Pacific/Easter",
-  "Pacific/Efate",
-  "Pacific/Enderbury",
-  "Pacific/Fakaofo",
-  "Pacific/Fiji",
-  "Pacific/Funafuti",
-  "Pacific/Galapagos",
-  "Pacific/Gambier",
-  "Pacific/Guadalcanal",
-  "Pacific/Guam",
-  "Pacific/Honolulu",
-  "Pacific/Johnston",
-  "Pacific/Kanton",
-  "Pacific/Kiritimati",
-  "Pacific/Kosrae",
-  "Pacific/Kwajalein",
-  "Pacific/Majuro",
-  "Pacific/Marquesas",
-  "Pacific/Midway",
-  "Pacific/Nauru",
-  "Pacific/Niue",
-  "Pacific/Norfolk",
-  "Pacific/Noumea",
-  "Pacific/Pago_Pago",
-  "Pacific/Palau",
-  "Pacific/Pitcairn",
-  "Pacific/Pohnpei",
-  "Pacific/Ponape",
-  "Pacific/Port_Moresby",
-  "Pacific/Rarotonga",
-  "Pacific/Saipan",
-  "Pacific/Samoa",
-  "Pacific/Tahiti",
-  "Pacific/Tarawa",
-  "Pacific/Tongatapu",
-  "Pacific/Truk",
-  "Pacific/Wake",
-  "Pacific/Wallis",
-  "Pacific/Yap",
-  "Poland",
-  "Portugal",
-  "PRC",
-  "PST8PDT",
-  "ROC",
-  "ROK",
-  "Singapore",
-  "Turkey",
-  "UCT",
-  "Universal",
-  "US/Alaska",
-  "US/Aleutian",
-  "US/Arizona",
-  "US/Central",
-  "US/East-Indiana",
-  "US/Eastern",
-  "US/Hawaii",
-  "US/Indiana-Starke",
-  "US/Michigan",
-  "US/Mountain",
-  "US/Pacific",
-  "US/Samoa",
-  "UTC",
-  "W-SU",
-  "WET",
-  "Zulu"
-]
-;
+    'Africa/Abidjan',
+    'Africa/Accra',
+    'Africa/Addis_Ababa',
+    'Africa/Algiers',
+    'Africa/Asmara',
+    'Africa/Asmera',
+    'Africa/Bamako',
+    'Africa/Bangui',
+    'Africa/Banjul',
+    'Africa/Bissau',
+    'Africa/Blantyre',
+    'Africa/Brazzaville',
+    'Africa/Bujumbura',
+    'Africa/Cairo',
+    'Africa/Casablanca',
+    'Africa/Ceuta',
+    'Africa/Conakry',
+    'Africa/Dakar',
+    'Africa/Dar_es_Salaam',
+    'Africa/Djibouti',
+    'Africa/Douala',
+    'Africa/El_Aaiun',
+    'Africa/Freetown',
+    'Africa/Gaborone',
+    'Africa/Harare',
+    'Africa/Johannesburg',
+    'Africa/Juba',
+    'Africa/Kampala',
+    'Africa/Khartoum',
+    'Africa/Kigali',
+    'Africa/Kinshasa',
+    'Africa/Lagos',
+    'Africa/Libreville',
+    'Africa/Lome',
+    'Africa/Luanda',
+    'Africa/Lubumbashi',
+    'Africa/Lusaka',
+    'Africa/Malabo',
+    'Africa/Maputo',
+    'Africa/Maseru',
+    'Africa/Mbabane',
+    'Africa/Mogadishu',
+    'Africa/Monrovia',
+    'Africa/Nairobi',
+    'Africa/Ndjamena',
+    'Africa/Niamey',
+    'Africa/Nouakchott',
+    'Africa/Ouagadougou',
+    'Africa/Porto-Novo',
+    'Africa/Sao_Tome',
+    'Africa/Timbuktu',
+    'Africa/Tripoli',
+    'Africa/Tunis',
+    'Africa/Windhoek',
+    'America/Adak',
+    'America/Anchorage',
+    'America/Anguilla',
+    'America/Antigua',
+    'America/Araguaina',
+    'America/Argentina/Buenos_Aires',
+    'America/Argentina/Catamarca',
+    'America/Argentina/ComodRivadavia',
+    'America/Argentina/Cordoba',
+    'America/Argentina/Jujuy',
+    'America/Argentina/La_Rioja',
+    'America/Argentina/Mendoza',
+    'America/Argentina/Rio_Gallegos',
+    'America/Argentina/Salta',
+    'America/Argentina/San_Juan',
+    'America/Argentina/San_Luis',
+    'America/Argentina/Tucuman',
+    'America/Argentina/Ushuaia',
+    'America/Aruba',
+    'America/Asuncion',
+    'America/Atikokan',
+    'America/Atka',
+    'America/Bahia_Banderas',
+    'America/Bahia',
+    'America/Barbados',
+    'America/Belem',
+    'America/Belize',
+    'America/Blanc-Sablon',
+    'America/Boa_Vista',
+    'America/Bogota',
+    'America/Boise',
+    'America/Buenos_Aires',
+    'America/Cambridge_Bay',
+    'America/Campo_Grande',
+    'America/Cancun',
+    'America/Caracas',
+    'America/Catamarca',
+    'America/Cayenne',
+    'America/Cayman',
+    'America/Chicago',
+    'America/Chihuahua',
+    'America/Coral_Harbour',
+    'America/Cordoba',
+    'America/Costa_Rica',
+    'America/Creston',
+    'America/Cuiaba',
+    'America/Curacao',
+    'America/Danmarkshavn',
+    'America/Dawson_Creek',
+    'America/Dawson',
+    'America/Denver',
+    'America/Detroit',
+    'America/Dominica',
+    'America/Edmonton',
+    'America/Eirunepe',
+    'America/El_Salvador',
+    'America/Ensenada',
+    'America/Fort_Nelson',
+    'America/Fort_Wayne',
+    'America/Fortaleza',
+    'America/Glace_Bay',
+    'America/Godthab',
+    'America/Goose_Bay',
+    'America/Grand_Turk',
+    'America/Grenada',
+    'America/Guadeloupe',
+    'America/Guatemala',
+    'America/Guayaquil',
+    'America/Guyana',
+    'America/Halifax',
+    'America/Havana',
+    'America/Hermosillo',
+    'America/Indiana/Indianapolis',
+    'America/Indiana/Knox',
+    'America/Indiana/Marengo',
+    'America/Indiana/Petersburg',
+    'America/Indiana/Tell_City',
+    'America/Indiana/Vevay',
+    'America/Indiana/Vincennes',
+    'America/Indiana/Winamac',
+    'America/Indianapolis',
+    'America/Inuvik',
+    'America/Iqaluit',
+    'America/Jamaica',
+    'America/Jujuy',
+    'America/Juneau',
+    'America/Kentucky/Louisville',
+    'America/Kentucky/Monticello',
+    'America/Knox_IN',
+    'America/Kralendijk',
+    'America/La_Paz',
+    'America/Lima',
+    'America/Los_Angeles',
+    'America/Louisville',
+    'America/Lower_Princes',
+    'America/Maceio',
+    'America/Managua',
+    'America/Manaus',
+    'America/Marigot',
+    'America/Martinique',
+    'America/Matamoros',
+    'America/Mazatlan',
+    'America/Mendoza',
+    'America/Menominee',
+    'America/Merida',
+    'America/Metlakatla',
+    'America/Mexico_City',
+    'America/Miquelon',
+    'America/Moncton',
+    'America/Monterrey',
+    'America/Montevideo',
+    'America/Montreal',
+    'America/Montserrat',
+    'America/Nassau',
+    'America/New_York',
+    'America/Nipigon',
+    'America/Nome',
+    'America/Noronha',
+    'America/North_Dakota/Beulah',
+    'America/North_Dakota/Center',
+    'America/North_Dakota/New_Salem',
+    'America/Nuuk',
+    'America/Ojinaga',
+    'America/Panama',
+    'America/Pangnirtung',
+    'America/Paramaribo',
+    'America/Phoenix',
+    'America/Port_of_Spain',
+    'America/Port-au-Prince',
+    'America/Porto_Acre',
+    'America/Porto_Velho',
+    'America/Puerto_Rico',
+    'America/Punta_Arenas',
+    'America/Rainy_River',
+    'America/Rankin_Inlet',
+    'America/Recife',
+    'America/Regina',
+    'America/Resolute',
+    'America/Rio_Branco',
+    'America/Rosario',
+    'America/Santa_Isabel',
+    'America/Santarem',
+    'America/Santiago',
+    'America/Santo_Domingo',
+    'America/Sao_Paulo',
+    'America/Scoresbysund',
+    'America/Shiprock',
+    'America/Sitka',
+    'America/St_Barthelemy',
+    'America/St_Johns',
+    'America/St_Kitts',
+    'America/St_Lucia',
+    'America/St_Thomas',
+    'America/St_Vincent',
+    'America/Swift_Current',
+    'America/Tegucigalpa',
+    'America/Thule',
+    'America/Thunder_Bay',
+    'America/Tijuana',
+    'America/Toronto',
+    'America/Tortola',
+    'America/Vancouver',
+    'America/Virgin',
+    'America/Whitehorse',
+    'America/Winnipeg',
+    'America/Yakutat',
+    'America/Yellowknife',
+    'Antarctica/Casey',
+    'Antarctica/Davis',
+    'Antarctica/DumontDUrville',
+    'Antarctica/Macquarie',
+    'Antarctica/Mawson',
+    'Antarctica/McMurdo',
+    'Antarctica/Palmer',
+    'Antarctica/Rothera',
+    'Antarctica/South_Pole',
+    'Antarctica/Syowa',
+    'Antarctica/Troll',
+    'Antarctica/Vostok',
+    'Arctic/Longyearbyen',
+    'Asia/Aden',
+    'Asia/Almaty',
+    'Asia/Amman',
+    'Asia/Anadyr',
+    'Asia/Aqtau',
+    'Asia/Aqtobe',
+    'Asia/Ashgabat',
+    'Asia/Ashkhabad',
+    'Asia/Atyrau',
+    'Asia/Baghdad',
+    'Asia/Bahrain',
+    'Asia/Baku',
+    'Asia/Bangkok',
+    'Asia/Barnaul',
+    'Asia/Beirut',
+    'Asia/Bishkek',
+    'Asia/Brunei',
+    'Asia/Calcutta',
+    'Asia/Chita',
+    'Asia/Choibalsan',
+    'Asia/Chongqing',
+    'Asia/Chungking',
+    'Asia/Colombo',
+    'Asia/Dacca',
+    'Asia/Damascus',
+    'Asia/Dhaka',
+    'Asia/Dili',
+    'Asia/Dubai',
+    'Asia/Dushanbe',
+    'Asia/Famagusta',
+    'Asia/Gaza',
+    'Asia/Harbin',
+    'Asia/Hebron',
+    'Asia/Ho_Chi_Minh',
+    'Asia/Hong_Kong',
+    'Asia/Hovd',
+    'Asia/Irkutsk',
+    'Asia/Istanbul',
+    'Asia/Jakarta',
+    'Asia/Jayapura',
+    'Asia/Jerusalem',
+    'Asia/Kabul',
+    'Asia/Kamchatka',
+    'Asia/Karachi',
+    'Asia/Kashgar',
+    'Asia/Kathmandu',
+    'Asia/Katmandu',
+    'Asia/Khandyga',
+    'Asia/Kolkata',
+    'Asia/Krasnoyarsk',
+    'Asia/Kuala_Lumpur',
+    'Asia/Kuching',
+    'Asia/Kuwait',
+    'Asia/Macao',
+    'Asia/Macau',
+    'Asia/Magadan',
+    'Asia/Makassar',
+    'Asia/Manila',
+    'Asia/Muscat',
+    'Asia/Nicosia',
+    'Asia/Novokuznetsk',
+    'Asia/Novosibirsk',
+    'Asia/Omsk',
+    'Asia/Oral',
+    'Asia/Phnom_Penh',
+    'Asia/Pontianak',
+    'Asia/Pyongyang',
+    'Asia/Qatar',
+    'Asia/Qostanay',
+    'Asia/Qyzylorda',
+    'Asia/Rangoon',
+    'Asia/Riyadh',
+    'Asia/Saigon',
+    'Asia/Sakhalin',
+    'Asia/Samarkand',
+    'Asia/Seoul',
+    'Asia/Shanghai',
+    'Asia/Singapore',
+    'Asia/Srednekolymsk',
+    'Asia/Taipei',
+    'Asia/Tashkent',
+    'Asia/Tbilisi',
+    'Asia/Tehran',
+    'Asia/Tel_Aviv',
+    'Asia/Thimbu',
+    'Asia/Thimphu',
+    'Asia/Tokyo',
+    'Asia/Tomsk',
+    'Asia/Ujung_Pandang',
+    'Asia/Ulaanbaatar',
+    'Asia/Ulan_Bator',
+    'Asia/Urumqi',
+    'Asia/Ust-Nera',
+    'Asia/Vientiane',
+    'Asia/Vladivostok',
+    'Asia/Yakutsk',
+    'Asia/Yangon',
+    'Asia/Yekaterinburg',
+    'Asia/Yerevan',
+    'Atlantic/Azores',
+    'Atlantic/Bermuda',
+    'Atlantic/Canary',
+    'Atlantic/Cape_Verde',
+    'Atlantic/Faeroe',
+    'Atlantic/Faroe',
+    'Atlantic/Jan_Mayen',
+    'Atlantic/Madeira',
+    'Atlantic/Reykjavik',
+    'Atlantic/South_Georgia',
+    'Atlantic/St_Helena',
+    'Atlantic/Stanley',
+    'Australia/ACT',
+    'Australia/Adelaide',
+    'Australia/Brisbane',
+    'Australia/Broken_Hill',
+    'Australia/Canberra',
+    'Australia/Currie',
+    'Australia/Darwin',
+    'Australia/Eucla',
+    'Australia/Hobart',
+    'Australia/LHI',
+    'Australia/Lindeman',
+    'Australia/Lord_Howe',
+    'Australia/Melbourne',
+    'Australia/North',
+    'Australia/NSW',
+    'Australia/Perth',
+    'Australia/Queensland',
+    'Australia/South',
+    'Australia/Sydney',
+    'Australia/Tasmania',
+    'Australia/Victoria',
+    'Australia/West',
+    'Australia/Yancowinna',
+    'Brazil/Acre',
+    'Brazil/DeNoronha',
+    'Brazil/East',
+    'Brazil/West',
+    'Canada/Atlantic',
+    'Canada/Central',
+    'Canada/Eastern',
+    'Canada/Mountain',
+    'Canada/Newfoundland',
+    'Canada/Pacific',
+    'Canada/Saskatchewan',
+    'Canada/Yukon',
+    'CET',
+    'Chile/Continental',
+    'Chile/EasterIsland',
+    'CST6CDT',
+    'Cuba',
+    'EET',
+    'Egypt',
+    'Eire',
+    'EST',
+    'EST5EDT',
+    'Etc/GMT-0',
+    'Etc/GMT-1',
+    'Etc/GMT-10',
+    'Etc/GMT-11',
+    'Etc/GMT-12',
+    'Etc/GMT-13',
+    'Etc/GMT-14',
+    'Etc/GMT-2',
+    'Etc/GMT-3',
+    'Etc/GMT-4',
+    'Etc/GMT-5',
+    'Etc/GMT-6',
+    'Etc/GMT-7',
+    'Etc/GMT-8',
+    'Etc/GMT-9',
+    'Etc/GMT',
+    'Etc/GMT+0',
+    'Etc/GMT+1',
+    'Etc/GMT+10',
+    'Etc/GMT+11',
+    'Etc/GMT+12',
+    'Etc/GMT+2',
+    'Etc/GMT+3',
+    'Etc/GMT+4',
+    'Etc/GMT+5',
+    'Etc/GMT+6',
+    'Etc/GMT+7',
+    'Etc/GMT+8',
+    'Etc/GMT+9',
+    'Etc/GMT0',
+    'Etc/Greenwich',
+    'Etc/UCT',
+    'Etc/Universal',
+    'Etc/UTC',
+    'Etc/Zulu',
+    'Europe/Amsterdam',
+    'Europe/Andorra',
+    'Europe/Astrakhan',
+    'Europe/Athens',
+    'Europe/Belfast',
+    'Europe/Belgrade',
+    'Europe/Berlin',
+    'Europe/Bratislava',
+    'Europe/Brussels',
+    'Europe/Bucharest',
+    'Europe/Budapest',
+    'Europe/Busingen',
+    'Europe/Chisinau',
+    'Europe/Copenhagen',
+    'Europe/Dublin',
+    'Europe/Gibraltar',
+    'Europe/Guernsey',
+    'Europe/Helsinki',
+    'Europe/Isle_of_Man',
+    'Europe/Istanbul',
+    'Europe/Jersey',
+    'Europe/Kaliningrad',
+    'Europe/Kiev',
+    'Europe/Kirov',
+    'Europe/Kyiv',
+    'Europe/Lisbon',
+    'Europe/Ljubljana',
+    'Europe/London',
+    'Europe/Luxembourg',
+    'Europe/Madrid',
+    'Europe/Malta',
+    'Europe/Mariehamn',
+    'Europe/Minsk',
+    'Europe/Monaco',
+    'Europe/Moscow',
+    'Europe/Nicosia',
+    'Europe/Oslo',
+    'Europe/Paris',
+    'Europe/Podgorica',
+    'Europe/Prague',
+    'Europe/Riga',
+    'Europe/Rome',
+    'Europe/Samara',
+    'Europe/San_Marino',
+    'Europe/Sarajevo',
+    'Europe/Saratov',
+    'Europe/Simferopol',
+    'Europe/Skopje',
+    'Europe/Sofia',
+    'Europe/Stockholm',
+    'Europe/Tallinn',
+    'Europe/Tirane',
+    'Europe/Tiraspol',
+    'Europe/Ulyanovsk',
+    'Europe/Uzhgorod',
+    'Europe/Vaduz',
+    'Europe/Vatican',
+    'Europe/Vienna',
+    'Europe/Vilnius',
+    'Europe/Volgograd',
+    'Europe/Warsaw',
+    'Europe/Zagreb',
+    'Europe/Zaporozhye',
+    'Europe/Zurich',
+    'GB-Eire',
+    'GB',
+    'GMT-0',
+    'GMT',
+    'GMT+0',
+    'GMT0',
+    'Greenwich',
+    'Hongkong',
+    'HST',
+    'Iceland',
+    'Indian/Antananarivo',
+    'Indian/Chagos',
+    'Indian/Christmas',
+    'Indian/Cocos',
+    'Indian/Comoro',
+    'Indian/Kerguelen',
+    'Indian/Mahe',
+    'Indian/Maldives',
+    'Indian/Mauritius',
+    'Indian/Mayotte',
+    'Indian/Reunion',
+    'Iran',
+    'Israel',
+    'Jamaica',
+    'Japan',
+    'Kwajalein',
+    'Libya',
+    'MET',
+    'Mexico/BajaNorte',
+    'Mexico/BajaSur',
+    'Mexico/General',
+    'MST',
+    'MST7MDT',
+    'Navajo',
+    'NZ-CHAT',
+    'NZ',
+    'Pacific/Apia',
+    'Pacific/Auckland',
+    'Pacific/Bougainville',
+    'Pacific/Chatham',
+    'Pacific/Chuuk',
+    'Pacific/Easter',
+    'Pacific/Efate',
+    'Pacific/Enderbury',
+    'Pacific/Fakaofo',
+    'Pacific/Fiji',
+    'Pacific/Funafuti',
+    'Pacific/Galapagos',
+    'Pacific/Gambier',
+    'Pacific/Guadalcanal',
+    'Pacific/Guam',
+    'Pacific/Honolulu',
+    'Pacific/Johnston',
+    'Pacific/Kanton',
+    'Pacific/Kiritimati',
+    'Pacific/Kosrae',
+    'Pacific/Kwajalein',
+    'Pacific/Majuro',
+    'Pacific/Marquesas',
+    'Pacific/Midway',
+    'Pacific/Nauru',
+    'Pacific/Niue',
+    'Pacific/Norfolk',
+    'Pacific/Noumea',
+    'Pacific/Pago_Pago',
+    'Pacific/Palau',
+    'Pacific/Pitcairn',
+    'Pacific/Pohnpei',
+    'Pacific/Ponape',
+    'Pacific/Port_Moresby',
+    'Pacific/Rarotonga',
+    'Pacific/Saipan',
+    'Pacific/Samoa',
+    'Pacific/Tahiti',
+    'Pacific/Tarawa',
+    'Pacific/Tongatapu',
+    'Pacific/Truk',
+    'Pacific/Wake',
+    'Pacific/Wallis',
+    'Pacific/Yap',
+    'Poland',
+    'Portugal',
+    'PRC',
+    'PST8PDT',
+    'ROC',
+    'ROK',
+    'Singapore',
+    'Turkey',
+    'UCT',
+    'Universal',
+    'US/Alaska',
+    'US/Aleutian',
+    'US/Arizona',
+    'US/Central',
+    'US/East-Indiana',
+    'US/Eastern',
+    'US/Hawaii',
+    'US/Indiana-Starke',
+    'US/Michigan',
+    'US/Mountain',
+    'US/Pacific',
+    'US/Samoa',
+    'UTC',
+    'W-SU',
+    'WET',
+    'Zulu',
+  ];
   if (jsonType) {
     return JSON.stringify(tzlibZoneNames);
   }
@@ -1613,7 +1612,6 @@ const atcbIcon = {
     '<span class="atcb-icon-checkmark"><svg viewBox="0 0 122.88 122.87" xmlns="http://www.w3.org/2000/svg"><path fill:#39B54A; d="m33.666 50.046s6.0748-0.59297 17.413 4.2983c9.3883 4.5751 11.891 8.3955 11.891 8.3955 5.38-8.65 11.11-16.6 17.16-23.9 10.412-12.578 24.613-22.448 24.613-22.448l14.257-0.012228s-19.308 19.294-32.483 38.51c-13.175 19.216-22.877 41.21-22.877 41.21s-9.3948-18.164-14.53-24.53-10.77-11.59-17.52-16.22z" fill="#45b555"/><path fill:#3C3C3C; d="m61.44 0c9.53 0 18.55 2.17 26.61 6.04-3.3 2.61-6.36 5.11-9.21 7.53-5.43-1.97-11.28-3.05-17.39-3.05-14.06 0-26.79 5.7-36 14.92s-14.92 21.94-14.92 36 5.7 26.78 14.92 36 21.94 14.92 36 14.92 26.79-5.7 36-14.92c9.22-9.22 14.91-21.94 14.91-36 0-3.34-0.32-6.62-0.94-9.78 2.64-3.44 5.35-6.88 8.11-10.28 2.17 6.28 3.35 13.04 3.35 20.06 0 16.96-6.88 32.33-17.99 43.44-11.12 11.12-26.48 18-43.44 18s-32.32-6.88-43.44-18c-11.13-11.12-18.01-26.48-18.01-43.44 0-16.97 6.88-32.33 17.99-43.44 11.12-11.12 26.48-18 43.45-18z"/></svg></span>',
 };
 
-
 function atcb_patch_config(configData) {
   if (configData.event != null) {
     Object.keys(configData.event).forEach((key) => {
@@ -1640,7 +1638,7 @@ function atcb_patch_config(configData) {
 function atcb_decorate_data(data) {
   data = atcb_decorate_data_rrule(data);
   data = atcb_decorate_data_options(data);
-  data = atcb_decorate_data_rich_data(data);
+  data.richData = atcb_decorate_data_rich_data(data);
   data = atcb_decorate_data_style(data);
   data = atcb_decorate_data_i18n(data);
   data = atcb_decorate_data_dates(data);
@@ -1750,10 +1748,10 @@ function atcb_decorate_data_options(data) {
   return data;
 }
 function atcb_decorate_data_rich_data(data) {
-  if (data.richData == null || data.richData == '') {
-    data.richData = true;
+  if (data.richData != null && data.richData == false) {
+    return false;
   }
-  return data;
+  return true;
 }
 function atcb_decorate_data_style(data) {
   if (data.listStyle == null || data.listStyle == '') {
@@ -1912,6 +1910,11 @@ function atcb_decorate_data_extend(data) {
     if (data.dates[`${i}`].organizer == null && data.organizer != null) {
       data.dates[`${i}`].organizer = data.organizer;
     }
+    if (data.dates[`${i}`].availability == null && data.availability != null) {
+      data.dates[`${i}`].availability = data.availability.toLowerCase();
+    } else if (data.dates[`${i}`].availability != null) {
+      data.dates[`${i}`].availability = data.dates[`${i}`].availability.toLowerCase();
+    }
     if (data.dates[`${i}`].uid == null) {
       data.dates[`${i}`].uid = atcb_generate_uuid();
     }
@@ -1980,7 +1983,6 @@ function atcb_date_calculation(dateString) {
   );
 }
 
-
 function atcb_check_required(data) {
   if (data.options == null || data.options.length < 1) {
     console.error('Add to Calendar Button generation failed: no valid options set');
@@ -2028,37 +2030,68 @@ function atcb_check_required(data) {
   }
 }
 function atcb_validate(data) {
+  const msgPrefix = 'Add to Calendar Button generation (' + data.identifier + ')';
+  if (!atcb_validate_prefix(data)) return false;
+  if (!atcb_validate_icsFile(data, msgPrefix)) return false;
+  if (!atcb_validate_created(data, msgPrefix)) return false;
+  if (!atcb_validate_updated(data, msgPrefix)) return false;
+  if (!atcb_validate_options(data, msgPrefix)) return false;
+  if (!atcb_validate_date_blocks(data, msgPrefix)) return false;
+  if (!atcb_validate_rrule(data, msgPrefix)) return false;
+  return true;
+}
+function atcb_validate_prefix(data) {
   if (data.identifier != null && data.identifier != '') {
     if (!/^[\w-]+$/.test(data.identifier)) {
       data.identifier = '';
       console.warn('Add to Calendar Button generation: identifier invalid - using auto numbers instead');
     }
   }
-  const msgPrefix = 'Add to Calendar Button generation (' + data.identifier + ')';
-  if (data.icsFile != null && data.icsFile != '') {
+  return true;
+}
+function atcb_validate_icsFile(data, msgPrefix, i = '', msgSuffix = '') {
+  const icsFileStr = (function () {
+    if (i != '' && data.dates[`${i}`].icsFile != null) {
+      return data.dates[`${i}`].icsFile;
+    }
+    if (i == '' && data.icsFile != null) {
+      return data.icsFile;
+    }
+    return '';
+  })();
+  if (icsFileStr != '') {
     if (
-      !atcb_secure_url(data.icsFile, false) ||
+      !atcb_secure_url(icsFileStr, false) ||
       !/\.ics$/.test(data.icsFile) ||
-      !data.icsFile.startsWith('https://')
+      !icsFileStr.startsWith('https://')
     ) {
-      console.error(msgPrefix + ' failed: explicit ics file path not valid');
+      console.error(msgPrefix + ' failed: explicit ics file path not valid' + msgSuffix);
       return false;
     }
   }
+  return true;
+}
+function atcb_validate_created(data, msgPrefix) {
   if (!/^\d{8}T\d{6}Z$/.test(data.created)) {
     console.error(
       msgPrefix +
-        ': created date format not valid. Needs to be a full ISO-8601 UTC date and time string, formatted YYYYMMDDTHHMMSSZ'
+        ' failed: created date format not valid. Needs to be a full ISO-8601 UTC date and time string, formatted YYYYMMDDTHHMMSSZ'
     );
     return false;
   }
+  return true;
+}
+function atcb_validate_updated(data, msgPrefix) {
   if (!/^\d{8}T\d{6}Z$/.test(data.updated)) {
     console.error(
       msgPrefix +
-        ': updated date format not valid. Needs to be a full ISO-8601 UTC date and time string, formatted YYYYMMDDTHHMMSSZ'
+        ' failed: updated date format not valid. Needs to be a full ISO-8601 UTC date and time string, formatted YYYYMMDDTHHMMSSZ'
     );
     return false;
   }
+  return true;
+}
+function atcb_validate_options(data, msgPrefix) {
   if (
     !data.options.every(function (option) {
       if (!atcbOptions.includes(option)) {
@@ -2070,170 +2103,216 @@ function atcb_validate(data) {
   ) {
     return false;
   }
+  return true;
+}
+function atcb_validate_date_blocks(data, msgPrefix) {
   for (let i = 0; i < data.dates.length; i++) {
-    const datesBlock = (function () {
+    const msgSuffix = (function () {
       if (data.dates.length == 1) {
         return '';
       } else {
         return ' [dates array object #' + (i + 1) + '/' + data.dates.length + '] ';
       }
     })();
+    if (!atcb_validate_icsFile(data, msgPrefix, i, msgSuffix)) return false;
+    if (!atcb_validate_status(data, msgPrefix, i, msgSuffix)) return false;
+    if (!atcb_validate_availability(data, msgPrefix, i, msgSuffix)) return false;
+    if (!atcb_validate_organizer(data, msgPrefix, i, msgSuffix)) return false;
+    if (!atcb_validate_uid(data, msgPrefix, i, msgSuffix)) return false;
+    if (!atcb_validate_sequence(data, msgPrefix, i, msgSuffix)) return false;
+    if (!atcb_validate_timezone(data, msgPrefix, i, msgSuffix)) return false;
+    if (!atcb_validate_datetime(data, msgPrefix, i, msgSuffix)) return false;
+  }
+  return true;
+}
+function atcb_validate_status(data, msgPrefix, i, msgSuffix) {
+  if (
+    data.dates[`${i}`].status != 'TENTATIVE' &&
+    data.dates[`${i}`].status != 'CONFIRMED' &&
+    data.dates[`${i}`].status != 'CANCELLED'
+  ) {
+    console.error(
+      msgPrefix + ' failed: event status needs to be TENTATIVE, CONFIRMED, or CANCELLED' + msgSuffix
+    );
+    return false;
+  }
+  return true;
+}
+function atcb_validate_availability(data, msgPrefix, i, msgSuffix) {
+  if (
+    data.dates[`${i}`].availability != null &&
+    data.dates[`${i}`].availability != '' &&
+    data.dates[`${i}`].availability != 'free' &&
+    data.dates[`${i}`].availability != 'busy'
+  ) {
+    console.error(msgPrefix + ' failed: event availability needs to be "free" or "busy"' + msgSuffix);
+    return false;
+  }
+  return true;
+}
+function atcb_validate_organizer(data, msgPrefix, i, msgSuffix) {
+  if (data.dates[`${i}`].organizer != null && data.dates[`${i}`].organizer != '') {
+    const organizerParts = data.dates[`${i}`].organizer.split('|');
     if (
-      data.dates[`${i}`].status != 'TENTATIVE' &&
-      data.dates[`${i}`].status != 'CONFIRMED' &&
-      data.dates[`${i}`].status != 'CANCELLED'
-    ) {
-      console.error(msgPrefix + ': event status needs to be TENTATIVE, CONFIRMED, or CANCELLED' + datesBlock);
-      return false;
-    }
-    if (data.dates[`${i}`].organizer != null && data.dates[`${i}`].organizer != '') {
-      const organizerParts = data.dates[`${i}`].organizer.split('|');
-      if (
-        organizerParts.length != 2 ||
-        organizerParts[0].length > 50 ||
-        organizerParts[1].length > 80 ||
-        !atcb_validEmail(organizerParts[1])
-      ) {
-        console.error(
-          msgPrefix +
-            ' failed: organizer needs to match the schema "NAME|EMAIL" with a valid email address' +
-            datesBlock
-        );
-        return false;
-      }
-    }
-    if (!/^(\w|-){1,254}$/.test(data.dates[`${i}`].uid)) {
-      console.error(
-        msgPrefix +
-          ': UID not valid. May only contain alpha, digits, and dashes; and be less than 255 characters' +
-          datesBlock
-      );
-      return false;
-    }
-    if (
-      !/^[0-9a-f]{8}-[0-9a-f]{4}-[0-5][0-9a-f]{3}-[089ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(
-        data.dates[`${i}`].uid
-      )
-    ) {
-      console.warn(
-        msgPrefix +
-          ': UID is strictly recommended to be a hex-encoded random Universally Unique Identifier (UUID)!' +
-          datesBlock
-      );
-    }
-    if (!/^\d+$/.test(data.dates[`${i}`].sequence)) {
-      console.log(msgPrefix + ': sequence needs to be a number. Used the default 0 instead' + datesBlock);
-      data.dates[`${i}`].sequence = 0;
-    }
-    if (data.dates[`${i}`].timeZone != null && data.dates[`${i}`].timeZone != '') {
-      const validTimeZones = tzlib_get_timezones();
-      if (!validTimeZones.includes(data.dates[`${i}`].timeZone)) {
-        console.error(msgPrefix + ' failed: invalid time zone given' + datesBlock);
-        return false;
-      }
-    }
-    const dates = ['startDate', 'endDate'];
-    const newDate = dates;
-    if (
-      !dates.every(function (date) {
-        if (data.dates[`${i}`][`${date}`].length !== 10) {
-          console.error(msgPrefix + ' failed: date misspelled [-> YYYY-MM-DD]' + datesBlock);
-          return false;
-        }
-        const dateParts = data.dates[`${i}`][`${date}`].split('-');
-        if (dateParts.length < 3 || dateParts.length > 3) {
-          console.error(
-            msgPrefix +
-              ' failed: date misspelled [' +
-              date +
-              ': ' +
-              data.dates[`${i}`][`${date}`] +
-              ']' +
-              datesBlock
-          );
-          return false;
-        }
-        newDate[`${date}`] = new Date(dateParts[0], dateParts[1] - 1, dateParts[2]);
-        return true;
-      })
-    ) {
-      return false;
-    }
-    const times = ['startTime', 'endTime'];
-    if (
-      !times.every(function (time) {
-        if (data.dates[`${i}`][`${time}`] != null) {
-          if (data.dates[`${i}`][`${time}`].length !== 5) {
-            console.error(msgPrefix + ' failed: time misspelled [-> HH:MM]' + datesBlock);
-            return false;
-          }
-          const timeParts = data.dates[`${i}`][`${time}`].split(':');
-          if (timeParts.length < 2 || timeParts.length > 2) {
-            console.error(
-              msgPrefix +
-                ' failed: time misspelled [' +
-                time +
-                ': ' +
-                data.dates[`${i}`][`${time}`] +
-                ']' +
-                datesBlock
-            );
-            return false;
-          }
-          if (timeParts[0] > 23) {
-            console.error(
-              msgPrefix +
-                ' failed: time misspelled - hours number too high [' +
-                time +
-                ': ' +
-                timeParts[0] +
-                ']' +
-                datesBlock
-            );
-            return false;
-          }
-          if (timeParts[1] > 59) {
-            console.error(
-              msgPrefix +
-                ' failed: time misspelled - minutes number too high [' +
-                time +
-                ': ' +
-                timeParts[1] +
-                ']' +
-                datesBlock
-            );
-            return false;
-          }
-          if (time == 'startTime') {
-            newDate.startDate = new Date(
-              newDate.startDate.getTime() + timeParts[0] * 3600000 + timeParts[1] * 60000
-            );
-          }
-          if (time == 'endTime') {
-            newDate.endDate = new Date(
-              newDate.endDate.getTime() + timeParts[0] * 3600000 + timeParts[1] * 60000
-            );
-          }
-        }
-        return true;
-      })
-    ) {
-      return false;
-    }
-    if (
-      (data.dates[`${i}`].startTime != null && data.dates[`${i}`].endTime == null) ||
-      (data.dates[`${i}`].startTime == null && data.dates[`${i}`].endTime != null)
+      organizerParts.length != 2 ||
+      organizerParts[0].length > 50 ||
+      organizerParts[1].length > 80 ||
+      !atcb_validEmail(organizerParts[1])
     ) {
       console.error(
-        msgPrefix + ' failed: if you set a starting time, you also need to define an end time' + datesBlock
+        msgPrefix +
+          ' failed: organizer needs to match the schema "NAME|EMAIL" with a valid email address' +
+          msgSuffix
       );
-      return false;
-    }
-    if (newDate.endDate < newDate.startDate) {
-      console.error(msgPrefix + ' failed: end date before start date' + datesBlock);
       return false;
     }
   }
+  return true;
+}
+function atcb_validate_uid(data, msgPrefix, i, msgSuffix) {
+  if (!/^(\w|-){1,254}$/.test(data.dates[`${i}`].uid)) {
+    console.error(
+      msgPrefix +
+        ' failed: UID not valid. May only contain alpha, digits, and dashes; and be less than 255 characters' +
+        msgSuffix
+    );
+    return false;
+  }
+  if (
+    !/^[0-9a-f]{8}-[0-9a-f]{4}-[0-5][0-9a-f]{3}-[089ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(
+      data.dates[`${i}`].uid
+    )
+  ) {
+    console.warn(
+      msgPrefix +
+        ' failed: UID is strictly recommended to be a hex-encoded random Universally Unique Identifier (UUID)!' +
+        msgSuffix
+    );
+  }
+  return true;
+}
+function atcb_validate_sequence(data, msgPrefix, i, msgSuffix) {
+  if (!/^\d+$/.test(data.dates[`${i}`].sequence)) {
+    console.log(msgPrefix + ': sequence needs to be a number. Used the default 0 instead' + msgSuffix);
+    data.dates[`${i}`].sequence = 0;
+  }
+  return true;
+}
+function atcb_validate_timezone(data, msgPrefix, i, msgSuffix) {
+  if (data.dates[`${i}`].timeZone != null && data.dates[`${i}`].timeZone != '') {
+    const validTimeZones = tzlib_get_timezones();
+    if (!validTimeZones.includes(data.dates[`${i}`].timeZone)) {
+      console.error(msgPrefix + ' failed: invalid time zone given' + msgSuffix);
+      return false;
+    }
+  }
+  return true;
+}
+function atcb_validate_datetime(data, msgPrefix, i, msgSuffix) {
+  const dates = ['startDate', 'endDate'];
+  const newDate = dates;
+  if (
+    !dates.every(function (date) {
+      if (data.dates[`${i}`][`${date}`].length !== 10) {
+        console.error(msgPrefix + ' failed: date misspelled [-> YYYY-MM-DD]' + msgSuffix);
+        return false;
+      }
+      const dateParts = data.dates[`${i}`][`${date}`].split('-');
+      if (dateParts.length < 3 || dateParts.length > 3) {
+        console.error(
+          msgPrefix +
+            ' failed: date misspelled [' +
+            date +
+            ': ' +
+            data.dates[`${i}`][`${date}`] +
+            ']' +
+            msgSuffix
+        );
+        return false;
+      }
+      newDate[`${date}`] = new Date(dateParts[0], dateParts[1] - 1, dateParts[2]);
+      return true;
+    })
+  ) {
+    return false;
+  }
+  const times = ['startTime', 'endTime'];
+  if (
+    !times.every(function (time) {
+      if (data.dates[`${i}`][`${time}`] != null) {
+        if (data.dates[`${i}`][`${time}`].length !== 5) {
+          console.error(msgPrefix + ' failed: time misspelled [-> HH:MM]' + msgSuffix);
+          return false;
+        }
+        const timeParts = data.dates[`${i}`][`${time}`].split(':');
+        if (timeParts.length < 2 || timeParts.length > 2) {
+          console.error(
+            msgPrefix +
+              ' failed: time misspelled [' +
+              time +
+              ': ' +
+              data.dates[`${i}`][`${time}`] +
+              ']' +
+              msgSuffix
+          );
+          return false;
+        }
+        if (timeParts[0] > 23) {
+          console.error(
+            msgPrefix +
+              ' failed: time misspelled - hours number too high [' +
+              time +
+              ': ' +
+              timeParts[0] +
+              ']' +
+              msgSuffix
+          );
+          return false;
+        }
+        if (timeParts[1] > 59) {
+          console.error(
+            msgPrefix +
+              ' failed: time misspelled - minutes number too high [' +
+              time +
+              ': ' +
+              timeParts[1] +
+              ']' +
+              msgSuffix
+          );
+          return false;
+        }
+        if (time == 'startTime') {
+          newDate.startDate = new Date(
+            newDate.startDate.getTime() + timeParts[0] * 3600000 + timeParts[1] * 60000
+          );
+        }
+        if (time == 'endTime') {
+          newDate.endDate = new Date(
+            newDate.endDate.getTime() + timeParts[0] * 3600000 + timeParts[1] * 60000
+          );
+        }
+      }
+      return true;
+    })
+  ) {
+    return false;
+  }
+  if (
+    (data.dates[`${i}`].startTime != null && data.dates[`${i}`].endTime == null) ||
+    (data.dates[`${i}`].startTime == null && data.dates[`${i}`].endTime != null)
+  ) {
+    console.error(
+      msgPrefix + ' failed: if you set a starting time, you also need to define an end time' + msgSuffix
+    );
+    return false;
+  }
+  if (newDate.endDate < newDate.startDate) {
+    console.error(msgPrefix + ' failed: end date before start date' + msgSuffix);
+    return false;
+  }
+  return true;
+}
+function atcb_validate_rrule(data, msgPrefix) {
   if (data.recurrence != null && data.recurrence != '' && data.dates.length > 1) {
     console.error(msgPrefix + ' failed: RRULE and multi-date set at the same time');
     return false;
@@ -2297,7 +2376,6 @@ function atcb_validate(data) {
   return true;
 }
 
-
 function atcb_toggle(action, data = '', button = '', keyboardTrigger = false, generatedButton = false) {
   if (action == 'open') {
     atcb_open(data, button, keyboardTrigger, generatedButton);
@@ -2329,7 +2407,7 @@ function atcb_open(data, button, keyboardTrigger = false, generatedButton = fals
       }
     }
     if (generatedButton) {
-      list.classList.add('atcb-generated-button'); 
+      list.classList.add('atcb-generated-button');
     }
   } else {
     list.classList.add('atcb-modal');
@@ -2418,7 +2496,6 @@ function atcb_close(keyboardTrigger = false) {
       .forEach((el) => el.remove());
   }
 }
-
 
 function atcb_generate_label(data, parent, type, icon = false, text = '', oneOption = false) {
   switch (type) {
@@ -3095,7 +3172,6 @@ function atcb_generate_date_button(data, parent, subEvent = 'all') {
   parent.appendChild(btnCheck);
 }
 
-
 function atcb_generate_links(type, data, subEvent = 'all', keyboardTrigger = false, multiDateModal = false) {
   if (subEvent != 'all') {
     subEvent = parseInt(subEvent) - 1;
@@ -3230,6 +3306,15 @@ function atcb_generate_google(data) {
   if (data.recurrence != null && data.recurrence != '') {
     urlParts.push('recur=' + encodeURIComponent(data.recurrence));
   }
+  if (data.availability != null && data.availability != '') {
+    const availabilityPart = (function () {
+      if (data.availability == 'free') {
+        return 'crm=AVAILABLE&trp=false';
+      }
+      return 'crm=BUSY&trp=true';
+    })();
+    urlParts.push(availabilityPart);
+  }
   urlParts.push('uid=' + encodeURIComponent(data.uid));
   const url = urlParts.join('&');
   if (atcb_secure_url(url)) {
@@ -3309,7 +3394,7 @@ function atcb_generate_msteams(data) {
   if (data.location != null && data.location != '') {
     locationString = encodeURIComponent(data.location);
     urlParts.push('location=' + locationString);
-    locationString += ' // '; 
+    locationString += ' // ';
   }
   if (data.descriptionHtmlFree != null && data.descriptionHtmlFree != '') {
     urlParts.push('content=' + locationString + encodeURIComponent(data.descriptionHtmlFree));
@@ -3326,9 +3411,19 @@ function atcb_generate_ical(data, subEvent = 'all', keyboardTrigger = false) {
     subEvent = parseInt(subEvent);
   }
   const filename = atcb_determine_ical_filename(data, subEvent);
-  if (data.icsFile != null && data.icsFile != '' && (!isiOS() || !isWebView())) {
-    atcb_save_file(data.icsFile, filename);
-    return;
+  if (!isiOS() || !isWebView()) {
+    if (
+      subEvent != 'all' &&
+      data.dates[`${subEvent}`].icsFile != null &&
+      data.dates[`${subEvent}`].icsFile != ''
+    ) {
+      atcb_save_file(data.dates[`${subEvent}`].icsFile, filename);
+      return;
+    }
+    if (data.icsFile != null && data.icsFile != '') {
+      atcb_save_file(data.icsFile, filename);
+      return;
+    }
   }
   const now = new Date();
   const ics_lines = ['BEGIN:VCALENDAR', 'VERSION:2.0'];
@@ -3380,7 +3475,7 @@ function atcb_generate_ical(data, subEvent = 'all', keyboardTrigger = false) {
     ics_lines.push('DTSTAMP:' + atcb_format_datetime(now, 'clean', true));
     ics_lines.push('DTSTART' + timeAddon + ':' + formattedDate.start);
     ics_lines.push('DTEND' + timeAddon + ':' + formattedDate.end);
-    ics_lines.push('SUMMARY:' + data.dates[`${i}`].name.replace(/.{65}/g, '$&' + '\r\n ')); 
+    ics_lines.push('SUMMARY:' + data.dates[`${i}`].name.replace(/.{65}/g, '$&' + '\r\n '));
     if (data.dates[`${i}`].descriptionHtmlFree != null && data.dates[`${i}`].descriptionHtmlFree != '') {
       ics_lines.push(
         'DESCRIPTION:' +
@@ -3404,6 +3499,15 @@ function atcb_generate_ical(data, subEvent = 'all', keyboardTrigger = false) {
     if (data.recurrence != null && data.recurrence != '') {
       ics_lines.push(data.recurrence);
     }
+    if (data.dates[`${i}`].availability != null && data.dates[`${i}`].availability != '') {
+      const transpVal = (function () {
+        if (data.dates[`${i}`].availability == 'free') {
+          return 'TRANSPARENT';
+        }
+        return 'OPAQUE';
+      })();
+      ics_lines.push('TRANSP:' + transpVal);
+    }
     ics_lines.push('SEQUENCE:' + data.dates[`${i}`].sequence);
     ics_lines.push('STATUS:' + data.dates[`${i}`].status);
     ics_lines.push('CREATED:' + data.created);
@@ -3411,7 +3515,10 @@ function atcb_generate_ical(data, subEvent = 'all', keyboardTrigger = false) {
     ics_lines.push('END:VEVENT');
   }
   ics_lines.push('END:VCALENDAR');
-  const dataUrl = (function () {
+  const dataUrl = (function (i) {
+    if (data.dates[`${i}`].icsFile != null && data.dates[`${i}`].icsFile != '') {
+      return data.dates[`${i}`].icsFile;
+    }
     if (data.icsFile != null && data.icsFile != '') {
       return data.icsFile;
     }
@@ -3424,22 +3531,22 @@ function atcb_generate_ical(data, subEvent = 'all', keyboardTrigger = false) {
   atcb_save_file(dataUrl, filename);
 }
 function atcb_determine_ical_filename(data, subEvent) {
-  const filenameSlug = (function () {
+  const filenameSuffix = (function () {
     if (subEvent != 'all' && subEvent != 0) {
       return '-' + parseInt(subEvent) + 1;
     }
     return '';
   })();
   if (data.iCalFileName != null && data.iCalFileName != '') {
-    return data.iCalFileName + filenameSlug;
+    return data.iCalFileName + filenameSuffix;
   }
   if (data.icsFile != null && data.icsFile != '') {
     const filenamePart = data.icsFile.split('/').pop().split('.')[0];
     if (filenamePart != '') {
-      return filenamePart + filenameSlug;
+      return filenamePart + filenameSuffix;
     }
   }
-  return 'event-to-save-in-my-calendar' + filenameSlug;
+  return 'event-to-save-in-my-calendar' + filenameSuffix;
 }
 function atcb_ical_copy_note(dataUrl, data, keyboardTrigger) {
   atcb_copy_to_clipboard(dataUrl);
@@ -3473,7 +3580,6 @@ function atcb_ical_copy_note(dataUrl, data, keyboardTrigger) {
     keyboardTrigger
   );
 }
-
 
 function atcb_saved_hook() {
   console.log('Event saved. Looking forward to it!');
@@ -3815,7 +3921,6 @@ function atcb_throttle(func, delay = 10) {
     return result;
   };
 }
-
 
 const i18nStrings = {
   en: {
@@ -4290,7 +4395,6 @@ function atcb_translate(identifier, language) {
   return identifier;
 }
 
-
 let atcbInitialInit = false;
 function atcb_init() {
   if (!atcbInitialInit) {
@@ -4448,7 +4552,6 @@ function atcb_set_global_event_listener() {
     })
   );
 }
-
 
 /*! START INIT */
 if (isBrowser()) {

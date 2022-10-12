@@ -188,6 +188,15 @@ function atcb_generate_google(data) {
   if (data.recurrence != null && data.recurrence != '') {
     urlParts.push('recur=' + encodeURIComponent(data.recurrence));
   }
+  if (data.availability != null && data.availability != '') {
+    const availabilityPart = (function () {
+      if (data.availability == 'free') {
+        return 'crm=AVAILABLE&trp=false';
+      }
+      return 'crm=BUSY&trp=true';
+    })();
+    urlParts.push(availabilityPart);
+  }
   // We also push the UID. It has no real effect, but at least becomes part of the url that way
   urlParts.push('uid=' + encodeURIComponent(data.uid));
   const url = urlParts.join('&');
@@ -311,9 +320,19 @@ function atcb_generate_ical(data, subEvent = 'all', keyboardTrigger = false) {
   // define the right filename
   const filename = atcb_determine_ical_filename(data, subEvent);
   // check for a given explicit file (not if iOS and WebView - will be catched further down)
-  if (data.icsFile != null && data.icsFile != '' && (!isiOS() || !isWebView())) {
-    atcb_save_file(data.icsFile, filename);
-    return;
+  if (!isiOS() || !isWebView()) {
+    if (
+      subEvent != 'all' &&
+      data.dates[`${subEvent}`].icsFile != null &&
+      data.dates[`${subEvent}`].icsFile != ''
+    ) {
+      atcb_save_file(data.dates[`${subEvent}`].icsFile, filename);
+      return;
+    }
+    if (data.icsFile != null && data.icsFile != '') {
+      atcb_save_file(data.icsFile, filename);
+      return;
+    }
   }
   // otherwise, generate one on the fly
   const now = new Date();
@@ -395,6 +414,15 @@ function atcb_generate_ical(data, subEvent = 'all', keyboardTrigger = false) {
     if (data.recurrence != null && data.recurrence != '') {
       ics_lines.push(data.recurrence);
     }
+    if (data.dates[`${i}`].availability != null && data.dates[`${i}`].availability != '') {
+      const transpVal = (function () {
+        if (data.dates[`${i}`].availability == 'free') {
+          return 'TRANSPARENT';
+        }
+        return 'OPAQUE';
+      })();
+      ics_lines.push('TRANSP:' + transpVal);
+    }
     ics_lines.push('SEQUENCE:' + data.dates[`${i}`].sequence);
     ics_lines.push('STATUS:' + data.dates[`${i}`].status);
     ics_lines.push('CREATED:' + data.created);
@@ -402,8 +430,11 @@ function atcb_generate_ical(data, subEvent = 'all', keyboardTrigger = false) {
     ics_lines.push('END:VEVENT');
   }
   ics_lines.push('END:VCALENDAR');
-  const dataUrl = (function () {
+  const dataUrl = (function (i) {
     // if we got to this point with an explicitely given iCal file, we are on an iOS device within an in-app browser (WebView). In this case, we use this as dataUrl
+    if (data.dates[`${i}`].icsFile != null && data.dates[`${i}`].icsFile != '') {
+      return data.dates[`${i}`].icsFile;
+    }
     if (data.icsFile != null && data.icsFile != '') {
       return data.icsFile;
     }
@@ -421,22 +452,22 @@ function atcb_generate_ical(data, subEvent = 'all', keyboardTrigger = false) {
 }
 
 function atcb_determine_ical_filename(data, subEvent) {
-  const filenameSlug = (function () {
+  const filenameSuffix = (function () {
     if (subEvent != 'all' && subEvent != 0) {
       return '-' + parseInt(subEvent) + 1;
     }
     return '';
   })();
   if (data.iCalFileName != null && data.iCalFileName != '') {
-    return data.iCalFileName + filenameSlug;
+    return data.iCalFileName + filenameSuffix;
   }
   if (data.icsFile != null && data.icsFile != '') {
     const filenamePart = data.icsFile.split('/').pop().split('.')[0];
     if (filenamePart != '') {
-      return filenamePart + filenameSlug;
+      return filenamePart + filenameSuffix;
     }
   }
-  return 'event-to-save-in-my-calendar' + filenameSlug;
+  return 'event-to-save-in-my-calendar' + filenameSuffix;
 }
 
 function atcb_ical_copy_note(dataUrl, data, keyboardTrigger) {

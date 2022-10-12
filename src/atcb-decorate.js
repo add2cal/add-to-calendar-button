@@ -48,7 +48,7 @@ function atcb_patch_config(configData) {
 function atcb_decorate_data(data) {
   data = atcb_decorate_data_rrule(data);
   data = atcb_decorate_data_options(data);
-  data = atcb_decorate_data_rich_data(data);
+  data.richData = atcb_decorate_data_rich_data(data);
   data = atcb_decorate_data_style(data);
   data = atcb_decorate_data_i18n(data);
   data = atcb_decorate_data_dates(data);
@@ -178,10 +178,10 @@ function atcb_decorate_data_options(data) {
 
 // set rich data / schema.org
 function atcb_decorate_data_rich_data(data) {
-  if (data.richData == null || data.richData == '') {
-    data.richData = true;
+  if (data.richData != null && data.richData == false) {
+    return false;
   }
-  return data;
+  return true;
 }
 
 function atcb_decorate_data_style(data) {
@@ -370,6 +370,11 @@ function atcb_decorate_data_extend(data) {
     }
     if (data.dates[`${i}`].organizer == null && data.organizer != null) {
       data.dates[`${i}`].organizer = data.organizer;
+    }
+    if (data.dates[`${i}`].availability == null && data.availability != null) {
+      data.dates[`${i}`].availability = data.availability.toLowerCase();
+    } else if (data.dates[`${i}`].availability != null) {
+      data.dates[`${i}`].availability = data.dates[`${i}`].availability.toLowerCase();
     }
     // for the uid, we do not copy from the top level, but rather generate it per event
     if (data.dates[`${i}`].uid == null) {

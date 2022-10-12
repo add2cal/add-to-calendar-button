@@ -38,6 +38,7 @@ declare module 'add-to-calendar-button' {
       recurrence_byMonth?: string;
       recurrence_byMonthDay?: string;
       recurrence_weekstart?: string;
+      availability?: 'busy' | 'free';
       created?: string;
       updated?: string;
       identifier?: string;
