@@ -9,7 +9,7 @@
  * Project: https://github.com/add2cal/add-to-calendar-button
  * License: Apache-2.0 with “Commons Clause” License Condition v1.0
  * Note:    DO NOT REMOVE THE COPYRIGHT NOTICE ABOVE!
- * 
+ *
  * Including the awesome PrismJS by Lea Verou (licensed MIT)
  *
  */

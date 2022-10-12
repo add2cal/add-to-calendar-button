@@ -1,5 +1,9 @@
 # ⚡ Changelog (without patches)
 
+## Version 2
+
+- v2.0 : multi-date functionality, subscription support, style updates, code refactoring, now a web component
+
 ## Version 1
 
 - v1.17 : new license (Apache-2.0 with “Commons Clause”)

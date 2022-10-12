@@ -182,8 +182,8 @@
             {
               "name":"Reminder to star the add to calendar button repo",
               "description":"Check out the maybe easiest way to include add to calendar buttons to your website:\n&#8594; [url]https://github.com/add2cal/add-to-calendar-button|Click here![/url]",
-              "startDate":"2022-01-14",
-              "endDate":"2022-01-18",
+              "startDate":"2023-01-14",
+              "endDate":"2023-01-16",
               "location":"World Wide Web",
               "options":[
                 "Apple",
@@ -207,8 +207,8 @@
 {
   "name":"Reminder to star the add to calendar button repo",
   "description":"Check out the maybe easiest way to include add to calendar buttons to your website:\n&#8594; [url]https://github.com/add2cal/add-to-calendar-button|Click here![/url]",
-  "startDate":"2022-01-14",
-  "endDate":"2022-01-18",
+  "startDate":"2023-01-14",
+  "endDate":"2023-01-16",
   "location":"World Wide Web",
   "options":[
     "Apple",
@@ -241,8 +241,8 @@
             {
               "name":"Reminder to star the add to calendar button repo",
               "description":"Check out the maybe easiest way to include add to calendar buttons to your website at:<br>&#8594; [url]https://github.com/add2cal/add-to-calendar-button|Click here![/url]",
-              "startDate":"2022-01-14",
-              "endDate":"2022-01-18",
+              "startDate":"2023-01-14",
+              "endDate":"2023-01-18",
               "location":"World Wide Web",
               "label":"Hit me to save!",
               "options":[
@@ -265,8 +265,8 @@
 {
   "name":"Reminder to star the add to calendar button repo",
   "description":"Check out the maybe easiest way to include add to calendar buttons to your website at:&lt;br&gt;&#8594; [url]https://github.com/add2cal/add-to-calendar-button|Click here![/url]",
-  "startDate":"2022-01-14",
-  "endDate":"2022-01-18",
+  "startDate":"2023-01-14",
+  "endDate":"2023-01-18",
   "location":"World Wide Web",
   "label":"Hit me to save!",
   "options":[
@@ -407,8 +407,8 @@
             {
               "name":"Recurring reminder to star the add to calendar button repo",
               "description":"Check out the maybe easiest way to include add to calendar buttons to your website at:<br>&#8594; [url]https://github.com/add2cal/add-to-calendar-button[/url]",
-              "startDate":"2022-07-13",
-              "endDate":"2022-07-13",
+              "startDate":"2023-07-13",
+              "endDate":"2023-07-13",
               "startTime":"10:45",
               "endTime":"15:00",
               "location":"https://github.com/add2cal/add-to-calendar-button",
@@ -431,8 +431,8 @@
 {
   "name":"Recurring reminder to star the add to calendar button repo",
   "description":"Check out the maybe easiest way to include add to calendar buttons to your website at:&lt;br&gt;&#8594; [url]https://github.com/add2cal/add-to-calendar-button[/url]",
-  "startDate":"2022-07-13",
-  "endDate":"2022-07-13",
+  "startDate":"2023-07-13",
+  "endDate":"2023-07-13",
   "startTime":"10:45",
   "endTime":"15:00",
   "location":"https://github.com/add2cal/add-to-calendar-button",
@@ -452,7 +452,97 @@
 
       <hr>
 
-      <h3>Example 7: Bring-Your-Own Button</h3>
+      <h3>Example 7: Multi-Date Events</h3>
+      <p class="description">
+        Events can also have multiple dates, which are not recurring. For example, a workshop, consisting of 2 parts.<br>
+        You define those parts by placing them as separate objects in a dates array.<br>
+        Each part can have his own name, description, and location. If not given, a global one will be used (in the example, we use the location globally).<br>
+        Individual date and time information would be required - global ones will be ignored.<br>
+        <em>(Mind that in the example, we left out the endDate, since we do not want to span >1 day per date.)</em>
+      </p>
+      <div class="example">
+        <div class="example-left">
+
+          <!-- start of button code -->
+          <div class="atcb" style="display:none;">
+            {
+              "name":"Event Series",
+              "dates":[
+                {
+                  "name":"Event #1/3 to star the add to calendar button repo",
+                  "description":"This is the first part to check the calendar button repository:<br>&#8594; [url]https://github.com/add2cal/add-to-calendar-button[/url]",
+                  "startDate":"today+3",
+                  "startTime":"10:15",
+                  "endTime":"23:30"
+                },
+                {
+                  "name":"Event #3/3 to star the add to calendar button repo",
+                  "description":"This is the third part to check the calendar button repository:<br>&#8594; [url]https://github.com/add2cal/add-to-calendar-button[/url]",
+                  "startDate":"today+6",
+                  "startTime":"13:15",
+                  "endTime":"15:05"
+                },
+                {
+                  "name":"Event #2/3 to star the add to calendar button repo",
+                  "description":"This is the second part to check the calendar button repository:<br>&#8594; [url]https://github.com/add2cal/add-to-calendar-button[/url]",
+                  "startDate":"today+5",
+                  "startTime":"13:15",
+                  "endTime":"15:05"
+                }
+              ],
+              "location":"World Wide Web",
+              "options":[
+                "Apple",
+                "Google",
+                "iCal",
+                "Outlook.com",
+                "Yahoo"
+              ],
+              "timeZone":"Europe/London",
+              "iCalFileName":"Multi-Date-Event"
+            }
+          </div>
+          <!-- end of button code -->
+
+        </div>
+        <div class="example-right">
+<pre><code class="language-html">&lt;div class="atcb" style="display:none;"&gt;
+{
+  "name":"Event Series",
+  "dates":[
+    {
+      "name":"Event #1/2 to star the add to calendar button repo",
+      "description":"This is the first part to check the calendar button repository:<br>&#8594; [url]https://github.com/add2cal/add-to-calendar-button[/url]",
+      "startDate":"today+3",
+      "startTime":"10:15",
+      "endTime":"23:30"
+    },
+    {
+      "name":"Event #2/2 to star the add to calendar button repo",
+      "description":"This is the second part to check the calendar button repository:<br>&#8594; [url]https://github.com/add2cal/add-to-calendar-button[/url]",
+      "startDate":"today+5",
+      "startTime":"13:15",
+      "endTime":"15:05"
+    }
+  ],
+  "location":"World Wide Web",
+  "options":[
+    "Apple",
+    "Google",
+    "iCal",
+    "Outlook.com",
+    "Yahoo"
+  ],
+  "timeZone":"Europe/Berlin",
+  "iCalFileName":"Multi-Date-Event"
+}
+&lt;/div&gt;</code></pre>
+        </div>
+      </div>
+
+      <hr>
+
+      <h3>Example 8: Bring-Your-Own Button</h3>
       <p class="description">
         If you can't or don't want to use "atcb_init", you can use the "atcb_action" function and apply it to your own button.
       </p>
@@ -467,8 +557,8 @@
             const config = {
               name: "Reminder to star the add to calendar button repo",
               description: "Check out the maybe easiest way to include add to calendar buttons to your website at:<br>&#8594; [url]https://github.com/add2cal/add-to-calendar-button[/url]",
-              startDate: "2022-01-14",
-              endDate: "2022-08-18",
+              startDate: "2023-01-14",
+              endDate: "2023-08-18",
               options: ["Google", "iCal"],
               timeZone: "Europe/Berlin",
               trigger: "click",
@@ -486,8 +576,8 @@
   const config = {
     name: "Reminder to star the add to calendar button repo",
     description: "Check out the maybe easiest way to include add to calendar buttons to your website at:&lt;br&gt;&#8594; [url]https://github.com/add2cal/add-to-calendar-button[/url]",
-    startDate: "2022-01-14",
-    endDate: "2022-01-18",
+    startDate: "2023-01-14",
+    endDate: "2023-01-18",
     options: ["Google", "iCal"],
     timeZone: "Europe/Berlin",
     trigger: "click",
@@ -501,7 +591,7 @@
 
       <hr>
 
-      <h3>Example 8: Bring-Your-Own Anything</h3>
+      <h3>Example 9: Bring-Your-Own Anything</h3>
       <p class="description">
         When using "atcb_action", you don't need to use a button. A form, a link, an image — whatever element you want to trigger the dropdown, you can use it (though not all of them are good for accessibility).<br>
         If you don't provide a second argument, the dropdown list will appear as a modal in the middle of the viewport.<br>
@@ -526,8 +616,8 @@
                 e.preventDefault();
                 atcb_action({
                   name: e.currentTarget.elements.name.value,
-                  startDate: "2022-01-14",
-                  endDate: "2022-01-18",
+                  startDate: "2023-01-14",
+                  endDate: "2023-01-18",
                   options: ["Apple", "Google", "iCal", "Microsoft365", "Outlook.com", "MicrosoftTeams", "Yahoo"],
                   timeZone: "Europe/Berlin",
                   listStyle: "modal",
@@ -553,8 +643,8 @@
       e.preventDefault();
       atcb_action({
         name: e.currentTarget.elements.name.value,
-        startDate: "2022-01-14",
-        endDate: "2022-01-18",
+        startDate: "2023-01-14",
+        endDate: "2023-01-18",
         options: ["Apple", "Google", "iCal", "Microsoft365", "Outlook.com", "MicrosoftTeams", "Yahoo"],
         timeZone: "Europe/Berlin",
         listStyle: "modal",

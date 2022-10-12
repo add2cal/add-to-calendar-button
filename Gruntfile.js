@@ -1,7 +1,7 @@
 function prepareFinalFile(
   content,
-  stripImport = true,
-  stripAllImport = false,
+  stripAllImport = true,
+  stripAllExport = true,
   newExportPhrase = '',
   transformToCommonJS = false
 ) {
@@ -10,27 +10,27 @@ function prepareFinalFile(
     /^console\.log\('Add to Calendar TimeZones iCal Library loaded \(version ' \+ tzlibVersion \+ '\)'\);$/m,
     ''
   );
-  if (stripImport) {
-    // remove import statements, except for our TimeZones iCal Library
-    content = content.replace(/^import[\w\s{}\+-_,"`\/\\.]*'((?!timezones-ical-library).)*';$/gim, '');
-  }
   if (stripAllImport) {
     // remove all import statements
     content = content.replace(/^import[\w\s{}\+-_,'"`\/\\.]*';/gim, '');
+    // remove regular comments
+    content = content.replace(/(^|(?<=;\s))\s*\/\/(?!\seslint).*$/gm, '');
+    // remove empty lines
+    content = content.replace(/^\s*$(?:\r\n?|\n)/gm, '');
+  }
+  if (stripAllExport) {
+    // remove all export statements
+    content = content.replace(/^export {[\w\s-_,]*};/gim, '');
   }
   if (newExportPhrase != '') {
     // remove export statements
     content = content.replace(
-      /\/\/ START INIT[\s\S]*?\/\/ END INIT/g,
+      /^\/\*! START INIT \*\/[\s\S]*?\/\*! END INIT \*\/$/gm,
       `${newExportPhrase} { atcb_action, atcb_init };`
     );
   }
   if (transformToCommonJS) {
     content = content
-      .replace(
-        /^import[\w\s{}\+-_,"`\/\\.]*'timezones\-ical\-library';$/gim,
-        "// eslint-disable-next-line @typescript-eslint/no-var-requires\r\nconst tzlibActions = require('timezones-ical-library');"
-      )
       .replace(/tzlib_get_offset/gm, 'tzlibActions.tzlib_get_offset')
       .replace(/tzlib_get_ical_block/gm, 'tzlibActions.tzlib_get_ical_block')
       .replace(/tzlib_get_timezones/gm, 'tzlibActions.tzlib_get_timezones');
@@ -54,7 +54,7 @@ module.exports = function (grunt) {
       },
       js: {
         options: {
-          prefix: 'Version.=..',
+          prefix: 'Version(.=..|:.)',
         },
         src: ['src/*.js'],
       },
@@ -106,19 +106,66 @@ module.exports = function (grunt) {
     // for the npm version supporting CommonJS and ES Module (https://www.sensedeep.com/blog/posts/2021/how-to-create-single-source-npm-module.html)
     concat: {
       dist: {
-        src: ['node_modules/timezones-ical-library/dist/tzlib.js', 'src/atcb.js'],
+        src: [
+          'node_modules/timezones-ical-library/dist/tzlib.js',
+          'src/atcb-globals.js',
+          'src/atcb-decorate.js',
+          'src/atcb-validate.js',
+          'src/atcb-control.js',
+          'src/atcb-generate.js',
+          'src/atcb-links.js',
+          'src/atcb-util.js',
+          'src/atcb-i18n.js',
+          'src/atcb-init.js',
+          'src/atcb.js',
+        ],
         dest: 'dist/atcb.js',
-        options: { process: (content) => prepareFinalFile(content, false, true) },
+        options: {
+          stripBanners: true,
+          process: (content) => prepareFinalFile(content),
+        },
       },
       mjs_dist: {
-        src: 'src/atcb.js',
+        src: [
+          'src/atcb-globals.js',
+          'src/atcb-decorate.js',
+          'src/atcb-validate.js',
+          'src/atcb-control.js',
+          'src/atcb-generate.js',
+          'src/atcb-links.js',
+          'src/atcb-util.js',
+          'src/atcb-i18n.js',
+          'src/atcb-init.js',
+          'src/atcb.js',
+        ],
         dest: 'npm_dist/mjs/index.js',
-        options: { process: (content) => prepareFinalFile(content, true, false, 'export') },
+        options: {
+          stripBanners: true,
+          banner:
+            "import { tzlib_get_ical_block, tzlib_get_offset, tzlib_get_timezones } from 'timezones-ical-library';\n\n",
+          process: (content) => prepareFinalFile(content, true, true, 'export'),
+        },
       },
       cjs_dist: {
-        src: 'src/atcb.js',
+        src: [
+          'src/atcb-globals.js',
+          'src/atcb-decorate.js',
+          'src/atcb-validate.js',
+          'src/atcb-control.js',
+          'src/atcb-generate.js',
+          'src/atcb-links.js',
+          'src/atcb-util.js',
+          'src/atcb-i18n.js',
+          'src/atcb-init.js',
+          'src/atcb.js',
+        ],
         dest: 'npm_dist/cjs/index.js',
-        options: { process: (content) => prepareFinalFile(content, true, false, 'module.exports =', true) },
+        options: {
+          stripBanners: true,
+          banner:
+            "// eslint-disable-next-line @typescript-eslint/no-var-requires\r\nconst tzlibActions = require('timezones-ical-library');\n\n",
+          process: (content) => prepareFinalFile(content, true, true, 'module.exports =', true),
+        },
       },
     },
     // creates files to support the npm dist structure
