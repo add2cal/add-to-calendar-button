@@ -311,20 +311,24 @@ function atcb_generate_ical(data, subEvent = 'all', keyboardTrigger = false) {
   }
   // define the right filename
   const filename = atcb_determine_ical_filename(data, subEvent);
-  // check for a given explicit file (not if iOS and WebView - will be catched further down)
-  if (!isiOS() || !isWebView()) {
+  // check for a given explicit file...
+  const givenIcsFile = (function () {
     if (
       subEvent != 'all' &&
       data.dates[`${subEvent}`].icsFile != null &&
       data.dates[`${subEvent}`].icsFile != ''
     ) {
-      atcb_save_file(data.dates[`${subEvent}`].icsFile, filename);
-      return;
+      return data.dates[`${subEvent}`].icsFile;
     }
     if (data.icsFile != null && data.icsFile != '') {
-      atcb_save_file(data.icsFile, filename);
-      return;
+      return data.icsFile;
     }
+    return '';
+  })();
+  // ... and directly load it (not if iOS and WebView - will be catched further down)
+  if (givenIcsFile != '' && (!isiOS() || !isWebView())) {
+    atcb_save_file(givenIcsFile, filename);
+    return;
   }
   // otherwise, generate one on the fly
   const now = new Date();
@@ -422,13 +426,10 @@ function atcb_generate_ical(data, subEvent = 'all', keyboardTrigger = false) {
     ics_lines.push('END:VEVENT');
   }
   ics_lines.push('END:VCALENDAR');
-  const dataUrl = (function (i) {
+  const dataUrl = (function () {
     // if we got to this point with an explicitely given iCal file, we are on an iOS device within an in-app browser (WebView). In this case, we use this as dataUrl
-    if (data.dates[`${i}`].icsFile != null && data.dates[`${i}`].icsFile != '') {
-      return data.dates[`${i}`].icsFile;
-    }
-    if (data.icsFile != null && data.icsFile != '') {
-      return data.icsFile;
+    if (givenIcsFile != '') {
+      return givenIcsFile;
     }
     // otherwise, we generate it from the array
     return 'data:text/calendar;charset=utf-8,' + encodeURIComponent(ics_lines.join('\r\n'));

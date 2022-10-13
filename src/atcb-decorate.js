@@ -46,6 +46,7 @@ function atcb_patch_config(configData) {
 
 // CLEAN DATA BEFORE FURTHER VALIDATION (CONSIDERING SPECIAL RULES AND SCHEMES)
 function atcb_decorate_data(data) {
+  data = atcb_decorate_data_identifier(data);
   data = atcb_decorate_data_rrule(data);
   data = atcb_decorate_data_options(data);
   data.richData = atcb_decorate_data_rich_data(data);
@@ -54,6 +55,19 @@ function atcb_decorate_data(data) {
   data = atcb_decorate_data_dates(data);
   data = atcb_decorate_data_meta(data);
   data = atcb_decorate_data_extend(data);
+  return data;
+}
+
+// extend provided identifier
+function atcb_decorate_data_identifier(data) {
+  if (data.identifier != null && data.identifier != '') {
+    data.identifier = 'atcb-btn-' + data.identifier;
+    // and directly validating it here (not in the validation, because we will already need the final form there)
+    if (!/^[\w-]+$/.test(data.identifier)) {
+      data.identifier = '';
+      console.warn('Add to Calendar Button generation: identifier invalid - using auto numbers instead');
+    }
+  }
   return data;
 }
 
@@ -138,41 +152,42 @@ function atcb_decorate_data_rrule(data) {
 
 // cleanup options, standardizing names and splitting off custom labels
 function atcb_decorate_data_options(data) {
-  data.optionLabels = [];
-  for (let i = 0; i < data.options.length; i++) {
-    let cleanOption = data.options[`${i}`].split('|');
-    data.options[`${i}`] = cleanOption[0].toLowerCase().replace('microsoft', 'ms').replace('.', '');
-    if (cleanOption[1] != null) {
-      data.optionLabels[`${i}`] = cleanOption[1];
-    } else {
-      data.optionLabels[`${i}`] = '';
-    }
-  }
-  // remove unsupported options
-  // for iOS, we remove iCal (further down) and force the Apple option (if it is not there, but iCal is)
+  // for iOS, we force the Apple option (if it is not there, but iCal is)
   if (isiOS() && data.options.includes('ical') && !data.options.includes('apple')) {
     data.options.push('apple');
   }
-  // next, iterrate over the options
+  // next, iterrate over the options and generate the new clean arrays (for options and labels)
+  const newOptions = [];
+  data.optionLabels = [];
   for (let i = 0; i < data.options.length; i++) {
-    // remove option, which should not appear on iOS (e.g. iCal, since we have the Apple option instead
-    // also, in the recurrence case, we strip out all options, which do not support it in general, as well as Apple and iCal for rrules with "until"
+    // preparing the input options and labels
+    const cleanOption = data.options[`${i}`].split('|');
+    const optionName = cleanOption[0].toLowerCase().replace('microsoft', 'ms').replace('.', '');
+    const optionLabel = (function () {
+      if (cleanOption[1] != null) {
+        return cleanOption[1];
+      }
+      return '';
+    })();
+    // next, fill the new arrays (where the labels array already sits inside the main data object)
+    // do not consider options, which should not appear on iOS (e.g. iCal, since we have the Apple option instead)
+    // also, in the recurrence case, we leave out all options, which do not support it in general, as well as Apple and iCal for rrules with "until"
     if (
-      (isiOS() && atcbiOSInvalidOptions.includes(data.options[`${i}`])) ||
+      (isiOS() && atcbiOSInvalidOptions.includes(optionName)) ||
       (data.recurrence != null &&
         data.recurrence != '' &&
-        (!atcbValidRecurrOptions.includes(data.options[`${i}`]) ||
+        (!atcbValidRecurrOptions.includes(optionName) ||
           (data.recurrence_until != null &&
             data.recurrence_until != '' &&
-            (data.options[`${i}`] == 'apple' || data.options[`${i}`] == 'ical'))))
+            (optionName == 'apple' || optionName == 'ical'))))
     ) {
-      data.options.splice(i, 1);
-      if (data.optionLabels[`${i}`] != null) {
-        delete data.optionLabels[`${i}`];
-      }
       continue;
     }
+    newOptions.push(optionName);
+    data.optionLabels.push(optionLabel);
   }
+  // last but not least, override the options at the main data object
+  data.options = newOptions;
   return data;
 }
 
@@ -318,15 +333,6 @@ function atcb_decorate_data_meta(data) {
   // set default sequence on top level
   if (data.sequence == null || data.sequence == '') {
     data.sequence = 0;
-  }
-  // set UID of first event, if "wrongly" specified on top level
-  if (
-    (data.dates[0].uid == null || data.dates[0].uid == '') &&
-    data.dates.length == 1 &&
-    data.uid != null &&
-    data.uid != ''
-  ) {
-    data.dates[0].uid = data.uid;
   }
   return data;
 }

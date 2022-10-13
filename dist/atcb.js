@@ -1638,6 +1638,7 @@ function atcb_patch_config(configData) {
   return configData;
 }
 function atcb_decorate_data(data) {
+  data = atcb_decorate_data_identifier(data);
   data = atcb_decorate_data_rrule(data);
   data = atcb_decorate_data_options(data);
   data.richData = atcb_decorate_data_rich_data(data);
@@ -1646,6 +1647,16 @@ function atcb_decorate_data(data) {
   data = atcb_decorate_data_dates(data);
   data = atcb_decorate_data_meta(data);
   data = atcb_decorate_data_extend(data);
+  return data;
+}
+function atcb_decorate_data_identifier(data) {
+  if (data.identifier != null && data.identifier != '') {
+    data.identifier = 'atcb-btn-' + data.identifier;
+    if (!/^[\w-]+$/.test(data.identifier)) {
+      data.identifier = '';
+      console.warn('Add to Calendar Button generation: identifier invalid - using auto numbers instead');
+    }
+  }
   return data;
 }
 function atcb_decorate_data_rrule(data) {
@@ -1717,36 +1728,35 @@ function atcb_decorate_data_rrule(data) {
   return data;
 }
 function atcb_decorate_data_options(data) {
-  data.optionLabels = [];
-  for (let i = 0; i < data.options.length; i++) {
-    let cleanOption = data.options[`${i}`].split('|');
-    data.options[`${i}`] = cleanOption[0].toLowerCase().replace('microsoft', 'ms').replace('.', '');
-    if (cleanOption[1] != null) {
-      data.optionLabels[`${i}`] = cleanOption[1];
-    } else {
-      data.optionLabels[`${i}`] = '';
-    }
-  }
   if (isiOS() && data.options.includes('ical') && !data.options.includes('apple')) {
     data.options.push('apple');
   }
+  const newOptions = [];
+  data.optionLabels = [];
   for (let i = 0; i < data.options.length; i++) {
+    const cleanOption = data.options[`${i}`].split('|');
+    const optionName = cleanOption[0].toLowerCase().replace('microsoft', 'ms').replace('.', '');
+    const optionLabel = (function () {
+      if (cleanOption[1] != null) {
+        return cleanOption[1];
+      }
+      return '';
+    })();
     if (
-      (isiOS() && atcbiOSInvalidOptions.includes(data.options[`${i}`])) ||
+      (isiOS() && atcbiOSInvalidOptions.includes(optionName)) ||
       (data.recurrence != null &&
         data.recurrence != '' &&
-        (!atcbValidRecurrOptions.includes(data.options[`${i}`]) ||
+        (!atcbValidRecurrOptions.includes(optionName) ||
           (data.recurrence_until != null &&
             data.recurrence_until != '' &&
-            (data.options[`${i}`] == 'apple' || data.options[`${i}`] == 'ical'))))
+            (optionName == 'apple' || optionName == 'ical'))))
     ) {
-      data.options.splice(i, 1);
-      if (data.optionLabels[`${i}`] != null) {
-        delete data.optionLabels[`${i}`];
-      }
       continue;
     }
+    newOptions.push(optionName);
+    data.optionLabels.push(optionLabel);
   }
+  data.options = newOptions;
   return data;
 }
 function atcb_decorate_data_rich_data(data) {
@@ -1867,14 +1877,6 @@ function atcb_decorate_data_meta(data) {
   }
   if (data.sequence == null || data.sequence == '') {
     data.sequence = 0;
-  }
-  if (
-    (data.dates[0].uid == null || data.dates[0].uid == '') &&
-    data.dates.length == 1 &&
-    data.uid != null &&
-    data.uid != ''
-  ) {
-    data.dates[0].uid = data.uid;
   }
   return data;
 }
@@ -2034,22 +2036,12 @@ function atcb_check_required(data) {
 }
 function atcb_validate(data) {
   const msgPrefix = 'Add to Calendar Button generation (' + data.identifier + ')';
-  if (!atcb_validate_prefix(data)) return false;
   if (!atcb_validate_icsFile(data, msgPrefix)) return false;
   if (!atcb_validate_created(data, msgPrefix)) return false;
   if (!atcb_validate_updated(data, msgPrefix)) return false;
   if (!atcb_validate_options(data, msgPrefix)) return false;
   if (!atcb_validate_date_blocks(data, msgPrefix)) return false;
   if (!atcb_validate_rrule(data, msgPrefix)) return false;
-  return true;
-}
-function atcb_validate_prefix(data) {
-  if (data.identifier != null && data.identifier != '') {
-    if (!/^[\w-]+$/.test(data.identifier)) {
-      data.identifier = '';
-      console.warn('Add to Calendar Button generation: identifier invalid - using auto numbers instead');
-    }
-  }
   return true;
 }
 function atcb_validate_icsFile(data, msgPrefix, i = '', msgSuffix = '') {
@@ -2174,12 +2166,12 @@ function atcb_validate_organizer(data, msgPrefix, i, msgSuffix) {
 }
 function atcb_validate_uid(data, msgPrefix, i, msgSuffix) {
   if (!/^(\w|-){1,254}$/.test(data.dates[`${i}`].uid)) {
-    console.error(
+    console.warn(
       msgPrefix +
-        ' failed: UID not valid. May only contain alpha, digits, and dashes; and be less than 255 characters' +
+        ': UID not valid. May only contain alpha, digits, and dashes; and be less than 255 characters. Falling back to an automated value!' +
         msgSuffix
     );
-    return false;
+    data.dates[`${i}`].uid = atcb_generate_uuid();
   }
   if (
     !/^[0-9a-f]{8}-[0-9a-f]{4}-[0-5][0-9a-f]{3}-[089ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(
@@ -2188,7 +2180,7 @@ function atcb_validate_uid(data, msgPrefix, i, msgSuffix) {
   ) {
     console.warn(
       msgPrefix +
-        ' failed: UID is strictly recommended to be a hex-encoded random Universally Unique Identifier (UUID)!' +
+        ': UID is highly recommended to be a hex-encoded random Universally Unique Identifier (UUID)!' +
         msgSuffix
     );
   }
@@ -2713,60 +2705,7 @@ function atcb_generate_rich_data(data, button) {
         : '"location":"' + data.dates[`${i}`].location + '"'
     );
     if (data.recurrence != null && data.recurrence != '') {
-      schemaContent.push('"eventSchedule": { "@type": "Schedule"');
-      if (data.dates[0].timeZone != null && data.dates[0].timeZone != '') {
-        schemaContent.push('"scheduleTimezone":"' + data.dates[0].timeZone + '"');
-      }
-      const repeatFrequency = 'P' + data.recurrence_interval + data.recurrence_frequency.substr(0, 1);
-      schemaContent.push('"repeatFrequency":"' + repeatFrequency + '"');
-      if (data.recurrence_byDay != null && data.recurrence_byDay != '') {
-        const byDayString = (function () {
-          if (/\d/.test(data.recurrence_byDay)) {
-            return '"' + data.recurrence_byDay + '"';
-          } else {
-            const byDays = data.recurrence_byDay.split(',');
-            const helperMap = {
-              MO: 'https://schema.org/Monday',
-              TU: 'https://schema.org/Tuesday',
-              WE: 'https://schema.org/Wednesday',
-              TH: 'https://schema.org/Thursday',
-              FR: 'https://schema.org/Friday',
-              SA: 'https://schema.org/Saturday',
-              SU: 'https://schema.org/Sunday',
-            };
-            const output = [];
-            for (let i = 0; i < byDays.length; i++) {
-              output.push('"' + helperMap[byDays[`${i}`]] + '"');
-            }
-            return '[' + output.join(',') + ']';
-          }
-        })();
-        schemaContent.push('"byDay":' + byDayString);
-      }
-      if (data.recurrence_byMonth != null && data.recurrence_byMonth != '') {
-        const byMonthString = data.recurrence_byMonth.includes(',')
-          ? '[' + data.recurrence_byMonth + ']'
-          : data.recurrence_byMonth;
-        schemaContent.push('"byMonth":"' + byMonthString + '"');
-      }
-      if (data.recurrence_byMonthDay != null && data.recurrence_byMonthDay != '') {
-        const byMonthDayString = data.recurrence_byMonthDay.includes(',')
-          ? '[' + data.recurrence_byMonthDay + ']'
-          : data.recurrence_byMonthDay;
-        schemaContent.push('"byMonthDay":"' + byMonthDayString + '"');
-      }
-      if (data.recurrence_count != null && data.recurrence_count != '') {
-        schemaContent.push('"repeatCount":"' + data.recurrence_count + '"');
-      }
-      if (data.recurrence_until != null && data.recurrence_until != '') {
-        schemaContent.push('"endDate":"' + data.recurrence_until + '"');
-      }
-      if (data.startTime != null && data.startTime != '' && data.endTime != null && data.endTime != '') {
-        schemaContent.push('"startTime":"' + data.startTime + ':00"');
-        schemaContent.push('"endTime":"' + data.endTime + ':00"');
-        schemaContent.push('"duration":"' + formattedDate.duration + '"');
-      }
-      schemaContent.push('"startDate":"' + data.startDate + '" }');
+      schemaContent.push(...atcb_generate_rich_data_recurrence(data, formattedDate));
     } else {
       schemaContent.push('"endDate":"' + formattedDate.end + '"');
     }
@@ -2806,6 +2745,64 @@ function atcb_generate_rich_data(data, button) {
     schemaEl.textContent = schemaContentFull[0];
   }
   button.appendChild(schemaEl);
+}
+function atcb_generate_rich_data_recurrence(data, formattedDate) {
+  const schemaRecurrenceContent = [];
+  schemaRecurrenceContent.push('"eventSchedule": { "@type": "Schedule"');
+  if (data.dates[0].timeZone != null && data.dates[0].timeZone != '') {
+    schemaRecurrenceContent.push('"scheduleTimezone":"' + data.dates[0].timeZone + '"');
+  }
+  const repeatFrequency = 'P' + data.recurrence_interval + data.recurrence_frequency.substr(0, 1);
+  schemaRecurrenceContent.push('"repeatFrequency":"' + repeatFrequency + '"');
+  if (data.recurrence_byDay != null && data.recurrence_byDay != '') {
+    const byDayString = (function () {
+      if (/\d/.test(data.recurrence_byDay)) {
+        return '"' + data.recurrence_byDay + '"';
+      } else {
+        const byDays = data.recurrence_byDay.split(',');
+        const helperMap = {
+          MO: 'https://schema.org/Monday',
+          TU: 'https://schema.org/Tuesday',
+          WE: 'https://schema.org/Wednesday',
+          TH: 'https://schema.org/Thursday',
+          FR: 'https://schema.org/Friday',
+          SA: 'https://schema.org/Saturday',
+          SU: 'https://schema.org/Sunday',
+        };
+        const output = [];
+        for (let i = 0; i < byDays.length; i++) {
+          output.push('"' + helperMap[byDays[`${i}`]] + '"');
+        }
+        return '[' + output.join(',') + ']';
+      }
+    })();
+    schemaRecurrenceContent.push('"byDay":' + byDayString);
+  }
+  if (data.recurrence_byMonth != null && data.recurrence_byMonth != '') {
+    const byMonthString = data.recurrence_byMonth.includes(',')
+      ? '[' + data.recurrence_byMonth + ']'
+      : data.recurrence_byMonth;
+    schemaRecurrenceContent.push('"byMonth":"' + byMonthString + '"');
+  }
+  if (data.recurrence_byMonthDay != null && data.recurrence_byMonthDay != '') {
+    const byMonthDayString = data.recurrence_byMonthDay.includes(',')
+      ? '[' + data.recurrence_byMonthDay + ']'
+      : data.recurrence_byMonthDay;
+    schemaRecurrenceContent.push('"byMonthDay":"' + byMonthDayString + '"');
+  }
+  if (data.recurrence_count != null && data.recurrence_count != '') {
+    schemaRecurrenceContent.push('"repeatCount":"' + data.recurrence_count + '"');
+  }
+  if (data.recurrence_until != null && data.recurrence_until != '') {
+    schemaRecurrenceContent.push('"endDate":"' + data.recurrence_until + '"');
+  }
+  if (data.startTime != null && data.startTime != '' && data.endTime != null && data.endTime != '') {
+    schemaRecurrenceContent.push('"startTime":"' + data.startTime + ':00"');
+    schemaRecurrenceContent.push('"endTime":"' + data.endTime + ':00"');
+    schemaRecurrenceContent.push('"duration":"' + formattedDate.duration + '"');
+  }
+  schemaRecurrenceContent.push('"startDate":"' + data.startDate + '" }');
+  return schemaRecurrenceContent;
 }
 function atcb_generate_dropdown_list(data) {
   const optionsList = document.createElement('div');
@@ -3413,19 +3410,22 @@ function atcb_generate_ical(data, subEvent = 'all', keyboardTrigger = false) {
     subEvent = parseInt(subEvent);
   }
   const filename = atcb_determine_ical_filename(data, subEvent);
-  if (!isiOS() || !isWebView()) {
+  const givenIcsFile = (function () {
     if (
       subEvent != 'all' &&
       data.dates[`${subEvent}`].icsFile != null &&
       data.dates[`${subEvent}`].icsFile != ''
     ) {
-      atcb_save_file(data.dates[`${subEvent}`].icsFile, filename);
-      return;
+      return data.dates[`${subEvent}`].icsFile;
     }
     if (data.icsFile != null && data.icsFile != '') {
-      atcb_save_file(data.icsFile, filename);
-      return;
+      return data.icsFile;
     }
+    return '';
+  })();
+  if (givenIcsFile != '' && (!isiOS() || !isWebView())) {
+    atcb_save_file(givenIcsFile, filename);
+    return;
   }
   const now = new Date();
   const ics_lines = ['BEGIN:VCALENDAR', 'VERSION:2.0'];
@@ -3517,12 +3517,9 @@ function atcb_generate_ical(data, subEvent = 'all', keyboardTrigger = false) {
     ics_lines.push('END:VEVENT');
   }
   ics_lines.push('END:VCALENDAR');
-  const dataUrl = (function (i) {
-    if (data.dates[`${i}`].icsFile != null && data.dates[`${i}`].icsFile != '') {
-      return data.dates[`${i}`].icsFile;
-    }
-    if (data.icsFile != null && data.icsFile != '') {
-      return data.icsFile;
+  const dataUrl = (function () {
+    if (givenIcsFile != '') {
+      return givenIcsFile;
     }
     return 'data:text/calendar;charset=utf-8,' + encodeURIComponent(ics_lines.join('\r\n'));
   })();
@@ -4459,7 +4456,15 @@ function atcb_action(data, triggerElement, keyboardTrigger = true) {
   }
   data = atcb_decorate_data(data);
   if (triggerElement) {
-    data.identifier = triggerElement.id;
+    if (triggerElement.id != null && triggerElement.id != '') {
+      data.identifier = triggerElement.id;
+    } else {
+      if (data.identifier != null && data.identifier != '') {
+        triggerElement.id = data.identifier;
+      } else {
+        data.identifier = 'atcb-btn-custom';
+      }
+    }
     if (data.listStyle == 'dropdown') {
       data.listStyle = 'overlay';
     }
@@ -4475,6 +4480,7 @@ function atcb_action(data, triggerElement, keyboardTrigger = true) {
   }
   atcb_update_state_management(data);
   atcb_toggle('open', data, triggerElement, keyboardTrigger);
+  console.log('Add to Calendar Button "' + data.identifier + '" triggered');
 }
 function atcb_update_state_management(data) {
   const singleDates = [];

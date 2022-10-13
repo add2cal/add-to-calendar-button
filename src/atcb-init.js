@@ -73,7 +73,7 @@ function atcb_init() {
       if (atcb_check_required(atcbJsonInputPatched)) {
         // Rewrite dynamic dates, standardize line breaks and transform urls in the description
         const data = atcb_decorate_data(atcbJsonInputPatched);
-        // set identifier
+        // set identifier if not provided
         if (data.identifier == null || data.identifier == '') {
           data.identifier = 'atcb-btn-' + (i + atcButtonsInitialized.length + 1);
         }
@@ -103,7 +103,17 @@ function atcb_action(data, triggerElement, keyboardTrigger = true) {
   }
   data = atcb_decorate_data(data);
   if (triggerElement) {
-    data.identifier = triggerElement.id;
+    // overriding the identifier with the id of the triggering element
+    if (triggerElement.id != null && triggerElement.id != '') {
+      data.identifier = triggerElement.id;
+    } else {
+      // however, if the trigger has no id, we set it with the identifier or a default fallback
+      if (data.identifier != null && data.identifier != '') {
+        triggerElement.id = data.identifier;
+      } else {
+        data.identifier = 'atcb-btn-custom';
+      }
+    }
     // for custom triggers, we block any dropdown, since this would look shit 99% of the time
     if (data.listStyle == 'dropdown') {
       data.listStyle = 'overlay';
@@ -122,6 +132,7 @@ function atcb_action(data, triggerElement, keyboardTrigger = true) {
   atcb_update_state_management(data);
   // if all is fine, open the options list
   atcb_toggle('open', data, triggerElement, keyboardTrigger);
+  console.log('Add to Calendar Button "' + data.identifier + '" triggered');
 }
 
 // update global state management

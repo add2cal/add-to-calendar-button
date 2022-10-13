@@ -13,7 +13,7 @@
 
 import { tzlib_get_timezones } from '../node_modules/timezones-ical-library/npm_dist/mjs/index.js';
 import { atcbOptions } from './atcb-globals.js';
-import { atcb_secure_url, atcb_validEmail } from './atcb-util.js';
+import { atcb_secure_url, atcb_validEmail, atcb_generate_uuid } from './atcb-util.js';
 
 // CHECK FOR REQUIRED FIELDS
 function atcb_check_required(data) {
@@ -72,7 +72,6 @@ function atcb_check_required(data) {
 // VALIDATE THE INPUT DATA
 function atcb_validate(data) {
   const msgPrefix = 'Add to Calendar Button generation (' + data.identifier + ')';
-  if (!atcb_validate_prefix(data)) return false;
   if (!atcb_validate_icsFile(data, msgPrefix)) return false;
   if (!atcb_validate_created(data, msgPrefix)) return false;
   if (!atcb_validate_updated(data, msgPrefix)) return false;
@@ -80,17 +79,6 @@ function atcb_validate(data) {
   if (!atcb_validate_date_blocks(data, msgPrefix)) return false;
   if (!atcb_validate_rrule(data, msgPrefix)) return false;
   // on passing the validation, return true
-  return true;
-}
-
-// validate prefix
-function atcb_validate_prefix(data) {
-  if (data.identifier != null && data.identifier != '') {
-    if (!/^[\w-]+$/.test(data.identifier)) {
-      data.identifier = '';
-      console.warn('Add to Calendar Button generation: identifier invalid - using auto numbers instead');
-    }
-  }
   return true;
 }
 
@@ -234,12 +222,12 @@ function atcb_validate_organizer(data, msgPrefix, i, msgSuffix) {
 function atcb_validate_uid(data, msgPrefix, i, msgSuffix) {
   // must have less then 255 characters and only allowes for alpha characters, numbers, and dashes; see https://icalendar.org/New-Properties-for-iCalendar-RFC-7986/5-3-uid-property.html
   if (!/^(\w|-){1,254}$/.test(data.dates[`${i}`].uid)) {
-    console.error(
+    console.warn(
       msgPrefix +
-        ' failed: UID not valid. May only contain alpha, digits, and dashes; and be less than 255 characters' +
+        ': UID not valid. May only contain alpha, digits, and dashes; and be less than 255 characters. Falling back to an automated value!' +
         msgSuffix
     );
-    return false;
+    data.dates[`${i}`].uid = atcb_generate_uuid();
   }
   // validate UID for the recommended form, which is not forced, but show throw a warning
   if (
@@ -249,7 +237,7 @@ function atcb_validate_uid(data, msgPrefix, i, msgSuffix) {
   ) {
     console.warn(
       msgPrefix +
-        ' failed: UID is strictly recommended to be a hex-encoded random Universally Unique Identifier (UUID)!' +
+        ': UID is highly recommended to be a hex-encoded random Universally Unique Identifier (UUID)!' +
         msgSuffix
     );
   }
@@ -281,6 +269,7 @@ function atcb_validate_timezone(data, msgPrefix, i, msgSuffix) {
 function atcb_validate_datetime(data, msgPrefix, i, msgSuffix) {
   const dates = ['startDate', 'endDate'];
   const newDate = dates;
+  // testing for right format first - mind that during decoration, we already cleaned up dates, so 2022-44-55 would be also valid, since it gets adjusted automatically!
   if (
     !dates.every(function (date) {
       if (data.dates[`${i}`][`${date}`].length !== 10) {
