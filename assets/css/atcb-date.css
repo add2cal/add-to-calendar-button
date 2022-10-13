@@ -635,9 +635,23 @@ a.atcb-modal-btn:hover {
 }
 
 button.atcb-modal-btn:focus-visible,
-a.atcb-modal-btn:focus-visible {
+a.atcb-modal-btn:focus-visible,
+body.atcb-dark a.atcb-modal-btn:focus-visible {
   background-color: var(--atcb-modal-btn-background-hover);
   outline: 2px solid var(--atcb-keyboard-focus);
+}
+
+body.atcb-dark a.atcb-modal-btn {
+  color: var(--atcb-modal-btn-sec-text);
+}
+
+body.atcb-dark a.atcb-modal-btn.atcb-modal-btn-primary  {
+  color: var(--atcb-modal-btn-text);
+}
+
+body.atcb-dark a.atcb-modal-btn:hover,
+body.atcb-dark a.atcb-modal-btn:active {
+  color: var(--atcb-modal-btn-text-hover);
 }
 
 /******************************

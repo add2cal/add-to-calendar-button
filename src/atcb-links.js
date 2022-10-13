@@ -42,6 +42,11 @@ function atcb_generate_links(type, data, subEvent = 'all', keyboardTrigger = fal
   } else if (data.dates.length == 1) {
     subEvent = 0;
   }
+  // if this is a calendar subscription case, we can take the short route here
+  if (data.subscribe) {
+    atcb_generate_subscribe_links(type, data, keyboardTrigger);
+    return;
+  }
   // TMP WORKAROUND: redirect to iCal solution on mobile devices for msteams, ms365, and outlookcom, since the Microsoft web apps are buggy on mobile devices (see https://github.com/add2cal/add-to-calendar-button/discussions/113)
   if (isMobile() && (type == 'msteams' || type == 'ms365' || type == 'outlookcom')) {
     type = 'ical';
@@ -92,8 +97,7 @@ function atcb_generate_links(type, data, subEvent = 'all', keyboardTrigger = fal
       return value < 1;
     });
     if (filteredStates.length == 0) {
-      document.getElementById(data.identifier).classList.add('atcb-saved');
-      atcb_set_fully_successful(multiDateModal);
+      atcb_set_fully_successful(data.identifier, multiDateModal);
     }
     return;
   }
@@ -120,8 +124,7 @@ function atcb_generate_multidate_links(type, data, keyboardTrigger, multiDateMod
     for (let i = 0; i < atcbStates[`${data.identifier}`][`${type}`].length; i++) {
       atcbStates[`${data.identifier}`][`${type}`][`${i}`]++;
     }
-    document.getElementById(data.identifier).classList.add('atcb-saved');
-    atcb_set_fully_successful(multiDateModal);
+    atcb_set_fully_successful(data.identifier, multiDateModal);
     return;
   }
   // for multi-date events in all other cases, we show an intermediate layer
@@ -142,12 +145,88 @@ function atcb_generate_multidate_links(type, data, keyboardTrigger, multiDateMod
   }
 }
 
-function atcb_set_fully_successful(multiDateModal) {
+function atcb_generate_subscribe_links(type, data, keyboardTrigger) {
+  const adjustedFileUrl = data.icsFile.replace('https://', 'webcal://');
+  switch (type) {
+    case 'apple':
+    case 'ical':
+      atcb_subscribe_ical(adjustedFileUrl);
+      break;
+    case 'google':
+      atcb_subscribe_google(adjustedFileUrl);
+      break;
+    case 'ms365':
+      atcb_subscribe_microsoft(adjustedFileUrl, data.name);
+      break;
+    case 'outlookcom':
+      atcb_subscribe_microsoft(adjustedFileUrl, data.name, 'outlook');
+      break;
+    case 'yahoo':
+      atcb_copy_to_clipboard(adjustedFileUrl);
+      atcb_create_modal(
+        data,
+        'yahoo',
+        atcb_translate_hook('Subscribe Yahoo', data),
+        atcb_translate_hook('Clipboard info', data) + '<br>' + atcb_translate_hook('Subscribe Yahoo Details', data),
+        [{label: atcb_translate_hook('Cancel', data)}, {label: atcb_translate_hook('Open Yahoo Calendar', data), primary: true, type: 'yahoo2nd', href: 'https://www.yahoo.com/calendar'}],
+        [],
+        keyboardTrigger
+      );
+      return;
+    case 'yahoo2nd':
+      atcb_copy_to_clipboard(adjustedFileUrl);
+      atcb_create_modal(
+        data,
+        'yahoo',
+        atcb_translate_hook('Subscribe Yahoo', data),
+        atcb_translate_hook('Clipboard info', data) + '<br>' + atcb_translate_hook('Subscribe Yahoo Details', data),
+        [{label: atcb_translate_hook('Close', data), primary: true}, {label: atcb_translate_hook('Open Yahoo Calendar', data), type: 'none', href: 'https://www.yahoo.com/calendar'}],
+        [],
+        keyboardTrigger
+      );
+      return;
+  }
+  // mark as successful (except for the Yahoo case, with returned)
+  atcb_set_fully_successful(data.identifier);
+}
+
+function atcb_set_fully_successful(id, multiDateModal) {
+  document.getElementById(id).classList.add('atcb-saved');
   atcb_saved_hook();
   if (multiDateModal && document.querySelectorAll('.atcb-modal[data-modal-nr]').length < 2) {
     atcb_toggle('close');
   }
 }
+
+// GENERATING SUBSCRIPTION URLS AND FILES
+
+// ICAL
+function atcb_subscribe_ical(fileUrl) {
+  atcb_open_cal_url(fileUrl);
+}
+
+// GOOGLE
+function atcb_subscribe_google(fileUrl) {
+  const baseUrl = 'https://calendar.google.com/calendar/r?cid=';
+  atcb_open_cal_url(baseUrl + fileUrl);
+}
+
+// MICROSOFT
+function atcb_subscribe_microsoft(fileUrl, calName, type = '365') {
+  const urlParts = [];
+  const baseUrl = (function () {
+    if (type == 'outlook') {
+      return 'https://outlook.live.com/calendar/0/addfromweb/?';
+    } else {
+      return 'https://outlook.office.com/calendar/0/addfromweb/?';
+    }
+  })();
+  urlParts.push('url=' + encodeURIComponent(fileUrl));
+  urlParts.push('name=' + encodeURIComponent(calName));
+  atcb_open_cal_url(baseUrl + urlParts.join('&'));
+}
+
+// GENERATING DEFAULT URLS AND FILES
 
 // FUNCTION TO GENERATE THE GOOGLE URL
 // See specs at: https://github.com/InteractionDesignFoundation/add-event-to-calendar-docs/blob/main/services/google.md (unofficial)
@@ -474,9 +553,9 @@ function atcb_ical_copy_note(dataUrl, data, keyboardTrigger) {
       atcb_translate_hook('Crios iCal headline', data),
       atcb_translate_hook('Crios iCal info', data) +
         '<br>' +
-        atcb_translate_hook('WebView iCal solution 1', data) +
+        atcb_translate_hook('Clipboard info', data) +
         '<br>' +
-        atcb_translate_hook('Crios iCal solution 2', data),
+        atcb_translate_hook('Crios iCal solution', data),
       [],
       [],
       keyboardTrigger
@@ -489,13 +568,13 @@ function atcb_ical_copy_note(dataUrl, data, keyboardTrigger) {
     atcb_translate_hook('WebView iCal headline', data),
     atcb_translate_hook('WebView iCal info', data) +
       '<br>' +
-      atcb_translate_hook('WebView iCal solution 1', data) +
+      atcb_translate_hook('Clipboard info', data) +
       '<br>' +
-      atcb_translate_hook('WebView iCal solution 2', data),
+      atcb_translate_hook('WebView iCal solution', data),
     [],
     [],
     keyboardTrigger
   );
 }
 
-export { atcb_generate_links };
+export { atcb_generate_links, atcb_set_fully_successful };

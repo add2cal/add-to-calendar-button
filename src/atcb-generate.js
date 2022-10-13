@@ -23,6 +23,7 @@ import {
   atcb_debounce,
   atcb_debounce_leading,
 } from './atcb-util.js';
+import { atcb_set_fully_successful } from './atcb-links'
 import { atcb_translate_hook } from './atcb-i18n.js';
 
 // GENERATE THE ACTUAL BUTTON
@@ -551,7 +552,7 @@ function atcb_create_modal(
       }
     }
   }
-  // add buttons (array of objects; attributes: href, type, subEvent, label, primary(boolean))
+  // add buttons (array of objects; attributes: href, type, label, primary(boolean))
   if (buttons.length == 0) {
     buttons.push({ type: 'close', label: atcb_translate_hook('Close', data) });
   }
@@ -594,6 +595,23 @@ function atcb_create_modal(
           }
         });
         break;
+      case 'yahoo2nd':
+        modalButton.addEventListener(
+          'click',
+          atcb_debounce(() => {
+            atcb_close();
+            atcb_subscribe_yahoo_modal_switch(data);
+          })
+        );
+        modalButton.addEventListener('keyup', function (event) {
+          if (event.key == 'Enter') {
+            atcb_toggle('close', '', '', true);
+            atcb_subscribe_yahoo_modal_switch(data, keyboardTrigger);
+          }
+        });
+        break;
+      case 'none':
+        break;
     }
   });
   // hide prev modal
@@ -603,6 +621,12 @@ function atcb_create_modal(
   }
   // set scroll behavior
   atcb_manage_body_scroll(modalWrapper);
+}
+
+// FUNCTION TO SWICH THE YAHOO SUBSCRIBE MODAL
+function atcb_subscribe_yahoo_modal_switch(data, keyboardTrigger) {
+  atcb_set_fully_successful(data.identifier);
+  atcb_generate_links('yahoo2nd', data, 'all', keyboardTrigger)
 }
 
 // FUNCTION TO GENERATE A MORE DETAILED DATE BUTTON

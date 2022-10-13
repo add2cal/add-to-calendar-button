@@ -102,6 +102,7 @@ const isProblematicWebView = isBrowser()
 const atcbDefaultTarget = isWebView() ? '_system' : '_blank';
 const atcbOptions = ['apple', 'google', 'ical', 'ms365', 'outlookcom', 'msteams', 'yahoo'];
 const atcbValidRecurrOptions = ['apple', 'google', 'ical'];
+const atcbInvalidSubscribeOptions = ['msteams'];
 const atcbiOSInvalidOptions = ['ical'];
 const atcbStates = [];
 
@@ -145,6 +146,7 @@ export {
   atcbDefaultTarget,
   atcbOptions,
   atcbValidRecurrOptions,
+  atcbInvalidSubscribeOptions,
   atcbiOSInvalidOptions,
   atcbStates,
   atcbIcon,

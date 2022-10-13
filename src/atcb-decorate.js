@@ -11,7 +11,7 @@
  *
  */
 
-import { isiOS, atcbValidRecurrOptions, atcbiOSInvalidOptions } from './atcb-globals.js';
+import { isiOS, atcbValidRecurrOptions, atcbInvalidSubscribeOptions, atcbiOSInvalidOptions } from './atcb-globals.js';
 import { atcb_format_datetime, atcb_rewrite_html_elements, atcb_generate_uuid } from './atcb-util.js';
 
 // BACKWARDS COMPATIBILITY REWRITE
@@ -47,6 +47,7 @@ function atcb_patch_config(configData) {
 // CLEAN DATA BEFORE FURTHER VALIDATION (CONSIDERING SPECIAL RULES AND SCHEMES)
 function atcb_decorate_data(data) {
   data = atcb_decorate_data_identifier(data);
+  data.subscribe = atcb_decorate_data_subscribe(data);
   data = atcb_decorate_data_rrule(data);
   data = atcb_decorate_data_options(data);
   data.richData = atcb_decorate_data_rich_data(data);
@@ -69,6 +70,14 @@ function atcb_decorate_data_identifier(data) {
     }
   }
   return data;
+}
+
+// differentiate default vs. subscription calendar
+function atcb_decorate_data_subscribe(data) {
+  if (data.subscribe != null && data.subscribe == true) {
+    return true;
+  }
+  return false;
 }
 
 // format RRULE
@@ -171,7 +180,8 @@ function atcb_decorate_data_options(data) {
     })();
     // next, fill the new arrays (where the labels array already sits inside the main data object)
     // do not consider options, which should not appear on iOS (e.g. iCal, since we have the Apple option instead)
-    // also, in the recurrence case, we leave out all options, which do not support it in general, as well as Apple and iCal for rrules with "until"
+    // in the recurrence case, we leave out all options, which do not support it in general, as well as Apple and iCal for rrules with "until"
+    // and in the subscribe case, we also skip options, which are not made for subscribing (MS Teams)
     if (
       (isiOS() && atcbiOSInvalidOptions.includes(optionName)) ||
       (data.recurrence != null &&
@@ -179,7 +189,8 @@ function atcb_decorate_data_options(data) {
         (!atcbValidRecurrOptions.includes(optionName) ||
           (data.recurrence_until != null &&
             data.recurrence_until != '' &&
-            (optionName == 'apple' || optionName == 'ical'))))
+            (optionName == 'apple' || optionName == 'ical')))) ||
+      (data.subscribe && atcbInvalidSubscribeOptions.includes(optionName))
     ) {
       continue;
     }

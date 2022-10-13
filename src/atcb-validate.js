@@ -73,6 +73,7 @@ function atcb_check_required(data) {
 function atcb_validate(data) {
   const msgPrefix = 'Add to Calendar Button generation (' + data.identifier + ')';
   if (!atcb_validate_icsFile(data, msgPrefix)) return false;
+  if (!atcb_validate_subscribe(data, msgPrefix)) return false;
   if (!atcb_validate_created(data, msgPrefix)) return false;
   if (!atcb_validate_updated(data, msgPrefix)) return false;
   if (!atcb_validate_options(data, msgPrefix)) return false;
@@ -94,14 +95,19 @@ function atcb_validate_icsFile(data, msgPrefix, i = '', msgSuffix = '') {
     return '';
   })();
   if (icsFileStr != '') {
-    if (
-      !atcb_secure_url(icsFileStr, false) ||
-      !/\.ics$/.test(data.icsFile) ||
-      !icsFileStr.startsWith('https://')
-    ) {
+    if (!atcb_secure_url(icsFileStr, false) || !/^https:\/\/(.)*\.ics$/m.test(data.icsFile)) {
       console.error(msgPrefix + ' failed: explicit ics file path not valid' + msgSuffix);
       return false;
     }
+  }
+  return true;
+}
+
+// validate the subscription functionality (requires an explicit ics file)
+function atcb_validate_subscribe(data, msgPrefix) {
+  if (data.subscribe == true && (data.icsFile == null || data.icsFile == '')) {
+    console.error(msgPrefix + ' failed: a subscription calendar requires a valid explicit ics file as well');
+    return false;
   }
   return true;
 }
