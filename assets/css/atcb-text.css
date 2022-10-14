@@ -7,7 +7,7 @@
  *
  * Style: Text
  *
- * Version: 1.17.0
+ * Version: 1.18.0
  * Creator: Jens Kuerschner (https://jenskuerschner.de)
  * Project: https://github.com/add2cal/add-to-calendar-button
  * License: Apache-2.0 with “Commons Clause” License Condition v1.0
@@ -538,6 +538,11 @@ body.atcb-dark #atcb-bgoverlay.atcb-bodyScheme {
   padding: .8em 1em;
   text-align: center;
   width: 100%;
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  flex-direction: row-reverse;
+  align-items: center;
 }
 
 button.atcb-modal-btn,

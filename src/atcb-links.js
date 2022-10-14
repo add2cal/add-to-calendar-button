@@ -3,7 +3,7 @@
  *  Add to Calendar Button
  *  ++++++++++++++++++++++
  *
- *  Version: 1.17.0
+ *  Version: 1.18.0
  *  Creator: Jens Kuerschner (https://jenskuerschner.de)
  *  Project: https://github.com/add2cal/add-to-calendar-button
  *  License: Apache-2.0 with “Commons Clause” License Condition v1.0
@@ -153,34 +153,34 @@ function atcb_generate_subscribe_links(type, data, keyboardTrigger) {
       atcb_subscribe_ical(adjustedFileUrl);
       break;
     case 'google':
-      atcb_subscribe_google(adjustedFileUrl);
+      atcb_subscribe_google(data.icsFile);
       break;
     case 'ms365':
-      atcb_subscribe_microsoft(adjustedFileUrl, data.name);
+      atcb_subscribe_microsoft(data.icsFile, data.name);
       break;
     case 'outlookcom':
-      atcb_subscribe_microsoft(adjustedFileUrl, data.name, 'outlook');
+      atcb_subscribe_microsoft(data.icsFile, data.name, 'outlook');
       break;
     case 'yahoo':
-      atcb_copy_to_clipboard(adjustedFileUrl);
+      atcb_copy_to_clipboard(data.icsFile);
       atcb_create_modal(
         data,
         'yahoo',
         atcb_translate_hook('Subscribe Yahoo', data),
         atcb_translate_hook('Clipboard info', data) + '<br>' + atcb_translate_hook('Subscribe Yahoo Details', data),
-        [{label: atcb_translate_hook('Cancel', data)}, {label: atcb_translate_hook('Open Yahoo Calendar', data), primary: true, type: 'yahoo2nd', href: 'https://www.yahoo.com/calendar'}],
+        [{label: atcb_translate_hook('Open Yahoo Calendar', data), primary: true, type: 'yahoo2nd', href: 'https://www.yahoo.com/calendar'}, {label: atcb_translate_hook('Cancel', data)}],
         [],
         keyboardTrigger
       );
       return;
     case 'yahoo2nd':
-      atcb_copy_to_clipboard(adjustedFileUrl);
+      atcb_copy_to_clipboard(data.icsFile);
       atcb_create_modal(
         data,
         'yahoo',
         atcb_translate_hook('Subscribe Yahoo', data),
         atcb_translate_hook('Clipboard info', data) + '<br>' + atcb_translate_hook('Subscribe Yahoo Details', data),
-        [{label: atcb_translate_hook('Close', data), primary: true}, {label: atcb_translate_hook('Open Yahoo Calendar', data), type: 'none', href: 'https://www.yahoo.com/calendar'}],
+        [{label: atcb_translate_hook('Open Yahoo Calendar', data), type: 'none', href: 'https://www.yahoo.com/calendar'}, {label: atcb_translate_hook('Cancel', data)}],
         [],
         keyboardTrigger
       );
@@ -375,10 +375,13 @@ function atcb_generate_msteams(data) {
 }
 
 // FUNCTION TO OPEN THE URL
-function atcb_open_cal_url(url) {
+function atcb_open_cal_url(url, target = '') {
+  if (target == '') {
+    target = atcbDefaultTarget;
+  }
   if (atcb_secure_url(url)) {
     // eslint-disable-next-line security/detect-non-literal-fs-filename
-    window.open(url, atcbDefaultTarget).focus();
+    window.open(url, target).focus();
   }
 }
 

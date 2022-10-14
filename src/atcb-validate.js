@@ -3,7 +3,7 @@
  *  Add to Calendar Button
  *  ++++++++++++++++++++++
  *
- *  Version: 1.17.0
+ *  Version: 1.18.0
  *  Creator: Jens Kuerschner (https://jenskuerschner.de)
  *  Project: https://github.com/add2cal/add-to-calendar-button
  *  License: Apache-2.0 with “Commons Clause” License Condition v1.0
@@ -95,7 +95,7 @@ function atcb_validate_icsFile(data, msgPrefix, i = '', msgSuffix = '') {
     return '';
   })();
   if (icsFileStr != '') {
-    if (!atcb_secure_url(icsFileStr, false) || !/^https:\/\/(.)*\.ics$/m.test(data.icsFile)) {
+    if (!atcb_secure_url(icsFileStr, false) || (!/^https:\/\/(.)*\.ics$/m.test(data.icsFile) && !data.subscribe) || (!data.icsFile.startsWith('https://') && data.subscribe)) {
       console.error(msgPrefix + ' failed: explicit ics file path not valid' + msgSuffix);
       return false;
     }

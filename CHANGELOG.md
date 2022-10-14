@@ -1,11 +1,8 @@
 # ⚡ Changelog (without patches)
 
-## Version 2
-
-- v2.0 : multi-date functionality, subscription support, style updates, code refactoring, now a web component
-
 ## Version 1
 
+- v1.18 : multi-date functionality, subscription support, busy/free option, style updates, code refactoring
 - v1.17 : new license (Apache-2.0 with “Commons Clause”)
 - v1.16 : custom sequence, UID, and status support; bundle size optimization
 - v1.15 : more stable time zone management via the [TimeZones iCal Library](https://tz.add-to-calendar-technology.com/), more languages, easier recurrence, better schema.org support, organizer and image information
