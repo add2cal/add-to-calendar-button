@@ -11,7 +11,12 @@
  *
  */
 
-import { isiOS, atcbValidRecurrOptions, atcbInvalidSubscribeOptions, atcbiOSInvalidOptions } from './atcb-globals.js';
+import {
+  isiOS,
+  atcbValidRecurrOptions,
+  atcbInvalidSubscribeOptions,
+  atcbiOSInvalidOptions,
+} from './atcb-globals.js';
 import { atcb_format_datetime, atcb_rewrite_html_elements, atcb_generate_uuid } from './atcb-util.js';
 
 // BACKWARDS COMPATIBILITY REWRITE

@@ -167,8 +167,18 @@ function atcb_generate_subscribe_links(type, data, keyboardTrigger) {
         data,
         'yahoo',
         atcb_translate_hook('Subscribe Yahoo', data),
-        atcb_translate_hook('Clipboard info', data) + '<br>' + atcb_translate_hook('Subscribe Yahoo Details', data),
-        [{label: atcb_translate_hook('Open Yahoo Calendar', data), primary: true, type: 'yahoo2nd', href: 'https://www.yahoo.com/calendar'}, {label: atcb_translate_hook('Cancel', data)}],
+        atcb_translate_hook('Clipboard info', data) +
+          '<br>' +
+          atcb_translate_hook('Subscribe Yahoo Details', data),
+        [
+          {
+            label: atcb_translate_hook('Open Yahoo Calendar', data),
+            primary: true,
+            type: 'yahoo2nd',
+            href: 'https://www.yahoo.com/calendar',
+          },
+          { label: atcb_translate_hook('Cancel', data) },
+        ],
         [],
         keyboardTrigger
       );
@@ -179,8 +189,17 @@ function atcb_generate_subscribe_links(type, data, keyboardTrigger) {
         data,
         'yahoo',
         atcb_translate_hook('Subscribe Yahoo', data),
-        atcb_translate_hook('Clipboard info', data) + '<br>' + atcb_translate_hook('Subscribe Yahoo Details', data),
-        [{label: atcb_translate_hook('Open Yahoo Calendar', data), type: 'none', href: 'https://www.yahoo.com/calendar'}, {label: atcb_translate_hook('Cancel', data)}],
+        atcb_translate_hook('Clipboard info', data) +
+          '<br>' +
+          atcb_translate_hook('Subscribe Yahoo Details', data),
+        [
+          {
+            label: atcb_translate_hook('Open Yahoo Calendar', data),
+            type: 'none',
+            href: 'https://www.yahoo.com/calendar',
+          },
+          { label: atcb_translate_hook('Cancel', data) },
+        ],
         [],
         keyboardTrigger
       );

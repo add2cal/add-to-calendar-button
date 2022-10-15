@@ -23,7 +23,7 @@ import {
   atcb_debounce,
   atcb_debounce_leading,
 } from './atcb-util.js';
-import { atcb_set_fully_successful } from './atcb-links'
+import { atcb_set_fully_successful } from './atcb-links';
 import { atcb_translate_hook } from './atcb-i18n.js';
 
 // GENERATE THE ACTUAL BUTTON
@@ -626,7 +626,7 @@ function atcb_create_modal(
 // FUNCTION TO SWICH THE YAHOO SUBSCRIBE MODAL
 function atcb_subscribe_yahoo_modal_switch(data, keyboardTrigger) {
   atcb_set_fully_successful(data.identifier);
-  atcb_generate_links('yahoo2nd', data, 'all', keyboardTrigger)
+  atcb_generate_links('yahoo2nd', data, 'all', keyboardTrigger);
 }
 
 // FUNCTION TO GENERATE A MORE DETAILED DATE BUTTON

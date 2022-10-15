@@ -25,7 +25,7 @@ const i18nStrings = {
     'WebView iCal headline': 'Open your browser',
     'WebView iCal info':
       'Unfortunately, in-app browsers have problems with the way we generate the calendar file.',
-    'Clipboard info': "We automatically copied a magical URL into your clipboard.",
+    'Clipboard info': 'We automatically copied a magical URL into your clipboard.',
     'WebView iCal solution':
       '<ol><li><strong>Open another browser</strong> on your phone, ...</li><li><strong>Paste</strong> the clipboard content and go.</li></ol>',
     'Crios iCal headline': 'Open Safari',
@@ -39,7 +39,8 @@ const i18nStrings = {
     'Cancelled Date': 'This date got cancelled.',
     'Delete from Calendar': 'Please update your calendar!',
     'Subscribe Yahoo': 'Add Calendar to Yahoo',
-    'Subscribe Yahoo Details': '<ol><li>Open now the Yahoo Calendar.</li><li>Click the "Actions" tab.</li><li>Hit "Follow Other Calendars".</li><li>Set a name and past the clipboard content into the url field.</li></ol>',
+    'Subscribe Yahoo Details':
+      '<ol><li>Open now the Yahoo Calendar.</li><li>Click the "Actions" tab.</li><li>Hit "Follow Other Calendars".</li><li>Set a name and past the clipboard content into the url field.</li></ol>',
     Cancel: 'Cancel',
   },
   de: {
@@ -51,8 +52,7 @@ const i18nStrings = {
     'WebView iCal headline': 'Öffne deinen Browser',
     'WebView iCal info':
       'Leider haben In-App-Browser Probleme mit der Art, wie wir Kalender-Dateien erzeugen.',
-    'Clipboard info':
-      'Wir haben automatisch eine magische URL in deine Zwischenablage kopiert.',
+    'Clipboard info': 'Wir haben automatisch eine magische URL in deine Zwischenablage kopiert.',
     'WebView iCal solution':
       '<ol><li><strong>Öffne einen anderen Browser</strong> auf deinem Smartphone, ...</li><li>Nutze die <strong>Einfügen</strong>-Funktion, um fortzufahren.</li></ol>',
     'Crios iCal headline': 'Öffne Safari',
@@ -65,7 +65,8 @@ const i18nStrings = {
     'Cancelled Date': 'Dieser Termin wurde abgesagt.',
     'Delete from Calendar': 'Bitte aktualisiere deinen Kalender!',
     'Subscribe Yahoo': 'Kalender zu Yahoo hinzufügen',
-    'Subscribe Yahoo Details': '<ol><li>Öffne den Yahoo Kalender.</li><li>Klicke auf den "Aktionen" Tab.</li><li>Wähle "Weiteren Kalendern folgen".</li><li>Wähle einen Namen und füge die URL aus deiner Zwischenablage in das URL-Feld ein.</li></ol>',
+    'Subscribe Yahoo Details':
+      '<ol><li>Öffne den Yahoo Kalender.</li><li>Klicke auf den "Aktionen" Tab.</li><li>Wähle "Weiteren Kalendern folgen".</li><li>Wähle einen Namen und füge die URL aus deiner Zwischenablage in das URL-Feld ein.</li></ol>',
     Cancel: 'Abbrechen',
   },
   es: {
@@ -77,8 +78,7 @@ const i18nStrings = {
     'WebView iCal headline': 'Abra su browser',
     'WebView iCal info':
       'Lamentablemente, los browsers in-app tienen problemas con la forma en que generamos el archivo del calendario.',
-    'Clipboard info':
-      'Hemos copiado automáticamente una URL mágica en su portapapeles.',
+    'Clipboard info': 'Hemos copiado automáticamente una URL mágica en su portapapeles.',
     'WebView iCal solution':
       '<ol><li><strong>Abre otro browser</strong> en tu smartphone, ...</li><li>Utilice la función de <strong>pegar</strong> para continuar.</li></ol>',
     'Crios iCal headline': 'Abrir Safari',
@@ -92,7 +92,8 @@ const i18nStrings = {
     'Cancelled Date': 'Esta fecha fue cancelada.',
     'Delete from Calendar': 'Actualice su calendario!',
     'Subscribe Yahoo': 'Añadir calendario a Yahoo',
-    'Subscribe Yahoo Details': '<ol><li>Abra el calendario de Yahoo.</li><li>Haga clic en la pestaña "Acciones".</li><li>Seleccione "Seguir otros calendarios".</li><li>Elige un nombre y pega la URL de tu portapapeles en el campo URL.</li></ol>',
+    'Subscribe Yahoo Details':
+      '<ol><li>Abra el calendario de Yahoo.</li><li>Haga clic en la pestaña "Acciones".</li><li>Seleccione "Seguir otros calendarios".</li><li>Elige un nombre y pega la URL de tu portapapeles en el campo URL.</li></ol>',
     Cancel: 'Cancelar',
   },
   pt: {
@@ -104,8 +105,7 @@ const i18nStrings = {
     'WebView iCal headline': 'Abra o seu browser',
     'WebView iCal info':
       'Infelizmente, os navegadores em tampas têm problemas com a forma como geramos o ficheiro de calendário.',
-    'Clipboard info':
-      'Copiámos automaticamente um URL mágico para a sua área de transferência.',
+    'Clipboard info': 'Copiámos automaticamente um URL mágico para a sua área de transferência.',
     'WebView iCal solution':
       '<ol><li><strong>Abrir outro browser</strong> en tu smartphone, ...</li><li>Use a função <forte>colar</strong> para continuar.</li></ol>',
     'Crios iCal headline': 'Safari aberto',
@@ -119,7 +119,8 @@ const i18nStrings = {
     'Cancelled Date': 'Esta data foi cancelada.',
     'Delete from Calendar': 'Actualize o seu calendário!',
     'Subscribe Yahoo': 'Adicionar calendário ao Yahoo',
-    'Subscribe Yahoo Details': '<ol><li>Abrir o calendário do Yahoo.</li><li>Clique no separador "Acções".</li><li>Seleccione "Seguir outros calendários".</li><li>Escolha um nome e cole o URL da sua área de transferência no campo URL.</li></ol>',
+    'Subscribe Yahoo Details':
+      '<ol><li>Abrir o calendário do Yahoo.</li><li>Clique no separador "Acções".</li><li>Seleccione "Seguir outros calendários".</li><li>Escolha um nome e cole o URL da sua área de transferência no campo URL.</li></ol>',
     Cancel: 'Cancelar',
   },
   fr: {
@@ -131,8 +132,7 @@ const i18nStrings = {
     'WebView iCal headline': 'Ouvrez votre navigateur',
     'WebView iCal info':
       'Malheureusement, les navigateurs in-app ont des problèmes avec la manière dont nous créons les fichiers de agenda.',
-    'Clipboard info':
-      'Nous avons automatiquement copié une URL magique dans ton presse-papiers.',
+    'Clipboard info': 'Nous avons automatiquement copié une URL magique dans ton presse-papiers.',
     'WebView iCal solution':
       '<ol><li><strong>Ouvre un autre navigateur</strong> sur ton smartphone, ...</li><li>Utilise la fonction <strong>insérer</strong> pour continuer.</li></ol>',
     'Crios iCal headline': 'Ouvre Safari',
@@ -146,7 +146,8 @@ const i18nStrings = {
     'Cancelled Date': 'Cette date est annulée.',
     'Delete from Calendar': 'Actualisez votre agenda!',
     'Subscribe Yahoo': 'Ajouter un agenda à Yahoo',
-    'Subscribe Yahoo Details': '<ol><li>Ouvre le Yahoo calendar.</li><li>Clique sur l\'onglet "Actions".</li><li>Sélectionne "Suivre d\'autres agendas".</li><li>Choisis un nom et colle l\'URL de ton presse-papiers dans le champ URL.</li></ol>',
+    'Subscribe Yahoo Details':
+      '<ol><li>Ouvre le Yahoo calendar.</li><li>Clique sur l\'onglet "Actions".</li><li>Sélectionne "Suivre d\'autres agendas".</li><li>Choisis un nom et colle l\'URL de ton presse-papiers dans le champ URL.</li></ol>',
     Cancel: 'Annuler',
   },
   nl: {
@@ -158,8 +159,7 @@ const i18nStrings = {
     'WebView iCal headline': 'Open uw browser',
     'WebView iCal info':
       'Helaas hebben in-app browsers problemen met de manier waarop wij kalenderbestanden maken.',
-    'Clipboard info':
-      'We hebben automatisch een magische URL naar je klembord gekopieerd.',
+    'Clipboard info': 'We hebben automatisch een magische URL naar je klembord gekopieerd.',
     'WebView iCal solution':
       '<ol><li><strong>Open een andere browser</strong> op uw smartphone, ...</li><li>Gebruik de <strong>insert</strong> functie om verder te gaan.</li></ol>',
     'Crios iCal headline': 'Open Safari',
@@ -173,7 +173,8 @@ const i18nStrings = {
     'Cancelled Date': 'Deze datum is geannuleerd.',
     'Delete from Calendar': 'Uw agenda bijwerken!',
     'Subscribe Yahoo': 'Toevoegen aan Yahoo',
-    'Subscribe Yahoo Details': '<ol><li>Open de Yahoo calendar.</li><li>Klik op de "Acties" tab.</li><li>Selecteer "Volg Andere Agenda\'s".</li><li>Kies een naam en plak de URL van uw klembord in het URL-veld.</li></ol>',
+    'Subscribe Yahoo Details':
+      '<ol><li>Open de Yahoo calendar.</li><li>Klik op de "Acties" tab.</li><li>Selecteer "Volg Andere Agenda\'s".</li><li>Kies een naam en plak de URL van uw klembord in het URL-veld.</li></ol>',
     Cancel: 'Annuleren',
   },
   tr: {
@@ -198,8 +199,9 @@ const i18nStrings = {
     Event: 'Etkinlik',
     'Cancelled Date': 'Bu tarih iptal edildi.',
     'Delete from Calendar': 'Lütfen takviminizi güncelleyin!',
-    'Subscribe Yahoo': 'Yahoo\'ya takvim ekleme',
-    'Subscribe Yahoo Details': '<ol><li>Yahoo takvimini açın.</li><li>"Eylemler" sekmesine tıklayın.</li><li>"Diğer Takvimleri Takip Et" öğesini seçin.</li><li>Bir ad seçin ve URL\'yi panonuzdan URL alanına yapıştırın.</li></ol>',
+    'Subscribe Yahoo': "Yahoo'ya takvim ekleme",
+    'Subscribe Yahoo Details':
+      '<ol><li>Yahoo takvimini açın.</li><li>"Eylemler" sekmesine tıklayın.</li><li>"Diğer Takvimleri Takip Et" öğesini seçin.</li><li>Bir ad seçin ve URL\'yi panonuzdan URL alanına yapıştırın.</li></ol>',
     Cancel: 'İptal',
   },
   zh: {
@@ -223,7 +225,8 @@ const i18nStrings = {
     'Cancelled Date': '此日期已取消。',
     'Delete from Calendar': '请更新您的日历!',
     'Subscribe Yahoo': '将日历添加到 Yahoo',
-    'Subscribe Yahoo Details': '<ol><li>打开 Yahoo 日历。</li><li>点击“操作”标签。</li><li>选择“关注其他日历”。</li><li>选择一个名称并将剪贴板中的 URL 粘贴到 URL 字段中。</li></ol>',
+    'Subscribe Yahoo Details':
+      '<ol><li>打开 Yahoo 日历。</li><li>点击“操作”标签。</li><li>选择“关注其他日历”。</li><li>选择一个名称并将剪贴板中的 URL 粘贴到 URL 字段中。</li></ol>',
     Cancel: '中止',
   },
   ar: {
@@ -247,7 +250,8 @@ const i18nStrings = {
     'Cancelled Date': 'تم إلغاء هذا التاريخ.',
     'Delete from Calendar': 'الرجاء تحديث التقويم الخاص بك!',
     'Subscribe Yahoo': 'أضف التقويم إلى Yahoo',
-    'Subscribe Yahoo Details': '<ol><li>افتح تقويم Yahoo.</li><li>انقر فوق علامة التبويب "الإجراءات".</li><li>حدد "متابعة تقويمات أخرى".</li><li>اختر اسمًا والصق عنوان URL من الحافظة الخاصة بك في حقل URL.</li></ol>',
+    'Subscribe Yahoo Details':
+      '<ol><li>افتح تقويم Yahoo.</li><li>انقر فوق علامة التبويب "الإجراءات".</li><li>حدد "متابعة تقويمات أخرى".</li><li>اختر اسمًا والصق عنوان URL من الحافظة الخاصة بك في حقل URL.</li></ol>',
     Cancel: 'إحباط',
   },
   hi: {
@@ -272,7 +276,8 @@ const i18nStrings = {
     'Cancelled Date': 'यह तिथि रद्द हो गई।',
     'Delete from Calendar': 'कृपया अपना कैलेंडर अपडेट करें!',
     'Subscribe Yahoo': 'Yahoo . में कैलेंडर जोड़ें',
-    'Subscribe Yahoo Details': '<ol><li>Yahoo कैलेंडर खोलें।</li><li>"कृती" टैब पर क्लिक करें।</li><li>"इतर कॅलेंडर्सचे अनुसरण करा" चुनें।</li><li>एक नाम चुनें और अपने क्लिपबोर्ड से URL को URL फ़ील्ड में पेस्ट करें।</li></ol>',
+    'Subscribe Yahoo Details':
+      '<ol><li>Yahoo कैलेंडर खोलें।</li><li>"कृती" टैब पर क्लिक करें।</li><li>"इतर कॅलेंडर्सचे अनुसरण करा" चुनें।</li><li>एक नाम चुनें और अपने क्लिपबोर्ड से URL को URL फ़ील्ड में पेस्ट करें।</li></ol>',
     Cancel: 'रद्द करना',
   },
   pl: {
@@ -297,7 +302,8 @@ const i18nStrings = {
     'Cancelled Date': 'Ta data została odwołana.',
     'Delete from Calendar': 'Zaktualizuj swój kalendarz!',
     'Subscribe Yahoo': 'Dodaj kalendarz do Yahoo',
-    'Subscribe Yahoo Details': '<ol><li>Otwórz kalendarz Yahoo.</li><li>Kliknij na zakładkę "Czynności".</li><li>Wybierz "Obserwuj inne kalendarze".</li><li>Wybierz nazwę i wklej adres URL ze schowka w polu URL.</li></ol>',
+    'Subscribe Yahoo Details':
+      '<ol><li>Otwórz kalendarz Yahoo.</li><li>Kliknij na zakładkę "Czynności".</li><li>Wybierz "Obserwuj inne kalendarze".</li><li>Wybierz nazwę i wklej adres URL ze schowka w polu URL.</li></ol>',
     Cancel: 'Anuluj',
   },
   id: {
@@ -323,7 +329,8 @@ const i18nStrings = {
     'Cancelled Date': 'Tanggal ini dibatalkan.',
     'Delete from Calendar': 'Perbarui kalender Anda!',
     'Subscribe Yahoo': 'Tambahkan kalender ke Yahoo',
-    'Subscribe Yahoo Details': '<ol><li>Buka kalender Yahoo.</li><li>Klik pada tab "Tindakan".</li><li>Pilih "Ikuti Kalender Lain".</li><li>Pilih nama dan tempelkan URL dari clipboard Anda ke bidang URL.</li></ol>',
+    'Subscribe Yahoo Details':
+      '<ol><li>Buka kalender Yahoo.</li><li>Klik pada tab "Tindakan".</li><li>Pilih "Ikuti Kalender Lain".</li><li>Pilih nama dan tempelkan URL dari clipboard Anda ke bidang URL.</li></ol>',
     Cancel: 'Batal',
   },
   no: {
@@ -348,7 +355,8 @@ const i18nStrings = {
     'Cancelled Date': 'Denne datoen ble avlyst.',
     'Delete from Calendar': 'Oppdater kalenderen din!',
     'Subscribe Yahoo': 'Legg til kalender til Yahoo',
-    'Subscribe Yahoo Details': '<ol><li>Åpne Yahoo-kalenderen.</li><li>Klikk på «Handlinger»-fanen.</li><li>Velg «Følg andre kalendere».</li><li>Velg et navn og lim inn URL-en fra utklippstavlen i URL-feltet.</li></ol>',
+    'Subscribe Yahoo Details':
+      '<ol><li>Åpne Yahoo-kalenderen.</li><li>Klikk på «Handlinger»-fanen.</li><li>Velg «Følg andre kalendere».</li><li>Velg et navn og lim inn URL-en fra utklippstavlen i URL-feltet.</li></ol>',
     Cancel: 'Avbryt',
   },
   fi: {
@@ -373,7 +381,8 @@ const i18nStrings = {
     'Cancelled Date': 'Tämä päivämäärä peruttiin.',
     'Delete from Calendar': 'Päivitä kalenterisi!',
     'Subscribe Yahoo': 'Lisää kalenteri Yahoo',
-    'Subscribe Yahoo Details': '<ol><li>Avaa Yahoo-kalenteri.</li><li>Napsauta "Toiminnot"-välilehteä.</li><li>Valitse "Seuraa muiden kalentereita".</li><li>Valitse nimi ja liitä URL-osoite leikepöydältäsi URL-kenttään.</li></ol>',
+    'Subscribe Yahoo Details':
+      '<ol><li>Avaa Yahoo-kalenteri.</li><li>Napsauta "Toiminnot"-välilehteä.</li><li>Valitse "Seuraa muiden kalentereita".</li><li>Valitse nimi ja liitä URL-osoite leikepöydältäsi URL-kenttään.</li></ol>',
     Cancel: 'Peruuta',
   },
   sv: {
@@ -397,7 +406,8 @@ const i18nStrings = {
     'Cancelled Date': 'Detta datum har ställts in.',
     'Delete from Calendar': 'Uppdatera din kalender!',
     'Subscribe Yahoo': 'Lägg till kalender i Yahoo',
-    'Subscribe Yahoo Details': '<ol><li>Öppna Yahoo-kalendern.</li><li>Klicka på fliken "Åtgärder".</li><li>Välj "Följ andra kalendrar".</li><li>Välj ett namn och klistra in URL:en från klippbordet i URL-fältet.</li></ol>',
+    'Subscribe Yahoo Details':
+      '<ol><li>Öppna Yahoo-kalendern.</li><li>Klicka på fliken "Åtgärder".</li><li>Välj "Följ andra kalendrar".</li><li>Välj ett namn och klistra in URL:en från klippbordet i URL-fältet.</li></ol>',
     Cancel: 'Avbryt',
   },
   cs: {
@@ -422,7 +432,8 @@ const i18nStrings = {
     'Cancelled Date': 'Toto datum bylo zrušeno.',
     'Delete from Calendar': 'Aktualizujte svůj kalendář!',
     'Subscribe Yahoo': 'Přidat kalendář do Yahoo',
-    'Subscribe Yahoo Details': '<ol><li>Otevřete kalendář Yahoo.</li><li>Klikněte na kartu "Akce".</li><li>Vyberte možnost "Sledovat další kalendáře".</li><li>Vyberte název a vložte adresu URL ze schránky do pole URL.</li></ol>',
+    'Subscribe Yahoo Details':
+      '<ol><li>Otevřete kalendář Yahoo.</li><li>Klikněte na kartu "Akce".</li><li>Vyberte možnost "Sledovat další kalendáře".</li><li>Vyberte název a vložte adresu URL ze schránky do pole URL.</li></ol>',
     Cancel: 'Storno',
   },
   ja: {
@@ -446,7 +457,8 @@ const i18nStrings = {
     'Cancelled Date': 'この日はキャンセルになりました。',
     'Delete from Calendar': 'カレンダーを更新する!',
     'Subscribe Yahoo': 'Yahooにカレンダーを追加する',
-    'Subscribe Yahoo Details': '<ol><li>Yahooカレンダーを開く。</li><li>[実行] タブをクリックします。</li><li>[その他のカレンダーのフォロー] を選択します。</li><li>名前を決めて、クリップボードにあるURLをURL欄に貼り付けます。</li></ol>',
+    'Subscribe Yahoo Details':
+      '<ol><li>Yahooカレンダーを開く。</li><li>[実行] タブをクリックします。</li><li>[その他のカレンダーのフォロー] を選択します。</li><li>名前を決めて、クリップボードにあるURLをURL欄に貼り付けます。</li></ol>',
     Cancel: 'キャンセル',
   },
   it: {
@@ -472,7 +484,8 @@ const i18nStrings = {
     'Cancelled Date': 'La data è stata annullata.',
     'Delete from Calendar': 'Aggiornare il calendario!',
     'Subscribe Yahoo': 'Aggiungi il calendario a Yahoo',
-    'Subscribe Yahoo Details': '<ol><li>Aprire il calendario di Yahoo.</li><li>Fare clic sulla scheda "Azioni".</li><li>Selezionare "Segui altri calendari".</li><li>Scegliere un nome e incollare l\'URL dagli appunti nel campo URL.</li></ol>',
+    'Subscribe Yahoo Details':
+      '<ol><li>Aprire il calendario di Yahoo.</li><li>Fare clic sulla scheda "Azioni".</li><li>Selezionare "Segui altri calendari".</li><li>Scegliere un nome e incollare l\'URL dagli appunti nel campo URL.</li></ol>',
     Cancel: 'Annulla',
   },
   ko: {
@@ -496,7 +509,8 @@ const i18nStrings = {
     'Cancelled Date': '이 날짜는 취소되었습니다.',
     'Delete from Calendar': '캘린더를 업데이트하세요!',
     'Subscribe Yahoo': 'Yahoo에 캘린더 추가',
-    'Subscribe Yahoo Details': '<ol><li>Yahoo 캘린더를 엽니다.</li><li>"동작" 탭을 클릭합니다.</li><li>"다른 일정관리 팔로우"를 선택합니다.</li><li>이름을 선택하고 클립보드의 URL을 URL 필드에 붙여넣습니다.</li></ol>',
+    'Subscribe Yahoo Details':
+      '<ol><li>Yahoo 캘린더를 엽니다.</li><li>"동작" 탭을 클릭합니다.</li><li>"다른 일정관리 팔로우"를 선택합니다.</li><li>이름을 선택하고 클립보드의 URL을 URL 필드에 붙여넣습니다.</li></ol>',
     Cancel: '취소',
   },
   vi: {
@@ -508,8 +522,7 @@ const i18nStrings = {
     'WebView iCal headline': 'Mở trình duyệt của bạn',
     'WebView iCal info':
       'Rất tiếc, các trình duyệt trong ứng dụng gặp sự cố với cách chúng tôi tạo tệp lịch.',
-    'Clipboard info':
-      'Chúng tôi đã tự động sao chép một URL ma thuật vào khay nhớ tạm của bạn.',
+    'Clipboard info': 'Chúng tôi đã tự động sao chép một URL ma thuật vào khay nhớ tạm của bạn.',
     'WebView iCal solution':
       '<ol><li><strong> Mở trình duyệt khác </strong> trên điện thoại của bạn, ...</li><li><strong> Dán </strong> nội dung khay nhớ tạm và bắt đầu.</li></ol>',
     'Crios iCal headline': 'Mở Safari',
@@ -522,7 +535,8 @@ const i18nStrings = {
     'Cancelled Date': 'Ngày này đã bị hủy.',
     'Delete from Calendar': 'Cập nhật lịch của bạn!',
     'Subscribe Yahoo': 'Thêm lịch vào Yahoo',
-    'Subscribe Yahoo Details': '<ol><li>Mở Lịch Yahoo.</li><li>Nhấp vào tab "Hành động".</li><li>Chọn "Theo dõi các Lịch khác".</li><li>Chọn tên và dán URL từ khay nhớ tạm của bạn vào trường URL.</li></ol>',
+    'Subscribe Yahoo Details':
+      '<ol><li>Mở Lịch Yahoo.</li><li>Nhấp vào tab "Hành động".</li><li>Chọn "Theo dõi các Lịch khác".</li><li>Chọn tên và dán URL từ khay nhớ tạm của bạn vào trường URL.</li></ol>',
     Cancel: 'Hủy bỏ',
   },
 };

@@ -95,7 +95,11 @@ function atcb_validate_icsFile(data, msgPrefix, i = '', msgSuffix = '') {
     return '';
   })();
   if (icsFileStr != '') {
-    if (!atcb_secure_url(icsFileStr, false) || (!/^https:\/\/(.)*\.ics$/m.test(data.icsFile) && !data.subscribe) || (!data.icsFile.startsWith('https://') && data.subscribe)) {
+    if (
+      !atcb_secure_url(icsFileStr, false) ||
+      (!/^https:\/\/(.)*\.ics$/m.test(data.icsFile) && !data.subscribe) ||
+      (!data.icsFile.startsWith('https://') && data.subscribe)
+    ) {
       console.error(msgPrefix + ' failed: explicit ics file path not valid' + msgSuffix);
       return false;
     }
