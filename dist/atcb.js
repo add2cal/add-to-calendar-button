@@ -2188,7 +2188,6 @@ function atcb_generate_yahoo(data) {
   if (data.descriptionHtmlFree != null && data.descriptionHtmlFree != '') {
     urlParts.push('desc=' + encodeURIComponent(data.descriptionHtmlFree));
   }
-  urlParts.push('uid=' + encodeURIComponent(data.uid));
   atcb_open_cal_url(urlParts.join('&'));
 }
 function atcb_generate_microsoft(data, type = '365') {

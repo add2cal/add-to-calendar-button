@@ -301,7 +301,7 @@ function atcb_generate_google(data) {
 }
 
 // FUNCTION TO GENERATE THE YAHOO URL
-// See specs at: TODO: add some documentation here, if it exists
+// See specs at: https://github.com/InteractionDesignFoundation/add-event-to-calendar-docs/blob/main/services/yahoo.md (unofficial)
 function atcb_generate_yahoo(data) {
   const urlParts = [];
   urlParts.push('https://calendar.yahoo.com/?v=60');
@@ -324,8 +324,7 @@ function atcb_generate_yahoo(data) {
     // using descriptionHtmlFree instead of description, since Yahoo does not support html tags in a stable way
     urlParts.push('desc=' + encodeURIComponent(data.descriptionHtmlFree));
   }
-  // We also push the UID. It has no real effect, but at least becomes part of the url that way
-  urlParts.push('uid=' + encodeURIComponent(data.uid));
+  // mind to not use the UID with Yahoo, since this is reserved for an internal Yahoo, which we usually do not know. Therefore, providing a wrong ID break it
   atcb_open_cal_url(urlParts.join('&'));
 }
 
