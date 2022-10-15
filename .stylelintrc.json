@@ -3,6 +3,7 @@
   "ignoreFiles": ["**/*.min.css"],
   "rules": {
     "selector-class-pattern": null,
-    "property-no-vendor-prefix": null
+    "property-no-vendor-prefix": null,
+    "value-no-vendor-prefix": null
   }
 }

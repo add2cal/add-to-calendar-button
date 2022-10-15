@@ -3,12 +3,31 @@ declare module 'add-to-calendar-button' {
   export function atcb_action(
     config: {
       name: string;
+      dates?: {
+        name?: string;
+        description?: string;
+        startDate?: string;
+        startTime?: string;
+        endDate?: string;
+        endTime?: string;
+        timeZone?: string;
+        location?: string;
+        status?: 'TENTATIVE' | 'CONFIRMED' | 'CANCELLED';
+        sequence?: bigint;
+        uid?: string;
+        organizer?: string;
+      }[];
       description?: string;
-      startDate: string;
+      startDate?: string;
       startTime?: string;
       endDate?: string;
       endTime?: string;
+      timeZone?: string;
       location?: string;
+      status?: 'TENTATIVE' | 'CONFIRMED' | 'CANCELLED';
+      sequence?: bigint;
+      uid?: string;
+      organizer?: string;
       icsFile?: string;
       images?: string[];
       recurrence?: string;
@@ -19,22 +38,18 @@ declare module 'add-to-calendar-button' {
       recurrence_byMonth?: string;
       recurrence_byMonthDay?: string;
       recurrence_weekstart?: string;
-      sequence?: bigint;
-      uid?: string;
-      status?: 'TENTATIVE' | 'CONFIRMED' | 'CANCELLED';
-      sequence?: bigint;
+      availability?: 'busy' | 'free';
       created?: string;
       updated?: string;
-      organizer?: string;
       identifier?: string;
+      subscribe?: boolean;
       options: ('Apple' | 'Google' | 'iCal' | 'Microsoft365' | 'MicrosoftTeams' | 'Outlook.com' | 'Yahoo')[];
       iCalFileName?: string;
-      timeZone?: string;
-      trigger?: 'hover' | 'click';
       listStyle?: 'dropdown' | 'dropdown-static' | 'overlay' | 'modal';
+      buttonStyle?: 'default' | '3d' | 'flat' | 'round' | 'neumorphism' | 'text' | 'date' | 'custom' | 'none';
+      trigger?: 'hover' | 'click';
       background?: boolean;
-      buttonStyle?: 'default' | '3d' | 'flat' | 'round' | 'neumorphism' | 'text' | 'none';
-      size?: bigint;
+      size?: string;
       customLabels?: object;
       lightMode?: 'system' | 'dark' | 'light' | 'bodyScheme';
       language?:

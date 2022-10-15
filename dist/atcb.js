@@ -1,758 +1,21 @@
-/**
+/*!
+ *  @preserve
+ *
  * ++++++++++++++++++++++++++++++++++++++
  * Add to Calendar TimeZones iCal Library
  * ++++++++++++++++++++++++++++++++++++++
- */
-const tzlibVersion = '1.3.2';
-/* Creator: Jens Kuerschner (https://jenskuerschner.de)
+ *
+ * Version: 1.4.0
+ * Creator: Jens Kuerschner (https://jenskuerschner.de)
  * Project: https://github.com/add2cal/timezones-ical-library
  * License: Apache-2.0
  *
  */
-
-// DEFINING THE DB DATA - WILL GET RE-WRITTEN WITH THE ACTUAL DATA ON BUILD
-const tzlibZonesDB = {
-  Africa: {
-    Abidjan: ['', 0],
-    Accra: ['Africa/Abidjan', 0],
-    Addis_Ababa: ['Africa/Nairobi', 1],
-    Algiers: ['', 2],
-    Asmara: ['Africa/Nairobi', 1],
-    Asmera: ['Africa/Nairobi', 1],
-    Bamako: ['Africa/Abidjan', 0],
-    Bangui: ['Africa/Lagos', 3],
-    Banjul: ['Africa/Abidjan', 0],
-    Bissau: ['', 0],
-    Blantyre: ['Africa/Maputo', 4],
-    Brazzaville: ['Africa/Lagos', 3],
-    Bujumbura: ['Africa/Maputo', 4],
-    Cairo: ['', 5],
-    Casablanca: ['', 6],
-    Ceuta: ['', 7],
-    Conakry: ['Africa/Abidjan', 0],
-    Dakar: ['Africa/Abidjan', 0],
-    Dar_es_Salaam: ['Africa/Nairobi', 1],
-    Djibouti: ['Africa/Nairobi', 1],
-    Douala: ['Africa/Lagos', 3],
-    El_Aaiun: ['', 6],
-    Freetown: ['Africa/Abidjan', 0],
-    Gaborone: ['Africa/Maputo', 4],
-    Harare: ['Africa/Maputo', 4],
-    Johannesburg: ['', 8],
-    Juba: ['', 4],
-    Kampala: ['Africa/Nairobi', 1],
-    Khartoum: ['', 4],
-    Kigali: ['Africa/Maputo', 4],
-    Kinshasa: ['Africa/Lagos', 3],
-    Lagos: ['', 3],
-    Libreville: ['Africa/Lagos', 3],
-    Lome: ['Africa/Abidjan', 0],
-    Luanda: ['Africa/Lagos', 3],
-    Lubumbashi: ['Africa/Maputo', 4],
-    Lusaka: ['Africa/Maputo', 4],
-    Malabo: ['Africa/Lagos', 3],
-    Maputo: ['', 4],
-    Maseru: ['Africa/Johannesburg', 8],
-    Mbabane: ['Africa/Johannesburg', 8],
-    Mogadishu: ['Africa/Nairobi', 1],
-    Monrovia: ['', 0],
-    Nairobi: ['', 1],
-    Ndjamena: ['', 3],
-    Niamey: ['Africa/Lagos', 3],
-    Nouakchott: ['Africa/Abidjan', 0],
-    Ouagadougou: ['Africa/Abidjan', 0],
-    'Porto-Novo': ['Africa/Lagos', 3],
-    Sao_Tome: ['', 0],
-    Timbuktu: ['Africa/Abidjan', 0],
-    Tripoli: ['', 5],
-    Tunis: ['', 2],
-    Windhoek: ['', 4],
-  },
-  America: {
-    Adak: ['', 9],
-    Anchorage: ['', 10],
-    Anguilla: ['America/Puerto_Rico', 11],
-    Antigua: ['America/Puerto_Rico', 11],
-    Araguaina: ['', 12],
-    Argentina: {
-      Buenos_Aires: ['', 12],
-      Catamarca: ['', 12],
-      ComodRivadavia: ['America/Argentina/Catamarca', 12],
-      Cordoba: ['', 12],
-      Jujuy: ['', 12],
-      La_Rioja: ['', 12],
-      Mendoza: ['', 12],
-      Rio_Gallegos: ['', 12],
-      Salta: ['', 12],
-      San_Juan: ['', 12],
-      San_Luis: ['', 12],
-      Tucuman: ['', 12],
-      Ushuaia: ['', 12],
-    },
-    Aruba: ['America/Puerto_Rico', 11],
-    Asuncion: ['', 13],
-    Atikokan: ['America/Panama', 14],
-    Atka: ['America/Adak', 9],
-    Bahia_Banderas: ['', 15],
-    Bahia: ['', 12],
-    Barbados: ['', 11],
-    Belem: ['', 12],
-    Belize: ['', 16],
-    'Blanc-Sablon': ['America/Puerto_Rico', 11],
-    Boa_Vista: ['', 17],
-    Bogota: ['', 18],
-    Boise: ['', 19],
-    Buenos_Aires: ['America/Argentina/Buenos_Aires', 12],
-    Cambridge_Bay: ['', 19],
-    Campo_Grande: ['', 17],
-    Cancun: ['', 14],
-    Caracas: ['', 17],
-    Catamarca: ['America/Argentina/Catamarca', 12],
-    Cayenne: ['', 12],
-    Cayman: ['America/Panama', 14],
-    Chicago: ['', 20],
-    Chihuahua: ['', 21],
-    Coral_Harbour: ['America/Panama', 14],
-    Cordoba: ['America/Argentina/Cordoba', 12],
-    Costa_Rica: ['', 16],
-    Creston: ['America/Phoenix', 22],
-    Cuiaba: ['', 17],
-    Curacao: ['America/Puerto_Rico', 11],
-    Danmarkshavn: ['', 0],
-    Dawson_Creek: ['', 22],
-    Dawson: ['', 22],
-    Denver: ['', 19],
-    Detroit: ['', 23],
-    Dominica: ['America/Puerto_Rico', 11],
-    Edmonton: ['', 19],
-    Eirunepe: ['', 18],
-    El_Salvador: ['', 16],
-    Ensenada: ['America/Tijuana', 24],
-    Fort_Nelson: ['', 22],
-    Fort_Wayne: ['America/Indiana/Indianapolis', 23],
-    Fortaleza: ['', 12],
-    Glace_Bay: ['', 25],
-    Godthab: ['America/Nuuk', 26],
-    Goose_Bay: ['', 27],
-    Grand_Turk: ['', 28],
-    Grenada: ['America/Puerto_Rico', 11],
-    Guadeloupe: ['America/Puerto_Rico', 11],
-    Guatemala: ['', 16],
-    Guayaquil: ['', 18],
-    Guyana: ['', 17],
-    Halifax: ['', 25],
-    Havana: ['', 29],
-    Hermosillo: ['', 22],
-    Indiana: {
-      Indianapolis: ['', 23],
-      Knox: ['', 20],
-      Marengo: ['', 23],
-      Petersburg: ['', 23],
-      Tell_City: ['', 20],
-      Vevay: ['', 23],
-      Vincennes: ['', 23],
-      Winamac: ['', 28],
-    },
-    Indianapolis: ['America/Indiana/Indianapolis', 23],
-    Inuvik: ['', 19],
-    Iqaluit: ['', 23],
-    Jamaica: ['', 14],
-    Jujuy: ['America/Argentina/Jujuy', 12],
-    Juneau: ['', 10],
-    Kentucky: { Louisville: ['', 23], Monticello: ['', 23] },
-    Knox_IN: ['America/Indiana/Knox', 20],
-    Kralendijk: ['America/Puerto_Rico', 11],
-    La_Paz: ['', 17],
-    Lima: ['', 18],
-    Los_Angeles: ['', 24],
-    Louisville: ['America/Kentucky/Louisville', 23],
-    Lower_Princes: ['America/Puerto_Rico', 11],
-    Maceio: ['', 12],
-    Managua: ['', 16],
-    Manaus: ['', 17],
-    Marigot: ['America/Puerto_Rico', 11],
-    Martinique: ['', 11],
-    Matamoros: ['', 20],
-    Mazatlan: ['', 21],
-    Mendoza: ['America/Argentina/Mendoza', 12],
-    Menominee: ['', 20],
-    Merida: ['', 30],
-    Metlakatla: ['', 10],
-    Mexico_City: ['', 30],
-    Miquelon: ['', 31],
-    Moncton: ['', 25],
-    Monterrey: ['', 30],
-    Montevideo: ['', 12],
-    Montreal: ['America/Toronto', 23],
-    Montserrat: ['America/Puerto_Rico', 11],
-    Nassau: ['America/Toronto', 23],
-    New_York: ['', 23],
-    Nipigon: ['', 23],
-    Nome: ['', 10],
-    Noronha: ['', 32],
-    North_Dakota: { Beulah: ['', 20], Center: ['', 20], New_Salem: ['', 20] },
-    Nuuk: ['', 26],
-    Ojinaga: ['', 19],
-    Panama: ['', 14],
-    Pangnirtung: ['', 23],
-    Paramaribo: ['', 12],
-    Phoenix: ['', 22],
-    Port_of_Spain: ['America/Puerto_Rico', 11],
-    'Port-au-Prince': ['', 23],
-    Porto_Acre: ['America/Rio_Branco', 18],
-    Porto_Velho: ['', 17],
-    Puerto_Rico: ['', 11],
-    Punta_Arenas: ['', 12],
-    Rainy_River: ['', 20],
-    Rankin_Inlet: ['', 20],
-    Recife: ['', 12],
-    Regina: ['', 16],
-    Resolute: ['', 33],
-    Rio_Branco: ['', 18],
-    Rosario: ['America/Argentina/Cordoba', 12],
-    Santa_Isabel: ['America/Tijuana', 24],
-    Santarem: ['', 12],
-    Santiago: ['', 34],
-    Santo_Domingo: ['', 11],
-    Sao_Paulo: ['', 12],
-    Scoresbysund: ['', 35],
-    Shiprock: ['America/Denver', 19],
-    Sitka: ['', 10],
-    St_Barthelemy: ['America/Puerto_Rico', 11],
-    St_Johns: ['', 36],
-    St_Kitts: ['America/Puerto_Rico', 11],
-    St_Lucia: ['America/Puerto_Rico', 11],
-    St_Thomas: ['America/Puerto_Rico', 11],
-    St_Vincent: ['America/Puerto_Rico', 11],
-    Swift_Current: ['', 16],
-    Tegucigalpa: ['', 16],
-    Thule: ['', 25],
-    Thunder_Bay: ['', 23],
-    Tijuana: ['', 24],
-    Toronto: ['', 23],
-    Tortola: ['America/Puerto_Rico', 11],
-    Vancouver: ['', 24],
-    Virgin: ['America/Puerto_Rico', 11],
-    Whitehorse: ['', 22],
-    Winnipeg: ['', 20],
-    Yakutat: ['', 10],
-    Yellowknife: ['', 19],
-  },
-  Antarctica: {
-    Casey: ['', 37],
-    Davis: ['', 38],
-    DumontDUrville: ['Pacific/Port_Moresby', 39],
-    Macquarie: ['', 40],
-    Mawson: ['', 41],
-    McMurdo: ['Pacific/Auckland', 42],
-    Palmer: ['', 12],
-    Rothera: ['', 12],
-    South_Pole: ['Pacific/Auckland', 42],
-    Syowa: ['Asia/Riyadh', 43],
-    Troll: ['', 44],
-    Vostok: ['Asia/Urumqi', 45],
-  },
-  Arctic: { Longyearbyen: ['Europe/Berlin', 7] },
-  Asia: {
-    Aden: ['Asia/Riyadh', 43],
-    Almaty: ['', 45],
-    Amman: ['', 46],
-    Anadyr: ['', 47],
-    Aqtau: ['', 41],
-    Aqtobe: ['', 41],
-    Ashgabat: ['', 41],
-    Ashkhabad: ['Asia/Ashgabat', 41],
-    Atyrau: ['', 41],
-    Baghdad: ['', 43],
-    Bahrain: ['Asia/Qatar', 43],
-    Baku: ['', 48],
-    Bangkok: ['', 38],
-    Barnaul: ['', 38],
-    Beirut: ['', 49],
-    Bishkek: ['', 45],
-    Brunei: ['Asia/Kuching', 50],
-    Calcutta: ['Asia/Kolkata', 51],
-    Chita: ['', 52],
-    Choibalsan: ['', 50],
-    Chongqing: ['Asia/Shanghai', 53],
-    Chungking: ['Asia/Shanghai', 53],
-    Colombo: ['', 54],
-    Dacca: ['Asia/Dhaka', 45],
-    Damascus: ['', 55],
-    Dhaka: ['', 45],
-    Dili: ['', 52],
-    Dubai: ['', 48],
-    Dushanbe: ['', 41],
-    Famagusta: ['', 56],
-    Gaza: ['', 57],
-    Harbin: ['Asia/Shanghai', 53],
-    Hebron: ['', 57],
-    Ho_Chi_Minh: ['', 38],
-    Hong_Kong: ['', 58],
-    Hovd: ['', 38],
-    Irkutsk: ['', 50],
-    Istanbul: ['Europe/Istanbul', 43],
-    Jakarta: ['', 59],
-    Jayapura: ['', 60],
-    Jerusalem: ['', 61],
-    Kabul: ['', 62],
-    Kamchatka: ['', 47],
-    Karachi: ['', 63],
-    Kashgar: ['Asia/Urumqi', 45],
-    Kathmandu: ['', 64],
-    Katmandu: ['Asia/Kathmandu', 64],
-    Khandyga: ['', 52],
-    Kolkata: ['', 51],
-    Krasnoyarsk: ['', 38],
-    Kuala_Lumpur: ['Asia/Singapore', 50],
-    Kuching: ['', 50],
-    Kuwait: ['Asia/Riyadh', 43],
-    Macao: ['Asia/Macau', 53],
-    Macau: ['', 53],
-    Magadan: ['', 37],
-    Makassar: ['', 65],
-    Manila: ['', 66],
-    Muscat: ['Asia/Dubai', 48],
-    Nicosia: ['', 67],
-    Novokuznetsk: ['', 38],
-    Novosibirsk: ['', 38],
-    Omsk: ['', 45],
-    Oral: ['', 41],
-    Phnom_Penh: ['Asia/Bangkok', 38],
-    Pontianak: ['', 59],
-    Pyongyang: ['', 68],
-    Qatar: ['', 43],
-    Qostanay: ['', 45],
-    Qyzylorda: ['', 41],
-    Rangoon: ['Asia/Yangon', 69],
-    Riyadh: ['', 43],
-    Saigon: ['Asia/Ho_Chi_Minh', 38],
-    Sakhalin: ['', 37],
-    Samarkand: ['', 41],
-    Seoul: ['', 68],
-    Shanghai: ['', 53],
-    Singapore: ['', 50],
-    Srednekolymsk: ['', 37],
-    Taipei: ['', 53],
-    Tashkent: ['', 41],
-    Tbilisi: ['', 48],
-    Tehran: ['', 70],
-    Tel_Aviv: ['Asia/Jerusalem', 61],
-    Thimbu: ['Asia/Thimphu', 45],
-    Thimphu: ['', 45],
-    Tokyo: ['', 71],
-    Tomsk: ['', 38],
-    Ujung_Pandang: ['Asia/Makassar', 65],
-    Ulaanbaatar: ['', 50],
-    Ulan_Bator: ['Asia/Ulaanbaatar', 50],
-    Urumqi: ['', 45],
-    'Ust-Nera': ['', 39],
-    Vientiane: ['Asia/Bangkok', 38],
-    Vladivostok: ['', 39],
-    Yakutsk: ['', 52],
-    Yangon: ['', 69],
-    Yekaterinburg: ['', 41],
-    Yerevan: ['', 48],
-  },
-  Atlantic: {
-    Azores: ['', 35],
-    Bermuda: ['', 25],
-    Canary: ['', 72],
-    Cape_Verde: ['', 73],
-    Faeroe: ['Atlantic/Faroe', 72],
-    Faroe: ['', 72],
-    Jan_Mayen: ['Europe/Berlin', 7],
-    Madeira: ['', 72],
-    Reykjavik: ['Africa/Abidjan', 0],
-    South_Georgia: ['', 32],
-    St_Helena: ['Africa/Abidjan', 0],
-    Stanley: ['', 12],
-  },
-  Australia: {
-    ACT: ['Australia/Sydney', 40],
-    Adelaide: ['', 74],
-    Brisbane: ['', 75],
-    Broken_Hill: ['', 74],
-    Canberra: ['Australia/Sydney', 40],
-    Currie: ['Australia/Hobart', 76],
-    Darwin: ['', 77],
-    Eucla: ['', 78],
-    Hobart: ['', 76],
-    LHI: ['Australia/Lord_Howe', 79],
-    Lindeman: ['', 75],
-    Lord_Howe: ['', 79],
-    Melbourne: ['', 40],
-    North: ['Australia/Darwin', 77],
-    NSW: ['Australia/Sydney', 40],
-    Perth: ['', 80],
-    Queensland: ['Australia/Brisbane', 75],
-    South: ['Australia/Adelaide', 74],
-    Sydney: ['', 40],
-    Tasmania: ['Australia/Hobart', 76],
-    Victoria: ['Australia/Melbourne', 40],
-    West: ['Australia/Perth', 80],
-    Yancowinna: ['Australia/Broken_Hill', 74],
-  },
-  Brazil: {
-    Acre: ['America/Rio_Branco', 18],
-    DeNoronha: ['America/Noronha', 32],
-    East: ['America/Sao_Paulo', 12],
-    West: ['America/Manaus', 17],
-  },
-  Canada: {
-    Atlantic: ['America/Halifax', 25],
-    Central: ['America/Winnipeg', 20],
-    Eastern: ['America/Toronto', 23],
-    Mountain: ['America/Edmonton', 19],
-    Newfoundland: ['America/St_Johns', 36],
-    Pacific: ['America/Vancouver', 24],
-    Saskatchewan: ['America/Regina', 16],
-    Yukon: ['America/Whitehorse', 22],
-  },
-  CET: ['', 7],
-  Chile: { Continental: ['America/Santiago', 34], EasterIsland: ['Pacific/Easter', 81] },
-  CST6CDT: ['', 20],
-  Cuba: ['America/Havana', 29],
-  EET: ['', 56],
-  Egypt: ['Africa/Cairo', 5],
-  Eire: ['Europe/Dublin', 82],
-  EST: ['', 14],
-  EST5EDT: ['', 23],
-  Etc: {
-    'GMT-0': ['Etc/GMT', 0],
-    'GMT-1': ['', 6],
-    'GMT-10': ['', 39],
-    'GMT-11': ['', 37],
-    'GMT-12': ['', 47],
-    'GMT-13': ['', 83],
-    'GMT-14': ['', 84],
-    'GMT-2': ['', 85],
-    'GMT-3': ['', 43],
-    'GMT-4': ['', 48],
-    'GMT-5': ['', 41],
-    'GMT-6': ['', 45],
-    'GMT-7': ['', 38],
-    'GMT-8': ['', 50],
-    'GMT-9': ['', 52],
-    GMT: ['', 0],
-    'GMT+0': ['Etc/GMT', 0],
-    'GMT+1': ['', 73],
-    'GMT+10': ['', 86],
-    'GMT+11': ['', 87],
-    'GMT+12': ['', 88],
-    'GMT+2': ['', 32],
-    'GMT+3': ['', 12],
-    'GMT+4': ['', 17],
-    'GMT+5': ['', 18],
-    'GMT+6': ['', 89],
-    'GMT+7': ['', 90],
-    'GMT+8': ['', 91],
-    'GMT+9': ['', 92],
-    GMT0: ['Etc/GMT', 0],
-    Greenwich: ['Etc/GMT', 0],
-    UCT: ['Etc/UTC', 93],
-    Universal: ['Etc/UTC', 93],
-    UTC: ['', 93],
-    Zulu: ['Etc/UTC', 93],
-  },
-  Europe: {
-    Amsterdam: ['Europe/Brussels', 7],
-    Andorra: ['', 7],
-    Astrakhan: ['', 48],
-    Athens: ['', 56],
-    Belfast: ['Europe/London', 94],
-    Belgrade: ['', 7],
-    Berlin: ['', 7],
-    Bratislava: ['Europe/Prague', 7],
-    Brussels: ['', 7],
-    Bucharest: ['', 56],
-    Budapest: ['', 7],
-    Busingen: ['Europe/Zurich', 7],
-    Chisinau: ['', 95],
-    Copenhagen: ['Europe/Berlin', 7],
-    Dublin: ['', 82],
-    Gibraltar: ['', 7],
-    Guernsey: ['Europe/London', 94],
-    Helsinki: ['', 56],
-    Isle_of_Man: ['Europe/London', 94],
-    Istanbul: ['', 43],
-    Jersey: ['Europe/London', 94],
-    Kaliningrad: ['', 5],
-    Kiev: ['Europe/Kyiv', 67],
-    Kirov: ['', 43],
-    Kyiv: ['', 67],
-    Lisbon: ['', 96],
-    Ljubljana: ['Europe/Belgrade', 7],
-    London: ['', 94],
-    Luxembourg: ['Europe/Brussels', 7],
-    Madrid: ['', 7],
-    Malta: ['', 7],
-    Mariehamn: ['Europe/Helsinki', 56],
-    Minsk: ['', 43],
-    Monaco: ['Europe/Paris', 7],
-    Moscow: ['', 97],
-    Nicosia: ['Asia/Nicosia', 67],
-    Oslo: ['Europe/Berlin', 7],
-    Paris: ['', 7],
-    Podgorica: ['Europe/Belgrade', 7],
-    Prague: ['', 7],
-    Riga: ['', 56],
-    Rome: ['', 7],
-    Samara: ['', 48],
-    San_Marino: ['Europe/Rome', 7],
-    Sarajevo: ['Europe/Belgrade', 7],
-    Saratov: ['', 48],
-    Simferopol: ['', 97],
-    Skopje: ['Europe/Belgrade', 7],
-    Sofia: ['', 56],
-    Stockholm: ['Europe/Berlin', 7],
-    Tallinn: ['', 56],
-    Tirane: ['', 7],
-    Tiraspol: ['Europe/Chisinau', 95],
-    Ulyanovsk: ['', 48],
-    Uzhgorod: ['Europe/Kyiv', 67],
-    Vaduz: ['Europe/Zurich', 7],
-    Vatican: ['Europe/Rome', 7],
-    Vienna: ['', 7],
-    Vilnius: ['', 56],
-    Volgograd: ['', 43],
-    Warsaw: ['', 7],
-    Zagreb: ['Europe/Belgrade', 7],
-    Zaporozhye: ['Europe/Kyiv', 67],
-    Zurich: ['', 7],
-  },
-  'GB-Eire': ['Europe/London', 94],
-  GB: ['Europe/London', 94],
-  'GMT-0': ['Etc/GMT', 0],
-  GMT: ['Etc/GMT', 0],
-  'GMT+0': ['Etc/GMT', 0],
-  GMT0: ['Etc/GMT', 0],
-  Greenwich: ['Etc/GMT', 0],
-  Hongkong: ['Asia/Hong_Kong', 58],
-  HST: ['', 98],
-  Iceland: ['Africa/Abidjan', 0],
-  Indian: {
-    Antananarivo: ['Africa/Nairobi', 1],
-    Chagos: ['', 45],
-    Christmas: ['Asia/Bangkok', 38],
-    Cocos: ['Asia/Yangon', 69],
-    Comoro: ['Africa/Nairobi', 1],
-    Kerguelen: ['Indian/Maldives', 41],
-    Mahe: ['Asia/Dubai', 48],
-    Maldives: ['', 41],
-    Mauritius: ['', 48],
-    Mayotte: ['Africa/Nairobi', 1],
-    Reunion: ['Asia/Dubai', 48],
-  },
-  Iran: ['Asia/Tehran', 70],
-  Israel: ['Asia/Jerusalem', 61],
-  Jamaica: ['America/Jamaica', 14],
-  Japan: ['Asia/Tokyo', 71],
-  Kwajalein: ['Pacific/Kwajalein', 47],
-  Libya: ['Africa/Tripoli', 5],
-  MET: ['', 99],
-  Mexico: {
-    BajaNorte: ['America/Tijuana', 24],
-    BajaSur: ['America/Mazatlan', 21],
-    General: ['America/Mexico_City', 30],
-  },
-  MST: ['', 22],
-  MST7MDT: ['', 19],
-  Navajo: ['America/Denver', 19],
-  'NZ-CHAT': ['Pacific/Chatham', 100],
-  NZ: ['Pacific/Auckland', 42],
-  Pacific: {
-    Apia: ['', 83],
-    Auckland: ['', 42],
-    Bougainville: ['', 37],
-    Chatham: ['', 100],
-    Chuuk: ['Pacific/Port_Moresby', 39],
-    Easter: ['', 81],
-    Efate: ['', 37],
-    Enderbury: ['Pacific/Kanton', 83],
-    Fakaofo: ['', 83],
-    Fiji: ['', 101],
-    Funafuti: ['Pacific/Tarawa', 47],
-    Galapagos: ['', 89],
-    Gambier: ['', 92],
-    Guadalcanal: ['', 37],
-    Guam: ['', 102],
-    Honolulu: ['', 98],
-    Johnston: ['Pacific/Honolulu', 98],
-    Kanton: ['', 83],
-    Kiritimati: ['', 84],
-    Kosrae: ['', 37],
-    Kwajalein: ['', 47],
-    Majuro: ['Pacific/Tarawa', 47],
-    Marquesas: ['', 103],
-    Midway: ['Pacific/Pago_Pago', 104],
-    Nauru: ['', 47],
-    Niue: ['', 87],
-    Norfolk: ['', 105],
-    Noumea: ['', 37],
-    Pago_Pago: ['', 104],
-    Palau: ['', 52],
-    Pitcairn: ['', 91],
-    Pohnpei: ['Pacific/Guadalcanal', 37],
-    Ponape: ['Pacific/Guadalcanal', 37],
-    Port_Moresby: ['', 39],
-    Rarotonga: ['', 86],
-    Saipan: ['Pacific/Guam', 102],
-    Samoa: ['Pacific/Pago_Pago', 104],
-    Tahiti: ['', 86],
-    Tarawa: ['', 47],
-    Tongatapu: ['', 83],
-    Truk: ['Pacific/Port_Moresby', 39],
-    Wake: ['Pacific/Tarawa', 47],
-    Wallis: ['Pacific/Tarawa', 47],
-    Yap: ['Pacific/Port_Moresby', 39],
-  },
-  Poland: ['Europe/Warsaw', 7],
-  Portugal: ['Europe/Lisbon', 96],
-  PRC: ['Asia/Shanghai', 53],
-  PST8PDT: ['', 24],
-  ROC: ['Asia/Taipei', 53],
-  ROK: ['Asia/Seoul', 68],
-  Singapore: ['Asia/Singapore', 50],
-  Turkey: ['Europe/Istanbul', 43],
-  UCT: ['Etc/UTC', 93],
-  Universal: ['Etc/UTC', 93],
-  US: {
-    Alaska: ['America/Anchorage', 10],
-    Aleutian: ['America/Adak', 9],
-    Arizona: ['America/Phoenix', 22],
-    Central: ['America/Chicago', 20],
-    'East-Indiana': ['America/Indiana/Indianapolis', 23],
-    Eastern: ['America/New_York', 23],
-    Hawaii: ['Pacific/Honolulu', 98],
-    'Indiana-Starke': ['America/Indiana/Knox', 20],
-    Michigan: ['America/Detroit', 23],
-    Mountain: ['America/Denver', 19],
-    Pacific: ['America/Los_Angeles', 24],
-    Samoa: ['Pacific/Pago_Pago', 104],
-  },
-  UTC: ['Etc/UTC', 93],
-  'W-SU': ['Europe/Moscow', 97],
-  WET: ['', 72],
-  Zulu: ['Etc/UTC', 93],
-};
-
-const tzlibZonesDetailsDB = [
-  '20220929T150625Z<br>BEGIN:STANDARD<br>TZNAME:GMT<br>TZOFFSETFROM:+0000<br>TZOFFSETTO:+0000<br>DTSTART:19700101T000000<br>END:STANDARD<br>',
-  '20220929T150625Z<br>BEGIN:STANDARD<br>TZNAME:EAT<br>TZOFFSETFROM:+0300<br>TZOFFSETTO:+0300<br>DTSTART:19700101T000000<br>END:STANDARD<br>',
-  '20220929T150625Z<br>BEGIN:STANDARD<br>TZNAME:CET<br>TZOFFSETFROM:+0100<br>TZOFFSETTO:+0100<br>DTSTART:19700101T000000<br>END:STANDARD<br>',
-  '20220929T150625Z<br>BEGIN:STANDARD<br>TZNAME:WAT<br>TZOFFSETFROM:+0100<br>TZOFFSETTO:+0100<br>DTSTART:19700101T000000<br>END:STANDARD<br>',
-  '20220929T150625Z<br>BEGIN:STANDARD<br>TZNAME:CAT<br>TZOFFSETFROM:+0200<br>TZOFFSETTO:+0200<br>DTSTART:19700101T000000<br>END:STANDARD<br>',
-  '20220929T150625Z<br>BEGIN:STANDARD<br>TZNAME:EET<br>TZOFFSETFROM:+0200<br>TZOFFSETTO:+0200<br>DTSTART:19700101T000000<br>END:STANDARD<br>',
-  '20220929T150625Z<br>BEGIN:STANDARD<br>TZNAME:+01<br>TZOFFSETFROM:+0100<br>TZOFFSETTO:+0100<br>DTSTART:19700101T000000<br>END:STANDARD<br>',
-  '20220929T150625Z<br>BEGIN:DAYLIGHT<br>TZNAME:CEST<br>TZOFFSETFROM:+0100<br>TZOFFSETTO:+0200<br>DTSTART:19700329T020000<br>RRULE:FREQ=YEARLY;BYMONTH=3;BYDAY=-1SU<br>END:DAYLIGHT<br>BEGIN:STANDARD<br>TZNAME:CET<br>TZOFFSETFROM:+0200<br>TZOFFSETTO:+0100<br>DTSTART:19701025T030000<br>RRULE:FREQ=YEARLY;BYMONTH=10;BYDAY=-1SU<br>END:STANDARD<br>',
-  '20220929T150625Z<br>BEGIN:STANDARD<br>TZNAME:SAST<br>TZOFFSETFROM:+0200<br>TZOFFSETTO:+0200<br>DTSTART:19700101T000000<br>END:STANDARD<br>',
-  '20220929T150625Z<br>BEGIN:DAYLIGHT<br>TZNAME:HDT<br>TZOFFSETFROM:-1000<br>TZOFFSETTO:-0900<br>DTSTART:19700308T020000<br>RRULE:FREQ=YEARLY;BYMONTH=3;BYDAY=2SU<br>END:DAYLIGHT<br>BEGIN:STANDARD<br>TZNAME:HST<br>TZOFFSETFROM:-0900<br>TZOFFSETTO:-1000<br>DTSTART:19701101T020000<br>RRULE:FREQ=YEARLY;BYMONTH=11;BYDAY=1SU<br>END:STANDARD<br>',
-  '20220929T150625Z<br>BEGIN:DAYLIGHT<br>TZNAME:AKDT<br>TZOFFSETFROM:-0900<br>TZOFFSETTO:-0800<br>DTSTART:19700308T020000<br>RRULE:FREQ=YEARLY;BYMONTH=3;BYDAY=2SU<br>END:DAYLIGHT<br>BEGIN:STANDARD<br>TZNAME:AKST<br>TZOFFSETFROM:-0800<br>TZOFFSETTO:-0900<br>DTSTART:19701101T020000<br>RRULE:FREQ=YEARLY;BYMONTH=11;BYDAY=1SU<br>END:STANDARD<br>',
-  '20220929T150625Z<br>BEGIN:STANDARD<br>TZNAME:AST<br>TZOFFSETFROM:-0400<br>TZOFFSETTO:-0400<br>DTSTART:19700101T000000<br>END:STANDARD<br>',
-  '20220929T150625Z<br>BEGIN:STANDARD<br>TZNAME:-03<br>TZOFFSETFROM:-0300<br>TZOFFSETTO:-0300<br>DTSTART:19700101T000000<br>END:STANDARD<br>',
-  '20220929T150625Z<br>BEGIN:DAYLIGHT<br>TZNAME:-03<br>TZOFFSETFROM:-0400<br>TZOFFSETTO:-0300<br>DTSTART:19701004T000000<br>RRULE:FREQ=YEARLY;BYMONTH=10;BYDAY=1SU<br>END:DAYLIGHT<br>BEGIN:STANDARD<br>TZNAME:-04<br>TZOFFSETFROM:-0300<br>TZOFFSETTO:-0400<br>DTSTART:19700322T000000<br>RRULE:FREQ=YEARLY;BYMONTH=3;BYDAY=4SU<br>END:STANDARD<br>',
-  '20220929T150625Z<br>BEGIN:STANDARD<br>TZNAME:EST<br>TZOFFSETFROM:-0500<br>TZOFFSETTO:-0500<br>DTSTART:19700101T000000<br>END:STANDARD<br>',
-  '20220929T150625Z<br>BEGIN:STANDARD<br>TZNAME:CST<br>TZOFFSETFROM:-0500<br>TZOFFSETTO:-0600<br>DTSTART:19701025T020000<br>RRULE:FREQ=YEARLY;BYMONTH=10;BYDAY=-1SU<br>END:STANDARD<br>BEGIN:DAYLIGHT<br>TZNAME:CDT<br>TZOFFSETFROM:-0600<br>TZOFFSETTO:-0500<br>DTSTART:19700405T020000<br>RRULE:FREQ=YEARLY;BYMONTH=4;BYDAY=1SU<br>END:DAYLIGHT<br>',
-  '20220929T150625Z<br>BEGIN:STANDARD<br>TZNAME:CST<br>TZOFFSETFROM:-0600<br>TZOFFSETTO:-0600<br>DTSTART:19700101T000000<br>END:STANDARD<br>',
-  '20220929T150625Z<br>BEGIN:STANDARD<br>TZNAME:-04<br>TZOFFSETFROM:-0400<br>TZOFFSETTO:-0400<br>DTSTART:19700101T000000<br>END:STANDARD<br>',
-  '20220929T150625Z<br>BEGIN:STANDARD<br>TZNAME:-05<br>TZOFFSETFROM:-0500<br>TZOFFSETTO:-0500<br>DTSTART:19700101T000000<br>END:STANDARD<br>',
-  '20220929T150625Z<br>BEGIN:DAYLIGHT<br>TZNAME:MDT<br>TZOFFSETFROM:-0700<br>TZOFFSETTO:-0600<br>DTSTART:19700308T020000<br>RRULE:FREQ=YEARLY;BYMONTH=3;BYDAY=2SU<br>END:DAYLIGHT<br>BEGIN:STANDARD<br>TZNAME:MST<br>TZOFFSETFROM:-0600<br>TZOFFSETTO:-0700<br>DTSTART:19701101T020000<br>RRULE:FREQ=YEARLY;BYMONTH=11;BYDAY=1SU<br>END:STANDARD<br>',
-  '20220929T150625Z<br>BEGIN:DAYLIGHT<br>TZNAME:CDT<br>TZOFFSETFROM:-0600<br>TZOFFSETTO:-0500<br>DTSTART:19700308T020000<br>RRULE:FREQ=YEARLY;BYMONTH=3;BYDAY=2SU<br>END:DAYLIGHT<br>BEGIN:STANDARD<br>TZNAME:CST<br>TZOFFSETFROM:-0500<br>TZOFFSETTO:-0600<br>DTSTART:19701101T020000<br>RRULE:FREQ=YEARLY;BYMONTH=11;BYDAY=1SU<br>END:STANDARD<br>',
-  '20220929T150625Z<br>BEGIN:DAYLIGHT<br>TZNAME:MDT<br>TZOFFSETFROM:-0700<br>TZOFFSETTO:-0600<br>DTSTART:19700405T020000<br>RRULE:FREQ=YEARLY;BYMONTH=4;BYDAY=1SU<br>END:DAYLIGHT<br>BEGIN:STANDARD<br>TZNAME:MST<br>TZOFFSETFROM:-0600<br>TZOFFSETTO:-0700<br>DTSTART:19701025T020000<br>RRULE:FREQ=YEARLY;BYMONTH=10;BYDAY=-1SU<br>END:STANDARD<br>',
-  '20220929T150625Z<br>BEGIN:STANDARD<br>TZNAME:MST<br>TZOFFSETFROM:-0700<br>TZOFFSETTO:-0700<br>DTSTART:19700101T000000<br>END:STANDARD<br>',
-  '20220929T150625Z<br>BEGIN:DAYLIGHT<br>TZNAME:EDT<br>TZOFFSETFROM:-0500<br>TZOFFSETTO:-0400<br>DTSTART:19700308T020000<br>RRULE:FREQ=YEARLY;BYMONTH=3;BYDAY=2SU<br>END:DAYLIGHT<br>BEGIN:STANDARD<br>TZNAME:EST<br>TZOFFSETFROM:-0400<br>TZOFFSETTO:-0500<br>DTSTART:19701101T020000<br>RRULE:FREQ=YEARLY;BYMONTH=11;BYDAY=1SU<br>END:STANDARD<br>',
-  '20220929T150625Z<br>BEGIN:DAYLIGHT<br>TZNAME:PDT<br>TZOFFSETFROM:-0800<br>TZOFFSETTO:-0700<br>DTSTART:19700308T020000<br>RRULE:FREQ=YEARLY;BYMONTH=3;BYDAY=2SU<br>END:DAYLIGHT<br>BEGIN:STANDARD<br>TZNAME:PST<br>TZOFFSETFROM:-0700<br>TZOFFSETTO:-0800<br>DTSTART:19701101T020000<br>RRULE:FREQ=YEARLY;BYMONTH=11;BYDAY=1SU<br>END:STANDARD<br>',
-  '20220929T150625Z<br>BEGIN:DAYLIGHT<br>TZNAME:ADT<br>TZOFFSETFROM:-0400<br>TZOFFSETTO:-0300<br>DTSTART:19700308T020000<br>RRULE:FREQ=YEARLY;BYMONTH=3;BYDAY=2SU<br>END:DAYLIGHT<br>BEGIN:STANDARD<br>TZNAME:AST<br>TZOFFSETFROM:-0300<br>TZOFFSETTO:-0400<br>DTSTART:19701101T020000<br>RRULE:FREQ=YEARLY;BYMONTH=11;BYDAY=1SU<br>END:STANDARD<br>',
-  '20220929T150625Z<br>BEGIN:DAYLIGHT<br>TZNAME:-02<br>TZOFFSETFROM:-0300<br>TZOFFSETTO:-0200<br>DTSTART:19700328T220000<br>RRULE:FREQ=YEARLY;BYMONTH=3;BYDAY=-1SA<br>END:DAYLIGHT<br>BEGIN:STANDARD<br>TZNAME:-03<br>TZOFFSETFROM:-0200<br>TZOFFSETTO:-0300<br>DTSTART:19701024T230000<br>RRULE:FREQ=YEARLY;BYMONTH=10;BYDAY=-1SA<br>END:STANDARD<br>',
-  '20220929T150625Z<br>BEGIN:STANDARD<br>TZNAME:AST<br>TZOFFSETFROM:-0300<br>TZOFFSETTO:-0400<br>DTSTART:19701101T020000<br>RRULE:FREQ=YEARLY;BYMONTH=11;BYDAY=1SU<br>END:STANDARD<br>BEGIN:DAYLIGHT<br>TZNAME:ADT<br>TZOFFSETFROM:-0400<br>TZOFFSETTO:-0300<br>DTSTART:19700308T020000<br>RRULE:FREQ=YEARLY;BYMONTH=3;BYDAY=2SU<br>END:DAYLIGHT<br>',
-  '20220929T150625Z<br>BEGIN:STANDARD<br>TZNAME:EST<br>TZOFFSETFROM:-0400<br>TZOFFSETTO:-0500<br>DTSTART:19701101T020000<br>RRULE:FREQ=YEARLY;BYMONTH=11;BYDAY=1SU<br>END:STANDARD<br>BEGIN:DAYLIGHT<br>TZNAME:EDT<br>TZOFFSETFROM:-0500<br>TZOFFSETTO:-0400<br>DTSTART:19700308T020000<br>RRULE:FREQ=YEARLY;BYMONTH=3;BYDAY=2SU<br>END:DAYLIGHT<br>',
-  '20220929T150625Z<br>BEGIN:STANDARD<br>TZNAME:CST<br>TZOFFSETFROM:-0400<br>TZOFFSETTO:-0500<br>DTSTART:19701101T010000<br>RRULE:FREQ=YEARLY;BYMONTH=11;BYDAY=1SU<br>END:STANDARD<br>BEGIN:DAYLIGHT<br>TZNAME:CDT<br>TZOFFSETFROM:-0500<br>TZOFFSETTO:-0400<br>DTSTART:19700308T000000<br>RRULE:FREQ=YEARLY;BYMONTH=3;BYDAY=2SU<br>END:DAYLIGHT<br>',
-  '20220929T150625Z<br>BEGIN:DAYLIGHT<br>TZNAME:CDT<br>TZOFFSETFROM:-0600<br>TZOFFSETTO:-0500<br>DTSTART:19700405T020000<br>RRULE:FREQ=YEARLY;BYMONTH=4;BYDAY=1SU<br>END:DAYLIGHT<br>BEGIN:STANDARD<br>TZNAME:CST<br>TZOFFSETFROM:-0500<br>TZOFFSETTO:-0600<br>DTSTART:19701025T020000<br>RRULE:FREQ=YEARLY;BYMONTH=10;BYDAY=-1SU<br>END:STANDARD<br>',
-  '20220929T150625Z<br>BEGIN:DAYLIGHT<br>TZNAME:-02<br>TZOFFSETFROM:-0300<br>TZOFFSETTO:-0200<br>DTSTART:19700308T020000<br>RRULE:FREQ=YEARLY;BYMONTH=3;BYDAY=2SU<br>END:DAYLIGHT<br>BEGIN:STANDARD<br>TZNAME:-03<br>TZOFFSETFROM:-0200<br>TZOFFSETTO:-0300<br>DTSTART:19701101T020000<br>RRULE:FREQ=YEARLY;BYMONTH=11;BYDAY=1SU<br>END:STANDARD<br>',
-  '20220929T150625Z<br>BEGIN:STANDARD<br>TZNAME:-02<br>TZOFFSETFROM:-0200<br>TZOFFSETTO:-0200<br>DTSTART:19700101T000000<br>END:STANDARD<br>',
-  '20220929T150625Z<br>BEGIN:STANDARD<br>TZNAME:CST<br>TZOFFSETFROM:-0500<br>TZOFFSETTO:-0600<br>DTSTART:19701101T020000<br>RRULE:FREQ=YEARLY;BYMONTH=11;BYDAY=1SU<br>END:STANDARD<br>BEGIN:DAYLIGHT<br>TZNAME:CDT<br>TZOFFSETFROM:-0600<br>TZOFFSETTO:-0500<br>DTSTART:19700308T020000<br>RRULE:FREQ=YEARLY;BYMONTH=3;BYDAY=2SU<br>END:DAYLIGHT<br>',
-  '20220929T150625Z<br>BEGIN:STANDARD<br>TZNAME:-04<br>TZOFFSETFROM:-0300<br>TZOFFSETTO:-0400<br>DTSTART:19700405T000000<br>RRULE:FREQ=YEARLY;BYMONTH=4;BYDAY=1SU<br>END:STANDARD<br>BEGIN:DAYLIGHT<br>TZNAME:-03<br>TZOFFSETFROM:-0400<br>TZOFFSETTO:-0300<br>DTSTART:19700906T000000<br>RRULE:FREQ=YEARLY;BYMONTH=9;BYDAY=1SU<br>END:DAYLIGHT<br>',
-  '20220929T150625Z<br>BEGIN:DAYLIGHT<br>TZNAME:+00<br>TZOFFSETFROM:-0100<br>TZOFFSETTO:+0000<br>DTSTART:19700329T000000<br>RRULE:FREQ=YEARLY;BYMONTH=3;BYDAY=-1SU<br>END:DAYLIGHT<br>BEGIN:STANDARD<br>TZNAME:-01<br>TZOFFSETFROM:+0000<br>TZOFFSETTO:-0100<br>DTSTART:19701025T010000<br>RRULE:FREQ=YEARLY;BYMONTH=10;BYDAY=-1SU<br>END:STANDARD<br>',
-  '20220929T150625Z<br>BEGIN:STANDARD<br>TZNAME:NST<br>TZOFFSETFROM:-0230<br>TZOFFSETTO:-0330<br>DTSTART:19701101T020000<br>RRULE:FREQ=YEARLY;BYMONTH=11;BYDAY=1SU<br>END:STANDARD<br>BEGIN:DAYLIGHT<br>TZNAME:NDT<br>TZOFFSETFROM:-0330<br>TZOFFSETTO:-0230<br>DTSTART:19700308T020000<br>RRULE:FREQ=YEARLY;BYMONTH=3;BYDAY=2SU<br>END:DAYLIGHT<br>',
-  '20220929T150625Z<br>BEGIN:STANDARD<br>TZNAME:+11<br>TZOFFSETFROM:+1100<br>TZOFFSETTO:+1100<br>DTSTART:19700101T000000<br>END:STANDARD<br>',
-  '20220929T150625Z<br>BEGIN:STANDARD<br>TZNAME:+07<br>TZOFFSETFROM:+0700<br>TZOFFSETTO:+0700<br>DTSTART:19700101T000000<br>END:STANDARD<br>',
-  '20220929T150625Z<br>BEGIN:STANDARD<br>TZNAME:+10<br>TZOFFSETFROM:+1000<br>TZOFFSETTO:+1000<br>DTSTART:19700101T000000<br>END:STANDARD<br>',
-  '20220929T150625Z<br>BEGIN:STANDARD<br>TZNAME:AEST<br>TZOFFSETFROM:+1100<br>TZOFFSETTO:+1000<br>DTSTART:19700405T030000<br>RRULE:FREQ=YEARLY;BYMONTH=4;BYDAY=1SU<br>END:STANDARD<br>BEGIN:DAYLIGHT<br>TZNAME:AEDT<br>TZOFFSETFROM:+1000<br>TZOFFSETTO:+1100<br>DTSTART:19701004T020000<br>RRULE:FREQ=YEARLY;BYMONTH=10;BYDAY=1SU<br>END:DAYLIGHT<br>',
-  '20220929T150625Z<br>BEGIN:STANDARD<br>TZNAME:+05<br>TZOFFSETFROM:+0500<br>TZOFFSETTO:+0500<br>DTSTART:19700101T000000<br>END:STANDARD<br>',
-  '20220929T150625Z<br>BEGIN:DAYLIGHT<br>TZNAME:NZDT<br>TZOFFSETFROM:+1200<br>TZOFFSETTO:+1300<br>DTSTART:19700927T020000<br>RRULE:FREQ=YEARLY;BYMONTH=9;BYDAY=-1SU<br>END:DAYLIGHT<br>BEGIN:STANDARD<br>TZNAME:NZST<br>TZOFFSETFROM:+1300<br>TZOFFSETTO:+1200<br>DTSTART:19700405T030000<br>RRULE:FREQ=YEARLY;BYMONTH=4;BYDAY=1SU<br>END:STANDARD<br>',
-  '20220929T150625Z<br>BEGIN:STANDARD<br>TZNAME:+03<br>TZOFFSETFROM:+0300<br>TZOFFSETTO:+0300<br>DTSTART:19700101T000000<br>END:STANDARD<br>',
-  '20220929T150625Z<br>BEGIN:DAYLIGHT<br>TZNAME:+02<br>TZOFFSETFROM:+0000<br>TZOFFSETTO:+0200<br>DTSTART:19700329T010000<br>RRULE:FREQ=YEARLY;BYMONTH=3;BYDAY=-1SU<br>END:DAYLIGHT<br>BEGIN:STANDARD<br>TZNAME:+00<br>TZOFFSETFROM:+0200<br>TZOFFSETTO:+0000<br>DTSTART:19701025T030000<br>RRULE:FREQ=YEARLY;BYMONTH=10;BYDAY=-1SU<br>END:STANDARD<br>',
-  '20220929T150625Z<br>BEGIN:STANDARD<br>TZNAME:+06<br>TZOFFSETFROM:+0600<br>TZOFFSETTO:+0600<br>DTSTART:19700101T000000<br>END:STANDARD<br>',
-  '20220929T150625Z<br>BEGIN:STANDARD<br>TZNAME:EET<br>TZOFFSETFROM:+0300<br>TZOFFSETTO:+0200<br>DTSTART:19701030T010000<br>RRULE:FREQ=YEARLY;BYMONTH=10;BYDAY=-1FR<br>END:STANDARD<br>BEGIN:DAYLIGHT<br>TZNAME:EEST<br>TZOFFSETFROM:+0200<br>TZOFFSETTO:+0300<br>DTSTART:19700227T000000<br>RRULE:FREQ=YEARLY;BYMONTH=2;BYDAY=-1FR<br>END:DAYLIGHT<br>',
-  '20220929T150625Z<br>BEGIN:STANDARD<br>TZNAME:+12<br>TZOFFSETFROM:+1200<br>TZOFFSETTO:+1200<br>DTSTART:19700101T000000<br>END:STANDARD<br>',
-  '20220929T150625Z<br>BEGIN:STANDARD<br>TZNAME:+04<br>TZOFFSETFROM:+0400<br>TZOFFSETTO:+0400<br>DTSTART:19700101T000000<br>END:STANDARD<br>',
-  '20220929T150625Z<br>BEGIN:DAYLIGHT<br>TZNAME:EEST<br>TZOFFSETFROM:+0200<br>TZOFFSETTO:+0300<br>DTSTART:19700329T000000<br>RRULE:FREQ=YEARLY;BYMONTH=3;BYDAY=-1SU<br>END:DAYLIGHT<br>BEGIN:STANDARD<br>TZNAME:EET<br>TZOFFSETFROM:+0300<br>TZOFFSETTO:+0200<br>DTSTART:19701025T000000<br>RRULE:FREQ=YEARLY;BYMONTH=10;BYDAY=-1SU<br>END:STANDARD<br>',
-  '20220929T150625Z<br>BEGIN:STANDARD<br>TZNAME:+08<br>TZOFFSETFROM:+0800<br>TZOFFSETTO:+0800<br>DTSTART:19700101T000000<br>END:STANDARD<br>',
-  '20220929T150625Z<br>BEGIN:STANDARD<br>TZNAME:IST<br>TZOFFSETFROM:+0530<br>TZOFFSETTO:+0530<br>DTSTART:19700101T000000<br>END:STANDARD<br>',
-  '20220929T150625Z<br>BEGIN:STANDARD<br>TZNAME:+09<br>TZOFFSETFROM:+0900<br>TZOFFSETTO:+0900<br>DTSTART:19700101T000000<br>END:STANDARD<br>',
-  '20220929T150625Z<br>BEGIN:STANDARD<br>TZNAME:CST<br>TZOFFSETFROM:+0800<br>TZOFFSETTO:+0800<br>DTSTART:19700101T000000<br>END:STANDARD<br>',
-  '20220929T150625Z<br>BEGIN:STANDARD<br>TZNAME:+0530<br>TZOFFSETFROM:+0530<br>TZOFFSETTO:+0530<br>DTSTART:19700101T000000<br>END:STANDARD<br>',
-  '20220929T150625Z<br>BEGIN:STANDARD<br>TZNAME:EET<br>TZOFFSETFROM:+0300<br>TZOFFSETTO:+0200<br>DTSTART:19701030T000000<br>RRULE:FREQ=YEARLY;BYMONTH=10;BYDAY=-1FR<br>END:STANDARD<br>BEGIN:DAYLIGHT<br>TZNAME:EEST<br>TZOFFSETFROM:+0200<br>TZOFFSETTO:+0300<br>DTSTART:19700327T000000<br>RRULE:FREQ=YEARLY;BYMONTH=3;BYDAY=-1FR<br>END:DAYLIGHT<br>',
-  '20220929T150625Z<br>BEGIN:DAYLIGHT<br>TZNAME:EEST<br>TZOFFSETFROM:+0200<br>TZOFFSETTO:+0300<br>DTSTART:19700329T030000<br>RRULE:FREQ=YEARLY;BYMONTH=3;BYDAY=-1SU<br>END:DAYLIGHT<br>BEGIN:STANDARD<br>TZNAME:EET<br>TZOFFSETFROM:+0300<br>TZOFFSETTO:+0200<br>DTSTART:19701025T040000<br>RRULE:FREQ=YEARLY;BYMONTH=10;BYDAY=-1SU<br>END:STANDARD<br>',
-  '20220929T150625Z<br>BEGIN:STANDARD<br>TZNAME:EET<br>TZOFFSETFROM:+0300<br>TZOFFSETTO:+0200<br>DTSTART:19701024T020000<br>RRULE:FREQ=YEARLY;BYMONTH=10;BYDAY=-1SA<br>END:STANDARD<br>BEGIN:DAYLIGHT<br>TZNAME:EEST<br>TZOFFSETFROM:+0200<br>TZOFFSETTO:+0300<br>DTSTART:19700328T020000<br>RRULE:FREQ=YEARLY;BYMONTH=3;BYDAY=-1SA<br>END:DAYLIGHT<br>',
-  '20220929T150625Z<br>BEGIN:STANDARD<br>TZNAME:HKT<br>TZOFFSETFROM:+0800<br>TZOFFSETTO:+0800<br>DTSTART:19700101T000000<br>END:STANDARD<br>',
-  '20220929T150625Z<br>BEGIN:STANDARD<br>TZNAME:WIB<br>TZOFFSETFROM:+0700<br>TZOFFSETTO:+0700<br>DTSTART:19700101T000000<br>END:STANDARD<br>',
-  '20220929T150625Z<br>BEGIN:STANDARD<br>TZNAME:WIT<br>TZOFFSETFROM:+0900<br>TZOFFSETTO:+0900<br>DTSTART:19700101T000000<br>END:STANDARD<br>',
-  '20220929T150625Z<br>BEGIN:DAYLIGHT<br>TZNAME:IDT<br>TZOFFSETFROM:+0200<br>TZOFFSETTO:+0300<br>DTSTART:19700327T020000<br>RRULE:FREQ=YEARLY;BYMONTH=3;BYDAY=-1FR<br>END:DAYLIGHT<br>BEGIN:STANDARD<br>TZNAME:IST<br>TZOFFSETFROM:+0300<br>TZOFFSETTO:+0200<br>DTSTART:19701025T020000<br>RRULE:FREQ=YEARLY;BYMONTH=10;BYDAY=-1SU<br>END:STANDARD<br>',
-  '20220929T150625Z<br>BEGIN:STANDARD<br>TZNAME:+0430<br>TZOFFSETFROM:+0430<br>TZOFFSETTO:+0430<br>DTSTART:19700101T000000<br>END:STANDARD<br>',
-  '20220929T150625Z<br>BEGIN:STANDARD<br>TZNAME:PKT<br>TZOFFSETFROM:+0500<br>TZOFFSETTO:+0500<br>DTSTART:19700101T000000<br>END:STANDARD<br>',
-  '20220929T150625Z<br>BEGIN:STANDARD<br>TZNAME:+0545<br>TZOFFSETFROM:+0545<br>TZOFFSETTO:+0545<br>DTSTART:19700101T000000<br>END:STANDARD<br>',
-  '20220929T150625Z<br>BEGIN:STANDARD<br>TZNAME:WITA<br>TZOFFSETFROM:+0800<br>TZOFFSETTO:+0800<br>DTSTART:19700101T000000<br>END:STANDARD<br>',
-  '20220929T150625Z<br>BEGIN:STANDARD<br>TZNAME:PST<br>TZOFFSETFROM:+0800<br>TZOFFSETTO:+0800<br>DTSTART:19700101T000000<br>END:STANDARD<br>',
-  '20220929T150625Z<br>BEGIN:STANDARD<br>TZNAME:EET<br>TZOFFSETFROM:+0300<br>TZOFFSETTO:+0200<br>DTSTART:19701025T040000<br>RRULE:FREQ=YEARLY;BYMONTH=10;BYDAY=-1SU<br>END:STANDARD<br>BEGIN:DAYLIGHT<br>TZNAME:EEST<br>TZOFFSETFROM:+0200<br>TZOFFSETTO:+0300<br>DTSTART:19700329T030000<br>RRULE:FREQ=YEARLY;BYMONTH=3;BYDAY=-1SU<br>END:DAYLIGHT<br>',
-  '20220929T150625Z<br>BEGIN:STANDARD<br>TZNAME:KST<br>TZOFFSETFROM:+0900<br>TZOFFSETTO:+0900<br>DTSTART:19700101T000000<br>END:STANDARD<br>',
-  '20220929T150625Z<br>BEGIN:STANDARD<br>TZNAME:+0630<br>TZOFFSETFROM:+0630<br>TZOFFSETTO:+0630<br>DTSTART:19700101T000000<br>END:STANDARD<br>',
-  '20220929T150625Z<br>BEGIN:STANDARD<br>TZNAME:+0330<br>TZOFFSETFROM:+0330<br>TZOFFSETTO:+0330<br>DTSTART:19700101T000000<br>END:STANDARD<br>',
-  '20220929T150625Z<br>BEGIN:STANDARD<br>TZNAME:JST<br>TZOFFSETFROM:+0900<br>TZOFFSETTO:+0900<br>DTSTART:19700101T000000<br>END:STANDARD<br>',
-  '20220929T150625Z<br>BEGIN:DAYLIGHT<br>TZNAME:WEST<br>TZOFFSETFROM:+0000<br>TZOFFSETTO:+0100<br>DTSTART:19700329T010000<br>RRULE:FREQ=YEARLY;BYMONTH=3;BYDAY=-1SU<br>END:DAYLIGHT<br>BEGIN:STANDARD<br>TZNAME:WET<br>TZOFFSETFROM:+0100<br>TZOFFSETTO:+0000<br>DTSTART:19701025T020000<br>RRULE:FREQ=YEARLY;BYMONTH=10;BYDAY=-1SU<br>END:STANDARD<br>',
-  '20220929T150625Z<br>BEGIN:STANDARD<br>TZNAME:-01<br>TZOFFSETFROM:-0100<br>TZOFFSETTO:-0100<br>DTSTART:19700101T000000<br>END:STANDARD<br>',
-  '20220929T150625Z<br>BEGIN:STANDARD<br>TZNAME:ACST<br>TZOFFSETFROM:+1030<br>TZOFFSETTO:+0930<br>DTSTART:19700405T030000<br>RRULE:FREQ=YEARLY;BYMONTH=4;BYDAY=1SU<br>END:STANDARD<br>BEGIN:DAYLIGHT<br>TZNAME:ACDT<br>TZOFFSETFROM:+0930<br>TZOFFSETTO:+1030<br>DTSTART:19701004T020000<br>RRULE:FREQ=YEARLY;BYMONTH=10;BYDAY=1SU<br>END:DAYLIGHT<br>',
-  '20220929T150625Z<br>BEGIN:STANDARD<br>TZNAME:AEST<br>TZOFFSETFROM:+1000<br>TZOFFSETTO:+1000<br>DTSTART:19700101T000000<br>END:STANDARD<br>',
-  '20220929T150625Z<br>BEGIN:DAYLIGHT<br>TZNAME:AEDT<br>TZOFFSETFROM:+1000<br>TZOFFSETTO:+1100<br>DTSTART:19701004T020000<br>RRULE:FREQ=YEARLY;BYMONTH=10;BYDAY=1SU<br>END:DAYLIGHT<br>BEGIN:STANDARD<br>TZNAME:AEST<br>TZOFFSETFROM:+1100<br>TZOFFSETTO:+1000<br>DTSTART:19700405T030000<br>RRULE:FREQ=YEARLY;BYMONTH=4;BYDAY=1SU<br>END:STANDARD<br>',
-  '20220929T150625Z<br>BEGIN:STANDARD<br>TZNAME:ACST<br>TZOFFSETFROM:+0930<br>TZOFFSETTO:+0930<br>DTSTART:19700101T000000<br>END:STANDARD<br>',
-  '20220929T150625Z<br>BEGIN:STANDARD<br>TZNAME:+0845<br>TZOFFSETFROM:+0845<br>TZOFFSETTO:+0845<br>DTSTART:19700101T000000<br>END:STANDARD<br>',
-  '20220929T150625Z<br>BEGIN:STANDARD<br>TZNAME:+1030<br>TZOFFSETFROM:+1100<br>TZOFFSETTO:+1030<br>DTSTART:19700405T020000<br>RRULE:FREQ=YEARLY;BYMONTH=4;BYDAY=1SU<br>END:STANDARD<br>BEGIN:DAYLIGHT<br>TZNAME:+11<br>TZOFFSETFROM:+1030<br>TZOFFSETTO:+1100<br>DTSTART:19701004T020000<br>RRULE:FREQ=YEARLY;BYMONTH=10;BYDAY=1SU<br>END:DAYLIGHT<br>',
-  '20220929T150625Z<br>BEGIN:STANDARD<br>TZNAME:AWST<br>TZOFFSETFROM:+0800<br>TZOFFSETTO:+0800<br>DTSTART:19700101T000000<br>END:STANDARD<br>',
-  '20220929T150625Z<br>BEGIN:STANDARD<br>TZNAME:-06<br>TZOFFSETFROM:-0500<br>TZOFFSETTO:-0600<br>DTSTART:19700404T220000<br>RRULE:FREQ=YEARLY;BYMONTH=4;BYDAY=1SA<br>END:STANDARD<br>BEGIN:DAYLIGHT<br>TZNAME:-05<br>TZOFFSETFROM:-0600<br>TZOFFSETTO:-0500<br>DTSTART:19700905T220000<br>RRULE:FREQ=YEARLY;BYMONTH=9;BYDAY=1SA<br>END:DAYLIGHT<br>',
-  '20220929T150625Z<br>BEGIN:STANDARD<br>TZNAME:IST<br>TZOFFSETFROM:+0000<br>TZOFFSETTO:+0100<br>DTSTART:19700329T010000<br>RRULE:FREQ=YEARLY;BYMONTH=3;BYDAY=-1SU<br>END:STANDARD<br>BEGIN:DAYLIGHT<br>TZNAME:GMT<br>TZOFFSETFROM:+0100<br>TZOFFSETTO:+0000<br>DTSTART:19701025T020000<br>RRULE:FREQ=YEARLY;BYMONTH=10;BYDAY=-1SU<br>END:DAYLIGHT<br>',
-  '20220929T150625Z<br>BEGIN:STANDARD<br>TZNAME:+13<br>TZOFFSETFROM:+1300<br>TZOFFSETTO:+1300<br>DTSTART:19700101T000000<br>END:STANDARD<br>',
-  '20220929T150625Z<br>BEGIN:STANDARD<br>TZNAME:+14<br>TZOFFSETFROM:+1400<br>TZOFFSETTO:+1400<br>DTSTART:19700101T000000<br>END:STANDARD<br>',
-  '20220929T150625Z<br>BEGIN:STANDARD<br>TZNAME:+02<br>TZOFFSETFROM:+0200<br>TZOFFSETTO:+0200<br>DTSTART:19700101T000000<br>END:STANDARD<br>',
-  '20220929T150625Z<br>BEGIN:STANDARD<br>TZNAME:-10<br>TZOFFSETFROM:-1000<br>TZOFFSETTO:-1000<br>DTSTART:19700101T000000<br>END:STANDARD<br>',
-  '20220929T150625Z<br>BEGIN:STANDARD<br>TZNAME:-11<br>TZOFFSETFROM:-1100<br>TZOFFSETTO:-1100<br>DTSTART:19700101T000000<br>END:STANDARD<br>',
-  '20220929T150625Z<br>BEGIN:STANDARD<br>TZNAME:-12<br>TZOFFSETFROM:-1200<br>TZOFFSETTO:-1200<br>DTSTART:19700101T000000<br>END:STANDARD<br>',
-  '20220929T150625Z<br>BEGIN:STANDARD<br>TZNAME:-06<br>TZOFFSETFROM:-0600<br>TZOFFSETTO:-0600<br>DTSTART:19700101T000000<br>END:STANDARD<br>',
-  '20220929T150625Z<br>BEGIN:STANDARD<br>TZNAME:-07<br>TZOFFSETFROM:-0700<br>TZOFFSETTO:-0700<br>DTSTART:19700101T000000<br>END:STANDARD<br>',
-  '20220929T150625Z<br>BEGIN:STANDARD<br>TZNAME:-08<br>TZOFFSETFROM:-0800<br>TZOFFSETTO:-0800<br>DTSTART:19700101T000000<br>END:STANDARD<br>',
-  '20220929T150625Z<br>BEGIN:STANDARD<br>TZNAME:-09<br>TZOFFSETFROM:-0900<br>TZOFFSETTO:-0900<br>DTSTART:19700101T000000<br>END:STANDARD<br>',
-  '20220929T150625Z<br>BEGIN:STANDARD<br>TZNAME:UTC<br>TZOFFSETFROM:+0000<br>TZOFFSETTO:+0000<br>DTSTART:19700101T000000<br>END:STANDARD<br>',
-  '20220929T150625Z<br>BEGIN:DAYLIGHT<br>TZNAME:BST<br>TZOFFSETFROM:+0000<br>TZOFFSETTO:+0100<br>DTSTART:19700329T010000<br>RRULE:FREQ=YEARLY;BYMONTH=3;BYDAY=-1SU<br>END:DAYLIGHT<br>BEGIN:STANDARD<br>TZNAME:GMT<br>TZOFFSETFROM:+0100<br>TZOFFSETTO:+0000<br>DTSTART:19701025T020000<br>RRULE:FREQ=YEARLY;BYMONTH=10;BYDAY=-1SU<br>END:STANDARD<br>',
-  '20220929T150625Z<br>BEGIN:DAYLIGHT<br>TZNAME:EEST<br>TZOFFSETFROM:+0200<br>TZOFFSETTO:+0300<br>DTSTART:19700329T020000<br>RRULE:FREQ=YEARLY;BYMONTH=3;BYDAY=-1SU<br>END:DAYLIGHT<br>BEGIN:STANDARD<br>TZNAME:EET<br>TZOFFSETFROM:+0300<br>TZOFFSETTO:+0200<br>DTSTART:19701025T030000<br>RRULE:FREQ=YEARLY;BYMONTH=10;BYDAY=-1SU<br>END:STANDARD<br>',
-  '20220929T150625Z<br>BEGIN:STANDARD<br>TZNAME:WET<br>TZOFFSETFROM:+0100<br>TZOFFSETTO:+0000<br>DTSTART:19701025T020000<br>RRULE:FREQ=YEARLY;BYMONTH=10;BYDAY=-1SU<br>END:STANDARD<br>BEGIN:DAYLIGHT<br>TZNAME:WEST<br>TZOFFSETFROM:+0000<br>TZOFFSETTO:+0100<br>DTSTART:19700329T010000<br>RRULE:FREQ=YEARLY;BYMONTH=3;BYDAY=-1SU<br>END:DAYLIGHT<br>',
-  '20220929T150625Z<br>BEGIN:STANDARD<br>TZNAME:MSK<br>TZOFFSETFROM:+0300<br>TZOFFSETTO:+0300<br>DTSTART:19700101T000000<br>END:STANDARD<br>',
-  '20220929T150625Z<br>BEGIN:STANDARD<br>TZNAME:HST<br>TZOFFSETFROM:-1000<br>TZOFFSETTO:-1000<br>DTSTART:19700101T000000<br>END:STANDARD<br>',
-  '20220929T150625Z<br>BEGIN:DAYLIGHT<br>TZNAME:MEST<br>TZOFFSETFROM:+0100<br>TZOFFSETTO:+0200<br>DTSTART:19700329T020000<br>RRULE:FREQ=YEARLY;BYMONTH=3;BYDAY=-1SU<br>END:DAYLIGHT<br>BEGIN:STANDARD<br>TZNAME:MET<br>TZOFFSETFROM:+0200<br>TZOFFSETTO:+0100<br>DTSTART:19701025T030000<br>RRULE:FREQ=YEARLY;BYMONTH=10;BYDAY=-1SU<br>END:STANDARD<br>',
-  '20220929T150625Z<br>BEGIN:DAYLIGHT<br>TZNAME:+1345<br>TZOFFSETFROM:+1245<br>TZOFFSETTO:+1345<br>DTSTART:19700927T024500<br>RRULE:FREQ=YEARLY;BYMONTH=9;BYDAY=-1SU<br>END:DAYLIGHT<br>BEGIN:STANDARD<br>TZNAME:+1245<br>TZOFFSETFROM:+1345<br>TZOFFSETTO:+1245<br>DTSTART:19700405T034500<br>RRULE:FREQ=YEARLY;BYMONTH=4;BYDAY=1SU<br>END:STANDARD<br>',
-  '20220929T150625Z<br>BEGIN:DAYLIGHT<br>TZNAME:+13<br>TZOFFSETFROM:+1200<br>TZOFFSETTO:+1300<br>DTSTART:19701108T020000<br>RRULE:FREQ=YEARLY;BYMONTH=11;BYDAY=2SU<br>END:DAYLIGHT<br>BEGIN:STANDARD<br>TZNAME:+12<br>TZOFFSETFROM:+1300<br>TZOFFSETTO:+1200<br>DTSTART:19700118T030000<br>RRULE:FREQ=YEARLY;BYMONTH=1;BYDAY=-2SU<br>END:STANDARD<br>',
-  '20220929T150625Z<br>BEGIN:STANDARD<br>TZNAME:ChST<br>TZOFFSETFROM:+1000<br>TZOFFSETTO:+1000<br>DTSTART:19700101T000000<br>END:STANDARD<br>',
-  '20220929T150625Z<br>BEGIN:STANDARD<br>TZNAME:-0930<br>TZOFFSETFROM:-0930<br>TZOFFSETTO:-0930<br>DTSTART:19700101T000000<br>END:STANDARD<br>',
-  '20220929T150625Z<br>BEGIN:STANDARD<br>TZNAME:SST<br>TZOFFSETFROM:-1100<br>TZOFFSETTO:-1100<br>DTSTART:19700101T000000<br>END:STANDARD<br>',
-  '20220929T150625Z<br>BEGIN:DAYLIGHT<br>TZNAME:+12<br>TZOFFSETFROM:+1100<br>TZOFFSETTO:+1200<br>DTSTART:19701004T020000<br>RRULE:FREQ=YEARLY;BYMONTH=10;BYDAY=1SU<br>END:DAYLIGHT<br>BEGIN:STANDARD<br>TZNAME:+11<br>TZOFFSETFROM:+1200<br>TZOFFSETTO:+1100<br>DTSTART:19700405T030000<br>RRULE:FREQ=YEARLY;BYMONTH=4;BYDAY=1SU<br>END:STANDARD<br>',
-];
-
-
-// SHARED FUNCTION TO GET THE TZ CONTENT FROM THE INTERNAL DATABASE
+const tzlibVersion = '1.4.0';
+const tzlibZonesDB = {"Africa":{"Abidjan":["",0],"Accra":["Africa/Abidjan",0],"Addis_Ababa":["Africa/Nairobi",1],"Algiers":["",2],"Asmara":["Africa/Nairobi",1],"Asmera":["Africa/Nairobi",1],"Bamako":["Africa/Abidjan",0],"Bangui":["Africa/Lagos",3],"Banjul":["Africa/Abidjan",0],"Bissau":["",0],"Blantyre":["Africa/Maputo",4],"Brazzaville":["Africa/Lagos",3],"Bujumbura":["Africa/Maputo",4],"Cairo":["",5],"Casablanca":["",6],"Ceuta":["",7],"Conakry":["Africa/Abidjan",0],"Dakar":["Africa/Abidjan",0],"Dar_es_Salaam":["Africa/Nairobi",1],"Djibouti":["Africa/Nairobi",1],"Douala":["Africa/Lagos",3],"El_Aaiun":["",6],"Freetown":["Africa/Abidjan",0],"Gaborone":["Africa/Maputo",4],"Harare":["Africa/Maputo",4],"Johannesburg":["",8],"Juba":["",4],"Kampala":["Africa/Nairobi",1],"Khartoum":["",4],"Kigali":["Africa/Maputo",4],"Kinshasa":["Africa/Lagos",3],"Lagos":["",3],"Libreville":["Africa/Lagos",3],"Lome":["Africa/Abidjan",0],"Luanda":["Africa/Lagos",3],"Lubumbashi":["Africa/Maputo",4],"Lusaka":["Africa/Maputo",4],"Malabo":["Africa/Lagos",3],"Maputo":["",4],"Maseru":["Africa/Johannesburg",8],"Mbabane":["Africa/Johannesburg",8],"Mogadishu":["Africa/Nairobi",1],"Monrovia":["",0],"Nairobi":["",1],"Ndjamena":["",3],"Niamey":["Africa/Lagos",3],"Nouakchott":["Africa/Abidjan",0],"Ouagadougou":["Africa/Abidjan",0],"Porto-Novo":["Africa/Lagos",3],"Sao_Tome":["",0],"Timbuktu":["Africa/Abidjan",0],"Tripoli":["",5],"Tunis":["",2],"Windhoek":["",4]},"America":{"Adak":["",9],"Anchorage":["",10],"Anguilla":["America/Puerto_Rico",11],"Antigua":["America/Puerto_Rico",11],"Araguaina":["",12],"Argentina":{"Buenos_Aires":["",12],"Catamarca":["",12],"ComodRivadavia":["America/Argentina/Catamarca",12],"Cordoba":["",12],"Jujuy":["",12],"La_Rioja":["",12],"Mendoza":["",12],"Rio_Gallegos":["",12],"Salta":["",12],"San_Juan":["",12],"San_Luis":["",12],"Tucuman":["",12],"Ushuaia":["",12]},"Aruba":["America/Puerto_Rico",11],"Asuncion":["",13],"Atikokan":["America/Panama",14],"Atka":["America/Adak",9],"Bahia_Banderas":["",15],"Bahia":["",12],"Barbados":["",11],"Belem":["",12],"Belize":["",16],"Blanc-Sablon":["America/Puerto_Rico",11],"Boa_Vista":["",17],"Bogota":["",18],"Boise":["",19],"Buenos_Aires":["America/Argentina/Buenos_Aires",12],"Cambridge_Bay":["",19],"Campo_Grande":["",17],"Cancun":["",14],"Caracas":["",17],"Catamarca":["America/Argentina/Catamarca",12],"Cayenne":["",12],"Cayman":["America/Panama",14],"Chicago":["",20],"Chihuahua":["",21],"Coral_Harbour":["America/Panama",14],"Cordoba":["America/Argentina/Cordoba",12],"Costa_Rica":["",16],"Creston":["America/Phoenix",22],"Cuiaba":["",17],"Curacao":["America/Puerto_Rico",11],"Danmarkshavn":["",0],"Dawson_Creek":["",22],"Dawson":["",22],"Denver":["",19],"Detroit":["",23],"Dominica":["America/Puerto_Rico",11],"Edmonton":["",19],"Eirunepe":["",18],"El_Salvador":["",16],"Ensenada":["America/Tijuana",24],"Fort_Nelson":["",22],"Fort_Wayne":["America/Indiana/Indianapolis",23],"Fortaleza":["",12],"Glace_Bay":["",25],"Godthab":["America/Nuuk",26],"Goose_Bay":["",27],"Grand_Turk":["",28],"Grenada":["America/Puerto_Rico",11],"Guadeloupe":["America/Puerto_Rico",11],"Guatemala":["",16],"Guayaquil":["",18],"Guyana":["",17],"Halifax":["",25],"Havana":["",29],"Hermosillo":["",22],"Indiana":{"Indianapolis":["",23],"Knox":["",20],"Marengo":["",23],"Petersburg":["",23],"Tell_City":["",20],"Vevay":["",23],"Vincennes":["",23],"Winamac":["",28]},"Indianapolis":["America/Indiana/Indianapolis",23],"Inuvik":["",19],"Iqaluit":["",23],"Jamaica":["",14],"Jujuy":["America/Argentina/Jujuy",12],"Juneau":["",10],"Kentucky":{"Louisville":["",23],"Monticello":["",23]},"Knox_IN":["America/Indiana/Knox",20],"Kralendijk":["America/Puerto_Rico",11],"La_Paz":["",17],"Lima":["",18],"Los_Angeles":["",24],"Louisville":["America/Kentucky/Louisville",23],"Lower_Princes":["America/Puerto_Rico",11],"Maceio":["",12],"Managua":["",16],"Manaus":["",17],"Marigot":["America/Puerto_Rico",11],"Martinique":["",11],"Matamoros":["",20],"Mazatlan":["",21],"Mendoza":["America/Argentina/Mendoza",12],"Menominee":["",20],"Merida":["",30],"Metlakatla":["",10],"Mexico_City":["",30],"Miquelon":["",31],"Moncton":["",25],"Monterrey":["",30],"Montevideo":["",12],"Montreal":["America/Toronto",23],"Montserrat":["America/Puerto_Rico",11],"Nassau":["America/Toronto",23],"New_York":["",23],"Nipigon":["",23],"Nome":["",10],"Noronha":["",32],"North_Dakota":{"Beulah":["",20],"Center":["",20],"New_Salem":["",20]},"Nuuk":["",26],"Ojinaga":["",19],"Panama":["",14],"Pangnirtung":["",23],"Paramaribo":["",12],"Phoenix":["",22],"Port_of_Spain":["America/Puerto_Rico",11],"Port-au-Prince":["",23],"Porto_Acre":["America/Rio_Branco",18],"Porto_Velho":["",17],"Puerto_Rico":["",11],"Punta_Arenas":["",12],"Rainy_River":["",20],"Rankin_Inlet":["",20],"Recife":["",12],"Regina":["",16],"Resolute":["",33],"Rio_Branco":["",18],"Rosario":["America/Argentina/Cordoba",12],"Santa_Isabel":["America/Tijuana",24],"Santarem":["",12],"Santiago":["",34],"Santo_Domingo":["",11],"Sao_Paulo":["",12],"Scoresbysund":["",35],"Shiprock":["America/Denver",19],"Sitka":["",10],"St_Barthelemy":["America/Puerto_Rico",11],"St_Johns":["",36],"St_Kitts":["America/Puerto_Rico",11],"St_Lucia":["America/Puerto_Rico",11],"St_Thomas":["America/Puerto_Rico",11],"St_Vincent":["America/Puerto_Rico",11],"Swift_Current":["",16],"Tegucigalpa":["",16],"Thule":["",25],"Thunder_Bay":["",23],"Tijuana":["",24],"Toronto":["",23],"Tortola":["America/Puerto_Rico",11],"Vancouver":["",24],"Virgin":["America/Puerto_Rico",11],"Whitehorse":["",22],"Winnipeg":["",20],"Yakutat":["",10],"Yellowknife":["",19]},"Antarctica":{"Casey":["",37],"Davis":["",38],"DumontDUrville":["Pacific/Port_Moresby",39],"Macquarie":["",40],"Mawson":["",41],"McMurdo":["Pacific/Auckland",42],"Palmer":["",12],"Rothera":["",12],"South_Pole":["Pacific/Auckland",42],"Syowa":["Asia/Riyadh",43],"Troll":["",44],"Vostok":["Asia/Urumqi",45]},"Arctic":{"Longyearbyen":["Europe/Berlin",7]},"Asia":{"Aden":["Asia/Riyadh",43],"Almaty":["",45],"Amman":["",43],"Anadyr":["",46],"Aqtau":["",41],"Aqtobe":["",41],"Ashgabat":["",41],"Ashkhabad":["Asia/Ashgabat",41],"Atyrau":["",41],"Baghdad":["",43],"Bahrain":["Asia/Qatar",43],"Baku":["",47],"Bangkok":["",38],"Barnaul":["",38],"Beirut":["",48],"Bishkek":["",45],"Brunei":["Asia/Kuching",49],"Calcutta":["Asia/Kolkata",50],"Chita":["",51],"Choibalsan":["",49],"Chongqing":["Asia/Shanghai",52],"Chungking":["Asia/Shanghai",52],"Colombo":["",53],"Dacca":["Asia/Dhaka",45],"Damascus":["",43],"Dhaka":["",45],"Dili":["",51],"Dubai":["",47],"Dushanbe":["",41],"Famagusta":["",54],"Gaza":["",55],"Harbin":["Asia/Shanghai",52],"Hebron":["",55],"Ho_Chi_Minh":["",38],"Hong_Kong":["",56],"Hovd":["",38],"Irkutsk":["",49],"Istanbul":["Europe/Istanbul",43],"Jakarta":["",57],"Jayapura":["",58],"Jerusalem":["",59],"Kabul":["",60],"Kamchatka":["",46],"Karachi":["",61],"Kashgar":["Asia/Urumqi",45],"Kathmandu":["",62],"Katmandu":["Asia/Kathmandu",62],"Khandyga":["",51],"Kolkata":["",50],"Krasnoyarsk":["",38],"Kuala_Lumpur":["Asia/Singapore",49],"Kuching":["",49],"Kuwait":["Asia/Riyadh",43],"Macao":["Asia/Macau",52],"Macau":["",52],"Magadan":["",37],"Makassar":["",63],"Manila":["",64],"Muscat":["Asia/Dubai",47],"Nicosia":["",65],"Novokuznetsk":["",38],"Novosibirsk":["",38],"Omsk":["",45],"Oral":["",41],"Phnom_Penh":["Asia/Bangkok",38],"Pontianak":["",57],"Pyongyang":["",66],"Qatar":["",43],"Qostanay":["",45],"Qyzylorda":["",41],"Rangoon":["Asia/Yangon",67],"Riyadh":["",43],"Saigon":["Asia/Ho_Chi_Minh",38],"Sakhalin":["",37],"Samarkand":["",41],"Seoul":["",66],"Shanghai":["",52],"Singapore":["",49],"Srednekolymsk":["",37],"Taipei":["",52],"Tashkent":["",41],"Tbilisi":["",47],"Tehran":["",68],"Tel_Aviv":["Asia/Jerusalem",59],"Thimbu":["Asia/Thimphu",45],"Thimphu":["",45],"Tokyo":["",69],"Tomsk":["",38],"Ujung_Pandang":["Asia/Makassar",63],"Ulaanbaatar":["",49],"Ulan_Bator":["Asia/Ulaanbaatar",49],"Urumqi":["",45],"Ust-Nera":["",39],"Vientiane":["Asia/Bangkok",38],"Vladivostok":["",39],"Yakutsk":["",51],"Yangon":["",67],"Yekaterinburg":["",41],"Yerevan":["",47]},"Atlantic":{"Azores":["",35],"Bermuda":["",25],"Canary":["",70],"Cape_Verde":["",71],"Faeroe":["Atlantic/Faroe",70],"Faroe":["",70],"Jan_Mayen":["Europe/Berlin",7],"Madeira":["",70],"Reykjavik":["Africa/Abidjan",0],"South_Georgia":["",32],"St_Helena":["Africa/Abidjan",0],"Stanley":["",12]},"Australia":{"ACT":["Australia/Sydney",40],"Adelaide":["",72],"Brisbane":["",73],"Broken_Hill":["",72],"Canberra":["Australia/Sydney",40],"Currie":["Australia/Hobart",74],"Darwin":["",75],"Eucla":["",76],"Hobart":["",74],"LHI":["Australia/Lord_Howe",77],"Lindeman":["",73],"Lord_Howe":["",77],"Melbourne":["",40],"North":["Australia/Darwin",75],"NSW":["Australia/Sydney",40],"Perth":["",78],"Queensland":["Australia/Brisbane",73],"South":["Australia/Adelaide",72],"Sydney":["",40],"Tasmania":["Australia/Hobart",74],"Victoria":["Australia/Melbourne",40],"West":["Australia/Perth",78],"Yancowinna":["Australia/Broken_Hill",72]},"Brazil":{"Acre":["America/Rio_Branco",18],"DeNoronha":["America/Noronha",32],"East":["America/Sao_Paulo",12],"West":["America/Manaus",17]},"Canada":{"Atlantic":["America/Halifax",25],"Central":["America/Winnipeg",20],"Eastern":["America/Toronto",23],"Mountain":["America/Edmonton",19],"Newfoundland":["America/St_Johns",36],"Pacific":["America/Vancouver",24],"Saskatchewan":["America/Regina",16],"Yukon":["America/Whitehorse",22]},"CET":["",7],"Chile":{"Continental":["America/Santiago",34],"EasterIsland":["Pacific/Easter",79]},"CST6CDT":["",20],"Cuba":["America/Havana",29],"EET":["",54],"Egypt":["Africa/Cairo",5],"Eire":["Europe/Dublin",80],"EST":["",14],"EST5EDT":["",23],"Etc":{"GMT-0":["Etc/GMT",0],"GMT-1":["",6],"GMT-10":["",39],"GMT-11":["",37],"GMT-12":["",46],"GMT-13":["",81],"GMT-14":["",82],"GMT-2":["",83],"GMT-3":["",43],"GMT-4":["",47],"GMT-5":["",41],"GMT-6":["",45],"GMT-7":["",38],"GMT-8":["",49],"GMT-9":["",51],"GMT":["",0],"GMT+0":["Etc/GMT",0],"GMT+1":["",71],"GMT+10":["",84],"GMT+11":["",85],"GMT+12":["",86],"GMT+2":["",32],"GMT+3":["",12],"GMT+4":["",17],"GMT+5":["",18],"GMT+6":["",87],"GMT+7":["",88],"GMT+8":["",89],"GMT+9":["",90],"GMT0":["Etc/GMT",0],"Greenwich":["Etc/GMT",0],"UCT":["Etc/UTC",91],"Universal":["Etc/UTC",91],"UTC":["",91],"Zulu":["Etc/UTC",91]},"Europe":{"Amsterdam":["Europe/Brussels",7],"Andorra":["",7],"Astrakhan":["",47],"Athens":["",54],"Belfast":["Europe/London",92],"Belgrade":["",7],"Berlin":["",7],"Bratislava":["Europe/Prague",7],"Brussels":["",7],"Bucharest":["",54],"Budapest":["",7],"Busingen":["Europe/Zurich",7],"Chisinau":["",93],"Copenhagen":["Europe/Berlin",7],"Dublin":["",80],"Gibraltar":["",7],"Guernsey":["Europe/London",92],"Helsinki":["",54],"Isle_of_Man":["Europe/London",92],"Istanbul":["",43],"Jersey":["Europe/London",92],"Kaliningrad":["",5],"Kiev":["Europe/Kyiv",65],"Kirov":["",43],"Kyiv":["",65],"Lisbon":["",94],"Ljubljana":["Europe/Belgrade",7],"London":["",92],"Luxembourg":["Europe/Brussels",7],"Madrid":["",7],"Malta":["",7],"Mariehamn":["Europe/Helsinki",54],"Minsk":["",43],"Monaco":["Europe/Paris",7],"Moscow":["",95],"Nicosia":["Asia/Nicosia",65],"Oslo":["Europe/Berlin",7],"Paris":["",7],"Podgorica":["Europe/Belgrade",7],"Prague":["",7],"Riga":["",54],"Rome":["",7],"Samara":["",47],"San_Marino":["Europe/Rome",7],"Sarajevo":["Europe/Belgrade",7],"Saratov":["",47],"Simferopol":["",95],"Skopje":["Europe/Belgrade",7],"Sofia":["",54],"Stockholm":["Europe/Berlin",7],"Tallinn":["",54],"Tirane":["",7],"Tiraspol":["Europe/Chisinau",93],"Ulyanovsk":["",47],"Uzhgorod":["Europe/Kyiv",65],"Vaduz":["Europe/Zurich",7],"Vatican":["Europe/Rome",7],"Vienna":["",7],"Vilnius":["",54],"Volgograd":["",43],"Warsaw":["",7],"Zagreb":["Europe/Belgrade",7],"Zaporozhye":["Europe/Kyiv",65],"Zurich":["",7]},"GB-Eire":["Europe/London",92],"GB":["Europe/London",92],"GMT-0":["Etc/GMT",0],"GMT":["Etc/GMT",0],"GMT+0":["Etc/GMT",0],"GMT0":["Etc/GMT",0],"Greenwich":["Etc/GMT",0],"Hongkong":["Asia/Hong_Kong",56],"HST":["",96],"Iceland":["Africa/Abidjan",0],"Indian":{"Antananarivo":["Africa/Nairobi",1],"Chagos":["",45],"Christmas":["Asia/Bangkok",38],"Cocos":["Asia/Yangon",67],"Comoro":["Africa/Nairobi",1],"Kerguelen":["Indian/Maldives",41],"Mahe":["Asia/Dubai",47],"Maldives":["",41],"Mauritius":["",47],"Mayotte":["Africa/Nairobi",1],"Reunion":["Asia/Dubai",47]},"Iran":["Asia/Tehran",68],"Israel":["Asia/Jerusalem",59],"Jamaica":["America/Jamaica",14],"Japan":["Asia/Tokyo",69],"Kwajalein":["Pacific/Kwajalein",46],"Libya":["Africa/Tripoli",5],"MET":["",97],"Mexico":{"BajaNorte":["America/Tijuana",24],"BajaSur":["America/Mazatlan",21],"General":["America/Mexico_City",30]},"MST":["",22],"MST7MDT":["",19],"Navajo":["America/Denver",19],"NZ-CHAT":["Pacific/Chatham",98],"NZ":["Pacific/Auckland",42],"Pacific":{"Apia":["",81],"Auckland":["",42],"Bougainville":["",37],"Chatham":["",98],"Chuuk":["Pacific/Port_Moresby",39],"Easter":["",79],"Efate":["",37],"Enderbury":["Pacific/Kanton",81],"Fakaofo":["",81],"Fiji":["",99],"Funafuti":["Pacific/Tarawa",46],"Galapagos":["",87],"Gambier":["",90],"Guadalcanal":["",37],"Guam":["",100],"Honolulu":["",96],"Johnston":["Pacific/Honolulu",96],"Kanton":["",81],"Kiritimati":["",82],"Kosrae":["",37],"Kwajalein":["",46],"Majuro":["Pacific/Tarawa",46],"Marquesas":["",101],"Midway":["Pacific/Pago_Pago",102],"Nauru":["",46],"Niue":["",85],"Norfolk":["",103],"Noumea":["",37],"Pago_Pago":["",102],"Palau":["",51],"Pitcairn":["",89],"Pohnpei":["Pacific/Guadalcanal",37],"Ponape":["Pacific/Guadalcanal",37],"Port_Moresby":["",39],"Rarotonga":["",84],"Saipan":["Pacific/Guam",100],"Samoa":["Pacific/Pago_Pago",102],"Tahiti":["",84],"Tarawa":["",46],"Tongatapu":["",81],"Truk":["Pacific/Port_Moresby",39],"Wake":["Pacific/Tarawa",46],"Wallis":["Pacific/Tarawa",46],"Yap":["Pacific/Port_Moresby",39]},"Poland":["Europe/Warsaw",7],"Portugal":["Europe/Lisbon",94],"PRC":["Asia/Shanghai",52],"PST8PDT":["",24],"ROC":["Asia/Taipei",52],"ROK":["Asia/Seoul",66],"Singapore":["Asia/Singapore",49],"Turkey":["Europe/Istanbul",43],"UCT":["Etc/UTC",91],"Universal":["Etc/UTC",91],"US":{"Alaska":["America/Anchorage",10],"Aleutian":["America/Adak",9],"Arizona":["America/Phoenix",22],"Central":["America/Chicago",20],"East-Indiana":["America/Indiana/Indianapolis",23],"Eastern":["America/New_York",23],"Hawaii":["Pacific/Honolulu",96],"Indiana-Starke":["America/Indiana/Knox",20],"Michigan":["America/Detroit",23],"Mountain":["America/Denver",19],"Pacific":["America/Los_Angeles",24],"Samoa":["Pacific/Pago_Pago",102]},"UTC":["Etc/UTC",91],"W-SU":["Europe/Moscow",95],"WET":["",70],"Zulu":["Etc/UTC",91]};
+const tzlibZonesDetailsDB = ["20221015T115821Z<n><bs><n><tz>GMT<n><of>+0000<n><ot>+0000<n><s>19700101T000000<n><es><n>","20221015T115821Z<n><bs><n><tz>EAT<n><of>+0300<n><ot>+0300<n><s>19700101T000000<n><es><n>","20221015T115821Z<n><bs><n><tz>CET<n><of>+0100<n><ot>+0100<n><s>19700101T000000<n><es><n>","20221015T115821Z<n><bs><n><tz>WAT<n><of>+0100<n><ot>+0100<n><s>19700101T000000<n><es><n>","20221015T115821Z<n><bs><n><tz>CAT<n><of>+0200<n><ot>+0200<n><s>19700101T000000<n><es><n>","20221015T115821Z<n><bs><n><tz>EET<n><of>+0200<n><ot>+0200<n><s>19700101T000000<n><es><n>","20221015T115821Z<n><bs><n><tz>+01<n><of>+0100<n><ot>+0100<n><s>19700101T000000<n><es><n>","20221015T115821Z<n><bd><n><tz>CEST<n><of>+0100<n><ot>+0200<n><s>19700329T020000<n><r>FREQ=YEARLY;BYMONTH=3;BYDAY=-1SU<n><ed><n><bs><n><tz>CET<n><of>+0200<n><ot>+0100<n><s>19701025T030000<n><r>FREQ=YEARLY;BYMONTH=10;BYDAY=-1SU<n><es><n>","20221015T115821Z<n><bs><n><tz>SAST<n><of>+0200<n><ot>+0200<n><s>19700101T000000<n><es><n>","20221015T115821Z<n><bd><n><tz>HDT<n><of>-1000<n><ot>-0900<n><s>19700308T020000<n><r>FREQ=YEARLY;BYMONTH=3;BYDAY=2SU<n><ed><n><bs><n><tz>HST<n><of>-0900<n><ot>-1000<n><s>19701101T020000<n><r>FREQ=YEARLY;BYMONTH=11;BYDAY=1SU<n><es><n>","20221015T115821Z<n><bd><n><tz>AKDT<n><of>-0900<n><ot>-0800<n><s>19700308T020000<n><r>FREQ=YEARLY;BYMONTH=3;BYDAY=2SU<n><ed><n><bs><n><tz>AKST<n><of>-0800<n><ot>-0900<n><s>19701101T020000<n><r>FREQ=YEARLY;BYMONTH=11;BYDAY=1SU<n><es><n>","20221015T115821Z<n><bs><n><tz>AST<n><of>-0400<n><ot>-0400<n><s>19700101T000000<n><es><n>","20221015T115821Z<n><bs><n><tz>-03<n><of>-0300<n><ot>-0300<n><s>19700101T000000<n><es><n>","20221015T115821Z<n><bd><n><tz>-03<n><of>-0400<n><ot>-0300<n><s>19701004T000000<n><r>FREQ=YEARLY;BYMONTH=10;BYDAY=1SU<n><ed><n><bs><n><tz>-04<n><of>-0300<n><ot>-0400<n><s>19700322T000000<n><r>FREQ=YEARLY;BYMONTH=3;BYDAY=4SU<n><es><n>","20221015T115821Z<n><bs><n><tz>EST<n><of>-0500<n><ot>-0500<n><s>19700101T000000<n><es><n>","20221015T115821Z<n><bs><n><tz>CST<n><of>-0500<n><ot>-0600<n><s>19701025T020000<n><r>FREQ=YEARLY;BYMONTH=10;BYDAY=-1SU<n><es><n><bd><n><tz>CDT<n><of>-0600<n><ot>-0500<n><s>19700405T020000<n><r>FREQ=YEARLY;BYMONTH=4;BYDAY=1SU<n><ed><n>","20221015T115821Z<n><bs><n><tz>CST<n><of>-0600<n><ot>-0600<n><s>19700101T000000<n><es><n>","20221015T115821Z<n><bs><n><tz>-04<n><of>-0400<n><ot>-0400<n><s>19700101T000000<n><es><n>","20221015T115821Z<n><bs><n><tz>-05<n><of>-0500<n><ot>-0500<n><s>19700101T000000<n><es><n>","20221015T115821Z<n><bd><n><tz>MDT<n><of>-0700<n><ot>-0600<n><s>19700308T020000<n><r>FREQ=YEARLY;BYMONTH=3;BYDAY=2SU<n><ed><n><bs><n><tz>MST<n><of>-0600<n><ot>-0700<n><s>19701101T020000<n><r>FREQ=YEARLY;BYMONTH=11;BYDAY=1SU<n><es><n>","20221015T115821Z<n><bd><n><tz>CDT<n><of>-0600<n><ot>-0500<n><s>19700308T020000<n><r>FREQ=YEARLY;BYMONTH=3;BYDAY=2SU<n><ed><n><bs><n><tz>CST<n><of>-0500<n><ot>-0600<n><s>19701101T020000<n><r>FREQ=YEARLY;BYMONTH=11;BYDAY=1SU<n><es><n>","20221015T115821Z<n><bd><n><tz>MDT<n><of>-0700<n><ot>-0600<n><s>19700405T020000<n><r>FREQ=YEARLY;BYMONTH=4;BYDAY=1SU<n><ed><n><bs><n><tz>MST<n><of>-0600<n><ot>-0700<n><s>19701025T020000<n><r>FREQ=YEARLY;BYMONTH=10;BYDAY=-1SU<n><es><n>","20221015T115821Z<n><bs><n><tz>MST<n><of>-0700<n><ot>-0700<n><s>19700101T000000<n><es><n>","20221015T115821Z<n><bd><n><tz>EDT<n><of>-0500<n><ot>-0400<n><s>19700308T020000<n><r>FREQ=YEARLY;BYMONTH=3;BYDAY=2SU<n><ed><n><bs><n><tz>EST<n><of>-0400<n><ot>-0500<n><s>19701101T020000<n><r>FREQ=YEARLY;BYMONTH=11;BYDAY=1SU<n><es><n>","20221015T115821Z<n><bd><n><tz>PDT<n><of>-0800<n><ot>-0700<n><s>19700308T020000<n><r>FREQ=YEARLY;BYMONTH=3;BYDAY=2SU<n><ed><n><bs><n><tz>PST<n><of>-0700<n><ot>-0800<n><s>19701101T020000<n><r>FREQ=YEARLY;BYMONTH=11;BYDAY=1SU<n><es><n>","20221015T115821Z<n><bd><n><tz>ADT<n><of>-0400<n><ot>-0300<n><s>19700308T020000<n><r>FREQ=YEARLY;BYMONTH=3;BYDAY=2SU<n><ed><n><bs><n><tz>AST<n><of>-0300<n><ot>-0400<n><s>19701101T020000<n><r>FREQ=YEARLY;BYMONTH=11;BYDAY=1SU<n><es><n>","20221015T115821Z<n><bd><n><tz>-02<n><of>-0300<n><ot>-0200<n><s>19700328T220000<n><r>FREQ=YEARLY;BYMONTH=3;BYDAY=-1SA<n><ed><n><bs><n><tz>-03<n><of>-0200<n><ot>-0300<n><s>19701024T230000<n><r>FREQ=YEARLY;BYMONTH=10;BYDAY=-1SA<n><es><n>","20221015T115821Z<n><bs><n><tz>AST<n><of>-0300<n><ot>-0400<n><s>19701101T020000<n><r>FREQ=YEARLY;BYMONTH=11;BYDAY=1SU<n><es><n><bd><n><tz>ADT<n><of>-0400<n><ot>-0300<n><s>19700308T020000<n><r>FREQ=YEARLY;BYMONTH=3;BYDAY=2SU<n><ed><n>","20221015T115821Z<n><bs><n><tz>EST<n><of>-0400<n><ot>-0500<n><s>19701101T020000<n><r>FREQ=YEARLY;BYMONTH=11;BYDAY=1SU<n><es><n><bd><n><tz>EDT<n><of>-0500<n><ot>-0400<n><s>19700308T020000<n><r>FREQ=YEARLY;BYMONTH=3;BYDAY=2SU<n><ed><n>","20221015T115821Z<n><bs><n><tz>CST<n><of>-0400<n><ot>-0500<n><s>19701101T010000<n><r>FREQ=YEARLY;BYMONTH=11;BYDAY=1SU<n><es><n><bd><n><tz>CDT<n><of>-0500<n><ot>-0400<n><s>19700308T000000<n><r>FREQ=YEARLY;BYMONTH=3;BYDAY=2SU<n><ed><n>","20221015T115821Z<n><bd><n><tz>CDT<n><of>-0600<n><ot>-0500<n><s>19700405T020000<n><r>FREQ=YEARLY;BYMONTH=4;BYDAY=1SU<n><ed><n><bs><n><tz>CST<n><of>-0500<n><ot>-0600<n><s>19701025T020000<n><r>FREQ=YEARLY;BYMONTH=10;BYDAY=-1SU<n><es><n>","20221015T115821Z<n><bd><n><tz>-02<n><of>-0300<n><ot>-0200<n><s>19700308T020000<n><r>FREQ=YEARLY;BYMONTH=3;BYDAY=2SU<n><ed><n><bs><n><tz>-03<n><of>-0200<n><ot>-0300<n><s>19701101T020000<n><r>FREQ=YEARLY;BYMONTH=11;BYDAY=1SU<n><es><n>","20221015T115821Z<n><bs><n><tz>-02<n><of>-0200<n><ot>-0200<n><s>19700101T000000<n><es><n>","20221015T115821Z<n><bs><n><tz>CST<n><of>-0500<n><ot>-0600<n><s>19701101T020000<n><r>FREQ=YEARLY;BYMONTH=11;BYDAY=1SU<n><es><n><bd><n><tz>CDT<n><of>-0600<n><ot>-0500<n><s>19700308T020000<n><r>FREQ=YEARLY;BYMONTH=3;BYDAY=2SU<n><ed><n>","20221015T115821Z<n><bs><n><tz>-04<n><of>-0300<n><ot>-0400<n><s>19700405T000000<n><r>FREQ=YEARLY;BYMONTH=4;BYDAY=1SU<n><es><n><bd><n><tz>-03<n><of>-0400<n><ot>-0300<n><s>19700906T000000<n><r>FREQ=YEARLY;BYMONTH=9;BYDAY=1SU<n><ed><n>","20221015T115821Z<n><bd><n><tz>+00<n><of>-0100<n><ot>+0000<n><s>19700329T000000<n><r>FREQ=YEARLY;BYMONTH=3;BYDAY=-1SU<n><ed><n><bs><n><tz>-01<n><of>+0000<n><ot>-0100<n><s>19701025T010000<n><r>FREQ=YEARLY;BYMONTH=10;BYDAY=-1SU<n><es><n>","20221015T115821Z<n><bs><n><tz>NST<n><of>-0230<n><ot>-0330<n><s>19701101T020000<n><r>FREQ=YEARLY;BYMONTH=11;BYDAY=1SU<n><es><n><bd><n><tz>NDT<n><of>-0330<n><ot>-0230<n><s>19700308T020000<n><r>FREQ=YEARLY;BYMONTH=3;BYDAY=2SU<n><ed><n>","20221015T115821Z<n><bs><n><tz>+11<n><of>+1100<n><ot>+1100<n><s>19700101T000000<n><es><n>","20221015T115821Z<n><bs><n><tz>+07<n><of>+0700<n><ot>+0700<n><s>19700101T000000<n><es><n>","20221015T115821Z<n><bs><n><tz>+10<n><of>+1000<n><ot>+1000<n><s>19700101T000000<n><es><n>","20221015T115821Z<n><bs><n><tz>AEST<n><of>+1100<n><ot>+1000<n><s>19700405T030000<n><r>FREQ=YEARLY;BYMONTH=4;BYDAY=1SU<n><es><n><bd><n><tz>AEDT<n><of>+1000<n><ot>+1100<n><s>19701004T020000<n><r>FREQ=YEARLY;BYMONTH=10;BYDAY=1SU<n><ed><n>","20221015T115821Z<n><bs><n><tz>+05<n><of>+0500<n><ot>+0500<n><s>19700101T000000<n><es><n>","20221015T115821Z<n><bd><n><tz>NZDT<n><of>+1200<n><ot>+1300<n><s>19700927T020000<n><r>FREQ=YEARLY;BYMONTH=9;BYDAY=-1SU<n><ed><n><bs><n><tz>NZST<n><of>+1300<n><ot>+1200<n><s>19700405T030000<n><r>FREQ=YEARLY;BYMONTH=4;BYDAY=1SU<n><es><n>","20221015T115821Z<n><bs><n><tz>+03<n><of>+0300<n><ot>+0300<n><s>19700101T000000<n><es><n>","20221015T115821Z<n><bd><n><tz>+02<n><of>+0000<n><ot>+0200<n><s>19700329T010000<n><r>FREQ=YEARLY;BYMONTH=3;BYDAY=-1SU<n><ed><n><bs><n><tz>+00<n><of>+0200<n><ot>+0000<n><s>19701025T030000<n><r>FREQ=YEARLY;BYMONTH=10;BYDAY=-1SU<n><es><n>","20221015T115821Z<n><bs><n><tz>+06<n><of>+0600<n><ot>+0600<n><s>19700101T000000<n><es><n>","20221015T115821Z<n><bs><n><tz>+12<n><of>+1200<n><ot>+1200<n><s>19700101T000000<n><es><n>","20221015T115821Z<n><bs><n><tz>+04<n><of>+0400<n><ot>+0400<n><s>19700101T000000<n><es><n>","20221015T115821Z<n><bd><n><tz>EEST<n><of>+0200<n><ot>+0300<n><s>19700329T000000<n><r>FREQ=YEARLY;BYMONTH=3;BYDAY=-1SU<n><ed><n><bs><n><tz>EET<n><of>+0300<n><ot>+0200<n><s>19701025T000000<n><r>FREQ=YEARLY;BYMONTH=10;BYDAY=-1SU<n><es><n>","20221015T115821Z<n><bs><n><tz>+08<n><of>+0800<n><ot>+0800<n><s>19700101T000000<n><es><n>","20221015T115821Z<n><bs><n><tz>IST<n><of>+0530<n><ot>+0530<n><s>19700101T000000<n><es><n>","20221015T115821Z<n><bs><n><tz>+09<n><of>+0900<n><ot>+0900<n><s>19700101T000000<n><es><n>","20221015T115821Z<n><bs><n><tz>CST<n><of>+0800<n><ot>+0800<n><s>19700101T000000<n><es><n>","20221015T115821Z<n><bs><n><tz>+0530<n><of>+0530<n><ot>+0530<n><s>19700101T000000<n><es><n>","20221015T115821Z<n><bd><n><tz>EEST<n><of>+0200<n><ot>+0300<n><s>19700329T030000<n><r>FREQ=YEARLY;BYMONTH=3;BYDAY=-1SU<n><ed><n><bs><n><tz>EET<n><of>+0300<n><ot>+0200<n><s>19701025T040000<n><r>FREQ=YEARLY;BYMONTH=10;BYDAY=-1SU<n><es><n>","20221015T115821Z<n><bs><n><tz>EET<n><of>+0300<n><ot>+0200<n><s>19701024T020000<n><r>FREQ=YEARLY;BYMONTH=10;BYDAY=-1SA<n><es><n><bd><n><tz>EEST<n><of>+0200<n><ot>+0300<n><s>19700328T020000<n><r>FREQ=YEARLY;BYMONTH=3;BYDAY=-1SA<n><ed><n>","20221015T115821Z<n><bs><n><tz>HKT<n><of>+0800<n><ot>+0800<n><s>19700101T000000<n><es><n>","20221015T115821Z<n><bs><n><tz>WIB<n><of>+0700<n><ot>+0700<n><s>19700101T000000<n><es><n>","20221015T115821Z<n><bs><n><tz>WIT<n><of>+0900<n><ot>+0900<n><s>19700101T000000<n><es><n>","20221015T115821Z<n><bd><n><tz>IDT<n><of>+0200<n><ot>+0300<n><s>19700327T020000<n><r>FREQ=YEARLY;BYMONTH=3;BYDAY=-1FR<n><ed><n><bs><n><tz>IST<n><of>+0300<n><ot>+0200<n><s>19701025T020000<n><r>FREQ=YEARLY;BYMONTH=10;BYDAY=-1SU<n><es><n>","20221015T115821Z<n><bs><n><tz>+0430<n><of>+0430<n><ot>+0430<n><s>19700101T000000<n><es><n>","20221015T115821Z<n><bs><n><tz>PKT<n><of>+0500<n><ot>+0500<n><s>19700101T000000<n><es><n>","20221015T115821Z<n><bs><n><tz>+0545<n><of>+0545<n><ot>+0545<n><s>19700101T000000<n><es><n>","20221015T115821Z<n><bs><n><tz>WITA<n><of>+0800<n><ot>+0800<n><s>19700101T000000<n><es><n>","20221015T115821Z<n><bs><n><tz>PST<n><of>+0800<n><ot>+0800<n><s>19700101T000000<n><es><n>","20221015T115821Z<n><bs><n><tz>EET<n><of>+0300<n><ot>+0200<n><s>19701025T040000<n><r>FREQ=YEARLY;BYMONTH=10;BYDAY=-1SU<n><es><n><bd><n><tz>EEST<n><of>+0200<n><ot>+0300<n><s>19700329T030000<n><r>FREQ=YEARLY;BYMONTH=3;BYDAY=-1SU<n><ed><n>","20221015T115821Z<n><bs><n><tz>KST<n><of>+0900<n><ot>+0900<n><s>19700101T000000<n><es><n>","20221015T115821Z<n><bs><n><tz>+0630<n><of>+0630<n><ot>+0630<n><s>19700101T000000<n><es><n>","20221015T115821Z<n><bs><n><tz>+0330<n><of>+0330<n><ot>+0330<n><s>19700101T000000<n><es><n>","20221015T115821Z<n><bs><n><tz>JST<n><of>+0900<n><ot>+0900<n><s>19700101T000000<n><es><n>","20221015T115821Z<n><bd><n><tz>WEST<n><of>+0000<n><ot>+0100<n><s>19700329T010000<n><r>FREQ=YEARLY;BYMONTH=3;BYDAY=-1SU<n><ed><n><bs><n><tz>WET<n><of>+0100<n><ot>+0000<n><s>19701025T020000<n><r>FREQ=YEARLY;BYMONTH=10;BYDAY=-1SU<n><es><n>","20221015T115821Z<n><bs><n><tz>-01<n><of>-0100<n><ot>-0100<n><s>19700101T000000<n><es><n>","20221015T115821Z<n><bs><n><tz>ACST<n><of>+1030<n><ot>+0930<n><s>19700405T030000<n><r>FREQ=YEARLY;BYMONTH=4;BYDAY=1SU<n><es><n><bd><n><tz>ACDT<n><of>+0930<n><ot>+1030<n><s>19701004T020000<n><r>FREQ=YEARLY;BYMONTH=10;BYDAY=1SU<n><ed><n>","20221015T115821Z<n><bs><n><tz>AEST<n><of>+1000<n><ot>+1000<n><s>19700101T000000<n><es><n>","20221015T115821Z<n><bd><n><tz>AEDT<n><of>+1000<n><ot>+1100<n><s>19701004T020000<n><r>FREQ=YEARLY;BYMONTH=10;BYDAY=1SU<n><ed><n><bs><n><tz>AEST<n><of>+1100<n><ot>+1000<n><s>19700405T030000<n><r>FREQ=YEARLY;BYMONTH=4;BYDAY=1SU<n><es><n>","20221015T115821Z<n><bs><n><tz>ACST<n><of>+0930<n><ot>+0930<n><s>19700101T000000<n><es><n>","20221015T115821Z<n><bs><n><tz>+0845<n><of>+0845<n><ot>+0845<n><s>19700101T000000<n><es><n>","20221015T115821Z<n><bs><n><tz>+1030<n><of>+1100<n><ot>+1030<n><s>19700405T020000<n><r>FREQ=YEARLY;BYMONTH=4;BYDAY=1SU<n><es><n><bd><n><tz>+11<n><of>+1030<n><ot>+1100<n><s>19701004T020000<n><r>FREQ=YEARLY;BYMONTH=10;BYDAY=1SU<n><ed><n>","20221015T115821Z<n><bs><n><tz>AWST<n><of>+0800<n><ot>+0800<n><s>19700101T000000<n><es><n>","20221015T115821Z<n><bs><n><tz>-06<n><of>-0500<n><ot>-0600<n><s>19700404T220000<n><r>FREQ=YEARLY;BYMONTH=4;BYDAY=1SA<n><es><n><bd><n><tz>-05<n><of>-0600<n><ot>-0500<n><s>19700905T220000<n><r>FREQ=YEARLY;BYMONTH=9;BYDAY=1SA<n><ed><n>","20221015T115821Z<n><bs><n><tz>IST<n><of>+0000<n><ot>+0100<n><s>19700329T010000<n><r>FREQ=YEARLY;BYMONTH=3;BYDAY=-1SU<n><es><n><bd><n><tz>GMT<n><of>+0100<n><ot>+0000<n><s>19701025T020000<n><r>FREQ=YEARLY;BYMONTH=10;BYDAY=-1SU<n><ed><n>","20221015T115821Z<n><bs><n><tz>+13<n><of>+1300<n><ot>+1300<n><s>19700101T000000<n><es><n>","20221015T115821Z<n><bs><n><tz>+14<n><of>+1400<n><ot>+1400<n><s>19700101T000000<n><es><n>","20221015T115821Z<n><bs><n><tz>+02<n><of>+0200<n><ot>+0200<n><s>19700101T000000<n><es><n>","20221015T115821Z<n><bs><n><tz>-10<n><of>-1000<n><ot>-1000<n><s>19700101T000000<n><es><n>","20221015T115821Z<n><bs><n><tz>-11<n><of>-1100<n><ot>-1100<n><s>19700101T000000<n><es><n>","20221015T115821Z<n><bs><n><tz>-12<n><of>-1200<n><ot>-1200<n><s>19700101T000000<n><es><n>","20221015T115821Z<n><bs><n><tz>-06<n><of>-0600<n><ot>-0600<n><s>19700101T000000<n><es><n>","20221015T115821Z<n><bs><n><tz>-07<n><of>-0700<n><ot>-0700<n><s>19700101T000000<n><es><n>","20221015T115821Z<n><bs><n><tz>-08<n><of>-0800<n><ot>-0800<n><s>19700101T000000<n><es><n>","20221015T115821Z<n><bs><n><tz>-09<n><of>-0900<n><ot>-0900<n><s>19700101T000000<n><es><n>","20221015T115821Z<n><bs><n><tz>UTC<n><of>+0000<n><ot>+0000<n><s>19700101T000000<n><es><n>","20221015T115821Z<n><bd><n><tz>BST<n><of>+0000<n><ot>+0100<n><s>19700329T010000<n><r>FREQ=YEARLY;BYMONTH=3;BYDAY=-1SU<n><ed><n><bs><n><tz>GMT<n><of>+0100<n><ot>+0000<n><s>19701025T020000<n><r>FREQ=YEARLY;BYMONTH=10;BYDAY=-1SU<n><es><n>","20221015T115821Z<n><bd><n><tz>EEST<n><of>+0200<n><ot>+0300<n><s>19700329T020000<n><r>FREQ=YEARLY;BYMONTH=3;BYDAY=-1SU<n><ed><n><bs><n><tz>EET<n><of>+0300<n><ot>+0200<n><s>19701025T030000<n><r>FREQ=YEARLY;BYMONTH=10;BYDAY=-1SU<n><es><n>","20221015T115821Z<n><bs><n><tz>WET<n><of>+0100<n><ot>+0000<n><s>19701025T020000<n><r>FREQ=YEARLY;BYMONTH=10;BYDAY=-1SU<n><es><n><bd><n><tz>WEST<n><of>+0000<n><ot>+0100<n><s>19700329T010000<n><r>FREQ=YEARLY;BYMONTH=3;BYDAY=-1SU<n><ed><n>","20221015T115821Z<n><bs><n><tz>MSK<n><of>+0300<n><ot>+0300<n><s>19700101T000000<n><es><n>","20221015T115821Z<n><bs><n><tz>HST<n><of>-1000<n><ot>-1000<n><s>19700101T000000<n><es><n>","20221015T115821Z<n><bd><n><tz>MEST<n><of>+0100<n><ot>+0200<n><s>19700329T020000<n><r>FREQ=YEARLY;BYMONTH=3;BYDAY=-1SU<n><ed><n><bs><n><tz>MET<n><of>+0200<n><ot>+0100<n><s>19701025T030000<n><r>FREQ=YEARLY;BYMONTH=10;BYDAY=-1SU<n><es><n>","20221015T115821Z<n><bd><n><tz>+1345<n><of>+1245<n><ot>+1345<n><s>19700927T024500<n><r>FREQ=YEARLY;BYMONTH=9;BYDAY=-1SU<n><ed><n><bs><n><tz>+1245<n><of>+1345<n><ot>+1245<n><s>19700405T034500<n><r>FREQ=YEARLY;BYMONTH=4;BYDAY=1SU<n><es><n>","20221015T115821Z<n><bd><n><tz>+13<n><of>+1200<n><ot>+1300<n><s>19701108T020000<n><r>FREQ=YEARLY;BYMONTH=11;BYDAY=2SU<n><ed><n><bs><n><tz>+12<n><of>+1300<n><ot>+1200<n><s>19700118T030000<n><r>FREQ=YEARLY;BYMONTH=1;BYDAY=-2SU<n><es><n>","20221015T115821Z<n><bs><n><tz>ChST<n><of>+1000<n><ot>+1000<n><s>19700101T000000<n><es><n>","20221015T115821Z<n><bs><n><tz>-0930<n><of>-0930<n><ot>-0930<n><s>19700101T000000<n><es><n>","20221015T115821Z<n><bs><n><tz>SST<n><of>-1100<n><ot>-1100<n><s>19700101T000000<n><es><n>","20221015T115821Z<n><bd><n><tz>+12<n><of>+1100<n><ot>+1200<n><s>19701004T020000<n><r>FREQ=YEARLY;BYMONTH=10;BYDAY=1SU<n><ed><n><bs><n><tz>+11<n><of>+1200<n><ot>+1100<n><s>19700405T030000<n><r>FREQ=YEARLY;BYMONTH=4;BYDAY=1SU<n><es><n>"];
 function tzlib_get_content(tzName) {
-  // get timezone parts
   const nameParts = tzName.split('/');
-  // validate timezone
-  // TODO: Make this a little bit smarter (depending on the future db structure)
   if (
     (nameParts.length === 3 &&
       (!tzlibZonesDB[`${nameParts[0]}`] ||
@@ -765,30 +28,44 @@ function tzlib_get_content(tzName) {
     console.error('Given timezone not valid.');
     return '';
   }
-  // create the output
   if (nameParts.length === 3) {
     return [
       tzlibZonesDB[`${nameParts[0]}`][`${nameParts[1]}`][`${nameParts[2]}`][0],
-      tzlibZonesDetailsDB[tzlibZonesDB[`${nameParts[0]}`][`${nameParts[1]}`][`${nameParts[2]}`][1]],
+      tzlib_enrich_data(tzlibZonesDetailsDB[tzlibZonesDB[`${nameParts[0]}`][`${nameParts[1]}`][`${nameParts[2]}`][1]]),
     ];
   }
   if (nameParts.length === 2) {
     return [
       tzlibZonesDB[`${nameParts[0]}`][`${nameParts[1]}`][0],
-      tzlibZonesDetailsDB[tzlibZonesDB[`${nameParts[0]}`][`${nameParts[1]}`][1]],
+      tzlib_enrich_data(tzlibZonesDetailsDB[tzlibZonesDB[`${nameParts[0]}`][`${nameParts[1]}`][1]]),
     ];
   }
-  return [tzlibZonesDB[`${nameParts[0]}`][0], tzlibZonesDetailsDB[tzlibZonesDB[`${nameParts[0]}`][1]]];
+  return [tzlibZonesDB[`${nameParts[0]}`][0], tzlib_enrich_data(tzlibZonesDetailsDB[tzlibZonesDB[`${nameParts[0]}`][1]])];
 }
-
-// LOADING THE RIGHT CODE BLOCK
+function tzlib_enrich_data(string) {
+  const shortenerMap = {
+    "<br>":"<n>",
+    "TZNAME:":"<tz>",
+    "TZOFFSETFROM:":"<of>",
+    "TZOFFSETTO:":"<ot>",
+    "DTSTART:":"<s>",
+    "RRULE:":"<r>",
+    "BEGIN:DAYLIGHT":"<bd>",
+    "END:DAYLIGHT":"<ed>",
+    "BEGIN:STANDARD":"<bs>",
+    "END:STANDARD":"<es>"
+  }
+  for (const [key, value] of Object.entries(shortenerMap)) {
+    string = string.replaceAll(value, key);
+  }
+  return string;
+}
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 function tzlib_get_ical_block(tzName, jsonType = false) {
   const tzBlock = tzlib_get_content(tzName);
   if (tzBlock[1] == null || tzBlock[1] == '') {
     return '';
   }
-  // create the output
   const location = (function () {
     if (tzBlock[0] == '') {
       return tzName;
@@ -807,58 +84,45 @@ function tzlib_get_ical_block(tzName, jsonType = false) {
       'END:VTIMEZONE',
     tzidLine,
   ];
-  // return
   if (jsonType) {
     return JSON.stringify(output);
   }
   return output;
 }
-
-// PROVIDING THE OFFSET BASED ON A GIVEN DATE AND TIME (YYYY-MM-DD and hh:mm as per ISO-8601).
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 function tzlib_get_offset(tzName, isoDate, isoTime) {
   const tzBlock = tzlib_get_content(tzName);
   if (tzBlock[1] == null || tzBlock[1] == '') {
     return '';
   }
-  // validate date
   if (!isoDate.match(/^\d{4}-\d{2}-\d{2}$/)) {
     console.error('offset calculation failed: date misspelled [-> YYYY-MM-DD]');
     return '';
   }
-  // validate time
   if (!isoTime.match(/^\d{2}:\d{2}$/)) {
     console.error('offset calculation failed: time misspelled [-> hh:mm]');
     return '';
   }
-  // return early if there are no daylight changes
   if (!tzBlock[1].match(/BEGIN:DAYLIGHT/i)) {
     return tzBlock[1].match(/TZOFFSETTO:([+|-]\d{4})/i)[1];
   }
-  // otherwise, calculate offset
-  // creating a JS date from the input
   const dateString = isoDate + 'T' + isoTime + ':00';
   const date = new Date(dateString);
   const dateYear = date.getFullYear();
   const dateMonth = date.getMonth() + 1;
   const dateDay = date.getDate();
   const dateHour = date.getHours();
-  // preparing the tz data
   const timezoneData = tzBlock[1].replace(/[^\w_\-:,;=+/<br>]/g, '').split('<br>');
-  // collect timezone breakpoints (exactly 2)
   const tzBreakpoints = { 1: {}, 2: {} };
   let breakpointCount = 0;
   for (let i = 0; i < timezoneData.length; i++) {
-    // always first and therefore drives the counter
     if (timezoneData[`${i}`].startsWith('TZOFFSETTO')) {
       breakpointCount++;
       tzBreakpoints[`${breakpointCount}`].offset = timezoneData[`${i}`].split(':')[1];
     }
-    // only required for the critical hour
     if (timezoneData[`${i}`].startsWith('DTSTART')) {
       tzBreakpoints[`${breakpointCount}`].hour = parseInt(timezoneData[`${i}`].substr(17, 2));
     }
-    // the RRULE is deciding when the switch happens (excluding the hour information from DTSTART)
     if (timezoneData[`${i}`].startsWith('RRULE')) {
       let rruleParts = timezoneData[`${i}`].split(';');
       let rruleMonth = parseInt(rruleParts[1].split('=')[1]);
@@ -866,11 +130,9 @@ function tzlib_get_offset(tzName, isoDate, isoTime) {
       tzBreakpoints[`${breakpointCount}`].day = rruleParts[2].split('=')[1];
     }
   }
-  // swap objects, if larger one comes first
   if (tzBreakpoints[1].month > tzBreakpoints[2].month) {
     [tzBreakpoints[1], tzBreakpoints[2]] = [tzBreakpoints[2], tzBreakpoints[1]];
   }
-  // check for easy cases where the month is cleary in between
   if (dateMonth != tzBreakpoints[1].month && dateMonth != tzBreakpoints[2].month) {
     if (dateMonth < tzBreakpoints[1].month || dateMonth > tzBreakpoints[2].month) {
       return tzBreakpoints[2].offset;
@@ -878,12 +140,9 @@ function tzlib_get_offset(tzName, isoDate, isoTime) {
       return tzBreakpoints[1].offset;
     }
   }
-  // in other cases, validate where we are exactly and pick the right offset
-  // defining the critical case, we need to evaluate (the breakpoint we are matching by month)
   const theCase = (function () {
     return Object.keys(tzBreakpoints).find((key) => tzBreakpoints[`${key}`].month == dateMonth);
   })();
-  // determining the actual day
   const helperArrayWeekdays = ['SU', 'MO', 'TU', 'WE', 'TH', 'FR', 'SA'];
   const numberDays = new Date(dateYear, dateMonth, 0).getDate();
   let weekdayCount = new Date(dateYear, dateMonth - 1, 1).getDay();
@@ -909,7 +168,6 @@ function tzlib_get_offset(tzName, isoDate, isoTime) {
       return weekdays[`${breakpointWeekday}`][tzBreakpoints[`${theCase}`].day[0]];
     }
   })();
-  // finally identifying the right offset
   if (dateDay > actualDay || (dateDay == actualDay && dateHour >= tzBreakpoints[`${theCase}`].hour)) {
     return tzBreakpoints[`${theCase}`].offset;
   }
@@ -922,617 +180,35 @@ function tzlib_get_offset(tzName, isoDate, isoTime) {
   })();
   return tzBreakpoints[`${fallbackCase}`].offset;
 }
-
-// PROVIDE ALL TIMEZONES
+let tzlibZoneNames = [];
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 function tzlib_get_timezones(jsonType = false) {
-  const tzlibZoneNames = [
-  "Africa/Abidjan",
-  "Africa/Accra",
-  "Africa/Addis_Ababa",
-  "Africa/Algiers",
-  "Africa/Asmara",
-  "Africa/Asmera",
-  "Africa/Bamako",
-  "Africa/Bangui",
-  "Africa/Banjul",
-  "Africa/Bissau",
-  "Africa/Blantyre",
-  "Africa/Brazzaville",
-  "Africa/Bujumbura",
-  "Africa/Cairo",
-  "Africa/Casablanca",
-  "Africa/Ceuta",
-  "Africa/Conakry",
-  "Africa/Dakar",
-  "Africa/Dar_es_Salaam",
-  "Africa/Djibouti",
-  "Africa/Douala",
-  "Africa/El_Aaiun",
-  "Africa/Freetown",
-  "Africa/Gaborone",
-  "Africa/Harare",
-  "Africa/Johannesburg",
-  "Africa/Juba",
-  "Africa/Kampala",
-  "Africa/Khartoum",
-  "Africa/Kigali",
-  "Africa/Kinshasa",
-  "Africa/Lagos",
-  "Africa/Libreville",
-  "Africa/Lome",
-  "Africa/Luanda",
-  "Africa/Lubumbashi",
-  "Africa/Lusaka",
-  "Africa/Malabo",
-  "Africa/Maputo",
-  "Africa/Maseru",
-  "Africa/Mbabane",
-  "Africa/Mogadishu",
-  "Africa/Monrovia",
-  "Africa/Nairobi",
-  "Africa/Ndjamena",
-  "Africa/Niamey",
-  "Africa/Nouakchott",
-  "Africa/Ouagadougou",
-  "Africa/Porto-Novo",
-  "Africa/Sao_Tome",
-  "Africa/Timbuktu",
-  "Africa/Tripoli",
-  "Africa/Tunis",
-  "Africa/Windhoek",
-  "America/Adak",
-  "America/Anchorage",
-  "America/Anguilla",
-  "America/Antigua",
-  "America/Araguaina",
-  "America/Argentina/Buenos_Aires",
-  "America/Argentina/Catamarca",
-  "America/Argentina/ComodRivadavia",
-  "America/Argentina/Cordoba",
-  "America/Argentina/Jujuy",
-  "America/Argentina/La_Rioja",
-  "America/Argentina/Mendoza",
-  "America/Argentina/Rio_Gallegos",
-  "America/Argentina/Salta",
-  "America/Argentina/San_Juan",
-  "America/Argentina/San_Luis",
-  "America/Argentina/Tucuman",
-  "America/Argentina/Ushuaia",
-  "America/Aruba",
-  "America/Asuncion",
-  "America/Atikokan",
-  "America/Atka",
-  "America/Bahia_Banderas",
-  "America/Bahia",
-  "America/Barbados",
-  "America/Belem",
-  "America/Belize",
-  "America/Blanc-Sablon",
-  "America/Boa_Vista",
-  "America/Bogota",
-  "America/Boise",
-  "America/Buenos_Aires",
-  "America/Cambridge_Bay",
-  "America/Campo_Grande",
-  "America/Cancun",
-  "America/Caracas",
-  "America/Catamarca",
-  "America/Cayenne",
-  "America/Cayman",
-  "America/Chicago",
-  "America/Chihuahua",
-  "America/Coral_Harbour",
-  "America/Cordoba",
-  "America/Costa_Rica",
-  "America/Creston",
-  "America/Cuiaba",
-  "America/Curacao",
-  "America/Danmarkshavn",
-  "America/Dawson_Creek",
-  "America/Dawson",
-  "America/Denver",
-  "America/Detroit",
-  "America/Dominica",
-  "America/Edmonton",
-  "America/Eirunepe",
-  "America/El_Salvador",
-  "America/Ensenada",
-  "America/Fort_Nelson",
-  "America/Fort_Wayne",
-  "America/Fortaleza",
-  "America/Glace_Bay",
-  "America/Godthab",
-  "America/Goose_Bay",
-  "America/Grand_Turk",
-  "America/Grenada",
-  "America/Guadeloupe",
-  "America/Guatemala",
-  "America/Guayaquil",
-  "America/Guyana",
-  "America/Halifax",
-  "America/Havana",
-  "America/Hermosillo",
-  "America/Indiana/Indianapolis",
-  "America/Indiana/Knox",
-  "America/Indiana/Marengo",
-  "America/Indiana/Petersburg",
-  "America/Indiana/Tell_City",
-  "America/Indiana/Vevay",
-  "America/Indiana/Vincennes",
-  "America/Indiana/Winamac",
-  "America/Indianapolis",
-  "America/Inuvik",
-  "America/Iqaluit",
-  "America/Jamaica",
-  "America/Jujuy",
-  "America/Juneau",
-  "America/Kentucky/Louisville",
-  "America/Kentucky/Monticello",
-  "America/Knox_IN",
-  "America/Kralendijk",
-  "America/La_Paz",
-  "America/Lima",
-  "America/Los_Angeles",
-  "America/Louisville",
-  "America/Lower_Princes",
-  "America/Maceio",
-  "America/Managua",
-  "America/Manaus",
-  "America/Marigot",
-  "America/Martinique",
-  "America/Matamoros",
-  "America/Mazatlan",
-  "America/Mendoza",
-  "America/Menominee",
-  "America/Merida",
-  "America/Metlakatla",
-  "America/Mexico_City",
-  "America/Miquelon",
-  "America/Moncton",
-  "America/Monterrey",
-  "America/Montevideo",
-  "America/Montreal",
-  "America/Montserrat",
-  "America/Nassau",
-  "America/New_York",
-  "America/Nipigon",
-  "America/Nome",
-  "America/Noronha",
-  "America/North_Dakota/Beulah",
-  "America/North_Dakota/Center",
-  "America/North_Dakota/New_Salem",
-  "America/Nuuk",
-  "America/Ojinaga",
-  "America/Panama",
-  "America/Pangnirtung",
-  "America/Paramaribo",
-  "America/Phoenix",
-  "America/Port_of_Spain",
-  "America/Port-au-Prince",
-  "America/Porto_Acre",
-  "America/Porto_Velho",
-  "America/Puerto_Rico",
-  "America/Punta_Arenas",
-  "America/Rainy_River",
-  "America/Rankin_Inlet",
-  "America/Recife",
-  "America/Regina",
-  "America/Resolute",
-  "America/Rio_Branco",
-  "America/Rosario",
-  "America/Santa_Isabel",
-  "America/Santarem",
-  "America/Santiago",
-  "America/Santo_Domingo",
-  "America/Sao_Paulo",
-  "America/Scoresbysund",
-  "America/Shiprock",
-  "America/Sitka",
-  "America/St_Barthelemy",
-  "America/St_Johns",
-  "America/St_Kitts",
-  "America/St_Lucia",
-  "America/St_Thomas",
-  "America/St_Vincent",
-  "America/Swift_Current",
-  "America/Tegucigalpa",
-  "America/Thule",
-  "America/Thunder_Bay",
-  "America/Tijuana",
-  "America/Toronto",
-  "America/Tortola",
-  "America/Vancouver",
-  "America/Virgin",
-  "America/Whitehorse",
-  "America/Winnipeg",
-  "America/Yakutat",
-  "America/Yellowknife",
-  "Antarctica/Casey",
-  "Antarctica/Davis",
-  "Antarctica/DumontDUrville",
-  "Antarctica/Macquarie",
-  "Antarctica/Mawson",
-  "Antarctica/McMurdo",
-  "Antarctica/Palmer",
-  "Antarctica/Rothera",
-  "Antarctica/South_Pole",
-  "Antarctica/Syowa",
-  "Antarctica/Troll",
-  "Antarctica/Vostok",
-  "Arctic/Longyearbyen",
-  "Asia/Aden",
-  "Asia/Almaty",
-  "Asia/Amman",
-  "Asia/Anadyr",
-  "Asia/Aqtau",
-  "Asia/Aqtobe",
-  "Asia/Ashgabat",
-  "Asia/Ashkhabad",
-  "Asia/Atyrau",
-  "Asia/Baghdad",
-  "Asia/Bahrain",
-  "Asia/Baku",
-  "Asia/Bangkok",
-  "Asia/Barnaul",
-  "Asia/Beirut",
-  "Asia/Bishkek",
-  "Asia/Brunei",
-  "Asia/Calcutta",
-  "Asia/Chita",
-  "Asia/Choibalsan",
-  "Asia/Chongqing",
-  "Asia/Chungking",
-  "Asia/Colombo",
-  "Asia/Dacca",
-  "Asia/Damascus",
-  "Asia/Dhaka",
-  "Asia/Dili",
-  "Asia/Dubai",
-  "Asia/Dushanbe",
-  "Asia/Famagusta",
-  "Asia/Gaza",
-  "Asia/Harbin",
-  "Asia/Hebron",
-  "Asia/Ho_Chi_Minh",
-  "Asia/Hong_Kong",
-  "Asia/Hovd",
-  "Asia/Irkutsk",
-  "Asia/Istanbul",
-  "Asia/Jakarta",
-  "Asia/Jayapura",
-  "Asia/Jerusalem",
-  "Asia/Kabul",
-  "Asia/Kamchatka",
-  "Asia/Karachi",
-  "Asia/Kashgar",
-  "Asia/Kathmandu",
-  "Asia/Katmandu",
-  "Asia/Khandyga",
-  "Asia/Kolkata",
-  "Asia/Krasnoyarsk",
-  "Asia/Kuala_Lumpur",
-  "Asia/Kuching",
-  "Asia/Kuwait",
-  "Asia/Macao",
-  "Asia/Macau",
-  "Asia/Magadan",
-  "Asia/Makassar",
-  "Asia/Manila",
-  "Asia/Muscat",
-  "Asia/Nicosia",
-  "Asia/Novokuznetsk",
-  "Asia/Novosibirsk",
-  "Asia/Omsk",
-  "Asia/Oral",
-  "Asia/Phnom_Penh",
-  "Asia/Pontianak",
-  "Asia/Pyongyang",
-  "Asia/Qatar",
-  "Asia/Qostanay",
-  "Asia/Qyzylorda",
-  "Asia/Rangoon",
-  "Asia/Riyadh",
-  "Asia/Saigon",
-  "Asia/Sakhalin",
-  "Asia/Samarkand",
-  "Asia/Seoul",
-  "Asia/Shanghai",
-  "Asia/Singapore",
-  "Asia/Srednekolymsk",
-  "Asia/Taipei",
-  "Asia/Tashkent",
-  "Asia/Tbilisi",
-  "Asia/Tehran",
-  "Asia/Tel_Aviv",
-  "Asia/Thimbu",
-  "Asia/Thimphu",
-  "Asia/Tokyo",
-  "Asia/Tomsk",
-  "Asia/Ujung_Pandang",
-  "Asia/Ulaanbaatar",
-  "Asia/Ulan_Bator",
-  "Asia/Urumqi",
-  "Asia/Ust-Nera",
-  "Asia/Vientiane",
-  "Asia/Vladivostok",
-  "Asia/Yakutsk",
-  "Asia/Yangon",
-  "Asia/Yekaterinburg",
-  "Asia/Yerevan",
-  "Atlantic/Azores",
-  "Atlantic/Bermuda",
-  "Atlantic/Canary",
-  "Atlantic/Cape_Verde",
-  "Atlantic/Faeroe",
-  "Atlantic/Faroe",
-  "Atlantic/Jan_Mayen",
-  "Atlantic/Madeira",
-  "Atlantic/Reykjavik",
-  "Atlantic/South_Georgia",
-  "Atlantic/St_Helena",
-  "Atlantic/Stanley",
-  "Australia/ACT",
-  "Australia/Adelaide",
-  "Australia/Brisbane",
-  "Australia/Broken_Hill",
-  "Australia/Canberra",
-  "Australia/Currie",
-  "Australia/Darwin",
-  "Australia/Eucla",
-  "Australia/Hobart",
-  "Australia/LHI",
-  "Australia/Lindeman",
-  "Australia/Lord_Howe",
-  "Australia/Melbourne",
-  "Australia/North",
-  "Australia/NSW",
-  "Australia/Perth",
-  "Australia/Queensland",
-  "Australia/South",
-  "Australia/Sydney",
-  "Australia/Tasmania",
-  "Australia/Victoria",
-  "Australia/West",
-  "Australia/Yancowinna",
-  "Brazil/Acre",
-  "Brazil/DeNoronha",
-  "Brazil/East",
-  "Brazil/West",
-  "Canada/Atlantic",
-  "Canada/Central",
-  "Canada/Eastern",
-  "Canada/Mountain",
-  "Canada/Newfoundland",
-  "Canada/Pacific",
-  "Canada/Saskatchewan",
-  "Canada/Yukon",
-  "CET",
-  "Chile/Continental",
-  "Chile/EasterIsland",
-  "CST6CDT",
-  "Cuba",
-  "EET",
-  "Egypt",
-  "Eire",
-  "EST",
-  "EST5EDT",
-  "Etc/GMT-0",
-  "Etc/GMT-1",
-  "Etc/GMT-10",
-  "Etc/GMT-11",
-  "Etc/GMT-12",
-  "Etc/GMT-13",
-  "Etc/GMT-14",
-  "Etc/GMT-2",
-  "Etc/GMT-3",
-  "Etc/GMT-4",
-  "Etc/GMT-5",
-  "Etc/GMT-6",
-  "Etc/GMT-7",
-  "Etc/GMT-8",
-  "Etc/GMT-9",
-  "Etc/GMT",
-  "Etc/GMT+0",
-  "Etc/GMT+1",
-  "Etc/GMT+10",
-  "Etc/GMT+11",
-  "Etc/GMT+12",
-  "Etc/GMT+2",
-  "Etc/GMT+3",
-  "Etc/GMT+4",
-  "Etc/GMT+5",
-  "Etc/GMT+6",
-  "Etc/GMT+7",
-  "Etc/GMT+8",
-  "Etc/GMT+9",
-  "Etc/GMT0",
-  "Etc/Greenwich",
-  "Etc/UCT",
-  "Etc/Universal",
-  "Etc/UTC",
-  "Etc/Zulu",
-  "Europe/Amsterdam",
-  "Europe/Andorra",
-  "Europe/Astrakhan",
-  "Europe/Athens",
-  "Europe/Belfast",
-  "Europe/Belgrade",
-  "Europe/Berlin",
-  "Europe/Bratislava",
-  "Europe/Brussels",
-  "Europe/Bucharest",
-  "Europe/Budapest",
-  "Europe/Busingen",
-  "Europe/Chisinau",
-  "Europe/Copenhagen",
-  "Europe/Dublin",
-  "Europe/Gibraltar",
-  "Europe/Guernsey",
-  "Europe/Helsinki",
-  "Europe/Isle_of_Man",
-  "Europe/Istanbul",
-  "Europe/Jersey",
-  "Europe/Kaliningrad",
-  "Europe/Kiev",
-  "Europe/Kirov",
-  "Europe/Kyiv",
-  "Europe/Lisbon",
-  "Europe/Ljubljana",
-  "Europe/London",
-  "Europe/Luxembourg",
-  "Europe/Madrid",
-  "Europe/Malta",
-  "Europe/Mariehamn",
-  "Europe/Minsk",
-  "Europe/Monaco",
-  "Europe/Moscow",
-  "Europe/Nicosia",
-  "Europe/Oslo",
-  "Europe/Paris",
-  "Europe/Podgorica",
-  "Europe/Prague",
-  "Europe/Riga",
-  "Europe/Rome",
-  "Europe/Samara",
-  "Europe/San_Marino",
-  "Europe/Sarajevo",
-  "Europe/Saratov",
-  "Europe/Simferopol",
-  "Europe/Skopje",
-  "Europe/Sofia",
-  "Europe/Stockholm",
-  "Europe/Tallinn",
-  "Europe/Tirane",
-  "Europe/Tiraspol",
-  "Europe/Ulyanovsk",
-  "Europe/Uzhgorod",
-  "Europe/Vaduz",
-  "Europe/Vatican",
-  "Europe/Vienna",
-  "Europe/Vilnius",
-  "Europe/Volgograd",
-  "Europe/Warsaw",
-  "Europe/Zagreb",
-  "Europe/Zaporozhye",
-  "Europe/Zurich",
-  "GB-Eire",
-  "GB",
-  "GMT-0",
-  "GMT",
-  "GMT+0",
-  "GMT0",
-  "Greenwich",
-  "Hongkong",
-  "HST",
-  "Iceland",
-  "Indian/Antananarivo",
-  "Indian/Chagos",
-  "Indian/Christmas",
-  "Indian/Cocos",
-  "Indian/Comoro",
-  "Indian/Kerguelen",
-  "Indian/Mahe",
-  "Indian/Maldives",
-  "Indian/Mauritius",
-  "Indian/Mayotte",
-  "Indian/Reunion",
-  "Iran",
-  "Israel",
-  "Jamaica",
-  "Japan",
-  "Kwajalein",
-  "Libya",
-  "MET",
-  "Mexico/BajaNorte",
-  "Mexico/BajaSur",
-  "Mexico/General",
-  "MST",
-  "MST7MDT",
-  "Navajo",
-  "NZ-CHAT",
-  "NZ",
-  "Pacific/Apia",
-  "Pacific/Auckland",
-  "Pacific/Bougainville",
-  "Pacific/Chatham",
-  "Pacific/Chuuk",
-  "Pacific/Easter",
-  "Pacific/Efate",
-  "Pacific/Enderbury",
-  "Pacific/Fakaofo",
-  "Pacific/Fiji",
-  "Pacific/Funafuti",
-  "Pacific/Galapagos",
-  "Pacific/Gambier",
-  "Pacific/Guadalcanal",
-  "Pacific/Guam",
-  "Pacific/Honolulu",
-  "Pacific/Johnston",
-  "Pacific/Kanton",
-  "Pacific/Kiritimati",
-  "Pacific/Kosrae",
-  "Pacific/Kwajalein",
-  "Pacific/Majuro",
-  "Pacific/Marquesas",
-  "Pacific/Midway",
-  "Pacific/Nauru",
-  "Pacific/Niue",
-  "Pacific/Norfolk",
-  "Pacific/Noumea",
-  "Pacific/Pago_Pago",
-  "Pacific/Palau",
-  "Pacific/Pitcairn",
-  "Pacific/Pohnpei",
-  "Pacific/Ponape",
-  "Pacific/Port_Moresby",
-  "Pacific/Rarotonga",
-  "Pacific/Saipan",
-  "Pacific/Samoa",
-  "Pacific/Tahiti",
-  "Pacific/Tarawa",
-  "Pacific/Tongatapu",
-  "Pacific/Truk",
-  "Pacific/Wake",
-  "Pacific/Wallis",
-  "Pacific/Yap",
-  "Poland",
-  "Portugal",
-  "PRC",
-  "PST8PDT",
-  "ROC",
-  "ROK",
-  "Singapore",
-  "Turkey",
-  "UCT",
-  "Universal",
-  "US/Alaska",
-  "US/Aleutian",
-  "US/Arizona",
-  "US/Central",
-  "US/East-Indiana",
-  "US/Eastern",
-  "US/Hawaii",
-  "US/Indiana-Starke",
-  "US/Michigan",
-  "US/Mountain",
-  "US/Pacific",
-  "US/Samoa",
-  "UTC",
-  "W-SU",
-  "WET",
-  "Zulu"
-]
-;
+  if (tzlibZoneNames.length == 0) {
+    tzlibZoneNames = (function () {
+      let namesArr = [];
+      for (const [key, value] of Object.entries(tzlibZonesDB)) {
+        if (typeof value === 'object' && !Array.isArray(value)) {
+          for (const [key2, value2] of Object.entries(value)) {
+            if (typeof value2 === 'object' && !Array.isArray(value2)) {
+              for (const [key3] of Object.entries(value2)) {
+                namesArr.push(key + '/' + key2 + '/' + key3);
+              }    
+            } else {
+              namesArr.push(key + '/' + key2);
+            }
+          } 
+        } else {
+          namesArr.push(key);
+        }
+      }
+      return namesArr;
+    })();
+  }
   if (jsonType) {
     return JSON.stringify(tzlibZoneNames);
   }
   return tzlibZoneNames;
 }
-
-
-
-
 
 /*!
  *  @preserve
@@ -1541,18 +217,14 @@ function tzlib_get_timezones(jsonType = false) {
  *  Add to Calendar Button
  *  ++++++++++++++++++++++
  *
+ *  Version: 1.18.0
  *  Creator: Jens Kuerschner (https://jenskuerschner.de)
  *  Project: https://github.com/add2cal/add-to-calendar-button
  *  License: Apache-2.0 with “Commons Clause” License Condition v1.0
  *  Note:    DO NOT REMOVE THE COPYRIGHT NOTICE ABOVE!
  *
  */
-const atcbVersion = '1.17.0';
-
-
-
-// CHECKING FOR SPECIFIC DEVICED AND SYSTEMS
-// browser
+const atcbVersion = '1.18.0';
 const isBrowser = () => {
   if (typeof window === 'undefined') {
     return false;
@@ -1560,7 +232,6 @@ const isBrowser = () => {
     return true;
   }
 };
-// iOS
 const isiOS = isBrowser()
   ? () => {
       if (
@@ -1576,7 +247,6 @@ const isiOS = isBrowser()
   : () => {
       return false;
     };
-// Android
 const isAndroid = isBrowser()
   ? () => {
       if (/android/i.test(navigator.userAgent || navigator.vendor || window.opera) && !window.MSStream) {
@@ -1588,7 +258,6 @@ const isAndroid = isBrowser()
   : () => {
       return false;
     };
-// Chrome
 const isChrome = isBrowser()
   ? () => {
       if (/chrome|chromium|crios/i.test(navigator.userAgent)) {
@@ -1600,7 +269,6 @@ const isChrome = isBrowser()
   : () => {
       return false;
     };
-// Mobile
 const isMobile = () => {
   if (isAndroid() || isiOS()) {
     return true;
@@ -1608,7 +276,6 @@ const isMobile = () => {
     return false;
   }
 };
-// WebView (iOS and Android)
 const isWebView = isBrowser()
   ? () => {
       if (
@@ -1622,7 +289,6 @@ const isWebView = isBrowser()
   : () => {
       return false;
     };
-// checking for problematic apps
 const isProblematicWebView = isBrowser()
   ? () => {
       if (/(Instagram)/i.test(navigator.userAgent || navigator.vendor || window.opera)) {
@@ -1634,15 +300,12 @@ const isProblematicWebView = isBrowser()
   : () => {
       return false;
     };
-
-// DEFINE GLOBAL VARIABLES
-let atcbConsoleInit = false;
 const atcbDefaultTarget = isWebView() ? '_system' : '_blank';
 const atcbOptions = ['apple', 'google', 'ical', 'ms365', 'outlookcom', 'msteams', 'yahoo'];
 const atcbValidRecurrOptions = ['apple', 'google', 'ical'];
+const atcbInvalidSubscribeOptions = ['msteams'];
 const atcbiOSInvalidOptions = ['ical'];
-
-// DEFINING GLOBAL ICONS
+const atcbStates = [];
 const atcbIcon = {
   trigger:
     '<span class="atcb-icon-trigger"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200.016"><path d="M132.829 7.699c0-4.248 4.199-7.699 9.391-7.699s9.391 3.451 9.391 7.699v33.724c0 4.248-4.199 7.699-9.391 7.699s-9.391-3.451-9.391-7.699zm-5.941 123.747c2.979 0 5.404 2.425 5.404 5.404s-2.425 5.404-5.404 5.404l-21.077-.065-.065 21.045c0 2.979-2.425 5.404-5.404 5.404s-5.404-2.425-5.404-5.404l.065-21.061-21.045-.081c-2.979 0-5.404-2.425-5.404-5.404s2.425-5.404 5.404-5.404l21.061.065.065-21.045c0-2.979 2.425-5.404 5.404-5.404s5.404 2.425 5.404 5.404l-.065 21.077 21.061.065zM48.193 7.699C48.193 3.451 52.393 0 57.585 0s9.391 3.451 9.391 7.699v33.724c0 4.248-4.199 7.699-9.391 7.699s-9.391-3.451-9.391-7.699zM10.417 73.763h179.167V34.945c0-1.302-.537-2.49-1.4-3.369-.863-.863-2.051-1.4-3.369-1.4h-17.171c-2.881 0-5.208-2.327-5.208-5.208s2.327-5.208 5.208-5.208h17.171c4.183 0 7.975 1.709 10.726 4.46S200 30.762 200 34.945v44.043 105.843c0 4.183-1.709 7.975-4.46 10.726s-6.543 4.46-10.726 4.46H15.186c-4.183 0-7.975-1.709-10.726-4.46C1.709 192.79 0 188.997 0 184.814V78.988 34.945c0-4.183 1.709-7.975 4.46-10.726s6.543-4.46 10.726-4.46h18.343c2.881 0 5.208 2.327 5.208 5.208s-2.327 5.208-5.208 5.208H15.186c-1.302 0-2.49.537-3.369 1.4-.863.863-1.4 2.051-1.4 3.369zm179.167 10.433H10.417v100.618c0 1.302.537 2.49 1.4 3.369.863.863 2.051 1.4 3.369 1.4h169.629c1.302 0 2.49-.537 3.369-1.4.863-.863 1.4-2.051 1.4-3.369zM82.08 30.176c-2.881 0-5.208-2.327-5.208-5.208s2.327-5.208 5.208-5.208h34.977c2.881 0 5.208 2.327 5.208 5.208s-2.327 5.208-5.208 5.208z"/></svg></span>',
@@ -1662,88 +325,24 @@ const atcbIcon = {
   atcb: '<svg version="1.1" viewBox="0 0 150 8.5002" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"><g transform="matrix(1.3333 0 0 -1.3333 -2427.5 1757.9)"><g transform="matrix(.22189 0 0 -.22189 1822.6 1374.6)" fill="#9a9a9a" style="paint-order:stroke markers fill;shape-inside:url(#rect2441);white-space:pre" aria-label="Add-to-Calendar-PRO.com"><path d="m-1.2773 253.99h12.148l7.9688 27.5h-9.4141l-1.0547-5.2734h-7.1094l-1.1328 5.2734h-9.0234zm8.7109 17.305-2.6172-12.031-2.6953 12.031z" style="paint-order:stroke markers fill"/><path d="m29.66 261.16q2.2656 0 3.9062 0.9375t2.6562 3.1055v-10.078l8.4375-1.25v27.617h-8.4375v-3.7109q-0.9375 2.0117-2.5586 3.0273-1.6211 0.9961-4.043 0.9961-2.0898 0-3.8672-0.83985-1.7773-0.85937-3.0859-2.2852-1.2891-1.4258-2.0312-3.2812-0.74219-1.875-0.74219-3.9062 0-2.1875 0.78125-4.082 0.80078-1.8945 2.1484-3.2812 1.3477-1.3867 3.1055-2.168 1.7773-0.80078 3.7305-0.80078zm6.5625 10.176q-0.03906-0.78125-0.37109-1.4844-0.33203-0.70312-0.87891-1.2109-0.52734-0.52735-1.2305-0.82032-0.70312-0.3125-1.4648-0.3125-0.85938 0-1.6016 0.33203-0.72266 0.3125-1.25 0.85938-0.52734 0.54687-0.83984 1.2695-0.29297 0.72266-0.29297 1.5234 0 0.85937 0.3125 1.582 0.33203 0.72266 0.87891 1.2695 0.54688 0.52734 1.2695 0.83984 0.72266 0.29297 1.5234 0.29297 0.83984 0 1.5625-0.33203 0.72266-0.33203 1.25-0.8789 0.52734-0.54688 0.82031-1.2695 0.3125-0.72265 0.3125-1.5039z" style="paint-order:stroke markers fill"/><path d="m57.551 261.16q2.2656 0 3.9062 0.9375t2.6562 3.1055v-10.078l8.4375-1.25v27.617h-8.4375v-3.7109q-0.9375 2.0117-2.5586 3.0273-1.6211 0.9961-4.043 0.9961-2.0898 0-3.8672-0.83985-1.7773-0.85937-3.0859-2.2852-1.2891-1.4258-2.0312-3.2812-0.74219-1.875-0.74219-3.9062 0-2.1875 0.78125-4.082 0.80078-1.8945 2.1484-3.2812 1.3477-1.3867 3.1055-2.168 1.7773-0.80078 3.7305-0.80078zm6.5625 10.176q-0.03906-0.78125-0.37109-1.4844-0.33203-0.70312-0.87891-1.2109-0.52734-0.52735-1.2305-0.82032-0.70312-0.3125-1.4648-0.3125-0.85938 0-1.6016 0.33203-0.72266 0.3125-1.25 0.85938-0.52734 0.54687-0.83984 1.2695-0.29297 0.72266-0.29297 1.5234 0 0.85937 0.3125 1.582 0.33203 0.72266 0.87891 1.2695 0.54688 0.52734 1.2695 0.83984 0.72266 0.29297 1.5234 0.29297 0.83984 0 1.5625-0.33203 0.72266-0.33203 1.25-0.8789 0.52734-0.54688 0.82031-1.2695 0.3125-0.72265 0.3125-1.5039z" style="paint-order:stroke markers fill"/><path d="m76.496 268.8h10.742v4.7266h-10.742z" style="paint-order:stroke markers fill"/><path d="m104.8 280.44q-2.7148 1.3672-6.0156 1.3672-1.6992 0-3.0273-0.54688-1.3281-0.5664-2.2461-1.6016-0.89844-1.0547-1.3672-2.5195-0.46875-1.4844-0.46875-3.3398l0.03906-7.3828h-2.5391v-4.9609h3.1641l3.7109-7.5781h4.0625v7.5781h4.6094v4.9609h-4.6094v6.7969q0 1.0547 0.68359 1.582t1.8555 0.52734q0.91797 0 1.8359-0.46875z" style="paint-order:stroke markers fill"/><path d="m114.62 271.45q0 1.0938 0.3125 1.9141 0.33204 0.82031 0.85938 1.3672 0.52734 0.54687 1.2109 0.82031 0.68359 0.27344 1.3867 0.27344 0.70312 0 1.3672-0.27344 0.6836-0.27344 1.2109-0.82031 0.54688-0.54688 0.85938-1.3672 0.33203-0.82031 0.33203-1.9141t-0.33203-1.9141q-0.3125-0.82031-0.85938-1.3476-0.52734-0.54688-1.2109-0.82032-0.66406-0.27343-1.3672-0.27343-0.70313 0-1.3867 0.27343-0.6836 0.27344-1.2109 0.82032-0.52734 0.52734-0.85938 1.3476-0.3125 0.82032-0.3125 1.9141zm-7.8125 0q0.0977-2.5195 1.0352-4.4336 0.95703-1.9141 2.5195-3.2226 1.5625-1.3086 3.6133-1.9727 2.0703-0.66406 4.3945-0.66406 2.5391 0 4.6484 0.76172 2.1094 0.76171 3.6328 2.1289 1.5234 1.3477 2.3633 3.2422 0.83985 1.8945 0.83985 4.1602 0 1.8359-0.48828 3.3203-0.46875 1.4844-1.2891 2.6367-0.82031 1.1328-1.9336 1.9726-1.1133 0.83985-2.4023 1.3867-1.2891 0.52735-2.6758 0.78125-1.3672 0.25391-2.7344 0.25391-2.5781 0-4.707-0.74219-2.1094-0.76172-3.6328-2.1289-1.5234-1.3672-2.3633-3.2617-0.82032-1.9141-0.82032-4.2188z" style="paint-order:stroke markers fill"/><path d="m132.73 268.8h10.742v4.7266h-10.742z" style="paint-order:stroke markers fill"/><path d="m162.41 274.89q0.6836 0 1.2695-0.0586 0.58594-0.0781 1.1524-0.21484 0.58593-0.13672 1.1914-0.35156 0.60547-0.21485 1.3477-0.50782l1.0938 6.3477q-3.4766 2.0117-7.5781 2.0117-5.8008 0-9.9414-3.9062-4.3359-4.0625-4.3945-10.488 0-3.125 1.0742-5.7617 1.0742-2.6367 2.9688-4.5312 1.8945-1.9141 4.4726-2.9688 2.5781-1.0742 5.5859-1.0742 4.2773 0 7.7734 1.9922l-1.0547 6.2109q-2.8711-1.0938-5.1953-1.0938-3.2617 0-4.9609 1.8945-1.6797 1.875-1.6797 5.293 0 1.6992 0.44922 3.0469 0.46875 1.3281 1.3477 2.2656 0.8789 0.91797 2.1484 1.4062 1.2891 0.48829 2.9297 0.48829z" style="paint-order:stroke markers fill"/><path d="m186.52 277.78q-0.9375 1.9531-2.5391 2.9883-1.6016 1.0352-4.0234 1.0352-1.9531 0-3.7305-0.78125-1.7774-0.80078-3.125-2.1875-1.3477-1.4062-2.1484-3.3203-0.80078-1.9141-0.80078-4.1602 0-2.2266 0.80078-4.1016 0.82031-1.875 2.168-3.2227 1.3672-1.3672 3.125-2.1094 1.7773-0.76172 3.7109-0.76172 0.9961 0 1.9531 0.27343 0.97656 0.25391 1.8359 0.83985 0.8789 0.5664 1.582 1.4453 0.72265 0.87891 1.1914 2.1094v-4.668h8.3984v20.332h-8.3984zm0-6.4453q-0.0391-0.78125-0.37109-1.4844-0.33203-0.70312-0.87891-1.2109-0.52734-0.52735-1.2305-0.82032-0.70313-0.3125-1.4648-0.3125-0.85937 0-1.6016 0.33203-0.72266 0.3125-1.2695 0.85938-0.52735 0.52734-0.83985 1.25t-0.3125 1.543q0 0.85937 0.33204 1.6016 0.33203 0.72266 0.8789 1.25 0.56641 0.52734 1.2891 0.83984 0.72266 0.29297 1.5234 0.29297 0.82031 0 1.5234-0.3125 0.70312-0.3125 1.2305-0.83984 0.52734-0.52734 0.83984-1.2109 0.3125-0.70312 0.35156-1.4648z" style="paint-order:stroke markers fill"/><path d="m212.02 280.44q-2.7148 1.3672-6.0156 1.3672-1.6992 0-3.0273-0.54688-1.3281-0.5664-2.2461-1.6016-0.89843-1.0547-1.3672-2.5195-0.46875-1.4844-0.46875-3.3398v-18.672l8.4375-1.25v19.336q0 1.0742 0.68359 1.6016 0.68359 0.50781 1.8555 0.50781 0.89844 0 1.8359-0.46875z" style="paint-order:stroke markers fill"/><path d="m225.71 276.2q2.7344 0 5.8984-1.4062l0.97656 5.3711q-3.6328 1.6406-8.1641 1.6406-2.5195 0-4.6094-0.76172-2.0703-0.78125-3.5742-2.1484-1.4844-1.3867-2.3242-3.2812-0.82031-1.8945-0.82031-4.1211 0-2.3438 0.85937-4.2383 0.87891-1.9141 2.3828-3.2617 1.5039-1.3672 3.5156-2.0898 2.0117-0.74218 4.2969-0.74218 2.3047 0 4.043 0.78125 1.7383 0.76172 2.8906 2.1094 1.1719 1.3281 1.7383 3.125 0.58594 1.7774 0.58594 3.8086 0 0.27343-0.0195 0.52734t-0.0586 0.48828l-11.992 1.5625q0.46875 1.4062 1.5625 2.0312 1.0938 0.60547 2.8125 0.60547zm1.4844-7.6758q-0.6836-2.5-3.0469-2.5-0.74218 0-1.3281 0.29297t-0.9961 0.82031q-0.39062 0.50781-0.60546 1.2305-0.21485 0.70312-0.23438 1.5234z" style="paint-order:stroke markers fill"/><path d="m236.3 261.75h8.0469v4.082q1.1719-2.3633 3.0078-3.5156 1.8555-1.1523 4.3359-1.1523 1.9922 0 3.5156 0.74218 1.5234 0.74219 2.5586 2.1094 1.0547 1.3477 1.582 3.2617 0.54687 1.8945 0.54687 4.2188v10h-8.3984v-10.82q0-0.78125-0.15625-1.4453-0.13672-0.66406-0.46875-1.1328-0.3125-0.48828-0.80078-0.74219-0.48828-0.27343-1.1914-0.27343-0.85938 0-1.582 0.42968-0.72265 0.41016-1.2695 1.0156-0.52734 0.60547-0.85937 1.2695-0.33203 0.64453-0.42969 1.1133v10.586h-8.4375z" style="paint-order:stroke markers fill"/><path d="m272.59 261.16q2.2656 0 3.9062 0.9375 1.6406 0.9375 2.6562 3.1055v-10.078l8.4375-1.25v27.617h-8.4375v-3.7109q-0.9375 2.0117-2.5586 3.0273-1.6211 0.9961-4.043 0.9961-2.0898 0-3.8672-0.83985-1.7773-0.85937-3.0859-2.2852-1.2891-1.4258-2.0312-3.2812-0.74219-1.875-0.74219-3.9062 0-2.1875 0.78125-4.082 0.80078-1.8945 2.1484-3.2812 1.3476-1.3867 3.1055-2.168 1.7774-0.80078 3.7305-0.80078zm6.5625 10.176q-0.0391-0.78125-0.37109-1.4844-0.33203-0.70312-0.87891-1.2109-0.52734-0.52735-1.2305-0.82032-0.70312-0.3125-1.4648-0.3125-0.85937 0-1.6016 0.33203-0.72266 0.3125-1.25 0.85938-0.52735 0.54687-0.83985 1.2695-0.29296 0.72266-0.29296 1.5234 0 0.85937 0.3125 1.582 0.33203 0.72266 0.8789 1.2695 0.54688 0.52734 1.2695 0.83984 0.72266 0.29297 1.5234 0.29297 0.83984 0 1.5625-0.33203t1.25-0.8789q0.52734-0.54688 0.82031-1.2695 0.3125-0.72265 0.3125-1.5039z" style="paint-order:stroke markers fill"/><path d="m307.06 277.78q-0.9375 1.9531-2.5391 2.9883-1.6016 1.0352-4.0234 1.0352-1.9531 0-3.7305-0.78125-1.7773-0.80078-3.125-2.1875-1.3477-1.4062-2.1484-3.3203-0.80078-1.9141-0.80078-4.1602 0-2.2266 0.80078-4.1016 0.82032-1.875 2.168-3.2227 1.3672-1.3672 3.125-2.1094 1.7774-0.76172 3.7109-0.76172 0.99609 0 1.9531 0.27343 0.97657 0.25391 1.8359 0.83985 0.87891 0.5664 1.582 1.4453 0.72266 0.87891 1.1914 2.1094v-4.668h8.3984v20.332h-8.3984zm0-6.4453q-0.0391-0.78125-0.37109-1.4844-0.33204-0.70312-0.87891-1.2109-0.52734-0.52735-1.2305-0.82032-0.70312-0.3125-1.4648-0.3125-0.85938 0-1.6016 0.33203-0.72265 0.3125-1.2695 0.85938-0.52734 0.52734-0.83984 1.25t-0.3125 1.543q0 0.85937 0.33203 1.6016 0.33203 0.72266 0.87891 1.25 0.5664 0.52734 1.2891 0.83984 0.72266 0.29297 1.5234 0.29297 0.82031 0 1.5234-0.3125 0.70313-0.3125 1.2305-0.83984 0.52735-0.52734 0.83985-1.2109 0.3125-0.70312 0.35156-1.4648z" style="paint-order:stroke markers fill"/><path d="m319.5 261.75h8.4375v4.082q0.95703-2.4219 2.5391-3.5352 1.6016-1.1328 3.6719-1.1328l1.1719 6.543q-3.8086 0-5.6055 0.82031-1.7773 0.80078-1.7773 2.5781v10.391h-8.4375z" style="paint-order:stroke markers fill"/><path d="m337.22 268.8h10.742v4.7266h-10.742z" style="paint-order:stroke markers fill"/><path d="m352.43 253.99h9.9219q3.0859 0 5.4883 0.60547t4.043 1.7773q1.6406 1.1719 2.5 2.8711 0.85937 1.6797 0.85937 3.8477 0 2.1094-0.97656 3.7695-0.97656 1.6602-2.6758 2.832-1.6992 1.1524-3.9844 1.7774-2.2656 0.60547-4.8633 0.60547h-1.6797v9.4141h-8.6328zm10.352 12.539q2.0703 0 3.2422-0.85937 1.1719-0.85938 1.1719-2.5781 0-0.83984-0.35156-1.4648-0.33204-0.625-0.9375-1.0352-0.58594-0.42969-1.3867-0.64453t-1.7383-0.21484h-1.7188v6.7188q0.27343 0.0391 0.70312 0.0586t1.0156 0.0195z" style="paint-order:stroke markers fill"/><path d="m402.92 281.41q-2.5586 0.70313-3.6914 0.70313-7.2461 0-9.1016-6.6016l-1.0938-4.4531h-1.875v10.43h-8.75v-27.5h12.227q2.3828 0 4.4726 0.54687 2.0898 0.52735 3.6328 1.5625 1.5625 1.0156 2.4414 2.5195 0.89844 1.5039 0.89844 3.457 0 1.4453-0.37109 2.5976-0.35157 1.1328-1.0352 2.0508-0.68359 0.89844-1.6797 1.6016-0.97656 0.70312-2.2266 1.25l0.17578 0.95703q0.0586 0.33203 0.11719 0.5664 0.0586 0.23438 0.0977 0.39063l0.21484 0.83984q0.23437 0.74219 0.52734 1.2695 0.3125 0.50782 0.78125 0.83985 0.46875 0.3125 1.1524 0.46875 0.70312 0.13672 1.6992 0.13672 0.15625 0 0.48828-0.0391 0.35156-0.0391 0.89843-0.11718zm-8.8476-18.945q0-0.76172-0.33203-1.25-0.3125-0.50781-0.87891-0.78125-0.56641-0.29297-1.3281-0.39062-0.76172-0.11719-1.6406-0.11719h-2.7344v5.5078h1.5234l1.2891-0.0586q0.76171-0.0586 1.4844-0.19532 0.74219-0.15625 1.3281-0.46875 0.58593-0.33203 0.9375-0.85937 0.35156-0.54688 0.35156-1.3867z" style="paint-order:stroke markers fill"/><path d="m404.76 267.78q0-5.957 3.7891-10.039 4.043-4.3555 10.938-4.3555 3.3594 0 6.0742 1.0938 2.7148 1.0742 4.6289 2.9883t2.9492 4.5703q1.0352 2.6367 1.0352 5.7422 0 1.875-0.42968 3.6719-0.42969 1.7969-1.2891 3.3984-0.83984 1.582-2.0898 2.9297-1.25 1.3281-2.8906 2.3047-1.6211 0.95703-3.6328 1.4844-1.9922 0.54688-4.3555 0.54688-2.4219 0-4.4531-0.54688-2.0117-0.54687-3.6523-1.5234-1.6406-0.97657-2.8906-2.3242-1.2305-1.3477-2.0703-2.9297-0.82031-1.6016-1.25-3.3789-0.41016-1.7773-0.41016-3.6328zm14.727 7.0703q1.543 0 2.6172-0.64453 1.0938-0.66406 1.7774-1.6797 0.70312-1.0352 1.0156-2.3047 0.33203-1.2695 0.33203-2.4805 0-1.582-0.41015-2.8906-0.39063-1.3281-1.1524-2.2852-0.74219-0.97657-1.8164-1.543-1.0547-0.56641-2.3633-0.625-1.5625 0.0391-2.6562 0.70312-1.0938 0.66407-1.7969 1.7188-0.68359 1.0352-1.0156 2.3438-0.3125 1.2891-0.3125 2.5781 0 1.5234 0.39063 2.832 0.41016 1.2891 1.1523 2.2461 0.76172 0.9375 1.8359 1.4844 1.0742 0.54687 2.4023 0.54687z" style="paint-order:stroke markers fill"/><path d="m436.18 279.2q0-0.58594 0.2474-1.0807 0.26042-0.49479 0.67708-0.84636 0.41667-0.35156 0.95053-0.54687 0.54687-0.20834 1.1198-0.20834 0.59896 0 1.1458 0.22136 0.54688 0.20833 0.95053 0.58594 0.41666 0.36458 0.65104 0.84635 0.2474 0.48177 0.2474 1.0286 0 0.61198-0.26042 1.1068-0.2474 0.49479-0.66407 0.85938-0.41666 0.35156-0.96354 0.54687-0.53385 0.19531-1.1068 0.19531-0.625 0-1.1719-0.20833-0.54687-0.20833-0.95052-0.57292-0.40365-0.36458-0.63802-0.85937-0.23438-0.49479-0.23438-1.0677z" style="paint-order:stroke markers fill"/><path d="m454.38 272.56q-1.4062-0.4427-2.6042-0.4427-0.61198 0-1.1068 0.19531-0.48177 0.19531-0.83333 0.54687-0.33855 0.35157-0.53386 0.85938-0.18229 0.49479-0.18229 1.1068t0.18229 1.1198q0.19531 0.49479 0.54688 0.85937 0.35156 0.36459 0.84635 0.5599 0.50782 0.19531 1.1328 0.19531 1.1849 0 2.5-0.44271l0.52083 3.724q-1.0026 0.52083-1.9661 0.6901-0.95053 0.16927-2.0703 0.16927-1.5755 0-2.9036-0.49479t-2.2917-1.3932-1.5104-2.1615q-0.53385-1.276-0.53385-2.8255t0.58594-2.8125q0.58593-1.276 1.5755-2.1745 1.0026-0.91146 2.3177-1.4062 1.3151-0.4948 2.7604-0.4948 0.63802 0 1.1458 0.0521 0.52084 0.0391 0.98959 0.16927 0.46875 0.11718 0.9375 0.32552 0.46875 0.20833 1.0156 0.53385z" style="paint-order:stroke markers fill"/><path d="m461.18 274.8q0 0.72917 0.20833 1.276 0.22136 0.54688 0.57292 0.91146 0.35157 0.36459 0.80729 0.54688 0.45573 0.18229 0.92449 0.18229 0.46875 0 0.91145-0.18229 0.45573-0.18229 0.8073-0.54688 0.36458-0.36458 0.57291-0.91146 0.22136-0.54687 0.22136-1.276t-0.22136-1.276q-0.20833-0.54688-0.57291-0.89844-0.35157-0.36458-0.8073-0.54688-0.4427-0.18229-0.91145-0.18229-0.46876 0-0.92449 0.18229-0.45572 0.1823-0.80729 0.54688-0.35156 0.35156-0.57292 0.89844-0.20833 0.54687-0.20833 1.276zm-5.2083 0q0.0651-1.6797 0.69011-2.9557 0.63802-1.276 1.6797-2.1484 1.0417-0.8724 2.4088-1.3151 1.3802-0.44271 2.9297-0.44271 1.6927 0 3.099 0.50782 1.4062 0.50781 2.4219 1.4193 1.0156 0.89844 1.5755 2.1615 0.55989 1.263 0.55989 2.7734 0 1.224-0.32552 2.2136-0.3125 0.98958-0.85937 1.7578-0.54688 0.75521-1.2891 1.3151-0.74219 0.55989-1.6016 0.92448-0.85938 0.35156-1.7839 0.52083-0.91146 0.16927-1.8229 0.16927-1.7188 0-3.138-0.49479-1.4062-0.50781-2.4219-1.4193t-1.5755-2.1745q-0.54688-1.276-0.54688-2.8125z" style="paint-order:stroke markers fill"/><path d="m488.16 271.26q0.54688-1.6536 1.7578-2.487 1.2109-0.83334 3.138-0.83334 1.0938 0 2.0182 0.50782 0.92448 0.50781 1.6016 1.4193 0.67708 0.91146 1.0547 2.1745 0.3776 1.263 0.3776 2.7865v6.6667h-5.625v-6.6667q0-0.55989-0.13021-1.0286-0.11718-0.48178-0.35156-0.83334-0.23437-0.35156-0.57292-0.54687-0.33854-0.19532-0.76823-0.19532-0.55989 0-0.96354 0.26042-0.40364 0.2474-0.66406 0.63802-0.26042 0.37761-0.39063 0.84636-0.11718 0.45573-0.11718 0.85937v6.6667h-5.5729v-6.6667q0-0.54687-0.13021-1.0156-0.11718-0.48178-0.36458-0.83334-0.23438-0.35156-0.58594-0.54687-0.35156-0.20834-0.79427-0.20834-0.48177 0-0.8724 0.19532-0.3776 0.19531-0.65104 0.54687-0.27344 0.33854-0.42969 0.79427-0.14323 0.45573-0.15625 0.96355v6.7708h-5.625v-13.164h5.625v2.7214q0.74219-1.6536 1.875-2.3828 1.1458-0.72917 2.6823-0.72917 0.74219 0 1.4323 0.19532 0.69011 0.18229 1.2891 0.58593 0.61198 0.40365 1.0938 1.0417 0.49479 0.625 0.82031 1.4974z" style="paint-order:stroke markers fill"/></g></g></svg>',
   close:
     '<span class="atcb-icon-close"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200"><path d="M2.321 13.529a7.927 7.927 0 0 1 0-11.208 7.927 7.927 0 0 1 11.208 0l86.471 86.471L186.47 2.321a7.927 7.927 0 0 1 11.209 0 7.927 7.927 0 0 1 0 11.208l-86.474 86.469 86.472 86.473a7.927 7.927 0 0 1-11.209 11.208l-86.471-86.471-86.469 86.471a7.927 7.927 0 0 1-11.208-11.208l86.471-86.473z"/></svg></span>',
-  browser:
-    '<span class="atcb-icon-browser"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 245.657"><path d="M117.011 163.676q-6.283 6.218-13.623 12.419l6.087-1.009a80.373 80.373 0 0 0 11.524-3.255l.7 1.042 1.628 2.067h0 0a26.693 26.693 0 0 0 3.467 3.255 89.992 89.992 0 0 1-15.837 4.753 95.592 95.592 0 0 1-37.159 0 87.046 87.046 0 0 1-17.253-5.322.423.423 0 0 1-.228-.114 101.077 101.077 0 0 1-15.625-8.415 88.56 88.56 0 0 1-13.672-11.214 85.761 85.761 0 0 1-11.214-13.64 97.317 97.317 0 0 1-8.545-15.658 90.806 90.806 0 0 1-5.436-17.546 95.592 95.592 0 0 1 0-37.159 86.037 86.037 0 0 1 5.339-17.253.537.537 0 0 1 .098-.228 98.212 98.212 0 0 1 8.545-15.707 87.893 87.893 0 0 1 11.214-13.656 84.947 84.947 0 0 1 13.672-11.231A97.17 97.17 0 0 1 56.43 7.259a88.739 88.739 0 0 1 17.448-5.436 95.592 95.592 0 0 1 37.159 0 87.714 87.714 0 0 1 17.253 5.322.456.456 0 0 1 .212.114 100.507 100.507 0 0 1 15.756 8.545 88.56 88.56 0 0 1 13.623 11.198 85.077 85.077 0 0 1 11.214 13.688 94.713 94.713 0 0 1 8.545 15.739 88.739 88.739 0 0 1 5.436 17.481l.195.977-8.822-2.49a76.499 76.499 0 0 0-4.232-12.744 88.251 88.251 0 0 0-4.671-9.375H138.48a106.562 106.562 0 0 1 6.836 13.819l-10.026-2.702a106.985 106.985 0 0 0-6.283-11.117H96.454v5.55l-.993.358a21.941 21.941 0 0 0-7.097 4.362V50.245H55.812q-12.484 19.385-14.03 38.152H83.4q1.628 4.02 3.402 8.138H41.7c.505 12.81 4.883 25.505 12.826 38.152h33.888v-34.49l8.138 17.904v16.553h7.748l3.727 8.138H96.503v28.5a201.567 201.567 0 0 0 17.139-15.707q1.709 4.053 3.369 8.138zm69.761-4.167a7.552 7.552 0 0 1-1.904 1.286h-.13a6.738 6.738 0 0 1-7.097-.977l-18.881-16.016-6.511 15.902a21.045 21.045 0 0 1-1.937 3.662 14.812 14.812 0 0 1-2.458 2.865 7.78 7.78 0 0 1-12.207-1.335 15.105 15.105 0 0 1-1.497-2.653c-11.231-28.467-26.465-56.805-37.859-85.289a5.062 5.062 0 0 1 5.68-6.966c27.296 5.046 62.664 16.586 90.416 23.943 8.627 2.279 10.026 9.88 3.662 15.772a19.874 19.874 0 0 1-3.255 2.474c-4.883 2.767-9.766 5.973-14.649 8.903l18.799 16.114a6.917 6.917 0 0 1 1.628 2.051v.13a6.966 6.966 0 0 1 .635 2.393h0a6.934 6.934 0 0 1-.26 2.507 7.145 7.145 0 0 1-1.172 2.262 153.894 153.894 0 0 1-11.003 12.972zm-4.883-6.25l9.099-10.677c-4.004-3.434-21.159-16.748-22.933-19.955a3.923 3.923 0 0 1 1.351-5.29c5.957-3.255 13.607-7.91 19.255-11.67a13.64 13.64 0 0 0 1.986-1.449 7.194 7.194 0 0 0 1.221-1.416l.26-.488-.505-.293a6.38 6.38 0 0 0-1.237-.423l-84.589-22.494 35.531 79.982a7.813 7.813 0 0 0 .619 1.139l.358.472.456-.326a7.341 7.341 0 0 0 1.188-1.449 12.224 12.224 0 0 0 1.107-2.165c2.653-6.511 5.68-15.414 8.789-21.436l.374-.521a3.906 3.906 0 0 1 5.485-.439l22.201 18.832zM81.594 176.095a171.814 171.814 0 0 1-31.348-33.334h-25.57A83.824 83.824 0 0 0 45.2 162.292a85.956 85.956 0 0 0 14.47 7.813.22.22 0 0 0 .179.114 79.966 79.966 0 0 0 15.69 4.883 106.008 106.008 0 0 0 6.104 1.009zm-62.241-41.44h25.733a82.359 82.359 0 0 1-11.394-38.152H8.138a90.741 90.741 0 0 0 1.628 12.923 78.566 78.566 0 0 0 4.883 15.902 88.153 88.153 0 0 0 4.655 9.375zM8.138 88.397h25.635A88.511 88.511 0 0 1 46.42 50.245H19.353a88.153 88.153 0 0 0-4.704 9.375s0 .114-.114.163A81.236 81.236 0 0 0 9.652 75.49a83.759 83.759 0 0 0-1.628 12.907zm16.488-46.241h27.003A191.606 191.606 0 0 1 82.131 8.708c-2.262.277-4.492.602-6.641 1.058a78.713 78.713 0 0 0-15.87 4.883 89.911 89.911 0 0 0-14.47 7.813 83.824 83.824 0 0 0-20.525 19.532h0zm78.127-33.448a186.577 186.577 0 0 1 30.518 33.448h27.019a79.152 79.152 0 0 0-8.138-9.375 81.073 81.073 0 0 0-12.419-10.205 86.705 86.705 0 0 0-14.405-7.829s-.098 0-.163-.098a79.999 79.999 0 0 0-15.69-4.883c-2.214-.439-4.443-.781-6.657-1.058h0zm-6.25 5.274v28.175h26.84a188.286 188.286 0 0 0-26.84-28.175zm-8.138 157.279v-28.5H60.223a171.993 171.993 0 0 0 28.24 28.5zm0-129.105V13.981a189.295 189.295 0 0 0-26.807 28.175z"/></svg></span>',
+  location:
+    '<span class="atcb-icon-location"><svg viewBox="0 0 200 266.42" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" clip-rule="evenodd" d="m148.54 230.43c-12.12 13.291-26.234 25.193-42.083 34.82-1.9513 1.431-4.5964 1.6044-6.7645 0.21681-23.416-14.895-43.08-32.782-58.539-52.23-21.334-26.755-34.755-56.414-39.351-84.99-4.6831-28.966-0.30354-56.848 14.114-79.505 5.6805-8.9543 12.944-17.106 21.79-24.153 20.337-16.196 43.557-24.76 66.713-24.586 22.288 0.17345 44.295 8.4773 63.309 25.844 6.6778 6.0707 12.293 13.03 16.89 20.575 15.502 25.54 18.841 58.105 12.033 91.104-6.7212 32.608-23.416 65.737-48.11 92.839zm-48.544-178.91c27.492 0 49.758 22.288 49.758 49.758 0 27.492-22.288 49.758-49.758 49.758-27.492 0-49.758-22.267-49.758-49.758-0.02168-27.492 22.267-49.758 49.758-49.758z" stroke-width="2.1681"/></svg></span>',
+  warning:
+    '<span class="atcb-icon-warning"><svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"><path d="m100 0c27.613 0 52.613 11.195 70.711 29.293 18.094 18.094 29.289 43.098 29.289 70.707 0 27.613-11.195 52.613-29.289 70.711-18.098 18.094-43.098 29.289-70.711 29.289-27.609 0-52.613-11.195-70.707-29.289-18.098-18.098-29.293-43.098-29.293-70.711 0-27.609 11.195-52.613 29.293-70.707 18.094-18.098 43.098-29.293 70.707-29.293zm57.66 42.34c-14.758-14.754-35.145-23.883-57.66-23.883-22.516 0-42.902 9.1289-57.66 23.883-14.754 14.758-23.883 35.145-23.883 57.66 0 22.516 9.1289 42.902 23.883 57.66 14.758 14.754 35.145 23.883 57.66 23.883 22.516 0 42.902-9.1289 57.66-23.883 14.754-14.758 23.883-35.145 23.883-57.66 0-22.516-9.1289-42.902-23.883-57.66z" fill="#f44336" fill-rule="nonzero" stroke-width=".39062"/><g transform="matrix(3.8384 0 0 3.8384 2277.8 -576.85)" style="shape-inside:url(#rect7396);white-space:pre" aria-label="!"><path d="m-563.8 161.59-0.65341 20.185h-5.8381l-0.65341-20.185zm-3.5796 29.503q-1.5199 0-2.6136-1.0795-1.0796-1.0796-1.0796-2.6136 0-1.5057 1.0796-2.571 1.0938-1.0796 2.6136-1.0796 1.4631 0 2.571 1.0796 1.1222 1.0653 1.1222 2.571 0 1.0227-0.52557 1.8608-0.51137 0.83807-1.3494 1.3352-0.82387 0.49715-1.8182 0.49715z"/></g></svg></span>',
+  checkmark:
+    '<span class="atcb-icon-checkmark"><svg viewBox="0 0 122.88 122.87" xmlns="http://www.w3.org/2000/svg"><path fill:#39B54A; d="m33.666 50.046s6.0748-0.59297 17.413 4.2983c9.3883 4.5751 11.891 8.3955 11.891 8.3955 5.38-8.65 11.11-16.6 17.16-23.9 10.412-12.578 24.613-22.448 24.613-22.448l14.257-0.012228s-19.308 19.294-32.483 38.51c-13.175 19.216-22.877 41.21-22.877 41.21s-9.3948-18.164-14.53-24.53-10.77-11.59-17.52-16.22z" fill="#45b555"/><path fill:#3C3C3C; d="m61.44 0c9.53 0 18.55 2.17 26.61 6.04-3.3 2.61-6.36 5.11-9.21 7.53-5.43-1.97-11.28-3.05-17.39-3.05-14.06 0-26.79 5.7-36 14.92s-14.92 21.94-14.92 36 5.7 26.78 14.92 36 21.94 14.92 36 14.92 26.79-5.7 36-14.92c9.22-9.22 14.91-21.94 14.91-36 0-3.34-0.32-6.62-0.94-9.78 2.64-3.44 5.35-6.88 8.11-10.28 2.17 6.28 3.35 13.04 3.35 20.06 0 16.96-6.88 32.33-17.99 43.44-11.12 11.12-26.48 18-43.44 18s-32.32-6.88-43.44-18c-11.13-11.12-18.01-26.48-18.01-43.44 0-16.97 6.88-32.33 17.99-43.44 11.12-11.12 26.48-18 43.45-18z"/></svg></span>',
 };
 
-// INITIALIZE THE SCRIPT AND FUNCTIONALITY
-function atcb_init() {
-  // let's get started
-  if (!atcbConsoleInit) {
-    console.log('Add to Calendar Button Script initialized (version ' + atcbVersion + ')');
-    console.log('See https://github.com/add2cal/add-to-calendar-button for details');
-    atcbConsoleInit = true;
-  }
-  // abort if not in a browser
-  if (!isBrowser()) {
-    console.error('no further initialization due to wrong environment (no browser)');
-    return;
-  }
-  // get all placeholders
-  const atcButtons = document.querySelectorAll('.atcb');
-  // if there are some, move on
-  if (atcButtons.length > 0) {
-    // get the amount of already initialized ones first
-    const atcButtonsInitialized = document.querySelectorAll('.atcb-initialized');
-    // generate the buttons one by one
-    for (let i = 0; i < atcButtons.length; i++) {
-      // skip already initialized ones
-      if (atcButtons[parseInt(i)].classList.contains('atcb-initialized')) {
-        continue;
-      }
-      // get JSON from HTML block, but remove real code line breaks before parsing.
-      // use <br> or \n explicitely in the description to create a line break.
-      const atcbJsonInput = (function () {
-        try {
-          return JSON.parse(
-            atcb_secure_content(atcButtons[parseInt(i)].innerHTML.replace(/(\r\n|\n|\r)/g, ''), false)
-          );
-        } catch (e) {
-          console.error(
-            'Add to Calendar Button generation failed: JSON content provided, but badly formatted (in doubt, try some tool like https://jsonformatter.org/ to validate).\r\nError message: ' +
-              e
-          );
-          return '';
-        }
-      })();
-      if (atcbJsonInput === '') {
-        continue;
-      }
-      // rewrite config for backwards compatibility
-      const atcbJsonInputPatched = atcb_patch_config(atcbJsonInput);
-      // check, if all required data is available
-      if (atcb_check_required(atcbJsonInputPatched)) {
-        // Rewrite dynamic dates, standardize line breaks and transform urls in the description
-        const atcbConfig = atcb_decorate_data(atcbJsonInputPatched);
-        // set identifier
-        if (atcbConfig.identifier == null || atcbConfig.identifier == '') {
-          atcbConfig.identifier = 'atcb-btn-' + (i + atcButtonsInitialized.length + 1);
-        }
-        // validate the config (JSON iput) ...
-        if (atcb_validate(atcbConfig)) {
-          // ... and generate the button on success
-          atcb_generate(atcButtons[parseInt(i)], atcbConfig);
-        }
-      }
-    }
-  }
-}
 
-// BACKWARDS COMPATIBILITY REWRITE
 function atcb_patch_config(configData) {
-  // you can remove this, if you did not use this script before v1.10.0
-  // adjusts any old schema.org structure
   if (configData.event != null) {
     Object.keys(configData.event).forEach((key) => {
-      // move entries one level up, but skip schema types
       if (key.charAt(0) !== '@') {
         configData[`${key}`] = configData.event[`${key}`];
       }
     });
     delete configData.event;
   }
-  // you can remove this, if you did not use this script before v1.4.0
-  // adjust deprecated config options
   const keyChanges = {
     title: 'name',
     dateStart: 'startDate',
@@ -1758,21 +357,42 @@ function atcb_patch_config(configData) {
   });
   return configData;
 }
-
-// CLEAN DATA BEFORE FURTHER VALIDATION (CONSIDERING SPECIAL RULES AND SCHEMES)
 function atcb_decorate_data(data) {
-  const now = new Date();
-  // format RRULE
+  data = atcb_decorate_data_identifier(data);
+  data.subscribe = atcb_decorate_data_subscribe(data);
+  data = atcb_decorate_data_rrule(data);
+  data = atcb_decorate_data_options(data);
+  data.richData = atcb_decorate_data_rich_data(data);
+  data = atcb_decorate_data_style(data);
+  data = atcb_decorate_data_i18n(data);
+  data = atcb_decorate_data_dates(data);
+  data = atcb_decorate_data_meta(data);
+  data = atcb_decorate_data_extend(data);
+  return data;
+}
+function atcb_decorate_data_identifier(data) {
+  if (data.identifier != null && data.identifier != '') {
+    data.identifier = 'atcb-btn-' + data.identifier;
+    if (!/^[\w-]+$/.test(data.identifier)) {
+      data.identifier = '';
+      console.warn('Add to Calendar Button generation: identifier invalid - using auto numbers instead');
+    }
+  }
+  return data;
+}
+function atcb_decorate_data_subscribe(data) {
+  if (data.subscribe != null && data.subscribe == true) {
+    return true;
+  }
+  return false;
+}
+function atcb_decorate_data_rrule(data) {
   if (data.recurrence != null && data.recurrence != '') {
-    // remove spaces and force upper case
     data.recurrence = data.recurrence.replace(/\s+/g, '').toUpperCase();
-    // pre-validate
     if (!/^(RRULE:[\w=;,:+-/\\]+|daily|weekly|monthly|yearly)$/im.test(data.recurrence)) {
       data.recurrence = '!wrong rrule format!';
     } else {
-      // check if RRULE already
       if (/^RRULE:/i.test(data.recurrence)) {
-        // draw easy rules from RRULE if possible
         const rruleParts = data.recurrence.substr(6).split(';');
         const rruleObj = new Object();
         rruleParts.forEach(function (rule) {
@@ -1786,20 +406,16 @@ function atcb_decorate_data(data) {
         data.recurrence_interval = rruleObj.INTERVAL ? rruleObj.INTERVAL : 1;
         data.recurrence_frequency = rruleObj.FREQ ? rruleObj.FREQ : '';
       } else {
-        // set interval if not given
         if (data.recurrence_interval == null || data.recurrence_interval == '') {
           data.recurrence_interval = 1;
         }
-        // set weekstart if not given
         if (
           data.recurrence_weekstart == null ||
           (data.recurrence_weekstart == '') | (data.recurrence_weekstart.length > 2)
         ) {
           data.recurrence_weekstart = 'MO';
         }
-        // save frequency before overriding the main recurrence data
         data.recurrence_frequency = data.recurrence;
-        // generate the RRULE from easy rules
         data.recurrence =
           'RRULE:FREQ=' +
           data.recurrence +
@@ -1807,7 +423,6 @@ function atcb_decorate_data(data) {
           data.recurrence_weekstart +
           ';INTERVAL=' +
           data.recurrence_interval;
-        // TODO: If "until" is given, translate it into a "count" and remove the "until" (here and in the above block). This would be way more stable!
         if (data.recurrence_until != null && data.recurrence_until != '') {
           if (data.endTime != null && data.endTime != '') {
             data.recurrence =
@@ -1837,104 +452,87 @@ function atcb_decorate_data(data) {
       }
     }
   }
-  // cleanup options, standardizing names and splitting off custom labels
-  data.optionLabels = [];
-  for (let i = 0; i < data.options.length; i++) {
-    let cleanOption = data.options[`${i}`].split('|');
-    data.options[`${i}`] = cleanOption[0].toLowerCase().replace('microsoft', 'ms').replace('.', '');
-    if (cleanOption[1] != null) {
-      data.optionLabels[`${i}`] = cleanOption[1];
-    } else {
-      data.optionLabels[`${i}`] = '';
-    }
-  }
-  // remove unsupported options
-  // for iOS, we remove iCal (further down) and force the Apple option (if it is not there, but iCal is)
+  return data;
+}
+function atcb_decorate_data_options(data) {
   if (isiOS() && data.options.includes('ical') && !data.options.includes('apple')) {
     data.options.push('apple');
   }
-  // next, iterrate over the options
+  const newOptions = [];
+  data.optionLabels = [];
   for (let i = 0; i < data.options.length; i++) {
-    // remove iCal for iOS as mentioned above (and potentially others)
-    if (isiOS() && atcbiOSInvalidOptions.includes(data.options[`${i}`])) {
-      data.options.splice(i, 1);
-      if (data.optionLabels[`${i}`] != null) {
-        delete data.optionLabels[`${i}`];
+    const cleanOption = data.options[`${i}`].split('|');
+    const optionName = cleanOption[0].toLowerCase().replace('microsoft', 'ms').replace('.', '');
+    const optionLabel = (function () {
+      if (cleanOption[1] != null) {
+        return cleanOption[1];
       }
+      return '';
+    })();
+    if (
+      (isiOS() && atcbiOSInvalidOptions.includes(optionName)) ||
+      (data.recurrence != null &&
+        data.recurrence != '' &&
+        (!atcbValidRecurrOptions.includes(optionName) ||
+          (data.recurrence_until != null &&
+            data.recurrence_until != '' &&
+            (optionName == 'apple' || optionName == 'ical')))) ||
+      (data.subscribe && atcbInvalidSubscribeOptions.includes(optionName))
+    ) {
       continue;
     }
-    // in the recurrence case, we strip out all options, which do not support it
-    if (data.recurrence != null && data.recurrence != '') {
-      if (!atcbValidRecurrOptions.includes(data.options[`${i}`])) {
-        data.options.splice(i, 1);
-        if (data.optionLabels[`${i}`] != null) {
-          delete data.optionLabels[`${i}`];
-        }
-        continue;
-      }
-      // also skip Apple and iCal for rrules with "until"
-      if (
-        data.recurrence_until != null &&
-        data.recurrence_until != '' &&
-        (data.options[`${i}`] == 'apple' || data.options[`${i}`] == 'ical')
-      ) {
-        data.options.splice(i, 1);
-        if (data.optionLabels[`${i}`] != null) {
-          delete data.optionLabels[`${i}`];
-        }
-      }
-    }
+    newOptions.push(optionName);
+    data.optionLabels.push(optionLabel);
   }
-  // cleanup different date-time formats
-  data = atcb_date_cleanup(data);
-  // calculate the real date values in case that there are some special rules included (e.g. adding days dynamically)
-  data.startDate = atcb_date_calculation(data.startDate);
-  data.endDate = atcb_date_calculation(data.endDate);
-  // set default listStyle
+  data.options = newOptions;
+  return data;
+}
+function atcb_decorate_data_rich_data(data) {
+  if (data.richData != null && data.richData == false) {
+    return false;
+  }
+  return true;
+}
+function atcb_decorate_data_style(data) {
   if (data.listStyle == null || data.listStyle == '') {
     data.listStyle = 'dropdown';
   }
-  // force click trigger on modal style
   if (data.listStyle === 'modal') {
     data.trigger = 'click';
   }
-  // set button style and force click on styles, where the dropdown is not attached to the button
   if (data.buttonStyle != null && data.buttonStyle != '' && data.buttonStyle != 'default') {
-    if (data.buttonStyle == 'round' || data.buttonStyle == 'text') {
+    if (data.buttonStyle == 'bubble' || data.buttonStyle == 'text' || data.buttonStyle == 'date') {
       data.trigger = 'click';
+    }
+    if (data.buttonStyle == 'date' && data.listStyle == 'dropdown') {
+      data.listStyle = 'overlay';
     }
   } else {
     data.buttonStyle = '';
   }
-  // set size
-  if (data.size != null && data.size != '' && data.size >= 0 && data.size < 11) {
-    data.size = 10 + parseInt(data.size);
-  } else {
-    data.size = 16;
+  data.sizes = [];
+  data.sizes['l'] = data.sizes['m'] = data.sizes['s'] = 16;
+  if (data.size != null && data.size != '') {
+    const sizeParts = data.size.split('|');
+    for (let i = 0; i < sizeParts.length; i++) {
+      sizeParts[`${i}`] = parseInt(sizeParts[`${i}`]);
+    }
+    if (sizeParts[0] >= 0 && sizeParts[0] < 11) {
+      data.sizes['l'] = 10 + sizeParts[0];
+    }
+    if (sizeParts.length > 2) {
+      if (sizeParts[1] >= 0 && sizeParts[1] < 11) {
+        data.sizes['m'] = 10 + sizeParts[1];
+      }
+      if (sizeParts[2] >= 0 && sizeParts[2] < 11) {
+        data.sizes['s'] = 10 + sizeParts[2];
+      }
+    } else if (sizeParts.length == 2) {
+      if (sizeParts[1] >= 0 && sizeParts[1] < 11) {
+        data.sizes['m'] = data.sizes['s'] = 10 + sizeParts[1];
+      }
+    }
   }
-  // set sequence
-  if (data.sequence == null || data.sequence == '') {
-    data.sequence = 0;
-  }
-  // set UID
-  if (data.uid == null || data.uid == '') {
-    data.uid = atcb_generate_uuid();
-  }
-  // set created date
-  if (data.created == null || data.created == '') {
-    data.created = atcb_format_datetime(now, 'clean', true);
-  }
-  // set updated date
-  if (data.updated == null || data.updated == '') {
-    data.updated = atcb_format_datetime(now, 'clean', true);
-  }
-  // set status
-  if (data.status == null || data.status == '') {
-    data.status = 'CONFIRMED';
-  } else {
-    data.status = data.status.toUpperCase();
-  }
-  // determine dark mode
   if (data.lightMode == null || data.lightMode == '') {
     data.lightMode = 'light';
   } else if (data.lightMode != null && data.lightMode != '') {
@@ -1955,86 +553,150 @@ function atcb_decorate_data(data) {
         break;
     }
   }
-  // set language if not set
+  return data;
+}
+function atcb_decorate_data_i18n(data) {
   if (data.language == null || data.language == '') {
     data.language = 'en';
   }
-  // set right-to-left for relevant languages
   if (data.language == 'ar') {
     data.rtl = true;
   } else {
     data.rtl = false;
   }
-  // decorate description
-  if (data.description != null && data.description != '') {
-    // store a clean description copy without the URL magic for iCal
-    data.descriptionHtmlFree = atcb_rewrite_html_elements(data.description, true);
-    // ...and transform pseudo elements for the regular one
-    data.description = atcb_rewrite_html_elements(data.description);
+  return data;
+}
+function atcb_decorate_data_dates(data) {
+  if (data.dates != null && data.dates.length > 0) {
+    for (let i = 0; i < data.dates.length; i++) {
+      if (data.dates[`${i}`].timeZone == null && data.timeZone != null) {
+        data.dates[`${i}`].timeZone = data.timeZone;
+      }
+      const cleanedUpDates = atcb_date_cleanup(data.dates[`${i}`]);
+      data.dates[`${i}`].startTime = cleanedUpDates.startTime;
+      data.dates[`${i}`].endTime = cleanedUpDates.endTime;
+      data.dates[`${i}`].timeZone = cleanedUpDates.timeZone;
+      data.dates[`${i}`].timestamp = cleanedUpDates.startTimestamp;
+      data.dates[`${i}`].startDate = atcb_date_calculation(cleanedUpDates.startDate);
+      data.dates[`${i}`].endDate = atcb_date_calculation(cleanedUpDates.endDate);
+    }
+  } else {
+    const cleanedUpDates = atcb_date_cleanup(data);
+    data.dates = [];
+    data.dates[0] = new Object();
+    data.startTime = data.dates[0].startTime = cleanedUpDates.startTime;
+    data.endTime = data.dates[0].endTime = cleanedUpDates.endTime;
+    data.timeZone = data.dates[0].timeZone = cleanedUpDates.timeZone;
+    data.startDate = data.dates[0].startDate = atcb_date_calculation(cleanedUpDates.startDate);
+    data.endDate = data.dates[0].endDate = atcb_date_calculation(cleanedUpDates.endDate);
+  }
+  const now = new Date();
+  if (data.created == null || data.created == '') {
+    data.created = atcb_format_datetime(now, 'clean', true);
+  }
+  if (data.updated == null || data.updated == '') {
+    data.updated = atcb_format_datetime(now, 'clean', true);
   }
   return data;
 }
-
-// CHECK FOR REQUIRED FIELDS
-function atcb_check_required(data) {
-  // check for at least 1 option
-  if (data.options == null || data.options.length < 1) {
-    console.error('Add to Calendar Button generation failed: no valid options set');
-    return false;
+function atcb_decorate_data_meta(data) {
+  if (data.status == null || data.status == '') {
+    data.status = 'CONFIRMED';
   }
-  // check for min required data (without "options")
-  const requiredField = ['name', 'startDate'];
-  return requiredField.every(function (field) {
-    if (data[`${field}`] == null || data[`${field}`] == '') {
-      console.error('Add to Calendar Button generation failed: required setting missing [' + field + ']');
-      return false;
-    }
-    return true;
-  });
+  if (data.sequence == null || data.sequence == '') {
+    data.sequence = 0;
+  }
+  return data;
 }
-
-// CALCULATE AND CLEAN UP THE ACTUAL DATES
-function atcb_date_cleanup(data) {
-  // set endDate = startDate, if not provided
-  if ((data.endDate == null || data.endDate == '') && data.startDate != null) {
-    data.endDate = data.startDate;
+function atcb_decorate_data_description(data, i) {
+  if (data.dates[`${i}`].description != null && data.dates[`${i}`].description != '') {
+    data.dates[`${i}`].descriptionHtmlFree = atcb_rewrite_html_elements(data.dates[`${i}`].description, true);
+    data.dates[`${i}`].description = atcb_rewrite_html_elements(data.dates[`${i}`].description);
+  } else {
+    if (data.dates[`${i}`].description == null && data.description != null && data.description != '') {
+      data.dates[`${i}`].descriptionHtmlFree = atcb_rewrite_html_elements(data.description, true);
+      data.dates[`${i}`].description = atcb_rewrite_html_elements(data.description);
+    } else {
+      data.dates[`${i}`].descriptionHtmlFree = data.dates[`${i}`].description = '';
+    }
   }
-  // parse date+time format (unofficial alternative to the main implementation)
+  return data;
+}
+function atcb_decorate_data_extend(data) {
+  for (let i = 0; i < data.dates.length; i++) {
+    data = atcb_decorate_data_description(data, i);
+    if (data.dates[`${i}`].name == null || data.dates[`${i}`].name == '') {
+      data.dates[`${i}`].name = data.name;
+    }
+    if (data.dates[`${i}`].status == null) {
+      data.dates[`${i}`].status = data.status.toUpperCase();
+    } else {
+      data.dates[`${i}`].status = data.dates[`${i}`].status.toUpperCase();
+    }
+    if (data.dates[`${i}`].sequence == null) {
+      data.dates[`${i}`].sequence = data.sequence;
+    }
+    if (data.dates[`${i}`].location == null && data.location != null) {
+      data.dates[`${i}`].location = data.location;
+    }
+    if (data.dates[`${i}`].organizer == null && data.organizer != null) {
+      data.dates[`${i}`].organizer = data.organizer;
+    }
+    if (data.dates[`${i}`].availability == null && data.availability != null) {
+      data.dates[`${i}`].availability = data.availability.toLowerCase();
+    } else if (data.dates[`${i}`].availability != null) {
+      data.dates[`${i}`].availability = data.dates[`${i}`].availability.toLowerCase();
+    }
+    if (data.dates[`${i}`].uid == null) {
+      data.dates[`${i}`].uid = atcb_generate_uuid();
+    }
+  }
+  if (data.recurrence != null && data.recurrence != '') {
+    data.dates[0].recurrence = data.recurrence;
+  }
+  if (data.dates.length > 1) {
+    data.dates.sort((a, b) => a.timestamp - b.timestamp);
+  }
+  return data;
+}
+function atcb_date_cleanup(dateTimeData) {
+  if (dateTimeData.endDate == null || dateTimeData.endDate == '') {
+    dateTimeData.endDate = dateTimeData.startDate;
+  }
   const endpoints = ['start', 'end'];
   endpoints.forEach(function (point) {
-    if (data[point + 'Date'] != null) {
-      // remove any milliseconds information
-      data[point + 'Date'] = data[point + 'Date'].replace(/\.\d{3}/, '').replace('Z', '');
-      // identify a possible time information within the date string
-      const tmpSplitStartDate = data[point + 'Date'].split('T');
+    if (dateTimeData[point + 'Date'] != null) {
+      dateTimeData[point + 'Date'] = dateTimeData[point + 'Date'].replace(/\.\d{3}/, '').replace('Z', '');
+      const tmpSplitStartDate = dateTimeData[point + 'Date'].split('T');
       if (tmpSplitStartDate[1] != null) {
-        data[point + 'Date'] = tmpSplitStartDate[0];
-        data[point + 'Time'] = tmpSplitStartDate[1];
+        dateTimeData[point + 'Date'] = tmpSplitStartDate[0];
+        dateTimeData[point + 'Time'] = tmpSplitStartDate[1];
       }
     }
-    // remove any seconds from time information
-    if (data[point + 'Time'] != null && data[point + 'Time'].length === 8) {
-      const timeStr = data[point + 'Time'];
-      data[point + 'Time'] = timeStr.substring(0, timeStr.length - 3);
+    if (dateTimeData[point + 'Time'] != null && dateTimeData[point + 'Time'].length === 8) {
+      const timeStr = dateTimeData[point + 'Time'];
+      dateTimeData[point + 'Time'] = timeStr.substring(0, timeStr.length - 3);
     }
-    // update time zone, if special case set to go for the user's browser
-    if (data.timeZone == 'currentBrowser') {
-      data.timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+    if (dateTimeData.timeZone == 'currentBrowser') {
+      dateTimeData.timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
     }
+    let tmpDate;
+    if (dateTimeData[point + 'Time'] != null) {
+      tmpDate = new Date(dateTimeData[point + 'Date'] + ' ' + dateTimeData[point + 'Time']);
+    } else {
+      tmpDate = new Date(dateTimeData[point + 'Date']);
+    }
+    dateTimeData[point + 'Timestamp'] = tmpDate.getTime();
   });
-  return data;
+  return dateTimeData;
 }
-
 function atcb_date_calculation(dateString) {
-  // replace "today" with the current date first
   const today = new Date();
-  const todayString = today.getUTCMonth() + 1 + '-' + today.getUTCDate() + '-' + today.getUTCFullYear();
+  const todayString = today.getUTCFullYear() + '-' + (today.getUTCMonth() + 1) + '-' + today.getUTCDate();
   dateString = dateString.replace(/today/gi, todayString);
-  // check for any dynamic additions and adjust
   const dateStringParts = dateString.split('+');
   const dateParts = dateStringParts[0].split('-');
-  const newDate = (function () {
-    // backwards compatibility for version <1.5.0
+  let newDate = (function () {
     if (dateParts[0].length < 4) {
       return new Date(dateParts[2], dateParts[0] - 1, dateParts[1]);
     }
@@ -2053,84 +715,114 @@ function atcb_date_calculation(dateString) {
   );
 }
 
-// VALIDATE THE INPUT DATA
-function atcb_validate(data) {
-  // validate prefix
-  if (data.identifier != null && data.identifier != '') {
-    if (!/^[\w-]+$/.test(data.identifier)) {
-      data.identifier = '';
-      console.error('Add to Calendar Button generation: identifier invalid - using auto numbers instead');
-    }
-  }
-  const msgPrefix = 'Add to Calendar Button generation (' + data.identifier + ')';
-  // validate explicit ics file
-  if (data.icsFile != null && data.icsFile != '') {
-    if (
-      !atcb_secure_url(data.icsFile, false) ||
-      !/\.ics$/.test(data.icsFile) ||
-      !data.icsFile.startsWith('https://')
-    ) {
-      console.error(msgPrefix + ' failed: explicit ics file path not valid');
-      return false;
-    }
-  }
-  // validate organizer
-  if (data.organizer != null && data.organizer != '') {
-    const organizerParts = data.organizer.split('|');
-    if (
-      organizerParts.length != 2 ||
-      organizerParts[0].length > 50 ||
-      organizerParts[1].length > 80 ||
-      !atcb_validEmail(organizerParts[1])
-    ) {
-      console.error(
-        msgPrefix + ' failed: organizer needs to match the schema "NAME|EMAIL" with a valid email address'
-      );
-      return false;
-    }
-  }
-  // validate UID (must have less then 255 characters and only allowes for ; see )
-  if (!/^(\w|-){1,254}$/.test(data.uid)) {
-    console.error(
-      msgPrefix +
-        ': UID not valid. May only contain alpha, digits, and dashes; and be less than 255 characters'
-    );
+
+function atcb_check_required(data) {
+  if (data.options == null || data.options.length < 1) {
+    console.error('Add to Calendar Button generation failed: no valid options set');
     return false;
   }
-  // validate UID for the recommended form, which is not forced, but show throw a warning
-  if (!/^[0-9a-f]{8}-[0-9a-f]{4}-[0-5][0-9a-f]{3}-[089ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(data.uid)) {
-    console.warn(
-      msgPrefix +
-        ': UID is strictly recommended to be a hex-encoded random Universally Unique Identifier (UUID)!'
-    );
-    data.sequence = 0;
+  if (data.name == null || data.name == '') {
+    console.error('Add to Calendar Button generation failed: required name information missing');
+    return false;
   }
-  // validate sequence number if given and set it 0 if not
-  if (!/^\d+$/.test(data.sequence)) {
-    console.log(msgPrefix + ': sequence needs to be a number. Used the default 0 instead');
-    data.sequence = 0;
+  if (data.dates != null && data.dates.length > 0) {
+    const requiredMultiField = ['name', 'startDate'];
+    const requiredMultiFieldFlex = ['name'];
+    return requiredMultiField.every(function (field) {
+      for (let i = 0; i < data.dates.length; i++) {
+        if (
+          (!requiredMultiFieldFlex.includes(`${field}`) &&
+            (data.dates[`${i}`][`${field}`] == null || data.dates[`${i}`][`${field}`] == '')) ||
+          (requiredMultiFieldFlex.includes(`${field}`) &&
+            (data.dates[`${i}`][`${field}`] == null || data.dates[`${i}`][`${field}`] == '') &&
+            (data[`${field}`] == null || data[`${field}`] == ''))
+        ) {
+          console.error(
+            'Add to Calendar Button generation failed: required setting missing [dates array object #' +
+              (i + 1) +
+              '/' +
+              data.dates.length +
+              '] => [' +
+              field +
+              ']'
+          );
+          return false;
+        }
+      }
+      return true;
+    });
+  } else {
+    const requiredSingleField = ['startDate'];
+    return requiredSingleField.every(function (field) {
+      if (data[`${field}`] == null || data[`${field}`] == '') {
+        console.error('Add to Calendar Button generation failed: required setting missing [' + field + ']');
+        return false;
+      }
+      return true;
+    });
   }
-  // validate created and updated input
+}
+function atcb_validate(data) {
+  const msgPrefix = 'Add to Calendar Button generation (' + data.identifier + ')';
+  if (!atcb_validate_icsFile(data, msgPrefix)) return false;
+  if (!atcb_validate_subscribe(data, msgPrefix)) return false;
+  if (!atcb_validate_created(data, msgPrefix)) return false;
+  if (!atcb_validate_updated(data, msgPrefix)) return false;
+  if (!atcb_validate_options(data, msgPrefix)) return false;
+  if (!atcb_validate_date_blocks(data, msgPrefix)) return false;
+  if (!atcb_validate_rrule(data, msgPrefix)) return false;
+  return true;
+}
+function atcb_validate_icsFile(data, msgPrefix, i = '', msgSuffix = '') {
+  const icsFileStr = (function () {
+    if (i != '' && data.dates[`${i}`].icsFile != null) {
+      return data.dates[`${i}`].icsFile;
+    }
+    if (i == '' && data.icsFile != null) {
+      return data.icsFile;
+    }
+    return '';
+  })();
+  if (icsFileStr != '') {
+    if (
+      !atcb_secure_url(icsFileStr, false) ||
+      (!/^https:\/\/(.)*\.ics$/m.test(data.icsFile) && !data.subscribe) ||
+      (!data.icsFile.startsWith('https://') && data.subscribe)
+    ) {
+      console.error(msgPrefix + ' failed: explicit ics file path not valid' + msgSuffix);
+      return false;
+    }
+  }
+  return true;
+}
+function atcb_validate_subscribe(data, msgPrefix) {
+  if (data.subscribe == true && (data.icsFile == null || data.icsFile == '')) {
+    console.error(msgPrefix + ' failed: a subscription calendar requires a valid explicit ics file as well');
+    return false;
+  }
+  return true;
+}
+function atcb_validate_created(data, msgPrefix) {
   if (!/^\d{8}T\d{6}Z$/.test(data.created)) {
     console.error(
       msgPrefix +
-        ': created date format not valid. Needs to be a full ISO-8601 UTC date and time string, formatted YYYYMMDDTHHMMSSZ'
+        ' failed: created date format not valid. Needs to be a full ISO-8601 UTC date and time string, formatted YYYYMMDDTHHMMSSZ'
     );
     return false;
   }
+  return true;
+}
+function atcb_validate_updated(data, msgPrefix) {
   if (!/^\d{8}T\d{6}Z$/.test(data.updated)) {
     console.error(
       msgPrefix +
-        ': updated date format not valid. Needs to be a full ISO-8601 UTC date and time string, formatted YYYYMMDDTHHMMSSZ'
+        ' failed: updated date format not valid. Needs to be a full ISO-8601 UTC date and time string, formatted YYYYMMDDTHHMMSSZ'
     );
     return false;
   }
-  // validate status
-  if (data.status != 'TENTATIVE' && data.status != 'CONFIRMED' && data.status != 'CANCELLED') {
-    console.error(msgPrefix + ': event status needs to be TENTATIVE, CONFIRMED, or CANCELLED');
-    return false;
-  }
-  // validate options
+  return true;
+}
+function atcb_validate_options(data, msgPrefix) {
   if (
     !data.options.every(function (option) {
       if (!atcbOptions.includes(option)) {
@@ -2142,26 +834,131 @@ function atcb_validate(data) {
   ) {
     return false;
   }
-  // validate time zone
-  if (data.timeZone != null && data.timeZone != '') {
-    const validTimeZones = tzlib_get_timezones();
-    if (!validTimeZones.includes(data.timeZone)) {
-      console.error(msgPrefix + ' failed: invalid time zone given');
+  return true;
+}
+function atcb_validate_date_blocks(data, msgPrefix) {
+  for (let i = 0; i < data.dates.length; i++) {
+    const msgSuffix = (function () {
+      if (data.dates.length == 1) {
+        return '';
+      } else {
+        return ' [dates array object #' + (i + 1) + '/' + data.dates.length + '] ';
+      }
+    })();
+    if (!atcb_validate_icsFile(data, msgPrefix, i, msgSuffix)) return false;
+    if (!atcb_validate_status(data, msgPrefix, i, msgSuffix)) return false;
+    if (!atcb_validate_availability(data, msgPrefix, i, msgSuffix)) return false;
+    if (!atcb_validate_organizer(data, msgPrefix, i, msgSuffix)) return false;
+    if (!atcb_validate_uid(data, msgPrefix, i, msgSuffix)) return false;
+    if (!atcb_validate_sequence(data, msgPrefix, i, msgSuffix)) return false;
+    if (!atcb_validate_timezone(data, msgPrefix, i, msgSuffix)) return false;
+    if (!atcb_validate_datetime(data, msgPrefix, i, msgSuffix)) return false;
+  }
+  return true;
+}
+function atcb_validate_status(data, msgPrefix, i, msgSuffix) {
+  if (
+    data.dates[`${i}`].status != 'TENTATIVE' &&
+    data.dates[`${i}`].status != 'CONFIRMED' &&
+    data.dates[`${i}`].status != 'CANCELLED'
+  ) {
+    console.error(
+      msgPrefix + ' failed: event status needs to be TENTATIVE, CONFIRMED, or CANCELLED' + msgSuffix
+    );
+    return false;
+  }
+  return true;
+}
+function atcb_validate_availability(data, msgPrefix, i, msgSuffix) {
+  if (
+    data.dates[`${i}`].availability != null &&
+    data.dates[`${i}`].availability != '' &&
+    data.dates[`${i}`].availability != 'free' &&
+    data.dates[`${i}`].availability != 'busy'
+  ) {
+    console.error(msgPrefix + ' failed: event availability needs to be "free" or "busy"' + msgSuffix);
+    return false;
+  }
+  return true;
+}
+function atcb_validate_organizer(data, msgPrefix, i, msgSuffix) {
+  if (data.dates[`${i}`].organizer != null && data.dates[`${i}`].organizer != '') {
+    const organizerParts = data.dates[`${i}`].organizer.split('|');
+    if (
+      organizerParts.length != 2 ||
+      organizerParts[0].length > 50 ||
+      organizerParts[1].length > 80 ||
+      !atcb_validEmail(organizerParts[1])
+    ) {
+      console.error(
+        msgPrefix +
+          ' failed: organizer needs to match the schema "NAME|EMAIL" with a valid email address' +
+          msgSuffix
+      );
       return false;
     }
   }
-  // validate date
+  return true;
+}
+function atcb_validate_uid(data, msgPrefix, i, msgSuffix) {
+  if (!/^(\w|-){1,254}$/.test(data.dates[`${i}`].uid)) {
+    console.warn(
+      msgPrefix +
+        ': UID not valid. May only contain alpha, digits, and dashes; and be less than 255 characters. Falling back to an automated value!' +
+        msgSuffix
+    );
+    data.dates[`${i}`].uid = atcb_generate_uuid();
+  }
+  if (
+    !/^[0-9a-f]{8}-[0-9a-f]{4}-[0-5][0-9a-f]{3}-[089ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(
+      data.dates[`${i}`].uid
+    )
+  ) {
+    console.warn(
+      msgPrefix +
+        ': UID is highly recommended to be a hex-encoded random Universally Unique Identifier (UUID)!' +
+        msgSuffix
+    );
+  }
+  return true;
+}
+function atcb_validate_sequence(data, msgPrefix, i, msgSuffix) {
+  if (!/^\d+$/.test(data.dates[`${i}`].sequence)) {
+    console.log(msgPrefix + ': sequence needs to be a number. Used the default 0 instead' + msgSuffix);
+    data.dates[`${i}`].sequence = 0;
+  }
+  return true;
+}
+function atcb_validate_timezone(data, msgPrefix, i, msgSuffix) {
+  if (data.dates[`${i}`].timeZone != null && data.dates[`${i}`].timeZone != '') {
+    const validTimeZones = tzlib_get_timezones();
+    if (!validTimeZones.includes(data.dates[`${i}`].timeZone)) {
+      console.error(msgPrefix + ' failed: invalid time zone given' + msgSuffix);
+      return false;
+    }
+  }
+  return true;
+}
+function atcb_validate_datetime(data, msgPrefix, i, msgSuffix) {
   const dates = ['startDate', 'endDate'];
   const newDate = dates;
   if (
     !dates.every(function (date) {
-      if (data[`${date}`].length !== 10) {
-        console.error(msgPrefix + ' failed: date misspelled [-> YYYY-MM-DD]');
+      if (data.dates[`${i}`][`${date}`].length !== 10) {
+        console.error(msgPrefix + ' failed: date misspelled [-> YYYY-MM-DD]' + msgSuffix);
         return false;
       }
-      const dateParts = data[`${date}`].split('-');
+      const dateParts = data.dates[`${i}`][`${date}`].split('-');
       if (dateParts.length < 3 || dateParts.length > 3) {
-        console.error(msgPrefix + ' failed: date misspelled [' + date + ': ' + data[`${date}`] + ']');
+        console.error(
+          msgPrefix +
+            ' failed: date misspelled [' +
+            date +
+            ': ' +
+            data.dates[`${i}`][`${date}`] +
+            ']' +
+            msgSuffix
+        );
         return false;
       }
       newDate[`${date}`] = new Date(dateParts[0], dateParts[1] - 1, dateParts[2]);
@@ -2170,19 +967,25 @@ function atcb_validate(data) {
   ) {
     return false;
   }
-  // validate time
   const times = ['startTime', 'endTime'];
   if (
     !times.every(function (time) {
-      if (data[`${time}`] != null) {
-        if (data[`${time}`].length !== 5) {
-          console.error(msgPrefix + ' failed: time misspelled [-> HH:MM]');
+      if (data.dates[`${i}`][`${time}`] != null) {
+        if (data.dates[`${i}`][`${time}`].length !== 5) {
+          console.error(msgPrefix + ' failed: time misspelled [-> HH:MM]' + msgSuffix);
           return false;
         }
-        const timeParts = data[`${time}`].split(':');
-        // validate the time parts
+        const timeParts = data.dates[`${i}`][`${time}`].split(':');
         if (timeParts.length < 2 || timeParts.length > 2) {
-          console.error(msgPrefix + ' failed: time misspelled [' + time + ': ' + data[`${time}`] + ']');
+          console.error(
+            msgPrefix +
+              ' failed: time misspelled [' +
+              time +
+              ': ' +
+              data.dates[`${i}`][`${time}`] +
+              ']' +
+              msgSuffix
+          );
           return false;
         }
         if (timeParts[0] > 23) {
@@ -2192,7 +995,8 @@ function atcb_validate(data) {
               time +
               ': ' +
               timeParts[0] +
-              ']'
+              ']' +
+              msgSuffix
           );
           return false;
         }
@@ -2203,11 +1007,11 @@ function atcb_validate(data) {
               time +
               ': ' +
               timeParts[1] +
-              ']'
+              ']' +
+              msgSuffix
           );
           return false;
         }
-        // update the date with the time for further validation steps
         if (time == 'startTime') {
           newDate.startDate = new Date(
             newDate.startDate.getTime() + timeParts[0] * 3600000 + timeParts[1] * 60000
@@ -2224,21 +1028,30 @@ function atcb_validate(data) {
   ) {
     return false;
   }
-  if ((data.startTime != null && data.endTime == null) || (data.startTime == null && data.endTime != null)) {
-    console.error(msgPrefix + ' failed: if you set a starting time, you also need to define an end time');
+  if (
+    (data.dates[`${i}`].startTime != null && data.dates[`${i}`].endTime == null) ||
+    (data.dates[`${i}`].startTime == null && data.dates[`${i}`].endTime != null)
+  ) {
+    console.error(
+      msgPrefix + ' failed: if you set a starting time, you also need to define an end time' + msgSuffix
+    );
     return false;
   }
-  // validate whether end is not before start
   if (newDate.endDate < newDate.startDate) {
-    console.error(msgPrefix + ' failed: end date before start date');
+    console.error(msgPrefix + ' failed: end date before start date' + msgSuffix);
     return false;
   }
-  // validate any given RRULE
+  return true;
+}
+function atcb_validate_rrule(data, msgPrefix) {
+  if (data.recurrence != null && data.recurrence != '' && data.dates.length > 1) {
+    console.error(msgPrefix + ' failed: RRULE and multi-date set at the same time');
+    return false;
+  }
   if (data.recurrence != null && data.recurrence != '' && !/^RRULE:[\w=;,:+-/\\]+$/i.test(data.recurrence)) {
     console.error(msgPrefix + ' failed: RRULE data misspelled');
     return false;
   }
-  // also validate the more easy recurrence settings, since any error there would be also hidden in the RRULE
   if (
     data.recurrence_interval != null &&
     data.recurrence_interval != '' &&
@@ -2291,21 +1104,137 @@ function atcb_validate(data) {
     console.error(msgPrefix + ' failed: recurrence data (weekstart) misspelled');
     return false;
   }
-  // on passing the validation, return true
   return true;
 }
 
-// GENERATE THE ACTUAL BUTTON
-// helper function to generate the labels for the button and list options
-function atcb_generate_label(data, parent, type, icon = false, text = '', oneOption = false) {
-  let defaultTriggerText = atcb_translate_hook('Add to Calendar', data.language, data);
-  // if there is only 1 option, we use the trigger text on the option label. Therefore, forcing it here
-  if (oneOption && text == '') {
-    text = defaultTriggerText;
+
+function atcb_toggle(action, data = '', button = '', keyboardTrigger = false, generatedButton = false) {
+  if (action == 'open') {
+    atcb_open(data, button, keyboardTrigger, generatedButton);
+  } else if (
+    action == 'close' ||
+    button.classList.contains('atcb-active') ||
+    document.querySelector('.atcb-active-modal')
+  ) {
+    atcb_close(keyboardTrigger);
+  } else {
+    atcb_open(data, button, keyboardTrigger, generatedButton);
   }
+}
+function atcb_open(data, button, keyboardTrigger = false, generatedButton = false) {
+  if (document.querySelector('.atcb-list') || document.querySelector('.atcb-modal')) return;
+  const list = atcb_generate_dropdown_list(data);
+  const listWrapper = document.createElement('div');
+  listWrapper.classList.add('atcb-list-wrapper');
+  if (button) {
+    button.classList.add('atcb-active');
+    if (data.listStyle === 'modal') {
+      button.classList.add('atcb-modal-style');
+      list.classList.add('atcb-modal');
+    } else {
+      listWrapper.appendChild(list);
+      listWrapper.classList.add('atcb-dropdown');
+      if (data.listStyle === 'overlay') {
+        listWrapper.classList.add('atcb-dropoverlay');
+      }
+    }
+    if (generatedButton) {
+      list.classList.add('atcb-generated-button'); 
+    }
+  } else {
+    list.classList.add('atcb-modal');
+  }
+  const bgOverlay = atcb_generate_bg_overlay(data.listStyle, data.trigger, data.lightMode, data.background);
+  const atcbL = document.createElement('div');
+  atcbL.id = 'add-to-calendar-button-reference';
+  atcbL.style.width = '150px';
+  atcbL.style.padding = '10px 0';
+  atcbL.style.height = 'auto';
+  atcbL.style.transform = 'translate3d(0, 0, 0)';
+  atcbL.style.zIndex = '15000000';
+  setTimeout(() => {
+    atcbL.innerHTML =
+      '<a href="https://add-to-calendar-button.com" target="_blank" rel="noopener">' +
+      atcbIcon['atcb'] +
+      '</a>';
+  }, 500);
+  if (data.listStyle === 'modal') {
+    document.body.appendChild(bgOverlay);
+    bgOverlay.appendChild(list);
+    atcbL.style.position = 'fixed';
+    atcbL.style.bottom = '15px';
+    atcbL.style.right = '30px';
+    atcb_manage_body_scroll();
+  } else {
+    atcbL.style.position = 'absolute';
+    document.body.appendChild(listWrapper);
+    listWrapper.appendChild(list);
+    if (data.buttonStyle != '') {
+      listWrapper.classList.add('atcb-style-' + data.buttonStyle);
+    }
+    document.body.appendChild(bgOverlay);
+    if (data.listStyle === 'dropdown-static') {
+      atcb_position_list(button, listWrapper, true);
+    } else {
+      atcb_position_list(button, listWrapper);
+    }
+  }
+  atcb_set_sizes(list, data.sizes);
+  atcb_set_fullsize(bgOverlay);
+  if (keyboardTrigger) {
+    list.firstChild.focus();
+  } else {
+    list.firstChild.focus({ preventScroll: true });
+  }
+  list.firstChild.blur();
+}
+function atcb_close(keyboardTrigger = false) {
+  const allModals = document.querySelectorAll('.atcb-modal[data-modal-nr]');
+  if (allModals.length > 1) {
+    document.querySelectorAll('.atcb-modal[data-modal-nr="' + allModals.length + '"]')[0].remove();
+    const nextModal = document.querySelectorAll(
+      '.atcb-modal[data-modal-nr="' + (allModals.length - 1) + '"]'
+    )[0];
+    nextModal.style.display = 'block';
+    let focusEl = nextModal;
+    const availableButtons = nextModal.getElementsByTagName('button');
+    if (availableButtons.length > 0) {
+      focusEl = availableButtons[0];
+    }
+    focusEl.focus();
+    if (!keyboardTrigger) {
+      focusEl.blur();
+    }
+  } else {
+    const newFocusEl = document.querySelector('.atcb-active, .atcb-active-modal');
+    if (newFocusEl) {
+      newFocusEl.focus({ preventScroll: true });
+      if (!keyboardTrigger) {
+        newFocusEl.blur();
+      }
+    }
+    Array.from(document.querySelectorAll('.atcb-active')).forEach((button) => {
+      button.classList.remove('atcb-active');
+    });
+    Array.from(document.querySelectorAll('.atcb-active-modal')).forEach((button) => {
+      button.classList.remove('atcb-active-modal');
+    });
+    document.body.classList.remove('atcb-modal-no-scroll');
+    Array.from(document.querySelectorAll('.atcb-list-wrapper'))
+      .concat(Array.from(document.querySelectorAll('.atcb-list')))
+      .concat(Array.from(document.querySelectorAll('.atcb-modal[data-modal-nr]')))
+      .concat(Array.from(document.querySelectorAll('#add-to-calendar-button-reference')))
+      .concat(Array.from(document.querySelectorAll('#atcb-bgoverlay')))
+      .forEach((el) => el.remove());
+  }
+}
+
+
+function atcb_generate_label(data, parent, type, icon = false, text = '', oneOption = false) {
   switch (type) {
     case 'trigger':
     default:
+      parent.id = data.identifier;
       if (data.trigger === 'click') {
         parent.addEventListener('click', (event) => {
           event.preventDefault();
@@ -2324,128 +1253,95 @@ function atcb_generate_label(data, parent, type, icon = false, text = '', oneOpt
           })
         );
       }
-      parent.id = data.identifier;
-      text = text || defaultTriggerText;
-      break;
-    case 'apple':
-      parent.addEventListener(
-        'click',
-        atcb_debounce(() => {
-          oneOption ? parent.blur() : atcb_toggle('close');
-          atcb_generate_ical(data);
-        })
-      );
-      parent.id = data.identifier + '-apple';
-      text = text || 'Apple';
-      break;
-    case 'google':
-      parent.addEventListener(
-        'click',
-        atcb_debounce(() => {
-          oneOption ? parent.blur() : atcb_toggle('close');
-          atcb_generate_google(data);
-        })
-      );
-      parent.id = data.identifier + '-google';
-      text = text || 'Google';
-      break;
-    case 'ical':
-      parent.addEventListener(
-        'click',
-        atcb_debounce(() => {
-          oneOption ? parent.blur() : atcb_toggle('close');
-          atcb_generate_ical(data);
-        })
-      );
-      parent.id = data.identifier + '-ical';
-      text = text || atcb_translate_hook('iCal File', data.language, data);
-      break;
-    case 'msteams':
-      parent.addEventListener(
-        'click',
-        atcb_debounce(() => {
-          oneOption ? parent.blur() : atcb_toggle('close');
-          atcb_generate_teams(data);
-        })
-      );
-      parent.id = data.identifier + '-msteams';
-      text = text || 'Microsoft Teams';
-      break;
-    case 'ms365':
-      parent.addEventListener(
-        'click',
-        atcb_debounce(() => {
-          oneOption ? parent.blur() : atcb_toggle('close');
-          atcb_generate_microsoft(data, '365');
-        })
-      );
-      parent.id = data.identifier + '-ms365';
-      text = text || 'Microsoft 365';
-      break;
-    case 'outlookcom':
-      parent.addEventListener(
-        'click',
-        atcb_debounce(() => {
-          oneOption ? parent.blur() : atcb_toggle('close');
-          atcb_generate_microsoft(data, 'outlook');
-        })
-      );
-      parent.id = data.identifier + '-outlook';
-      text = text || 'Outlook.com';
-      break;
-    case 'yahoo':
-      parent.addEventListener(
-        'click',
-        atcb_debounce(() => {
-          oneOption ? parent.blur() : atcb_toggle('close');
-          atcb_generate_yahoo(data);
-        })
-      );
-      parent.id = data.identifier + '-yahoo';
-      text = text || 'Yahoo';
-      break;
-    case 'close':
-      parent.addEventListener(
-        'click',
-        atcb_debounce(() => {
-          oneOption ? parent.blur() : atcb_toggle('close');
-        })
-      );
-      parent.addEventListener(
-        'focus',
-        atcb_debounce(() => atcb_close(false))
-      );
-      parent.id = data.identifier + '-close';
-      text = atcb_translate_hook('Close', data.language, data);
-      break;
-  }
-  // override the id for the oneOption button, since the button always needs to have the button id
-  if (oneOption) {
-    parent.id = data.identifier;
-  }
-  // support keyboard input
-  if (!oneOption && type === 'trigger') {
-    parent.addEventListener(
-      'keyup',
-      atcb_debounce_leading((event) => {
+      parent.addEventListener('keyup', function (event) {
         if (event.key == 'Enter') {
           event.preventDefault();
           atcb_toggle('auto', data, parent, true, true);
         }
-      })
-    );
-  } else {
-    parent.addEventListener(
-      'keyup',
-      atcb_debounce_leading((event) => {
+      });
+      break;
+    case 'apple':
+    case 'google':
+    case 'ical':
+    case 'msteams':
+    case 'ms365':
+    case 'outlookcom':
+    case 'yahoo':
+      parent.id = data.identifier + '-' + type;
+      parent.addEventListener(
+        'click',
+        atcb_debounce(() => {
+          oneOption ? parent.blur() : atcb_toggle('close');
+          atcb_generate_links(type, data);
+        })
+      );
+      parent.addEventListener('keyup', function (event) {
         if (event.key == 'Enter') {
           event.preventDefault();
-          parent.click();
+          oneOption ? parent.blur() : atcb_toggle('close');
+          atcb_generate_links(type, data, 'all', true);
         }
-      })
-    );
+      });
+      break;
+    case 'close':
+      parent.id = data.identifier + '-close';
+      parent.addEventListener(
+        'click',
+        atcb_debounce(() => {
+          atcb_toggle('close');
+        })
+      );
+      parent.addEventListener('keyup', function (event) {
+        if (event.key == 'Enter') {
+          event.preventDefault();
+          atcb_toggle('close', data, 'all', true);
+        }
+      });
+      break;
   }
-  // add icon and text label
+  if (oneOption) {
+    parent.id = data.identifier;
+  }
+  atcb_generate_label_text(data, parent, type, icon, text, oneOption);
+}
+function atcb_generate_label_text(data, parent, type, icon, text, oneOption) {
+  const defaultTriggerText = atcb_translate_hook('Add to Calendar', data);
+  if (oneOption && text == '') {
+    text = defaultTriggerText;
+  }
+  switch (type) {
+    case 'trigger':
+    default:
+      text = text || defaultTriggerText;
+      break;
+    case 'apple':
+      text = text || 'Apple';
+      break;
+    case 'google':
+      text = text || 'Google';
+      break;
+    case 'ical':
+      text = text || atcb_translate_hook('iCal File', data);
+      break;
+    case 'msteams':
+      text = text || 'Microsoft Teams';
+      break;
+    case 'ms365':
+      text = text || 'Microsoft 365';
+      break;
+    case 'outlookcom':
+      text = text || 'Outlook.com';
+      break;
+    case 'yahoo':
+      text = text || 'Yahoo';
+      break;
+    case 'close':
+      text = atcb_translate_hook('Close', data);
+      break;
+  }
+  if (data.buttonStyle == 'date' && (type == 'trigger' || oneOption)) {
+    return;
+  }
   if (icon) {
     const iconEl = document.createElement('span');
     iconEl.classList.add('atcb-icon');
@@ -2457,95 +1353,100 @@ function atcb_generate_label(data, parent, type, icon = false, text = '', oneOpt
   textEl.textContent = text;
   parent.appendChild(textEl);
 }
-
-// generate the triggering button
-function atcb_generate(button, data) {
-  // clean the placeholder
+function atcb_generate_button(button, data) {
   button.textContent = '';
-  // create schema.org data, if possible (https://schema.org/Event)
-  // see https://developers.google.com/search/docs/advanced/structured-data/event for more details on how this affects Google search results
-  if (data.name && data.location && data.startDate) {
-    const schemaEl = document.createElement('script');
-    schemaEl.type = 'application/ld+json';
+  if (data.richData && data.name && data.dates[0].location && data.dates[0].startDate) {
+    atcb_generate_rich_data(data, button);
+  }
+  const buttonTriggerWrapper = document.createElement('div');
+  buttonTriggerWrapper.classList.add('atcb-button-wrapper');
+  buttonTriggerWrapper.classList.add('atcb-' + data.lightMode);
+  if (data.rtl) {
+    buttonTriggerWrapper.classList.add('atcb-rtl');
+  }
+  button.appendChild(buttonTriggerWrapper);
+  atcb_set_sizes(buttonTriggerWrapper, data.sizes);
+  const buttonTrigger = document.createElement('button');
+  buttonTrigger.classList.add('atcb-button');
+  if (data.trigger === 'click') {
+    buttonTrigger.classList.add('atcb-click');
+  }
+  if (data.listStyle === 'overlay') {
+    buttonTrigger.classList.add('atcb-dropoverlay');
+  }
+  buttonTrigger.type = 'button';
+  buttonTriggerWrapper.appendChild(buttonTrigger);
+  if (data.buttonStyle == 'date') {
+    atcb_generate_date_button(data, buttonTrigger);
+  }
+  if (data.options.length === 1) {
+    buttonTrigger.classList.add('atcb-single');
+    atcb_generate_label(data, buttonTrigger, data.options[0], true, data.label, true);
+  } else {
+    atcb_generate_label(data, buttonTrigger, 'trigger', true, data.label);
+    const buttonDropdownAnchor = document.createElement('div');
+    buttonDropdownAnchor.classList.add('atcb-dropdown-anchor');
+    buttonTrigger.appendChild(buttonDropdownAnchor);
+  }
+  const btnCheck = document.createElement('div');
+  btnCheck.classList.add('atcb-checkmark');
+  btnCheck.innerHTML = atcbIcon['checkmark'];
+  buttonTrigger.appendChild(btnCheck);
+  button.classList.remove('atcb');
+  button.classList.add('atcb-initialized');
+  if (data.inline) {
+    button.style.display = 'inline-block';
+  } else {
+    button.style.display = 'block';
+  }
+  console.log('Add to Calendar Button "' + data.identifier + '" created');
+}
+function atcb_generate_rich_data(data, button) {
+  const schemaEl = document.createElement('script');
+  schemaEl.type = 'application/ld+json';
+  const schemaContentMulti = [];
+  if (data.dates.length > 1) {
+    const parts = [];
+    parts.push('"@context":"https://schema.org"');
+    parts.push('"@type":"EventSeries"');
+    parts.push('"@id":"' + data.name.replace(/\s/g, '') + '"');
+    parts.push('"name":"' + data.name + '",');
+    schemaContentMulti.push('{\r\n' + parts.join(',\r\n') + '\r\n');
+  }
+  const schemaContentFull = [];
+  for (let i = 0; i < data.dates.length; i++) {
     const schemaContent = [];
-    schemaContent.push('{\r\n"event": {\r\n"@context":"https://schema.org",\r\n"@type":"Event"');
-    if (data.status == 'CANCELLED') {
+    schemaContent.push('"@context":"https://schema.org"');
+    schemaContent.push('"@type":"Event"');
+    if (data.dates.length > 1) {
+      schemaContent.push('"@id":"' + data.name.replace(/\s/g, '') + '-' + (i + 1) + '"');
+    }
+    if (data.dates[`${i}`].status == 'CANCELLED') {
       schemaContent.push('"eventStatus":"https://schema.org/EventCancelled"');
     }
-    schemaContent.push('"name":"' + data.name + '"');
-    if (data.descriptionHtmlFree) {
-      schemaContent.push('"description":"' + data.descriptionHtmlFree + '"');
+    schemaContent.push('"name":"' + data.dates[`${i}`].name + '"');
+    if (data.dates[`${i}`].descriptionHtmlFree) {
+      schemaContent.push('"description":"' + data.dates[`${i}`].descriptionHtmlFree + '"');
     }
-    const formattedDate = atcb_generate_time(data, 'delimiters', 'general', true);
+    const formattedDate = atcb_generate_time(data.dates[`${i}`], 'delimiters', 'general', true);
     schemaContent.push('"startDate":"' + formattedDate.start + '"');
-    schemaContent.push('"duration":"' + formattedDate.duration + '"');
+    if (formattedDate.duration != null) {
+      schemaContent.push('"duration":"' + formattedDate.duration + '"');
+    }
+    schemaContent.push(
+      data.dates[`${i}`].location.startsWith('http')
+        ? '"eventAttendanceMode":"https://schema.org/OnlineEventAttendanceMode",\r\n"location": {\r\n"@type":"VirtualLocation",\r\n"url":"' +
+            data.dates[`${i}`].location +
+            '"\r\n}'
+        : '"location":"' + data.dates[`${i}`].location + '"'
+    );
     if (data.recurrence != null && data.recurrence != '') {
-      schemaContent.push('"eventSchedule": { "@type": "Schedule"');
-      if (data.timeZone != null && data.timeZone != '') {
-        schemaContent.push('"scheduleTimezone":"' + data.timeZone + '"');
-      }
-      const repeatFrequency = 'P' + data.recurrence_interval + data.recurrence_frequency.substr(0, 1);
-      schemaContent.push('"repeatFrequency":"' + repeatFrequency + '"');
-      if (data.recurrence_byDay != null && data.recurrence_byDay != '') {
-        const byDayString = (function () {
-          if (/\d/.test(data.recurrence_byDay)) {
-            return '"' + data.recurrence_byDay + '"';
-          } else {
-            const byDays = data.recurrence_byDay.split(',');
-            const helperMap = {
-              MO: 'https://schema.org/Monday',
-              TU: 'https://schema.org/Tuesday',
-              WE: 'https://schema.org/Wednesday',
-              TH: 'https://schema.org/Thursday',
-              FR: 'https://schema.org/Friday',
-              SA: 'https://schema.org/Saturday',
-              SU: 'https://schema.org/Sunday',
-            };
-            const output = [];
-            for (let i = 0; i < byDays.length; i++) {
-              output.push('"' + helperMap[byDays[`${i}`]] + '"');
-            }
-            return '[' + output.join(',') + ']';
-          }
-        })();
-        schemaContent.push('"byDay":' + byDayString);
-      }
-      if (data.recurrence_byMonth != null && data.recurrence_byMonth != '') {
-        const byMonthString = data.recurrence_byMonth.includes(',')
-          ? '[' + data.recurrence_byMonth + ']'
-          : data.recurrence_byMonth;
-        schemaContent.push('"byMonth":"' + byMonthString + '"');
-      }
-      if (data.recurrence_byMonthDay != null && data.recurrence_byMonthDay != '') {
-        const byMonthDayString = data.recurrence_byMonthDay.includes(',')
-          ? '[' + data.recurrence_byMonthDay + ']'
-          : data.recurrence_byMonthDay;
-        schemaContent.push('"byMonthDay":"' + byMonthDayString + '"');
-      }
-      if (data.recurrence_count != null && data.recurrence_count != '') {
-        schemaContent.push('"repeatCount":"' + data.recurrence_count + '"');
-      }
-      if (data.recurrence_until != null && data.recurrence_until != '') {
-        schemaContent.push('"endDate":"' + data.recurrence_until + '"');
-      }
-      if (data.startTime != null && data.startTime != '' && data.endTime != null && data.endTime != '') {
-        schemaContent.push('"startTime":"' + data.startTime + ':00"');
-        schemaContent.push('"endTime":"' + data.endTime + ':00"');
-        schemaContent.push('"duration":"' + formattedDate.duration + '"');
-      }
-      schemaContent.push('"startDate":"' + data.startDate + '" }');
+      schemaContent.push(...atcb_generate_rich_data_recurrence(data, formattedDate));
     } else {
       schemaContent.push('"endDate":"' + formattedDate.end + '"');
     }
-    schemaContent.push(
-      data.location.startsWith('http')
-        ? '"eventAttendanceMode":"https://schema.org/OnlineEventAttendanceMode",\r\n"location": {\r\n"@type":"VirtualLocation",\r\n"url":"' +
-            data.location +
-            '"\r\n}'
-        : '"location":"' + data.location + '"'
-    );
-    if (data.organizer != null && data.organizer != '') {
-      const organizerParts = data.organizer.split('|');
+    if (data.dates[`${i}`].organizer != null && data.dates[`${i}`].organizer != '') {
+      const organizerParts = data.dates[`${i}`].organizer.split('|');
       schemaContent.push(
         '"organizer":{\r\n"@type":"Person",\r\n"name":"' +
           organizerParts[0] +
@@ -2568,56 +1469,77 @@ function atcb_generate(button, data) {
       imageData.push('"https://add-to-calendar-button.com/demo_assets/img/4x3.png"');
       imageData.push('"https://add-to-calendar-button.com/demo_assets/img/16x9.png"');
     }
-    schemaContent.push('"image":[\r\n' + imageData.join(',\r\n') + ']');
-    schemaEl.textContent = schemaContent.join(',\r\n') + '\r\n}\r\n}';
-    button.appendChild(schemaEl);
+    if (imageData.length > 0) {
+      schemaContent.push('"image":[\r\n' + imageData.join(',\r\n') + ']');
+    }
+    schemaContentFull.push('{\r\n' + schemaContent.join(',\r\n') + '\r\n}');
   }
-  // generate the wrapper div
-  const buttonTriggerWrapper = document.createElement('div');
-  buttonTriggerWrapper.classList.add('atcb-button-wrapper');
-  buttonTriggerWrapper.classList.add('atcb-' + data.lightMode);
-  if (data.rtl) {
-    buttonTriggerWrapper.classList.add('atcb-rtl');
-  }
-  buttonTriggerWrapper.style.fontSize = data.size + 'px';
-  button.appendChild(buttonTriggerWrapper);
-  // generate the button trigger div
-  const buttonTrigger = document.createElement('button');
-  buttonTrigger.classList.add('atcb-button');
-  if (data.trigger === 'click') {
-    buttonTrigger.classList.add('atcb-click');
-  }
-  if (data.listStyle === 'overlay') {
-    buttonTrigger.classList.add('atcb-dropoverlay');
-  }
-  buttonTrigger.type = 'button';
-  buttonTriggerWrapper.appendChild(buttonTrigger);
-  // generate the label incl. eventListeners
-  // if there is only 1 calendar option, we directly show this at the button, but with the trigger's label text
-  if (data.options.length === 1) {
-    buttonTrigger.classList.add('atcb-single');
-    atcb_generate_label(data, buttonTrigger, data.options[0], true, data.label, true);
+  if (data.dates.length > 1) {
+    schemaEl.textContent =
+      schemaContentMulti.join(',\r\n') + '"subEvents":[\r\n' + schemaContentFull.join(',\r\n') + '\r\n]\r\n}';
   } else {
-    atcb_generate_label(data, buttonTrigger, 'trigger', true, data.label);
-    // create an empty anchor div to place the dropdown, while the position can be defined via CSS
-    const buttonDropdownAnchor = document.createElement('div');
-    buttonDropdownAnchor.classList.add('atcb-dropdown-anchor');
-    buttonTrigger.appendChild(buttonDropdownAnchor);
+    schemaEl.textContent = schemaContentFull[0];
   }
-  // update the placeholder class to prevent multiple initializations
-  button.classList.remove('atcb');
-  button.classList.add('atcb-initialized');
-  // show the placeholder div
-  if (data.inline) {
-    button.style.display = 'inline-block';
-  } else {
-    button.style.display = 'block';
-  }
-  // console log
-  console.log('Add to Calendar Button "' + data.identifier + '" created');
+  button.appendChild(schemaEl);
 }
-
-// generate the dropdown list (can also appear wihtin a modal, if option is set)
+function atcb_generate_rich_data_recurrence(data, formattedDate) {
+  const schemaRecurrenceContent = [];
+  schemaRecurrenceContent.push('"eventSchedule": { "@type": "Schedule"');
+  if (data.dates[0].timeZone != null && data.dates[0].timeZone != '') {
+    schemaRecurrenceContent.push('"scheduleTimezone":"' + data.dates[0].timeZone + '"');
+  }
+  const repeatFrequency = 'P' + data.recurrence_interval + data.recurrence_frequency.substr(0, 1);
+  schemaRecurrenceContent.push('"repeatFrequency":"' + repeatFrequency + '"');
+  if (data.recurrence_byDay != null && data.recurrence_byDay != '') {
+    const byDayString = (function () {
+      if (/\d/.test(data.recurrence_byDay)) {
+        return '"' + data.recurrence_byDay + '"';
+      } else {
+        const byDays = data.recurrence_byDay.split(',');
+        const helperMap = {
+          MO: 'https://schema.org/Monday',
+          TU: 'https://schema.org/Tuesday',
+          WE: 'https://schema.org/Wednesday',
+          TH: 'https://schema.org/Thursday',
+          FR: 'https://schema.org/Friday',
+          SA: 'https://schema.org/Saturday',
+          SU: 'https://schema.org/Sunday',
+        };
+        const output = [];
+        for (let i = 0; i < byDays.length; i++) {
+          output.push('"' + helperMap[byDays[`${i}`]] + '"');
+        }
+        return '[' + output.join(',') + ']';
+      }
+    })();
+    schemaRecurrenceContent.push('"byDay":' + byDayString);
+  }
+  if (data.recurrence_byMonth != null && data.recurrence_byMonth != '') {
+    const byMonthString = data.recurrence_byMonth.includes(',')
+      ? '[' + data.recurrence_byMonth + ']'
+      : data.recurrence_byMonth;
+    schemaRecurrenceContent.push('"byMonth":"' + byMonthString + '"');
+  }
+  if (data.recurrence_byMonthDay != null && data.recurrence_byMonthDay != '') {
+    const byMonthDayString = data.recurrence_byMonthDay.includes(',')
+      ? '[' + data.recurrence_byMonthDay + ']'
+      : data.recurrence_byMonthDay;
+    schemaRecurrenceContent.push('"byMonthDay":"' + byMonthDayString + '"');
+  }
+  if (data.recurrence_count != null && data.recurrence_count != '') {
+    schemaRecurrenceContent.push('"repeatCount":"' + data.recurrence_count + '"');
+  }
+  if (data.recurrence_until != null && data.recurrence_until != '') {
+    schemaRecurrenceContent.push('"endDate":"' + data.recurrence_until + '"');
+  }
+  if (data.startTime != null && data.startTime != '' && data.endTime != null && data.endTime != '') {
+    schemaRecurrenceContent.push('"startTime":"' + data.startTime + ':00"');
+    schemaRecurrenceContent.push('"endTime":"' + data.endTime + ':00"');
+    schemaRecurrenceContent.push('"duration":"' + formattedDate.duration + '"');
+  }
+  schemaRecurrenceContent.push('"startDate":"' + data.startDate + '" }');
+  return schemaRecurrenceContent;
+}
 function atcb_generate_dropdown_list(data) {
   const optionsList = document.createElement('div');
   optionsList.classList.add('atcb-list');
@@ -2625,8 +1547,6 @@ function atcb_generate_dropdown_list(data) {
   if (data.rtl) {
     optionsList.classList.add('atcb-rtl');
   }
-  optionsList.style.fontSize = data.size + 'px';
-  // generate the list items
   let listCount = 0;
   data.options.forEach(function (option) {
     const optionItem = document.createElement('div');
@@ -2635,10 +1555,8 @@ function atcb_generate_dropdown_list(data) {
     listCount++;
     optionItem.dataset.optionNumber = listCount;
     optionsList.appendChild(optionItem);
-    // generate the label incl. individual eventListener
     atcb_generate_label(data, optionItem, option, true, data.optionLabels[listCount - 1]);
   });
-  // in the modal case, we also render a close option
   if (data.listStyle === 'modal') {
     const optionItem = document.createElement('div');
     optionItem.classList.add('atcb-list-item', 'atcb-list-item-close');
@@ -2648,8 +1566,6 @@ function atcb_generate_dropdown_list(data) {
   }
   return optionsList;
 }
-
-// create the background overlay, which also acts as trigger to close any dropdowns
 function atcb_generate_bg_overlay(listStyle = 'dropdown', trigger = '', lightMode = 'light', darken = true) {
   const bgOverlay = document.createElement('div');
   bgOverlay.id = 'atcb-bgoverlay';
@@ -2703,183 +1619,522 @@ function atcb_generate_bg_overlay(listStyle = 'dropdown', trigger = '', lightMod
       })
     );
   } else {
-    // if trigger is not set to 'click', we render a close icon, when hovering over the background
     bgOverlay.classList.add('atcb-click');
   }
   return bgOverlay;
 }
-
-// FUNCTIONS TO CONTROL THE INTERACTION
-function atcb_toggle(action, data = '', button = '', keyboardTrigger = false, generatedButton = false) {
-  // check for state and adjust accordingly
-  // action can be 'open', 'close', or 'auto'
-  if (action == 'open') {
-    atcb_open(data, button, keyboardTrigger, generatedButton);
-  } else if (
-    action == 'close' ||
-    button.classList.contains('atcb-active') ||
-    document.querySelector('.atcb-active-modal')
-  ) {
-    atcb_close(keyboardTrigger);
-  } else {
-    atcb_open(data, button, keyboardTrigger, generatedButton);
-  }
-}
-
-// show the dropdown list + background overlay
-function atcb_open(data, button, keyboardTrigger = false, generatedButton = false) {
-  // abort early if an add to calendar dropdown or modal already opened
-  if (document.querySelector('.atcb-list') || document.querySelector('.atcb-modal')) return;
-  // generate list and prepare wrapper
-  const list = atcb_generate_dropdown_list(data);
-  const listWrapper = document.createElement('div');
-  listWrapper.classList.add('atcb-list-wrapper');
-  // set list styles, set button to atcb-active and force modal listStyle if no button is set
-  if (button) {
-    button.classList.add('atcb-active');
-    if (data.listStyle === 'modal') {
-      button.classList.add('atcb-modal-style');
-      list.classList.add('atcb-modal');
+function atcb_create_modal(
+  data,
+  icon = '',
+  headline,
+  content = '',
+  buttons = [],
+  subEvents = [],
+  keyboardTrigger = false
+) {
+  const bgOverlay = (function () {
+    const el = document.getElementById('atcb-bgoverlay');
+    if (!el) {
+      return atcb_generate_bg_overlay('modal', 'click', data.lightMode);
     } else {
-      listWrapper.appendChild(list);
-      listWrapper.classList.add('atcb-dropdown');
-      if (data.listStyle === 'overlay') {
-        listWrapper.classList.add('atcb-dropoverlay');
+      return el;
+    }
+  })();
+  document.body.appendChild(bgOverlay);
+  const modalWrapper = document.createElement('div');
+  modalWrapper.classList.add('atcb-modal');
+  bgOverlay.appendChild(modalWrapper);
+  const modalCount = document.querySelectorAll('.atcb-modal').length;
+  modalWrapper.dataset.modalNr = modalCount;
+  modalWrapper.tabIndex = 0;
+  modalWrapper.focus({ preventScroll: true });
+  modalWrapper.blur();
+  const parentButton = document.getElementById(data.identifier);
+  if (parentButton != null) {
+    parentButton.classList.add('atcb-active-modal');
+  }
+  const modal = document.createElement('div');
+  modal.classList.add('atcb-modal-box');
+  modal.classList.add('atcb-' + data.lightMode);
+  if (data.rtl) {
+    modal.classList.add('atcb-rtl');
+  }
+  modalWrapper.appendChild(modal);
+  atcb_set_sizes(modal, data.sizes);
+  atcb_set_fullsize(bgOverlay);
+  if (icon != '') {
+    const modalIcon = document.createElement('div');
+    modalIcon.classList.add('atcb-modal-icon');
+    modalIcon.innerHTML = atcbIcon[`${icon}`];
+    modal.appendChild(modalIcon);
+  }
+  const modalHeadline = document.createElement('div');
+  modalHeadline.classList.add('atcb-modal-headline');
+  modalHeadline.textContent = headline;
+  modal.appendChild(modalHeadline);
+  if (content != '') {
+    const modalContent = document.createElement('div');
+    modalContent.classList.add('atcb-modal-content');
+    modalContent.innerHTML = content;
+    modal.appendChild(modalContent);
+  }
+  if (subEvents.length > 1) {
+    const modalsubEventsContent = document.createElement('div');
+    modalsubEventsContent.classList.add('atcb-modal-content');
+    modal.appendChild(modalsubEventsContent);
+    for (let i = 1; i < subEvents.length; i++) {
+      const modalSubEventButton = document.createElement('button');
+      modalSubEventButton.type = 'button';
+      modalSubEventButton.id = data.identifier + '-' + subEvents[0] + '-' + i;
+      if (atcbStates[`${data.identifier}`][`${subEvents[0]}`][i - 1] > 0) {
+        modalSubEventButton.classList.add('atcb-saved');
+      }
+      modalSubEventButton.classList.add('atcb-subevent-btn');
+      modalsubEventsContent.appendChild(modalSubEventButton);
+      atcb_generate_date_button(data, modalSubEventButton, i);
+      if (i == 1 && keyboardTrigger) {
+        modalSubEventButton.focus();
+      }
+      switch (subEvents[0]) {
+        case 'apple':
+        case 'google':
+        case 'ical':
+        case 'msteams':
+        case 'ms365':
+        case 'outlookcom':
+        case 'yahoo':
+          modalSubEventButton.addEventListener(
+            'click',
+            atcb_debounce(() => {
+              atcb_generate_links(subEvents[0], data, subEvents[`${i}`], keyboardTrigger, true);
+            })
+          );
+          break;
       }
     }
-    if (generatedButton) {
-      list.classList.add('atcb-generated-button'); // if the button has been generated by the script, we add some more specifics
-    }
-  } else {
-    list.classList.add('atcb-modal');
   }
-  // define background overlay
-  const bgOverlay = atcb_generate_bg_overlay(data.listStyle, data.trigger, data.lightMode, data.background);
-  // render the items depending on the liststyle
-  const atcbL = document.createElement('div');
-  atcbL.id = 'add-to-calendar-button-reference';
-  atcbL.style.width = '150px';
-  atcbL.style.padding = '10px 0';
-  atcbL.style.height = 'auto';
-  atcbL.style.transform = 'translate3d(0, 0, 0)';
-  atcbL.style.zIndex = '15000000';
-  setTimeout(() => {
-    atcbL.innerHTML =
-      '<a href="https://add-to-calendar-button.com" target="_blank" rel="noopener">' +
-      atcbIcon['atcb'] +
-      '</a>';
-  }, 500);
-  if (data.listStyle === 'modal') {
-    document.body.appendChild(bgOverlay);
-    bgOverlay.appendChild(list);
-    //document.body.appendChild(atcbL);
-    atcbL.style.position = 'fixed';
-    atcbL.style.bottom = '15px';
-    atcbL.style.right = '30px';
-    document.body.classList.add('atcb-modal-no-scroll');
-  } else {
-    atcbL.style.position = 'absolute';
-    document.body.appendChild(listWrapper);
-    listWrapper.appendChild(list);
-    listWrapper.classList.add('atcb-style-' + data.buttonStyle);
-    //document.body.appendChild(atcbL);
-    document.body.appendChild(bgOverlay);
-    if (data.listStyle === 'dropdown-static') {
-      // in the dropdown-static case, we do not dynamically adjust whether we show the dropdown upwards
-      atcb_position_list(button, listWrapper, true);
+  if (buttons.length == 0) {
+    buttons.push({ type: 'close', label: atcb_translate_hook('Close', data) });
+  }
+  const modalButtons = document.createElement('div');
+  modalButtons.classList.add('atcb-modal-buttons');
+  modal.appendChild(modalButtons);
+  buttons.forEach((button, index) => {
+    let modalButton;
+    if (button.href != null && button.href != '') {
+      modalButton = document.createElement('a');
+      modalButton.setAttribute('target', atcbDefaultTarget);
+      modalButton.setAttribute('href', button.href);
+      modalButton.setAttribute('rel', 'noopener');
     } else {
-      atcb_position_list(button, listWrapper);
+      modalButton = document.createElement('button');
+      modalButton.type = 'button';
+    }
+    modalButton.classList.add('atcb-modal-btn');
+    if (button.primary) {
+      modalButton.classList.add('atcb-modal-btn-primary');
+    }
+    if (button.label == null || button.label == '') {
+      button.label = atcb_translate_hook('Click me', data);
+    }
+    modalButton.textContent = button.label;
+    modalButtons.appendChild(modalButton);
+    if (index == 0 && subEvents.length < 2 && keyboardTrigger) {
+      modalButton.focus();
+    }
+    switch (button.type) {
+      default:
+      case 'close':
+        modalButton.addEventListener(
+          'click',
+          atcb_debounce(() => atcb_close())
+        );
+        modalButton.addEventListener('keyup', function (event) {
+          if (event.key == 'Enter') {
+            atcb_toggle('close', '', '', true);
+          }
+        });
+        break;
+      case 'yahoo2nd':
+        modalButton.addEventListener(
+          'click',
+          atcb_debounce(() => {
+            atcb_close();
+            atcb_subscribe_yahoo_modal_switch(data);
+          })
+        );
+        modalButton.addEventListener('keyup', function (event) {
+          if (event.key == 'Enter') {
+            atcb_toggle('close', '', '', true);
+            atcb_subscribe_yahoo_modal_switch(data, keyboardTrigger);
+          }
+        });
+        break;
+      case 'none':
+        break;
+    }
+  });
+  if (modalCount > 1) {
+    const prevModal = document.querySelectorAll('.atcb-modal[data-modal-nr="' + (modalCount - 1) + '"]')[0];
+    prevModal.style.display = 'none';
+  }
+  atcb_manage_body_scroll(modalWrapper);
+}
+function atcb_subscribe_yahoo_modal_switch(data, keyboardTrigger) {
+  atcb_set_fully_successful(data.identifier);
+  atcb_generate_links('yahoo2nd', data, 'all', keyboardTrigger);
+}
+function atcb_generate_date_button(data, parent, subEvent = 'all') {
+  if (subEvent != 'all') {
+    subEvent = parseInt(subEvent) - 1;
+  } else if (data.dates.length == 1) {
+    subEvent = 0;
+  }
+  const fullTimeInfo = (function () {
+    let startDateInfo, endDateInfo, timeZoneInfo;
+    if (subEvent == 'all') {
+      startDateInfo = new Date(atcb_generate_time(data.dates[0])['start']);
+      endDateInfo = new Date(atcb_generate_time(data.dates[data.dates.length - 1])['end']);
+      timeZoneInfo = data.dates[0].timeZone;
+    } else {
+      const formattedTime = atcb_generate_time(data.dates[`${subEvent}`]);
+      startDateInfo = new Date(formattedTime['start']);
+      endDateInfo = new Date(formattedTime['end']);
+      timeZoneInfo = data.dates[`${subEvent}`].timeZone;
+    }
+    let timeString = '';
+    const optionsDateTimeShort = {
+      timeZone: timeZoneInfo,
+      hour12: false,
+      year: 'numeric',
+      hour: 'numeric',
+      minute: '2-digit',
+    };
+    const optionsDateTimeLong = {
+      timeZone: timeZoneInfo,
+      hour12: false,
+      year: 'numeric',
+      month: 'numeric',
+      day: 'numeric',
+      hour: 'numeric',
+      minute: '2-digit',
+    };
+    const optionsTime = {
+      timeZone: timeZoneInfo,
+      hour12: false,
+      hour: 'numeric',
+      minute: '2-digit',
+    };
+    if (
+      startDateInfo.getFullYear() === endDateInfo.getFullYear() &&
+      startDateInfo.getMonth() === endDateInfo.getMonth() &&
+      startDateInfo.getDate() === endDateInfo.getDate()
+    ) {
+      timeString =
+        startDateInfo.toLocaleString(data.language, optionsDateTimeShort) +
+        ' - ' +
+        endDateInfo.toLocaleTimeString(data.language, optionsTime);
+    } else {
+      timeString =
+        startDateInfo.toLocaleString(data.language, optionsDateTimeShort) +
+        ' - ' +
+        endDateInfo.toLocaleString(data.language, optionsDateTimeLong);
+    }
+    if (timeZoneInfo != null) {
+      if (Intl.DateTimeFormat().resolvedOptions().timeZone != timeZoneInfo) {
+        timeString += '; ' + timeZoneInfo;
+      }
+    } else {
+      timeString += '; UTC';
+    }
+    return timeString;
+  })();
+  const hoverText = (function () {
+    if (subEvent != 'all' && data.dates[`${subEvent}`].status == 'CANCELLED') {
+      return (
+        atcb_translate_hook('Cancelled Date', data) +
+        '<br>' +
+        atcb_translate_hook('Delete from Calendar', data)
+      );
+    }
+    return '+ ' + atcb_translate_hook('Add to Calendar', data);
+  })();
+  const cancelledInfo = (function () {
+    if (subEvent != 'all' && data.dates[`${subEvent}`].status == 'CANCELLED') {
+      return atcb_translate_hook('Cancelled Date', data);
+    }
+    return '';
+  })();
+  if (subEvent == 'all') {
+    subEvent = 0;
+  }
+  const startDate = new Date(data.dates[`${subEvent}`].startDate);
+  const btnLeft = document.createElement('div');
+  btnLeft.classList.add('atcb-date-btn-left');
+  parent.appendChild(btnLeft);
+  const btnDay = document.createElement('div');
+  btnDay.classList.add('atcb-date-btn-day');
+  btnLeft.appendChild(btnDay);
+  const btnMonth = document.createElement('div');
+  btnMonth.classList.add('atcb-date-btn-month');
+  btnDay.textContent = String(startDate.getDate()).padStart(2, '0');
+  btnMonth.textContent = startDate.toLocaleString(data.language, {
+    month: 'short',
+  });
+  btnLeft.appendChild(btnMonth);
+  const btnRight = document.createElement('div');
+  btnRight.classList.add('atcb-date-btn-right');
+  parent.appendChild(btnRight);
+  const btnDetails = document.createElement('div');
+  btnDetails.classList.add('atcb-date-btn-details');
+  btnRight.appendChild(btnDetails);
+  const btnHeadline = document.createElement('div');
+  btnHeadline.classList.add('atcb-date-btn-headline');
+  btnHeadline.textContent = data.dates[`${subEvent}`].name;
+  btnDetails.appendChild(btnHeadline);
+  if ((data.location != null && data.location != '') || cancelledInfo == '') {
+    const btnLocation = document.createElement('div');
+    btnLocation.classList.add('atcb-date-btn-content');
+    btnDetails.appendChild(btnLocation);
+    if (cancelledInfo != '') {
+      btnLocation.textContent = cancelledInfo;
+      btnLocation.style.fontWeight = '600';
+      btnLocation.style.color = '#9c1a23';
+    } else {
+      btnLocation.classList.add('atcb-date-btn-content-location');
+      const btnLocationIcon = document.createElement('span');
+      btnLocationIcon.classList.add('atcb-date-btn-content-icon');
+      btnLocationIcon.innerHTML = atcbIcon['location'];
+      btnLocation.appendChild(btnLocationIcon);
+      const btnLocationText = document.createElement('span');
+      btnLocationText.textContent = data.location;
+      btnLocation.appendChild(btnLocationText);
     }
   }
-  // set overlay size just to be sure
-  atcb_set_fullsize(bgOverlay);
-  // give keyboard focus to first item in list, if not blocked, because there is definitely no keyboard trigger
-  if (keyboardTrigger) {
-    list.firstChild.focus();
-  } else {
-    list.firstChild.focus({ preventScroll: true });
+  const btnDateTime = document.createElement('div');
+  btnDateTime.classList.add('atcb-date-btn-content');
+  btnDetails.appendChild(btnDateTime);
+  const btnDateTimeIcon = document.createElement('span');
+  btnDateTimeIcon.classList.add('atcb-date-btn-content-icon');
+  btnDateTimeIcon.innerHTML = atcbIcon['ical'];
+  btnDateTime.appendChild(btnDateTimeIcon);
+  const btnDateTimeText = document.createElement('span');
+  btnDateTimeText.textContent = fullTimeInfo;
+  btnDateTime.appendChild(btnDateTimeText);
+  if (data.recurrence != null && data.recurrence != '') {
+    const recurSign = document.createElement('span');
+    recurSign.classList.add('atcb-date-btn-content-recurr-icon');
+    btnDateTime.appendChild(recurSign);
+    recurSign.innerHTML = '&#x27F3;';
   }
-  list.firstChild.blur();
+  const btnHover = document.createElement('div');
+  btnHover.classList.add('atcb-date-btn-hover');
+  btnHover.innerHTML = hoverText;
+  btnRight.appendChild(btnHover);
+  const btnCheck = document.createElement('div');
+  btnCheck.classList.add('atcb-checkmark');
+  btnCheck.innerHTML = atcbIcon['checkmark'];
+  parent.appendChild(btnCheck);
 }
 
-function atcb_close(keyboardTrigger = false) {
-  // focus triggering button if available - especially relevant for keyboard navigation
-  const newFocusEl = document.querySelector('.atcb-active, .atcb-active-modal');
-  if (newFocusEl) {
-    newFocusEl.focus({ preventScroll: true });
-    if (!keyboardTrigger) {
-      newFocusEl.blur();
-    }
-  }
-  // inactivate all buttons
-  Array.from(document.querySelectorAll('.atcb-active')).forEach((button) => {
-    button.classList.remove('atcb-active');
-  });
-  Array.from(document.querySelectorAll('.atcb-active-modal')).forEach((button) => {
-    button.classList.remove('atcb-active-modal');
-  });
-  // make body scrollable again
-  document.body.classList.remove('atcb-modal-no-scroll');
-  // remove dropdowns, modals, and bg overlays (should only be one of each at max)
-  Array.from(document.querySelectorAll('.atcb-list-wrapper'))
-    .concat(Array.from(document.querySelectorAll('.atcb-list')))
-    .concat(Array.from(document.querySelectorAll('.atcb-info-modal')))
-    .concat(Array.from(document.querySelectorAll('#add-to-calendar-button-reference')))
-    .concat(Array.from(document.querySelectorAll('#atcb-bgoverlay')))
-    .forEach((el) => el.remove());
-}
 
-// prepare data when not using the init function
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-function atcb_action(data, triggerElement, keyboardTrigger = true) {
-  if (!atcbConsoleInit) {
-    console.log('Add to Calendar Button Script initialized (version ' + atcbVersion + ')');
-    console.log('See https://github.com/add2cal/add-to-calendar-button for details');
-    atcbConsoleInit = true;
+function atcb_generate_links(type, data, subEvent = 'all', keyboardTrigger = false, multiDateModal = false) {
+  if (subEvent != 'all') {
+    subEvent = parseInt(subEvent) - 1;
+  } else if (data.dates.length == 1) {
+    subEvent = 0;
   }
-  data = atcb_secure_content(data);
-  // decorate & validate data
-  if (!atcb_check_required(data)) {
-    throw new Error('Add to Calendar Button generation failed: required data missing; see console logs');
+  if (data.subscribe) {
+    atcb_generate_subscribe_links(type, data, keyboardTrigger);
+    return;
   }
-  data = atcb_decorate_data(data);
-  if (triggerElement) {
-    data.identifier = triggerElement.id;
-    // if listStyle some dropdown one, force overlay
-    if (data.listStyle != 'modal') {
-      data.listStyle = 'overlay';
+  if (isMobile() && (type == 'msteams' || type == 'ms365' || type == 'outlookcom')) {
+    type = 'ical';
+  }
+  if (subEvent != 'all') {
+    if (data.dates[`${subEvent}`].status == 'CANCELLED' && type != 'apple' && type != 'ical') {
+      atcb_create_modal(
+        data,
+        'warning',
+        atcb_translate_hook('Cancelled Date', data),
+        atcb_translate_hook('Delete from Calendar', data),
+        [],
+        [],
+        keyboardTrigger
+      );
+    } else {
+      switch (type) {
+        case 'apple':
+        case 'ical':
+          atcb_generate_ical(data, subEvent, keyboardTrigger);
+          break;
+        case 'google':
+          atcb_generate_google(data.dates[`${subEvent}`]);
+          break;
+        case 'msteams':
+          atcb_generate_msteams(data.dates[`${subEvent}`]);
+          break;
+        case 'ms365':
+          atcb_generate_microsoft(data.dates[`${subEvent}`]);
+          break;
+        case 'outlookcom':
+          atcb_generate_microsoft(data.dates[`${subEvent}`], 'outlook');
+          break;
+        case 'yahoo':
+          atcb_generate_yahoo(data.dates[`${subEvent}`]);
+          break;
+      }
     }
-  } else {
-    data.identifier = 'atcb-btn-custom';
-    // if no button is defined, fallback to listStyle "modal" and "click" trigger
-    data.listStyle = 'modal';
-    data.trigger = 'click';
+    const subEventButton = document.getElementById(data.identifier + '-' + type + '-' + (subEvent + 1));
+    if (subEventButton) {
+      subEventButton.classList.add('atcb-saved');
+    }
+    atcbStates[`${data.identifier}`][`${type}`][`${subEvent}`]++;
+    const filteredStates = atcbStates[`${data.identifier}`][`${type}`].filter(function (value) {
+      return value < 1;
+    });
+    if (filteredStates.length == 0) {
+      atcb_set_fully_successful(data.identifier, multiDateModal);
+    }
+    return;
   }
-  if (!atcb_validate(data)) {
-    throw new Error(
-      'Add to Calendar Button generation (' + data.identifier + ') failed: invalid data; see console logs'
+  atcb_generate_multidate_links(type, data, keyboardTrigger, multiDateModal);
+}
+function atcb_generate_multidate_links(type, data, keyboardTrigger, multiDateModal) {
+  if (
+    (type == 'ical' || type == 'apple') &&
+    data.dates.every(function (theSubEvent) {
+      if (
+        theSubEvent.status == 'CANCELLED' ||
+        (theSubEvent.organizer != null && theSubEvent.organizer != '')
+      ) {
+        return false;
+      }
+      return true;
+    })
+  ) {
+    atcb_generate_ical(data, 'all', keyboardTrigger);
+    for (let i = 0; i < atcbStates[`${data.identifier}`][`${type}`].length; i++) {
+      atcbStates[`${data.identifier}`][`${type}`][`${i}`]++;
+    }
+    atcb_set_fully_successful(data.identifier, multiDateModal);
+    return;
+  }
+  if (!multiDateModal) {
+    const individualButtons = [type];
+    for (let i = 0; i < data.dates.length; i++) {
+      individualButtons.push(i + 1);
+    }
+    atcb_create_modal(
+      data,
+      type,
+      atcb_translate_hook('MultiDate headline', data),
+      atcb_translate_hook('MultiDate info', data),
+      [],
+      individualButtons,
+      keyboardTrigger
     );
   }
-  // if all is fine, open the options list
-  atcb_toggle('open', data, triggerElement, keyboardTrigger);
 }
-
-// FUNCTION TO GENERATE THE GOOGLE URL
-// See specs at: TODO
+function atcb_generate_subscribe_links(type, data, keyboardTrigger) {
+  const adjustedFileUrl = data.icsFile.replace('https://', 'webcal://');
+  switch (type) {
+    case 'apple':
+    case 'ical':
+      atcb_subscribe_ical(adjustedFileUrl);
+      break;
+    case 'google':
+      atcb_subscribe_google(data.icsFile);
+      break;
+    case 'ms365':
+      atcb_subscribe_microsoft(data.icsFile, data.name);
+      break;
+    case 'outlookcom':
+      atcb_subscribe_microsoft(data.icsFile, data.name, 'outlook');
+      break;
+    case 'yahoo':
+      atcb_copy_to_clipboard(data.icsFile);
+      atcb_create_modal(
+        data,
+        'yahoo',
+        atcb_translate_hook('Subscribe Yahoo', data),
+        atcb_translate_hook('Clipboard info', data) +
+          '<br>' +
+          atcb_translate_hook('Subscribe Yahoo Details', data),
+        [
+          {
+            label: atcb_translate_hook('Open Yahoo Calendar', data),
+            primary: true,
+            type: 'yahoo2nd',
+            href: 'https://www.yahoo.com/calendar',
+          },
+          { label: atcb_translate_hook('Cancel', data) },
+        ],
+        [],
+        keyboardTrigger
+      );
+      return;
+    case 'yahoo2nd':
+      atcb_copy_to_clipboard(data.icsFile);
+      atcb_create_modal(
+        data,
+        'yahoo',
+        atcb_translate_hook('Subscribe Yahoo', data),
+        atcb_translate_hook('Clipboard info', data) +
+          '<br>' +
+          atcb_translate_hook('Subscribe Yahoo Details', data),
+        [
+          {
+            label: atcb_translate_hook('Open Yahoo Calendar', data),
+            type: 'none',
+            href: 'https://www.yahoo.com/calendar',
+          },
+          { label: atcb_translate_hook('Cancel', data) },
+        ],
+        [],
+        keyboardTrigger
+      );
+      return;
+  }
+  atcb_set_fully_successful(data.identifier);
+}
+function atcb_set_fully_successful(id, multiDateModal) {
+  document.getElementById(id).classList.add('atcb-saved');
+  atcb_saved_hook();
+  if (multiDateModal && document.querySelectorAll('.atcb-modal[data-modal-nr]').length < 2) {
+    atcb_toggle('close');
+  }
+}
+function atcb_subscribe_ical(fileUrl) {
+  atcb_open_cal_url(fileUrl);
+}
+function atcb_subscribe_google(fileUrl) {
+  const baseUrl = 'https://calendar.google.com/calendar/r?cid=';
+  atcb_open_cal_url(baseUrl + fileUrl);
+}
+function atcb_subscribe_microsoft(fileUrl, calName, type = '365') {
+  const urlParts = [];
+  const baseUrl = (function () {
+    if (type == 'outlook') {
+      return 'https://outlook.live.com/calendar/0/addfromweb/?';
+    } else {
+      return 'https://outlook.office.com/calendar/0/addfromweb/?';
+    }
+  })();
+  urlParts.push('url=' + encodeURIComponent(fileUrl));
+  urlParts.push('name=' + encodeURIComponent(calName));
+  atcb_open_cal_url(baseUrl + urlParts.join('&'));
+}
 function atcb_generate_google(data) {
-  // url parts
   const urlParts = [];
   urlParts.push('https://calendar.google.com/calendar/render?action=TEMPLATE');
-  // generate and add date
   const formattedDate = atcb_generate_time(data, 'clean', 'google');
   urlParts.push(
     'dates=' + encodeURIComponent(formattedDate.start) + '%2F' + encodeURIComponent(formattedDate.end)
   );
-  // setting time zone if given and not GMT +/- something, since this is not supported by Google Calendar
   if (data.timeZone != null && data.timeZone != '' && !/GMT[+|-]\d{1,2}/i.test(data.timeZone)) {
     urlParts.push('ctz=' + data.timeZone);
   }
-  // add details (if set)
   if (data.name != null && data.name != '') {
     urlParts.push('text=' + encodeURIComponent(data.name));
   }
@@ -2889,9 +2144,7 @@ function atcb_generate_google(data) {
   }
   if (data.location != null && data.location != '') {
     urlParts.push('location=' + encodeURIComponent(data.location));
-    // TODO: Find a better solution for the next temporary workaround.
     if (isiOS()) {
-      // workaround to cover a bug, where, when using Google Calendar on an iPhone, the location is not recognized. So, for the moment, we simply add it to the description.
       if (tmpDataDescription.length > 0) {
         tmpDataDescription.push('<br><br>');
       }
@@ -2904,22 +2157,21 @@ function atcb_generate_google(data) {
   if (data.recurrence != null && data.recurrence != '') {
     urlParts.push('recur=' + encodeURIComponent(data.recurrence));
   }
-  // We also push the UID. It has no real effect, but at least becomes part of the url that way
-  urlParts.push('uid=' + encodeURIComponent(data.uid));
-  const url = urlParts.join('&');
-  if (atcb_secure_url(url)) {
-    // eslint-disable-next-line security/detect-non-literal-fs-filename
-    window.open(url, atcbDefaultTarget).focus();
+  if (data.availability != null && data.availability != '') {
+    const availabilityPart = (function () {
+      if (data.availability == 'free') {
+        return 'crm=AVAILABLE&trp=false';
+      }
+      return 'crm=BUSY&trp=true';
+    })();
+    urlParts.push(availabilityPart);
   }
+  urlParts.push('uid=' + encodeURIComponent(data.uid));
+  atcb_open_cal_url(urlParts.join('&'));
 }
-
-// FUNCTION TO GENERATE THE YAHOO URL
-// See specs at: TODO
 function atcb_generate_yahoo(data) {
-  // url parts
   const urlParts = [];
   urlParts.push('https://calendar.yahoo.com/?v=60');
-  // generate and add date
   const formattedDate = atcb_generate_time(data, 'clean');
   urlParts.push(
     'st=' + encodeURIComponent(formattedDate.start) + '&et=' + encodeURIComponent(formattedDate.end)
@@ -2927,7 +2179,6 @@ function atcb_generate_yahoo(data) {
   if (formattedDate.allday) {
     urlParts.push('dur=allday');
   }
-  // add details (if set)
   if (data.name != null && data.name != '') {
     urlParts.push('title=' + encodeURIComponent(data.name));
   }
@@ -2935,27 +2186,11 @@ function atcb_generate_yahoo(data) {
     urlParts.push('in_loc=' + encodeURIComponent(data.location));
   }
   if (data.descriptionHtmlFree != null && data.descriptionHtmlFree != '') {
-    // using descriptionHtmlFree instead of description, since Yahoo does not support html tags in a stable way
     urlParts.push('desc=' + encodeURIComponent(data.descriptionHtmlFree));
   }
-  // We also push the UID. It has no real effect, but at least becomes part of the url that way
-  urlParts.push('uid=' + encodeURIComponent(data.uid));
-  const url = urlParts.join('&');
-  if (atcb_secure_url(url)) {
-    // eslint-disable-next-line security/detect-non-literal-fs-filename
-    window.open(url, atcbDefaultTarget).focus();
-  }
+  atcb_open_cal_url(urlParts.join('&'));
 }
-
-// FUNCTION TO GENERATE THE MICROSOFT 365 OR OUTLOOK WEB URL
-// See specs at: TODO
 function atcb_generate_microsoft(data, type = '365') {
-  // redirect to iCal solution on mobile devices, since the Microsoft web apps are buggy on mobile devices (see https://github.com/add2cal/add-to-calendar-button/discussions/113)
-  if (isMobile()) {
-    atcb_generate_ical(data);
-    return;
-  }
-  // url parts
   const urlParts = [];
   const basePath = '/calendar/0/deeplink/compose?path=%2Fcalendar%2Faction%2Fcompose&rru=addevent';
   const baseUrl = (function () {
@@ -2966,14 +2201,12 @@ function atcb_generate_microsoft(data, type = '365') {
     }
   })();
   urlParts.push(baseUrl);
-  // generate and add date
   const formattedDate = atcb_generate_time(data, 'delimiters', 'microsoft');
   urlParts.push('startdt=' + encodeURIComponent(formattedDate.start));
   urlParts.push('enddt=' + encodeURIComponent(formattedDate.end));
   if (formattedDate.allday) {
     urlParts.push('allday=true');
   }
-  // add details (if set)
   if (data.name != null && data.name != '') {
     urlParts.push('subject=' + encodeURIComponent(data.name));
   }
@@ -2983,27 +2216,15 @@ function atcb_generate_microsoft(data, type = '365') {
   if (data.description != null && data.description != '') {
     urlParts.push('body=' + encodeURIComponent(data.description.replace(/\n/g, '<br>')));
   }
-  // We also push the UID. It has no real effect, but at least becomes part of the url that way
   urlParts.push('uid=' + encodeURIComponent(data.uid));
-  const url = urlParts.join('&');
-  if (atcb_secure_url(url)) {
-    // eslint-disable-next-line security/detect-non-literal-fs-filename
-    window.open(url, atcbDefaultTarget).focus();
-  }
+  atcb_open_cal_url(urlParts.join('&'));
 }
-
-// FUNCTION TO GENERATE THE MICROSOFT TEAMS URL
-// See specs at: https://docs.microsoft.com/en-us/microsoftteams/platform/concepts/build-and-test/deep-links#deep-linking-to-the-scheduling-dialog
-// Mind that this is still in development mode by Microsoft! Location, html tags and linebreaks in the description are not supported yet.
-function atcb_generate_teams(data) {
-  // url parts
+function atcb_generate_msteams(data) {
   const urlParts = [];
   const baseUrl = 'https://teams.microsoft.com/l/meeting/new?';
-  // generate and add date
   const formattedDate = atcb_generate_time(data, 'delimiters', 'microsoft');
   urlParts.push('startTime=' + encodeURIComponent(formattedDate.start));
   urlParts.push('endTime=' + encodeURIComponent(formattedDate.end));
-  // add details (if set)
   if (data.name != null && data.name != '') {
     urlParts.push('subject=' + encodeURIComponent(data.name));
   }
@@ -3011,174 +2232,207 @@ function atcb_generate_teams(data) {
   if (data.location != null && data.location != '') {
     locationString = encodeURIComponent(data.location);
     urlParts.push('location=' + locationString);
-    locationString += ' // '; // preparing the workaround putting the location into the description, since the native field is not supported yet
+    locationString += ' // '; 
   }
   if (data.descriptionHtmlFree != null && data.descriptionHtmlFree != '') {
-    // using descriptionHtmlFree instead of description, since Teams does not support html tags
     urlParts.push('content=' + locationString + encodeURIComponent(data.descriptionHtmlFree));
   }
-  // We also push the UID. It has no real effect, but at least becomes part of the url that way
   urlParts.push('uid=' + encodeURIComponent(data.uid));
-  const url = baseUrl + urlParts.join('&');
+  atcb_open_cal_url(baseUrl + urlParts.join('&'));
+}
+function atcb_open_cal_url(url, target = '') {
+  if (target == '') {
+    target = atcbDefaultTarget;
+  }
   if (atcb_secure_url(url)) {
     // eslint-disable-next-line security/detect-non-literal-fs-filename
-    window.open(url, atcbDefaultTarget).focus();
+    window.open(url, target).focus();
   }
 }
-
-// FUNCTION TO GENERATE THE iCAL FILE (also for the Apple option)
-// See specs at: https://www.rfc-editor.org/rfc/rfc5545.html
-function atcb_generate_ical(data) {
-  // define the right filename
-  let filename = 'event-to-save-in-my-calendar';
-  if (data.iCalFileName != null && data.iCalFileName != '') {
-    filename = data.iCalFileName;
-  } else if (data.icsFile != null && data.icsFile != '') {
-    const filenamePart = data.icsFile.split('/').pop().split('.')[0];
-    if (filenamePart != '') {
-      filename = filenamePart;
+function atcb_generate_ical(data, subEvent = 'all', keyboardTrigger = false) {
+  if (subEvent != 'all') {
+    subEvent = parseInt(subEvent);
+  }
+  const filename = atcb_determine_ical_filename(data, subEvent);
+  const givenIcsFile = (function () {
+    if (
+      subEvent != 'all' &&
+      data.dates[`${subEvent}`].icsFile != null &&
+      data.dates[`${subEvent}`].icsFile != ''
+    ) {
+      return data.dates[`${subEvent}`].icsFile;
     }
-  }
-  // check for a given explicit file (not if iOS and WebView - will be catched further down)
-  if (data.icsFile != null && data.icsFile != '' && (!isiOS() || !isWebView())) {
-    atcb_save_file(data.icsFile, filename);
-    return;
-  }
-  // otherwise, generate one on the fly
-  const now = new Date();
-  const formattedDate = atcb_generate_time(data, 'clean', 'ical');
-  const ics_lines = ['BEGIN:VCALENDAR', 'VERSION:2.0'];
-  ics_lines.push('PRODID:-// https://add-to-calendar-pro.com // button v' + atcbVersion + ' //EN');
-  ics_lines.push('CALSCALE:GREGORIAN');
-  // we set CANCEL, whenever the status says so
-  if (data.status == 'CANCELLED') {
-    ics_lines.push('METHOD:CANCEL');
-  } else {
-    // for all other cases, we use REQUEST for organized/hosted events
-    if (data.organizer != null && data.organizer != '') {
-      ics_lines.push('METHOD:REQUEST');
-    } else {
-      // and PUBLISH for events without a host
-      ics_lines.push('METHOD:PUBLISH');
-    }
-  }
-  // include time zone information, if set and if not allday (not necessary in that case)
-  const timeAddon = (function () {
-    if (formattedDate.allday) {
-      return ';VALUE=DATE';
-    }
-    if (data.timeZone != null && data.timeZone != '') {
-      const timeZoneBlock = tzlib_get_ical_block(data.timeZone);
-      ics_lines.push(timeZoneBlock[0]);
-      return ';' + timeZoneBlock[1];
-    }
-  })();
-  ics_lines.push('BEGIN:VEVENT');
-  ics_lines.push('UID:' + data.uid);
-  ics_lines.push('DTSTAMP:' + atcb_format_datetime(now, 'clean', true));
-  ics_lines.push('DTSTART' + timeAddon + ':' + formattedDate.start);
-  ics_lines.push('DTEND' + timeAddon + ':' + formattedDate.end);
-  ics_lines.push('SUMMARY:' + data.name.replace(/.{65}/g, '$&' + '\r\n ')); // making sure it does not exceed 75 characters per line
-  if (data.descriptionHtmlFree != null && data.descriptionHtmlFree != '') {
-    ics_lines.push(
-      'DESCRIPTION:' + data.descriptionHtmlFree.replace(/\n/g, '\\n').replace(/.{60}/g, '$&' + '\r\n ') // adjusting for intended line breaks + making sure it does not exceed 75 characters per line
-    );
-  }
-  if (data.description != null && data.description != '') {
-    ics_lines.push(
-      'X-ALT-DESC;FMTTYPE=text/html:\r\n <!DOCTYPE HTML PUBLIC ""-//W3C//DTD HTML 3.2//EN"">\r\n <HTML><BODY>\r\n ' +
-        data.description.replace(/\n/g, '<br>').replace(/.{60}/g, '$&' + '\r\n ') +
-        '\r\n </BODY></HTML>'
-    );
-  }
-  if (data.location != null && data.location != '') {
-    ics_lines.push('LOCATION:' + data.location);
-  }
-  if (data.organizer != null && data.organizer != '') {
-    const organizerParts = data.organizer.split('|');
-    ics_lines.push('ORGANIZER;CN=' + organizerParts[0] + ':MAILTO:' + organizerParts[1]);
-  }
-  if (data.recurrence != null && data.recurrence != '') {
-    ics_lines.push(data.recurrence);
-  }
-  ics_lines.push('STATUS:' + data.status);
-  ics_lines.push('CREATED:' + data.created);
-  ics_lines.push('LAST-MODIFIED:' + data.updated);
-  ics_lines.push('SEQUENCE:' + data.sequence);
-  ics_lines.push('END:VEVENT');
-  ics_lines.push('END:VCALENDAR');
-  const dataUrl = (function () {
-    // if we got to this point with an explicitely given iCal file, we are on an iOS device within an in-app browser (WebView). In this case, we use this as dataUrl
     if (data.icsFile != null && data.icsFile != '') {
       return data.icsFile;
     }
-    // otherwise, we generate it from the array
+    return '';
+  })();
+  if (givenIcsFile != '' && (!isiOS() || !isWebView())) {
+    atcb_save_file(givenIcsFile, filename);
+    return;
+  }
+  const now = new Date();
+  const ics_lines = ['BEGIN:VCALENDAR', 'VERSION:2.0'];
+  ics_lines.push('PRODID:-// https://add-to-calendar-pro.com // button v' + atcbVersion + ' //EN');
+  ics_lines.push('CALSCALE:GREGORIAN');
+  if (subEvent == 'all') {
+    ics_lines.push('METHOD:PUBLISH');
+  } else {
+    if (data.dates[`${subEvent}`].status != null && data.dates[`${subEvent}`].status == 'CANCELLED') {
+      ics_lines.push('METHOD:CANCEL');
+    } else {
+      if (data.dates[`${subEvent}`].organizer != null && data.dates[`${subEvent}`].organizer != '') {
+        ics_lines.push('METHOD:REQUEST');
+      } else {
+        ics_lines.push('METHOD:PUBLISH');
+      }
+    }
+  }
+  const usedTimeZones = [];
+  const loopStart = (function () {
+    if (subEvent != 'all') {
+      return subEvent;
+    }
+    return 0;
+  })();
+  const loopEnd = (function () {
+    if (subEvent != 'all') {
+      return subEvent;
+    }
+    return data.dates.length - 1;
+  })();
+  for (let i = loopStart; i <= loopEnd; i++) {
+    const formattedDate = atcb_generate_time(data.dates[`${i}`], 'clean', 'ical');
+    const timeAddon = (function () {
+      if (formattedDate.allday) {
+        return ';VALUE=DATE';
+      }
+      if (data.dates[`${i}`].timeZone != null && data.dates[`${i}`].timeZone != '') {
+        const timeZoneBlock = tzlib_get_ical_block(data.dates[`${i}`].timeZone);
+        if (!usedTimeZones.includes(data.dates[`${i}`].timeZone)) {
+          ics_lines.push(timeZoneBlock[0]);
+        }
+        usedTimeZones.push(data.dates[`${i}`].timeZone);
+        return ';' + timeZoneBlock[1];
+      }
+    })();
+    ics_lines.push('BEGIN:VEVENT');
+    ics_lines.push('UID:' + data.dates[`${i}`].uid);
+    ics_lines.push('DTSTAMP:' + atcb_format_datetime(now, 'clean', true));
+    ics_lines.push('DTSTART' + timeAddon + ':' + formattedDate.start);
+    ics_lines.push('DTEND' + timeAddon + ':' + formattedDate.end);
+    ics_lines.push('SUMMARY:' + data.dates[`${i}`].name.replace(/.{65}/g, '$&' + '\r\n ')); 
+    if (data.dates[`${i}`].descriptionHtmlFree != null && data.dates[`${i}`].descriptionHtmlFree != '') {
+      ics_lines.push(
+        'DESCRIPTION:' +
+          data.dates[`${i}`].descriptionHtmlFree.replace(/\n/g, '\\n').replace(/.{60}/g, '$&' + '\r\n ') // adjusting for intended line breaks + making sure it does not exceed 75 characters per line
+      );
+    }
+    if (data.dates[`${i}`].description != null && data.dates[`${i}`].description != '') {
+      ics_lines.push(
+        'X-ALT-DESC;FMTTYPE=text/html:\r\n <!DOCTYPE HTML PUBLIC ""-//W3C//DTD HTML 3.2//EN"">\r\n <HTML><BODY>\r\n ' +
+          data.dates[`${i}`].description.replace(/\n/g, '<br>').replace(/.{60}/g, '$&' + '\r\n ') +
+          '\r\n </BODY></HTML>'
+      );
+    }
+    if (data.dates[`${i}`].location != null && data.dates[`${i}`].location != '') {
+      ics_lines.push('LOCATION:' + data.dates[`${i}`].location);
+    }
+    if (data.dates[`${i}`].organizer != null && data.dates[`${i}`].organizer != '') {
+      const organizerParts = data.dates[`${i}`].organizer.split('|');
+      ics_lines.push('ORGANIZER;CN=' + organizerParts[0] + ':MAILTO:' + organizerParts[1]);
+    }
+    if (data.recurrence != null && data.recurrence != '') {
+      ics_lines.push(data.recurrence);
+    }
+    if (data.dates[`${i}`].availability != null && data.dates[`${i}`].availability != '') {
+      const transpVal = (function () {
+        if (data.dates[`${i}`].availability == 'free') {
+          return 'TRANSPARENT';
+        }
+        return 'OPAQUE';
+      })();
+      ics_lines.push('TRANSP:' + transpVal);
+    }
+    ics_lines.push('SEQUENCE:' + data.dates[`${i}`].sequence);
+    ics_lines.push('STATUS:' + data.dates[`${i}`].status);
+    ics_lines.push('CREATED:' + data.created);
+    ics_lines.push('LAST-MODIFIED:' + data.updated);
+    ics_lines.push('END:VEVENT');
+  }
+  ics_lines.push('END:VCALENDAR');
+  const dataUrl = (function () {
+    if (givenIcsFile != '') {
+      return givenIcsFile;
+    }
     return 'data:text/calendar;charset=utf-8,' + encodeURIComponent(ics_lines.join('\r\n'));
   })();
-  // in in-app browser cases (WebView), we offer a copy option, since the on-the-fly client side generation is usually not supported
-  // for Android, we are more specific and only go for specific apps at the moment
-  // for Chrome on iOS we basically do the same
   if ((isiOS() && isChrome()) || (isWebView() && (isiOS() || (isAndroid() && isProblematicWebView())))) {
-    // putting the download url to the clipboard
-    const tmpInput = document.createElement('input');
-    document.body.appendChild(tmpInput);
-    const editable = tmpInput.contentEditable;
-    const readOnly = tmpInput.readOnly;
-    tmpInput.value = dataUrl;
-    tmpInput.contentEditable = true;
-    tmpInput.readOnly = false;
-    if (isiOS()) {
-      var range = document.createRange();
-      range.selectNodeContents(tmpInput);
-      var selection = window.getSelection();
-      selection.removeAllRanges();
-      selection.addRange(range);
-      tmpInput.setSelectionRange(0, 999999);
-    } else {
-      // the next 2 lines are basically doing the same in different ways (just to be sure)
-      navigator.clipboard.writeText(dataUrl);
-      tmpInput.select();
-    }
-    tmpInput.contentEditable = editable;
-    tmpInput.readOnly = readOnly;
-    document.execCommand('copy');
-    tmpInput.remove();
-    // creating the modal
-    if (isiOS() && isChrome()) {
-      atcb_create_modal(
-        data,
-        'browser',
-        atcb_translate_hook('Crios iCal headline', data.language, data),
-        atcb_translate_hook('Crios iCal info', data.language, data) +
-          '<br>' +
-          atcb_translate_hook('WebView iCal solution 1', data.language, data) +
-          '<br>' +
-          atcb_translate_hook('Crios iCal solution 2', data.language, data)
-      );
-    } else {
-      atcb_create_modal(
-        data,
-        'browser',
-        atcb_translate_hook('WebView iCal headline', data.language, data),
-        atcb_translate_hook('WebView iCal info', data.language, data) +
-          '<br>' +
-          atcb_translate_hook('WebView iCal solution 1', data.language, data) +
-          '<br>' +
-          atcb_translate_hook('WebView iCal solution 2', data.language, data)
-      );
-    }
-  } else {
-    atcb_save_file(dataUrl, filename);
+    atcb_ical_copy_note(dataUrl, data, keyboardTrigger);
+    return;
   }
+  atcb_save_file(dataUrl, filename);
+}
+function atcb_determine_ical_filename(data, subEvent) {
+  const filenameSuffix = (function () {
+    if (subEvent != 'all' && subEvent != 0) {
+      return '-' + parseInt(subEvent) + 1;
+    }
+    return '';
+  })();
+  if (data.iCalFileName != null && data.iCalFileName != '') {
+    return data.iCalFileName + filenameSuffix;
+  }
+  if (data.icsFile != null && data.icsFile != '') {
+    const filenamePart = data.icsFile.split('/').pop().split('.')[0];
+    if (filenamePart != '') {
+      return filenamePart + filenameSuffix;
+    }
+  }
+  return 'event-to-save-in-my-calendar' + filenameSuffix;
+}
+function atcb_ical_copy_note(dataUrl, data, keyboardTrigger) {
+  atcb_copy_to_clipboard(dataUrl);
+  if (isiOS() && isChrome()) {
+    atcb_create_modal(
+      data,
+      'warning',
+      atcb_translate_hook('Crios iCal headline', data),
+      atcb_translate_hook('Crios iCal info', data) +
+        '<br>' +
+        atcb_translate_hook('Clipboard info', data) +
+        '<br>' +
+        atcb_translate_hook('Crios iCal solution', data),
+      [],
+      [],
+      keyboardTrigger
+    );
+    return;
+  }
+  atcb_create_modal(
+    data,
+    'warning',
+    atcb_translate_hook('WebView iCal headline', data),
+    atcb_translate_hook('WebView iCal info', data) +
+      '<br>' +
+      atcb_translate_hook('Clipboard info', data) +
+      '<br>' +
+      atcb_translate_hook('WebView iCal solution', data),
+    [],
+    [],
+    keyboardTrigger
+  );
 }
 
-// SHARED FUNCTION TO SAVE A FILE
+
+function atcb_saved_hook() {
+  console.log('Event saved. Looking forward to it!');
+}
 function atcb_save_file(file, filename) {
   try {
     const save = document.createElementNS('http://www.w3.org/1999/xhtml', 'a');
     save.rel = 'noopener';
     save.href = file;
-    // not using default target here, since this needs to happen _self on iOS (abstracted to mobile in general) and _blank at Firefox (abstracted to other setups) due to potential cross-origin restrictions
     if (isMobile()) {
       save.target = '_self';
     } else {
@@ -3197,13 +2451,10 @@ function atcb_save_file(file, filename) {
     console.error(e);
   }
 }
-
-// SHARED FUNCTION TO GENERATE A TIME STRING
 function atcb_generate_time(data, style = 'delimiters', targetCal = 'general', addTimeZoneOffset = false) {
   const startDate = data.startDate.split('-');
   const endDate = data.endDate.split('-');
-  if (data.startTime != null && data.endTime != null) {
-    // for the input, we assume UTC per default
+  if (data.startTime != null && data.startTime != '' && data.endTime != null && data.endTime != '') {
     const newStartDate = new Date(
       startDate[0] + '-' + startDate[1] + '-' + startDate[2] + 'T' + data.startTime + ':00.000+00:00'
     );
@@ -3219,7 +2470,6 @@ function atcb_generate_time(data, style = 'delimiters', targetCal = 'general', a
       }
       return durationHours + ':' + ('0' + durationMinutes).slice(-2);
     })();
-    // if no time zone is given and we need to add the offset to the datetime string, do so directly and return
     if ((data.timeZone == null || (data.timeZone != null && data.timeZone == '')) && addTimeZoneOffset) {
       return {
         start: newStartDate.toISOString().replace('.000Z', '+00:00'),
@@ -3228,12 +2478,8 @@ function atcb_generate_time(data, style = 'delimiters', targetCal = 'general', a
         allday: false,
       };
     }
-    // if a time zone is given, we adjust the diverse cases
-    // (see https://tz.add-to-calendar-technology.com/ for available TZ names)
     if (data.timeZone != null && data.timeZone != '') {
       if (targetCal == 'ical' || (targetCal == 'google' && !/GMT[+|-]\d{1,2}/i.test(data.timeZone))) {
-        // in the iCal case, we simply return and cut off the Z. Same applies to Google, except for GMT +/- time zones, which are not supported there.
-        // everything else will be done by injecting the VTIMEZONE block at the iCal function
         return {
           start: atcb_format_datetime(newStartDate, 'clean', true, true),
           end: atcb_format_datetime(newEndDate, 'clean', true, true),
@@ -3241,10 +2487,8 @@ function atcb_generate_time(data, style = 'delimiters', targetCal = 'general', a
           allday: false,
         };
       }
-      // we get the correct offset via the timeZones iCal Library
       const offsetStart = tzlib_get_offset(data.timeZone, data.startDate, data.startTime);
       const offsetEnd = tzlib_get_offset(data.timeZone, data.endDate, data.endTime);
-      // if we need to add the offset to the datetime string, do so respectively
       if (addTimeZoneOffset) {
         const formattedOffsetStart = offsetStart.slice(0, 3) + ':' + offsetStart.slice(3);
         const formattedOffsetEnd = offsetEnd.slice(0, 3) + ':' + offsetEnd.slice(3);
@@ -3255,8 +2499,6 @@ function atcb_generate_time(data, style = 'delimiters', targetCal = 'general', a
           allday: false,
         };
       }
-      // in other cases, we substract the offset from the dates
-      // (substraction to reflect the fact that the user assumed his timezone and to convert to UTC; since calendars assume UTC and add offsets again)
       const calcOffsetStart =
         parseInt(offsetStart[0] + 1) *
         -1 *
@@ -3268,7 +2510,6 @@ function atcb_generate_time(data, style = 'delimiters', targetCal = 'general', a
       newStartDate.setTime(newStartDate.getTime() + calcOffsetStart);
       newEndDate.setTime(newEndDate.getTime() + calcOffsetEnd);
     }
-    // return formatted data
     return {
       start: atcb_format_datetime(newStartDate, style),
       end: atcb_format_datetime(newEndDate, style),
@@ -3276,14 +2517,11 @@ function atcb_generate_time(data, style = 'delimiters', targetCal = 'general', a
       allday: false,
     };
   } else {
-    // would be an allday event then
     const newStartDate = new Date(Date.UTC(startDate[0], startDate[1] - 1, startDate[2]));
     const newEndDate = new Date(Date.UTC(endDate[0], endDate[1] - 1, endDate[2]));
-    // increment the end day by 1 for Google Calendar, iCal and Outlook
     if (targetCal == 'google' || targetCal == 'microsoft' || targetCal == 'ical') {
       newEndDate.setDate(newEndDate.getDate() + 1);
     }
-    // return formatted data
     return {
       start: atcb_format_datetime(newStartDate, style, false),
       end: atcb_format_datetime(newEndDate, style, false),
@@ -3291,7 +2529,6 @@ function atcb_generate_time(data, style = 'delimiters', targetCal = 'general', a
     };
   }
 }
-
 function atcb_format_datetime(datetime, style = 'delimiters', includeTime = true, removeZ = false) {
   const regex = (function () {
     if (includeTime) {
@@ -3310,10 +2547,7 @@ function atcb_format_datetime(datetime, style = 'delimiters', includeTime = true
     : datetime.toISOString().replace(regex, '');
   return output;
 }
-
-// SHARED FUNCTION TO SECURE DATA
 function atcb_secure_content(data, isJSON = true) {
-  // strip HTML tags (especially since stupid Safari adds stuff) - except for <br>
   const toClean = isJSON ? JSON.stringify(data) : data;
   const cleanedUp = toClean.replace(/(<(?!br)([^>]+)>)/gi, '');
   if (isJSON) {
@@ -3322,8 +2556,6 @@ function atcb_secure_content(data, isJSON = true) {
     return cleanedUp;
   }
 }
-
-// SHARED FUNCTION TO SECURE URLS
 function atcb_secure_url(url, throwError = true) {
   if (
     url.match(
@@ -3340,29 +2572,19 @@ function atcb_secure_url(url, throwError = true) {
     return true;
   }
 }
-
-// SHARED FUNCTION TO VALIDATE EMAIL ADDRESSES
 function atcb_validEmail(email, mx = false) {
-  // rough format check first
   if (!/^.{0,70}@.{1,30}\.[\w.]{2,9}$/.test(email)) {
     return false;
   }
-  // testing for mx records second, if activated
   if (mx) {
-    // TODO: call external service to validate email address
+    console.log('Testing for MX records not yet available');
   }
   return true;
 }
-
-// SHARED FUNCTION TO REPLACE HTML PSEUDO ELEMENTS
 function atcb_rewrite_html_elements(content, clear = false) {
-  // standardize any line breaks
   content = content.replace(/<br\s*\/?>/gi, '\n');
-  // remove any pseudo elements, if necessary
   if (clear) {
     content = content.replace(/\[(|\/)(url|br|hr|p|b|strong|u|i|em|li|ul|ol|h\d)\]|((\|.*)\[\/url\])/gi, '');
-    // and build html for the rest
-    // supporting: br, hr, p, strong, u, i, em, li, ul, ol, h (like h1, h2, h3, ...), url (= a)
   } else {
     content = content.replace(/\[(\/|)(br|hr|p|b|strong|u|i|em|li|ul|ol|h\d)\]/gi, '<$1$2>');
     content = content.replace(/\[url\]([\w&$+.,:;=~!*'?@^%#|\s\-()/]*)\[\/url\]/gi, function (match, p1) {
@@ -3381,135 +2603,17 @@ function atcb_rewrite_html_elements(content, clear = false) {
   }
   return content;
 }
-
-// SHARED FUNCTION TO CREATE INFO MODALS
-function atcb_create_modal(data, icon = '', headline, content, buttons) {
-  // setting the stage
-  const bgOverlay = atcb_generate_bg_overlay('modal', 'click', data.lightMode);
-  const infoModalWrapper = document.createElement('div');
-  infoModalWrapper.classList.add('atcb-modal', 'atcb-info-modal');
-  infoModalWrapper.tabIndex = 0;
-  bgOverlay.appendChild(infoModalWrapper);
-  document.body.appendChild(bgOverlay);
-  document.body.classList.add('atcb-modal-no-scroll');
-  const parentButton = document.getElementById(data.identifier);
-  if (parentButton != null) {
-    parentButton.classList.add('atcb-active-modal');
-  }
-  const infoModal = document.createElement('div');
-  infoModal.classList.add('atcb-modal-box');
-  infoModal.classList.add('atcb-' + data.lightMode);
-  if (data.rtl) {
-    infoModal.classList.add('atcb-rtl');
-  }
-  infoModal.style.fontSize = data.size + 'px';
-  infoModalWrapper.appendChild(infoModal);
-  // set overlay size just to be sure
-  atcb_set_fullsize(bgOverlay);
-  // adding closing button
-  const infoModalClose = document.createElement('div');
-  infoModalClose.classList.add('atcb-modal-close');
-  infoModalClose.innerHTML = atcbIcon.close;
-  infoModal.appendChild(infoModalClose);
-  infoModalClose.addEventListener(
-    'click',
-    atcb_debounce(() => atcb_close())
-  );
-  infoModalClose.addEventListener(
-    'keyup',
-    atcb_debounce_leading((event) => {
-      if (event.key == 'Enter') {
-        event.preventDefault();
-        atcb_toggle('close', '', '', true);
-      }
-    })
-  );
-  if (buttons == null || buttons.length == 0) {
-    infoModalClose.tabIndex = 0;
-    infoModalClose.focus();
-  }
-  // adding headline (incl. icon)
-  const infoModalHeadline = document.createElement('div');
-  infoModalHeadline.classList.add('atcb-modal-headline');
-  infoModal.appendChild(infoModalHeadline);
-  if (icon != '') {
-    const infoModalHeadlineIcon = document.createElement('span');
-    infoModalHeadlineIcon.classList.add('atcb-modal-headline-icon');
-    infoModalHeadlineIcon.innerHTML = atcbIcon[`${icon}`];
-    infoModalHeadline.appendChild(infoModalHeadlineIcon);
-  }
-  let infoModalHeadlineText = document.createTextNode(headline);
-  infoModalHeadline.appendChild(infoModalHeadlineText);
-  // and text content
-  const infoModalContent = document.createElement('div');
-  infoModalContent.classList.add('atcb-modal-content');
-  infoModalContent.innerHTML = content;
-  infoModal.appendChild(infoModalContent);
-  // and buttons (array of objects; attributes: href, type, label, primary(boolean))
-  if (buttons != null && buttons.length > 0) {
-    const infoModalButtons = document.createElement('div');
-    infoModalButtons.classList.add('atcb-modal-buttons');
-    infoModal.appendChild(infoModalButtons);
-    buttons.forEach((button, index) => {
-      let infoModalButton;
-      if (button.href != null && button.href != '') {
-        infoModalButton = document.createElement('a');
-        infoModalButton.setAttribute('target', atcbDefaultTarget);
-        infoModalButton.setAttribute('href', button.href);
-        infoModalButton.setAttribute('rel', 'noopener');
-      } else {
-        infoModalButton = document.createElement('button');
-        infoModalButton.type = 'button';
-      }
-      infoModalButton.classList.add('atcb-modal-btn');
-      if (button.primary) {
-        infoModalButton.classList.add('atcb-modal-btn-primary');
-      }
-      if (button.label == null || button.label == '') {
-        button.label = atcb_translate_hook('Click me', data.language, data);
-      }
-      infoModalButton.textContent = button.label;
-      infoModalButtons.appendChild(infoModalButton);
-      if (index == 0) {
-        infoModalButton.focus();
-      }
-      switch (button.type) {
-        default:
-        case 'close':
-          infoModalButton.addEventListener(
-            'click',
-            atcb_debounce(() => atcb_close())
-          );
-          infoModalButton.addEventListener(
-            'keyup',
-            atcb_debounce((event) => {
-              if (event.key == 'Enter') {
-                atcb_toggle('close', '', '', true);
-              }
-            })
-          );
-          break;
-      }
-    });
-  }
-}
-
-// SHARED FUNCTION TO CALCULATE THE POSITION OF THE DROPDOWN LIST
 function atcb_position_list(trigger, list, blockUpwards = false, resize = false) {
-  // check for position anchor
   let anchorSet = false;
   const originalTrigger = trigger;
   if (trigger.querySelector('.atcb-dropdown-anchor') !== null) {
     trigger = trigger.querySelector('.atcb-dropdown-anchor');
     anchorSet = true;
   }
-  // calculate position
   let triggerDim = trigger.getBoundingClientRect();
   let listDim = list.getBoundingClientRect();
   const btnDim = originalTrigger.getBoundingClientRect();
   if (anchorSet === true && !list.classList.contains('atcb-dropoverlay')) {
-    // in the regular case, we also check for the ideal direction
-    // not in the !updateDirection case and not if there is not enough space above
     const viewportHeight = document.documentElement.clientHeight;
     if (
       (list.classList.contains('atcb-dropup') && resize) ||
@@ -3530,22 +2634,17 @@ function atcb_position_list(trigger, list, blockUpwards = false, resize = false)
         originalTrigger.classList.remove('atcb-dropup');
       }
     }
-    // read trigger dimensions again, since after adjusting the top value of the list, something might have changed (e.g. re-adjustment due to missing scrollbars at this point in time)
     triggerDim = trigger.getBoundingClientRect();
-    if (list.classList.contains('atcb-style-round') || list.classList.contains('atcb-style-text')) {
+    if (list.classList.contains('atcb-style-bubble') || list.classList.contains('atcb-style-text')) {
       list.style.minWidth = triggerDim.width + 'px';
     } else {
       list.style.width = triggerDim.width + 'px';
     }
-    // read list dimensions again, since we altered the width in the step before
     listDim = list.getBoundingClientRect();
     list.style.left = triggerDim.left - (listDim.width - triggerDim.width) / 2 + 'px';
   } else {
-    // when there is no anchor set (only the case with custom implementations) or the listStyle is set respectively (overlay), we render the modal centered above the trigger
-    // make sure the trigger is not moved over it via CSS in this case!
     let listWidth = triggerDim.width + 20 + 'px';
     list.style.minWidth = listWidth;
-    // read list dimensions again, since we altered the width in the step before
     listDim = list.getBoundingClientRect();
     list.style.top = window.scrollY + btnDim.top + btnDim.height / 2 - listDim.height / 2 + 'px';
     list.style.left = triggerDim.left - (listDim.width - triggerDim.width) / 2 + 'px';
@@ -3566,23 +2665,60 @@ function atcb_position_list(trigger, list, blockUpwards = false, resize = false)
     }
   }
 }
-
-// SHARED FUNCTION TO DEFINE WIDTH AND HEIGHT FOR "FULLSCREEN" FULLSIZE ELEMENTS
+function atcb_manage_body_scroll(modalObj = null) {
+  const modal = (function () {
+    if (modalObj != null) {
+      return modalObj;
+    } else {
+      const allModals = document.querySelectorAll('.atcb-modal');
+      return allModals[allModals.length - 1];
+    }
+  })();
+  const modalDim = modal.getBoundingClientRect();
+  if (modalDim.height + 100 > window.innerHeight) {
+    document.body.classList.add('atcb-modal-no-scroll');
+  } else {
+    document.body.classList.remove('atcb-modal-no-scroll');
+  }
+}
 function atcb_set_fullsize(el) {
   el.style.width = window.innerWidth + 'px';
   el.style.height = window.innerHeight + 100 + 'px';
 }
-
-// SHARED FUNCTION TO GENERATE UUIDs
+function atcb_set_sizes(el, size) {
+  el.style.setProperty('--base-font-size-l', size.l + 'px');
+  el.style.setProperty('--base-font-size-m', size.m + 'px');
+  el.style.setProperty('--base-font-size-s', size.s + 'px');
+}
 function atcb_generate_uuid() {
-  //return crypto.randomUUID(); // lacking support of Safari < 15.4 and Firefox < 95, which is to important for now
   return ([1e7] + -1e3 + -4e3 + -8e3 + -1e11).replace(/[018]/g, (c) =>
     (c ^ (crypto.getRandomValues(new Uint8Array(1))[0] & (15 >> (c / 4)))).toString(16)
   );
 }
-
-// SHARED DEBOUNCE AND THROTTLE FUNCTIONS
-// going for last call debounce
+function atcb_copy_to_clipboard(dataString) {
+  const tmpInput = document.createElement('input');
+  document.body.appendChild(tmpInput);
+  const editable = tmpInput.contentEditable;
+  const readOnly = tmpInput.readOnly;
+  tmpInput.value = dataString;
+  tmpInput.contentEditable = true;
+  tmpInput.readOnly = false;
+  if (isiOS()) {
+    var range = document.createRange();
+    range.selectNodeContents(tmpInput);
+    var selection = window.getSelection();
+    selection.removeAllRanges();
+    selection.addRange(range);
+    tmpInput.setSelectionRange(0, 999999);
+  } else {
+    navigator.clipboard.writeText(dataString);
+    tmpInput.select();
+  }
+  tmpInput.contentEditable = editable;
+  tmpInput.readOnly = readOnly;
+  document.execCommand('copy');
+  tmpInput.remove();
+}
 function atcb_debounce(func, timeout = 200) {
   let timer;
   return (...args) => {
@@ -3592,7 +2728,6 @@ function atcb_debounce(func, timeout = 200) {
     }, timeout);
   };
 }
-// dropping subsequent calls debounce
 function atcb_debounce_leading(func, timeout = 300) {
   let timer;
   return (...args) => {
@@ -3605,7 +2740,6 @@ function atcb_debounce_leading(func, timeout = 300) {
     }, timeout);
   };
 }
-// throttle
 function atcb_throttle(func, delay = 10) {
   let result;
   let timeout = null;
@@ -3632,18 +2766,666 @@ function atcb_throttle(func, delay = 10) {
   };
 }
 
-// GLOBAL KEYBOARD AND DEVICE LISTENERS
-if (isBrowser()) {
-  // global listener to ESC key to close dropdown
-  document.addEventListener(
-    'keyup',
-    atcb_debounce_leading((event) => {
-      if (event.key === 'Escape') {
-        atcb_toggle('close', '', '', true);
+
+const i18nStrings = {
+  en: {
+    'Add to Calendar': 'Add to Calendar',
+    'iCal File': 'iCal File',
+    Close: 'Close',
+    'Close Selection': 'Close Selection',
+    'Click me': 'Click me',
+    'WebView iCal headline': 'Open your browser',
+    'WebView iCal info':
+      'Unfortunately, in-app browsers have problems with the way we generate the calendar file.',
+    'Clipboard info': 'We automatically copied a magical URL into your clipboard.',
+    'WebView iCal solution':
+      '<ol><li><strong>Open another browser</strong> on your phone, ...</li><li><strong>Paste</strong> the clipboard content and go.</li></ol>',
+    'Crios iCal headline': 'Open Safari',
+    'Crios iCal info':
+      'Unfortunately, Chrome on iOS has problems with the way we generate the calendar file.',
+    'Crios iCal solution':
+      '<ol><li><strong>Open Safari</strong>, ...</li><li><strong>Paste</strong> the clipboard content and go.</li></ol>',
+    'MultiDate headline': 'This is an event series',
+    'MultiDate info': 'Add the individual events one by one:',
+    Event: 'Event',
+    'Cancelled Date': 'This date got cancelled.',
+    'Delete from Calendar': 'Please update your calendar!',
+    'Subscribe Yahoo': 'Add Calendar to Yahoo',
+    'Subscribe Yahoo Details':
+      '<ol><li>Open now the Yahoo Calendar.</li><li>Click the "Actions" tab.</li><li>Hit "Follow Other Calendars".</li><li>Set a name and past the clipboard content into the url field.</li></ol>',
+    Cancel: 'Cancel',
+  },
+  de: {
+    'Add to Calendar': 'Im Kalender speichern',
+    'iCal File': 'iCal-Datei',
+    Close: 'Schließen',
+    'Close Selection': 'Auswahl schließen',
+    'Click me': 'Klick mich',
+    'WebView iCal headline': 'Öffne deinen Browser',
+    'WebView iCal info':
+      'Leider haben In-App-Browser Probleme mit der Art, wie wir Kalender-Dateien erzeugen.',
+    'Clipboard info': 'Wir haben automatisch eine magische URL in deine Zwischenablage kopiert.',
+    'WebView iCal solution':
+      '<ol><li><strong>Öffne einen anderen Browser</strong> auf deinem Smartphone, ...</li><li>Nutze die <strong>Einfügen</strong>-Funktion, um fortzufahren.</li></ol>',
+    'Crios iCal headline': 'Öffne Safari',
+    'Crios iCal info': 'Leider Chrome unter iOS Probleme mit der Art, wie wir Kalender-Dateien erzeugen.',
+    'Crios iCal solution':
+      '<ol><li><strong>Öffne Safari</strong>, ...</li><li>Nutze die <strong>Einfügen</strong>-Funktion, um fortzufahren.</li></ol>',
+    'MultiDate headline': 'Dies is eine Termin-Reihe',
+    'MultiDate info': 'Füge die einzelnen Termine der Reihe nach deinem Kalender hinzu:',
+    Event: 'Termin',
+    'Cancelled Date': 'Dieser Termin wurde abgesagt.',
+    'Delete from Calendar': 'Bitte aktualisiere deinen Kalender!',
+    'Subscribe Yahoo': 'Kalender zu Yahoo hinzufügen',
+    'Subscribe Yahoo Details':
+      '<ol><li>Öffne den Yahoo Kalender.</li><li>Klicke auf den "Aktionen" Tab.</li><li>Wähle "Weiteren Kalendern folgen".</li><li>Wähle einen Namen und füge die URL aus deiner Zwischenablage in das URL-Feld ein.</li></ol>',
+    Cancel: 'Abbrechen',
+  },
+  es: {
+    'Add to Calendar': 'Añadir al Calendario',
+    'iCal File': 'iCal Ficha',
+    Close: 'Ciérralo',
+    'Close Selection': 'Cerrar Selección',
+    'Click me': 'Haz clic mí',
+    'WebView iCal headline': 'Abra su browser',
+    'WebView iCal info':
+      'Lamentablemente, los browsers in-app tienen problemas con la forma en que generamos el archivo del calendario.',
+    'Clipboard info': 'Hemos copiado automáticamente una URL mágica en su portapapeles.',
+    'WebView iCal solution':
+      '<ol><li><strong>Abre otro browser</strong> en tu smartphone, ...</li><li>Utilice la función de <strong>pegar</strong> para continuar.</li></ol>',
+    'Crios iCal headline': 'Abrir Safari',
+    'Crios iCal info':
+      'Lamentablemente, Chrome en iOS tiene problemas con la forma de generar el archivo de calendario.',
+    'Crios iCal solution':
+      '<ol><li><strong>Abrir Safari</strong>, ...</li><li>Utilice la función de <strong>pegar</strong> para continuar.</li></ol>',
+    'MultiDate headline': 'Esta es una serie de fechas',
+    'MultiDate info': 'Añada las fechas individuales a su calendario en orden:',
+    Event: 'Término',
+    'Cancelled Date': 'Esta fecha fue cancelada.',
+    'Delete from Calendar': 'Actualice su calendario!',
+    'Subscribe Yahoo': 'Añadir calendario a Yahoo',
+    'Subscribe Yahoo Details':
+      '<ol><li>Abra el calendario de Yahoo.</li><li>Haga clic en la pestaña "Acciones".</li><li>Seleccione "Seguir otros calendarios".</li><li>Elige un nombre y pega la URL de tu portapapeles en el campo URL.</li></ol>',
+    Cancel: 'Cancelar',
+  },
+  pt: {
+    'Add to Calendar': 'Incluir no Calendário',
+    'iCal File': 'Ficheiro iCal',
+    Close: 'Fechar',
+    'Close Selection': 'Fechar selecção',
+    'Click me': 'Clicar-me',
+    'WebView iCal headline': 'Abra o seu browser',
+    'WebView iCal info':
+      'Infelizmente, os navegadores em tampas têm problemas com a forma como geramos o ficheiro de calendário.',
+    'Clipboard info': 'Copiámos automaticamente um URL mágico para a sua área de transferência.',
+    'WebView iCal solution':
+      '<ol><li><strong>Abrir outro browser</strong> en tu smartphone, ...</li><li>Use a função <forte>colar</strong> para continuar.</li></ol>',
+    'Crios iCal headline': 'Safari aberto',
+    'Crios iCal info':
+      'Infelizmente, o cromado no iOS tem problemas com a forma como geramos o ficheiro do calendário.',
+    'Crios iCal solution':
+      '<ol><li><strong>Safari aberto</strong>, ...</li><li>Use a função <forte>colar</strong> para continuar.</li></ol>',
+    'MultiDate headline': 'Esta é uma série de datas',
+    'MultiDate info': 'Adicione as datas individuais ao seu calendário, por ordem:',
+    Event: 'Termo',
+    'Cancelled Date': 'Esta data foi cancelada.',
+    'Delete from Calendar': 'Actualize o seu calendário!',
+    'Subscribe Yahoo': 'Adicionar calendário ao Yahoo',
+    'Subscribe Yahoo Details':
+      '<ol><li>Abrir o calendário do Yahoo.</li><li>Clique no separador "Acções".</li><li>Seleccione "Seguir outros calendários".</li><li>Escolha um nome e cole o URL da sua área de transferência no campo URL.</li></ol>',
+    Cancel: 'Cancelar',
+  },
+  fr: {
+    'Add to Calendar': 'Ajout au Agenda',
+    'iCal File': 'iCal Fichier',
+    Close: 'Fermez',
+    'Close Selection': 'Fermez la sélection',
+    'Click me': 'Cliquez-moi',
+    'WebView iCal headline': 'Ouvrez votre navigateur',
+    'WebView iCal info':
+      'Malheureusement, les navigateurs in-app ont des problèmes avec la manière dont nous créons les fichiers de agenda.',
+    'Clipboard info': 'Nous avons automatiquement copié une URL magique dans ton presse-papiers.',
+    'WebView iCal solution':
+      '<ol><li><strong>Ouvre un autre navigateur</strong> sur ton smartphone, ...</li><li>Utilise la fonction <strong>insérer</strong> pour continuer.</li></ol>',
+    'Crios iCal headline': 'Ouvre Safari',
+    'Crios iCal info':
+      'Malheureusement, Chrome sur iOS a des problèmes avec la façon dont nous générons le fichier du agenda.',
+    'Crios iCal solution':
+      '<ol><li><strong>Ouvre Safari</strong>, ...</li><li>Utilise la fonction <strong>insérer</strong> pour continuer.</li></ol>',
+    'MultiDate headline': "Il s'agit d'une série d'événements",
+    'MultiDate info': "Ajoute les différents rendez-vous dans l'ordre à ton agenda:",
+    Event: 'Terminaison',
+    'Cancelled Date': 'Cette date est annulée.',
+    'Delete from Calendar': 'Actualisez votre agenda!',
+    'Subscribe Yahoo': 'Ajouter un agenda à Yahoo',
+    'Subscribe Yahoo Details':
+      '<ol><li>Ouvre le Yahoo calendar.</li><li>Clique sur l\'onglet "Actions".</li><li>Sélectionne "Suivre d\'autres agendas".</li><li>Choisis un nom et colle l\'URL de ton presse-papiers dans le champ URL.</li></ol>',
+    Cancel: 'Annuler',
+  },
+  nl: {
+    'Add to Calendar': 'Opslaan in Agenda',
+    'iCal File': 'iCal File',
+    Close: 'Sluiten',
+    'Close Selection': 'Sluit selectie',
+    'Click me': 'Klik me',
+    'WebView iCal headline': 'Open uw browser',
+    'WebView iCal info':
+      'Helaas hebben in-app browsers problemen met de manier waarop wij kalenderbestanden maken.',
+    'Clipboard info': 'We hebben automatisch een magische URL naar je klembord gekopieerd.',
+    'WebView iCal solution':
+      '<ol><li><strong>Open een andere browser</strong> op uw smartphone, ...</li><li>Gebruik de <strong>insert</strong> functie om verder te gaan.</li></ol>',
+    'Crios iCal headline': 'Open Safari',
+    'Crios iCal info':
+      'Helaas heeft Chrome op iOS problemen met de manier waarop we het kalenderbestand genereren.',
+    'Crios iCal solution':
+      '<ol><li><strong>Open Safari</strong>, ...</li><li>Gebruik de <strong>insert</strong> functie om verder te gaan.</li></ol>',
+    'MultiDate headline': 'Dit is een reeks data',
+    'MultiDate info': 'Voeg de afzonderlijke delen één voor één toe:',
+    Event: 'Termin',
+    'Cancelled Date': 'Deze datum is geannuleerd.',
+    'Delete from Calendar': 'Uw agenda bijwerken!',
+    'Subscribe Yahoo': 'Toevoegen aan Yahoo',
+    'Subscribe Yahoo Details':
+      '<ol><li>Open de Yahoo calendar.</li><li>Klik op de "Acties" tab.</li><li>Selecteer "Volg Andere Agenda\'s".</li><li>Kies een naam en plak de URL van uw klembord in het URL-veld.</li></ol>',
+    Cancel: 'Annuleren',
+  },
+  tr: {
+    'Add to Calendar': 'Takvime Ekle',
+    'iCal File': 'iCal Dosyası',
+    Close: 'Kapat',
+    'Close Selection': 'Seçimi kapat',
+    'Click me': 'Beni tıklayın',
+    'WebView iCal headline': 'Tarayıcınızı açın',
+    'WebView iCal info':
+      'Ne yazık ki, uygulama içi tarayıcılar takvim dosyalarını oluşturma şeklimizle ilgili sorunlar yaşıyor.',
+    'Clipboard info': 'Panonuza otomatik olarak sihirli bir URL kopyaladık.',
+    'WebView iCal solution':
+      '<ol><li><strong>Akıllı telefonunuzda başka bir tarayıcı açın</strong>, ...</li><li>Devam etmek için <strong>insert</strong> fonksiyonunu kullanın.</li></ol>',
+    'Crios iCal headline': 'Açık Safari',
+    'Crios iCal info':
+      "Ne yazık ki iOS'ta Chrome'un takvim dosyası oluşturma yöntemiyle ilgili sorunları var.",
+    'Crios iCal solution':
+      '<ol><li><strong>Açık Safari</strong>, ...</li><li>Devam etmek için <strong>insert</strong> fonksiyonunu kullanın.</li></ol>',
+    'MultiDate headline': 'Bu bir etkinlik serisidir',
+    'MultiDate info': 'Parçaları teker teker ekleyin:',
+    Event: 'Etkinlik',
+    'Cancelled Date': 'Bu tarih iptal edildi.',
+    'Delete from Calendar': 'Lütfen takviminizi güncelleyin!',
+    'Subscribe Yahoo': "Yahoo'ya takvim ekleme",
+    'Subscribe Yahoo Details':
+      '<ol><li>Yahoo takvimini açın.</li><li>"Eylemler" sekmesine tıklayın.</li><li>"Diğer Takvimleri Takip Et" öğesini seçin.</li><li>Bir ad seçin ve URL\'yi panonuzdan URL alanına yapıştırın.</li></ol>',
+    Cancel: 'İptal',
+  },
+  zh: {
+    'Add to Calendar': '添加到日历',
+    'iCal File': 'iCal 文件',
+    Close: '关',
+    'Close Selection': '关闭选择',
+    'Click me': '点我',
+    'WebView iCal headline': '打开浏览器',
+    'WebView iCal info': '不幸的是，应用内浏览器在我们生成日历文件的方式上存在问题。',
+    'Clipboard info': '我们自动将魔术 URL 复制到您的剪贴板。',
+    'WebView iCal solution':
+      '<ol><li>打开手机上的任何其他浏览器, ...</li><li>粘贴剪贴板内容并开始。</li></ol>',
+    'Crios iCal headline': '打开 Safari',
+    'Crios iCal info': '不幸的是，iOS 上的 Chrome 在我们生成日历文件的方式上存在问题。',
+    'Crios iCal solution':
+      '<ol><li><strong>打开 Safari</strong>, ...</li><li>粘贴剪贴板内容并开始。</li></ol>',
+    'MultiDate headline': '这是一个活动系列',
+    'MultiDate info': '逐个添加各个部分:',
+    Event: '事件',
+    'Cancelled Date': '此日期已取消。',
+    'Delete from Calendar': '请更新您的日历!',
+    'Subscribe Yahoo': '将日历添加到 Yahoo',
+    'Subscribe Yahoo Details':
+      '<ol><li>打开 Yahoo 日历。</li><li>点击“操作”标签。</li><li>选择“关注其他日历”。</li><li>选择一个名称并将剪贴板中的 URL 粘贴到 URL 字段中。</li></ol>',
+    Cancel: '中止',
+  },
+  ar: {
+    'Add to Calendar': 'إضافة إلى التقويم',
+    'iCal File': 'ملف iCal',
+    Close: 'قريب',
+    'Close Selection': 'إغلاق التحديد',
+    'Click me': 'انقر فوق لي',
+    'WebView iCal headline': 'افتح المستعرض الخاص بك',
+    'WebView iCal info': 'لسوء الحظ ، تواجه المتصفحات داخل التطبيق مشاكل في طريقة إنشاء ملف التقويم.',
+    'Clipboard info': 'قمنا تلقائيًا بنسخ عنوان URL سحري إلى الحافظة الخاصة بك.',
+    'WebView iCal solution':
+      '<ol><li>افتح أي متصفح آخر على هاتفك الذكي, ...</li><li>.الصق محتوى الحافظة واذهب</li></ol>',
+    'Crios iCal headline': 'افتح Safari',
+    'Crios iCal info': 'لسوء الحظ ، يواجه Chrome على iOS مشاكل في طريقة إنشاء ملف التقويم',
+    'Crios iCal solution':
+      '<ol><li><strong>افتح Safari</strong>, ...</li><li>الصق محتوى الحافظة واذهب.</li></ol>',
+    'MultiDate headline': 'هذه سلسلة أحداث',
+    'MultiDate info': 'أضف الأجزاء الفردية واحدة تلو الأخرى:',
+    Event: 'حدث',
+    'Cancelled Date': 'تم إلغاء هذا التاريخ.',
+    'Delete from Calendar': 'الرجاء تحديث التقويم الخاص بك!',
+    'Subscribe Yahoo': 'أضف التقويم إلى Yahoo',
+    'Subscribe Yahoo Details':
+      '<ol><li>افتح تقويم Yahoo.</li><li>انقر فوق علامة التبويب "الإجراءات".</li><li>حدد "متابعة تقويمات أخرى".</li><li>اختر اسمًا والصق عنوان URL من الحافظة الخاصة بك في حقل URL.</li></ol>',
+    Cancel: 'إحباط',
+  },
+  hi: {
+    'Add to Calendar': 'कैलेंडर में जोड़ें',
+    'iCal File': 'iCal फ़ाइल',
+    Close: 'बंद करना',
+    'Close Selection': 'चयन बंद करें',
+    'Click me': 'मुझे क्लिक करें',
+    'WebView iCal headline': 'अपना ब्राउज़र खोलें',
+    'WebView iCal info': 'दुर्भाग्य से, इन-ऐप ब्राउज़र में कैलेंडर फ़ाइल बनाने के तरीके में समस्याएँ हैं।',
+    'Clipboard info': 'हमने आपके क्लिपबोर्ड पर स्वचालित रूप से एक जादुई URL कॉपी कर लिया है।',
+    'WebView iCal solution':
+      '<ol><li>अपने फ़ोन पर <strong>दूसरा ब्राउज़र खोलें</strong>, ...</li><li>क्लिपबोर्ड सामग्री <strong>चिपकाएं</strong> और जाएं।</li></ol>',
+    'Crios iCal headline': 'सफारी खोलें',
+    'Crios iCal info':
+      'दुर्भाग्य से, iOS पर Chrome को कैलेंडर फ़ाइल जेनरेट करने के हमारे तरीके में समस्या है।',
+    'Crios iCal solution':
+      '<ol><li><strong>सफारी खोलें</strong>, ...</li><li>क्लिपबोर्ड सामग्री <strong>चिपकाएं</strong> और जाएं।</li></ol>',
+    'MultiDate headline': 'यह एक इवेंट सीरीज़ है',
+    'MultiDate info': 'अलग-अलग हिस्सों को एक-एक करके जोड़ें:',
+    Event: 'आयोजन',
+    'Cancelled Date': 'यह तिथि रद्द हो गई।',
+    'Delete from Calendar': 'कृपया अपना कैलेंडर अपडेट करें!',
+    'Subscribe Yahoo': 'Yahoo . में कैलेंडर जोड़ें',
+    'Subscribe Yahoo Details':
+      '<ol><li>Yahoo कैलेंडर खोलें।</li><li>"कृती" टैब पर क्लिक करें।</li><li>"इतर कॅलेंडर्सचे अनुसरण करा" चुनें।</li><li>एक नाम चुनें और अपने क्लिपबोर्ड से URL को URL फ़ील्ड में पेस्ट करें।</li></ol>',
+    Cancel: 'रद्द करना',
+  },
+  pl: {
+    'Add to Calendar': 'Dodaj do kalendarza',
+    'iCal File': 'Plik iCal',
+    Close: 'Zamknij',
+    'Close Selection': 'Zamknij wybór',
+    'Click me': 'Kliknij mnie',
+    'WebView iCal headline': 'Otwórz przeglądarkę',
+    'WebView iCal info':
+      'Niestety, przeglądarki in-app mają problemy ze sposobem, w jaki generujemy plik kalendarza.',
+    'Clipboard info': 'Automatycznie skopiowaliśmy magiczny adres URL do schowka.',
+    'WebView iCal solution':
+      '<ol><li><strong>Otwórz inną przeglądarkę</strong> w swoim telefonie, ...</li><li><strong>Wklej</strong> zawartość schowka i ruszaj.</li></ol>',
+    'Crios iCal headline': 'Otwórz Safari',
+    'Crios iCal info': 'Niestety, Chrome na iOS ma problemy ze sposobem generowania pliku kalendarza.',
+    'Crios iCal solution':
+      '<ol><li><strong>Otwórz Safari</strong>, ...</li><li><strong>Wklej</strong> zawartość schowka i ruszaj.</li></ol>',
+    'MultiDate headline': 'To jest cykl imprez',
+    'MultiDate info': 'Dodawać po kolei poszczególne części:',
+    Event: 'Wydarzenie',
+    'Cancelled Date': 'Ta data została odwołana.',
+    'Delete from Calendar': 'Zaktualizuj swój kalendarz!',
+    'Subscribe Yahoo': 'Dodaj kalendarz do Yahoo',
+    'Subscribe Yahoo Details':
+      '<ol><li>Otwórz kalendarz Yahoo.</li><li>Kliknij na zakładkę "Czynności".</li><li>Wybierz "Obserwuj inne kalendarze".</li><li>Wybierz nazwę i wklej adres URL ze schowka w polu URL.</li></ol>',
+    Cancel: 'Anuluj',
+  },
+  id: {
+    'Add to Calendar': 'Tambahkan ke Kalender',
+    'iCal File': 'File iCal',
+    Close: 'Tutup',
+    'Close Selection': 'Seleksi Tutup',
+    'Click me': 'Klik saya',
+    'WebView iCal headline': 'Buka browser Anda',
+    'WebView iCal info':
+      'Sayangnya, browser dalam aplikasi memiliki masalah dengan cara kami menghasilkan file kalender.',
+    'Clipboard info': 'Kami telah secara otomatis menyalin URL ajaib ke clipboard Anda.',
+    'WebView iCal solution':
+      '<ol><li><strong>Buka peramban lain</strong> pada ponsel Anda, ...</li><li>Tempelkan konten clipboard dan pergi.</li></ol>',
+    'Crios iCal headline': 'Buka Safari',
+    'Crios iCal info':
+      'Sayangnya, Chrome di iOS memiliki masalah dengan cara kami menghasilkan file kalender.',
+    'Crios iCal solution':
+      '<ol><li><strong>Buka Safari</strong>, ...</li><li>Tempelkan konten clipboard dan pergi.</li></ol>',
+    'MultiDate headline': 'Ini adalah rangkaian acara',
+    'MultiDate info': 'Tambahkan masing-masing bagian satu per satu:',
+    Event: 'Acara',
+    'Cancelled Date': 'Tanggal ini dibatalkan.',
+    'Delete from Calendar': 'Perbarui kalender Anda!',
+    'Subscribe Yahoo': 'Tambahkan kalender ke Yahoo',
+    'Subscribe Yahoo Details':
+      '<ol><li>Buka kalender Yahoo.</li><li>Klik pada tab "Tindakan".</li><li>Pilih "Ikuti Kalender Lain".</li><li>Pilih nama dan tempelkan URL dari clipboard Anda ke bidang URL.</li></ol>',
+    Cancel: 'Batal',
+  },
+  no: {
+    'Add to Calendar': 'Legg til i kalenderen',
+    'iCal File': 'iCal-fil',
+    Close: 'Lukk',
+    'Close Selection': 'Lukk utvalg',
+    'Click me': 'Klikk på meg',
+    'WebView iCal headline': 'Åpne nettleseren din',
+    'WebView iCal info':
+      'Dessverre har nettlesere i appen problemer med måten vi genererer kalenderfilen på.',
+    'Clipboard info': 'Vi kopierte automatisk en magisk URL til utklippstavlen din.',
+    'WebView iCal solution':
+      '<ol><li><strong>Åpne en annen nettleser</strong> på telefonen, ...</li><li><strong>Lim inn</strong> innholdet på utklippstavlen og gå.</li></ol>',
+    'Crios iCal headline': 'Åpne Safari',
+    'Crios iCal info': 'Dessverre har Chrome på iOS problemer med måten vi genererer kalenderfilen på.',
+    'Crios iCal solution':
+      '<ol><li><strong>Åpne Safari</strong>, ...</li><li><strong>Lim inn</strong> innholdet på utklippstavlen og gå.</li></ol>',
+    'MultiDate headline': 'Dette er en avtaleserie',
+    'MultiDate info': 'Legg til de enkelte datoene i kalenderen din i rekkefølge:',
+    Event: 'Møte',
+    'Cancelled Date': 'Denne datoen ble avlyst.',
+    'Delete from Calendar': 'Oppdater kalenderen din!',
+    'Subscribe Yahoo': 'Legg til kalender til Yahoo',
+    'Subscribe Yahoo Details':
+      '<ol><li>Åpne Yahoo-kalenderen.</li><li>Klikk på «Handlinger»-fanen.</li><li>Velg «Følg andre kalendere».</li><li>Velg et navn og lim inn URL-en fra utklippstavlen i URL-feltet.</li></ol>',
+    Cancel: 'Avbryt',
+  },
+  fi: {
+    'Add to Calendar': 'Lisää kalenteriin',
+    'iCal File': 'iCal-tiedosto',
+    Close: 'Sulje',
+    'Close Selection': 'Sulje valinta',
+    'Click me': 'Klikkaa minua',
+    'WebView iCal headline': 'Avaa selain',
+    'WebView iCal info':
+      'Valitettavasti sovelluksen sisäisillä selaimilla on ongelmia kalenteritiedoston luomisessa.',
+    'Clipboard info': 'Olemme automaattisesti kopioineet maagisen URL-osoitteen leikepöydällesi.',
+    'WebView iCal solution':
+      '<ol><li><strong>Avaa toinen selain</strong> puhelimessasi., ...</li><li><strong>liitä</strong> leikepöydän sisältö ja lähde.</li></ol>',
+    'Crios iCal headline': 'Avaa Safari',
+    'Crios iCal info': 'Valitettavasti iOS:n Chromessa on ongelmia kalenteritiedoston luomisessa.',
+    'Crios iCal solution':
+      '<ol><li><strong>Avaa Safari</strong>, ...</li><li><strong>liitä</strong> leikepöydän sisältö ja lähde.</li></ol>',
+    'MultiDate headline': 'Tämä on tapahtumasarja',
+    'MultiDate info': 'Lisää yksittäiset osat yksi kerrallaan:',
+    Event: 'Tapahtuma',
+    'Cancelled Date': 'Tämä päivämäärä peruttiin.',
+    'Delete from Calendar': 'Päivitä kalenterisi!',
+    'Subscribe Yahoo': 'Lisää kalenteri Yahoo',
+    'Subscribe Yahoo Details':
+      '<ol><li>Avaa Yahoo-kalenteri.</li><li>Napsauta "Toiminnot"-välilehteä.</li><li>Valitse "Seuraa muiden kalentereita".</li><li>Valitse nimi ja liitä URL-osoite leikepöydältäsi URL-kenttään.</li></ol>',
+    Cancel: 'Peruuta',
+  },
+  sv: {
+    'Add to Calendar': 'Lägg till i kalender',
+    'iCal File': 'iCal-fil',
+    Close: 'Stäng',
+    'Close Selection': 'Stäng urvalet',
+    'Click me': 'Klicka på mig',
+    'WebView iCal headline': 'Öppna din webbläsare',
+    'WebView iCal info': 'Tyvärr har webbläsare i appen problem med hur vi genererar kalenderfilen.',
+    'Clipboard info': 'Vi har automatiskt kopierat en magisk URL till ditt klippblock.',
+    'WebView iCal solution':
+      '<ol><li><strong>Öppna en annan webbläsare</strong> på telefonen, ...</li><li><strong>Insätt</strong> innehållet i klippbordet och kör.</li></ol>',
+    'Crios iCal headline': 'Öppna Safari',
+    'Crios iCal info': 'Tyvärr har Chrome på iOS problem med hur vi genererar kalenderfilen.',
+    'Crios iCal solution':
+      '<ol><li><strong>Öppna Safari</strong>, ...</li><li><strong>Insätt</strong> innehållet i klippbordet och kör.</li></ol>',
+    'MultiDate headline': 'Detta är en evenemangsserie',
+    'MultiDate info': 'Lägg till de enskilda delarna en efter en:',
+    Event: 'Evenemang',
+    'Cancelled Date': 'Detta datum har ställts in.',
+    'Delete from Calendar': 'Uppdatera din kalender!',
+    'Subscribe Yahoo': 'Lägg till kalender i Yahoo',
+    'Subscribe Yahoo Details':
+      '<ol><li>Öppna Yahoo-kalendern.</li><li>Klicka på fliken "Åtgärder".</li><li>Välj "Följ andra kalendrar".</li><li>Välj ett namn och klistra in URL:en från klippbordet i URL-fältet.</li></ol>',
+    Cancel: 'Avbryt',
+  },
+  cs: {
+    'Add to Calendar': 'Přidat do kalendáře',
+    'iCal File': 'Soubor iCal',
+    Close: 'Zavřít',
+    'Close Selection': 'Zavřít výběr',
+    'Click me': 'Klikněte na mě',
+    'WebView iCal headline': 'Otevřete prohlížeč',
+    'WebView iCal info':
+      'Prohlížeče v aplikacích mají bohužel problémy se způsobem generování souboru kalendáře.',
+    'Clipboard info': 'Do schránky jsme automaticky zkopírovali kouzelnou adresu URL.',
+    'WebView iCal solution':
+      '<ol><li><strong>Otevření jiného prohlížeče</strong> v telefonu, ...</li><li><strong>Vložte</strong> obsah schránky a přejděte.</li></ol>',
+    'Crios iCal headline': 'Otevřít Safari',
+    'Crios iCal info': 'Chrome v systému iOS má bohužel problémy se způsobem generování souboru kalendáře.',
+    'Crios iCal solution':
+      '<ol><li><strong>Otevřít Safari</strong>, ...</li><li><strong>Vložte</strong> obsah schránky a přejděte.</li></ol>',
+    'MultiDate headline': 'Jedná se o sérii událostí',
+    'MultiDate info': 'Přidávejte jednotlivé díly jeden po druhém:',
+    Event: 'Událost',
+    'Cancelled Date': 'Toto datum bylo zrušeno.',
+    'Delete from Calendar': 'Aktualizujte svůj kalendář!',
+    'Subscribe Yahoo': 'Přidat kalendář do Yahoo',
+    'Subscribe Yahoo Details':
+      '<ol><li>Otevřete kalendář Yahoo.</li><li>Klikněte na kartu "Akce".</li><li>Vyberte možnost "Sledovat další kalendáře".</li><li>Vyberte název a vložte adresu URL ze schránky do pole URL.</li></ol>',
+    Cancel: 'Storno',
+  },
+  ja: {
+    'Add to Calendar': 'カレンダーに追加',
+    'iCal File': 'iCalファイル',
+    Close: '閉じる',
+    'Close Selection': 'クローズ選択',
+    'Click me': 'クリックしてください',
+    'WebView iCal headline': 'ブラウザを起動する',
+    'WebView iCal info': '残念ながら、アプリ内ブラウザは、カレンダーファイルの生成方法に問題があります。',
+    'Clipboard info': '魔法のURLを自動的にクリップボードにコピーしています。',
+    'WebView iCal solution':
+      '<ol><li>スマートフォンで別のブラウザを起動する, ...</li><li>クリップボードの内容を貼り付けて行く。</li></ol>',
+    'Crios iCal headline': 'オープンSafari',
+    'Crios iCal info': '残念ながら、iOS版Chromeでは、カレンダーファイルの生成方法に問題があります。',
+    'Crios iCal solution':
+      '<ol><li><strong>オープンSafari</strong>, ...</li><li>クリップボードの内容を貼り付けて行く。</li></ol>',
+    'MultiDate headline': 'イベントシリーズです',
+    'MultiDate info': '個々のパーツを一つずつ追加していく:',
+    Event: 'イベント',
+    'Cancelled Date': 'この日はキャンセルになりました。',
+    'Delete from Calendar': 'カレンダーを更新する!',
+    'Subscribe Yahoo': 'Yahooにカレンダーを追加する',
+    'Subscribe Yahoo Details':
+      '<ol><li>Yahooカレンダーを開く。</li><li>[実行] タブをクリックします。</li><li>[その他のカレンダーのフォロー] を選択します。</li><li>名前を決めて、クリップボードにあるURLをURL欄に貼り付けます。</li></ol>',
+    Cancel: 'キャンセル',
+  },
+  it: {
+    'Add to Calendar': 'Aggiungi al calendario',
+    'iCal File': 'File iCal',
+    Close: 'Chiudere',
+    'Close Selection': 'Chiudere la selezione',
+    'Click me': 'Clicca su di me',
+    'WebView iCal headline': 'Aprire il browser',
+    'WebView iCal info':
+      'Purtroppo i browser in-app hanno problemi con il modo in cui generiamo il file del calendario.',
+    'Clipboard info': 'Abbiamo copiato automaticamente un URL magico negli appunti.',
+    'WebView iCal solution':
+      '<ol><li><strong>Aprire un altro browser</strong> sul cellulare, ...</li><li><strong>Incollare</strong> il contenuto degli appunti e partire.</li></ol>',
+    'Crios iCal headline': 'Aprire Safari',
+    'Crios iCal info':
+      'Purtroppo, Chrome su iOS ha problemi con il modo in cui generiamo il file del calendario.',
+    'Crios iCal solution':
+      '<ol><li><strong>Aprire Safari</strong>, ...</li><li><strong>Incollare</strong> il contenuto degli appunti e partire.</li></ol>',
+    'MultiDate headline': 'Questa è una serie di eventi',
+    'MultiDate info': 'Aggiungere le singole parti una per una:',
+    Event: 'Evento',
+    'Cancelled Date': 'La data è stata annullata.',
+    'Delete from Calendar': 'Aggiornare il calendario!',
+    'Subscribe Yahoo': 'Aggiungi il calendario a Yahoo',
+    'Subscribe Yahoo Details':
+      '<ol><li>Aprire il calendario di Yahoo.</li><li>Fare clic sulla scheda "Azioni".</li><li>Selezionare "Segui altri calendari".</li><li>Scegliere un nome e incollare l\'URL dagli appunti nel campo URL.</li></ol>',
+    Cancel: 'Annulla',
+  },
+  ko: {
+    'Add to Calendar': '캘린더에 추가',
+    'iCal File': 'iCal 파일',
+    Close: '닫다',
+    'Close Selection': '선택 닫기',
+    'Click me': '클릭 해주세요',
+    'WebView iCal headline': '브라우저 열기',
+    'WebView iCal info': '불행히도 인앱 브라우저는 캘린더 파일을 생성하는 방식에 문제가 있습니다.',
+    'Clipboard info': '매직 URL을 클립보드에 자동으로 복사했습니다.',
+    'WebView iCal solution':
+      '<ol><li>휴대전화에서 다른 브라우저 열기, ...</li><li>클립보드 내용을 붙여넣고 이동합니다.</li></ol>',
+    'Crios iCal headline': 'Safari 열기',
+    'Crios iCal info': '불행히도 iOS의 Chrome은 캘린더 파일을 생성하는 방식에 문제가 있습니다.',
+    'Crios iCal solution':
+      '<ol><li><strong>Safari 열기</strong>, ...</li><li>클립보드 내용을 붙여넣고 이동합니다.</li></ol>',
+    'MultiDate headline': '이벤트 시리즈입니다',
+    'MultiDate info': '개별 부품을 하나씩 추가:',
+    Event: '이벤트',
+    'Cancelled Date': '이 날짜는 취소되었습니다.',
+    'Delete from Calendar': '캘린더를 업데이트하세요!',
+    'Subscribe Yahoo': 'Yahoo에 캘린더 추가',
+    'Subscribe Yahoo Details':
+      '<ol><li>Yahoo 캘린더를 엽니다.</li><li>"동작" 탭을 클릭합니다.</li><li>"다른 일정관리 팔로우"를 선택합니다.</li><li>이름을 선택하고 클립보드의 URL을 URL 필드에 붙여넣습니다.</li></ol>',
+    Cancel: '취소',
+  },
+  vi: {
+    'Add to Calendar': 'Thêm vào Lịch',
+    'iCal File': 'Tệp iCal',
+    Close: 'Đóng',
+    'Close Selection': 'Đóng lựa chọn',
+    'Click me': 'Nhấp vào đây',
+    'WebView iCal headline': 'Mở trình duyệt của bạn',
+    'WebView iCal info':
+      'Rất tiếc, các trình duyệt trong ứng dụng gặp sự cố với cách chúng tôi tạo tệp lịch.',
+    'Clipboard info': 'Chúng tôi đã tự động sao chép một URL ma thuật vào khay nhớ tạm của bạn.',
+    'WebView iCal solution':
+      '<ol><li><strong> Mở trình duyệt khác </strong> trên điện thoại của bạn, ...</li><li><strong> Dán </strong> nội dung khay nhớ tạm và bắt đầu.</li></ol>',
+    'Crios iCal headline': 'Mở Safari',
+    'Crios iCal info': 'Rất tiếc, Chrome trên iOS gặp sự cố với cách chúng tôi tạo tệp lịch.',
+    'Crios iCal solution':
+      '<ol><li><strong>Mở Safari</strong>, ...</li><li><strong> Dán </strong> nội dung khay nhớ tạm và bắt đầu.</li></ol>',
+    'MultiDate headline': 'Đây là một chuỗi sự kiện',
+    'MultiDate info': 'Thêm từng phần riêng lẻ một:',
+    Event: 'Biến cố',
+    'Cancelled Date': 'Ngày này đã bị hủy.',
+    'Delete from Calendar': 'Cập nhật lịch của bạn!',
+    'Subscribe Yahoo': 'Thêm lịch vào Yahoo',
+    'Subscribe Yahoo Details':
+      '<ol><li>Mở Lịch Yahoo.</li><li>Nhấp vào tab "Hành động".</li><li>Chọn "Theo dõi các Lịch khác".</li><li>Chọn tên và dán URL từ khay nhớ tạm của bạn vào trường URL.</li></ol>',
+    Cancel: 'Hủy bỏ',
+  },
+};
+function atcb_translate_hook(identifier, data) {
+  const searchKey = identifier.replace(/\s+/g, '').toLowerCase();
+  if (
+    data.customLabels != null &&
+    data.customLabels[`${searchKey}`] != null &&
+    data.customLabels[`${searchKey}`] != ''
+  ) {
+    return atcb_rewrite_html_elements(data.customLabels[`${searchKey}`]);
+  } else {
+    return atcb_translate(identifier, data.language);
+  }
+}
+function atcb_translate(identifier, language) {
+  if (!language) {
+    language = 'en';
+  }
+  if (i18nStrings[`${language}`][`${identifier}`]) {
+    return i18nStrings[`${language}`][`${identifier}`];
+  }
+  return identifier;
+}
+
+
+let atcbInitialInit = false;
+function atcb_init() {
+  if (!atcbInitialInit) {
+    atcb_set_global_event_listener();
+  }
+  atcb_init_log_msg();
+  if (!isBrowser()) {
+    console.error('no further initialization due to wrong environment (no browser)');
+    return;
+  }
+  const atcButtons = document.querySelectorAll('.atcb');
+  if (atcButtons.length > 0) {
+    const atcButtonsInitialized = document.querySelectorAll('.atcb-initialized');
+    for (let i = 0; i < atcButtons.length; i++) {
+      if (atcButtons[parseInt(i)].classList.contains('atcb-initialized')) {
+        continue;
       }
-    })
-  );
-  // global listener to arrow key optionlist navigation
+      const atcbJsonInput = (function () {
+        try {
+          return JSON.parse(
+            atcb_secure_content(atcButtons[parseInt(i)].innerHTML.replace(/(\r\n|\n|\r)/g, ''), false)
+          );
+        } catch (e) {
+          console.error(
+            'Add to Calendar Button generation failed: JSON content provided, but badly formatted (in doubt, try some tool like https://jsonformatter.org/ to validate).\r\nError message: ' +
+              e
+          );
+          return '';
+        }
+      })();
+      if (atcbJsonInput === '') {
+        continue;
+      }
+      const atcbJsonInputPatched = atcb_patch_config(atcbJsonInput);
+      if (atcb_check_required(atcbJsonInputPatched)) {
+        const data = atcb_decorate_data(atcbJsonInputPatched);
+        if (data.identifier == null || data.identifier == '') {
+          data.identifier = 'atcb-btn-' + (i + atcButtonsInitialized.length + 1);
+        }
+        if (atcb_validate(data)) {
+          atcb_generate_button(atcButtons[parseInt(i)], data);
+          atcb_update_state_management(data);
+        }
+      }
+    }
+  }
+}
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+function atcb_action(data, triggerElement, keyboardTrigger = true) {
+  if (!atcbInitialInit) {
+    atcb_set_global_event_listener();
+  }
+  atcb_init_log_msg();
+  data = atcb_secure_content(data);
+  if (!atcb_check_required(data)) {
+    throw new Error('Add to Calendar Button generation failed: required data missing; see console logs');
+  }
+  data = atcb_decorate_data(data);
+  if (triggerElement) {
+    if (triggerElement.id != null && triggerElement.id != '') {
+      data.identifier = triggerElement.id;
+    } else {
+      if (data.identifier != null && data.identifier != '') {
+        triggerElement.id = data.identifier;
+      } else {
+        data.identifier = 'atcb-btn-custom';
+      }
+    }
+    if (data.listStyle == 'dropdown') {
+      data.listStyle = 'overlay';
+    }
+  } else {
+    data.identifier = 'atcb-btn-custom';
+    data.listStyle = 'modal';
+    data.trigger = 'click';
+  }
+  if (!atcb_validate(data)) {
+    throw new Error(
+      'Add to Calendar Button generation (' + data.identifier + ') failed: invalid data; see console logs'
+    );
+  }
+  atcb_update_state_management(data);
+  atcb_toggle('open', data, triggerElement, keyboardTrigger);
+  console.log('Add to Calendar Button "' + data.identifier + '" triggered');
+}
+function atcb_update_state_management(data) {
+  const singleDates = [];
+  for (let i = 0; i < data.options.length; i++) {
+    singleDates[data.options[`${i}`]] = [];
+    for (let id = 1; id <= data.dates.length; id++) {
+      singleDates[data.options[`${i}`]].push(0);
+    }
+  }
+  atcbStates[data.identifier] = singleDates;
+}
+function atcb_init_log_msg() {
+  if (!atcbInitialInit) {
+    console.log('Add to Calendar Button Script initialized (version ' + atcbVersion + ')');
+    console.log('See https://github.com/add2cal/add-to-calendar-button for details');
+    atcbInitialInit = true;
+  }
+}
+function atcb_set_global_event_listener() {
+  if (!isBrowser()) {
+    return;
+  }
+  document.addEventListener('keyup', function (event) {
+    if (event.key === 'Escape') {
+      atcb_toggle('close', '', '', true);
+    }
+  });
   document.addEventListener('keydown', (event) => {
     if (
       document.querySelector('.atcb-list') &&
@@ -3665,24 +3447,27 @@ if (isBrowser()) {
         }
       } else {
         event.preventDefault();
-        if (
-          document.querySelector('.atcb-list-wrapper.atcb-dropup') &&
-          (event.key === 'ArrowDown' || event.key === 'ArrowUp')
-        ) {
-          document.querySelector('.atcb-list-item[data-option-number="' + optionListCount + '"]').focus();
-        } else {
-          document.querySelector('.atcb-list-item[data-option-number="1"]').focus();
+        switch (event.key) {
+          case 'ArrowDown':
+            document.querySelector('.atcb-list-item[data-option-number="1"]').focus();
+            break;
+          case 'ArrowUp':
+            document.querySelector('.atcb-list-item[data-option-number="' + optionListCount + '"]').focus();
+            break;
+          default:
+            document.querySelector('.atcb-list-item[data-option-number="1"]').focus();
+            break;
         }
       }
     }
   });
-  // Global listener to any screen changes
   window.addEventListener(
     'resize',
     atcb_throttle(() => {
       const activeOverlay = document.getElementById('atcb-bgoverlay');
       if (activeOverlay != null) {
         atcb_set_fullsize(activeOverlay);
+        atcb_manage_body_scroll();
       }
       const activeButton = document.querySelector('.atcb-active');
       const activeList = document.querySelector('.atcb-dropdown');
@@ -3693,395 +3478,13 @@ if (isBrowser()) {
   );
 }
 
-// TRANSLATIONS
-// the database object
-const i18nStrings = {
-  en: {
-    'Add to Calendar': 'Add to Calendar',
-    'iCal File': 'iCal File',
-    Close: 'Close',
-    'Close Selection': 'Close Selection',
-    'Click me': 'Click me',
-    'WebView iCal headline': 'Open your browser',
-    'WebView iCal info':
-      'Unfortunately, in-app browsers have problems with the way we generate the calendar file.',
-    'WebView iCal solution 1': "We automatically put a magical URL into your phone's clipboard.",
-    'WebView iCal solution 2':
-      '<ol><li><strong>Open another browser</strong> on your phone, ...</li><li><strong>Paste</strong> the clipboard content and go.</li></ol>',
-    'Crios iCal headline': 'Open Safari',
-    'Crios iCal info':
-      'Unfortunately, Chrome on iOS has problems with the way we generate the calendar file.',
-    'Crios iCal solution 2':
-      '<ol><li><strong>Open Safari</strong>, ...</li><li><strong>Paste</strong> the clipboard content and go.</li></ol>',
-  },
-  de: {
-    'Add to Calendar': 'Im Kalender speichern',
-    'iCal File': 'iCal-Datei',
-    Close: 'Schließen',
-    'Close Selection': 'Auswahl schließen',
-    'Click me': 'Klick mich',
-    'WebView iCal headline': 'Öffne deinen Browser',
-    'WebView iCal info':
-      'Leider haben In-App-Browser Probleme mit der Art, wie wir Kalender-Dateien erzeugen.',
-    'WebView iCal solution 1':
-      'Wir haben automatisch eine magische URL in die Zwischenablage deines Smartphones kopiert.',
-    'WebView iCal solution 2':
-      '<ol><li><strong>Öffne einen anderen Browser</strong> auf deinem Smartphone, ...</li><li>Nutze die <strong>Einfügen</strong>-Funktion, um fortzufahren.</li></ol>',
-    'Crios iCal headline': 'Öffne Safari',
-    'Crios iCal info': 'Leider Chrome unter iOS Probleme mit der Art, wie wir Kalender-Dateien erzeugen.',
-    'Crios iCal solution 2':
-      '<ol><li><strong>Öffne Safari</strong>, ...</li><li>Nutze die <strong>Einfügen</strong>-Funktion, um fortzufahren.</li></ol>',
-  },
-  es: {
-    'Add to Calendar': 'Añadir al Calendario',
-    'iCal File': 'iCal Ficha',
-    Close: 'Ciérralo',
-    'Close Selection': 'Cerrar Selección',
-    'Click me': 'Haz clic mí',
-    'WebView iCal headline': 'Abra su browser',
-    'WebView iCal info':
-      'Lamentablemente, los browsers in-app tienen problemas con la forma en que generamos el archivo del calendario.',
-    'WebView iCal solution 1':
-      'Hemos copiado automáticamente una URL mágica en el portapapeles de tu smartphone.',
-    'WebView iCal solution 2':
-      '<ol><li><strong>Abre otro browser</strong> en tu smartphone, ...</li><li>Utilice la función de <strong>pegar</strong> para continuar.</li></ol>',
-    'Crios iCal headline': 'Abrir Safari',
-    'Crios iCal info':
-      'Lamentablemente, Chrome en iOS tiene problemas con la forma de generar el archivo de calendario.',
-    'Crios iCal solution 2':
-      '<ol><li><strong>Abrir Safari</strong>, ...</li><li>Utilice la función de <strong>pegar</strong> para continuar.</li></ol>',
-  },
-  pt: {
-    'Add to Calendar': 'Incluir no Calendário',
-    'iCal File': 'Ficheiro iCal',
-    Close: 'Fechar',
-    'Close Selection': 'Fechar selecção',
-    'Click me': 'Clicar-me',
-    'WebView iCal headline': 'Abra o seu browser',
-    'WebView iCal info':
-      'Infelizmente, os navegadores em tampas têm problemas com a forma como geramos o ficheiro de calendário.',
-    'WebView iCal solution 1':
-      'Copiámos automaticamente um URL mágico para a área de transferência do seu smartphone.',
-    'WebView iCal solution 2':
-      '<ol><li><strong>Abrir outro browser</strong> en tu smartphone, ...</li><li>Use a função <forte>colar</strong> para continuar.</li></ol>',
-    'Crios iCal headline': 'Safari aberto',
-    'Crios iCal info':
-      'Infelizmente, o cromado no iOS tem problemas com a forma como geramos o ficheiro do calendário.',
-    'Crios iCal solution 2':
-      '<ol><li><strong>Safari aberto</strong>, ...</li><li>Use a função <forte>colar</strong> para continuar.</li></ol>',
-  },
-  fr: {
-    'Add to Calendar': 'Ajout au Calendrier',
-    'iCal File': 'iCal Fichier',
-    Close: 'Fermez',
-    'Close Selection': 'Fermez la sélection',
-    'Click me': 'Cliquez-moi',
-    'WebView iCal headline': 'Ouvrez votre navigateur',
-    'WebView iCal info':
-      'Malheureusement, les navigateurs in-app ont des problèmes avec la manière dont nous créons les fichiers de calendrier.',
-    'WebView iCal solution 1':
-      'Nous avons automatiquement copié une URL magique dans le presse-papiers de ton smartphone.',
-    'WebView iCal solution 2':
-      '<ol><li><strong>Ouvre un autre navigateur</strong> sur ton smartphone, ...</li><li>Utilise la fonction <strong>insérer</strong> pour continuer.</li></ol>',
-    'Crios iCal headline': 'Ouvre Safari',
-    'Crios iCal info':
-      'Malheureusement, Chrome sur iOS a des problèmes avec la façon dont nous générons le fichier du calendrier.',
-    'Crios iCal solution 2':
-      '<ol><li><strong>Ouvre Safari</strong>, ...</li><li>Utilise la fonction <strong>insérer</strong> pour continuer.</li></ol>',
-  },
-  nl: {
-    'Add to Calendar': 'Opslaan in Kalender',
-    'iCal File': 'iCal File',
-    Close: 'Sluiten',
-    'Close Selection': 'Sluit selectie',
-    'Click me': 'Klik me',
-    'WebView iCal headline': 'Open uw browser',
-    'WebView iCal info':
-      'Helaas hebben in-app browsers problemen met de manier waarop wij kalenderbestanden maken.',
-    'WebView iCal solution 1':
-      'We hebben automatisch een magische URL naar het klembord van uw smartphone gekopieerd.',
-    'WebView iCal solution 2':
-      '<ol><li><strong>Open een andere browser</strong> op uw smartphone, ...</li><li>Gebruik de <strong>insert</strong> functie om verder te gaan.</li></ol>',
-    'Crios iCal headline': 'Open Safari',
-    'Crios iCal info':
-      'Helaas heeft Chrome op iOS problemen met de manier waarop we het kalenderbestand genereren.',
-    'Crios iCal solution 2':
-      '<ol><li><strong>Open Safari</strong>, ...</li><li>Gebruik de <strong>insert</strong> functie om verder te gaan.</li></ol>',
-  },
-  tr: {
-    'Add to Calendar': 'Takvime Ekle',
-    'iCal File': 'iCal Dosyası',
-    Close: 'Kapat',
-    'Close Selection': 'Seçimi kapat',
-    'Click me': 'Beni tıklayın',
-    'WebView iCal headline': 'Tarayıcınızı açın',
-    'WebView iCal info':
-      'Ne yazık ki, uygulama içi tarayıcılar takvim dosyalarını oluşturma şeklimizle ilgili sorunlar yaşıyor.',
-    'WebView iCal solution 1': 'Akıllı telefonunuzun panosuna otomatik olarak sihirli bir URL kopyaladık.',
-    'WebView iCal solution 2':
-      '<ol><li><strong>Akıllı telefonunuzda başka bir tarayıcı açın</strong>, ...</li><li>Devam etmek için <strong>insert</strong> fonksiyonunu kullanın.</li></ol>',
-    'Crios iCal headline': 'Açık Safari',
-    'Crios iCal info':
-      "Ne yazık ki iOS'ta Chrome'un takvim dosyası oluşturma yöntemiyle ilgili sorunları var.",
-    'Crios iCal solution 2':
-      '<ol><li><strong>Açık Safari</strong>, ...</li><li>Devam etmek için <strong>insert</strong> fonksiyonunu kullanın.</li></ol>',
-  },
-  zh: {
-    'Add to Calendar': '添加到日历',
-    'iCal File': 'iCal 文件',
-    Close: '关',
-    'Close Selection': '关闭选择',
-    'Click me': '点我',
-    'WebView iCal headline': '打开浏览器',
-    'WebView iCal info': '不幸的是，应用内浏览器在我们生成日历文件的方式上存在问题.',
-    'WebView iCal solution 1': '我们会自动将一个神奇的 URL 放入您手机的剪贴板.',
-    'WebView iCal solution 2':
-      '<ol><li>打开手机上的任何其他浏览器, ...</li><li>粘贴剪贴板内容并开始.</li></ol>',
-    'Crios iCal headline': '打开 Safari',
-    'Crios iCal info': '不幸的是，iOS 上的 Chrome 在我们生成日历文件的方式上存在问题.',
-    'Crios iCal solution 2':
-      '<ol><li><strong>打开 Safari</strong>, ...</li><li>粘贴剪贴板内容并开始.</li></ol>',
-  },
-  ar: {
-    'Add to Calendar': 'إضافة إلى التقويم',
-    'iCal File': 'ملف iCal',
-    Close: 'قريب',
-    'Close Selection': 'إغلاق التحديد',
-    'Click me': 'انقر فوق لي',
-    'WebView iCal headline': 'افتح المستعرض الخاص بك',
-    'WebView iCal info': 'لسوء الحظ ، تواجه المتصفحات داخل التطبيق مشاكل في طريقة إنشاء ملف التقويم.',
-    'WebView iCal solution 1': 'نضع تلقائيًا عنوان ويب سحريًا في حافظة هاتفك.',
-    'WebView iCal solution 2':
-      '<ol><li>افتح أي متصفح آخر على هاتفك الذكي, ...</li><li>الصق محتوى الحافظة واذهب.</li></ol>',
-    'Crios iCal headline': 'افتح Safari',
-    'Crios iCal info': 'لسوء الحظ ، يواجه Chrome على iOS مشاكل في طريقة إنشاء ملف التقويم.',
-    'Crios iCal solution 2':
-      '<ol><li><strong>افتح Safari</strong>, ...</li><li>الصق محتوى الحافظة واذهب.</li></ol>',
-  },
-  hi: {
-    'Add to Calendar': 'कैलेंडर में जोड़ें',
-    'iCal File': 'iCal फ़ाइल',
-    Close: 'बंद करना',
-    'Close Selection': 'चयन बंद करें',
-    'Click me': 'मुझे क्लिक करें',
-    'WebView iCal headline': 'अपना ब्राउज़र खोलें',
-    'WebView iCal info': 'दुर्भाग्य से, इन-ऐप ब्राउज़र में कैलेंडर फ़ाइल बनाने के तरीके में समस्याएँ हैं।',
-    'WebView iCal solution 1': 'हम स्वचालित रूप से आपके फ़ोन के क्लिपबोर्ड में एक जादुई URL डालते हैं।',
-    'WebView iCal solution 2':
-      '<ol><li>अपने फ़ोन पर <strong>दूसरा ब्राउज़र खोलें</strong>, ...</li><li>क्लिपबोर्ड सामग्री <strong>चिपकाएं</strong> और जाएं।</li></ol>',
-    'Crios iCal headline': 'सफारी खोलें',
-    'Crios iCal info':
-      'दुर्भाग्य से, iOS पर Chrome को कैलेंडर फ़ाइल जेनरेट करने के हमारे तरीके में समस्या है।',
-    'Crios iCal solution 2':
-      '<ol><li><strong>सफारी खोलें</strong>, ...</li><li>क्लिपबोर्ड सामग्री <strong>चिपकाएं</strong> और जाएं।</li></ol>',
-  },
-  pl: {
-    'Add to Calendar': 'Dodaj do kalendarza',
-    'iCal File': 'Plik iCal',
-    Close: 'Zamknij',
-    'Close Selection': 'Zamknij wybór',
-    'Click me': 'Kliknij mnie',
-    'WebView iCal headline': 'Otwórz przeglądarkę',
-    'WebView iCal info':
-      'Niestety, przeglądarki in-app mają problemy ze sposobem, w jaki generujemy plik kalendarza.',
-    'WebView iCal solution 1': 'Automatycznie umieszczamy magiczny adres URL w schowku telefonu.',
-    'WebView iCal solution 2':
-      '<ol><li><strong>Otwórz inną przeglądarkę</strong> w swoim telefonie, ...</li><li><strong>Wklej</strong> zawartość schowka i ruszaj.</li></ol>',
-    'Crios iCal headline': 'Otwórz Safari',
-    'Crios iCal info': 'Niestety, Chrome na iOS ma problemy ze sposobem generowania pliku kalendarza.',
-    'Crios iCal solution 2':
-      '<ol><li><strong>Otwórz Safari</strong>, ...</li><li><strong>Wklej</strong> zawartość schowka i ruszaj.</li></ol>',
-  },
-  id: {
-    'Add to Calendar': 'Tambahkan ke Kalender',
-    'iCal File': 'File iCal',
-    Close: 'Tutup',
-    'Close Selection': 'Seleksi Tutup',
-    'Click me': 'Klik saya',
-    'WebView iCal headline': 'Buka browser Anda',
-    'WebView iCal info':
-      'Sayangnya, browser dalam aplikasi memiliki masalah dengan cara kami menghasilkan file kalender.',
-    'WebView iCal solution 1': 'Kami secara otomatis memasukkan URL ajaib ke clipboard ponsel Anda.',
-    'WebView iCal solution 2':
-      '<ol><li><strong>Buka peramban lain</strong> pada ponsel Anda, ...</li><li>Tempelkan konten clipboard dan pergi.</li></ol>',
-    'Crios iCal headline': 'Buka Safari',
-    'Crios iCal info':
-      'Sayangnya, Chrome di iOS memiliki masalah dengan cara kami menghasilkan file kalender.',
-    'Crios iCal solution 2':
-      '<ol><li><strong>Buka Safari</strong>, ...</li><li>Tempelkan konten clipboard dan pergi.</li></ol>',
-  },
-  no: {
-    'Add to Calendar': 'Legg til i kalenderen',
-    'iCal File': 'iCal-fil',
-    Close: 'Lukk',
-    'Close Selection': 'Lukk utvalg',
-    'Click me': 'Klikk på meg',
-    'WebView iCal headline': 'Åpne nettleseren din',
-    'WebView iCal info':
-      'Dessverre har nettlesere i appen problemer med måten vi genererer kalenderfilen på.',
-    'WebView iCal solution 1': 'Vi legger automatisk inn en magisk URL i telefonens utklippstavle.',
-    'WebView iCal solution 2':
-      '<ol><li><strong>Åpne en annen nettleser</strong> på telefonen, ...</li><li><strong>Lim inn</strong> innholdet på utklippstavlen og gå.</li></ol>',
-    'Crios iCal headline': 'Åpne Safari',
-    'Crios iCal info': 'Dessverre har Chrome på iOS problemer med måten vi genererer kalenderfilen på.',
-    'Crios iCal solution 2':
-      '<ol><li><strong>Åpne Safari</strong>, ...</li><li><strong>Lim inn</strong> innholdet på utklippstavlen og gå.</li></ol>',
-  },
-  fi: {
-    'Add to Calendar': 'Lisää kalenteriin',
-    'iCal File': 'iCal-tiedosto',
-    Close: 'Sulje',
-    'Close Selection': 'Sulje valinta',
-    'Click me': 'Klikkaa minua',
-    'WebView iCal headline': 'Avaa selain',
-    'WebView iCal info':
-      'Valitettavasti sovelluksen sisäisillä selaimilla on ongelmia kalenteritiedoston luomisessa.',
-    'WebView iCal solution 1': 'Laitamme automaattisesti maagisen URL-osoitteen puhelimesi leikepöydälle.',
-    'WebView iCal solution 2':
-      '<ol><li><strong>Avaa toinen selain</strong> puhelimessasi., ...</li><li><strong>liitä</strong> leikepöydän sisältö ja lähde.</li></ol>',
-    'Crios iCal headline': 'Avaa Safari',
-    'Crios iCal info': 'Valitettavasti iOS:n Chromessa on ongelmia kalenteritiedoston luomisessa.',
-    'Crios iCal solution 2':
-      '<ol><li><strong>Avaa Safari</strong>, ...</li><li><strong>liitä</strong> leikepöydän sisältö ja lähde.</li></ol>',
-  },
-  sv: {
-    'Add to Calendar': 'Lägg till i kalender',
-    'iCal File': 'iCal-fil',
-    Close: 'Stäng',
-    'Close Selection': 'Stäng urvalet',
-    'Click me': 'Klicka på mig',
-    'WebView iCal headline': 'Öppna din webbläsare',
-    'WebView iCal info': 'Tyvärr har webbläsare i appen problem med hur vi genererar kalenderfilen.',
-    'WebView iCal solution 1': 'Vi lägger automatiskt in en magisk webbadress i telefonens klippbräda.',
-    'WebView iCal solution 2':
-      '<ol><li><strong>Öppna en annan webbläsare</strong> på telefonen, ...</li><li><strong>Insätt</strong> innehållet i klippbordet och kör.</li></ol>',
-    'Crios iCal headline': 'Öppna Safari',
-    'Crios iCal info': 'Tyvärr har Chrome på iOS problem med hur vi genererar kalenderfilen.',
-    'Crios iCal solution 2':
-      '<ol><li><strong>Öppna Safari</strong>, ...</li><li><strong>Insätt</strong> innehållet i klippbordet och kör.</li></ol>',
-  },
-  cs: {
-    'Add to Calendar': 'Přidat do kalendáře',
-    'iCal File': 'Soubor iCal',
-    Close: 'Zavřít',
-    'Close Selection': 'Zavřít výběr',
-    'Click me': 'Klikněte na mě',
-    'WebView iCal headline': 'Otevřete prohlížeč',
-    'WebView iCal info':
-      'Prohlížeče v aplikacích mají bohužel problémy se způsobem generování souboru kalendáře.',
-    'WebView iCal solution 1': 'Do schránky telefonu automaticky vložíme kouzelnou adresu URL.',
-    'WebView iCal solution 2':
-      '<ol><li><strong>Otevření jiného prohlížeče</strong> v telefonu, ...</li><li><strong>Vložte</strong> obsah schránky a přejděte.</li></ol>',
-    'Crios iCal headline': 'Otevřít Safari',
-    'Crios iCal info': 'Chrome v systému iOS má bohužel problémy se způsobem generování souboru kalendáře.',
-    'Crios iCal solution 2':
-      '<ol><li><strong>Otevřít Safari</strong>, ...</li><li><strong>Vložte</strong> obsah schránky a přejděte.</li></ol>',
-  },
-  ja: {
-    'Add to Calendar': 'カレンダーに追加',
-    'iCal File': 'iCalファイル',
-    Close: '閉じる',
-    'Close Selection': 'クローズ選択',
-    'Click me': 'クリックしてください',
-    'WebView iCal headline': 'ブラウザを起動する',
-    'WebView iCal info': '残念ながら、アプリ内ブラウザは、カレンダーファイルの生成方法に問題があります。',
-    'WebView iCal solution 1': 'あなたの携帯電話のクリップボードに、魔法のようなURLを自動的に入れます。',
-    'WebView iCal solution 2':
-      '<ol><li>スマートフォンで別のブラウザを起動する, ...</li><li>クリップボードの内容を貼り付けて行く。</li></ol>',
-    'Crios iCal headline': 'オープンSafari',
-    'Crios iCal info': '残念ながら、iOS版Chromeでは、カレンダーファイルの生成方法に問題があります。',
-    'Crios iCal solution 2':
-      '<ol><li><strong>オープンSafari</strong>, ...</li><li>クリップボードの内容を貼り付けて行く。</li></ol>',
-  },
-  it: {
-    'Add to Calendar': 'Aggiungi al calendario',
-    'iCal File': 'File iCal',
-    Close: 'Chiudere',
-    'Close Selection': 'Chiudere la selezione',
-    'Click me': 'Clicca su di me',
-    'WebView iCal headline': 'Aprire il browser',
-    'WebView iCal info':
-      'Purtroppo i browser in-app hanno problemi con il modo in cui generiamo il file del calendario.',
-    'WebView iCal solution 1': 'Inseriamo automaticamente un URL magico negli appunti del telefono.',
-    'WebView iCal solution 2':
-      '<ol><li><strong>Aprire un altro browser</strong> sul cellulare, ...</li><li><strong>Incollare</strong> il contenuto degli appunti e partire.</li></ol>',
-    'Crios iCal headline': 'Aprire Safari',
-    'Crios iCal info':
-      'Purtroppo, Chrome su iOS ha problemi con il modo in cui generiamo il file del calendario.',
-    'Crios iCal solution 2':
-      '<ol><li><strong>Aprire Safari</strong>, ...</li><li><strong>Incollare</strong> il contenuto degli appunti e partire.</li></ol>',
-  },
-  ko: {
-    'Add to Calendar': '캘린더에 추가',
-    'iCal File': 'iCal 파일',
-    Close: '닫다',
-    'Close Selection': '선택 닫기',
-    'Click me': '클릭 해주세요',
-    'WebView iCal headline': '브라우저 열기',
-    'WebView iCal info': '불행히도 인앱 브라우저는 캘린더 파일을 생성하는 방식에 문제가 있습니다.',
-    'WebView iCal solution 1': '자동으로 마법의 URL을 휴대전화의 클립보드에 넣습니다.',
-    'WebView iCal solution 2':
-      '<ol><li>휴대전화에서 다른 브라우저 열기, ...</li><li>클립보드 내용을 붙여넣고 이동합니다.</li></ol>',
-    'Crios iCal headline': 'Safari 열기',
-    'Crios iCal info': '불행히도 iOS의 Chrome은 캘린더 파일을 생성하는 방식에 문제가 있습니다.',
-    'Crios iCal solution 2':
-      '<ol><li><strong>Safari 열기</strong>, ...</li><li>클립보드 내용을 붙여넣고 이동합니다.</li></ol>',
-  },
-  vi: {
-    'Add to Calendar': 'Thêm vào Lịch',
-    'iCal File': 'Tệp iCal',
-    Close: 'Đóng',
-    'Close Selection': 'Đóng lựa chọn',
-    'Click me': 'Nhấp vào đây',
-    'WebView iCal headline': 'Mở trình duyệt của bạn',
-    'WebView iCal info':
-      'Rất tiếc, các trình duyệt trong ứng dụng gặp sự cố với cách chúng tôi tạo tệp lịch.',
-    'WebView iCal solution 1':
-      'Chúng tôi tự động đặt một URL kỳ diệu vào khay nhớ tạm thời trên điện thoại của bạn.',
-    'WebView iCal solution 2':
-      '<ol><li><strong> Mở trình duyệt khác </strong> trên điện thoại của bạn, ...</li><li><strong> Dán </strong> nội dung khay nhớ tạm và bắt đầu.</li></ol>',
-    'Crios iCal headline': 'Mở Safari',
-    'Crios iCal info': 'Rất tiếc, Chrome trên iOS gặp sự cố với cách chúng tôi tạo tệp lịch.',
-    'Crios iCal solution 2':
-      '<ol><li><strong>Mở Safari</strong>, ...</li><li><strong> Dán </strong> nội dung khay nhớ tạm và bắt đầu.</li></ol>',
-  },
-};
 
-// hook, which can be used to override all potential "hard" strings by setting customLabel_ + the key (without spaces) as option key and the intended string as value
-function atcb_translate_hook(identifier, language, data) {
-  const searchKey = identifier.replace(/\s+/g, '').toLowerCase();
-  if (
-    data.customLabels != null &&
-    data.customLabels[`${searchKey}`] != null &&
-    data.customLabels[`${searchKey}`] != ''
-  ) {
-    return atcb_rewrite_html_elements(data.customLabels[`${searchKey}`]);
-  } else {
-    return atcb_translate(identifier, language);
-  }
-}
-
-function atcb_translate(identifier, language) {
-  // set default language
-  if (!language) {
-    language = 'en';
-  }
-  // return string, if available
-  if (i18nStrings[`${language}`][`${identifier}`]) {
-    return i18nStrings[`${language}`][`${identifier}`];
-  }
-  // if nothing found, return the original identifier
-  return identifier;
-}
-
-// START INIT
+/*! START INIT */
 if (isBrowser()) {
   if (document.readyState !== 'loading') {
-    // if the script is loaded after the page has been loaded, run the initilization
     atcb_init();
   } else {
-    // otherwise, init the magic as soon as the DOM has been loaded
     document.addEventListener('DOMContentLoaded', atcb_init, false);
   }
 }
-// END INIT
+/*! END INIT */

@@ -5,7 +5,7 @@
  * Add to Calendar Button
  * ++++++++++++++++++++++
  *
- * Style: Default
+ * Style: Date
  *
  * Version: 1.18.0
  * Creator: Jens Kuerschner (https://jenskuerschner.de)
@@ -80,7 +80,7 @@ body.atcb-dark .atcb-modal-box.atcb-bodyScheme,
 #atcb-bgoverlay.atcb-dark,
 body.atcb-dark #atcb-bgoverlay.atcb-bodyScheme {
   --atcb-background: #2e2e2e;
-  --atcb-background-hover: #373737;
+  --atcb-background-hover: #474747;
   --atcb-border: #4d4d4d;
   --atcb-text: #dedede;
   --atcb-text-2: #f1f1f1;
@@ -143,7 +143,7 @@ body.atcb-dark #atcb-bgoverlay.atcb-bodyScheme {
 }
 
 /******************************
- * The triggering button
+ * The triggering button (and at the same time date button)
  */
 
 .atcb-button-wrapper {
@@ -152,31 +152,31 @@ body.atcb-dark #atcb-bgoverlay.atcb-bodyScheme {
   position: relative;
 }
 
-.atcb-button {
-  align-items: center;
-  background-color: var(--atcb-background);
-  border: 1px solid var(--atcb-border);
-  border-radius: 6px;
-  box-shadow: var(--atcb-shadow-button);
-  color: var(--atcb-text);
-  cursor: pointer;
+.atcb-button,
+.atcb-subevent-btn {
   display: flex;
+  align-items: flex-start;
+  cursor: pointer;
   font-family: var(--font);
   font-size: 1em;
-  font-weight: 600;
-  justify-content: center;
-  line-height: 1.5em;
-  margin: .13em;
-  max-width: 350px;
-  min-width: 160px;
-  padding: .65em 1em;
-  position: relative;
-  text-align: center;
+  box-shadow: var(--atcb-shadow-modal-date-btn);
+  background-color: var(--atcb-modal-date-btn-background);
+  border: 0;
+  border-radius: 6px;
+  padding: 0;
+  margin: 0;
   touch-action: manipulation;
+  position: relative;
   user-select: none;
   -webkit-user-select: none;
   -webkit-tap-highlight-color: transparent;
-  width: auto;
+}
+
+.atcb-button {
+  box-shadow: var(--atcb-shadow-button);
+  min-width: 280px;
+  max-width: 450px;
+  position: relative;
   z-index: 1;
 }
 
@@ -185,28 +185,154 @@ body.atcb-dark #atcb-bgoverlay.atcb-bodyScheme {
   text-align: right;
 }
 
+.atcb-button:hover,
+.atcb-subevent-btn:hover {
+  align-items: center;
+}
+
+.atcb-subevent-btn:hover,
+.atcb-subevent-btn:focus {
+  background-color: var(--atcb-modal-date-btn-background-hover);
+  box-shadow: var(--atcb-shadow-modal-date-btn-hover);  
+}
+
 .atcb-button:focus,
 .atcb-button:hover {
   background-color: var(--atcb-background-hover);
   box-shadow: var(--atcb-shadow-button-hover);
 }
 
-.atcb-button:focus-visible {
+.atcb-button:focus-visible,
+.atcb-subevent-btn:focus-visible {
   outline: 2px solid var(--atcb-keyboard-focus);
-}
-
-.atcb-button.atcb-active:not(.atcb-modal-style, .atcb-dropoverlay),
-.atcb-button.atcb-single:focus,
-.atcb-button.atcb-single:hover {
-  background-color: var(--atcb-background-hover);
-  box-shadow: var(--atcb-shadow-button-active);
-  margin: 0;
-  padding: .78em 1.13em;
-  z-index: 15000000;
 }
 
 .atcb-button.atcb-active.atcb-dropoverlay {
   z-index: 14000090;
+}
+
+.atcb-subevent-btn + .atcb-subevent-btn {
+  margin-top: 30px;
+}
+
+.atcb-date-btn-left {
+  border-radius: 4px 0 0 4px;
+  align-self: stretch;
+  background-color: var(--atcb-modal-date-btn-cal-background);
+  color: var(--atcb-modal-date-btn-background-hover);
+  padding: 15px;
+  width: 2.7em;
+  text-align: center;
+}
+
+.atcb-rtl .atcb-date-btn-left {
+  border-radius: 0 4px 4px 0;
+}
+
+.atcb-button:hover .atcb-date-btn-left,
+.atcb-subevent-btn:hover .atcb-date-btn-left {
+  opacity: .8;
+}
+
+.atcb-date-btn-day {
+  color: var(--atcb-modal-date-btn-cal-text);
+  font-weight: 300;
+  font-size: 2em;
+}
+
+.atcb-date-btn-month {
+  color: var(--atcb-modal-date-btn-cal-text-2);
+  font-weight: 600;
+  font-size: 1em;
+}
+
+.atcb-date-btn-right {
+  position: relative;
+  color: var(--atcb-modal-date-btn-text);
+}
+
+.atcb-date-btn-details {
+  opacity: 1;
+  padding: .8em;
+  text-align: left;
+}
+
+.atcb-rtl .atcb-date-btn-details {
+  text-align: right;
+}
+
+.atcb-date-btn-hover {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  opacity: 0;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+  font-size: 1em;
+}
+
+.atcb-button:hover .atcb-date-btn-details,
+.atcb-subevent-btn:hover .atcb-date-btn-details {
+  opacity: 0;
+}
+
+.atcb-button:hover .atcb-date-btn-hover,
+.atcb-subevent-btn:hover .atcb-date-btn-hover {
+  opacity: 1;
+}
+
+.atcb-date-btn-headline {
+  font-weight: 600;
+  font-size: .9em;
+  margin-bottom: .5em;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
+}
+
+.atcb-date-btn-content {
+  display: flex;
+  font-size: .8em;
+  color: var(--atcb-modal-date-btn-text-2);
+}
+
+.atcb-date-btn-content-location {
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
+  word-break: break-all;
+}
+
+.atcb-date-btn-content-icon {
+  display: inline-block;
+  height: 0.8em;
+  width: 1.3em;
+  flex: 0 0 1.3em;
+}
+
+.atcb-rtl .atcb-date-btn-content-icon {
+  margin-right: 0;
+  margin-left: .5em;
+}
+
+.atcb-date-btn-content-icon svg {
+  height: 100%;
+  fill: currentcolor;
+  width: auto;
+}
+
+.atcb-date-btn-content + .atcb-date-btn-content {
+  margin-top: .3em;
+}
+
+.atcb-date-btn-content-recurr-icon {
+  padding-left: .3em;
 }
 
 /******************************
@@ -453,7 +579,7 @@ body.atcb-dark #atcb-bgoverlay.atcb-bodyScheme {
   .atcb-modal-headline {
     padding: 1.8em 1em 1em;
   }
-  
+
   .atcb-modal-content {  
     padding: .3em 1em 2em;
   }
@@ -537,163 +663,6 @@ body.atcb-dark a.atcb-modal-btn:active {
 }
 
 /******************************
- * Date Buttons
- */
-
-.atcb-subevent-btn {
-  display: flex;
-  align-items: flex-start;
-  cursor: pointer;
-  font-family: var(--font);
-  font-size: 1em;
-  box-shadow: var(--atcb-shadow-modal-date-btn);
-  background-color: var(--atcb-modal-date-btn-background);
-  border: 0;
-  border-radius: 6px;
-  padding: 0;
-  margin: 0;
-  touch-action: manipulation;
-  position: relative;
-  user-select: none;
-  -webkit-user-select: none;
-  -webkit-tap-highlight-color: transparent;
-}
-
-.atcb-subevent-btn:hover {
-  align-items: center;
-}
-
-.atcb-subevent-btn:hover,
-.atcb-subevent-btn:focus {
-  background-color: var(--atcb-modal-date-btn-background-hover);
-  box-shadow: var(--atcb-shadow-modal-date-btn-hover);  
-}
-
-.atcb-subevent-btn:focus-visible {
-  outline: 2px solid var(--atcb-keyboard-focus);
-}
-
-.atcb-subevent-btn + .atcb-subevent-btn {
-  margin-top: 30px;
-}
-
-.atcb-date-btn-left {
-  border-radius: 4px 0 0 4px;
-  align-self: stretch;
-  background-color: var(--atcb-modal-date-btn-cal-background);
-  color: var(--atcb-modal-date-btn-background-hover);
-  padding: 15px;
-  width: 2.7em;
-  text-align: center;
-}
-
-.atcb-rtl .atcb-date-btn-left {
-  border-radius: 0 4px 4px 0;
-}
-
-.atcb-subevent-btn:hover .atcb-date-btn-left {
-  opacity: .8;
-}
-
-.atcb-date-btn-day {
-  color: var(--atcb-modal-date-btn-cal-text);
-  font-weight: 300;
-  font-size: 2em;
-}
-
-.atcb-date-btn-month {
-  color: var(--atcb-modal-date-btn-cal-text-2);
-  font-weight: 600;
-  font-size: 1em;
-}
-
-.atcb-date-btn-right {
-  position: relative;
-  color: var(--atcb-modal-date-btn-text);
-}
-
-.atcb-date-btn-details {
-  opacity: 1;
-  padding: .8em;
-  text-align: left;
-}
-
-.atcb-rtl .atcb-date-btn-details {
-  text-align: right;
-}
-
-.atcb-date-btn-hover {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  opacity: 0;
-  height: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-weight: 600;
-  font-size: 1em;
-}
-
-.atcb-subevent-btn:hover .atcb-date-btn-details {
-  opacity: 0;
-}
-
-.atcb-subevent-btn:hover .atcb-date-btn-hover {
-  opacity: 1;
-}
-
-.atcb-date-btn-headline {
-  font-weight: 600;
-  font-size: .9em;
-  margin-bottom: .5em;
-  overflow: hidden;
-  display: -webkit-box;
-  -webkit-line-clamp: 1;
-  -webkit-box-orient: vertical;
-}
-
-.atcb-date-btn-content {
-  font-size: .8em;
-  color: var(--atcb-modal-date-btn-text-2);
-}
-
-.atcb-date-btn-content-location {
-  overflow: hidden;
-  display: -webkit-box;
-  -webkit-line-clamp: 1;
-  -webkit-box-orient: vertical;
-  word-break: break-all;
-}
-
-.atcb-date-btn-content-icon {
-  display: inline-block;
-  height: 0.8em;
-  width: 1.3em;
-  flex: 0 0 1.3em;
-}
-
-.atcb-rtl .atcb-date-btn-content-icon {
-  margin-right: 0;
-  margin-left: .5em;
-}
-
-.atcb-date-btn-content-icon svg {
-  height: 100%;
-  fill: currentcolor;
-  width: auto;
-}
-
-.atcb-date-btn-content + .atcb-date-btn-content {
-  margin-top: .3em;
-}
-
-.atcb-date-btn-content-recurr-icon {
-  padding-left: .3em;
-}
-
-/******************************
  * Checkmark Overlay
  */
 
@@ -713,18 +682,12 @@ body.atcb-dark a.atcb-modal-btn:active {
   height: 2em;
 }
 
-.atcb-button.atcb-active:not(.atcb-modal-style, .atcb-dropoverlay) .atcb-checkmark,
-.atcb-button.atcb-single:focus .atcb-checkmark,
-.atcb-button.atcb-single:hover .atcb-checkmark {
-  top: -1.07em;
-  right: -.17em;
-}
-
 .atcb-checkmark svg {
   height: 100%;
   fill: currentcolor;
   width: auto;
 }
+
 
 /******************************
  * Background Overlay

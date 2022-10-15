@@ -1,6 +1,6 @@
 {
   "name": "add-to-calendar-button",
-  "version": "1.17.0",
+  "version": "1.18.0",
   "engines": {
     "node": ">=14.20.0"
   },
@@ -65,11 +65,11 @@
     "build": "npx grunt"
   },
   "dependencies": {
-    "timezones-ical-library": "^1.3.2"
+    "timezones-ical-library": "^1.4.0"
   },
   "devDependencies": {
-    "@typescript-eslint/eslint-plugin": "^5.38.1",
-    "@typescript-eslint/parser": "^5.38.1",
+    "@typescript-eslint/eslint-plugin": "^5.39.0",
+    "@typescript-eslint/parser": "^5.39.0",
     "eslint": "^8.24.0",
     "eslint-config-prettier": "^8.5.0",
     "eslint-plugin-commonjs": "^1.0.2",
