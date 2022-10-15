@@ -65,7 +65,7 @@
     "build": "npx grunt"
   },
   "dependencies": {
-    "timezones-ical-library": "^1.3.2"
+    "timezones-ical-library": "^1.4.0"
   },
   "devDependencies": {
     "@typescript-eslint/eslint-plugin": "^5.39.0",
