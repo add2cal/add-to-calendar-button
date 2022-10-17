@@ -39,7 +39,7 @@ A good bug report shouldn't leave others needing to chase you up for more inform
 Please try to be as detailed as possible in your report. What is your environment? What steps will reproduce the issue? What browser(s) and OS experience the problem? What would you expect to be the outcome?
 All these details will help people to fix any potential bugs.
 
-Therefore, use the official bug issue optione and fill out all the provided fields
+Therefore, use the official bug issue option and fill out all the provided fields
 
 <br />
 
