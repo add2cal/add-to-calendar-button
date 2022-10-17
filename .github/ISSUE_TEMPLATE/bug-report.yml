@@ -39,5 +39,6 @@ body:
         1. Device and OS (e.g. iPhone, iOS 15)
         2. Browser (e.g. Chrome)
         3. Version number of the application (e.g. 1.9.1)
+        4. How you include the script (e.g. via the React Wrapper, WordPress Plugin, the Vanilla Javascript way, ...)
     validations:
       required: true

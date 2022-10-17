@@ -1,4 +1,4 @@
-# Contributing to the Add-to-Calendar-Button Repository
+# Contributing to the Add to Calendar Button Repository
 
 You like the project and want to get involved?
 Awesome! It is always great to get some help.
