@@ -220,6 +220,17 @@ function atcb_set_global_event_listener() {
       }
     })
   );
+  // Global listener for scrolling (relevant, if the button changes its position on scroll)
+  window.addEventListener(
+    'scroll',
+    atcb_throttle(() => {
+      const activeButton = document.querySelector('.atcb-active');
+      const activeList = document.querySelector('.atcb-dropdown');
+      if (activeButton != null && activeList != null) {
+        atcb_position_list(activeButton, activeList, false, true);
+      }
+    })
+  );
 }
 
 export { atcb_init, atcb_action };

@@ -15,7 +15,6 @@
 .github/
 demo_assets/
 assets/img/
-test/
 src/
 *.png
 *.ico
@@ -23,15 +22,14 @@ src/
 *.svg
 *.ics
 index.html
+Gruntfile.js
 security.md
+package-lock.json
 browserconfig.xml
 manifest.json
 CNAME
-Gruntfile.js
 set-release.js
-package-lock.json
 sitemap.xml
-.eslintrc.json
 .prettierignore
 .prettierrc.json
 .stylelintrc.json

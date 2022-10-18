@@ -757,6 +757,11 @@ body.atcb-dark a.atcb-modal-btn:active {
   animation: atcb-bgoverlay-animate 0.3s ease 0s 1 normal forwards;
 }
 
+#atcb-bgoverlay.atcb-no-animation {
+  animation: none;
+  opacity: 1;
+}
+
 #atcb-bgoverlay.atcb-no-bg {
   animation: none;
   backdrop-filter: none;

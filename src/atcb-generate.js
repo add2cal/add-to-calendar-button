@@ -455,6 +455,7 @@ function atcb_generate_bg_overlay(listStyle = 'dropdown', trigger = '', lightMod
 }
 
 // FUNCTION TO CREATE MODALS
+// this is only about special communication modals - not the list style modal
 function atcb_create_modal(
   data,
   icon = '',
@@ -468,11 +469,12 @@ function atcb_create_modal(
   const bgOverlay = (function () {
     const el = document.getElementById('atcb-bgoverlay');
     if (!el) {
-      return atcb_generate_bg_overlay('modal', 'click', data.lightMode);
+      return atcb_generate_bg_overlay('modal', 'click', data.lightMode, data.background);
     } else {
       return el;
     }
   })();
+  bgOverlay.classList.add('atcb-no-animation');
   document.body.appendChild(bgOverlay);
   const modalWrapper = document.createElement('div');
   modalWrapper.classList.add('atcb-modal');
