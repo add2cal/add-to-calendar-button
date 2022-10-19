@@ -26,7 +26,7 @@ function prepareFinalFile(
     // remove export statements
     content = content.replace(
       /^\/\*! START INIT \*\/[\s\S]*?\/\*! END INIT \*\/$/gm,
-      `${newExportPhrase} { atcb_action, atcb_init };`
+      `${newExportPhrase} { atcb_action, atcb_init, atcb_destroy };`
     );
   }
   if (transformToCommonJS) {

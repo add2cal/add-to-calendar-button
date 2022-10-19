@@ -203,10 +203,12 @@ function atcb_generate_button(button, data) {
     buttonTrigger.appendChild(buttonDropdownAnchor);
   }
   // add checkmark (hidden first)
-  const btnCheck = document.createElement('div');
-  btnCheck.classList.add('atcb-checkmark');
-  btnCheck.innerHTML = atcbIcon['checkmark'];
-  buttonTrigger.appendChild(btnCheck);
+  if (data.checkmark) {
+    const btnCheck = document.createElement('div');
+    btnCheck.classList.add('atcb-checkmark');
+    btnCheck.innerHTML = atcbIcon['checkmark'];
+    buttonTrigger.appendChild(btnCheck);
+  }
   // update the placeholder class to prevent multiple initializations
   button.classList.remove('atcb');
   button.classList.add('atcb-initialized');
@@ -779,10 +781,12 @@ function atcb_generate_date_button(data, parent, subEvent = 'all') {
   btnHover.classList.add('atcb-date-btn-hover');
   btnHover.innerHTML = hoverText;
   btnRight.appendChild(btnHover);
-  const btnCheck = document.createElement('div');
-  btnCheck.classList.add('atcb-checkmark');
-  btnCheck.innerHTML = atcbIcon['checkmark'];
-  parent.appendChild(btnCheck);
+  if (data.checkmark) {
+    const btnCheck = document.createElement('div');
+    btnCheck.classList.add('atcb-checkmark');
+    btnCheck.innerHTML = atcbIcon['checkmark'];
+    parent.appendChild(btnCheck);
+  }
 }
 
 export {

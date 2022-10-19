@@ -56,6 +56,9 @@ function atcb_open(data, button, keyboardTrigger = false, generatedButton = fals
       listWrapper.classList.add('atcb-dropdown');
       if (data.listStyle === 'overlay') {
         listWrapper.classList.add('atcb-dropoverlay');
+      }      
+      if (data.mindScrolling) {
+        listWrapper.classList.add('atcb-mind-scrolling');
       }
     }
     if (generatedButton) {

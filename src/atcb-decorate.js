@@ -56,6 +56,8 @@ function atcb_decorate_data(data) {
   data = atcb_decorate_data_rrule(data);
   data = atcb_decorate_data_options(data);
   data.richData = atcb_decorate_data_rich_data(data);
+  data.checkmark = atcb_decorate_data_checkmark(data);
+  data.mindScrolling = atcb_decorate_data_mind_scrolling(data);
   data = atcb_decorate_data_style(data);
   data = atcb_decorate_data_i18n(data);
   data = atcb_decorate_data_dates(data);
@@ -213,6 +215,22 @@ function atcb_decorate_data_rich_data(data) {
     return false;
   }
   return true;
+}
+
+// specify the checkmark option (marking saved events with an icon)
+function atcb_decorate_data_checkmark(data) {
+  if (data.checkmark != null && data.checkmark == false) {
+    return false;
+  }
+  return true;
+}
+
+// set whether we observe global scroll to re-adjust the dropdown
+function atcb_decorate_data_mind_scrolling(data) {
+  if (data.mindScrolling != null && data.mindScrolling == true) {
+    return true;
+  }
+  return false;
 }
 
 function atcb_decorate_data_style(data) {
