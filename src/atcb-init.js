@@ -3,7 +3,7 @@
  *  Add to Calendar Button
  *  ++++++++++++++++++++++
  *
- *  Version: 1.18.0
+ *  Version: 1.18.1
  *  Creator: Jens Kuerschner (https://jenskuerschner.de)
  *  Project: https://github.com/add2cal/add-to-calendar-button
  *  License: Apache-2.0 with “Commons Clause” License Condition v1.0
@@ -141,13 +141,13 @@ function atcb_action(data, triggerElement, keyboardTrigger = true) {
 
 // destorying a specific button
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-function atcb_destroy(id) {  
+function atcb_destroy(id) {
   // close everything before killing the element
   atcb_close();
   const el = document.getElementById(id);
   if (atcbStates[`${id}`] == null || !el) {
-    return 'Add to Calendar Button could not be destroyed! ID unknown.'
-  }  
+    return 'Add to Calendar Button could not be destroyed! ID unknown.';
+  }
   delete atcbStates[`${id}`];
   el.remove();
   return 'Add to Calendar Button "' + id + '" destroyed';
@@ -232,7 +232,7 @@ function atcb_set_global_event_listener() {
         atcb_manage_body_scroll();
       }
       const activeButton = document.querySelector('.atcb-active');
-      if (activeButton != null) {        
+      if (activeButton != null) {
         const activeList = document.querySelector('.atcb-dropdown');
         if (activeList != null) {
           atcb_position_list(activeButton, activeList, false, true);
@@ -245,7 +245,7 @@ function atcb_set_global_event_listener() {
     'scroll',
     atcb_throttle(() => {
       const activeButton = document.querySelector('.atcb-active');
-      if (activeButton != null) {        
+      if (activeButton != null) {
         const activeList = document.querySelector('.atcb-dropdown');
         if (activeList != null) {
           if (activeList.classList.contains('atcb-mind-scrolling')) {

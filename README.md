@@ -276,7 +276,7 @@ const MyComponent = () => {
 }
 ```
 
-*By the way: Both functions return an array, holding the IDs of the generated buttons!*
+_By the way: Both functions return an array, holding the IDs of the generated buttons!_
 
 <br /><br />
 

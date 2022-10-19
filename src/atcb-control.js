@@ -3,7 +3,7 @@
  *  Add to Calendar Button
  *  ++++++++++++++++++++++
  *
- *  Version: 1.18.0
+ *  Version: 1.18.1
  *  Creator: Jens Kuerschner (https://jenskuerschner.de)
  *  Project: https://github.com/add2cal/add-to-calendar-button
  *  License: Apache-2.0 with “Commons Clause” License Condition v1.0
@@ -56,7 +56,7 @@ function atcb_open(data, button, keyboardTrigger = false, generatedButton = fals
       listWrapper.classList.add('atcb-dropdown');
       if (data.listStyle === 'overlay') {
         listWrapper.classList.add('atcb-dropoverlay');
-      }      
+      }
       if (data.mindScrolling) {
         listWrapper.classList.add('atcb-mind-scrolling');
       }

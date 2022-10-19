@@ -217,14 +217,14 @@ function tzlib_get_timezones(jsonType = false) {
  *  Add to Calendar Button
  *  ++++++++++++++++++++++
  *
- *  Version: 1.18.0
+ *  Version: 1.18.1
  *  Creator: Jens Kuerschner (https://jenskuerschner.de)
  *  Project: https://github.com/add2cal/add-to-calendar-button
  *  License: Apache-2.0 with “Commons Clause” License Condition v1.0
  *  Note:    DO NOT REMOVE THE COPYRIGHT NOTICE ABOVE!
  *
  */
-const atcbVersion = '1.18.0';
+const atcbVersion = '1.18.1';
 const isBrowser = () => {
   if (typeof window === 'undefined') {
     return false;
@@ -1150,7 +1150,7 @@ function atcb_open(data, button, keyboardTrigger = false, generatedButton = fals
       listWrapper.classList.add('atcb-dropdown');
       if (data.listStyle === 'overlay') {
         listWrapper.classList.add('atcb-dropoverlay');
-      }      
+      }
       if (data.mindScrolling) {
         listWrapper.classList.add('atcb-mind-scrolling');
       }
@@ -2836,7 +2836,8 @@ const i18nStrings = {
     'modal.webview.ical.steps':
       '<ol><li><strong>Öffne einen anderen Browser</strong> auf deinem Smartphone, ...</li><li>Nutze die <strong>Einfügen</strong>-Funktion, um fortzufahren.</li></ol>',
     'modal.crios.ical.h': 'Öffne Safari',
-    'modal.crios.ical.text': 'Leider Chrome unter iOS Probleme mit der Art, wie wir Kalender-Dateien erzeugen.',
+    'modal.crios.ical.text':
+      'Leider Chrome unter iOS Probleme mit der Art, wie wir Kalender-Dateien erzeugen.',
     'modal.crios.ical.steps':
       '<ol><li><strong>Öffne Safari</strong>, ...</li><li>Nutze die <strong>Einfügen</strong>-Funktion, um fortzufahren.</li></ol>',
     'modal.multidate.h': 'Dies is eine Termin-Reihe',
@@ -3041,7 +3042,8 @@ const i18nStrings = {
     'Close Selection': 'चयन बंद करें',
     'Click me': 'मुझे क्लिक करें',
     'modal.webview.ical.h': 'अपना ब्राउज़र खोलें',
-    'modal.webview.ical.text': 'दुर्भाग्य से, इन-ऐप ब्राउज़र में कैलेंडर फ़ाइल बनाने के तरीके में समस्याएँ हैं।',
+    'modal.webview.ical.text':
+      'दुर्भाग्य से, इन-ऐप ब्राउज़र में कैलेंडर फ़ाइल बनाने के तरीके में समस्याएँ हैं।',
     'modal.clipboard.text': 'हमने आपके क्लिपबोर्ड पर स्वचालित रूप से एक जादुई URL कॉपी कर लिया है।',
     'modal.webview.ical.steps':
       '<ol><li>अपने फ़ोन पर <strong>दूसरा ब्राउज़र खोलें</strong>, ...</li><li>क्लिपबोर्ड सामग्री <strong>चिपकाएं</strong> और जाएं।</li></ol>',
@@ -3203,7 +3205,8 @@ const i18nStrings = {
     'modal.webview.ical.steps':
       '<ol><li><strong>Otevření jiného prohlížeče</strong> v telefonu, ...</li><li><strong>Vložte</strong> obsah schránky a přejděte.</li></ol>',
     'modal.crios.ical.h': 'Otevřít Safari',
-    'modal.crios.ical.text': 'Chrome v systému iOS má bohužel problémy se způsobem generování souboru kalendáře.',
+    'modal.crios.ical.text':
+      'Chrome v systému iOS má bohužel problémy se způsobem generování souboru kalendáře.',
     'modal.crios.ical.steps':
       '<ol><li><strong>Otevřít Safari</strong>, ...</li><li><strong>Vložte</strong> obsah schránky a přejděte.</li></ol>',
     'modal.multidate.h': 'Jedná se o sérii událostí',
@@ -3223,7 +3226,8 @@ const i18nStrings = {
     'Close Selection': 'クローズ選択',
     'Click me': 'クリックしてください',
     'modal.webview.ical.h': 'ブラウザを起動する',
-    'modal.webview.ical.text': '残念ながら、アプリ内ブラウザは、カレンダーファイルの生成方法に問題があります。',
+    'modal.webview.ical.text':
+      '残念ながら、アプリ内ブラウザは、カレンダーファイルの生成方法に問題があります。',
     'modal.clipboard.text': '魔法のURLを自動的にクリップボードにコピーしています。',
     'modal.webview.ical.steps':
       '<ol><li>スマートフォンで別のブラウザを起動する, ...</li><li>クリップボードの内容を貼り付けて行く。</li></ol>',
@@ -3433,12 +3437,12 @@ function atcb_action(data, triggerElement, keyboardTrigger = true) {
   return [data.identifier];
 }
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-function atcb_destroy(id) {  
+function atcb_destroy(id) {
   atcb_close();
   const el = document.getElementById(id);
   if (atcbStates[`${id}`] == null || !el) {
-    return 'Add to Calendar Button could not be destroyed! ID unknown.'
-  }  
+    return 'Add to Calendar Button could not be destroyed! ID unknown.';
+  }
   delete atcbStates[`${id}`];
   el.remove();
   return 'Add to Calendar Button "' + id + '" destroyed';
@@ -3513,7 +3517,7 @@ function atcb_set_global_event_listener() {
         atcb_manage_body_scroll();
       }
       const activeButton = document.querySelector('.atcb-active');
-      if (activeButton != null) {        
+      if (activeButton != null) {
         const activeList = document.querySelector('.atcb-dropdown');
         if (activeList != null) {
           atcb_position_list(activeButton, activeList, false, true);
@@ -3525,7 +3529,7 @@ function atcb_set_global_event_listener() {
     'scroll',
     atcb_throttle(() => {
       const activeButton = document.querySelector('.atcb-active');
-      if (activeButton != null) {        
+      if (activeButton != null) {
         const activeList = document.querySelector('.atcb-dropdown');
         if (activeList != null) {
           if (activeList.classList.contains('atcb-mind-scrolling')) {
