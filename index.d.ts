@@ -1,5 +1,5 @@
 declare module 'add-to-calendar-button' {
-  export function atcb_init(): void;
+  export function atcb_init(): string[];
   export function atcb_action(
     config: {
       name: string;
@@ -49,6 +49,8 @@ declare module 'add-to-calendar-button' {
       buttonStyle?: 'default' | '3d' | 'flat' | 'round' | 'neumorphism' | 'text' | 'date' | 'custom' | 'none';
       trigger?: 'hover' | 'click';
       background?: boolean;
+      checkmark?: boolean;
+      mindScrolling?: boolean;
       size?: string;
       customLabels?: object;
       lightMode?: 'system' | 'dark' | 'light' | 'bodyScheme';
@@ -76,5 +78,6 @@ declare module 'add-to-calendar-button' {
     },
     triggerElement?: HTMLElement,
     keyboardTrigger?: boolean
-  ): void;
+  ): string[];
+  export function atcb_destroy(id: string): string;
 }

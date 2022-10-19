@@ -5,13 +5,13 @@
  * Add to Calendar TimeZones iCal Library
  * ++++++++++++++++++++++++++++++++++++++
  *
- * Version: 1.4.0
+ * Version: 1.4.2
  * Creator: Jens Kuerschner (https://jenskuerschner.de)
  * Project: https://github.com/add2cal/timezones-ical-library
  * License: Apache-2.0
  *
  */
-const tzlibVersion = '1.4.0';
+const tzlibVersion = '1.4.2';
 const tzlibZonesDB = {"Africa":{"Abidjan":["",0],"Accra":["Africa/Abidjan",0],"Addis_Ababa":["Africa/Nairobi",1],"Algiers":["",2],"Asmara":["Africa/Nairobi",1],"Asmera":["Africa/Nairobi",1],"Bamako":["Africa/Abidjan",0],"Bangui":["Africa/Lagos",3],"Banjul":["Africa/Abidjan",0],"Bissau":["",0],"Blantyre":["Africa/Maputo",4],"Brazzaville":["Africa/Lagos",3],"Bujumbura":["Africa/Maputo",4],"Cairo":["",5],"Casablanca":["",6],"Ceuta":["",7],"Conakry":["Africa/Abidjan",0],"Dakar":["Africa/Abidjan",0],"Dar_es_Salaam":["Africa/Nairobi",1],"Djibouti":["Africa/Nairobi",1],"Douala":["Africa/Lagos",3],"El_Aaiun":["",6],"Freetown":["Africa/Abidjan",0],"Gaborone":["Africa/Maputo",4],"Harare":["Africa/Maputo",4],"Johannesburg":["",8],"Juba":["",4],"Kampala":["Africa/Nairobi",1],"Khartoum":["",4],"Kigali":["Africa/Maputo",4],"Kinshasa":["Africa/Lagos",3],"Lagos":["",3],"Libreville":["Africa/Lagos",3],"Lome":["Africa/Abidjan",0],"Luanda":["Africa/Lagos",3],"Lubumbashi":["Africa/Maputo",4],"Lusaka":["Africa/Maputo",4],"Malabo":["Africa/Lagos",3],"Maputo":["",4],"Maseru":["Africa/Johannesburg",8],"Mbabane":["Africa/Johannesburg",8],"Mogadishu":["Africa/Nairobi",1],"Monrovia":["",0],"Nairobi":["",1],"Ndjamena":["",3],"Niamey":["Africa/Lagos",3],"Nouakchott":["Africa/Abidjan",0],"Ouagadougou":["Africa/Abidjan",0],"Porto-Novo":["Africa/Lagos",3],"Sao_Tome":["",0],"Timbuktu":["Africa/Abidjan",0],"Tripoli":["",5],"Tunis":["",2],"Windhoek":["",4]},"America":{"Adak":["",9],"Anchorage":["",10],"Anguilla":["America/Puerto_Rico",11],"Antigua":["America/Puerto_Rico",11],"Araguaina":["",12],"Argentina":{"Buenos_Aires":["",12],"Catamarca":["",12],"ComodRivadavia":["America/Argentina/Catamarca",12],"Cordoba":["",12],"Jujuy":["",12],"La_Rioja":["",12],"Mendoza":["",12],"Rio_Gallegos":["",12],"Salta":["",12],"San_Juan":["",12],"San_Luis":["",12],"Tucuman":["",12],"Ushuaia":["",12]},"Aruba":["America/Puerto_Rico",11],"Asuncion":["",13],"Atikokan":["America/Panama",14],"Atka":["America/Adak",9],"Bahia_Banderas":["",15],"Bahia":["",12],"Barbados":["",11],"Belem":["",12],"Belize":["",16],"Blanc-Sablon":["America/Puerto_Rico",11],"Boa_Vista":["",17],"Bogota":["",18],"Boise":["",19],"Buenos_Aires":["America/Argentina/Buenos_Aires",12],"Cambridge_Bay":["",19],"Campo_Grande":["",17],"Cancun":["",14],"Caracas":["",17],"Catamarca":["America/Argentina/Catamarca",12],"Cayenne":["",12],"Cayman":["America/Panama",14],"Chicago":["",20],"Chihuahua":["",21],"Coral_Harbour":["America/Panama",14],"Cordoba":["America/Argentina/Cordoba",12],"Costa_Rica":["",16],"Creston":["America/Phoenix",22],"Cuiaba":["",17],"Curacao":["America/Puerto_Rico",11],"Danmarkshavn":["",0],"Dawson_Creek":["",22],"Dawson":["",22],"Denver":["",19],"Detroit":["",23],"Dominica":["America/Puerto_Rico",11],"Edmonton":["",19],"Eirunepe":["",18],"El_Salvador":["",16],"Ensenada":["America/Tijuana",24],"Fort_Nelson":["",22],"Fort_Wayne":["America/Indiana/Indianapolis",23],"Fortaleza":["",12],"Glace_Bay":["",25],"Godthab":["America/Nuuk",26],"Goose_Bay":["",27],"Grand_Turk":["",28],"Grenada":["America/Puerto_Rico",11],"Guadeloupe":["America/Puerto_Rico",11],"Guatemala":["",16],"Guayaquil":["",18],"Guyana":["",17],"Halifax":["",25],"Havana":["",29],"Hermosillo":["",22],"Indiana":{"Indianapolis":["",23],"Knox":["",20],"Marengo":["",23],"Petersburg":["",23],"Tell_City":["",20],"Vevay":["",23],"Vincennes":["",23],"Winamac":["",28]},"Indianapolis":["America/Indiana/Indianapolis",23],"Inuvik":["",19],"Iqaluit":["",23],"Jamaica":["",14],"Jujuy":["America/Argentina/Jujuy",12],"Juneau":["",10],"Kentucky":{"Louisville":["",23],"Monticello":["",23]},"Knox_IN":["America/Indiana/Knox",20],"Kralendijk":["America/Puerto_Rico",11],"La_Paz":["",17],"Lima":["",18],"Los_Angeles":["",24],"Louisville":["America/Kentucky/Louisville",23],"Lower_Princes":["America/Puerto_Rico",11],"Maceio":["",12],"Managua":["",16],"Manaus":["",17],"Marigot":["America/Puerto_Rico",11],"Martinique":["",11],"Matamoros":["",20],"Mazatlan":["",21],"Mendoza":["America/Argentina/Mendoza",12],"Menominee":["",20],"Merida":["",30],"Metlakatla":["",10],"Mexico_City":["",30],"Miquelon":["",31],"Moncton":["",25],"Monterrey":["",30],"Montevideo":["",12],"Montreal":["America/Toronto",23],"Montserrat":["America/Puerto_Rico",11],"Nassau":["America/Toronto",23],"New_York":["",23],"Nipigon":["",23],"Nome":["",10],"Noronha":["",32],"North_Dakota":{"Beulah":["",20],"Center":["",20],"New_Salem":["",20]},"Nuuk":["",26],"Ojinaga":["",19],"Panama":["",14],"Pangnirtung":["",23],"Paramaribo":["",12],"Phoenix":["",22],"Port_of_Spain":["America/Puerto_Rico",11],"Port-au-Prince":["",23],"Porto_Acre":["America/Rio_Branco",18],"Porto_Velho":["",17],"Puerto_Rico":["",11],"Punta_Arenas":["",12],"Rainy_River":["",20],"Rankin_Inlet":["",20],"Recife":["",12],"Regina":["",16],"Resolute":["",33],"Rio_Branco":["",18],"Rosario":["America/Argentina/Cordoba",12],"Santa_Isabel":["America/Tijuana",24],"Santarem":["",12],"Santiago":["",34],"Santo_Domingo":["",11],"Sao_Paulo":["",12],"Scoresbysund":["",35],"Shiprock":["America/Denver",19],"Sitka":["",10],"St_Barthelemy":["America/Puerto_Rico",11],"St_Johns":["",36],"St_Kitts":["America/Puerto_Rico",11],"St_Lucia":["America/Puerto_Rico",11],"St_Thomas":["America/Puerto_Rico",11],"St_Vincent":["America/Puerto_Rico",11],"Swift_Current":["",16],"Tegucigalpa":["",16],"Thule":["",25],"Thunder_Bay":["",23],"Tijuana":["",24],"Toronto":["",23],"Tortola":["America/Puerto_Rico",11],"Vancouver":["",24],"Virgin":["America/Puerto_Rico",11],"Whitehorse":["",22],"Winnipeg":["",20],"Yakutat":["",10],"Yellowknife":["",19]},"Antarctica":{"Casey":["",37],"Davis":["",38],"DumontDUrville":["Pacific/Port_Moresby",39],"Macquarie":["",40],"Mawson":["",41],"McMurdo":["Pacific/Auckland",42],"Palmer":["",12],"Rothera":["",12],"South_Pole":["Pacific/Auckland",42],"Syowa":["Asia/Riyadh",43],"Troll":["",44],"Vostok":["Asia/Urumqi",45]},"Arctic":{"Longyearbyen":["Europe/Berlin",7]},"Asia":{"Aden":["Asia/Riyadh",43],"Almaty":["",45],"Amman":["",43],"Anadyr":["",46],"Aqtau":["",41],"Aqtobe":["",41],"Ashgabat":["",41],"Ashkhabad":["Asia/Ashgabat",41],"Atyrau":["",41],"Baghdad":["",43],"Bahrain":["Asia/Qatar",43],"Baku":["",47],"Bangkok":["",38],"Barnaul":["",38],"Beirut":["",48],"Bishkek":["",45],"Brunei":["Asia/Kuching",49],"Calcutta":["Asia/Kolkata",50],"Chita":["",51],"Choibalsan":["",49],"Chongqing":["Asia/Shanghai",52],"Chungking":["Asia/Shanghai",52],"Colombo":["",53],"Dacca":["Asia/Dhaka",45],"Damascus":["",43],"Dhaka":["",45],"Dili":["",51],"Dubai":["",47],"Dushanbe":["",41],"Famagusta":["",54],"Gaza":["",55],"Harbin":["Asia/Shanghai",52],"Hebron":["",55],"Ho_Chi_Minh":["",38],"Hong_Kong":["",56],"Hovd":["",38],"Irkutsk":["",49],"Istanbul":["Europe/Istanbul",43],"Jakarta":["",57],"Jayapura":["",58],"Jerusalem":["",59],"Kabul":["",60],"Kamchatka":["",46],"Karachi":["",61],"Kashgar":["Asia/Urumqi",45],"Kathmandu":["",62],"Katmandu":["Asia/Kathmandu",62],"Khandyga":["",51],"Kolkata":["",50],"Krasnoyarsk":["",38],"Kuala_Lumpur":["Asia/Singapore",49],"Kuching":["",49],"Kuwait":["Asia/Riyadh",43],"Macao":["Asia/Macau",52],"Macau":["",52],"Magadan":["",37],"Makassar":["",63],"Manila":["",64],"Muscat":["Asia/Dubai",47],"Nicosia":["",65],"Novokuznetsk":["",38],"Novosibirsk":["",38],"Omsk":["",45],"Oral":["",41],"Phnom_Penh":["Asia/Bangkok",38],"Pontianak":["",57],"Pyongyang":["",66],"Qatar":["",43],"Qostanay":["",45],"Qyzylorda":["",41],"Rangoon":["Asia/Yangon",67],"Riyadh":["",43],"Saigon":["Asia/Ho_Chi_Minh",38],"Sakhalin":["",37],"Samarkand":["",41],"Seoul":["",66],"Shanghai":["",52],"Singapore":["",49],"Srednekolymsk":["",37],"Taipei":["",52],"Tashkent":["",41],"Tbilisi":["",47],"Tehran":["",68],"Tel_Aviv":["Asia/Jerusalem",59],"Thimbu":["Asia/Thimphu",45],"Thimphu":["",45],"Tokyo":["",69],"Tomsk":["",38],"Ujung_Pandang":["Asia/Makassar",63],"Ulaanbaatar":["",49],"Ulan_Bator":["Asia/Ulaanbaatar",49],"Urumqi":["",45],"Ust-Nera":["",39],"Vientiane":["Asia/Bangkok",38],"Vladivostok":["",39],"Yakutsk":["",51],"Yangon":["",67],"Yekaterinburg":["",41],"Yerevan":["",47]},"Atlantic":{"Azores":["",35],"Bermuda":["",25],"Canary":["",70],"Cape_Verde":["",71],"Faeroe":["Atlantic/Faroe",70],"Faroe":["",70],"Jan_Mayen":["Europe/Berlin",7],"Madeira":["",70],"Reykjavik":["Africa/Abidjan",0],"South_Georgia":["",32],"St_Helena":["Africa/Abidjan",0],"Stanley":["",12]},"Australia":{"ACT":["Australia/Sydney",40],"Adelaide":["",72],"Brisbane":["",73],"Broken_Hill":["",72],"Canberra":["Australia/Sydney",40],"Currie":["Australia/Hobart",74],"Darwin":["",75],"Eucla":["",76],"Hobart":["",74],"LHI":["Australia/Lord_Howe",77],"Lindeman":["",73],"Lord_Howe":["",77],"Melbourne":["",40],"North":["Australia/Darwin",75],"NSW":["Australia/Sydney",40],"Perth":["",78],"Queensland":["Australia/Brisbane",73],"South":["Australia/Adelaide",72],"Sydney":["",40],"Tasmania":["Australia/Hobart",74],"Victoria":["Australia/Melbourne",40],"West":["Australia/Perth",78],"Yancowinna":["Australia/Broken_Hill",72]},"Brazil":{"Acre":["America/Rio_Branco",18],"DeNoronha":["America/Noronha",32],"East":["America/Sao_Paulo",12],"West":["America/Manaus",17]},"Canada":{"Atlantic":["America/Halifax",25],"Central":["America/Winnipeg",20],"Eastern":["America/Toronto",23],"Mountain":["America/Edmonton",19],"Newfoundland":["America/St_Johns",36],"Pacific":["America/Vancouver",24],"Saskatchewan":["America/Regina",16],"Yukon":["America/Whitehorse",22]},"CET":["",7],"Chile":{"Continental":["America/Santiago",34],"EasterIsland":["Pacific/Easter",79]},"CST6CDT":["",20],"Cuba":["America/Havana",29],"EET":["",54],"Egypt":["Africa/Cairo",5],"Eire":["Europe/Dublin",80],"EST":["",14],"EST5EDT":["",23],"Etc":{"GMT-0":["Etc/GMT",0],"GMT-1":["",6],"GMT-10":["",39],"GMT-11":["",37],"GMT-12":["",46],"GMT-13":["",81],"GMT-14":["",82],"GMT-2":["",83],"GMT-3":["",43],"GMT-4":["",47],"GMT-5":["",41],"GMT-6":["",45],"GMT-7":["",38],"GMT-8":["",49],"GMT-9":["",51],"GMT":["",0],"GMT+0":["Etc/GMT",0],"GMT+1":["",71],"GMT+10":["",84],"GMT+11":["",85],"GMT+12":["",86],"GMT+2":["",32],"GMT+3":["",12],"GMT+4":["",17],"GMT+5":["",18],"GMT+6":["",87],"GMT+7":["",88],"GMT+8":["",89],"GMT+9":["",90],"GMT0":["Etc/GMT",0],"Greenwich":["Etc/GMT",0],"UCT":["Etc/UTC",91],"Universal":["Etc/UTC",91],"UTC":["",91],"Zulu":["Etc/UTC",91]},"Europe":{"Amsterdam":["Europe/Brussels",7],"Andorra":["",7],"Astrakhan":["",47],"Athens":["",54],"Belfast":["Europe/London",92],"Belgrade":["",7],"Berlin":["",7],"Bratislava":["Europe/Prague",7],"Brussels":["",7],"Bucharest":["",54],"Budapest":["",7],"Busingen":["Europe/Zurich",7],"Chisinau":["",93],"Copenhagen":["Europe/Berlin",7],"Dublin":["",80],"Gibraltar":["",7],"Guernsey":["Europe/London",92],"Helsinki":["",54],"Isle_of_Man":["Europe/London",92],"Istanbul":["",43],"Jersey":["Europe/London",92],"Kaliningrad":["",5],"Kiev":["Europe/Kyiv",65],"Kirov":["",43],"Kyiv":["",65],"Lisbon":["",94],"Ljubljana":["Europe/Belgrade",7],"London":["",92],"Luxembourg":["Europe/Brussels",7],"Madrid":["",7],"Malta":["",7],"Mariehamn":["Europe/Helsinki",54],"Minsk":["",43],"Monaco":["Europe/Paris",7],"Moscow":["",95],"Nicosia":["Asia/Nicosia",65],"Oslo":["Europe/Berlin",7],"Paris":["",7],"Podgorica":["Europe/Belgrade",7],"Prague":["",7],"Riga":["",54],"Rome":["",7],"Samara":["",47],"San_Marino":["Europe/Rome",7],"Sarajevo":["Europe/Belgrade",7],"Saratov":["",47],"Simferopol":["",95],"Skopje":["Europe/Belgrade",7],"Sofia":["",54],"Stockholm":["Europe/Berlin",7],"Tallinn":["",54],"Tirane":["",7],"Tiraspol":["Europe/Chisinau",93],"Ulyanovsk":["",47],"Uzhgorod":["Europe/Kyiv",65],"Vaduz":["Europe/Zurich",7],"Vatican":["Europe/Rome",7],"Vienna":["",7],"Vilnius":["",54],"Volgograd":["",43],"Warsaw":["",7],"Zagreb":["Europe/Belgrade",7],"Zaporozhye":["Europe/Kyiv",65],"Zurich":["",7]},"GB-Eire":["Europe/London",92],"GB":["Europe/London",92],"GMT-0":["Etc/GMT",0],"GMT":["Etc/GMT",0],"GMT+0":["Etc/GMT",0],"GMT0":["Etc/GMT",0],"Greenwich":["Etc/GMT",0],"Hongkong":["Asia/Hong_Kong",56],"HST":["",96],"Iceland":["Africa/Abidjan",0],"Indian":{"Antananarivo":["Africa/Nairobi",1],"Chagos":["",45],"Christmas":["Asia/Bangkok",38],"Cocos":["Asia/Yangon",67],"Comoro":["Africa/Nairobi",1],"Kerguelen":["Indian/Maldives",41],"Mahe":["Asia/Dubai",47],"Maldives":["",41],"Mauritius":["",47],"Mayotte":["Africa/Nairobi",1],"Reunion":["Asia/Dubai",47]},"Iran":["Asia/Tehran",68],"Israel":["Asia/Jerusalem",59],"Jamaica":["America/Jamaica",14],"Japan":["Asia/Tokyo",69],"Kwajalein":["Pacific/Kwajalein",46],"Libya":["Africa/Tripoli",5],"MET":["",97],"Mexico":{"BajaNorte":["America/Tijuana",24],"BajaSur":["America/Mazatlan",21],"General":["America/Mexico_City",30]},"MST":["",22],"MST7MDT":["",19],"Navajo":["America/Denver",19],"NZ-CHAT":["Pacific/Chatham",98],"NZ":["Pacific/Auckland",42],"Pacific":{"Apia":["",81],"Auckland":["",42],"Bougainville":["",37],"Chatham":["",98],"Chuuk":["Pacific/Port_Moresby",39],"Easter":["",79],"Efate":["",37],"Enderbury":["Pacific/Kanton",81],"Fakaofo":["",81],"Fiji":["",99],"Funafuti":["Pacific/Tarawa",46],"Galapagos":["",87],"Gambier":["",90],"Guadalcanal":["",37],"Guam":["",100],"Honolulu":["",96],"Johnston":["Pacific/Honolulu",96],"Kanton":["",81],"Kiritimati":["",82],"Kosrae":["",37],"Kwajalein":["",46],"Majuro":["Pacific/Tarawa",46],"Marquesas":["",101],"Midway":["Pacific/Pago_Pago",102],"Nauru":["",46],"Niue":["",85],"Norfolk":["",103],"Noumea":["",37],"Pago_Pago":["",102],"Palau":["",51],"Pitcairn":["",89],"Pohnpei":["Pacific/Guadalcanal",37],"Ponape":["Pacific/Guadalcanal",37],"Port_Moresby":["",39],"Rarotonga":["",84],"Saipan":["Pacific/Guam",100],"Samoa":["Pacific/Pago_Pago",102],"Tahiti":["",84],"Tarawa":["",46],"Tongatapu":["",81],"Truk":["Pacific/Port_Moresby",39],"Wake":["Pacific/Tarawa",46],"Wallis":["Pacific/Tarawa",46],"Yap":["Pacific/Port_Moresby",39]},"Poland":["Europe/Warsaw",7],"Portugal":["Europe/Lisbon",94],"PRC":["Asia/Shanghai",52],"PST8PDT":["",24],"ROC":["Asia/Taipei",52],"ROK":["Asia/Seoul",66],"Singapore":["Asia/Singapore",49],"Turkey":["Europe/Istanbul",43],"UCT":["Etc/UTC",91],"Universal":["Etc/UTC",91],"US":{"Alaska":["America/Anchorage",10],"Aleutian":["America/Adak",9],"Arizona":["America/Phoenix",22],"Central":["America/Chicago",20],"East-Indiana":["America/Indiana/Indianapolis",23],"Eastern":["America/New_York",23],"Hawaii":["Pacific/Honolulu",96],"Indiana-Starke":["America/Indiana/Knox",20],"Michigan":["America/Detroit",23],"Mountain":["America/Denver",19],"Pacific":["America/Los_Angeles",24],"Samoa":["Pacific/Pago_Pago",102]},"UTC":["Etc/UTC",91],"W-SU":["Europe/Moscow",95],"WET":["",70],"Zulu":["Etc/UTC",91]};
 const tzlibZonesDetailsDB = ["20221015T115821Z<n><bs><n><tz>GMT<n><of>+0000<n><ot>+0000<n><s>19700101T000000<n><es><n>","20221015T115821Z<n><bs><n><tz>EAT<n><of>+0300<n><ot>+0300<n><s>19700101T000000<n><es><n>","20221015T115821Z<n><bs><n><tz>CET<n><of>+0100<n><ot>+0100<n><s>19700101T000000<n><es><n>","20221015T115821Z<n><bs><n><tz>WAT<n><of>+0100<n><ot>+0100<n><s>19700101T000000<n><es><n>","20221015T115821Z<n><bs><n><tz>CAT<n><of>+0200<n><ot>+0200<n><s>19700101T000000<n><es><n>","20221015T115821Z<n><bs><n><tz>EET<n><of>+0200<n><ot>+0200<n><s>19700101T000000<n><es><n>","20221015T115821Z<n><bs><n><tz>+01<n><of>+0100<n><ot>+0100<n><s>19700101T000000<n><es><n>","20221015T115821Z<n><bd><n><tz>CEST<n><of>+0100<n><ot>+0200<n><s>19700329T020000<n><r>FREQ=YEARLY;BYMONTH=3;BYDAY=-1SU<n><ed><n><bs><n><tz>CET<n><of>+0200<n><ot>+0100<n><s>19701025T030000<n><r>FREQ=YEARLY;BYMONTH=10;BYDAY=-1SU<n><es><n>","20221015T115821Z<n><bs><n><tz>SAST<n><of>+0200<n><ot>+0200<n><s>19700101T000000<n><es><n>","20221015T115821Z<n><bd><n><tz>HDT<n><of>-1000<n><ot>-0900<n><s>19700308T020000<n><r>FREQ=YEARLY;BYMONTH=3;BYDAY=2SU<n><ed><n><bs><n><tz>HST<n><of>-0900<n><ot>-1000<n><s>19701101T020000<n><r>FREQ=YEARLY;BYMONTH=11;BYDAY=1SU<n><es><n>","20221015T115821Z<n><bd><n><tz>AKDT<n><of>-0900<n><ot>-0800<n><s>19700308T020000<n><r>FREQ=YEARLY;BYMONTH=3;BYDAY=2SU<n><ed><n><bs><n><tz>AKST<n><of>-0800<n><ot>-0900<n><s>19701101T020000<n><r>FREQ=YEARLY;BYMONTH=11;BYDAY=1SU<n><es><n>","20221015T115821Z<n><bs><n><tz>AST<n><of>-0400<n><ot>-0400<n><s>19700101T000000<n><es><n>","20221015T115821Z<n><bs><n><tz>-03<n><of>-0300<n><ot>-0300<n><s>19700101T000000<n><es><n>","20221015T115821Z<n><bd><n><tz>-03<n><of>-0400<n><ot>-0300<n><s>19701004T000000<n><r>FREQ=YEARLY;BYMONTH=10;BYDAY=1SU<n><ed><n><bs><n><tz>-04<n><of>-0300<n><ot>-0400<n><s>19700322T000000<n><r>FREQ=YEARLY;BYMONTH=3;BYDAY=4SU<n><es><n>","20221015T115821Z<n><bs><n><tz>EST<n><of>-0500<n><ot>-0500<n><s>19700101T000000<n><es><n>","20221015T115821Z<n><bs><n><tz>CST<n><of>-0500<n><ot>-0600<n><s>19701025T020000<n><r>FREQ=YEARLY;BYMONTH=10;BYDAY=-1SU<n><es><n><bd><n><tz>CDT<n><of>-0600<n><ot>-0500<n><s>19700405T020000<n><r>FREQ=YEARLY;BYMONTH=4;BYDAY=1SU<n><ed><n>","20221015T115821Z<n><bs><n><tz>CST<n><of>-0600<n><ot>-0600<n><s>19700101T000000<n><es><n>","20221015T115821Z<n><bs><n><tz>-04<n><of>-0400<n><ot>-0400<n><s>19700101T000000<n><es><n>","20221015T115821Z<n><bs><n><tz>-05<n><of>-0500<n><ot>-0500<n><s>19700101T000000<n><es><n>","20221015T115821Z<n><bd><n><tz>MDT<n><of>-0700<n><ot>-0600<n><s>19700308T020000<n><r>FREQ=YEARLY;BYMONTH=3;BYDAY=2SU<n><ed><n><bs><n><tz>MST<n><of>-0600<n><ot>-0700<n><s>19701101T020000<n><r>FREQ=YEARLY;BYMONTH=11;BYDAY=1SU<n><es><n>","20221015T115821Z<n><bd><n><tz>CDT<n><of>-0600<n><ot>-0500<n><s>19700308T020000<n><r>FREQ=YEARLY;BYMONTH=3;BYDAY=2SU<n><ed><n><bs><n><tz>CST<n><of>-0500<n><ot>-0600<n><s>19701101T020000<n><r>FREQ=YEARLY;BYMONTH=11;BYDAY=1SU<n><es><n>","20221015T115821Z<n><bd><n><tz>MDT<n><of>-0700<n><ot>-0600<n><s>19700405T020000<n><r>FREQ=YEARLY;BYMONTH=4;BYDAY=1SU<n><ed><n><bs><n><tz>MST<n><of>-0600<n><ot>-0700<n><s>19701025T020000<n><r>FREQ=YEARLY;BYMONTH=10;BYDAY=-1SU<n><es><n>","20221015T115821Z<n><bs><n><tz>MST<n><of>-0700<n><ot>-0700<n><s>19700101T000000<n><es><n>","20221015T115821Z<n><bd><n><tz>EDT<n><of>-0500<n><ot>-0400<n><s>19700308T020000<n><r>FREQ=YEARLY;BYMONTH=3;BYDAY=2SU<n><ed><n><bs><n><tz>EST<n><of>-0400<n><ot>-0500<n><s>19701101T020000<n><r>FREQ=YEARLY;BYMONTH=11;BYDAY=1SU<n><es><n>","20221015T115821Z<n><bd><n><tz>PDT<n><of>-0800<n><ot>-0700<n><s>19700308T020000<n><r>FREQ=YEARLY;BYMONTH=3;BYDAY=2SU<n><ed><n><bs><n><tz>PST<n><of>-0700<n><ot>-0800<n><s>19701101T020000<n><r>FREQ=YEARLY;BYMONTH=11;BYDAY=1SU<n><es><n>","20221015T115821Z<n><bd><n><tz>ADT<n><of>-0400<n><ot>-0300<n><s>19700308T020000<n><r>FREQ=YEARLY;BYMONTH=3;BYDAY=2SU<n><ed><n><bs><n><tz>AST<n><of>-0300<n><ot>-0400<n><s>19701101T020000<n><r>FREQ=YEARLY;BYMONTH=11;BYDAY=1SU<n><es><n>","20221015T115821Z<n><bd><n><tz>-02<n><of>-0300<n><ot>-0200<n><s>19700328T220000<n><r>FREQ=YEARLY;BYMONTH=3;BYDAY=-1SA<n><ed><n><bs><n><tz>-03<n><of>-0200<n><ot>-0300<n><s>19701024T230000<n><r>FREQ=YEARLY;BYMONTH=10;BYDAY=-1SA<n><es><n>","20221015T115821Z<n><bs><n><tz>AST<n><of>-0300<n><ot>-0400<n><s>19701101T020000<n><r>FREQ=YEARLY;BYMONTH=11;BYDAY=1SU<n><es><n><bd><n><tz>ADT<n><of>-0400<n><ot>-0300<n><s>19700308T020000<n><r>FREQ=YEARLY;BYMONTH=3;BYDAY=2SU<n><ed><n>","20221015T115821Z<n><bs><n><tz>EST<n><of>-0400<n><ot>-0500<n><s>19701101T020000<n><r>FREQ=YEARLY;BYMONTH=11;BYDAY=1SU<n><es><n><bd><n><tz>EDT<n><of>-0500<n><ot>-0400<n><s>19700308T020000<n><r>FREQ=YEARLY;BYMONTH=3;BYDAY=2SU<n><ed><n>","20221015T115821Z<n><bs><n><tz>CST<n><of>-0400<n><ot>-0500<n><s>19701101T010000<n><r>FREQ=YEARLY;BYMONTH=11;BYDAY=1SU<n><es><n><bd><n><tz>CDT<n><of>-0500<n><ot>-0400<n><s>19700308T000000<n><r>FREQ=YEARLY;BYMONTH=3;BYDAY=2SU<n><ed><n>","20221015T115821Z<n><bd><n><tz>CDT<n><of>-0600<n><ot>-0500<n><s>19700405T020000<n><r>FREQ=YEARLY;BYMONTH=4;BYDAY=1SU<n><ed><n><bs><n><tz>CST<n><of>-0500<n><ot>-0600<n><s>19701025T020000<n><r>FREQ=YEARLY;BYMONTH=10;BYDAY=-1SU<n><es><n>","20221015T115821Z<n><bd><n><tz>-02<n><of>-0300<n><ot>-0200<n><s>19700308T020000<n><r>FREQ=YEARLY;BYMONTH=3;BYDAY=2SU<n><ed><n><bs><n><tz>-03<n><of>-0200<n><ot>-0300<n><s>19701101T020000<n><r>FREQ=YEARLY;BYMONTH=11;BYDAY=1SU<n><es><n>","20221015T115821Z<n><bs><n><tz>-02<n><of>-0200<n><ot>-0200<n><s>19700101T000000<n><es><n>","20221015T115821Z<n><bs><n><tz>CST<n><of>-0500<n><ot>-0600<n><s>19701101T020000<n><r>FREQ=YEARLY;BYMONTH=11;BYDAY=1SU<n><es><n><bd><n><tz>CDT<n><of>-0600<n><ot>-0500<n><s>19700308T020000<n><r>FREQ=YEARLY;BYMONTH=3;BYDAY=2SU<n><ed><n>","20221015T115821Z<n><bs><n><tz>-04<n><of>-0300<n><ot>-0400<n><s>19700405T000000<n><r>FREQ=YEARLY;BYMONTH=4;BYDAY=1SU<n><es><n><bd><n><tz>-03<n><of>-0400<n><ot>-0300<n><s>19700906T000000<n><r>FREQ=YEARLY;BYMONTH=9;BYDAY=1SU<n><ed><n>","20221015T115821Z<n><bd><n><tz>+00<n><of>-0100<n><ot>+0000<n><s>19700329T000000<n><r>FREQ=YEARLY;BYMONTH=3;BYDAY=-1SU<n><ed><n><bs><n><tz>-01<n><of>+0000<n><ot>-0100<n><s>19701025T010000<n><r>FREQ=YEARLY;BYMONTH=10;BYDAY=-1SU<n><es><n>","20221015T115821Z<n><bs><n><tz>NST<n><of>-0230<n><ot>-0330<n><s>19701101T020000<n><r>FREQ=YEARLY;BYMONTH=11;BYDAY=1SU<n><es><n><bd><n><tz>NDT<n><of>-0330<n><ot>-0230<n><s>19700308T020000<n><r>FREQ=YEARLY;BYMONTH=3;BYDAY=2SU<n><ed><n>","20221015T115821Z<n><bs><n><tz>+11<n><of>+1100<n><ot>+1100<n><s>19700101T000000<n><es><n>","20221015T115821Z<n><bs><n><tz>+07<n><of>+0700<n><ot>+0700<n><s>19700101T000000<n><es><n>","20221015T115821Z<n><bs><n><tz>+10<n><of>+1000<n><ot>+1000<n><s>19700101T000000<n><es><n>","20221015T115821Z<n><bs><n><tz>AEST<n><of>+1100<n><ot>+1000<n><s>19700405T030000<n><r>FREQ=YEARLY;BYMONTH=4;BYDAY=1SU<n><es><n><bd><n><tz>AEDT<n><of>+1000<n><ot>+1100<n><s>19701004T020000<n><r>FREQ=YEARLY;BYMONTH=10;BYDAY=1SU<n><ed><n>","20221015T115821Z<n><bs><n><tz>+05<n><of>+0500<n><ot>+0500<n><s>19700101T000000<n><es><n>","20221015T115821Z<n><bd><n><tz>NZDT<n><of>+1200<n><ot>+1300<n><s>19700927T020000<n><r>FREQ=YEARLY;BYMONTH=9;BYDAY=-1SU<n><ed><n><bs><n><tz>NZST<n><of>+1300<n><ot>+1200<n><s>19700405T030000<n><r>FREQ=YEARLY;BYMONTH=4;BYDAY=1SU<n><es><n>","20221015T115821Z<n><bs><n><tz>+03<n><of>+0300<n><ot>+0300<n><s>19700101T000000<n><es><n>","20221015T115821Z<n><bd><n><tz>+02<n><of>+0000<n><ot>+0200<n><s>19700329T010000<n><r>FREQ=YEARLY;BYMONTH=3;BYDAY=-1SU<n><ed><n><bs><n><tz>+00<n><of>+0200<n><ot>+0000<n><s>19701025T030000<n><r>FREQ=YEARLY;BYMONTH=10;BYDAY=-1SU<n><es><n>","20221015T115821Z<n><bs><n><tz>+06<n><of>+0600<n><ot>+0600<n><s>19700101T000000<n><es><n>","20221015T115821Z<n><bs><n><tz>+12<n><of>+1200<n><ot>+1200<n><s>19700101T000000<n><es><n>","20221015T115821Z<n><bs><n><tz>+04<n><of>+0400<n><ot>+0400<n><s>19700101T000000<n><es><n>","20221015T115821Z<n><bd><n><tz>EEST<n><of>+0200<n><ot>+0300<n><s>19700329T000000<n><r>FREQ=YEARLY;BYMONTH=3;BYDAY=-1SU<n><ed><n><bs><n><tz>EET<n><of>+0300<n><ot>+0200<n><s>19701025T000000<n><r>FREQ=YEARLY;BYMONTH=10;BYDAY=-1SU<n><es><n>","20221015T115821Z<n><bs><n><tz>+08<n><of>+0800<n><ot>+0800<n><s>19700101T000000<n><es><n>","20221015T115821Z<n><bs><n><tz>IST<n><of>+0530<n><ot>+0530<n><s>19700101T000000<n><es><n>","20221015T115821Z<n><bs><n><tz>+09<n><of>+0900<n><ot>+0900<n><s>19700101T000000<n><es><n>","20221015T115821Z<n><bs><n><tz>CST<n><of>+0800<n><ot>+0800<n><s>19700101T000000<n><es><n>","20221015T115821Z<n><bs><n><tz>+0530<n><of>+0530<n><ot>+0530<n><s>19700101T000000<n><es><n>","20221015T115821Z<n><bd><n><tz>EEST<n><of>+0200<n><ot>+0300<n><s>19700329T030000<n><r>FREQ=YEARLY;BYMONTH=3;BYDAY=-1SU<n><ed><n><bs><n><tz>EET<n><of>+0300<n><ot>+0200<n><s>19701025T040000<n><r>FREQ=YEARLY;BYMONTH=10;BYDAY=-1SU<n><es><n>","20221015T115821Z<n><bs><n><tz>EET<n><of>+0300<n><ot>+0200<n><s>19701024T020000<n><r>FREQ=YEARLY;BYMONTH=10;BYDAY=-1SA<n><es><n><bd><n><tz>EEST<n><of>+0200<n><ot>+0300<n><s>19700328T020000<n><r>FREQ=YEARLY;BYMONTH=3;BYDAY=-1SA<n><ed><n>","20221015T115821Z<n><bs><n><tz>HKT<n><of>+0800<n><ot>+0800<n><s>19700101T000000<n><es><n>","20221015T115821Z<n><bs><n><tz>WIB<n><of>+0700<n><ot>+0700<n><s>19700101T000000<n><es><n>","20221015T115821Z<n><bs><n><tz>WIT<n><of>+0900<n><ot>+0900<n><s>19700101T000000<n><es><n>","20221015T115821Z<n><bd><n><tz>IDT<n><of>+0200<n><ot>+0300<n><s>19700327T020000<n><r>FREQ=YEARLY;BYMONTH=3;BYDAY=-1FR<n><ed><n><bs><n><tz>IST<n><of>+0300<n><ot>+0200<n><s>19701025T020000<n><r>FREQ=YEARLY;BYMONTH=10;BYDAY=-1SU<n><es><n>","20221015T115821Z<n><bs><n><tz>+0430<n><of>+0430<n><ot>+0430<n><s>19700101T000000<n><es><n>","20221015T115821Z<n><bs><n><tz>PKT<n><of>+0500<n><ot>+0500<n><s>19700101T000000<n><es><n>","20221015T115821Z<n><bs><n><tz>+0545<n><of>+0545<n><ot>+0545<n><s>19700101T000000<n><es><n>","20221015T115821Z<n><bs><n><tz>WITA<n><of>+0800<n><ot>+0800<n><s>19700101T000000<n><es><n>","20221015T115821Z<n><bs><n><tz>PST<n><of>+0800<n><ot>+0800<n><s>19700101T000000<n><es><n>","20221015T115821Z<n><bs><n><tz>EET<n><of>+0300<n><ot>+0200<n><s>19701025T040000<n><r>FREQ=YEARLY;BYMONTH=10;BYDAY=-1SU<n><es><n><bd><n><tz>EEST<n><of>+0200<n><ot>+0300<n><s>19700329T030000<n><r>FREQ=YEARLY;BYMONTH=3;BYDAY=-1SU<n><ed><n>","20221015T115821Z<n><bs><n><tz>KST<n><of>+0900<n><ot>+0900<n><s>19700101T000000<n><es><n>","20221015T115821Z<n><bs><n><tz>+0630<n><of>+0630<n><ot>+0630<n><s>19700101T000000<n><es><n>","20221015T115821Z<n><bs><n><tz>+0330<n><of>+0330<n><ot>+0330<n><s>19700101T000000<n><es><n>","20221015T115821Z<n><bs><n><tz>JST<n><of>+0900<n><ot>+0900<n><s>19700101T000000<n><es><n>","20221015T115821Z<n><bd><n><tz>WEST<n><of>+0000<n><ot>+0100<n><s>19700329T010000<n><r>FREQ=YEARLY;BYMONTH=3;BYDAY=-1SU<n><ed><n><bs><n><tz>WET<n><of>+0100<n><ot>+0000<n><s>19701025T020000<n><r>FREQ=YEARLY;BYMONTH=10;BYDAY=-1SU<n><es><n>","20221015T115821Z<n><bs><n><tz>-01<n><of>-0100<n><ot>-0100<n><s>19700101T000000<n><es><n>","20221015T115821Z<n><bs><n><tz>ACST<n><of>+1030<n><ot>+0930<n><s>19700405T030000<n><r>FREQ=YEARLY;BYMONTH=4;BYDAY=1SU<n><es><n><bd><n><tz>ACDT<n><of>+0930<n><ot>+1030<n><s>19701004T020000<n><r>FREQ=YEARLY;BYMONTH=10;BYDAY=1SU<n><ed><n>","20221015T115821Z<n><bs><n><tz>AEST<n><of>+1000<n><ot>+1000<n><s>19700101T000000<n><es><n>","20221015T115821Z<n><bd><n><tz>AEDT<n><of>+1000<n><ot>+1100<n><s>19701004T020000<n><r>FREQ=YEARLY;BYMONTH=10;BYDAY=1SU<n><ed><n><bs><n><tz>AEST<n><of>+1100<n><ot>+1000<n><s>19700405T030000<n><r>FREQ=YEARLY;BYMONTH=4;BYDAY=1SU<n><es><n>","20221015T115821Z<n><bs><n><tz>ACST<n><of>+0930<n><ot>+0930<n><s>19700101T000000<n><es><n>","20221015T115821Z<n><bs><n><tz>+0845<n><of>+0845<n><ot>+0845<n><s>19700101T000000<n><es><n>","20221015T115821Z<n><bs><n><tz>+1030<n><of>+1100<n><ot>+1030<n><s>19700405T020000<n><r>FREQ=YEARLY;BYMONTH=4;BYDAY=1SU<n><es><n><bd><n><tz>+11<n><of>+1030<n><ot>+1100<n><s>19701004T020000<n><r>FREQ=YEARLY;BYMONTH=10;BYDAY=1SU<n><ed><n>","20221015T115821Z<n><bs><n><tz>AWST<n><of>+0800<n><ot>+0800<n><s>19700101T000000<n><es><n>","20221015T115821Z<n><bs><n><tz>-06<n><of>-0500<n><ot>-0600<n><s>19700404T220000<n><r>FREQ=YEARLY;BYMONTH=4;BYDAY=1SA<n><es><n><bd><n><tz>-05<n><of>-0600<n><ot>-0500<n><s>19700905T220000<n><r>FREQ=YEARLY;BYMONTH=9;BYDAY=1SA<n><ed><n>","20221015T115821Z<n><bs><n><tz>IST<n><of>+0000<n><ot>+0100<n><s>19700329T010000<n><r>FREQ=YEARLY;BYMONTH=3;BYDAY=-1SU<n><es><n><bd><n><tz>GMT<n><of>+0100<n><ot>+0000<n><s>19701025T020000<n><r>FREQ=YEARLY;BYMONTH=10;BYDAY=-1SU<n><ed><n>","20221015T115821Z<n><bs><n><tz>+13<n><of>+1300<n><ot>+1300<n><s>19700101T000000<n><es><n>","20221015T115821Z<n><bs><n><tz>+14<n><of>+1400<n><ot>+1400<n><s>19700101T000000<n><es><n>","20221015T115821Z<n><bs><n><tz>+02<n><of>+0200<n><ot>+0200<n><s>19700101T000000<n><es><n>","20221015T115821Z<n><bs><n><tz>-10<n><of>-1000<n><ot>-1000<n><s>19700101T000000<n><es><n>","20221015T115821Z<n><bs><n><tz>-11<n><of>-1100<n><ot>-1100<n><s>19700101T000000<n><es><n>","20221015T115821Z<n><bs><n><tz>-12<n><of>-1200<n><ot>-1200<n><s>19700101T000000<n><es><n>","20221015T115821Z<n><bs><n><tz>-06<n><of>-0600<n><ot>-0600<n><s>19700101T000000<n><es><n>","20221015T115821Z<n><bs><n><tz>-07<n><of>-0700<n><ot>-0700<n><s>19700101T000000<n><es><n>","20221015T115821Z<n><bs><n><tz>-08<n><of>-0800<n><ot>-0800<n><s>19700101T000000<n><es><n>","20221015T115821Z<n><bs><n><tz>-09<n><of>-0900<n><ot>-0900<n><s>19700101T000000<n><es><n>","20221015T115821Z<n><bs><n><tz>UTC<n><of>+0000<n><ot>+0000<n><s>19700101T000000<n><es><n>","20221015T115821Z<n><bd><n><tz>BST<n><of>+0000<n><ot>+0100<n><s>19700329T010000<n><r>FREQ=YEARLY;BYMONTH=3;BYDAY=-1SU<n><ed><n><bs><n><tz>GMT<n><of>+0100<n><ot>+0000<n><s>19701025T020000<n><r>FREQ=YEARLY;BYMONTH=10;BYDAY=-1SU<n><es><n>","20221015T115821Z<n><bd><n><tz>EEST<n><of>+0200<n><ot>+0300<n><s>19700329T020000<n><r>FREQ=YEARLY;BYMONTH=3;BYDAY=-1SU<n><ed><n><bs><n><tz>EET<n><of>+0300<n><ot>+0200<n><s>19701025T030000<n><r>FREQ=YEARLY;BYMONTH=10;BYDAY=-1SU<n><es><n>","20221015T115821Z<n><bs><n><tz>WET<n><of>+0100<n><ot>+0000<n><s>19701025T020000<n><r>FREQ=YEARLY;BYMONTH=10;BYDAY=-1SU<n><es><n><bd><n><tz>WEST<n><of>+0000<n><ot>+0100<n><s>19700329T010000<n><r>FREQ=YEARLY;BYMONTH=3;BYDAY=-1SU<n><ed><n>","20221015T115821Z<n><bs><n><tz>MSK<n><of>+0300<n><ot>+0300<n><s>19700101T000000<n><es><n>","20221015T115821Z<n><bs><n><tz>HST<n><of>-1000<n><ot>-1000<n><s>19700101T000000<n><es><n>","20221015T115821Z<n><bd><n><tz>MEST<n><of>+0100<n><ot>+0200<n><s>19700329T020000<n><r>FREQ=YEARLY;BYMONTH=3;BYDAY=-1SU<n><ed><n><bs><n><tz>MET<n><of>+0200<n><ot>+0100<n><s>19701025T030000<n><r>FREQ=YEARLY;BYMONTH=10;BYDAY=-1SU<n><es><n>","20221015T115821Z<n><bd><n><tz>+1345<n><of>+1245<n><ot>+1345<n><s>19700927T024500<n><r>FREQ=YEARLY;BYMONTH=9;BYDAY=-1SU<n><ed><n><bs><n><tz>+1245<n><of>+1345<n><ot>+1245<n><s>19700405T034500<n><r>FREQ=YEARLY;BYMONTH=4;BYDAY=1SU<n><es><n>","20221015T115821Z<n><bd><n><tz>+13<n><of>+1200<n><ot>+1300<n><s>19701108T020000<n><r>FREQ=YEARLY;BYMONTH=11;BYDAY=2SU<n><ed><n><bs><n><tz>+12<n><of>+1300<n><ot>+1200<n><s>19700118T030000<n><r>FREQ=YEARLY;BYMONTH=1;BYDAY=-2SU<n><es><n>","20221015T115821Z<n><bs><n><tz>ChST<n><of>+1000<n><ot>+1000<n><s>19700101T000000<n><es><n>","20221015T115821Z<n><bs><n><tz>-0930<n><of>-0930<n><ot>-0930<n><s>19700101T000000<n><es><n>","20221015T115821Z<n><bs><n><tz>SST<n><of>-1100<n><ot>-1100<n><s>19700101T000000<n><es><n>","20221015T115821Z<n><bd><n><tz>+12<n><of>+1100<n><ot>+1200<n><s>19701004T020000<n><r>FREQ=YEARLY;BYMONTH=10;BYDAY=1SU<n><ed><n><bs><n><tz>+11<n><of>+1200<n><ot>+1100<n><s>19700405T030000<n><r>FREQ=YEARLY;BYMONTH=4;BYDAY=1SU<n><es><n>"];
 function tzlib_get_content(tzName) {
@@ -217,14 +217,14 @@ function tzlib_get_timezones(jsonType = false) {
  *  Add to Calendar Button
  *  ++++++++++++++++++++++
  *
- *  Version: 1.18.0
+ *  Version: 1.18.1
  *  Creator: Jens Kuerschner (https://jenskuerschner.de)
  *  Project: https://github.com/add2cal/add-to-calendar-button
  *  License: Apache-2.0 with “Commons Clause” License Condition v1.0
  *  Note:    DO NOT REMOVE THE COPYRIGHT NOTICE ABOVE!
  *
  */
-const atcbVersion = '1.18.0';
+const atcbVersion = '1.18.1';
 const isBrowser = () => {
   if (typeof window === 'undefined') {
     return false;
@@ -363,6 +363,8 @@ function atcb_decorate_data(data) {
   data = atcb_decorate_data_rrule(data);
   data = atcb_decorate_data_options(data);
   data.richData = atcb_decorate_data_rich_data(data);
+  data.checkmark = atcb_decorate_data_checkmark(data);
+  data.mindScrolling = atcb_decorate_data_mind_scrolling(data);
   data = atcb_decorate_data_style(data);
   data = atcb_decorate_data_i18n(data);
   data = atcb_decorate_data_dates(data);
@@ -492,6 +494,18 @@ function atcb_decorate_data_rich_data(data) {
     return false;
   }
   return true;
+}
+function atcb_decorate_data_checkmark(data) {
+  if (data.checkmark != null && data.checkmark == false) {
+    return false;
+  }
+  return true;
+}
+function atcb_decorate_data_mind_scrolling(data) {
+  if (data.mindScrolling != null && data.mindScrolling == true) {
+    return true;
+  }
+  return false;
 }
 function atcb_decorate_data_style(data) {
   if (data.listStyle == null || data.listStyle == '') {
@@ -1137,6 +1151,9 @@ function atcb_open(data, button, keyboardTrigger = false, generatedButton = fals
       if (data.listStyle === 'overlay') {
         listWrapper.classList.add('atcb-dropoverlay');
       }
+      if (data.mindScrolling) {
+        listWrapper.classList.add('atcb-mind-scrolling');
+      }
     }
     if (generatedButton) {
       list.classList.add('atcb-generated-button'); 
@@ -1388,10 +1405,12 @@ function atcb_generate_button(button, data) {
     buttonDropdownAnchor.classList.add('atcb-dropdown-anchor');
     buttonTrigger.appendChild(buttonDropdownAnchor);
   }
-  const btnCheck = document.createElement('div');
-  btnCheck.classList.add('atcb-checkmark');
-  btnCheck.innerHTML = atcbIcon['checkmark'];
-  buttonTrigger.appendChild(btnCheck);
+  if (data.checkmark) {
+    const btnCheck = document.createElement('div');
+    btnCheck.classList.add('atcb-checkmark');
+    btnCheck.innerHTML = atcbIcon['checkmark'];
+    buttonTrigger.appendChild(btnCheck);
+  }
   button.classList.remove('atcb');
   button.classList.add('atcb-initialized');
   if (data.inline) {
@@ -1635,11 +1654,12 @@ function atcb_create_modal(
   const bgOverlay = (function () {
     const el = document.getElementById('atcb-bgoverlay');
     if (!el) {
-      return atcb_generate_bg_overlay('modal', 'click', data.lightMode);
+      return atcb_generate_bg_overlay('modal', 'click', data.lightMode, data.background);
     } else {
       return el;
     }
   })();
+  bgOverlay.classList.add('atcb-no-animation');
   document.body.appendChild(bgOverlay);
   const modalWrapper = document.createElement('div');
   modalWrapper.classList.add('atcb-modal');
@@ -1931,10 +1951,12 @@ function atcb_generate_date_button(data, parent, subEvent = 'all') {
   btnHover.classList.add('atcb-date-btn-hover');
   btnHover.innerHTML = hoverText;
   btnRight.appendChild(btnHover);
-  const btnCheck = document.createElement('div');
-  btnCheck.classList.add('atcb-checkmark');
-  btnCheck.innerHTML = atcbIcon['checkmark'];
-  parent.appendChild(btnCheck);
+  if (data.checkmark) {
+    const btnCheck = document.createElement('div');
+    btnCheck.classList.add('atcb-checkmark');
+    btnCheck.innerHTML = atcbIcon['checkmark'];
+    parent.appendChild(btnCheck);
+  }
 }
 
 
@@ -2028,8 +2050,8 @@ function atcb_generate_multidate_links(type, data, keyboardTrigger, multiDateMod
     atcb_create_modal(
       data,
       type,
-      atcb_translate_hook('MultiDate headline', data),
-      atcb_translate_hook('MultiDate info', data),
+      atcb_translate_hook('modal.multidate.h', data),
+      atcb_translate_hook('modal.multidate.text', data),
       [],
       individualButtons,
       keyboardTrigger
@@ -2057,10 +2079,10 @@ function atcb_generate_subscribe_links(type, data, keyboardTrigger) {
       atcb_create_modal(
         data,
         'yahoo',
-        atcb_translate_hook('Subscribe Yahoo', data),
-        atcb_translate_hook('Clipboard info', data) +
+        atcb_translate_hook('modal.subscribe.yahoo.h', data),
+        atcb_translate_hook('modal.clipboard.text', data) +
           '<br>' +
-          atcb_translate_hook('Subscribe Yahoo Details', data),
+          atcb_translate_hook('modal.subscribe.yahoo.text', data),
         [
           {
             label: atcb_translate_hook('Open Yahoo Calendar', data),
@@ -2079,10 +2101,10 @@ function atcb_generate_subscribe_links(type, data, keyboardTrigger) {
       atcb_create_modal(
         data,
         'yahoo',
-        atcb_translate_hook('Subscribe Yahoo', data),
-        atcb_translate_hook('Clipboard info', data) +
+        atcb_translate_hook('modal.subscribe.yahoo.h', data),
+        atcb_translate_hook('modal.clipboard.text', data) +
           '<br>' +
-          atcb_translate_hook('Subscribe Yahoo Details', data),
+          atcb_translate_hook('modal.subscribe.yahoo.text', data),
         [
           {
             label: atcb_translate_hook('Open Yahoo Calendar', data),
@@ -2397,12 +2419,12 @@ function atcb_ical_copy_note(dataUrl, data, keyboardTrigger) {
     atcb_create_modal(
       data,
       'warning',
-      atcb_translate_hook('Crios iCal headline', data),
-      atcb_translate_hook('Crios iCal info', data) +
+      atcb_translate_hook('modal.crios.ical.h', data),
+      atcb_translate_hook('modal.crios.ical.text', data) +
         '<br>' +
-        atcb_translate_hook('Clipboard info', data) +
+        atcb_translate_hook('modal.clipboard.text', data) +
         '<br>' +
-        atcb_translate_hook('Crios iCal solution', data),
+        atcb_translate_hook('modal.crios.ical.steps', data),
       [],
       [],
       keyboardTrigger
@@ -2412,12 +2434,12 @@ function atcb_ical_copy_note(dataUrl, data, keyboardTrigger) {
   atcb_create_modal(
     data,
     'warning',
-    atcb_translate_hook('WebView iCal headline', data),
-    atcb_translate_hook('WebView iCal info', data) +
+    atcb_translate_hook('modal.webview.ical.h', data),
+    atcb_translate_hook('modal.webview.ical.text', data) +
       '<br>' +
-      atcb_translate_hook('Clipboard info', data) +
+      atcb_translate_hook('modal.clipboard.text', data) +
       '<br>' +
-      atcb_translate_hook('WebView iCal solution', data),
+      atcb_translate_hook('modal.webview.ical.steps', data),
     [],
     [],
     keyboardTrigger
@@ -2671,9 +2693,15 @@ function atcb_manage_body_scroll(modalObj = null) {
       return modalObj;
     } else {
       const allModals = document.querySelectorAll('.atcb-modal');
+      if (allModals.length == 0) {
+        return null;
+      }
       return allModals[allModals.length - 1];
     }
   })();
+  if (modal == null) {
+    return;
+  }
   const modalDim = modal.getBoundingClientRect();
   if (modalDim.height + 100 > window.innerHeight) {
     document.body.classList.add('atcb-modal-no-scroll');
@@ -2774,24 +2802,24 @@ const i18nStrings = {
     Close: 'Close',
     'Close Selection': 'Close Selection',
     'Click me': 'Click me',
-    'WebView iCal headline': 'Open your browser',
-    'WebView iCal info':
+    'modal.webview.ical.h': 'Open your browser',
+    'modal.webview.ical.text':
       'Unfortunately, in-app browsers have problems with the way we generate the calendar file.',
-    'Clipboard info': 'We automatically copied a magical URL into your clipboard.',
-    'WebView iCal solution':
+    'modal.clipboard.text': 'We automatically copied a magical URL into your clipboard.',
+    'modal.webview.ical.steps':
       '<ol><li><strong>Open another browser</strong> on your phone, ...</li><li><strong>Paste</strong> the clipboard content and go.</li></ol>',
-    'Crios iCal headline': 'Open Safari',
-    'Crios iCal info':
+    'modal.crios.ical.h': 'Open Safari',
+    'modal.crios.ical.text':
       'Unfortunately, Chrome on iOS has problems with the way we generate the calendar file.',
-    'Crios iCal solution':
+    'modal.crios.ical.steps':
       '<ol><li><strong>Open Safari</strong>, ...</li><li><strong>Paste</strong> the clipboard content and go.</li></ol>',
-    'MultiDate headline': 'This is an event series',
-    'MultiDate info': 'Add the individual events one by one:',
+    'modal.multidate.h': 'This is an event series',
+    'modal.multidate.text': 'Add the individual events one by one:',
     Event: 'Event',
     'Cancelled Date': 'This date got cancelled.',
     'Delete from Calendar': 'Please update your calendar!',
-    'Subscribe Yahoo': 'Add Calendar to Yahoo',
-    'Subscribe Yahoo Details':
+    'modal.subscribe.yahoo.h': 'Add Calendar to Yahoo',
+    'modal.subscribe.yahoo.text':
       '<ol><li>Open now the Yahoo Calendar.</li><li>Click the "Actions" tab.</li><li>Hit "Follow Other Calendars".</li><li>Set a name and past the clipboard content into the url field.</li></ol>',
     Cancel: 'Cancel',
   },
@@ -2801,23 +2829,24 @@ const i18nStrings = {
     Close: 'Schließen',
     'Close Selection': 'Auswahl schließen',
     'Click me': 'Klick mich',
-    'WebView iCal headline': 'Öffne deinen Browser',
-    'WebView iCal info':
+    'modal.webview.ical.h': 'Öffne deinen Browser',
+    'modal.webview.ical.text':
       'Leider haben In-App-Browser Probleme mit der Art, wie wir Kalender-Dateien erzeugen.',
-    'Clipboard info': 'Wir haben automatisch eine magische URL in deine Zwischenablage kopiert.',
-    'WebView iCal solution':
+    'modal.clipboard.text': 'Wir haben automatisch eine magische URL in deine Zwischenablage kopiert.',
+    'modal.webview.ical.steps':
       '<ol><li><strong>Öffne einen anderen Browser</strong> auf deinem Smartphone, ...</li><li>Nutze die <strong>Einfügen</strong>-Funktion, um fortzufahren.</li></ol>',
-    'Crios iCal headline': 'Öffne Safari',
-    'Crios iCal info': 'Leider Chrome unter iOS Probleme mit der Art, wie wir Kalender-Dateien erzeugen.',
-    'Crios iCal solution':
+    'modal.crios.ical.h': 'Öffne Safari',
+    'modal.crios.ical.text':
+      'Leider Chrome unter iOS Probleme mit der Art, wie wir Kalender-Dateien erzeugen.',
+    'modal.crios.ical.steps':
       '<ol><li><strong>Öffne Safari</strong>, ...</li><li>Nutze die <strong>Einfügen</strong>-Funktion, um fortzufahren.</li></ol>',
-    'MultiDate headline': 'Dies is eine Termin-Reihe',
-    'MultiDate info': 'Füge die einzelnen Termine der Reihe nach deinem Kalender hinzu:',
+    'modal.multidate.h': 'Dies is eine Termin-Reihe',
+    'modal.multidate.text': 'Füge die einzelnen Termine der Reihe nach deinem Kalender hinzu:',
     Event: 'Termin',
     'Cancelled Date': 'Dieser Termin wurde abgesagt.',
     'Delete from Calendar': 'Bitte aktualisiere deinen Kalender!',
-    'Subscribe Yahoo': 'Kalender zu Yahoo hinzufügen',
-    'Subscribe Yahoo Details':
+    'modal.subscribe.yahoo.h': 'Kalender zu Yahoo hinzufügen',
+    'modal.subscribe.yahoo.text':
       '<ol><li>Öffne den Yahoo Kalender.</li><li>Klicke auf den "Aktionen" Tab.</li><li>Wähle "Weiteren Kalendern folgen".</li><li>Wähle einen Namen und füge die URL aus deiner Zwischenablage in das URL-Feld ein.</li></ol>',
     Cancel: 'Abbrechen',
   },
@@ -2827,24 +2856,24 @@ const i18nStrings = {
     Close: 'Ciérralo',
     'Close Selection': 'Cerrar Selección',
     'Click me': 'Haz clic mí',
-    'WebView iCal headline': 'Abra su browser',
-    'WebView iCal info':
+    'modal.webview.ical.h': 'Abra su browser',
+    'modal.webview.ical.text':
       'Lamentablemente, los browsers in-app tienen problemas con la forma en que generamos el archivo del calendario.',
-    'Clipboard info': 'Hemos copiado automáticamente una URL mágica en su portapapeles.',
-    'WebView iCal solution':
+    'modal.clipboard.text': 'Hemos copiado automáticamente una URL mágica en su portapapeles.',
+    'modal.webview.ical.steps':
       '<ol><li><strong>Abre otro browser</strong> en tu smartphone, ...</li><li>Utilice la función de <strong>pegar</strong> para continuar.</li></ol>',
-    'Crios iCal headline': 'Abrir Safari',
-    'Crios iCal info':
+    'modal.crios.ical.h': 'Abrir Safari',
+    'modal.crios.ical.text':
       'Lamentablemente, Chrome en iOS tiene problemas con la forma de generar el archivo de calendario.',
-    'Crios iCal solution':
+    'modal.crios.ical.steps':
       '<ol><li><strong>Abrir Safari</strong>, ...</li><li>Utilice la función de <strong>pegar</strong> para continuar.</li></ol>',
-    'MultiDate headline': 'Esta es una serie de fechas',
-    'MultiDate info': 'Añada las fechas individuales a su calendario en orden:',
+    'modal.multidate.h': 'Esta es una serie de fechas',
+    'modal.multidate.text': 'Añada las fechas individuales a su calendario en orden:',
     Event: 'Término',
     'Cancelled Date': 'Esta fecha fue cancelada.',
     'Delete from Calendar': 'Actualice su calendario!',
-    'Subscribe Yahoo': 'Añadir calendario a Yahoo',
-    'Subscribe Yahoo Details':
+    'modal.subscribe.yahoo.h': 'Añadir calendario a Yahoo',
+    'modal.subscribe.yahoo.text':
       '<ol><li>Abra el calendario de Yahoo.</li><li>Haga clic en la pestaña "Acciones".</li><li>Seleccione "Seguir otros calendarios".</li><li>Elige un nombre y pega la URL de tu portapapeles en el campo URL.</li></ol>',
     Cancel: 'Cancelar',
   },
@@ -2854,24 +2883,24 @@ const i18nStrings = {
     Close: 'Fechar',
     'Close Selection': 'Fechar selecção',
     'Click me': 'Clicar-me',
-    'WebView iCal headline': 'Abra o seu browser',
-    'WebView iCal info':
+    'modal.webview.ical.h': 'Abra o seu browser',
+    'modal.webview.ical.text':
       'Infelizmente, os navegadores em tampas têm problemas com a forma como geramos o ficheiro de calendário.',
-    'Clipboard info': 'Copiámos automaticamente um URL mágico para a sua área de transferência.',
-    'WebView iCal solution':
+    'modal.clipboard.text': 'Copiámos automaticamente um URL mágico para a sua área de transferência.',
+    'modal.webview.ical.steps':
       '<ol><li><strong>Abrir outro browser</strong> en tu smartphone, ...</li><li>Use a função <forte>colar</strong> para continuar.</li></ol>',
-    'Crios iCal headline': 'Safari aberto',
-    'Crios iCal info':
+    'modal.crios.ical.h': 'Safari aberto',
+    'modal.crios.ical.text':
       'Infelizmente, o cromado no iOS tem problemas com a forma como geramos o ficheiro do calendário.',
-    'Crios iCal solution':
+    'modal.crios.ical.steps':
       '<ol><li><strong>Safari aberto</strong>, ...</li><li>Use a função <forte>colar</strong> para continuar.</li></ol>',
-    'MultiDate headline': 'Esta é uma série de datas',
-    'MultiDate info': 'Adicione as datas individuais ao seu calendário, por ordem:',
+    'modal.multidate.h': 'Esta é uma série de datas',
+    'modal.multidate.text': 'Adicione as datas individuais ao seu calendário, por ordem:',
     Event: 'Termo',
     'Cancelled Date': 'Esta data foi cancelada.',
     'Delete from Calendar': 'Actualize o seu calendário!',
-    'Subscribe Yahoo': 'Adicionar calendário ao Yahoo',
-    'Subscribe Yahoo Details':
+    'modal.subscribe.yahoo.h': 'Adicionar calendário ao Yahoo',
+    'modal.subscribe.yahoo.text':
       '<ol><li>Abrir o calendário do Yahoo.</li><li>Clique no separador "Acções".</li><li>Seleccione "Seguir outros calendários".</li><li>Escolha um nome e cole o URL da sua área de transferência no campo URL.</li></ol>',
     Cancel: 'Cancelar',
   },
@@ -2881,24 +2910,24 @@ const i18nStrings = {
     Close: 'Fermez',
     'Close Selection': 'Fermez la sélection',
     'Click me': 'Cliquez-moi',
-    'WebView iCal headline': 'Ouvrez votre navigateur',
-    'WebView iCal info':
+    'modal.webview.ical.h': 'Ouvrez votre navigateur',
+    'modal.webview.ical.text':
       'Malheureusement, les navigateurs in-app ont des problèmes avec la manière dont nous créons les fichiers de agenda.',
-    'Clipboard info': 'Nous avons automatiquement copié une URL magique dans ton presse-papiers.',
-    'WebView iCal solution':
+    'modal.clipboard.text': 'Nous avons automatiquement copié une URL magique dans ton presse-papiers.',
+    'modal.webview.ical.steps':
       '<ol><li><strong>Ouvre un autre navigateur</strong> sur ton smartphone, ...</li><li>Utilise la fonction <strong>insérer</strong> pour continuer.</li></ol>',
-    'Crios iCal headline': 'Ouvre Safari',
-    'Crios iCal info':
+    'modal.crios.ical.h': 'Ouvre Safari',
+    'modal.crios.ical.text':
       'Malheureusement, Chrome sur iOS a des problèmes avec la façon dont nous générons le fichier du agenda.',
-    'Crios iCal solution':
+    'modal.crios.ical.steps':
       '<ol><li><strong>Ouvre Safari</strong>, ...</li><li>Utilise la fonction <strong>insérer</strong> pour continuer.</li></ol>',
-    'MultiDate headline': "Il s'agit d'une série d'événements",
-    'MultiDate info': "Ajoute les différents rendez-vous dans l'ordre à ton agenda:",
+    'modal.multidate.h': "Il s'agit d'une série d'événements",
+    'modal.multidate.text': "Ajoute les différents rendez-vous dans l'ordre à ton agenda:",
     Event: 'Terminaison',
     'Cancelled Date': 'Cette date est annulée.',
     'Delete from Calendar': 'Actualisez votre agenda!',
-    'Subscribe Yahoo': 'Ajouter un agenda à Yahoo',
-    'Subscribe Yahoo Details':
+    'modal.subscribe.yahoo.h': 'Ajouter un agenda à Yahoo',
+    'modal.subscribe.yahoo.text':
       '<ol><li>Ouvre le Yahoo calendar.</li><li>Clique sur l\'onglet "Actions".</li><li>Sélectionne "Suivre d\'autres agendas".</li><li>Choisis un nom et colle l\'URL de ton presse-papiers dans le champ URL.</li></ol>',
     Cancel: 'Annuler',
   },
@@ -2908,24 +2937,24 @@ const i18nStrings = {
     Close: 'Sluiten',
     'Close Selection': 'Sluit selectie',
     'Click me': 'Klik me',
-    'WebView iCal headline': 'Open uw browser',
-    'WebView iCal info':
+    'modal.webview.ical.h': 'Open uw browser',
+    'modal.webview.ical.text':
       'Helaas hebben in-app browsers problemen met de manier waarop wij kalenderbestanden maken.',
-    'Clipboard info': 'We hebben automatisch een magische URL naar je klembord gekopieerd.',
-    'WebView iCal solution':
+    'modal.clipboard.text': 'We hebben automatisch een magische URL naar je klembord gekopieerd.',
+    'modal.webview.ical.steps':
       '<ol><li><strong>Open een andere browser</strong> op uw smartphone, ...</li><li>Gebruik de <strong>insert</strong> functie om verder te gaan.</li></ol>',
-    'Crios iCal headline': 'Open Safari',
-    'Crios iCal info':
+    'modal.crios.ical.h': 'Open Safari',
+    'modal.crios.ical.text':
       'Helaas heeft Chrome op iOS problemen met de manier waarop we het kalenderbestand genereren.',
-    'Crios iCal solution':
+    'modal.crios.ical.steps':
       '<ol><li><strong>Open Safari</strong>, ...</li><li>Gebruik de <strong>insert</strong> functie om verder te gaan.</li></ol>',
-    'MultiDate headline': 'Dit is een reeks data',
-    'MultiDate info': 'Voeg de afzonderlijke delen één voor één toe:',
+    'modal.multidate.h': 'Dit is een reeks data',
+    'modal.multidate.text': 'Voeg de afzonderlijke delen één voor één toe:',
     Event: 'Termin',
     'Cancelled Date': 'Deze datum is geannuleerd.',
     'Delete from Calendar': 'Uw agenda bijwerken!',
-    'Subscribe Yahoo': 'Toevoegen aan Yahoo',
-    'Subscribe Yahoo Details':
+    'modal.subscribe.yahoo.h': 'Toevoegen aan Yahoo',
+    'modal.subscribe.yahoo.text':
       '<ol><li>Open de Yahoo calendar.</li><li>Klik op de "Acties" tab.</li><li>Selecteer "Volg Andere Agenda\'s".</li><li>Kies een naam en plak de URL van uw klembord in het URL-veld.</li></ol>',
     Cancel: 'Annuleren',
   },
@@ -2935,24 +2964,24 @@ const i18nStrings = {
     Close: 'Kapat',
     'Close Selection': 'Seçimi kapat',
     'Click me': 'Beni tıklayın',
-    'WebView iCal headline': 'Tarayıcınızı açın',
-    'WebView iCal info':
+    'modal.webview.ical.h': 'Tarayıcınızı açın',
+    'modal.webview.ical.text':
       'Ne yazık ki, uygulama içi tarayıcılar takvim dosyalarını oluşturma şeklimizle ilgili sorunlar yaşıyor.',
-    'Clipboard info': 'Panonuza otomatik olarak sihirli bir URL kopyaladık.',
-    'WebView iCal solution':
+    'modal.clipboard.text': 'Panonuza otomatik olarak sihirli bir URL kopyaladık.',
+    'modal.webview.ical.steps':
       '<ol><li><strong>Akıllı telefonunuzda başka bir tarayıcı açın</strong>, ...</li><li>Devam etmek için <strong>insert</strong> fonksiyonunu kullanın.</li></ol>',
-    'Crios iCal headline': 'Açık Safari',
-    'Crios iCal info':
+    'modal.crios.ical.h': 'Açık Safari',
+    'modal.crios.ical.text':
       "Ne yazık ki iOS'ta Chrome'un takvim dosyası oluşturma yöntemiyle ilgili sorunları var.",
-    'Crios iCal solution':
+    'modal.crios.ical.steps':
       '<ol><li><strong>Açık Safari</strong>, ...</li><li>Devam etmek için <strong>insert</strong> fonksiyonunu kullanın.</li></ol>',
-    'MultiDate headline': 'Bu bir etkinlik serisidir',
-    'MultiDate info': 'Parçaları teker teker ekleyin:',
+    'modal.multidate.h': 'Bu bir etkinlik serisidir',
+    'modal.multidate.text': 'Parçaları teker teker ekleyin:',
     Event: 'Etkinlik',
     'Cancelled Date': 'Bu tarih iptal edildi.',
     'Delete from Calendar': 'Lütfen takviminizi güncelleyin!',
-    'Subscribe Yahoo': "Yahoo'ya takvim ekleme",
-    'Subscribe Yahoo Details':
+    'modal.subscribe.yahoo.h': "Yahoo'ya takvim ekleme",
+    'modal.subscribe.yahoo.text':
       '<ol><li>Yahoo takvimini açın.</li><li>"Eylemler" sekmesine tıklayın.</li><li>"Diğer Takvimleri Takip Et" öğesini seçin.</li><li>Bir ad seçin ve URL\'yi panonuzdan URL alanına yapıştırın.</li></ol>',
     Cancel: 'İptal',
   },
@@ -2962,22 +2991,22 @@ const i18nStrings = {
     Close: '关',
     'Close Selection': '关闭选择',
     'Click me': '点我',
-    'WebView iCal headline': '打开浏览器',
-    'WebView iCal info': '不幸的是，应用内浏览器在我们生成日历文件的方式上存在问题。',
-    'Clipboard info': '我们自动将魔术 URL 复制到您的剪贴板。',
-    'WebView iCal solution':
+    'modal.webview.ical.h': '打开浏览器',
+    'modal.webview.ical.text': '不幸的是，应用内浏览器在我们生成日历文件的方式上存在问题。',
+    'modal.clipboard.text': '我们自动将魔术 URL 复制到您的剪贴板。',
+    'modal.webview.ical.steps':
       '<ol><li>打开手机上的任何其他浏览器, ...</li><li>粘贴剪贴板内容并开始。</li></ol>',
-    'Crios iCal headline': '打开 Safari',
-    'Crios iCal info': '不幸的是，iOS 上的 Chrome 在我们生成日历文件的方式上存在问题。',
-    'Crios iCal solution':
+    'modal.crios.ical.h': '打开 Safari',
+    'modal.crios.ical.text': '不幸的是，iOS 上的 Chrome 在我们生成日历文件的方式上存在问题。',
+    'modal.crios.ical.steps':
       '<ol><li><strong>打开 Safari</strong>, ...</li><li>粘贴剪贴板内容并开始。</li></ol>',
-    'MultiDate headline': '这是一个活动系列',
-    'MultiDate info': '逐个添加各个部分:',
+    'modal.multidate.h': '这是一个活动系列',
+    'modal.multidate.text': '逐个添加各个部分:',
     Event: '事件',
     'Cancelled Date': '此日期已取消。',
     'Delete from Calendar': '请更新您的日历!',
-    'Subscribe Yahoo': '将日历添加到 Yahoo',
-    'Subscribe Yahoo Details':
+    'modal.subscribe.yahoo.h': '将日历添加到 Yahoo',
+    'modal.subscribe.yahoo.text':
       '<ol><li>打开 Yahoo 日历。</li><li>点击“操作”标签。</li><li>选择“关注其他日历”。</li><li>选择一个名称并将剪贴板中的 URL 粘贴到 URL 字段中。</li></ol>',
     Cancel: '中止',
   },
@@ -2987,22 +3016,22 @@ const i18nStrings = {
     Close: 'قريب',
     'Close Selection': 'إغلاق التحديد',
     'Click me': 'انقر فوق لي',
-    'WebView iCal headline': 'افتح المستعرض الخاص بك',
-    'WebView iCal info': 'لسوء الحظ ، تواجه المتصفحات داخل التطبيق مشاكل في طريقة إنشاء ملف التقويم.',
-    'Clipboard info': 'قمنا تلقائيًا بنسخ عنوان URL سحري إلى الحافظة الخاصة بك.',
-    'WebView iCal solution':
+    'modal.webview.ical.h': 'افتح المستعرض الخاص بك',
+    'modal.webview.ical.text': 'لسوء الحظ ، تواجه المتصفحات داخل التطبيق مشاكل في طريقة إنشاء ملف التقويم.',
+    'modal.clipboard.text': 'قمنا تلقائيًا بنسخ عنوان URL سحري إلى الحافظة الخاصة بك.',
+    'modal.webview.ical.steps':
       '<ol><li>افتح أي متصفح آخر على هاتفك الذكي, ...</li><li>.الصق محتوى الحافظة واذهب</li></ol>',
-    'Crios iCal headline': 'افتح Safari',
-    'Crios iCal info': 'لسوء الحظ ، يواجه Chrome على iOS مشاكل في طريقة إنشاء ملف التقويم',
-    'Crios iCal solution':
+    'modal.crios.ical.h': 'افتح Safari',
+    'modal.crios.ical.text': 'لسوء الحظ ، يواجه Chrome على iOS مشاكل في طريقة إنشاء ملف التقويم',
+    'modal.crios.ical.steps':
       '<ol><li><strong>افتح Safari</strong>, ...</li><li>الصق محتوى الحافظة واذهب.</li></ol>',
-    'MultiDate headline': 'هذه سلسلة أحداث',
-    'MultiDate info': 'أضف الأجزاء الفردية واحدة تلو الأخرى:',
+    'modal.multidate.h': 'هذه سلسلة أحداث',
+    'modal.multidate.text': 'أضف الأجزاء الفردية واحدة تلو الأخرى:',
     Event: 'حدث',
     'Cancelled Date': 'تم إلغاء هذا التاريخ.',
     'Delete from Calendar': 'الرجاء تحديث التقويم الخاص بك!',
-    'Subscribe Yahoo': 'أضف التقويم إلى Yahoo',
-    'Subscribe Yahoo Details':
+    'modal.subscribe.yahoo.h': 'أضف التقويم إلى Yahoo',
+    'modal.subscribe.yahoo.text':
       '<ol><li>افتح تقويم Yahoo.</li><li>انقر فوق علامة التبويب "الإجراءات".</li><li>حدد "متابعة تقويمات أخرى".</li><li>اختر اسمًا والصق عنوان URL من الحافظة الخاصة بك في حقل URL.</li></ol>',
     Cancel: 'إحباط',
   },
@@ -3012,23 +3041,24 @@ const i18nStrings = {
     Close: 'बंद करना',
     'Close Selection': 'चयन बंद करें',
     'Click me': 'मुझे क्लिक करें',
-    'WebView iCal headline': 'अपना ब्राउज़र खोलें',
-    'WebView iCal info': 'दुर्भाग्य से, इन-ऐप ब्राउज़र में कैलेंडर फ़ाइल बनाने के तरीके में समस्याएँ हैं।',
-    'Clipboard info': 'हमने आपके क्लिपबोर्ड पर स्वचालित रूप से एक जादुई URL कॉपी कर लिया है।',
-    'WebView iCal solution':
+    'modal.webview.ical.h': 'अपना ब्राउज़र खोलें',
+    'modal.webview.ical.text':
+      'दुर्भाग्य से, इन-ऐप ब्राउज़र में कैलेंडर फ़ाइल बनाने के तरीके में समस्याएँ हैं।',
+    'modal.clipboard.text': 'हमने आपके क्लिपबोर्ड पर स्वचालित रूप से एक जादुई URL कॉपी कर लिया है।',
+    'modal.webview.ical.steps':
       '<ol><li>अपने फ़ोन पर <strong>दूसरा ब्राउज़र खोलें</strong>, ...</li><li>क्लिपबोर्ड सामग्री <strong>चिपकाएं</strong> और जाएं।</li></ol>',
-    'Crios iCal headline': 'सफारी खोलें',
-    'Crios iCal info':
+    'modal.crios.ical.h': 'सफारी खोलें',
+    'modal.crios.ical.text':
       'दुर्भाग्य से, iOS पर Chrome को कैलेंडर फ़ाइल जेनरेट करने के हमारे तरीके में समस्या है।',
-    'Crios iCal solution':
+    'modal.crios.ical.steps':
       '<ol><li><strong>सफारी खोलें</strong>, ...</li><li>क्लिपबोर्ड सामग्री <strong>चिपकाएं</strong> और जाएं।</li></ol>',
-    'MultiDate headline': 'यह एक इवेंट सीरीज़ है',
-    'MultiDate info': 'अलग-अलग हिस्सों को एक-एक करके जोड़ें:',
+    'modal.multidate.h': 'यह एक इवेंट सीरीज़ है',
+    'modal.multidate.text': 'अलग-अलग हिस्सों को एक-एक करके जोड़ें:',
     Event: 'आयोजन',
     'Cancelled Date': 'यह तिथि रद्द हो गई।',
     'Delete from Calendar': 'कृपया अपना कैलेंडर अपडेट करें!',
-    'Subscribe Yahoo': 'Yahoo . में कैलेंडर जोड़ें',
-    'Subscribe Yahoo Details':
+    'modal.subscribe.yahoo.h': 'Yahoo . में कैलेंडर जोड़ें',
+    'modal.subscribe.yahoo.text':
       '<ol><li>Yahoo कैलेंडर खोलें।</li><li>"कृती" टैब पर क्लिक करें।</li><li>"इतर कॅलेंडर्सचे अनुसरण करा" चुनें।</li><li>एक नाम चुनें और अपने क्लिपबोर्ड से URL को URL फ़ील्ड में पेस्ट करें।</li></ol>',
     Cancel: 'रद्द करना',
   },
@@ -3038,23 +3068,23 @@ const i18nStrings = {
     Close: 'Zamknij',
     'Close Selection': 'Zamknij wybór',
     'Click me': 'Kliknij mnie',
-    'WebView iCal headline': 'Otwórz przeglądarkę',
-    'WebView iCal info':
+    'modal.webview.ical.h': 'Otwórz przeglądarkę',
+    'modal.webview.ical.text':
       'Niestety, przeglądarki in-app mają problemy ze sposobem, w jaki generujemy plik kalendarza.',
-    'Clipboard info': 'Automatycznie skopiowaliśmy magiczny adres URL do schowka.',
-    'WebView iCal solution':
+    'modal.clipboard.text': 'Automatycznie skopiowaliśmy magiczny adres URL do schowka.',
+    'modal.webview.ical.steps':
       '<ol><li><strong>Otwórz inną przeglądarkę</strong> w swoim telefonie, ...</li><li><strong>Wklej</strong> zawartość schowka i ruszaj.</li></ol>',
-    'Crios iCal headline': 'Otwórz Safari',
-    'Crios iCal info': 'Niestety, Chrome na iOS ma problemy ze sposobem generowania pliku kalendarza.',
-    'Crios iCal solution':
+    'modal.crios.ical.h': 'Otwórz Safari',
+    'modal.crios.ical.text': 'Niestety, Chrome na iOS ma problemy ze sposobem generowania pliku kalendarza.',
+    'modal.crios.ical.steps':
       '<ol><li><strong>Otwórz Safari</strong>, ...</li><li><strong>Wklej</strong> zawartość schowka i ruszaj.</li></ol>',
-    'MultiDate headline': 'To jest cykl imprez',
-    'MultiDate info': 'Dodawać po kolei poszczególne części:',
+    'modal.multidate.h': 'To jest cykl imprez',
+    'modal.multidate.text': 'Dodawać po kolei poszczególne części:',
     Event: 'Wydarzenie',
     'Cancelled Date': 'Ta data została odwołana.',
     'Delete from Calendar': 'Zaktualizuj swój kalendarz!',
-    'Subscribe Yahoo': 'Dodaj kalendarz do Yahoo',
-    'Subscribe Yahoo Details':
+    'modal.subscribe.yahoo.h': 'Dodaj kalendarz do Yahoo',
+    'modal.subscribe.yahoo.text':
       '<ol><li>Otwórz kalendarz Yahoo.</li><li>Kliknij na zakładkę "Czynności".</li><li>Wybierz "Obserwuj inne kalendarze".</li><li>Wybierz nazwę i wklej adres URL ze schowka w polu URL.</li></ol>',
     Cancel: 'Anuluj',
   },
@@ -3064,24 +3094,24 @@ const i18nStrings = {
     Close: 'Tutup',
     'Close Selection': 'Seleksi Tutup',
     'Click me': 'Klik saya',
-    'WebView iCal headline': 'Buka browser Anda',
-    'WebView iCal info':
+    'modal.webview.ical.h': 'Buka browser Anda',
+    'modal.webview.ical.text':
       'Sayangnya, browser dalam aplikasi memiliki masalah dengan cara kami menghasilkan file kalender.',
-    'Clipboard info': 'Kami telah secara otomatis menyalin URL ajaib ke clipboard Anda.',
-    'WebView iCal solution':
+    'modal.clipboard.text': 'Kami telah secara otomatis menyalin URL ajaib ke clipboard Anda.',
+    'modal.webview.ical.steps':
       '<ol><li><strong>Buka peramban lain</strong> pada ponsel Anda, ...</li><li>Tempelkan konten clipboard dan pergi.</li></ol>',
-    'Crios iCal headline': 'Buka Safari',
-    'Crios iCal info':
+    'modal.crios.ical.h': 'Buka Safari',
+    'modal.crios.ical.text':
       'Sayangnya, Chrome di iOS memiliki masalah dengan cara kami menghasilkan file kalender.',
-    'Crios iCal solution':
+    'modal.crios.ical.steps':
       '<ol><li><strong>Buka Safari</strong>, ...</li><li>Tempelkan konten clipboard dan pergi.</li></ol>',
-    'MultiDate headline': 'Ini adalah rangkaian acara',
-    'MultiDate info': 'Tambahkan masing-masing bagian satu per satu:',
+    'modal.multidate.h': 'Ini adalah rangkaian acara',
+    'modal.multidate.text': 'Tambahkan masing-masing bagian satu per satu:',
     Event: 'Acara',
     'Cancelled Date': 'Tanggal ini dibatalkan.',
     'Delete from Calendar': 'Perbarui kalender Anda!',
-    'Subscribe Yahoo': 'Tambahkan kalender ke Yahoo',
-    'Subscribe Yahoo Details':
+    'modal.subscribe.yahoo.h': 'Tambahkan kalender ke Yahoo',
+    'modal.subscribe.yahoo.text':
       '<ol><li>Buka kalender Yahoo.</li><li>Klik pada tab "Tindakan".</li><li>Pilih "Ikuti Kalender Lain".</li><li>Pilih nama dan tempelkan URL dari clipboard Anda ke bidang URL.</li></ol>',
     Cancel: 'Batal',
   },
@@ -3091,23 +3121,23 @@ const i18nStrings = {
     Close: 'Lukk',
     'Close Selection': 'Lukk utvalg',
     'Click me': 'Klikk på meg',
-    'WebView iCal headline': 'Åpne nettleseren din',
-    'WebView iCal info':
+    'modal.webview.ical.h': 'Åpne nettleseren din',
+    'modal.webview.ical.text':
       'Dessverre har nettlesere i appen problemer med måten vi genererer kalenderfilen på.',
-    'Clipboard info': 'Vi kopierte automatisk en magisk URL til utklippstavlen din.',
-    'WebView iCal solution':
+    'modal.clipboard.text': 'Vi kopierte automatisk en magisk URL til utklippstavlen din.',
+    'modal.webview.ical.steps':
       '<ol><li><strong>Åpne en annen nettleser</strong> på telefonen, ...</li><li><strong>Lim inn</strong> innholdet på utklippstavlen og gå.</li></ol>',
-    'Crios iCal headline': 'Åpne Safari',
-    'Crios iCal info': 'Dessverre har Chrome på iOS problemer med måten vi genererer kalenderfilen på.',
-    'Crios iCal solution':
+    'modal.crios.ical.h': 'Åpne Safari',
+    'modal.crios.ical.text': 'Dessverre har Chrome på iOS problemer med måten vi genererer kalenderfilen på.',
+    'modal.crios.ical.steps':
       '<ol><li><strong>Åpne Safari</strong>, ...</li><li><strong>Lim inn</strong> innholdet på utklippstavlen og gå.</li></ol>',
-    'MultiDate headline': 'Dette er en avtaleserie',
-    'MultiDate info': 'Legg til de enkelte datoene i kalenderen din i rekkefølge:',
+    'modal.multidate.h': 'Dette er en avtaleserie',
+    'modal.multidate.text': 'Legg til de enkelte datoene i kalenderen din i rekkefølge:',
     Event: 'Møte',
     'Cancelled Date': 'Denne datoen ble avlyst.',
     'Delete from Calendar': 'Oppdater kalenderen din!',
-    'Subscribe Yahoo': 'Legg til kalender til Yahoo',
-    'Subscribe Yahoo Details':
+    'modal.subscribe.yahoo.h': 'Legg til kalender til Yahoo',
+    'modal.subscribe.yahoo.text':
       '<ol><li>Åpne Yahoo-kalenderen.</li><li>Klikk på «Handlinger»-fanen.</li><li>Velg «Følg andre kalendere».</li><li>Velg et navn og lim inn URL-en fra utklippstavlen i URL-feltet.</li></ol>',
     Cancel: 'Avbryt',
   },
@@ -3117,23 +3147,23 @@ const i18nStrings = {
     Close: 'Sulje',
     'Close Selection': 'Sulje valinta',
     'Click me': 'Klikkaa minua',
-    'WebView iCal headline': 'Avaa selain',
-    'WebView iCal info':
+    'modal.webview.ical.h': 'Avaa selain',
+    'modal.webview.ical.text':
       'Valitettavasti sovelluksen sisäisillä selaimilla on ongelmia kalenteritiedoston luomisessa.',
-    'Clipboard info': 'Olemme automaattisesti kopioineet maagisen URL-osoitteen leikepöydällesi.',
-    'WebView iCal solution':
+    'modal.clipboard.text': 'Olemme automaattisesti kopioineet maagisen URL-osoitteen leikepöydällesi.',
+    'modal.webview.ical.steps':
       '<ol><li><strong>Avaa toinen selain</strong> puhelimessasi., ...</li><li><strong>liitä</strong> leikepöydän sisältö ja lähde.</li></ol>',
-    'Crios iCal headline': 'Avaa Safari',
-    'Crios iCal info': 'Valitettavasti iOS:n Chromessa on ongelmia kalenteritiedoston luomisessa.',
-    'Crios iCal solution':
+    'modal.crios.ical.h': 'Avaa Safari',
+    'modal.crios.ical.text': 'Valitettavasti iOS:n Chromessa on ongelmia kalenteritiedoston luomisessa.',
+    'modal.crios.ical.steps':
       '<ol><li><strong>Avaa Safari</strong>, ...</li><li><strong>liitä</strong> leikepöydän sisältö ja lähde.</li></ol>',
-    'MultiDate headline': 'Tämä on tapahtumasarja',
-    'MultiDate info': 'Lisää yksittäiset osat yksi kerrallaan:',
+    'modal.multidate.h': 'Tämä on tapahtumasarja',
+    'modal.multidate.text': 'Lisää yksittäiset osat yksi kerrallaan:',
     Event: 'Tapahtuma',
     'Cancelled Date': 'Tämä päivämäärä peruttiin.',
     'Delete from Calendar': 'Päivitä kalenterisi!',
-    'Subscribe Yahoo': 'Lisää kalenteri Yahoo',
-    'Subscribe Yahoo Details':
+    'modal.subscribe.yahoo.h': 'Lisää kalenteri Yahoo',
+    'modal.subscribe.yahoo.text':
       '<ol><li>Avaa Yahoo-kalenteri.</li><li>Napsauta "Toiminnot"-välilehteä.</li><li>Valitse "Seuraa muiden kalentereita".</li><li>Valitse nimi ja liitä URL-osoite leikepöydältäsi URL-kenttään.</li></ol>',
     Cancel: 'Peruuta',
   },
@@ -3143,22 +3173,22 @@ const i18nStrings = {
     Close: 'Stäng',
     'Close Selection': 'Stäng urvalet',
     'Click me': 'Klicka på mig',
-    'WebView iCal headline': 'Öppna din webbläsare',
-    'WebView iCal info': 'Tyvärr har webbläsare i appen problem med hur vi genererar kalenderfilen.',
-    'Clipboard info': 'Vi har automatiskt kopierat en magisk URL till ditt klippblock.',
-    'WebView iCal solution':
+    'modal.webview.ical.h': 'Öppna din webbläsare',
+    'modal.webview.ical.text': 'Tyvärr har webbläsare i appen problem med hur vi genererar kalenderfilen.',
+    'modal.clipboard.text': 'Vi har automatiskt kopierat en magisk URL till ditt klippblock.',
+    'modal.webview.ical.steps':
       '<ol><li><strong>Öppna en annan webbläsare</strong> på telefonen, ...</li><li><strong>Insätt</strong> innehållet i klippbordet och kör.</li></ol>',
-    'Crios iCal headline': 'Öppna Safari',
-    'Crios iCal info': 'Tyvärr har Chrome på iOS problem med hur vi genererar kalenderfilen.',
-    'Crios iCal solution':
+    'modal.crios.ical.h': 'Öppna Safari',
+    'modal.crios.ical.text': 'Tyvärr har Chrome på iOS problem med hur vi genererar kalenderfilen.',
+    'modal.crios.ical.steps':
       '<ol><li><strong>Öppna Safari</strong>, ...</li><li><strong>Insätt</strong> innehållet i klippbordet och kör.</li></ol>',
-    'MultiDate headline': 'Detta är en evenemangsserie',
-    'MultiDate info': 'Lägg till de enskilda delarna en efter en:',
+    'modal.multidate.h': 'Detta är en evenemangsserie',
+    'modal.multidate.text': 'Lägg till de enskilda delarna en efter en:',
     Event: 'Evenemang',
     'Cancelled Date': 'Detta datum har ställts in.',
     'Delete from Calendar': 'Uppdatera din kalender!',
-    'Subscribe Yahoo': 'Lägg till kalender i Yahoo',
-    'Subscribe Yahoo Details':
+    'modal.subscribe.yahoo.h': 'Lägg till kalender i Yahoo',
+    'modal.subscribe.yahoo.text':
       '<ol><li>Öppna Yahoo-kalendern.</li><li>Klicka på fliken "Åtgärder".</li><li>Välj "Följ andra kalendrar".</li><li>Välj ett namn och klistra in URL:en från klippbordet i URL-fältet.</li></ol>',
     Cancel: 'Avbryt',
   },
@@ -3168,23 +3198,24 @@ const i18nStrings = {
     Close: 'Zavřít',
     'Close Selection': 'Zavřít výběr',
     'Click me': 'Klikněte na mě',
-    'WebView iCal headline': 'Otevřete prohlížeč',
-    'WebView iCal info':
+    'modal.webview.ical.h': 'Otevřete prohlížeč',
+    'modal.webview.ical.text':
       'Prohlížeče v aplikacích mají bohužel problémy se způsobem generování souboru kalendáře.',
-    'Clipboard info': 'Do schránky jsme automaticky zkopírovali kouzelnou adresu URL.',
-    'WebView iCal solution':
+    'modal.clipboard.text': 'Do schránky jsme automaticky zkopírovali kouzelnou adresu URL.',
+    'modal.webview.ical.steps':
       '<ol><li><strong>Otevření jiného prohlížeče</strong> v telefonu, ...</li><li><strong>Vložte</strong> obsah schránky a přejděte.</li></ol>',
-    'Crios iCal headline': 'Otevřít Safari',
-    'Crios iCal info': 'Chrome v systému iOS má bohužel problémy se způsobem generování souboru kalendáře.',
-    'Crios iCal solution':
+    'modal.crios.ical.h': 'Otevřít Safari',
+    'modal.crios.ical.text':
+      'Chrome v systému iOS má bohužel problémy se způsobem generování souboru kalendáře.',
+    'modal.crios.ical.steps':
       '<ol><li><strong>Otevřít Safari</strong>, ...</li><li><strong>Vložte</strong> obsah schránky a přejděte.</li></ol>',
-    'MultiDate headline': 'Jedná se o sérii událostí',
-    'MultiDate info': 'Přidávejte jednotlivé díly jeden po druhém:',
+    'modal.multidate.h': 'Jedná se o sérii událostí',
+    'modal.multidate.text': 'Přidávejte jednotlivé díly jeden po druhém:',
     Event: 'Událost',
     'Cancelled Date': 'Toto datum bylo zrušeno.',
     'Delete from Calendar': 'Aktualizujte svůj kalendář!',
-    'Subscribe Yahoo': 'Přidat kalendář do Yahoo',
-    'Subscribe Yahoo Details':
+    'modal.subscribe.yahoo.h': 'Přidat kalendář do Yahoo',
+    'modal.subscribe.yahoo.text':
       '<ol><li>Otevřete kalendář Yahoo.</li><li>Klikněte na kartu "Akce".</li><li>Vyberte možnost "Sledovat další kalendáře".</li><li>Vyberte název a vložte adresu URL ze schránky do pole URL.</li></ol>',
     Cancel: 'Storno',
   },
@@ -3194,22 +3225,23 @@ const i18nStrings = {
     Close: '閉じる',
     'Close Selection': 'クローズ選択',
     'Click me': 'クリックしてください',
-    'WebView iCal headline': 'ブラウザを起動する',
-    'WebView iCal info': '残念ながら、アプリ内ブラウザは、カレンダーファイルの生成方法に問題があります。',
-    'Clipboard info': '魔法のURLを自動的にクリップボードにコピーしています。',
-    'WebView iCal solution':
+    'modal.webview.ical.h': 'ブラウザを起動する',
+    'modal.webview.ical.text':
+      '残念ながら、アプリ内ブラウザは、カレンダーファイルの生成方法に問題があります。',
+    'modal.clipboard.text': '魔法のURLを自動的にクリップボードにコピーしています。',
+    'modal.webview.ical.steps':
       '<ol><li>スマートフォンで別のブラウザを起動する, ...</li><li>クリップボードの内容を貼り付けて行く。</li></ol>',
-    'Crios iCal headline': 'オープンSafari',
-    'Crios iCal info': '残念ながら、iOS版Chromeでは、カレンダーファイルの生成方法に問題があります。',
-    'Crios iCal solution':
+    'modal.crios.ical.h': 'オープンSafari',
+    'modal.crios.ical.text': '残念ながら、iOS版Chromeでは、カレンダーファイルの生成方法に問題があります。',
+    'modal.crios.ical.steps':
       '<ol><li><strong>オープンSafari</strong>, ...</li><li>クリップボードの内容を貼り付けて行く。</li></ol>',
-    'MultiDate headline': 'イベントシリーズです',
-    'MultiDate info': '個々のパーツを一つずつ追加していく:',
+    'modal.multidate.h': 'イベントシリーズです',
+    'modal.multidate.text': '個々のパーツを一つずつ追加していく:',
     Event: 'イベント',
     'Cancelled Date': 'この日はキャンセルになりました。',
     'Delete from Calendar': 'カレンダーを更新する!',
-    'Subscribe Yahoo': 'Yahooにカレンダーを追加する',
-    'Subscribe Yahoo Details':
+    'modal.subscribe.yahoo.h': 'Yahooにカレンダーを追加する',
+    'modal.subscribe.yahoo.text':
       '<ol><li>Yahooカレンダーを開く。</li><li>[実行] タブをクリックします。</li><li>[その他のカレンダーのフォロー] を選択します。</li><li>名前を決めて、クリップボードにあるURLをURL欄に貼り付けます。</li></ol>',
     Cancel: 'キャンセル',
   },
@@ -3219,24 +3251,24 @@ const i18nStrings = {
     Close: 'Chiudere',
     'Close Selection': 'Chiudere la selezione',
     'Click me': 'Clicca su di me',
-    'WebView iCal headline': 'Aprire il browser',
-    'WebView iCal info':
+    'modal.webview.ical.h': 'Aprire il browser',
+    'modal.webview.ical.text':
       'Purtroppo i browser in-app hanno problemi con il modo in cui generiamo il file del calendario.',
-    'Clipboard info': 'Abbiamo copiato automaticamente un URL magico negli appunti.',
-    'WebView iCal solution':
+    'modal.clipboard.text': 'Abbiamo copiato automaticamente un URL magico negli appunti.',
+    'modal.webview.ical.steps':
       '<ol><li><strong>Aprire un altro browser</strong> sul cellulare, ...</li><li><strong>Incollare</strong> il contenuto degli appunti e partire.</li></ol>',
-    'Crios iCal headline': 'Aprire Safari',
-    'Crios iCal info':
+    'modal.crios.ical.h': 'Aprire Safari',
+    'modal.crios.ical.text':
       'Purtroppo, Chrome su iOS ha problemi con il modo in cui generiamo il file del calendario.',
-    'Crios iCal solution':
+    'modal.crios.ical.steps':
       '<ol><li><strong>Aprire Safari</strong>, ...</li><li><strong>Incollare</strong> il contenuto degli appunti e partire.</li></ol>',
-    'MultiDate headline': 'Questa è una serie di eventi',
-    'MultiDate info': 'Aggiungere le singole parti una per una:',
+    'modal.multidate.h': 'Questa è una serie di eventi',
+    'modal.multidate.text': 'Aggiungere le singole parti una per una:',
     Event: 'Evento',
     'Cancelled Date': 'La data è stata annullata.',
     'Delete from Calendar': 'Aggiornare il calendario!',
-    'Subscribe Yahoo': 'Aggiungi il calendario a Yahoo',
-    'Subscribe Yahoo Details':
+    'modal.subscribe.yahoo.h': 'Aggiungi il calendario a Yahoo',
+    'modal.subscribe.yahoo.text':
       '<ol><li>Aprire il calendario di Yahoo.</li><li>Fare clic sulla scheda "Azioni".</li><li>Selezionare "Segui altri calendari".</li><li>Scegliere un nome e incollare l\'URL dagli appunti nel campo URL.</li></ol>',
     Cancel: 'Annulla',
   },
@@ -3246,22 +3278,22 @@ const i18nStrings = {
     Close: '닫다',
     'Close Selection': '선택 닫기',
     'Click me': '클릭 해주세요',
-    'WebView iCal headline': '브라우저 열기',
-    'WebView iCal info': '불행히도 인앱 브라우저는 캘린더 파일을 생성하는 방식에 문제가 있습니다.',
-    'Clipboard info': '매직 URL을 클립보드에 자동으로 복사했습니다.',
-    'WebView iCal solution':
+    'modal.webview.ical.h': '브라우저 열기',
+    'modal.webview.ical.text': '불행히도 인앱 브라우저는 캘린더 파일을 생성하는 방식에 문제가 있습니다.',
+    'modal.clipboard.text': '매직 URL을 클립보드에 자동으로 복사했습니다.',
+    'modal.webview.ical.steps':
       '<ol><li>휴대전화에서 다른 브라우저 열기, ...</li><li>클립보드 내용을 붙여넣고 이동합니다.</li></ol>',
-    'Crios iCal headline': 'Safari 열기',
-    'Crios iCal info': '불행히도 iOS의 Chrome은 캘린더 파일을 생성하는 방식에 문제가 있습니다.',
-    'Crios iCal solution':
+    'modal.crios.ical.h': 'Safari 열기',
+    'modal.crios.ical.text': '불행히도 iOS의 Chrome은 캘린더 파일을 생성하는 방식에 문제가 있습니다.',
+    'modal.crios.ical.steps':
       '<ol><li><strong>Safari 열기</strong>, ...</li><li>클립보드 내용을 붙여넣고 이동합니다.</li></ol>',
-    'MultiDate headline': '이벤트 시리즈입니다',
-    'MultiDate info': '개별 부품을 하나씩 추가:',
+    'modal.multidate.h': '이벤트 시리즈입니다',
+    'modal.multidate.text': '개별 부품을 하나씩 추가:',
     Event: '이벤트',
     'Cancelled Date': '이 날짜는 취소되었습니다.',
     'Delete from Calendar': '캘린더를 업데이트하세요!',
-    'Subscribe Yahoo': 'Yahoo에 캘린더 추가',
-    'Subscribe Yahoo Details':
+    'modal.subscribe.yahoo.h': 'Yahoo에 캘린더 추가',
+    'modal.subscribe.yahoo.text':
       '<ol><li>Yahoo 캘린더를 엽니다.</li><li>"동작" 탭을 클릭합니다.</li><li>"다른 일정관리 팔로우"를 선택합니다.</li><li>이름을 선택하고 클립보드의 URL을 URL 필드에 붙여넣습니다.</li></ol>',
     Cancel: '취소',
   },
@@ -3271,23 +3303,23 @@ const i18nStrings = {
     Close: 'Đóng',
     'Close Selection': 'Đóng lựa chọn',
     'Click me': 'Nhấp vào đây',
-    'WebView iCal headline': 'Mở trình duyệt của bạn',
-    'WebView iCal info':
+    'modal.webview.ical.h': 'Mở trình duyệt của bạn',
+    'modal.webview.ical.text':
       'Rất tiếc, các trình duyệt trong ứng dụng gặp sự cố với cách chúng tôi tạo tệp lịch.',
-    'Clipboard info': 'Chúng tôi đã tự động sao chép một URL ma thuật vào khay nhớ tạm của bạn.',
-    'WebView iCal solution':
+    'modal.clipboard.text': 'Chúng tôi đã tự động sao chép một URL ma thuật vào khay nhớ tạm của bạn.',
+    'modal.webview.ical.steps':
       '<ol><li><strong> Mở trình duyệt khác </strong> trên điện thoại của bạn, ...</li><li><strong> Dán </strong> nội dung khay nhớ tạm và bắt đầu.</li></ol>',
-    'Crios iCal headline': 'Mở Safari',
-    'Crios iCal info': 'Rất tiếc, Chrome trên iOS gặp sự cố với cách chúng tôi tạo tệp lịch.',
-    'Crios iCal solution':
+    'modal.crios.ical.h': 'Mở Safari',
+    'modal.crios.ical.text': 'Rất tiếc, Chrome trên iOS gặp sự cố với cách chúng tôi tạo tệp lịch.',
+    'modal.crios.ical.steps':
       '<ol><li><strong>Mở Safari</strong>, ...</li><li><strong> Dán </strong> nội dung khay nhớ tạm và bắt đầu.</li></ol>',
-    'MultiDate headline': 'Đây là một chuỗi sự kiện',
-    'MultiDate info': 'Thêm từng phần riêng lẻ một:',
+    'modal.multidate.h': 'Đây là một chuỗi sự kiện',
+    'modal.multidate.text': 'Thêm từng phần riêng lẻ một:',
     Event: 'Biến cố',
     'Cancelled Date': 'Ngày này đã bị hủy.',
     'Delete from Calendar': 'Cập nhật lịch của bạn!',
-    'Subscribe Yahoo': 'Thêm lịch vào Yahoo',
-    'Subscribe Yahoo Details':
+    'modal.subscribe.yahoo.h': 'Thêm lịch vào Yahoo',
+    'modal.subscribe.yahoo.text':
       '<ol><li>Mở Lịch Yahoo.</li><li>Nhấp vào tab "Hành động".</li><li>Chọn "Theo dõi các Lịch khác".</li><li>Chọn tên và dán URL từ khay nhớ tạm của bạn vào trường URL.</li></ol>',
     Cancel: 'Hủy bỏ',
   },
@@ -3326,6 +3358,7 @@ function atcb_init() {
     return;
   }
   const atcButtons = document.querySelectorAll('.atcb');
+  const btnIDs = [];
   if (atcButtons.length > 0) {
     const atcButtonsInitialized = document.querySelectorAll('.atcb-initialized');
     for (let i = 0; i < atcButtons.length; i++) {
@@ -3357,10 +3390,12 @@ function atcb_init() {
         if (atcb_validate(data)) {
           atcb_generate_button(atcButtons[parseInt(i)], data);
           atcb_update_state_management(data);
+          btnIDs.push(data.identifier);
         }
       }
     }
   }
+  return btnIDs;
 }
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 function atcb_action(data, triggerElement, keyboardTrigger = true) {
@@ -3399,6 +3434,18 @@ function atcb_action(data, triggerElement, keyboardTrigger = true) {
   atcb_update_state_management(data);
   atcb_toggle('open', data, triggerElement, keyboardTrigger);
   console.log('Add to Calendar Button "' + data.identifier + '" triggered');
+  return [data.identifier];
+}
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+function atcb_destroy(id) {
+  atcb_close();
+  const el = document.getElementById(id);
+  if (atcbStates[`${id}`] == null || !el) {
+    return 'Add to Calendar Button could not be destroyed! ID unknown.';
+  }
+  delete atcbStates[`${id}`];
+  el.remove();
+  return 'Add to Calendar Button "' + id + '" destroyed';
 }
 function atcb_update_state_management(data) {
   const singleDates = [];
@@ -3470,11 +3517,27 @@ function atcb_set_global_event_listener() {
         atcb_manage_body_scroll();
       }
       const activeButton = document.querySelector('.atcb-active');
-      const activeList = document.querySelector('.atcb-dropdown');
-      if (activeButton != null && activeList != null) {
-        atcb_position_list(activeButton, activeList, false, true);
+      if (activeButton != null) {
+        const activeList = document.querySelector('.atcb-dropdown');
+        if (activeList != null) {
+          atcb_position_list(activeButton, activeList, false, true);
+        }
       }
     })
+  );
+  window.addEventListener(
+    'scroll',
+    atcb_throttle(() => {
+      const activeButton = document.querySelector('.atcb-active');
+      if (activeButton != null) {
+        const activeList = document.querySelector('.atcb-dropdown');
+        if (activeList != null) {
+          if (activeList.classList.contains('atcb-mind-scrolling')) {
+            atcb_position_list(activeButton, activeList, false, true);
+          }
+        }
+      }
+    }, 20)
   );
 }
 

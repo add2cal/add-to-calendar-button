@@ -3,7 +3,7 @@
  *  Add to Calendar Button
  *  ++++++++++++++++++++++
  *
- *  Version: 1.18.0
+ *  Version: 1.18.1
  *  Creator: Jens Kuerschner (https://jenskuerschner.de)
  *  Project: https://github.com/add2cal/add-to-calendar-button
  *  License: Apache-2.0 with “Commons Clause” License Condition v1.0
@@ -245,7 +245,7 @@ function atcb_position_list(trigger, list, blockUpwards = false, resize = false)
   const btnDim = originalTrigger.getBoundingClientRect();
   if (anchorSet === true && !list.classList.contains('atcb-dropoverlay')) {
     // in the regular case, we also check for the ideal direction
-    // not in the !updateDirection case and not if there is not enough space above
+    // not in the !blockUpwards case and not if there is not enough space above
     const viewportHeight = document.documentElement.clientHeight;
     if (
       (list.classList.contains('atcb-dropup') && resize) ||
@@ -311,10 +311,16 @@ function atcb_manage_body_scroll(modalObj = null) {
       return modalObj;
     } else {
       const allModals = document.querySelectorAll('.atcb-modal');
+      if (allModals.length == 0) {
+        return null;
+      }
       return allModals[allModals.length - 1];
       // since ES2022 this could also simply be return document.querySelectorAll('.atcb-modal').at(-1); - let's change this in the future
     }
   })();
+  if (modal == null) {
+    return;
+  }
   const modalDim = modal.getBoundingClientRect();
   if (modalDim.height + 100 > window.innerHeight) {
     document.body.classList.add('atcb-modal-no-scroll');

@@ -3,7 +3,7 @@
  *  Add to Calendar Button
  *  ++++++++++++++++++++++
  *
- *  Version: 1.18.0
+ *  Version: 1.18.1
  *  Creator: Jens Kuerschner (https://jenskuerschner.de)
  *  Project: https://github.com/add2cal/add-to-calendar-button
  *  License: Apache-2.0 with “Commons Clause” License Condition v1.0
@@ -15,7 +15,7 @@ import { atcbVersion, isBrowser, atcbStates } from './atcb-globals.js';
 import { atcb_decorate_data, atcb_patch_config } from './atcb-decorate.js';
 import { atcb_check_required, atcb_validate } from './atcb-validate.js';
 import { atcb_generate_button } from './atcb-generate.js';
-import { atcb_toggle } from './atcb-control.js';
+import { atcb_close, atcb_toggle } from './atcb-control.js';
 import {
   atcb_secure_content,
   atcb_position_list,
@@ -40,6 +40,7 @@ function atcb_init() {
   }
   // get all placeholders
   const atcButtons = document.querySelectorAll('.atcb');
+  const btnIDs = [];
   if (atcButtons.length > 0) {
     // get the amount of already initialized ones first
     const atcButtonsInitialized = document.querySelectorAll('.atcb-initialized');
@@ -82,10 +83,12 @@ function atcb_init() {
           // ... and generate the button on success
           atcb_generate_button(atcButtons[parseInt(i)], data);
           atcb_update_state_management(data);
+          btnIDs.push(data.identifier);
         }
       }
     }
   }
+  return btnIDs;
 }
 
 // prepare data when not using the init function, but some custom trigger instead
@@ -133,6 +136,21 @@ function atcb_action(data, triggerElement, keyboardTrigger = true) {
   // if all is fine, open the options list
   atcb_toggle('open', data, triggerElement, keyboardTrigger);
   console.log('Add to Calendar Button "' + data.identifier + '" triggered');
+  return [data.identifier];
+}
+
+// destorying a specific button
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+function atcb_destroy(id) {
+  // close everything before killing the element
+  atcb_close();
+  const el = document.getElementById(id);
+  if (atcbStates[`${id}`] == null || !el) {
+    return 'Add to Calendar Button could not be destroyed! ID unknown.';
+  }
+  delete atcbStates[`${id}`];
+  el.remove();
+  return 'Add to Calendar Button "' + id + '" destroyed';
 }
 
 // update global state management
@@ -214,12 +232,29 @@ function atcb_set_global_event_listener() {
         atcb_manage_body_scroll();
       }
       const activeButton = document.querySelector('.atcb-active');
-      const activeList = document.querySelector('.atcb-dropdown');
-      if (activeButton != null && activeList != null) {
-        atcb_position_list(activeButton, activeList, false, true);
+      if (activeButton != null) {
+        const activeList = document.querySelector('.atcb-dropdown');
+        if (activeList != null) {
+          atcb_position_list(activeButton, activeList, false, true);
+        }
       }
     })
   );
+  // Global listener for scrolling (relevant, if the button changes its position on scroll) (since quite "expensive", only runs if explicitely activated!)
+  window.addEventListener(
+    'scroll',
+    atcb_throttle(() => {
+      const activeButton = document.querySelector('.atcb-active');
+      if (activeButton != null) {
+        const activeList = document.querySelector('.atcb-dropdown');
+        if (activeList != null) {
+          if (activeList.classList.contains('atcb-mind-scrolling')) {
+            atcb_position_list(activeButton, activeList, false, true);
+          }
+        }
+      }
+    }, 20)
+  );
 }
 
-export { atcb_init, atcb_action };
+export { atcb_init, atcb_action, atcb_destroy };

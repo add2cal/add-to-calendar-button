@@ -3,7 +3,7 @@
  *  Add to Calendar Button
  *  ++++++++++++++++++++++
  *
- *  Version: 1.18.0
+ *  Version: 1.18.1
  *  Creator: Jens Kuerschner (https://jenskuerschner.de)
  *  Project: https://github.com/add2cal/add-to-calendar-button
  *  License: Apache-2.0 with “Commons Clause” License Condition v1.0
@@ -203,10 +203,12 @@ function atcb_generate_button(button, data) {
     buttonTrigger.appendChild(buttonDropdownAnchor);
   }
   // add checkmark (hidden first)
-  const btnCheck = document.createElement('div');
-  btnCheck.classList.add('atcb-checkmark');
-  btnCheck.innerHTML = atcbIcon['checkmark'];
-  buttonTrigger.appendChild(btnCheck);
+  if (data.checkmark) {
+    const btnCheck = document.createElement('div');
+    btnCheck.classList.add('atcb-checkmark');
+    btnCheck.innerHTML = atcbIcon['checkmark'];
+    buttonTrigger.appendChild(btnCheck);
+  }
   // update the placeholder class to prevent multiple initializations
   button.classList.remove('atcb');
   button.classList.add('atcb-initialized');
@@ -455,6 +457,7 @@ function atcb_generate_bg_overlay(listStyle = 'dropdown', trigger = '', lightMod
 }
 
 // FUNCTION TO CREATE MODALS
+// this is only about special communication modals - not the list style modal
 function atcb_create_modal(
   data,
   icon = '',
@@ -468,11 +471,12 @@ function atcb_create_modal(
   const bgOverlay = (function () {
     const el = document.getElementById('atcb-bgoverlay');
     if (!el) {
-      return atcb_generate_bg_overlay('modal', 'click', data.lightMode);
+      return atcb_generate_bg_overlay('modal', 'click', data.lightMode, data.background);
     } else {
       return el;
     }
   })();
+  bgOverlay.classList.add('atcb-no-animation');
   document.body.appendChild(bgOverlay);
   const modalWrapper = document.createElement('div');
   modalWrapper.classList.add('atcb-modal');
@@ -777,10 +781,12 @@ function atcb_generate_date_button(data, parent, subEvent = 'all') {
   btnHover.classList.add('atcb-date-btn-hover');
   btnHover.innerHTML = hoverText;
   btnRight.appendChild(btnHover);
-  const btnCheck = document.createElement('div');
-  btnCheck.classList.add('atcb-checkmark');
-  btnCheck.innerHTML = atcbIcon['checkmark'];
-  parent.appendChild(btnCheck);
+  if (data.checkmark) {
+    const btnCheck = document.createElement('div');
+    btnCheck.classList.add('atcb-checkmark');
+    btnCheck.innerHTML = atcbIcon['checkmark'];
+    parent.appendChild(btnCheck);
+  }
 }
 
 export {

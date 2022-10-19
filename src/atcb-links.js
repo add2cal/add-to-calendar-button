@@ -3,7 +3,7 @@
  *  Add to Calendar Button
  *  ++++++++++++++++++++++
  *
- *  Version: 1.18.0
+ *  Version: 1.18.1
  *  Creator: Jens Kuerschner (https://jenskuerschner.de)
  *  Project: https://github.com/add2cal/add-to-calendar-button
  *  License: Apache-2.0 with “Commons Clause” License Condition v1.0
@@ -136,8 +136,8 @@ function atcb_generate_multidate_links(type, data, keyboardTrigger, multiDateMod
     atcb_create_modal(
       data,
       type,
-      atcb_translate_hook('MultiDate headline', data),
-      atcb_translate_hook('MultiDate info', data),
+      atcb_translate_hook('modal.multidate.h', data),
+      atcb_translate_hook('modal.multidate.text', data),
       [],
       individualButtons,
       keyboardTrigger
@@ -166,10 +166,10 @@ function atcb_generate_subscribe_links(type, data, keyboardTrigger) {
       atcb_create_modal(
         data,
         'yahoo',
-        atcb_translate_hook('Subscribe Yahoo', data),
-        atcb_translate_hook('Clipboard info', data) +
+        atcb_translate_hook('modal.subscribe.yahoo.h', data),
+        atcb_translate_hook('modal.clipboard.text', data) +
           '<br>' +
-          atcb_translate_hook('Subscribe Yahoo Details', data),
+          atcb_translate_hook('modal.subscribe.yahoo.text', data),
         [
           {
             label: atcb_translate_hook('Open Yahoo Calendar', data),
@@ -188,10 +188,10 @@ function atcb_generate_subscribe_links(type, data, keyboardTrigger) {
       atcb_create_modal(
         data,
         'yahoo',
-        atcb_translate_hook('Subscribe Yahoo', data),
-        atcb_translate_hook('Clipboard info', data) +
+        atcb_translate_hook('modal.subscribe.yahoo.h', data),
+        atcb_translate_hook('modal.clipboard.text', data) +
           '<br>' +
-          atcb_translate_hook('Subscribe Yahoo Details', data),
+          atcb_translate_hook('modal.subscribe.yahoo.text', data),
         [
           {
             label: atcb_translate_hook('Open Yahoo Calendar', data),
@@ -571,12 +571,12 @@ function atcb_ical_copy_note(dataUrl, data, keyboardTrigger) {
     atcb_create_modal(
       data,
       'warning',
-      atcb_translate_hook('Crios iCal headline', data),
-      atcb_translate_hook('Crios iCal info', data) +
+      atcb_translate_hook('modal.crios.ical.h', data),
+      atcb_translate_hook('modal.crios.ical.text', data) +
         '<br>' +
-        atcb_translate_hook('Clipboard info', data) +
+        atcb_translate_hook('modal.clipboard.text', data) +
         '<br>' +
-        atcb_translate_hook('Crios iCal solution', data),
+        atcb_translate_hook('modal.crios.ical.steps', data),
       [],
       [],
       keyboardTrigger
@@ -586,12 +586,12 @@ function atcb_ical_copy_note(dataUrl, data, keyboardTrigger) {
   atcb_create_modal(
     data,
     'warning',
-    atcb_translate_hook('WebView iCal headline', data),
-    atcb_translate_hook('WebView iCal info', data) +
+    atcb_translate_hook('modal.webview.ical.h', data),
+    atcb_translate_hook('modal.webview.ical.text', data) +
       '<br>' +
-      atcb_translate_hook('Clipboard info', data) +
+      atcb_translate_hook('modal.clipboard.text', data) +
       '<br>' +
-      atcb_translate_hook('WebView iCal solution', data),
+      atcb_translate_hook('modal.webview.ical.steps', data),
     [],
     [],
     keyboardTrigger
