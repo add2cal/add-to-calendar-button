@@ -218,7 +218,7 @@ body.atcb-dark #atcb-bgoverlay.atcb-bodyScheme {
 }
 
 .atcb-rtl .atcb-icon {
-  padding-right: 0;
+  margin-right: 0;
   padding-left: 1em;
 }
 
@@ -337,7 +337,7 @@ body.atcb-dark #atcb-bgoverlay.atcb-bodyScheme {
 }
 
 .atcb-rtl .atcb-list-item .atcb-icon {
-  padding-right: 0;
+  margin-right: 0;
   padding-left: 0.6em;
 }
 
