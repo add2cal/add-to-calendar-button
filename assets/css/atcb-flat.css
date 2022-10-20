@@ -683,6 +683,7 @@ body.atcb-dark a.atcb-modal-btn:active {
 }
 
 .atcb-saved .atcb-checkmark {
+  box-sizing: content-box;
   color: var(--atcb-text);
   display: block;
   position: absolute;
