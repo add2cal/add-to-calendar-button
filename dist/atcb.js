@@ -2669,8 +2669,8 @@ function atcb_position_list(trigger, list, blockUpwards = false, resize = false)
   if (anchorSet === true && !list.classList.contains('atcb-dropoverlay')) {
     const viewportHeight = document.documentElement.clientHeight;
     const posWrapper = document.getElementById('atcb-pos-wrapper');
-    if (posWrapper != null) {
-      posWrapper.style.height = viewportHeight;
+    if (posWrapper !== null) {
+      posWrapper.style.height = viewportHeight + 'px';
     }
     if (
       (list.classList.contains('atcb-dropup') && resize) ||
