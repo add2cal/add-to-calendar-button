@@ -3,7 +3,7 @@
  *  Add to Calendar Button
  *  ++++++++++++++++++++++
  *
- *  Version: 1.18.1
+ *  Version: 1.18.2
  *  Creator: Jens Kuerschner (https://jenskuerschner.de)
  *  Project: https://github.com/add2cal/add-to-calendar-button
  *  License: Apache-2.0 with “Commons Clause” License Condition v1.0
@@ -247,6 +247,10 @@ function atcb_position_list(trigger, list, blockUpwards = false, resize = false)
     // in the regular case, we also check for the ideal direction
     // not in the !blockUpwards case and not if there is not enough space above
     const viewportHeight = document.documentElement.clientHeight;
+    const posWrapper = document.getElementById('atcb-pos-wrapper');
+    if (posWrapper != null) {
+      posWrapper.style.height = viewportHeight;
+    }
     if (
       (list.classList.contains('atcb-dropup') && resize) ||
       (!blockUpwards &&
@@ -279,12 +283,11 @@ function atcb_position_list(trigger, list, blockUpwards = false, resize = false)
   } else {
     // when there is no anchor set (only the case with custom implementations) or the listStyle is set respectively (overlay), we render the modal centered above the trigger
     // make sure the trigger is not moved over it via CSS in this case!
-    let listWidth = triggerDim.width + 20 + 'px';
-    list.style.minWidth = listWidth;
+    list.style.minWidth = btnDim.width + 20 + 'px';
     // read list dimensions again, since we altered the width in the step before
     listDim = list.getBoundingClientRect();
     list.style.top = window.scrollY + btnDim.top + btnDim.height / 2 - listDim.height / 2 + 'px';
-    list.style.left = triggerDim.left - (listDim.width - triggerDim.width) / 2 + 'px';
+    list.style.left = btnDim.left - (listDim.width - btnDim.width) / 2 + 'px';
   }
   const atcbL = document.getElementById('add-to-calendar-button-reference');
   if (atcbL) {

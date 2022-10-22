@@ -217,14 +217,14 @@ function tzlib_get_timezones(jsonType = false) {
  *  Add to Calendar Button
  *  ++++++++++++++++++++++
  *
- *  Version: 1.18.1
+ *  Version: 1.18.2
  *  Creator: Jens Kuerschner (https://jenskuerschner.de)
  *  Project: https://github.com/add2cal/add-to-calendar-button
  *  License: Apache-2.0 with “Commons Clause” License Condition v1.0
  *  Note:    DO NOT REMOVE THE COPYRIGHT NOTICE ABOVE!
  *
  */
-const atcbVersion = '1.18.1';
+const atcbVersion = '1.18.2';
 const isBrowser = () => {
   if (typeof window === 'undefined') {
     return false;
@@ -365,6 +365,7 @@ function atcb_decorate_data(data) {
   data.richData = atcb_decorate_data_rich_data(data);
   data.checkmark = atcb_decorate_data_checkmark(data);
   data.mindScrolling = atcb_decorate_data_mind_scrolling(data);
+  data.branding = atcb_decorate_data_branding(data);
   data = atcb_decorate_data_style(data);
   data = atcb_decorate_data_i18n(data);
   data = atcb_decorate_data_dates(data);
@@ -500,6 +501,12 @@ function atcb_decorate_data_checkmark(data) {
     return false;
   }
   return true;
+}
+function atcb_decorate_data_branding(data) {
+  if (data.branding != null && data.branding == false) {
+    return false;
+  }
+  return false;
 }
 function atcb_decorate_data_mind_scrolling(data) {
   if (data.mindScrolling != null && data.mindScrolling == true) {
@@ -1162,41 +1169,36 @@ function atcb_open(data, button, keyboardTrigger = false, generatedButton = fals
     list.classList.add('atcb-modal');
   }
   const bgOverlay = atcb_generate_bg_overlay(data.listStyle, data.trigger, data.lightMode, data.background);
-  const atcbL = document.createElement('div');
-  atcbL.id = 'add-to-calendar-button-reference';
-  atcbL.style.width = '150px';
-  atcbL.style.padding = '10px 0';
-  atcbL.style.height = 'auto';
-  atcbL.style.transform = 'translate3d(0, 0, 0)';
-  atcbL.style.zIndex = '15000000';
-  setTimeout(() => {
-    atcbL.innerHTML =
-      '<a href="https://add-to-calendar-button.com" target="_blank" rel="noopener">' +
-      atcbIcon['atcb'] +
-      '</a>';
-  }, 500);
   if (data.listStyle === 'modal') {
     document.body.appendChild(bgOverlay);
     bgOverlay.appendChild(list);
-    atcbL.style.position = 'fixed';
-    atcbL.style.bottom = '15px';
-    atcbL.style.right = '30px';
+    if (data.branding) {
+      atcb_create_atcbl(false);
+    }
+    atcb_set_sizes(list, data.sizes);
     atcb_manage_body_scroll();
   } else {
-    atcbL.style.position = 'absolute';
-    document.body.appendChild(listWrapper);
+    const positionWrapper = document.createElement('div');
+    positionWrapper.id = 'atcb-pos-wrapper';
+    document.body.appendChild(positionWrapper);
+    positionWrapper.appendChild(listWrapper);
     listWrapper.appendChild(list);
     if (data.buttonStyle != '') {
       listWrapper.classList.add('atcb-style-' + data.buttonStyle);
     }
-    document.body.appendChild(bgOverlay);
-    if (data.listStyle === 'dropdown-static') {
-      atcb_position_list(button, listWrapper, true);
-    } else {
-      atcb_position_list(button, listWrapper);
+    if (data.branding) {
+      atcb_create_atcbl();
     }
+    document.body.appendChild(bgOverlay);
+    atcb_set_sizes(list, data.sizes);
+    setTimeout(function () {
+      if (data.listStyle === 'dropdown-static') {
+        atcb_position_list(button, listWrapper, true);
+      } else {
+        atcb_position_list(button, listWrapper);
+      }
+    }, 5);
   }
-  atcb_set_sizes(list, data.sizes);
   atcb_set_fullsize(bgOverlay);
   if (keyboardTrigger) {
     list.firstChild.focus();
@@ -1241,6 +1243,7 @@ function atcb_close(keyboardTrigger = false) {
       .concat(Array.from(document.querySelectorAll('.atcb-list')))
       .concat(Array.from(document.querySelectorAll('.atcb-modal[data-modal-nr]')))
       .concat(Array.from(document.querySelectorAll('#add-to-calendar-button-reference')))
+      .concat(Array.from(document.querySelectorAll('#atcb-pos-wrapper')))
       .concat(Array.from(document.querySelectorAll('#atcb-bgoverlay')))
       .forEach((el) => el.remove());
   }
@@ -1642,6 +1645,31 @@ function atcb_generate_bg_overlay(listStyle = 'dropdown', trigger = '', lightMod
   }
   return bgOverlay;
 }
+function atcb_create_atcbl(atList = true) {
+  /*const atcbL = document.createElement('div');
+  atcbL.id = 'add-to-calendar-button-reference';
+  atcbL.style.width = '150px';
+  atcbL.style.padding = '10px 0';
+  atcbL.style.height = 'auto';
+  atcbL.style.transform = 'translate3d(0, 0, 0)';
+  atcbL.style.zIndex = '15000000';
+  setTimeout(() => {
+    atcbL.innerHTML =
+      '<a href="https://add-to-calendar-pro.com" target="_blank" rel="noopener">' +
+      atcbIcon['atcb'] +
+      '</a>';
+  }, 500);  
+  document.body.appendChild(atcbL);
+  if (atList) {
+    atcbL.style.position = 'absolute';
+  } else {
+    if (window.innerHeight > 1000 || window.innerWidth > 1000) {
+      atcbL.style.position = 'fixed';
+      atcbL.style.bottom = '15px';
+      atcbL.style.right = '30px';
+    }
+  }*/
+}
 function atcb_create_modal(
   data,
   icon = '',
@@ -1699,6 +1727,9 @@ function atcb_create_modal(
     modal.appendChild(modalContent);
   }
   if (subEvents.length > 1) {
+    if (data.branding) {
+      atcb_create_atcbl(false);
+    }
     const modalsubEventsContent = document.createElement('div');
     modalsubEventsContent.classList.add('atcb-modal-content');
     modal.appendChild(modalsubEventsContent);
@@ -2637,6 +2668,10 @@ function atcb_position_list(trigger, list, blockUpwards = false, resize = false)
   const btnDim = originalTrigger.getBoundingClientRect();
   if (anchorSet === true && !list.classList.contains('atcb-dropoverlay')) {
     const viewportHeight = document.documentElement.clientHeight;
+    const posWrapper = document.getElementById('atcb-pos-wrapper');
+    if (posWrapper != null) {
+      posWrapper.style.height = viewportHeight;
+    }
     if (
       (list.classList.contains('atcb-dropup') && resize) ||
       (!blockUpwards &&
@@ -2665,11 +2700,10 @@ function atcb_position_list(trigger, list, blockUpwards = false, resize = false)
     listDim = list.getBoundingClientRect();
     list.style.left = triggerDim.left - (listDim.width - triggerDim.width) / 2 + 'px';
   } else {
-    let listWidth = triggerDim.width + 20 + 'px';
-    list.style.minWidth = listWidth;
+    list.style.minWidth = btnDim.width + 20 + 'px';
     listDim = list.getBoundingClientRect();
     list.style.top = window.scrollY + btnDim.top + btnDim.height / 2 - listDim.height / 2 + 'px';
-    list.style.left = triggerDim.left - (listDim.width - triggerDim.width) / 2 + 'px';
+    list.style.left = btnDim.left - (listDim.width - btnDim.width) / 2 + 'px';
   }
   const atcbL = document.getElementById('add-to-calendar-button-reference');
   if (atcbL) {
@@ -3378,12 +3412,13 @@ function atcb_init() {
           return '';
         }
       })();
-      if (atcbJsonInput === '') {
+      const atcbJsonInputPatched = atcb_patch_config(atcbJsonInput);
+      const atcbInputData = atcb_get_pro_data(atcbJsonInputPatched);
+      if (atcbInputData.length == 0) {
         continue;
       }
-      const atcbJsonInputPatched = atcb_patch_config(atcbJsonInput);
-      if (atcb_check_required(atcbJsonInputPatched)) {
-        const data = atcb_decorate_data(atcbJsonInputPatched);
+      if (atcb_check_required(atcbInputData)) {
+        const data = atcb_decorate_data(atcbInputData);
         if (data.identifier == null || data.identifier == '') {
           data.identifier = 'atcb-btn-' + (i + atcButtonsInitialized.length + 1);
         }
@@ -3404,6 +3439,7 @@ function atcb_action(data, triggerElement, keyboardTrigger = true) {
   }
   atcb_init_log_msg();
   data = atcb_secure_content(data);
+  data = atcb_get_pro_data(data);
   if (!atcb_check_required(data)) {
     throw new Error('Add to Calendar Button generation failed: required data missing; see console logs');
   }
@@ -3441,11 +3477,17 @@ function atcb_destroy(id) {
   atcb_close();
   const el = document.getElementById(id);
   if (atcbStates[`${id}`] == null || !el) {
-    return 'Add to Calendar Button could not be destroyed! ID unknown.';
+    console.error('Add to Calendar Button could not be destroyed! ID unknown.');
+    return false;
   }
   delete atcbStates[`${id}`];
-  el.remove();
-  return 'Add to Calendar Button "' + id + '" destroyed';
+  if (el.parentElement.parentElement.classList.contains('atcb-initialized')) {
+    el.parentElement.parentElement.remove();
+  } else {
+    el.remove();
+  }
+  console.log('Add to Calendar Button "' + id + '" destroyed');
+  return true;
 }
 function atcb_update_state_management(data) {
   const singleDates = [];
@@ -3463,6 +3505,13 @@ function atcb_init_log_msg() {
     console.log('See https://github.com/add2cal/add-to-calendar-button for details');
     atcbInitialInit = true;
   }
+}
+function atcb_get_pro_data(data) {
+  if (data.proKey != null && data.proKey != '') {
+    console.error('Add to Calendar Button generation failed: proKey invalid!');
+    return [];
+  }
+  return data;
 }
 function atcb_set_global_event_listener() {
   if (!isBrowser()) {
