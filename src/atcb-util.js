@@ -248,8 +248,8 @@ function atcb_position_list(trigger, list, blockUpwards = false, resize = false)
     // not in the !blockUpwards case and not if there is not enough space above
     const viewportHeight = document.documentElement.clientHeight;
     const posWrapper = document.getElementById('atcb-pos-wrapper');
-    if (posWrapper != null) {
-      posWrapper.style.height = viewportHeight;
+    if (posWrapper !== null) {
+      posWrapper.style.height = viewportHeight + 'px';
     }
     if (
       (list.classList.contains('atcb-dropup') && resize) ||
