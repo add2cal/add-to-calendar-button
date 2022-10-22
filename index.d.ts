@@ -2,7 +2,8 @@ declare module 'add-to-calendar-button' {
   export function atcb_init(): string[];
   export function atcb_action(
     config: {
-      name: string;
+      proKey?: string;
+      name?: string;
       dates?: {
         name?: string;
         description?: string;
@@ -43,7 +44,7 @@ declare module 'add-to-calendar-button' {
       updated?: string;
       identifier?: string;
       subscribe?: boolean;
-      options: ('Apple' | 'Google' | 'iCal' | 'Microsoft365' | 'MicrosoftTeams' | 'Outlook.com' | 'Yahoo')[];
+      options?: ('Apple' | 'Google' | 'iCal' | 'Microsoft365' | 'MicrosoftTeams' | 'Outlook.com' | 'Yahoo')[];
       iCalFileName?: string;
       listStyle?: 'dropdown' | 'dropdown-static' | 'overlay' | 'modal';
       buttonStyle?: 'default' | '3d' | 'flat' | 'round' | 'neumorphism' | 'text' | 'date' | 'custom' | 'none';
@@ -51,7 +52,9 @@ declare module 'add-to-calendar-button' {
       background?: boolean;
       checkmark?: boolean;
       mindScrolling?: boolean;
+      branding?: boolean;
       size?: string;
+      label?: string;
       customLabels?: object;
       lightMode?: 'system' | 'dark' | 'light' | 'bodyScheme';
       language?:
@@ -79,5 +82,5 @@ declare module 'add-to-calendar-button' {
     triggerElement?: HTMLElement,
     keyboardTrigger?: boolean
   ): string[];
-  export function atcb_destroy(id: string): string;
+  export function atcb_destroy(id: string): boolean;
 }

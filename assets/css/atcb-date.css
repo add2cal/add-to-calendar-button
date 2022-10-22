@@ -7,7 +7,7 @@
  *
  * Style: Date
  *
- * Version: 1.18.1
+ * Version: 1.18.2
  * Creator: Jens Kuerschner (https://jenskuerschner.de)
  * Project: https://github.com/add2cal/add-to-calendar-button
  * License: Apache-2.0 with “Commons Clause” License Condition v1.0
@@ -374,6 +374,13 @@ body.atcb-dark #atcb-bgoverlay.atcb-bodyScheme {
   position: absolute;
 }
 
+.atcb-pos-wrapper {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 100%;
+}
+
 .atcb-list-wrapper {
   box-sizing: border-box;
   padding: 0 4px;
@@ -671,6 +678,7 @@ body.atcb-dark a.atcb-modal-btn:active {
 }
 
 .atcb-saved .atcb-checkmark {
+  box-sizing: content-box;
   color: var(--atcb-text);
   display: block;
   position: absolute;

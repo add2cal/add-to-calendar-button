@@ -3,7 +3,7 @@
  *  Add to Calendar Button
  *  ++++++++++++++++++++++
  *
- *  Version: 1.18.1
+ *  Version: 1.18.2
  *  Creator: Jens Kuerschner (https://jenskuerschner.de)
  *  Project: https://github.com/add2cal/add-to-calendar-button
  *  License: Apache-2.0 with “Commons Clause” License Condition v1.0
@@ -58,6 +58,7 @@ function atcb_decorate_data(data) {
   data.richData = atcb_decorate_data_rich_data(data);
   data.checkmark = atcb_decorate_data_checkmark(data);
   data.mindScrolling = atcb_decorate_data_mind_scrolling(data);
+  data.branding = atcb_decorate_data_branding(data);
   data = atcb_decorate_data_style(data);
   data = atcb_decorate_data_i18n(data);
   data = atcb_decorate_data_dates(data);
@@ -223,6 +224,15 @@ function atcb_decorate_data_checkmark(data) {
     return false;
   }
   return true;
+}
+
+// specify the branding option
+function atcb_decorate_data_branding(data) {
+  if (data.branding != null && data.branding == false) {
+    return false;
+  }
+  return false;
+  //return true; // not ready yet
 }
 
 // set whether we observe global scroll to re-adjust the dropdown

@@ -3,7 +3,7 @@
  *  Add to Calendar Button
  *  ++++++++++++++++++++++
  *
- *  Version: 1.18.1
+ *  Version: 1.18.2
  *  Creator: Jens Kuerschner (https://jenskuerschner.de)
  *  Project: https://github.com/add2cal/add-to-calendar-button
  *  License: Apache-2.0 with “Commons Clause” License Condition v1.0
@@ -456,6 +456,33 @@ function atcb_generate_bg_overlay(listStyle = 'dropdown', trigger = '', lightMod
   return bgOverlay;
 }
 
+// SMALL LOGO
+function atcb_create_atcbl(atList = true) {
+  /*const atcbL = document.createElement('div');
+  atcbL.id = 'add-to-calendar-button-reference';
+  atcbL.style.width = '150px';
+  atcbL.style.padding = '10px 0';
+  atcbL.style.height = 'auto';
+  atcbL.style.transform = 'translate3d(0, 0, 0)';
+  atcbL.style.zIndex = '15000000';
+  setTimeout(() => {
+    atcbL.innerHTML =
+      '<a href="https://add-to-calendar-pro.com" target="_blank" rel="noopener">' +
+      atcbIcon['atcb'] +
+      '</a>';
+  }, 500);  
+  document.body.appendChild(atcbL);
+  if (atList) {
+    atcbL.style.position = 'absolute';
+  } else {
+    if (window.innerHeight > 1000 || window.innerWidth > 1000) {
+      atcbL.style.position = 'fixed';
+      atcbL.style.bottom = '15px';
+      atcbL.style.right = '30px';
+    }
+  }*/
+}
+
 // FUNCTION TO CREATE MODALS
 // this is only about special communication modals - not the list style modal
 function atcb_create_modal(
@@ -522,6 +549,9 @@ function atcb_create_modal(
   }
   // add subEvent buttons (array with type first and subEvent numbers following)
   if (subEvents.length > 1) {
+    if (data.branding) {
+      atcb_create_atcbl(false);
+    }
     const modalsubEventsContent = document.createElement('div');
     modalsubEventsContent.classList.add('atcb-modal-content');
     modal.appendChild(modalsubEventsContent);
@@ -795,4 +825,5 @@ export {
   atcb_generate_dropdown_list,
   atcb_create_modal,
   atcb_generate_bg_overlay,
+  atcb_create_atcbl,
 };
