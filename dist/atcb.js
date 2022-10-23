@@ -217,14 +217,14 @@ function tzlib_get_timezones(jsonType = false) {
  *  Add to Calendar Button
  *  ++++++++++++++++++++++
  *
- *  Version: 1.18.2
+ *  Version: 1.18.3
  *  Creator: Jens Kuerschner (https://jenskuerschner.de)
  *  Project: https://github.com/add2cal/add-to-calendar-button
  *  License: Apache-2.0 with “Commons Clause” License Condition v1.0
  *  Note:    DO NOT REMOVE THE COPYRIGHT NOTICE ABOVE!
  *
  */
-const atcbVersion = '1.18.2';
+const atcbVersion = '1.18.3';
 const isBrowser = () => {
   if (typeof window === 'undefined') {
     return false;
@@ -1179,7 +1179,11 @@ function atcb_open(data, button, keyboardTrigger = false, generatedButton = fals
     atcb_manage_body_scroll();
   } else {
     const positionWrapper = document.createElement('div');
-    positionWrapper.id = 'atcb-pos-wrapper';
+    positionWrapper.id = 'atcb-pos-wrapper';    
+    positionWrapper.style.position = 'absolute';
+    positionWrapper.style.top = '0';
+    positionWrapper.style.bottom = '0';
+    positionWrapper.style.width = '100%';
     document.body.appendChild(positionWrapper);
     positionWrapper.appendChild(listWrapper);
     listWrapper.appendChild(list);
@@ -1191,7 +1195,9 @@ function atcb_open(data, button, keyboardTrigger = false, generatedButton = fals
     }
     document.body.appendChild(bgOverlay);
     atcb_set_sizes(list, data.sizes);
-    setTimeout(function () {
+    listWrapper.style.display = 'none';
+    setTimeout(function () {      
+      listWrapper.style.display = 'block';
       if (data.listStyle === 'dropdown-static') {
         atcb_position_list(button, listWrapper, true);
       } else {
