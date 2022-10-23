@@ -3,7 +3,7 @@
  *  Add to Calendar Button
  *  ++++++++++++++++++++++
  *
- *  Version: 1.18.2
+ *  Version: 1.18.3
  *  Creator: Jens Kuerschner (https://jenskuerschner.de)
  *  Project: https://github.com/add2cal/add-to-calendar-button
  *  License: Apache-2.0 with “Commons Clause” License Condition v1.0
@@ -79,7 +79,11 @@ function atcb_open(data, button, keyboardTrigger = false, generatedButton = fals
     atcb_manage_body_scroll();
   } else {
     const positionWrapper = document.createElement('div');
-    positionWrapper.id = 'atcb-pos-wrapper';
+    positionWrapper.id = 'atcb-pos-wrapper';    
+    positionWrapper.style.position = 'absolute';
+    positionWrapper.style.top = '0';
+    positionWrapper.style.bottom = '0';
+    positionWrapper.style.width = '100%';
     document.body.appendChild(positionWrapper);
     positionWrapper.appendChild(listWrapper);
     listWrapper.appendChild(list);
@@ -92,7 +96,9 @@ function atcb_open(data, button, keyboardTrigger = false, generatedButton = fals
     document.body.appendChild(bgOverlay);
     atcb_set_sizes(list, data.sizes);
     // setting the position with a tiny timeout to prevent any edge case situations, where the order gets mixed up
-    setTimeout(function () {
+    listWrapper.style.display = 'none';
+    setTimeout(function () {      
+      listWrapper.style.display = 'block';
       if (data.listStyle === 'dropdown-static') {
         // in the dropdown-static case, we do not dynamically adjust whether we show the dropdown upwards
         atcb_position_list(button, listWrapper, true);
