@@ -44,6 +44,9 @@ function atcb_open(data, button, keyboardTrigger = false, generatedButton = fals
   const list = atcb_generate_dropdown_list(data);
   const listWrapper = document.createElement('div');
   listWrapper.classList.add('atcb-list-wrapper');
+  if (data.textLabelList == false) {
+    listWrapper.classList.add('atcb-no-text');
+  }
   // set list styles, set button to atcb-active and force modal listStyle if no button is set
   if (button) {
     button.classList.add('atcb-active');
@@ -79,7 +82,7 @@ function atcb_open(data, button, keyboardTrigger = false, generatedButton = fals
     atcb_manage_body_scroll();
   } else {
     const positionWrapper = document.createElement('div');
-    positionWrapper.id = 'atcb-pos-wrapper';    
+    positionWrapper.id = 'atcb-pos-wrapper';
     positionWrapper.style.position = 'absolute';
     positionWrapper.style.top = '0';
     positionWrapper.style.bottom = '0';
@@ -97,7 +100,7 @@ function atcb_open(data, button, keyboardTrigger = false, generatedButton = fals
     atcb_set_sizes(list, data.sizes);
     // setting the position with a tiny timeout to prevent any edge case situations, where the order gets mixed up
     listWrapper.style.display = 'none';
-    setTimeout(function () {      
+    setTimeout(function () {
       listWrapper.style.display = 'block';
       if (data.listStyle === 'dropdown-static') {
         // in the dropdown-static case, we do not dynamically adjust whether we show the dropdown upwards

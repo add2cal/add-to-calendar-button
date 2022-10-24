@@ -57,6 +57,7 @@ function atcb_decorate_data(data) {
   data = atcb_decorate_data_options(data);
   data.richData = atcb_decorate_data_rich_data(data);
   data.checkmark = atcb_decorate_data_checkmark(data);
+  data.background = atcb_decorate_data_background(data);
   data.mindScrolling = atcb_decorate_data_mind_scrolling(data);
   data.branding = atcb_decorate_data_branding(data);
   data = atcb_decorate_data_style(data);
@@ -226,6 +227,14 @@ function atcb_decorate_data_checkmark(data) {
   return true;
 }
 
+// specify the background option
+function atcb_decorate_data_background(data) {
+  if (data.background != null && data.background == false) {
+    return false;
+  }
+  return true;
+}
+
 // specify the branding option
 function atcb_decorate_data_branding(data) {
   if (data.branding != null && data.branding == false) {
@@ -309,6 +318,41 @@ function atcb_decorate_data_style(data) {
         break;
     }
   }
+  // specify the icons option
+  data.iconButton = true;
+  data.iconList = true;
+  data.iconModal = true;
+  if (data.icons != null) {
+    data.icons = String(data.icons);
+    if (data.icons != '') {
+      const iconsConfig = data.icons.split('|');
+      if (iconsConfig[0] == 'false') {
+        data.iconButton = false;
+      }
+      if (iconsConfig[1] != null && iconsConfig[1] == 'false') {
+        data.iconList = false;
+      }
+      if (iconsConfig[2] != null && iconsConfig[2] == 'false') {
+        data.iconModal = false;
+      }
+    }
+  }
+  // specify the text labels option
+  data.textLabelButton = true;
+  data.textLabelList = true;
+  if (data.textLabels != null) {
+    data.textLabels = String(data.textLabels);
+    if (data.textLabels != '') {
+      const textLabelsConfig = data.textLabels.split('|');
+      if (textLabelsConfig[0] == 'false') {
+        data.textLabelButton = false;
+      }
+      if (textLabelsConfig[1] != null && textLabelsConfig[1] == 'false') {
+        data.textLabelList = false;
+      }
+    }
+  }
+  // return result
   return data;
 }
 

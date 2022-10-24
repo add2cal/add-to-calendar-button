@@ -243,17 +243,18 @@ function atcb_position_list(trigger, list, blockUpwards = false, resize = false)
   let triggerDim = trigger.getBoundingClientRect();
   let listDim = list.getBoundingClientRect();
   const btnDim = originalTrigger.getBoundingClientRect();
+  const viewportHeight = document.documentElement.clientHeight;
+  const posWrapper = document.getElementById('atcb-pos-wrapper');
+  if (posWrapper !== null) {
+    posWrapper.style.height = viewportHeight + 'px';
+  }
   if (anchorSet === true && !list.classList.contains('atcb-dropoverlay')) {
     // in the regular case, we also check for the ideal direction
     // not in the !blockUpwards case and not if there is not enough space above
-    const viewportHeight = document.documentElement.clientHeight;
-    const posWrapper = document.getElementById('atcb-pos-wrapper');
-    if (posWrapper !== null) {
-      posWrapper.style.height = viewportHeight + 'px';
-    }
     if (
       (list.classList.contains('atcb-dropup') && resize) ||
       (!blockUpwards &&
+        !resize &&
         triggerDim.top + listDim.height > viewportHeight - 20 &&
         2 * btnDim.top + btnDim.height - triggerDim.top - listDim.height > 20)
     ) {

@@ -180,6 +180,10 @@ body.atcb-dark #atcb-bgoverlay.atcb-bodyScheme {
   z-index: 1;
 }
 
+.atcb-button.atcb-no-text {
+  min-width: 0;
+}
+
 .atcb-rtl .atcb-button {
   direction: rtl;
   text-align: right;
@@ -224,6 +228,11 @@ body.atcb-dark #atcb-bgoverlay.atcb-bodyScheme {
 .atcb-rtl .atcb-icon {
   margin-right: 0;
   margin-left: .8em;
+}
+
+.atcb-no-text .atcb-icon {
+  margin-right: 0;
+  margin-left: 0;
 }
 
 .atcb-icon svg {
@@ -359,6 +368,10 @@ body.atcb-dark #atcb-bgoverlay.atcb-bodyScheme {
   margin-left: .6em;
 }
 
+.atcb-no-text .atcb-list-item .atcb-icon {
+  margin: 0 auto;
+}
+
 .atcb-list-item-close {
   background-color: var(--atcb-close-background);
 }
@@ -446,6 +459,7 @@ body.atcb-dark #atcb-bgoverlay.atcb-bodyScheme {
 
 .atcb-modal-content {  
   background-color: var(--atcb-modal-background);
+  font-size: 1em;
   padding: .3em 2.5em 2.25em;
 }
 

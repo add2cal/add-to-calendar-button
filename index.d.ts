@@ -49,6 +49,8 @@ declare module 'add-to-calendar-button' {
       listStyle?: 'dropdown' | 'dropdown-static' | 'overlay' | 'modal';
       buttonStyle?: 'default' | '3d' | 'flat' | 'round' | 'neumorphism' | 'text' | 'date' | 'custom' | 'none';
       trigger?: 'hover' | 'click';
+      icons?: string;
+      textLabels?: string;
       background?: boolean;
       checkmark?: boolean;
       mindScrolling?: boolean;
