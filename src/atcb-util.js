@@ -47,16 +47,10 @@ function atcb_save_file(file, filename) {
 
 // SHARED FUNCTION TO GENERATE A TIME STRING
 function atcb_generate_time(data, style = 'delimiters', targetCal = 'general', addTimeZoneOffset = false) {
-  const startDate = data.startDate.split('-');
-  const endDate = data.endDate.split('-');
   if (data.startTime != null && data.startTime != '' && data.endTime != null && data.endTime != '') {
     // for the input, we assume UTC per default
-    const newStartDate = new Date(
-      startDate[0] + '-' + startDate[1] + '-' + startDate[2] + 'T' + data.startTime + ':00.000+00:00'
-    );
-    const newEndDate = new Date(
-      endDate[0] + '-' + endDate[1] + '-' + endDate[2] + 'T' + data.endTime + ':00.000+00:00'
-    );
+    const newStartDate = new Date(data.startDate + 'T' + data.startTime + ':00.000+00:00');
+    const newEndDate = new Date(data.endDate + 'T' + data.endTime + ':00.000+00:00');
     const durationMS = newEndDate - newStartDate;
     const durationHours = Math.floor(durationMS / 1000 / 60 / 60);
     const durationMinutes = Math.floor(((durationMS - durationHours * 60 * 60 * 1000) / 1000 / 60) % 60);
@@ -124,8 +118,9 @@ function atcb_generate_time(data, style = 'delimiters', targetCal = 'general', a
     };
   } else {
     // would be an allday event then
-    const newStartDate = new Date(Date.UTC(startDate[0], startDate[1] - 1, startDate[2]));
-    const newEndDate = new Date(Date.UTC(endDate[0], endDate[1] - 1, endDate[2]));
+    const newStartDate = new Date(data.startDate + 'T00:00:00.000Z');
+    console.log(newStartDate);
+    const newEndDate = new Date(data.endDate + 'T00:00:00.000Z');
     // increment the end day by 1 for Google Calendar, iCal and Outlook
     if (targetCal == 'google' || targetCal == 'microsoft' || targetCal == 'ical') {
       newEndDate.setDate(newEndDate.getDate() + 1);

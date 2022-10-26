@@ -334,1719 +334,10 @@ const atcbIcon = {
 };
 
 
-function atcb_patch_config(configData) {
-  if (configData.event != null) {
-    Object.keys(configData.event).forEach((key) => {
-      if (key.charAt(0) !== '@') {
-        configData[`${key}`] = configData.event[`${key}`];
-      }
-    });
-    delete configData.event;
-  }
-  const keyChanges = {
-    title: 'name',
-    dateStart: 'startDate',
-    dateEnd: 'endDate',
-    timeStart: 'startTime',
-    timeEnd: 'endTime',
-  };
-  Object.keys(keyChanges).forEach((key) => {
-    if (configData[keyChanges[`${key}`]] == null && configData[`${key}`] != null) {
-      configData[keyChanges[`${key}`]] = configData[`${key}`];
-    }
-  });
-  return configData;
-}
-function atcb_decorate_data(data) {
-  data = atcb_decorate_data_identifier(data);
-  data.subscribe = atcb_decorate_data_subscribe(data);
-  data = atcb_decorate_data_rrule(data);
-  data = atcb_decorate_data_options(data);
-  data.richData = atcb_decorate_data_rich_data(data);
-  data.checkmark = atcb_decorate_data_checkmark(data);
-  data.background = atcb_decorate_data_background(data);
-  data.mindScrolling = atcb_decorate_data_mind_scrolling(data);
-  data.branding = atcb_decorate_data_branding(data);
-  data = atcb_decorate_data_style(data);
-  data = atcb_decorate_data_i18n(data);
-  data = atcb_decorate_data_dates(data);
-  data = atcb_decorate_data_meta(data);
-  data = atcb_decorate_data_extend(data);
-  return data;
-}
-function atcb_decorate_data_identifier(data) {
-  if (data.identifier != null && data.identifier != '') {
-    data.identifier = 'atcb-btn-' + data.identifier;
-    if (!/^[\w-]+$/.test(data.identifier)) {
-      data.identifier = '';
-      console.warn('Add to Calendar Button generation: identifier invalid - using auto numbers instead');
-    }
-  }
-  return data;
-}
-function atcb_decorate_data_subscribe(data) {
-  if (data.subscribe != null && data.subscribe == true) {
-    return true;
-  }
-  return false;
-}
-function atcb_decorate_data_rrule(data) {
-  if (data.recurrence != null && data.recurrence != '') {
-    data.recurrence = data.recurrence.replace(/\s+/g, '').toUpperCase();
-    if (!/^(RRULE:[\w=;,:+-/\\]+|daily|weekly|monthly|yearly)$/im.test(data.recurrence)) {
-      data.recurrence = '!wrong rrule format!';
-    } else {
-      if (/^RRULE:/i.test(data.recurrence)) {
-        const rruleParts = data.recurrence.substr(6).split(';');
-        const rruleObj = new Object();
-        rruleParts.forEach(function (rule) {
-          rruleObj[rule.split('=')[0]] = rule.split('=')[1];
-        });
-        data.recurrence_until = rruleObj.UNTIL ? rruleObj.UNTIL : '';
-        data.recurrence_count = rruleObj.COUNT ? rruleObj.COUNT : '';
-        data.recurrence_byDay = rruleObj.BYDAY ? rruleObj.BYDAY : '';
-        data.recurrence_byMonth = rruleObj.BYMONTH ? rruleObj.BYMONTH : '';
-        data.recurrence_byMonthDay = rruleObj.BYMONTHDAY ? rruleObj.BYMONTHDAY : '';
-        data.recurrence_interval = rruleObj.INTERVAL ? rruleObj.INTERVAL : 1;
-        data.recurrence_frequency = rruleObj.FREQ ? rruleObj.FREQ : '';
-      } else {
-        if (data.recurrence_interval == null || data.recurrence_interval == '') {
-          data.recurrence_interval = 1;
-        }
-        if (
-          data.recurrence_weekstart == null ||
-          (data.recurrence_weekstart == '') | (data.recurrence_weekstart.length > 2)
-        ) {
-          data.recurrence_weekstart = 'MO';
-        }
-        data.recurrence_frequency = data.recurrence;
-        data.recurrence =
-          'RRULE:FREQ=' +
-          data.recurrence +
-          ';WKST=' +
-          data.recurrence_weekstart +
-          ';INTERVAL=' +
-          data.recurrence_interval;
-        if (data.recurrence_until != null && data.recurrence_until != '') {
-          if (data.endTime != null && data.endTime != '') {
-            data.recurrence =
-              data.recurrence +
-              ';UNTIL=' +
-              data.recurrence_until.replace(/-/g, '').slice(0, 8) +
-              'T' +
-              data.endTime.replace(':', '') +
-              '00';
-          } else {
-            data.recurrence =
-              data.recurrence + ';UNTIL=' + data.recurrence_until.replace(/-/g, '').slice(0, 8);
-          }
-        }
-        if (data.recurrence_count != null && data.recurrence_count != '') {
-          data.recurrence = data.recurrence + ';COUNT=' + data.recurrence_count;
-        }
-        if (data.recurrence_byDay != null && data.recurrence_byDay != '') {
-          data.recurrence = data.recurrence + ';BYDAY=' + data.recurrence_byDay;
-        }
-        if (data.recurrence_byMonth != null && data.recurrence_byMonth != '') {
-          data.recurrence = data.recurrence + ';BYMONTH=' + data.recurrence_byMonth;
-        }
-        if (data.recurrence_byMonthDay != null && data.recurrence_byMonthDay != '') {
-          data.recurrence = data.recurrence + ';BYMONTHDAY=' + data.recurrence_byMonthDay;
-        }
-      }
-    }
-  }
-  return data;
-}
-function atcb_decorate_data_options(data) {
-  if (isiOS() && data.options.includes('ical') && !data.options.includes('apple')) {
-    data.options.push('apple');
-  }
-  const newOptions = [];
-  data.optionLabels = [];
-  for (let i = 0; i < data.options.length; i++) {
-    const cleanOption = data.options[`${i}`].split('|');
-    const optionName = cleanOption[0].toLowerCase().replace('microsoft', 'ms').replace('.', '');
-    const optionLabel = (function () {
-      if (cleanOption[1] != null) {
-        return cleanOption[1];
-      }
-      return '';
-    })();
-    if (
-      (isiOS() && atcbiOSInvalidOptions.includes(optionName)) ||
-      (data.recurrence != null &&
-        data.recurrence != '' &&
-        (!atcbValidRecurrOptions.includes(optionName) ||
-          (data.recurrence_until != null &&
-            data.recurrence_until != '' &&
-            (optionName == 'apple' || optionName == 'ical')))) ||
-      (data.subscribe && atcbInvalidSubscribeOptions.includes(optionName))
-    ) {
-      continue;
-    }
-    newOptions.push(optionName);
-    data.optionLabels.push(optionLabel);
-  }
-  data.options = newOptions;
-  return data;
-}
-function atcb_decorate_data_rich_data(data) {
-  if (data.richData != null && data.richData == false) {
-    return false;
-  }
-  return true;
-}
-function atcb_decorate_data_checkmark(data) {
-  if (data.checkmark != null && data.checkmark == false) {
-    return false;
-  }
-  return true;
-}
-function atcb_decorate_data_background(data) {
-  if (data.background != null && data.background == false) {
-    return false;
-  }
-  return true;
-}
-function atcb_decorate_data_branding(data) {
-  if (data.branding != null && data.branding == false) {
-    return false;
-  }
-  return false;
-}
-function atcb_decorate_data_mind_scrolling(data) {
-  if (data.mindScrolling != null && data.mindScrolling == true) {
-    return true;
-  }
-  return false;
-}
-function atcb_decorate_data_style(data) {
-  if (data.listStyle == null || data.listStyle == '') {
-    data.listStyle = 'dropdown';
-  }
-  if (data.listStyle === 'modal') {
-    data.trigger = 'click';
-  }
-  if (data.buttonStyle != null && data.buttonStyle != '' && data.buttonStyle != 'default') {
-    if (data.buttonStyle == 'bubble' || data.buttonStyle == 'text' || data.buttonStyle == 'date') {
-      data.trigger = 'click';
-    }
-    if (data.buttonStyle == 'date' && data.listStyle == 'dropdown') {
-      data.listStyle = 'overlay';
-    }
-  } else {
-    data.buttonStyle = '';
-  }
-  data.sizes = [];
-  data.sizes['l'] = data.sizes['m'] = data.sizes['s'] = 16;
-  if (data.size != null && data.size != '') {
-    const sizeParts = data.size.split('|');
-    for (let i = 0; i < sizeParts.length; i++) {
-      sizeParts[`${i}`] = parseInt(sizeParts[`${i}`]);
-    }
-    if (sizeParts[0] >= 0 && sizeParts[0] < 11) {
-      data.sizes['l'] = 10 + sizeParts[0];
-    }
-    if (sizeParts.length > 2) {
-      if (sizeParts[1] >= 0 && sizeParts[1] < 11) {
-        data.sizes['m'] = 10 + sizeParts[1];
-      }
-      if (sizeParts[2] >= 0 && sizeParts[2] < 11) {
-        data.sizes['s'] = 10 + sizeParts[2];
-      }
-    } else if (sizeParts.length == 2) {
-      if (sizeParts[1] >= 0 && sizeParts[1] < 11) {
-        data.sizes['m'] = data.sizes['s'] = 10 + sizeParts[1];
-      }
-    }
-  }
-  if (data.lightMode == null || data.lightMode == '') {
-    data.lightMode = 'light';
-  } else if (data.lightMode != null && data.lightMode != '') {
-    const prefersDarkScheme = window.matchMedia('(prefers-color-scheme: dark)');
-    switch (data.lightMode) {
-      case 'system':
-        if (prefersDarkScheme.matches) {
-          data.lightMode = 'dark';
-        } else {
-          data.lightMode = 'light';
-        }
-        break;
-      case 'bodyScheme':
-      case 'dark':
-        break;
-      default:
-        data.lightMode = 'light';
-        break;
-    }
-  }
-  data.iconButton = true;
-  data.iconList = true;
-  data.iconModal = true;
-  if (data.icons != null) {
-    data.icons = String(data.icons);
-    if (data.icons != '') {
-      const iconsConfig = data.icons.split('|');
-      if (iconsConfig[0] == 'false') {
-        data.iconButton = false;
-      }
-      if (iconsConfig[1] != null && iconsConfig[1] == 'false') {
-        data.iconList = false;
-      }
-      if (iconsConfig[2] != null && iconsConfig[2] == 'false') {
-        data.iconModal = false;
-      }
-    }
-  }
-  data.textLabelButton = true;
-  data.textLabelList = true;
-  if (data.textLabels != null) {
-    data.textLabels = String(data.textLabels);
-    if (data.textLabels != '') {
-      const textLabelsConfig = data.textLabels.split('|');
-      if (textLabelsConfig[0] == 'false') {
-        data.textLabelButton = false;
-      }
-      if (textLabelsConfig[1] != null && textLabelsConfig[1] == 'false') {
-        data.textLabelList = false;
-      }
-    }
-  }
-  return data;
-}
-function atcb_decorate_data_i18n(data) {
-  if (data.language == null || data.language == '') {
-    data.language = 'en';
-  }
-  if (data.language == 'ar') {
-    data.rtl = true;
-  } else {
-    data.rtl = false;
-  }
-  return data;
-}
-function atcb_decorate_data_dates(data) {
-  if (data.dates != null && data.dates.length > 0) {
-    for (let i = 0; i < data.dates.length; i++) {
-      if (data.dates[`${i}`].timeZone == null && data.timeZone != null) {
-        data.dates[`${i}`].timeZone = data.timeZone;
-      }
-      const cleanedUpDates = atcb_date_cleanup(data.dates[`${i}`]);
-      data.dates[`${i}`].startTime = cleanedUpDates.startTime;
-      data.dates[`${i}`].endTime = cleanedUpDates.endTime;
-      data.dates[`${i}`].timeZone = cleanedUpDates.timeZone;
-      data.dates[`${i}`].timestamp = cleanedUpDates.startTimestamp;
-      data.dates[`${i}`].startDate = atcb_date_calculation(cleanedUpDates.startDate);
-      data.dates[`${i}`].endDate = atcb_date_calculation(cleanedUpDates.endDate);
-    }
-  } else {
-    const cleanedUpDates = atcb_date_cleanup(data);
-    data.dates = [];
-    data.dates[0] = new Object();
-    data.startTime = data.dates[0].startTime = cleanedUpDates.startTime;
-    data.endTime = data.dates[0].endTime = cleanedUpDates.endTime;
-    data.timeZone = data.dates[0].timeZone = cleanedUpDates.timeZone;
-    data.startDate = data.dates[0].startDate = atcb_date_calculation(cleanedUpDates.startDate);
-    data.endDate = data.dates[0].endDate = atcb_date_calculation(cleanedUpDates.endDate);
-  }
-  const now = new Date();
-  if (data.created == null || data.created == '') {
-    data.created = atcb_format_datetime(now, 'clean', true);
-  }
-  if (data.updated == null || data.updated == '') {
-    data.updated = atcb_format_datetime(now, 'clean', true);
-  }
-  return data;
-}
-function atcb_decorate_data_meta(data) {
-  if (data.status == null || data.status == '') {
-    data.status = 'CONFIRMED';
-  }
-  if (data.sequence == null || data.sequence == '') {
-    data.sequence = 0;
-  }
-  return data;
-}
-function atcb_decorate_data_description(data, i) {
-  if (data.dates[`${i}`].description != null && data.dates[`${i}`].description != '') {
-    data.dates[`${i}`].descriptionHtmlFree = atcb_rewrite_html_elements(data.dates[`${i}`].description, true);
-    data.dates[`${i}`].description = atcb_rewrite_html_elements(data.dates[`${i}`].description);
-  } else {
-    if (data.dates[`${i}`].description == null && data.description != null && data.description != '') {
-      data.dates[`${i}`].descriptionHtmlFree = atcb_rewrite_html_elements(data.description, true);
-      data.dates[`${i}`].description = atcb_rewrite_html_elements(data.description);
-    } else {
-      data.dates[`${i}`].descriptionHtmlFree = data.dates[`${i}`].description = '';
-    }
-  }
-  return data;
-}
-function atcb_decorate_data_extend(data) {
-  for (let i = 0; i < data.dates.length; i++) {
-    data = atcb_decorate_data_description(data, i);
-    if (data.dates[`${i}`].name == null || data.dates[`${i}`].name == '') {
-      data.dates[`${i}`].name = data.name;
-    }
-    if (data.dates[`${i}`].status == null) {
-      data.dates[`${i}`].status = data.status.toUpperCase();
-    } else {
-      data.dates[`${i}`].status = data.dates[`${i}`].status.toUpperCase();
-    }
-    if (data.dates[`${i}`].sequence == null) {
-      data.dates[`${i}`].sequence = data.sequence;
-    }
-    if (data.dates[`${i}`].location == null && data.location != null) {
-      data.dates[`${i}`].location = data.location;
-    }
-    if (data.dates[`${i}`].organizer == null && data.organizer != null) {
-      data.dates[`${i}`].organizer = data.organizer;
-    }
-    if (data.dates[`${i}`].availability == null && data.availability != null) {
-      data.dates[`${i}`].availability = data.availability.toLowerCase();
-    } else if (data.dates[`${i}`].availability != null) {
-      data.dates[`${i}`].availability = data.dates[`${i}`].availability.toLowerCase();
-    }
-    if (data.dates[`${i}`].uid == null) {
-      data.dates[`${i}`].uid = atcb_generate_uuid();
-    }
-  }
-  if (data.recurrence != null && data.recurrence != '') {
-    data.dates[0].recurrence = data.recurrence;
-  }
-  if (data.dates.length > 1) {
-    data.dates.sort((a, b) => a.timestamp - b.timestamp);
-  }
-  return data;
-}
-function atcb_date_cleanup(dateTimeData) {
-  if (dateTimeData.endDate == null || dateTimeData.endDate == '') {
-    dateTimeData.endDate = dateTimeData.startDate;
-  }
-  const endpoints = ['start', 'end'];
-  endpoints.forEach(function (point) {
-    if (dateTimeData[point + 'Date'] != null) {
-      dateTimeData[point + 'Date'] = dateTimeData[point + 'Date'].replace(/\.\d{3}/, '').replace('Z', '');
-      const tmpSplitStartDate = dateTimeData[point + 'Date'].split('T');
-      if (tmpSplitStartDate[1] != null) {
-        dateTimeData[point + 'Date'] = tmpSplitStartDate[0];
-        dateTimeData[point + 'Time'] = tmpSplitStartDate[1];
-      }
-    }
-    if (dateTimeData[point + 'Time'] != null && dateTimeData[point + 'Time'].length === 8) {
-      const timeStr = dateTimeData[point + 'Time'];
-      dateTimeData[point + 'Time'] = timeStr.substring(0, timeStr.length - 3);
-    }
-    if (dateTimeData.timeZone == 'currentBrowser') {
-      dateTimeData.timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
-    }
-    let tmpDate;
-    if (dateTimeData[point + 'Time'] != null) {
-      tmpDate = new Date(dateTimeData[point + 'Date'] + ' ' + dateTimeData[point + 'Time']);
-    } else {
-      tmpDate = new Date(dateTimeData[point + 'Date']);
-    }
-    dateTimeData[point + 'Timestamp'] = tmpDate.getTime();
-  });
-  return dateTimeData;
-}
-function atcb_date_calculation(dateString) {
-  const today = new Date();
-  const todayString = today.getUTCFullYear() + '-' + (today.getUTCMonth() + 1) + '-' + today.getUTCDate();
-  dateString = dateString.replace(/today/gi, todayString);
-  const dateStringParts = dateString.split('+');
-  const dateParts = dateStringParts[0].split('-');
-  let newDate = (function () {
-    if (dateParts[0].length < 4) {
-      return new Date(dateParts[2], dateParts[0] - 1, dateParts[1]);
-    }
-    return new Date(dateParts[0], dateParts[1] - 1, dateParts[2]);
-  })();
-  if (dateStringParts[1] != null && dateStringParts[1] > 0) {
-    newDate.setDate(newDate.getDate() + parseInt(dateStringParts[1]));
-  }
-  return (
-    newDate.getFullYear() +
-    '-' +
-    ((newDate.getMonth() + 1 < 10 ? '0' : '') + (newDate.getMonth() + 1)) +
-    '-' +
-    (newDate.getDate() < 10 ? '0' : '') +
-    newDate.getDate()
-  );
-}
-
-
-function atcb_check_required(data) {
-  if (data.options == null || data.options.length < 1) {
-    console.error('Add to Calendar Button generation failed: no valid options set');
-    return false;
-  }
-  if (data.name == null || data.name == '') {
-    console.error('Add to Calendar Button generation failed: required name information missing');
-    return false;
-  }
-  if (data.dates != null && data.dates.length > 0) {
-    const requiredMultiField = ['name', 'startDate'];
-    const requiredMultiFieldFlex = ['name'];
-    return requiredMultiField.every(function (field) {
-      for (let i = 0; i < data.dates.length; i++) {
-        if (
-          (!requiredMultiFieldFlex.includes(`${field}`) &&
-            (data.dates[`${i}`][`${field}`] == null || data.dates[`${i}`][`${field}`] == '')) ||
-          (requiredMultiFieldFlex.includes(`${field}`) &&
-            (data.dates[`${i}`][`${field}`] == null || data.dates[`${i}`][`${field}`] == '') &&
-            (data[`${field}`] == null || data[`${field}`] == ''))
-        ) {
-          console.error(
-            'Add to Calendar Button generation failed: required setting missing [dates array object #' +
-              (i + 1) +
-              '/' +
-              data.dates.length +
-              '] => [' +
-              field +
-              ']'
-          );
-          return false;
-        }
-      }
-      return true;
-    });
-  } else {
-    const requiredSingleField = ['startDate'];
-    return requiredSingleField.every(function (field) {
-      if (data[`${field}`] == null || data[`${field}`] == '') {
-        console.error('Add to Calendar Button generation failed: required setting missing [' + field + ']');
-        return false;
-      }
-      return true;
-    });
-  }
-}
-function atcb_validate(data) {
-  const msgPrefix = 'Add to Calendar Button generation (' + data.identifier + ')';
-  if (!atcb_validate_icsFile(data, msgPrefix)) return false;
-  if (!atcb_validate_subscribe(data, msgPrefix)) return false;
-  if (!atcb_validate_created(data, msgPrefix)) return false;
-  if (!atcb_validate_updated(data, msgPrefix)) return false;
-  if (!atcb_validate_options(data, msgPrefix)) return false;
-  if (!atcb_validate_date_blocks(data, msgPrefix)) return false;
-  if (!atcb_validate_rrule(data, msgPrefix)) return false;
-  return true;
-}
-function atcb_validate_icsFile(data, msgPrefix, i = '', msgSuffix = '') {
-  const icsFileStr = (function () {
-    if (i != '' && data.dates[`${i}`].icsFile != null) {
-      return data.dates[`${i}`].icsFile;
-    }
-    if (i == '' && data.icsFile != null) {
-      return data.icsFile;
-    }
-    return '';
-  })();
-  if (icsFileStr != '') {
-    if (
-      !atcb_secure_url(icsFileStr, false) ||
-      (!/^https:\/\/(.)*\.ics$/m.test(data.icsFile) && !data.subscribe) ||
-      (!data.icsFile.startsWith('https://') && data.subscribe)
-    ) {
-      console.error(msgPrefix + ' failed: explicit ics file path not valid' + msgSuffix);
-      return false;
-    }
-  }
-  return true;
-}
-function atcb_validate_subscribe(data, msgPrefix) {
-  if (data.subscribe == true && (data.icsFile == null || data.icsFile == '')) {
-    console.error(msgPrefix + ' failed: a subscription calendar requires a valid explicit ics file as well');
-    return false;
-  }
-  return true;
-}
-function atcb_validate_created(data, msgPrefix) {
-  if (!/^\d{8}T\d{6}Z$/.test(data.created)) {
-    console.error(
-      msgPrefix +
-        ' failed: created date format not valid. Needs to be a full ISO-8601 UTC date and time string, formatted YYYYMMDDTHHMMSSZ'
-    );
-    return false;
-  }
-  return true;
-}
-function atcb_validate_updated(data, msgPrefix) {
-  if (!/^\d{8}T\d{6}Z$/.test(data.updated)) {
-    console.error(
-      msgPrefix +
-        ' failed: updated date format not valid. Needs to be a full ISO-8601 UTC date and time string, formatted YYYYMMDDTHHMMSSZ'
-    );
-    return false;
-  }
-  return true;
-}
-function atcb_validate_options(data, msgPrefix) {
-  if (
-    !data.options.every(function (option) {
-      if (!atcbOptions.includes(option)) {
-        console.error(msgPrefix + ' failed: invalid option [' + option + ']');
-        return false;
-      }
-      return true;
-    })
-  ) {
-    return false;
-  }
-  return true;
-}
-function atcb_validate_date_blocks(data, msgPrefix) {
-  for (let i = 0; i < data.dates.length; i++) {
-    const msgSuffix = (function () {
-      if (data.dates.length == 1) {
-        return '';
-      } else {
-        return ' [dates array object #' + (i + 1) + '/' + data.dates.length + '] ';
-      }
-    })();
-    if (!atcb_validate_icsFile(data, msgPrefix, i, msgSuffix)) return false;
-    if (!atcb_validate_status(data, msgPrefix, i, msgSuffix)) return false;
-    if (!atcb_validate_availability(data, msgPrefix, i, msgSuffix)) return false;
-    if (!atcb_validate_organizer(data, msgPrefix, i, msgSuffix)) return false;
-    if (!atcb_validate_uid(data, msgPrefix, i, msgSuffix)) return false;
-    if (!atcb_validate_sequence(data, msgPrefix, i, msgSuffix)) return false;
-    if (!atcb_validate_timezone(data, msgPrefix, i, msgSuffix)) return false;
-    if (!atcb_validate_datetime(data, msgPrefix, i, msgSuffix)) return false;
-  }
-  return true;
-}
-function atcb_validate_status(data, msgPrefix, i, msgSuffix) {
-  if (
-    data.dates[`${i}`].status != 'TENTATIVE' &&
-    data.dates[`${i}`].status != 'CONFIRMED' &&
-    data.dates[`${i}`].status != 'CANCELLED'
-  ) {
-    console.error(
-      msgPrefix + ' failed: event status needs to be TENTATIVE, CONFIRMED, or CANCELLED' + msgSuffix
-    );
-    return false;
-  }
-  return true;
-}
-function atcb_validate_availability(data, msgPrefix, i, msgSuffix) {
-  if (
-    data.dates[`${i}`].availability != null &&
-    data.dates[`${i}`].availability != '' &&
-    data.dates[`${i}`].availability != 'free' &&
-    data.dates[`${i}`].availability != 'busy'
-  ) {
-    console.error(msgPrefix + ' failed: event availability needs to be "free" or "busy"' + msgSuffix);
-    return false;
-  }
-  return true;
-}
-function atcb_validate_organizer(data, msgPrefix, i, msgSuffix) {
-  if (data.dates[`${i}`].organizer != null && data.dates[`${i}`].organizer != '') {
-    const organizerParts = data.dates[`${i}`].organizer.split('|');
-    if (
-      organizerParts.length != 2 ||
-      organizerParts[0].length > 50 ||
-      organizerParts[1].length > 80 ||
-      !atcb_validEmail(organizerParts[1])
-    ) {
-      console.error(
-        msgPrefix +
-          ' failed: organizer needs to match the schema "NAME|EMAIL" with a valid email address' +
-          msgSuffix
-      );
-      return false;
-    }
-  }
-  return true;
-}
-function atcb_validate_uid(data, msgPrefix, i, msgSuffix) {
-  if (!/^(\w|-){1,254}$/.test(data.dates[`${i}`].uid)) {
-    console.warn(
-      msgPrefix +
-        ': UID not valid. May only contain alpha, digits, and dashes; and be less than 255 characters. Falling back to an automated value!' +
-        msgSuffix
-    );
-    data.dates[`${i}`].uid = atcb_generate_uuid();
-  }
-  if (
-    !/^[0-9a-f]{8}-[0-9a-f]{4}-[0-5][0-9a-f]{3}-[089ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(
-      data.dates[`${i}`].uid
-    )
-  ) {
-    console.warn(
-      msgPrefix +
-        ': UID is highly recommended to be a hex-encoded random Universally Unique Identifier (UUID)!' +
-        msgSuffix
-    );
-  }
-  return true;
-}
-function atcb_validate_sequence(data, msgPrefix, i, msgSuffix) {
-  if (!/^\d+$/.test(data.dates[`${i}`].sequence)) {
-    console.log(msgPrefix + ': sequence needs to be a number. Used the default 0 instead' + msgSuffix);
-    data.dates[`${i}`].sequence = 0;
-  }
-  return true;
-}
-function atcb_validate_timezone(data, msgPrefix, i, msgSuffix) {
-  if (data.dates[`${i}`].timeZone != null && data.dates[`${i}`].timeZone != '') {
-    const validTimeZones = tzlib_get_timezones();
-    if (!validTimeZones.includes(data.dates[`${i}`].timeZone)) {
-      console.error(msgPrefix + ' failed: invalid time zone given' + msgSuffix);
-      return false;
-    }
-  }
-  return true;
-}
-function atcb_validate_datetime(data, msgPrefix, i, msgSuffix) {
-  const dates = ['startDate', 'endDate'];
-  const newDate = dates;
-  if (
-    !dates.every(function (date) {
-      if (data.dates[`${i}`][`${date}`].length !== 10) {
-        console.error(msgPrefix + ' failed: date misspelled [-> YYYY-MM-DD]' + msgSuffix);
-        return false;
-      }
-      const dateParts = data.dates[`${i}`][`${date}`].split('-');
-      if (dateParts.length < 3 || dateParts.length > 3) {
-        console.error(
-          msgPrefix +
-            ' failed: date misspelled [' +
-            date +
-            ': ' +
-            data.dates[`${i}`][`${date}`] +
-            ']' +
-            msgSuffix
-        );
-        return false;
-      }
-      newDate[`${date}`] = new Date(dateParts[0], dateParts[1] - 1, dateParts[2]);
-      return true;
-    })
-  ) {
-    return false;
-  }
-  const times = ['startTime', 'endTime'];
-  if (
-    !times.every(function (time) {
-      if (data.dates[`${i}`][`${time}`] != null) {
-        if (data.dates[`${i}`][`${time}`].length !== 5) {
-          console.error(msgPrefix + ' failed: time misspelled [-> HH:MM]' + msgSuffix);
-          return false;
-        }
-        const timeParts = data.dates[`${i}`][`${time}`].split(':');
-        if (timeParts.length < 2 || timeParts.length > 2) {
-          console.error(
-            msgPrefix +
-              ' failed: time misspelled [' +
-              time +
-              ': ' +
-              data.dates[`${i}`][`${time}`] +
-              ']' +
-              msgSuffix
-          );
-          return false;
-        }
-        if (timeParts[0] > 23) {
-          console.error(
-            msgPrefix +
-              ' failed: time misspelled - hours number too high [' +
-              time +
-              ': ' +
-              timeParts[0] +
-              ']' +
-              msgSuffix
-          );
-          return false;
-        }
-        if (timeParts[1] > 59) {
-          console.error(
-            msgPrefix +
-              ' failed: time misspelled - minutes number too high [' +
-              time +
-              ': ' +
-              timeParts[1] +
-              ']' +
-              msgSuffix
-          );
-          return false;
-        }
-        if (time == 'startTime') {
-          newDate.startDate = new Date(
-            newDate.startDate.getTime() + timeParts[0] * 3600000 + timeParts[1] * 60000
-          );
-        }
-        if (time == 'endTime') {
-          newDate.endDate = new Date(
-            newDate.endDate.getTime() + timeParts[0] * 3600000 + timeParts[1] * 60000
-          );
-        }
-      }
-      return true;
-    })
-  ) {
-    return false;
-  }
-  if (
-    (data.dates[`${i}`].startTime != null && data.dates[`${i}`].endTime == null) ||
-    (data.dates[`${i}`].startTime == null && data.dates[`${i}`].endTime != null)
-  ) {
-    console.error(
-      msgPrefix + ' failed: if you set a starting time, you also need to define an end time' + msgSuffix
-    );
-    return false;
-  }
-  if (newDate.endDate < newDate.startDate) {
-    console.error(msgPrefix + ' failed: end date before start date' + msgSuffix);
-    return false;
-  }
-  return true;
-}
-function atcb_validate_rrule(data, msgPrefix) {
-  if (data.recurrence != null && data.recurrence != '' && data.dates.length > 1) {
-    console.error(msgPrefix + ' failed: RRULE and multi-date set at the same time');
-    return false;
-  }
-  if (data.recurrence != null && data.recurrence != '' && !/^RRULE:[\w=;,:+-/\\]+$/i.test(data.recurrence)) {
-    console.error(msgPrefix + ' failed: RRULE data misspelled');
-    return false;
-  }
-  if (
-    data.recurrence_interval != null &&
-    data.recurrence_interval != '' &&
-    !/^\d+$/.test(data.recurrence_interval)
-  ) {
-    console.error(msgPrefix + ' failed: recurrence data (interval) misspelled');
-    return false;
-  }
-  if (
-    data.recurrence_until != null &&
-    data.recurrence_until != '' &&
-    !/^(\d|-|:)+$/i.test(data.recurrence_until)
-  ) {
-    console.error(msgPrefix + ' failed: recurrence data (until) misspelled');
-    return false;
-  }
-  if (data.recurrence_count != null && data.recurrence_count != '' && !/^\d+$/.test(data.recurrence_count)) {
-    console.error(msgPrefix + ' failed: recurrence data (interval) misspelled');
-    return false;
-  }
-  if (
-    data.recurrence_byMonth != null &&
-    data.recurrence_byMonth != '' &&
-    !/^(\d|,)+$/.test(data.recurrence_byMonth)
-  ) {
-    console.error(msgPrefix + ' failed: recurrence data (byMonth) misspelled');
-    return false;
-  }
-  if (
-    data.recurrence_byMonthDay != null &&
-    data.recurrence_byMonthDay != '' &&
-    !/^(\d|,)+$/.test(data.recurrence_byMonthDay)
-  ) {
-    console.error(msgPrefix + ' failed: recurrence data (byMonthDay) misspelled');
-    return false;
-  }
-  if (
-    data.recurrence_byDay != null &&
-    data.recurrence_byDay != '' &&
-    !/^(\d|-|MO|TU|WE|TH|FR|SA|SU|,)+$/im.test(data.recurrence_byDay)
-  ) {
-    console.error(msgPrefix + ' failed: recurrence data (byDay) misspelled');
-    return false;
-  }
-  if (
-    data.recurrence_weekstart != null &&
-    data.recurrence_weekstart != '' &&
-    !/^(MO|TU|WE|TH|FR|SA|SU)$/im.test(data.recurrence_weekstart)
-  ) {
-    console.error(msgPrefix + ' failed: recurrence data (weekstart) misspelled');
-    return false;
-  }
-  return true;
-}
-
-
-function atcb_toggle(action, data = '', button = '', keyboardTrigger = false, generatedButton = false) {
-  if (action == 'open') {
-    atcb_open(data, button, keyboardTrigger, generatedButton);
-  } else if (
-    action == 'close' ||
-    button.classList.contains('atcb-active') ||
-    document.querySelector('.atcb-active-modal')
-  ) {
-    atcb_close(keyboardTrigger);
-  } else {
-    atcb_open(data, button, keyboardTrigger, generatedButton);
-  }
-}
-function atcb_open(data, button, keyboardTrigger = false, generatedButton = false) {
-  if (document.querySelector('.atcb-list') || document.querySelector('.atcb-modal')) return;
-  const list = atcb_generate_dropdown_list(data);
-  const listWrapper = document.createElement('div');
-  listWrapper.classList.add('atcb-list-wrapper');
-  if (data.textLabelList == false) {
-    listWrapper.classList.add('atcb-no-text');
-  }
-  if (button) {
-    button.classList.add('atcb-active');
-    if (data.listStyle === 'modal') {
-      button.classList.add('atcb-modal-style');
-      list.classList.add('atcb-modal');
-    } else {
-      listWrapper.appendChild(list);
-      listWrapper.classList.add('atcb-dropdown');
-      if (data.listStyle === 'overlay') {
-        listWrapper.classList.add('atcb-dropoverlay');
-      }
-      if (data.mindScrolling) {
-        listWrapper.classList.add('atcb-mind-scrolling');
-      }
-    }
-    if (generatedButton) {
-      list.classList.add('atcb-generated-button'); 
-    }
-  } else {
-    list.classList.add('atcb-modal');
-  }
-  const bgOverlay = atcb_generate_bg_overlay(data.listStyle, data.trigger, data.lightMode, data.background);
-  if (data.listStyle === 'modal') {
-    document.body.appendChild(bgOverlay);
-    bgOverlay.appendChild(list);
-    if (data.branding) {
-      atcb_create_atcbl(false);
-    }
-    atcb_set_sizes(list, data.sizes);
-    atcb_manage_body_scroll();
-  } else {
-    const positionWrapper = document.createElement('div');
-    positionWrapper.id = 'atcb-pos-wrapper';
-    positionWrapper.style.position = 'absolute';
-    positionWrapper.style.top = '0';
-    positionWrapper.style.bottom = '0';
-    positionWrapper.style.width = '100%';
-    document.body.appendChild(positionWrapper);
-    positionWrapper.appendChild(listWrapper);
-    listWrapper.appendChild(list);
-    if (data.buttonStyle != '') {
-      listWrapper.classList.add('atcb-style-' + data.buttonStyle);
-    }
-    if (data.branding) {
-      atcb_create_atcbl();
-    }
-    document.body.appendChild(bgOverlay);
-    atcb_set_sizes(list, data.sizes);
-    listWrapper.style.display = 'none';
-    setTimeout(function () {
-      listWrapper.style.display = 'block';
-      if (data.listStyle === 'dropdown-static') {
-        atcb_position_list(button, listWrapper, true);
-      } else {
-        atcb_position_list(button, listWrapper);
-      }
-    }, 5);
-  }
-  atcb_set_fullsize(bgOverlay);
-  if (keyboardTrigger) {
-    list.firstChild.focus();
-  } else {
-    list.firstChild.focus({ preventScroll: true });
-  }
-  list.firstChild.blur();
-}
-function atcb_close(keyboardTrigger = false) {
-  const allModals = document.querySelectorAll('.atcb-modal[data-modal-nr]');
-  if (allModals.length > 1) {
-    document.querySelectorAll('.atcb-modal[data-modal-nr="' + allModals.length + '"]')[0].remove();
-    const nextModal = document.querySelectorAll(
-      '.atcb-modal[data-modal-nr="' + (allModals.length - 1) + '"]'
-    )[0];
-    nextModal.style.display = 'block';
-    let focusEl = nextModal;
-    const availableButtons = nextModal.getElementsByTagName('button');
-    if (availableButtons.length > 0) {
-      focusEl = availableButtons[0];
-    }
-    focusEl.focus();
-    if (!keyboardTrigger) {
-      focusEl.blur();
-    }
-  } else {
-    const newFocusEl = document.querySelector('.atcb-active, .atcb-active-modal');
-    if (newFocusEl) {
-      newFocusEl.focus({ preventScroll: true });
-      if (!keyboardTrigger) {
-        newFocusEl.blur();
-      }
-    }
-    Array.from(document.querySelectorAll('.atcb-active')).forEach((button) => {
-      button.classList.remove('atcb-active');
-    });
-    Array.from(document.querySelectorAll('.atcb-active-modal')).forEach((button) => {
-      button.classList.remove('atcb-active-modal');
-    });
-    document.body.classList.remove('atcb-modal-no-scroll');
-    Array.from(document.querySelectorAll('.atcb-list-wrapper'))
-      .concat(Array.from(document.querySelectorAll('.atcb-list')))
-      .concat(Array.from(document.querySelectorAll('.atcb-modal[data-modal-nr]')))
-      .concat(Array.from(document.querySelectorAll('#add-to-calendar-button-reference')))
-      .concat(Array.from(document.querySelectorAll('#atcb-pos-wrapper')))
-      .concat(Array.from(document.querySelectorAll('#atcb-bgoverlay')))
-      .forEach((el) => el.remove());
-  }
-}
-
-
-function atcb_generate_label(data, parent, type, icon = false, text = '', oneOption = false) {
-  switch (type) {
-    case 'trigger':
-    default:
-      parent.id = data.identifier;
-      if (data.trigger === 'click') {
-        parent.addEventListener('click', (event) => {
-          event.preventDefault();
-          atcb_toggle('auto', data, parent, false, true);
-        });
-      } else {
-        parent.addEventListener('touchend', (event) => {
-          event.preventDefault();
-          atcb_toggle('auto', data, parent, false, true);
-        });
-        parent.addEventListener(
-          'mouseenter',
-          atcb_debounce_leading((event) => {
-            event.preventDefault();
-            atcb_toggle('open', data, parent, false, true);
-          })
-        );
-      }
-      parent.addEventListener('keyup', function (event) {
-        if (event.key == 'Enter') {
-          event.preventDefault();
-          atcb_toggle('auto', data, parent, true, true);
-        }
-      });
-      break;
-    case 'apple':
-    case 'google':
-    case 'ical':
-    case 'msteams':
-    case 'ms365':
-    case 'outlookcom':
-    case 'yahoo':
-      parent.id = data.identifier + '-' + type;
-      parent.addEventListener(
-        'click',
-        atcb_debounce(() => {
-          oneOption ? parent.blur() : atcb_toggle('close');
-          atcb_generate_links(type, data);
-        })
-      );
-      parent.addEventListener('keyup', function (event) {
-        if (event.key == 'Enter') {
-          event.preventDefault();
-          oneOption ? parent.blur() : atcb_toggle('close');
-          atcb_generate_links(type, data, 'all', true);
-        }
-      });
-      break;
-    case 'close':
-      parent.id = data.identifier + '-close';
-      parent.addEventListener(
-        'click',
-        atcb_debounce(() => {
-          atcb_toggle('close');
-        })
-      );
-      parent.addEventListener('keyup', function (event) {
-        if (event.key == 'Enter') {
-          event.preventDefault();
-          atcb_toggle('close', data, 'all', true);
-        }
-      });
-      break;
-  }
-  if (oneOption) {
-    parent.id = data.identifier;
-  }
-  atcb_generate_label_content(data, parent, type, icon, text, oneOption);
-}
-function atcb_generate_label_content(data, parent, type, icon, text, oneOption) {
-  const defaultTriggerText = atcb_translate_hook('Add to Calendar', data);
-  if (oneOption && text == '') {
-    text = defaultTriggerText;
-  }
-  switch (type) {
-    case 'trigger':
-    default:
-      text = text || defaultTriggerText;
-      break;
-    case 'apple':
-      text = text || 'Apple';
-      break;
-    case 'google':
-      text = text || 'Google';
-      break;
-    case 'ical':
-      text = text || atcb_translate_hook('iCal File', data);
-      break;
-    case 'msteams':
-      text = text || 'Microsoft Teams';
-      break;
-    case 'ms365':
-      text = text || 'Microsoft 365';
-      break;
-    case 'outlookcom':
-      text = text || 'Outlook.com';
-      break;
-    case 'yahoo':
-      text = text || 'Yahoo';
-      break;
-    case 'close':
-      text = atcb_translate_hook('Close', data);
-      break;
-  }
-  if (data.buttonStyle == 'date' && (type == 'trigger' || oneOption)) {
-    return;
-  }
-  if (icon) {
-    const iconEl = document.createElement('span');
-    iconEl.classList.add('atcb-icon');
-    iconEl.innerHTML = atcbIcon[`${type}`];
-    parent.appendChild(iconEl);
-  }
-  if (
-    (type == 'trigger' && data.textLabelButton == true) ||
-    (type != 'trigger' && data.textLabelList == true)
-  ) {
-    const textEl = document.createElement('span');
-    textEl.classList.add('atcb-text');
-    textEl.textContent = text;
-    parent.appendChild(textEl);
-  }
-}
-function atcb_generate_button(button, data) {
-  button.textContent = '';
-  if (data.richData && data.name && data.dates[0].location && data.dates[0].startDate) {
-    atcb_generate_rich_data(data, button);
-  }
-  const buttonTriggerWrapper = document.createElement('div');
-  buttonTriggerWrapper.classList.add('atcb-button-wrapper');
-  buttonTriggerWrapper.classList.add('atcb-' + data.lightMode);
-  if (data.rtl) {
-    buttonTriggerWrapper.classList.add('atcb-rtl');
-  }
-  button.appendChild(buttonTriggerWrapper);
-  atcb_set_sizes(buttonTriggerWrapper, data.sizes);
-  const buttonTrigger = document.createElement('button');
-  buttonTrigger.classList.add('atcb-button');
-  if (data.textLabelButton == false) {
-    buttonTrigger.classList.add('atcb-no-text');
-  }
-  if (data.trigger === 'click') {
-    buttonTrigger.classList.add('atcb-click');
-  }
-  if (data.listStyle === 'overlay') {
-    buttonTrigger.classList.add('atcb-dropoverlay');
-  }
-  buttonTrigger.type = 'button';
-  buttonTriggerWrapper.appendChild(buttonTrigger);
-  if (data.buttonStyle == 'date') {
-    atcb_generate_date_button(data, buttonTrigger);
-  }
-  if (data.options.length === 1) {
-    buttonTrigger.classList.add('atcb-single');
-    atcb_generate_label(data, buttonTrigger, data.options[0], data.iconButton, data.label, true);
-  } else {
-    atcb_generate_label(data, buttonTrigger, 'trigger', data.iconButton, data.label);
-    const buttonDropdownAnchor = document.createElement('div');
-    buttonDropdownAnchor.classList.add('atcb-dropdown-anchor');
-    buttonTrigger.appendChild(buttonDropdownAnchor);
-  }
-  if (data.checkmark) {
-    const btnCheck = document.createElement('div');
-    btnCheck.classList.add('atcb-checkmark');
-    btnCheck.innerHTML = atcbIcon['checkmark'];
-    buttonTrigger.appendChild(btnCheck);
-  }
-  button.classList.remove('atcb');
-  button.classList.add('atcb-initialized');
-  if (data.inline) {
-    button.style.display = 'inline-block';
-  } else {
-    button.style.display = 'block';
-  }
-  console.log('Add to Calendar Button "' + data.identifier + '" created');
-}
-function atcb_generate_rich_data(data, button) {
-  const schemaEl = document.createElement('script');
-  schemaEl.type = 'application/ld+json';
-  const schemaContentMulti = [];
-  if (data.dates.length > 1) {
-    const parts = [];
-    parts.push('"@context":"https://schema.org"');
-    parts.push('"@type":"EventSeries"');
-    parts.push('"@id":"' + data.name.replace(/\s/g, '') + '"');
-    parts.push('"name":"' + data.name + '",');
-    schemaContentMulti.push('{\r\n' + parts.join(',\r\n') + '\r\n');
-  }
-  const schemaContentFull = [];
-  for (let i = 0; i < data.dates.length; i++) {
-    const schemaContent = [];
-    schemaContent.push('"@context":"https://schema.org"');
-    schemaContent.push('"@type":"Event"');
-    if (data.dates.length > 1) {
-      schemaContent.push('"@id":"' + data.name.replace(/\s/g, '') + '-' + (i + 1) + '"');
-    }
-    if (data.dates[`${i}`].status == 'CANCELLED') {
-      schemaContent.push('"eventStatus":"https://schema.org/EventCancelled"');
-    }
-    schemaContent.push('"name":"' + data.dates[`${i}`].name + '"');
-    if (data.dates[`${i}`].descriptionHtmlFree) {
-      schemaContent.push('"description":"' + data.dates[`${i}`].descriptionHtmlFree + '"');
-    }
-    const formattedDate = atcb_generate_time(data.dates[`${i}`], 'delimiters', 'general', true);
-    schemaContent.push('"startDate":"' + formattedDate.start + '"');
-    if (formattedDate.duration != null) {
-      schemaContent.push('"duration":"' + formattedDate.duration + '"');
-    }
-    schemaContent.push(
-      data.dates[`${i}`].location.startsWith('http')
-        ? '"eventAttendanceMode":"https://schema.org/OnlineEventAttendanceMode",\r\n"location": {\r\n"@type":"VirtualLocation",\r\n"url":"' +
-            data.dates[`${i}`].location +
-            '"\r\n}'
-        : '"location":"' + data.dates[`${i}`].location + '"'
-    );
-    if (data.recurrence != null && data.recurrence != '') {
-      schemaContent.push(...atcb_generate_rich_data_recurrence(data, formattedDate));
-    } else {
-      schemaContent.push('"endDate":"' + formattedDate.end + '"');
-    }
-    if (data.dates[`${i}`].organizer != null && data.dates[`${i}`].organizer != '') {
-      const organizerParts = data.dates[`${i}`].organizer.split('|');
-      schemaContent.push(
-        '"organizer":{\r\n"@type":"Person",\r\n"name":"' +
-          organizerParts[0] +
-          '",\r\n"email":"' +
-          organizerParts[1] +
-          '"\r\n}'
-      );
-    }
-    const imageData = [];
-    if (data.images != null) {
-      if (Array.isArray(data.images)) {
-        for (let i = 0; i < data.images.length; i++) {
-          if (atcb_secure_url(data.images[`${i}`]) && data.images[`${i}`].startsWith('http')) {
-            imageData.push('"' + data.images[`${i}`] + '"');
-          }
-        }
-      }
-    } else {
-      imageData.push('"https://add-to-calendar-button.com/demo_assets/img/1x1.png"');
-      imageData.push('"https://add-to-calendar-button.com/demo_assets/img/4x3.png"');
-      imageData.push('"https://add-to-calendar-button.com/demo_assets/img/16x9.png"');
-    }
-    if (imageData.length > 0) {
-      schemaContent.push('"image":[\r\n' + imageData.join(',\r\n') + ']');
-    }
-    schemaContentFull.push('{\r\n' + schemaContent.join(',\r\n') + '\r\n}');
-  }
-  if (data.dates.length > 1) {
-    schemaEl.textContent =
-      schemaContentMulti.join(',\r\n') + '"subEvents":[\r\n' + schemaContentFull.join(',\r\n') + '\r\n]\r\n}';
-  } else {
-    schemaEl.textContent = schemaContentFull[0];
-  }
-  button.appendChild(schemaEl);
-}
-function atcb_generate_rich_data_recurrence(data, formattedDate) {
-  const schemaRecurrenceContent = [];
-  schemaRecurrenceContent.push('"eventSchedule": { "@type": "Schedule"');
-  if (data.dates[0].timeZone != null && data.dates[0].timeZone != '') {
-    schemaRecurrenceContent.push('"scheduleTimezone":"' + data.dates[0].timeZone + '"');
-  }
-  const repeatFrequency = 'P' + data.recurrence_interval + data.recurrence_frequency.substr(0, 1);
-  schemaRecurrenceContent.push('"repeatFrequency":"' + repeatFrequency + '"');
-  if (data.recurrence_byDay != null && data.recurrence_byDay != '') {
-    const byDayString = (function () {
-      if (/\d/.test(data.recurrence_byDay)) {
-        return '"' + data.recurrence_byDay + '"';
-      } else {
-        const byDays = data.recurrence_byDay.split(',');
-        const helperMap = {
-          MO: 'https://schema.org/Monday',
-          TU: 'https://schema.org/Tuesday',
-          WE: 'https://schema.org/Wednesday',
-          TH: 'https://schema.org/Thursday',
-          FR: 'https://schema.org/Friday',
-          SA: 'https://schema.org/Saturday',
-          SU: 'https://schema.org/Sunday',
-        };
-        const output = [];
-        for (let i = 0; i < byDays.length; i++) {
-          output.push('"' + helperMap[byDays[`${i}`]] + '"');
-        }
-        return '[' + output.join(',') + ']';
-      }
-    })();
-    schemaRecurrenceContent.push('"byDay":' + byDayString);
-  }
-  if (data.recurrence_byMonth != null && data.recurrence_byMonth != '') {
-    const byMonthString = data.recurrence_byMonth.includes(',')
-      ? '[' + data.recurrence_byMonth + ']'
-      : data.recurrence_byMonth;
-    schemaRecurrenceContent.push('"byMonth":"' + byMonthString + '"');
-  }
-  if (data.recurrence_byMonthDay != null && data.recurrence_byMonthDay != '') {
-    const byMonthDayString = data.recurrence_byMonthDay.includes(',')
-      ? '[' + data.recurrence_byMonthDay + ']'
-      : data.recurrence_byMonthDay;
-    schemaRecurrenceContent.push('"byMonthDay":"' + byMonthDayString + '"');
-  }
-  if (data.recurrence_count != null && data.recurrence_count != '') {
-    schemaRecurrenceContent.push('"repeatCount":"' + data.recurrence_count + '"');
-  }
-  if (data.recurrence_until != null && data.recurrence_until != '') {
-    schemaRecurrenceContent.push('"endDate":"' + data.recurrence_until + '"');
-  }
-  if (data.startTime != null && data.startTime != '' && data.endTime != null && data.endTime != '') {
-    schemaRecurrenceContent.push('"startTime":"' + data.startTime + ':00"');
-    schemaRecurrenceContent.push('"endTime":"' + data.endTime + ':00"');
-    schemaRecurrenceContent.push('"duration":"' + formattedDate.duration + '"');
-  }
-  schemaRecurrenceContent.push('"startDate":"' + data.startDate + '" }');
-  return schemaRecurrenceContent;
-}
-function atcb_generate_dropdown_list(data) {
-  const optionsList = document.createElement('div');
-  optionsList.classList.add('atcb-list');
-  optionsList.classList.add('atcb-' + data.lightMode);
-  if (data.rtl) {
-    optionsList.classList.add('atcb-rtl');
-  }
-  let listCount = 0;
-  data.options.forEach(function (option) {
-    const optionItem = document.createElement('div');
-    optionItem.classList.add('atcb-list-item');
-    optionItem.tabIndex = 0;
-    listCount++;
-    optionItem.dataset.optionNumber = listCount;
-    optionsList.appendChild(optionItem);
-    atcb_generate_label(data, optionItem, option, data.iconList, data.optionLabels[listCount - 1]);
-  });
-  if (data.listStyle === 'modal') {
-    const optionItem = document.createElement('div');
-    optionItem.classList.add('atcb-list-item', 'atcb-list-item-close');
-    optionItem.tabIndex = 0;
-    optionsList.appendChild(optionItem);
-    atcb_generate_label(data, optionItem, 'close', data.iconList);
-  }
-  return optionsList;
-}
-function atcb_generate_bg_overlay(listStyle = 'dropdown', trigger = '', lightMode = 'light', darken = true) {
-  const bgOverlay = document.createElement('div');
-  bgOverlay.id = 'atcb-bgoverlay';
-  if (listStyle !== 'modal' && darken) {
-    bgOverlay.classList.add('atcb-animate-bg');
-  }
-  if (!darken) {
-    bgOverlay.classList.add('atcb-no-bg');
-  }
-  bgOverlay.classList.add('atcb-' + lightMode);
-  bgOverlay.tabIndex = 0;
-  bgOverlay.addEventListener(
-    'click',
-    atcb_debounce((e) => {
-      if (e.target !== e.currentTarget) return;
-      atcb_toggle('close');
-    })
-  );
-  let fingerMoved = false;
-  bgOverlay.addEventListener(
-    'touchstart',
-    atcb_debounce_leading(() => (fingerMoved = false)),
-    { passive: true }
-  );
-  bgOverlay.addEventListener(
-    'touchmove',
-    atcb_debounce_leading(() => (fingerMoved = true)),
-    { passive: true }
-  );
-  bgOverlay.addEventListener(
-    'touchend',
-    atcb_debounce((e) => {
-      if (fingerMoved !== false || e.target !== e.currentTarget) return;
-      atcb_toggle('close');
-    }),
-    { passive: true }
-  );
-  bgOverlay.addEventListener(
-    'focus',
-    atcb_debounce_leading((e) => {
-      if (e.target !== e.currentTarget) return;
-      atcb_toggle('close');
-    })
-  );
-  if (trigger !== 'click') {
-    bgOverlay.addEventListener(
-      'mousemove',
-      atcb_debounce_leading((e) => {
-        if (e.target !== e.currentTarget) return;
-        atcb_toggle('close');
-      })
-    );
-  } else {
-    bgOverlay.classList.add('atcb-click');
-  }
-  return bgOverlay;
-}
-function atcb_create_atcbl(atList = true) {
-  /*const atcbL = document.createElement('div');
-  atcbL.id = 'add-to-calendar-button-reference';
-  atcbL.style.width = '150px';
-  atcbL.style.padding = '10px 0';
-  atcbL.style.height = 'auto';
-  atcbL.style.transform = 'translate3d(0, 0, 0)';
-  atcbL.style.zIndex = '15000000';
-  setTimeout(() => {
-    atcbL.innerHTML =
-      '<a href="https://add-to-calendar-pro.com" target="_blank" rel="noopener">' +
-      atcbIcon['atcb'] +
-      '</a>';
-  }, 500);  
-  document.body.appendChild(atcbL);
-  if (atList) {
-    atcbL.style.position = 'absolute';
-  } else {
-    if (window.innerHeight > 1000 || window.innerWidth > 1000) {
-      atcbL.style.position = 'fixed';
-      atcbL.style.bottom = '15px';
-      atcbL.style.right = '30px';
-    }
-  }*/
-}
-function atcb_create_modal(
-  data,
-  icon = '',
-  headline,
-  content = '',
-  buttons = [],
-  subEvents = [],
-  keyboardTrigger = false
-) {
-  const bgOverlay = (function () {
-    const el = document.getElementById('atcb-bgoverlay');
-    if (!el) {
-      return atcb_generate_bg_overlay('modal', 'click', data.lightMode, data.background);
-    } else {
-      return el;
-    }
-  })();
-  bgOverlay.classList.add('atcb-no-animation');
-  document.body.appendChild(bgOverlay);
-  const modalWrapper = document.createElement('div');
-  modalWrapper.classList.add('atcb-modal');
-  bgOverlay.appendChild(modalWrapper);
-  const modalCount = document.querySelectorAll('.atcb-modal').length;
-  modalWrapper.dataset.modalNr = modalCount;
-  modalWrapper.tabIndex = 0;
-  modalWrapper.focus({ preventScroll: true });
-  modalWrapper.blur();
-  const parentButton = document.getElementById(data.identifier);
-  if (parentButton != null) {
-    parentButton.classList.add('atcb-active-modal');
-  }
-  const modal = document.createElement('div');
-  modal.classList.add('atcb-modal-box');
-  modal.classList.add('atcb-' + data.lightMode);
-  if (data.rtl) {
-    modal.classList.add('atcb-rtl');
-  }
-  modalWrapper.appendChild(modal);
-  atcb_set_sizes(modal, data.sizes);
-  atcb_set_fullsize(bgOverlay);
-  if (icon != '' && data.iconModal == true) {
-    const modalIcon = document.createElement('div');
-    modalIcon.classList.add('atcb-modal-icon');
-    modalIcon.innerHTML = atcbIcon[`${icon}`];
-    modal.appendChild(modalIcon);
-  }
-  const modalHeadline = document.createElement('div');
-  modalHeadline.classList.add('atcb-modal-headline');
-  modalHeadline.textContent = headline;
-  modal.appendChild(modalHeadline);
-  if (content != '') {
-    const modalContent = document.createElement('div');
-    modalContent.classList.add('atcb-modal-content');
-    modalContent.innerHTML = content;
-    modal.appendChild(modalContent);
-  }
-  if (subEvents.length > 1) {
-    if (data.branding) {
-      atcb_create_atcbl(false);
-    }
-    const modalsubEventsContent = document.createElement('div');
-    modalsubEventsContent.classList.add('atcb-modal-content');
-    modal.appendChild(modalsubEventsContent);
-    for (let i = 1; i < subEvents.length; i++) {
-      const modalSubEventButton = document.createElement('button');
-      modalSubEventButton.type = 'button';
-      modalSubEventButton.id = data.identifier + '-' + subEvents[0] + '-' + i;
-      if (atcbStates[`${data.identifier}`][`${subEvents[0]}`][i - 1] > 0) {
-        modalSubEventButton.classList.add('atcb-saved');
-      }
-      modalSubEventButton.classList.add('atcb-subevent-btn');
-      modalsubEventsContent.appendChild(modalSubEventButton);
-      atcb_generate_date_button(data, modalSubEventButton, i);
-      if (i == 1 && keyboardTrigger) {
-        modalSubEventButton.focus();
-      }
-      switch (subEvents[0]) {
-        case 'apple':
-        case 'google':
-        case 'ical':
-        case 'msteams':
-        case 'ms365':
-        case 'outlookcom':
-        case 'yahoo':
-          modalSubEventButton.addEventListener(
-            'click',
-            atcb_debounce(() => {
-              atcb_generate_links(subEvents[0], data, subEvents[`${i}`], keyboardTrigger, true);
-            })
-          );
-          break;
-      }
-    }
-  }
-  if (buttons.length == 0) {
-    buttons.push({ type: 'close', label: atcb_translate_hook('Close', data) });
-  }
-  const modalButtons = document.createElement('div');
-  modalButtons.classList.add('atcb-modal-buttons');
-  modal.appendChild(modalButtons);
-  buttons.forEach((button, index) => {
-    let modalButton;
-    if (button.href != null && button.href != '') {
-      modalButton = document.createElement('a');
-      modalButton.setAttribute('target', atcbDefaultTarget);
-      modalButton.setAttribute('href', button.href);
-      modalButton.setAttribute('rel', 'noopener');
-    } else {
-      modalButton = document.createElement('button');
-      modalButton.type = 'button';
-    }
-    modalButton.classList.add('atcb-modal-btn');
-    if (button.primary) {
-      modalButton.classList.add('atcb-modal-btn-primary');
-    }
-    if (button.label == null || button.label == '') {
-      button.label = atcb_translate_hook('Click me', data);
-    }
-    modalButton.textContent = button.label;
-    modalButtons.appendChild(modalButton);
-    if (index == 0 && subEvents.length < 2 && keyboardTrigger) {
-      modalButton.focus();
-    }
-    switch (button.type) {
-      default:
-      case 'close':
-        modalButton.addEventListener(
-          'click',
-          atcb_debounce(() => atcb_close())
-        );
-        modalButton.addEventListener('keyup', function (event) {
-          if (event.key == 'Enter') {
-            atcb_toggle('close', '', '', true);
-          }
-        });
-        break;
-      case 'yahoo2nd':
-        modalButton.addEventListener(
-          'click',
-          atcb_debounce(() => {
-            atcb_close();
-            atcb_subscribe_yahoo_modal_switch(data);
-          })
-        );
-        modalButton.addEventListener('keyup', function (event) {
-          if (event.key == 'Enter') {
-            atcb_toggle('close', '', '', true);
-            atcb_subscribe_yahoo_modal_switch(data, keyboardTrigger);
-          }
-        });
-        break;
-      case 'none':
-        break;
-    }
-  });
-  if (modalCount > 1) {
-    const prevModal = document.querySelectorAll('.atcb-modal[data-modal-nr="' + (modalCount - 1) + '"]')[0];
-    prevModal.style.display = 'none';
-  }
-  atcb_manage_body_scroll(modalWrapper);
-}
-function atcb_subscribe_yahoo_modal_switch(data, keyboardTrigger) {
-  atcb_set_fully_successful(data.identifier);
-  atcb_generate_links('yahoo2nd', data, 'all', keyboardTrigger);
-}
-function atcb_generate_date_button(data, parent, subEvent = 'all') {
-  if (subEvent != 'all') {
-    subEvent = parseInt(subEvent) - 1;
-  } else if (data.dates.length == 1) {
-    subEvent = 0;
-  }
-  const fullTimeInfo = (function () {
-    let startDateInfo, endDateInfo, timeZoneInfo;
-    if (subEvent == 'all') {
-      startDateInfo = new Date(atcb_generate_time(data.dates[0])['start']);
-      endDateInfo = new Date(atcb_generate_time(data.dates[data.dates.length - 1])['end']);
-      timeZoneInfo = data.dates[0].timeZone;
-    } else {
-      const formattedTime = atcb_generate_time(data.dates[`${subEvent}`]);
-      startDateInfo = new Date(formattedTime['start']);
-      endDateInfo = new Date(formattedTime['end']);
-      timeZoneInfo = data.dates[`${subEvent}`].timeZone;
-    }
-    let timeString = '';
-    const optionsDateTimeShort = {
-      timeZone: timeZoneInfo,
-      hour12: false,
-      year: 'numeric',
-      hour: 'numeric',
-      minute: '2-digit',
-    };
-    const optionsDateTimeLong = {
-      timeZone: timeZoneInfo,
-      hour12: false,
-      year: 'numeric',
-      month: 'numeric',
-      day: 'numeric',
-      hour: 'numeric',
-      minute: '2-digit',
-    };
-    const optionsTime = {
-      timeZone: timeZoneInfo,
-      hour12: false,
-      hour: 'numeric',
-      minute: '2-digit',
-    };
-    if (
-      startDateInfo.getFullYear() === endDateInfo.getFullYear() &&
-      startDateInfo.getMonth() === endDateInfo.getMonth() &&
-      startDateInfo.getDate() === endDateInfo.getDate()
-    ) {
-      timeString =
-        startDateInfo.toLocaleString(data.language, optionsDateTimeShort) +
-        ' - ' +
-        endDateInfo.toLocaleTimeString(data.language, optionsTime);
-    } else {
-      timeString =
-        startDateInfo.toLocaleString(data.language, optionsDateTimeShort) +
-        ' - ' +
-        endDateInfo.toLocaleString(data.language, optionsDateTimeLong);
-    }
-    if (timeZoneInfo != null) {
-      if (Intl.DateTimeFormat().resolvedOptions().timeZone != timeZoneInfo) {
-        timeString += '; ' + timeZoneInfo;
-      }
-    } else {
-      timeString += '; UTC';
-    }
-    return timeString;
-  })();
-  const hoverText = (function () {
-    if (subEvent != 'all' && data.dates[`${subEvent}`].status == 'CANCELLED') {
-      return (
-        atcb_translate_hook('Cancelled Date', data) +
-        '<br>' +
-        atcb_translate_hook('Delete from Calendar', data)
-      );
-    }
-    return '+ ' + atcb_translate_hook('Add to Calendar', data);
-  })();
-  const cancelledInfo = (function () {
-    if (subEvent != 'all' && data.dates[`${subEvent}`].status == 'CANCELLED') {
-      return atcb_translate_hook('Cancelled Date', data);
-    }
-    return '';
-  })();
-  if (subEvent == 'all') {
-    subEvent = 0;
-  }
-  const startDate = new Date(data.dates[`${subEvent}`].startDate);
-  const btnLeft = document.createElement('div');
-  btnLeft.classList.add('atcb-date-btn-left');
-  parent.appendChild(btnLeft);
-  const btnDay = document.createElement('div');
-  btnDay.classList.add('atcb-date-btn-day');
-  btnLeft.appendChild(btnDay);
-  const btnMonth = document.createElement('div');
-  btnMonth.classList.add('atcb-date-btn-month');
-  btnDay.textContent = String(startDate.getDate()).padStart(2, '0');
-  btnMonth.textContent = startDate.toLocaleString(data.language, {
-    month: 'short',
-  });
-  btnLeft.appendChild(btnMonth);
-  const btnRight = document.createElement('div');
-  btnRight.classList.add('atcb-date-btn-right');
-  parent.appendChild(btnRight);
-  const btnDetails = document.createElement('div');
-  btnDetails.classList.add('atcb-date-btn-details');
-  btnRight.appendChild(btnDetails);
-  const btnHeadline = document.createElement('div');
-  btnHeadline.classList.add('atcb-date-btn-headline');
-  btnHeadline.textContent = data.dates[`${subEvent}`].name;
-  btnDetails.appendChild(btnHeadline);
-  if ((data.location != null && data.location != '') || cancelledInfo != '') {
-    const btnLocation = document.createElement('div');
-    btnLocation.classList.add('atcb-date-btn-content');
-    btnDetails.appendChild(btnLocation);
-    if (cancelledInfo != '') {
-      btnLocation.textContent = cancelledInfo;
-      btnLocation.style.fontWeight = '600';
-      btnLocation.style.color = '#9c1a23';
-    } else {
-      btnLocation.classList.add('atcb-date-btn-content-location');
-      const btnLocationIcon = document.createElement('span');
-      btnLocationIcon.classList.add('atcb-date-btn-content-icon');
-      btnLocationIcon.innerHTML = atcbIcon['location'];
-      btnLocation.appendChild(btnLocationIcon);
-      const btnLocationText = document.createElement('span');
-      btnLocationText.textContent = data.location;
-      btnLocation.appendChild(btnLocationText);
-    }
-  }
-  const btnDateTime = document.createElement('div');
-  btnDateTime.classList.add('atcb-date-btn-content');
-  btnDetails.appendChild(btnDateTime);
-  const btnDateTimeIcon = document.createElement('span');
-  btnDateTimeIcon.classList.add('atcb-date-btn-content-icon');
-  btnDateTimeIcon.innerHTML = atcbIcon['ical'];
-  btnDateTime.appendChild(btnDateTimeIcon);
-  const btnDateTimeText = document.createElement('span');
-  btnDateTimeText.textContent = fullTimeInfo;
-  btnDateTime.appendChild(btnDateTimeText);
-  if (data.recurrence != null && data.recurrence != '') {
-    const recurSign = document.createElement('span');
-    recurSign.classList.add('atcb-date-btn-content-recurr-icon');
-    btnDateTime.appendChild(recurSign);
-    recurSign.innerHTML = '&#x27F3;';
-  }
-  const btnHover = document.createElement('div');
-  btnHover.classList.add('atcb-date-btn-hover');
-  btnHover.innerHTML = hoverText;
-  btnRight.appendChild(btnHover);
-  if (data.checkmark) {
-    const btnCheck = document.createElement('div');
-    btnCheck.classList.add('atcb-checkmark');
-    btnCheck.innerHTML = atcbIcon['checkmark'];
-    parent.appendChild(btnCheck);
-  }
-}
-
-
+function atcb_patch_config(configData) {  if (configData.event != null) {    Object.keys(configData.event).forEach((key) => {      if (key.charAt(0) !== '@') {        configData[`${key}`] = configData.event[`${key}`];      }    });    delete configData.event;  }  const keyChanges = {    title: 'name',    dateStart: 'startDate',    dateEnd: 'endDate',    timeStart: 'startTime',    timeEnd: 'endTime',  };  Object.keys(keyChanges).forEach((key) => {    if (configData[keyChanges[`${key}`]] == null && configData[`${key}`] != null) {      configData[keyChanges[`${key}`]] = configData[`${key}`];    }  });  return configData;}function atcb_decorate_data(data) {  data = atcb_decorate_data_identifier(data);  data.subscribe = atcb_decorate_data_subscribe(data);  data = atcb_decorate_data_rrule(data);  data = atcb_decorate_data_options(data);  data.richData = atcb_decorate_data_rich_data(data);  data.checkmark = atcb_decorate_data_checkmark(data);  data.background = atcb_decorate_data_background(data);  data.mindScrolling = atcb_decorate_data_mind_scrolling(data);  data.branding = atcb_decorate_data_branding(data);  data = atcb_decorate_data_style(data);  data = atcb_decorate_data_i18n(data);  data = atcb_decorate_data_dates(data);  data = atcb_decorate_data_meta(data);  data = atcb_decorate_data_extend(data);  return data;}function atcb_decorate_data_identifier(data) {  if (data.identifier != null && data.identifier != '') {    data.identifier = 'atcb-btn-' + data.identifier;    if (!/^[\w-]+$/.test(data.identifier)) {      data.identifier = '';      console.warn('Add to Calendar Button generation: identifier invalid - using auto numbers instead');    }  }  return data;}function atcb_decorate_data_subscribe(data) {  if (data.subscribe != null && data.subscribe == true) {    return true;  }  return false;}function atcb_decorate_data_rrule(data) {  if (data.recurrence != null && data.recurrence != '') {    data.recurrence = data.recurrence.replace(/\s+/g, '').toUpperCase();    if (!/^(RRULE:[\w=;,:+-/\\]+|daily|weekly|monthly|yearly)$/im.test(data.recurrence)) {      data.recurrence = '!wrong rrule format!';    } else {      if (/^RRULE:/i.test(data.recurrence)) {        const rruleParts = data.recurrence.substr(6).split(';');        const rruleObj = new Object();        rruleParts.forEach(function (rule) {          rruleObj[rule.split('=')[0]] = rule.split('=')[1];        });        data.recurrence_until = rruleObj.UNTIL ? rruleObj.UNTIL : '';        data.recurrence_count = rruleObj.COUNT ? rruleObj.COUNT : '';        data.recurrence_byDay = rruleObj.BYDAY ? rruleObj.BYDAY : '';        data.recurrence_byMonth = rruleObj.BYMONTH ? rruleObj.BYMONTH : '';        data.recurrence_byMonthDay = rruleObj.BYMONTHDAY ? rruleObj.BYMONTHDAY : '';        data.recurrence_interval = rruleObj.INTERVAL ? rruleObj.INTERVAL : 1;        data.recurrence_frequency = rruleObj.FREQ ? rruleObj.FREQ : '';      } else {        if (data.recurrence_interval == null || data.recurrence_interval == '') {          data.recurrence_interval = 1;        }        if (          data.recurrence_weekstart == null ||          (data.recurrence_weekstart == '') | (data.recurrence_weekstart.length > 2)        ) {          data.recurrence_weekstart = 'MO';        }        data.recurrence_frequency = data.recurrence;        data.recurrence =          'RRULE:FREQ=' +          data.recurrence +          ';WKST=' +          data.recurrence_weekstart +          ';INTERVAL=' +          data.recurrence_interval;        if (data.recurrence_until != null && data.recurrence_until != '') {          if (data.endTime != null && data.endTime != '') {            data.recurrence =              data.recurrence +              ';UNTIL=' +              data.recurrence_until.replace(/-/g, '').slice(0, 8) +              'T' +              data.endTime.replace(':', '') +              '00';          } else {            data.recurrence =              data.recurrence + ';UNTIL=' + data.recurrence_until.replace(/-/g, '').slice(0, 8);          }        }        if (data.recurrence_count != null && data.recurrence_count != '') {          data.recurrence = data.recurrence + ';COUNT=' + data.recurrence_count;        }        if (data.recurrence_byDay != null && data.recurrence_byDay != '') {          data.recurrence = data.recurrence + ';BYDAY=' + data.recurrence_byDay;        }        if (data.recurrence_byMonth != null && data.recurrence_byMonth != '') {          data.recurrence = data.recurrence + ';BYMONTH=' + data.recurrence_byMonth;        }        if (data.recurrence_byMonthDay != null && data.recurrence_byMonthDay != '') {          data.recurrence = data.recurrence + ';BYMONTHDAY=' + data.recurrence_byMonthDay;        }      }    }  }  return data;}function atcb_decorate_data_options(data) {  if (isiOS() && data.options.includes('ical') && !data.options.includes('apple')) {    data.options.push('apple');  }  const newOptions = [];  data.optionLabels = [];  for (let i = 0; i < data.options.length; i++) {    const cleanOption = data.options[`${i}`].split('|');    const optionName = cleanOption[0].toLowerCase().replace('microsoft', 'ms').replace('.', '');    const optionLabel = (function () {      if (cleanOption[1] != null) {        return cleanOption[1];      }      return '';    })();    if (      (isiOS() && atcbiOSInvalidOptions.includes(optionName)) ||      (data.recurrence != null &&        data.recurrence != '' &&        (!atcbValidRecurrOptions.includes(optionName) ||          (data.recurrence_until != null &&            data.recurrence_until != '' &&            (optionName == 'apple' || optionName == 'ical')))) ||      (data.subscribe && atcbInvalidSubscribeOptions.includes(optionName))    ) {      continue;    }    newOptions.push(optionName);    data.optionLabels.push(optionLabel);  }  data.options = newOptions;  return data;}function atcb_decorate_data_rich_data(data) {  if (data.richData != null && data.richData == false) {    return false;  }  return true;}function atcb_decorate_data_checkmark(data) {  if (data.checkmark != null && data.checkmark == false) {    return false;  }  return true;}function atcb_decorate_data_background(data) {  if (data.background != null && data.background == false) {    return false;  }  return true;}function atcb_decorate_data_branding(data) {  if (data.branding != null && data.branding == false) {    return false;  }  return false;}function atcb_decorate_data_mind_scrolling(data) {  if (data.mindScrolling != null && data.mindScrolling == true) {    return true;  }  return false;}function atcb_decorate_data_style(data) {  if (data.listStyle == null || data.listStyle == '') {    data.listStyle = 'dropdown';  }  if (data.listStyle === 'modal') {    data.trigger = 'click';  }  if (data.buttonStyle != null && data.buttonStyle != '' && data.buttonStyle != 'default') {    if (data.buttonStyle == 'bubble' || data.buttonStyle == 'text' || data.buttonStyle == 'date') {      data.trigger = 'click';    }    if (data.buttonStyle == 'date' && data.listStyle == 'dropdown') {      data.listStyle = 'overlay';    }  } else {    data.buttonStyle = '';  }  data.sizes = [];  data.sizes['l'] = data.sizes['m'] = data.sizes['s'] = 16;  if (data.size != null && data.size != '') {    const sizeParts = data.size.split('|');    for (let i = 0; i < sizeParts.length; i++) {      sizeParts[`${i}`] = parseInt(sizeParts[`${i}`]);    }    if (sizeParts[0] >= 0 && sizeParts[0] < 11) {      data.sizes['l'] = 10 + sizeParts[0];    }    if (sizeParts.length > 2) {      if (sizeParts[1] >= 0 && sizeParts[1] < 11) {        data.sizes['m'] = 10 + sizeParts[1];      }      if (sizeParts[2] >= 0 && sizeParts[2] < 11) {        data.sizes['s'] = 10 + sizeParts[2];      }    } else if (sizeParts.length == 2) {      if (sizeParts[1] >= 0 && sizeParts[1] < 11) {        data.sizes['m'] = data.sizes['s'] = 10 + sizeParts[1];      }    }  }  if (data.lightMode == null || data.lightMode == '') {    data.lightMode = 'light';  } else if (data.lightMode != null && data.lightMode != '') {    const prefersDarkScheme = window.matchMedia('(prefers-color-scheme: dark)');    switch (data.lightMode) {      case 'system':        if (prefersDarkScheme.matches) {          data.lightMode = 'dark';        } else {          data.lightMode = 'light';        }        break;      case 'bodyScheme':      case 'dark':        break;      default:        data.lightMode = 'light';        break;    }  }  data.iconButton = true;  data.iconList = true;  data.iconModal = true;  if (data.icons != null) {    data.icons = String(data.icons);    if (data.icons != '') {      const iconsConfig = data.icons.split('|');      if (iconsConfig[0] == 'false') {        data.iconButton = false;      }      if (iconsConfig[1] != null && iconsConfig[1] == 'false') {        data.iconList = false;      }      if (iconsConfig[2] != null && iconsConfig[2] == 'false') {        data.iconModal = false;      }    }  }  data.textLabelButton = true;  data.textLabelList = true;  if (data.textLabels != null) {    data.textLabels = String(data.textLabels);    if (data.textLabels != '') {      const textLabelsConfig = data.textLabels.split('|');      if (textLabelsConfig[0] == 'false') {        data.textLabelButton = false;      }      if (textLabelsConfig[1] != null && textLabelsConfig[1] == 'false') {        data.textLabelList = false;      }    }  }  return data;}function atcb_decorate_data_i18n(data) {  if (data.language == null || data.language == '') {    data.language = 'en';  }  if (data.language == 'ar') {    data.rtl = true;  } else {    data.rtl = false;  }  return data;}function atcb_decorate_data_dates(data) {  if (data.dates != null && data.dates.length > 0) {    for (let i = 0; i < data.dates.length; i++) {      if (data.dates[`${i}`].timeZone == null && data.timeZone != null) {        data.dates[`${i}`].timeZone = data.timeZone;      }      const cleanedUpDates = atcb_date_cleanup(data.dates[`${i}`]);      data.dates[`${i}`].startTime = cleanedUpDates.startTime;      data.dates[`${i}`].endTime = cleanedUpDates.endTime;      data.dates[`${i}`].timeZone = cleanedUpDates.timeZone;      data.dates[`${i}`].timestamp = cleanedUpDates.startTimestamp;      data.dates[`${i}`].startDate = atcb_date_calculation(cleanedUpDates.startDate);      data.dates[`${i}`].endDate = atcb_date_calculation(cleanedUpDates.endDate);    }  } else {    const cleanedUpDates = atcb_date_cleanup(data);    data.dates = [];    data.dates[0] = new Object();    data.startTime = data.dates[0].startTime = cleanedUpDates.startTime;    data.endTime = data.dates[0].endTime = cleanedUpDates.endTime;    data.timeZone = data.dates[0].timeZone = cleanedUpDates.timeZone;    data.startDate = data.dates[0].startDate = atcb_date_calculation(cleanedUpDates.startDate);    data.endDate = data.dates[0].endDate = atcb_date_calculation(cleanedUpDates.endDate);  }  const now = new Date();  if (data.created == null || data.created == '') {    data.created = atcb_format_datetime(now, 'clean', true);  }  if (data.updated == null || data.updated == '') {    data.updated = atcb_format_datetime(now, 'clean', true);  }  return data;}function atcb_decorate_data_meta(data) {  if (data.status == null || data.status == '') {    data.status = 'CONFIRMED';  }  if (data.sequence == null || data.sequence == '') {    data.sequence = 0;  }  return data;}function atcb_decorate_data_description(data, i) {  if (data.dates[`${i}`].description != null && data.dates[`${i}`].description != '') {    data.dates[`${i}`].descriptionHtmlFree = atcb_rewrite_html_elements(data.dates[`${i}`].description, true);    data.dates[`${i}`].description = atcb_rewrite_html_elements(data.dates[`${i}`].description);  } else {    if (data.dates[`${i}`].description == null && data.description != null && data.description != '') {      data.dates[`${i}`].descriptionHtmlFree = atcb_rewrite_html_elements(data.description, true);      data.dates[`${i}`].description = atcb_rewrite_html_elements(data.description);    } else {      data.dates[`${i}`].descriptionHtmlFree = data.dates[`${i}`].description = '';    }  }  return data;}function atcb_decorate_data_extend(data) {  for (let i = 0; i < data.dates.length; i++) {    data = atcb_decorate_data_description(data, i);    if (data.dates[`${i}`].name == null || data.dates[`${i}`].name == '') {      data.dates[`${i}`].name = data.name;    }    if (data.dates[`${i}`].status == null) {      data.dates[`${i}`].status = data.status.toUpperCase();    } else {      data.dates[`${i}`].status = data.dates[`${i}`].status.toUpperCase();    }    if (data.dates[`${i}`].sequence == null) {      data.dates[`${i}`].sequence = data.sequence;    }    if (data.dates[`${i}`].location == null && data.location != null) {      data.dates[`${i}`].location = data.location;    }    if (data.dates[`${i}`].organizer == null && data.organizer != null) {      data.dates[`${i}`].organizer = data.organizer;    }    if (data.dates[`${i}`].availability == null && data.availability != null) {      data.dates[`${i}`].availability = data.availability.toLowerCase();    } else if (data.dates[`${i}`].availability != null) {      data.dates[`${i}`].availability = data.dates[`${i}`].availability.toLowerCase();    }    if (data.dates[`${i}`].uid == null) {      data.dates[`${i}`].uid = atcb_generate_uuid();    }  }  if (data.recurrence != null && data.recurrence != '') {    data.dates[0].recurrence = data.recurrence;  }  if (data.dates.length > 1) {    data.dates.sort((a, b) => a.timestamp - b.timestamp);  }  return data;}function atcb_date_cleanup(dateTimeData) {  if (dateTimeData.endDate == null || dateTimeData.endDate == '') {    dateTimeData.endDate = dateTimeData.startDate;  }  const endpoints = ['start', 'end'];  endpoints.forEach(function (point) {    if (dateTimeData[point + 'Date'] != null) {      dateTimeData[point + 'Date'] = dateTimeData[point + 'Date'].replace(/\.\d{3}/, '').replace('Z', '');      const tmpSplitStartDate = dateTimeData[point + 'Date'].split('T');      if (tmpSplitStartDate[1] != null) {        dateTimeData[point + 'Date'] = tmpSplitStartDate[0];        dateTimeData[point + 'Time'] = tmpSplitStartDate[1];      }    }    if (dateTimeData[point + 'Time'] != null && dateTimeData[point + 'Time'].length === 8) {      const timeStr = dateTimeData[point + 'Time'];      dateTimeData[point + 'Time'] = timeStr.substring(0, timeStr.length - 3);    }    if (dateTimeData.timeZone == 'currentBrowser') {      dateTimeData.timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;    }    let tmpDate;    if (dateTimeData[point + 'Time'] != null) {      tmpDate = new Date(dateTimeData[point + 'Date'] + ' ' + dateTimeData[point + 'Time']);    } else {      tmpDate = new Date(dateTimeData[point + 'Date']);    }    dateTimeData[point + 'Timestamp'] = tmpDate.getTime();  });  return dateTimeData;}function atcb_date_calculation(dateString) {  const today = new Date();  const todayString = today.getUTCFullYear() + '-' + (today.getUTCMonth() + 1) + '-' + today.getUTCDate();  dateString = dateString.replace(/today/gi, todayString);  const dateStringParts = dateString.split('+');  const dateParts = dateStringParts[0].split('-');  let newDate = (function () {    if (dateParts[0].length < 4) {      return new Date(dateParts[2], dateParts[0] - 1, dateParts[1]);    }    return new Date(dateParts[0], dateParts[1] - 1, dateParts[2]);  })();  if (dateStringParts[1] != null && dateStringParts[1] > 0) {    newDate.setDate(newDate.getDate() + parseInt(dateStringParts[1]));  }  return (    newDate.getFullYear() +    '-' +    ((newDate.getMonth() + 1 < 10 ? '0' : '') + (newDate.getMonth() + 1)) +    '-' +    (newDate.getDate() < 10 ? '0' : '') +    newDate.getDate()  );}
+function atcb_check_required(data) {  if (data.options == null || data.options.length < 1) {    console.error('Add to Calendar Button generation failed: no valid options set');    return false;  }  if (data.name == null || data.name == '') {    console.error('Add to Calendar Button generation failed: required name information missing');    return false;  }  if (data.dates != null && data.dates.length > 0) {    const requiredMultiField = ['name', 'startDate'];    const requiredMultiFieldFlex = ['name'];    return requiredMultiField.every(function (field) {      for (let i = 0; i < data.dates.length; i++) {        if (          (!requiredMultiFieldFlex.includes(`${field}`) &&            (data.dates[`${i}`][`${field}`] == null || data.dates[`${i}`][`${field}`] == '')) ||          (requiredMultiFieldFlex.includes(`${field}`) &&            (data.dates[`${i}`][`${field}`] == null || data.dates[`${i}`][`${field}`] == '') &&            (data[`${field}`] == null || data[`${field}`] == ''))        ) {          console.error(            'Add to Calendar Button generation failed: required setting missing [dates array object #' +              (i + 1) +              '/' +              data.dates.length +              '] => [' +              field +              ']'          );          return false;        }      }      return true;    });  } else {    const requiredSingleField = ['startDate'];    return requiredSingleField.every(function (field) {      if (data[`${field}`] == null || data[`${field}`] == '') {        console.error('Add to Calendar Button generation failed: required setting missing [' + field + ']');        return false;      }      return true;    });  }}function atcb_validate(data) {  const msgPrefix = 'Add to Calendar Button generation (' + data.identifier + ')';  if (!atcb_validate_icsFile(data, msgPrefix)) return false;  if (!atcb_validate_subscribe(data, msgPrefix)) return false;  if (!atcb_validate_created(data, msgPrefix)) return false;  if (!atcb_validate_updated(data, msgPrefix)) return false;  if (!atcb_validate_options(data, msgPrefix)) return false;  if (!atcb_validate_date_blocks(data, msgPrefix)) return false;  if (!atcb_validate_rrule(data, msgPrefix)) return false;  return true;}function atcb_validate_icsFile(data, msgPrefix, i = '', msgSuffix = '') {  const icsFileStr = (function () {    if (i != '' && data.dates[`${i}`].icsFile != null) {      return data.dates[`${i}`].icsFile;    }    if (i == '' && data.icsFile != null) {      return data.icsFile;    }    return '';  })();  if (icsFileStr != '') {    if (      !atcb_secure_url(icsFileStr, false) ||      (!/^https:\/\/(.)*\.ics$/m.test(data.icsFile) && !data.subscribe) ||      (!data.icsFile.startsWith('https://') && data.subscribe)    ) {      console.error(msgPrefix + ' failed: explicit ics file path not valid' + msgSuffix);      return false;    }  }  return true;}function atcb_validate_subscribe(data, msgPrefix) {  if (data.subscribe == true && (data.icsFile == null || data.icsFile == '')) {    console.error(msgPrefix + ' failed: a subscription calendar requires a valid explicit ics file as well');    return false;  }  return true;}function atcb_validate_created(data, msgPrefix) {  if (!/^\d{8}T\d{6}Z$/.test(data.created)) {    console.error(      msgPrefix +        ' failed: created date format not valid. Needs to be a full ISO-8601 UTC date and time string, formatted YYYYMMDDTHHMMSSZ'    );    return false;  }  return true;}function atcb_validate_updated(data, msgPrefix) {  if (!/^\d{8}T\d{6}Z$/.test(data.updated)) {    console.error(      msgPrefix +        ' failed: updated date format not valid. Needs to be a full ISO-8601 UTC date and time string, formatted YYYYMMDDTHHMMSSZ'    );    return false;  }  return true;}function atcb_validate_options(data, msgPrefix) {  if (    !data.options.every(function (option) {      if (!atcbOptions.includes(option)) {        console.error(msgPrefix + ' failed: invalid option [' + option + ']');        return false;      }      return true;    })  ) {    return false;  }  return true;}function atcb_validate_date_blocks(data, msgPrefix) {  for (let i = 0; i < data.dates.length; i++) {    const msgSuffix = (function () {      if (data.dates.length == 1) {        return '';      } else {        return ' [dates array object #' + (i + 1) + '/' + data.dates.length + '] ';      }    })();    if (!atcb_validate_icsFile(data, msgPrefix, i, msgSuffix)) return false;    if (!atcb_validate_status(data, msgPrefix, i, msgSuffix)) return false;    if (!atcb_validate_availability(data, msgPrefix, i, msgSuffix)) return false;    if (!atcb_validate_organizer(data, msgPrefix, i, msgSuffix)) return false;    if (!atcb_validate_uid(data, msgPrefix, i, msgSuffix)) return false;    if (!atcb_validate_sequence(data, msgPrefix, i, msgSuffix)) return false;    if (!atcb_validate_timezone(data, msgPrefix, i, msgSuffix)) return false;    if (!atcb_validate_datetime(data, msgPrefix, i, msgSuffix)) return false;  }  return true;}function atcb_validate_status(data, msgPrefix, i, msgSuffix) {  if (    data.dates[`${i}`].status != 'TENTATIVE' &&    data.dates[`${i}`].status != 'CONFIRMED' &&    data.dates[`${i}`].status != 'CANCELLED'  ) {    console.error(      msgPrefix + ' failed: event status needs to be TENTATIVE, CONFIRMED, or CANCELLED' + msgSuffix    );    return false;  }  return true;}function atcb_validate_availability(data, msgPrefix, i, msgSuffix) {  if (    data.dates[`${i}`].availability != null &&    data.dates[`${i}`].availability != '' &&    data.dates[`${i}`].availability != 'free' &&    data.dates[`${i}`].availability != 'busy'  ) {    console.error(msgPrefix + ' failed: event availability needs to be "free" or "busy"' + msgSuffix);    return false;  }  return true;}function atcb_validate_organizer(data, msgPrefix, i, msgSuffix) {  if (data.dates[`${i}`].organizer != null && data.dates[`${i}`].organizer != '') {    const organizerParts = data.dates[`${i}`].organizer.split('|');    if (      organizerParts.length != 2 ||      organizerParts[0].length > 50 ||      organizerParts[1].length > 80 ||      !atcb_validEmail(organizerParts[1])    ) {      console.error(        msgPrefix +          ' failed: organizer needs to match the schema "NAME|EMAIL" with a valid email address' +          msgSuffix      );      return false;    }  }  return true;}function atcb_validate_uid(data, msgPrefix, i, msgSuffix) {  if (!/^(\w|-){1,254}$/.test(data.dates[`${i}`].uid)) {    console.warn(      msgPrefix +        ': UID not valid. May only contain alpha, digits, and dashes; and be less than 255 characters. Falling back to an automated value!' +        msgSuffix    );    data.dates[`${i}`].uid = atcb_generate_uuid();  }  if (    !/^[0-9a-f]{8}-[0-9a-f]{4}-[0-5][0-9a-f]{3}-[089ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(      data.dates[`${i}`].uid    )  ) {    console.warn(      msgPrefix +        ': UID is highly recommended to be a hex-encoded random Universally Unique Identifier (UUID)!' +        msgSuffix    );  }  return true;}function atcb_validate_sequence(data, msgPrefix, i, msgSuffix) {  if (!/^\d+$/.test(data.dates[`${i}`].sequence)) {    console.log(msgPrefix + ': sequence needs to be a number. Used the default 0 instead' + msgSuffix);    data.dates[`${i}`].sequence = 0;  }  return true;}function atcb_validate_timezone(data, msgPrefix, i, msgSuffix) {  if (data.dates[`${i}`].timeZone != null && data.dates[`${i}`].timeZone != '') {    const validTimeZones = tzlib_get_timezones();    if (!validTimeZones.includes(data.dates[`${i}`].timeZone)) {      console.error(msgPrefix + ' failed: invalid time zone given' + msgSuffix);      return false;    }  }  return true;}function atcb_validate_datetime(data, msgPrefix, i, msgSuffix) {  const dates = ['startDate', 'endDate'];  const newDate = dates;  if (    !dates.every(function (date) {      if (data.dates[`${i}`][`${date}`].length !== 10) {        console.error(msgPrefix + ' failed: date misspelled [-> YYYY-MM-DD]' + msgSuffix);        return false;      }      const dateParts = data.dates[`${i}`][`${date}`].split('-');      if (dateParts.length < 3 || dateParts.length > 3) {        console.error(          msgPrefix +            ' failed: date misspelled [' +            date +            ': ' +            data.dates[`${i}`][`${date}`] +            ']' +            msgSuffix        );        return false;      }      newDate[`${date}`] = new Date(dateParts[0], dateParts[1] - 1, dateParts[2]);      return true;    })  ) {    return false;  }  const times = ['startTime', 'endTime'];  if (    !times.every(function (time) {      if (data.dates[`${i}`][`${time}`] != null) {        if (data.dates[`${i}`][`${time}`].length !== 5) {          console.error(msgPrefix + ' failed: time misspelled [-> HH:MM]' + msgSuffix);          return false;        }        const timeParts = data.dates[`${i}`][`${time}`].split(':');        if (timeParts.length < 2 || timeParts.length > 2) {          console.error(            msgPrefix +              ' failed: time misspelled [' +              time +              ': ' +              data.dates[`${i}`][`${time}`] +              ']' +              msgSuffix          );          return false;        }        if (timeParts[0] > 23) {          console.error(            msgPrefix +              ' failed: time misspelled - hours number too high [' +              time +              ': ' +              timeParts[0] +              ']' +              msgSuffix          );          return false;        }        if (timeParts[1] > 59) {          console.error(            msgPrefix +              ' failed: time misspelled - minutes number too high [' +              time +              ': ' +              timeParts[1] +              ']' +              msgSuffix          );          return false;        }        if (time == 'startTime') {          newDate.startDate = new Date(            newDate.startDate.getTime() + timeParts[0] * 3600000 + timeParts[1] * 60000          );        }        if (time == 'endTime') {          newDate.endDate = new Date(            newDate.endDate.getTime() + timeParts[0] * 3600000 + timeParts[1] * 60000          );        }      }      return true;    })  ) {    return false;  }  if (    (data.dates[`${i}`].startTime != null && data.dates[`${i}`].endTime == null) ||    (data.dates[`${i}`].startTime == null && data.dates[`${i}`].endTime != null)  ) {    console.error(      msgPrefix + ' failed: if you set a starting time, you also need to define an end time' + msgSuffix    );    return false;  }  if (newDate.endDate < newDate.startDate) {    console.error(msgPrefix + ' failed: end date before start date' + msgSuffix);    return false;  }  return true;}function atcb_validate_rrule(data, msgPrefix) {  if (data.recurrence != null && data.recurrence != '' && data.dates.length > 1) {    console.error(msgPrefix + ' failed: RRULE and multi-date set at the same time');    return false;  }  if (data.recurrence != null && data.recurrence != '' && !/^RRULE:[\w=;,:+-/\\]+$/i.test(data.recurrence)) {    console.error(msgPrefix + ' failed: RRULE data misspelled');    return false;  }  if (    data.recurrence_interval != null &&    data.recurrence_interval != '' &&    !/^\d+$/.test(data.recurrence_interval)  ) {    console.error(msgPrefix + ' failed: recurrence data (interval) misspelled');    return false;  }  if (    data.recurrence_until != null &&    data.recurrence_until != '' &&    !/^(\d|-|:)+$/i.test(data.recurrence_until)  ) {    console.error(msgPrefix + ' failed: recurrence data (until) misspelled');    return false;  }  if (data.recurrence_count != null && data.recurrence_count != '' && !/^\d+$/.test(data.recurrence_count)) {    console.error(msgPrefix + ' failed: recurrence data (interval) misspelled');    return false;  }  if (    data.recurrence_byMonth != null &&    data.recurrence_byMonth != '' &&    !/^(\d|,)+$/.test(data.recurrence_byMonth)  ) {    console.error(msgPrefix + ' failed: recurrence data (byMonth) misspelled');    return false;  }  if (    data.recurrence_byMonthDay != null &&    data.recurrence_byMonthDay != '' &&    !/^(\d|,)+$/.test(data.recurrence_byMonthDay)  ) {    console.error(msgPrefix + ' failed: recurrence data (byMonthDay) misspelled');    return false;  }  if (    data.recurrence_byDay != null &&    data.recurrence_byDay != '' &&    !/^(\d|-|MO|TU|WE|TH|FR|SA|SU|,)+$/im.test(data.recurrence_byDay)  ) {    console.error(msgPrefix + ' failed: recurrence data (byDay) misspelled');    return false;  }  if (    data.recurrence_weekstart != null &&    data.recurrence_weekstart != '' &&    !/^(MO|TU|WE|TH|FR|SA|SU)$/im.test(data.recurrence_weekstart)  ) {    console.error(msgPrefix + ' failed: recurrence data (weekstart) misspelled');    return false;  }  return true;}
+function atcb_toggle(action, data = '', button = '', keyboardTrigger = false, generatedButton = false) {  if (action == 'open') {    atcb_open(data, button, keyboardTrigger, generatedButton);  } else if (    action == 'close' ||    button.classList.contains('atcb-active') ||    document.querySelector('.atcb-active-modal')  ) {    atcb_close(keyboardTrigger);  } else {    atcb_open(data, button, keyboardTrigger, generatedButton);  }}function atcb_open(data, button, keyboardTrigger = false, generatedButton = false) {  if (document.querySelector('.atcb-list') || document.querySelector('.atcb-modal')) return;  const list = atcb_generate_dropdown_list(data);  const listWrapper = document.createElement('div');  listWrapper.classList.add('atcb-list-wrapper');  if (data.textLabelList == false) {    listWrapper.classList.add('atcb-no-text');  }  if (button) {    button.classList.add('atcb-active');    if (data.listStyle === 'modal') {      button.classList.add('atcb-modal-style');      list.classList.add('atcb-modal');    } else {      listWrapper.appendChild(list);      listWrapper.classList.add('atcb-dropdown');      if (data.listStyle === 'overlay') {        listWrapper.classList.add('atcb-dropoverlay');      }      if (data.mindScrolling) {        listWrapper.classList.add('atcb-mind-scrolling');      }    }    if (generatedButton) {      list.classList.add('atcb-generated-button');     }  } else {    list.classList.add('atcb-modal');  }  const bgOverlay = atcb_generate_bg_overlay(data.listStyle, data.trigger, data.lightMode, data.background);  if (data.listStyle === 'modal') {    document.body.appendChild(bgOverlay);    bgOverlay.appendChild(list);    if (data.branding) {      atcb_create_atcbl(false);    }    atcb_set_sizes(list, data.sizes);    atcb_manage_body_scroll();  } else {    const positionWrapper = document.createElement('div');    positionWrapper.id = 'atcb-pos-wrapper';    positionWrapper.style.position = 'absolute';    positionWrapper.style.top = '0';    positionWrapper.style.bottom = '0';    positionWrapper.style.width = '100%';    document.body.appendChild(positionWrapper);    positionWrapper.appendChild(listWrapper);    listWrapper.appendChild(list);    if (data.buttonStyle != '') {      listWrapper.classList.add('atcb-style-' + data.buttonStyle);    }    if (data.branding) {      atcb_create_atcbl();    }    document.body.appendChild(bgOverlay);    atcb_set_sizes(list, data.sizes);    listWrapper.style.display = 'none';    setTimeout(function () {      listWrapper.style.display = 'block';      if (data.listStyle === 'dropdown-static') {        atcb_position_list(button, listWrapper, true);      } else {        atcb_position_list(button, listWrapper);      }    }, 5);  }  atcb_set_fullsize(bgOverlay);  if (keyboardTrigger) {    list.firstChild.focus();  } else {    list.firstChild.focus({ preventScroll: true });  }  list.firstChild.blur();}function atcb_close(keyboardTrigger = false) {  const allModals = document.querySelectorAll('.atcb-modal[data-modal-nr]');  if (allModals.length > 1) {    document.querySelectorAll('.atcb-modal[data-modal-nr="' + allModals.length + '"]')[0].remove();    const nextModal = document.querySelectorAll(      '.atcb-modal[data-modal-nr="' + (allModals.length - 1) + '"]'    )[0];    nextModal.style.display = 'block';    let focusEl = nextModal;    const availableButtons = nextModal.getElementsByTagName('button');    if (availableButtons.length > 0) {      focusEl = availableButtons[0];    }    focusEl.focus();    if (!keyboardTrigger) {      focusEl.blur();    }  } else {    const newFocusEl = document.querySelector('.atcb-active, .atcb-active-modal');    if (newFocusEl) {      newFocusEl.focus({ preventScroll: true });      if (!keyboardTrigger) {        newFocusEl.blur();      }    }    Array.from(document.querySelectorAll('.atcb-active')).forEach((button) => {      button.classList.remove('atcb-active');    });    Array.from(document.querySelectorAll('.atcb-active-modal')).forEach((button) => {      button.classList.remove('atcb-active-modal');    });    document.body.classList.remove('atcb-modal-no-scroll');    Array.from(document.querySelectorAll('.atcb-list-wrapper'))      .concat(Array.from(document.querySelectorAll('.atcb-list')))      .concat(Array.from(document.querySelectorAll('.atcb-modal[data-modal-nr]')))      .concat(Array.from(document.querySelectorAll('#add-to-calendar-button-reference')))      .concat(Array.from(document.querySelectorAll('#atcb-pos-wrapper')))      .concat(Array.from(document.querySelectorAll('#atcb-bgoverlay')))      .forEach((el) => el.remove());  }}
+function atcb_generate_label(data, parent, type, icon = false, text = '', oneOption = false) {  switch (type) {    case 'trigger':    default:      parent.id = data.identifier;      if (data.trigger === 'click') {        parent.addEventListener('click', (event) => {          event.preventDefault();          atcb_toggle('auto', data, parent, false, true);        });      } else {        parent.addEventListener('touchend', (event) => {          event.preventDefault();          atcb_toggle('auto', data, parent, false, true);        });        parent.addEventListener(          'mouseenter',          atcb_debounce_leading((event) => {            event.preventDefault();            atcb_toggle('open', data, parent, false, true);          })        );      }      parent.addEventListener('keyup', function (event) {        if (event.key == 'Enter') {          event.preventDefault();          atcb_toggle('auto', data, parent, true, true);        }      });      break;    case 'apple':    case 'google':    case 'ical':    case 'msteams':    case 'ms365':    case 'outlookcom':    case 'yahoo':      parent.id = data.identifier + '-' + type;      parent.addEventListener(        'click',        atcb_debounce(() => {          oneOption ? parent.blur() : atcb_toggle('close');          atcb_generate_links(type, data);        })      );      parent.addEventListener('keyup', function (event) {        if (event.key == 'Enter') {          event.preventDefault();          oneOption ? parent.blur() : atcb_toggle('close');          atcb_generate_links(type, data, 'all', true);        }      });      break;    case 'close':      parent.id = data.identifier + '-close';      parent.addEventListener(        'click',        atcb_debounce(() => {          atcb_toggle('close');        })      );      parent.addEventListener('keyup', function (event) {        if (event.key == 'Enter') {          event.preventDefault();          atcb_toggle('close', data, 'all', true);        }      });      break;  }  if (oneOption) {    parent.id = data.identifier;  }  atcb_generate_label_content(data, parent, type, icon, text, oneOption);}function atcb_generate_label_content(data, parent, type, icon, text, oneOption) {  const defaultTriggerText = atcb_translate_hook('Add to Calendar', data);  if (oneOption && text == '') {    text = defaultTriggerText;  }  switch (type) {    case 'trigger':    default:      text = text || defaultTriggerText;      break;    case 'apple':      text = text || 'Apple';      break;    case 'google':      text = text || 'Google';      break;    case 'ical':      text = text || atcb_translate_hook('iCal File', data);      break;    case 'msteams':      text = text || 'Microsoft Teams';      break;    case 'ms365':      text = text || 'Microsoft 365';      break;    case 'outlookcom':      text = text || 'Outlook.com';      break;    case 'yahoo':      text = text || 'Yahoo';      break;    case 'close':      text = atcb_translate_hook('Close', data);      break;  }  if (data.buttonStyle == 'date' && (type == 'trigger' || oneOption)) {    return;  }  if (icon) {    const iconEl = document.createElement('span');    iconEl.classList.add('atcb-icon');    iconEl.innerHTML = atcbIcon[`${type}`];    parent.appendChild(iconEl);  }  if (    (type == 'trigger' && data.textLabelButton == true) ||    (type != 'trigger' && data.textLabelList == true)  ) {    const textEl = document.createElement('span');    textEl.classList.add('atcb-text');    textEl.textContent = text;    parent.appendChild(textEl);  }}function atcb_generate_button(button, data) {  button.textContent = '';  if (data.richData && data.name && data.dates[0].location && data.dates[0].startDate) {    atcb_generate_rich_data(data, button);  }  const buttonTriggerWrapper = document.createElement('div');  buttonTriggerWrapper.classList.add('atcb-button-wrapper');  buttonTriggerWrapper.classList.add('atcb-' + data.lightMode);  if (data.rtl) {    buttonTriggerWrapper.classList.add('atcb-rtl');  }  button.appendChild(buttonTriggerWrapper);  atcb_set_sizes(buttonTriggerWrapper, data.sizes);  const buttonTrigger = document.createElement('button');  buttonTrigger.classList.add('atcb-button');  if (data.textLabelButton == false) {    buttonTrigger.classList.add('atcb-no-text');  }  if (data.trigger === 'click') {    buttonTrigger.classList.add('atcb-click');  }  if (data.listStyle === 'overlay') {    buttonTrigger.classList.add('atcb-dropoverlay');  }  buttonTrigger.type = 'button';  buttonTriggerWrapper.appendChild(buttonTrigger);  if (data.buttonStyle == 'date') {    atcb_generate_date_button(data, buttonTrigger);  }  if (data.options.length === 1) {    buttonTrigger.classList.add('atcb-single');    atcb_generate_label(data, buttonTrigger, data.options[0], data.iconButton, data.label, true);  } else {    atcb_generate_label(data, buttonTrigger, 'trigger', data.iconButton, data.label);    const buttonDropdownAnchor = document.createElement('div');    buttonDropdownAnchor.classList.add('atcb-dropdown-anchor');    buttonTrigger.appendChild(buttonDropdownAnchor);  }  if (data.checkmark) {    const btnCheck = document.createElement('div');    btnCheck.classList.add('atcb-checkmark');    btnCheck.innerHTML = atcbIcon['checkmark'];    buttonTrigger.appendChild(btnCheck);  }  button.classList.remove('atcb');  button.classList.add('atcb-initialized');  if (data.inline) {    button.style.display = 'inline-block';  } else {    button.style.display = 'block';  }  console.log('Add to Calendar Button "' + data.identifier + '" created');}function atcb_generate_rich_data(data, button) {  const schemaEl = document.createElement('script');  schemaEl.type = 'application/ld+json';  const schemaContentMulti = [];  if (data.dates.length > 1) {    const parts = [];    parts.push('"@context":"https://schema.org"');    parts.push('"@type":"EventSeries"');    parts.push('"@id":"' + data.name.replace(/\s/g, '') + '"');    parts.push('"name":"' + data.name + '",');    schemaContentMulti.push('{\r\n' + parts.join(',\r\n') + '\r\n');  }  const schemaContentFull = [];  for (let i = 0; i < data.dates.length; i++) {    const schemaContent = [];    schemaContent.push('"@context":"https://schema.org"');    schemaContent.push('"@type":"Event"');    if (data.dates.length > 1) {      schemaContent.push('"@id":"' + data.name.replace(/\s/g, '') + '-' + (i + 1) + '"');    }    if (data.dates[`${i}`].status == 'CANCELLED') {      schemaContent.push('"eventStatus":"https://schema.org/EventCancelled"');    }    schemaContent.push('"name":"' + data.dates[`${i}`].name + '"');    if (data.dates[`${i}`].descriptionHtmlFree) {      schemaContent.push('"description":"' + data.dates[`${i}`].descriptionHtmlFree + '"');    }    const formattedDate = atcb_generate_time(data.dates[`${i}`], 'delimiters', 'general', true);    schemaContent.push('"startDate":"' + formattedDate.start + '"');    if (formattedDate.duration != null) {      schemaContent.push('"duration":"' + formattedDate.duration + '"');    }    schemaContent.push(      data.dates[`${i}`].location.startsWith('http')        ? '"eventAttendanceMode":"https://schema.org/OnlineEventAttendanceMode",\r\n"location": {\r\n"@type":"VirtualLocation",\r\n"url":"' +            data.dates[`${i}`].location +            '"\r\n}'        : '"location":"' + data.dates[`${i}`].location + '"'    );    if (data.recurrence != null && data.recurrence != '') {      schemaContent.push(...atcb_generate_rich_data_recurrence(data, formattedDate));    } else {      schemaContent.push('"endDate":"' + formattedDate.end + '"');    }    if (data.dates[`${i}`].organizer != null && data.dates[`${i}`].organizer != '') {      const organizerParts = data.dates[`${i}`].organizer.split('|');      schemaContent.push(        '"organizer":{\r\n"@type":"Person",\r\n"name":"' +          organizerParts[0] +          '",\r\n"email":"' +          organizerParts[1] +          '"\r\n}'      );    }    const imageData = [];    if (data.images != null) {      if (Array.isArray(data.images)) {        for (let i = 0; i < data.images.length; i++) {          if (atcb_secure_url(data.images[`${i}`]) && data.images[`${i}`].startsWith('http')) {            imageData.push('"' + data.images[`${i}`] + '"');          }        }      }    } else {      imageData.push('"https://add-to-calendar-button.com/demo_assets/img/1x1.png"');      imageData.push('"https://add-to-calendar-button.com/demo_assets/img/4x3.png"');      imageData.push('"https://add-to-calendar-button.com/demo_assets/img/16x9.png"');    }    if (imageData.length > 0) {      schemaContent.push('"image":[\r\n' + imageData.join(',\r\n') + ']');    }    schemaContentFull.push('{\r\n' + schemaContent.join(',\r\n') + '\r\n}');  }  if (data.dates.length > 1) {    schemaEl.textContent =      schemaContentMulti.join(',\r\n') + '"subEvents":[\r\n' + schemaContentFull.join(',\r\n') + '\r\n]\r\n}';  } else {    schemaEl.textContent = schemaContentFull[0];  }  button.appendChild(schemaEl);}function atcb_generate_rich_data_recurrence(data, formattedDate) {  const schemaRecurrenceContent = [];  schemaRecurrenceContent.push('"eventSchedule": { "@type": "Schedule"');  if (data.dates[0].timeZone != null && data.dates[0].timeZone != '') {    schemaRecurrenceContent.push('"scheduleTimezone":"' + data.dates[0].timeZone + '"');  }  const repeatFrequency = 'P' + data.recurrence_interval + data.recurrence_frequency.substr(0, 1);  schemaRecurrenceContent.push('"repeatFrequency":"' + repeatFrequency + '"');  if (data.recurrence_byDay != null && data.recurrence_byDay != '') {    const byDayString = (function () {      if (/\d/.test(data.recurrence_byDay)) {        return '"' + data.recurrence_byDay + '"';      } else {        const byDays = data.recurrence_byDay.split(',');        const helperMap = {          MO: 'https://schema.org/Monday',          TU: 'https://schema.org/Tuesday',          WE: 'https://schema.org/Wednesday',          TH: 'https://schema.org/Thursday',          FR: 'https://schema.org/Friday',          SA: 'https://schema.org/Saturday',          SU: 'https://schema.org/Sunday',        };        const output = [];        for (let i = 0; i < byDays.length; i++) {          output.push('"' + helperMap[byDays[`${i}`]] + '"');        }        return '[' + output.join(',') + ']';      }    })();    schemaRecurrenceContent.push('"byDay":' + byDayString);  }  if (data.recurrence_byMonth != null && data.recurrence_byMonth != '') {    const byMonthString = data.recurrence_byMonth.includes(',')      ? '[' + data.recurrence_byMonth + ']'      : data.recurrence_byMonth;    schemaRecurrenceContent.push('"byMonth":"' + byMonthString + '"');  }  if (data.recurrence_byMonthDay != null && data.recurrence_byMonthDay != '') {    const byMonthDayString = data.recurrence_byMonthDay.includes(',')      ? '[' + data.recurrence_byMonthDay + ']'      : data.recurrence_byMonthDay;    schemaRecurrenceContent.push('"byMonthDay":"' + byMonthDayString + '"');  }  if (data.recurrence_count != null && data.recurrence_count != '') {    schemaRecurrenceContent.push('"repeatCount":"' + data.recurrence_count + '"');  }  if (data.recurrence_until != null && data.recurrence_until != '') {    schemaRecurrenceContent.push('"endDate":"' + data.recurrence_until + '"');  }  if (data.startTime != null && data.startTime != '' && data.endTime != null && data.endTime != '') {    schemaRecurrenceContent.push('"startTime":"' + data.startTime + ':00"');    schemaRecurrenceContent.push('"endTime":"' + data.endTime + ':00"');    schemaRecurrenceContent.push('"duration":"' + formattedDate.duration + '"');  }  schemaRecurrenceContent.push('"startDate":"' + data.startDate + '" }');  return schemaRecurrenceContent;}function atcb_generate_dropdown_list(data) {  const optionsList = document.createElement('div');  optionsList.classList.add('atcb-list');  optionsList.classList.add('atcb-' + data.lightMode);  if (data.rtl) {    optionsList.classList.add('atcb-rtl');  }  let listCount = 0;  data.options.forEach(function (option) {    const optionItem = document.createElement('div');    optionItem.classList.add('atcb-list-item');    optionItem.tabIndex = 0;    listCount++;    optionItem.dataset.optionNumber = listCount;    optionsList.appendChild(optionItem);    atcb_generate_label(data, optionItem, option, data.iconList, data.optionLabels[listCount - 1]);  });  if (data.listStyle === 'modal') {    const optionItem = document.createElement('div');    optionItem.classList.add('atcb-list-item', 'atcb-list-item-close');    optionItem.tabIndex = 0;    optionsList.appendChild(optionItem);    atcb_generate_label(data, optionItem, 'close', data.iconList);  }  return optionsList;}function atcb_generate_bg_overlay(listStyle = 'dropdown', trigger = '', lightMode = 'light', darken = true) {  const bgOverlay = document.createElement('div');  bgOverlay.id = 'atcb-bgoverlay';  if (listStyle !== 'modal' && darken) {    bgOverlay.classList.add('atcb-animate-bg');  }  if (!darken) {    bgOverlay.classList.add('atcb-no-bg');  }  bgOverlay.classList.add('atcb-' + lightMode);  bgOverlay.tabIndex = 0;  bgOverlay.addEventListener(    'click',    atcb_debounce((e) => {      if (e.target !== e.currentTarget) return;      atcb_toggle('close');    })  );  let fingerMoved = false;  bgOverlay.addEventListener(    'touchstart',    atcb_debounce_leading(() => (fingerMoved = false)),    { passive: true }  );  bgOverlay.addEventListener(    'touchmove',    atcb_debounce_leading(() => (fingerMoved = true)),    { passive: true }  );  bgOverlay.addEventListener(    'touchend',    atcb_debounce((e) => {      if (fingerMoved !== false || e.target !== e.currentTarget) return;      atcb_toggle('close');    }),    { passive: true }  );  bgOverlay.addEventListener(    'focus',    atcb_debounce_leading((e) => {      if (e.target !== e.currentTarget) return;      atcb_toggle('close');    })  );  if (trigger !== 'click') {    bgOverlay.addEventListener(      'mousemove',      atcb_debounce_leading((e) => {        if (e.target !== e.currentTarget) return;        atcb_toggle('close');      })    );  } else {    bgOverlay.classList.add('atcb-click');  }  return bgOverlay;}function atcb_create_atcbl(atList = true) {  /*const atcbL = document.createElement('div');  atcbL.id = 'add-to-calendar-button-reference';  atcbL.style.width = '150px';  atcbL.style.padding = '10px 0';  atcbL.style.height = 'auto';  atcbL.style.transform = 'translate3d(0, 0, 0)';  atcbL.style.zIndex = '15000000';  setTimeout(() => {    atcbL.innerHTML =      '<a href="https://add-to-calendar-pro.com" target="_blank" rel="noopener">' +      atcbIcon['atcb'] +      '</a>';  }, 500);    document.body.appendChild(atcbL);  if (atList) {    atcbL.style.position = 'absolute';  } else {    if (window.innerHeight > 1000 || window.innerWidth > 1000) {      atcbL.style.position = 'fixed';      atcbL.style.bottom = '15px';      atcbL.style.right = '30px';    }  }*/}function atcb_create_modal(  data,  icon = '',  headline,  content = '',  buttons = [],  subEvents = [],  keyboardTrigger = false) {  const bgOverlay = (function () {    const el = document.getElementById('atcb-bgoverlay');    if (!el) {      return atcb_generate_bg_overlay('modal', 'click', data.lightMode, data.background);    } else {      return el;    }  })();  bgOverlay.classList.add('atcb-no-animation');  document.body.appendChild(bgOverlay);  const modalWrapper = document.createElement('div');  modalWrapper.classList.add('atcb-modal');  bgOverlay.appendChild(modalWrapper);  const modalCount = document.querySelectorAll('.atcb-modal').length;  modalWrapper.dataset.modalNr = modalCount;  modalWrapper.tabIndex = 0;  modalWrapper.focus({ preventScroll: true });  modalWrapper.blur();  const parentButton = document.getElementById(data.identifier);  if (parentButton != null) {    parentButton.classList.add('atcb-active-modal');  }  const modal = document.createElement('div');  modal.classList.add('atcb-modal-box');  modal.classList.add('atcb-' + data.lightMode);  if (data.rtl) {    modal.classList.add('atcb-rtl');  }  modalWrapper.appendChild(modal);  atcb_set_sizes(modal, data.sizes);  atcb_set_fullsize(bgOverlay);  if (icon != '' && data.iconModal == true) {    const modalIcon = document.createElement('div');    modalIcon.classList.add('atcb-modal-icon');    modalIcon.innerHTML = atcbIcon[`${icon}`];    modal.appendChild(modalIcon);  }  const modalHeadline = document.createElement('div');  modalHeadline.classList.add('atcb-modal-headline');  modalHeadline.textContent = headline;  modal.appendChild(modalHeadline);  if (content != '') {    const modalContent = document.createElement('div');    modalContent.classList.add('atcb-modal-content');    modalContent.innerHTML = content;    modal.appendChild(modalContent);  }  if (subEvents.length > 1) {    if (data.branding) {      atcb_create_atcbl(false);    }    const modalsubEventsContent = document.createElement('div');    modalsubEventsContent.classList.add('atcb-modal-content');    modal.appendChild(modalsubEventsContent);    for (let i = 1; i < subEvents.length; i++) {      const modalSubEventButton = document.createElement('button');      modalSubEventButton.type = 'button';      modalSubEventButton.id = data.identifier + '-' + subEvents[0] + '-' + i;      if (atcbStates[`${data.identifier}`][`${subEvents[0]}`][i - 1] > 0) {        modalSubEventButton.classList.add('atcb-saved');      }      modalSubEventButton.classList.add('atcb-subevent-btn');      modalsubEventsContent.appendChild(modalSubEventButton);      atcb_generate_date_button(data, modalSubEventButton, i);      if (i == 1 && keyboardTrigger) {        modalSubEventButton.focus();      }      switch (subEvents[0]) {        case 'apple':        case 'google':        case 'ical':        case 'msteams':        case 'ms365':        case 'outlookcom':        case 'yahoo':          modalSubEventButton.addEventListener(            'click',            atcb_debounce(() => {              atcb_generate_links(subEvents[0], data, subEvents[`${i}`], keyboardTrigger, true);            })          );          break;      }    }  }  if (buttons.length == 0) {    buttons.push({ type: 'close', label: atcb_translate_hook('Close', data) });  }  const modalButtons = document.createElement('div');  modalButtons.classList.add('atcb-modal-buttons');  modal.appendChild(modalButtons);  buttons.forEach((button, index) => {    let modalButton;    if (button.href != null && button.href != '') {      modalButton = document.createElement('a');      modalButton.setAttribute('target', atcbDefaultTarget);      modalButton.setAttribute('href', button.href);      modalButton.setAttribute('rel', 'noopener');    } else {      modalButton = document.createElement('button');      modalButton.type = 'button';    }    modalButton.classList.add('atcb-modal-btn');    if (button.primary) {      modalButton.classList.add('atcb-modal-btn-primary');    }    if (button.label == null || button.label == '') {      button.label = atcb_translate_hook('Click me', data);    }    modalButton.textContent = button.label;    modalButtons.appendChild(modalButton);    if (index == 0 && subEvents.length < 2 && keyboardTrigger) {      modalButton.focus();    }    switch (button.type) {      default:      case 'close':        modalButton.addEventListener(          'click',          atcb_debounce(() => atcb_close())        );        modalButton.addEventListener('keyup', function (event) {          if (event.key == 'Enter') {            atcb_toggle('close', '', '', true);          }        });        break;      case 'yahoo2nd':        modalButton.addEventListener(          'click',          atcb_debounce(() => {            atcb_close();            atcb_subscribe_yahoo_modal_switch(data);          })        );        modalButton.addEventListener('keyup', function (event) {          if (event.key == 'Enter') {            atcb_toggle('close', '', '', true);            atcb_subscribe_yahoo_modal_switch(data, keyboardTrigger);          }        });        break;      case 'none':        break;    }  });  if (modalCount > 1) {    const prevModal = document.querySelectorAll('.atcb-modal[data-modal-nr="' + (modalCount - 1) + '"]')[0];    prevModal.style.display = 'none';  }  atcb_manage_body_scroll(modalWrapper);}function atcb_subscribe_yahoo_modal_switch(data, keyboardTrigger) {  atcb_set_fully_successful(data.identifier);  atcb_generate_links('yahoo2nd', data, 'all', keyboardTrigger);}function atcb_generate_date_button(data, parent, subEvent = 'all') {  if (subEvent != 'all') {    subEvent = parseInt(subEvent) - 1;  } else if (data.dates.length == 1) {    subEvent = 0;  }  const fullTimeInfo = (function () {    let startDateInfo, endDateInfo, timeZoneInfo;    if (subEvent == 'all') {      startDateInfo = new Date(atcb_generate_time(data.dates[0])['start']);      endDateInfo = new Date(atcb_generate_time(data.dates[data.dates.length - 1])['end']);      timeZoneInfo = data.dates[0].timeZone;    } else {      const formattedTime = atcb_generate_time(data.dates[`${subEvent}`]);      startDateInfo = new Date(formattedTime['start']);      endDateInfo = new Date(formattedTime['end']);      timeZoneInfo = data.dates[`${subEvent}`].timeZone;    }    let timeString = '';    const optionsDateTimeShort = {      timeZone: timeZoneInfo,      hour12: false,      year: 'numeric',      hour: 'numeric',      minute: '2-digit',    };    const optionsDateTimeLong = {      timeZone: timeZoneInfo,      hour12: false,      year: 'numeric',      month: 'numeric',      day: 'numeric',      hour: 'numeric',      minute: '2-digit',    };    const optionsTime = {      timeZone: timeZoneInfo,      hour12: false,      hour: 'numeric',      minute: '2-digit',    };    if (      startDateInfo.getFullYear() === endDateInfo.getFullYear() &&      startDateInfo.getMonth() === endDateInfo.getMonth() &&      startDateInfo.getDate() === endDateInfo.getDate()    ) {      timeString =        startDateInfo.toLocaleString(data.language, optionsDateTimeShort) +        ' - ' +        endDateInfo.toLocaleTimeString(data.language, optionsTime);    } else {      timeString =        startDateInfo.toLocaleString(data.language, optionsDateTimeShort) +        ' - ' +        endDateInfo.toLocaleString(data.language, optionsDateTimeLong);    }    if (timeZoneInfo != null) {      if (Intl.DateTimeFormat().resolvedOptions().timeZone != timeZoneInfo) {        timeString += '; ' + timeZoneInfo;      }    } else {      timeString += '; UTC';    }    return timeString;  })();  const hoverText = (function () {    if (subEvent != 'all' && data.dates[`${subEvent}`].status == 'CANCELLED') {      return (        atcb_translate_hook('Cancelled Date', data) +        '<br>' +        atcb_translate_hook('Delete from Calendar', data)      );    }    return '+ ' + atcb_translate_hook('Add to Calendar', data);  })();  const cancelledInfo = (function () {    if (subEvent != 'all' && data.dates[`${subEvent}`].status == 'CANCELLED') {      return atcb_translate_hook('Cancelled Date', data);    }    return '';  })();  if (subEvent == 'all') {    subEvent = 0;  }  const startDate = new Date(data.dates[`${subEvent}`].startDate);  const btnLeft = document.createElement('div');  btnLeft.classList.add('atcb-date-btn-left');  parent.appendChild(btnLeft);  const btnDay = document.createElement('div');  btnDay.classList.add('atcb-date-btn-day');  btnLeft.appendChild(btnDay);  const btnMonth = document.createElement('div');  btnMonth.classList.add('atcb-date-btn-month');  btnDay.textContent = String(startDate.getDate()).padStart(2, '0');  btnMonth.textContent = startDate.toLocaleString(data.language, {    month: 'short',  });  btnLeft.appendChild(btnMonth);  const btnRight = document.createElement('div');  btnRight.classList.add('atcb-date-btn-right');  parent.appendChild(btnRight);  const btnDetails = document.createElement('div');  btnDetails.classList.add('atcb-date-btn-details');  btnRight.appendChild(btnDetails);  const btnHeadline = document.createElement('div');  btnHeadline.classList.add('atcb-date-btn-headline');  btnHeadline.textContent = data.dates[`${subEvent}`].name;  btnDetails.appendChild(btnHeadline);  if ((data.location != null && data.location != '') || cancelledInfo != '') {    const btnLocation = document.createElement('div');    btnLocation.classList.add('atcb-date-btn-content');    btnDetails.appendChild(btnLocation);    if (cancelledInfo != '') {      btnLocation.textContent = cancelledInfo;      btnLocation.style.fontWeight = '600';      btnLocation.style.color = '#9c1a23';    } else {      btnLocation.classList.add('atcb-date-btn-content-location');      const btnLocationIcon = document.createElement('span');      btnLocationIcon.classList.add('atcb-date-btn-content-icon');      btnLocationIcon.innerHTML = atcbIcon['location'];      btnLocation.appendChild(btnLocationIcon);      const btnLocationText = document.createElement('span');      btnLocationText.textContent = data.location;      btnLocation.appendChild(btnLocationText);    }  }  const btnDateTime = document.createElement('div');  btnDateTime.classList.add('atcb-date-btn-content');  btnDetails.appendChild(btnDateTime);  const btnDateTimeIcon = document.createElement('span');  btnDateTimeIcon.classList.add('atcb-date-btn-content-icon');  btnDateTimeIcon.innerHTML = atcbIcon['ical'];  btnDateTime.appendChild(btnDateTimeIcon);  const btnDateTimeText = document.createElement('span');  btnDateTimeText.textContent = fullTimeInfo;  btnDateTime.appendChild(btnDateTimeText);  if (data.recurrence != null && data.recurrence != '') {    const recurSign = document.createElement('span');    recurSign.classList.add('atcb-date-btn-content-recurr-icon');    btnDateTime.appendChild(recurSign);    recurSign.innerHTML = '&#x27F3;';  }  const btnHover = document.createElement('div');  btnHover.classList.add('atcb-date-btn-hover');  btnHover.innerHTML = hoverText;  btnRight.appendChild(btnHover);  if (data.checkmark) {    const btnCheck = document.createElement('div');    btnCheck.classList.add('atcb-checkmark');    btnCheck.innerHTML = atcbIcon['checkmark'];    parent.appendChild(btnCheck);  }}
 function atcb_generate_links(type, data, subEvent = 'all', keyboardTrigger = false, multiDateModal = false) {
   if (subEvent != 'all') {
     subEvent = parseInt(subEvent) - 1;
@@ -2534,358 +825,7 @@ function atcb_ical_copy_note(dataUrl, data, keyboardTrigger) {
 }
 
 
-function atcb_saved_hook() {
-  console.log('Event saved. Looking forward to it!');
-}
-function atcb_save_file(file, filename) {
-  try {
-    const save = document.createElementNS('http://www.w3.org/1999/xhtml', 'a');
-    save.rel = 'noopener';
-    save.href = file;
-    if (isMobile()) {
-      save.target = '_self';
-    } else {
-      save.target = '_blank';
-    }
-    save.download = filename + '.ics';
-    const evt = new MouseEvent('click', {
-      view: window,
-      button: 0,
-      bubbles: true,
-      cancelable: false,
-    });
-    save.dispatchEvent(evt);
-    (window.URL || window.webkitURL).revokeObjectURL(save.href);
-  } catch (e) {
-    console.error(e);
-  }
-}
-function atcb_generate_time(data, style = 'delimiters', targetCal = 'general', addTimeZoneOffset = false) {
-  const startDate = data.startDate.split('-');
-  const endDate = data.endDate.split('-');
-  if (data.startTime != null && data.startTime != '' && data.endTime != null && data.endTime != '') {
-    const newStartDate = new Date(
-      startDate[0] + '-' + startDate[1] + '-' + startDate[2] + 'T' + data.startTime + ':00.000+00:00'
-    );
-    const newEndDate = new Date(
-      endDate[0] + '-' + endDate[1] + '-' + endDate[2] + 'T' + data.endTime + ':00.000+00:00'
-    );
-    const durationMS = newEndDate - newStartDate;
-    const durationHours = Math.floor(durationMS / 1000 / 60 / 60);
-    const durationMinutes = Math.floor(((durationMS - durationHours * 60 * 60 * 1000) / 1000 / 60) % 60);
-    const durationString = (function () {
-      if (durationHours < 10) {
-        return '0' + durationHours + ':' + ('0' + durationMinutes).slice(-2);
-      }
-      return durationHours + ':' + ('0' + durationMinutes).slice(-2);
-    })();
-    if ((data.timeZone == null || (data.timeZone != null && data.timeZone == '')) && addTimeZoneOffset) {
-      return {
-        start: newStartDate.toISOString().replace('.000Z', '+00:00'),
-        end: newEndDate.toISOString().replace('.000Z', '+00:00'),
-        duration: durationString,
-        allday: false,
-      };
-    }
-    if (data.timeZone != null && data.timeZone != '') {
-      if (targetCal == 'ical' || (targetCal == 'google' && !/GMT[+|-]\d{1,2}/i.test(data.timeZone))) {
-        return {
-          start: atcb_format_datetime(newStartDate, 'clean', true, true),
-          end: atcb_format_datetime(newEndDate, 'clean', true, true),
-          duration: durationString,
-          allday: false,
-        };
-      }
-      const offsetStart = tzlib_get_offset(data.timeZone, data.startDate, data.startTime);
-      const offsetEnd = tzlib_get_offset(data.timeZone, data.endDate, data.endTime);
-      if (addTimeZoneOffset) {
-        const formattedOffsetStart = offsetStart.slice(0, 3) + ':' + offsetStart.slice(3);
-        const formattedOffsetEnd = offsetEnd.slice(0, 3) + ':' + offsetEnd.slice(3);
-        return {
-          start: newStartDate.toISOString().replace('.000Z', formattedOffsetStart),
-          end: newEndDate.toISOString().replace('.000Z', formattedOffsetEnd),
-          duration: durationString,
-          allday: false,
-        };
-      }
-      const calcOffsetStart =
-        parseInt(offsetStart[0] + 1) *
-        -1 *
-        ((parseInt(offsetStart.substr(1, 2)) * 60 + parseInt(offsetStart.substr(3, 2))) * 60 * 1000);
-      const calcOffsetEnd =
-        parseInt(offsetEnd[0] + 1) *
-        -1 *
-        ((parseInt(offsetEnd.substr(1, 2)) * 60 + parseInt(offsetEnd.substr(3, 2))) * 60 * 1000);
-      newStartDate.setTime(newStartDate.getTime() + calcOffsetStart);
-      newEndDate.setTime(newEndDate.getTime() + calcOffsetEnd);
-    }
-    return {
-      start: atcb_format_datetime(newStartDate, style),
-      end: atcb_format_datetime(newEndDate, style),
-      duration: durationString,
-      allday: false,
-    };
-  } else {
-    const newStartDate = new Date(Date.UTC(startDate[0], startDate[1] - 1, startDate[2]));
-    const newEndDate = new Date(Date.UTC(endDate[0], endDate[1] - 1, endDate[2]));
-    if (targetCal == 'google' || targetCal == 'microsoft' || targetCal == 'ical') {
-      newEndDate.setDate(newEndDate.getDate() + 1);
-    }
-    return {
-      start: atcb_format_datetime(newStartDate, style, false),
-      end: atcb_format_datetime(newEndDate, style, false),
-      allday: true,
-    };
-  }
-}
-function atcb_format_datetime(datetime, style = 'delimiters', includeTime = true, removeZ = false) {
-  const regex = (function () {
-    if (includeTime) {
-      if (style == 'clean') {
-        return /(-|:|(\.\d{3}))/g;
-      }
-      return /(\.\d{3})/g;
-    }
-    if (style == 'clean') {
-      return /(-|T(\d{2}:\d{2}:\d{2}\.\d{3})Z)/g;
-    }
-    return /T(\d{2}:\d{2}:\d{2}\.\d{3})Z/g;
-  })();
-  const output = removeZ
-    ? datetime.toISOString().replace(regex, '').replace('Z', '')
-    : datetime.toISOString().replace(regex, '');
-  return output;
-}
-function atcb_secure_content(data, isJSON = true) {
-  const toClean = isJSON ? JSON.stringify(data) : data;
-  const cleanedUp = toClean.replace(/(<(?!br)([^>]+)>)/gi, '');
-  if (isJSON) {
-    return JSON.parse(cleanedUp);
-  } else {
-    return cleanedUp;
-  }
-}
-function atcb_secure_url(url, throwError = true) {
-  if (
-    url.match(
-      /((\.\.\/)|(\.\.\\)|(%2e%2e%2f)|(%252e%252e%252f)|(%2e%2e\/)|(%252e%252e\/)|(\.\.%2f)|(\.\.%252f)|(%2e%2e%5c)|(%252e%252e%255c)|(%2e%2e\\)|(%252e%252e\\)|(\.\.%5c)|(\.\.%255c)|(\.\.%c0%af)|(\.\.%25c0%25af)|(\.\.%c1%9c)|(\.\.%25c1%259c))/gi
-    )
-  ) {
-    if (throwError) {
-      console.error(
-        'Seems like the generated URL includes at least one security issue and got blocked. Please check the calendar button parameters!'
-      );
-    }
-    return false;
-  } else {
-    return true;
-  }
-}
-function atcb_validEmail(email, mx = false) {
-  if (!/^.{0,70}@.{1,30}\.[\w.]{2,9}$/.test(email)) {
-    return false;
-  }
-  if (mx) {
-    console.log('Testing for MX records not yet available');
-  }
-  return true;
-}
-function atcb_rewrite_html_elements(content, clear = false) {
-  content = content.replace(/<br\s*\/?>/gi, '\n');
-  if (clear) {
-    content = content.replace(/\[(|\/)(url|br|hr|p|b|strong|u|i|em|li|ul|ol|h\d)\]|((\|.*)\[\/url\])/gi, '');
-  } else {
-    content = content.replace(/\[(\/|)(br|hr|p|b|strong|u|i|em|li|ul|ol|h\d)\]/gi, '<$1$2>');
-    content = content.replace(/\[url\]([\w&$+.,:;=~!*'?@^%#|\s\-()/]*)\[\/url\]/gi, function (match, p1) {
-      const urlText = p1.split('|');
-      const text = (function () {
-        if (urlText.length > 1 && urlText[1] != '') {
-          return urlText[1];
-        } else {
-          return urlText[0];
-        }
-      })();
-      return (
-        '<a href="' + urlText[0] + '" target="' + atcbDefaultTarget + '" rel="noopener">' + text + '</a>'
-      );
-    });
-  }
-  return content;
-}
-function atcb_position_list(trigger, list, blockUpwards = false, resize = false) {
-  let anchorSet = false;
-  const originalTrigger = trigger;
-  if (trigger.querySelector('.atcb-dropdown-anchor') !== null) {
-    trigger = trigger.querySelector('.atcb-dropdown-anchor');
-    anchorSet = true;
-  }
-  let triggerDim = trigger.getBoundingClientRect();
-  let listDim = list.getBoundingClientRect();
-  const btnDim = originalTrigger.getBoundingClientRect();
-  const viewportHeight = document.documentElement.clientHeight;
-  const posWrapper = document.getElementById('atcb-pos-wrapper');
-  if (posWrapper !== null) {
-    posWrapper.style.height = viewportHeight + 'px';
-  }
-  if (anchorSet === true && !list.classList.contains('atcb-dropoverlay')) {
-    if (
-      (list.classList.contains('atcb-dropup') && resize) ||
-      (!blockUpwards &&
-        !resize &&
-        triggerDim.top + listDim.height > viewportHeight - 20 &&
-        2 * btnDim.top + btnDim.height - triggerDim.top - listDim.height > 20)
-    ) {
-      originalTrigger.classList.add('atcb-dropup');
-      list.classList.add('atcb-dropup');
-      list.style.bottom =
-        2 * viewportHeight -
-        (viewportHeight + (btnDim.top + (btnDim.top + btnDim.height - triggerDim.top))) -
-        window.scrollY +
-        'px';
-    } else {
-      list.style.top = window.scrollY + triggerDim.top + 'px';
-      if (originalTrigger.classList.contains('atcb-dropup')) {
-        originalTrigger.classList.remove('atcb-dropup');
-      }
-    }
-    triggerDim = trigger.getBoundingClientRect();
-    if (list.classList.contains('atcb-style-bubble') || list.classList.contains('atcb-style-text')) {
-      list.style.minWidth = triggerDim.width + 'px';
-    } else {
-      list.style.width = triggerDim.width + 'px';
-    }
-    listDim = list.getBoundingClientRect();
-    list.style.left = triggerDim.left - (listDim.width - triggerDim.width) / 2 + 'px';
-  } else {
-    list.style.minWidth = btnDim.width + 20 + 'px';
-    listDim = list.getBoundingClientRect();
-    list.style.top = window.scrollY + btnDim.top + btnDim.height / 2 - listDim.height / 2 + 'px';
-    list.style.left = btnDim.left - (listDim.width - btnDim.width) / 2 + 'px';
-  }
-  const atcbL = document.getElementById('add-to-calendar-button-reference');
-  if (atcbL) {
-    if (originalTrigger.classList.contains('atcb-dropup')) {
-      atcbL.style.top = window.scrollY + btnDim.top + btnDim.height + 'px';
-      atcbL.style.left = btnDim.left + (btnDim.width - 150) / 2 + 'px';
-    } else {
-      listDim = list.getBoundingClientRect();
-      if (originalTrigger.classList.contains('atcb-dropoverlay') || !anchorSet) {
-        atcbL.style.top = window.scrollY + listDim.top + listDim.height + 'px';
-      } else {
-        atcbL.style.top = window.scrollY + triggerDim.top + listDim.height + 'px';
-      }
-      atcbL.style.left = listDim.left + (listDim.width - 150) / 2 + 'px';
-    }
-  }
-}
-function atcb_manage_body_scroll(modalObj = null) {
-  const modal = (function () {
-    if (modalObj != null) {
-      return modalObj;
-    } else {
-      const allModals = document.querySelectorAll('.atcb-modal');
-      if (allModals.length == 0) {
-        return null;
-      }
-      return allModals[allModals.length - 1];
-    }
-  })();
-  if (modal == null) {
-    return;
-  }
-  const modalDim = modal.getBoundingClientRect();
-  if (modalDim.height + 100 > window.innerHeight) {
-    document.body.classList.add('atcb-modal-no-scroll');
-  } else {
-    document.body.classList.remove('atcb-modal-no-scroll');
-  }
-}
-function atcb_set_fullsize(el) {
-  el.style.width = window.innerWidth + 'px';
-  el.style.height = window.innerHeight + 100 + 'px';
-}
-function atcb_set_sizes(el, size) {
-  el.style.setProperty('--base-font-size-l', size.l + 'px');
-  el.style.setProperty('--base-font-size-m', size.m + 'px');
-  el.style.setProperty('--base-font-size-s', size.s + 'px');
-}
-function atcb_generate_uuid() {
-  return ([1e7] + -1e3 + -4e3 + -8e3 + -1e11).replace(/[018]/g, (c) =>
-    (c ^ (crypto.getRandomValues(new Uint8Array(1))[0] & (15 >> (c / 4)))).toString(16)
-  );
-}
-function atcb_copy_to_clipboard(dataString) {
-  const tmpInput = document.createElement('input');
-  document.body.appendChild(tmpInput);
-  const editable = tmpInput.contentEditable;
-  const readOnly = tmpInput.readOnly;
-  tmpInput.value = dataString;
-  tmpInput.contentEditable = true;
-  tmpInput.readOnly = false;
-  if (isiOS()) {
-    var range = document.createRange();
-    range.selectNodeContents(tmpInput);
-    var selection = window.getSelection();
-    selection.removeAllRanges();
-    selection.addRange(range);
-    tmpInput.setSelectionRange(0, 999999);
-  } else {
-    navigator.clipboard.writeText(dataString);
-    tmpInput.select();
-  }
-  tmpInput.contentEditable = editable;
-  tmpInput.readOnly = readOnly;
-  document.execCommand('copy');
-  tmpInput.remove();
-}
-function atcb_debounce(func, timeout = 200) {
-  let timer;
-  return (...args) => {
-    clearTimeout(timer);
-    timer = setTimeout(() => {
-      func.apply(this, args);
-    }, timeout);
-  };
-}
-function atcb_debounce_leading(func, timeout = 300) {
-  let timer;
-  return (...args) => {
-    if (!timer) {
-      func.apply(this, args);
-    }
-    clearTimeout(timer);
-    timer = setTimeout(() => {
-      timer = undefined;
-    }, timeout);
-  };
-}
-function atcb_throttle(func, delay = 10) {
-  let result;
-  let timeout = null;
-  let previous = 0;
-  let later = (...args) => {
-    previous = Date.now();
-    timeout = null;
-    result = func.apply(this, args);
-  };
-  return (...args) => {
-    let now = Date.now();
-    let remaining = delay - (now - previous);
-    if (remaining <= 0 || remaining > delay) {
-      if (timeout) {
-        clearTimeout(timeout);
-        timeout = null;
-      }
-      previous = now;
-      result = func.apply(this, args);
-    } else if (!timeout) {
-      timeout = setTimeout(later, remaining);
-    }
-    return result;
-  };
-}
-
-
+function atcb_saved_hook() {  console.log('Event saved. Looking forward to it!');}function atcb_save_file(file, filename) {  try {    const save = document.createElementNS('http://www.w3.org/1999/xhtml', 'a');    save.rel = 'noopener';    save.href = file;    if (isMobile()) {      save.target = '_self';    } else {      save.target = '_blank';    }    save.download = filename + '.ics';    const evt = new MouseEvent('click', {      view: window,      button: 0,      bubbles: true,      cancelable: false,    });    save.dispatchEvent(evt);    (window.URL || window.webkitURL).revokeObjectURL(save.href);  } catch (e) {    console.error(e);  }}function atcb_generate_time(data, style = 'delimiters', targetCal = 'general', addTimeZoneOffset = false) {  if (data.startTime != null && data.startTime != '' && data.endTime != null && data.endTime != '') {    const newStartDate = new Date(data.startDate + 'T' + data.startTime + ':00.000+00:00');    const newEndDate = new Date(data.endDate + 'T' + data.endTime + ':00.000+00:00');    const durationMS = newEndDate - newStartDate;    const durationHours = Math.floor(durationMS / 1000 / 60 / 60);    const durationMinutes = Math.floor(((durationMS - durationHours * 60 * 60 * 1000) / 1000 / 60) % 60);    const durationString = (function () {      if (durationHours < 10) {        return '0' + durationHours + ':' + ('0' + durationMinutes).slice(-2);      }      return durationHours + ':' + ('0' + durationMinutes).slice(-2);    })();    if ((data.timeZone == null || (data.timeZone != null && data.timeZone == '')) && addTimeZoneOffset) {      return {        start: newStartDate.toISOString().replace('.000Z', '+00:00'),        end: newEndDate.toISOString().replace('.000Z', '+00:00'),        duration: durationString,        allday: false,      };    }    if (data.timeZone != null && data.timeZone != '') {      if (targetCal == 'ical' || (targetCal == 'google' && !/GMT[+|-]\d{1,2}/i.test(data.timeZone))) {        return {          start: atcb_format_datetime(newStartDate, 'clean', true, true),          end: atcb_format_datetime(newEndDate, 'clean', true, true),          duration: durationString,          allday: false,        };      }      const offsetStart = tzlib_get_offset(data.timeZone, data.startDate, data.startTime);      const offsetEnd = tzlib_get_offset(data.timeZone, data.endDate, data.endTime);      if (addTimeZoneOffset) {        const formattedOffsetStart = offsetStart.slice(0, 3) + ':' + offsetStart.slice(3);        const formattedOffsetEnd = offsetEnd.slice(0, 3) + ':' + offsetEnd.slice(3);        return {          start: newStartDate.toISOString().replace('.000Z', formattedOffsetStart),          end: newEndDate.toISOString().replace('.000Z', formattedOffsetEnd),          duration: durationString,          allday: false,        };      }      const calcOffsetStart =        parseInt(offsetStart[0] + 1) *        -1 *        ((parseInt(offsetStart.substr(1, 2)) * 60 + parseInt(offsetStart.substr(3, 2))) * 60 * 1000);      const calcOffsetEnd =        parseInt(offsetEnd[0] + 1) *        -1 *        ((parseInt(offsetEnd.substr(1, 2)) * 60 + parseInt(offsetEnd.substr(3, 2))) * 60 * 1000);      newStartDate.setTime(newStartDate.getTime() + calcOffsetStart);      newEndDate.setTime(newEndDate.getTime() + calcOffsetEnd);    }    return {      start: atcb_format_datetime(newStartDate, style),      end: atcb_format_datetime(newEndDate, style),      duration: durationString,      allday: false,    };  } else {    const newStartDate = new Date(data.startDate + 'T00:00:00.000Z');    console.log(newStartDate);    const newEndDate = new Date(data.endDate + 'T00:00:00.000Z');    if (targetCal == 'google' || targetCal == 'microsoft' || targetCal == 'ical') {      newEndDate.setDate(newEndDate.getDate() + 1);    }    return {      start: atcb_format_datetime(newStartDate, style, false),      end: atcb_format_datetime(newEndDate, style, false),      allday: true,    };  }}function atcb_format_datetime(datetime, style = 'delimiters', includeTime = true, removeZ = false) {  const regex = (function () {    if (includeTime) {      if (style == 'clean') {        return /(-|:|(\.\d{3}))/g;      }      return /(\.\d{3})/g;    }    if (style == 'clean') {      return /(-|T(\d{2}:\d{2}:\d{2}\.\d{3})Z)/g;    }    return /T(\d{2}:\d{2}:\d{2}\.\d{3})Z/g;  })();  const output = removeZ    ? datetime.toISOString().replace(regex, '').replace('Z', '')    : datetime.toISOString().replace(regex, '');  return output;}function atcb_secure_content(data, isJSON = true) {  const toClean = isJSON ? JSON.stringify(data) : data;  const cleanedUp = toClean.replace(/(<(?!br)([^>]+)>)/gi, '');  if (isJSON) {    return JSON.parse(cleanedUp);  } else {    return cleanedUp;  }}function atcb_secure_url(url, throwError = true) {  if (    url.match(      /((\.\.\/)|(\.\.\\)|(%2e%2e%2f)|(%252e%252e%252f)|(%2e%2e\/)|(%252e%252e\/)|(\.\.%2f)|(\.\.%252f)|(%2e%2e%5c)|(%252e%252e%255c)|(%2e%2e\\)|(%252e%252e\\)|(\.\.%5c)|(\.\.%255c)|(\.\.%c0%af)|(\.\.%25c0%25af)|(\.\.%c1%9c)|(\.\.%25c1%259c))/gi    )  ) {    if (throwError) {      console.error(        'Seems like the generated URL includes at least one security issue and got blocked. Please check the calendar button parameters!'      );    }    return false;  } else {    return true;  }}function atcb_validEmail(email, mx = false) {  if (!/^.{0,70}@.{1,30}\.[\w.]{2,9}$/.test(email)) {    return false;  }  if (mx) {    console.log('Testing for MX records not yet available');  }  return true;}function atcb_rewrite_html_elements(content, clear = false) {  content = content.replace(/<br\s*\/?>/gi, '\n');  if (clear) {    content = content.replace(/\[(|\/)(url|br|hr|p|b|strong|u|i|em|li|ul|ol|h\d)\]|((\|.*)\[\/url\])/gi, '');  } else {    content = content.replace(/\[(\/|)(br|hr|p|b|strong|u|i|em|li|ul|ol|h\d)\]/gi, '<$1$2>');    content = content.replace(/\[url\]([\w&$+.,:;=~!*'?@^%#|\s\-()/]*)\[\/url\]/gi, function (match, p1) {      const urlText = p1.split('|');      const text = (function () {        if (urlText.length > 1 && urlText[1] != '') {          return urlText[1];        } else {          return urlText[0];        }      })();      return (        '<a href="' + urlText[0] + '" target="' + atcbDefaultTarget + '" rel="noopener">' + text + '</a>'      );    });  }  return content;}function atcb_position_list(trigger, list, blockUpwards = false, resize = false) {  let anchorSet = false;  const originalTrigger = trigger;  if (trigger.querySelector('.atcb-dropdown-anchor') !== null) {    trigger = trigger.querySelector('.atcb-dropdown-anchor');    anchorSet = true;  }  let triggerDim = trigger.getBoundingClientRect();  let listDim = list.getBoundingClientRect();  const btnDim = originalTrigger.getBoundingClientRect();  const viewportHeight = document.documentElement.clientHeight;  const posWrapper = document.getElementById('atcb-pos-wrapper');  if (posWrapper !== null) {    posWrapper.style.height = viewportHeight + 'px';  }  if (anchorSet === true && !list.classList.contains('atcb-dropoverlay')) {    if (      (list.classList.contains('atcb-dropup') && resize) ||      (!blockUpwards &&        !resize &&        triggerDim.top + listDim.height > viewportHeight - 20 &&        2 * btnDim.top + btnDim.height - triggerDim.top - listDim.height > 20)    ) {      originalTrigger.classList.add('atcb-dropup');      list.classList.add('atcb-dropup');      list.style.bottom =        2 * viewportHeight -        (viewportHeight + (btnDim.top + (btnDim.top + btnDim.height - triggerDim.top))) -        window.scrollY +        'px';    } else {      list.style.top = window.scrollY + triggerDim.top + 'px';      if (originalTrigger.classList.contains('atcb-dropup')) {        originalTrigger.classList.remove('atcb-dropup');      }    }    triggerDim = trigger.getBoundingClientRect();    if (list.classList.contains('atcb-style-bubble') || list.classList.contains('atcb-style-text')) {      list.style.minWidth = triggerDim.width + 'px';    } else {      list.style.width = triggerDim.width + 'px';    }    listDim = list.getBoundingClientRect();    list.style.left = triggerDim.left - (listDim.width - triggerDim.width) / 2 + 'px';  } else {    list.style.minWidth = btnDim.width + 20 + 'px';    listDim = list.getBoundingClientRect();    list.style.top = window.scrollY + btnDim.top + btnDim.height / 2 - listDim.height / 2 + 'px';    list.style.left = btnDim.left - (listDim.width - btnDim.width) / 2 + 'px';  }  const atcbL = document.getElementById('add-to-calendar-button-reference');  if (atcbL) {    if (originalTrigger.classList.contains('atcb-dropup')) {      atcbL.style.top = window.scrollY + btnDim.top + btnDim.height + 'px';      atcbL.style.left = btnDim.left + (btnDim.width - 150) / 2 + 'px';    } else {      listDim = list.getBoundingClientRect();      if (originalTrigger.classList.contains('atcb-dropoverlay') || !anchorSet) {        atcbL.style.top = window.scrollY + listDim.top + listDim.height + 'px';      } else {        atcbL.style.top = window.scrollY + triggerDim.top + listDim.height + 'px';      }      atcbL.style.left = listDim.left + (listDim.width - 150) / 2 + 'px';    }  }}function atcb_manage_body_scroll(modalObj = null) {  const modal = (function () {    if (modalObj != null) {      return modalObj;    } else {      const allModals = document.querySelectorAll('.atcb-modal');      if (allModals.length == 0) {        return null;      }      return allModals[allModals.length - 1];    }  })();  if (modal == null) {    return;  }  const modalDim = modal.getBoundingClientRect();  if (modalDim.height + 100 > window.innerHeight) {    document.body.classList.add('atcb-modal-no-scroll');  } else {    document.body.classList.remove('atcb-modal-no-scroll');  }}function atcb_set_fullsize(el) {  el.style.width = window.innerWidth + 'px';  el.style.height = window.innerHeight + 100 + 'px';}function atcb_set_sizes(el, size) {  el.style.setProperty('--base-font-size-l', size.l + 'px');  el.style.setProperty('--base-font-size-m', size.m + 'px');  el.style.setProperty('--base-font-size-s', size.s + 'px');}function atcb_generate_uuid() {  return ([1e7] + -1e3 + -4e3 + -8e3 + -1e11).replace(/[018]/g, (c) =>    (c ^ (crypto.getRandomValues(new Uint8Array(1))[0] & (15 >> (c / 4)))).toString(16)  );}function atcb_copy_to_clipboard(dataString) {  const tmpInput = document.createElement('input');  document.body.appendChild(tmpInput);  const editable = tmpInput.contentEditable;  const readOnly = tmpInput.readOnly;  tmpInput.value = dataString;  tmpInput.contentEditable = true;  tmpInput.readOnly = false;  if (isiOS()) {    var range = document.createRange();    range.selectNodeContents(tmpInput);    var selection = window.getSelection();    selection.removeAllRanges();    selection.addRange(range);    tmpInput.setSelectionRange(0, 999999);  } else {    navigator.clipboard.writeText(dataString);    tmpInput.select();  }  tmpInput.contentEditable = editable;  tmpInput.readOnly = readOnly;  document.execCommand('copy');  tmpInput.remove();}function atcb_debounce(func, timeout = 200) {  let timer;  return (...args) => {    clearTimeout(timer);    timer = setTimeout(() => {      func.apply(this, args);    }, timeout);  };}function atcb_debounce_leading(func, timeout = 300) {  let timer;  return (...args) => {    if (!timer) {      func.apply(this, args);    }    clearTimeout(timer);    timer = setTimeout(() => {      timer = undefined;    }, timeout);  };}function atcb_throttle(func, delay = 10) {  let result;  let timeout = null;  let previous = 0;  let later = (...args) => {    previous = Date.now();    timeout = null;    result = func.apply(this, args);  };  return (...args) => {    let now = Date.now();    let remaining = delay - (now - previous);    if (remaining <= 0 || remaining > delay) {      if (timeout) {        clearTimeout(timeout);        timeout = null;      }      previous = now;      result = func.apply(this, args);    } else if (!timeout) {      timeout = setTimeout(later, remaining);    }    return result;  };}
 const i18nStrings = {
   en: {
     'Add to Calendar': 'Add to Calendar',
@@ -3438,222 +1378,5 @@ function atcb_translate(identifier, language) {
 }
 
 
-let atcbInitialInit = false;
-function atcb_init() {
-  if (!atcbInitialInit) {
-    atcb_set_global_event_listener();
-  }
-  atcb_init_log_msg();
-  if (!isBrowser()) {
-    console.error('no further initialization due to wrong environment (no browser)');
-    return;
-  }
-  const atcButtons = document.querySelectorAll('.atcb');
-  const btnIDs = [];
-  if (atcButtons.length > 0) {
-    const atcButtonsInitialized = document.querySelectorAll('.atcb-initialized');
-    for (let i = 0; i < atcButtons.length; i++) {
-      if (atcButtons[parseInt(i)].classList.contains('atcb-initialized')) {
-        continue;
-      }
-      const atcbJsonInput = (function () {
-        try {
-          return JSON.parse(
-            atcb_secure_content(atcButtons[parseInt(i)].innerHTML.replace(/(\r\n|\n|\r)/g, ''), false)
-          );
-        } catch (e) {
-          console.error(
-            'Add to Calendar Button generation failed: JSON content provided, but badly formatted (in doubt, try some tool like https://jsonformatter.org/ to validate).\r\nError message: ' +
-              e
-          );
-          return '';
-        }
-      })();
-      const atcbJsonInputPatched = atcb_patch_config(atcbJsonInput);
-      const atcbInputData = atcb_get_pro_data(atcbJsonInputPatched);
-      if (atcbInputData.length == 0) {
-        continue;
-      }
-      if (atcb_check_required(atcbInputData)) {
-        const data = atcb_decorate_data(atcbInputData);
-        if (data.identifier == null || data.identifier == '') {
-          data.identifier = 'atcb-btn-' + (i + atcButtonsInitialized.length + 1);
-        }
-        if (atcb_validate(data)) {
-          atcb_generate_button(atcButtons[parseInt(i)], data);
-          atcb_update_state_management(data);
-          btnIDs.push(data.identifier);
-        }
-      }
-    }
-  }
-  return btnIDs;
-}
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-function atcb_action(data, triggerElement, keyboardTrigger = true) {
-  if (!atcbInitialInit) {
-    atcb_set_global_event_listener();
-  }
-  atcb_init_log_msg();
-  data = atcb_secure_content(data);
-  data = atcb_get_pro_data(data);
-  if (!atcb_check_required(data)) {
-    throw new Error('Add to Calendar Button generation failed: required data missing; see console logs');
-  }
-  data = atcb_decorate_data(data);
-  if (triggerElement) {
-    if (triggerElement.id != null && triggerElement.id != '') {
-      data.identifier = triggerElement.id;
-    } else {
-      if (data.identifier != null && data.identifier != '') {
-        triggerElement.id = data.identifier;
-      } else {
-        data.identifier = 'atcb-btn-custom';
-      }
-    }
-    if (data.listStyle == 'dropdown') {
-      data.listStyle = 'overlay';
-    }
-  } else {
-    data.identifier = 'atcb-btn-custom';
-    data.listStyle = 'modal';
-    data.trigger = 'click';
-  }
-  if (!atcb_validate(data)) {
-    throw new Error(
-      'Add to Calendar Button generation (' + data.identifier + ') failed: invalid data; see console logs'
-    );
-  }
-  atcb_update_state_management(data);
-  atcb_toggle('open', data, triggerElement, keyboardTrigger);
-  console.log('Add to Calendar Button "' + data.identifier + '" triggered');
-  return [data.identifier];
-}
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-function atcb_destroy(id) {
-  atcb_close();
-  const el = document.getElementById(id);
-  if (atcbStates[`${id}`] == null || !el) {
-    console.error('Add to Calendar Button could not be destroyed! ID unknown.');
-    return false;
-  }
-  delete atcbStates[`${id}`];
-  if (el.parentElement.parentElement.classList.contains('atcb-initialized')) {
-    el.parentElement.parentElement.remove();
-  } else {
-    el.remove();
-  }
-  console.log('Add to Calendar Button "' + id + '" destroyed');
-  return true;
-}
-function atcb_update_state_management(data) {
-  const singleDates = [];
-  for (let i = 0; i < data.options.length; i++) {
-    singleDates[data.options[`${i}`]] = [];
-    for (let id = 1; id <= data.dates.length; id++) {
-      singleDates[data.options[`${i}`]].push(0);
-    }
-  }
-  atcbStates[data.identifier] = singleDates;
-}
-function atcb_init_log_msg() {
-  if (!atcbInitialInit) {
-    console.log('Add to Calendar Button Script initialized (version ' + atcbVersion + ')');
-    console.log('See https://github.com/add2cal/add-to-calendar-button for details');
-    atcbInitialInit = true;
-  }
-}
-function atcb_get_pro_data(data) {
-  if (data.proKey != null && data.proKey != '') {
-    console.error('Add to Calendar Button generation failed: proKey invalid!');
-    return [];
-  }
-  return data;
-}
-function atcb_set_global_event_listener() {
-  if (!isBrowser()) {
-    return;
-  }
-  document.addEventListener('keyup', function (event) {
-    if (event.key === 'Escape') {
-      atcb_toggle('close', '', '', true);
-    }
-  });
-  document.addEventListener('keydown', (event) => {
-    if (
-      document.querySelector('.atcb-list') &&
-      (event.key === 'ArrowDown' || event.key === 'ArrowUp' || event.key === 'Tab')
-    ) {
-      let targetFocus = 0;
-      let currFocusOption = document.activeElement;
-      const optionListCount = document.querySelectorAll('.atcb-list-item').length;
-      if (currFocusOption.classList.contains('atcb-list-item')) {
-        if (event.key === 'ArrowDown' && currFocusOption.dataset.optionNumber < optionListCount) {
-          event.preventDefault();
-          targetFocus = parseInt(currFocusOption.dataset.optionNumber) + 1;
-        } else if (event.key === 'ArrowUp' && currFocusOption.dataset.optionNumber >= 1) {
-          event.preventDefault();
-          targetFocus = parseInt(currFocusOption.dataset.optionNumber) - 1;
-        }
-        if (targetFocus > 0) {
-          document.querySelector('.atcb-list-item[data-option-number="' + targetFocus + '"]').focus();
-        }
-      } else {
-        event.preventDefault();
-        switch (event.key) {
-          case 'ArrowDown':
-            document.querySelector('.atcb-list-item[data-option-number="1"]').focus();
-            break;
-          case 'ArrowUp':
-            document.querySelector('.atcb-list-item[data-option-number="' + optionListCount + '"]').focus();
-            break;
-          default:
-            document.querySelector('.atcb-list-item[data-option-number="1"]').focus();
-            break;
-        }
-      }
-    }
-  });
-  window.addEventListener(
-    'resize',
-    atcb_throttle(() => {
-      const activeOverlay = document.getElementById('atcb-bgoverlay');
-      if (activeOverlay != null) {
-        atcb_set_fullsize(activeOverlay);
-        atcb_manage_body_scroll();
-      }
-      const activeButton = document.querySelector('.atcb-active');
-      if (activeButton != null) {
-        const activeList = document.querySelector('.atcb-dropdown');
-        if (activeList != null) {
-          atcb_position_list(activeButton, activeList, false, true);
-        }
-      }
-    })
-  );
-  window.addEventListener(
-    'scroll',
-    atcb_throttle(() => {
-      const activeButton = document.querySelector('.atcb-active');
-      if (activeButton != null) {
-        const activeList = document.querySelector('.atcb-dropdown');
-        if (activeList != null) {
-          if (activeList.classList.contains('atcb-mind-scrolling')) {
-            atcb_position_list(activeButton, activeList, false, true);
-          }
-        }
-      }
-    }, 20)
-  );
-}
-
-
-/*! START INIT */
-if (isBrowser()) {
-  if (document.readyState !== 'loading') {
-    atcb_init();
-  } else {
-    document.addEventListener('DOMContentLoaded', atcb_init, false);
-  }
-}
-/*! END INIT */
+let atcbInitialInit = false;function atcb_init() {  if (!atcbInitialInit) {    atcb_set_global_event_listener();  }  atcb_init_log_msg();  if (!isBrowser()) {    console.error('no further initialization due to wrong environment (no browser)');    return;  }  const atcButtons = document.querySelectorAll('.atcb');  const btnIDs = [];  if (atcButtons.length > 0) {    const atcButtonsInitialized = document.querySelectorAll('.atcb-initialized');    for (let i = 0; i < atcButtons.length; i++) {      if (atcButtons[parseInt(i)].classList.contains('atcb-initialized')) {        continue;      }      const atcbJsonInput = (function () {        try {          return JSON.parse(            atcb_secure_content(atcButtons[parseInt(i)].innerHTML.replace(/(\r\n|\n|\r)/g, ''), false)          );        } catch (e) {          console.error(            'Add to Calendar Button generation failed: JSON content provided, but badly formatted (in doubt, try some tool like https://jsonformatter.org/ to validate).\r\nError message: ' +              e          );          return '';        }      })();      const atcbJsonInputPatched = atcb_patch_config(atcbJsonInput);      const atcbInputData = atcb_get_pro_data(atcbJsonInputPatched);      if (atcbInputData.length == 0) {        continue;      }      if (atcb_check_required(atcbInputData)) {        const data = atcb_decorate_data(atcbInputData);        if (data.identifier == null || data.identifier == '') {          data.identifier = 'atcb-btn-' + (i + atcButtonsInitialized.length + 1);        }        if (atcb_validate(data)) {          atcb_generate_button(atcButtons[parseInt(i)], data);          atcb_update_state_management(data);          btnIDs.push(data.identifier);        }      }    }  }  return btnIDs;}// eslint-disable-next-line @typescript-eslint/no-unused-varsfunction atcb_action(data, triggerElement, keyboardTrigger = true) {  if (!atcbInitialInit) {    atcb_set_global_event_listener();  }  atcb_init_log_msg();  data = atcb_secure_content(data);  data = atcb_get_pro_data(data);  if (!atcb_check_required(data)) {    throw new Error('Add to Calendar Button generation failed: required data missing; see console logs');  }  data = atcb_decorate_data(data);  if (triggerElement) {    if (triggerElement.id != null && triggerElement.id != '') {      data.identifier = triggerElement.id;    } else {      if (data.identifier != null && data.identifier != '') {        triggerElement.id = data.identifier;      } else {        data.identifier = 'atcb-btn-custom';      }    }    if (data.listStyle == 'dropdown') {      data.listStyle = 'overlay';    }  } else {    data.identifier = 'atcb-btn-custom';    data.listStyle = 'modal';    data.trigger = 'click';  }  if (!atcb_validate(data)) {    throw new Error(      'Add to Calendar Button generation (' + data.identifier + ') failed: invalid data; see console logs'    );  }  atcb_update_state_management(data);  atcb_toggle('open', data, triggerElement, keyboardTrigger);  console.log('Add to Calendar Button "' + data.identifier + '" triggered');  return [data.identifier];}// eslint-disable-next-line @typescript-eslint/no-unused-varsfunction atcb_destroy(id) {  atcb_close();  const el = document.getElementById(id);  if (atcbStates[`${id}`] == null || !el) {    console.error('Add to Calendar Button could not be destroyed! ID unknown.');    return false;  }  delete atcbStates[`${id}`];  if (el.parentElement.parentElement.classList.contains('atcb-initialized')) {    el.parentElement.parentElement.remove();  } else {    el.remove();  }  console.log('Add to Calendar Button "' + id + '" destroyed');  return true;}function atcb_update_state_management(data) {  const singleDates = [];  for (let i = 0; i < data.options.length; i++) {    singleDates[data.options[`${i}`]] = [];    for (let id = 1; id <= data.dates.length; id++) {      singleDates[data.options[`${i}`]].push(0);    }  }  atcbStates[data.identifier] = singleDates;}function atcb_init_log_msg() {  if (!atcbInitialInit) {    console.log('Add to Calendar Button Script initialized (version ' + atcbVersion + ')');    console.log('See https://github.com/add2cal/add-to-calendar-button for details');    atcbInitialInit = true;  }}function atcb_get_pro_data(data) {  if (data.proKey != null && data.proKey != '') {    console.error('Add to Calendar Button generation failed: proKey invalid!');    return [];  }  return data;}function atcb_set_global_event_listener() {  if (!isBrowser()) {    return;  }  document.addEventListener('keyup', function (event) {    if (event.key === 'Escape') {      atcb_toggle('close', '', '', true);    }  });  document.addEventListener('keydown', (event) => {    if (      document.querySelector('.atcb-list') &&      (event.key === 'ArrowDown' || event.key === 'ArrowUp' || event.key === 'Tab')    ) {      let targetFocus = 0;      let currFocusOption = document.activeElement;      const optionListCount = document.querySelectorAll('.atcb-list-item').length;      if (currFocusOption.classList.contains('atcb-list-item')) {        if (event.key === 'ArrowDown' && currFocusOption.dataset.optionNumber < optionListCount) {          event.preventDefault();          targetFocus = parseInt(currFocusOption.dataset.optionNumber) + 1;        } else if (event.key === 'ArrowUp' && currFocusOption.dataset.optionNumber >= 1) {          event.preventDefault();          targetFocus = parseInt(currFocusOption.dataset.optionNumber) - 1;        }        if (targetFocus > 0) {          document.querySelector('.atcb-list-item[data-option-number="' + targetFocus + '"]').focus();        }      } else {        event.preventDefault();        switch (event.key) {          case 'ArrowDown':            document.querySelector('.atcb-list-item[data-option-number="1"]').focus();            break;          case 'ArrowUp':            document.querySelector('.atcb-list-item[data-option-number="' + optionListCount + '"]').focus();            break;          default:            document.querySelector('.atcb-list-item[data-option-number="1"]').focus();            break;        }      }    }  });  window.addEventListener(    'resize',    atcb_throttle(() => {      const activeOverlay = document.getElementById('atcb-bgoverlay');      if (activeOverlay != null) {        atcb_set_fullsize(activeOverlay);        atcb_manage_body_scroll();      }      const activeButton = document.querySelector('.atcb-active');      if (activeButton != null) {        const activeList = document.querySelector('.atcb-dropdown');        if (activeList != null) {          atcb_position_list(activeButton, activeList, false, true);        }      }    })  );  window.addEventListener(    'scroll',    atcb_throttle(() => {      const activeButton = document.querySelector('.atcb-active');      if (activeButton != null) {        const activeList = document.querySelector('.atcb-dropdown');        if (activeList != null) {          if (activeList.classList.contains('atcb-mind-scrolling')) {            atcb_position_list(activeButton, activeList, false, true);          }        }      }    }, 20)  );}
+/*! START INIT */if (isBrowser()) {  if (document.readyState !== 'loading') {    atcb_init();  } else {    document.addEventListener('DOMContentLoaded', atcb_init, false);  }}/*! END INIT */
