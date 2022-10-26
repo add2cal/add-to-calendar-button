@@ -3,7 +3,7 @@
  *  Add to Calendar Button
  *  ++++++++++++++++++++++
  *
- *  Version: 1.18.3
+ *  Version: 1.18.4
  *  Creator: Jens Kuerschner (https://jenskuerschner.de)
  *  Project: https://github.com/add2cal/add-to-calendar-button
  *  License: Apache-2.0 with “Commons Clause” License Condition v1.0
@@ -72,7 +72,13 @@ function atcb_generate_time(data, style = 'delimiters', targetCal = 'general', a
     // if a time zone is given, we adjust the diverse cases
     // (see https://tz.add-to-calendar-technology.com/api/zones.json for available TZ names)
     if (data.timeZone != null && data.timeZone != '') {
-      if (targetCal == 'ical' || (targetCal == 'google' && !/GMT[+|-]\d{1,2}/i.test(data.timeZone))) {
+      if (
+        targetCal == 'ical' ||
+        (targetCal == 'google' &&
+          !/(GMT[+|-]\d{1,2}|Etc\/U|Etc\/Zulu|CET|CST6CDT|EET|EST|EST5EDT|MET|MST|MST7MDT|PST8PDT|WET)/i.test(
+            data.timeZone
+          ))
+      ) {
         // in the iCal case, we simply return and cut off the Z. Same applies to Google, except for GMT +/- time zones, which are not supported there.
         // everything else will be done by injecting the VTIMEZONE block at the iCal function
         return {
@@ -119,7 +125,6 @@ function atcb_generate_time(data, style = 'delimiters', targetCal = 'general', a
   } else {
     // would be an allday event then
     const newStartDate = new Date(data.startDate + 'T00:00:00.000Z');
-    console.log(newStartDate);
     const newEndDate = new Date(data.endDate + 'T00:00:00.000Z');
     // increment the end day by 1 for Google Calendar, iCal and Outlook
     if (targetCal == 'google' || targetCal == 'microsoft' || targetCal == 'ical') {
