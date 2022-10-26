@@ -217,14 +217,14 @@ function tzlib_get_timezones(jsonType = false) {
  *  Add to Calendar Button
  *  ++++++++++++++++++++++
  *
- *  Version: 1.18.3
+ *  Version: 1.18.4
  *  Creator: Jens Kuerschner (https://jenskuerschner.de)
  *  Project: https://github.com/add2cal/add-to-calendar-button
  *  License: Apache-2.0 with “Commons Clause” License Condition v1.0
  *  Note:    DO NOT REMOVE THE COPYRIGHT NOTICE ABOVE!
  *
  */
-const atcbVersion = '1.18.3';
+const atcbVersion = '1.18.4';
 const isBrowser = () => {
   if (typeof window === 'undefined') {
     return false;
@@ -364,6 +364,7 @@ function atcb_decorate_data(data) {
   data = atcb_decorate_data_options(data);
   data.richData = atcb_decorate_data_rich_data(data);
   data.checkmark = atcb_decorate_data_checkmark(data);
+  data.background = atcb_decorate_data_background(data);
   data.mindScrolling = atcb_decorate_data_mind_scrolling(data);
   data.branding = atcb_decorate_data_branding(data);
   data = atcb_decorate_data_style(data);
@@ -502,6 +503,12 @@ function atcb_decorate_data_checkmark(data) {
   }
   return true;
 }
+function atcb_decorate_data_background(data) {
+  if (data.background != null && data.background == false) {
+    return false;
+  }
+  return true;
+}
 function atcb_decorate_data_branding(data) {
   if (data.branding != null && data.branding == false) {
     return false;
@@ -572,6 +579,38 @@ function atcb_decorate_data_style(data) {
       default:
         data.lightMode = 'light';
         break;
+    }
+  }
+  data.iconButton = true;
+  data.iconList = true;
+  data.iconModal = true;
+  if (data.icons != null) {
+    data.icons = String(data.icons);
+    if (data.icons != '') {
+      const iconsConfig = data.icons.split('|');
+      if (iconsConfig[0] == 'false') {
+        data.iconButton = false;
+      }
+      if (iconsConfig[1] != null && iconsConfig[1] == 'false') {
+        data.iconList = false;
+      }
+      if (iconsConfig[2] != null && iconsConfig[2] == 'false') {
+        data.iconModal = false;
+      }
+    }
+  }
+  data.textLabelButton = true;
+  data.textLabelList = true;
+  if (data.textLabels != null) {
+    data.textLabels = String(data.textLabels);
+    if (data.textLabels != '') {
+      const textLabelsConfig = data.textLabels.split('|');
+      if (textLabelsConfig[0] == 'false') {
+        data.textLabelButton = false;
+      }
+      if (textLabelsConfig[1] != null && textLabelsConfig[1] == 'false') {
+        data.textLabelList = false;
+      }
     }
   }
   return data;
@@ -1147,6 +1186,9 @@ function atcb_open(data, button, keyboardTrigger = false, generatedButton = fals
   const list = atcb_generate_dropdown_list(data);
   const listWrapper = document.createElement('div');
   listWrapper.classList.add('atcb-list-wrapper');
+  if (data.textLabelList == false) {
+    listWrapper.classList.add('atcb-no-text');
+  }
   if (button) {
     button.classList.add('atcb-active');
     if (data.listStyle === 'modal') {
@@ -1179,7 +1221,7 @@ function atcb_open(data, button, keyboardTrigger = false, generatedButton = fals
     atcb_manage_body_scroll();
   } else {
     const positionWrapper = document.createElement('div');
-    positionWrapper.id = 'atcb-pos-wrapper';    
+    positionWrapper.id = 'atcb-pos-wrapper';
     positionWrapper.style.position = 'absolute';
     positionWrapper.style.top = '0';
     positionWrapper.style.bottom = '0';
@@ -1196,7 +1238,7 @@ function atcb_open(data, button, keyboardTrigger = false, generatedButton = fals
     document.body.appendChild(bgOverlay);
     atcb_set_sizes(list, data.sizes);
     listWrapper.style.display = 'none';
-    setTimeout(function () {      
+    setTimeout(function () {
       listWrapper.style.display = 'block';
       if (data.listStyle === 'dropdown-static') {
         atcb_position_list(button, listWrapper, true);
@@ -1328,9 +1370,9 @@ function atcb_generate_label(data, parent, type, icon = false, text = '', oneOpt
   if (oneOption) {
     parent.id = data.identifier;
   }
-  atcb_generate_label_text(data, parent, type, icon, text, oneOption);
+  atcb_generate_label_content(data, parent, type, icon, text, oneOption);
 }
-function atcb_generate_label_text(data, parent, type, icon, text, oneOption) {
+function atcb_generate_label_content(data, parent, type, icon, text, oneOption) {
   const defaultTriggerText = atcb_translate_hook('Add to Calendar', data);
   if (oneOption && text == '') {
     text = defaultTriggerText;
@@ -1374,10 +1416,15 @@ function atcb_generate_label_text(data, parent, type, icon, text, oneOption) {
     iconEl.innerHTML = atcbIcon[`${type}`];
     parent.appendChild(iconEl);
   }
-  const textEl = document.createElement('span');
-  textEl.classList.add('atcb-text');
-  textEl.textContent = text;
-  parent.appendChild(textEl);
+  if (
+    (type == 'trigger' && data.textLabelButton == true) ||
+    (type != 'trigger' && data.textLabelList == true)
+  ) {
+    const textEl = document.createElement('span');
+    textEl.classList.add('atcb-text');
+    textEl.textContent = text;
+    parent.appendChild(textEl);
+  }
 }
 function atcb_generate_button(button, data) {
   button.textContent = '';
@@ -1394,6 +1441,9 @@ function atcb_generate_button(button, data) {
   atcb_set_sizes(buttonTriggerWrapper, data.sizes);
   const buttonTrigger = document.createElement('button');
   buttonTrigger.classList.add('atcb-button');
+  if (data.textLabelButton == false) {
+    buttonTrigger.classList.add('atcb-no-text');
+  }
   if (data.trigger === 'click') {
     buttonTrigger.classList.add('atcb-click');
   }
@@ -1407,9 +1457,9 @@ function atcb_generate_button(button, data) {
   }
   if (data.options.length === 1) {
     buttonTrigger.classList.add('atcb-single');
-    atcb_generate_label(data, buttonTrigger, data.options[0], true, data.label, true);
+    atcb_generate_label(data, buttonTrigger, data.options[0], data.iconButton, data.label, true);
   } else {
-    atcb_generate_label(data, buttonTrigger, 'trigger', true, data.label);
+    atcb_generate_label(data, buttonTrigger, 'trigger', data.iconButton, data.label);
     const buttonDropdownAnchor = document.createElement('div');
     buttonDropdownAnchor.classList.add('atcb-dropdown-anchor');
     buttonTrigger.appendChild(buttonDropdownAnchor);
@@ -1583,14 +1633,14 @@ function atcb_generate_dropdown_list(data) {
     listCount++;
     optionItem.dataset.optionNumber = listCount;
     optionsList.appendChild(optionItem);
-    atcb_generate_label(data, optionItem, option, true, data.optionLabels[listCount - 1]);
+    atcb_generate_label(data, optionItem, option, data.iconList, data.optionLabels[listCount - 1]);
   });
   if (data.listStyle === 'modal') {
     const optionItem = document.createElement('div');
     optionItem.classList.add('atcb-list-item', 'atcb-list-item-close');
     optionItem.tabIndex = 0;
     optionsList.appendChild(optionItem);
-    atcb_generate_label(data, optionItem, 'close', true);
+    atcb_generate_label(data, optionItem, 'close', data.iconList);
   }
   return optionsList;
 }
@@ -1716,7 +1766,7 @@ function atcb_create_modal(
   modalWrapper.appendChild(modal);
   atcb_set_sizes(modal, data.sizes);
   atcb_set_fullsize(bgOverlay);
-  if (icon != '') {
+  if (icon != '' && data.iconModal == true) {
     const modalIcon = document.createElement('div');
     modalIcon.classList.add('atcb-modal-icon');
     modalIcon.innerHTML = atcbIcon[`${icon}`];
@@ -1949,7 +1999,7 @@ function atcb_generate_date_button(data, parent, subEvent = 'all') {
   btnHeadline.classList.add('atcb-date-btn-headline');
   btnHeadline.textContent = data.dates[`${subEvent}`].name;
   btnDetails.appendChild(btnHeadline);
-  if ((data.location != null && data.location != '') || cancelledInfo == '') {
+  if ((data.location != null && data.location != '') || cancelledInfo != '') {
     const btnLocation = document.createElement('div');
     btnLocation.classList.add('atcb-date-btn-content');
     btnDetails.appendChild(btnLocation);
@@ -2191,7 +2241,7 @@ function atcb_generate_google(data) {
   urlParts.push(
     'dates=' + encodeURIComponent(formattedDate.start) + '%2F' + encodeURIComponent(formattedDate.end)
   );
-  if (data.timeZone != null && data.timeZone != '' && !/GMT[+|-]\d{1,2}/i.test(data.timeZone)) {
+  if (data.timeZone != null && data.timeZone != '' && !/(GMT[+|-]\d{1,2}|Etc\/U|Etc\/Zulu|CET|CST6CDT|EET|EST|EST5EDT|MET|MST|MST7MDT|PST8PDT|WET)/i.test(data.timeZone)) {
     urlParts.push('ctz=' + data.timeZone);
   }
   if (data.name != null && data.name != '') {
@@ -2511,15 +2561,9 @@ function atcb_save_file(file, filename) {
   }
 }
 function atcb_generate_time(data, style = 'delimiters', targetCal = 'general', addTimeZoneOffset = false) {
-  const startDate = data.startDate.split('-');
-  const endDate = data.endDate.split('-');
   if (data.startTime != null && data.startTime != '' && data.endTime != null && data.endTime != '') {
-    const newStartDate = new Date(
-      startDate[0] + '-' + startDate[1] + '-' + startDate[2] + 'T' + data.startTime + ':00.000+00:00'
-    );
-    const newEndDate = new Date(
-      endDate[0] + '-' + endDate[1] + '-' + endDate[2] + 'T' + data.endTime + ':00.000+00:00'
-    );
+    const newStartDate = new Date(data.startDate + 'T' + data.startTime + ':00.000+00:00');
+    const newEndDate = new Date(data.endDate + 'T' + data.endTime + ':00.000+00:00');
     const durationMS = newEndDate - newStartDate;
     const durationHours = Math.floor(durationMS / 1000 / 60 / 60);
     const durationMinutes = Math.floor(((durationMS - durationHours * 60 * 60 * 1000) / 1000 / 60) % 60);
@@ -2538,7 +2582,13 @@ function atcb_generate_time(data, style = 'delimiters', targetCal = 'general', a
       };
     }
     if (data.timeZone != null && data.timeZone != '') {
-      if (targetCal == 'ical' || (targetCal == 'google' && !/GMT[+|-]\d{1,2}/i.test(data.timeZone))) {
+      if (
+        targetCal == 'ical' ||
+        (targetCal == 'google' &&
+          !/(GMT[+|-]\d{1,2}|Etc\/U|Etc\/Zulu|CET|CST6CDT|EET|EST|EST5EDT|MET|MST|MST7MDT|PST8PDT|WET)/i.test(
+            data.timeZone
+          ))
+      ) {
         return {
           start: atcb_format_datetime(newStartDate, 'clean', true, true),
           end: atcb_format_datetime(newEndDate, 'clean', true, true),
@@ -2576,8 +2626,8 @@ function atcb_generate_time(data, style = 'delimiters', targetCal = 'general', a
       allday: false,
     };
   } else {
-    const newStartDate = new Date(Date.UTC(startDate[0], startDate[1] - 1, startDate[2]));
-    const newEndDate = new Date(Date.UTC(endDate[0], endDate[1] - 1, endDate[2]));
+    const newStartDate = new Date(data.startDate + 'T00:00:00.000Z');
+    const newEndDate = new Date(data.endDate + 'T00:00:00.000Z');
     if (targetCal == 'google' || targetCal == 'microsoft' || targetCal == 'ical') {
       newEndDate.setDate(newEndDate.getDate() + 1);
     }
@@ -2672,15 +2722,16 @@ function atcb_position_list(trigger, list, blockUpwards = false, resize = false)
   let triggerDim = trigger.getBoundingClientRect();
   let listDim = list.getBoundingClientRect();
   const btnDim = originalTrigger.getBoundingClientRect();
+  const viewportHeight = document.documentElement.clientHeight;
+  const posWrapper = document.getElementById('atcb-pos-wrapper');
+  if (posWrapper !== null) {
+    posWrapper.style.height = viewportHeight + 'px';
+  }
   if (anchorSet === true && !list.classList.contains('atcb-dropoverlay')) {
-    const viewportHeight = document.documentElement.clientHeight;
-    const posWrapper = document.getElementById('atcb-pos-wrapper');
-    if (posWrapper !== null) {
-      posWrapper.style.height = viewportHeight + 'px';
-    }
     if (
       (list.classList.contains('atcb-dropup') && resize) ||
       (!blockUpwards &&
+        !resize &&
         triggerDim.top + listDim.height > viewportHeight - 20 &&
         2 * btnDim.top + btnDim.height - triggerDim.top - listDim.height > 20)
     ) {

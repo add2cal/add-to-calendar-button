@@ -3,7 +3,7 @@
  *  Add to Calendar Button
  *  ++++++++++++++++++++++
  *
- *  Version: 1.18.3
+ *  Version: 1.18.4
  *  Creator: Jens Kuerschner (https://jenskuerschner.de)
  *  Project: https://github.com/add2cal/add-to-calendar-button
  *  License: Apache-2.0 with “Commons Clause” License Condition v1.0
@@ -103,10 +103,10 @@ function atcb_generate_label(data, parent, type, icon = false, text = '', oneOpt
     parent.id = data.identifier;
   }
   // set icon and text
-  atcb_generate_label_text(data, parent, type, icon, text, oneOption);
+  atcb_generate_label_content(data, parent, type, icon, text, oneOption);
 }
 
-function atcb_generate_label_text(data, parent, type, icon, text, oneOption) {
+function atcb_generate_label_content(data, parent, type, icon, text, oneOption) {
   const defaultTriggerText = atcb_translate_hook('Add to Calendar', data);
   // if there is only 1 option, we use the trigger text on the option label. Therefore, forcing it here
   if (oneOption && text == '') {
@@ -153,10 +153,15 @@ function atcb_generate_label_text(data, parent, type, icon, text, oneOption) {
     iconEl.innerHTML = atcbIcon[`${type}`];
     parent.appendChild(iconEl);
   }
-  const textEl = document.createElement('span');
-  textEl.classList.add('atcb-text');
-  textEl.textContent = text;
-  parent.appendChild(textEl);
+  if (
+    (type == 'trigger' && data.textLabelButton == true) ||
+    (type != 'trigger' && data.textLabelList == true)
+  ) {
+    const textEl = document.createElement('span');
+    textEl.classList.add('atcb-text');
+    textEl.textContent = text;
+    parent.appendChild(textEl);
+  }
 }
 
 // generate the triggering button
@@ -179,6 +184,9 @@ function atcb_generate_button(button, data) {
   // generate the button trigger div
   const buttonTrigger = document.createElement('button');
   buttonTrigger.classList.add('atcb-button');
+  if (data.textLabelButton == false) {
+    buttonTrigger.classList.add('atcb-no-text');
+  }
   if (data.trigger === 'click') {
     buttonTrigger.classList.add('atcb-click');
   }
@@ -194,9 +202,9 @@ function atcb_generate_button(button, data) {
   // if there is only 1 calendar option, we directly show this at the button, but with the trigger's label text (small exception for the date style)
   if (data.options.length === 1) {
     buttonTrigger.classList.add('atcb-single');
-    atcb_generate_label(data, buttonTrigger, data.options[0], true, data.label, true);
+    atcb_generate_label(data, buttonTrigger, data.options[0], data.iconButton, data.label, true);
   } else {
-    atcb_generate_label(data, buttonTrigger, 'trigger', true, data.label);
+    atcb_generate_label(data, buttonTrigger, 'trigger', data.iconButton, data.label);
     // create an empty anchor div to place the dropdown, while the position can be defined via CSS
     const buttonDropdownAnchor = document.createElement('div');
     buttonDropdownAnchor.classList.add('atcb-dropdown-anchor');
@@ -383,7 +391,7 @@ function atcb_generate_dropdown_list(data) {
     optionItem.dataset.optionNumber = listCount;
     optionsList.appendChild(optionItem);
     // generate the label incl. individual eventListener
-    atcb_generate_label(data, optionItem, option, true, data.optionLabels[listCount - 1]);
+    atcb_generate_label(data, optionItem, option, data.iconList, data.optionLabels[listCount - 1]);
   });
   // in the modal case, we also render a close option
   if (data.listStyle === 'modal') {
@@ -391,7 +399,7 @@ function atcb_generate_dropdown_list(data) {
     optionItem.classList.add('atcb-list-item', 'atcb-list-item-close');
     optionItem.tabIndex = 0;
     optionsList.appendChild(optionItem);
-    atcb_generate_label(data, optionItem, 'close', true);
+    atcb_generate_label(data, optionItem, 'close', data.iconList);
   }
   return optionsList;
 }
@@ -529,7 +537,7 @@ function atcb_create_modal(
   // set overlay size just to be sure
   atcb_set_fullsize(bgOverlay);
   // add icon
-  if (icon != '') {
+  if (icon != '' && data.iconModal == true) {
     const modalIcon = document.createElement('div');
     modalIcon.classList.add('atcb-modal-icon');
     modalIcon.innerHTML = atcbIcon[`${icon}`];
@@ -772,7 +780,7 @@ function atcb_generate_date_button(data, parent, subEvent = 'all') {
   btnHeadline.classList.add('atcb-date-btn-headline');
   btnHeadline.textContent = data.dates[`${subEvent}`].name;
   btnDetails.appendChild(btnHeadline);
-  if ((data.location != null && data.location != '') || cancelledInfo == '') {
+  if ((data.location != null && data.location != '') || cancelledInfo != '') {
     const btnLocation = document.createElement('div');
     btnLocation.classList.add('atcb-date-btn-content');
     btnDetails.appendChild(btnLocation);

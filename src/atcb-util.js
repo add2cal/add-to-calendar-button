@@ -3,7 +3,7 @@
  *  Add to Calendar Button
  *  ++++++++++++++++++++++
  *
- *  Version: 1.18.3
+ *  Version: 1.18.4
  *  Creator: Jens Kuerschner (https://jenskuerschner.de)
  *  Project: https://github.com/add2cal/add-to-calendar-button
  *  License: Apache-2.0 with “Commons Clause” License Condition v1.0
@@ -47,16 +47,10 @@ function atcb_save_file(file, filename) {
 
 // SHARED FUNCTION TO GENERATE A TIME STRING
 function atcb_generate_time(data, style = 'delimiters', targetCal = 'general', addTimeZoneOffset = false) {
-  const startDate = data.startDate.split('-');
-  const endDate = data.endDate.split('-');
   if (data.startTime != null && data.startTime != '' && data.endTime != null && data.endTime != '') {
     // for the input, we assume UTC per default
-    const newStartDate = new Date(
-      startDate[0] + '-' + startDate[1] + '-' + startDate[2] + 'T' + data.startTime + ':00.000+00:00'
-    );
-    const newEndDate = new Date(
-      endDate[0] + '-' + endDate[1] + '-' + endDate[2] + 'T' + data.endTime + ':00.000+00:00'
-    );
+    const newStartDate = new Date(data.startDate + 'T' + data.startTime + ':00.000+00:00');
+    const newEndDate = new Date(data.endDate + 'T' + data.endTime + ':00.000+00:00');
     const durationMS = newEndDate - newStartDate;
     const durationHours = Math.floor(durationMS / 1000 / 60 / 60);
     const durationMinutes = Math.floor(((durationMS - durationHours * 60 * 60 * 1000) / 1000 / 60) % 60);
@@ -78,7 +72,13 @@ function atcb_generate_time(data, style = 'delimiters', targetCal = 'general', a
     // if a time zone is given, we adjust the diverse cases
     // (see https://tz.add-to-calendar-technology.com/api/zones.json for available TZ names)
     if (data.timeZone != null && data.timeZone != '') {
-      if (targetCal == 'ical' || (targetCal == 'google' && !/GMT[+|-]\d{1,2}/i.test(data.timeZone))) {
+      if (
+        targetCal == 'ical' ||
+        (targetCal == 'google' &&
+          !/(GMT[+|-]\d{1,2}|Etc\/U|Etc\/Zulu|CET|CST6CDT|EET|EST|EST5EDT|MET|MST|MST7MDT|PST8PDT|WET)/i.test(
+            data.timeZone
+          ))
+      ) {
         // in the iCal case, we simply return and cut off the Z. Same applies to Google, except for GMT +/- time zones, which are not supported there.
         // everything else will be done by injecting the VTIMEZONE block at the iCal function
         return {
@@ -124,8 +124,8 @@ function atcb_generate_time(data, style = 'delimiters', targetCal = 'general', a
     };
   } else {
     // would be an allday event then
-    const newStartDate = new Date(Date.UTC(startDate[0], startDate[1] - 1, startDate[2]));
-    const newEndDate = new Date(Date.UTC(endDate[0], endDate[1] - 1, endDate[2]));
+    const newStartDate = new Date(data.startDate + 'T00:00:00.000Z');
+    const newEndDate = new Date(data.endDate + 'T00:00:00.000Z');
     // increment the end day by 1 for Google Calendar, iCal and Outlook
     if (targetCal == 'google' || targetCal == 'microsoft' || targetCal == 'ical') {
       newEndDate.setDate(newEndDate.getDate() + 1);
@@ -243,17 +243,18 @@ function atcb_position_list(trigger, list, blockUpwards = false, resize = false)
   let triggerDim = trigger.getBoundingClientRect();
   let listDim = list.getBoundingClientRect();
   const btnDim = originalTrigger.getBoundingClientRect();
+  const viewportHeight = document.documentElement.clientHeight;
+  const posWrapper = document.getElementById('atcb-pos-wrapper');
+  if (posWrapper !== null) {
+    posWrapper.style.height = viewportHeight + 'px';
+  }
   if (anchorSet === true && !list.classList.contains('atcb-dropoverlay')) {
     // in the regular case, we also check for the ideal direction
     // not in the !blockUpwards case and not if there is not enough space above
-    const viewportHeight = document.documentElement.clientHeight;
-    const posWrapper = document.getElementById('atcb-pos-wrapper');
-    if (posWrapper !== null) {
-      posWrapper.style.height = viewportHeight + 'px';
-    }
     if (
       (list.classList.contains('atcb-dropup') && resize) ||
       (!blockUpwards &&
+        !resize &&
         triggerDim.top + listDim.height > viewportHeight - 20 &&
         2 * btnDim.top + btnDim.height - triggerDim.top - listDim.height > 20)
     ) {
