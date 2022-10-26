@@ -15,8 +15,8 @@
  * 
  */
 
- .atcb {
-  display: none;
+.atcb-initialized {
+  display: block !important;
 }
 
 /******************************

@@ -18,10 +18,10 @@ import { atcb_init } from './atcb-init.js';
 if (isBrowser()) {
   if (document.readyState !== 'loading') {
     // if the script is loaded after the page has been loaded, run the initilization
-    atcb_init();
+    //atcb_init();
   } else {
     // otherwise, init the magic as soon as the DOM has been loaded
-    document.addEventListener('DOMContentLoaded', atcb_init, false);
+    //document.addEventListener('DOMContentLoaded', atcb_init, false);
   }
 }
 /*! END INIT */

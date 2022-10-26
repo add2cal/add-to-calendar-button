@@ -25,6 +25,99 @@ import {
 } from './atcb-util.js';
 
 let atcbInitialInit = false;
+let atcbBtnCount = 0;
+
+// DEFINING THE WEB COMPONENT
+const template = document.createElement('template');
+template.innerHTML = `<div class="atcb-initialized" style="display:none;"><slot></slot></div>`;
+
+class AddToCalendarButton extends HTMLElement {
+
+  constructor() {
+    super();
+    this.attachShadow({mode: 'open'});
+    // set global event listeners
+    if (!atcbInitialInit) {
+      atcb_set_global_event_listener();
+    }
+    atcb_init_log_msg();
+    this.shadowRoot.appendChild(template.content.cloneNode(true));
+    // get updates when content is updated in the slot
+    this.shadowRoot.addEventListener('slotchange', event => console.log(event));
+  };
+  
+  connectedCallback() {        
+    if (this.id == null || this.id == '') {
+      atcbBtnCount = atcbBtnCount++;
+    }
+    // load attributes
+    this.name = this.getAttribute('name');
+    //...
+
+    // get JSON from HTML block, but remove real code line breaks before parsing.
+    // use <br> or \n explicitely in the description to create a line break.
+    const rootObj = this.shadowRoot.querySelector('.atcb-initialized');
+    const slotInput = this.innerHTML;
+    const atcbJsonInput = (function () {
+      if (slotInput != '') {
+        try {
+          const input = JSON.parse(
+            atcb_secure_content(slotInput.replace(/(\r\n|\n|\r)/g, ''), false)
+          );
+          // we immediately patch for backwards compatibility
+          return atcb_patch_config(input);
+        } catch (e) {
+          throw new Error('Add to Calendar Button generation failed: JSON content provided, but badly formatted (in doubt, try some tool like https://jsonformatter.org/ to validate).\r\nError message: ' + e);
+        }
+      }
+      return '';
+    })();
+    // pull data from PRO server, if key is given
+    const atcbInputData = atcb_get_pro_data(atcbJsonInput);
+    // abort on missing input data
+    if (atcbInputData.length == 0) {
+      throw new Error('Add to Calendar Button generation failed: no data provided');
+    }
+    // check, if all required data is available
+    if (atcb_check_required(atcbInputData)) {
+      // Rewrite dynamic dates, standardize line breaks and transform urls in the description
+      const data = atcb_decorate_data(atcbInputData);
+      // set identifier if not provided (but only if not yet constructed)
+      if (data.identifier == null || data.identifier == '') {
+        if (this.id == null || this.id == '') {
+          data.identifier = 'atcb-btn-' + atcbBtnCount;
+        } else {
+          data.identifier = this.id;
+        }
+      }
+      if (atcb_validate(data)) {
+        // ... and generate the button on success
+        atcb_generate_button(rootObj, data);
+        atcb_update_state_management(data);
+        this.id = data.identifier;
+      }
+    }
+  }
+
+  disconnectedCallback() {
+    // TODO: destroy button in this case too!
+  }
+
+  static get observedAttributes() {
+    return ['name', 'startDate', 'options'];
+  }
+  
+  attributeChangedCallback(name, oldValue, newValue) {
+    console.log(`${name}'s value has been changed from ${oldValue} to ${newValue}`);
+  }
+
+  // TODO: on any change (attr or slot): destroy button (using this.id) and re-construct from scratch!!
+  // for the wrappers, this would mean that they simply can push changes and the web component catches it.
+
+
+}
+
+window.customElements.define('add-to-calendar-button', AddToCalendarButton);
 
 // INITIALIZE THE SCRIPT AND FUNCTIONALITY
 function atcb_init() {

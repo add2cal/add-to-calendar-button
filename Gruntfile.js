@@ -117,7 +117,7 @@ module.exports = function (grunt) {
           'src/atcb-util.js',
           'src/atcb-i18n.js',
           'src/atcb-init.js',
-          'src/atcb.js',
+          'src/atcb.js'
         ],
         dest: 'dist/atcb.js',
         options: {
@@ -136,14 +136,14 @@ module.exports = function (grunt) {
           'src/atcb-util.js',
           'src/atcb-i18n.js',
           'src/atcb-init.js',
-          'src/atcb.js',
+          'src/atcb.js'
         ],
         dest: 'npm_dist/mjs/index.js',
         options: {
           stripBanners: true,
           banner:
             "import { tzlib_get_ical_block, tzlib_get_offset, tzlib_get_timezones } from 'timezones-ical-library';\n\n",
-          process: (content) => prepareFinalFile(content, true, true, 'export'),
+          process: (content) => prepareFinalFile(content, true, true, 'export default'),
         },
       },
       cjs_dist: {
@@ -157,7 +157,7 @@ module.exports = function (grunt) {
           'src/atcb-util.js',
           'src/atcb-i18n.js',
           'src/atcb-init.js',
-          'src/atcb.js',
+          'src/atcb.js'
         ],
         dest: 'npm_dist/cjs/index.js',
         options: {
