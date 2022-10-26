@@ -210,7 +210,10 @@ function atcb_generate_subscribe_links(type, data, keyboardTrigger) {
 }
 
 function atcb_set_fully_successful(id, multiDateModal) {
-  document.getElementById(id).classList.add('atcb-saved');
+  const trigger = document.getElementById(id);
+  if (trigger) {
+    trigger.classList.add('atcb-saved');
+  }
   atcb_saved_hook();
   if (multiDateModal && document.querySelectorAll('.atcb-modal[data-modal-nr]').length < 2) {
     atcb_toggle('close');

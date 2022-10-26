@@ -124,8 +124,10 @@ function atcb_generate_time(data, style = 'delimiters', targetCal = 'general', a
     };
   } else {
     // would be an allday event then
-    const newStartDate = new Date(data.startDate + 'T00:00:00.000Z');
-    const newEndDate = new Date(data.endDate + 'T00:00:00.000Z');
+    const startDate = data.startDate.split('-');
+    const endDate = data.endDate.split('-');
+    const newStartDate = new Date(Date.UTC(startDate[0], startDate[1] - 1, startDate[2]));
+    const newEndDate = new Date(Date.UTC(endDate[0], endDate[1] - 1, endDate[2]));
     // increment the end day by 1 for Google Calendar, iCal and Outlook
     if (targetCal == 'google' || targetCal == 'microsoft' || targetCal == 'ical') {
       newEndDate.setDate(newEndDate.getDate() + 1);
