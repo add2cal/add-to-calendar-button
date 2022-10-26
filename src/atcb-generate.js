@@ -690,28 +690,31 @@ function atcb_generate_date_button(data, parent, subEvent = 'all') {
       endDateInfo = new Date(formattedTime['end']);
       timeZoneInfo = data.dates[`${subEvent}`].timeZone;
     }
+    if (timeZoneInfo == undefined || timeZoneInfo == '') {
+      timeZoneInfo = 'UTC';
+    }
     let timeString = '';
     const optionsDateTimeShort = {
       timeZone: timeZoneInfo,
-      hour12: false,
       year: 'numeric',
       hour: 'numeric',
       minute: '2-digit',
+      hourCycle: 'h23'
     };
     const optionsDateTimeLong = {
       timeZone: timeZoneInfo,
-      hour12: false,
       year: 'numeric',
       month: 'numeric',
       day: 'numeric',
       hour: 'numeric',
       minute: '2-digit',
+      hourCycle: 'h23'
     };
     const optionsTime = {
       timeZone: timeZoneInfo,
-      hour12: false,
       hour: 'numeric',
       minute: '2-digit',
+      hourCycle: 'h23'
     };
     if (
       startDateInfo.getFullYear() === endDateInfo.getFullYear() &&
@@ -757,6 +760,13 @@ function atcb_generate_date_button(data, parent, subEvent = 'all') {
     subEvent = 0;
   }
   const startDate = new Date(data.dates[`${subEvent}`].startDate);
+  const timeZone = (function() {
+    if (data.dates[`${subEvent}`].timeZone != null && data.dates[`${subEvent}`].timeZone != '') {
+      return data.dates[`${subEvent}`].timeZone;
+    } else {
+      return 'UTC';
+    }
+  })();
   const btnLeft = document.createElement('div');
   btnLeft.classList.add('atcb-date-btn-left');
   parent.appendChild(btnLeft);
@@ -765,9 +775,10 @@ function atcb_generate_date_button(data, parent, subEvent = 'all') {
   btnLeft.appendChild(btnDay);
   const btnMonth = document.createElement('div');
   btnMonth.classList.add('atcb-date-btn-month');
-  btnDay.textContent = String(startDate.getDate()).padStart(2, '0');
+  btnDay.textContent = String(startDate.getUTCDate()).padStart(2, '0');
   btnMonth.textContent = startDate.toLocaleString(data.language, {
     month: 'short',
+    timeZone: timeZone
   });
   btnLeft.appendChild(btnMonth);
   const btnRight = document.createElement('div');
