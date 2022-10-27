@@ -3,7 +3,7 @@
  *  Add to Calendar Button
  *  ++++++++++++++++++++++
  *
- *  Version: 1.18.4
+ *  Version: 1.18.5
  *  Creator: Jens Kuerschner (https://jenskuerschner.de)
  *  Project: https://github.com/add2cal/add-to-calendar-button
  *  License: Apache-2.0 with “Commons Clause” License Condition v1.0
@@ -124,8 +124,11 @@ function atcb_generate_time(data, style = 'delimiters', targetCal = 'general', a
     };
   } else {
     // would be an allday event then
-    const newStartDate = new Date(data.startDate + 'T00:00:00.000Z');
-    const newEndDate = new Date(data.endDate + 'T00:00:00.000Z');
+    const startDate = data.startDate.split('-');
+    const endDate = data.endDate.split('-');
+    // we set 12 o clock as time to prevent Daylight saving time to interfere with any calculation here
+    const newStartDate = new Date(Date.UTC(startDate[0], startDate[1] - 1, startDate[2], 12, 0, 0));
+    const newEndDate = new Date(Date.UTC(endDate[0], endDate[1] - 1, endDate[2], 12, 0, 0));
     // increment the end day by 1 for Google Calendar, iCal and Outlook
     if (targetCal == 'google' || targetCal == 'microsoft' || targetCal == 'ical') {
       newEndDate.setDate(newEndDate.getDate() + 1);
@@ -141,6 +144,7 @@ function atcb_generate_time(data, style = 'delimiters', targetCal = 'general', a
 
 function atcb_format_datetime(datetime, style = 'delimiters', includeTime = true, removeZ = false) {
   const regex = (function () {
+    // defines what gets cut off
     if (includeTime) {
       if (style == 'clean') {
         return /(-|:|(\.\d{3}))/g;

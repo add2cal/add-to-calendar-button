@@ -217,14 +217,14 @@ function tzlib_get_timezones(jsonType = false) {
  *  Add to Calendar Button
  *  ++++++++++++++++++++++
  *
- *  Version: 1.18.4
+ *  Version: 1.18.5
  *  Creator: Jens Kuerschner (https://jenskuerschner.de)
  *  Project: https://github.com/add2cal/add-to-calendar-button
  *  License: Apache-2.0 with “Commons Clause” License Condition v1.0
  *  Note:    DO NOT REMOVE THE COPYRIGHT NOTICE ABOVE!
  *
  */
-const atcbVersion = '1.18.4';
+const atcbVersion = '1.18.5';
 const isBrowser = () => {
   if (typeof window === 'undefined') {
     return false;
@@ -758,21 +758,14 @@ function atcb_date_calculation(dateString) {
   const dateParts = dateStringParts[0].split('-');
   let newDate = (function () {
     if (dateParts[0].length < 4) {
-      return new Date(dateParts[2], dateParts[0] - 1, dateParts[1]);
+      return new Date(Date.UTC(dateParts[2], dateParts[0] - 1, dateParts[1]));
     }
-    return new Date(dateParts[0], dateParts[1] - 1, dateParts[2]);
+    return new Date(Date.UTC(dateParts[0], dateParts[1] - 1, dateParts[2]));
   })();
   if (dateStringParts[1] != null && dateStringParts[1] > 0) {
     newDate.setDate(newDate.getDate() + parseInt(dateStringParts[1]));
   }
-  return (
-    newDate.getFullYear() +
-    '-' +
-    ((newDate.getMonth() + 1 < 10 ? '0' : '') + (newDate.getMonth() + 1)) +
-    '-' +
-    (newDate.getDate() < 10 ? '0' : '') +
-    newDate.getDate()
-  );
+  return newDate.toISOString().replace(/T(\d{2}:\d{2}:\d{2}\.\d{3})Z/g, '');
 }
 
 
@@ -1898,61 +1891,74 @@ function atcb_generate_date_button(data, parent, subEvent = 'all') {
     subEvent = 0;
   }
   const fullTimeInfo = (function () {
-    let startDateInfo, endDateInfo, timeZoneInfo;
+    let startDateInfo, endDateInfo, timeZoneInfoStart, timeZoneInfoEnd;
+    let formattedTimeStart = {};
+    let formattedTimeEnd = {};
     if (subEvent == 'all') {
-      startDateInfo = new Date(atcb_generate_time(data.dates[0])['start']);
-      endDateInfo = new Date(atcb_generate_time(data.dates[data.dates.length - 1])['end']);
-      timeZoneInfo = data.dates[0].timeZone;
+      formattedTimeStart = atcb_generate_time(data.dates[0]);
+      formattedTimeEnd = atcb_generate_time(data.dates[data.dates.length - 1]);
+      timeZoneInfoStart = data.dates[0].timeZone;
+      timeZoneInfoEnd = data.dates[data.dates.length - 1].timeZone;
     } else {
-      const formattedTime = atcb_generate_time(data.dates[`${subEvent}`]);
-      startDateInfo = new Date(formattedTime['start']);
-      endDateInfo = new Date(formattedTime['end']);
-      timeZoneInfo = data.dates[`${subEvent}`].timeZone;
+      formattedTimeStart = atcb_generate_time(data.dates[`${subEvent}`]);
+      formattedTimeEnd = formattedTimeStart;
+      timeZoneInfoStart = data.dates[`${subEvent}`].timeZone;
+      timeZoneInfoEnd = timeZoneInfoStart;
+    }
+    startDateInfo = new Date(formattedTimeStart.start);
+    endDateInfo = new Date(formattedTimeEnd.end);
+    if (timeZoneInfoStart == undefined || timeZoneInfoStart == '' || formattedTimeStart.allday) {
+      timeZoneInfoStart = 'UTC';
+    }
+    if (timeZoneInfoEnd == undefined || timeZoneInfoEnd == '' || formattedTimeEnd.allday) {
+      timeZoneInfoEnd = 'UTC';
     }
     let timeString = '';
-    const optionsDateTimeShort = {
-      timeZone: timeZoneInfo,
-      hour12: false,
-      year: 'numeric',
-      hour: 'numeric',
-      minute: '2-digit',
-    };
-    const optionsDateTimeLong = {
-      timeZone: timeZoneInfo,
-      hour12: false,
-      year: 'numeric',
-      month: 'numeric',
-      day: 'numeric',
-      hour: 'numeric',
-      minute: '2-digit',
-    };
-    const optionsTime = {
-      timeZone: timeZoneInfo,
-      hour12: false,
-      hour: 'numeric',
-      minute: '2-digit',
-    };
+    let timeZoneInfoStringStart = '';
+    let timeZoneInfoStringEnd = '';
+    if (
+      !formattedTimeStart.allday &&
+      Intl.DateTimeFormat().resolvedOptions().timeZone != timeZoneInfoStart &&
+      timeZoneInfoStart != timeZoneInfoEnd
+    ) {
+      timeZoneInfoStringStart = ' (' + timeZoneInfoStart + ')';
+    }
+    if (
+      (!formattedTimeEnd.allday && Intl.DateTimeFormat().resolvedOptions().timeZone != timeZoneInfoEnd) ||
+      timeZoneInfoStart != timeZoneInfoEnd
+    ) {
+      timeZoneInfoStringEnd = ' (' + timeZoneInfoEnd + ')';
+    }
+    const formatOptionsStart = get_format_options(timeZoneInfoStart);
+    const formatOptionsEnd = get_format_options(timeZoneInfoEnd);
     if (
       startDateInfo.getFullYear() === endDateInfo.getFullYear() &&
       startDateInfo.getMonth() === endDateInfo.getMonth() &&
       startDateInfo.getDate() === endDateInfo.getDate()
     ) {
-      timeString =
-        startDateInfo.toLocaleString(data.language, optionsDateTimeShort) +
-        ' - ' +
-        endDateInfo.toLocaleTimeString(data.language, optionsTime);
-    } else {
-      timeString =
-        startDateInfo.toLocaleString(data.language, optionsDateTimeShort) +
-        ' - ' +
-        endDateInfo.toLocaleString(data.language, optionsDateTimeLong);
-    }
-    if (timeZoneInfo != null) {
-      if (Intl.DateTimeFormat().resolvedOptions().timeZone != timeZoneInfo) {
-        timeString += '; ' + timeZoneInfo;
+      if (formattedTimeStart.allday) {
+        timeString = startDateInfo.toLocaleDateString(data.language, formatOptionsStart.DateShort);
+      } else {
+        timeString =
+          startDateInfo.toLocaleString(data.language, formatOptionsStart.DateTimeShort) +
+          timeZoneInfoStringStart +
+          ' - ' +
+          endDateInfo.toLocaleTimeString(data.language, formatOptionsEnd.Time) +
+          timeZoneInfoStringEnd;
       }
     } else {
-      timeString += '; UTC';
+      if (formattedTimeStart.allday) {
+        timeString = startDateInfo.toLocaleDateString(data.language, formatOptionsStart.DateShort);
+      } else {
+        timeString = startDateInfo.toLocaleString(data.language, formatOptionsStart.DateTimeShort);
+      }
+      timeString += timeZoneInfoStringStart + ' - ';
+      if (formattedTimeEnd.allday) {
+        timeString += endDateInfo.toLocaleDateString(data.language, formatOptionsEnd.DateLong);
+      } else {
+        timeString += endDateInfo.toLocaleString(data.language, formatOptionsEnd.DateTimeLong);
+      }
+      timeString += timeZoneInfoStringEnd;
     }
     return timeString;
   })();
@@ -1976,6 +1982,13 @@ function atcb_generate_date_button(data, parent, subEvent = 'all') {
     subEvent = 0;
   }
   const startDate = new Date(data.dates[`${subEvent}`].startDate);
+  const timeZone = (function () {
+    if (data.dates[`${subEvent}`].timeZone != null && data.dates[`${subEvent}`].timeZone != '') {
+      return data.dates[`${subEvent}`].timeZone;
+    } else {
+      return 'UTC';
+    }
+  })();
   const btnLeft = document.createElement('div');
   btnLeft.classList.add('atcb-date-btn-left');
   parent.appendChild(btnLeft);
@@ -1984,9 +1997,13 @@ function atcb_generate_date_button(data, parent, subEvent = 'all') {
   btnLeft.appendChild(btnDay);
   const btnMonth = document.createElement('div');
   btnMonth.classList.add('atcb-date-btn-month');
-  btnDay.textContent = String(startDate.getDate()).padStart(2, '0');
+  btnDay.textContent = startDate.toLocaleString(data.language, {
+    day: 'numeric',
+    timeZone: timeZone,
+  });
   btnMonth.textContent = startDate.toLocaleString(data.language, {
     month: 'short',
+    timeZone: timeZone,
   });
   btnLeft.appendChild(btnMonth);
   const btnRight = document.createElement('div');
@@ -2044,6 +2061,42 @@ function atcb_generate_date_button(data, parent, subEvent = 'all') {
     btnCheck.innerHTML = atcbIcon['checkmark'];
     parent.appendChild(btnCheck);
   }
+}
+function get_format_options(timeZoneInfo) {
+  return {
+    DateShort: {
+      timeZone: timeZoneInfo,
+      year: 'numeric',
+    },
+    DateLong: {
+      timeZone: timeZoneInfo,
+      year: 'numeric',
+      month: 'numeric',
+      day: 'numeric',
+    },
+    DateTimeShort: {
+      timeZone: timeZoneInfo,
+      year: 'numeric',
+      hour: 'numeric',
+      minute: '2-digit',
+      hourCycle: 'h23',
+    },
+    DateTimeLong: {
+      timeZone: timeZoneInfo,
+      year: 'numeric',
+      month: 'numeric',
+      day: 'numeric',
+      hour: 'numeric',
+      minute: '2-digit',
+      hourCycle: 'h23',
+    },
+    Time: {
+      timeZone: timeZoneInfo,
+      hour: 'numeric',
+      minute: '2-digit',
+      hourCycle: 'h23',
+    },
+  };
 }
 
 
@@ -2208,7 +2261,10 @@ function atcb_generate_subscribe_links(type, data, keyboardTrigger) {
   atcb_set_fully_successful(data.identifier);
 }
 function atcb_set_fully_successful(id, multiDateModal) {
-  document.getElementById(id).classList.add('atcb-saved');
+  const trigger = document.getElementById(id);
+  if (trigger) {
+    trigger.classList.add('atcb-saved');
+  }
   atcb_saved_hook();
   if (multiDateModal && document.querySelectorAll('.atcb-modal[data-modal-nr]').length < 2) {
     atcb_toggle('close');
@@ -2241,7 +2297,13 @@ function atcb_generate_google(data) {
   urlParts.push(
     'dates=' + encodeURIComponent(formattedDate.start) + '%2F' + encodeURIComponent(formattedDate.end)
   );
-  if (data.timeZone != null && data.timeZone != '' && !/(GMT[+|-]\d{1,2}|Etc\/U|Etc\/Zulu|CET|CST6CDT|EET|EST|EST5EDT|MET|MST|MST7MDT|PST8PDT|WET)/i.test(data.timeZone)) {
+  if (
+    data.timeZone != null &&
+    data.timeZone != '' &&
+    !/(GMT[+|-]\d{1,2}|Etc\/U|Etc\/Zulu|CET|CST6CDT|EET|EST|EST5EDT|MET|MST|MST7MDT|PST8PDT|WET)/i.test(
+      data.timeZone
+    )
+  ) {
     urlParts.push('ctz=' + data.timeZone);
   }
   if (data.name != null && data.name != '') {
@@ -2626,8 +2688,10 @@ function atcb_generate_time(data, style = 'delimiters', targetCal = 'general', a
       allday: false,
     };
   } else {
-    const newStartDate = new Date(data.startDate + 'T00:00:00.000Z');
-    const newEndDate = new Date(data.endDate + 'T00:00:00.000Z');
+    const startDate = data.startDate.split('-');
+    const endDate = data.endDate.split('-');
+    const newStartDate = new Date(Date.UTC(startDate[0], startDate[1] - 1, startDate[2], 12, 0, 0));
+    const newEndDate = new Date(Date.UTC(endDate[0], endDate[1] - 1, endDate[2], 12, 0, 0));
     if (targetCal == 'google' || targetCal == 'microsoft' || targetCal == 'ical') {
       newEndDate.setDate(newEndDate.getDate() + 1);
     }

@@ -3,7 +3,7 @@
  *  Add to Calendar Button
  *  ++++++++++++++++++++++
  *
- *  Version: 1.18.4
+ *  Version: 1.18.5
  *  Creator: Jens Kuerschner (https://jenskuerschner.de)
  *  Project: https://github.com/add2cal/add-to-calendar-button
  *  License: Apache-2.0 with “Commons Clause” License Condition v1.0
@@ -537,21 +537,14 @@ function atcb_date_calculation(dateString) {
   let newDate = (function () {
     // backwards compatibility for version <1.5.0
     if (dateParts[0].length < 4) {
-      return new Date(dateParts[2], dateParts[0] - 1, dateParts[1]);
+      return new Date(Date.UTC(dateParts[2], dateParts[0] - 1, dateParts[1]));
     }
-    return new Date(dateParts[0], dateParts[1] - 1, dateParts[2]);
+    return new Date(Date.UTC(dateParts[0], dateParts[1] - 1, dateParts[2]));
   })();
   if (dateStringParts[1] != null && dateStringParts[1] > 0) {
     newDate.setDate(newDate.getDate() + parseInt(dateStringParts[1]));
   }
-  return (
-    newDate.getFullYear() +
-    '-' +
-    ((newDate.getMonth() + 1 < 10 ? '0' : '') + (newDate.getMonth() + 1)) +
-    '-' +
-    (newDate.getDate() < 10 ? '0' : '') +
-    newDate.getDate()
-  );
+  return newDate.toISOString().replace(/T(\d{2}:\d{2}:\d{2}\.\d{3})Z/g, '');
 }
 
 export { atcb_decorate_data, atcb_patch_config };

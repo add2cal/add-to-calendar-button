@@ -3,7 +3,7 @@
  *  Add to Calendar Button
  *  ++++++++++++++++++++++
  *
- *  Version: 1.18.4
+ *  Version: 1.18.5
  *  Creator: Jens Kuerschner (https://jenskuerschner.de)
  *  Project: https://github.com/add2cal/add-to-calendar-button
  *  License: Apache-2.0 with “Commons Clause” License Condition v1.0
@@ -679,61 +679,75 @@ function atcb_generate_date_button(data, parent, subEvent = 'all') {
     subEvent = 0;
   }
   const fullTimeInfo = (function () {
-    let startDateInfo, endDateInfo, timeZoneInfo;
+    let startDateInfo, endDateInfo, timeZoneInfoStart, timeZoneInfoEnd;
+    let formattedTimeStart = {};
+    let formattedTimeEnd = {};
     if (subEvent == 'all') {
-      startDateInfo = new Date(atcb_generate_time(data.dates[0])['start']);
-      endDateInfo = new Date(atcb_generate_time(data.dates[data.dates.length - 1])['end']);
-      timeZoneInfo = data.dates[0].timeZone;
+      formattedTimeStart = atcb_generate_time(data.dates[0]);
+      formattedTimeEnd = atcb_generate_time(data.dates[data.dates.length - 1]);
+      timeZoneInfoStart = data.dates[0].timeZone;
+      timeZoneInfoEnd = data.dates[data.dates.length - 1].timeZone;
     } else {
-      const formattedTime = atcb_generate_time(data.dates[`${subEvent}`]);
-      startDateInfo = new Date(formattedTime['start']);
-      endDateInfo = new Date(formattedTime['end']);
-      timeZoneInfo = data.dates[`${subEvent}`].timeZone;
+      formattedTimeStart = atcb_generate_time(data.dates[`${subEvent}`]);
+      formattedTimeEnd = formattedTimeStart;
+      timeZoneInfoStart = data.dates[`${subEvent}`].timeZone;
+      timeZoneInfoEnd = timeZoneInfoStart;
+    }
+    startDateInfo = new Date(formattedTimeStart.start);
+    endDateInfo = new Date(formattedTimeEnd.end);
+    // set UTC for undefined cases or allday events to prevent any time zone mismatches
+    if (timeZoneInfoStart == undefined || timeZoneInfoStart == '' || formattedTimeStart.allday) {
+      timeZoneInfoStart = 'UTC';
+    }
+    if (timeZoneInfoEnd == undefined || timeZoneInfoEnd == '' || formattedTimeEnd.allday) {
+      timeZoneInfoEnd = 'UTC';
     }
     let timeString = '';
-    const optionsDateTimeShort = {
-      timeZone: timeZoneInfo,
-      hour12: false,
-      year: 'numeric',
-      hour: 'numeric',
-      minute: '2-digit',
-    };
-    const optionsDateTimeLong = {
-      timeZone: timeZoneInfo,
-      hour12: false,
-      year: 'numeric',
-      month: 'numeric',
-      day: 'numeric',
-      hour: 'numeric',
-      minute: '2-digit',
-    };
-    const optionsTime = {
-      timeZone: timeZoneInfo,
-      hour12: false,
-      hour: 'numeric',
-      minute: '2-digit',
-    };
+    let timeZoneInfoStringStart = '';
+    let timeZoneInfoStringEnd = '';
+    if (
+      !formattedTimeStart.allday &&
+      Intl.DateTimeFormat().resolvedOptions().timeZone != timeZoneInfoStart &&
+      timeZoneInfoStart != timeZoneInfoEnd
+    ) {
+      timeZoneInfoStringStart = ' (' + timeZoneInfoStart + ')';
+    }
+    if (
+      (!formattedTimeEnd.allday && Intl.DateTimeFormat().resolvedOptions().timeZone != timeZoneInfoEnd) ||
+      timeZoneInfoStart != timeZoneInfoEnd
+    ) {
+      timeZoneInfoStringEnd = ' (' + timeZoneInfoEnd + ')';
+    }
+    const formatOptionsStart = get_format_options(timeZoneInfoStart);
+    const formatOptionsEnd = get_format_options(timeZoneInfoEnd);
     if (
       startDateInfo.getFullYear() === endDateInfo.getFullYear() &&
       startDateInfo.getMonth() === endDateInfo.getMonth() &&
       startDateInfo.getDate() === endDateInfo.getDate()
     ) {
-      timeString =
-        startDateInfo.toLocaleString(data.language, optionsDateTimeShort) +
-        ' - ' +
-        endDateInfo.toLocaleTimeString(data.language, optionsTime);
-    } else {
-      timeString =
-        startDateInfo.toLocaleString(data.language, optionsDateTimeShort) +
-        ' - ' +
-        endDateInfo.toLocaleString(data.language, optionsDateTimeLong);
-    }
-    if (timeZoneInfo != null) {
-      if (Intl.DateTimeFormat().resolvedOptions().timeZone != timeZoneInfo) {
-        timeString += '; ' + timeZoneInfo;
+      if (formattedTimeStart.allday) {
+        timeString = startDateInfo.toLocaleDateString(data.language, formatOptionsStart.DateShort);
+      } else {
+        timeString =
+          startDateInfo.toLocaleString(data.language, formatOptionsStart.DateTimeShort) +
+          timeZoneInfoStringStart +
+          ' - ' +
+          endDateInfo.toLocaleTimeString(data.language, formatOptionsEnd.Time) +
+          timeZoneInfoStringEnd;
       }
     } else {
-      timeString += '; UTC';
+      if (formattedTimeStart.allday) {
+        timeString = startDateInfo.toLocaleDateString(data.language, formatOptionsStart.DateShort);
+      } else {
+        timeString = startDateInfo.toLocaleString(data.language, formatOptionsStart.DateTimeShort);
+      }
+      timeString += timeZoneInfoStringStart + ' - ';
+      if (formattedTimeEnd.allday) {
+        timeString += endDateInfo.toLocaleDateString(data.language, formatOptionsEnd.DateLong);
+      } else {
+        timeString += endDateInfo.toLocaleString(data.language, formatOptionsEnd.DateTimeLong);
+      }
+      timeString += timeZoneInfoStringEnd;
     }
     return timeString;
   })();
@@ -757,6 +771,13 @@ function atcb_generate_date_button(data, parent, subEvent = 'all') {
     subEvent = 0;
   }
   const startDate = new Date(data.dates[`${subEvent}`].startDate);
+  const timeZone = (function () {
+    if (data.dates[`${subEvent}`].timeZone != null && data.dates[`${subEvent}`].timeZone != '') {
+      return data.dates[`${subEvent}`].timeZone;
+    } else {
+      return 'UTC';
+    }
+  })();
   const btnLeft = document.createElement('div');
   btnLeft.classList.add('atcb-date-btn-left');
   parent.appendChild(btnLeft);
@@ -765,9 +786,13 @@ function atcb_generate_date_button(data, parent, subEvent = 'all') {
   btnLeft.appendChild(btnDay);
   const btnMonth = document.createElement('div');
   btnMonth.classList.add('atcb-date-btn-month');
-  btnDay.textContent = String(startDate.getDate()).padStart(2, '0');
+  btnDay.textContent = startDate.toLocaleString(data.language, {
+    day: 'numeric',
+    timeZone: timeZone,
+  });
   btnMonth.textContent = startDate.toLocaleString(data.language, {
     month: 'short',
+    timeZone: timeZone,
   });
   btnLeft.appendChild(btnMonth);
   const btnRight = document.createElement('div');
@@ -825,6 +850,43 @@ function atcb_generate_date_button(data, parent, subEvent = 'all') {
     btnCheck.innerHTML = atcbIcon['checkmark'];
     parent.appendChild(btnCheck);
   }
+}
+
+function get_format_options(timeZoneInfo) {
+  return {
+    DateShort: {
+      timeZone: timeZoneInfo,
+      year: 'numeric',
+    },
+    DateLong: {
+      timeZone: timeZoneInfo,
+      year: 'numeric',
+      month: 'numeric',
+      day: 'numeric',
+    },
+    DateTimeShort: {
+      timeZone: timeZoneInfo,
+      year: 'numeric',
+      hour: 'numeric',
+      minute: '2-digit',
+      hourCycle: 'h23',
+    },
+    DateTimeLong: {
+      timeZone: timeZoneInfo,
+      year: 'numeric',
+      month: 'numeric',
+      day: 'numeric',
+      hour: 'numeric',
+      minute: '2-digit',
+      hourCycle: 'h23',
+    },
+    Time: {
+      timeZone: timeZoneInfo,
+      hour: 'numeric',
+      minute: '2-digit',
+      hourCycle: 'h23',
+    },
+  };
 }
 
 export {
