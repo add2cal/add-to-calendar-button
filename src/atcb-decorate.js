@@ -302,20 +302,10 @@ function atcb_decorate_data_style(data) {
     data.lightMode = 'light';
   } else if (data.lightMode != null && data.lightMode != '') {
     const prefersDarkScheme = window.matchMedia('(prefers-color-scheme: dark)');
-    switch (data.lightMode) {
-      case 'system':
-        if (prefersDarkScheme.matches) {
-          data.lightMode = 'dark';
-        } else {
-          data.lightMode = 'light';
-        }
-        break;
-      case 'bodyScheme':
-      case 'dark':
-        break;
-      default:
-        data.lightMode = 'light';
-        break;
+    if (data.lightMode == 'system') {
+      data.lightMode = prefersDarkScheme.matches ? 'dark' : 'light';
+    } else if (data.lightMode != 'bodyScheme' && data.lightMode != 'dark') {
+      data.lightMode = 'light';
     }
   }
   // specify the icons option

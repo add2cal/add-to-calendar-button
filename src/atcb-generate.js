@@ -112,37 +112,19 @@ function atcb_generate_label_content(data, parent, type, icon, text, oneOption) 
   if (oneOption && text == '') {
     text = defaultTriggerText;
   }
-  // defining labels
-  switch (type) {
-    case 'trigger':
-    default:
-      text = text || defaultTriggerText;
-      break;
-    case 'apple':
-      text = text || 'Apple';
-      break;
-    case 'google':
-      text = text || 'Google';
-      break;
-    case 'ical':
-      text = text || atcb_translate_hook('iCal File', data);
-      break;
-    case 'msteams':
-      text = text || 'Microsoft Teams';
-      break;
-    case 'ms365':
-      text = text || 'Microsoft 365';
-      break;
-    case 'outlookcom':
-      text = text || 'Outlook.com';
-      break;
-    case 'yahoo':
-      text = text || 'Yahoo';
-      break;
-    case 'close':
-      text = atcb_translate_hook('Close', data);
-      break;
-  }
+  // defining text labels
+  const labelText = {
+    'trigger': text || defaultTriggerText,
+    'apple': text || 'Apple',
+    'google': text || 'Google',
+    'ical': text || atcb_translate_hook('iCal File', data),
+    'msteams': text || 'Microsoft Teams',
+    'ms365': text || 'Microsoft 365',
+    'outlookcom': text || 'Outlook.com',
+    'yahoo': text || 'Yahoo',
+    'close': atcb_translate_hook('Close', data),
+  };
+  text = labelText[`${type}`];
   // add icon and text label (not in the date style trigger case)
   if (data.buttonStyle == 'date' && (type == 'trigger' || oneOption)) {
     return;
@@ -576,22 +558,12 @@ function atcb_create_modal(
       if (i == 1 && keyboardTrigger) {
         modalSubEventButton.focus();
       }
-      switch (subEvents[0]) {
-        case 'apple':
-        case 'google':
-        case 'ical':
-        case 'msteams':
-        case 'ms365':
-        case 'outlookcom':
-        case 'yahoo':
-          modalSubEventButton.addEventListener(
-            'click',
-            atcb_debounce(() => {
-              atcb_generate_links(subEvents[0], data, subEvents[`${i}`], keyboardTrigger, true);
-            })
-          );
-          break;
-      }
+      modalSubEventButton.addEventListener(
+        'click',
+        atcb_debounce(() => {
+          atcb_generate_links(subEvents[0], data, subEvents[`${i}`], keyboardTrigger, true);
+        })
+      );
     }
   }
   // add buttons (array of objects; attributes: href, type, label, primary(boolean))
