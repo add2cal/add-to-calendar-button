@@ -564,7 +564,7 @@
               trigger: "click",
               iCalFileName: "Reminder-Event",
             };
-            const button = document.querySelector('#default-button');
+            const button = document.getElementById('default-button');
             button.addEventListener('click', () => atcb_action(config, button));
           </script>
           <!-- end of button code -->
@@ -583,7 +583,7 @@
     trigger: "click",
     iCalFileName: "Reminder-Event",
   };
-  const button = document.querySelector('#default-button');
+  const button = document.getElementById('default-button');
   button.addEventListener('click', () => atcb_action(config, button));
 &lt;/script&gt;</code></pre>
         </div>
@@ -610,8 +610,8 @@
             <input id="myTriggerElement" type="submit" value="Save" />
           </form>
           <script type="application/javascript">
-            const triggerEl = document.querySelector('#myTriggerElement');
-            document.querySelector('#event-form')
+            const triggerEl = document.getElementById('myTriggerElement');
+            document.getElementById('event-form')
               .addEventListener('submit', (e) => {
                 e.preventDefault();
                 atcb_action({
@@ -637,8 +637,8 @@
   &lt;input id="myTriggerElement" type="submit" value="Save" /&gt;
 &lt;/form&gt;
 &lt;script type="application/javascript"&gt;
-  const triggerEl = document.querySelector('#myTriggerElement');
-  document.querySelector('#event-form')
+  const triggerEl = document.getElementById('myTriggerElement');
+  document.getElementById('event-form')
     .addEventListener('submit', (e) =&gt; {
       e.preventDefault();
       atcb_action({
