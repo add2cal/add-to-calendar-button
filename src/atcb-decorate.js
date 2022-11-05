@@ -3,7 +3,7 @@
  *  Add to Calendar Button
  *  ++++++++++++++++++++++
  *
- *  Version: 1.18.1
+ *  Version: 1.18.5
  *  Creator: Jens Kuerschner (https://jenskuerschner.de)
  *  Project: https://github.com/add2cal/add-to-calendar-button
  *  License: Apache-2.0 with “Commons Clause” License Condition v1.0
@@ -57,7 +57,9 @@ function atcb_decorate_data(data) {
   data = atcb_decorate_data_options(data);
   data.richData = atcb_decorate_data_rich_data(data);
   data.checkmark = atcb_decorate_data_checkmark(data);
+  data.background = atcb_decorate_data_background(data);
   data.mindScrolling = atcb_decorate_data_mind_scrolling(data);
+  data.branding = atcb_decorate_data_branding(data);
   data = atcb_decorate_data_style(data);
   data = atcb_decorate_data_i18n(data);
   data = atcb_decorate_data_dates(data);
@@ -225,6 +227,23 @@ function atcb_decorate_data_checkmark(data) {
   return true;
 }
 
+// specify the background option
+function atcb_decorate_data_background(data) {
+  if (data.background != null && data.background == false) {
+    return false;
+  }
+  return true;
+}
+
+// specify the branding option
+function atcb_decorate_data_branding(data) {
+  if (data.branding != null && data.branding == false) {
+    return false;
+  }
+  return false;
+  //return true; // not ready yet
+}
+
 // set whether we observe global scroll to re-adjust the dropdown
 function atcb_decorate_data_mind_scrolling(data) {
   if (data.mindScrolling != null && data.mindScrolling == true) {
@@ -299,6 +318,41 @@ function atcb_decorate_data_style(data) {
         break;
     }
   }
+  // specify the icons option
+  data.iconButton = true;
+  data.iconList = true;
+  data.iconModal = true;
+  if (data.icons != null) {
+    data.icons = String(data.icons);
+    if (data.icons != '') {
+      const iconsConfig = data.icons.split('|');
+      if (iconsConfig[0] == 'false') {
+        data.iconButton = false;
+      }
+      if (iconsConfig[1] != null && iconsConfig[1] == 'false') {
+        data.iconList = false;
+      }
+      if (iconsConfig[2] != null && iconsConfig[2] == 'false') {
+        data.iconModal = false;
+      }
+    }
+  }
+  // specify the text labels option
+  data.textLabelButton = true;
+  data.textLabelList = true;
+  if (data.textLabels != null) {
+    data.textLabels = String(data.textLabels);
+    if (data.textLabels != '') {
+      const textLabelsConfig = data.textLabels.split('|');
+      if (textLabelsConfig[0] == 'false') {
+        data.textLabelButton = false;
+      }
+      if (textLabelsConfig[1] != null && textLabelsConfig[1] == 'false') {
+        data.textLabelList = false;
+      }
+    }
+  }
+  // return result
   return data;
 }
 
@@ -483,21 +537,14 @@ function atcb_date_calculation(dateString) {
   let newDate = (function () {
     // backwards compatibility for version <1.5.0
     if (dateParts[0].length < 4) {
-      return new Date(dateParts[2], dateParts[0] - 1, dateParts[1]);
+      return new Date(Date.UTC(dateParts[2], dateParts[0] - 1, dateParts[1]));
     }
-    return new Date(dateParts[0], dateParts[1] - 1, dateParts[2]);
+    return new Date(Date.UTC(dateParts[0], dateParts[1] - 1, dateParts[2]));
   })();
   if (dateStringParts[1] != null && dateStringParts[1] > 0) {
     newDate.setDate(newDate.getDate() + parseInt(dateStringParts[1]));
   }
-  return (
-    newDate.getFullYear() +
-    '-' +
-    ((newDate.getMonth() + 1 < 10 ? '0' : '') + (newDate.getMonth() + 1)) +
-    '-' +
-    (newDate.getDate() < 10 ? '0' : '') +
-    newDate.getDate()
-  );
+  return newDate.toISOString().replace(/T(\d{2}:\d{2}:\d{2}\.\d{3})Z/g, '');
 }
 
 export { atcb_decorate_data, atcb_patch_config };

@@ -3,7 +3,7 @@
  *  Add to Calendar Button
  *  ++++++++++++++++++++++
  *
- *  Version: 1.18.1
+ *  Version: 1.18.5
  *  Creator: Jens Kuerschner (https://jenskuerschner.de)
  *  Project: https://github.com/add2cal/add-to-calendar-button
  *  License: Apache-2.0 with “Commons Clause” License Condition v1.0
@@ -103,10 +103,10 @@ function atcb_generate_label(data, parent, type, icon = false, text = '', oneOpt
     parent.id = data.identifier;
   }
   // set icon and text
-  atcb_generate_label_text(data, parent, type, icon, text, oneOption);
+  atcb_generate_label_content(data, parent, type, icon, text, oneOption);
 }
 
-function atcb_generate_label_text(data, parent, type, icon, text, oneOption) {
+function atcb_generate_label_content(data, parent, type, icon, text, oneOption) {
   const defaultTriggerText = atcb_translate_hook('Add to Calendar', data);
   // if there is only 1 option, we use the trigger text on the option label. Therefore, forcing it here
   if (oneOption && text == '') {
@@ -153,10 +153,15 @@ function atcb_generate_label_text(data, parent, type, icon, text, oneOption) {
     iconEl.innerHTML = atcbIcon[`${type}`];
     parent.appendChild(iconEl);
   }
-  const textEl = document.createElement('span');
-  textEl.classList.add('atcb-text');
-  textEl.textContent = text;
-  parent.appendChild(textEl);
+  if (
+    (type == 'trigger' && data.textLabelButton == true) ||
+    (type != 'trigger' && data.textLabelList == true)
+  ) {
+    const textEl = document.createElement('span');
+    textEl.classList.add('atcb-text');
+    textEl.textContent = text;
+    parent.appendChild(textEl);
+  }
 }
 
 // generate the triggering button
@@ -179,6 +184,9 @@ function atcb_generate_button(button, data) {
   // generate the button trigger div
   const buttonTrigger = document.createElement('button');
   buttonTrigger.classList.add('atcb-button');
+  if (data.textLabelButton == false) {
+    buttonTrigger.classList.add('atcb-no-text');
+  }
   if (data.trigger === 'click') {
     buttonTrigger.classList.add('atcb-click');
   }
@@ -194,9 +202,9 @@ function atcb_generate_button(button, data) {
   // if there is only 1 calendar option, we directly show this at the button, but with the trigger's label text (small exception for the date style)
   if (data.options.length === 1) {
     buttonTrigger.classList.add('atcb-single');
-    atcb_generate_label(data, buttonTrigger, data.options[0], true, data.label, true);
+    atcb_generate_label(data, buttonTrigger, data.options[0], data.iconButton, data.label, true);
   } else {
-    atcb_generate_label(data, buttonTrigger, 'trigger', true, data.label);
+    atcb_generate_label(data, buttonTrigger, 'trigger', data.iconButton, data.label);
     // create an empty anchor div to place the dropdown, while the position can be defined via CSS
     const buttonDropdownAnchor = document.createElement('div');
     buttonDropdownAnchor.classList.add('atcb-dropdown-anchor');
@@ -383,7 +391,7 @@ function atcb_generate_dropdown_list(data) {
     optionItem.dataset.optionNumber = listCount;
     optionsList.appendChild(optionItem);
     // generate the label incl. individual eventListener
-    atcb_generate_label(data, optionItem, option, true, data.optionLabels[listCount - 1]);
+    atcb_generate_label(data, optionItem, option, data.iconList, data.optionLabels[listCount - 1]);
   });
   // in the modal case, we also render a close option
   if (data.listStyle === 'modal') {
@@ -391,7 +399,7 @@ function atcb_generate_dropdown_list(data) {
     optionItem.classList.add('atcb-list-item', 'atcb-list-item-close');
     optionItem.tabIndex = 0;
     optionsList.appendChild(optionItem);
-    atcb_generate_label(data, optionItem, 'close', true);
+    atcb_generate_label(data, optionItem, 'close', data.iconList);
   }
   return optionsList;
 }
@@ -456,6 +464,33 @@ function atcb_generate_bg_overlay(listStyle = 'dropdown', trigger = '', lightMod
   return bgOverlay;
 }
 
+// SMALL LOGO
+function atcb_create_atcbl(atList = true) {
+  /*const atcbL = document.createElement('div');
+  atcbL.id = 'add-to-calendar-button-reference';
+  atcbL.style.width = '150px';
+  atcbL.style.padding = '10px 0';
+  atcbL.style.height = 'auto';
+  atcbL.style.transform = 'translate3d(0, 0, 0)';
+  atcbL.style.zIndex = '15000000';
+  setTimeout(() => {
+    atcbL.innerHTML =
+      '<a href="https://add-to-calendar-pro.com" target="_blank" rel="noopener">' +
+      atcbIcon['atcb'] +
+      '</a>';
+  }, 500);  
+  document.body.appendChild(atcbL);
+  if (atList) {
+    atcbL.style.position = 'absolute';
+  } else {
+    if (window.innerHeight > 1000 || window.innerWidth > 1000) {
+      atcbL.style.position = 'fixed';
+      atcbL.style.bottom = '15px';
+      atcbL.style.right = '30px';
+    }
+  }*/
+}
+
 // FUNCTION TO CREATE MODALS
 // this is only about special communication modals - not the list style modal
 function atcb_create_modal(
@@ -502,7 +537,7 @@ function atcb_create_modal(
   // set overlay size just to be sure
   atcb_set_fullsize(bgOverlay);
   // add icon
-  if (icon != '') {
+  if (icon != '' && data.iconModal == true) {
     const modalIcon = document.createElement('div');
     modalIcon.classList.add('atcb-modal-icon');
     modalIcon.innerHTML = atcbIcon[`${icon}`];
@@ -522,6 +557,9 @@ function atcb_create_modal(
   }
   // add subEvent buttons (array with type first and subEvent numbers following)
   if (subEvents.length > 1) {
+    if (data.branding) {
+      atcb_create_atcbl(false);
+    }
     const modalsubEventsContent = document.createElement('div');
     modalsubEventsContent.classList.add('atcb-modal-content');
     modal.appendChild(modalsubEventsContent);
@@ -641,61 +679,75 @@ function atcb_generate_date_button(data, parent, subEvent = 'all') {
     subEvent = 0;
   }
   const fullTimeInfo = (function () {
-    let startDateInfo, endDateInfo, timeZoneInfo;
+    let startDateInfo, endDateInfo, timeZoneInfoStart, timeZoneInfoEnd;
+    let formattedTimeStart = {};
+    let formattedTimeEnd = {};
     if (subEvent == 'all') {
-      startDateInfo = new Date(atcb_generate_time(data.dates[0])['start']);
-      endDateInfo = new Date(atcb_generate_time(data.dates[data.dates.length - 1])['end']);
-      timeZoneInfo = data.dates[0].timeZone;
+      formattedTimeStart = atcb_generate_time(data.dates[0]);
+      formattedTimeEnd = atcb_generate_time(data.dates[data.dates.length - 1]);
+      timeZoneInfoStart = data.dates[0].timeZone;
+      timeZoneInfoEnd = data.dates[data.dates.length - 1].timeZone;
     } else {
-      const formattedTime = atcb_generate_time(data.dates[`${subEvent}`]);
-      startDateInfo = new Date(formattedTime['start']);
-      endDateInfo = new Date(formattedTime['end']);
-      timeZoneInfo = data.dates[`${subEvent}`].timeZone;
+      formattedTimeStart = atcb_generate_time(data.dates[`${subEvent}`]);
+      formattedTimeEnd = formattedTimeStart;
+      timeZoneInfoStart = data.dates[`${subEvent}`].timeZone;
+      timeZoneInfoEnd = timeZoneInfoStart;
+    }
+    startDateInfo = new Date(formattedTimeStart.start);
+    endDateInfo = new Date(formattedTimeEnd.end);
+    // set UTC for undefined cases or allday events to prevent any time zone mismatches
+    if (timeZoneInfoStart == undefined || timeZoneInfoStart == '' || formattedTimeStart.allday) {
+      timeZoneInfoStart = 'UTC';
+    }
+    if (timeZoneInfoEnd == undefined || timeZoneInfoEnd == '' || formattedTimeEnd.allday) {
+      timeZoneInfoEnd = 'UTC';
     }
     let timeString = '';
-    const optionsDateTimeShort = {
-      timeZone: timeZoneInfo,
-      hour12: false,
-      year: 'numeric',
-      hour: 'numeric',
-      minute: '2-digit',
-    };
-    const optionsDateTimeLong = {
-      timeZone: timeZoneInfo,
-      hour12: false,
-      year: 'numeric',
-      month: 'numeric',
-      day: 'numeric',
-      hour: 'numeric',
-      minute: '2-digit',
-    };
-    const optionsTime = {
-      timeZone: timeZoneInfo,
-      hour12: false,
-      hour: 'numeric',
-      minute: '2-digit',
-    };
+    let timeZoneInfoStringStart = '';
+    let timeZoneInfoStringEnd = '';
+    if (
+      !formattedTimeStart.allday &&
+      Intl.DateTimeFormat().resolvedOptions().timeZone != timeZoneInfoStart &&
+      timeZoneInfoStart != timeZoneInfoEnd
+    ) {
+      timeZoneInfoStringStart = ' (' + timeZoneInfoStart + ')';
+    }
+    if (
+      (!formattedTimeEnd.allday && Intl.DateTimeFormat().resolvedOptions().timeZone != timeZoneInfoEnd) ||
+      timeZoneInfoStart != timeZoneInfoEnd
+    ) {
+      timeZoneInfoStringEnd = ' (' + timeZoneInfoEnd + ')';
+    }
+    const formatOptionsStart = get_format_options(timeZoneInfoStart);
+    const formatOptionsEnd = get_format_options(timeZoneInfoEnd);
     if (
       startDateInfo.getFullYear() === endDateInfo.getFullYear() &&
       startDateInfo.getMonth() === endDateInfo.getMonth() &&
       startDateInfo.getDate() === endDateInfo.getDate()
     ) {
-      timeString =
-        startDateInfo.toLocaleString(data.language, optionsDateTimeShort) +
-        ' - ' +
-        endDateInfo.toLocaleTimeString(data.language, optionsTime);
-    } else {
-      timeString =
-        startDateInfo.toLocaleString(data.language, optionsDateTimeShort) +
-        ' - ' +
-        endDateInfo.toLocaleString(data.language, optionsDateTimeLong);
-    }
-    if (timeZoneInfo != null) {
-      if (Intl.DateTimeFormat().resolvedOptions().timeZone != timeZoneInfo) {
-        timeString += '; ' + timeZoneInfo;
+      if (formattedTimeStart.allday) {
+        timeString = startDateInfo.toLocaleDateString(data.language, formatOptionsStart.DateShort);
+      } else {
+        timeString =
+          startDateInfo.toLocaleString(data.language, formatOptionsStart.DateTimeShort) +
+          timeZoneInfoStringStart +
+          ' - ' +
+          endDateInfo.toLocaleTimeString(data.language, formatOptionsEnd.Time) +
+          timeZoneInfoStringEnd;
       }
     } else {
-      timeString += '; UTC';
+      if (formattedTimeStart.allday) {
+        timeString = startDateInfo.toLocaleDateString(data.language, formatOptionsStart.DateShort);
+      } else {
+        timeString = startDateInfo.toLocaleString(data.language, formatOptionsStart.DateTimeShort);
+      }
+      timeString += timeZoneInfoStringStart + ' - ';
+      if (formattedTimeEnd.allday) {
+        timeString += endDateInfo.toLocaleDateString(data.language, formatOptionsEnd.DateLong);
+      } else {
+        timeString += endDateInfo.toLocaleString(data.language, formatOptionsEnd.DateTimeLong);
+      }
+      timeString += timeZoneInfoStringEnd;
     }
     return timeString;
   })();
@@ -719,6 +771,13 @@ function atcb_generate_date_button(data, parent, subEvent = 'all') {
     subEvent = 0;
   }
   const startDate = new Date(data.dates[`${subEvent}`].startDate);
+  const timeZone = (function () {
+    if (data.dates[`${subEvent}`].timeZone != null && data.dates[`${subEvent}`].timeZone != '') {
+      return data.dates[`${subEvent}`].timeZone;
+    } else {
+      return 'UTC';
+    }
+  })();
   const btnLeft = document.createElement('div');
   btnLeft.classList.add('atcb-date-btn-left');
   parent.appendChild(btnLeft);
@@ -727,9 +786,13 @@ function atcb_generate_date_button(data, parent, subEvent = 'all') {
   btnLeft.appendChild(btnDay);
   const btnMonth = document.createElement('div');
   btnMonth.classList.add('atcb-date-btn-month');
-  btnDay.textContent = String(startDate.getDate()).padStart(2, '0');
+  btnDay.textContent = startDate.toLocaleString(data.language, {
+    day: 'numeric',
+    timeZone: timeZone,
+  });
   btnMonth.textContent = startDate.toLocaleString(data.language, {
     month: 'short',
+    timeZone: timeZone,
   });
   btnLeft.appendChild(btnMonth);
   const btnRight = document.createElement('div');
@@ -742,7 +805,7 @@ function atcb_generate_date_button(data, parent, subEvent = 'all') {
   btnHeadline.classList.add('atcb-date-btn-headline');
   btnHeadline.textContent = data.dates[`${subEvent}`].name;
   btnDetails.appendChild(btnHeadline);
-  if ((data.location != null && data.location != '') || cancelledInfo == '') {
+  if ((data.location != null && data.location != '') || cancelledInfo != '') {
     const btnLocation = document.createElement('div');
     btnLocation.classList.add('atcb-date-btn-content');
     btnDetails.appendChild(btnLocation);
@@ -789,10 +852,48 @@ function atcb_generate_date_button(data, parent, subEvent = 'all') {
   }
 }
 
+function get_format_options(timeZoneInfo) {
+  return {
+    DateShort: {
+      timeZone: timeZoneInfo,
+      year: 'numeric',
+    },
+    DateLong: {
+      timeZone: timeZoneInfo,
+      year: 'numeric',
+      month: 'numeric',
+      day: 'numeric',
+    },
+    DateTimeShort: {
+      timeZone: timeZoneInfo,
+      year: 'numeric',
+      hour: 'numeric',
+      minute: '2-digit',
+      hourCycle: 'h23',
+    },
+    DateTimeLong: {
+      timeZone: timeZoneInfo,
+      year: 'numeric',
+      month: 'numeric',
+      day: 'numeric',
+      hour: 'numeric',
+      minute: '2-digit',
+      hourCycle: 'h23',
+    },
+    Time: {
+      timeZone: timeZoneInfo,
+      hour: 'numeric',
+      minute: '2-digit',
+      hourCycle: 'h23',
+    },
+  };
+}
+
 export {
   atcb_generate_label,
   atcb_generate_button,
   atcb_generate_dropdown_list,
   atcb_create_modal,
   atcb_generate_bg_overlay,
+  atcb_create_atcbl,
 };

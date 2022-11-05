@@ -7,7 +7,7 @@
  *
  * Style: Flat
  *
- * Version: 1.18.1
+ * Version: 1.18.5
  * Creator: Jens Kuerschner (https://jenskuerschner.de)
  * Project: https://github.com/add2cal/add-to-calendar-button
  * License: Apache-2.0 with “Commons Clause” License Condition v1.0
@@ -168,6 +168,10 @@ body.atcb-dark #atcb-bgoverlay.atcb-bodyScheme {
   z-index: 1;
 }
 
+.atcb-button.atcb-no-text {
+  min-width: 0;
+}
+
 .atcb-button.atcb-click {
   top: -3px;
   left: -3px;
@@ -211,7 +215,7 @@ body.atcb-dark #atcb-bgoverlay.atcb-bodyScheme {
 
 .atcb-icon {
   height: 1em;
-  padding-right: 1em;
+  margin-right: 1em;
   line-height: 1em;
   flex-grow: 0;
   flex-shrink: 0;
@@ -219,7 +223,12 @@ body.atcb-dark #atcb-bgoverlay.atcb-bodyScheme {
 
 .atcb-rtl .atcb-icon {
   margin-right: 0;
-  padding-left: 1em;
+  margin-left: 1em;
+}
+
+.atcb-no-text .atcb-icon {
+  margin-right: 0;
+  margin-left: 0;
 }
 
 .atcb-icon svg {
@@ -341,6 +350,10 @@ body.atcb-dark #atcb-bgoverlay.atcb-bodyScheme {
   padding-left: 0.6em;
 }
 
+.atcb-no-text .atcb-list-item .atcb-icon {
+  margin: 0 auto;
+}
+
 .atcb-list-item-close {
   background-color: var(--atcb-close-background);
 }
@@ -428,6 +441,7 @@ body.atcb-dark #atcb-bgoverlay.atcb-bodyScheme {
 
 .atcb-modal-content {
   padding: .3em 2.5em 2.25em;
+  font-size: 1em;
 }
 
 @media (max-width: 575px) {
@@ -683,6 +697,7 @@ body.atcb-dark a.atcb-modal-btn:active {
 }
 
 .atcb-saved .atcb-checkmark {
+  box-sizing: content-box;
   color: var(--atcb-text);
   display: block;
   position: absolute;

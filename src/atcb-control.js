@@ -3,7 +3,7 @@
  *  Add to Calendar Button
  *  ++++++++++++++++++++++
  *
- *  Version: 1.18.1
+ *  Version: 1.18.5
  *  Creator: Jens Kuerschner (https://jenskuerschner.de)
  *  Project: https://github.com/add2cal/add-to-calendar-button
  *  License: Apache-2.0 with “Commons Clause” License Condition v1.0
@@ -11,8 +11,7 @@
  *
  */
 
-import { atcbIcon } from './atcb-globals.js';
-import { atcb_generate_dropdown_list, atcb_generate_bg_overlay } from './atcb-generate.js';
+import { atcb_generate_dropdown_list, atcb_generate_bg_overlay, atcb_create_atcbl } from './atcb-generate.js';
 import {
   atcb_position_list,
   atcb_manage_body_scroll,
@@ -45,6 +44,9 @@ function atcb_open(data, button, keyboardTrigger = false, generatedButton = fals
   const list = atcb_generate_dropdown_list(data);
   const listWrapper = document.createElement('div');
   listWrapper.classList.add('atcb-list-wrapper');
+  if (data.textLabelList == false) {
+    listWrapper.classList.add('atcb-no-text');
+  }
   // set list styles, set button to atcb-active and force modal listStyle if no button is set
   if (button) {
     button.classList.add('atcb-active');
@@ -70,44 +72,44 @@ function atcb_open(data, button, keyboardTrigger = false, generatedButton = fals
   // define background overlay
   const bgOverlay = atcb_generate_bg_overlay(data.listStyle, data.trigger, data.lightMode, data.background);
   // render the items depending on the liststyle
-  const atcbL = document.createElement('div');
-  atcbL.id = 'add-to-calendar-button-reference';
-  atcbL.style.width = '150px';
-  atcbL.style.padding = '10px 0';
-  atcbL.style.height = 'auto';
-  atcbL.style.transform = 'translate3d(0, 0, 0)';
-  atcbL.style.zIndex = '15000000';
-  setTimeout(() => {
-    atcbL.innerHTML =
-      '<a href="https://add-to-calendar-button.com" target="_blank" rel="noopener">' +
-      atcbIcon['atcb'] +
-      '</a>';
-  }, 500);
   if (data.listStyle === 'modal') {
     document.body.appendChild(bgOverlay);
     bgOverlay.appendChild(list);
-    //document.body.appendChild(atcbL);
-    atcbL.style.position = 'fixed';
-    atcbL.style.bottom = '15px';
-    atcbL.style.right = '30px';
+    if (data.branding) {
+      atcb_create_atcbl(false);
+    }
+    atcb_set_sizes(list, data.sizes);
     atcb_manage_body_scroll();
   } else {
-    atcbL.style.position = 'absolute';
-    document.body.appendChild(listWrapper);
+    const positionWrapper = document.createElement('div');
+    positionWrapper.id = 'atcb-pos-wrapper';
+    positionWrapper.style.position = 'absolute';
+    positionWrapper.style.top = '0';
+    positionWrapper.style.bottom = '0';
+    positionWrapper.style.width = '100%';
+    document.body.appendChild(positionWrapper);
+    positionWrapper.appendChild(listWrapper);
     listWrapper.appendChild(list);
     if (data.buttonStyle != '') {
       listWrapper.classList.add('atcb-style-' + data.buttonStyle);
     }
-    //document.body.appendChild(atcbL);
-    document.body.appendChild(bgOverlay);
-    if (data.listStyle === 'dropdown-static') {
-      // in the dropdown-static case, we do not dynamically adjust whether we show the dropdown upwards
-      atcb_position_list(button, listWrapper, true);
-    } else {
-      atcb_position_list(button, listWrapper);
+    if (data.branding) {
+      atcb_create_atcbl();
     }
+    document.body.appendChild(bgOverlay);
+    atcb_set_sizes(list, data.sizes);
+    // setting the position with a tiny timeout to prevent any edge case situations, where the order gets mixed up
+    listWrapper.style.display = 'none';
+    setTimeout(function () {
+      listWrapper.style.display = 'block';
+      if (data.listStyle === 'dropdown-static') {
+        // in the dropdown-static case, we do not dynamically adjust whether we show the dropdown upwards
+        atcb_position_list(button, listWrapper, true);
+      } else {
+        atcb_position_list(button, listWrapper);
+      }
+    }, 5);
   }
-  atcb_set_sizes(list, data.sizes);
   // set overlay size just to be sure
   atcb_set_fullsize(bgOverlay);
   // give keyboard focus to first item in list, if not blocked, because there is definitely no keyboard trigger
@@ -160,6 +162,7 @@ function atcb_close(keyboardTrigger = false) {
       .concat(Array.from(document.querySelectorAll('.atcb-list')))
       .concat(Array.from(document.querySelectorAll('.atcb-modal[data-modal-nr]')))
       .concat(Array.from(document.querySelectorAll('#add-to-calendar-button-reference')))
+      .concat(Array.from(document.querySelectorAll('#atcb-pos-wrapper')))
       .concat(Array.from(document.querySelectorAll('#atcb-bgoverlay')))
       .forEach((el) => el.remove());
   }

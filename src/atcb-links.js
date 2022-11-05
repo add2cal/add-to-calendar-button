@@ -3,7 +3,7 @@
  *  Add to Calendar Button
  *  ++++++++++++++++++++++
  *
- *  Version: 1.18.1
+ *  Version: 1.18.5
  *  Creator: Jens Kuerschner (https://jenskuerschner.de)
  *  Project: https://github.com/add2cal/add-to-calendar-button
  *  License: Apache-2.0 with “Commons Clause” License Condition v1.0
@@ -210,7 +210,10 @@ function atcb_generate_subscribe_links(type, data, keyboardTrigger) {
 }
 
 function atcb_set_fully_successful(id, multiDateModal) {
-  document.getElementById(id).classList.add('atcb-saved');
+  const trigger = document.getElementById(id);
+  if (trigger) {
+    trigger.classList.add('atcb-saved');
+  }
   atcb_saved_hook();
   if (multiDateModal && document.querySelectorAll('.atcb-modal[data-modal-nr]').length < 2) {
     atcb_toggle('close');
@@ -258,7 +261,13 @@ function atcb_generate_google(data) {
     'dates=' + encodeURIComponent(formattedDate.start) + '%2F' + encodeURIComponent(formattedDate.end)
   );
   // setting time zone if given and not GMT +/- something, since this is not supported by Google Calendar
-  if (data.timeZone != null && data.timeZone != '' && !/GMT[+|-]\d{1,2}/i.test(data.timeZone)) {
+  if (
+    data.timeZone != null &&
+    data.timeZone != '' &&
+    !/(GMT[+|-]\d{1,2}|Etc\/U|Etc\/Zulu|CET|CST6CDT|EET|EST|EST5EDT|MET|MST|MST7MDT|PST8PDT|WET)/i.test(
+      data.timeZone
+    )
+  ) {
     urlParts.push('ctz=' + data.timeZone);
   }
   // add details (if set)

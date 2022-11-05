@@ -63,6 +63,7 @@ They should remain focused in scope and avoid containing unrelated commits.
 
 **Please ask first** before embarking on any significant pull request (e.g. implementing features, refactoring code, porting to a different language).
 Otherwise you risk spending a lot of time working on something that the project's developers might not want to merge into the project.
+You can do so via the mentioned discussions board or email us at [contributing at add-to-calendar-pro.com](contributing@add-to-calendar-pro.com);
 
 New development happens on the dev branch first. It is the only branch which gets merged into main!
 
