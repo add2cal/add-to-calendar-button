@@ -248,7 +248,7 @@ import { atcb_init } from "add-to-calendar-button";
 import 'add-to-calendar-button/assets/css/atcb.css';
 
 const MyComponent = () => {
-  React.useEffect(atcb_init, []);
+  React.useEffect( () => { atcb_init() }, []);
   return (
     <div className="atcb">
       { '{' }
