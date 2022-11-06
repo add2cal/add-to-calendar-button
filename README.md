@@ -95,19 +95,13 @@ Simple and convenient integration of 1 or many buttons, configurable directly wi
 
 You can use the jsDeliver CDN and load the respective ressources into your web project.
 
-Put the css (use atcb-3d for an alternative style) into the `<head>`:
+Put the javascript into the `<body>` footer:
 
 ```
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/add-to-calendar-button@1/assets/css/atcb.min.css">
+<script src="https://cdn.jsdelivr.net/npm/add-to-calendar-button@2" async defer></script>
 ```
 
-... and the javascript into the `<body>` footer:
-
-```
-<script src="https://cdn.jsdelivr.net/npm/add-to-calendar-button@1" async defer></script>
-```
-
-_Mind that this always pulls the latest release of v1! You can pin a more specific version by adding the exact version number after the "@" - see [jsDeliver.com](https://www.jsdelivr.com/features#npm) for details._
+_Mind that this always pulls the latest release of v2! You can pin a more specific version by adding the exact version number after the "@" - see [jsDeliver.com](https://www.jsdelivr.com/features#npm) for details._
 If you want to rather host it yourself, you could also download the source files or clone the repository (mind to take the original one at [github.com/add2cal/add-to-calendar-button](https://github.com/add2cal/add-to-calendar-button)) and maintain/update it manually.
 
 <br />
@@ -123,15 +117,13 @@ npm install add-to-calendar-button
 Import the module into your project/component. For example with Angular/React:
 
 ```
-import { atcb_action, atcb_init } from 'add-to-calendar-button';
+import { atcb_action } from 'add-to-calendar-button';
 ```
 
 Either use `atcb_action` with your own buttons/forms/etc, or run `atcb_init` after the DOM has been loaded. To determine the right moment to execute the `atcb_init`, ...
 
 - with Angular, you would use `ngAfterViewInit()` with `atcb_init();` (mind that, depending on your app, other hooks might be better);
 - with React, you might want to include an event listener for `DOMContentLoaded` or use a hook in a functional component like `useEffect(() => atcb_init());`.
-
-Include the css. For example with Angular or React, add `@import 'add-to-calendar-button/assets/css/atcb.css'` to some other css file - or include it in other more direct ways (like adding `import 'add-to-calendar-button/assets/css/atcb.css';` to the respective component) (use atcb-3d for an alternative style).
 
 <br /><br />
 
@@ -327,6 +319,8 @@ Licensed under [Apache-2.0 (with “Commons Clause” License Condition v1.0)](L
 <a href="https://github.com/jekuer"><img src="https://avatars.githubusercontent.com/u/8572883?v=4" title="jekuer" width="60" height="60"></a>
 <a href="https://github.com/add-to-calendar"><img src="https://avatars.githubusercontent.com/u/110406429?s=96&v=4" title="add-to-calendar" width="60" height="60"></a>
 <a href="https://github.com/chadoh"><img src="https://avatars.githubusercontent.com/u/221614?v=4" title="chadoh" width="60" height="60"></a>
+<a href="https://github.com/turcuciprian"><img src="https://avatars.githubusercontent.com/u/3309840?v=4" title="turcuciprian" width="60" height="60"></a>
+<a href="https://github.com/lizakorab"><img src="https://avatars.githubusercontent.com/u/72821189?v=4" title="lizakorab" width="60" height="60"></a>
 <a href="https://github.com/bryan-brancotte"><img src="https://avatars.githubusercontent.com/u/11556772?v=4" title="bryan-brancotte" width="60" height="60"></a>
 <a href="https://github.com/nticaric"><img src="https://avatars.githubusercontent.com/u/824840?v=4" title="nticaric" width="60" height="60"></a>
 <a href="https://github.com/Ortovoxx"><img src="https://avatars.githubusercontent.com/u/56805259?v=4" title="Ortovoxx" width="60" height="60"></a>

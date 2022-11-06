@@ -237,11 +237,10 @@ function atcb_decorate_data_background(data) {
 
 // specify the branding option
 function atcb_decorate_data_branding(data) {
-  if (data.branding != null && data.branding == false) {
-    return false;
+  if (data.branding != null && data.branding == true) {
+    return true;
   }
   return false;
-  //return true; // not ready yet
 }
 
 // set whether we observe global scroll to re-adjust the dropdown
@@ -271,7 +270,7 @@ function atcb_decorate_data_style(data) {
       data.listStyle = 'overlay';
     }
   } else {
-    data.buttonStyle = '';
+    data.buttonStyle = 'default';
   }
   // prepare sizes
   data.sizes = [];

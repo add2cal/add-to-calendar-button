@@ -11,10 +11,10 @@
  *
  */
 
-import { atcbVersion, isBrowser, atcbStates } from './atcb-globals.js';
+import { atcbVersion, isBrowser, atcbStates, atcbCssTemplate } from './atcb-globals.js';
 import { atcb_decorate_data, atcb_patch_config } from './atcb-decorate.js';
 import { atcb_check_required, atcb_validate } from './atcb-validate.js';
-import { atcb_generate_button } from './atcb-generate.js';
+import { atcb_generate_button, atcb_generate_rich_data } from './atcb-generate.js';
 import { atcb_close, atcb_toggle } from './atcb-control.js';
 import {
   atcb_secure_content,
@@ -24,31 +24,28 @@ import {
   atcb_throttle,
 } from './atcb-util.js';
 
-let atcbInitialInit = false;
+let atcbInitialGlobalInit = false;
 let atcbBtnCount = 0;
 
 // DEFINING THE WEB COMPONENT
 const template = document.createElement('template');
-template.innerHTML = `<div class="atcb-initialized" style="display:none;"><slot></slot></div>`;
+template.innerHTML = `<div class="atcb-initialized" style="display:none;"></div>`;
 
 class AddToCalendarButton extends HTMLElement {
 
   constructor() {
     super();
     this.attachShadow({mode: 'open'});
-    // set global event listeners
-    if (!atcbInitialInit) {
-      atcb_set_global_event_listener();
-    }
     atcb_init_log_msg();
-    this.shadowRoot.appendChild(template.content.cloneNode(true));
+    this.shadowRoot.append(template.content.cloneNode(true));
     // get updates when content is updated in the slot
     this.shadowRoot.addEventListener('slotchange', event => console.log(event));
   };
   
-  connectedCallback() {        
-    if (this.id == null || this.id == '') {
-      atcbBtnCount = atcbBtnCount++;
+  connectedCallback() {
+    const componentButtonId = this.getAttribute('atcb-button-id');
+    if (componentButtonId == null || componentButtonId == '') {
+      atcbBtnCount = atcbBtnCount + 1;
     }
     // load attributes
     this.name = this.getAttribute('name');
@@ -84,17 +81,25 @@ class AddToCalendarButton extends HTMLElement {
       const data = atcb_decorate_data(atcbInputData);
       // set identifier if not provided (but only if not yet constructed)
       if (data.identifier == null || data.identifier == '') {
-        if (this.id == null || this.id == '') {
+        if (componentButtonId == null || componentButtonId == '') {
           data.identifier = 'atcb-btn-' + atcbBtnCount;
         } else {
-          data.identifier = this.id;
+          data.identifier = componentButtonId;
         }
       }
       if (atcb_validate(data)) {
-        // ... and generate the button on success
-        atcb_generate_button(rootObj, data);
+        // ... and on success, load css and generate the button
+        atcb_set_light_mode(this.shadowRoot, data);
+        atcb_load_css(this.shadowRoot, rootObj, data.buttonStyle, data.inline, data.customCss);
+        atcb_generate_button(this.shadowRoot, rootObj, data);
         atcb_update_state_management(data);
-        this.id = data.identifier;
+        // set global event listeners
+        atcb_set_global_event_listener(this.shadowRoot, data);
+        this.setAttribute('atcb-button-id', data.identifier);
+        // create schema.org data (https://schema.org/Event), if possible; and add it to the regular DOM
+        if (data.richData && data.name && data.dates[0].location && data.dates[0].startDate) {
+          atcb_generate_rich_data(data, this);
+        }
       }
     }
   }
@@ -114,86 +119,68 @@ class AddToCalendarButton extends HTMLElement {
   // TODO: on any change (attr or slot): destroy button (using this.id) and re-construct from scratch!!
   // for the wrappers, this would mean that they simply can push changes and the web component catches it.
 
-
 }
 
 window.customElements.define('add-to-calendar-button', AddToCalendarButton);
 
-// INITIALIZE THE SCRIPT AND FUNCTIONALITY
-function atcb_init() {
-  // set global event listeners
-  if (!atcbInitialInit) {
-    atcb_set_global_event_listener();
+// set light mode
+function atcb_set_light_mode(shadowRoot, data) {
+  shadowRoot.host.classList.remove('atcb-dark', 'atcb-light', 'atcb-bodyScheme');
+  let hostLightMode = data.lightMode;
+  // Safari + Firefox combat hack
+  if (hostLightMode == 'bodyScheme' && document.body.classList.contains('atcb-dark')) {
+    hostLightMode = 'dark';
   }
-  atcb_init_log_msg();
-  // abort early, if not in a browser
-  if (!isBrowser()) {
-    console.error('no further initialization due to wrong environment (no browser)');
-    return;
+  // apply
+  shadowRoot.host.classList.add('atcb-' + hostLightMode);
+}
+
+// load the right css
+function atcb_load_css(host, rootObj, style = '', inline = false, customCss = '') {
+  // add global no-scroll style
+  if (!document.getElementById('atcb-global-style')) {
+    const cssGlobalContent = document.createElement("style");
+    cssGlobalContent.id = 'atcb-global-style'
+    cssGlobalContent.innerText = '.atcb-modal-no-scroll { overflow-y: hidden; }';
+    document.head.append(cssGlobalContent);
   }
-  // get all placeholders
-  const atcButtons = document.querySelectorAll('.atcb');
-  const btnIDs = [];
-  if (atcButtons.length > 0) {
-    // get the amount of already initialized ones first
-    const atcButtonsInitialized = document.querySelectorAll('.atcb-initialized');
-    // generate the buttons one by one
-    for (let i = 0; i < atcButtons.length; i++) {
-      // skip already initialized ones
-      if (atcButtons[parseInt(i)].classList.contains('atcb-initialized')) {
-        continue;
-      }
-      // get JSON from HTML block, but remove real code line breaks before parsing.
-      // use <br> or \n explicitely in the description to create a line break.
-      const atcbJsonInput = (function () {
-        try {
-          return JSON.parse(
-            atcb_secure_content(atcButtons[parseInt(i)].innerHTML.replace(/(\r\n|\n|\r)/g, ''), false)
-          );
-        } catch (e) {
-          console.error(
-            'Add to Calendar Button generation failed: JSON content provided, but badly formatted (in doubt, try some tool like https://jsonformatter.org/ to validate).\r\nError message: ' +
-              e
-          );
-          return '';
-        }
-      })();
-      // rewrite config for backwards compatibility
-      const atcbJsonInputPatched = atcb_patch_config(atcbJsonInput);
-      // pull data from PRO server, if key is given
-      const atcbInputData = atcb_get_pro_data(atcbJsonInputPatched);
-      // abort on missing input data
-      if (atcbInputData.length == 0) {
-        continue;
-      }
-      // check, if all required data is available
-      if (atcb_check_required(atcbInputData)) {
-        // Rewrite dynamic dates, standardize line breaks and transform urls in the description
-        const data = atcb_decorate_data(atcbInputData);
-        // set identifier if not provided
-        if (data.identifier == null || data.identifier == '') {
-          data.identifier = 'atcb-btn-' + (i + atcButtonsInitialized.length + 1);
-        }
-        // validate the config (JSON iput) ...
-        if (atcb_validate(data)) {
-          // ... and generate the button on success
-          atcb_generate_button(atcButtons[parseInt(i)], data);
-          atcb_update_state_management(data);
-          btnIDs.push(data.identifier);
+  // we load custom styles dynamically
+  if (customCss != '' && style == 'custom') {
+    const cssUrl = customCss;
+    const cssFile = document.createElement("link");
+    cssFile.setAttribute("rel", "stylesheet");
+    cssFile.setAttribute("type", "text/css");
+    cssFile.setAttribute("href", cssUrl);
+    host.prepend(cssFile);
+    if (rootObj != null) {
+      cssFile.onload = function(){
+        if (inline) {
+          rootObj.style.display = 'inline-block';
+        } else {
+          rootObj.style.display = 'block';
         }
       }
     }
+    return;
   }
-  return btnIDs;
+  // otherwise, we load it from a variable
+  if (style != 'none') {
+    const cssContent = document.createElement("style");
+    cssContent.innerText = atcbCssTemplate[`${style}`];
+    host.prepend(cssContent);
+  }
+  if (rootObj != null) {
+    if (inline) {
+      rootObj.style.display = 'inline-block';
+    } else {
+      rootObj.style.display = 'block';
+    }
+  }
 }
 
-// prepare data when not using the init function, but some custom trigger instead
+// prepare data when not using the web component, but some custom trigger instead
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 function atcb_action(data, triggerElement, keyboardTrigger = true) {
-  // set global event listeners
-  if (!atcbInitialInit) {
-    atcb_set_global_event_listener();
-  }
   atcb_init_log_msg();
   data = atcb_secure_content(data);
   // pull data from PRO server, if key is given
@@ -231,8 +218,13 @@ function atcb_action(data, triggerElement, keyboardTrigger = true) {
     );
   }
   atcb_update_state_management(data);
+  // set global event listeners
+  if (!atcbInitialGlobalInit) {
+    atcb_set_global_event_listener(document, data);
+  }
   // if all is fine, open the options list
-  atcb_toggle('open', data, triggerElement, keyboardTrigger);
+  // TODO: load css here too, but only after moving elements to shadowRoot: atcb_load_css(this.shadowRoot, rootObj, data.buttonStyle, data.inline);
+  atcb_toggle(document.body, 'open', data, triggerElement, keyboardTrigger);
   console.log('Add to Calendar Button "' + data.identifier + '" triggered');
   return [data.identifier];
 }
@@ -241,7 +233,7 @@ function atcb_action(data, triggerElement, keyboardTrigger = true) {
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 function atcb_destroy(id) {
   // close everything before killing the element
-  atcb_close();
+  atcb_close(); // TODO: needs a host information!! -> rebuild the killing procedure. Rather kill the whole component!
   const el = document.getElementById(id);
   if (atcbStates[`${id}`] == null || !el) {
     console.error('Add to Calendar Button could not be destroyed! ID unknown.');
@@ -272,10 +264,10 @@ function atcb_update_state_management(data) {
 
 // SHARED FUNCTION TO GENERATE THE INIT LOG MESSAGE
 function atcb_init_log_msg() {
-  if (!atcbInitialInit) {
+  if (!atcbInitialGlobalInit) {
     console.log('Add to Calendar Button Script initialized (version ' + atcbVersion + ')');
     console.log('See https://github.com/add2cal/add-to-calendar-button for details');
-    atcbInitialInit = true;
+    atcbInitialGlobalInit = true;
   }
 }
 
@@ -289,26 +281,30 @@ function atcb_get_pro_data(data) {
 }
 
 // GLOBAL KEYBOARD AND DEVICE LISTENERS
-function atcb_set_global_event_listener() {
+function atcb_set_global_event_listener(host, data) {
   // return, if we are not in a browser
   if (!isBrowser()) {
     return;
   }
+  // temporary listener to any class change at the body for the light mode Safari/Firefox hack
+  if (data.lightMode == 'bodyScheme') {
+    atcb_set_light_mode(host, data);
+  }
   // global listener for ESC key to close dropdown
   document.addEventListener('keyup', function (event) {
     if (event.key === 'Escape') {
-      atcb_toggle('close', '', '', true);
+      atcb_toggle(host, 'close', '', '', true);
     }
   });
   // global listener for arrow key optionlist navigation
   document.addEventListener('keydown', (event) => {
     if (
-      document.querySelector('.atcb-list') &&
+      host.querySelector('.atcb-list') &&
       (event.key === 'ArrowDown' || event.key === 'ArrowUp' || event.key === 'Tab')
     ) {
       let targetFocus = 0;
-      let currFocusOption = document.activeElement;
-      const optionListCount = document.querySelectorAll('.atcb-list-item').length;
+      let currFocusOption = host.activeElement;
+      const optionListCount = host.querySelectorAll('.atcb-list-item').length;
       if (currFocusOption.classList.contains('atcb-list-item')) {
         if (event.key === 'ArrowDown' && currFocusOption.dataset.optionNumber < optionListCount) {
           event.preventDefault();
@@ -318,19 +314,19 @@ function atcb_set_global_event_listener() {
           targetFocus = parseInt(currFocusOption.dataset.optionNumber) - 1;
         }
         if (targetFocus > 0) {
-          document.querySelector('.atcb-list-item[data-option-number="' + targetFocus + '"]').focus();
+          host.querySelector('.atcb-list-item[data-option-number="' + targetFocus + '"]').focus();
         }
       } else {
         event.preventDefault();
         switch (event.key) {
           case 'ArrowDown':
-            document.querySelector('.atcb-list-item[data-option-number="1"]').focus();
+            host.querySelector('.atcb-list-item[data-option-number="1"]').focus();
             break;
           case 'ArrowUp':
-            document.querySelector('.atcb-list-item[data-option-number="' + optionListCount + '"]').focus();
+            host.querySelector('.atcb-list-item[data-option-number="' + optionListCount + '"]').focus();
             break;
           default:
-            document.querySelector('.atcb-list-item[data-option-number="1"]').focus();
+            host.querySelector('.atcb-list-item[data-option-number="1"]').focus();
             break;
         }
       }
@@ -340,14 +336,14 @@ function atcb_set_global_event_listener() {
   window.addEventListener(
     'resize',
     atcb_throttle(() => {
-      const activeOverlay = document.getElementById('atcb-bgoverlay');
+      const activeOverlay = host.getElementById('atcb-bgoverlay');
       if (activeOverlay != null) {
         atcb_set_fullsize(activeOverlay);
-        atcb_manage_body_scroll();
+        atcb_manage_body_scroll(host);
       }
-      const activeButton = document.querySelector('.atcb-active');
+      const activeButton = host.querySelector('.atcb-active');
       if (activeButton != null) {
-        const activeList = document.querySelector('.atcb-dropdown');
+        const activeList = host.querySelector('.atcb-dropdown');
         if (activeList != null) {
           atcb_position_list(activeButton, activeList, false, true);
         }
@@ -358,9 +354,9 @@ function atcb_set_global_event_listener() {
   window.addEventListener(
     'scroll',
     atcb_throttle(() => {
-      const activeButton = document.querySelector('.atcb-active');
+      const activeButton = host.querySelector('.atcb-active');
       if (activeButton != null) {
-        const activeList = document.querySelector('.atcb-dropdown');
+        const activeList = host.querySelector('.atcb-dropdown');
         if (activeList != null) {
           if (activeList.classList.contains('atcb-mind-scrolling')) {
             atcb_position_list(activeButton, activeList, false, true);
@@ -371,4 +367,4 @@ function atcb_set_global_event_listener() {
   );
 }
 
-export { atcb_init, atcb_action, atcb_destroy };
+export { AddToCalendarButton, atcb_action, atcb_destroy };

@@ -1,8 +1,9 @@
+const fs = require("fs");
+
 function prepareFinalFile(
   content,
   stripAllImport = true,
   stripAllExport = true,
-  newExportPhrase = '',
   transformToCommonJS = false
 ) {
   // remove TimeZones iCal Library version output (do not do this, if your are using the time zone library standalone!)
@@ -10,6 +11,25 @@ function prepareFinalFile(
     /^console\.log\('Add to Calendar TimeZones iCal Library loaded \(version ' \+ tzlibVersion \+ '\)'\);$/m,
     ''
   );
+  // add style inline
+  // TODO: replace 'const atcbCssTemplate = [];' with style block
+  const styleRegex = /const\satcbCssTemplate\s=\s\{\};/;
+  if (styleRegex.test(content)) {
+    const availableStyles = ['default', '3d', 'flat', 'round', 'neumorphism', 'text', 'date', 'bubble'];
+    let inlineStyleOutput = 'const atcbCssTemplate = {';
+    availableStyles.forEach ((style) => {
+      const styleString = (function() {
+        if (style != 'default') {
+          return '-' + style;
+        }
+        return '';
+      })();
+      const cssFileContent = fs.readFileSync('./assets/css/atcb' + styleString + '.min.css').toString().replace(/"/g, '\\"');
+      inlineStyleOutput += '\r\n"' + style + '": "' + cssFileContent + '",';
+    });
+    inlineStyleOutput += '\r\n};';
+    content = content.replace(styleRegex, inlineStyleOutput);
+  }
   if (stripAllImport) {
     // remove all import statements
     content = content.replace(/^import[\w\s{}\+-_,'"`\/\\.]*';/gim, '');
@@ -21,13 +41,6 @@ function prepareFinalFile(
   if (stripAllExport) {
     // remove all export statements
     content = content.replace(/^export {[\w\s-_,]*};/gim, '');
-  }
-  if (newExportPhrase != '') {
-    // remove export statements
-    content = content.replace(
-      /^\/\*! START INIT \*\/[\s\S]*?\/\*! END INIT \*\/$/gm,
-      `${newExportPhrase} { atcb_action, atcb_init, atcb_destroy };`
-    );
   }
   if (transformToCommonJS) {
     content = content
@@ -80,9 +93,6 @@ module.exports = function (grunt) {
     },
     // minifies the css file
     cssmin: {
-      options: {
-        sourceMap: true,
-      },
       minify: {
         files: [
           {
@@ -116,8 +126,7 @@ module.exports = function (grunt) {
           'src/atcb-links.js',
           'src/atcb-util.js',
           'src/atcb-i18n.js',
-          'src/atcb-init.js',
-          'src/atcb.js'
+          'src/atcb-init.js'
         ],
         dest: 'dist/atcb.js',
         options: {
@@ -135,15 +144,15 @@ module.exports = function (grunt) {
           'src/atcb-links.js',
           'src/atcb-util.js',
           'src/atcb-i18n.js',
-          'src/atcb-init.js',
-          'src/atcb.js'
+          'src/atcb-init.js'
         ],
         dest: 'npm_dist/mjs/index.js',
         options: {
           stripBanners: true,
           banner:
-            "import { tzlib_get_ical_block, tzlib_get_offset, tzlib_get_timezones } from 'timezones-ical-library';\n\n",
-          process: (content) => prepareFinalFile(content, true, true, 'export default'),
+            "import { tzlib_get_ical_block, tzlib_get_offset, tzlib_get_timezones } from 'timezones-ical-library';\r\n",
+          footer: "export default { atcb_action, atcb_destroy };",
+          process: (content) => prepareFinalFile(content, true, true),
         },
       },
       cjs_dist: {
@@ -156,15 +165,15 @@ module.exports = function (grunt) {
           'src/atcb-links.js',
           'src/atcb-util.js',
           'src/atcb-i18n.js',
-          'src/atcb-init.js',
-          'src/atcb.js'
+          'src/atcb-init.js'
         ],
         dest: 'npm_dist/cjs/index.js',
         options: {
           stripBanners: true,
           banner:
-            "// eslint-disable-next-line @typescript-eslint/no-var-requires\r\nconst tzlibActions = require('timezones-ical-library');\n\n",
-          process: (content) => prepareFinalFile(content, true, true, 'module.exports =', true),
+            "// eslint-disable-next-line @typescript-eslint/no-var-requires\r\nconst tzlibActions = require('timezones-ical-library');\r\n",
+            footer: "module.exports = { atcb_action, atcb_destroy };",
+          process: (content) => prepareFinalFile(content, true, true, true),
         },
       },
     },
@@ -221,5 +230,6 @@ module.exports = function (grunt) {
 
   // Register task(s).
   grunt.registerTask('default', ['clean', 'cssmin', 'concat:dist', 'uglify']);
+  grunt.registerTask('dev', ['clean', 'cssmin', 'concat:dist', 'uglify']);
   grunt.registerTask('npm', ['clean', 'cssmin', 'concat', 'file-creator', 'uglify']);
 };

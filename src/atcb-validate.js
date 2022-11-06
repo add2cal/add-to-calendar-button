@@ -69,6 +69,7 @@ function atcb_check_required(data) {
 function atcb_validate(data) {
   const msgPrefix = 'Add to Calendar Button generation (' + data.identifier + ')';
   if (!atcb_validate_icsFile(data, msgPrefix)) return false;
+  if (!atcb_validate_buttonStyle(data, msgPrefix)) return false;
   if (!atcb_validate_subscribe(data, msgPrefix)) return false;
   if (!atcb_validate_created(data, msgPrefix)) return false;
   if (!atcb_validate_updated(data, msgPrefix)) return false;
@@ -99,6 +100,24 @@ function atcb_validate_icsFile(data, msgPrefix, i = '', msgSuffix = '') {
       console.error(msgPrefix + ' failed: explicit ics file path not valid' + msgSuffix);
       return false;
     }
+  }
+  return true;
+}
+
+// validate the subscription functionality (requires an explicit ics file)
+function atcb_validate_buttonStyle(data, msgPrefix) {
+  const availableStyles = ['default', '3d', 'flat', 'round', 'neumorphism', 'text', 'date', 'bubble', 'custom', 'none'];
+  if (!availableStyles.includes(data.buttonStyle)) {
+    console.error(msgPrefix + ' failed: provided buttonStyle invalid');
+    return false;
+  }
+  if (data.customCss != null && data.customCss != '' && (!atcb_secure_url(data.customCss, false) || !/^https:\/\/(.)*\.css$/m.test(data.customCss))) {
+    console.error(msgPrefix + ' failed: customCss provided, but no valid url');
+    return false;
+  }
+  if ((data.customCss == null || data.customCss == '') && data.buttonStyle == 'custom') {
+    console.error(msgPrefix + ' failed: buttonStyle "custom" selected, but no customCss file provided');
+    return false;
   }
   return true;
 }

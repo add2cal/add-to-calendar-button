@@ -1773,7 +1773,7 @@ Prism.languages.js = Prism.languages.javascript;
     var wrapper = document.createElement('div');
     wrapper.classList.add('code-toolbar');
     pre.parentNode.insertBefore(wrapper, pre);
-    wrapper.appendChild(pre);
+    wrapper.append(pre);
 
     // Setup the toolbar
     var toolbar = document.createElement('div');
@@ -1798,12 +1798,12 @@ Prism.languages.js = Prism.languages.javascript;
       var item = document.createElement('div');
       item.classList.add('toolbar-item');
 
-      item.appendChild(element);
-      toolbar.appendChild(item);
+      item.append(element);
+      toolbar.append(item);
     });
 
     // Add our toolbar to the currently created wrapper of <pre> tag
-    wrapper.appendChild(toolbar);
+    wrapper.append(toolbar);
   });
 
   registerButton('label', function (env) {
@@ -1888,7 +1888,7 @@ Prism.languages.js = Prism.languages.javascript;
     textArea.style.left = '0';
     textArea.style.position = 'fixed';
 
-    document.body.appendChild(textArea);
+    document.body.append(textArea);
     textArea.focus();
     textArea.select();
 
@@ -1970,7 +1970,7 @@ Prism.languages.js = Prism.languages.javascript;
     linkCopy.className = 'copy-to-clipboard-button';
     linkCopy.setAttribute('type', 'button');
     var linkSpan = document.createElement('span');
-    linkCopy.appendChild(linkSpan);
+    linkCopy.append(linkSpan);
 
     setState('copy');
 

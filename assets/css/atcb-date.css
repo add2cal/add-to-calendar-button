@@ -1,6 +1,4 @@
-/*!
- * @preserve
- *
+/*
  * ++++++++++++++++++++++
  * Add to Calendar Button
  * ++++++++++++++++++++++
@@ -15,15 +13,11 @@
  * 
  */
 
-.atcb-initialized {
-  display: block !important;
-}
-
 /******************************
  * Global colors and shadows
  */
 
-:root {
+:host {
   --base-font-size-l: 16px;
   --base-font-size-m: 16px;
   --base-font-size-s: 16px;
@@ -71,14 +65,8 @@
 
 /* Dark mode */
 
-.atcb-button-wrapper.atcb-dark,
-body.atcb-dark .atcb-button-wrapper.atcb-bodyScheme,
-.atcb-list.atcb-dark,
-body.atcb-dark .atcb-list.atcb-bodyScheme,
-.atcb-modal-box.atcb-dark,
-body.atcb-dark .atcb-modal-box.atcb-bodyScheme,
-#atcb-bgoverlay.atcb-dark,
-body.atcb-dark #atcb-bgoverlay.atcb-bodyScheme {
+:host(.atcb-dark),
+:host-context(body.atcb-dark):host(.atcb-bodyScheme) {
   --atcb-background: #2e2e2e;
   --atcb-background-hover: #474747;
   --atcb-border: #4d4d4d;
@@ -505,10 +493,6 @@ body.atcb-dark #atcb-bgoverlay.atcb-bodyScheme {
  * Modal
  */
 
-.atcb-modal-no-scroll {
-  overflow-y: hidden;
-}
-
 .atcb-modal {
   display: block;
   margin: auto;
@@ -647,24 +631,6 @@ button.atcb-modal-btn:focus-visible,
 a.atcb-modal-btn:focus-visible{
   background-color: var(--atcb-modal-btn-background-hover);
   outline: 2px solid var(--atcb-keyboard-focus);
-}
-
-body.atcb-dark a.atcb-modal-btn {
-  color: var(--atcb-modal-btn-sec-text);
-}
-
-body.atcb-dark a.atcb-modal-btn:focus-visible {
-  background-color: var(--atcb-modal-btn-background-hover);
-  outline: 2px solid var(--atcb-keyboard-focus);
-}
-
-body.atcb-dark a.atcb-modal-btn.atcb-modal-btn-primary  {
-  color: var(--atcb-modal-btn-text);
-}
-
-body.atcb-dark a.atcb-modal-btn:hover,
-body.atcb-dark a.atcb-modal-btn:active {
-  color: var(--atcb-modal-btn-text-hover);
 }
 
 /******************************

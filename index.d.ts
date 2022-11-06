@@ -1,5 +1,5 @@
 declare module 'add-to-calendar-button' {
-  export function atcb_init(): string[];
+  export default AddToCalendarButton;
   export function atcb_action(
     config: {
       proKey?: string;
@@ -47,7 +47,7 @@ declare module 'add-to-calendar-button' {
       options?: ('Apple' | 'Google' | 'iCal' | 'Microsoft365' | 'MicrosoftTeams' | 'Outlook.com' | 'Yahoo')[];
       iCalFileName?: string;
       listStyle?: 'dropdown' | 'dropdown-static' | 'overlay' | 'modal';
-      buttonStyle?: 'default' | '3d' | 'flat' | 'round' | 'neumorphism' | 'text' | 'date' | 'custom' | 'none';
+      buttonStyle?: 'default' | '3d' | 'flat' | 'round' | 'neumorphism' | 'text' | 'date' | 'bubble' | 'custom' | 'none';
       trigger?: 'hover' | 'click';
       icons?: string;
       textLabels?: string;
@@ -58,6 +58,7 @@ declare module 'add-to-calendar-button' {
       size?: string;
       label?: string;
       customLabels?: object;
+      customCss?: string;
       lightMode?: 'system' | 'dark' | 'light' | 'bodyScheme';
       language?:
         | 'en'

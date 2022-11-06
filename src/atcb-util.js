@@ -248,10 +248,6 @@ function atcb_position_list(trigger, list, blockUpwards = false, resize = false)
   let listDim = list.getBoundingClientRect();
   const btnDim = originalTrigger.getBoundingClientRect();
   const viewportHeight = document.documentElement.clientHeight;
-  const posWrapper = document.getElementById('atcb-pos-wrapper');
-  if (posWrapper !== null) {
-    posWrapper.style.height = viewportHeight + 'px';
-  }
   if (anchorSet === true && !list.classList.contains('atcb-dropoverlay')) {
     // in the regular case, we also check for the ideal direction
     // not in the !blockUpwards case and not if there is not enough space above
@@ -312,18 +308,18 @@ function atcb_position_list(trigger, list, blockUpwards = false, resize = false)
 }
 
 // SHARED FUNCTION TO CALCULATE WHETHER WE BLOCK SCROLLING OR NOT (WHEN MODAL OR LIST IS LARGER THAN THE SCREEN HEIGHT)
-function atcb_manage_body_scroll(modalObj = null) {
+function atcb_manage_body_scroll(host, modalObj = null) {
   const modal = (function () {
     // if a specific modal is defined, we take it. Otherwise we go for the latest one
     if (modalObj != null) {
       return modalObj;
     } else {
-      const allModals = document.querySelectorAll('.atcb-modal');
+      const allModals = host.querySelectorAll('.atcb-modal');
       if (allModals.length == 0) {
         return null;
       }
       return allModals[allModals.length - 1];
-      // since ES2022 this could also simply be return document.querySelectorAll('.atcb-modal').at(-1); - let's change this in the future
+      // since ES2022 this could also simply be return host.querySelectorAll('.atcb-modal').at(-1); - let's change this in the future
     }
   })();
   if (modal == null) {
@@ -361,7 +357,7 @@ function atcb_generate_uuid() {
 // SHARED FUNCTION TO COPY TO CLIPBOARD
 function atcb_copy_to_clipboard(dataString) {
   const tmpInput = document.createElement('input');
-  document.body.appendChild(tmpInput);
+  document.body.append(tmpInput);
   const editable = tmpInput.contentEditable;
   const readOnly = tmpInput.readOnly;
   tmpInput.value = dataString;
