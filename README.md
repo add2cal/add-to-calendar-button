@@ -223,7 +223,7 @@ const MyComponent = () => {
     <form onSubmit={e => {
       e.preventDefault();
       atcb_action({
-        name,
+        name: name,
         startDate: "2022-10-14",
         endDate: "2022-10-18",
         options: ['Apple', 'Google', 'iCal', 'Microsoft365', 'Outlook.com', 'Yahoo'],
@@ -248,7 +248,7 @@ import { atcb_init } from "add-to-calendar-button";
 import 'add-to-calendar-button/assets/css/atcb.css';
 
 const MyComponent = () => {
-  React.useEffect(atcb_init, []);
+  React.useEffect( () => { atcb_init() }, []);
   return (
     <div className="atcb">
       { '{' }
