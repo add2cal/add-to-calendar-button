@@ -215,7 +215,7 @@ const MyComponent = () => {
     <form onSubmit={e => {
       e.preventDefault();
       atcb_action({
-        name,
+        name: name,
         startDate: "2022-10-14",
         endDate: "2022-10-18",
         options: ['Apple', 'Google', 'iCal', 'Microsoft365', 'Outlook.com', 'Yahoo'],
@@ -240,7 +240,7 @@ import { atcb_init } from "add-to-calendar-button";
 import 'add-to-calendar-button/assets/css/atcb.css';
 
 const MyComponent = () => {
-  React.useEffect(atcb_init, []);
+  React.useEffect( () => { atcb_init() }, []);
   return (
     <div className="atcb">
       { '{' }
@@ -328,6 +328,8 @@ Licensed under [Apache-2.0 (with “Commons Clause” License Condition v1.0)](L
 <a href="https://github.com/killerrin"><img src="https://avatars.githubusercontent.com/u/3269687?v=4" title="killerrin" width="60" height="60"></a>
 <a href="https://github.com/acm-will"><img src="https://avatars.githubusercontent.com/u/103984058?v=4" title="acm-will" width="60" height="60"></a>
 <a href="https://github.com/ssaaiidd"><img src="https://avatars.githubusercontent.com/u/29234802?v=4" title="ssaaiidd" width="60" height="60"></a>
+<a href="https://github.com/c0rychu"><img src="https://avatars.githubusercontent.com/u/55235141?v=4" title="Cory Chu" width="60" height="60"></a>
+<a href="https://github.com/Denperidge"><img src="https://avatars.githubusercontent.com/u/27348469?v=4" title="Cat" width="60" height="60"></a>
 <a href="https://github.com/apps/dependabot"><img src="https://avatars.githubusercontent.com/in/29110?v=4" title="dependabot[bot]" width="60" height="60"></a>
 
 <br />
