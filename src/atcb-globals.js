@@ -15,6 +15,11 @@
 const atcbVersion = '1.18.5';
 
 // CHECKING FOR SPECIFIC DEVICED AND SYSTEMS
+const navigator = window.navigator || {};
+const platform = (navigator.platform || '').toLowerCase();
+const userAgent = (navigator.userAgent || '').toLowerCase();
+const vendor = (navigator.vendor || '').toLowerCase();
+const opera = (window.opera || '').toLowerCase();
 // browser
 const isBrowser = () => {
   if (typeof window === 'undefined') {
@@ -27,9 +32,9 @@ const isBrowser = () => {
 const isiOS = isBrowser()
   ? () => {
       if (
-        (/iPad|iPhone|iPod/i.test(navigator.userAgent || navigator.vendor || window.opera) &&
+        (/ipad|iphone|ipod/i.test(userAgent || vendor || opera) &&
           !window.MSStream) ||
-        (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1)
+        (platform === 'macintel' && navigator.maxTouchPoints > 1)
       ) {
         return true;
       } else {
@@ -42,7 +47,7 @@ const isiOS = isBrowser()
 // Android
 const isAndroid = isBrowser()
   ? () => {
-      if (/android/i.test(navigator.userAgent || navigator.vendor || window.opera) && !window.MSStream) {
+      if (/android/i.test(userAgent || vendor || opera) && !window.MSStream) {
         return true;
       } else {
         return false;
@@ -51,10 +56,10 @@ const isAndroid = isBrowser()
   : () => {
       return false;
     };
-// Chrome
+// Chrome (incl. Chromium browsers like Edge)
 const isChrome = isBrowser()
   ? () => {
-      if (/chrome|chromium|crios/i.test(navigator.userAgent)) {
+      if (/chrome|chromium|crios/i.test(userAgent)) {
         return true;
       } else {
         return false;
@@ -75,7 +80,7 @@ const isMobile = () => {
 const isWebView = isBrowser()
   ? () => {
       if (
-        /(; ?wv|(iPhone|iPod|iPad).*AppleWebKit(?!.*Safari))/i.test(navigator.userAgent || navigator.vendor)
+        /(; ?wv|(iphone|ipod|ipad).*applewebkit(?!.*safari))/i.test(userAgent || vendor)
       ) {
         return true;
       } else {
@@ -88,7 +93,7 @@ const isWebView = isBrowser()
 // checking for problematic apps
 const isProblematicWebView = isBrowser()
   ? () => {
-      if (/(Instagram)/i.test(navigator.userAgent || navigator.vendor || window.opera)) {
+      if (/(instagram)/i.test(userAgent || vendor || opera)) {
         return true;
       } else {
         return false;

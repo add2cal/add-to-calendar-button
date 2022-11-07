@@ -11,7 +11,7 @@
  *
  */
 
-import { atcbIcon, atcbStates, atcbDefaultTarget } from './atcb-globals.js';
+import { atcbIcon, atcbStates, atcbDefaultTarget, isChrome, isiOS } from './atcb-globals.js';
 import { atcb_toggle, atcb_close } from './atcb-control.js';
 import { atcb_generate_links } from './atcb-links.js';
 import {
