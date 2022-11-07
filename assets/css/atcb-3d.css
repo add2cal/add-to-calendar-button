@@ -391,7 +391,8 @@
 
 .atcb-dropup .atcb-list-item:first-child,
 .atcb-dropoverlay .atcb-list .atcb-list-item:first-child,
-.atcb-list.atcb-modal .atcb-list-item:first-child {
+.atcb-list.atcb-modal .atcb-list-item:first-child,
+.atcb-dropup .atcb-list {
   border-radius: 6px 6px 0 0;
 }
 

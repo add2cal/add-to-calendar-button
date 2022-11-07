@@ -58,7 +58,6 @@ function atcb_decorate_data(data) {
   data.richData = atcb_decorate_data_rich_data(data);
   data.checkmark = atcb_decorate_data_checkmark(data);
   data.background = atcb_decorate_data_background(data);
-  data.mindScrolling = atcb_decorate_data_mind_scrolling(data);
   data.branding = atcb_decorate_data_branding(data);
   data = atcb_decorate_data_style(data);
   data = atcb_decorate_data_i18n(data);
@@ -238,14 +237,6 @@ function atcb_decorate_data_background(data) {
 // specify the branding option
 function atcb_decorate_data_branding(data) {
   if (data.branding != null && data.branding == true) {
-    return true;
-  }
-  return false;
-}
-
-// set whether we observe global scroll to re-adjust the dropdown
-function atcb_decorate_data_mind_scrolling(data) {
-  if (data.mindScrolling != null && data.mindScrolling == true) {
     return true;
   }
   return false;

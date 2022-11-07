@@ -247,6 +247,7 @@ function atcb_position_list(trigger, list, blockUpwards = false, resize = false)
   let triggerDim = trigger.getBoundingClientRect();
   let listDim = list.getBoundingClientRect();
   const btnDim = originalTrigger.getBoundingClientRect();
+  const btnParentDim = originalTrigger.parentNode.getBoundingClientRect();
   const viewportHeight = document.documentElement.clientHeight;
   if (anchorSet === true && !list.classList.contains('atcb-dropoverlay')) {
     // in the regular case, we also check for the ideal direction
@@ -260,13 +261,9 @@ function atcb_position_list(trigger, list, blockUpwards = false, resize = false)
     ) {
       originalTrigger.classList.add('atcb-dropup');
       list.classList.add('atcb-dropup');
-      list.style.bottom =
-        2 * viewportHeight -
-        (viewportHeight + (btnDim.top + (btnDim.top + btnDim.height - triggerDim.top))) -
-        window.scrollY +
-        'px';
+      list.style.bottom = (btnDim.top - btnParentDim.top) + (triggerDim.top - btnDim.top) + 'px';
     } else {
-      list.style.top = window.scrollY + triggerDim.top + 'px';
+      list.style.top = (btnDim.top - btnParentDim.top) + (triggerDim.top - btnDim.top) + 'px';
       if (originalTrigger.classList.contains('atcb-dropup')) {
         originalTrigger.classList.remove('atcb-dropup');
       }
@@ -280,15 +277,13 @@ function atcb_position_list(trigger, list, blockUpwards = false, resize = false)
     }
     // read list dimensions again, since we altered the width in the step before
     listDim = list.getBoundingClientRect();
-    list.style.left = triggerDim.left - (listDim.width - triggerDim.width) / 2 + 'px';
+    list.style.left = (triggerDim.left - btnParentDim.left) - (listDim.width - triggerDim.width) / 2 + 'px';
   } else {
     // when there is no anchor set (only the case with custom implementations) or the listStyle is set respectively (overlay), we render the modal centered above the trigger
-    // make sure the trigger is not moved over it via CSS in this case!
-    list.style.minWidth = btnDim.width + 20 + 'px';
-    // read list dimensions again, since we altered the width in the step before
-    listDim = list.getBoundingClientRect();
-    list.style.top = window.scrollY + btnDim.top + btnDim.height / 2 - listDim.height / 2 + 'px';
-    list.style.left = btnDim.left - (listDim.width - btnDim.width) / 2 + 'px';
+    list.style.minWidth = btnParentDim.width + 20 + 'px';
+    // changing its position to get the ideal width of the content
+    list.style.position = 'relative';
+    list.style.marginTop = - (listDim.height / 2) + 'px';
   }
   const atcbL = document.getElementById('add-to-calendar-button-reference');
   if (atcbL) {

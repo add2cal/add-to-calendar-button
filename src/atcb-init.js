@@ -18,7 +18,6 @@ import { atcb_generate_button, atcb_generate_rich_data } from './atcb-generate.j
 import { atcb_close, atcb_toggle } from './atcb-control.js';
 import {
   atcb_secure_content,
-  atcb_position_list,
   atcb_manage_body_scroll,
   atcb_set_fullsize,
   atcb_throttle,
@@ -29,7 +28,7 @@ let atcbBtnCount = 0;
 
 // DEFINING THE WEB COMPONENT
 const template = document.createElement('template');
-template.innerHTML = `<div class="atcb-initialized" style="display:none;"></div>`;
+template.innerHTML = `<div class="atcb-initialized" style="display:none;position:relative;"></div>`;
 
 class AddToCalendarButton extends HTMLElement {
 
@@ -128,8 +127,11 @@ function atcb_set_light_mode(shadowRoot, data) {
   shadowRoot.host.classList.remove('atcb-dark', 'atcb-light', 'atcb-bodyScheme');
   let hostLightMode = data.lightMode;
   // Safari + Firefox combat hack
+  // could be removed as soon as those browsers support the :host-context selector
   if (hostLightMode == 'bodyScheme' && document.body.classList.contains('atcb-dark')) {
     hostLightMode = 'dark';
+  } else {
+    hostLightMode = 'light';
   }
   // apply
   shadowRoot.host.classList.add('atcb-' + hostLightMode);
@@ -164,7 +166,7 @@ function atcb_load_css(host, rootObj, style = '', inline = false, customCss = ''
     return;
   }
   // otherwise, we load it from a variable
-  if (style != 'none') {
+  if (style != 'none' && atcbCssTemplate[`${style}`] != null) {
     const cssContent = document.createElement("style");
     cssContent.innerText = atcbCssTemplate[`${style}`];
     host.prepend(cssContent);
@@ -288,7 +290,14 @@ function atcb_set_global_event_listener(host, data) {
   }
   // temporary listener to any class change at the body for the light mode Safari/Firefox hack
   if (data.lightMode == 'bodyScheme') {
-    atcb_set_light_mode(host, data);
+    const lightModeMutationObserver = new MutationObserver(function(mutationsList) {
+      mutationsList.forEach(mutation => {
+        if (mutation.attributeName === 'class') {
+          atcb_set_light_mode(host, data);
+        }
+      });
+    });
+    lightModeMutationObserver.observe(document.body, { attributes: true })
   }
   // global listener for ESC key to close dropdown
   document.addEventListener('keyup', function (event) {
@@ -341,29 +350,7 @@ function atcb_set_global_event_listener(host, data) {
         atcb_set_fullsize(activeOverlay);
         atcb_manage_body_scroll(host);
       }
-      const activeButton = host.querySelector('.atcb-active');
-      if (activeButton != null) {
-        const activeList = host.querySelector('.atcb-dropdown');
-        if (activeList != null) {
-          atcb_position_list(activeButton, activeList, false, true);
-        }
-      }
     })
-  );
-  // Global listener for scrolling (relevant, if the button changes its position on scroll) (since quite "expensive", only runs if explicitely activated!)
-  window.addEventListener(
-    'scroll',
-    atcb_throttle(() => {
-      const activeButton = host.querySelector('.atcb-active');
-      if (activeButton != null) {
-        const activeList = host.querySelector('.atcb-dropdown');
-        if (activeList != null) {
-          if (activeList.classList.contains('atcb-mind-scrolling')) {
-            atcb_position_list(activeButton, activeList, false, true);
-          }
-        }
-      }
-    }, 20)
   );
 }
 

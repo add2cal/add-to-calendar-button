@@ -53,7 +53,6 @@ declare module 'add-to-calendar-button' {
       textLabels?: string;
       background?: boolean;
       checkmark?: boolean;
-      mindScrolling?: boolean;
       branding?: boolean;
       size?: string;
       label?: string;

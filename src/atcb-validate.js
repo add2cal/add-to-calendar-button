@@ -111,7 +111,7 @@ function atcb_validate_buttonStyle(data, msgPrefix) {
     console.error(msgPrefix + ' failed: provided buttonStyle invalid');
     return false;
   }
-  if (data.customCss != null && data.customCss != '' && (!atcb_secure_url(data.customCss, false) || !/^https:\/\/(.)*\.css$/m.test(data.customCss))) {
+  if (data.customCss != null && data.customCss != '' && (!atcb_secure_url(data.customCss, false) || !/\.css$/m.test(data.customCss))) {
     console.error(msgPrefix + ' failed: customCss provided, but no valid url');
     return false;
   }

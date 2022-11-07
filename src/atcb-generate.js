@@ -443,11 +443,11 @@ function atcb_create_atcbl(host, atList = true) {
       atcbIcon['atcb'] +
       '</a>';
   }, 500);  
-  host.append(atcbL);
   if (atList) {
-    atcbL.style.position = 'absolute';
+    host.querySelector('.atcb-initialized').append(atcbL);
   } else {
     if (window.innerHeight > 1000 || window.innerWidth > 1000) {
+      host.append(atcbL);
       atcbL.style.position = 'fixed';
       atcbL.style.bottom = '15px';
       atcbL.style.right = '30px';

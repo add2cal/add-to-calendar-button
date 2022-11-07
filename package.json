@@ -5,13 +5,17 @@
     "node": ">=14.20.0"
   },
   "description": "A convenient JavaScript snippet, which lets you create beautiful buttons, where people can add events to their calendars.",
-  "main": "npm_dist/cjs/index.js",
-  "module": "npm_dist/mjs/index.js",
+  "main": "dist/cjs/index.js",
+  "module": "dist/mjs/index.js",
+  "files": [
+    "dist",
+    "test"
+  ],
   "exports": {
     "./assets/css/": "./assets/css/",
     ".": {
-      "import": "./npm_dist/mjs/index.js",
-      "require": "./npm_dist/cjs/index.js"
+      "import": "./dist/mjs/index.js",
+      "require": "./dist/cjs/index.js"
     }
   },
   "types": "index.d.ts",
@@ -62,7 +66,6 @@
     "prettier:fix": "npm run prettier -- --write",
     "format": "npm run eslint:fix && npm run prettier:fix && npm run stylelint:fix",
     "test": "node test/tests.js",
-    "build-npm": "npx grunt npm",
     "build": "npx grunt"
   },
   "dependencies": {
