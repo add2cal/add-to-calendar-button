@@ -3,7 +3,7 @@
  *  Add to Calendar Button
  *  ++++++++++++++++++++++
  *
- *  Version: 1.18.5
+ *  Version: 1.18.6
  *  Creator: Jens Kuerschner (https://jenskuerschner.de)
  *  Project: https://github.com/add2cal/add-to-calendar-button
  *  License: Apache-2.0 with “Commons Clause” License Condition v1.0
@@ -11,7 +11,7 @@
  *
  */
 
-import { atcbIcon, atcbStates, atcbDefaultTarget } from './atcb-globals.js';
+import { atcbIcon, atcbStates, atcbDefaultTarget, isChrome, isiOS } from './atcb-globals.js';
 import { atcb_toggle, atcb_close } from './atcb-control.js';
 import { atcb_generate_links } from './atcb-links.js';
 import {

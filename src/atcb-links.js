@@ -3,7 +3,7 @@
  *  Add to Calendar Button
  *  ++++++++++++++++++++++
  *
- *  Version: 1.18.5
+ *  Version: 1.18.6
  *  Creator: Jens Kuerschner (https://jenskuerschner.de)
  *  Project: https://github.com/add2cal/add-to-calendar-button
  *  License: Apache-2.0 with “Commons Clause” License Condition v1.0
@@ -548,12 +548,13 @@ function atcb_generate_ical(host, data, subEvent = 'all', keyboardTrigger = fals
     return 'data:text/calendar;charset=utf-8,' + encodeURIComponent(ics_lines.join('\r\n'));
   })();
   // in in-app browser cases (WebView), we offer a copy option, since the on-the-fly client side generation is usually not supported
-  // for Android, we are more specific and only go for specific apps at the moment
+  // for Android, we are more specific than with iOS and only go for specific apps at the moment
   // for Chrome on iOS we basically do the same
   if ((isiOS() && isChrome()) || (isWebView() && (isiOS() || (isAndroid() && isProblematicWebView())))) {
     atcb_ical_copy_note(host, dataUrl, data, keyboardTrigger);
     return;
   }
+  // save the file dialog in all other cases
   atcb_save_file(dataUrl, filename);
 }
 
