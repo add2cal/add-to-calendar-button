@@ -59,7 +59,7 @@ const isAndroid = isBrowser()
 // Chrome (incl. Chromium browsers like Edge)
 const isChrome = isBrowser()
   ? () => {
-      if (/chrome|chromium|crios/i.test(userAgent)) {
+      if (/chrome|chromium|crios|google inc/i.test(userAgent || vendor)) {
         return true;
       } else {
         return false;
