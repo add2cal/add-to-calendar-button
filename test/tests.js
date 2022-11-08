@@ -30,7 +30,7 @@ try {
   }
 
   const fs = require('fs');
-  const dirToDrop = 'npm_dist';
+  const dirToDrop = 'dist';
   fs.rm(dirToDrop, { recursive: true }, (error) => {
     if (error) {
       throw error;
