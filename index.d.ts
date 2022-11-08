@@ -84,5 +84,4 @@ declare module 'add-to-calendar-button' {
     triggerElement?: HTMLElement,
     keyboardTrigger?: boolean
   ): string[];
-  export function atcb_destroy(id: string): boolean;
 }

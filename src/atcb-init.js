@@ -97,6 +97,7 @@ class AddToCalendarButton extends HTMLElement {
         // create schema.org data (https://schema.org/Event), if possible; and add it to the regular DOM
         if (this.data.richData && this.data.name && this.data.dates[0].location && this.data.dates[0].startDate) {
           atcb_generate_rich_data(this.data, this);
+          this.data.schemaEl = this.previousSibling;
         }
       }
     }
@@ -104,8 +105,13 @@ class AddToCalendarButton extends HTMLElement {
 
   disconnectedCallback() {
     // cleaning up a little bit
-    // TODO: remove schema.org thing in this case too!
+    atcb_close(this.shadowRoot);
     atcb_unset_global_event_listener(this.shadowRoot, this.data);
+    if (this.data.schemaEl != null) {
+      this.data.schemaEl.remove();
+    }
+    delete atcbStates[`${this.data.identifier}`];
+    console.log('Add to Calendar Button "' + this.data.identifier + '" destroyed');
   }
 
   static get observedAttributes() {
@@ -245,27 +251,6 @@ function atcb_action(data, triggerElement, keyboardTrigger = true) {
   return [data.identifier];
 }
 
-// destorying a specific button
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-function atcb_destroy(id) {
-  // close everything before killing the element
-  atcb_close(); // TODO: needs a host information!! -> rebuild the killing procedure. Rather kill the whole component!
-  const el = document.getElementById(id);
-  if (atcbStates[`${id}`] == null || !el) {
-    console.error('Add to Calendar Button could not be destroyed! ID unknown.');
-    return false;
-  }
-  delete atcbStates[`${id}`];
-  // in case this is a generated button, we also need to remove the wrapper
-  if (el.parentElement.parentElement.classList.contains('atcb-initialized')) {
-    el.parentElement.parentElement.remove();
-  } else {
-    el.remove();
-  }
-  console.log('Add to Calendar Button "' + id + '" destroyed');
-  return true;
-}
-
 // update global state management
 function atcb_update_state_management(data) {
   const singleDates = [];
@@ -375,4 +360,4 @@ function atcb_unset_global_event_listener(host, data) {
   }
 }
 
-export { AddToCalendarButton, atcb_action, atcb_destroy };
+export { AddToCalendarButton, atcb_action };

@@ -286,8 +286,9 @@ function atcb_position_list(host, trigger, list, blockUpwards = false, resize = 
     // read list dimensions again, since we altered it in the steps before
     listDim = list.getBoundingClientRect();
     const sideMargin = Math.round((btnParentDim.width - listDim.width) / 2) + 'px';
-    list.style.margin = - Math.round(listDim.height / 2) + 'px ' + sideMargin + ' 0 ' + sideMargin;
+    list.style.margin = - Math.round((listDim.height + btnParentDim.height) / 2) + 'px ' + sideMargin + ' 0 ' + sideMargin;
   }
+  // adjust branding message, if set
   const atcbL = host.querySelector('#add-to-calendar-button-reference');
   if (atcbL) {
     if (originalTrigger.classList.contains('atcb-dropup')) {
