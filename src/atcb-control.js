@@ -94,9 +94,9 @@ function atcb_open(host, data, button, keyboardTrigger = false, generatedButton 
       listWrapper.style.display = 'block';
       if (data.listStyle === 'dropdown-static') {
         // in the dropdown-static case, we do not dynamically adjust whether we show the dropdown upwards
-        atcb_position_list(button, listWrapper, true);
+        atcb_position_list(host, button, listWrapper, true);
       } else {
-        atcb_position_list(button, listWrapper);
+        atcb_position_list(host, button, listWrapper);
       }
     }, 5);
   }

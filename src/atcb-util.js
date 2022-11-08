@@ -235,7 +235,7 @@ function atcb_rewrite_html_elements(content, clear = false) {
 }
 
 // SHARED FUNCTION TO CALCULATE THE POSITION OF THE DROPDOWN LIST
-function atcb_position_list(trigger, list, blockUpwards = false, resize = false) {
+function atcb_position_list(host, trigger, list, blockUpwards = false, resize = false) {
   // check for position anchor
   let anchorSet = false;
   const originalTrigger = trigger;
@@ -283,21 +283,17 @@ function atcb_position_list(trigger, list, blockUpwards = false, resize = false)
     list.style.minWidth = btnParentDim.width + 20 + 'px';
     // changing its position to get the ideal width of the content
     list.style.position = 'relative';
-    list.style.marginTop = - (listDim.height / 2) + 'px';
+    // read list dimensions again, since we altered it in the steps before
+    listDim = list.getBoundingClientRect();
+    const sideMargin = Math.round((btnParentDim.width - listDim.width) / 2) + 'px';
+    list.style.margin = - Math.round(listDim.height / 2) + 'px ' + sideMargin + ' 0 ' + sideMargin;
   }
-  const atcbL = document.getElementById('add-to-calendar-button-reference');
+  const atcbL = host.querySelector('#add-to-calendar-button-reference');
   if (atcbL) {
     if (originalTrigger.classList.contains('atcb-dropup')) {
-      atcbL.style.top = window.scrollY + btnDim.top + btnDim.height + 'px';
-      atcbL.style.left = btnDim.left + (btnDim.width - 150) / 2 + 'px';
-    } else {
-      listDim = list.getBoundingClientRect();
-      if (originalTrigger.classList.contains('atcb-dropoverlay') || !anchorSet) {
-        atcbL.style.top = window.scrollY + listDim.top + listDim.height + 'px';
-      } else {
-        atcbL.style.top = window.scrollY + triggerDim.top + listDim.height + 'px';
-      }
-      atcbL.style.left = listDim.left + (listDim.width - 150) / 2 + 'px';
+      originalTrigger.parentNode.parentNode.after(atcbL);
+      atcbL.style.padding = '5px 15px';
+      atcbL.style.position = 'absolute';
     }
   }
 }

@@ -25,6 +25,7 @@ import {
 
 let atcbInitialGlobalInit = false;
 let atcbBtnCount = 0;
+const lightModeMutationObserver = [];
 
 // DEFINING THE WEB COMPONENT
 const template = document.createElement('template');
@@ -37,8 +38,6 @@ class AddToCalendarButton extends HTMLElement {
     this.attachShadow({mode: 'open'});
     atcb_init_log_msg();
     this.shadowRoot.append(template.content.cloneNode(true));
-    // get updates when content is updated in the slot
-    this.shadowRoot.addEventListener('slotchange', event => console.log(event));
   };
   
   connectedCallback() {
@@ -77,41 +76,45 @@ class AddToCalendarButton extends HTMLElement {
     // check, if all required data is available
     if (atcb_check_required(atcbInputData)) {
       // Rewrite dynamic dates, standardize line breaks and transform urls in the description
-      const data = atcb_decorate_data(atcbInputData);
+      this.data = atcb_decorate_data(atcbInputData);
       // set identifier if not provided (but only if not yet constructed)
-      if (data.identifier == null || data.identifier == '') {
+      if (this.data.identifier == null || this.data.identifier == '') {
         if (componentButtonId == null || componentButtonId == '') {
-          data.identifier = 'atcb-btn-' + atcbBtnCount;
+          this.data.identifier = 'atcb-btn-' + atcbBtnCount;
         } else {
-          data.identifier = componentButtonId;
+          this.data.identifier = componentButtonId;
         }
       }
-      if (atcb_validate(data)) {
+      if (atcb_validate(this.data)) {
         // ... and on success, load css and generate the button
-        atcb_set_light_mode(this.shadowRoot, data);
-        atcb_load_css(this.shadowRoot, rootObj, data.buttonStyle, data.inline, data.customCss);
-        atcb_generate_button(this.shadowRoot, rootObj, data);
-        atcb_update_state_management(data);
+        atcb_set_light_mode(this.shadowRoot, this.data);
+        atcb_load_css(this.shadowRoot, rootObj, this.data.buttonStyle, this.data.inline, this.data.customCss);
+        atcb_generate_button(this.shadowRoot, rootObj, this.data);
+        atcb_update_state_management(this.data);
         // set global event listeners
-        atcb_set_global_event_listener(this.shadowRoot, data);
-        this.setAttribute('atcb-button-id', data.identifier);
+        atcb_set_global_event_listener(this.shadowRoot, this.data);
+        this.setAttribute('atcb-button-id', this.data.identifier);
         // create schema.org data (https://schema.org/Event), if possible; and add it to the regular DOM
-        if (data.richData && data.name && data.dates[0].location && data.dates[0].startDate) {
-          atcb_generate_rich_data(data, this);
+        if (this.data.richData && this.data.name && this.data.dates[0].location && this.data.dates[0].startDate) {
+          atcb_generate_rich_data(this.data, this);
         }
       }
     }
   }
 
   disconnectedCallback() {
-    // TODO: destroy button in this case too!
+    // cleaning up a little bit
+    // TODO: remove schema.org thing in this case too!
+    atcb_unset_global_event_listener(this.shadowRoot, this.data);
   }
 
   static get observedAttributes() {
-    return ['name', 'startDate', 'options'];
+    return ['instance', 'name', 'startDate', 'options'];
   }
   
   attributeChangedCallback(name, oldValue, newValue) {
+    // updating whenever attributes update
+    // mind that this only observes the actual attributes, not the innerHTML of the host!
     console.log(`${name}'s value has been changed from ${oldValue} to ${newValue}`);
   }
 
@@ -148,14 +151,25 @@ function atcb_load_css(host, rootObj, style = '', inline = false, customCss = ''
   }
   // we load custom styles dynamically
   if (customCss != '' && style == 'custom') {
+    // first, create placeholder
+    const placeholder = document.createElement('div');
+    placeholder.style.width = '150px';
+    placeholder.style.height = '40px';
+    placeholder.style.borderRadius = '13px';
+    placeholder.style.backgroundColor = '#777';
+    placeholder.style.opacity = '.3';
+    host.prepend(placeholder);
+    // second, load the actual css
     const cssUrl = customCss;
-    const cssFile = document.createElement("link");
-    cssFile.setAttribute("rel", "stylesheet");
-    cssFile.setAttribute("type", "text/css");
-    cssFile.setAttribute("href", cssUrl);
+    const cssFile = document.createElement('link');
+    cssFile.setAttribute('rel', 'stylesheet');
+    cssFile.setAttribute('type', 'text/css');
+    cssFile.setAttribute('href', cssUrl);
     host.prepend(cssFile);
+    // third, remove placeholder and render object as soon as loaded
     if (rootObj != null) {
       cssFile.onload = function(){
+        placeholder.remove();
         if (inline) {
           rootObj.style.display = 'inline-block';
         } else {
@@ -290,14 +304,14 @@ function atcb_set_global_event_listener(host, data) {
   }
   // temporary listener to any class change at the body for the light mode Safari/Firefox hack
   if (data.lightMode == 'bodyScheme') {
-    const lightModeMutationObserver = new MutationObserver(function(mutationsList) {
+    lightModeMutationObserver[data.identifier] = new MutationObserver(function(mutationsList) {
       mutationsList.forEach(mutation => {
         if (mutation.attributeName === 'class') {
           atcb_set_light_mode(host, data);
         }
       });
     });
-    lightModeMutationObserver.observe(document.body, { attributes: true })
+    lightModeMutationObserver[data.identifier].observe(document.body, { attributes: true })
   }
   // global listener for ESC key to close dropdown
   document.addEventListener('keyup', function (event) {
@@ -306,44 +320,9 @@ function atcb_set_global_event_listener(host, data) {
     }
   });
   // global listener for arrow key optionlist navigation
-  document.addEventListener('keydown', (event) => {
-    if (
-      host.querySelector('.atcb-list') &&
-      (event.key === 'ArrowDown' || event.key === 'ArrowUp' || event.key === 'Tab')
-    ) {
-      let targetFocus = 0;
-      let currFocusOption = host.activeElement;
-      const optionListCount = host.querySelectorAll('.atcb-list-item').length;
-      if (currFocusOption.classList.contains('atcb-list-item')) {
-        if (event.key === 'ArrowDown' && currFocusOption.dataset.optionNumber < optionListCount) {
-          event.preventDefault();
-          targetFocus = parseInt(currFocusOption.dataset.optionNumber) + 1;
-        } else if (event.key === 'ArrowUp' && currFocusOption.dataset.optionNumber >= 1) {
-          event.preventDefault();
-          targetFocus = parseInt(currFocusOption.dataset.optionNumber) - 1;
-        }
-        if (targetFocus > 0) {
-          host.querySelector('.atcb-list-item[data-option-number="' + targetFocus + '"]').focus();
-        }
-      } else {
-        event.preventDefault();
-        switch (event.key) {
-          case 'ArrowDown':
-            host.querySelector('.atcb-list-item[data-option-number="1"]').focus();
-            break;
-          case 'ArrowUp':
-            host.querySelector('.atcb-list-item[data-option-number="' + optionListCount + '"]').focus();
-            break;
-          default:
-            host.querySelector('.atcb-list-item[data-option-number="1"]').focus();
-            break;
-        }
-      }
-    }
-  });
+  document.addEventListener('keydown', (event) => { atcb_global_listener_keydown(host, event) });
   // Global listener for any screen changes
-  window.addEventListener(
-    'resize',
+  window.addEventListener('resize', 
     atcb_throttle(() => {
       const activeOverlay = host.getElementById('atcb-bgoverlay');
       if (activeOverlay != null) {
@@ -352,6 +331,48 @@ function atcb_set_global_event_listener(host, data) {
       }
     })
   );
+}
+
+function atcb_global_listener_keydown(host, event) {
+  if (
+    host.querySelector('.atcb-list') &&
+    (event.key === 'ArrowDown' || event.key === 'ArrowUp' || event.key === 'Tab')
+  ) {
+    let targetFocus = 0;
+    let currFocusOption = host.activeElement;
+    const optionListCount = host.querySelectorAll('.atcb-list-item').length;
+    if (currFocusOption.classList.contains('atcb-list-item')) {
+      if (event.key === 'ArrowDown' && currFocusOption.dataset.optionNumber < optionListCount) {
+        event.preventDefault();
+        targetFocus = parseInt(currFocusOption.dataset.optionNumber) + 1;
+      } else if (event.key === 'ArrowUp' && currFocusOption.dataset.optionNumber >= 1) {
+        event.preventDefault();
+        targetFocus = parseInt(currFocusOption.dataset.optionNumber) - 1;
+      }
+      if (targetFocus > 0) {
+        host.querySelector('.atcb-list-item[data-option-number="' + targetFocus + '"]').focus();
+      }
+    } else {
+      event.preventDefault();
+      switch (event.key) {
+        case 'ArrowDown':
+          host.querySelector('.atcb-list-item[data-option-number="1"]').focus();
+          break;
+        case 'ArrowUp':
+          host.querySelector('.atcb-list-item[data-option-number="' + optionListCount + '"]').focus();
+          break;
+        default:
+          host.querySelector('.atcb-list-item[data-option-number="1"]').focus();
+          break;
+      }
+    }
+  }
+}
+
+function atcb_unset_global_event_listener(host, data) {
+  if (data.lightMode == 'bodyScheme') {
+    lightModeMutationObserver[data.identifier].disconnect();
+  }
 }
 
 export { AddToCalendarButton, atcb_action, atcb_destroy };

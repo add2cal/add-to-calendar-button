@@ -432,9 +432,10 @@ function atcb_generate_bg_overlay(host, listStyle = 'dropdown', trigger = '', da
 function atcb_create_atcbl(host, atList = true) {
   const atcbL = document.createElement('div');
   atcbL.id = 'add-to-calendar-button-reference';
-  atcbL.style.width = '150px';
-  atcbL.style.padding = '10px 0';
+  atcbL.style.width = '130px';
+  atcbL.style.padding = '5px';
   atcbL.style.height = 'auto';
+  atcbL.style.opacity = '.8';
   atcbL.style.transform = 'translate3d(0, 0, 0)';
   atcbL.style.zIndex = '15000000';
   setTimeout(() => {
@@ -444,7 +445,7 @@ function atcb_create_atcbl(host, atList = true) {
       '</a>';
   }, 500);  
   if (atList) {
-    host.querySelector('.atcb-initialized').append(atcbL);
+    host.querySelector('.atcb-initialized .atcb-list-wrapper').append(atcbL);
   } else {
     if (window.innerHeight > 1000 || window.innerWidth > 1000) {
       host.append(atcbL);
