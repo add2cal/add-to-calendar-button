@@ -11,7 +11,7 @@
  *
  */
 
-import { tzlib_get_ical_block } from '../node_modules/timezones-ical-library/npm_dist/mjs/index.js';
+import { tzlib_get_ical_block } from '../node_modules/timezones-ical-library/dist/mjs/index.js';
 import {
   atcbVersion,
   isiOS,

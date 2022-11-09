@@ -297,7 +297,7 @@ Anyone is welcome to contribute, but mind the [guidelines](.github/CONTRIBUTING.
 - [Feature requests](.github/CONTRIBUTING.md#features)
 - [Pull requests](.github/CONTRIBUTING.md#pull-requests)
 
-**IMPORTANT NOTE:** Run `npm install`, `npm run format`, and `npm run build` to auto-lint and create the minified js, css, as well as its sourcemap files!
+**IMPORTANT NOTE:** Run `npm install` and `npm run format` to auto-lint!
 
 <br />
 
