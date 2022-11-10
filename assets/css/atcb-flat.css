@@ -139,7 +139,7 @@
   font-weight: 600;
   justify-content: center;
   line-height: 1.5em;
-  margin: 10px;
+  margin: 0;
   max-width: 350px;
   min-width: 160px;
   padding: 0.8em 1.2em;
@@ -267,11 +267,11 @@
   color: var(--atcb-text);
   display: block;
   font-family: var(--font);
-  max-width: 100%;
+  min-width: 100%;
   position: relative;
   user-select: none;
   -webkit-user-select: none;
-  width: 100%;
+  width: fit-content;
 }
 
 .atcb-list-item {
@@ -329,13 +329,13 @@
 
 .atcb-list-item .atcb-icon {
   margin-bottom: 0.1em;
-  padding-right: 0.6em;
+  margin-right: 0.6em;
   width: 1.125em;
 }
 
 .atcb-rtl .atcb-list-item .atcb-icon {
   margin-right: 0;
-  padding-left: 0.6em;
+  margin-left: 0.6em;
 }
 
 .atcb-no-text .atcb-list-item .atcb-icon {

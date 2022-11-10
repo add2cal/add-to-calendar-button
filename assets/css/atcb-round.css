@@ -5,7 +5,7 @@
  *
  * Style: Round
  *
- * Version: 1.18.5
+ * Version: 1.18.6
  * Creator: Jens Kuerschner (https://jenskuerschner.de)
  * Project: https://github.com/add2cal/add-to-calendar-button
  * License: Apache-2.0 with “Commons Clause” License Condition v1.0
@@ -17,7 +17,7 @@
  * Global colors and shadows
  */
 
-:host {
+ :host {
   --base-font-size-l: 16px;
   --base-font-size-m: 16px;
   --base-font-size-s: 16px;
@@ -51,7 +51,7 @@
   --atcb-shadow-button-active: rgba(0 0 0 / 50%) 2px 5px 18px -1px, rgba(0 0 0 / 45%) 2px 2px 10px -3px;
   --atcb-shadow-list: rgba(0 0 0 / 20%) 2px 5px 18px -1px, rgba(0 0 0 / 40%) 2px 2px 10px -3px;
   --atcb-shadow-list-modal: rgba(0 0 0 / 60%) 3px 6px 40px -5px, rgba(0 0 0 / 60%) 3px 3px 15px -4px;
-  --atcb-shadow-modal: drop-shadow(5px 6px 20px rgba(0 0 0 / 20%)) drop-shadow(15px 20px 25px rgba(0 0 0 / 30%)) drop-shadow(12px 20px 40px rgba(0 0 0 / 30%));
+  --atcb-shadow-modal: drop-shadow(5px 8px 30px rgba(0 0 0 / 70%));
   --atcb-shadow-modal-date-btn: rgba(0 0 0 / 40%) 1px 3px 15px -4px, rgba(0 0 0 / 20%) 1px 1px 8px -4px;
   --atcb-shadow-modal-date-btn-hover: rgba(0 0 0 / 40%) 4px 6px 18px -1px, rgba(0 0 0 / 35%) 4px 5px 25px -2px;
   --atcb-shadow-modal-button: rgba(0 0 0 / 10%) 2px 3px 10px -3px,rgba(0 0 0 / 25%) 1px 1px 8px -4px;
@@ -94,7 +94,7 @@
   --atcb-shadow-button-active: rgba(255 255 255 / 7%) -12px -5px 23px -8px, rgba(255 255 255 / 8%) -7px -5px 18px -3px, rgba(0 0 0 / 70%) 2px 5px 19px -1px, rgba(0 0 0 / 60%) 3px 3px 22px -3px;
   --atcb-shadow-list: rgba(255 255 255 / 5%) -12px -5px 20px -8px, rgba(255 255 255 / 6%) -7px -5px 15px -3px, rgba(0 0 0 / 50%) 2px 5px 18px -1px, rgba(0 0 0 / 40%) 3px 3px 20px -3px;
   --atcb-shadow-list-modal: rgba(255 255 255 / 8%) -12px -5px 30px -8px, rgba(255 255 255 / 8%) -7px -5px 15px -3px, rgba(0 0 0 / 60%) 4px 6px 50px -4px, rgba(0 0 0 / 90%) 8px 12px 40px -2px;
-  --atcb-shadow-modal: drop-shadow(5px 6px 15px rgba(0 0 0 / 40%)) drop-shadow(15px 20px 20px rgba(0 0 0 / 50%)) drop-shadow(12px 20px 50px rgba(0 0 0 / 40%));
+  --atcb-shadow-modal: drop-shadow(5px 8px 30px rgba(0 0 0 / 90%));
   --atcb-shadow-modal-date-btn: rgba(255 255 255 / 10%) -8px -6px 20px, rgba(0 0 0 / 50%) 1px 3px 25px -8px,rgba(0 0 0 / 50%) 1px 1px 10px -3px;
   --atcb-shadow-modal-button: rgba(255 255 255 / 5%) -2px -2px 10px,rgba(0 0 0 / 30%) 1px 2px 8px -1px;
   --atcb-checkmark-background: radial-gradient(circle,rgba(0 0 0 / 50%) 0,rgba(0 0 0 / 30%) 40%,rgba(0 0 0 / 0%) 70%);
@@ -144,7 +144,7 @@
   align-items: center;
   background-color: var(--atcb-background);
   border: 1px solid var(--atcb-border);
-  border-radius: 6px;
+  border-radius: 500px;
   box-shadow: var(--atcb-shadow-button);
   color: var(--atcb-text);
   cursor: pointer;
@@ -154,10 +154,10 @@
   font-weight: 600;
   justify-content: center;
   line-height: 1.5em;
-  margin: .13em;
+  margin: 0.13em;
   max-width: 350px;
   min-width: 160px;
-  padding: .65em 1em;
+  padding: 0.65em 1em;
   position: relative;
   text-align: center;
   touch-action: manipulation;
@@ -170,6 +170,8 @@
 
 .atcb-button.atcb-no-text {
   min-width: 0;
+  border-radius: 100%;
+  padding: 0.8em 1em;
 }
 
 .atcb-rtl .atcb-button {
@@ -181,20 +183,62 @@
 .atcb-button:hover {
   background-color: var(--atcb-background-hover);
   box-shadow: var(--atcb-shadow-button-hover);
+  margin: 0;
+  padding: 0.78em 1.13em;
+}
+
+.atcb-button.atcb-no-text:focus,
+.atcb-button.atcb-no-text:hover {
+  padding: 0.93em 1.13em;
 }
 
 .atcb-button:focus-visible {
   outline: 2px solid var(--atcb-keyboard-focus);
 }
 
-.atcb-button.atcb-active:not(.atcb-modal-style, .atcb-dropoverlay),
-.atcb-button.atcb-single:focus,
-.atcb-button.atcb-single:hover {
+.atcb-button.atcb-active:not(.atcb-modal-style, .atcb-dropoverlay, .atcb-no-text),
+.atcb-button.atcb-single:not(.atcb-no-text):focus,
+.atcb-button.atcb-single:not(.atcb-no-text):hover {
   background-color: var(--atcb-background-hover);
   box-shadow: var(--atcb-shadow-button-active);
   margin: 0;
-  padding: .78em 1.13em;
+  padding: 0.78em 1.13em;
   z-index: 15000000;
+}
+
+.atcb-button.atcb-active.atcb-no-text:not(.atcb-modal-style, .atcb-dropoverlay),
+.atcb-button.atcb-single.atcb-no-text:focus,
+.atcb-button.atcb-single.atcb-no-text:hover {
+  background-color: var(--atcb-background-hover);
+  box-shadow: var(--atcb-shadow-button-active);
+  margin: 0;
+  padding: 0.93em 1.13em;
+  z-index: 15000000;
+}
+
+.atcb-button.atcb-active:not(.atcb-modal-style, .atcb-dropoverlay, .atcb-dropup, .atcb-no-text)::before,
+.atcb-button.atcb-active.atcb-dropup::after {
+  content: "";
+  width: 0;
+  height: 0;
+  position: absolute;
+  left: 0;
+  right: 0;
+  margin: 0 auto;
+}
+
+.atcb-button.atcb-active:not(.atcb-modal-style, .atcb-dropoverlay, .atcb-dropup, .atcb-no-text)::before {
+  top: 100%;
+  border: 0.35em solid transparent;
+  border-bottom: none;
+  border-top-color: var(--atcb-background-hover);
+}
+
+.atcb-button.atcb-active.atcb-dropup::after {
+  bottom: 100%;
+  border: 0.35em solid transparent;
+  border-top: none;
+  border-bottom-color: var(--atcb-background-hover);
 }
 
 .atcb-button.atcb-active.atcb-dropoverlay {
@@ -207,15 +251,15 @@
 
 .atcb-icon {
   height: 1em;
-  margin-bottom: .3em;
-  margin-right: .8em;
+  margin-bottom: 0.3em;
+  margin-right: 0.8em;
   flex-grow: 0;
   flex-shrink: 0;
 }
 
 .atcb-rtl .atcb-icon {
   margin-right: 0;
-  margin-left: .8em;
+  margin-left: 0.8em;
 }
 
 .atcb-no-text .atcb-icon {
@@ -238,8 +282,8 @@
  */
 
 .atcb-dropdown-anchor {
-  bottom: 4px;
-  height: 1px;
+  bottom: -15px;
+  height: 0;
   width: 100%;
   opacity: 0;
   position: absolute;
@@ -247,39 +291,89 @@
 
 .atcb-list-wrapper {
   box-sizing: border-box;
-  padding: 0 4px;
   position: absolute;
   z-index: 14000090;
+  min-width: 200px;
+  width: auto;
+}
+
+.atcb-list-wrapper:not(.atcb-dropup, .atcb-dropoverlay) {
+  animation: list-entrance-bottom 200ms ease 0s 1 normal forwards;
+}
+
+.atcb-list-wrapper.atcb-dropup {
+  animation: list-entrance-top 200ms ease 0s 1 normal forwards;
 }
 
 .atcb-list-wrapper.atcb-dropoverlay {
+  animation: list-entrance-center 200ms ease 0s 1 normal forwards;
   z-index: 15000000;
 }
 
+@keyframes list-entrance-bottom {
+  0% {
+    opacity: 0;
+    transform: translateY(250px);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes list-entrance-top {
+  0% {
+    opacity: 0;
+    transform: translateY(-250px);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes list-entrance-center {
+  0% {
+    opacity: 0;
+    transform: scaleY(1);
+  }
+
+  1% {
+    opacity: 1;
+    transform: scaleY(0);
+  }
+
+  100% {
+    opacity: 1;
+    transform: scaleY(1);
+  }
+}
+
 .atcb-list {
-  border-radius: 0 0 6px 6px;
+  border-radius: 11px;
   box-sizing: border-box;
   box-shadow: var(--atcb-shadow-list);
   color: var(--atcb-text);
   display: block;
   font-family: var(--font);
-  max-width: 100%;
+  min-width: 100%;
   position: relative;
   user-select: none;
   -webkit-user-select: none;
-  width: 100%;
+  width: fit-content;
 }
 
 .atcb-list-item {
   align-items: center;
   background-color: var(--atcb-background);
-  border: 1px solid var(--atcb-border);
   box-sizing: border-box;
   cursor: pointer;
   display: flex;
   font-size: 1em;
   line-height: 1.75em;
-  padding: .8em;
+  padding: 0.8em;
   text-align: left;
   touch-action: manipulation;
   -webkit-tap-highlight-color: transparent;
@@ -298,48 +392,21 @@
 .atcb-list-item:focus-visible {
   background-color: var(--atcb-background-hover);
   color: var(--atcb-keyboard-focus);
-  font-size: .95em;
+  font-size: 0.95em;
   font-weight: 600;
   outline: none;
 }
 
 .atcb-list-item:last-child {
-  border-radius: 0 0 6px 6px;
+  border-radius: 0 0 11px 11px;
 }
 
-.atcb-list .atcb-list-item:not(:first-child) {
-  border-top-style: none;
+.atcb-list-item:first-child {
+  border-radius: 11px 11px 0 0;
 }
 
-.atcb-dropup .atcb-list-item:last-child {
-  border-radius: 0;
-  padding-bottom: 1.25em;
-}
-
-.atcb-dropup .atcb-list-item:first-child,
-.atcb-dropoverlay .atcb-list .atcb-list-item:first-child,
-.atcb-list.atcb-modal .atcb-list-item:first-child,
-.atcb-dropup .atcb-list {
-  border-radius: 6px 6px 0 0;
-}
-
-.atcb-dropoverlay .atcb-list .atcb-list-item:only-child,
-.atcb-list.atcb-modal .atcb-list-item:only-child {
-  border-radius: 6px;
-}
-
-.atcb-list.atcb-generated-button:not(.atcb-modal) .atcb-list-item:first-child {
-  padding-top: 1.25em;
-}
-
-.atcb-dropup .atcb-list.atcb-generated-button:not(.atcb-modal) .atcb-list-item:first-child,
-.atcb-dropoverlay .atcb-list.atcb-generated-button:not(.atcb-modal) .atcb-list-item:first-child {
-  padding-top: .8em;
-}
-
-.atcb-dropoverlay .atcb-list,
-.atcb-list.atcb-modal {
-  border-radius: 6px;
+.atcb-list-item:only-child {
+  border-radius: 11px;
 }
 
 .atcb-list.atcb-modal {
@@ -347,14 +414,14 @@
 }
 
 .atcb-list-item .atcb-icon {
-  margin-bottom: .5em;
-  margin-right: .6em;
+  margin-bottom: 0.5em;
+  margin-right: 0.6em;
   width: 1.125em;
 }
 
 .atcb-rtl .atcb-list-item .atcb-icon {
   margin-right: 0;
-  margin-left: .6em;
+  margin-left: 0.6em;
 }
 
 .atcb-no-text .atcb-list-item .atcb-icon {
@@ -390,7 +457,7 @@
   filter: var(--atcb-shadow-modal);
   color: var(--atcb-text-2);
   cursor: default;
-  box-sizing: border-box;  
+  box-sizing: border-box;
   font-family: var(--font);
   line-height: 1.5em;
   text-align: left;
@@ -428,7 +495,7 @@
 /* content */
 .atcb-modal-headline {
   background-color: var(--atcb-modal-background);
-  border-radius: 6px 6px 0 0;
+  border-radius: 9px 9px 0 0;
   font-size: 1.3em;
   font-weight: 600;
   line-height: 1.5em;
@@ -442,28 +509,28 @@
   padding-top: 2.6em;
 }
 
-.atcb-modal-content {  
+.atcb-modal-content {
   background-color: var(--atcb-modal-background);
   font-size: 1em;
-  padding: .3em 2.5em 2.25em;
+  padding: 0.3em 2.5em 2.25em;
 }
 
 @media (max-width: 575px) {
   .atcb-modal-headline {
     padding: 1.8em 1em 1em;
   }
-  
-  .atcb-modal-content {  
-    padding: .3em 1em 2em;
+
+  .atcb-modal-content {
+    padding: 0.3em 1em 2em;
   }
 }
 
 /* buttons */
 .atcb-modal-buttons {
   background-color: var(--atcb-modal-buttons-bar);
-  border-radius: 0 0 6px 6px;
+  border-radius: 0 0 9px 9px;
   box-sizing: border-box;
-  padding: .8em 1em;
+  padding: 0.8em 1em;
   text-align: center;
   width: 100%;
   display: flex;
@@ -476,17 +543,17 @@ button.atcb-modal-btn,
 a.atcb-modal-btn {
   background-color: var(--atcb-modal-btn-sec-background);
   border: 0;
-  border-radius: 6px;
+  border-radius: 500px;
   box-shadow: var(--atcb-shadow-modal-button);
   color: var(--atcb-modal-btn-sec-text);
   cursor: pointer;
   display: inline-block;
   font-family: var(--font);
-  font-size: .9em;
+  font-size: 0.9em;
   font-weight: 600;
   line-height: 1.5em;
-  margin: .625em;
-  padding: .625em 1.25em;
+  margin: 0.625em;
+  padding: 0.625em 1.25em;
   position: relative;
   text-align: center;
   text-decoration: none;
@@ -512,7 +579,7 @@ a.atcb-modal-btn:hover {
 }
 
 button.atcb-modal-btn:focus-visible,
-a.atcb-modal-btn:focus-visible{
+a.atcb-modal-btn:focus-visible {
   background-color: var(--atcb-modal-btn-background-hover);
   outline: 2px solid var(--atcb-keyboard-focus);
 }
@@ -547,7 +614,7 @@ a.atcb-modal-btn:focus-visible{
 .atcb-subevent-btn:hover,
 .atcb-subevent-btn:focus {
   background-color: var(--atcb-modal-date-btn-background-hover);
-  box-shadow: var(--atcb-shadow-modal-date-btn-hover);  
+  box-shadow: var(--atcb-shadow-modal-date-btn-hover);
 }
 
 .atcb-subevent-btn:focus-visible {
@@ -573,7 +640,7 @@ a.atcb-modal-btn:focus-visible{
 }
 
 .atcb-subevent-btn:hover .atcb-date-btn-left {
-  opacity: .8;
+  opacity: 0.8;
 }
 
 .atcb-date-btn-day {
@@ -595,7 +662,7 @@ a.atcb-modal-btn:focus-visible{
 
 .atcb-date-btn-details {
   opacity: 1;
-  padding: .8em;
+  padding: 0.8em;
   text-align: left;
 }
 
@@ -627,8 +694,8 @@ a.atcb-modal-btn:focus-visible{
 
 .atcb-date-btn-headline {
   font-weight: 600;
-  font-size: .9em;
-  margin-bottom: .5em;
+  font-size: 0.9em;
+  margin-bottom: 0.5em;
   overflow: hidden;
   display: -webkit-box;
   -webkit-line-clamp: 1;
@@ -636,7 +703,7 @@ a.atcb-modal-btn:focus-visible{
 }
 
 .atcb-date-btn-content {
-  font-size: .8em;
+  font-size: 0.8em;
   color: var(--atcb-modal-date-btn-text-2);
 }
 
@@ -657,7 +724,7 @@ a.atcb-modal-btn:focus-visible{
 
 .atcb-rtl .atcb-date-btn-content-icon {
   margin-right: 0;
-  margin-left: .5em;
+  margin-left: 0.5em;
 }
 
 .atcb-date-btn-content-icon svg {
@@ -667,11 +734,11 @@ a.atcb-modal-btn:focus-visible{
 }
 
 .atcb-date-btn-content + .atcb-date-btn-content {
-  margin-top: .3em;
+  margin-top: 0.3em;
 }
 
 .atcb-date-btn-content-recurr-icon {
-  padding-left: .3em;
+  padding-left: 0.3em;
 }
 
 /******************************
@@ -688,18 +755,19 @@ a.atcb-modal-btn:focus-visible{
   display: block;
   position: absolute;
   top: -1.2em;
-  right: -.3em;
-  padding: .5em;
+  right: -0.3em;
+  padding: 0.5em;
   background: var(--atcb-checkmark-background);
   border-radius: 100%;
   height: 2em;
 }
 
-.atcb-button.atcb-active:not(.atcb-modal-style, .atcb-dropoverlay) .atcb-checkmark,
+.atcb-button.atcb-active:not(.atcb-modal-style, .atcb-dropoverlay)
+  .atcb-checkmark,
 .atcb-button.atcb-single:focus .atcb-checkmark,
 .atcb-button.atcb-single:hover .atcb-checkmark {
   top: -1.07em;
-  right: -.17em;
+  right: -0.17em;
 }
 
 .atcb-checkmark svg {
@@ -719,7 +787,7 @@ a.atcb-modal-btn:focus-visible{
   background-color: var(--atcb-overlay-background);
   box-sizing: border-box;
   display: flex;
-  
+
   /* could become simply 100dvh in the future - with regular padding then */
   height: calc(100vh + 100px);
   left: 0;

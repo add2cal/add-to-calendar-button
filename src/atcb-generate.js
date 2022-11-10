@@ -136,8 +136,8 @@ function atcb_generate_label_content(data, parent, type, icon, text, oneOption) 
     parent.append(iconEl);
   }
   if (
-    (type == 'trigger' && data.textLabelButton == true) ||
-    (type != 'trigger' && data.textLabelList == true)
+    ((type == 'trigger' || oneOption) && data.textLabelButton == true) ||
+    (!oneOption && type != 'trigger' && data.textLabelList == true)
   ) {
     const textEl = document.createElement('span');
     textEl.classList.add('atcb-text');
@@ -186,7 +186,7 @@ function atcb_generate_button(host, button, data) {
     buttonTrigger.append(buttonDropdownAnchor);
   }
   // add checkmark (hidden first)
-  if (data.checkmark) {
+  if (data.checkmark && data.textLabelButton) {
     const btnCheck = document.createElement('div');
     btnCheck.classList.add('atcb-checkmark');
     btnCheck.innerHTML = atcbIcon['checkmark'];

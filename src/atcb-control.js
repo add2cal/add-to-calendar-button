@@ -18,6 +18,8 @@ import {
   atcb_set_fullsize,
   atcb_set_sizes,
 } from './atcb-util.js';
+import { atcb_unset_global_event_listener } from './atcb-init.js';
+import { atcbStates } from './atcb-globals.js';
 
 // FUNCTIONS TO CONTROL THE INTERACTION
 function atcb_toggle(host, action, data = '', button = '', keyboardTrigger = false, generatedButton = false) {
@@ -38,6 +40,7 @@ function atcb_toggle(host, action, data = '', button = '', keyboardTrigger = fal
 
 // show the dropdown list + background overlay
 function atcb_open(host, data, button, keyboardTrigger = false, generatedButton = false) {
+  atcbStates['active'] = data.identifier;
   // abort early if an add to calendar dropdown or modal already opened
   if (host.querySelector('.atcb-list') || host.querySelector('.atcb-modal')) return;
   // generate list and prepare wrapper
@@ -103,12 +106,13 @@ function atcb_open(host, data, button, keyboardTrigger = false, generatedButton 
   // set overlay size just to be sure
   atcb_set_fullsize(bgOverlay);
   // give keyboard focus to first item in list, if not blocked, because there is definitely no keyboard trigger
+  const focusEl = host.querySelector('.atcb-list:first-child');
   if (keyboardTrigger) {
-    list.firstChild.focus();
+    focusEl.focus();
   } else {
-    list.firstChild.focus({ preventScroll: true });
+    focusEl.focus({ preventScroll: true });
   }
-  list.firstChild.blur();
+  focusEl.blur();
 }
 
 function atcb_close(host, keyboardTrigger = false) {
@@ -154,6 +158,13 @@ function atcb_close(host, keyboardTrigger = false) {
       .concat(Array.from(host.querySelectorAll('#add-to-calendar-button-reference')))
       .concat(Array.from(host.querySelectorAll('#atcb-bgoverlay')))
       .forEach((el) => el.remove());
+    // unset whatever possible for customTriggers
+    if (document.body.classList.contains('atcb-customTrigger-active')) {
+      document.body.classList.remove('atcb-customTrigger-active');
+      atcb_unset_global_event_listener(atcbStates['active']);
+      delete atcbStates[`${atcbStates['active']}`];
+      host.host.remove();
+    }
   }
 }
 

@@ -114,7 +114,7 @@
         <div class="example-left">
 
           <!-- start of button code -->
-          <add-to-calendar-button>
+          <add-to-calendar-button name="Test" options='"Apple","Google"' startDate="2022-12-24" branding="true">
             {
               "name":"Reminder to star the add to calendar button repo",
               "description":"Check out the maybe easiest way to include add to calendar buttons to your website at:<br>&#8594; [url]https://github.com/add2cal/add-to-calendar-button[/url]",
@@ -133,7 +133,7 @@
                 "Yahoo"
               ],
               "timeZone":"Europe/Berlin",
-              "buttonStyle":"flat",
+              "buttonStyle":"round",
               "branding":true,
               "iCalFileName":"Reminder-Event"
             }
@@ -256,7 +256,7 @@
               "listStyle":"overlay",
               "size":"8",
               "buttonStyle":"3d",
-              "branding":false,
+              "branding":true,
               "timeZone":"Europe/Berlin"
             }
           </add-to-calendar-button>
@@ -366,7 +366,7 @@
               "inline":true,
               "trigger":"click",
               "branding":true,
-              "listStyle":"modal"
+              "buttonStyle":"flat"
             }
           </add-to-calendar-button>
           <!-- end of button code -->
@@ -504,6 +504,7 @@
               ],
               "timeZone":"Europe/London",
               "lightMode":"dark",
+              "buttonStyle":"round",
               "iCalFileName":"Multi-Date-Event"
             }
           </add-to-calendar-button>

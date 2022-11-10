@@ -16,16 +16,22 @@ import { atcbOptions } from './atcb-globals.js';
 import { atcb_secure_url, atcb_validEmail, atcb_generate_uuid } from './atcb-util.js';
 
 // CHECK FOR REQUIRED FIELDS
-function atcb_check_required(data) {
+function atcb_check_required(data, throwError = true) {
   // in this first step, we only check for the bare minimum, so we can abort early on really broken setups. We will do further validation later.
   // check for at least 1 option
   if (data.options == null || data.options.length < 1) {
-    throw new Error('Add to Calendar Button generation failed: no valid options set');
+    if (throwError) {
+      throw new Error('Add to Calendar Button generation failed: no valid options set');
+    }
+    return false;
   }
   // check for min required data (without "options")
   // name is always required on top level (in the multi-date setup this would be the name of the event series)
   if (data.name == null || data.name == '') {
-    throw new Error('Add to Calendar Button generation failed: required name information missing');
+    if (throwError) {
+      throw new Error('Add to Calendar Button generation failed: required name information missing');
+    }
+    return false;
   }
   // regarding event specifics, we start by checking for multi-date setups
   if (data.dates != null && data.dates.length > 0) {
@@ -41,15 +47,18 @@ function atcb_check_required(data) {
             (data.dates[`${i}`][`${field}`] == null || data.dates[`${i}`][`${field}`] == '') &&
             (data[`${field}`] == null || data[`${field}`] == ''))
         ) {
-          throw new Error(
-            'Add to Calendar Button generation failed: required setting missing [dates array object #' +
-              (i + 1) +
-              '/' +
-              data.dates.length +
-              '] => [' +
-              field +
-              ']'
-          );
+          if (throwError) {
+            throw new Error(
+              'Add to Calendar Button generation failed: required setting missing [dates array object #' +
+                (i + 1) +
+                '/' +
+                data.dates.length +
+                '] => [' +
+                field +
+                ']'
+            );
+          }
+          return false;
         }
       }
       return true;
@@ -58,7 +67,10 @@ function atcb_check_required(data) {
     const requiredSingleField = ['startDate'];
     return requiredSingleField.every(function (field) {
       if (data[`${field}`] == null || data[`${field}`] == '') {
-        throw new Error('Add to Calendar Button generation failed: required setting missing [' + field + ']');
+        if (throwError) {
+          throw new Error('Add to Calendar Button generation failed: required setting missing [' + field + ']');
+        }
+        return false;
       }
       return true;
     });
@@ -106,7 +118,7 @@ function atcb_validate_icsFile(data, msgPrefix, i = '', msgSuffix = '') {
 
 // validate the subscription functionality (requires an explicit ics file)
 function atcb_validate_buttonStyle(data, msgPrefix) {
-  const availableStyles = ['default', '3d', 'flat', 'round', 'neumorphism', 'text', 'date', 'bubble', 'custom', 'none'];
+  const availableStyles = ['default', '3d', 'flat', 'round', 'neumorphism', 'text', 'date', 'custom', 'none'];
   if (!availableStyles.includes(data.buttonStyle)) {
     console.error(msgPrefix + ' failed: provided buttonStyle invalid');
     return false;

@@ -380,17 +380,16 @@
   color: var(--atcb-text);
   display: block;
   font-family: var(--font);
-  max-width: 100%;
+  min-width: 100%;
   position: relative;
   user-select: none;
   -webkit-user-select: none;
-  width: 100%;
+  width: fit-content;
 }
 
 .atcb-list-item {
   align-items: center;
   background-color: var(--atcb-background);
-  border: 1px solid var(--atcb-border);
   box-sizing: border-box;
   cursor: pointer;
   display: flex;

@@ -15,7 +15,7 @@ function prepareFinalFile(
   // add style inline
   const styleRegex = /const\satcbCssTemplate\s=\s\{\};/;
   if (styleRegex.test(content)) {
-    const availableStyles = ['default', '3d', 'flat', 'round', 'neumorphism', 'text', 'date', 'bubble'];
+    const availableStyles = ['default', '3d', 'flat', 'round', 'neumorphism', 'text', 'date'];
     let inlineStyleOutput = 'const atcbCssTemplate = {';
     availableStyles.forEach ((style) => {
       const styleString = (function() {

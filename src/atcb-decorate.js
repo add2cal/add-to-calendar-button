@@ -243,6 +243,40 @@ function atcb_decorate_data_branding(data) {
 }
 
 function atcb_decorate_data_style(data) {
+  // specify the icons option
+  data.iconButton = true;
+  data.iconList = true;
+  data.iconModal = true;
+  if (data.icons != null) {
+    data.icons = String(data.icons);
+    if (data.icons != '') {
+      const iconsConfig = data.icons.split('|');
+      if (iconsConfig[0] == 'false') {
+        data.iconButton = false;
+      }
+      if (iconsConfig[1] != null && iconsConfig[1] == 'false') {
+        data.iconList = false;
+      }
+      if (iconsConfig[2] != null && iconsConfig[2] == 'false') {
+        data.iconModal = false;
+      }
+    }
+  }
+  // specify the text labels option
+  data.textLabelButton = true;
+  data.textLabelList = true;
+  if (data.textLabels != null) {
+    data.textLabels = String(data.textLabels);
+    if (data.textLabels != '') {
+      const textLabelsConfig = data.textLabels.split('|');
+      if (textLabelsConfig[0] == 'false') {
+        data.textLabelButton = false;
+      }
+      if (textLabelsConfig[1] != null && textLabelsConfig[1] == 'false') {
+        data.textLabelList = false;
+      }
+    }
+  }
   // set default listStyle
   if (data.listStyle == null || data.listStyle == '') {
     data.listStyle = 'dropdown';
@@ -253,7 +287,7 @@ function atcb_decorate_data_style(data) {
   }
   // set button style and force click on styles, where the dropdown is not attached to the button
   if (data.buttonStyle != null && data.buttonStyle != '' && data.buttonStyle != 'default') {
-    if (data.buttonStyle == 'bubble' || data.buttonStyle == 'text' || data.buttonStyle == 'date') {
+    if (data.buttonStyle == 'round' || data.buttonStyle == 'text' || data.buttonStyle == 'date' || data.buttonStyle == 'neumorphism') {
       data.trigger = 'click';
     }
     // for the date style, we even block the dropdown completely and fall back to overlay
@@ -262,6 +296,10 @@ function atcb_decorate_data_style(data) {
     }
   } else {
     data.buttonStyle = 'default';
+  }
+  // force overlay when the button label is ommited, but the list labels are not (which would make the list need to be larger than the button) - at dropdown cases
+  if ((data.buttonStyle == 'default' || data.buttonStyle == '3d' || data.buttonStyle == 'flat') && data.listStyle == 'dropdown' && data.textLabelList && !data.textLabelButton) {
+    data.listStyle = 'overlay';
   }
   // prepare sizes
   data.sizes = [];
@@ -296,40 +334,6 @@ function atcb_decorate_data_style(data) {
       data.lightMode = prefersDarkScheme.matches ? 'dark' : 'light';
     } else if (data.lightMode != 'bodyScheme' && data.lightMode != 'dark') {
       data.lightMode = 'light';
-    }
-  }
-  // specify the icons option
-  data.iconButton = true;
-  data.iconList = true;
-  data.iconModal = true;
-  if (data.icons != null) {
-    data.icons = String(data.icons);
-    if (data.icons != '') {
-      const iconsConfig = data.icons.split('|');
-      if (iconsConfig[0] == 'false') {
-        data.iconButton = false;
-      }
-      if (iconsConfig[1] != null && iconsConfig[1] == 'false') {
-        data.iconList = false;
-      }
-      if (iconsConfig[2] != null && iconsConfig[2] == 'false') {
-        data.iconModal = false;
-      }
-    }
-  }
-  // specify the text labels option
-  data.textLabelButton = true;
-  data.textLabelList = true;
-  if (data.textLabels != null) {
-    data.textLabels = String(data.textLabels);
-    if (data.textLabels != '') {
-      const textLabelsConfig = data.textLabels.split('|');
-      if (textLabelsConfig[0] == 'false') {
-        data.textLabelButton = false;
-      }
-      if (textLabelsConfig[1] != null && textLabelsConfig[1] == 'false') {
-        data.textLabelList = false;
-      }
     }
   }
   // return result
