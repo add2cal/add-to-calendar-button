@@ -11,7 +11,7 @@
  *
  */
 
-import { atcbIcon, atcbStates, atcbDefaultTarget, isChrome, isiOS } from './atcb-globals.js';
+import { atcbIcon, atcbStates, atcbDefaultTarget } from './atcb-globals.js';
 import { atcb_toggle, atcb_close } from './atcb-control.js';
 import { atcb_generate_links } from './atcb-links.js';
 import {
@@ -33,17 +33,26 @@ function atcb_generate_label(host, data, parent, type, icon = false, text = '', 
   switch (type) {
     case 'trigger':
     default:
-      parent.id = data.identifier;
+      parent.id = data.identifier;      
+      parent.addEventListener('keyup', function (event) {
+        if (event.key == 'Enter') {
+          event.preventDefault();
+          atcb_toggle(host, 'auto', data, parent, true, true);
+        }
+      });
+      parent.addEventListener('touchend', (event) => {
+        event.preventDefault();
+        atcb_toggle(host, 'auto', data, parent, false, true);
+      });
       if (data.trigger === 'click') {
-        parent.addEventListener('click', (event) => {
-          event.preventDefault();
-          atcb_toggle(host, 'auto', data, parent, false, true);
-        });
+        parent.addEventListener(
+          'mouseup',
+          atcb_debounce_leading((event) => {
+            event.preventDefault();
+            atcb_toggle(host, 'auto', data, parent, false, true);
+          })
+        );
       } else {
-        parent.addEventListener('touchend', (event) => {
-          event.preventDefault();
-          atcb_toggle(host, 'auto', data, parent, false, true);
-        });
         parent.addEventListener(
           'mouseenter',
           atcb_debounce_leading((event) => {
@@ -52,12 +61,6 @@ function atcb_generate_label(host, data, parent, type, icon = false, text = '', 
           })
         );
       }
-      parent.addEventListener('keyup', function (event) {
-        if (event.key == 'Enter') {
-          event.preventDefault();
-          atcb_toggle(host, 'auto', data, parent, true, true);
-        }
-      });
       break;
     case 'apple':
     case 'google':

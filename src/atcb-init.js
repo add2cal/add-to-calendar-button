@@ -55,7 +55,6 @@ const atcbWcParams = [
   "availability",
   "created",
   "updated",
-  "identifier",
   "subscribe",
   "options",
   "iCalFileName",
@@ -64,6 +63,7 @@ const atcbWcParams = [
   "trigger",
   "icons",
   "textLabels",
+  "buttonsList",
   "background",
   "checkmark",
   "branding",
@@ -73,6 +73,7 @@ const atcbWcParams = [
   "rsvp",
   "inlineRsvp",
   "customLabels",
+  "customCss",
   "lightMode",
   "language",
   "richData"
@@ -87,110 +88,39 @@ class AddToCalendarButton extends HTMLElement {
     super();
     this.attachShadow({mode: 'open', delegateFocus: true});
     this.shadowRoot.append(template.content.cloneNode(true));
+    this.initialized = false;
+    this.data = {};
+    atcbBtnCount = atcbBtnCount + 1;
   };
   
   connectedCallback() {
-    const componentButtonId = this.getAttribute('atcb-button-id');
-    if (componentButtonId == null || componentButtonId == '') {
-      atcbBtnCount = atcbBtnCount + 1;
-    }
-    const rootObj = this.shadowRoot.querySelector('.atcb-initialized');
-    this.data = {};
+    // initial data fetch
     // checking for PRO key first and pull data if given
     if (this.getAttribute('proKey') != null && this.getAttribute('proKey') != '') {
       this.data = atcb_get_pro_data(this.getAttribute('proKey'));
-    } else {
-      // otherwise, we try reading attributes
-      const wcBooleanParams = [
-        "subscribe",
-        "background",
-        "checkmark",
-        "branding",
-        "inlineRsvp",
-        "richData"
-      ];
-      const wcObjectParams = [
-        "customLabels",
-        "ty",
-        "rsvp"
-      ];
-      const wcArrayParams = [
-        "images",
-        "options"
-      ];
-      for (let i = 0; i < atcbWcParams.length; i++) {
-        // reading data, but removing real code line breaks before parsing.
-        // use <br> or \n explicitely in the description to create a line break.
-        let attr = atcbWcParams[`${i}`];
-        if (this.getAttribute(`${attr}`) != null) {
-          let inputVal = atcb_secure_content(this.getAttribute(`${attr}`).replace(/(\r\n|\n|\r)/g, ''), false);
-          let val;
-          if (wcBooleanParams.includes(attr)) {
-            val = (inputVal === 'true');
-          } else if (wcObjectParams.includes(attr)) {
-            val = JSON.parse(inputVal);
-          } else if (wcArrayParams.includes(attr)) {
-            val = (inputVal).substring(1, inputVal.length - 1).replace(/\s/g, '').split('","');
-          } else {
-            val = inputVal;
-          }
-          this.data[`${attr}`] = val;
-        }
+    }
+    if (this.data.name == null || this.data.name == '')  {
+      // if something goes wrong, we try reading attributes or the innerHTML of the host element
+      this.data = atcb_read_attributes(this);
+    }
+    // set identifier first, no matter further validation
+    if (this.data.identifier != null && this.data.identifier != '') {
+      if (!/^[\w-]+$/.test(this.data.identifier)) {
+        this.data.identifier = '';
+        console.warn('Add to Calendar Button generation: identifier invalid - using auto numbers instead');
+      } else {
+        this.data.identifier = 'atcb-btn-' + this.data.identifier;
       }
     }
-    if (!atcb_check_required(this.data, false)) {
-      // if we still have no data, we get a potential JSON from the innerHTML
-      const slotInput = this.innerHTML;
-      const atcbJsonInput = (function () {
-        if (slotInput != '') {
-          try {
-            const input = JSON.parse(
-              atcb_secure_content(slotInput.replace(/(\r\n|\n|\r)/g, ''), false)
-            );
-            // we immediately patch for backwards compatibility
-            return atcb_patch_config(input);
-          } catch (e) {
-            throw new Error('Add to Calendar Button generation failed: JSON content provided, but badly formatted (in doubt, try some tool like https://jsonformatter.org/ to validate).\r\nError message: ' + e);
-          }
-        }
-        return '';
-      })();
-      // abort on missing input data
-      if (atcbJsonInput.length == 0) {
-        throw new Error('Add to Calendar Button generation failed: no data provided');
-      }
-      this.data = atcbJsonInput;
+    if (this.data.identifier == null || this.data.identifier == '') {
+      this.data.identifier = 'atcb-btn-' + atcbBtnCount;
     }
-    // check, if all required data is available
-    if (atcb_check_required(this.data)) {
-      // Rewrite dynamic dates, standardize line breaks and transform urls in the description
-      this.data = atcb_decorate_data(this.data);
-      // set identifier if not provided (but only if not yet constructed)
-      if (this.data.identifier == null || this.data.identifier == '') {
-        if (componentButtonId == null || componentButtonId == '') {
-          this.data.identifier = 'atcb-btn-' + atcbBtnCount;
-        } else {
-          this.data.identifier = componentButtonId;
-        }
-      }
-      if (atcb_validate(this.data)) {
-        // ... and on success, load css and generate the button
-        atcb_set_light_mode(this.shadowRoot, this.data);
-        atcb_load_css(this.shadowRoot, rootObj, this.data.buttonStyle, this.data.inline, this.data.customCss);
-        atcb_setup_state_management(this.data);
-        // set global event listeners
-        atcb_set_global_event_listener(this.shadowRoot, this.data);
-        atcb_init_log();
-        this.setAttribute('atcb-button-id', this.data.identifier);
-        // generate the actual button
-        atcb_generate_button(this.shadowRoot, rootObj, this.data);
-        // create schema.org data (https://schema.org/Event), if possible; and add it to the regular DOM
-        if (this.data.richData && this.data.name && this.data.dates[0].location && this.data.dates[0].startDate) {
-          atcb_generate_rich_data(this.data, this);
-          this.data.schemaEl = this.previousSibling;
-        }
-      }
-    }
+    // we are copying the value to presever it over re-building the data object
+    this.identifier = this.data.identifier;
+    this.setAttribute('atcb-button-id', this.data.identifier);
+    this.initialized = true;
+    atcb_init_log();
+    atcb_build_button(this.shadowRoot, this.data);
   }
 
   disconnectedCallback() {
@@ -199,22 +129,133 @@ class AddToCalendarButton extends HTMLElement {
   }
 
   static get observedAttributes() {
+    const observeAdditionally = ['instance'];
     return atcbWcParams.map(element => {
       return element.toLowerCase();
-    });
+    }).concat(observeAdditionally);
   }
   
   attributeChangedCallback(name, oldValue, newValue) {
     // updating whenever attributes update
-    // mind that this only observes the actual attributes, not the innerHTML of the host!
-    if (atcbInitialGlobalInit) {
-      console.log(`${name}'s value has been changed from ${oldValue} to ${newValue}`);
-      atcb_cleanup(this.shadowRoot, this.data);
+    // but not if we are loading external data (which may not change dynamically)
+    if (this.data.proKey != null && this.data.proKey != '') {
+      return;
     }
+    // also return, if this is the first initialization
+    if (!this.initialized) {
+      return;
+    }
+    // in all other cases, destroy and rebuild the button
+    // mind that this only observes the actual attributes, not the innerHTML of the host (one would need to alter the instance attribute for that case)!
+    console.log(`${name}'s value has been changed from ${oldValue} to ${newValue}`);
+    atcb_cleanup(this.shadowRoot, this.data);
+    this.data = {};
+    this.shadowRoot.querySelector('.atcb-initialized').remove();
+    this.shadowRoot.append(template.content.cloneNode(true));
+    this.shadowRoot.querySelector('style').remove();
+    this.data = atcb_read_attributes(this);
+    this.data.identifier = this.identifier;
+    atcb_build_button(this.shadowRoot, this.data);
   }
 }
 
 window.customElements.define('add-to-calendar-button', AddToCalendarButton);
+
+// read data attributes
+function atcb_read_attributes(el) {
+  let data = {};
+  const wcBooleanParams = [
+    "subscribe",
+    "background",
+    "checkmark",
+    "branding",
+    "inlineRsvp",
+    "richData",
+    "buttonsList"
+  ];
+  const wcObjectParams = [
+    "customLabels",
+    "ty",
+    "rsvp"
+  ];
+  const wcArrayParams = [
+    "images",
+    "options"
+  ];
+  for (let i = 0; i < atcbWcParams.length; i++) {
+    // reading data, but removing real code line breaks before parsing.
+    // use <br> or \n explicitely in the description to create a line break.
+    let attr = atcbWcParams[`${i}`];
+    if (el.getAttribute(`${attr}`) != null) {
+      let inputVal = atcb_secure_content(el.getAttribute(`${attr}`).replace(/(\r\n|\n|\r)/g, ''), false);
+      let val;
+      if (wcBooleanParams.includes(attr)) {
+        val = (inputVal === 'true');
+      } else if (wcObjectParams.includes(attr)) {
+        val = JSON.parse(inputVal);
+      } else if (wcArrayParams.includes(attr)) {
+        val = (inputVal).substring(1, inputVal.length - 1).replace(/\s/g, '').split('","');
+      } else {
+        val = inputVal;
+      }
+      data[`${attr}`] = val;
+    }
+    // getting identifier separartely
+    const identifierAttr = el.getAttribute('identifier');
+    if (identifierAttr != null && identifierAttr != '') {
+      data['identifier'] = atcb_secure_content(identifierAttr.replace(/(\r\n|\n|\r)/g, ''), false);
+    }
+  }
+  // if we receive no data that way, we try to get a potential JSON from the innerHTML
+  if (!atcb_check_required(data, false)) {    
+    const slotInput = el.innerHTML;
+    const atcbJsonInput = (function () {
+      if (slotInput != '') {
+        try {
+          const input = JSON.parse(
+            atcb_secure_content(slotInput.replace(/(\r\n|\n|\r)/g, ''), false)
+          );
+          // we immediately patch for backwards compatibility
+          return atcb_patch_config(input);
+        } catch (e) {
+          throw new Error('Add to Calendar Button generation failed: JSON content provided, but badly formatted (in doubt, try some tool like https://jsonformatter.org/ to validate).\r\nError message: ' + e);
+        }
+      }
+      return '';
+    })();
+    // abort on missing input data
+    if (atcbJsonInput.length == 0) {
+      throw new Error('Add to Calendar Button generation failed: no data provided');
+    }
+    data = atcbJsonInput;
+  }
+  return data;
+}
+
+// build the button
+function atcb_build_button(host, data) {
+  // check, if all required data is available
+  if (atcb_check_required(data)) {    
+    // Rewrite dynamic dates, standardize line breaks and transform urls in the description
+    data = atcb_decorate_data(data);
+    if (atcb_validate(data)) {
+      const rootObj = host.querySelector('.atcb-initialized');
+      // ... and on success, load css and generate the button
+      atcb_set_light_mode(host, data);
+      atcb_load_css(host, rootObj, data.buttonStyle, data.inline, data.customCss);
+      atcb_setup_state_management(data);
+      // set global event listeners
+      atcb_set_global_event_listener(host, data);
+      // generate the actual button
+      atcb_generate_button(host, rootObj, data);
+      // create schema.org data (https://schema.org/Event), if possible; and add it to the regular DOM
+      if (data.richData && data.name && data.dates[0].location && data.dates[0].startDate) {
+        atcb_generate_rich_data(data, host.host);
+        data.schemaEl = host.host.previousSibling;
+      }
+    }
+  }
+}
 
 // destroy the button
 function atcb_cleanup(host, data) {
@@ -318,10 +359,13 @@ function atcb_action(data, triggerElement, keyboardTrigger = true) {
     } else {
       // however, if the trigger has no id, we set it with the identifier or a default fallback
       if (data.identifier != null && data.identifier != '') {
-        triggerElement.id = data.identifier;
-      } else {
-        data.identifier = 'atcb-btn-custom';
+        if (!/^[\w-]+$/.test(data.identifier)) {
+          data.identifier = 'atcb-btn-custom';
+        } else {
+          this.data.identifier = 'atcb-btn-' + this.data.identifier;
+        }
       }
+      triggerElement.id = data.identifier;
     }
     // for custom triggers, we block any dropdown, since this would look shit 99% of the time
     if (data.listStyle == 'dropdown') {
@@ -388,6 +432,7 @@ function atcb_init_log() {
 function atcb_get_pro_data(licenseKey) {
   const data = {};
   if (licenseKey != null && licenseKey != '') {
+    data.proKey = licenseKey;
     console.error('Add to Calendar Button proKey invalid! Falling back to local data...');    
     // TODO: Pull data from server
   }

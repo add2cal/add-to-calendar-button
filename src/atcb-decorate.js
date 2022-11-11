@@ -51,7 +51,6 @@ function atcb_patch_config(configData) {
 
 // CLEAN DATA BEFORE FURTHER VALIDATION (CONSIDERING SPECIAL RULES AND SCHEMES)
 function atcb_decorate_data(data) {
-  data = atcb_decorate_data_identifier(data);
   data.subscribe = atcb_decorate_data_subscribe(data);
   data = atcb_decorate_data_rrule(data);
   data = atcb_decorate_data_options(data);
@@ -64,19 +63,6 @@ function atcb_decorate_data(data) {
   data = atcb_decorate_data_dates(data);
   data = atcb_decorate_data_meta(data);
   data = atcb_decorate_data_extend(data);
-  return data;
-}
-
-// extend provided identifier
-function atcb_decorate_data_identifier(data) {
-  if (data.identifier != null && data.identifier != '') {
-    data.identifier = 'atcb-btn-' + data.identifier;
-    // and directly validating it here (not in the validation, because we will already need the final form there)
-    if (!/^[\w-]+$/.test(data.identifier)) {
-      data.identifier = '';
-      console.warn('Add to Calendar Button generation: identifier invalid - using auto numbers instead');
-    }
-  }
   return data;
 }
 
