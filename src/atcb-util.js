@@ -15,7 +15,10 @@ import { tzlib_get_offset } from '../node_modules/timezones-ical-library/dist/mj
 import { isMobile, isiOS, atcbDefaultTarget } from './atcb-globals.js';
 
 // SHARED FUNCTION HOOK FOR WHEN EVENT GOT SAVED
-function atcb_saved_hook() {
+function atcb_saved_hook(host, data) {
+  if (data.proKey == null | data.proKey == '') {
+    return;
+  }
   console.log('Event saved. Looking forward to it!');
 }
 

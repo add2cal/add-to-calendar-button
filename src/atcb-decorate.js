@@ -58,6 +58,7 @@ function atcb_decorate_data(data) {
   data.checkmark = atcb_decorate_data_checkmark(data);
   data.background = atcb_decorate_data_background(data);
   data.branding = atcb_decorate_data_branding(data);
+  data.bypassWebViewCheck = atcb_decorate_data_bypassWebViewCheck(data);
   data = atcb_decorate_data_style(data);
   data = atcb_decorate_data_i18n(data);
   data = atcb_decorate_data_dates(data);
@@ -228,6 +229,14 @@ function atcb_decorate_data_branding(data) {
   return false;
 }
 
+// specify the very optional bypassWebViewCheck option
+function atcb_decorate_data_bypassWebViewCheck(data) {
+  if (data.bypassWebViewCheck != null && data.bypassWebViewCheck == true) {
+    return true;
+  }
+  return false;
+}
+
 function atcb_decorate_data_style(data) {
   // specify the icons option
   data.iconButton = true;
@@ -287,6 +296,12 @@ function atcb_decorate_data_style(data) {
   if ((data.buttonStyle == 'default' || data.buttonStyle == '3d' || data.buttonStyle == 'flat') && data.listStyle == 'dropdown' && data.textLabelList && !data.textLabelButton) {
     data.listStyle = 'overlay';
   }
+  // determine the buttonsList option
+  if (data.buttonsList != null && data.buttonsList == true) {
+    data.buttonsList = true;
+  } else {
+    data.buttonsList = false;
+  }
   // prepare sizes
   data.sizes = [];
   data.sizes['l'] = data.sizes['m'] = data.sizes['s'] = 16;
@@ -330,6 +345,10 @@ function atcb_decorate_data_i18n(data) {
   // set language if not set
   if (data.language == null || data.language == '') {
     data.language = 'en';
+  }
+  // reduce language identifier, if long version is used
+  if (data.language.length > 2) {
+    data.language = data.language.substr(0,2);
   }
   // set right-to-left for relevant languages
   if (data.language == 'ar') {

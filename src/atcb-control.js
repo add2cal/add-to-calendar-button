@@ -70,7 +70,7 @@ function atcb_open(host, data, button, keyboardTrigger = false, generatedButton 
     list.classList.add('atcb-modal');
   }
   // define background overlay
-  const bgOverlay = atcb_generate_bg_overlay(host, data.listStyle, data.trigger, data.background);
+  const bgOverlay = atcb_generate_bg_overlay(host, data.trigger, data.background);
   // render the items depending on the liststyle
   if (data.listStyle === 'modal') {
     host.append(bgOverlay);

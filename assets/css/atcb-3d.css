@@ -190,15 +190,14 @@
   outline: 2px solid var(--atcb-keyboard-focus);
 }
 
-.atcb-button.atcb-active:not(.atcb-modal-style, .atcb-dropoverlay),
-.atcb-button.atcb-single:focus,
-.atcb-button.atcb-single:hover {
+.atcb-button.atcb-active:not(.atcb-modal-style, .atcb-dropoverlay) {
   background-color: var(--atcb-background-hover);
   z-index: 15000000;
 }
 
 .atcb-button.atcb-single:focus,
 .atcb-button.atcb-single:hover {
+  background-color: var(--atcb-background-hover);
   box-shadow: var(--atcb-shadow-button-active);
   margin: -.13em;
   padding: .78em 1.13em;
@@ -805,15 +804,6 @@ a.atcb-modal-btn:focus-visible{
   position: fixed;
   width: 100vw;
   z-index: 14000000;
-}
-
-#atcb-bgoverlay.atcb-animate-bg {
-  animation: atcb-bgoverlay-animate 0.3s ease 0s 1 normal forwards;
-}
-
-#atcb-bgoverlay.atcb-no-animation {
-  animation: none;
-  opacity: 1;
 }
 
 #atcb-bgoverlay.atcb-no-bg {

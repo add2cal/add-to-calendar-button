@@ -40,10 +40,13 @@ function atcb_generate_label(host, data, parent, type, icon = false, text = '', 
           atcb_toggle(host, 'auto', data, parent, true, true);
         }
       });
-      parent.addEventListener('touchend', (event) => {
-        event.preventDefault();
-        atcb_toggle(host, 'auto', data, parent, false, true);
-      });
+      parent.addEventListener(
+        'touchend', 
+        atcb_debounce_leading((event) => {  
+          event.preventDefault();
+          atcb_toggle(host, 'auto', data, parent, false, true);
+        })
+      );
       if (data.trigger === 'click') {
         parent.addEventListener(
           'mouseup',
@@ -72,15 +75,25 @@ function atcb_generate_label(host, data, parent, type, icon = false, text = '', 
       parent.id = data.identifier + '-' + type;
       parent.addEventListener(
         'click',
-        atcb_debounce(() => {
-          oneOption ? parent.blur() : atcb_toggle(host, 'close');
+        atcb_debounce_leading(() => {
+          if (oneOption) {
+            atcbStates['active'] = host.host.getAttribute('atcb-button-id');
+            host.querySelector('#' + parent.id).blur()
+          } else {
+            atcb_toggle(host, 'close')
+          }
           atcb_generate_links(host, type, data);
         })
       );
       parent.addEventListener('keyup', function (event) {
         if (event.key == 'Enter') {
           event.preventDefault();
-          oneOption ? parent.blur() : atcb_toggle(host, 'close');
+          if (oneOption) {
+            atcbStates['active'] = host.host.getAttribute('atcb-button-id');
+            host.querySelector('#' + parent.id).blur()
+          } else {
+            atcb_toggle(host, 'close')
+          }
           atcb_generate_links(host, type, data, 'all', true);
         }
       });
@@ -100,10 +113,6 @@ function atcb_generate_label(host, data, parent, type, icon = false, text = '', 
         }
       });
       break;
-  }
-  // override the id for the oneOption button, since the button always needs to have the button id
-  if (oneOption) {
-    parent.id = data.identifier;
   }
   // set icon and text
   atcb_generate_label_content(data, parent, type, icon, text, oneOption);
@@ -151,50 +160,66 @@ function atcb_generate_label_content(data, parent, type, icon, text, oneOption) 
 
 // generate the triggering button
 function atcb_generate_button(host, button, data) {
-  // generate the wrapper div
-  const buttonTriggerWrapper = document.createElement('div');
-  buttonTriggerWrapper.classList.add('atcb-button-wrapper');
-  if (data.rtl) {
-    buttonTriggerWrapper.classList.add('atcb-rtl');
-  }
-  button.append(buttonTriggerWrapper);
-  atcb_set_sizes(buttonTriggerWrapper, data.sizes);
-  // generate the button trigger div
-  const buttonTrigger = document.createElement('button');
-  buttonTrigger.classList.add('atcb-button');
-  if (data.textLabelButton == false) {
-    buttonTrigger.classList.add('atcb-no-text');
-  }
-  if (data.trigger === 'click') {
-    buttonTrigger.classList.add('atcb-click');
-  }
-  if (data.listStyle === 'overlay') {
-    buttonTrigger.classList.add('atcb-dropoverlay');
-  }
-  buttonTrigger.type = 'button';
-  buttonTriggerWrapper.append(buttonTrigger);
-  // generate the label incl. eventListeners
-  if (data.buttonStyle == 'date') {
-    atcb_generate_date_button(data, buttonTrigger);
-  }
-  // if there is only 1 calendar option, we directly show this at the button, but with the trigger's label text (small exception for the date style)
-  if (data.options.length === 1) {
-    buttonTrigger.classList.add('atcb-single');
-    atcb_generate_label(host, data, buttonTrigger, data.options[0], data.iconButton, data.label, true);
-  } else {
-    atcb_generate_label(host, data, buttonTrigger, 'trigger', data.iconButton, data.label);
-    // create an empty anchor div to place the dropdown, while the position can be defined via CSS
-    const buttonDropdownAnchor = document.createElement('div');
-    buttonDropdownAnchor.classList.add('atcb-dropdown-anchor');
-    buttonTrigger.append(buttonDropdownAnchor);
-  }
-  // add checkmark (hidden first)
-  if (data.checkmark && data.textLabelButton) {
-    const btnCheck = document.createElement('div');
-    btnCheck.classList.add('atcb-checkmark');
-    btnCheck.innerHTML = atcbIcon['checkmark'];
-    buttonTrigger.append(btnCheck);
-  }
+  // determine whether we are looking for the 1-option case (also with buttonsList)
+  const oneOption = (function () {
+    if (data.options.length === 1 || (data.buttonsList && data.buttonStyle != 'date')) {
+      return true;
+    }
+    return false;
+  })();
+  const optionSplit = oneOption ? data.options : ["default"];
+  optionSplit.forEach(function (option) {    
+    // generate the wrapper div
+    const buttonTriggerWrapper = document.createElement('div');
+    buttonTriggerWrapper.classList.add('atcb-button-wrapper');
+    if (data.rtl) {
+      buttonTriggerWrapper.classList.add('atcb-rtl');
+    }
+    button.append(buttonTriggerWrapper);
+    atcb_set_sizes(buttonTriggerWrapper, data.sizes);
+    // generate the button trigger div
+    const buttonTrigger = document.createElement('button');
+    buttonTrigger.classList.add('atcb-button');
+    if (data.textLabelButton == false) {
+      buttonTrigger.classList.add('atcb-no-text');
+    }
+    if (data.trigger === 'click') {
+      buttonTrigger.classList.add('atcb-click');
+    }
+    if (data.listStyle === 'overlay') {
+      buttonTrigger.classList.add('atcb-dropoverlay');
+    }
+    buttonTrigger.type = 'button';
+    buttonTriggerWrapper.append(buttonTrigger);
+    // generate the label incl. eventListeners
+    if (data.buttonStyle == 'date') {
+      atcb_generate_date_button(data, buttonTrigger);
+    }
+    // if there is only 1 calendar option, we directly show this at the button, but with the trigger's label text (small exception for the date style)
+    if (oneOption) {
+      buttonTrigger.classList.add('atcb-single');
+      atcb_generate_label(host, data, buttonTrigger, option, data.iconButton, data.label, true);
+      // override the id for the oneOption button, since the button always needs to have the button id, while it received the option id from the labeling function
+      buttonTrigger.id = data.identifier;
+      // but in case we simply render one button per option, only use the identifier for the first one and also add the info for the option
+      if (data.buttonsList) {
+        buttonTrigger.id = data.identifier + '-' + option;
+      }
+    } else {
+      atcb_generate_label(host, data, buttonTrigger, 'trigger', data.iconButton, data.label);
+      // create an empty anchor div to place the dropdown, while the position can be defined via CSS
+      const buttonDropdownAnchor = document.createElement('div');
+      buttonDropdownAnchor.classList.add('atcb-dropdown-anchor');
+      buttonTrigger.append(buttonDropdownAnchor);
+    }
+    // add checkmark (hidden first)
+    if (data.checkmark && data.textLabelButton && !data.buttonsList) {
+      const btnCheck = document.createElement('div');
+      btnCheck.classList.add('atcb-checkmark');
+      btnCheck.innerHTML = atcbIcon['checkmark'];
+      buttonTrigger.append(btnCheck);
+    }
+  });
   console.log('Add to Calendar Button "' + data.identifier + '" created');
 }
 
@@ -366,6 +391,8 @@ function atcb_generate_dropdown_list(host, data) {
     const optionItem = document.createElement('div');
     optionItem.classList.add('atcb-list-item', 'atcb-list-item-close');
     optionItem.tabIndex = 0;
+    listCount++;
+    optionItem.dataset.optionNumber = listCount;
     optionsList.append(optionItem);
     atcb_generate_label(host, data, optionItem, 'close', data.iconList);
   }
@@ -373,19 +400,16 @@ function atcb_generate_dropdown_list(host, data) {
 }
 
 // create the background overlay, which also acts as trigger to close any dropdowns
-function atcb_generate_bg_overlay(host, listStyle = 'dropdown', trigger = '', darken = true) {
+function atcb_generate_bg_overlay(host, trigger = '', darken = true) {
   const bgOverlay = document.createElement('div');
   bgOverlay.id = 'atcb-bgoverlay';
-  if (listStyle !== 'modal' && darken) {
-    bgOverlay.classList.add('atcb-animate-bg');
-  }
   if (!darken) {
     bgOverlay.classList.add('atcb-no-bg');
   }
   bgOverlay.tabIndex = 0;
   bgOverlay.addEventListener(
-    'click',
-    atcb_debounce((e) => {
+    'mouseup',
+    atcb_debounce_leading((e) => {
       if (e.target !== e.currentTarget) return;
       atcb_toggle(host, 'close');
     })
@@ -411,7 +435,7 @@ function atcb_generate_bg_overlay(host, listStyle = 'dropdown', trigger = '', da
   );
   bgOverlay.addEventListener(
     'focus',
-    atcb_debounce_leading((e) => {
+    atcb_debounce((e) => {
       if (e.target !== e.currentTarget) return;
       atcb_toggle(host, 'close');
     })
@@ -475,12 +499,11 @@ function atcb_create_modal(
   const bgOverlay = (function () {
     const el = host.getElementById('atcb-bgoverlay');
     if (!el) {
-      return atcb_generate_bg_overlay(host, 'modal', 'click', data.background);
+      return atcb_generate_bg_overlay(host, 'click', data.background);
     } else {
       return el;
     }
   })();
-  bgOverlay.classList.add('atcb-no-animation');
   host.append(bgOverlay);
   const modalWrapper = document.createElement('div');
   modalWrapper.classList.add('atcb-modal');
@@ -616,7 +639,7 @@ function atcb_create_modal(
   });
   // hide prev modal
   if (modalCount > 1) {
-    const prevModal = host.querySelectorAll('.atcb-modal[data-modal-nr="' + (modalCount - 1) + '"]')[0];
+    const prevModal = host.querySelector('.atcb-modal[data-modal-nr="' + (modalCount - 1) + '"]');
     prevModal.style.display = 'none';
   }
   // set scroll behavior
@@ -625,7 +648,7 @@ function atcb_create_modal(
 
 // FUNCTION TO SWICH THE YAHOO SUBSCRIBE MODAL
 function atcb_subscribe_yahoo_modal_switch(host, data, keyboardTrigger) {
-  atcb_set_fully_successful(host, data.identifier);
+  atcb_set_fully_successful(host, data);
   atcb_generate_links(host, 'yahoo2nd', data, 'all', keyboardTrigger);
 }
 

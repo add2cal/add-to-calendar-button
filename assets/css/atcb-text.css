@@ -196,13 +196,18 @@
 }
 
 .atcb-button.atcb-active:not(.atcb-modal-style, .atcb-dropoverlay) {
+  z-index: 15000000;
+}
+
+.atcb-button.atcb-active:not(.atcb-modal-style, .atcb-dropoverlay),
+.atcb-button.atcb-single:focus,
+.atcb-button.atcb-single:hover {
   background-size: 100% 10%;
   border-radius: 3px 3px 11px 11px;
   background-position: 0 0;
   background-color: var(--atcb-background);
   color: var(--atcb-text);
   text-shadow: none;
-  z-index: 15000000;
 }
 
 .atcb-button.atcb-active.atcb-dropup {
@@ -796,15 +801,6 @@ a.atcb-modal-btn:focus-visible{
   position: fixed;
   width: 100vw;
   z-index: 14000000;
-}
-
-#atcb-bgoverlay.atcb-animate-bg {
-  animation: atcb-bgoverlay-animate 0.3s ease 0s 1 normal forwards;
-}
-
-#atcb-bgoverlay.atcb-no-animation {
-  animation: none;
-  opacity: 1;
 }
 
 #atcb-bgoverlay.atcb-no-bg {

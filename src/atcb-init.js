@@ -79,87 +79,96 @@ const atcbWcParams = [
   "richData"
 ];
 
-const template = document.createElement('template');
-template.innerHTML = `<div class="atcb-initialized" style="display:none;position:relative;max-width:max-content;"></div>`;
+let template;
 
-class AddToCalendarButton extends HTMLElement {
+if (isBrowser()) {
 
-  constructor() {
-    super();
-    this.attachShadow({mode: 'open', delegateFocus: true});
-    this.shadowRoot.append(template.content.cloneNode(true));
-    this.initialized = false;
-    this.data = {};
-    atcbBtnCount = atcbBtnCount + 1;
-  };
-  
-  connectedCallback() {
-    // initial data fetch
-    // checking for PRO key first and pull data if given
-    if (this.getAttribute('proKey') != null && this.getAttribute('proKey') != '') {
-      this.data = atcb_get_pro_data(this.getAttribute('proKey'));
-    }
-    if (this.data.name == null || this.data.name == '')  {
-      // if something goes wrong, we try reading attributes or the innerHTML of the host element
-      this.data = atcb_read_attributes(this);
-    }
-    // set identifier first, no matter further validation
-    if (this.data.identifier != null && this.data.identifier != '') {
-      if (!/^[\w-]+$/.test(this.data.identifier)) {
-        this.data.identifier = '';
-        console.warn('Add to Calendar Button generation: identifier invalid - using auto numbers instead');
-      } else {
-        this.data.identifier = 'atcb-btn-' + this.data.identifier;
+  template = document.createElement('template');
+  template.innerHTML = `<div class="atcb-initialized" style="display:none;position:relative;max-width:max-content;"></div>`;
+
+  class AddToCalendarButton extends HTMLElement {
+
+    constructor() {
+      super();
+      this.attachShadow({mode: 'open', delegateFocus: true});
+      this.shadowRoot.append(template.content.cloneNode(true));
+      this.initialized = false;
+      this.data = {};
+      atcbBtnCount = atcbBtnCount + 1;
+    };
+    
+    connectedCallback() {
+      // initial data fetch
+      // checking for PRO key first and pull data if given
+      if (this.getAttribute('proKey') != null && this.getAttribute('proKey') != '') {
+        this.data = atcb_get_pro_data(this.getAttribute('proKey'));
       }
+      if (this.data.name == null || this.data.name == '')  {
+        // if something goes wrong, we try reading attributes or the innerHTML of the host element
+        this.data = atcb_read_attributes(this);
+        this.data.proKey = '';
+      }
+      // set identifier first, no matter further validation
+      if (this.data.identifier != null && this.data.identifier != '') {
+        if (!/^[\w-]+$/.test(this.data.identifier)) {
+          this.data.identifier = '';
+          console.warn('Add to Calendar Button generation: identifier invalid - using auto numbers instead');
+        } else {
+          this.data.identifier = 'atcb-btn-' + this.data.identifier;
+        }
+      }
+      if (this.data.identifier == null || this.data.identifier == '') {
+        this.data.identifier = 'atcb-btn-' + atcbBtnCount;
+      }
+      // we are copying the value to presever it over re-building the data object
+      this.identifier = this.data.identifier;
+      this.setAttribute('atcb-button-id', this.data.identifier);
+      this.initialized = true;
+      atcb_build_button(this.shadowRoot, this.data);
+      atcb_init_log();
     }
-    if (this.data.identifier == null || this.data.identifier == '') {
-      this.data.identifier = 'atcb-btn-' + atcbBtnCount;
+
+    disconnectedCallback() {
+      atcb_cleanup(this.shadowRoot, this.data);
+      console.log('Add to Calendar Button "' + this.data.identifier + '" destroyed');
     }
-    // we are copying the value to presever it over re-building the data object
-    this.identifier = this.data.identifier;
-    this.setAttribute('atcb-button-id', this.data.identifier);
-    this.initialized = true;
-    atcb_init_log();
-    atcb_build_button(this.shadowRoot, this.data);
+
+    static get observedAttributes() {
+      const observeAdditionally = ['instance'];
+      return atcbWcParams.map(element => {
+        return element.toLowerCase();
+      }).concat(observeAdditionally);
+    }
+    
+    attributeChangedCallback(name, oldValue, newValue) {
+      // updating whenever attributes update
+      // but not if we are loading external data (which may not change dynamically)
+      if (this.data.proKey != null && this.data.proKey != '') {
+        return;
+      }
+      // also return, if this is the first initialization
+      if (!this.initialized) {
+        return;
+      }
+      // in all other cases, destroy and rebuild the button
+      // mind that this only observes the actual attributes, not the innerHTML of the host (one would need to alter the instance attribute for that case)!
+      console.log(`${name}'s value has been changed from ${oldValue} to ${newValue}`);
+      atcb_cleanup(this.shadowRoot, this.data);
+      this.data = {};
+      this.shadowRoot.querySelector('.atcb-initialized').remove();
+      this.shadowRoot.append(template.content.cloneNode(true));
+      this.shadowRoot.querySelector('style').remove();
+      this.data = atcb_read_attributes(this);
+      this.data.identifier = this.identifier;
+      atcb_build_button(this.shadowRoot, this.data);
+    }
   }
 
-  disconnectedCallback() {
-    atcb_cleanup(this.shadowRoot, this.data);
-    console.log('Add to Calendar Button "' + this.data.identifier + '" destroyed');
+  if (!customElements.get('add-to-calendar-button')) {
+    customElements.define('add-to-calendar-button', AddToCalendarButton);
   }
 
-  static get observedAttributes() {
-    const observeAdditionally = ['instance'];
-    return atcbWcParams.map(element => {
-      return element.toLowerCase();
-    }).concat(observeAdditionally);
-  }
-  
-  attributeChangedCallback(name, oldValue, newValue) {
-    // updating whenever attributes update
-    // but not if we are loading external data (which may not change dynamically)
-    if (this.data.proKey != null && this.data.proKey != '') {
-      return;
-    }
-    // also return, if this is the first initialization
-    if (!this.initialized) {
-      return;
-    }
-    // in all other cases, destroy and rebuild the button
-    // mind that this only observes the actual attributes, not the innerHTML of the host (one would need to alter the instance attribute for that case)!
-    console.log(`${name}'s value has been changed from ${oldValue} to ${newValue}`);
-    atcb_cleanup(this.shadowRoot, this.data);
-    this.data = {};
-    this.shadowRoot.querySelector('.atcb-initialized').remove();
-    this.shadowRoot.append(template.content.cloneNode(true));
-    this.shadowRoot.querySelector('style').remove();
-    this.data = atcb_read_attributes(this);
-    this.data.identifier = this.identifier;
-    atcb_build_button(this.shadowRoot, this.data);
-  }
 }
-
-window.customElements.define('add-to-calendar-button', AddToCalendarButton);
 
 // read data attributes
 function atcb_read_attributes(el) {
@@ -194,7 +203,12 @@ function atcb_read_attributes(el) {
       } else if (wcObjectParams.includes(attr)) {
         val = JSON.parse(inputVal);
       } else if (wcArrayParams.includes(attr)) {
-        val = (inputVal).substring(1, inputVal.length - 1).replace(/\s/g, '').split('","');
+        const cleanedInput = (inputVal).substring(1, inputVal.length - 1).replace(/\s/g, '');
+        if (cleanedInput.includes("','")) {
+          val = cleanedInput.split("','");
+        } else {
+          val = cleanedInput.split('","');
+        }
       } else {
         val = inputVal;
       }
@@ -433,8 +447,8 @@ function atcb_get_pro_data(licenseKey) {
   const data = {};
   if (licenseKey != null && licenseKey != '') {
     data.proKey = licenseKey;
-    console.error('Add to Calendar Button proKey invalid! Falling back to local data...');    
     // TODO: Pull data from server
+    console.error('Add to Calendar Button proKey invalid! Falling back to local data...');
   }
   return data;
 }
@@ -467,15 +481,28 @@ function atcb_set_global_event_listener(host, data) {
 }
 
 function atcb_global_listener_keyup(event) {
-  const host = document.querySelector('[atcb-button-id="' + atcbStates['active'] + '"]').shadowRoot;
-  if (event.key === 'Escape') {
+  const root = document.querySelector('[atcb-button-id="' + atcbStates['active'] + '"]');
+  const host = (function () {
+    if (root != null) {
+      return root.shadowRoot;
+    }
+    return null;
+  })();
+  if (host != null && event.key === 'Escape') {
     atcb_toggle(host, 'close', '', '', true);
   }
 }
 
 function atcb_global_listener_keydown(event) {
-  const host = document.querySelector('[atcb-button-id="' + atcbStates['active'] + '"]').shadowRoot;
+  const root = document.querySelector('[atcb-button-id="' + atcbStates['active'] + '"]');
+  const host = (function () {
+    if (root != null) {
+      return root.shadowRoot;
+    }
+    return null;
+  })();
   if (
+    host != null &&
     host.querySelector('.atcb-list') &&
     (event.key === 'ArrowDown' || event.key === 'ArrowUp' || event.key === 'Tab')
   ) {
@@ -508,21 +535,28 @@ function atcb_global_listener_keydown(event) {
 }
 
 function atcb_global_listener_resize() {
-  const host = document.querySelector('[atcb-button-id="' + atcbStates['active'] + '"]').shadowRoot;
-  atcb_throttle(() => {
-    const activeOverlay = host.getElementById('atcb-bgoverlay');
-    if (activeOverlay != null) {
-      atcb_set_fullsize(activeOverlay);
-      atcb_manage_body_scroll(host);
+  const root = document.querySelector('[atcb-button-id="' + atcbStates['active'] + '"]');
+  const host = (function () {
+    if (root != null) {
+      return root.shadowRoot;
     }
-  })
+    return null;
+  })();
+  if (host != null) {
+    atcb_throttle(() => {
+      const activeOverlay = host.getElementById('atcb-bgoverlay');
+      if (activeOverlay != null) {
+        atcb_set_fullsize(activeOverlay);
+        atcb_manage_body_scroll(host);
+      }
+    })
+}
 }
 
 function atcb_unset_global_event_listener(identifier) {
   if (typeof lightModeMutationObserver[`${identifier}`] !== 'undefined') {
     lightModeMutationObserver[`${identifier}`].disconnect();
   }
-  // TODO: Remove global event listeners as well (might require refactoring of how we set them in the first place)
 }
 
 export { atcb_unset_global_event_listener };

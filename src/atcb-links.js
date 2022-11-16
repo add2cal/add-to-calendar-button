@@ -98,7 +98,7 @@ function atcb_generate_links(host, type, data, subEvent = 'all', keyboardTrigger
       return value < 1;
     });
     if (filteredStates.length == 0) {
-      atcb_set_fully_successful(host, data.identifier, multiDateModal);
+      atcb_set_fully_successful(host, data, multiDateModal);
     }
     return;
   }
@@ -125,7 +125,7 @@ function atcb_generate_multidate_links(host, type, data, keyboardTrigger, multiD
     for (let i = 0; i < atcbStates[`${data.identifier}`][`${type}`].length; i++) {
       atcbStates[`${data.identifier}`][`${type}`][`${i}`]++;
     }
-    atcb_set_fully_successful(host, data.identifier, multiDateModal);
+    atcb_set_fully_successful(host, data, multiDateModal);
     return;
   }
   // for multi-date events in all other cases, we show an intermediate layer
@@ -210,15 +210,15 @@ function atcb_generate_subscribe_links(host, type, data, keyboardTrigger) {
       return;
   }
   // mark as successful (except for the Yahoo case, with returned)
-  atcb_set_fully_successful(host, data.identifier);
+  atcb_set_fully_successful(host, data);
 }
 
-function atcb_set_fully_successful(host, id, multiDateModal) {
-  const trigger = host.getElementById(id);
+function atcb_set_fully_successful(host, data, multiDateModal = false) {
+  const trigger = host.getElementById(data.identifier);
   if (trigger) {
     trigger.classList.add('atcb-saved');
   }
-  atcb_saved_hook();
+  atcb_saved_hook(host, data);
   if (multiDateModal && host.querySelectorAll('.atcb-modal[data-modal-nr]').length < 2) {
     atcb_toggle(host, 'close');
   }
@@ -438,8 +438,8 @@ function atcb_generate_ical(host, data, subEvent = 'all', keyboardTrigger = fals
     }
     return '';
   })();
-  // ... and directly load it (not if iOS and WebView - will be catched further down)
-  if (givenIcsFile != '' && (!isiOS() || !isWebView())) {
+  // ... and directly load it (not if iOS and WebView - will be catched further down - except it is explicitely bridged)
+  if (givenIcsFile != '' && (!isiOS() || !isWebView() || data.bypassWebViewCheck == true)) {
     atcb_save_file(givenIcsFile, filename);
     return;
   }

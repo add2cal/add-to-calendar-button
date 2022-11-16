@@ -3,9 +3,7 @@ const fs = require("fs");
 function prepareFinalFile(
   content,
   stripAllImport = true,
-  stripAllExport = true,
-  transformToCommonJS = false,
-  includeCSS = true
+  stripAllExport = true
 ) {
   // remove TimeZones iCal Library version output (do not do this, if your are using the time zone library standalone!)
   content = content.replace(
@@ -28,9 +26,7 @@ function prepareFinalFile(
       inlineStyleOutput += '\r\n"' + style + '": "' + cssFileContent + '",';
     });
     inlineStyleOutput += '\r\n};\r\n';
-    if (includeCSS) {
-      content = content.replace(styleRegex, inlineStyleOutput);    
-    }
+    content = content.replace(styleRegex, inlineStyleOutput);    
   }
   if (stripAllImport) {
     // remove all import statements
@@ -43,12 +39,6 @@ function prepareFinalFile(
   if (stripAllExport) {
     // remove all export statements
     content = content.replace(/^export {[\w\s-_,]*};/gim, '');
-  }
-  if (transformToCommonJS) {
-    content = content
-      .replace(/tzlib_get_offset/gm, 'tzlibActions.tzlib_get_offset')
-      .replace(/tzlib_get_ical_block/gm, 'tzlibActions.tzlib_get_ical_block')
-      .replace(/tzlib_get_timezones/gm, 'tzlibActions.tzlib_get_timezones');
   }
   return content;
 }
@@ -114,7 +104,6 @@ module.exports = function (grunt) {
       },
     },
     // generate the distributable JavaScript files
-    // for the npm version supporting CommonJS and ES Module (https://www.sensedeep.com/blog/posts/2021/how-to-create-single-source-npm-module.html)
     concat: {
       main: {
         src: [
@@ -152,29 +141,8 @@ module.exports = function (grunt) {
           stripBanners: true,
           banner:
             "import { tzlib_get_ical_block, tzlib_get_offset, tzlib_get_timezones } from 'timezones-ical-library';\r\n",
-          footer: "export { AddToCalendarButton, atcb_action };",
+          footer: "export { atcb_action };",
           process: (content) => prepareFinalFile(content, true, true),
-        },
-      },
-      commonjs: {
-        src: [
-          'src/atcb-globals.js',
-          'src/atcb-decorate.js',
-          'src/atcb-validate.js',
-          'src/atcb-control.js',
-          'src/atcb-generate.js',
-          'src/atcb-links.js',
-          'src/atcb-util.js',
-          'src/atcb-i18n.js',
-          'src/atcb-init.js'
-        ],
-        dest: 'dist/cjs/index.js',
-        options: {
-          stripBanners: true,
-          banner:
-            "// eslint-disable-next-line @typescript-eslint/no-var-requires\r\nconst tzlibActions = require('timezones-ical-library');\r\n",
-            footer: "module.exports = { AddToCalendarButton, atcb_action };",
-          process: (content) => prepareFinalFile(content, true, true, true, false),
         },
       },
     },
@@ -183,21 +151,6 @@ module.exports = function (grunt) {
       'package.json ES Module': {
         'dist/mjs/package.json': function (fs, fd, done) {
           fs.writeSync(fd, '{ "type": "module" }');
-          done();
-        },
-      },
-      'package.json commonJS': {
-        'dist/cjs/package.json': function (fs, fd, done) {
-          fs.writeSync(fd, '{ "type": "commonjs" }');
-          done();
-        },
-      },
-      '.eslintrc.json commonJS': {
-        'dist/cjs/.eslintrc.json': function (fs, fd, done) {
-          fs.writeSync(
-            fd,
-            '{ "extends": "../../.eslintrc.json", "env": { "node": true }, "plugins": ["commonjs"] }'
-          );
           done();
         },
       },

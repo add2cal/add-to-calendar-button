@@ -687,15 +687,6 @@ a.atcb-modal-btn:focus-visible{
   z-index: 14000000;
 }
 
-#atcb-bgoverlay.atcb-animate-bg {
-  animation: atcb-bgoverlay-animate 0.3s ease 0s 1 normal forwards;
-}
-
-#atcb-bgoverlay.atcb-no-animation {
-  animation: none;
-  opacity: 1;
-}
-
 #atcb-bgoverlay.atcb-no-bg {
   animation: none;
   backdrop-filter: none;

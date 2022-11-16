@@ -5,21 +5,13 @@
     "node": ">=14.20.0"
   },
   "description": "A convenient JavaScript snippet, which lets you create beautiful buttons, where people can add events to their calendars.",
-  "main": "dist/cjs/index.js",
+  "main": "dist/mjs/index.js",
   "module": "dist/mjs/index.js",
   "files": [
     "dist",
     "test"
   ],
-  "exports": {
-    "./assets/css/": "./assets/css/",
-    ".": {
-      "import": "./dist/mjs/index.js",
-      "require": "./dist/cjs/index.js"
-    }
-  },
   "types": "index.d.ts",
-  "style": "assets/css/atcb.css",
   "jsdelivr": "./dist/atcb.js",
   "repository": {
     "type": "git",
@@ -76,7 +68,6 @@
     "@typescript-eslint/parser": "^5.42.1",
     "eslint": "^8.27.0",
     "eslint-config-prettier": "^8.5.0",
-    "eslint-plugin-commonjs": "^1.0.2",
     "eslint-plugin-security": "^1.5.0",
     "grunt": ">=1.5.3",
     "grunt-contrib-clean": "^2.0.1",

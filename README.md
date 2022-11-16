@@ -1,10 +1,10 @@
 ![Add to Calendar Button](https://github.com/add2cal/add-to-calendar-button/blob/main/assets/img/readme-header.png?raw=true)
 
 [![Code Quality](https://img.shields.io/codacy/grade/572c0a102d7b4f39b792439dcd2e8aad/main?style=for-the-badge)](https://app.codacy.com/gh/add2cal/add-to-calendar-button/dashboard)
-[![Build Status](https://img.shields.io/github/workflow/status/add2cal/add-to-calendar-button/npm%20publish?style=for-the-badge)](https://github.com/add2cal/add-to-calendar-button/actions/workflows/npm-publish.yml)
-![npm bundle size](https://img.shields.io/bundlephobia/minzip/add-to-calendar-button?style=for-the-badge)
-[![npm Installations](https://img.shields.io/npm/dt/add-to-calendar-button?label=npm%20Installations&style=for-the-badge)](https://www.npmjs.com/package/add-to-calendar-button)
+[![npm Installations Total](https://img.shields.io/npm/dt/add-to-calendar-button?label=npm%20Installations&style=for-the-badge)](https://www.npmjs.com/package/add-to-calendar-button)
+[![npm Installations per Month](https://img.shields.io/npm/dm/add-to-calendar-button?label=npm%20Installations%2FMonth&style=for-the-badge)](https://www.npmjs.com/package/add-to-calendar-button)
 [![jsDelivr npm Hits](https://img.shields.io/jsdelivr/npm/hm/add-to-calendar-button?label=jsDelivr%20npm%20hits&style=for-the-badge)](https://www.jsdelivr.com/package/npm/add-to-calendar-button)
+![npm bundle size](https://img.shields.io/bundlephobia/minzip/add-to-calendar-button?style=for-the-badge)
 
 <br />
 
@@ -57,6 +57,7 @@ Simple and convenient integration of 1 or many buttons, configurable directly wi
 
 - Timed and all-day events.
 - One-time, multi-date, recurring, or fluid.
+- Calendar Subscription.
 - Most robust time zone and daylight saving management (via our own [TimeZones iCal Library](https://github.com/add2cal/timezones-ical-library)).
 - Dynamic dates (like "today + 3").
 
@@ -284,6 +285,8 @@ Find all information about the available options and how to configure specific f
 <br />
 
 ## ⚡ Changelog
+
+![npm version](https://img.shields.io/npm/v/add-to-calendar-button?label=version&style=for-the-badge)
 
 Find all changes in the dedicated file at [CHANGELOG.md](CHANGELOG.md).
 

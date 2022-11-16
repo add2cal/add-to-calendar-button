@@ -171,7 +171,13 @@
 .atcb-button.atcb-no-text {
   min-width: 0;
   border-radius: 100%;
-  padding: 0.8em 1em;
+  display: flex;
+  align-content: center;
+  justify-content: center;
+  align-items: center;
+  height: 3em;
+  width: 3em;
+  padding: 0;
 }
 
 .atcb-rtl .atcb-button {
@@ -189,11 +195,17 @@
 
 .atcb-button.atcb-no-text:focus,
 .atcb-button.atcb-no-text:hover {
-  padding: 0.93em 1.13em;
+  height: 3.26em;
+  width: 3.26em;
+  padding: 0;
 }
 
 .atcb-button:focus-visible {
   outline: 2px solid var(--atcb-keyboard-focus);
+}
+
+.atcb-button.atcb-active:not(.atcb-modal-style, .atcb-dropoverlay) {
+  z-index: 15000000;
 }
 
 .atcb-button.atcb-active:not(.atcb-modal-style, .atcb-dropoverlay, .atcb-no-text),
@@ -203,7 +215,6 @@
   box-shadow: var(--atcb-shadow-button-active);
   margin: 0;
   padding: 0.78em 1.13em;
-  z-index: 15000000;
 }
 
 .atcb-button.atcb-active.atcb-no-text:not(.atcb-modal-style, .atcb-dropoverlay),
@@ -213,7 +224,6 @@
   box-shadow: var(--atcb-shadow-button-active);
   margin: 0;
   padding: 0.93em 1.13em;
-  z-index: 15000000;
 }
 
 .atcb-button.atcb-active:not(.atcb-modal-style, .atcb-dropoverlay, .atcb-dropup, .atcb-no-text)::before,
@@ -801,15 +811,6 @@ a.atcb-modal-btn:focus-visible {
   position: fixed;
   width: 100vw;
   z-index: 14000000;
-}
-
-#atcb-bgoverlay.atcb-animate-bg {
-  animation: atcb-bgoverlay-animate 0.3s ease 0s 1 normal forwards;
-}
-
-#atcb-bgoverlay.atcb-no-animation {
-  animation: none;
-  opacity: 1;
 }
 
 #atcb-bgoverlay.atcb-no-bg {

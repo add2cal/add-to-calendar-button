@@ -80,6 +80,9 @@ declare module 'add-to-calendar-button' {
         | 'it'
         | 'ko'
         | 'vi';
+      ty?: object;
+      rsvp?: object;
+      bypassWebViewCheck?: boolean;
     },
     triggerElement?: HTMLElement,
     keyboardTrigger?: boolean
