@@ -14,8 +14,12 @@ try {
 // test whether the base script (without the export statement) can also be loaded with Node without any critical error, even it would not work
 try {
   execSync('node test/server-side-init.test.js', { stdio: [0, 1, 2] });
-  console.log('\n\nSERVER INIT TEST SUCCESSFUL: server side initialization seems not to be blocked\nNEXT: testing the actual script...\n\n');
+  console.log(
+    '\n\nSERVER INIT TEST SUCCESSFUL: server side initialization seems not to be blocked\nNEXT: testing the actual script...\n\n'
+  );
 } catch (error) {
-  console.log('\n\nSERVER INIT TEST FAILED: Something went wrong with the server side initialization test\n\n');
+  console.log(
+    '\n\nSERVER INIT TEST FAILED: Something went wrong with the server side initialization test\n\n'
+  );
   throw error;
 }

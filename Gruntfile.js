@@ -1,10 +1,6 @@
-const fs = require("fs");
+const fs = require('fs');
 
-function prepareFinalFile(
-  content,
-  stripAllImport = true,
-  stripAllExport = true
-) {
+function prepareFinalFile(content, stripAllImport = true, stripAllExport = true) {
   // remove TimeZones iCal Library version output (do not do this, if your are using the time zone library standalone!)
   content = content.replace(
     /^console\.log\('Add to Calendar TimeZones iCal Library loaded \(version ' \+ tzlibVersion \+ '\)'\);$/m,
@@ -15,18 +11,21 @@ function prepareFinalFile(
   if (styleRegex.test(content)) {
     const availableStyles = ['default', '3d', 'flat', 'round', 'neumorphism', 'text', 'date'];
     let inlineStyleOutput = 'const atcbCssTemplate = {';
-    availableStyles.forEach ((style) => {
-      const styleString = (function() {
+    availableStyles.forEach((style) => {
+      const styleString = (function () {
         if (style != 'default') {
           return '-' + style;
         }
         return '';
       })();
-      const cssFileContent = fs.readFileSync('./assets/css/atcb' + styleString + '.min.css').toString().replace(/"/g, '\\"');
+      const cssFileContent = fs
+        .readFileSync('./assets/css/atcb' + styleString + '.min.css')
+        .toString()
+        .replace(/"/g, '\\"');
       inlineStyleOutput += '\r\n"' + style + '": "' + cssFileContent + '",';
     });
     inlineStyleOutput += '\r\n};\r\n';
-    content = content.replace(styleRegex, inlineStyleOutput);    
+    content = content.replace(styleRegex, inlineStyleOutput);
   }
   if (stripAllImport) {
     // remove all import statements
@@ -116,7 +115,7 @@ module.exports = function (grunt) {
           'src/atcb-links.js',
           'src/atcb-util.js',
           'src/atcb-i18n.js',
-          'src/atcb-init.js'
+          'src/atcb-init.js',
         ],
         dest: 'dist/atcb.js',
         options: {
@@ -134,14 +133,14 @@ module.exports = function (grunt) {
           'src/atcb-links.js',
           'src/atcb-util.js',
           'src/atcb-i18n.js',
-          'src/atcb-init.js'
+          'src/atcb-init.js',
         ],
         dest: 'dist/module/index.js',
         options: {
           stripBanners: true,
           banner:
             "import { tzlib_get_ical_block, tzlib_get_offset, tzlib_get_timezones } from 'timezones-ical-library';\r\n",
-          footer: "export { atcb_action };",
+          footer: 'export { atcb_action };',
           process: (content) => prepareFinalFile(content, true, true),
         },
       },

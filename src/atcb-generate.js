@@ -33,7 +33,7 @@ function atcb_generate_label(host, data, parent, type, icon = false, text = '', 
   switch (type) {
     case 'trigger':
     default:
-      parent.id = data.identifier;      
+      parent.id = data.identifier;
       parent.addEventListener('keyup', function (event) {
         if (event.key == 'Enter') {
           event.preventDefault();
@@ -41,8 +41,8 @@ function atcb_generate_label(host, data, parent, type, icon = false, text = '', 
         }
       });
       parent.addEventListener(
-        'touchend', 
-        atcb_debounce_leading((event) => {  
+        'touchend',
+        atcb_debounce_leading((event) => {
           event.preventDefault();
           atcb_toggle(host, 'auto', data, parent, false, true);
         })
@@ -78,9 +78,9 @@ function atcb_generate_label(host, data, parent, type, icon = false, text = '', 
         atcb_debounce_leading(() => {
           if (oneOption) {
             atcbStates['active'] = host.host.getAttribute('atcb-button-id');
-            host.querySelector('#' + parent.id).blur()
+            host.querySelector('#' + parent.id).blur();
           } else {
-            atcb_toggle(host, 'close')
+            atcb_toggle(host, 'close');
           }
           atcb_generate_links(host, type, data);
         })
@@ -90,9 +90,9 @@ function atcb_generate_label(host, data, parent, type, icon = false, text = '', 
           event.preventDefault();
           if (oneOption) {
             atcbStates['active'] = host.host.getAttribute('atcb-button-id');
-            host.querySelector('#' + parent.id).blur()
+            host.querySelector('#' + parent.id).blur();
           } else {
-            atcb_toggle(host, 'close')
+            atcb_toggle(host, 'close');
           }
           atcb_generate_links(host, type, data, 'all', true);
         }
@@ -126,15 +126,15 @@ function atcb_generate_label_content(data, parent, type, icon, text, oneOption) 
   }
   // defining text labels
   const labelText = {
-    'trigger': text || defaultTriggerText,
-    'apple': text || 'Apple',
-    'google': text || 'Google',
-    'ical': text || atcb_translate_hook('iCal File', data),
-    'msteams': text || 'Microsoft Teams',
-    'ms365': text || 'Microsoft 365',
-    'outlookcom': text || 'Outlook.com',
-    'yahoo': text || 'Yahoo',
-    'close': atcb_translate_hook('Close', data),
+    trigger: text || defaultTriggerText,
+    apple: text || 'Apple',
+    google: text || 'Google',
+    ical: text || atcb_translate_hook('iCal File', data),
+    msteams: text || 'Microsoft Teams',
+    ms365: text || 'Microsoft 365',
+    outlookcom: text || 'Outlook.com',
+    yahoo: text || 'Yahoo',
+    close: atcb_translate_hook('Close', data),
   };
   text = labelText[`${type}`];
   // add icon and text label (not in the date style trigger case)
@@ -167,8 +167,8 @@ function atcb_generate_button(host, button, data) {
     }
     return false;
   })();
-  const optionSplit = oneOption ? data.options : ["default"];
-  optionSplit.forEach(function (option) {    
+  const optionSplit = oneOption ? data.options : ['default'];
+  optionSplit.forEach(function (option) {
     // generate the wrapper div
     const buttonTriggerWrapper = document.createElement('div');
     buttonTriggerWrapper.classList.add('atcb-button-wrapper');
@@ -467,10 +467,8 @@ function atcb_create_atcbl(host, atList = true) {
   atcbL.style.zIndex = '15000000';
   setTimeout(() => {
     atcbL.innerHTML =
-      '<a href="https://add-to-calendar-pro.com" target="_blank" rel="noopener">' +
-      atcbIcon['atcb'] +
-      '</a>';
-  }, 500);  
+      '<a href="https://add-to-calendar-pro.com" target="_blank" rel="noopener">' + atcbIcon['atcb'] + '</a>';
+  }, 500);
   if (atList) {
     host.querySelector('.atcb-initialized .atcb-list-wrapper').append(atcbL);
   } else {

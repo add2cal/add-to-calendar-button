@@ -16,7 +16,7 @@ import { isMobile, isiOS, atcbDefaultTarget } from './atcb-globals.js';
 
 // SHARED FUNCTION HOOK FOR WHEN EVENT GOT SAVED
 function atcb_saved_hook(host, data) {
-  if (data.proKey == null | data.proKey == '') {
+  if ((data.proKey == null) | (data.proKey == '')) {
     return;
   }
   console.log('Event saved. Looking forward to it!');
@@ -268,9 +268,9 @@ function atcb_position_list(host, trigger, list, blockUpwards = false, resize = 
       originalTrigger.classList.add('atcb-dropup');
       list.classList.add('atcb-dropup');
       //list.style.bottom = btnDim.top + ((btnDim.top + btnDim.height) - triggerDim.top) + 'px';
-      list.style.bottom = (btnParentDim.bottom - btnDim.bottom ) + (triggerDim.top - btnDim.top) + 'px';
+      list.style.bottom = btnParentDim.bottom - btnDim.bottom + (triggerDim.top - btnDim.top) + 'px';
     } else {
-      list.style.top = (btnDim.top - btnParentDim.top) + (triggerDim.top - btnDim.top) + 'px';
+      list.style.top = btnDim.top - btnParentDim.top + (triggerDim.top - btnDim.top) + 'px';
       if (originalTrigger.classList.contains('atcb-dropup')) {
         originalTrigger.classList.remove('atcb-dropup');
       }
@@ -278,12 +278,17 @@ function atcb_position_list(host, trigger, list, blockUpwards = false, resize = 
     // read trigger dimensions again, since after adjusting the top value of the list, something might have changed (e.g. re-adjustment due to missing scrollbars at this point in time)
     triggerDim = trigger.getBoundingClientRect();
     list.style.minWidth = triggerDim.width + 'px';
-    if (list.classList.contains('atcb-dropdown') && !list.classList.contains('atcb-style-round') || list.classList.contains('atcb-style-text') || list.classList.contains('atcb-style-neumorphism')) {
+    if (
+      (list.classList.contains('atcb-dropdown') && !list.classList.contains('atcb-style-round')) ||
+      list.classList.contains('atcb-style-text') ||
+      list.classList.contains('atcb-style-neumorphism')
+    ) {
       list.style.maxWidth = triggerDim.width + 'px';
     }
     // read list dimensions again, since we altered the width in the step before
     listDim = list.getBoundingClientRect();
-    list.style.left = Math.round((triggerDim.left - btnParentDim.left) - (listDim.width - triggerDim.width) / 2) + 'px';
+    list.style.left =
+      Math.round(triggerDim.left - btnParentDim.left - (listDim.width - triggerDim.width) / 2) + 'px';
   } else {
     // when there is no anchor set (only the case with custom implementations) or the listStyle is set respectively (overlay), we render the modal centered above the trigger
     list.style.minWidth = btnDim.width + 20 + 'px';
@@ -291,7 +296,8 @@ function atcb_position_list(host, trigger, list, blockUpwards = false, resize = 
     const listDim = list.getBoundingClientRect();
     list.style.width = listDim.width + 'px';
     const sideMargin = Math.round((btnDim.width - listDim.width) / 2);
-    list.style.margin = - Math.round((listDim.height + btnDim.height) / 2) + 'px ' + sideMargin + 'px 0 ' + sideMargin + 'px';
+    list.style.margin =
+      -Math.round((listDim.height + btnDim.height) / 2) + 'px ' + sideMargin + 'px 0 ' + sideMargin + 'px';
   }
   // changing the list's position back to absolute
   list.style.position = 'absolute';

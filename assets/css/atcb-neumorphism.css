@@ -29,7 +29,7 @@
   --atcb-text-2: #111;
   --atcb-close-background: #e5e5e5;
   --atcb-close-text: #777;
-  --atcb-overlay-background: rgba(220, 220, 220);
+  --atcb-overlay-background: #dcdcdc;
   --atcb-modal-background: #f5f5f5;
   --atcb-modal-buttons-bar: #c6c8cd;
   --atcb-modal-btn-background: #f5f5f5;
@@ -45,15 +45,15 @@
   --atcb-modal-date-btn-cal-background: #313132;
   --atcb-modal-date-btn-background: #e3e5ea;
   --atcb-modal-date-btn-background-hover: #fff;
-  --atcb-shadow-button: rgba(40, 40, 40, 0.3) 0.3em 0.3em 0.6em, rgba(255, 255, 255, 0.6) -0.2em -0.2em 0.4em;
-  --atcb-shadow-button-hover: rgba(40, 40, 40, 0.5) 0.4em 0.4em 0.8em, rgba(255, 255, 255, 0.9) -0.3em -0.3em 0.6em;
-  --atcb-shadow-button-active: inset rgba(40, 40, 40, 0.4) 0.15em 0.15em 0.3em, inset rgba(255, 255, 255, 0.9) -0.2em -0.2em 0.5em;
-  --atcb-shadow-list: rgba(40, 40, 40, 0.3) 0.4em 0.4em 0.8em, rgba(255, 255, 255, 0.9) -0.4em -0.4em 0.9em;
+  --atcb-shadow-button: rgba(40 40 40 / 30%) 0.3em 0.3em 0.6em, rgba(255 255 255 / 60%) -0.2em -0.2em 0.4em;
+  --atcb-shadow-button-hover: rgba(40 40 40 / 50%) 0.4em 0.4em 0.8em, rgba(255 255 255 / 90%) -0.3em -0.3em 0.6em;
+  --atcb-shadow-button-active: inset rgba(40 40 40 / 40%) 0.15em 0.15em 0.3em, inset rgba(255 255 255 / 90%) -0.2em -0.2em 0.5em;
+  --atcb-shadow-list: rgba(40 40 40 / 30%) 0.4em 0.4em 0.8em, rgba(255 255 255 / 90%) -0.4em -0.4em 0.9em;
   --atcb-shadow-modal: drop-shadow(5px 8px 30px rgba(0 0 0 / 70%));
-  --atcb-shadow-modal-date-btn: rgba(40, 40, 40, 0.4) 0.2em 0.2em 0.8em, rgba(255, 255, 255, 0.8) -0.2em -0.2em 0.4em;
-  --atcb-shadow-modal-date-btn-hover: rgba(40, 40, 40, 0.5) 0.3em 0.4em 1em, rgba(255, 255, 255) -0.3em -0.3em 0.7em;
-  --atcb-shadow-modal-button: rgba(40, 40, 40, 0.15) 0.2em 0.2em 0.4em, rgba(255, 255, 255, 0.3) -0.1em -0.1em 0.3em;
-  --atcb-shadow-modal-button-hover: rgba(40, 40, 40, 0.4) 0.4em 0.4em 0.7em, rgba(255, 255, 255, 0.7) -0.2em -0.2em 0.5em;
+  --atcb-shadow-modal-date-btn: rgba(40 40 40 / 40%) 0.2em 0.2em 0.8em, rgba(255 255 255 / 80%) -0.2em -0.2em 0.4em;
+  --atcb-shadow-modal-date-btn-hover: rgba(40 40 40 / 50%) 0.3em 0.4em 1em, rgba(255 255 255) -0.3em -0.3em 0.7em;
+  --atcb-shadow-modal-button: rgba(40 40 40 / 15%) 0.2em 0.2em 0.4em, rgba(255 255 255 / 30%) -0.1em -0.1em 0.3em;
+  --atcb-shadow-modal-button-hover: rgba(40 40 40 / 40%) 0.4em 0.4em 0.7em, rgba(255 255 255 / 70%) -0.2em -0.2em 0.5em;
   --atcb-checkmark-background: radial-gradient(circle, #fff 0, rgba(255 255 255 / 80%) 40%, rgba(255 255 255 / 0%) 70%);
   --bg-cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='%23777' width='16' height='16' viewBox='0 0 122.878 122.88'%3E%3Cpath d='M1.426 8.313a4.87 4.87 0 0 1 0-6.886 4.87 4.87 0 0 1 6.886 0l53.127 53.127 53.127-53.127a4.87 4.87 0 0 1 6.887 0 4.87 4.87 0 0 1 0 6.886L68.324 61.439l53.128 53.128a4.87 4.87 0 0 1-6.887 6.886L61.438 68.326 8.312 121.453a4.87 4.87 0 0 1-6.886 0 4.87 4.87 0 0 1 0-6.886l53.127-53.128L1.426 8.313h0z'/%3E%3C/svg%3E") 16 16, crosshair;
   --icon-ms365-color: #ea3e23;
@@ -70,7 +70,7 @@
   --atcb-text: #dedede;
   --atcb-text-2: #f1f1f1;
   --atcb-close-background: #282828;
-  --atcb-overlay-background: rgba(20, 20, 20);
+  --atcb-overlay-background: #141414;
   --atcb-modal-background: #242424;
   --atcb-modal-buttons-bar: #38383a;
   --atcb-modal-btn-background: #181819;
@@ -86,15 +86,15 @@
   --atcb-modal-date-btn-cal-background: #c7c7cd;
   --atcb-modal-date-btn-background: #363636;
   --atcb-modal-date-btn-background-hover: #474747;
-  --atcb-shadow-button: rgba(0, 0, 0, 0.7) 0.3em 0.3em 0.6em, rgba(230, 230, 230, 0.15) -0.1em -0.1em 0.5em;
-  --atcb-shadow-button-hover: rgba(0, 0, 0, 0.8) 0.4em 0.4em 0.9em, rgba(230, 230, 230, 0.15) -0.2em -0.2em 0.5em;
-  --atcb-shadow-button-active: inset rgba(0, 0, 0, 0.8) 0.15em 0.15em 0.25em, inset rgba(230, 230, 230, 0.15) -0.2em -0.2em 0.6em;
-  --atcb-shadow-list: rgba(0, 0, 0) 0.3em 0.3em 1em, rgba(230, 230, 230, 0.15) -0.1em -0.1em 0.8em;
+  --atcb-shadow-button: rgba(0 0 0 / 70%) 0.3em 0.3em 0.6em, rgba(230 230 230 / 15%) -0.1em -0.1em 0.5em;
+  --atcb-shadow-button-hover: rgba(0 0 0 / 80%) 0.4em 0.4em 0.9em, rgba(230 230 230 / 15%) -0.2em -0.2em 0.5em;
+  --atcb-shadow-button-active: inset rgba(0 0 0 / 80%) 0.15em 0.15em 0.25em, inset rgba(230 230 230 / 15%) -0.2em -0.2em 0.6em;
+  --atcb-shadow-list: rgba(0 0 0) 0.3em 0.3em 1em, rgba(230 230 230 / 15%) -0.1em -0.1em 0.8em;
   --atcb-shadow-modal: drop-shadow(5px 8px 35px rgba(0 0 0 / 90%));
-  --atcb-shadow-modal-date-btn: rgba(0, 0, 0, 0.7) 0.2em 0.2em 0.8em, rgba(230, 230, 230, 0.15) -0.1em -0.1em 0.5em;
-  --atcb-shadow-modal-date-btn-hover: rgba(0, 0, 0) 0.3em 0.4em 1em, rgba(230, 230, 230, 0.15) -0.2em -0.2em 0.8em;
-  --atcb-shadow-modal-button: rgba(0, 0, 0, 0.6) 0.2em 0.2em 0.6em, rgba(230, 230, 230, 0.15) -0.1em -0.1em 0.4em;
-  --atcb-shadow-modal-button-hover: rgba(0, 0, 0, 0.8) 0.3em 0.3em 0.8em, rgba(230, 230, 230, 0.15) -0.1em -0.1em 0.6em;
+  --atcb-shadow-modal-date-btn: rgba(0 0 0 / 70%) 0.2em 0.2em 0.8em, rgba(230 230 230 / 15%) -0.1em -0.1em 0.5em;
+  --atcb-shadow-modal-date-btn-hover: rgba(0 0 0) 0.3em 0.4em 1em, rgba(230 230 230 / 15%) -0.2em -0.2em 0.8em;
+  --atcb-shadow-modal-button: rgba(0 0 0 / 60%) 0.2em 0.2em 0.6em, rgba(230 230 230 / 15%) -0.1em -0.1em 0.4em;
+  --atcb-shadow-modal-button-hover: rgba(0 0 0 / 80%) 0.3em 0.3em 0.8em, rgba(230 230 230 / 15%) -0.1em -0.1em 0.6em;
   --atcb-checkmark-background: radial-gradient(circle, rgba(0 0 0 / 50%) 0, rgba(0 0 0 / 30%) 40%, rgba(0 0 0 / 0%) 70%);
   --icon-ms365-color: #ea3e23;
   --icon-yahoo-color: #bebebe;
@@ -256,12 +256,8 @@
 .atcb-list-wrapper {
   box-sizing: border-box;
   position: absolute;
-  z-index: 14000090;
   min-width: 200px;
   width: auto;
-}
-
-.atcb-list-wrapper {
   animation: list-entrance 600ms ease 0s 1 normal forwards;
   z-index: 15000000;
 }

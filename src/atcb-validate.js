@@ -68,7 +68,9 @@ function atcb_check_required(data, throwError = true) {
     return requiredSingleField.every(function (field) {
       if (data[`${field}`] == null || data[`${field}`] == '') {
         if (throwError) {
-          throw new Error('Add to Calendar Button generation failed: required setting missing [' + field + ']');
+          throw new Error(
+            'Add to Calendar Button generation failed: required setting missing [' + field + ']'
+          );
         }
         return false;
       }
@@ -104,7 +106,7 @@ function atcb_validate_icsFile(data, msgPrefix, i = '', msgSuffix = '') {
     return '';
   })();
   if (icsFileStr != '') {
-    if (!atcb_secure_url(icsFileStr, false) || (!data.icsFile.startsWith('https://'))) {
+    if (!atcb_secure_url(icsFileStr, false) || !data.icsFile.startsWith('https://')) {
       console.error(msgPrefix + ' failed: explicit ics file path not valid' + msgSuffix);
       return false;
     }
@@ -119,7 +121,11 @@ function atcb_validate_buttonStyle(data, msgPrefix) {
     console.error(msgPrefix + ' failed: provided buttonStyle invalid');
     return false;
   }
-  if (data.customCss != null && data.customCss != '' && (!atcb_secure_url(data.customCss, false) || !/\.css$/m.test(data.customCss))) {
+  if (
+    data.customCss != null &&
+    data.customCss != '' &&
+    (!atcb_secure_url(data.customCss, false) || !/\.css$/m.test(data.customCss))
+  ) {
     console.error(msgPrefix + ' failed: customCss provided, but no valid url');
     return false;
   }

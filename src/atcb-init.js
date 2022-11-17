@@ -29,81 +29,79 @@ const lightModeMutationObserver = [];
 
 // DEFINING THE WEB COMPONENT
 const atcbWcParams = [
-  "name",
-  "dates",
-  "description",
-  "startDate",
-  "startTime",
-  "endDate",
-  "endTime",
-  "timeZone",
-  "location",
-  "status",
-  "sequence",
-  "uid",
-  "organizer",
-  "icsFile",
-  "images",
-  "recurrence",
-  "recurrence_interval",
-  "recurrence_until",
-  "recurrence_count",
-  "recurrence_byDay",
-  "recurrence_byMonth",
-  "recurrence_byMonthDay",
-  "recurrence_weekstart",
-  "availability",
-  "created",
-  "updated",
-  "subscribe",
-  "options",
-  "iCalFileName",
-  "listStyle",
-  "buttonStyle",
-  "trigger",
-  "icons",
-  "textLabels",
-  "buttonsList",
-  "background",
-  "checkmark",
-  "branding",
-  "size",
-  "label",
-  "ty",
-  "rsvp",
-  "inlineRsvp",
-  "customLabels",
-  "customCss",
-  "lightMode",
-  "language",
-  "richData"
+  'name',
+  'dates',
+  'description',
+  'startDate',
+  'startTime',
+  'endDate',
+  'endTime',
+  'timeZone',
+  'location',
+  'status',
+  'sequence',
+  'uid',
+  'organizer',
+  'icsFile',
+  'images',
+  'recurrence',
+  'recurrence_interval',
+  'recurrence_until',
+  'recurrence_count',
+  'recurrence_byDay',
+  'recurrence_byMonth',
+  'recurrence_byMonthDay',
+  'recurrence_weekstart',
+  'availability',
+  'created',
+  'updated',
+  'subscribe',
+  'options',
+  'iCalFileName',
+  'listStyle',
+  'buttonStyle',
+  'trigger',
+  'icons',
+  'textLabels',
+  'buttonsList',
+  'background',
+  'checkmark',
+  'branding',
+  'size',
+  'label',
+  'ty',
+  'rsvp',
+  'inlineRsvp',
+  'customLabels',
+  'customCss',
+  'lightMode',
+  'language',
+  'richData',
 ];
 
 let template;
 
 if (isBrowser()) {
-
   template = document.createElement('template');
   template.innerHTML = `<div class="atcb-initialized" style="display:none;position:relative;max-width:max-content;"></div>`;
 
   class AddToCalendarButton extends HTMLElement {
-
     constructor() {
       super();
-      this.attachShadow({mode: 'open', delegateFocus: true});
+      this.attachShadow({ mode: 'open', delegateFocus: true });
       this.shadowRoot.append(template.content.cloneNode(true));
       this.initialized = false;
       this.data = {};
       atcbBtnCount = atcbBtnCount + 1;
-    };
-    
+    }
+
     connectedCallback() {
       // initial data fetch
       // checking for PRO key first and pull data if given
       if (this.getAttribute('proKey') != null && this.getAttribute('proKey') != '') {
         this.data = atcb_get_pro_data(this.getAttribute('proKey'));
       }
-      if (this.data.name == null || this.data.name == '')  {
+      if (this.data.name == null || this.data.name == '') {
         // if something goes wrong, we try reading attributes or the innerHTML of the host element
         this.data = atcb_read_attributes(this);
         this.data.proKey = '';
@@ -134,11 +132,13 @@ if (isBrowser()) {
 
     static get observedAttributes() {
       const observeAdditionally = ['instance'];
-      return atcbWcParams.map(element => {
-        return element.toLowerCase();
-      }).concat(observeAdditionally);
+      return atcbWcParams
+        .map((element) => {
+          return element.toLowerCase();
+        })
+        .concat(observeAdditionally);
     }
-    
+
     attributeChangedCallback(name, oldValue, newValue) {
       // updating whenever attributes update
       // but not if we are loading external data (which may not change dynamically)
@@ -166,30 +166,22 @@ if (isBrowser()) {
   if (!customElements.get('add-to-calendar-button')) {
     customElements.define('add-to-calendar-button', AddToCalendarButton);
   }
-
 }
 
 // read data attributes
 function atcb_read_attributes(el) {
   let data = {};
   const wcBooleanParams = [
-    "subscribe",
-    "background",
-    "checkmark",
-    "branding",
-    "inlineRsvp",
-    "richData",
-    "buttonsList"
+    'subscribe',
+    'background',
+    'checkmark',
+    'branding',
+    'inlineRsvp',
+    'richData',
+    'buttonsList',
   ];
-  const wcObjectParams = [
-    "customLabels",
-    "ty",
-    "rsvp"
-  ];
-  const wcArrayParams = [
-    "images",
-    "options"
-  ];
+  const wcObjectParams = ['customLabels', 'ty', 'rsvp'];
+  const wcArrayParams = ['images', 'options'];
   for (let i = 0; i < atcbWcParams.length; i++) {
     // reading data, but removing real code line breaks before parsing.
     // use <br> or \n explicitely in the description to create a line break.
@@ -198,7 +190,7 @@ function atcb_read_attributes(el) {
       let inputVal = atcb_secure_content(el.getAttribute(`${attr}`).replace(/(\r\n|\n|\r)/g, ''), false);
       let val;
       if (wcBooleanParams.includes(attr)) {
-        val = (inputVal === 'true');
+        val = inputVal === 'true';
       } else if (wcObjectParams.includes(attr)) {
         val = JSON.parse(inputVal);
       } else if (wcArrayParams.includes(attr)) {
@@ -206,7 +198,7 @@ function atcb_read_attributes(el) {
           if (inputVal.includes('"') || inputVal.includes("'")) {
             return inputVal.substring(1, inputVal.length - 1).replace(/\s/g, '');
           } else {
-            return inputVal.replace(/\s/g, '');;
+            return inputVal.replace(/\s/g, '');
           }
         })();
         if (cleanedInput.includes("','")) {
@@ -226,18 +218,19 @@ function atcb_read_attributes(el) {
     }
   }
   // if we receive no data that way, we try to get a potential JSON from the innerHTML
-  if (!atcb_check_required(data, false)) {    
+  if (!atcb_check_required(data, false)) {
     const slotInput = el.innerHTML;
     const atcbJsonInput = (function () {
       if (slotInput != '') {
         try {
-          const input = JSON.parse(
-            atcb_secure_content(slotInput.replace(/(\r\n|\n|\r)/g, ''), false)
-          );
+          const input = JSON.parse(atcb_secure_content(slotInput.replace(/(\r\n|\n|\r)/g, ''), false));
           // we immediately patch for backwards compatibility
           return atcb_patch_config(input);
         } catch (e) {
-          throw new Error('Add to Calendar Button generation failed: JSON content provided, but badly formatted (in doubt, try some tool like https://jsonformatter.org/ to validate).\r\nError message: ' + e);
+          throw new Error(
+            'Add to Calendar Button generation failed: JSON content provided, but badly formatted (in doubt, try some tool like https://jsonformatter.org/ to validate).\r\nError message: ' +
+              e
+          );
         }
       }
       return '';
@@ -254,7 +247,7 @@ function atcb_read_attributes(el) {
 // build the button
 function atcb_build_button(host, data) {
   // check, if all required data is available
-  if (atcb_check_required(data)) {    
+  if (atcb_check_required(data)) {
     // Rewrite dynamic dates, standardize line breaks and transform urls in the description
     data = atcb_decorate_data(data);
     if (atcb_validate(data)) {
@@ -307,8 +300,8 @@ function atcb_set_light_mode(shadowRoot, data) {
 function atcb_load_css(host, rootObj, style = '', inline = false, customCss = '') {
   // add global no-scroll style
   if (!document.getElementById('atcb-global-style')) {
-    const cssGlobalContent = document.createElement("style");
-    cssGlobalContent.id = 'atcb-global-style'
+    const cssGlobalContent = document.createElement('style');
+    cssGlobalContent.id = 'atcb-global-style';
     cssGlobalContent.innerText = '.atcb-modal-no-scroll { overflow-y: hidden; }';
     document.head.append(cssGlobalContent);
   }
@@ -331,20 +324,20 @@ function atcb_load_css(host, rootObj, style = '', inline = false, customCss = ''
     host.prepend(cssFile);
     // third, remove placeholder and render object as soon as loaded
     if (rootObj != null) {
-      cssFile.onload = function(){
+      cssFile.onload = function () {
         placeholder.remove();
         if (inline) {
           rootObj.style.display = 'inline-block';
         } else {
           rootObj.style.display = 'block';
         }
-      }
+      };
     }
     return;
   }
   // otherwise, we load it from a variable
   if (style != 'none' && atcbCssTemplate[`${style}`] != null) {
-    const cssContent = document.createElement("style");
+    const cssContent = document.createElement('style');
     cssContent.innerText = atcbCssTemplate[`${style}`];
     host.prepend(cssContent);
   }
@@ -404,14 +397,14 @@ function atcb_action(data, triggerElement, keyboardTrigger = true) {
   }
   // prepare shadow dom and load style
   let host = document.createElement('div');
-  host.id = 'atcb-customTrigger-' + data.identifier + '-host'; 
+  host.id = 'atcb-customTrigger-' + data.identifier + '-host';
   if (root == document.body) {
     document.body.append(host);
   } else {
     root.after(host);
   }
   host.setAttribute('atcb-button-id', data.identifier);
-  host.attachShadow({mode: 'open', delegateFocus: true});
+  host.attachShadow({ mode: 'open', delegateFocus: true });
   host.shadowRoot.append(template.content.cloneNode(true));
   const rootObj = host.shadowRoot.querySelector('.atcb-initialized');
   atcb_setup_state_management(data);
@@ -467,14 +460,14 @@ function atcb_set_global_event_listener(host, data) {
   }
   // temporary listener to any class change at the body for the light mode Safari/Firefox hack
   if (data.lightMode == 'bodyScheme') {
-    lightModeMutationObserver[data.identifier] = new MutationObserver(function(mutationsList) {
-      mutationsList.forEach(mutation => {
+    lightModeMutationObserver[data.identifier] = new MutationObserver(function (mutationsList) {
+      mutationsList.forEach((mutation) => {
         if (mutation.attributeName === 'class') {
           atcb_set_light_mode(host, data);
         }
       });
     });
-    lightModeMutationObserver[data.identifier].observe(document.body, { attributes: true })
+    lightModeMutationObserver[data.identifier].observe(document.body, { attributes: true });
   }
   if (!atcbInitialGlobalInit) {
     // global listener for ESC key to close dropdown
@@ -555,8 +548,8 @@ function atcb_global_listener_resize() {
         atcb_set_fullsize(activeOverlay);
         atcb_manage_body_scroll(host);
       }
-    })
-}
+    });
+  }
 }
 
 function atcb_unset_global_event_listener(identifier) {

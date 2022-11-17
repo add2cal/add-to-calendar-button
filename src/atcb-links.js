@@ -21,7 +21,7 @@ import {
   isWebView,
   isProblematicWebView,
   atcbDefaultTarget,
-  atcbStates
+  atcbStates,
 } from './atcb-globals.js';
 import { atcb_toggle } from './atcb-control.js';
 import {
@@ -36,7 +36,14 @@ import { atcb_create_modal } from './atcb-generate.js';
 import { atcb_translate_hook } from './atcb-i18n.js';
 
 // MIDDLEWARE FUNCTION TO GENERATE THE CALENDAR LINKS
-function atcb_generate_links(host, type, data, subEvent = 'all', keyboardTrigger = false, multiDateModal = false) {
+function atcb_generate_links(
+  host,
+  type,
+  data,
+  subEvent = 'all',
+  keyboardTrigger = false,
+  multiDateModal = false
+) {
   if (subEvent != 'all') {
     subEvent = parseInt(subEvent) - 1;
   } else if (data.dates.length == 1) {

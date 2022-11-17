@@ -120,9 +120,7 @@ function atcb_close(host, keyboardTrigger = false) {
   const allModals = host.querySelectorAll('.atcb-modal[data-modal-nr]');
   if (allModals.length > 1) {
     host.querySelectorAll('.atcb-modal[data-modal-nr="' + allModals.length + '"]')[0].remove();
-    const nextModal = host.querySelectorAll(
-      '.atcb-modal[data-modal-nr="' + (allModals.length - 1) + '"]'
-    )[0];
+    const nextModal = host.querySelectorAll('.atcb-modal[data-modal-nr="' + (allModals.length - 1) + '"]')[0];
     nextModal.style.display = 'block';
     let focusEl = nextModal;
     const availableButtons = nextModal.getElementsByTagName('button');
