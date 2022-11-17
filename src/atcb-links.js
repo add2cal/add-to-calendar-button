@@ -155,13 +155,13 @@ function atcb_generate_subscribe_links(host, type, data, keyboardTrigger) {
       atcb_subscribe_ical(adjustedFileUrl);
       break;
     case 'google':
-      atcb_subscribe_google(data.icsFile);
+      atcb_subscribe_google(adjustedFileUrl.replace('webcal://calendar.google.com/calendar/u/2?cid=', ''));
       break;
     case 'ms365':
-      atcb_subscribe_microsoft(data.icsFile, data.name);
+      atcb_subscribe_microsoft(adjustedFileUrl, data.name);
       break;
     case 'outlookcom':
-      atcb_subscribe_microsoft(data.icsFile, data.name, 'outlook');
+      atcb_subscribe_microsoft(adjustedFileUrl, data.name, 'outlook');
       break;
     case 'yahoo':
       atcb_copy_to_clipboard(data.icsFile);

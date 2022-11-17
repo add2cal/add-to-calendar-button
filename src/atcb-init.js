@@ -125,7 +125,6 @@ if (isBrowser()) {
       this.setAttribute('atcb-button-id', this.data.identifier);
       this.initialized = true;
       atcb_build_button(this.shadowRoot, this.data);
-      atcb_init_log();
     }
 
     disconnectedCallback() {
@@ -260,6 +259,7 @@ function atcb_build_button(host, data) {
       atcb_setup_state_management(data);
       // set global event listeners
       atcb_set_global_event_listener(host, data);
+      atcb_init_log();
       // generate the actual button
       atcb_generate_button(host, rootObj, data);
       // create schema.org data (https://schema.org/Event), if possible; and add it to the regular DOM
