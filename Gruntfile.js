@@ -136,7 +136,7 @@ module.exports = function (grunt) {
           'src/atcb-i18n.js',
           'src/atcb-init.js'
         ],
-        dest: 'dist/mjs/index.js',
+        dest: 'dist/module/index.js',
         options: {
           stripBanners: true,
           banner:
@@ -149,7 +149,7 @@ module.exports = function (grunt) {
     // creates files to support the dist structure
     'file-creator': {
       'package.json ES Module': {
-        'dist/mjs/package.json': function (fs, fd, done) {
+        'dist/module/package.json': function (fs, fd, done) {
           fs.writeSync(fd, '{ "type": "module" }');
           done();
         },

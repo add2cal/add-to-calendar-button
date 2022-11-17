@@ -11,7 +11,7 @@
  *
  */
 
-import { tzlib_get_timezones } from '../node_modules/timezones-ical-library/dist/mjs/index.js';
+import { tzlib_get_timezones } from 'timezones-ical-library';
 import { atcbOptions } from './atcb-globals.js';
 import { atcb_secure_url, atcb_validEmail, atcb_generate_uuid } from './atcb-util.js';
 

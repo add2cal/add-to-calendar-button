@@ -202,7 +202,13 @@ function atcb_read_attributes(el) {
       } else if (wcObjectParams.includes(attr)) {
         val = JSON.parse(inputVal);
       } else if (wcArrayParams.includes(attr)) {
-        const cleanedInput = (inputVal).substring(1, inputVal.length - 1).replace(/\s/g, '');
+        const cleanedInput = (function () {
+          if (inputVal.includes('"') || inputVal.includes("'")) {
+            return inputVal.substring(1, inputVal.length - 1).replace(/\s/g, '');
+          } else {
+            return inputVal.replace(/\s/g, '');;
+          }
+        })();
         if (cleanedInput.includes("','")) {
           val = cleanedInput.split("','");
         } else {

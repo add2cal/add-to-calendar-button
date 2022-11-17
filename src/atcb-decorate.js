@@ -58,6 +58,7 @@ function atcb_decorate_data(data) {
   data.checkmark = atcb_decorate_data_checkmark(data);
   data.background = atcb_decorate_data_background(data);
   data.branding = atcb_decorate_data_branding(data);
+  data.inlineRsvp = atcb_decorate_data_inlineRsvp(data);
   data.bypassWebViewCheck = atcb_decorate_data_bypassWebViewCheck(data);
   data = atcb_decorate_data_style(data);
   data = atcb_decorate_data_i18n(data);
@@ -69,7 +70,7 @@ function atcb_decorate_data(data) {
 
 // differentiate default vs. subscription calendar
 function atcb_decorate_data_subscribe(data) {
-  if (data.subscribe != null && data.subscribe == true) {
+  if (data.subscribe != null && (data.subscribe == true || data.subscribe == 'true')) {
     return true;
   }
   return false;
@@ -199,7 +200,7 @@ function atcb_decorate_data_options(data) {
 
 // set rich data / schema.org
 function atcb_decorate_data_rich_data(data) {
-  if (data.richData != null && data.richData == false) {
+  if (data.richData != null && (data.richData == false || data.richData == 'false')) {
     return false;
   }
   return true;
@@ -207,7 +208,7 @@ function atcb_decorate_data_rich_data(data) {
 
 // specify the checkmark option (marking saved events with an icon)
 function atcb_decorate_data_checkmark(data) {
-  if (data.checkmark != null && data.checkmark == false) {
+  if (data.checkmark != null && (data.checkmark == false || data.checkmark == 'false')) {
     return false;
   }
   return true;
@@ -215,7 +216,7 @@ function atcb_decorate_data_checkmark(data) {
 
 // specify the background option
 function atcb_decorate_data_background(data) {
-  if (data.background != null && data.background == false) {
+  if (data.background != null && (data.background == false || data.background == 'false')) {
     return false;
   }
   return true;
@@ -223,7 +224,15 @@ function atcb_decorate_data_background(data) {
 
 // specify the branding option
 function atcb_decorate_data_branding(data) {
-  if (data.branding != null && data.branding == true) {
+  if (data.branding != null && (data.branding == true || data.branding == 'true')) {
+    return true;
+  }
+  return false;
+}
+
+// specify the inline RSVP option
+function atcb_decorate_data_inlineRsvp(data) {
+  if (data.inlineRsvp != null && (data.inlineRsvp == true || data.inlineRsvp == 'true')) {
     return true;
   }
   return false;
@@ -231,7 +240,7 @@ function atcb_decorate_data_branding(data) {
 
 // specify the very optional bypassWebViewCheck option
 function atcb_decorate_data_bypassWebViewCheck(data) {
-  if (data.bypassWebViewCheck != null && data.bypassWebViewCheck == true) {
+  if (data.bypassWebViewCheck != null && (data.bypassWebViewCheck == true || data.bypassWebViewCheck == 'true')) {
     return true;
   }
   return false;
@@ -297,7 +306,7 @@ function atcb_decorate_data_style(data) {
     data.listStyle = 'overlay';
   }
   // determine the buttonsList option
-  if (data.buttonsList != null && data.buttonsList == true) {
+  if (data.buttonsList != null && (data.buttonsList == true || data.buttonsList == 'true')) {
     data.buttonsList = true;
   } else {
     data.buttonsList = false;
