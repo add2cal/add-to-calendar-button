@@ -3,7 +3,7 @@
  *  Add to Calendar Button
  *  ++++++++++++++++++++++
  *
- *  Version: 1.18.7
+ *  Version: 1.18.8
  *  Creator: Jens Kuerschner (https://jenskuerschner.de)
  *  Project: https://github.com/add2cal/add-to-calendar-button
  *  License: Apache-2.0 with “Commons Clause” License Condition v1.0
@@ -720,11 +720,7 @@ function atcb_generate_date_button(data, parent, subEvent = 'all') {
     }
     const formatOptionsStart = get_format_options(timeZoneInfoStart);
     const formatOptionsEnd = get_format_options(timeZoneInfoEnd);
-    if (
-      startDateInfo.getFullYear() === endDateInfo.getFullYear() &&
-      startDateInfo.getMonth() === endDateInfo.getMonth() &&
-      startDateInfo.getDate() === endDateInfo.getDate()
-    ) {
+    if (startDateInfo.toLocaleDateString(data.language, formatOptionsEnd.DateLong) === endDateInfo.toLocaleDateString(data.language, formatOptionsEnd.DateLong)) {
       if (formattedTimeStart.allday) {
         timeString = startDateInfo.toLocaleDateString(data.language, formatOptionsStart.DateShort);
       } else {
@@ -770,7 +766,7 @@ function atcb_generate_date_button(data, parent, subEvent = 'all') {
   if (subEvent == 'all') {
     subEvent = 0;
   }
-  const startDate = new Date(data.dates[`${subEvent}`].startDate);
+  const startDate = new Date(atcb_generate_time(data.dates[`${subEvent}`]).start);
   const timeZone = (function () {
     if (data.dates[`${subEvent}`].timeZone != null && data.dates[`${subEvent}`].timeZone != '') {
       return data.dates[`${subEvent}`].timeZone;
