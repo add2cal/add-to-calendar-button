@@ -1,6 +1,17 @@
-# add-to-calendar-button-demo
+# Add to Calendar Button Demo
 
-This template should help get you started developing with Vue 3 in Vite.
+This sub-repository holds the demo page for the [Add to Calendar Button](https://add-to-calendar-button.com/).
+
+It is built with Vue 3 and includes the button script directly from the parent repository via the npm workspaces config. Therefore, mind to not see the source code as the demo, but the underlying rendered website and its content!
+Check the package.json scripts from the parent repository! Everything also includes the demo, while there is even a specific build script on that level. You could also solely work within this sub-repository, but mind that this would then not affect the parent at all (maybe sometimes this is the intention).
+
+Contributing to this demo page follows the same rules as with the parent repository ([see rules here](../.github/CONTRIBUTING.md)) and also follows the same license. For a better start, also see the Vue guide below.
+
+<br />
+
+---
+
+<br />
 
 ## Recommended IDE Setup
 

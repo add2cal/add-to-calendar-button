@@ -1,6 +1,16 @@
 {
   "name": "add-to-calendar-button-demo",
   "version": "0.0.0",
+  "description": "The official demo website for the Add to Calendar Button script.",
+  "author": {
+    "name": "Jens Kuerschner",
+    "url": "https://jenskuerschner.de/"
+  },
+  "license": "ELv2",
+  "bugs": {
+    "url": "https://github.com/add2cal/add-to-calendar-button/issues"
+  },
+  "homepage": "https://add-to-calendar-button.com/",
   "scripts": {
     "dev": "vite",
     "build": "run-p type-check build-only",
@@ -13,13 +23,14 @@
     "../"
   ],
   "dependencies": {
+    "prismjs": "^1.29.0",
     "vue": "^3.2.41",
     "vue-i18n": "^9.2.2",
     "vue-router": "^4.1.5"
   },
   "devDependencies": {
     "@rushstack/eslint-patch": "^1.1.4",
-    "@types/node": "^16.11.68",
+    "@types/node": "^16.18.3",
     "@vitejs/plugin-vue": "^3.1.2",
     "@vue/eslint-config-prettier": "^7.0.0",
     "@vue/eslint-config-typescript": "^11.0.0",

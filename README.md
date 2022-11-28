@@ -80,7 +80,7 @@ Simple and convenient integration of 1 or many buttons, configurable directly wi
 
 - Well documented code, to easily understand the processes and build on top of it.
 - No external module or backend dependencies.
-- Therefore, fully GDPR, CCPA, and LGPD compliant - without the need of signing some data processing agreement.
+- Fully GDPR, CCPA, and LGPD compliant by design - without the need of signing some data processing agreement.
 - FREE and easy.
 
 ![Demo Screenshot](https://github.com/add2cal/add-to-calendar-button/blob/main/assets/img/demo.gif?raw=true)

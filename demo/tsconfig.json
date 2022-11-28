@@ -1,6 +1,7 @@
 {
   "extends": "@vue/tsconfig/tsconfig.web.json",
   "include": ["env.d.ts", "src/**/*", "src/**/*.vue"],
+  "exclude": ["src/components/CodeHighlighter.vue"],
   "compilerOptions": {
     "baseUrl": ".",
     "paths": {

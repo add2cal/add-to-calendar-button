@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import "add-to-calendar-button";
-import highlight from "../components/CodeHighlighter.vue"
-highlight();
+import "../components/CodeHighlighter.vue";
 </script>
 
 <template>
