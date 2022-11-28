@@ -353,7 +353,9 @@
               "inline":true,
               "trigger":"click",
               "buttonStyle":"flat",
-              "listStyle":"modal"
+              "listStyle":"modal",
+              "subscribe": "true",
+              "icsFile": "https://add-to-calendar-button.com/demo-event.ics"
             }
           </add-to-calendar-button>
           <!-- end of button code -->
@@ -616,8 +618,48 @@
                   options: ["Apple", "Google", "iCal", "Microsoft365", "Outlook.com", "MicrosoftTeams", "Yahoo"],
                   timeZone: "Europe/Berlin",
                   listStyle: "modal",
+                  subscribe: "true",
+                  icsFile: "https://add-to-calendar-button.com/demo-event.ics",
                   iCalFileName: "Reminder-Event",
                 }, triggerEl);
+              });
+          </script>
+
+          <form id="event-form2">
+            <label>
+              Event name:
+              <input name="name" value="Some cool event" />
+            </label>
+            <input id="myTriggerElement2" type="submit" value="Save" />
+          </form>
+          <script type="application/javascript">
+            const triggerEl2 = document.getElementById('myTriggerElement2');
+            document.getElementById('event-form2')
+              .addEventListener('submit', (e) => {
+                e.preventDefault();
+                atcb_action({
+                  name: e.currentTarget.elements.name.value,
+                  dates: [
+                    {
+                      "name":"Event #1/2 to star the add to calendar button repo",
+                      "description":"This is the first part to check the calendar button repository:<br>&#8594; [url]https://github.com/add2cal/add-to-calendar-button[/url]",
+                      "startDate":"today+3",
+                      "startTime":"10:15",
+                      "endTime":"23:30"
+                    },
+                    {
+                      "name":"Event #2/2 to star the add to calendar button repo",
+                      "description":"This is the second part to check the calendar button repository:<br>&#8594; [url]https://github.com/add2cal/add-to-calendar-button[/url]",
+                      "startDate":"today+5",
+                      "startTime":"13:15",
+                      "endTime":"15:05"
+                    }
+                  ],
+                  options: ["Apple", "Google", "iCal", "Microsoft365", "Outlook.com", "MicrosoftTeams", "Yahoo"],
+                  timeZone: "Europe/Berlin",
+                  listStyle: "modal",
+                  iCalFileName: "Reminder-Event",
+                }, triggerEl2);
               });
           </script>
           <!-- end of button code -->

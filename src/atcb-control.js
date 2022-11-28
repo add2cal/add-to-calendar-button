@@ -156,13 +156,6 @@ function atcb_close(host, keyboardTrigger = false) {
       .concat(Array.from(host.querySelectorAll('#add-to-calendar-button-reference')))
       .concat(Array.from(host.querySelectorAll('#atcb-bgoverlay')))
       .forEach((el) => el.remove());
-    // unset whatever possible for customTriggers
-    if (document.body.classList.contains('atcb-customTrigger-active')) {
-      document.body.classList.remove('atcb-customTrigger-active');
-      atcb_unset_global_event_listener(atcbStates['active']);
-      delete atcbStates[`${atcbStates['active']}`];
-      host.host.remove();
-    }
   }
 }
 

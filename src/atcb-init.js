@@ -390,6 +390,9 @@ function atcb_action(data, triggerElement, keyboardTrigger = false) {
   const potentialExistingHost = document.getElementById('atcb-customTrigger-' + data.identifier + '-host');
   if (potentialExistingHost) {
     atcb_close(potentialExistingHost.shadowRoot, false);
+    // unset whatever possible for customTriggers
+    delete atcbStates[`${atcbStates['active']}`];
+    potentialExistingHost.remove();
   }
   // prepare shadow dom and load style
   let host = document.createElement('div');
@@ -412,11 +415,9 @@ function atcb_action(data, triggerElement, keyboardTrigger = false) {
   // trigger link at in oneoption case, or ...
   if (oneOption) {
     atcbStates['active'] = data.identifier;
-    document.body.classList.add('atcb-customTrigger-active');
     atcb_generate_links(host.shadowRoot, data.options[0], data, 'all', keyboardTrigger);
   } else {
     // open the options list
-    document.body.classList.add('atcb-customTrigger-active');
     atcb_toggle(host.shadowRoot, 'open', data, triggerElement, keyboardTrigger);
   }
   atcb_init_log();
