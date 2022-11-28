@@ -21,7 +21,6 @@ import {
   atcb_secure_content,
   atcb_manage_body_scroll,
   atcb_set_fullsize,
-  atcb_throttle,
 } from './atcb-util.js';
 
 let atcbInitialGlobalInit = false;
@@ -153,7 +152,7 @@ if (isBrowser()) {
 // read data attributes
 function atcb_read_attributes(el) {
   let data = {};
-  //data['hideBranding'] = true;
+  data['hideBranding'] = true;
   for (let i = 0; i < atcbWcParams.length; i++) {
     // reading data, but removing real code line breaks before parsing.
     // use <br> or \n explicitely in the description to create a line break.
@@ -547,13 +546,11 @@ function atcb_global_listener_resize() {
     return null;
   })();
   if (host != null) {
-    atcb_throttle(() => {
-      const activeOverlay = host.getElementById('atcb-bgoverlay');
-      if (activeOverlay != null) {
-        atcb_set_fullsize(activeOverlay);
-        atcb_manage_body_scroll(host);
-      }
-    });
+    const activeOverlay = host.querySelector('#atcb-bgoverlay');
+    if (activeOverlay != null) {
+      atcb_set_fullsize(activeOverlay);
+      atcb_manage_body_scroll(host);
+    }
   }
 }
 

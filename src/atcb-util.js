@@ -387,7 +387,7 @@ function atcb_copy_to_clipboard(dataString) {
   tmpInput.remove();
 }
 
-// SHARED DEBOUNCE AND THROTTLE FUNCTIONS
+// SHARED DEBOUNCE FUNCTIONS
 // going for last call debounce
 function atcb_debounce(func, timeout = 200) {
   let timer;
@@ -396,7 +396,7 @@ function atcb_debounce(func, timeout = 200) {
     timer = setTimeout(() => {
       func.apply(this, args);
     }, timeout);
-  };
+  }
 }
 // dropping subsequent calls debounce
 function atcb_debounce_leading(func, timeout = 300) {
@@ -409,33 +409,7 @@ function atcb_debounce_leading(func, timeout = 300) {
     timer = setTimeout(() => {
       timer = undefined;
     }, timeout);
-  };
-}
-// throttle
-function atcb_throttle(func, delay = 10) {
-  let result;
-  let timeout = null;
-  let previous = 0;
-  let later = (...args) => {
-    previous = Date.now();
-    timeout = null;
-    result = func.apply(this, args);
-  };
-  return (...args) => {
-    let now = Date.now();
-    let remaining = delay - (now - previous);
-    if (remaining <= 0 || remaining > delay) {
-      if (timeout) {
-        clearTimeout(timeout);
-        timeout = null;
-      }
-      previous = now;
-      result = func.apply(this, args);
-    } else if (!timeout) {
-      timeout = setTimeout(later, remaining);
-    }
-    return result;
-  };
+  }
 }
 
 export {
@@ -455,5 +429,4 @@ export {
   atcb_copy_to_clipboard,
   atcb_debounce,
   atcb_debounce_leading,
-  atcb_throttle,
 };
