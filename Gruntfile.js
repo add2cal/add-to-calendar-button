@@ -50,12 +50,6 @@ module.exports = function (grunt) {
       package: {
         src: ['package.json'],
       },
-      demoHtml: {
-        options: {
-          prefix: '.(tiny-version">v|.?v=)',
-        },
-        src: ['index.html'],
-      },
       js: {
         options: {
           prefix: 'Version(.=..|:.)',
@@ -68,6 +62,12 @@ module.exports = function (grunt) {
         },
         src: ['assets/css/*.css'],
       },
+      demo: {
+        options: {
+          prefix: 'Version:.',
+        },
+        src: ['demo/src/components/FooterArea.vue'],
+      }
     },
     // cleans old built files
     clean: {

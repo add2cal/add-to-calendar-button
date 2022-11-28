@@ -3,19 +3,20 @@
  *  Add to Calendar Button
  *  ++++++++++++++++++++++
  *
- *  Version: 1.18.6
+ *  Version: 2.0.0
  *  Creator: Jens Kuerschner (https://jenskuerschner.de)
  *  Project: https://github.com/add2cal/add-to-calendar-button
- *  License: Apache-2.0 with “Commons Clause” License Condition v1.0
+ *  License: Elastic License 2.0 (ELv2)
  *  Note:    DO NOT REMOVE THE COPYRIGHT NOTICE ABOVE!
  *
  */
 
-import { atcbVersion, isBrowser, atcbStates, atcbCssTemplate } from './atcb-globals.js';
-import { atcb_decorate_data, atcb_patch_config } from './atcb-decorate.js';
+import { atcbVersion, isBrowser, atcbStates, atcbWcParams, atcbWcBooleanParams, atcbWcObjectParams, atcbWcArrayParams, atcbCssTemplate } from './atcb-globals.js';
+import { atcb_decorate_data } from './atcb-decorate.js';
 import { atcb_check_required, atcb_validate } from './atcb-validate.js';
 import { atcb_generate_button, atcb_generate_rich_data } from './atcb-generate.js';
 import { atcb_close, atcb_toggle } from './atcb-control.js';
+import { atcb_generate_links } from './atcb-links';
 import {
   atcb_secure_content,
   atcb_manage_body_scroll,
@@ -26,59 +27,6 @@ import {
 let atcbInitialGlobalInit = false;
 let atcbBtnCount = 0;
 const lightModeMutationObserver = [];
-
-// DEFINING THE WEB COMPONENT
-const atcbWcParams = [
-  'name',
-  'dates',
-  'description',
-  'startDate',
-  'startTime',
-  'endDate',
-  'endTime',
-  'timeZone',
-  'location',
-  'status',
-  'sequence',
-  'uid',
-  'organizer',
-  'icsFile',
-  'images',
-  'recurrence',
-  'recurrence_interval',
-  'recurrence_until',
-  'recurrence_count',
-  'recurrence_byDay',
-  'recurrence_byMonth',
-  'recurrence_byMonthDay',
-  'recurrence_weekstart',
-  'availability',
-  'created',
-  'updated',
-  'subscribe',
-  'options',
-  'iCalFileName',
-  'listStyle',
-  'buttonStyle',
-  'trigger',
-  'icons',
-  'textLabels',
-  'buttonsList',
-  'background',
-  'checkmark',
-  'branding',
-  'size',
-  'label',
-  'ty',
-  'rsvp',
-  'inlineRsvp',
-  'customLabels',
-  'customCss',
-  'lightMode',
-  'language',
-  'richData',
-];
-
 let template;
 
 if (isBrowser()) {
@@ -92,18 +40,28 @@ if (isBrowser()) {
       this.shadowRoot.append(template.content.cloneNode(true));
       this.initialized = false;
       this.data = {};
+      this.error = false;
       atcbBtnCount = atcbBtnCount + 1;
     }
 
     connectedCallback() {
       // initial data fetch
-      // checking for PRO key first and pull data if given
+      this.debug = this.hasAttribute('debug');
+      // checking for PRO key and pull data if given
       if (this.getAttribute('proKey') != null && this.getAttribute('proKey') != '') {
         this.data = atcb_get_pro_data(this.getAttribute('proKey'));
       }
       if (this.data.name == null || this.data.name == '') {
-        // if something goes wrong, we try reading attributes or the innerHTML of the host element
-        this.data = atcb_read_attributes(this);
+        // if no data yet, we try reading attributes or the innerHTML of the host element
+        try {
+          this.data = atcb_read_attributes(this);
+        } catch (e) {
+          if (this.debug) {
+            atcb_render_debug_msg(this.shadowRoot, e);
+            console.error(e);
+            return;
+          }
+        }
         this.data.proKey = '';
       }
       // set identifier first, no matter further validation
@@ -122,7 +80,15 @@ if (isBrowser()) {
       this.identifier = this.data.identifier;
       this.setAttribute('atcb-button-id', this.data.identifier);
       this.initialized = true;
-      atcb_build_button(this.shadowRoot, this.data);
+      try {
+        atcb_build_button(this.shadowRoot, this.data, this.debug);
+      } catch (e) {
+        if (this.debug) {
+          atcb_render_debug_msg(this.shadowRoot, e);
+          console.error(e);
+          return;
+        }
+      }
     }
 
     disconnectedCallback() {
@@ -157,9 +123,25 @@ if (isBrowser()) {
       this.shadowRoot.querySelector('.atcb-initialized').remove();
       this.shadowRoot.append(template.content.cloneNode(true));
       this.shadowRoot.querySelector('style').remove();
-      this.data = atcb_read_attributes(this);
+      try {
+        this.data = atcb_read_attributes(this);
+      } catch (e) {
+        if (this.debug) {
+          atcb_render_debug_msg(this.shadowRoot, e);
+          console.error(e);
+          return;
+        }
+      }
       this.data.identifier = this.identifier;
-      atcb_build_button(this.shadowRoot, this.data);
+      try {
+        atcb_build_button(this.shadowRoot, this.data, this.debug);
+      } catch (e) {
+        if (this.debug) {
+          atcb_render_debug_msg(this.shadowRoot, e);
+          console.error(e);
+          return;
+        }
+      }
     }
   }
 
@@ -171,31 +153,30 @@ if (isBrowser()) {
 // read data attributes
 function atcb_read_attributes(el) {
   let data = {};
-  const wcBooleanParams = [
-    'subscribe',
-    'background',
-    'checkmark',
-    'branding',
-    'inlineRsvp',
-    'richData',
-    'buttonsList',
-  ];
-  const wcObjectParams = ['customLabels', 'ty', 'rsvp'];
-  const wcArrayParams = ['images', 'options'];
+  //data['hideBranding'] = true;
   for (let i = 0; i < atcbWcParams.length; i++) {
     // reading data, but removing real code line breaks before parsing.
     // use <br> or \n explicitely in the description to create a line break.
     let attr = atcbWcParams[`${i}`];
-    if (el.getAttribute(`${attr}`) != null) {
+    if (el.hasAttribute(`${attr}`)) {
       let inputVal = atcb_secure_content(el.getAttribute(`${attr}`).replace(/(\r\n|\n|\r)/g, ''), false);
       let val;
-      if (wcBooleanParams.includes(attr)) {
-        val = inputVal === 'true';
-      } else if (wcObjectParams.includes(attr)) {
+      if (atcbWcBooleanParams.includes(attr)) {
+        // if a boolean param has no value, it is handles as prop and set true
+        if (inputVal == '') {
+          val = true;
+        } else {
+          // otherwise, we parse the text
+          val = inputVal === 'true';
+        }
+      } else if (atcbWcObjectParams.includes(attr)) {
         val = JSON.parse(inputVal);
-      } else if (wcArrayParams.includes(attr)) {
+      } else if (atcbWcArrayParams.includes(attr)) {
         const cleanedInput = (function () {
           if (inputVal.includes('"') || inputVal.includes("'")) {
+            if (inputVal.includes('[')) {
+              return inputVal.substring(2, inputVal.length - 2).replace(/\s/g, '');
+            }
             return inputVal.substring(1, inputVal.length - 1).replace(/\s/g, '');
           } else {
             return inputVal.replace(/\s/g, '');
@@ -223,9 +204,7 @@ function atcb_read_attributes(el) {
     const atcbJsonInput = (function () {
       if (slotInput != '') {
         try {
-          const input = JSON.parse(atcb_secure_content(slotInput.replace(/(\r\n|\n|\r)/g, ''), false));
-          // we immediately patch for backwards compatibility
-          return atcb_patch_config(input);
+          return JSON.parse(atcb_secure_content(slotInput.replace(/(\r\n|\n|\r)/g, ''), false));
         } catch (e) {
           throw new Error(
             'Add to Calendar Button generation failed: JSON content provided, but badly formatted (in doubt, try some tool like https://jsonformatter.org/ to validate).\r\nError message: ' +
@@ -237,7 +216,7 @@ function atcb_read_attributes(el) {
     })();
     // abort on missing input data
     if (atcbJsonInput.length == 0) {
-      throw new Error('Add to Calendar Button generation failed: no data provided');
+      throw new Error('Add to Calendar Button generation failed: no data provided or missing required fields - see console logs for details');
     }
     data = atcbJsonInput;
   }
@@ -245,7 +224,7 @@ function atcb_read_attributes(el) {
 }
 
 // build the button
-function atcb_build_button(host, data) {
+function atcb_build_button(host, data, debug = false) {
   // check, if all required data is available
   if (atcb_check_required(data)) {
     // Rewrite dynamic dates, standardize line breaks and transform urls in the description
@@ -262,10 +241,13 @@ function atcb_build_button(host, data) {
       // generate the actual button
       atcb_generate_button(host, rootObj, data);
       // create schema.org data (https://schema.org/Event), if possible; and add it to the regular DOM
-      if (data.richData && data.name && data.dates[0].location && data.dates[0].startDate) {
+      if (!data.hideRichData && data.name && data.dates[0].location && data.dates[0].startDate) {
         atcb_generate_rich_data(data, host.host);
         data.schemaEl = host.host.previousSibling;
       }
+    } else if (debug) {
+      // in this case, since we do not throw any hard error, if validation fails, we need to trigger the debug message here
+      atcb_render_debug_msg(host, 'Add to Calendar Button generation failed: invalid data; see console logs for details');
     }
   }
 }
@@ -287,7 +269,7 @@ function atcb_set_light_mode(shadowRoot, data) {
   let hostLightMode = data.lightMode;
   // Safari + Firefox combat hack
   // could be removed as soon as those browsers support the :host-context selector
-  if (hostLightMode == 'bodyScheme' && document.body.classList.contains('atcb-dark')) {
+  if (hostLightMode == 'bodyScheme' && (document.body.classList.contains('atcb-dark') || document.documentElement.classList.contains('atcb-dark'))) {
     hostLightMode = 'dark';
   } else {
     hostLightMode = 'light';
@@ -309,11 +291,7 @@ function atcb_load_css(host, rootObj, style = '', inline = false, customCss = ''
   if (customCss != '' && style == 'custom') {
     // first, create placeholder
     const placeholder = document.createElement('div');
-    placeholder.style.width = '150px';
-    placeholder.style.height = '40px';
-    placeholder.style.borderRadius = '13px';
-    placeholder.style.backgroundColor = '#777';
-    placeholder.style.opacity = '.3';
+    placeholder.style.cssText = 'width: 150px; height: 40px; border-radius: 13px; background-color: #777; opacity: .3;';
     host.prepend(placeholder);
     // second, load the actual css
     const cssUrl = customCss;
@@ -350,9 +328,16 @@ function atcb_load_css(host, rootObj, style = '', inline = false, customCss = ''
   }
 }
 
+function atcb_render_debug_msg(host, error) {
+  const errorBanner = document.createElement('div');
+  errorBanner.style.cssText = 'color: #bf2e2e; font-size: 12px; font-weight: bold; padding: 12px 15px; border: 2px solid #bf2e2e; max-width: 180px; border-radius: 13px;';
+  errorBanner.textContent = error;
+  host.append(errorBanner);
+}
+
 // prepare data when not using the web component, but some custom trigger instead
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-function atcb_action(data, triggerElement, keyboardTrigger = true) {
+function atcb_action(data, triggerElement, keyboardTrigger = false) {
   data = atcb_secure_content(data);
   // pull data from PRO server, if key is given
   if (data.proKey != null && data.proKey != '') {
@@ -395,6 +380,18 @@ function atcb_action(data, triggerElement, keyboardTrigger = true) {
       'Add to Calendar Button generation (' + data.identifier + ') failed: invalid data; see console logs'
     );
   }
+  // determine whether we are looking for the 1-option case (also with buttonsList)
+  const oneOption = (function () {
+    if (data.options.length === 1) {
+      return true;
+    }
+    return false;
+  })();
+  // to clean-up the stage, we first close anything left open
+  const potentialExistingHost = document.getElementById('atcb-customTrigger-' + data.identifier + '-host');
+  if (potentialExistingHost) {
+    atcb_close(potentialExistingHost.shadowRoot, false);
+  }
   // prepare shadow dom and load style
   let host = document.createElement('div');
   host.id = 'atcb-customTrigger-' + data.identifier + '-host';
@@ -412,9 +409,17 @@ function atcb_action(data, triggerElement, keyboardTrigger = true) {
   atcb_load_css(host.shadowRoot, rootObj, data.buttonStyle, data.inline, data.customCss);
   // set global event listeners
   atcb_set_global_event_listener(host.shadowRoot, data);
-  // if all is fine, open the options list
-  document.body.classList.add('atcb-customTrigger-active');
-  atcb_toggle(host.shadowRoot, 'open', data, triggerElement, keyboardTrigger);
+  // if all is fine, ...
+  // trigger link at in oneoption case, or ...
+  if (oneOption) {
+    atcbStates['active'] = data.identifier;
+    document.body.classList.add('atcb-customTrigger-active');
+    atcb_generate_links(host.shadowRoot, data.options[0], data, 'all', keyboardTrigger);
+  } else {
+    // open the options list
+    document.body.classList.add('atcb-customTrigger-active');
+    atcb_toggle(host.shadowRoot, 'open', data, triggerElement, keyboardTrigger);
+  }
   atcb_init_log();
   console.log('Add to Calendar Button "' + data.identifier + '" triggered');
   return data.identifier;

@@ -308,7 +308,17 @@ Anyone is welcome to contribute, but mind the [guidelines](.github/CONTRIBUTING.
 
 Copyright (c) [Jens Kuerschner](https://jenskuerschner.de).
 
-Licensed under [Apache-2.0 (with “Commons Clause” License Condition v1.0)](LICENSE.txt).
+Licensed under [Elastic License 2.0 (ELv2)](LICENSE.txt).
+
+**About open-source**: 
+We consider ourselves open-source. 
+However, we are also aware of the controversy coming with licenses like the one selected. 
+Therefore, and contrary to many other companies and products, we no longer use the term in any marketing statements unless it is about other pieces which really are under an official OSI license. 
+
+Speaking **about the license**: 
+We love it, because it is so simple. Have a look! 
+You are basically free to do anything unless you are not offering the tool itself as a product or service; or want to remove copyright and license stuff. 
+In doubt, simply ask and we find a way. :)
 
 <br />
 

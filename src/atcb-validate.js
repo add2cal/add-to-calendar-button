@@ -3,10 +3,10 @@
  *  Add to Calendar Button
  *  ++++++++++++++++++++++
  *
- *  Version: 1.18.6
+ *  Version: 2.0.0
  *  Creator: Jens Kuerschner (https://jenskuerschner.de)
  *  Project: https://github.com/add2cal/add-to-calendar-button
- *  License: Apache-2.0 with “Commons Clause” License Condition v1.0
+ *  License: Elastic License 2.0 (ELv2)
  *  Note:    DO NOT REMOVE THE COPYRIGHT NOTICE ABOVE!
  *
  */

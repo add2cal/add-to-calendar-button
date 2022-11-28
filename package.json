@@ -1,6 +1,6 @@
 {
   "name": "add-to-calendar-button",
-  "version": "1.18.6",
+  "version": "2.0.0",
   "engines": {
     "node": ">=14.20.0"
   },
@@ -43,7 +43,7 @@
     "name": "Jens Kuerschner",
     "url": "https://jenskuerschner.de/"
   },
-  "license": "SEE LICENSE.txt",
+  "license": "ELv2",
   "bugs": {
     "url": "https://github.com/add2cal/add-to-calendar-button/issues"
   },
@@ -58,7 +58,10 @@
     "prettier:fix": "npm run prettier -- --write",
     "format": "npm run eslint:fix && npm run prettier:fix && npm run stylelint:fix",
     "test": "node test/test-prep.js && npx web-test-runner test/wc-tests/*.test.js --node-resolve",
-    "build": "npx grunt"
+    "dev": "cd demo && npm run dev",
+    "build:core": "npx grunt",
+    "build:demo": "cd demo && npm run build",
+    "build": "npm run build:core && npm run build:demo"
   },
   "dependencies": {
     "timezones-ical-library": "^1.5.0"

@@ -115,17 +115,17 @@
 
           <!-- start of button code -->
           <add-to-calendar-button 
-            name="Reminder to star the add to calendar button repo" 
-            options='"Apple","Google","iCal","Microsoft365","Outlook.com","Yahoo"' 
-            location="World Wide Web" 
-            startDate="2023-02-14" 
-            endDate="2023-02-14" 
-            startTime="10:15" 
-            endTime="23:30" 
-            timeZone="Europe/Berlin" 
-            buttonStyle="neumorphism" 
-            lightMode="bodyScheme" 
-            branding="true"
+            name="Reminder to star the add to calendar button repo"
+            options='"Apple","Google","iCal","Microsoft365","Outlook.com","Yahoo"'
+            dates = '[{"name":"Event #1/3","startDate":"today+3","startTime":"10:15","endTime":"23:30"},{"name":"Event #3/3","startDate":"today+6","startTime":"13:15","endTime":"15:05"},{"name":"Event #2/3","startDate":"today+5","startTime":"13:15","endTime":"15:05"}]'
+            location="World Wide Web"
+            startDate="2023-02-14"
+            endDate="2023-02-14"
+            startTime="10:15"
+            endTime="23:30"
+            debug
+            timeZone="Europe/Berlin"
+            lightMode="bodyScheme"
           ></add-to-calendar-button>
           <!-- end of button code -->
 
@@ -185,7 +185,6 @@
               ],
               "timeZone":"Europe/Berlin",
               "lightMode":"bodyScheme",
-              "branding":true,
               "iCalFileName":"Reminder-Event"
             }
           </add-to-calendar-button>
@@ -245,7 +244,6 @@
               "listStyle":"overlay",
               "size":"8",
               "buttonStyle":"3d",
-              "branding":true,
               "timeZone":"Europe/Berlin"
             }
           </add-to-calendar-button>
@@ -354,7 +352,6 @@
               "timeZone":"Europe/Berlin",
               "inline":true,
               "trigger":"click",
-              "branding":true,
               "buttonStyle":"flat",
               "listStyle":"modal"
             }

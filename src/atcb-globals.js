@@ -5,14 +5,14 @@
  *  Add to Calendar Button
  *  ++++++++++++++++++++++
  *
- *  Version: 1.18.6
+ *  Version: 2.0.0
  *  Creator: Jens Kuerschner (https://jenskuerschner.de)
  *  Project: https://github.com/add2cal/add-to-calendar-button
- *  License: Apache-2.0 with “Commons Clause” License Condition v1.0
+ *  License: Elastic License 2.0 (ELv2)
  *  Note:    DO NOT REMOVE THE COPYRIGHT NOTICE ABOVE!
  *
  */
-const atcbVersion = '1.18.6';
+const atcbVersion = '2.0.0';
 
 // DEFINING CSS
 const atcbCssTemplate = {};
@@ -108,6 +108,81 @@ const atcbInvalidSubscribeOptions = ['msteams'];
 const atcbiOSInvalidOptions = ['ical'];
 const atcbStates = [];
 
+// DEFINING THE WEB COMPONENT ATTRIBUTES (not including the debug and proKey options)
+const atcbWcParams = [
+  'name',
+  'dates',
+  'description',
+  'startDate',
+  'startTime',
+  'endDate',
+  'endTime',
+  'timeZone',
+  'location',
+  'status',
+  'sequence',
+  'uid',
+  'organizer',
+  'icsFile',
+  'images',
+  'recurrence',
+  'recurrence_interval',
+  'recurrence_until',
+  'recurrence_count',
+  'recurrence_byDay',
+  'recurrence_byMonth',
+  'recurrence_byMonthDay',
+  'recurrence_weekstart',
+  'availability',
+  'created',
+  'updated',
+  'subscribe',
+  'options',
+  'iCalFileName',
+  'listStyle',
+  'buttonStyle',
+  'trigger',  
+  'hideIconButton',
+  'hideIconList',
+  'hideIconModal',
+  'hideTextLabelButton',
+  'hideTextLabelList',
+  'buttonsList',
+  'hideBackground',
+  'hideCheckmark',
+  'hideBranding',
+  'size',
+  'label',
+  'ty',
+  'rsvp',
+  'inline',
+  'inlineRsvp',
+  'customLabels',
+  'customCss',
+  'lightMode',
+  'language',
+  'hideRichData',
+  'bypassWebViewCheck',
+];
+const atcbWcBooleanParams = [
+  'hideIconButton',
+  'hideIconList',
+  'hideIconModal',
+  'hideTextLabelButton',
+  'hideTextLabelList',
+  'subscribe',
+  'hideBackground',
+  'hideCheckmark',
+  'hideBranding',
+  'inlineRsvp',
+  'hideRichData',
+  'buttonsList',
+  'inline',
+  'bypassWebViewCheck',
+];
+const atcbWcObjectParams = ['dates', 'customLabels', 'ty', 'rsvp'];
+const atcbWcArrayParams = ['images', 'options'];
+
 // DEFINING GLOBAL ICONS
 const atcbIcon = {
   trigger:
@@ -151,6 +226,10 @@ export {
   atcbInvalidSubscribeOptions,
   atcbiOSInvalidOptions,
   atcbStates,
+  atcbWcParams,
+  atcbWcBooleanParams,
+  atcbWcObjectParams,
+  atcbWcArrayParams,
   atcbIcon,
   atcbCssTemplate,
 };

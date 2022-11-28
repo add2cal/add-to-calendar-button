@@ -3,10 +3,10 @@
  *  Add to Calendar Button
  *  ++++++++++++++++++++++
  *
- *  Version: 1.18.6
+ *  Version: 2.0.0
  *  Creator: Jens Kuerschner (https://jenskuerschner.de)
  *  Project: https://github.com/add2cal/add-to-calendar-button
- *  License: Apache-2.0 with “Commons Clause” License Condition v1.0
+ *  License: Elastic License 2.0 (ELv2)
  *  Note:    DO NOT REMOVE THE COPYRIGHT NOTICE ABOVE!
  *
  */
@@ -162,7 +162,7 @@ function atcb_generate_subscribe_links(host, type, data, keyboardTrigger) {
       atcb_subscribe_ical(adjustedFileUrl);
       break;
     case 'google':
-      atcb_subscribe_google(adjustedFileUrl.replace('webcal://calendar.google.com/calendar/u/2?cid=', ''));
+      atcb_subscribe_google(adjustedFileUrl);
       break;
     case 'ms365':
       atcb_subscribe_microsoft(adjustedFileUrl, data.name);
@@ -241,7 +241,13 @@ function atcb_subscribe_ical(fileUrl) {
 // GOOGLE
 function atcb_subscribe_google(fileUrl) {
   const baseUrl = 'https://calendar.google.com/calendar/r?cid=';
-  atcb_open_cal_url(baseUrl + fileUrl);
+  const newFileUrl = (function () {
+    if (fileUrl.includes('calendar.google.com')) {
+      return fileUrl.replace(/(.)*?cid=/, '');
+    }
+    return encodeURIComponent(fileUrl);
+  })();
+  atcb_open_cal_url(baseUrl + newFileUrl);
 }
 
 // MICROSOFT

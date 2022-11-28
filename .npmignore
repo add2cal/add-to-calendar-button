@@ -12,10 +12,10 @@
 
 # PLUS what else should not be on npm
 
-.github/
-demo_assets/
-assets/
-src/
+/.github
+/demo
+/assets
+/src
 *.png
 *.ico
 *.gif

@@ -3,10 +3,10 @@
  *  Add to Calendar Button
  *  ++++++++++++++++++++++
  *
- *  Version: 1.18.6
+ *  Version: 2.0.0
  *  Creator: Jens Kuerschner (https://jenskuerschner.de)
  *  Project: https://github.com/add2cal/add-to-calendar-button
- *  License: Apache-2.0 with “Commons Clause” License Condition v1.0
+ *  License: Elastic License 2.0 (ELv2)
  *  Note:    DO NOT REMOVE THE COPYRIGHT NOTICE ABOVE!
  *
  */
@@ -47,7 +47,7 @@ function atcb_open(host, data, button, keyboardTrigger = false, generatedButton 
   const list = atcb_generate_dropdown_list(host, data);
   const listWrapper = document.createElement('div');
   listWrapper.classList.add('atcb-list-wrapper');
-  if (data.textLabelList == false) {
+  if (data.hideTextLabelList) {
     listWrapper.classList.add('atcb-no-text');
   }
   // set list styles, set button to atcb-active and force modal listStyle if no button is set
@@ -70,12 +70,12 @@ function atcb_open(host, data, button, keyboardTrigger = false, generatedButton 
     list.classList.add('atcb-modal');
   }
   // define background overlay
-  const bgOverlay = atcb_generate_bg_overlay(host, data.trigger, data.background);
+  const bgOverlay = atcb_generate_bg_overlay(host, data.trigger, !data.hideBackground);
   // render the items depending on the liststyle
   if (data.listStyle === 'modal') {
     host.append(bgOverlay);
     bgOverlay.append(list);
-    if (data.branding) {
+    if (!data.hideBranding) {
       atcb_create_atcbl(host, false);
     }
     atcb_set_sizes(list, data.sizes);
@@ -86,7 +86,7 @@ function atcb_open(host, data, button, keyboardTrigger = false, generatedButton 
     if (data.buttonStyle != 'default') {
       listWrapper.classList.add('atcb-style-' + data.buttonStyle);
     }
-    if (data.branding) {
+    if (!data.hideBranding) {
       atcb_create_atcbl(host);
     }
     host.append(bgOverlay);
