@@ -1,43 +1,85 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd">
+  <!-- English (en): default -->
   <url>
     <loc>https://add-to-calendar-button.com/</loc>
     <priority>1.0</priority>
   </url>
   <url>
-    <loc>https://add-to-calendar-button.com/examples</loc>
+    <loc>https://add-to-calendar-button.com/en/examples</loc>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://add-to-calendar-button.com/advanced-use</loc>
+    <loc>https://add-to-calendar-button.com/en/advanced-use</loc>
     <priority>0.4</priority>
   </url>
   <url>
-    <loc>https://add-to-calendar-button.com/use</loc>
+    <loc>https://add-to-calendar-button.com/en/use</loc>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://add-to-calendar-button.com/use-with-vue</loc>
+    <loc>https://add-to-calendar-button.com/en/use-with-vue</loc>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://add-to-calendar-button.com/use-with-react</loc>
+    <loc>https://add-to-calendar-button.com/en/use-with-react</loc>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://add-to-calendar-button.com/use-with-angular</loc>
+    <loc>https://add-to-calendar-button.com/en/use-with-angular</loc>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://add-to-calendar-button.com/use-with-svelte</loc>
+    <loc>https://add-to-calendar-button.com/en/use-with-svelte</loc>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://add-to-calendar-button.com/use-with-astro</loc>
+    <loc>https://add-to-calendar-button.com/en/use-with-astro</loc>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://add-to-calendar-button.com/use-with-wordpress</loc>
+    <loc>https://add-to-calendar-button.com/en/use-with-wordpress</loc>
+    <priority>0.6</priority>
+  </url>
+  <!-- German (de) -->
+  <url>
+    <loc>https://add-to-calendar-button.com/de/</loc>
+    <priority>1.0</priority>
+  </url>
+  <url>
+    <loc>https://add-to-calendar-button.com/de/examples</loc>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://add-to-calendar-button.com/de/advanced-use</loc>
+    <priority>0.4</priority>
+  </url>
+  <url>
+    <loc>https://add-to-calendar-button.com/de/use</loc>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://add-to-calendar-button.com/de/use-with-vue</loc>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://add-to-calendar-button.com/de/use-with-react</loc>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://add-to-calendar-button.com/de/use-with-angular</loc>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://add-to-calendar-button.com/de/use-with-svelte</loc>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://add-to-calendar-button.com/de/use-with-astro</loc>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://add-to-calendar-button.com/de/use-with-wordpress</loc>
     <priority>0.6</priority>
   </url>
 </urlset>

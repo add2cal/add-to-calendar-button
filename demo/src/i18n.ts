@@ -33,6 +33,7 @@ export function setLocale(i18n: I18n, locale: Locale): void {
   } else {
     i18n.global.locale = locale;
   }
+  localStorage.setItem('user-language', locale);
 }
 
 export function setupI18n(options: I18nOptions = { locale: 'en' }): I18n {
@@ -59,7 +60,7 @@ const getResourceMessages = (r: any) => r.default || r;
 export async function loadLocaleMessages(i18n: I18n, locale: Locale) {
   // load locale messages
   const messages = await import(
-    /* @vite-ignore */ `./locales/${locale}.json`
+    /* @vite-ignore */ `@/locales/${locale}.json`
   ).then(getResourceMessages);
 
   // set locale and locale message

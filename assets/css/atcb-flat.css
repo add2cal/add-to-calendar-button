@@ -58,6 +58,7 @@
 /* Dark mode */
 
 :host(.atcb-dark),
+:host-context(html.atcb-dark):host(.atcb-bodyScheme),
 :host-context(body.atcb-dark):host(.atcb-bodyScheme) {
   --atcb-background: #222;
   --atcb-background-hover: #373737;

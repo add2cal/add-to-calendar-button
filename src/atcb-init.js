@@ -451,6 +451,7 @@ function atcb_get_pro_data(licenseKey) {
   const data = {};
   if (licenseKey != null && licenseKey != '') {
     data.proKey = licenseKey;
+    data.identifier = licenseKey;
     // TODO: Pull data from server
     console.error('Add to Calendar Button proKey invalid! Falling back to local data...');
   }
@@ -463,7 +464,7 @@ function atcb_set_global_event_listener(host, data) {
   if (!isBrowser()) {
     return;
   }
-  // temporary listener to any class change at the body for the light mode Safari/Firefox hack
+  // temporary listener to any class change at the body or html for the light mode Safari/Firefox hack
   if (data.lightMode == 'bodyScheme') {
     lightModeMutationObserver[data.identifier] = new MutationObserver(function (mutationsList) {
       mutationsList.forEach((mutation) => {
@@ -472,6 +473,7 @@ function atcb_set_global_event_listener(host, data) {
         }
       });
     });
+    lightModeMutationObserver[data.identifier].observe(document.documentElement, { attributes: true });
     lightModeMutationObserver[data.identifier].observe(document.body, { attributes: true });
   }
   if (!atcbInitialGlobalInit) {

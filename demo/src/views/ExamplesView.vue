@@ -1,29 +1,27 @@
 <script setup lang="ts">
 import "add-to-calendar-button";
-import "../components/CodeHighlighter.vue";
+import CodeBlock from "@/components/CodeBlock.vue";
 </script>
 
 <template>
-  <div class="container">
+  <h1>Examples</h1>
 
-    <h1>Examples</h1>
+  <add-to-calendar-button
+    name="Reminder to star the add to calendar button repo"
+    options="'Apple','Google','iCal','Outlook.com','Yahoo'"
+    location="World Wide Web"
+    startDate="2023-02-14"
+    endDate="2023-02-14"
+    startTime="10:15"
+    endTime="23:30"
+    timeZone="Europe/Berlin"
+    lightMode="bodyScheme"
+    buttonStyle="round"
+  ></add-to-calendar-button>
 
-    <add-to-calendar-button
-      name="Reminder to star the add to calendar button repo"
-      options="'Apple','Google','iCal','Outlook.com','Yahoo'"
-      location="World Wide Web"
-      startDate="2023-02-14"
-      endDate="2023-02-14"
-      startTime="10:15"
-      endTime="23:30"
-      timeZone="Europe/Berlin"
-      lightMode="bodyScheme"
-      buttonStyle="round"
-    ></add-to-calendar-button>
-
-    <div class="codeblock">
-      <pre class="language-html line-numbers">
-<code>&lt;add-to-calendar-button
+  <CodeBlock class="line-numbers">
+    <pre>
+&lt;add-to-calendar-button
   name="Title"
   options="'Apple','Google'"
   location="World Wide Web"
@@ -32,12 +30,14 @@ import "../components/CodeHighlighter.vue";
   startTime="10:15"
   endTime="23:30"
   timeZone="Europe/Berlin"
-&gt;&lt;/add-to-calendar-button&gt;</code></pre>
-    </div>
+&gt;&lt;/add-to-calendar-button&gt;
+</pre
+    >
+  </CodeBlock>
 
-    <div class="codeblock">
-      <pre class="language-html">
-<code>&lt;script type="application/javascript"&gt;
+  <CodeBlock>
+    <pre>
+&lt;script type="application/javascript"&gt;
 const triggerEl = document.getElementById('myTriggerElement');
 document.getElementById('event-form')
   .addEventListener('submit', (e) => {
@@ -52,10 +52,10 @@ document.getElementById('event-form')
       iCalFileName: "Reminder-Event",
     }, triggerEl);
   });
-&lt;/script&gt;</code></pre>
-    </div>
-    <div class="codeblock">
-      <pre class="language-sh"><code>npm run build</code></pre>
-    </div>
-  </div>
+&lt;/script&gt;
+</pre
+    >
+  </CodeBlock>
+
+  <CodeBlock>npm run build</CodeBlock>
 </template>

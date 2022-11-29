@@ -20,11 +20,11 @@ const cval = document.cookie.match('(^|;)\\s*atcb-light-mode\\s*=\\s*([^;]+)')?.
 
 if (cval == '') {
   if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
-    document.body.classList.toggle('atcb-dark');
+    document.documentElement.classList.toggle('atcb-dark');
   }
 } else {
   if (cval == 'dark') {
-    document.body.classList.toggle('atcb-dark');
+    document.documentElement.classList.toggle('atcb-dark');
   }
 }
 
@@ -32,9 +32,9 @@ lightModeButtonHeader.addEventListener('click', toggle_atcb_light_mode);
 lightModeButtonFooter.addEventListener('click', toggle_atcb_light_mode);
 
 function toggle_atcb_light_mode() {
-  document.body.classList.toggle('atcb-dark');
+  document.documentElement.classList.toggle('atcb-dark');
   // also save as cookie
-  const newCval = document.body.classList.contains('atcb-dark') ? 'dark' : 'light';
+  const newCval = document.documentElement.classList.contains('atcb-dark') ? 'dark' : 'light';
   const d = new Date();
   d.setTime(d.getTime() + 90 * 24 * 60 * 60 * 1000);
   document.cookie = 'atcb-light-mode=' + newCval + ';expires=' + d.toUTCString();

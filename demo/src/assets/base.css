@@ -127,7 +127,10 @@
   }
 
   a {
-    font-weight: bold;
+    font-weight: 600;
+  }
+  a:hover {
+    text-decoration: underline;
   }
 
   code[class*="language-"],
@@ -136,8 +139,22 @@
     font-family: 'Fira Mono', Consolas, Courier, monospace;
   }
 
+  @keyframes bounce-minimal {
+    0%, 100% {
+      transform: translateY(-10%);
+      animation-timing-function: cubic-bezier(0.8,0,1,1);
+    }
+    50% {
+      transform: none;
+      animation-timing-function: cubic-bezier(0,0,0.2,1);
+    }
+  }
+  .animate-bounce-minimal {
+    animation: bounce-minimal 2s infinite;
+  }
+
 }
 
-.codeblock {
-  @apply bg-gray-100 border-gray-300 dark:bg-zinc-900 dark:border-zinc-800 transition-colors border rounded-md;
+.button-primary {
+  @apply inline-block rounded-md bg-secondary from-secondary to-secondary-light py-2 px-3 text-zinc-800 shadow-md hover:bg-gradient-to-tr hover:text-black hover:no-underline hover:shadow-lg;
 }

@@ -32,8 +32,24 @@ module.exports = {
         'background-dark': '#1b1d21',
         text: '#333',
         'text-dark': '#e6e2ed',
+        twitter: '#1da1f2',
+        npm: '#cb3837',
+      },
+      animation: {
+        marquee: 'marquee 60s linear infinite',
+        marquee2: 'marquee2 60s linear infinite',
+      },
+      keyframes: {
+        marquee: {
+          '0%': { transform: 'translateX(0%)' },
+          '100%': { transform: 'translateX(-100%)' },
+        },
+        marquee2: {
+          '0%': { transform: 'translateX(100%)' },
+          '100%': { transform: 'translateX(0%)' },
+        },
       },
     },
   },
-  plugins: [],
+  plugins: [require('@headlessui/tailwindcss')({ prefix: 'ui' })],
 }

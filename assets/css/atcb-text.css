@@ -66,6 +66,7 @@
 /* Dark mode */
 
 :host(.atcb-dark),
+:host-context(html.atcb-dark):host(.atcb-bodyScheme),
 :host-context(body.atcb-dark):host(.atcb-bodyScheme) {
   --atcb-underline: #336db9;
   --atcb-border: #888;

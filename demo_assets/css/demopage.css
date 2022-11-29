@@ -47,7 +47,7 @@
 
 /* Dark mode */
 
-body.atcb-dark {
+html.atcb-dark {
   --page-background: #1b1d21;
   --text: #e6e2ed;
   --github: #222;
@@ -248,13 +248,13 @@ a:hover {
   text-decoration: none;
 }
 
-body.atcb-dark a,
-body.atcb-dark a:focus,
-body.atcb-dark a:active {
+html.atcb-dark a,
+html.atcb-dark a:focus,
+html.atcb-dark a:active {
   color: var(--primary-color);
 }
 
-body.atcb-dark a:hover {
+html.atcb-dark a:hover {
   color: var(--primary-color-light);
 }
 
@@ -297,13 +297,13 @@ a.github:hover {
   cursor: pointer;
 }
 
-body.atcb-dark a.github,
-body.atcb-dark a.github:focus,
-body.atcb-dark a.github:active {
+html.atcb-dark a.github,
+html.atcb-dark a.github:focus,
+html.atcb-dark a.github:active {
   color: var(--github);
 }
 
-body.atcb-dark a.github:hover {
+html.atcb-dark a.github:hover {
   color: #fff;
 }
 
@@ -382,7 +382,7 @@ a.github:hover svg {
   background: var(--light-mode-switch);
 }
 
-body.atcb-dark .light-mode-switch div {
+html.atcb-dark .light-mode-switch div {
   transform: scale(0.5);
 }
 
@@ -417,14 +417,14 @@ body.atcb-dark .light-mode-switch div {
   transition: transform 0.45s ease;
 }
 
-body.atcb-dark .light-mode-switch div::before {
+html.atcb-dark .light-mode-switch div::before {
   opacity: 1;
   box-shadow: 0 -20px 0 0 var(--light-mode-switch), 0 20px 0 0 var(--light-mode-switch), -20px 0 0 0 var(--light-mode-switch),
     20px 0 0 0 var(--light-mode-switch), 15px 15px 0 0 var(--light-mode-switch), 15px -15px 0 0 var(--light-mode-switch),
     -15px 15px 0 0 var(--light-mode-switch), -15px -15px 0 0 var(--light-mode-switch);
 }
 
-body.atcb-dark .light-mode-switch div::after {
+html.atcb-dark .light-mode-switch div::after {
   opacity: 0;
   transition: background 0.45s ease;
   transform: translateX(50%) translateY(-50%);

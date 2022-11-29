@@ -19,8 +19,8 @@
 
 /* Dark mode */
 
-body.atcb-dark {
-  --code-comment: #999;
+html.atcb-dark {
+  --code-comment: #727272;
   --code-punctuation: #9d9d9d;
   --code-tag: #66a4f5;
   --code-selector: #cbaaff;
@@ -227,7 +227,7 @@ div.code-toolbar > .toolbar > .toolbar-item > button {
 div.code-toolbar > .toolbar > .toolbar-item > a,
 div.code-toolbar > .toolbar > .toolbar-item > button,
 div.code-toolbar > .toolbar > .toolbar-item > span {
-  @apply bg-zinc-300 text-zinc-500 dark:bg-zinc-700 dark:text-zinc-300;
+  @apply bg-zinc-200 text-zinc-500 dark:bg-zinc-700 dark:text-zinc-300;
   font-size: 13px;
   padding: 4px 6px;
   box-shadow: 0 1px 4px rgba(0 0 0 / 40%);
@@ -243,4 +243,16 @@ div.code-toolbar > .toolbar > .toolbar-item > span:focus {
   @apply bg-zinc-500 text-zinc-100 dark:bg-zinc-800 dark:text-zinc-100;
   text-decoration: none;
   box-shadow: 1px 2px 8px 0 rgba(0 0 0 / 50%);
+}
+
+div.code-toolbar > .toolbar > .toolbar-item > button > span {
+  height: 2em;
+  display: block;
+  padding: 4px 3px;
+}
+
+div.code-toolbar > .toolbar > .toolbar-item > button > span > svg {
+  height: 100%;
+  fill: currentcolor;
+  width: auto;
 }
