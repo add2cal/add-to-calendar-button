@@ -3,19 +3,22 @@
  *  Add to Calendar Button
  *  ++++++++++++++++++++++
  *
- *  Version: 1.18.8
+ *  Version: 2.0.0
  *  Creator: Jens Kuerschner (https://jenskuerschner.de)
  *  Project: https://github.com/add2cal/add-to-calendar-button
- *  License: Apache-2.0 with “Commons Clause” License Condition v1.0
+ *  License: Elastic License 2.0 (ELv2)
  *  Note:    DO NOT REMOVE THE COPYRIGHT NOTICE ABOVE!
  *
  */
 
-import { tzlib_get_offset } from '../node_modules/timezones-ical-library/npm_dist/mjs/index.js';
+import { tzlib_get_offset } from 'timezones-ical-library';
 import { isMobile, isiOS, atcbDefaultTarget } from './atcb-globals.js';
 
 // SHARED FUNCTION HOOK FOR WHEN EVENT GOT SAVED
-function atcb_saved_hook() {
+function atcb_saved_hook(host, data) {
+  if ((data.proKey == null) | (data.proKey == '')) {
+    return;
+  }
   console.log('Event saved. Looking forward to it!');
 }
 
@@ -235,7 +238,7 @@ function atcb_rewrite_html_elements(content, clear = false) {
 }
 
 // SHARED FUNCTION TO CALCULATE THE POSITION OF THE DROPDOWN LIST
-function atcb_position_list(trigger, list, blockUpwards = false, resize = false) {
+function atcb_position_list(host, trigger, list, blockUpwards = false, resize = false) {
   // check for position anchor
   let anchorSet = false;
   const originalTrigger = trigger;
@@ -243,16 +246,16 @@ function atcb_position_list(trigger, list, blockUpwards = false, resize = false)
     trigger = trigger.querySelector('.atcb-dropdown-anchor');
     anchorSet = true;
   }
+  // changing the lists css position temporarily to get the ideal width of the content
+  list.style.position = 'relative';
   // calculate position
   let triggerDim = trigger.getBoundingClientRect();
-  let listDim = list.getBoundingClientRect();
   const btnDim = originalTrigger.getBoundingClientRect();
+  const btnParentDim = originalTrigger.parentNode.getBoundingClientRect();
   const viewportHeight = document.documentElement.clientHeight;
-  const posWrapper = document.getElementById('atcb-pos-wrapper');
-  if (posWrapper !== null) {
-    posWrapper.style.height = viewportHeight + 'px';
-  }
   if (anchorSet === true && !list.classList.contains('atcb-dropoverlay')) {
+    let listDim = list.getBoundingClientRect();
+    list.style.width = listDim.width + 'px';
     // in the regular case, we also check for the ideal direction
     // not in the !blockUpwards case and not if there is not enough space above
     if (
@@ -264,66 +267,65 @@ function atcb_position_list(trigger, list, blockUpwards = false, resize = false)
     ) {
       originalTrigger.classList.add('atcb-dropup');
       list.classList.add('atcb-dropup');
-      list.style.bottom =
-        2 * viewportHeight -
-        (viewportHeight + (btnDim.top + (btnDim.top + btnDim.height - triggerDim.top))) -
-        window.scrollY +
-        'px';
+      //list.style.bottom = btnDim.top + ((btnDim.top + btnDim.height) - triggerDim.top) + 'px';
+      list.style.bottom = btnParentDim.bottom - btnDim.bottom + (triggerDim.top - btnDim.top) + 'px';
     } else {
-      list.style.top = window.scrollY + triggerDim.top + 'px';
+      list.style.top = btnDim.top - btnParentDim.top + (triggerDim.top - btnDim.top) + 'px';
       if (originalTrigger.classList.contains('atcb-dropup')) {
         originalTrigger.classList.remove('atcb-dropup');
       }
     }
     // read trigger dimensions again, since after adjusting the top value of the list, something might have changed (e.g. re-adjustment due to missing scrollbars at this point in time)
     triggerDim = trigger.getBoundingClientRect();
-    if (list.classList.contains('atcb-style-bubble') || list.classList.contains('atcb-style-text')) {
-      list.style.minWidth = triggerDim.width + 'px';
-    } else {
-      list.style.width = triggerDim.width + 'px';
+    list.style.minWidth = triggerDim.width + 'px';
+    if (
+      (list.classList.contains('atcb-dropdown') && !list.classList.contains('atcb-style-round')) ||
+      list.classList.contains('atcb-style-text') ||
+      list.classList.contains('atcb-style-neumorphism')
+    ) {
+      list.style.maxWidth = triggerDim.width + 'px';
     }
     // read list dimensions again, since we altered the width in the step before
     listDim = list.getBoundingClientRect();
-    list.style.left = triggerDim.left - (listDim.width - triggerDim.width) / 2 + 'px';
+    list.style.left =
+      Math.round(triggerDim.left - btnParentDim.left - (listDim.width - triggerDim.width) / 2) + 'px';
   } else {
     // when there is no anchor set (only the case with custom implementations) or the listStyle is set respectively (overlay), we render the modal centered above the trigger
-    // make sure the trigger is not moved over it via CSS in this case!
     list.style.minWidth = btnDim.width + 20 + 'px';
-    // read list dimensions again, since we altered the width in the step before
-    listDim = list.getBoundingClientRect();
-    list.style.top = window.scrollY + btnDim.top + btnDim.height / 2 - listDim.height / 2 + 'px';
-    list.style.left = btnDim.left - (listDim.width - btnDim.width) / 2 + 'px';
+    // read list dimensions again, since we altered it in the steps before
+    const listDim = list.getBoundingClientRect();
+    list.style.width = listDim.width + 'px';
+    const sideMargin = Math.round((btnDim.width - listDim.width) / 2);
+    list.style.margin =
+      -Math.round((listDim.height + btnDim.height) / 2) + 'px ' + sideMargin + 'px 0 ' + sideMargin + 'px';
   }
-  const atcbL = document.getElementById('add-to-calendar-button-reference');
+  // changing the list's position back to absolute
+  list.style.position = 'absolute';
+  // adjust branding message, if set
+  const atcbL = host.querySelector('#add-to-calendar-button-reference');
   if (atcbL) {
     if (originalTrigger.classList.contains('atcb-dropup')) {
-      atcbL.style.top = window.scrollY + btnDim.top + btnDim.height + 'px';
-      atcbL.style.left = btnDim.left + (btnDim.width - 150) / 2 + 'px';
-    } else {
-      listDim = list.getBoundingClientRect();
-      if (originalTrigger.classList.contains('atcb-dropoverlay') || !anchorSet) {
-        atcbL.style.top = window.scrollY + listDim.top + listDim.height + 'px';
-      } else {
-        atcbL.style.top = window.scrollY + triggerDim.top + listDim.height + 'px';
-      }
-      atcbL.style.left = listDim.left + (listDim.width - 150) / 2 + 'px';
+      originalTrigger.parentNode.parentNode.after(atcbL);
+      atcbL.style.padding = '5px 15px';
+      atcbL.style.position = 'absolute';
+      atcbL.style.left = btnDim.left + 'px';
     }
   }
 }
 
 // SHARED FUNCTION TO CALCULATE WHETHER WE BLOCK SCROLLING OR NOT (WHEN MODAL OR LIST IS LARGER THAN THE SCREEN HEIGHT)
-function atcb_manage_body_scroll(modalObj = null) {
+function atcb_manage_body_scroll(host, modalObj = null) {
   const modal = (function () {
     // if a specific modal is defined, we take it. Otherwise we go for the latest one
     if (modalObj != null) {
       return modalObj;
     } else {
-      const allModals = document.querySelectorAll('.atcb-modal');
+      const allModals = host.querySelectorAll('.atcb-modal');
       if (allModals.length == 0) {
         return null;
       }
       return allModals[allModals.length - 1];
-      // since ES2022 this could also simply be return document.querySelectorAll('.atcb-modal').at(-1); - let's change this in the future
+      // since ES2022 this could also simply be return host.querySelectorAll('.atcb-modal').at(-1); - let's change this in the future
     }
   })();
   if (modal == null) {
@@ -344,10 +346,10 @@ function atcb_set_fullsize(el) {
 }
 
 // SHARED FUNCTION TO UPDATE GLOBAL SIZES
-function atcb_set_sizes(el, size) {
-  el.style.setProperty('--base-font-size-l', size.l + 'px');
-  el.style.setProperty('--base-font-size-m', size.m + 'px');
-  el.style.setProperty('--base-font-size-s', size.s + 'px');
+function atcb_set_sizes(el, sizes) {
+  el.style.setProperty('--base-font-size-l', sizes['l'] + 'px');
+  el.style.setProperty('--base-font-size-m', sizes['m'] + 'px');
+  el.style.setProperty('--base-font-size-s', sizes['s'] + 'px');
 }
 
 // SHARED FUNCTION TO GENERATE UUIDs
@@ -361,7 +363,7 @@ function atcb_generate_uuid() {
 // SHARED FUNCTION TO COPY TO CLIPBOARD
 function atcb_copy_to_clipboard(dataString) {
   const tmpInput = document.createElement('input');
-  document.body.appendChild(tmpInput);
+  document.body.append(tmpInput);
   const editable = tmpInput.contentEditable;
   const readOnly = tmpInput.readOnly;
   tmpInput.value = dataString;
@@ -385,7 +387,7 @@ function atcb_copy_to_clipboard(dataString) {
   tmpInput.remove();
 }
 
-// SHARED DEBOUNCE AND THROTTLE FUNCTIONS
+// SHARED DEBOUNCE FUNCTIONS
 // going for last call debounce
 function atcb_debounce(func, timeout = 200) {
   let timer;
@@ -394,7 +396,7 @@ function atcb_debounce(func, timeout = 200) {
     timer = setTimeout(() => {
       func.apply(this, args);
     }, timeout);
-  };
+  }
 }
 // dropping subsequent calls debounce
 function atcb_debounce_leading(func, timeout = 300) {
@@ -407,33 +409,7 @@ function atcb_debounce_leading(func, timeout = 300) {
     timer = setTimeout(() => {
       timer = undefined;
     }, timeout);
-  };
-}
-// throttle
-function atcb_throttle(func, delay = 10) {
-  let result;
-  let timeout = null;
-  let previous = 0;
-  let later = (...args) => {
-    previous = Date.now();
-    timeout = null;
-    result = func.apply(this, args);
-  };
-  return (...args) => {
-    let now = Date.now();
-    let remaining = delay - (now - previous);
-    if (remaining <= 0 || remaining > delay) {
-      if (timeout) {
-        clearTimeout(timeout);
-        timeout = null;
-      }
-      previous = now;
-      result = func.apply(this, args);
-    } else if (!timeout) {
-      timeout = setTimeout(later, remaining);
-    }
-    return result;
-  };
+  }
 }
 
 export {
@@ -453,5 +429,4 @@ export {
   atcb_copy_to_clipboard,
   atcb_debounce,
   atcb_debounce_leading,
-  atcb_throttle,
 };

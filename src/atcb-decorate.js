@@ -3,64 +3,25 @@
  *  Add to Calendar Button
  *  ++++++++++++++++++++++
  *
- *  Version: 1.18.8
+ *  Version: 2.0.0
  *  Creator: Jens Kuerschner (https://jenskuerschner.de)
  *  Project: https://github.com/add2cal/add-to-calendar-button
- *  License: Apache-2.0 with “Commons Clause” License Condition v1.0
+ *  License: Elastic License 2.0 (ELv2)
  *  Note:    DO NOT REMOVE THE COPYRIGHT NOTICE ABOVE!
  *
  */
 
-import {
-  isiOS,
-  atcbValidRecurrOptions,
-  atcbInvalidSubscribeOptions,
-  atcbiOSInvalidOptions,
-} from './atcb-globals.js';
+import { isiOS, atcbValidRecurrOptions, atcbInvalidSubscribeOptions, atcbiOSInvalidOptions, atcbWcBooleanParams } from './atcb-globals.js';
 import { atcb_format_datetime, atcb_rewrite_html_elements, atcb_generate_uuid } from './atcb-util.js';
-
-// BACKWARDS COMPATIBILITY REWRITE
-function atcb_patch_config(configData) {
-  // you can remove this, if you did not use this script before v1.10.0
-  // adjusts any old schema.org structure
-  if (configData.event != null) {
-    Object.keys(configData.event).forEach((key) => {
-      // move entries one level up, but skip schema types
-      if (key.charAt(0) !== '@') {
-        configData[`${key}`] = configData.event[`${key}`];
-      }
-    });
-    delete configData.event;
-  }
-  // you can remove this, if you did not use this script before v1.4.0
-  // adjust deprecated config options
-  const keyChanges = {
-    title: 'name',
-    dateStart: 'startDate',
-    dateEnd: 'endDate',
-    timeStart: 'startTime',
-    timeEnd: 'endTime',
-  };
-  Object.keys(keyChanges).forEach((key) => {
-    if (configData[keyChanges[`${key}`]] == null && configData[`${key}`] != null) {
-      configData[keyChanges[`${key}`]] = configData[`${key}`];
-    }
-  });
-  return configData;
-}
 
 // CLEAN DATA BEFORE FURTHER VALIDATION (CONSIDERING SPECIAL RULES AND SCHEMES)
 function atcb_decorate_data(data) {
-  data = atcb_decorate_data_identifier(data);
-  data.subscribe = atcb_decorate_data_subscribe(data);
+  data = atcb_decorate_data_boolean(data);
   data = atcb_decorate_data_rrule(data);
   data = atcb_decorate_data_options(data);
-  data.richData = atcb_decorate_data_rich_data(data);
-  data.checkmark = atcb_decorate_data_checkmark(data);
-  data.background = atcb_decorate_data_background(data);
-  data.mindScrolling = atcb_decorate_data_mind_scrolling(data);
-  data.branding = atcb_decorate_data_branding(data);
   data = atcb_decorate_data_style(data);
+  data.sizes = atcb_decorate_sizes(data.size);
+  data.lightMode = atcb_decorate_light_mode(data.lightMode);
   data = atcb_decorate_data_i18n(data);
   data = atcb_decorate_data_dates(data);
   data = atcb_decorate_data_meta(data);
@@ -68,25 +29,19 @@ function atcb_decorate_data(data) {
   return data;
 }
 
-// extend provided identifier
-function atcb_decorate_data_identifier(data) {
-  if (data.identifier != null && data.identifier != '') {
-    data.identifier = 'atcb-btn-' + data.identifier;
-    // and directly validating it here (not in the validation, because we will already need the final form there)
-    if (!/^[\w-]+$/.test(data.identifier)) {
-      data.identifier = '';
-      console.warn('Add to Calendar Button generation: identifier invalid - using auto numbers instead');
+
+
+// setting boolean parameters right, since they can be provided or not
+function atcb_decorate_data_boolean(data) {
+  for (let i = 0; i < atcbWcBooleanParams.length; i++) {
+    const attr = atcbWcBooleanParams[`${i}`];
+    if (data[`${attr}`] != null && (data[`${attr}`] === 'true' || data[`${attr}`] === true)) {
+      data[`${attr}`] = true;
+    } else {
+      data[`${attr}`] = false;
     }
   }
   return data;
-}
-
-// differentiate default vs. subscription calendar
-function atcb_decorate_data_subscribe(data) {
-  if (data.subscribe != null && data.subscribe == true) {
-    return true;
-  }
-  return false;
 }
 
 // format RRULE
@@ -211,47 +166,6 @@ function atcb_decorate_data_options(data) {
   return data;
 }
 
-// set rich data / schema.org
-function atcb_decorate_data_rich_data(data) {
-  if (data.richData != null && data.richData == false) {
-    return false;
-  }
-  return true;
-}
-
-// specify the checkmark option (marking saved events with an icon)
-function atcb_decorate_data_checkmark(data) {
-  if (data.checkmark != null && data.checkmark == false) {
-    return false;
-  }
-  return true;
-}
-
-// specify the background option
-function atcb_decorate_data_background(data) {
-  if (data.background != null && data.background == false) {
-    return false;
-  }
-  return true;
-}
-
-// specify the branding option
-function atcb_decorate_data_branding(data) {
-  if (data.branding != null && data.branding == false) {
-    return false;
-  }
-  return false;
-  //return true; // not ready yet
-}
-
-// set whether we observe global scroll to re-adjust the dropdown
-function atcb_decorate_data_mind_scrolling(data) {
-  if (data.mindScrolling != null && data.mindScrolling == true) {
-    return true;
-  }
-  return false;
-}
-
 function atcb_decorate_data_style(data) {
   // set default listStyle
   if (data.listStyle == null || data.listStyle == '') {
@@ -263,7 +177,12 @@ function atcb_decorate_data_style(data) {
   }
   // set button style and force click on styles, where the dropdown is not attached to the button
   if (data.buttonStyle != null && data.buttonStyle != '' && data.buttonStyle != 'default') {
-    if (data.buttonStyle == 'bubble' || data.buttonStyle == 'text' || data.buttonStyle == 'date') {
+    if (
+      data.buttonStyle == 'round' ||
+      data.buttonStyle == 'text' ||
+      data.buttonStyle == 'date' ||
+      data.buttonStyle == 'neumorphism'
+    ) {
       data.trigger = 'click';
     }
     // for the date style, we even block the dropdown completely and fall back to overlay
@@ -271,95 +190,69 @@ function atcb_decorate_data_style(data) {
       data.listStyle = 'overlay';
     }
   } else {
-    data.buttonStyle = '';
+    data.buttonStyle = 'default';
   }
-  // prepare sizes
-  data.sizes = [];
-  data.sizes['l'] = data.sizes['m'] = data.sizes['s'] = 16;
-  if (data.size != null && data.size != '') {
-    const sizeParts = data.size.split('|');
+  // force overlay when the button label is ommited, but the list labels are not (which would make the list need to be larger than the button) - at dropdown cases
+  if (
+    (data.buttonStyle == 'default' || data.buttonStyle == '3d' || data.buttonStyle == 'flat') &&
+    data.listStyle == 'dropdown' &&
+    !data.hideTextLabelList &&
+    data.hideTextLabelButton
+  ) {
+    data.listStyle = 'overlay';
+  }
+  // return result
+  return data;
+}
+
+// prepare sizes
+function atcb_decorate_sizes(size) {
+  const sizes = [];
+  sizes['l'] = sizes['m'] = sizes['s'] = 16;
+  if (size != null && size != '') {
+    const sizeParts = size.split('|');
     for (let i = 0; i < sizeParts.length; i++) {
       sizeParts[`${i}`] = parseInt(sizeParts[`${i}`]);
     }
     if (sizeParts[0] >= 0 && sizeParts[0] < 11) {
-      data.sizes['l'] = 10 + sizeParts[0];
+      sizes['l'] = 10 + sizeParts[0];
     }
     if (sizeParts.length > 2) {
       if (sizeParts[1] >= 0 && sizeParts[1] < 11) {
-        data.sizes['m'] = 10 + sizeParts[1];
+        sizes['m'] = 10 + sizeParts[1];
       }
       if (sizeParts[2] >= 0 && sizeParts[2] < 11) {
-        data.sizes['s'] = 10 + sizeParts[2];
+        sizes['s'] = 10 + sizeParts[2];
       }
     } else if (sizeParts.length == 2) {
       if (sizeParts[1] >= 0 && sizeParts[1] < 11) {
-        data.sizes['m'] = data.sizes['s'] = 10 + sizeParts[1];
+        sizes['m'] = sizes['s'] = 10 + sizeParts[1];
       }
     }
   }
-  // determine dark mode
-  if (data.lightMode == null || data.lightMode == '') {
-    data.lightMode = 'light';
-  } else if (data.lightMode != null && data.lightMode != '') {
+  return sizes;
+}
+
+// determine dark mode
+function atcb_decorate_light_mode(lightMode = '') {
+  if (lightMode == 'system') {
     const prefersDarkScheme = window.matchMedia('(prefers-color-scheme: dark)');
-    switch (data.lightMode) {
-      case 'system':
-        if (prefersDarkScheme.matches) {
-          data.lightMode = 'dark';
-        } else {
-          data.lightMode = 'light';
-        }
-        break;
-      case 'bodyScheme':
-      case 'dark':
-        break;
-      default:
-        data.lightMode = 'light';
-        break;
-    }
+    return prefersDarkScheme.matches ? 'dark' : 'light';
   }
-  // specify the icons option
-  data.iconButton = true;
-  data.iconList = true;
-  data.iconModal = true;
-  if (data.icons != null) {
-    data.icons = String(data.icons);
-    if (data.icons != '') {
-      const iconsConfig = data.icons.split('|');
-      if (iconsConfig[0] == 'false') {
-        data.iconButton = false;
-      }
-      if (iconsConfig[1] != null && iconsConfig[1] == 'false') {
-        data.iconList = false;
-      }
-      if (iconsConfig[2] != null && iconsConfig[2] == 'false') {
-        data.iconModal = false;
-      }
-    }
+  if (lightMode != 'bodyScheme' && lightMode != 'dark') {
+    return 'light';
   }
-  // specify the text labels option
-  data.textLabelButton = true;
-  data.textLabelList = true;
-  if (data.textLabels != null) {
-    data.textLabels = String(data.textLabels);
-    if (data.textLabels != '') {
-      const textLabelsConfig = data.textLabels.split('|');
-      if (textLabelsConfig[0] == 'false') {
-        data.textLabelButton = false;
-      }
-      if (textLabelsConfig[1] != null && textLabelsConfig[1] == 'false') {
-        data.textLabelList = false;
-      }
-    }
-  }
-  // return result
-  return data;
+  return lightMode;
 }
 
 function atcb_decorate_data_i18n(data) {
   // set language if not set
   if (data.language == null || data.language == '') {
     data.language = 'en';
+  }
+  // reduce language identifier, if long version is used
+  if (data.language.length > 2) {
+    data.language = data.language.substr(0, 2);
   }
   // set right-to-left for relevant languages
   if (data.language == 'ar') {
@@ -547,4 +440,4 @@ function atcb_date_calculation(dateString) {
   return newDate.toISOString().replace(/T(\d{2}:\d{2}:\d{2}\.\d{3})Z/g, '');
 }
 
-export { atcb_decorate_data, atcb_patch_config };
+export { atcb_decorate_data };

@@ -3,10 +3,10 @@
  *  Add to Calendar Button
  *  ++++++++++++++++++++++
  *
- *  Version: 1.18.8
+ *  Version: 2.0.0
  *  Creator: Jens Kuerschner (https://jenskuerschner.de)
  *  Project: https://github.com/add2cal/add-to-calendar-button
- *  License: Apache-2.0 with “Commons Clause” License Condition v1.0
+ *  License: Elastic License 2.0 (ELv2)
  *  Note:    DO NOT REMOVE THE COPYRIGHT NOTICE ABOVE!
  *
  */
@@ -545,7 +545,7 @@ const i18nStrings = {
   },
 };
 
-// hook, which can be used to override all potential "hard" strings by setting customLabel_ + the key (without spaces) as option key and the intended string as value
+// hook, which can be used to override all potential "hard" strings by setting the key (without spaces) as option key and the intended string as value
 function atcb_translate_hook(identifier, data) {
   const searchKey = identifier.replace(/\s+/g, '').toLowerCase();
   if (

@@ -1,5 +1,5 @@
 declare module 'add-to-calendar-button' {
-  export function atcb_init(): string[];
+  export default AddToCalendarButton;
   export function atcb_action(
     config: {
       proKey?: string;
@@ -49,15 +49,18 @@ declare module 'add-to-calendar-button' {
       listStyle?: 'dropdown' | 'dropdown-static' | 'overlay' | 'modal';
       buttonStyle?: 'default' | '3d' | 'flat' | 'round' | 'neumorphism' | 'text' | 'date' | 'custom' | 'none';
       trigger?: 'hover' | 'click';
-      icons?: string;
-      textLabels?: string;
-      background?: boolean;
-      checkmark?: boolean;
-      mindScrolling?: boolean;
-      branding?: boolean;
+      hideIconButton?: boolean;
+      hideIconList?: boolean;
+      hideIconModal?: boolean;
+      hideTextLabelButton?: boolean;
+      hideTextLabelList?: boolean;
+      hideBackground?: boolean;
+      hideCheckmark?: boolean;
+      hideBranding?: boolean;
       size?: string;
       label?: string;
       customLabels?: object;
+      customCss?: string;
       lightMode?: 'system' | 'dark' | 'light' | 'bodyScheme';
       language?:
         | 'en'
@@ -80,9 +83,11 @@ declare module 'add-to-calendar-button' {
         | 'it'
         | 'ko'
         | 'vi';
+      ty?: object;
+      rsvp?: object;
+      bypassWebViewCheck?: boolean;
     },
     triggerElement?: HTMLElement,
     keyboardTrigger?: boolean
-  ): string[];
-  export function atcb_destroy(id: string): boolean;
+  ): string;
 }

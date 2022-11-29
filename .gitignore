@@ -12,4 +12,8 @@
 .history/
 
 # node_modules.
-node_modules/
+/node_modules
+
+# dist folder.
+/dist
+demo/dist

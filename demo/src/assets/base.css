@@ -1,0 +1,160 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+
+  /* paytone-one-regular - latin */
+  @font-face {
+    font-display: swap;
+    font-family: 'Paytone One';
+    font-style: normal;
+    font-weight: 400;
+    src: local('Paytone One'),
+        url('./assets/fonts/paytone-one-v18-latin-regular.woff2') format('woff2'),
+        url('./assets/fonts/paytone-one-v18-latin-regular.woff') format('woff'),
+        url('./assets/fonts/paytone-one-v18-latin-regular.ttf') format('truetype');
+  }
+
+  /* inter-300 - latin */
+  @font-face {
+    font-display: swap;
+    font-family: Inter;
+    font-style: normal;
+    font-weight: 300;
+    src: local('Inter Light'),
+        url('./assets/fonts/inter-v12-latin-300.woff2') format('woff2'),
+        url('./assets/fonts/inter-v12-latin-300.woff') format('woff'),
+        url('./assets/fonts/inter-v12-latin-300.ttf') format('truetype');
+  }
+
+  /* inter-regular - latin */
+  @font-face {
+    font-display: swap;
+    font-family: Inter;
+    font-style: normal;
+    font-weight: 400;
+    src: local('Inter'),
+        url('./assets/fonts/inter-v12-latin-regular.woff2') format('woff2'),
+        url('./assets/fonts/inter-v12-latin-regular.woff') format('woff'),
+        url('./assets/fonts/inter-v12-latin-regular.ttf') format('truetype');
+  }
+
+  /* inter-600 - latin */
+  @font-face {
+    font-display: swap;
+    font-family: Inter;
+    font-style: normal;
+    font-weight: 600;
+    src: local('Inter SemiBold'),
+        url('./assets/fonts/inter-v12-latin-600.woff2') format('woff2'),
+        url('./assets/fonts/inter-v12-latin-600.woff') format('woff'),
+        url('./assets/fonts/inter-v12-latin-600.ttf') format('truetype');
+  }
+
+  /* inter-800 - latin */
+  @font-face {
+    font-display: swap;
+    font-family: Inter;
+    font-style: normal;
+    font-weight: 800;
+    src: local('Inter ExtraBold'),
+        url('./assets/fonts/inter-v12-latin-800.woff2') format('woff2'),
+        url('./assets/fonts/inter-v12-latin-800.woff') format('woff'),
+        url('./assets/fonts/inter-v12-latin-800.ttf') format('truetype');
+  }
+
+  /* fira-mono-regular - latin */
+  @font-face {
+    font-display: swap;
+    font-family: 'Fira Mono';
+    font-style: normal;
+    font-weight: 400;
+    src: local('Fira Mono'),
+        url('./assets/fonts/fira-mono-v14-latin-regular.woff2') format('woff2'),
+        url('./assets/fonts/fira-mono-v14-latin-regular.woff') format('woff'),
+        url('./assets/fonts/fira-mono-v14-latin-regular.ttf') format('truetype');
+  }
+
+  /* fira-mono-700 - latin */
+  @font-face {
+    font-display: swap;
+    font-family: 'Fira Mono';
+    font-style: normal;
+    font-weight: 700;
+    src: url('./assets/fonts/fira-mono-v14-latin-700.woff2') format('woff2'),
+        url('./assets/fonts/fira-mono-v14-latin-700.woff') format('woff'),
+        url('./assets/fonts/fira-mono-v14-latin-700.ttf') format('truetype');
+  }
+
+  /* selection color */
+  ::selection {
+    @apply bg-primary text-white dark:bg-primary-light dark:text-black;
+  }
+
+  /* base style */
+  body {
+    @apply bg-background text-text dark:bg-background-dark dark:text-text-dark transition-colors;
+    box-sizing: border-box;
+    font-family: Inter, Arial, sans-serif;
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 1.5rem;
+    margin: 0;
+    padding: 0;
+    text-align: center;
+    height: 100%;
+    width: 100%;
+  }
+
+  h1 {
+    font-family: 'Paytone One', Arial, sans-serif;
+    font-size: 2em;
+    line-height: 1.3em;
+  }
+
+  h2 {
+    font-family: 'Paytone One', Arial, sans-serif;
+    font-size: 1.5em;
+    line-height: 1.3em;
+  }
+
+  h3 {
+    @apply text-left md:text-center;
+    font-size: 1.2em;
+    font-weight: 800;
+    line-height: 1.2em;
+  }
+
+  a {
+    font-weight: 600;
+  }
+  a:hover {
+    text-decoration: underline;
+  }
+
+  code[class*="language-"],
+  pre[class*="language-"] {
+    background: none;
+    font-family: 'Fira Mono', Consolas, Courier, monospace;
+  }
+
+  @keyframes bounce-minimal {
+    0%, 100% {
+      transform: translateY(-10%);
+      animation-timing-function: cubic-bezier(0.8,0,1,1);
+    }
+    50% {
+      transform: none;
+      animation-timing-function: cubic-bezier(0,0,0.2,1);
+    }
+  }
+  .animate-bounce-minimal {
+    animation: bounce-minimal 2s infinite;
+  }
+
+}
+
+.button-primary {
+  @apply inline-block rounded-md bg-secondary from-secondary to-secondary-light py-2 px-3 text-zinc-800 shadow-md hover:bg-gradient-to-tr hover:text-black hover:no-underline hover:shadow-lg;
+}

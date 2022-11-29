@@ -67,7 +67,7 @@ You can do so via the mentioned discussions board or email us at [contributing a
 
 New development happens on the dev branch first. It is the only branch which gets merged into main!
 
-Mind to run `npm install`, `npm format`, and `npm run build` to auto-lint and create the minified js, css, as well as its sourcemap files!
+Mind to run `npm install` and `npm run format` to auto-lint!
 
 Adhering to the following process is the best way to get your work included in the project:
 
@@ -116,4 +116,4 @@ Adhering to the following process is the best way to get your work included in t
 
 <br />
 
-**IMPORTANT**: By submitting a patch, you agree to allow the project owners to license your work under the terms of the [Apache-2.0 license (with “Commons Clause” License Condition v1.0)](../LICENSE.txt).
+**IMPORTANT**: By submitting a patch, you agree to allow the project owners to license your work under the terms of the [Elastic License 2.0 (ELv2) license](../LICENSE.txt).

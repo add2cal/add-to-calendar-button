@@ -3,30 +3,34 @@
  *  Add to Calendar Button
  *  ++++++++++++++++++++++
  *
- *  Version: 1.18.8
+ *  Version: 2.0.0
  *  Creator: Jens Kuerschner (https://jenskuerschner.de)
  *  Project: https://github.com/add2cal/add-to-calendar-button
- *  License: Apache-2.0 with “Commons Clause” License Condition v1.0
+ *  License: Elastic License 2.0 (ELv2)
  *  Note:    DO NOT REMOVE THE COPYRIGHT NOTICE ABOVE!
  *
  */
 
-import { tzlib_get_timezones } from '../node_modules/timezones-ical-library/npm_dist/mjs/index.js';
+import { tzlib_get_timezones } from 'timezones-ical-library';
 import { atcbOptions } from './atcb-globals.js';
 import { atcb_secure_url, atcb_validEmail, atcb_generate_uuid } from './atcb-util.js';
 
 // CHECK FOR REQUIRED FIELDS
-function atcb_check_required(data) {
+function atcb_check_required(data, throwError = true) {
   // in this first step, we only check for the bare minimum, so we can abort early on really broken setups. We will do further validation later.
   // check for at least 1 option
   if (data.options == null || data.options.length < 1) {
-    console.error('Add to Calendar Button generation failed: no valid options set');
+    if (throwError) {
+      throw new Error('Add to Calendar Button generation failed: no valid options set');
+    }
     return false;
   }
   // check for min required data (without "options")
   // name is always required on top level (in the multi-date setup this would be the name of the event series)
   if (data.name == null || data.name == '') {
-    console.error('Add to Calendar Button generation failed: required name information missing');
+    if (throwError) {
+      throw new Error('Add to Calendar Button generation failed: required name information missing');
+    }
     return false;
   }
   // regarding event specifics, we start by checking for multi-date setups
@@ -43,15 +47,17 @@ function atcb_check_required(data) {
             (data.dates[`${i}`][`${field}`] == null || data.dates[`${i}`][`${field}`] == '') &&
             (data[`${field}`] == null || data[`${field}`] == ''))
         ) {
-          console.error(
-            'Add to Calendar Button generation failed: required setting missing [dates array object #' +
-              (i + 1) +
-              '/' +
-              data.dates.length +
-              '] => [' +
-              field +
-              ']'
-          );
+          if (throwError) {
+            throw new Error(
+              'Add to Calendar Button generation failed: required setting missing [dates array object #' +
+                (i + 1) +
+                '/' +
+                data.dates.length +
+                '] => [' +
+                field +
+                ']'
+            );
+          }
           return false;
         }
       }
@@ -61,7 +67,11 @@ function atcb_check_required(data) {
     const requiredSingleField = ['startDate'];
     return requiredSingleField.every(function (field) {
       if (data[`${field}`] == null || data[`${field}`] == '') {
-        console.error('Add to Calendar Button generation failed: required setting missing [' + field + ']');
+        if (throwError) {
+          throw new Error(
+            'Add to Calendar Button generation failed: required setting missing [' + field + ']'
+          );
+        }
         return false;
       }
       return true;
@@ -73,6 +83,7 @@ function atcb_check_required(data) {
 function atcb_validate(data) {
   const msgPrefix = 'Add to Calendar Button generation (' + data.identifier + ')';
   if (!atcb_validate_icsFile(data, msgPrefix)) return false;
+  if (!atcb_validate_buttonStyle(data, msgPrefix)) return false;
   if (!atcb_validate_subscribe(data, msgPrefix)) return false;
   if (!atcb_validate_created(data, msgPrefix)) return false;
   if (!atcb_validate_updated(data, msgPrefix)) return false;
@@ -95,14 +106,32 @@ function atcb_validate_icsFile(data, msgPrefix, i = '', msgSuffix = '') {
     return '';
   })();
   if (icsFileStr != '') {
-    if (
-      !atcb_secure_url(icsFileStr, false) ||
-      (!/^https:\/\/(.)*\.ics$/m.test(data.icsFile) && !data.subscribe) ||
-      (!data.icsFile.startsWith('https://') && data.subscribe)
-    ) {
+    if (!atcb_secure_url(icsFileStr, false) || !data.icsFile.startsWith('https://')) {
       console.error(msgPrefix + ' failed: explicit ics file path not valid' + msgSuffix);
       return false;
     }
+  }
+  return true;
+}
+
+// validate the subscription functionality (requires an explicit ics file)
+function atcb_validate_buttonStyle(data, msgPrefix) {
+  const availableStyles = ['default', '3d', 'flat', 'round', 'neumorphism', 'text', 'date', 'custom', 'none'];
+  if (!availableStyles.includes(data.buttonStyle)) {
+    console.error(msgPrefix + ' failed: provided buttonStyle invalid');
+    return false;
+  }
+  if (
+    data.customCss != null &&
+    data.customCss != '' &&
+    (!atcb_secure_url(data.customCss, false) || !/\.css$/m.test(data.customCss))
+  ) {
+    console.error(msgPrefix + ' failed: customCss provided, but no valid url');
+    return false;
+  }
+  if ((data.customCss == null || data.customCss == '') && data.buttonStyle == 'custom') {
+    console.error(msgPrefix + ' failed: buttonStyle "custom" selected, but no customCss file provided');
+    return false;
   }
   return true;
 }

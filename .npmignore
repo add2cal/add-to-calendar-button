@@ -12,10 +12,10 @@
 
 # PLUS what else should not be on npm
 
-.github/
-demo_assets/
-assets/img/
-src/
+/.github
+/demo
+/assets
+/src
 *.png
 *.ico
 *.gif
@@ -34,6 +34,6 @@ sitemap.xml
 .prettierrc.json
 .stylelintrc.json
 .gitattributes
-*.min.css
 *.min.js
 *.map
+.eslintrc.json

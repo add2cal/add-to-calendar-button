@@ -7,7 +7,7 @@
  *
  * Creator: Jens Kuerschner (https://jenskuerschner.de)
  * Project: https://github.com/add2cal/add-to-calendar-button
- * License: Apache-2.0 with “Commons Clause” License Condition v1.0
+ * License: Elastic License 2.0 (ELv2)
  * Note:    DO NOT REMOVE THE COPYRIGHT NOTICE ABOVE!
  *
  * Including the awesome PrismJS by Lea Verou (licensed MIT)
@@ -20,11 +20,11 @@ const cval = document.cookie.match('(^|;)\\s*atcb-light-mode\\s*=\\s*([^;]+)')?.
 
 if (cval == '') {
   if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
-    document.body.classList.toggle('atcb-dark');
+    document.documentElement.classList.toggle('atcb-dark');
   }
 } else {
   if (cval == 'dark') {
-    document.body.classList.toggle('atcb-dark');
+    document.documentElement.classList.toggle('atcb-dark');
   }
 }
 
@@ -32,9 +32,9 @@ lightModeButtonHeader.addEventListener('click', toggle_atcb_light_mode);
 lightModeButtonFooter.addEventListener('click', toggle_atcb_light_mode);
 
 function toggle_atcb_light_mode() {
-  document.body.classList.toggle('atcb-dark');
+  document.documentElement.classList.toggle('atcb-dark');
   // also save as cookie
-  const newCval = document.body.classList.contains('atcb-dark') ? 'dark' : 'light';
+  const newCval = document.documentElement.classList.contains('atcb-dark') ? 'dark' : 'light';
   const d = new Date();
   d.setTime(d.getTime() + 90 * 24 * 60 * 60 * 1000);
   document.cookie = 'atcb-light-mode=' + newCval + ';expires=' + d.toUTCString();
@@ -1773,7 +1773,7 @@ Prism.languages.js = Prism.languages.javascript;
     var wrapper = document.createElement('div');
     wrapper.classList.add('code-toolbar');
     pre.parentNode.insertBefore(wrapper, pre);
-    wrapper.appendChild(pre);
+    wrapper.append(pre);
 
     // Setup the toolbar
     var toolbar = document.createElement('div');
@@ -1798,12 +1798,12 @@ Prism.languages.js = Prism.languages.javascript;
       var item = document.createElement('div');
       item.classList.add('toolbar-item');
 
-      item.appendChild(element);
-      toolbar.appendChild(item);
+      item.append(element);
+      toolbar.append(item);
     });
 
     // Add our toolbar to the currently created wrapper of <pre> tag
-    wrapper.appendChild(toolbar);
+    wrapper.append(toolbar);
   });
 
   registerButton('label', function (env) {
@@ -1888,7 +1888,7 @@ Prism.languages.js = Prism.languages.javascript;
     textArea.style.left = '0';
     textArea.style.position = 'fixed';
 
-    document.body.appendChild(textArea);
+    document.body.append(textArea);
     textArea.focus();
     textArea.select();
 
@@ -1970,7 +1970,7 @@ Prism.languages.js = Prism.languages.javascript;
     linkCopy.className = 'copy-to-clipboard-button';
     linkCopy.setAttribute('type', 'button');
     var linkSpan = document.createElement('span');
-    linkCopy.appendChild(linkSpan);
+    linkCopy.append(linkSpan);
 
     setState('copy');
 

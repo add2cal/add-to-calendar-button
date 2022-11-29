@@ -1,29 +1,23 @@
-/*!
- * @preserve
- *
+/*
  * ++++++++++++++++++++++
  * Add to Calendar Button
  * ++++++++++++++++++++++
  *
  * Style: Flat
  *
- * Version: 1.18.8
+ * Version: 2.0.0
  * Creator: Jens Kuerschner (https://jenskuerschner.de)
  * Project: https://github.com/add2cal/add-to-calendar-button
- * License: Apache-2.0 with “Commons Clause” License Condition v1.0
+ * License: Elastic License 2.0 (ELv2)
  * Note:    DO NOT REMOVE THE COPYRIGHT NOTICE ABOVE!
  * 
  */
-
- .atcb {
-  display: none;
-}
 
 /******************************
  * Global colors and shadows
  */
 
-:root {
+:host {
   --base-font-size-l: 16px;
   --base-font-size-m: 16px;
   --base-font-size-s: 16px;
@@ -63,14 +57,9 @@
 
 /* Dark mode */
 
-.atcb-button-wrapper.atcb-dark,
-body.atcb-dark .atcb-button-wrapper.atcb-bodyScheme,
-.atcb-list.atcb-dark,
-body.atcb-dark .atcb-list.atcb-bodyScheme,
-.atcb-modal-box.atcb-dark,
-body.atcb-dark .atcb-modal-box.atcb-bodyScheme,
-#atcb-bgoverlay.atcb-dark,
-body.atcb-dark #atcb-bgoverlay.atcb-bodyScheme {
+:host(.atcb-dark),
+:host-context(html.atcb-dark):host(.atcb-bodyScheme),
+:host-context(body.atcb-dark):host(.atcb-bodyScheme) {
   --atcb-background: #222;
   --atcb-background-hover: #373737;
   --atcb-border: #515151;
@@ -151,7 +140,7 @@ body.atcb-dark #atcb-bgoverlay.atcb-bodyScheme {
   font-weight: 600;
   justify-content: center;
   line-height: 1.5em;
-  margin: 10px;
+  margin: 0;
   max-width: 350px;
   min-width: 160px;
   padding: 0.8em 1.2em;
@@ -195,6 +184,10 @@ body.atcb-dark #atcb-bgoverlay.atcb-bodyScheme {
   outline: 2px solid var(--atcb-keyboard-focus);
 }
 
+.atcb-button.atcb-active:not(.atcb-modal-style, .atcb-dropoverlay) {
+  z-index: 15000000;
+}
+
 .atcb-button.atcb-active:not(.atcb-modal-style, .atcb-dropoverlay),
 .atcb-button.atcb-single:focus,
 .atcb-button.atcb-single:hover {
@@ -202,7 +195,6 @@ body.atcb-dark #atcb-bgoverlay.atcb-bodyScheme {
   top: -5px;
   left: -5px;
   box-shadow: 5px 5px 0 0 var(--atcb-button-shadow);
-  z-index: 15000000;
 }
 
 .atcb-button.atcb-active.atcb-dropoverlay {
@@ -279,11 +271,11 @@ body.atcb-dark #atcb-bgoverlay.atcb-bodyScheme {
   color: var(--atcb-text);
   display: block;
   font-family: var(--font);
-  max-width: 100%;
+  min-width: 100%;
   position: relative;
   user-select: none;
   -webkit-user-select: none;
-  width: 100%;
+  width: fit-content;
 }
 
 .atcb-list-item {
@@ -341,13 +333,13 @@ body.atcb-dark #atcb-bgoverlay.atcb-bodyScheme {
 
 .atcb-list-item .atcb-icon {
   margin-bottom: 0.1em;
-  padding-right: 0.6em;
+  margin-right: 0.6em;
   width: 1.125em;
 }
 
 .atcb-rtl .atcb-list-item .atcb-icon {
   margin-right: 0;
-  padding-left: 0.6em;
+  margin-left: 0.6em;
 }
 
 .atcb-no-text .atcb-list-item .atcb-icon {
@@ -373,10 +365,6 @@ body.atcb-dark #atcb-bgoverlay.atcb-bodyScheme {
 /******************************
  * Modal
  */
-
- .atcb-modal-no-scroll {
-  overflow-y: hidden;
-}
 
 .atcb-modal {
   display: block;
@@ -515,24 +503,6 @@ a.atcb-modal-btn:focus-visible{
   outline: 2px solid var(--atcb-keyboard-focus);
 }
 
-body.atcb-dark a.atcb-modal-btn {
-  color: var(--atcb-modal-btn-sec-text);
-}
-
-body.atcb-dark a.atcb-modal-btn:focus-visible {
-  background-color: var(--atcb-modal-btn-background-hover);
-  outline: 2px solid var(--atcb-keyboard-focus);
-}
-
-body.atcb-dark a.atcb-modal-btn.atcb-modal-btn-primary  {
-  color: var(--atcb-modal-btn-text);
-}
-
-body.atcb-dark a.atcb-modal-btn:hover,
-body.atcb-dark a.atcb-modal-btn:active {
-  color: var(--atcb-modal-btn-text-hover);
-}
-
 /******************************
  * Date Buttons
  */
@@ -605,6 +575,7 @@ body.atcb-dark a.atcb-modal-btn:active {
 .atcb-date-btn-right {
   position: relative;
   color: var(--atcb-modal-date-btn-text);
+  min-width: 200px;
 }
 
 .atcb-date-btn-details {
@@ -740,15 +711,6 @@ body.atcb-dark a.atcb-modal-btn:active {
   position: fixed;
   width: 100vw;
   z-index: 14000000;
-}
-
-#atcb-bgoverlay.atcb-animate-bg {
-  animation: atcb-bgoverlay-animate 0.3s ease 0s 1 normal forwards;
-}
-
-#atcb-bgoverlay.atcb-no-animation {
-  animation: none;
-  opacity: 1;
 }
 
 #atcb-bgoverlay.atcb-no-bg {

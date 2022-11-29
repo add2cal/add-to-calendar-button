@@ -1,0 +1,30 @@
+{
+  "message": {
+    "404": "Unfortunately, the requested page is not available."
+  },
+  "navigation": {
+    "home": "Demo",
+    "installation": "Installation",
+    "features": "Functionality",
+    "examples": "Examples",
+    "advanced": "Advanced Use",
+    "legal-notice": "Legal Notice",
+    "privacy-policy": "Privacy Policy"
+  },
+  "labels": {
+    "enableDarkMode": "Enable Dark Mode",
+    "clickHere": "Click here",
+    "showCode": "Show source code",
+    "hideCode": "Hide source code",
+    "dateInput": "Date Details",
+    "layoutInput": "Layout Settings"
+  },
+  "meta": {
+    "titleSlug": "The free and easy tool for more convenient event sharing",
+    "keywords": "calendar, event, sharing, button, script, widget, rsvp, javascript, angular, react, vue, svelte, astro, web component, outlook, ical, microsoft, teams, apple, google, yahoo, free",
+    "description": "Experience the interactive demo and tutorials on how to create a button, which adds events to your users' calendars. Quick and convenient."
+  },
+  "content": {
+    "404RealContent": "The real content can be accessed best via the home page."
+  }
+}

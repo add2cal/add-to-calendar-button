@@ -1,9 +1,10 @@
 ![Add to Calendar Button](https://github.com/add2cal/add-to-calendar-button/blob/main/assets/img/readme-header.png?raw=true)
 
 [![Code Quality](https://img.shields.io/codacy/grade/572c0a102d7b4f39b792439dcd2e8aad/main?style=for-the-badge)](https://app.codacy.com/gh/add2cal/add-to-calendar-button/dashboard)
-[![Build Status](https://img.shields.io/github/workflow/status/add2cal/add-to-calendar-button/npm%20publish?style=for-the-badge)](https://github.com/add2cal/add-to-calendar-button/actions/workflows/npm-publish.yml)
-[![npm Installations](https://img.shields.io/npm/dt/add-to-calendar-button?label=npm%20Installations&style=for-the-badge)](https://www.npmjs.com/package/add-to-calendar-button)
+[![npm Installations Total](https://img.shields.io/npm/dt/add-to-calendar-button?label=npm%20Installations&style=for-the-badge)](https://www.npmjs.com/package/add-to-calendar-button)
+[![npm Installations per Month](https://img.shields.io/npm/dm/add-to-calendar-button?label=npm%20Installations%2FMonth&style=for-the-badge)](https://www.npmjs.com/package/add-to-calendar-button)
 [![jsDelivr npm Hits](https://img.shields.io/jsdelivr/npm/hm/add-to-calendar-button?label=jsDelivr%20npm%20hits&style=for-the-badge)](https://www.jsdelivr.com/package/npm/add-to-calendar-button)
+![npm bundle size](https://img.shields.io/bundlephobia/minzip/add-to-calendar-button?style=for-the-badge)
 
 <br />
 
@@ -56,6 +57,7 @@ Simple and convenient integration of 1 or many buttons, configurable directly wi
 
 - Timed and all-day events.
 - One-time, multi-date, recurring, or fluid.
+- Calendar Subscription.
 - Most robust time zone and daylight saving management (via our own [TimeZones iCal Library](https://github.com/add2cal/timezones-ical-library)).
 - Dynamic dates (like "today + 3").
 
@@ -78,7 +80,7 @@ Simple and convenient integration of 1 or many buttons, configurable directly wi
 
 - Well documented code, to easily understand the processes and build on top of it.
 - No external module or backend dependencies.
-- Therefore, fully GDPR, CCPA, and LGPD compliant - without the need of signing some data processing agreement.
+- Fully GDPR, CCPA, and LGPD compliant by design - without the need of signing some data processing agreement.
 - FREE and easy.
 
 ![Demo Screenshot](https://github.com/add2cal/add-to-calendar-button/blob/main/assets/img/demo.gif?raw=true)
@@ -95,19 +97,13 @@ Simple and convenient integration of 1 or many buttons, configurable directly wi
 
 You can use the jsDeliver CDN and load the respective ressources into your web project.
 
-Put the css (use atcb-3d for an alternative style) into the `<head>`:
+Put the javascript into the `<body>` footer:
 
 ```
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/add-to-calendar-button@1/assets/css/atcb.min.css">
+<script src="https://cdn.jsdelivr.net/npm/add-to-calendar-button@2" async defer></script>
 ```
 
-... and the javascript into the `<body>` footer:
-
-```
-<script src="https://cdn.jsdelivr.net/npm/add-to-calendar-button@1" async defer></script>
-```
-
-_Mind that this always pulls the latest release of v1! You can pin a more specific version by adding the exact version number after the "@" - see [jsDeliver.com](https://www.jsdelivr.com/features#npm) for details._
+_Mind that this always pulls the latest release of v2! You can pin a more specific version by adding the exact version number after the "@" - see [jsDeliver.com](https://www.jsdelivr.com/features#npm) for details._
 If you want to rather host it yourself, you could also download the source files or clone the repository (mind to take the original one at [github.com/add2cal/add-to-calendar-button](https://github.com/add2cal/add-to-calendar-button)) and maintain/update it manually.
 
 <br />
@@ -123,15 +119,13 @@ npm install add-to-calendar-button
 Import the module into your project/component. For example with Angular/React:
 
 ```
-import { atcb_action, atcb_init } from 'add-to-calendar-button';
+import { atcb_action } from 'add-to-calendar-button';
 ```
 
 Either use `atcb_action` with your own buttons/forms/etc, or run `atcb_init` after the DOM has been loaded. To determine the right moment to execute the `atcb_init`, ...
 
 - with Angular, you would use `ngAfterViewInit()` with `atcb_init();` (mind that, depending on your app, other hooks might be better);
 - with React, you might want to include an event listener for `DOMContentLoaded` or use a hook in a functional component like `useEffect(() => atcb_init());`.
-
-Include the css. For example with Angular or React, add `@import 'add-to-calendar-button/assets/css/atcb.css'` to some other css file - or include it in other more direct ways (like adding `import 'add-to-calendar-button/assets/css/atcb.css';` to the respective component) (use atcb-3d for an alternative style).
 
 <br /><br />
 
@@ -292,6 +286,8 @@ Find all information about the available options and how to configure specific f
 
 ## ⚡ Changelog
 
+![npm version](https://img.shields.io/npm/v/add-to-calendar-button?label=version&style=for-the-badge)
+
 Find all changes in the dedicated file at [CHANGELOG.md](CHANGELOG.md).
 
 <br />
@@ -304,7 +300,7 @@ Anyone is welcome to contribute, but mind the [guidelines](.github/CONTRIBUTING.
 - [Feature requests](.github/CONTRIBUTING.md#features)
 - [Pull requests](.github/CONTRIBUTING.md#pull-requests)
 
-**IMPORTANT NOTE:** Run `npm install`, `npm run format`, and `npm run build` to auto-lint and create the minified js, css, as well as its sourcemap files!
+**IMPORTANT NOTE:** Run `npm install` and `npm run format` to auto-lint!
 
 <br />
 
@@ -312,7 +308,17 @@ Anyone is welcome to contribute, but mind the [guidelines](.github/CONTRIBUTING.
 
 Copyright (c) [Jens Kuerschner](https://jenskuerschner.de).
 
-Licensed under [Apache-2.0 (with “Commons Clause” License Condition v1.0)](LICENSE.txt).
+Licensed under [Elastic License 2.0 (ELv2)](LICENSE.txt).
+
+**About open-source**: 
+We consider ourselves open-source. 
+However, we are also aware of the controversy coming with licenses like the one selected. 
+Therefore, and contrary to many other companies and products, we no longer use the term in any marketing statements unless it is about other pieces which really are under an official OSI license. 
+
+Speaking **about the license**: 
+We love it, because it is so simple. Have a look! 
+You are basically free to do anything unless you are not offering the tool itself as a product or service; or want to remove copyright and license stuff. 
+In doubt, simply ask and we find a way. :)
 
 <br />
 

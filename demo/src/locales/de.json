@@ -1,0 +1,30 @@
+{
+  "message": {
+    "404": "Leider gibt es die gewählte Seite nicht (mehr)."
+  },
+  "navigation": {
+    "home": "Demo",
+    "installation": "Installation",
+    "features": "Funktionen",
+    "examples": "Beispiele",
+    "advanced": "Profi-Modus",
+    "legal-notice": "Impressum",
+    "privacy-policy": "Datenschutz"
+  },
+  "labels": {
+    "enableDarkMode": "Dark Mode aktivieren",
+    "clickHere": "Hier klicken",
+    "showCode": "Quellcode anzeigen",
+    "hideCode": "Quellcode ausblenden",
+    "dateInput": "Termin Details",
+    "layoutInput": "Layout-Einstellungen"
+  },
+  "meta": {
+    "titleSlug": "Termine teilen leicht gemacht - kostenfrei",
+    "keywords": "Kalender, Event, Veranstaltung, teilen, Button, Script, Skript, Widget, RSVP, Javascript, Angular, React, Vue, Svelte, Astro, Web Component, Outlook, iCal, Microsoft, Teams, Apple, Google, Yahoo, free, kostenlos",
+    "description": "Interaktive Demo sowie Tutorials für die Integration in alle großen Web-Frameworks. Speichere unkompliziert Events im Kalender deiner Nutzer."
+  },
+  "content": {
+    "404RealContent": "Alle Inhalte erreichst du am besten über die Startseite."
+  }
+}

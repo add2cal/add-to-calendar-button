@@ -1,5 +1,17 @@
 # ⚡ Changelog (without patches)
 
+## Version 2
+
+- v2.0 : "all" new version 2
+  - new license: ELv2
+  - potential breaks:
+    - backwards compatibility for old schema.org support (< v1.10) and parameter names prior v1.4 are no longer supported
+    - some rather rarely used parameters have changed (name and direction):
+      - background -> hideBackground
+      - checkmark -> hideCheckmark
+      - richData -> hideRichData
+    
+
 ## Version 1
 
 - v1.18 : multi-date functionality, subscription support, busy/free option, style updates, code refactoring, timezone database update

@@ -1,6 +1,5 @@
 {
   "proseWrap": "preserve",
-  "printWidth": 110,
   "embeddedLanguageFormatting": "off",
   "useTabs": false,
   "singleQuote": true,
