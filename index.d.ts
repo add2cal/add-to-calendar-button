@@ -34,7 +34,7 @@ declare module 'add-to-calendar-button' {
       recurrence?: string;
       recurrence_interval?: bigint;
       recurrence_until?: string;
-      recurrence_count?: string;
+      recurrence_count?: bigint;
       recurrence_byDay?: string;
       recurrence_byMonth?: string;
       recurrence_byMonthDay?: string;

@@ -27,6 +27,7 @@
     "@headlessui/vue": "^1.7.4",
     "@heroicons/vue": "^2.0.13",
     "prismjs": "^1.29.0",
+    "timezones-ical-library": "^1.5.0",
     "vue": "^3.2.41",
     "vue-i18n": "^9.2.2",
     "vue-router": "^4.1.5"
