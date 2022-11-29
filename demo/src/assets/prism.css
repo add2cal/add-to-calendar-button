@@ -1,4 +1,5 @@
 /* PrismJS 1.29.0 */
+
 /* custom theme based on prism.js default theme for JavaScript, CSS and HTML (by Lea Verou), which is based on dabblet (http://dabblet.com) */
 
 /******************************
@@ -38,6 +39,7 @@ html.atcb-dark {
 code[class*="language-"],
 pre[class*="language-"] {
   @apply text-black dark:text-text-dark;
+
   font-size: 14px;
   text-align: left;
   white-space: pre;
@@ -130,6 +132,7 @@ pre[class*="language-"] {
 .token.bold {
   font-weight: bold;
 }
+
 .token.italic {
   font-style: italic;
 }
@@ -144,6 +147,7 @@ pre[class*="language-"] {
 
 pre[class*="language-"].line-numbers {
   @apply md:pl-12;
+
   position: relative;
   counter-reset: linenumber;
 }
@@ -155,6 +159,7 @@ pre[class*="language-"].line-numbers > code {
 
 .line-numbers .line-numbers-rows {
   @apply -left-9 hidden md:block;
+
   position: absolute;
   pointer-events: none;
   top: 0;
@@ -175,7 +180,7 @@ pre[class*="language-"].line-numbers > code {
     text-align: right;
   }
 
-    .line-numbers-rows > span:before {
+    .line-numbers-rows > span::before {
       content: counter(linenumber);
       color: var(--code-line-numbers);
       display: block;
@@ -228,21 +233,11 @@ div.code-toolbar > .toolbar > .toolbar-item > a,
 div.code-toolbar > .toolbar > .toolbar-item > button,
 div.code-toolbar > .toolbar > .toolbar-item > span {
   @apply bg-zinc-200 text-zinc-500 dark:bg-zinc-700 dark:text-zinc-300;
+
   font-size: 13px;
   padding: 4px 6px;
   box-shadow: 0 1px 4px rgba(0 0 0 / 40%);
   border-radius: 5px;
-}
-
-div.code-toolbar > .toolbar > .toolbar-item > a:hover,
-div.code-toolbar > .toolbar > .toolbar-item > a:focus,
-div.code-toolbar > .toolbar > .toolbar-item > button:hover,
-div.code-toolbar > .toolbar > .toolbar-item > button:focus,
-div.code-toolbar > .toolbar > .toolbar-item > span:hover,
-div.code-toolbar > .toolbar > .toolbar-item > span:focus {
-  @apply bg-zinc-500 text-zinc-100 dark:bg-zinc-800 dark:text-zinc-100;
-  text-decoration: none;
-  box-shadow: 1px 2px 8px 0 rgba(0 0 0 / 50%);
 }
 
 div.code-toolbar > .toolbar > .toolbar-item > button > span {
@@ -255,4 +250,16 @@ div.code-toolbar > .toolbar > .toolbar-item > button > span > svg {
   height: 100%;
   fill: currentcolor;
   width: auto;
+}
+
+div.code-toolbar > .toolbar > .toolbar-item > a:hover,
+div.code-toolbar > .toolbar > .toolbar-item > a:focus,
+div.code-toolbar > .toolbar > .toolbar-item > button:hover,
+div.code-toolbar > .toolbar > .toolbar-item > button:focus,
+div.code-toolbar > .toolbar > .toolbar-item > span:hover,
+div.code-toolbar > .toolbar > .toolbar-item > span:focus {
+  @apply bg-zinc-500 text-zinc-100 dark:bg-zinc-800 dark:text-zinc-100;
+
+  text-decoration: none;
+  box-shadow: 1px 2px 8px 0 rgba(0 0 0 / 50%);
 }

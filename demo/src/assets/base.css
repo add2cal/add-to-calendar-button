@@ -3,7 +3,6 @@
 @tailwind utilities;
 
 @layer base {
-
   /* paytone-one-regular - latin */
   @font-face {
     font-display: swap;
@@ -95,6 +94,7 @@
   /* base style */
   body {
     @apply bg-background text-text dark:bg-background-dark dark:text-text-dark transition-colors;
+
     box-sizing: border-box;
     font-family: Inter, Arial, sans-serif;
     font-size: 16px;
@@ -121,6 +121,7 @@
 
   h3 {
     @apply text-left md:text-center;
+
     font-size: 1.2em;
     font-weight: 800;
     line-height: 1.2em;
@@ -129,6 +130,7 @@
   a {
     font-weight: 600;
   }
+
   a:hover {
     text-decoration: underline;
   }
@@ -144,11 +146,13 @@
       transform: translateY(-10%);
       animation-timing-function: cubic-bezier(0.8,0,1,1);
     }
+
     50% {
       transform: none;
       animation-timing-function: cubic-bezier(0,0,0.2,1);
     }
   }
+  
   .animate-bounce-minimal {
     animation: bounce-minimal 2s infinite;
   }
