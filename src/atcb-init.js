@@ -26,17 +26,18 @@ import {
 let atcbInitialGlobalInit = false;
 let atcbBtnCount = 0;
 const lightModeMutationObserver = [];
-let template;
 
+const template = `<div class="atcb-initialized" style="display:none;position:relative;max-width:max-content;"></div>`;
+
+// we cannot load the custom element server-side - therefore, we check for a browser environment first
 if (isBrowser()) {
-  template = document.createElement('template');
-  template.innerHTML = `<div class="atcb-initialized" style="display:none;position:relative;max-width:max-content;"></div>`;
-
   class AddToCalendarButton extends HTMLElement {
     constructor() {
       super();
+      const elem = document.createElement('template')
+      elem.innerHTML = template
       this.attachShadow({ mode: 'open', delegateFocus: true });
-      this.shadowRoot.append(template.content.cloneNode(true));
+      this.shadowRoot.append(elem.content.cloneNode(true));
       this.initialized = false;
       this.data = {};
       this.error = false;

@@ -5,7 +5,7 @@ const execSync = require('child_process').execSync;
 
 // preparing the files
 try {
-  execSync('npm run build', { stdio: [0, 1, 2] });
+  execSync('npm run build:core', { stdio: [0, 1, 2] });
 } catch (error) {
   console.log('\n\nERROR: Something went wrong with the npm build script while testing!\n\n');
   throw error;

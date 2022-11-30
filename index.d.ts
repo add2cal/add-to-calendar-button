@@ -1,5 +1,4 @@
 declare module 'add-to-calendar-button' {
-  export default AddToCalendarButton;
   export function atcb_action(
     config: {
       proKey?: string;

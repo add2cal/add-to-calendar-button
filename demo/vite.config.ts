@@ -85,15 +85,15 @@ export default defineConfig({
         ],
         screenshots: [
           {
-            src: './assets/img/website1×1.png',
+            src: './assets/img/website1x1.png',
             sizes: '1920x1920',
           },
           {
-            src: './assets/img/website4×3.png',
+            src: './assets/img/website4x3.png',
             sizes: '1920x1440',
           },
           {
-            src: './assets/img/website16×9.png',
+            src: './assets/img/website16x9.png',
             sizes: '1920x1080',
           },
         ],

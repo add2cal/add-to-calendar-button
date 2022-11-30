@@ -167,7 +167,6 @@ module.exports = function (grunt) {
       newBuild: {
         files: {
           'dist/atcb.js': ['dist/atcb.js'],
-          'demo_assets/js/demopage.min.js': ['demo_assets/js/demopage.js'],
         },
       },
     },

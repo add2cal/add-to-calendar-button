@@ -2,8 +2,9 @@
 
 This sub-repository holds the demo page for the [Add to Calendar Button](https://add-to-calendar-button.com/).
 
-It is built with Vue 3 and includes the button script directly from the parent repository via the npm workspaces config. Therefore, mind to not see the source code as the demo, but the underlying rendered website and its content!
-Check the package.json scripts from the parent repository! Everything also includes the demo, while there is even a specific build script on that level. You could also solely work within this sub-repository, but mind that this would then not affect the parent at all (maybe sometimes this is the intention).
+It is built with Vue 3 and includes the button script directly from the parent repository via the npm workspaces config.
+Therefore, you can not use this sub-repository standalone!
+But you also don't need to. You can call the important npm commands directly from the root. Check the package.json scripts from the parent repository! 
 
 Contributing to this demo page follows the same rules as with the parent repository ([see rules here](../.github/CONTRIBUTING.md)) and also follows the same license. For a better start, also see the Vue guide below.
 
@@ -34,7 +35,12 @@ See [Vite Configuration Reference](https://vitejs.dev/config/).
 
 ## Project Setup
 
+Assuming you start at the root.
+
 ```sh
+npm install
+npm run build:core
+cd demo
 npm install
 ```
 
