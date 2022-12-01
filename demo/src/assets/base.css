@@ -141,6 +141,11 @@
     font-family: 'Fira Mono', Consolas, Courier, monospace;
   }
 
+  label.required:after {
+    content: "*";
+    color: #b91d1b;
+  }
+
   @keyframes bounce-minimal {
     0%, 100% {
       transform: translateY(-10%);

@@ -4,6 +4,8 @@ import LightModeSwitch from "@/components/LightModeSwitch.vue";
 import { EyeIcon, EyeSlashIcon } from '@heroicons/vue/24/outline';
 import "add-to-calendar-button";
 import CodeBlock from "@/components/CodeBlock.vue";
+import DateProps from "@/components/playground/input/DateProps.vue";
+import LayoutProps from "@/components/playground/input/LayoutProps.vue";
 import { useI18n } from 'vue-i18n'
 const { t } = useI18n();
 
@@ -20,7 +22,7 @@ const showCode = ref(false);
       >
         {{ t('labels.dateInput') }}
       </div>
-      Input fields ...
+      <DateProps />
     </div>
     <div
       id="rendering"
