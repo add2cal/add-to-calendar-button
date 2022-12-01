@@ -117,7 +117,9 @@ if (isBrowser()) {
       atcb_cleanup(this.shadowRoot, this.data);
       this.data = {};
       this.shadowRoot.querySelector('.atcb-initialized').remove();
-      this.shadowRoot.append(template.content.cloneNode(true));
+      const elem = document.createElement('template');
+      elem.innerHTML = template;
+      this.shadowRoot.append(elem.content.cloneNode(true));
       this.shadowRoot.querySelector('style').remove();
       try {
         this.data = atcb_read_attributes(this);
