@@ -775,8 +775,8 @@ a.atcb-modal-btn:focus-visible {
 }
 
 .atcb-button.atcb-active:not(.atcb-modal-style, .atcb-dropoverlay) .atcb-checkmark,
-.atcb-button.atcb-single:focus .atcb-checkmark,
-.atcb-button.atcb-single:hover .atcb-checkmark {
+.atcb-button:focus .atcb-checkmark,
+.atcb-button:hover .atcb-checkmark {
   top: -1.07em;
   right: -0.17em;
 }
