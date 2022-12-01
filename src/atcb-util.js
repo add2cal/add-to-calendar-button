@@ -75,13 +75,7 @@ function atcb_generate_time(data, style = 'delimiters', targetCal = 'general', a
     // if a time zone is given, we adjust the diverse cases
     // (see https://tz.add-to-calendar-technology.com/api/zones.json for available TZ names)
     if (data.timeZone != null && data.timeZone != '') {
-      if (
-        targetCal == 'ical' ||
-        (targetCal == 'google' &&
-          !/(GMT[+|-]\d{1,2}|Etc\/U|Etc\/Zulu|CET|CST6CDT|EET|EST|EST5EDT|MET|MST|MST7MDT|PST8PDT|WET)/i.test(
-            data.timeZone
-          ))
-      ) {
+      if (targetCal == 'ical' || (targetCal == 'google' && !/(GMT[+|-]\d{1,2}|Etc\/U|Etc\/Zulu|CET|CST6CDT|EET|EST|EST5EDT|MET|MST|MST7MDT|PST8PDT|WET)/i.test(data.timeZone))) {
         // in the iCal case, we simply return and cut off the Z. Same applies to Google, except for GMT +/- time zones, which are not supported there.
         // everything else will be done by injecting the VTIMEZONE block at the iCal function
         return {
@@ -107,14 +101,8 @@ function atcb_generate_time(data, style = 'delimiters', targetCal = 'general', a
       }
       // in other cases, we substract the offset from the dates
       // (substraction to reflect the fact that the user assumed his timezone and to convert to UTC; since calendars assume UTC and add offsets again)
-      const calcOffsetStart =
-        parseInt(offsetStart[0] + 1) *
-        -1 *
-        ((parseInt(offsetStart.substr(1, 2)) * 60 + parseInt(offsetStart.substr(3, 2))) * 60 * 1000);
-      const calcOffsetEnd =
-        parseInt(offsetEnd[0] + 1) *
-        -1 *
-        ((parseInt(offsetEnd.substr(1, 2)) * 60 + parseInt(offsetEnd.substr(3, 2))) * 60 * 1000);
+      const calcOffsetStart = parseInt(offsetStart[0] + 1) * -1 * ((parseInt(offsetStart.substr(1, 2)) * 60 + parseInt(offsetStart.substr(3, 2))) * 60 * 1000);
+      const calcOffsetEnd = parseInt(offsetEnd[0] + 1) * -1 * ((parseInt(offsetEnd.substr(1, 2)) * 60 + parseInt(offsetEnd.substr(3, 2))) * 60 * 1000);
       newStartDate.setTime(newStartDate.getTime() + calcOffsetStart);
       newEndDate.setTime(newEndDate.getTime() + calcOffsetEnd);
     }
@@ -159,9 +147,7 @@ function atcb_format_datetime(datetime, style = 'delimiters', includeTime = true
     }
     return /T(\d{2}:\d{2}:\d{2}\.\d{3})Z/g;
   })();
-  const output = removeZ
-    ? datetime.toISOString().replace(regex, '').replace('Z', '')
-    : datetime.toISOString().replace(regex, '');
+  const output = removeZ ? datetime.toISOString().replace(regex, '').replace('Z', '') : datetime.toISOString().replace(regex, '');
   return output;
 }
 
@@ -179,15 +165,9 @@ function atcb_secure_content(data, isJSON = true) {
 
 // SHARED FUNCTION TO SECURE URLS
 function atcb_secure_url(url, throwError = true) {
-  if (
-    url.match(
-      /((\.\.\/)|(\.\.\\)|(%2e%2e%2f)|(%252e%252e%252f)|(%2e%2e\/)|(%252e%252e\/)|(\.\.%2f)|(\.\.%252f)|(%2e%2e%5c)|(%252e%252e%255c)|(%2e%2e\\)|(%252e%252e\\)|(\.\.%5c)|(\.\.%255c)|(\.\.%c0%af)|(\.\.%25c0%25af)|(\.\.%c1%9c)|(\.\.%25c1%259c))/gi
-    )
-  ) {
+  if (url.match(/((\.\.\/)|(\.\.\\)|(%2e%2e%2f)|(%252e%252e%252f)|(%2e%2e\/)|(%252e%252e\/)|(\.\.%2f)|(\.\.%252f)|(%2e%2e%5c)|(%252e%252e%255c)|(%2e%2e\\)|(%252e%252e\\)|(\.\.%5c)|(\.\.%255c)|(\.\.%c0%af)|(\.\.%25c0%25af)|(\.\.%c1%9c)|(\.\.%25c1%259c))/gi)) {
     if (throwError) {
-      console.error(
-        'Seems like the generated URL includes at least one security issue and got blocked. Please check the calendar button parameters!'
-      );
+      console.error('Seems like the generated URL includes at least one security issue and got blocked. Please check the calendar button parameters!');
     }
     return false;
   } else {
@@ -229,9 +209,7 @@ function atcb_rewrite_html_elements(content, clear = false) {
           return urlText[0];
         }
       })();
-      return (
-        '<a href="' + urlText[0] + '" target="' + atcbDefaultTarget + '" rel="noopener">' + text + '</a>'
-      );
+      return '<a href="' + urlText[0] + '" target="' + atcbDefaultTarget + '" rel="noopener">' + text + '</a>';
     });
   }
   return content;
@@ -258,13 +236,7 @@ function atcb_position_list(host, trigger, list, blockUpwards = false, resize = 
     list.style.width = listDim.width + 'px';
     // in the regular case, we also check for the ideal direction
     // not in the !blockUpwards case and not if there is not enough space above
-    if (
-      (list.classList.contains('atcb-dropup') && resize) ||
-      (!blockUpwards &&
-        !resize &&
-        triggerDim.top + listDim.height > viewportHeight - 20 &&
-        2 * btnDim.top + btnDim.height - triggerDim.top - listDim.height > 20)
-    ) {
+    if ((list.classList.contains('atcb-dropup') && resize) || (!blockUpwards && !resize && triggerDim.top + listDim.height > viewportHeight - 20 && 2 * btnDim.top + btnDim.height - triggerDim.top - listDim.height > 20)) {
       originalTrigger.classList.add('atcb-dropup');
       list.classList.add('atcb-dropup');
       //list.style.bottom = btnDim.top + ((btnDim.top + btnDim.height) - triggerDim.top) + 'px';
@@ -278,17 +250,12 @@ function atcb_position_list(host, trigger, list, blockUpwards = false, resize = 
     // read trigger dimensions again, since after adjusting the top value of the list, something might have changed (e.g. re-adjustment due to missing scrollbars at this point in time)
     triggerDim = trigger.getBoundingClientRect();
     list.style.minWidth = triggerDim.width + 'px';
-    if (
-      (list.classList.contains('atcb-dropdown') && !list.classList.contains('atcb-style-round')) ||
-      list.classList.contains('atcb-style-text') ||
-      list.classList.contains('atcb-style-neumorphism')
-    ) {
+    if ((list.classList.contains('atcb-dropdown') && !list.classList.contains('atcb-style-round')) || list.classList.contains('atcb-style-text') || list.classList.contains('atcb-style-neumorphism')) {
       list.style.maxWidth = triggerDim.width + 'px';
     }
     // read list dimensions again, since we altered the width in the step before
     listDim = list.getBoundingClientRect();
-    list.style.left =
-      Math.round(triggerDim.left - btnParentDim.left - (listDim.width - triggerDim.width) / 2) + 'px';
+    list.style.left = Math.round(triggerDim.left - btnParentDim.left - (listDim.width - triggerDim.width) / 2) + 'px';
   } else {
     // when there is no anchor set (only the case with custom implementations) or the listStyle is set respectively (overlay), we render the modal centered above the trigger
     list.style.minWidth = btnDim.width + 20 + 'px';
@@ -296,8 +263,7 @@ function atcb_position_list(host, trigger, list, blockUpwards = false, resize = 
     const listDim = list.getBoundingClientRect();
     list.style.width = listDim.width + 'px';
     const sideMargin = Math.round((btnDim.width - listDim.width) / 2);
-    list.style.margin =
-      -Math.round((listDim.height + btnDim.height) / 2) + 'px ' + sideMargin + 'px 0 ' + sideMargin + 'px';
+    list.style.margin = -Math.round((listDim.height + btnDim.height) / 2) + 'px ' + sideMargin + 'px 0 ' + sideMargin + 'px';
   }
   // changing the list's position back to absolute
   list.style.position = 'absolute';
@@ -355,9 +321,7 @@ function atcb_set_sizes(el, sizes) {
 // SHARED FUNCTION TO GENERATE UUIDs
 function atcb_generate_uuid() {
   //return crypto.randomUUID(); // lacking support of Safari < 15.4 and Firefox < 95, which is to important for now
-  return ([1e7] + -1e3 + -4e3 + -8e3 + -1e11).replace(/[018]/g, (c) =>
-    (c ^ (crypto.getRandomValues(new Uint8Array(1))[0] & (15 >> (c / 4)))).toString(16)
-  );
+  return ([1e7] + -1e3 + -4e3 + -8e3 + -1e11).replace(/[018]/g, (c) => (c ^ (crypto.getRandomValues(new Uint8Array(1))[0] & (15 >> (c / 4)))).toString(16));
 }
 
 // SHARED FUNCTION TO COPY TO CLIPBOARD
@@ -396,7 +360,7 @@ function atcb_debounce(func, timeout = 200) {
     timer = setTimeout(() => {
       func.apply(this, args);
     }, timeout);
-  }
+  };
 }
 // dropping subsequent calls debounce
 function atcb_debounce_leading(func, timeout = 300) {
@@ -409,7 +373,7 @@ function atcb_debounce_leading(func, timeout = 300) {
     timer = setTimeout(() => {
       timer = undefined;
     }, timeout);
-  }
+  };
 }
 
 export {

@@ -41,22 +41,11 @@ function atcb_check_required(data, throwError = true) {
       for (let i = 0; i < data.dates.length; i++) {
         // if a field is missing, for flexible fields, we also need to check, whether they might be present globally (fallback for them)
         if (
-          (!requiredMultiFieldFlex.includes(`${field}`) &&
-            (data.dates[`${i}`][`${field}`] == null || data.dates[`${i}`][`${field}`] == '')) ||
-          (requiredMultiFieldFlex.includes(`${field}`) &&
-            (data.dates[`${i}`][`${field}`] == null || data.dates[`${i}`][`${field}`] == '') &&
-            (data[`${field}`] == null || data[`${field}`] == ''))
+          (!requiredMultiFieldFlex.includes(`${field}`) && (data.dates[`${i}`][`${field}`] == null || data.dates[`${i}`][`${field}`] == '')) ||
+          (requiredMultiFieldFlex.includes(`${field}`) && (data.dates[`${i}`][`${field}`] == null || data.dates[`${i}`][`${field}`] == '') && (data[`${field}`] == null || data[`${field}`] == ''))
         ) {
           if (throwError) {
-            throw new Error(
-              'Add to Calendar Button generation failed: required setting missing [dates array object #' +
-                (i + 1) +
-                '/' +
-                data.dates.length +
-                '] => [' +
-                field +
-                ']'
-            );
+            throw new Error('Add to Calendar Button generation failed: required setting missing [dates array object #' + (i + 1) + '/' + data.dates.length + '] => [' + field + ']');
           }
           return false;
         }
@@ -68,9 +57,7 @@ function atcb_check_required(data, throwError = true) {
     return requiredSingleField.every(function (field) {
       if (data[`${field}`] == null || data[`${field}`] == '') {
         if (throwError) {
-          throw new Error(
-            'Add to Calendar Button generation failed: required setting missing [' + field + ']'
-          );
+          throw new Error('Add to Calendar Button generation failed: required setting missing [' + field + ']');
         }
         return false;
       }
@@ -121,11 +108,7 @@ function atcb_validate_buttonStyle(data, msgPrefix) {
     console.error(msgPrefix + ' failed: provided buttonStyle invalid');
     return false;
   }
-  if (
-    data.customCss != null &&
-    data.customCss != '' &&
-    (!atcb_secure_url(data.customCss, false) || !/\.css$/m.test(data.customCss))
-  ) {
+  if (data.customCss != null && data.customCss != '' && (!atcb_secure_url(data.customCss, false) || !/\.css$/m.test(data.customCss))) {
     console.error(msgPrefix + ' failed: customCss provided, but no valid url');
     return false;
   }
@@ -148,10 +131,7 @@ function atcb_validate_subscribe(data, msgPrefix) {
 // validate created input
 function atcb_validate_created(data, msgPrefix) {
   if (!/^\d{8}T\d{6}Z$/.test(data.created)) {
-    console.error(
-      msgPrefix +
-        ' failed: created date format not valid. Needs to be a full ISO-8601 UTC date and time string, formatted YYYYMMDDTHHMMSSZ'
-    );
+    console.error(msgPrefix + ' failed: created date format not valid. Needs to be a full ISO-8601 UTC date and time string, formatted YYYYMMDDTHHMMSSZ');
     return false;
   }
   return true;
@@ -160,10 +140,7 @@ function atcb_validate_created(data, msgPrefix) {
 // validate updated input
 function atcb_validate_updated(data, msgPrefix) {
   if (!/^\d{8}T\d{6}Z$/.test(data.updated)) {
-    console.error(
-      msgPrefix +
-        ' failed: updated date format not valid. Needs to be a full ISO-8601 UTC date and time string, formatted YYYYMMDDTHHMMSSZ'
-    );
+    console.error(msgPrefix + ' failed: updated date format not valid. Needs to be a full ISO-8601 UTC date and time string, formatted YYYYMMDDTHHMMSSZ');
     return false;
   }
   return true;
@@ -209,14 +186,8 @@ function atcb_validate_date_blocks(data, msgPrefix) {
 
 // validate status
 function atcb_validate_status(data, msgPrefix, i, msgSuffix) {
-  if (
-    data.dates[`${i}`].status != 'TENTATIVE' &&
-    data.dates[`${i}`].status != 'CONFIRMED' &&
-    data.dates[`${i}`].status != 'CANCELLED'
-  ) {
-    console.error(
-      msgPrefix + ' failed: event status needs to be TENTATIVE, CONFIRMED, or CANCELLED' + msgSuffix
-    );
+  if (data.dates[`${i}`].status != 'TENTATIVE' && data.dates[`${i}`].status != 'CONFIRMED' && data.dates[`${i}`].status != 'CANCELLED') {
+    console.error(msgPrefix + ' failed: event status needs to be TENTATIVE, CONFIRMED, or CANCELLED' + msgSuffix);
     return false;
   }
   return true;
@@ -224,12 +195,7 @@ function atcb_validate_status(data, msgPrefix, i, msgSuffix) {
 
 // validate availability
 function atcb_validate_availability(data, msgPrefix, i, msgSuffix) {
-  if (
-    data.dates[`${i}`].availability != null &&
-    data.dates[`${i}`].availability != '' &&
-    data.dates[`${i}`].availability != 'free' &&
-    data.dates[`${i}`].availability != 'busy'
-  ) {
+  if (data.dates[`${i}`].availability != null && data.dates[`${i}`].availability != '' && data.dates[`${i}`].availability != 'free' && data.dates[`${i}`].availability != 'busy') {
     console.error(msgPrefix + ' failed: event availability needs to be "free" or "busy"' + msgSuffix);
     return false;
   }
@@ -240,17 +206,8 @@ function atcb_validate_availability(data, msgPrefix, i, msgSuffix) {
 function atcb_validate_organizer(data, msgPrefix, i, msgSuffix) {
   if (data.dates[`${i}`].organizer != null && data.dates[`${i}`].organizer != '') {
     const organizerParts = data.dates[`${i}`].organizer.split('|');
-    if (
-      organizerParts.length != 2 ||
-      organizerParts[0].length > 50 ||
-      organizerParts[1].length > 80 ||
-      !atcb_validEmail(organizerParts[1])
-    ) {
-      console.error(
-        msgPrefix +
-          ' failed: organizer needs to match the schema "NAME|EMAIL" with a valid email address' +
-          msgSuffix
-      );
+    if (organizerParts.length != 2 || organizerParts[0].length > 50 || organizerParts[1].length > 80 || !atcb_validEmail(organizerParts[1])) {
+      console.error(msgPrefix + ' failed: organizer needs to match the schema "NAME|EMAIL" with a valid email address' + msgSuffix);
       return false;
     }
   }
@@ -261,24 +218,12 @@ function atcb_validate_organizer(data, msgPrefix, i, msgSuffix) {
 function atcb_validate_uid(data, msgPrefix, i, msgSuffix) {
   // must have less then 255 characters and only allowes for alpha characters, numbers, and dashes; see https://icalendar.org/New-Properties-for-iCalendar-RFC-7986/5-3-uid-property.html
   if (!/^(\w|-){1,254}$/.test(data.dates[`${i}`].uid)) {
-    console.warn(
-      msgPrefix +
-        ': UID not valid. May only contain alpha, digits, and dashes; and be less than 255 characters. Falling back to an automated value!' +
-        msgSuffix
-    );
+    console.warn(msgPrefix + ': UID not valid. May only contain alpha, digits, and dashes; and be less than 255 characters. Falling back to an automated value!' + msgSuffix);
     data.dates[`${i}`].uid = atcb_generate_uuid();
   }
   // validate UID for the recommended form, which is not forced, but show throw a warning
-  if (
-    !/^[0-9a-f]{8}-[0-9a-f]{4}-[0-5][0-9a-f]{3}-[089ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(
-      data.dates[`${i}`].uid
-    )
-  ) {
-    console.warn(
-      msgPrefix +
-        ': UID is highly recommended to be a hex-encoded random Universally Unique Identifier (UUID)!' +
-        msgSuffix
-    );
+  if (!/^[0-9a-f]{8}-[0-9a-f]{4}-[0-5][0-9a-f]{3}-[089ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(data.dates[`${i}`].uid)) {
+    console.warn(msgPrefix + ': UID is highly recommended to be a hex-encoded random Universally Unique Identifier (UUID)!' + msgSuffix);
   }
   return true;
 }
@@ -317,15 +262,7 @@ function atcb_validate_datetime(data, msgPrefix, i, msgSuffix) {
       }
       const dateParts = data.dates[`${i}`][`${date}`].split('-');
       if (dateParts.length < 3 || dateParts.length > 3) {
-        console.error(
-          msgPrefix +
-            ' failed: date misspelled [' +
-            date +
-            ': ' +
-            data.dates[`${i}`][`${date}`] +
-            ']' +
-            msgSuffix
-        );
+        console.error(msgPrefix + ' failed: date misspelled [' + date + ': ' + data.dates[`${i}`][`${date}`] + ']' + msgSuffix);
         return false;
       }
       newDate[`${date}`] = new Date(dateParts[0], dateParts[1] - 1, dateParts[2]);
@@ -345,51 +282,23 @@ function atcb_validate_datetime(data, msgPrefix, i, msgSuffix) {
         const timeParts = data.dates[`${i}`][`${time}`].split(':');
         // validate the time parts
         if (timeParts.length < 2 || timeParts.length > 2) {
-          console.error(
-            msgPrefix +
-              ' failed: time misspelled [' +
-              time +
-              ': ' +
-              data.dates[`${i}`][`${time}`] +
-              ']' +
-              msgSuffix
-          );
+          console.error(msgPrefix + ' failed: time misspelled [' + time + ': ' + data.dates[`${i}`][`${time}`] + ']' + msgSuffix);
           return false;
         }
         if (timeParts[0] > 23) {
-          console.error(
-            msgPrefix +
-              ' failed: time misspelled - hours number too high [' +
-              time +
-              ': ' +
-              timeParts[0] +
-              ']' +
-              msgSuffix
-          );
+          console.error(msgPrefix + ' failed: time misspelled - hours number too high [' + time + ': ' + timeParts[0] + ']' + msgSuffix);
           return false;
         }
         if (timeParts[1] > 59) {
-          console.error(
-            msgPrefix +
-              ' failed: time misspelled - minutes number too high [' +
-              time +
-              ': ' +
-              timeParts[1] +
-              ']' +
-              msgSuffix
-          );
+          console.error(msgPrefix + ' failed: time misspelled - minutes number too high [' + time + ': ' + timeParts[1] + ']' + msgSuffix);
           return false;
         }
         // update the date with the time for further validation steps
         if (time == 'startTime') {
-          newDate.startDate = new Date(
-            newDate.startDate.getTime() + timeParts[0] * 3600000 + timeParts[1] * 60000
-          );
+          newDate.startDate = new Date(newDate.startDate.getTime() + timeParts[0] * 3600000 + timeParts[1] * 60000);
         }
         if (time == 'endTime') {
-          newDate.endDate = new Date(
-            newDate.endDate.getTime() + timeParts[0] * 3600000 + timeParts[1] * 60000
-          );
+          newDate.endDate = new Date(newDate.endDate.getTime() + timeParts[0] * 3600000 + timeParts[1] * 60000);
         }
       }
       return true;
@@ -397,13 +306,8 @@ function atcb_validate_datetime(data, msgPrefix, i, msgSuffix) {
   ) {
     return false;
   }
-  if (
-    (data.dates[`${i}`].startTime != null && data.dates[`${i}`].endTime == null) ||
-    (data.dates[`${i}`].startTime == null && data.dates[`${i}`].endTime != null)
-  ) {
-    console.error(
-      msgPrefix + ' failed: if you set a starting time, you also need to define an end time' + msgSuffix
-    );
+  if ((data.dates[`${i}`].startTime != null && data.dates[`${i}`].endTime == null) || (data.dates[`${i}`].startTime == null && data.dates[`${i}`].endTime != null)) {
+    console.error(msgPrefix + ' failed: if you set a starting time, you also need to define an end time' + msgSuffix);
     return false;
   }
   // validate whether end is not before start
@@ -427,19 +331,11 @@ function atcb_validate_rrule(data, msgPrefix) {
     return false;
   }
   // also validate the more easy recurrence settings, since any error there would be also hidden in the RRULE
-  if (
-    data.recurrence_interval != null &&
-    data.recurrence_interval != '' &&
-    !/^\d+$/.test(data.recurrence_interval)
-  ) {
+  if (data.recurrence_interval != null && data.recurrence_interval != '' && !/^\d+$/.test(data.recurrence_interval)) {
     console.error(msgPrefix + ' failed: recurrence data (interval) misspelled');
     return false;
   }
-  if (
-    data.recurrence_until != null &&
-    data.recurrence_until != '' &&
-    !/^(\d|-|:)+$/i.test(data.recurrence_until)
-  ) {
+  if (data.recurrence_until != null && data.recurrence_until != '' && !/^(\d|-|:)+$/i.test(data.recurrence_until)) {
     console.error(msgPrefix + ' failed: recurrence data (until) misspelled');
     return false;
   }
@@ -447,35 +343,19 @@ function atcb_validate_rrule(data, msgPrefix) {
     console.error(msgPrefix + ' failed: recurrence data (interval) misspelled');
     return false;
   }
-  if (
-    data.recurrence_byMonth != null &&
-    data.recurrence_byMonth != '' &&
-    !/^(\d|,)+$/.test(data.recurrence_byMonth)
-  ) {
+  if (data.recurrence_byMonth != null && data.recurrence_byMonth != '' && !/^(\d|,)+$/.test(data.recurrence_byMonth)) {
     console.error(msgPrefix + ' failed: recurrence data (byMonth) misspelled');
     return false;
   }
-  if (
-    data.recurrence_byMonthDay != null &&
-    data.recurrence_byMonthDay != '' &&
-    !/^(\d|,)+$/.test(data.recurrence_byMonthDay)
-  ) {
+  if (data.recurrence_byMonthDay != null && data.recurrence_byMonthDay != '' && !/^(\d|,)+$/.test(data.recurrence_byMonthDay)) {
     console.error(msgPrefix + ' failed: recurrence data (byMonthDay) misspelled');
     return false;
   }
-  if (
-    data.recurrence_byDay != null &&
-    data.recurrence_byDay != '' &&
-    !/^(\d|-|MO|TU|WE|TH|FR|SA|SU|,)+$/im.test(data.recurrence_byDay)
-  ) {
+  if (data.recurrence_byDay != null && data.recurrence_byDay != '' && !/^(\d|-|MO|TU|WE|TH|FR|SA|SU|,)+$/im.test(data.recurrence_byDay)) {
     console.error(msgPrefix + ' failed: recurrence data (byDay) misspelled');
     return false;
   }
-  if (
-    data.recurrence_weekstart != null &&
-    data.recurrence_weekstart != '' &&
-    !/^(MO|TU|WE|TH|FR|SA|SU)$/im.test(data.recurrence_weekstart)
-  ) {
+  if (data.recurrence_weekstart != null && data.recurrence_weekstart != '' && !/^(MO|TU|WE|TH|FR|SA|SU)$/im.test(data.recurrence_weekstart)) {
     console.error(msgPrefix + ' failed: recurrence data (weekstart) misspelled');
     return false;
   }

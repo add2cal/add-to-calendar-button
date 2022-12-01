@@ -29,8 +29,6 @@ function atcb_decorate_data(data) {
   return data;
 }
 
-
-
 // setting boolean parameters right, since they can be provided or not
 function atcb_decorate_data_boolean(data) {
   for (let i = 0; i < atcbWcBooleanParams.length; i++) {
@@ -74,35 +72,19 @@ function atcb_decorate_data_rrule(data) {
           data.recurrence_interval = 1;
         }
         // set weekstart if not given
-        if (
-          data.recurrence_weekstart == null ||
-          (data.recurrence_weekstart == '') | (data.recurrence_weekstart.length > 2)
-        ) {
+        if (data.recurrence_weekstart == null || (data.recurrence_weekstart == '') | (data.recurrence_weekstart.length > 2)) {
           data.recurrence_weekstart = 'MO';
         }
         // save frequency before overriding the main recurrence data
         data.recurrence_frequency = data.recurrence;
         // generate the RRULE from easy rules
-        data.recurrence =
-          'RRULE:FREQ=' +
-          data.recurrence +
-          ';WKST=' +
-          data.recurrence_weekstart +
-          ';INTERVAL=' +
-          data.recurrence_interval;
+        data.recurrence = 'RRULE:FREQ=' + data.recurrence + ';WKST=' + data.recurrence_weekstart + ';INTERVAL=' + data.recurrence_interval;
         // TODO: If "until" is given, translate it into a "count" and remove the "until" (here and in the above block). This would be way more stable!
         if (data.recurrence_until != null && data.recurrence_until != '') {
           if (data.endTime != null && data.endTime != '') {
-            data.recurrence =
-              data.recurrence +
-              ';UNTIL=' +
-              data.recurrence_until.replace(/-/g, '').slice(0, 8) +
-              'T' +
-              data.endTime.replace(':', '') +
-              '00';
+            data.recurrence = data.recurrence + ';UNTIL=' + data.recurrence_until.replace(/-/g, '').slice(0, 8) + 'T' + data.endTime.replace(':', '') + '00';
           } else {
-            data.recurrence =
-              data.recurrence + ';UNTIL=' + data.recurrence_until.replace(/-/g, '').slice(0, 8);
+            data.recurrence = data.recurrence + ';UNTIL=' + data.recurrence_until.replace(/-/g, '').slice(0, 8);
           }
         }
         if (data.recurrence_count != null && data.recurrence_count != '') {
@@ -148,12 +130,7 @@ function atcb_decorate_data_options(data) {
     // and in the subscribe case, we also skip options, which are not made for subscribing (MS Teams)
     if (
       (isiOS() && atcbiOSInvalidOptions.includes(optionName)) ||
-      (data.recurrence != null &&
-        data.recurrence != '' &&
-        (!atcbValidRecurrOptions.includes(optionName) ||
-          (data.recurrence_until != null &&
-            data.recurrence_until != '' &&
-            (optionName == 'apple' || optionName == 'ical')))) ||
+      (data.recurrence != null && data.recurrence != '' && (!atcbValidRecurrOptions.includes(optionName) || (data.recurrence_until != null && data.recurrence_until != '' && (optionName == 'apple' || optionName == 'ical')))) ||
       (data.subscribe && atcbInvalidSubscribeOptions.includes(optionName))
     ) {
       continue;
@@ -177,12 +154,7 @@ function atcb_decorate_data_style(data) {
   }
   // set button style and force click on styles, where the dropdown is not attached to the button
   if (data.buttonStyle != null && data.buttonStyle != '' && data.buttonStyle != 'default') {
-    if (
-      data.buttonStyle == 'round' ||
-      data.buttonStyle == 'text' ||
-      data.buttonStyle == 'date' ||
-      data.buttonStyle == 'neumorphism'
-    ) {
+    if (data.buttonStyle == 'round' || data.buttonStyle == 'text' || data.buttonStyle == 'date' || data.buttonStyle == 'neumorphism') {
       data.trigger = 'click';
     }
     // for the date style, we even block the dropdown completely and fall back to overlay
@@ -193,12 +165,7 @@ function atcb_decorate_data_style(data) {
     data.buttonStyle = 'default';
   }
   // force overlay when the button label is ommited, but the list labels are not (which would make the list need to be larger than the button) - at dropdown cases
-  if (
-    (data.buttonStyle == 'default' || data.buttonStyle == '3d' || data.buttonStyle == 'flat') &&
-    data.listStyle == 'dropdown' &&
-    !data.hideTextLabelList &&
-    data.hideTextLabelButton
-  ) {
+  if ((data.buttonStyle == 'default' || data.buttonStyle == '3d' || data.buttonStyle == 'flat') && data.listStyle == 'dropdown' && !data.hideTextLabelList && data.hideTextLabelButton) {
     data.listStyle = 'overlay';
   }
   // return result

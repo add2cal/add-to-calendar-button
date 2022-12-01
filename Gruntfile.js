@@ -2,10 +2,7 @@ const fs = require('fs');
 
 function prepareFinalFile(content, stripAllImport = true, stripAllExport = true) {
   // remove TimeZones iCal Library version output (do not do this, if your are using the time zone library standalone!)
-  content = content.replace(
-    /^console\.log\('Add to Calendar TimeZones iCal Library loaded \(version ' \+ tzlibVersion \+ '\)'\);$/m,
-    ''
-  );
+  content = content.replace(/^console\.log\('Add to Calendar TimeZones iCal Library loaded \(version ' \+ tzlibVersion \+ '\)'\);$/m, '');
   // add style inline
   const styleRegex = /const\satcbCssTemplate\s=\s\{\};/;
   if (styleRegex.test(content)) {
@@ -67,19 +64,11 @@ module.exports = function (grunt) {
           prefix: 'Version:.',
         },
         src: ['demo/src/components/FooterArea.vue'],
-      }
+      },
     },
     // cleans old built files
     clean: {
-      oldBuildFiles: [
-        'dist/',
-        'assets/css/*.min.css',
-        'assets/css/*.min.css.map',
-        'demo_assets/css/*.min.css',
-        'demo_assets/css/*.min.css.map',
-        'demo_assets/js/*.js.css',
-        'demo_assets/js/*.min.js.map',
-      ],
+      oldBuildFiles: ['dist/', 'assets/css/*.min.css', 'assets/css/*.min.css.map', 'demo_assets/css/*.min.css', 'demo_assets/css/*.min.css.map', 'demo_assets/js/*.js.css', 'demo_assets/js/*.min.js.map'],
     },
     // minifies the css file
     cssmin: {
@@ -105,18 +94,7 @@ module.exports = function (grunt) {
     // generate the distributable JavaScript files
     concat: {
       main: {
-        src: [
-          'node_modules/timezones-ical-library/dist/tzlib.js',
-          'src/atcb-globals.js',
-          'src/atcb-decorate.js',
-          'src/atcb-validate.js',
-          'src/atcb-control.js',
-          'src/atcb-generate.js',
-          'src/atcb-links.js',
-          'src/atcb-util.js',
-          'src/atcb-i18n.js',
-          'src/atcb-init.js',
-        ],
+        src: ['node_modules/timezones-ical-library/dist/tzlib.js', 'src/atcb-globals.js', 'src/atcb-decorate.js', 'src/atcb-validate.js', 'src/atcb-control.js', 'src/atcb-generate.js', 'src/atcb-links.js', 'src/atcb-util.js', 'src/atcb-i18n.js', 'src/atcb-init.js'],
         dest: 'dist/atcb.js',
         options: {
           stripBanners: true,
@@ -124,22 +102,11 @@ module.exports = function (grunt) {
         },
       },
       module: {
-        src: [
-          'src/atcb-globals.js',
-          'src/atcb-decorate.js',
-          'src/atcb-validate.js',
-          'src/atcb-control.js',
-          'src/atcb-generate.js',
-          'src/atcb-links.js',
-          'src/atcb-util.js',
-          'src/atcb-i18n.js',
-          'src/atcb-init.js',
-        ],
+        src: ['src/atcb-globals.js', 'src/atcb-decorate.js', 'src/atcb-validate.js', 'src/atcb-control.js', 'src/atcb-generate.js', 'src/atcb-links.js', 'src/atcb-util.js', 'src/atcb-i18n.js', 'src/atcb-init.js'],
         dest: 'dist/module/index.js',
         options: {
           stripBanners: true,
-          banner:
-            "import { tzlib_get_ical_block, tzlib_get_offset, tzlib_get_timezones } from 'timezones-ical-library';\r\n",
+          banner: "import { tzlib_get_ical_block, tzlib_get_offset, tzlib_get_timezones } from 'timezones-ical-library';\r\n",
           footer: 'export { atcb_action };',
           process: (content) => prepareFinalFile(content, true, true),
         },

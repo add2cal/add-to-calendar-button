@@ -3,5 +3,6 @@
   "embeddedLanguageFormatting": "off",
   "useTabs": false,
   "singleQuote": true,
-  "arrowParens": "always"
+  "arrowParens": "always",
+  "printWidth": 300
 }

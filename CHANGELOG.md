@@ -10,7 +10,6 @@
       - background -> hideBackground
       - checkmark -> hideCheckmark
       - richData -> hideRichData
-    
 
 ## Version 1
 

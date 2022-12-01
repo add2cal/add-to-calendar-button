@@ -28,11 +28,7 @@ const isBrowser = () => {
 // iOS
 const isiOS = isBrowser()
   ? () => {
-      if (
-        (/iPad|iPhone|iPod/i.test(navigator.userAgent || navigator.vendor || window.opera) &&
-          !window.MSStream) ||
-        (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1)
-      ) {
+      if ((/iPad|iPhone|iPod/i.test(navigator.userAgent || navigator.vendor || window.opera) && !window.MSStream) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1)) {
         return true;
       } else {
         return false;
@@ -76,9 +72,7 @@ const isMobile = () => {
 // WebView (iOS and Android)
 const isWebView = isBrowser()
   ? () => {
-      if (
-        /(; ?wv|(iPhone|iPod|iPad).*AppleWebKit(?!.*Safari))/i.test(navigator.userAgent || navigator.vendor)
-      ) {
+      if (/(; ?wv|(iPhone|iPod|iPad).*AppleWebKit(?!.*Safari))/i.test(navigator.userAgent || navigator.vendor)) {
         return true;
       } else {
         return false;
@@ -141,7 +135,7 @@ const atcbWcParams = [
   'iCalFileName',
   'listStyle',
   'buttonStyle',
-  'trigger',  
+  'trigger',
   'hideIconButton',
   'hideIconList',
   'hideIconModal',
@@ -164,22 +158,7 @@ const atcbWcParams = [
   'hideRichData',
   'bypassWebViewCheck',
 ];
-const atcbWcBooleanParams = [
-  'hideIconButton',
-  'hideIconList',
-  'hideIconModal',
-  'hideTextLabelButton',
-  'hideTextLabelList',
-  'subscribe',
-  'hideBackground',
-  'hideCheckmark',
-  'hideBranding',
-  'inlineRsvp',
-  'hideRichData',
-  'buttonsList',
-  'inline',
-  'bypassWebViewCheck',
-];
+const atcbWcBooleanParams = ['hideIconButton', 'hideIconList', 'hideIconModal', 'hideTextLabelButton', 'hideTextLabelList', 'subscribe', 'hideBackground', 'hideCheckmark', 'hideBranding', 'inlineRsvp', 'hideRichData', 'buttonsList', 'inline', 'bypassWebViewCheck'];
 const atcbWcObjectParams = ['dates', 'customLabels', 'ty', 'rsvp'];
 const atcbWcArrayParams = ['images', 'options'];
 

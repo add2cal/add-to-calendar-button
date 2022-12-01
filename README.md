@@ -95,7 +95,7 @@ Simple and convenient integration of 1 or many buttons, configurable directly wi
 
 ### Option 1: simple (CDN)
 
-You can use the jsDelivr CDN and load the respective script directly into your website. Place the script tag inside the <head> section.
+You can use the jsDelivr CDN and load the respective script directly into your website. Place the script tag inside the `<head>` section.
 
 ```html
 <script src="https://cdn.jsdelivr.net/npm/add-to-calendar-button@2" async defer></script>
@@ -127,9 +127,10 @@ Find the details for the most common ones below.
 At the `app.module.ts`, import `CUSTOM_ELEMENTS_SCHEMA` from `@angular/core` and add the following to the `@NgModule` block:
 
 ```javascript
-...,
-schemas: [CUSTOM_ELEMENTS_SCHEMA],
-...
+@NgModule({
+  //(...),
+  schemas: [CUSTOM_ELEMENTS_SCHEMA],
+})
 ```
 
 #### React
@@ -166,7 +167,7 @@ If you still want to go for the npm way, you would need to add something like th
       observer.disconnect();
       import('../../node_modules/add-to-calendar-button/dist/module/index.js');
     }
-  });		
+  });
   const instances = document.querySelectorAll('add-to-calendar-button');
   for (const instance of instances) observer.observe(instance);
 </script>
@@ -264,14 +265,14 @@ Copyright (c) [Jens Kuerschner](https://jenskuerschner.de).
 
 Licensed under [Elastic License 2.0 (ELv2)](LICENSE.txt).
 
-**About open-source**: 
-We consider ourselves open-source. 
-However, we are also aware of the controversy coming with licenses like the one selected. 
-Therefore, and contrary to many other companies and products, we no longer use the term in any marketing statements unless it is about other pieces which really are under an official OSI license. 
+**About open-source**:
+We consider ourselves open-source.
+However, we are also aware of the controversy coming with licenses like the one selected.
+Therefore, and contrary to many other companies and products, we no longer use the term in any marketing statements unless it is about other pieces which really are under an official OSI license.
 
-Speaking **about the license**: 
-We love it, because it is so simple. Have a look! 
-You are basically free to do anything unless you are not offering the tool itself as a product or service; or want to remove copyright and license stuff. 
+Speaking **about the license**:
+We love it, because it is so simple. Have a look!
+You are basically free to do anything unless you are not offering the tool itself as a product or service; or want to remove copyright and license stuff.
 In doubt, simply ask and we find a way. :)
 
 <br />

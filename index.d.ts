@@ -61,27 +61,7 @@ declare module 'add-to-calendar-button' {
       customLabels?: object;
       customCss?: string;
       lightMode?: 'system' | 'dark' | 'light' | 'bodyScheme';
-      language?:
-        | 'en'
-        | 'de'
-        | 'nl'
-        | 'fr'
-        | 'es'
-        | 'pt'
-        | 'tr'
-        | 'zh'
-        | 'ar'
-        | 'hi'
-        | 'pl'
-        | 'id'
-        | 'no'
-        | 'fi'
-        | 'sv'
-        | 'cs'
-        | 'ja'
-        | 'it'
-        | 'ko'
-        | 'vi';
+      language?: 'en' | 'de' | 'nl' | 'fr' | 'es' | 'pt' | 'tr' | 'zh' | 'ar' | 'hi' | 'pl' | 'id' | 'no' | 'fi' | 'sv' | 'cs' | 'ja' | 'it' | 'ko' | 'vi';
       ty?: object;
       rsvp?: object;
       bypassWebViewCheck?: boolean;

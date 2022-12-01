@@ -12,13 +12,7 @@
  */
 
 import { atcb_generate_dropdown_list, atcb_generate_bg_overlay, atcb_create_atcbl } from './atcb-generate.js';
-import {
-  atcb_position_list,
-  atcb_manage_body_scroll,
-  atcb_set_fullsize,
-  atcb_set_sizes,
-} from './atcb-util.js';
-import { atcb_unset_global_event_listener } from './atcb-init.js';
+import { atcb_position_list, atcb_manage_body_scroll, atcb_set_fullsize, atcb_set_sizes } from './atcb-util.js';
 import { atcbStates } from './atcb-globals.js';
 
 // FUNCTIONS TO CONTROL THE INTERACTION
@@ -27,11 +21,7 @@ function atcb_toggle(host, action, data = '', button = '', keyboardTrigger = fal
   // action can be 'open', 'close', or 'auto'
   if (action == 'open') {
     atcb_open(host, data, button, keyboardTrigger, generatedButton);
-  } else if (
-    action == 'close' ||
-    button.classList.contains('atcb-active') ||
-    host.querySelector('.atcb-active-modal')
-  ) {
+  } else if (action == 'close' || button.classList.contains('atcb-active') || host.querySelector('.atcb-active-modal')) {
     atcb_close(host, keyboardTrigger);
   } else {
     atcb_open(host, data, button, keyboardTrigger, generatedButton);

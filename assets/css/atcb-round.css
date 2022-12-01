@@ -155,10 +155,10 @@
   font-weight: 600;
   justify-content: center;
   line-height: 1.5em;
-  margin: 0.13em;
+  margin: .13em;
   max-width: 350px;
   min-width: 160px;
-  padding: 0.65em 1em;
+  padding: .65em 1em;
   position: relative;
   text-align: center;
   touch-action: manipulation;
@@ -774,8 +774,7 @@ a.atcb-modal-btn:focus-visible {
   height: 2em;
 }
 
-.atcb-button.atcb-active:not(.atcb-modal-style, .atcb-dropoverlay)
-  .atcb-checkmark,
+.atcb-button.atcb-active:not(.atcb-modal-style, .atcb-dropoverlay) .atcb-checkmark,
 .atcb-button.atcb-single:focus .atcb-checkmark,
 .atcb-button.atcb-single:hover .atcb-checkmark {
   top: -1.07em;

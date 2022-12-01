@@ -17,11 +17,7 @@ import { atcb_check_required, atcb_validate } from './atcb-validate.js';
 import { atcb_generate_button, atcb_generate_rich_data } from './atcb-generate.js';
 import { atcb_close, atcb_toggle } from './atcb-control.js';
 import { atcb_generate_links } from './atcb-links';
-import {
-  atcb_secure_content,
-  atcb_manage_body_scroll,
-  atcb_set_fullsize,
-} from './atcb-util.js';
+import { atcb_secure_content, atcb_manage_body_scroll, atcb_set_fullsize } from './atcb-util.js';
 
 let atcbInitialGlobalInit = false;
 let atcbBtnCount = 0;
@@ -34,8 +30,8 @@ if (isBrowser()) {
   class AddToCalendarButton extends HTMLElement {
     constructor() {
       super();
-      const elem = document.createElement('template')
-      elem.innerHTML = template
+      const elem = document.createElement('template');
+      elem.innerHTML = template;
       this.attachShadow({ mode: 'open', delegateFocus: true });
       this.shadowRoot.append(elem.content.cloneNode(true));
       this.initialized = false;
@@ -206,10 +202,7 @@ function atcb_read_attributes(el) {
         try {
           return JSON.parse(atcb_secure_content(slotInput.replace(/(\r\n|\n|\r)/g, ''), false));
         } catch (e) {
-          throw new Error(
-            'Add to Calendar Button generation failed: JSON content provided, but badly formatted (in doubt, try some tool like https://jsonformatter.org/ to validate).\r\nError message: ' +
-              e
-          );
+          throw new Error('Add to Calendar Button generation failed: JSON content provided, but badly formatted (in doubt, try some tool like https://jsonformatter.org/ to validate).\r\nError message: ' + e);
         }
       }
       return '';
@@ -376,9 +369,7 @@ function atcb_action(data, triggerElement, keyboardTrigger = false) {
     data.trigger = 'click';
   }
   if (!atcb_validate(data)) {
-    throw new Error(
-      'Add to Calendar Button generation (' + data.identifier + ') failed: invalid data; see console logs'
-    );
+    throw new Error('Add to Calendar Button generation (' + data.identifier + ') failed: invalid data; see console logs');
   }
   // determine whether we are looking for the 1-option case (also with buttonsList)
   const oneOption = (function () {
@@ -508,11 +499,7 @@ function atcb_global_listener_keydown(event) {
     }
     return null;
   })();
-  if (
-    host != null &&
-    host.querySelector('.atcb-list') &&
-    (event.key === 'ArrowDown' || event.key === 'ArrowUp' || event.key === 'Tab')
-  ) {
+  if (host != null && host.querySelector('.atcb-list') && (event.key === 'ArrowDown' || event.key === 'ArrowUp' || event.key === 'Tab')) {
     let targetFocus = 0;
     let currFocusOption = host.activeElement;
     const optionListCount = host.querySelectorAll('.atcb-list-item').length;

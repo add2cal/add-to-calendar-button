@@ -11,7 +11,8 @@ import CodeBlock from "@/components/CodeBlock.vue";
 
   if you use build tools go for the following Vite Config setup:
   <CodeBlock language="javascript" class="line-numbers">
-<pre>// vite.config.js
+    <pre>
+// vite.config.js
 import vue from '@vitejs/plugin-vue'
 
 export default {
@@ -25,11 +26,14 @@ export default {
       }
     })
   ]
-}</pre></CodeBlock>
+}</pre
+    >
+  </CodeBlock>
 
   Example vue cli config:
   <CodeBlock language="javascript" class="line-numbers">
-    <pre>// vue.config.js
+    <pre>
+// vue.config.js
 module.exports = {
   chainWebpack: config => {
     config.module
@@ -43,15 +47,20 @@ module.exports = {
         }
       }))
   }
-}</pre></CodeBlock>
+}</pre
+    >
+  </CodeBlock>
 
   Mind the specialties when passing DOM properties! Only strings for objects and
   arrays. Boolean is ok. v-bind as option:
   <CodeBlock>
-    <pre>&lt;my-element :user.prop="{ name: 'jack' }"&gt;&lt;/my-element&gt;
+    <pre>
+&lt;my-element :user.prop="{ name: 'jack' }"&gt;&lt;/my-element&gt;
 
 &lt;!-- shorthand equivalent --&gt;
-&lt;my-element .user="{ name: 'jack' }"&gt;&lt;/my-element&gt;</pre></CodeBlock>
+&lt;my-element .user="{ name: 'jack' }"&gt;&lt;/my-element&gt;</pre
+    >
+  </CodeBlock>
 
   See official documentation at
   https://vuejs.org/guide/extras/web-components.html
