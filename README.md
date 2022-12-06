@@ -156,7 +156,7 @@ declare global {
 
 **Option B:**
 
-If this does not work or you want to keep it more convenient, you should use [the official Add to Calendar Button React Wrapper (click here)](https://github.com/add2cal/add-to-calendar-button-react).
+If this does not work OR if you want to keep it more convenient, you should use [the official Add to Calendar Button React Wrapper (click here)](https://github.com/add2cal/add-to-calendar-button-react).
 
 This approach also enables you to provide object and array type props as objects and arrays.
 Find all further information within the wrapper repository's Readme file.
