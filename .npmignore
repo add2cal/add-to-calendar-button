@@ -21,15 +21,10 @@
 *.gif
 *.svg
 *.ics
-index.html
 Gruntfile.js
 security.md
 package-lock.json
-browserconfig.xml
-manifest.json
-CNAME
 set-release.js
-sitemap.xml
 .prettierignore
 .prettierrc.json
 .stylelintrc.json
@@ -37,3 +32,5 @@ sitemap.xml
 *.min.js
 *.map
 .eslintrc.json
+.eslintrc.cjs
+CNAME

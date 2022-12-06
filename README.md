@@ -122,6 +122,8 @@ import 'add-to-calendar-button';
 Based on your framework/library, you might need to make minor adjustments to the respective config.
 Find the details for the most common ones below.
 
+<br />
+
 #### Angular
 
 At the `app.module.ts`, import `CUSTOM_ELEMENTS_SCHEMA` from `@angular/core` and add the following to the `@NgModule` block:
@@ -132,10 +134,34 @@ At the `app.module.ts`, import `CUSTOM_ELEMENTS_SCHEMA` from `@angular/core` and
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
 ```
+<br />
 
 #### React
 
-tbd
+**Option A:**
+
+With basic React projects, the web component works out-of-the-box.
+
+If you are working with Typescript or other stricter setups, you would need to define a respective global JSX interface.
+
+```typescript
+declare global {
+  namespace JSX {
+    interface IntrinsicElements {
+      ['add-to-calendar-button']: CustomElement<AddToCalendarButton>;
+    }
+  }
+}
+```
+
+**Option B:**
+
+If this does not work or you want to keep it more convenient, you should use [the official Add to Calendar Button React Wrapper (click here)](https://github.com/add2cal/add-to-calendar-button-react).
+
+This approach also enables you to provide object and array type props as objects and arrays.
+Find all further information within the wrapper repository's Readme file.
+
+<br />
 
 #### Vue 3
 
@@ -149,9 +175,13 @@ compilerOptions: {
 
 If you want to be more precise, you can also write something like `tag.startsWith('ion-')` to apply this rule only to tags starting with "add-".
 
+<br />
+
 #### Svelte
 
 Works out-of-the-box. Nice!
+
+<br />
 
 #### Astro
 
@@ -185,15 +215,15 @@ A button can be easily created by using the respective custom element.
 
 You can then configure the button by simply adding the options as attributes to it. Boolean values (true/false) can be set as `optionName="true"` or simply by adding `optionName` to the tag. Not setting it at all would be automatically translate to "false".
 
-Theoretically, you could also add all the configuration as JSON structured String by placing this string as the TextContent of the tag. This is mainly due to backwards compatibility reasons and no longer recommended!
+Theoretically, you could also add all the configuration as JSON structured String by placing this string as the TextContent of the tag. This is mainly due to backwards compatibility reasons and no longer recommended, since it also does not detect changes!
 
 <br />
 
 ### Minimal structure (required)
 
-If there is no endDate set, the script assumes that it is the same as startDate.
+Mind that for auto-generating rich snippets, a location would be mandatory as well.
 
-Mind that for auto-generating rich snippets, a location would be mandatory as well. Even a timezone is not required, but recommended - if not given, the script will assume UTC.
+A time zone is not required, but recommended.
 
 ```html
 <add-to-calendar-button
@@ -206,7 +236,7 @@ Mind that for auto-generating rich snippets, a location would be mandatory as we
 
 <br />
 
-### More powerful example
+### A more powerful example
 
 ```html
 <add-to-calendar-button
@@ -227,11 +257,15 @@ Mind that for auto-generating rich snippets, a location would be mandatory as we
 </add-to-calendar-button>
 ```
 
+<br />
+
+You can find more examples as well as an interactive playground at the demo page: [add-to-calendar-button.com](https://add-to-calendar-button.com).
+
 <br /><br />
 
 ### All options and features
 
-Find all information about the available options and how to configure specific features at the [DOCS.md](DOCS.md).
+Find all information about the available options and how to configure specific features on the demo page as well as at the [DOCS.md](DOCS.md).
 
 <br />
 

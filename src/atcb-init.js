@@ -89,7 +89,9 @@ if (isBrowser()) {
 
     disconnectedCallback() {
       atcb_cleanup(this.shadowRoot, this.data);
-      console.log('Add to Calendar Button "' + this.data.identifier + '" destroyed');
+      if (this.debug != null && this.debug == true) {
+        console.log('Add to Calendar Button "' + this.data.identifier + '" destroyed');
+      }
     }
 
     static get observedAttributes() {
@@ -113,14 +115,16 @@ if (isBrowser()) {
       }
       // in all other cases, destroy and rebuild the button
       // mind that this only observes the actual attributes, not the innerHTML of the host (one would need to alter the instance attribute for that case)!
-      console.log(`${name}'s value has been changed from ${oldValue} to ${newValue}`);
+      if (this.debug != null && this.debug == true) {
+        console.log(`${name}'s value has been changed from ${oldValue} to ${newValue}`);
+      }
       atcb_cleanup(this.shadowRoot, this.data);
       this.data = {};
       this.shadowRoot.querySelector('.atcb-initialized').remove();
       const elem = document.createElement('template');
       elem.innerHTML = template;
       this.shadowRoot.append(elem.content.cloneNode(true));
-      this.shadowRoot.querySelector('style').remove();
+      if (this.shadowRoot.querySelector('style')) this.shadowRoot.querySelector('style').remove();
       try {
         this.data = atcb_read_attributes(this);
       } catch (e) {
@@ -234,7 +238,7 @@ function atcb_build_button(host, data, debug = false) {
       atcb_set_global_event_listener(host, data);
       atcb_init_log();
       // generate the actual button
-      atcb_generate_button(host, rootObj, data);
+      atcb_generate_button(host, rootObj, data, debug);
       // create schema.org data (https://schema.org/Event), if possible; and add it to the regular DOM
       if (!data.hideRichData && data.name && data.dates[0].location && data.dates[0].startDate) {
         atcb_generate_rich_data(data, host.host);
@@ -252,6 +256,9 @@ function atcb_cleanup(host, data) {
   // cleaning up a little bit
   atcb_close(host);
   atcb_unset_global_event_listener(data.identifier);
+  if (host.querySelector('.atcb-debug-error-msg')) {
+    host.querySelector('.atcb-debug-error-msg').remove();
+  }
   if (data.schemaEl != null) {
     data.schemaEl.remove();
   }
@@ -264,10 +271,12 @@ function atcb_set_light_mode(shadowRoot, data) {
   let hostLightMode = data.lightMode;
   // Safari + Firefox combat hack
   // could be removed as soon as those browsers support the :host-context selector
-  if (hostLightMode == 'bodyScheme' && (document.body.classList.contains('atcb-dark') || document.documentElement.classList.contains('atcb-dark'))) {
-    hostLightMode = 'dark';
-  } else {
-    hostLightMode = 'light';
+  if (hostLightMode == 'bodyScheme') {
+    if (document.body.classList.contains('atcb-dark') || document.documentElement.classList.contains('atcb-dark')) {
+      hostLightMode = 'dark';
+    } else {
+      hostLightMode = 'light';
+    }
   }
   // apply
   shadowRoot.host.classList.add('atcb-' + hostLightMode);
@@ -324,7 +333,9 @@ function atcb_load_css(host, rootObj, style = '', inline = false, customCss = ''
 }
 
 function atcb_render_debug_msg(host, error) {
+  if (host.querySelector('.atcb-debug-error-msg')) return;
   const errorBanner = document.createElement('div');
+  errorBanner.classList.add('atcb-debug-error-msg');
   errorBanner.style.cssText = 'color: #bf2e2e; font-size: 12px; font-weight: bold; padding: 12px 15px; border: 2px solid #bf2e2e; max-width: 180px; border-radius: 13px;';
   errorBanner.textContent = error;
   host.append(errorBanner);
