@@ -3,10 +3,10 @@ import { RouterLink } from "vue-router";
 import LightModeSwitch from "@/components/LightModeSwitch.vue";
 import LanguageSwitcher from "@/components/LanguageSwitcher.vue";
 import { ArrowUpIcon } from '@heroicons/vue/24/solid';
-import Logo from "@/components/LogoMain.vue";
-import LogoGithub from "@/components/LogoGithub.vue";
-import LogoTwitter from "@/components/LogoTwitter.vue";
-import LogoNpm from "@/components/LogoNpm.vue";
+import Logo from "@/components/logos/LogoMain.vue";
+import LogoGithub from "@/components/logos/LogoGithub.vue";
+import LogoTwitter from "@/components/logos/LogoTwitter.vue";
+import LogoNpm from "@/components/logos/LogoNpm.vue";
 import { useI18n } from 'vue-i18n'
 const { t, locale } = useI18n();
 </script>

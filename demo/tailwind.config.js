@@ -13,10 +13,15 @@ module.exports = {
       '2xl': '1600px',
     },
     container: {
-      xl: '1024px',
-      '2xl': '1024px',
       center: true,
       padding: '2rem',
+      screens: {
+        sm: '640px',
+        md: '768px',
+        lg: '976px',
+        xl: '1200px',
+        '2xl': '1200px',
+      },
     },
     extend: {
       colors: {
@@ -35,6 +40,28 @@ module.exports = {
         'text-dark': '#e6e2ed',
         twitter: '#1da1f2',
         npm: '#cb3837',
+        angular: '#C3002F',
+        astro: '#0F172A',
+        react: '#00d8ff',
+        svelte: '#FF3E19',
+        vue: '#42b883',
+        wordpress: '#21759b',
+        javascript: '#f7df1e',
+      },
+      dropShadow: {
+        'light-sm': '0 1px 1px rgb(255 255 255 / 0.05)',
+        light: [
+          '0 1px 2px rgb(255 255 255 / 0.1)',
+          '0 1px 1px rgb(255 255 255 / 0.06)',
+        ],
+        'light-md': [
+          '0 3px 3px rgb(255 255 255 / 0.07)',
+          '0 1px 5px rgb(255 255 255 / 0.06)',
+        ],
+        'light-lg': [
+          '0 8px 8px rgb(255 255 255 / 0.04)',
+          '0 3px 3px rgb(255 255 255 / 0.1)',
+        ],
       },
       animation: {
         marquee: 'marquee 60s linear infinite',

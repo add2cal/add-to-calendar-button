@@ -132,6 +132,7 @@ At the `app.module.ts`, import `CUSTOM_ELEMENTS_SCHEMA` from `@angular/core` and
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
 ```
+
 <br />
 
 #### React

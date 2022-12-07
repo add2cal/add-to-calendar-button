@@ -17,7 +17,11 @@
     "showCode": "Quellcode anzeigen",
     "hideCode": "Quellcode ausblenden",
     "dateInput": "Termin Details",
-    "layoutInput": "Layout-Einstellungen"
+    "layoutInput": "Layout-Einstellungen",
+    "demo": "Demo",
+    "getStarted": "Loslegen",
+    "default": "Standard",
+    "startConfiguring": "Jetzt konfigurieren"
   },
   "meta": {
     "titleSlug": "Termine teilen leicht gemacht - kostenfrei",

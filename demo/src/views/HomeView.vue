@@ -8,20 +8,20 @@ const { t, locale } = useI18n();
 </script>
 
 <template>
-  <div class="container max-w-[1200px] pt-8 pb-5">
-    <h3 class="pb-16 text-left opacity-50">
-      The hustle-free JavaScript component, enabling people to add events to
-      their calendars.
-    </h3>
+  <div class="container pt-8 pb-5">
     <div class="flex flex-col justify-between lg:flex-row">
       <div class="pr-0 pb-16 lg:pb-0 lg:pr-20">
+        <h2 class="pb-16 text-zinc-600 dark:text-zinc-300">
+          Let users add events to their calendar.<br />Fast and hustle-free
+          🔥🚀😏
+        </h2>
         <p>Intro...</p>
       </div>
       <a
         href="https://www.producthunt.com/posts/add-to-calendar-button-generator?utm_source=badge-top-post-badge&utm_medium=badge&utm_souce=badge-add&#0045;to&#0045;calendar&#0045;button&#0045;generator"
         target="_blank"
         rel="noopener"
-        class="hidden self-center dark:block md:self-start"
+        class="hidden self-center drop-shadow-light-md dark:block md:self-start"
         ><img
           src="../../public/assets/img/ph-badge-dark.svg"
           alt="Product of the Day | Product Hunt"
@@ -33,7 +33,7 @@ const { t, locale } = useI18n();
         href="https://www.producthunt.com/posts/add-to-calendar-button-generator?utm_source=badge-top-post-badge&utm_medium=badge&utm_souce=badge-add&#0045;to&#0045;calendar&#0045;button&#0045;generator"
         target="_blank"
         rel="noopener"
-        class="block self-center dark:hidden md:self-start"
+        class="block self-center drop-shadow dark:hidden md:self-start"
         ><img
           src="../../public/assets/img/ph-badge-light.svg"
           alt="Product of the Day | Product Hunt"
@@ -49,7 +49,7 @@ const { t, locale } = useI18n();
     class="mt-20 bg-gradient-to-tr from-zinc-300 to-zinc-200 pt-12 pb-16 shadow-lg dark:from-zinc-800 dark:via-zinc-800 dark:to-zinc-700 dark:shadow-xl"
   >
     <div class="container">
-      <h2 class="pb-6">
+      <h2 class="pb-8">
         <BeakerIcon
           class="-mt-1 mr-3 inline-block h-6 w-6"
           aria-hidden="true"
@@ -59,8 +59,8 @@ const { t, locale } = useI18n();
     </div>
   </div>
 
-  <div id="installation" class="container max-w-screen-xl pt-6">
-    <h2 class="pt-16 pb-6">
+  <div id="installation" class="container pt-6">
+    <h2 class="pt-20 pb-8">
       <WrenchScrewdriverIcon
         class="-mt-1 mr-3 inline-block h-6 w-6"
         aria-hidden="true"
@@ -68,11 +68,11 @@ const { t, locale } = useI18n();
     </h2>
     <IntegrationGuides />
 
-    <h2 id="features" class="pt-16 pb-6">
+    <h2 id="features" class="pt-20 pb-8">
       <AdjustmentsHorizontalIcon
         class="-mt-1 mr-3 inline-block h-6 w-6"
         aria-hidden="true"
-      />Functionality &amp; Setup
+      />Functionality &amp; Configuration
     </h2>
     <RouterLink
       class="button-primary m-auto"

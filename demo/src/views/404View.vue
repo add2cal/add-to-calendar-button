@@ -603,7 +603,7 @@ const { t, locale } = useI18n();
   </div>
   <div class="text-center">
     <h1>404: {{ t("message.404") }}</h1>
-    <p class="mt-20">{{ t("content.404RealContent") }}</p>
+    <p class="mt-20 mb-6">{{ t("content.404RealContent") }}</p>
     <RouterLink
       v-if="locale=='en'"
       :to="{ name: 'home', params: { locale } }"

@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import NavigationBar from "@/components/NavigationBar.vue";
-import Logo from "@/components/LogoMain.vue";
+import NavigationBar from "@/components/menu/NavigationBar.vue";
+import Logo from "@/components/logos/LogoMain.vue";
 import { RouterLink } from "vue-router";
 import { useI18n } from 'vue-i18n'
 const { locale } = useI18n();

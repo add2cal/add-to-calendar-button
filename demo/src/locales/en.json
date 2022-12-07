@@ -17,7 +17,11 @@
     "showCode": "Show source code",
     "hideCode": "Hide source code",
     "dateInput": "Date Details",
-    "layoutInput": "Layout Settings"
+    "layoutInput": "Layout Settings",
+    "demo": "Demo",
+    "getStarted": "Get started",
+    "default": "Default",
+    "startConfiguring": "Start configuring"
   },
   "meta": {
     "titleSlug": "The free and easy tool for more convenient event sharing",

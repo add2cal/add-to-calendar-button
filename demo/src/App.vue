@@ -88,7 +88,7 @@ watch(router.currentRoute, newRoute =>  {
 
   <div
     class="mt-16 mb-20 text-center md:text-left"
-    :class="($route.name!=='home' && $route.name!='home-i18n') ? 'container max-w-screen-xl' : ''"
+    :class="($route.name!=='home' && $route.name!='home-i18n') ? 'container' : ''"
   >
     <RouterView />
   </div>

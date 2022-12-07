@@ -7,9 +7,7 @@ import { StarIcon, CogIcon, PresentationChartLineIcon, BoltIcon, TagIcon } from 
 
 <template>
   <div class="bg-zinc-600 dark:bg-zinc-700">
-    <div
-      class="relative mx-auto flex w-full max-w-screen-2xl overflow-x-hidden"
-    >
+    <div class="relative mx-auto flex w-full overflow-x-hidden">
       <div class="z-10 bg-zinc-600 p-2 pr-3 dark:bg-zinc-700">
         <div
           class="rounded-md bg-red-700 py-1 px-2 text-xs font-semibold text-white shadow motion-safe:animate-pulse"
