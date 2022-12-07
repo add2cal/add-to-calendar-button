@@ -101,8 +101,6 @@ You can use the jsDelivr CDN and load the respective script directly into your w
 <script src="https://cdn.jsdelivr.net/npm/add-to-calendar-button@2" async defer></script>
 ```
 
-_Mind that this always pulls the latest release of v2! You can pin a more specific version by adding the exact version number after the "@" - see [jsDelivr.com](https://www.jsdelivr.com/features#npm) for details._
-
 <br />
 
 ### Option 2: npm

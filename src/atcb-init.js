@@ -89,6 +89,10 @@ if (isBrowser()) {
 
     disconnectedCallback() {
       atcb_cleanup(this.shadowRoot, this.data);
+      // reset the count, if all buttons got destroyed
+      if (document.querySelectorAll('add-to-calendar-button').length == 0) {
+        atcbBtnCount = 0;
+      }
       if (this.debug != null && this.debug == true) {
         console.log('Add to Calendar Button "' + this.data.identifier + '" destroyed');
       }
