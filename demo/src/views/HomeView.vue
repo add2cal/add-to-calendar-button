@@ -3,24 +3,18 @@ import { RouterLink } from "vue-router";
 import PlaygroundArea from "@/components/playground/PlaygroundArea.vue";
 import { CalendarDaysIcon, WrenchScrewdriverIcon, BeakerIcon, AdjustmentsHorizontalIcon } from '@heroicons/vue/24/outline';
 import { useI18n } from 'vue-i18n'
+import IntegrationGuides from "@/components/integration/IntegrationGuides.vue";
 const { t, locale } = useI18n();
 </script>
 
 <template>
-  <div class="container max-w-screen-xl pt-6">
-    <h2>
-      <CalendarDaysIcon
-        class="-mt-1 mr-3 inline-block h-6 w-6"
-        aria-hidden="true"
-      />Welcome to your next
-    </h2>
-    <h1 class="mb-6">Add to Calendar Button!</h1>
+  <div class="container max-w-[1200px] pt-8 pb-5">
+    <h3 class="pb-16 text-left opacity-50">
+      The hustle-free JavaScript component, enabling people to add events to
+      their calendars.
+    </h3>
     <div class="flex flex-col justify-between lg:flex-row">
       <div class="pr-0 pb-16 lg:pb-0 lg:pr-20">
-        <h3 class="pb-6 text-left opacity-50">
-          The hustle-free JavaScript component, enabling people to add events to
-          their calendars.
-        </h3>
         <p>Intro...</p>
       </div>
       <a
@@ -72,6 +66,7 @@ const { t, locale } = useI18n();
         aria-hidden="true"
       />Bringing it to your Website
     </h2>
+    <IntegrationGuides />
 
     <h2 id="features" class="pt-16 pb-6">
       <AdjustmentsHorizontalIcon

@@ -148,7 +148,7 @@ function atcb_generate_label_content(data, parent, type, icon, text, oneOption) 
 }
 
 // generate the triggering button
-function atcb_generate_button(host, button, data) {
+function atcb_generate_button(host, button, data, debug = false) {
   // determine whether we are looking for the 1-option case (also with buttonsList)
   const oneOption = (function () {
     if (data.options.length === 1 || (data.buttonsList && data.buttonStyle != 'date')) {
@@ -209,7 +209,9 @@ function atcb_generate_button(host, button, data) {
       buttonTrigger.append(btnCheck);
     }
   });
-  console.log('Add to Calendar Button "' + data.identifier + '" created');
+  if (debug) {
+    console.log('Add to Calendar Button "' + data.identifier + '" created');
+  }
 }
 
 // generate schema.org rich data

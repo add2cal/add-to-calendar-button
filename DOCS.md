@@ -12,12 +12,13 @@ More details about available options and how to configure specific features.
 
 <br />
 
+- If there is no endDate set, the script assumes that it is the same as startDate.
 - The `label` is optional, but enables you to customize the button text. Default: "Add to Calendar".
 - Dates need to be formatted as YYYY-MM-DD ([ISO-8601](https://en.wikipedia.org/wiki/ISO_8601)).
 - You can also use the word `today` as date. It will then dynamically use the current day at click.
 - Add `+5` at the end of the date to dynamically add 5 days (or any other number). `2022-01-30+12` would generate the 11th of February 2022. This can be interesting, when combined with `today`.
 - Times are optional. If not set, the button generates all-day events. If set, they need to be formatted as HH:MM
-- You can and should add a `timeZone` (TZ name). Find a list of them at [Wikipedia](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones).
+- You can and should add a `timeZone` (TZ name). Find a list of them at [Wikipedia](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones). If no valid time zone is provided, the script will assume UTC.
 - Use "currentBrowser" as value for `timeZone` to dynamically use the time of the user's browser. Use this with caution, since it would mean that the date and time will differ per user, which should not be the usual case! (Requires all times to be set.)
 - Define multi-date events by using the `dates` option, which holds an array of objects, which needs to hold the date, and time information of the sub-event. Each date can optionally provide its own name, description, location, timeZone, organizer, sequence, status, UID, and availability. Mind that in this case, the name at the top level becomes the name of the event series and is still required.
 - Use the `recurrence` option to define recurring events. But mind that this will deactivate the Yahoo, Microsoft365, Teams, and Outlook options, since they do not support it at the moment (users could still use iCal in this case).

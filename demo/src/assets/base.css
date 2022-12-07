@@ -165,5 +165,5 @@
 }
 
 .button-primary {
-  @apply inline-block rounded-md bg-secondary from-secondary to-secondary-light py-2 px-3 text-zinc-800 shadow-md hover:bg-gradient-to-tr hover:text-black hover:no-underline hover:shadow-lg;
+  @apply inline-block rounded-md bg-secondary from-secondary to-secondary-light py-2 px-3 text-zinc-800 shadow-md hover:bg-gradient-to-tr hover:text-black hover:no-underline hover:shadow-lg transition;
 }
