@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import { RouterLink } from "vue-router";
 import PlaygroundArea from "@/components/playground/PlaygroundArea.vue";
+import { CalendarDaysIcon, WrenchScrewdriverIcon, BeakerIcon, AdjustmentsHorizontalIcon } from '@heroicons/vue/24/outline';
+import { useI18n } from 'vue-i18n'
 import IntegrationGuides from "@/components/integration/IntegrationGuides.vue";
-import { WrenchScrewdriverIcon, BeakerIcon, AdjustmentsHorizontalIcon } from '@heroicons/vue/24/outline';
-import { useI18n } from 'vue-i18n';
 const { t, locale } = useI18n();
 </script>
 
