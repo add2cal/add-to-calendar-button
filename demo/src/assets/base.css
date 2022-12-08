@@ -170,3 +170,7 @@
 .button-secondary {
   @apply inline-block rounded-md border-2 text-center font-semibold border-secondary m-0 hover:m-[2px] hover:border-none from-secondary to-secondary-light py-4 px-5 leading-none shadow-md hover:bg-gradient-to-tr hover:text-black hover:no-underline hover:shadow-lg transition;
 }
+
+.tech-stack-button {
+  @apply flex flex-col self-center rounded-lg border-2 border-zinc-400 bg-gradient-to-tr from-zinc-200 to-zinc-100 p-1 text-zinc-700 shadow-md hover:no-underline hover:shadow-xl dark:border-zinc-600 dark:from-zinc-800 dark:to-zinc-700 dark:text-zinc-300;
+}
