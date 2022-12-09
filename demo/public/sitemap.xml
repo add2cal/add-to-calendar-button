@@ -41,6 +41,14 @@
     <loc>https://add-to-calendar-button.com/en/use-with-wordpress</loc>
     <priority>0.6</priority>
   </url>
+  <url>
+    <loc>https://add-to-calendar-button.com/en/configuration</loc>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://add-to-calendar-button.com/en/what-is-an-add-to-calendar-button</loc>
+    <priority>0.6</priority>
+  </url>
   <!-- German (de) -->
   <url>
     <loc>https://add-to-calendar-button.com/de/</loc>
@@ -80,6 +88,14 @@
   </url>
   <url>
     <loc>https://add-to-calendar-button.com/de/use-with-wordpress</loc>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://add-to-calendar-button.com/de/configuration</loc>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://add-to-calendar-button.com/de/what-is-an-add-to-calendar-button</loc>
     <priority>0.6</priority>
   </url>
 </urlset>

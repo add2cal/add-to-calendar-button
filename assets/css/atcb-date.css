@@ -46,8 +46,8 @@
   --atcb-modal-date-btn-cal-background: #313132;
   --atcb-modal-date-btn-background: #eae9ed;
   --atcb-modal-date-btn-background-hover: #fff;
-  --atcb-shadow-button: rgba(0 0 0 / 30%) 2px 5px 18px -1px, rgba(0 0 0 / 25%) 2px 2px 10px -3px;
-  --atcb-shadow-button-hover: rgba(0 0 0 / 40%) 2px 5px 18px -1px, rgba(0 0 0 / 35%) 2px 2px 10px -3px;
+  --atcb-shadow-button: rgba(0 0 0 / 20%) 2px 5px 18px -1px, rgba(0 0 0 / 15%) 2px 2px 10px -3px;
+  --atcb-shadow-button-hover: rgba(0 0 0 / 30%) 2px 5px 18px -1px, rgba(0 0 0 / 25%) 2px 2px 10px -3px;
   --atcb-shadow-button-active: rgba(0 0 0 / 50%) 2px 5px 18px -1px, rgba(0 0 0 / 45%) 2px 2px 10px -3px;
   --atcb-shadow-list: rgba(0 0 0 / 20%) 2px 5px 18px -1px, rgba(0 0 0 / 40%) 2px 2px 10px -3px;
   --atcb-shadow-list-modal: rgba(0 0 0 / 60%) 3px 6px 40px -5px, rgba(0 0 0 / 60%) 3px 3px 15px -4px;

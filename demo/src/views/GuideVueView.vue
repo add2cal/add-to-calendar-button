@@ -1,67 +1,77 @@
 <script setup lang="ts">
 import CodeBlock from "@/components/CodeBlock.vue";
+import NextSteps from "@/components/integration/NextSteps.vue";
+import GuideSidebar from "@/components/integration/GuideSidebar.vue";
 </script>
 
 <template>
-  use as usual, but optimize with if you use in-browser compilation:
-  <CodeBlock language="javascript"
-    >app.config.compilerOptions.isCustomElement = (tag) =>
-    tag.includes('-')</CodeBlock
-  >
+  <div class="grid grid-cols-1 lg:grid-cols-[minmax(0,1fr)_192px]">
+    <div class="pr-0 lg:pr-8 xl:pr-12 2xl:pr-20">
+      <h1 class="mb-16 underline decoration-primary-light decoration-4 dark:decoration-primary-dark">How to use the Add to Calendar Button with Vue 3</h1>
+      <div class="px-0 md:px-3 lg:px-5">
+        <h2 class="mb-6">Step 1: npm installation</h2>
+        <p>Install the package from the npm registry.</p>
+        <CodeBlock><pre>npm install add-to-calendar-button</pre></CodeBlock>
+        <h2 class="mt-20 mb-6">Step 2: Import it</h2>
+        <p>Import the module into the component, where you want to use the button.</p>
+        <CodeBlock language="javascript">
+          <pre>import 'add-to-calendar-button';</pre>
+        </CodeBlock>
+        <h2 class="mt-20 mb-6">Step 3: Optimize the Vue config</h2>
+        <p>
+          Theoretically, this was already it.<br />
+          Vue works extremely well with Web Components.
+        </p>
+        <p>
+          However, you might notice a warning in the browser console.<br />
+          To get rid of this, you need to provide a little bit more information to the compiler options at your
+          <span class="font-semibold italic">vite.config.js</span>.
+        </p>
+        <CodeBlock language="javascript" class="line-numbers">
+          <pre>
+// vite.config.js or vite.config.ts
 
-  if you use build tools go for the following Vite Config setup:
-  <CodeBlock language="javascript" class="line-numbers">
-    <pre>
-// vite.config.js
-import vue from '@vitejs/plugin-vue'
-
-export default {
-  plugins: [
-    vue({
-      template: {
-        compilerOptions: {
-          // treat all tags with a dash as custom elements
-          isCustomElement: (tag) => tag.includes('-')
-        }
-      }
-    })
-  ]
+compilerOptions: {
+  isCustomElement: (tag) => tag.includes('-')
 }</pre
-    >
-  </CodeBlock>
+          >
+        </CodeBlock>
+        <p>In case the Add to Calendar Button is the only Web Component in your project, you could also be a little bit more explicit here.<br />In this case, our recommendation is to define tags, which start with "add-" as custom elements.</p>
+        <CodeBlock language="javascript" class="line-numbers">
+          <pre>
+// vite.config.js or vite.config.ts
 
-  Example vue cli config:
-  <CodeBlock language="javascript" class="line-numbers">
-    <pre>
-// vue.config.js
-module.exports = {
-  chainWebpack: config => {
-    config.module
-      .rule('vue')
-      .use('vue-loader')
-      .tap(options => ({
-        ...options,
-        compilerOptions: {
-          // treat any tag that starts with add- as custom elements
-          isCustomElement: tag => tag.startsWith('add-')
-        }
-      }))
-  }
+compilerOptions: {
+  isCustomElement: (tag) => tag.startsWith('add-')
 }</pre
-    >
-  </CodeBlock>
-
-  Mind the specialties when passing DOM properties! Only strings for objects and
-  arrays. Boolean is ok. v-bind as option:
-  <CodeBlock>
-    <pre>
-&lt;my-element :user.prop="{ name: 'jack' }"&gt;&lt;/my-element&gt;
-
-&lt;!-- shorthand equivalent --&gt;
-&lt;my-element .user="{ name: 'jack' }"&gt;&lt;/my-element&gt;</pre
-    >
-  </CodeBlock>
-
-  See official documentation at
-  https://vuejs.org/guide/extras/web-components.html
+          >
+        </CodeBlock>
+        <h2 class="mt-20 mb-6">Step 4: Use it</h2>
+        <p>
+          Start using the component by adding a
+          <code>&lt;add-to-calendar-button&gt;</code> tag to your code - with the options as attributes.
+        </p>
+        <p class="font-semibold italic">Yes, it is that simple.</p>
+        <p>Your code block could look like the following:</p>
+        <CodeBlock class="line-numbers">
+          <pre>
+&lt;add-to-calendar-button
+  name="Title"
+  options="'Apple','Google'"
+  location="World Wide Web"
+  startDate="2023-02-14"
+  endDate="2023-02-14"
+  startTime="10:15"
+  endTime="23:30"
+  timeZone="Europe/Berlin"
+&gt;&lt;/add-to-calendar-button&gt;</pre
+          >
+        </CodeBlock>
+        <NextSteps />
+      </div>
+    </div>
+    <div class="hidden border-l border-zinc-300 pl-8 text-xs dark:border-zinc-700 lg:block xl:pl-12">
+      <GuideSidebar stack="vue" />
+    </div>
+  </div>
 </template>

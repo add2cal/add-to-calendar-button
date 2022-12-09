@@ -54,34 +54,44 @@ export function setupRouter(i18n: I18n): Router {
       component: () => import('@/views/GuideView.vue'),
     },
     {
+      path: '/:locale/use-with-angular',
+      name: 'use-with-angular',
+      component: () => import('@/views/GuideAngularView.vue'),
+    },
+    {
+      path: '/:locale/use-with-astro',
+      name: 'use-with-astro',
+      component: () => import('@/views/GuideAstroView.vue'),
+    },
+    {
+      path: '/:locale/use-with-react',
+      name: 'use-with-react',
+      component: () => import('@/views/GuideReactView.vue'),
+    },
+    {
+      path: '/:locale/use-with-svelte',
+      name: 'use-with-svelte',
+      component: () => import('@/views/GuideSvelteView.vue'),
+    },
+    {
       path: '/:locale/use-with-vue',
       name: 'use-with-vue',
       component: () => import('@/views/GuideVueView.vue'),
     },
     {
-      path: '/:locale/use-with-react',
-      name: 'use-with-react',
-      component: () => import('@/views/GuideVueView.vue'),
-    },
-    {
-      path: '/:locale/use-with-angular',
-      name: 'use-with-angular',
-      component: () => import('@/views/GuideVueView.vue'),
-    },
-    {
-      path: '/:locale/use-with-astro',
-      name: 'use-with-astro',
-      component: () => import('@/views/GuideVueView.vue'),
-    },
-    {
-      path: '/:locale/use-with-svelte',
-      name: 'use-with-svelte',
-      component: () => import('@/views/GuideVueView.vue'),
-    },
-    {
       path: '/:locale/use-with-wordpress',
       name: 'use-with-wordpress',
-      component: () => import('@/views/GuideVueView.vue'),
+      component: () => import('@/views/GuideWordPressView.vue'),
+    },
+    {
+      path: '/:locale/configuration',
+      name: 'configuration',
+      component: () => import('@/views/ConfigView.vue'),
+    },
+    {
+      path: '/:locale/what-is-an-add-to-calendar-button',
+      name: 'seo',
+      component: () => import('@/views/SeoView.vue'),
     },
     {
       path: '/:locale/:_(.*)',
@@ -152,11 +162,7 @@ export function setupRouter(i18n: I18n): Router {
     if (robotsEl) robotsEl.setAttribute('content', `${robots}`);
     // canonical
     const canonicalEl = document.querySelector('link[rel="canonical"]');
-    if (canonicalEl)
-      canonicalEl.setAttribute(
-        'href',
-        'http://add-to-calendar-button.com' + `${to.fullPath}`
-      );
+    if (canonicalEl) canonicalEl.setAttribute('href', 'http://add-to-calendar-button.com' + `${to.fullPath}`);
   });
 
   return router;

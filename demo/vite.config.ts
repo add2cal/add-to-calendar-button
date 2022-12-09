@@ -25,8 +25,7 @@ export default defineConfig({
       manifest: {
         name: 'Add to Calendar Button DEMO',
         short_name: 'Add2Cal DEMO',
-        description:
-          'Demo and Guidance for the convenient JavaScript snippet, which lets you create beautiful buttons, where people can add events to their calendars',
+        description: 'Demo and Guidance for the convenient JavaScript snippet, which lets you create beautiful buttons, where people can add events to their calendars',
         icons: [
           {
             src: './assets/favicons/android-chrome-36x36.png',

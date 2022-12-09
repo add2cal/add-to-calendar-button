@@ -9,7 +9,16 @@
     "examples": "Examples",
     "advanced": "Advanced Use",
     "legal-notice": "Legal Notice",
-    "privacy-policy": "Privacy Policy"
+    "privacy-policy": "Privacy Policy",
+    "use": "Implementation Guide",
+    "use-with-angular": "How to use with Angular",
+    "use-with-astro": "How to use with Astro",
+    "use-with-react": "How to use with React",
+    "use-with-svelte": "How to use with Svelte",
+    "use-with-vue": "How to use with Vue",
+    "use-with-wordpress": "How to use with WordPress",
+    "configuration": "Configuration",
+    "404": "404 not found"
   },
   "labels": {
     "enableDarkMode": "Enable Dark Mode",
@@ -21,12 +30,15 @@
     "demo": "Demo",
     "getStarted": "Get started",
     "default": "Default",
-    "startConfiguring": "Start configuring"
+    "startPlaying": "Start playing",
+    "startConfiguring": "Start configuring",
+    "exploreExamples": "Start exploring"
   },
   "meta": {
     "titleSlug": "The free and easy tool for more convenient event sharing",
     "keywords": "calendar, event, sharing, button, script, widget, rsvp, javascript, angular, react, vue, svelte, astro, web component, outlook, ical, microsoft, teams, apple, google, yahoo, free",
-    "description": "Experience the interactive demo and tutorials on how to create a button, which adds events to your users' calendars. Quick and convenient."
+    "description": "Experience the interactive demo and tutorials on how to create a button, which adds events to your users' calendars. Quick and convenient.",
+    "seo-title": "All about Add to Calendar Buttons"
   },
   "content": {
     "404RealContent": "The real content can be accessed best via the home page."

@@ -179,14 +179,18 @@ function atcb_read_attributes(el) {
         val = JSON.parse(inputVal);
       } else if (atcbWcArrayParams.includes(attr)) {
         const cleanedInput = (function () {
+          let newVal = inputVal;
           if (inputVal.includes('"') || inputVal.includes("'")) {
             if (inputVal.includes('[')) {
-              return inputVal.substring(2, inputVal.length - 2).replace(/\s/g, '');
+              newVal = inputVal.substring(2, inputVal.length - 2);
+            } else {
+              newVal = inputVal.substring(1, inputVal.length - 1);
             }
-            return inputVal.substring(1, inputVal.length - 1).replace(/\s/g, '');
-          } else {
-            return inputVal.replace(/\s/g, '');
           }
+          if (!inputVal.includes('|')) {
+           newVal = newVal.replace(/\s/g, '');
+          }
+          return newVal;
         })();
         if (cleanedInput.includes("','")) {
           val = cleanedInput.split("','");

@@ -1,6 +1,7 @@
 {
   "name": "add-to-calendar-button-demo",
   "version": "0.0.0",
+  "private": true,
   "engines": {
     "node": ">=16.18.1",
     "npm": ">=8.19.2"
@@ -55,7 +56,6 @@
     "typescript": "~4.9.3",
     "vite": "^3.2.4",
     "vite-plugin-pwa": "^0.13.3",
-    "vue-tsc": "^1.0.10"
-  },
-  "private": true
+    "vue-tsc": "^1.0.11"
+  }
 }

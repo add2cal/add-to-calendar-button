@@ -1,3 +1,3 @@
 <template>
-  <h1>Legal</h1>
+  <h1 class="mb-16 underline decoration-primary-light decoration-4 dark:decoration-primary-dark">Legal</h1>
 </template>

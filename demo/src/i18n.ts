@@ -1,21 +1,11 @@
 import { nextTick, isRef } from 'vue';
 import { createI18n } from 'vue-i18n';
 
-import type {
-  I18n,
-  I18nOptions,
-  Locale,
-  VueI18n,
-  Composer,
-  I18nMode,
-} from 'vue-i18n';
+import type { I18n, I18nOptions, Locale, VueI18n, Composer, I18nMode } from 'vue-i18n';
 
 export const SUPPORT_LOCALES = ['en', 'de'];
 
-function isComposer(
-  instance: VueI18n | Composer,
-  mode: I18nMode
-): instance is Composer {
+function isComposer(instance: VueI18n | Composer, mode: I18nMode): instance is Composer {
   return mode === 'composition' && isRef(instance.locale);
 }
 
@@ -59,9 +49,7 @@ const getResourceMessages = (r: any) => r.default || r;
 
 export async function loadLocaleMessages(i18n: I18n, locale: Locale) {
   // load locale messages
-  const messages = await import(
-    /* @vite-ignore */ `@/locales/${locale}.json`
-  ).then(getResourceMessages);
+  const messages = await import(/* @vite-ignore */ `@/locales/${locale}.json`).then(getResourceMessages);
 
   // set locale and locale message
   i18n.global.setLocaleMessage(locale, messages);

@@ -141,7 +141,7 @@ At the `app.module.ts`, import `CUSTOM_ELEMENTS_SCHEMA` from `@angular/core` and
 
 With basic React projects, the web component works out-of-the-box.
 
-If you are working with Typescript or other stricter setups, you would need to define a respective global JSX interface.
+If you are working with TypeScript or other stricter setups, you would need to define a respective global JSX interface.
 
 ```typescript
 declare global {
@@ -172,7 +172,7 @@ compilerOptions: {
 }
 ```
 
-If you want to be more precise, you can also write something like `tag.startsWith('ion-')` to apply this rule only to tags starting with "add-".
+If you want to be more precise, you can also write something like `tag.startsWith('add-')` to apply this rule only to tags starting with "add-".
 
 <br />
 

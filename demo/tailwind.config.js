@@ -50,18 +50,9 @@ module.exports = {
       },
       dropShadow: {
         'light-sm': '0 1px 1px rgb(255 255 255 / 0.05)',
-        light: [
-          '0 1px 2px rgb(255 255 255 / 0.1)',
-          '0 1px 1px rgb(255 255 255 / 0.06)',
-        ],
-        'light-md': [
-          '0 3px 3px rgb(255 255 255 / 0.07)',
-          '0 1px 5px rgb(255 255 255 / 0.06)',
-        ],
-        'light-lg': [
-          '0 8px 8px rgb(255 255 255 / 0.04)',
-          '0 3px 3px rgb(255 255 255 / 0.1)',
-        ],
+        light: ['0 1px 2px rgb(255 255 255 / 0.1)', '0 1px 1px rgb(255 255 255 / 0.06)'],
+        'light-md': ['0 3px 3px rgb(255 255 255 / 0.07)', '0 1px 5px rgb(255 255 255 / 0.06)'],
+        'light-lg': ['0 8px 8px rgb(255 255 255 / 0.04)', '0 3px 3px rgb(255 255 255 / 0.1)'],
       },
       animation: {
         marquee: 'marquee 60s linear infinite',

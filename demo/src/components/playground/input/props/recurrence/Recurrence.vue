@@ -32,54 +32,16 @@ const monthList = getMonthList();
 
 <template>
   <div class="grid">
-    <Switch
-      label="Simply Reccurence Input"
-      class="mb-3"
-      v-model="modelValue.isSimple"
-    />
+    <Switch label="Simply Reccurence Input" class="mb-3" v-model="modelValue.isSimple" />
 
-    <Input
-      v-if="!modelValue.isSimple"
-      v-model="modelValue.recurrence"
-      label="Recurrence"
-      placeholder="RRULE :FREQ=…"
-      class="mb-3"
-    />
+    <Input v-if="!modelValue.isSimple" v-model="modelValue.recurrence" label="Recurrence" placeholder="RRULE :FREQ=…" class="mb-3" />
 
     <template v-else>
-      <Input
-        v-model="modelValue.recurrenceInterval"
-        label="Recurrence Interval"
-        type="number"
-        class="mb-3"
-      />
-      <Input
-        v-model="modelValue.recurrenceCount"
-        label="Recurrence Count"
-        type="number"
-        class="mb-3"
-      />
-      <Input
-        v-model="modelValue.recurrenceByDay"
-        label="Recurrence by Day"
-        placeholder="e.g. “MO,SA” or “-2MO"
-        class="mb-3"
-      />
-      <Select
-        v-model="modelValue.recurrenceByMonth"
-        :options="monthList"
-        label="Recurrence by Month"
-        multiselect
-        class="mb-3"
-        byKey="key"
-        byValue="value"
-      />
-      <Input
-        v-model="modelValue.recurrenceByMonthDay"
-        label="Recurrence by Month Day"
-        placeholder="e.g. “4,5”"
-        class="mb-3"
-      />
+      <Input v-model="modelValue.recurrenceInterval" label="Recurrence Interval" type="number" class="mb-3" />
+      <Input v-model="modelValue.recurrenceCount" label="Recurrence Count" type="number" class="mb-3" />
+      <Input v-model="modelValue.recurrenceByDay" label="Recurrence by Day" placeholder="e.g. “MO,SA” or “-2MO" class="mb-3" />
+      <Select v-model="modelValue.recurrenceByMonth" :options="monthList" label="Recurrence by Month" multiselect class="mb-3" byKey="key" byValue="value" />
+      <Input v-model="modelValue.recurrenceByMonthDay" label="Recurrence by Month Day" placeholder="e.g. “4,5”" class="mb-3" />
     </template>
   </div>
 </template>

@@ -7,9 +7,18 @@
     "installation": "Installation",
     "features": "Funktionen",
     "examples": "Beispiele",
-    "advanced": "Profi-Modus",
+    "advanced": "Profi-Konfiguration",
     "legal-notice": "Impressum",
-    "privacy-policy": "Datenschutz"
+    "privacy-policy": "Datenschutz",
+    "use": "Anleitung",
+    "use-with-angular": "Setup mit Angular",
+    "use-with-astro": "Setup mit Astro",
+    "use-with-react": "Setup mit React",
+    "use-with-svelte": "Setup mit Svelte",
+    "use-with-vue": "Setup mit Vue",
+    "use-with-wordpress": "Nutzung mit WordPress",
+    "configuration": "Konfiguration",
+    "404": "404 nicht gefunden"
   },
   "labels": {
     "enableDarkMode": "Dark Mode aktivieren",
@@ -21,12 +30,15 @@
     "demo": "Demo",
     "getStarted": "Loslegen",
     "default": "Standard",
-    "startConfiguring": "Jetzt konfigurieren"
+    "startPlaying": "Live ausprobieren",
+    "startConfiguring": "Jetzt konfigurieren",
+    "exploreExamples": "Beispiele erkunden"
   },
   "meta": {
     "titleSlug": "Termine teilen leicht gemacht - kostenfrei",
     "keywords": "Kalender, Event, Veranstaltung, teilen, Button, Script, Skript, Widget, RSVP, Javascript, Angular, React, Vue, Svelte, Astro, Web Component, Outlook, iCal, Microsoft, Teams, Apple, Google, Yahoo, free, kostenlos",
-    "description": "Interaktive Demo sowie Tutorials für die Integration in alle großen Web-Frameworks. Speichere unkompliziert Events im Kalender deiner Nutzer."
+    "description": "Interaktive Demo sowie Tutorials für die Integration in alle großen Web-Frameworks. Speichere unkompliziert Events im Kalender deiner Nutzer.",
+    "seo-title": "Alles über Add to Calendar Buttons"
   },
   "content": {
     "404RealContent": "Alle Inhalte erreichst du am besten über die Startseite."

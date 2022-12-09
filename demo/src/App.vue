@@ -14,10 +14,15 @@ watch(router.currentRoute, newRoute =>  {
   // set meta information (except for robots and canonical)
   // page title
   const title = (function () {
-    if (rName != 'home' && rName != 'home-i18n') {
+    if (rName != 'home' && rName != 'home-i18n' && rName != 'seo') {
       return (
         t('navigation.' + rName) +
         ' | Add to Calendar Button'
+      );
+    }
+    if (rName == 'seo') {
+      return (
+        t('meta.seo-title')
       );
     }
     return 'Add to Calendar Button | ' + t('meta.titleSlug');
@@ -86,10 +91,7 @@ watch(router.currentRoute, newRoute =>  {
     </div>
   </header>
 
-  <div
-    class="mt-16 mb-20 text-center md:text-left"
-    :class="($route.name!=='home' && $route.name!='home-i18n') ? 'container' : ''"
-  >
+  <div class="mt-16 mb-20 text-center md:text-left" :class="($route.name!=='home' && $route.name!='home-i18n') ? 'container' : ''">
     <RouterView />
   </div>
 

@@ -23,30 +23,15 @@ watch(showMM, val => {
     <div class="hidden space-x-3 self-center lg:inline">
       <Menu />
     </div>
-    <Bars3Icon
-      :class="{ hidden: showMM }"
-      class="block h-10 w-10 cursor-pointer self-center leading-none lg:hidden"
-      @click="(showMM = !showMM)"
-    />
+    <Bars3Icon :class="{ hidden: showMM }" class="block h-10 w-10 cursor-pointer self-center leading-none hover:text-secondary dark:hover:text-secondary lg:hidden" @click="(showMM = !showMM)" />
     <div class="hidden self-center py-2 px-3 leading-none lg:block">
       <LightModeSwitch />
     </div>
-    <a
-      class="w-8 self-center py-2 leading-none text-zinc-700 hover:text-black dark:text-zinc-300 dark:hover:text-white lg:w-6"
-      target="_blank"
-      rel="noopener"
-      href="https://github.com/add2cal/add-to-calendar-button"
-      ><LogoGithub
-    /></a>
+    <a class="w-8 self-center py-2 leading-none text-white hover:text-black dark:text-white dark:hover:text-secondary lg:w-6" target="_blank" rel="noopener" href="https://github.com/add2cal/add-to-calendar-button"><LogoGithub /></a>
   </nav>
-  <nav
-    :class="{ hidden: !showMM }"
-    class="fixed top-0 left-0 z-50 h-full w-full overflow-y-auto bg-gradient-to-tr from-primary via-primary to-primary-dark dark:via-primary-dark dark:to-primary-dark lg:hidden"
-  >
-    <XMarkIcon
-      class="fixed top-8 right-8 block h-10 w-10 cursor-pointer text-white"
-      @click="(showMM = !showMM)"
-    />
+  <!-- mobile menu -->
+  <nav :class="{ hidden: !showMM }" class="fixed top-0 left-0 z-50 h-full w-full overflow-y-auto bg-gradient-to-tr from-primary via-primary to-primary-dark dark:via-primary-dark dark:to-primary-dark lg:hidden">
+    <XMarkIcon class="fixed top-8 right-8 block h-10 w-10 cursor-pointer text-white hover:text-secondary" @click="(showMM = !showMM)" />
     <div class="grid grid-cols-1 gap-10 px-6 pt-24 text-white">
       <Menu @closeMM="(showMM = false)" />
       <div class="self-center py-2 px-3 leading-none"><LightModeSwitch /></div>

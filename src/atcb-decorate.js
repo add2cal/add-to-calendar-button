@@ -117,7 +117,7 @@ function atcb_decorate_data_options(data) {
   for (let i = 0; i < data.options.length; i++) {
     // preparing the input options and labels
     const cleanOption = data.options[`${i}`].split('|');
-    const optionName = cleanOption[0].toLowerCase().replace('microsoft', 'ms').replace('.', '');
+    const optionName = cleanOption[0].toLowerCase().replace('microsoft', 'ms').replace(/\./, '');
     const optionLabel = (function () {
       if (cleanOption[1] != null) {
         return cleanOption[1];

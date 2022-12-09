@@ -71,18 +71,8 @@ if (typeof docObserver !== 'undefined') {
 </script>
 
 <template>
-  <Switch
-    @update:model-value="toggleTheme"
-    v-model="darkEnabled"
-    :class="darkEnabled ? 'border-zinc-500 bg-zinc-700 hover:border-zinc-400' : 'border-zinc-300 bg-zinc-200 hover:border-zinc-400'"
-    class="relative inline-flex h-[24px] w-[40px] items-center rounded-full border shadow hover:shadow-md"
-  >
+  <Switch @update:model-value="toggleTheme" v-model="darkEnabled" :class="darkEnabled ? 'border-zinc-500 bg-zinc-700 hover:border-zinc-400' : 'border-zinc-300 bg-zinc-200 hover:border-zinc-400'" class="relative inline-flex h-[24px] w-[40px] items-center rounded-full border shadow hover:shadow-md">
     <span class="sr-only">{{ t('labels.enableDarkMode') }}</span>
-    <span
-      :class="darkEnabled ? 'ml-[17px] bg-zinc-900 p-[2px] text-white' : 'ml-[1px] bg-white p-[1px] text-zinc-900'"
-      class="inline-block h-[20px] w-[20px] transform rounded-full shadow-md transition"
-      ><SunIcon class="ui-checked:hidden" /><MoonIcon
-        class="ui-not-checked:hidden"
-    /></span>
+    <span :class="darkEnabled ? 'ml-[17px] bg-zinc-900 p-[2px] text-white' : 'ml-[1px] bg-white p-[1px] text-zinc-900'" class="inline-block h-[20px] w-[20px] transform rounded-full shadow-md transition"><SunIcon class="ui-checked:hidden" /><MoonIcon class="ui-not-checked:hidden" /></span>
   </Switch>
 </template>
