@@ -7,10 +7,12 @@ import {
   ListboxOption,
 } from '@headlessui/vue';
 import { ChevronDownIcon } from '@heroicons/vue/20/solid';
-import { useI18n } from 'vue-i18n';
 
 const props = defineProps({
-  modelValue: [String, Number, Array],
+  modelValue: {
+    type: [String, Number, Array],
+    required: false,
+  },
   label: String,
   required: {
     type: Boolean,
@@ -34,8 +36,6 @@ const props = defineProps({
 
 defineEmits(['update:modelValue']);
 
-const { t } = useI18n();
-
 const selectedOptions = computed(() => {
   if (!props.modelValue) {
     return [];
@@ -50,10 +50,18 @@ const selectedOptions = computed(() => {
 
 <template>
   <div>
-    <label v-if="label" :class="['block text-sm font-medium text-gray-700', required && 'required']">
-      {{ t(label) }}
+    <label
+      v-if="label"
+      :class="['block text-sm font-medium text-gray-700', required && 'required']"
+    >
+      {{ label }}
     </label>
-    <Listbox :modelValue="multiselect ? (Array.isArray(modelValue) ? modelValue : []) : modelValue" @update:modelValue="$emit('update:modelValue', $event)" :multiple="multiselect">
+    <Listbox
+      :modelValue="multiselect ? (Array.isArray(modelValue) ? modelValue : []) : modelValue"
+      :multiple="multiselect"
+      class="mt-1"
+      @update:modelValue="$emit('update:modelValue', $event)"
+    >
       <div class="relative">
         <ListboxButton
           class="focus-visible:none relative w-full cursor-pointer rounded-lg bg-white py-2 pl-3 pr-10 text-left shadow hover:shadow-md focus:outline-none focus-visible:ring-2 focus-visible:ring-secondary focus-visible:ring-opacity-75 focus-visible:ring-offset-2 focus-visible:ring-offset-secondary-light dark:bg-zinc-700 sm:text-sm"
@@ -62,10 +70,10 @@ const selectedOptions = computed(() => {
             <template v-for="(selected, index) in selectedOptions">
               <template v-if="(index !== 0)">&nbsp;</template>
               <template v-if="byKey">
-                {{ selected && selected[byKey] && t(selected[byKey]) }}
+                {{ selected && selected[byKey] }}
               </template>
               <template v-else>
-                {{ selected && t(selected) }}
+                {{ selected }}
               </template>
             </template>
           </span>
@@ -74,11 +82,26 @@ const selectedOptions = computed(() => {
           </span>
         </ListboxButton>
 
-        <transition leave-active-class="transition duration-100 ease-in" leave-from-class="opacity-100" leave-to-class="opacity-0">
-          <ListboxOptions class="absolute z-10 mt-1 max-h-36 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none dark:bg-zinc-700 sm:text-sm">
-            <ListboxOption v-for="option in options" :key="byKey ? option[byKey] : option" :value="byValue ? option[byValue] : option" as="template">
-              <li class="relative cursor-pointer select-none py-2 pl-10 pr-4 text-left ui-active:bg-secondary-light ui-active:text-zinc-900">
-                <span class="block truncate ui-selected:font-semibold"> {{ t(byKey ? option[byKey]: option) }}</span>
+        <transition
+          leave-active-class="transition duration-100 ease-in"
+          leave-from-class="opacity-100"
+          leave-to-class="opacity-0"
+        >
+          <ListboxOptions
+            class="absolute z-10 mt-1 max-h-36 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none dark:bg-zinc-700 sm:text-sm"
+          >
+            <ListboxOption
+              v-for="option in options"
+              :key="byKey ? option[byKey] : option"
+              :value="byValue ? option[byValue] : option"
+              as="template"
+            >
+              <li
+                class="relative cursor-pointer select-none py-2 pl-10 pr-4 text-left ui-active:bg-secondary-light ui-active:text-zinc-900"
+              >
+                <span class="block truncate ui-selected:font-semibold">
+                  {{ byKey ? option[byKey]: option }}</span
+                >
               </li>
             </ListboxOption>
           </ListboxOptions>
