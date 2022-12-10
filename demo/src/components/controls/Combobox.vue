@@ -54,7 +54,7 @@ let filteredOptions = computed(() => {
     <Combobox :value="modelValue" @update:modelValue="$emit('update:modelValue', $event)" as="div">
       <div class="relative mt-1">
         <div class="relative w-full cursor-default overflow-hidden rounded-lg bg-white text-left shadow-md focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75 focus-visible:ring-offset-2 focus-visible:ring-offset-teal-300 sm:text-sm">
-          <ComboboxInput class="w-full border-none py-2 pl-3 pr-10 text-sm leading-5 text-gray-900 outline-none focus:ring-0" @change="search = $event.target.value" />
+          <ComboboxInput class="w-full border-none py-2 pl-3 pr-10 text-sm leading-5 text-gray-900 outline-none focus:ring-0" :value="modelValue" @change="search = $event.target.value" />
           <ComboboxButton class="absolute inset-y-0 right-0 flex items-center pr-2">
             <ChevronUpDownIcon class="h-5 w-5 text-gray-400" aria-hidden="true" />
           </ComboboxButton>

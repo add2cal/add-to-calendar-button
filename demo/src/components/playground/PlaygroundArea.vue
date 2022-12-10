@@ -7,7 +7,7 @@ import CodeBlock from "@/components/CodeBlock.vue";
 import DateAttrs from "@/components/playground/attrs/DateAttrs.vue";
 import LayoutAttrs from "@/components/playground/attrs/LayoutAttrs.vue";
 import { useI18n } from 'vue-i18n'
-import { getDefaultAttrs, mapAttrsObject } from '@/utils/attrs';
+import { getDefaultAttrs, mapAttrsObject, attrsToHtmlString } from '@/utils/attrs';
 const { t } = useI18n();
 
 const showCode = ref(false);
@@ -17,7 +17,6 @@ const data = ref(getDefaultAttrs())
 
 <template>
   <div>
-    {{ data }}
     <div class="grid grid-cols-2 rounded-t-md border-2 border-zinc-400 shadow-lg dark:border-zinc-600 lg:grid-cols-3">
       <div id="date-input" class="rounded-tl-md bg-zinc-200 p-3 dark:bg-zinc-800">
         <div class="mb-4 text-sm font-semibold uppercase text-zinc-400 dark:text-zinc-600">
@@ -43,8 +42,7 @@ const data = ref(getDefaultAttrs())
       </div>
       <div :class="{ hidden: !showCode }" class="m-2 mt-3">
         <CodeBlock class="line-numbers">
-          &lt;!-- Just some sample code, which should be dynamically generated later... --&gt; &lt;!-- We might be able to not use the &lt;pre&gt; here when dynamically generating it... --&gt; &lt;add-to-calendar-button name="Title" options="'Apple','Google'" location="World Wide Web"
-          startDate="2023-02-14" endDate="2023-02-14" startTime="10:15" endTime="23:30" timeZone="Europe/Berlin" &gt;&lt;/add-to-calendar-button&gt;
+          {{ attrsToHtmlString(data) }}
         </CodeBlock>
       </div>
     </div>

@@ -47,7 +47,7 @@
       "organizer_email": "Organizer Email",
       "isc_file": "*.isc File",
       "availability": "Availability",
-      "is_subscribed": "Subscribed",
+      "is_subscribed": "Subscribe",
       "options": "Options",
       "ical_file_name": "iCal File Name",
       "recurrence": {
