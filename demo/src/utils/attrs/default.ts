@@ -1,35 +1,16 @@
-import {
-  type DateAttrs,
-  type DateRecurrenceAttrs,
-  type LayoutAttrs,
-  type Attrs,
-  DateAttrsKey,
-  DateRecurrenceAttrsKey,
-  LayoutAttrsKey,
-} from '@/models/attrs';
-import {
-  Status,
-  Availability,
-  Option,
-  ButtonStyle,
-  Trigger,
-  LightMode,
-  Size,
-  DefaultButtonStyle,
-  DefaultTrigger,
-  DefaultLightMode,
-} from '@/models/addToCalendarButton';
-import { DefaultLanguage, Language } from '@/models/language';
+import { type DateAttrs, type DateRecurrenceAttrs, type LayoutAttrs, type Attrs, DateAttrsKey, DateRecurrenceAttrsKey, LayoutAttrsKey } from '@/models/attrs';
+import { Option, Size, DefaultButtonStyle, DefaultTrigger, DefaultLightMode } from '@/models/addToCalendarButton';
+import { DefaultLanguage } from '@/models/language';
 import { getBrowserTimezone } from '@/utils/timezone';
 
 export const getDefaultDateRecurrenceAttrs = (): DateRecurrenceAttrs => ({
   [DateRecurrenceAttrsKey.IS_SIMPLE]: true,
-  [DateRecurrenceAttrsKey.RECURRENCE]: '',
-  [DateRecurrenceAttrsKey.RECURRENCE_INTERVAL]: 0,
-  [DateRecurrenceAttrsKey.RECURRENCE_COUNT]: 0,
-  [DateRecurrenceAttrsKey.RECURRENCE_BY_DAY]: '',
-  [DateRecurrenceAttrsKey.RECURRENCE_BY_MONTH]: [],
-  [DateRecurrenceAttrsKey.RECURRENCE_BY_MONTH_DAY]: '',
+  [DateRecurrenceAttrsKey.RRULE_VALUE]: '',
+  [DateRecurrenceAttrsKey.INTERVAL]: 0,
+  [DateRecurrenceAttrsKey.COUNT]: 0,
+  [DateRecurrenceAttrsKey.BY_DAY]: '',
+  [DateRecurrenceAttrsKey.BY_MONTH]: [],
+  [DateRecurrenceAttrsKey.BY_MONTH_DAY]: '',
 });
 
 export const getDefaultDateAttrs = (): DateAttrs => ({
@@ -50,13 +31,7 @@ export const getDefaultDateAttrs = (): DateAttrs => ({
   [DateAttrsKey.RECURRENCE_OBJECT]: getDefaultDateRecurrenceAttrs(),
   [DateAttrsKey.AVAILABILITY]: '',
   [DateAttrsKey.IS_SUBSCRIBED]: false,
-  [DateAttrsKey.OPTIONS]: [
-    Option.APPLE,
-    Option.GOOGLE,
-    Option.ICAL,
-    Option.OUTLOOK,
-    Option.YAHOO,
-  ],
+  [DateAttrsKey.OPTIONS]: [Option.APPLE, Option.GOOGLE, Option.ICAL, Option.OUTLOOK, Option.YAHOO],
   [DateAttrsKey.ICAL_FILE_NAME]: '',
 });
 

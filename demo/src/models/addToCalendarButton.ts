@@ -1,12 +1,12 @@
 export enum Status {
-  TENTATIVE = 'Tentative',
-  CONFIRMED = 'Confirmed',
-  CANCELLED = 'Cancelled',
+  TENTATIVE = 'tentative',
+  CONFIRMED = 'confirmed',
+  CANCELLED = 'cancelled',
 }
 
 export enum Availability {
-  BUSY = 'Busy',
-  FREE = 'Free',
+  BUSY = 'busy',
+  FREE = 'free',
 }
 
 export enum Option {

@@ -32,7 +32,60 @@
     "default": "Default",
     "startPlaying": "Start playing",
     "startConfiguring": "Start configuring",
-    "exploreExamples": "Start exploring"
+    "exploreExamples": "Start exploring",
+    "inputs": {
+      "name": "Name",
+      "description": "Description",
+      "start_date": "Start Date",
+      "start_time": "Start Time",
+      "end_date": "End Date",
+      "end_time": "End Time",
+      "timezone": "Timezone",
+      "location": "Location",
+      "status": "Status",
+      "organizer_name": "Organizer Name",
+      "organizer_email": "Organizer Email",
+      "isc_file": "*.isc File",
+      "availability": "Availability",
+      "is_subscribed": "Subscribed",
+      "options": "Options",
+      "ical_file_name": "iCal File Name",
+      "recurrence": {
+        "rrule_value": "Recurrence",
+        "is_simple": "Is Recurrence Simple",
+        "interval": "Recurrence Interval",
+        "count": "Recurrence Count",
+        "by_day": "Recurrence By Day",
+        "by_month": "Recurrence By Month",
+        "by_month_day": "Recurrence By Month Day"
+      },
+      "list_style": "List Style",
+      "button_style": "Button Style",
+      "trigger": "Trigger",
+      "hide_icon_button": "Hide Icon Button",
+      "hide_icon_list": "Hide Icon List",
+      "hide_icon_modal": "Hide Icon Modal",
+      "hide_text_label_button": "Hide Text Label Button",
+      "hide_text_label_list": "Hide Text Label List",
+      "is_buttons_list": "Button List",
+      "hide_background": "Hide Background",
+      "hide_checkmark": "Hide Checkmark",
+      "size": "Size",
+      "label": "Label",
+      "light_mode": "Light Mode",
+      "language": "Language"
+    }
+  },
+  "options": {
+    "status": {
+      "tentative": "Tentative",
+      "confirmed": "Confirmed",
+      "cancelled": "Cancelled"
+    },
+    "availability": {
+      "busy": "Busy",
+      "free": "Free"
+    }
   },
   "meta": {
     "titleSlug": "The free and easy tool for more convenient event sharing",

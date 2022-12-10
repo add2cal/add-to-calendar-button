@@ -1,10 +1,4 @@
-import type {
-  Option,
-  ListStyle,
-  ButtonStyle,
-  Trigger,
-  LightMode,
-} from '@/models/addToCalendarButton';
+import type { Option, ListStyle, ButtonStyle, Trigger, LightMode } from '@/models/addToCalendarButton';
 import type { Language } from '@/models//language';
 
 export enum DateAttrsKey {
@@ -30,12 +24,12 @@ export enum DateAttrsKey {
 
 export enum DateRecurrenceAttrsKey {
   IS_SIMPLE = 'IS_SIMPLE',
-  RECURRENCE = 'RECURRENCE',
-  RECURRENCE_INTERVAL = 'RECURRENCE_INTERVAL',
-  RECURRENCE_COUNT = 'RECURRENCE_COUNT',
-  RECURRENCE_BY_DAY = 'RECURRENCE_BY_DAY',
-  RECURRENCE_BY_MONTH = 'RECURRENCE_BY_MONTH',
-  RECURRENCE_BY_MONTH_DAY = 'RECURRENCE_BY_MONTH_DAY',
+  RRULE_VALUE = 'RRULE_VALUE',
+  INTERVAL = 'INTERVAL',
+  COUNT = 'COUNT',
+  BY_DAY = 'BY_DAY',
+  BY_MONTH = 'BY_MONTH',
+  BY_MONTH_DAY = 'BY_MONTH_DAY',
 }
 
 export enum LayoutAttrsKey {
@@ -88,12 +82,12 @@ export interface DateAttrs {
 
 export interface DateRecurrenceAttrs {
   [DateRecurrenceAttrsKey.IS_SIMPLE]: boolean;
-  [DateRecurrenceAttrsKey.RECURRENCE]: string;
-  [DateRecurrenceAttrsKey.RECURRENCE_INTERVAL]: number;
-  [DateRecurrenceAttrsKey.RECURRENCE_COUNT]: number;
-  [DateRecurrenceAttrsKey.RECURRENCE_BY_DAY]: string;
-  [DateRecurrenceAttrsKey.RECURRENCE_BY_MONTH]: number[];
-  [DateRecurrenceAttrsKey.RECURRENCE_BY_MONTH_DAY]: string;
+  [DateRecurrenceAttrsKey.RRULE_VALUE]: string;
+  [DateRecurrenceAttrsKey.INTERVAL]: number;
+  [DateRecurrenceAttrsKey.COUNT]: number;
+  [DateRecurrenceAttrsKey.BY_DAY]: string;
+  [DateRecurrenceAttrsKey.BY_MONTH]: number[];
+  [DateRecurrenceAttrsKey.BY_MONTH_DAY]: string;
 }
 
 export interface LayoutAttrs {
@@ -131,17 +125,16 @@ export const ComponentAttrKeyMap: { [key in string]: string } = {
   [AttrsKey.STATUS]: 'status',
   [AttrsKey.ORGANIZER]: 'organizer',
   [AttrsKey.ISC_FILE]: 'icsFile',
-  [AttrsKey.RECURRENCE]: 'recurrence',
-  [AttrsKey.RECURRENCE_INTERVAL]: 'recurrence_interval',
-  [AttrsKey.RECURRENCE_COUNT]: 'recurrence_count',
-  [AttrsKey.RECURRENCE_BY_DAY]: 'recurrence_byDay',
-  [AttrsKey.RECURRENCE_BY_MONTH]: 'recurrence_byMonth',
-  [AttrsKey.RECURRENCE_BY_MONTH_DAY]: 'recurrence_byMonthDay',
+  [AttrsKey.RRULE_VALUE]: 'recurrence',
+  [AttrsKey.INTERVAL]: 'recurrence_interval',
+  [AttrsKey.COUNT]: 'recurrence_count',
+  [AttrsKey.BY_DAY]: 'recurrence_byDay',
+  [AttrsKey.BY_MONTH]: 'recurrence_byMonth',
+  [AttrsKey.BY_MONTH_DAY]: 'recurrence_byMonthDay',
   [AttrsKey.AVAILABILITY]: 'availability',
   [AttrsKey.IS_SUBSCRIBED]: 'subscribe',
   [AttrsKey.OPTIONS]: 'options',
   [AttrsKey.ICAL_FILE_NAME]: 'iCalFileName',
-  // todo: map layout fields
   [AttrsKey.LIST_STYLE]: 'listStyle',
   [AttrsKey.BUTTON_STYLE]: 'buttonStyle',
   [AttrsKey.TRIGGER]: 'trigger',

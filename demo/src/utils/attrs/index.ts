@@ -1,5 +1,5 @@
 import { DefaultButtonStyle, DefaultTrigger, Size } from '@/models/addToCalendarButton';
-import { AttrsKey, ComponentAttrKeyMap, type Attrs } from '@/models/attrs';
+import { AttrsKey, ComponentAttrKeyMap, DateRecurrenceAttrsKey, type Attrs } from '@/models/attrs';
 import { DefaultLanguage } from '@/models/language';
 import { getAvailableTimezones } from '@/utils/timezone';
 
@@ -25,24 +25,30 @@ export const mapAttrsObject = (attrs: Attrs) => {
           }
           break;
         }
+        case AttrsKey.STATUS: {
+          if (!!value && typeof value === 'string') {
+            value = value.toUpperCase();
+          }
+          break;
+        }
         case AttrsKey.ORGANIZER: {
           const name = value[AttrsKey.ORGANIZER_NAME];
           const email = value[AttrsKey.ORGANIZER_EMAIL];
           value = name && email ? `${name}|${email}` : '';
           break;
         }
-        case AttrsKey.RECURRENCE: {
-          if (obj[AttrsKey.IS_SIMPLE]) {
+        case DateRecurrenceAttrsKey.RRULE_VALUE: {
+          if (obj[DateRecurrenceAttrsKey.IS_SIMPLE]) {
             value = '';
           }
           break;
         }
-        case AttrsKey.RECURRENCE_INTERVAL:
-        case AttrsKey.RECURRENCE_COUNT:
-        case AttrsKey.RECURRENCE_BY_DAY:
-        case AttrsKey.RECURRENCE_BY_MONTH:
-        case AttrsKey.RECURRENCE_BY_MONTH_DAY: {
-          if (obj[AttrsKey.IS_SIMPLE]) {
+        case DateRecurrenceAttrsKey.INTERVAL:
+        case DateRecurrenceAttrsKey.COUNT:
+        case DateRecurrenceAttrsKey.BY_DAY:
+        case DateRecurrenceAttrsKey.BY_MONTH:
+        case DateRecurrenceAttrsKey.BY_MONTH_DAY: {
+          if (obj[DateRecurrenceAttrsKey.IS_SIMPLE]) {
             if (Array.isArray(value)) {
               value = value.join();
             }

@@ -15,10 +15,7 @@ defineEmits(['update:modelValue']);
 
 <template>
   <div>
-    <label
-      v-if="label"
-      :class="['block text-sm font-medium text-gray-700 ', required && 'required']"
-    >
+    <label v-if="label" :class="['block text-sm font-medium text-gray-700 ', required && 'required']">
       {{ label }}
     </label>
     <input

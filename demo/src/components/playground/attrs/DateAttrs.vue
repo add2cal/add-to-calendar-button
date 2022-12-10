@@ -1,11 +1,5 @@
 <script setup lang="ts">
-import { ref, computed, defineProps } from "vue";
-import {
-  Listbox,
-  ListboxButton,
-  ListboxOptions,
-  ListboxOption,
-} from "@headlessui/vue";
+import { ref, computed, watch, defineProps, defineEmits } from "vue";
 import Input from "@/components/controls/Input.vue";
 import Combobox from "@/components/controls/Combobox.vue";
 import Select from "@/components/controls/Select.vue";
@@ -15,113 +9,68 @@ import { getAvailableTimezones } from "@/utils/timezone.js";
 import { Status, Availability, Option } from "@/models/addToCalendarButton";
 import { getDefaultDateAttrs } from "@/utils/attrs";
 import { DateAttrsKey } from "@/models/attrs";
+import { useI18n } from 'vue-i18n';
 
-defineProps({
+const props = defineProps({
   modelValue: {
     type: Object,
     default: getDefaultDateAttrs()
   },
 });
+
+const emit = defineEmits(['update:modelValue']);
+
+
 const timezoneOptions = getAvailableTimezones();
+
+const internalValue = ref(props.modelValue || getDefaultDateAttrs());
+
+const { t } = useI18n();
+
+watch(internalValue, () => {
+  emit('update:modelValue', internalValue);
+}, { deep: true });
+
+const i18nAvailabilityOptions = computed(() =>
+  Object.values(Availability).map((item: string) =>
+    ({
+      key: t(`options.availability.${item}`),
+      value: item
+    })
+  )
+)
+
+const i18nStatusOptions  = computed(() =>
+  Object.values(Status).map((item: string) =>
+    ({
+      key: t(`options.status.${item}`),
+      value: item
+    })
+  )
+)
 </script>
 
 <template>
   <div class="grid">
-    <Input
-      v-model="modelValue[DateAttrsKey.NAME]"
-      required
-      label="Name"
-      class="mb-3"
-    />
-    <Input
-      v-model="modelValue[DateAttrsKey.DESCRIPTION]"
-      label="Description"
-      class="mb-3"
-    />
-    <Input
-      v-model="modelValue[DateAttrsKey.START_DATE]"
-      label="Start date"
-      placeholder="YYYY-MM-DD"
-      class="mb-3"
-    />
-    <Input
-      v-model="modelValue[DateAttrsKey.START_TIME]"
-      label="Start time"
-      placeholder="HH:MM"
-      class="mb-3"
-    />
-    <Input
-      v-model="modelValue[DateAttrsKey.END_DATE]"
-      label="End date"
-      placeholder="YYYY-MM-DD"
-      class="mb-3"
-    />
-    <Input
-      v-model="modelValue[DateAttrsKey.END_TIME]"
-      label="End time"
-      placeholder="HH:MM"
-      class="mb-3"
-    />
-    <Combobox
-      label="Timezone"
-      :options="timezoneOptions"
-      v-model="modelValue[DateAttrsKey.TIMEZONE]"
-      class="mb-3"
-    />
-    <Input
-      v-model="modelValue[DateAttrsKey.LOCATION]"
-      label="Location"
-      class="mb-3"
-    />
-    <Select
-      v-model="modelValue[DateAttrsKey.STATUS]"
-      label="Status"
-      :options="Object.values(Status)"
-      class="mb-3"
-    />
-    <Input
-      v-model="modelValue[DateAttrsKey.ORGANIZER][DateAttrsKey.ORGANIZER_NAME]"
-      label="Organizer Name"
-      class="mb-3"
-    />
-    <Input
-      v-model="modelValue[DateAttrsKey.ORGANIZER][DateAttrsKey.ORGANIZER_EMAIL]"
-      label="Organizer Email"
-      class="mb-3"
-    />
+    <Input v-model="internalValue[DateAttrsKey.NAME]" required :label="t(`labels.inputs.${[DateAttrsKey.NAME]}`.toLocaleLowerCase())" class="mb-3" />
+    <Input v-model="internalValue[DateAttrsKey.DESCRIPTION]" :label="t(`labels.inputs.${[DateAttrsKey.DESCRIPTION]}`.toLocaleLowerCase())" class="mb-3" />
+    <Input v-model="internalValue[DateAttrsKey.START_DATE]" :label="t(`labels.inputs.${[DateAttrsKey.START_DATE]}`.toLocaleLowerCase())" placeholder="YYYY-MM-DD" class="mb-3" />
+    <Input v-model="internalValue[DateAttrsKey.START_TIME]" :label="t(`labels.inputs.${[DateAttrsKey.START_TIME]}`.toLocaleLowerCase())" placeholder="HH:MM" class="mb-3" />
+    <Input v-model="internalValue[DateAttrsKey.END_DATE]" :label="t(`labels.inputs.${[DateAttrsKey.END_DATE]}`.toLocaleLowerCase())" placeholder="YYYY-MM-DD" class="mb-3" />
+    <Input v-model="internalValue[DateAttrsKey.END_TIME]" :label="t(`labels.inputs.${[DateAttrsKey.END_TIME]}`.toLocaleLowerCase())" placeholder="HH:MM" class="mb-3" />
+    <Combobox v-model="internalValue[DateAttrsKey.TIMEZONE]" :label="t(`labels.inputs.${[DateAttrsKey.TIMEZONE]}`.toLocaleLowerCase())" :options="timezoneOptions" class="mb-3" />
+    <Input v-model="internalValue[DateAttrsKey.LOCATION]" :label="t(`labels.inputs.${[DateAttrsKey.LOCATION]}`.toLocaleLowerCase())" class="mb-3" />
+    <Select v-model="internalValue[DateAttrsKey.STATUS]" :label="t(`labels.inputs.${[DateAttrsKey.STATUS]}`.toLocaleLowerCase())" :options="i18nStatusOptions" byKey="key" byValue="value" class="mb-3" />
+    <Input v-model="internalValue[DateAttrsKey.ORGANIZER][DateAttrsKey.ORGANIZER_NAME]" :label="t(`labels.inputs.${[DateAttrsKey.ORGANIZER_NAME]}`.toLocaleLowerCase())" class="mb-3" />
+    <Input v-model="internalValue[DateAttrsKey.ORGANIZER][DateAttrsKey.ORGANIZER_EMAIL]" :label="t(`labels.inputs.${[DateAttrsKey.ORGANIZER_EMAIL]}`.toLocaleLowerCase())" class="mb-3" />
 
-    <Input
-      v-model="modelValue[DateAttrsKey.ISC_FILE]"
-      label="*.isc file"
-      placeholder="https://..."
-      class="mb-3"
-    />
-    <Recurrence v-model="modelValue[DateAttrsKey.RECURRENCE_OBJECT]" />
-    <Select
-      v-model="modelValue[DateAttrsKey.AVAILABILITY]"
-      label="Availability"
-      :options="Object.values(Availability)"
-      class="mb-3"
-    />
-    <Switch
-      v-model="modelValue[DateAttrsKey.IS_SUBSCRIBED]"
-      label="Subscribe"
-      class="mb-3"
-    />
+    <Input v-model="internalValue[DateAttrsKey.ISC_FILE]" :label="t(`labels.inputs.${[DateAttrsKey.ISC_FILE]}`.toLocaleLowerCase())" placeholder="https://..." class="mb-3" />
+    <Recurrence v-model="internalValue[DateAttrsKey.RECURRENCE_OBJECT]" />
+    <Select v-model="internalValue[DateAttrsKey.AVAILABILITY]" :label="t(`labels.inputs.${[DateAttrsKey.AVAILABILITY]}`.toLocaleLowerCase())" :options="i18nAvailabilityOptions" byKey="key" byValue="value" class="mb-3" />
+    <Switch v-model="internalValue[DateAttrsKey.IS_SUBSCRIBED]" :label="t(`labels.inputs.${[DateAttrsKey.IS_SUBSCRIBED]}`.toLocaleLowerCase())" class="mb-3" />
 
-    <Select
-      v-model="modelValue[DateAttrsKey.OPTIONS]"
-      multiselect
-      required
-      label="Options"
-      :options="Object.values(Option)"
-      class="mb-3"
-    />
+    <Select v-model="internalValue[DateAttrsKey.OPTIONS]" multiselect required :label="t(`labels.inputs.${[DateAttrsKey.OPTIONS]}`.toLocaleLowerCase())" :options="Object.values(Option)" class="mb-3" />
 
-    <Input
-      v-model="modelValue[DateAttrsKey.ICAL_FILE_NAME]"
-      label="iCalFileName"
-      class="mb-3"
-    />
+    <Input v-model="internalValue[DateAttrsKey.ICAL_FILE_NAME]" :label="t(`labels.inputs.${[DateAttrsKey.ICAL_FILE_NAME]}`.toLocaleLowerCase())" class="mb-3" />
   </div>
 </template>

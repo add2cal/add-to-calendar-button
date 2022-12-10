@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { defineProps, ref, defineEmits } from 'vue';
+import { defineProps, defineEmits } from 'vue';
 import { SwitchGroup, SwitchLabel, Switch } from '@headlessui/vue';
 import { useI18n } from 'vue-i18n';
 const { t } = useI18n();

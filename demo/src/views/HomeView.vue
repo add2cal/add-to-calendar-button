@@ -100,7 +100,7 @@ const { t, locale } = useI18n();
       </div>
     </div>
 
-    <div class="py-14 mt-20 border-t border-zinc-300 dark:border-zinc-700 text-center">
+    <div class="mt-20 border-t border-zinc-300 py-14 text-center dark:border-zinc-700">
       <h3 class="pb-6">What's next?</h3>
 
       <RouterLink class="button-primary m-6" :to="{ name: 'examples', params: { locale } }"> Explore Examples <ArrowRightIcon class="-mt-0.5 ml-2 inline-block h-4 w-4" aria-hidden="true" /></RouterLink>
