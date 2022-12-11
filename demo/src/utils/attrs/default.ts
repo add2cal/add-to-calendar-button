@@ -2,6 +2,7 @@ import { type DateAttrs, type DateRecurrenceAttrs, type LayoutAttrs, type Attrs,
 import { Option, Size, DefaultButtonStyle, DefaultTrigger, DefaultLightMode } from '@/models/addToCalendarButton';
 import { DefaultLanguageCode } from '@/models/language';
 import { getBrowserTimezone } from '@/utils/timezone';
+import { get, LSKey } from '@/utils/localStorage';
 
 export const getDefaultDateRecurrenceAttrs = (): DateRecurrenceAttrs => ({
   [DateRecurrenceAttrsKey.IS_SIMPLE]: true,
@@ -54,3 +55,24 @@ export const getDefaultAttrs = (): Attrs => ({
   date: getDefaultDateAttrs(),
   layout: getDefaultLayoutAttrs(),
 });
+
+export const getInitialAttrs = (): Attrs => {
+  const defaultData = getDefaultAttrs();
+  const cachedData: Attrs = get(LSKey.ATTRS) && JSON.parse(get(LSKey.ATTRS));
+
+  const mergeDeep = (objA: any, objB: any) => {
+    if (objB) {
+      Object.keys(objB).forEach((key) => {
+        if (!objA.hasOwnProperty(key) || typeof objB[key] !== 'object') {
+          objA[key] = objB[key];
+        } else {
+          mergeDeep(objA[key], objB[key]);
+        }
+      });
+    }
+
+    return objA;
+  };
+
+  return !!cachedData && typeof cachedData === 'object' ? mergeDeep(defaultData, cachedData) : defaultData;
+};

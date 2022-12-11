@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref } from 'vue';
+import { ref, watch } from 'vue';
 import LightModeSwitch from "@/components/LightModeSwitch.vue";
 import { EyeIcon, EyeSlashIcon } from '@heroicons/vue/24/outline';
 import "add-to-calendar-button";
@@ -8,11 +8,17 @@ import DateAttrs from "@/components/playground/attrs/DateAttrs.vue";
 import LayoutAttrs from "@/components/playground/attrs/LayoutAttrs.vue";
 import { useI18n } from 'vue-i18n'
 import { getDefaultAttrs, mapAttrsObject, attrsToHtmlString } from '@/utils/attrs';
+import { set, LSKey } from '@/utils/localStorage';
+import { getInitialAttrs } from '@/utils/attrs/default';
 const { t } = useI18n();
 
 const showCode = ref(false);
 
-const data = ref(getDefaultAttrs())
+const data = ref(getInitialAttrs())
+
+watch(data, () => {
+  set(LSKey.ATTRS, data.value);
+}, { deep: true });
 </script>
 
 <template>
