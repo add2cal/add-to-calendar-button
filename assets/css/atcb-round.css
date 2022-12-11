@@ -18,6 +18,7 @@
  */
 
  :host {
+  text-align: center;
   --base-font-size-l: 16px;
   --base-font-size-m: 16px;
   --base-font-size-s: 16px;
@@ -157,8 +158,8 @@
   line-height: 1.5em;
   margin: .13em;
   max-width: 350px;
-  min-width: 160px;
-  padding: .65em 1em;
+  min-width: 10em;
+  padding: .65em 1.2em;
   position: relative;
   text-align: center;
   touch-action: manipulation;
@@ -191,7 +192,7 @@
   background-color: var(--atcb-background-hover);
   box-shadow: var(--atcb-shadow-button-hover);
   margin: 0;
-  padding: 0.78em 1.13em;
+  padding: 0.78em 1.33em;
 }
 
 .atcb-button.atcb-no-text:focus,
@@ -215,7 +216,7 @@
   background-color: var(--atcb-background-hover);
   box-shadow: var(--atcb-shadow-button-active);
   margin: 0;
-  padding: 0.78em 1.13em;
+  padding: 0.78em 1.33em;
 }
 
 .atcb-button.atcb-active.atcb-no-text:not(.atcb-modal-style, .atcb-dropoverlay),
@@ -224,7 +225,7 @@
   background-color: var(--atcb-background-hover);
   box-shadow: var(--atcb-shadow-button-active);
   margin: 0;
-  padding: 0.93em 1.13em;
+  padding: 0.93em 1.33em;
 }
 
 .atcb-button.atcb-active:not(.atcb-modal-style, .atcb-dropoverlay, .atcb-dropup, .atcb-no-text)::before,
@@ -304,7 +305,7 @@
   box-sizing: border-box;
   position: absolute;
   z-index: 14000090;
-  min-width: 200px;
+  min-width: 12.5em;
   width: auto;
 }
 
@@ -669,7 +670,8 @@ a.atcb-modal-btn:focus-visible {
 .atcb-date-btn-right {
   position: relative;
   color: var(--atcb-modal-date-btn-text);
-  min-width: 200px;
+  min-width: 12.5em;
+  overflow-wrap: anywhere;
 }
 
 .atcb-date-btn-details {
