@@ -18,6 +18,7 @@
  */
 
 :host {
+  text-align: center;
   --base-font-size-l: 16px;
   --base-font-size-m: 16px;
   --base-font-size-s: 16px;
@@ -163,8 +164,8 @@
 
 .atcb-button {
   box-shadow: var(--atcb-shadow-button);
-  min-width: 280px;
-  max-width: 450px;
+  min-width: 17.5em;
+  max-width: 16em;
   position: relative;
   z-index: 1;
 }
@@ -238,7 +239,8 @@
 .atcb-date-btn-right {
   position: relative;
   color: var(--atcb-modal-date-btn-text);
-  min-width: 200px;
+  min-width: 12.5em;
+  overflow-wrap: anywhere;
 }
 
 .atcb-date-btn-details {

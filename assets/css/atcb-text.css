@@ -18,6 +18,7 @@
  */
 
 :host {
+  text-align: center;
   --base-font-size-l: 16px;
   --base-font-size-m: 16px;
   --base-font-size-s: 16px;
@@ -302,7 +303,7 @@
   box-sizing: border-box;
   position: absolute;
   z-index: 14000090;
-  min-width: 200px;
+  min-width: 12.5em;
   width: auto;
 }
 
@@ -667,7 +668,8 @@ a.atcb-modal-btn:focus-visible{
 .atcb-date-btn-right {
   position: relative;
   color: var(--atcb-modal-date-btn-text);
-  min-width: 200px;
+  min-width: 12.5em;
+  overflow-wrap: anywhere;
 }
 
 .atcb-date-btn-details {

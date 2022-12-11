@@ -320,8 +320,8 @@ const defaultDate = nextDay.getFullYear() + '-' + ('0' + (nextDay.getMonth() + 1
         </p>
         <p>In this example, instead of changing the trigger, we made the "listStyle" a modal, which automatically sets the click trigger.</p>
         <div>
-          <div class="flex justify-center p-10 pb-6">
-            <span class="self-center pr-6">Do it! →</span>
+          <div class="mx-auto p-10 pb-6 text-center">
+            <span class="pr-6">Do it! →</span>
             <add-to-calendar-button
               name="[Reminder] Test the Add to Calendar Button"
               v-bind:startDate="defaultDate"
@@ -332,8 +332,8 @@ const defaultDate = nextDay.getFullYear() + '-' + ('0' + (nextDay.getMonth() + 1
               label="Click me hard!"
               description="Check out the maybe easiest way to include Add to Calendar Buttons to your website:[br]→ [url]https://add-to-calendar-button.com/|Click here![/url]"
               options="'Apple','Google','iCal','Outlook.com','Yahoo'"
-              inline
               listStyle="modal"
+              inline
               lightMode="bodyScheme"
             ></add-to-calendar-button>
           </div>

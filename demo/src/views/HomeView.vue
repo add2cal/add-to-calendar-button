@@ -39,11 +39,13 @@ const { t, locale } = useI18n();
     </div>
   </div>
 
-  <div id="installation" class="container pt-6">
-    <h2 class="pt-20 pb-8"><WrenchScrewdriverIcon class="-mt-1 mr-3 inline-block h-6 w-6" aria-hidden="true" />Bringing it to your Website</h2>
+  <div class="h-14"></div>
+
+  <div id="installation" class="container pt-12">
+    <h2 class="pb-8"><WrenchScrewdriverIcon class="-mt-1 mr-3 inline-block h-6 w-6" aria-hidden="true" />Bringing it to your Website</h2>
     <IntegrationGuides />
 
-    <h2 id="features" class="pt-20 pb-8"><AdjustmentsHorizontalIcon class="-mt-1 mr-3 inline-block h-6 w-6" aria-hidden="true" />Functionality</h2>
+    <h2 id="features" class="mt-20 pb-8"><AdjustmentsHorizontalIcon class="-mt-1 mr-3 inline-block h-6 w-6" aria-hidden="true" />Functionality</h2>
     <div>Simple and convenient integration of 1 or many buttons, configurable directly within the HTML code!</div>
     <div class="my-14 mx-auto grid max-w-sm grid-cols-1 gap-x-10 md:max-w-4xl md:grid-cols-[200px_minmax(0,1fr)] md:gap-y-20">
       <img alt="Supported Calendars" width="150" height="150" src="../../public/assets/img/caltypes.png" class="mx-auto self-center" />
