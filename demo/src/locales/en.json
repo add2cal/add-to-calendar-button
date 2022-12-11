@@ -62,9 +62,11 @@
       "list_style": "List Style",
       "button_style": "Button Style",
       "trigger": "Trigger",
+      "hide_icon_options": "Hide Icon for",
       "hide_icon_button": "Hide Icon Button",
       "hide_icon_list": "Hide Icon List",
       "hide_icon_modal": "Hide Icon Modal",
+      "hide_text_options": "Hide Text for",
       "hide_text_label_button": "Hide Text Label Button",
       "hide_text_label_list": "Hide Text Label List",
       "is_buttons_list": "Button List",
@@ -85,6 +87,15 @@
     "availability": {
       "busy": "Busy",
       "free": "Free"
+    },
+    "hide_icon": {
+      "button": "Button",
+      "list": "List",
+      "modal": "Modal"
+    },
+    "hide_text": {
+      "button": "Button",
+      "list": "List"
     }
   },
   "meta": {

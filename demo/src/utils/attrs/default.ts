@@ -1,6 +1,6 @@
-import { type DateAttrs, type DateRecurrenceAttrs, type LayoutAttrs, type Attrs, DateAttrsKey, DateRecurrenceAttrsKey, LayoutAttrsKey } from '@/models/attrs';
+import { type DateAttrs, type DateRecurrenceAttrs, type LayoutAttrs, type Attrs, DateAttrsKey, DateRecurrenceAttrsKey, LayoutAttrsKey, HideIconOption, HideTextOption } from '@/models/attrs';
 import { Option, Size, DefaultButtonStyle, DefaultTrigger, DefaultLightMode } from '@/models/addToCalendarButton';
-import { DefaultLanguage } from '@/models/language';
+import { DefaultLanguageCode } from '@/models/language';
 import { getBrowserTimezone } from '@/utils/timezone';
 
 export const getDefaultDateRecurrenceAttrs = (): DateRecurrenceAttrs => ({
@@ -39,18 +39,15 @@ export const getDefaultLayoutAttrs = (): LayoutAttrs => ({
   [LayoutAttrsKey.LIST_STYLE]: null,
   [LayoutAttrsKey.BUTTON_STYLE]: DefaultButtonStyle,
   [LayoutAttrsKey.TRIGGER]: DefaultTrigger,
-  [LayoutAttrsKey.HIDE_ICON_BUTTON]: false,
-  [LayoutAttrsKey.HIDE_ICON_LIST]: false,
-  [LayoutAttrsKey.HIDE_ICON_MODAL]: false,
-  [LayoutAttrsKey.HIDE_TEXT_LABEL_BUTTON]: false,
-  [LayoutAttrsKey.HIDE_TEXT_LABEL_LIST]: false,
+  [LayoutAttrsKey.HIDE_ICON_OPTIONS]: { [HideIconOption.BUTTON]: false, [HideIconOption.LIST]: false, [HideIconOption.MODAL]: false }, // for playground ui
+  [LayoutAttrsKey.HIDE_TEXT_OPTIONS]: { [HideTextOption.BUTTON]: false, [HideTextOption.LIST]: false }, // for playground ui
   [LayoutAttrsKey.IS_BUTTONS_LIST]: false,
   [LayoutAttrsKey.HIDE_BACKGROUND]: false,
   [LayoutAttrsKey.HIDE_CHECKMARK]: false,
   [LayoutAttrsKey.SIZE]: Size.default,
   [LayoutAttrsKey.LABEL]: '',
   [LayoutAttrsKey.LIGHT_MODE]: DefaultLightMode,
-  [LayoutAttrsKey.LANGUAGE]: DefaultLanguage,
+  [LayoutAttrsKey.LANGUAGE]: DefaultLanguageCode,
 });
 
 export const getDefaultAttrs = (): Attrs => ({

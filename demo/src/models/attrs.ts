@@ -1,5 +1,5 @@
 import type { Option, ListStyle, ButtonStyle, Trigger, LightMode } from '@/models/addToCalendarButton';
-import type { Language } from '@/models//language';
+import type { LanguageCode } from '@/models//language';
 
 export enum DateAttrsKey {
   NAME = 'NAME',
@@ -36,11 +36,8 @@ export enum LayoutAttrsKey {
   LIST_STYLE = 'LIST_STYLE',
   BUTTON_STYLE = 'BUTTON_STYLE',
   TRIGGER = 'TRIGGER',
-  HIDE_ICON_BUTTON = 'HIDE_ICON_BUTTON',
-  HIDE_ICON_LIST = 'HIDE_ICON_LIST',
-  HIDE_ICON_MODAL = 'HIDE_ICON_MODAL',
-  HIDE_TEXT_LABEL_BUTTON = 'HIDE_TEXT_LABEL_BUTTON',
-  HIDE_TEXT_LABEL_LIST = 'HIDE_TEXT_LABEL_LIST',
+  HIDE_ICON_OPTIONS = 'HIDE_ICON_OPTIONS', // for playground ui
+  HIDE_TEXT_OPTIONS = 'HIDE_TEXT_OPTIONS', // for playground ui
   IS_BUTTONS_LIST = 'IS_BUTTONS_LIST',
   HIDE_BACKGROUND = 'HIDE_BACKGROUND',
   HIDE_CHECKMARK = 'HIDE_CHECKMARK',
@@ -50,13 +47,28 @@ export enum LayoutAttrsKey {
   LANGUAGE = 'LANGUAGE',
 }
 
+export enum HideIconOption {
+  BUTTON = 'HIDE_ICON_BUTTON',
+  LIST = 'HIDE_ICON_LIST',
+  MODAL = 'HIDE_ICON_MODAL',
+}
+
+export enum HideTextOption {
+  BUTTON = 'HIDE_TEXT_LABEL_BUTTON',
+  LIST = 'HIDE_TEXT_LABEL_LIST',
+}
+
 // merged enum
 export const AttrsKey = {
   ...DateAttrsKey,
   ...DateRecurrenceAttrsKey,
   ...LayoutAttrsKey,
+  HIDE_ICON_BUTTON: 'HIDE_ICON_BUTTON', // for mapping
+  HIDE_ICON_LIST: 'HIDE_ICON_LIST', // for mapping
+  HIDE_ICON_MODAL: 'HIDE_ICON_MODAL', // for mapping
+  HIDE_TEXT_LABEL_BUTTON: 'HIDE_TEXT_LABEL_BUTTON', // for mapping
+  HIDE_TEXT_LABEL_LIST: 'HIDE_TEXT_LABEL_LIST', // for mapping
 };
-// export type AttrsKey = typeof AttrsKey;
 
 export interface DateAttrs {
   [DateAttrsKey.NAME]: string;
@@ -94,18 +106,15 @@ export interface LayoutAttrs {
   [LayoutAttrsKey.LIST_STYLE]: ListStyle | null;
   [LayoutAttrsKey.BUTTON_STYLE]: ButtonStyle;
   [LayoutAttrsKey.TRIGGER]: Trigger;
-  [LayoutAttrsKey.HIDE_ICON_BUTTON]: boolean;
-  [LayoutAttrsKey.HIDE_ICON_LIST]: boolean;
-  [LayoutAttrsKey.HIDE_ICON_MODAL]: boolean;
-  [LayoutAttrsKey.HIDE_TEXT_LABEL_BUTTON]: boolean;
-  [LayoutAttrsKey.HIDE_TEXT_LABEL_LIST]: boolean;
+  [LayoutAttrsKey.HIDE_ICON_OPTIONS]: { [key in HideIconOption]: boolean };
+  [LayoutAttrsKey.HIDE_TEXT_OPTIONS]: { [key in HideTextOption]: boolean };
   [LayoutAttrsKey.IS_BUTTONS_LIST]: boolean;
   [LayoutAttrsKey.HIDE_BACKGROUND]: boolean;
   [LayoutAttrsKey.HIDE_CHECKMARK]: boolean;
   [LayoutAttrsKey.SIZE]: number;
   [LayoutAttrsKey.LABEL]: string;
   [LayoutAttrsKey.LIGHT_MODE]: LightMode;
-  [LayoutAttrsKey.LANGUAGE]: Language;
+  [LayoutAttrsKey.LANGUAGE]: LanguageCode;
 }
 
 export interface Attrs {

@@ -61,12 +61,14 @@ const selectedOptions = computed(() => {
           <span class="block truncate">
             <template v-for="(selected, index) in selectedOptions">
               <template v-if="(index !== 0)">&nbsp;</template>
-              <template v-if="byKey">
-                {{ selected && selected[byKey] }}
-              </template>
-              <template v-else>
-                {{ selected }}
-              </template>
+              <slot name="selected" :option="selected">
+                <template v-if="byKey">
+                  {{ selected && selected[byKey] }}
+                </template>
+                <template v-else>
+                  {{ selected }}
+                </template>
+              </slot>
             </template>
           </span>
           <span class="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2">
@@ -78,7 +80,9 @@ const selectedOptions = computed(() => {
           <ListboxOptions class="absolute z-10 mt-1 max-h-36 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none dark:bg-zinc-700 sm:text-sm">
             <ListboxOption v-for="option in options" :key="byKey ? option[byKey] : option" :value="byValue ? option[byValue] : option" as="template">
               <li class="relative cursor-pointer select-none py-2 pl-10 pr-4 text-left ui-active:bg-secondary-light ui-active:text-zinc-900">
-                <span class="block truncate ui-selected:font-semibold"> {{ byKey ? option[byKey]: option }}</span>
+                <span class="block truncate ui-selected:font-semibold">
+                  <slot name="option" :option="option">{{ byKey ? option[byKey]: option }}</slot>
+                </span>
               </li>
             </ListboxOption>
           </ListboxOptions>

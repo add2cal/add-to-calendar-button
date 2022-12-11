@@ -1,12 +1,12 @@
 <script setup lang="ts">
-import { ref, watch, defineProps, defineEmits } from "vue";
+import { ref, watch, computed, defineProps, defineEmits } from "vue";
 import Input from "@/components/controls/Input.vue";
 import Select from "@/components/controls/Select.vue";
 import Switch from "@/components/controls/Switch.vue";
 import { ListStyle, ButtonStyle, Trigger, LightMode, Size } from "@/models/addToCalendarButton";
-import { Language } from "@/models/language";
+import { LanguageCode, LanguageNames } from "@/models/language";
 import { getDefaultLayoutAttrs } from "@/utils/attrs";
-import { LayoutAttrsKey } from "@/models/attrs";
+import { LayoutAttrsKey, HideIconOption, HideTextOption } from "@/models/attrs";
 import { useI18n } from 'vue-i18n';
 
 const props = defineProps({
@@ -25,6 +25,45 @@ const { t } = useI18n();
 watch(internalValue, () => {
   emit('update:modelValue', internalValue);
 }, { deep: true });
+
+const languageOptions = computed(() =>
+  Object.values(LanguageCode).map((item) =>
+    ({
+      key: LanguageNames[item] +  ` (${item})`,
+      value: item
+    })
+  )
+)
+
+const i18nHideIconOptions = computed(() =>
+  Object.keys(HideIconOption).map((key: string) =>
+    ({
+      key: t(`options.hide_icon.${key}`.toLowerCase()),
+      value: HideIconOption[key]
+    })
+  )
+)
+
+const i18nHideTextOptions = computed(() =>
+  Object.keys(HideTextOption).map((key: string) =>
+    ({
+      key: t(`options.hide_text.${key}`.toLowerCase()),
+      value: HideTextOption[key]
+    })
+  )
+)
+
+function onHideIconOptionsUpdate(options: string[]) {
+  Object.keys(internalValue.value[LayoutAttrsKey.HIDE_ICON_OPTIONS]).forEach((key) => {
+    internalValue.value[LayoutAttrsKey.HIDE_ICON_OPTIONS][key] = options.includes(key);
+  });
+}
+
+function onHideTextOptionsUpdate(options: string[]) {
+  Object.keys(internalValue.value[LayoutAttrsKey.HIDE_TEXT_OPTIONS]).forEach((key) => {
+    internalValue.value[LayoutAttrsKey.HIDE_TEXT_OPTIONS][key] = options.includes(key);
+  });
+}
 </script>
 
 <template>
@@ -35,15 +74,27 @@ watch(internalValue, () => {
 
     <Select v-model="internalValue[LayoutAttrsKey.TRIGGER]" :label="t(`labels.inputs.${[LayoutAttrsKey.TRIGGER]}`.toLocaleLowerCase())" :options="Object.values(Trigger)" class="mb-3" />
 
-    <Switch v-model="internalValue[LayoutAttrsKey.HIDE_ICON_BUTTON]" :label="t(`labels.inputs.${[LayoutAttrsKey.HIDE_ICON_BUTTON]}`.toLocaleLowerCase())" class="mb-3" />
+    <Select
+      :modelValue="Object.keys(internalValue[LayoutAttrsKey.HIDE_ICON_OPTIONS]).filter((key) => !!internalValue[LayoutAttrsKey.HIDE_ICON_OPTIONS][key])"
+      :label="t(`labels.inputs.${[LayoutAttrsKey.HIDE_ICON_OPTIONS]}`.toLocaleLowerCase())"
+      :options="i18nHideIconOptions"
+      byKey="key"
+      byValue="value"
+      multiselect
+      class="mb-3"
+      @update:modelValue="onHideIconOptionsUpdate"
+    />
 
-    <Switch v-model="internalValue[LayoutAttrsKey.HIDE_ICON_LIST]" :label="t(`labels.inputs.${[LayoutAttrsKey.HIDE_ICON_LIST]}`.toLocaleLowerCase())" class="mb-3" />
-
-    <Switch v-model="internalValue[LayoutAttrsKey.HIDE_ICON_MODAL]" :label="t(`labels.inputs.${[LayoutAttrsKey.HIDE_ICON_MODAL]}`.toLocaleLowerCase())" class="mb-3" />
-
-    <Switch v-model="internalValue[LayoutAttrsKey.HIDE_TEXT_LABEL_BUTTON]" :label="t(`labels.inputs.${[LayoutAttrsKey.HIDE_TEXT_LABEL_BUTTON]}`.toLocaleLowerCase())" class="mb-3" />
-
-    <Switch v-model="internalValue[LayoutAttrsKey.HIDE_TEXT_LABEL_LIST]" :label="t(`labels.inputs.${[LayoutAttrsKey.HIDE_TEXT_LABEL_LIST]}`.toLocaleLowerCase())" class="mb-3" />
+    <Select
+      :modelValue="Object.keys(internalValue[LayoutAttrsKey.HIDE_TEXT_OPTIONS]).filter((key) => !!internalValue[LayoutAttrsKey.HIDE_TEXT_OPTIONS][key])"
+      :label="t(`labels.inputs.${[LayoutAttrsKey.HIDE_TEXT_OPTIONS]}`.toLocaleLowerCase())"
+      :options="i18nHideTextOptions"
+      byKey="key"
+      byValue="value"
+      multiselect
+      class="mb-3"
+      @update:modelValue="onHideTextOptionsUpdate"
+    />
 
     <Switch v-model="internalValue[LayoutAttrsKey.IS_BUTTONS_LIST]" :label="t(`labels.inputs.${[LayoutAttrsKey.IS_BUTTONS_LIST]}`.toLocaleLowerCase())" class="mb-3" />
 
@@ -57,6 +108,6 @@ watch(internalValue, () => {
 
     <Select v-model="internalValue[LayoutAttrsKey.LIGHT_MODE]" :label="t(`labels.inputs.${[LayoutAttrsKey.LIGHT_MODE]}`.toLocaleLowerCase())" :options="Object.values(LightMode)" class="mb-3" />
 
-    <Select v-model="internalValue[LayoutAttrsKey.LANGUAGE]" :label="t(`labels.inputs.${[LayoutAttrsKey.LANGUAGE]}`.toLocaleLowerCase())" :options="Object.values(Language)" class="mb-3" />
+    <Select v-model="internalValue[LayoutAttrsKey.LANGUAGE]" :label="t(`labels.inputs.${[LayoutAttrsKey.LANGUAGE]}`.toLocaleLowerCase())" :options="languageOptions" byKey="key" byValue="value" class="mb-3" />
   </div>
 </template>

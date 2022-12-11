@@ -1,4 +1,4 @@
-export enum Language {
+export enum LanguageCode {
   EN = 'en',
   DE = 'de',
   NL = 'nl',
@@ -7,7 +7,6 @@ export enum Language {
   PT = 'pt',
   TR = 'tr',
   ZH = 'zh',
-  AR = 'ar',
   HI = 'hi',
   PL = 'pl',
   ID = 'id',
@@ -19,6 +18,30 @@ export enum Language {
   IT = 'it',
   KO = 'ko',
   VI = 'vi',
+  AR = 'ar',
 }
 
-export const DefaultLanguage = Language.EN;
+export const DefaultLanguageCode = LanguageCode.EN;
+
+export const LanguageNames = {
+  [LanguageCode.EN]: 'English',
+  [LanguageCode.DE]: 'German',
+  [LanguageCode.NL]: 'Dutch',
+  [LanguageCode.FR]: 'French',
+  [LanguageCode.ES]: 'Spanish',
+  [LanguageCode.PT]: 'Portugese',
+  [LanguageCode.TR]: 'Turkish',
+  [LanguageCode.ZH]: 'Chinese',
+  [LanguageCode.HI]: 'Hindi',
+  [LanguageCode.PL]: 'Polish',
+  [LanguageCode.ID]: 'Indonesian',
+  [LanguageCode.NO]: 'Norwegian',
+  [LanguageCode.FI]: 'Finnish',
+  [LanguageCode.SV]: 'Swedish',
+  [LanguageCode.CS]: 'Czech',
+  [LanguageCode.JA]: 'Japanese',
+  [LanguageCode.IT]: 'Italian',
+  [LanguageCode.KO]: 'Korean',
+  [LanguageCode.VI]: 'Vietnamnese',
+  [LanguageCode.AR]: 'Arabic',
+};
