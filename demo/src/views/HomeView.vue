@@ -35,7 +35,9 @@ const { t, locale } = useI18n();
   <div id="demo" class="mt-20 bg-gradient-to-tr from-zinc-300 to-zinc-200 pt-12 pb-16 shadow-lg dark:from-zinc-800 dark:via-zinc-800 dark:to-zinc-700 dark:shadow-xl">
     <div class="container">
       <h2 class="pb-8"><BeakerIcon class="-mt-1 mr-3 inline-block h-6 w-6" aria-hidden="true" />{{ t('navigation.playground') }}</h2>
-      <PlaygroundArea />
+    </div>
+    <PlaygroundArea />
+    <div class="container hidden md:block">
       <div class="py-4 text-center text-sm italic text-zinc-400 dark:text-zinc-500">
         {{ t('content.demoDisclaimer') }} <RouterLink :to="{ name: 'configuration', params: { locale } }">"{{ t('labels.clickHere') }}"</RouterLink>
       </div>
