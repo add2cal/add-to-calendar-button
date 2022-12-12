@@ -19,7 +19,7 @@ const { t, locale } = useI18n();
     </p>
     <p class="font-semibold">Find a step-by-step guide by selecting your environment.</p>
     <div class="flex flex-col py-24 xl:flex-row">
-      <div class="mx-auto grid grid-cols-1 gap-14 xs:grid-cols-2 md:grid-cols-3">
+      <div class="mx-auto grid grid-cols-1 gap-14 pb-8 pr-0 xs:grid-cols-2 md:grid-cols-3 xl:pb-0 xl:pr-8">
         <RouterLink class="tech-stack-button group h-36 w-40 hover:border-angular hover:from-angular hover:to-angular hover:text-white dark:hover:border-angular dark:hover:from-angular dark:hover:to-angular dark:hover:text-white" :to="{ name: 'use-with-angular', params: { locale } }">
           <Angular class="self-center p-4" />
           <div class="self-center p-4 pt-0">Angular</div>
@@ -45,7 +45,7 @@ const { t, locale } = useI18n();
           <div class="self-center p-4 pt-0">WordPress</div>
         </RouterLink>
       </div>
-      <div class="flex flex-col justify-center self-center pt-24 pb-12 md:flex-row xl:flex-col xl:pt-12">
+      <div class="mt-8 flex w-full flex-col justify-center self-center border-t border-l-0 border-zinc-300 pt-8 pb-12 pl-0 dark:border-zinc-700 md:flex-row xl:mt-0 xl:w-auto xl:flex-col xl:border-t-0 xl:border-l xl:pl-8">
         <div class="mr-0 mb-6 max-w-xs self-center text-center md:mr-10 md:mb-0 xl:mr-0 xl:mb-10 xl:self-end">
           You are using another stack?
           <br />

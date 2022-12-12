@@ -2,7 +2,7 @@
 import { RouterLink } from "vue-router";
 import LightModeSwitch from "@/components/LightModeSwitch.vue";
 import LanguageSwitcher from "@/components/LanguageSwitcher.vue";
-import { ArrowUpIcon } from '@heroicons/vue/24/solid';
+import { ArrowUpIcon, ArrowTopRightOnSquareIcon } from '@heroicons/vue/24/solid';
 import Logo from "@/components/logos/LogoMain.vue";
 import LogoGithub from "@/components/logos/LogoGithub.vue";
 import LogoTwitter from "@/components/logos/LogoTwitter.vue";
@@ -39,7 +39,13 @@ const { t, locale } = useI18n();
             <RouterLink :to="{ name: 'privacy-policy', params: { locale } }">
               {{ t('navigation.privacy-policy') }}
             </RouterLink>
-            <div class="mt-2">
+            <span class="inline sm:hidden md:inline"> | </span>
+            <span class="inline pt-0 sm:block sm:pt-2 md:inline md:pt-0">
+              <a href="https://github.com/add2cal/add-to-calendar-button/blob/main/LICENSE.txt" target="_blank" rel="noopener">{{ t('navigation.license') }} <ArrowTopRightOnSquareIcon class="-mt-0.5 mr-0.5 inline-block h-3 w-3" aria-hidden="true" /></a>
+              |
+              <a href="https://github.com/add2cal/add-to-calendar-button/discussions" target="_blank" rel="noopener">{{ t('navigation.help') }} <ArrowTopRightOnSquareIcon class="-mt-0.5 mr-0.5 inline-block h-3 w-3" aria-hidden="true" /></a>
+            </span>
+            <div class="mt-3">
               <span class="font-semibold text-zinc-500 dark:text-zinc-400"> &copy; {{new Date().getFullYear()}} </span>
               <span class="lowercase text-zinc-400 dark:text-zinc-500"> , Current Version: 2.0.0 </span>
             </div>

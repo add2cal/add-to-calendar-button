@@ -23,17 +23,19 @@ watch(data, () => {
 
 <template>
   <div>
-    <div class="grid grid-cols-2 rounded-t-md border-2 border-zinc-400 shadow-lg dark:border-zinc-600 lg:grid-cols-3">
-      <div id="date-input" class="rounded-tl-md bg-zinc-200 p-3 dark:bg-zinc-800">
+    <div :class="[ !showCode ? 'rounded-md' : 'rounded-t-md' ]" class="grid grid-cols-2 border-2 border-zinc-400 shadow-lg dark:border-zinc-600 lg:grid-cols-3">
+      <div id="date-input" :class="{ 'lg:rounded-bl-md-none rounded-bl-md': !showCode }" class="rounded-tl-md bg-zinc-200 p-3 dark:bg-zinc-800">
         <div class="mb-4 text-sm font-semibold uppercase text-zinc-400 dark:text-zinc-600">
           {{ t('labels.dateInput') }}
         </div>
         <DateAttrs v-model="data.date" />
       </div>
-      <div id="rendering" class="row-span-2 flex justify-center border-l-2 border-zinc-400 bg-zinc-100 px-3 py-8 dark:border-zinc-600 dark:bg-zinc-900 lg:row-span-1">
-        <add-to-calendar-button v-bind="mapAttrsObject(data)" debug />
+      <div id="rendering" :class="{ 'rounded-br-md lg:rounded-br-none': !showCode }" class="row-span-2 flex justify-center rounded-tr-md border-l-2 py-8 border-zinc-400 bg-zinc-100 px-3 dark:border-zinc-600 dark:bg-zinc-900 lg:row-span-1 lg:rounded-tr-none">
+        <div class="sticky top-[30vh] h-[500px]">
+          <add-to-calendar-button v-bind="mapAttrsObject(data)" debug />
+        </div>
       </div>
-      <div id="style-input" class="border-l-0 border-t-2 border-zinc-400 bg-zinc-200 p-3 dark:border-zinc-600 dark:bg-zinc-800 lg:rounded-tr-md lg:border-t-0 lg:border-l-2">
+      <div id="style-input" :class="[ !showCode ? 'rounded-bl-md lg:rounded-r-md lg:rounded-bl-none' : 'rounded-none lg:rounded-tr-md' ]" class="border-l-0 border-t-2 border-zinc-400 bg-zinc-200 p-3 dark:border-zinc-600 dark:bg-zinc-800 lg:border-t-0 lg:border-l-2">
         <div class="mb-4 flex justify-between text-sm font-semibold uppercase text-zinc-400 dark:text-zinc-600">
           <span>{{ t('labels.layoutInput') }}</span>
           <LightModeSwitch />
@@ -41,7 +43,7 @@ watch(data, () => {
         <LayoutAttrs v-model="data.layout" />
       </div>
     </div>
-    <div id="code-output" :class="[ !showCode ? 'bg-zinc-300 dark:bg-zinc-800' : 'bg-zinc-200 dark:bg-zinc-800' ]" class="rounded-b-md border-2 border-t-0 border-zinc-400 p-2 shadow-lg dark:border-zinc-600">
+    <div id="code-output" :class="[ !showCode ? 'mx-8 bg-zinc-300 dark:bg-zinc-800' : 'mx-0 bg-zinc-200 pb-0 dark:bg-zinc-800' ]" class="rounded-b-md border-2 border-t-0 border-zinc-400 p-2 shadow-lg transition-all dark:border-zinc-600">
       <div class="cursor-pointer text-center text-sm font-semibold text-zinc-500 hover:text-black dark:text-zinc-500 dark:hover:text-secondary" @click="showCode = !showCode">
         <span :class="{ hidden: showCode }"><EyeIcon class="-mt-1 mr-2 inline-block h-5 w-5" aria-hidden="true" />{{ t('labels.showCode') }}</span>
         <span :class="{ hidden: !showCode }"><EyeSlashIcon class="-mt-1 mr-2 inline-block h-5 w-5" aria-hidden="true" />{{ t('labels.hideCode') }}</span>

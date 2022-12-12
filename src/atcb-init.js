@@ -240,6 +240,7 @@ function atcb_build_button(host, data, debug = false) {
       const rootObj = host.querySelector('.atcb-initialized');
       // ... and on success, load css and generate the button
       atcb_set_light_mode(host, data);
+      rootObj.setAttribute('lang', data.language);
       atcb_load_css(host, rootObj, data.buttonStyle, data.inline, data.customCss);
       atcb_setup_state_management(data);
       // set global event listeners
@@ -421,6 +422,7 @@ function atcb_action(data, triggerElement, keyboardTrigger = false) {
   const rootObj = host.shadowRoot.querySelector('.atcb-initialized');
   atcb_setup_state_management(data);
   atcb_set_light_mode(host.shadowRoot, data);
+  host.shadowRoot.querySelector('.atcb-initialized').setAttribute('lang', data.language);
   atcb_load_css(host.shadowRoot, rootObj, data.buttonStyle, data.inline, data.customCss);
   // set global event listeners
   atcb_set_global_event_listener(host.shadowRoot, data);

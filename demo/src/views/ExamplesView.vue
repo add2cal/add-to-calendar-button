@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import "add-to-calendar-button";
-import { ArrowRightIcon } from '@heroicons/vue/24/outline';
+import { ArrowRightIcon, ArrowTopRightOnSquareIcon } from '@heroicons/vue/24/outline';
 import CodeBlock from "@/components/CodeBlock.vue";
 import { useI18n } from 'vue-i18n'
 const { t, locale } = useI18n();
@@ -139,7 +139,7 @@ const defaultDate = nextDay.getFullYear() + '-' + ('0' + (nextDay.getMonth() + 1
         <h2 class="mb-4 mt-14 border-t border-zinc-300 pt-14 dark:border-zinc-700">Example 4: Recurring Event</h2>
         <p>
           You can define recurring events by setting an
-          <a href="https://www.rfc-editor.org/rfc/rfc5545" target="_blank" rel="noopener">RRULE</a>.<br />
+          <a href="https://www.rfc-editor.org/rfc/rfc5545" target="_blank" rel="noopener">RRULE <ArrowTopRightOnSquareIcon class="-mt-0.5 mr-0.5 inline-block h-4 w-4" aria-hidden="true" /></a>.<br />
           Mind that the rule needs to be valid (technically and logically) and that it is not supported by all calendar types - in this example, the specified Yahoo option won't show up for that reason.
         </p>
         <p>

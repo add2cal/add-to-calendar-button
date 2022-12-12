@@ -4,6 +4,7 @@
   },
   "navigation": {
     "home": "Demo",
+    "playground": "Playground",
     "installation": "Installation",
     "features": "Functionality",
     "examples": "Examples",
@@ -18,7 +19,9 @@
     "use-with-vue": "How to use with Vue",
     "use-with-wordpress": "How to use with WordPress",
     "configuration": "Configuration",
-    "404": "404 not found"
+    "404": "404 not found",
+    "license": "License",
+    "help": "Help"
   },
   "labels": {
     "enableDarkMode": "Enable Dark Mode",
@@ -43,38 +46,39 @@
       "timezone": "Timezone",
       "location": "Location",
       "status": "Status",
-      "organizer_name": "Organizer Name",
-      "organizer_email": "Organizer Email",
-      "isc_file": "*.isc File",
+      "organizer_name": "Organizer: Name",
+      "organizer_email": "Organizer: Email",
+      "isc_file": "*.ics File",
       "availability": "Availability",
       "is_subscribed": "Subscribe",
-      "options": "Options",
+      "options": "Calendar Types",
       "ical_file_name": "iCal File Name",
       "recurrence": {
-        "rrule_value": "Recurrence",
-        "is_simple": "Is Recurrence Simple",
-        "interval": "Recurrence Interval",
-        "count": "Recurrence Count",
-        "by_day": "Recurrence By Day",
-        "by_month": "Recurrence By Month",
-        "by_month_day": "Recurrence By Month Day"
+        "headline": "Recurrence",
+        "rrule_value": "RRULE",
+        "is_simple": "Simplyfied",
+        "interval": "Interval",
+        "count": "Count",
+        "by_day": "By Day",
+        "by_month": "By Month",
+        "by_month_day": "By Month Day"
       },
       "list_style": "List Style",
       "button_style": "Button Style",
       "trigger": "Trigger",
-      "hide_icon_options": "Hide Icon for",
-      "hide_icon_button": "Hide Icon Button",
-      "hide_icon_list": "Hide Icon List",
-      "hide_icon_modal": "Hide Icon Modal",
-      "hide_text_options": "Hide Text for",
-      "hide_text_label_button": "Hide Text Label Button",
-      "hide_text_label_list": "Hide Text Label List",
+      "hide_icon_options": "Hide Icon for...",
+      "hide_icon_button": "Hide Button Icon",
+      "hide_icon_list": "Hide List Icons",
+      "hide_icon_modal": "Hide Modal Icon",
+      "hide_text_options": "Hide Text for...",
+      "hide_text_label_button": "Hide Label on Button",
+      "hide_text_label_list": "Hide Text on List",
       "is_buttons_list": "Button List",
       "hide_background": "Hide Background",
       "hide_checkmark": "Hide Checkmark",
       "size": "Size",
-      "label": "Label",
-      "light_mode": "Light Mode",
+      "label": "Button Label",
+      "light_mode": "Dark/Light Mode",
       "language": "Language"
     }
   },
@@ -105,6 +109,7 @@
     "seo-title": "All about Add to Calendar Buttons"
   },
   "content": {
-    "404RealContent": "The real content can be accessed best via the home page."
+    "404RealContent": "The real content can be accessed best via the home page.",
+    "demoDisclaimer": "The playground only holds a subset of the available options. Check the \"Configuration\" page for more:"
   }
 }

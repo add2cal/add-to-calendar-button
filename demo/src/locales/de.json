@@ -4,6 +4,7 @@
   },
   "navigation": {
     "home": "Demo",
+    "playground": "Testbereich",
     "installation": "Installation",
     "features": "Funktionen",
     "examples": "Beispiele",
@@ -18,7 +19,9 @@
     "use-with-vue": "Setup mit Vue",
     "use-with-wordpress": "Nutzung mit WordPress",
     "configuration": "Konfiguration",
-    "404": "404 nicht gefunden"
+    "404": "404 nicht gefunden",
+    "license": "Lizenz",
+    "help": "Hilfe"
   },
   "labels": {
     "enableDarkMode": "Dark Mode aktivieren",
@@ -32,7 +35,72 @@
     "default": "Standard",
     "startPlaying": "Live ausprobieren",
     "startConfiguring": "Jetzt konfigurieren",
-    "exploreExamples": "Beispiele erkunden"
+    "exploreExamples": "Beispiele erkunden",
+    "inputs": {
+      "name": "Name",
+      "description": "Beschreibung",
+      "start_date": "Start-Datum",
+      "start_time": "Start-Zeit",
+      "end_date": "End-Datum",
+      "end_time": "End-Zeit",
+      "timezone": "Zeitzone",
+      "location": "Ort",
+      "status": "Status",
+      "organizer_name": "Organisator: Name",
+      "organizer_email": "Organisator: Email",
+      "isc_file": "*.ics Datei",
+      "availability": "Verfügbarkeit",
+      "is_subscribed": "Abonnement",
+      "options": "Kalendertypen",
+      "ical_file_name": "iCal Dateiname",
+      "recurrence": {
+        "headline": "Wiederholung",
+        "rrule_value": "RRULE",
+        "is_simple": "Vereinfacht",
+        "interval": "Interval",
+        "count": "Anzahl",
+        "by_day": "Nach Tag",
+        "by_month": "Nach Monat",
+        "by_month_day": "Nach Wochentag"
+      },
+      "list_style": "Listen-Stil",
+      "button_style": "Button-Stil",
+      "trigger": "Auslöser",
+      "hide_icon_options": "Keine Icons für...",
+      "hide_icon_button": "Kein Button-Icon",
+      "hide_icon_list": "Keine List-Icons",
+      "hide_icon_modal": "Kein Modal-Icon",
+      "hide_text_options": "Kein Text für...",
+      "hide_text_label_button": "Kein Text auf Button",
+      "hide_text_label_list": "Kein Text auf Liste",
+      "is_buttons_list": "Button-Liste",
+      "hide_background": "Kein Hintergrund",
+      "hide_checkmark": "Kein Erfolgs-Haken",
+      "size": "Größe",
+      "label": "Button-Text",
+      "light_mode": "Dark/Light Mode",
+      "language": "Sprache"
+    }
+  },
+  "options": {
+    "status": {
+      "tentative": "Tentative",
+      "confirmed": "Confirmed",
+      "cancelled": "Cancelled"
+    },
+    "availability": {
+      "busy": "Busy",
+      "free": "Free"
+    },
+    "hide_icon": {
+      "button": "Button",
+      "list": "List",
+      "modal": "Modal"
+    },
+    "hide_text": {
+      "button": "Button",
+      "list": "List"
+    }
   },
   "meta": {
     "titleSlug": "Termine teilen leicht gemacht - kostenfrei",
@@ -41,6 +109,7 @@
     "seo-title": "Alles über Add to Calendar Buttons"
   },
   "content": {
-    "404RealContent": "Alle Inhalte erreichst du am besten über die Startseite."
+    "404RealContent": "Alle Inhalte erreichst du am besten über die Startseite.",
+    "demoDisclaimer": "Dieser Bereich zeigt nur einen Teil der verfügbaren Funktionen. Eine vollständige Liste findet sich unter \"Konfiguration\":"
   }
 }

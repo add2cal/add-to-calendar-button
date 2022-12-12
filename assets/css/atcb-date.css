@@ -210,9 +210,11 @@
   align-self: stretch;
   background-color: var(--atcb-modal-date-btn-cal-background);
   color: var(--atcb-modal-date-btn-background-hover);
-  padding: 15px;
+  padding: .7em .8em .8em;
   width: 2.7em;
-  text-align: center;
+  align-items: center;
+  display: flex;
+  flex-direction: column;
 }
 
 .atcb-rtl .atcb-date-btn-left {
@@ -228,6 +230,14 @@
   color: var(--atcb-modal-date-btn-cal-text);
   font-weight: 300;
   font-size: 2em;
+  word-break: keep-all;
+  padding-bottom: .1em;
+}
+
+.atcb-initialized[lang="zh"] .atcb-date-btn-day,
+.atcb-initialized[lang="ja"] .atcb-date-btn-day,
+.atcb-initialized[lang="ko"] .atcb-date-btn-day {
+  font-size: 1.3em;
 }
 
 .atcb-date-btn-month {
@@ -245,7 +255,7 @@
 
 .atcb-date-btn-details {
   opacity: 1;
-  padding: .8em;
+  padding: .7em .8em;
   text-align: left;
 }
 
@@ -289,6 +299,7 @@
 
 .atcb-date-btn-content {
   display: flex;
+  align-items: center;
   font-size: .8em;
   color: var(--atcb-modal-date-btn-text-2);
 }
@@ -303,9 +314,16 @@
 
 .atcb-date-btn-content-icon {
   display: inline-block;
+  margin-top: -.3em;
   height: 0.8em;
   width: 1.3em;
   flex: 0 0 1.3em;
+}
+
+.atcb-initialized[lang="zh"] .atcb-date-btn-content-icon,
+.atcb-initialized[lang="ja"] .atcb-date-btn-content-icon,
+.atcb-initialized[lang="ko"] .atcb-date-btn-content-icon {
+  margin-top: -.2em;
 }
 
 .atcb-rtl .atcb-date-btn-content-icon {
