@@ -1,5 +1,5 @@
 import { DefaultButtonStyle, DefaultTrigger, Size } from '@/models/addToCalendarButton';
-import { AttrsKey, ComponentAttrKeyMap, DateAttrsKey, DateRecurrenceAttrsKey, LayoutAttrsKey, type Attrs } from '@/models/attrs';
+import { AttrsKey, ComponentAttrKeyMap, DateRecurrenceAttrsKey, type Attrs } from '@/models/attrs';
 import { DefaultLanguageCode } from '@/models/language';
 import { getAvailableTimezones } from '@/utils/timezone';
 
@@ -137,9 +137,12 @@ export const attrsToHtmlString = (attrs: Attrs) => {
   const proceedAttr = (obj: any) => {
     Object.keys(obj).forEach((key: string) => {
       const value = allAttrs[key];
-      const defaultValue = defaultAttrs[key];
+      const defaultValue = defaultAttrs[key as keyof typeof defaultAttrs];
       const mappedValue = mapAttrsField(obj, key);
 
+      //TODO: The following makes no sense.
+      // First: if the first block only gets accessed when there is no mappedValue, why are we checking if the mappedValue equals the default in it?
+      // Second: we might change the logic anyway, since we are using default values differently. Proposed approach: Add some new "list" of keys, where matching the default lead to them being not included. This list would contain: buttonStyle, trigger, dropdownStyle, size, lightMode, language. Then, go for addAttr always, except the key is on this list and its value equals the default, OR (for all keys) the value is null or empty or false (for all boolean attributes).
       if (!mappedValue) {
         if (JSON.stringify(value || null) !== JSON.stringify(defaultValue || null) && JSON.stringify(mappedValue || null) !== JSON.stringify(defaultValue || null)) {
           addAttr(key, mappedValue);
@@ -156,7 +159,7 @@ export const attrsToHtmlString = (attrs: Attrs) => {
 
   proceedAttr(allAttrs);
 
-  html += '/>';
+  html += '></add-to-calendar-button>';
 
   return html;
 };

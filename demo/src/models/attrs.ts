@@ -18,7 +18,6 @@ export enum DateAttrsKey {
   RECURRENCE_OBJECT = 'RECURRENCE_OBJECT',
   AVAILABILITY = 'AVAILABILITY',
   IS_SUBSCRIBED = 'IS_SUBSCRIBED',
-  OPTIONS = 'OPTIONS',
   ICAL_FILE_NAME = 'ICAL_FILE_NAME',
 }
 
@@ -45,6 +44,7 @@ export enum LayoutAttrsKey {
   LABEL = 'LABEL',
   LIGHT_MODE = 'LIGHT_MODE',
   LANGUAGE = 'LANGUAGE',
+  OPTIONS = 'OPTIONS',
 }
 
 export enum HideIconOption {
@@ -88,7 +88,6 @@ export interface DateAttrs {
   [DateAttrsKey.RECURRENCE_OBJECT]: DateRecurrenceAttrs;
   [DateAttrsKey.AVAILABILITY]: string;
   [DateAttrsKey.IS_SUBSCRIBED]: boolean;
-  [DateAttrsKey.OPTIONS]: Option[];
   [DateAttrsKey.ICAL_FILE_NAME]: string;
 }
 
@@ -115,6 +114,7 @@ export interface LayoutAttrs {
   [LayoutAttrsKey.LABEL]: string;
   [LayoutAttrsKey.LIGHT_MODE]: LightMode;
   [LayoutAttrsKey.LANGUAGE]: LanguageCode;
+  [LayoutAttrsKey.OPTIONS]: Option[];
 }
 
 export interface Attrs {

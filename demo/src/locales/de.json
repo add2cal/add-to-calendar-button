@@ -28,7 +28,7 @@
     "clickHere": "Hier klicken",
     "showCode": "Quellcode anzeigen",
     "hideCode": "Quellcode ausblenden",
-    "dateInput": "Termin Details",
+    "dateInput": "Termin-Details",
     "layoutInput": "Layout-Einstellungen",
     "demo": "Demo",
     "getStarted": "Loslegen",
@@ -37,7 +37,7 @@
     "startConfiguring": "Jetzt konfigurieren",
     "exploreExamples": "Beispiele erkunden",
     "inputs": {
-      "name": "Name",
+      "name": "Titel",
       "description": "Beschreibung",
       "start_date": "Start-Datum",
       "start_time": "Start-Zeit",
@@ -48,7 +48,7 @@
       "status": "Status",
       "organizer_name": "Organisator: Name",
       "organizer_email": "Organisator: Email",
-      "isc_file": "*.ics Datei",
+      "isc_file": "Bestehende *.ics Datei",
       "availability": "Verfügbarkeit",
       "is_subscribed": "Abonnement",
       "options": "Kalendertypen",
@@ -61,25 +61,32 @@
         "count": "Anzahl",
         "by_day": "Nach Tag",
         "by_month": "Nach Monat",
-        "by_month_day": "Nach Wochentag"
+        "by_month_day": "Nach Wochentag",
+        "placeholder": {
+          "interval": "\"Interval\" im Sinne von jeden Xten ...",
+          "by_day": "\"MO,SA\" oder \"-2MO\", ...",
+          "by_month_day": "bspw. \"4,5\""
+        }
       },
       "list_style": "Listen-Stil",
       "button_style": "Button-Stil",
       "trigger": "Auslöser",
-      "hide_icon_options": "Keine Icons für...",
+      "hide_icon_options": "Icons verbergen",
       "hide_icon_button": "Kein Button-Icon",
       "hide_icon_list": "Keine List-Icons",
       "hide_icon_modal": "Kein Modal-Icon",
-      "hide_text_options": "Kein Text für...",
+      "hide_text_options": "Text verbergen",
       "hide_text_label_button": "Kein Text auf Button",
       "hide_text_label_list": "Kein Text auf Liste",
-      "is_buttons_list": "Button-Liste",
+      "is_buttons_list": "als Liste",
       "hide_background": "Kein Hintergrund",
       "hide_checkmark": "Kein Erfolgs-Haken",
       "size": "Größe",
-      "label": "Button-Text",
+      "label": "Eigener Button-Text",
       "light_mode": "Dark/Light Mode",
-      "language": "Sprache"
+      "language": "Sprache",
+      "nothing_found": "Nichts gefunden.",
+      "select_option": "Option auswählen..."
     }
   },
   "options": {
@@ -102,8 +109,11 @@
       "list": "List"
     }
   },
+  "defaults": {
+    "name": "Beispiels-Event"
+  },
   "meta": {
-    "titleSlug": "Termine teilen leicht gemacht - kostenfrei",
+    "titleSlug": "Termine teilen leicht gemacht",
     "keywords": "Kalender, Event, Veranstaltung, teilen, Button, Script, Skript, Widget, RSVP, Javascript, Angular, React, Vue, Svelte, Astro, Web Component, Outlook, iCal, Microsoft, Teams, Apple, Google, Yahoo, free, kostenlos",
     "description": "Interaktive Demo sowie Tutorials für die Integration in alle großen Web-Frameworks. Speichere unkompliziert Events im Kalender deiner Nutzer.",
     "seo-title": "Alles über Add to Calendar Buttons"

@@ -54,7 +54,7 @@ export enum LightMode {
   BODY_SCHEME = 'bodyScheme',
 }
 
-export const DefaultLightMode = LightMode.BODY_SCHEME;
+export const DefaultLightMode = LightMode.LIGHT;
 
 export const Size = {
   default: 6,

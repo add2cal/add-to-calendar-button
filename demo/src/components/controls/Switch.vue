@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { defineProps, defineEmits } from 'vue';
+
 import { SwitchGroup, SwitchLabel, Switch } from '@headlessui/vue';
 import { useI18n } from 'vue-i18n';
 const { t } = useI18n();
@@ -22,11 +23,14 @@ defineEmits(['update:modelValue']);
 <template>
   <SwitchGroup>
     <div class="flex items-center">
-      <SwitchLabel :class="['mr-4 block text-sm font-medium text-gray-700', required && 'required']" v-if="label">
-        {{ t(label) }}
-      </SwitchLabel>
-      <Switch :value="!!modelValue" :class='modelValue ? "bg-blue-600" : "bg-gray-400"' class="relative inline-flex h-6 w-11 items-center rounded-full outline-none transition-colors focus:outline-none" @update:modelValue="$emit('update:modelValue', !modelValue)">
-        <span :class='modelValue ? "translate-x-6" : "translate-x-1"' class="inline-block h-4 w-4 transform rounded-full bg-white outline-none transition-transform" />
+      <SwitchLabel :class="['mr-3 block text-sm text-zinc-400 dark:text-zinc-500', required && 'required']" v-if="label"> {{ t(label) }}: </SwitchLabel>
+      <Switch
+        value="{modelValue}"
+        :class='modelValue ? "bg-primary-dark" : "bg-zinc-400 dark:bg-zinc-700"'
+        class="relative inline-flex h-[24px] w-[40px] items-center rounded-full border border-zinc-300 shadow outline-none transition-colors hover:border-zinc-400 hover:shadow-md focus:outline-none focus-visible:ring focus-visible:ring-secondary focus-visible:ring-opacity-75 dark:border-zinc-500 dark:hover:border-zinc-400"
+        @update:modelValue="$emit('update:modelValue', !modelValue)"
+      >
+        <span :class='modelValue ? "ml-[18px]" : "ml-[1px]"' class="inline-block h-[19px] w-[19px] transform rounded-full bg-white shadow-md outline-none transition dark:bg-zinc-900" />
       </Switch>
     </div>
   </SwitchGroup>

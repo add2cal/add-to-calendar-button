@@ -32,7 +32,6 @@ export const getDefaultDateAttrs = (): DateAttrs => ({
   [DateAttrsKey.RECURRENCE_OBJECT]: getDefaultDateRecurrenceAttrs(),
   [DateAttrsKey.AVAILABILITY]: '',
   [DateAttrsKey.IS_SUBSCRIBED]: false,
-  [DateAttrsKey.OPTIONS]: [Option.APPLE, Option.GOOGLE, Option.ICAL, Option.OUTLOOK, Option.YAHOO],
   [DateAttrsKey.ICAL_FILE_NAME]: '',
 });
 
@@ -49,6 +48,7 @@ export const getDefaultLayoutAttrs = (): LayoutAttrs => ({
   [LayoutAttrsKey.LABEL]: '',
   [LayoutAttrsKey.LIGHT_MODE]: DefaultLightMode,
   [LayoutAttrsKey.LANGUAGE]: DefaultLanguageCode,
+  [LayoutAttrsKey.OPTIONS]: [Option.APPLE, Option.GOOGLE, Option.ICAL, Option.OUTLOOK, Option.YAHOO],
 });
 
 export const getDefaultAttrs = (): Attrs => ({
@@ -63,7 +63,7 @@ export const getInitialAttrs = (): Attrs => {
   const mergeDeep = (objA: any, objB: any) => {
     if (objB) {
       Object.keys(objB).forEach((key) => {
-        if (!objA.hasOwnProperty(key) || typeof objB[key] !== 'object') {
+        if (!Object.prototype.hasOwnProperty.call(objA, key) || typeof objB[key] !== 'object') {
           objA[key] = objB[key];
         } else {
           mergeDeep(objA[key], objB[key]);

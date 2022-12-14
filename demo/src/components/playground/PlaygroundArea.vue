@@ -1,13 +1,13 @@
 <script setup lang="ts">
 import { ref, watch } from 'vue';
 import LightModeSwitch from "@/components/LightModeSwitch.vue";
-import { EyeIcon, EyeSlashIcon, AdjustmentsHorizontalIcon } from '@heroicons/vue/24/outline';
+import { EyeIcon, EyeSlashIcon, AdjustmentsHorizontalIcon, CheckIcon } from '@heroicons/vue/24/outline';
 import "add-to-calendar-button";
 import CodeBlock from "@/components/CodeBlock.vue";
 import DateAttrs from "@/components/playground/attrs/DateAttrs.vue";
 import LayoutAttrs from "@/components/playground/attrs/LayoutAttrs.vue";
 import { useI18n } from 'vue-i18n'
-import { getDefaultAttrs, mapAttrsObject, attrsToHtmlString } from '@/utils/attrs';
+import { mapAttrsObject, attrsToHtmlString } from '@/utils/attrs';
 import { set, LSKey } from '@/utils/localStorage';
 import { getInitialAttrs } from '@/utils/attrs/default';
 const { t } = useI18n();
@@ -19,13 +19,24 @@ const data = ref(getInitialAttrs())
 watch(data, () => {
   set(LSKey.ATTRS, data.value);
 }, { deep: true });
+
+const showMC = ref(false);
+
+// blocking page scrolling, if the mobile menu is open
+watch(showMC, val => {
+  if (val) {
+    document.documentElement.style.overflow = "hidden";
+  } else {
+    document.documentElement.style.overflow = "auto";
+  }
+});
 </script>
 
 <template>
   <div class="md:container">
-    <div :class="[ !showCode ? 'rounded-none md:rounded-md' : 'rounded-none md:rounded-t-md' ]" class="grid grid-cols-1 border-2 border-x-0 border-zinc-400 shadow-lg dark:border-zinc-600 md:grid-cols-2 md:border-x-2 lg:grid-cols-3">
-      <div id="mobile-input" class="border-b-2 flex justify-center border-zinc-400 bg-zinc-200 p-3 dark:border-zinc-600 dark:bg-zinc-800 md:hidden">
-        <AdjustmentsHorizontalIcon class="block h-8 w-8 mr-14 cursor-pointer hover:text-secondary" />
+    <div :class="[ !showCode ? 'rounded-none md:rounded-md' : 'rounded-none md:rounded-t-md' ]" class="grid grid-cols-1 border-b-2 border-zinc-400 shadow-lg dark:border-zinc-600 md:grid-cols-2 md:border-2 lg:grid-cols-3">
+      <div id="mobile-input" class="flex justify-center bg-gradient-to-tr from-primary-dark to-primary-light p-3 dark:to-primary md:hidden">
+        <AdjustmentsHorizontalIcon @click="(showMC = !showMC)" class="mr-14 block h-8 w-8 cursor-pointer text-white hover:text-secondary" />
         <LightModeSwitch class="self-center" />
       </div>
       <div id="date-input" :class="{ 'lg:rounded-bl-md-none rounded-bl-md': !showCode }" class="hidden rounded-tl-md bg-zinc-200 p-3 dark:bg-zinc-800 md:block">
@@ -37,7 +48,7 @@ watch(data, () => {
       <div
         id="rendering"
         :class="{ 'rounded-bl-none md:rounded-br-md lg:rounded-br-none': !showCode }"
-        class="row-span-2 flex justify-center rounded-tl-none border-0 border-zinc-400 bg-zinc-100 py-8 px-3 dark:border-zinc-600 dark:bg-zinc-900 md:rounded-tr-md md:border-l-2 lg:row-span-1 lg:rounded-tr-none"
+        class="grid-bg row-span-2 flex justify-center rounded-tl-none border-0 border-zinc-400 bg-zinc-100 py-8 px-3 dark:border-zinc-600 dark:bg-zinc-900 md:rounded-tr-md md:border-l-2 lg:row-span-1 lg:rounded-tr-none"
       >
         <div class="sticky top-[30vh] h-auto py-10 md:h-[500px] md:py-0">
           <add-to-calendar-button v-bind="mapAttrsObject(data)" debug />
@@ -63,4 +74,29 @@ watch(data, () => {
       </div>
     </div>
   </div>
+  <!-- mobile config -->
+  <nav :class="{ hidden: !showMC }" class="fixed top-0 left-0 z-50 h-full w-full overflow-y-auto overflow-x-hidden bg-zinc-200 dark:bg-zinc-800 lg:hidden">
+    <div class="grid grid-cols-1 gap-10 pb-28">
+      <div class="bg-zinc-400 p-4 font-semibold uppercase text-zinc-100 dark:bg-zinc-700 dark:text-zinc-400">
+        {{ t('labels.dateInput') }}
+      </div>
+      <div class="px-8 text-left">
+        <DateAttrs v-model="data.date" />
+      </div>
+      <div class="bg-zinc-400 p-4 font-semibold uppercase text-zinc-100 dark:bg-zinc-700 dark:text-zinc-400">
+        {{ t('labels.layoutInput') }}
+      </div>
+      <div class="px-8 text-left">
+        <LayoutAttrs v-model="data.layout" />
+      </div>
+    </div>
+    <div class="fixed bottom-0 left-0 flex h-20 w-full cursor-pointer justify-center bg-secondary text-lg font-semibold text-zinc-700 hover:bg-secondary-light hover:text-black" @click="(showMC = !showMC)">
+      <div class="flex self-center">
+        <div>
+          <CheckIcon class="-mt-1.5 mr-2 inline-block h-7 w-7" aria-hidden="true" />
+          Apply
+        </div>
+      </div>
+    </div>
+  </nav>
 </template>

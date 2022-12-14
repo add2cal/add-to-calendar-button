@@ -3,19 +3,26 @@
   "include": ["env.d.ts", "src/**/*", "src/**/*.vue"],
   "exclude": ["src/components/CodeBlock.vue", "node_modules", "dist"],
   "compilerOptions": {
+    "module": "ESNext",
+    "moduleResolution": "Node",
+    "resolveJsonModule": true,
+    "useDefineForClassFields": true,
     "baseUrl": ".",
     "paths": {
       "@/*": ["./src/*"]
-    }
+    },
+    "target": "ESNext",
+    "lib": ["ESNext", "dom"],
+    "skipLibCheck": true,
   },
   "types": [
     "./node_modules/@types",
     "./node_modules/vite/dist",
-    "./node_modules/vue-i18n/dist"
+    "./node_modules/vue-i18n/dist",
   ],
   "references": [
     {
       "path": "./tsconfig.config.json"
     }
-  ]
+  ],
 }

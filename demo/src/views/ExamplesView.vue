@@ -443,12 +443,16 @@ const defaultDate = nextDay.getFullYear() + '-' + ('0' + (nextDay.getMonth() + 1
 
       <div class="mt-14 grid grid-cols-1 gap-12 border-t border-zinc-300 pt-14 dark:border-zinc-700 sm:grid-cols-2">
         <p class="self-center text-center sm:text-left">Let's directly test most of the options at our playground!</p>
-        <RouterLink class="button-primary w-56 self-center" :to="{ name: 'configuration', params: { locale } }">
+        <RouterLink class="button-primary w-56 self-center" v-if="locale=='en'" :to="{ name: 'home', hash: '#demo', params: { locale } }">
+          {{ t('labels.startPlaying') }}
+          <ArrowRightIcon class="-mt-0.5 ml-2 inline-block h-4 w-4" aria-hidden="true" />
+        </RouterLink>
+        <RouterLink class="button-primary w-56 self-center" v-if="locale!='en'" :to="{ name: 'home-i18n', hash: '#demo', params: { locale } }">
           {{ t('labels.startPlaying') }}
           <ArrowRightIcon class="-mt-0.5 ml-2 inline-block h-4 w-4" aria-hidden="true" />
         </RouterLink>
         <p class="self-center text-center sm:text-left">If you are looking for crazy customization, you can check out the "danger zone".</p>
-        <RouterLink class="button-secondary w-56 self-center" :to="{ name: 'examples', params: { locale } }">
+        <RouterLink class="button-secondary w-56 self-center" :to="{ name: 'advanced-use', params: { locale } }">
           {{ t('navigation.advanced') }}
           <ArrowRightIcon class="-mt-0.5 ml-2 inline-block h-4 w-4" aria-hidden="true" />
         </RouterLink>

@@ -182,7 +182,7 @@ function atcb_decorate_sizes(size) {
       sizeParts[`${i}`] = parseInt(sizeParts[`${i}`]);
     }
     if (sizeParts[0] >= 0 && sizeParts[0] < 11) {
-      sizes['l'] = 10 + sizeParts[0];
+      sizes['l'] = sizes['m'] = sizes['s'] = 10 + sizeParts[0];
     }
     if (sizeParts.length > 2) {
       if (sizeParts[1] >= 0 && sizeParts[1] < 11) {

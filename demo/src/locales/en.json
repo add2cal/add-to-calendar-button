@@ -37,7 +37,7 @@
     "startConfiguring": "Start configuring",
     "exploreExamples": "Start exploring",
     "inputs": {
-      "name": "Name",
+      "name": "Subject",
       "description": "Description",
       "start_date": "Start Date",
       "start_time": "Start Time",
@@ -48,11 +48,11 @@
       "status": "Status",
       "organizer_name": "Organizer: Name",
       "organizer_email": "Organizer: Email",
-      "isc_file": "*.ics File",
+      "isc_file": "Existing *.ics File",
       "availability": "Availability",
       "is_subscribed": "Subscribe",
       "options": "Calendar Types",
-      "ical_file_name": "iCal File Name",
+      "ical_file_name": "Custom iCal File Name",
       "recurrence": {
         "headline": "Recurrence",
         "rrule_value": "RRULE",
@@ -61,25 +61,32 @@
         "count": "Count",
         "by_day": "By Day",
         "by_month": "By Month",
-        "by_month_day": "By Month Day"
+        "by_month_day": "By Month Day",
+        "placeholder": {
+          "interval": "\"Interval\" like every X ...",
+          "by_day": "\"MO,SA\" or \"-2MO\", ...",
+          "by_month_day": "e.g. \"4,5\""
+        }
       },
       "list_style": "List Style",
       "button_style": "Button Style",
       "trigger": "Trigger",
-      "hide_icon_options": "Hide Icon for...",
+      "hide_icon_options": "Hide Icons",
       "hide_icon_button": "Hide Button Icon",
       "hide_icon_list": "Hide List Icons",
       "hide_icon_modal": "Hide Modal Icon",
-      "hide_text_options": "Hide Text for...",
+      "hide_text_options": "Hide Text",
       "hide_text_label_button": "Hide Label on Button",
       "hide_text_label_list": "Hide Text on List",
-      "is_buttons_list": "Button List",
+      "is_buttons_list": "as List",
       "hide_background": "Hide Background",
       "hide_checkmark": "Hide Checkmark",
       "size": "Size",
-      "label": "Button Label",
+      "label": "Custom Button Label",
       "light_mode": "Dark/Light Mode",
-      "language": "Language"
+      "language": "Language",
+      "nothing_found": "Nothing found.",
+      "select_option": "Select an option..."
     }
   },
   "options": {
@@ -102,8 +109,11 @@
       "list": "List"
     }
   },
+  "defaults": {
+    "name": "Sample Event"
+  },
   "meta": {
-    "titleSlug": "The free and easy tool for more convenient event sharing",
+    "titleSlug": "convenient event sharing",
     "keywords": "calendar, event, sharing, button, script, widget, rsvp, javascript, angular, react, vue, svelte, astro, web component, outlook, ical, microsoft, teams, apple, google, yahoo, free",
     "description": "Experience the interactive demo and tutorials on how to create a button, which adds events to your users' calendars. Quick and convenient.",
     "seo-title": "All about Add to Calendar Buttons"

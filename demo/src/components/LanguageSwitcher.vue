@@ -51,9 +51,7 @@ watch(currentLanguage, val => {
   <div class="mx-auto w-36">
     <Listbox v-model="currentLanguage">
       <div class="relative">
-        <ListboxButton
-          class="focus-visible:none relative w-full cursor-pointer rounded-lg bg-zinc-50 py-2 pl-9 pr-10 text-left shadow hover:bg-white hover:shadow-md focus:outline-none focus-visible:ring-2 focus-visible:ring-secondary focus-visible:ring-opacity-75 focus-visible:ring-offset-2 focus-visible:ring-offset-secondary-light dark:bg-zinc-700 dark:hover:bg-zinc-600 sm:text-sm"
-        >
+        <ListboxButton class="relative w-full cursor-pointer rounded-lg bg-zinc-50 py-2 pl-9 pr-10 text-left shadow hover:bg-white hover:shadow-md focus:outline-none focus-visible:ring focus-visible:ring-secondary focus-visible:ring-opacity-75 dark:bg-zinc-700 dark:hover:bg-zinc-600 sm:text-sm">
           <span class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-2">
             <LanguageIcon class="h-5 w-5" aria-hidden="true" />
           </span>

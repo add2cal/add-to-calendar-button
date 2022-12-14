@@ -1,3 +1,1 @@
-<template>
-  Deutsch
-</template>
+<template>Deutsch</template>

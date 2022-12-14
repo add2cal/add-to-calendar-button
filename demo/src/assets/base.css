@@ -166,6 +166,11 @@
 
 }
 
+.grid-bg {
+  background-size: 25px 25px;
+  background-image: radial-gradient(circle, rgb(119, 119, 119, .4) 1px, rgba(0, 0, 0, 0) 1px);
+}
+
 .button-primary {
   @apply inline-block rounded-md border-[2px] text-center font-semibold bg-secondary border-secondary hover:border-0 from-secondary to-secondary-light py-[16px] px-[20px] hover:py-[18px] hover:px-[22px] leading-none text-zinc-700 shadow-md hover:bg-gradient-to-tr hover:text-black hover:no-underline hover:shadow-lg transition;
 }
