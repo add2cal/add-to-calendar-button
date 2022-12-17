@@ -10,6 +10,7 @@ import { Availability } from "@/models/addToCalendarButton";
 import { getDefaultDateAttrs } from "@/utils/attrs";
 import { DateAttrsKey } from "@/models/attrs";
 import { useI18n } from 'vue-i18n';
+import TimezoneAutocomplete from '@/components/controls/TimezoneAutocomplete.vue';
 
 const { t } = useI18n();
 
@@ -27,14 +28,6 @@ const internalValue = ref(props.modelValue || getDefaultDateAttrs());
 watch(internalValue, () => {
   emit('update:modelValue', internalValue);
 }, { deep: true });
-
-const timezoneOptionsImport = getAvailableTimezones();
-const timezoneOptions = (function() {
-  if (Array.isArray(timezoneOptionsImport)) {
-    return timezoneOptionsImport;
-  }
-  return [];
-})();
 
 const i18nAvailabilityOptions = computed(() =>
   Object.values(Availability).map((item: string) =>
@@ -58,16 +51,16 @@ const i18nAvailabilityOptions = computed(() =>
       <Input v-model="internalValue[DateAttrsKey.END_DATE]" :label="t(`labels.inputs.${[DateAttrsKey.END_DATE]}`.toLocaleLowerCase())" type="text" placeholder="YYYY-MM-DD" />
       <Input v-model="internalValue[DateAttrsKey.END_TIME]" :label="t(`labels.inputs.${[DateAttrsKey.END_TIME]}`.toLocaleLowerCase())" type="text" placeholder="HH:MM" />
     </div>
-    <Combobox v-model="internalValue[DateAttrsKey.TIMEZONE]" :label="t(`labels.inputs.${[DateAttrsKey.TIMEZONE]}`.toLocaleLowerCase())" :options="timezoneOptions" class="mb-3" />
+    <TimezoneAutocomplete v-model="internalValue[DateAttrsKey.TIMEZONE]" :label="t(`labels.inputs.${[DateAttrsKey.TIMEZONE]}`.toLocaleLowerCase())" class="mb-3" />
     <Input v-model="internalValue[DateAttrsKey.LOCATION]" :label="t(`labels.inputs.${[DateAttrsKey.LOCATION]}`.toLocaleLowerCase())" type="text" class="mb-3" />
     <Recurrence v-model="internalValue[DateAttrsKey.RECURRENCE_OBJECT]" />
-    <Select v-model="internalValue[DateAttrsKey.AVAILABILITY]" :label="t(`labels.inputs.${[DateAttrsKey.AVAILABILITY]}`.toLocaleLowerCase())" :options="i18nAvailabilityOptions" byKey="key" byValue="value" class="mb-3" />
+    <Select v-model="internalValue[DateAttrsKey.AVAILABILITY]" :label="t(`labels.inputs.${[DateAttrsKey.AVAILABILITY]}`.toLocaleLowerCase())" :options="i18nAvailabilityOptions" byKey="key" byValue="value" clearable class="mb-3" />
     <div class="mb-3 grid grid-cols-2 gap-3">
       <Input v-model="internalValue[DateAttrsKey.ORGANIZER][DateAttrsKey.ORGANIZER_NAME]" :label="t(`labels.inputs.${[DateAttrsKey.ORGANIZER_NAME]}`.toLocaleLowerCase())" type="text" />
       <Input v-model="internalValue[DateAttrsKey.ORGANIZER][DateAttrsKey.ORGANIZER_EMAIL]" :label="t(`labels.inputs.${[DateAttrsKey.ORGANIZER_EMAIL]}`.toLocaleLowerCase())" type="text" />
     </div>
     <Switch v-model="internalValue[DateAttrsKey.IS_SUBSCRIBED]" :label="t(`labels.inputs.${[DateAttrsKey.IS_SUBSCRIBED]}`.toLocaleLowerCase())" class="mb-3" />
     <Input v-model="internalValue[DateAttrsKey.ISC_FILE]" :label="t(`labels.inputs.${[DateAttrsKey.ISC_FILE]}`.toLocaleLowerCase())" placeholder="https://..." type="text" class="mb-3" />
-    <Input v-model="internalValue[DateAttrsKey.ICAL_FILE_NAME]" :label="t(`labels.inputs.${[DateAttrsKey.ICAL_FILE_NAME]}`.toLocaleLowerCase())" type="text"/>
+    <Input v-model="internalValue[DateAttrsKey.ICAL_FILE_NAME]" :label="t(`labels.inputs.${[DateAttrsKey.ICAL_FILE_NAME]}`.toLocaleLowerCase())" type="text" />
   </div>
 </template>

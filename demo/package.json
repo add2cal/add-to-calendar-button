@@ -31,6 +31,7 @@
     "@headlessui/tailwindcss": "^0.1.1",
     "@headlessui/vue": "^1.7.4",
     "@heroicons/vue": "^2.0.13",
+    "@trevoreyre/autocomplete-js": "^2.3.0",
     "prismjs": "^1.29.0",
     "timezones-ical-library": "^1.5.1",
     "vue": "^3.2.45",

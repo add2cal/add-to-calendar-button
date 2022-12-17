@@ -6,7 +6,7 @@ import {
   ListboxOptions,
   ListboxOption,
 } from '@headlessui/vue';
-import { CheckIcon, ChevronDownIcon } from '@heroicons/vue/20/solid';
+import { CheckIcon, ChevronDownIcon, XMarkIcon } from '@heroicons/vue/20/solid';
 
 const props = defineProps({
   modelValue: {
@@ -36,10 +36,14 @@ const props = defineProps({
   multiselect: {
     type: Boolean,
     default: false
-  }
+  },
+  clearable: {
+    type: Boolean,
+    default: false
+  },
 });
 
-defineEmits(['update:modelValue']);
+const emit = defineEmits(['update:modelValue']);
 
 const selectedOptions = computed(() => {
   if (!props.modelValue || !props.options) {
@@ -50,7 +54,13 @@ const selectedOptions = computed(() => {
     const key = option && props.byValue ? option[props.byValue] : option;
     return Array.isArray(props.modelValue) ? props.modelValue.includes(key) : props.modelValue === key
   });
-})
+});
+
+const hasEmptyValue = computed(() => props.multiselect ? !(Array.isArray(props.modelValue) && !!props.modelValue.length) : !props.modelValue);
+
+const clear = () => {
+  emit('update:modelValue', props.multiselect ? [] : '');
+}
 </script>
 
 <template>
@@ -60,7 +70,12 @@ const selectedOptions = computed(() => {
     </label>
     <Listbox :modelValue="multiselect ? (Array.isArray(modelValue) ? modelValue : []) : modelValue" :multiple="multiselect" class="mt-1 pl-2" @update:modelValue="$emit('update:modelValue', $event)">
       <div class="relative w-full">
-        <ListboxButton class="grid w-full cursor-pointer rounded-md bg-zinc-50 py-2 pl-3 pr-10 text-left text-sm shadow hover:bg-white hover:shadow-md focus:outline-none focus-visible:ring focus-visible:ring-secondary focus-visible:ring-opacity-75 dark:bg-zinc-700 dark:hover:bg-zinc-600">
+        <ListboxButton
+          :class="[
+            'grid w-full cursor-pointer rounded-md bg-zinc-50 py-2 pl-3 text-left text-sm shadow hover:bg-white hover:shadow-md focus:outline-none focus-visible:ring focus-visible:ring-secondary focus-visible:ring-opacity-75 dark:bg-zinc-700 dark:hover:bg-zinc-600',
+            !hasEmptyValue && clearable ? 'pr-12' : 'pr-10'
+          ]"
+        >
           <span class="block h-auto min-h-[20px] truncate">
             <span v-if="modelValue==''" class="font-normal text-gray-400">{{ props.placeholder }}<span v-if="!props.placeholder" v-t="'labels.inputs.select_option'"></span></span>
             <template v-for="(selected, index) in selectedOptions">
@@ -74,6 +89,10 @@ const selectedOptions = computed(() => {
                 </template>
               </slot>
             </template>
+          </span>
+
+          <span class="z-1 absolute inset-y-0 right-0 flex items-center pr-7" v-if="!hasEmptyValue && clearable">
+            <XMarkIcon class="h-5 w-5 text-gray-400" aria-hidden="true" @click.prevent="clear" />
           </span>
           <span class="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2">
             <ChevronDownIcon class="h-5 w-5 text-gray-400 transition-transform ui-open:rotate-180" aria-hidden="true" />
