@@ -3,6 +3,7 @@ import { Option, Size, DefaultButtonStyle, DefaultTrigger, DefaultLightMode } fr
 import { DefaultLanguageCode } from '@/models/language';
 import { getBrowserTimezone } from '@/utils/timezone';
 import { get, LSKey } from '@/utils/localStorage';
+import { mergeDeep } from '@/utils/array';
 
 export const getDefaultDateRecurrenceAttrs = (): DateRecurrenceAttrs => ({
   [DateRecurrenceAttrsKey.IS_SIMPLE]: true,
@@ -59,20 +60,6 @@ export const getDefaultAttrs = (): Attrs => ({
 export const getInitialAttrs = (): Attrs => {
   const defaultData = getDefaultAttrs();
   const cachedData: Attrs = get(LSKey.ATTRS) && JSON.parse(get(LSKey.ATTRS));
-
-  const mergeDeep = (objA: any, objB: any) => {
-    if (objB) {
-      Object.keys(objB).forEach((key) => {
-        if (!Object.prototype.hasOwnProperty.call(objA, key) || typeof objB[key] !== 'object') {
-          objA[key] = objB[key];
-        } else {
-          mergeDeep(objA[key], objB[key]);
-        }
-      });
-    }
-
-    return objA;
-  };
 
   return !!cachedData && typeof cachedData === 'object' ? mergeDeep(defaultData, cachedData) : defaultData;
 };
