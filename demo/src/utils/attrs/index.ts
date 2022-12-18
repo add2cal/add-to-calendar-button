@@ -1,5 +1,5 @@
 import { DefaultButtonStyle, DefaultTrigger, Size } from '@/models/addToCalendarButton';
-import { AttrsKey, ComponentAttrKeyMap, DateRecurrenceAttrsKey, type Attrs } from '@/models/attrs';
+import { AttrsKey, ComponentAttrKeyMap, DateAttrsKey, DateRecurrenceAttrsKey, LayoutAttrsKey, type Attrs } from '@/models/attrs';
 import { DefaultLanguageCode } from '@/models/language';
 import { getAvailableTimezones } from '@/utils/timezone';
 
@@ -43,6 +43,8 @@ const mapAttrsField = (obj: any, key: string) => {
       if (obj[DateRecurrenceAttrsKey.IS_SIMPLE]) {
         if (Array.isArray(value)) {
           value = value.join();
+        } else if (!isNaN(+value)) {
+          value = +value;
         }
       } else {
         value = '';
@@ -71,6 +73,7 @@ const mapAttrsField = (obj: any, key: string) => {
       if (value === '' || isNaN(+value) || +value < Size.min || +value > Size.max) {
         value = Size.default;
       }
+      value = +value;
       break;
     }
     case AttrsKey.LANGUAGE: {
@@ -112,11 +115,6 @@ export const mapAttrsObject = (attrs: Attrs) => {
 };
 
 export const attrsToHtmlString = (attrs: Attrs) => {
-  const allAttrs: { [key: string]: any } = {
-    ...attrs.date,
-    ...attrs.layout,
-  };
-
   let html = '<add-to-calendar-button \n';
 
   const addAttr = (key: string, value: any) => {
@@ -132,32 +130,30 @@ export const attrsToHtmlString = (attrs: Attrs) => {
     }
   };
 
+  const allAttrs: { [key: string]: any } = {
+    ...attrs.date,
+    ...attrs.layout,
+  };
   const defaultAttrs = { ...getDefaultAttrs().date, ...getDefaultAttrs().layout };
+  const requiredAttrs: string[] = [DateAttrsKey.NAME, DateAttrsKey.START_DATE, DateAttrsKey.START_TIME, DateAttrsKey.END_TIME, DateAttrsKey.TIMEZONE, LayoutAttrsKey.OPTIONS];
 
-  const proceedAttr = (obj: any) => {
+  const proceedAttr = (obj: any, defaultObj: any) => {
     Object.keys(obj).forEach((key: string) => {
-      const value = allAttrs[key];
-      const defaultValue = defaultAttrs[key as keyof typeof defaultAttrs];
+      const defaultValue = mapAttrsField(defaultObj, key);
       const mappedValue = mapAttrsField(obj, key);
 
-      //TODO: The following makes no sense.
-      // First: if the first block only gets accessed when there is no mappedValue, why are we checking if the mappedValue equals the default in it?
-      // Second: we might change the logic anyway, since we are using default values differently. Proposed approach: Add some new "list" of keys, where matching the default lead to them being not included. This list would contain: buttonStyle, trigger, dropdownStyle, size, lightMode, language. Then, go for addAttr always, except the key is on this list and its value equals the default, OR (for all keys) the value is null or empty or false (for all boolean attributes).
-      if (!mappedValue) {
-        if (JSON.stringify(value || null) !== JSON.stringify(defaultValue || null) && JSON.stringify(mappedValue || null) !== JSON.stringify(defaultValue || null)) {
-          addAttr(key, mappedValue);
-        }
-      } else {
+      if (mappedValue && (defaultValue !== mappedValue || (defaultValue === mappedValue && requiredAttrs.includes(key)))) {
         addAttr(key, mappedValue);
       }
 
+      const value = obj[key];
       if (value && typeof value === 'object' && !Array.isArray(value)) {
-        proceedAttr(value);
+        proceedAttr(value, defaultObj[key]);
       }
     });
   };
 
-  proceedAttr(allAttrs);
+  proceedAttr(allAttrs, defaultAttrs);
 
   html += '></add-to-calendar-button>';
 
