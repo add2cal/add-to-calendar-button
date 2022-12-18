@@ -45,14 +45,22 @@ export function setI18nLanguage(i18n: I18n, locale: Locale): void {
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-const getResourceMessages = (r: any) => r.default || r;
+const getResource = (r: any) => r.default || r;
 
-export async function loadLocaleMessages(i18n: I18n, locale: Locale) {
+export async function loadLocaleResources(i18n: I18n, locale: Locale) {
   // load locale messages
-  const messages = await import(/* @vite-ignore */ `@/locales/${locale}.json`).then(getResourceMessages);
+  const messages = await import(/* @vite-ignore */ `@/i18n/locales/${locale}.json`).then(getResource);
+  // load locale date formats
+  const datetimeFormats = await import(`@/i18n/datetimeFormats/${locale}.json`).then(getResource);
+  // load locale number formats
+  const numberFormats = await import(`@/i18n/numberFormats/${locale}.json`).then(getResource);
 
   // set locale and locale message
   i18n.global.setLocaleMessage(locale, messages);
+  // set locale and datetime format
+  i18n.global.setDateTimeFormat(locale, datetimeFormats);
+  // set locale and number format
+  i18n.global.setNumberFormat(locale, numberFormats);
 
   return nextTick();
 }
