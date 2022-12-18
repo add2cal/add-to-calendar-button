@@ -3,7 +3,9 @@ import App from '@/App.vue';
 import { setupRouter } from '@/router';
 
 import { setupI18n, SUPPORT_LOCALES } from '@/i18n';
-import en from '@/locales/en.json';
+import enLocale from '@/i18n/locales/en.json';
+import enDateFormat from '@/i18n/datetimeFormats/en.json';
+import enNumberFormat from '@/i18n/numberFormats/en.json';
 
 import '@/assets/main.css';
 
@@ -18,7 +20,13 @@ const i18n = setupI18n({
   fallbackWarn: false,
   locale: initialLanguage,
   fallbackLocale: 'en',
-  messages: { en },
+  messages: { en: enLocale },
+  datetimeFormats: {
+    en: enDateFormat
+  },
+  numberFormats: {
+    en: enNumberFormat
+  },
 });
 const router = setupRouter(i18n);
 

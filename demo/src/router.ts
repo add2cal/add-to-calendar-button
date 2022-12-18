@@ -1,5 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router';
-import { setI18nLanguage, loadLocaleMessages, SUPPORT_LOCALES } from '@/i18n';
+import { setI18nLanguage, loadLocaleResources, SUPPORT_LOCALES } from '@/i18n';
 import type { Router, RouteRecordRaw } from 'vue-router';
 import type { I18n } from 'vue-i18n';
 
@@ -143,9 +143,9 @@ export function setupRouter(i18n: I18n): Router {
       return to.fullPath.slice(0, -1);
     }
 
-    // load locale messages
+    // load locale resources
     if (!i18n.global.availableLocales.includes(paramsLocale)) {
-      await loadLocaleMessages(i18n, paramsLocale);
+      await loadLocaleResources(i18n, paramsLocale);
     }
 
     // set i18n language

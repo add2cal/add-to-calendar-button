@@ -17,7 +17,7 @@ export default defineConfig({
       },
     }),
     vueI18n({
-      include: resolve(dirname(fileURLToPath(import.meta.url)), './locales/**'),
+      include: resolve(dirname(fileURLToPath(import.meta.url)), '.i18n/locales/**'),
     }),
     VitePWA({
       registerType: 'autoUpdate',
