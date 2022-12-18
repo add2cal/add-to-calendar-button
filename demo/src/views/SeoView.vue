@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import View_DE from "@/views/SeoView-de.vue";
+import View_DE from "@/components/translated/SeoView-de.vue";
 import "add-to-calendar-button";
 import { RouterLink } from "vue-router";
 import { useI18n } from 'vue-i18n'

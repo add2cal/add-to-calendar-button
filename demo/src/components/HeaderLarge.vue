@@ -42,8 +42,8 @@ const { t, locale } = useI18n();
         </div>
       </div>
       <div class="hidden self-center lg:block">
-        <img class="hidden xl:block" width="400" height="198" src="../../public/assets/img/oval-light.png" />
-        <img alt="Add to Calendar Button" width="150" height="150" src="../../public/assets/img/cal.png" class="animate-bounce-minimal xl:-mt-[180px] xl:ml-[125px]" />
+        <img class="hidden xl:block" width="400" height="198" src="../../assets/img/oval-light.png" />
+        <img alt="Add to Calendar Button" width="150" height="150" src="../../assets/img/cal.png" class="animate-bounce-minimal xl:-mt-[180px] xl:ml-[125px]" />
       </div>
     </div>
   </div>

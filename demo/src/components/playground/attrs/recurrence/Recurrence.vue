@@ -33,7 +33,7 @@ const monthList = getMonthList();
     <div class="text-sm font-semibold text-zinc-400 dark:text-zinc-500">{{ t('labels.inputs.recurrence.headline') }}</div>
     <Switch v-model="internalValue[DateRecurrenceAttrsKey.IS_SIMPLE]" :label="t(`labels.inputs.recurrence.${[DateRecurrenceAttrsKey.IS_SIMPLE]}`.toLocaleLowerCase())" />
 
-    <Input v-if="!internalValue[DateRecurrenceAttrsKey.IS_SIMPLE]" v-model="internalValue[DateRecurrenceAttrsKey.RRULE_VALUE]" :label="t(`labels.inputs.recurrence.${[DateRecurrenceAttrsKey.RRULE_VALUE]}`.toLocaleLowerCase())" placeholder="RRULE :FREQ=..." class="col-span-2" />
+    <Input v-if="!internalValue[DateRecurrenceAttrsKey.IS_SIMPLE]" v-model="internalValue[DateRecurrenceAttrsKey.RRULE_VALUE]" :label="t(`labels.inputs.recurrence.${[DateRecurrenceAttrsKey.RRULE_VALUE]}`.toLocaleLowerCase())" type="text" placeholder="RRULE :FREQ=..." class="col-span-2" />
 
     <template v-else>
       <Input v-model="internalValue[DateRecurrenceAttrsKey.INTERVAL]" :label="t(`labels.inputs.recurrence.${[DateRecurrenceAttrsKey.INTERVAL]}`.toLocaleLowerCase())" type="number" :min="0" :placeholder="t('labels.inputs.recurrence.placeholder.interval')" class="col-span-2" />

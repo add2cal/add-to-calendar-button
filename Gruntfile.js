@@ -91,10 +91,10 @@ module.exports = function (grunt) {
         ],
       },
     },
-    // generate the distributable JavaScript files
+    // generate the distributable JavaScript files (and also add a customized css file to the demo)
     concat: {
       main: {
-        src: ['node_modules/timezones-ical-library/dist/tzlib.js', 'src/atcb-globals.js', 'src/atcb-decorate.js', 'src/atcb-validate.js', 'src/atcb-control.js', 'src/atcb-generate.js', 'src/atcb-links.js', 'src/atcb-util.js', 'src/atcb-i18n.js', 'src/atcb-init.js'],
+        src: ['node_modules/timezones-ical-library/dist/tzlib.js', 'src/atcb-globals.js', 'src/atcb-decorate.js', 'src/atcb-validate.js', 'src/atcb-control.js', 'src/atcb-generate.js', 'src/atcb-generate-rich-data.js', 'src/atcb-links.js', 'src/atcb-util.js', 'src/atcb-i18n.js', 'src/atcb-init.js'],
         dest: 'dist/atcb.js',
         options: {
           stripBanners: true,
@@ -102,13 +102,20 @@ module.exports = function (grunt) {
         },
       },
       module: {
-        src: ['src/atcb-globals.js', 'src/atcb-decorate.js', 'src/atcb-validate.js', 'src/atcb-control.js', 'src/atcb-generate.js', 'src/atcb-links.js', 'src/atcb-util.js', 'src/atcb-i18n.js', 'src/atcb-init.js'],
+        src: ['src/atcb-globals.js', 'src/atcb-decorate.js', 'src/atcb-validate.js', 'src/atcb-control.js', 'src/atcb-generate.js', 'src/atcb-generate-rich-data.js', 'src/atcb-links.js', 'src/atcb-util.js', 'src/atcb-i18n.js', 'src/atcb-init.js'],
         dest: 'dist/module/index.js',
         options: {
           stripBanners: true,
           banner: "import { tzlib_get_ical_block, tzlib_get_offset, tzlib_get_timezones } from 'timezones-ical-library';\r\n",
           footer: 'export { atcb_action };',
           process: (content) => prepareFinalFile(content, true, true),
+        },
+      },
+      cssDemo: {
+        src: ['assets/css/atcb.css'],
+        dest: 'demo/public/atcb.css',
+        options: {
+          footer: ':host { --atcb-background: #ffa255; }:host(.atcb-dark), :host-context(html.atcb-dark):host(.atcb-bodyScheme), :host-context(body.atcb-dark):host(.atcb-bodyScheme) { --atcb-background: #000; }',
         },
       },
     },

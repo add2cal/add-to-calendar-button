@@ -20,7 +20,7 @@ const defaultDate = nextDay.getFullYear() + '-' + ('0' + (nextDay.getMonth() + 1
       <p>The following examples are demonstrating parts of the functionality.<br />We recommend you to play with the demo to experience all variations.</p>
       <p class="italic">On this page, all buttons have some shared parameters. Beside the base date sample, all have the default style, no endDate (defaults to the startDate), and adapt to the lightMode of the website.</p>
       <p>
-        For more advanced expert cases, have a look at the <RouterLink :to="{ name: 'advanced-use', params: { locale } }">"{{ t('navigation.advanced') }}"</RouterLink> page.
+        For more advanced expert cases, have a look at the <RouterLink :to="{ name: 'advanced-use', params: { locale } }">"{{ t('navigation.advanced-use') }}"</RouterLink> page.
       </p>
       <section id="1">
         <h2 class="mb-4 mt-14 border-t border-zinc-300 pt-14 dark:border-zinc-700">Example 1: The usual one</h2>
@@ -191,9 +191,8 @@ const defaultDate = nextDay.getFullYear() + '-' + ('0' + (nextDay.getMonth() + 1
           <div class="flex w-full flex-none justify-center p-10 pb-6 md:w-[300px]">
             <add-to-calendar-button
               name="Event Series"
-              dates='[
-                {
-                  "name":"[Reminder 1/3] to use the Add to Calendar Button",
+              dates='[{
+                "name":"[Reminder 1/3] to use the Add to Calendar Button",
                   "description":"This is the first part to check the Add to Calendar Button script at [url]https://add-to-calendar-button.com/[/url]",
                   "startDate":"today+3",
                   "startTime":"10:15",
@@ -212,8 +211,7 @@ const defaultDate = nextDay.getFullYear() + '-' + ('0' + (nextDay.getMonth() + 1
                   "startDate":"today+8",
                   "startTime":"09:00",
                   "endTime":"19:00"
-                }
-              ]'
+                }]'
               timeZone="Europe/London"
               location="World Wide Web"
               options="'Apple','Google','iCal','Outlook.com','Yahoo'"
@@ -453,7 +451,7 @@ const defaultDate = nextDay.getFullYear() + '-' + ('0' + (nextDay.getMonth() + 1
         </RouterLink>
         <p class="self-center text-center sm:text-left">If you are looking for crazy customization, you can check out the "danger zone".</p>
         <RouterLink class="button-secondary w-56 self-center" :to="{ name: 'advanced-use', params: { locale } }">
-          {{ t('navigation.advanced') }}
+          {{ t('navigation.advanced-use') }}
           <ArrowRightIcon class="-mt-0.5 ml-2 inline-block h-4 w-4" aria-hidden="true" />
         </RouterLink>
       </div>

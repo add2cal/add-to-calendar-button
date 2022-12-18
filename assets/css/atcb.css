@@ -312,10 +312,6 @@
   border-radius: 0 0 6px 6px;
 }
 
-.atcb-list .atcb-list-item:not(:first-child) {
-  border-top-style: none;
-}
-
 .atcb-dropup .atcb-list-item:last-child {
   border-radius: 0;
   padding-bottom: 1.25em;

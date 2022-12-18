@@ -16,7 +16,7 @@ import { atcb_position_list, atcb_manage_body_scroll, atcb_set_fullsize, atcb_se
 import { atcbStates } from './atcb-globals.js';
 
 // FUNCTIONS TO CONTROL THE INTERACTION
-function atcb_toggle(host, action, data = '', button = '', keyboardTrigger = false, generatedButton = false) {
+function atcb_toggle(host, action, data = '', button = null, keyboardTrigger = false, generatedButton = false) {
   // check for state and adjust accordingly
   // action can be 'open', 'close', or 'auto'
   if (action == 'open') {
@@ -29,7 +29,7 @@ function atcb_toggle(host, action, data = '', button = '', keyboardTrigger = fal
 }
 
 // show the dropdown list + background overlay
-function atcb_open(host, data, button, keyboardTrigger = false, generatedButton = false) {
+function atcb_open(host, data, button = null, keyboardTrigger = false, generatedButton = false) {
   atcbStates['active'] = data.identifier;
   // abort early if an add to calendar dropdown or modal already opened
   if (host.querySelector('.atcb-list') || host.querySelector('.atcb-modal')) return;

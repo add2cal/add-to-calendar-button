@@ -239,7 +239,6 @@ function atcb_position_list(host, trigger, list, blockUpwards = false, resize = 
     if ((list.classList.contains('atcb-dropup') && resize) || (!blockUpwards && !resize && triggerDim.top + listDim.height > viewportHeight - 20 && 2 * btnDim.top + btnDim.height - triggerDim.top - listDim.height > 20)) {
       originalTrigger.classList.add('atcb-dropup');
       list.classList.add('atcb-dropup');
-      //list.style.bottom = btnDim.top + ((btnDim.top + btnDim.height) - triggerDim.top) + 'px';
       list.style.bottom = btnParentDim.bottom - btnDim.bottom + (triggerDim.top - btnDim.top) + 'px';
     } else {
       list.style.top = btnDim.top - btnParentDim.top + (triggerDim.top - btnDim.top) + 'px';
@@ -262,7 +261,7 @@ function atcb_position_list(host, trigger, list, blockUpwards = false, resize = 
     // read list dimensions again, since we altered it in the steps before
     const listDim = list.getBoundingClientRect();
     list.style.width = listDim.width + 'px';
-    const sideMargin = Math.round((btnDim.width - listDim.width) / 2);
+    const sideMargin = Math.round((btnDim.width - listDim.width) / 4);
     list.style.margin = -Math.round((listDim.height + btnDim.height) / 2) + 'px ' + sideMargin + 'px 0 ' + sideMargin + 'px';
   }
   // changing the list's position back to absolute

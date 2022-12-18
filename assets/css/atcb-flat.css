@@ -267,6 +267,7 @@
 }
 
 .atcb-list {
+  background: var(--atcb-close-background);
   box-sizing: border-box;
   border: 0.15em solid var(--atcb-border);
   color: var(--atcb-text);
@@ -309,10 +310,6 @@
   font-size: 0.95em;
   font-weight: 600;
   outline: none;
-}
-
-.atcb-list .atcb-list-item:not(:first-child) {
-  border-top-style: none;
 }
 
 .atcb-dropup .atcb-list-item:last-child {

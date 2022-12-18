@@ -14,7 +14,7 @@ const { t, locale } = useI18n();
       <p>The following examples are demonstrating parts of the functionality.<br />We recommend you to play with the demo to experience all variations.</p>
       <p class="italic">On this page, all buttons have some shared parameters. Beside the base date sample, all have the default style, no endDate (defaults to the startDate), and adapt to the lightMode of the website.</p>
       <p>
-        For more advanced expert cases, have a look at the <RouterLink :to="{ name: 'advanced-use', params: { locale } }">"{{ t('navigation.advanced') }}"</RouterLink> page.
+        For more advanced expert cases, have a look at the <RouterLink :to="{ name: 'advanced-use', params: { locale } }">"{{ t('navigation.advanced-use') }}"</RouterLink> page.
       </p>
       <section id="1"></section>
 
@@ -35,7 +35,7 @@ const { t, locale } = useI18n();
         </RouterLink>
         <p class="self-center text-center sm:text-left">For the edge cases, you can check the "danger zone".</p>
         <RouterLink class="button-secondary w-56 self-center" :to="{ name: 'advanced-use', params: { locale } }">
-          {{ t('navigation.advanced') }}
+          {{ t('navigation.advanced-use') }}
           <ArrowRightIcon class="-mt-0.5 ml-2 inline-block h-4 w-4" aria-hidden="true" />
         </RouterLink>
       </div>

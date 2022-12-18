@@ -32,7 +32,10 @@ watch(router.currentRoute, route => {
 // push route when locale change has been detected
 watch(currentLanguage, val => {
   if ((router.currentRoute.value.name == 'home-i18n' || router.currentRoute.value.name == 'home') && val.id == 'en') {
-    router.push({ name: 'home' });
+    router.push({
+      name: 'home',
+      params: { locale: val.id }
+    });
   } else if (router.currentRoute.value.name == 'home' && val.id != 'en') {
     router.push({
       name: 'home-i18n',

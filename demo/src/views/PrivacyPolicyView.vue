@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import View_DE from "@/views/PrivacyPolicyView-de.vue";
+import View_DE from "@/components/translated/PrivacyPolicyView-de.vue";
 import { useI18n } from 'vue-i18n'
 const { t, locale } = useI18n();
 </script>

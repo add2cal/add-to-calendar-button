@@ -14,7 +14,8 @@
 import { atcbVersion, isBrowser, atcbStates, atcbWcParams, atcbWcBooleanParams, atcbWcObjectParams, atcbWcArrayParams, atcbCssTemplate } from './atcb-globals.js';
 import { atcb_decorate_data } from './atcb-decorate.js';
 import { atcb_check_required, atcb_validate } from './atcb-validate.js';
-import { atcb_generate_button, atcb_generate_rich_data } from './atcb-generate.js';
+import { atcb_generate_button } from './atcb-generate.js';
+import { atcb_generate_rich_data } from './atcb-generate-rich-data.js';
 import { atcb_close, atcb_toggle } from './atcb-control.js';
 import { atcb_generate_links } from './atcb-links';
 import { atcb_secure_content, atcb_manage_body_scroll, atcb_set_fullsize } from './atcb-util.js';
@@ -245,7 +246,7 @@ function atcb_build_button(host, data, debug = false) {
       atcb_setup_state_management(data);
       // set global event listeners
       atcb_set_global_event_listener(host, data);
-      atcb_init_log();
+      atcb_init_log(data.proKey);
       // generate the actual button
       atcb_generate_button(host, rootObj, data, debug);
       // create schema.org data (https://schema.org/Event), if possible; and add it to the regular DOM
@@ -304,7 +305,7 @@ function atcb_load_css(host, rootObj, style = '', inline = false, customCss = ''
   if (customCss != '' && style == 'custom') {
     // first, create placeholder
     const placeholder = document.createElement('div');
-    placeholder.style.cssText = 'width: 150px; height: 40px; border-radius: 13px; background-color: #777; opacity: .3;';
+    placeholder.style.cssText = 'width: 150px; height: 40px; border-radius: 200px; background-color: #777; opacity: .3;';
     host.prepend(placeholder);
     // second, load the actual css
     const cssUrl = customCss;
@@ -329,7 +330,25 @@ function atcb_load_css(host, rootObj, style = '', inline = false, customCss = ''
   // otherwise, we load it from a variable
   if (style != 'none' && atcbCssTemplate[`${style}`] != null) {
     const cssContent = document.createElement('style');
-    cssContent.innerText = atcbCssTemplate[`${style}`];
+    // get custom override information and remove them from the host
+    const overrideDefaultCss = (function() {
+      if (host.host.hasAttribute('style')) {
+        const output = ":host { " + atcb_secure_content(host.host.getAttribute('style').replace(/(\r\n|\n|\r)/g, ''), false) + " }";
+        host.host.removeAttribute('style');
+        return output;
+      }
+      return "";
+    })();
+    const overrideDarkCss = (function() {
+      if (host.host.hasAttribute('styleDark')) {
+        const output = ":host(.atcb-dark), :host-context(html.atcb-dark):host(.atcb-bodyScheme), :host-context(body.atcb-dark):host(.atcb-bodyScheme) { " + atcb_secure_content(host.host.getAttribute('styleDark').replace(/(\r\n|\n|\r)/g, ''), false) + " }";
+        host.host.removeAttribute('styleDark');
+        return output;
+      }
+      return "";      
+    })();
+    // add style to element    
+    cssContent.innerText = atcbCssTemplate[`${style}`] + overrideDefaultCss + overrideDarkCss;
     host.prepend(cssContent);
   }
   if (rootObj != null) {
@@ -354,6 +373,7 @@ function atcb_render_debug_msg(host, error) {
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 function atcb_action(data, triggerElement, keyboardTrigger = false) {
   data = atcb_secure_content(data);
+  data.hideBranding = true;
   // pull data from PRO server, if key is given
   if (data.proKey != null && data.proKey != '') {
     data = atcb_get_pro_data(data.proKey);
@@ -364,6 +384,8 @@ function atcb_action(data, triggerElement, keyboardTrigger = false) {
   }
   data = atcb_decorate_data(data);
   let root = document.body;
+  // we always force the click trigger in the custom case
+  data.trigger = 'click';
   if (triggerElement) {
     root = triggerElement;
     // overriding the identifier with the id of the triggering element
@@ -380,15 +402,14 @@ function atcb_action(data, triggerElement, keyboardTrigger = false) {
       }
       triggerElement.id = data.identifier;
     }
-    // for custom triggers, we block any dropdown, since this would look shit 99% of the time
-    if (data.listStyle == 'dropdown') {
-      data.listStyle = 'overlay';
+    // for custom triggers, we block any dropdown, since this would look shit 99% of the time. Overlay is a little better, but modal would be recommended
+    if (data.listStyle == 'dropdown' || data.listStyle == 'dropdown-static') {
+      data.listStyle = 'modal';
     }
   } else {
     data.identifier = 'atcb-btn-custom';
-    // if no button is defined, fallback to listStyle "modal" and "click" trigger
+    // if no button is defined, fallback to listStyle "modal" in any case
     data.listStyle = 'modal';
-    data.trigger = 'click';
   }
   if (!atcb_validate(data)) {
     throw new Error('Add to Calendar Button generation (' + data.identifier + ') failed: invalid data; see console logs');
@@ -416,9 +437,17 @@ function atcb_action(data, triggerElement, keyboardTrigger = false) {
   } else {
     root.after(host);
   }
+  if (triggerElement) {
+    const btnDim = triggerElement.getBoundingClientRect();
+    host.style.position = 'relative';
+    host.style.left = -btnDim.width + 'px';
+    host.style.top = btnDim.height + 'px';
+  }
   host.setAttribute('atcb-button-id', data.identifier);
   host.attachShadow({ mode: 'open', delegateFocus: true });
-  host.shadowRoot.append(template.content.cloneNode(true));
+  const elem = document.createElement('template');
+  elem.innerHTML = template;
+  host.shadowRoot.append(elem.content.cloneNode(true));
   const rootObj = host.shadowRoot.querySelector('.atcb-initialized');
   atcb_setup_state_management(data);
   atcb_set_light_mode(host.shadowRoot, data);
@@ -427,7 +456,7 @@ function atcb_action(data, triggerElement, keyboardTrigger = false) {
   // set global event listeners
   atcb_set_global_event_listener(host.shadowRoot, data);
   // if all is fine, ...
-  // trigger link at in oneoption case, or ...
+  // trigger link at the oneoption case, or ...
   if (oneOption) {
     atcbStates['active'] = data.identifier;
     atcb_generate_links(host.shadowRoot, data.options[0], data, 'all', keyboardTrigger);
@@ -435,7 +464,7 @@ function atcb_action(data, triggerElement, keyboardTrigger = false) {
     // open the options list
     atcb_toggle(host.shadowRoot, 'open', data, triggerElement, keyboardTrigger);
   }
-  atcb_init_log();
+  atcb_init_log(data.proKey);
   console.log('Add to Calendar Button "' + data.identifier + '" triggered');
   return data.identifier;
 }
@@ -453,10 +482,15 @@ function atcb_setup_state_management(data) {
 }
 
 // SHARED FUNCTION TO GENERATE THE INIT LOG MESSAGE
-function atcb_init_log() {
+function atcb_init_log(pro = '') {
   if (!atcbInitialGlobalInit) {
-    console.log('Add to Calendar Button Script initialized (version ' + atcbVersion + ')');
-    console.log('See https://github.com/add2cal/add-to-calendar-button for details');
+    if (pro != '') {
+      console.log('Add to Calendar PRO script initialized (version ' + atcbVersion + ') | https://add-to-calendar-pro.com');
+    } else {
+      console.log('%cAdd to Calendar Button script initialized (version ' + atcbVersion + ')', 'font-weight: bold;');
+      console.log('see https://add-to-calendar-button.com for details');
+      //console.log('✨ %cPRO version available at https://add-to-calendar-pro.com ← check it out!', 'font-size: 16px; font-weight: bold;');
+    }
     atcbInitialGlobalInit = true;
   }
 }
@@ -469,6 +503,7 @@ function atcb_get_pro_data(licenseKey) {
     data.identifier = licenseKey;
     // TODO: Pull data from server
     console.error('Add to Calendar Button proKey invalid! Falling back to local data...');
+    // data.proKey = '';
   }
   return data;
 }
