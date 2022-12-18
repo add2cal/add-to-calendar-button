@@ -43,7 +43,7 @@
       "start_time": "Start Time",
       "end_date": "End Date",
       "end_time": "End Time",
-      "timezone": "Timezone",
+      "timezone": "Time Zone",
       "location": "Location",
       "status": "Status",
       "organizer_name": "Organizer: Name",
@@ -86,7 +86,8 @@
       "light_mode": "Dark/Light Mode",
       "language": "Language",
       "nothing_found": "Nothing found.",
-      "select_option": "Select an option..."
+      "select_option": "Select an option...",
+      "search_time_zone": "Search for a time zone..."
     }
   },
   "options": {

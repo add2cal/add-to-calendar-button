@@ -86,7 +86,8 @@
       "light_mode": "Dark/Light Mode",
       "language": "Sprache",
       "nothing_found": "Nichts gefunden.",
-      "select_option": "Option auswählen..."
+      "select_option": "Option auswählen...",
+      "search_time_zone": "Zeitzone suchen..."
     }
   },
   "options": {

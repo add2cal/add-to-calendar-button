@@ -92,7 +92,7 @@ const clear = () => {
           </span>
 
           <span class="z-1 absolute inset-y-0 right-0 flex items-center pr-7" v-if="!hasEmptyValue && clearable">
-            <XMarkIcon class="h-5 w-5 text-gray-400" aria-hidden="true" @click.prevent="clear" />
+            <XMarkIcon class="h-5 w-5 text-gray-400 hover:text-secondary" aria-hidden="true" @click.prevent="clear" />
           </span>
           <span class="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2">
             <ChevronDownIcon class="h-5 w-5 text-gray-400 transition-transform ui-open:rotate-180" aria-hidden="true" />
