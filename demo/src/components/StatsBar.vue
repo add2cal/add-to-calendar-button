@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import { StarIcon, CogIcon, PresentationChartLineIcon, BoltIcon, TagIcon } from '@heroicons/vue/20/solid';
 import { ref, onMounted } from 'vue';
+import { get, set, LSKey } from '@/utils/localStorage';
+import { mergeDeep } from '@/utils/array';
 
 const statRowClasses = [
   'flex animate-marquee space-x-10 whitespace-nowrap',
@@ -28,7 +30,17 @@ const npmPackageUrl = 'https://api.npms.io/v2/package/add-to-calendar-button';
 const npmDownloadsUrl = 'https://api.npmjs.org/downloads/range/{start}:{end}/add-to-calendar-button';
 const jsdelivrStatsUrl = 'https://data.jsdelivr.com/v1/package/npm/add-to-calendar-button/stats';
 
-onMounted(async () => {
+onMounted(() => {
+  const cachedStats = get(LSKey.STATS) && JSON.parse(get(LSKey.STATS));;
+
+  if (cachedStats?.expireAt && cachedStats?.data && new Date(cachedStats.expireAt).getTime() > Date.now()) {
+    data.value = mergeDeep(data.value, cachedStats.data);
+  } else {
+    loadData();
+  }
+});
+
+const loadData = async () => {
   isLoading.value = true;
 
   await Promise.all([
@@ -38,7 +50,15 @@ onMounted(async () => {
   ])
 
   isLoading.value = false;
-});
+
+  // save to LS with expiration date (+5 days)
+  const date = new Date();
+  date.setDate(date.getDate() + 5);
+  set(LSKey.STATS, {
+    data: data.value,
+    expireAt: date
+  });
+}
 
 const loadNpmPackageData = async () => {
   const response = await fetch(npmPackageUrl);

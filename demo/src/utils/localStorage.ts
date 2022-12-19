@@ -1,5 +1,6 @@
 export enum LSKey {
   ATTRS = 'ATTRS',
+  STATS = 'STATS',
 }
 
 let ls: Storage;

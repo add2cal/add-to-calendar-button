@@ -61,6 +61,15 @@ const onSearchInputFocus = () => {
   isInputFocused.value = true;
   searchInput.value && searchInput.value.select();
 }
+
+const onSearchInputBlur = () => {
+  isInputFocused.value = false;
+
+  if (searchInput.value && !timezoneOptions.includes(searchInput.value.value.toString().trim())) {
+    searchInput.value.value = '';
+    emit('update:modelValue', '');
+  }
+}
 </script>
 
 <template>
@@ -78,7 +87,7 @@ const onSearchInputFocus = () => {
             :placeholder="t('labels.inputs.search_time_zone')"
             :aria-label="t('labels.inputs.search_time_zone')"
             @focus="onSearchInputFocus"
-            @blur="isInputFocused=false"
+            @blur="onSearchInputBlur"
           />
           <span class="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2">
             <MagnifyingGlassIcon class="h-5 w-5 text-gray-400" aria-hidden="true" />
