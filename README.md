@@ -49,15 +49,16 @@ Simple and convenient integration of 1 or many buttons, configurable directly wi
 ### Supported Calendars
 
 - **Google** Calendar.
+- **Apple** Calendar.
 - **Yahoo** Calender.
 - **Microsoft 365, Outlook, and Teams**.
-- Automatically generated **iCal/ics** files (for all other calendars, like **Apple**).
+- Automatically generated **iCal/ics** files (for all other calendars and cases).
 
 ### Event Types
 
 - Timed and all-day events.
 - One-time, multi-date, recurring, or fluid.
-- Calendar Subscription.
+- Calendar subscription.
 - Most robust time zone and daylight saving management (via our own [TimeZones iCal Library](https://github.com/add2cal/timezones-ical-library)).
 - Dynamic dates (like "today + 3").
 
@@ -79,7 +80,7 @@ Simple and convenient integration of 1 or many buttons, configurable directly wi
 ### And much more
 
 - Well documented code, to easily understand the processes and build on top of it.
-- No external module or backend dependencies.
+- No external service or backend dependencies.
 - Fully GDPR, CCPA, and LGPD compliant by design - without the need of signing some data processing agreement.
 - FREE and easy.
 
