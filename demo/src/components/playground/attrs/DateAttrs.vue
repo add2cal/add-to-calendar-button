@@ -17,6 +17,10 @@ const props = defineProps({
     type: Object,
     default: getDefaultDateAttrs()
   },
+  mobile: {
+    type: Boolean,
+    default: false
+  }
 });
 
 const emit = defineEmits(['update:modelValue']);
@@ -49,7 +53,7 @@ const i18nAvailabilityOptions = computed(() =>
       <Input v-model="internalValue[DateAttrsKey.END_DATE]" :label="t(`labels.inputs.${[DateAttrsKey.END_DATE]}`.toLocaleLowerCase())" type="text" placeholder="YYYY-MM-DD" />
       <Input v-model="internalValue[DateAttrsKey.END_TIME]" :label="t(`labels.inputs.${[DateAttrsKey.END_TIME]}`.toLocaleLowerCase())" type="text" placeholder="HH:MM" />
     </div>
-    <TimezoneAutocomplete v-model="internalValue[DateAttrsKey.TIMEZONE]" :label="t(`labels.inputs.${[DateAttrsKey.TIMEZONE]}`.toLocaleLowerCase())" class="mb-3" />
+    <TimezoneAutocomplete v-model="internalValue[DateAttrsKey.TIMEZONE]" :label="t(`labels.inputs.${[DateAttrsKey.TIMEZONE]}`.toLocaleLowerCase())" :mobile="mobile ? true : false" class="mb-3" />
     <Input v-model="internalValue[DateAttrsKey.LOCATION]" :label="t(`labels.inputs.${[DateAttrsKey.LOCATION]}`.toLocaleLowerCase())" type="text" class="mb-3" />
     <Recurrence v-model="internalValue[DateAttrsKey.RECURRENCE_OBJECT]" />
     <Select v-model="internalValue[DateAttrsKey.AVAILABILITY]" :label="t(`labels.inputs.${[DateAttrsKey.AVAILABILITY]}`.toLocaleLowerCase())" :options="i18nAvailabilityOptions" byKey="key" byValue="value" clearable class="mb-3" />

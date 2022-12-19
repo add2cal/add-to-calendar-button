@@ -81,7 +81,7 @@ watch(showMC, val => {
         {{ t('labels.dateInput') }}
       </div>
       <div class="px-8 text-left">
-        <DateAttrs v-model="data.date" />
+        <DateAttrs v-model="data.date" mobile />
       </div>
       <div class="bg-zinc-400 p-4 font-semibold uppercase text-zinc-100 dark:bg-zinc-700 dark:text-zinc-400">
         {{ t('labels.layoutInput') }}

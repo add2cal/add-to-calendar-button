@@ -4,6 +4,13 @@ import PlaygroundArea from "@/components/playground/PlaygroundArea.vue";
 import { ArrowRightIcon, WrenchScrewdriverIcon, BeakerIcon, AdjustmentsHorizontalIcon } from '@heroicons/vue/24/outline';
 import { useI18n } from 'vue-i18n'
 import IntegrationGuides from "@/components/integration/IntegrationGuides.vue";
+import PHLightImage from '@i/ph-badge-light.svg';
+import PHDarkImage from '@i/ph-badge-dark.svg';
+import CalTypeImage from '@i/caltypes.png';
+import VarietyImage from '@i/variety.png';
+import MoreImage from '@i/more.png';
+import AccessibilityImage from '@i/accessibility.png';
+import StyleImage from '@i/style.png';
 const { t, locale } = useI18n();
 </script>
 
@@ -24,10 +31,10 @@ const { t, locale } = useI18n();
         target="_blank"
         rel="noopener"
         class="hidden self-center drop-shadow-light-md dark:block md:self-start"
-        ><img src="../../assets/img/ph-badge-dark.svg" alt="Product of the Day | Product Hunt" style="width: 250px; height: 54px;" width="250" height="54"
+        ><img :src="PHDarkImage" alt="Product of the Day | Product Hunt" style="width: 250px; height: 54px;" width="250" height="54"
       /></a>
       <a href="https://www.producthunt.com/posts/add-to-calendar-button-generator?utm_source=badge-top-post-badge&utm_medium=badge&utm_souce=badge-add&#0045;to&#0045;calendar&#0045;button&#0045;generator" target="_blank" rel="noopener" class="block self-center drop-shadow dark:hidden md:self-start"
-        ><img src="../../assets/img/ph-badge-light.svg" alt="Product of the Day | Product Hunt" style="width: 250px; height: 54px;" width="250" height="54"
+        ><img :src="PHLightImage" alt="Product of the Day | Product Hunt" style="width: 250px; height: 54px;" width="250" height="54"
       /></a>
     </div>
   </div>
@@ -53,7 +60,7 @@ const { t, locale } = useI18n();
     <h2 id="features" class="mt-20 pb-8"><AdjustmentsHorizontalIcon class="-mt-1 mr-3 inline-block h-6 w-6" aria-hidden="true" />Functionality</h2>
     <div>Simple and convenient integration of 1 or many buttons, configurable directly within the HTML code!</div>
     <div class="my-14 mx-auto grid max-w-sm grid-cols-1 gap-x-10 md:max-w-4xl md:grid-cols-[200px_minmax(0,1fr)] md:gap-y-20">
-      <img alt="Supported Calendars" width="150" height="150" src="../../assets/img/caltypes.png" class="mx-auto self-center" />
+      <img alt="Supported Calendars" width="150" height="150" :src="CalTypeImage" class="mx-auto self-center" />
       <div class="mb-20 md:mb-0">
         <h3 class="mt-8 text-left">Supported Calendars</h3>
         <ul class="my-4 list-disc pl-6">
@@ -64,7 +71,7 @@ const { t, locale } = useI18n();
           <li class="text-left">Automatically generated iCal/ics files (for all other calendars and cases).</li>
         </ul>
       </div>
-      <img alt="Event Types" width="150" height="150" src="../../assets/img/variety.png" class="mx-auto self-center" />
+      <img alt="Event Types" width="150" height="150" :src="VarietyImage" class="mx-auto self-center" />
       <div class="mb-20 md:mb-0">
         <h3 class="mt-8 text-left">Event Types</h3>
         <ul class="my-4 list-disc pl-6">
@@ -75,7 +82,7 @@ const { t, locale } = useI18n();
           <li class="text-left">Dynamic dates (like "today + 3").</li>
         </ul>
       </div>
-      <img alt="Look" width="150" height="150" src="../../assets/img/style.png" class="mx-auto self-center" />
+      <img alt="Look" width="150" height="150" :src="StyleImage" class="mx-auto self-center" />
       <div class="mb-20 md:mb-0">
         <h3 class="mt-8 text-left">Look</h3>
         <ul class="my-4 list-disc pl-6">
@@ -84,7 +91,7 @@ const { t, locale } = useI18n();
           <li class="text-left">Multiple themes.</li>
         </ul>
       </div>
-      <img alt="Accessibility" width="150" height="150" src="../../assets/img/accessibility.png" class="mx-auto self-center" />
+      <img alt="Accessibility" width="150" height="150" :src="AccessibilityImage" class="mx-auto self-center" />
       <div class="mb-20 md:mb-0">
         <h3 class="mt-8 text-left">Accessibility</h3>
         <ul class="my-4 list-disc pl-6">
@@ -95,7 +102,7 @@ const { t, locale } = useI18n();
           <li class="text-left">Supporting 20+ languages, incl. RTL text for Arabic; but also custom labels and text blocks.</li>
         </ul>
       </div>
-      <img alt="More" width="150" height="150" src="../../assets/img/more.png" class="mx-auto self-center" />
+      <img alt="More" width="150" height="150" :src="MoreImage" class="mx-auto self-center" />
       <div>
         <h3 class="mt-8 text-left">And much more</h3>
         <ul class="my-4 list-disc pl-6">

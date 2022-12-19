@@ -10,9 +10,9 @@
     font-style: normal;
     font-weight: 400;
     src: local('Paytone One'),
-        url('https://add-to-calendar-button.com/assets/fonts/paytone-one-v18-latin-regular.woff2') format('woff2'),
-        url('https://add-to-calendar-button.com/assets/fonts/paytone-one-v18-latin-regular.woff') format('woff'),
-        url('https://add-to-calendar-button.com/assets/fonts/paytone-one-v18-latin-regular.ttf') format('truetype');
+        url('../fonts/paytone-one-v18-latin-regular.woff2') format('woff2'),
+        url('../fonts/paytone-one-v18-latin-regular.woff') format('woff'),
+        url('../fonts/paytone-one-v18-latin-regular.ttf') format('truetype');
   }
 
   /* inter-300 - latin */
@@ -22,9 +22,9 @@
     font-style: normal;
     font-weight: 300;
     src: local('Inter Light'),
-        url('https://add-to-calendar-button.com/assets/fonts/inter-v12-latin-300.woff2') format('woff2'),
-        url('https://add-to-calendar-button.com/assets/fonts/inter-v12-latin-300.woff') format('woff'),
-        url('https://add-to-calendar-button.com/assets/fonts/inter-v12-latin-300.ttf') format('truetype');
+        url('../fonts/inter-v12-latin-300.woff2') format('woff2'),
+        url('../fonts/inter-v12-latin-300.woff') format('woff'),
+        url('../fonts/inter-v12-latin-300.ttf') format('truetype');
   }
 
   /* inter-regular - latin */
@@ -34,9 +34,9 @@
     font-style: normal;
     font-weight: 400;
     src: local('Inter'),
-        url('https://add-to-calendar-button.com/assets/fonts/inter-v12-latin-regular.woff2') format('woff2'),
-        url('https://add-to-calendar-button.com/assets/fonts/inter-v12-latin-regular.woff') format('woff'),
-        url('https://add-to-calendar-button.com/assets/fonts/inter-v12-latin-regular.ttf') format('truetype');
+        url('../fonts/inter-v12-latin-regular.woff2') format('woff2'),
+        url('../fonts/inter-v12-latin-regular.woff') format('woff'),
+        url('../fonts/inter-v12-latin-regular.ttf') format('truetype');
   }
 
   /* inter-600 - latin */
@@ -46,9 +46,9 @@
     font-style: normal;
     font-weight: 600;
     src: local('Inter SemiBold'),
-        url('https://add-to-calendar-button.com/assets/fonts/inter-v12-latin-600.woff2') format('woff2'),
-        url('https://add-to-calendar-button.com/assets/fonts/inter-v12-latin-600.woff') format('woff'),
-        url('https://add-to-calendar-button.com/assets/fonts/inter-v12-latin-600.ttf') format('truetype');
+        url('../fonts/inter-v12-latin-600.woff2') format('woff2'),
+        url('../fonts/inter-v12-latin-600.woff') format('woff'),
+        url('../fonts/inter-v12-latin-600.ttf') format('truetype');
   }
 
   /* inter-800 - latin */
@@ -58,9 +58,9 @@
     font-style: normal;
     font-weight: 800;
     src: local('Inter ExtraBold'),
-        url('https://add-to-calendar-button.com/assets/fonts/inter-v12-latin-800.woff2') format('woff2'),
-        url('https://add-to-calendar-button.com/assets/fonts/inter-v12-latin-800.woff') format('woff'),
-        url('https://add-to-calendar-button.com/assets/fonts/inter-v12-latin-800.ttf') format('truetype');
+        url('../fonts/inter-v12-latin-800.woff2') format('woff2'),
+        url('../fonts/inter-v12-latin-800.woff') format('woff'),
+        url('../fonts/inter-v12-latin-800.ttf') format('truetype');
   }
 
   /* fira-mono-regular - latin */
@@ -70,9 +70,9 @@
     font-style: normal;
     font-weight: 400;
     src: local('Fira Mono'),
-        url('https://add-to-calendar-button.com/assets/fonts/fira-mono-v14-latin-regular.woff2') format('woff2'),
-        url('https://add-to-calendar-button.com/assets/fonts/fira-mono-v14-latin-regular.woff') format('woff'),
-        url('https://add-to-calendar-button.com/assets/fonts/fira-mono-v14-latin-regular.ttf') format('truetype');
+        url('../fonts/fira-mono-v14-latin-regular.woff2') format('woff2'),
+        url('../fonts/fira-mono-v14-latin-regular.woff') format('woff'),
+        url('../fonts/fira-mono-v14-latin-regular.ttf') format('truetype');
   }
 
   /* fira-mono-700 - latin */
@@ -81,9 +81,9 @@
     font-family: 'Fira Mono';
     font-style: normal;
     font-weight: 700;
-    src: url('https://add-to-calendar-button.com/assets/fonts/fira-mono-v14-latin-700.woff2') format('woff2'),
-        url('https://add-to-calendar-button.com/assets/fonts/fira-mono-v14-latin-700.woff') format('woff'),
-        url('https://add-to-calendar-button.com/assets/fonts/fira-mono-v14-latin-700.ttf') format('truetype');
+    src: url('../fonts/fira-mono-v14-latin-700.woff2') format('woff2'),
+        url('../fonts/fira-mono-v14-latin-700.woff') format('woff'),
+        url('../fonts/fira-mono-v14-latin-700.ttf') format('truetype');
   }
 
   /* selection color */

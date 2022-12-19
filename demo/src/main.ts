@@ -7,7 +7,7 @@ import enLocale from '@/i18n/locales/en.json';
 import enDateFormat from '@/i18n/datetimeFormats/en.json';
 import enNumberFormat from '@/i18n/numberFormats/en.json';
 
-import '@/assets/main.css';
+import '@/assets/css/main.css';
 
 let initialLanguage = localStorage.getItem('user-language');
 if (initialLanguage == null || !SUPPORT_LOCALES.includes(initialLanguage)) {

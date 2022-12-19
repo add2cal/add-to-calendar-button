@@ -618,5 +618,5 @@ export default {
 </script>
 
 <style>
-@import '../assets/prism.css';
+@import '../assets/css/prism.css';
 </style>

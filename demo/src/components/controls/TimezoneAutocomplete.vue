@@ -13,6 +13,10 @@ const props = defineProps({
     type: Boolean,
     default: false
   },
+  mobile: {
+    type: Boolean,
+    default: false
+  }
 });
 
 const emit = defineEmits(['update:modelValue']);
@@ -36,12 +40,19 @@ const getFilteredTimezoneOptions = () => {
   );
 };
 
+const elID = (function() {
+  if (props.mobile) {
+    return 'autocompleteM';
+  }
+  return 'autocomplete';
+})();
+
 onMounted(() => {
   if (props.modelValue && getFilteredTimezoneOptions().includes(props.modelValue.toString())) {
     searchInput.value && (searchInput.value.value = props.modelValue)
   }
 
-  new Autocomplete('#autocomplete', {
+  new Autocomplete('#' + elID, {
     search: (input: string) => {
       search.value = input;
       return getFilteredTimezoneOptions();
@@ -78,7 +89,7 @@ const onSearchInputBlur = () => {
       {{ label }}
     </label>
     <div class="relative w-full pl-2">
-      <div id="autocomplete" class="autocomplete">
+      <div :id="elID" class="autocomplete">
         <div class="group mt-1 grid w-full cursor-default rounded-md bg-zinc-50 shadow hover:bg-white hover:shadow-md focus:outline-none focus-visible:ring focus-visible:ring-secondary focus-visible:ring-opacity-75 dark:bg-zinc-700 dark:hover:bg-zinc-600">
           <input
             id="autocomplete-input"
@@ -93,7 +104,7 @@ const onSearchInputBlur = () => {
             <MagnifyingGlassIcon class="h-5 w-5 text-gray-400" aria-hidden="true" />
           </span>
         </div>
-        <ul class="autocomplete-result-list absolute z-10 mt-3 max-h-36 w-full overflow-auto rounded-md bg-white py-1 text-sm shadow-lg ring ring-secondary ring-opacity-75 focus:outline-none dark:bg-zinc-700" />
+        <ul class="autocomplete-result-list absolute z-10 mt-2.5 max-h-36 w-full overflow-auto rounded-md bg-white py-1 text-sm shadow-lg ring ring-secondary ring-opacity-75 focus:outline-none dark:bg-zinc-700" />
         <ul id="tz-no-results" v-if="isInputFocused && !getFilteredTimezoneOptions().length" class="autocomplete-result-list absolute z-10 mt-3 max-h-36 w-full overflow-auto rounded-md bg-white py-1 text-sm shadow-lg ring ring-red-600 ring-opacity-75 focus:outline-none dark:bg-zinc-700">
           <li class="no-result relative cursor-default select-none py-2 px-4 italic" v-t="'labels.inputs.nothing_found'">Nothing found.</li>
         </ul>
@@ -113,5 +124,9 @@ const onSearchInputBlur = () => {
 
 .autocomplete-result:hover {
   @apply bg-secondary-light text-zinc-900;
+}
+
+[data-position='above'] .autocomplete-result-list {
+  @apply mt-0 mb-2.5;
 }
 </style>

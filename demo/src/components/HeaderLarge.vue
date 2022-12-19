@@ -2,6 +2,8 @@
 import NavigationBar from "@/components/menu/NavigationBar.vue";
 import StatsBar from "@/components/StatsBar.vue";
 import Logo from "@/components/logos/LogoMain.vue";
+import HeroImage from '@i/cal.png';
+import OvalLight from '@i/oval-light.png';
 import { RouterLink } from "vue-router";
 import { useI18n } from 'vue-i18n'
 const { t, locale } = useI18n();
@@ -42,8 +44,8 @@ const { t, locale } = useI18n();
         </div>
       </div>
       <div class="hidden self-center lg:block">
-        <img class="hidden xl:block" width="400" height="198" src="../../assets/img/oval-light.png" />
-        <img alt="Add to Calendar Button" width="150" height="150" src="../../assets/img/cal.png" class="animate-bounce-minimal xl:-mt-[180px] xl:ml-[125px]" />
+        <img class="hidden xl:block" width="400" height="198" :src="OvalLight" />
+        <img alt="Add to Calendar Button" width="150" height="150" :src="HeroImage" class="animate-bounce-minimal xl:-mt-[180px] xl:ml-[125px]" />
       </div>
     </div>
   </div>
