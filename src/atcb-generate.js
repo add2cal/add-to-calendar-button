@@ -14,7 +14,7 @@
 import { atcbIcon, atcbStates, atcbDefaultTarget } from './atcb-globals.js';
 import { atcb_toggle, atcb_close } from './atcb-control.js';
 import { atcb_generate_links } from './atcb-links.js';
-import { atcb_generate_time, atcb_secure_url, atcb_manage_body_scroll, atcb_set_fullsize, atcb_set_sizes, atcb_debounce, atcb_debounce_leading } from './atcb-util.js';
+import { atcb_generate_time, atcb_manage_body_scroll, atcb_set_fullsize, atcb_set_sizes, atcb_debounce, atcb_debounce_leading } from './atcb-util.js';
 import { atcb_set_fully_successful } from './atcb-links';
 import { atcb_translate_hook } from './atcb-i18n.js';
 

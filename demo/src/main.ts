@@ -22,10 +22,10 @@ const i18n = setupI18n({
   fallbackLocale: 'en',
   messages: { en: enLocale },
   datetimeFormats: {
-    en: enDateFormat
+    en: enDateFormat,
   },
   numberFormats: {
-    en: enNumberFormat
+    en: enNumberFormat,
   },
 });
 const router = setupRouter(i18n);

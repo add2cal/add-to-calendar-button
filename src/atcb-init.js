@@ -189,7 +189,7 @@ function atcb_read_attributes(el) {
             }
           }
           if (!inputVal.includes('|')) {
-           newVal = newVal.replace(/\s/g, '');
+            newVal = newVal.replace(/\s/g, '');
           }
           return newVal;
         })();
@@ -331,23 +331,23 @@ function atcb_load_css(host, rootObj, style = '', inline = false, customCss = ''
   if (style != 'none' && atcbCssTemplate[`${style}`] != null) {
     const cssContent = document.createElement('style');
     // get custom override information and remove them from the host
-    const overrideDefaultCss = (function() {
+    const overrideDefaultCss = (function () {
       if (host.host.hasAttribute('style')) {
-        const output = ":host { " + atcb_secure_content(host.host.getAttribute('style').replace(/(\r\n|\n|\r)/g, ''), false) + " }";
+        const output = ':host { ' + atcb_secure_content(host.host.getAttribute('style').replace(/(\r\n|\n|\r)/g, ''), false) + ' }';
         host.host.removeAttribute('style');
         return output;
       }
-      return "";
+      return '';
     })();
-    const overrideDarkCss = (function() {
+    const overrideDarkCss = (function () {
       if (host.host.hasAttribute('styleDark')) {
-        const output = ":host(.atcb-dark), :host-context(html.atcb-dark):host(.atcb-bodyScheme), :host-context(body.atcb-dark):host(.atcb-bodyScheme) { " + atcb_secure_content(host.host.getAttribute('styleDark').replace(/(\r\n|\n|\r)/g, ''), false) + " }";
+        const output = ':host(.atcb-dark), :host-context(html.atcb-dark):host(.atcb-bodyScheme), :host-context(body.atcb-dark):host(.atcb-bodyScheme) { ' + atcb_secure_content(host.host.getAttribute('styleDark').replace(/(\r\n|\n|\r)/g, ''), false) + ' }';
         host.host.removeAttribute('styleDark');
         return output;
       }
-      return "";      
+      return '';
     })();
-    // add style to element    
+    // add style to element
     cssContent.innerText = atcbCssTemplate[`${style}`] + overrideDefaultCss + overrideDarkCss;
     host.prepend(cssContent);
   }

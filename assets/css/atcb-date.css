@@ -19,6 +19,7 @@
 
 :host {
   text-align: center;
+
   --base-font-size-l: 16px;
   --base-font-size-m: 16px;
   --base-font-size-s: 16px;
@@ -320,15 +321,15 @@
   flex: 0 0 1.3em;
 }
 
+.atcb-rtl .atcb-date-btn-content-icon {
+  margin-right: 0;
+  margin-left: .5em;
+}
+
 .atcb-initialized[lang="zh"] .atcb-date-btn-content-icon,
 .atcb-initialized[lang="ja"] .atcb-date-btn-content-icon,
 .atcb-initialized[lang="ko"] .atcb-date-btn-content-icon {
   margin-top: -.2em;
-}
-
-.atcb-rtl .atcb-date-btn-content-icon {
-  margin-right: 0;
-  margin-left: .5em;
 }
 
 .atcb-date-btn-content-icon svg {
