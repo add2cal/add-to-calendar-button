@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { RouterLink } from "vue-router";
-import PlaygroundArea from "@/components/playground/PlaygroundArea.vue";
+import { defineAsyncComponent } from 'vue';
 import { ArrowRightIcon, WrenchScrewdriverIcon, BeakerIcon, AdjustmentsHorizontalIcon } from '@heroicons/vue/24/outline';
 import { useI18n } from 'vue-i18n'
 import IntegrationGuides from "@/components/integration/IntegrationGuides.vue";
@@ -12,6 +12,16 @@ import MoreImage from '@i/more.png';
 import AccessibilityImage from '@i/accessibility.png';
 import StyleImage from '@i/style.png';
 const { t, locale } = useI18n();
+</script>
+
+<script lang="ts">
+export default {
+  components: {
+    PlaygroundArea: defineAsyncComponent(() =>
+      import('@/components/playground/PlaygroundArea.vue')
+    )
+  }
+}
 </script>
 
 <template>

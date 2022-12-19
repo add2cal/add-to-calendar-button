@@ -1,12 +1,22 @@
 <script setup lang="ts">
+import { defineAsyncComponent } from 'vue';
 import NavigationBar from "@/components/menu/NavigationBar.vue";
-import StatsBar from "@/components/StatsBar.vue";
 import Logo from "@/components/logos/LogoMain.vue";
 import HeroImage from '@i/cal.png';
 import OvalLight from '@i/oval-light.png';
 import { RouterLink } from "vue-router";
 import { useI18n } from 'vue-i18n'
 const { t, locale } = useI18n();
+</script>
+
+<script lang="ts">
+export default {
+  components: {
+    StatsBar: defineAsyncComponent(() =>
+      import('@/components/StatsBar.vue')
+    )
+  }
+}
 </script>
 
 <template>

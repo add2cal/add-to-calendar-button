@@ -27,6 +27,7 @@ const data = ref({
 const isLoading = ref(false);
 
 const npmPackageUrl = 'https://api.npms.io/v2/package/add-to-calendar-button';
+const githubRepoUrl = 'https://api.github.com/repos/add2cal/add-to-calendar-button';
 const npmDownloadsUrl = 'https://api.npmjs.org/downloads/range/{start}:{end}/add-to-calendar-button';
 const jsdelivrStatsUrl = 'https://data.jsdelivr.com/v1/package/npm/add-to-calendar-button/stats';
 
@@ -45,6 +46,7 @@ const loadData = async () => {
 
   await Promise.all([
     loadNpmPackageData(),
+    loadGitHubRepoData(),
     loadNpmDownloadsData(),
     loadJsdelivrStats()
   ])
@@ -65,9 +67,17 @@ const loadNpmPackageData = async () => {
   if (response.ok) {
     const json = await response.json();
 
-    json?.collected?.github?.starsCount && (data.value.github.stars = json.collected.github.starsCount);
     json?.collected?.metadata?.version && (data.value.npm.version = json.collected.metadata.version);
     json?.collected?.metadata?.date && (data.value.npm.lastUpdate = json.collected.metadata.date);
+  }
+}
+
+const loadGitHubRepoData = async () => {
+  const response = await fetch(githubRepoUrl);
+  if (response.ok) {
+    const json = await response.json();
+
+    json?.stargazers_count && (data.value.github.stars = json.stargazers_count);
   }
 }
 

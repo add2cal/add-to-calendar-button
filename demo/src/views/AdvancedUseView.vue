@@ -364,7 +364,14 @@ onUnmounted(() => {
       </section>
       <section id="6">
         <h2 class="mb-4 mt-14 border-t border-zinc-300 pt-14 dark:border-zinc-700">6. Set a custom ID</h2>
-        <p>This is a more or less standard setup with all available calendar types and a time zone set.</p>
+        <p>
+          A generated button gets an ID assigned. This ID follows the scheme "atcb-btn-X", where "X" will be an ascending number.<br />
+          The individual calendar options then gets the button ID plus the calendar type assigned - like "atcb-btn-5-google"
+        </p>
+        <p>
+          You can override the automatically defined button ID (and therefore also the calendar type IDs) by defining a distinctive one with the "identifier" option.<br />
+          This might help you to track any user interaction more precisely.
+        </p>
         <div class="block w-full justify-between md:flex">
           <div class="flex w-full flex-none justify-center p-10 pb-6 md:w-[300px]">
             <add-to-calendar-button
@@ -373,9 +380,8 @@ onUnmounted(() => {
               startTime="10:15"
               endTime="23:30"
               timeZone="Europe/Berlin"
-              location="World Wide Web"
-              description="Check out the maybe easiest way to include Add to Calendar Buttons to your website:[br]→ [url]https://add-to-calendar-button.com/|Click here![/url]"
               options="'Apple','Google','iCal','Outlook.com','Microsoft 365','Microsoft Teams','Yahoo'"
+              identifier="my-custom-id"
               lightMode="bodyScheme"
             ></add-to-calendar-button>
           </div>
@@ -388,9 +394,8 @@ onUnmounted(() => {
   startTime="10:15"
   endTime="23:30"
   timeZone="Europe/Berlin"
-  location="World Wide Web"
-  description="Check out the maybe easiest way to include Add to Calendar Buttons to your website:[br]→ [url]https://add-to-calendar-button.com/|Click here![/url]"
   options="'Apple','Google','iCal','Outlook.com','Microsoft 365','Microsoft Teams','Yahoo'"
+  identifier="my-custom-id"
   lightMode="bodyScheme"
 &gt;&lt;/add-to-calendar-button&gt;
 </pre
@@ -442,33 +447,37 @@ onUnmounted(() => {
       </section>
       <section id="8">
         <h2 class="mb-4 mt-14 border-t border-zinc-300 pt-14 dark:border-zinc-700">8. WebView</h2>
-        <p>This is a more or less standard setup with all available calendar types and a time zone set.</p>
+        <p>
+          On mobile devices, applications, which are using the "WebView", have problems with how we generate and deliver the .ics files on the fly.<br />
+          Therefore, we catch those cases, copy the data url to the user's clipboard, and show a short guide on how to proceed.
+        </p>
+        <p>Since this is the best practice for all websites and web apps, it might not be, if you are building your own native/hybrid app where you have control over the WebView settings.</p>
+        <p>
+          While this would still break the dynamic generation of the .ics file, you could at least deliver existing external ics files directly.<br />
+          In this case, you could deactivate the described workaround with the "bypassWebViewCheck" option.
+        </p>
+        <p class="font-semibold">Please make sure that the following applys to your project!</p>
+        <ul class="ml-6 list-disc py-3">
+          <li>You are developing your own native/hybrid app.</li>
+          <li>You are opening the device's default browser instead of using any in-app WebView.</li>
+          <li>You have a distinctive .ics file on some server and can refer to it via the "icsFile" option.</li>
+        </ul>
+        <span class="text-sm italic">(The button below should not fire within an in-app WebView like at the Instagram native app - but it would in your app.)</span>
         <div class="block w-full justify-between md:flex">
           <div class="flex w-full flex-none justify-center p-10 pb-6 md:w-[300px]">
-            <add-to-calendar-button
-              name="[Reminder] Test the Add to Calendar Button"
-              v-bind:startDate="defaultDate"
-              startTime="10:15"
-              endTime="23:30"
-              timeZone="Europe/Berlin"
-              location="World Wide Web"
-              description="Check out the maybe easiest way to include Add to Calendar Buttons to your website:[br]→ [url]https://add-to-calendar-button.com/|Click here![/url]"
-              options="'Apple','Google','iCal','Outlook.com','Microsoft 365','Microsoft Teams','Yahoo'"
-              lightMode="bodyScheme"
-            ></add-to-calendar-button>
+            <add-to-calendar-button name="Some random name" v-bind:startDate="defaultDate" startTime="10:15" endTime="23:30" options="iCal" icsFile="https://add-to-calendar-button.com/demo-event.ics" bypassWebViewCheck lightMode="bodyScheme"></add-to-calendar-button>
           </div>
           <div class="flex-1 overflow-x-auto">
             <CodeBlock class="line-numbers">
               <pre>
 &lt;add-to-calendar-button
-  name="[Reminder] Test the Add to Calendar Button"
+  name="Some random name"
   startDate="{{defaultDate}}"
   startTime="10:15"
   endTime="23:30"
-  timeZone="Europe/Berlin"
-  location="World Wide Web"
-  description="Check out the maybe easiest way to include Add to Calendar Buttons to your website:[br]→ [url]https://add-to-calendar-button.com/|Click here![/url]"
-  options="'Apple','Google','iCal','Outlook.com','Microsoft 365','Microsoft Teams','Yahoo'"
+  options="iCal"
+  icsFile="https://add-to-calendar-button.com/demo-event.ics"
+  bypassWebViewCheck
   lightMode="bodyScheme"
 &gt;&lt;/add-to-calendar-button&gt;
 </pre
