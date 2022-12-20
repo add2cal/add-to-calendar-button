@@ -330,9 +330,13 @@ function atcb_decorate_data_extend(data) {
     } else if (data.dates[`${i}`].availability != null) {
       data.dates[`${i}`].availability = data.dates[`${i}`].availability.toLowerCase();
     }
-    // for the uid, we do not copy from the top level, but rather generate it per event
+    // for the uid, we do not copy from the top level, but rather generate it per event (except for the first one)
     if (data.dates[`${i}`].uid == null) {
-      data.dates[`${i}`].uid = atcb_generate_uuid();
+      if (i == 0 && data.uid != null && data.uid != '') {
+        data.dates[0].uid = data.uid;
+      } else {
+        data.dates[`${i}`].uid = atcb_generate_uuid();
+      }
     }
   }
   // we also copy recurrence, but just for easier access and only for the first array element. Multi-date events cannot be recurrent

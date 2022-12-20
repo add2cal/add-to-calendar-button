@@ -11,9 +11,10 @@
  *
  */
 
-import { atcb_generate_dropdown_list, atcb_generate_bg_overlay, atcb_create_atcbl } from './atcb-generate.js';
+import { atcb_generate_dropdown_list, atcb_generate_bg_overlay, atcb_create_atcbl, atcb_generate_modal_host } from './atcb-generate.js';
 import { atcb_position_list, atcb_manage_body_scroll, atcb_set_fullsize, atcb_set_sizes } from './atcb-util.js';
 import { atcbStates } from './atcb-globals.js';
+import { atcb_log_event } from './atcb-event';
 
 // FUNCTIONS TO CONTROL THE INTERACTION
 function atcb_toggle(host, action, data = '', button = null, keyboardTrigger = false, generatedButton = false) {
@@ -30,10 +31,12 @@ function atcb_toggle(host, action, data = '', button = null, keyboardTrigger = f
 
 // show the dropdown list + background overlay
 function atcb_open(host, data, button = null, keyboardTrigger = false, generatedButton = false) {
-  atcbStates['active'] = data.identifier;
   // abort early if an add to calendar dropdown or modal already opened
   if (host.querySelector('.atcb-list') || host.querySelector('.atcb-modal')) return;
+  // log event
+  atcb_log_event('openList', data.identifier, data.identifier);
   // generate list and prepare wrapper
+  atcbStates['active'] = data.identifier;
   const list = atcb_generate_dropdown_list(host, data);
   const listWrapper = document.createElement('div');
   listWrapper.classList.add('atcb-list-wrapper');
@@ -59,17 +62,21 @@ function atcb_open(host, data, button = null, keyboardTrigger = false, generated
   } else {
     list.classList.add('atcb-modal');
   }
-  // define background overlay
-  const bgOverlay = atcb_generate_bg_overlay(host, data.trigger, !data.hideBackground);
   // render the items depending on the liststyle
+  const bgOverlay = atcb_generate_bg_overlay(host, data.trigger, !data.hideBackground);
   if (data.listStyle === 'modal') {
-    host.append(bgOverlay);
+    // define background overlay in its own new modal shadowDOM
+    const modalHost = atcb_generate_modal_host(host, data);
+    // append background overlay and list to the modal shadowDOM; and init helper functions
+    modalHost.append(bgOverlay);
     bgOverlay.append(list);
     if (!data.hideBranding) {
-      atcb_create_atcbl(host, false);
+      atcb_create_atcbl(modalHost, false);
     }
     atcb_set_sizes(list, data.sizes);
-    atcb_manage_body_scroll(host);
+    atcb_manage_body_scroll(modalHost);
+    // set overlay size just to be sure
+    atcb_set_fullsize(bgOverlay);
   } else {
     host.querySelector('.atcb-initialized').append(listWrapper);
     listWrapper.append(list);
@@ -79,6 +86,7 @@ function atcb_open(host, data, button = null, keyboardTrigger = false, generated
     if (!data.hideBranding) {
       atcb_create_atcbl(host);
     }
+    // add background overlay to the main shadowDOM
     host.append(bgOverlay);
     atcb_set_sizes(list, data.sizes);
     // setting the position with a tiny timeout to prevent any edge case situations, where the order gets mixed up
@@ -92,25 +100,35 @@ function atcb_open(host, data, button = null, keyboardTrigger = false, generated
         atcb_position_list(host, button, listWrapper);
       }
     }, 5);
+    // set overlay size just to be sure
+    atcb_set_fullsize(bgOverlay);    
   }
-  // set overlay size just to be sure
-  atcb_set_fullsize(bgOverlay);
-  // give keyboard focus to first item in list, if not blocked, because there is definitely no keyboard trigger
-  const focusEl = host.querySelector('.atcb-list:first-child');
-  if (keyboardTrigger) {
-    focusEl.focus();
-  } else {
-    focusEl.focus({ preventScroll: true });
+  // give keyboard focus to first item in list, if possible
+  const focusEl = (function () {
+    const hostEl = host.querySelector('.atcb-list-item');
+    if (hostEl) {
+      return hostEl;
+    }    
+    const modalHost = document.getElementById(data.identifier + '-modal-host');
+    return modalHost?.shadowRoot?.querySelector('.atcb-list-item');
+  })();
+  if (focusEl) {
+    if (keyboardTrigger) {
+      focusEl.focus();
+    } else {
+      focusEl.focus({ preventScroll: true });
+    }
+    focusEl.blur();
   }
-  focusEl.blur();
 }
 
 function atcb_close(host, keyboardTrigger = false) {
   // if we have a modal on a modal, close the latest first
-  const allModals = host.querySelectorAll('.atcb-modal[data-modal-nr]');
-  if (allModals.length > 1) {
-    host.querySelectorAll('.atcb-modal[data-modal-nr="' + allModals.length + '"]')[0].remove();
-    const nextModal = host.querySelectorAll('.atcb-modal[data-modal-nr="' + (allModals.length - 1) + '"]')[0];
+  const existingModalHost = document.getElementById(host.host.getAttribute('atcb-button-id') + '-modal-host');
+  const allModals = existingModalHost?.shadowRoot?.querySelectorAll('.atcb-modal[data-modal-nr]');
+  if (allModals?.length > 1) {
+    existingModalHost.shadowRoot.querySelectorAll('.atcb-modal[data-modal-nr="' + allModals.length + '"]')[0].remove();
+    const nextModal = existingModalHost.shadowRoot.querySelectorAll('.atcb-modal[data-modal-nr="' + (allModals.length - 1) + '"]')[0];
     nextModal.style.display = 'block';
     let focusEl = nextModal;
     const availableButtons = nextModal.getElementsByTagName('button');
@@ -123,29 +141,47 @@ function atcb_close(host, keyboardTrigger = false) {
     }
   } else {
     // focus triggering button if available - especially relevant for keyboard navigation
-    const newFocusEl = host.querySelector('.atcb-active, .atcb-active-modal');
+    const newFocusEl = (function () {
+      // find at host
+      const hostEl = host.querySelector('.atcb-active, .atcb-active-modal');
+      if (hostEl) {
+        return hostEl;
+      }
+      // fallback to document (atcb_action case)
+      return document.querySelector('.atcb-active, .atcb-active-modal');
+    })();
     if (newFocusEl) {
       newFocusEl.focus({ preventScroll: true });
       if (!keyboardTrigger) {
         newFocusEl.blur();
       }
     }
-    // inactivate all buttons
+    // inactivate all buttons at the host...
     Array.from(host.querySelectorAll('.atcb-active')).forEach((button) => {
       button.classList.remove('atcb-active');
     });
     Array.from(host.querySelectorAll('.atcb-active-modal')).forEach((modal) => {
       modal.classList.remove('atcb-active-modal');
     });
+    // ... as well as the document (case with atcb_action)
+    Array.from(document.querySelectorAll('.atcb-active')).forEach((button) => {
+      button.classList.remove('atcb-active');
+    });
+    Array.from(document.querySelectorAll('.atcb-active-modal')).forEach((modal) => {
+      modal.classList.remove('atcb-active-modal');
+    });
+    // remove any modal host
+    existingModalHost?.remove();
     // make body scrollable again
     document.body.classList.remove('atcb-modal-no-scroll');
     // remove dropdowns, modals, and bg overlays (should only be one of each at max)
     Array.from(host.querySelectorAll('.atcb-list-wrapper'))
       .concat(Array.from(host.querySelectorAll('.atcb-list')))
-      .concat(Array.from(host.querySelectorAll('.atcb-modal[data-modal-nr]')))
       .concat(Array.from(host.querySelectorAll('#add-to-calendar-button-reference')))
       .concat(Array.from(host.querySelectorAll('#atcb-bgoverlay')))
       .forEach((el) => el.remove());
+    // reset active state
+    atcbStates['active'] = '';
   }
 }
 

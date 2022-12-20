@@ -710,7 +710,8 @@ a.atcb-modal-btn:focus-visible{
   animation: none;
   backdrop-filter: none;
   -webkit-backdrop-filter: none;
-  opacity: 0;
+  opacity: 1;
+  background-color: transparent;
 }
 
 @keyframes atcb-bgoverlay-animate {

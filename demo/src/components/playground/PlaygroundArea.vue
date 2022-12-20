@@ -50,7 +50,7 @@ watch(showMC, val => {
         :class="{ 'rounded-bl-none md:rounded-br-md lg:rounded-br-none': !showCode }"
         class="grid-bg row-span-2 flex justify-center rounded-tl-none border-0 border-zinc-400 bg-zinc-100 py-8 px-3 dark:border-zinc-600 dark:bg-zinc-900 md:rounded-tr-md md:border-l-2 lg:row-span-1 lg:rounded-tr-none"
       >
-        <div class="sticky top-[30vh] h-auto py-10 md:h-[500px] md:py-0">
+        <div class="sticky top-[30vh] z-30 h-auto py-10 md:h-[500px] md:py-0">
           <add-to-calendar-button v-bind="mapAttrsObject(data)" debug />
         </div>
       </div>

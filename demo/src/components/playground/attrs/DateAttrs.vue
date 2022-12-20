@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, computed, watch, defineProps, defineEmits } from "vue";
+import { ref, computed, watch } from "vue";
 import Input from "@/components/controls/Input.vue";
 import Select from "@/components/controls/Select.vue";
 import Switch from "@/components/controls/Switch.vue";

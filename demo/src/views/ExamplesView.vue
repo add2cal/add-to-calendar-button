@@ -6,7 +6,7 @@ import { useI18n } from 'vue-i18n'
 const { t, locale } = useI18n();
 
 const today = new Date();
-let nextDay = new Date();
+const nextDay = new Date();
 nextDay.setDate(today.getDate() + 3);
 const defaultDate = nextDay.getFullYear() + '-' + ('0' + (nextDay.getMonth() + 1)).slice(-2) + '-' + ('0' + nextDay.getDate()).slice(-2);
 </script>

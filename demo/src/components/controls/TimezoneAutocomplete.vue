@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, defineProps, defineEmits, onMounted } from 'vue'
+import { ref, watch, onMounted } from 'vue'
 import { getAvailableTimezones } from '@/utils/timezone';
 import Autocomplete from '@trevoreyre/autocomplete-js';
 import { MagnifyingGlassIcon } from '@heroicons/vue/20/solid';
@@ -81,6 +81,11 @@ const onSearchInputBlur = () => {
     emit('update:modelValue', '');
   }
 }
+
+// watch props changes to synch mobile and desktop field here
+watch(props, () => {
+  searchInput.value && (searchInput.value.value = props.modelValue);
+});
 </script>
 
 <template>

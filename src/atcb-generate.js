@@ -17,6 +17,8 @@ import { atcb_generate_links } from './atcb-links.js';
 import { atcb_generate_time, atcb_manage_body_scroll, atcb_set_fullsize, atcb_set_sizes, atcb_debounce, atcb_debounce_leading } from './atcb-util.js';
 import { atcb_set_fully_successful } from './atcb-links';
 import { atcb_translate_hook } from './atcb-i18n.js';
+import { atcb_load_css } from './atcb-init';
+import { atcb_log_event } from './atcb-event';
 
 // GENERATE THE ACTUAL BUTTON
 // helper function to generate the labels for the button and list options
@@ -69,10 +71,11 @@ function atcb_generate_label(host, data, parent, type, icon = false, text = '', 
         'click',
         atcb_debounce_leading(() => {
           if (oneOption) {
-            atcbStates['active'] = host.host.getAttribute('atcb-button-id');
             host.querySelector('#' + parent.id).blur();
+            atcb_log_event('openSingletonLink', parent.id, data.identifier);
           } else {
             atcb_toggle(host, 'close');
+            atcb_log_event('openCalendarLink', parent.id, data.identifier);
           }
           atcb_generate_links(host, type, data);
         })
@@ -81,10 +84,11 @@ function atcb_generate_label(host, data, parent, type, icon = false, text = '', 
         if (event.key == 'Enter') {
           event.preventDefault();
           if (oneOption) {
-            atcbStates['active'] = host.host.getAttribute('atcb-button-id');
             host.querySelector('#' + parent.id).blur();
+            atcb_log_event('openSingletonLink', parent.id, data.identifier);
           } else {
             atcb_toggle(host, 'close');
+            atcb_log_event('openCalendarLink', parent.id, data.identifier);
           }
           atcb_generate_links(host, type, data, 'all', true);
         }
@@ -95,12 +99,14 @@ function atcb_generate_label(host, data, parent, type, icon = false, text = '', 
       parent.addEventListener(
         'click',
         atcb_debounce(() => {
+          atcb_log_event('closeList', 'List Close Button', data.identifier);
           atcb_toggle(host, 'close');
         })
       );
       parent.addEventListener('keyup', function (event) {
         if (event.key == 'Enter') {
           event.preventDefault();
+          atcb_log_event('closeList', 'List Close Button', data.identifier);
           atcb_toggle(host, 'close', data, 'all', true);
         }
       });
@@ -258,6 +264,7 @@ function atcb_generate_bg_overlay(host, trigger = '', darken = true) {
     'mouseup',
     atcb_debounce_leading((e) => {
       if (e.target !== e.currentTarget) return;
+      atcb_log_event('closeList', 'Background Hit', atcbStates['active']);
       atcb_toggle(host, 'close');
     })
   );
@@ -276,6 +283,7 @@ function atcb_generate_bg_overlay(host, trigger = '', darken = true) {
     'touchend',
     atcb_debounce((e) => {
       if (fingerMoved !== false || e.target !== e.currentTarget) return;
+      atcb_log_event('closeList', 'Background Hit', atcbStates['active']);
       atcb_toggle(host, 'close');
     }),
     { passive: true }
@@ -284,6 +292,7 @@ function atcb_generate_bg_overlay(host, trigger = '', darken = true) {
     'focus',
     atcb_debounce((e) => {
       if (e.target !== e.currentTarget) return;
+      atcb_log_event('closeList', 'Background Hit', atcbStates['active']);
       atcb_toggle(host, 'close');
     })
   );
@@ -292,6 +301,7 @@ function atcb_generate_bg_overlay(host, trigger = '', darken = true) {
       'mousemove',
       atcb_debounce_leading((e) => {
         if (e.target !== e.currentTarget) return;
+        atcb_log_event('closeList', 'Background Hit', atcbStates['active']);
         atcb_toggle(host, 'close');
       })
     );
@@ -323,26 +333,34 @@ function atcb_create_atcbl(host, atList = true) {
 // FUNCTION TO CREATE MODALS
 // this is only about special communication modals - not the list style modal
 function atcb_create_modal(host, data, icon = '', headline, content = '', buttons = [], subEvents = [], keyboardTrigger = false) {
+  atcbStates['active'] = data.identifier;
   // setting the stage
+  const modalHost = atcb_generate_modal_host(host, data, false);
   const bgOverlay = (function () {
-    const el = host.getElementById('atcb-bgoverlay');
+    const el = modalHost.getElementById('atcb-bgoverlay');
     if (!el) {
-      return atcb_generate_bg_overlay(host, 'click', !data.hideBackground);
-    } else {
-      return el;
+      const newOverlay = atcb_generate_bg_overlay(host, 'click', !data.hideBackground);
+      modalHost.append(newOverlay);
+      return newOverlay;
     }
-  })();
-  host.append(bgOverlay);
+    return el;
+  })();  
   const modalWrapper = document.createElement('div');
   modalWrapper.classList.add('atcb-modal');
   bgOverlay.append(modalWrapper);
-  const modalCount = host.querySelectorAll('.atcb-modal').length;
+  const modalCount = modalHost.querySelectorAll('.atcb-modal').length;
   modalWrapper.dataset.modalNr = modalCount;
   modalWrapper.tabIndex = 0;
   modalWrapper.focus({ preventScroll: true });
   modalWrapper.blur();
-  const parentButton = host.getElementById(data.identifier);
-  if (parentButton != null) {
+  const parentButton = (function () {
+    const hostEl = host.getElementById(data.identifier);
+    if (hostEl) {
+      return hostEl;
+    }
+    return document.getElementById(data.identifier);
+  })();
+  if (parentButton) {
     parentButton.classList.add('atcb-active-modal');
   }
   // create box
@@ -377,7 +395,7 @@ function atcb_create_modal(host, data, icon = '', headline, content = '', button
   // add subEvent buttons (array with type first and subEvent numbers following)
   if (subEvents.length > 1) {
     if (!data.hideBranding) {
-      atcb_create_atcbl(host, false);
+      atcb_create_atcbl(modalHost, false);
     }
     const modalsubEventsContent = document.createElement('div');
     modalsubEventsContent.classList.add('atcb-modal-content');
@@ -397,7 +415,8 @@ function atcb_create_modal(host, data, icon = '', headline, content = '', button
       }
       modalSubEventButton.addEventListener(
         'click',
-        atcb_debounce(() => {
+        atcb_debounce(() => {          
+          atcb_log_event('openSubEventLink', modalSubEventButton.id, data.identifier);
           atcb_generate_links(host, subEvents[0], data, subEvents[`${i}`], keyboardTrigger, true);
         })
       );
@@ -438,10 +457,14 @@ function atcb_create_modal(host, data, icon = '', headline, content = '', button
       case 'close':
         modalButton.addEventListener(
           'click',
-          atcb_debounce(() => atcb_close(host))
+          atcb_debounce(() => {
+            atcb_log_event('closeList', 'Modal Close Button', data.identifier);
+            atcb_close(host);
+          })
         );
         modalButton.addEventListener('keyup', function (event) {
           if (event.key == 'Enter') {
+            atcb_log_event('closeList', 'Modal Close Button', data.identifier);
             atcb_toggle(host, 'close', '', '', true);
           }
         });
@@ -467,11 +490,11 @@ function atcb_create_modal(host, data, icon = '', headline, content = '', button
   });
   // hide prev modal
   if (modalCount > 1) {
-    const prevModal = host.querySelector('.atcb-modal[data-modal-nr="' + (modalCount - 1) + '"]');
+    const prevModal = modalHost.querySelector('.atcb-modal[data-modal-nr="' + (modalCount - 1) + '"]');
     prevModal.style.display = 'none';
   }
   // set scroll behavior
-  atcb_manage_body_scroll(host, modalWrapper);
+  atcb_manage_body_scroll(modalHost, modalWrapper);
 }
 
 // FUNCTION TO SWICH THE YAHOO SUBSCRIBE MODAL
@@ -680,4 +703,29 @@ function get_format_options(timeZoneInfo) {
   };
 }
 
-export { atcb_generate_label, atcb_generate_button, atcb_generate_dropdown_list, atcb_create_modal, atcb_generate_bg_overlay, atcb_create_atcbl };
+// FUNCTION TO BUILD A SECOND SHADOWDOM FOR MODALS
+function atcb_generate_modal_host(host, data, reset = true) {
+  // to clean-up the stage, we first close anything left open
+  const existingModalHost = document.getElementById(data.identifier + '-modal-host');
+  if (!reset && existingModalHost) {
+    // return existing one, if we do not want to rebuild
+    return existingModalHost.shadowRoot;
+  }
+  existingModalHost?.remove();
+  // create host element and add shadowDOM
+  let newModalHost = document.createElement('div');
+  newModalHost.id = data.identifier + '-modal-host';
+  newModalHost.classList.add('atcb-' + data.lightMode);
+  newModalHost.setAttribute('styleLight', host.host?.getAttribute('styleLight'));
+  newModalHost.setAttribute('styleDark', host.host?.getAttribute('styleDark'));
+  newModalHost.setAttribute('atcb-button-id', data.identifier);
+  document.body.append(newModalHost);
+  newModalHost.attachShadow({ mode: 'open', delegateFocus: true });
+  const elem = document.createElement('template');
+  elem.innerHTML = '<div class="atcb-modal-host-initialized" style="position:relative;"></div>';
+  newModalHost.shadowRoot.append(elem.content.cloneNode(true));
+  atcb_load_css(newModalHost.shadowRoot, null, data.buttonStyle, data.inline, data.customCss);
+  return newModalHost.shadowRoot;
+}
+
+export { atcb_generate_label, atcb_generate_button, atcb_generate_dropdown_list, atcb_create_modal, atcb_generate_bg_overlay, atcb_create_atcbl, atcb_generate_modal_host };

@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { defineEmits } from 'vue'
 import { RouterLink } from "vue-router";
 //import { SparklesIcon, } from '@heroicons/vue/24/outline';
 import { useI18n } from 'vue-i18n'
@@ -9,22 +8,22 @@ const emit = defineEmits(['closeMM']);
 </script>
 
 <template>
-  <RouterLink class="m-auto rounded-md border border-transparent py-2 px-3 text-2xl opacity-80 hover:border-white hover:no-underline hover:opacity-100 lg:text-base" @click="emit" v-if="locale=='en'" :to="{ name: 'home', hash: '#demo', params: { locale } }">
+  <RouterLink class="m-auto rounded-md border border-transparent py-2 px-3 text-2xl opacity-80 hover:border-white hover:no-underline hover:opacity-100 lg:text-base" @click="emit('closeMM')" v-if="locale=='en'" :to="{ name: 'home', hash: '#demo', params: { locale } }">
     {{ t('navigation.home') }}
   </RouterLink>
-  <RouterLink class="m-auto rounded-md border border-transparent py-2 px-3 text-2xl opacity-80 hover:border-white hover:no-underline hover:opacity-100 lg:text-base" @click="emit" v-if="locale!='en'" :to="{ name: 'home-i18n', hash: '#demo', params: { locale } }">
+  <RouterLink class="m-auto rounded-md border border-transparent py-2 px-3 text-2xl opacity-80 hover:border-white hover:no-underline hover:opacity-100 lg:text-base" @click="emit('closeMM')" v-if="locale!='en'" :to="{ name: 'home-i18n', hash: '#demo', params: { locale } }">
     {{ t('navigation.home') }}
   </RouterLink>
-  <RouterLink class="m-auto rounded-md border border-transparent py-2 px-3 text-2xl opacity-80 hover:border-white hover:no-underline hover:opacity-100 lg:text-base" @click="emit" v-if="locale=='en'" :to="{ name: 'home', hash: '#installation', params: { locale } }">
+  <RouterLink class="m-auto rounded-md border border-transparent py-2 px-3 text-2xl opacity-80 hover:border-white hover:no-underline hover:opacity-100 lg:text-base" @click="emit('closeMM')" v-if="locale=='en'" :to="{ name: 'home', hash: '#installation', params: { locale } }">
     {{ t('navigation.installation') }}
   </RouterLink>
-  <RouterLink class="m-auto rounded-md border border-transparent py-2 px-3 text-2xl opacity-80 hover:border-white hover:no-underline hover:opacity-100 lg:text-base" @click="emit" v-if="locale!='en'" :to="{ name: 'home-i18n', hash: '#installation', params: { locale } }">
+  <RouterLink class="m-auto rounded-md border border-transparent py-2 px-3 text-2xl opacity-80 hover:border-white hover:no-underline hover:opacity-100 lg:text-base" @click="emit('closeMM')" v-if="locale!='en'" :to="{ name: 'home-i18n', hash: '#installation', params: { locale } }">
     {{ t('navigation.installation') }}
   </RouterLink>
-  <RouterLink class="m-auto rounded-md border border-transparent py-2 px-3 text-2xl opacity-80 hover:border-white hover:no-underline hover:opacity-100 lg:text-base" @click="emit" :to="{ name: 'configuration', params: { locale } }">
+  <RouterLink class="m-auto rounded-md border border-transparent py-2 px-3 text-2xl opacity-80 hover:border-white hover:no-underline hover:opacity-100 lg:text-base" @click="emit('closeMM')" :to="{ name: 'configuration', params: { locale } }">
     {{ t('navigation.configuration') }}
   </RouterLink>
-  <RouterLink class="m-auto rounded-md border border-transparent py-2 px-3 text-2xl opacity-80 hover:border-white hover:no-underline hover:opacity-100 lg:text-base" @click="emit" :to="{ name: 'examples', params: { locale } }">
+  <RouterLink class="m-auto rounded-md border border-transparent py-2 px-3 text-2xl opacity-80 hover:border-white hover:no-underline hover:opacity-100 lg:text-base" @click="emit('closeMM')" :to="{ name: 'examples', params: { locale } }">
     {{ t('navigation.examples') }}
   </RouterLink>
   <!--<a

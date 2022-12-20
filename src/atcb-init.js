@@ -19,12 +19,13 @@ import { atcb_generate_rich_data } from './atcb-generate-rich-data.js';
 import { atcb_close, atcb_toggle } from './atcb-control.js';
 import { atcb_generate_links } from './atcb-links';
 import { atcb_secure_content, atcb_manage_body_scroll, atcb_set_fullsize } from './atcb-util.js';
+import { atcb_log_event } from './atcb-event';
 
 let atcbInitialGlobalInit = false;
 let atcbBtnCount = 0;
 const lightModeMutationObserver = [];
 
-const template = `<div class="atcb-initialized" style="display:none;position:relative;max-width:max-content;"></div>`;
+const template = `<div class="atcb-initialized" style="display:none;position:relative;"></div>`;
 
 // we cannot load the custom element server-side - therefore, we check for a browser environment first
 if (isBrowser()) {
@@ -38,7 +39,6 @@ if (isBrowser()) {
       this.initialized = false;
       this.data = {};
       this.error = false;
-      atcbBtnCount = atcbBtnCount + 1;
     }
 
     connectedCallback() {
@@ -62,8 +62,9 @@ if (isBrowser()) {
         this.data.proKey = '';
       }
       // set identifier first, no matter further validation
-      if (this.data.identifier != null && this.data.identifier != '') {
-        if (!/^[\w-]+$/.test(this.data.identifier)) {
+      atcbBtnCount = atcbBtnCount + 1;
+      if (this.data.identifier && this.data.identifier != '') {
+        if (!/^[\w\-_]+$/.test(this.data.identifier)) {
           this.data.identifier = '';
           console.warn('Add to Calendar Button generation: identifier invalid - using auto numbers instead');
         } else {
@@ -254,6 +255,8 @@ function atcb_build_button(host, data, debug = false) {
         atcb_generate_rich_data(data, host.host);
         data.schemaEl = host.host.previousSibling;
       }
+      // log event
+      atcb_log_event('initialization', data.identifier, data.identifier);
     } else if (debug) {
       // in this case, since we do not throw any hard error, if validation fails, we need to trigger the debug message here
       atcb_render_debug_msg(host, 'Add to Calendar Button generation failed: invalid data; see console logs for details');
@@ -293,7 +296,7 @@ function atcb_set_light_mode(shadowRoot, data) {
 }
 
 // load the right css
-function atcb_load_css(host, rootObj, style = '', inline = false, customCss = '') {
+function atcb_load_css(host, rootObj = null, style = '', inline = false, customCss = '') {
   // add global no-scroll style
   if (!document.getElementById('atcb-global-style')) {
     const cssGlobalContent = document.createElement('style');
@@ -330,11 +333,10 @@ function atcb_load_css(host, rootObj, style = '', inline = false, customCss = ''
   // otherwise, we load it from a variable
   if (style != 'none' && atcbCssTemplate[`${style}`] != null) {
     const cssContent = document.createElement('style');
-    // get custom override information and remove them from the host
+    // get custom override information
     const overrideDefaultCss = (function () {
-      if (host.host.hasAttribute('style')) {
-        const output = ':host { ' + atcb_secure_content(host.host.getAttribute('style').replace(/(\r\n|\n|\r)/g, ''), false) + ' }';
-        host.host.removeAttribute('style');
+      if (host.host.hasAttribute('styleLight')) {
+        const output = ':host { ' + atcb_secure_content(host.host.getAttribute('styleLight').replace(/(\r\n|\n|\r)/g, ''), false) + ' }';
         return output;
       }
       return '';
@@ -342,7 +344,6 @@ function atcb_load_css(host, rootObj, style = '', inline = false, customCss = ''
     const overrideDarkCss = (function () {
       if (host.host.hasAttribute('styleDark')) {
         const output = ':host(.atcb-dark), :host-context(html.atcb-dark):host(.atcb-bodyScheme), :host-context(body.atcb-dark):host(.atcb-bodyScheme) { ' + atcb_secure_content(host.host.getAttribute('styleDark').replace(/(\r\n|\n|\r)/g, ''), false) + ' }';
-        host.host.removeAttribute('styleDark');
         return output;
       }
       return '';
@@ -394,7 +395,7 @@ function atcb_action(data, triggerElement, keyboardTrigger = false) {
     } else {
       // however, if the trigger has no id, we set it with the identifier or a default fallback
       if (data.identifier != null && data.identifier != '') {
-        if (!/^[\w-]+$/.test(data.identifier)) {
+        if (!/^[\w\-_]+$/.test(data.identifier)) {
           data.identifier = 'atcb-btn-custom';
         } else {
           this.data.identifier = 'atcb-btn-' + this.data.identifier;
@@ -426,7 +427,9 @@ function atcb_action(data, triggerElement, keyboardTrigger = false) {
   if (potentialExistingHost) {
     atcb_close(potentialExistingHost.shadowRoot, false);
     // unset whatever possible for customTriggers
-    delete atcbStates[`${atcbStates['active']}`];
+    if (atcbStates[`${atcbStates['active']}`]) {
+      delete atcbStates[`${atcbStates['active']}`];
+    }
     potentialExistingHost.remove();
   }
   // prepare shadow dom and load style
@@ -455,11 +458,14 @@ function atcb_action(data, triggerElement, keyboardTrigger = false) {
   atcb_load_css(host.shadowRoot, rootObj, data.buttonStyle, data.inline, data.customCss);
   // set global event listeners
   atcb_set_global_event_listener(host.shadowRoot, data);
+  // log event
+  atcb_log_event('initialization', data.identifier, data.identifier);
   // if all is fine, ...
   // trigger link at the oneoption case, or ...
   if (oneOption) {
-    atcbStates['active'] = data.identifier;
     atcb_generate_links(host.shadowRoot, data.options[0], data, 'all', keyboardTrigger);
+    // log event
+    atcb_log_event('openSingletonLink', data.identifier, data.identifier);
   } else {
     // open the options list
     atcb_toggle(host.shadowRoot, 'open', data, triggerElement, keyboardTrigger);
@@ -537,31 +543,36 @@ function atcb_set_global_event_listener(host, data) {
 }
 
 function atcb_global_listener_keyup(event) {
-  const root = document.querySelector('[atcb-button-id="' + atcbStates['active'] + '"]');
   const host = (function () {
-    if (root != null) {
+    const root = document.querySelector('[atcb-button-id="' + atcbStates['active'] + '"]');
+    if (root) {
       return root.shadowRoot;
     }
     return null;
   })();
-  if (host != null && event.key === 'Escape') {
+  if (host && event.key === 'Escape') {
+    atcb_log_event('closeList', 'Ecs Hit', atcbStates['active']);
     atcb_toggle(host, 'close', '', '', true);
   }
 }
 
 function atcb_global_listener_keydown(event) {
-  const root = document.querySelector('[atcb-button-id="' + atcbStates['active'] + '"]');
   const host = (function () {
-    if (root != null) {
+    const root = document.querySelector('[atcb-button-id="' + atcbStates['active'] + '"]');
+    const rootModal = document.getElementById(atcbStates['active'] + '-modal-host');
+    if (rootModal) {
+      return rootModal.shadowRoot;
+    }
+    if (root) {
       return root.shadowRoot;
     }
     return null;
   })();
-  if (host != null && host.querySelector('.atcb-list') && (event.key === 'ArrowDown' || event.key === 'ArrowUp' || event.key === 'Tab')) {
+  if (host && host.querySelector('.atcb-list') && (event.key === 'ArrowDown' || event.key === 'ArrowUp' || event.key === 'Tab')) {
     let targetFocus = 0;
     let currFocusOption = host.activeElement;
     const optionListCount = host.querySelectorAll('.atcb-list-item').length;
-    if (currFocusOption != null && currFocusOption.classList.contains('atcb-list-item')) {
+    if (currFocusOption && currFocusOption.classList.contains('atcb-list-item')) {
       if (event.key === 'ArrowDown' && currFocusOption.dataset.optionNumber < optionListCount) {
         event.preventDefault();
         targetFocus = parseInt(currFocusOption.dataset.optionNumber) + 1;
@@ -587,16 +598,20 @@ function atcb_global_listener_keydown(event) {
 }
 
 function atcb_global_listener_resize() {
-  const root = document.querySelector('[atcb-button-id="' + atcbStates['active'] + '"]');
   const host = (function () {
-    if (root != null) {
+    const root = document.querySelector('[atcb-button-id="' + atcbStates['active'] + '"]');
+    const rootModal = document.getElementById(atcbStates['active'] + '-modal-host');
+    if (rootModal) {
+      return rootModal.shadowRoot;
+    }
+    if (root) {
       return root.shadowRoot;
     }
     return null;
   })();
-  if (host != null) {
+  if (host) {
     const activeOverlay = host.querySelector('#atcb-bgoverlay');
-    if (activeOverlay != null) {
+    if (activeOverlay) {
       atcb_set_fullsize(activeOverlay);
       atcb_manage_body_scroll(host);
     }
@@ -609,4 +624,4 @@ function atcb_unset_global_event_listener(identifier) {
   }
 }
 
-export { atcb_unset_global_event_listener };
+export { atcb_unset_global_event_listener, atcb_load_css };
