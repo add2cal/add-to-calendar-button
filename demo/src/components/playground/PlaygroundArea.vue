@@ -40,7 +40,7 @@ watch(showMC, val => {
         <LightModeSwitch class="self-center" />
       </div>
       <div id="date-input" :class="{ 'lg:rounded-bl-md-none rounded-bl-md': !showCode }" class="hidden rounded-tl-md bg-zinc-200 p-3 dark:bg-zinc-800 md:block">
-        <div class="mb-4 text-sm font-semibold uppercase text-zinc-400 dark:text-zinc-600">
+        <div class="mb-4 text-sm font-semibold uppercase text-zinc-500">
           {{ t('labels.dateInput') }}
         </div>
         <DateAttrs v-model="data.date" />
@@ -55,7 +55,7 @@ watch(showMC, val => {
         </div>
       </div>
       <div id="style-input" :class="[ !showCode ? 'rounded-bl-md lg:rounded-r-md lg:rounded-bl-none' : 'rounded-none lg:rounded-tr-md' ]" class="hidden border-l-0 border-t-2 border-zinc-400 bg-zinc-200 p-3 dark:border-zinc-600 dark:bg-zinc-800 md:block lg:border-t-0 lg:border-l-2">
-        <div class="mb-4 flex justify-between text-sm font-semibold uppercase text-zinc-400 dark:text-zinc-600">
+        <div class="mb-4 flex justify-between text-sm font-semibold uppercase text-zinc-500">
           <span>{{ t('labels.layoutInput') }}</span>
           <LightModeSwitch />
         </div>
@@ -87,7 +87,7 @@ watch(showMC, val => {
         {{ t('labels.layoutInput') }}
       </div>
       <div class="px-8 text-left">
-        <LayoutAttrs v-model="data.layout" />
+        <LayoutAttrs v-model="data.layout" mobile />
       </div>
     </div>
     <div class="fixed bottom-0 left-0 flex h-20 w-full cursor-pointer justify-center bg-secondary text-lg font-semibold text-zinc-700 hover:bg-secondary-light hover:text-black" @click="(showMC = !showMC)">

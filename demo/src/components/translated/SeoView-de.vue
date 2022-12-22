@@ -3,5 +3,7 @@ import "add-to-calendar-button";
 </script>
 
 <template>
-  <h1 class="mb-16 underline decoration-primary-light decoration-4 dark:decoration-primary-dark">What is an Add to Calendar Button</h1>
+  <div>
+    <h1 class="mb-16 underline decoration-primary-light decoration-4 dark:decoration-primary-dark">Was ist ein Add to Calendar Button?</h1>
+  </div>
 </template>

@@ -42,9 +42,23 @@ const getFilteredTimezoneOptions = () => {
 
 const elID = (function() {
   if (props.mobile) {
-    return 'autocompleteM';
+    return 'autocomplete-mobile';
   }
   return 'autocomplete';
+})();
+
+const elInputID = (function() {
+  if (props.mobile) {
+    return 'autocomplete-input-mobile';
+  }
+  return 'autocomplete-input';
+})();
+
+const elNoResultsID = (function() {
+  if (props.mobile) {
+    return 'tz-no-results-mobile';
+  }
+  return 'tz-no-results';
 })();
 
 onMounted(() => {
@@ -90,14 +104,14 @@ watch(props, () => {
 
 <template>
   <div>
-    <label v-if="label" :class="['block text-sm text-zinc-400 dark:text-zinc-500', required && 'required']">
+    <label v-if="label" :class="['block text-sm text-zinc-500', required && 'required']">
       {{ label }}
     </label>
     <div class="relative w-full pl-2">
       <div :id="elID" class="autocomplete">
         <div class="group mt-1 grid w-full cursor-default rounded-md bg-zinc-50 shadow hover:bg-white hover:shadow-md focus:outline-none focus-visible:ring focus-visible:ring-secondary focus-visible:ring-opacity-75 dark:bg-zinc-700 dark:hover:bg-zinc-600">
           <input
-            id="autocomplete-input"
+            :id="elInputID"
             class="autocomplete-input truncate rounded-md bg-zinc-50 py-2 pr-10 pl-3 text-left text-sm focus:outline-none focus-visible:ring focus-visible:ring-secondary focus-visible:ring-opacity-75 group-hover:bg-white dark:bg-zinc-700 dark:group-hover:bg-zinc-600"
             ref="searchInput"
             :placeholder="t('labels.inputs.search_time_zone')"
@@ -110,7 +124,7 @@ watch(props, () => {
           </span>
         </div>
         <ul class="autocomplete-result-list absolute z-10 mt-2.5 max-h-36 w-full overflow-auto rounded-md bg-white py-1 text-sm shadow-lg ring ring-secondary ring-opacity-75 focus:outline-none dark:bg-zinc-700" />
-        <ul id="tz-no-results" v-if="isInputFocused && !getFilteredTimezoneOptions().length" class="autocomplete-result-list absolute z-10 mt-3 max-h-36 w-full overflow-auto rounded-md bg-white py-1 text-sm shadow-lg ring ring-red-600 ring-opacity-75 focus:outline-none dark:bg-zinc-700">
+        <ul :id="elNoResultsID" v-if="isInputFocused && !getFilteredTimezoneOptions().length" class="autocomplete-result-list absolute z-10 mt-3 max-h-36 w-full overflow-auto rounded-md bg-white py-1 text-sm shadow-lg ring ring-red-600 ring-opacity-75 focus:outline-none dark:bg-zinc-700">
           <li class="no-result relative cursor-default select-none py-2 px-4 italic" v-t="'labels.inputs.nothing_found'">Nothing found.</li>
         </ul>
       </div>

@@ -1,9 +1,7 @@
 <script setup lang="ts">
 import { SwitchGroup, SwitchLabel, Switch } from '@headlessui/vue';
-import { useI18n } from 'vue-i18n';
-const { t } = useI18n();
 
-defineProps({
+const props = defineProps({
   modelValue: {
     type: Boolean,
     default: false
@@ -12,7 +10,7 @@ defineProps({
   required: {
     type: Boolean,
     default: false
-  },
+  }
 })
 
 defineEmits(['update:modelValue']);
@@ -21,8 +19,9 @@ defineEmits(['update:modelValue']);
 <template>
   <SwitchGroup>
     <div class="flex items-center">
-      <SwitchLabel :class="['mr-3 block text-sm text-zinc-400 dark:text-zinc-500', required && 'required']" v-if="label"> {{ t(label) }}: </SwitchLabel>
+      <SwitchLabel :class="['mr-3 block text-sm text-zinc-500', required && 'required']" v-if="label"> {{ label }}: </SwitchLabel>
       <Switch
+        :aria-label="label"
         value="{modelValue}"
         :class='modelValue ? "bg-primary-dark" : "bg-zinc-400 dark:bg-zinc-700"'
         class="relative inline-flex h-[24px] w-[40px] items-center rounded-full border border-zinc-300 shadow outline-none transition-colors hover:border-zinc-400 hover:shadow-md focus:outline-none focus-visible:ring focus-visible:ring-secondary focus-visible:ring-opacity-75 dark:border-zinc-500 dark:hover:border-zinc-400"

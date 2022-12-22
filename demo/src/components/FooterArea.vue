@@ -25,7 +25,7 @@ const { t, locale } = useI18n();
             </RouterLink>
           </div>
           <div class="flex">
-            <a href="#" class="mr-8 hidden self-center opacity-40 hover:pb-2 hover:opacity-100 md:inline-block"><ArrowUpIcon class="h-6 w-6" aria-hidden="true" /></a>
+            <a href="#" class="mr-8 hidden self-center opacity-40 hover:pb-2 hover:opacity-100 md:inline-block" :aria-label="t('labels.toTop')"><ArrowUpIcon class="h-6 w-6" aria-hidden="true" /></a>
             <div class="inline-block"><LanguageSwitcher /></div>
           </div>
         </div>

@@ -307,7 +307,7 @@ function atcb_validate_datetime(data, msgPrefix, i, msgSuffix) {
     return false;
   }
   if ((data.dates[`${i}`].startTime != null && data.dates[`${i}`].endTime == null) || (data.dates[`${i}`].startTime == null && data.dates[`${i}`].endTime != null)) {
-    console.error(msgPrefix + ' failed: if you set a starting time, you also need to define an end time' + msgSuffix);
+    console.error(msgPrefix + ' failed: if you set a starting or end time, the respective other one also needs to be defined' + msgSuffix);
     return false;
   }
   // validate whether end is not before start

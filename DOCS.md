@@ -6,6 +6,43 @@
 
 More details about available options and how to configure specific features.
 
+You can also find an overview of that at [add-to-calendar-button.com/en/configuration](https://add-to-calendar-button.com/en/configuration).
+
+Examples with even more explanation can be found at [add-to-calendar-button.com/en/examples](https://add-to-calendar-button.com/en/examples).
+
+<br /><br />
+
+---
+
+<br />
+
+## Event Attributes
+
+| Name/Key | Value | Details |
+| --- | --- |
+| name | _string_<br /><br />Required! | The name of your event. Should be a rather short string. In case you set the "dates" attribute (multi-date), the name is still required. It then acts as fallback and name for the event series. In the subscription case, the name would be used as calendar name for Microsoft services. |
+
+| dates | _stringified object_<br /><br />`dates='[{ "name":"Event 1/2", "startDate":"2045-01-02" }, { "name":"Event 2/2", "startDate":"2045-01-04" }]` | If you want to define an event series, you can use the dates object. It basically holds the same information as the top level, but enables you to define multiple events. Except for date and time information, all other attributes, if not provided in the dates object, use the top level information as fallback. There is one special case with the "UID", which only uses the top level information for the first sub-event (since it needs to be unique). All subsequent sub-events will receive randomly generated new UIDs.<br /><br/>**Available options pre sub-event:**<br /><ul><li>name</li><li>description</li><li>startDate</li><li>startTime</li><li>endDate</li><li>endTime</li><li>timeZone</li><li>location</li><li>status</li><li>sequence</li><li>uid</li><li>organizer</li></ul> |
+| a | b | c |
+
+## Style Attributes
+
+## Additional Settings
+
+<br /><br />
+
+---
+
+<br />
+
+To specify a boolean value within an HTML element, you simply only add the name as attribute. Not setting it would automatically reflect to 'false'. As an alternative, you could also always write it as a string like `attributeName="true"`.
+
+<br /><br />
+
+Mind that if you are using the [React wrapper](https://github.com/add2cal/add-to-calendar-button-react), you do not necessarily need to stringify any non-string value.
+
+You could simply write something like `options=['Apple','Google']` instead of `options="['Apple','Google']"`. 
+
 <br /><br />
 
 ---

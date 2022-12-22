@@ -140,7 +140,7 @@ const defaultDate = nextDay.getFullYear() + '-' + ('0' + (nextDay.getMonth() + 1
         <p>
           You can define recurring events by setting an
           <a href="https://www.rfc-editor.org/rfc/rfc5545" target="_blank" rel="noopener">RRULE <ArrowTopRightOnSquareIcon class="-mt-0.5 mr-0.5 inline-block h-4 w-4" aria-hidden="true" /></a>.<br />
-          Mind that the rule needs to be valid (technically and logically) and that it is not supported by all calendar types - in this example, the specified Yahoo option won't show up for that reason.
+          Mind that the rule needs to be valid (technically and logically) and that it is not supported by all calendar types - in this example, the specified Yahoo and Outlook.com options won't show up for that reason.
         </p>
         <p>
           You can also specify the rule in more simple terms. Check the <RouterLink :to="{ name: 'configuration', params: { locale } }">"{{ t('navigation.configuration') }}"</RouterLink> page for more details on that.

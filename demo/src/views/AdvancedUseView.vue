@@ -291,7 +291,7 @@ onUnmounted(() => {
           There, you need to specify a JSON structure and define any text you want to override.<br />
           Check the <a href="https://github.com/add2cal/add-to-calendar-button/blob/main/src/atcb-i18n.js" target="_blank" rel="noopener">atcb-i18n.js <ArrowTopRightOnSquareIcon class="-mt-0.5 mr-0.5 inline-block h-4 w-4" aria-hidden="true" /></a> file at the repository for the available
           keys/options.<br />
-          <span class="font-semibold">Mind that for the "customLabels" option, all keys need to be transformed to a lower case strings without any whitespaces!</span>
+          <span class="font-semibold">Mind that for the "customLabels" option, all keys need to be transformed to lower case strings without any whitespaces!</span>
           Any custom label will also override any translation.
         </p>
         <p class="text-sm italic">(In case you are only looking for a translation, check the "language" option instead!)</p>

@@ -24,7 +24,9 @@ function atcb_log_event(event, trigger, identifier) {
   })();
   // set log attribute
   // (mind that custom triggers won't have any information as long as they have not been fired!)
-  parentEl.setAttribute('atcb-last-event', event + ':' + trigger);
+  if (parentEl) {
+    parentEl.setAttribute('atcb-last-event', event + ':' + trigger);
+  }
   // trigger push to data layer
   atcb_push_to_data_layer(event, trigger);
 }

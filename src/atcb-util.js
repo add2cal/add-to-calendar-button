@@ -224,8 +224,9 @@ function atcb_position_list(host, trigger, list, blockUpwards = false, resize = 
     trigger = trigger.querySelector('.atcb-dropdown-anchor');
     anchorSet = true;
   }
-  // changing the lists css position temporarily to get the ideal width of the content
+  // changing the lists css position and display type temporarily to get the ideal width of the content
   list.style.position = 'relative';
+  list.style.display = 'inline-block';
   // calculate position
   let triggerDim = trigger.getBoundingClientRect();
   const btnDim = originalTrigger.getBoundingClientRect();
@@ -264,8 +265,9 @@ function atcb_position_list(host, trigger, list, blockUpwards = false, resize = 
     const sideMargin = Math.round((btnDim.width - listDim.width) / 4);
     list.style.margin = -Math.round((listDim.height + btnDim.height) / 2) + 'px ' + sideMargin + 'px 0 ' + sideMargin + 'px';
   }
-  // changing the list's position back to absolute
-  list.style.position = 'absolute';
+  // changing the list's position back to absolute and display to block
+  list.style.position = 'absolute';  
+  list.style.display = 'block';
   // adjust branding message, if set
   const atcbL = host.querySelector('#add-to-calendar-button-reference');
   if (atcbL) {

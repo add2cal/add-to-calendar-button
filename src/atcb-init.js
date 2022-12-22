@@ -243,7 +243,7 @@ function atcb_build_button(host, data, debug = false) {
       // ... and on success, load css and generate the button
       atcb_set_light_mode(host, data);
       rootObj.setAttribute('lang', data.language);
-      atcb_load_css(host, rootObj, data.buttonStyle, data.inline, data.customCss);
+      atcb_load_css(host, rootObj, data.buttonStyle, data.inline, data.buttonsList, data.customCss);
       atcb_setup_state_management(data);
       // set global event listeners
       atcb_set_global_event_listener(host, data);
@@ -296,7 +296,7 @@ function atcb_set_light_mode(shadowRoot, data) {
 }
 
 // load the right css
-function atcb_load_css(host, rootObj = null, style = '', inline = false, customCss = '') {
+function atcb_load_css(host, rootObj = null, style = '', inline = false, buttonsList = false, customCss = '') {
   // add global no-scroll style
   if (!document.getElementById('atcb-global-style')) {
     const cssGlobalContent = document.createElement('style');
@@ -324,7 +324,13 @@ function atcb_load_css(host, rootObj = null, style = '', inline = false, customC
         if (inline) {
           rootObj.style.display = 'inline-block';
         } else {
-          rootObj.style.display = 'block';
+          if (buttonsList) {
+            rootObj.style.display = 'flex';
+            rootObj.style.flexWrap = 'wrap';
+            rootObj.style.justifyContent = 'center';
+          } else {
+            rootObj.style.display = 'block';
+          }
         }
       };
     }
@@ -356,7 +362,13 @@ function atcb_load_css(host, rootObj = null, style = '', inline = false, customC
     if (inline) {
       rootObj.style.display = 'inline-block';
     } else {
-      rootObj.style.display = 'block';
+      if (buttonsList) {
+        rootObj.style.display = 'flex';
+        rootObj.style.flexWrap = 'wrap';
+        rootObj.style.justifyContent = 'center';
+      } else {
+        rootObj.style.display = 'block';
+      }
     }
   }
 }
@@ -455,7 +467,7 @@ function atcb_action(data, triggerElement, keyboardTrigger = false) {
   atcb_setup_state_management(data);
   atcb_set_light_mode(host.shadowRoot, data);
   host.shadowRoot.querySelector('.atcb-initialized').setAttribute('lang', data.language);
-  atcb_load_css(host.shadowRoot, rootObj, data.buttonStyle, data.inline, data.customCss);
+  atcb_load_css(host.shadowRoot, rootObj, data.buttonStyle, false, false, data.customCss);
   // set global event listeners
   atcb_set_global_event_listener(host.shadowRoot, data);
   // log event

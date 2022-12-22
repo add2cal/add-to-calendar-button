@@ -1,22 +1,12 @@
 <script setup lang="ts">
-import { defineAsyncComponent } from 'vue';
+import StatsBar from "@/components/StatsBar.vue";
 import NavigationBar from "@/components/menu/NavigationBar.vue";
 import Logo from "@/components/logos/LogoMain.vue";
-import HeroImage from '@i/cal.png';
-import OvalLight from '@i/oval-light.png';
+import HeroImage from '@i/cal.webp';
+import OvalLight from '@i/oval-light.webp';
 import { RouterLink } from "vue-router";
-import { useI18n } from 'vue-i18n'
+import { useI18n } from 'vue-i18n';
 const { t, locale } = useI18n();
-</script>
-
-<script lang="ts">
-export default {
-  components: {
-    StatsBar: defineAsyncComponent(() =>
-      import('@/components/StatsBar.vue')
-    )
-  }
-}
 </script>
 
 <template>
@@ -54,7 +44,7 @@ export default {
         </div>
       </div>
       <div class="hidden self-center lg:block">
-        <img class="hidden xl:block" width="400" height="198" :src="OvalLight" />
+        <img alt="Mark this" class="hidden xl:block" width="400" height="198" :src="OvalLight" />
         <img alt="Add to Calendar Button" width="150" height="150" :src="HeroImage" class="animate-bounce-minimal xl:-mt-[180px] xl:ml-[125px]" />
       </div>
     </div>

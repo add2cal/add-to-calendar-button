@@ -40,7 +40,7 @@ const props = defineProps({
   clearable: {
     type: Boolean,
     default: false
-  },
+  }
 });
 
 const emit = defineEmits(['update:modelValue']);
@@ -65,12 +65,13 @@ const clear = () => {
 
 <template>
   <div>
-    <label v-if="label" :class="['block text-sm text-zinc-400 dark:text-zinc-500', required && 'required']">
+    <label v-if="label" :class="['block text-sm text-zinc-500', required && 'required']">
       {{ label }}
     </label>
     <Listbox :modelValue="multiselect ? (Array.isArray(modelValue) ? modelValue : []) : modelValue" :multiple="multiselect" class="mt-1 pl-2" @update:modelValue="$emit('update:modelValue', $event)">
       <div class="relative w-full">
         <ListboxButton
+          :aria-label="label"
           :class="[
             'grid w-full cursor-pointer rounded-md bg-zinc-50 py-2 pl-3 text-left text-sm shadow hover:bg-white hover:shadow-md focus:outline-none focus-visible:ring focus-visible:ring-secondary focus-visible:ring-opacity-75 dark:bg-zinc-700 dark:hover:bg-zinc-600',
             !hasEmptyValue && clearable ? 'pr-12' : 'pr-10'

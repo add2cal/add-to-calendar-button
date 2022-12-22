@@ -30,11 +30,12 @@ defineEmits(['update:modelValue']);
 
 <template>
   <div>
-    <label v-if="label" :class="['block text-sm text-zinc-400 dark:text-zinc-500 ', required && 'required']">
+    <label v-if="label" :class="['block text-sm text-zinc-500 ', required && 'required']">
       {{ label }}
     </label>
     <div class="mt-1 flex items-center pl-2 pt-1 pb-2">
       <input
+        :aria-label="label"
         :value="modelValue"
         @input="$emit('update:modelValue', ($event.target as HTMLInputElement).value)"
         class="block w-full flex-1 placeholder:text-xs focus:outline-none"

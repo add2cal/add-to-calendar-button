@@ -18,7 +18,7 @@
  */
 
  :host {
-  text-align: center;
+  width: fit-content;
 
   --base-font-size-l: 16px;
   --base-font-size-m: 16px;
@@ -138,7 +138,7 @@
  */
 
 .atcb-button-wrapper {
-  display: inline-block;
+  display: block;
   padding: 5px;
   position: relative;
 }

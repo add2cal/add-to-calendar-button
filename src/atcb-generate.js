@@ -99,14 +99,14 @@ function atcb_generate_label(host, data, parent, type, icon = false, text = '', 
       parent.addEventListener(
         'click',
         atcb_debounce(() => {
-          atcb_log_event('closeList', 'List Close Button', data.identifier);
+          atcb_log_event('closeList', 'List Close Button', atcbStates['active']);
           atcb_toggle(host, 'close');
         })
       );
       parent.addEventListener('keyup', function (event) {
         if (event.key == 'Enter') {
           event.preventDefault();
-          atcb_log_event('closeList', 'List Close Button', data.identifier);
+          atcb_log_event('closeList', 'List Close Button', atcbStates['active']);
           atcb_toggle(host, 'close', data, 'all', true);
         }
       });
@@ -458,13 +458,13 @@ function atcb_create_modal(host, data, icon = '', headline, content = '', button
         modalButton.addEventListener(
           'click',
           atcb_debounce(() => {
-            atcb_log_event('closeList', 'Modal Close Button', data.identifier);
+            atcb_log_event('closeList', 'Modal Close Button', atcbStates['active']);
             atcb_close(host);
           })
         );
         modalButton.addEventListener('keyup', function (event) {
           if (event.key == 'Enter') {
-            atcb_log_event('closeList', 'Modal Close Button', data.identifier);
+            atcb_log_event('closeList', 'Modal Close Button', atcbStates['active']);
             atcb_toggle(host, 'close', '', '', true);
           }
         });
@@ -724,7 +724,7 @@ function atcb_generate_modal_host(host, data, reset = true) {
   const elem = document.createElement('template');
   elem.innerHTML = '<div class="atcb-modal-host-initialized" style="position:relative;"></div>';
   newModalHost.shadowRoot.append(elem.content.cloneNode(true));
-  atcb_load_css(newModalHost.shadowRoot, null, data.buttonStyle, data.inline, data.customCss);
+  atcb_load_css(newModalHost.shadowRoot, null, data.buttonStyle, false, false, data.customCss);
   return newModalHost.shadowRoot;
 }
 

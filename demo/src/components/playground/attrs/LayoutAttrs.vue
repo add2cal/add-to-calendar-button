@@ -15,7 +15,7 @@ const props = defineProps({
   modelValue: {
     type: Object,
     default: getDefaultLayoutAttrs()
-  },
+  }
 });
 
 const emit = defineEmits(['update:modelValue']);
@@ -88,6 +88,7 @@ function onHideTextOptionsUpdate(options: string[]) {
       byValue="value"
       multiselect
       class="mb-3"
+     
       @update:modelValue="onHideIconOptionsUpdate"
     />
     <Select
@@ -98,6 +99,7 @@ function onHideTextOptionsUpdate(options: string[]) {
       byValue="value"
       multiselect
       class="mb-3"
+     
       @update:modelValue="onHideTextOptionsUpdate"
     />
     <Switch v-model="internalValue[LayoutAttrsKey.HIDE_CHECKMARK]" :label="t(`labels.inputs.${[LayoutAttrsKey.HIDE_CHECKMARK]}`.toLocaleLowerCase())" class="mb-3" />

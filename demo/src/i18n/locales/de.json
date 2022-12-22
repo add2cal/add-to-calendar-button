@@ -24,6 +24,7 @@
     "help": "Hilfe"
   },
   "labels": {
+    "toTop": "nach oben",
     "enableDarkMode": "Dark Mode aktivieren",
     "clickHere": "Hier klicken",
     "showCode": "Quellcode anzeigen",

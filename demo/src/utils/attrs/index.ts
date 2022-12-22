@@ -99,7 +99,7 @@ export const mapAttrsObject = (attrs: Attrs) => {
     Object.keys(obj).forEach((key: string) => {
       const value = mapAttrsField(obj, key);
       const componentAttrKey = ComponentAttrKeyMap[key];
-      if (componentAttrKey) {
+      if (componentAttrKey && value) {
         data[componentAttrKey] = value;
       }
 
