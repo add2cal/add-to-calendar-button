@@ -7,7 +7,7 @@ import Vue from "@/components/logos/LogoVue.vue";
 import WordPress from "@/components/logos/LogoWordPress.vue";
 import { CodeBracketIcon } from '@heroicons/vue/24/solid';
 import { RouterLink } from "vue-router";
-import { useI18n } from 'vue-i18n'
+import { useI18n } from 'vue-i18n';
 const { t, locale } = useI18n();
 </script>
 

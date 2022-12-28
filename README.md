@@ -75,7 +75,7 @@ Simple and convenient integration of 1 or many buttons, configurable directly wi
 - Taking care of all those edge cases, where some scenarios do not support specific setups (like WebView blocking downloads); utilizing beautiful user guidance workarounds.
 - Auto-generated Schema.org rich (structured) data for better SEO.
 - Full support for mouse, touch, or keyboard input (W3C WAI compliant).
-- Supporting 20+ languages, incl. RTL text for Arabic; but also custom labels and text blocks.
+- Supporting 20+ languages, incl. RTL text for Arabic; but also custom labels and text blocks (i18n).
 
 ### And much more
 
@@ -265,7 +265,7 @@ You can find more examples as well as an interactive playground at the demo page
 
 ### All options and features
 
-Find all information about the available options and how to configure specific features on the demo page as well as at the [DOCS.md](DOCS.md).
+Find all information about the available attributes and how to configure specific features on the demo page at [add-to-calendar-button.com/en/configuration](https://add-to-calendar-button.com/en/configuration).
 
 <br />
 

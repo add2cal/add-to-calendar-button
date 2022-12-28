@@ -37,6 +37,7 @@
     "startPlaying": "Live ausprobieren",
     "startConfiguring": "Jetzt konfigurieren",
     "exploreExamples": "Beispiele erkunden",
+    "example": "Beispiel",
     "inputs": {
       "name": "Titel",
       "description": "Beschreibung",
@@ -58,13 +59,14 @@
         "headline": "Wiederholung",
         "rrule_value": "RRULE",
         "is_simple": "Vereinfacht",
+        "repeat_every": "Alle X wiederholen",
+        "frequency": "Frequenz",
         "interval": "Interval",
-        "count": "Anzahl",
+        "count": "Max. Anzahl",
         "by_day": "Nach Tag",
         "by_month": "Nach Monat",
         "by_month_day": "Nach Wochentag",
         "placeholder": {
-          "interval": "\"Interval\" im Sinne von jeden Xten ...",
           "by_day": "\"MO,SA\" oder \"-2MO\", ...",
           "by_month_day": "bspw. \"4,5\""
         }
@@ -88,7 +90,8 @@
       "language": "Sprache",
       "nothing_found": "Nichts gefunden.",
       "select_option": "Option auswählen...",
-      "search_time_zone": "Zeitzone suchen..."
+      "search_time_zone": "Zeitzone suchen...",
+      "search": "Suchen..."
     }
   },
   "options": {
@@ -98,21 +101,33 @@
       "cancelled": "Cancelled"
     },
     "availability": {
-      "busy": "Busy",
-      "free": "Free"
+      "busy": "Beschäftigt",
+      "free": "Verfügbar"
+    },
+    "frequency": {
+      "daily": "Tag(e)",
+      "weekly": "Woche(n)",
+      "monthly": "Monat(e)",
+      "yearly": "Jahr(e)"
     },
     "hide_icon": {
       "button": "Button",
-      "list": "List",
+      "list": "Liste",
       "modal": "Modal"
     },
     "hide_text": {
       "button": "Button",
-      "list": "List"
+      "list": "Liste"
+    },
+    "trigger": {
+      "hover": "Hover",
+      "click": "Klick"
     }
   },
   "defaults": {
-    "name": "Beispiels-Event"
+    "name": "Beispiel-Event",
+    "description": "Spiel mit mir!",
+    "location": "Das Internet"
   },
   "meta": {
     "titleSlug": "Termine teilen leicht gemacht",
@@ -122,6 +137,17 @@
   },
   "content": {
     "404RealContent": "Alle Inhalte erreichst du am besten über die Startseite.",
-    "demoDisclaimer": "Dieser Bereich zeigt nur einen Teil der verfügbaren Funktionen. Eine vollständige Liste findet sich unter \"Konfiguration\":"
+    "home": {
+      "demoDisclaimer": "Dieser Bereich zeigt nur einen Teil der verfügbaren Funktionen. Eine vollständige Liste findet sich unter \"Konfiguration\":"
+    },
+    "legal": {
+      "intro": "Angaben gemäß § 5 TMG und § 55 Abs. 2 RStV:"
+    },
+    "privacy": {
+      "no-cookies": "Cookie-frei geht auch",
+      "no-cookies-details-1": "Wir verwenden keine Cookies. Wir verfolgen dich auch nicht im Internet oder teilen deine Daten mit Dritten zu Marketing- oder Tracking-Zwecken.",
+      "no-cookies-details-2": "Daher müssen wir dich auch nicht mit einem Cookie-Banner belästigen.",
+      "no-cookies-details-3": "Die nachfolgenden Informationen erläutern, wie wir darüber hinaus Daten verarbeiten."
+    }
   }
 }

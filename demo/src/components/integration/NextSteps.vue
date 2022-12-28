@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ArrowRightIcon } from '@heroicons/vue/24/outline';
 import { RouterLink } from "vue-router";
-import { useI18n } from 'vue-i18n'
+import { useI18n } from 'vue-i18n';
 const { t, locale } = useI18n();
 </script>
 

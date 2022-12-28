@@ -266,7 +266,7 @@ function atcb_position_list(host, trigger, list, blockUpwards = false, resize = 
     list.style.margin = -Math.round((listDim.height + btnDim.height) / 2) + 'px ' + sideMargin + 'px 0 ' + sideMargin + 'px';
   }
   // changing the list's position back to absolute and display to block
-  list.style.position = 'absolute';  
+  list.style.position = 'absolute';
   list.style.display = 'block';
   // adjust branding message, if set
   const atcbL = host.querySelector('#add-to-calendar-button-reference');

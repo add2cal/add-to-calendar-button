@@ -23,11 +23,11 @@ watch(showMM, val => {
     <div class="hidden space-x-3 self-center lg:inline">
       <Menu />
     </div>
-    <Bars3Icon :class="{ hidden: showMM }" class="block h-10 w-10 cursor-pointer self-center rounded-md border border-transparent p-0 leading-none opacity-100 hover:border-white hover:p-1 hover:opacity-80 lg:hidden" @click="(showMM = !showMM)" />
     <div class="hidden self-center py-2 px-3 leading-none lg:block">
       <LightModeSwitch />
     </div>
     <a class="w-8 self-center py-2 leading-none text-white hover:text-black lg:w-6" target="_blank" rel="noopener" href="https://github.com/add2cal/add-to-calendar-button"><LogoGithub /></a>
+    <Bars3Icon :class="{ hidden: showMM }" class="block h-10 w-10 cursor-pointer self-center rounded-md border border-transparent p-0 leading-none opacity-100 hover:border-white hover:p-1 hover:opacity-80 lg:hidden" @click="(showMM = !showMM)" />
   </nav>
   <!-- mobile menu -->
   <nav :class="{ hidden: !showMM }" class="fixed top-0 left-0 z-50 h-full w-full overflow-y-auto bg-gradient-to-tr from-primary via-primary to-primary-dark dark:via-primary-dark dark:to-primary-dark lg:hidden">

@@ -5,25 +5,31 @@ import { getBrowserTimezone } from '@/utils/timezone';
 import { get, LSKey } from '@/utils/localStorage';
 import { mergeDeep } from '@/utils/array';
 
+const today = new Date();
+const futureDay = new Date();
+futureDay.setDate(today.getDate() + 180);
+const defaultDate = futureDay.getFullYear() + '-' + ('0' + (futureDay.getMonth() + 1)).slice(-2) + '-' + ('0' + futureDay.getDate()).slice(-2);
+
 export const getDefaultDateRecurrenceAttrs = (): DateRecurrenceAttrs => ({
-  [DateRecurrenceAttrsKey.IS_SIMPLE]: true,
+  [DateRecurrenceAttrsKey.IS_SIMPLE]: false,
   [DateRecurrenceAttrsKey.RRULE_VALUE]: '',
-  [DateRecurrenceAttrsKey.INTERVAL]: 0,
-  [DateRecurrenceAttrsKey.COUNT]: 0,
+  [DateRecurrenceAttrsKey.FREQUENCY]: 'daily',
+  [DateRecurrenceAttrsKey.INTERVAL]: 1,
+  [DateRecurrenceAttrsKey.COUNT]: '',
   [DateRecurrenceAttrsKey.BY_DAY]: '',
   [DateRecurrenceAttrsKey.BY_MONTH]: [],
   [DateRecurrenceAttrsKey.BY_MONTH_DAY]: '',
 });
 
-export const getDefaultDateAttrs = (): DateAttrs => ({
-  [DateAttrsKey.NAME]: 'name',
-  [DateAttrsKey.DESCRIPTION]: '',
-  [DateAttrsKey.START_DATE]: '2023-02-14',
-  [DateAttrsKey.START_TIME]: '10:10',
+export const getDefaultDateAttrs = (defaultName: string, defaultDescription: string, defaultLocation: string): DateAttrs => ({
+  [DateAttrsKey.NAME]: defaultName,
+  [DateAttrsKey.DESCRIPTION]: defaultDescription,
+  [DateAttrsKey.START_DATE]: defaultDate,
+  [DateAttrsKey.START_TIME]: '10:15',
   [DateAttrsKey.END_DATE]: '',
-  [DateAttrsKey.END_TIME]: '10:40',
+  [DateAttrsKey.END_TIME]: '17:45',
   [DateAttrsKey.TIMEZONE]: getBrowserTimezone(),
-  [DateAttrsKey.LOCATION]: '',
+  [DateAttrsKey.LOCATION]: defaultLocation,
   [DateAttrsKey.STATUS]: '',
   [DateAttrsKey.ORGANIZER]: {
     [DateAttrsKey.ORGANIZER_NAME]: '',
@@ -52,14 +58,21 @@ export const getDefaultLayoutAttrs = (): LayoutAttrs => ({
   [LayoutAttrsKey.OPTIONS]: [Option.APPLE, Option.GOOGLE, Option.ICAL, Option.OUTLOOK, Option.YAHOO],
 });
 
-export const getDefaultAttrs = (): Attrs => ({
-  date: getDefaultDateAttrs(),
+export const getDefaultAttrs = (defaultName: string, defaultDescription: string, defaultLocation: string): Attrs => ({
+  date: getDefaultDateAttrs(defaultName, defaultDescription, defaultLocation),
   layout: getDefaultLayoutAttrs(),
 });
 
-export const getInitialAttrs = (): Attrs => {
-  const defaultData = getDefaultAttrs();
+export const getInitialAttrs = (defaultName: string, defaultDescription: string, defaultLocation: string): Attrs => {
+  const defaultData = getDefaultAttrs(defaultName, defaultDescription, defaultLocation);
   const cachedData: Attrs = get(LSKey.ATTRS) && JSON.parse(get(LSKey.ATTRS));
 
-  return !!cachedData && typeof cachedData === 'object' ? mergeDeep(defaultData, cachedData) : defaultData;
+  const overrideData = (function () {
+    if (!cachedData) {
+      return { layout: { [LayoutAttrsKey.LANGUAGE]: get(LSKey.LANG) } };
+    }
+    return {};
+  })();
+
+  return !!cachedData && typeof cachedData === 'object' ? mergeDeep(defaultData, cachedData) : mergeDeep(defaultData, overrideData);
 };

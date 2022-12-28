@@ -2,7 +2,7 @@
 import { ref, onMounted, onUnmounted } from 'vue';
 import { Switch } from '@headlessui/vue';
 import { SunIcon, MoonIcon } from '@heroicons/vue/24/outline';
-import { useI18n } from 'vue-i18n'
+import { useI18n } from 'vue-i18n';
 
 export type UserTheme = 'light' | 'dark';
 
@@ -73,6 +73,6 @@ if (typeof docObserver !== 'undefined') {
 <template>
   <Switch @update:model-value="toggleTheme" v-model="darkEnabled" :class="darkEnabled ? 'border-zinc-500 bg-zinc-700 hover:border-zinc-400' : 'border-zinc-300 bg-zinc-200 hover:border-zinc-400'" class="relative inline-flex h-[24px] w-[40px] items-center rounded-full border shadow hover:shadow-md">
     <span class="sr-only">{{ t('labels.enableDarkMode') }}</span>
-    <span :class="darkEnabled ? 'ml-[18px] bg-zinc-900 text-white' : 'ml-[1px] bg-white text-zinc-900'" class="inline-block h-[19px] w-[19px] transform rounded-full shadow-md transition"><SunIcon class="m-[2px] ui-checked:hidden" /><MoonIcon class="m-[2px] ui-not-checked:hidden" /></span>
+    <span :class="darkEnabled ? 'ml-[18px] bg-zinc-900 text-white' : 'ml-[1px] bg-white text-zinc-900'" class="inline-block h-[19px] w-[19px] transform rounded-full shadow-md"><SunIcon class="m-[2px] ui-checked:hidden" /><MoonIcon class="m-[2px] ui-not-checked:hidden" /></span>
   </Switch>
 </template>

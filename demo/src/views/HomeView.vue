@@ -2,31 +2,38 @@
 import { RouterLink } from "vue-router";
 import { defineAsyncComponent } from 'vue';
 import { ArrowRightIcon, WrenchScrewdriverIcon, BeakerIcon, AdjustmentsHorizontalIcon, MagnifyingGlassIcon, AcademicCapIcon } from '@heroicons/vue/24/outline';
-import { useI18n } from 'vue-i18n'
+import { useI18n } from 'vue-i18n';
 import IntegrationGuides from "@/components/integration/IntegrationGuides.vue";
+import PlaygroundPlaceholder from "@/components/placeholders/PlaygroundPlaceholder.vue";
+import FeaturesBlockPlaceholder from "@/components/placeholders/FeaturesBlockPlaceholder.vue";
 import PHLightImage from '@i/ph-badge-light.svg';
 import PHDarkImage from '@i/ph-badge-dark.svg';
 const { t, locale } = useI18n();
 </script>
 
 <script lang="ts">
-export default {
-  components: {
-    PlaygroundArea: defineAsyncComponent(() =>
-      import('@/components/playground/PlaygroundArea.vue')
-    ),
-    FeaturesBlock: defineAsyncComponent(() =>
-      import('@/components/FeaturesBlock.vue')
-    )
-  }
-}
+const PlaygroundArea = defineAsyncComponent({
+  loader: () => import('@/components/playground/PlaygroundArea.vue'),
+  loadingComponent: PlaygroundPlaceholder,
+  delay: 0,
+  errorComponent: PlaygroundPlaceholder,
+  timeout: 5000
+});
+
+const FeaturesBlock = defineAsyncComponent({
+  loader: () => import('@/components/FeaturesBlock.vue'),
+  loadingComponent: FeaturesBlockPlaceholder,
+  delay: 0,
+  errorComponent: FeaturesBlockPlaceholder,
+  timeout: 5000
+});
 </script>
 
 <template>
   <div class="container pt-8 pb-5">
     <div class="flex flex-col justify-between lg:flex-row">
       <div class="flex-1 pr-0 pb-16 lg:pb-0 lg:pr-20">
-        <h2 class="pb-16 text-zinc-600 dark:text-zinc-300">Let users add events to their calendar.<br />Fast and hustle-free 🔥🚀😏</h2>
+        <h2 class="pb-16 text-zinc-600 dark:text-zinc-300">Let users add events to their calendar.<br />Fast and hustle-free<span class="block py-3 sm:inline sm:py-0 sm:px-2">🔥🚀😏</span></h2>
         <p>
           Welcome to the maybe most conveniant way working with Add to Calendar Buttons.<br />
           Designed to reduce developer headaches down to zero.
@@ -54,7 +61,7 @@ export default {
     <PlaygroundArea />
     <div class="container hidden md:block">
       <div class="py-4 text-center text-sm italic text-zinc-400 dark:text-zinc-500">
-        {{ t('content.demoDisclaimer') }} <RouterLink :to="{ name: 'configuration', params: { locale } }">"{{ t('labels.clickHere') }}"</RouterLink>
+        {{ t('content.home.demoDisclaimer') }} <RouterLink :to="{ name: 'configuration', params: { locale } }">"{{ t('labels.clickHere') }}"</RouterLink>
       </div>
     </div>
   </div>

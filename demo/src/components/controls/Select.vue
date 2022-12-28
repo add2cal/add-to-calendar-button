@@ -37,6 +37,10 @@ const props = defineProps({
     type: Boolean,
     default: false
   },
+  hidelabel: {
+    type: Boolean,
+    default: false
+  },
   clearable: {
     type: Boolean,
     default: false
@@ -65,10 +69,10 @@ const clear = () => {
 
 <template>
   <div>
-    <label v-if="label" :class="['block text-sm text-zinc-500', required && 'required']">
+    <label v-if="label" :class="['text-sm text-zinc-500', required && 'required', hidelabel ? 'hidden' : 'block']">
       {{ label }}
     </label>
-    <Listbox :modelValue="multiselect ? (Array.isArray(modelValue) ? modelValue : []) : modelValue" :multiple="multiselect" class="mt-1 pl-2" @update:modelValue="$emit('update:modelValue', $event)">
+    <Listbox :modelValue="multiselect ? (Array.isArray(modelValue) ? modelValue : []) : modelValue" :multiple="multiselect" class="py-2 pl-2" @update:modelValue="$emit('update:modelValue', $event)">
       <div class="relative w-full">
         <ListboxButton
           :aria-label="label"

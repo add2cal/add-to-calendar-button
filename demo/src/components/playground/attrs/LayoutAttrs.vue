@@ -35,6 +35,15 @@ const languageOptions = computed(() =>
   )
 )
 
+const triggerOptions = computed(() =>
+  Object.values(Trigger).map((item: string) =>
+    ({
+      key: t(`options.trigger.${item}`.toLowerCase()),
+      value: item
+    })
+  )
+)
+
 const i18nHideIconOptions = computed(() =>
   Object.keys(HideIconOption).map((key: string) =>
     ({
@@ -72,10 +81,10 @@ function onHideTextOptionsUpdate(options: string[]) {
 
     <div class="mb-3 flex items-center justify-between">
       <Select v-model="internalValue[LayoutAttrsKey.BUTTON_STYLE]" :label="t(`labels.inputs.${[LayoutAttrsKey.BUTTON_STYLE]}`.toLocaleLowerCase())" :options="Object.values(ButtonStyle)" class="mr-5 flex-1" />
-      <Switch v-model="internalValue[LayoutAttrsKey.IS_BUTTONS_LIST]" :label="t(`labels.inputs.${[LayoutAttrsKey.IS_BUTTONS_LIST]}`.toLocaleLowerCase())" class="pt-6" />
+      <Switch v-model="internalValue[LayoutAttrsKey.IS_BUTTONS_LIST]" :label="t(`labels.inputs.${[LayoutAttrsKey.IS_BUTTONS_LIST]}`.toLocaleLowerCase())" class="pt-6 pb-0" />
     </div>
     <Input v-model="internalValue[LayoutAttrsKey.LABEL]" :label="t(`labels.inputs.${[LayoutAttrsKey.LABEL]}`.toLocaleLowerCase())" type="text" class="mb-3" />
-    <Select v-model="internalValue[LayoutAttrsKey.TRIGGER]" :label="t(`labels.inputs.${[LayoutAttrsKey.TRIGGER]}`.toLocaleLowerCase())" :options="Object.values(Trigger)" class="mb-3" />
+    <Select v-model="internalValue[LayoutAttrsKey.TRIGGER]" :label="t(`labels.inputs.${[LayoutAttrsKey.TRIGGER]}`.toLocaleLowerCase())" :options="triggerOptions" byKey="key" byValue="value" class="mb-3" />
 
     <Select v-model="internalValue[LayoutAttrsKey.LIST_STYLE]" :label="t(`labels.inputs.${[LayoutAttrsKey.LIST_STYLE]}`.toLocaleLowerCase())" :options="Object.values(ListStyle)" class="mb-3" />
     <Switch v-model="internalValue[LayoutAttrsKey.HIDE_BACKGROUND]" :label="t(`labels.inputs.${[LayoutAttrsKey.HIDE_BACKGROUND]}`.toLocaleLowerCase())" class="mb-3" />
@@ -88,7 +97,6 @@ function onHideTextOptionsUpdate(options: string[]) {
       byValue="value"
       multiselect
       class="mb-3"
-     
       @update:modelValue="onHideIconOptionsUpdate"
     />
     <Select
@@ -99,7 +107,6 @@ function onHideTextOptionsUpdate(options: string[]) {
       byValue="value"
       multiselect
       class="mb-3"
-     
       @update:modelValue="onHideTextOptionsUpdate"
     />
     <Switch v-model="internalValue[LayoutAttrsKey.HIDE_CHECKMARK]" :label="t(`labels.inputs.${[LayoutAttrsKey.HIDE_CHECKMARK]}`.toLocaleLowerCase())" class="mb-3" />

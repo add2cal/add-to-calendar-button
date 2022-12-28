@@ -55,12 +55,12 @@ function atcb_push_to_data_layer(event, trigger) {
       action = 'Opened';
       break;
   }
-  const atcbDataLayer = window.dataLayer = window.dataLayer || [];
+  const atcbDataLayer = (window.dataLayer = window.dataLayer || []);
   atcbDataLayer.push({
-    'eventCategory': 'Add-to-Calendar-Button',
-    'eventAction': action,
-    'eventLabel': trigger,
-    'event': event
+    eventCategory: 'Add-to-Calendar-Button',
+    eventAction: action,
+    eventLabel: trigger,
+    event: event,
   });
 }
 

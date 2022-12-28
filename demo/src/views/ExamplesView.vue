@@ -2,7 +2,7 @@
 import "add-to-calendar-button";
 import { ArrowRightIcon, ArrowTopRightOnSquareIcon } from '@heroicons/vue/24/outline';
 import CodeBlock from "@/components/CodeBlock.vue";
-import { useI18n } from 'vue-i18n'
+import { useI18n } from 'vue-i18n';
 const { t, locale } = useI18n();
 
 const today = new Date();
@@ -142,9 +142,6 @@ const defaultDate = nextDay.getFullYear() + '-' + ('0' + (nextDay.getMonth() + 1
           <a href="https://www.rfc-editor.org/rfc/rfc5545" target="_blank" rel="noopener">RRULE <ArrowTopRightOnSquareIcon class="-mt-0.5 mr-0.5 inline-block h-4 w-4" aria-hidden="true" /></a>.<br />
           Mind that the rule needs to be valid (technically and logically) and that it is not supported by all calendar types - in this example, the specified Yahoo and Outlook.com options won't show up for that reason.
         </p>
-        <p>
-          You can also specify the rule in more simple terms. Check the <RouterLink :to="{ name: 'configuration', params: { locale } }">"{{ t('navigation.configuration') }}"</RouterLink> page for more details on that.
-        </p>
         <div class="block w-full justify-between md:flex">
           <div class="flex w-full flex-none justify-center p-10 pb-6 md:w-[300px]">
             <add-to-calendar-button
@@ -173,6 +170,50 @@ const defaultDate = nextDay.getFullYear() + '-' + ('0' + (nextDay.getMonth() + 1
   description="Check out the maybe easiest way to include Add to Calendar Buttons to your website:[br]→ [url]https://add-to-calendar-button.com/|Click here![/url]"
   options="'Apple','Google','iCal','Outlook.com','Yahoo'"
   recurrence="RRULE:FREQ=WEEKLY;INTERVAL=1;WKST=MO;BYDAY=WE,FR;COUNT=6"
+  lightMode="bodyScheme"
+&gt;&lt;/add-to-calendar-button&gt;
+</pre
+              >
+            </CodeBlock>
+          </div>
+        </div>
+        <p>
+          You can also specify the rule in more simple terms. Check the <RouterLink :to="{ name: 'configuration', hash: '#recurrence', params: { locale } }">"{{ t('navigation.configuration') }}"</RouterLink> page for more details on that.
+        </p>
+        <div class="block w-full justify-between md:flex">
+          <div class="flex w-full flex-none justify-center p-10 pb-6 md:w-[300px]">
+            <add-to-calendar-button
+              name="[Reminder] Test the Add to Calendar Button"
+              v-bind:startDate="defaultDate"
+              startTime="10:15"
+              endTime="23:30"
+              timeZone="Europe/Berlin"
+              location="World Wide Web"
+              description="Check out the maybe easiest way to include Add to Calendar Buttons to your website:[br]→ [url]https://add-to-calendar-button.com/|Click here![/url]"
+              options="'Apple','Google','iCal','Outlook.com','Yahoo'"
+              recurrence="weekly"
+              recurrence_interval="1"
+              recurrence_count="6"
+              recurrence_byDay="WE,FR"
+              lightMode="bodyScheme"
+            ></add-to-calendar-button>
+          </div>
+          <div class="flex-1 overflow-x-auto">
+            <CodeBlock class="line-numbers">
+              <pre>
+&lt;add-to-calendar-button
+  name="[Reminder] Test the Add to Calendar Button"
+  startDate="{{defaultDate}}"
+  startTime="10:15"
+  endTime="23:30"
+  timeZone="Europe/Berlin"
+  location="World Wide Web"
+  description="Check out the maybe easiest way to include Add to Calendar Buttons to your website:[br]→ [url]https://add-to-calendar-button.com/|Click here![/url]"
+  options="'Apple','Google','iCal','Outlook.com','Yahoo'"
+  recurrence="weekly"
+  recurrence_interval="1"
+  recurrence_count="6"
+  recurrence_byDay="WE,FR"
   lightMode="bodyScheme"
 &gt;&lt;/add-to-calendar-button&gt;
 </pre
@@ -265,7 +306,7 @@ const defaultDate = nextDay.getFullYear() + '-' + ('0' + (nextDay.getMonth() + 1
           Here, we also set the listStyle to an overlay list, slightly reduce the size, and set a custom ics file name.
         </p>
         <p class="text-sm italic">
-          If you want to change system text blocks, you can do so with the "customLabels" option - check the <RouterLink :to="{ name: 'configuration', params: { locale } }">"{{ t('navigation.configuration') }}"</RouterLink> page for details.
+          If you want to change system text blocks, you can do so with the "customLabels" option - check the <RouterLink :to="{ name: 'configuration', hash: '#customlabels', params: { locale } }">"{{ t('navigation.configuration') }}"</RouterLink> page for details.
         </p>
         <div class="block w-full justify-between md:flex">
           <div class="flex w-full flex-none justify-center p-10 pb-6 md:w-[300px]">
@@ -441,23 +482,23 @@ const defaultDate = nextDay.getFullYear() + '-' + ('0' + (nextDay.getMonth() + 1
 
       <div class="mt-14 grid grid-cols-1 gap-12 border-t border-zinc-300 pt-14 dark:border-zinc-700 sm:grid-cols-2">
         <p class="self-center text-center sm:text-left">Let's directly test most of the options at our playground!</p>
-        <RouterLink class="button-primary w-56 self-center" v-if="locale=='en'" :to="{ name: 'home', hash: '#demo', params: { locale } }">
+        <RouterLink class="button-primary mx-auto w-56 self-center sm:mx-0" v-if="locale=='en'" :to="{ name: 'home', hash: '#demo', params: { locale } }">
           {{ t('labels.startPlaying') }}
           <ArrowRightIcon class="-mt-0.5 ml-2 inline-block h-4 w-4" aria-hidden="true" />
         </RouterLink>
-        <RouterLink class="button-primary w-56 self-center" v-if="locale!='en'" :to="{ name: 'home-i18n', hash: '#demo', params: { locale } }">
+        <RouterLink class="button-primary mx-auto w-56 self-center sm:mx-0" v-if="locale!='en'" :to="{ name: 'home-i18n', hash: '#demo', params: { locale } }">
           {{ t('labels.startPlaying') }}
           <ArrowRightIcon class="-mt-0.5 ml-2 inline-block h-4 w-4" aria-hidden="true" />
         </RouterLink>
         <p class="self-center text-center sm:text-left">If you are looking for crazy customization, you can check out the "danger zone".</p>
-        <RouterLink class="button-secondary w-56 self-center" :to="{ name: 'advanced-use', params: { locale } }">
+        <RouterLink class="button-secondary mx-auto w-56 self-center sm:mx-0" :to="{ name: 'advanced-use', params: { locale } }">
           {{ t('navigation.advanced-use') }}
           <ArrowRightIcon class="-mt-0.5 ml-2 inline-block h-4 w-4" aria-hidden="true" />
         </RouterLink>
       </div>
     </div>
     <div class="hidden border-l border-zinc-300 pl-8 text-sm dark:border-zinc-700 lg:block">
-      <div class="sticky top-0 h-96 pt-4">
+      <div class="sticky top-0 pt-4">
         <a href="#1" class="my-4 block">#1: The usual</a>
         <a href="#2" class="my-4 block">#2: All-Day</a>
         <a href="#3" class="my-4 block">#3: Dynamic Dates</a>

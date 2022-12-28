@@ -17,7 +17,7 @@ import { atcb_generate_links } from './atcb-links.js';
 import { atcb_generate_time, atcb_manage_body_scroll, atcb_set_fullsize, atcb_set_sizes, atcb_debounce, atcb_debounce_leading } from './atcb-util.js';
 import { atcb_set_fully_successful } from './atcb-links';
 import { atcb_translate_hook } from './atcb-i18n.js';
-import { atcb_load_css } from './atcb-init';
+import { atcb_load_css, atcb_set_light_mode } from './atcb-init';
 import { atcb_log_event } from './atcb-event';
 
 // GENERATE THE ACTUAL BUTTON
@@ -253,8 +253,16 @@ function atcb_generate_dropdown_list(host, data) {
 }
 
 // create the background overlay, which also acts as trigger to close any dropdowns
-function atcb_generate_bg_overlay(host, trigger = '', darken = true) {
-  const bgOverlay = document.createElement('div');
+function atcb_generate_bg_overlay(host, trigger = '', modal = false, darken = true) {
+  const bgOverlay = (function () {
+    if (modal) {
+      return document.createElement('dialog');
+    }
+    return document.createElement('div');
+  })();
+  if (modal) {
+    bgOverlay.setAttribute('open', true);
+  }
   bgOverlay.id = 'atcb-bgoverlay';
   if (!darken) {
     bgOverlay.classList.add('atcb-no-bg');
@@ -339,12 +347,12 @@ function atcb_create_modal(host, data, icon = '', headline, content = '', button
   const bgOverlay = (function () {
     const el = modalHost.getElementById('atcb-bgoverlay');
     if (!el) {
-      const newOverlay = atcb_generate_bg_overlay(host, 'click', !data.hideBackground);
+      const newOverlay = atcb_generate_bg_overlay(host, 'click', true, !data.hideBackground);
       modalHost.append(newOverlay);
       return newOverlay;
     }
     return el;
-  })();  
+  })();
   const modalWrapper = document.createElement('div');
   modalWrapper.classList.add('atcb-modal');
   bgOverlay.append(modalWrapper);
@@ -415,7 +423,7 @@ function atcb_create_modal(host, data, icon = '', headline, content = '', button
       }
       modalSubEventButton.addEventListener(
         'click',
-        atcb_debounce(() => {          
+        atcb_debounce(() => {
           atcb_log_event('openSubEventLink', modalSubEventButton.id, data.identifier);
           atcb_generate_links(host, subEvents[0], data, subEvents[`${i}`], keyboardTrigger, true);
         })
@@ -715,15 +723,19 @@ function atcb_generate_modal_host(host, data, reset = true) {
   // create host element and add shadowDOM
   let newModalHost = document.createElement('div');
   newModalHost.id = data.identifier + '-modal-host';
-  newModalHost.classList.add('atcb-' + data.lightMode);
-  newModalHost.setAttribute('styleLight', host.host?.getAttribute('styleLight'));
-  newModalHost.setAttribute('styleDark', host.host?.getAttribute('styleDark'));
+  if (host.host?.hasAttribute('styleLight')) {
+    newModalHost.setAttribute('styleLight', host.host.getAttribute('styleLight'));
+  }
+  if (host.host?.hasAttribute('styleDark')) {
+    newModalHost.setAttribute('styleDark', host.host.getAttribute('styleDark'));
+  }
   newModalHost.setAttribute('atcb-button-id', data.identifier);
   document.body.append(newModalHost);
   newModalHost.attachShadow({ mode: 'open', delegateFocus: true });
   const elem = document.createElement('template');
   elem.innerHTML = '<div class="atcb-modal-host-initialized" style="position:relative;"></div>';
   newModalHost.shadowRoot.append(elem.content.cloneNode(true));
+  atcb_set_light_mode(newModalHost.shadowRoot, data);
   atcb_load_css(newModalHost.shadowRoot, null, data.buttonStyle, false, false, data.customCss);
   return newModalHost.shadowRoot;
 }

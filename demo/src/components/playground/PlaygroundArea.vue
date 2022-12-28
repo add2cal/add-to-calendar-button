@@ -6,7 +6,7 @@ import "add-to-calendar-button";
 import CodeBlock from "@/components/CodeBlock.vue";
 import DateAttrs from "@/components/playground/attrs/DateAttrs.vue";
 import LayoutAttrs from "@/components/playground/attrs/LayoutAttrs.vue";
-import { useI18n } from 'vue-i18n'
+import { useI18n } from 'vue-i18n';
 import { mapAttrsObject, attrsToHtmlString } from '@/utils/attrs';
 import { set, LSKey } from '@/utils/localStorage';
 import { getInitialAttrs } from '@/utils/attrs/default';
@@ -14,7 +14,7 @@ const { t } = useI18n();
 
 const showCode = ref(false);
 
-const data = ref(getInitialAttrs())
+const data = ref(getInitialAttrs(t('defaults.name'), t('defaults.description'), t('defaults.location')))
 
 watch(data, () => {
   set(LSKey.ATTRS, data.value);

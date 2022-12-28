@@ -9,13 +9,12 @@ import { getDefaultDateAttrs } from "@/utils/attrs";
 import { DateAttrsKey } from "@/models/attrs";
 import { useI18n } from 'vue-i18n';
 import TimezoneAutocomplete from '@/components/controls/TimezoneAutocomplete.vue';
-
 const { t } = useI18n();
 
 const props = defineProps({
   modelValue: {
     type: Object,
-    default: getDefaultDateAttrs()
+    default: getDefaultDateAttrs('', '', '')
   },
   mobile: {
     type: Boolean,
@@ -25,7 +24,7 @@ const props = defineProps({
 
 const emit = defineEmits(['update:modelValue']);
 
-const internalValue = ref(props.modelValue || getDefaultDateAttrs());
+const internalValue = ref(props.modelValue || getDefaultDateAttrs(t('defaults.name'), t('defaults.description'), t('defaults.location')));
 
 watch(internalValue, () => {
   emit('update:modelValue', internalValue);

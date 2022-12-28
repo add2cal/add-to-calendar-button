@@ -35,6 +35,7 @@ const mapAttrsField = (obj: any, key: string) => {
       }
       break;
     }
+    case DateRecurrenceAttrsKey.FREQUENCY:
     case DateRecurrenceAttrsKey.INTERVAL:
     case DateRecurrenceAttrsKey.COUNT:
     case DateRecurrenceAttrsKey.BY_DAY:
@@ -134,7 +135,7 @@ export const attrsToHtmlString = (attrs: Attrs) => {
     ...attrs.date,
     ...attrs.layout,
   };
-  const defaultAttrs = { ...getDefaultAttrs().date, ...getDefaultAttrs().layout };
+  const defaultAttrs = { ...getDefaultAttrs('', '', '').date, ...getDefaultAttrs('', '', '').layout };
   const requiredAttrs: string[] = [DateAttrsKey.NAME, DateAttrsKey.START_DATE, DateAttrsKey.START_TIME, DateAttrsKey.END_TIME, DateAttrsKey.TIMEZONE, LayoutAttrsKey.OPTIONS];
 
   const proceedAttr = (obj: any, defaultObj: any) => {

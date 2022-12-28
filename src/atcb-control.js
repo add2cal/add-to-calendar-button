@@ -63,8 +63,8 @@ function atcb_open(host, data, button = null, keyboardTrigger = false, generated
     list.classList.add('atcb-modal');
   }
   // render the items depending on the liststyle
-  const bgOverlay = atcb_generate_bg_overlay(host, data.trigger, !data.hideBackground);
   if (data.listStyle === 'modal') {
+    const bgOverlay = atcb_generate_bg_overlay(host, data.trigger, true, !data.hideBackground);
     // define background overlay in its own new modal shadowDOM
     const modalHost = atcb_generate_modal_host(host, data);
     // append background overlay and list to the modal shadowDOM; and init helper functions
@@ -78,6 +78,7 @@ function atcb_open(host, data, button = null, keyboardTrigger = false, generated
     // set overlay size just to be sure
     atcb_set_fullsize(bgOverlay);
   } else {
+    const bgOverlay = atcb_generate_bg_overlay(host, data.trigger, false, !data.hideBackground);
     host.querySelector('.atcb-initialized').append(listWrapper);
     listWrapper.append(list);
     if (data.buttonStyle != 'default') {
@@ -101,14 +102,14 @@ function atcb_open(host, data, button = null, keyboardTrigger = false, generated
       }
     }, 5);
     // set overlay size just to be sure
-    atcb_set_fullsize(bgOverlay);    
+    atcb_set_fullsize(bgOverlay);
   }
   // give keyboard focus to first item in list, if possible
   const focusEl = (function () {
     const hostEl = host.querySelector('.atcb-list-item');
     if (hostEl) {
       return hostEl;
-    }    
+    }
     const modalHost = document.getElementById(data.identifier + '-modal-host');
     return modalHost?.shadowRoot?.querySelector('.atcb-list-item');
   })();

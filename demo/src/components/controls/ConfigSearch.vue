@@ -1,39 +1,87 @@
 <script setup lang="ts">
-import { ref, watch, onMounted } from 'vue'
-import { getAvailableTimezones } from '@/utils/timezone';
+import { ref, onMounted } from 'vue'
+import { useRouter } from "vue-router";
 import Autocomplete from '@trevoreyre/autocomplete-js';
 import { MagnifyingGlassIcon } from '@heroicons/vue/20/solid';
 import { useI18n } from 'vue-i18n';
-const { t } = useI18n();
+
+const router = useRouter();
+const { t, locale } = useI18n();
 
 const props = defineProps({
-  modelValue: [String, Number, Array],
   label: String,
-  required: {
-    type: Boolean,
-    default: false
-  },
   mobile: {
     type: Boolean,
     default: false
   }
 });
 
-const emit = defineEmits(['update:modelValue']);
-
 const isInputFocused = ref(false);
 const search = ref('');
 const searchInput = ref();
 
-const timezoneOptionsImport = getAvailableTimezones();
-const timezoneOptions = (() => Array.isArray(timezoneOptionsImport) ? timezoneOptionsImport : [])();
+const configOptions = [
+  //"proKey",
+  "options",
+  "name",
+  "description",
+  "startDate",
+  "startTime",
+  "endDate",
+  "endTime",
+  "timeZone",
+  "location",
+  "status",
+  "sequence",
+  "uid",
+  "organizer",
+  "dates",
+  "recurrence",
+  "recurrence_interval",
+  "recurrence_until",
+  "recurrence_count",
+  "recurrence_byDay",
+  "recurrence_byMonthDay",
+  "recurrence_byMonth",
+  "recurrence_weekstart",
+  "availability",
+  "subscribe",
+  "icsFile",
+  "iCalFileName",
+  "created",
+  "updated",
+  "buttonStyle",
+  "inline",
+  "customCss",
+  "buttonsList",
+  "label",
+  "trigger",
+  "listStyle",
+  "hideBackground",
+  "hideIconButton",
+  "hideIconList",
+  "hideIconModal",
+  "hideTextLabelButton",
+  "hideTextLabelList",
+  "hideCheckmark",
+  "size",
+  "lightMode",
+  "language",
+  "customLabels",
+  "images",
+  "hideRichData",
+  "identifier",
+  "bypassWebViewCheck",
+  "hideBranding",
+  "debug"
+];
 
-const getFilteredTimezoneOptions = () => {
+const getFilteredOptions = () => {
   if (!search.value) {
-    return timezoneOptions;
+    return configOptions;
   }
 
-  return timezoneOptions.filter((option: string) => option
+  return configOptions.filter((option: string) => option
     .toLowerCase()
     .replace(/\s+/g, '')
     .includes(search.value.toLowerCase().replace(/\s+/g, ''))
@@ -42,39 +90,40 @@ const getFilteredTimezoneOptions = () => {
 
 const elID = (function() {
   if (props.mobile) {
-    return 'tz-mobile';
+    return 'configsearch-mobile';
   }
-  return 'tz';
+  return 'configsearch';
 })();
 
 const elInputID = (function() {
   if (props.mobile) {
-    return 'tz-input-mobile';
+    return 'configsearch-input-mobile';
   }
-  return 'tz-input';
+  return 'configsearch-input';
 })();
 
 const elNoResultsID = (function() {
   if (props.mobile) {
-    return 'tz-no-results-mobile';
+    return 'configsearch-no-results-mobile';
   }
-  return 'tz-no-results';
+  return 'configsearch-no-results';
 })();
 
 onMounted(() => {
-  if (props.modelValue && getFilteredTimezoneOptions().includes(props.modelValue.toString())) {
-    searchInput.value && (searchInput.value.value = props.modelValue)
-  }
-
   new Autocomplete('#' + elID, {
     search: (input: string) => {
       search.value = input;
-      return getFilteredTimezoneOptions();
+      return getFilteredOptions();
     },
-    onSubmit: (value: string) => {
+    onSubmit: (value: string, myLocale: any = locale) => {
       if (value !== undefined) {
-        emit('update:modelValue', value);
         searchInput.value && searchInput.value.blur();
+        router.push({
+          name: 'configuration',
+          hash: '#' + value.toLowerCase(),
+          params: { myLocale }
+        });
+        searchInput.value.value = '';
       }
     },
     autoSelect: true,
@@ -90,32 +139,26 @@ const onSearchInputFocus = () => {
 const onSearchInputBlur = () => {
   isInputFocused.value = false;
 
-  if (searchInput.value && !timezoneOptions.includes(searchInput.value.value.toString().trim())) {
+  if (searchInput.value && !configOptions.includes(searchInput.value.value.toString().trim())) {
     searchInput.value.value = '';
-    emit('update:modelValue', '');
   }
 }
-
-// watch props changes to synch mobile and desktop field here
-watch(props, () => {
-  searchInput.value && (searchInput.value.value = props.modelValue);
-});
 </script>
 
 <template>
   <div>
-    <label v-if="label" :class="['block text-sm text-zinc-500', required && 'required']">
+    <label v-if="label" class="hidden pr-5 text-sm text-zinc-500 sm:inline-block">
       {{ label }}
     </label>
-    <div class="relative w-full py-2 pl-2">
+    <div class="relative" :class="label ? 'block sm:inline-block' : 'block w-full'">
       <div :id="elID" class="autocomplete">
-        <div class="group grid w-full cursor-default rounded-md bg-zinc-50 shadow hover:bg-white hover:shadow-md focus:outline-none focus-visible:ring focus-visible:ring-secondary focus-visible:ring-opacity-75 dark:bg-zinc-700 dark:hover:bg-zinc-600">
+        <div class="group mt-1 grid w-full cursor-default rounded-md bg-zinc-50 shadow hover:bg-white hover:shadow-md focus:outline-none focus-visible:ring focus-visible:ring-secondary focus-visible:ring-opacity-75 dark:bg-zinc-700 dark:hover:bg-zinc-600">
           <input
             :id="elInputID"
             class="autocomplete-input truncate rounded-md bg-zinc-50 py-2 pr-10 pl-3 text-left text-sm focus:outline-none focus-visible:ring focus-visible:ring-secondary focus-visible:ring-opacity-75 group-hover:bg-white dark:bg-zinc-700 dark:group-hover:bg-zinc-600"
             ref="searchInput"
-            :placeholder="t('labels.inputs.search_time_zone')"
-            :aria-label="t('labels.inputs.search_time_zone')"
+            :placeholder="t('labels.inputs.search')"
+            :aria-label="t('labels.inputs.search')"
             @focus="onSearchInputFocus"
             @blur="onSearchInputBlur"
           />
@@ -124,7 +167,7 @@ watch(props, () => {
           </span>
         </div>
         <ul class="autocomplete-result-list absolute z-10 mt-2.5 max-h-36 w-full overflow-auto rounded-md bg-white py-1 text-sm shadow-lg ring ring-secondary ring-opacity-75 focus:outline-none dark:bg-zinc-700" />
-        <ul :id="elNoResultsID" v-if="isInputFocused && !getFilteredTimezoneOptions().length" class="autocomplete-result-list absolute z-10 mt-3 max-h-36 w-full overflow-auto rounded-md bg-white py-1 text-sm shadow-lg ring ring-red-600 ring-opacity-75 focus:outline-none dark:bg-zinc-700">
+        <ul :id="elNoResultsID" v-if="isInputFocused && !getFilteredOptions().length" class="autocomplete-result-list absolute z-10 mt-3 max-h-36 w-full overflow-auto rounded-md bg-white py-1 text-sm shadow-lg ring ring-red-600 ring-opacity-75 focus:outline-none dark:bg-zinc-700">
           <li class="no-result relative cursor-default select-none py-2 px-4 italic" v-t="'labels.inputs.nothing_found'">Nothing found.</li>
         </ul>
       </div>

@@ -37,6 +37,7 @@
     "startPlaying": "Start playing",
     "startConfiguring": "Start configuring",
     "exploreExamples": "Start exploring",
+    "example": "Example",
     "inputs": {
       "name": "Subject",
       "description": "Description",
@@ -58,13 +59,14 @@
         "headline": "Recurrence",
         "rrule_value": "RRULE",
         "is_simple": "Simplyfied",
+        "repeat_every": "Repeat every",
         "interval": "Interval",
-        "count": "Count",
+        "frequency": "Frequency",
+        "count": "Max. Occurrences",
         "by_day": "By Day",
         "by_month": "By Month",
         "by_month_day": "By Month Day",
         "placeholder": {
-          "interval": "\"Interval\" like every X ...",
           "by_day": "\"MO,SA\" or \"-2MO\", ...",
           "by_month_day": "e.g. \"4,5\""
         }
@@ -88,7 +90,8 @@
       "language": "Language",
       "nothing_found": "Nothing found.",
       "select_option": "Select an option...",
-      "search_time_zone": "Search for a time zone..."
+      "search_time_zone": "Search for a time zone...",
+      "search": "Search..."
     }
   },
   "options": {
@@ -101,6 +104,12 @@
       "busy": "Busy",
       "free": "Free"
     },
+    "frequency": {
+      "daily": "Day(s)",
+      "weekly": "Week(s)",
+      "monthly": "Month(s)",
+      "yearly": "Year(s)"
+    },
     "hide_icon": {
       "button": "Button",
       "list": "List",
@@ -109,10 +118,16 @@
     "hide_text": {
       "button": "Button",
       "list": "List"
+    },
+    "trigger": {
+      "hover": "Hover",
+      "click": "Click"
     }
   },
   "defaults": {
-    "name": "Sample Event"
+    "name": "Sample Event",
+    "description": "Play with me!",
+    "location": "World Wide Web"
   },
   "meta": {
     "titleSlug": "convenient event sharing",
@@ -122,6 +137,17 @@
   },
   "content": {
     "404RealContent": "The real content can be accessed best via the home page.",
-    "demoDisclaimer": "The playground only holds a subset of the available options. Check the \"Configuration\" page for more:"
+    "home": {
+      "demoDisclaimer": "The playground only holds a subset of the available options. Check the \"Configuration\" page for more:"
+    },
+    "legal": {
+      "intro": "Information in accordance with section 5 TMG and section 55 para. 2 RStV:"
+    },
+    "privacy": {
+      "no-cookies": "No Cookies are possible",
+      "no-cookies-details-1": "We are not using any cookies. We are also not following you around the web or sharing your data with any third party for marketing or tracking purposes.",
+      "no-cookies-details-2": "Therefore, we do not need to bother you with a cookie banner.",
+      "no-cookies-details-3": "The following information explains how we process data apart from this."
+    }
   }
 }

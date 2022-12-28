@@ -27,11 +27,11 @@ const { t, locale } = useI18n();
           </h1>
           <h2 class="mt-5 hidden italic text-white opacity-70 xs:block">Make your events get saved!</h2>
         </div>
-        <div class="grid max-w-[400px] grid-cols-1 justify-items-center gap-6 self-center xs:grid-cols-2 md:grid-cols-1 lg:grid-cols-2">
-          <RouterLink class="button-secondary w-40 text-white" v-if="locale=='en'" :to="{ name: 'home', hash: '#installation', params: { locale } }">
+        <div class="grid max-w-[400px] grid-cols-1  justify-items-center gap-6 self-center xs:grid-cols-2 md:grid-cols-1 lg:grid-cols-2">
+          <RouterLink class="button-secondary order-last w-40 text-white xs:order-first md:order-last lg:order-first" v-if="locale=='en'" :to="{ name: 'home', hash: '#installation', params: { locale } }">
             {{ t('labels.getStarted') }}
           </RouterLink>
-          <RouterLink class="button-secondary w-40 text-white" v-if="locale!='en'" :to="{ name: 'home-i18n', hash: '#installation', params: { locale } }">
+          <RouterLink class="button-secondary order-last w-40 text-white xs:order-first md:order-last lg:order-first" v-if="locale!='en'" :to="{ name: 'home-i18n', hash: '#installation', params: { locale } }">
             {{ t('labels.getStarted') }}
           </RouterLink>
 

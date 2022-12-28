@@ -3,6 +3,14 @@
 ## Version 2
 
 - v2.0 : "all" new version 2
+  - now a universally usable web component, working basically plug and play at almost all frontend stacks
+  - more customization (hide/show all parts individually) and easy styling (no longer necessary to include the css file manually)
+  - updates automatically when you change any attributes
+  - a lot of bug fixes and performance improvement
+  - prepared for better tracking
+  - full code refactoring
+  - new demo page with live playground
+  - using attributes instead of the innerContent JSON structure. Latter one is still supported, but not with to the full degree of the new version
   - new license: ELv2
   - potential breaks:
     - backwards compatibility for old schema.org support (< v1.10) and parameter names prior v1.4 are no longer supported

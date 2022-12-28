@@ -7,7 +7,7 @@ import Svelte from "@/components/logos/LogoSvelte.vue";
 import Vue from "@/components/logos/LogoVue.vue";
 import WordPress from "@/components/logos/LogoWordPress.vue";
 import { RouterLink } from "vue-router";
-import { useI18n } from 'vue-i18n'
+import { useI18n } from 'vue-i18n';
 const { locale } = useI18n();
 </script>
 

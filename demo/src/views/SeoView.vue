@@ -1,10 +1,11 @@
 <script setup lang="ts">
 import { defineAsyncComponent } from 'vue';
 import View_DE from "@/components/translated/SeoView-de.vue";
+import FeaturesBlockPlaceholder from "@/components/placeholders/FeaturesBlockPlaceholder.vue";
 import "add-to-calendar-button";
 import { ArrowRightIcon, WrenchScrewdriverIcon, BeakerIcon, MagnifyingGlassIcon, RocketLaunchIcon } from '@heroicons/vue/24/outline';
 import { RouterLink } from "vue-router";
-import { useI18n } from 'vue-i18n'
+import { useI18n } from 'vue-i18n';
 const { t, locale } = useI18n();
 
 const today = new Date();
@@ -14,13 +15,11 @@ const defaultDate = nextDay.getFullYear() + '-' + ('0' + (nextDay.getMonth() + 1
 </script>
 
 <script lang="ts">
-export default {
-  components: {
-    FeaturesBlock: defineAsyncComponent(() =>
-      import('@/components/FeaturesBlock.vue')
-    )
-  }
-}
+const FeaturesBlock = defineAsyncComponent({
+  loader: () => import('@/components/FeaturesBlock.vue'),
+  loadingComponent: FeaturesBlockPlaceholder,
+  delay: 0
+});
 </script>
 
 <template>
@@ -126,7 +125,7 @@ export default {
     <FeaturesBlock />
     <div class="text-center">
       <h2 class="mb-10 mt-20">... and here you can see how it looks like!</h2>
-      <div class="px-10">
+      <div class="flex justify-center px-10">
         <add-to-calendar-button
           name="[Reminder] Test the Add to Calendar Button"
           v-bind:startDate="defaultDate"

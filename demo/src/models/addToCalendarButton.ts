@@ -9,6 +9,13 @@ export enum Availability {
   FREE = 'free',
 }
 
+export enum Frequency {
+  DAILY = 'daily',
+  WEEKLY = 'weekly',
+  MONTHLY = 'monthly',
+  YEARLY = 'yearly',
+}
+
 export enum Option {
   APPLE = 'Apple',
   GOOGLE = 'Google',
@@ -34,8 +41,8 @@ export enum ButtonStyle {
   NEUMORPHISM = 'neumorphism',
   TEXT = 'text',
   DATE = 'date',
-  CUSTOM = 'custom',
-  NONE = 'none',
+  //CUSTOM = 'custom',
+  //NONE = 'none',
 }
 
 export const DefaultButtonStyle = ButtonStyle.DEFAULT;

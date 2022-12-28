@@ -24,6 +24,7 @@ export enum DateAttrsKey {
 export enum DateRecurrenceAttrsKey {
   IS_SIMPLE = 'IS_SIMPLE',
   RRULE_VALUE = 'RRULE_VALUE',
+  FREQUENCY = 'FREQUENCY',
   INTERVAL = 'INTERVAL',
   COUNT = 'COUNT',
   BY_DAY = 'BY_DAY',
@@ -94,8 +95,9 @@ export interface DateAttrs {
 export interface DateRecurrenceAttrs {
   [DateRecurrenceAttrsKey.IS_SIMPLE]: boolean;
   [DateRecurrenceAttrsKey.RRULE_VALUE]: string;
-  [DateRecurrenceAttrsKey.INTERVAL]: number;
-  [DateRecurrenceAttrsKey.COUNT]: number;
+  [DateRecurrenceAttrsKey.FREQUENCY]: string;
+  [DateRecurrenceAttrsKey.INTERVAL]: number | string;
+  [DateRecurrenceAttrsKey.COUNT]: number | string;
   [DateRecurrenceAttrsKey.BY_DAY]: string;
   [DateRecurrenceAttrsKey.BY_MONTH]: number[];
   [DateRecurrenceAttrsKey.BY_MONTH_DAY]: string;
@@ -135,6 +137,7 @@ export const ComponentAttrKeyMap: { [key in string]: string } = {
   [AttrsKey.ORGANIZER]: 'organizer',
   [AttrsKey.ISC_FILE]: 'icsFile',
   [AttrsKey.RRULE_VALUE]: 'recurrence',
+  [AttrsKey.FREQUENCY]: 'recurrence',
   [AttrsKey.INTERVAL]: 'recurrence_interval',
   [AttrsKey.COUNT]: 'recurrence_count',
   [AttrsKey.BY_DAY]: 'recurrence_byDay',

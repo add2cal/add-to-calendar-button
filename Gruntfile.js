@@ -94,7 +94,20 @@ module.exports = function (grunt) {
     // generate the distributable JavaScript files (and also add a customized css file to the demo)
     concat: {
       main: {
-        src: ['node_modules/timezones-ical-library/dist/tzlib.js', 'src/atcb-globals.js', 'src/atcb-decorate.js', 'src/atcb-validate.js', 'src/atcb-control.js', 'src/atcb-generate.js', 'src/atcb-generate-rich-data.js', 'src/atcb-links.js', 'src/atcb-util.js', 'src/atcb-event.js', 'src/atcb-i18n.js', 'src/atcb-init.js'],
+        src: [
+          'node_modules/timezones-ical-library/dist/tzlib.js',
+          'src/atcb-globals.js',
+          'src/atcb-decorate.js',
+          'src/atcb-validate.js',
+          'src/atcb-control.js',
+          'src/atcb-generate.js',
+          'src/atcb-generate-rich-data.js',
+          'src/atcb-links.js',
+          'src/atcb-util.js',
+          'src/atcb-event.js',
+          'src/atcb-i18n.js',
+          'src/atcb-init.js',
+        ],
         dest: 'dist/atcb.js',
         options: {
           stripBanners: true,

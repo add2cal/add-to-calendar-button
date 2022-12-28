@@ -3,7 +3,7 @@ import { onMounted, onUnmounted } from 'vue';
 import { atcb_action } from "add-to-calendar-button";
 import { ArrowTopRightOnSquareIcon } from '@heroicons/vue/24/outline';
 import CodeBlock from "@/components/CodeBlock.vue";
-import { useI18n } from 'vue-i18n'
+import { useI18n } from 'vue-i18n';
 const { t, locale } = useI18n();
 
 const today = new Date();
@@ -446,7 +446,7 @@ onUnmounted(() => {
           The individual calendar options then get the button ID plus the calendar type assigned - like "atcb-btn-5-google"
         </p>
         <p>
-          You can override the automatically defined button ID (and therefore also the calendar type IDs) by defining a distinctive one with the "identifier" option.<br />
+          You can override the automatically defined "X" at the button ID (and therefore also the calendar type IDs) by defining a distinctive one with the "identifier" option.<br />
           This might help you to track any user interaction more precisely.
         </p>
         <p class="font-semibold">Mind that this ID needs to be unique and may not be used at any other element - not even the <code>&lt;add-to-calendar-button&gt;</code> tag!</p>
@@ -639,7 +639,7 @@ onUnmounted(() => {
       </section>
     </div>
     <div class="hidden border-l border-zinc-300 pl-8 text-sm dark:border-zinc-700 lg:block">
-      <div class="sticky top-0 h-96 pt-4">
+      <div class="sticky top-0 pt-4">
         <a href="#1" class="my-4 block">#1: External Style</a>
         <a href="#2" class="my-4 block">#2: Rich description</a>
         <a href="#3" class="my-4 block">#3: Subscription</a>

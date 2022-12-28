@@ -22,6 +22,10 @@ const props = defineProps({
   max: {
     type: Number,
     required: false
+  },
+  hidelabel: {
+    type: Boolean,
+    default: false
   }
 });
 
@@ -30,10 +34,10 @@ defineEmits(['update:modelValue']);
 
 <template>
   <div>
-    <label v-if="label" :class="['block text-sm text-zinc-500 ', required && 'required']">
+    <label v-if="label" :class="['block text-sm text-zinc-500 ', required && 'required', hidelabel ? 'hidden' : 'block']">
       {{ label }}
     </label>
-    <div class="mt-1 flex items-center pl-2 pt-1 pb-2">
+    <div class="flex items-center py-2 pl-2">
       <input
         :aria-label="label"
         :value="modelValue"
@@ -66,11 +70,7 @@ input[type=range]:focus::-webkit-slider-thumb {
   @apply bg-secondary;
 }
 input[type=range]::-moz-range-track {
-  width: 100%;
-  height: 8.4px;
-  background: #3071a9;
-  border-radius: 1.3px;
-  border: 0.2px solid #010101;
+  @apply rounded-md bg-zinc-300 h-2 w-full shadow-inner dark:bg-zinc-700;
 }
 input[type=range]::-moz-range-thumb {
   @apply rounded-md bg-white dark:bg-zinc-400 h-2 w-full shadow-inner;

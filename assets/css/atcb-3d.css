@@ -68,9 +68,9 @@
 
 /* Dark mode */
 
-:host(.atcb-dark),
-:host-context(html.atcb-dark):host(.atcb-bodyScheme),
-:host-context(body.atcb-dark):host(.atcb-bodyScheme) {
+/*:host-context(html.atcb-dark):host(.atcb-bodyScheme),
+:host-context(body.atcb-dark):host(.atcb-bodyScheme), */
+:host(.atcb-dark) {
   --atcb-background: #2e2e2e;
   --atcb-background-hover: #373737;
   --atcb-border: #4d4d4d;
@@ -808,11 +808,13 @@ a.atcb-modal-btn:focus-visible{
   backdrop-filter: blur(2px);
   -webkit-backdrop-filter: blur(2px);
   background-color: var(--atcb-overlay-background);
+  border: 0;
   box-sizing: border-box;
   display: flex;
   
   /* could become simply 100dvh in the future - with regular padding then */
   height: calc(100vh + 100px);
+  inset-inline: 0;
   left: 0;
   right: 0;
   top: 0;

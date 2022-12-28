@@ -7,7 +7,7 @@ import Logo from "@/components/logos/LogoMain.vue";
 import LogoGithub from "@/components/logos/LogoGithub.vue";
 import LogoTwitter from "@/components/logos/LogoTwitter.vue";
 import LogoNpm from "@/components/logos/LogoNpm.vue";
-import { useI18n } from 'vue-i18n'
+import { useI18n } from 'vue-i18n';
 const { t, locale } = useI18n();
 </script>
 
@@ -31,7 +31,7 @@ const { t, locale } = useI18n();
         </div>
         <hr class="mt-6 mb-4 border-gray-300 dark:border-zinc-700" />
         <div class="flex flex-col-reverse text-xs sm:flex-row sm:justify-between">
-          <div class="px-1 pt-10 pb-2 text-center sm:pt-1 sm:text-left">
+          <div class="px-1 pt-10 pb-2 text-center text-sm sm:pt-1 sm:text-left sm:text-xs">
             <RouterLink :to="{ name: 'legal-notice', params: { locale } }">
               {{ t('navigation.legal-notice') }}
             </RouterLink>
@@ -45,19 +45,25 @@ const { t, locale } = useI18n();
               |
               <a href="https://github.com/add2cal/add-to-calendar-button/discussions" target="_blank" rel="noopener">{{ t('navigation.help') }} <ArrowTopRightOnSquareIcon class="-mt-0.5 mr-0.5 inline-block h-3 w-3" aria-hidden="true" /></a>
             </span>
-            <div class="mt-3">
+            <div class="mt-6 sm:mt-5 md:mt-3 text-xs">
               <span class="font-semibold text-zinc-500 dark:text-zinc-400"> &copy; {{new Date().getFullYear()}} </span>
               <span class="lowercase text-zinc-400 dark:text-zinc-500"> , Current Version: 2.0.0 </span>
             </div>
           </div>
           <div class="hidden self-center sm:block"><LightModeSwitch /></div>
           <div class="flex justify-center space-x-6 pt-3 sm:pt-0">
-            <a class="w-9 self-center p-1 text-zinc-700 hover:text-black dark:text-zinc-300 dark:hover:text-white" target="_blank" rel="noopener" href="https://github.com/add2cal/add-to-calendar-button"><LogoGithub /></a>
-            <a class="w-9 self-center p-1 text-zinc-700 hover:text-twitter dark:text-zinc-300 dark:hover:text-twitter" target="_blank" rel="noopener" href="https://twitter.com/add2calendar"><LogoTwitter /></a>
-            <a class="w-12 self-center p-1 text-zinc-700 hover:text-npm dark:text-zinc-300 dark:hover:text-npm" target="_blank" rel="noopener" href="https://www.npmjs.com/package/add-to-calendar-button"><LogoNpm /></a>
+            <a class="footer-icon-base w-9 hover:text-black dark:hover:text-white" target="_blank" rel="noopener" href="https://github.com/add2cal/add-to-calendar-button"><LogoGithub /></a>
+            <a class="footer-icon-base w-9 hover:text-twitter dark:hover:text-twitter" target="_blank" rel="noopener" href="https://twitter.com/add2calendar"><LogoTwitter /></a>
+            <a class="footer-icon-base w-12  hover:text-npm dark:hover:text-npm" target="_blank" rel="noopener" href="https://www.npmjs.com/package/add-to-calendar-button"><LogoNpm /></a>
           </div>
         </div>
       </div>
     </div>
   </div>
 </template>
+
+<style scoped>
+.footer-icon-base {
+  @apply self-center p-1 text-zinc-700 dark:text-zinc-300;
+}
+</style>

@@ -280,18 +280,19 @@ function atcb_cleanup(host, data) {
 
 // set light mode
 function atcb_set_light_mode(shadowRoot, data) {
-  shadowRoot.host.classList.remove('atcb-dark', 'atcb-light', 'atcb-bodyScheme');
-  let hostLightMode = data.lightMode;
   // Safari + Firefox combat hack
-  // could be removed as soon as those browsers support the :host-context selector
-  if (hostLightMode == 'bodyScheme') {
-    if (document.body.classList.contains('atcb-dark') || document.documentElement.classList.contains('atcb-dark')) {
-      hostLightMode = 'dark';
-    } else {
-      hostLightMode = 'light';
+  // could be removed (together with the global mutation observer on that) as soon as those browsers support the :host-context selector
+  shadowRoot.host.classList.remove('atcb-dark', 'atcb-light', 'atcb-bodyScheme');
+  const hostLightMode = (function () {
+    if (data.lightMode == 'bodyScheme') {
+      if (document.body.classList.contains('atcb-dark') || document.documentElement.classList.contains('atcb-dark')) {
+        return 'dark';
+      } else {
+        return 'light';
+      }
     }
-  }
-  // apply
+    return data.lightMode;
+  })();
   shadowRoot.host.classList.add('atcb-' + hostLightMode);
 }
 
@@ -636,4 +637,4 @@ function atcb_unset_global_event_listener(identifier) {
   }
 }
 
-export { atcb_unset_global_event_listener, atcb_load_css };
+export { atcb_unset_global_event_listener, atcb_load_css, atcb_set_light_mode };
