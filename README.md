@@ -275,7 +275,7 @@ Find all information about the available attributes and how to configure specifi
 
 ## ⚡ Changelog
 
-![npm version](https://img.shields.io/npm/v/add-to-calendar-button?label=version&style=for-the-badge)
+![npm version](https://img.shields.io/npm/v/add-to-calendar-button?label=current%20version&style=for-the-badge)
 
 Find all changes in the dedicated file at [CHANGELOG.md](CHANGELOG.md).
 

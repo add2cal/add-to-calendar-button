@@ -140,14 +140,14 @@ onUnmounted(() => {
         <p class="italic">Mind that this is not working with the "none" button style or the atcb_action approach (<a href="#9">see #9</a>).</p>
         <div class="block w-full justify-between md:flex">
           <div class="flex w-full flex-none justify-center p-10 pb-6 md:w-[300px]">
-            <add-to-calendar-button styleLight="--atcb-background: #ffa255;" styleDark="--atcb-background: #000;" name="[Reminder] Test the Add to Calendar Button" v-bind:startDate="defaultDate" options="'Apple','Google','iCal'" lightMode="bodyScheme"></add-to-calendar-button>
+            <add-to-calendar-button styleLight="--btn-background: #ffa255;" styleDark="--btn-background: #000;" name="[Reminder] Test the Add to Calendar Button" v-bind:startDate="defaultDate" options="'Apple','Google','iCal'" lightMode="bodyScheme"></add-to-calendar-button>
           </div>
           <div class="flex-1 overflow-x-auto">
             <CodeBlock class="line-numbers">
               <pre>
 &lt;add-to-calendar-button 
-  styleLight="--atcb-background: #ffa255;"
-  styleDark="--atcb-background: #000;"
+  styleLight="--btn-background: #ffa255;"
+  styleDark="--btn-background: #000;"
   name="[Reminder] Test the Add to Calendar Button"
   v-bind:startDate="{{defaultDate}}"
   options="'Apple','Google','iCal'"

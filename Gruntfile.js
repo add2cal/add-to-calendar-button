@@ -128,7 +128,7 @@ module.exports = function (grunt) {
         src: ['assets/css/atcb.css'],
         dest: 'demo/public/atcb.css',
         options: {
-          footer: ':host { --atcb-background: #ffa255; }:host(.atcb-dark), :host-context(html.atcb-dark):host(.atcb-bodyScheme), :host-context(body.atcb-dark):host(.atcb-bodyScheme) { --atcb-background: #000; }',
+          footer: ':host { --btn-background: #ffa255; }:host(.atcb-dark), :host-context(html.atcb-dark):host(.atcb-bodyScheme), :host-context(body.atcb-dark):host(.atcb-bodyScheme) { --btn-background: #000; }',
         },
       },
     },

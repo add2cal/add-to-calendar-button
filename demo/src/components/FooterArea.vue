@@ -18,10 +18,10 @@ const { t, locale } = useI18n();
         <div class="flex flex-col-reverse items-center sm:flex-row sm:justify-between">
           <div class="hidden w-auto max-w-[200px] sm:block">
             <RouterLink v-if="locale=='en'" :to="{ name: 'home', params: { locale } }">
-              <Logo />
+              <Logo variation="footer" />
             </RouterLink>
             <RouterLink v-if="locale!='en'" :to="{ name: 'home-i18n', params: { locale } }">
-              <Logo />
+              <Logo variation="footer" />
             </RouterLink>
           </div>
           <div class="flex">
@@ -45,7 +45,7 @@ const { t, locale } = useI18n();
               |
               <a href="https://github.com/add2cal/add-to-calendar-button/discussions" target="_blank" rel="noopener">{{ t('navigation.help') }} <ArrowTopRightOnSquareIcon class="-mt-0.5 mr-0.5 inline-block h-3 w-3" aria-hidden="true" /></a>
             </span>
-            <div class="mt-6 sm:mt-5 md:mt-3 text-xs">
+            <div class="mt-6 text-xs sm:mt-5 md:mt-3">
               <span class="font-semibold text-zinc-500 dark:text-zinc-400"> &copy; {{new Date().getFullYear()}} </span>
               <span class="lowercase text-zinc-400 dark:text-zinc-500"> , Current Version: 2.0.0 </span>
             </div>
