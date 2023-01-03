@@ -501,6 +501,7 @@ onUnmounted(() => {
           <li>openCalendarLink</li>
           <li>openSingletonLink</li>
           <li>openSubEventLink</li>
+          <li>success</li>
         </ul>
         <p class="mt-3 text-sm italic">(You can try this by playing with a button on this site and putting <code>dataLayer</code> into the JavaScript console.)</p>
       </section>

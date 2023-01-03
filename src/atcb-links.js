@@ -63,9 +63,12 @@ function atcb_generate_links(host, type, data, subEvent = 'all', keyboardTrigger
       }
     }
     // we mark the clicked date - in the multi-date case, this would be one out of many
-    const subEventButton = host.getElementById(data.identifier + '-' + type + '-' + (subEvent + 1));
-    if (subEventButton) {
-      subEventButton.classList.add('atcb-saved');
+    const modalHost = document.getElementById(data.identifier + '-modal-host');
+    if (modalHost) {
+      const subEventButton = modalHost.shadowRoot.getElementById(data.identifier + '-' + type + '-' + (subEvent + 1));
+      if (subEventButton) {
+        subEventButton.classList.add('atcb-saved');
+      }
     }
     atcbStates[`${data.identifier}`][`${type}`][`${subEvent}`]++;
     const filteredStates = atcbStates[`${data.identifier}`][`${type}`].filter(function (value) {

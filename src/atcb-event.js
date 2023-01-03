@@ -54,6 +54,9 @@ function atcb_push_to_data_layer(event, trigger) {
     case 'openSubEventLink':
       action = 'Opened';
       break;
+    case 'success':
+      action = 'Saved';
+      break;
   }
   const atcbDataLayer = (window.dataLayer = window.dataLayer || []);
   atcbDataLayer.push({
