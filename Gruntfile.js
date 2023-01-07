@@ -108,7 +108,7 @@ module.exports = function (grunt) {
           'src/atcb-i18n.js',
           'src/atcb-init.js',
         ],
-        dest: 'dist/atcb.js',
+        dest: 'dist/atcb-unminified.js',
         options: {
           stripBanners: true,
           process: (content) => prepareFinalFile(content),
@@ -153,7 +153,7 @@ module.exports = function (grunt) {
       },
       newBuild: {
         files: {
-          'dist/atcb.js': ['dist/atcb.js'],
+          'dist/atcb.js': ['dist/atcb-unminified.js'],
         },
       },
     },

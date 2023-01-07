@@ -21,6 +21,7 @@
 *.gif
 *.svg
 *.ics
+atcb-unminified.js
 Gruntfile.js
 security.md
 package-lock.json
