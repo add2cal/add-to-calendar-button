@@ -2,6 +2,11 @@
 import CodeBlock from "@/components/CodeBlock.vue";
 import NextSteps from "@/components/integration/NextSteps.vue";
 import GuideSidebar from "@/components/integration/GuideSidebar.vue";
+
+const today = new Date();
+const nextDay = new Date();
+nextDay.setDate(today.getDate() + 3);
+const defaultDate = nextDay.getFullYear() + '-' + ('0' + (nextDay.getMonth() + 1)).slice(-2) + '-' + ('0' + nextDay.getDate()).slice(-2);
 </script>
 
 <template>
@@ -30,8 +35,8 @@ import GuideSidebar from "@/components/integration/GuideSidebar.vue";
   name="Title"
   options="'Apple','Google'"
   location="World Wide Web"
-  startDate="2023-02-14"
-  endDate="2023-02-14"
+  startDate="{{defaultDate}}"
+  endDate="{{defaultDate}}"
   startTime="10:15"
   endTime="23:30"
   timeZone="Europe/Berlin"

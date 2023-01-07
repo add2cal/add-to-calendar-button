@@ -25,7 +25,7 @@ let atcbInitialGlobalInit = false;
 let atcbBtnCount = 0;
 const lightModeMutationObserver = [];
 
-const template = `<div class="atcb-initialized" style="display:none;position:relative;"></div>`;
+const template = `<div class="atcb-initialized" style="display:none;position:relative;width:fit-content;"></div>`;
 
 // we cannot load the custom element server-side - therefore, we check for a browser environment first
 if (isBrowser()) {
@@ -61,21 +61,27 @@ if (isBrowser()) {
         }
         this.data.proKey = '';
       }
-      // set identifier first, no matter further validation
       atcbBtnCount = atcbBtnCount + 1;
-      if (this.data.identifier && this.data.identifier != '') {
-        if (!/^[\w\-_]+$/.test(this.data.identifier)) {
-          this.data.identifier = '';
-          console.warn('Add to Calendar Button generation: identifier invalid - using auto numbers instead');
-        } else {
-          this.data.identifier = 'atcb-btn-' + this.data.identifier;
+      // set identifier first, no matter further validation
+      // we use a stored one if available (the case, if destroyed before)
+      if (this.identifier && this.identifier != '') {
+        this.data.identifier = this.identifier;
+      } else {
+        // and create one in all other cases
+        if (this.data.identifier && this.data.identifier != '') {
+          if (!/^[\w\-_]+$/.test(this.data.identifier)) {
+            this.data.identifier = '';
+            console.warn('Add to Calendar Button generation: identifier invalid - using auto numbers instead');
+          } else {
+            this.data.identifier = 'atcb-btn-' + this.data.identifier;
+          }
         }
+        if (this.data.identifier == null || this.data.identifier == '') {
+          this.data.identifier = 'atcb-btn-' + atcbBtnCount;
+        }
+        // we are copying the value to presever it over re-building the data object
+        this.identifier = this.data.identifier;
       }
-      if (this.data.identifier == null || this.data.identifier == '') {
-        this.data.identifier = 'atcb-btn-' + atcbBtnCount;
-      }
-      // we are copying the value to presever it over re-building the data object
-      this.identifier = this.data.identifier;
       this.setAttribute('atcb-button-id', this.data.identifier);
       this.initialized = true;
       try {
@@ -91,12 +97,12 @@ if (isBrowser()) {
 
     disconnectedCallback() {
       atcb_cleanup(this.shadowRoot, this.data);
+      if (this.debug != null && this.debug == true) {
+        console.log('Add to Calendar Button "' + this.data.identifier + '" destroyed');
+      }
       // reset the count, if all buttons got destroyed
       if (document.querySelectorAll('add-to-calendar-button').length == 0) {
         atcbBtnCount = 0;
-      }
-      if (this.debug != null && this.debug == true) {
-        console.log('Add to Calendar Button "' + this.data.identifier + '" destroyed');
       }
     }
 
@@ -130,7 +136,6 @@ if (isBrowser()) {
       const elem = document.createElement('template');
       elem.innerHTML = template;
       this.shadowRoot.append(elem.content.cloneNode(true));
-      if (this.shadowRoot.querySelector('style')) this.shadowRoot.querySelector('style').remove();
       try {
         this.data = atcb_read_attributes(this);
       } catch (e) {
@@ -269,12 +274,13 @@ function atcb_cleanup(host, data) {
   // cleaning up a little bit
   atcb_close(host);
   atcb_unset_global_event_listener(data.identifier);
-  if (host.querySelector('.atcb-debug-error-msg')) {
-    host.querySelector('.atcb-debug-error-msg').remove();
-  }
   if (data.schemaEl != null) {
     data.schemaEl.remove();
   }
+  Array.from(host.querySelectorAll('.atcb-debug-error-msg'))
+      .concat(Array.from(host.querySelectorAll('style')))
+      .concat(Array.from(host.querySelectorAll('.atcb-button-wrapper')))
+      .forEach((el) => el.remove());
   delete atcbStates[`${data.identifier}`];
 }
 
@@ -411,7 +417,7 @@ function atcb_action(data, triggerElement, keyboardTrigger = false) {
         if (!/^[\w\-_]+$/.test(data.identifier)) {
           data.identifier = 'atcb-btn-custom';
         } else {
-          this.data.identifier = 'atcb-btn-' + this.data.identifier;
+          data.identifier = 'atcb-btn-' + data.identifier;
         }
       }
       triggerElement.id = data.identifier;
@@ -545,7 +551,7 @@ function atcb_set_global_event_listener(host, data) {
     lightModeMutationObserver[data.identifier].observe(document.documentElement, { attributes: true });
     lightModeMutationObserver[data.identifier].observe(document.body, { attributes: true });
   }
-  if (!atcbInitialGlobalInit) {
+  if (!atcbInitialGlobalInit && !data.blockInteraction) {
     // global listener for ESC key to close dropdown
     document.addEventListener('keyup', atcb_global_listener_keyup);
     // global listener for arrow key optionlist navigation

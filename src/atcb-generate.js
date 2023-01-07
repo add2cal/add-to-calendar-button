@@ -28,35 +28,37 @@ function atcb_generate_label(host, data, parent, type, icon = false, text = '', 
     case 'trigger':
     default:
       parent.id = data.identifier;
-      parent.addEventListener('keyup', function (event) {
-        if (event.key == 'Enter') {
-          event.preventDefault();
-          atcb_toggle(host, 'auto', data, parent, true, true);
-        }
-      });
-      parent.addEventListener(
-        'touchend',
-        atcb_debounce_leading((event) => {
-          event.preventDefault();
-          atcb_toggle(host, 'auto', data, parent, false, true);
-        })
-      );
-      if (data.trigger === 'click') {
+      if (!data.blockInteraction) {
+        parent.addEventListener('keyup', function (event) {
+          if (event.key == 'Enter') {
+            event.preventDefault();
+            atcb_toggle(host, 'auto', data, parent, true, true);
+          }
+        });
         parent.addEventListener(
-          'mouseup',
+          'touchend',
           atcb_debounce_leading((event) => {
             event.preventDefault();
             atcb_toggle(host, 'auto', data, parent, false, true);
           })
         );
-      } else {
-        parent.addEventListener(
-          'mouseenter',
-          atcb_debounce_leading((event) => {
-            event.preventDefault();
-            atcb_toggle(host, 'open', data, parent, false, true);
-          })
-        );
+        if (data.trigger === 'click') {
+          parent.addEventListener(
+            'mouseup',
+            atcb_debounce_leading((event) => {
+              event.preventDefault();
+              atcb_toggle(host, 'auto', data, parent, false, true);
+            })
+          );
+        } else {
+          parent.addEventListener(
+            'mouseenter',
+            atcb_debounce_leading((event) => {
+              event.preventDefault();
+              atcb_toggle(host, 'open', data, parent, false, true);
+            })
+          );
+        }
       }
       break;
     case 'apple':
