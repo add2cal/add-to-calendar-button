@@ -126,7 +126,7 @@ export interface Attrs {
 
 export const ComponentAttrKeyMap: { [key in string]: string } = {
   [AttrsKey.NAME]: 'name',
-  [AttrsKey.DESCRIPTION]: 'decription',
+  [AttrsKey.DESCRIPTION]: 'description',
   [AttrsKey.START_DATE]: 'startDate',
   [AttrsKey.START_TIME]: 'startTime',
   [AttrsKey.END_DATE]: 'endDate',

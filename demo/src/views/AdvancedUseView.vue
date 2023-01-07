@@ -263,7 +263,14 @@ onUnmounted(() => {
         </p>
         <div class="block w-full justify-between md:flex">
           <div class="flex w-full flex-none justify-center p-10 pb-6 md:w-[300px]">
-            <add-to-calendar-button name="[Test Subscription] Add to Calendar Button" v-bind:startDate="defaultDate" subscribe icsFile="" options="'Apple','Google','iCal','Outlook.com','Microsoft 365','Microsoft Teams','Yahoo'" lightMode="bodyScheme"></add-to-calendar-button>
+            <add-to-calendar-button
+              name="[Test Subscription] Add to Calendar Button"
+              v-bind:startDate="defaultDate"
+              subscribe
+              icsFile="https://add2cal.github.io/ics-demo/demo-calendar.ics"
+              options="'Apple','Google','iCal','Outlook.com','Microsoft 365','Microsoft Teams','Yahoo'"
+              lightMode="bodyScheme"
+            ></add-to-calendar-button>
           </div>
           <div class="flex-1 overflow-x-auto">
             <CodeBlock class="line-numbers">
@@ -272,7 +279,7 @@ onUnmounted(() => {
   name="[Test Subscription] Add to Calendar Button"
   startDate="{{defaultDate}}"
   subscribe
-  icsFile=""
+  icsFile="https://add2cal.github.io/ics-demo/demo-calendar.ics"
   options="'Apple','Google','iCal','Outlook.com','Microsoft 365','Microsoft Teams','Yahoo'"
   lightMode="bodyScheme"
 &gt;&lt;/add-to-calendar-button&gt;
