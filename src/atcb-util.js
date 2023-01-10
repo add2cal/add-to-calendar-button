@@ -23,7 +23,7 @@ function atcb_saved_hook(host, data) {
   if ((data.proKey == null) || (data.proKey == '')) {
     return;
   }
-  console.log('Event saved. Looking forward to it!');
+  // go PRO...
 }
 
 // SHARED FUNCTION TO SAVE A FILE

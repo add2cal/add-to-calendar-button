@@ -71,7 +71,9 @@ if (isBrowser()) {
         if (this.data.identifier && this.data.identifier != '') {
           if (!/^[\w\-_]+$/.test(this.data.identifier)) {
             this.data.identifier = '';
-            console.warn('Add to Calendar Button generation: identifier invalid - using auto numbers instead');
+            if (this.debug) {
+              console.warn('Add to Calendar Button generation: identifier invalid - using auto numbers instead');
+            }
           } else {
             this.data.identifier = 'atcb-btn-' + this.data.identifier;
           }
@@ -97,7 +99,7 @@ if (isBrowser()) {
 
     disconnectedCallback() {
       atcb_cleanup(this.shadowRoot, this.data);
-      if (this.debug != null && this.debug == true) {
+      if (this.debug) {
         console.log('Add to Calendar Button "' + this.data.identifier + '" destroyed');
       }
       // reset the count, if all buttons got destroyed
@@ -127,7 +129,7 @@ if (isBrowser()) {
       }
       // in all other cases, destroy and rebuild the button
       // mind that this only observes the actual attributes, not the innerHTML of the host (one would need to alter the instance attribute for that case)!
-      if (this.debug != null && this.debug == true) {
+      if (this.debug) {
         console.log(`${name}'s value has been changed from ${oldValue} to ${newValue}`);
       }
       atcb_cleanup(this.shadowRoot, this.data);
@@ -252,7 +254,7 @@ function atcb_build_button(host, data, debug = false) {
       atcb_setup_state_management(data);
       // set global event listeners
       atcb_set_global_event_listener(host, data);
-      atcb_init_log(data.proKey);
+      atcb_init_log(data.proKey, debug);
       // generate the actual button
       atcb_generate_button(host, rootObj, data, debug);
       // create schema.org data (https://schema.org/Event), if possible; and add it to the regular DOM
@@ -399,6 +401,7 @@ function atcb_action(data, triggerElement, keyboardTrigger = false) {
     data = atcb_get_pro_data(data.proKey);
   }
   // decorate & validate data
+  data.debug = data.debug === 'true';
   if (!atcb_check_required(data)) {
     throw new Error('Add to Calendar Button generation failed: required data missing; see console logs');
   }
@@ -489,8 +492,10 @@ function atcb_action(data, triggerElement, keyboardTrigger = false) {
     // open the options list
     atcb_toggle(host.shadowRoot, 'open', data, triggerElement, keyboardTrigger);
   }
-  atcb_init_log(data.proKey);
-  console.log('Add to Calendar Button "' + data.identifier + '" triggered');
+  atcb_init_log(data.proKey, data.debug);
+  if (data.debug) {
+    console.log('Add to Calendar Button "' + data.identifier + '" triggered');
+  }
   return data.identifier;
 }
 
@@ -507,12 +512,18 @@ function atcb_setup_state_management(data) {
 }
 
 // SHARED FUNCTION TO GENERATE THE INIT LOG MESSAGE
-function atcb_init_log(pro = '') {
+function atcb_init_log(pro = '', debug = false) {
   if (!atcbInitialGlobalInit) {
+    const versionOutput = (function () {
+      if (debug) {
+        return ' (version ' + atcbVersion + ')';
+      }
+      return '';
+    })();
     if (pro != '') {
-      console.log('Add to Calendar PRO script initialized (version ' + atcbVersion + ') | https://add-to-calendar-pro.com');
+      console.log('Add to Calendar PRO script initialized' + versionOutput + ' | https://add-to-calendar-pro.com');
     } else {
-      console.log('%cAdd to Calendar Button script initialized (version ' + atcbVersion + ')', 'font-weight: bold;');
+      console.log('%cAdd to Calendar Button script initialized' + versionOutput, 'font-weight: bold;');
       console.log('see https://add-to-calendar-button.com for details');
       //console.log('✨ %cPRO version available at https://add-to-calendar-pro.com ← check it out!', 'font-size: 16px; font-weight: bold;');
     }

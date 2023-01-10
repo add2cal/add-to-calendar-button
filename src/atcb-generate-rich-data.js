@@ -62,7 +62,7 @@ function atcb_generate_rich_data(data, parent) {
     if (data.images != null) {
       if (Array.isArray(data.images)) {
         for (let i = 0; i < data.images.length; i++) {
-          if (atcb_secure_url(data.images[`${i}`]) && data.images[`${i}`].startsWith('http')) {
+          if (atcb_secure_url(data.images[`${i}`], data.debug) && data.images[`${i}`].startsWith('http')) {
             imageData.push('"' + data.images[`${i}`] + '"');
           }
         }

@@ -102,8 +102,9 @@ const atcbInvalidSubscribeOptions = ['msteams'];
 const atcbiOSInvalidOptions = ['ical'];
 const atcbStates = [];
 
-// DEFINING THE WEB COMPONENT ATTRIBUTES (not including the debug and proKey options)
+// DEFINING THE WEB COMPONENT ATTRIBUTES (not including the proKey options)
 const atcbWcParams = [
+  'debug',
   'name',
   'dates',
   'description',
@@ -159,7 +160,7 @@ const atcbWcParams = [
   'bypassWebViewCheck',
   'blockInteraction'
 ];
-const atcbWcBooleanParams = ['hideIconButton', 'hideIconList', 'hideIconModal', 'hideTextLabelButton', 'hideTextLabelList', 'subscribe', 'hideBackground', 'hideCheckmark', 'hideBranding', 'inlineRsvp', 'hideRichData', 'buttonsList', 'inline', 'bypassWebViewCheck', 'blockInteraction'];
+const atcbWcBooleanParams = ['debug', 'hideIconButton', 'hideIconList', 'hideIconModal', 'hideTextLabelButton', 'hideTextLabelList', 'subscribe', 'hideBackground', 'hideCheckmark', 'hideBranding', 'inlineRsvp', 'hideRichData', 'buttonsList', 'inline', 'bypassWebViewCheck', 'blockInteraction'];
 const atcbWcObjectParams = ['dates', 'customLabels', 'ty', 'rsvp'];
 const atcbWcArrayParams = ['images', 'options'];
 
