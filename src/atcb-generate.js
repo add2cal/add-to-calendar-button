@@ -226,6 +226,7 @@ function atcb_generate_button(host, button, data, debug = false) {
 function atcb_generate_dropdown_list(host, data) {
   const optionsList = document.createElement('div');
   optionsList.classList.add('atcb-list');
+  optionsList.role = 'list';
   if (data.rtl) {
     optionsList.classList.add('atcb-rtl');
   }
@@ -234,6 +235,7 @@ function atcb_generate_dropdown_list(host, data) {
   data.options.forEach(function (option) {
     const optionItem = document.createElement('div');
     optionItem.classList.add('atcb-list-item');
+    optionItem.role = 'link';
     optionItem.tabIndex = 0;
     listCount++;
     optionItem.dataset.optionNumber = listCount;
@@ -245,6 +247,7 @@ function atcb_generate_dropdown_list(host, data) {
   if (data.listStyle === 'modal') {
     const optionItem = document.createElement('div');
     optionItem.classList.add('atcb-list-item', 'atcb-list-item-close');
+    optionItem.role = 'button';
     optionItem.tabIndex = 0;
     listCount++;
     optionItem.dataset.optionNumber = listCount;
@@ -269,6 +272,7 @@ function atcb_generate_bg_overlay(host, trigger = '', modal = false, darken = tr
   if (!darken) {
     bgOverlay.classList.add('atcb-no-bg');
   }
+  bgOverlay.role = 'button';
   bgOverlay.tabIndex = 0;
   bgOverlay.addEventListener(
     'mouseup',
