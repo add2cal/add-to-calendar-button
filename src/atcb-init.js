@@ -599,22 +599,26 @@ function atcb_global_listener_keydown(event) {
     return null;
   })();
   if (host && host.querySelector('.atcb-list') && (event.key === 'ArrowDown' || event.key === 'ArrowUp' || event.key === 'Tab')) {
+    event.preventDefault();
     let targetFocus = 0;
     let currFocusOption = host.activeElement;
     const optionListCount = host.querySelectorAll('.atcb-list-item').length;
-    if (currFocusOption && currFocusOption.classList.contains('atcb-list-item')) {
+    if (currFocusOption && currFocusOption.classList.contains('atcb-list-item')) {      
       if (event.key === 'ArrowDown' && currFocusOption.dataset.optionNumber < optionListCount) {
-        event.preventDefault();
         targetFocus = parseInt(currFocusOption.dataset.optionNumber) + 1;
+      } else if (event.key === 'Tab') {
+        if (currFocusOption.dataset.optionNumber < optionListCount) {
+          targetFocus = parseInt(currFocusOption.dataset.optionNumber) + 1;
+        } else {
+          targetFocus = 1;
+        }
       } else if (event.key === 'ArrowUp' && currFocusOption.dataset.optionNumber >= 1) {
-        event.preventDefault();
         targetFocus = parseInt(currFocusOption.dataset.optionNumber) - 1;
       }
       if (targetFocus > 0) {
         host.querySelector('.atcb-list-item[data-option-number="' + targetFocus + '"]').focus();
       }
     } else {
-      event.preventDefault();
       switch (event.key) {
         default:
           host.querySelector('.atcb-list-item[data-option-number="1"]').focus();

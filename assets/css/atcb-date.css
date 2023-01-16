@@ -506,7 +506,7 @@
   background-color: var(--list-close-background);
 }
 
-.atcb-list-item.atcb-list-item-close {
+.atcb-list-item.atcb-list-item-close:not(:focus-visible) {
   color: var(--list-close-text);
 }
 

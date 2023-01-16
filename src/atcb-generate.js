@@ -304,14 +304,6 @@ function atcb_generate_bg_overlay(host, trigger = '', modal = false, darken = tr
     }),
     { passive: true }
   );
-  bgOverlay.addEventListener(
-    'focus',
-    atcb_debounce((e) => {
-      if (e.target !== e.currentTarget) return;
-      atcb_log_event('closeList', 'Background Hit', atcbStates['active']);
-      atcb_toggle(host, 'close');
-    })
-  );
   if (trigger !== 'click') {
     bgOverlay.addEventListener(
       'mousemove',
