@@ -20,7 +20,7 @@ function atcb_saved_hook(host, data) {
   // log event
   atcb_log_event('success', data.identifier, data.identifier);
   // check for further actions
-  if ((data.proKey == null) || (data.proKey == '')) {
+  if (data.proKey == null || data.proKey == '') {
     return;
   }
   // go PRO...

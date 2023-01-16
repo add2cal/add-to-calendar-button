@@ -31,7 +31,7 @@ watch(showMM, val => {
   </nav>
   <!-- mobile menu -->
   <nav :class="{ hidden: !showMM }" class="fixed top-0 left-0 z-50 h-full w-full overflow-y-auto bg-gradient-to-tr from-primary via-primary to-primary-dark dark:via-primary-dark dark:to-primary-dark lg:hidden">
-    <XMarkIcon class="block fixed top-8 right-8 h-10 w-10 cursor-pointer text-white hover:text-secondary" @click="(showMM = !showMM)" />
+    <XMarkIcon class="fixed top-8 right-8 block h-10 w-10 cursor-pointer text-white hover:text-secondary" @click="(showMM = !showMM)" />
     <div class="grid grid-cols-1 gap-10 px-6 pt-24 pb-12 text-white">
       <Menu @closeMM="(showMM = false)" />
       <a class="mx-auto w-8 self-center py-2 leading-none opacity-80 hover:text-black hover:opacity-100" target="_blank" rel="noopener" href="https://github.com/add2cal/add-to-calendar-button"><LogoGithub /></a>

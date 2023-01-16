@@ -280,9 +280,9 @@ function atcb_cleanup(host, data) {
     data.schemaEl.remove();
   }
   Array.from(host.querySelectorAll('.atcb-debug-error-msg'))
-      .concat(Array.from(host.querySelectorAll('style')))
-      .concat(Array.from(host.querySelectorAll('.atcb-button-wrapper')))
-      .forEach((el) => el.remove());
+    .concat(Array.from(host.querySelectorAll('style')))
+    .concat(Array.from(host.querySelectorAll('.atcb-button-wrapper')))
+    .forEach((el) => el.remove());
   delete atcbStates[`${data.identifier}`];
 }
 
@@ -603,7 +603,7 @@ function atcb_global_listener_keydown(event) {
     let targetFocus = 0;
     let currFocusOption = host.activeElement;
     const optionListCount = host.querySelectorAll('.atcb-list-item').length;
-    if (currFocusOption && currFocusOption.classList.contains('atcb-list-item')) {      
+    if (currFocusOption && currFocusOption.classList.contains('atcb-list-item')) {
       if (event.key === 'ArrowDown' && currFocusOption.dataset.optionNumber < optionListCount) {
         targetFocus = parseInt(currFocusOption.dataset.optionNumber) + 1;
       } else if (event.key === 'Tab') {

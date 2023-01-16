@@ -158,7 +158,7 @@ const atcbWcParams = [
   'language',
   'hideRichData',
   'bypassWebViewCheck',
-  'blockInteraction'
+  'blockInteraction',
 ];
 const atcbWcBooleanParams = ['debug', 'hideIconButton', 'hideIconList', 'hideIconModal', 'hideTextLabelButton', 'hideTextLabelList', 'subscribe', 'hideBackground', 'hideCheckmark', 'hideBranding', 'inlineRsvp', 'hideRichData', 'buttonsList', 'inline', 'bypassWebViewCheck', 'blockInteraction'];
 const atcbWcObjectParams = ['dates', 'customLabels', 'ty', 'rsvp'];
