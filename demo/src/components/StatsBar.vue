@@ -3,10 +3,12 @@ import { StarIcon, CogIcon, PresentationChartLineIcon, BoltIcon, TagIcon, ArrowT
 import { ref, onMounted } from 'vue';
 import { get, set, LSKey } from '@/utils/localStorage';
 import { mergeDeep } from '@/utils/array';
+import { useI18n } from 'vue-i18n';
+const { t } = useI18n();
 
 const statRowClasses = [
   'flex animate-marquee space-x-10 whitespace-nowrap',
-  'absolute top-3 left-56 flex animate-marquee2 space-x-10 whitespace-nowrap'
+  'absolute top-3 left-64 flex animate-marquee2 space-x-10 whitespace-nowrap'
 ];
 
 const data = ref({
@@ -137,40 +139,40 @@ const loadJsdelivrStats = async () => {
     <div class="relative mx-auto flex w-full overflow-x-hidden">
       <div class="z-10 bg-zinc-600 p-2 pr-3 dark:bg-zinc-700">
         <div class="rounded-md bg-red-800 py-1 px-2 text-xs font-semibold text-zinc-100 shadow">
-          <span class="hidden xl:inline">Verifiable Statistics</span>
-          <span class="inline xl:hidden">Statistics</span>
+          <span class="hidden xl:inline">{{ t('labels.stats.label_long') }}</span>
+          <span class="inline xl:hidden">{{ t('labels.stats.label_short') }}</span>
         </div>
       </div>
       <div class="z-10 w-10 bg-gradient-to-r from-zinc-600 to-transparent p-2 dark:from-zinc-700"></div>
 
       <div v-for="(classes, index) in statRowClasses" :class="classes" :key="index">
         <a target="_blank" rel="noopener" href="https://github.com/add2cal/add-to-calendar-button" class="group flex self-center text-xs text-zinc-200 hover:text-white hover:no-underline">
-          <StarIcon class="mr-1 inline-block h-3 w-3 self-center" />{{ isLoading ? '...' : $n(data.github.stars) }}<span class="pl-1 font-normal text-zinc-400 group-hover:text-zinc-200">GitHub Stars</span>
+          <StarIcon class="mr-1 inline-block h-3 w-3 self-center" />{{ isLoading ? '...' : $n(data.github.stars) }}<span class="pl-1 font-normal text-zinc-400 group-hover:text-zinc-200">{{ t('labels.stats.stars') }}</span>
           <ArrowTopRightOnSquareIcon class="mt-0.5 ml-0.5 hidden h-3 w-3 group-hover:inline-block" aria-hidden="true" />
           <span class="ml-0.5 block w-3 group-hover:hidden"></span>
         </a>
         <a target="_blank" rel="noopener" href="https://www.npmjs.com/package/add-to-calendar-button" class="group flex self-center text-xs text-zinc-200 hover:text-white hover:no-underline">
-          <CogIcon class="mr-1 inline-block h-3 w-3 self-center" />{{ isLoading ? '...' : $n(data.npm.totalInstallations) }}<span class="pl-1 font-normal text-zinc-400 group-hover:text-zinc-200">total npm Installations</span>
+          <CogIcon class="mr-1 inline-block h-3 w-3 self-center" />{{ isLoading ? '...' : $n(data.npm.totalInstallations) }}<span class="pl-1 font-normal text-zinc-400 group-hover:text-zinc-200">{{ t('labels.stats.npm_total') }}</span>
           <ArrowTopRightOnSquareIcon class="mt-0.5 ml-0.5 hidden h-3 w-3 group-hover:inline-block" aria-hidden="true" />
           <span class="ml-0.5 block w-3 group-hover:hidden"></span>
         </a>
         <a target="_blank" rel="noopener" href="https://www.npmjs.com/package/add-to-calendar-button" class="group flex self-center text-xs text-zinc-200 hover:text-white hover:no-underline">
-          <CogIcon class="mr-1 inline-block h-3 w-3 self-center" />{{ isLoading ? '...' : $n(data.npm.weeklyInstallations) }}<span class="pl-1 font-normal text-zinc-400 group-hover:text-zinc-200">weekly npm Installations</span>
+          <CogIcon class="mr-1 inline-block h-3 w-3 self-center" />{{ isLoading ? '...' : $n(data.npm.weeklyInstallations) }}<span class="pl-1 font-normal text-zinc-400 group-hover:text-zinc-200">{{ t('labels.stats.npm_weekly') }}</span>
           <ArrowTopRightOnSquareIcon class="mt-0.5 ml-0.5 hidden h-3 w-3 group-hover:inline-block" aria-hidden="true" />
           <span class="ml-0.5 block w-3 group-hover:hidden"></span>
         </a>
         <a target="_blank" rel="noopener" href="https://www.jsdelivr.com/package/npm/add-to-calendar-button" class="group flex self-center text-xs text-zinc-200 hover:text-white hover:no-underline">
-          <PresentationChartLineIcon class="mr-1 inline-block h-3 w-3 self-center" />{{ isLoading ? '...' : $n(data.jsdelivr.montlyHits) }}<span class="pl-1 font-normal text-zinc-400 group-hover:text-zinc-200">monthly CDN hits</span>
+          <PresentationChartLineIcon class="mr-1 inline-block h-3 w-3 self-center" />{{ isLoading ? '...' : $n(data.jsdelivr.montlyHits) }}<span class="pl-1 font-normal text-zinc-400 group-hover:text-zinc-200">{{ t('labels.stats.cdn') }}</span>
           <ArrowTopRightOnSquareIcon class="mt-0.5 ml-0.5 hidden h-3 w-3 group-hover:inline-block" aria-hidden="true" />
           <span class="ml-0.5 block w-3 group-hover:hidden"></span>
         </a>
         <a target="_blank" rel="noopener" href="https://github.com/add2cal/add-to-calendar-button" class="group flex self-center text-xs text-zinc-200 hover:text-white hover:no-underline">
-          <TagIcon class="mr-1 inline-block h-3 w-3 self-center" /><span class="pr-1 font-normal text-zinc-400 group-hover:text-zinc-200">latest version:</span>{{ isLoading ? '...' : 'v' + data.npm.version }}
+          <TagIcon class="mr-1 inline-block h-3 w-3 self-center" /><span class="pr-1 font-normal text-zinc-400 group-hover:text-zinc-200">{{ t('labels.stats.version') }}:</span>{{ isLoading ? '...' : 'v' + data.npm.version }}
           <ArrowTopRightOnSquareIcon class="mt-0.5 ml-0.5 hidden h-3 w-3 group-hover:inline-block" aria-hidden="true" />
           <span class="ml-0.5 block w-3 group-hover:hidden"></span>
         </a>
         <a target="_blank" rel="noopener" href="https://github.com/add2cal/add-to-calendar-button" class="group flex self-center text-xs text-zinc-200 hover:text-white hover:no-underline">
-          <BoltIcon class="mr-1 inline-block h-3 w-3 self-center" /><span class="pr-1 font-normal text-zinc-400 group-hover:text-zinc-200">last update:</span>{{ isLoading ? '...' : $d(new Date(data.npm.lastUpdate), 'short') }}
+          <BoltIcon class="mr-1 inline-block h-3 w-3 self-center" /><span class="pr-1 font-normal text-zinc-400 group-hover:text-zinc-200">{{ t('labels.stats.update') }}:</span>{{ isLoading ? '...' : $d(new Date(data.npm.lastUpdate), 'short') }}
           <ArrowTopRightOnSquareIcon class="mt-0.5 ml-0.5 hidden h-3 w-3 group-hover:inline-block" aria-hidden="true" />
           <span class="ml-0.5 block w-3 group-hover:hidden"></span>
         </a>

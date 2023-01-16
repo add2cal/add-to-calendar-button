@@ -93,73 +93,74 @@ const FeaturesBlock = defineAsyncComponent({
       Check out the interactive demo as well as integration guides and examples!<br />
       We are here to help and provide you with the best state-of-the-art add to calendar soltuion - boosting your business!
     </p>
-    <div class="mt-16 mb-16 flex flex-col justify-center gap-8 border-b border-zinc-300 pb-14 dark:border-zinc-700 md:flex-row lg:gap-12">
-      <RouterLink class="button-primary w-56 self-center" v-if="locale=='en'" :to="{ name: 'home', hash: '#demo', params: { locale } }">
-        <BeakerIcon class="-mt-0.5 mr-2 inline-block h-4 w-4 md:hidden lg:inline-block" aria-hidden="true" />
-        {{ t('labels.demo') }}
-        <ArrowRightIcon class="-mt-0.5 ml-2 inline-block h-4 w-4" aria-hidden="true" />
-      </RouterLink>
-      <RouterLink class="button-primary w-56 self-center" v-if="locale!='en'" :to="{ name: 'home-i18n', hash: '#demo', params: { locale } }">
-        <BeakerIcon class="-mt-0.5 mr-2 inline-block h-4 w-4 md:hidden lg:inline-block" aria-hidden="true" />
-        {{ t('labels.demo') }}
-        <ArrowRightIcon class="-mt-0.5 ml-2 inline-block h-4 w-4" aria-hidden="true" />
-      </RouterLink>
-      <RouterLink class="button-secondary w-56 self-center" v-if="locale=='en'" :to="{ name: 'home', hash: '#installation', params: { locale } }">
-        <WrenchScrewdriverIcon class="-mt-0.5 mr-2 inline-block h-4 w-4 md:hidden lg:inline-block" aria-hidden="true" />
-        {{ t('navigation.installation') }}
-        <ArrowRightIcon class="-mt-0.5 ml-2 inline-block h-4 w-4" aria-hidden="true" />
-      </RouterLink>
-      <RouterLink class="button-secondary w-56 self-center" v-if="locale!='en'" :to="{ name: 'home-i18n', hash: '#installation', params: { locale } }">
-        <WrenchScrewdriverIcon class="-mt-0.5 mr-2 inline-block h-4 w-4 md:hidden lg:inline-block" aria-hidden="true" />
-        {{ t('navigation.installation') }}
-        <ArrowRightIcon class="-mt-0.5 ml-2 inline-block h-4 w-4" aria-hidden="true" />
-      </RouterLink>
-      <RouterLink class="button-secondary w-56 self-center" :to="{ name: 'examples', params: { locale } }">
-        <MagnifyingGlassIcon class="-mt-0.5 mr-2 inline-block h-4 w-4 md:hidden lg:inline-block" aria-hidden="true" />
-        {{ t('navigation.examples') }}
-        <ArrowRightIcon class="-mt-0.5 ml-2 inline-block h-4 w-4" aria-hidden="true" />
-      </RouterLink>
+  </div>
+  <div class="mt-16 mb-16 flex flex-col justify-center gap-8 border-b border-zinc-300 pb-14 dark:border-zinc-700 md:flex-row lg:gap-12">
+    <RouterLink class="button-primary w-56 self-center" v-if="locale=='en'" :to="{ name: 'home', hash: '#demo', params: { locale } }">
+      <BeakerIcon class="-mt-0.5 mr-2 inline-block h-4 w-4 md:hidden lg:inline-block" aria-hidden="true" />
+      {{ t('labels.demo') }}
+      <ArrowRightIcon class="-mt-0.5 ml-2 inline-block h-4 w-4" aria-hidden="true" />
+    </RouterLink>
+    <RouterLink class="button-primary w-56 self-center" v-if="locale!='en'" :to="{ name: 'home-i18n', hash: '#demo', params: { locale } }">
+      <BeakerIcon class="-mt-0.5 mr-2 inline-block h-4 w-4 md:hidden lg:inline-block" aria-hidden="true" />
+      {{ t('labels.demo') }}
+      <ArrowRightIcon class="-mt-0.5 ml-2 inline-block h-4 w-4" aria-hidden="true" />
+    </RouterLink>
+    <RouterLink class="button-secondary w-56 self-center" v-if="locale=='en'" :to="{ name: 'home', hash: '#installation', params: { locale } }">
+      <WrenchScrewdriverIcon class="-mt-0.5 mr-2 inline-block h-4 w-4 md:hidden lg:inline-block" aria-hidden="true" />
+      {{ t('navigation.installation') }}
+      <ArrowRightIcon class="-mt-0.5 ml-2 inline-block h-4 w-4" aria-hidden="true" />
+    </RouterLink>
+    <RouterLink class="button-secondary w-56 self-center" v-if="locale!='en'" :to="{ name: 'home-i18n', hash: '#installation', params: { locale } }">
+      <WrenchScrewdriverIcon class="-mt-0.5 mr-2 inline-block h-4 w-4 md:hidden lg:inline-block" aria-hidden="true" />
+      {{ t('navigation.installation') }}
+      <ArrowRightIcon class="-mt-0.5 ml-2 inline-block h-4 w-4" aria-hidden="true" />
+    </RouterLink>
+    <RouterLink class="button-secondary w-56 self-center" :to="{ name: 'examples', params: { locale } }">
+      <MagnifyingGlassIcon class="-mt-0.5 mr-2 inline-block h-4 w-4 md:hidden lg:inline-block" aria-hidden="true" />
+      {{ t('navigation.examples') }}
+      <ArrowRightIcon class="-mt-0.5 ml-2 inline-block h-4 w-4" aria-hidden="true" />
+    </RouterLink>
+  </div>
+  <h2 class="mt-16">{{ t('content.seo.features_headline_1') }}</h2>
+  <h2 class="mb-10 mt-2">{{ t('content.seo.features_headline_2') }} ...</h2>
+  <FeaturesBlock />
+  <div class="text-center">
+    <h2 class="mb-10 mt-20">... {{ t('content.seo.example') }}</h2>
+    <div class="grid-bg flex w-full justify-center rounded-lg py-16 shadow-lg">
+      <add-to-calendar-button
+        :name="t('demo_data.name')"
+        :startDate="defaultDate"
+        startTime="10:15"
+        endTime="23:30"
+        timeZone="currentBrowser"
+        :location="t('demo_data.url')"
+        :description="t('demo_data.description')"
+        options="'Apple','Google','iCal','Outlook.com','Microsoft 365','Microsoft Teams','Yahoo'"
+        lightMode="bodyScheme"
+        buttonStyle="round"
+        size="8"
+        :language="locale"
+      ></add-to-calendar-button>
     </div>
-    <h2 class="mt-16">Not convinced?</h2>
-    <h2 class="mb-10 mt-2">Those are some of the main features...</h2>
-    <FeaturesBlock />
-    <div class="text-center">
-      <h2 class="mb-10 mt-20">... and here you can see how it looks like!</h2>
-      <div class="flex justify-center px-10">
-        <add-to-calendar-button
-          name="[Reminder] Test the Add to Calendar Button"
-          v-bind:startDate="defaultDate"
-          startTime="10:15"
-          endTime="23:30"
-          timeZone="currentBrowser"
-          location="https://add-to-calendar-button.com"
-          description="✨ Check out the maybe easiest way to include Add to Calendar Buttons to your website:[br]→ [url]https://add-to-calendar-button.com/|Click here![/url]"
-          options="'Apple','Google','iCal','Outlook.com','Microsoft 365','Microsoft Teams','Yahoo'"
-          lightMode="bodyScheme"
-          buttonStyle="round"
-          size="8"
-        ></add-to-calendar-button>
-      </div>
-      <p class="mt-10 italic">But to be fair - this is just one out of so many configurable options!</p>
-    </div>
+    <p class="mt-10 italic">{{ t('content.seo.example_disclaimer') }}</p>
   </div>
   <div class="pt-24 pb-8 text-center">
     <RouterLink
-      class="max-w-xl rounded-xl bg-gradient-to-tr from-secondary via-secondary to-secondary-light py-10 px-16 text-center text-xl font-semibold text-zinc-700 shadow-md hover:via-secondary-light hover:to-secondary-light hover:text-black hover:no-underline hover:shadow-xl"
+      class="max-w-xl rounded-xl bg-gradient-to-tr from-secondary via-secondary to-secondary-light py-8 px-12 text-center text-xl font-semibold text-zinc-700 shadow-md hover:via-secondary-light hover:to-secondary-light hover:text-black hover:no-underline hover:shadow-xl"
       v-if="locale=='en'"
       :to="{ name: 'home', params: { locale } }"
     >
       <RocketLaunchIcon class="-mt-0.5 mr-3 inline-block h-8 w-8" aria-hidden="true" />
-      Click here to learn more
+      {{ t('labels.clickHereLearnMore') }}
       <ArrowRightIcon class="-mt-0.5 ml-2 inline-block h-4 w-4" aria-hidden="true" />
     </RouterLink>
     <RouterLink
-      class="hmax-w-xl rounded-xl bg-gradient-to-tr from-secondary via-secondary to-secondary-light py-10 px-16 text-center text-xl font-semibold text-zinc-700 shadow-md hover:via-secondary-light hover:to-secondary-light hover:text-black hover:no-underline"
+      class="hmax-w-xl rounded-xl bg-gradient-to-tr from-secondary via-secondary to-secondary-light py-8 px-12 text-center text-xl font-semibold text-zinc-700 shadow-md hover:via-secondary-light hover:to-secondary-light hover:text-black hover:no-underline"
       v-if="locale!='en'"
       :to="{ name: 'home-i18n', params: { locale } }"
     >
       <RocketLaunchIcon class="-mt-0.5 mr-3 inline-block h-8 w-8" aria-hidden="true" />
-      Click here to learn more
+      {{ t('labels.clickHereLearnMore') }}
       <ArrowRightIcon class="-mt-0.5 ml-2 inline-block h-4 w-4" aria-hidden="true" />
     </RouterLink>
   </div>

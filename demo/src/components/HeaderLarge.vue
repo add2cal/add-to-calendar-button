@@ -21,15 +21,15 @@ const { t, locale } = useI18n();
     <div class="container m-auto mb-16 mt-8 grid grid-cols-1 justify-items-center xs:my-20 md:my-24 lg:my-28 lg:grid-cols-2 xl:my-32">
       <div class="grid grid-cols-1 justify-items-center md:grid-cols-2 lg:grid-cols-1">
         <div class="max-w-[400px] self-center pb-14 md:pb-0 lg:pb-16">
-          <div class="block mx-auto mb-16 w-auto max-w-[280px] xs:hidden">
+          <div class="mx-auto mb-16 block w-auto max-w-[280px] xs:hidden">
             <Logo class="force-light" variation="mobile" />
           </div>
           <h1 class="text-white">
-            <span class="hidden xs:block">The Next-level</span>
+            <span class="hidden xs:block">{{ t('content.home.header_prefix') }}</span>
             <span class="hidden xs:block">Add to Calendar Button</span>
-            <span class="block text-2xl italic opacity-70 xs:hidden">Make your events get saved!</span>
+            <span class="block text-2xl italic opacity-70 xs:hidden">{{ t('content.home.header_slogan') }}</span>
           </h1>
-          <h2 class="mt-5 hidden italic text-white opacity-70 xs:block">Make your events get saved!</h2>
+          <h2 class="mt-5 hidden italic text-white opacity-70 xs:block">{{ t('content.home.header_slogan') }}</h2>
         </div>
         <div class="grid max-w-[400px] grid-cols-1  justify-items-center gap-6 self-center xs:grid-cols-2 md:grid-cols-1 lg:grid-cols-2">
           <div class="hidden xs:block">
@@ -53,7 +53,7 @@ const { t, locale } = useI18n();
         </div>
       </div>
       <div class="hidden self-center lg:block">
-        <img alt="Mark this" class="hidden xl:block" width="400" height="198" :src="OvalLight" />
+        <img :alt="t('labels.markThis')" class="hidden xl:block" width="400" height="198" :src="OvalLight" />
         <img alt="Add to Calendar Button" width="150" height="150" :src="HeroImage" class="animate-bounce-minimal xl:-mt-[180px] xl:ml-[125px]" />
       </div>
     </div>

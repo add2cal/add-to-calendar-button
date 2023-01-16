@@ -26,7 +26,9 @@
   "labels": {
     "toTop": "to top",
     "enableDarkMode": "Enable Dark Mode",
+    "markThis": "Mark this",
     "clickHere": "Click here",
+    "clickHereLearnMore": "Click here to learn more",
     "showCode": "Show source code",
     "hideCode": "Hide source code",
     "dateInput": "Date Details",
@@ -92,6 +94,16 @@
       "select_option": "Select an option...",
       "search_time_zone": "Search for a time zone...",
       "search": "Search..."
+    },
+    "stats": {
+      "label_long": "Verifiable Statistics",
+      "label_short": "Statistics",
+      "stars": "GitHub stars",
+      "npm_total": "npm installations",
+      "npm_weekly": "weekly npm installations",
+      "cdn": "monthly CDN hits",
+      "version": "latest version",
+      "update": "last update"
     }
   },
   "options": {
@@ -138,7 +150,72 @@
   "content": {
     "404RealContent": "The real content can be accessed best via the home page.",
     "home": {
+      "header_prefix": "The Next-level",
+      "header_slogan": "Make your events get saved!",
+      "intro_slogan_1": "Let your users add events to their calendar",
+      "intro_slogan_2": "Simple, fast, and hustle-free",
+      "intro_block_1": "Welcome to the maybe most conveniant way working with Add to Calendar Buttons.",
+      "intro_block_2": "Designed to reduce developer headaches down to zero.",
+      "intro_block_3": "Supporting all major calendars; in all modern browsers (Chrome, Edge, Firefox, Safari); on Windows, Mac, Android, and iOS as well as rather restricted webview environments like the Instagram in-app browser.",
+      "intro_block_4": "Built as a Web Component, you can easily integrate it basically everywhere. Enjoy!",
+      "headline_installation": "Bringing it to your web project",
+      "headline_functionality": "Functionality",
+      "functionality_intro": "Simple and convenient integration of 1 or many buttons, configurable directly within the HTML code!",
+      "next": "What's next?",
+      "button_examples": "Explore Examples",
+      "button_configure": "Learn how to configure",
       "demoDisclaimer": "The playground only holds a subset of the available options. Check the \"Configuration\" page for more:"
+    },
+    "installation": {
+      "intro_1": "The script is built as a \"Web Component\".",
+      "intro_2": "This means that you can use it similar to any other HTML element and it is working out-of-the-box for all setups.",
+      "intro_3": "Find a step-by-step guide by selecting your environment.",
+      "other_stack_1": "You are using another stack?",
+      "other_stack_2": "The default setup is the way to go!"
+    },
+    "features": {
+      "headline_1": "Supported Calendars",
+      "block_1": {
+        "1": "Google Calendar.",
+        "2": "Apple Calendar.",
+        "3": "Microsoft 365, Outlook, and Teams.",
+        "4": "Yahoo Calender.",
+        "5": "Automatically generated iCal/ics files (for all other calendars and cases)."
+      },
+      "headline_2": "Event Types",
+      "block_2": {
+        "1": "Timed and all-day events.",
+        "2": "One-time, multi-date, recurring.",
+        "3": "Calendar subscription.",
+        "4": "Most robust time zone and daylight saving management (via our own TimeZones iCal Library).",
+        "5": "Dynamic dates (like \"today + 3\")."
+      },
+      "headline_3": "Look",
+      "block_3": {
+        "1": "Beautiful and adjustable UI.",
+        "2": "Light and dark mode.",
+        "3": "Multiple themes."
+      },
+      "headline_4": "Accessibility",
+      "block_4": {
+        "1": "Optimized and adjustable UX (for desktop and mobile).",
+        "2": "Dynamic dropdown positioning.",
+        "3": "Taking care of all those edge cases, where some scenarios do not support specific setups (like WebView blocking downloads); utilizing beautiful user guidance workarounds.",
+        "4": "Full support for mouse, touch, or keyboard input (W3C WAI compliant).",
+        "5": "Supporting 20+ languages, incl. RTL text for Arabic; but also custom labels and text blocks (i18n)."
+      },
+      "headline_5": "And much more",
+      "block_5": {
+        "1": "Auto-generated Schema.org rich (structured) data for better SEO.",
+        "2": "Fully GDPR, CCPA, and LGPD compliant - without the need of signing some data processing agreement.",
+        "3": "Security by design."
+      }
+    },
+    "seo": {
+      "features_headline_1": "Not convinced?",
+      "features_headline_2": "Those are some of the main features",
+      "example": "and here you can see how it looks like!",
+      "example_disclaimer": "But to be fair - this is just one out of so many configurable options!"
     },
     "legal": {
       "intro": "Information in accordance with section 5 TMG and section 55 para. 2 RStV:"
@@ -149,5 +226,11 @@
       "no-cookies-details-2": "Therefore, we do not need to bother you with a cookie banner.",
       "no-cookies-details-3": "The following information explains how we process data apart from this."
     }
+  },
+  "demo_data": {
+    "language": "en",
+    "name": "[Reminder] Test the Add to Calendar Button",
+    "url": "https://add-to-calendar-button.com",
+    "description": "✨ Check out the maybe easiest way to include Add to Calendar Buttons to your web projects:[br]→ [url]https://add-to-calendar-button.com/{'|'}Click here![/url]"
   }
 }

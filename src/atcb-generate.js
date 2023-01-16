@@ -153,6 +153,8 @@ function atcb_generate_label_content(data, parent, type, icon, text, oneOption) 
     textEl.textContent = text;
     parent.append(textEl);
   }
+  // also add text as aria-label to the parent element
+  parent.setAttribute('aria-label', text);
 }
 
 // generate the triggering button

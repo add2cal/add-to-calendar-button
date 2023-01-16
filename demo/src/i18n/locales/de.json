@@ -26,7 +26,9 @@
   "labels": {
     "toTop": "nach oben",
     "enableDarkMode": "Dark Mode aktivieren",
+    "markThis": "Merken",
     "clickHere": "Hier klicken",
+    "clickHereLearnMore": "Hier klicken und mehr erfahren",
     "showCode": "Quellcode anzeigen",
     "hideCode": "Quellcode ausblenden",
     "dateInput": "Termin-Details",
@@ -92,6 +94,16 @@
       "select_option": "Option auswählen...",
       "search_time_zone": "Zeitzone suchen...",
       "search": "Suchen..."
+    },
+    "stats": {
+      "label_long": "Nachprüfbare Kennzahlen",
+      "label_short": "Kennzahlen",
+      "stars": "GitHub Stars",
+      "npm_total": "npm Installationen",
+      "npm_weekly": "npm Installationen/Woche",
+      "cdn": "CDN Hits/Monat",
+      "version": "Neueste Version",
+      "update": "Letztes Update"
     }
   },
   "options": {
@@ -138,7 +150,72 @@
   "content": {
     "404RealContent": "Alle Inhalte erreichst du am besten über die Startseite.",
     "home": {
+      "header_prefix": "Der Next-Level",
+      "header_slogan": "Deine Events im Kalender gespeichert!",
+      "intro_slogan_1": "Lass deine Nutzer Events zu ihrem Kalender hinzufügen",
+      "intro_slogan_2": "Einfach, schnell und ohne stressfrei",
+      "intro_block_1": "Herzlich Willkommen zur wahrscheinlich entspanntesten Möglichkeit Add to Calendar Buttons zu nutzen.",
+      "intro_block_2": "Designed, um Entwicklern-Kopfschmerzen zu eliminieren.",
+      "intro_block_3": "Für alle wichtigen Kalender; in allen modernen Browsern (Chrome, Edge, Firefox, Safari); unter Windows, Mac, Android und iOS sowie sehr restriktiven WebView-Umgebungen, wie dem Instagram in-App Browser.",
+      "intro_block_4": "Entwickelt als Web Component, der sich quasi überall fast von alleine integriert. Enjoy!",
+      "headline_installation": "Integration in dein Web-Project",
+      "headline_functionality": "Features",
+      "functionality_intro": "Einfache und unkomplizierte Integration von 1 oder mehreren Buttons, direkt im HTML-Code konfigurierbar!",
+      "next": "Wohin als nächstes?",
+      "button_examples": "Entdecke unsere Beispiele",
+      "button_configure": "Lerne die Konfiguration kennnen",
       "demoDisclaimer": "Dieser Bereich zeigt nur einen Teil der verfügbaren Funktionen. Eine vollständige Liste findet sich unter \"Konfiguration\":"
+    },
+    "installation": {
+      "intro_1": "Das Skript ist als \"Web Component\" konzipiert und entwickelt.",
+      "intro_2": "Das bedeutet, dass du es wie jedes andere HTML-Element nutzen kannst und es in fast jedem Szenario quasi out-of-the-box funktioniert.",
+      "intro_3": "Nachfolgend findest du den passenden Step-by-Step-Guide für dein Setup.",
+      "other_stack_1": "Du nutzt einen anderen Stack?",
+      "other_stack_2": "Schau dir den Standard-Prozess an!"
+    },
+    "features": {
+      "headline_1": "Unterstützte Kalender",
+      "block_1": {
+        "1": "Google Kalender.",
+        "2": "Apple Kalender.",
+        "3": "Microsoft 365, Outlook und Teams.",
+        "4": "Yahoo Kalender.",
+        "5": "Automatisch erzeugte iCal/ics Dateien (für alle anderen Kalender und Fälle)."
+      },
+      "headline_2": "Event-Arten",
+      "block_2": {
+        "1": "Zeitgebundene und Ganztages-Events.",
+        "2": "Einmalig, wiederkehrend, Termin-Reihen.",
+        "3": "Kalender-Abonnements.",
+        "4": "Äußerst robusteste Verwaltung von Zeitzonen und Sommerzeit (durch unsere eigene TimeZones iCal Bibliothek).",
+        "5": "Dynamische Daten (bspw. \"today + 3\")."
+      },
+      "headline_3": "Look",
+      "block_3": {
+        "1": "Bezaubernde und anpassbare UI.",
+        "2": "Light und Dark Mode.",
+        "3": "Verschiedene Themes."
+      },
+      "headline_4": "Bedienbarkeit",
+      "block_4": {
+        "1": "Optimierte und anpassbare UX (für Desktop und Mobile).",
+        "2": "Dynamische Dropdown-Positionierung.",
+        "3": "Absicherung diverser Sonderfälle, in denen bestimmte Szenarien nicht unterstützt werden (z.B. WebViews, die Downloads blockieren); durch die Integration und Illustration intuitiver Workarounds.",
+        "4": "Volle Unterstützung für Maus-, Touch- und Tastatureingaben (W3C WAI compliant).",
+        "5": "20+ Sprachen, einschließlich RTL-Text für Arabisch; aber auch anpassbare Beschriftungen und Textblöcke (i18n)."
+      },
+      "headline_5": "Und vieles mehr",
+      "block_5": {
+        "1": "Automatisch generierte Schema.org strukturierte Daten (Rich Data) für bessere SEO-Performance.",
+        "2": "Vollständig GDPR, CCPA und LGPD compliant - ohne dass irgendwelche Verträge zur Auftragsverarbeitung geschlossen werden müssten.",
+        "3": "Security by Design."
+      }
+    },
+    "seo": {
+      "features_headline_1": "Nicht überzeugt?",
+      "features_headline_2": "Einige der wichtigsten Features",
+      "example": "und hier siehst du wie es aussehen kann!",
+      "example_disclaimer": "Um fair zu sein - dies ist nur eine von zahlreichen möglichen Konfigurationen!"
     },
     "legal": {
       "intro": "Angaben gemäß § 5 TMG und § 55 Abs. 2 RStV:"
@@ -149,5 +226,11 @@
       "no-cookies-details-2": "Daher müssen wir dich auch nicht mit einem Cookie-Banner belästigen.",
       "no-cookies-details-3": "Die nachfolgenden Informationen erläutern, wie wir darüber hinaus Daten verarbeiten."
     }
+  },
+  "demo_data": {
+    "language": "de",
+    "name": "[Reminder] Add to Calendar Button testen",
+    "url": "https://add-to-calendar-button.com/de/",
+    "description": "✨ Entdecke die wahrscheinlich einfachste Möglichkeit einen Add to Calendar Button in dein Web-Projekt zu integrieren:[br]→ [url]https://add-to-calendar-button.com/de/{'|'}Hier klicken![/url]"
   }
 }
