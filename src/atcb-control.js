@@ -118,8 +118,8 @@ function atcb_open(host, data, button = null, keyboardTrigger = false, generated
       focusEl.focus();
     } else {
       focusEl.focus({ preventScroll: true });
+      focusEl.blur();
     }
-    focusEl.blur();
   }
 }
 

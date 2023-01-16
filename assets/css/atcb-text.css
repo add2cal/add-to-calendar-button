@@ -411,7 +411,6 @@
 .atcb-list-item:focus-visible {
   background-color: var(--list-background-hover);
   color: var(--keyboard-focus);
-  font-size: 0.95em;
   font-weight: 600;
   outline: none;
 }
