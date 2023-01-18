@@ -13,7 +13,7 @@ const { locale } = useI18n();
         <RouterLink v-if="locale=='en'" :to="{ name: 'home', params: { locale } }">
           <Logo class="force-light" />
         </RouterLink>
-        <RouterLink v-if="locale!='en'" :to="{ name: 'home-i18n', params: { locale } }">
+        <RouterLink v-else :to="{ name: 'home-i18n', params: { locale } }">
           <Logo class="force-light" />
         </RouterLink>
       </div>

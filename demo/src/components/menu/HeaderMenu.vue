@@ -11,13 +11,13 @@ const emit = defineEmits(['closeMM']);
   <RouterLink class="menu-item" @click="emit('closeMM')" v-if="locale=='en'" :to="{ name: 'home', hash: '#demo', params: { locale } }">
     {{ t('navigation.home') }}
   </RouterLink>
-  <RouterLink class="menu-item" @click="emit('closeMM')" v-if="locale!='en'" :to="{ name: 'home-i18n', hash: '#demo', params: { locale } }">
+  <RouterLink class="menu-item" @click="emit('closeMM')" v-else :to="{ name: 'home-i18n', hash: '#demo', params: { locale } }">
     {{ t('navigation.home') }}
   </RouterLink>
   <RouterLink class="menu-item" @click="emit('closeMM')" v-if="locale=='en'" :to="{ name: 'home', hash: '#installation', params: { locale } }">
     {{ t('navigation.installation') }}
   </RouterLink>
-  <RouterLink class="menu-item" @click="emit('closeMM')" v-if="locale!='en'" :to="{ name: 'home-i18n', hash: '#installation', params: { locale } }">
+  <RouterLink class="menu-item" @click="emit('closeMM')" v-else :to="{ name: 'home-i18n', hash: '#installation', params: { locale } }">
     {{ t('navigation.installation') }}
   </RouterLink>
   <RouterLink class="menu-item" @click="emit('closeMM')" :to="{ name: 'configuration', params: { locale } }">

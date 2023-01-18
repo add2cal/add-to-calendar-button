@@ -36,7 +36,7 @@ const { t, locale } = useI18n();
             <RouterLink class="button-secondary order-first w-40 text-white md:order-last lg:order-first" v-if="locale=='en'" :to="{ name: 'home', hash: '#installation', params: { locale } }">
               {{ t('labels.getStarted') }}
             </RouterLink>
-            <RouterLink class="button-secondary order-first w-40 text-white md:order-last lg:order-first" v-if="locale!='en'" :to="{ name: 'home-i18n', hash: '#installation', params: { locale } }">
+            <RouterLink class="button-secondary order-first w-40 text-white md:order-last lg:order-first" v-else :to="{ name: 'home-i18n', hash: '#installation', params: { locale } }">
               {{ t('labels.getStarted') }}
             </RouterLink>
           </div>
@@ -45,7 +45,7 @@ const { t, locale } = useI18n();
               {{ t('labels.demo') }}
               <ArrowDownIcon class="-mt-1 ml-2 inline-block h-4 w-4 xs:hidden" aria-hidden="true" />
             </RouterLink>
-            <RouterLink class="button-primary w-40 text-white" v-if="locale!='en'" :to="{ name: 'home-i18n', hash: '#demo', params: { locale } }">
+            <RouterLink class="button-primary w-40 text-white" v-else :to="{ name: 'home-i18n', hash: '#demo', params: { locale } }">
               {{ t('labels.demo') }}
               <ArrowDownIcon class="-mt-1 ml-2 inline-block h-4 w-4 xs:hidden" aria-hidden="true" />
             </RouterLink>

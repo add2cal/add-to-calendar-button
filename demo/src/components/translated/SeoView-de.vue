@@ -5,72 +5,72 @@ import "add-to-calendar-button";
 <template>
   <div>
     <h1 class="mb-16 underline decoration-primary-light decoration-4 dark:decoration-primary-dark">Was ist ein Add to Calendar Button?</h1>
-    <h2 class="mb-10">Options to get events saved</h2>
+    <h2 class="mb-10">Wie Events einfach gespeichert werden können</h2>
     <p>
-      Adding events to your calendar can help keep you organized and up-to-date on upcoming tasks, commitments, and events. However, manually entering events into your calendar can often be tedious and time-consuming.<br />
-      Thankfully, there are several ways to save events to your calendar quickly and easily.
+      Das Hinzufügen von Ereignissen zu einem Kalender kann dabei helfen, sich zu organisieren und über anstehende Aufgaben, Verpflichtungen und Ereignisse auf dem Laufenden zu bleiben. Das manuelle Eintragen von Ereignissen in Kalender kann jedoch oft mühsam und zeitaufwändig sein.<br />
+      Glücklicherweise gibt es mehrere Möglichkeiten, Ereignisse schnell und einfach in Kalender zu speichern.
     </p>
     <h3 class="mb-3 mt-6">A. Add to Calendar Button</h3>
     <p>
-      One of the most popular methods to save events to a calendar is by utilizing an <span class="font-semibold">add to calendar button</span>.<br />
-      These buttons enable one-click importing directly from your website or event registration form, allowing users to quickly and easily add an event to their preferred calendar application.<br />
-      By eliminating the need for manual entry and integrations, add to calendar buttons can help to save time and costs associated with calendar-related processes.
+      Eine der beliebtesten Methoden zum Speichern von Ereignissen in einem Kalender ist die Verwendung eines <span class="font-semibold">Add to Calendar Button</span>.<br />
+      Diese Buttons ermöglichen den Import mit nur einem Klick direkt von einer Website oder Veranstaltungs-Registrierungsformular, so dass Benutzer schnell und einfach ein Ereignis zu ihrer bevorzugten Kalenderanwendung hinzufügen können.<br />
+      Durch den Wegfall von manuellen Eingaben und Integrationen können Add to Calendar Buttons dazu beitragen, Zeit und Kosten im Zusammenhang mit kalenderbezogenen Prozessen zu sparen.
     </p>
-    <h3 class="mb-3 mt-6">B. Deep Integration</h3>
+    <h3 class="mb-3 mt-6">B. Tiefen-Integration</h3>
     <p>
-      Another convenient way to save events to a calendar is by <span class="font-semibold">integrating</span> a third-party calendar application to the respective tool or website.<br />
-      Popular calendar applications such as Apple Calendar, Google Calendar, and Outlook Calendar can be integrated to automatically save events.<br />
-      While this is extremely stable, it requires way more setup than a simple add to calendar button. In addition, it can have highly negative effects on the user experience (UX), when the user is required to allow another tool access to such sensitive information like the personal calendar.<br />
-      As long as your application is not already connected to such or similar information out of other reasons, it is usually not recommendable to add any functionality promting the user to confirm the connection to his personal information.<br />
-      Besides the UX issue, you might even not want this as the owner of the application, website, or tool, since such a process would come with a lot of privacy issues (GDPR, CCPA, and LGPD calling).
+      Eine weitere bequeme Möglichkeit zum Speichern von Terminen in einem Kalender ist die <span class="font-semibold">Integration</span> einer Kalenderanwendung eines Drittanbieters in das jeweilige Tool oder die Website.<br />
+      Beliebte Kalenderanwendungen wie Apple Calendar, Google Calendar und Outlook Calendar können integriert werden, um Ereignisse automatisch zu speichern.<br />
+      Dies ist zwar äußerst stabil, erfordert aber weit mehr Implementierungs-Aufwand als ein Add to Calendar Button. Außerdem kann es sich äußerst negativ auf die Benutzerfreundlichkeit (UX) auswirken, wenn der Nutzer einem anderen Tool Zugriff auf so sensible Informationen wie den persönlichen
+      Kalender gewähren muss.<br />
+      Solange deine Anwendung nicht bereits aus anderen Gründen mit solchen oder ähnlichen Informationen verbunden ist, ist es in der Regel nicht empfehlenswert, eine Funktionalität hinzuzufügen, die den Benutzer auffordert, die Verbindung zu seinen persönlichen Informationen zu bestätigen.<br />
+      Abgesehen vom UX-Problem möchtest du dies als Eigentümer der Anwendung, der Website oder des Tools vielleicht auch deshalb nicht, da ein solcher Prozess eine Menge Datenschutzprobleme mit sich bringen würde (GDPR, CCPA und LGPD lassen grüßen).
     </p>
-    <h3 class="mb-3 mt-6">C. Manually</h3>
+    <h3 class="mb-3 mt-6">C. Manuell</h3>
     <p>
-      A third option for calendar users to save events is by <span class="font-semibold">manually copying</span> and pasting the event details into their chosen calendar program.<br />
-      This obviously is not very convenient, as it is time-consuming and yields inconsistent results.<br />
-      From a technical perspective, you could still support this process by making it easy to copy information via a "copy button". However, even this breaks the process in many ways, since you cannot be sure which format the user requires.
+      Eine dritte Möglichkeit für Nutzer, Kalendereinträge zu speichern, ist das <span class="font-semibold">manuelle Kopieren und Einfügen</span> der Ereignisdetails in das gewählte Kalenderprogramm.<br />
+      Dies ist natürlich nicht sehr bequem, da es zeitaufwendig ist und zu uneinheitlichen Ergebnissen führt.<br />
+      Aus technischer Sicht kann man diesen Prozess unterstützen, indem man das Kopieren von Informationen über eine "Kopierschaltfläche" erleichtert. Aber auch dies zerstört den User-Flow in vielerlei Hinsicht, da man nicht sicher sein kann, welches Format der Benutzer am Ende tatsächlich benötigt.
     </p>
     <p>
-      Add to calendar buttons, integrations, and manual copy/paste each provide a viable way for to ensure that important meetings, tasks, and events are never forgotten.<br />
-      The convenience and ease of use associated with add to calendar buttons makes them a popular choice for businesses that need to keep customers updated and make sure events take place as planned. For companies, marketing campaigns, and events that rely on customer success, add to calendar
-      buttons are an invaluable tool that can help to keep customers organized and up-to-date.
+      Add to Calendar Buttons, Integrationen und manuelles Kopieren/Einfügen bieten jeweils für sich eine praktikable Möglichkeit, um sicherzustellen, dass wichtige Besprechungen, Aufgaben und Ereignisse nie vergessen werden.<br />
+      Die Benutzerfreundlichkeit von Add to Calendar Buttons macht diese zu einer beliebten Wahl für Unternehmen, die ihre Kunden auf dem Laufenden halten wollen und sicherstellen müssen, dass Veranstaltungen wie geplant stattfinden. Für Unternehmen, Marketingkampagnen und Veranstaltungen, die auf
+      gute Kundenbeziehungen angewiesen sind, sind Add to Calendar Buttons daher von unschätzbarem Wert.
     </p>
-    <h2 class="mb-10 mt-16">Effort of implementing an Add to Calendar Button</h2>
+    <h2 class="mb-10 mt-16">Aufwand einen Add to Calendar Button zu implementieren</h2>
     <p>
-      The effort of implementing an Add to Calendar Button can be broken down into two main components: technical integration, and marketing.<br />
-      Technical integration is essential to understand the technical requirements of adding an Add to Calendar button to your business's website.<br />
-      Marketers must understand what customers are looking for in such a feature, and how to best promote it.
-    </p>
-
-    <p>
-      First, the technical component of integrating an Add to Calendar button requires some programming knowledge.<br />
-      The ability to embed code into the website and to link to third-party calendar systems will be needed. You'll need to choose from a variety of calendar systems, such as Google Calendar, Apple Calendar, Outlook, and Yahoo Calendar.<br />
-      Depending on the computer language used to create the website, different coding techniques could be used. Once the code is added to the website, testing and debugging will need to take place to ensure the button works as expected.
+      Der Aufwand für die Implementierung eines Add to Calendar Buttons kann in zwei Dimensionen unterteilt werden: technische Integration und Marketing.<br />
+      Bei der technischen Integration geht es darum, die technischen Anforderungen für das Hinzufügen eines Add to Calendar Buttons zu der Website deines Unternehmens zu verstehen.<br />
+      Das Marketing muss gleichzeitig verstehen, was die jeweiligen Kunden von einer solchen Funktion erwarten und wie man sie am besten bewirbt.
     </p>
 
     <p>
-      Second, the marketing component of an Add to Calendar Button involves increasing awareness about the feature and the benefits.<br />
-      The main focus should be on educating customers on how easy and convenient it is to click an Add to Calendar button versus manually entering the event information into their calendar.<br />
-      Promoting this feature through blog posts, email campaigns, social media posts, and even ads should be considered. By studying customer feedback, it'll be easier to assess what works best and what doesn't in terms of increasing customer engagement.
+      Zunächst erfordert die technische Komponente der Integration eines Add to Calendar Buttons meist ein paar Programmierkenntnisse.<br />
+      Du musst in der Lage sein, Code in die Website einzubetten und Links zu Kalendersystemen von Drittanbietern zu erstellen. Hierbei muss eine Vielzahl von Kalendersystemen wie Google Calendar, Apple Calendar, Outlook und Yahoo Calendar berücksichtigt werden.<br />
+      Je nach Tech-Stack, der zur Erstellung der Website verwendet wird, können unterschiedliche MEthoden zum Einsatz kommen. Sobald der Code in die Website eingefügt ist, müssen Tests und Fehlersuche durchgeführt werden, um sicherzustellen, dass die Schaltfläche wie erwartet funktioniert.
     </p>
 
     <p>
-      An important part of the implementation of this feature is understanding the cost of such a process!<br />
-      Many of the systems used will require a solution provider, and cost can vary depending on several factors. Some providers offer free, or even open-source, calendars which could reduce cost. However, with custom coding and integration, the amount of time and effort can cause the cost of
-      implementation to increase greatly.
+      Bei der Marketingkomponente geht es schließlich darum, das Bewusstsein der Nutzer für die Funktion und ihre Vorteile zu schärfen.<br />
+      Das Hauptaugenmerk sollte darauf liegen, die Kunden darüber aufzuklären, wie einfach und bequem es ist, auf einen Add to Calendar Button zu klicken, anstatt die Veranstaltungsinformationen manuell in den Kalender einzugeben.<br />
+      Diese Funktion sollte durch Blogbeiträge, E-Mail-Kampagnen, Beiträge in sozialen Medien und sogar durch Anzeigen beworben werden. Durch die Analyse des Kundenfeedbacks lässt sich feststellen, was am besten funktioniert und was nicht, um die Kundenbindung zu erhöhen.
     </p>
 
     <p>
-      Finally, there's the potential to expand the use of an Add to Calendar Button by creating other features such as SMS integration, or even expanding the availability to different devices.<br />
-      In any case, the bottom line is that it's worth the effort to implement this feature as it can provide customers with an easier, more convenient way of scheduling events.<br />
-      Plus, it can potentially lead to improved customer success and lower customers' expectations. Consider investing in implementing an Add to Calendar Button in your business' website to provide customers with an enhanced user experience.
+      Ein wichtiger Teil der Implementierung dieser Funktion ist das Verständnis für die Kosten eines solchen Prozesses!<br />
+      Viele der verwendeten Systeme erfordern einen Lösungsanbieter, wobei die Kosten abhängig mehrerer Faktoren variieren. Einige Anbieter bieten kostenlose oder sogar Open-Source-Kalender an, was die Kosten senken könnte. Bei kundenspezifischer Entwicklung und Integration können die Kosten für die
+      Implementierung jedoch aufgrund des hohen Zeit- und Arbeitsaufwands stark ansteigen.
     </p>
-    <h2 class="mb-10 mt-16">Worried about cost and effort?</h2>
-    <p class="font-semibold">Luckily, with the Add to Calendar solution, presented on this website, you can save a lot of cost and are facing almost no technical effort!</p>
-    <p>The solution is designed to be usable without a lot of technical knowledge within only a few minutes - compatible with almost any modern web tech stack!</p>
+
     <p>
-      Check out the interactive demo as well as integration guides and examples!<br />
-      We are here to help and provide you with the best state-of-the-art add to calendar soltuion - boosting your business!
+      Schließlich besteht die Möglichkeit, die Nutzung eines Add to Calendar Buttons durch weitere Funktionen wie eine SMS-Integration oder sogar die Ausweitung der Verfügbarkeit auf verschiedene Geräte zu erweitern.<br />
+      In jedem Fall lohnt es sich, die Kern-Funktion zu implementieren, da sie den Kunden eine einfachere und bequemere Möglichkeit bietet, Termine zu merken.
+    </p>
+    <h2 class="mb-10 mt-16">Angst vor hohen Kosten und Aufwand?</h2>
+    <p class="font-semibold">Zum Glück kannst du mit der auf dieser Website vorgestellten Add-to-Calendar-Lösung eine Menge Kosten sparen und hast dabei nahezu keinen technischen Aufwand!</p>
+    <p>Die Lösung ist dabei so konzipiert, dass sie ohne große technische Kenntnisse innerhalb weniger Minuten nutzbar ist - kompatibel mit nahezu jedem modernen Web-Tech-Stack!</p>
+    <p>
+      Sieh dir die interaktive Demo sowie die Integrationsanleitungen und Beispiele an!<br />
+      Wir arbeiten hart daran, dir die beste Add-to-Calendar-Lösung, auf dem neuesten Stand der Technik, für dein Web-Projekt zur Verfügung zu stellen!
     </p>
   </div>
 </template>

@@ -87,7 +87,7 @@ watch(router.currentRoute, newRoute =>  {
   <header>
     <div class="wrapper">
       <HeaderLarge v-if="$route.name=='home' || $route.name=='home-i18n'" />
-      <HeaderSmall v-if="$route.name!=='home' && $route.name!='home-i18n'" />
+      <HeaderSmall v-else />
     </div>
   </header>
 

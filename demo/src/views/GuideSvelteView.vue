@@ -1,45 +1,60 @@
 <script setup lang="ts">
+import { watch } from 'vue';
 import CodeBlock from "@/components/CodeBlock.vue";
 import NextSteps from "@/components/integration/NextSteps.vue";
 import GuideSidebar from "@/components/integration/GuideSidebar.vue";
+import { useI18n } from 'vue-i18n';
+const { t, locale } = useI18n();
 
 const today = new Date();
 const nextDay = new Date();
 nextDay.setDate(today.getDate() + 3);
 const defaultDate = nextDay.getFullYear() + '-' + ('0' + (nextDay.getMonth() + 1)).slice(-2) + '-' + ('0' + nextDay.getDate()).slice(-2);
+let defaultLang = (function () {
+  if (locale.value != 'en') {
+    return '\n  language="' + locale.value + '"';
+  }
+  return '';
+})();
+watch(locale, value => {
+  if (value != 'en') {
+    defaultLang = '\n  language="' + locale.value + '"';
+  } else {
+    defaultLang = '';
+  }
+});
 </script>
 
 <template>
   <div class="grid grid-cols-1 lg:grid-cols-[minmax(0,1fr)_192px]">
     <div class="pr-0 lg:pr-8 xl:pr-12 2xl:pr-20">
-      <h1 class="mb-16 underline decoration-primary-light decoration-4 dark:decoration-primary-dark">How to use the Add to Calendar Button with Svelte</h1>
+      <h1 class="mb-16 underline decoration-primary-light decoration-4 dark:decoration-primary-dark">{{ t('content.guide.svelte.headline') }}</h1>
       <div class="px-0 md:px-3 lg:px-5">
-        <h2 class="mb-6">Step 1: npm installation</h2>
-        <p>Install the package from the npm registry.</p>
+        <h2 class="mb-6">{{ t('content.guide.step1') }}: {{ t('content.guide.step_npm') }}</h2>
+        <p>{{ t('content.guide.install_npm') }}</p>
         <CodeBlock><pre>npm install add-to-calendar-button</pre></CodeBlock>
-        <h2 class="mt-20 mb-6">Step 2: Import it</h2>
-        <p>Import the module into the component, where you want to use the button.</p>
+        <h2 class="mt-20 mb-6">{{ t('content.guide.step2') }}: {{ t('content.guide.step_import') }}</h2>
+        <p>{{ t('content.guide.import_npm') }}</p>
         <CodeBlock language="javascript">
           <pre>import 'add-to-calendar-button';</pre>
         </CodeBlock>
-        <h2 class="mt-20 mb-6">Step 3: Use it</h2>
+        <h2 class="mt-20 mb-6">{{ t('content.guide.step3') }}: {{ t('content.guide.step_use') }}</h2>
         <p>
-          Start using the component by adding a
-          <code>&lt;add-to-calendar-button&gt;</code> tag to your code - with the options as attributes.
+          {{ t('content.guide.step_use_start') }}
         </p>
-        <p class="font-semibold italic">Yes, it is that simple.</p>
-        <p>Your code block could look like the following:</p>
+        <p class="font-semibold italic">{{ t('content.guide.step_use_simple') }}</p>
+        <p>{{ t('content.guide.step_use_example') }}</p>
         <CodeBlock class="line-numbers">
           <pre>
 &lt;add-to-calendar-button
-  name="Title"
+  name="{{ t('demo_data.name_dummy') }}"
   options="'Apple','Google'"
-  location="World Wide Web"
+  location="{{ t('demo_data.location') }}"
   startDate="{{defaultDate}}"
   endDate="{{defaultDate}}"
   startTime="10:15"
   endTime="23:30"
-  timeZone="Europe/Berlin"
+  timeZone="{{ t('demo_data.default_timezone') }}"{{defaultLang}}
 &gt;&lt;/add-to-calendar-button&gt;</pre
           >
         </CodeBlock>

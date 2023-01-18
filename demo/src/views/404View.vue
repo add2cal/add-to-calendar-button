@@ -286,6 +286,6 @@ const { t, locale } = useI18n();
     <h1 class="underline decoration-primary-light decoration-4 dark:decoration-primary-dark">404: {{ t("message.404") }}</h1>
     <p class="mt-20 mb-6">{{ t("content.404RealContent") }}</p>
     <RouterLink v-if="locale=='en'" :to="{ name: 'home', params: { locale } }" class="button-primary m-3 mt-4"> <HomeIcon class="-mt-0.5 mr-2 inline-block h-4 w-4" aria-hidden="true" />{{ t('labels.clickHere') }} </RouterLink>
-    <RouterLink v-if="locale!='en'" :to="{ name: 'home-i18n', params: { locale } }" class="button-primary m-3 mt-4"> <HomeIcon class="-mt-0.5 mr-2 inline-block h-4 w-4" aria-hidden="true" />{{ t('labels.clickHere') }} </RouterLink>
+    <RouterLink v-else :to="{ name: 'home-i18n', params: { locale } }" class="button-primary m-3 mt-4"> <HomeIcon class="-mt-0.5 mr-2 inline-block h-4 w-4" aria-hidden="true" />{{ t('labels.clickHere') }} </RouterLink>
   </div>
 </template>

@@ -18,7 +18,7 @@ const config:Object = {
   startDate: defaultDate,
   startTime: "10:15",
   endTime: "23:30",
-  options: ["Google", "iCal"],
+  options: ["Google|hghgh", "iCal"],
   timeZone: "Europe/Berlin"
 };
 
@@ -604,12 +604,12 @@ onUnmounted(() => {
           Theoretically, you do not need to provide a button element. However, it is recommended to do so, since it will optimize the user experience a lot (like focusing the element on closing the modal, etc.).<br />
           If you provide a specific button, you can also choose between the overlay-dropdown list or the modal (default) style. Latter one is strongly recommended.
         </p>
-        <h3 class="mb-3 mt-8">Step 1: Import</h3>
+        <h3 class="mb-3 mt-8">{{ t('content.guide.step1') }}: Import</h3>
         <p>If you use the script via CDN, you can skip this step.<br />If you use the script as npm package, you would first need to import the "atcb_action" functionality. Simply change the import statement to the following:</p>
         <CodeBlock language="javascript">
           <pre>import { atcb_action } from "add-to-calendar-button";</pre>
         </CodeBlock>
-        <h3 class="mb-3 mt-8">Step 2: Config and trigger</h3>
+        <h3 class="mb-3 mt-8">{{ t('content.guide.step2') }}: Config and trigger</h3>
         <p>
           Secondly, you would need to define the config and the trigger.<br />
           This might differ a lot based on your environment. You are the expert there.

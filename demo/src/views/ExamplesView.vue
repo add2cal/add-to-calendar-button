@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { watch } from 'vue';
 import "add-to-calendar-button";
 import { ArrowRightIcon, ArrowTopRightOnSquareIcon } from '@heroicons/vue/24/outline';
 import CodeBlock from "@/components/CodeBlock.vue";
@@ -9,6 +10,19 @@ const today = new Date();
 const nextDay = new Date();
 nextDay.setDate(today.getDate() + 3);
 const defaultDate = nextDay.getFullYear() + '-' + ('0' + (nextDay.getMonth() + 1)).slice(-2) + '-' + ('0' + nextDay.getDate()).slice(-2);
+let defaultLang = (function () {
+  if (locale.value != 'en') {
+    return '\n  language="' + locale.value + '"';
+  }
+  return '';
+})();
+watch(locale, value => {
+  if (value != 'en') {
+    defaultLang = '\n  language="' + locale.value + '"';
+  } else {
+    defaultLang = '';
+  }
+});
 </script>
 
 <template>
@@ -23,35 +37,36 @@ const defaultDate = nextDay.getFullYear() + '-' + ('0' + (nextDay.getMonth() + 1
         For more advanced expert cases, have a look at the <RouterLink :to="{ name: 'advanced-use', params: { locale } }">"{{ t('navigation.advanced-use') }}"</RouterLink> page.
       </p>
       <section id="1">
-        <h2 class="mb-4 mt-14 border-t border-zinc-300 pt-14 dark:border-zinc-700">Example 1: The usual one</h2>
+        <h2 class="mb-4 mt-14 border-t border-zinc-300 pt-14 dark:border-zinc-700">{{ t('content.examples.example') }} 1: The usual one</h2>
         <p>This is a more or less standard setup with all available calendar types and a time zone set.</p>
         <div class="block w-full justify-between md:flex">
-          <div class="flex w-full flex-none justify-center p-10 pb-6 md:w-[300px]">
+          <div class="flex w-full flex-none justify-center p-6 pt-8 md:w-[300px]">
             <add-to-calendar-button
-              name="[Reminder] Test the Add to Calendar Button"
-              v-bind:startDate="defaultDate"
+              :name="t('demo_data.name')"
+              :startDate="defaultDate"
               startTime="10:15"
               endTime="23:30"
-              timeZone="Europe/Berlin"
-              location="World Wide Web"
-              description="Check out the maybe easiest way to include Add to Calendar Buttons to your website:[br]→ [url]https://add-to-calendar-button.com/|Click here![/url]"
+              :timeZone="t('demo_data.default_timezone')"
+              :location="t('demo_data.location')"
+              :description="t('demo_data.description_alt1')"
               options="'Apple','Google','iCal','Outlook.com','Microsoft 365','Microsoft Teams','Yahoo'"
               lightMode="bodyScheme"
+              :language="locale"
             ></add-to-calendar-button>
           </div>
           <div class="flex-1 overflow-x-auto">
             <CodeBlock class="line-numbers">
               <pre>
 &lt;add-to-calendar-button
-  name="[Reminder] Test the Add to Calendar Button"
+  name="{{ t('demo_data.name') }}"
   startDate="{{defaultDate}}"
   startTime="10:15"
   endTime="23:30"
-  timeZone="Europe/Berlin"
-  location="World Wide Web"
-  description="Check out the maybe easiest way to include Add to Calendar Buttons to your website:[br]→ [url]https://add-to-calendar-button.com/|Click here![/url]"
+  timeZone="{{ t('demo_data.default_timezone') }}"
+  location="{{ t('demo_data.location') }}"
+  description="{{ t('demo_data.description_alt1') }}"
   options="'Apple','Google','iCal','Outlook.com','Microsoft 365','Microsoft Teams','Yahoo'"
-  lightMode="bodyScheme"
+  lightMode="bodyScheme"{{defaultLang}}
 &gt;&lt;/add-to-calendar-button&gt;
 </pre
               >
@@ -61,32 +76,33 @@ const defaultDate = nextDay.getFullYear() + '-' + ('0' + (nextDay.getMonth() + 1
       </section>
 
       <section id="2">
-        <h2 class="mb-4 mt-14 border-t border-zinc-300 pt-14 dark:border-zinc-700">Example 2: All-Day Event</h2>
+        <h2 class="mb-4 mt-14 border-t border-zinc-300 pt-14 dark:border-zinc-700">{{ t('content.examples.example') }} 2: All-Day Event</h2>
         <p>
           For an all-day event, you would simply leave out the time information.<br />
           <span class="text-sm italic">You can even omit the time zone information here.</span>
         </p>
         <div class="block w-full justify-between md:flex">
-          <div class="flex w-full flex-none justify-center p-10 pb-6 md:w-[300px]">
+          <div class="flex w-full flex-none justify-center p-6 pt-8 md:w-[300px]">
             <add-to-calendar-button
-              name="[Reminder] Test the Add to Calendar Button"
-              v-bind:startDate="defaultDate"
-              location="World Wide Web"
-              description="Check out the maybe easiest way to include Add to Calendar Buttons to your website:[br]→ [url]https://add-to-calendar-button.com/|Click here![/url]"
+              :name="t('demo_data.name')"
+              :startDate="defaultDate"
+              :location="t('demo_data.location')"
+              :description="t('demo_data.description_alt1')"
               options="'Apple','Google','iCal','Outlook.com','Microsoft 365','Microsoft Teams','Yahoo'"
               lightMode="bodyScheme"
+              :language="locale"
             ></add-to-calendar-button>
           </div>
           <div class="flex-1 overflow-x-auto">
             <CodeBlock class="line-numbers">
               <pre>
 &lt;add-to-calendar-button
-  name="[Reminder] Test the Add to Calendar Button"
+  name="{{ t('demo_data.name') }}"
   startDate="{{defaultDate}}"
-  location="World Wide Web"
-  description="Check out the maybe easiest way to include Add to Calendar Buttons to your website:[br]→ [url]https://add-to-calendar-button.com/|Click here![/url]"
+  location="{{ t('demo_data.location') }}"
+  description="{{ t('demo_data.description_alt1') }}"
   options="'Apple','Google','iCal','Outlook.com','Microsoft 365','Microsoft Teams','Yahoo'"
-  lightMode="bodyScheme"
+  lightMode="bodyScheme"{{defaultLang}}
 &gt;&lt;/add-to-calendar-button&gt;
 </pre
               >
@@ -96,37 +112,38 @@ const defaultDate = nextDay.getFullYear() + '-' + ('0' + (nextDay.getMonth() + 1
       </section>
 
       <section id="3">
-        <h2 class="mb-4 mt-14 border-t border-zinc-300 pt-14 dark:border-zinc-700">Example 3: Dynamic Dates</h2>
+        <h2 class="mb-4 mt-14 border-t border-zinc-300 pt-14 dark:border-zinc-700">{{ t('content.examples.example') }} 3: Dynamic Dates</h2>
         <p>Instead of using a fixed date, you can also go with dynamic ones.</p>
         <p>You can use "today" instead of a date to always use the respective current day.<br />Adding "+7" after the date string (like "2025-04-18+7") would add 7 days. Here, we are combining this to make the event always be 2 days from today.</p>
         <p class="text-sm italic">Btw: This example also generates online-event-rich-schema in the background, since the location is a URL.</p>
         <div class="block w-full justify-between md:flex">
-          <div class="flex w-full flex-none justify-center p-10 pb-6 md:w-[300px]">
+          <div class="flex w-full flex-none justify-center p-6 pt-8 md:w-[300px]">
             <add-to-calendar-button
-              name="[Reminder] Test the Add to Calendar Button"
+              :name="t('demo_data.name')"
               startDate="today+2"
               startTime="10:15"
               endTime="23:30"
-              timeZone="Europe/Berlin"
-              location="https://add-to-calendar-button.com/"
-              description="Check out the maybe easiest way to include Add to Calendar Buttons to your website:[br]→ [url]https://add-to-calendar-button.com/|Click here![/url]"
+              :timeZone="t('demo_data.default_timezone')"
+              :location="t('demo_data.url')"
+              :description="t('demo_data.description_alt1')"
               options="'Apple','Google','iCal','Outlook.com','Yahoo'"
               lightMode="bodyScheme"
+              :language="locale"
             ></add-to-calendar-button>
           </div>
           <div class="flex-1 overflow-x-auto">
             <CodeBlock class="line-numbers">
               <pre>
 &lt;add-to-calendar-button
-  name="[Reminder] Test the Add to Calendar Button"
+  name="{{ t('demo_data.name') }}"
   startDate="today+2"
   startTime="10:15"
   endTime="23:30"
-  timeZone="Europe/Berlin"
-  location="https://add-to-calendar-button.com/"
-  description="Check out the maybe easiest way to include Add to Calendar Buttons to your website:[br]→ [url]https://add-to-calendar-button.com/|Click here![/url]"
+  timeZone="{{ t('demo_data.default_timezone') }}"
+  location="{{ t('demo_data.url') }}"
+  description="{{ t('demo_data.description_alt1') }}"
   options="'Apple','Google','iCal','Outlook.com','Yahoo'"
-  lightMode="bodyScheme"
+  lightMode="bodyScheme"{{defaultLang}}
 &gt;&lt;/add-to-calendar-button&gt;
 </pre
               >
@@ -136,41 +153,42 @@ const defaultDate = nextDay.getFullYear() + '-' + ('0' + (nextDay.getMonth() + 1
       </section>
 
       <section id="4">
-        <h2 class="mb-4 mt-14 border-t border-zinc-300 pt-14 dark:border-zinc-700">Example 4: Recurring Event</h2>
+        <h2 class="mb-4 mt-14 border-t border-zinc-300 pt-14 dark:border-zinc-700">{{ t('content.examples.example') }} 4: Recurring Event</h2>
         <p>
           You can define recurring events by setting an
           <a href="https://www.rfc-editor.org/rfc/rfc5545" target="_blank" rel="noopener">RRULE <ArrowTopRightOnSquareIcon class="-mt-0.5 mr-0.5 inline-block h-4 w-4" aria-hidden="true" /></a>.<br />
           Mind that the rule needs to be valid (technically and logically) and that it is not supported by all calendar types - in this example, the specified Yahoo and Outlook.com options won't show up for that reason.
         </p>
         <div class="block w-full justify-between md:flex">
-          <div class="flex w-full flex-none justify-center p-10 pb-6 md:w-[300px]">
+          <div class="flex w-full flex-none justify-center p-6 pt-8 md:w-[300px]">
             <add-to-calendar-button
-              name="[Reminder] Test the Add to Calendar Button"
-              v-bind:startDate="defaultDate"
+              :name="t('demo_data.name')"
+              :startDate="defaultDate"
               startTime="10:15"
               endTime="23:30"
-              timeZone="Europe/Berlin"
-              location="World Wide Web"
-              description="Check out the maybe easiest way to include Add to Calendar Buttons to your website:[br]→ [url]https://add-to-calendar-button.com/|Click here![/url]"
+              :timeZone="t('demo_data.default_timezone')"
+              :location="t('demo_data.location')"
+              :description="t('demo_data.description_alt1')"
               options="'Apple','Google','iCal','Outlook.com','Yahoo'"
               recurrence="RRULE:FREQ=WEEKLY;INTERVAL=1;WKST=MO;BYDAY=WE,FR;COUNT=6"
               lightMode="bodyScheme"
+              :language="locale"
             ></add-to-calendar-button>
           </div>
           <div class="flex-1 overflow-x-auto">
             <CodeBlock class="line-numbers">
               <pre>
 &lt;add-to-calendar-button
-  name="[Reminder] Test the Add to Calendar Button"
+  name="{{ t('demo_data.name') }}"
   startDate="{{defaultDate}}"
   startTime="10:15"
   endTime="23:30"
-  timeZone="Europe/Berlin"
-  location="World Wide Web"
-  description="Check out the maybe easiest way to include Add to Calendar Buttons to your website:[br]→ [url]https://add-to-calendar-button.com/|Click here![/url]"
+  timeZone="{{ t('demo_data.default_timezone') }}"
+  location="{{ t('demo_data.location') }}"
+  description="{{ t('demo_data.description_alt1') }}"
   options="'Apple','Google','iCal','Outlook.com','Yahoo'"
   recurrence="RRULE:FREQ=WEEKLY;INTERVAL=1;WKST=MO;BYDAY=WE,FR;COUNT=6"
-  lightMode="bodyScheme"
+  lightMode="bodyScheme"{{defaultLang}}
 &gt;&lt;/add-to-calendar-button&gt;
 </pre
               >
@@ -181,40 +199,41 @@ const defaultDate = nextDay.getFullYear() + '-' + ('0' + (nextDay.getMonth() + 1
           You can also specify the rule in more simple terms. Check the <RouterLink :to="{ name: 'configuration', hash: '#recurrence', params: { locale } }">"{{ t('navigation.configuration') }}"</RouterLink> page for more details on that.
         </p>
         <div class="block w-full justify-between md:flex">
-          <div class="flex w-full flex-none justify-center p-10 pb-6 md:w-[300px]">
+          <div class="flex w-full flex-none justify-center p-6 pt-8 md:w-[300px]">
             <add-to-calendar-button
-              name="[Reminder] Test the Add to Calendar Button"
-              v-bind:startDate="defaultDate"
+              :name="t('demo_data.name')"
+              :startDate="defaultDate"
               startTime="10:15"
               endTime="23:30"
-              timeZone="Europe/Berlin"
-              location="World Wide Web"
-              description="Check out the maybe easiest way to include Add to Calendar Buttons to your website:[br]→ [url]https://add-to-calendar-button.com/|Click here![/url]"
+              :timeZone="t('demo_data.default_timezone')"
+              :location="t('demo_data.location')"
+              :description="t('demo_data.description_alt1')"
               options="'Apple','Google','iCal','Outlook.com','Yahoo'"
               recurrence="weekly"
               recurrence_interval="1"
               recurrence_count="6"
               recurrence_byDay="WE,FR"
               lightMode="bodyScheme"
+              :language="locale"
             ></add-to-calendar-button>
           </div>
           <div class="flex-1 overflow-x-auto">
             <CodeBlock class="line-numbers">
               <pre>
 &lt;add-to-calendar-button
-  name="[Reminder] Test the Add to Calendar Button"
+  name="{{ t('demo_data.name') }}"
   startDate="{{defaultDate}}"
   startTime="10:15"
   endTime="23:30"
-  timeZone="Europe/Berlin"
-  location="World Wide Web"
-  description="Check out the maybe easiest way to include Add to Calendar Buttons to your website:[br]→ [url]https://add-to-calendar-button.com/|Click here![/url]"
+  timeZone="{{ t('demo_data.default_timezone') }}"
+  location="{{ t('demo_data.location') }}"
+  description="{{ t('demo_data.description_alt1') }}"
   options="'Apple','Google','iCal','Outlook.com','Yahoo'"
   recurrence="weekly"
   recurrence_interval="1"
   recurrence_count="6"
   recurrence_byDay="WE,FR"
-  lightMode="bodyScheme"
+  lightMode="bodyScheme"{{defaultLang}}
 &gt;&lt;/add-to-calendar-button&gt;
 </pre
               >
@@ -224,16 +243,16 @@ const defaultDate = nextDay.getFullYear() + '-' + ('0' + (nextDay.getMonth() + 1
       </section>
 
       <section id="5">
-        <h2 class="mb-4 mt-14 border-t border-zinc-300 pt-14 dark:border-zinc-700">Example 5: Multi-Date Event</h2>
+        <h2 class="mb-4 mt-14 border-t border-zinc-300 pt-14 dark:border-zinc-700">{{ t('content.examples.example') }} 5: Multi-Date Event</h2>
         <p>Events can also have multiple dates, which are not recurring. For example a workshop consisting of 2 parts.</p>
         <p>You define those parts by placing them as separate objects in a dates array. Each part can have his own name, description, and location. If not given, a global one will be used (in the example, we use the location globally).</p>
         <p>Individual date and time information would be required - global ones will be ignored.</p>
         <div class="block w-full justify-between md:flex">
-          <div class="flex w-full flex-none justify-center p-10 pb-6 md:w-[300px]">
+          <div class="flex w-full flex-none justify-center p-6 pt-8 md:w-[300px]">
             <add-to-calendar-button
-              name="Event Series"
-              dates='[{
-                "name":"[Reminder 1/3] to use the Add to Calendar Button",
+              :name="t('demo_data.name_series')"
+              :dates='`[{
+                  "name":"` + 5 + `",
                   "description":"This is the first part to check the Add to Calendar Button script at [url]https://add-to-calendar-button.com/[/url]",
                   "startDate":"today+3",
                   "startTime":"10:15",
@@ -252,45 +271,46 @@ const defaultDate = nextDay.getFullYear() + '-' + ('0' + (nextDay.getMonth() + 1
                   "startDate":"today+8",
                   "startTime":"09:00",
                   "endTime":"19:00"
-                }]'
-              timeZone="Europe/London"
-              location="World Wide Web"
+                }]`'
+              :timeZone="t('demo_data.default_timezone')"
+              :location="t('demo_data.location')"
               options="'Apple','Google','iCal','Outlook.com','Yahoo'"
               lightMode="bodyScheme"
+              :language="locale"
             ></add-to-calendar-button>
           </div>
           <div class="flex-1 overflow-x-auto">
             <CodeBlock class="line-numbers">
               <pre>
 &lt;add-to-calendar-button
-  name="Event Series"
+  name="{{ t('demo_data.name_series') }}"
   dates='[
     {
-      "name":"[Reminder 1/3] to use the Add to Calendar Button",
-      "description":"This is the first part to check the Add to Calendar Button script at [url]https://add-to-calendar-button.com/[/url]",
+      "name":"{{ t('demo_data.name_sub_1') }}",
+      "description":"{{ t('demo_data.description_sub_1') }}",
       "startDate":"today+3",
       "startTime":"10:15",
       "endTime":"23:30"
     },
     {
-      "name":"[Reminder 2/3] to use the Add to Calendar Button",
-      "description":"This is the second part to check the Add to Calendar Button script at [url]https://add-to-calendar-button.com/[/url]",
+      "name":"{{ t('demo_data.name_sub_2') }}",
+      "description":"{{ t('demo_data.description_sub_2') }}",
       "startDate":"today+5",
       "startTime":"11:30",
       "endTime":"20:00"
     },
     {
-      "name":"[Reminder 3/3] to use the Add to Calendar Button",
-      "description":"This is the third part to check the Add to Calendar Button script at [url]https://add-to-calendar-button.com/[/url]",
+      "name":"{{ t('demo_data.name_sub_3') }}",
+      "description":"{{ t('demo_data.description_sub_3') }}",
       "startDate":"today+8",
       "startTime":"09:00",
       "endTime":"19:00"
     }
   ]'
-  timeZone="Europe/London"
-  location="World Wide Web"
+  timeZone="{{ t('demo_data.default_timezone') }}"
+  location="{{ t('demo_data.location') }}"
   options="'Apple','Google','iCal','Outlook.com','Yahoo'"
-  lightMode="bodyScheme"
+  lightMode="bodyScheme"{{defaultLang}}
 &gt;&lt;/add-to-calendar-button&gt;
 </pre
               >
@@ -300,7 +320,7 @@ const defaultDate = nextDay.getFullYear() + '-' + ('0' + (nextDay.getMonth() + 1
       </section>
 
       <section id="6">
-        <h2 class="mb-4 mt-14 border-t border-zinc-300 pt-14 dark:border-zinc-700">Example 6: Custom Labels</h2>
+        <h2 class="mb-4 mt-14 border-t border-zinc-300 pt-14 dark:border-zinc-700">{{ t('content.examples.example') }} 6: Custom Labels</h2>
         <p>
           You can customize the button's label as well as the ones of each calendar option.<br />
           Here, we also set the listStyle to an overlay list, slightly reduce the size, and set a custom ics file name.
@@ -309,40 +329,41 @@ const defaultDate = nextDay.getFullYear() + '-' + ('0' + (nextDay.getMonth() + 1
           If you want to change system text blocks, you can do so with the "customLabels" option - check the <RouterLink :to="{ name: 'configuration', hash: '#customlabels', params: { locale } }">"{{ t('navigation.configuration') }}"</RouterLink> page for details.
         </p>
         <div class="block w-full justify-between md:flex">
-          <div class="flex w-full flex-none justify-center p-10 pb-6 md:w-[300px]">
+          <div class="flex w-full flex-none justify-center p-6 pt-8 md:w-[300px]">
             <add-to-calendar-button
-              name="[Reminder] Test the Add to Calendar Button"
-              v-bind:startDate="defaultDate"
+              :name="t('demo_data.name')"
+              :startDate="defaultDate"
               startTime="10:15"
               endTime="23:30"
-              timeZone="Europe/Berlin"
-              location="World Wide Web"
-              label="Hit me to save!"
-              description="Check out the maybe easiest way to include Add to Calendar Buttons to your website:[br]→ [url]https://add-to-calendar-button.com/|Click here![/url]"
-              options="'Apple|Apple is ok for me','Google|Add to Google Cal','iCal|iCall ftw!','Outlook.com|Use Outlook instead','Yahoo|Yahoo, really?'"
+              :timeZone="t('demo_data.default_timezone')"
+              :location="t('demo_data.location')"
+              :label="t('demo_data.name_custom_1')"
+              :description="t('demo_data.description_alt1')"
+              :options="t('demo_data.options_labels')"
               iCalFileName="Reminder-Event"
               listStyle="overlay"
               size="5"
               lightMode="bodyScheme"
+              :language="locale"
             ></add-to-calendar-button>
           </div>
           <div class="flex-1 overflow-x-auto">
             <CodeBlock class="line-numbers">
               <pre>
 &lt;add-to-calendar-button
-  name="[Reminder] Test the Add to Calendar Button"
+  name="{{ t('demo_data.name') }}"
   startDate="{{defaultDate}}"
   startTime="10:15"
   endTime="23:30"
-  timeZone="Europe/Berlin"
-  location="World Wide Web"
-  label="Hit me to save!"
-  description="Check out the maybe easiest way to include Add to Calendar Buttons to your website:[br]→ [url]https://add-to-calendar-button.com/|Click here![/url]"
-  options="'Apple|Apple is ok for me','Google|Add to Google Cal','iCal|iCall ftw!','Outlook.com|Use Outlook instead','Yahoo|Yahoo, really?'"
+  timeZone="{{ t('demo_data.default_timezone') }}"
+  location="{{ t('demo_data.location') }}"
+  description="{{ t('demo_data.description_alt1') }}"
+  options="{{ t('demo_data.options_labels') }}"
+  label="{{ t('demo_data.name_custom_1') }}"
   iCalFileName="Reminder-Event"
   listStyle="overlay"
   size="5"
-  lightMode="bodyScheme"
+  lightMode="bodyScheme"{{defaultLang}}
 &gt;&lt;/add-to-calendar-button&gt;
 </pre
               >
@@ -352,46 +373,47 @@ const defaultDate = nextDay.getFullYear() + '-' + ('0' + (nextDay.getMonth() + 1
       </section>
 
       <section id="7">
-        <h2 class="mb-4 mt-14 border-t border-zinc-300 pt-14 dark:border-zinc-700">Example 7: Inline Button</h2>
+        <h2 class="mb-4 mt-14 border-t border-zinc-300 pt-14 dark:border-zinc-700">{{ t('content.examples.example') }} 7: Inline Button</h2>
         <p>
           Per default, the button is a block element, which opens a dropdown on hover.<br />
           You can make the button inline as well as change the trigger for the dropdown to "click".
         </p>
         <p>In this example, instead of changing the trigger, we made the "listStyle" a modal, which automatically sets the click trigger.</p>
         <div>
-          <div class="mx-auto p-10 pb-6 text-center">
+          <div class="mx-auto p-6 pt-8 text-center">
             <span class="pr-6">Do it! →</span>
             <add-to-calendar-button
-              name="[Reminder] Test the Add to Calendar Button"
-              v-bind:startDate="defaultDate"
+              :name="t('demo_data.name')"
+              :startDate="defaultDate"
               startTime="10:15"
               endTime="23:30"
-              timeZone="Europe/Berlin"
-              location="World Wide Web"
-              label="Click me hard!"
-              description="Check out the maybe easiest way to include Add to Calendar Buttons to your website:[br]→ [url]https://add-to-calendar-button.com/|Click here![/url]"
+              :timeZone="t('demo_data.default_timezone')"
+              :location="t('demo_data.location')"
+              :label="t('demo_data.name_custom_2')"
+              :description="t('demo_data.description_alt1')"
               options="'Apple','Google','iCal','Outlook.com','Yahoo'"
               listStyle="modal"
               inline
               lightMode="bodyScheme"
+              :language="locale"
             ></add-to-calendar-button>
           </div>
           <div class="overflow-x-auto">
             <CodeBlock class="line-numbers">
               <pre>
 &lt;add-to-calendar-button
-  name="[Reminder] Test the Add to Calendar Button"
+  name="{{ t('demo_data.name') }}"
   startDate="{{defaultDate}}"
   startTime="10:15"
   endTime="23:30"
-  timeZone="Europe/Berlin"
-  location="World Wide Web"
-  label="Click me hard!"
-  description="Check out the maybe easiest way to include Add to Calendar Buttons to your website:[br]→ [url]https://add-to-calendar-button.com/|Click here![/url]"
+  timeZone="{{ t('demo_data.default_timezone') }}"
+  location="{{ t('demo_data.location') }}"
+  description="{{ t('demo_data.description_alt1') }}"
   options="'Apple','Google','iCal','Outlook.com','Yahoo'"
+  label="{{ t('demo_data.name_custom_2') }}"
   inline
   listStyle="modal"
-  lightMode="bodyScheme"
+  lightMode="bodyScheme"{{defaultLang}}
 &gt;&lt;/add-to-calendar-button&gt;
 </pre
               >
@@ -400,34 +422,35 @@ const defaultDate = nextDay.getFullYear() + '-' + ('0' + (nextDay.getMonth() + 1
         </div>
       </section>
       <section id="8">
-        <h2 class="mb-4 mt-14 border-t border-zinc-300 pt-14 dark:border-zinc-700">Example 8: One calendar type only</h2>
+        <h2 class="mb-4 mt-14 border-t border-zinc-300 pt-14 dark:border-zinc-700">{{ t('content.examples.example') }} 8: One calendar type only</h2>
         <p>When you specify only 1 calendar type, there will be no list at all. Instead, the button itself becomes the list entry.</p>
         <p class="text-sm italic">Mind that this would not block any potential info screen from showing up (for example the Google type with a multi-date event)</p>
         <div class="block w-full justify-between md:flex">
-          <div class="flex w-full flex-none justify-center p-10 pb-6 md:w-[300px]">
+          <div class="flex w-full flex-none justify-center p-6 pt-8 md:w-[300px]">
             <add-to-calendar-button
-              name="[Reminder] Test the Add to Calendar Button"
-              v-bind:startDate="defaultDate"
+              :name="t('demo_data.name')"
+              :startDate="defaultDate"
               startTime="10:15"
               endTime="23:30"
-              timeZone="Europe/Berlin"
-              description="Check out the maybe easiest way to include Add to Calendar Buttons to your website:[br]→ [url]https://add-to-calendar-button.com/|Click here![/url]"
+              :timeZone="t('demo_data.default_timezone')"
+              :description="t('demo_data.description_alt1')"
               options="Google"
               lightMode="bodyScheme"
+              :language="locale"
             ></add-to-calendar-button>
           </div>
           <div class="flex-1 overflow-x-auto">
             <CodeBlock class="line-numbers">
               <pre>
 &lt;add-to-calendar-button
-  name="[Reminder] Test the Add to Calendar Button"
+  name="{{ t('demo_data.name') }}"
   startDate="{{defaultDate}}"
   startTime="10:15"
   endTime="23:30"
-  timeZone="Europe/Berlin"
-  description="Check out the maybe easiest way to include Add to Calendar Buttons to your website:[br]→ [url]https://add-to-calendar-button.com/|Click here![/url]"
+  timeZone="{{ t('demo_data.default_timezone') }}"
+  description="{{ t('demo_data.description_alt1') }}"
   options="Google"
-  lightMode="bodyScheme"
+  lightMode="bodyScheme"{{defaultLang}}
 &gt;&lt;/add-to-calendar-button&gt;
 </pre
               >
@@ -436,42 +459,41 @@ const defaultDate = nextDay.getFullYear() + '-' + ('0' + (nextDay.getMonth() + 1
         </div>
       </section>
       <section id="9">
-        <h2 class="mb-4 mt-14 border-t border-zinc-300 pt-14 dark:border-zinc-700">Example 9: Splitting a button</h2>
+        <h2 class="mb-4 mt-14 border-t border-zinc-300 pt-14 dark:border-zinc-700">{{ t('content.examples.example') }} 9: Splitting a button</h2>
         <p>With the option "buttonsList", you can split the button into multiple - one per calendar type.</p>
         <p>In this example, we also used the round button style and hide the button label.</p>
         <div>
-          <div class="flex justify-center p-10 pb-6">
+          <div class="flex justify-center p-6 pt-8">
             <add-to-calendar-button
-              name="[Reminder] Test the Add to Calendar Button"
-              v-bind:startDate="defaultDate"
+              :name="t('demo_data.name')"
+              :startDate="defaultDate"
               startTime="10:15"
               endTime="23:30"
-              timeZone="Europe/Berlin"
-              description="Check out the maybe easiest way to include Add to Calendar Buttons to your website:[br]→ [url]https://add-to-calendar-button.com/|Click here![/url]"
+              :timeZone="t('demo_data.default_timezone')"
+              :description="t('demo_data.description_alt1')"
               options="'Apple','Google','iCal','Outlook.com','Yahoo'"
               buttonsList
               hideTextLabelButton
               buttonStyle="round"
-              buttonLabel="fals"
               lightMode="bodyScheme"
+              :language="locale"
             ></add-to-calendar-button>
           </div>
           <div class="overflow-x-auto">
             <CodeBlock class="line-numbers">
               <pre>
 &lt;add-to-calendar-button
-  name="[Reminder] Test the Add to Calendar Button"
+  name="{{ t('demo_data.name') }}"
   startDate="{{defaultDate}}"
   startTime="10:15"
   endTime="23:30"
-  timeZone="Europe/Berlin"
-  description="Check out the maybe easiest way to include Add to Calendar Buttons to your website:[br]→ [url]https://add-to-calendar-button.com/|Click here![/url]"
+  timeZone="{{ t('demo_data.default_timezone') }}"
+  description="{{ t('demo_data.description_alt1') }}"
   options="'Apple','Google','iCal','Outlook.com','Yahoo'"
   buttonsList
   hideTextLabelButton
   buttonStyle="round"
-  buttonLabel="fals"
-  lightMode="bodyScheme"
+  lightMode="bodyScheme"{{defaultLang}}
 &gt;&lt;/add-to-calendar-button&gt;
 </pre
               >
@@ -486,7 +508,7 @@ const defaultDate = nextDay.getFullYear() + '-' + ('0' + (nextDay.getMonth() + 1
           {{ t('labels.startPlaying') }}
           <ArrowRightIcon class="-mt-0.5 ml-2 inline-block h-4 w-4" aria-hidden="true" />
         </RouterLink>
-        <RouterLink class="button-primary mx-auto w-56 self-center sm:mx-0" v-if="locale!='en'" :to="{ name: 'home-i18n', hash: '#demo', params: { locale } }">
+        <RouterLink class="button-primary mx-auto w-56 self-center sm:mx-0" v-else :to="{ name: 'home-i18n', hash: '#demo', params: { locale } }">
           {{ t('labels.startPlaying') }}
           <ArrowRightIcon class="-mt-0.5 ml-2 inline-block h-4 w-4" aria-hidden="true" />
         </RouterLink>

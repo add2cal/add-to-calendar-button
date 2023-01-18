@@ -100,7 +100,7 @@ const FeaturesBlock = defineAsyncComponent({
       {{ t('labels.demo') }}
       <ArrowRightIcon class="-mt-0.5 ml-2 inline-block h-4 w-4" aria-hidden="true" />
     </RouterLink>
-    <RouterLink class="button-primary w-56 self-center" v-if="locale!='en'" :to="{ name: 'home-i18n', hash: '#demo', params: { locale } }">
+    <RouterLink class="button-primary w-56 self-center" v-else :to="{ name: 'home-i18n', hash: '#demo', params: { locale } }">
       <BeakerIcon class="-mt-0.5 mr-2 inline-block h-4 w-4 md:hidden lg:inline-block" aria-hidden="true" />
       {{ t('labels.demo') }}
       <ArrowRightIcon class="-mt-0.5 ml-2 inline-block h-4 w-4" aria-hidden="true" />
@@ -110,7 +110,7 @@ const FeaturesBlock = defineAsyncComponent({
       {{ t('navigation.installation') }}
       <ArrowRightIcon class="-mt-0.5 ml-2 inline-block h-4 w-4" aria-hidden="true" />
     </RouterLink>
-    <RouterLink class="button-secondary w-56 self-center" v-if="locale!='en'" :to="{ name: 'home-i18n', hash: '#installation', params: { locale } }">
+    <RouterLink class="button-secondary w-56 self-center" v-else :to="{ name: 'home-i18n', hash: '#installation', params: { locale } }">
       <WrenchScrewdriverIcon class="-mt-0.5 mr-2 inline-block h-4 w-4 md:hidden lg:inline-block" aria-hidden="true" />
       {{ t('navigation.installation') }}
       <ArrowRightIcon class="-mt-0.5 ml-2 inline-block h-4 w-4" aria-hidden="true" />
@@ -156,7 +156,7 @@ const FeaturesBlock = defineAsyncComponent({
     </RouterLink>
     <RouterLink
       class="hmax-w-xl rounded-xl bg-gradient-to-tr from-secondary via-secondary to-secondary-light py-8 px-12 text-center text-xl font-semibold text-zinc-700 shadow-md hover:via-secondary-light hover:to-secondary-light hover:text-black hover:no-underline"
-      v-if="locale!='en'"
+      v-else
       :to="{ name: 'home-i18n', params: { locale } }"
     >
       <RocketLaunchIcon class="-mt-0.5 mr-3 inline-block h-8 w-8" aria-hidden="true" />
