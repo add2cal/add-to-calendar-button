@@ -376,7 +376,7 @@
     "description_sub_2": "This is the second part to check the Add to Calendar Button script at [url]https://add-to-calendar-button.com/[/url]",
     "description_sub_3": "This is the third part to check the Add to Calendar Button script at [url]https://add-to-calendar-button.com/[/url]",
     "default_timezone": "America/Los_Angeles",
-    "location":"World Wide Web",
+    "location": "World Wide Web",
     "options_labels": "'Apple{'|'}Apple is ok for me','Google{'|'}Add to Google Cal','iCal{'|'}iCall ftw!','Outlook.com{'|'}Use Outlook instead','Yahoo{'|'}Yahoo, really?'"
   }
 }

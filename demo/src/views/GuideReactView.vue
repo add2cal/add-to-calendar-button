@@ -37,7 +37,8 @@ watch(locale, value => {
           <li class="text-left">{{ t('content.guide.react.pick_option1') }}</li>
           <li class="mt-3 text-left">{{ t('content.guide.react.pick_option2') }}</li>
           <li class="mt-3 text-left">
-            {{ t('content.guide.react.pick_option3_1') }}<a href="https://github.com/add2cal/add-to-calendar-button-react" target="_blank" rel="noopener">{{ t('content.guide.react.pick_option3_2') }} <ArrowTopRightOnSquareIcon class="-mt-0.5 mr-0.5 inline-block h-4 w-4" aria-hidden="true" /></a>{{ t('content.guide.react.pick_option3_3') }}
+            {{ t('content.guide.react.pick_option3_1') }}<a href="https://github.com/add2cal/add-to-calendar-button-react" target="_blank" rel="noopener">{{ t('content.guide.react.pick_option3_2') }} <ArrowTopRightOnSquareIcon class="-mt-0.5 mr-0.5 inline-block h-4 w-4" aria-hidden="true" /></a
+            >{{ t('content.guide.react.pick_option3_3') }}
           </li>
         </ul>
         <p class="pt-5">{{ t('content.guide.options_intro_1') }}</p>

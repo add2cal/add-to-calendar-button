@@ -427,17 +427,7 @@ watch(locale, value => {
         <p class="text-sm italic">Mind that this would not block any potential info screen from showing up (for example the Google type with a multi-date event)</p>
         <div class="block w-full justify-between md:flex">
           <div class="flex w-full flex-none justify-center p-6 pt-8 md:w-[300px]">
-            <add-to-calendar-button
-              :name="t('demo_data.name')"
-              :startDate="defaultDate"
-              startTime="10:15"
-              endTime="23:30"
-              :timeZone="t('demo_data.default_timezone')"
-              :description="t('demo_data.description_alt1')"
-              options="Google"
-              lightMode="bodyScheme"
-              :language="locale"
-            ></add-to-calendar-button>
+            <add-to-calendar-button :name="t('demo_data.name')" :startDate="defaultDate" startTime="10:15" endTime="23:30" :timeZone="t('demo_data.default_timezone')" :description="t('demo_data.description_alt1')" options="Google" lightMode="bodyScheme" :language="locale"></add-to-calendar-button>
           </div>
           <div class="flex-1 overflow-x-auto">
             <CodeBlock class="line-numbers">

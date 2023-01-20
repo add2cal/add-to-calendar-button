@@ -376,7 +376,7 @@
     "description_sub_2": "Dies ist der zweite Teil des Reminders den Add to Calendar Button unter [url]https://add-to-calendar-button.com/de/[/url] zu testen",
     "description_sub_3": "Dies ist der dritte Teil des Reminders den Add to Calendar Button unter [url]https://add-to-calendar-button.com/de/[/url] zu testen",
     "default_timezone": "Europe/Berlin",
-    "location":"World Wide Web",
+    "location": "World Wide Web",
     "options_labels": "'Apple{'|'}Apple ist in Ordnung','Google{'|'}Zum Google-Kalendar','iCal{'|'}iCall ftw!','Outlook.com{'|'}Lieber Outlook...','Yahoo{'|'}Yahoo, wirklich?'"
   }
 }
