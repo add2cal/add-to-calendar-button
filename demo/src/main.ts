@@ -36,4 +36,5 @@ const head = createHead();
 app.use(i18n);
 app.use(router);
 app.use(head);
+
 app.mount('#app');

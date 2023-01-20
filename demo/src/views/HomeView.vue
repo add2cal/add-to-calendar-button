@@ -5,7 +5,7 @@ import { ArrowRightIcon, WrenchScrewdriverIcon, BeakerIcon, AdjustmentsHorizonta
 import { useI18n } from 'vue-i18n';
 import IntegrationGuides from "@/components/integration/IntegrationGuides.vue";
 import PlaygroundPlaceholder from "@/components/placeholders/PlaygroundPlaceholder.vue";
-import FeaturesBlockPlaceholder from "@/components/placeholders/FeaturesBlockPlaceholder.vue";
+import FeaturesBlock from "@/components/FeaturesBlock.vue";
 import PHLightImage from '@i/ph-badge-light.svg';
 import PHDarkImage from '@i/ph-badge-dark.svg';
 const { t, locale } = useI18n();
@@ -17,14 +17,6 @@ const PlaygroundArea = defineAsyncComponent({
   loadingComponent: PlaygroundPlaceholder,
   delay: 0,
   errorComponent: PlaygroundPlaceholder,
-  timeout: 5000
-});
-
-const FeaturesBlock = defineAsyncComponent({
-  loader: () => import('@/components/FeaturesBlock.vue'),
-  loadingComponent: FeaturesBlockPlaceholder,
-  delay: 0,
-  errorComponent: FeaturesBlockPlaceholder,
   timeout: 5000
 });
 </script>

@@ -1,7 +1,6 @@
 <script setup lang="ts">
-import { defineAsyncComponent } from 'vue';
 import View_DE from "@/components/translated/SeoView-de.vue";
-import FeaturesBlockPlaceholder from "@/components/placeholders/FeaturesBlockPlaceholder.vue";
+import FeaturesBlock from "@/components/FeaturesBlock.vue";
 import "add-to-calendar-button";
 import { ArrowRightIcon, WrenchScrewdriverIcon, BeakerIcon, MagnifyingGlassIcon, RocketLaunchIcon } from '@heroicons/vue/24/outline';
 import { RouterLink } from "vue-router";
@@ -12,14 +11,6 @@ const today = new Date();
 const nextDay = new Date();
 nextDay.setDate(today.getDate() + 3);
 const defaultDate = nextDay.getFullYear() + '-' + ('0' + (nextDay.getMonth() + 1)).slice(-2) + '-' + ('0' + nextDay.getDate()).slice(-2);
-</script>
-
-<script lang="ts">
-const FeaturesBlock = defineAsyncComponent({
-  loader: () => import('@/components/FeaturesBlock.vue'),
-  loadingComponent: FeaturesBlockPlaceholder,
-  delay: 0
-});
 </script>
 
 <template>
