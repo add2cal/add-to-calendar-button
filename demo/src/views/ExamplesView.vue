@@ -23,6 +23,30 @@ watch(locale, value => {
     defaultLang = '';
   }
 });
+const defaultMultiDate = (function () {
+  const data = [{
+    "name":t('demo_data.name_sub_1'),
+    "description":t('demo_data.description_sub_1'),
+    "startDate":"today+3",
+    "startTime":"10:15",
+    "endTime":"23:30"
+  },
+  {
+    "name":t('demo_data.name_sub_2'),
+    "description":t('demo_data.description_sub_2'),
+    "startDate":"today+5",
+    "startTime":"11:30",
+    "endTime":"20:00"
+  },
+  {
+    "name":t('demo_data.name_sub_3'),
+    "description":t('demo_data.description_sub_3'),
+    "startDate":"today+8",
+    "startTime":"09:00",
+    "endTime":"19:00"
+  }];
+  return JSON.stringify(data);
+})();
 </script>
 
 <template>
@@ -249,35 +273,7 @@ watch(locale, value => {
         <p>Individual date and time information would be required - global ones will be ignored.</p>
         <div class="block w-full justify-between md:flex">
           <div class="flex w-full flex-none justify-center p-6 pt-8 md:w-[300px]">
-            <add-to-calendar-button
-              :name="t('demo_data.name_series')"
-              :dates='`[{
-                  "name":"` + 5 + `",
-                  "description":"This is the first part to check the Add to Calendar Button script at [url]https://add-to-calendar-button.com/[/url]",
-                  "startDate":"today+3",
-                  "startTime":"10:15",
-                  "endTime":"23:30"
-                },
-                {
-                  "name":"[Reminder 2/3] to use the Add to Calendar Button",
-                  "description":"This is the second part to check the Add to Calendar Button script at [url]https://add-to-calendar-button.com/[/url]",
-                  "startDate":"today+5",
-                  "startTime":"11:30",
-                  "endTime":"20:00"
-                },
-                {
-                  "name":"[Reminder 3/3] to use the Add to Calendar Button",
-                  "description":"This is the third part to check the Add to Calendar Button script at [url]https://add-to-calendar-button.com/[/url]",
-                  "startDate":"today+8",
-                  "startTime":"09:00",
-                  "endTime":"19:00"
-                }]`'
-              :timeZone="t('demo_data.default_timezone')"
-              :location="t('demo_data.location')"
-              options="'Apple','Google','iCal','Outlook.com','Yahoo'"
-              lightMode="bodyScheme"
-              :language="locale"
-            ></add-to-calendar-button>
+            <add-to-calendar-button :name="t('demo_data.name_series')" :dates="defaultMultiDate" :timeZone="t('demo_data.default_timezone')" :location="t('demo_data.location')" options="'Apple','Google','iCal','Outlook.com','Yahoo'" lightMode="bodyScheme" :language="locale"></add-to-calendar-button>
           </div>
           <div class="flex-1 overflow-x-auto">
             <CodeBlock class="line-numbers">
