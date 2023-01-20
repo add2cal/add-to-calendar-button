@@ -1,4 +1,5 @@
 import { createApp } from 'vue';
+import { createHead } from '@vueuse/head';
 import App from '@/App.vue';
 import { setupRouter } from '@/router';
 
@@ -31,6 +32,8 @@ const i18n = setupI18n({
 const router = setupRouter(i18n);
 
 const app = createApp(App);
+const head = createHead();
 app.use(i18n);
 app.use(router);
+app.use(head);
 app.mount('#app');

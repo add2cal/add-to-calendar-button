@@ -36,17 +36,11 @@ export function setupRouter(i18n: I18n): Router {
       path: '/:locale/legal-notice',
       name: 'legal-notice',
       component: () => import('@/views/LegalNoticeView.vue'),
-      meta: {
-        robots: 'noindex, nofollow',
-      },
     },
     {
       path: '/:locale/privacy-policy',
       name: 'privacy-policy',
       component: () => import('@/views/PrivacyPolicyView.vue'),
-      meta: {
-        robots: 'noindex, nofollow',
-      },
     },
     {
       path: '/:locale/use',
@@ -150,19 +144,6 @@ export function setupRouter(i18n: I18n): Router {
 
     // set i18n language
     setI18nLanguage(i18n, paramsLocale);
-
-    // set robots.txt and canonical meta information (language sensitive meta data is updated via a helper function from the App.vue)
-    const robots = (function () {
-      if (to.meta.robots != null && to.meta.robots != '') {
-        return to.meta.robots;
-      }
-      return 'index, follow';
-    })();
-    const robotsEl = document.querySelector('meta[name="robots"]');
-    if (robotsEl) robotsEl.setAttribute('content', `${robots}`);
-    // canonical
-    const canonicalEl = document.querySelector('link[rel="canonical"]');
-    if (canonicalEl) canonicalEl.setAttribute('href', 'http://add-to-calendar-button.com' + `${to.fullPath}`);
   });
 
   return router;

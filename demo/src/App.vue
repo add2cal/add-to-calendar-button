@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { watch } from 'vue';
+import { useHead } from '@vueuse/head';
 import FooterArea from "@/components/FooterArea.vue";
 import HeaderLarge from "@/components/HeaderLarge.vue";
 import HeaderSmall from "@/components/HeaderSmall.vue";
@@ -12,7 +13,7 @@ const router = useRouter();
 watch(router.currentRoute, newRoute =>  {
   const rName = newRoute.name as string;
   // set meta information (except for robots and canonical)
-  // page title
+  // prepare page title
   const title = (function () {
     if (rName != 'home' && rName != 'home-i18n' && rName != 'seo') {
       return (
@@ -27,39 +28,14 @@ watch(router.currentRoute, newRoute =>  {
     }
     return 'Add to Calendar Button | ' + t('meta.titleSlug');
   })();
-  document.title = `${title}`;
-  const titleOgEl = document.querySelector('meta[property="og:title"]');
-  if (titleOgEl) titleOgEl.setAttribute('content', `${title}`);
-  const titleTwEl = document.querySelector('meta[name="twitter:title"');
-  if (titleTwEl) titleTwEl.setAttribute('content', `${title}`);
-  // keywords
-  const keywordsEl = document.querySelector('meta[name="keywords"]');
-  if (keywordsEl)
-    keywordsEl.setAttribute('content', `${t('meta.keywords')}`);
-  // description
-  const descriptionEl = document.querySelector('meta[name="description"]');
-  if (descriptionEl)
-    descriptionEl.setAttribute(
-      'content',
-      `${t('meta.description')}`
-    );
-  const descriptionOgEl = document.querySelector(
-    'meta[property="og:description"]'
-  );
-  if (descriptionOgEl)
-    descriptionOgEl.setAttribute(
-      'content',
-      `${t('meta.description')}`
-    );
-  const descriptionTwEl = document.querySelector(
-    'meta[name="twitter:description"'
-  );
-  if (descriptionTwEl)
-    descriptionTwEl.setAttribute(
-      'content',
-      `${t('meta.description')}`
-    );
-  // hreflang entries
+  // prepare robots
+  const robots = (function () {
+    if (rName == 'legal-notice' || rName == 'privacy-policy') {
+      return 'noindex, nofollow';
+    }
+    return 'index, follow';
+  })();
+  // prepare hreflang entries
   const urlEn = (function () {
     if (rName == 'home' || rName == 'home-i18n') {
       return 'http://add-to-calendar-button.com';
@@ -72,14 +48,64 @@ watch(router.currentRoute, newRoute =>  {
     }
     return 'http://add-to-calendar-button.com/de/' + rName;
   })();
-  const hreflangDefault = document.querySelector(
-    'link[hreflang="x-default"]'
-  );
-  if (hreflangDefault) hreflangDefault.setAttribute('href', `${urlEn}`);
-  const hreflangEn = document.querySelector('link[hreflang="en"]');
-  if (hreflangEn) hreflangEn.setAttribute('href', `${urlEn}`);
-  const hreflangDe = document.querySelector('link[hreflang="de"]');
-  if (hreflangDe) hreflangDe.setAttribute('href', `${urlDe}`);
+  // output
+  useHead({
+    title: `${title}`,
+    meta: [
+      {
+        name: "robots",
+        content: `${robots}`
+      },
+      {
+        property: "og:title",
+        content: `${title}`
+      },
+      {
+        name: "twitter:title",
+        content: `${title}`
+      },
+      {
+        name: "keywords",
+        content: `${t('meta.keywords')}`
+      },
+      {
+        name: "description",
+        content: `${t('meta.description')}`
+      },
+      {
+        property: "og:description",
+        content: `${t('meta.description')}`
+      },
+      {
+        name: "twitter:description",
+        content: `${t('meta.description')}`
+      },
+    ],
+    link: [
+      {
+        rel: "canonical",
+        href: `${urlEn}`
+      },
+      {
+        rel: "alternate",
+        hreflang: "x-default",
+        href: `${urlEn}`,
+        key: "hreflang-default"
+      },
+      {
+        rel: "alternate",
+        hreflang: "en",
+        href: `${urlEn}`,
+        key: "hreflang-en"
+      },
+      {
+        rel: "alternate",
+        hreflang: "de",
+        href: `${urlDe}`,
+        key: "hreflang-de"
+      }
+    ]
+  });
 });
 </script>
 
