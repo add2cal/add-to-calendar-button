@@ -1,5 +1,5 @@
 import { type DateAttrs, type DateRecurrenceAttrs, type LayoutAttrs, type Attrs, DateAttrsKey, DateRecurrenceAttrsKey, LayoutAttrsKey, HideIconOption, HideTextOption } from '@/models/attrs';
-import { Option, Size, DefaultButtonStyle, DefaultTrigger, DefaultLightMode } from '@/models/addToCalendarButton';
+import { Option, Size, DefaultButtonStyle, DefaultListStyle, DefaultTrigger, DefaultLightMode } from '@/models/addToCalendarButton';
 import { DefaultLanguageCode } from '@/models/language';
 import { getBrowserTimezone } from '@/utils/timezone';
 import { get, LSKey } from '@/utils/localStorage';
@@ -43,7 +43,7 @@ export const getDefaultDateAttrs = (defaultName: string, defaultDescription: str
 });
 
 export const getDefaultLayoutAttrs = (): LayoutAttrs => ({
-  [LayoutAttrsKey.LIST_STYLE]: null,
+  [LayoutAttrsKey.LIST_STYLE]: DefaultListStyle,
   [LayoutAttrsKey.BUTTON_STYLE]: DefaultButtonStyle,
   [LayoutAttrsKey.TRIGGER]: DefaultTrigger,
   [LayoutAttrsKey.HIDE_ICON_OPTIONS]: { [HideIconOption.BUTTON]: false, [HideIconOption.LIST]: false, [HideIconOption.MODAL]: false }, // for playground ui
