@@ -39,7 +39,7 @@ Assuming you start at the root.
 
 ```sh
 npm install
-npm run build:core
+npm run build
 cd demo
 npm install
 ```
