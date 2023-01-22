@@ -196,7 +196,7 @@ function atcb_subscribe_ical(fileUrl) {
 function atcb_subscribe_google(fileUrl) {
   const baseUrl = 'https://calendar.google.com/calendar/r?cid=';
   const newFileUrl = (function () {
-    if (fileUrl.startsWith('https://calendar.google.com') || fileUrl.startsWith('webcal://calendar.google.com') || fileUrl.startsWith('http://calendar.google.com') || fileUrl.startsWith('//calendar.google.com')) {
+    if (fileUrl.startsWith('https://calendar.google.com/') || fileUrl.startsWith('webcal://calendar.google.com/') || fileUrl.startsWith('http://calendar.google.com/') || fileUrl.startsWith('//calendar.google.com/')) {
       return fileUrl.replace(/^(.)*\?cid=/, '');
     }
     return encodeURIComponent(fileUrl);
