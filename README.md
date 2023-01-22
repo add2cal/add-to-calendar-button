@@ -96,7 +96,9 @@ Simple and convenient integration of 1 or many buttons, configurable directly wi
 
 ### Option 1: simple (CDN)
 
-You can use the jsDelivr CDN and load the respective script directly into your website. Place the script tag inside the `<head>` section.
+You can use the jsDelivr CDN and load the respective script directly into your website.
+
+Place the script tag inside the `<head>` section.
 
 ```html
 <script src="https://cdn.jsdelivr.net/npm/add-to-calendar-button@2" async defer></script>
