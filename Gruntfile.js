@@ -15,10 +15,11 @@ function prepareFinalFile(content, stripAllImport = true, stripAllExport = true)
         }
         return '';
       })();
+      // determining the input data. Mind that we remove any ".." or more "." for security reasons - should not be used anyway
       const cssFileContent = fs
         .readFileSync('./assets/css/atcb' + styleString + '.min.css')
         .toString()
-        .replace(/(\.\.\/)|(\.\.\\)/g, "")
+        .replace(/\.{2,}/g, "")
         .replace(/"/g, '\\"');
       inlineStyleOutput += '\r\n"' + style + '": "' + cssFileContent + '",';
     });

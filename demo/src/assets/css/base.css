@@ -143,8 +143,9 @@
     font-family: 'Fira Mono', Consolas, Courier, monospace;
   }
 
-  label.required:after {
+  label.required::after {
     @apply text-red-700;
+
     content: "*";
   }
 
@@ -168,7 +169,7 @@
 
 .grid-bg {
   background-size: 25px 25px;
-  background-image: radial-gradient(circle, rgb(119, 119, 119, .4) 1px, rgba(0, 0, 0, 0) 1px);
+  background-image: radial-gradient(circle, rgb(119 119 119 / 40%) 1px, rgba(0 0 0 / 0%) 1px);
 }
 
 .button-primary {
