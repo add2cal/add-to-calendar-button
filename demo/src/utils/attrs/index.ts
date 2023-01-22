@@ -1,4 +1,4 @@
-import { DefaultButtonStyle, DefaultTrigger, Size } from '@/models/addToCalendarButton';
+import { DefaultButtonStyle, DefaultListStyle, DefaultTrigger, Size } from '@/models/addToCalendarButton';
 import { AttrsKey, ComponentAttrKeyMap, DateAttrsKey, DateRecurrenceAttrsKey, LayoutAttrsKey, type Attrs } from '@/models/attrs';
 import { DefaultLanguageCode } from '@/models/language';
 import { getAvailableTimezones } from '@/utils/timezone';
@@ -60,6 +60,12 @@ const mapAttrsField = (obj: any, key: string) => {
     }
     case AttrsKey.BUTTON_STYLE: {
       if (value === DefaultButtonStyle) {
+        value = null;
+      }
+      break;
+    }
+    case AttrsKey.LIST_STYLE: {
+      if (value === DefaultListStyle) {
         value = null;
       }
       break;

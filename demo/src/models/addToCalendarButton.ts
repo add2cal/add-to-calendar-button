@@ -33,6 +33,8 @@ export enum ListStyle {
   MODAL = 'modal',
 }
 
+export const DefaultListStyle = ListStyle.DROPDOWN;
+
 export enum ButtonStyle {
   DEFAULT = 'default',
   '3D' = '3d',
