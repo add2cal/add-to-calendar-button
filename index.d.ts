@@ -1,5 +1,4 @@
 declare module 'add-to-calendar-button' {
-  export function atcb_init(): string[];
   export function atcb_action(
     config: {
       proKey?: string;
@@ -34,7 +33,7 @@ declare module 'add-to-calendar-button' {
       recurrence?: string;
       recurrence_interval?: bigint;
       recurrence_until?: string;
-      recurrence_count?: string;
+      recurrence_count?: bigint;
       recurrence_byDay?: string;
       recurrence_byMonth?: string;
       recurrence_byMonthDay?: string;
@@ -49,40 +48,25 @@ declare module 'add-to-calendar-button' {
       listStyle?: 'dropdown' | 'dropdown-static' | 'overlay' | 'modal';
       buttonStyle?: 'default' | '3d' | 'flat' | 'round' | 'neumorphism' | 'text' | 'date' | 'custom' | 'none';
       trigger?: 'hover' | 'click';
-      icons?: string;
-      textLabels?: string;
-      background?: boolean;
-      checkmark?: boolean;
-      mindScrolling?: boolean;
-      branding?: boolean;
+      hideIconButton?: boolean;
+      hideIconList?: boolean;
+      hideIconModal?: boolean;
+      hideTextLabelButton?: boolean;
+      hideTextLabelList?: boolean;
+      hideBackground?: boolean;
+      hideCheckmark?: boolean;
+      hideBranding?: boolean;
       size?: string;
       label?: string;
       customLabels?: object;
+      customCss?: string;
       lightMode?: 'system' | 'dark' | 'light' | 'bodyScheme';
-      language?:
-        | 'en'
-        | 'de'
-        | 'nl'
-        | 'fr'
-        | 'es'
-        | 'pt'
-        | 'tr'
-        | 'zh'
-        | 'ar'
-        | 'hi'
-        | 'pl'
-        | 'id'
-        | 'no'
-        | 'fi'
-        | 'sv'
-        | 'cs'
-        | 'ja'
-        | 'it'
-        | 'ko'
-        | 'vi';
+      language?: 'en' | 'de' | 'nl' | 'fr' | 'es' | 'pt' | 'tr' | 'zh' | 'ar' | 'hi' | 'pl' | 'id' | 'no' | 'fi' | 'sv' | 'cs' | 'ja' | 'it' | 'ko' | 'vi';
+      ty?: object;
+      rsvp?: object;
+      bypassWebViewCheck?: boolean;
     },
     triggerElement?: HTMLElement,
     keyboardTrigger?: boolean
-  ): string[];
-  export function atcb_destroy(id: string): boolean;
+  ): string;
 }

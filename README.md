@@ -1,15 +1,16 @@
 ![Add to Calendar Button](https://github.com/add2cal/add-to-calendar-button/blob/main/assets/img/readme-header.png?raw=true)
 
 [![Code Quality](https://img.shields.io/codacy/grade/572c0a102d7b4f39b792439dcd2e8aad/main?style=for-the-badge)](https://app.codacy.com/gh/add2cal/add-to-calendar-button/dashboard)
-[![Build Status](https://img.shields.io/github/actions/workflow/status/add2cal/add-to-calendar-button/npm-publish.yml?style=for-the-badge)](https://github.com/add2cal/add-to-calendar-button/actions/workflows/npm-publish.yml)
-[![npm Installations](https://img.shields.io/npm/dt/add-to-calendar-button?label=npm%20Installations&style=for-the-badge)](https://www.npmjs.com/package/add-to-calendar-button)
+[![npm Installations Total](https://img.shields.io/npm/dt/add-to-calendar-button?label=npm%20Installations&style=for-the-badge)](https://www.npmjs.com/package/add-to-calendar-button)
+[![npm Installations per Month](https://img.shields.io/npm/dm/add-to-calendar-button?label=npm%20Installations%2FMonth&style=for-the-badge)](https://www.npmjs.com/package/add-to-calendar-button)
 [![jsDelivr npm Hits](https://img.shields.io/jsdelivr/npm/hm/add-to-calendar-button?label=jsDelivr%20npm%20hits&style=for-the-badge)](https://www.jsdelivr.com/package/npm/add-to-calendar-button)
+![npm bundle size](https://img.shields.io/bundlephobia/minzip/add-to-calendar-button?style=for-the-badge)
 
 <br />
 
 # Your next Add to Calendar Button
 
-The convenient JavaScript snippet, which lets you reliably create beautiful buttons, where people can add events to their calendars.
+The convenient JavaScript Web Component, which lets you reliably create beautiful buttons, where people can add events to their calendars.
 
 [![#1 Product of the Day on ProductHunt](https://api.producthunt.com/widgets/embed-image/v1/top-post-badge.svg?post_id=319458&theme=dark&period=daily)](https://www.producthunt.com/products/add-to-calendar-button-generator)
 
@@ -21,7 +22,7 @@ Supporting calendars at Apple, Google, Microsoft (365, Outlook, Teams), Yahoo, a
 
 ![Supported Calendars: Apple (via iCal), Google, Microsoft (365, Outlook, Teams), Yahoo, generic iCal](https://github.com/add2cal/add-to-calendar-button/blob/main/assets/img/badge-supported-calendars.svg)
 
-The script integrates easily with any usual HTML webpage (**VanillaJS** way) as well as popular JavaScript frameworks and libraries like **Angular**, **React**, **Vue**, **Svelte**, and more.
+The script, since it is a web component, integrates easily with any usual HTML webpage (**VanillaJS** way) as well as popular JavaScript frameworks and libraries like **Angular**, **React**, **Vue**, **Svelte**, and more.
 
 ![Supported Technology: Angular, React, Vue, Svelte, and every other project that can load JavaScript](https://github.com/add2cal/add-to-calendar-button/blob/main/assets/img/badge-technology.svg)
 
@@ -35,7 +36,7 @@ In terms of system support, **all modern browsers** (Chrome, Edge, Firefox, Safa
 
 ## ▶️ Demo
 
-See [add-to-calendar-button.com](https://add-to-calendar-button.com/) for a live demo.
+See [add-to-calendar-button.com](https://add-to-calendar-button.com/) for a live demo and playground.
 
 And remember to [⭐ **star** this repository](#) in order to stay up-to-date and save it for later! 🤗
 
@@ -48,14 +49,16 @@ Simple and convenient integration of 1 or many buttons, configurable directly wi
 ### Supported Calendars
 
 - **Google** Calendar.
+- **Apple** Calendar.
 - **Yahoo** Calender.
 - **Microsoft 365, Outlook, and Teams**.
-- Automatically generated **iCal/ics** files (for all other calendars, like **Apple**).
+- Automatically generated **iCal/ics** files (for all other calendars and cases).
 
 ### Event Types
 
 - Timed and all-day events.
-- One-time, multi-date, recurring, or fluid.
+- One-time, multi-date, recurring.
+- Calendar subscription.
 - Most robust time zone and daylight saving management (via our own [TimeZones iCal Library](https://github.com/add2cal/timezones-ical-library)).
 - Dynamic dates (like "today + 3").
 
@@ -72,13 +75,13 @@ Simple and convenient integration of 1 or many buttons, configurable directly wi
 - Taking care of all those edge cases, where some scenarios do not support specific setups (like WebView blocking downloads); utilizing beautiful user guidance workarounds.
 - Auto-generated Schema.org rich (structured) data for better SEO.
 - Full support for mouse, touch, or keyboard input (W3C WAI compliant).
-- Supporting 20+ languages, incl. RTL text for Arabic; but also custom labels and text blocks.
+- Supporting 20+ languages, incl. RTL text for Arabic; but also custom labels and text blocks (i18n).
 
 ### And much more
 
 - Well documented code, to easily understand the processes and build on top of it.
-- No external module or backend dependencies.
-- Therefore, fully GDPR, CCPA, and LGPD compliant - without the need of signing some data processing agreement.
+- No external service or backend dependencies.
+- Fully GDPR, CCPA, and LGPD compliant by design - without the need of signing some data processing agreement.
 - FREE and easy.
 
 ![Demo Screenshot](https://github.com/add2cal/add-to-calendar-button/blob/main/assets/img/demo.gif?raw=true)
@@ -93,22 +96,11 @@ Simple and convenient integration of 1 or many buttons, configurable directly wi
 
 ### Option 1: simple (CDN)
 
-You can use the jsDeliver CDN and load the respective ressources into your web project.
+You can use the jsDelivr CDN and load the respective script directly into your website. Place the script tag inside the `<head>` section.
 
-Put the css (use atcb-3d for an alternative style) into the `<head>`:
-
+```html
+<script src="https://cdn.jsdelivr.net/npm/add-to-calendar-button@2" async defer></script>
 ```
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/add-to-calendar-button@1/assets/css/atcb.min.css">
-```
-
-... and the javascript into the `<body>` footer:
-
-```
-<script src="https://cdn.jsdelivr.net/npm/add-to-calendar-button@1" async defer></script>
-```
-
-_Mind that this always pulls the latest release of v1! You can pin a more specific version by adding the exact version number after the "@" - see [jsDeliver.com](https://www.jsdelivr.com/features#npm) for details._
-If you want to rather host it yourself, you could also download the source files or clone the repository (mind to take the original one at [github.com/add2cal/add-to-calendar-button](https://github.com/add2cal/add-to-calendar-button)) and maintain/update it manually.
 
 <br />
 
@@ -116,173 +108,164 @@ If you want to rather host it yourself, you could also download the source files
 
 Import the package using the following npm command:
 
-```
+```sh
 npm install add-to-calendar-button
 ```
 
-Import the module into your project/component. For example with Angular/React:
+Import the module into your project/component
 
+```javascript
+import 'add-to-calendar-button';
 ```
-import { atcb_action, atcb_init } from 'add-to-calendar-button';
+
+Based on your framework/library, you might need to make minor adjustments to the respective config.
+Find the details for the most common ones below.
+
+<br />
+
+#### Angular
+
+At the `app.module.ts`, import `CUSTOM_ELEMENTS_SCHEMA` from `@angular/core` and add the following to the `@NgModule` block:
+
+```javascript
+@NgModule({
+  //(...),
+  schemas: [CUSTOM_ELEMENTS_SCHEMA],
+})
 ```
 
-Either use `atcb_action` with your own buttons/forms/etc, or run `atcb_init` after the DOM has been loaded. To determine the right moment to execute the `atcb_init`, ...
+<br />
 
-- with Angular, you would use `ngAfterViewInit()` with `atcb_init();` (mind that, depending on your app, other hooks might be better);
-- with React, you might want to include an event listener for `DOMContentLoaded` or use a hook in a functional component like `useEffect(() => atcb_init());`.
+#### React
 
-Include the css. For example with Angular or React, add `@import 'add-to-calendar-button/assets/css/atcb.css'` to some other css file - or include it in other more direct ways (like adding `import 'add-to-calendar-button/assets/css/atcb.css';` to the respective component) (use atcb-3d for an alternative style).
+**Option A:**
+
+With basic React projects, the web component works out-of-the-box.
+
+If you are working with TypeScript or other stricter setups, you would need to define a respective global JSX interface.
+
+```typescript
+declare global {
+  namespace JSX {
+    interface IntrinsicElements {
+      ['add-to-calendar-button']: CustomElement<AddToCalendarButton>;
+    }
+  }
+}
+```
+
+**Option B:**
+
+If this does not work OR if you want to keep it more convenient, you should use [the official Add to Calendar Button React Wrapper (click here)](https://github.com/add2cal/add-to-calendar-button-react).
+
+This approach also enables you to provide object and array type props as objects and arrays.
+Find all further information within the wrapper repository's Readme file.
+
+<br />
+
+#### Vue 3
+
+In the `vite.config.js/ts`, add the following compiler option to treat all tags with a dash as custom elements and get rid of the warning. Anything else works out-of-the-box.
+
+```javascript
+compilerOptions: {
+  isCustomElement: (tag) => tag.includes('-')
+}
+```
+
+If you want to be more precise, you can also write something like `tag.startsWith('add-')` to apply this rule only to tags starting with "add-".
+
+<br />
+
+#### Svelte
+
+Works out-of-the-box. Nice!
+
+<br />
+
+#### Astro
+
+For Astro as well as other SSR setups, you might want to include the script from the CDN rather than working with the npm package!
+
+If you still want to go for the npm way, you would need to add something like this to your page (instead of the import statement):
+
+```javascript
+<script type="module" hoist>
+  const observer = new IntersectionObserver((entries) => {
+    for (const entry of entries) {
+      if (!entry.isIntersecting) continue;
+      observer.disconnect();
+      import('../../node_modules/add-to-calendar-button/dist/module/index.js');
+    }
+  });
+  const instances = document.querySelectorAll('add-to-calendar-button');
+  for (const instance of instances) observer.observe(instance);
+</script>
+```
 
 <br /><br />
 
 ## 🎛️ Configuration
 
-A button can be easily created by placing a respective placeholder, wherever you want the button to appear.
-(The `style="display:none;"` theoretically is not necessary, but should be used for better compatibility.)
+A button can be easily created by using the respective custom element.
 
 ```html
-<div class="atcb" style="display:none;">(...)</div>
+<add-to-calendar-button></add-to-calendar-button>
 ```
 
-Within this placeholder, you can easily configure the button, by placing a respective JSON structure.
-Mind that with Angular, you might need to escape the { with `{{ '{' }}` and } with `{{ '}' }}`; with React it would be `{ '{' }` and `{ '}' }`.
+You can then configure the button by simply adding the options as attributes to it. Boolean values (true/false) can be set as `optionName="true"` or simply by adding `optionName` to the tag. Not setting it at all would be automatically translate to "false".
+
+Theoretically, you could also add all the configuration as JSON structured String by placing this string as the TextContent of the tag. This is mainly due to backwards compatibility reasons and no longer recommended, since it also does not detect changes!
 
 <br />
 
 ### Minimal structure (required)
 
-If there is no endDate set, the script assumes that it is the same as startDate.
+Mind that for auto-generating rich snippets, a location would be mandatory as well.
 
-Mind that for auto-generating rich snippets, a location would be mandatory as well. Even a timezone is not required, but recommended - if not given, the script will assume UTC.
+A time zone is not required, but recommended.
 
 ```html
-<div class="atcb" style="display:none;">
-  {
-    "name":"Add the title of your event",
-    "startDate":"2022-02-21",
-    "options":[
-      "Google"
-    ]
-  }
-</div>
+<add-to-calendar-button
+  name="Add the title of your event"
+  startDate="2022-02-21"
+  options="['Google']"
+>
+</add-to-calendar-button>
 ```
 
 <br />
 
-### Typical structure
+### A more powerful example
 
 ```html
-<div class="atcb" style="display:none;">
-  {
-    "name":"Add the title of your event",
-    "description":"A nice description does not hurt",
-    "startDate":"2022-02-21",
-    "endDate":"2022-03-24",
-    "startTime":"10:13",
-    "endTime":"17:57",
-    "location":"Somewhere over the rainbow",
-    "label":"Add to Calendar",
-    "options":[
-      "Apple",
-      "Google",
-      "iCal",
-      "Microsoft365",
-      "MicrosoftTeams",
-      "Outlook.com",
-      "Yahoo"
-    ],
-    "timeZone":"Europe/Berlin",
-    "trigger":"click",
-    "inline":true,
-    "listStyle":"modal",
-    "iCalFileName":"Reminder-Event"
-  }
-</div>
+<add-to-calendar-button
+  name="Add the title of your event"
+  description="A nice description does not hurt"
+  startDate="2022-02-21"
+  endDate="2022-03-24"
+  startTime="10:13"
+  endTime="17:57"
+  location="Somewhere over the rainbow"
+  options="['Apple','Google','iCal','Microsoft365','Outlook.com','Yahoo']"
+  timeZone="Europe/Berlin"
+  trigger="click"
+  inline
+  listStyle="modal"
+  iCalFileName="Reminder-Event"
+>
+</add-to-calendar-button>
 ```
 
 <br />
 
-### React examples
-
-#### atcb_action
-
-If you can't or don't want to use `atcb_init`, you can use the `atcb_action` import with your own buttons or other elements/components.
-
-This may work better with React and other frontend frameworks, but it misses the Schema.org and button specific functionalities.
-
-```js
-import React from 'react';
-import { atcb_action } from 'add-to-calendar-button';
-
-const MyComponent = () => {
-  const [name, setName] = React.useState("Some event");
-  const changeName = e => {
-    setName(e.target.value);
-  };
-  return (
-    <form onSubmit={e => {
-      e.preventDefault();
-      atcb_action({
-        name: name,
-        startDate: "2022-10-14",
-        endDate: "2022-10-18",
-        options: ['Apple', 'Google', 'iCal', 'Microsoft365', 'Outlook.com', 'Yahoo'],
-        timeZone: "Europe/Berlin",
-        iCalFileName: "Reminder-Event",
-      });
-    }}>
-      <input value={name} onChange={changeName} />
-      <input type="submit" value="save" />
-    </form>
-  );
-}
-```
-
-#### atcb_init
-
-Alternatively, you could use `atcb_init` with a `useEffect` hook:
-
-```js
-import React from "react";
-import { atcb_init } from "add-to-calendar-button";
-import 'add-to-calendar-button/assets/css/atcb.css';
-
-const MyComponent = () => {
-  React.useEffect( () => { atcb_init() }, []);
-  return (
-    <div className="atcb">
-      { '{' }
-        "name":"Add the title of your event",
-        "description":"A nice description does not hurt",
-        "startDate":"2022-02-21",
-        "endDate":"2022-03-24",
-        "startTime":"10:13",
-        "endTime":"17:57",
-        "location":"Somewhere over the rainbow",
-        "label":"Add to Calendar",
-        "options":[
-          "Apple",
-          "Google",
-          "iCal",
-          "Microsoft365",
-          "Outlook.com",
-          "Yahoo"
-        ],
-        "timeZone":"Europe/Berlin",
-        "iCalFileName":"Reminder-Event"
-      { '}' }
-    </div>
-  );
-}
-```
-
-_By the way: Both functions return an array, holding the IDs of the generated buttons!_
+You can find more examples as well as an interactive playground at the demo page: [add-to-calendar-button.com](https://add-to-calendar-button.com).
 
 <br /><br />
 
-### All options and hidden features
+### All options and features
 
-Find all information about the available options and how to configure specific features at the [DOCS.md](DOCS.md).
+Find all information about the available attributes and how to configure specific features on the demo page at [add-to-calendar-button.com/en/configuration](https://add-to-calendar-button.com/en/configuration).
 
 <br />
 
@@ -291,6 +274,8 @@ Find all information about the available options and how to configure specific f
 <br />
 
 ## ⚡ Changelog
+
+![npm version](https://img.shields.io/npm/v/add-to-calendar-button?label=current%20version&style=for-the-badge)
 
 Find all changes in the dedicated file at [CHANGELOG.md](CHANGELOG.md).
 
@@ -304,7 +289,7 @@ Anyone is welcome to contribute, but mind the [guidelines](.github/CONTRIBUTING.
 - [Feature requests](.github/CONTRIBUTING.md#features)
 - [Pull requests](.github/CONTRIBUTING.md#pull-requests)
 
-**IMPORTANT NOTE:** Run `npm install`, `npm run format`, and `npm run build` to auto-lint and create the minified js, css, as well as its sourcemap files!
+**IMPORTANT NOTE:** Run `npm install` and `npm run format` to auto-lint!
 
 <br />
 
@@ -312,7 +297,17 @@ Anyone is welcome to contribute, but mind the [guidelines](.github/CONTRIBUTING.
 
 Copyright (c) [Jens Kuerschner](https://jenskuerschner.de).
 
-Licensed under [Apache-2.0 (with “Commons Clause” License Condition v1.0)](LICENSE.txt).
+Licensed under [Elastic License 2.0 (ELv2)](LICENSE.txt).
+
+**About open-source**:
+We consider ourselves open-source.
+However, we are also aware of the controversy coming with licenses like the one selected.
+Therefore, and contrary to many other companies and products, we no longer use the term in any marketing statements unless it is about other pieces which really are under an official OSI license.
+
+Speaking **about the license**:
+We love it, because it is so simple. Have a look!
+You are basically free to do anything unless you are not offering the tool itself as a product or service; or want to remove copyright and license stuff.
+In doubt, simply ask and we find a way. :)
 
 <br />
 

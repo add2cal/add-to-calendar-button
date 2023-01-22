@@ -12,28 +12,26 @@
 
 # PLUS what else should not be on npm
 
-.github/
-demo_assets/
-assets/img/
-src/
+/.github
+/demo
+/assets
+/src
 *.png
 *.ico
 *.gif
 *.svg
 *.ics
-index.html
+atcb-unminified.js
 Gruntfile.js
 security.md
 package-lock.json
-browserconfig.xml
-manifest.json
-CNAME
 set-release.js
-sitemap.xml
 .prettierignore
 .prettierrc.json
 .stylelintrc.json
 .gitattributes
-*.min.css
 *.min.js
 *.map
+.eslintrc.json
+.eslintrc.cjs
+CNAME

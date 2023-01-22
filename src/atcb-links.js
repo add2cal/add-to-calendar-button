@@ -3,40 +3,23 @@
  *  Add to Calendar Button
  *  ++++++++++++++++++++++
  *
- *  Version: 1.18.8
+ *  Version: 2.0.0
  *  Creator: Jens Kuerschner (https://jenskuerschner.de)
  *  Project: https://github.com/add2cal/add-to-calendar-button
- *  License: Apache-2.0 with “Commons Clause” License Condition v1.0
+ *  License: Elastic License 2.0 (ELv2)
  *  Note:    DO NOT REMOVE THE COPYRIGHT NOTICE ABOVE!
  *
  */
 
-import { tzlib_get_ical_block } from '../node_modules/timezones-ical-library/npm_dist/mjs/index.js';
-import {
-  atcbVersion,
-  isiOS,
-  isAndroid,
-  isChrome,
-  isMobile,
-  isWebView,
-  isProblematicWebView,
-  atcbDefaultTarget,
-  atcbStates,
-} from './atcb-globals.js';
+import { tzlib_get_ical_block } from 'timezones-ical-library';
+import { atcbVersion, isiOS, isAndroid, isChrome, isMobile, isWebView, isProblematicWebView, atcbDefaultTarget, atcbStates } from './atcb-globals.js';
 import { atcb_toggle } from './atcb-control.js';
-import {
-  atcb_saved_hook,
-  atcb_save_file,
-  atcb_generate_time,
-  atcb_format_datetime,
-  atcb_secure_url,
-  atcb_copy_to_clipboard,
-} from './atcb-util.js';
+import { atcb_saved_hook, atcb_save_file, atcb_generate_time, atcb_format_datetime, atcb_secure_url, atcb_copy_to_clipboard } from './atcb-util.js';
 import { atcb_create_modal } from './atcb-generate.js';
 import { atcb_translate_hook } from './atcb-i18n.js';
 
 // MIDDLEWARE FUNCTION TO GENERATE THE CALENDAR LINKS
-function atcb_generate_links(type, data, subEvent = 'all', keyboardTrigger = false, multiDateModal = false) {
+function atcb_generate_links(host, type, data, subEvent = 'all', keyboardTrigger = false, multiDateModal = false) {
   if (subEvent != 'all') {
     subEvent = parseInt(subEvent) - 1;
   } else if (data.dates.length == 1) {
@@ -44,7 +27,7 @@ function atcb_generate_links(type, data, subEvent = 'all', keyboardTrigger = fal
   }
   // if this is a calendar subscription case, we can take the short route here
   if (data.subscribe) {
-    atcb_generate_subscribe_links(type, data, keyboardTrigger);
+    atcb_generate_subscribe_links(host, type, data, keyboardTrigger);
     return;
   }
   // TMP WORKAROUND: redirect to iCal solution on mobile devices for msteams, ms365, and outlookcom, since the Microsoft web apps are buggy on mobile devices (see https://github.com/add2cal/add-to-calendar-button/discussions/113)
@@ -55,20 +38,12 @@ function atcb_generate_links(type, data, subEvent = 'all', keyboardTrigger = fal
   if (subEvent != 'all') {
     // for cancelled dates, we show a modal - except for iCal, where we can send Cancel-ics-files
     if (data.dates[`${subEvent}`].status == 'CANCELLED' && type != 'apple' && type != 'ical') {
-      atcb_create_modal(
-        data,
-        'warning',
-        atcb_translate_hook('Cancelled Date', data),
-        atcb_translate_hook('Delete from Calendar', data),
-        [],
-        [],
-        keyboardTrigger
-      );
+      atcb_create_modal(host, data, 'warning', atcb_translate_hook('Cancelled Date', data), atcb_translate_hook('Delete from Calendar', data), [], [], keyboardTrigger);
     } else {
       switch (type) {
         case 'apple':
         case 'ical':
-          atcb_generate_ical(data, subEvent, keyboardTrigger);
+          atcb_generate_ical(host, data, subEvent, keyboardTrigger);
           break;
         case 'google':
           atcb_generate_google(data.dates[`${subEvent}`]);
@@ -88,43 +63,43 @@ function atcb_generate_links(type, data, subEvent = 'all', keyboardTrigger = fal
       }
     }
     // we mark the clicked date - in the multi-date case, this would be one out of many
-    const subEventButton = document.getElementById(data.identifier + '-' + type + '-' + (subEvent + 1));
-    if (subEventButton) {
-      subEventButton.classList.add('atcb-saved');
+    const modalHost = document.getElementById(data.identifier + '-modal-host');
+    if (modalHost) {
+      const subEventButton = modalHost.shadowRoot.getElementById(data.identifier + '-' + type + '-' + (subEvent + 1));
+      if (subEventButton) {
+        subEventButton.classList.add('atcb-saved');
+      }
     }
     atcbStates[`${data.identifier}`][`${type}`][`${subEvent}`]++;
     const filteredStates = atcbStates[`${data.identifier}`][`${type}`].filter(function (value) {
       return value < 1;
     });
     if (filteredStates.length == 0) {
-      atcb_set_fully_successful(data.identifier, multiDateModal);
+      atcb_set_fully_successful(host, data, multiDateModal);
     }
     return;
   }
   // if not a single date case, we continue for multi-date
-  atcb_generate_multidate_links(type, data, keyboardTrigger, multiDateModal);
+  atcb_generate_multidate_links(host, type, data, keyboardTrigger, multiDateModal);
 }
 
-function atcb_generate_multidate_links(type, data, keyboardTrigger, multiDateModal) {
+function atcb_generate_multidate_links(host, type, data, keyboardTrigger, multiDateModal) {
   // in the multi-date event case, when all sub-events have no organizer AND are not cancelled, we can also go the short way (for iCal)
   if (
     (type == 'ical' || type == 'apple') &&
     data.dates.every(function (theSubEvent) {
-      if (
-        theSubEvent.status == 'CANCELLED' ||
-        (theSubEvent.organizer != null && theSubEvent.organizer != '')
-      ) {
+      if (theSubEvent.status == 'CANCELLED' || (theSubEvent.organizer != null && theSubEvent.organizer != '')) {
         return false;
       }
       return true;
     })
   ) {
-    atcb_generate_ical(data, 'all', keyboardTrigger);
+    atcb_generate_ical(host, data, 'all', keyboardTrigger);
     // we mark the whole event as clicked
     for (let i = 0; i < atcbStates[`${data.identifier}`][`${type}`].length; i++) {
       atcbStates[`${data.identifier}`][`${type}`][`${i}`]++;
     }
-    atcb_set_fully_successful(data.identifier, multiDateModal);
+    atcb_set_fully_successful(host, data, multiDateModal);
     return;
   }
   // for multi-date events in all other cases, we show an intermediate layer
@@ -133,19 +108,11 @@ function atcb_generate_multidate_links(type, data, keyboardTrigger, multiDateMod
     for (let i = 0; i < data.dates.length; i++) {
       individualButtons.push(i + 1);
     }
-    atcb_create_modal(
-      data,
-      type,
-      atcb_translate_hook('modal.multidate.h', data),
-      atcb_translate_hook('modal.multidate.text', data),
-      [],
-      individualButtons,
-      keyboardTrigger
-    );
+    atcb_create_modal(host, data, type, atcb_translate_hook('modal.multidate.h', data), atcb_translate_hook('modal.multidate.text', data), [], individualButtons, keyboardTrigger);
   }
 }
 
-function atcb_generate_subscribe_links(type, data, keyboardTrigger) {
+function atcb_generate_subscribe_links(host, type, data, keyboardTrigger) {
   const adjustedFileUrl = data.icsFile.replace('https://', 'webcal://');
   switch (type) {
     case 'apple':
@@ -153,7 +120,7 @@ function atcb_generate_subscribe_links(type, data, keyboardTrigger) {
       atcb_subscribe_ical(adjustedFileUrl);
       break;
     case 'google':
-      atcb_subscribe_google(adjustedFileUrl.replace('webcal://calendar.google.com/calendar/u/2?cid=', ''));
+      atcb_subscribe_google(adjustedFileUrl);
       break;
     case 'ms365':
       atcb_subscribe_microsoft(adjustedFileUrl, data.name);
@@ -164,12 +131,11 @@ function atcb_generate_subscribe_links(type, data, keyboardTrigger) {
     case 'yahoo':
       atcb_copy_to_clipboard(data.icsFile);
       atcb_create_modal(
+        host,
         data,
         'yahoo',
         atcb_translate_hook('modal.subscribe.yahoo.h', data),
-        atcb_translate_hook('modal.clipboard.text', data) +
-          '<br>' +
-          atcb_translate_hook('modal.subscribe.yahoo.text', data),
+        atcb_translate_hook('modal.clipboard.text', data) + '<br>' + atcb_translate_hook('modal.subscribe.yahoo.text', data),
         [
           {
             label: atcb_translate_hook('Open Yahoo Calendar', data),
@@ -186,12 +152,11 @@ function atcb_generate_subscribe_links(type, data, keyboardTrigger) {
     case 'yahoo2nd':
       atcb_copy_to_clipboard(data.icsFile);
       atcb_create_modal(
+        host,
         data,
         'yahoo',
         atcb_translate_hook('modal.subscribe.yahoo.h', data),
-        atcb_translate_hook('modal.clipboard.text', data) +
-          '<br>' +
-          atcb_translate_hook('modal.subscribe.yahoo.text', data),
+        atcb_translate_hook('modal.clipboard.text', data) + '<br>' + atcb_translate_hook('modal.subscribe.yahoo.text', data),
         [
           {
             label: atcb_translate_hook('Open Yahoo Calendar', data),
@@ -206,17 +171,17 @@ function atcb_generate_subscribe_links(type, data, keyboardTrigger) {
       return;
   }
   // mark as successful (except for the Yahoo case, with returned)
-  atcb_set_fully_successful(data.identifier);
+  atcb_set_fully_successful(host, data);
 }
 
-function atcb_set_fully_successful(id, multiDateModal) {
-  const trigger = document.getElementById(id);
+function atcb_set_fully_successful(host, data, multiDateModal = false) {
+  const trigger = host.getElementById(data.identifier);
   if (trigger) {
     trigger.classList.add('atcb-saved');
   }
-  atcb_saved_hook();
-  if (multiDateModal && document.querySelectorAll('.atcb-modal[data-modal-nr]').length < 2) {
-    atcb_toggle('close');
+  atcb_saved_hook(host, data);
+  if (multiDateModal && host.querySelectorAll('.atcb-modal[data-modal-nr]').length < 2) {
+    atcb_toggle(host, 'close');
   }
 }
 
@@ -230,7 +195,13 @@ function atcb_subscribe_ical(fileUrl) {
 // GOOGLE
 function atcb_subscribe_google(fileUrl) {
   const baseUrl = 'https://calendar.google.com/calendar/r?cid=';
-  atcb_open_cal_url(baseUrl + fileUrl);
+  const newFileUrl = (function () {
+    if (fileUrl.startsWith('https://calendar.google.com/') || fileUrl.startsWith('webcal://calendar.google.com/') || fileUrl.startsWith('http://calendar.google.com/') || fileUrl.startsWith('//calendar.google.com/')) {
+      return fileUrl.replace(/^(.)*\?cid=/, '');
+    }
+    return encodeURIComponent(fileUrl);
+  })();
+  atcb_open_cal_url(baseUrl + newFileUrl);
 }
 
 // MICROSOFT
@@ -257,17 +228,9 @@ function atcb_generate_google(data) {
   urlParts.push('https://calendar.google.com/calendar/render?action=TEMPLATE');
   // generate and add date
   const formattedDate = atcb_generate_time(data, 'clean', 'google');
-  urlParts.push(
-    'dates=' + encodeURIComponent(formattedDate.start) + '%2F' + encodeURIComponent(formattedDate.end)
-  );
+  urlParts.push('dates=' + encodeURIComponent(formattedDate.start) + '%2F' + encodeURIComponent(formattedDate.end));
   // setting time zone if given and not GMT +/- something, since this is not supported by Google Calendar
-  if (
-    data.timeZone != null &&
-    data.timeZone != '' &&
-    !/(GMT[+|-]\d{1,2}|Etc\/U|Etc\/Zulu|CET|CST6CDT|EET|EST|EST5EDT|MET|MST|MST7MDT|PST8PDT|WET)/i.test(
-      data.timeZone
-    )
-  ) {
+  if (data.timeZone != null && data.timeZone != '' && !/(GMT[+|-]\d{1,2}|Etc\/U|Etc\/Zulu|CET|CST6CDT|EET|EST|EST5EDT|MET|MST|MST7MDT|PST8PDT|WET)/i.test(data.timeZone)) {
     urlParts.push('ctz=' + data.timeZone);
   }
   // add details (if set)
@@ -316,9 +279,7 @@ function atcb_generate_yahoo(data) {
   urlParts.push('https://calendar.yahoo.com/?v=60');
   // generate and add date
   const formattedDate = atcb_generate_time(data, 'clean');
-  urlParts.push(
-    'st=' + encodeURIComponent(formattedDate.start) + '&et=' + encodeURIComponent(formattedDate.end)
-  );
+  urlParts.push('st=' + encodeURIComponent(formattedDate.start) + '&et=' + encodeURIComponent(formattedDate.end));
   if (formattedDate.allday) {
     urlParts.push('dur=allday');
   }
@@ -414,7 +375,7 @@ function atcb_open_cal_url(url, target = '') {
 
 // FUNCTION TO GENERATE THE iCAL FILE (also for the Apple option)
 // See specs at: https://www.rfc-editor.org/rfc/rfc5545.html
-function atcb_generate_ical(data, subEvent = 'all', keyboardTrigger = false) {
+function atcb_generate_ical(host, data, subEvent = 'all', keyboardTrigger = false) {
   if (subEvent != 'all') {
     subEvent = parseInt(subEvent);
   }
@@ -422,11 +383,7 @@ function atcb_generate_ical(data, subEvent = 'all', keyboardTrigger = false) {
   const filename = atcb_determine_ical_filename(data, subEvent);
   // check for a given explicit file...
   const givenIcsFile = (function () {
-    if (
-      subEvent != 'all' &&
-      data.dates[`${subEvent}`].icsFile != null &&
-      data.dates[`${subEvent}`].icsFile != ''
-    ) {
+    if (subEvent != 'all' && data.dates[`${subEvent}`].icsFile != null && data.dates[`${subEvent}`].icsFile != '') {
       return data.dates[`${subEvent}`].icsFile;
     }
     if (data.icsFile != null && data.icsFile != '') {
@@ -434,8 +391,8 @@ function atcb_generate_ical(data, subEvent = 'all', keyboardTrigger = false) {
     }
     return '';
   })();
-  // ... and directly load it (not if iOS and WebView - will be catched further down)
-  if (givenIcsFile != '' && (!isiOS() || !isWebView())) {
+  // ... and directly load it (not if iOS and WebView - will be catched further down - except it is explicitely bridged)
+  if (givenIcsFile != '' && (!isiOS() || !isWebView() || data.bypassWebViewCheck == true)) {
     atcb_save_file(givenIcsFile, filename);
     return;
   }
@@ -498,16 +455,11 @@ function atcb_generate_ical(data, subEvent = 'all', keyboardTrigger = false) {
     ics_lines.push('SUMMARY:' + data.dates[`${i}`].name.replace(/.{65}/g, '$&' + '\r\n ')); // making sure it does not exceed 75 characters per line
     if (data.dates[`${i}`].descriptionHtmlFree != null && data.dates[`${i}`].descriptionHtmlFree != '') {
       ics_lines.push(
-        'DESCRIPTION:' +
-          data.dates[`${i}`].descriptionHtmlFree.replace(/\n/g, '\\n').replace(/.{60}/g, '$&' + '\r\n ') // adjusting for intended line breaks + making sure it does not exceed 75 characters per line
+        'DESCRIPTION:' + data.dates[`${i}`].descriptionHtmlFree.replace(/\n/g, '\\n').replace(/.{60}/g, '$&' + '\r\n ') // adjusting for intended line breaks + making sure it does not exceed 75 characters per line
       );
     }
     if (data.dates[`${i}`].description != null && data.dates[`${i}`].description != '') {
-      ics_lines.push(
-        'X-ALT-DESC;FMTTYPE=text/html:\r\n <!DOCTYPE HTML PUBLIC ""-//W3C//DTD HTML 3.2//EN"">\r\n <HTML><BODY>\r\n ' +
-          data.dates[`${i}`].description.replace(/\n/g, '<br>').replace(/.{60}/g, '$&' + '\r\n ') +
-          '\r\n </BODY></HTML>'
-      );
+      ics_lines.push('X-ALT-DESC;FMTTYPE=text/html:\r\n <!DOCTYPE HTML PUBLIC ""-//W3C//DTD HTML 3.2//EN"">\r\n <HTML><BODY>\r\n ' + data.dates[`${i}`].description.replace(/\n/g, '<br>').replace(/.{60}/g, '$&' + '\r\n ') + '\r\n </BODY></HTML>');
     }
     if (data.dates[`${i}`].location != null && data.dates[`${i}`].location != '') {
       ics_lines.push('LOCATION:' + data.dates[`${i}`].location);
@@ -547,7 +499,7 @@ function atcb_generate_ical(data, subEvent = 'all', keyboardTrigger = false) {
   // for Android, we are more specific than with iOS and only go for specific apps at the moment
   // for Chrome on iOS we basically do the same
   if ((isiOS() && isChrome()) || (isWebView() && (isiOS() || (isAndroid() && isProblematicWebView())))) {
-    atcb_ical_copy_note(dataUrl, data, keyboardTrigger);
+    atcb_ical_copy_note(host, dataUrl, data, keyboardTrigger);
     return;
   }
   // save the file dialog in all other cases
@@ -573,39 +525,15 @@ function atcb_determine_ical_filename(data, subEvent) {
   return 'event-to-save-in-my-calendar' + filenameSuffix;
 }
 
-function atcb_ical_copy_note(dataUrl, data, keyboardTrigger) {
+function atcb_ical_copy_note(host, dataUrl, data, keyboardTrigger) {
   // putting the download url to the clipboard
   atcb_copy_to_clipboard(dataUrl);
   // creating the modal
   if (isiOS() && isChrome()) {
-    atcb_create_modal(
-      data,
-      'warning',
-      atcb_translate_hook('modal.crios.ical.h', data),
-      atcb_translate_hook('modal.crios.ical.text', data) +
-        '<br>' +
-        atcb_translate_hook('modal.clipboard.text', data) +
-        '<br>' +
-        atcb_translate_hook('modal.crios.ical.steps', data),
-      [],
-      [],
-      keyboardTrigger
-    );
+    atcb_create_modal(host, data, 'warning', atcb_translate_hook('modal.crios.ical.h', data), atcb_translate_hook('modal.crios.ical.text', data) + '<br>' + atcb_translate_hook('modal.clipboard.text', data) + '<br>' + atcb_translate_hook('modal.crios.ical.steps', data), [], [], keyboardTrigger);
     return;
   }
-  atcb_create_modal(
-    data,
-    'warning',
-    atcb_translate_hook('modal.webview.ical.h', data),
-    atcb_translate_hook('modal.webview.ical.text', data) +
-      '<br>' +
-      atcb_translate_hook('modal.clipboard.text', data) +
-      '<br>' +
-      atcb_translate_hook('modal.webview.ical.steps', data),
-    [],
-    [],
-    keyboardTrigger
-  );
+  atcb_create_modal(host, data, 'warning', atcb_translate_hook('modal.webview.ical.h', data), atcb_translate_hook('modal.webview.ical.text', data) + '<br>' + atcb_translate_hook('modal.clipboard.text', data) + '<br>' + atcb_translate_hook('modal.webview.ical.steps', data), [], [], keyboardTrigger);
 }
 
 export { atcb_generate_links, atcb_set_fully_successful };

@@ -1,0 +1,185 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  /* paytone-one-regular - latin */
+  @font-face {
+    font-display: swap;
+    font-family: 'Paytone One';
+    font-style: normal;
+    font-weight: 400;
+    src: local('Paytone One'),
+        url('../fonts/paytone-one-v18-latin-regular.woff2') format('woff2'),
+        url('../fonts/paytone-one-v18-latin-regular.woff') format('woff'),
+        url('../fonts/paytone-one-v18-latin-regular.ttf') format('truetype');
+  }
+
+  /* inter-300 - latin */
+  @font-face {
+    font-display: swap;
+    font-family: Inter;
+    font-style: normal;
+    font-weight: 300;
+    src: local('Inter Light'),
+        url('../fonts/inter-v12-latin-300.woff2') format('woff2'),
+        url('../fonts/inter-v12-latin-300.woff') format('woff'),
+        url('../fonts/inter-v12-latin-300.ttf') format('truetype');
+  }
+
+  /* inter-regular - latin */
+  @font-face {
+    font-display: swap;
+    font-family: Inter;
+    font-style: normal;
+    font-weight: 400;
+    src: local('Inter'),
+        url('../fonts/inter-v12-latin-regular.woff2') format('woff2'),
+        url('../fonts/inter-v12-latin-regular.woff') format('woff'),
+        url('../fonts/inter-v12-latin-regular.ttf') format('truetype');
+  }
+
+  /* inter-600 - latin */
+  @font-face {
+    font-display: swap;
+    font-family: Inter;
+    font-style: normal;
+    font-weight: 600;
+    src: local('Inter SemiBold'),
+        url('../fonts/inter-v12-latin-600.woff2') format('woff2'),
+        url('../fonts/inter-v12-latin-600.woff') format('woff'),
+        url('../fonts/inter-v12-latin-600.ttf') format('truetype');
+  }
+
+  /* inter-800 - latin */
+  @font-face {
+    font-display: swap;
+    font-family: Inter;
+    font-style: normal;
+    font-weight: 800;
+    src: local('Inter ExtraBold'),
+        url('../fonts/inter-v12-latin-800.woff2') format('woff2'),
+        url('../fonts/inter-v12-latin-800.woff') format('woff'),
+        url('../fonts/inter-v12-latin-800.ttf') format('truetype');
+  }
+
+  /* fira-mono-regular - latin */
+  @font-face {
+    font-display: swap;
+    font-family: 'Fira Mono';
+    font-style: normal;
+    font-weight: 400;
+    src: local('Fira Mono'),
+        url('../fonts/fira-mono-v14-latin-regular.woff2') format('woff2'),
+        url('../fonts/fira-mono-v14-latin-regular.woff') format('woff'),
+        url('../fonts/fira-mono-v14-latin-regular.ttf') format('truetype');
+  }
+
+  /* fira-mono-700 - latin */
+  @font-face {
+    font-display: swap;
+    font-family: 'Fira Mono';
+    font-style: normal;
+    font-weight: 700;
+    src: url('../fonts/fira-mono-v14-latin-700.woff2') format('woff2'),
+        url('../fonts/fira-mono-v14-latin-700.woff') format('woff'),
+        url('../fonts/fira-mono-v14-latin-700.ttf') format('truetype');
+  }
+
+  /* selection color */
+  ::selection {
+    @apply bg-primary text-white dark:bg-primary-light dark:text-black;
+  }
+
+  /* base style */
+  body {
+    @apply bg-background text-text dark:bg-background-dark dark:text-text-dark transition-colors;
+
+    box-sizing: border-box;
+    font-family: Inter, Arial, sans-serif;
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 1.5rem;
+    margin: 0;
+    padding: 0;
+    text-align: center;
+    height: 100%;
+    width: 100%;
+  }
+
+  h1 {
+    font-family: 'Paytone One', Arial, sans-serif;
+    font-size: 2em;
+    line-height: 1.3em;
+  }
+
+  h2 {
+    font-family: 'Paytone One', Arial, sans-serif;
+    font-size: 1.5em;
+    line-height: 1.3em;
+  }
+
+  h3 {
+    font-size: 1.2em;
+    font-weight: 800;
+    line-height: 1.2em;
+  }
+
+  a {
+    @apply font-semibold;
+  }
+
+  a:hover {
+    @apply underline decoration-2 decoration-secondary;
+  }
+
+  p+p {
+    margin-top: .8em;
+  }
+
+  code[class*="language-"],
+  pre[class*="language-"] {
+    background: none;
+    font-family: 'Fira Mono', Consolas, Courier, monospace;
+  }
+
+  label.required::after {
+    @apply text-red-700;
+
+    content: "*";
+  }
+
+  @keyframes bounce-minimal {
+    0%, 100% {
+      transform: translateY(-10%);
+      animation-timing-function: cubic-bezier(0.8,0,1,1);
+    }
+
+    50% {
+      transform: none;
+      animation-timing-function: cubic-bezier(0,0,0.2,1);
+    }
+  }
+  
+  .animate-bounce-minimal {
+    animation: bounce-minimal 2s infinite;
+  }
+
+}
+
+.grid-bg {
+  background-size: 25px 25px;
+  background-image: radial-gradient(circle, rgb(119 119 119 / 40%) 1px, rgba(0 0 0 / 0%) 1px);
+}
+
+.button-primary {
+  @apply inline-block rounded-md border-[2px] text-center font-semibold bg-secondary border-secondary hover:border-0 from-secondary to-secondary-light py-[16px] px-[20px] hover:py-[18px] hover:px-[22px] leading-none text-zinc-700 shadow-md hover:bg-gradient-to-tr hover:text-black hover:no-underline hover:shadow-lg transition;
+}
+
+.button-secondary {
+  @apply inline-block rounded-md border-[2px] text-center font-semibold border-secondary hover:border-0 from-secondary to-secondary-light py-[16px] px-[20px] hover:py-[18px] hover:px-[22px] leading-none shadow-md hover:bg-gradient-to-tr hover:text-black hover:no-underline hover:shadow-lg transition;
+}
+
+.tech-stack-button {
+  @apply flex flex-col self-center rounded-lg border-2 border-zinc-400 bg-gradient-to-tr from-zinc-200 to-zinc-100 p-1 text-zinc-700 shadow-md hover:no-underline hover:shadow-xl dark:border-zinc-600 dark:from-zinc-800 dark:to-zinc-700 dark:text-zinc-300;
+}
