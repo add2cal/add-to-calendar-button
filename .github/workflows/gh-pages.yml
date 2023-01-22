@@ -33,7 +33,7 @@ jobs:
         uses: actions/upload-pages-artifact@v1
         with:
           # Upload demo page build
-          path: './dist'
+          path: './demo/dist'
 
   deploy:
     environment:
