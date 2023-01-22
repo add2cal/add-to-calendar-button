@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { watch, ref } from 'vue';
+import { watch, ref, onUpdated } from 'vue';
 import { useHead } from '@vueuse/head';
 import FooterArea from "@/components/FooterArea.vue";
 import HeaderLarge from "@/components/HeaderLarge.vue";
@@ -109,6 +109,10 @@ watch(router.currentRoute, newRoute =>  {
 });
 
 const showFooter = ref(false);
+
+onUpdated(() => {
+  showFooter.value = true;
+});
 </script>
 
 <template>
@@ -120,7 +124,7 @@ const showFooter = ref(false);
   </header>
 
   <div class="mt-16 mb-20 text-center md:text-left" :class="($route.name!=='home' && $route.name!='home-i18n') ? 'container' : ''">
-    <RouterView @afterRender="showFooter = true" />
+    <RouterView />
   </div>
 
   <footer>

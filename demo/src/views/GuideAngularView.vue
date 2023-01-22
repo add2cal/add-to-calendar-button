@@ -66,11 +66,11 @@ import { NgModule, CUSTOM_ELEMENTS_SCHEMA  } from '@angular/core';
   name="{{ t('demo_data.name_dummy') }}"
   options="'Apple','Google'"
   location="{{ t('demo_data.location') }}"
-  startDate="{{defaultDate}}"
-  endDate="{{defaultDate}}"
+  startDate="{{ defaultDate }}"
+  endDate="{{ defaultDate }}"
   startTime="10:15"
   endTime="23:30"
-  timeZone="{{ t('demo_data.default_timezone') }}"{{defaultLang}}
+  timeZone="{{ t('demo_data.default_timezone') }}"{{ defaultLang }}
 &gt;&lt;/add-to-calendar-button&gt;</pre
           >
         </CodeBlock>

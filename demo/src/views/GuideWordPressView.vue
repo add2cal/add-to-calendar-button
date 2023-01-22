@@ -48,7 +48,7 @@ watch(locale, value => {
         <h3 class="mb-6">A: Shortcode</h3>
         <p>{{ t('content.guide.wordpress.shortcode') }}</p>
         <CodeBlock>
-          <pre>[add-to-calendar-button name="{{ t('demo_data.name_dummy') }}" options="'Apple','Google'" startDate="{{defaultDate}}"]</pre>
+          <pre>[add-to-calendar-button name="{{ t('demo_data.name_dummy') }}" options="'Apple','Google'" startDate="{{ defaultDate }}"]</pre>
         </CodeBlock>
         <h3 class="mt-12 mb-6">B: Block</h3>
         <p>{{ t('content.guide.wordpress.block') }}</p>
