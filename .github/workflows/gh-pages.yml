@@ -27,16 +27,8 @@ jobs:
           node-version: 18
           registry-url: https://registry.npmjs.org/
           cache: 'npm'
-      - name: npm ci main
-        run: npm ci
-      - name: Build main
-        run: npm run build
-      - name: Go demo
-        run: cd demo
-      - name: npm ci demo
-        run: npm ci
-      - name: Build Demo
-        run: npm run build
+      - name: Build it
+        run: npm ci && npm run build && cd demo && npm ci && npm run build
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v1
         with:
