@@ -1,9 +1,9 @@
 name: Deploy GitHub Pages
 
 on:
-  push:
-    branches: ['main']
-
+  # currently paused in favor of Azure Static Webapps
+  #push:
+    #branches: ['main']
   workflow_dispatch:
 
 permissions:
