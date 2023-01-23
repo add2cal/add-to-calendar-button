@@ -5,14 +5,14 @@
  *  Add to Calendar Button
  *  ++++++++++++++++++++++
  *
- *  Version: 2.0.0
+ *  Version: 2.0.1
  *  Creator: Jens Kuerschner (https://jenskuerschner.de)
  *  Project: https://github.com/add2cal/add-to-calendar-button
  *  License: Elastic License 2.0 (ELv2)
  *  Note:    DO NOT REMOVE THE COPYRIGHT NOTICE ABOVE!
  *
  */
-const atcbVersion = '2.0.0';
+const atcbVersion = '2.0.1';
 
 // DEFINING CSS
 const atcbCssTemplate = {};
