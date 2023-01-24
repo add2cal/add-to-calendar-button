@@ -117,12 +117,12 @@ onMounted(() => {
     },
     onSubmit: (value: string, myLocale: any = locale) => {
       if (value !== undefined) {
-        searchInput.value && searchInput.value.blur();
         router.push({
           name: 'configuration',
           hash: '#' + value.toLowerCase(),
           params: { myLocale }
         });
+        searchInput.value && searchInput.value.blur();
         searchInput.value.value = '';
       }
     },
