@@ -105,8 +105,7 @@ export function setupRouter(i18n: I18n): Router {
           el: to.hash,
           behavior: 'smooth',
         };
-      }
-      if (savedPosition) {
+      } else if (savedPosition) {
         return savedPosition;
       } else {
         return { top: 0 };
