@@ -933,17 +933,17 @@ tbody tr td span.format {
 }
 
 tbody tr th {
-  @apply flex p-3 font-semibold sm:p-5 md:table-cell text-base md:text-sm;
+  @apply block p-3 pb-5 underline underline-offset-2 md:no-underline font-semibold sm:p-5 md:table-cell text-base md:text-sm;
   vertical-align: top;
 }
 
 tbody tr td {
-  @apply flex flex-col p-3 pt-0 sm:p-5 sm:pt-0 md:table-cell md:pt-5;
+  @apply block p-3 pt-0 sm:p-5 sm:pt-0 md:table-cell md:pt-5;
   vertical-align: top;
 }
 
 tbody tr td+td {
-  @apply pt-3 sm:table-cell sm:p-5 sm:pt-5;
+  @apply pt-6 sm:table-cell sm:p-5 sm:pt-5;
 }
 
 .next-group {

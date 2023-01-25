@@ -37,7 +37,8 @@
     "prismjs": "^1.29.0",
     "timezones-ical-library": "^1.6.0",
     "vue": "^3.2.45",
-    "vue-i18n": "^9.2.2"
+    "vue-i18n": "^9.2.2",
+    "vue-marquee-text-component": "^2.0.1"
   },
   "devDependencies": {
     "@rushstack/eslint-patch": "^1.2.0",

@@ -68,12 +68,18 @@ const PlaygroundArea = defineAsyncComponent({
     <div class="mt-20 border-t border-zinc-300 py-14 text-center dark:border-zinc-700">
       <h3 class="pb-6">{{ t('content.home.next') }}</h3>
 
-      <RouterLink class="button-primary m-6" :to="{ name: 'examples', params: { locale } }"
-        ><MagnifyingGlassIcon class="-mt-0.5 mr-2 inline-block h-4 w-4 md:hidden lg:inline-block" aria-hidden="true" /> {{ t('content.home.button_examples') }} <ArrowRightIcon class="-mt-0.5 ml-2 inline-block h-4 w-4" aria-hidden="true"
-      /></RouterLink>
-      <RouterLink class="button-primary m-6" :to="{ name: 'configuration', params: { locale } }"
-        ><AcademicCapIcon class="-mt-0.5 mr-2 inline-block h-4 w-4 md:hidden lg:inline-block" aria-hidden="true" /> {{ t('content.home.button_configure') }} <ArrowRightIcon class="-mt-0.5 ml-2 inline-block h-4 w-4" aria-hidden="true"
-      /></RouterLink>
+      <div class="grid grid-cols-1 text-center md:grid-cols-2">
+        <div class="py-6 sm:p-6 md:text-right">
+          <RouterLink class="button-primary w-full max-w-xs" :to="{ name: 'examples', params: { locale } }"
+            ><MagnifyingGlassIcon class="-mt-0.5 mr-2 inline-block h-4 w-4 md:hidden lg:inline-block" aria-hidden="true" /> {{ t('content.home.button_examples') }} <ArrowRightIcon class="-mt-0.5 ml-2 inline-block h-4 w-4" aria-hidden="true"
+          /></RouterLink>
+        </div>
+        <div class="py-6 sm:p-6 md:text-left">
+          <RouterLink class="button-primary w-full max-w-xs" :to="{ name: 'configuration', params: { locale } }"
+            ><AcademicCapIcon class="-mt-0.5 mr-2 inline-block h-4 w-4 md:hidden lg:inline-block" aria-hidden="true" /> {{ t('content.home.button_configure') }} <ArrowRightIcon class="-mt-0.5 ml-2 inline-block h-4 w-4" aria-hidden="true"
+          /></RouterLink>
+        </div>
+      </div>
     </div>
   </div>
 </template>

@@ -58,7 +58,7 @@ const i18nAvailabilityOptions = computed(() =>
     <Select v-model="internalValue[DateAttrsKey.AVAILABILITY]" :label="t(`labels.inputs.${[DateAttrsKey.AVAILABILITY]}`.toLocaleLowerCase())" :options="i18nAvailabilityOptions" byKey="key" byValue="value" clearable class="mb-3" />
     <div class="mb-3 grid grid-cols-2 gap-3">
       <Input v-model="internalValue[DateAttrsKey.ORGANIZER][DateAttrsKey.ORGANIZER_NAME]" :label="t(`labels.inputs.${[DateAttrsKey.ORGANIZER_NAME]}`.toLocaleLowerCase())" type="text" />
-      <Input v-model="internalValue[DateAttrsKey.ORGANIZER][DateAttrsKey.ORGANIZER_EMAIL]" :label="t(`labels.inputs.${[DateAttrsKey.ORGANIZER_EMAIL]}`.toLocaleLowerCase())" type="text" />
+      <Input v-model="internalValue[DateAttrsKey.ORGANIZER][DateAttrsKey.ORGANIZER_EMAIL]" :label="t(`labels.inputs.${[DateAttrsKey.ORGANIZER_EMAIL]}`.toLocaleLowerCase())" type="email" />
     </div>
     <Switch v-model="internalValue[DateAttrsKey.IS_SUBSCRIBED]" :label="t(`labels.inputs.${[DateAttrsKey.IS_SUBSCRIBED]}`.toLocaleLowerCase())" class="mb-3" />
     <Input v-model="internalValue[DateAttrsKey.ISC_FILE]" :label="t(`labels.inputs.${[DateAttrsKey.ISC_FILE]}`.toLocaleLowerCase())" placeholder="https://..." type="text" class="mb-3" />

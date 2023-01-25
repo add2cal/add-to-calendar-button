@@ -3,7 +3,7 @@
  *  Add to Calendar Button
  *  ++++++++++++++++++++++
  *
- *  Version: 2.0.1
+ *  Version: 2.0.2
  *  Creator: Jens Kuerschner (https://jenskuerschner.de)
  *  Project: https://github.com/add2cal/add-to-calendar-button
  *  License: Elastic License 2.0 (ELv2)
@@ -175,6 +175,7 @@ function atcb_close(host, keyboardTrigger = false) {
     existingModalHost?.remove();
     // make body scrollable again
     document.body.classList.remove('atcb-modal-no-scroll');
+    document.documentElement.classList.remove('atcb-modal-no-scroll');
     // remove dropdowns, modals, and bg overlays (should only be one of each at max)
     Array.from(host.querySelectorAll('.atcb-list-wrapper'))
       .concat(Array.from(host.querySelectorAll('.atcb-list')))

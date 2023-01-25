@@ -32,22 +32,22 @@ const { t, locale } = useI18n();
         <hr class="mt-6 mb-4 border-gray-300 dark:border-zinc-700" />
         <div class="flex flex-col-reverse text-xs sm:flex-row sm:justify-between">
           <div class="px-1 pt-10 pb-2 text-center text-sm sm:pt-1 sm:text-left sm:text-xs">
-            <RouterLink :to="{ name: 'legal-notice', params: { locale } }">
+            <RouterLink class="inline-block p-1 sm:p-0" :to="{ name: 'legal-notice', params: { locale } }">
               {{ t('navigation.legal-notice') }}
             </RouterLink>
             |
-            <RouterLink :to="{ name: 'privacy-policy', params: { locale } }">
+            <RouterLink class="inline-block p-1 sm:p-0" :to="{ name: 'privacy-policy', params: { locale } }">
               {{ t('navigation.privacy-policy') }}
             </RouterLink>
             <span class="inline sm:hidden md:inline"> | </span>
-            <span class="inline pt-0 sm:block sm:pt-2 md:inline md:pt-0">
-              <a href="https://github.com/add2cal/add-to-calendar-button/blob/main/LICENSE.txt" target="_blank" rel="noopener">{{ t('navigation.license') }} <ArrowTopRightOnSquareIcon class="-mt-0.5 mr-0.5 inline-block h-3 w-3" aria-hidden="true" /></a>
+            <span class="inline whitespace-nowrap pt-0 sm:block sm:pt-2 md:inline md:pt-0">
+              <a href="https://github.com/add2cal/add-to-calendar-button/blob/main/LICENSE.txt" class="inline-block p-1 sm:p-0" target="_blank" rel="noopener">{{ t('navigation.license') }} <ArrowTopRightOnSquareIcon class="-mt-0.5 mr-0.5 inline-block h-3 w-3" aria-hidden="true" /></a>
               |
-              <a href="https://github.com/add2cal/add-to-calendar-button/discussions" target="_blank" rel="noopener">{{ t('navigation.help') }} <ArrowTopRightOnSquareIcon class="-mt-0.5 mr-0.5 inline-block h-3 w-3" aria-hidden="true" /></a>
+              <a href="https://github.com/add2cal/add-to-calendar-button/discussions" class="inline-block p-1 sm:p-0" target="_blank" rel="noopener">{{ t('navigation.help') }} <ArrowTopRightOnSquareIcon class="-mt-0.5 mr-0.5 inline-block h-3 w-3" aria-hidden="true" /></a>
             </span>
             <div class="mt-6 text-xs sm:mt-5 md:mt-3">
               <span class="font-semibold text-zinc-500 dark:text-zinc-400"> &copy; {{new Date().getFullYear()}} </span>
-              <span class="lowercase text-zinc-400 dark:text-zinc-500"> , Current Version: 2.0.1 </span>
+              <span class="lowercase text-zinc-400 dark:text-zinc-500"> , Current Version: 2.0.2 </span>
             </div>
           </div>
           <div class="hidden self-center sm:block"><LightModeSwitch /></div>
@@ -57,6 +57,7 @@ const { t, locale } = useI18n();
             <a class="footer-icon-base w-12  hover:text-npm dark:hover:text-npm" target="_blank" rel="noopener" href="https://www.npmjs.com/package/add-to-calendar-button"><LogoNpm /></a>
           </div>
         </div>
+        <a href="#" class="mx-auto flex w-fit justify-center pt-10 opacity-40 hover:-mt-2 hover:pb-2 hover:opacity-100 md:hidden" :aria-label="t('labels.toTop')"><ArrowUpIcon class="h-6 w-6" aria-hidden="true" /></a>
       </div>
     </div>
   </div>

@@ -3,7 +3,7 @@
  *  Add to Calendar Button
  *  ++++++++++++++++++++++
  *
- *  Version: 2.0.1
+ *  Version: 2.0.2
  *  Creator: Jens Kuerschner (https://jenskuerschner.de)
  *  Project: https://github.com/add2cal/add-to-calendar-button
  *  License: Elastic License 2.0 (ELv2)
@@ -53,6 +53,7 @@ function atcb_decorate_data_rrule(data) {
     } else {
       // check if RRULE already
       if (/^RRULE:/i.test(data.recurrence)) {
+        data.recurrence_simplyfied = false;
         // draw easy rules from RRULE if possible
         const rruleParts = data.recurrence.substr(6).split(';');
         const rruleObj = new Object();
@@ -67,6 +68,7 @@ function atcb_decorate_data_rrule(data) {
         data.recurrence_interval = rruleObj.INTERVAL ? rruleObj.INTERVAL : 1;
         data.recurrence_frequency = rruleObj.FREQ ? rruleObj.FREQ : '';
       } else {
+        data.recurrence_simplyfied = true;
         // set interval if not given
         if (data.recurrence_interval == null || data.recurrence_interval == '') {
           data.recurrence_interval = 1;

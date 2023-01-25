@@ -21,13 +21,13 @@ const { t, locale } = useI18n();
     <div class="container m-auto mb-16 mt-8 grid grid-cols-1 justify-items-center xs:my-20 md:my-24 lg:my-28 lg:grid-cols-2 xl:my-32">
       <div class="grid grid-cols-1 justify-items-center md:grid-cols-2 lg:grid-cols-1">
         <div class="max-w-[400px] self-center pb-14 md:pb-0 lg:pb-16">
-          <div class="mx-auto mb-16 block w-auto max-w-[280px] xs:hidden">
+          <div class="mx-auto mb-16 -mt-4 block w-auto max-w-[280px] xs:hidden">
             <Logo class="force-light" variation="mobile" />
           </div>
           <h1 class="text-white">
             <span class="hidden xs:block">{{ t('content.home.header_prefix') }}</span>
             <span class="hidden xs:block">Add to Calendar Button</span>
-            <span class="block text-2xl italic opacity-70 xs:hidden">{{ t('content.home.header_slogan') }}</span>
+            <span class="block text-4xl opacity-70 xs:hidden">{{ t('content.home.header_slogan') }}</span>
           </h1>
           <h2 class="mt-5 hidden italic text-white opacity-70 xs:block">{{ t('content.home.header_slogan') }}</h2>
         </div>

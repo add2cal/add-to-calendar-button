@@ -117,13 +117,15 @@ onMounted(() => {
     },
     onSubmit: (value: string, myLocale: any = locale) => {
       if (value !== undefined) {
-        router.push({
-          name: 'configuration',
-          hash: '#' + value.toLowerCase(),
-          params: { myLocale }
-        });
+        const goTo = value.toLowerCase();
         searchInput.value && searchInput.value.blur();
         searchInput.value.value = '';
+        // push the route, but add some delay to work around some android soft keyboard issues
+        setTimeout( () => router.push({
+          name: 'configuration',
+          hash: '#' + goTo,
+          params: { myLocale }
+        }), 200);
       }
     },
     autoSelect: true,

@@ -277,7 +277,8 @@ Find all information about the available attributes and how to configure specifi
 
 ## ⚡ Changelog
 
-![npm version](https://img.shields.io/npm/v/add-to-calendar-button?label=current%20version&style=for-the-badge)
+![npm Version](https://img.shields.io/npm/v/add-to-calendar-button?label=current%20version&style=for-the-badge)
+[![Build Status](https://img.shields.io/github/actions/workflow/status/add2cal/add-to-calendar-button/npm-publish.yml?label=build&style=for-the-badge)](https://github.com/add2cal/add-to-calendar-button/actions/workflows/npm-publish.yml)
 
 Find all changes in the dedicated file at [CHANGELOG.md](CHANGELOG.md).
 

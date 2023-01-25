@@ -173,11 +173,11 @@
 }
 
 .button-primary {
-  @apply inline-block rounded-md border-[2px] text-center font-semibold bg-secondary border-secondary hover:border-0 from-secondary to-secondary-light py-[16px] px-[20px] hover:py-[18px] hover:px-[22px] leading-none text-zinc-700 shadow-md hover:bg-gradient-to-tr hover:text-black hover:no-underline hover:shadow-lg transition;
+  @apply inline-block rounded-[6px] border-[2px] text-center font-semibold bg-secondary border-secondary hover:border-0 from-secondary to-secondary-light py-[16px] px-[20px] hover:py-[17.6px] hover:px-[22px] leading-none text-black shadow-md hover:bg-gradient-to-tr hover:text-zinc-800 hover:no-underline hover:shadow-lg transition;
 }
 
 .button-secondary {
-  @apply inline-block rounded-md border-[2px] text-center font-semibold border-secondary hover:border-0 from-secondary to-secondary-light py-[16px] px-[20px] hover:py-[18px] hover:px-[22px] leading-none shadow-md hover:bg-gradient-to-tr hover:text-black hover:no-underline hover:shadow-lg transition;
+  @apply inline-block rounded-[6px] border-[2px] text-center font-semibold border-secondary hover:border-0 from-secondary to-secondary-light py-[16px] px-[20px] hover:py-[17.6px] hover:px-[22px] leading-none shadow-md hover:bg-gradient-to-tr hover:text-zinc-800 hover:no-underline hover:shadow-lg transition;
 }
 
 .tech-stack-button {

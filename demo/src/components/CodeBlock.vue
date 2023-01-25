@@ -604,7 +604,7 @@ export default {
         innerHTML: formattedCode
       });
     }
-    return h('div', { class: 'bg-gray-100 my-5 border-gray-300 dark:bg-zinc-900 dark:border-zinc-800 transition-colors border rounded-md', innerHTML: '<pre class="' + this.class + ' language-' + this.language + '"><code class="' + this.class + ' language-' + this.language + '">' + formattedCode + '</code></pre>' });
+    return h('div', { class: 'bg-gray-100 my-5 border-gray-300 dark:bg-zinc-900 dark:border-zinc-700 transition-colors border rounded-md', innerHTML: '<pre class="' + this.class + ' language-' + this.language + '"><code class="' + this.class + ' language-' + this.language + '">' + formattedCode + '</code></pre>' });
   },
   mounted() {
     Prism.highlightAll();
