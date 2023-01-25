@@ -3,7 +3,7 @@
  *  Add to Calendar Button
  *  ++++++++++++++++++++++
  *
- *  Version: 2.0.1
+ *  Version: 2.0.2
  *  Creator: Jens Kuerschner (https://jenskuerschner.de)
  *  Project: https://github.com/add2cal/add-to-calendar-button
  *  License: Elastic License 2.0 (ELv2)
@@ -77,6 +77,9 @@ function atcb_validate(data) {
   if (!atcb_validate_options(data, msgPrefix)) return false;
   if (!atcb_validate_date_blocks(data, msgPrefix)) return false;
   if (!atcb_validate_rrule(data, msgPrefix)) return false;
+  if (data.recurrence_simplyfied) {
+    if (!atcb_validate_rrule_simplyfied(data, msgPrefix)) return false;
+  }
   // on passing the validation, return true
   return true;
 }
@@ -378,7 +381,10 @@ function atcb_validate_rrule(data, msgPrefix) {
     }
     return false;
   }
-  // also validate the more easy recurrence settings, since any error there would be also hidden in the RRULE
+  return true;
+}
+// also validate the simplyfied recurrence settings (if provided), since any error there would be also hidden in the RRULE
+function atcb_validate_rrule_simplyfied(data, msgPrefix) {
   if (data.recurrence_interval != null && data.recurrence_interval != '' && !/^\d+$/.test(data.recurrence_interval)) {
     if (data.debug) {
       console.error(msgPrefix + ' failed: recurrence data (interval) misspelled');

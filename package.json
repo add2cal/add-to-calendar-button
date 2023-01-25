@@ -1,6 +1,6 @@
 {
   "name": "add-to-calendar-button",
-  "version": "2.0.1",
+  "version": "2.0.2",
   "engines": {
     "node": ">=16.18.1",
     "npm": ">=8.19.2"
@@ -11,7 +11,10 @@
   "files": [
     "dist",
     "test",
-    "index.d.ts"
+    "index.d.ts",
+    ".eslintrc.json",
+    "CHANGELOG.md",
+    ".npmignore"
   ],
   "types": "index.d.ts",
   "jsdelivr": "./dist/atcb.js",

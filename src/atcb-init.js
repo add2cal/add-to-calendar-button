@@ -3,7 +3,7 @@
  *  Add to Calendar Button
  *  ++++++++++++++++++++++
  *
- *  Version: 2.0.1
+ *  Version: 2.0.2
  *  Creator: Jens Kuerschner (https://jenskuerschner.de)
  *  Project: https://github.com/add2cal/add-to-calendar-button
  *  License: Elastic License 2.0 (ELv2)
@@ -310,7 +310,8 @@ function atcb_load_css(host, rootObj = null, style = '', inline = false, buttons
   if (!document.getElementById('atcb-global-style')) {
     const cssGlobalContent = document.createElement('style');
     cssGlobalContent.id = 'atcb-global-style';
-    cssGlobalContent.innerText = '.atcb-modal-no-scroll { overflow-y: hidden; }';
+    const scrollBarWidth = window.innerWidth - document.documentElement.clientWidth;
+    cssGlobalContent.innerText = '.atcb-modal-no-scroll { overflow-y: hidden !important; -webkit-overflow-scrolling: touch; } body.atcb-modal-no-scroll { padding-right: ' + scrollBarWidth + 'px; }';
     document.head.append(cssGlobalContent);
   }
   // we load custom styles dynamically

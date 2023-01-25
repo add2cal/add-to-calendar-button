@@ -3,7 +3,7 @@
  *  Add to Calendar Button
  *  ++++++++++++++++++++++
  *
- *  Version: 2.0.1
+ *  Version: 2.0.2
  *  Creator: Jens Kuerschner (https://jenskuerschner.de)
  *  Project: https://github.com/add2cal/add-to-calendar-button
  *  License: Elastic License 2.0 (ELv2)
@@ -38,7 +38,7 @@ function atcb_generate_links(host, type, data, subEvent = 'all', keyboardTrigger
   if (subEvent != 'all') {
     // for cancelled dates, we show a modal - except for iCal, where we can send Cancel-ics-files
     if (data.dates[`${subEvent}`].status == 'CANCELLED' && type != 'apple' && type != 'ical') {
-      atcb_create_modal(host, data, 'warning', atcb_translate_hook('Cancelled Date', data), atcb_translate_hook('Delete from Calendar', data), [], [], keyboardTrigger);
+      atcb_create_modal(host, data, 'warning', atcb_translate_hook('date.status.cancelled', data), atcb_translate_hook('date.status.cancelled.cta', data), [], [], keyboardTrigger);
     } else {
       switch (type) {
         case 'apple':
@@ -143,7 +143,7 @@ function atcb_generate_subscribe_links(host, type, data, keyboardTrigger) {
             type: 'yahoo2nd',
             href: 'https://www.yahoo.com/calendar',
           },
-          { label: atcb_translate_hook('Cancel', data) },
+          { label: atcb_translate_hook('cancel', data) },
         ],
         [],
         keyboardTrigger
@@ -163,7 +163,7 @@ function atcb_generate_subscribe_links(host, type, data, keyboardTrigger) {
             type: 'none',
             href: 'https://www.yahoo.com/calendar',
           },
-          { label: atcb_translate_hook('Cancel', data) },
+          { label: atcb_translate_hook('cancel', data) },
         ],
         [],
         keyboardTrigger

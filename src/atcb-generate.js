@@ -3,7 +3,7 @@
  *  Add to Calendar Button
  *  ++++++++++++++++++++++
  *
- *  Version: 2.0.1
+ *  Version: 2.0.2
  *  Creator: Jens Kuerschner (https://jenskuerschner.de)
  *  Project: https://github.com/add2cal/add-to-calendar-button
  *  License: Elastic License 2.0 (ELv2)
@@ -119,7 +119,7 @@ function atcb_generate_label(host, data, parent, type, icon = false, text = '', 
 }
 
 function atcb_generate_label_content(data, parent, type, icon, text, oneOption) {
-  const defaultTriggerText = atcb_translate_hook('Add to Calendar', data);
+  const defaultTriggerText = atcb_translate_hook('label.addtocalendar', data);
   // if there is only 1 option, we use the trigger text on the option label. Therefore, forcing it here
   if (oneOption && text == '') {
     text = defaultTriggerText;
@@ -129,12 +129,12 @@ function atcb_generate_label_content(data, parent, type, icon, text, oneOption) 
     trigger: text || defaultTriggerText,
     apple: text || 'Apple',
     google: text || 'Google',
-    ical: text || atcb_translate_hook('iCal File', data),
+    ical: text || atcb_translate_hook('label.icalfile', data),
     msteams: text || 'Microsoft Teams',
     ms365: text || 'Microsoft 365',
     outlookcom: text || 'Outlook.com',
     yahoo: text || 'Yahoo',
-    close: atcb_translate_hook('Close', data),
+    close: atcb_translate_hook('close', data),
   };
   text = labelText[`${type}`];
   // add icon and text label (not in the date style trigger case)
@@ -432,7 +432,7 @@ function atcb_create_modal(host, data, icon = '', headline, content = '', button
   }
   // add buttons (array of objects; attributes: href, type, label, primary(boolean))
   if (buttons.length == 0) {
-    buttons.push({ type: 'close', label: atcb_translate_hook('Close', data) });
+    buttons.push({ type: 'close', label: atcb_translate_hook('close', data) });
   }
   const modalButtons = document.createElement('div');
   modalButtons.classList.add('atcb-modal-buttons');
@@ -453,7 +453,7 @@ function atcb_create_modal(host, data, icon = '', headline, content = '', button
       modalButton.classList.add('atcb-modal-btn-primary');
     }
     if (button.label == null || button.label == '') {
-      button.label = atcb_translate_hook('Click me', data);
+      button.label = atcb_translate_hook('modal.button.default', data);
     }
     modalButton.textContent = button.label;
     modalButtons.append(modalButton);
@@ -577,13 +577,13 @@ function atcb_generate_date_button(data, parent, subEvent = 'all') {
   })();
   const hoverText = (function () {
     if (subEvent != 'all' && data.dates[`${subEvent}`].status == 'CANCELLED') {
-      return atcb_translate_hook('Cancelled Date', data) + '<br>' + atcb_translate_hook('Delete from Calendar', data);
+      return atcb_translate_hook('date.status.cancelled', data) + '<br>' + atcb_translate_hook('date.status.cancelled.cta', data);
     }
-    return '+ ' + atcb_translate_hook('Add to Calendar', data);
+    return '+ ' + atcb_translate_hook('label.addtocalendar', data);
   })();
   const cancelledInfo = (function () {
     if (subEvent != 'all' && data.dates[`${subEvent}`].status == 'CANCELLED') {
-      return atcb_translate_hook('Cancelled Date', data);
+      return atcb_translate_hook('date.status.cancelled', data);
     }
     return '';
   })();

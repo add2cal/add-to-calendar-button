@@ -31,6 +31,5 @@ set-release.js
 .gitattributes
 *.min.js
 *.map
-.eslintrc.json
 .eslintrc.cjs
 CNAME

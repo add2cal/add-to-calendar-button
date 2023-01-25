@@ -3,7 +3,7 @@
  *  Add to Calendar Button
  *  ++++++++++++++++++++++
  *
- *  Version: 2.0.1
+ *  Version: 2.0.2
  *  Creator: Jens Kuerschner (https://jenskuerschner.de)
  *  Project: https://github.com/add2cal/add-to-calendar-button
  *  License: Elastic License 2.0 (ELv2)
@@ -305,8 +305,10 @@ function atcb_manage_body_scroll(host, modalObj = null) {
   const modalDim = modal.getBoundingClientRect();
   if (modalDim.height + 100 > window.innerHeight) {
     document.body.classList.add('atcb-modal-no-scroll');
+    document.documentElement.classList.add('atcb-modal-no-scroll');
   } else {
     document.body.classList.remove('atcb-modal-no-scroll');
+    document.documentElement.classList.remove('atcb-modal-no-scroll');
   }
 }
 

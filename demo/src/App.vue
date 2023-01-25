@@ -2,8 +2,7 @@
 import { watch, ref, onUpdated } from 'vue';
 import { useHead } from '@vueuse/head';
 import FooterArea from "@/components/FooterArea.vue";
-import HeaderLarge from "@/components/HeaderLarge.vue";
-import HeaderSmall from "@/components/HeaderSmall.vue";
+import Header from "@/components/HeaderWrapper.vue";
 
 import { RouterView, useRouter } from "vue-router";
 import { useI18n } from 'vue-i18n';
@@ -117,10 +116,7 @@ onUpdated(() => {
 
 <template>
   <header>
-    <div class="wrapper">
-      <HeaderLarge v-if="$route.name=='home' || $route.name=='home-i18n'" />
-      <HeaderSmall v-else />
-    </div>
+    <Header />
   </header>
 
   <div class="mt-16 mb-20 text-center md:text-left" :class="($route.name!=='home' && $route.name!='home-i18n') ? 'container' : ''">
