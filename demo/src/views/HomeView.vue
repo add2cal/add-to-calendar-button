@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { RouterLink } from "vue-router";
 import { defineAsyncComponent } from 'vue';
-import { ArrowRightIcon, WrenchScrewdriverIcon, BeakerIcon, AdjustmentsHorizontalIcon, MagnifyingGlassIcon, AcademicCapIcon } from '@heroicons/vue/24/outline';
+import { ArrowRightIcon, WrenchScrewdriverIcon, BeakerIcon, AdjustmentsHorizontalIcon } from '@heroicons/vue/24/outline';
 import { useI18n } from 'vue-i18n';
 import IntegrationGuides from "@/components/integration/IntegrationGuides.vue";
 import PlaygroundPlaceholder from "@/components/placeholders/PlaygroundPlaceholder.vue";
@@ -71,12 +71,12 @@ const PlaygroundArea = defineAsyncComponent({
       <div class="grid grid-cols-1 text-center md:grid-cols-2">
         <div class="py-6 sm:p-6 md:text-right">
           <RouterLink class="button-primary w-full max-w-xs" :to="{ name: 'examples', params: { locale } }"
-            ><MagnifyingGlassIcon class="-mt-0.5 mr-2 inline-block h-4 w-4 md:hidden lg:inline-block" aria-hidden="true" /> {{ t('content.home.button_examples') }} <ArrowRightIcon class="-mt-0.5 ml-2 inline-block h-4 w-4" aria-hidden="true"
+            >{{ t('content.home.button_examples') }} <ArrowRightIcon class="-mt-0.5 ml-2 inline-block h-4 w-4" aria-hidden="true"
           /></RouterLink>
         </div>
         <div class="py-6 sm:p-6 md:text-left">
           <RouterLink class="button-primary w-full max-w-xs" :to="{ name: 'configuration', params: { locale } }"
-            ><AcademicCapIcon class="-mt-0.5 mr-2 inline-block h-4 w-4 md:hidden lg:inline-block" aria-hidden="true" /> {{ t('content.home.button_configure') }} <ArrowRightIcon class="-mt-0.5 ml-2 inline-block h-4 w-4" aria-hidden="true"
+            >{{ t('content.home.button_configure') }} <ArrowRightIcon class="-mt-0.5 ml-2 inline-block h-4 w-4" aria-hidden="true"
           /></RouterLink>
         </div>
       </div>

@@ -350,15 +350,15 @@ onUnmounted(() => {
           <span class="font-semibold">{{ t('content.advanced.supported_tags') }}:</span>
         </p>
         <ul class="ml-6 list-disc pb-4 pt-2">
-          <li>[hr]</li>
-          <li>[p] ... [/p]</li>
-          <li>[br]</li>
-          <li>[strong] ... [/strong]</li>
-          <li>[u] ... [/u]</li>
-          <li>[i] ... [/i], [em] ... [/em]</li>
-          <li>[ul] ... [/ul], [ol] ... [/ol], [li] ... [/li]</li>
-          <li>[h*] ... [/h*] (&larr; h1, h2, h3, ...)</li>
-          <li>
+          <li class="text-left">[hr]</li>
+          <li class="text-left">[p] ... [/p]</li>
+          <li class="text-left">[br]</li>
+          <li class="text-left">[strong] ... [/strong]</li>
+          <li class="text-left">[u] ... [/u]</li>
+          <li class="text-left">[i] ... [/i], [em] ... [/em]</li>
+          <li class="text-left">[ul] ... [/ul], [ol] ... [/ol], [li] ... [/li]</li>
+          <li class="text-left">[h*] ... [/h*] (&larr; h1, h2, h3, ...)</li>
+          <li class="text-left">
             [url] ... [/url]<br /><span class="text-sm italic">{{ t('content.advanced.url_link_text') }}</span>
           </li>
         </ul>
@@ -688,8 +688,8 @@ onUnmounted(() => {
             You can read this data in 2 ways.
           </p>
           <ol class="ml-6 list-decimal py-3">
-            <li>Observe the <code>atcb-last-event</code> attribute, which gets added to every button. It holds the last event and respective trigger (schema: "EVENT:TRIGGER"; example: "openList:atcb-btn-1").</li>
-            <li class="pt-2">Access the Data Layer.</li>
+            <li class="text-left">Observe the <code>atcb-last-event</code> attribute, which gets added to every button. It holds the last event and respective trigger (schema: "EVENT:TRIGGER"; example: "openList:atcb-btn-1").</li>
+            <li class="pt-2 text-left">Access the Data Layer.</li>
           </ol>
           <p>We are pushing the events directly into the Data Layer, which can be read, for example, with the Google Tag Manager and Google Analytics.</p>
         </div>
@@ -699,20 +699,20 @@ onUnmounted(() => {
             Die Daten kannst du auf 2 Arten auslesen.
           </p>
           <ol class="ml-6 list-decimal py-3">
-            <li>Tracke selbst das <code>atcb-last-event</code> Attribut, welches an jedem Button erzeugt wird. Es zeigt das jeweils letzte Event zusammen mit dem jeweiligen Trigger an (Schema: "EVENT:TRIGGER"; Beispiel: "openList:atcb-btn-1").</li>
-            <li class="pt-2">Nutzer den Data Layer.</li>
+            <li class="text-left">Tracke selbst das <code>atcb-last-event</code> Attribut, welches an jedem Button erzeugt wird. Es zeigt das jeweils letzte Event zusammen mit dem jeweiligen Trigger an (Schema: "EVENT:TRIGGER"; Beispiel: "openList:atcb-btn-1").</li>
+            <li class="pt-2 text-left">Nutzer den Data Layer.</li>
           </ol>
           <p>Wir speichern alle Events direct im Data Layer, der wiederum bspw. vom Google Tag Manager und Google Analytics gelesen werden kann.</p>
         </div>
         <p class="mt-6 font-semibold">{{ t('content.advanced.available_events') }}:</p>
         <ul class="ml-6 list-disc py-3">
-          <li>initialization</li>
-          <li>openList</li>
-          <li>closeList</li>
-          <li>openCalendarLink</li>
-          <li>openSingletonLink</li>
-          <li>openSubEventLink</li>
-          <li>success</li>
+          <li class="text-left">initialization</li>
+          <li class="text-left">openList</li>
+          <li class="text-left">closeList</li>
+          <li class="text-left">openCalendarLink</li>
+          <li class="text-left">openSingletonLink</li>
+          <li class="text-left">openSubEventLink</li>
+          <li class="text-left">success</li>
         </ul>
         <p class="mt-3 text-sm italic">({{ t('content.advanced.tracking_test_disclaimer') }})</p>
       </section>
@@ -787,9 +787,9 @@ onUnmounted(() => {
           </p>
           <p class="font-semibold">Please make sure that the following applys to your project!</p>
           <ul class="ml-6 list-disc py-3">
-            <li>You are developing your own native/hybrid app.</li>
-            <li>You are opening the device's default browser instead of using any in-app WebView.</li>
-            <li>You have a distinctive .ics file on some server and can refer to it via the "icsFile" option.</li>
+            <li class="text-left">You are developing your own native/hybrid app.</li>
+            <li class="text-left">You are opening the device's default browser instead of using any in-app WebView.</li>
+            <li class="text-left">You have a distinctive .ics file on some server and can refer to it via the "icsFile" option.</li>
           </ul>
           <span class="text-sm italic">(The button below should not fire within an in-app WebView like at the Instagram native app - but it would in your app.)</span>
         </div>
@@ -805,9 +805,9 @@ onUnmounted(() => {
           </p>
           <p class="font-semibold">Bitte stelle sicher, dass folgendes auf dein Projekt zutrifft!</p>
           <ul class="ml-6 list-disc py-3">
-            <li>Du entwickelst deine eigene native/hybride App.</li>
-            <li>Du öffnest in der App den Standard-Browser des Geräts und nutzt nicht den WebView.</li>
-            <li>Du hast eine dedizierte .ics-Datei zur Verfügung und verweist auf diese über die "icsFile"-Option.</li>
+            <li class="text-left">Du entwickelst deine eigene native/hybride App.</li>
+            <li class="text-left">Du öffnest in der App den Standard-Browser des Geräts und nutzt nicht den WebView.</li>
+            <li class="text-left">Du hast eine dedizierte .ics-Datei zur Verfügung und verweist auf diese über die "icsFile"-Option.</li>
           </ul>
           <span class="text-sm italic">(Der nachfolgende Button sollte in einer in-App-WebView-Umgebung, wie der Instagram-App nicht funktionieren, wohl aber in deiner eigenen App.)</span>
         </div>
