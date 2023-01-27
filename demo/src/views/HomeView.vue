@@ -70,14 +70,10 @@ const PlaygroundArea = defineAsyncComponent({
 
       <div class="grid grid-cols-1 text-center md:grid-cols-2">
         <div class="py-6 sm:p-6 md:text-right">
-          <RouterLink class="button-primary w-full max-w-xs" :to="{ name: 'examples', params: { locale } }"
-            >{{ t('content.home.button_examples') }} <ArrowRightIcon class="-mt-0.5 ml-2 inline-block h-4 w-4" aria-hidden="true"
-          /></RouterLink>
+          <RouterLink class="button-primary w-full max-w-xs" :to="{ name: 'examples', params: { locale } }">{{ t('content.home.button_examples') }} <ArrowRightIcon class="-mt-0.5 ml-2 inline-block h-4 w-4" aria-hidden="true" /></RouterLink>
         </div>
         <div class="py-6 sm:p-6 md:text-left">
-          <RouterLink class="button-primary w-full max-w-xs" :to="{ name: 'configuration', params: { locale } }"
-            >{{ t('content.home.button_configure') }} <ArrowRightIcon class="-mt-0.5 ml-2 inline-block h-4 w-4" aria-hidden="true"
-          /></RouterLink>
+          <RouterLink class="button-primary w-full max-w-xs" :to="{ name: 'configuration', params: { locale } }">{{ t('content.home.button_configure') }} <ArrowRightIcon class="-mt-0.5 ml-2 inline-block h-4 w-4" aria-hidden="true" /></RouterLink>
         </div>
       </div>
     </div>

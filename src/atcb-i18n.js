@@ -14,6 +14,19 @@
 import { atcb_rewrite_html_elements } from './atcb-util.js';
 
 // TRANSLATIONS
+
+/* How to add new languages:
+ * 1. Duplicate the "en" block at the following "i18nStrings" object.
+ * 2. Change the key to the ISO 639-1 code of your language (https://www.w3schools.com/tags/ref_language_codes.asp).
+ * 3. Translate the labels.
+ * 4. Add the language to the "rtlLanguages" array, if it write from right to left.
+ * 4. Update the "language" part at the configuration page of the demo page - add the new lagnuages to the "Options" info (/demo/src/views/ConfigView.vue).
+ * 5. Also update the language.ts file at the demo page, so the language appears at the demo playground (/demo/src/components/models/language.ts).
+ */
+
+// right-to-left languages
+const rtlLanguages = ['ar'];
+
 // the database object
 const i18nStrings = {
   en: {
@@ -97,19 +110,19 @@ const i18nStrings = {
     cancel: 'Cancelar',
   },
   fr: {
-    'label.addtocalendar': 'Ajouter à l\'Agenda',
+    'label.addtocalendar': "Ajouter à l'Agenda",
     'label.icalfile': 'Fichier iCal',
     close: 'Fermer',
     'modal.button.default': 'Cliquez-moi',
     'modal.webview.ical.h': 'Ouvrez votre navigateur',
-    'modal.webview.ical.text': 'Malheureusement, les navigateurs in-app ont des problèmes avec la manière dont nous créons les fichiers d\'agenda.',
+    'modal.webview.ical.text': "Malheureusement, les navigateurs in-app ont des problèmes avec la manière dont nous créons les fichiers d'agenda.",
     'modal.clipboard.text': 'Nous avons automatiquement copié une URL magique dans votre presse-papiers.',
     'modal.webview.ical.steps': '<ol><li><strong>Ouvrez un autre navigateur</strong> sur votre smartphone, ...</li><li><strong>Collez</strong> le contenu du presser-papier et continuez.</li></ol>',
     'modal.crios.ical.h': 'Ouvrir Safari',
     'modal.crios.ical.text': 'Malheureusement, Chrome sur iOS a des problèmes avec la façon dont nous générons le fichier agenda.',
     'modal.crios.ical.steps': '<ol><li><strong>Ouvrez Safari</strong>, ...</li><li><strong>Collez</strong> le contenu du presse-papier et continuez.</li></ol>',
-    'modal.multidate.h': "Ceci est un évènement récurrent",
-    'modal.multidate.text': "Ajouter les différents évènements un par un:",
+    'modal.multidate.h': 'Ceci est un évènement récurrent',
+    'modal.multidate.text': 'Ajouter les différents évènements un par un:',
     'date.status.cancelled': 'Cette date est annulée.',
     'date.status.cancelled.cta': 'Actualisez votre agenda!',
     'modal.subscribe.yahoo.h': 'Ajouter un agenda à Yahoo',
@@ -418,6 +431,8 @@ const i18nStrings = {
   },
 };
 
+const availableLanguages = Object.keys(i18nStrings);
+
 // hook, which can be used to override all potential "hard" strings by setting the key (without spaces) as option key and the intended string as value
 function atcb_translate_hook(identifier, data) {
   const searchKey = identifier.replace(/\s+/g, '').toLowerCase();
@@ -441,4 +456,4 @@ function atcb_translate(identifier, language) {
   return identifier;
 }
 
-export { atcb_translate_hook };
+export { atcb_translate_hook, availableLanguages, rtlLanguages };

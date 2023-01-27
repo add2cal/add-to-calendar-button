@@ -19,8 +19,8 @@ const { t, locale } = useI18n();
           Not setting it would automatically reflect to "false". As an alternative, you could also always write it as a string like <code>attributeName="true"</code>.
         </p>
         <p class="mt-8 hidden lg:block">
-          Mind that if you are using the <a href="https://github.com/add2cal/add-to-calendar-button-react" target="_blank" rel="noopener">React wrapper <ArrowTopRightOnSquareIcon class="-mt-0.5 mr-0.5 inline-block h-4 w-4" aria-hidden="true" /></a>, you do not necessarily need to stringify any
-          non-string value.<br />
+          Mind that if you are using the <a href="https://github.com/add2cal/add-to-calendar-button-react" target="_blank" rel="noopener" class="whitespace-nowrap">React wrapper <ArrowTopRightOnSquareIcon class="-mt-0.5 mr-0.5 inline-block h-4 w-4" aria-hidden="true" /></a>, you do not necessarily
+          need to stringify any non-string value.<br />
           You could simply write something like <code>options=['Apple','Google']</code> instead of <code>options="['Apple','Google']"</code>.
         </p>
       </div>
@@ -32,8 +32,8 @@ const { t, locale } = useI18n();
           Wenn er nicht gesetzt ist, definiert das die Option automatisch als "false". Alternativ kannst du den Wert aber auch immer vollständig als String ergänzen: <code>attributeName="true"</code>.
         </p>
         <p class="mt-8 hidden lg:block">
-          Falls du den <a href="https://github.com/add2cal/add-to-calendar-button-react" target="_blank" rel="noopener">React Wrapper <ArrowTopRightOnSquareIcon class="-mt-0.5 mr-0.5 inline-block h-4 w-4" aria-hidden="true" /></a> nutzt, musst du Nicht-String-Werte nicht zwingend zu Strings
-          transformieren.<br />
+          Falls du den <a href="https://github.com/add2cal/add-to-calendar-button-react" target="_blank" rel="noopener" class="whitespace-nowrap">React Wrapper <ArrowTopRightOnSquareIcon class="-mt-0.5 mr-0.5 inline-block h-4 w-4" aria-hidden="true" /></a> nutzt, musst du Nicht-String-Werte nicht
+          zwingend zu Strings transformieren.<br />
           In diesem Fall kannst du bspw. auch einfach <code>options=['Apple','Google']</code> anstelle von <code>options="['Apple','Google']"</code> schreiben.
         </p>
       </div>
@@ -125,12 +125,13 @@ const { t, locale } = useI18n();
                 ><br /><br /><span class="format">YYYY-MM-DD</span>
               </td>
               <td v-if="locale=='en'">
-                A date needs to be formatted as YYYY-MM-DD as specified with <a href="https://en.wikipedia.org/wiki/ISO_8601" target="_blank" rel="noopener">ISO-8601 <ArrowTopRightOnSquareIcon class="-mt-0.5 mr-0.5 inline-block h-3 w-3" aria-hidden="true" /></a>.<br /><br />
+                A date needs to be formatted as YYYY-MM-DD as specified with
+                <a href="https://en.wikipedia.org/wiki/ISO_8601" target="_blank" rel="noopener" class="whitespace-nowrap">ISO-8601 <ArrowTopRightOnSquareIcon class="-mt-0.5 mr-0.5 inline-block h-3 w-3" aria-hidden="true" /></a>.<br /><br />
                 You can use the magic word "today" to dynamically set the current day. Adding "+5" at the end would automatically add 5 days to the calculated date.<br /><br />
                 <RouterLink :to="{ name: 'examples', hash: '#3', params: { locale } }">{{ t('labels.example') }} <ArrowRightIcon class="-mt-0.5 mr-0.5 inline-block h-3 w-3" aria-hidden="true" /></RouterLink>
               </td>
               <td v-else>
-                Ein Datum muss im Schema YYYY-MM-DD gemäß <a href="https://de.wikipedia.org/wiki/ISO_8601" target="_blank" rel="noopener">ISO-8601 <ArrowTopRightOnSquareIcon class="-mt-0.5 mr-0.5 inline-block h-3 w-3" aria-hidden="true" /></a> formatiert sein<br /><br />
+                Ein Datum muss im Schema YYYY-MM-DD gemäß <a href="https://de.wikipedia.org/wiki/ISO_8601" target="_blank" rel="noopener" class="whitespace-nowrap">ISO-8601 <ArrowTopRightOnSquareIcon class="-mt-0.5 mr-0.5 inline-block h-3 w-3" aria-hidden="true" /></a> formatiert sein<br /><br />
                 Du kannst das Wort "today" nutzen, um dynamisch den jeweils aktuellen Tag zu setzen. Wenn du bspw. "+5" hinzufügst, werden automatisch 5 Tage aufaddiert.<br /><br />
                 <RouterLink :to="{ name: 'examples', hash: '#3', params: { locale } }">{{ t('labels.example') }} <ArrowRightIcon class="-mt-0.5 mr-0.5 inline-block h-3 w-3" aria-hidden="true" /></RouterLink>
               </td>
@@ -145,11 +146,12 @@ const { t, locale } = useI18n();
               <th scope="row">endDate</th>
               <td><em>String</em><br /><br /><span class="format">YYYY-MM-DD</span></td>
               <td v-if="locale=='en'">
-                A date needs to be formatted as YYYY-MM-DD as specified with <a href="https://en.wikipedia.org/wiki/ISO_8601" target="_blank" rel="noopener">ISO-8601 <ArrowTopRightOnSquareIcon class="-mt-0.5 mr-0.5 inline-block h-3 w-3" aria-hidden="true" /></a>.<br /><br />
+                A date needs to be formatted as YYYY-MM-DD as specified with
+                <a href="https://en.wikipedia.org/wiki/ISO_8601" target="_blank" rel="noopener" class="whitespace-nowrap">ISO-8601 <ArrowTopRightOnSquareIcon class="-mt-0.5 mr-0.5 inline-block h-3 w-3" aria-hidden="true" /></a>.<br /><br />
                 If there is no endDate set, it is assumed that it is the same as startDate. You can use the magic word "today" to dynamically set the current day. Adding "+5" at the end would automatically add 5 days to the calculated date.
               </td>
               <td v-else>
-                Ein Datum muss im Schema YYYY-MM-DD gemäß <a href="https://de.wikipedia.org/wiki/ISO_8601" target="_blank" rel="noopener">ISO-8601 <ArrowTopRightOnSquareIcon class="-mt-0.5 mr-0.5 inline-block h-3 w-3" aria-hidden="true" /></a> formatiert sein<br /><br />
+                Ein Datum muss im Schema YYYY-MM-DD gemäß <a href="https://de.wikipedia.org/wiki/ISO_8601" target="_blank" rel="noopener" class="whitespace-nowrap">ISO-8601 <ArrowTopRightOnSquareIcon class="-mt-0.5 mr-0.5 inline-block h-3 w-3" aria-hidden="true" /></a> formatiert sein<br /><br />
                 Du kannst das Wort "today" nutzen, um dynamisch den jeweils aktuellen Tag zu setzen. Wenn du bspw. "+5" hinzufügst, werden automatisch 5 Tage aufaddiert.<br /><br />
               </td>
             </tr>
@@ -166,14 +168,15 @@ const { t, locale } = useI18n();
               </td>
               <td v-if="locale=='en'">
                 It is not required, but recommended to add a time zone.<br />
-                Find a list of them at <a href="https://en.wikipedia.org/wiki/List_of_tz_database_time_zones" target="_blank" rel="noopener">Wikipedia <ArrowTopRightOnSquareIcon class="-mt-0.5 mr-0.5 inline-block h-3 w-3" aria-hidden="true" /></a>.<br /><br />
+                Find a list of them at <a href="https://en.wikipedia.org/wiki/List_of_tz_database_time_zones" target="_blank" rel="noopener" class="whitespace-nowrap">Wikipedia <ArrowTopRightOnSquareIcon class="-mt-0.5 mr-0.5 inline-block h-3 w-3" aria-hidden="true" /></a>.<br /><br />
                 You can use "currentBrowser" as value to dynamically use the time of the user's browser. Use this with caution, since it would mean that the time for the event will differ per user, which should not be the usual case.
                 <br />
                 A time zone only comes into play, when startTime and endTime are defined.
               </td>
               <td v-else>
                 Kein Pflichtfeld, aber wärmstens empfohlen.<br />
-                Eine Liste valider Zeitzonen findest du auf <a href="https://en.wikipedia.org/wiki/List_of_tz_database_time_zones" target="_blank" rel="noopener">Wikipedia <ArrowTopRightOnSquareIcon class="-mt-0.5 mr-0.5 inline-block h-3 w-3" aria-hidden="true" /></a>.<br /><br />
+                Eine Liste valider Zeitzonen findest du auf
+                <a href="https://en.wikipedia.org/wiki/List_of_tz_database_time_zones" target="_blank" rel="noopener" class="whitespace-nowrap">Wikipedia <ArrowTopRightOnSquareIcon class="-mt-0.5 mr-0.5 inline-block h-3 w-3" aria-hidden="true" /></a>.<br /><br />
                 Du kannst "currentBrowser" als Wert nutzen, um dynamisch die Zeitzone des jeweiligen Nutzers (Browser) zu wählen. Nutze diese Funktion mit Vorsicht, da dies bedeutet, dass die Zeitangabe für das Event je Nutzer unterschiedlich sein kann, was meist nicht gewollt ist.<br />
                 Eine Zeitzone ist nur relevant, wenn startTime und endTime spezifiziert sind.
               </td>
@@ -193,12 +196,12 @@ const { t, locale } = useI18n();
               </td>
               <td v-if="locale=='en'">
                 Can be used to manage changes of an event as it is specified within the iCalendar specifications
-                <a href="https://www.rfc-editor.org/rfc/rfc5545#section-3.8.1.11" target="_blank" rel="noopener">RFC5545 <ArrowTopRightOnSquareIcon class="-mt-0.5 mr-0.5 inline-block h-3 w-3" aria-hidden="true" /></a>.<br /><br />
+                <a href="https://www.rfc-editor.org/rfc/rfc5545#section-3.8.1.11" target="_blank" rel="noopener" class="whitespace-nowrap">RFC5545 <ArrowTopRightOnSquareIcon class="-mt-0.5 mr-0.5 inline-block h-3 w-3" aria-hidden="true" /></a>.<br /><br />
                 <RouterLink :to="{ name: 'advanced-use', hash: '#5', params: { locale } }">{{ t('labels.example') }} <ArrowRightIcon class="-mt-0.5 mr-0.5 inline-block h-3 w-3" aria-hidden="true" /></RouterLink>
               </td>
               <td v-else>
                 Kann genutzt werden, um Änderungen an einem Event zu verwalten.<br />Gemäß der iCalendar-Spezifikation
-                <a href="https://www.rfc-editor.org/rfc/rfc5545#section-3.8.1.11" target="_blank" rel="noopener">RFC5545 <ArrowTopRightOnSquareIcon class="-mt-0.5 mr-0.5 inline-block h-3 w-3" aria-hidden="true" /></a>.<br /><br />
+                <a href="https://www.rfc-editor.org/rfc/rfc5545#section-3.8.1.11" target="_blank" rel="noopener" class="whitespace-nowrap">RFC5545 <ArrowTopRightOnSquareIcon class="-mt-0.5 mr-0.5 inline-block h-3 w-3" aria-hidden="true" /></a>.<br /><br />
                 <RouterLink :to="{ name: 'advanced-use', hash: '#5', params: { locale } }">{{ t('labels.example') }} <ArrowRightIcon class="-mt-0.5 mr-0.5 inline-block h-3 w-3" aria-hidden="true" /></RouterLink>
               </td>
             </tr>
@@ -306,10 +309,11 @@ const { t, locale } = useI18n();
               <td v-if="locale=='en'">
                 Defines recurring events.<br /><br />
                 This will deactivate the Yahoo and Microsoft options, since they do not support it at the moment (users could still use iCal in this case).<br />
-                You can use any valid <a href="https://www.rfc-editor.org/rfc/rfc5545" target="_blank" rel="noopener">RRULE <ArrowTopRightOnSquareIcon class="-mt-0.5 mr-0.5 inline-block h-3 w-3" aria-hidden="true" /></a> to define the respective rule (<a
+                You can use any valid <a href="https://www.rfc-editor.org/rfc/rfc5545" target="_blank" rel="noopener" class="whitespace-nowrap">RRULE <ArrowTopRightOnSquareIcon class="-mt-0.5 mr-0.5 inline-block h-3 w-3" aria-hidden="true" /></a> to define the respective rule (<a
                   href="https://icalendar.org/rrule-tool.html"
                   target="_blank"
                   rel="noopener"
+                  class="whitespace-nowrap"
                   >click here for a generator <ArrowTopRightOnSquareIcon class="-mt-0.5 mr-0.5 inline-block h-3 w-3" aria-hidden="true" /></a
                 >).<br />
                 Mind that the startDate needs to be valid within the given recurrence ruleset!<br /><br />
@@ -320,10 +324,11 @@ const { t, locale } = useI18n();
               <td v-else>
                 Definiert wiederkehrende Events.<br /><br />
                 Diese Optione deaktiviert die Yahoo- und Microsoft-Kalendar-Optionen, da die Funktion dort aktuell nicht unterstützt wird (in diesen Fällen können Nutzer weiterhin auf die iCal-Datei zurückgreifen).<br />
-                Du kannst jede valide <a href="https://www.rfc-editor.org/rfc/rfc5545" target="_blank" rel="noopener">RRULE <ArrowTopRightOnSquareIcon class="-mt-0.5 mr-0.5 inline-block h-3 w-3" aria-hidden="true" /></a> nutzen, um eine entsprechende Regel anzuwenden (<a
+                Du kannst jede valide <a href="https://www.rfc-editor.org/rfc/rfc5545" target="_blank" rel="noopener" class="whitespace-nowrap">RRULE <ArrowTopRightOnSquareIcon class="-mt-0.5 mr-0.5 inline-block h-3 w-3" aria-hidden="true" /></a> nutzen, um eine entsprechende Regel anzuwenden (<a
                   href="https://icalendar.org/rrule-tool.html"
                   target="_blank"
                   rel="noopener"
+                  class="whitespace-nowrap"
                   >Generator-Tool <ArrowTopRightOnSquareIcon class="-mt-0.5 mr-0.5 inline-block h-3 w-3" aria-hidden="true" /></a
                 >).<br />
                 Beachte, dass das startDate ein valides Datum innerhalb des definierten Regelwerks sein muss!<br /><br />
@@ -730,12 +735,13 @@ const { t, locale } = useI18n();
               </td>
               <td v-if="locale=='en'">
                 If you want to have the text blocks in another language than English, you can use the included translations (i18n).<br /><br />
-                Simply set one of the supported languages as <a href="https://www.w3schools.com/tags/ref_language_codes.asp" target="_blank" rel="noopener">ISO 639-1 code <ArrowTopRightOnSquareIcon class="-mt-0.5 mr-0.5 inline-block h-3 w-3" aria-hidden="true" /></a>.<br />
+                Simply set one of the supported languages as <a href="https://www.w3schools.com/tags/ref_language_codes.asp" target="_blank" rel="noopener" class="whitespace-nowrap">ISO 639-1 code <ArrowTopRightOnSquareIcon class="-mt-0.5 mr-0.5 inline-block h-3 w-3" aria-hidden="true" /></a>.<br />
                 Also supports Right-to-Left (RTL) with Arabic.
               </td>
               <td v-else>
                 Sofern du die Text-Blöcke in einer anderen Sprache als Englisch anzeigen möchtest, kannst du die inkludierten Übersetzungen nutzen (i18n).<br /><br />
-                Spezifiere einfach eine der unterstützten Sprachen als <a href="https://www.w3schools.com/tags/ref_language_codes.asp" target="_blank" rel="noopener">ISO 639-1 code <ArrowTopRightOnSquareIcon class="-mt-0.5 mr-0.5 inline-block h-3 w-3" aria-hidden="true" /></a>.<br />
+                Spezifiere einfach eine der unterstützten Sprachen als
+                <a href="https://www.w3schools.com/tags/ref_language_codes.asp" target="_blank" rel="noopener" class="whitespace-nowrap">ISO 639-1 code <ArrowTopRightOnSquareIcon class="-mt-0.5 mr-0.5 inline-block h-3 w-3" aria-hidden="true" /></a>.<br />
                 Für Arabisch wird zudem Rechts-nach-Links (RTL) für alle Elemente unterstützt und automatisch angewendet.
               </td>
             </tr>
@@ -745,16 +751,16 @@ const { t, locale } = useI18n();
               <td v-if="locale=='en'">
                 For all text blocks, which are not already customizable via other options (like the word "Close"), you can specify the "customLabels" option.<br />
                 There, you need to specify a JSON structure and define any text you want to override. Check the
-                <a href="https://github.com/add2cal/add-to-calendar-button/blob/main/src/atcb-i18n.js" target="_blank" rel="noopener">atcb-i18n.js file <ArrowTopRightOnSquareIcon class="-mt-0.5 mr-0.5 inline-block h-3 w-3" aria-hidden="true" /></a> for the available keys. Mind to transform those
-                keys to lower case strings without any whitespaces!<br />
+                <a href="https://github.com/add2cal/add-to-calendar-button/blob/main/src/atcb-i18n.js" target="_blank" rel="noopener" class="whitespace-nowrap">atcb-i18n.js file <ArrowTopRightOnSquareIcon class="-mt-0.5 mr-0.5 inline-block h-3 w-3" aria-hidden="true" /></a> for the available keys.
+                Mind to transform those keys to lower case strings without any whitespaces!<br />
                 Any custom label will also override any translation.<br />You can use the same HTML pseudo tags as with the description option here.<br /><br />
                 <RouterLink :to="{ name: 'advanced-use', hash: '#4', params: { locale } }">{{ t('labels.example') }} <ArrowRightIcon class="-mt-0.5 mr-0.5 inline-block h-3 w-3" aria-hidden="true" /></RouterLink>
               </td>
               <td v-else>
                 Text-Blöcke, die nicht bereits durch andere Optionen bearbeitbar sind (bspw. das Wort "Schließen"), können über die Option "customLabels" verändert werden.<br />
                 Hierbei muss eine JSON-Struktur mit den zu überschreibenden Texten definiert werden. Sieh dir die
-                <a href="https://github.com/add2cal/add-to-calendar-button/blob/main/src/atcb-i18n.js" target="_blank" rel="noopener">atcb-i18n.js-Datei <ArrowTopRightOnSquareIcon class="-mt-0.5 mr-0.5 inline-block h-3 w-3" aria-hidden="true" /></a> für eine Liste der verfügbaren Keys an. Beachte,
-                dass die Keys hier zu Kleinbuchstaben transformiert und Leerzeichen entfernt werden müssen!<br />
+                <a href="https://github.com/add2cal/add-to-calendar-button/blob/main/src/atcb-i18n.js" target="_blank" rel="noopener" class="whitespace-nowrap">atcb-i18n.js-Datei <ArrowTopRightOnSquareIcon class="-mt-0.5 mr-0.5 inline-block h-3 w-3" aria-hidden="true" /></a> für eine Liste der
+                verfügbaren Keys an. Beachte, dass die Keys hier zu Kleinbuchstaben transformiert und Leerzeichen entfernt werden müssen!<br />
                 Ein so manipulierter Text überschreibt auch jegliche Übersetzung.<br />Du kannst hierbei die gleichen HTML-Pseudo-Tags nutzen, wie sie auch in der "description"-Option möglich sind.<br /><br />
                 <RouterLink :to="{ name: 'advanced-use', hash: '#4', params: { locale } }">{{ t('labels.example') }} <ArrowRightIcon class="-mt-0.5 mr-0.5 inline-block h-3 w-3" aria-hidden="true" /></RouterLink>
               </td>
