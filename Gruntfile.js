@@ -19,8 +19,8 @@ function prepareFinalFile(content, stripAllImport = true, stripAllExport = true)
       const cssFileContent = fs
         .readFileSync('./assets/css/atcb' + styleString + '.min.css')
         .toString()
-        .replace(/\.{2,}/g, "")
-        .replace(/\\/g, "")
+        .replace(/\.{2,}/g, '')
+        .replace(/\\/g, '')
         .replace(/"/g, '\\"');
       inlineStyleOutput += '\r\n"' + style + '": "' + cssFileContent + '",';
     });

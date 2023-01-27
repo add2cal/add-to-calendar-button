@@ -13,6 +13,7 @@
 
 import { isiOS, atcbValidRecurrOptions, atcbInvalidSubscribeOptions, atcbiOSInvalidOptions, atcbWcBooleanParams } from './atcb-globals.js';
 import { atcb_format_datetime, atcb_rewrite_html_elements, atcb_generate_uuid } from './atcb-util.js';
+import { availableLanguages, rtlLanguages } from './atcb-i18n';
 
 // CLEAN DATA BEFORE FURTHER VALIDATION (CONSIDERING SPECIAL RULES AND SCHEMES)
 function atcb_decorate_data(data) {
@@ -216,7 +217,7 @@ function atcb_decorate_light_mode(lightMode = '') {
 
 function atcb_decorate_data_i18n(data) {
   // set language if not set
-  if (data.language == null || data.language == '') {
+  if (data.language == null || data.language == '' || !availableLanguages.includes(data.language)) {
     data.language = 'en';
   }
   // reduce language identifier, if long version is used
@@ -224,7 +225,7 @@ function atcb_decorate_data_i18n(data) {
     data.language = data.language.substr(0, 2);
   }
   // set right-to-left for relevant languages
-  if (data.language == 'ar') {
+  if (rtlLanguages.includes(data.language)) {
     data.rtl = true;
   } else {
     data.rtl = false;
