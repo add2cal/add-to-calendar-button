@@ -731,7 +731,7 @@ const { t, locale } = useI18n();
             <tr id="language">
               <th scope="row">language</th>
               <td>
-                <em>String</em><br /><br /><span class="label block">{{ t('content.config.options') }}:</span>en, de, nl, fr, es, pt, tr, zh, ar, hi, pl, id, no, fi, sv, cs, ja, it, ko, vi<br /><br /><span class="label">{{ t('content.config.default') }}:</span>en
+                <em>String</em><br /><br /><span class="label block">{{ t('content.config.options') }}:</span>ar, cs, de, en, es, fi, fr, hi, id, it, ja, ko, nl, no, ro, pl, pt, sv, tr, vi, zh<br /><br /><span class="label">{{ t('content.config.default') }}:</span>en
               </td>
               <td v-if="locale=='en'">
                 If you want to have the text blocks in another language than English, you can use the included translations (i18n).<br /><br />

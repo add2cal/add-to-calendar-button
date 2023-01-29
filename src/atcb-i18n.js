@@ -19,7 +19,7 @@ import { atcb_rewrite_html_elements } from './atcb-util.js';
  * 1. Duplicate the "en" block at the following "i18nStrings" object.
  * 2. Change the key to the ISO 639-1 code of your language (https://www.w3schools.com/tags/ref_language_codes.asp).
  * 3. Translate the labels.
- * 4. Add the language to the "rtlLanguages" array, if it write from right to left.
+ * 4. Add the language to the "rtlLanguages" array below, if it write from right to left.
  * 4. Update the "language" part at the configuration page of the demo page - add the new lagnuages to the "Options" info (/demo/src/views/ConfigView.vue).
  * 5. Also update the language.ts file at the demo page, so the language appears at the demo playground (/demo/src/components/models/language.ts).
  */
