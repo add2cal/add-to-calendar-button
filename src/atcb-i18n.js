@@ -429,6 +429,26 @@ const i18nStrings = {
     'modal.subscribe.yahoo.text': '<ol><li>Mở Lịch Yahoo.</li><li>Nhấp vào tab "Hành động".</li><li>Chọn "Theo dõi các Lịch khác".</li><li>Chọn tên và dán URL từ khay nhớ tạm của bạn vào trường URL.</li></ol>',
     cancel: 'Hủy bỏ',
   },
+  ro: {
+    'label.addtocalendar': 'Adauga In Calendar',
+    'label.icalfile': 'Fisier iCal',
+    close: 'Inchide',
+    'modal.button.default': 'Apasa-ma',
+    'modal.webview.ical.h': 'Deschide browserul',
+    'modal.webview.ical.text': 'Din pacate, browserele din aplicatie au probleme cu generarea de fisiere pentru calendar.',
+    'modal.clipboard.text': 'Ti-am copiat automat un URL magic in clipboard',
+    'modal.webview.ical.steps': '<ol><li><strong>Deschide un alt browser</strong> pe telefonul tau, ...</li><li><strong>Lipeste</strong> continutul din clipboard si continua.</li></ol>',
+    'modal.crios.ical.h': 'Deschide Safari',
+    'modal.crios.ical.text': 'Din nefericire, Chrome pe iOS are probleme cu modalitatile prin care noi generam fisierele pentru scalendar.',
+    'modal.crios.ical.steps': '<ol><li><strong>Deschides Safari</strong>, ...</li><li><strong>Lipeste</strong> continutul din clipboard si continua.</li></ol>',
+    'modal.multidate.h': 'Aceasta este o serie de evenimente',
+    'modal.multidate.text': 'Adauga evenimentele individuale una cate una:',
+    'date.status.cancelled': 'Aceasta data a fost anulata.',
+    'date.status.cancelled.cta': 'Te rugam sa-ti updatezi calendarul!',
+    'modal.subscribe.yahoo.h': 'Adauga Calendar in Yahoo',
+    'modal.subscribe.yahoo.text': '<ol><li>Deschide acum calendarul Yahoo.</li><li>Apasa pe tab-ul de "Actiuni".</li><li>Apasa "Urmareste alte calendare".</li><li>Seteaza un nume si lipeste continutul din clipboard in casuta cu url.</li></ol>',
+    cancel: 'Anuleaza',
+  },
 };
 
 const availableLanguages = Object.keys(i18nStrings);
