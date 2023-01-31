@@ -1,6 +1,6 @@
 const fs = require('fs');
 
-function prepareFinalFile(content, stripAllImport = true, stripAllExport = true) {
+function prepareFinalFile(content, stripAllImport = true, stripAllExport = true, transformToCommonJS = false) {
   // remove TimeZones iCal Library version output (do not do this, if your are using the time zone library standalone!)
   content = content.replace(/^console\.log\('Add to Calendar TimeZones iCal Library loaded \(version ' \+ tzlibVersion \+ '\)'\);$/m, '');
   // add style inline
@@ -39,8 +39,16 @@ function prepareFinalFile(content, stripAllImport = true, stripAllExport = true)
     // remove all export statements
     content = content.replace(/^export {[\w\s-_,]*};/gim, '');
   }
+  if (transformToCommonJS) {
+    content = content
+      .replace(/tzlib_get_offset/gm, 'tzlibActions.tzlib_get_offset')
+      .replace(/tzlib_get_ical_block/gm, 'tzlibActions.tzlib_get_ical_block')
+      .replace(/tzlib_get_timezones/gm, 'tzlibActions.tzlib_get_timezones');
+  }
   return content;
 }
+
+const jsCoreFilesToCombine = ['src/atcb-globals.js', 'src/atcb-decorate.js', 'src/atcb-validate.js', 'src/atcb-control.js', 'src/atcb-generate.js', 'src/atcb-generate-rich-data.js', 'src/atcb-links.js', 'src/atcb-util.js', 'src/atcb-event.js', 'src/atcb-i18n.js', 'src/atcb-init.js'];
 
 // The config.
 module.exports = function (grunt) {
@@ -97,20 +105,7 @@ module.exports = function (grunt) {
     // generate the distributable JavaScript files (and also add a customized css file to the demo)
     concat: {
       main: {
-        src: [
-          'node_modules/timezones-ical-library/dist/tzlib.js',
-          'src/atcb-globals.js',
-          'src/atcb-decorate.js',
-          'src/atcb-validate.js',
-          'src/atcb-control.js',
-          'src/atcb-generate.js',
-          'src/atcb-generate-rich-data.js',
-          'src/atcb-links.js',
-          'src/atcb-util.js',
-          'src/atcb-event.js',
-          'src/atcb-i18n.js',
-          'src/atcb-init.js',
-        ],
+        src: ['node_modules/timezones-ical-library/dist/tzlib.js', ...jsCoreFilesToCombine],
         // uncomment the following line instead of the line after (and also at line 161) that to additionally create a atcb script, which is not minified
         //dest: 'dist/atcb-unminified.js',
         dest: 'dist/atcb.js',
@@ -120,13 +115,23 @@ module.exports = function (grunt) {
         },
       },
       module: {
-        src: ['src/atcb-globals.js', 'src/atcb-decorate.js', 'src/atcb-validate.js', 'src/atcb-control.js', 'src/atcb-generate.js', 'src/atcb-generate-rich-data.js', 'src/atcb-links.js', 'src/atcb-util.js', 'src/atcb-event.js', 'src/atcb-i18n.js', 'src/atcb-init.js'],
+        src: jsCoreFilesToCombine,
         dest: 'dist/module/index.js',
         options: {
           stripBanners: true,
           banner: "import { tzlib_get_ical_block, tzlib_get_offset, tzlib_get_timezones } from 'timezones-ical-library';\r\n",
           footer: 'export { atcb_action };',
           process: (content) => prepareFinalFile(content, true, true),
+        },
+      },
+      commonJS: {
+        src: jsCoreFilesToCombine,
+        dest: 'dist/commonjs/index.js',
+        options: {
+          stripBanners: true,
+          banner: "// eslint-disable-next-line @typescript-eslint/no-var-requires\r\nconst tzlibActions = require('timezones-ical-library');\r\n",
+          footer: 'module.exports = { atcb_action };',
+          process: (content) => prepareFinalFile(content, true, true, true),
         },
       },
       cssDemo: {
@@ -142,6 +147,21 @@ module.exports = function (grunt) {
       'package.json ES Module': {
         'dist/module/package.json': function (fs, fd, done) {
           fs.writeSync(fd, '{ "type": "module" }');
+          done();
+        },
+      },
+      'package.json commonJS': {
+        'dist/commonjs/package.json': function (fs, fd, done) {
+          fs.writeSync(fd, '{ "type": "commonjs" }');
+          done();
+        },
+      },
+      '.eslintrc.json commonJS': {
+        'dist/commonjs/.eslintrc.json': function (fs, fd, done) {
+          fs.writeSync(
+            fd,
+            '{ "extends": "../../.eslintrc.json", "env": { "node": true }, "plugins": ["commonjs"] }'
+          );
           done();
         },
       },

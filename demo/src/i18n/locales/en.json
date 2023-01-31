@@ -280,8 +280,8 @@
         "optimize_1": "Theoretically, this was already it.",
         "optimize_2": "Vue works extremely well with Web Components.",
         "config_1": "However, you might notice a warning in the browser console.",
-        "config_2": "To get rid of this, you need to provide a little bit more information to the compiler options at your",
-        "config_3": "",
+        "config_2": "To get rid of this, you need to provide a little bit more information to the compiler options.",
+        "config_3": "This can go into your vite.config.js or other places depending on your setup. Check the official Vue documentation for more details",
         "config_4": "In case the Add to Calendar Button is the only Web Component in your project, you could also be a little bit more explicit here.",
         "config_5": "In this case, our recommendation is to define tags, which start with \"add-\" as \"custom elements\"."
       },
@@ -312,6 +312,7 @@
       "sidebar": {
         "framework": "You are using Angular, React, Vue, or other frameworks?",
         "tech_stack": "Not your tech stack?",
+        "stackblitz": "Find complete project examples per stack at Stackblitz",
         "cta": "Check out the \"Installation\" section!",
         "explainer": "We have strong guides and solutions for all big frontend stacks as well things like WordPress."
       }

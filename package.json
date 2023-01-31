@@ -1,12 +1,12 @@
 {
   "name": "add-to-calendar-button",
-  "version": "2.0.2",
+  "version": "2.1.0",
   "engines": {
     "node": ">=16.18.1",
     "npm": ">=8.19.2"
   },
   "description": "A convenient JavaScript snippet, which lets you create beautiful buttons, where people can add events to their calendars.",
-  "main": "dist/module/index.js",
+  "main": "dist/commonjs/index.js",
   "module": "dist/module/index.js",
   "files": [
     "dist",
@@ -16,6 +16,12 @@
     "CHANGELOG.md",
     ".npmignore"
   ],
+  "exports": {
+    ".": {
+      "import": "./dist/module/index.js",
+      "require": "./dist/commonjs/index.js"
+    }
+  },
   "types": "index.d.ts",
   "jsdelivr": "./dist/atcb.js",
   "repository": {
