@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { watch } from 'vue';
+import { ArrowTopRightOnSquareIcon } from '@heroicons/vue/24/outline';
 import CodeBlock from "@/components/CodeBlock.vue";
 import NextSteps from "@/components/integration/NextSteps.vue";
 import GuideSidebar from "@/components/integration/GuideSidebar.vue";
@@ -45,7 +46,11 @@ watch(locale, value => {
         </p>
         <p>
           {{ t('content.guide.vue.config_1') }}<br />
-          {{ t('content.guide.vue.config_2') }} <span class="font-semibold italic">vite.config.js</span>{{ t('content.guide.vue.config_3') }}.
+          {{ t('content.guide.vue.config_2') }}
+        </p>
+        <p>
+          {{ t('content.guide.vue.config_3') }}:
+          <a href="https://vuejs.org/guide/extras/web-components.html#using-custom-elements-in-vue" target="_blank" rel="noopener" class="whitespace-nowrap">{{ t('labels.clickHere') }} <ArrowTopRightOnSquareIcon class="-mt-0.5 mr-0.5 inline-block h-4 w-4" aria-hidden="true" /></a>.
         </p>
         <CodeBlock language="javascript" class="line-numbers">
           <pre>

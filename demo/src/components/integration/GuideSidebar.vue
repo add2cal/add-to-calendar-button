@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { CodeBracketIcon } from '@heroicons/vue/24/outline';
+import { CodeBracketIcon, ArrowTopRightOnSquareIcon } from '@heroicons/vue/24/outline';
 import Angular from "@/components/logos/LogoAngular.vue";
 import Astro from "@/components/logos/LogoAstro.vue";
 import React from "@/components/logos/LogoReact.vue";
@@ -40,4 +40,9 @@ export default {
     <RouterLink v-else :to="{ name: 'home-i18n', hash: '#installation', params: { locale } }">{{ t('content.guide.sidebar.cta') }}</RouterLink>
   </p>
   <p>{{ t('content.guide.sidebar.explainer') }}</p>
+  <div class="mt-7 border-t border-zinc-300 pt-7 dark:border-zinc-700"></div>
+  <p>
+    {{ t('content.guide.sidebar.stackblitz') }}:
+    <a href="https://stackblitz.com/@add-to-calendar/collections/add-to-calendar-button-integration-examples" target="_blank" rel="noopener" class="whitespace-nowrap">{{ t('labels.clickHere') }} <ArrowTopRightOnSquareIcon class="mr-0.5 inline-block h-2.5 w-2.5" aria-hidden="true" /></a>.
+  </p>
 </template>

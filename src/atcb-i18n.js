@@ -3,7 +3,7 @@
  *  Add to Calendar Button
  *  ++++++++++++++++++++++
  *
- *  Version: 2.0.2
+ *  Version: 2.1.0
  *  Creator: Jens Kuerschner (https://jenskuerschner.de)
  *  Project: https://github.com/add2cal/add-to-calendar-button
  *  License: Elastic License 2.0 (ELv2) (https://github.com/add2cal/add-to-calendar-button/blob/main/LICENSE.txt)
@@ -19,7 +19,7 @@ import { atcb_rewrite_html_elements } from './atcb-util.js';
  * 1. Duplicate the "en" block at the following "i18nStrings" object.
  * 2. Change the key to the ISO 639-1 code of your language (https://www.w3schools.com/tags/ref_language_codes.asp).
  * 3. Translate the labels.
- * 4. Add the language to the "rtlLanguages" array, if it write from right to left.
+ * 4. Add the language to the "rtlLanguages" array below, if it write from right to left.
  * 4. Update the "language" part at the configuration page of the demo page - add the new lagnuages to the "Options" info (/demo/src/views/ConfigView.vue).
  * 5. Also update the language.ts file at the demo page, so the language appears at the demo playground (/demo/src/components/models/language.ts).
  */
@@ -428,6 +428,26 @@ const i18nStrings = {
     'modal.subscribe.yahoo.h': 'Thêm lịch vào Yahoo',
     'modal.subscribe.yahoo.text': '<ol><li>Mở Lịch Yahoo.</li><li>Nhấp vào tab "Hành động".</li><li>Chọn "Theo dõi các Lịch khác".</li><li>Chọn tên và dán URL từ khay nhớ tạm của bạn vào trường URL.</li></ol>',
     cancel: 'Hủy bỏ',
+  },
+  ro: {
+    'label.addtocalendar': 'Adauga In Calendar',
+    'label.icalfile': 'Fisier iCal',
+    close: 'Inchide',
+    'modal.button.default': 'Apasa-ma',
+    'modal.webview.ical.h': 'Deschide browserul',
+    'modal.webview.ical.text': 'Din pacate, browserele din aplicatie au probleme cu generarea de fisiere pentru calendar.',
+    'modal.clipboard.text': 'Ti-am copiat automat un URL magic in clipboard',
+    'modal.webview.ical.steps': '<ol><li><strong>Deschide un alt browser</strong> pe telefonul tau, ...</li><li><strong>Lipeste</strong> continutul din clipboard si continua.</li></ol>',
+    'modal.crios.ical.h': 'Deschide Safari',
+    'modal.crios.ical.text': 'Din nefericire, Chrome pe iOS are probleme cu modalitatile prin care noi generam fisierele pentru scalendar.',
+    'modal.crios.ical.steps': '<ol><li><strong>Deschides Safari</strong>, ...</li><li><strong>Lipeste</strong> continutul din clipboard si continua.</li></ol>',
+    'modal.multidate.h': 'Aceasta este o serie de evenimente',
+    'modal.multidate.text': 'Adauga evenimentele individuale una cate una:',
+    'date.status.cancelled': 'Aceasta data a fost anulata.',
+    'date.status.cancelled.cta': 'Te rugam sa-ti updatezi calendarul!',
+    'modal.subscribe.yahoo.h': 'Adauga Calendar in Yahoo',
+    'modal.subscribe.yahoo.text': '<ol><li>Deschide acum calendarul Yahoo.</li><li>Apasa pe tab-ul de "Actiuni".</li><li>Apasa "Urmareste alte calendare".</li><li>Seteaza un nume si lipeste continutul din clipboard in casuta cu url.</li></ol>',
+    cancel: 'Anuleaza',
   },
 };
 
