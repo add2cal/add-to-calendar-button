@@ -158,10 +158,7 @@ module.exports = function (grunt) {
       },
       '.eslintrc.json commonJS': {
         'dist/commonjs/.eslintrc.json': function (fs, fd, done) {
-          fs.writeSync(
-            fd,
-            '{ "extends": "../../.eslintrc.json", "env": { "node": true }, "plugins": ["commonjs"] }'
-          );
+          fs.writeSync(fd, '{ "extends": "../../.eslintrc.json", "env": { "node": true }, "plugins": ["commonjs"] }');
           done();
         },
       },

@@ -3,7 +3,7 @@
  *  Add to Calendar Button
  *  ++++++++++++++++++++++
  *
- *  Version: 2.1.0
+ *  Version: 2.1.1
  *  Creator: Jens Kuerschner (https://jenskuerschner.de)
  *  Project: https://github.com/add2cal/add-to-calendar-button
  *  License: Elastic License 2.0 (ELv2) (https://github.com/add2cal/add-to-calendar-button/blob/main/LICENSE.txt)
@@ -417,12 +417,10 @@ function atcb_action(data, triggerElement, keyboardTrigger = false) {
       data.identifier = triggerElement.id;
     } else {
       // however, if the trigger has no id, we set it with the identifier or a default fallback
-      if (data.identifier != null && data.identifier != '') {
-        if (!/^[\w\-_]+$/.test(data.identifier)) {
-          data.identifier = 'atcb-btn-custom';
-        } else {
-          data.identifier = 'atcb-btn-' + data.identifier;
-        }
+      if (data.identifier != null && data.identifier != '' && /^[\w\-_]+$/.test(data.identifier)) {
+        data.identifier = 'atcb-btn-' + data.identifier;
+      } else {
+        data.identifier = 'atcb-btn-custom';
       }
       triggerElement.id = data.identifier;
     }

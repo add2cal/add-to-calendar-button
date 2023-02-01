@@ -5,4 +5,6 @@ const arg = process.argv[2] || 'patch';
 
 execSync('npx grunt version::' + arg, { stdio: [0, 1, 2] });
 execSync('npm install', { stdio: [0, 1, 2] });
-execSync('npm run build:all', { stdio: [0, 1, 2] });
+execSync('npm run build', { stdio: [0, 1, 2] });
+execSync('cd demo', { stdio: [0, 1, 2] });
+execSync('npm install', { stdio: [0, 1, 2] });

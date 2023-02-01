@@ -635,6 +635,7 @@ onUnmounted(() => {
             This might help you to track any user interaction more precisely.
           </p>
           <p class="font-semibold">Mind that this ID needs to be unique and may not be used at any other element!</p>
+          <p>It behaves a little different, if you are using the custom <a href="#10">atcb_action function</a>, where the script might take the triggering element's id first, before falling back to the described scheme.</p>
         </div>
         <div v-else>
           <p>
@@ -646,6 +647,7 @@ onUnmounted(() => {
             Dies kann bspw. für Tracking-Funktionalitäten auf deiner Webseite hilfreich sein.
           </p>
           <p class="font-semibold">Beachte, dass der Wert eindeutig sein muss und für kein weiteres Element genutzt werden darf!</p>
+          <p>Bei Nutzung der <a href="#10">atcb_action Funktion</a> verhält es sich minimal anders. Das Skript nutzt das genannte Schema nur, wenn das auslösende Element keine ID besitzt.</p>
         </div>
         <div class="block w-full justify-between pt-4 md:flex">
           <div class="flex w-full flex-none justify-center p-6 pt-8 md:w-[300px]">

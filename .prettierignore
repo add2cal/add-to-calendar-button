@@ -6,3 +6,6 @@
 
 # Ignore minified files
 *.min.*
+
+# Ignore dist folders
+**/dist

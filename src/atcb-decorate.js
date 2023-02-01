@@ -3,7 +3,7 @@
  *  Add to Calendar Button
  *  ++++++++++++++++++++++
  *
- *  Version: 2.1.0
+ *  Version: 2.1.1
  *  Creator: Jens Kuerschner (https://jenskuerschner.de)
  *  Project: https://github.com/add2cal/add-to-calendar-button
  *  License: Elastic License 2.0 (ELv2) (https://github.com/add2cal/add-to-calendar-button/blob/main/LICENSE.txt)
@@ -110,13 +110,11 @@ function atcb_decorate_data_rrule(data) {
 
 // cleanup options, standardizing names and splitting off custom labels
 function atcb_decorate_data_options(data) {
-  // for iOS, we force the Apple option (if it is not there, but iCal is)
-  if (isiOS() && data.options.includes('ical') && !data.options.includes('apple')) {
-    data.options.push('apple');
-  }
-  // next, iterrate over the options and generate the new clean arrays (for options and labels)
+  // iterrate over the options and generate the new clean arrays (for options and labels)
   const newOptions = [];
   data.optionLabels = [];
+  let iCalGiven = false;
+  let appleGiven = false;
   for (let i = 0; i < data.options.length; i++) {
     // preparing the input options and labels
     const cleanOption = data.options[`${i}`].split('|');
@@ -127,6 +125,12 @@ function atcb_decorate_data_options(data) {
       }
       return '';
     })();
+    if (optionName === 'apple') {
+      appleGiven = true;
+    }
+    if (optionName === 'ical') {
+      iCalGiven = true;
+    }
     // next, fill the new arrays (where the labels array already sits inside the main data object)
     // do not consider options, which should not appear on iOS (e.g. iCal, since we have the Apple option instead)
     // in the recurrence case, we leave out all options, which do not support it in general, as well as Apple and iCal for rrules with "until"
@@ -140,6 +144,10 @@ function atcb_decorate_data_options(data) {
     }
     newOptions.push(optionName);
     data.optionLabels.push(optionLabel);
+  }
+  // for iOS, we force the Apple option (if it is not there, but iCal was)
+  if (isiOS() && iCalGiven && !appleGiven) {
+    newOptions.push('apple');
   }
   // last but not least, override the options at the main data object
   data.options = newOptions;
