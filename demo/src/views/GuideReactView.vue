@@ -104,16 +104,16 @@ declare global {
         <p>{{ t('content.guide.react.start_wrapper_2') }}</p>
         <CodeBlock language="javascript" class="line-numbers">
           <pre>
-&lt;AddtoCalendarButton
+&lt;AddToCalendarButton
   name="{{ t('demo_data.name_dummy') }}"
-  options=['Apple','Google']
+  options={['Apple','Google']}
   location="{{ t('demo_data.location') }}"
   startDate="{{ defaultDate }}"
   endDate="{{ defaultDate }}"
   startTime="10:15"
   endTime="23:30"
   timeZone="{{ t('demo_data.default_timezone') }}"{{ defaultLang }}
-&gt;&lt;/AddtoCalendarButton&gt;</pre
+&gt;&lt;/AddToCalendarButton&gt;</pre
           >
         </CodeBlock>
         <p class="font-semibold">{{ t('content.guide.react.start_wrapper_3') }}</p>
