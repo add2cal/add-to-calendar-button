@@ -121,7 +121,7 @@ module.exports = function (grunt) {
           stripBanners: true,
           banner: "import { tzlib_get_ical_block, tzlib_get_offset, tzlib_get_timezones } from 'timezones-ical-library';\r\n",
           footer: 'export { atcb_action };',
-          process: (content) => prepareFinalFile(content, true, true),
+          process: (content) => prepareFinalFile(content),
         },
       },
       commonJS: {
@@ -163,19 +163,19 @@ module.exports = function (grunt) {
         },
       },
     },
-    // minifies the main js file
+    // minifies the main js file (currently not compressing, since it would be best practice to leave this up to the hosting system or CDN)
     uglify: {
       options: {
-        compress: true,
+        compress: false,
         mangle: true,
         sourceMap: false,
+        banner: '/* eslint-disable @typescript-eslint/no-unused-vars */',
         output: {
           comments: 'some',
         },
       },
       newBuild: {
         files: {
-          //'dist/atcb.js': ['dist/atcb-unminified.js'],
           'dist/atcb.js': ['dist/atcb.js'],
         },
       },

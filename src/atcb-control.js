@@ -3,7 +3,7 @@
  *  Add to Calendar Button
  *  ++++++++++++++++++++++
  *
- *  Version: 2.1.1
+ *  Version: 2.1.2
  *  Creator: Jens Kuerschner (https://jenskuerschner.de)
  *  Project: https://github.com/add2cal/add-to-calendar-button
  *  License: Elastic License 2.0 (ELv2) (https://github.com/add2cal/add-to-calendar-button/blob/main/LICENSE.txt)
@@ -111,7 +111,10 @@ function atcb_open(host, data, button = null, keyboardTrigger = false, generated
       return hostEl;
     }
     const modalHost = document.getElementById(data.identifier + '-modal-host');
-    return modalHost?.shadowRoot?.querySelector('.atcb-list-item');
+    if (!modalHost) {
+      return;
+    }
+    return modalHost.shadowRoot.querySelector('.atcb-list-item');
   })();
   if (focusEl) {
     if (keyboardTrigger) {
@@ -126,8 +129,13 @@ function atcb_open(host, data, button = null, keyboardTrigger = false, generated
 function atcb_close(host, keyboardTrigger = false) {
   // if we have a modal on a modal, close the latest first
   const existingModalHost = document.getElementById(host.host.getAttribute('atcb-button-id') + '-modal-host');
-  const allModals = existingModalHost?.shadowRoot?.querySelectorAll('.atcb-modal[data-modal-nr]');
-  if (allModals?.length > 1) {
+  const allModals = (function () {
+    if (!existingModalHost || existingModalHost.length === 0) {
+      return [];
+    }
+    return existingModalHost.shadowRoot.querySelectorAll('.atcb-modal[data-modal-nr]');
+  })();
+  if (allModals.length > 1) {
     existingModalHost.shadowRoot.querySelectorAll('.atcb-modal[data-modal-nr="' + allModals.length + '"]')[0].remove();
     const nextModal = existingModalHost.shadowRoot.querySelectorAll('.atcb-modal[data-modal-nr="' + (allModals.length - 1) + '"]')[0];
     nextModal.style.display = 'block';
@@ -172,7 +180,9 @@ function atcb_close(host, keyboardTrigger = false) {
       modal.classList.remove('atcb-active-modal');
     });
     // remove any modal host
-    existingModalHost?.remove();
+    if (existingModalHost) {
+      existingModalHost.remove();
+    }
     // make body scrollable again
     document.body.classList.remove('atcb-modal-no-scroll');
     document.documentElement.classList.remove('atcb-modal-no-scroll');
