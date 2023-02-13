@@ -3,7 +3,7 @@
  *  Add to Calendar Button
  *  ++++++++++++++++++++++
  *
- *  Version: 2.1.1
+ *  Version: 2.1.2
  *  Creator: Jens Kuerschner (https://jenskuerschner.de)
  *  Project: https://github.com/add2cal/add-to-calendar-button
  *  License: Elastic License 2.0 (ELv2) (https://github.com/add2cal/add-to-calendar-button/blob/main/LICENSE.txt)
@@ -11,7 +11,7 @@
  *
  */
 
-import { isiOS, atcbValidRecurrOptions, atcbInvalidSubscribeOptions, atcbiOSInvalidOptions, atcbWcBooleanParams } from './atcb-globals.js';
+import { isiOS, isBrowser, atcbValidRecurrOptions, atcbInvalidSubscribeOptions, atcbiOSInvalidOptions, atcbWcBooleanParams } from './atcb-globals.js';
 import { atcb_format_datetime, atcb_rewrite_html_elements, atcb_generate_uuid } from './atcb-util.js';
 import { availableLanguages, rtlLanguages } from './atcb-i18n';
 
@@ -213,7 +213,7 @@ function atcb_decorate_sizes(size) {
 
 // determine dark mode
 function atcb_decorate_light_mode(lightMode = '') {
-  if (lightMode == 'system') {
+  if (lightMode == 'system' && isBrowser()) {
     const prefersDarkScheme = window.matchMedia('(prefers-color-scheme: dark)');
     return prefersDarkScheme.matches ? 'dark' : 'light';
   }

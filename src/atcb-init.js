@@ -3,7 +3,7 @@
  *  Add to Calendar Button
  *  ++++++++++++++++++++++
  *
- *  Version: 2.1.1
+ *  Version: 2.1.2
  *  Creator: Jens Kuerschner (https://jenskuerschner.de)
  *  Project: https://github.com/add2cal/add-to-calendar-button
  *  License: Elastic License 2.0 (ELv2) (https://github.com/add2cal/add-to-calendar-button/blob/main/LICENSE.txt)
@@ -395,6 +395,11 @@ function atcb_render_debug_msg(host, error) {
 // prepare data when not using the web component, but some custom trigger instead
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 function atcb_action(data, triggerElement, keyboardTrigger = false) {
+  // return if not within a browser environment
+  if (!isBrowser()) {
+    return;
+  }
+  // get data
   data = atcb_secure_content(data);
   data.hideBranding = true;
   // pull data from PRO server, if key is given

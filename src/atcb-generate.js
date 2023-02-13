@@ -3,7 +3,7 @@
  *  Add to Calendar Button
  *  ++++++++++++++++++++++
  *
- *  Version: 2.1.1
+ *  Version: 2.1.2
  *  Creator: Jens Kuerschner (https://jenskuerschner.de)
  *  Project: https://github.com/add2cal/add-to-calendar-button
  *  License: Elastic License 2.0 (ELv2) (https://github.com/add2cal/add-to-calendar-button/blob/main/LICENSE.txt)
@@ -719,14 +719,16 @@ function atcb_generate_modal_host(host, data, reset = true) {
     // return existing one, if we do not want to rebuild
     return existingModalHost.shadowRoot;
   }
-  existingModalHost?.remove();
+  if (existingModalHost) {
+    existingModalHost.remove();
+  }
   // create host element and add shadowDOM
   let newModalHost = document.createElement('div');
   newModalHost.id = data.identifier + '-modal-host';
-  if (host.host?.hasAttribute('styleLight')) {
+  if (host.host.hasAttribute('styleLight')) {
     newModalHost.setAttribute('styleLight', host.host.getAttribute('styleLight'));
   }
-  if (host.host?.hasAttribute('styleDark')) {
+  if (host.host.hasAttribute('styleDark')) {
     newModalHost.setAttribute('styleDark', host.host.getAttribute('styleDark'));
   }
   newModalHost.setAttribute('atcb-button-id', data.identifier);
