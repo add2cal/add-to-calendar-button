@@ -267,7 +267,7 @@ You can find more examples as well as an interactive playground at the demo page
 
 ### All options and features
 
-Find all information about the available attributes and how to configure specific features on the demo page at [add-to-calendar-button.com/en/configuration](https://add-to-calendar-button.com/en/configuration).
+Find all information about the available attributes and how to configure specific features on the demo page at [add-to-calendar-button.com/configuration](https://add-to-calendar-button.com/configuration).
 
 <br />
 

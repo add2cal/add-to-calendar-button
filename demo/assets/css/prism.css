@@ -1,0 +1,265 @@
+/* PrismJS 1.29.0 */
+
+/* custom theme based on prism.js default theme for JavaScript, CSS and HTML (by Lea Verou), which is based on dabblet (http://dabblet.com) */
+
+/******************************
+* Global colors and shadows
+*/
+
+:root {
+  --code-comment: #708090;
+  --code-punctuation: #808080;
+  --code-tag: #1362c9;
+  --code-selector: #7644c6;
+  --code-operator: #111;
+  --code-keyword: #444;
+  --code-function: #d05f03;
+  --code-regex: #1d6443;
+  --code-line-numbers: #d1d1d1;
+}
+
+/* Dark mode */
+
+html.atcb-dark {
+  --code-comment: #727272;
+  --code-punctuation: #9d9d9d;
+  --code-tag: #66a4f5;
+  --code-selector: #cbaaff;
+  --code-operator: #e8e8e8;
+  --code-keyword: #ccc;
+  --code-function: #f08d49;
+  --code-regex: #7ec699;
+  --code-line-numbers: #343434;
+}
+
+/******************************
+* The actual Prism core style
+*/
+
+code[class*="language-"],
+pre[class*="language-"] {
+  @apply text-black dark:text-text-dark;
+
+  font-size: 14px;
+  text-align: left;
+  white-space: pre;
+  word-spacing: normal;
+  word-break: normal;
+  word-wrap: normal;
+  line-height: 21px; 
+  -moz-tab-size: 2;
+  -o-tab-size: 2;
+  tab-size: 2; 
+  -webkit-hyphens: none;
+  -moz-hyphens: none;
+  -ms-hyphens: none;
+  hyphens: none;
+}
+
+/* Code blocks */
+pre[class*="language-"] {
+  padding: 16px 18px;
+  overflow: auto;
+}
+
+/* Inline code */
+:not(pre) > code[class*="language-"] {
+  padding: .1em;
+  border-radius: .3em;
+  white-space: normal;
+}
+
+.token.comment,
+.token.prolog,
+.token.doctype,
+.token.cdata {
+  color: var(--code-comment);
+}
+
+.token.punctuation {
+  color: var(--code-punctuation);
+}
+
+.token.namespace {
+  opacity: .7;
+}
+
+.token.property,
+.token.tag,
+.token.boolean,
+.token.number,
+.token.constant,
+.token.symbol,
+.token.deleted {
+  color: var(--code-tag);
+}
+
+.token.selector,
+.token.attr-name,
+.token.string,
+.token.char,
+.token.builtin,
+.token.inserted {
+  color: var(--code-selector);
+}
+
+.token.operator,
+.token.entity,
+.token.url,
+.language-css .token.string,
+.style .token.string {
+  color: var(--code-operator);
+}
+
+.token.atrule,
+.token.attr-value,
+.token.keyword {
+  color: var(--code-keyword);
+}
+
+.token.function,
+.token.class-name {
+  color: var(--code-function);
+}
+
+.token.regex,
+.token.important,
+.token.variable {
+  color: var(--code-regex);
+}
+
+.token.important,
+.token.bold {
+  font-weight: bold;
+}
+
+.token.italic {
+  font-style: italic;
+}
+
+.token.entity {
+  cursor: help;
+}
+
+/******************************
+* The line numbers style
+*/
+
+pre[class*="language-"].line-numbers {
+  @apply md:pl-12;
+
+  position: relative;
+  counter-reset: linenumber;
+}
+
+pre[class*="language-"].line-numbers > code {
+  position: relative;
+  white-space: inherit;
+}
+
+.line-numbers .line-numbers-rows {
+  @apply -left-9 hidden md:block;
+
+  position: absolute;
+  pointer-events: none;
+  top: 0;
+  line-height: 21px;
+  letter-spacing: -1px;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+}
+
+  .line-numbers-rows > span {
+    display: block;
+    counter-increment: linenumber;
+    text-align: right;
+  }
+
+    .line-numbers-rows > span::before {
+      content: counter(linenumber);
+      color: var(--code-line-numbers);
+      display: block;
+    }
+
+/******************************
+* The toolbar (copy to clipboard) style
+*/
+
+div.code-toolbar {
+  position: relative;
+}
+
+div.code-toolbar > .toolbar {
+  position: absolute;
+  z-index: 10;
+  top: 10px;
+  right: 10px;
+  transition: opacity 0.3s ease-in-out;
+  opacity: 0;
+}
+
+div.code-toolbar:hover > .toolbar {
+  opacity: 1;
+}
+
+/* Separate line b/c rules are thrown out if selector is invalid.
+  IE11 and old Edge versions don't support :focus-within. */
+div.code-toolbar:focus-within > .toolbar {
+  opacity: 1;
+}
+
+div.code-toolbar > .toolbar > .toolbar-item {
+  display: inline-block;
+}
+
+div.code-toolbar > .toolbar > .toolbar-item > a {
+  cursor: pointer;
+}
+
+div.code-toolbar > .toolbar > .toolbar-item > button {
+  line-height: normal;
+  overflow: visible;
+  -webkit-user-select: none; /* for button */
+  -moz-user-select: none;
+  -ms-user-select: none;
+}
+
+div.code-toolbar > .toolbar > .toolbar-item > a,
+div.code-toolbar > .toolbar > .toolbar-item > button,
+div.code-toolbar > .toolbar > .toolbar-item > span {
+  @apply bg-zinc-200 text-zinc-500 dark:bg-zinc-700 dark:text-zinc-300;
+
+  font-size: 13px;
+  padding: 4px 6px;
+  box-shadow: 0 1px 4px rgba(0 0 0 / 40%);
+  border-radius: 5px;
+}
+
+div.code-toolbar > .toolbar > .toolbar-item > button > span {
+  height: 2em;
+  display: block;
+  padding: 4px 3px;
+}
+
+div.code-toolbar > .toolbar > .toolbar-item > button > span > svg {
+  height: 100%;
+  fill: currentcolor;
+  width: auto;
+}
+
+div.code-toolbar > .toolbar > .toolbar-item > a:hover,
+div.code-toolbar > .toolbar > .toolbar-item > a:focus,
+div.code-toolbar > .toolbar > .toolbar-item > button:hover,
+div.code-toolbar > .toolbar > .toolbar-item > button:focus,
+div.code-toolbar > .toolbar > .toolbar-item > span:hover,
+div.code-toolbar > .toolbar > .toolbar-item > span:focus {
+  @apply bg-zinc-500 text-zinc-100 dark:bg-zinc-800 dark:text-zinc-100;
+
+  text-decoration: none;
+  box-shadow: 1px 2px 8px 0 rgba(0 0 0 / 50%);
+}
