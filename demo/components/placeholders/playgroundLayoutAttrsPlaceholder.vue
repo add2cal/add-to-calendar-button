@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import Input from "@/components/controls/Input.vue";
-import Switch from "@/components/controls/Switch.vue";
+import Input from "~~/components/controls/input.vue";
+import Switch from "~~/components/controls/switch.vue";
 import { LayoutAttrsKey } from "@/models/attrs";
 </script>
 
