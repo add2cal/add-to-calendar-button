@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import { ref, computed, watch } from "vue";
-import Input from "~/components/controls/input.vue";
-import Select from "~/components/controls/select.vue";
-import Switch from "~/components/controls/switch.vue";
-import TimezoneAutocomplete from '~/components/controls/timezoneAutocomplete.vue';
+import Input from "@/components/controls/input.vue";
+import Select from "@/components/controls/select.vue";
+import Switch from "@/components/controls/switch.vue";
+import TimezoneAutocomplete from '@/components/controls/timezoneAutocomplete.vue';
 import Recurrence from "@/components/playground/attrs/recurrence/recurrence.vue";
 import { Availability } from "@/models/addToCalendarButton";
 import { DateAttrsKey } from "@/models/attrs";

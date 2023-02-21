@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import ConfigSearch from '~/components/controls/configSearch.vue';
+import ConfigSearch from '@/components/controls/configSearch.vue';
 import { ArrowRightIcon, ArrowTopRightOnSquareIcon } from '@heroicons/vue/24/outline';
 
 const { locale } = useI18n();

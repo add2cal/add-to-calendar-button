@@ -1,11 +1,21 @@
 {
-  "name": "add-to-calendar",
+  "name": "add-to-calendar-button-demo",
   "version": "0.0.0",
   "private": true,
   "engines": {
     "node": ">=16.18.1",
     "npm": ">=8.19.2"
   },
+  "description": "The official demo website for the Add to Calendar Button script.",
+  "author": {
+    "name": "Jens Kuerschner",
+    "url": "https://jenskuerschner.de/"
+  },
+  "license": "ELv2",
+  "bugs": {
+    "url": "https://github.com/add2cal/add-to-calendar-button/issues"
+  },
+  "homepage": "https://add-to-calendar-button.com/",
   "scripts": {
     "build": "nuxt build",
     "dev": "nuxt dev -p 3233",
