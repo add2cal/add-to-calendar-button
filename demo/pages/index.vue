@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ArrowRightIcon, WrenchScrewdriverIcon, BeakerIcon, AdjustmentsHorizontalIcon } from '@heroicons/vue/24/outline';
-import IntegrationGuides from "@/components/integration/integrationGuides.vue";
+import IntegrationGuidesOverview from "@/components/integration/integrationGuidesOverview.vue";
 import PlaygroundArea from "@/components/playground/playgroundArea.vue";
 import PlaygroundAreaPlaceholder from "@/components/placeholders/playgroundAreaPlaceholder.vue";
 import FeaturesBlock from "@/components/featuresBlock.vue";
@@ -55,7 +55,7 @@ const localePath = useLocalePath();
 
   <div id="installation" class="container pt-12">
     <h2 class="pb-8"><WrenchScrewdriverIcon class="-mt-1 mr-3 inline-block h-6 w-6" aria-hidden="true" />{{ $t('content.home.headline_installation') }}</h2>
-    <IntegrationGuides />
+    <IntegrationGuidesOverview />
 
     <h2 id="features" class="mt-20 pb-8"><AdjustmentsHorizontalIcon class="-mt-1 mr-3 inline-block h-6 w-6" aria-hidden="true" />{{ $t('content.home.headline_functionality') }}</h2>
     <div>{{ $t('content.home.functionality_intro') }}</div>

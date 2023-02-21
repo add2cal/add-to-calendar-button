@@ -16,6 +16,14 @@ const localePath = useLocalePath();
       </div>
       <NavigationBar />
     </div>
+    <div :class="view.atTopOfPage ? 'top-[-80px]' : 'top-0'" class="fixed z-50 w-full bg-gradient-to-tr from-primary via-primary to-primary-light py-3 shadow-xl transition-all dark:from-primary dark:via-primary-dark dark:to-primary-dark lg:hidden">
+      <div class="container flex justify-between">
+        <div class="-mt-1 -ml-3 w-auto max-w-[100px] grow xl:ml-0">
+          <Logo variation="mobile-small" class="force-light" />
+        </div>
+        <NavigationBar />
+      </div>
+    </div>
     <div class="container m-auto mb-16 mt-8 grid grid-cols-1 justify-items-center xs:my-20 md:my-24 lg:my-28 lg:grid-cols-2 xl:my-32">
       <div class="grid grid-cols-1 justify-items-center md:grid-cols-2 lg:grid-cols-1">
         <div class="max-w-[400px] self-center pb-14 md:pb-0 lg:pb-16">
@@ -53,3 +61,27 @@ const localePath = useLocalePath();
     </ClientOnly>
   </div>
 </template>
+
+<script lang="ts">
+export default {
+  data () {
+    return {
+      view: {
+        atTopOfPage: true
+      }
+    }
+  },
+  beforeMount () {
+    window.addEventListener('scroll', this.handleScroll);
+  },
+  methods: {
+    handleScroll(){
+      if (window.pageYOffset > 500) {
+        if (this.view.atTopOfPage) this.view.atTopOfPage = false
+      } else {
+        if (!this.view.atTopOfPage) this.view.atTopOfPage = true
+      }
+    }
+  }
+};
+</script>

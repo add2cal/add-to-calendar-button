@@ -35,7 +35,7 @@ watch(showMM, val => {
     <Bars3Icon :class="{ hidden: showMM }" class="block h-10 w-10 cursor-pointer self-center rounded-md border border-transparent p-0 leading-none opacity-100 hover:border-white hover:p-1 hover:opacity-80 lg:hidden" @click="(showMM = !showMM)" />
   </nav>
   <!-- mobile menu -->
-  <nav :class="{ hidden: !showMM }" class="fixed top-0 left-0 z-50 h-full w-full overflow-y-auto bg-gradient-to-tr from-primary via-primary to-primary-dark dark:via-primary-dark dark:to-primary-dark lg:hidden">
+  <nav :class="{ hidden: !showMM }" class="fixed top-0 left-0 z-50 h-full w-full overflow-y-auto bg-gradient-to-tr from-primary via-primary to-primary-dark dark:via-primary-dark dark:to-primary-dark">
     <XMarkIcon class="fixed top-8 right-8 block h-10 w-10 cursor-pointer text-white hover:text-secondary" @click="(showMM = !showMM)" />
     <div class="grid grid-cols-1 gap-10 px-6 pt-24 pb-12 text-white">
       <Menu @close-mobile-menu="(showMM = false)" />

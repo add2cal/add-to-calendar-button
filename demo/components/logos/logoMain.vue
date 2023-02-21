@@ -13,7 +13,7 @@ const idD = props.variation + '-d';
 
 <script lang="ts">
 export default {
- name: 'SvgLogo'
+  name: 'SvgLogo'
 }
 </script>
 
