@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import Input from "~/components/controls/input.vue";
-import Switch from "~/components/controls/switch.vue";
+import Input from "@/components/controls/input.vue";
+import Switch from "@/components/controls/switch.vue";
 import { DateAttrsKey } from "@/models/attrs";
 import { DateRecurrenceAttrsKey } from "@/models/attrs";
 </script>

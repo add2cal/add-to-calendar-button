@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { ref, watch, computed } from 'vue'
-import Input from "~/components/controls/input.vue";
-import Select from "~/components/controls/select.vue";
-import Switch from "~/components/controls/switch.vue";
+import Input from "@/components/controls/input.vue";
+import Select from "@/components/controls/select.vue";
+import Switch from "@/components/controls/switch.vue";
 import { getMonthList } from "@/utils/date.js";
 import { Frequency } from "@/models/addToCalendarButton";
 import { getDefaultDateRecurrenceAttrs } from '@/utils/attrs';
