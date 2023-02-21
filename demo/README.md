@@ -1,63 +1,42 @@
-# Add to Calendar Button Demo
+# Nuxt 3 Minimal Starter
 
-This sub-repository holds the demo page for the [Add to Calendar Button](https://add-to-calendar-button.com/).
+Look at the [Nuxt 3 documentation](https://nuxt.com/docs/getting-started/introduction) to learn more.
 
-It is built with Vue 3 and includes the button script directly from the parent repository via the npm workspaces config.
-Therefore, you can not use this sub-repository standalone!
-But you also don't need to. You can call the important npm commands directly from the root. Check the package.json scripts from the parent repository!
+## Setup
 
-Contributing to this demo page follows the same rules as with the parent repository ([see rules here](../.github/CONTRIBUTING.md)) and also follows the same license. For a better start, also see the Vue guide below.
+Make sure to install the dependencies:
 
-<br />
+```bash
+# yarn
+yarn install
 
----
-
-<br />
-
-## Recommended IDE Setup
-
-[VSCode](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur) + [TypeScript Vue Plugin (Volar)](https://marketplace.visualstudio.com/items?itemName=Vue.vscode-typescript-vue-plugin).
-
-## Type Support for `.vue` Imports in TS
-
-TypeScript cannot handle type information for `.vue` imports by default, so we replace the `tsc` CLI with `vue-tsc` for type checking. In editors, we need [TypeScript Vue Plugin (Volar)](https://marketplace.visualstudio.com/items?itemName=Vue.vscode-typescript-vue-plugin) to make the TypeScript language service aware of `.vue` types.
-
-If the standalone TypeScript plugin doesn't feel fast enough to you, Volar has also implemented a [Take Over Mode](https://github.com/johnsoncodehk/volar/discussions/471#discussioncomment-1361669) that is more performant. You can enable it by the following steps:
-
-1. Disable the built-in TypeScript Extension
-   1. Run `Extensions: Show Built-in Extensions` from VSCode's command palette
-   2. Find `TypeScript and JavaScript Language Features`, right click and select `Disable (Workspace)`
-2. Reload the VSCode window by running `Developer: Reload Window` from the command palette.
-
-## Customize configuration
-
-See [Vite Configuration Reference](https://vitejs.dev/config/).
-
-## Project Setup
-
-Assuming you start at the root.
-
-```sh
+# npm
 npm install
-npm run build
-cd demo
-npm install
+
+# pnpm
+pnpm install
 ```
 
-### Compile and Hot-Reload for Development
+## Development Server
 
-```sh
+Start the development server on http://localhost:3000
+
+```bash
 npm run dev
 ```
 
-### Type-Check, Compile and Minify for Production
+## Production
 
-```sh
+Build the application for production:
+
+```bash
 npm run build
 ```
 
-### Lint with [ESLint](https://eslint.org/)
+Locally preview production build:
 
-```sh
-npm run lint
+```bash
+npm run preview
 ```
+
+Check out the [deployment documentation](https://nuxt.com/docs/getting-started/deployment) for more information.

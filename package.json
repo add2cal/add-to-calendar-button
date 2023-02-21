@@ -71,7 +71,7 @@
     "test": "node test/test-prep.js && npx web-test-runner test/wc-tests/*.test.js --node-resolve",
     "dev": "cd demo && npm run dev",
     "build:all": "npm run build && npm run build:demo",
-    "build:demo": "cd demo && npm run build",
+    "build:demo": "cd demo && npm run generate",
     "build": "npx grunt"
   },
   "dependencies": {

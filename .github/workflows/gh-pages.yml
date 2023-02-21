@@ -28,12 +28,12 @@ jobs:
           registry-url: https://registry.npmjs.org/
           cache: 'npm'
       - name: Build it
-        run: npm ci && npm run build && cd demo && npm ci && npm run build
+        run: npm ci && npm run build && cd demo && npm ci && npm run generate
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v1
         with:
           # Upload demo page build
-          path: './demo/dist'
+          path: './demo/.output/public'
 
   deploy:
     environment:
