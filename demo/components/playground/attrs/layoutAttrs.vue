@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { ref, watch, computed } from "vue";
-import Input from "@/components/controls/Input.vue";
-import Select from "@/components/controls/Select.vue";
-import Switch from "@/components/controls/Switch.vue";
+import Input from "~~/components/controls/input.vue";
+import Select from "~~/components/controls/select.vue";
+import Switch from "~~/components/controls/switch.vue";
 import { ListStyle, ButtonStyle, Trigger, LightMode, Size, Option } from "@/models/addToCalendarButton";
 import { LanguageCode, LanguageNames } from "@/models/language";
 import { LayoutAttrsKey, HideIconOption, HideTextOption } from "@/models/attrs";
