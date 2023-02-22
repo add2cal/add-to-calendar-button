@@ -170,7 +170,6 @@ export default defineNuxtConfig({
     },
     useCredentials: true,
     workbox: {
-      navigateFallback: '/',
       globPatterns: ['**/*.{js,css,html,ico,png,svg,woff,woff2,ttf}'],
     },
     client: {

@@ -7,5 +7,6 @@
 # Ignore minified files
 *.min.*
 
-# Ignore dist folders
-**/dist
+# Ignore dist and demo folders
+dist
+demo
