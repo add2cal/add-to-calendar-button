@@ -171,6 +171,7 @@ export default defineNuxtConfig({
     useCredentials: true,
     workbox: {
       globPatterns: ['**/*.{js,css,html,ico,png,svg,woff,woff2,ttf}'],
+      navigateFallback: null,
     },
     client: {
       installPrompt: false,

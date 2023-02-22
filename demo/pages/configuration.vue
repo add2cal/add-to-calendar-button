@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import ConfigSearch from '@/components/controls/configSearch.vue';
+import ConfigSearchPlaceholder from '@/components/placeholders/configSearchPlaceholder.vue';
 import { ArrowRightIcon, ArrowTopRightOnSquareIcon } from '@heroicons/vue/24/outline';
 
 const { locale } = useI18n();
@@ -45,7 +46,12 @@ definePageMeta({
       </div>
 
       <div class="mx-auto mt-14 block border-y border-zinc-300 px-5 pt-6 pb-7 dark:border-zinc-700 md:mx-0 lg:hidden">
-        <ConfigSearch :mobile="true" label />
+        <ClientOnly>
+          <ConfigSearch :mobile="true" label />
+          <template #fallback>
+            <ConfigSearchPlaceholder label />
+          </template>
+        </ClientOnly>
       </div>
 
       <h3 id="event-parameters" class="mt-12 pt-4">{{ $t('content.config.event_params') }}</h3>
@@ -912,7 +918,12 @@ definePageMeta({
     </div>
     <div class="hidden border-l border-zinc-300 pl-8 text-sm dark:border-zinc-700 lg:block">
       <div class="sticky top-0 pt-4">
-        <ConfigSearch class="mb-10" />
+        <ClientOnly>
+          <ConfigSearch class="mb-10" />
+          <template #fallback>
+            <ConfigSearchPlaceholder class="mb-10" />
+          </template>
+        </ClientOnly>
         <NuxtLink :to="'#event-parameters'" class="side-nav">{{ $t('content.config.event_params') }}</NuxtLink>
         <NuxtLink :to="'#style-parameters'" class="side-nav">{{ $t('content.config.style_params') }}</NuxtLink>
         <NuxtLink :to="'#additional-parameters'" class="side-nav">{{ $t('content.config.additional_params') }}</NuxtLink>

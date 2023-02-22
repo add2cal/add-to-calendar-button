@@ -13,6 +13,12 @@ import LogoNpm from "@/components/logos/logoNpm.vue";
 const localePath = useLocalePath();
 </script>
 
+<script lang="ts">
+function topFunction() {
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+</script>
+
 <template>
   <div class="max-w-full bg-gradient-to-t from-zinc-100 to-gray-300 dark:from-zinc-800 dark:to-zinc-900">
     <div class="container">
@@ -22,7 +28,7 @@ const localePath = useLocalePath();
             <NuxtLink :to="localePath('index')"><Logo variation="footer" /></NuxtLink>
           </div>
           <div class="flex">
-            <a href="#" class="mr-8 hidden self-center opacity-40 hover:pb-2 hover:opacity-100 md:inline-block" :aria-label="$t('labels.toTop')"><ArrowUpIcon class="h-6 w-6" aria-hidden="true" /></a>
+            <div class="mr-8 hidden cursor-pointer self-center opacity-40 hover:pb-2 hover:opacity-100 md:inline-block" :aria-label="$t('labels.toTop')" @click="topFunction()"><ArrowUpIcon class="h-6 w-6" aria-hidden="true" /></div>
             <div class="inline-block"><LanguageSwitcher /></div>
           </div>
         </div>
@@ -57,7 +63,7 @@ const localePath = useLocalePath();
             <a class="footer-icon-base w-12  hover:text-npm dark:hover:text-npm" target="_blank" rel="noopener" href="https://www.npmjs.com/package/add-to-calendar-button"><LogoNpm /></a>
           </div>
         </div>
-        <a href="#" class="mx-auto flex w-fit justify-center pt-10 opacity-40 hover:-mt-2 hover:pb-2 hover:opacity-100 md:hidden" :aria-label="$t('labels.toTop')"><ArrowUpIcon class="h-6 w-6" aria-hidden="true" /></a>
+        <div class="mx-auto flex w-fit cursor-pointer justify-center pt-10 opacity-40 hover:-mt-2 hover:pb-2 hover:opacity-100 md:hidden" :aria-label="$t('labels.toTop')" @click="topFunction()"><ArrowUpIcon class="h-6 w-6" aria-hidden="true" /></div>
       </div>
     </div>
   </div>
