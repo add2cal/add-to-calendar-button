@@ -26,10 +26,10 @@ const localePath = useLocalePath();
         target="_blank"
         rel="noopener"
         class="hidden self-center drop-shadow-light-md dark:block md:self-start"
-        ><img src="~/assets/img/ph-badge-dark.svg" alt="Product of the Day | Product Hunt" style="width: 250px; height: 54px;" width="250" height="54"
+        ><img src="/assets/img/ph-badge-dark.svg" alt="Product of the Day | Product Hunt" style="width: 250px; height: 54px;" width="250" height="54"
       /></a>
       <a href="https://www.producthunt.com/posts/add-to-calendar-button-generator?utm_source=badge-top-post-badge&utm_medium=badge&utm_souce=badge-add&#0045;to&#0045;calendar&#0045;button&#0045;generator" target="_blank" rel="noopener" class="block self-center drop-shadow dark:hidden md:self-start"
-        ><img src="~/assets/img/ph-badge-light.svg" alt="Product of the Day | Product Hunt" style="width: 250px; height: 54px;" width="250" height="54"
+        ><img src="/assets/img/ph-badge-light.svg" alt="Product of the Day | Product Hunt" style="width: 250px; height: 54px;" width="250" height="54"
       /></a>
     </div>
   </div>

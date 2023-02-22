@@ -47,8 +47,8 @@ const localePath = useLocalePath();
         </div>
       </div>
       <div class="hidden self-center lg:block">
-        <img :alt="$t('labels.markThis')" class="hidden xl:block" width="400" height="198" src="~/assets/img/oval-light.webp" />
-        <img alt="Add to Calendar Button" width="150" height="150" src="~/assets/img/cal.webp" class="animate-bounce-minimal xl:mt-[-180px] xl:ml-[125px]" />
+        <img :alt="$t('labels.markThis')" class="hidden xl:block" width="400" height="198" src="/assets/img/oval-light.webp" />
+        <img alt="Add to Calendar Button" width="150" height="150" src="/assets/img/cal.webp" class="animate-bounce-minimal xl:mt-[-180px] xl:ml-[125px]" />
       </div>
     </div>
   </div>
