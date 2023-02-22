@@ -1,7 +1,9 @@
 {
-  "navigationFallback": {
-    "rewrite": "index.html",
-    "exclude": ["/**/*.{js,webp,css,woff,ttf,woff2,svg,png,jpg,gif,ico,xml,ics,json}"]
+  "responseOverrides": {
+    "404": {
+      "rewrite": "/404.html",
+      "statusCode": 404
+    }
   },
   "globalHeaders": {
     "X-Frame-Options": "sameorigin",
