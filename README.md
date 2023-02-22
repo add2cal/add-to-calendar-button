@@ -40,8 +40,6 @@ See [add-to-calendar-button.com](https://add-to-calendar-button.com/) for a live
 
 And remember to [⭐ **star** this repository](#) in order to stay up-to-date and save it for later! 🤗
 
-[![Remember to star this repository!](https://github.com/add2cal/add-to-calendar-button/blob/main/assets/img/starring.gif?raw=true)](#)
-
 ## ✨ Features
 
 Simple and convenient integration of 1 or many buttons, configurable directly within the HTML code.
@@ -83,8 +81,6 @@ Simple and convenient integration of 1 or many buttons, configurable directly wi
 - No external service or backend dependencies.
 - Fully GDPR, CCPA, and LGPD compliant by design - without the need of signing some data processing agreement.
 - FREE and easy.
-
-![Demo Screenshot](https://github.com/add2cal/add-to-calendar-button/blob/main/assets/img/demo.gif?raw=true)
 
 <br />
 

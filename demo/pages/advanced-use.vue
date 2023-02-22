@@ -105,7 +105,7 @@ onUnmounted(() => {
           Sofern du die <NuxtLink :to="localePath('examples')">"{{ $t('navigation.examples') }}"</NuxtLink>-Seite noch nicht besucht hast, solltest du dies zuerst tun.
         </p>
       </div>
-      <section id="1">
+      <section id="case-1">
         <h2 class="mb-4 mt-14 border-t border-zinc-300 pt-14 dark:border-zinc-700">1. {{ $t('content.advanced.1_long') }}</h2>
         <div v-if="locale=='en'">
           <h3 class="mb-3 mt-8">Built-in options</h3>
@@ -228,7 +228,7 @@ onUnmounted(() => {
             <a href="https://github.com/add2cal/add-to-calendar-button/tree/main/assets/css" target="_blank" rel="noopener">css file in the repository <ArrowTopRightOnSquareIcon class="-mt-0.5 mr-0.5 inline-block h-4 w-4" aria-hidden="true" /></a> (have a look at the "Global colors and shadows"
             section).
           </p>
-          <p class="italic">Mind that this is not working with the "none" button style or the atcb_action approach (<a href="#10">see #10</a>).</p>
+          <p class="italic">Mind that this is not working with the "none" button style or the atcb_action approach (<NuxtLink :to="'#case-10'">see #10</NuxtLink>).</p>
         </div>
         <div v-else>
           <h3 class="mb-3 mt-8">Farbwerte überschreiben</h3>
@@ -243,7 +243,7 @@ onUnmounted(() => {
             <a href="https://github.com/add2cal/add-to-calendar-button/tree/main/assets/css" target="_blank" rel="noopener">css file in the repository <ArrowTopRightOnSquareIcon class="-mt-0.5 mr-0.5 inline-block h-4 w-4" aria-hidden="true" /></a> an (du findest die möglichen Werte in der Sektion
             "Global colors and shadows").
           </p>
-          <p class="italic">Beachte, dass dies nicht mit dem Button-Stil "none" oder dem atcb_action-Ansatz (<a href="#10">siehe #10</a>) kompatibel ist.</p>
+          <p class="italic">Beachte, dass dies nicht mit dem Button-Stil "none" oder dem atcb_action-Ansatz (<NuxtLink :to="'#case-10'">siehe #10</NuxtLink>) kompatibel ist.</p>
         </div>
         <div class="block w-full justify-between pt-4 md:flex">
           <div class="flex w-full flex-none justify-center p-6 pt-8 md:w-[300px]">
@@ -317,7 +317,7 @@ onUnmounted(() => {
           <h3 class="mb-3 mt-8">Use a custom object as button</h3>
           <p>
             Last but not least, you could also stick to a provided style, but use your own triggering object.<br />
-            Check the <a href="#10">"10. Bring your own button" example</a> at the bottom of this page for more details.
+            Check the <NuxtLink :to="'#case-10'">"10. Bring your own button" example</NuxtLink> at the bottom of this page for more details.
           </p>
         </div>
         <div v-else>
@@ -325,11 +325,11 @@ onUnmounted(() => {
           <p>
             Zu guter Letzt kannst du auch den Button durch dein eigenes Element ersetzen.<br />
             Dies beeinflusst zwar nicht den Stil weiterer Elemente (wie die Kalender-Link-Liste), ermöglicht es dir aber, jedes beliebige Element auf deiner Seite als Trigger zu nutzen.<br />
-            Wirf einen Blick auf die Sektion <a href="#10">"10. Eigenen Button verknüpfen"</a> am Ende dieser Seite.
+            Wirf einen Blick auf die Sektion <NuxtLink :to="'#case-10'">"10. Eigenen Button verknüpfen"</NuxtLink> am Ende dieser Seite.
           </p>
         </div>
       </section>
-      <section id="2">
+      <section id="case-2">
         <h2 class="mb-4 mt-14 border-t border-zinc-300 pt-14 dark:border-zinc-700">2. {{ $t('content.advanced.2_long') }}</h2>
         <div v-if="locale=='en'">
           <p>
@@ -400,7 +400,7 @@ onUnmounted(() => {
           </div>
         </div>
       </section>
-      <section id="3">
+      <section id="case-3">
         <h2 class="mb-4 mt-14 border-t border-zinc-300 pt-14 dark:border-zinc-700">3. {{ $t('content.advanced.3_long') }}</h2>
         <div v-if="locale=='en'">
           <p>You can also offer your users the option to subscribe to a calendar, instead of only saving static events.</p>
@@ -449,7 +449,7 @@ onUnmounted(() => {
           </div>
         </div>
       </section>
-      <section id="4">
+      <section id="case-4">
         <h2 class="mb-4 mt-14 border-t border-zinc-300 pt-14 dark:border-zinc-700">4. {{ $t('content.advanced.4_long') }}</h2>
         <div v-if="locale=='en'">
           <p>You can change any text blocks.</p>
@@ -512,7 +512,7 @@ onUnmounted(() => {
           </div>
         </div>
       </section>
-      <section id="5">
+      <section id="case-5">
         <h2 class="mb-4 mt-14 border-t border-zinc-300 pt-14 dark:border-zinc-700">5. {{ $t('content.advanced.5_long') }}</h2>
         <div v-if="locale=='en'">
           <p>
@@ -628,7 +628,7 @@ onUnmounted(() => {
           </div>
         </div>
       </section>
-      <section id="6">
+      <section id="case-6">
         <h2 class="mb-4 mt-14 border-t border-zinc-300 pt-14 dark:border-zinc-700">6. {{ $t('content.advanced.6_long') }}</h2>
         <div v-if="locale=='en'">
           <p>
@@ -640,7 +640,7 @@ onUnmounted(() => {
             This might help you to track any user interaction more precisely.
           </p>
           <p class="font-semibold">Mind that this ID needs to be unique and may not be used at any other element!</p>
-          <p>It behaves a little different, if you are using the custom <a href="#10">atcb_action function</a>, where the script might take the triggering element's id first, before falling back to the described scheme.</p>
+          <p>It behaves a little different, if you are using the custom <NuxtLink :to="'#case-10'">atcb_action function</NuxtLink>, where the script might take the triggering element's id first, before falling back to the described scheme.</p>
         </div>
         <div v-else>
           <p>
@@ -652,7 +652,7 @@ onUnmounted(() => {
             Dies kann bspw. für Tracking-Funktionalitäten auf deiner Webseite hilfreich sein.
           </p>
           <p class="font-semibold">Beachte, dass der Wert eindeutig sein muss und für kein weiteres Element genutzt werden darf!</p>
-          <p>Bei Nutzung der <a href="#10">atcb_action Funktion</a> verhält es sich minimal anders. Das Skript nutzt das genannte Schema nur, wenn das auslösende Element keine ID besitzt.</p>
+          <p>Bei Nutzung der <NuxtLink :to="'#case-10'">atcb_action Funktion</NuxtLink> verhält es sich minimal anders. Das Skript nutzt das genannte Schema nur, wenn das auslösende Element keine ID besitzt.</p>
         </div>
         <div class="block w-full justify-between pt-4 md:flex">
           <div class="flex w-full flex-none justify-center p-6 pt-8 md:w-[300px]">
@@ -687,7 +687,7 @@ onUnmounted(() => {
           </div>
         </div>
       </section>
-      <section id="7">
+      <section id="case-7">
         <h2 class="mb-4 mt-14 border-t border-zinc-300 pt-14 dark:border-zinc-700">7. {{ $t('content.advanced.7_long') }}</h2>
         <div v-if="locale=='en'">
           <p>
@@ -723,7 +723,7 @@ onUnmounted(() => {
         </ul>
         <p class="mt-3 text-sm italic">({{ $t('content.advanced.tracking_test_disclaimer') }})</p>
       </section>
-      <section id="8">
+      <section id="case-8">
         <h2 class="mb-4 mt-14 border-t border-zinc-300 pt-14 dark:border-zinc-700">8. {{ $t('content.advanced.8_long') }}</h2>
         <div v-if="locale=='en'">
           <p>
@@ -780,7 +780,7 @@ onUnmounted(() => {
           </div>
         </div>
       </section>
-      <section id="9">
+      <section id="case-9">
         <h2 class="mb-4 mt-14 border-t border-zinc-300 pt-14 dark:border-zinc-700">9. {{ $t('content.advanced.9_long') }}</h2>
         <div v-if="locale=='en'">
           <p>
@@ -841,7 +841,7 @@ onUnmounted(() => {
           </div>
         </div>
       </section>
-      <section id="10">
+      <section id="case-10">
         <h2 class="mb-4 mt-14 border-t border-zinc-300 pt-14 dark:border-zinc-700">10. {{ $t('content.advanced.10_long') }}</h2>
         <div v-if="locale=='en'">
           <p>
@@ -925,16 +925,16 @@ onUnmounted(() => {
     </div>
     <div class="hidden border-l border-zinc-300 pl-8 text-sm dark:border-zinc-700 lg:block">
       <div class="sticky top-0 pt-4">
-        <a href="#1" class="my-4 block">#1: {{ $t('content.advanced.1_short') }}</a>
-        <a href="#2" class="my-4 block">#2: {{ $t('content.advanced.2_short') }}</a>
-        <a href="#3" class="my-4 block">#3: {{ $t('content.advanced.3_short') }}</a>
-        <a href="#4" class="my-4 block">#4: {{ $t('content.advanced.4_short') }}</a>
-        <a href="#5" class="my-4 block">#5: {{ $t('content.advanced.5_short') }}</a>
-        <a href="#6" class="my-4 block">#6: {{ $t('content.advanced.6_short') }}</a>
-        <a href="#7" class="my-4 block">#7: {{ $t('content.advanced.7_short') }}</a>
-        <a href="#8" class="my-4 block">#8: {{ $t('content.advanced.8_short') }}</a>
-        <a href="#9" class="my-4 block">#9: {{ $t('content.advanced.9_short') }}</a>
-        <a href="#10" class="my-4 block">#10: {{ $t('content.advanced.10_short') }}</a>
+        <NuxtLink :to="'#case-1'" class="my-4 block">#1: {{ $t('content.advanced.1_short') }}</NuxtLink>
+        <NuxtLink :to="'#case-2'" class="my-4 block">#2: {{ $t('content.advanced.2_short') }}</NuxtLink>
+        <NuxtLink :to="'#case-3'" class="my-4 block">#3: {{ $t('content.advanced.3_short') }}</NuxtLink>
+        <NuxtLink :to="'#case-4'" class="my-4 block">#4: {{ $t('content.advanced.4_short') }}</NuxtLink>
+        <NuxtLink :to="'#case-5'" class="my-4 block">#5: {{ $t('content.advanced.5_short') }}</NuxtLink>
+        <NuxtLink :to="'#case-6'" class="my-4 block">#6: {{ $t('content.advanced.6_short') }}</NuxtLink>
+        <NuxtLink :to="'#case-7'" class="my-4 block">#7: {{ $t('content.advanced.7_short') }}</NuxtLink>
+        <NuxtLink :to="'#case-8'" class="my-4 block">#8: {{ $t('content.advanced.8_short') }}</NuxtLink>
+        <NuxtLink :to="'#case-9'" class="my-4 block">#9: {{ $t('content.advanced.9_short') }}</NuxtLink>
+        <NuxtLink :to="'#case-10'" class="my-4 block">#10: {{ $t('content.advanced.10_short') }}</NuxtLink>
       </div>
     </div>
   </div>

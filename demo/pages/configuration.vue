@@ -125,13 +125,13 @@ definePageMeta({
                 Supports HTML pseudo tags for formatting: [url], [br], [hr], [p], [strong], [u], [i], [em], [li], [ul], [ol], [h*] (like h1, h2, h3, ...).<br />
                 Define a link text with the following schema: [url]https://....|URL Text[/url].<br /><br />
                 (Yahoo and Microsoft Teams are not fully supported and automatically transformed to plain text.)<br /><br />
-                <NuxtLink :to="{path: localePath('advanced-use'), hash: '#2'}">{{ $t('labels.example') }} <ArrowRightIcon class="-mt-0.5 mr-0.5 inline-block h-3 w-3" aria-hidden="true" /></NuxtLink>
+                <NuxtLink :to="{path: localePath('advanced-use'), hash: '#case-2'}">{{ $t('labels.example') }} <ArrowRightIcon class="-mt-0.5 mr-0.5 inline-block h-3 w-3" aria-hidden="true" /></NuxtLink>
               </td>
               <td v-else>
                 Unterstützt HTML-Pseudo-Tags zur Formatierung: [url], [br], [hr], [p], [strong], [u], [i], [em], [li], [ul], [ol], [h*] (wie etwa h1, h2, h3, ...).<br />
                 Einen Link-Text spezifizierst du mit folgendem Schema: [url]https://....|URL Text[/url].<br /><br />
                 (Yahoo und Microsoft Teams werden hierbei nicht vollständig unterstützt und der Wert automatisch zu Plain Text transformiert.)<br /><br />
-                <NuxtLink :to="{path: localePath('advanced-use'), hash: '#2'}">{{ $t('labels.example') }} <ArrowRightIcon class="-mt-0.5 mr-0.5 inline-block h-3 w-3" aria-hidden="true" /></NuxtLink>
+                <NuxtLink :to="{path: localePath('advanced-use'), hash: '#case-2'}">{{ $t('labels.example') }} <ArrowRightIcon class="-mt-0.5 mr-0.5 inline-block h-3 w-3" aria-hidden="true" /></NuxtLink>
               </td>
             </tr>
             <tr id="startdate">
@@ -144,12 +144,12 @@ definePageMeta({
                 A date needs to be formatted as YYYY-MM-DD as specified with
                 <a href="https://en.wikipedia.org/wiki/ISO_8601" target="_blank" rel="noopener" class="whitespace-nowrap">ISO-8601 <ArrowTopRightOnSquareIcon class="-mt-0.5 mr-0.5 inline-block h-3 w-3" aria-hidden="true" /></a>.<br /><br />
                 You can use the magic word "today" to dynamically set the current day. Adding "+5" at the end would automatically add 5 days to the calculated date.<br /><br />
-                <NuxtLink :to="{path: localePath('examples'), hash: '#3'}">{{ $t('labels.example') }} <ArrowRightIcon class="-mt-0.5 mr-0.5 inline-block h-3 w-3" aria-hidden="true" /></NuxtLink>
+                <NuxtLink :to="{path: localePath('examples'), hash: '#case-3'}">{{ $t('labels.example') }} <ArrowRightIcon class="-mt-0.5 mr-0.5 inline-block h-3 w-3" aria-hidden="true" /></NuxtLink>
               </td>
               <td v-else>
                 Ein Datum muss im Schema YYYY-MM-DD gemäß <a href="https://de.wikipedia.org/wiki/ISO_8601" target="_blank" rel="noopener" class="whitespace-nowrap">ISO-8601 <ArrowTopRightOnSquareIcon class="-mt-0.5 mr-0.5 inline-block h-3 w-3" aria-hidden="true" /></a> formatiert sein<br /><br />
                 Du kannst das Wort "today" nutzen, um dynamisch den jeweils aktuellen Tag zu setzen. Wenn du bspw. "+5" hinzufügst, werden automatisch 5 Tage aufaddiert.<br /><br />
-                <NuxtLink :to="{path: localePath('examples'), hash: '#3'}">{{ $t('labels.example') }} <ArrowRightIcon class="-mt-0.5 mr-0.5 inline-block h-3 w-3" aria-hidden="true" /></NuxtLink>
+                <NuxtLink :to="{path: localePath('examples'), hash: '#case-3'}">{{ $t('labels.example') }} <ArrowRightIcon class="-mt-0.5 mr-0.5 inline-block h-3 w-3" aria-hidden="true" /></NuxtLink>
               </td>
             </tr>
             <tr id="starttime">
@@ -213,12 +213,12 @@ definePageMeta({
               <td v-if="locale=='en'">
                 Can be used to manage changes of an event as it is specified within the iCalendar specifications
                 <a href="https://www.rfc-editor.org/rfc/rfc5545#section-3.8.1.11" target="_blank" rel="noopener" class="whitespace-nowrap">RFC5545 <ArrowTopRightOnSquareIcon class="-mt-0.5 mr-0.5 inline-block h-3 w-3" aria-hidden="true" /></a>.<br /><br />
-                <NuxtLink :to="{path: localePath('advanced-use'), hash: '#5'}">{{ $t('labels.example') }} <ArrowRightIcon class="-mt-0.5 mr-0.5 inline-block h-3 w-3" aria-hidden="true" /></NuxtLink>
+                <NuxtLink :to="{path: localePath('advanced-use'), hash: '#case-5'}">{{ $t('labels.example') }} <ArrowRightIcon class="-mt-0.5 mr-0.5 inline-block h-3 w-3" aria-hidden="true" /></NuxtLink>
               </td>
               <td v-else>
                 Kann genutzt werden, um Änderungen an einem Event zu verwalten.<br />Gemäß der iCalendar-Spezifikation
                 <a href="https://www.rfc-editor.org/rfc/rfc5545#section-3.8.1.11" target="_blank" rel="noopener" class="whitespace-nowrap">RFC5545 <ArrowTopRightOnSquareIcon class="-mt-0.5 mr-0.5 inline-block h-3 w-3" aria-hidden="true" /></a>.<br /><br />
-                <NuxtLink :to="{path: localePath('advanced-use'), hash: '#5'}">{{ $t('labels.example') }} <ArrowRightIcon class="-mt-0.5 mr-0.5 inline-block h-3 w-3" aria-hidden="true" /></NuxtLink>
+                <NuxtLink :to="{path: localePath('advanced-use'), hash: '#case-5'}">{{ $t('labels.example') }} <ArrowRightIcon class="-mt-0.5 mr-0.5 inline-block h-3 w-3" aria-hidden="true" /></NuxtLink>
               </td>
             </tr>
             <tr id="sequence">
@@ -228,11 +228,11 @@ definePageMeta({
               </td>
               <td v-if="locale=='en'">
                 Needs to be a positive integer number.<br />Needs to grow when you make changes to the event.<br /><br />
-                <NuxtLink :to="{path: localePath('advanced-use'), hash: '#5'}">{{ $t('labels.example') }} <ArrowRightIcon class="-mt-0.5 mr-0.5 inline-block h-3 w-3" aria-hidden="true" /></NuxtLink>
+                <NuxtLink :to="{path: localePath('advanced-use'), hash: '#case-5'}">{{ $t('labels.example') }} <ArrowRightIcon class="-mt-0.5 mr-0.5 inline-block h-3 w-3" aria-hidden="true" /></NuxtLink>
               </td>
               <td v-else>
                 Muss eine positive ganze Zahl sein.<br />Muss größer werden, wenn Veränderungen am Event vorgenommen werden.<br /><br />
-                <NuxtLink :to="{path: localePath('advanced-use'), hash: '#5'}">{{ $t('labels.example') }} <ArrowRightIcon class="-mt-0.5 mr-0.5 inline-block h-3 w-3" aria-hidden="true" /></NuxtLink>
+                <NuxtLink :to="{path: localePath('advanced-use'), hash: '#case-5'}">{{ $t('labels.example') }} <ArrowRightIcon class="-mt-0.5 mr-0.5 inline-block h-3 w-3" aria-hidden="true" /></NuxtLink>
               </td>
             </tr>
             <tr id="uid">
@@ -260,13 +260,13 @@ definePageMeta({
                 Use the schema "NAME|EMAIL" (e.g. "John Doe|john.doe@gmail.com").<br /><br />
                 The organizer will appear within the schema.org rich data as well as the iCal file.<br />
                 Setting this option will also change the style of the iCal information from being an event to simply save to an event invitation one can accept or decline.<br /><br />
-                <NuxtLink :to="{path: localePath('advanced-use'), hash: '#5'}">{{ $t('labels.example') }} <ArrowRightIcon class="-mt-0.5 mr-0.5 inline-block h-3 w-3" aria-hidden="true" /></NuxtLink>
+                <NuxtLink :to="{path: localePath('advanced-use'), hash: '#case-5'}">{{ $t('labels.example') }} <ArrowRightIcon class="-mt-0.5 mr-0.5 inline-block h-3 w-3" aria-hidden="true" /></NuxtLink>
               </td>
               <td v-else>
                 Schema "NAME|E-MAIL" (bspw. "Max Muster|max.muster@gmail.com").<br /><br />
                 Der "Organizer" wird innerhalb der Schema.org-Daten sowie in iCal-Dateien integriert.<br />
                 Sofern diese Option gesetzt wird, verändert sich auch die iCal-Struktur. Anstelle eines einfachen Events wird eine Event-Einladung, der man zu- oder absagen kann, erzeugt.<br /><br />
-                <NuxtLink :to="{path: localePath('advanced-use'), hash: '#5'}">{{ $t('labels.example') }} <ArrowRightIcon class="-mt-0.5 mr-0.5 inline-block h-3 w-3" aria-hidden="true" /></NuxtLink>
+                <NuxtLink :to="{path: localePath('advanced-use'), hash: '#case-5'}">{{ $t('labels.example') }} <ArrowRightIcon class="-mt-0.5 mr-0.5 inline-block h-3 w-3" aria-hidden="true" /></NuxtLink>
               </td>
             </tr>
             <tr id="dates">
@@ -292,7 +292,7 @@ definePageMeta({
                   <li>organizer</li>
                 </ul>
                 <br /><br />
-                <NuxtLink :to="{path: localePath('examples'), hash: '#5'}">{{ $t('labels.example') }} <ArrowRightIcon class="-mt-0.5 mr-0.5 inline-block h-3 w-3" aria-hidden="true" /></NuxtLink>
+                <NuxtLink :to="{path: localePath('examples'), hash: '#case-5'}">{{ $t('labels.example') }} <ArrowRightIcon class="-mt-0.5 mr-0.5 inline-block h-3 w-3" aria-hidden="true" /></NuxtLink>
               </td>
               <td v-else>
                 Mit dem "dates"-Objekt kannst du eine Termin-Reihe spezifizieren.<br /><br />
@@ -314,7 +314,7 @@ definePageMeta({
                   <li>organizer</li>
                 </ul>
                 <br /><br />
-                <NuxtLink :to="{path: localePath('examples'), hash: '#5'}">{{ $t('labels.example') }} <ArrowRightIcon class="-mt-0.5 mr-0.5 inline-block h-3 w-3" aria-hidden="true" /></NuxtLink>
+                <NuxtLink :to="{path: localePath('examples'), hash: '#case-5'}">{{ $t('labels.example') }} <ArrowRightIcon class="-mt-0.5 mr-0.5 inline-block h-3 w-3" aria-hidden="true" /></NuxtLink>
               </td>
             </tr>
             <tr id="recurrence">
@@ -335,7 +335,7 @@ definePageMeta({
                 Mind that the startDate needs to be valid within the given recurrence ruleset!<br /><br />
                 As an alternative to the RRULE, you could also specify the following more specific reccurence settings, which will then generate the RRULE for you in the background (see next parameters).<br />
                 In this case, for the "recurrence" field, you would define the frequency (daily, weekly, monthly, yearly) instead of the RRULE.<br /><br />
-                <NuxtLink :to="{path: localePath('examples'), hash: '#4'}">{{ $t('labels.example') }} <ArrowRightIcon class="-mt-0.5 mr-0.5 inline-block h-3 w-3" aria-hidden="true" /></NuxtLink>
+                <NuxtLink :to="{path: localePath('examples'), hash: '#case-4'}">{{ $t('labels.example') }} <ArrowRightIcon class="-mt-0.5 mr-0.5 inline-block h-3 w-3" aria-hidden="true" /></NuxtLink>
               </td>
               <td v-else>
                 Definiert wiederkehrende Events.<br /><br />
@@ -350,7 +350,7 @@ definePageMeta({
                 Beachte, dass das startDate ein valides Datum innerhalb des definierten Regelwerks sein muss!<br /><br />
                 Alternativ zur RRULE kannst du auch die folgenden einfacheren und spezifischeren Einstellungen nutzen. Diese generieren die RRULE automatisch für dich im Hintergrund.<br />
                 In diesem Fall würdest du als Wert für die "recurrence"-Option lediglich die Frequenz (täglich, wöchentlich, ...) anstelle der kompletten RRULE definieren.<br /><br />
-                <NuxtLink :to="{path: localePath('examples'), hash: '#4'}">{{ $t('labels.example') }} <ArrowRightIcon class="-mt-0.5 mr-0.5 inline-block h-3 w-3" aria-hidden="true" /></NuxtLink>
+                <NuxtLink :to="{path: localePath('examples'), hash: '#case-4'}">{{ $t('labels.example') }} <ArrowRightIcon class="-mt-0.5 mr-0.5 inline-block h-3 w-3" aria-hidden="true" /></NuxtLink>
               </td>
             </tr>
             <tr id="recurrence_interval">
@@ -470,7 +470,7 @@ definePageMeta({
                 "Name" and "startDate" would be still required for organizational purposes, but every other event parameter can be skipped in the subscription case.<br />
                 For Microsoft services, the "Name" will be used as name for the calendar.<br /><br />
                 Microsoft Teams is not yet supported and will be automatically disabled.<br /><br />
-                <NuxtLink :to="{path: localePath('advanced-use'), hash: '#3'}">{{ $t('labels.example') }} <ArrowRightIcon class="-mt-0.5 mr-0.5 inline-block h-3 w-3" aria-hidden="true" /></NuxtLink>
+                <NuxtLink :to="{path: localePath('advanced-use'), hash: '#case-3'}">{{ $t('labels.example') }} <ArrowRightIcon class="-mt-0.5 mr-0.5 inline-block h-3 w-3" aria-hidden="true" /></NuxtLink>
               </td>
               <td v-else>
                 Alternativ zur Angabe eines bestimmten vordefinierten Events kannst du auch einen Kalender bereitstellen und ihn zum Abonnieren anbieten (erfordert einen gehosteten Kalender).<br />
@@ -478,7 +478,7 @@ definePageMeta({
                 "Name" und "startDate" wären für organisatorische Zwecke immer noch erforderlich, aber jeder andere Event-Parameter kann im Abonnementfall übersprungen werden.<br />
                 Für Microsoft-Dienste wird der "Name" als Name für den Kalender verwendet.<br /><br />
                 Microsoft Teams wird derzeit nicht unterstützt und automatisch deaktiviert.<br /><br />
-                <NuxtLink :to="{path: localePath('advanced-use'), hash: '#3'}">{{ $t('labels.example') }} <ArrowRightIcon class="-mt-0.5 mr-0.5 inline-block h-3 w-3" aria-hidden="true" /></NuxtLink>
+                <NuxtLink :to="{path: localePath('advanced-use'), hash: '#case-3'}">{{ $t('labels.example') }} <ArrowRightIcon class="-mt-0.5 mr-0.5 inline-block h-3 w-3" aria-hidden="true" /></NuxtLink>
               </td>
             </tr>
             <tr id="icsfile">
@@ -577,11 +577,11 @@ definePageMeta({
               </td>
               <td v-if="locale=='en'">
                 This option would render the button inline instead of the default block style.<br /><br />
-                <NuxtLink :to="{path: localePath('examples'), hash: '#7'}">{{ $t('labels.example') }} <ArrowRightIcon class="-mt-0.5 mr-0.5 inline-block h-3 w-3" aria-hidden="true" /></NuxtLink>
+                <NuxtLink :to="{path: localePath('examples'), hash: '#case-7'}">{{ $t('labels.example') }} <ArrowRightIcon class="-mt-0.5 mr-0.5 inline-block h-3 w-3" aria-hidden="true" /></NuxtLink>
               </td>
               <td v-else>
                 Diese Option rendert den Button inline anstelle des standardmäßigen Block-Styles.<br /><br />
-                <NuxtLink :to="{path: localePath('examples'), hash: '#7'}">{{ $t('labels.example') }} <ArrowRightIcon class="-mt-0.5 mr-0.5 inline-block h-3 w-3" aria-hidden="true" /></NuxtLink>
+                <NuxtLink :to="{path: localePath('examples'), hash: '#case-7'}">{{ $t('labels.example') }} <ArrowRightIcon class="-mt-0.5 mr-0.5 inline-block h-3 w-3" aria-hidden="true" /></NuxtLink>
               </td>
             </tr>
             <tr id="customcss">
@@ -590,12 +590,12 @@ definePageMeta({
               <td v-if="locale=='en'">
                 You can load an external css file instead of using and customizing the integrated one.<br />
                 Define the url of the file here and set the buttonStyle option to "custom".<br /><br />
-                <NuxtLink :to="{path: localePath('advanced-use'), hash: '#1'}">{{ $t('labels.example') }} <ArrowRightIcon class="-mt-0.5 mr-0.5 inline-block h-3 w-3" aria-hidden="true" /></NuxtLink>
+                <NuxtLink :to="{path: localePath('advanced-use'), hash: '#case-1'}">{{ $t('labels.example') }} <ArrowRightIcon class="-mt-0.5 mr-0.5 inline-block h-3 w-3" aria-hidden="true" /></NuxtLink>
               </td>
               <td v-else>
                 Du kannst eine externe CSS-DAtei anstelle der integrierten Optionen laden.<br />
                 Spezifiziere die URL der Datei hier und nutze die buttonStyle-Option "custom".<br /><br />
-                <NuxtLink :to="{path: localePath('advanced-use'), hash: '#1'}">{{ $t('labels.example') }} <ArrowRightIcon class="-mt-0.5 mr-0.5 inline-block h-3 w-3" aria-hidden="true" /></NuxtLink>
+                <NuxtLink :to="{path: localePath('advanced-use'), hash: '#case-1'}">{{ $t('labels.example') }} <ArrowRightIcon class="-mt-0.5 mr-0.5 inline-block h-3 w-3" aria-hidden="true" /></NuxtLink>
               </td>
             </tr>
             <tr id="buttonslist">
@@ -605,11 +605,11 @@ definePageMeta({
               </td>
               <td v-if="locale=='en'">
                 Activating this option would render one button per calendar type instead of the button + list.<br /><br />
-                <NuxtLink :to="{path: localePath('examples'), hash: '#9'}">{{ $t('labels.example') }} <ArrowRightIcon class="-mt-0.5 mr-0.5 inline-block h-3 w-3" aria-hidden="true" /></NuxtLink>
+                <NuxtLink :to="{path: localePath('examples'), hash: '#case-9'}">{{ $t('labels.example') }} <ArrowRightIcon class="-mt-0.5 mr-0.5 inline-block h-3 w-3" aria-hidden="true" /></NuxtLink>
               </td>
               <td v-else>
                 Wenn du diese Option aktivierst wird ein Button je Kalender-Typ erzeugt - anstelle eines Buttons mit entsprechender Liste.<br /><br />
-                <NuxtLink :to="{path: localePath('examples'), hash: '#9'}">{{ $t('labels.example') }} <ArrowRightIcon class="-mt-0.5 mr-0.5 inline-block h-3 w-3" aria-hidden="true" /></NuxtLink>
+                <NuxtLink :to="{path: localePath('examples'), hash: '#case-9'}">{{ $t('labels.example') }} <ArrowRightIcon class="-mt-0.5 mr-0.5 inline-block h-3 w-3" aria-hidden="true" /></NuxtLink>
               </td>
             </tr>
             <tr id="label">
@@ -770,7 +770,7 @@ definePageMeta({
                 <a href="https://github.com/add2cal/add-to-calendar-button/blob/main/src/atcb-i18n.js" target="_blank" rel="noopener" class="whitespace-nowrap">atcb-i18n.js file <ArrowTopRightOnSquareIcon class="-mt-0.5 mr-0.5 inline-block h-3 w-3" aria-hidden="true" /></a> for the available keys.
                 Mind to transform those keys to lower case strings without any whitespaces!<br />
                 Any custom label will also override any translation.<br />You can use the same HTML pseudo tags as with the description option here.<br /><br />
-                <NuxtLink :to="{path: localePath('advanced-use'), hash: '#4'}">{{ $t('labels.example') }} <ArrowRightIcon class="-mt-0.5 mr-0.5 inline-block h-3 w-3" aria-hidden="true" /></NuxtLink>
+                <NuxtLink :to="{path: localePath('advanced-use'), hash: '#case-4'}">{{ $t('labels.example') }} <ArrowRightIcon class="-mt-0.5 mr-0.5 inline-block h-3 w-3" aria-hidden="true" /></NuxtLink>
               </td>
               <td v-else>
                 Text-Blöcke, die nicht bereits durch andere Optionen bearbeitbar sind (bspw. das Wort "Schließen"), können über die Option "customLabels" verändert werden.<br />
@@ -778,7 +778,7 @@ definePageMeta({
                 <a href="https://github.com/add2cal/add-to-calendar-button/blob/main/src/atcb-i18n.js" target="_blank" rel="noopener" class="whitespace-nowrap">atcb-i18n.js-Datei <ArrowTopRightOnSquareIcon class="-mt-0.5 mr-0.5 inline-block h-3 w-3" aria-hidden="true" /></a> für eine Liste der
                 verfügbaren Keys an. Beachte, dass die Keys hier zu Kleinbuchstaben transformiert und Leerzeichen entfernt werden müssen!<br />
                 Ein so manipulierter Text überschreibt auch jegliche Übersetzung.<br />Du kannst hierbei die gleichen HTML-Pseudo-Tags nutzen, wie sie auch in der "description"-Option möglich sind.<br /><br />
-                <NuxtLink :to="{path: localePath('advanced-use'), hash: '#4'}">{{ $t('labels.example') }} <ArrowRightIcon class="-mt-0.5 mr-0.5 inline-block h-3 w-3" aria-hidden="true" /></NuxtLink>
+                <NuxtLink :to="{path: localePath('advanced-use'), hash: '#case-4'}">{{ $t('labels.example') }} <ArrowRightIcon class="-mt-0.5 mr-0.5 inline-block h-3 w-3" aria-hidden="true" /></NuxtLink>
               </td>
             </tr>
           </tbody>

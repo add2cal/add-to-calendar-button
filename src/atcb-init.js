@@ -41,7 +41,7 @@ if (isBrowser()) {
       this.error = false;
     }
 
-    connectedCallback() {
+    async connectedCallback() {
       // initial data fetch
       this.debug = this.hasAttribute('debug');
       // checking for PRO key and pull data if given

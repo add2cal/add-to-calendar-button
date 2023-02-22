@@ -93,7 +93,7 @@ watch(locale, value => {
           Speziellere Beispiele und Erläuterung von komplexeren Konfigurationen findest du in der <NuxtLink :to="localePath('advanced-use')">"{{ $t('navigation.advanced-use') }}"</NuxtLink>.
         </p>
       </div>
-      <section id="1">
+      <section id="case-1">
         <h2 class="mb-4 mt-14 border-t border-zinc-300 pt-14 dark:border-zinc-700">{{ $t('content.examples.example') }} 1: {{ $t('content.examples.1_long') }}</h2>
         <p v-if="locale=='en'">This is a more or less standard setup with all available calendar types and a time zone set.</p>
         <p v-else>Dies ist das gewöhnliche Standard-Setup mit allen verfügbaren Kalender-Links und einer definierten Zeitzone</p>
@@ -133,7 +133,7 @@ watch(locale, value => {
         </div>
       </section>
 
-      <section id="2">
+      <section id="case-2">
         <h2 class="mb-4 mt-14 border-t border-zinc-300 pt-14 dark:border-zinc-700">{{ $t('content.examples.example') }} 2: {{ $t('content.examples.2_long') }}</h2>
         <p v-if="locale=='en'">
           For an all-day event, you would simply leave out the time information.<br />
@@ -173,7 +173,7 @@ watch(locale, value => {
         </div>
       </section>
 
-      <section id="3">
+      <section id="case-3">
         <h2 class="mb-4 mt-14 border-t border-zinc-300 pt-14 dark:border-zinc-700">{{ $t('content.examples.example') }} 3: {{ $t('content.examples.3_long') }}</h2>
         <div v-if="locale=='en'">
           <p>Instead of using a fixed date, you can also go with dynamic ones.</p>
@@ -221,7 +221,7 @@ watch(locale, value => {
         </div>
       </section>
 
-      <section id="4">
+      <section id="case-4">
         <h2 class="mb-4 mt-14 border-t border-zinc-300 pt-14 dark:border-zinc-700">{{ $t('content.examples.example') }} 4: {{ $t('content.examples.4_long') }}</h2>
         <p v-if="locale=='en'">
           You can define recurring events by setting an
@@ -320,7 +320,7 @@ watch(locale, value => {
         </div>
       </section>
 
-      <section id="5">
+      <section id="case-5">
         <h2 class="mb-4 mt-14 border-t border-zinc-300 pt-14 dark:border-zinc-700">{{ $t('content.examples.example') }} 5: {{ $t('content.examples.5_long') }}</h2>
         <div v-if="locale=='en'">
           <p>
@@ -394,7 +394,7 @@ watch(locale, value => {
         </div>
       </section>
 
-      <section id="6">
+      <section id="case-6">
         <h2 class="mb-4 mt-14 border-t border-zinc-300 pt-14 dark:border-zinc-700">{{ $t('content.examples.example') }} 6: {{ $t('content.examples.6_long') }}</h2>
         <div v-if="locale=='en'">
           <p>
@@ -458,7 +458,7 @@ watch(locale, value => {
         </div>
       </section>
 
-      <section id="7">
+      <section id="case-7">
         <h2 class="mb-4 mt-14 border-t border-zinc-300 pt-14 dark:border-zinc-700">{{ $t('content.examples.example') }} 7: {{ $t('content.examples.7_long') }}</h2>
         <div v-if="locale=='en'">
           <p>
@@ -516,7 +516,7 @@ watch(locale, value => {
           </div>
         </div>
       </section>
-      <section id="8">
+      <section id="case-8">
         <h2 class="mb-4 mt-14 border-t border-zinc-300 pt-14 dark:border-zinc-700">{{ $t('content.examples.example') }} 8: {{ $t('content.examples.8_long') }}</h2>
         <p v-if="locale=='en'">
           When you specify only 1 calendar type, there will be no list at all.<br />
@@ -559,7 +559,7 @@ watch(locale, value => {
           </div>
         </div>
       </section>
-      <section id="9">
+      <section id="case-9">
         <h2 class="mb-4 mt-14 border-t border-zinc-300 pt-14 dark:border-zinc-700">{{ $t('content.examples.example') }} 9: {{ $t('content.examples.9_long') }}</h2>
         <div v-if="locale=='en'">
           <p>With the option "buttonsList", you can split the button into multiple - one per calendar type.</p>
@@ -618,15 +618,15 @@ watch(locale, value => {
     </div>
     <div class="hidden border-l border-zinc-300 pl-8 text-sm dark:border-zinc-700 lg:block">
       <div class="sticky top-0 pt-4">
-        <NuxtLink :to="'#1'" class="side-nav">#1: {{ $t('content.examples.1_short') }}</NuxtLink>
-        <NuxtLink :to="'#2'" class="side-nav">#2: {{ $t('content.examples.2_short') }}</NuxtLink>
-        <NuxtLink :to="'#3'" class="side-nav">#3: {{ $t('content.examples.3_short') }}</NuxtLink>
-        <NuxtLink :to="'#4'" class="side-nav">#4: {{ $t('content.examples.4_short') }}</NuxtLink>
-        <NuxtLink :to="'#5'" class="side-nav">#5: {{ $t('content.examples.5_short') }}</NuxtLink>
-        <NuxtLink :to="'#6'" class="side-nav">#6: {{ $t('content.examples.6_short') }}</NuxtLink>
-        <NuxtLink :to="'#7'" class="side-nav">#7: {{ $t('content.examples.7_short') }}</NuxtLink>
-        <NuxtLink :to="'#8'" class="side-nav">#8: {{ $t('content.examples.8_short') }}</NuxtLink>
-        <NuxtLink :to="'#9'" class="side-nav">#9: {{ $t('content.examples.9_short') }}</NuxtLink>
+        <NuxtLink :to="'#case-1'" class="side-nav">#1: {{ $t('content.examples.1_short') }}</NuxtLink>
+        <NuxtLink :to="'#case-2'" class="side-nav">#2: {{ $t('content.examples.2_short') }}</NuxtLink>
+        <NuxtLink :to="'#case-3'" class="side-nav">#3: {{ $t('content.examples.3_short') }}</NuxtLink>
+        <NuxtLink :to="'#case-4'" class="side-nav">#4: {{ $t('content.examples.4_short') }}</NuxtLink>
+        <NuxtLink :to="'#case-5'" class="side-nav">#5: {{ $t('content.examples.5_short') }}</NuxtLink>
+        <NuxtLink :to="'#case-6'" class="side-nav">#6: {{ $t('content.examples.6_short') }}</NuxtLink>
+        <NuxtLink :to="'#case-7'" class="side-nav">#7: {{ $t('content.examples.7_short') }}</NuxtLink>
+        <NuxtLink :to="'#case-8'" class="side-nav">#8: {{ $t('content.examples.8_short') }}</NuxtLink>
+        <NuxtLink :to="'#case-9'" class="side-nav">#9: {{ $t('content.examples.9_short') }}</NuxtLink>
       </div>
     </div>
   </div>
