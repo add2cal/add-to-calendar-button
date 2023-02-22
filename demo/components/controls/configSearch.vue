@@ -144,11 +144,11 @@ const onSearchInputBlur = () => {
     <label v-if="label" class="hidden pr-5 text-sm text-zinc-500 sm:inline-block">{{ $t('content.config.find_params') }}: </label>
     <div class="relative" :class="label ? 'block sm:inline-block' : 'block w-full'">
       <div :id="elID" class="autocomplete">
-        <div class="focus-visible:ring-secondary/75 group mt-1 grid w-full cursor-default rounded-md bg-zinc-50 shadow hover:bg-white hover:shadow-md focus:outline-none focus-visible:ring dark:bg-zinc-700 dark:hover:bg-zinc-600">
+        <div class="group mt-1 grid w-full cursor-default rounded-md bg-zinc-50 shadow hover:bg-white hover:shadow-md focus:outline-none focus-visible:ring focus-visible:ring-secondary/75 dark:bg-zinc-700 dark:hover:bg-zinc-600">
           <input
             :id="elInputID"
             ref="searchInput"
-            class="autocomplete-input caret-secondary focus-visible:ring-secondary/75 truncate rounded-md bg-zinc-50 py-2 pr-10 pl-3 text-left text-sm focus:outline-none focus-visible:ring group-hover:bg-white dark:bg-zinc-700 dark:group-hover:bg-zinc-600"
+            class="autocomplete-input truncate rounded-md bg-zinc-50 py-2 pr-10 pl-3 text-left text-sm caret-secondary focus:outline-none focus-visible:ring focus-visible:ring-secondary/75 group-hover:bg-white dark:bg-zinc-700 dark:group-hover:bg-zinc-600"
             :placeholder="$t('labels.inputs.search')"
             :aria-label="$t('labels.inputs.search')"
             @focus="onSearchInputFocus"
@@ -158,7 +158,7 @@ const onSearchInputBlur = () => {
             <MagnifyingGlassIcon class="h-5 w-5 text-gray-400" aria-hidden="true" />
           </span>
         </div>
-        <ul class="autocomplete-result-list ring-secondary/75 absolute z-10 mt-2.5 max-h-36 w-full overflow-auto rounded-md bg-white py-1 text-sm shadow-lg ring focus:outline-none dark:bg-zinc-700" />
+        <ul class="autocomplete-result-list absolute z-10 mt-2.5 max-h-36 w-full overflow-auto rounded-md bg-white py-1 text-sm shadow-lg ring ring-secondary/75 focus:outline-none dark:bg-zinc-700" />
         <ul v-if="isInputFocused && !getFilteredOptions().length" :id="elNoResultsID" class="autocomplete-result-list absolute z-10 mt-3 max-h-36 w-full overflow-auto rounded-md bg-white py-1 text-sm shadow-lg ring ring-red-600/75 focus:outline-none dark:bg-zinc-700">
           <li v-t="'labels.inputs.nothing_found'" class="no-result relative cursor-default select-none py-2 px-4 italic">Nothing found.</li>
         </ul>

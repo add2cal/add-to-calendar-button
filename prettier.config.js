@@ -8,4 +8,5 @@ module.exports = {
   arrowParens: 'always',
   printWidth: 300,
   endOfLine: 'lf',
+  plugins: [require('prettier-plugin-tailwindcss')],
 };

@@ -1,12 +1,22 @@
+# Ignore artifacts:
+build
+coverage
+
+# Ignore minified files
+*.min.*
+
+# Ignore some folders
+.nuxt
+.nitro
+.cache
+.output
+.env
+dist
+dist-dev
+public
+
 # Ignore html files
 *.html
 
 # Ignore css files
 *.css
-
-# Ignore minified files
-*.min.*
-
-# Ignore dist and demo folders
-dist
-demo

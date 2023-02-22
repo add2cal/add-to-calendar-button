@@ -25,5 +25,6 @@ module.exports = {
     'tailwindcss/no-custom-classname': 'off',
     'vue/attribute-hyphenation': 'off',
     'vue/require-default-prop': 'off',
+    'tailwindcss/classnames-order': 'off',
   },
 };

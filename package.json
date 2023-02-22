@@ -65,8 +65,8 @@
     "stylelint:fix": "npm run stylelint -- --fix",
     "eslint": "npx eslint .",
     "eslint:fix": "npm run eslint -- --fix",
-    "prettier": "npx prettier . --check && cd demo && npx prettier . --check",
-    "prettier:fix": "npm run prettier -- --write && cd demo && npm run prettier -- --write",
+    "prettier": "npx prettier . --check",
+    "prettier:fix": "npm run prettier -- --write",
     "format": "npm run eslint:fix && npm run prettier:fix && npm run stylelint:fix",
     "test": "node test/test-prep.js && npx web-test-runner test/wc-tests/*.test.js --node-resolve",
     "dev": "cd demo && npm run dev",
@@ -79,8 +79,8 @@
   },
   "devDependencies": {
     "@open-wc/testing": "^3.1.7",
-    "@typescript-eslint/eslint-plugin": "^5.52.0",
-    "@typescript-eslint/parser": "^5.52.0",
+    "@typescript-eslint/eslint-plugin": "^5.53.0",
+    "@typescript-eslint/parser": "^5.53.0",
     "@web/test-runner": "^0.15.0",
     "eslint": "^8.34.0",
     "eslint-config-prettier": "^8.6.0",
@@ -94,8 +94,9 @@
     "grunt-file-creator": "^0.1.3",
     "grunt-version": "^3.0.0",
     "prettier": "2.8.4",
-    "stylelint": "^14.16.1",
+    "prettier-plugin-tailwindcss": "^0.2.3",
+    "stylelint": "^15.2.0",
     "stylelint-config-prettier": "^9.0.5",
-    "stylelint-config-standard": "^29.0.0"
+    "stylelint-config-standard": "^30.0.1"
   }
 }
