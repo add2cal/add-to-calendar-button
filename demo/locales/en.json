@@ -184,7 +184,7 @@
     }
   },
   "content": {
-    "404": {      
+    "404": {
       "intro": "Unfortunately, the requested page is not available.",
       "back": "Go to the home page"
     },
