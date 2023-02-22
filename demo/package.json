@@ -24,7 +24,9 @@
     "postinstall": "nuxt prepare",
     "type-check": "vue-tsc --noEmit",
     "lint": "eslint --ext \".ts,.js,.vue\" --ignore-path .gitignore .",
-    "lintfix": "eslint --fix --ext \".ts,.js,.vue\" --ignore-path .gitignore ."
+    "lint:fix": "eslint --fix --ext \".ts,.js,.vue\" --ignore-path .gitignore .",
+    "prettier": "npx prettier . --check",
+    "prettier:fix": "npm run prettier -- --write"
   },
   "workspaces": [
     "../"

@@ -6,6 +6,7 @@ node_modules
 .output
 .env
 dist
+dist-dev
 
 # Editor directories and files
 .vscode/*

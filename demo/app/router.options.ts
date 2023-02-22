@@ -26,6 +26,7 @@ export default <RouterConfig>{
       }
       return {
         el: to.hash,
+        top: 68,
         left: 0,
         behavior: 'smooth',
       };

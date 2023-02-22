@@ -5,6 +5,12 @@ coverage
 # Ignore minified files
 *.min.*
 
-# Ignore dist folders
-**/dist
-**/.output
+# Ignore some folders
+.nuxt
+.nitro
+.cache
+.output
+.env
+dist
+dist-dev
+public
