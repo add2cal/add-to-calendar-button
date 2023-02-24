@@ -87,9 +87,14 @@ const onSearchInputFocus = () => {
 const onSearchInputBlur = () => {
   isInputFocused.value = false;
 
-  if (searchInput.value && !timezoneOptions.includes(searchInput.value.value.toString().trim())) {
-    searchInput.value.value = '';
-    emit('update:modelValue', '');
+  if (searchInput.value) {
+    const value = searchInput.value.value.toString().trim();
+    if (!timezoneOptions.includes(value)) {
+      searchInput.value.value = '';
+      emit('update:modelValue', '');
+    } else {
+      emit('update:modelValue', value);
+    }
   }
 }
 
