@@ -3,7 +3,7 @@
  *  Add to Calendar Button
  *  ++++++++++++++++++++++
  *
- *  Version: 2.1.3
+ *  Version: 2.1.4
  *  Creator: Jens Kuerschner (https://jenskuerschner.de)
  *  Project: https://github.com/add2cal/add-to-calendar-button
  *  License: Elastic License 2.0 (ELv2) (https://github.com/add2cal/add-to-calendar-button/blob/main/LICENSE.txt)
@@ -411,8 +411,8 @@ function atcb_date_specials_calculation(type, dateString, timeString = null, tim
   }
   // determine whether a date is overdue or not
   let isoString = tmpDate.toISOString();
-  if (timeString) {
-    // if a time information is given, we adjust for time zone
+  if (timeString && timeZone) {
+    // if time and time zone information are given, we adjust for time zone
     const offsetEnd = tzlib_get_offset(timeZone, dateString, timeString);
     const formattedOffsetEnd = offsetEnd.slice(0, 3) + ':' + offsetEnd.slice(3);
     isoString.replace('.000Z', formattedOffsetEnd);
