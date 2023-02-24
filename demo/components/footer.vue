@@ -28,7 +28,7 @@ function topFunction() {
             <NuxtLink :to="localePath('index')"><Logo variation="footer" /></NuxtLink>
           </div>
           <div class="flex">
-            <div class="mr-8 hidden cursor-pointer self-center opacity-40 hover:pb-2 hover:opacity-100 md:inline-block" :aria-label="$t('labels.toTop')" @click="topFunction()"><ArrowUpIcon class="h-6 w-6" aria-hidden="true" /></div>
+            <div role="button" class="mr-8 hidden cursor-pointer self-center opacity-40 hover:pb-2 hover:opacity-100 md:inline-block" :aria-label="$t('labels.toTop')" @click="topFunction()"><ArrowUpIcon class="h-6 w-6" aria-hidden="true" /></div>
             <div class="inline-block"><LanguageSwitcher /></div>
           </div>
         </div>
@@ -63,7 +63,7 @@ function topFunction() {
             <a class="footer-icon-base w-12  hover:text-npm dark:hover:text-npm" target="_blank" rel="noopener" href="https://www.npmjs.com/package/add-to-calendar-button"><LogoNpm /></a>
           </div>
         </div>
-        <div class="mx-auto flex w-fit cursor-pointer justify-center pt-10 opacity-40 hover:-mt-2 hover:pb-2 hover:opacity-100 md:hidden" :aria-label="$t('labels.toTop')" @click="topFunction()"><ArrowUpIcon class="h-6 w-6" aria-hidden="true" /></div>
+        <div role="button" class="mx-auto flex w-fit cursor-pointer justify-center pt-10 opacity-40 hover:-mt-2 hover:pb-2 hover:opacity-100 md:hidden" :aria-label="$t('labels.toTop')" @click="topFunction()"><ArrowUpIcon class="h-6 w-6" aria-hidden="true" /></div>
       </div>
     </div>
   </div>

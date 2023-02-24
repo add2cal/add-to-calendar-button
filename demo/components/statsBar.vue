@@ -132,12 +132,12 @@ const loadJsdelivrStats = async () => {
           <span class="inline xl:hidden">{{ $t('labels.stats.label_short') }}</span>
         </div>
       </div>
-      <div class="z-10 h-10 w-10 bg-gradient-to-r from-zinc-600 to-transparent py-2 px-4 dark:from-zinc-700"></div>
+      <div class="z-10 ml-1 h-10 w-14 shrink-0 bg-gradient-to-r from-zinc-600 to-transparent py-2 dark:from-zinc-700"></div>
 
       <client-only>
-        <MarqueeText :key="marqueeKey" :duration="100" :repeat="4" class="overflow-visible">
+        <MarqueeText :key="marqueeKey" :duration="100" :repeat="4" class="-ml-14 overflow-visible">
           <div class="flex whitespace-nowrap">
-            <a target="_blank" rel="noopener" href="https://github.com/add2cal/add-to-calendar-button" class="group mr-20 flex text-xs text-zinc-200 hover:text-white hover:no-underline">
+            <a target="_blank" rel="noopener" href="https://github.com/add2cal/add-to-calendar-button" class="group mr-20 flex py-2 text-xs text-zinc-200 hover:text-white hover:no-underline">
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="mr-1 inline-block h-3 w-3 self-center">
                 <path
                   fill-rule="evenodd"
@@ -145,13 +145,14 @@ const loadJsdelivrStats = async () => {
                   clip-rule="evenodd"
                 />
               </svg>
-              {{ isLoading ? '...' : $n(data.github.stars) }}<span class="pl-1 font-normal text-zinc-400 group-hover:text-zinc-200">{{ $t('labels.stats.stars') }}</span>
+              <span class="underline decoration-primary decoration-2 underline-offset-4 group-hover:decoration-primary-light group-hover:underline-offset-1">{{ isLoading ? '...' : $n(data.github.stars) }}</span>
+              <span class="pl-1 font-normal text-zinc-200 group-hover:text-zinc-100">{{ $t('labels.stats.stars') }}</span>
               <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="mt-0.5 ml-0.5 hidden h-3 w-3 group-hover:inline-block" aria-hidden="true">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 6H5.25A2.25 2.25 0 003 8.25v10.5A2.25 2.25 0 005.25 21h10.5A2.25 2.25 0 0018 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25" />
               </svg>
               <span class="ml-0.5 block w-3 group-hover:hidden"></span>
             </a>
-            <a target="_blank" rel="noopener" href="https://www.npmjs.com/package/add-to-calendar-button" class="group mr-20 flex text-xs text-zinc-200 hover:text-white hover:no-underline">
+            <a target="_blank" rel="noopener" href="https://www.npmjs.com/package/add-to-calendar-button" class="group mr-20 flex py-2 text-xs text-zinc-200 hover:text-white hover:no-underline">
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="mr-1 inline-block h-3 w-3 self-center">
                 <path
                   d="M17.004 10.407c.138.435-.216.842-.672.842h-3.465a.75.75 0 01-.65-.375l-1.732-3c-.229-.396-.053-.907.393-1.004a5.252 5.252 0 016.126 3.537zM8.12 8.464c.307-.338.838-.235 1.066.16l1.732 3a.75.75 0 010 .75l-1.732 3.001c-.229.396-.76.498-1.067.16A5.231 5.231 0 016.75 12c0-1.362.519-2.603 1.37-3.536zM10.878 17.13c-.447-.097-.623-.608-.394-1.003l1.733-3.003a.75.75 0 01.65-.375h3.465c.457 0 .81.408.672.843a5.252 5.252 0 01-6.126 3.538z"
@@ -162,13 +163,14 @@ const loadJsdelivrStats = async () => {
                   clip-rule="evenodd"
                 />
               </svg>
-              {{ isLoading ? '...' : $n(data.npm.totalInstallations) }}<span class="pl-1 font-normal text-zinc-400 group-hover:text-zinc-200">{{ $t('labels.stats.npm_total') }}</span>
+              <span class="underline decoration-primary decoration-2 underline-offset-4 group-hover:decoration-primary-light group-hover:underline-offset-1">{{ isLoading ? '...' : $n(data.npm.totalInstallations) }}</span>
+              <span class="pl-1 font-normal text-zinc-200 group-hover:text-zinc-100">{{ $t('labels.stats.npm_total') }}</span>
               <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="mt-0.5 ml-0.5 hidden h-3 w-3 group-hover:inline-block" aria-hidden="true">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 6H5.25A2.25 2.25 0 003 8.25v10.5A2.25 2.25 0 005.25 21h10.5A2.25 2.25 0 0018 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25" />
               </svg>
               <span class="ml-0.5 block w-3 group-hover:hidden"></span>
             </a>
-            <a target="_blank" rel="noopener" href="https://www.npmjs.com/package/add-to-calendar-button" class="group mr-20 flex text-xs text-zinc-200 hover:text-white hover:no-underline">
+            <a target="_blank" rel="noopener" href="https://www.npmjs.com/package/add-to-calendar-button" class="group mr-20 flex py-2 text-xs text-zinc-200 hover:text-white hover:no-underline">
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="mr-1 inline-block h-3 w-3 self-center">
                 <path
                   d="M17.004 10.407c.138.435-.216.842-.672.842h-3.465a.75.75 0 01-.65-.375l-1.732-3c-.229-.396-.053-.907.393-1.004a5.252 5.252 0 016.126 3.537zM8.12 8.464c.307-.338.838-.235 1.066.16l1.732 3a.75.75 0 010 .75l-1.732 3.001c-.229.396-.76.498-1.067.16A5.231 5.231 0 016.75 12c0-1.362.519-2.603 1.37-3.536zM10.878 17.13c-.447-.097-.623-.608-.394-1.003l1.733-3.003a.75.75 0 01.65-.375h3.465c.457 0 .81.408.672.843a5.252 5.252 0 01-6.126 3.538z"
@@ -179,13 +181,14 @@ const loadJsdelivrStats = async () => {
                   clip-rule="evenodd"
                 />
               </svg>
-              {{ isLoading ? '...' : $n(data.npm.weeklyInstallations) }}<span class="pl-1 font-normal text-zinc-400 group-hover:text-zinc-200">{{ $t('labels.stats.npm_weekly') }}</span>
+              <span class="underline decoration-primary decoration-2 underline-offset-4 group-hover:decoration-primary-light group-hover:underline-offset-1">{{ isLoading ? '...' : $n(data.npm.weeklyInstallations) }}</span>
+              <span class="pl-1 font-normal text-zinc-200 group-hover:text-zinc-100">{{ $t('labels.stats.npm_weekly') }}</span>
               <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="mt-0.5 ml-0.5 hidden h-3 w-3 group-hover:inline-block" aria-hidden="true">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 6H5.25A2.25 2.25 0 003 8.25v10.5A2.25 2.25 0 005.25 21h10.5A2.25 2.25 0 0018 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25" />
               </svg>
               <span class="ml-0.5 block w-3 group-hover:hidden"></span>
             </a>
-            <a target="_blank" rel="noopener" href="https://www.jsdelivr.com/package/npm/add-to-calendar-button" class="group mr-20 flex text-xs text-zinc-200 hover:text-white hover:no-underline">
+            <a target="_blank" rel="noopener" href="https://www.jsdelivr.com/package/npm/add-to-calendar-button" class="group mr-20 flex py-2 text-xs text-zinc-200 hover:text-white hover:no-underline">
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="mr-1 inline-block h-3 w-3 self-center">
                 <path
                   fill-rule="evenodd"
@@ -193,7 +196,8 @@ const loadJsdelivrStats = async () => {
                   clip-rule="evenodd"
                 />
               </svg>
-              {{ isLoading ? '...' : $n(data.jsdelivr.montlyHits) }}<span class="pl-1 font-normal text-zinc-400 group-hover:text-zinc-200">{{ $t('labels.stats.cdn') }}</span>
+              <span class="underline decoration-primary decoration-2 underline-offset-4 group-hover:decoration-primary-light group-hover:underline-offset-1">{{ isLoading ? '...' : $n(data.jsdelivr.montlyHits) }}</span>
+              <span class="pl-1 font-normal text-zinc-200 group-hover:text-zinc-100">{{ $t('labels.stats.cdn') }}</span>
               <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="mt-0.5 ml-0.5 hidden h-3 w-3 group-hover:inline-block" aria-hidden="true">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 6H5.25A2.25 2.25 0 003 8.25v10.5A2.25 2.25 0 005.25 21h10.5A2.25 2.25 0 0018 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25" />
               </svg>

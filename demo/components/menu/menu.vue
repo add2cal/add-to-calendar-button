@@ -24,7 +24,7 @@ const localePath = useLocalePath();
 
 <style scoped>
 .menu-item {
-  @apply m-auto rounded-md border border-transparent py-2 px-3 text-2xl opacity-80 hover:border-white hover:no-underline hover:opacity-100 lg:text-base;
+  @apply m-auto rounded-md border border-transparent py-2 px-3 text-2xl opacity-80 hover:border-white hover:no-underline hover:opacity-100 hover:shadow-md lg:text-base;
 }
 
 .menu-item-pro {

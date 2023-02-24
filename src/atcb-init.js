@@ -3,7 +3,7 @@
  *  Add to Calendar Button
  *  ++++++++++++++++++++++
  *
- *  Version: 2.1.2
+ *  Version: 2.1.3
  *  Creator: Jens Kuerschner (https://jenskuerschner.de)
  *  Project: https://github.com/add2cal/add-to-calendar-button
  *  License: Elastic License 2.0 (ELv2) (https://github.com/add2cal/add-to-calendar-button/blob/main/LICENSE.txt)
@@ -41,7 +41,7 @@ if (isBrowser()) {
       this.error = false;
     }
 
-    connectedCallback() {
+    async connectedCallback() {
       // initial data fetch
       this.debug = this.hasAttribute('debug');
       // checking for PRO key and pull data if given

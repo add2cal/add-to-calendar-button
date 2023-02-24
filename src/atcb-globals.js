@@ -5,14 +5,14 @@
  *  Add to Calendar Button
  *  ++++++++++++++++++++++
  *
- *  Version: 2.1.2
+ *  Version: 2.1.3
  *  Creator: Jens Kuerschner (https://jenskuerschner.de)
  *  Project: https://github.com/add2cal/add-to-calendar-button
  *  License: Elastic License 2.0 (ELv2) (https://github.com/add2cal/add-to-calendar-button/blob/main/LICENSE.txt)
  *  Note:    DO NOT REMOVE THE COPYRIGHT NOTICE ABOVE!
  *
  */
-const atcbVersion = '2.1.2';
+const atcbVersion = '2.1.3';
 
 // DEFINING CSS
 const atcbCssTemplate = {};
@@ -159,8 +159,13 @@ const atcbWcParams = [
   'hideRichData',
   'bypassWebViewCheck',
   'blockInteraction',
+  'styleLight',
+  'styleDark',
+  'disabled',
+  'hidden',
+  'pastDateHandling'
 ];
-const atcbWcBooleanParams = ['debug', 'hideIconButton', 'hideIconList', 'hideIconModal', 'hideTextLabelButton', 'hideTextLabelList', 'subscribe', 'hideBackground', 'hideCheckmark', 'hideBranding', 'inlineRsvp', 'hideRichData', 'buttonsList', 'inline', 'bypassWebViewCheck', 'blockInteraction'];
+const atcbWcBooleanParams = ['debug', 'hideIconButton', 'hideIconList', 'hideIconModal', 'hideTextLabelButton', 'hideTextLabelList', 'subscribe', 'hideBackground', 'hideCheckmark', 'hideBranding', 'inlineRsvp', 'hideRichData', 'buttonsList', 'inline', 'bypassWebViewCheck', 'blockInteraction', 'disabled', 'hidden'];
 const atcbWcObjectParams = ['dates', 'customLabels', 'ty', 'rsvp'];
 const atcbWcArrayParams = ['images', 'options'];
 

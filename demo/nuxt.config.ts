@@ -181,7 +181,7 @@ export default defineNuxtConfig({
     strategy: 'prefix_and_default',
     types: 'composition',
     langDir: 'locales',
-    lazy: true,
+    lazy: false,
     baseUrl: baseUrl,
     defaultLocale: 'en',
     locales: [

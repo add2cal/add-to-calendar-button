@@ -34,8 +34,8 @@ const localePath = useLocalePath();
     </div>
   </div>
 
-  <div id="demo" class="mt-20 bg-gradient-to-tr from-zinc-300 to-zinc-200 pt-12 pb-16 shadow-lg dark:from-zinc-800 dark:via-zinc-800 dark:to-zinc-700 dark:shadow-xl">
-    <div class="container">
+  <div class="mt-20 bg-gradient-to-tr from-zinc-300 to-zinc-200 pt-12 pb-16 shadow-lg dark:from-zinc-800 dark:via-zinc-800 dark:to-zinc-700 dark:shadow-xl">
+    <div id="demo" class="container">
       <h2 class="pb-8"><BeakerIcon class="-mt-1 mr-3 inline-block h-6 w-6" aria-hidden="true" />{{ $t('navigation.playground') }}</h2>
     </div>
     <ClientOnly>
@@ -53,7 +53,7 @@ const localePath = useLocalePath();
 
   <div class="h-14"></div>
 
-  <div id="installation" class="container pt-12">
+  <div id="installation" class="container mt-12">
     <h2 class="pb-8"><WrenchScrewdriverIcon class="-mt-1 mr-3 inline-block h-6 w-6" aria-hidden="true" />{{ $t('content.home.headline_installation') }}</h2>
     <IntegrationGuidesOverview />
 
