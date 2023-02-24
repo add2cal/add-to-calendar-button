@@ -11,6 +11,7 @@
  *
  */
 
+import { tzlib_get_offset } from 'timezones-ical-library';
 import { isiOS, isBrowser, atcbValidRecurrOptions, atcbInvalidSubscribeOptions, atcbiOSInvalidOptions, atcbWcBooleanParams } from './atcb-globals.js';
 import { atcb_format_datetime, atcb_rewrite_html_elements, atcb_generate_uuid } from './atcb-util.js';
 import { availableLanguages, rtlLanguages } from './atcb-i18n';
@@ -27,6 +28,7 @@ function atcb_decorate_data(data) {
   data = atcb_decorate_data_dates(data);
   data = atcb_decorate_data_meta(data);
   data = atcb_decorate_data_extend(data);
+  data = atcb_decorate_data_button_status_handling(data);
   return data;
 }
 
@@ -254,10 +256,12 @@ function atcb_decorate_data_dates(data) {
       data.dates[`${i}`].startTime = cleanedUpDates.startTime;
       data.dates[`${i}`].endTime = cleanedUpDates.endTime;
       data.dates[`${i}`].timeZone = cleanedUpDates.timeZone;
-      data.dates[`${i}`].timestamp = cleanedUpDates.startTimestamp;
       // calculate the real date values in case that there are some special rules included (e.g. adding days dynamically)
       data.dates[`${i}`].startDate = atcb_date_calculation(cleanedUpDates.startDate);
       data.dates[`${i}`].endDate = atcb_date_calculation(cleanedUpDates.endDate);
+      // calculating more special meta information      
+      data.dates[`${i}`].timestamp = atcb_date_specials_calculation('timestamp', data.dates[`${i}`].startDate, data.dates[`${i}`].startTime, data.dates[`${i}`].timeZone);
+      data.dates[`${i}`].overdue = atcb_date_specials_calculation('overdue', data.dates[`${i}`].endDate, data.dates[`${i}`].endTime, data.dates[`${i}`].timeZone);
     }
   } else {
     // in the single case, we do the same, but without the looping
@@ -270,6 +274,7 @@ function atcb_decorate_data_dates(data) {
     data.timeZone = data.dates[0].timeZone = cleanedUpDates.timeZone;
     data.startDate = data.dates[0].startDate = atcb_date_calculation(cleanedUpDates.startDate);
     data.endDate = data.dates[0].endDate = atcb_date_calculation(cleanedUpDates.endDate);
+    data.dates[0].overdue  = atcb_date_specials_calculation('overdue', data.endDate, data.endTime, data.timeZone);
   }
   // calculate current time
   const now = new Date();
@@ -367,7 +372,7 @@ function atcb_date_cleanup(dateTimeData) {
   if (dateTimeData.endDate == null || dateTimeData.endDate == '') {
     dateTimeData.endDate = dateTimeData.startDate;
   }
-  // parse date+time format (unofficial alternative to the main implementation)
+  // parse date+time format (unofficial alternatives to the main implementation)
   const endpoints = ['start', 'end'];
   endpoints.forEach(function (point) {
     if (dateTimeData[point + 'Date'] != null) {
@@ -389,16 +394,32 @@ function atcb_date_cleanup(dateTimeData) {
     if (dateTimeData.timeZone == 'currentBrowser') {
       dateTimeData.timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
     }
-    // create timestamps (not considering timezones, since this is only for sorting)
-    let tmpDate;
-    if (dateTimeData[point + 'Time'] != null) {
-      tmpDate = new Date(dateTimeData[point + 'Date'] + ' ' + dateTimeData[point + 'Time']);
-    } else {
-      tmpDate = new Date(dateTimeData[point + 'Date']);
-    }
-    dateTimeData[point + 'Timestamp'] = tmpDate.getTime();
   });
   return dateTimeData;
+}
+
+function atcb_date_specials_calculation(type, dateString, timeString = null, timeZone = null) {
+  const tmpDate = (function () {
+    if (timeString) {
+      return new Date(dateString + ' ' + timeString);
+    }
+    return new Date(dateString);
+  })();
+  if (type === 'timestamp') {
+    // create timestamps (not considering timezones, since this is only for sorting)    
+    return tmpDate.getTime();
+  }
+  // determine whether a date is overdue or not
+  let isoString = tmpDate.toISOString();
+  if (timeString) {
+    // if a time information is given, we adjust for time zone
+    const offsetEnd = tzlib_get_offset(timeZone, dateString, timeString);
+    const formattedOffsetEnd = offsetEnd.slice(0, 3) + ':' + offsetEnd.slice(3);
+    isoString.replace('.000Z', formattedOffsetEnd);
+  }
+  const utcEndDate = new Date(isoString);
+  const currentUtcDate = new Date(Date.now()).toUTCString();
+  return utcEndDate.getTime() < new Date(currentUtcDate).getTime();
 }
 
 function atcb_date_calculation(dateString) {
@@ -420,6 +441,40 @@ function atcb_date_calculation(dateString) {
     newDate.setDate(newDate.getDate() + parseInt(dateStringParts[1]));
   }
   return newDate.toISOString().replace(/T(\d{2}:\d{2}:\d{2}\.\d{3})Z/g, '');
+}
+
+function atcb_decorate_data_button_status_handling(data) {
+  // first, check for how we should handle the behavior on overdue events
+  if (data.pastDateHandling == null || (data.pastDateHandling != 'disable' && data.pastDateHandling != 'hide')) {
+    data.pastDateHandling = 'none';
+  }
+  const overdue = (function () {
+    for (let i = 0; i < data.dates.length; i++) {
+      if (!data.dates[`${i}`].endDate) {
+        // if at least one sub date has no endDate, the event cannot be in the past
+        // TODO: optimize for recurrence, where there is no endDate, but a count limit. We should calculate a recurrence endDate first and then do not need to change anything here.
+        return false;
+      }      
+      if (!data.dates[`${i}`].overdue) {
+        // we also return false if at least one event is not overdue
+        return false;
+      }
+    }
+    // in other cases, all dates would be overdue and therefore also the overall event
+    return true;
+  })();
+  if (overdue) {
+    if (data.pastDateHandling == 'disable') {
+      data.disabled = true;
+    } else if (data.pastDateHandling == 'hide') {
+      data.hidden = true;
+    }
+  }
+  // second, block interaction if disabled or hidden
+  if (data.disabled || data.hidden) {
+    data.blockInteraction = true;
+  }
+  return data;
 }
 
 export { atcb_decorate_data };

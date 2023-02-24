@@ -591,6 +591,7 @@ function atcb_generate_date_button(data, parent, subEvent = 'all') {
     subEvent = 0;
   }
   const startDate = new Date(atcb_generate_time(data.dates[`${subEvent}`]).start);
+  const allDay = atcb_generate_time(data.dates[`${subEvent}`]).allday;
   const timeZone = (function () {
     if (data.dates[`${subEvent}`].timeZone != null && data.dates[`${subEvent}`].timeZone != '') {
       return data.dates[`${subEvent}`].timeZone;
@@ -606,14 +607,24 @@ function atcb_generate_date_button(data, parent, subEvent = 'all') {
   btnLeft.append(btnDay);
   const btnMonth = document.createElement('div');
   btnMonth.classList.add('atcb-date-btn-month');
-  btnDay.textContent = startDate.toLocaleString(data.language, {
-    day: 'numeric',
-    timeZone: timeZone,
-  });
-  btnMonth.textContent = startDate.toLocaleString(data.language, {
-    month: 'short',
-    timeZone: timeZone,
-  });
+  btnDay.textContent = (function () {
+    if (allDay) {
+      return startDate.toLocaleString(data.language, { day: 'numeric' });
+    }
+    return startDate.toLocaleString(data.language, {
+      day: 'numeric',
+      timeZone: timeZone,
+    });
+  })();
+  btnMonth.textContent = (function () {
+    if (allDay) {
+      return startDate.toLocaleString(data.language, { month: 'short' });
+    }
+    return startDate.toLocaleString(data.language, {
+      month: 'short',
+      timeZone: timeZone,
+    });
+  })();
   btnLeft.append(btnMonth);
   const btnRight = document.createElement('div');
   btnRight.classList.add('atcb-date-btn-right');

@@ -30,18 +30,18 @@ let defaultMultiDate = JSON.stringify([{
     "endTime":"23:30"
   },
   {
-    "name":t('demo_data.name_sub_2'),
-    "description":t('demo_data.description_sub_2'),
-    "startDate":"today+5",
-    "startTime":"11:30",
-    "endTime":"20:00"
-  },
-  {
     "name":t('demo_data.name_sub_3'),
     "description":t('demo_data.description_sub_3'),
     "startDate":"today+8",
     "startTime":"09:00",
     "endTime":"19:00"
+  },
+  {
+    "name":t('demo_data.name_sub_2'),
+    "description":t('demo_data.description_sub_2'),
+    "startDate":"today+5",
+    "startTime":"11:30",
+    "endTime":"20:00"
   }]);
 watch(locale, value => {
   if (value != 'en') {
@@ -57,18 +57,18 @@ watch(locale, value => {
     "endTime":"23:30"
   },
   {
-    "name":t('demo_data.name_sub_2'),
-    "description":t('demo_data.description_sub_2'),
-    "startDate":"today+5",
-    "startTime":"11:30",
-    "endTime":"20:00"
-  },
-  {
     "name":t('demo_data.name_sub_3'),
     "description":t('demo_data.description_sub_3'),
     "startDate":"today+8",
     "startTime":"09:00",
     "endTime":"19:00"
+  },
+  {
+    "name":t('demo_data.name_sub_2'),
+    "description":t('demo_data.description_sub_2'),
+    "startDate":"today+5",
+    "startTime":"11:30",
+    "endTime":"20:00"
   }]);
 });
 </script>
@@ -329,7 +329,8 @@ watch(locale, value => {
           </p>
           <p>
             You define those parts by placing them as separate objects in a dates array.<br />
-            Individual date and time information would be required - global ones will be ignored.
+            Individual date and time information would be required - global ones will be ignored.<br />
+            Events get automatically sorted based on their startDate.
           </p>
         </div>
         <div v-else>
@@ -339,7 +340,8 @@ watch(locale, value => {
           </p>
           <p>
             Du kannst diese einzelnen Teile mit dem "dates" Objekt in einem Event spezifizieren.<br />
-            Zeit-Informationen je Sub-Event sind verpflichtend - Daten auf übergeordneter Ebene werden ignoriert.
+            Zeit-Informationen je Sub-Event sind verpflichtend - Daten auf übergeordneter Ebene werden ignoriert.<br />
+            Sub-Events werden automatisch nach StartDate sortiert.
           </p>
         </div>
         <div class="block w-full justify-between md:flex">
@@ -368,18 +370,18 @@ watch(locale, value => {
       "endTime":"23:30"
     },
     {
-      "name":"{{ $t('demo_data.name_sub_2') }}",
-      "description":"{{ $t('demo_data.description_sub_2') }}",
-      "startDate":"today+5",
-      "startTime":"11:30",
-      "endTime":"20:00"
-    },
-    {
       "name":"{{ $t('demo_data.name_sub_3') }}",
       "description":"{{ $t('demo_data.description_sub_3') }}",
       "startDate":"today+8",
       "startTime":"09:00",
       "endTime":"19:00"
+    },
+    {
+      "name":"{{ $t('demo_data.name_sub_2') }}",
+      "description":"{{ $t('demo_data.description_sub_2') }}",
+      "startDate":"today+5",
+      "startTime":"11:30",
+      "endTime":"20:00"
     }
   ]'
   timeZone="{{ $t('demo_data.default_timezone') }}"
