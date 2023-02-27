@@ -315,34 +315,25 @@ function atcb_load_css(host, rootObj = null, style = '', inline = false, buttons
     document.head.append(cssGlobalContent);
   }
   // we load custom styles dynamically
-  if (customCss != '' && style == 'custom') {
-    // first, create placeholder
-    const placeholder = document.createElement('div');
-    placeholder.style.cssText = 'width: 150px; height: 40px; border-radius: 200px; background-color: #777; opacity: .3;';
-    host.prepend(placeholder);
-    // second, load the actual css
-    const cssUrl = customCss;
+  if (customCss != '' && style == 'custom') {    
     const cssFile = document.createElement('link');
     cssFile.setAttribute('rel', 'stylesheet');
     cssFile.setAttribute('type', 'text/css');
-    cssFile.setAttribute('href', cssUrl);
-    host.prepend(cssFile);
-    // third, remove placeholder and render object as soon as loaded
-    if (rootObj != null) {
-      cssFile.onload = function () {
-        placeholder.remove();
-        if (inline) {
-          rootObj.style.display = 'inline-block';
-        } else {
-          if (buttonsList) {
-            rootObj.style.display = 'flex';
-            rootObj.style.flexWrap = 'wrap';
-            rootObj.style.justifyContent = 'center';
-          } else {
-            rootObj.style.display = 'block';
-          }
-        }
-      };
+    cssFile.setAttribute('href', customCss);
+    // if we have no rootObject, we are loading a modal in a new shadowDOM, which can and should be blocking.
+    if (rootObj == null) {
+      // first, hide the content
+      host.host.style.display = 'none';
+      // second, load the actual css (and re-show the content as soon as it is loaded)
+      loadExternalCssAsynch(cssFile, host, host.host);
+    } else {
+      // else, it should be rather non-blocking.
+      // first, create a button placeholder
+      const placeholder = document.createElement('div');
+      placeholder.style.cssText = 'width: 150px; height: 40px; border-radius: 200px; background-color: #777; opacity: .3;';
+      host.prepend(placeholder);
+      // second, load the actual css (and remove the placeholder as soon as it is loaded)
+      loadExternalCssAsynch(cssFile, host, rootObj, placeholder, inline, buttonsList);
     }
     return;
   }
@@ -379,6 +370,28 @@ function atcb_load_css(host, rootObj = null, style = '', inline = false, buttons
       } else {
         rootObj.style.display = 'block';
       }
+    }
+  }
+}
+
+async function loadExternalCssAsynch(cssFile, host, rootObj, placeholder = null, inline = false, buttonsList = false) {
+  host.prepend(cssFile);
+  // remove placeholder and render object as soon as loaded - only relevant if given
+  await new Promise(resolve => {
+    cssFile.onload = resolve;
+  });
+  if (placeholder != null) {
+    placeholder.remove();
+  }
+  if (inline) {
+    rootObj.style.display = 'inline-block';
+  } else {
+    if (buttonsList) {
+      rootObj.style.display = 'flex';
+      rootObj.style.flexWrap = 'wrap';
+      rootObj.style.justifyContent = 'center';
+    } else {
+      rootObj.style.display = 'block';
     }
   }
 }

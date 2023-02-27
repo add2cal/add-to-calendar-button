@@ -61,7 +61,7 @@ const localePath = useLocalePath();
     <div>{{ $t('content.home.functionality_intro') }}</div>
     <FeaturesBlock />
 
-    <div class="mt-20 border-t border-zinc-300 py-14 text-center dark:border-zinc-700">
+    <div class="mt-20 border-t border-zinc-300 pt-14 text-center dark:border-zinc-700">
       <h3 class="pb-6">{{ $t('content.home.next') }}</h3>
 
       <div class="grid grid-cols-1 text-center md:grid-cols-2">
