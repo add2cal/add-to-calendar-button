@@ -164,9 +164,28 @@ const atcbWcParams = [
   'styleDark',
   'disabled',
   'hidden',
-  'pastDateHandling'
+  'pastDateHandling',
 ];
-const atcbWcBooleanParams = ['debug', 'hideIconButton', 'hideIconList', 'hideIconModal', 'hideTextLabelButton', 'hideTextLabelList', 'subscribe', 'hideBackground', 'hideCheckmark', 'hideBranding', 'inlineRsvp', 'hideRichData', 'buttonsList', 'inline', 'bypassWebViewCheck', 'blockInteraction', 'disabled', 'hidden'];
+const atcbWcBooleanParams = [
+  'debug',
+  'hideIconButton',
+  'hideIconList',
+  'hideIconModal',
+  'hideTextLabelButton',
+  'hideTextLabelList',
+  'subscribe',
+  'hideBackground',
+  'hideCheckmark',
+  'hideBranding',
+  'inlineRsvp',
+  'hideRichData',
+  'buttonsList',
+  'inline',
+  'bypassWebViewCheck',
+  'blockInteraction',
+  'disabled',
+  'hidden',
+];
 const atcbWcObjectParams = ['dates', 'customLabels', 'ty', 'rsvp'];
 const atcbWcArrayParams = ['images', 'options'];
 

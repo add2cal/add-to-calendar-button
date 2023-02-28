@@ -259,7 +259,7 @@ function atcb_decorate_data_dates(data) {
       // calculate the real date values in case that there are some special rules included (e.g. adding days dynamically)
       data.dates[`${i}`].startDate = atcb_date_calculation(cleanedUpDates.startDate);
       data.dates[`${i}`].endDate = atcb_date_calculation(cleanedUpDates.endDate);
-      // calculating more special meta information      
+      // calculating more special meta information
       data.dates[`${i}`].timestamp = atcb_date_specials_calculation('timestamp', data.dates[`${i}`].startDate, data.dates[`${i}`].startTime, data.dates[`${i}`].timeZone);
       data.dates[`${i}`].overdue = atcb_date_specials_calculation('overdue', data.dates[`${i}`].endDate, data.dates[`${i}`].endTime, data.dates[`${i}`].timeZone);
     }
@@ -274,7 +274,7 @@ function atcb_decorate_data_dates(data) {
     data.timeZone = data.dates[0].timeZone = cleanedUpDates.timeZone;
     data.startDate = data.dates[0].startDate = atcb_date_calculation(cleanedUpDates.startDate);
     data.endDate = data.dates[0].endDate = atcb_date_calculation(cleanedUpDates.endDate);
-    data.dates[0].overdue  = atcb_date_specials_calculation('overdue', data.endDate, data.endTime, data.timeZone);
+    data.dates[0].overdue = atcb_date_specials_calculation('overdue', data.endDate, data.endTime, data.timeZone);
   }
   // calculate current time
   const now = new Date();
@@ -409,7 +409,7 @@ function atcb_date_specials_calculation(type, dateString, timeString = null, tim
     return new Date(dateString);
   })();
   if (type === 'timestamp') {
-    // create timestamps (not considering timezones, since this is only for sorting)    
+    // create timestamps (not considering timezones, since this is only for sorting)
     return tmpDate.getTime();
   }
   // determine whether a date is overdue or not
@@ -457,7 +457,7 @@ function atcb_decorate_data_button_status_handling(data) {
         // if at least one sub date has no endDate, the event cannot be in the past
         // TODO: optimize for recurrence, where there is no endDate, but a count limit. We should calculate a recurrence endDate first and then do not need to change anything here.
         return false;
-      }      
+      }
       if (!data.dates[`${i}`].overdue) {
         // we also return false if at least one event is not overdue
         return false;
