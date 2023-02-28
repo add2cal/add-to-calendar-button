@@ -118,6 +118,7 @@ const atcbWcParams = [
   'sequence',
   'uid',
   'organizer',
+  'attendee',
   'icsFile',
   'images',
   'recurrence',

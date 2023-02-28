@@ -702,12 +702,12 @@ a.atcb-modal-btn:focus-visible{
   color: var(--btn-text);
   display: block;
   position: absolute;
-  top: -1.2em;
+  top: -.9em;
   right: -.3em;
   padding: .5em;
   background: var(--checkmark-background);
   border-radius: 100%;
-  height: 2em;
+  height: 1.5em;
 }
 
 .atcb-checkmark svg {
@@ -721,7 +721,7 @@ a.atcb-modal-btn:focus-visible{
  */
 
  #atcb-bgoverlay {
-  animation: atcb-bgoverlay-animate 0.1s ease 0s 1 normal forwards;
+  animation: atcb-bgoverlay-animate 0.2s ease 0s 1 normal forwards;
   backdrop-filter: blur(2px);
   -webkit-backdrop-filter: blur(2px);
   background-color: var(--overlay-background);

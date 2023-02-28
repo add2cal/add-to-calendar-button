@@ -341,6 +341,9 @@ function atcb_decorate_data_extend(data) {
     if (data.dates[`${i}`].organizer == null && data.organizer != null) {
       data.dates[`${i}`].organizer = data.organizer;
     }
+    if (data.dates[`${i}`].attendee == null && data.attendee != null) {
+      data.dates[`${i}`].attendee = data.attendee;
+    }
     if (data.dates[`${i}`].availability == null && data.availability != null) {
       data.dates[`${i}`].availability = data.availability.toLowerCase();
     } else if (data.dates[`${i}`].availability != null) {

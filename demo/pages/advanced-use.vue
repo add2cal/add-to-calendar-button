@@ -516,18 +516,24 @@ onUnmounted(() => {
         <h2 class="mb-4 mt-14 border-t border-zinc-300 pt-14 dark:border-zinc-700">5. {{ $t('content.advanced.5_long') }}</h2>
         <div v-if="locale=='en'">
           <p>
-            If you feel confident enough to mess with the rather unusual iCal settings, you can use the options "uid", "sequence", "created", "updated", and "status" (TENTATIVE, CONFIRMED, CANCELLED).<br />
+            If you feel confident enough to mess with the rather unusual iCal settings, you can use the options "uid", "sequence", "created", "updated", "attendee", and "status" (TENTATIVE, CONFIRMED, CANCELLED).<br />
             They basically override the respective default values.
           </p>
-          <p>Mind that those options are only supported by the iCal and Apple calendar links (and even there not recognized by all calendars)!</p>
+          <p class="font-semibold">Mind that those options are only supported by the iCal and Apple calendar links!</p>
           <p>To update an existing event (e.g. changing its status) by changing those properties, you would need to have a growing sequence number, newer "updated" date, same "created" date, the same "uid", and also the organizer field (name and email) set.</p>
-          <p>We do our best to automatically support you even with those expert options; but would not really recommend using them.</p>
+          <p>
+            Some calendars only work with the "attendee" to be specified as well. And if your "update" to the event is not a status change to "CANCELLED", it is mandatory in all cases!<br />
+            The attendee needs to be the person saving the event. If you know this, you can make use of this functionality. If not, we would not recommend it.
+          </p>
         </div>
         <div v-else>
-          <p>Falls du im Umgang mit iCal-Einstellungen erfahren bist, kannst du die Optionen "uid", "sequence", "created", "updated" und "status" (TENTATIVE, CONFIRMED, CANCELLED) manuell steuern.</p>
-          <p>Beachte, dass diese Optionen nur von den iCal und Apple Kalendar-Links unterstützt werden (und auch dann nicht von allen Kalender immer sauber erkannt werden)!</p>
+          <p>Falls du im Umgang mit iCal-Einstellungen erfahren bist, kannst du die Optionen "uid", "sequence", "created", "updated", "attendee" und "status" (TENTATIVE, CONFIRMED, CANCELLED) manuell steuern.</p>
+          <p class="font-semibold">Beachte, dass diese Optionen nur von den iCal und Apple Kalendar-Links unterstützt werden (und auch dann nicht von allen Kalender immer sauber erkannt werden)!</p>
           <p>Um ein bestehendes Event zu aktualisieren (bspw. den Status) muss die "sequence"-Nummer aufsteigen, ein jüngeres "updated"-Datum bei gleichem "created"-Datum gesetzt, die gleiche "uid" und die "organizer"-Option gegeben sein.</p>
-          <p>Wir geben unser Bestes Anpassungen automatisiert zu unterstützen, können aber nicht bedenkenlos empfehlen hiermit exzessiv in Produktivumgebungen zu arbeiten.</p>
+          <p>
+            Einige Kalender erfordern zudem einen "attendee". Sollte dein "Update" des Event kein Status-Wechsel auf "CANCELLED" sein, ist dieser in jedem Fall verpflichtend!<br />
+            Der "attendee" muss die Person sein, die das Event bei sich speichert. Wenn du diese Information hast, kannst du die Update-Funktionalität nutzen. Ansonsten muss davon abgeraten werden.
+          </p>
         </div>
         <div class="block w-full justify-between pt-4 md:flex">
           <div class="flex w-full flex-none flex-col items-center justify-start p-6 pt-8 text-center md:w-[300px]">
@@ -540,7 +546,7 @@ onUnmounted(() => {
               :timeZone="$t('demo_data.default_timezone')"
               :label="$t('demo_data.label_add')"
               :description="$t('demo_data.description_alt3')"
-              options="'iCal'"
+              options="iCal"
               :organizer="$t('demo_data.default_organizer')"
               uid="7060df05-7b3d-4baa-b215-689b85769e5b"
               sequence="1"
@@ -563,7 +569,7 @@ onUnmounted(() => {
   timeZone="{{ $t('demo_data.default_timezone') }}"
   label="{{ $t('demo_data.label_add') }}"
   description="{{ $t('demo_data.description_alt3') }}"
-  options="'iCal'"
+  options="iCal"
   organizer="{{ $t('demo_data.default_organizer') }}"
   uid="7060df05-7b3d-4baa-b215-689b85769e5b"
   sequence="1"
@@ -589,10 +595,10 @@ onUnmounted(() => {
               :timeZone="$t('demo_data.default_timezone')"
               :label="$t('demo_data.label_cancel')"
               :description="$t('demo_data.description_alt3')"
-              options="'iCal'"
+              options="iCal"
               :organizer="$t('demo_data.default_organizer')"
               uid="7060df05-7b3d-4baa-b215-689b85769e5b"
-              sequence="2"
+              sequence="3"
               created="20221201T103000Z"
               updated="20221218T154500Z"
               status="CANCELLED"
@@ -612,7 +618,7 @@ onUnmounted(() => {
   timeZone="{{ $t('demo_data.default_timezone') }}"
   label="{{ $t('demo_data.label_cancel') }}"
   description="{{ $t('demo_data.description_alt3') }}"
-  options="'iCal'"
+  options="iCal"
   organizer="{{ $t('demo_data.default_organizer') }}"
   uid="7060df05-7b3d-4baa-b215-689b85769e5b"
   sequence="2"

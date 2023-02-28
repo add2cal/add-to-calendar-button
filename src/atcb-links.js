@@ -468,6 +468,10 @@ function atcb_generate_ical(host, data, subEvent = 'all', keyboardTrigger = fals
       const organizerParts = data.dates[`${i}`].organizer.split('|');
       ics_lines.push('ORGANIZER;CN=' + organizerParts[0] + ':MAILTO:' + organizerParts[1]);
     }
+    if (data.dates[`${i}`].attendee != null && data.dates[`${i}`].attendee != '') {
+      const attendeeParts = data.dates[`${i}`].attendee.split('|');
+      ics_lines.push('ATTENDEE;ROLE=REQ-PARTICIPANT;CN=' + attendeeParts[0] + ':MAILTO:' + attendeeParts[1]);
+    }
     if (data.recurrence != null && data.recurrence != '') {
       ics_lines.push(data.recurrence);
     }
