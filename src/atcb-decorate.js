@@ -58,7 +58,7 @@ function atcb_decorate_data_rrule(data) {
       if (/^RRULE:/i.test(data.recurrence)) {
         data.recurrence_simplyfied = false;
         // draw easy rules from RRULE if possible
-        const rruleParts = data.recurrence.substr(6).split(';');
+        const rruleParts = data.recurrence.substring(6).split(';');
         const rruleObj = new Object();
         rruleParts.forEach(function (rule) {
           rruleObj[rule.split('=')[0]] = rule.split('=')[1];
@@ -232,7 +232,7 @@ function atcb_decorate_data_i18n(data) {
   }
   // reduce language identifier, if long version is used
   if (data.language.length > 2) {
-    data.language = data.language.substr(0, 2);
+    data.language = data.language.substring(0, 2);
   }
   // set right-to-left for relevant languages
   if (rtlLanguages.includes(data.language)) {
