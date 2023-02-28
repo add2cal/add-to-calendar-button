@@ -5,7 +5,7 @@
  *
  * Style: Neumorphism
  *
- * Version: 2.1.4
+ * Version: 2.2.0
  * Creator: Jens Kuerschner (https://jenskuerschner.de)
  * Project: https://github.com/add2cal/add-to-calendar-button
  * License: Elastic License 2.0 (ELv2) (https://github.com/add2cal/add-to-calendar-button/blob/main/LICENSE.txt)
@@ -718,19 +718,19 @@ a.atcb-modal-btn:focus-visible {
   color: var(--btn-text);
   display: block;
   position: absolute;
-  top: -1.2em;
-  right: -0.3em;
-  padding: 0.5em;
+  top: -.9em;
+  right: -.3em;
+  padding: .5em;
   background: var(--checkmark-background);
   border-radius: 100%;
-  height: 2em;
+  height: 1.5em;
 }
 
 .atcb-button.atcb-active:not(.atcb-modal-style, .atcb-dropoverlay) .atcb-checkmark,
 .atcb-button.atcb-single:focus .atcb-checkmark,
 .atcb-button.atcb-single:hover .atcb-checkmark {
-  top: -1.07em;
-  right: -0.17em;
+  top: -.77em;
+  right: -.17em;
 }
 
 .atcb-checkmark svg {

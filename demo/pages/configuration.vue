@@ -269,6 +269,28 @@ definePageMeta({
                 <NuxtLink :to="{path: localePath('advanced-use'), hash: '#case-5'}">{{ $t('labels.example') }} <ArrowRightIcon class="-mt-0.5 mr-0.5 inline-block h-3 w-3" aria-hidden="true" /></NuxtLink>
               </td>
             </tr>
+            <tr id="attendee">
+              <th scope="row">attendee</th>
+              <td>
+                <em>String</em><br /><br /><span class="format">{{ $t('content.config.organizer_default') }}</span>
+              </td>
+              <td v-if="locale=='en'">
+                Use the schema "NAME|EMAIL" (e.g. "John Doe|john.doe@gmail.com").<br />
+                With setting this option, you would be able to update an event in a user's calendar, if this user loads the new iCal file as well.<br /><br />
+                Only 1 attendee can be specified<br />
+                This attendee needs to be the person saving the event.<br />
+                If you do not have this information, do not use this option!<br /><br />
+                When you specify an attendee, you also need to specify an organizer.
+              </td>
+              <td v-else>
+                Schema "NAME|E-MAIL" (bspw. "Max Muster|max.muster@gmail.com").<br />
+                Mit dieser Option kannst du ein Event im Kalender eines Nutzers aktualisieren, wenn dieser Nutzer auch die neue iCal-Datei speichert.<br /><br />
+                Es kann nur 1 "attendee" gesetzt werden<br />
+                Diese Person muss gleichzeitig diejenige sein, die das Event speichert.<br />
+                Wenn du nicht über diese Information verfügst, solltest du die Option nicht nutzen!<br /><br />
+                Wenn du einen "attendee" definierst, muss auch die "organizer" option gesetzt sein.
+              </td>
+            </tr>
             <tr id="dates">
               <th scope="row">dates</th>
               <td><em>Stringified Object</em></td>
@@ -290,6 +312,7 @@ definePageMeta({
                   <li>sequence</li>
                   <li>uid</li>
                   <li>organizer</li>
+                  <li>attendee</li>
                 </ul>
                 <br /><br />
                 <NuxtLink :to="{path: localePath('examples'), hash: '#case-5'}">{{ $t('labels.example') }} <ArrowRightIcon class="-mt-0.5 mr-0.5 inline-block h-3 w-3" aria-hidden="true" /></NuxtLink>
@@ -312,6 +335,7 @@ definePageMeta({
                   <li>sequence</li>
                   <li>uid</li>
                   <li>organizer</li>
+                  <li>attendee</li>
                 </ul>
                 <br /><br />
                 <NuxtLink :to="{path: localePath('examples'), hash: '#case-5'}">{{ $t('labels.example') }} <ArrowRightIcon class="-mt-0.5 mr-0.5 inline-block h-3 w-3" aria-hidden="true" /></NuxtLink>

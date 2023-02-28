@@ -11,15 +11,15 @@ if (typeof window !== 'undefined') {
   }
 }
 
-export const get = (key: string): any => {
+export const get = (key: string): string | null => {
   if (!ls) {
-    return;
+    return null;
   }
 
   return ls.getItem(key);
 };
 
-export const set = (key: string, value: any) => {
+export const set = (key: string, value: string) => {
   if (!ls) {
     return;
   }

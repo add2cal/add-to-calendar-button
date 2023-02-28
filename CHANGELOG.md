@@ -2,6 +2,7 @@
 
 ## Version 2
 
+- v2.2 : "attendee" option, lazy external css loading, fixes
 - v2.1 : Romanian language support and a bunch of fixes
 - v2.0 : "all" new version 2
   - now a universally usable web component, working basically plug and play at almost all frontend stacks

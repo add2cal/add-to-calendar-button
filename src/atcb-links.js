@@ -3,7 +3,7 @@
  *  Add to Calendar Button
  *  ++++++++++++++++++++++
  *
- *  Version: 2.1.4
+ *  Version: 2.2.0
  *  Creator: Jens Kuerschner (https://jenskuerschner.de)
  *  Project: https://github.com/add2cal/add-to-calendar-button
  *  License: Elastic License 2.0 (ELv2) (https://github.com/add2cal/add-to-calendar-button/blob/main/LICENSE.txt)
@@ -467,6 +467,10 @@ function atcb_generate_ical(host, data, subEvent = 'all', keyboardTrigger = fals
     if (data.dates[`${i}`].organizer != null && data.dates[`${i}`].organizer != '') {
       const organizerParts = data.dates[`${i}`].organizer.split('|');
       ics_lines.push('ORGANIZER;CN=' + organizerParts[0] + ':MAILTO:' + organizerParts[1]);
+    }
+    if (data.dates[`${i}`].attendee != null && data.dates[`${i}`].attendee != '') {
+      const attendeeParts = data.dates[`${i}`].attendee.split('|');
+      ics_lines.push('ATTENDEE;ROLE=REQ-PARTICIPANT;CN=' + attendeeParts[0] + ':MAILTO:' + attendeeParts[1]);
     }
     if (data.recurrence != null && data.recurrence != '') {
       ics_lines.push(data.recurrence);
