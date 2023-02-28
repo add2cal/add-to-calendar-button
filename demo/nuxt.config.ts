@@ -89,6 +89,23 @@ export default defineNuxtConfig({
   },
   pwa: {
     registerType: 'autoUpdate',
+    registerWebManifestInRouteRules: true,
+    useCredentials: true,
+    workbox: {
+      globPatterns: ['**/*.{js,css,html,ico,png,svg,woff,woff2,ttf}'],
+      navigateFallback: null,
+      cleanupOutdatedCaches: true,
+      sourcemap: true,
+      runtimeCaching: [
+        {
+          handler: 'StaleWhileRevalidate',
+          urlPattern: /.*$/,
+        },
+      ],
+    },
+    client: {
+      installPrompt: true,
+    },
     manifestFilename: 'manifest.json',
     manifest: {
       name: 'Add to Calendar Button DEMO',
@@ -168,18 +185,6 @@ export default defineNuxtConfig({
         {
           src: baseUrl + '/assets/img/website16x9.png',
           sizes: '1920x1080',
-        },
-      ],
-    },
-    useCredentials: true,
-    workbox: {
-      globPatterns: ['**/*.{js,css,html,ico,png,svg,woff,woff2,ttf}'],
-      navigateFallback: null,
-      sourcemap: true,
-      runtimeCaching: [
-        {
-          handler: 'StaleWhileRevalidate',
-          urlPattern: /.*$/,
         },
       ],
     },

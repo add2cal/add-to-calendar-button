@@ -3,7 +3,7 @@
  *  Add to Calendar Button
  *  ++++++++++++++++++++++
  *
- *  Version: 2.1.4
+ *  Version: 2.2.0
  *  Creator: Jens Kuerschner (https://jenskuerschner.de)
  *  Project: https://github.com/add2cal/add-to-calendar-button
  *  License: Elastic License 2.0 (ELv2) (https://github.com/add2cal/add-to-calendar-button/blob/main/LICENSE.txt)
@@ -91,7 +91,7 @@ function atcb_generate_rich_data_recurrence(data, formattedDate) {
   if (data.dates[0].timeZone != null && data.dates[0].timeZone != '') {
     schemaRecurrenceContent.push('"scheduleTimezone":"' + data.dates[0].timeZone + '"');
   }
-  const repeatFrequency = 'P' + data.recurrence_interval + data.recurrence_frequency.substr(0, 1);
+  const repeatFrequency = 'P' + data.recurrence_interval + data.recurrence_frequency.substring(0, 1);
   schemaRecurrenceContent.push('"repeatFrequency":"' + repeatFrequency + '"');
   if (data.recurrence_byDay != null && data.recurrence_byDay != '') {
     const byDayString = (function () {

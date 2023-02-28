@@ -31,6 +31,7 @@ const configOptions = [
   "sequence",
   "uid",
   "organizer",
+  "attendee",
   "dates",
   "recurrence",
   "recurrence_interval",
