@@ -295,7 +295,7 @@ onUnmounted(() => {
         </div>
         <div class="block w-full justify-between pt-4 md:flex">
           <div class="flex w-full flex-none justify-center p-6 pt-8 md:w-[300px]">
-            <add-to-calendar-button :name="$t('demo_data.name')" :startDate="defaultDate" options="'Apple','Google','iCal'" lightMode="bodyScheme" :language="locale" customCss="https://add-to-calendar-button.com/atcb.css" buttonStyle="custom"></add-to-calendar-button>
+            <add-to-calendar-button :name="$t('demo_data.name')" :startDate="defaultDate" options="'Apple','Google','iCal'" lightMode="bodyScheme" :language="locale" customCss="https://add-to-calendar-button.com/atcb.css" buttonStyle="custom" listStyle="modal"></add-to-calendar-button>
           </div>
           <div class="flex-1 overflow-x-auto">
             <LazyCodeBlock class="line-numbers">
@@ -307,6 +307,7 @@ onUnmounted(() => {
   lightMode="bodyScheme"{{ defaultLang }}
   customCss="https://add-to-calendar-button.com/atcb.css"
   buttonStyle="custom"
+  listStyle="modal"
 &gt;&lt;/add-to-calendar-button&gt;
 </pre
               >
