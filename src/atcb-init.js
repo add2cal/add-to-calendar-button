@@ -315,7 +315,7 @@ function atcb_load_css(host, rootObj = null, style = '', inline = false, buttons
     document.head.append(cssGlobalContent);
   }
   // we load custom styles dynamically
-  if (customCss != '' && style == 'custom') {    
+  if (customCss != '' && style == 'custom') {
     const cssFile = document.createElement('link');
     cssFile.setAttribute('rel', 'stylesheet');
     cssFile.setAttribute('type', 'text/css');
@@ -377,7 +377,7 @@ function atcb_load_css(host, rootObj = null, style = '', inline = false, buttons
 async function loadExternalCssAsynch(cssFile, host, rootObj, placeholder = null, inline = false, buttonsList = false) {
   host.prepend(cssFile);
   // remove placeholder and render object as soon as loaded - only relevant if given
-  await new Promise(resolve => {
+  await new Promise((resolve) => {
     cssFile.onload = resolve;
   });
   if (placeholder != null) {
