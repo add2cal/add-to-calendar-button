@@ -92,6 +92,13 @@ export default defineNuxtConfig({
       globPatterns: ['**/*.{js,css,html,ico,png,svg,woff,woff2,ttf}'],
       navigateFallback: null,
       cleanupOutdatedCaches: true,
+      sourcemap: true,
+      runtimeCaching: [
+        {
+          handler: 'StaleWhileRevalidate',
+          urlPattern: /.*$/,
+        },
+      ],
     },
     client: {
       installPrompt: true,
