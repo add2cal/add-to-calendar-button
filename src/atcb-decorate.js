@@ -3,7 +3,7 @@
  *  Add to Calendar Button
  *  ++++++++++++++++++++++
  *
- *  Version: 2.2.0
+ *  Version: 2.2.1
  *  Creator: Jens Kuerschner (https://jenskuerschner.de)
  *  Project: https://github.com/add2cal/add-to-calendar-button
  *  License: Elastic License 2.0 (ELv2) (https://github.com/add2cal/add-to-calendar-button/blob/main/LICENSE.txt)
@@ -413,16 +413,21 @@ function atcb_date_specials_calculation(type, dateString, timeString = null, tim
     return tmpDate.getTime();
   }
   // determine whether a date is overdue or not
-  let isoString = tmpDate.toISOString();
-  if (timeString && timeZone) {
-    // if time and time zone information are given, we adjust for time zone
-    const offsetEnd = tzlib_get_offset(timeZone, dateString, timeString);
-    const formattedOffsetEnd = offsetEnd.slice(0, 3) + ':' + offsetEnd.slice(3);
-    isoString.replace('.000Z', formattedOffsetEnd);
+  try {
+    let isoString = tmpDate.toISOString();
+    if (timeString && timeZone) {
+      // if time and time zone information are given, we adjust for time zone
+      const offsetEnd = tzlib_get_offset(timeZone, dateString, timeString);
+      const formattedOffsetEnd = offsetEnd.slice(0, 3) + ':' + offsetEnd.slice(3);
+      isoString.replace('.000Z', formattedOffsetEnd);
+    }
+    const utcEndDate = new Date(isoString);
+    const currentUtcDate = new Date(Date.now()).toUTCString();
+    return utcEndDate.getTime() < new Date(currentUtcDate).getTime();
+  } catch (e) {
+    // we will catch the detailed problem on validation at the next step
+    return false;
   }
-  const utcEndDate = new Date(isoString);
-  const currentUtcDate = new Date(Date.now()).toUTCString();
-  return utcEndDate.getTime() < new Date(currentUtcDate).getTime();
 }
 
 function atcb_date_calculation(dateString) {
@@ -443,7 +448,12 @@ function atcb_date_calculation(dateString) {
   if (dateStringParts[1] != null && dateStringParts[1] > 0) {
     newDate.setDate(newDate.getDate() + parseInt(dateStringParts[1]));
   }
-  return newDate.toISOString().replace(/T(\d{2}:\d{2}:\d{2}\.\d{3})Z/g, '');
+  try {
+    return newDate.toISOString().replace(/T(\d{2}:\d{2}:\d{2}\.\d{3})Z/g, '');
+  } catch (e) {
+    // we will catch the detailed problem on validation at the next step
+    return false;
+  }
 }
 
 function atcb_decorate_data_button_status_handling(data) {

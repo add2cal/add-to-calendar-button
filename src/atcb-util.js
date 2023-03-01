@@ -3,7 +3,7 @@
  *  Add to Calendar Button
  *  ++++++++++++++++++++++
  *
- *  Version: 2.2.0
+ *  Version: 2.2.1
  *  Creator: Jens Kuerschner (https://jenskuerschner.de)
  *  Project: https://github.com/add2cal/add-to-calendar-button
  *  License: Elastic License 2.0 (ELv2) (https://github.com/add2cal/add-to-calendar-button/blob/main/LICENSE.txt)
@@ -200,23 +200,28 @@ function atcb_rewrite_html_elements(content, clear = false) {
   // remove any pseudo elements, if necessary
   if (clear) {
     content = content.replace(/\[(|\/)(url|br|hr|p|b|strong|u|i|em|li|ul|ol|h\d)\]|((\|.*)\[\/url\])/gi, '');
+    content = content.replace(/\{(|\/)(url|br|hr|p|b|strong|u|i|em|li|ul|ol|h\d)\}|((\|.*)\{\/url\})/gi, '');
     // and build html for the rest
     // supporting: br, hr, p, strong, u, i, em, li, ul, ol, h (like h1, h2, h3, ...), url (= a)
   } else {
     content = content.replace(/\[(\/|)(br|hr|p|b|strong|u|i|em|li|ul|ol|h\d)\]/gi, '<$1$2>');
-    content = content.replace(/\[url\]([\w&$+.,:;=~!*'?@^%#|\s\-()/]*)\[\/url\]/gi, function (match, p1) {
-      const urlText = p1.split('|');
-      const text = (function () {
-        if (urlText.length > 1 && urlText[1] != '') {
-          return urlText[1];
-        } else {
-          return urlText[0];
-        }
-      })();
-      return '<a href="' + urlText[0] + '" target="' + atcbDefaultTarget + '" rel="noopener">' + text + '</a>';
-    });
+    content = content.replace(/\{(\/|)(br|hr|p|b|strong|u|i|em|li|ul|ol|h\d)\}/gi, '<$1$2>');
+    content = content.replace(/\[url\]([\w&$+.,:;=~!*'?@^%#|\s\-()/]*)\[\/url\]/gi, function (match, p1) { return atcb_parse_url_code(p1); });
+    content = content.replace(/\{url\}([\w&$+.,:;=~!*'?@^%#|\s\-()/]*)\{\/url\}/gi, function (match, p1) { return atcb_parse_url_code(p1); });
   }
   return content;
+}
+
+function atcb_parse_url_code(input) {
+  const urlText = input.split('|');
+  const text = (function () {
+    if (urlText.length > 1 && urlText[1] != '') {
+      return urlText[1];
+    } else {
+      return urlText[0];
+    }
+  })();
+  return '<a href="' + urlText[0] + '" target="' + atcbDefaultTarget + '" rel="noopener">' + text + '</a>';
 }
 
 // SHARED FUNCTION TO CALCULATE THE POSITION OF THE DROPDOWN LIST

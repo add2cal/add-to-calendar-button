@@ -49,10 +49,11 @@ watch(locale, value => {
         <p>{{ $t('content.guide.wordpress.activate') }}</p>
         <h2 class="mt-20 mb-6">{{ $t('content.guide.step3') }}: {{ $t('content.guide.step_use') }}</h2>
         <h3 class="mb-6">A: Shortcode</h3>
-        <p>{{ $t('content.guide.wordpress.shortcode') }}</p>
+        <p>{{ $t('content.guide.wordpress.shortcode1') }}</p>
         <LazyCodeBlock>
-          <pre>[add-to-calendar-button name="{{ $t('demo_data.name_dummy') }}" options="'Apple','Google'" startDate="{{ defaultDate }}"]</pre>
+          <pre>[add-to-calendar-button name="{{ $t('demo_data.name_dummy') }}" options="'Apple','Google'" startDate="{{ defaultDate }}" description="{{ $t('content.guide.wordpress.shortcode_description') }}"]</pre>
         </LazyCodeBlock>
+        <p class="text-sm italic">{{ $t('content.guide.wordpress.shortcode2') }}</p>
         <h3 class="mt-12 mb-6">B: Block</h3>
         <p>{{ $t('content.guide.wordpress.block') }}</p>
         <ol class="my-6 list-decimal pl-8">
