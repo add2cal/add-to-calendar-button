@@ -339,6 +339,7 @@ onUnmounted(() => {
           </p>
           <p>
             Those rules are set up as HTML pseudo tags, which get transformed automatically.<br />
+            <span class="text-sm italic">(If you are using the WordPress Plugin Shortcode, ']' would break your code. Instead of [*], you could also use {*} here.)</span><br />
             <span class="text-sm italic">(Yahoo and Microsoft Teams are not fully supported and automatically transformed to plain text.)</span>
           </p>
         </div>
@@ -349,6 +350,7 @@ onUnmounted(() => {
           </p>
           <p>
             Diese Regeln setzt du über HTML-Pseudo-Tags, die am Ende automatisch in echtes HTML transformiert werden.<br />
+            <span class="text-sm italic">(Wenn du den WordPress Plugin Shortcode nutzt, stört ']' den Code. In diesem Fall kannst du {*} anstelle von [*] nutzen.)</span><br />
             <span class="text-sm italic">(Yahoo und Microsoft Teams werden diesbezüglich leider nicht unterstützt und automatisch in Plain Text umgewandelt.)</span>
           </p>
         </div>

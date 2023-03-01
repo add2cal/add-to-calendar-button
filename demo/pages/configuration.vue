@@ -124,12 +124,14 @@ definePageMeta({
               <td v-if="locale=='en'">
                 Supports HTML pseudo tags for formatting: [url], [br], [hr], [p], [strong], [u], [i], [em], [li], [ul], [ol], [h*] (like h1, h2, h3, ...).<br />
                 Define a link text with the following schema: [url]https://....|URL Text[/url].<br /><br />
+                (If you are using the WordPress Plugin Shortcode, ']' would break your code. Instead of [*], you could also use {*} here.)<br /><br />
                 (Yahoo and Microsoft Teams are not fully supported and automatically transformed to plain text.)<br /><br />
                 <NuxtLink :to="{path: localePath('advanced-use'), hash: '#case-2'}">{{ $t('labels.example') }} <ArrowRightIcon class="-mt-0.5 mr-0.5 inline-block h-3 w-3" aria-hidden="true" /></NuxtLink>
               </td>
               <td v-else>
                 Unterstützt HTML-Pseudo-Tags zur Formatierung: [url], [br], [hr], [p], [strong], [u], [i], [em], [li], [ul], [ol], [h*] (wie etwa h1, h2, h3, ...).<br />
                 Einen Link-Text spezifizierst du mit folgendem Schema: [url]https://....|URL Text[/url].<br /><br />
+                (Wenn du den WordPress Plugin Shortcode nutzt, stört ']' den Code. In diesem Fall kannst du {*} anstelle von [*] nutzen.)<br /><br />
                 (Yahoo und Microsoft Teams werden hierbei nicht vollständig unterstützt und der Wert automatisch zu Plain Text transformiert.)<br /><br />
                 <NuxtLink :to="{path: localePath('advanced-use'), hash: '#case-2'}">{{ $t('labels.example') }} <ArrowRightIcon class="-mt-0.5 mr-0.5 inline-block h-3 w-3" aria-hidden="true" /></NuxtLink>
               </td>

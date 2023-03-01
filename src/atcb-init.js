@@ -3,7 +3,7 @@
  *  Add to Calendar Button
  *  ++++++++++++++++++++++
  *
- *  Version: 2.2.0
+ *  Version: 2.2.1
  *  Creator: Jens Kuerschner (https://jenskuerschner.de)
  *  Project: https://github.com/add2cal/add-to-calendar-button
  *  License: Elastic License 2.0 (ELv2) (https://github.com/add2cal/add-to-calendar-button/blob/main/LICENSE.txt)
@@ -266,7 +266,8 @@ function atcb_build_button(host, data, debug = false) {
       atcb_log_event('initialization', data.identifier, data.identifier);
     } else if (debug) {
       // in this case, since we do not throw any hard error, if validation fails, we need to trigger the debug message here
-      atcb_render_debug_msg(host, 'Add to Calendar Button generation failed: invalid data; see console logs for details');
+      console.error(data.validationError);
+      atcb_render_debug_msg(host, data.validationError);
     }
   }
 }
