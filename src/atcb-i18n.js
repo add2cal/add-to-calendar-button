@@ -3,7 +3,7 @@
  *  Add to Calendar Button
  *  ++++++++++++++++++++++
  *
- *  Version: 2.2.1
+ *  Version: 2.2.2
  *  Creator: Jens Kuerschner (https://jenskuerschner.de)
  *  Project: https://github.com/add2cal/add-to-calendar-button
  *  License: Elastic License 2.0 (ELv2) (https://github.com/add2cal/add-to-calendar-button/blob/main/LICENSE.txt)
@@ -453,11 +453,10 @@ const i18nStrings = {
 
 const availableLanguages = Object.keys(i18nStrings);
 
-// hook, which can be used to override all potential "hard" strings by setting the key (without spaces) as option key and the intended string as value
+// hook, which can be used to override all potential "hard" strings by setting the key as option key and the intended string as value
 function atcb_translate_hook(identifier, data) {
-  const searchKey = identifier.replace(/\s+/g, '').toLowerCase();
-  if (data.customLabels != null && data.customLabels[`${searchKey}`] != null && data.customLabels[`${searchKey}`] != '') {
-    return atcb_rewrite_html_elements(data.customLabels[`${searchKey}`]);
+  if (data.customLabels != null && data.customLabels[`${identifier}`] != null && data.customLabels[`${identifier}`] != '') {
+    return atcb_rewrite_html_elements(data.customLabels[`${identifier}`]);
   } else {
     return atcb_translate(identifier, data.language);
   }

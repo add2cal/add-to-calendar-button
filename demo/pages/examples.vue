@@ -330,7 +330,8 @@ watch(locale, value => {
           <p>
             You define those parts by placing them as separate objects in a dates array.<br />
             Individual date and time information would be required - global ones will be ignored.<br />
-            Events get automatically sorted based on their startDate.
+            Events get automatically sorted based on their startDate.<br />
+            You can omit the starting '[' and ending ']', if necessary (e.g. when using the WordPress Shortcode).
           </p>
         </div>
         <div v-else>
@@ -341,7 +342,8 @@ watch(locale, value => {
           <p>
             Du kannst diese einzelnen Teile mit dem "dates" Objekt in einem Event spezifizieren.<br />
             Zeit-Informationen je Sub-Event sind verpflichtend - Daten auf übergeordneter Ebene werden ignoriert.<br />
-            Sub-Events werden automatisch nach StartDate sortiert.
+            Sub-Events werden automatisch nach StartDate sortiert.<br />
+            Falls nötig, kannst du die '[' und ']' Zeichen aussparen (bspw. bei Nutzung des WordPress Shortcodes).
           </p>
         </div>
         <div class="block w-full justify-between md:flex">

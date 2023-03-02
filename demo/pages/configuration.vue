@@ -295,7 +295,7 @@ definePageMeta({
             </tr>
             <tr id="dates">
               <th scope="row">dates</th>
-              <td><em>Stringified Object</em></td>
+              <td><em>Stringified Array of Objects</em></td>
               <td v-if="locale=='en'">
                 If you want to define an event series, you can use the dates object.<br /><br />
                 It basically holds the same information as the top level, but enables you to define multiple events. Except for date and time information, all other attributes, if not provided in the dates object, use the top level information as fallback. There is one special case with the "UID",
