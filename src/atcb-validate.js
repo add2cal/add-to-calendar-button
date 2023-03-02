@@ -3,7 +3,7 @@
  *  Add to Calendar Button
  *  ++++++++++++++++++++++
  *
- *  Version: 2.2.1
+ *  Version: 2.2.2
  *  Creator: Jens Kuerschner (https://jenskuerschner.de)
  *  Project: https://github.com/add2cal/add-to-calendar-button
  *  License: Elastic License 2.0 (ELv2) (https://github.com/add2cal/add-to-calendar-button/blob/main/LICENSE.txt)
@@ -16,21 +16,20 @@ import { atcbOptions } from './atcb-globals.js';
 import { atcb_secure_url, atcb_validEmail, atcb_generate_uuid } from './atcb-util.js';
 
 // CHECK FOR REQUIRED FIELDS
-function atcb_check_required(data, throwError = true) {
+function atcb_check_required(data) {
+  if (data.validationError) {
+    data.validationError = null;
+  }
   // in this first step, we only check for the bare minimum, so we can abort early on really broken setups. We will do further validation later.
   // check for at least 1 option
   if (data.options == null || data.options.length < 1) {
-    if (throwError) {
-      throw new Error('Add to Calendar Button generation failed: no valid options set');
-    }
+    data.validationError = 'Add to Calendar Button generation failed: no valid options set';
     return false;
   }
   // check for min required data (without "options")
   // name is always required on top level (in the multi-date setup this would be the name of the event series)
   if (data.name == null || data.name == '') {
-    if (throwError) {
-      throw new Error('Add to Calendar Button generation failed: required name information missing');
-    }
+    data.validationError = 'Add to Calendar Button generation failed: required name information missing';
     return false;
   }
   // regarding event specifics, we start by checking for multi-date setups
@@ -44,9 +43,7 @@ function atcb_check_required(data, throwError = true) {
           (!requiredMultiFieldFlex.includes(`${field}`) && (data.dates[`${i}`][`${field}`] == null || data.dates[`${i}`][`${field}`] == '')) ||
           (requiredMultiFieldFlex.includes(`${field}`) && (data.dates[`${i}`][`${field}`] == null || data.dates[`${i}`][`${field}`] == '') && (data[`${field}`] == null || data[`${field}`] == ''))
         ) {
-          if (throwError) {
-            throw new Error('Add to Calendar Button generation failed: required setting missing [dates array object #' + (i + 1) + '/' + data.dates.length + '] => [' + field + ']');
-          }
+          data.validationError = 'Add to Calendar Button generation failed: required setting missing [dates array object #' + (i + 1) + '/' + data.dates.length + '] => [' + field + ']';
           return false;
         }
       }
@@ -56,9 +53,7 @@ function atcb_check_required(data, throwError = true) {
     const requiredSingleField = ['startDate'];
     return requiredSingleField.every(function (field) {
       if (data[`${field}`] == null || data[`${field}`] == '') {
-        if (throwError) {
-          throw new Error('Add to Calendar Button generation failed: required setting missing [' + field + ']');
-        }
+        data.validationError = 'Add to Calendar Button generation failed: required setting missing [' + field + ']';
         return false;
       }
       return true;
