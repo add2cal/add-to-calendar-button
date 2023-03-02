@@ -5,7 +5,7 @@
  *
  * Style: Flat
  *
- * Version: 2.2.1
+ * Version: 2.2.2
  * Creator: Jens Kuerschner (https://jenskuerschner.de)
  * Project: https://github.com/add2cal/add-to-calendar-button
  * License: Elastic License 2.0 (ELv2) (https://github.com/add2cal/add-to-calendar-button/blob/main/LICENSE.txt)
@@ -275,8 +275,40 @@
   z-index: 16000090;
 }
 
+.atcb-list-wrapper:not(.atcb-dropup, .atcb-dropoverlay) {
+  animation: list-entrance-bottom 200ms ease 0s 1 normal forwards;
+}
+
+.atcb-list-wrapper.atcb-dropup {
+  animation: list-entrance-top 200ms ease 0s 1 normal forwards;
+}
+
 .atcb-list-wrapper.atcb-dropoverlay {
   z-index: 15000000;
+}
+
+@keyframes list-entrance-bottom {
+  0% {
+    opacity: 0;
+    transform: translateY(150px);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes list-entrance-top {
+  0% {
+    opacity: 0;
+    transform: translateY(-150px);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .atcb-list {
