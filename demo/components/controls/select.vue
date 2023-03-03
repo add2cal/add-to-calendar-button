@@ -69,7 +69,7 @@ const clear = () => {
 
 <template>
   <div>
-    <label v-if="label" :class="['text-sm text-zinc-500', required && 'required', hidelabel ? 'hidden' : 'block']">
+    <label v-if="label" :class="['text-sm text-zinc-600 dark:text-zinc-400', required && 'required', hidelabel ? 'hidden' : 'block']">
       {{ label }}
     </label>
     <Listbox :modelValue="multiselect ? (Array.isArray(modelValue) ? modelValue : []) : modelValue" :multiple="multiselect" class="ml-2 py-2" @update:model-value="$emit('update:modelValue', $event)">
@@ -77,9 +77,9 @@ const clear = () => {
         <ListboxButton
           :aria-label="label"
           :class="[
-            'focus-visible:ring/75 grid w-full cursor-pointer rounded-md bg-zinc-50 py-2 pl-3 text-left text-sm shadow hover:bg-white hover:shadow-md focus:outline-none focus-visible:ring-secondary dark:bg-zinc-700 dark:hover:bg-zinc-600',
             !hasEmptyValue && clearable ? 'pr-12' : 'pr-10'
           ]"
+          class="relative grid w-full cursor-pointer rounded-md bg-zinc-50 py-2 pl-3 text-left text-sm shadow hover:bg-white hover:shadow-md focus:outline-none focus-visible:ring focus-visible:ring-secondary/75 dark:bg-zinc-700 dark:hover:bg-zinc-600"
         >
           <span class="block h-auto min-h-[20px] truncate">
             <span v-if="modelValue==''" class="font-normal text-gray-400">{{ props.placeholder }}<span v-if="!props.placeholder" v-t="'labels.inputs.select_option'"></span></span>

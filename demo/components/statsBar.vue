@@ -124,9 +124,16 @@ const loadJsdelivrStats = async () => {
 </script>
 
 <template>
-  <div class="bg-zinc-600 dark:bg-zinc-700">
-    <div class="relative mx-auto flex w-full items-center overflow-x-hidden">
-      <div class="z-10 bg-zinc-600 p-2 pr-3 dark:bg-zinc-700">
+  <div class="-mt-2 h-[68px] w-full drop-shadow-xl">
+    <svg version="1.1" viewBox="0 0 1500 68" preserveAspectRatio="none" class="h-[68px] w-full fill-zinc-600 dark:fill-zinc-700" xmlns="http://www.w3.org/2000/svg">
+      <path
+        d="m0 62.572c129.98-0.48579 135.88 6.2187 368.8 4.7672 290.46-1.81 220.13-3.7434 330.2-4.0747 124.07-0.37343 248.13 2.3891 372.2 2.3522 249.15-2.6139 166.97-2.0838 428.8 0.8059v-60.029c-230.74-0.16215-448.31-1.9959-643-4.3042-226.2 1.0603-428.55 0.14121-642.8 2.97-99.725 1.3167-95.683-0.28568-214.2-4.6058z"
+      />
+    </svg>
+  </div>
+  <div class="mt-[-54px] h-[40px]">
+    <div class="relative mx-auto flex h-[40px] w-full items-center overflow-hidden">
+      <div class="z-10 p-2 pr-3">
         <div class="whitespace-nowrap rounded-md bg-red-800 py-1 px-2 text-xs font-semibold text-zinc-100 shadow">
           <span class="hidden xl:inline">{{ $t('labels.stats.label_long') }}</span>
           <span class="inline xl:hidden">{{ $t('labels.stats.label_short') }}</span>
@@ -137,7 +144,7 @@ const loadJsdelivrStats = async () => {
       <client-only>
         <MarqueeText :key="marqueeKey" :duration="100" :repeat="4" class="-ml-14 overflow-visible">
           <div class="flex whitespace-nowrap">
-            <a target="_blank" rel="noopener" href="https://github.com/add2cal/add-to-calendar-button" class="group mr-20 flex py-2 text-xs text-zinc-200 hover:text-white hover:no-underline">
+            <a target="_blank" rel="noopener" href="https://github.com/add2cal/add-to-calendar-button" class="fade-in group mr-20 flex py-2 text-xs text-zinc-200 hover:text-white hover:no-underline">
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="mr-1 inline-block h-3 w-3 self-center">
                 <path
                   fill-rule="evenodd"
@@ -152,7 +159,7 @@ const loadJsdelivrStats = async () => {
               </svg>
               <span class="ml-0.5 block w-3 group-hover:hidden"></span>
             </a>
-            <a target="_blank" rel="noopener" href="https://www.npmjs.com/package/add-to-calendar-button" class="group mr-20 flex py-2 text-xs text-zinc-200 hover:text-white hover:no-underline">
+            <a target="_blank" rel="noopener" href="https://www.npmjs.com/package/add-to-calendar-button" class="fade-in group mr-20 flex py-2 text-xs text-zinc-200 hover:text-white hover:no-underline">
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="mr-1 inline-block h-3 w-3 self-center">
                 <path
                   d="M17.004 10.407c.138.435-.216.842-.672.842h-3.465a.75.75 0 01-.65-.375l-1.732-3c-.229-.396-.053-.907.393-1.004a5.252 5.252 0 016.126 3.537zM8.12 8.464c.307-.338.838-.235 1.066.16l1.732 3a.75.75 0 010 .75l-1.732 3.001c-.229.396-.76.498-1.067.16A5.231 5.231 0 016.75 12c0-1.362.519-2.603 1.37-3.536zM10.878 17.13c-.447-.097-.623-.608-.394-1.003l1.733-3.003a.75.75 0 01.65-.375h3.465c.457 0 .81.408.672.843a5.252 5.252 0 01-6.126 3.538z"
@@ -170,7 +177,7 @@ const loadJsdelivrStats = async () => {
               </svg>
               <span class="ml-0.5 block w-3 group-hover:hidden"></span>
             </a>
-            <a target="_blank" rel="noopener" href="https://www.npmjs.com/package/add-to-calendar-button" class="group mr-20 flex py-2 text-xs text-zinc-200 hover:text-white hover:no-underline">
+            <a target="_blank" rel="noopener" href="https://www.npmjs.com/package/add-to-calendar-button" class="fade-in group mr-20 flex py-2 text-xs text-zinc-200 hover:text-white hover:no-underline">
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="mr-1 inline-block h-3 w-3 self-center">
                 <path
                   d="M17.004 10.407c.138.435-.216.842-.672.842h-3.465a.75.75 0 01-.65-.375l-1.732-3c-.229-.396-.053-.907.393-1.004a5.252 5.252 0 016.126 3.537zM8.12 8.464c.307-.338.838-.235 1.066.16l1.732 3a.75.75 0 010 .75l-1.732 3.001c-.229.396-.76.498-1.067.16A5.231 5.231 0 016.75 12c0-1.362.519-2.603 1.37-3.536zM10.878 17.13c-.447-.097-.623-.608-.394-1.003l1.733-3.003a.75.75 0 01.65-.375h3.465c.457 0 .81.408.672.843a5.252 5.252 0 01-6.126 3.538z"
@@ -188,7 +195,7 @@ const loadJsdelivrStats = async () => {
               </svg>
               <span class="ml-0.5 block w-3 group-hover:hidden"></span>
             </a>
-            <a target="_blank" rel="noopener" href="https://www.jsdelivr.com/package/npm/add-to-calendar-button" class="group mr-20 flex py-2 text-xs text-zinc-200 hover:text-white hover:no-underline">
+            <a target="_blank" rel="noopener" href="https://www.jsdelivr.com/package/npm/add-to-calendar-button" class="fade-in group mr-20 flex py-2 text-xs text-zinc-200 hover:text-white hover:no-underline">
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="mr-1 inline-block h-3 w-3 self-center">
                 <path
                   fill-rule="evenodd"
@@ -209,3 +216,19 @@ const loadJsdelivrStats = async () => {
     </div>
   </div>
 </template>
+
+<style scoped>
+.fade-in {
+  animation: entryAnimation 2s ease 0s 1 normal forwards;
+}
+
+@keyframes entryAnimation {
+	0% {
+		opacity: 0;
+	}
+
+	100% {
+		opacity: 1;
+	}
+}
+</style>

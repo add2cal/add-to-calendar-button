@@ -39,14 +39,14 @@ const i18nFrequencyOptions = computed(() =>
 
 <template>
   <div class="my-3 grid grid-cols-2 items-center gap-3 border-y border-zinc-300 px-1 pt-2 pb-4 dark:border-zinc-600">
-    <div class="text-sm font-semibold text-zinc-400 dark:text-zinc-500">{{ t('labels.inputs.recurrence.headline') }}</div>
+    <div class="text-sm font-semibold text-zinc-700 dark:text-zinc-300">{{ t('labels.inputs.recurrence.headline') }}</div>
     <Switch v-model="internalValue[DateRecurrenceAttrsKey.IS_SIMPLE]" :label="t(`labels.inputs.recurrence.${[DateRecurrenceAttrsKey.IS_SIMPLE]}`.toLocaleLowerCase())" />
 
     <Input v-if="!internalValue[DateRecurrenceAttrsKey.IS_SIMPLE]" v-model="internalValue[DateRecurrenceAttrsKey.RRULE_VALUE]" :label="t(`labels.inputs.recurrence.${[DateRecurrenceAttrsKey.RRULE_VALUE]}`.toLocaleLowerCase())" type="text" placeholder="RRULE:FREQ=..." class="col-span-2" />
 
     <template v-else>
       <div class="col-span-2">
-        <label class="block text-sm text-zinc-500">
+        <label class="block text-sm text-zinc-600 dark:text-zinc-400">
           {{ t('labels.inputs.recurrence.repeat_every') }}
         </label>
         <div class="grid grid-cols-3">

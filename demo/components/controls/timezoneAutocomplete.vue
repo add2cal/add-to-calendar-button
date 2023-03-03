@@ -106,7 +106,7 @@ watch(props, () => {
 
 <template>
   <div>
-    <label v-if="label" :class="['block text-sm text-zinc-500', required && 'required']">
+    <label v-if="label" :class="['block text-sm text-zinc-600 dark:text-zinc-400', required && 'required']">
       {{ label }}
     </label>
     <div class="relative w-full py-2 pl-2">

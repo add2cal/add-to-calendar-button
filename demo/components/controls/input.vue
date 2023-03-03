@@ -38,7 +38,7 @@ defineEmits(['update:modelValue']);
 
 <template>
   <div>
-    <label v-if="label" :class="['block text-sm text-zinc-500 ', required && 'required', hidelabel ? 'hidden' : 'block']">
+    <label v-if="label" :class="['block text-sm text-zinc-600 dark:text-zinc-400 ', required && 'required', hidelabel ? 'hidden' : 'block']">
       {{ label }}
     </label>
     <div class="flex items-center py-2 pl-2">

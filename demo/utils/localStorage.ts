@@ -19,7 +19,7 @@ export const get = (key: string): string | null => {
   return ls.getItem(key);
 };
 
-export const set = (key: string, value: string) => {
+export const set = (key: string, value: string | object) => {
   if (!ls) {
     return;
   }
