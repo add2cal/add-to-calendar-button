@@ -180,6 +180,10 @@
   z-index: 1;
 }
 
+.atcb-button:disabled .atcb-text {
+  letter-spacing: .1em;
+}
+
 .atcb-button.atcb-no-text {
   min-width: 0;
   border-radius: 100%;
@@ -192,13 +196,17 @@
   padding: 0;
 }
 
+.atcb-button:disabled {
+  min-width: 0;
+}
+
 .atcb-rtl .atcb-button {
   direction: rtl;
   text-align: right;
 }
 
-.atcb-button:focus,
-.atcb-button:hover {
+.atcb-button:not([disabled]):focus,
+.atcb-button:not([disabled]):hover {
   background-color: var(--btn-background-hover);
   box-shadow: var(--btn-shadow-hover);
 }
@@ -212,8 +220,8 @@
 }
 
 .atcb-button.atcb-active:not(.atcb-modal-style, .atcb-dropoverlay),
-.atcb-button.atcb-single:focus,
-.atcb-button.atcb-single:hover {
+.atcb-button.atcb-single:not([disabled]):focus,
+.atcb-button.atcb-single:not([disabled]):hover {
   background-color: var(--btn-background-hover);
   box-shadow: var(--btn-shadow-active);
 }

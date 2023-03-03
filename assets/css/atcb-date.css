@@ -179,6 +179,10 @@
   z-index: 1;
 }
 
+.atcb-button:disabled .atcb-date-btn-hover {
+  letter-spacing: .1em;
+}
+
 .atcb-rtl .atcb-button {
   direction: rtl;
   text-align: right;

@@ -181,6 +181,10 @@
   z-index: 1;
 }
 
+.atcb-button:disabled .atcb-text {
+  letter-spacing: .1em;
+}
+
 .atcb-button.atcb-no-text {
   min-width: 0;
   border-radius: 100%;
@@ -193,13 +197,17 @@
   padding: 0;
 }
 
+.atcb-button:disabled {
+  min-width: 0;
+}
+
 .atcb-rtl .atcb-button {
   direction: rtl;
   text-align: right;
 }
 
-.atcb-button:focus,
-.atcb-button:hover {
+.atcb-button:not([disabled]):focus,
+.atcb-button:not([disabled]):hover {
   background-color: var(--btn-background-hover);
   box-shadow: var(--btn-shadow-hover);
   margin: 0;
@@ -222,8 +230,8 @@
 }
 
 .atcb-button.atcb-active:not(.atcb-modal-style, .atcb-dropoverlay, .atcb-no-text),
-.atcb-button.atcb-single:not(.atcb-no-text):focus,
-.atcb-button.atcb-single:not(.atcb-no-text):hover {
+.atcb-button.atcb-single:not(.atcb-no-text):not([disabled]):focus,
+.atcb-button.atcb-single:not(.atcb-no-text):not([disabled]):hover {
   background-color: var(--btn-background-hover);
   box-shadow: var(--btn-shadow-active);
   margin: 0;
@@ -231,8 +239,8 @@
 }
 
 .atcb-button.atcb-active.atcb-no-text:not(.atcb-modal-style, .atcb-dropoverlay),
-.atcb-button.atcb-single.atcb-no-text:focus,
-.atcb-button.atcb-single.atcb-no-text:hover {
+.atcb-button.atcb-single.atcb-no-text:not([disabled]):focus,
+.atcb-button.atcb-single.atcb-no-text:not([disabled]):hover {
   background-color: var(--btn-background-hover);
   box-shadow: var(--btn-shadow-active);
   margin: 0;

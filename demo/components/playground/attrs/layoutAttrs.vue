@@ -3,7 +3,7 @@ import { ref, watch, computed } from "vue";
 import Input from "@/components/controls/input.vue";
 import Select from "@/components/controls/select.vue";
 import Switch from "@/components/controls/switch.vue";
-import { ListStyle, ButtonStyle, Trigger, LightMode, Size, Option } from "@/models/addToCalendarButton";
+import { ListStyle, ButtonStyle, Trigger, LightMode, PastDateHandling, Size, Option } from "@/models/addToCalendarButton";
 import { LanguageCode, LanguageNames } from "@/models/language";
 import { LayoutAttrsKey, HideIconOption, HideTextOption } from "@/models/attrs";
 import { getDefaultLayoutAttrs } from "@/utils/attrs";
@@ -96,7 +96,7 @@ function onHideTextOptionsUpdate(options: string[]) {
       byValue="value"
       multiselect
       class="mb-3"
-      @update:modelValue="onHideIconOptionsUpdate"
+      @update:model-value="onHideIconOptionsUpdate"
     />
     <Select
       :modelValue="Object.keys(internalValue[LayoutAttrsKey.HIDE_TEXT_OPTIONS]).filter((key) => !!internalValue[LayoutAttrsKey.HIDE_TEXT_OPTIONS][key])"
@@ -106,13 +106,15 @@ function onHideTextOptionsUpdate(options: string[]) {
       byValue="value"
       multiselect
       class="mb-3"
-      @update:modelValue="onHideTextOptionsUpdate"
+      @update:model-value="onHideTextOptionsUpdate"
     />
     <Switch v-model="internalValue[LayoutAttrsKey.HIDE_CHECKMARK]" :label="t(`labels.inputs.${[LayoutAttrsKey.HIDE_CHECKMARK]}`.toLocaleLowerCase())" class="mb-3" />
 
     <Input v-model="internalValue[LayoutAttrsKey.SIZE]" :label="t(`labels.inputs.${[LayoutAttrsKey.SIZE]}`.toLocaleLowerCase())" type="range" :min="Size.min" :max="Size.max" class="mb-3" />
 
     <Select v-model="internalValue[LayoutAttrsKey.LIGHT_MODE]" :label="t(`labels.inputs.${[LayoutAttrsKey.LIGHT_MODE]}`.toLocaleLowerCase())" :options="Object.values(LightMode)" class="mb-3" />
+
+    <Select v-model="internalValue[LayoutAttrsKey.PAST_DATE_HANDLING]" :label="t(`labels.inputs.${[LayoutAttrsKey.PAST_DATE_HANDLING]}`.toLocaleLowerCase())" :options="Object.values(PastDateHandling)" class="mb-3" />
 
     <Select v-model="internalValue[LayoutAttrsKey.LANGUAGE]" :label="t(`labels.inputs.${[LayoutAttrsKey.LANGUAGE]}`.toLocaleLowerCase())" :options="languageOptions" byKey="key" byValue="value" />
   </div>

@@ -119,7 +119,12 @@ function atcb_generate_label(host, data, parent, type, icon = false, text = '', 
 }
 
 function atcb_generate_label_content(data, parent, type, icon, text, oneOption) {
-  const defaultTriggerText = atcb_translate_hook('label.addtocalendar', data);
+  const defaultTriggerText = (function () {
+    if (data.dates[0].overdue && data.pastDateHandling != 'none') {
+      return atcb_translate_hook('expired', data);
+    }
+    return atcb_translate_hook('label.addtocalendar', data);
+  })();
   // if there is only 1 option, we use the trigger text on the option label. Therefore, forcing it here
   if (oneOption && text == '') {
     text = defaultTriggerText;
@@ -179,6 +184,10 @@ function atcb_generate_button(host, button, data, debug = false) {
     // generate the button trigger div
     const buttonTrigger = document.createElement('button');
     buttonTrigger.classList.add('atcb-button');
+    if (data.disabled) {
+      buttonTrigger.setAttribute('disabled', true);
+      buttonTrigger.style.cssText = 'opacity: .75; cursor: not-allowed; filter: brightness(95%); border-style: dashed;';
+    }
     if (data.hideTextLabelButton) {
       buttonTrigger.classList.add('atcb-no-text');
     }
@@ -211,8 +220,8 @@ function atcb_generate_button(host, button, data, debug = false) {
       buttonDropdownAnchor.classList.add('atcb-dropdown-anchor');
       buttonTrigger.append(buttonDropdownAnchor);
     }
-    // add checkmark (hidden first)
-    if (!data.hideCheckmark && !data.hideTextLabelButton && !data.buttonsList) {
+    // add checkmark (hidden first) (if button is not disabled already)
+    if (!data.hideCheckmark && !data.hideTextLabelButton && !data.buttonsList && !data.disabled) {
       const btnCheck = document.createElement('div');
       btnCheck.classList.add('atcb-checkmark');
       btnCheck.innerHTML = atcbIcon['checkmark'];
@@ -578,6 +587,9 @@ function atcb_generate_date_button(data, parent, subEvent = 'all') {
   const hoverText = (function () {
     if (subEvent != 'all' && data.dates[`${subEvent}`].status == 'CANCELLED') {
       return atcb_translate_hook('date.status.cancelled', data) + '<br>' + atcb_translate_hook('date.status.cancelled.cta', data);
+    }
+    if (data.dates[`${subEvent}`].overdue && data.pastDateHandling != 'none') {
+      return atcb_translate_hook('expired', data);
     }
     return '+ ' + atcb_translate_hook('label.addtocalendar', data);
   })();
