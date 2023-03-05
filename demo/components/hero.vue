@@ -9,7 +9,7 @@ const localePath = useLocalePath();
 </script>
 
 <template>
-  <div class="w-full bg-gradient-to-tr from-primary via-primary to-primary-light pt-5 shadow-lg dark:from-primary dark:via-primary-dark dark:to-primary-dark">
+  <div class="hero-container">
     <div class="container flex justify-end py-3 xs:justify-between xs:py-0">
       <div class="-mt-1 hidden w-auto max-w-[150px] grow xs:block">
         <Logo class="force-light" />
@@ -46,7 +46,7 @@ const localePath = useLocalePath();
         </div>
       </div>
       <div class="flex justify-end overflow-hidden">
-        <div class="w-full max-w-full pt-48 xs:pt-36 sm:pt-20 md:max-w-[450px] md:pt-20 lg:max-w-[600px] lg:pt-32 xl:max-w-[750px] xl:pt-10">
+        <div class="w-full max-w-full pt-56 xs:pt-40 sm:pt-28 md:max-w-[450px] md:pt-28 lg:max-w-[600px] lg:pt-32 xl:max-w-[750px] xl:pt-12">
           <svg version="1.1" style="width:100%; height:auto; min-height:300px;" viewBox="0 0 808 572" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
             <g transform="translate(-186.89 -51.542)" opacity=".62861">
               <path
@@ -101,3 +101,11 @@ export default {
   }
 };
 </script>
+
+<style scoped>
+.hero-container {
+  border-bottom-right-radius: 80% 20%;
+  border-bottom-left-radius: 80% 20%;
+  @apply w-full bg-gradient-to-tr from-primary via-primary to-primary-light pt-5 shadow-2xl dark:from-primary dark:via-primary-dark dark:to-primary-dark sm:rounded-b-none sm:shadow-none;
+}
+</style>

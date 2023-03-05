@@ -142,7 +142,7 @@ const onSearchInputBlur = () => {
 
 <template>
   <div>
-    <label v-if="label" class="hidden pr-5 text-sm text-zinc-500 sm:inline-block">{{ $t('content.config.find_params') }}: </label>
+    <label v-if="label" class="hidden pr-5 text-sm text-zinc-600 dark:text-zinc-400 sm:inline-block">{{ $t('content.config.find_params') }}: </label>
     <div class="relative" :class="label ? 'block sm:inline-block' : 'block w-full'">
       <div :id="elID" class="autocomplete">
         <div class="group mt-1 grid w-full cursor-default rounded-md bg-zinc-50 shadow hover:bg-white hover:shadow-md focus:outline-none focus-visible:ring focus-visible:ring-secondary/75 dark:bg-zinc-700 dark:hover:bg-zinc-600">

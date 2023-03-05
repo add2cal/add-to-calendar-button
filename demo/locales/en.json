@@ -86,6 +86,7 @@
       "size": "Size",
       "label": "Custom Button Label",
       "light_mode": "Dark/Light Mode",
+      "past_date_handling": "Past Date Handling",
       "language": "Language",
       "nothing_found": "Nothing found.",
       "select_option": "Select an option...",

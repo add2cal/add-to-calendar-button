@@ -65,6 +65,14 @@ export enum LightMode {
 
 export const DefaultLightMode = LightMode.LIGHT;
 
+export enum PastDateHandling {
+  NONE = 'none',
+  DISABLE = 'disable',
+  HIDE = 'hide',
+}
+
+export const DefaultPastDateHandling = PastDateHandling.NONE;
+
 export const Size = {
   default: 6,
   min: 0,

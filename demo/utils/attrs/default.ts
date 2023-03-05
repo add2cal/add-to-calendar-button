@@ -1,5 +1,5 @@
 import { type DateAttrs, type DateRecurrenceAttrs, type LayoutAttrs, type Attrs, DateAttrsKey, DateRecurrenceAttrsKey, LayoutAttrsKey, HideIconOption, HideTextOption } from '@/models/attrs';
-import { Option, Size, DefaultButtonStyle, DefaultListStyle, DefaultTrigger, DefaultLightMode } from '@/models/addToCalendarButton';
+import { Option, Size, DefaultButtonStyle, DefaultListStyle, DefaultTrigger, DefaultLightMode, DefaultPastDateHandling } from '@/models/addToCalendarButton';
 import { DefaultLanguageCode } from '@/models/language';
 import { getBrowserTimezone } from '@/utils/timezone';
 import { get, LSKey } from '@/utils/localStorage';
@@ -43,6 +43,7 @@ export const getDefaultDateAttrs = (defaultName: string, defaultDescription: str
 });
 
 export const getDefaultLayoutAttrs = (): LayoutAttrs => ({
+  [LayoutAttrsKey.OPTIONS]: [Option.APPLE, Option.GOOGLE, Option.ICAL, Option.OUTLOOK, Option.YAHOO],
   [LayoutAttrsKey.LIST_STYLE]: DefaultListStyle,
   [LayoutAttrsKey.BUTTON_STYLE]: DefaultButtonStyle,
   [LayoutAttrsKey.TRIGGER]: DefaultTrigger,
@@ -55,7 +56,7 @@ export const getDefaultLayoutAttrs = (): LayoutAttrs => ({
   [LayoutAttrsKey.LABEL]: '',
   [LayoutAttrsKey.LIGHT_MODE]: DefaultLightMode,
   [LayoutAttrsKey.LANGUAGE]: DefaultLanguageCode,
-  [LayoutAttrsKey.OPTIONS]: [Option.APPLE, Option.GOOGLE, Option.ICAL, Option.OUTLOOK, Option.YAHOO],
+  [LayoutAttrsKey.PAST_DATE_HANDLING]: DefaultPastDateHandling,
 });
 
 export const getDefaultAttrs = (defaultName: string, defaultDescription: string, defaultLocation: string): Attrs => ({

@@ -185,7 +185,12 @@
   z-index: 1;
 }
 
-.atcb-button.atcb-no-text {
+.atcb-button:disabled .atcb-text {
+  letter-spacing: .1em;
+}
+
+.atcb-button.atcb-no-text,
+.atcb-button:disabled {
   min-width: 0;
 }
 
@@ -194,8 +199,8 @@
   text-align: right;
 }
 
-.atcb-button:focus,
-.atcb-button:hover {
+.atcb-button:not([disabled]):focus,
+.atcb-button:not([disabled]):hover {
   background-size: 100% 100%;
   color: var(--btn-text-hover);
   text-shadow: 0 0 0.7em var(--btn-text-shadow);
@@ -211,8 +216,8 @@
 }
 
 .atcb-button.atcb-active:not(.atcb-modal-style, .atcb-dropoverlay),
-.atcb-button.atcb-single:focus,
-.atcb-button.atcb-single:hover {
+.atcb-button.atcb-single:not([disabled]):focus,
+.atcb-button.atcb-single:not([disabled]):hover {
   background-size: 100% 10%;
   border-radius: 3px 3px 11px 11px;
   background-position: 0 0;

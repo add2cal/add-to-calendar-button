@@ -27,7 +27,7 @@ defineEmits(['update:modelValue']);
 <template>
   <SwitchGroup>
     <div class="flex items-center py-2">
-      <SwitchLabel v-if="props.label" :class="['mr-2 block text-sm text-zinc-500', props.required && 'required', hidelabel ? 'hidden' : 'block']"> {{ props.label }}: </SwitchLabel>
+      <SwitchLabel v-if="props.label" :class="['mr-2 block text-sm text-zinc-600 dark:text-zinc-400', props.required && 'required', hidelabel ? 'hidden' : 'block']"> {{ props.label }}: </SwitchLabel>
       <Switch v-if="props.disabled" :aria-label="label" class="relative inline-flex h-[24px] w-[40px] cursor-progress items-center rounded-full border border-zinc-300 bg-zinc-400 shadow dark:border-zinc-600 dark:bg-zinc-700">
         <span class="ml-[1px] inline-block h-[19px] w-[19px] rounded-full bg-zinc-200 shadow-md dark:bg-zinc-600" />
       </Switch>

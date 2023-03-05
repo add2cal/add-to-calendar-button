@@ -69,8 +69,13 @@ if (typeof docObserver !== 'undefined') {
 </script>
 
 <template>
-  <Switch v-model="darkEnabled" :class="darkEnabled ? 'border-zinc-500 bg-zinc-700 hover:border-zinc-400' : 'border-zinc-300 bg-zinc-200 hover:border-zinc-400'" class="relative inline-flex h-[24px] w-[40px] items-center rounded-full border shadow hover:shadow-md" @update:model-value="toggleTheme">
+  <Switch
+    v-model="darkEnabled"
+    :class="darkEnabled ? 'border-zinc-500 bg-zinc-700 hover:border-zinc-400' : 'border-zinc-300 bg-zinc-200 hover:border-zinc-400'"
+    class="relative inline-flex h-[24px] w-[40px] items-center rounded-full border shadow outline-none transition-colors hover:shadow-md focus:outline-none focus-visible:ring focus-visible:ring-secondary/75"
+    @update:model-value="toggleTheme"
+  >
     <span class="sr-only">{{ $t('labels.enableDarkMode') }}</span>
-    <span :class="darkEnabled ? 'ml-[18px] bg-zinc-900 text-white' : 'ml-[1px] bg-white text-zinc-900'" class="inline-block h-[19px] w-[19px] rounded-full shadow-md"><SunIcon class="m-[2px] ui-checked:hidden" /><MoonIcon class="m-[2px] ui-not-checked:hidden" /></span>
+    <span :class="darkEnabled ? 'ml-[18px] bg-zinc-900 text-white' : 'ml-[1px] bg-white text-zinc-900'" class="inline-block h-[19px] w-[19px] rounded-full shadow-md outline-none"><SunIcon class="m-[2px] ui-checked:hidden" /><MoonIcon class="m-[2px] ui-not-checked:hidden" /></span>
   </Switch>
 </template>
