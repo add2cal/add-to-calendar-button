@@ -1,4 +1,4 @@
-import type { Option, ListStyle, ButtonStyle, Trigger, LightMode } from '@/models/addToCalendarButton';
+import type { Option, ListStyle, ButtonStyle, Trigger, LightMode, PastDateHandling } from '@/models/addToCalendarButton';
 import type { LanguageCode } from '@/models//language';
 
 export enum DateAttrsKey {
@@ -33,6 +33,7 @@ export enum DateRecurrenceAttrsKey {
 }
 
 export enum LayoutAttrsKey {
+  OPTIONS = 'OPTIONS',
   LIST_STYLE = 'LIST_STYLE',
   BUTTON_STYLE = 'BUTTON_STYLE',
   TRIGGER = 'TRIGGER',
@@ -45,7 +46,7 @@ export enum LayoutAttrsKey {
   LABEL = 'LABEL',
   LIGHT_MODE = 'LIGHT_MODE',
   LANGUAGE = 'LANGUAGE',
-  OPTIONS = 'OPTIONS',
+  PAST_DATE_HANDLING = 'PAST_DATE_HANDLING',
 }
 
 export enum HideIconOption {
@@ -104,6 +105,7 @@ export interface DateRecurrenceAttrs {
 }
 
 export interface LayoutAttrs {
+  [LayoutAttrsKey.OPTIONS]: Option[];
   [LayoutAttrsKey.LIST_STYLE]: ListStyle | null;
   [LayoutAttrsKey.BUTTON_STYLE]: ButtonStyle;
   [LayoutAttrsKey.TRIGGER]: Trigger;
@@ -116,7 +118,7 @@ export interface LayoutAttrs {
   [LayoutAttrsKey.LABEL]: string;
   [LayoutAttrsKey.LIGHT_MODE]: LightMode;
   [LayoutAttrsKey.LANGUAGE]: LanguageCode;
-  [LayoutAttrsKey.OPTIONS]: Option[];
+  [LayoutAttrsKey.PAST_DATE_HANDLING]: PastDateHandling;
 }
 
 export interface Attrs {
@@ -162,4 +164,5 @@ export const ComponentAttrKeyMap: { [key in string]: string } = {
   [AttrsKey.LABEL]: 'label',
   [AttrsKey.LIGHT_MODE]: 'lightMode',
   [AttrsKey.LANGUAGE]: 'language',
+  [AttrsKey.PAST_DATE_HANDLING]: 'pastDateHandling',
 };

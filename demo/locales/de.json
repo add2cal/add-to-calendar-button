@@ -86,6 +86,7 @@
       "size": "Größe",
       "label": "Eigener Button-Text",
       "light_mode": "Dark/Light Mode",
+      "past_date_handling": "Handhabung abgelaufener Daten",
       "language": "Sprache",
       "nothing_found": "Nichts gefunden.",
       "select_option": "Option auswählen...",

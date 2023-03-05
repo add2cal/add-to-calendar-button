@@ -258,12 +258,14 @@ function atcb_build_button(host, data, debug = false) {
     // set global event listeners
     atcb_set_global_event_listener(host, data);
     atcb_init_log(data.proKey, debug);
-    // generate the actual button
-    atcb_generate_button(host, rootObj, data, debug);
-    // create schema.org data (https://schema.org/Event), if possible; and add it to the regular DOM
-    if (!data.hideRichData && data.name && data.dates[0].location && data.dates[0].startDate) {
-      atcb_generate_rich_data(data, host.host);
-      data.schemaEl = host.host.previousSibling;
+    // generate the actual button (if not hidden)
+    if (!data.hidden) {
+      atcb_generate_button(host, rootObj, data, debug);
+      // create schema.org data (https://schema.org/Event), if possible; and add it to the regular DOM
+      if (!data.hideRichData && data.name && data.dates[0].location && data.dates[0].startDate) {
+        atcb_generate_rich_data(data, host.host);
+        data.schemaEl = host.host.previousSibling;
+      }
     }
     // log event
     atcb_log_event('initialization', data.identifier, data.identifier);
@@ -475,43 +477,46 @@ function atcb_action(data, triggerElement, keyboardTrigger = false) {
     }
     potentialExistingHost.remove();
   }
-  // prepare shadow dom and load style
-  let host = document.createElement('div');
-  host.id = 'atcb-customTrigger-' + data.identifier + '-host';
-  if (root == document.body) {
-    document.body.append(host);
-  } else {
-    root.after(host);
-  }
-  if (triggerElement) {
-    const btnDim = triggerElement.getBoundingClientRect();
-    host.style.position = 'relative';
-    host.style.left = -btnDim.width + 'px';
-    host.style.top = btnDim.height + 'px';
-  }
-  host.setAttribute('atcb-button-id', data.identifier);
-  host.attachShadow({ mode: 'open', delegateFocus: true });
-  const elem = document.createElement('template');
-  elem.innerHTML = template;
-  host.shadowRoot.append(elem.content.cloneNode(true));
-  const rootObj = host.shadowRoot.querySelector('.atcb-initialized');
-  atcb_setup_state_management(data);
-  atcb_set_light_mode(host.shadowRoot, data);
-  host.shadowRoot.querySelector('.atcb-initialized').setAttribute('lang', data.language);
-  atcb_load_css(host.shadowRoot, rootObj, data.buttonStyle, false, false, data.customCss);
-  // set global event listeners
-  atcb_set_global_event_listener(host.shadowRoot, data);
   // log event
   atcb_log_event('initialization', data.identifier, data.identifier);
-  // if all is fine, ...
-  // trigger link at the oneoption case, or ...
-  if (oneOption) {
-    atcb_generate_links(host.shadowRoot, data.options[0], data, 'all', keyboardTrigger);
-    // log event
-    atcb_log_event('openSingletonLink', data.identifier, data.identifier);
-  } else {
-    // open the options list
-    atcb_toggle(host.shadowRoot, 'open', data, triggerElement, keyboardTrigger);
+  // we would only render something, if interaction is not blocked
+  if (!data.blockInteraction) {
+    // prepare shadow dom and load style
+    let host = document.createElement('div');
+    host.id = 'atcb-customTrigger-' + data.identifier + '-host';
+    if (root == document.body) {
+      document.body.append(host);
+    } else {
+      root.after(host);
+    }
+    if (triggerElement) {
+      const btnDim = triggerElement.getBoundingClientRect();
+      host.style.position = 'relative';
+      host.style.left = -btnDim.width + 'px';
+      host.style.top = btnDim.height + 'px';
+    }
+    host.setAttribute('atcb-button-id', data.identifier);
+    host.attachShadow({ mode: 'open', delegateFocus: true });
+    const elem = document.createElement('template');
+    elem.innerHTML = template;
+    host.shadowRoot.append(elem.content.cloneNode(true));
+    const rootObj = host.shadowRoot.querySelector('.atcb-initialized');
+    atcb_setup_state_management(data);
+    atcb_set_light_mode(host.shadowRoot, data);
+    host.shadowRoot.querySelector('.atcb-initialized').setAttribute('lang', data.language);
+    atcb_load_css(host.shadowRoot, rootObj, data.buttonStyle, false, false, data.customCss);
+    // set global event listeners
+    atcb_set_global_event_listener(host.shadowRoot, data);
+    // if all is fine, ...
+    // trigger link at the oneoption case, or ...
+    if (oneOption) {
+      atcb_generate_links(host.shadowRoot, data.options[0], data, 'all', keyboardTrigger);
+      // log event
+      atcb_log_event('openSingletonLink', data.identifier, data.identifier);
+    } else {
+      // open the options list
+      atcb_toggle(host.shadowRoot, 'open', data, triggerElement, keyboardTrigger);
+    }
   }
   atcb_init_log(data.proKey, data.debug);
   if (data.debug) {

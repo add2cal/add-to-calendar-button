@@ -48,6 +48,7 @@ const i18nStrings = {
     'modal.subscribe.yahoo.h': 'Add Calendar to Yahoo',
     'modal.subscribe.yahoo.text': '<ol><li>Open now the Yahoo Calendar.</li><li>Click the "Actions" tab.</li><li>Hit "Follow Other Calendars".</li><li>Set a name and past the clipboard content into the url field.</li></ol>',
     cancel: 'Cancel',
+    expired: 'Expired',
   },
   de: {
     'label.addtocalendar': 'Im Kalender speichern',
@@ -68,6 +69,7 @@ const i18nStrings = {
     'modal.subscribe.yahoo.h': 'Kalender zu Yahoo hinzufügen',
     'modal.subscribe.yahoo.text': '<ol><li>Öffne den Yahoo Kalender.</li><li>Klicke auf den "Aktionen" Tab.</li><li>Wähle "Weiteren Kalendern folgen".</li><li>Wähle einen Namen und füge die URL aus deiner Zwischenablage in das URL-Feld ein.</li></ol>',
     cancel: 'Abbrechen',
+    expired: 'Abgelaufen',
   },
   es: {
     'label.addtocalendar': 'Añadir al Calendario',
@@ -88,6 +90,7 @@ const i18nStrings = {
     'modal.subscribe.yahoo.h': 'Añadir calendario a Yahoo',
     'modal.subscribe.yahoo.text': '<ol><li>Abra el calendario de Yahoo.</li><li>Haga clic en la pestaña "Acciones".</li><li>Seleccione "Seguir otros calendarios".</li><li>Elige un nombre y pega la URL de tu portapapeles en el campo URL.</li></ol>',
     cancel: 'Cancelar',
+    expired: 'Caducada',
   },
   pt: {
     'label.addtocalendar': 'Incluir no Calendário',
@@ -108,6 +111,7 @@ const i18nStrings = {
     'modal.subscribe.yahoo.h': 'Adicionar calendário ao Yahoo',
     'modal.subscribe.yahoo.text': '<ol><li>Abrir o calendário do Yahoo.</li><li>Clique no separador "Acções".</li><li>Seleccione "Seguir outros calendários".</li><li>Escolha um nome e cole o URL da sua área de transferência no campo URL.</li></ol>',
     cancel: 'Cancelar',
+    expired: 'Expirada',
   },
   fr: {
     'label.addtocalendar': "Ajouter à l'Agenda",
@@ -128,6 +132,7 @@ const i18nStrings = {
     'modal.subscribe.yahoo.h': 'Ajouter un agenda à Yahoo',
     'modal.subscribe.yahoo.text': '<ol><li>Ouvrez l\'Agenda Yahoo.</li><li>Cliquez sur l\'onglet "Actions".</li><li>Sélectionnez "Suivre d\'autres agendas".</li><li>Choisissez un nom et collez le contenu de votre presse-papiers dans le champ URL.</li></ol>',
     cancel: 'Annuler',
+    expired: 'Expiré',
   },
   nl: {
     'label.addtocalendar': 'Opslaan in Agenda',
@@ -148,6 +153,7 @@ const i18nStrings = {
     'modal.subscribe.yahoo.h': 'Toevoegen aan Yahoo',
     'modal.subscribe.yahoo.text': '<ol><li>Open de Yahoo calendar.</li><li>Klik op de "Acties" tab.</li><li>Selecteer "Volg Andere Agenda\'s".</li><li>Kies een naam en plak de URL van uw klembord in het URL-veld.</li></ol>',
     cancel: 'Annuleren',
+    expired: 'Verlopen',
   },
   tr: {
     'label.addtocalendar': 'Takvime Ekle',
@@ -168,6 +174,7 @@ const i18nStrings = {
     'modal.subscribe.yahoo.h': "Yahoo'ya takvim ekleme",
     'modal.subscribe.yahoo.text': '<ol><li>Yahoo takvimini açın.</li><li>"Eylemler" sekmesine tıklayın.</li><li>"Diğer Takvimleri Takip Et" öğesini seçin.</li><li>Bir ad seçin ve URL\'yi panonuzdan URL alanına yapıştırın.</li></ol>',
     cancel: 'İptal',
+    expired: 'Günü geçmiş',
   },
   zh: {
     'label.addtocalendar': '添加到日历',
@@ -188,6 +195,7 @@ const i18nStrings = {
     'modal.subscribe.yahoo.h': '将日历添加到 Yahoo',
     'modal.subscribe.yahoo.text': '<ol><li>打开 Yahoo 日历。</li><li>点击“操作”标签。</li><li>选择“关注其他日历”。</li><li>选择一个名称并将剪贴板中的 URL 粘贴到 URL 字段中。</li></ol>',
     cancel: '中止',
+    expired: '已到期',
   },
   ar: {
     'label.addtocalendar': 'إضافة إلى التقويم',
@@ -208,6 +216,7 @@ const i18nStrings = {
     'modal.subscribe.yahoo.h': 'أضف التقويم إلى Yahoo',
     'modal.subscribe.yahoo.text': '<ol><li>افتح تقويم Yahoo.</li><li>انقر فوق علامة التبويب "الإجراءات".</li><li>حدد "متابعة تقويمات أخرى".</li><li>اختر اسمًا والصق عنوان URL من الحافظة الخاصة بك في حقل URL.</li></ol>',
     cancel: 'إحباط',
+    expired: 'منتهي الصلاحية',
   },
   hi: {
     'label.addtocalendar': 'कैलेंडर में जोड़ें',
@@ -228,6 +237,7 @@ const i18nStrings = {
     'modal.subscribe.yahoo.h': 'Yahoo . में कैलेंडर जोड़ें',
     'modal.subscribe.yahoo.text': '<ol><li>Yahoo कैलेंडर खोलें।</li><li>"कृती" टैब पर क्लिक करें।</li><li>"इतर कॅलेंडर्सचे अनुसरण करा" चुनें।</li><li>एक नाम चुनें और अपने क्लिपबोर्ड से URL को URL फ़ील्ड में पेस्ट करें।</li></ol>',
     cancel: 'रद्द करना',
+    expired: 'खत्म हो चुका',
   },
   pl: {
     'label.addtocalendar': 'Dodaj do kalendarza',
@@ -248,6 +258,7 @@ const i18nStrings = {
     'modal.subscribe.yahoo.h': 'Dodaj kalendarz do Yahoo',
     'modal.subscribe.yahoo.text': '<ol><li>Otwórz kalendarz Yahoo.</li><li>Kliknij na zakładkę "Czynności".</li><li>Wybierz "Obserwuj inne kalendarze".</li><li>Wybierz nazwę i wklej adres URL ze schowka w polu URL.</li></ol>',
     cancel: 'Anuluj',
+    expired: 'Wygasły',
   },
   id: {
     'label.addtocalendar': 'Tambahkan ke Kalender',
@@ -268,6 +279,7 @@ const i18nStrings = {
     'modal.subscribe.yahoo.h': 'Tambahkan kalender ke Yahoo',
     'modal.subscribe.yahoo.text': '<ol><li>Buka kalender Yahoo.</li><li>Klik pada tab "Tindakan".</li><li>Pilih "Ikuti Kalender Lain".</li><li>Pilih nama dan tempelkan URL dari clipboard Anda ke bidang URL.</li></ol>',
     cancel: 'Batal',
+    expired: 'Kedaluwarsa',
   },
   no: {
     'label.addtocalendar': 'Legg til i kalenderen',
@@ -288,6 +300,7 @@ const i18nStrings = {
     'modal.subscribe.yahoo.h': 'Legg til kalender til Yahoo',
     'modal.subscribe.yahoo.text': '<ol><li>Åpne Yahoo-kalenderen.</li><li>Klikk på «Handlinger»-fanen.</li><li>Velg «Følg andre kalendere».</li><li>Velg et navn og lim inn URL-en fra utklippstavlen i URL-feltet.</li></ol>',
     cancel: 'Avbryt',
+    expired: 'Utløpt',
   },
   fi: {
     'label.addtocalendar': 'Lisää kalenteriin',
@@ -308,6 +321,7 @@ const i18nStrings = {
     'modal.subscribe.yahoo.h': 'Lisää kalenteri Yahoo',
     'modal.subscribe.yahoo.text': '<ol><li>Avaa Yahoo-kalenteri.</li><li>Napsauta "Toiminnot"-välilehteä.</li><li>Valitse "Seuraa muiden kalentereita".</li><li>Valitse nimi ja liitä URL-osoite leikepöydältäsi URL-kenttään.</li></ol>',
     cancel: 'Peruuta',
+    expired: 'Vanhentunut',
   },
   sv: {
     'label.addtocalendar': 'Lägg till i kalender',
@@ -328,6 +342,7 @@ const i18nStrings = {
     'modal.subscribe.yahoo.h': 'Lägg till kalender i Yahoo',
     'modal.subscribe.yahoo.text': '<ol><li>Öppna Yahoo-kalendern.</li><li>Klicka på fliken "Åtgärder".</li><li>Välj "Följ andra kalendrar".</li><li>Välj ett namn och klistra in URL:en från klippbordet i URL-fältet.</li></ol>',
     cancel: 'Avbryt',
+    expired: 'Utgånget',
   },
   cs: {
     'label.addtocalendar': 'Přidat do kalendáře',
@@ -348,6 +363,7 @@ const i18nStrings = {
     'modal.subscribe.yahoo.h': 'Přidat kalendář do Yahoo',
     'modal.subscribe.yahoo.text': '<ol><li>Otevřete kalendář Yahoo.</li><li>Klikněte na kartu "Akce".</li><li>Vyberte možnost "Sledovat další kalendáře".</li><li>Vyberte název a vložte adresu URL ze schránky do pole URL.</li></ol>',
     cancel: 'Storno',
+    expired: 'Platnost vypršela',
   },
   ja: {
     'label.addtocalendar': 'カレンダーに追加',
@@ -368,6 +384,7 @@ const i18nStrings = {
     'modal.subscribe.yahoo.h': 'Yahooにカレンダーを追加する',
     'modal.subscribe.yahoo.text': '<ol><li>Yahooカレンダーを開く。</li><li>[実行] タブをクリックします。</li><li>[その他のカレンダーのフォロー] を選択します。</li><li>名前を決めて、クリップボードにあるURLをURL欄に貼り付けます。</li></ol>',
     cancel: 'キャンセル',
+    expired: '期限切れ',
   },
   it: {
     'label.addtocalendar': 'Aggiungi al calendario',
@@ -388,6 +405,7 @@ const i18nStrings = {
     'modal.subscribe.yahoo.h': 'Aggiungi il calendario a Yahoo',
     'modal.subscribe.yahoo.text': '<ol><li>Aprire il calendario di Yahoo.</li><li>Fare clic sulla scheda "Azioni".</li><li>Selezionare "Segui altri calendari".</li><li>Scegliere un nome e incollare l\'URL dagli appunti nel campo URL.</li></ol>',
     cancel: 'Annulla',
+    expired: 'Scaduta',
   },
   ko: {
     'label.addtocalendar': '캘린더에 추가',
@@ -408,6 +426,7 @@ const i18nStrings = {
     'modal.subscribe.yahoo.h': 'Yahoo에 캘린더 추가',
     'modal.subscribe.yahoo.text': '<ol><li>Yahoo 캘린더를 엽니다.</li><li>"동작" 탭을 클릭합니다.</li><li>"다른 일정관리 팔로우"를 선택합니다.</li><li>이름을 선택하고 클립보드의 URL을 URL 필드에 붙여넣습니다.</li></ol>',
     cancel: '취소',
+    expired: '만료됨',
   },
   vi: {
     'label.addtocalendar': 'Thêm vào Lịch',
@@ -428,6 +447,7 @@ const i18nStrings = {
     'modal.subscribe.yahoo.h': 'Thêm lịch vào Yahoo',
     'modal.subscribe.yahoo.text': '<ol><li>Mở Lịch Yahoo.</li><li>Nhấp vào tab "Hành động".</li><li>Chọn "Theo dõi các Lịch khác".</li><li>Chọn tên và dán URL từ khay nhớ tạm của bạn vào trường URL.</li></ol>',
     cancel: 'Hủy bỏ',
+    expired: 'Hết hạn',
   },
   ro: {
     'label.addtocalendar': 'Adauga In Calendar',
@@ -448,6 +468,7 @@ const i18nStrings = {
     'modal.subscribe.yahoo.h': 'Adauga Calendar in Yahoo',
     'modal.subscribe.yahoo.text': '<ol><li>Deschide acum calendarul Yahoo.</li><li>Apasa pe tab-ul de "Actiuni".</li><li>Apasa "Urmareste alte calendare".</li><li>Seteaza un nume si lipeste continutul din clipboard in casuta cu url.</li></ol>',
     cancel: 'Anuleaza',
+    expired: 'Expirat',
   },
 };
 

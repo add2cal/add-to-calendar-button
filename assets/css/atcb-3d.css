@@ -184,7 +184,12 @@
   z-index: 1;
 }
 
-.atcb-button.atcb-no-text {
+.atcb-button:disabled .atcb-text {
+  letter-spacing: .1em;
+}
+
+.atcb-button.atcb-no-text,
+.atcb-button:disabled {
   min-width: 0;
 }
 
@@ -193,8 +198,8 @@
   text-align: right;
 }
 
-.atcb-button:focus,
-.atcb-button:hover {
+.atcb-button:not([disabled]):focus,
+.atcb-button:not([disabled]):hover {
   background-color: var(--btn-background-hover);
   box-shadow: var(--btn-shadow-hover);
 }
@@ -208,8 +213,8 @@
   z-index: 15000000;
 }
 
-.atcb-button.atcb-single:focus,
-.atcb-button.atcb-single:hover {
+.atcb-button.atcb-single:not([disabled]):focus,
+.atcb-button.atcb-single:not([disabled]):hover {
   background-color: var(--btn-background-hover);
   box-shadow: var(--btn-shadow-active);
   margin: -.13em;
