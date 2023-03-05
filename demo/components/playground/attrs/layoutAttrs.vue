@@ -114,7 +114,7 @@ function onHideTextOptionsUpdate(options: string[]) {
 
     <Select v-model="internalValue[LayoutAttrsKey.LIGHT_MODE]" :label="t(`labels.inputs.${[LayoutAttrsKey.LIGHT_MODE]}`.toLocaleLowerCase())" :options="Object.values(LightMode)" class="mb-3" />
 
-    <Select v-model="internalValue[LayoutAttrsKey.PAST_DATE_HANDLING]" :label="t(`labels.inputs.${[LayoutAttrsKey.PAST_DATE_HANDLING]}`.toLocaleLowerCase())" :options="Object.values(PastDateHandling)" class="mb-3" />
+    <Select v-model="internalValue[LayoutAttrsKey.PAST_DATE_HANDLING]" :label="t(`labels.inputs.${[LayoutAttrsKey.PAST_DATE_HANDLING]}`.toLocaleLowerCase())" :options="Object.values(PastDateHandling)" class="mb-3 hidden" />
 
     <Select v-model="internalValue[LayoutAttrsKey.LANGUAGE]" :label="t(`labels.inputs.${[LayoutAttrsKey.LANGUAGE]}`.toLocaleLowerCase())" :options="languageOptions" byKey="key" byValue="value" />
   </div>

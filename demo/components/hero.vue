@@ -9,7 +9,7 @@ const localePath = useLocalePath();
 </script>
 
 <template>
-  <div class="w-full rounded-b-[90px] bg-gradient-to-tr from-primary via-primary to-primary-light pt-5 shadow-2xl dark:from-primary dark:via-primary-dark dark:to-primary-dark xs:rounded-b-[60px] sm:rounded-b-none sm:shadow-none">
+  <div class="hero-container">
     <div class="container flex justify-end py-3 xs:justify-between xs:py-0">
       <div class="-mt-1 hidden w-auto max-w-[150px] grow xs:block">
         <Logo class="force-light" />
@@ -101,3 +101,11 @@ export default {
   }
 };
 </script>
+
+<style scoped>
+.hero-container {
+  border-bottom-right-radius: 80% 20%;
+  border-bottom-left-radius: 80% 20%;
+  @apply w-full bg-gradient-to-tr from-primary via-primary to-primary-light pt-5 shadow-2xl dark:from-primary dark:via-primary-dark dark:to-primary-dark sm:rounded-b-none sm:shadow-none;
+}
+</style>

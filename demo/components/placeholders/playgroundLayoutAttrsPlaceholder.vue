@@ -25,7 +25,7 @@ import { LayoutAttrsKey } from "@/models/attrs";
     <Input :label="$t(`labels.inputs.${[LayoutAttrsKey.SIZE]}`.toLocaleLowerCase())" type="range" :min="0" :max="10" :modelValue="6" disabled class="mb-3" />
 
     <Input :label="$t(`labels.inputs.${[LayoutAttrsKey.LIGHT_MODE]}`.toLocaleLowerCase())" type="text" disabled class="mb-3" />
-    <Input :label="$t(`labels.inputs.${[LayoutAttrsKey.PAST_DATE_HANDLING]}`.toLocaleLowerCase())" type="text" disabled class="mb-3" />
+    <Input :label="$t(`labels.inputs.${[LayoutAttrsKey.PAST_DATE_HANDLING]}`.toLocaleLowerCase())" type="text" disabled class="mb-3 hidden" />
     <Input :label="$t(`labels.inputs.${[LayoutAttrsKey.LANGUAGE]}`.toLocaleLowerCase())" type="text" disabled />
   </div>
 </template>

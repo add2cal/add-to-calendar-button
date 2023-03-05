@@ -18,7 +18,7 @@ const showCode = ref(false);
         <LightModeSwitchPlaceholder class="self-center" />
       </div>
       <div id="date-input" :class="{ 'lg:rounded-bl-md-none rounded-bl-md': !showCode }" class="hidden rounded-tl-md bg-zinc-200 p-3 dark:bg-zinc-800 md:block">
-        <div class="mb-4 text-sm font-semibold uppercase text-zinc-500">
+        <div class="mb-4 text-sm font-semibold uppercase text-zinc-800 dark:text-zinc-200">
           {{ t('labels.dateInput') }}
         </div>
         <DateAttrsPlaceholder />
@@ -36,7 +36,7 @@ const showCode = ref(false);
         </div>
       </div>
       <div id="style-input" :class="[ !showCode ? 'rounded-bl-md lg:rounded-r-md lg:rounded-bl-none' : 'rounded-none lg:rounded-tr-md' ]" class="hidden border-l-0 border-t-2 border-zinc-400 bg-zinc-200 p-3 dark:border-zinc-600 dark:bg-zinc-800 md:block lg:border-t-0 lg:border-l-2">
-        <div class="mb-4 flex justify-between text-sm font-semibold uppercase text-zinc-500">
+        <div class="mb-4 flex justify-between text-sm font-semibold uppercase text-zinc-800 dark:text-zinc-200">
           <span>{{ t('labels.layoutInput') }}</span>
           <LightModeSwitchPlaceholder />
         </div>
@@ -44,7 +44,7 @@ const showCode = ref(false);
       </div>
     </div>
     <div id="code-output" :class="[ !showCode ? 'mx-8 bg-zinc-300 dark:bg-zinc-800' : 'mx-2 bg-zinc-200 pb-0 dark:bg-zinc-800 md:mx-0' ]" class="rounded-b-md border-2 border-t-0 border-zinc-400 p-2 shadow-lg transition-all dark:border-zinc-600">
-      <div class="cursor-pointer text-center text-sm font-semibold text-zinc-500 hover:text-black dark:text-zinc-500 dark:hover:text-secondary" @click="showCode = !showCode">
+      <div class="cursor-pointer text-center text-sm font-semibold text-zinc-600 hover:text-black dark:text-zinc-400 dark:hover:text-secondary" @click="showCode = !showCode">
         <span :class="{ hidden: showCode }"><EyeIcon class="-mt-1 mr-2 inline-block h-5 w-5" aria-hidden="true" />{{ t('labels.showCode') }}</span>
         <span :class="{ hidden: !showCode }"><EyeSlashIcon class="-mt-1 mr-2 inline-block h-5 w-5" aria-hidden="true" />{{ t('labels.hideCode') }}</span>
       </div>

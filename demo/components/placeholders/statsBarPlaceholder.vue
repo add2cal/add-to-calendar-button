@@ -8,7 +8,7 @@
   </div>
   <div class="mt-[-54px] h-[40px]">
     <div class="relative mx-auto flex w-full items-center overflow-x-hidden">
-      <div class="z-10">
+      <div class="z-10 p-2 pr-3">
         <div class="whitespace-nowrap rounded-md bg-red-800 py-1 px-2 text-xs font-semibold text-zinc-100 shadow">
           <span class="hidden xl:inline">{{ $t('labels.stats.label_long') }}</span>
           <span class="inline xl:hidden">{{ $t('labels.stats.label_short') }}</span>
