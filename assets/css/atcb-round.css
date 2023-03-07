@@ -5,7 +5,7 @@
  *
  * Style: Round
  *
- * Version: 2.2.2
+ * Version: 2.2.3
  * Creator: Jens Kuerschner (https://jenskuerschner.de)
  * Project: https://github.com/add2cal/add-to-calendar-button
  * License: Elastic License 2.0 (ELv2) (https://github.com/add2cal/add-to-calendar-button/blob/main/LICENSE.txt)
@@ -230,8 +230,8 @@
 }
 
 .atcb-button.atcb-active:not(.atcb-modal-style, .atcb-dropoverlay, .atcb-no-text),
-.atcb-button.atcb-single:not(.atcb-no-text):not([disabled]):focus,
-.atcb-button.atcb-single:not(.atcb-no-text):not([disabled]):hover {
+.atcb-button.atcb-single:not(.atcb-no-text, [disabled]):focus,
+.atcb-button.atcb-single:not(.atcb-no-text, [disabled]):hover {
   background-color: var(--btn-background-hover);
   box-shadow: var(--btn-shadow-active);
   margin: 0;

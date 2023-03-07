@@ -3,7 +3,7 @@
  *  Add to Calendar Button
  *  ++++++++++++++++++++++
  *
- *  Version: 2.2.2
+ *  Version: 2.2.3
  *  Creator: Jens Kuerschner (https://jenskuerschner.de)
  *  Project: https://github.com/add2cal/add-to-calendar-button
  *  License: Elastic License 2.0 (ELv2) (https://github.com/add2cal/add-to-calendar-button/blob/main/LICENSE.txt)
@@ -180,6 +180,10 @@ function atcb_decorate_data_style(data) {
   // force overlay when the button label is ommited, but the list labels are not (which would make the list need to be larger than the button) - at dropdown cases
   if ((data.buttonStyle == 'default' || data.buttonStyle == '3d' || data.buttonStyle == 'flat') && data.listStyle == 'dropdown' && !data.hideTextLabelList && data.hideTextLabelButton) {
     data.listStyle = 'overlay';
+  }
+  // force buttonsList false on date style button
+  if (data.buttonsList && data.buttonStyle == 'date') {
+    data.buttonsList = false;
   }
   // return result
   return data;
