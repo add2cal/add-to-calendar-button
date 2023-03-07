@@ -83,9 +83,9 @@ import { NgModule, CUSTOM_ELEMENTS_SCHEMA  } from '@angular/core';
         <LazyCodeBlock class="line-numbers">
           <pre>
 &lt;add-to-calendar-button
-  [attr.name]="{{ $t('demo_data.name_dummy') }}"
+  [attr.name]="titleVar"
   options="'Apple','Google'"
-  [attr.startDate]="{{ defaultDate }}"
+  [attr.startDate]="dateVar"
 &gt;&lt;/add-to-calendar-button&gt;</pre
           >
         </LazyCodeBlock>
