@@ -146,11 +146,13 @@ definePageMeta({
                 A date needs to be formatted as YYYY-MM-DD as specified with
                 <a href="https://en.wikipedia.org/wiki/ISO_8601" target="_blank" rel="noopener" class="whitespace-nowrap">ISO-8601 <ArrowTopRightOnSquareIcon class="-mt-0.5 mr-0.5 inline-block h-3 w-3" aria-hidden="true" /></a>.<br /><br />
                 You can use the magic word "today" to dynamically set the current day. Adding "+5" at the end would automatically add 5 days to the calculated date.<br /><br />
+                Unofficially, something like "YYYY-MM-DDTHH:MMZ" would also work.<br /><br />
                 <NuxtLink :to="{path: localePath('examples'), hash: '#case-3'}">{{ $t('labels.example') }} <ArrowRightIcon class="-mt-0.5 mr-0.5 inline-block h-3 w-3" aria-hidden="true" /></NuxtLink>
               </td>
               <td v-else>
                 Ein Datum muss im Schema YYYY-MM-DD gemäß <a href="https://de.wikipedia.org/wiki/ISO_8601" target="_blank" rel="noopener" class="whitespace-nowrap">ISO-8601 <ArrowTopRightOnSquareIcon class="-mt-0.5 mr-0.5 inline-block h-3 w-3" aria-hidden="true" /></a> formatiert sein<br /><br />
                 Du kannst das Wort "today" nutzen, um dynamisch den jeweils aktuellen Tag zu setzen. Wenn du bspw. "+5" hinzufügst, werden automatisch 5 Tage aufaddiert.<br /><br />
+                Inoffiziell werden Formate wie "YYYY-MM-DDTHH:MMZ" auch unterstützt.<br /><br />
                 <NuxtLink :to="{path: localePath('examples'), hash: '#case-3'}">{{ $t('labels.example') }} <ArrowRightIcon class="-mt-0.5 mr-0.5 inline-block h-3 w-3" aria-hidden="true" /></NuxtLink>
               </td>
             </tr>
@@ -166,11 +168,13 @@ definePageMeta({
               <td v-if="locale=='en'">
                 A date needs to be formatted as YYYY-MM-DD as specified with
                 <a href="https://en.wikipedia.org/wiki/ISO_8601" target="_blank" rel="noopener" class="whitespace-nowrap">ISO-8601 <ArrowTopRightOnSquareIcon class="-mt-0.5 mr-0.5 inline-block h-3 w-3" aria-hidden="true" /></a>.<br /><br />
-                If there is no endDate set, it is assumed that it is the same as startDate. You can use the magic word "today" to dynamically set the current day. Adding "+5" at the end would automatically add 5 days to the calculated date.
+                If there is no endDate set, it is assumed that it is the same as startDate. You can use the magic word "today" to dynamically set the current day. Adding "+5" at the end would automatically add 5 days to the calculated date.<br /><br />
+                Unofficially, something like "YYYY-MM-DDTHH:MMZ" would also work.
               </td>
               <td v-else>
                 Ein Datum muss im Schema YYYY-MM-DD gemäß <a href="https://de.wikipedia.org/wiki/ISO_8601" target="_blank" rel="noopener" class="whitespace-nowrap">ISO-8601 <ArrowTopRightOnSquareIcon class="-mt-0.5 mr-0.5 inline-block h-3 w-3" aria-hidden="true" /></a> formatiert sein<br /><br />
                 Du kannst das Wort "today" nutzen, um dynamisch den jeweils aktuellen Tag zu setzen. Wenn du bspw. "+5" hinzufügst, werden automatisch 5 Tage aufaddiert.<br /><br />
+                Inoffiziell werden Formate wie "YYYY-MM-DDTHH:MMZ" auch unterstützt.
               </td>
             </tr>
             <tr id="endtime">
@@ -736,6 +740,22 @@ definePageMeta({
                 Nach Klick auf einen Kalender-Link wird das Event als "gespeichert" markiert und ein Icon auf den Button gesetzt.<br />
                 Dies ist nicht der Fall, wenn der Text auf dem Button verborgen wird, die buttonsList-Option gesetzt ist oder mit der atcb_action-Variante gearbeitet wird.<br />
                 Nutze diese Option hier, um das Icon auch in allen anderen Fällen zu verbergen.
+              </td>
+            </tr>
+            <tr id="pastdatehandling">
+              <th scope="row">pastDateHandling</th>
+              <td>
+                <em>String</em><br /><br /><span class="label block">{{ $t('content.config.options') }}:</span>none, disable, hide<br /><br /><span class="label">{{ $t('content.config.default') }}:</span>none
+              </td>
+              <td v-if="locale=='en'">
+                This option specifies what happens, if an event is overdue.<br />
+                Setting it to "disable" will disable the button, while "hide" will completely hide it. In both cases, the user can no longer save the event.<br /><br />
+                Mind that with recurring events, this will not get triggered!
+              </td>
+              <td v-else>
+                Diese Option bestimmt, was passiert, sollte ein Termin in der Vergangenheit liegen.<br />
+                Wenn du sie auf "disable" setzt, wird der Button deaktiviert, bei "hide" vollständig ausgeblendet. In beiden Fällen kann der Nutzer das Event nicht mehr speichern.<br /><br />
+                Beachte, dass die Funktion bei wiederkehrenden Events nicht greift!
               </td>
             </tr>
             <tr id="size">

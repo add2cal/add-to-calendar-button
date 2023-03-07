@@ -120,8 +120,17 @@ function atcb_generate_label(host, data, parent, type, icon = false, text = '', 
 
 function atcb_generate_label_content(data, parent, type, icon, text, oneOption) {
   const defaultTriggerText = (function () {
-    if (data.dates[0].overdue && data.pastDateHandling != 'none') {
-      return atcb_translate_hook('expired', data);
+    if (data.pastDateHandling != 'none') {
+      let allOverdue = true;
+      for (let i = 0; i < data.dates.length; i++) {        
+        if (!data.dates[`${i}`].overdue) {
+          allOverdue = false;
+          break;
+        }
+      }
+      if (allOverdue) {
+        return atcb_translate_hook('expired', data);
+      }
     }
     return atcb_translate_hook('label.addtocalendar', data);
   })();
@@ -427,16 +436,24 @@ function atcb_create_modal(host, data, icon = '', headline, content = '', button
       modalSubEventButton.classList.add('atcb-subevent-btn');
       modalsubEventsContent.append(modalSubEventButton);
       atcb_generate_date_button(data, modalSubEventButton, i);
-      if (i == 1 && keyboardTrigger) {
-        modalSubEventButton.focus();
+      // interaction only if not overdue and blocked
+      if (!data.dates[i - 1].overdue || data.pastDateHandling == 'none') {
+        if (i == 1 && keyboardTrigger) {
+          modalSubEventButton.focus();
+        }
+        modalSubEventButton.addEventListener(
+          'click',
+          atcb_debounce(() => {
+            atcb_log_event('openSubEventLink', modalSubEventButton.id, data.identifier);
+            modalSubEventButton.blur();
+            atcb_generate_links(host, subEvents[0], data, subEvents[`${i}`], keyboardTrigger, true);
+          })
+        );
+      } else {
+        // if blocked, we also add styles
+        modalSubEventButton.setAttribute('disabled', true);
+        modalSubEventButton.style.cssText = 'opacity: .75; cursor: not-allowed; filter: brightness(95%); border-style: dashed;';
       }
-      modalSubEventButton.addEventListener(
-        'click',
-        atcb_debounce(() => {
-          atcb_log_event('openSubEventLink', modalSubEventButton.id, data.identifier);
-          atcb_generate_links(host, subEvents[0], data, subEvents[`${i}`], keyboardTrigger, true);
-        })
-      );
     }
   }
   // add buttons (array of objects; attributes: href, type, label, primary(boolean))

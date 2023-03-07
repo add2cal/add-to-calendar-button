@@ -274,7 +274,12 @@ function atcb_decorate_data_dates(data) {
     data.timeZone = data.dates[0].timeZone = cleanedUpDates.timeZone;
     data.startDate = data.dates[0].startDate = atcb_date_calculation(cleanedUpDates.startDate);
     data.endDate = data.dates[0].endDate = atcb_date_calculation(cleanedUpDates.endDate);
-    data.dates[0].overdue = atcb_date_specials_calculation('overdue', data.endDate, data.endTime, data.timeZone);
+    if (!data.recurrence) {
+      data.dates[0].overdue = atcb_date_specials_calculation('overdue', data.endDate, data.endTime, data.timeZone);
+    } else {
+      // TODO: optimize for recurrence, where there is no endDate, but a count limit. We should calculate a recurrence endDate first and then do not need to change anything here.
+      data.dates[0].overdue = false;
+    }
   }
   // calculate current time
   const now = new Date();
@@ -378,52 +383,57 @@ function atcb_date_cleanup(dateTimeData) {
   // parse date+time format (unofficial alternatives to the main implementation)
   const endpoints = ['start', 'end'];
   endpoints.forEach(function (point) {
-    if (dateTimeData[point + 'Date'] != null) {
-      // remove any milliseconds information
-      dateTimeData[point + 'Date'] = dateTimeData[point + 'Date'].replace(/\.\d{3}/, '').replace('Z', '');
-      // identify a possible time information within the date string
-      const tmpSplitStartDate = dateTimeData[point + 'Date'].split('T');
-      if (tmpSplitStartDate[1] != null) {
-        dateTimeData[point + 'Date'] = tmpSplitStartDate[0];
-        dateTimeData[point + 'Time'] = tmpSplitStartDate[1];
+    // validate first (we set some text instead, so the later validation picks it up as an error)
+    if (!/^(\d{4}-\d{2}-\d{2}T?(?:\d{2}:\d{2}|)Z?|today(?:\+\d{1,4}|))$/.test(dateTimeData[point + 'Date'])) {
+      dateTimeData[point + 'Date'] = 'badly-formed';
+    } else {
+      // second, if valid, clean up
+      if (dateTimeData[point + 'Date'] != null) {
+        // remove any milliseconds information
+        dateTimeData[point + 'Date'] = dateTimeData[point + 'Date'].replace(/\.\d{3}/, '').replace('Z', '');
+        // identify a possible time information within the date string
+        const tmpSplitStartDate = dateTimeData[point + 'Date'].split('T');
+        if (tmpSplitStartDate[1] != null) {
+          dateTimeData[point + 'Date'] = tmpSplitStartDate[0];
+          dateTimeData[point + 'Time'] = tmpSplitStartDate[1];
+        }
+      }
+      // remove any seconds from time information
+      if (dateTimeData[point + 'Time'] != null && dateTimeData[point + 'Time'].length === 8) {
+        const timeStr = dateTimeData[point + 'Time'];
+        dateTimeData[point + 'Time'] = timeStr.substring(0, timeStr.length - 3);
       }
     }
-    // remove any seconds from time information
-    if (dateTimeData[point + 'Time'] != null && dateTimeData[point + 'Time'].length === 8) {
-      const timeStr = dateTimeData[point + 'Time'];
-      dateTimeData[point + 'Time'] = timeStr.substring(0, timeStr.length - 3);
-    }
-    // update time zone, if special case set to go for the user's browser
-    if (dateTimeData.timeZone == 'currentBrowser') {
-      dateTimeData.timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
-    }
   });
+  // update time zone, if special case set to go for the user's browser
+  if (dateTimeData.timeZone == 'currentBrowser') {
+    dateTimeData.timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+  }
   return dateTimeData;
 }
 
 function atcb_date_specials_calculation(type, dateString, timeString = null, timeZone = null) {
-  const tmpDate = (function () {
-    if (timeString) {
-      return new Date(dateString + ' ' + timeString);
-    }
-    return new Date(dateString);
-  })();
-  if (type === 'timestamp') {
-    // create timestamps (not considering timezones, since this is only for sorting)
-    return tmpDate.getTime();
-  }
-  // determine whether a date is overdue or not
   try {
-    let isoString = tmpDate.toISOString();
-    if (timeString && timeZone) {
-      // if time and time zone information are given, we adjust for time zone
-      const offsetEnd = tzlib_get_offset(timeZone, dateString, timeString);
-      const formattedOffsetEnd = offsetEnd.slice(0, 3) + ':' + offsetEnd.slice(3);
-      isoString.replace('.000Z', formattedOffsetEnd);
+    const tmpDate = (function () {
+      if (timeString) {
+        if (timeZone) {
+          const offsetEnd = tzlib_get_offset(timeZone, dateString, timeString);
+          return new Date(dateString + ' ' + timeString + ':00 GMT' + offsetEnd);
+        }
+        return new Date(dateString + ' ' + timeString);
+      }
+      return new Date(dateString);
+    })();
+    if (type === 'timestamp') {
+      // create timestamps (only for sorting)
+      return tmpDate.getTime();
     }
-    const utcEndDate = new Date(isoString);
-    const currentUtcDate = new Date(Date.now()).toUTCString();
-    return utcEndDate.getTime() < new Date(currentUtcDate).getTime();
+    // determine whether a date is overdue or not  
+    if (!timeString) {
+      tmpDate.setDate(tmpDate.getDate() + 1);
+    }
+    const currentUtcDate = new Date().toISOString();
+    return tmpDate.getTime() < new Date(currentUtcDate).getTime();
   } catch (e) {
     // we will catch the detailed problem on validation at the next step
     return false;
@@ -463,13 +473,8 @@ function atcb_decorate_data_button_status_handling(data) {
   }
   const overdue = (function () {
     for (let i = 0; i < data.dates.length; i++) {
-      if (!data.dates[`${i}`].endDate) {
-        // if at least one sub date has no endDate, the event cannot be in the past
-        // TODO: optimize for recurrence, where there is no endDate, but a count limit. We should calculate a recurrence endDate first and then do not need to change anything here.
-        return false;
-      }
       if (!data.dates[`${i}`].overdue) {
-        // we also return false if at least one event is not overdue
+        // we return false if at least one event is not overdue
         return false;
       }
     }

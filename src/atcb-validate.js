@@ -277,7 +277,8 @@ function atcb_validate_timezone(data, msgPrefix, i, msgSuffix) {
 function atcb_validate_datetime(data, msgPrefix, i, msgSuffix) {
   const dates = ['startDate', 'endDate'];
   const newDate = dates;
-  // testing for right format first - mind that during decoration, we already cleaned up dates, so 2022-44-55 would be also valid, since it gets adjusted automatically!
+  // testing for right format first
+  //mind that during decoration, we already cleaned up dates, so 2022-44-55 would be also valid, since it gets adjusted automatically. However, we have some pre-validation there too
   if (
     !dates.every(function (date) {
       if (data.dates[`${i}`][`${date}`].length !== 10) {
@@ -289,6 +290,7 @@ function atcb_validate_datetime(data, msgPrefix, i, msgSuffix) {
         data.validationError = msgPrefix + ' failed: date misspelled [' + date + ': ' + data.dates[`${i}`][`${date}`] + ']' + msgSuffix;
         return false;
       }
+      // setting date for further time validation
       newDate[`${date}`] = new Date(dateParts[0], dateParts[1] - 1, dateParts[2]);
       return true;
     })

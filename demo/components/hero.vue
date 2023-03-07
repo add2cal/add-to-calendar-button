@@ -36,7 +36,7 @@ const localePath = useLocalePath();
                 <NuxtLink :to="{path: localePath('index'), hash: '#installation'}" class="button-secondary order-first w-40 text-white md:order-last lg:order-first">{{ $t('labels.getStarted') }}</NuxtLink>
               </div>
               <div>
-                <NuxtLink :to="{path: localePath('index'), hash: '#demo'}" class="button-primary order-first w-40 text-white md:order-last lg:order-first">{{ $t('labels.demo') }} <ArrowDownIcon class="-mt-1 ml-2 inline-block h-4 w-4 xs:hidden" aria-hidden="true" /></NuxtLink>
+                <NuxtLink :to="{path: localePath('index'), hash: '#demo'}" class="button-primary-animated order-first w-40 text-white md:order-last lg:order-first">{{ $t('labels.demo') }} <ArrowDownIcon class="-mt-1 ml-2 inline-block h-4 w-4 xs:hidden" aria-hidden="true" /></NuxtLink>
               </div>
             </div>
           </div>

@@ -34,6 +34,7 @@ module.exports = {
         'primary-dark': '#7644c6',
         secondary: '#ffa255',
         'secondary-light': '#ffd0aa',
+        'secondary-dark': '#fc8f29',
         background: '#f1eff8',
         'background-dark': '#1b1d21',
         text: '#333',
@@ -53,20 +54,6 @@ module.exports = {
         light: ['0 1px 2px rgb(255 255 255 / 0.1)', '0 1px 1px rgb(255 255 255 / 0.06)'],
         'light-md': ['0 3px 3px rgb(255 255 255 / 0.07)', '0 1px 5px rgb(255 255 255 / 0.06)'],
         'light-lg': ['0 8px 8px rgb(255 255 255 / 0.04)', '0 3px 3px rgb(255 255 255 / 0.1)'],
-      },
-      animation: {
-        marquee: 'marquee 60s linear infinite',
-        marquee2: 'marquee2 60s linear infinite',
-      },
-      keyframes: {
-        marquee: {
-          '0%': { transform: 'translateX(0%)' },
-          '100%': { transform: 'translateX(-100%)' },
-        },
-        marquee2: {
-          '0%': { transform: 'translateX(100%)' },
-          '100%': { transform: 'translateX(0%)' },
-        },
       },
     },
   },

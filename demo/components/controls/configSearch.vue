@@ -61,6 +61,7 @@ const configOptions = [
   "hideTextLabelButton",
   "hideTextLabelList",
   "hideCheckmark",
+  "pastDateHandling",
   "size",
   "lightMode",
   "language",
