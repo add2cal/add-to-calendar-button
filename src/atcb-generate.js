@@ -122,7 +122,7 @@ function atcb_generate_label_content(data, parent, type, icon, text, oneOption) 
   const defaultTriggerText = (function () {
     if (data.pastDateHandling != 'none') {
       let allOverdue = true;
-      for (let i = 0; i < data.dates.length; i++) {        
+      for (let i = 0; i < data.dates.length; i++) {
         if (!data.dates[`${i}`].overdue) {
           allOverdue = false;
           break;

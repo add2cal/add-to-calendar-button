@@ -185,10 +185,6 @@
   z-index: 1;
 }
 
-.atcb-button:disabled .atcb-text {
-  letter-spacing: .1em;
-}
-
 .atcb-button.atcb-no-text,
 .atcb-button:disabled {
   min-width: 0;
@@ -199,16 +195,16 @@
   text-align: right;
 }
 
+.atcb-button:focus-visible {
+  outline: 2px solid var(--keyboard-focus);
+}
+
 .atcb-button:not([disabled]):focus,
 .atcb-button:not([disabled]):hover {
   background-size: 100% 100%;
   color: var(--btn-text-hover);
   text-shadow: 0 0 0.7em var(--btn-text-shadow);
   border-radius: 21px;
-}
-
-.atcb-button:focus-visible {
-  outline: 2px solid var(--keyboard-focus);
 }
 
 .atcb-button.atcb-active:not(.atcb-modal-style, .atcb-dropoverlay) {
@@ -299,6 +295,10 @@
 
 .atcb-text {
   overflow-wrap: anywhere;
+}
+
+.atcb-button:disabled .atcb-text {
+  letter-spacing: .1em;
 }
 
 /******************************

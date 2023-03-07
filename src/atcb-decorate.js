@@ -432,7 +432,7 @@ function atcb_date_specials_calculation(type, dateString, timeString = null, tim
       // create timestamps (only for sorting)
       return tmpDate.getTime();
     }
-    // determine whether a date is overdue or not  
+    // determine whether a date is overdue or not
     if (!timeString) {
       tmpDate.setDate(tmpDate.getDate() + 1);
     }
