@@ -217,7 +217,7 @@ onUnmounted(() => {
           </div>
         </div>
         <div v-if="locale=='en'">
-          <h3 class="mb-3 mt-8">Override colors</h3>
+          <h3 class="mb-3 mt-8">Override styles</h3>
           <p>
             Generally, it is not possible to directly override the CSS style, since the button sits in its own ShadowDOM.<br />
             What you can do, however, is overriding some CSS variables, which are bound to the host (= the <code>&lt;add-to-calendar-button&gt;</code> tag).<br />
@@ -231,7 +231,7 @@ onUnmounted(() => {
           <p class="italic">Mind that this is not working with the "none" button style or the atcb_action approach (<NuxtLink :to="'#case-10'">see #10</NuxtLink>).</p>
         </div>
         <div v-else>
-          <h3 class="mb-3 mt-8">Farbwerte überschreiben</h3>
+          <h3 class="mb-3 mt-8">Styles überschreiben</h3>
           <p>
             Grundsätzlich ist es nicht möglich den CSS-Style direkt zu manipulieren, da der Button in seinem eigenen "ShadowDOM" gerendert wird.<br />
             Es gibt allerdings eine kleine Hintertür, über die du einige Variablen doch überschreiben kannst.<br />
@@ -247,13 +247,21 @@ onUnmounted(() => {
         </div>
         <div class="block w-full justify-between pt-4 md:flex">
           <div class="flex w-full flex-none justify-center p-6 pt-8 md:w-[300px]">
-            <add-to-calendar-button styleLight="--btn-background: #ffa255;" styleDark="--btn-background: #000;" :name="$t('demo_data.name')" :startDate="defaultDate" options="'Apple','Google','iCal'" lightMode="bodyScheme" :language="locale"></add-to-calendar-button>
+            <add-to-calendar-button
+              styleLight="--btn-background: #2f4377; --btn-text: #fff; --font: Georgia, 'Times New Roman', Times, serif;"
+              styleDark="--btn-background: #000;"
+              :name="$t('demo_data.name')"
+              :startDate="defaultDate"
+              options="'Apple','Google','iCal'"
+              lightMode="bodyScheme"
+              :language="locale"
+            ></add-to-calendar-button>
           </div>
           <div class="flex-1 overflow-x-auto">
             <LazyCodeBlock class="line-numbers">
               <pre>
 &lt;add-to-calendar-button 
-  styleLight="--btn-background: #ffa255;"
+  styleLight="--btn-background: #2f4377; --btn-text: #fff; --font: Georgia, 'Times New Roman', Times, serif;"
   styleDark="--btn-background: #000;"
   name="{{ $t('demo_data.name') }}"
   startDate="{{ defaultDate }}"

@@ -55,7 +55,7 @@ function atcb_save_file(file, filename) {
 // SHARED FUNCTION TO GENERATE A TIME STRING
 function atcb_generate_time(data, style = 'delimiters', targetCal = 'general', addTimeZoneOffset = false) {
   if (data.startTime != null && data.startTime != '' && data.endTime != null && data.endTime != '') {
-    // for the input, we assume UTC per default
+    // for the input, we assume GMT/UTC per default
     const newStartDate = new Date(data.startDate + 'T' + data.startTime + ':00.000+00:00');
     const newEndDate = new Date(data.endDate + 'T' + data.endTime + ':00.000+00:00');
     const durationMS = newEndDate - newStartDate;
@@ -67,49 +67,37 @@ function atcb_generate_time(data, style = 'delimiters', targetCal = 'general', a
       }
       return durationHours + ':' + ('0' + durationMinutes).slice(-2);
     })();
-    // if no time zone is given and we need to add the offset to the datetime string, do so directly and return
-    if ((data.timeZone == null || (data.timeZone != null && data.timeZone == '')) && addTimeZoneOffset) {
+    // (see https://tz.add-to-calendar-technology.com/api/zones.json for available TZ names)
+    if (targetCal == 'ical' || (targetCal == 'google' && !/(GMT[+|-]\d{1,2}|Etc\/U|Etc\/Zulu|CET|CST6CDT|EET|EST|EST5EDT|MET|MST|MST7MDT|PST8PDT|WET)/i.test(data.timeZone))) {
+      // in the iCal case, we simply return and cut off the Z. Same applies to Google, except for GMT +/- time zones, which are not supported there.
+      // everything else will be done by injecting the VTIMEZONE block at the iCal function
       return {
-        start: newStartDate.toISOString().replace('.000Z', '+00:00'),
-        end: newEndDate.toISOString().replace('.000Z', '+00:00'),
+        start: atcb_format_datetime(newStartDate, 'clean', true, true),
+        end: atcb_format_datetime(newEndDate, 'clean', true, true),
         duration: durationString,
         allday: false,
       };
     }
-    // if a time zone is given, we adjust the diverse cases
-    // (see https://tz.add-to-calendar-technology.com/api/zones.json for available TZ names)
-    if (data.timeZone != null && data.timeZone != '') {
-      if (targetCal == 'ical' || (targetCal == 'google' && !/(GMT[+|-]\d{1,2}|Etc\/U|Etc\/Zulu|CET|CST6CDT|EET|EST|EST5EDT|MET|MST|MST7MDT|PST8PDT|WET)/i.test(data.timeZone))) {
-        // in the iCal case, we simply return and cut off the Z. Same applies to Google, except for GMT +/- time zones, which are not supported there.
-        // everything else will be done by injecting the VTIMEZONE block at the iCal function
-        return {
-          start: atcb_format_datetime(newStartDate, 'clean', true, true),
-          end: atcb_format_datetime(newEndDate, 'clean', true, true),
-          duration: durationString,
-          allday: false,
-        };
-      }
-      // we get the correct offset via the timeZones iCal Library
-      const offsetStart = tzlib_get_offset(data.timeZone, data.startDate, data.startTime);
-      const offsetEnd = tzlib_get_offset(data.timeZone, data.endDate, data.endTime);
-      // if we need to add the offset to the datetime string, do so respectively
-      if (addTimeZoneOffset) {
-        const formattedOffsetStart = offsetStart.slice(0, 3) + ':' + offsetStart.slice(3);
-        const formattedOffsetEnd = offsetEnd.slice(0, 3) + ':' + offsetEnd.slice(3);
-        return {
-          start: newStartDate.toISOString().replace('.000Z', formattedOffsetStart),
-          end: newEndDate.toISOString().replace('.000Z', formattedOffsetEnd),
-          duration: durationString,
-          allday: false,
-        };
-      }
-      // in other cases, we substract the offset from the dates
-      // (substraction to reflect the fact that the user assumed his timezone and to convert to UTC; since calendars assume UTC and add offsets again)
-      const calcOffsetStart = parseInt(offsetStart[0] + 1) * -1 * ((parseInt(offsetStart.substring(1, 3)) * 60 + parseInt(offsetStart.substring(3, 5))) * 60 * 1000);
-      const calcOffsetEnd = parseInt(offsetEnd[0] + 1) * -1 * ((parseInt(offsetEnd.substring(1, 3)) * 60 + parseInt(offsetEnd.substring(3, 5))) * 60 * 1000);
-      newStartDate.setTime(newStartDate.getTime() + calcOffsetStart);
-      newEndDate.setTime(newEndDate.getTime() + calcOffsetEnd);
+    // we get the correct offset via the timeZones iCal Library
+    const offsetStart = tzlib_get_offset(data.timeZone, data.startDate, data.startTime);
+    const offsetEnd = tzlib_get_offset(data.timeZone, data.endDate, data.endTime);
+    // if we need to add the offset to the datetime string, do so respectively
+    if (addTimeZoneOffset) {
+      const formattedOffsetStart = offsetStart.slice(0, 3) + ':' + offsetStart.slice(3);
+      const formattedOffsetEnd = offsetEnd.slice(0, 3) + ':' + offsetEnd.slice(3);
+      return {
+        start: newStartDate.toISOString().replace('.000Z', formattedOffsetStart),
+        end: newEndDate.toISOString().replace('.000Z', formattedOffsetEnd),
+        duration: durationString,
+        allday: false,
+      };
     }
+    // in other cases, we substract the offset from the dates
+    // (substraction to reflect the fact that the user assumed his timezone and to convert to UTC; since calendars assume UTC and add offsets again)
+    const calcOffsetStart = parseInt(offsetStart[0] + 1) * -1 * ((parseInt(offsetStart.substring(1, 3)) * 60 + parseInt(offsetStart.substring(3, 5))) * 60 * 1000);
+    const calcOffsetEnd = parseInt(offsetEnd[0] + 1) * -1 * ((parseInt(offsetEnd.substring(1, 3)) * 60 + parseInt(offsetEnd.substring(3, 5))) * 60 * 1000);
+    newStartDate.setTime(newStartDate.getTime() + calcOffsetStart);
+    newEndDate.setTime(newEndDate.getTime() + calcOffsetEnd);
     // return formatted data
     return {
       start: atcb_format_datetime(newStartDate, style),

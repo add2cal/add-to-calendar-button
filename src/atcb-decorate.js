@@ -19,6 +19,7 @@ import { availableLanguages, rtlLanguages } from './atcb-i18n';
 // CLEAN DATA BEFORE FURTHER VALIDATION (CONSIDERING SPECIAL RULES AND SCHEMES)
 function atcb_decorate_data(data) {
   data = atcb_decorate_data_boolean(data);
+  data.timeZone = atcb_decorate_data_timezone(data.timeZone);
   data = atcb_decorate_data_rrule(data);
   data = atcb_decorate_data_options(data);
   data = atcb_decorate_data_style(data);
@@ -43,6 +44,14 @@ function atcb_decorate_data_boolean(data) {
     }
   }
   return data;
+}
+
+// set time zone
+function atcb_decorate_data_timezone(tz = null) {
+  if (!tz || tz == '') {
+    return 'GMT';
+  }
+  return tz;
 }
 
 // format RRULE
@@ -252,7 +261,7 @@ function atcb_decorate_data_dates(data) {
   if (data.dates != null && data.dates.length > 0) {
     for (let i = 0; i < data.dates.length; i++) {
       // get global time zone, if not set within the date block, but globally
-      if (data.dates[`${i}`].timeZone == null && data.timeZone != null) {
+      if (data.dates[`${i}`].timeZone == null) {
         data.dates[`${i}`].timeZone = data.timeZone;
       }
       // cleanup different date-time formats
@@ -344,9 +353,6 @@ function atcb_decorate_data_extend(data) {
     if (data.dates[`${i}`].sequence == null) {
       data.dates[`${i}`].sequence = data.sequence;
     }
-    if (data.dates[`${i}`].location == null && data.location != null) {
-      data.dates[`${i}`].location = data.location;
-    }
     if (data.dates[`${i}`].organizer == null && data.organizer != null) {
       data.dates[`${i}`].organizer = data.organizer;
     }
@@ -357,6 +363,15 @@ function atcb_decorate_data_extend(data) {
       data.dates[`${i}`].availability = data.availability.toLowerCase();
     } else if (data.dates[`${i}`].availability != null) {
       data.dates[`${i}`].availability = data.dates[`${i}`].availability.toLowerCase();
+    }
+    if (data.dates[`${i}`].location == null && data.location != null) {
+      data.dates[`${i}`].location = data.location;
+    }
+    // for the location, we also set the online flag here    
+    if (data.dates[`${i}`].location && data.dates[`${i}`].location.startsWith('http')) {
+      data.dates[`${i}`].onlineEvent = true;
+    } else {
+      data.dates[`${i}`].onlineEvent = false;
     }
     // for the uid, we do not copy from the top level, but rather generate it per event (except for the first one)
     if (data.dates[`${i}`].uid == null) {
@@ -416,15 +431,12 @@ function atcb_date_cleanup(dateTimeData) {
   return dateTimeData;
 }
 
-function atcb_date_specials_calculation(type, dateString, timeString = null, timeZone = null) {
+function atcb_date_specials_calculation(type, dateString, timeString = null, timeZone) {
   try {
     const tmpDate = (function () {
       if (timeString) {
-        if (timeZone) {
-          const offsetEnd = tzlib_get_offset(timeZone, dateString, timeString);
-          return new Date(dateString + ' ' + timeString + ':00 GMT' + offsetEnd);
-        }
-        return new Date(dateString + ' ' + timeString);
+        const offsetEnd = tzlib_get_offset(timeZone, dateString, timeString);
+        return new Date(dateString + ' ' + timeString + ':00 GMT' + offsetEnd);
       }
       return new Date(dateString);
     })();

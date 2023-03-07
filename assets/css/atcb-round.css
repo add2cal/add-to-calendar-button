@@ -210,6 +210,7 @@
 .atcb-button:not([disabled]):hover {
   background-color: var(--btn-background-hover);
   box-shadow: var(--btn-shadow-hover);
+  color: var(--btn-text-hover);
   margin: 0;
   padding: 0.78em 1.43em;
 }
@@ -230,6 +231,7 @@
 .atcb-button.atcb-single:not(.atcb-no-text, [disabled]):hover {
   background-color: var(--btn-background-hover);
   box-shadow: var(--btn-shadow-active);
+  color: var(--btn-text-hover);
   margin: 0;
   padding: 0.78em 1.43em;
 }
@@ -239,6 +241,7 @@
 .atcb-button.atcb-single.atcb-no-text:not([disabled]):hover {
   background-color: var(--btn-background-hover);
   box-shadow: var(--btn-shadow-active);
+  color: var(--btn-text-hover);
   margin: 0;
   padding: 0.93em 1.43em;
 }
@@ -746,8 +749,8 @@ a.atcb-modal-btn:focus-visible {
 
 .atcb-date-btn-content {
   display: flex;
-  align-items: center;
-  font-size: 0.8em;
+  align-items: flex-start;
+  font-size: .8em;
   color: var(--date-btn-text-secondary);
 }
 
@@ -761,7 +764,6 @@ a.atcb-modal-btn:focus-visible {
 
 .atcb-date-btn-content-icon {
   display: inline-block;
-  margin-top: -.3em;
   height: 0.8em;
   width: 1.3em;
   flex: 0 0 1.3em;
@@ -769,13 +771,13 @@ a.atcb-modal-btn:focus-visible {
 
 .atcb-rtl .atcb-date-btn-content-icon {
   margin-right: 0;
-  margin-left: 0.5em;
+  margin-left: .5em;
 }
 
-.atcb-initialized[lang="zh"] .atcb-date-btn-content-icon,
-.atcb-initialized[lang="ja"] .atcb-date-btn-content-icon,
-.atcb-initialized[lang="ko"] .atcb-date-btn-content-icon {
-  margin-top: -.2em;
+.atcb-initialized[lang="zh"] .atcb-date-btn-content:not(.atcb-date-btn-content-location) .atcb-date-btn-content-icon,
+.atcb-initialized[lang="ja"] .atcb-date-btn-content:not(.atcb-date-btn-content-location) .atcb-date-btn-content-icon,
+.atcb-initialized[lang="ko"] .atcb-date-btn-content:not(.atcb-date-btn-content-location) .atcb-date-btn-content-icon {
+  margin-top: .15em;
 }
 
 .atcb-date-btn-content-icon svg {

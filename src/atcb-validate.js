@@ -263,12 +263,10 @@ function atcb_validate_sequence(data, msgPrefix, i, msgSuffix) {
 
 // validate time zone
 function atcb_validate_timezone(data, msgPrefix, i, msgSuffix) {
-  if (data.dates[`${i}`].timeZone != null && data.dates[`${i}`].timeZone != '') {
-    const validTimeZones = tzlib_get_timezones();
-    if (!validTimeZones.includes(data.dates[`${i}`].timeZone)) {
-      data.validationError = msgPrefix + ' failed: invalid time zone given' + msgSuffix;
-      return false;
-    }
+  const validTimeZones = tzlib_get_timezones();
+  if (!validTimeZones.includes(data.dates[`${i}`].timeZone)) {
+    data.validationError = msgPrefix + ' failed: invalid time zone given' + msgSuffix;
+    return false;
   }
   return true;
 }

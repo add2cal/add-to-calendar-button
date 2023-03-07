@@ -181,10 +181,6 @@
   z-index: 1;
 }
 
-.atcb-button:disabled .atcb-text {
-  letter-spacing: .1em;
-}
-
 .atcb-button.atcb-no-text,
 .atcb-button:disabled {
   min-width: 0;
@@ -195,14 +191,15 @@
   text-align: right;
 }
 
+.atcb-button:focus-visible {
+  outline: 2px solid var(--keyboard-focus);
+}
+
 .atcb-button:not([disabled]):focus,
 .atcb-button:not([disabled]):hover {
   background-color: var(--btn-background-hover);
   box-shadow: var(--btn-shadow-hover);
-}
-
-.atcb-button:focus-visible {
-  outline: 2px solid var(--keyboard-focus);
+  color: var(--btn-text-hover);
 }
 
 .atcb-button.atcb-active:not(.atcb-modal-style, .atcb-dropoverlay) {
@@ -214,6 +211,7 @@
 .atcb-button.atcb-single:not([disabled]):hover {
   background-color: var(--btn-background-hover);
   box-shadow: var(--btn-shadow-active);
+  color: var(--btn-text-hover);
   margin: 0;
   padding: .78em 1.13em;
 }
@@ -252,6 +250,10 @@
 
 .atcb-text {
   overflow-wrap: anywhere;
+}
+
+.atcb-button:disabled .atcb-text {
+  letter-spacing: .1em;
 }
 
 /******************************
@@ -665,7 +667,7 @@ a.atcb-modal-btn:focus-visible{
 
 .atcb-date-btn-content {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   font-size: .8em;
   color: var(--date-btn-text-secondary);
 }
@@ -680,7 +682,6 @@ a.atcb-modal-btn:focus-visible{
 
 .atcb-date-btn-content-icon {
   display: inline-block;
-  margin-top: -.3em;
   height: 0.8em;
   width: 1.3em;
   flex: 0 0 1.3em;
@@ -691,10 +692,10 @@ a.atcb-modal-btn:focus-visible{
   margin-left: .5em;
 }
 
-.atcb-initialized[lang="zh"] .atcb-date-btn-content-icon,
-.atcb-initialized[lang="ja"] .atcb-date-btn-content-icon,
-.atcb-initialized[lang="ko"] .atcb-date-btn-content-icon {
-  margin-top: -.2em;
+.atcb-initialized[lang="zh"] .atcb-date-btn-content:not(.atcb-date-btn-content-location) .atcb-date-btn-content-icon,
+.atcb-initialized[lang="ja"] .atcb-date-btn-content:not(.atcb-date-btn-content-location) .atcb-date-btn-content-icon,
+.atcb-initialized[lang="ko"] .atcb-date-btn-content:not(.atcb-date-btn-content-location) .atcb-date-btn-content-icon {
+  margin-top: .15em;
 }
 
 .atcb-date-btn-content-icon svg {

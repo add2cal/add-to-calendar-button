@@ -186,7 +186,7 @@ definePageMeta({
             <tr id="timezone">
               <th scope="row">timeZone</th>
               <td>
-                <em>String</em><br /><br /><span class="label">{{ $t('content.config.default') }}:</span>UTC
+                <em>String</em><br /><br /><span class="label">{{ $t('content.config.default') }}:</span>GMT
               </td>
               <td v-if="locale=='en'">
                 It is not required, but recommended to add a time zone.<br />
@@ -208,8 +208,16 @@ definePageMeta({
               <td>
                 <em>String</em><br /><br /><span class="font-semibold">{{ $t('content.config.required_alt2') }}</span>
               </td>
-              <td v-if="locale=='en'">Can be anything.<br /><br />If it is a URL, the event will be classified as "online event" via the schema.org declaration.</td>
-              <td v-else>Kann alles mögliche sein.<br /><br />Wenn es eine URL ist, so wird das Event innerhalb der Schema.org-Daten als "Online Event" klassifiziert.</td>
+              <td v-if="locale=='en'">
+                Can be anything.<br /><br />
+                If it is a URL, the event will be classified as "online event" via the schema.org declaration.<br />
+                An online event is not showing up on the date button. Additionally, the time on this button type will then be converted to the user's time zone (will also be done, if location is "Global", "Worldwide", or "Online").
+              </td>
+              <td v-else>
+                Kann alles mögliche sein.<br /><br />
+                Wenn es eine URL ist, so wird das Event innerhalb der Schema.org-Daten als "Online-Event" klassifiziert.<br />
+                Ein Online-Event wird auf Date-Buttons nicht angezeigt. Zusätzlich werden in diesem Fall Zeitangaben auf diesem Button-Type in die Zeitzone des Nutzers übertragen (geschieht auch, wenn location "Global", "Worldwide" oder "Online" lautet).
+              </td>
             </tr>
             <tr id="status">
               <th scope="row">status</th>

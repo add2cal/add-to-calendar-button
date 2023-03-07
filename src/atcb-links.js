@@ -230,7 +230,7 @@ function atcb_generate_google(data) {
   const formattedDate = atcb_generate_time(data, 'clean', 'google');
   urlParts.push('dates=' + encodeURIComponent(formattedDate.start) + '%2F' + encodeURIComponent(formattedDate.end));
   // setting time zone if given and not GMT +/- something, since this is not supported by Google Calendar
-  if (data.timeZone != null && data.timeZone != '' && !/(GMT[+|-]\d{1,2}|Etc\/U|Etc\/Zulu|CET|CST6CDT|EET|EST|EST5EDT|MET|MST|MST7MDT|PST8PDT|WET)/i.test(data.timeZone)) {
+  if (!/(GMT[+|-]\d{1,2}|Etc\/U|Etc\/Zulu|CET|CST6CDT|EET|EST|EST5EDT|MET|MST|MST7MDT|PST8PDT|WET)/i.test(data.timeZone)) {
     urlParts.push('ctz=' + data.timeZone);
   }
   // add details (if set)
@@ -438,14 +438,12 @@ function atcb_generate_ical(host, data, subEvent = 'all', keyboardTrigger = fals
       if (formattedDate.allday) {
         return ';VALUE=DATE';
       }
-      if (data.dates[`${i}`].timeZone != null && data.dates[`${i}`].timeZone != '') {
-        const timeZoneBlock = tzlib_get_ical_block(data.dates[`${i}`].timeZone);
-        if (!usedTimeZones.includes(data.dates[`${i}`].timeZone)) {
-          ics_lines.push(timeZoneBlock[0]);
-        }
-        usedTimeZones.push(data.dates[`${i}`].timeZone);
-        return ';' + timeZoneBlock[1];
+      const timeZoneBlock = tzlib_get_ical_block(data.dates[`${i}`].timeZone);
+      if (!usedTimeZones.includes(data.dates[`${i}`].timeZone)) {
+        ics_lines.push(timeZoneBlock[0]);
       }
+      usedTimeZones.push(data.dates[`${i}`].timeZone);
+      return ';' + timeZoneBlock[1];
     })();
     ics_lines.push('BEGIN:VEVENT');
     ics_lines.push('UID:' + data.dates[`${i}`].uid);
