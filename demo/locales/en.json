@@ -280,7 +280,10 @@
         "step_optimize": "Optimize the Angular config",
         "config_1": "To make Angular work properly with the Web Component, you need to import the ",
         "config_2": " and update the ",
-        "config_3": " block respectively"
+        "config_3": " block respectively",
+        "binding_headline": "Proper bindings",
+        "binding_guide_1": "To bind data to a specific attribute, you need to use the syntax [attr.PARAMETER]=\"your data\".",
+        "binding_guide_2": "Based on your setup, the data flow might happen after the first rendering of the button. This is no problem, but you might see errors in the console when in debug mode, claiming there is data missing. Mind that due to this reason, binding the \"identifier\" option would not work."
       },
       "astro": {
         "headline": "How to install the Add to Calendar Button with Astro",

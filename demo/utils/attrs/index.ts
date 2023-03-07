@@ -107,7 +107,7 @@ export const mapAttrsObject = (attrs: Attrs) => {
     Object.keys(obj).forEach((key: string) => {
       const value = mapAttrsField(obj, key);
       const componentAttrKey = ComponentAttrKeyMap[key];
-      if (componentAttrKey && (value || value == '0')) {
+      if (componentAttrKey && (value || (key == LayoutAttrsKey.SIZE && value == '0'))) {
         data[componentAttrKey] = value;
       }
 
@@ -150,7 +150,7 @@ export const attrsToHtmlString = (attrs: Attrs) => {
       const defaultValue = mapAttrsField(defaultObj, key);
       const mappedValue = mapAttrsField(obj, key);
 
-      if ((mappedValue || mappedValue == '0') && (defaultValue !== mappedValue || (defaultValue === mappedValue && requiredAttrs.includes(key)))) {
+      if ((mappedValue || (key == LayoutAttrsKey.SIZE && mappedValue == '0')) && (defaultValue !== mappedValue || (defaultValue === mappedValue && requiredAttrs.includes(key)))) {
         addAttr(key, mappedValue);
       }
 

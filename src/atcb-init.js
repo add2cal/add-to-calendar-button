@@ -36,6 +36,7 @@ if (isBrowser()) {
       elem.innerHTML = template;
       this.attachShadow({ mode: 'open', delegateFocus: true });
       this.shadowRoot.append(elem.content.cloneNode(true));
+      this.loaded = false;
       this.initialized = false;
       this.data = {};
       this.error = false;
@@ -52,47 +53,17 @@ if (isBrowser()) {
         // if no data yet, we try reading attributes or the innerHTML of the host element
         try {
           this.data = atcb_read_attributes(this);
+          this.loaded = true;
         } catch (e) {
           if (this.debug) {
             atcb_render_debug_msg(this.shadowRoot, e);
           }
+          this.loaded = true;
           return;
         }
         this.data.proKey = '';
       }
-      atcbBtnCount = atcbBtnCount + 1;
-      // set identifier first, no matter further validation
-      // we use a stored one if available (the case, if destroyed before)
-      if (this.identifier && this.identifier != '') {
-        this.data.identifier = this.identifier;
-      } else {
-        // and create one in all other cases
-        if (this.data.identifier && this.data.identifier != '') {
-          if (!/^[\w\-_]+$/.test(this.data.identifier)) {
-            this.data.identifier = '';
-            if (this.debug) {
-              console.warn('Add to Calendar Button generation: identifier invalid - using auto numbers instead');
-            }
-          } else {
-            this.data.identifier = 'atcb-btn-' + this.data.identifier;
-          }
-        }
-        if (this.data.identifier == null || this.data.identifier == '') {
-          this.data.identifier = 'atcb-btn-' + atcbBtnCount;
-        }
-        // we are copying the value to presever it over re-building the data object
-        this.identifier = this.data.identifier;
-      }
-      this.setAttribute('atcb-button-id', this.data.identifier);
-      this.initialized = true;
-      try {
-        atcb_build_button(this.shadowRoot, this.data, this.debug);
-      } catch (e) {
-        if (this.debug) {
-          atcb_render_debug_msg(this.shadowRoot, e);
-        }
-        return;
-      }
+      this.initButton();
     }
 
     disconnectedCallback() {
@@ -121,13 +92,14 @@ if (isBrowser()) {
       if (this.data.proKey != null && this.data.proKey != '') {
         return;
       }
-      // also return, if this is the first initialization
-      if (!this.initialized) {
+      // also return, if this is the very first run
+      if (!this.loaded) {
         return;
       }
       // in all other cases, destroy and rebuild the button
       // mind that this only observes the actual attributes, not the innerHTML of the host (one would need to alter the instance attribute for that case)!
-      if (this.debug) {
+      if (this.debug && this.initialized) {
+        // we only mention this, if it has been initialized (with Angular, e.g., a bound variable will get infused after the initial loading)
         console.log(`${name}'s value has been changed from ${oldValue} to ${newValue}`);
       }
       atcb_cleanup(this.shadowRoot, this.data);
@@ -144,7 +116,38 @@ if (isBrowser()) {
         }
         return;
       }
-      this.data.identifier = this.identifier;
+      this.initButton();
+    }
+
+    initButton() {
+      if (!this.initialized) {
+        this.initialized = true;
+        atcbBtnCount = atcbBtnCount + 1;
+      }
+      // set identifier first, no matter further validation
+      // we use a stored one if available (the case, if destroyed before)
+      if (this.identifier && this.identifier != '') {
+        this.data.identifier = this.identifier;
+      } else {
+        // and create one in all other cases
+        if (this.data.identifier && this.data.identifier != '') {
+          if (!/^[\w\-_]+$/.test(this.data.identifier)) {
+            this.data.identifier = '';
+            if (this.debug) {
+              console.warn('Add to Calendar Button generation: identifier invalid - using auto numbers instead');
+            }
+          } else {
+            this.data.identifier = 'atcb-btn-' + this.data.identifier;
+          }
+        }
+        if (this.data.identifier == null || this.data.identifier == '') {
+          this.data.identifier = 'atcb-btn-' + atcbBtnCount;
+        }
+        // we are copying the value to presever it over re-building the data object
+        this.identifier = this.data.identifier;
+      }
+      this.setAttribute('atcb-button-id', this.data.identifier);
+      // build the button
       try {
         atcb_build_button(this.shadowRoot, this.data, this.debug);
       } catch (e) {
@@ -549,9 +552,8 @@ function atcb_init_log(pro = '', debug = false) {
     if (pro != '') {
       console.log('Add to Calendar PRO script initialized' + versionOutput + ' | https://add-to-calendar-pro.com');
     } else {
-      console.log('%cAdd to Calendar Button script initialized' + versionOutput, 'font-weight: bold;');
-      console.log('see https://add-to-calendar-button.com for details');
-      //console.log('✨ %cPRO version available at https://add-to-calendar-pro.com ← check it out!', 'font-size: 16px; font-weight: bold;');
+      console.log('%c\nAdd to Calendar Button script initialized' + versionOutput + '\n' + 'see https://add-to-calendar-button.com for details.\n', 'font-weight: bold;');
+      //console.log('✨ %cPRO version available at https://add-to-calendar-pro.com ← check it out!', 'font-weight: bold; line-height: 60px;');
     }
     atcbInitialGlobalInit = true;
   }
@@ -588,7 +590,7 @@ function atcb_set_global_event_listener(host, data) {
     lightModeMutationObserver[data.identifier].observe(document.documentElement, { attributes: true });
     lightModeMutationObserver[data.identifier].observe(document.body, { attributes: true });
   }
-  if (!atcbInitialGlobalInit && !data.blockInteraction) {
+  if (!atcbInitialGlobalInit) {
     // global listener for ESC key to close dropdown
     document.addEventListener('keyup', atcb_global_listener_keyup);
     // global listener for arrow key optionlist navigation
