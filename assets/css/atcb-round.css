@@ -230,8 +230,8 @@
 }
 
 .atcb-button.atcb-active:not(.atcb-modal-style, .atcb-dropoverlay, .atcb-no-text),
-.atcb-button.atcb-single:not(.atcb-no-text):not([disabled]):focus,
-.atcb-button.atcb-single:not(.atcb-no-text):not([disabled]):hover {
+.atcb-button.atcb-single:not(.atcb-no-text, [disabled]):focus,
+.atcb-button.atcb-single:not(.atcb-no-text, [disabled]):hover {
   background-color: var(--btn-background-hover);
   box-shadow: var(--btn-shadow-active);
   margin: 0;
