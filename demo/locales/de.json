@@ -280,7 +280,10 @@
         "step_optimize": "Optimiere die Angular-Konfiguration",
         "config_1": "Damit Angular sauber mit Web Components arbeitet, musst du das ",
         "config_2": " importieren und den ",
-        "config_3": "-Block entsprechend aktualisieren"
+        "config_3": "-Block entsprechend aktualisieren",
+        "binding_headline": "Bindings richtig nutzen",
+        "binding_guide_1": "Um eine Variable an ein bestimmtes Attribut zu binden, musst du den Syntax [attr.PARAMETER]=\"your data\" nutzen.",
+        "binding_guide_2": "Basierend auf deinem Setup werden Daten erst nach dem ersten Rendering des Buttons übermittelt. Dies ist kein Problem, führt aber zu Fehlermeldungen über fehlende Daten in der Console, sofern du dich im Debug-Modus befindest. Beachte, dass ein Binding für die \"identifier\"-Option aus diesem Grund nicht funktioniert."
       },
       "astro": {
         "headline": "Wie man den Add to Calendar Button mit Astro nutzt",

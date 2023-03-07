@@ -77,6 +77,18 @@ import { NgModule, CUSTOM_ELEMENTS_SCHEMA  } from '@angular/core';
 &gt;&lt;/add-to-calendar-button&gt;</pre
           >
         </LazyCodeBlock>
+        <h2 class="mt-20 mb-6">{{ $t('content.guide.angular.binding_headline') }}</h2>
+        <p>{{ $t('content.guide.angular.binding_guide_1') }}</p>
+        <p>{{ $t('content.guide.angular.binding_guide_2') }}</p>
+        <LazyCodeBlock class="line-numbers">
+          <pre>
+&lt;add-to-calendar-button
+  [attr.name]="{{ $t('demo_data.name_dummy') }}"
+  options="'Apple','Google'"
+  [attr.startDate]="{{ defaultDate }}"
+&gt;&lt;/add-to-calendar-button&gt;</pre
+          >
+        </LazyCodeBlock>
         <NextSteps />
       </div>
     </div>
