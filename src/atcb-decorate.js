@@ -181,6 +181,10 @@ function atcb_decorate_data_style(data) {
   if ((data.buttonStyle == 'default' || data.buttonStyle == '3d' || data.buttonStyle == 'flat') && data.listStyle == 'dropdown' && !data.hideTextLabelList && data.hideTextLabelButton) {
     data.listStyle = 'overlay';
   }
+  // force buttonsList false on date style button
+  if (data.buttonsList && data.buttonStyle == 'date') {
+    data.buttonsList = false;
+  }
   // return result
   return data;
 }
