@@ -216,7 +216,7 @@ definePageMeta({
               <td v-else>
                 Kann alles mögliche sein.<br /><br />
                 Wenn es eine URL ist, so wird das Event innerhalb der Schema.org-Daten als "Online-Event" klassifiziert.<br />
-                Ein Online-Event wird auf Date-Buttons nicht angezeigt. Zusätzlich werden in diesem Fall Zeitangaben auf diesem Button-Type in die Zeitzone des Nutzers übertragen (geschieht auch, wenn location "Global", "Worldwide" oder "Online" lautet).
+                Ein Online-Event wird auf Date-Buttons nicht angezeigt. Zusätzlich werden in diesem Fall Zeitangaben auf diesem Button-Type in die Zeitzone des Nutzers übertragen (geschieht auch bei den Werten "Global", "Worldwide" und "Online").
               </td>
             </tr>
             <tr id="status">

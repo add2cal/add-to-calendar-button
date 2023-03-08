@@ -645,6 +645,8 @@ a.atcb-modal-btn:focus-visible{
   justify-content: center;
   font-weight: 600;
   font-size: 1em;
+  padding: .3em;
+  box-sizing: border-box;
 }
 
 .atcb-subevent-btn:hover .atcb-date-btn-details {
@@ -708,8 +710,9 @@ a.atcb-modal-btn:focus-visible{
   margin-top: .3em;
 }
 
-.atcb-date-btn-content-recurr-icon {
-  padding-left: .3em;
+.atcb-date-btn-content-text span:not(.atcb-icon-ical) {
+  padding-right: .3em;
+  display: inline-block;
 }
 
 /******************************
@@ -751,7 +754,6 @@ a.atcb-modal-btn:focus-visible{
  */
 
 #atcb-bgoverlay {
-  animation: atcb-bgoverlay-animate 0.2s ease 0s 1 normal forwards;
   backdrop-filter: blur(2px);
   -webkit-backdrop-filter: blur(2px);
   background-color: var(--overlay-background);
@@ -767,12 +769,16 @@ a.atcb-modal-btn:focus-visible{
   top: 0;
   min-height: 100%;
   min-width: 100%;
-  opacity: 0;
   overflow-y: auto;
   padding: 20px 20px 130px;
   position: fixed;
   width: 100vw;
   z-index: 14000000;
+}
+
+#atcb-bgoverlay:not(dialog) {
+  animation: atcb-bgoverlay-animate 0.2s ease 0s 1 normal forwards;
+  opacity: 0;
 }
 
 #atcb-bgoverlay.atcb-no-bg {

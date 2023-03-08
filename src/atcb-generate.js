@@ -548,6 +548,9 @@ function atcb_generate_date_button(data, parent, subEvent = 'all') {
     let startDateInfo, endDateInfo, timeZoneInfoStart, timeZoneInfoEnd;
     let formattedTimeStart = {};
     let formattedTimeEnd = {};
+    let timeBlocks = [];
+    let timeZoneInfoStringStart = '';
+    let timeZoneInfoStringEnd = '';
     if (subEvent == 'all') {
       formattedTimeStart = atcb_generate_time(data.dates[0]);
       formattedTimeEnd = atcb_generate_time(data.dates[data.dates.length - 1]);
@@ -567,16 +570,22 @@ function atcb_generate_date_button(data, parent, subEvent = 'all') {
     }
     if (formattedTimeEnd.allday) {
       timeZoneInfoEnd = 'GMT';
+    }    
+    // in the case of an online event (or magic location), convert the time zone
+    const browserTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+    const magicLocationPhrases = ['global', 'world-wide', 'worldwide', 'online'];
+    if (data.dates[`${subEvent}`].onlineEvent || magicLocationPhrases.includes(data.dates[`${subEvent}`].location.toLowerCase())) {
+      timeZoneInfoStart = timeZoneInfoEnd = browserTimezone;
+    } else {
+      // determine time zone strings
+      if (!formattedTimeStart.allday && browserTimezone != timeZoneInfoStart && timeZoneInfoStart != timeZoneInfoEnd) {
+        timeZoneInfoStringStart = '(' + timeZoneInfoStart + ')';
+      }
+      if ((!formattedTimeEnd.allday && browserTimezone != timeZoneInfoEnd) || timeZoneInfoStart != timeZoneInfoEnd) {
+        timeZoneInfoStringEnd = '(' + timeZoneInfoEnd + ')';
+      }
     }
-    let timeBlocks = [];
-    let timeZoneInfoStringStart = '';
-    let timeZoneInfoStringEnd = '';
-    if (!formattedTimeStart.allday && Intl.DateTimeFormat().resolvedOptions().timeZone != timeZoneInfoStart && timeZoneInfoStart != timeZoneInfoEnd) {
-      timeZoneInfoStringStart = ' (' + timeZoneInfoStart + ')';
-    }
-    if ((!formattedTimeEnd.allday && Intl.DateTimeFormat().resolvedOptions().timeZone != timeZoneInfoEnd) || timeZoneInfoStart != timeZoneInfoEnd) {
-      timeZoneInfoStringEnd = ' (' + timeZoneInfoEnd + ')';
-    }
+    // drop the year, if it is the current one
     const now = new Date();
     const dropYearStart = (function () {
       if (startDateInfo.getFullYear() == now.getFullYear()) {
@@ -585,11 +594,12 @@ function atcb_generate_date_button(data, parent, subEvent = 'all') {
       return false;
     })();
     const dropYearEnd = (function () {      
-      if (endDateInfo.getFullYear() == now.getFullYear() || endDateInfo.getFullYear() == startDateInfo.getFullYear()) {
+      if (endDateInfo.getFullYear() == now.getFullYear()) {
         return true;
       }
       return false;
     })();
+    // get the options to format the date
     const formatOptionsStart = get_format_options(timeZoneInfoStart, dropYearStart, data.language);
     const formatOptionsEnd = get_format_options(timeZoneInfoEnd, dropYearEnd, data.language);
     // start = end
@@ -597,15 +607,24 @@ function atcb_generate_date_button(data, parent, subEvent = 'all') {
       // allday vs. timed
       if (formattedTimeStart.allday) {
         if (!dropYearStart) {
-          timeBlocks.push(startDateInfo.toLocaleDateString(data.language, formatOptionsStart.DateShort));
+          timeBlocks.push(startDateInfo.toLocaleDateString(data.language, formatOptionsStart.DateLong));
         }
       } else {
-        timeBlocks.push(startDateInfo.toLocaleString(data.language, formatOptionsStart.DateTimeShort).replace(/:00/, ''));
+        let timeString = '';
+        if (dropYearStart) {
+          timeString = startDateInfo.toLocaleString(data.language, formatOptionsStart.Time);
+        } else {
+          timeString = startDateInfo.toLocaleString(data.language, formatOptionsStart.DateTimeLong);
+        }
+        if (data.language == 'en') {
+          timeString = timeString.replace(/:00/, '');
+        }
+        timeBlocks.push(timeString);
         if (timeZoneInfoStringStart != '') {
           timeBlocks.push(timeZoneInfoStringStart);
         }
-        timeBlocks.push(' - ');
-        let timeString = endDateInfo.toLocaleTimeString(data.language, formatOptionsEnd.Time);
+        timeBlocks.push('-');
+        timeString = endDateInfo.toLocaleTimeString(data.language, formatOptionsEnd.Time);
         if (data.language == 'en') {
           timeString = timeString.replace(/:00/, '');
         }
@@ -618,9 +637,14 @@ function atcb_generate_date_button(data, parent, subEvent = 'all') {
       // start != end
       // allday vs. timed (start)
       if (formattedTimeStart.allday) {
-        timeBlocks.push(startDateInfo.toLocaleDateString(data.language, formatOptionsStart.DateShort));
+        timeBlocks.push(startDateInfo.toLocaleDateString(data.language, formatOptionsStart.DateLong));
       } else {
-        let timeString = startDateInfo.toLocaleString(data.language, formatOptionsStart.DateTimeShort);
+        let timeString = '';
+        if (dropYearStart) {
+          timeString = startDateInfo.toLocaleString(data.language, formatOptionsStart.Time);
+        } else {
+          timeString = startDateInfo.toLocaleString(data.language, formatOptionsStart.DateTimeLong);
+        }
         if (data.language == 'en') {
           timeString = timeString.replace(/:00/, '');
         }
@@ -629,7 +653,7 @@ function atcb_generate_date_button(data, parent, subEvent = 'all') {
       if (timeZoneInfoStringStart != '') {
         timeBlocks.push(timeZoneInfoStringStart);
       }
-      timeBlocks.push(' - ');
+      timeBlocks.push('-');
       // allday vs. timed (end)
       if (formattedTimeEnd.allday) {
         timeBlocks.push(endDateInfo.toLocaleDateString(data.language, formatOptionsEnd.DateLong));
@@ -660,6 +684,12 @@ function atcb_generate_date_button(data, parent, subEvent = 'all') {
       return atcb_translate_hook('date.status.cancelled', data);
     }
     return '';
+  })();
+  const recurringString = (function () {
+    if (fullTimeInfo.length == 0) {
+      return atcb_translate_hook('recurring', data) + ' &#x27F3;';
+    }
+    return '&#x27F3;';
   })();
   if (subEvent == 'all') {
     subEvent = 0;
@@ -706,7 +736,7 @@ function atcb_generate_date_button(data, parent, subEvent = 'all') {
   btnHeadline.textContent = data.dates[`${subEvent}`].name;
   btnDetails.append(btnHeadline);
   // location line
-  if ((data.location != null && data.location != '' && !data.dates[`${subEvent}`].onlineEvent) || cancelledInfo != '') {
+  if ((data.dates[`${subEvent}`].location != null && data.dates[`${subEvent}`].location != '' && !data.dates[`${subEvent}`].onlineEvent) || cancelledInfo != '') {
     const btnLocation = document.createElement('div');
     btnLocation.classList.add('atcb-date-btn-content');
     btnDetails.append(btnLocation);
@@ -721,11 +751,26 @@ function atcb_generate_date_button(data, parent, subEvent = 'all') {
       btnLocationIcon.innerHTML = atcbIcon['location'];
       btnLocation.append(btnLocationIcon);
       const btnLocationText = document.createElement('span');
-      btnLocationText.textContent = data.location;
+      btnLocationText.textContent = data.dates[`${subEvent}`].location;
       btnLocation.append(btnLocationText);
     }
   } else {
-    btnHeadline.style.cssText = '-webkit-line-clamp: 2';
+    // in case we would not show date details as well, show description instead
+    if (data.dates[`${subEvent}`].description != '' && fullTimeInfo.length == 0 && (data.recurrence == null || data.recurrence == '')) {
+      const btnDescription = document.createElement('div');
+      btnDescription.classList.add('atcb-date-btn-content');
+      btnDescription.textContent = data.dates[`${subEvent}`].description;
+      btnDescription.style.cssText = 'overflow: hidden; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;';
+      btnDetails.append(btnDescription);
+    } else {
+      // in other cases, at least give the headline the option to grow
+      btnHeadline.style.cssText = '-webkit-line-clamp: 2;';
+      // and center, if nothing else is here
+      if (fullTimeInfo.length == 0 && (data.recurrence == null || data.recurrence == '')) {
+        btnRight.style.alignSelf = 'center';
+        btnHeadline.style.cssText = 'text-align: center; -webkit-line-clamp: 2;';
+      }
+    }
   }
   // datetime line
   if (fullTimeInfo.length > 0 || (data.recurrence != null && data.recurrence != '')) {
@@ -737,6 +782,7 @@ function atcb_generate_date_button(data, parent, subEvent = 'all') {
     btnDateTimeIcon.innerHTML = atcbIcon['ical'];
     btnDateTime.append(btnDateTimeIcon);
     const btnDateTimeText = document.createElement('span');
+    btnDateTimeText.classList.add('atcb-date-btn-content-text');
     btnDateTime.append(btnDateTimeText);
     fullTimeInfo.forEach(function (block) {
       const btnDateTimeTextBlock = document.createElement('span');
@@ -745,9 +791,8 @@ function atcb_generate_date_button(data, parent, subEvent = 'all') {
     });
     if (data.recurrence != null && data.recurrence != '') {
       const recurSign = document.createElement('span');
-      recurSign.classList.add('atcb-date-btn-content-recurr-icon');
+      recurSign.innerHTML = recurringString;
       btnDateTimeText.append(recurSign);
-      recurSign.innerHTML = '&#x27F3;';
     }
   }
   // hover text
@@ -772,19 +817,10 @@ function get_format_options(timeZoneInfo, dropYear = false, language = 'en') {
   })();
   if (dropYear) {
     return {
-      DateShort: {
-        timeZone: timeZoneInfo
-      },
       DateLong: {
         timeZone: timeZoneInfo,
         month: 'short',
         day: 'numeric',
-      },
-      DateTimeShort: {
-        timeZone: timeZoneInfo,
-        hour: 'numeric',
-        minute: '2-digit',
-        hourCycle: hoursFormat,
       },
       DateTimeLong: {
         timeZone: timeZoneInfo,
@@ -803,22 +839,11 @@ function get_format_options(timeZoneInfo, dropYear = false, language = 'en') {
     };
   }
   return {
-    DateShort: {
-      timeZone: timeZoneInfo,
-      year: 'numeric',
-    },
     DateLong: {
       timeZone: timeZoneInfo,
       year: 'numeric',
       month: 'numeric',
       day: 'numeric',
-    },
-    DateTimeShort: {
-      timeZone: timeZoneInfo,
-      year: 'numeric',
-      hour: 'numeric',
-      minute: '2-digit',
-      hourCycle: hoursFormat,
     },
     DateTimeLong: {
       timeZone: timeZoneInfo,
