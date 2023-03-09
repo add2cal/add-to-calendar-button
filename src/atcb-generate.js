@@ -574,7 +574,7 @@ function atcb_generate_date_button(data, parent, subEvent = 'all') {
     // in the case of an online event (or magic location), convert the time zone
     const browserTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
     const magicLocationPhrases = ['global', 'world-wide', 'worldwide', 'online'];
-    if (data.dates[`${subEvent}`].onlineEvent || magicLocationPhrases.includes(data.dates[`${subEvent}`].location.toLowerCase())) {
+    if (data.dates[`${subEvent}`].onlineEvent || (data.dates[`${subEvent}`].location != '' && magicLocationPhrases.includes(data.dates[`${subEvent}`].location.toLowerCase()))) {
       timeZoneInfoStart = timeZoneInfoEnd = browserTimezone;
     } else {
       // determine time zone strings
@@ -811,9 +811,9 @@ function atcb_generate_date_button(data, parent, subEvent = 'all') {
 function get_format_options(timeZoneInfo, dropYear = false, language = 'en') {
   const hoursFormat = (function () {
     if (language == 'en') {
-      return 'h11';
+      return 'h12'; // 12am -> 1am -> .. -> 12pm -> 1pm -> ...
     }
-    return 'h23';
+    return 'h23'; // 00:00 -> 01:00 -> 12:00 -> 13:00 -> ...
   })();
   if (dropYear) {
     return {
