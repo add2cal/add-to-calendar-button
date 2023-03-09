@@ -497,7 +497,9 @@ function atcb_decorate_data_button_status_handling(data) {
     // in other cases, all dates would be overdue and therefore also the overall event
     return true;
   })();
+  data.allOverdue = false;
   if (overdue) {
+    data.allOverdue = true;
     if (data.pastDateHandling == 'disable') {
       data.disabled = true;
     } else if (data.pastDateHandling == 'hide') {

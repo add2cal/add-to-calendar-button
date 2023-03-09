@@ -551,12 +551,12 @@ function atcb_generate_date_button(data, parent, subEvent = 'all') {
     let timeBlocks = [];
     let timeZoneInfoStringStart = '';
     let timeZoneInfoStringEnd = '';
-    if (subEvent == 'all') {
+    if (subEvent == 'all') { // we are looking at multiple sub-events, which should be considered all together
       formattedTimeStart = atcb_generate_time(data.dates[0]);
       formattedTimeEnd = atcb_generate_time(data.dates[data.dates.length - 1]);
       timeZoneInfoStart = data.dates[0].timeZone;
       timeZoneInfoEnd = data.dates[data.dates.length - 1].timeZone;
-    } else {
+    } else { // we are looking at 1 or many sub-events, but we consider only one specific
       formattedTimeStart = atcb_generate_time(data.dates[`${subEvent}`]);
       formattedTimeEnd = formattedTimeStart;
       timeZoneInfoStart = data.dates[`${subEvent}`].timeZone;
@@ -574,7 +574,28 @@ function atcb_generate_date_button(data, parent, subEvent = 'all') {
     // in the case of an online event (or magic location), convert the time zone
     const browserTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
     const magicLocationPhrases = ['global', 'world-wide', 'worldwide', 'online'];
-    if (data.dates[`${subEvent}`].onlineEvent || (data.dates[`${subEvent}`].location != '' && magicLocationPhrases.includes(data.dates[`${subEvent}`].location.toLowerCase()))) {
+    const convertable = (function () {
+      let i = 0;
+      let j = data.dates.length - 1;
+      if (subEvent != 'all') {
+        i = j = subEvent;
+      }
+      for (i; i <= j; i++) {
+        const magicLocation = (function () {
+          if (data.dates[`${i}`].location != null && data.dates[`${i}`].location != '') {
+            if (magicLocationPhrases.includes(data.dates[`${i}`].location.toLowerCase())) {
+              return true;
+            }
+          }
+          return false;
+        })();
+        if (!magicLocation && !data.dates[`${i}`].onlineEvent) {
+          return false;
+        }
+      }
+      return true;
+    })();
+    if (convertable) {
       timeZoneInfoStart = timeZoneInfoEnd = browserTimezone;
     } else {
       // determine time zone strings
@@ -674,8 +695,10 @@ function atcb_generate_date_button(data, parent, subEvent = 'all') {
     if (subEvent != 'all' && data.dates[`${subEvent}`].status == 'CANCELLED') {
       return atcb_translate_hook('date.status.cancelled', data) + '<br>' + atcb_translate_hook('date.status.cancelled.cta', data);
     }
-    if (data.dates[`${subEvent}`].overdue && data.pastDateHandling != 'none') {
-      return atcb_translate_hook('expired', data);
+    if (data.pastDateHandling != 'none') {
+      if ((subEvent == 'all' && data.allOverdue) || (subEvent != 'all' && data.dates[`${subEvent}`].overdue)) {
+        return atcb_translate_hook('expired', data);
+      }
     }
     return '+ ' + atcb_translate_hook('label.addtocalendar', data);
   })();
