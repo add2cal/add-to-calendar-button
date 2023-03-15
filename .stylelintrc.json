@@ -1,5 +1,5 @@
 {
-  "extends": ["stylelint-config-standard", "stylelint-config-prettier"],
+  "extends": ["stylelint-config-standard"],
   "ignoreFiles": ["**/*.min.css"],
   "rules": {
     "selector-class-pattern": null,
