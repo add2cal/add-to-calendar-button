@@ -367,7 +367,7 @@ function atcb_decorate_data_extend(data) {
     if (data.dates[`${i}`].location == null && data.location != null) {
       data.dates[`${i}`].location = data.location;
     }
-    // for the location, we also set the online flag here    
+    // for the location, we also set the online flag here
     if (data.dates[`${i}`].location && data.dates[`${i}`].location.startsWith('http')) {
       data.dates[`${i}`].onlineEvent = true;
     } else {

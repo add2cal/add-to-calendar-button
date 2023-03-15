@@ -551,12 +551,14 @@ function atcb_generate_date_button(data, parent, subEvent = 'all') {
     let timeBlocks = [];
     let timeZoneInfoStringStart = '';
     let timeZoneInfoStringEnd = '';
-    if (subEvent == 'all') { // we are looking at multiple sub-events, which should be considered all together
+    if (subEvent == 'all') {
+      // we are looking at multiple sub-events, which should be considered all together
       formattedTimeStart = atcb_generate_time(data.dates[0]);
       formattedTimeEnd = atcb_generate_time(data.dates[data.dates.length - 1]);
       timeZoneInfoStart = data.dates[0].timeZone;
       timeZoneInfoEnd = data.dates[data.dates.length - 1].timeZone;
-    } else { // we are looking at 1 or many sub-events, but we consider only one specific
+    } else {
+      // we are looking at 1 or many sub-events, but we consider only one specific
       formattedTimeStart = atcb_generate_time(data.dates[`${subEvent}`]);
       formattedTimeEnd = formattedTimeStart;
       timeZoneInfoStart = data.dates[`${subEvent}`].timeZone;
@@ -570,7 +572,7 @@ function atcb_generate_date_button(data, parent, subEvent = 'all') {
     }
     if (formattedTimeEnd.allday) {
       timeZoneInfoEnd = 'GMT';
-    }    
+    }
     // in the case of an online event (or magic location), convert the time zone
     const browserTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
     const magicLocationPhrases = ['global', 'world-wide', 'worldwide', 'online'];
@@ -614,7 +616,7 @@ function atcb_generate_date_button(data, parent, subEvent = 'all') {
       }
       return false;
     })();
-    const dropYearEnd = (function () {      
+    const dropYearEnd = (function () {
       if (endDateInfo.getFullYear() == now.getFullYear()) {
         return true;
       }
@@ -679,7 +681,7 @@ function atcb_generate_date_button(data, parent, subEvent = 'all') {
       if (formattedTimeEnd.allday) {
         timeBlocks.push(endDateInfo.toLocaleDateString(data.language, formatOptionsEnd.DateLong));
       } else {
-        let timeString = endDateInfo.toLocaleString(data.language, formatOptionsEnd.DateTimeLong)
+        let timeString = endDateInfo.toLocaleString(data.language, formatOptionsEnd.DateTimeLong);
         if (data.language == 'en') {
           timeString = timeString.replace(/:00/, '');
         }

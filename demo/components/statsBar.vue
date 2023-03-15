@@ -124,9 +124,9 @@ const loadJsdelivrStats = async () => {
 </script>
 
 <template>
-  <div class="block px-8 sm:hidden pb-16 -mt-16">
+  <div class="-mt-16 block px-8 pb-16 sm:hidden">
     <div class="inline-block">
-      <div class="fade-in flex m-2 py-3 px-5 bg-zinc-800/70 rounded-full text-white">
+      <div class="fade-in m-2 flex rounded-full bg-zinc-800/70 py-3 px-5 text-white">
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="mr-2 inline-block h-4 w-4 self-center">
           <path
             fill-rule="evenodd"
@@ -134,12 +134,12 @@ const loadJsdelivrStats = async () => {
             clip-rule="evenodd"
           />
         </svg>
-        <span class="underline decoration-primary font-semibold text-md self-center decoration-2 underline-offset-4">{{ isLoading ? '...' : $n(data.github.stars) }}</span>
-        <span class="pl-2 font-normal text-xs text-zinc-100 self-center">{{ $t('labels.stats.stars') }}</span>
+        <span class="text-md self-center font-semibold underline decoration-primary decoration-2 underline-offset-4">{{ isLoading ? '...' : $n(data.github.stars) }}</span>
+        <span class="self-center pl-2 text-xs font-normal text-zinc-100">{{ $t('labels.stats.stars') }}</span>
       </div>
     </div>
     <div class="inline-block">
-      <div class="fade-in flex m-2 py-3 px-5 bg-zinc-800/70 rounded-full text-white">
+      <div class="fade-in m-2 flex rounded-full bg-zinc-800/70 py-3 px-5 text-white">
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="mr-2 inline-block h-4 w-4 self-center">
           <path
             d="M17.004 10.407c.138.435-.216.842-.672.842h-3.465a.75.75 0 01-.65-.375l-1.732-3c-.229-.396-.053-.907.393-1.004a5.252 5.252 0 016.126 3.537zM8.12 8.464c.307-.338.838-.235 1.066.16l1.732 3a.75.75 0 010 .75l-1.732 3.001c-.229.396-.76.498-1.067.16A5.231 5.231 0 016.75 12c0-1.362.519-2.603 1.37-3.536zM10.878 17.13c-.447-.097-.623-.608-.394-1.003l1.733-3.003a.75.75 0 01.65-.375h3.465c.457 0 .81.408.672.843a5.252 5.252 0 01-6.126 3.538z"
@@ -150,12 +150,12 @@ const loadJsdelivrStats = async () => {
             clip-rule="evenodd"
           />
         </svg>
-        <span class="underline decoration-primary font-semibold text-md self-center decoration-2 underline-offset-4">{{ isLoading ? '...' : $n(data.npm.totalInstallations) }}</span>
-        <span class="pl-2 font-normal text-xs text-zinc-100 self-center">{{ $t('labels.stats.npm_total') }}</span>
+        <span class="text-md self-center font-semibold underline decoration-primary decoration-2 underline-offset-4">{{ isLoading ? '...' : $n(data.npm.totalInstallations) }}</span>
+        <span class="self-center pl-2 text-xs font-normal text-zinc-100">{{ $t('labels.stats.npm_total') }}</span>
       </div>
     </div>
-    <div class="xs:inline-block hidden">
-      <div class="fade-in flex m-2 py-3 px-5 bg-zinc-800/70 rounded-full text-white">
+    <div class="hidden xs:inline-block">
+      <div class="fade-in m-2 flex rounded-full bg-zinc-800/70 py-3 px-5 text-white">
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="mr-2 inline-block h-4 w-4 self-center">
           <path
             fill-rule="evenodd"
@@ -163,20 +163,20 @@ const loadJsdelivrStats = async () => {
             clip-rule="evenodd"
           />
         </svg>
-        <span class="underline decoration-primary font-semibold text-md self-center decoration-2 underline-offset-4">{{ isLoading ? '...' : $n(data.jsdelivr.montlyHits) }}</span>
-        <span class="pl-2 font-normal text-xs text-zinc-100 self-center">{{ $t('labels.stats.cdn') }}</span>
+        <span class="text-md self-center font-semibold underline decoration-primary decoration-2 underline-offset-4">{{ isLoading ? '...' : $n(data.jsdelivr.montlyHits) }}</span>
+        <span class="self-center pl-2 text-xs font-normal text-zinc-100">{{ $t('labels.stats.cdn') }}</span>
       </div>
     </div>
   </div>
 
-  <div class="hidden sm:block -mt-2 h-[68px] w-full drop-shadow-xl">
+  <div class="-mt-2 hidden h-[68px] w-full drop-shadow-xl sm:block">
     <svg version="1.1" viewBox="0 0 1500 68" preserveAspectRatio="none" class="h-[68px] w-full fill-zinc-600 dark:fill-zinc-700" xmlns="http://www.w3.org/2000/svg">
       <path
         d="m0 62.572c129.98-0.48579 135.88 6.2187 368.8 4.7672 290.46-1.81 220.13-3.7434 330.2-4.0747 124.07-0.37343 248.13 2.3891 372.2 2.3522 249.15-2.6139 166.97-2.0838 428.8 0.8059v-60.029c-230.74-0.16215-448.31-1.9959-643-4.3042-226.2 1.0603-428.55 0.14121-642.8 2.97-99.725 1.3167-95.683-0.28568-214.2-4.6058z"
       />
     </svg>
   </div>
-  <div class="mt-[-54px] h-[40px] hidden sm:block ">
+  <div class="mt-[-54px] hidden h-[40px] sm:block ">
     <div class="relative mx-auto flex h-[40px] w-full items-center overflow-hidden">
       <div class="z-10 p-2 pr-3">
         <div class="whitespace-nowrap rounded-md bg-red-800 py-1 px-2 text-xs font-semibold text-zinc-100 shadow">
