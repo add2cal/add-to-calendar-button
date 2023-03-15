@@ -46,7 +46,7 @@ const localePath = useLocalePath();
         </div>
       </div>
       <div class="flex justify-end overflow-hidden">
-        <div class="w-full max-w-full pt-56 xs:pt-40 sm:pt-28 md:max-w-[450px] md:pt-28 lg:max-w-[600px] lg:pt-32 xl:max-w-[750px] xl:pt-12">
+        <div class="w-full max-w-full pt-64 xs:pt-48 sm:pt-28 md:max-w-[450px] md:pt-28 lg:max-w-[600px] lg:pt-32 xl:max-w-[750px] xl:pt-12">
           <svg version="1.1" style="width:100%; height:auto; min-height:300px;" viewBox="0 0 808 572" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
             <g transform="translate(-186.89 -51.542)" opacity=".62861">
               <path
@@ -59,6 +59,14 @@ const localePath = useLocalePath();
         </div>
       </div>
     </div>
+    <div>
+      <ClientOnly>
+        <StatsBar />
+        <template #fallback>
+          <StatsBarPlaceholder />
+        </template>
+      </ClientOnly>
+    </div>
   </div>
   <div :class="view.atTopOfPage ? 'top-[-80px]' : 'top-0'" class="fixed z-50 w-full bg-gradient-to-tr from-primary via-primary to-primary-light py-3 shadow-xl transition-all dark:from-primary dark:via-primary-dark dark:to-primary-dark lg:hidden">
     <div class="container flex justify-between">
@@ -67,14 +75,6 @@ const localePath = useLocalePath();
       </div>
       <NavigationBar />
     </div>
-  </div>
-  <div class="hidden sm:block">
-    <ClientOnly>
-      <StatsBar />
-      <template #fallback>
-        <StatsBarPlaceholder />
-      </template>
-    </ClientOnly>
   </div>
 </template>
 
