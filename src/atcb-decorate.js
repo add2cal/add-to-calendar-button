@@ -12,7 +12,7 @@
  */
 
 import { tzlib_get_offset } from 'timezones-ical-library';
-import { isiOS, isBrowser, atcbValidRecurrOptions, atcbInvalidSubscribeOptions, atcbiOSInvalidOptions, atcbWcBooleanParams } from './atcb-globals.js';
+import { isiOS, isBrowser, isMobile, atcbValidRecurrOptions, atcbInvalidSubscribeOptions, atcbiOSInvalidOptions, atcbWcBooleanParams } from './atcb-globals.js';
 import { atcb_format_datetime, atcb_rewrite_html_elements, atcb_generate_uuid } from './atcb-util.js';
 import { availableLanguages, rtlLanguages } from './atcb-i18n';
 
@@ -116,6 +116,7 @@ function atcb_decorate_data_options(data) {
   const newOptions = [];
   data.optionLabels = [];
   let iCalGiven = false;
+  let msGiven = false;
   let appleGiven = false;
   for (let i = 0; i < data.options.length; i++) {
     // preparing the input options and labels
@@ -144,8 +145,20 @@ function atcb_decorate_data_options(data) {
     ) {
       continue;
     }
+    // TMP WORKAROUND: on mobile devices for msteams, ms365, and outlookcom, we exchange this for the iCal option - since the Microsoft web apps are buggy on mobile devices (see https://github.com/add2cal/add-to-calendar-button/discussions/113)
+    if (isMobile() && (optionName == 'msteams' || optionName == 'ms365' || optionName == 'outlookcom')) {
+      msGiven = true;
+      continue;
+    }
     newOptions.push(optionName);
     data.optionLabels.push(optionLabel);
+  }
+  // TMP WORKAROUND: add the iCal option as described above, but not if this would get replaced by Apple again
+  if (isMobile() && !iCalGiven && msGiven) {
+    iCalGiven = true;
+    if (!isiOS()) {
+      newOptions.push('ical');
+    }
   }
   // for iOS, we force the Apple option (if it is not there, but iCal was)
   if (isiOS() && iCalGiven && !appleGiven) {
@@ -307,14 +320,22 @@ function atcb_decorate_data_meta(data) {
 
 function atcb_decorate_data_description(data, i) {
   if (data.dates[`${i}`].description != null && data.dates[`${i}`].description != '') {
-    // store a clean description copy without the URL magic for iCal
+    // remove any "wrong" line breaks
+    data.dates[`${i}`].description = data.dates[`${i}`].description.replace(/(\\r\\n|\\n|\\r|<br(\s|\s\/|\/|)>)/g, '');
+    // store a clean description copy without the URL magic for Yahoo, MS Teams, ...
     data.dates[`${i}`].descriptionHtmlFree = atcb_rewrite_html_elements(data.dates[`${i}`].description, true);
+    // ... and iCal
+    data.dates[`${i}`].descriptionHtmlFreeICal = atcb_rewrite_html_elements(data.dates[`${i}`].description, true, true);
     // ...and transform pseudo elements for the regular one
     data.dates[`${i}`].description = atcb_rewrite_html_elements(data.dates[`${i}`].description);
   } else {
-    // if not given per sub-date, we copy from the global one or set '', if not provided at all
+    // if not given per sub-event, we copy from the global one or set '', if not provided at all
     if (data.dates[`${i}`].description == null && data.description != null && data.description != '') {
+      // remove any "wrong" line breaks
+      data.description = data.description.replace(/(\\r\\n|\\n|\\r|<br(\s|\s\/|\/|)>)/g, '');
+      // set data for sub-event
       data.dates[`${i}`].descriptionHtmlFree = atcb_rewrite_html_elements(data.description, true);
+      data.dates[`${i}`].descriptionHtmlFreeICal = atcb_rewrite_html_elements(data.description, true, true);
       data.dates[`${i}`].description = atcb_rewrite_html_elements(data.description);
     } else {
       data.dates[`${i}`].descriptionHtmlFree = data.dates[`${i}`].description = '';

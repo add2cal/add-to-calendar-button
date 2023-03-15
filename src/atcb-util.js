@@ -194,13 +194,19 @@ function atcb_validEmail(email, mx = false) {
 }
 
 // SHARED FUNCTION TO REPLACE HTML PSEUDO ELEMENTS
-function atcb_rewrite_html_elements(content, clear = false) {
-  // standardize any line breaks
-  content = content.replace(/<br\s*\/?>/gi, '\n');
-  // remove any pseudo elements, if necessary
+function atcb_rewrite_html_elements(content, clear = false, iCalBreaks = false) {
   if (clear) {
-    content = content.replace(/\[(|\/)(url|br|hr|p|b|strong|u|i|em|li|ul|ol|h\d)\]|((\|.*)\[\/url\])/gi, '');
-    content = content.replace(/\{(|\/)(url|br|hr|p|b|strong|u|i|em|li|ul|ol|h\d)\}|((\|.*)\{\/url\})/gi, '');
+    // remove any pseudo elements
+    content = content.replace(/\[(|\/)(url|hr|p|b|strong|u|i|em|li|ul|ol|h\d)\]|((\|.*)\[\/url\])/gi, '');
+    content = content.replace(/\{(|\/)(url|hr|p|b|strong|u|i|em|li|ul|ol|h\d)\}|((\|.*)\{\/url\})/gi, '');
+    // for line breaks, we add a space instead (or \\n for iCal)
+    if (iCalBreaks) {
+      content = content.replace(/(\[br\]|\{br\})/gi, '\\n');
+    } else {
+      content = content.replace(/(\[br\]|\{br\})/gi, ' ');
+    }
+    // also remove any special characters
+    content = content.replace(/&[#a-zA-Z0-9]{1,9};/gi, '');
     // and build html for the rest
     // supporting: br, hr, p, strong, u, i, em, li, ul, ol, h (like h1, h2, h3, ...), url (= a)
   } else {
@@ -226,6 +232,12 @@ function atcb_parse_url_code(input) {
     }
   })();
   return '<a href="' + urlText[0] + '" target="' + atcbDefaultTarget + '" rel="noopener">' + text + '</a>';
+}
+
+// SHARED FUNCTION TO FORMAT iCAL TEXT
+function atcb_rewrite_ical_text(content) {
+  content = content.replace(/"/gi, '');
+  return content;
 }
 
 // SHARED FUNCTION TO CALCULATE THE POSITION OF THE DROPDOWN LIST
@@ -401,6 +413,7 @@ export {
   atcb_secure_url,
   atcb_validEmail,
   atcb_rewrite_html_elements,
+  atcb_rewrite_ical_text,
   atcb_position_list,
   atcb_manage_body_scroll,
   atcb_set_fullsize,
