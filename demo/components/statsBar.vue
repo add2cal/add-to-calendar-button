@@ -176,7 +176,7 @@ const loadJsdelivrStats = async () => {
       />
     </svg>
   </div>
-  <div class="mt-[-54px] hidden h-[40px] sm:block ">
+  <div class="mt-[-54px] hidden h-[40px] sm:block">
     <div class="relative mx-auto flex h-[40px] w-full items-center overflow-hidden">
       <div class="z-10 p-2 pr-3">
         <div class="whitespace-nowrap rounded-md bg-red-800 py-1 px-2 text-xs font-semibold text-zinc-100 shadow">
