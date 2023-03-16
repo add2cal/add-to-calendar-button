@@ -239,7 +239,7 @@ function atcb_rewrite_ical_text(content, truncate = true, inQuotes = false) {
   if (inQuotes) {
     content = content.replace(/"/g, '');
   } else {
-    content = content.replace(/(,|;)/g, '\\$1');
+    content = content.replace(/\\/g, '\\\\').replace(/(,|;)/g, '\\$1');
   }
   if (truncate) {
     // adjusting for intended line breaks + making sure it does not exceed 75 characters per line
