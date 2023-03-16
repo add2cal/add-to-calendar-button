@@ -74,7 +74,7 @@ module.exports = function (grunt) {
         options: {
           prefix: 'Version:.',
         },
-        src: ['demo/src/components/FooterArea.vue'],
+        src: ['demo/components/footer.vue'],
       },
     },
     // cleans old built files
