@@ -3,7 +3,7 @@
  *  Add to Calendar Button
  *  ++++++++++++++++++++++
  *
- *  Version: 2.2.3
+ *  Version: 2.2.4
  *  Creator: Jens Kuerschner (https://jenskuerschner.de)
  *  Project: https://github.com/add2cal/add-to-calendar-button
  *  License: Elastic License 2.0 (ELv2) (https://github.com/add2cal/add-to-calendar-button/blob/main/LICENSE.txt)
@@ -235,8 +235,16 @@ function atcb_parse_url_code(input) {
 }
 
 // SHARED FUNCTION TO FORMAT iCAL TEXT
-function atcb_rewrite_ical_text(content) {
-  content = content.replace(/"/gi, '');
+function atcb_rewrite_ical_text(content, truncate = true, inQuotes = false) {
+  if (inQuotes) {
+    content = content.replace(/"/g, '');
+  } else {
+    content = content.replace(/(,|;)/g, '\\$1');
+  }
+  if (truncate) {
+    // adjusting for intended line breaks + making sure it does not exceed 75 characters per line
+    content = content.replace(/.{60}/g, '$&' + '\r\n ');
+  }
   return content;
 }
 

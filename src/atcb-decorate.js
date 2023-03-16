@@ -3,7 +3,7 @@
  *  Add to Calendar Button
  *  ++++++++++++++++++++++
  *
- *  Version: 2.2.3
+ *  Version: 2.2.4
  *  Creator: Jens Kuerschner (https://jenskuerschner.de)
  *  Project: https://github.com/add2cal/add-to-calendar-button
  *  License: Elastic License 2.0 (ELv2) (https://github.com/add2cal/add-to-calendar-button/blob/main/LICENSE.txt)
@@ -12,7 +12,7 @@
  */
 
 import { tzlib_get_offset } from 'timezones-ical-library';
-import { isiOS, isBrowser, isMobile, atcbValidRecurrOptions, atcbInvalidSubscribeOptions, atcbiOSInvalidOptions, atcbWcBooleanParams } from './atcb-globals.js';
+import { isiOS, isBrowser, atcbValidRecurrOptions, atcbInvalidSubscribeOptions, atcbiOSInvalidOptions, atcbWcBooleanParams } from './atcb-globals.js';
 import { atcb_format_datetime, atcb_rewrite_html_elements, atcb_generate_uuid } from './atcb-util.js';
 import { availableLanguages, rtlLanguages } from './atcb-i18n';
 
@@ -116,7 +116,6 @@ function atcb_decorate_data_options(data) {
   const newOptions = [];
   data.optionLabels = [];
   let iCalGiven = false;
-  let msGiven = false;
   let appleGiven = false;
   for (let i = 0; i < data.options.length; i++) {
     // preparing the input options and labels
@@ -145,20 +144,8 @@ function atcb_decorate_data_options(data) {
     ) {
       continue;
     }
-    // TMP WORKAROUND: on mobile devices for msteams, ms365, and outlookcom, we exchange this for the iCal option - since the Microsoft web apps are buggy on mobile devices (see https://github.com/add2cal/add-to-calendar-button/discussions/113)
-    if (isMobile() && (optionName == 'msteams' || optionName == 'ms365' || optionName == 'outlookcom')) {
-      msGiven = true;
-      continue;
-    }
     newOptions.push(optionName);
     data.optionLabels.push(optionLabel);
-  }
-  // TMP WORKAROUND: add the iCal option as described above, but not if this would get replaced by Apple again
-  if (isMobile() && !iCalGiven && msGiven) {
-    iCalGiven = true;
-    if (!isiOS()) {
-      newOptions.push('ical');
-    }
   }
   // for iOS, we force the Apple option (if it is not there, but iCal was)
   if (isiOS() && iCalGiven && !appleGiven) {
@@ -329,11 +316,11 @@ function atcb_decorate_data_description(data, i) {
     // ...and transform pseudo elements for the regular one
     data.dates[`${i}`].description = atcb_rewrite_html_elements(data.dates[`${i}`].description);
   } else {
-    // if not given per sub-event, we copy from the global one or set '', if not provided at all
+    // if not given per subEvent, we copy from the global one or set '', if not provided at all
     if (data.dates[`${i}`].description == null && data.description != null && data.description != '') {
       // remove any "wrong" line breaks
       data.description = data.description.replace(/(\\r\\n|\\n|\\r|<br(\s|\s\/|\/|)>)/g, '');
-      // set data for sub-event
+      // set data for subEvent
       data.dates[`${i}`].descriptionHtmlFree = atcb_rewrite_html_elements(data.description, true);
       data.dates[`${i}`].descriptionHtmlFreeICal = atcb_rewrite_html_elements(data.description, true, true);
       data.dates[`${i}`].description = atcb_rewrite_html_elements(data.description);
@@ -387,7 +374,7 @@ function atcb_decorate_data_extend(data) {
   if (data.recurrence != null && data.recurrence != '') {
     data.dates[0].recurrence = data.recurrence;
   }
-  // last but not least, we sort any sub-events by start data ascending
+  // last but not least, we sort any subEvent by start data ascending
   if (data.dates.length > 1) {
     data.dates.sort((a, b) => a.timestamp - b.timestamp);
   }

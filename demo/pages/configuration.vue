@@ -90,14 +90,14 @@ definePageMeta({
                 You can also override the label per option here. Simply add a pipe between the option name and your label (e.g. "Google|My custom Google Label").<br />
                 If you only specify 1 calendar type, the button would show the calendar's icon instead of the default one and redirect directly instead of opening a list (singleton case).<br /><br />
                 Some options might be dynamically excluded based on other settings!<br />
-                Microsoft Services will be replaced by "iCal" on mobile devices. "iCal" will be replaced by "Apple" on iOS devices.
+                "iCal" will be replaced by "Apple" on iOS devices.
               </td>
               <td v-else>
                 Array an Kalender-Arten, die in der Liste erscheinen.<br /><br />
                 Du kannst das Label jeweils direkt überschreiben. Füge hierzu ein Pipe-Symbol nach dem Kalender-Namen, gefolgt von deinem Label-Text ein (bspw. "Google|Mein Google-Label").<br />
                 Sofern du nur 1 Option definierst wird der Button das Icon dieser Option anzeigen sowie direkt die jeweilige Kalender-Aktion auslösen und keine Auswahlliste öffnen (Singleton-Case).<br /><br />
                 Optionen können deaktiviert werden, wenn sie aufgrund anderere Einstellungen nicht unterstützt werden!<br />
-                Auf Mobilgeräten werden Microsoft-Optionen durch "iCal" und auf iOS-Geräten die iCal-Option durch "Apple" ersetzt.
+                Auf iOS-Geräten wird die iCal-Option durch "Apple" ersetzt.
               </td>
             </tr>
             <tr id="name">
