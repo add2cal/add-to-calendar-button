@@ -3,7 +3,7 @@
  *  Add to Calendar Button
  *  ++++++++++++++++++++++
  *
- *  Version: 2.2.3
+ *  Version: 2.2.4
  *  Creator: Jens Kuerschner (https://jenskuerschner.de)
  *  Project: https://github.com/add2cal/add-to-calendar-button
  *  License: Elastic License 2.0 (ELv2) (https://github.com/add2cal/add-to-calendar-button/blob/main/LICENSE.txt)
@@ -307,14 +307,22 @@ function atcb_decorate_data_meta(data) {
 
 function atcb_decorate_data_description(data, i) {
   if (data.dates[`${i}`].description != null && data.dates[`${i}`].description != '') {
-    // store a clean description copy without the URL magic for iCal
+    // remove any "wrong" line breaks
+    data.dates[`${i}`].description = data.dates[`${i}`].description.replace(/(\\r\\n|\\n|\\r|<br(\s|\s\/|\/|)>)/g, '');
+    // store a clean description copy without the URL magic for Yahoo, MS Teams, ...
     data.dates[`${i}`].descriptionHtmlFree = atcb_rewrite_html_elements(data.dates[`${i}`].description, true);
+    // ... and iCal
+    data.dates[`${i}`].descriptionHtmlFreeICal = atcb_rewrite_html_elements(data.dates[`${i}`].description, true, true);
     // ...and transform pseudo elements for the regular one
     data.dates[`${i}`].description = atcb_rewrite_html_elements(data.dates[`${i}`].description);
   } else {
-    // if not given per sub-date, we copy from the global one or set '', if not provided at all
+    // if not given per subEvent, we copy from the global one or set '', if not provided at all
     if (data.dates[`${i}`].description == null && data.description != null && data.description != '') {
+      // remove any "wrong" line breaks
+      data.description = data.description.replace(/(\\r\\n|\\n|\\r|<br(\s|\s\/|\/|)>)/g, '');
+      // set data for subEvent
       data.dates[`${i}`].descriptionHtmlFree = atcb_rewrite_html_elements(data.description, true);
+      data.dates[`${i}`].descriptionHtmlFreeICal = atcb_rewrite_html_elements(data.description, true, true);
       data.dates[`${i}`].description = atcb_rewrite_html_elements(data.description);
     } else {
       data.dates[`${i}`].descriptionHtmlFree = data.dates[`${i}`].description = '';
@@ -366,7 +374,7 @@ function atcb_decorate_data_extend(data) {
   if (data.recurrence != null && data.recurrence != '') {
     data.dates[0].recurrence = data.recurrence;
   }
-  // last but not least, we sort any sub-events by start data ascending
+  // last but not least, we sort any subEvent by start data ascending
   if (data.dates.length > 1) {
     data.dates.sort((a, b) => a.timestamp - b.timestamp);
   }

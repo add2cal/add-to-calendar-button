@@ -3,7 +3,7 @@
  *  Add to Calendar Button
  *  ++++++++++++++++++++++
  *
- *  Version: 2.2.3
+ *  Version: 2.2.4
  *  Creator: Jens Kuerschner (https://jenskuerschner.de)
  *  Project: https://github.com/add2cal/add-to-calendar-button
  *  License: Elastic License 2.0 (ELv2) (https://github.com/add2cal/add-to-calendar-button/blob/main/LICENSE.txt)
@@ -14,12 +14,23 @@
 import { tzlib_get_ical_block } from 'timezones-ical-library';
 import { atcbVersion, isiOS, isAndroid, isChrome, isMobile, isWebView, isProblematicWebView, atcbDefaultTarget, atcbStates } from './atcb-globals.js';
 import { atcb_toggle } from './atcb-control.js';
-import { atcb_saved_hook, atcb_save_file, atcb_generate_time, atcb_format_datetime, atcb_secure_url, atcb_copy_to_clipboard } from './atcb-util.js';
+import { atcb_saved_hook, atcb_save_file, atcb_generate_time, atcb_format_datetime, atcb_secure_url, atcb_copy_to_clipboard, atcb_rewrite_ical_text } from './atcb-util.js';
 import { atcb_create_modal } from './atcb-generate.js';
 import { atcb_translate_hook } from './atcb-i18n.js';
 
 // MIDDLEWARE FUNCTION TO GENERATE THE CALENDAR LINKS
 function atcb_generate_links(host, type, data, subEvent = 'all', keyboardTrigger = false, multiDateModal = false) {
+  // we differentiate between the type the user triggered and the type of link it shall activate
+  let linkType = type;
+  // the apple type would trigger the same as ical, for example
+  if (type == 'apple') {
+    linkType = 'ical';
+  }
+  // TMP WORKAROUND: redirect to iCal solution on mobile devices for msteams, ms365, and outlookcom, since the Microsoft web apps are buggy on mobile devices (see https://github.com/add2cal/add-to-calendar-button/discussions/113)
+  if (isMobile() && (type == 'msteams' || type == 'ms365' || type == 'outlookcom')) {
+    linkType = 'ical';
+  }
+  // adjust for subEvent and case
   if (subEvent != 'all') {
     subEvent = parseInt(subEvent) - 1;
   } else if (data.dates.length == 1) {
@@ -27,22 +38,17 @@ function atcb_generate_links(host, type, data, subEvent = 'all', keyboardTrigger
   }
   // if this is a calendar subscription case, we can take the short route here
   if (data.subscribe) {
-    atcb_generate_subscribe_links(host, type, data, keyboardTrigger);
+    atcb_generate_subscribe_links(host, linkType, data, keyboardTrigger);
     return;
-  }
-  // TMP WORKAROUND: redirect to iCal solution on mobile devices for msteams, ms365, and outlookcom, since the Microsoft web apps are buggy on mobile devices (see https://github.com/add2cal/add-to-calendar-button/discussions/113)
-  if (isMobile() && (type == 'msteams' || type == 'ms365' || type == 'outlookcom')) {
-    type = 'ical';
   }
   // for single-date events or if a specific subEvent is given, we can simply call the respective endpoints
   if (subEvent != 'all') {
     // for cancelled dates, we show a modal - except for iCal, where we can send Cancel-ics-files
-    if (data.dates[`${subEvent}`].status == 'CANCELLED' && type != 'apple' && type != 'ical') {
+    if (data.dates[`${subEvent}`].status == 'CANCELLED' && linkType != 'ical') {
       atcb_create_modal(host, data, 'warning', atcb_translate_hook('date.status.cancelled', data), atcb_translate_hook('date.status.cancelled.cta', data), [], [], keyboardTrigger);
     } else {
-      switch (type) {
-        case 'apple':
-        case 'ical':
+      switch (linkType) {
+        case 'ical': // also for apple (see above)
           atcb_generate_ical(host, data, subEvent, keyboardTrigger);
           break;
         case 'google':
@@ -80,14 +86,13 @@ function atcb_generate_links(host, type, data, subEvent = 'all', keyboardTrigger
     return;
   }
   // if not a single date case, we continue for multi-date
-  atcb_generate_multidate_links(host, type, data, keyboardTrigger, multiDateModal);
+  atcb_generate_multidate_links(host, type, linkType, data, keyboardTrigger, multiDateModal);
 }
 
-function atcb_generate_multidate_links(host, type, data, keyboardTrigger, multiDateModal) {
-  // in the multi-date event case, when all sub-events have no organizer AND are not cancelled, we can also go the short way (for iCal)
+function atcb_generate_multidate_links(host, type, linkType, data, keyboardTrigger, multiDateModal) {
+  // in the multi-date event case, when all subEvent have no organizer AND are not cancelled, we can also go the short way (for iCal)
   if (
-    (type == 'ical' || type == 'apple') &&
-    data.dates.every(function (theSubEvent) {
+    (linkType == 'ical') && data.dates.every(function (theSubEvent) {
       if (theSubEvent.status == 'CANCELLED' || (theSubEvent.organizer != null && theSubEvent.organizer != '')) {
         return false;
       }
@@ -112,11 +117,10 @@ function atcb_generate_multidate_links(host, type, data, keyboardTrigger, multiD
   }
 }
 
-function atcb_generate_subscribe_links(host, type, data, keyboardTrigger) {
+function atcb_generate_subscribe_links(host, linkType, data, keyboardTrigger) {
   const adjustedFileUrl = data.icsFile.replace('https://', 'webcal://');
-  switch (type) {
-    case 'apple':
-    case 'ical':
+  switch (linkType) {
+    case 'ical': // also for apple (see above)
       atcb_subscribe_ical(adjustedFileUrl);
       break;
     case 'google':
@@ -326,7 +330,7 @@ function atcb_generate_microsoft(data, type = '365') {
     urlParts.push('location=' + encodeURIComponent(data.location));
   }
   if (data.description != null && data.description != '') {
-    urlParts.push('body=' + encodeURIComponent(data.description.replace(/\n/g, '<br>')));
+    urlParts.push('body=' + encodeURIComponent(data.description));
   }
   // We also push the UID. It has no real effect, but at least becomes part of the url that way
   urlParts.push('uid=' + encodeURIComponent(data.uid));
@@ -373,7 +377,7 @@ function atcb_open_cal_url(url, target = '') {
   }
 }
 
-// FUNCTION TO GENERATE THE iCAL FILE (also for the Apple option)
+// FUNCTION TO GENERATE THE iCAL FILE (also for apple - see above)
 // See specs at: https://www.rfc-editor.org/rfc/rfc5545.html
 function atcb_generate_ical(host, data, subEvent = 'all', keyboardTrigger = false) {
   if (subEvent != 'all') {
@@ -452,25 +456,25 @@ function atcb_generate_ical(host, data, subEvent = 'all', keyboardTrigger = fals
     ics_lines.push('DTSTAMP:' + atcb_format_datetime(now, 'clean', true));
     ics_lines.push('DTSTART' + timeAddon + ':' + formattedDate.start);
     ics_lines.push('DTEND' + timeAddon + ':' + formattedDate.end);
-    ics_lines.push('SUMMARY:' + data.dates[`${i}`].name.replace(/.{65}/g, '$&' + '\r\n ')); // making sure it does not exceed 75 characters per line
-    if (data.dates[`${i}`].descriptionHtmlFree != null && data.dates[`${i}`].descriptionHtmlFree != '') {
+    ics_lines.push('SUMMARY:' + atcb_rewrite_ical_text(data.dates[`${i}`].name, true));
+    if (data.dates[`${i}`].descriptionHtmlFreeICal != null && data.dates[`${i}`].descriptionHtmlFreeICal != '') {
       ics_lines.push(
-        'DESCRIPTION:' + data.dates[`${i}`].descriptionHtmlFree.replace(/\n/g, '\\n').replace(/.{60}/g, '$&' + '\r\n ') // adjusting for intended line breaks + making sure it does not exceed 75 characters per line
+        'DESCRIPTION:' + atcb_rewrite_ical_text(data.dates[`${i}`].descriptionHtmlFreeICal, true)
       );
     }
     if (data.dates[`${i}`].description != null && data.dates[`${i}`].description != '') {
-      ics_lines.push('X-ALT-DESC;FMTTYPE=text/html:\r\n <!DOCTYPE HTML PUBLIC ""-//W3C//DTD HTML 3.2//EN"">\r\n <HTML><BODY>\r\n ' + data.dates[`${i}`].description.replace(/\n/g, '<br>').replace(/.{60}/g, '$&' + '\r\n ') + '\r\n </BODY></HTML>');
+      ics_lines.push('X-ALT-DESC;FMTTYPE=text/html:\r\n <!DOCTYPE HTML PUBLIC ""-//W3C//DTD HTML 3.2//EN"">\r\n <HTML><BODY>\r\n ' + atcb_rewrite_ical_text(data.dates[`${i}`].description, true) + '\r\n </BODY></HTML>');
     }
     if (data.dates[`${i}`].location != null && data.dates[`${i}`].location != '') {
-      ics_lines.push('LOCATION:' + data.dates[`${i}`].location);
+      ics_lines.push('LOCATION:' + atcb_rewrite_ical_text(data.dates[`${i}`].location, true));
     }
     if (data.dates[`${i}`].organizer != null && data.dates[`${i}`].organizer != '') {
       const organizerParts = data.dates[`${i}`].organizer.split('|');
-      ics_lines.push('ORGANIZER;CN=' + organizerParts[0] + ':MAILTO:' + organizerParts[1]);
+      ics_lines.push('ORGANIZER;CN="' + atcb_rewrite_ical_text(organizerParts[0], false, true) + '":MAILTO:' + organizerParts[1]);
     }
     if (data.dates[`${i}`].attendee != null && data.dates[`${i}`].attendee != '') {
       const attendeeParts = data.dates[`${i}`].attendee.split('|');
-      ics_lines.push('ATTENDEE;ROLE=REQ-PARTICIPANT;CN=' + attendeeParts[0] + ':MAILTO:' + attendeeParts[1]);
+      ics_lines.push('ATTENDEE;ROLE=REQ-PARTICIPANT;CN="' + atcb_rewrite_ical_text(attendeeParts[0], false, true) + '":MAILTO:' + attendeeParts[1]);
     }
     if (data.recurrence != null && data.recurrence != '') {
       ics_lines.push(data.recurrence);

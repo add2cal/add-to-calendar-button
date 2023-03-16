@@ -3,7 +3,7 @@
  *  Add to Calendar Button
  *  ++++++++++++++++++++++
  *
- *  Version: 2.2.3
+ *  Version: 2.2.4
  *  Creator: Jens Kuerschner (https://jenskuerschner.de)
  *  Project: https://github.com/add2cal/add-to-calendar-button
  *  License: Elastic License 2.0 (ELv2) (https://github.com/add2cal/add-to-calendar-button/blob/main/LICENSE.txt)
@@ -170,10 +170,10 @@ function atcb_read_attributes(el) {
   data['hideBranding'] = true;
   for (let i = 0; i < atcbWcParams.length; i++) {
     // reading data, but removing real code line breaks before parsing.
-    // use <br> or \n explicitely in the description to create a line break.
+    // use [br] in the description to create a line break.
     let attr = atcbWcParams[`${i}`];
     if (el.hasAttribute(`${attr}`)) {
-      let inputVal = atcb_secure_content(el.getAttribute(`${attr}`).replace(/(\r\n|\n|\r)/g, ''), false);
+      let inputVal = atcb_secure_content(el.getAttribute(`${attr}`).replace(/(\\r\\n|\\n|\\r)/g, ''), false);
       let val;
       if (atcbWcBooleanParams.includes(attr)) {
         // if a boolean param has no value, it is handles as prop and set true
@@ -221,7 +221,7 @@ function atcb_read_attributes(el) {
     // getting identifier separartely
     const identifierAttr = el.getAttribute('identifier');
     if (identifierAttr != null && identifierAttr != '') {
-      data['identifier'] = atcb_secure_content(identifierAttr.replace(/(\r\n|\n|\r)/g, ''), false);
+      data['identifier'] = atcb_secure_content(identifierAttr.replace(/(\\r\\n|\\n|\\r)/g, ''), false);
     }
   }
   // if we receive no or not enough data that way, we try to get a potential JSON from the innerHTML
@@ -230,7 +230,7 @@ function atcb_read_attributes(el) {
     const atcbJsonInput = (function () {
       if (slotInput != '') {
         try {
-          return JSON.parse(atcb_secure_content(slotInput.replace(/(\r\n|\n|\r)/g, ''), false));
+          return JSON.parse(atcb_secure_content(slotInput.replace(/(\\r\\n|\\n|\\r)/g, ''), false));
         } catch (e) {
           throw new Error('Add to Calendar Button generation failed: JSON content provided, but badly formatted (in doubt, try some tool like https://jsonformatter.org/ to validate).\r\nError message: ' + e);
         }
@@ -350,14 +350,14 @@ function atcb_load_css(host, rootObj = null, style = '', inline = false, buttons
     // get custom override information
     const overrideDefaultCss = (function () {
       if (host.host.hasAttribute('styleLight')) {
-        const output = ':host { ' + atcb_secure_content(host.host.getAttribute('styleLight').replace(/(\r\n|\n|\r)/g, ''), false) + ' }';
+        const output = ':host { ' + atcb_secure_content(host.host.getAttribute('styleLight').replace(/(\\r\\n|\\n|\\r)/g, ''), false) + ' }';
         return output;
       }
       return '';
     })();
     const overrideDarkCss = (function () {
       if (host.host.hasAttribute('styleDark')) {
-        const output = ':host(.atcb-dark), :host-context(html.atcb-dark):host(.atcb-bodyScheme), :host-context(body.atcb-dark):host(.atcb-bodyScheme) { ' + atcb_secure_content(host.host.getAttribute('styleDark').replace(/(\r\n|\n|\r)/g, ''), false) + ' }';
+        const output = ':host(.atcb-dark), :host-context(html.atcb-dark):host(.atcb-bodyScheme), :host-context(body.atcb-dark):host(.atcb-bodyScheme) { ' + atcb_secure_content(host.host.getAttribute('styleDark').replace(/(\\r\\n|\\n|\\r)/g, ''), false) + ' }';
         return output;
       }
       return '';
