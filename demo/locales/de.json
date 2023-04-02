@@ -141,10 +141,10 @@
   },
   "meta": {
     "title": "{title} {'|'} Free Add to Calendar Button",
-    "title_main": "Add to Calendar Button",
+    "title_main": "Der Add to Calendar Button",
     "title_slug": "Termine teilen leicht gemacht",
     "keywords": "Kalender, Event, Veranstaltung, teilen, Button, Script, Skript, Widget, RSVP, Javascript, Angular, React, Vue, Svelte, Astro, Web Component, Outlook, iCal, Microsoft, Teams, Apple, Google, Yahoo, free, kostenlos",
-    "description": "Interaktive Demo sowie Tutorials für die Integration in alle großen Web-Frameworks. Speichere unkompliziert Events im Kalender deiner Nutzer.",
+    "description": "Interaktive Demo sowie Tutorials für die Integration in alle großen Web-Frameworks. Speichere unkompliziert und kostenfrei Events im Kalender deiner Nutzer.",
     "seo-title": "Alles über Add to Calendar Buttons",
     "404": {
       "title": "Fehler"
@@ -159,22 +159,22 @@
       "description": "Interaktive Beispiele und Anleitung für komplexe Use Cases rund um Event-Sharing und Add to Calendar Buttons."
     },
     "use-with-angular": {
-      "description": "Alle Details und Anleitung, wie du einen Add to Calendar Button in unter 1 Minute mit Angular implementierst."
+      "description": "Alle Details und Anleitung, wie du den wahrscheinlich komplettesten Add to Calendar Button in unter 1 Minute mit Angular implementierst."
     },
     "use-with-astro": {
-      "description": "Alle Details und Anleitung, wie du einen Add to Calendar Button in unter 1 Minute mit Astro implementierst."
+      "description": "Alle Details und Anleitung, wie du den wahrscheinlich komplettesten Add to Calendar Button in unter 1 Minute mit Astro implementierst."
     },
     "use-with-react": {
-      "description": "Alle Details und Anleitung, wie du einen Add to Calendar Button in unter 1 Minute mit React und TypeScript implementierst."
+      "description": "Alle Details und Anleitung, wie du den wohl komplettesten Add to Calendar Button in unter 1 Minute in React (mit oder ohne TypeScript) implementierst."
     },
     "use-with-svelte": {
-      "description": "Alle Details und Anleitung, wie du einen Add to Calendar Button in unter 1 Minute mit Svelte implementierst."
+      "description": "Alle Details und Anleitung, wie du den wahrscheinlich komplettesten Add to Calendar Button in unter 1 Minute mit Svelte implementierst."
     },
     "use-with-vue": {
-      "description": "Alle Details und Anleitung, wie du einen Add to Calendar Button in unter 1 Minute mit Vue 3 implementierst."
+      "description": "Alle Details und Anleitung, wie du den wahrscheinlich komplettesten Add to Calendar Button in unter 1 Minute mit Vue 3 implementierst."
     },
     "use-with-wordpress": {
-      "description": "Alle Details und Anleitung, wie du einen Add to Calendar Button mit unserem WordPress Plugin nutzt - in unter 1 Minute einsatzbereit."
+      "description": "Alle Details und Anleitung, wie du den wohl komplettesten Add to Calendar Button mit unserem WordPress Plugin nutzt - in unter 1 Minute einsatzbereit."
     },
     "configuration": {
       "description": "Entdecke alle Konfigurations-Parameter, mit denen du unseren Add to Calendar Button gezielt an dein Projekt anpassen kannst."
