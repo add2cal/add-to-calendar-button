@@ -364,7 +364,7 @@
     },
     "config": {
       "event_params": "Event parameters",
-      "style_params": "Style parameters",
+      "layout_params": "Layout parameters",
       "additional_params": "Additional parameters",
       "find_params": "Find parameters",
       "name": "Name",
