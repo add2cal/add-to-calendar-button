@@ -104,8 +104,8 @@ export default {
 
 <style scoped>
 .hero-container {
-  border-bottom-right-radius: 80% 20%;
-  border-bottom-left-radius: 80% 20%;
+  border-bottom-right-radius: 90% 10%;
+  border-bottom-left-radius: 90% 10%;
   @apply w-full bg-gradient-to-tr from-primary via-primary to-primary-light pt-5 shadow-2xl dark:from-primary dark:via-primary-dark dark:to-primary-dark sm:rounded-b-none sm:shadow-none;
 }
 </style>
