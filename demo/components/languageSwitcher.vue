@@ -34,7 +34,7 @@ watch(currentLanguage, val => {
             <ListboxOption v-for="entry in locales" v-slot="{ active, selected }" :key="entry.code" :value="entry" as="template">
               <li
                 :class="[
-                  active ? 'bg-secondary-light text-zinc-900' : 'text-gray-800',
+                  active ? 'bg-secondary-light text-zinc-900' : 'text-gray-800 dark:text-zinc-200',
                   'relative cursor-pointer select-none py-2 pl-10 pr-4 text-left hover:bg-secondary-light',
                 ]"
               >
