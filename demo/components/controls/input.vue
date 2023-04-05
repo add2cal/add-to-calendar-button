@@ -42,14 +42,14 @@ defineEmits(['update:modelValue']);
       {{ label }}
     </label>
     <div class="flex items-center py-2 pl-2">
-      <div v-if="props.disabled && props.type != 'range'" :aria-label="label" class="block w-full flex-1 cursor-progress rounded-md bg-zinc-50 py-2 px-3 text-sm leading-5 shadow dark:bg-zinc-700">...</div>
+      <div v-if="props.disabled && props.type != 'range'" :aria-label="label" class="block w-full flex-1 cursor-progress rounded-md bg-zinc-50 px-3 py-2 text-sm leading-5 shadow dark:bg-zinc-700">...</div>
       <input v-else-if="props.disabled && props.type == 'range'" :aria-label="label" type="range" :min="props.min" :value="6" :max="props.max" disabled class="form-range block w-full flex-1 cursor-progress appearance-none bg-transparent p-0" />
       <input
         v-else
         :aria-label="label"
         :value="modelValue"
         class="block w-full flex-1 caret-secondary placeholder:text-xs focus:outline-none"
-        :class="props.type == 'range' ? 'form-range cursor-ew-resize appearance-none bg-transparent p-0 focus:ring-0' : 'rounded-md bg-zinc-50 py-2 px-3 text-sm leading-5 shadow hover:bg-white hover:shadow-md focus:bg-white focus-visible:ring focus-visible:ring-secondary focus-visible:ring-opacity-75 dark:bg-zinc-700 dark:hover:bg-zinc-600 dark:focus:bg-zinc-600'"
+        :class="props.type == 'range' ? 'form-range cursor-ew-resize appearance-none bg-transparent p-0 focus:ring-0' : 'rounded-md bg-zinc-50 px-3 py-2 text-sm leading-5 shadow hover:bg-white hover:shadow-md focus:bg-white focus-visible:ring focus-visible:ring-secondary focus-visible:ring-opacity-75 dark:bg-zinc-700 dark:hover:bg-zinc-600 dark:focus:bg-zinc-600'"
         :type="props.type"
         :placeholder="props.placeholder"
         :min="props.min"
@@ -57,7 +57,7 @@ defineEmits(['update:modelValue']);
         step="1"
         @input="$emit('update:modelValue', ($event.target as HTMLInputElement).value)"
       />
-      <div v-if="props.type == 'range'" class="ml-3 inline-block min-w-[32px] cursor-default rounded-lg bg-zinc-100 py-1 px-2 text-center text-xs font-semibold opacity-70 dark:bg-zinc-700">{{ modelValue }}</div>
+      <div v-if="props.type == 'range'" class="ml-3 inline-block min-w-[32px] cursor-default rounded-lg bg-zinc-100 px-2 py-1 text-center text-xs font-semibold opacity-70 dark:bg-zinc-700">{{ modelValue }}</div>
     </div>
   </div>
 </template>

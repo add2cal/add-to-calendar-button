@@ -28,23 +28,6 @@ import { ArrowTopRightOnSquareIcon } from '@heroicons/vue/24/outline';
   </p>
   <p>Hierzu sowie zu weiteren Fragen zum Thema Datenschutz kannst du dich jederzeit an uns wenden.</p>
   <h2>2. Hosting</h2>
-  <p>Wir hosten die Inhalte unserer Website bei folgenden Anbietern:</p>
-  <h3>DomainFactory</h3>
-  <p>Anbieter ist die DomainFactory GmbH, c/o WeWork, Neuturmstra&szlig;e 5, 80331 M&uuml;nchen (nachfolgend DomainFactory). Wenn du unsere Website besuchst, erfasst DomainFactory verschiedene Logfiles inklusive deiner IP-Adressen.</p>
-  <p>
-    Details etnimmst du der Datenschutzerkl&auml;rung von DomainFactory: <a href="https://www.df.eu/de/datenschutz/" target="_blank" rel="noopener noreferrer">https://www.df.eu/de/datenschutz/ <ArrowTopRightOnSquareIcon class="-mt-0.5 mr-0.5 inline-block h-4 w-4" aria-hidden="true" /></a>.
-  </p>
-  <p>
-    Die Verwendung von DomainFactory erfolgt auf Grundlage von Art. 6 Abs. 1 lit. f DSGVO. Wir haben ein berechtigtes Interesse an einer m&ouml;glichst zuverl&auml;ssigen Darstellung unserer Website. Sofern eine entsprechende Einwilligung abgefragt wurde, erfolgt die Verarbeitung
-    ausschlie&szlig;lich auf Grundlage von Art. 6 Abs. 1 lit. a DSGVO und &sect; 25 Abs. 1 TTDSG, soweit die Einwilligung die Speicherung von Cookies oder den Zugriff auf Informationen im Endger&auml;t des Nutzers (z.&nbsp;B. f&uuml;r Device-Fingerprinting) im Sinne des TTDSG umfasst. Die
-    Einwilligung ist jederzeit widerrufbar.
-  </p>
-  <h4>Auftragsverarbeitung</h4>
-  <p>
-    Wir haben einen Vertrag &uuml;ber Auftragsverarbeitung (AVV) zur Nutzung des oben genannten Dienstes geschlossen. Hierbei handelt es sich um einen datenschutzrechtlich vorgeschriebenen Vertrag, der gew&auml;hrleistet, dass dieser die personenbezogenen Daten unserer Websitebesucher nur nach
-    unseren Weisungen und unter Einhaltung der DSGVO verarbeitet.
-  </p>
-  <h3>Externes Hosting</h3>
   <p>
     Diese Website wird extern gehostet. Die personenbezogenen Daten, die auf dieser Website erfasst werden, werden auf den Servern des Hosters / der Hoster gespeichert. Hierbei kann es sich v.&nbsp;a. um IP-Adressen, Kontaktanfragen, Meta- und Kommunikationsdaten, Vertragsdaten, Kontaktdaten, Namen,
     Websitezugriffe und sonstige Daten, die &uuml;ber eine Website generiert werden, handeln.
@@ -63,9 +46,13 @@ import { ArrowTopRightOnSquareIcon } from '@heroicons/vue/24/outline';
     <br />
     GitHub Inc.<br />
     88 Colin P Kelly Junior Street<br />
-    San Francisco, CA 94107, USA
+    San Francisco, CA 94107, USA<br />
+    <br />
+    Google Ireland Limited<br />
+    Gordon House, Barrow Street<br />
+    Dublin 4, Irland<br />
   </p>
-  <h4>Auftragsverarbeitung</h4>
+  <h3>Auftragsverarbeitung</h3>
   <p>
     Wir haben einen Vertrag &uuml;ber Auftragsverarbeitung (AVV) zur Nutzung des oben genannten Dienstes geschlossen. Hierbei handelt es sich um einen datenschutzrechtlich vorgeschriebenen Vertrag, der gew&auml;hrleistet, dass dieser die personenbezogenen Daten unserer Websitebesucher nur nach
     unseren Weisungen und unter Einhaltung der DSGVO verarbeitet.
@@ -88,7 +75,7 @@ import { ArrowTopRightOnSquareIcon } from '@heroicons/vue/24/outline';
   </p>
 
   <p>
-    E-Mail: <span style="display:none; ">are-</span><span style="display:inline; ">&#x6D;&#x61;&#x69;&#x6C;</span><span style="display:none; ">-xya34</span><span style="display:inline; ">[at]</span><span style="display:none; ">ddks-</span
+    E-Mail: <span style="display:none; ">are-</span><span style="display:inline; ">&#x73;&#x75;&#x70;&#x70;&#x6F;&#x72;&#x74;</span><span style="display:none; ">-xya34</span><span style="display:inline; ">[at]</span><span style="display:none; ">ddks-</span
     ><span style="display:inline; ">&#97;&#100;&#100;&#45;&#116;&#111;&#45;&#99;&#97;&#108;&#101;&#110;&#100;&#97;&#114;&#45;&#112;&#114;&#111;&#46;&#99;&#111;&#109;</span>
   </p>
   <p>Verantwortliche Stelle ist die nat&uuml;rliche oder juristische Person, die allein oder gemeinsam mit anderen &uuml;ber die Zwecke und Mittel der Verarbeitung von personenbezogenen Daten (z.&nbsp;B. Namen, E-Mail-Adressen o. &Auml;.) entscheidet.</p>

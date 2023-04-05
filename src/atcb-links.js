@@ -3,7 +3,7 @@
  *  Add to Calendar Button
  *  ++++++++++++++++++++++
  *
- *  Version: 2.2.4
+ *  Version: 2.2.5
  *  Creator: Jens Kuerschner (https://jenskuerschner.de)
  *  Project: https://github.com/add2cal/add-to-calendar-button
  *  License: Elastic License 2.0 (ELv2) (https://github.com/add2cal/add-to-calendar-button/blob/main/LICENSE.txt)
@@ -92,7 +92,8 @@ function atcb_generate_links(host, type, data, subEvent = 'all', keyboardTrigger
 function atcb_generate_multidate_links(host, type, linkType, data, keyboardTrigger, multiDateModal) {
   // in the multi-date event case, when all subEvent have no organizer AND are not cancelled, we can also go the short way (for iCal)
   if (
-    (linkType == 'ical') && data.dates.every(function (theSubEvent) {
+    linkType == 'ical' &&
+    data.dates.every(function (theSubEvent) {
       if (theSubEvent.status == 'CANCELLED' || (theSubEvent.organizer != null && theSubEvent.organizer != '')) {
         return false;
       }
@@ -458,9 +459,7 @@ function atcb_generate_ical(host, data, subEvent = 'all', keyboardTrigger = fals
     ics_lines.push('DTEND' + timeAddon + ':' + formattedDate.end);
     ics_lines.push('SUMMARY:' + atcb_rewrite_ical_text(data.dates[`${i}`].name, true));
     if (data.dates[`${i}`].descriptionHtmlFreeICal != null && data.dates[`${i}`].descriptionHtmlFreeICal != '') {
-      ics_lines.push(
-        'DESCRIPTION:' + atcb_rewrite_ical_text(data.dates[`${i}`].descriptionHtmlFreeICal, true)
-      );
+      ics_lines.push('DESCRIPTION:' + atcb_rewrite_ical_text(data.dates[`${i}`].descriptionHtmlFreeICal, true));
     }
     if (data.dates[`${i}`].description != null && data.dates[`${i}`].description != '') {
       ics_lines.push('X-ALT-DESC;FMTTYPE=text/html:\r\n <!DOCTYPE HTML PUBLIC ""-//W3C//DTD HTML 3.2//EN"">\r\n <HTML><BODY>\r\n ' + atcb_rewrite_ical_text(data.dates[`${i}`].description, true) + '\r\n </BODY></HTML>');

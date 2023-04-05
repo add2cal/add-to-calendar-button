@@ -3,7 +3,7 @@
  *  Add to Calendar Button
  *  ++++++++++++++++++++++
  *
- *  Version: 2.2.4
+ *  Version: 2.2.5
  *  Creator: Jens Kuerschner (https://jenskuerschner.de)
  *  Project: https://github.com/add2cal/add-to-calendar-button
  *  License: Elastic License 2.0 (ELv2) (https://github.com/add2cal/add-to-calendar-button/blob/main/LICENSE.txt)
@@ -488,7 +488,9 @@ function atcb_decorate_data_button_status_handling(data) {
     // in other cases, all dates would be overdue and therefore also the overall event
     return true;
   })();
+  data.allOverdue = false;
   if (overdue) {
+    data.allOverdue = true;
     if (data.pastDateHandling == 'disable') {
       data.disabled = true;
     } else if (data.pastDateHandling == 'hide') {

@@ -5,7 +5,7 @@
  *
  * Style: Default
  *
- * Version: 2.2.4
+ * Version: 2.2.5
  * Creator: Jens Kuerschner (https://jenskuerschner.de)
  * Project: https://github.com/add2cal/add-to-calendar-button
  * License: Elastic License 2.0 (ELv2) (https://github.com/add2cal/add-to-calendar-button/blob/main/LICENSE.txt)
@@ -126,7 +126,7 @@
 }
 
 /* medium */
-@media (max-width: 991px) {
+@media (width <= 991px) {
   .atcb-button-wrapper,
   .atcb-list,
   .atcb-modal-box {
@@ -135,7 +135,7 @@
 }
 
 /* small */
-@media (max-width: 575px) {
+@media (width <= 575px) {
   .atcb-button-wrapper,
   .atcb-list,
   .atcb-modal-box {
@@ -181,10 +181,6 @@
   z-index: 1;
 }
 
-.atcb-button:disabled .atcb-text {
-  letter-spacing: .1em;
-}
-
 .atcb-button.atcb-no-text,
 .atcb-button:disabled {
   min-width: 0;
@@ -195,14 +191,15 @@
   text-align: right;
 }
 
+.atcb-button:focus-visible {
+  outline: 2px solid var(--keyboard-focus);
+}
+
 .atcb-button:not([disabled]):focus,
 .atcb-button:not([disabled]):hover {
   background-color: var(--btn-background-hover);
   box-shadow: var(--btn-shadow-hover);
-}
-
-.atcb-button:focus-visible {
-  outline: 2px solid var(--keyboard-focus);
+  color: var(--btn-text-hover);
 }
 
 .atcb-button.atcb-active:not(.atcb-modal-style, .atcb-dropoverlay) {
@@ -214,6 +211,7 @@
 .atcb-button.atcb-single:not([disabled]):hover {
   background-color: var(--btn-background-hover);
   box-shadow: var(--btn-shadow-active);
+  color: var(--btn-text-hover);
   margin: 0;
   padding: .78em 1.13em;
 }
@@ -252,6 +250,10 @@
 
 .atcb-text {
   overflow-wrap: anywhere;
+}
+
+.atcb-button:disabled .atcb-text {
+  letter-spacing: .1em;
 }
 
 /******************************
@@ -464,7 +466,7 @@
   padding: .3em 2.5em 2.25em;
 }
 
-@media (max-width: 575px) {
+@media (width <= 575px) {
   .atcb-modal-headline {
     padding: 1.8em 1em 1em;
   }

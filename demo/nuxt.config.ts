@@ -1,6 +1,5 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 import { defineNuxtConfig } from 'nuxt/config';
-import { EnumChangefreq } from 'sitemap';
 
 const baseUrl = process.env.NUXT_PUBLIC_SITE_URL || 'https://add-to-calendar-button.com';
 
@@ -273,7 +272,7 @@ export default defineNuxtConfig({
     exclude: ['/en/**', 'legal-notice', 'privacy-policy', '*/legal-notice', '*/privacy-policy'],
     defaults: {
       priority: 1,
-      changefreq: EnumChangefreq.DAILY,
+      changefreq: 'daily',
       lastmod: new Date().toISOString(),
     },
   },

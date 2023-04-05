@@ -18,10 +18,10 @@ const localePath = useLocalePath();
     </div>
     <div class="container">
       <div class="relative">
-        <div class="absolute top-0 left-0 m-auto grid w-full grid-cols-1 justify-items-center pb-20 pt-8 xs:py-24 md:py-28 lg:grid-cols-2 lg:py-36">
+        <div class="absolute left-0 top-0 m-auto grid w-full grid-cols-1 justify-items-center pb-20 pt-8 xs:py-24 md:py-28 lg:grid-cols-2 lg:py-36">
           <div class="grid grid-cols-1 justify-items-center pb-5 md:grid-cols-2 lg:grid-cols-1">
             <div class="max-w-[400px] self-center pb-14 md:pb-0 lg:pb-16">
-              <div class="mx-auto mb-16 -mt-4 block w-auto max-w-[280px] xs:hidden">
+              <div class="mx-auto -mt-4 mb-16 block w-auto max-w-[280px] xs:hidden">
                 <Logo class="force-light" variation="mobile" />
               </div>
               <h1 class="text-white">
@@ -62,7 +62,7 @@ const localePath = useLocalePath();
   </div>
   <div :class="view.atTopOfPage ? 'top-[-80px]' : 'top-0'" class="fixed z-50 w-full bg-gradient-to-tr from-primary via-primary to-primary-light py-3 shadow-xl transition-all dark:from-primary dark:via-primary-dark dark:to-primary-dark lg:hidden">
     <div class="container flex justify-between">
-      <div class="-mt-1 -ml-3 w-auto max-w-[100px] grow xl:ml-0">
+      <div class="-ml-3 -mt-1 w-auto max-w-[100px] grow xl:ml-0">
         <Logo variation="mobile-small" class="force-light" />
       </div>
       <NavigationBar />
@@ -104,8 +104,8 @@ export default {
 
 <style scoped>
 .hero-container {
-  border-bottom-right-radius: 80% 20%;
-  border-bottom-left-radius: 80% 20%;
+  border-bottom-right-radius: 90% 10%;
+  border-bottom-left-radius: 90% 10%;
   @apply w-full bg-gradient-to-tr from-primary via-primary to-primary-light pt-5 shadow-2xl dark:from-primary dark:via-primary-dark dark:to-primary-dark sm:rounded-b-none sm:shadow-none;
 }
 </style>

@@ -35,7 +35,7 @@ const description = computed(() => route.meta.description ? t(route.meta.descrip
       </Head>
       <Body>
         <Header />
-        <div class="container mt-16 mb-20 text-center md:text-left">
+        <div class="container mb-20 mt-16 text-center md:text-left">
           <slot />
         </div>
         <LazyFooter />

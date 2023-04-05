@@ -36,12 +36,12 @@ watch(locale, value => {
         <h2 class="mb-6">{{ $t('content.guide.step1') }}: {{ $t('content.guide.step_npm') }}</h2>
         <p>{{ $t('content.guide.install_npm') }}</p>
         <LazyCodeBlock><pre>npm install add-to-calendar-button</pre></LazyCodeBlock>
-        <h2 class="mt-20 mb-6">{{ $t('content.guide.step2') }}: {{ $t('content.guide.step_import') }}</h2>
+        <h2 class="mb-6 mt-20">{{ $t('content.guide.step2') }}: {{ $t('content.guide.step_import') }}</h2>
         <p>{{ $t('content.guide.import_npm') }}</p>
         <LazyCodeBlock language="javascript">
           <pre>import 'add-to-calendar-button';</pre>
         </LazyCodeBlock>
-        <h2 class="mt-20 mb-6">{{ $t('content.guide.step3') }}: {{ $t('content.guide.angular.step_optimize') }}</h2>
+        <h2 class="mb-6 mt-20">{{ $t('content.guide.step3') }}: {{ $t('content.guide.angular.step_optimize') }}</h2>
         <p>{{ $t('content.guide.angular.config_1') }}<span class="font-semibold italic">CUSTOM_ELEMENTS_SCHEMA</span>{{ $t('content.guide.angular.config_2') }}<span class="font-semibold italic">@NgModule</span>{{ $t('content.guide.angular.config_3') }}.</p>
         <LazyCodeBlock language="javascript" class="line-numbers">
           <pre>
@@ -57,7 +57,7 @@ import { NgModule, CUSTOM_ELEMENTS_SCHEMA  } from '@angular/core';
 //(...)</pre
           >
         </LazyCodeBlock>
-        <h2 class="mt-20 mb-6">{{ $t('content.guide.step4') }}: {{ $t('content.guide.step_use') }}</h2>
+        <h2 class="mb-6 mt-20">{{ $t('content.guide.step4') }}: {{ $t('content.guide.step_use') }}</h2>
         <p>
           {{ $t('content.guide.step_use_start') }}
         </p>
@@ -77,7 +77,7 @@ import { NgModule, CUSTOM_ELEMENTS_SCHEMA  } from '@angular/core';
 &gt;&lt;/add-to-calendar-button&gt;</pre
           >
         </LazyCodeBlock>
-        <h2 class="mt-20 mb-6">{{ $t('content.guide.angular.binding_headline') }}</h2>
+        <h2 class="mb-6 mt-20">{{ $t('content.guide.angular.binding_headline') }}</h2>
         <p>{{ $t('content.guide.angular.binding_guide_1') }}</p>
         <p>{{ $t('content.guide.angular.binding_guide_2') }}</p>
         <LazyCodeBlock class="line-numbers">

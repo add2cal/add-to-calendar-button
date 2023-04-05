@@ -22,7 +22,7 @@ function topFunction() {
 <template>
   <div class="max-w-full bg-gradient-to-t from-zinc-100 to-gray-300 dark:from-zinc-800 dark:to-zinc-900">
     <div class="container">
-      <div class="mx-6 pt-12 pb-16 md:m-auto md:pt-16">
+      <div class="mx-6 pb-16 pt-12 md:m-auto md:pt-16">
         <div class="flex flex-col-reverse items-center sm:flex-row sm:justify-between">
           <div class="hidden w-auto max-w-[200px] sm:block">
             <NuxtLink :to="localePath('index')"><Logo variation="footer" /></NuxtLink>
@@ -32,9 +32,9 @@ function topFunction() {
             <div class="inline-block"><LanguageSwitcher /></div>
           </div>
         </div>
-        <hr class="mt-6 mb-4 border-gray-300 dark:border-zinc-700" />
+        <hr class="mb-4 mt-6 border-gray-300 dark:border-zinc-700" />
         <div class="flex flex-col-reverse text-xs sm:flex-row sm:justify-between">
-          <div class="px-1 pt-10 pb-2 text-center text-sm sm:pt-1 sm:text-left sm:text-xs">
+          <div class="px-1 pb-2 pt-10 text-center text-sm sm:pt-1 sm:text-left sm:text-xs">
             <NuxtLink :to="localePath('legal-notice')">{{ $t('navigation.legal-notice') }}</NuxtLink>
             |
             <NuxtLink :to="localePath('privacy-policy')">{{ $t('navigation.privacy-policy') }}</NuxtLink>
@@ -46,7 +46,7 @@ function topFunction() {
             </span>
             <div class="mt-6 text-xs sm:mt-5 md:mt-3">
               <span class="font-semibold text-zinc-500 dark:text-zinc-400"> &copy; {{new Date().getFullYear()}} </span>
-              <span class="lowercase text-zinc-400 dark:text-zinc-500"> , Current Version: 2.2.4 </span>
+              <span class="lowercase text-zinc-400 dark:text-zinc-500"> , Current Version: 2.2.5 </span>
             </div>
           </div>
           <div class="hidden self-center sm:block">

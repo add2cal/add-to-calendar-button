@@ -26,7 +26,7 @@ useHead({
         />
       </svg>
       <div class="mx-4 p-2 text-left">
-        <p class="pt-2 pb-4 text-xl font-bold leading-3">{{ $t('content.privacy.no-cookies') }}!</p>
+        <p class="pb-4 pt-2 text-xl font-bold leading-3">{{ $t('content.privacy.no-cookies') }}!</p>
         <p>
           {{ $t('content.privacy.no-cookies-details-1') }}<br />
           {{ $t('content.privacy.no-cookies-details-2') }}<br />
@@ -61,19 +61,6 @@ useHead({
       </p>
       <p>Please do not hesitate to contact us at any time if you have questions about this or any other data protection related issues.</p>
       <h2>2. Hosting</h2>
-      <p>We are hosting the content of our website at the following providers:</p>
-      <h3>DomainFactory</h3>
-      <p>The provider is the DomainFactory GmbH, c/o WeWork, Neuturmstra&szlig;e 5, 80331 M&uuml;nchen, Germany (hereinafter referred to as: DomainFactory). Whenever you visit our website, DomainFactory records a variety of logfiles, including your IP addresses.</p>
-      <p>
-        For details, please refer to the Privacy Policy of DomainFactory: <a href="https://www.df.eu/de/datenschutz/" target="_blank" rel="noopener noreferrer">https://www.df.eu/de/datenschutz/ <ArrowTopRightOnSquareIcon class="-mt-0.5 mr-0.5 inline-block h-4 w-4" aria-hidden="true" /></a>.
-      </p>
-      <p>
-        We use DomainFactory on the basis of Art. 6(1)(f) GDPR. We have a legitimate interest in making the depiction of our website as dependable as possible. If you have been asked for your respective consent, processing shall occur exclusively on the basis of Art. 6(1)(a) GDPR and &sect; 25(1)
-        TTDSG, if the consent comprises the archiving of cookies or access to information on the user&rsquo;s device (e.g., device finger printing) as defined in the TTDSG. Such consent may be revoked at any time.
-      </p>
-      <h4>Data processing</h4>
-      <p>We have concluded a data processing agreement (DPA) for the use of the above-mentioned service. This is a contract mandated by data privacy laws that guarantees that they process personal data of our website visitors only based on our instructions and in compliance with the GDPR.</p>
-      <h3>External Hosting</h3>
       <p>
         This website is hosted externally. Personal data collected on this website are stored on the servers of the host. These may include, but are not limited to, IP addresses, contact requests, metadata and communications, contract information, contact information, names, web page access, and
         other data generated through a web site.
@@ -92,9 +79,13 @@ useHead({
         <br />
         GitHub Inc.<br />
         88 Colin P Kelly Junior Street<br />
-        San Francisco, CA 94107, USA
+        San Francisco, CA 94107, USA<br />
+        <br />
+        Google Ireland Limited<br />
+        Gordon House, Barrow Street<br />
+        Dublin 4, Irland<br />
       </p>
-      <h4>Data processing</h4>
+      <h3>Data processing</h3>
       <p>We have concluded a data processing agreement (DPA) for the use of the above-mentioned service. This is a contract mandated by data privacy laws that guarantees that they process personal data of our website visitors only based on our instructions and in compliance with the GDPR.</p>
       <h2>3. General information and mandatory information</h2>
       <h3>Data protection</h3>
@@ -114,7 +105,7 @@ useHead({
       </p>
 
       <p>
-        Email: <span style="display:none; ">are-</span><span style="display:inline; ">&#x6D;&#x61;&#x69;&#x6C;</span><span style="display:none; ">-xya34</span><span style="display:inline; ">[at]</span><span style="display:none; ">ddks-</span
+        Email: <span style="display:none; ">are-</span><span style="display:inline; ">&#x73;&#x75;&#x70;&#x70;&#x6F;&#x72;&#x74;</span><span style="display:none; ">-xya34</span><span style="display:inline; ">[at]</span><span style="display:none; ">ddks-</span
         ><span style="display:inline; ">&#97;&#100;&#100;&#45;&#116;&#111;&#45;&#99;&#97;&#108;&#101;&#110;&#100;&#97;&#114;&#45;&#112;&#114;&#111;&#46;&#99;&#111;&#109;</span>
       </p>
       <p>The controller is the natural person or legal entity that single-handedly or jointly with others makes decisions as to the purposes of and resources for the processing of personal data (e.g., names, email addresses, etc.).</p>

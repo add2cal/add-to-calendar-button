@@ -1,5 +1,5 @@
 <template>
-  <div class="my-14 mx-auto grid max-w-sm grid-cols-1 gap-x-10 md:max-w-4xl md:grid-cols-[200px_minmax(0,1fr)] md:gap-y-20">
+  <div class="mx-auto my-14 grid max-w-sm grid-cols-1 gap-x-10 md:max-w-4xl md:grid-cols-[200px_minmax(0,1fr)] md:gap-y-20">
     <img :alt="$t('content.features.headline_1')" width="150" height="150" src="/assets/img/caltypes.webp" class="mx-auto self-center" />
     <div class="mb-20 md:mb-0">
       <h3>{{ $t('content.features.headline_1') }}</h3>

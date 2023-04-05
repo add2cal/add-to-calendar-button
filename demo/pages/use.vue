@@ -38,7 +38,7 @@ watch(locale, value => {
         <LazyCodeBlock>
           <pre>&lt;script src="https://cdn.jsdelivr.net/npm/add-to-calendar-button@2" async defer&gt;&lt;/script&gt;</pre>
         </LazyCodeBlock>
-        <h2 class="mt-20 mb-6">{{ $t('content.guide.step2') }}: {{ $t('content.guide.step_use') }}</h2>
+        <h2 class="mb-6 mt-20">{{ $t('content.guide.step2') }}: {{ $t('content.guide.step_use') }}</h2>
         <p>{{ $t('content.guide.step_use_start') }}</p>
         <p class="font-semibold italic">{{ $t('content.guide.step_use_simple') }}</p>
         <p>{{ $t('content.guide.step_use_example') }}</p>
