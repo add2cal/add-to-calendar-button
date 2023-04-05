@@ -132,7 +132,7 @@ const loadJsdelivrStats = async () => {
 <template>
   <div class="-mt-16 block px-8 pb-16 sm:hidden">
     <div class="inline-block">
-      <div class="fade-in m-2 flex rounded-full bg-zinc-800/70 py-3 px-5 text-white">
+      <div class="fade-in m-2 flex rounded-full bg-zinc-800/70 px-5 py-3 text-white">
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="mr-2 inline-block h-4 w-4 self-center">
           <path
             fill-rule="evenodd"
@@ -145,7 +145,7 @@ const loadJsdelivrStats = async () => {
       </div>
     </div>
     <div class="inline-block">
-      <div class="fade-in m-2 flex rounded-full bg-zinc-800/70 py-3 px-5 text-white">
+      <div class="fade-in m-2 flex rounded-full bg-zinc-800/70 px-5 py-3 text-white">
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="mr-2 inline-block h-4 w-4 self-center">
           <path
             d="M17.004 10.407c.138.435-.216.842-.672.842h-3.465a.75.75 0 01-.65-.375l-1.732-3c-.229-.396-.053-.907.393-1.004a5.252 5.252 0 016.126 3.537zM8.12 8.464c.307-.338.838-.235 1.066.16l1.732 3a.75.75 0 010 .75l-1.732 3.001c-.229.396-.76.498-1.067.16A5.231 5.231 0 016.75 12c0-1.362.519-2.603 1.37-3.536zM10.878 17.13c-.447-.097-.623-.608-.394-1.003l1.733-3.003a.75.75 0 01.65-.375h3.465c.457 0 .81.408.672.843a5.252 5.252 0 01-6.126 3.538z"
@@ -161,7 +161,7 @@ const loadJsdelivrStats = async () => {
       </div>
     </div>
     <div class="hidden xs:inline-block">
-      <div class="fade-in m-2 flex rounded-full bg-zinc-800/70 py-3 px-5 text-white">
+      <div class="fade-in m-2 flex rounded-full bg-zinc-800/70 px-5 py-3 text-white">
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="mr-2 inline-block h-4 w-4 self-center">
           <path
             fill-rule="evenodd"

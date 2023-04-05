@@ -292,10 +292,6 @@
   letter-spacing: .1em;
 }
 
-.atcb-button:disabled .atcb-date-btn-hover {
-  letter-spacing: .1em;
-}
-
 .atcb-button:hover .atcb-date-btn-details,
 .atcb-subevent-btn:hover .atcb-date-btn-details {
   opacity: 0;
