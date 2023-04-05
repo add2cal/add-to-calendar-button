@@ -66,14 +66,19 @@ export const getDefaultAttrs = (defaultName: string, defaultDescription: string,
 
 export const getInitialAttrs = (defaultName: string, defaultDescription: string, defaultLocation: string): Attrs => {
   const defaultData = getDefaultAttrs(defaultName, defaultDescription, defaultLocation);
-  const cachedData: Attrs = get(LSKey.ATTRS) && JSON.parse(get(LSKey.ATTRS));
+  const cachedData = get(LSKey.ATTRS);
+  const cachedDataParsed = (function () {
+    if (cachedData) {
+      return JSON.parse(cachedData);
+    }
+  })();
 
   const overrideData = (function () {
-    if (!cachedData) {
+    if (!cachedDataParsed) {
       return { layout: { [LayoutAttrsKey.LANGUAGE]: get(LSKey.LANG) } };
     }
     return {};
   })();
 
-  return !!cachedData && typeof cachedData === 'object' ? mergeDeep(defaultData, cachedData) : mergeDeep(defaultData, overrideData);
+  return !!cachedDataParsed && typeof cachedDataParsed === 'object' ? mergeDeep(defaultData, cachedDataParsed) : mergeDeep(defaultData, overrideData);
 };

@@ -53,7 +53,7 @@ const statusCode = (function () {
       </Head>
       <Body>
         <div class="h-5 w-full bg-gradient-to-tr from-primary via-primary to-primary-light shadow-lg dark:from-primary dark:via-primary-dark dark:to-primary-dark"></div>
-        <div class="container mt-16 mb-20 text-center md:text-left">
+        <div class="container mb-20 mt-16 text-center md:text-left">
           <div v-if="statusCode == 404" class="m-20 mx-auto max-w-sm">
             <svg version="1.1" viewBox="0 0 819.92 844.36" xmlns="http://www.w3.org/2000/svg">
               <g id="a" transform="translate(-550.04 -117.83)" fill="#9755ff">

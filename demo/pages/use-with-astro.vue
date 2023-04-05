@@ -37,16 +37,16 @@ watch(locale, value => {
         <p>{{ $t('content.guide.astro.ssg_intro_1') }}<br />{{ $t('content.guide.astro.ssg_intro_2') }}</p>
         <p class="pt-5">{{ $t('content.guide.options_intro_1') }}</p>
         <p class="italic">{{ $t('content.guide.options_intro_2') }}</p>
-        <h2 class="mt-20 mb-6">{{ $t('content.guide.step1') }}: {{ $t('content.guide.astro.step_setup') }}</h2>
+        <h2 class="mb-6 mt-20">{{ $t('content.guide.step1') }}: {{ $t('content.guide.astro.step_setup') }}</h2>
         <h3 class="mb-6">{{ $t('content.guide.optionA') }}: {{ $t('content.guide.step_cdn') }}</h3>
         <p>{{ $t('content.guide.step_cdn_p1') }}<br />{{ $t('content.guide.step_cdn_p2') }}</p>
         <LazyCodeBlock>
           <pre>&lt;script src="https://cdn.jsdelivr.net/npm/add-to-calendar-button@2" async defer&gt;&lt;/script&gt;</pre>
         </LazyCodeBlock>
-        <h3 class="mt-20 mb-6">{{ $t('content.guide.optionB') }}: {{ $t('content.guide.step_npm') }}</h3>
+        <h3 class="mb-6 mt-20">{{ $t('content.guide.optionB') }}: {{ $t('content.guide.step_npm') }}</h3>
         <p>{{ $t('content.guide.astro.npm_alternative_1') }}</p>
         <LazyCodeBlock><pre>npm install add-to-calendar-button</pre></LazyCodeBlock>
-        <div class="mt-10 mb-6 font-bold">{{ $t('content.guide.astro.npm_alternative_2') }}</div>
+        <div class="mb-6 mt-10 font-bold">{{ $t('content.guide.astro.npm_alternative_2') }}</div>
         <LazyCodeBlock class="line-numbers">
           <pre>
 &lt;script type="module" hoist&gt;
@@ -62,7 +62,7 @@ watch(locale, value => {
 &lt;/script&gt;</pre
           >
         </LazyCodeBlock>
-        <h2 class="mt-20 mb-6">{{ $t('content.guide.step2') }}: {{ $t('content.guide.step_use') }}</h2>
+        <h2 class="mb-6 mt-20">{{ $t('content.guide.step2') }}: {{ $t('content.guide.step_use') }}</h2>
         <p>
           {{ $t('content.guide.step_use_start') }}
         </p>

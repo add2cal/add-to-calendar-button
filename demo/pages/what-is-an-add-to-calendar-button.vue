@@ -130,10 +130,10 @@ const defaultDate = nextDay.getFullYear() + '-' + ('0' + (nextDay.getMonth() + 1
     </div>
     <p class="mt-10 italic">{{ $t('content.seo.example_disclaimer') }}</p>
   </div>
-  <div class="pt-24 pb-8 text-center">
+  <div class="pb-8 pt-24 text-center">
     <NuxtLink
       :to="localePath('index')"
-      class="max-w-xl rounded-xl bg-gradient-to-tr from-secondary via-secondary to-secondary-light py-8 px-12 text-center text-xl font-semibold text-zinc-700 shadow-md hover:via-secondary-light hover:to-secondary-light hover:text-black hover:no-underline hover:shadow-xl"
+      class="max-w-xl rounded-xl bg-gradient-to-tr from-secondary via-secondary to-secondary-light px-12 py-8 text-center text-xl font-semibold text-zinc-700 shadow-md hover:via-secondary-light hover:to-secondary-light hover:text-black hover:no-underline hover:shadow-xl"
     >
       <RocketLaunchIcon class="-mt-0.5 mr-3 inline-block h-8 w-8" aria-hidden="true" />
       {{ $t('labels.clickHereLearnMore') }}

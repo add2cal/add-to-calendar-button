@@ -5,7 +5,7 @@
  *
  * Style: Date
  *
- * Version: 2.2.4
+ * Version: 2.2.5
  * Creator: Jens Kuerschner (https://jenskuerschner.de)
  * Project: https://github.com/add2cal/add-to-calendar-button
  * License: Elastic License 2.0 (ELv2) (https://github.com/add2cal/add-to-calendar-button/blob/main/LICENSE.txt)
@@ -124,7 +124,7 @@
 }
 
 /* medium */
-@media (max-width: 991px) {
+@media (width <= 991px) {
   .atcb-button-wrapper,
   .atcb-list,
   .atcb-modal-box {
@@ -133,7 +133,7 @@
 }
 
 /* small */
-@media (max-width: 575px) {
+@media (width <= 575px) {
   .atcb-button-wrapper,
   .atcb-list,
   .atcb-modal-box {
@@ -177,10 +177,6 @@
   max-width: 16em;
   position: relative;
   z-index: 1;
-}
-
-.atcb-button:disabled .atcb-date-btn-hover {
-  letter-spacing: .1em;
 }
 
 .atcb-rtl .atcb-button {
@@ -288,6 +284,10 @@
   justify-content: center;
   font-weight: 600;
   font-size: 1em;
+}
+
+.atcb-button:disabled .atcb-date-btn-hover {
+  letter-spacing: .1em;
 }
 
 .atcb-button:hover .atcb-date-btn-details,
@@ -593,7 +593,7 @@
   padding: .3em 2.5em 2.25em;
 }
 
-@media (max-width: 575px) {
+@media (width <= 575px) {
   .atcb-modal-headline {
     padding: 1.8em 1em 1em;
   }
