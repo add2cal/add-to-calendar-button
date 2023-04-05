@@ -34,7 +34,7 @@ const description = computed(() => t('meta.description'));
       </Head>
       <Body>
         <HeroHeader />
-        <div class="mt-16 mb-20 text-center md:text-left">
+        <div class="mb-20 mt-16 text-center md:text-left">
           <slot />
         </div>
         <LazyFooter />

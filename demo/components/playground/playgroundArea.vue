@@ -46,13 +46,13 @@ watch(showMC, val => {
       <div
         id="rendering"
         :class="{ 'rounded-bl-none md:rounded-br-md lg:rounded-br-none': !showCode }"
-        class="grid-bg row-span-2 flex justify-center rounded-tl-none border-0 border-zinc-400 bg-zinc-100 py-8 px-3 dark:border-zinc-600 dark:bg-zinc-900 md:rounded-tr-md md:border-l-2 lg:row-span-1 lg:rounded-tr-none"
+        class="grid-bg row-span-2 flex justify-center rounded-tl-none border-0 border-zinc-400 bg-zinc-100 px-3 py-8 dark:border-zinc-600 dark:bg-zinc-900 md:rounded-tr-md md:border-l-2 lg:row-span-1 lg:rounded-tr-none"
       >
         <div class="sticky top-[30vh] z-30 h-auto py-10 md:h-[500px] md:py-0">
           <add-to-calendar-button v-bind="mapAttrsObject(data)" debug />
         </div>
       </div>
-      <div id="style-input" :class="[ !showCode ? 'rounded-bl-md lg:rounded-r-md lg:rounded-bl-none' : 'rounded-none lg:rounded-tr-md' ]" class="hidden border-l-0 border-t-2 border-zinc-400 bg-zinc-200 p-3 dark:border-zinc-600 dark:bg-zinc-800 md:block lg:border-t-0 lg:border-l-2">
+      <div id="style-input" :class="[ !showCode ? 'rounded-bl-md lg:rounded-r-md lg:rounded-bl-none' : 'rounded-none lg:rounded-tr-md' ]" class="hidden border-l-0 border-t-2 border-zinc-400 bg-zinc-200 p-3 dark:border-zinc-600 dark:bg-zinc-800 md:block lg:border-l-2 lg:border-t-0">
         <div class="mb-4 flex justify-between text-sm font-semibold uppercase text-zinc-800 dark:text-zinc-200">
           <span>{{ t('labels.layoutInput') }}</span>
           <LightModeSwitch />
@@ -73,7 +73,7 @@ watch(showMC, val => {
     </div>
   </div>
   <!-- mobile config -->
-  <nav :class="{ hidden: !showMC }" class="fixed top-0 left-0 z-50 h-full w-full overflow-y-auto overflow-x-hidden bg-zinc-200 dark:bg-zinc-800 lg:hidden">
+  <nav :class="{ hidden: !showMC }" class="fixed left-0 top-0 z-50 h-full w-full overflow-y-auto overflow-x-hidden bg-zinc-200 dark:bg-zinc-800 lg:hidden">
     <div class="grid grid-cols-1 gap-10 pb-28">
       <div class="bg-zinc-500 p-4 font-semibold uppercase text-zinc-100 dark:bg-zinc-700 dark:text-zinc-400">
         {{ t('labels.dateInput') }}

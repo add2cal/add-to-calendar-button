@@ -46,27 +46,27 @@ watch(locale, value => {
         </ul>
         <p class="pt-5">{{ $t('content.guide.options_intro_1') }}</p>
         <p class="italic">{{ $t('content.guide.options_intro_2') }}</p>
-        <h2 class="mt-20 mb-6">{{ $t('content.guide.step1') }}: {{ $t('content.guide.step_npm') }}</h2>
+        <h2 class="mb-6 mt-20">{{ $t('content.guide.step1') }}: {{ $t('content.guide.step_npm') }}</h2>
         <h3 class="mb-6">{{ $t('content.guide.optionA') }}: Web Component</h3>
         <p>{{ $t('content.guide.install_npm') }}</p>
         <LazyCodeBlock><pre>npm install add-to-calendar-button</pre></LazyCodeBlock>
-        <h3 class="mt-12 mb-6">{{ $t('content.guide.optionB') }}: React Wrapper</h3>
+        <h3 class="mb-6 mt-12">{{ $t('content.guide.optionB') }}: React Wrapper</h3>
         <p>{{ $t('content.guide.react.install_wrapper') }}</p>
         <LazyCodeBlock>
           <pre>npm install add-to-calendar-button-react</pre>
         </LazyCodeBlock>
-        <h2 class="mt-20 mb-6">{{ $t('content.guide.step2') }}: {{ $t('content.guide.step_import') }}</h2>
+        <h2 class="mb-6 mt-20">{{ $t('content.guide.step2') }}: {{ $t('content.guide.step_import') }}</h2>
         <h3 class="mb-6">{{ $t('content.guide.optionA') }}: Web Component</h3>
         <p>{{ $t('content.guide.import_npm') }}</p>
         <LazyCodeBlock language="javascript">
           <pre>import 'add-to-calendar-button';</pre>
         </LazyCodeBlock>
-        <h3 class="mt-12 mb-6">{{ $t('content.guide.optionB') }}: React Wrapper</h3>
+        <h3 class="mb-6 mt-12">{{ $t('content.guide.optionB') }}: React Wrapper</h3>
         <p>{{ $t('content.guide.react.import_wrapper') }}</p>
         <LazyCodeBlock language="javascript">
           <pre>import { AddToCalendarButton } from 'add-to-calendar-button-react';</pre>
         </LazyCodeBlock>
-        <h2 class="mt-20 mb-6">{{ $t('content.guide.step3') }}: {{ $t('content.guide.react.step_optimize_ts') }}</h2>
+        <h2 class="mb-6 mt-20">{{ $t('content.guide.step3') }}: {{ $t('content.guide.react.step_optimize_ts') }}</h2>
         <p class="font-semibold">{{ $t('content.guide.react.optimize_ts_1') }}</p>
         <p>{{ $t('content.guide.react.optimize_ts_2') }}</p>
         <LazyCodeBlock language="javascript" class="line-numbers">
@@ -82,7 +82,7 @@ declare global {
 }</pre
           >
         </LazyCodeBlock>
-        <h2 class="mt-20 mb-6">{{ $t('content.guide.step4') }}: {{ $t('content.guide.step_use') }}</h2>
+        <h2 class="mb-6 mt-20">{{ $t('content.guide.step4') }}: {{ $t('content.guide.step_use') }}</h2>
         <h3 class="mb-6">{{ $t('content.guide.optionA') }}: Web Component</h3>
         <p>
           {{ $t('content.guide.step_use_start') }}
@@ -102,7 +102,7 @@ declare global {
 &gt;&lt;/add-to-calendar-button&gt;</pre
           >
         </LazyCodeBlock>
-        <h3 class="mt-12 mb-6">{{ $t('content.guide.optionB') }}: React Wrapper</h3>
+        <h3 class="mb-6 mt-12">{{ $t('content.guide.optionB') }}: React Wrapper</h3>
         <p>{{ $t('content.guide.react.start_wrapper_1') }}</p>
         <p>{{ $t('content.guide.react.start_wrapper_2') }}</p>
         <LazyCodeBlock language="javascript" class="line-numbers">

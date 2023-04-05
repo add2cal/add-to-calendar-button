@@ -45,9 +45,9 @@ watch(locale, value => {
             >{{ $t('content.guide.wordpress.install_way_2_3') }}<span class="font-semibold italic"> wp-content/plugins/ </span>{{ $t('content.guide.wordpress.install_way_2_4') }}
           </li>
         </ul>
-        <h2 class="mt-20 mb-6">{{ $t('content.guide.step2') }}: {{ $t('content.guide.wordpress.step_activate') }}</h2>
+        <h2 class="mb-6 mt-20">{{ $t('content.guide.step2') }}: {{ $t('content.guide.wordpress.step_activate') }}</h2>
         <p>{{ $t('content.guide.wordpress.activate') }}</p>
-        <h2 class="mt-20 mb-6">{{ $t('content.guide.step3') }}: {{ $t('content.guide.step_use') }}</h2>
+        <h2 class="mb-6 mt-20">{{ $t('content.guide.step3') }}: {{ $t('content.guide.step_use') }}</h2>
         <h3 class="mb-6">A: Block</h3>
         <p>{{ $t('content.guide.wordpress.block') }}</p>
         <ol class="my-6 list-decimal pl-8 text-left">
@@ -55,7 +55,7 @@ watch(locale, value => {
           <li class="mt-3">{{ $t('content.guide.wordpress.block_step2') }}</li>
           <li class="mt-3">{{ $t('content.guide.wordpress.block_step3') }}</li>
         </ol>
-        <h3 class="mt-12 mb-6">B: Shortcode</h3>
+        <h3 class="mb-6 mt-12">B: Shortcode</h3>
         <p>{{ $t('content.guide.wordpress.shortcode1') }}</p>
         <LazyCodeBlock>
           <pre>[add-to-calendar-button name="{{ $t('demo_data.name_dummy') }}" options="'Apple','Google'" startDate="{{ defaultDate }}" description="{{ $t('content.guide.wordpress.shortcode_description') }}"]</pre>

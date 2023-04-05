@@ -10,7 +10,7 @@ import { LayoutAttrsKey } from "@/models/attrs";
 
     <div class="mb-3 flex items-center justify-between">
       <Input :label="$t(`labels.inputs.${[LayoutAttrsKey.BUTTON_STYLE]}`.toLocaleLowerCase())" type="text" disabled class="mr-5 flex-1" />
-      <Switch :label="$t(`labels.inputs.${[LayoutAttrsKey.IS_BUTTONS_LIST]}`.toLocaleLowerCase())" disabled class="pt-6 pb-0" />
+      <Switch :label="$t(`labels.inputs.${[LayoutAttrsKey.IS_BUTTONS_LIST]}`.toLocaleLowerCase())" disabled class="pb-0 pt-6" />
     </div>
     <Input :label="$t(`labels.inputs.${[LayoutAttrsKey.LABEL]}`.toLocaleLowerCase())" type="text" disabled class="mb-3" />
     <Input :label="$t(`labels.inputs.${[LayoutAttrsKey.TRIGGER]}`.toLocaleLowerCase())" type="text" disabled class="mb-3" />

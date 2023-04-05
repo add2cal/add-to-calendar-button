@@ -24,12 +24,18 @@ const npmDownloadsUrl = 'https://api.npmjs.org/downloads/range/{start}:{end}/add
 const jsdelivrStatsUrl = 'https://data.jsdelivr.com/v1/package/npm/add-to-calendar-button/stats';
 
 onMounted(() => {
-  const cachedStats = get(LSKey.STATS) && JSON.parse(get(LSKey.STATS));
 
-  if (cachedStats?.expireAt && cachedStats?.data) {
-    data.value = mergeDeep(data.value, cachedStats.data);
+  const cachedStats = get(LSKey.STATS);
+  const cachedStatsParsed = (function () {
+    if (cachedStats) {
+      return JSON.parse(cachedStats);
+    }
+  })();
+
+  if (cachedStatsParsed?.expireAt && cachedStatsParsed?.data) {
+    data.value = mergeDeep(data.value, cachedStatsParsed.data);
     marqueeKey.value += 1;
-    if (new Date(cachedStats.expireAt).getTime() < Date.now()) {
+    if (new Date(cachedStatsParsed.expireAt).getTime() < Date.now()) {
       // we load new data in the background, if expired
       loadData();
     }
@@ -179,7 +185,7 @@ const loadJsdelivrStats = async () => {
   <div class="mt-[-54px] hidden h-[40px] sm:block">
     <div class="relative mx-auto flex h-[40px] w-full items-center overflow-hidden">
       <div class="z-10 p-2 pr-3">
-        <div class="whitespace-nowrap rounded-md bg-red-800 py-1 px-2 text-xs font-semibold text-zinc-100 shadow">
+        <div class="whitespace-nowrap rounded-md bg-red-800 px-2 py-1 text-xs font-semibold text-zinc-100 shadow">
           <span class="hidden xl:inline">{{ $t('labels.stats.label_long') }}</span>
           <span class="inline xl:hidden">{{ $t('labels.stats.label_short') }}</span>
         </div>
@@ -199,7 +205,7 @@ const loadJsdelivrStats = async () => {
               </svg>
               <span class="underline decoration-primary decoration-2 underline-offset-4 group-hover:decoration-primary-light group-hover:underline-offset-1">{{ isLoading ? '...' : $n(data.github.stars) }}</span>
               <span class="pl-1 font-normal text-zinc-200 group-hover:text-zinc-100">{{ $t('labels.stats.stars') }}</span>
-              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="mt-0.5 ml-0.5 hidden h-3 w-3 group-hover:inline-block" aria-hidden="true">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="ml-0.5 mt-0.5 hidden h-3 w-3 group-hover:inline-block" aria-hidden="true">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 6H5.25A2.25 2.25 0 003 8.25v10.5A2.25 2.25 0 005.25 21h10.5A2.25 2.25 0 0018 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25" />
               </svg>
               <span class="ml-0.5 block w-3 group-hover:hidden"></span>
@@ -217,7 +223,7 @@ const loadJsdelivrStats = async () => {
               </svg>
               <span class="underline decoration-primary decoration-2 underline-offset-4 group-hover:decoration-primary-light group-hover:underline-offset-1">{{ isLoading ? '...' : $n(data.npm.totalInstallations) }}</span>
               <span class="pl-1 font-normal text-zinc-200 group-hover:text-zinc-100">{{ $t('labels.stats.npm_total') }}</span>
-              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="mt-0.5 ml-0.5 hidden h-3 w-3 group-hover:inline-block" aria-hidden="true">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="ml-0.5 mt-0.5 hidden h-3 w-3 group-hover:inline-block" aria-hidden="true">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 6H5.25A2.25 2.25 0 003 8.25v10.5A2.25 2.25 0 005.25 21h10.5A2.25 2.25 0 0018 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25" />
               </svg>
               <span class="ml-0.5 block w-3 group-hover:hidden"></span>
@@ -235,7 +241,7 @@ const loadJsdelivrStats = async () => {
               </svg>
               <span class="underline decoration-primary decoration-2 underline-offset-4 group-hover:decoration-primary-light group-hover:underline-offset-1">{{ isLoading ? '...' : $n(data.npm.weeklyInstallations) }}</span>
               <span class="pl-1 font-normal text-zinc-200 group-hover:text-zinc-100">{{ $t('labels.stats.npm_weekly') }}</span>
-              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="mt-0.5 ml-0.5 hidden h-3 w-3 group-hover:inline-block" aria-hidden="true">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="ml-0.5 mt-0.5 hidden h-3 w-3 group-hover:inline-block" aria-hidden="true">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 6H5.25A2.25 2.25 0 003 8.25v10.5A2.25 2.25 0 005.25 21h10.5A2.25 2.25 0 0018 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25" />
               </svg>
               <span class="ml-0.5 block w-3 group-hover:hidden"></span>
@@ -250,7 +256,7 @@ const loadJsdelivrStats = async () => {
               </svg>
               <span class="underline decoration-primary decoration-2 underline-offset-4 group-hover:decoration-primary-light group-hover:underline-offset-1">{{ isLoading ? '...' : $n(data.jsdelivr.montlyHits) }}</span>
               <span class="pl-1 font-normal text-zinc-200 group-hover:text-zinc-100">{{ $t('labels.stats.cdn') }}</span>
-              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="mt-0.5 ml-0.5 hidden h-3 w-3 group-hover:inline-block" aria-hidden="true">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="ml-0.5 mt-0.5 hidden h-3 w-3 group-hover:inline-block" aria-hidden="true">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 6H5.25A2.25 2.25 0 003 8.25v10.5A2.25 2.25 0 005.25 21h10.5A2.25 2.25 0 0018 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25" />
               </svg>
               <span class="ml-0.5 block w-3 group-hover:hidden"></span>

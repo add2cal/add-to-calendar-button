@@ -19,7 +19,7 @@ import { DateRecurrenceAttrsKey } from "@/models/attrs";
     </div>
     <Input :label="$t(`labels.inputs.${[DateAttrsKey.TIMEZONE]}`.toLocaleLowerCase())" type="text" disabled class="mb-3" />
     <Input :label="$t(`labels.inputs.${[DateAttrsKey.LOCATION]}`.toLocaleLowerCase())" type="text" disabled class="mb-3" />
-    <div class="my-3 grid grid-cols-2 items-center gap-3 border-y border-zinc-300 px-1 pt-2 pb-4 dark:border-zinc-600">
+    <div class="my-3 grid grid-cols-2 items-center gap-3 border-y border-zinc-300 px-1 pb-4 pt-2 dark:border-zinc-600">
       <div class="text-sm font-semibold uppercase text-zinc-700 dark:text-zinc-300">{{ $t('labels.inputs.recurrence.headline') }}</div>
       <Switch class="justify-end" :label="$t(`labels.inputs.recurrence.${[DateRecurrenceAttrsKey.IS_SIMPLE]}`.toLocaleLowerCase())" disabled />
       <Input :label="$t(`labels.inputs.recurrence.${[DateRecurrenceAttrsKey.RRULE_VALUE]}`.toLocaleLowerCase())" type="text" disabled class="col-span-2" />

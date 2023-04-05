@@ -45,7 +45,7 @@ definePageMeta({
         </p>
       </div>
 
-      <div class="mx-auto mt-14 block border-y border-zinc-300 px-5 pt-6 pb-7 dark:border-zinc-700 md:mx-0 lg:hidden">
+      <div class="mx-auto mt-14 block border-y border-zinc-300 px-5 pb-7 pt-6 dark:border-zinc-700 md:mx-0 lg:hidden">
         <ClientOnly>
           <ConfigSearch :mobile="true" label />
           <template #fallback>
@@ -292,7 +292,7 @@ definePageMeta({
                 It basically holds the same information as the top level, but enables you to define multiple events. Except for date and time information, all other attributes, if not provided in the dates object, use the top level information as fallback. There is one special case with the "UID",
                 which only uses the top level information for the first sub-event (since it needs to be unique). All subsequent sub-events will receive randomly generated new UIDs.<br /><br />
                 <span class="underline">Attributes per sub-event block:</span><br />
-                <ul class="list-disc pt-2 pl-5">
+                <ul class="list-disc pl-5 pt-2">
                   <li>name</li>
                   <li>description</li>
                   <li>startDate</li>
@@ -316,7 +316,7 @@ definePageMeta({
                 Es beinhaltet im Grunde die gleichen Parameter wie die Haupt-Ebene, bietet aber die Möglichkeit mehrere Events zu definieren. Abgesehen von Datums- und Zeitangaben wird für die möglichken Parameter stets eine Information auf der Haupt-Ebene genutzt, sofern sie innerhalb des
                 "dates"-Elements fehlt. Für die "UID" geschieht dies allerdings nur für das erste Event (da die ID einzigartig sein muss). Weitere Events erhalten eine eigene, zufällig generierte ID.<br /><br />
                 <span class="underline">Attribute je Sub-Event-Block:</span><br />
-                <ul class="list-disc pt-2 pl-5">
+                <ul class="list-disc pl-5 pt-2">
                   <li>name</li>
                   <li>description</li>
                   <li>startDate</li>

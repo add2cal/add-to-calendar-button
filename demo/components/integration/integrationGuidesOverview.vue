@@ -41,8 +41,8 @@ const localePath = useLocalePath();
           <div class="self-center p-4 pt-0">WordPress</div>
         </NuxtLink>
       </div>
-      <div class="mt-8 flex w-full flex-col justify-center self-center border-t border-l-0 border-zinc-300 pt-8 pb-12 pl-0 dark:border-zinc-700 md:flex-row xl:mt-0 xl:w-auto xl:flex-col xl:border-t-0 xl:border-l xl:pl-8">
-        <div class="mr-0 mb-6 max-w-xs self-center text-center md:mr-10 md:mb-0 xl:mr-0 xl:mb-10 xl:self-end">
+      <div class="mt-8 flex w-full flex-col justify-center self-center border-l-0 border-t border-zinc-300 pb-12 pl-0 pt-8 dark:border-zinc-700 md:flex-row xl:mt-0 xl:w-auto xl:flex-col xl:border-l xl:border-t-0 xl:pl-8">
+        <div class="mb-6 mr-0 max-w-xs self-center text-center md:mb-0 md:mr-10 xl:mb-10 xl:mr-0 xl:self-end">
           {{ $t('content.installation.other_stack_1') }}
           <br />
           {{ $t('content.installation.other_stack_2') }}
