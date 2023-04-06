@@ -227,8 +227,8 @@
   border-radius: 11px 11px 3px 3px;
 }
 
-.atcb-button.atcb-active:not(.atcb-modal-style, .atcb-dropoverlay, .atcb-dropup)::before,
-.atcb-button.atcb-active.atcb-dropup::after {
+.atcb-button:not(.atcb-modal-style, .atcb-dropoverlay, .atcb-dropup)::before,
+.atcb-button.atcb-dropup::after {
   content: "";
   width: 0;
   height: 0;
@@ -236,20 +236,26 @@
   left: 0;
   right: 0;
   margin: 0 auto;
+  transition: border-width 0.1s linear 0.1s;
 }
 
-.atcb-button.atcb-active:not(.atcb-modal-style, .atcb-dropoverlay, .atcb-dropup)::before {
+.atcb-button:not(.atcb-modal-style, .atcb-dropoverlay, .atcb-dropup)::before {
   top: 100%;
-  border: 0.35em solid transparent;
+  border: 0 solid transparent;
   border-bottom: none;
   border-top-color: var(--btn-background);
 }
 
-.atcb-button.atcb-active.atcb-dropup::after {
+.atcb-button.atcb-dropup::after {
   bottom: 100%;
-  border: 0.35em solid transparent;
+  border: 0 solid transparent;
   border-top: none;
   border-bottom-color: var(--btn-background);
+}
+
+.atcb-button.atcb-active:not(.atcb-modal-style, .atcb-dropoverlay, .atcb-dropup)::before,
+.atcb-button.atcb-active.atcb-dropup::after {
+  border-width: 0.35em;
 }
 
 .atcb-button.atcb-active.atcb-dropoverlay {

@@ -451,7 +451,7 @@ function atcb_action(data, triggerElement, keyboardTrigger = false) {
       triggerElement.id = data.identifier;
     }
     // for custom triggers, we block any dropdown, since this would look shit 99% of the time. Overlay is a little better, but modal would be recommended
-    if (data.listStyle == 'dropdown' || data.listStyle == 'dropdown-static') {
+    if (data.listStyle === 'dropdown' || data.listStyle === 'dropdown-static' || data.listStyle === 'dropup-static') {
       data.listStyle = 'modal';
     }
   } else {

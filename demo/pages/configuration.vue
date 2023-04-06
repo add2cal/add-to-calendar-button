@@ -677,15 +677,15 @@ definePageMeta({
             <tr id="liststyle">
               <th scope="row">listStyle</th>
               <td>
-                <em>String</em><br /><br /><span class="label block">{{ $t('content.config.options') }}:</span>dropdown, dropdown-static, overlay, modal<br /><br /><span class="label">{{ $t('content.config.default') }}:</span>dropdown
+                <em>String</em><br /><br /><span class="label block">{{ $t('content.config.options') }}:</span>dropdown, dropdown-static, dropup-static, overlay, modal<br /><br /><span class="label">{{ $t('content.config.default') }}:</span>dropdown
               </td>
               <td v-if="locale=='en'">
                 The calendar link list can be rendered as dropdown, overlay, or modal.<br /><br />
-                The dropdown style also considers the position of the button on the screen and shows the list automatically above or below the button. Use "dropdown-static" to always open below the button.
+                The dropdown style also considers the position of the button on the screen and shows the list automatically above or below the button. Use "dropdown-static" or "dropup-static" to always open below or above the button.
               </td>
               <td v-else>
                 Die Kalender-Link-Liste kann als Dropdown, Overlay oder Modal dargestellt werden.<br /><br />
-                Der Dropdown-Stil berücksichtigt auch die Position auf dem Bildschirm und zeigt die Liste je nach Situation über oder unter dem Button an. Nutze den Wert "dropdown-static", um sie immer unterhalb anzuzeigen.
+                Der Dropdown-Stil berücksichtigt auch die Position auf dem Bildschirm und zeigt die Liste je nach Situation über oder unter dem Button an. Nutze den Wert "dropdown-static", bzw. "dropup-static", um sie immer unterhalb oder oberhalb anzuzeigen.
               </td>
             </tr>
             <tr id="hidebackground">
