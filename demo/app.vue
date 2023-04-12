@@ -2,7 +2,9 @@
 import { set, LSKey } from '@/utils/localStorage';
 const { locale } = useI18n();
 
-set(LSKey.LANG, locale.value);
+if (process.client) {
+  set(LSKey.LANG, locale.value);
+}
 
 useSchemaOrg([
   defineWebSite({
