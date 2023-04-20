@@ -40,6 +40,12 @@ See [add-to-calendar-button.com](https://add-to-calendar-button.com/) for a live
 
 And remember to [⭐ **star** this repository](#) in order to stay up-to-date and save it for later! 🤗
 
+<br />
+
+---
+
+<br />
+
 ## ✨ Features
 
 Simple and convenient integration of 1 or many buttons, configurable directly within the HTML code.
