@@ -17,7 +17,7 @@ const localePath = useLocalePath();
       <NavigationBar />
     </div>
     <div class="container">
-      <div class="relative">
+      <div class="relative z-20">
         <div class="absolute left-0 top-0 m-auto grid w-full grid-cols-1 justify-items-center pb-20 pt-8 xs:py-24 md:py-28 lg:grid-cols-2 lg:py-36">
           <div class="grid grid-cols-1 justify-items-center pb-5 md:grid-cols-2 lg:grid-cols-1">
             <div class="max-w-[400px] self-center pb-14 md:pb-0 lg:pb-16">
@@ -31,7 +31,7 @@ const localePath = useLocalePath();
               </h1>
               <h2 class="mt-5 hidden italic text-white opacity-70 xs:block">{{ $t('content.home.header_slogan') }}</h2>
             </div>
-            <div class="grid max-w-[400px] grid-cols-1  justify-items-center gap-6 self-center xs:grid-cols-2 md:grid-cols-1 lg:grid-cols-2">
+            <div class="grid max-w-[400px] grid-cols-1 justify-items-center gap-6 self-center xs:grid-cols-2 md:grid-cols-1 lg:grid-cols-2">
               <div class="hidden xs:block">
                 <NuxtLink :to="{path: localePath('index'), hash: '#installation'}" class="button-secondary order-first w-40 text-white md:order-last lg:order-first">{{ $t('labels.getStarted') }}</NuxtLink>
               </div>
@@ -45,7 +45,7 @@ const localePath = useLocalePath();
           </div>
         </div>
       </div>
-      <div class="flex justify-end overflow-hidden">
+      <div class="relative z-10 flex justify-end overflow-hidden">
         <div class="w-full max-w-full pt-64 opacity-10 dark:opacity-[0.05] xs:pt-48 sm:pt-28 md:max-w-[450px] md:pt-28 lg:max-w-[600px] lg:pt-32 xl:max-w-[750px] xl:pt-12">
           <svg version="1.1" style="width:100%; height:auto; min-height:300px;" viewBox="0 0 808 572" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
             <g transform="translate(-186.89 -51.542)" opacity=".62861">
