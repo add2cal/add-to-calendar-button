@@ -67,7 +67,7 @@ const localePath = useLocalePath();
       </ClientOnly>
     </div>
   </div>
-  <div :class="view.atTopOfPage ? 'top-[-80px]' : 'top-0'" class="fixed z-50 w-full bg-gradient-to-tr from-primary via-primary to-primary-light py-3 shadow-xl transition-all dark:from-primary-dark dark:via-primary-darker dark:to-primary-darker lg:hidden">
+  <div :class="view.atTopOfPage ? 'top-[-80px]' : 'top-0'" class="fixed z-50 w-full bg-gradient-to-tr from-primary to-primary-light py-3 shadow-xl transition-all dark:from-primary-darkest dark:to-primary-darker lg:hidden">
     <div class="container flex justify-between">
       <div class="-ml-3 -mt-1 w-auto max-w-[100px] grow xl:ml-0">
         <Logo variation="mobile-small" class="force-light" />
@@ -105,6 +105,6 @@ export default {
 .hero-container {
   border-bottom-right-radius: 90% 10%;
   border-bottom-left-radius: 90% 10%;
-  @apply w-full bg-gradient-to-tr from-primary via-primary to-primary-light pt-5 shadow-2xl dark:from-primary-dark dark:via-primary-darker dark:to-primary-darker sm:rounded-b-none sm:shadow-none;
+  @apply w-full bg-gradient-to-tr from-primary from-40% to-primary-light pt-5 shadow-2xl dark:from-primary-darkest dark:to-primary-darker sm:rounded-b-none sm:shadow-none;
 }
 </style>

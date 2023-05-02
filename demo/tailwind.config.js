@@ -33,6 +33,7 @@ module.exports = {
         'primary-light': '#cbaaff',
         'primary-dark': '#7644c6',
         'primary-darker': '#4e3872',
+        'primary-darkest': '#28182d',
         secondary: '#ffa255',
         'secondary-light': '#ffd0aa',
         'secondary-dark': '#fc8f29',
