@@ -3,7 +3,7 @@
  *  Add to Calendar Button
  *  ++++++++++++++++++++++
  *
- *  Version: 2.2.5
+ *  Version: 2.2.6
  *  Creator: Jens Kuerschner (https://jenskuerschner.de)
  *  Project: https://github.com/add2cal/add-to-calendar-button
  *  License: Elastic License 2.0 (ELv2) (https://github.com/add2cal/add-to-calendar-button/blob/main/LICENSE.txt)
@@ -113,10 +113,19 @@ function atcb_generate_time(data, style = 'delimiters', targetCal = 'general', a
     const newStartDate = new Date(Date.UTC(startDate[0], startDate[1] - 1, startDate[2], 12, 0, 0));
     const newEndDate = new Date(Date.UTC(endDate[0], endDate[1] - 1, endDate[2], 12, 0, 0));
     // increment the end day by 1 for Google Calendar, iCal and Outlook
-    if (targetCal == 'google' || targetCal == 'microsoft' || targetCal == 'ical') {
+    if (targetCal == 'google' || targetCal == 'microsoft' || targetCal == 'msteams' || targetCal == 'ical') {
       newEndDate.setDate(newEndDate.getDate() + 1);
     }
     // return formatted data
+    // for ms teams, we need to remove the Z as well and add the time zone offset +00:00 (with encoded :) instead
+    if (targetCal == 'msteams') {
+      return {
+        start: atcb_format_datetime(newStartDate, style, false, true) + '+00%3A00',
+        end: atcb_format_datetime(newEndDate, style, false, true) + '+00%3A00',
+        allday: true,
+      };
+    }
+    // for all others, it is easier
     return {
       start: atcb_format_datetime(newStartDate, style, false),
       end: atcb_format_datetime(newEndDate, style, false),
