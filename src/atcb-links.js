@@ -3,7 +3,7 @@
  *  Add to Calendar Button
  *  ++++++++++++++++++++++
  *
- *  Version: 2.2.5
+ *  Version: 2.2.6
  *  Creator: Jens Kuerschner (https://jenskuerschner.de)
  *  Project: https://github.com/add2cal/add-to-calendar-button
  *  License: Elastic License 2.0 (ELv2) (https://github.com/add2cal/add-to-calendar-button/blob/main/LICENSE.txt)
@@ -235,7 +235,8 @@ function atcb_generate_google(data) {
   const formattedDate = atcb_generate_time(data, 'clean', 'google');
   urlParts.push('dates=' + encodeURIComponent(formattedDate.start) + '%2F' + encodeURIComponent(formattedDate.end));
   // setting time zone if given and not GMT +/- something, since this is not supported by Google Calendar
-  if (data.timeZone != null && data.timeZone != '' && !/(GMT[+|-]\d{1,2}|Etc\/U|Etc\/Zulu|CET|CST6CDT|EET|EST|EST5EDT|MET|MST|MST7MDT|PST8PDT|WET)/i.test(data.timeZone)) {
+  // also do not set for all-day events, since this can lead to Google Calendar trying to adjust times
+  if (data.timeZone != null && data.timeZone != '' && !/(GMT[+|-]\d{1,2}|Etc\/U|Etc\/Zulu|CET|CST6CDT|EET|EST|EST5EDT|MET|MST|MST7MDT|PST8PDT|WET)/i.test(data.timeZone) && !formattedDate.allday) {
     urlParts.push('ctz=' + data.timeZone);
   }
   // add details (if set)
@@ -339,15 +340,21 @@ function atcb_generate_microsoft(data, type = '365') {
 }
 
 // FUNCTION TO GENERATE THE MICROSOFT TEAMS URL
-// See specs at: https://docs.microsoft.com/en-us/microsoftteams/platform/concepts/build-and-test/deep-links#deep-linking-to-the-scheduling-dialog
+// See specs at: https://learn.microsoft.com/en-us/microsoftteams/platform/concepts/build-and-test/deep-link-workflow?tabs=teamsjs-v2#deep-link-to-open-a-meeting-scheduling-dialog
 // Mind that this is still in development mode by Microsoft! Location, html tags and linebreaks in the description are not supported yet.
 function atcb_generate_msteams(data) {
   const urlParts = [];
   const baseUrl = 'https://teams.microsoft.com/l/meeting/new?';
   // generate and add date
-  const formattedDate = atcb_generate_time(data, 'delimiters', 'microsoft');
-  urlParts.push('startTime=' + encodeURIComponent(formattedDate.start));
-  urlParts.push('endTime=' + encodeURIComponent(formattedDate.end));
+  const formattedDate = atcb_generate_time(data, 'delimiters', 'msteams', true);
+  // we need to encode the date, but not for all-day events to not encode the plus for the offset (somehow strange, but this all consists somehow of workarounds with the Microsoft Teams url scheme)...
+  if (!formattedDate.allday) {
+    urlParts.push('startTime=' + encodeURIComponent(formattedDate.start));
+    urlParts.push('endTime=' + encodeURIComponent(formattedDate.end));
+  } else {
+    urlParts.push('startTime=' + formattedDate.start);
+    urlParts.push('endTime=' + formattedDate.end);
+  }
   // add details (if set)
   if (data.name != null && data.name != '') {
     urlParts.push('subject=' + encodeURIComponent(data.name));
