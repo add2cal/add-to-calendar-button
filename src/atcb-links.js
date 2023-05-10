@@ -27,9 +27,9 @@ function atcb_generate_links(host, type, data, subEvent = 'all', keyboardTrigger
     linkType = 'ical';
   }
   // TMP WORKAROUND: redirect to iCal solution on mobile devices for msteams, ms365, and outlookcom, since the Microsoft web apps are buggy on mobile devices (see https://github.com/add2cal/add-to-calendar-button/discussions/113)
-  if (isMobile() && (type == 'msteams' || type == 'ms365' || type == 'outlookcom')) {
+  /*if (isMobile() && (type == 'msteams' || type == 'ms365' || type == 'outlookcom')) {
     linkType = 'ical';
-  }
+  }*/
   // adjust for subEvent and case
   if (subEvent != 'all') {
     subEvent = parseInt(subEvent) - 1;
@@ -308,7 +308,7 @@ function atcb_generate_yahoo(data) {
 // See specs at: TODO: add some documentation here, if it exists
 function atcb_generate_microsoft(data, type = '365') {
   const urlParts = [];
-  const basePath = '/calendar/0/deeplink/compose?path=%2Fcalendar%2Faction%2Fcompose&rru=addevent';
+  const basePath = '/calendar/0/deeplink/compose?path=%252Fcalendar%252Faction%252Fcompose&rru=addevent';
   const baseUrl = (function () {
     if (type == 'outlook') {
       return 'https://outlook.live.com' + basePath;
@@ -319,8 +319,8 @@ function atcb_generate_microsoft(data, type = '365') {
   urlParts.push(baseUrl);
   // generate and add date
   const formattedDate = atcb_generate_time(data, 'delimiters', 'microsoft');
-  urlParts.push('startdt=' + encodeURIComponent(formattedDate.start));
-  urlParts.push('enddt=' + encodeURIComponent(formattedDate.end));
+  urlParts.push('startdt=' + formattedDate.start);
+  urlParts.push('enddt=' + formattedDate.end);
   if (formattedDate.allday) {
     urlParts.push('allday=true');
   }
