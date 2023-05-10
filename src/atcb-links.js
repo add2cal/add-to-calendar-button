@@ -3,7 +3,7 @@
  *  Add to Calendar Button
  *  ++++++++++++++++++++++
  *
- *  Version: 2.2.6
+ *  Version: 2.2.7
  *  Creator: Jens Kuerschner (https://jenskuerschner.de)
  *  Project: https://github.com/add2cal/add-to-calendar-button
  *  License: Elastic License 2.0 (ELv2) (https://github.com/add2cal/add-to-calendar-button/blob/main/LICENSE.txt)
@@ -12,7 +12,7 @@
  */
 
 import { tzlib_get_ical_block } from 'timezones-ical-library';
-import { atcbVersion, isiOS, isAndroid, isChrome, isMobile, isWebView, isProblematicWebView, atcbDefaultTarget, atcbStates } from './atcb-globals.js';
+import { atcbVersion, isiOS, isAndroid, isChrome, isWebView, isProblematicWebView, atcbDefaultTarget, atcbStates } from './atcb-globals.js';
 import { atcb_toggle } from './atcb-control.js';
 import { atcb_saved_hook, atcb_save_file, atcb_generate_time, atcb_format_datetime, atcb_secure_url, atcb_copy_to_clipboard, atcb_rewrite_ical_text } from './atcb-util.js';
 import { atcb_create_modal } from './atcb-generate.js';
@@ -26,10 +26,6 @@ function atcb_generate_links(host, type, data, subEvent = 'all', keyboardTrigger
   if (type == 'apple') {
     linkType = 'ical';
   }
-  // TMP WORKAROUND: redirect to iCal solution on mobile devices for msteams, ms365, and outlookcom, since the Microsoft web apps are buggy on mobile devices (see https://github.com/add2cal/add-to-calendar-button/discussions/113)
-  /*if (isMobile() && (type == 'msteams' || type == 'ms365' || type == 'outlookcom')) {
-    linkType = 'ical';
-  }*/
   // adjust for subEvent and case
   if (subEvent != 'all') {
     subEvent = parseInt(subEvent) - 1;
