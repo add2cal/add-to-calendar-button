@@ -71,7 +71,9 @@ const configOptions = [
   "identifier",
   "bypassWebViewCheck",
   "hideBranding",
-  "debug"
+  "debug",
+  "styleLight",
+  "styleDark",
 ];
 
 const getFilteredOptions = () => {

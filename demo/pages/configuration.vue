@@ -837,6 +837,38 @@ definePageMeta({
                 <NuxtLink :to="{path: localePath('advanced-use'), hash: '#case-4'}">{{ $t('labels.example') }} <ArrowRightIcon class="-mt-0.5 mr-0.5 inline-block h-3 w-3" aria-hidden="true" /></NuxtLink>
               </td>
             </tr>
+            <tr id="stylelight">
+              <th scope="row">styleLight</th>
+              <td><em>String</em></td>
+              <td v-if="locale=='en'">
+                You can override global css variables for the button.<br /><br />
+                Find out what you can change by having a look at the top section at a respective
+                <a href="https://github.com/add2cal/add-to-calendar-button/tree/main/assets/css" target="_blank" rel="noopener">css file in the repository <ArrowTopRightOnSquareIcon class="-mt-0.5 mr-0.5 inline-block h-4 w-4" aria-hidden="true" /></a>.<br /><br />
+                Example: <em>styleLight="--btn-background: #2f4377; --btn-text: #fff; --font: Georgia, 'Times New Roman', Times, serif;"</em><br /><br />
+                The styleLight option acts as default. To override dark mode variables, also define styleDark (see below).
+              </td>
+              <td v-else>
+                Du kannst globale CSS Variabeln des Buttons überschreiben.<br /><br />
+                Alle möglichen Einträge findest du zu Beginn der jeweiligen
+                <a href="https://github.com/add2cal/add-to-calendar-button/tree/main/assets/css" target="_blank" rel="noopener">CSS-Datei im Repository <ArrowTopRightOnSquareIcon class="-mt-0.5 mr-0.5 inline-block h-4 w-4" aria-hidden="true" /></a>.<br /><br />
+                Beispiel: <em>styleLight="--btn-background: #2f4377; --btn-text: #fff; --font: Georgia, 'Times New Roman', Times, serif;"</em><br /><br />
+                Die styleLight-Option definiert den Standard. Um Dark-Mode-Variabeln zu überschreiben, musst du zusätzlich die styleDark-Option setzen.
+              </td>
+            </tr>
+            <tr id="styledark">
+              <th scope="row">styleDark</th>
+              <td><em>String</em></td>
+              <td v-if="locale=='en'">
+                You can override global css variables for the button.<br /><br />
+                Find out what you can change by having a look at the top section at a respective
+                <a href="https://github.com/add2cal/add-to-calendar-button/tree/main/assets/css" target="_blank" rel="noopener">css file in the repository <ArrowTopRightOnSquareIcon class="-mt-0.5 mr-0.5 inline-block h-4 w-4" aria-hidden="true" /></a>.<br />
+              </td>
+              <td v-else>
+                Du kannst globale CSS Variabeln des Buttons überschreiben.<br /><br />
+                Alle möglichen Einträge findest du zu Beginn der jeweiligen
+                <a href="https://github.com/add2cal/add-to-calendar-button/tree/main/assets/css" target="_blank" rel="noopener">CSS-Datei im Repository <ArrowTopRightOnSquareIcon class="-mt-0.5 mr-0.5 inline-block h-4 w-4" aria-hidden="true" /></a>.<br />
+              </td>
+            </tr>
           </tbody>
         </table>
       </div>

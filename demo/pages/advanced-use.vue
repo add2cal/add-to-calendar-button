@@ -239,8 +239,8 @@ onUnmounted(() => {
             Spezifiziere deine invididuellen Werte über das "styleLight"-Attribut für den Standard-Look und über das "styleDark"-Attribut für den Dark-Mode.
           </p>
           <p>
-            Die möglichen Variablen unterscheiden sich ein wenig von Button-Theme zu Button-Themen. Sieh dir die entsprechende CSS-Datei unter
-            <a href="https://github.com/add2cal/add-to-calendar-button/tree/main/assets/css" target="_blank" rel="noopener">css file in the repository <ArrowTopRightOnSquareIcon class="-mt-0.5 mr-0.5 inline-block h-4 w-4" aria-hidden="true" /></a> an (du findest die möglichen Werte in der Sektion
+            Die möglichen Variablen unterscheiden sich ein wenig von Button-Theme zu Button-Themen. Wirf hierzu einen Blick in die entsprechende
+            <a href="https://github.com/add2cal/add-to-calendar-button/tree/main/assets/css" target="_blank" rel="noopener">CSS-Datei im Repository <ArrowTopRightOnSquareIcon class="-mt-0.5 mr-0.5 inline-block h-4 w-4" aria-hidden="true" /></a> an (du findest die möglichen Werte in der Sektion
             "Global colors and shadows").
           </p>
           <p class="italic">Beachte, dass dies nicht mit dem Button-Stil "none" oder dem atcb_action-Ansatz (<NuxtLink :to="'#case-10'">siehe #10</NuxtLink>) kompatibel ist.</p>
