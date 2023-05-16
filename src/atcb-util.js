@@ -137,15 +137,18 @@ function atcb_generate_time(data, style = 'delimiters', targetCal = 'general', a
       if (isMobile()) {
         // get the time zone offset of the user's browser
         const offset = new Date().getTimezoneOffset();
-        // calculate the offset in milliseconds
-        const calcOffset = offset * 60 * 1000;
-        // add the offset to the dates
-        newStartDate.setTime(newStartDate.getTime() + calcOffset);
-        newEndDate.setTime(newEndDate.getTime() + calcOffset);
+        // get the ISO string of the offset
+        const formattedOffset = (function () {
+          if (offset < 0) {
+            return '+' + ('0' + Math.abs(offset / 60)).slice(-2) + ':' + ('0' + Math.abs(offset % 60)).slice(-2);
+          } else {
+            return '-' + ('0' + Math.abs(offset / 60)).slice(-2) + ':' + ('0' + Math.abs(offset % 60)).slice(-2);
+          }
+        })();
         // return formatted data
         return {
-          start: atcb_format_datetime(newStartDate, style, true, true) + '+00:00',
-          end: atcb_format_datetime(newEndDate, style, true, true) + '+00:00',
+          start: atcb_format_datetime(newStartDate, style, true, true) + formattedOffset,
+          end: atcb_format_datetime(newEndDate, style, true, true) + formattedOffset,
           allday: true,
         };
       }
