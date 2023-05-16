@@ -130,12 +130,28 @@ function atcb_generate_time(data, style = 'delimiters', targetCal = 'general', a
       newEndDate.setDate(newEndDate.getDate() + 1);
     }
     // return formatted data
-    // for ms teams, we need to remove the Z as well and add the time zone offset +00:00 as well as 0 time instead
+    // for ms teams, we need to remove the Z as well and add the time zone offset +00:00 instead
+    // but only on desktop - on mobile devices, we add time information in the user's time zone
     // TODO: optimize this as soon as Microsoft fixed their bugs
     if (targetCal === 'msteams') {
+      if (isMobile()) {
+        // get the time zone offset of the user's browser
+        const offset = new Date().getTimezoneOffset();
+        // calculate the offset in milliseconds
+        const calcOffset = offset * 60 * 1000;
+        // add the offset to the dates
+        newStartDate.setTime(newStartDate.getTime() + calcOffset);
+        newEndDate.setTime(newEndDate.getTime() + calcOffset);
+        // return formatted data
+        return {
+          start: atcb_format_datetime(newStartDate, style, true, true) + '+00:00',
+          end: atcb_format_datetime(newEndDate, style, true, true) + '+00:00',
+          allday: true,
+        };
+      }
       return {
-        start: atcb_format_datetime(newStartDate, style, false, true) + 'T00:00:00+00:00',
-        end: atcb_format_datetime(newEndDate, style, false, true) + 'T00:00:00+00:00',
+        start: atcb_format_datetime(newStartDate, style, false, true) + '+00:00',
+        end: atcb_format_datetime(newEndDate, style, false, true) + '+00:00',
         allday: true,
       };
     }
