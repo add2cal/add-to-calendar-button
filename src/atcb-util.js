@@ -130,12 +130,12 @@ function atcb_generate_time(data, style = 'delimiters', targetCal = 'general', a
       newEndDate.setDate(newEndDate.getDate() + 1);
     }
     // return formatted data
-    // for ms teams, we need to remove the Z as well and add the time zone offset +00:00 instead
+    // for ms teams, we need to remove the Z as well and add the time zone offset +00:00 as well as 0 time instead
     // TODO: optimize this as soon as Microsoft fixed their bugs
     if (targetCal === 'msteams') {
       return {
-        start: atcb_format_datetime(newStartDate, style, true, true) + '+00:00',
-        end: atcb_format_datetime(newEndDate, style, true, true) + '+00:00',
+        start: atcb_format_datetime(newStartDate, style, false, true) + 'T00:00:00+00:00',
+        end: atcb_format_datetime(newEndDate, style, false, true) + 'T00:00:00+00:00',
         allday: true,
       };
     }
