@@ -350,8 +350,9 @@ function atcb_generate_msteams(data) {
   const baseUrl = 'https://teams.microsoft.com/l/meeting/new?';
   // generate and add date
   const formattedDate = atcb_generate_time(data, 'delimiters', 'msteams', true);
-  // we need to encode the date, but not for all-day events to not encode the plus for the offset (somehow strange, but this all consists somehow of workarounds with the Microsoft Teams url scheme)...
-  if (!formattedDate.allday) {
+  // we need to encode the date, but not for all-day events on desktop to not encode the plus for the offset (somehow strange, but this all consists somehow of workarounds with the Microsoft Teams url scheme)...
+  // TODO: optimize this, when Microsoft has fixed it
+  if (!formattedDate.allday || isMobile()) {
     urlParts.push('startTime=' + encodeURIComponent(formattedDate.start));
     urlParts.push('endTime=' + encodeURIComponent(formattedDate.end));
   } else {
