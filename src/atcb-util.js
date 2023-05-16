@@ -134,8 +134,8 @@ function atcb_generate_time(data, style = 'delimiters', targetCal = 'general', a
     // TODO: optimize this as soon as Microsoft fixed their bugs
     if (targetCal === 'msteams') {
       return {
-        start: atcb_format_datetime(newStartDate, style, false, true) + '+00:00',
-        end: atcb_format_datetime(newEndDate, style, false, true) + '+00:00',
+        start: atcb_format_datetime(newStartDate, style, true, true) + '+00:00',
+        end: atcb_format_datetime(newEndDate, style, true, true) + '+00:00',
         allday: true,
       };
     }
