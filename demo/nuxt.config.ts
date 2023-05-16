@@ -29,6 +29,7 @@ export default defineNuxtConfig({
     debug: process.env.NODE_ENV === 'development',
   },
   app: {
+    rootId: 'atcb-demo',
     head: {
       htmlAttrs: {
         lang: 'en',
@@ -80,6 +81,7 @@ export default defineNuxtConfig({
         { rel: 'dns-prefetch', href: 'https://data.jsdelivr.com' },
       ],
       script: [{ async: true, defer: true, 'data-website-id': 'd178e769-c435-4de9-87e5-48b0ec339f62', src: 'https://a.add-to-calendar-button.com/atcba.js', 'data-host-url': 'https://a.add-to-calendar-button.com', 'data-domains': 'add-to-calendar-button.com' }],
+      noscript: [{ innerHTML: 'Please enable JavaScript to view this website.' }],
     },
   },
   schemaOrg: {
