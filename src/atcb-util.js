@@ -147,8 +147,8 @@ function atcb_generate_time(data, style = 'delimiters', targetCal = 'general', a
         })();
         // return formatted data
         return {
-          start: atcb_format_datetime(newStartDate, style, true, true) + formattedOffset,
-          end: atcb_format_datetime(newEndDate, style, true, true) + formattedOffset,
+          start: atcb_format_datetime(newStartDate, style, false, true) + 'T00:00:00' + formattedOffset,
+          end: atcb_format_datetime(newEndDate, style, false, true) + 'T00:00:00' + formattedOffset,
           allday: true,
         };
       }
