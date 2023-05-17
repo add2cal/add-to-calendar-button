@@ -74,7 +74,7 @@ watch(showMC, val => {
   </div>
   <!-- mobile config -->
   <nav :class="{ hidden: !showMC }" class="fixed left-0 top-0 z-50 h-full w-full overflow-y-auto overflow-x-hidden bg-zinc-200 dark:bg-zinc-800 lg:hidden">
-    <div class="grid grid-cols-1 gap-10 pb-28">
+    <div class="grid grid-cols-1 gap-10 pb-24">
       <div class="bg-zinc-500 p-4 font-semibold uppercase text-zinc-100 dark:bg-zinc-700 dark:text-zinc-400">
         {{ t('labels.dateInput') }}
       </div>
@@ -88,7 +88,7 @@ watch(showMC, val => {
         <LayoutAttrs v-model="data.layout" mobile />
       </div>
     </div>
-    <div class="fixed bottom-0 left-0 flex h-20 w-full cursor-pointer justify-center bg-secondary text-lg font-semibold text-zinc-700 hover:bg-secondary-light hover:text-black" @click="(showMC = !showMC)">
+    <div class="sticky bottom-0 left-0 flex h-20 w-full cursor-pointer justify-center bg-secondary text-lg font-semibold text-zinc-700 hover:bg-secondary-light hover:text-black" @click="(showMC = !showMC)">
       <div class="flex self-center">
         <div>
           <CheckIcon class="-mt-1.5 mr-2 inline-block h-7 w-7" aria-hidden="true" />
