@@ -3,7 +3,7 @@
  *  Add to Calendar Button
  *  ++++++++++++++++++++++
  *
- *  Version: 2.2.8
+ *  Version: 2.2.9
  *  Creator: Jens Kuerschner (https://jenskuerschner.de)
  *  Project: https://github.com/add2cal/add-to-calendar-button
  *  License: Elastic License 2.0 (ELv2) (https://github.com/add2cal/add-to-calendar-button/blob/main/LICENSE.txt)
@@ -12,7 +12,7 @@
  */
 
 import { tzlib_get_ical_block } from 'timezones-ical-library';
-import { atcbVersion, isiOS, isAndroid, isChrome, isWebView, isProblematicWebView, atcbDefaultTarget, atcbStates } from './atcb-globals.js';
+import { atcbVersion, isMobile, isiOS, isAndroid, isChrome, isWebView, isProblematicWebView, atcbDefaultTarget, atcbStates } from './atcb-globals.js';
 import { atcb_toggle } from './atcb-control.js';
 import { atcb_saved_hook, atcb_save_file, atcb_generate_time, atcb_format_datetime, atcb_secure_url, atcb_copy_to_clipboard, atcb_rewrite_ical_text } from './atcb-util.js';
 import { atcb_create_modal } from './atcb-generate.js';
@@ -304,7 +304,14 @@ function atcb_generate_yahoo(data) {
 // See specs at: TODO: add some documentation here, if it exists
 function atcb_generate_microsoft(data, type = '365') {
   const urlParts = [];
-  const basePath = '/calendar/action/compose?rru=addevent';
+  const basePath = (function () {
+    // tmp workaround to reflect the fact that Microsoft is routing mobile traffic differently
+    // TODO: remove this, when Microsoft has fixed this
+    if (isMobile()) {
+      return '/calendar/0/deeplink/compose?path=%2Fcalendar%2Faction%2Fcompose&rru=addevent';
+    }
+    return '/calendar/action/compose?rru=addevent';
+  })();
   const baseUrl = (function () {
     if (type == 'outlook') {
       return 'https://outlook.live.com' + basePath;
@@ -314,7 +321,7 @@ function atcb_generate_microsoft(data, type = '365') {
   })();
   urlParts.push(baseUrl);
   // generate and add date
-  const formattedDate = atcb_generate_time(data, 'delimiters', 'microsoft', true);
+  const formattedDate = atcb_generate_time(data, 'delimiters', 'microsoft');
   urlParts.push('startdt=' + formattedDate.start);
   urlParts.push('enddt=' + formattedDate.end);
   if (formattedDate.allday) {
@@ -343,8 +350,9 @@ function atcb_generate_msteams(data) {
   const baseUrl = 'https://teams.microsoft.com/l/meeting/new?';
   // generate and add date
   const formattedDate = atcb_generate_time(data, 'delimiters', 'msteams', true);
-  // we need to encode the date, but not for all-day events to not encode the plus for the offset (somehow strange, but this all consists somehow of workarounds with the Microsoft Teams url scheme)...
-  if (!formattedDate.allday) {
+  // we need to encode the date, but not for all-day events on desktop to not encode the plus for the offset (somehow strange, but this all consists somehow of workarounds with the Microsoft Teams url scheme)...
+  // TODO: optimize this, when Microsoft has fixed it
+  if (!formattedDate.allday || isMobile()) {
     urlParts.push('startTime=' + encodeURIComponent(formattedDate.start));
     urlParts.push('endTime=' + encodeURIComponent(formattedDate.end));
   } else {

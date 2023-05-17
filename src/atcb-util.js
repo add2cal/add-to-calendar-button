@@ -3,7 +3,7 @@
  *  Add to Calendar Button
  *  ++++++++++++++++++++++
  *
- *  Version: 2.2.8
+ *  Version: 2.2.9
  *  Creator: Jens Kuerschner (https://jenskuerschner.de)
  *  Project: https://github.com/add2cal/add-to-calendar-button
  *  License: Elastic License 2.0 (ELv2) (https://github.com/add2cal/add-to-calendar-button/blob/main/LICENSE.txt)
@@ -124,16 +124,37 @@ function atcb_generate_time(data, style = 'delimiters', targetCal = 'general', a
     // we set 12 o clock as time to prevent Daylight saving time to interfere with any calculation here
     const newStartDate = new Date(Date.UTC(startDate[0], startDate[1] - 1, startDate[2], 12, 0, 0));
     const newEndDate = new Date(Date.UTC(endDate[0], endDate[1] - 1, endDate[2], 12, 0, 0));
-    // increment the end day by 1 for Google Calendar, iCal and Outlook
-    if (targetCal == 'google' || targetCal == 'microsoft' || targetCal == 'msteams' || targetCal == 'ical') {
+    // increment the end day by 1 for Google Calendar, iCal, and Microsoft (but only if mobile, since desktop does not need this)
+    // TODO: remove Microsoft from this list as soon as they fixed their bugs
+    if (targetCal === 'google' || (targetCal === 'microsoft' && !isMobile()) || targetCal === 'msteams' || targetCal === 'ical') {
       newEndDate.setDate(newEndDate.getDate() + 1);
     }
     // return formatted data
-    // for ms teams, we need to remove the Z as well and add the time zone offset +00:00 (with encoded :) instead
-    if (targetCal == 'msteams') {
+    // for ms teams, we need to remove the Z as well and add the time zone offset +00:00 instead
+    // but only on desktop - on mobile devices, we add time information in the user's time zone
+    // TODO: optimize this as soon as Microsoft fixed their bugs
+    if (targetCal === 'msteams') {
+      if (isMobile()) {
+        // get the time zone offset of the user's browser for the start date
+        const offset = newStartDate.getTimezoneOffset();
+        // get the ISO string of the offset
+        const formattedOffset = (function () {
+          if (offset < 0) {
+            return '+' + ('0' + Math.abs(offset / 60)).slice(-2) + ':' + ('0' + Math.abs(offset % 60)).slice(-2);
+          } else {
+            return '-' + ('0' + Math.abs(offset / 60)).slice(-2) + ':' + ('0' + Math.abs(offset % 60)).slice(-2);
+          }
+        })();
+        // return formatted data
+        return {
+          start: atcb_format_datetime(newStartDate, style, false, true) + 'T00:00:00' + formattedOffset,
+          end: atcb_format_datetime(newEndDate, style, false, true) + 'T00:00:00' + formattedOffset,
+          allday: true,
+        };
+      }
       return {
-        start: atcb_format_datetime(newStartDate, style, false, true) + '+00%3A00',
-        end: atcb_format_datetime(newEndDate, style, false, true) + '+00%3A00',
+        start: atcb_format_datetime(newStartDate, style, false, true) + '+00:00',
+        end: atcb_format_datetime(newEndDate, style, false, true) + '+00:00',
         allday: true,
       };
     }
@@ -248,7 +269,7 @@ function atcb_rewrite_ical_text(content, truncate = true, inQuotes = false) {
   if (inQuotes) {
     content = content.replace(/"/g, '');
   } else {
-    content = content.replace(/\\/g, '\\\\').replace(/(,|;)/g, '\\$1');
+    content = content.replace(/\\/g, '\\\\').replace(/(,|;)/g, '\\$1').replace(/\\\\n/g, '\\n');
   }
   if (truncate) {
     // adjusting for intended line breaks + making sure it does not exceed 75 characters per line
