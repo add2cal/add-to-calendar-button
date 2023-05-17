@@ -135,8 +135,8 @@ function atcb_generate_time(data, style = 'delimiters', targetCal = 'general', a
     // TODO: optimize this as soon as Microsoft fixed their bugs
     if (targetCal === 'msteams') {
       if (isMobile()) {
-        // get the time zone offset of the user's browser
-        const offset = new Date().getTimezoneOffset();
+        // get the time zone offset of the user's browser for the start date
+        const offset = newStartDate.getTimezoneOffset();
         // get the ISO string of the offset
         const formattedOffset = (function () {
           if (offset < 0) {
