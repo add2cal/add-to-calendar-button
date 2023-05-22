@@ -261,6 +261,7 @@ function atcb_build_button(host, data, debug = false) {
     // set global event listeners
     atcb_set_global_event_listener(host, data);
     atcb_init_log(data.proKey, debug);
+    // generate RSVP form (if not hidden)
     // generate the actual button (if not hidden)
     if (!data.hidden) {
       atcb_generate_button(host, rootObj, data, debug);

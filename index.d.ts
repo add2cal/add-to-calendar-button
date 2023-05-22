@@ -58,6 +58,7 @@ declare module 'add-to-calendar-button' {
       hideBackground?: boolean;
       hideCheckmark?: boolean;
       hideBranding?: boolean;
+      hideButton?: boolean;
       size?: string;
       label?: string;
       customLabels?: object;
