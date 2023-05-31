@@ -57,7 +57,7 @@
       "recurrence": {
         "headline": "Recurrence",
         "rrule_value": "RRULE",
-        "is_simple": "Simplyfied",
+        "is_simple": "Simplified",
         "repeat_every": "Repeat every",
         "interval": "Interval",
         "frequency": "Frequency",
