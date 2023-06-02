@@ -25,7 +25,7 @@ import { atcb_rewrite_html_elements } from './atcb-util.js';
  */
 
 // right-to-left languages
-const rtlLanguages = ['ar'];
+const rtlLanguages = ['ar', 'fa'];
 
 // the database object
 const i18nStrings = {
@@ -469,6 +469,27 @@ const i18nStrings = {
     'modal.subscribe.yahoo.text': '<ol><li>Deschide acum calendarul Yahoo.</li><li>Apasa pe tab-ul de "Actiuni".</li><li>Apasa "Urmareste alte calendare".</li><li>Seteaza un nume si lipeste continutul din clipboard in casuta cu url.</li></ol>',
     cancel: 'Anuleaza',
     expired: 'Expirat',
+  },
+  fa: {
+    'label.addtocalendar': 'افزودن به تقویم',
+    'label.icalfile': 'پرونده iCal',
+    close: 'بستن',
+    'modal.button.default': 'اینجا کلیک کنید',
+    'modal.webview.ical.h': 'مرورگر خود را باز کنید',
+    'modal.webview.ical.text': 'متاسفانه، مرورگرهای درون برنامه‌ای با نحوه تولید پرونده تقویم مشکل دارند.',
+    'modal.clipboard.text': 'ما به طور خودکار یک نشانی اینترنتی جادویی را در کلیپ‌بورد شما کپی کردیم.',
+    'modal.webview.ical.steps': '<ol><li><strong>مرورگر دیگری را </strong> در گوشی خود باز کنید، ...</li><li>محتوای کلیپ‌بورد را <strong>Paste</strong> کنید و Go را بزنید که آدرس باز شود.</li></ol>',
+    'modal.crios.ical.h': 'سافاری را باز کنید',
+    'modal.crios.ical.text': 'متاسفانه، مرورگر کروم در iOS با نحوه تولید پرونده تقویم مشکل دارد.',
+    'modal.crios.ical.steps': '<ol><li><strong>سافاری را باز کنید</strong>، ...</li><li>محتوای کلیپ‌بورد را <strong>Paste</strong> کنید و Go را بزنید که آدرس باز شود.</li></ol>',
+    'modal.multidate.h': 'این یک سری رویداد است',
+    'modal.multidate.text': 'رویدادهای شخصی را یکی یکی اضافه کنید:',
+    'date.status.cancelled': 'این تاریخ لغو شد',
+    'date.status.cancelled.cta': 'لطفا تقویم خود را به‌روز کنید!',
+    'modal.subscribe.yahoo.h': 'افزودن تقویم به یاهو',
+    'modal.subscribe.yahoo.text': '<ol><li>اکنون تقویم یاهو را باز کنید.</li><li>روی زبانه «Actions» کلیک کنید.</li><li>روی «Follow Other Calendars» ضربه بزنید.</li><li>یک نام وارد کنید و محتوای کلیپ‌بورد را در قسمت url قرار دهید.</li></ol>',
+    cancel: 'لغو',
+    expired: 'منقضی شده',
   },
 };
 
