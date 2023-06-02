@@ -3,7 +3,7 @@
 [![Code Quality](https://img.shields.io/codacy/grade/572c0a102d7b4f39b792439dcd2e8aad/main?style=for-the-badge)](https://app.codacy.com/gh/add2cal/add-to-calendar-button/dashboard)
 [![npm Installations Total](https://img.shields.io/npm/dt/add-to-calendar-button?label=npm%20Installations&style=for-the-badge)](https://www.npmjs.com/package/add-to-calendar-button)
 [![npm Installations per Month](https://img.shields.io/npm/dm/add-to-calendar-button?label=npm%20Installations%2FMonth&style=for-the-badge)](https://www.npmjs.com/package/add-to-calendar-button)
-[![jsDelivr npm Hits](https://img.shields.io/jsdelivr/npm/hm/add-to-calendar-button?label=jsDelivr%20npm%20hits&style=for-the-badge)](https://www.jsdelivr.com/package/npm/add-to-calendar-button)
+[![jsDelivr npm Hits](https://img.shields.io/jsdelivr/npm/hm/add-to-calendar-button?label=jsDelivr%20npm%20hits&style=for-the-badge)](https://www.jsdelivr.com/package/npm/add-to-calendar-button?tab=stats)
 ![npm bundle size](https://img.shields.io/bundlephobia/minzip/add-to-calendar-button?style=for-the-badge)
 
 <br />

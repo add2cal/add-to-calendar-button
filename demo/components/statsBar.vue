@@ -246,7 +246,7 @@ const loadJsdelivrStats = async () => {
               </svg>
               <span class="ml-0.5 block w-3 group-hover:hidden"></span>
             </a>
-            <a target="_blank" rel="noopener" href="https://www.jsdelivr.com/package/npm/add-to-calendar-button" class="fade-in group mr-20 flex py-2 text-xs text-zinc-200 hover:text-white hover:no-underline">
+            <a target="_blank" rel="noopener" href="https://www.jsdelivr.com/package/npm/add-to-calendar-button?tab=stats" class="fade-in group mr-20 flex py-2 text-xs text-zinc-200 hover:text-white hover:no-underline">
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="mr-1 inline-block h-3 w-3 self-center">
                 <path
                   fill-rule="evenodd"
