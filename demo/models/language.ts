@@ -1,4 +1,5 @@
 export enum LanguageCode {
+  FA = 'fa',
   AR = 'ar',
   CS = 'cs',
   DE = 'de',
@@ -25,6 +26,7 @@ export enum LanguageCode {
 export const DefaultLanguageCode = LanguageCode.EN;
 
 export const LanguageNames = {
+  [LanguageCode.FA]: 'Persian',
   [LanguageCode.AR]: 'Arabic',
   [LanguageCode.CS]: 'Czech',
   [LanguageCode.DE]: 'German',

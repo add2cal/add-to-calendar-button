@@ -241,7 +241,7 @@
         "2": "Dynamic dropdown positioning.",
         "3": "Taking care of all those edge cases, where some scenarios do not support specific setups (like WebView blocking downloads); utilizing beautiful user guidance workarounds.",
         "4": "Full support for mouse, touch, or keyboard input (W3C WAI compliant).",
-        "5": "Supporting 20+ languages, incl. RTL text for Arabic; but also custom labels and text blocks (i18n)."
+        "5": "Supporting 20+ languages, incl. RTL text for Arabic & Persian; but also custom labels and text blocks (i18n)."
       },
       "headline_5": "And much more",
       "block_5": {

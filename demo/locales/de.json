@@ -241,7 +241,7 @@
         "2": "Dynamische Dropdown-Positionierung.",
         "3": "Absicherung diverser Sonderfälle, in denen bestimmte Szenarien nicht unterstützt werden (z.B. WebViews, die Downloads blockieren); durch die Integration und Illustration intuitiver Workarounds.",
         "4": "Volle Unterstützung für Maus-, Touch- und Tastatureingaben (W3C WAI compliant).",
-        "5": "20+ Sprachen, einschließlich RTL-Text für Arabisch; aber auch anpassbare Beschriftungen und Textblöcke (i18n)."
+        "5": "20+ Sprachen, einschließlich RTL-Text für Arabisch, Persisch; aber auch anpassbare Beschriftungen und Textblöcke (i18n)."
       },
       "headline_5": "Und vieles mehr",
       "block_5": {

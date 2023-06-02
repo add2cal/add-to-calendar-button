@@ -73,7 +73,7 @@ Simple and convenient integration of 1 or many buttons, configurable directly wi
 - Taking care of all those edge cases, where some scenarios do not support specific setups (like WebView blocking downloads); utilizing beautiful user guidance workarounds.
 - Auto-generated Schema.org rich (structured) data for better SEO.
 - Full support for mouse, touch, or keyboard input (W3C WAI compliant).
-- Supporting 20+ languages, incl. RTL text for Arabic; but also custom labels and text blocks (i18n).
+- Supporting 20+ languages, incl. RTL text for Arabic & Persian; but also custom labels and text blocks (i18n).
 
 ### And much more
 
