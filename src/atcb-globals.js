@@ -186,7 +186,7 @@ const atcbWcBooleanParams = [
   'blockInteraction',
   'disabled',
   'hidden',
-  'hideButton'
+  'hideButton',
 ];
 const atcbWcObjectParams = ['customLabels', 'ty', 'rsvp'];
 const atcbWcObjectArrayParams = ['dates'];

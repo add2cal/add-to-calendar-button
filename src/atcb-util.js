@@ -288,7 +288,7 @@ function atcb_position_list(host, trigger, list, blockUpwards = false, blockDown
     list.style.width = listDim.width + 'px';
     // in the regular case, we also check for the ideal direction
     // not in the !blockUpwards case and not if there is not enough space above
-    if ((list.classList.contains('atcb-dropup')) || (!blockUpwards && triggerDim.top + listDim.height > viewportHeight - 20 && 2 * btnDim.top + btnDim.height - triggerDim.top - listDim.height > 20) || blockDownwards) {
+    if (list.classList.contains('atcb-dropup') || (!blockUpwards && triggerDim.top + listDim.height > viewportHeight - 20 && 2 * btnDim.top + btnDim.height - triggerDim.top - listDim.height > 20) || blockDownwards) {
       originalTrigger.classList.add('atcb-dropup');
       list.classList.add('atcb-dropup');
       list.style.bottom = btnParentDim.bottom - btnDim.bottom + (triggerDim.top - btnDim.top) + 'px';

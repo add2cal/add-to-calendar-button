@@ -1,10 +1,10 @@
 export enum LanguageCode {
-  FA = 'fa',
   AR = 'ar',
   CS = 'cs',
   DE = 'de',
   EN = 'en',
   ES = 'es',
+  FA = 'fa',
   FI = 'fi',
   FR = 'fr',
   HI = 'hi',
@@ -26,12 +26,12 @@ export enum LanguageCode {
 export const DefaultLanguageCode = LanguageCode.EN;
 
 export const LanguageNames = {
-  [LanguageCode.FA]: 'Persian',
   [LanguageCode.AR]: 'Arabic',
   [LanguageCode.CS]: 'Czech',
   [LanguageCode.DE]: 'German',
   [LanguageCode.EN]: 'English',
   [LanguageCode.ES]: 'Spanish',
+  [LanguageCode.FA]: 'Persian',
   [LanguageCode.FI]: 'Finnish',
   [LanguageCode.FR]: 'French',
   [LanguageCode.HI]: 'Hindi',

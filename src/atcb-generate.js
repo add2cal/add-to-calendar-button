@@ -30,7 +30,7 @@ function atcb_generate_label(host, data, parent, type, icon = false, text = '', 
       parent.id = data.identifier;
       if (!data.blockInteraction) {
         parent.addEventListener('keyup', function (event) {
-          if (event.key === 'Enter' || event.code == 'Space' || event.key === 'Alt' && event.key === 'Control' && event.code === 'Space') {
+          if (event.key === 'Enter' || event.code == 'Space' || (event.key === 'Alt' && event.key === 'Control' && event.code === 'Space')) {
             event.preventDefault();
             atcb_toggle(host, 'auto', data, parent, true, true);
           }
@@ -499,7 +499,7 @@ function atcb_create_modal(host, data, icon = '', headline, content = '', button
           })
         );
         modalButton.addEventListener('keyup', function (event) {
-          if (event.key === 'Enter' || event.code == 'Space' || event.key === 'Alt' && event.key === 'Control' && event.code === 'Space') {
+          if (event.key === 'Enter' || event.code == 'Space' || (event.key === 'Alt' && event.key === 'Control' && event.code === 'Space')) {
             atcb_log_event('closeList', 'Modal Close Button', atcbStates['active']);
             atcb_toggle(host, 'close', '', '', true);
           }
@@ -514,7 +514,7 @@ function atcb_create_modal(host, data, icon = '', headline, content = '', button
           })
         );
         modalButton.addEventListener('keyup', function (event) {
-          if (event.key === 'Enter' || event.code == 'Space' || event.key === 'Alt' && event.key === 'Control' && event.code === 'Space') {
+          if (event.key === 'Enter' || event.code == 'Space' || (event.key === 'Alt' && event.key === 'Control' && event.code === 'Space')) {
             atcb_toggle(host, 'close', '', '', true);
             atcb_subscribe_yahoo_modal_switch(host, data, keyboardTrigger);
           }
