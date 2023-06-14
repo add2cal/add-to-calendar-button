@@ -118,6 +118,10 @@ function atcb_generate_subscribe_links(host, linkType, data, keyboardTrigger) {
   const adjustedFileUrl = data.icsFile.replace('https://', 'webcal://');
   switch (linkType) {
     case 'ical': // also for apple (see above)
+      if (isMobile()) {
+        atcb_subscribe_ical(data.icsFile);
+        break;
+      }
       atcb_subscribe_ical(adjustedFileUrl);
       break;
     case 'google':
