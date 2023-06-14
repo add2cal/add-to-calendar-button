@@ -384,9 +384,9 @@ function atcb_copy_to_clipboard(dataString) {
   document.body.append(tmpInput);
   const editable = tmpInput.contentEditable;
   const readOnly = tmpInput.readOnly;
-  tmpInput.value = dataString;
   tmpInput.contentEditable = true;
   tmpInput.readOnly = false;
+  tmpInput.value = dataString;
   if (isiOS()) {
     var range = document.createRange();
     range.selectNodeContents(tmpInput);
@@ -395,14 +395,13 @@ function atcb_copy_to_clipboard(dataString) {
     selection.addRange(range);
     tmpInput.setSelectionRange(0, 999999);
   } else {
-    // the next 2 lines are basically doing the same in different ways (just to be sure)
-    navigator.clipboard.writeText(dataString);
     tmpInput.select();
   }
   tmpInput.contentEditable = editable;
   tmpInput.readOnly = readOnly;
   document.execCommand('copy');
   tmpInput.remove();
+  // navigator.clipboard.writeText(dataString); would require a lot more hacks on many systems, but could be something for the future (see https://developer.mozilla.org/en-US/docs/Web/API/Clipboard/writeText)
 }
 
 // SHARED DEBOUNCE FUNCTIONS
