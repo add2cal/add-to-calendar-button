@@ -53,7 +53,7 @@
     "eslint-plugin-prettier": "^4.2.1",
     "eslint-plugin-tailwindcss": "^3.11.0",
     "eslint-plugin-vue": "^9.10.0",
-    "nuxt": "^3.3.3",
+    "nuxt": "^3.4.3",
     "nuxt-delay-hydration": "^1.1.4",
     "nuxt-headlessui": "^1.1.1",
     "nuxt-schema-org": "^2.1.2",
