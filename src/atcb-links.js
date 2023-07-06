@@ -389,7 +389,10 @@ function atcb_open_cal_url(url, target = '') {
   }
   if (atcb_secure_url(url)) {
     // eslint-disable-next-line security/detect-non-literal-fs-filename
-    window.open(url, target).focus();
+    const newTab = window.open(url, target);
+    if (newTab) {
+      newTab.focus();
+    }
   }
 }
 
