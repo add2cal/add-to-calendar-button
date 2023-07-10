@@ -259,7 +259,7 @@ function atcb_generate_google(data) {
     }
   }
   if (tmpDataDescription.length > 0) {
-    urlParts.push('details=' + encodeURIComponent(tmpDataDescription.join()));
+    urlParts.push('details=' + encodeURIComponent(tmpDataDescription.join('')));
   }
   if (data.recurrence != null && data.recurrence != '') {
     urlParts.push('recur=' + encodeURIComponent(data.recurrence));
