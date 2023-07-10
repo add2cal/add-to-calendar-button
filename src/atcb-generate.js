@@ -3,7 +3,7 @@
  *  Add to Calendar Button
  *  ++++++++++++++++++++++
  *
- *  Version: 2.2.9
+ *  Version: 2.2.10
  *  Creator: Jens Kuerschner (https://jenskuerschner.de)
  *  Project: https://github.com/add2cal/add-to-calendar-button
  *  License: Elastic License 2.0 (ELv2) (https://github.com/add2cal/add-to-calendar-button/blob/main/LICENSE.txt)
@@ -69,32 +69,34 @@ function atcb_generate_label(host, data, parent, type, icon = false, text = '', 
     case 'outlookcom':
     case 'yahoo':
       parent.id = data.identifier + '-' + type;
-      parent.addEventListener(
-        'click',
-        atcb_debounce_leading(() => {
-          if (oneOption) {
-            host.querySelector('#' + parent.id).blur();
-            atcb_log_event('openSingletonLink', parent.id, data.identifier);
-          } else {
-            atcb_toggle(host, 'close');
-            atcb_log_event('openCalendarLink', parent.id, data.identifier);
+      if (!data.blockInteraction) {
+        parent.addEventListener(
+          'click',
+          atcb_debounce_leading(() => {
+            if (oneOption) {
+              host.querySelector('#' + parent.id).blur();
+              atcb_log_event('openSingletonLink', parent.id, data.identifier);
+            } else {
+              atcb_toggle(host, 'close');
+              atcb_log_event('openCalendarLink', parent.id, data.identifier);
+            }
+            atcb_generate_links(host, type, data);
+          })
+        );
+        parent.addEventListener('keyup', function (event) {
+          if (event.key == 'Enter') {
+            event.preventDefault();
+            if (oneOption) {
+              host.querySelector('#' + parent.id).blur();
+              atcb_log_event('openSingletonLink', parent.id, data.identifier);
+            } else {
+              atcb_toggle(host, 'close');
+              atcb_log_event('openCalendarLink', parent.id, data.identifier);
+            }
+            atcb_generate_links(host, type, data, 'all', true);
           }
-          atcb_generate_links(host, type, data);
-        })
-      );
-      parent.addEventListener('keyup', function (event) {
-        if (event.key == 'Enter') {
-          event.preventDefault();
-          if (oneOption) {
-            host.querySelector('#' + parent.id).blur();
-            atcb_log_event('openSingletonLink', parent.id, data.identifier);
-          } else {
-            atcb_toggle(host, 'close');
-            atcb_log_event('openCalendarLink', parent.id, data.identifier);
-          }
-          atcb_generate_links(host, type, data, 'all', true);
-        }
-      });
+        });
+      }
       break;
     case 'close':
       parent.id = data.identifier + '-close';
