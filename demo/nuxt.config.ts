@@ -12,6 +12,7 @@ export default defineNuxtConfig({
     },
   },
   ssr: true,
+  spaLoadingTemplate: false,
   nitro: {
     preset: 'azure',
   },
