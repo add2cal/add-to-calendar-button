@@ -259,7 +259,7 @@
       "optionA": "Option A",
       "optionB": "Option B",
       "step_cdn": "Integrate via CDN",
-      "step_cdn_p1": "Load the respective script by adding the following script tag to the <head> section of your website.",
+      "step_cdn_p1": "Load the respective script by adding the following script tag to the head section of your website.",
       "step_cdn_p2": "The script will be loaded in a non-blocking way. So you don't need to worry about where to include it exactly.",
       "step_use": "Use it",
       "step_use_start": "Start using it by adding a <add-to-calendar-button> tag to your HTML source code - with the options as attributes.",

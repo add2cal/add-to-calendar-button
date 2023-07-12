@@ -562,6 +562,10 @@ function atcb_init_log(pro = '', debug = false) {
 
 // PULLING PRO DATA
 function atcb_get_pro_data(licenseKey) {
+  /*!
+  *  @preserve
+  *  PER LICENSE AGREEMENT, YOU ARE NOT ALLOWED TO REMOVE OR CHANGE THIS FUNCTION!
+  */
   const data = {};
   if (licenseKey != null && licenseKey != '') {
     data.proKey = licenseKey;

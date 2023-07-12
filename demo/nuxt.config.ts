@@ -32,9 +32,6 @@ export default defineNuxtConfig({
   app: {
     rootId: 'atcb-demo',
     head: {
-      htmlAttrs: {
-        lang: 'en',
-      },
       viewport: 'width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes',
       meta: [
         { 'http-equiv': 'content-type', content: 'text/html; charset=utf-8' },
@@ -196,6 +193,9 @@ export default defineNuxtConfig({
     types: 'composition',
     langDir: 'locales',
     lazy: false,
+    compilation: {
+      strictMessage: false,
+    },
     baseUrl: baseUrl,
     defaultLocale: 'en',
     locales: [
@@ -212,58 +212,7 @@ export default defineNuxtConfig({
         name: 'Deutsch',
       },
     ],
-    vueI18n: {
-      locale: 'en',
-      fallbackLocale: 'en',
-      legacy: false,
-      globalInjection: true,
-      datetimeFormats: {
-        en: {
-          short: {
-            year: 'numeric',
-            month: 'numeric',
-            day: 'numeric',
-          },
-        },
-        de: {
-          short: {
-            year: 'numeric',
-            month: 'numeric',
-            day: 'numeric',
-          },
-        },
-      },
-      numberFormats: {
-        en: {
-          currency: {
-            style: 'currency',
-            currency: 'USD',
-            useGrouping: true,
-            currencyDisplay: 'symbol',
-            notation: 'standard',
-          },
-          decimal: {
-            style: 'decimal',
-            minimumFractionDigits: 0,
-            maximumFractionDigits: 2,
-          },
-        },
-        de: {
-          currency: {
-            style: 'currency',
-            currency: 'EUR',
-            useGrouping: true,
-            currencyDisplay: 'symbol',
-            notation: 'standard',
-          },
-          decimal: {
-            style: 'decimal',
-            minimumFractionDigits: 0,
-            maximumFractionDigits: 2,
-          },
-        },
-      },
-    },
+    vueI18n: './nuxt.i18n.config.ts',
   },
   tailwindcss: {
     cssPath: '~/assets/css/main.css',
