@@ -151,7 +151,7 @@ function atcb_generate_subscribe_links(host, linkType, data, keyboardTrigger) {
           { label: atcb_translate_hook('cancel', data) },
         ],
         [],
-        keyboardTrigger
+        keyboardTrigger,
       );
       return;
     case 'yahoo2nd':
@@ -171,7 +171,7 @@ function atcb_generate_subscribe_links(host, linkType, data, keyboardTrigger) {
           { label: atcb_translate_hook('cancel', data) },
         ],
         [],
-        keyboardTrigger
+        keyboardTrigger,
       );
       return;
   }

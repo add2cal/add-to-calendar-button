@@ -40,7 +40,7 @@ function atcb_generate_label(host, data, parent, type, icon = false, text = '', 
           atcb_debounce_leading((event) => {
             event.preventDefault();
             atcb_toggle(host, 'auto', data, parent, false, true);
-          })
+          }),
         );
         if (data.trigger === 'click') {
           parent.addEventListener(
@@ -48,7 +48,7 @@ function atcb_generate_label(host, data, parent, type, icon = false, text = '', 
             atcb_debounce_leading((event) => {
               event.preventDefault();
               atcb_toggle(host, 'auto', data, parent, false, true);
-            })
+            }),
           );
         } else {
           parent.addEventListener(
@@ -56,7 +56,7 @@ function atcb_generate_label(host, data, parent, type, icon = false, text = '', 
             atcb_debounce_leading((event) => {
               event.preventDefault();
               atcb_toggle(host, 'open', data, parent, false, true);
-            })
+            }),
           );
         }
       }
@@ -81,7 +81,7 @@ function atcb_generate_label(host, data, parent, type, icon = false, text = '', 
               atcb_log_event('openCalendarLink', parent.id, data.identifier);
             }
             atcb_generate_links(host, type, data);
-          })
+          }),
         );
         parent.addEventListener('keyup', function (event) {
           if (event.key === 'Enter') {
@@ -105,7 +105,7 @@ function atcb_generate_label(host, data, parent, type, icon = false, text = '', 
         atcb_debounce(() => {
           atcb_log_event('closeList', 'List Close Button', atcbStates['active']);
           atcb_toggle(host, 'close');
-        })
+        }),
       );
       parent.addEventListener('keyup', function (event) {
         if (event.key === 'Enter') {
@@ -136,8 +136,8 @@ function atcb_generate_label_content(data, parent, type, icon, text, oneOption) 
     }
     return atcb_translate_hook('label.addtocalendar', data);
   })();
-  // if there is only 1 option, we use the trigger text on the option label. Therefore, forcing it here
-  if (oneOption && text == '') {
+  // if there is only 1 option, we use the trigger text on the option label
+  if (text == '' && data.options.length === 1) {
     text = defaultTriggerText;
   }
   // defining text labels
@@ -217,7 +217,15 @@ function atcb_generate_button(host, button, data, debug = false) {
     // if there is only 1 calendar option, we directly show this at the button, but with the trigger's label text (small exception for the date style)
     if (oneOption) {
       buttonTrigger.classList.add('atcb-single');
-      atcb_generate_label(host, data, buttonTrigger, option, !data.hideIconButton, data.label, true);
+      // if buttonsList is true and we have more than 1 option, use the option as label
+      const label = (function () {
+        if (data.buttonsList && data.options.length > 1) {
+          return data.optionLabels[0];
+        }
+        return data.label;
+      })();
+      // generate label
+      atcb_generate_label(host, data, buttonTrigger, option, !data.hideIconButton, label, true);
       // override the id for the oneOption button, since the button always needs to have the button id, while it received the option id from the labeling function
       buttonTrigger.id = data.identifier;
       // but in case we simply render one button per option, only use the identifier for the first one and also add the info for the option
@@ -302,18 +310,18 @@ function atcb_generate_bg_overlay(host, trigger = '', modal = false, darken = tr
       if (e.target !== e.currentTarget) return;
       atcb_log_event('closeList', 'Background Hit', atcbStates['active']);
       atcb_toggle(host, 'close');
-    })
+    }),
   );
   let fingerMoved = false;
   bgOverlay.addEventListener(
     'touchstart',
     atcb_debounce_leading(() => (fingerMoved = false)),
-    { passive: true }
+    { passive: true },
   );
   bgOverlay.addEventListener(
     'touchmove',
     atcb_debounce_leading(() => (fingerMoved = true)),
-    { passive: true }
+    { passive: true },
   );
   bgOverlay.addEventListener(
     'touchend',
@@ -322,7 +330,7 @@ function atcb_generate_bg_overlay(host, trigger = '', modal = false, darken = tr
       atcb_log_event('closeList', 'Background Hit', atcbStates['active']);
       atcb_toggle(host, 'close');
     }),
-    { passive: true }
+    { passive: true },
   );
   if (trigger !== 'click') {
     bgOverlay.addEventListener(
@@ -331,7 +339,7 @@ function atcb_generate_bg_overlay(host, trigger = '', modal = false, darken = tr
         if (e.target !== e.currentTarget) return;
         atcb_log_event('closeList', 'Background Hit', atcbStates['active']);
         atcb_toggle(host, 'close');
-      })
+      }),
     );
   } else {
     // if trigger is not set to 'click', we render a close icon, when hovering over the background
@@ -449,7 +457,7 @@ function atcb_create_modal(host, data, icon = '', headline, content = '', button
             atcb_log_event('openSubEventLink', modalSubEventButton.id, data.identifier);
             modalSubEventButton.blur();
             atcb_generate_links(host, subEvents[0], data, subEvents[`${i}`], keyboardTrigger, true);
-          })
+          }),
         );
       } else {
         // if blocked, we also add styles
@@ -496,7 +504,7 @@ function atcb_create_modal(host, data, icon = '', headline, content = '', button
           atcb_debounce(() => {
             atcb_log_event('closeList', 'Modal Close Button', atcbStates['active']);
             atcb_close(host);
-          })
+          }),
         );
         modalButton.addEventListener('keyup', function (event) {
           if (event.key === 'Enter' || event.code == 'Space' || (event.key === 'Alt' && event.key === 'Control' && event.code === 'Space')) {
@@ -511,7 +519,7 @@ function atcb_create_modal(host, data, icon = '', headline, content = '', button
           atcb_debounce(() => {
             atcb_close(host);
             atcb_subscribe_yahoo_modal_switch(host, data);
-          })
+          }),
         );
         modalButton.addEventListener('keyup', function (event) {
           if (event.key === 'Enter' || event.code == 'Space' || (event.key === 'Alt' && event.key === 'Control' && event.code === 'Space')) {
@@ -703,6 +711,9 @@ function atcb_generate_date_button(data, parent, subEvent = 'all') {
       if ((subEvent == 'all' && data.allOverdue) || (subEvent != 'all' && data.dates[`${subEvent}`].overdue)) {
         return atcb_translate_hook('expired', data);
       }
+    }
+    if (data.label && data.label != '') {
+      return data.label;
     }
     return '+ ' + atcb_translate_hook('label.addtocalendar', data);
   })();

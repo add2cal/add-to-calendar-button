@@ -70,6 +70,6 @@ declare module 'add-to-calendar-button' {
       bypassWebViewCheck?: boolean;
     },
     triggerElement?: HTMLElement,
-    keyboardTrigger?: boolean
+    keyboardTrigger?: boolean,
   ): string;
 }

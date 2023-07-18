@@ -189,10 +189,10 @@ export default defineNuxtConfig({
     },
   },
   i18n: {
-    strategy: 'prefix_and_default',
+    strategy: 'prefix_except_default',
     types: 'composition',
     langDir: 'locales',
-    lazy: false,
+    lazy: true,
     compilation: {
       strictMessage: false,
     },

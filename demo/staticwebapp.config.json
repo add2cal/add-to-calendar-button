@@ -4,16 +4,180 @@
   },
   "routes": [
     {
-      "route": "/404",
-      "rewrite": "/404.html"
-    },
-    {
       "route": "/200",
       "rewrite": "/200.html"
     },
     {
+      "route": "/404",
+      "rewrite": "/404.html"
+    },
+    {
+      "route": "/de/use",
+      "rewrite": "/de/use/index.html"
+    },
+    {
+      "route": "/en/what-is-an-add-to-calendar-button",
+      "rewrite": "/en/what-is-an-add-to-calendar-button/index.html"
+    },
+    {
+      "route": "/use",
+      "rewrite": "/use/index.html"
+    },
+    {
+      "route": "/de/what-is-an-add-to-calendar-button",
+      "rewrite": "/de/what-is-an-add-to-calendar-button/index.html"
+    },
+    {
+      "route": "/what-is-an-add-to-calendar-button",
+      "rewrite": "/what-is-an-add-to-calendar-button/index.html"
+    },
+    {
+      "route": "/en/use",
+      "rewrite": "/en/use/index.html"
+    },
+    {
+      "route": "/de/use-with-wordpress",
+      "rewrite": "/de/use-with-wordpress/index.html"
+    },
+    {
+      "route": "/de/use-with-vue",
+      "rewrite": "/de/use-with-vue/index.html"
+    },
+    {
+      "route": "/en/use-with-wordpress",
+      "rewrite": "/en/use-with-wordpress/index.html"
+    },
+    {
+      "route": "/use-with-wordpress",
+      "rewrite": "/use-with-wordpress/index.html"
+    },
+    {
+      "route": "/en/use-with-vue",
+      "rewrite": "/en/use-with-vue/index.html"
+    },
+    {
+      "route": "/de/use-with-svelte",
+      "rewrite": "/de/use-with-svelte/index.html"
+    },
+    {
+      "route": "/use-with-vue",
+      "rewrite": "/use-with-vue/index.html"
+    },
+    {
+      "route": "/en/use-with-svelte",
+      "rewrite": "/en/use-with-svelte/index.html"
+    },
+    {
+      "route": "/use-with-svelte",
+      "rewrite": "/use-with-svelte/index.html"
+    },
+    {
+      "route": "/en/use-with-react",
+      "rewrite": "/en/use-with-react/index.html"
+    },
+    {
+      "route": "/de/use-with-react",
+      "rewrite": "/de/use-with-react/index.html"
+    },
+    {
+      "route": "/use-with-react",
+      "rewrite": "/use-with-react/index.html"
+    },
+    {
+      "route": "/en/advanced-use",
+      "rewrite": "/en/advanced-use/index.html"
+    },
+    {
+      "route": "/de/privacy-policy",
+      "rewrite": "/de/privacy-policy/index.html"
+    },
+    {
+      "route": "/en/privacy-policy",
+      "rewrite": "/en/privacy-policy/index.html"
+    },
+    {
+      "route": "/de/advanced-use",
+      "rewrite": "/de/advanced-use/index.html"
+    },
+    {
+      "route": "/en/use-with-angular",
+      "rewrite": "/en/use-with-angular/index.html"
+    },
+    {
+      "route": "/en/use-with-astro",
+      "rewrite": "/en/use-with-astro/index.html"
+    },
+    {
+      "route": "/en/configuration",
+      "rewrite": "/en/configuration/index.html"
+    },
+    {
+      "route": "/de/use-with-astro",
+      "rewrite": "/de/use-with-astro/index.html"
+    },
+    {
+      "route": "/de/configuration",
+      "rewrite": "/de/configuration/index.html"
+    },
+    {
+      "route": "/de/use-with-angular",
+      "rewrite": "/de/use-with-angular/index.html"
+    },
+    {
+      "route": "/de/legal-notice",
+      "rewrite": "/de/legal-notice/index.html"
+    },
+    {
+      "route": "/en/legal-notice",
+      "rewrite": "/en/legal-notice/index.html"
+    },
+    {
       "route": "/",
       "rewrite": "/index.html"
+    },
+    {
+      "route": "/de/examples",
+      "rewrite": "/de/examples/index.html"
+    },
+    {
+      "route": "/en/examples",
+      "rewrite": "/en/examples/index.html"
+    },
+    {
+      "route": "/en",
+      "rewrite": "/en/index.html"
+    },
+    {
+      "route": "/examples",
+      "rewrite": "/examples/index.html"
+    },
+    {
+      "route": "/de",
+      "rewrite": "/de/index.html"
+    },
+    {
+      "route": "/privacy-policy",
+      "rewrite": "/privacy-policy/index.html"
+    },
+    {
+      "route": "/use-with-angular",
+      "rewrite": "/use-with-angular/index.html"
+    },
+    {
+      "route": "/advanced-use",
+      "rewrite": "/advanced-use/index.html"
+    },
+    {
+      "route": "/use-with-astro",
+      "rewrite": "/use-with-astro/index.html"
+    },
+    {
+      "route": "/configuration",
+      "rewrite": "/configuration/index.html"
+    },
+    {
+      "route": "/legal-notice",
+      "rewrite": "/legal-notice/index.html"
     }
   ],
   "navigationFallback": {
