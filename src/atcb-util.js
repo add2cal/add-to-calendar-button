@@ -326,7 +326,7 @@ function atcb_position_list(host, trigger, list, blockUpwards = false, blockDown
   }
 }
 
-// SHARED FUNCTION TO CALCULATE WHETHER WE BLOCK SCROLLING OR NOT (WHEN MODAL OR LIST IS LARGER THAN THE SCREEN HEIGHT)
+// SHARED FUNCTION TO BLOCK SCROLLING
 function atcb_manage_body_scroll(host, modalObj = null) {
   const modal = (function () {
     // if a specific modal is defined, we take it. Otherwise we go for the latest one
@@ -344,14 +344,8 @@ function atcb_manage_body_scroll(host, modalObj = null) {
   if (modal == null) {
     return;
   }
-  const modalDim = modal.getBoundingClientRect();
-  if (modalDim.height + 100 > window.innerHeight) {
-    document.body.classList.add('atcb-modal-no-scroll');
-    document.documentElement.classList.add('atcb-modal-no-scroll');
-  } else {
-    document.body.classList.remove('atcb-modal-no-scroll');
-    document.documentElement.classList.remove('atcb-modal-no-scroll');
-  }
+  document.body.classList.add('atcb-modal-no-scroll');
+  document.documentElement.classList.add('atcb-modal-no-scroll');
 }
 
 // SHARED FUNCTION TO DEFINE WIDTH AND HEIGHT FOR "FULLSCREEN" FULLSIZE ELEMENTS
