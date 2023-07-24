@@ -389,16 +389,19 @@ function atcb_open_cal_url(url, target = '', doubleLoad = false) {
   }
   if (atcb_secure_url(url)) {
     // eslint-disable-next-line security/detect-non-literal-fs-filename
-    const newTab = window.open(url, target);
+    let newTab = window.open(url, target);
     if (newTab) {
       if (doubleLoad) {
         if (isiOS()) {
           // workaround for iOS, where Google Calendar won't load the event, if not already open - therefore, loading twice
           newTab.onload = function () {
-            newTab.location.reload();
+            newTab.close();
+            newTab = window.open(url, target);
           };
         }
       }
+    }
+    if (newTab) {
       newTab.focus();
     }
   }
