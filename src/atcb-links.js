@@ -151,7 +151,7 @@ function atcb_generate_subscribe_links(host, linkType, data, keyboardTrigger) {
           { label: atcb_translate_hook('cancel', data) },
         ],
         [],
-        keyboardTrigger
+        keyboardTrigger,
       );
       return;
     case 'yahoo2nd':
@@ -171,7 +171,7 @@ function atcb_generate_subscribe_links(host, linkType, data, keyboardTrigger) {
           { label: atcb_translate_hook('cancel', data) },
         ],
         [],
-        keyboardTrigger
+        keyboardTrigger,
       );
       return;
   }
@@ -243,14 +243,30 @@ function atcb_generate_google(data) {
   if (data.name != null && data.name != '') {
     urlParts.push('text=' + encodeURIComponent(data.name));
   }
+  const tmpDataDescription = [];
   if (data.description != null && data.description != '') {
-    urlParts.push('details=' + encodeURIComponent(data.description));
+    tmpDataDescription.push(data.description);
   }
   if (data.location != null && data.location != '') {
     urlParts.push('location=' + encodeURIComponent(data.location));
+    // TODO: Find a better solution for the next temporary workaround.
+    if (isiOS()) {
+      // workaround to cover a bug, where, when using Google Calendar on an iPhone, the location is not recognized. So, for the moment, we simply add it to the description.
+      if (tmpDataDescription.length > 0) {
+        tmpDataDescription.push('<br><br>');
+      }
+      tmpDataDescription.push('&#128205;: ' + data.location);
+    }
+  }
+  if (tmpDataDescription.length > 0) {
+    urlParts.push('details=' + encodeURIComponent(tmpDataDescription.join('')));
   }
   if (data.recurrence != null && data.recurrence != '') {
     urlParts.push('recur=' + encodeURIComponent(data.recurrence));
+    // on iOS, try to force opening Google Calendar in the browser instead of the app, since the app is not supporting recurrence via Deep Links
+    if (isiOS()) {
+      urlParts.push('forcedesktop=true');
+    }
   }
   if (data.availability != null && data.availability != '') {
     const availabilityPart = (function () {

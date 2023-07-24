@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import "add-to-calendar-button";
 import { ArrowRightIcon, ArrowTopRightOnSquareIcon } from '@heroicons/vue/24/outline';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import CodeBlock from "@/components/codeBlock.vue";
 
 const { t, locale } = useI18n();

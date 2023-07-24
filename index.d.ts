@@ -47,7 +47,7 @@ declare module 'add-to-calendar-button' {
       subscribe?: boolean;
       options?: ('Apple' | 'Google' | 'iCal' | 'Microsoft365' | 'MicrosoftTeams' | 'Outlook.com' | 'Yahoo')[];
       iCalFileName?: string;
-      listStyle?: 'dropdown' | 'dropdown-static' | 'overlay' | 'modal';
+      listStyle?: 'dropdown' | 'dropdown-static' | 'dropup-static' | 'overlay' | 'modal';
       buttonStyle?: 'default' | '3d' | 'flat' | 'round' | 'neumorphism' | 'text' | 'date' | 'custom' | 'none';
       trigger?: 'hover' | 'click';
       hideIconButton?: boolean;
@@ -58,17 +58,18 @@ declare module 'add-to-calendar-button' {
       hideBackground?: boolean;
       hideCheckmark?: boolean;
       hideBranding?: boolean;
+      hideButton?: boolean;
       size?: string;
       label?: string;
       customLabels?: object;
       customCss?: string;
       lightMode?: 'system' | 'dark' | 'light' | 'bodyScheme';
-      language?: 'en' | 'de' | 'nl' | 'fr' | 'es' | 'pt' | 'tr' | 'zh' | 'ar' | 'hi' | 'pl' | 'ro' | 'id' | 'no' | 'fi' | 'sv' | 'cs' | 'ja' | 'it' | 'ko' | 'vi';
+      language?: 'en' | 'de' | 'nl' | 'fa' | 'fr' | 'es' | 'pt' | 'tr' | 'zh' | 'ar' | 'hi' | 'pl' | 'ro' | 'id' | 'no' | 'fi' | 'sv' | 'cs' | 'ja' | 'it' | 'ko' | 'vi';
       ty?: object;
       rsvp?: object;
       bypassWebViewCheck?: boolean;
     },
     triggerElement?: HTMLElement,
-    keyboardTrigger?: boolean
+    keyboardTrigger?: boolean,
   ): string;
 }

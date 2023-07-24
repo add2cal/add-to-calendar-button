@@ -261,6 +261,7 @@ function atcb_build_button(host, data, debug = false) {
     // set global event listeners
     atcb_set_global_event_listener(host, data);
     atcb_init_log(data.proKey, debug);
+    // generate RSVP form (if not hidden)
     // generate the actual button (if not hidden)
     if (!data.hidden) {
       atcb_generate_button(host, rootObj, data, debug);
@@ -451,7 +452,7 @@ function atcb_action(data, triggerElement, keyboardTrigger = false) {
       triggerElement.id = data.identifier;
     }
     // for custom triggers, we block any dropdown, since this would look shit 99% of the time. Overlay is a little better, but modal would be recommended
-    if (data.listStyle == 'dropdown' || data.listStyle == 'dropdown-static') {
+    if (data.listStyle === 'dropdown' || data.listStyle === 'dropdown-static' || data.listStyle === 'dropup-static') {
       data.listStyle = 'modal';
     }
   } else {
@@ -561,6 +562,10 @@ function atcb_init_log(pro = '', debug = false) {
 
 // PULLING PRO DATA
 function atcb_get_pro_data(licenseKey) {
+  /*!
+   *  @preserve
+   *  PER LICENSE AGREEMENT, YOU ARE NOT ALLOWED TO REMOVE OR CHANGE THIS FUNCTION!
+   */
   const data = {};
   if (licenseKey != null && licenseKey != '') {
     data.proKey = licenseKey;

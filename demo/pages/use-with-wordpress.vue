@@ -1,4 +1,5 @@
 <script setup lang="ts">
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import CodeBlock from "@/components/codeBlock.vue";
 import NextSteps from "@/components/integration/nextSteps.vue";
 import GuideSidebar from "@/components/integration/guideSidebar.vue";

@@ -241,7 +241,7 @@
         "2": "Dynamische Dropdown-Positionierung.",
         "3": "Absicherung diverser Sonderfälle, in denen bestimmte Szenarien nicht unterstützt werden (z.B. WebViews, die Downloads blockieren); durch die Integration und Illustration intuitiver Workarounds.",
         "4": "Volle Unterstützung für Maus-, Touch- und Tastatureingaben (W3C WAI compliant).",
-        "5": "20+ Sprachen, einschließlich RTL-Text für Arabisch; aber auch anpassbare Beschriftungen und Textblöcke (i18n)."
+        "5": "20+ Sprachen, einschließlich RTL-Text für Arabisch, Persisch; aber auch anpassbare Beschriftungen und Textblöcke (i18n)."
       },
       "headline_5": "Und vieles mehr",
       "block_5": {
@@ -259,7 +259,7 @@
       "optionA": "Option A",
       "optionB": "Option B",
       "step_cdn": "Integration via CDN",
-      "step_cdn_p1": "Lade das Skript, indem du den nachfolgenden \"Script Tag\" im <head>-Bereich deiner Webseite einfügst.",
+      "step_cdn_p1": "Lade das Skript, indem du den nachfolgenden \"Script Tag\" im head-Bereich deiner Webseite einfügst.",
       "step_cdn_p2": "Das Skript lädt automatisch auf nicht-blockierende Art und Weise. Daher ist es im Zweifel nicht entscheidend, wo genau es platziert wird.",
       "step_use": "Loslegen",
       "step_use_start": "Beginne mit der Nutzung, indem du einen <add-to-calendar-button> Tag in deinem HTML-Quellcode einfügst - mit den Optionen als Attribute.",

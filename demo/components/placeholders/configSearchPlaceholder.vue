@@ -8,8 +8,8 @@ const props = defineProps({
 
 <template>
   <div>
-    <label v-if="label" class="hidden pr-5 text-sm text-zinc-500 sm:inline-block">{{ $t('content.config.find_params') }}: </label>
-    <div class="relative" :class="label ? 'block sm:inline-block' : 'block w-full'">
+    <label v-if="props.label" class="hidden pr-5 text-sm text-zinc-500 sm:inline-block">{{ $t('content.config.find_params') }}: </label>
+    <div class="relative" :class="props.label ? 'block sm:inline-block' : 'block w-full'">
       <div class="relative">
         <div class="group mt-1 grid w-full cursor-progress rounded-md bg-zinc-50 shadow dark:bg-zinc-700">
           <div class="w-60 rounded-md bg-zinc-50 py-2 pl-3 pr-10 text-left text-sm text-gray-400 dark:bg-zinc-700">{{ $t('labels.inputs.search') }}</div>

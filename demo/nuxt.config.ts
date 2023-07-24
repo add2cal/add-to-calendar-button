@@ -12,6 +12,7 @@ export default defineNuxtConfig({
     },
   },
   ssr: true,
+  spaLoadingTemplate: false,
   nitro: {
     preset: 'azure',
   },
@@ -29,10 +30,8 @@ export default defineNuxtConfig({
     debug: process.env.NODE_ENV === 'development',
   },
   app: {
+    rootId: 'atcb-demo',
     head: {
-      htmlAttrs: {
-        lang: 'en',
-      },
       viewport: 'width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes',
       meta: [
         { 'http-equiv': 'content-type', content: 'text/html; charset=utf-8' },
@@ -80,6 +79,7 @@ export default defineNuxtConfig({
         { rel: 'dns-prefetch', href: 'https://data.jsdelivr.com' },
       ],
       script: [{ async: true, defer: true, 'data-website-id': 'd178e769-c435-4de9-87e5-48b0ec339f62', src: 'https://a.add-to-calendar-button.com/atcba.js', 'data-host-url': 'https://a.add-to-calendar-button.com', 'data-domains': 'add-to-calendar-button.com' }],
+      noscript: [{ innerHTML: 'Please enable JavaScript to view this website.' }],
     },
   },
   schemaOrg: {
@@ -189,10 +189,13 @@ export default defineNuxtConfig({
     },
   },
   i18n: {
-    strategy: 'prefix_and_default',
+    strategy: 'prefix_except_default',
     types: 'composition',
     langDir: 'locales',
-    lazy: false,
+    lazy: true,
+    compilation: {
+      strictMessage: false,
+    },
     baseUrl: baseUrl,
     defaultLocale: 'en',
     locales: [
@@ -209,58 +212,7 @@ export default defineNuxtConfig({
         name: 'Deutsch',
       },
     ],
-    vueI18n: {
-      locale: 'en',
-      fallbackLocale: 'en',
-      legacy: false,
-      globalInjection: true,
-      datetimeFormats: {
-        en: {
-          short: {
-            year: 'numeric',
-            month: 'numeric',
-            day: 'numeric',
-          },
-        },
-        de: {
-          short: {
-            year: 'numeric',
-            month: 'numeric',
-            day: 'numeric',
-          },
-        },
-      },
-      numberFormats: {
-        en: {
-          currency: {
-            style: 'currency',
-            currency: 'USD',
-            useGrouping: true,
-            currencyDisplay: 'symbol',
-            notation: 'standard',
-          },
-          decimal: {
-            style: 'decimal',
-            minimumFractionDigits: 0,
-            maximumFractionDigits: 2,
-          },
-        },
-        de: {
-          currency: {
-            style: 'currency',
-            currency: 'EUR',
-            useGrouping: true,
-            currencyDisplay: 'symbol',
-            notation: 'standard',
-          },
-          decimal: {
-            style: 'decimal',
-            minimumFractionDigits: 0,
-            maximumFractionDigits: 2,
-          },
-        },
-      },
-    },
+    vueI18n: './nuxt.i18n.config.ts',
   },
   tailwindcss: {
     cssPath: '~/assets/css/main.css',

@@ -48,7 +48,7 @@ function atcb_generate_rich_data(data, parent) {
     if (formattedDate.duration != null) {
       schemaContent.push('"duration":"' + formattedDate.duration + '"');
     }
-    schemaContent.push(data.dates[`${i}`].location.startsWith('http') ? '"eventAttendanceMode":"https://schema.org/OnlineEventAttendanceMode",\r\n"location": {\r\n"@type":"VirtualLocation",\r\n"url":"' + data.dates[`${i}`].location + '"\r\n}' : '"location":"' + data.dates[`${i}`].location + '"');
+    schemaContent.push(data.dates[`${i}`].onlineEvent ? '"eventAttendanceMode":"https://schema.org/OnlineEventAttendanceMode",\r\n"location": {\r\n"@type":"VirtualLocation",\r\n"url":"' + data.dates[`${i}`].location + '"\r\n}' : '"location":"' + data.dates[`${i}`].location + '"');
     if (data.recurrence != null && data.recurrence != '') {
       schemaContent.push(...atcb_generate_rich_data_recurrence(data, formattedDate));
     } else {
@@ -88,9 +88,7 @@ function atcb_generate_rich_data(data, parent) {
 function atcb_generate_rich_data_recurrence(data, formattedDate) {
   const schemaRecurrenceContent = [];
   schemaRecurrenceContent.push('"eventSchedule": { "@type": "Schedule"');
-  if (data.dates[0].timeZone != null && data.dates[0].timeZone != '') {
-    schemaRecurrenceContent.push('"scheduleTimezone":"' + data.dates[0].timeZone + '"');
-  }
+  schemaRecurrenceContent.push('"scheduleTimezone":"' + data.dates[0].timeZone + '"');
   const repeatFrequency = 'P' + data.recurrence_interval + data.recurrence_frequency.substring(0, 1);
   schemaRecurrenceContent.push('"repeatFrequency":"' + repeatFrequency + '"');
   if (data.recurrence_byDay != null && data.recurrence_byDay != '') {

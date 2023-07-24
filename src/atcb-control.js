@@ -97,6 +97,9 @@ function atcb_open(host, data, button = null, keyboardTrigger = false, generated
       if (data.listStyle === 'dropdown-static') {
         // in the dropdown-static case, we do not dynamically adjust whether we show the dropdown upwards
         atcb_position_list(host, button, listWrapper, true);
+      } else if (data.listStyle === 'dropup-static') {
+        // in the dropup-static case, we also do not dynamically adjust, but always show on top
+        atcb_position_list(host, button, listWrapper, false, true);
       } else {
         atcb_position_list(host, button, listWrapper);
       }
