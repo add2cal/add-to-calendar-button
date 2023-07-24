@@ -198,15 +198,10 @@ function atcb_secure_url(url, throwError = true) {
 }
 
 // SHARED FUNCTION TO VALIDATE EMAIL ADDRESSES
-function atcb_validEmail(email, mx = false) {
+function atcb_validEmail(email) {
   // rough format check first
   if (!/^.{0,70}@.{1,30}\.[\w.]{2,9}$/.test(email)) {
     return false;
-  }
-  // testing for mx records second, if activated
-  // TODO: call external service to validate email address
-  if (mx) {
-    console.log('Testing for MX records not yet available');
   }
   return true;
 }

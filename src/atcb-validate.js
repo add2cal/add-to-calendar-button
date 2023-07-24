@@ -149,6 +149,12 @@ function atcb_validate_updated(data, msgPrefix) {
 
 // validate options
 function atcb_validate_options(data, msgPrefix) {
+  // we check for valid options again, since they might have been changed during decoration
+  if (data.options == null || data.options.length < 1) {
+    data.validationError = msgPrefix + ' failed: no valid options available';
+    return false;
+  }
+  // we also double-check whether options are valid
   if (
     !data.options.every(function (option) {
       if (!atcbOptions.includes(option)) {

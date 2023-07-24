@@ -343,7 +343,7 @@ definePageMeta({
               </td>
               <td v-if="locale=='en'">
                 Defines recurring events.<br /><br />
-                This will deactivate the Yahoo and Microsoft (and Google at iOS) options, since they do not support it at the moment (users could still use iCal in this case).<br />
+                This will deactivate the Yahoo and Microsoft (and Google at iOS) options, since they do not support it at the moment (users could still use iCal in this case). If no option is left then, iCal will be set as fallback.<br />
                 You can use any valid <a href="https://www.rfc-editor.org/rfc/rfc5545" target="_blank" rel="noopener" class="whitespace-nowrap">RRULE <ArrowTopRightOnSquareIcon class="-mt-0.5 mr-0.5 inline-block h-3 w-3" aria-hidden="true" /></a> to define the respective rule (<a
                   href="https://icalendar.org/rrule-tool.html"
                   target="_blank"
@@ -358,7 +358,8 @@ definePageMeta({
               </td>
               <td v-else>
                 Definiert wiederkehrende Events.<br /><br />
-                Diese Optione deaktiviert die Yahoo- und Microsoft-Kalendar-Optionen (sowie Google unter iOS), da die Funktion dort aktuell nicht unterstützt wird (in diesen Fällen können Nutzer weiterhin auf die iCal-Datei zurückgreifen).<br />
+                Diese Optione deaktiviert die Yahoo- und Microsoft-Kalendar-Optionen (sowie Google unter iOS), da die Funktion dort aktuell nicht unterstützt wird (in diesen Fällen können Nutzer weiterhin auf die iCal-Datei zurückgreifen). Bleibt keine Option übrig, wird iCal als Fallback
+                aktiviert.<br />
                 Du kannst jede valide <a href="https://www.rfc-editor.org/rfc/rfc5545" target="_blank" rel="noopener" class="whitespace-nowrap">RRULE <ArrowTopRightOnSquareIcon class="-mt-0.5 mr-0.5 inline-block h-3 w-3" aria-hidden="true" /></a> nutzen, um eine entsprechende Regel anzuwenden (<a
                   href="https://icalendar.org/rrule-tool.html"
                   target="_blank"
