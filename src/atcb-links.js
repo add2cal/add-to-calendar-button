@@ -265,7 +265,7 @@ function atcb_generate_google(data) {
     urlParts.push('recur=' + encodeURIComponent(data.recurrence));
     // on iOS, try to force opening Google Calendar in the browser instead of the app, since the app is not supporting recurrence via Deep Links
     if (isiOS()) {
-      urlParts.push('forcedesktop=true');
+      urlParts.push('sf=true&forcedesktop=true');
     }
   }
   if (data.availability != null && data.availability != '') {
