@@ -803,7 +803,7 @@ definePageMeta({
             <tr id="language">
               <th scope="row">language</th>
               <td>
-                <em>String</em><br /><br /><span class="label block">{{ $t('content.config.options') }}:</span>ar, cs, de, en, es, fa, fi, fr, hi, id, it, ja, ko, nl, no, ro, pl, pt, sv, tr, vi, zh<br /><br /><span class="label">{{ $t('content.config.default') }}:</span>en
+                <em>String</em><br /><br /><span class="label block">{{ $t('content.config.options') }}:</span>ar, cs, de, en, es, et, fa, fi, fr, hi, id, it, ja, ko, nl, no, ro, pl, pt, sv, tr, vi, zh<br /><br /><span class="label">{{ $t('content.config.default') }}:</span>en
               </td>
               <td v-if="locale=='en'">
                 If you want to have the text blocks in another language than English, you can use the included translations (i18n).<br /><br />

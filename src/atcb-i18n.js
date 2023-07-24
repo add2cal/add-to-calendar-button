@@ -20,7 +20,7 @@ import { atcb_rewrite_html_elements } from './atcb-util.js';
  * 2. Change the key to the ISO 639-1 code of your language (https://www.w3schools.com/tags/ref_language_codes.asp).
  * 3. Translate the labels.
  * 4. Add the language to the "rtlLanguages" array below, if it write from right to left.
- * 4. Update the "language" part at the configuration page of the demo page - add the new lagnuages to the "Options" info (/demo/src/views/ConfigView.vue).
+ * 4. Update the "language" part at the configuration page of the demo page - add the new lagnuages to the "Options" info (/demo/pages/configuration.vue).
  * 5. Also update the language.ts file at the demo page, so the language appears at the demo playground (/demo/src/components/models/language.ts).
  */
 
@@ -46,7 +46,7 @@ const i18nStrings = {
     'date.status.cancelled': 'This date got cancelled.',
     'date.status.cancelled.cta': 'Please update your calendar!',
     'modal.subscribe.yahoo.h': 'Add Calendar to Yahoo',
-    'modal.subscribe.yahoo.text': '<ol><li>Open now the Yahoo Calendar.</li><li>Click the "Actions" tab.</li><li>Hit "Follow Other Calendars".</li><li>Set a name and past the clipboard content into the url field.</li></ol>',
+    'modal.subscribe.yahoo.text': '<ol><li>Open now the Yahoo Calendar.</li><li>Click the "Actions" tab.</li><li>Hit "Follow Other Calendars".</li><li>Set a name and paste the clipboard content into the url field.</li></ol>',
     cancel: 'Cancel',
     expired: 'Expired',
     recurring: 'Recurring',
@@ -511,6 +511,27 @@ const i18nStrings = {
     'modal.subscribe.yahoo.text': '<ol><li>اکنون تقویم یاهو را باز کنید.</li><li>روی زبانه «Actions» کلیک کنید.</li><li>روی «Follow Other Calendars» ضربه بزنید.</li><li>یک نام وارد کنید و محتوای کلیپ‌بورد را در قسمت url قرار دهید.</li></ol>',
     cancel: 'لغو',
     expired: 'منقضی شده',
+  },
+  et: {
+    'label.addtocalendar': 'Lisa kalendrisse',
+    'label.icalfile': 'iCal fail',
+    close: 'Sulge',
+    'modal.button.default': 'Kliki siia',
+    'modal.webview.ical.h': 'Ava oma veebilehitseja',
+    'modal.webview.ical.text': 'Kahjuks on rakendusesisestel veebilehitsejatel probleeme kalendrifailide loomisega.',
+    'modal.clipboard.text': 'Kalendri veebi aadress on automaatselt kopeeritud sinu lõikelauale.',
+    'modal.webview.ical.steps': '<ol><li><strong>Ava teine veebilehitseja</strong> oma telefonis, ...</li><li><strong>Kleebi</strong> lõikelaua sisu ning mine sellele lehele.</li></ol>',
+    'modal.crios.ical.h': 'Ava Safari',
+    'modal.crios.ical.text': 'Kahjuks on iOS-i Chrome-l probleeme kalendrifailide loomisega.',
+    'modal.crios.ical.steps': '<ol><li><strong>Ava Safari</strong>, ...</li><li><strong>Kleebi</strong> lõikelaua sisu ning mine sellele lehele.</li></ol>',
+    'modal.multidate.h': 'See on sündmuste seeria',
+    'modal.multidate.text': 'Ava üksikud sündmused ükshaaval:',
+    'date.status.cancelled': 'See kuupäev on tühistatud.',
+    'date.status.cancelled.cta': 'Palun uuenda oma kalendrit!',
+    'modal.subscribe.yahoo.h': 'Lisa kalender Yahoo-sse',
+    'modal.subscribe.yahoo.text': '<ol><li>Ava oma Yahoo kalender.</li><li>Kliki "Actions" vahelehte.</li><li>Vajuta "Follow Other Calendars".</li><li>Määra nimi ning lisa lõikelaua sisu URL (veebi aadressi) väljale.</li></ol>',
+    cancel: 'Tühista',
+    expired: 'Aegunud',
   },
 };
 
