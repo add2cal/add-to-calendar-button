@@ -275,7 +275,7 @@ function atcb_generate_google(data) {
   }
   // We also push the UID. It has no real effect, but at least becomes part of the url that way
   urlParts.push('uid=' + encodeURIComponent(data.uid));
-  atcb_open_cal_url(urlParts.join('&'));
+  atcb_open_cal_url(urlParts.join('&'), '', true);
 }
 
 // FUNCTION TO GENERATE THE YAHOO URL
@@ -383,7 +383,7 @@ function atcb_generate_msteams(data) {
 }
 
 // FUNCTION TO OPEN THE URL
-function atcb_open_cal_url(url, target = '') {
+function atcb_open_cal_url(url, target = '', doubleLoad = false) {
   if (target == '') {
     target = atcbDefaultTarget;
   }
@@ -391,6 +391,14 @@ function atcb_open_cal_url(url, target = '') {
     // eslint-disable-next-line security/detect-non-literal-fs-filename
     const newTab = window.open(url, target);
     if (newTab) {
+      if (doubleLoad) {
+        if (isiOS()) {
+          // workaround for iOS, where Google Calendar won't load the event, if not already open - therefore, loading twice
+          newTab.onload = function () {
+            newTab.reload();
+          };
+        }
+      }
       newTab.focus();
     }
   }
