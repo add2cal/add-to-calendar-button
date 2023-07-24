@@ -148,7 +148,7 @@ function atcb_decorate_data_options(data) {
     // and in the subscribe case, we also skip options, which are not made for subscribing (MS Teams)
     if (
       (isiOS() && atcbiOSInvalidOptions.includes(optionName)) ||
-      (data.recurrence != null && data.recurrence != '' && (!atcbValidRecurrOptions.includes(optionName) || (data.recurrence_until != null && data.recurrence_until != '' && (optionName === 'apple' || optionName === 'ical')))) ||
+      (data.recurrence != null && data.recurrence != '' && (!atcbValidRecurrOptions.includes(optionName) || (data.recurrence_until != null && data.recurrence_until != '' && (optionName === 'apple' || optionName === 'ical')) || (isiOS() && optionName === 'google'))) ||
       (data.subscribe && atcbInvalidSubscribeOptions.includes(optionName))
     ) {
       continue;
