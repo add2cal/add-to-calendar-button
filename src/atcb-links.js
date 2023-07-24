@@ -394,6 +394,7 @@ function atcb_open_cal_url(url, target = '', doubleLoad = false) {
       if (doubleLoad) {
         if (isiOS()) {
           // workaround for iOS, where Google Calendar won't load the event, if not already open - therefore, loading twice
+          newTab.reload();
           newTab.onload = function () {
             newTab.reload();
           };

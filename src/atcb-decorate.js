@@ -158,13 +158,16 @@ function atcb_decorate_data_options(data) {
   }
   // since the above can lead to excluding all options, we add the iCal option as default, if not other option is left
   if (newOptions.length === 0) {
-    newOptions.push('ical');
-    data.optionLabels.push('');
+    if (!isiOS()) {
+      newOptions.push('ical');
+      data.optionLabels.push('');
+    }
     iCalGiven = true;
   }
   // for iOS, we force the Apple option (if it is not there, but iCal was)
   if (isiOS() && iCalGiven && !appleGiven) {
     newOptions.push('apple');
+    data.optionLabels.push('');
   }
   // last but not least, override the options at the main data object
   data.options = newOptions;
