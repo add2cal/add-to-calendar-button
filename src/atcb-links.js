@@ -263,6 +263,10 @@ function atcb_generate_google(data) {
   }
   if (data.recurrence != null && data.recurrence != '') {
     urlParts.push('recur=' + encodeURIComponent(data.recurrence));
+    // on iOS, try to force opening Google Calendar in the browser instead of the app, since the app is not supporting recurrence via Deep Links
+    if (isiOS()) {
+      urlParts.push('forcedesktop=true');
+    }
   }
   if (data.availability != null && data.availability != '') {
     const availabilityPart = (function () {
