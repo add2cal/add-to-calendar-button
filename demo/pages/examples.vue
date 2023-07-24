@@ -227,11 +227,11 @@ watch(locale, value => {
         <p v-if="locale=='en'">
           You can define recurring events by setting an
           <a href="https://www.rfc-editor.org/rfc/rfc5545" target="_blank" rel="noopener">RRULE <ArrowTopRightOnSquareIcon class="-mt-0.5 mr-0.5 inline-block h-4 w-4" aria-hidden="true" /></a>.<br />
-          Mind that the rule needs to be valid (technically and logically) and that it is not supported by all calendar types - in this example, the specified Yahoo and Outlook.com options won't show up for that reason.
+          Mind that the rule needs to be valid (technically and logically) and that it is not supported by all calendar types - in this example, the specified Yahoo and Outlook.com (and Google, if you're on iOS) options won't show up for that reason.
         </p>
         <p v-else>
           Du kannst Wiederholungen grundsätzlich ganz einfach mit einer <a href="https://www.rfc-editor.org/rfc/rfc5545" target="_blank" rel="noopener">RRULE <ArrowTopRightOnSquareIcon class="-mt-0.5 mr-0.5 inline-block h-4 w-4" aria-hidden="true" /></a> definieren.<br />
-          Beachte, dass die Regel technisch und logisch gültig sein muss und die Option nicht von allen Kalender-Typen unterstützt wird - im Beispiel tauchen die definierten Yahoo- und Outlook-Optionen aus diesem Grund nicht auf.
+          Beachte, dass die Regel technisch und logisch gültig sein muss und die Option nicht von allen Kalender-Typen unterstützt wird - im Beispiel tauchen die definierten Yahoo- und Outlook-Optionen (sowie Google unter iOS) aus diesem Grund nicht auf.
         </p>
         <div class="block w-full justify-between md:flex">
           <div class="flex w-full flex-none justify-center p-6 pt-8 md:w-[300px]">

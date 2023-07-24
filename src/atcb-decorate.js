@@ -144,11 +144,11 @@ function atcb_decorate_data_options(data) {
     }
     // next, fill the new arrays (where the labels array already sits inside the main data object)
     // do not consider options, which should not appear on iOS (e.g. iCal, since we have the Apple option instead)
-    // in the recurrence case, we leave out all options, which do not support it in general, as well as Apple and iCal for rrules with "until"
+    // in the recurrence case, we leave out all options, which do not support it in general, as well as Apple and iCal for rrules with "until", as well as Google in the iOS case
     // and in the subscribe case, we also skip options, which are not made for subscribing (MS Teams)
     if (
       (isiOS() && atcbiOSInvalidOptions.includes(optionName)) ||
-      (data.recurrence != null && data.recurrence != '' && (!atcbValidRecurrOptions.includes(optionName) || (data.recurrence_until != null && data.recurrence_until != '' && (optionName == 'apple' || optionName == 'ical')))) ||
+      (data.recurrence != null && data.recurrence != '' && (!atcbValidRecurrOptions.includes(optionName) || (data.recurrence_until != null && data.recurrence_until != '' && (optionName === 'apple' || optionName === 'ical')) || (isiOS() && optionName === 'google'))) ||
       (data.subscribe && atcbInvalidSubscribeOptions.includes(optionName))
     ) {
       continue;
