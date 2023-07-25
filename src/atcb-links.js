@@ -276,12 +276,11 @@ function atcb_generate_google(data) {
   }
   // workaround to trick the Google Calendar app on iOS, which otherwise in some cases opens without the event add dialog
   if (isiOS()) {
-    atcb_open_cal_url(urlParts.join('&').replace('https://calendar.google.com/calendar/', 'googlecalendar://calendar.google.com/calendar/'));
-    /*atcb_open_cal_url(urlParts.join('https://calendar.google.com/calendar/'));
+    atcb_open_cal_url(urlParts.join('https://calendar.google.com/calendar/'));
     // wait 2 seconds, then open the real one
     setTimeout(function () {
       atcb_open_cal_url(urlParts.join('&'));
-    }, 2000);*/
+    }, 2000);
   } else {
     atcb_open_cal_url(urlParts.join('&'));
   }

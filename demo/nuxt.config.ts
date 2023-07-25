@@ -222,6 +222,7 @@ export default defineNuxtConfig({
   },
   sitemap: {
     exclude: ['/en/**', 'legal-notice', 'privacy-policy', '*/legal-notice', '*/privacy-policy'],
+    include: ['/favicon.ico', '/favicon.svg'],
     defaults: {
       priority: 1,
       changefreq: 'daily',
