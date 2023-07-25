@@ -94,7 +94,7 @@ function atcb_validate_icsFile(data, msgPrefix, i = '', msgSuffix = '') {
     return '';
   })();
   if (icsFileStr != '') {
-    if (!atcb_secure_url(icsFileStr, false) || !data.icsFile.startsWith('https://')) {
+    if (!atcb_secure_url(icsFileStr, false) || (!data.icsFile.startsWith('https://') && !data.icsFile.startsWith('http://'))) {
       data.validationError = msgPrefix + ' failed: explicit ics file path not valid' + msgSuffix;
       return false;
     }

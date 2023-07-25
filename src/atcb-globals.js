@@ -61,6 +61,18 @@ const isChrome = isBrowser()
   : () => {
       return false;
     };
+// Safari
+const isSafari = isBrowser()
+  ? () => {
+      if (/^((?!chrome|android|crios|fxios).)*safari/i.test(navigator.userAgent || navigator.vendor) || !!navigator.userAgent.match(/AppleWebKit/i)) {
+        return true;
+      } else {
+        return false;
+      }
+    }
+  : () => {
+      return false;
+    };
 // Mobile
 const isMobile = () => {
   if (isAndroid() || isiOS()) {
@@ -226,6 +238,7 @@ export {
   isiOS,
   isAndroid,
   isChrome,
+  isSafari,
   isMobile,
   isWebView,
   isProblematicWebView,
