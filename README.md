@@ -3,7 +3,7 @@
 [![Code Quality](https://img.shields.io/codacy/grade/572c0a102d7b4f39b792439dcd2e8aad/main?style=for-the-badge)](https://app.codacy.com/gh/add2cal/add-to-calendar-button/dashboard)
 [![npm Installations Total](https://img.shields.io/npm/dt/add-to-calendar-button?label=npm%20Installations&style=for-the-badge)](https://www.npmjs.com/package/add-to-calendar-button)
 [![npm Installations per Month](https://img.shields.io/npm/dm/add-to-calendar-button?label=npm%20Installations%2FMonth&style=for-the-badge)](https://www.npmjs.com/package/add-to-calendar-button)
-[![jsDelivr npm Hits](https://img.shields.io/jsdelivr/npm/hm/add-to-calendar-button?label=jsDelivr%20npm%20hits&style=for-the-badge)](https://www.jsdelivr.com/package/npm/add-to-calendar-button)
+[![jsDelivr npm Hits](https://img.shields.io/jsdelivr/npm/hm/add-to-calendar-button?label=jsDelivr%20npm%20hits&style=for-the-badge)](https://www.jsdelivr.com/package/npm/add-to-calendar-button?tab=stats)
 ![npm bundle size](https://img.shields.io/bundlephobia/minzip/add-to-calendar-button?style=for-the-badge)
 
 <br />
@@ -26,7 +26,7 @@ The script, since it is a web component, integrates easily with any usual HTML w
 
 ![Supported Technology: Angular, React, Vue, Svelte, and every other project that can load JavaScript](https://github.com/add2cal/add-to-calendar-button/blob/main/assets/img/badge-technology.svg)
 
-In terms of system support, **all modern browsers** (Chrome, Edge, Firefox, Safari) on **Windows, Mac, Android, and iOS** as well as rather restricted webview environments like the **Instagram** in-app browser are supported.
+Works with **all modern browsers** (Chrome, Edge, Firefox, Safari) on **Windows, Mac, Android, and iOS** as well as rather restricted webview environments like the **Instagram** in-app browser.
 
 <br /><br />
 
@@ -39,6 +39,12 @@ In terms of system support, **all modern browsers** (Chrome, Edge, Firefox, Safa
 See [add-to-calendar-button.com](https://add-to-calendar-button.com/) for a live demo and playground.
 
 And remember to [⭐ **star** this repository](#) in order to stay up-to-date and save it for later! 🤗
+
+<br />
+
+---
+
+<br />
 
 ## ✨ Features
 
@@ -73,7 +79,7 @@ Simple and convenient integration of 1 or many buttons, configurable directly wi
 - Taking care of all those edge cases, where some scenarios do not support specific setups (like WebView blocking downloads); utilizing beautiful user guidance workarounds.
 - Auto-generated Schema.org rich (structured) data for better SEO.
 - Full support for mouse, touch, or keyboard input (W3C WAI compliant).
-- Supporting 20+ languages, incl. RTL text for Arabic; but also custom labels and text blocks (i18n).
+- Supporting 20+ languages, incl. RTL text for Arabic & Persian; but also custom labels and text blocks (i18n).
 
 ### And much more
 
@@ -213,8 +219,6 @@ A button can be easily created by using the respective custom element.
 
 You can then configure the button by simply adding the options as attributes to it. Boolean values (true/false) can be set as `optionName="true"` or simply by adding `optionName` to the tag. Not setting it at all would be automatically translate to "false".
 
-Theoretically, you could also add all the configuration as JSON structured String by placing this string as the TextContent of the tag. This is mainly due to backwards compatibility reasons and no longer recommended, since it also does not detect changes!
-
 <br />
 
 ### Minimal structure (required)
@@ -255,15 +259,9 @@ A time zone is not required, but recommended.
 </add-to-calendar-button>
 ```
 
-<br />
-
-You can find more examples as well as an interactive playground at the demo page: [add-to-calendar-button.com](https://add-to-calendar-button.com).
-
 <br /><br />
 
-### All options and features
-
-Find all information about the available attributes and how to configure specific features on the demo page at [add-to-calendar-button.com/configuration](https://add-to-calendar-button.com/configuration).
+[More Examples](https://add-to-calendar-button.com/examples) • [Full Configuration Documentation](https://add-to-calendar-button.com/configuration)
 
 <br />
 
@@ -326,6 +324,8 @@ In doubt, simply ask and we find a way. :)
 <a href="https://github.com/bryan-brancotte"><img src="https://avatars.githubusercontent.com/u/11556772?v=4" title="bryan-brancotte" width="60" height="60"></a>
 <a href="https://github.com/nticaric"><img src="https://avatars.githubusercontent.com/u/824840?v=4" title="nticaric" width="60" height="60"></a>
 <a href="https://github.com/Ortovoxx"><img src="https://avatars.githubusercontent.com/u/56805259?v=4" title="Ortovoxx" width="60" height="60"></a>
+<a href="https://github.com/Goudarz"><img src="https://avatars.githubusercontent.com/u/3191949?v=4" title="Goudarz" width="60" height="60"></a>
+<a href="https://github.com/ragnarkurm"><img src="https://avatars.githubusercontent.com/u/5205088?v=4" title="Ragnar Kurm" width="60" height="60"></a>
 <a href="https://github.com/emilebosch"><img src="https://avatars.githubusercontent.com/u/303135?v=4" title="emilebosch" width="60" height="60"></a>
 <a href="https://github.com/killerrin"><img src="https://avatars.githubusercontent.com/u/3269687?v=4" title="killerrin" width="60" height="60"></a>
 <a href="https://github.com/acm-will"><img src="https://avatars.githubusercontent.com/u/103984058?v=4" title="acm-will" width="60" height="60"></a>

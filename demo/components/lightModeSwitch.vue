@@ -1,63 +1,35 @@
 <script setup lang="ts">
-import { ref, onMounted, onUnmounted } from 'vue';
+import { getUserTheme, changeUserTheme } from "@/utils/themeSwitch";
 import { Switch } from '@headlessui/vue';
 import { SunIcon, MoonIcon } from '@heroicons/vue/24/outline';
-import { get, set } from '@/utils/localStorage';
 
-export type UserTheme = 'light' | 'dark';
-
-const setTheme = (theme: UserTheme) => {
-  set('user-theme', theme);
-  userTheme.value = theme;
-};
-
-const getTheme = (): UserTheme => {
-  return get('user-theme') as UserTheme;
-};
+let userTheme = getUserTheme();
 
 const toggleTheme = (): void => {
-  const activeTheme = get('user-theme');
-  if (activeTheme === 'light') {
-    setTheme('dark');
-    document.documentElement.classList.add('atcb-dark');
+  if (userTheme === 'light') {
+    changeUserTheme('dark');
+    userTheme = 'dark';
   } else {
-    setTheme('light');
-    document.documentElement.classList.remove('atcb-dark');
+    changeUserTheme('light');
+    userTheme = 'light';
   }
 };
 
-const getMediaPreference = (): UserTheme => {
-  /*const hasDarkPreference = window.matchMedia('(prefers-color-scheme: dark)').matches;
-  if (hasDarkPreference) {
-    return 'dark';
-  } else {
-    return 'light';
-  }*/
-  // for now, we will not adapt to any system setting, but always start light, since it better suits the button. Might change this in the future. Therefore, we leave it commented
-  return 'light';
-};
-
-const userTheme = ref<UserTheme>(getTheme() || getMediaPreference());
-
-const darkEnabled = userTheme.value == 'dark' ? ref(true) : ref(false);
+const darkEnabled = userTheme === 'dark' ? ref(true) : ref(false);
 
 const docObserver = new MutationObserver(function (mutationsList) {
-    mutationsList.forEach((mutation) => {
-      if (mutation.attributeName === 'class') {
-        if (document.documentElement.classList.contains('atcb-dark')) {
-          darkEnabled.value = true;
-        } else {
-          darkEnabled.value = false;
-        }
+  mutationsList.forEach((mutation) => {
+    if (mutation.attributeName === 'class') {
+      if (document.documentElement.classList.contains('atcb-dark')) {
+        darkEnabled.value = true;
+      } else {
+        darkEnabled.value = false;
       }
-    });
+    }
   });
+});
 
 onMounted(() => {
-  if (userTheme.value == 'dark') {
-    document.documentElement.classList.add('atcb-dark');
-  }
-  setTheme(userTheme.value);
   docObserver.observe(document.documentElement, { attributes: true });
 });
 

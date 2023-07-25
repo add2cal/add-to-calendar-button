@@ -2,6 +2,7 @@
 import LightModeSwitch from "@/components/lightModeSwitch.vue";
 import { EyeIcon, EyeSlashIcon, AdjustmentsHorizontalIcon, CheckIcon } from '@heroicons/vue/24/outline';
 import "add-to-calendar-button";
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import CodeBlock from "@/components/codeBlock.vue";
 import DateAttrs from "@/components/playground/attrs/dateAttrs.vue";
 import LayoutAttrs from "@/components/playground/attrs/layoutAttrs.vue";

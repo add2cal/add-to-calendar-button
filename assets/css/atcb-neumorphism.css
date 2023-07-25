@@ -5,7 +5,7 @@
  *
  * Style: Neumorphism
  *
- * Version: 2.2.10
+ * Version: 2.3.0
  * Creator: Jens Kuerschner (https://jenskuerschner.de)
  * Project: https://github.com/add2cal/add-to-calendar-button
  * License: Elastic License 2.0 (ELv2) (https://github.com/add2cal/add-to-calendar-button/blob/main/LICENSE.txt)
@@ -647,6 +647,8 @@ a.atcb-modal-btn:focus-visible {
   justify-content: center;
   font-weight: 600;
   font-size: 1em;
+  padding: .3em;
+  box-sizing: border-box;
 }
 
 .atcb-subevent-btn:hover .atcb-date-btn-details {
@@ -669,8 +671,8 @@ a.atcb-modal-btn:focus-visible {
 
 .atcb-date-btn-content {
   display: flex;
-  align-items: center;
-  font-size: 0.8em;
+  align-items: flex-start;
+  font-size: .8em;
   color: var(--date-btn-text-secondary);
 }
 
@@ -684,7 +686,6 @@ a.atcb-modal-btn:focus-visible {
 
 .atcb-date-btn-content-icon {
   display: inline-block;
-  margin-top: -.3em;
   height: 0.8em;
   width: 1.3em;
   flex: 0 0 1.3em;
@@ -692,13 +693,13 @@ a.atcb-modal-btn:focus-visible {
 
 .atcb-rtl .atcb-date-btn-content-icon {
   margin-right: 0;
-  margin-left: 0.5em;
+  margin-left: .5em;
 }
 
-.atcb-initialized[lang="zh"] .atcb-date-btn-content-icon,
-.atcb-initialized[lang="ja"] .atcb-date-btn-content-icon,
-.atcb-initialized[lang="ko"] .atcb-date-btn-content-icon {
-  margin-top: -.2em;
+.atcb-initialized[lang="zh"] .atcb-date-btn-content:not(.atcb-date-btn-content-location) .atcb-date-btn-content-icon,
+.atcb-initialized[lang="ja"] .atcb-date-btn-content:not(.atcb-date-btn-content-location) .atcb-date-btn-content-icon,
+.atcb-initialized[lang="ko"] .atcb-date-btn-content:not(.atcb-date-btn-content-location) .atcb-date-btn-content-icon {
+  margin-top: .15em;
 }
 
 .atcb-date-btn-content-icon svg {
@@ -711,8 +712,9 @@ a.atcb-modal-btn:focus-visible {
   margin-top: 0.3em;
 }
 
-.atcb-date-btn-content-recurr-icon {
-  padding-left: 0.3em;
+.atcb-date-btn-content-text span:not(.atcb-icon-ical) {
+  padding-right: .3em;
+  display: inline-block;
 }
 
 /******************************
@@ -754,7 +756,6 @@ a.atcb-modal-btn:focus-visible {
  */
 
 #atcb-bgoverlay {
-  animation: atcb-bgoverlay-animate 0.1s ease 0s 1 normal forwards;
   background-color: var(--overlay-background);
   border: 0;
   box-sizing: border-box;
@@ -768,12 +769,16 @@ a.atcb-modal-btn:focus-visible {
   top: 0;
   min-height: 100%;
   min-width: 100%;
-  opacity: 0;
   overflow-y: auto;
   padding: 20px 20px 130px;
   position: fixed;
   width: 100vw;
   z-index: 14000000;
+}
+
+#atcb-bgoverlay:not(dialog) {
+  animation: atcb-bgoverlay-animate 0.1s ease 0s 1 normal forwards;
+  opacity: 0;
 }
 
 #atcb-bgoverlay.atcb-no-bg {

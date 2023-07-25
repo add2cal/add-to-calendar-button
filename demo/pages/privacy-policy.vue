@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import View_DE from "@/components/translated/privacy-policy-de.vue";
-import { ArrowTopRightOnSquareIcon } from '@heroicons/vue/24/outline';
 
 const { locale } = useI18n();
 

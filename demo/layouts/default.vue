@@ -35,10 +35,10 @@ const description = computed(() => route.meta.description ? t(route.meta.descrip
       </Head>
       <Body>
         <Header />
-        <div class="container mb-20 mt-16 text-center md:text-left">
+        <div class="container relative z-10 mb-20 mt-16 text-center md:text-left">
           <slot />
         </div>
-        <LazyFooter />
+        <Footer />
       </Body>
     </Html>
   </div>

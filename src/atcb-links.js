@@ -3,7 +3,7 @@
  *  Add to Calendar Button
  *  ++++++++++++++++++++++
  *
- *  Version: 2.2.10
+ *  Version: 2.3.0
  *  Creator: Jens Kuerschner (https://jenskuerschner.de)
  *  Project: https://github.com/add2cal/add-to-calendar-button
  *  License: Elastic License 2.0 (ELv2) (https://github.com/add2cal/add-to-calendar-button/blob/main/LICENSE.txt)
@@ -12,7 +12,7 @@
  */
 
 import { tzlib_get_ical_block } from 'timezones-ical-library';
-import { atcbVersion, isMobile, isiOS, isAndroid, isChrome, isWebView, isProblematicWebView, atcbDefaultTarget, atcbStates } from './atcb-globals.js';
+import { atcbVersion, isMobile, isiOS, isAndroid, isSafari, isWebView, isProblematicWebView, atcbDefaultTarget, atcbStates } from './atcb-globals.js';
 import { atcb_toggle } from './atcb-control.js';
 import { atcb_saved_hook, atcb_save_file, atcb_generate_time, atcb_format_datetime, atcb_secure_url, atcb_copy_to_clipboard, atcb_rewrite_ical_text } from './atcb-util.js';
 import { atcb_create_modal } from './atcb-generate.js';
@@ -151,7 +151,7 @@ function atcb_generate_subscribe_links(host, linkType, data, keyboardTrigger) {
           { label: atcb_translate_hook('cancel', data) },
         ],
         [],
-        keyboardTrigger
+        keyboardTrigger,
       );
       return;
     case 'yahoo2nd':
@@ -171,7 +171,7 @@ function atcb_generate_subscribe_links(host, linkType, data, keyboardTrigger) {
           { label: atcb_translate_hook('cancel', data) },
         ],
         [],
-        keyboardTrigger
+        keyboardTrigger,
       );
       return;
   }
@@ -201,7 +201,8 @@ function atcb_subscribe_ical(fileUrl) {
 function atcb_subscribe_google(fileUrl) {
   const baseUrl = 'https://calendar.google.com/calendar/r?cid=';
   const newFileUrl = (function () {
-    if (fileUrl.startsWith('https://calendar.google.com/') || fileUrl.startsWith('webcal://calendar.google.com/') || fileUrl.startsWith('http://calendar.google.com/') || fileUrl.startsWith('//calendar.google.com/')) {
+    const fileUrlRegex = /^(https?:\/\/|webcal:\/\/|\/\/)calendar\.google\.com\//;
+    if (fileUrlRegex.test(fileUrl)) {
       return fileUrl.replace(/^(.)*\?cid=/, '');
     }
     return encodeURIComponent(fileUrl);
@@ -243,11 +244,23 @@ function atcb_generate_google(data) {
   if (data.name != null && data.name != '') {
     urlParts.push('text=' + encodeURIComponent(data.name));
   }
+  const tmpDataDescription = [];
   if (data.description != null && data.description != '') {
-    urlParts.push('details=' + encodeURIComponent(data.description));
+    tmpDataDescription.push(data.description);
   }
   if (data.location != null && data.location != '') {
     urlParts.push('location=' + encodeURIComponent(data.location));
+    // TODO: Find a better solution for the next temporary workaround.
+    if (isiOS()) {
+      // workaround to cover a bug, where, when using Google Calendar on an iPhone, the location is not recognized. So, for the moment, we simply add it to the description.
+      if (tmpDataDescription.length > 0) {
+        tmpDataDescription.push('<br><br>');
+      }
+      tmpDataDescription.push('&#128205;: ' + data.location);
+    }
+  }
+  if (tmpDataDescription.length > 0) {
+    urlParts.push('details=' + encodeURIComponent(tmpDataDescription.join('')));
   }
   if (data.recurrence != null && data.recurrence != '') {
     urlParts.push('recur=' + encodeURIComponent(data.recurrence));
@@ -261,8 +274,6 @@ function atcb_generate_google(data) {
     })();
     urlParts.push(availabilityPart);
   }
-  // We also push the UID. It has no real effect, but at least becomes part of the url that way
-  urlParts.push('uid=' + encodeURIComponent(data.uid));
   atcb_open_cal_url(urlParts.join('&'));
 }
 
@@ -288,7 +299,6 @@ function atcb_generate_yahoo(data) {
     // using descriptionHtmlFree instead of description, since Yahoo does not support html tags in a stable way
     urlParts.push('desc=' + encodeURIComponent(data.descriptionHtmlFree));
   }
-  // mind to not use the UID with Yahoo, since this is reserved for an internal Yahoo, which we usually do not know. Therefore, providing a wrong ID break it
   atcb_open_cal_url(urlParts.join('&'));
 }
 
@@ -329,8 +339,6 @@ function atcb_generate_microsoft(data, type = '365') {
   if (data.description != null && data.description != '') {
     urlParts.push('body=' + encodeURIComponent(data.description));
   }
-  // We also push the UID. It has no real effect, but at least becomes part of the url that way
-  urlParts.push('uid=' + encodeURIComponent(data.uid));
   atcb_open_cal_url(urlParts.join('&'));
 }
 
@@ -365,8 +373,6 @@ function atcb_generate_msteams(data) {
     // using descriptionHtmlFree instead of description, since Teams does not support html tags
     urlParts.push('content=' + locationString + encodeURIComponent(data.descriptionHtmlFree));
   }
-  // We also push the UID. It has no real effect, but at least becomes part of the url that way
-  urlParts.push('uid=' + encodeURIComponent(data.uid));
   atcb_open_cal_url(baseUrl + urlParts.join('&'));
 }
 
@@ -402,8 +408,8 @@ function atcb_generate_ical(host, data, subEvent = 'all', keyboardTrigger = fals
     }
     return '';
   })();
-  // ... and directly load it (not if iOS and WebView - will be catched further down - except it is explicitely bridged)
-  if (givenIcsFile != '' && (!isiOS() || !isWebView() || data.bypassWebViewCheck == true)) {
+  // ... and directly load it (not if iOS - will be catched further down - except it is WebView and explicitely bridged)
+  if (givenIcsFile != '' && (!isiOS() || (isiOS() && isWebView() && data.bypassWebViewCheck == true))) {
     atcb_save_file(givenIcsFile, filename);
     return;
   }
@@ -501,7 +507,7 @@ function atcb_generate_ical(host, data, subEvent = 'all', keyboardTrigger = fals
   }
   ics_lines.push('END:VCALENDAR');
   const dataUrl = (function () {
-    // if we got to this point with an explicitely given iCal file, we are on an iOS device within an in-app browser (WebView). In this case, we use this as dataUrl
+    // if we got to this point with an explicitely given iCal file, we are on an iOS device. In this case, we use this as dataUrl
     if (givenIcsFile != '') {
       return givenIcsFile;
     }
@@ -511,7 +517,7 @@ function atcb_generate_ical(host, data, subEvent = 'all', keyboardTrigger = fals
   // in in-app browser cases (WebView), we offer a copy option, since the on-the-fly client side generation is usually not supported
   // for Android, we are more specific than with iOS and only go for specific apps at the moment
   // for Chrome on iOS we basically do the same
-  if ((isiOS() && isChrome()) || (isWebView() && (isiOS() || (isAndroid() && isProblematicWebView())))) {
+  if ((isiOS() && !isSafari()) || (isWebView() && (isiOS() || (isAndroid() && isProblematicWebView())))) {
     atcb_ical_copy_note(host, dataUrl, data, keyboardTrigger);
     return;
   }
@@ -542,8 +548,17 @@ function atcb_ical_copy_note(host, dataUrl, data, keyboardTrigger) {
   // putting the download url to the clipboard
   atcb_copy_to_clipboard(dataUrl);
   // creating the modal
-  if (isiOS() && isChrome()) {
-    atcb_create_modal(host, data, 'warning', atcb_translate_hook('modal.crios.ical.h', data), atcb_translate_hook('modal.crios.ical.text', data) + '<br>' + atcb_translate_hook('modal.clipboard.text', data) + '<br>' + atcb_translate_hook('modal.crios.ical.steps', data), [], [], keyboardTrigger);
+  if (isiOS() && !isSafari()) {
+    atcb_create_modal(
+      host,
+      data,
+      'warning',
+      atcb_translate_hook('modal.opensafari.ical.h', data),
+      atcb_translate_hook('modal.opensafari.ical.text', data) + '<br>' + atcb_translate_hook('modal.clipboard.text', data) + '<br>' + atcb_translate_hook('modal.opensafari.ical.steps', data),
+      [],
+      [],
+      keyboardTrigger,
+    );
     return;
   }
   atcb_create_modal(host, data, 'warning', atcb_translate_hook('modal.webview.ical.h', data), atcb_translate_hook('modal.webview.ical.text', data) + '<br>' + atcb_translate_hook('modal.clipboard.text', data) + '<br>' + atcb_translate_hook('modal.webview.ical.steps', data), [], [], keyboardTrigger);

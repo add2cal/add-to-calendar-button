@@ -1,4 +1,11 @@
 <script setup lang="ts">
+import { set, LSKey } from '@/utils/localStorage';
+const { locale } = useI18n();
+
+if (process.client) {
+  set(LSKey.LANG, locale.value);
+}
+
 useSchemaOrg([
   defineWebSite({
     name: 'Add to Calendar Button',
