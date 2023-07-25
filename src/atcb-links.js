@@ -3,7 +3,7 @@
  *  Add to Calendar Button
  *  ++++++++++++++++++++++
  *
- *  Version: 2.2.10
+ *  Version: 2.3.0
  *  Creator: Jens Kuerschner (https://jenskuerschner.de)
  *  Project: https://github.com/add2cal/add-to-calendar-button
  *  License: Elastic License 2.0 (ELv2) (https://github.com/add2cal/add-to-calendar-button/blob/main/LICENSE.txt)
@@ -549,7 +549,16 @@ function atcb_ical_copy_note(host, dataUrl, data, keyboardTrigger) {
   atcb_copy_to_clipboard(dataUrl);
   // creating the modal
   if (isiOS() && !isSafari()) {
-    atcb_create_modal(host, data, 'warning', atcb_translate_hook('modal.opensafari.ical.h', data), atcb_translate_hook('modal.opensafari.ical.text', data) + '<br>' + atcb_translate_hook('modal.clipboard.text', data) + '<br>' + atcb_translate_hook('modal.opensafari.ical.steps', data), [], [], keyboardTrigger);
+    atcb_create_modal(
+      host,
+      data,
+      'warning',
+      atcb_translate_hook('modal.opensafari.ical.h', data),
+      atcb_translate_hook('modal.opensafari.ical.text', data) + '<br>' + atcb_translate_hook('modal.clipboard.text', data) + '<br>' + atcb_translate_hook('modal.opensafari.ical.steps', data),
+      [],
+      [],
+      keyboardTrigger,
+    );
     return;
   }
   atcb_create_modal(host, data, 'warning', atcb_translate_hook('modal.webview.ical.h', data), atcb_translate_hook('modal.webview.ical.text', data) + '<br>' + atcb_translate_hook('modal.clipboard.text', data) + '<br>' + atcb_translate_hook('modal.webview.ical.steps', data), [], [], keyboardTrigger);

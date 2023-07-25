@@ -3,7 +3,7 @@
  *  Add to Calendar Button
  *  ++++++++++++++++++++++
  *
- *  Version: 2.2.10
+ *  Version: 2.3.0
  *  Creator: Jens Kuerschner (https://jenskuerschner.de)
  *  Project: https://github.com/add2cal/add-to-calendar-button
  *  License: Elastic License 2.0 (ELv2) (https://github.com/add2cal/add-to-calendar-button/blob/main/LICENSE.txt)
@@ -171,7 +171,7 @@ const i18nStrings = {
     'modal.clipboard.text': 'Panonuza otomatik olarak sihirli bir URL kopyaladık.',
     'modal.webview.ical.steps': '<ol><li><strong>Akıllı telefonunuzda başka bir tarayıcı açın</strong>, ...</li><li>Devam etmek için <strong>insert</strong> fonksiyonunu kullanın.</li></ol>',
     'modal.opensafari.ical.h': 'Açık Safari',
-    'modal.opensafari.ical.text': "Ne yazık ki iOS, takvim dosyasını Safari dışında oluştururken ve açarken bazı sorunlar yaşıyor.",
+    'modal.opensafari.ical.text': 'Ne yazık ki iOS, takvim dosyasını Safari dışında oluştururken ve açarken bazı sorunlar yaşıyor.',
     'modal.opensafari.ical.steps': '<ol><li><strong>Açık Safari</strong>, ...</li><li>Devam etmek için <strong>insert</strong> fonksiyonunu kullanın.</li></ol>',
     'modal.multidate.h': 'Bu bir etkinlik serisidir',
     'modal.multidate.text': 'Parçaları teker teker ekleyin:',
@@ -413,7 +413,7 @@ const i18nStrings = {
     'modal.clipboard.text': 'Abbiamo copiato automaticamente un URL magico negli appunti.',
     'modal.webview.ical.steps': '<ol><li><strong>Aprire un altro browser</strong> sul cellulare, ...</li><li><strong>Incollare</strong> il contenuto degli appunti e partire.</li></ol>',
     'modal.opensafari.ical.h': 'Aprire Safari',
-    'modal.opensafari.ical.text': 'Sfortunatamente, iOS ha alcuni problemi nella generazione e nell\'apertura del file del calendario al di fuori di Safari.',
+    'modal.opensafari.ical.text': "Sfortunatamente, iOS ha alcuni problemi nella generazione e nell'apertura del file del calendario al di fuori di Safari.",
     'modal.opensafari.ical.steps': '<ol><li><strong>Aprire Safari</strong>, ...</li><li><strong>Incollare</strong> il contenuto degli appunti e partire.</li></ol>',
     'modal.multidate.h': 'Questa è una serie di eventi',
     'modal.multidate.text': 'Aggiungere le singole parti una per una:',

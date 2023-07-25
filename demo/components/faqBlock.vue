@@ -29,7 +29,7 @@ let wpUrl = (function () {
         leave-from-class="transform scale-100 opacity-100"
         leave-to-class="transform scale-95 opacity-0"
       >
-        <DisclosurePanel class="px-4 pb-6 pt-4" :unmount="false" itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
+        <DisclosurePanel class="px-4 pb-6 pt-4 text-left" :unmount="false" itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
           <div v-if="locale=='en'" itemprop="text">
             Add to Calendar Buttons provide users with the opportunity to easily save events directly to the calendar app of their choice.<br />
             They only need to click, select their desired format and save.<br />
@@ -59,7 +59,7 @@ let wpUrl = (function () {
         leave-from-class="transform scale-100 opacity-100"
         leave-to-class="transform scale-95 opacity-0"
       >
-        <DisclosurePanel class="px-4 pb-6 pt-4" :unmount="false" itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
+        <DisclosurePanel class="px-4 pb-6 pt-4 text-left" :unmount="false" itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
           <div v-if="locale=='en'" itemprop="text">
             Implementing the Add to Calendar Button is quite straightforward and can be done in <a href="https://www.youtube.com/watch?v=rGcDeYRN8uI" target="_blank" rel="noopener">under 1 minute</a> (not lying)!<br />
             It is designed as a web component to perfectly fit into any website. Therefore, it can be used in any development environment, including JavaScript frameworks, website builders and even WordPress.<br />
@@ -89,7 +89,7 @@ let wpUrl = (function () {
         leave-from-class="transform scale-100 opacity-100"
         leave-to-class="transform scale-95 opacity-0"
       >
-        <DisclosurePanel class="px-4 pb-6 pt-4" :unmount="false" itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
+        <DisclosurePanel class="px-4 pb-6 pt-4 text-left" :unmount="false" itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
           <div v-if="locale=='en'" itemprop="text">
             The Add to Calendar Button is a JavaScript library, that allows you to easily integrate a customizable button into your website.<br />
             When a user clicks on the button, a calendar event is generated and opened in the user's calendar app of choice.<br />
@@ -127,7 +127,7 @@ let wpUrl = (function () {
         leave-from-class="transform scale-100 opacity-100"
         leave-to-class="transform scale-95 opacity-0"
       >
-        <DisclosurePanel class="px-4 pb-6 pt-4" :unmount="false" itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
+        <DisclosurePanel class="px-4 pb-6 pt-4 text-left" :unmount="false" itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
           <div v-if="locale=='en'" itemprop="text">
             Most Add to Calendar scripts are highly outdated and therefore dysfunctional. Others are more or less up-to-date, but do only support very basic schemes, which break in many cases.<br />
             Besides that, there is at least one solution, which forces you to sign up for their services and pay for it, when you hit some limitations.<br />
@@ -161,7 +161,7 @@ let wpUrl = (function () {
         leave-from-class="transform scale-100 opacity-100"
         leave-to-class="transform scale-95 opacity-0"
       >
-        <DisclosurePanel class="px-4 pb-6 pt-4" :unmount="false" itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
+        <DisclosurePanel class="px-4 pb-6 pt-4 text-left" :unmount="false" itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
           <div v-if="locale=='en'" itemprop="text">
             Yes. The Add to Calendar Button in its Opens Source version is free to use for everyone. You can use it for your personal projects as well as for your business.<br />
             This is even guaranteed by the <a href="https://archiveprogram.github.com/" target="_blank" rel="noopener">GitHub Archive Program</a>!<br />
@@ -193,7 +193,7 @@ let wpUrl = (function () {
         leave-from-class="transform scale-100 opacity-100"
         leave-to-class="transform scale-95 opacity-0"
       >
-        <DisclosurePanel class="px-4 pb-6 pt-4" :unmount="false" itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
+        <DisclosurePanel class="px-4 pb-6 pt-4 text-left" :unmount="false" itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
           <div v-if="locale=='en'" itemprop="text">
             You can customize the Add to Calendar Button directly within its HTML element.<br />
             Have a look at the <NuxtLink :to="localePath('use')">examples page</NuxtLink> to learn how this looks like.<br />
@@ -223,7 +223,7 @@ let wpUrl = (function () {
         leave-from-class="transform scale-100 opacity-100"
         leave-to-class="transform scale-95 opacity-0"
       >
-        <DisclosurePanel class="px-4 pb-6 pt-4" :unmount="false" itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
+        <DisclosurePanel class="px-4 pb-6 pt-4 text-left" :unmount="false" itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
           <div v-if="locale=='en'" itemprop="text">
             Absolutely! The Add to Calendar Button script makes use of its own strong <a href="https://github.com/add2cal/timezones-ical-library" target="_blank" rel="noopener">time zone management library</a>, that is tightly connected to the official IANA time zone database.<br />
             This way, we can ensure a stable time zone support - no matter where in the world your user is located.
@@ -251,7 +251,7 @@ let wpUrl = (function () {
         leave-from-class="transform scale-100 opacity-100"
         leave-to-class="transform scale-95 opacity-0"
       >
-        <DisclosurePanel class="px-4 pb-6 pt-4" :unmount="false" itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
+        <DisclosurePanel class="px-4 pb-6 pt-4 text-left" :unmount="false" itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
           <div v-if="locale=='en'" itemprop="text">Yes. The Add to Calendar script can be used within almost every development environment. Have a look at the <NuxtLink :to="{path: localePath('index'), hash: '#installation'}">installation section</NuxtLink> for examples and guides.</div>
           <div v-else itemprop="text">Ja. Das Add to Calendar Skript kann in quasi jeder Entwicklungsumgebung eingesetzt werden. Wirf einen Blick in den <NuxtLink :to="{path: localePath('index'), hash: '#installation'}">Installations-Bereich</NuxtLink> für Beispiele und Anleitungen.</div>
         </DisclosurePanel>
@@ -273,7 +273,7 @@ let wpUrl = (function () {
         leave-from-class="transform scale-100 opacity-100"
         leave-to-class="transform scale-95 opacity-0"
       >
-        <DisclosurePanel class="px-4 pb-6 pt-4" :unmount="false" itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
+        <DisclosurePanel class="px-4 pb-6 pt-4 text-left" :unmount="false" itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
           <div v-if="locale=='en'" itemprop="text">Yes. The Add to Calendar script can be used within almost every development environment. Have a look at the <NuxtLink :to="localePath('use')">default JavaScript integration guide</NuxtLink>.</div>
           <div v-else itemprop="text">Ja. Das Add to Calendar Skript kann in quasi jeder Entwicklungsumgebung eingesetzt werden. Wirf einen Blick in die <NuxtLink :to="localePath('use')">Standard JavaScript-Integrations-Anleitung</NuxtLink>.</div>
         </DisclosurePanel>
@@ -295,7 +295,7 @@ let wpUrl = (function () {
         leave-from-class="transform scale-100 opacity-100"
         leave-to-class="transform scale-95 opacity-0"
       >
-        <DisclosurePanel class="px-4 pb-6 pt-4" :unmount="false" itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
+        <DisclosurePanel class="px-4 pb-6 pt-4 text-left" :unmount="false" itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
           <div v-if="locale=='en'" itemprop="text">Yes. The Add to Calendar script can be used within almost every development environment. For WordPress, a dedicated <a :href="wpUrl" target="_blank" rel="noopener">Plugin</a> is available as well. Find more details and guides for it above.</div>
           <div v-else itemprop="text">
             Ja. Das Add to Calendar Skript kann in quasi jeder Entwicklungsumgebung eingesetzt werden. Für WordPress steht zudem ein dediziertes <a :href="wpUrl" target="_blank" rel="noopener">Plugin</a> zur Verfügung. Mehr Details und Anleitungen findest du weiter oben.
@@ -319,7 +319,7 @@ let wpUrl = (function () {
         leave-from-class="transform scale-100 opacity-100"
         leave-to-class="transform scale-95 opacity-0"
       >
-        <DisclosurePanel class="px-4 pb-6 pt-4" :unmount="false" itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
+        <DisclosurePanel class="px-4 pb-6 pt-4 text-left" :unmount="false" itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
           <div v-if="locale=='en'" itemprop="text">Yes. The Add to Calendar Button comes with over 20 languages, including RTL settings for Arabic and Persian. In case your language is not already included, you can also customize every single text block.</div>
           <div v-else itemprop="text">Ja. Der Add to Calendar Button beinhaltet über 20 Sprachen, inkl. RTL-Ausrichtung für Arabisch und Persisch. Sofern deine Sprache nicht bereits enthalten ist, kannst du jeden Text-Block entsprechend anpassen.</div>
         </DisclosurePanel>
