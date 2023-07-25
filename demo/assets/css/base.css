@@ -208,3 +208,7 @@
 .tech-stack-button {
   @apply flex flex-col self-center rounded-lg border-2 border-zinc-400 bg-gradient-to-tr from-zinc-200 to-zinc-100 p-1 text-zinc-700 shadow-md hover:no-underline hover:shadow-xl dark:border-zinc-600 dark:from-zinc-800 dark:to-zinc-700 dark:text-zinc-300;
 }
+
+.faq-button {
+  @apply flex w-full justify-between px-4 py-2 text-left text-base font-semibold rounded-lg border dark:text-zinc-300 hover:dark:text-white hover:text-black border-zinc-300 bg-gradient-to-tr from-zinc-200 hover:from-zinc-100 dark:hover:from-zinc-700 dark:hover:to-zinc-700 to-zinc-100 p-1 text-zinc-700 shadow hover:no-underline hover:shadow-md dark:border-zinc-700 dark:from-zinc-800 dark:to-zinc-700;
+}

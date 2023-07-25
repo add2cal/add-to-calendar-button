@@ -345,7 +345,7 @@ function atcb_manage_body_scroll(host, modalObj = null) {
     return;
   }
   const modalDim = modal.getBoundingClientRect();
-  if (modalDim.height + 100 > window.innerHeight) {
+  if (modalDim.height + 150 > window.innerHeight) {
     document.body.classList.add('atcb-modal-no-scroll');
     document.documentElement.classList.add('atcb-modal-no-scroll');
   } else {

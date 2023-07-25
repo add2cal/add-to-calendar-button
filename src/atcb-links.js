@@ -274,16 +274,7 @@ function atcb_generate_google(data) {
     })();
     urlParts.push(availabilityPart);
   }
-  // workaround to trick the Google Calendar app on iOS, which otherwise in some cases opens without the event add dialog
-  if (isiOS()) {
-    atcb_open_cal_url(urlParts.join('https://calendar.google.com/calendar/'));
-    // wait 2 seconds, then open the real one
-    setTimeout(function () {
-      atcb_open_cal_url(urlParts.join('&'));
-    }, 2000);
-  } else {
-    atcb_open_cal_url(urlParts.join('&'));
-  }
+  atcb_open_cal_url(urlParts.join('&'));
 }
 
 // FUNCTION TO GENERATE THE YAHOO URL

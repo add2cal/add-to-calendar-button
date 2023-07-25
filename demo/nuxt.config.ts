@@ -13,9 +13,6 @@ export default defineNuxtConfig({
   },
   ssr: true,
   spaLoadingTemplate: false,
-  nitro: {
-    preset: 'azure',
-  },
   runtimeConfig: {
     public: {
       siteUrl: baseUrl,
@@ -221,12 +218,22 @@ export default defineNuxtConfig({
     viewer: false,
   },
   sitemap: {
+    urls: [
+      {
+        loc: '/favicon.ico',
+        changefreq: 'monthly',
+        priority: 0.1,
+      },
+      {
+        loc: '/favicon.svg',
+        changefreq: 'monthly',
+        priority: 0.1,
+      },
+    ],
     exclude: ['/en/**', 'legal-notice', 'privacy-policy', '*/legal-notice', '*/privacy-policy'],
-    include: ['/favicon.ico', '/favicon.svg'],
     defaults: {
       priority: 1,
       changefreq: 'daily',
-      lastmod: new Date().toISOString(),
     },
   },
 });
