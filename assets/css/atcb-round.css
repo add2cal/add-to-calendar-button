@@ -5,7 +5,7 @@
  *
  * Style: Round
  *
- * Version: 2.2.10
+ * Version: 2.3.0
  * Creator: Jens Kuerschner (https://jenskuerschner.de)
  * Project: https://github.com/add2cal/add-to-calendar-button
  * License: Elastic License 2.0 (ELv2) (https://github.com/add2cal/add-to-calendar-button/blob/main/LICENSE.txt)
@@ -246,8 +246,8 @@
   padding: 0.93em 1.43em;
 }
 
-.atcb-button.atcb-active:not(.atcb-modal-style, .atcb-dropoverlay, .atcb-dropup, .atcb-no-text)::before,
-.atcb-button.atcb-active.atcb-dropup::after {
+.atcb-button:not(.atcb-modal-style, .atcb-dropoverlay, .atcb-dropup, .atcb-no-text)::before,
+.atcb-button.atcb-dropup::after {
   content: "";
   width: 0;
   height: 0;
@@ -255,20 +255,26 @@
   left: 0;
   right: 0;
   margin: 0 auto;
+  transition: border-width 0.1s linear 0.1s;
 }
 
-.atcb-button.atcb-active:not(.atcb-modal-style, .atcb-dropoverlay, .atcb-dropup, .atcb-no-text)::before {
+.atcb-button:not(.atcb-modal-style, .atcb-dropoverlay, .atcb-dropup, .atcb-no-text)::before {
   top: 100%;
-  border: 0.35em solid transparent;
+  border: 0 solid transparent;
   border-bottom: none;
   border-top-color: var(--btn-background-hover);
 }
 
-.atcb-button.atcb-active.atcb-dropup::after {
+.atcb-button.atcb-dropup::after {
   bottom: 100%;
-  border: 0.35em solid transparent;
+  border: 0 solid transparent;
   border-top: none;
   border-bottom-color: var(--btn-background-hover);
+}
+
+.atcb-button.atcb-active:not(.atcb-modal-style, .atcb-dropoverlay, .atcb-dropup, .atcb-no-text)::before,
+.atcb-button.atcb-active.atcb-dropup::after {
+  border-width: 0.35em;
 }
 
 .atcb-button.atcb-active.atcb-dropoverlay {
@@ -727,6 +733,8 @@ a.atcb-modal-btn:focus-visible {
   justify-content: center;
   font-weight: 600;
   font-size: 1em;
+  padding: .3em;
+  box-sizing: border-box;
 }
 
 .atcb-subevent-btn:hover .atcb-date-btn-details {
@@ -749,8 +757,8 @@ a.atcb-modal-btn:focus-visible {
 
 .atcb-date-btn-content {
   display: flex;
-  align-items: center;
-  font-size: 0.8em;
+  align-items: flex-start;
+  font-size: .8em;
   color: var(--date-btn-text-secondary);
 }
 
@@ -764,7 +772,6 @@ a.atcb-modal-btn:focus-visible {
 
 .atcb-date-btn-content-icon {
   display: inline-block;
-  margin-top: -.3em;
   height: 0.8em;
   width: 1.3em;
   flex: 0 0 1.3em;
@@ -772,13 +779,13 @@ a.atcb-modal-btn:focus-visible {
 
 .atcb-rtl .atcb-date-btn-content-icon {
   margin-right: 0;
-  margin-left: 0.5em;
+  margin-left: .5em;
 }
 
-.atcb-initialized[lang="zh"] .atcb-date-btn-content-icon,
-.atcb-initialized[lang="ja"] .atcb-date-btn-content-icon,
-.atcb-initialized[lang="ko"] .atcb-date-btn-content-icon {
-  margin-top: -.2em;
+.atcb-initialized[lang="zh"] .atcb-date-btn-content:not(.atcb-date-btn-content-location) .atcb-date-btn-content-icon,
+.atcb-initialized[lang="ja"] .atcb-date-btn-content:not(.atcb-date-btn-content-location) .atcb-date-btn-content-icon,
+.atcb-initialized[lang="ko"] .atcb-date-btn-content:not(.atcb-date-btn-content-location) .atcb-date-btn-content-icon {
+  margin-top: .15em;
 }
 
 .atcb-date-btn-content-icon svg {
@@ -791,8 +798,9 @@ a.atcb-modal-btn:focus-visible {
   margin-top: 0.3em;
 }
 
-.atcb-date-btn-content-recurr-icon {
-  padding-left: 0.3em;
+.atcb-date-btn-content-text span:not(.atcb-icon-ical) {
+  padding-right: .3em;
+  display: inline-block;
 }
 
 /******************************
@@ -834,7 +842,6 @@ a.atcb-modal-btn:focus-visible {
  */
 
 #atcb-bgoverlay {
-  animation: atcb-bgoverlay-animate 0.2s ease 0s 1 normal forwards;
   backdrop-filter: blur(2px);
   -webkit-backdrop-filter: blur(2px);
   background-color: var(--overlay-background);
@@ -850,12 +857,16 @@ a.atcb-modal-btn:focus-visible {
   top: 0;
   min-height: 100%;
   min-width: 100%;
-  opacity: 0;
   overflow-y: auto;
   padding: 20px 20px 130px;
   position: fixed;
   width: 100vw;
   z-index: 14000000;
+}
+
+#atcb-bgoverlay:not(dialog) {
+  animation: atcb-bgoverlay-animate 0.2s ease 0s 1 normal forwards;
+  opacity: 0;
 }
 
 #atcb-bgoverlay.atcb-no-bg {

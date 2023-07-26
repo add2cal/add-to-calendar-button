@@ -3,7 +3,7 @@
  *  Add to Calendar Button
  *  ++++++++++++++++++++++
  *
- *  Version: 2.2.10
+ *  Version: 2.3.0
  *  Creator: Jens Kuerschner (https://jenskuerschner.de)
  *  Project: https://github.com/add2cal/add-to-calendar-button
  *  License: Elastic License 2.0 (ELv2) (https://github.com/add2cal/add-to-calendar-button/blob/main/LICENSE.txt)
@@ -97,6 +97,9 @@ function atcb_open(host, data, button = null, keyboardTrigger = false, generated
       if (data.listStyle === 'dropdown-static') {
         // in the dropdown-static case, we do not dynamically adjust whether we show the dropdown upwards
         atcb_position_list(host, button, listWrapper, true);
+      } else if (data.listStyle === 'dropup-static') {
+        // in the dropup-static case, we also do not dynamically adjust, but always show on top
+        atcb_position_list(host, button, listWrapper, false, true);
       } else {
         atcb_position_list(host, button, listWrapper);
       }

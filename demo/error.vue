@@ -2,6 +2,25 @@
 import Footer from "@/components/footer.vue";
 import { ArrowUturnLeftIcon } from '@heroicons/vue/24/outline';
 
+const route = useRoute();
+
+const props = defineProps({
+  error: Object
+});
+
+const statusCode = (function () {
+  if (props.error) {
+    return props.error.statusCode;
+  }
+  return 404;
+})();
+
+// if statusCode is 404 and path starts with /en/, redirect to path without /en/
+if (statusCode == 404 && route.path.startsWith('/en/')) {
+  const newPath = route.path.replace(/^\/en/, '');
+  navigateTo(newPath, { redirectCode: 301 });
+}
+
 const { t } = useI18n();
 
 const head = useLocaleHead({
@@ -20,17 +39,6 @@ useHead({
 });
 
 const localePath = useLocalePath();
-
-const props = defineProps({
-  error: Object
-});
-
-const statusCode = (function () {
-  if (props.error) {
-    return props.error.statusCode;
-  }
-  return 404;
-})();
 </script>
 
 <template>

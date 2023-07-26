@@ -1,6 +1,4 @@
-<script setup lang="ts">
-import { ArrowTopRightOnSquareIcon } from '@heroicons/vue/24/outline';
-</script>
+<script setup lang="ts"></script>
 
 <template>
   <h2>1. Datenschutz auf einen Blick</h2>

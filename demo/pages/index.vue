@@ -1,9 +1,11 @@
 <script setup lang="ts">
-import { ArrowRightIcon, WrenchScrewdriverIcon, BeakerIcon, AdjustmentsHorizontalIcon } from '@heroicons/vue/24/outline';
+import { ArrowRightIcon, WrenchScrewdriverIcon, BeakerIcon, LightBulbIcon } from '@heroicons/vue/24/outline';
 import IntegrationGuidesOverview from "@/components/integration/integrationGuidesOverview.vue";
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import PlaygroundArea from "@/components/playground/playgroundArea.vue";
 import PlaygroundAreaPlaceholder from "@/components/placeholders/playgroundAreaPlaceholder.vue";
 import FeaturesBlock from "@/components/featuresBlock.vue";
+import FaqBlock from "@/components/faqBlock.vue";
 
 definePageMeta({
   layout: "home",
@@ -36,7 +38,7 @@ const localePath = useLocalePath();
 
   <div id="demo" class="mt-20 bg-gradient-to-tr from-zinc-300 to-zinc-200 pb-16 pt-12 shadow-lg dark:from-zinc-800 dark:via-zinc-800 dark:to-zinc-700 dark:shadow-xl">
     <div class="container">
-      <h2 class="pb-8"><BeakerIcon class="-mt-1 mr-3 inline-block h-6 w-6" aria-hidden="true" />{{ $t('navigation.playground') }}</h2>
+      <h2 class="pb-8 underline decoration-primary-light decoration-2 dark:decoration-primary-dark"><BeakerIcon class="-mt-1 mr-3 inline-block h-6 w-6" aria-hidden="true" />{{ $t('navigation.playground') }}</h2>
     </div>
     <ClientOnly>
       <LazyPlaygroundArea />
@@ -52,24 +54,31 @@ const localePath = useLocalePath();
   </div>
 
   <div id="installation" class="container mt-12 pt-12">
-    <h2 class="pb-8"><WrenchScrewdriverIcon class="-mt-1 mr-3 inline-block h-6 w-6" aria-hidden="true" />{{ $t('content.home.headline_installation') }}</h2>
+    <h2 class="pb-8 underline decoration-primary-light decoration-2 dark:decoration-primary-dark"><WrenchScrewdriverIcon class="-mt-1 mr-3 inline-block h-6 w-6" aria-hidden="true" />{{ $t('content.home.headline_installation') }}</h2>
     <IntegrationGuidesOverview />
+  </div>
 
-    <h2 id="features" class="mt-20 pb-8"><AdjustmentsHorizontalIcon class="-mt-1 mr-3 inline-block h-6 w-6" aria-hidden="true" />{{ $t('content.home.headline_functionality') }}</h2>
+  <div id="features" class="container">
+    <h2 class="mt-20 pb-8 underline decoration-primary-light decoration-2 dark:decoration-primary-dark"><LightBulbIcon class="-mt-1 mr-3 inline-block h-6 w-6" aria-hidden="true" />{{ $t('content.home.headline_functionality') }}</h2>
     <div>{{ $t('content.home.functionality_intro') }}</div>
     <FeaturesBlock />
+  </div>
 
-    <div class="mt-20 border-t border-zinc-300 pt-14 text-center dark:border-zinc-700">
-      <h3 class="pb-6">{{ $t('content.home.next') }}</h3>
+  <div class="my-28 border-y border-zinc-300 bg-gradient-to-tr from-zinc-300 to-zinc-200 py-14 text-center shadow dark:border-zinc-700 dark:from-zinc-800 dark:via-zinc-800 dark:to-zinc-700 dark:shadow-xl">
+    <h3 class="pb-6">{{ $t('content.home.next') }}</h3>
 
-      <div class="grid grid-cols-1 text-center md:grid-cols-2">
-        <div class="py-6 sm:p-6 md:text-right">
-          <NuxtLink class="button-primary w-full max-w-xs" :to="localePath('examples')">{{ $t('content.home.button_examples') }} <ArrowRightIcon class="-mt-0.5 ml-2 inline-block h-4 w-4" aria-hidden="true" /></NuxtLink>
-        </div>
-        <div class="py-6 sm:p-6 md:text-left">
-          <NuxtLink class="button-primary w-full max-w-xs" :to="localePath('configuration')">{{ $t('content.home.button_configure') }} <ArrowRightIcon class="-mt-0.5 ml-2 inline-block h-4 w-4" aria-hidden="true" /></NuxtLink>
-        </div>
+    <div class="mx-8 grid grid-cols-1 text-center md:grid-cols-2">
+      <div class="py-6 sm:p-6 md:text-right">
+        <NuxtLink class="button-primary w-full max-w-xs" :to="localePath('examples')">{{ $t('content.home.button_examples') }} <ArrowRightIcon class="-mt-0.5 ml-2 inline-block h-4 w-4" aria-hidden="true" /></NuxtLink>
+      </div>
+      <div class="py-6 sm:p-6 md:text-left">
+        <NuxtLink class="button-primary w-full max-w-xs" :to="localePath('configuration')">{{ $t('content.home.button_configure') }} <ArrowRightIcon class="-mt-0.5 ml-2 inline-block h-4 w-4" aria-hidden="true" /></NuxtLink>
       </div>
     </div>
+  </div>
+
+  <div id="faq" class="container" itemscope itemtype="https://schema.org/FAQPage">
+    <h2 class="mt-20 pb-12 text-center underline decoration-primary-light decoration-2 dark:decoration-primary-dark">{{ $t('content.home.headline_faq') }}</h2>
+    <FaqBlock />
   </div>
 </template>

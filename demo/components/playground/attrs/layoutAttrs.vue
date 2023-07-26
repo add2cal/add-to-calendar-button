@@ -76,7 +76,7 @@ function onHideTextOptionsUpdate(options: string[]) {
 
 <template>
   <div class="grid">
-    <Select v-model="internalValue[LayoutAttrsKey.OPTIONS]" multiselect required :label="t(`labels.inputs.${[LayoutAttrsKey.OPTIONS]}`.toLocaleLowerCase())" :options="Object.values(Option)" class="mb-3 border-b border-zinc-300 pb-4 dark:border-zinc-600" />
+    <Select v-model="internalValue[LayoutAttrsKey.OPTIONS]" multiselect required :label="t(`labels.inputs.${[LayoutAttrsKey.OPTIONS]}`.toLocaleLowerCase())" :options="Object.values(Option)" class="mb-3 border-b border-zinc-400 pb-4 dark:border-zinc-600" />
 
     <div class="mb-3 flex items-center justify-between">
       <Select v-model="internalValue[LayoutAttrsKey.BUTTON_STYLE]" :label="t(`labels.inputs.${[LayoutAttrsKey.BUTTON_STYLE]}`.toLocaleLowerCase())" :options="Object.values(ButtonStyle)" class="mr-5 flex-1" />
@@ -114,7 +114,7 @@ function onHideTextOptionsUpdate(options: string[]) {
 
     <Select v-model="internalValue[LayoutAttrsKey.LIGHT_MODE]" :label="t(`labels.inputs.${[LayoutAttrsKey.LIGHT_MODE]}`.toLocaleLowerCase())" :options="Object.values(LightMode)" class="mb-3" />
 
-    <Select v-model="internalValue[LayoutAttrsKey.PAST_DATE_HANDLING]" :label="t(`labels.inputs.${[LayoutAttrsKey.PAST_DATE_HANDLING]}`.toLocaleLowerCase())" :options="Object.values(PastDateHandling)" class="mb-3 hidden" />
+    <Select v-model="internalValue[LayoutAttrsKey.PAST_DATE_HANDLING]" :label="t(`labels.inputs.${[LayoutAttrsKey.PAST_DATE_HANDLING]}`.toLocaleLowerCase())" :options="Object.values(PastDateHandling)" class="mb-3" />
 
     <Select v-model="internalValue[LayoutAttrsKey.LANGUAGE]" :label="t(`labels.inputs.${[LayoutAttrsKey.LANGUAGE]}`.toLocaleLowerCase())" :options="languageOptions" byKey="key" byValue="value" />
   </div>

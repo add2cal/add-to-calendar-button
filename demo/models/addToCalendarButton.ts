@@ -29,6 +29,7 @@ export enum Option {
 export enum ListStyle {
   DROPDOWN = 'dropdown',
   DROPDOWN_STATIC = 'dropdown-static',
+  DROPUP_STATIC = 'dropup-static',
   OVERLAY = 'overlay',
   MODAL = 'modal',
 }

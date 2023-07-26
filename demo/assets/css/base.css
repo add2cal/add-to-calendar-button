@@ -173,7 +173,32 @@
 }
 
 .button-primary {
-  @apply inline-block rounded-[6px] text-center hover:cursor-pointer font-semibold bg-secondary from-secondary to-secondary-light py-[18px] px-[20px] leading-none text-black shadow-md hover:bg-gradient-to-tr hover:text-zinc-800 hover:no-underline hover:shadow-lg transition;
+  @apply inline-block rounded-[6px] text-center hover:cursor-pointer font-semibold bg-secondary from-secondary-dark to-secondary-light py-[18px] px-[20px] leading-none text-black shadow-md hover:bg-gradient-to-tr hover:text-zinc-800 hover:no-underline hover:shadow-lg transition;
+}
+
+.button-primary-animated {
+  @apply inline-block rounded-[6px] text-center font-semibold py-[18px] px-[20px] leading-none text-black shadow-md transition;
+  background: linear-gradient(45deg, #fc8f29, #ffa255, #ffd0aa, #ffa255);
+  background-size: 300% 300%;
+  animation: gradient 5s ease infinite;
+}
+
+.button-primary-animated:hover {
+  @apply cursor-pointer bg-secondary from-secondary to-secondary-light bg-gradient-to-tr text-zinc-800 no-underline shadow-xl;
+  background-size: cover;
+  animation: none;
+}
+
+@keyframes gradient {
+  0% {
+      background-position: 0% 50%;
+  }
+  50% {
+      background-position: 100% 50%;
+  }
+  100% {
+      background-position: 0% 50%;
+  }
 }
 
 .button-secondary {
@@ -182,4 +207,8 @@
 
 .tech-stack-button {
   @apply flex flex-col self-center rounded-lg border-2 border-zinc-400 bg-gradient-to-tr from-zinc-200 to-zinc-100 p-1 text-zinc-700 shadow-md hover:no-underline hover:shadow-xl dark:border-zinc-600 dark:from-zinc-800 dark:to-zinc-700 dark:text-zinc-300;
+}
+
+.faq-button {
+  @apply flex w-full justify-between px-4 py-2 text-left text-base font-semibold rounded-lg border dark:text-zinc-300 hover:dark:text-white hover:text-black border-zinc-300 bg-gradient-to-tr from-zinc-200 hover:from-zinc-100 dark:hover:from-zinc-700 dark:hover:to-zinc-700 to-zinc-100 p-1 text-zinc-700 shadow hover:no-underline hover:shadow-md dark:border-zinc-700 dark:from-zinc-800 dark:to-zinc-700;
 }

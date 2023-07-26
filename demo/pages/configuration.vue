@@ -103,14 +103,14 @@ definePageMeta({
               <td v-if="locale=='en'">
                 Supports HTML pseudo tags for formatting: [url], [br], [hr], [p], [strong], [u], [i], [em], [li], [ul], [ol], [h*] (like h1, h2, h3, ...).<br />
                 Define a link text with the following schema: [url]https://....|URL Text[/url].<br /><br />
-                (If you are using the WordPress Plugin Shortcode, ']' would break your code. Instead of [*], you could also use {*} here.)<br /><br />
+                (In case of compatibility issues, you can use curly {*} instead of square [*] brackets here.)<br /><br />
                 (Yahoo and Microsoft Teams are not fully supported and automatically transformed to plain text.)<br /><br />
                 <NuxtLink :to="{path: localePath('advanced-use'), hash: '#case-2'}">{{ $t('labels.example') }} <ArrowRightIcon class="-mt-0.5 mr-0.5 inline-block h-3 w-3" aria-hidden="true" /></NuxtLink>
               </td>
               <td v-else>
                 Unterstützt HTML-Pseudo-Tags zur Formatierung: [url], [br], [hr], [p], [strong], [u], [i], [em], [li], [ul], [ol], [h*] (wie etwa h1, h2, h3, ...).<br />
                 Einen Link-Text spezifizierst du mit folgendem Schema: [url]https://....|URL Text[/url].<br /><br />
-                (Wenn du den WordPress Plugin Shortcode nutzt, stört ']' den Code. In diesem Fall kannst du {*} anstelle von [*] nutzen.)<br /><br />
+                (Bei Kompatibilitätsproblemen kannst du auch geschweifte {*} anstelle von eckigen [*] Klammern nutzen.)<br /><br />
                 (Yahoo und Microsoft Teams werden hierbei nicht vollständig unterstützt und der Wert automatisch zu Plain Text transformiert.)<br /><br />
                 <NuxtLink :to="{path: localePath('advanced-use'), hash: '#case-2'}">{{ $t('labels.example') }} <ArrowRightIcon class="-mt-0.5 mr-0.5 inline-block h-3 w-3" aria-hidden="true" /></NuxtLink>
               </td>
@@ -125,11 +125,13 @@ definePageMeta({
                 A date needs to be formatted as YYYY-MM-DD as specified with
                 <a href="https://en.wikipedia.org/wiki/ISO_8601" target="_blank" rel="noopener" class="whitespace-nowrap">ISO-8601 <ArrowTopRightOnSquareIcon class="-mt-0.5 mr-0.5 inline-block h-3 w-3" aria-hidden="true" /></a>.<br /><br />
                 You can use the magic word "today" to dynamically set the current day. Adding "+5" at the end would automatically add 5 days to the calculated date.<br /><br />
+                Unofficially, something like "YYYY-MM-DDTHH:MMZ" would also work.<br /><br />
                 <NuxtLink :to="{path: localePath('examples'), hash: '#case-3'}">{{ $t('labels.example') }} <ArrowRightIcon class="-mt-0.5 mr-0.5 inline-block h-3 w-3" aria-hidden="true" /></NuxtLink>
               </td>
               <td v-else>
                 Ein Datum muss im Schema YYYY-MM-DD gemäß <a href="https://de.wikipedia.org/wiki/ISO_8601" target="_blank" rel="noopener" class="whitespace-nowrap">ISO-8601 <ArrowTopRightOnSquareIcon class="-mt-0.5 mr-0.5 inline-block h-3 w-3" aria-hidden="true" /></a> formatiert sein<br /><br />
                 Du kannst das Wort "today" nutzen, um dynamisch den jeweils aktuellen Tag zu setzen. Wenn du bspw. "+5" hinzufügst, werden automatisch 5 Tage aufaddiert.<br /><br />
+                Inoffiziell werden Formate wie "YYYY-MM-DDTHH:MMZ" auch unterstützt.<br /><br />
                 <NuxtLink :to="{path: localePath('examples'), hash: '#case-3'}">{{ $t('labels.example') }} <ArrowRightIcon class="-mt-0.5 mr-0.5 inline-block h-3 w-3" aria-hidden="true" /></NuxtLink>
               </td>
             </tr>
@@ -145,11 +147,13 @@ definePageMeta({
               <td v-if="locale=='en'">
                 A date needs to be formatted as YYYY-MM-DD as specified with
                 <a href="https://en.wikipedia.org/wiki/ISO_8601" target="_blank" rel="noopener" class="whitespace-nowrap">ISO-8601 <ArrowTopRightOnSquareIcon class="-mt-0.5 mr-0.5 inline-block h-3 w-3" aria-hidden="true" /></a>.<br /><br />
-                If there is no endDate set, it is assumed that it is the same as startDate. You can use the magic word "today" to dynamically set the current day. Adding "+5" at the end would automatically add 5 days to the calculated date.
+                If there is no endDate set, it is assumed that it is the same as startDate. You can use the magic word "today" to dynamically set the current day. Adding "+5" at the end would automatically add 5 days to the calculated date.<br /><br />
+                Unofficially, something like "YYYY-MM-DDTHH:MMZ" would also work.
               </td>
               <td v-else>
                 Ein Datum muss im Schema YYYY-MM-DD gemäß <a href="https://de.wikipedia.org/wiki/ISO_8601" target="_blank" rel="noopener" class="whitespace-nowrap">ISO-8601 <ArrowTopRightOnSquareIcon class="-mt-0.5 mr-0.5 inline-block h-3 w-3" aria-hidden="true" /></a> formatiert sein<br /><br />
                 Du kannst das Wort "today" nutzen, um dynamisch den jeweils aktuellen Tag zu setzen. Wenn du bspw. "+5" hinzufügst, werden automatisch 5 Tage aufaddiert.<br /><br />
+                Inoffiziell werden Formate wie "YYYY-MM-DDTHH:MMZ" auch unterstützt.
               </td>
             </tr>
             <tr id="endtime">
@@ -161,7 +165,7 @@ definePageMeta({
             <tr id="timezone">
               <th scope="row">timeZone</th>
               <td>
-                <em>String</em><br /><br /><span class="label">{{ $t('content.config.default') }}:</span>UTC
+                <em>String</em><br /><br /><span class="label">{{ $t('content.config.default') }}:</span>GMT
               </td>
               <td v-if="locale=='en'">
                 It is not required, but recommended to add a time zone.<br />
@@ -183,8 +187,16 @@ definePageMeta({
               <td>
                 <em>String</em><br /><br /><span class="font-semibold">{{ $t('content.config.required_alt2') }}</span>
               </td>
-              <td v-if="locale=='en'">Can be anything.<br /><br />If it is a URL, the event will be classified as "online event" via the schema.org declaration.</td>
-              <td v-else>Kann alles mögliche sein.<br /><br />Wenn es eine URL ist, so wird das Event innerhalb der Schema.org-Daten als "Online Event" klassifiziert.</td>
+              <td v-if="locale=='en'">
+                Can be anything.<br /><br />
+                If it is a URL, the event will be classified as "online event" via the schema.org declaration.<br />
+                An online event is not showing up on the date button. Additionally, the time on this button type will then be converted to the user's time zone (will also be done, if location is "Global", "Worldwide", or "Online").
+              </td>
+              <td v-else>
+                Kann alles mögliche sein.<br /><br />
+                Wenn es eine URL ist, so wird das Event innerhalb der Schema.org-Daten als "Online-Event" klassifiziert.<br />
+                Ein Online-Event wird auf Date-Buttons nicht angezeigt. Zusätzlich werden in diesem Fall Zeitangaben auf diesem Button-Type in die Zeitzone des Nutzers übertragen (geschieht auch bei den Werten "Global", "Worldwide" und "Online").
+              </td>
             </tr>
             <tr id="status">
               <th scope="row">status</th>
@@ -331,7 +343,7 @@ definePageMeta({
               </td>
               <td v-if="locale=='en'">
                 Defines recurring events.<br /><br />
-                This will deactivate the Yahoo and Microsoft options, since they do not support it at the moment (users could still use iCal in this case).<br />
+                This will deactivate the Yahoo and Microsoft (and Google at iOS) options, since they do not support it at the moment (users could still use iCal in this case). If no option is left then, iCal will be set as fallback.<br />
                 You can use any valid <a href="https://www.rfc-editor.org/rfc/rfc5545" target="_blank" rel="noopener" class="whitespace-nowrap">RRULE <ArrowTopRightOnSquareIcon class="-mt-0.5 mr-0.5 inline-block h-3 w-3" aria-hidden="true" /></a> to define the respective rule (<a
                   href="https://icalendar.org/rrule-tool.html"
                   target="_blank"
@@ -346,7 +358,8 @@ definePageMeta({
               </td>
               <td v-else>
                 Definiert wiederkehrende Events.<br /><br />
-                Diese Optione deaktiviert die Yahoo- und Microsoft-Kalendar-Optionen, da die Funktion dort aktuell nicht unterstützt wird (in diesen Fällen können Nutzer weiterhin auf die iCal-Datei zurückgreifen).<br />
+                Diese Optione deaktiviert die Yahoo- und Microsoft-Kalendar-Optionen (sowie Google unter iOS), da die Funktion dort aktuell nicht unterstützt wird (in diesen Fällen können Nutzer weiterhin auf die iCal-Datei zurückgreifen). Bleibt keine Option übrig, wird iCal als Fallback
+                aktiviert.<br />
                 Du kannst jede valide <a href="https://www.rfc-editor.org/rfc/rfc5545" target="_blank" rel="noopener" class="whitespace-nowrap">RRULE <ArrowTopRightOnSquareIcon class="-mt-0.5 mr-0.5 inline-block h-3 w-3" aria-hidden="true" /></a> nutzen, um eine entsprechende Regel anzuwenden (<a
                   href="https://icalendar.org/rrule-tool.html"
                   target="_blank"
@@ -665,15 +678,15 @@ definePageMeta({
             <tr id="liststyle">
               <th scope="row">listStyle</th>
               <td>
-                <em>String</em><br /><br /><span class="label block">{{ $t('content.config.options') }}:</span>dropdown, dropdown-static, overlay, modal<br /><br /><span class="label">{{ $t('content.config.default') }}:</span>dropdown
+                <em>String</em><br /><br /><span class="label block">{{ $t('content.config.options') }}:</span>dropdown, dropdown-static, dropup-static, overlay, modal<br /><br /><span class="label">{{ $t('content.config.default') }}:</span>dropdown
               </td>
               <td v-if="locale=='en'">
                 The calendar link list can be rendered as dropdown, overlay, or modal.<br /><br />
-                The dropdown style also considers the position of the button on the screen and shows the list automatically above or below the button. Use "dropdown-static" to always open below the button.
+                The dropdown style also considers the position of the button on the screen and shows the list automatically above or below the button. Use "dropdown-static" or "dropup-static" to always open below or above the button.
               </td>
               <td v-else>
                 Die Kalender-Link-Liste kann als Dropdown, Overlay oder Modal dargestellt werden.<br /><br />
-                Der Dropdown-Stil berücksichtigt auch die Position auf dem Bildschirm und zeigt die Liste je nach Situation über oder unter dem Button an. Nutze den Wert "dropdown-static", um sie immer unterhalb anzuzeigen.
+                Der Dropdown-Stil berücksichtigt auch die Position auf dem Bildschirm und zeigt die Liste je nach Situation über oder unter dem Button an. Nutze den Wert "dropdown-static", bzw. "dropup-static", um sie immer unterhalb oder oberhalb anzuzeigen.
               </td>
             </tr>
             <tr id="hidebackground">
@@ -740,6 +753,22 @@ definePageMeta({
                 Nutze diese Option hier, um das Icon auch in allen anderen Fällen zu verbergen.
               </td>
             </tr>
+            <tr id="pastdatehandling">
+              <th scope="row">pastDateHandling</th>
+              <td>
+                <em>String</em><br /><br /><span class="label block">{{ $t('content.config.options') }}:</span>none, disable, hide<br /><br /><span class="label">{{ $t('content.config.default') }}:</span>none
+              </td>
+              <td v-if="locale=='en'">
+                This option specifies what happens, if an event is overdue.<br />
+                Setting it to "disable" will disable the button, while "hide" will completely hide it. In both cases, the user can no longer save the event.<br /><br />
+                Mind that with recurring events, this will not get triggered!
+              </td>
+              <td v-else>
+                Diese Option bestimmt, was passiert, sollte ein Termin in der Vergangenheit liegen.<br />
+                Wenn du sie auf "disable" setzt, wird der Button deaktiviert, bei "hide" vollständig ausgeblendet. In beiden Fällen kann der Nutzer das Event nicht mehr speichern.<br /><br />
+                Beachte, dass die Funktion bei wiederkehrenden Events nicht greift!
+              </td>
+            </tr>
             <tr id="size">
               <th scope="row">size</th>
               <td>
@@ -775,18 +804,18 @@ definePageMeta({
             <tr id="language">
               <th scope="row">language</th>
               <td>
-                <em>String</em><br /><br /><span class="label block">{{ $t('content.config.options') }}:</span>ar, cs, de, en, es, fi, fr, hi, id, it, ja, ko, nl, no, ro, pl, pt, sv, tr, vi, zh<br /><br /><span class="label">{{ $t('content.config.default') }}:</span>en
+                <em>String</em><br /><br /><span class="label block">{{ $t('content.config.options') }}:</span>ar, cs, de, en, es, et, fa, fi, fr, hi, id, it, ja, ko, nl, no, ro, pl, pt, sv, tr, vi, zh<br /><br /><span class="label">{{ $t('content.config.default') }}:</span>en
               </td>
               <td v-if="locale=='en'">
                 If you want to have the text blocks in another language than English, you can use the included translations (i18n).<br /><br />
                 Simply set one of the supported languages as <a href="https://www.w3schools.com/tags/ref_language_codes.asp" target="_blank" rel="noopener" class="whitespace-nowrap">ISO 639-1 code <ArrowTopRightOnSquareIcon class="-mt-0.5 mr-0.5 inline-block h-3 w-3" aria-hidden="true" /></a>.<br />
-                Also supports Right-to-Left (RTL) with Arabic.
+                Also supports Right-to-Left (RTL) with Arabic &amp; Persian.
               </td>
               <td v-else>
                 Sofern du die Text-Blöcke in einer anderen Sprache als Englisch anzeigen möchtest, kannst du die inkludierten Übersetzungen nutzen (i18n).<br /><br />
                 Spezifiere einfach eine der unterstützten Sprachen als
                 <a href="https://www.w3schools.com/tags/ref_language_codes.asp" target="_blank" rel="noopener" class="whitespace-nowrap">ISO 639-1 code <ArrowTopRightOnSquareIcon class="-mt-0.5 mr-0.5 inline-block h-3 w-3" aria-hidden="true" /></a>.<br />
-                Für Arabisch wird zudem Rechts-nach-Links (RTL) für alle Elemente unterstützt und automatisch angewendet.
+                Für Arabisch, Persisch wird zudem Rechts-nach-Links (RTL) für alle Elemente unterstützt und automatisch angewendet.
               </td>
             </tr>
             <tr id="customlabels">
@@ -807,6 +836,38 @@ definePageMeta({
                 verfügbaren Keys an. Beachte, dass die Keys hier zu Kleinbuchstaben transformiert und Leerzeichen entfernt werden müssen!<br />
                 Ein so manipulierter Text überschreibt auch jegliche Übersetzung.<br />Du kannst hierbei die gleichen HTML-Pseudo-Tags nutzen, wie sie auch in der "description"-Option möglich sind.<br /><br />
                 <NuxtLink :to="{path: localePath('advanced-use'), hash: '#case-4'}">{{ $t('labels.example') }} <ArrowRightIcon class="-mt-0.5 mr-0.5 inline-block h-3 w-3" aria-hidden="true" /></NuxtLink>
+              </td>
+            </tr>
+            <tr id="stylelight">
+              <th scope="row">styleLight</th>
+              <td><em>String</em></td>
+              <td v-if="locale=='en'">
+                You can override global css variables for the button.<br /><br />
+                Find out what you can change by having a look at the top section at a respective
+                <a href="https://github.com/add2cal/add-to-calendar-button/tree/main/assets/css" target="_blank" rel="noopener">css file in the repository <ArrowTopRightOnSquareIcon class="-mt-0.5 mr-0.5 inline-block h-4 w-4" aria-hidden="true" /></a>.<br /><br />
+                Example: <em>styleLight="--btn-background: #2f4377; --btn-text: #fff; --font: Georgia, 'Times New Roman', Times, serif;"</em><br /><br />
+                The styleLight option acts as default. To override dark mode variables, also define styleDark (see below).
+              </td>
+              <td v-else>
+                Du kannst globale CSS Variabeln des Buttons überschreiben.<br /><br />
+                Alle möglichen Einträge findest du zu Beginn der jeweiligen
+                <a href="https://github.com/add2cal/add-to-calendar-button/tree/main/assets/css" target="_blank" rel="noopener">CSS-Datei im Repository <ArrowTopRightOnSquareIcon class="-mt-0.5 mr-0.5 inline-block h-4 w-4" aria-hidden="true" /></a>.<br /><br />
+                Beispiel: <em>styleLight="--btn-background: #2f4377; --btn-text: #fff; --font: Georgia, 'Times New Roman', Times, serif;"</em><br /><br />
+                Die styleLight-Option definiert den Standard. Um Dark-Mode-Variabeln zu überschreiben, musst du zusätzlich die styleDark-Option setzen.
+              </td>
+            </tr>
+            <tr id="styledark">
+              <th scope="row">styleDark</th>
+              <td><em>String</em></td>
+              <td v-if="locale=='en'">
+                You can override global css variables for the button.<br /><br />
+                Find out what you can change by having a look at the top section at a respective
+                <a href="https://github.com/add2cal/add-to-calendar-button/tree/main/assets/css" target="_blank" rel="noopener">css file in the repository <ArrowTopRightOnSquareIcon class="-mt-0.5 mr-0.5 inline-block h-4 w-4" aria-hidden="true" /></a>.<br />
+              </td>
+              <td v-else>
+                Du kannst globale CSS Variabeln des Buttons überschreiben.<br /><br />
+                Alle möglichen Einträge findest du zu Beginn der jeweiligen
+                <a href="https://github.com/add2cal/add-to-calendar-button/tree/main/assets/css" target="_blank" rel="noopener">CSS-Datei im Repository <ArrowTopRightOnSquareIcon class="-mt-0.5 mr-0.5 inline-block h-4 w-4" aria-hidden="true" /></a>.<br />
               </td>
             </tr>
           </tbody>

@@ -3,7 +3,7 @@
  *  Add to Calendar Button
  *  ++++++++++++++++++++++
  *
- *  Version: 2.2.10
+ *  Version: 2.3.0
  *  Creator: Jens Kuerschner (https://jenskuerschner.de)
  *  Project: https://github.com/add2cal/add-to-calendar-button
  *  License: Elastic License 2.0 (ELv2) (https://github.com/add2cal/add-to-calendar-button/blob/main/LICENSE.txt)
@@ -94,7 +94,7 @@ function atcb_validate_icsFile(data, msgPrefix, i = '', msgSuffix = '') {
     return '';
   })();
   if (icsFileStr != '') {
-    if (!atcb_secure_url(icsFileStr, false) || !data.icsFile.startsWith('https://')) {
+    if (!atcb_secure_url(icsFileStr, false) || (!data.icsFile.startsWith('https://') && !data.icsFile.startsWith('http://'))) {
       data.validationError = msgPrefix + ' failed: explicit ics file path not valid' + msgSuffix;
       return false;
     }
@@ -149,6 +149,12 @@ function atcb_validate_updated(data, msgPrefix) {
 
 // validate options
 function atcb_validate_options(data, msgPrefix) {
+  // we check for valid options again, since they might have been changed during decoration
+  if (data.options == null || data.options.length < 1) {
+    data.validationError = msgPrefix + ' failed: no valid options available';
+    return false;
+  }
+  // we also double-check whether options are valid
   if (
     !data.options.every(function (option) {
       if (!atcbOptions.includes(option)) {
@@ -263,12 +269,10 @@ function atcb_validate_sequence(data, msgPrefix, i, msgSuffix) {
 
 // validate time zone
 function atcb_validate_timezone(data, msgPrefix, i, msgSuffix) {
-  if (data.dates[`${i}`].timeZone != null && data.dates[`${i}`].timeZone != '') {
-    const validTimeZones = tzlib_get_timezones();
-    if (!validTimeZones.includes(data.dates[`${i}`].timeZone)) {
-      data.validationError = msgPrefix + ' failed: invalid time zone given' + msgSuffix;
-      return false;
-    }
+  const validTimeZones = tzlib_get_timezones();
+  if (!validTimeZones.includes(data.dates[`${i}`].timeZone)) {
+    data.validationError = msgPrefix + ' failed: invalid time zone given' + msgSuffix;
+    return false;
   }
   return true;
 }
@@ -277,7 +281,8 @@ function atcb_validate_timezone(data, msgPrefix, i, msgSuffix) {
 function atcb_validate_datetime(data, msgPrefix, i, msgSuffix) {
   const dates = ['startDate', 'endDate'];
   const newDate = dates;
-  // testing for right format first - mind that during decoration, we already cleaned up dates, so 2022-44-55 would be also valid, since it gets adjusted automatically!
+  // testing for right format first
+  //mind that during decoration, we already cleaned up dates, so 2022-44-55 would be also valid, since it gets adjusted automatically. However, we have some pre-validation there too
   if (
     !dates.every(function (date) {
       if (data.dates[`${i}`][`${date}`].length !== 10) {
@@ -289,6 +294,7 @@ function atcb_validate_datetime(data, msgPrefix, i, msgSuffix) {
         data.validationError = msgPrefix + ' failed: date misspelled [' + date + ': ' + data.dates[`${i}`][`${date}`] + ']' + msgSuffix;
         return false;
       }
+      // setting date for further time validation
       newDate[`${date}`] = new Date(dateParts[0], dateParts[1] - 1, dateParts[2]);
       return true;
     })
