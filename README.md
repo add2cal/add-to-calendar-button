@@ -38,17 +38,6 @@ Works with **all modern browsers** (Chrome, Edge, Firefox, Safari) on **Windows,
 
 See [add-to-calendar-button.com](https://add-to-calendar-button.com/) for a live demo and playground.
 
-<br /><br />
-
-### 🤗 Like it? Support it!
-
-If you like this project, it would be awesome if you would support it, so it lives on!
-
-- ⭐ [**Star** the repository](#) in order to stay up-to-date and save it for later!
-- 📣 Spread the word! On Twitter/X, Medium, Discord, Facebook, ...
-- ✍️ Leave a Review at [ProductHunt](https://www.producthunt.com/products/add-to-calendar-button-generator/reviews).
-- 💌 Send us some positive feedback at the [discussion board](https://github.com/add2cal/add-to-calendar-button/discussions).
-
 <br />
 
 ---
@@ -135,7 +124,11 @@ Based on your framework/library, you might need to make minor adjustments to the
 
 Find detailed installation guides for the most common ones, like React, Angular, Vue, Svelte, or Astro at [add-to-calendar-button.com/#installation](https://add-to-calendar-button.com/#installation).
 
-<br /><br />
+<br />
+
+---
+
+<br />
 
 ## 🎛️ Configuration
 
@@ -194,6 +187,17 @@ A time zone is not required, but recommended.
 <br />
 
 ---
+
+<br />
+
+## 🤗 Support it!
+
+You like this project? It would be awesome if you would support it, so it lives on!
+
+- ⭐ [Star the repository](#) in order to stay up-to-date and save it for later!
+- 📣 Spread the word! On Twitter/X, Medium, Discord, Facebook, ...
+- ✍️ Leave a review at [ProductHunt](https://www.producthunt.com/products/add-to-calendar-button-generator/reviews).
+- 💌 Send us some positive feedback at the [discussion board](https://github.com/add2cal/add-to-calendar-button/discussions).
 
 <br />
 
