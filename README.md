@@ -38,7 +38,16 @@ Works with **all modern browsers** (Chrome, Edge, Firefox, Safari) on **Windows,
 
 See [add-to-calendar-button.com](https://add-to-calendar-button.com/) for a live demo and playground.
 
-And remember to [⭐ **star** this repository](#) in order to stay up-to-date and save it for later! 🤗
+<br /><br />
+
+### 🤗 Like it? Support it!
+
+If you like this project, it would be awesome if you would support it, so it lives on!
+
+- ⭐ [**Star** the repository](#) in order to stay up-to-date and save it for later!
+- 📣 Spread the word! On Twitter/X, Medium, Discord, Facebook, ...
+- ✍️ Leave a Review at [ProductHunt](https://www.producthunt.com/products/add-to-calendar-button-generator/reviews).
+- 💌 Send us some positive feedback at the [discussion board](https://github.com/add2cal/add-to-calendar-button/discussions).
 
 <br />
 
@@ -123,89 +132,8 @@ import 'add-to-calendar-button';
 ```
 
 Based on your framework/library, you might need to make minor adjustments to the respective config.
-Find the details for the most common ones below.
 
-<br />
-
-#### Angular
-
-At the `app.module.ts`, import `CUSTOM_ELEMENTS_SCHEMA` from `@angular/core` and add the following to the `@NgModule` block:
-
-```javascript
-@NgModule({
-  //(...),
-  schemas: [CUSTOM_ELEMENTS_SCHEMA],
-})
-```
-
-<br />
-
-#### React
-
-**Option A:**
-
-With basic React projects, the web component works out-of-the-box.
-
-If you are working with TypeScript or other stricter setups, you would need to define a respective global JSX interface.
-
-```typescript
-declare global {
-  namespace JSX {
-    interface IntrinsicElements {
-      ['add-to-calendar-button']: CustomElement<AddToCalendarButton>;
-    }
-  }
-}
-```
-
-**Option B:**
-
-If this does not work OR if you want to keep it more convenient, you should use [the official Add to Calendar Button React Wrapper (click here)](https://github.com/add2cal/add-to-calendar-button-react).
-
-This approach also enables you to provide object and array type props as objects and arrays.
-Find all further information within the wrapper repository's Readme file.
-
-<br />
-
-#### Vue 3
-
-In the `vite.config.js/ts`, add the following compiler option to treat all tags with a dash as custom elements and get rid of the warning. Anything else works out-of-the-box.
-
-```javascript
-compilerOptions: {
-  isCustomElement: (tag) => tag.includes('-')
-}
-```
-
-If you want to be more precise, you can also write something like `tag.startsWith('add-')` to apply this rule only to tags starting with "add-".
-
-<br />
-
-#### Svelte
-
-Works out-of-the-box. Nice!
-
-<br />
-
-#### Astro
-
-For Astro as well as other SSR setups, you might want to include the script from the CDN rather than working with the npm package!
-
-If you still want to go for the npm way, you would need to add something like this to your page (instead of the import statement):
-
-```javascript
-<script type="module" hoist>
-  const observer = new IntersectionObserver((entries) => {
-    for (const entry of entries) {
-      if (!entry.isIntersecting) continue;
-      observer.disconnect();
-      import('../../node_modules/add-to-calendar-button/dist/module/index.js');
-    }
-  });
-  const instances = document.querySelectorAll('add-to-calendar-button');
-  for (const instance of instances) observer.observe(instance);
-</script>
-```
+Find detailed installation guides for the most common ones, like React, Angular, Vue, Svelte, or Astro at [add-to-calendar-button.com/#installation](https://add-to-calendar-button.com/#installation).
 
 <br /><br />
 
