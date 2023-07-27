@@ -11,6 +11,11 @@ export default defineNuxtConfig({
       isCustomElement: (tag) => tag.startsWith('add-'),
     },
   },
+  vite: {
+    build: {
+      cssMinify: 'lightningcss',
+    },
+  },
   ssr: true,
   spaLoadingTemplate: false,
   runtimeConfig: {
@@ -58,7 +63,7 @@ export default defineNuxtConfig({
         { rel: 'icon', type: 'image/png', sizes: '32x32', href: baseUrl + '/assets/favicons/favicon-32x32.png' },
         { rel: 'icon', type: 'image/png', sizes: '16x16', href: baseUrl + '/assets/favicons/favicon-16x16.png' },
         { rel: 'icon', type: 'image/svg+xml', href: baseUrl + '/assets/favicons/favicon.svg' },
-        { rel: 'shortcut icon', href: baseUrl + '/assets/favicons/favicon.ico' },
+        { rel: 'shortcut icon', type: 'image/x-icon', href: baseUrl + '/assets/favicons/favicon.ico' },
         { rel: 'apple-touch-icon', sizes: '57x57', href: baseUrl + '/assets/favicons/apple-touch-icon-57x57.png' },
         { rel: 'apple-touch-icon', sizes: '60x60', href: baseUrl + '/assets/favicons/apple-touch-icon-60x60.png' },
         { rel: 'apple-touch-icon', sizes: '72x72', href: baseUrl + '/assets/favicons/apple-touch-icon-72x72.png' },

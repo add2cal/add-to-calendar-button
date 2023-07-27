@@ -17,9 +17,9 @@ let wpUrl = (function () {
   <Disclosure v-slot="{ open }" class="mx-auto w-full max-w-3xl">
     <div itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
       <DisclosureButton as="h3" itemprop="name" class="faq-button flex w-full cursor-pointer justify-between">
-        <span v-if="locale=='en'">What is the Add to Calendar Button?</span>
+        <span v-if="locale=='en'">What is a Add to Calendar Button?</span>
         <span v-else>Was ist ein Add to Calendar Button?</span>
-        <ChevronUpIcon :class="open ? 'rotate-180 transform' : ''" class="h-5 w-5 text-inherit" />
+        <ChevronUpIcon :class="open ? 'rotate-180 transform' : ''" class="h-5 w-5 text-inherit transition-transform" />
       </DisclosureButton>
       <transition
         enter-active-class="transition duration-100 ease-out"
@@ -49,7 +49,7 @@ let wpUrl = (function () {
       <DisclosureButton as="h3" itemprop="name" class="faq-button flex w-full cursor-pointer justify-between">
         <span v-if="locale=='en'">How can I implement the Add to Calendar Button?</span>
         <span v-else>Wie kann ich den Add to Calendar Button installieren?</span>
-        <ChevronUpIcon :class="open ? 'rotate-180 transform' : ''" class="h-5 w-5 text-inherit" />
+        <ChevronUpIcon :class="open ? 'rotate-180 transform' : ''" class="h-5 w-5 text-inherit transition-transform" />
       </DisclosureButton>
       <transition
         enter-active-class="transition duration-100 ease-out"
@@ -79,7 +79,7 @@ let wpUrl = (function () {
       <DisclosureButton as="h3" itemprop="name" class="faq-button flex w-full cursor-pointer justify-between">
         <span v-if="locale=='en'">How does the Add to Calendar Button work?</span>
         <span v-else>Wie funktioniert der Add to Calendar Button?</span>
-        <ChevronUpIcon :class="open ? 'rotate-180 transform' : ''" class="h-5 w-5 text-inherit" />
+        <ChevronUpIcon :class="open ? 'rotate-180 transform' : ''" class="h-5 w-5 text-inherit transition-transform" />
       </DisclosureButton>
       <transition
         enter-active-class="transition duration-100 ease-out"
@@ -117,7 +117,7 @@ let wpUrl = (function () {
       <DisclosureButton as="h3" itemprop="name" class="faq-button flex w-full cursor-pointer justify-between">
         <span v-if="locale=='en'">What are the differences with Add to Calendar Button solutions?</span>
         <span v-else>Welche Unterschiede gibt es bei Add to Calendar Buttons?</span>
-        <ChevronUpIcon :class="open ? 'rotate-180 transform' : ''" class="h-5 w-5 text-inherit" />
+        <ChevronUpIcon :class="open ? 'rotate-180 transform' : ''" class="h-5 w-5 text-inherit transition-transform" />
       </DisclosureButton>
       <transition
         enter-active-class="transition duration-100 ease-out"
@@ -151,7 +151,7 @@ let wpUrl = (function () {
       <DisclosureButton as="h3" itemprop="name" class="faq-button flex w-full cursor-pointer justify-between">
         <span v-if="locale=='en'">Is the Add to Calendar Button free to use?</span>
         <span v-else>Ist der Add to Calendar Button kostenfrei nutzbar?</span>
-        <ChevronUpIcon :class="open ? 'rotate-180 transform' : ''" class="h-5 w-5 text-inherit" />
+        <ChevronUpIcon :class="open ? 'rotate-180 transform' : ''" class="h-5 w-5 text-inherit transition-transform" />
       </DisclosureButton>
       <transition
         enter-active-class="transition duration-100 ease-out"
@@ -183,7 +183,7 @@ let wpUrl = (function () {
       <DisclosureButton as="h3" itemprop="name" class="faq-button flex w-full cursor-pointer justify-between">
         <span v-if="locale=='en'">How can I customize the Add to Calendar Button?</span>
         <span v-else>Wie kann ich den Add to Calendar Button anpassen?</span>
-        <ChevronUpIcon :class="open ? 'rotate-180 transform' : ''" class="h-5 w-5 text-inherit" />
+        <ChevronUpIcon :class="open ? 'rotate-180 transform' : ''" class="h-5 w-5 text-inherit transition-transform" />
       </DisclosureButton>
       <transition
         enter-active-class="transition duration-100 ease-out"
@@ -213,7 +213,7 @@ let wpUrl = (function () {
       <DisclosureButton as="h3" itemprop="name" class="faq-button flex w-full cursor-pointer justify-between">
         <span v-if="locale=='en'">Does the Add to Calendar Button consider time zones?</span>
         <span v-else>Berücksichtigt der Add to Calendar Button Zeitzonen?</span>
-        <ChevronUpIcon :class="open ? 'rotate-180 transform' : ''" class="h-5 w-5 text-inherit" />
+        <ChevronUpIcon :class="open ? 'rotate-180 transform' : ''" class="h-5 w-5 text-inherit transition-transform" />
       </DisclosureButton>
       <transition
         enter-active-class="transition duration-100 ease-out"
@@ -241,7 +241,7 @@ let wpUrl = (function () {
       <DisclosureButton as="h3" itemprop="name" class="faq-button flex w-full cursor-pointer justify-between">
         <span v-if="locale=='en'">Does the Add to Calendar Button work with JavaScript frameworks?</span>
         <span v-else>Funktioniert der Add to Calendar Button mit JavaScript-Frameworks?</span>
-        <ChevronUpIcon :class="open ? 'rotate-180 transform' : ''" class="h-5 w-5 text-inherit" />
+        <ChevronUpIcon :class="open ? 'rotate-180 transform' : ''" class="h-5 w-5 text-inherit transition-transform" />
       </DisclosureButton>
       <transition
         enter-active-class="transition duration-100 ease-out"
@@ -263,7 +263,7 @@ let wpUrl = (function () {
       <DisclosureButton as="h3" itemprop="name" class="faq-button flex w-full cursor-pointer justify-between">
         <span v-if="locale=='en'">Does the Add to Calendar Button work with website builders?</span>
         <span v-else>Funktioniert der Add to Calendar Button mit Website-Baukästen?</span>
-        <ChevronUpIcon :class="open ? 'rotate-180 transform' : ''" class="h-5 w-5 text-inherit" />
+        <ChevronUpIcon :class="open ? 'rotate-180 transform' : ''" class="h-5 w-5 text-inherit transition-transform" />
       </DisclosureButton>
       <transition
         enter-active-class="transition duration-100 ease-out"
@@ -285,7 +285,7 @@ let wpUrl = (function () {
       <DisclosureButton as="h3" itemprop="name" class="faq-button flex w-full cursor-pointer justify-between">
         <span v-if="locale=='en'">Does the Add to Calendar Button work with WordPress?</span>
         <span v-else>Funktioniert der Add to Calendar Button mit WordPress?</span>
-        <ChevronUpIcon :class="open ? 'rotate-180 transform' : ''" class="h-5 w-5 text-inherit" />
+        <ChevronUpIcon :class="open ? 'rotate-180 transform' : ''" class="h-5 w-5 text-inherit transition-transform" />
       </DisclosureButton>
       <transition
         enter-active-class="transition duration-100 ease-out"
@@ -309,7 +309,7 @@ let wpUrl = (function () {
       <DisclosureButton as="h3" itemprop="name" class="faq-button flex w-full cursor-pointer justify-between">
         <span v-if="locale=='en'">Does the Add to Calendar Button support my language?</span>
         <span v-else>Unterstützt der Add to Calendar Button meine Sprache?</span>
-        <ChevronUpIcon :class="open ? 'rotate-180 transform' : ''" class="h-5 w-5 text-inherit" />
+        <ChevronUpIcon :class="open ? 'rotate-180 transform' : ''" class="h-5 w-5 text-inherit transition-transform" />
       </DisclosureButton>
       <transition
         enter-active-class="transition duration-100 ease-out"
