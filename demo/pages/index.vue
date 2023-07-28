@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ArrowRightIcon, WrenchScrewdriverIcon, BeakerIcon, LightBulbIcon } from '@heroicons/vue/24/outline';
+import { ArrowRightIcon, WrenchScrewdriverIcon, BeakerIcon, SparklesIcon } from '@heroicons/vue/24/outline';
 import IntegrationGuidesOverview from "@/components/integration/integrationGuidesOverview.vue";
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import PlaygroundArea from "@/components/playground/playgroundArea.vue";
@@ -59,7 +59,7 @@ const localePath = useLocalePath();
   </div>
 
   <div id="features" class="container">
-    <h2 class="mt-20 pb-8 underline decoration-primary-light decoration-2 dark:decoration-primary-dark"><LightBulbIcon class="-mt-1 mr-3 inline-block h-6 w-6" aria-hidden="true" />{{ $t('content.home.headline_functionality') }}</h2>
+    <h2 class="mt-20 pb-8 underline decoration-primary-light decoration-2 dark:decoration-primary-dark"><SparklesIcon class="-mt-1 mr-3 inline-block h-6 w-6" aria-hidden="true" />{{ $t('content.home.headline_functionality') }}</h2>
     <div>{{ $t('content.home.functionality_intro') }}</div>
     <FeaturesBlock />
   </div>

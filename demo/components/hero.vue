@@ -18,8 +18,8 @@ const localePath = useLocalePath();
     </div>
     <div class="container">
       <div class="relative z-20">
-        <div class="absolute left-0 top-0 m-auto grid w-full grid-cols-1 justify-items-center pb-20 pt-8 xs:py-24 md:py-28 lg:grid-cols-2 lg:py-36">
-          <div class="grid grid-cols-1 justify-items-center pb-5 md:grid-cols-2 lg:grid-cols-1">
+        <div class="absolute left-0 top-0 m-auto grid w-full grid-cols-1 justify-items-center pb-20 pt-8 xs:py-24 md:py-28 lg:grid-cols-2 lg:py-16">
+          <div class="grid grid-cols-1 justify-items-center pb-5 md:grid-cols-2 lg:grid-cols-1 lg:py-20">
             <div class="max-w-[400px] self-center pb-14 md:pb-0 lg:pb-16">
               <div class="mx-auto -mt-4 mb-16 block w-auto max-w-[280px] xs:hidden">
                 <Logo class="force-light" variation="mobile" />
@@ -40,8 +40,8 @@ const localePath = useLocalePath();
               </div>
             </div>
           </div>
-          <div class="hidden self-center lg:block">
-            <img alt="Add to Calendar Button" width="150" height="150" src="/assets/img/cal.webp" class="animate-bounce-minimal" />
+          <div class="hidden self-center p-14 lg:block xl:p-10">
+            <img alt="Add to Calendar Button" width="1000" height="791" src="/assets/img/combo.webp" />
           </div>
         </div>
       </div>

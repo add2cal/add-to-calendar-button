@@ -20,7 +20,7 @@ watch(currentLanguage, val => {
   <div class="mx-auto w-36">
     <Listbox v-model="currentLanguage">
       <div class="relative">
-        <ListboxButton class="language-switch-btn">
+        <ListboxButton id="language-switcher" class="language-switch-btn">
           <span class="icon">
             <LanguageIcon class="h-5 w-5" aria-hidden="true" />
           </span>
