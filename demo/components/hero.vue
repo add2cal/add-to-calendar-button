@@ -60,7 +60,9 @@ const localePath = useLocalePath();
     </div>
     <div>
       <ClientOnly>
-        <StatsBar />
+        <DelayHydration>
+          <StatsBar />
+        </DelayHydration>
         <template #fallback>
           <StatsBarPlaceholder />
         </template>
