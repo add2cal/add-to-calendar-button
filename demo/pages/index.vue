@@ -40,14 +40,14 @@ const localePath = useLocalePath();
     <div class="container">
       <h2 class="pb-8 underline decoration-primary-light decoration-2 dark:decoration-primary-dark"><BeakerIcon class="-mt-1 mr-3 inline-block h-6 w-6" aria-hidden="true" />{{ $t('navigation.playground') }}</h2>
     </div>
-    <ClientOnly>
-      <DelayHydration>
+    <DelayHydration>
+      <ClientOnly>
         <LazyPlaygroundArea />
-      </DelayHydration>
-      <template #fallback>
-        <PlaygroundAreaPlaceholder />
-      </template>
-    </ClientOnly>
+        <template #fallback>
+          <PlaygroundAreaPlaceholder />
+        </template>
+      </ClientOnly>
+    </DelayHydration>
     <div class="container hidden md:block">
       <div class="py-4 text-center text-sm italic text-zinc-400 dark:text-zinc-500">
         {{ $t('content.home.demoDisclaimer') }} <NuxtLink :to="localePath('configuration')">"{{ $t('labels.clickHere') }}"</NuxtLink>

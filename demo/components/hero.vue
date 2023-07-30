@@ -59,14 +59,14 @@ const localePath = useLocalePath();
       </div>
     </div>
     <div>
-      <ClientOnly>
-        <DelayHydration>
+      <DelayHydration>
+        <ClientOnly>
           <StatsBar />
-        </DelayHydration>
-        <template #fallback>
-          <StatsBarPlaceholder />
-        </template>
-      </ClientOnly>
+          <template #fallback>
+            <StatsBarPlaceholder />
+          </template>
+        </ClientOnly>
+      </DelayHydration>
     </div>
   </div>
   <div :class="view.atTopOfPage ? 'top-[-80px]' : 'top-0'" class="fixed z-50 w-full bg-gradient-to-tr from-primary to-primary-light py-3 shadow-xl transition-all dark:from-primary-darkest dark:to-primary-darker lg:hidden">
