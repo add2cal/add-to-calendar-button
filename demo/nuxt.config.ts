@@ -28,7 +28,7 @@ export default defineNuxtConfig({
     inlineSSRStyles: true,
   },
   delayHydration: {
-    mode: 'mount',
+    mode: 'manual',
     debug: process.env.NODE_ENV === 'development',
   },
   app: {
