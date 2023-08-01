@@ -20,12 +20,17 @@ import { atcb_log_event } from './atcb-event';
 function atcb_toggle(host, action, data = '', button = null, keyboardTrigger = false, generatedButton = false) {
   // check for state and adjust accordingly
   // action can be 'open', 'close', or 'auto'
+  // aria-expanded state will be change according to the button state 'open' or 'close'
+  // aria-expanded will let know screen readers about the button state.
   if (action == 'open') {
     atcb_open(host, data, button, keyboardTrigger, generatedButton);
+    button.setAttribute('aria-expanded', true);
   } else if (action == 'close' || button.classList.contains('atcb-active') || host.querySelector('.atcb-active-modal')) {
     atcb_close(host, keyboardTrigger);
+    button.setAttribute('aria-expanded', false);
   } else {
     atcb_open(host, data, button, keyboardTrigger, generatedButton);
+    button.setAttribute('aria-expanded', true);
   }
 }
 
@@ -46,6 +51,7 @@ function atcb_open(host, data, button = null, keyboardTrigger = false, generated
   // set list styles, set button to atcb-active and force modal listStyle if no button is set
   if (button) {
     button.classList.add('atcb-active');
+    button.setAttribute('aria-expanded', !!button);
     if (data.listStyle === 'modal') {
       button.classList.add('atcb-modal-style');
       list.classList.add('atcb-modal');
@@ -171,6 +177,7 @@ function atcb_close(host, keyboardTrigger = false) {
     // inactivate all buttons at the host...
     Array.from(host.querySelectorAll('.atcb-active')).forEach((button) => {
       button.classList.remove('atcb-active');
+      button.setAttribute('aria-expanded', false);
     });
     Array.from(host.querySelectorAll('.atcb-active-modal')).forEach((modal) => {
       modal.classList.remove('atcb-active-modal');
