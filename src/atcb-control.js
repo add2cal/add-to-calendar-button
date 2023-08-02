@@ -3,7 +3,7 @@
  *  Add to Calendar Button
  *  ++++++++++++++++++++++
  *
- *  Version: 2.3.0
+ *  Version: 2.3.1
  *  Creator: Jens Kuerschner (https://jenskuerschner.de)
  *  Project: https://github.com/add2cal/add-to-calendar-button
  *  License: Elastic License 2.0 (ELv2) (https://github.com/add2cal/add-to-calendar-button/blob/main/LICENSE.txt)
@@ -43,9 +43,10 @@ function atcb_open(host, data, button = null, keyboardTrigger = false, generated
   if (data.hideTextLabelList) {
     listWrapper.classList.add('atcb-no-text');
   }
-  // set list styles, set button to atcb-active and force modal listStyle if no button is set
+  // set list styles, set button to atcb-active and force modal as listStyle if no button is set
   if (button) {
     button.classList.add('atcb-active');
+    button.setAttribute('aria-expanded', true);
     if (data.listStyle === 'modal') {
       button.classList.add('atcb-modal-style');
       list.classList.add('atcb-modal');
@@ -171,6 +172,7 @@ function atcb_close(host, keyboardTrigger = false) {
     // inactivate all buttons at the host...
     Array.from(host.querySelectorAll('.atcb-active')).forEach((button) => {
       button.classList.remove('atcb-active');
+      button.setAttribute('aria-expanded', false);
     });
     Array.from(host.querySelectorAll('.atcb-active-modal')).forEach((modal) => {
       modal.classList.remove('atcb-active-modal');
@@ -178,6 +180,7 @@ function atcb_close(host, keyboardTrigger = false) {
     // ... as well as the document (case with atcb_action)
     Array.from(document.querySelectorAll('.atcb-active')).forEach((button) => {
       button.classList.remove('atcb-active');
+      button.setAttribute('aria-expanded', false);
     });
     Array.from(document.querySelectorAll('.atcb-active-modal')).forEach((modal) => {
       modal.classList.remove('atcb-active-modal');

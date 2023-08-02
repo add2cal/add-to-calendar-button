@@ -3,7 +3,7 @@
  *  Add to Calendar Button
  *  ++++++++++++++++++++++
  *
- *  Version: 2.3.0
+ *  Version: 2.3.1
  *  Creator: Jens Kuerschner (https://jenskuerschner.de)
  *  Project: https://github.com/add2cal/add-to-calendar-button
  *  License: Elastic License 2.0 (ELv2) (https://github.com/add2cal/add-to-calendar-button/blob/main/LICENSE.txt)
@@ -209,6 +209,7 @@ function atcb_generate_button(host, button, data, debug = false) {
       buttonTrigger.classList.add('atcb-dropoverlay');
     }
     buttonTrigger.type = 'button';
+    buttonTrigger.setAttribute('aria-expanded', false); // aria-expanded default value on button generate
     buttonTriggerWrapper.append(buttonTrigger);
     // generate the label incl. eventListeners
     if (data.buttonStyle == 'date') {
