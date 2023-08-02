@@ -13,8 +13,8 @@ const defaultDate = futureDay.getFullYear() + '-' + ('0' + (futureDay.getMonth()
 export const getDefaultDateRecurrenceAttrs = (): DateRecurrenceAttrs => ({
   [DateRecurrenceAttrsKey.IS_SIMPLE]: false,
   [DateRecurrenceAttrsKey.RRULE_VALUE]: '',
-  [DateRecurrenceAttrsKey.FREQUENCY]: 'daily',
-  [DateRecurrenceAttrsKey.INTERVAL]: 1,
+  [DateRecurrenceAttrsKey.FREQUENCY]: '',
+  [DateRecurrenceAttrsKey.INTERVAL]: '',
   [DateRecurrenceAttrsKey.COUNT]: '',
   [DateRecurrenceAttrsKey.BY_DAY]: '',
   [DateRecurrenceAttrsKey.BY_MONTH]: [],

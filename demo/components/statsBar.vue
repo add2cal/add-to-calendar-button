@@ -21,7 +21,7 @@ const marqueeKey = ref(0);
 
 const githubRepoUrl = 'https://api.github.com/repos/add2cal/add-to-calendar-button';
 const npmDownloadsUrl = 'https://api.npmjs.org/downloads/range/{start}:{end}/add-to-calendar-button';
-const jsdelivrStatsUrl = 'https://data.jsdelivr.com/v1/package/npm/add-to-calendar-button/stats';
+const jsdelivrStatsUrl = 'https://data.jsdelivr.com/v1/stats/packages/npm/add-to-calendar-button?period=month';
 
 onMounted(() => {
 
@@ -124,7 +124,7 @@ const loadJsdelivrStats = async () => {
   const response = await fetch(jsdelivrStatsUrl);
   if (response.ok) {
     const json = await response.json();
-    json?.total && (data.value.jsdelivr.montlyHits = json.total);
+    json?.hits.total && (data.value.jsdelivr.montlyHits = json.hits.total);
   }
 };
 </script>

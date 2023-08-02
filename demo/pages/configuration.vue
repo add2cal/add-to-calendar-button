@@ -344,6 +344,7 @@ definePageMeta({
               <td v-if="locale=='en'">
                 Defines recurring events.<br /><br />
                 This will deactivate the Yahoo and Microsoft (and Google at iOS) options, since they do not support it at the moment (users could still use iCal in this case). If no option is left then, iCal will be set as fallback.<br />
+                Mind that it is not possible to use more than 1 dates (dates option) and recurrence.<br /><br />
                 You can use any valid <a href="https://www.rfc-editor.org/rfc/rfc5545" target="_blank" rel="noopener" class="whitespace-nowrap">RRULE <ArrowTopRightOnSquareIcon class="-mt-0.5 mr-0.5 inline-block h-3 w-3" aria-hidden="true" /></a> to define the respective rule (<a
                   href="https://icalendar.org/rrule-tool.html"
                   target="_blank"
@@ -360,6 +361,7 @@ definePageMeta({
                 Definiert wiederkehrende Events.<br /><br />
                 Diese Optione deaktiviert die Yahoo- und Microsoft-Kalendar-Optionen (sowie Google unter iOS), da die Funktion dort aktuell nicht unterstützt wird (in diesen Fällen können Nutzer weiterhin auf die iCal-Datei zurückgreifen). Bleibt keine Option übrig, wird iCal als Fallback
                 aktiviert.<br />
+                Beachte, dass es nicht möglich ist, mehr als 1 Termin (dates option) gemeinsam mit der recurrence option zu verwenden.<br /><br />
                 Du kannst jede valide <a href="https://www.rfc-editor.org/rfc/rfc5545" target="_blank" rel="noopener" class="whitespace-nowrap">RRULE <ArrowTopRightOnSquareIcon class="-mt-0.5 mr-0.5 inline-block h-3 w-3" aria-hidden="true" /></a> nutzen, um eine entsprechende Regel anzuwenden (<a
                   href="https://icalendar.org/rrule-tool.html"
                   target="_blank"
