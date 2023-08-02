@@ -209,6 +209,7 @@ function atcb_generate_button(host, button, data, debug = false) {
       buttonTrigger.classList.add('atcb-dropoverlay');
     }
     buttonTrigger.type = 'button';
+    buttonTrigger.setAttribute('aria-expanded', false); // aria-expanded default value on button generate
     buttonTriggerWrapper.append(buttonTrigger);
     // generate the label incl. eventListeners
     if (data.buttonStyle == 'date') {
