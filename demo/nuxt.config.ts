@@ -234,6 +234,26 @@ export default defineNuxtConfig({
         changefreq: 'monthly',
         priority: 0.1,
       },
+      {
+        loc: '/assets/favicons/favicon.svg',
+        changefreq: 'monthly',
+        priority: 0.1,
+      },
+      {
+        loc: '/assets/favicons/favicon.ico',
+        changefreq: 'monthly',
+        priority: 0.1,
+      },
+      {
+        loc: '/assets/favicons/favicon-32x32.png',
+        changefreq: 'monthly',
+        priority: 0.1,
+      },
+      {
+        loc: '/assets/favicons/favicon-16x16.png',
+        changefreq: 'monthly',
+        priority: 0.1,
+      },
     ],
     exclude: ['/en/**', 'legal-notice', 'privacy-policy', '*/legal-notice', '*/privacy-policy'],
     defaults: {

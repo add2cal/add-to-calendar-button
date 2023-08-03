@@ -5,10 +5,10 @@ import MarqueeText from 'vue-marquee-text-component';
 
 const data = ref({
   github: {
-    stars: 1000,
+    stars: 1200,
   },
   npm: {
-    totalInstallations: 200000,
+    totalInstallations: 600000,
     weeklyInstallations: 1
   },
   jsdelivr: {
