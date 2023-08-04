@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { set, LSKey } from '@/utils/localStorage';
+import '@/assets/css/main.css?inline';
 const { locale } = useI18n();
 
 if (process.client) {

@@ -11,12 +11,6 @@ export default defineNuxtConfig({
       isCustomElement: (tag) => tag.startsWith('add-'),
     },
   },
-  vite: {
-    build: {
-      cssMinify: 'lightningcss',
-      cssCodeSplit: false,
-    },
-  },
   ssr: true,
   spaLoadingTemplate: false,
   runtimeConfig: {
@@ -218,7 +212,7 @@ export default defineNuxtConfig({
     vueI18n: './nuxt.i18n.config.ts',
   },
   tailwindcss: {
-    cssPath: '~/assets/css/main.css',
+    cssPath: false,
     configPath: '~/tailwind.config.js',
     exposeConfig: false,
     viewer: false,

@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import '@/assets/css/main.css?inline';
 import Footer from "@/components/footer.vue";
 import { ArrowUturnLeftIcon } from '@heroicons/vue/24/outline';
 
