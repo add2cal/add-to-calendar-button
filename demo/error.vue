@@ -2,12 +2,8 @@
 import Footer from "@/components/footer.vue";
 import { ArrowUturnLeftIcon } from '@heroicons/vue/24/outline';
 import { set, LSKey } from '@/utils/localStorage';
-const { locale } = useI18n();
 
-if (process.client) {
-  set(LSKey.LANG, locale.value);
-}
-
+const { locale, t } = useI18n();
 const route = useRoute();
 
 const props = defineProps({
@@ -27,7 +23,9 @@ if (statusCode == 404 && route.path.startsWith('/en/')) {
   navigateTo(newPath, { redirectCode: 301 });
 }
 
-const { t } = useI18n();
+if (process.client) {
+  set(LSKey.LANG, locale.value);
+}
 
 const head = useLocaleHead({
   addDirAttribute: true,
