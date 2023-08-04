@@ -11,6 +11,12 @@ export default defineNuxtConfig({
       isCustomElement: (tag) => tag.startsWith('add-'),
     },
   },
+  nitro: {
+    compressPublicAssets: {
+      gzip: true,
+      brotli: true,
+    },
+  },
   ssr: true,
   spaLoadingTemplate: false,
   runtimeConfig: {
@@ -212,7 +218,7 @@ export default defineNuxtConfig({
     vueI18n: './nuxt.i18n.config.ts',
   },
   tailwindcss: {
-    cssPath: false,
+    cssPath: '~/assets/css/main.css',
     configPath: '~/tailwind.config.js',
     exposeConfig: false,
     viewer: false,

@@ -1,7 +1,12 @@
 <script setup lang="ts">
-import '@/assets/css/main.css?inline';
 import Footer from "@/components/footer.vue";
 import { ArrowUturnLeftIcon } from '@heroicons/vue/24/outline';
+import { set, LSKey } from '@/utils/localStorage';
+const { locale } = useI18n();
+
+if (process.client) {
+  set(LSKey.LANG, locale.value);
+}
 
 const route = useRoute();
 
