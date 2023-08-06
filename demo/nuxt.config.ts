@@ -11,9 +11,9 @@ export default defineNuxtConfig({
       isCustomElement: (tag) => tag.startsWith('add-'),
     },
   },
-  vite: {
-    build: {
-      cssMinify: 'lightningcss',
+  nitro: {
+    compressPublicAssets: {
+      brotli: true,
     },
   },
   ssr: true,

@@ -33,6 +33,11 @@ const description = computed(() => t('meta.description'));
         <Meta name="description" :content="description" />
       </Head>
       <Body>
+        <a href="https://www.producthunt.com/posts/add-to-calendar-button-v2" target="_blank" class="flex w-full flex-wrap items-center justify-center bg-[#FF6154] p-3 text-white hover:no-underline hover:opacity-90">
+          <span class="mr-3 h-6 w-6 rounded-full border border-white">P</span>
+          <span class="mr-2 font-normal">We are live on Product Hunt.</span><span class="mr-2 hidden font-normal md:inline-block">Support us with an Upvote! 🚀</span>
+          <span>Click here &raquo;</span>
+        </a>
         <HeroHeader />
         <div class="mb-20 mt-16 text-center md:text-left">
           <slot />
