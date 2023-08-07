@@ -34,11 +34,6 @@ const description = computed(() => route.meta.description ? t(route.meta.descrip
         <Meta name="description" :content="description" />
       </Head>
       <Body>
-        <a href="https://www.producthunt.com/posts/add-to-calendar-button-v2" target="_blank" class="hidden w-full flex-wrap items-center justify-center bg-[#FF6154] p-3 text-white hover:no-underline hover:opacity-90 lg:flex">
-          <span class="mr-3 h-6 w-6 rounded-full border border-white">P</span>
-          <span class="mr-2 font-normal">We are live on Product Hunt.</span><span class="mr-2 hidden font-normal md:inline-block">Support us with an Upvote! 🚀</span>
-          <span>Click here &raquo;</span>
-        </a>
         <Header />
         <div class="container relative z-10 mb-20 mt-16 text-center md:text-left">
           <slot />
