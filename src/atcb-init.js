@@ -490,7 +490,7 @@ function atcb_action(data, triggerElement, keyboardTrigger = false) {
   if (!data.blockInteraction) {
     // prepare shadow dom and load style (not necessary if iCal or Apple, and not on mobile and not multi-date with organizer)
     let host = null;
-    if (data.options.length > 1 || (data.listStyle !== 'apple' && data.listStyle !== 'ical') || (data.dates && data.dates.length > 1 && data.dates.organizer) || (isMobile())) {
+    if (!oneOption || (data.options[0] !== 'apple' && data.options[0] !== 'ical') || (data.dates && data.dates.length > 1 && data.dates.organizer) || (isMobile())) {
       host = document.createElement('div');
       host.id = 'atcb-customTrigger-' + data.identifier + '-host';
       if (root == document.body) {
