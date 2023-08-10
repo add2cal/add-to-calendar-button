@@ -3,7 +3,7 @@
  *  Add to Calendar Button
  *  ++++++++++++++++++++++
  *
- *  Version: 2.3.1
+ *  Version: 2.3.2
  *  Creator: Jens Kuerschner (https://jenskuerschner.de)
  *  Project: https://github.com/add2cal/add-to-calendar-button
  *  License: Elastic License 2.0 (ELv2) (https://github.com/add2cal/add-to-calendar-button/blob/main/LICENSE.txt)
@@ -11,7 +11,7 @@
  *
  */
 
-import { atcbVersion, isBrowser, atcbStates, atcbWcParams, atcbWcBooleanParams, atcbWcObjectParams, atcbWcObjectArrayParams, atcbWcArrayParams, atcbCssTemplate } from './atcb-globals.js';
+import { atcbVersion, isBrowser, atcbStates, atcbWcParams, atcbWcBooleanParams, atcbWcObjectParams, atcbWcObjectArrayParams, atcbWcArrayParams, atcbCssTemplate, isMobile } from './atcb-globals.js';
 import { atcb_decorate_data } from './atcb-decorate.js';
 import { atcb_check_required, atcb_validate } from './atcb-validate.js';
 import { atcb_generate_button } from './atcb-generate.js';
@@ -149,6 +149,9 @@ if (isBrowser()) {
       this.setAttribute('atcb-button-id', this.data.identifier);
       // build the button
       try {
+        this.style.visibility = 'visible';
+        this.style.opacity = '1';
+        this.style.position = 'relative';
         atcb_build_button(this.shadowRoot, this.data, this.debug);
       } catch (e) {
         if (this.debug) {
@@ -485,32 +488,35 @@ function atcb_action(data, triggerElement, keyboardTrigger = false) {
   atcb_log_event('initialization', data.identifier, data.identifier);
   // we would only render something, if interaction is not blocked
   if (!data.blockInteraction) {
-    // prepare shadow dom and load style
-    let host = document.createElement('div');
-    host.id = 'atcb-customTrigger-' + data.identifier + '-host';
-    if (root == document.body) {
-      document.body.append(host);
-    } else {
-      root.after(host);
+    // prepare shadow dom and load style (not necessary if iCal or Apple, and not on mobile and not multi-date with organizer)
+    let host = null;
+    if (!oneOption || (data.options[0] !== 'apple' && data.options[0] !== 'ical') || (data.dates && data.dates.length > 1 && data.dates.organizer) || (isMobile())) {
+      host = document.createElement('div');
+      host.id = 'atcb-customTrigger-' + data.identifier + '-host';
+      if (root == document.body) {
+        document.body.append(host);
+      } else {
+        root.after(host);
+      }
+      if (triggerElement) {
+        const btnDim = triggerElement.getBoundingClientRect();
+        host.style.position = 'relative';
+        host.style.left = -btnDim.width + 'px';
+        host.style.top = btnDim.height + 'px';
+      }
+      host.setAttribute('atcb-button-id', data.identifier);
+      host.attachShadow({ mode: 'open', delegateFocus: true });
+      const elem = document.createElement('template');
+      elem.innerHTML = template;
+      host.shadowRoot.append(elem.content.cloneNode(true));
+      const rootObj = host.shadowRoot.querySelector('.atcb-initialized');
+      atcb_setup_state_management(data);
+      atcb_set_light_mode(host.shadowRoot, data);
+      host.shadowRoot.querySelector('.atcb-initialized').setAttribute('lang', data.language);
+      atcb_load_css(host.shadowRoot, rootObj, data.buttonStyle, false, false, data.customCss);
+      // set global event listeners
+      atcb_set_global_event_listener(host.shadowRoot, data);
     }
-    if (triggerElement) {
-      const btnDim = triggerElement.getBoundingClientRect();
-      host.style.position = 'relative';
-      host.style.left = -btnDim.width + 'px';
-      host.style.top = btnDim.height + 'px';
-    }
-    host.setAttribute('atcb-button-id', data.identifier);
-    host.attachShadow({ mode: 'open', delegateFocus: true });
-    const elem = document.createElement('template');
-    elem.innerHTML = template;
-    host.shadowRoot.append(elem.content.cloneNode(true));
-    const rootObj = host.shadowRoot.querySelector('.atcb-initialized');
-    atcb_setup_state_management(data);
-    atcb_set_light_mode(host.shadowRoot, data);
-    host.shadowRoot.querySelector('.atcb-initialized').setAttribute('lang', data.language);
-    atcb_load_css(host.shadowRoot, rootObj, data.buttonStyle, false, false, data.customCss);
-    // set global event listeners
-    atcb_set_global_event_listener(host.shadowRoot, data);
     // if all is fine, ...
     // trigger link at the oneoption case, or ...
     if (oneOption) {
