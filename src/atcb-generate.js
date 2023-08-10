@@ -377,7 +377,7 @@ function atcb_create_modal(host, data, icon = '', headline, content = '', button
     const el = modalHost.getElementById('atcb-bgoverlay');
     if (!el) {
       const newOverlay = atcb_generate_bg_overlay(host, 'click', true, !data.hideBackground);
-      modalHost.append(newOverlay);
+      modalHost.querySelector('.atcb-modal-host-initialized').append(newOverlay);
       return newOverlay;
     }
     return el;
@@ -923,10 +923,11 @@ function atcb_generate_modal_host(host, data, reset = true) {
     newModalHost.setAttribute('styleDark', host.host.getAttribute('styleDark'));
   }
   newModalHost.setAttribute('atcb-button-id', data.identifier);
+  newModalHost.setAttribute('style', 'transform:translate3D(0, 0, 0);visibility:visible;opacity:1;position:fixed;top:0;left:0;display:flex;z-index:13999998;');
   document.body.append(newModalHost);
   newModalHost.attachShadow({ mode: 'open', delegateFocus: true });
   const elem = document.createElement('template');
-  elem.innerHTML = '<div class="atcb-modal-host-initialized" style="position:relative;"></div>';
+  elem.innerHTML = '<div class="atcb-modal-host-initialized" style="translate3D(0, 0, 0);visibility:visible;opacity:1;position:fixed;top:0;left:0;display:flex;z-index:13999999;"></div>';
   newModalHost.shadowRoot.append(elem.content.cloneNode(true));
   atcb_set_light_mode(newModalHost.shadowRoot, data);
   atcb_load_css(newModalHost.shadowRoot, null, data.buttonStyle, false, false, data.customCss);

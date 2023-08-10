@@ -149,6 +149,9 @@ if (isBrowser()) {
       this.setAttribute('atcb-button-id', this.data.identifier);
       // build the button
       try {
+        this.style.visibility = 'visible';
+        this.style.opacity = '1';
+        this.style.position = 'relative';
         atcb_build_button(this.shadowRoot, this.data, this.debug);
       } catch (e) {
         if (this.debug) {

@@ -69,7 +69,7 @@ function atcb_open(host, data, button = null, keyboardTrigger = false, generated
     // define background overlay in its own new modal shadowDOM
     const modalHost = atcb_generate_modal_host(host, data);
     // append background overlay and list to the modal shadowDOM; and init helper functions
-    modalHost.append(bgOverlay);
+    modalHost.querySelector('.atcb-modal-host-initialized').append(bgOverlay);
     bgOverlay.append(list);
     if (!data.hideBranding) {
       atcb_create_atcbl(modalHost, false);
