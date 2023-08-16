@@ -73,7 +73,7 @@ watch(locale, value => {
   }]);
 });
 
-const nonce = useNonce();
+const nonce = ref(useNonce());
 </script>
 
 <template>
@@ -104,7 +104,7 @@ const nonce = useNonce();
           <div class="flex w-full flex-none justify-center p-6 pt-8 md:w-[300px]">
             {{ nonce }}
             <add-to-calendar-button
-              nonce="nonce"
+              :nonce="nonce"
               :name="$t('demo_data.name')"
               :startDate="defaultDate"
               startTime="10:15"
