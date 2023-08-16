@@ -334,6 +334,9 @@ function atcb_load_css(host, rootObj = null, style = '', inline = false, buttons
     cssFile.setAttribute('rel', 'stylesheet');
     cssFile.setAttribute('type', 'text/css');
     cssFile.setAttribute('href', customCss);
+    if (host.host.hasAttribute('cspNonce')) {
+      cssFile.setAttribute('nonce', host.host.getAttribute('cspNonce'));
+    }
     // if we have no rootObject, we are loading a modal in a new shadowDOM, which can and should be blocking.
     if (rootObj == null) {
       // first, hide the content
@@ -354,6 +357,9 @@ function atcb_load_css(host, rootObj = null, style = '', inline = false, buttons
   // otherwise, we load it from a variable
   if (style != 'none' && atcbCssTemplate[`${style}`] != null) {
     const cssContent = document.createElement('style');
+    if (host.host.hasAttribute('cspNonce')) {
+      cssContent.setAttribute('nonce', host.host.getAttribute('cspNonce'));
+    }
     // get custom override information
     const overrideDefaultCss = (function () {
       if (host.host.hasAttribute('styleLight')) {
