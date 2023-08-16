@@ -3,7 +3,7 @@
  *  Add to Calendar Button
  *  ++++++++++++++++++++++
  *
- *  Version: 2.3.2
+ *  Version: 2.3.3
  *  Creator: Jens Kuerschner (https://jenskuerschner.de)
  *  Project: https://github.com/add2cal/add-to-calendar-button
  *  License: Elastic License 2.0 (ELv2) (https://github.com/add2cal/add-to-calendar-button/blob/main/LICENSE.txt)
@@ -12,7 +12,7 @@
  */
 
 import { tzlib_get_offset } from 'timezones-ical-library';
-import { isMobile, isiOS, atcbDefaultTarget } from './atcb-globals.js';
+import { atcbIsMobile, atcbIsiOS, atcbDefaultTarget } from './atcb-globals.js';
 import { atcb_log_event } from './atcb-event';
 
 // SHARED FUNCTION HOOK FOR WHEN EVENT GOT SAVED
@@ -33,7 +33,7 @@ function atcb_save_file(file, filename) {
     save.rel = 'noopener';
     save.href = file;
     // not using default target here, since this needs to happen _self on iOS (abstracted to mobile in general) and _blank at Firefox (abstracted to other setups) due to potential cross-origin restrictions
-    if (isMobile()) {
+    if (atcbIsMobile()) {
       save.target = '_self';
     } else {
       save.target = '_blank';
@@ -114,7 +114,7 @@ function atcb_generate_time(data, style = 'delimiters', targetCal = 'general', a
     const newEndDate = new Date(Date.UTC(endDate[0], endDate[1] - 1, endDate[2], 12, 0, 0));
     // increment the end day by 1 for Google Calendar, iCal, and Microsoft (but only if mobile, since desktop does not need this)
     // TODO: remove Microsoft from this list as soon as they fixed their bugs
-    if (targetCal === 'google' || (targetCal === 'microsoft' && !isMobile()) || targetCal === 'msteams' || targetCal === 'ical') {
+    if (targetCal === 'google' || (targetCal === 'microsoft' && !atcbIsMobile()) || targetCal === 'msteams' || targetCal === 'ical') {
       newEndDate.setDate(newEndDate.getDate() + 1);
     }
     // return formatted data
@@ -122,7 +122,7 @@ function atcb_generate_time(data, style = 'delimiters', targetCal = 'general', a
     // but only on desktop - on mobile devices, we add time information in the user's time zone
     // TODO: optimize this as soon as Microsoft fixed their bugs
     if (targetCal === 'msteams') {
-      if (isMobile()) {
+      if (atcbIsMobile()) {
         // get the time zone offset of the user's browser for the start date
         const offset = newStartDate.getTimezoneOffset();
         // get the ISO string of the offset
@@ -382,7 +382,7 @@ function atcb_copy_to_clipboard(dataString) {
   tmpInput.contentEditable = true;
   tmpInput.readOnly = false;
   tmpInput.value = dataString;
-  if (isiOS()) {
+  if (atcbIsiOS()) {
     var range = document.createRange();
     range.selectNodeContents(tmpInput);
     var selection = window.getSelection();

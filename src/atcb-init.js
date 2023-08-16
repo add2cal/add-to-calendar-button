@@ -3,7 +3,7 @@
  *  Add to Calendar Button
  *  ++++++++++++++++++++++
  *
- *  Version: 2.3.2
+ *  Version: 2.3.3
  *  Creator: Jens Kuerschner (https://jenskuerschner.de)
  *  Project: https://github.com/add2cal/add-to-calendar-button
  *  License: Elastic License 2.0 (ELv2) (https://github.com/add2cal/add-to-calendar-button/blob/main/LICENSE.txt)
@@ -11,7 +11,7 @@
  *
  */
 
-import { atcbVersion, isBrowser, atcbStates, atcbWcParams, atcbWcBooleanParams, atcbWcObjectParams, atcbWcObjectArrayParams, atcbWcArrayParams, atcbCssTemplate, isMobile } from './atcb-globals.js';
+import { atcbVersion, atcbIsBrowser, atcbStates, atcbWcParams, atcbWcBooleanParams, atcbWcObjectParams, atcbWcObjectArrayParams, atcbWcArrayParams, atcbCssTemplate, atcbIsMobile } from './atcb-globals.js';
 import { atcb_decorate_data } from './atcb-decorate.js';
 import { atcb_check_required, atcb_validate } from './atcb-validate.js';
 import { atcb_generate_button } from './atcb-generate.js';
@@ -28,7 +28,7 @@ const lightModeMutationObserver = [];
 const template = `<div class="atcb-initialized" style="display:none;position:relative;width:fit-content;"></div>`;
 
 // we cannot load the custom element server-side - therefore, we check for a browser environment first
-if (isBrowser()) {
+if (atcbIsBrowser()) {
   class AddToCalendarButton extends HTMLElement {
     constructor() {
       super();
@@ -429,7 +429,7 @@ function atcb_render_debug_msg(host, error) {
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 function atcb_action(data, triggerElement, keyboardTrigger = false) {
   // return if not within a browser environment
-  if (!isBrowser()) {
+  if (!atcbIsBrowser()) {
     return;
   }
   // get data
@@ -499,7 +499,7 @@ function atcb_action(data, triggerElement, keyboardTrigger = false) {
   if (!data.blockInteraction) {
     // prepare shadow dom and load style (not necessary if iCal or Apple, and not on mobile and not multi-date with organizer)
     let host = null;
-    if (!oneOption || (data.options[0] !== 'apple' && data.options[0] !== 'ical') || (data.dates && data.dates.length > 1 && data.dates.organizer) || (isMobile())) {
+    if (!oneOption || (data.options[0] !== 'apple' && data.options[0] !== 'ical') || (data.dates && data.dates.length > 1 && data.dates.organizer) || (atcbIsMobile())) {
       host = document.createElement('div');
       host.id = 'atcb-customTrigger-' + data.identifier + '-host';
       if (root == document.body) {
@@ -595,7 +595,7 @@ function atcb_get_pro_data(licenseKey) {
 // GLOBAL KEYBOARD AND DEVICE LISTENERS
 function atcb_set_global_event_listener(host, data) {
   // return, if we are not in a browser
-  if (!isBrowser()) {
+  if (!atcbIsBrowser()) {
     return;
   }
   // temporary listener to any class change at the body or html for the light mode Safari/Firefox hack

@@ -3,7 +3,7 @@
  *  Add to Calendar Button
  *  ++++++++++++++++++++++
  *
- *  Version: 2.3.2
+ *  Version: 2.3.3
  *  Creator: Jens Kuerschner (https://jenskuerschner.de)
  *  Project: https://github.com/add2cal/add-to-calendar-button
  *  License: Elastic License 2.0 (ELv2) (https://github.com/add2cal/add-to-calendar-button/blob/main/LICENSE.txt)
@@ -11,7 +11,7 @@
  *
  */
 
-import { isBrowser } from './atcb-globals.js';
+import { atcbIsBrowser } from './atcb-globals.js';
 
 // LOG/TRACK FUNCTION
 // add information to the parent element, which can be used for tracking
@@ -30,7 +30,7 @@ function atcb_log_event(event, trigger, identifier) {
     parentEl.setAttribute('atcb-last-event', event + ':' + trigger);
   }
   // trigger push to data layer
-  if (isBrowser()) {
+  if (atcbIsBrowser()) {
     atcb_push_to_data_layer(event, trigger);
   }
 }
