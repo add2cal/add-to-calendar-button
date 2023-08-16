@@ -323,8 +323,8 @@ function atcb_load_css(host, rootObj = null, style = '', inline = false, buttons
     cssGlobalContent.id = 'atcb-global-style';
     const scrollBarWidth = window.innerWidth - document.documentElement.clientWidth;
     cssGlobalContent.innerText = '.atcb-modal-no-scroll { overflow-y: hidden !important; -webkit-overflow-scrolling: touch; } body.atcb-modal-no-scroll { padding-right: ' + scrollBarWidth + 'px; }';
-    if (host.host.hasAttribute('nonce')) {
-      cssGlobalContent.setAttribute('nonce', host.host.getAttribute('nonce'));
+    if (host.host.hasAttribute('cspNonce')) {
+      cssGlobalContent.setAttribute('nonce', host.host.getAttribute('cspNonce'));
     }
     document.head.append(cssGlobalContent);
   }
