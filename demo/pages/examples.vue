@@ -102,8 +102,9 @@ const nonce = useNonce();
         <p v-else>Dies ist das gewöhnliche Standard-Setup mit allen verfügbaren Kalender-Links und einer definierten Zeitzone</p>
         <div class="block w-full justify-between md:flex">
           <div class="flex w-full flex-none justify-center p-6 pt-8 md:w-[300px]">
+            {{ nonce }}
             <add-to-calendar-button
-              :nonce="nonce"
+              nonce="nonce"
               :name="$t('demo_data.name')"
               :startDate="defaultDate"
               startTime="10:15"
