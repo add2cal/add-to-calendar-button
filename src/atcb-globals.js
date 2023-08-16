@@ -117,7 +117,7 @@ const atcbStates = [];
 // DEFINING THE WEB COMPONENT ATTRIBUTES (not including the proKey options)
 const atcbWcParams = [
   'debug',
-  'cspNonce',
+  'cspnonce',
   'name',
   'dates',
   'description',

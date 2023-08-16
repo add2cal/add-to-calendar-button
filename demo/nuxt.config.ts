@@ -32,29 +32,27 @@ export default defineNuxtConfig({
     debug: process.env.NODE_ENV === 'development',
   },
   security: {
-    enabled: true,
+    enabled: process.env.NODE_ENV === 'development' ? false : true,
     xssValidator: {
       stripIgnoreTag: true,
     },
     hidePoweredBy: true,
     basicAuth: false,
     csrf: false,
-    nonce: true,
     headers: {
       crossOriginResourcePolicy: 'cross-origin',
       crossOriginOpenerPolicy: 'same-origin',
       crossOriginEmbedderPolicy: 'unsafe-none',
       contentSecurityPolicy: {
-        //'default-src': ["'self'", "'nonce-{{nonce}}'", 'https://add-to-calendar-button.com', 'https://a.add-to-calendar-button.com', 'https://event.caldn.net', 'https://api.npms.io', 'https://api.npmjs.org', 'https://api.github.com', 'https://data.jsdelivr.com'],
         'base-uri': ["'self'"],
         'font-src': ["'self'", 'data:'],
         'form-action': ["'self'"],
         'frame-ancestors': ["'self'"],
         'img-src': ["'self'", 'https://add-to-calendar-button.com', 'data:'],
         'object-src': ["'none'"],
-        'script-src-attr': ["'self'", "'nonce-abc'", "'strict-dynamic'"],
-        'script-src': ["'self'", "'nonce-abc'", "'strict-dynamic'", 'https://add-to-calendar-button.com', 'https://a.add-to-calendar-button.com'],
-        'style-src': ["'self'", "'nonce-abc'", 'https://add-to-calendar-button.com'],
+        'script-src-attr': ["'self'"],
+        'script-src': ["'self'", 'https://add-to-calendar-button.com', 'https://a.add-to-calendar-button.com', 'http://localhost:3233'],
+        'style-src': ["'self'", "'unsafe-inline'", 'https://add-to-calendar-button.com'],
         'upgrade-insecure-requests': true,
       },
       // the following needs to match the settings in ./public/staticwebapp.config.json

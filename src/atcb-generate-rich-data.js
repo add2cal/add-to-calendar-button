@@ -18,6 +18,9 @@ import { atcb_generate_time, atcb_secure_url } from './atcb-util.js';
 // multi-date events are not 100% compliant with schema.org, since this is still a little broken and not supported by Google
 function atcb_generate_rich_data(data, parent) {
   const schemaEl = document.createElement('script');
+  if (parent.hasAttribute('cspnonce')) {
+    schemaEl.setAttribute('nonce', parent.getAttribute('cspnonce'));
+  }
   schemaEl.type = 'application/ld+json';
   const schemaContentMulti = [];
   if (data.dates.length > 1) {
