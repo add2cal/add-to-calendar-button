@@ -9,8 +9,6 @@ const idA = props.variation + '-a';
 const idB = props.variation + '-b';
 const idC = props.variation + '-c';
 const idD = props.variation + '-d';
-
-const nonce = useNonce();
 </script>
 
 <script lang="ts">
@@ -20,7 +18,7 @@ export default {
 </script>
 
 <template>
-  <svg :nonce="nonce" style="height:auto;width:100%;fill:currentColor" role="img" title="Add to Calendar Button DEMO" version="1.1" viewBox="0 0 2004.5 950.12" xmlns="http://www.w3.org/2000/svg">
+  <svg style="height:auto;width:100%;fill:currentColor" role="img" title="Add to Calendar Button DEMO" version="1.1" viewBox="0 0 2004.5 950.12" xmlns="http://www.w3.org/2000/svg">
     <defs>
       <linearGradient :id="idA" x2="1" gradientTransform="scale(-1648.58 1648.58) rotate(-54.6 .56 2.31)" gradientUnits="userSpaceOnUse">
         <stop offset="0" stop-color="#fff" />

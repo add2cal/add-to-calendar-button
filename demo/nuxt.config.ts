@@ -45,7 +45,7 @@ export default defineNuxtConfig({
       crossOriginOpenerPolicy: 'same-origin',
       crossOriginEmbedderPolicy: 'unsafe-none',
       contentSecurityPolicy: {
-        'default-src': ["'self'", "'nonce-{{nonce}}'", 'https://add-to-calendar-button.com', 'https://a.add-to-calendar-button.com', 'https://event.caldn.net', 'https://api.npms.io', 'https://api.npmjs.org', 'https://api.github.com', 'https://data.jsdelivr.com'],
+        //'default-src': ["'self'", "'nonce-{{nonce}}'", 'https://add-to-calendar-button.com', 'https://a.add-to-calendar-button.com', 'https://event.caldn.net', 'https://api.npms.io', 'https://api.npmjs.org', 'https://api.github.com', 'https://data.jsdelivr.com'],
         'base-uri': ["'self'"],
         'font-src': ["'self'", 'data:'],
         'form-action': ["'self'"],
