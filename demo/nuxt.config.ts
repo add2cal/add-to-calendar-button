@@ -52,9 +52,9 @@ export default defineNuxtConfig({
         'frame-ancestors': ["'self'"],
         'img-src': ["'self'", 'https://add-to-calendar-button.com', 'data:'],
         'object-src': ["'none'"],
-        'script-src-attr': ["'self'", "'nonce-{{nonce}}'", "'strict-dynamic'"],
-        'script-src': ["'self'", "'nonce-{{nonce}}'", "'strict-dynamic'", 'https://add-to-calendar-button.com', 'https://a.add-to-calendar-button.com'],
-        'style-src': ["'self'", "'nonce-{{nonce}}'", 'https://add-to-calendar-button.com'],
+        'script-src-attr': ["'self'", "'nonce-abc'", "'strict-dynamic'"],
+        'script-src': ["'self'", "'nonce-abc'", "'strict-dynamic'", 'https://add-to-calendar-button.com', 'https://a.add-to-calendar-button.com'],
+        'style-src': ["'self'", "'nonce-abc'", 'https://add-to-calendar-button.com'],
         'upgrade-insecure-requests': true,
       },
       // the following needs to match the settings in ./public/staticwebapp.config.json
