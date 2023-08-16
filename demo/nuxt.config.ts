@@ -32,12 +32,12 @@ export default defineNuxtConfig({
     debug: process.env.NODE_ENV === 'development',
   },
   security: {
+    enabled: true,
     xssValidator: {
       stripIgnoreTag: true,
     },
     hidePoweredBy: true,
     basicAuth: false,
-    enabled: true,
     csrf: false,
     nonce: true,
     headers: {

@@ -72,6 +72,8 @@ watch(locale, value => {
     "endTime":"20:00"
   }]);
 });
+
+const nonce = useNonce();
 </script>
 
 <template>
@@ -101,6 +103,7 @@ watch(locale, value => {
         <div class="block w-full justify-between md:flex">
           <div class="flex w-full flex-none justify-center p-6 pt-8 md:w-[300px]">
             <add-to-calendar-button
+              :nonce="nonce"
               :name="$t('demo_data.name')"
               :startDate="defaultDate"
               startTime="10:15"
