@@ -4,7 +4,7 @@ import { defineNuxtConfig } from 'nuxt/config';
 const baseUrl = process.env.NUXT_PUBLIC_SITE_URL || 'https://add-to-calendar-button.com';
 
 export default defineNuxtConfig({
-  modules: ['@nuxtjs/i18n', '@nuxtjs/tailwindcss', 'nuxt-headlessui', 'nuxt-schema-org', '@vite-pwa/nuxt', 'nuxt-simple-sitemap', 'nuxt-delay-hydration'],
+  modules: ['@nuxtjs/i18n', '@nuxtjs/tailwindcss', 'nuxt-headlessui', 'nuxt-security', 'nuxt-schema-org', '@vite-pwa/nuxt', 'nuxt-simple-sitemap', 'nuxt-delay-hydration'],
   vue: {
     compilerOptions: {
       // treat all tags starting with "add-" as custom elements
@@ -30,6 +30,56 @@ export default defineNuxtConfig({
   delayHydration: {
     mode: 'manual',
     debug: process.env.NODE_ENV === 'development',
+  },
+  security: {
+    headers: {
+      crossOriginResourcePolicy: 'same-origin',
+      crossOriginOpenerPolicy: 'same-origin',
+      crossOriginEmbedderPolicy: 'require-corp',
+      contentSecurityPolicy: {
+        'default-src': ["'self'", 'https://add-to-calendar-button.com', 'https://a.add-to-calendar-button.com', 'https://caldn.net', 'https://api.npms.io', 'https://api.npmjs.org', 'https://api.github.com', 'https://data.jsdelivr.com'],
+        'base-uri': ["'self'"],
+        'font-src': ["'self'", 'data:'],
+        'form-action': ["'self'"],
+        'frame-ancestors': ["'self'"],
+        'img-src': ["'self'", 'https://add-to-calendar-button.com', 'data:'],
+        'object-src': ["'none'"],
+        'script-src-attr': ["'self'", "'nonce-{{nonce}}'", "'strict-dynamic'"],
+        'script-src': ["'self'", "'nonce-{{nonce}}'", "'strict-dynamic'"],
+        'style-src': ["'self'", "'nonce-{{nonce}}'"],
+        'upgrade-insecure-requests': true,
+      },
+      xssValidator: {
+        stripIgnoreTag: true,
+      },
+      hidePoweredBy: true,
+      basicAuth: false,
+      enabled: true,
+      csrf: false,
+      // the following needs to match the settings in ./public/staticwebapp.config.json
+      referrerPolicy: 'strict-origin-when-cross-origin',
+      strictTransportSecurity: {
+        maxAge: 31536000,
+        includeSubdomains: true,
+      },
+      xContentTypeOptions: 'nosniff',
+      xDNSPrefetchControl: 'on',
+      xDownloadOptions: 'noopen',
+      xFrameOptions: 'sameorigin',
+      allowedMethodsRestricter: 'GET',
+      permissionsPolicy: {
+        midi: ['()'],
+        'sync-xhr': ['()'],
+        gyroscope: ['(*)'],
+        'encrypted-media': ['(*)'],
+        payment: ['()'],
+        camera: ['()'],
+        'display-capture': ['()'],
+        fullscreen: ['()'],
+        geolocation: ['()'],
+        microphone: ['()'],
+      },
+    },
   },
   app: {
     rootId: 'atcb-demo',

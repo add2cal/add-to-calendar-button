@@ -9,10 +9,11 @@
     "X-Frame-Options": "sameorigin",
     "X-XSS-Protection": "1; mode=block",
     "X-Content-Type-Options": "nosniff",
+    "X-DNS-Prefetch-Control": "on",
+    "X-Download-Options": "noopen",
     "Strict-Transport-Security": "max-age=31536000; includeSubDomains",
     "Referrer-Policy": "strict-origin-when-cross-origin",
     "Access-Control-Allow-Methods": "GET",
-    "Content-Security-Policy": "default-src 'self' https://add-to-calendar-button.com https://a.add-to-calendar-button.com https://caldn.net https://api.npms.io https://api.npmjs.org https://api.github.com https://data.jsdelivr.com; img-src 'self' https://add-to-calendar-button.com data:",
-    "Permissions-Policy": "geolocation=(),midi=(),sync-xhr=(),microphone=(),camera=(),magnetometer=(),gyroscope=(*),encrypted-media=(*),accelerometer=(),payment=()"
+    "Permissions-Policy": "geolocation=(),midi=(),sync-xhr=(),microphone=(),camera=(),gyroscope=(*),encrypted-media=(*),payment=()"
   }
 }
