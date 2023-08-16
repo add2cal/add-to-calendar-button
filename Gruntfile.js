@@ -106,11 +106,11 @@ module.exports = function (grunt) {
     concat: {
       main: {
         src: ['node_modules/timezones-ical-library/dist/tzlib.js', ...jsCoreFilesToCombine],
-        // uncomment the following line instead of the line after (and also at line 161) that to additionally create a atcb script, which is not minified
-        //dest: 'dist/atcb-unminified.js',
         dest: 'dist/atcb.js',
         options: {
           stripBanners: true,
+          banner: '( function() { ',
+          footer: ' } )();',
           process: (content) => prepareFinalFile(content),
         },
       },
@@ -163,11 +163,12 @@ module.exports = function (grunt) {
         },
       },
     },
-    // minifies the main js file (currently not compressing, since it would be best practice to leave this up to the hosting system or CDN)
+    // minifies the main js file
     uglify: {
       options: {
-        compress: false,
+        compress: true,
         mangle: true,
+        beautify: false,
         sourceMap: false,
         banner: '/* eslint-disable @typescript-eslint/no-unused-vars */',
         output: {

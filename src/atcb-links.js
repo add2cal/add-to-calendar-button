@@ -3,7 +3,7 @@
  *  Add to Calendar Button
  *  ++++++++++++++++++++++
  *
- *  Version: 2.3.2
+ *  Version: 2.3.3
  *  Creator: Jens Kuerschner (https://jenskuerschner.de)
  *  Project: https://github.com/add2cal/add-to-calendar-button
  *  License: Elastic License 2.0 (ELv2) (https://github.com/add2cal/add-to-calendar-button/blob/main/LICENSE.txt)
@@ -12,7 +12,7 @@
  */
 
 import { tzlib_get_ical_block } from 'timezones-ical-library';
-import { atcbVersion, isMobile, isiOS, isAndroid, isSafari, isWebView, isProblematicWebView, atcbDefaultTarget, atcbStates } from './atcb-globals.js';
+import { atcbVersion, atcbIsMobile, atcbIsiOS, atcbIsAndroid, atcbIsSafari, atcbIsWebView, atcbIsProblematicWebView, atcbDefaultTarget, atcbStates } from './atcb-globals.js';
 import { atcb_toggle } from './atcb-control.js';
 import { atcb_saved_hook, atcb_save_file, atcb_generate_time, atcb_format_datetime, atcb_secure_url, atcb_copy_to_clipboard, atcb_rewrite_ical_text } from './atcb-util.js';
 import { atcb_create_modal } from './atcb-generate.js';
@@ -118,7 +118,7 @@ function atcb_generate_subscribe_links(host, linkType, data, keyboardTrigger) {
   const adjustedFileUrl = data.icsFile.replace('https://', 'webcal://');
   switch (linkType) {
     case 'ical': // also for apple (see above)
-      if (isMobile()) {
+      if (atcbIsMobile()) {
         atcb_subscribe_ical(data.icsFile);
         break;
       }
@@ -251,7 +251,7 @@ function atcb_generate_google(data) {
   if (data.location != null && data.location != '') {
     urlParts.push('location=' + encodeURIComponent(data.location));
     // TODO: Find a better solution for the next temporary workaround.
-    if (isiOS()) {
+    if (atcbIsiOS()) {
       // workaround to cover a bug, where, when using Google Calendar on an iPhone, the location is not recognized. So, for the moment, we simply add it to the description.
       if (tmpDataDescription.length > 0) {
         tmpDataDescription.push('<br><br>');
@@ -309,7 +309,7 @@ function atcb_generate_microsoft(data, type = '365') {
   const basePath = (function () {
     // tmp workaround to reflect the fact that Microsoft is routing mobile traffic differently
     // TODO: remove this, when Microsoft has fixed this
-    if (isMobile()) {
+    if (atcbIsMobile()) {
       return '/calendar/0/deeplink/compose?path=%2Fcalendar%2Faction%2Fcompose&rru=addevent';
     }
     return '/calendar/action/compose?rru=addevent';
@@ -352,7 +352,7 @@ function atcb_generate_msteams(data) {
   const formattedDate = atcb_generate_time(data, 'delimiters', 'msteams', true);
   // we need to encode the date, but not for all-day events on desktop to not encode the plus for the offset (somehow strange, but this all consists somehow of workarounds with the Microsoft Teams url scheme)...
   // TODO: optimize this, when Microsoft has fixed it
-  if (!formattedDate.allday || isMobile()) {
+  if (!formattedDate.allday || atcbIsMobile()) {
     urlParts.push('startTime=' + encodeURIComponent(formattedDate.start));
     urlParts.push('endTime=' + encodeURIComponent(formattedDate.end));
   } else {
@@ -409,7 +409,7 @@ function atcb_generate_ical(host, data, subEvent = 'all', keyboardTrigger = fals
     return '';
   })();
   // ... and directly load it (not if iOS - will be catched further down - except it is WebView and explicitely bridged)
-  if (givenIcsFile != '' && (!isiOS() || (isiOS() && isWebView() && data.bypassWebViewCheck == true))) {
+  if (givenIcsFile != '' && (!atcbIsiOS() || (atcbIsiOS() && atcbIsWebView() && data.bypassWebViewCheck == true))) {
     atcb_save_file(givenIcsFile, filename);
     return;
   }
@@ -517,7 +517,7 @@ function atcb_generate_ical(host, data, subEvent = 'all', keyboardTrigger = fals
   // in in-app browser cases (WebView), we offer a copy option, since the on-the-fly client side generation is usually not supported
   // for Android, we are more specific than with iOS and only go for specific apps at the moment
   // for Chrome on iOS we basically do the same
-  if ((isiOS() && !isSafari()) || (isWebView() && (isiOS() || (isAndroid() && isProblematicWebView())))) {
+  if ((atcbIsiOS() && !atcbIsSafari()) || (atcbIsWebView() && (atcbIsiOS() || (atcbIsAndroid() && atcbIsProblematicWebView())))) {
     atcb_ical_copy_note(host, dataUrl, data, keyboardTrigger);
     return;
   }
@@ -548,7 +548,7 @@ function atcb_ical_copy_note(host, dataUrl, data, keyboardTrigger) {
   // putting the download url to the clipboard
   atcb_copy_to_clipboard(dataUrl);
   // creating the modal
-  if (isiOS() && !isSafari()) {
+  if (atcbIsiOS() && !atcbIsSafari()) {
     atcb_create_modal(
       host,
       data,

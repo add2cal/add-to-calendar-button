@@ -6,13 +6,15 @@
     }
   },
   "globalHeaders": {
-    "X-Frame-Options": "sameorigin",
+    "X-Frame-Options": "SAMEORIGIN",
     "X-XSS-Protection": "1; mode=block",
     "X-Content-Type-Options": "nosniff",
+    "X-DNS-Prefetch-Control": "on",
+    "X-Download-Options": "noopen",
     "Strict-Transport-Security": "max-age=31536000; includeSubDomains",
     "Referrer-Policy": "strict-origin-when-cross-origin",
     "Access-Control-Allow-Methods": "GET",
-    "Content-Security-Policy": "default-src 'self' 'unsafe-inline' 'unsafe-eval' https://add-to-calendar-button.com https://a.add-to-calendar-button.com https://caldn.net https://api.npms.io https://api.npmjs.org https://api.github.com https://data.jsdelivr.com; img-src 'self' https://add-to-calendar-button.com data:",
-    "Permissions-Policy": "geolocation=(),midi=(),sync-xhr=(),microphone=(),camera=(),magnetometer=(),gyroscope=(*),encrypted-media=(*),accelerometer=(),payment=()"
+    "Content-Security-Policy": "base-uri 'self'; font-src 'self' data:; form-action 'self'; frame-ancestors 'self'; img-src 'self' https://add-to-calendar-button.com data:; object-src 'none'; script-src-attr 'self'; script-src 'self' 'unsafe-inline' https://add-to-calendar-button.com https://a.add-to-calendar-button.com; style-src 'self' 'unsafe-inline' https://add-to-calendar-button.com;",
+    "Permissions-Policy": "geolocation=(),midi=(),microphone=(),camera=(),gyroscope=(*),encrypted-media=(*),payment=()"
   }
 }

@@ -3,7 +3,7 @@
  *  Add to Calendar Button
  *  ++++++++++++++++++++++
  *
- *  Version: 2.3.2
+ *  Version: 2.3.3
  *  Creator: Jens Kuerschner (https://jenskuerschner.de)
  *  Project: https://github.com/add2cal/add-to-calendar-button
  *  License: Elastic License 2.0 (ELv2) (https://github.com/add2cal/add-to-calendar-button/blob/main/LICENSE.txt)
@@ -12,7 +12,7 @@
  */
 
 import { tzlib_get_offset } from 'timezones-ical-library';
-import { isiOS, isBrowser, atcbValidRecurrOptions, atcbInvalidSubscribeOptions, atcbiOSInvalidOptions, atcbWcBooleanParams } from './atcb-globals.js';
+import { atcbIsiOS, atcbIsBrowser, atcbValidRecurrOptions, atcbInvalidSubscribeOptions, atcbiOSInvalidOptions, atcbWcBooleanParams } from './atcb-globals.js';
 import { atcb_format_datetime, atcb_rewrite_html_elements, atcb_generate_uuid } from './atcb-util.js';
 import { availableLanguages, rtlLanguages } from './atcb-i18n';
 
@@ -147,8 +147,8 @@ function atcb_decorate_data_options(data) {
     // in the recurrence case, we leave out all options, which do not support it in general, as well as Apple and iCal for rrules with "until"
     // and in the subscribe case, we also skip options, which are not made for subscribing (MS Teams)
     if (
-      (isiOS() && atcbiOSInvalidOptions.includes(optionName)) ||
-      (data.recurrence != null && data.recurrence != '' && (!atcbValidRecurrOptions.includes(optionName) || (data.recurrence_until != null && data.recurrence_until != '' && (optionName === 'apple' || optionName === 'ical')) || (isiOS() && optionName === 'google'))) ||
+      (atcbIsiOS() && atcbiOSInvalidOptions.includes(optionName)) ||
+      (data.recurrence != null && data.recurrence != '' && (!atcbValidRecurrOptions.includes(optionName) || (data.recurrence_until != null && data.recurrence_until != '' && (optionName === 'apple' || optionName === 'ical')) || (atcbIsiOS() && optionName === 'google'))) ||
       (data.subscribe && atcbInvalidSubscribeOptions.includes(optionName))
     ) {
       continue;
@@ -158,14 +158,14 @@ function atcb_decorate_data_options(data) {
   }
   // since the above can lead to excluding all options, we add the iCal option as default, if not other option is left
   if (newOptions.length === 0) {
-    if (!isiOS()) {
+    if (!atcbIsiOS()) {
       newOptions.push('ical');
       data.optionLabels.push('');
     }
     iCalGiven = true;
   }
   // for iOS, we force the Apple option (if it is not there, but iCal was)
-  if (isiOS() && iCalGiven && !appleGiven) {
+  if (atcbIsiOS() && iCalGiven && !appleGiven) {
     newOptions.push('apple');
     data.optionLabels.push('');
   }
@@ -244,7 +244,7 @@ function atcb_decorate_sizes(size) {
 
 // determine dark mode
 function atcb_decorate_light_mode(lightMode = '') {
-  if (lightMode == 'system' && isBrowser()) {
+  if (lightMode == 'system' && atcbIsBrowser()) {
     const prefersDarkScheme = window.matchMedia('(prefers-color-scheme: dark)');
     return prefersDarkScheme.matches ? 'dark' : 'light';
   }

@@ -3,7 +3,7 @@
  *  Add to Calendar Button
  *  ++++++++++++++++++++++
  *
- *  Version: 2.3.2
+ *  Version: 2.3.3
  *  Creator: Jens Kuerschner (https://jenskuerschner.de)
  *  Project: https://github.com/add2cal/add-to-calendar-button
  *  License: Elastic License 2.0 (ELv2) (https://github.com/add2cal/add-to-calendar-button/blob/main/LICENSE.txt)
@@ -18,6 +18,9 @@ import { atcb_generate_time, atcb_secure_url } from './atcb-util.js';
 // multi-date events are not 100% compliant with schema.org, since this is still a little broken and not supported by Google
 function atcb_generate_rich_data(data, parent) {
   const schemaEl = document.createElement('script');
+  if (parent.hasAttribute('cspnonce')) {
+    schemaEl.setAttribute('nonce', parent.getAttribute('cspnonce'));
+  }
   schemaEl.type = 'application/ld+json';
   const schemaContentMulti = [];
   if (data.dates.length > 1) {

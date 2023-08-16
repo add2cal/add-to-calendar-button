@@ -5,20 +5,20 @@
  *  Add to Calendar Button
  *  ++++++++++++++++++++++
  *
- *  Version: 2.3.2
+ *  Version: 2.3.3
  *  Creator: Jens Kuerschner (https://jenskuerschner.de)
  *  Project: https://github.com/add2cal/add-to-calendar-button
  *  License: Elastic License 2.0 (ELv2) (https://github.com/add2cal/add-to-calendar-button/blob/main/LICENSE.txt)
  *  Note:    DO NOT REMOVE THE COPYRIGHT NOTICE ABOVE!
  *
  */
-const atcbVersion = '2.3.2';
+const atcbVersion = '2.3.3';
 
 // DEFINING CSS
 const atcbCssTemplate = {};
 
 // CHECKING FOR SPECIFIC DEVICED AND SYSTEMS
-const isBrowser = () => {
+const atcbIsBrowser = () => {
   if (typeof window === 'undefined') {
     return false;
   } else {
@@ -26,7 +26,7 @@ const isBrowser = () => {
   }
 };
 // iOS
-const isiOS = isBrowser()
+const atcbIsiOS = atcbIsBrowser()
   ? () => {
       if ((/iPad|iPhone|iPod/i.test(navigator.userAgent || navigator.vendor || window.opera) && !window.MSStream) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1)) {
         return true;
@@ -38,7 +38,7 @@ const isiOS = isBrowser()
       return false;
     };
 // Android
-const isAndroid = isBrowser()
+const atcbIsAndroid = atcbIsBrowser()
   ? () => {
       if (/android/i.test(navigator.userAgent || navigator.vendor || window.opera) && !window.MSStream) {
         return true;
@@ -50,7 +50,7 @@ const isAndroid = isBrowser()
       return false;
     };
 // Chrome
-/*const isChrome = isBrowser()
+/*const isChrome = atcbIsBrowser()
   ? () => {
       if (/chrome|chromium|crios|google inc/i.test(navigator.userAgent || navigator.vendor)) {
         return true;
@@ -62,7 +62,7 @@ const isAndroid = isBrowser()
       return false;
     };*/
 // Safari
-const isSafari = isBrowser()
+const atcbIsSafari = atcbIsBrowser()
   ? () => {
       if (/^((?!chrome|android|crios|fxios).)*safari/i.test(navigator.userAgent || navigator.vendor)) {
         return true;
@@ -74,15 +74,15 @@ const isSafari = isBrowser()
       return false;
     };
 // Mobile
-const isMobile = () => {
-  if (isAndroid() || isiOS()) {
+const atcbIsMobile = () => {
+  if (atcbIsAndroid() || atcbIsiOS()) {
     return true;
   } else {
     return false;
   }
 };
 // WebView (iOS and Android)
-const isWebView = isBrowser()
+const atcbIsWebView = atcbIsBrowser()
   ? () => {
       if (/(; ?wv|(iPhone|iPod|iPad).*AppleWebKit(?!.*Safari))/i.test(navigator.userAgent || navigator.vendor)) {
         return true;
@@ -94,7 +94,7 @@ const isWebView = isBrowser()
       return false;
     };
 // checking for problematic apps
-const isProblematicWebView = isBrowser()
+const atcbIsProblematicWebView = atcbIsBrowser()
   ? () => {
       if (/(Instagram)/i.test(navigator.userAgent || navigator.vendor || window.opera)) {
         return true;
@@ -107,7 +107,7 @@ const isProblematicWebView = isBrowser()
     };
 
 // DEFINE GLOBAL VARIABLES
-const atcbDefaultTarget = isWebView() ? '_system' : '_blank';
+const atcbDefaultTarget = atcbIsWebView() ? '_system' : '_blank';
 const atcbOptions = ['apple', 'google', 'ical', 'ms365', 'outlookcom', 'msteams', 'yahoo'];
 const atcbValidRecurrOptions = ['apple', 'google', 'ical'];
 const atcbInvalidSubscribeOptions = ['msteams'];
@@ -117,6 +117,7 @@ const atcbStates = [];
 // DEFINING THE WEB COMPONENT ATTRIBUTES (not including the proKey options)
 const atcbWcParams = [
   'debug',
+  'cspnonce',
   'name',
   'dates',
   'description',
@@ -234,13 +235,13 @@ const atcbIcon = {
 
 export {
   atcbVersion,
-  isBrowser,
-  isiOS,
-  isAndroid,
-  isSafari,
-  isMobile,
-  isWebView,
-  isProblematicWebView,
+  atcbIsBrowser,
+  atcbIsiOS,
+  atcbIsAndroid,
+  atcbIsSafari,
+  atcbIsMobile,
+  atcbIsWebView,
+  atcbIsProblematicWebView,
   atcbDefaultTarget,
   atcbOptions,
   atcbValidRecurrOptions,
