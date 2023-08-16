@@ -6,7 +6,7 @@
     }
   },
   "globalHeaders": {
-    "X-Frame-Options": "sameorigin",
+    "X-Frame-Options": "SAMEORIGIN",
     "X-XSS-Protection": "1; mode=block",
     "X-Content-Type-Options": "nosniff",
     "X-DNS-Prefetch-Control": "on",
@@ -14,6 +14,6 @@
     "Strict-Transport-Security": "max-age=31536000; includeSubDomains",
     "Referrer-Policy": "strict-origin-when-cross-origin",
     "Access-Control-Allow-Methods": "GET",
-    "Permissions-Policy": "geolocation=(),midi=(),sync-xhr=(),microphone=(),camera=(),gyroscope=(*),encrypted-media=(*),payment=()"
+    "Permissions-Policy": "geolocation=(),midi=(),microphone=(),camera=(),gyroscope=(*),encrypted-media=(*),payment=()"
   }
 }

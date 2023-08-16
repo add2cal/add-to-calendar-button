@@ -32,12 +32,20 @@ export default defineNuxtConfig({
     debug: process.env.NODE_ENV === 'development',
   },
   security: {
+    xssValidator: {
+      stripIgnoreTag: true,
+    },
+    hidePoweredBy: true,
+    basicAuth: false,
+    enabled: true,
+    csrf: false,
+    nonce: true,
     headers: {
-      crossOriginResourcePolicy: 'same-origin',
+      crossOriginResourcePolicy: 'cross-origin',
       crossOriginOpenerPolicy: 'same-origin',
-      crossOriginEmbedderPolicy: 'require-corp',
+      crossOriginEmbedderPolicy: 'unsafe-none',
       contentSecurityPolicy: {
-        'default-src': ["'self'", 'https://add-to-calendar-button.com', 'https://a.add-to-calendar-button.com', 'https://caldn.net', 'https://api.npms.io', 'https://api.npmjs.org', 'https://api.github.com', 'https://data.jsdelivr.com'],
+        'default-src': ["'self'", "'nonce-{{nonce}}'", 'https://add-to-calendar-button.com', 'https://a.add-to-calendar-button.com', 'https://event.caldn.net', 'https://api.npms.io', 'https://api.npmjs.org', 'https://api.github.com', 'https://data.jsdelivr.com'],
         'base-uri': ["'self'"],
         'font-src': ["'self'", 'data:'],
         'form-action': ["'self'"],
@@ -45,17 +53,10 @@ export default defineNuxtConfig({
         'img-src': ["'self'", 'https://add-to-calendar-button.com', 'data:'],
         'object-src': ["'none'"],
         'script-src-attr': ["'self'", "'nonce-{{nonce}}'", "'strict-dynamic'"],
-        'script-src': ["'self'", "'nonce-{{nonce}}'", "'strict-dynamic'"],
-        'style-src': ["'self'", "'nonce-{{nonce}}'"],
+        'script-src': ["'self'", "'nonce-{{nonce}}'", "'strict-dynamic'", 'https://add-to-calendar-button.com', 'https://a.add-to-calendar-button.com'],
+        'style-src': ["'self'", "'nonce-{{nonce}}'", 'https://add-to-calendar-button.com'],
         'upgrade-insecure-requests': true,
       },
-      xssValidator: {
-        stripIgnoreTag: true,
-      },
-      hidePoweredBy: true,
-      basicAuth: false,
-      enabled: true,
-      csrf: false,
       // the following needs to match the settings in ./public/staticwebapp.config.json
       referrerPolicy: 'strict-origin-when-cross-origin',
       strictTransportSecurity: {
@@ -65,11 +66,9 @@ export default defineNuxtConfig({
       xContentTypeOptions: 'nosniff',
       xDNSPrefetchControl: 'on',
       xDownloadOptions: 'noopen',
-      xFrameOptions: 'sameorigin',
-      allowedMethodsRestricter: 'GET',
+      xFrameOptions: 'SAMEORIGIN',
       permissionsPolicy: {
         midi: ['()'],
-        'sync-xhr': ['()'],
         gyroscope: ['(*)'],
         'encrypted-media': ['(*)'],
         payment: ['()'],
@@ -80,6 +79,7 @@ export default defineNuxtConfig({
         microphone: ['()'],
       },
     },
+    allowedMethodsRestricter: ['GET'],
   },
   app: {
     rootId: 'atcb-demo',
