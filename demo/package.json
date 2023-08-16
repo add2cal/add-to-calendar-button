@@ -57,6 +57,7 @@
     "nuxt-delay-hydration": "^1.2.1",
     "nuxt-headlessui": "^1.1.4",
     "nuxt-schema-org": "^2.2.0",
+    "nuxt-security": "^0.14.4",
     "nuxt-simple-sitemap": "^3.0.12",
     "prettier": "^3.0.0",
     "prettier-plugin-tailwindcss": "^0.4.1",

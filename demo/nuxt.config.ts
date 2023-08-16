@@ -4,7 +4,7 @@ import { defineNuxtConfig } from 'nuxt/config';
 const baseUrl = process.env.NUXT_PUBLIC_SITE_URL || 'https://add-to-calendar-button.com';
 
 export default defineNuxtConfig({
-  modules: ['@nuxtjs/i18n', '@nuxtjs/tailwindcss', 'nuxt-headlessui', 'nuxt-schema-org', '@vite-pwa/nuxt', 'nuxt-simple-sitemap', 'nuxt-delay-hydration'],
+  modules: ['@nuxtjs/i18n', '@nuxtjs/tailwindcss', 'nuxt-headlessui', 'nuxt-security', 'nuxt-schema-org', '@vite-pwa/nuxt', 'nuxt-simple-sitemap', 'nuxt-delay-hydration'],
   vue: {
     compilerOptions: {
       // treat all tags starting with "add-" as custom elements
@@ -30,6 +30,54 @@ export default defineNuxtConfig({
   delayHydration: {
     mode: 'manual',
     debug: process.env.NODE_ENV === 'development',
+  },
+  security: {
+    enabled: process.env.NODE_ENV === 'development' ? false : true,
+    xssValidator: {
+      stripIgnoreTag: true,
+    },
+    hidePoweredBy: true,
+    basicAuth: false,
+    csrf: false,
+    headers: {
+      crossOriginResourcePolicy: 'cross-origin',
+      crossOriginOpenerPolicy: 'same-origin',
+      crossOriginEmbedderPolicy: 'unsafe-none',
+      // the following needs to match the settings in ./public/staticwebapp.config.json
+      contentSecurityPolicy: {
+        'base-uri': ["'self'"],
+        'font-src': ["'self'", 'data:'],
+        'form-action': ["'self'"],
+        'frame-ancestors': ["'self'"],
+        'img-src': ["'self'", 'https://add-to-calendar-button.com', 'data:'],
+        'object-src': ["'none'"],
+        'script-src-attr': ["'self'"],
+        'script-src': ["'self'", "'unsafe-inline'", 'https://add-to-calendar-button.com', 'https://a.add-to-calendar-button.com'],
+        'style-src': ["'self'", "'unsafe-inline'", 'https://add-to-calendar-button.com'],
+        'upgrade-insecure-requests': true,
+      },
+      referrerPolicy: 'strict-origin-when-cross-origin',
+      strictTransportSecurity: {
+        maxAge: 31536000,
+        includeSubdomains: true,
+      },
+      xContentTypeOptions: 'nosniff',
+      xDNSPrefetchControl: 'on',
+      xDownloadOptions: 'noopen',
+      xFrameOptions: 'SAMEORIGIN',
+      permissionsPolicy: {
+        midi: ['()'],
+        gyroscope: ['(*)'],
+        'encrypted-media': ['(*)'],
+        payment: ['()'],
+        camera: ['()'],
+        'display-capture': ['()'],
+        fullscreen: ['()'],
+        geolocation: ['()'],
+        microphone: ['()'],
+      },
+    },
+    allowedMethodsRestricter: ['GET'],
   },
   app: {
     rootId: 'atcb-demo',
