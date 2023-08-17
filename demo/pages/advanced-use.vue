@@ -920,9 +920,9 @@ onUnmounted(() => {
 &lt;button id="my-default-button" style="background:#ffa255; color:#000; padding:8px 16px; height:fit-content; display:block; border-radius: 21px;"&gt;{{ $t('labels.clickHere') }}&lt;/button&gt;
 
 &lt;script type="application/javascript"&gt;
-  const config:Object = {
+  const config = {
     name: "{{ $t('demo_data.name') }}",
-    description: "{{ $t('demo_data.description_alt1') }}"
+    description: "{{ $t('demo_data.description_alt1') }}",
     startDate: "{{ defaultDate }}",
     startTime: "10:15",
     endTime: "23:30",

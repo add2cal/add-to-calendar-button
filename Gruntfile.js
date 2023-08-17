@@ -109,8 +109,8 @@ module.exports = function (grunt) {
         dest: 'dist/atcb.js',
         options: {
           stripBanners: true,
-          banner: '( function() { ',
-          footer: ' } )();',
+          banner: '( function(atcbGlobal) { ',
+          footer: ' } )(window);',
           process: (content) => prepareFinalFile(content),
         },
       },
