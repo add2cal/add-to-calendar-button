@@ -3,7 +3,7 @@
  *  Add to Calendar Button
  *  ++++++++++++++++++++++
  *
- *  Version: 2.3.3
+ *  Version: 2.3.4
  *  Creator: Jens Kuerschner (https://jenskuerschner.de)
  *  Project: https://github.com/add2cal/add-to-calendar-button
  *  License: Elastic License 2.0 (ELv2) (https://github.com/add2cal/add-to-calendar-button/blob/main/LICENSE.txt)
@@ -318,12 +318,16 @@ function atcb_set_light_mode(shadowRoot, data) {
 // load the right css
 function atcb_load_css(host, rootObj = null, style = '', inline = false, buttonsList = false, customCss = '') {
   // add global no-scroll style
+  const cspnonceRegex = /[`'"()[\]{}<>\s]/;
   if (!document.getElementById('atcb-global-style')) {
     const cssGlobalContent = document.createElement('style');
     cssGlobalContent.id = 'atcb-global-style';
     const scrollBarWidth = window.innerWidth - document.documentElement.clientWidth;
     cssGlobalContent.innerText = '.atcb-modal-no-scroll { overflow-y: hidden !important; -webkit-overflow-scrolling: touch; } body.atcb-modal-no-scroll { padding-right: ' + scrollBarWidth + 'px; }';
     if (host.host.hasAttribute('cspnonce')) {
+      if (cspnonceRegex.test(host.host.getAttribute('cspnonce'))) {
+        throw new Error("cspnonce input contains forbidden characters.");
+      }
       cssGlobalContent.setAttribute('nonce', host.host.getAttribute('cspnonce'));
     }
     document.head.append(cssGlobalContent);
@@ -335,6 +339,9 @@ function atcb_load_css(host, rootObj = null, style = '', inline = false, buttons
     cssFile.setAttribute('type', 'text/css');
     cssFile.setAttribute('href', customCss);
     if (host.host.hasAttribute('cspnonce')) {
+      if (cspnonceRegex.test(host.host.getAttribute('cspnonce'))) {
+        throw new Error("cspnonce input contains forbidden characters.");
+      }
       cssFile.setAttribute('nonce', host.host.getAttribute('cspnonce'));
     }
     // if we have no rootObject, we are loading a modal in a new shadowDOM, which can and should be blocking.
@@ -358,6 +365,9 @@ function atcb_load_css(host, rootObj = null, style = '', inline = false, buttons
   if (style != 'none' && atcbCssTemplate[`${style}`] != null) {
     const cssContent = document.createElement('style');
     if (host.host.hasAttribute('cspnonce')) {
+      if (cspnonceRegex.test(host.host.getAttribute('cspnonce'))) {
+        throw new Error("cspnonce input contains forbidden characters.");
+      }
       cssContent.setAttribute('nonce', host.host.getAttribute('cspnonce'));
     }
     // get custom override information
