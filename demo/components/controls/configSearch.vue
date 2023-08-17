@@ -72,7 +72,7 @@ const configOptions = [
   "bypassWebViewCheck",
   "hideBranding",
   "debug",
-  "cspnonce",
+  //"cspnonce",
   "styleLight",
   "styleDark",
 ];
