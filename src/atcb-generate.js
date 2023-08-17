@@ -922,6 +922,9 @@ function atcb_generate_modal_host(host, data, reset = true) {
   if (host.host.hasAttribute('styleDark')) {
     newModalHost.setAttribute('styleDark', host.host.getAttribute('styleDark'));
   }
+  if (host.host.hasAttribute('cspnonce')) {
+    newModalHost.setAttribute('cspnonce', host.host.getAttribute('cspnonce'));
+  }
   newModalHost.setAttribute('atcb-button-id', data.identifier);
   newModalHost.setAttribute('style', 'transform:translate3D(0, 0, 0);visibility:visible;opacity:1;position:fixed;top:0;left:0;display:flex;z-index:13999998;');
   document.body.append(newModalHost);

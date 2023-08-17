@@ -966,14 +966,14 @@ definePageMeta({
                 Sofern du das Projekt nicht unterstützen möchtest, kannst du mit dieser Option das Branding entfernen (im Einklang mit den Lizenzbedingungen).
               </td>
             </tr>
-            <tr id="cspnonce">
+            <!--<tr id="cspnonce">
               <th scope="row">cspnonce</th>
               <td>
                 <em>String</em>
               </td>
               <td v-if="locale=='en'">This will add an attribute "nonce" with the provided value to all inline script and style tags. Useful for strict Content-Security-Policy environments.</td>
               <td v-else>Diese Option fügt allen inline script und style tags ein Attribut "nonce" mit dem angegebenen Wert hinzu. Nützlich für strikte Content-Security-Policy Umgebungen.</td>
-            </tr>
+            </tr>-->
             <tr id="debug">
               <th scope="row">debug</th>
               <td>
