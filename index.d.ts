@@ -73,7 +73,7 @@ declare module 'add-to-calendar-button' {
       rsvp?: object | string;
       bypassWebViewCheck?: boolean | string;
       debug?: boolean | string;
-      nonce?: string;
+      cspnonce?: string;
       blockInteraction?: boolean | string;
       styleLight?: string;
       styleDark?: string;
