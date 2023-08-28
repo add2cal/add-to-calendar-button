@@ -120,7 +120,7 @@ module.exports = function (grunt) {
         options: {
           stripBanners: true,
           banner: "import { tzlib_get_ical_block, tzlib_get_offset, tzlib_get_timezones } from 'timezones-ical-library';\r\n",
-          footer: 'export { atcb_action };',
+          footer: 'export { atcb_action, i18nStrings };',
           process: (content) => prepareFinalFile(content),
         },
       },
@@ -130,7 +130,7 @@ module.exports = function (grunt) {
         options: {
           stripBanners: true,
           banner: "// eslint-disable-next-line @typescript-eslint/no-var-requires\r\nconst tzlibActions = require('timezones-ical-library');\r\n",
-          footer: 'module.exports = { atcb_action };',
+          footer: 'module.exports = { atcb_action, i18nStrings };',
           process: (content) => prepareFinalFile(content, true, true, true),
         },
       },

@@ -548,19 +548,29 @@
   padding-top: 2.6em;
 }
 
-.atcb-modal-content {
+.atcb-modal-content {  
   background-color: var(--modal-background);
   font-size: 1em;
-  padding: 0.3em 2.5em 2.25em;
+  padding: .3em 2.5em 2.25em;
+}
+
+.atcb-modal-icon + .atcb-modal-content {
+  border-radius: 9px 9px 0 0;
+  margin-top: -2.6em;
+  padding-top: 2.6em;
 }
 
 @media (width <= 575px) {
   .atcb-modal-headline {
     padding: 1.8em 1em 1em;
   }
+  
+  .atcb-modal-content {  
+    padding: .3em 1.5em 1.5em;
+  }
 
-  .atcb-modal-content {
-    padding: 0.3em 1em 2em;
+  .atcb-modal-icon + .atcb-modal-content {
+    padding-top: 1.8em;
   }
 }
 

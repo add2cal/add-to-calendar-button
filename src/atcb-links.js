@@ -19,7 +19,7 @@ import { atcb_create_modal } from './atcb-generate.js';
 import { atcb_translate_hook } from './atcb-i18n.js';
 
 // MIDDLEWARE FUNCTION TO GENERATE THE CALENDAR LINKS
-function atcb_generate_links(host, type, data, subEvent = 'all', keyboardTrigger = false, multiDateModal = false) {
+function atcb_generate_links(host, type, data, subEvent = 'all', keyboardTrigger = false, multiDateModal = false, skipDoubleLink = false) {
   // we differentiate between the type the user triggered and the type of link it shall activate
   let linkType = type;
   // the apple type would trigger the same as ical, for example
@@ -43,6 +43,31 @@ function atcb_generate_links(host, type, data, subEvent = 'all', keyboardTrigger
     if (data.dates[`${subEvent}`].status == 'CANCELLED' && linkType != 'ical') {
       atcb_create_modal(host, data, 'warning', atcb_translate_hook('date.status.cancelled', data), atcb_translate_hook('date.status.cancelled.cta', data), [], [], keyboardTrigger);
     } else {
+      // in some cases, we want to inform the user about specifics for the link type, before actually following the link
+      if (!skipDoubleLink) {
+        if (!atcbIsiOS() && linkType === 'google') {
+          atcb_create_modal(
+            host,
+            data,
+            'warning',
+            '',
+            atcb_translate_hook('modal.crios.google.text', data),
+            [
+              {
+                label: atcb_translate_hook('continue', data),
+                primary: true,
+                type: '2timeslink',
+              },
+              { label: atcb_translate_hook('cancel', data) },
+            ],
+            [],
+            keyboardTrigger,
+            {'type':type, 'id':subEvent + 1},
+          );
+          return;
+        }
+      }
+      // apart from that, we generate the link
       switch (linkType) {
         case 'ical': // also for apple (see above)
           atcb_generate_ical(host, data, subEvent, keyboardTrigger);
@@ -143,7 +168,7 @@ function atcb_generate_subscribe_links(host, linkType, data, keyboardTrigger) {
         atcb_translate_hook('modal.clipboard.text', data) + '<br>' + atcb_translate_hook('modal.subscribe.yahoo.text', data),
         [
           {
-            label: atcb_translate_hook('Open Yahoo Calendar', data),
+            label: atcb_translate_hook('modal.subscribe.yahoo.button', data),
             primary: true,
             type: 'yahoo2nd',
             href: 'https://www.yahoo.com/calendar',
@@ -164,7 +189,7 @@ function atcb_generate_subscribe_links(host, linkType, data, keyboardTrigger) {
         atcb_translate_hook('modal.clipboard.text', data) + '<br>' + atcb_translate_hook('modal.subscribe.yahoo.text', data),
         [
           {
-            label: atcb_translate_hook('Open Yahoo Calendar', data),
+            label: atcb_translate_hook('modal.subscribe.yahoo.button', data),
             type: 'none',
             href: 'https://www.yahoo.com/calendar',
           },
