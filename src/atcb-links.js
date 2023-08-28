@@ -410,9 +410,9 @@ function atcb_generate_ical(host, data, subEvent = 'all', keyboardTrigger = fals
   })();
   // ... and directly load it (not if iOS and WebView - will be catched further down - except it is explicitely bridged)
   if (givenIcsFile != '' && (!atcbIsiOS() || !atcbIsWebView() || data.bypassWebViewCheck == true)) {
-    // replace the protocol at givenIcsFile (https or http) with better protocols, but only on iOS
-    if (atcbIsiOS()) {      
-      atcb_save_file(givenIcsFile.replace(/^https?:\/\//, 'x-apple-calevent://'), filename); // alternative: https for Safari and webcal for others - ugly, but works
+    // replace the protocol at givenIcsFile (https or http) with webcal for non-Safari on iOS browsers. Opens the subscription dialog, but best we get atm
+    if (atcbIsiOS() && !atcbIsSafari()) {      
+      atcb_save_file(givenIcsFile.replace(/^https?:\/\//, 'webcal://'), filename);
       return;
     }
     atcb_save_file(givenIcsFile, filename);
