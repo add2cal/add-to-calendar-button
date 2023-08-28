@@ -12,7 +12,7 @@
  */
 
 import { tzlib_get_ical_block } from 'timezones-ical-library';
-import { atcbVersion, atcbIsMobile, atcbIsiOS, atcbIsAndroid, atcbIsSafari, atcbIsWebView, atcbIsProblematicWebView, atcbDefaultTarget, atcbStates } from './atcb-globals.js';
+import { atcbVersion, atcbIsMobile, atcbIsiOS, atcbIsAndroid, atcbIsChrome, atcbIsSafari, atcbIsWebView, atcbIsProblematicWebView, atcbDefaultTarget, atcbStates } from './atcb-globals.js';
 import { atcb_toggle } from './atcb-control.js';
 import { atcb_saved_hook, atcb_save_file, atcb_generate_time, atcb_format_datetime, atcb_secure_url, atcb_copy_to_clipboard, atcb_rewrite_ical_text } from './atcb-util.js';
 import { atcb_create_modal } from './atcb-generate.js';
@@ -408,8 +408,15 @@ function atcb_generate_ical(host, data, subEvent = 'all', keyboardTrigger = fals
     }
     return '';
   })();
-  // ... and directly load it (not if iOS - will be catched further down - except it is WebView and explicitely bridged)
-  if (givenIcsFile != '' && (!atcbIsiOS() || (atcbIsiOS() && atcbIsWebView() && data.bypassWebViewCheck == true))) {
+  // ... and directly load it (not if iOS and WebView - will be catched further down - except it is explicitely bridged)
+  if (givenIcsFile != '' && (!atcbIsiOS() || !atcbIsWebView() || data.bypassWebViewCheck == true)) {
+    // replace the protocol at givenIcsFile (https or http) with better protocols, but only on iOS
+    if (atcbIsiOS()) {
+      if (atcbIsChrome()) {
+        return givenIcsFile.replace(/^https?:\/\//, 'googlecalendar://');
+      }
+      return givenIcsFile.replace(/^https?:\/\//, 'webcal://');
+    }
     atcb_save_file(givenIcsFile, filename);
     return;
   }
@@ -507,7 +514,7 @@ function atcb_generate_ical(host, data, subEvent = 'all', keyboardTrigger = fals
   }
   ics_lines.push('END:VCALENDAR');
   const dataUrl = (function () {
-    // if we got to this point with an explicitely given iCal file, we are on an iOS device. In this case, we use this as dataUrl
+    // if we got to this point with an explicitely given iCal file, we are on an iOS device (but at some wrong environment). In this case, we use this as dataUrl to then show a modal
     if (givenIcsFile != '') {
       return givenIcsFile;
     }
