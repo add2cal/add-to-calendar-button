@@ -50,7 +50,7 @@ const atcbIsAndroid = atcbIsBrowser()
       return false;
     };
 // Chrome
-/*const isChrome = atcbIsBrowser()
+/*const atcbIsChrome = atcbIsBrowser()
   ? () => {
       if (/chrome|chromium|crios|google inc/i.test(navigator.userAgent || navigator.vendor)) {
         return true;

@@ -1,4 +1,9 @@
 declare module 'add-to-calendar-button' {
+  export const i18nStrings: {
+    [key: string]: {
+      [key: string]: string;
+    };
+  };
   export function atcb_action(
     config: {
       proKey?: string;

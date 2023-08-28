@@ -369,7 +369,7 @@ function atcb_create_atcbl(host, atList = true) {
 
 // FUNCTION TO CREATE MODALS
 // this is only about special communication modals - not the list style modal
-function atcb_create_modal(host, data, icon = '', headline, content = '', buttons = [], subEvents = [], keyboardTrigger = false) {
+function atcb_create_modal(host, data, icon = '', headline, content = '', buttons = [], subEvents = [], keyboardTrigger = false, goto = {}) {
   atcbStates['active'] = data.identifier;
   // setting the stage
   const modalHost = atcb_generate_modal_host(host, data, false);
@@ -418,10 +418,12 @@ function atcb_create_modal(host, data, icon = '', headline, content = '', button
     modal.append(modalIcon);
   }
   // add headline
-  const modalHeadline = document.createElement('div');
-  modalHeadline.classList.add('atcb-modal-headline');
-  modalHeadline.textContent = headline;
-  modal.append(modalHeadline);
+  if (headline && headline != '') {
+    const modalHeadline = document.createElement('div');
+    modalHeadline.classList.add('atcb-modal-headline');
+    modalHeadline.textContent = headline;
+    modal.append(modalHeadline);
+  }
   // add text content
   if (content != '') {
     const modalContent = document.createElement('div');
@@ -514,7 +516,7 @@ function atcb_create_modal(host, data, icon = '', headline, content = '', button
           }
         });
         break;
-      case 'yahoo2nd':
+      case 'yahoo2nd': // for yahoo subscribe modal, where we guide the user through the process
         modalButton.addEventListener(
           'click',
           atcb_debounce(() => {
@@ -526,6 +528,21 @@ function atcb_create_modal(host, data, icon = '', headline, content = '', button
           if (event.key === 'Enter' || event.code == 'Space' || (event.key === 'Alt' && event.key === 'Control' && event.code === 'Space')) {
             atcb_toggle(host, 'close', '', '', true);
             atcb_subscribe_yahoo_modal_switch(host, data, keyboardTrigger);
+          }
+        });
+        break;
+      case '2timeslink': // for the note that the user shall click the button twice
+        modalButton.addEventListener(
+          'click',
+          atcb_debounce(() => {
+            atcb_close(host);
+            atcb_generate_links(host, goto.type, data, goto.id, keyboardTrigger, false, true);
+          }),
+        );
+        modalButton.addEventListener('keyup', function (event) {
+          if (event.key === 'Enter' || event.code == 'Space' || (event.key === 'Alt' && event.key === 'Control' && event.code === 'Space')) {
+            atcb_toggle(host, 'close', '', '', true);
+            atcb_generate_links(host, goto.type, data, goto.id, keyboardTrigger, false, true);
           }
         });
         break;
