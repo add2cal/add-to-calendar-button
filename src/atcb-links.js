@@ -118,7 +118,7 @@ function atcb_generate_subscribe_links(host, linkType, data, keyboardTrigger) {
   const adjustedFileUrl = data.icsFile.replace('https://', 'webcal://');
   switch (linkType) {
     case 'ical': // also for apple (see above)
-      if (atcbIsMobile()) {
+      if (atcbIsAndroid()) {
         atcb_subscribe_ical(data.icsFile);
         break;
       }
@@ -412,7 +412,7 @@ function atcb_generate_ical(host, data, subEvent = 'all', keyboardTrigger = fals
   if (givenIcsFile != '' && (!atcbIsiOS() || !atcbIsWebView() || data.bypassWebViewCheck == true)) {
     // replace the protocol at givenIcsFile (https or http) with better protocols, but only on iOS
     if (atcbIsiOS()) {      
-      atcb_save_file(givenIcsFile.replace(/^https?:\/\//, 'webcal://'), filename);
+      atcb_save_file(givenIcsFile.replace(/^https?:\/\//, 'x-apple-calevent://'), filename); // alternative: https for Safari and webcal for others - ugly, but works
       return;
     }
     atcb_save_file(givenIcsFile, filename);
