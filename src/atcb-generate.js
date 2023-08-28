@@ -789,7 +789,11 @@ function atcb_generate_date_button(data, parent, subEvent = 'all') {
   // headline
   const btnHeadline = document.createElement('div');
   btnHeadline.classList.add('atcb-date-btn-headline');
-  btnHeadline.textContent = data.dates[`${subEvent}`].name;
+  if (data.dates.length > 1) {
+    btnHeadline.textContent = data.name; // show name of event series for multi-date
+  } else {
+    btnHeadline.textContent = data.dates[`${subEvent}`].name;
+  }
   btnDetails.append(btnHeadline);
   // location line
   if ((data.dates[`${subEvent}`].location != null && data.dates[`${subEvent}`].location != '' && !data.dates[`${subEvent}`].onlineEvent) || cancelledInfo != '') {
