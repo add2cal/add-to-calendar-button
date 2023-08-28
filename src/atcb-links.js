@@ -12,7 +12,7 @@
  */
 
 import { tzlib_get_ical_block } from 'timezones-ical-library';
-import { atcbVersion, atcbIsMobile, atcbIsiOS, atcbIsAndroid, atcbIsChrome, atcbIsSafari, atcbIsWebView, atcbIsProblematicWebView, atcbDefaultTarget, atcbStates } from './atcb-globals.js';
+import { atcbVersion, atcbIsMobile, atcbIsiOS, atcbIsAndroid, atcbIsSafari, atcbIsWebView, atcbIsProblematicWebView, atcbDefaultTarget, atcbStates } from './atcb-globals.js';
 import { atcb_toggle } from './atcb-control.js';
 import { atcb_saved_hook, atcb_save_file, atcb_generate_time, atcb_format_datetime, atcb_secure_url, atcb_copy_to_clipboard, atcb_rewrite_ical_text } from './atcb-util.js';
 import { atcb_create_modal } from './atcb-generate.js';
@@ -199,7 +199,12 @@ function atcb_subscribe_ical(fileUrl) {
 
 // GOOGLE
 function atcb_subscribe_google(fileUrl) {
-  const baseUrl = 'https://calendar.google.com/calendar/r?cid=';
+  const baseUrl = (function () {
+    if (atcbIsiOS()) {
+      return 'googlecalendar://calendar.google.com/calendar/r?cid=';
+    }
+    return 'https://calendar.google.com/calendar/r?cid=';
+  })();
   const newFileUrl = (function () {
     const fileUrlRegex = /^(https?:\/\/|webcal:\/\/|\/\/)calendar\.google\.com\//;
     if (fileUrlRegex.test(fileUrl)) {
@@ -231,7 +236,11 @@ function atcb_subscribe_microsoft(fileUrl, calName, type = '365') {
 // See specs at: https://github.com/InteractionDesignFoundation/add-event-to-calendar-docs/blob/main/services/google.md (unofficial)
 function atcb_generate_google(data) {
   const urlParts = [];
-  urlParts.push('https://calendar.google.com/calendar/render?action=TEMPLATE');
+  if (atcbIsiOS()) {
+    urlParts.push('googlecalendar://calendar.google.com/calendar/render?action=TEMPLATE');
+  } else {
+    urlParts.push('https://calendar.google.com/calendar/render?action=TEMPLATE');
+  }
   // generate and add date
   const formattedDate = atcb_generate_time(data, 'clean', 'google');
   urlParts.push('dates=' + encodeURIComponent(formattedDate.start) + '%2F' + encodeURIComponent(formattedDate.end));
@@ -412,10 +421,7 @@ function atcb_generate_ical(host, data, subEvent = 'all', keyboardTrigger = fals
   if (givenIcsFile != '' && (!atcbIsiOS() || !atcbIsWebView() || data.bypassWebViewCheck == true)) {
     // replace the protocol at givenIcsFile (https or http) with better protocols, but only on iOS
     if (atcbIsiOS()) {
-      if (atcbIsChrome()) {
-        return givenIcsFile.replace(/^https?:\/\//, 'googlecalendar://');
-      }
-      return givenIcsFile.replace(/^https?:\/\//, 'webcal://');
+      return givenIcsFile.replace(/^https?:\/\//, 'calshow://'); // next: try calshow 
     }
     atcb_save_file(givenIcsFile, filename);
     return;

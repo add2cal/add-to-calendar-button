@@ -50,7 +50,7 @@ const atcbIsAndroid = atcbIsBrowser()
       return false;
     };
 // Chrome
-const atcbIsChrome = atcbIsBrowser()
+/*const atcbIsChrome = atcbIsBrowser()
   ? () => {
       if (/chrome|chromium|crios|google inc/i.test(navigator.userAgent || navigator.vendor)) {
         return true;
@@ -60,7 +60,7 @@ const atcbIsChrome = atcbIsBrowser()
     }
   : () => {
       return false;
-    };
+    };*/
 // Safari
 const atcbIsSafari = atcbIsBrowser()
   ? () => {
@@ -239,7 +239,6 @@ export {
   atcbIsiOS,
   atcbIsAndroid,
   atcbIsSafari,
-  atcbIsChrome,
   atcbIsMobile,
   atcbIsWebView,
   atcbIsProblematicWebView,
