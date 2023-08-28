@@ -747,8 +747,10 @@ function atcb_generate_date_button(data, parent, subEvent = 'all') {
     }
     return '&#x27F3;';
   })();
-  if (subEvent == 'all') {
+  let subEventAll = false;
+  if (subEvent === 'all') {
     subEvent = 0;
+    subEventAll = true;
   }
   const startDate = new Date(atcb_generate_time(data.dates[`${subEvent}`]).start);
   const allDay = atcb_generate_time(data.dates[`${subEvent}`]).allday;
@@ -789,7 +791,7 @@ function atcb_generate_date_button(data, parent, subEvent = 'all') {
   // headline
   const btnHeadline = document.createElement('div');
   btnHeadline.classList.add('atcb-date-btn-headline');
-  if (data.dates.length > 1) {
+  if (data.dates.length > 1 && subEventAll) {
     btnHeadline.textContent = data.name; // show name of event series for multi-date
   } else {
     btnHeadline.textContent = data.dates[`${subEvent}`].name;

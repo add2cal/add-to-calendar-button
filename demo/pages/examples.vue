@@ -357,6 +357,7 @@ watch(locale, value => {
               options="'Apple','Google','iCal','Outlook.com','Yahoo'"
               lightMode="bodyScheme"
               :language="locale"
+              buttonStyle="date"
             ></add-to-calendar-button>
           </div>
           <div class="flex-1 overflow-x-auto">
