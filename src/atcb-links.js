@@ -199,12 +199,7 @@ function atcb_subscribe_ical(fileUrl) {
 
 // GOOGLE
 function atcb_subscribe_google(fileUrl) {
-  const baseUrl = (function () {
-    if (atcbIsiOS()) {
-      return 'googlecalendar://calendar.google.com/calendar/r?cid=';
-    }
-    return 'https://calendar.google.com/calendar/r?cid=';
-  })();
+  const baseUrl = 'https://calendar.google.com/calendar/r?cid=';
   const newFileUrl = (function () {
     const fileUrlRegex = /^(https?:\/\/|webcal:\/\/|\/\/)calendar\.google\.com\//;
     if (fileUrlRegex.test(fileUrl)) {
@@ -236,11 +231,7 @@ function atcb_subscribe_microsoft(fileUrl, calName, type = '365') {
 // See specs at: https://github.com/InteractionDesignFoundation/add-event-to-calendar-docs/blob/main/services/google.md (unofficial)
 function atcb_generate_google(data) {
   const urlParts = [];
-  if (atcbIsiOS()) {
-    urlParts.push('googlecalendar://calendar.google.com/calendar/render?action=TEMPLATE');
-  } else {
-    urlParts.push('https://calendar.google.com/calendar/render?action=TEMPLATE');
-  }
+  urlParts.push('https://calendar.google.com/calendar/render?action=TEMPLATE');
   // generate and add date
   const formattedDate = atcb_generate_time(data, 'clean', 'google');
   urlParts.push('dates=' + encodeURIComponent(formattedDate.start) + '%2F' + encodeURIComponent(formattedDate.end));
@@ -421,7 +412,7 @@ function atcb_generate_ical(host, data, subEvent = 'all', keyboardTrigger = fals
   if (givenIcsFile != '' && (!atcbIsiOS() || !atcbIsWebView() || data.bypassWebViewCheck == true)) {
     // replace the protocol at givenIcsFile (https or http) with better protocols, but only on iOS
     if (atcbIsiOS()) {      
-      atcb_save_file(givenIcsFile.replace(/^https?:\/\//, 'calshow://'), filename); // next: try webcal 
+      atcb_save_file(givenIcsFile.replace(/^https?:\/\//, 'webcal://'), filename);
       return;
     }
     atcb_save_file(givenIcsFile, filename);
