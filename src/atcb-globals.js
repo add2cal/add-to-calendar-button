@@ -179,6 +179,11 @@ const atcbWcParams = [
   'hidden',
   'hideButton',
   'pastDateHandling',
+  'proxy',
+  'fakeMobile',
+  'fakeIOS',
+  'fakeAndroid',
+  'forceOverlay',
 ];
 const atcbWcBooleanParams = [
   'debug',
@@ -200,6 +205,11 @@ const atcbWcBooleanParams = [
   'disabled',
   'hidden',
   'hideButton',
+  'proxy',
+  'fakeMobile',
+  'fakeIOS',
+  'fakeAndroid',
+  'forceOverlay',
 ];
 const atcbWcObjectParams = ['customLabels', 'ty', 'rsvp'];
 const atcbWcObjectArrayParams = ['dates'];

@@ -73,19 +73,19 @@ function atcb_generate_links(host, type, data, subEvent = 'all', keyboardTrigger
           atcb_generate_ical(host, data, subEvent, keyboardTrigger);
           break;
         case 'google':
-          atcb_generate_google(data.dates[`${subEvent}`]);
+          atcb_generate_google(data, data.dates[`${subEvent}`]);
           break;
         case 'msteams':
-          atcb_generate_msteams(data.dates[`${subEvent}`]);
+          atcb_generate_msteams(data, data.dates[`${subEvent}`]);
           break;
         case 'ms365':
-          atcb_generate_microsoft(data.dates[`${subEvent}`]);
+          atcb_generate_microsoft(data, data.dates[`${subEvent}`]);
           break;
         case 'outlookcom':
-          atcb_generate_microsoft(data.dates[`${subEvent}`], 'outlook');
+          atcb_generate_microsoft(data, data.dates[`${subEvent}`], 'outlook');
           break;
         case 'yahoo':
-          atcb_generate_yahoo(data.dates[`${subEvent}`]);
+          atcb_generate_yahoo(data, data.dates[`${subEvent}`]);
           break;
       }
     }
@@ -143,22 +143,26 @@ function atcb_generate_subscribe_links(host, linkType, data, keyboardTrigger) {
   const adjustedFileUrl = data.icsFile.replace('https://', 'webcal://');
   switch (linkType) {
     case 'ical': // also for apple (see above)
-      if (atcbIsAndroid()) {
-        atcb_subscribe_ical(data.icsFile);
+      if (atcbIsAndroid() || data.fakeAndroid) {
+        atcb_subscribe_ical(data, data.icsFile);
         break;
       }
-      atcb_subscribe_ical(adjustedFileUrl);
+      atcb_subscribe_ical(data, adjustedFileUrl);
       break;
     case 'google':
-      atcb_subscribe_google(adjustedFileUrl);
+      atcb_subscribe_google(data, adjustedFileUrl);
       break;
     case 'ms365':
-      atcb_subscribe_microsoft(adjustedFileUrl, data.name);
+      atcb_subscribe_microsoft(data, adjustedFileUrl, data.name);
       break;
     case 'outlookcom':
-      atcb_subscribe_microsoft(adjustedFileUrl, data.name, 'outlook');
+      atcb_subscribe_microsoft(data, adjustedFileUrl, data.name, 'outlook');
       break;
     case 'yahoo':
+      if (data.proxy) {
+        atcb_open_cal_url(data, 'yahoo', '', true);
+        return;
+      }
       atcb_copy_to_clipboard(data.icsFile);
       atcb_create_modal(
         host,
@@ -218,12 +222,12 @@ function atcb_set_fully_successful(host, data, multiDateModal = false) {
 // GENERATING SUBSCRIPTION URLS AND FILES
 
 // ICAL
-function atcb_subscribe_ical(fileUrl) {
-  atcb_open_cal_url(fileUrl);
+function atcb_subscribe_ical(data, fileUrl) {
+  atcb_open_cal_url(data, 'ical', fileUrl, true);
 }
 
 // GOOGLE
-function atcb_subscribe_google(fileUrl) {
+function atcb_subscribe_google(data, fileUrl) {
   const baseUrl = 'https://calendar.google.com/calendar/r?cid=';
   const newFileUrl = (function () {
     const fileUrlRegex = /^(https?:\/\/|webcal:\/\/|\/\/)calendar\.google\.com\//;
@@ -232,11 +236,11 @@ function atcb_subscribe_google(fileUrl) {
     }
     return encodeURIComponent(fileUrl);
   })();
-  atcb_open_cal_url(baseUrl + newFileUrl);
+  atcb_open_cal_url(data, 'google', baseUrl + newFileUrl, true);
 }
 
 // MICROSOFT
-function atcb_subscribe_microsoft(fileUrl, calName, type = '365') {
+function atcb_subscribe_microsoft(data, fileUrl, calName, type = '365') {
   const urlParts = [];
   const baseUrl = (function () {
     if (type == 'outlook') {
@@ -247,94 +251,94 @@ function atcb_subscribe_microsoft(fileUrl, calName, type = '365') {
   })();
   urlParts.push('url=' + encodeURIComponent(fileUrl));
   urlParts.push('name=' + encodeURIComponent(calName));
-  atcb_open_cal_url(baseUrl + urlParts.join('&'));
+  atcb_open_cal_url(data, type, baseUrl + urlParts.join('&'), true);
 }
 
 // GENERATING DEFAULT URLS AND FILES
 
 // FUNCTION TO GENERATE THE GOOGLE URL
 // See specs at: https://github.com/InteractionDesignFoundation/add-event-to-calendar-docs/blob/main/services/google.md (unofficial)
-function atcb_generate_google(data) {
+function atcb_generate_google(data, date) {
   const urlParts = [];
   urlParts.push('https://calendar.google.com/calendar/render?action=TEMPLATE');
   // generate and add date
-  const formattedDate = atcb_generate_time(data, 'clean', 'google');
+  const formattedDate = atcb_generate_time(date, 'clean', 'google');
   urlParts.push('dates=' + encodeURIComponent(formattedDate.start) + '%2F' + encodeURIComponent(formattedDate.end));
   // setting time zone if given and not GMT +/- something, since this is not supported by Google Calendar
   // also do not set for all-day events, since this can lead to Google Calendar trying to adjust times
-  if (data.timeZone != null && data.timeZone != '' && !/(GMT[+|-]\d{1,2}|Etc\/U|Etc\/Zulu|CET|CST6CDT|EET|EST|EST5EDT|MET|MST|MST7MDT|PST8PDT|WET)/i.test(data.timeZone) && !formattedDate.allday) {
-    urlParts.push('ctz=' + data.timeZone);
+  if (date.timeZone != null && date.timeZone != '' && !/(GMT[+|-]\d{1,2}|Etc\/U|Etc\/Zulu|CET|CST6CDT|EET|EST|EST5EDT|MET|MST|MST7MDT|PST8PDT|WET)/i.test(date.timeZone) && !formattedDate.allday) {
+    urlParts.push('ctz=' + date.timeZone);
   }
   // add details (if set)
-  if (data.name != null && data.name != '') {
-    urlParts.push('text=' + encodeURIComponent(data.name));
+  if (date.name != null && date.name != '') {
+    urlParts.push('text=' + encodeURIComponent(date.name));
   }
   const tmpDataDescription = [];
-  if (data.description != null && data.description != '') {
-    tmpDataDescription.push(data.description);
+  if (date.description != null && date.description != '') {
+    tmpDataDescription.push(date.description);
   }
-  if (data.location != null && data.location != '') {
-    urlParts.push('location=' + encodeURIComponent(data.location));
+  if (date.location != null && date.location != '') {
+    urlParts.push('location=' + encodeURIComponent(date.location));
     // TODO: Find a better solution for the next temporary workaround.
-    if (atcbIsiOS()) {
+    if (atcbIsiOS() || data.fakeIOS) {
       // workaround to cover a bug, where, when using Google Calendar on an iPhone, the location is not recognized. So, for the moment, we simply add it to the description.
       if (tmpDataDescription.length > 0) {
         tmpDataDescription.push('<br><br>');
       }
-      tmpDataDescription.push('&#128205;: ' + data.location);
+      tmpDataDescription.push('&#128205;: ' + date.location);
     }
   }
   if (tmpDataDescription.length > 0) {
     urlParts.push('details=' + encodeURIComponent(tmpDataDescription.join('')));
   }
-  if (data.recurrence != null && data.recurrence != '') {
-    urlParts.push('recur=' + encodeURIComponent(data.recurrence));
+  if (date.recurrence != null && date.recurrence != '') {
+    urlParts.push('recur=' + encodeURIComponent(date.recurrence));
   }
-  if (data.availability != null && data.availability != '') {
+  if (date.availability != null && date.availability != '') {
     const availabilityPart = (function () {
-      if (data.availability == 'free') {
+      if (date.availability == 'free') {
         return 'crm=AVAILABLE&trp=false';
       }
       return 'crm=BUSY&trp=true';
     })();
     urlParts.push(availabilityPart);
   }
-  atcb_open_cal_url(urlParts.join('&'));
+  atcb_open_cal_url(data, 'google', urlParts.join('&'));
 }
 
 // FUNCTION TO GENERATE THE YAHOO URL
 // See specs at: https://github.com/InteractionDesignFoundation/add-event-to-calendar-docs/blob/main/services/yahoo.md (unofficial)
-function atcb_generate_yahoo(data) {
+function atcb_generate_yahoo(data, date) {
   const urlParts = [];
   urlParts.push('https://calendar.yahoo.com/?v=60');
   // generate and add date
-  const formattedDate = atcb_generate_time(data, 'clean');
+  const formattedDate = atcb_generate_time(date, 'clean');
   urlParts.push('st=' + encodeURIComponent(formattedDate.start) + '&et=' + encodeURIComponent(formattedDate.end));
   if (formattedDate.allday) {
     urlParts.push('dur=allday');
   }
   // add details (if set)
-  if (data.name != null && data.name != '') {
-    urlParts.push('title=' + encodeURIComponent(data.name));
+  if (date.name != null && date.name != '') {
+    urlParts.push('title=' + encodeURIComponent(date.name));
   }
-  if (data.location != null && data.location != '') {
-    urlParts.push('in_loc=' + encodeURIComponent(data.location));
+  if (date.location != null && date.location != '') {
+    urlParts.push('in_loc=' + encodeURIComponent(date.location));
   }
-  if (data.descriptionHtmlFree != null && data.descriptionHtmlFree != '') {
+  if (date.descriptionHtmlFree != null && date.descriptionHtmlFree != '') {
     // using descriptionHtmlFree instead of description, since Yahoo does not support html tags in a stable way
-    urlParts.push('desc=' + encodeURIComponent(data.descriptionHtmlFree));
+    urlParts.push('desc=' + encodeURIComponent(date.descriptionHtmlFree));
   }
-  atcb_open_cal_url(urlParts.join('&'));
+  atcb_open_cal_url(data, 'yahoo', urlParts.join('&'));
 }
 
 // FUNCTION TO GENERATE THE MICROSOFT 365 OR OUTLOOK WEB URL
 // See specs at: TODO: add some documentation here, if it exists
-function atcb_generate_microsoft(data, type = '365') {
+function atcb_generate_microsoft(data, date, type = '365') {
   const urlParts = [];
   const basePath = (function () {
     // tmp workaround to reflect the fact that Microsoft is routing mobile traffic differently
     // TODO: remove this, when Microsoft has fixed this
-    if (atcbIsMobile()) {
+    if (atcbIsMobile() || data.fakeMobile) {
       return '/calendar/0/deeplink/compose?path=%2Fcalendar%2Faction%2Fcompose&rru=addevent';
     }
     return '/calendar/action/compose?rru=addevent';
@@ -348,36 +352,36 @@ function atcb_generate_microsoft(data, type = '365') {
   })();
   urlParts.push(baseUrl);
   // generate and add date
-  const formattedDate = atcb_generate_time(data, 'delimiters', 'microsoft');
+  const formattedDate = atcb_generate_time(date, 'delimiters', 'microsoft');
   urlParts.push('startdt=' + formattedDate.start);
   urlParts.push('enddt=' + formattedDate.end);
   if (formattedDate.allday) {
     urlParts.push('allday=true');
   }
   // add details (if set)
-  if (data.name != null && data.name != '') {
-    urlParts.push('subject=' + encodeURIComponent(data.name));
+  if (date.name != null && date.name != '') {
+    urlParts.push('subject=' + encodeURIComponent(date.name));
   }
-  if (data.location != null && data.location != '') {
-    urlParts.push('location=' + encodeURIComponent(data.location));
+  if (date.location != null && date.location != '') {
+    urlParts.push('location=' + encodeURIComponent(date.location));
   }
-  if (data.description != null && data.description != '') {
-    urlParts.push('body=' + encodeURIComponent(data.description));
+  if (date.description != null && date.description != '') {
+    urlParts.push('body=' + encodeURIComponent(date.description));
   }
-  atcb_open_cal_url(urlParts.join('&'));
+  atcb_open_cal_url(data, type, urlParts.join('&'));
 }
 
 // FUNCTION TO GENERATE THE MICROSOFT TEAMS URL
 // See specs at: https://learn.microsoft.com/en-us/microsoftteams/platform/concepts/build-and-test/deep-link-workflow?tabs=teamsjs-v2#deep-link-to-open-a-meeting-scheduling-dialog
 // Mind that this is still in development mode by Microsoft! Location, html tags and linebreaks in the description are not supported yet.
-function atcb_generate_msteams(data) {
+function atcb_generate_msteams(data, date) {
   const urlParts = [];
   const baseUrl = 'https://teams.microsoft.com/l/meeting/new?';
   // generate and add date
-  const formattedDate = atcb_generate_time(data, 'delimiters', 'msteams', true);
+  const formattedDate = atcb_generate_time(date, 'delimiters', 'msteams', true);
   // we need to encode the date, but not for all-day events on desktop to not encode the plus for the offset (somehow strange, but this all consists somehow of workarounds with the Microsoft Teams url scheme)...
   // TODO: optimize this, when Microsoft has fixed it
-  if (!formattedDate.allday || atcbIsMobile()) {
+  if (!formattedDate.allday || atcbIsMobile() || data.fakeMobile) {
     urlParts.push('startTime=' + encodeURIComponent(formattedDate.start));
     urlParts.push('endTime=' + encodeURIComponent(formattedDate.end));
   } else {
@@ -385,28 +389,36 @@ function atcb_generate_msteams(data) {
     urlParts.push('endTime=' + formattedDate.end);
   }
   // add details (if set)
-  if (data.name != null && data.name != '') {
-    urlParts.push('subject=' + encodeURIComponent(data.name));
+  if (date.name != null && date.name != '') {
+    urlParts.push('subject=' + encodeURIComponent(date.name));
   }
   let locationString = '';
-  if (data.location != null && data.location != '') {
-    locationString = encodeURIComponent(data.location);
+  if (date.location != null && date.location != '') {
+    locationString = encodeURIComponent(date.location);
     urlParts.push('location=' + locationString);
     locationString += ' // '; // preparing the workaround putting the location into the description, since the native field is not supported yet
   }
-  if (data.descriptionHtmlFree != null && data.descriptionHtmlFree != '') {
+  if (date.descriptionHtmlFree != null && date.descriptionHtmlFree != '') {
     // using descriptionHtmlFree instead of description, since Teams does not support html tags
-    urlParts.push('content=' + locationString + encodeURIComponent(data.descriptionHtmlFree));
+    urlParts.push('content=' + locationString + encodeURIComponent(date.descriptionHtmlFree));
   }
-  atcb_open_cal_url(baseUrl + urlParts.join('&'));
+  atcb_open_cal_url(data, 'msteams', baseUrl + urlParts.join('&'));
 }
 
 // FUNCTION TO OPEN THE URL
-function atcb_open_cal_url(url, target = '') {
+function atcb_open_cal_url(data, type, url, subscribe = false, target = '') {
   if (target == '') {
     target = atcbDefaultTarget;
   }
   if (atcb_secure_url(url)) {
+    if (data.proxy && data.proKey && data.proKey != '') {
+      const urlType = subscribe ? 's' : 'o';
+      const query = url ? '?url=' + encodeURIComponent(url) : '';
+      url = 'https://caldn.net/' + data.proKey + '/' + urlType + '/' + type + query;
+      if (!atcb_secure_url(url)) {
+        return;
+      }
+    }
     // eslint-disable-next-line security/detect-non-literal-fs-filename
     const newTab = window.open(url, target);
     if (newTab) {
@@ -433,7 +445,12 @@ function atcb_generate_ical(host, data, subEvent = 'all', keyboardTrigger = fals
     }
     return '';
   })();
-  // ... and directly load it (not if iOS and WebView - will be catched further down - except it is explicitely bridged)
+  // if we are in proxy mode, we can directly redirect
+  if (givenIcsFile && givenIcsFile !== '' && data.proxy) {
+    atcb_open_cal_url(data, 'ical', givenIcsFile);
+    return;
+  }
+  // else, we directly load it (not if iOS and WebView - will be catched further down - except it is explicitely bridged)
   if (givenIcsFile != '' && (!atcbIsiOS() || !atcbIsWebView() || data.bypassWebViewCheck == true)) {
     // replace the protocol at givenIcsFile (https or http) with webcal for non-Safari on iOS browsers. Opens the subscription dialog, but best we get atm
     if (atcbIsiOS() && !atcbIsSafari()) {
