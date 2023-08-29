@@ -137,6 +137,7 @@ onUnmounted(() => {
               :label="$t('demo_data.options_label_single_dummy')"
               lightMode="bodyScheme"
               :language="locale"
+              hideRichData
             ></add-to-calendar-button>
           </div>
           <div class="flex-1 overflow-x-auto">
@@ -195,6 +196,7 @@ onUnmounted(() => {
               size="5"
               lightMode="bodyScheme"
               :language="locale"
+              hideRichData
             ></add-to-calendar-button>
           </div>
           <div class="flex-1 overflow-x-auto">
@@ -256,6 +258,7 @@ onUnmounted(() => {
               options="'Apple','Google','iCal'"
               lightMode="bodyScheme"
               :language="locale"
+              hideRichData
             ></add-to-calendar-button>
           </div>
           <div class="flex-1 overflow-x-auto">
@@ -304,7 +307,7 @@ onUnmounted(() => {
         </div>
         <div class="block w-full justify-between pt-4 md:flex">
           <div class="flex w-full flex-none justify-center p-6 pt-8 md:w-[300px]">
-            <add-to-calendar-button :name="$t('demo_data.name')" :startDate="defaultDate" options="'Apple','Google','iCal'" lightMode="bodyScheme" :language="locale" customCss="https://add-to-calendar-button.com/atcb.css" buttonStyle="custom" listStyle="modal"></add-to-calendar-button>
+            <add-to-calendar-button :name="$t('demo_data.name')" :startDate="defaultDate" options="'Apple','Google','iCal'" lightMode="bodyScheme" :language="locale" customCss="https://add-to-calendar-button.com/atcb.css" buttonStyle="custom" listStyle="modal" hideRichData> </add-to-calendar-button>
           </div>
           <div class="flex-1 overflow-x-auto">
             <LazyCodeBlock class="line-numbers">
@@ -391,6 +394,7 @@ onUnmounted(() => {
               lightMode="bodyScheme"
               :description="$t('demo_data.description_alt2')"
               :language="locale"
+              hideRichData
             ></add-to-calendar-button>
           </div>
           <div class="flex-1 overflow-x-auto">
@@ -442,6 +446,7 @@ onUnmounted(() => {
               options="'Apple','Google','iCal','Outlook.com','Microsoft 365','Microsoft Teams','Yahoo'"
               lightMode="bodyScheme"
               :language="locale"
+              hideRichData
             ></add-to-calendar-button>
           </div>
           <div class="flex-1 overflow-x-auto">
@@ -502,6 +507,7 @@ onUnmounted(() => {
               :customLabels="defaultCustCloseLabel"
               lightMode="bodyScheme"
               :language="locale"
+              hideRichData
             ></add-to-calendar-button>
           </div>
           <div class="flex-1 overflow-x-auto">
@@ -568,6 +574,7 @@ onUnmounted(() => {
               :iCalFileName="$t('demo_data.iCal_confirmed')"
               lightMode="bodyScheme"
               :language="locale"
+              hideRichData
             ></add-to-calendar-button>
           </div>
           <div class="flex-1 overflow-x-auto">
@@ -617,6 +624,7 @@ onUnmounted(() => {
               :iCalFileName="$t('demo_data.iCal_cancelled')"
               lightMode="bodyScheme"
               :language="locale"
+              hideRichData
             ></add-to-calendar-button>
           </div>
           <div class="flex-1 overflow-x-auto">
@@ -684,6 +692,7 @@ onUnmounted(() => {
               identifier="my-custom-id"
               lightMode="bodyScheme"
               :language="locale"
+              hideRichData
             ></add-to-calendar-button>
           </div>
           <div class="flex-1 overflow-x-auto">
@@ -776,6 +785,7 @@ onUnmounted(() => {
               options="'Apple','Google','iCal'"
               lightMode="bodyScheme"
               :language="locale"
+              hideRichData
             ></add-to-calendar-button>
           </div>
           <div class="flex-1 overflow-x-auto">
@@ -838,7 +848,18 @@ onUnmounted(() => {
         </div>
         <div class="block w-full justify-between pt-4 md:flex">
           <div class="flex w-full flex-none justify-center p-6 pt-8 md:w-[300px]">
-            <add-to-calendar-button :name="$t('demo_data.name_dummy')" :startDate="defaultDate" startTime="10:15" endTime="23:30" options="iCal" icsFile="https://add-to-calendar-button.com/demo-event.ics" bypassWebViewCheck lightMode="bodyScheme" :language="locale"></add-to-calendar-button>
+            <add-to-calendar-button
+              :name="$t('demo_data.name_dummy')"
+              :startDate="defaultDate"
+              startTime="10:15"
+              endTime="23:30"
+              options="iCal"
+              icsFile="https://add-to-calendar-button.com/demo-event.ics"
+              bypassWebViewCheck
+              lightMode="bodyScheme"
+              :language="locale"
+              hideRichData
+            ></add-to-calendar-button>
           </div>
           <div class="flex-1 overflow-x-auto">
             <LazyCodeBlock class="line-numbers">

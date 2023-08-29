@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 declare module 'add-to-calendar-button' {
   export const i18nStrings: {
     [key: string]: {

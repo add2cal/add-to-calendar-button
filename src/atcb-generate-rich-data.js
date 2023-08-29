@@ -18,10 +18,10 @@ import { atcb_generate_time, atcb_secure_url } from './atcb-util.js';
 // multi-date events are not 100% compliant with schema.org, since this is still a little broken and not supported by Google
 function atcb_generate_rich_data(data, parent) {
   const schemaEl = document.createElement('script');
-  if (parent.hasAttribute('cspnonce')) {    
+  if (parent.hasAttribute('cspnonce')) {
     const cspnonceRegex = /[`'"()[\]{}<>\s]/;
     if (cspnonceRegex.test(parent.getAttribute('cspnonce'))) {
-      throw new Error("cspnonce input contains forbidden characters.");
+      throw new Error('cspnonce input contains forbidden characters.');
     }
     schemaEl.setAttribute('nonce', parent.getAttribute('cspnonce'));
   }

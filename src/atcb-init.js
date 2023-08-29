@@ -323,7 +323,7 @@ function atcb_load_css(host, rootObj = null, style = '', inline = false, buttons
       return null;
     }
     if (cspnonceRegex.test(host.host.getAttribute('cspnonce'))) {
-      throw new Error("cspnonce input contains forbidden characters.");
+      throw new Error('cspnonce input contains forbidden characters.');
     }
     return host.host.getAttribute('cspnonce');
   })();
@@ -436,7 +436,7 @@ function atcb_render_debug_msg(host, error) {
 }
 
 // prepare data when not using the web component, but some custom trigger instead
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
+// eslint-disable-next-line no-unused-vars, @typescript-eslint/no-unused-vars
 function atcb_action(data, triggerElement, keyboardTrigger = false) {
   // return if not within a browser environment
   if (!atcbIsBrowser()) {
@@ -509,7 +509,7 @@ function atcb_action(data, triggerElement, keyboardTrigger = false) {
   if (!data.blockInteraction) {
     // prepare shadow dom and load style (not necessary if iCal or Apple, and not on mobile and not multi-date with organizer)
     let host = null;
-    if (!oneOption || (data.options[0] !== 'apple' && data.options[0] !== 'ical') || (data.dates && data.dates.length > 1 && data.dates.organizer) || (atcbIsMobile())) {
+    if (!oneOption || (data.options[0] !== 'apple' && data.options[0] !== 'ical') || (data.dates && data.dates.length > 1 && data.dates.organizer) || atcbIsMobile()) {
       host = document.createElement('div');
       host.id = 'atcb-customTrigger-' + data.identifier + '-host';
       if (root == document.body) {

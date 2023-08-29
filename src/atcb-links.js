@@ -45,7 +45,7 @@ function atcb_generate_links(host, type, data, subEvent = 'all', keyboardTrigger
     } else {
       // in some cases, we want to inform the user about specifics for the link type, before actually following the link
       if (!skipDoubleLink) {
-        if (!atcbIsiOS() && linkType === 'google') {
+        if (atcbIsiOS() && linkType === 'google') {
           atcb_create_modal(
             host,
             data,
@@ -62,7 +62,7 @@ function atcb_generate_links(host, type, data, subEvent = 'all', keyboardTrigger
             ],
             [],
             keyboardTrigger,
-            {'type':type, 'id':subEvent + 1},
+            { type: type, id: subEvent + 1 },
           );
           return;
         }
@@ -436,7 +436,7 @@ function atcb_generate_ical(host, data, subEvent = 'all', keyboardTrigger = fals
   // ... and directly load it (not if iOS and WebView - will be catched further down - except it is explicitely bridged)
   if (givenIcsFile != '' && (!atcbIsiOS() || !atcbIsWebView() || data.bypassWebViewCheck == true)) {
     // replace the protocol at givenIcsFile (https or http) with webcal for non-Safari on iOS browsers. Opens the subscription dialog, but best we get atm
-    if (atcbIsiOS() && !atcbIsSafari()) {      
+    if (atcbIsiOS() && !atcbIsSafari()) {
       atcb_save_file(givenIcsFile.replace(/^https?:\/\//, 'webcal://'), filename);
       return;
     }
