@@ -1,14 +1,15 @@
 {
   "root": true,
+
   "env": {
     "browser": true,
     "node": true,
     "es6": true
   },
-  "extends": ["eslint:recommended", "plugin:@typescript-eslint/recommended", "plugin:security/recommended", "prettier"],
-  "parser": "@typescript-eslint/parser",
+
   "parserOptions": {
     "sourceType": "module",
+    "parser": "@typescript-eslint/parser",
     "xss/no-mixed-html": [
       2,
       {
@@ -20,8 +21,13 @@
       }
     ]
   },
-  "plugins": ["@typescript-eslint"],
-  "ignorePatterns": ["*.min.*", "Gruntfile.js", "set-release.js", "demo/dist/*"],
+
+  "extends": ["plugin:@typescript-eslint/recommended", "eslint:recommended", "plugin:security/recommended", "plugin:prettier/recommended"],
+
+  "plugins": ["@typescript-eslint", "prettier"],
+
+  "ignorePatterns": ["*.min.*", "dist/*", "Gruntfile.js", "set-release.js", "demo/dist/*"],
+
   "rules": {
     // TO-DO: Enable rules to find and optimize code style
     "eqeqeq": 0,

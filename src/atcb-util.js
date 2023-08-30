@@ -3,7 +3,7 @@
  *  Add to Calendar Button
  *  ++++++++++++++++++++++
  *
- *  Version: 2.3.4
+ *  Version: 2.4.0
  *  Creator: Jens Kuerschner (https://jenskuerschner.de)
  *  Project: https://github.com/add2cal/add-to-calendar-button
  *  License: Elastic License 2.0 (ELv2) (https://github.com/add2cal/add-to-calendar-button/blob/main/LICENSE.txt)
@@ -14,16 +14,12 @@
 import { tzlib_get_offset } from 'timezones-ical-library';
 import { atcbIsMobile, atcbIsiOS, atcbDefaultTarget } from './atcb-globals.js';
 import { atcb_log_event } from './atcb-event';
+import { atcbStates } from './atcb-globals.js';
 
 // SHARED FUNCTION HOOK FOR WHEN EVENT GOT SAVED
 function atcb_saved_hook(host, data) {
   // log event
   atcb_log_event('success', data.identifier, data.identifier);
-  // check for further actions
-  if (data.proKey == null || data.proKey == '') {
-    return;
-  }
-  // go PRO...
 }
 
 // SHARED FUNCTION TO SAVE A FILE
@@ -326,6 +322,25 @@ function atcb_position_list(host, trigger, list, blockUpwards = false, blockDown
   }
 }
 
+// SHARED FUNCTION TO CALCULATE THE POSITION OF THE SHADOW OVERLAY BUTTON
+function atcb_position_shadow_button(originalEl, shadowEl) {
+  const wrapperDim = originalEl.querySelector('.atcb-initialized').getBoundingClientRect();
+  const newWrapper = shadowEl.querySelector('.atcb-initialized');
+  newWrapper.style.width = wrapperDim.width + 'px';
+  newWrapper.style.height = wrapperDim.height + 'px';
+  newWrapper.style.top = wrapperDim.top + 'px';
+  newWrapper.style.left = wrapperDim.left + 'px';
+}
+
+function atcb_position_shadow_button_listener() {
+  const active = atcbStates['active'];
+  if (active !== null && active !== '') {
+    const originalEl = document.querySelector('add-to-calendar-button[atcb-button-id=' + active + ']').shadowRoot;
+    const shadowEl = document.querySelector('div[atcb-button-id=' + active + ']').shadowRoot;
+    atcb_position_shadow_button(originalEl, shadowEl);
+  }
+}
+
 // // SHARED FUNCTION TO CALCULATE WHETHER WE BLOCK SCROLLING OR NOT (WHEN MODAL OR LIST IS LARGER THAN THE SCREEN HEIGHT)
 function atcb_manage_body_scroll(host, modalObj = null) {
   const modal = (function () {
@@ -334,7 +349,7 @@ function atcb_manage_body_scroll(host, modalObj = null) {
       return modalObj;
     } else {
       const allModals = host.querySelectorAll('.atcb-modal');
-      if (allModals.length == 0) {
+      if (allModals.length === 0) {
         return null;
       }
       return allModals[allModals.length - 1];
@@ -435,6 +450,8 @@ export {
   atcb_rewrite_html_elements,
   atcb_rewrite_ical_text,
   atcb_position_list,
+  atcb_position_shadow_button,
+  atcb_position_shadow_button_listener,
   atcb_manage_body_scroll,
   atcb_set_fullsize,
   atcb_set_sizes,

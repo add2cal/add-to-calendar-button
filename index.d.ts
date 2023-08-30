@@ -1,4 +1,10 @@
+/* eslint-disable no-unused-vars */
 declare module 'add-to-calendar-button' {
+  export const i18nStrings: {
+    [key: string]: {
+      [key: string]: string;
+    };
+  };
   export function atcb_action(
     config: {
       proKey?: string;
@@ -80,6 +86,11 @@ declare module 'add-to-calendar-button' {
       disabled?: boolean | string;
       hidden?: boolean | string;
       pastDateHandling?: string;
+      proxy?: boolean | string;
+      fakeMobile?: boolean | string;
+      fakeIOS?: boolean | string;
+      fakeAndroid?: boolean | string;
+      forceOverlay?: boolean | string;
     },
     triggerElement?: HTMLElement,
     keyboardTrigger?: boolean,

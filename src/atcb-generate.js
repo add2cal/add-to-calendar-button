@@ -3,7 +3,7 @@
  *  Add to Calendar Button
  *  ++++++++++++++++++++++
  *
- *  Version: 2.3.4
+ *  Version: 2.4.0
  *  Creator: Jens Kuerschner (https://jenskuerschner.de)
  *  Project: https://github.com/add2cal/add-to-calendar-button
  *  License: Elastic License 2.0 (ELv2) (https://github.com/add2cal/add-to-calendar-button/blob/main/LICENSE.txt)
@@ -14,7 +14,7 @@
 import { atcbIcon, atcbStates, atcbDefaultTarget } from './atcb-globals.js';
 import { atcb_toggle, atcb_close } from './atcb-control.js';
 import { atcb_generate_links } from './atcb-links.js';
-import { atcb_generate_time, atcb_manage_body_scroll, atcb_set_fullsize, atcb_set_sizes, atcb_debounce, atcb_debounce_leading } from './atcb-util.js';
+import { atcb_generate_time, atcb_position_shadow_button, atcb_position_shadow_button_listener, atcb_manage_body_scroll, atcb_set_fullsize, atcb_set_sizes, atcb_debounce, atcb_debounce_leading } from './atcb-util.js';
 import { atcb_set_fully_successful } from './atcb-links';
 import { atcb_translate_hook } from './atcb-i18n.js';
 import { atcb_load_css, atcb_set_light_mode } from './atcb-init';
@@ -369,7 +369,7 @@ function atcb_create_atcbl(host, atList = true) {
 
 // FUNCTION TO CREATE MODALS
 // this is only about special communication modals - not the list style modal
-function atcb_create_modal(host, data, icon = '', headline, content = '', buttons = [], subEvents = [], keyboardTrigger = false) {
+function atcb_create_modal(host, data, icon = '', headline, content = '', buttons = [], subEvents = [], keyboardTrigger = false, goto = {}) {
   atcbStates['active'] = data.identifier;
   // setting the stage
   const modalHost = atcb_generate_modal_host(host, data, false);
@@ -418,10 +418,12 @@ function atcb_create_modal(host, data, icon = '', headline, content = '', button
     modal.append(modalIcon);
   }
   // add headline
-  const modalHeadline = document.createElement('div');
-  modalHeadline.classList.add('atcb-modal-headline');
-  modalHeadline.textContent = headline;
-  modal.append(modalHeadline);
+  if (headline && headline != '') {
+    const modalHeadline = document.createElement('div');
+    modalHeadline.classList.add('atcb-modal-headline');
+    modalHeadline.textContent = headline;
+    modal.append(modalHeadline);
+  }
   // add text content
   if (content != '') {
     const modalContent = document.createElement('div');
@@ -514,7 +516,7 @@ function atcb_create_modal(host, data, icon = '', headline, content = '', button
           }
         });
         break;
-      case 'yahoo2nd':
+      case 'yahoo2nd': // for yahoo subscribe modal, where we guide the user through the process
         modalButton.addEventListener(
           'click',
           atcb_debounce(() => {
@@ -526,6 +528,21 @@ function atcb_create_modal(host, data, icon = '', headline, content = '', button
           if (event.key === 'Enter' || event.code == 'Space' || (event.key === 'Alt' && event.key === 'Control' && event.code === 'Space')) {
             atcb_toggle(host, 'close', '', '', true);
             atcb_subscribe_yahoo_modal_switch(host, data, keyboardTrigger);
+          }
+        });
+        break;
+      case '2timeslink': // for the note that the user shall click the button twice
+        modalButton.addEventListener(
+          'click',
+          atcb_debounce(() => {
+            atcb_close(host);
+            atcb_generate_links(host, goto.type, data, goto.id, keyboardTrigger, false, true);
+          }),
+        );
+        modalButton.addEventListener('keyup', function (event) {
+          if (event.key === 'Enter' || event.code == 'Space' || (event.key === 'Alt' && event.key === 'Control' && event.code === 'Space')) {
+            atcb_toggle(host, 'close', '', '', true);
+            atcb_generate_links(host, goto.type, data, goto.id, keyboardTrigger, false, true);
           }
         });
         break;
@@ -730,8 +747,10 @@ function atcb_generate_date_button(data, parent, subEvent = 'all') {
     }
     return '&#x27F3;';
   })();
-  if (subEvent == 'all') {
+  let subEventAll = false;
+  if (subEvent === 'all') {
     subEvent = 0;
+    subEventAll = true;
   }
   const startDate = new Date(atcb_generate_time(data.dates[`${subEvent}`]).start);
   const allDay = atcb_generate_time(data.dates[`${subEvent}`]).allday;
@@ -772,7 +791,11 @@ function atcb_generate_date_button(data, parent, subEvent = 'all') {
   // headline
   const btnHeadline = document.createElement('div');
   btnHeadline.classList.add('atcb-date-btn-headline');
-  btnHeadline.textContent = data.dates[`${subEvent}`].name;
+  if (data.dates.length > 1 && subEventAll) {
+    btnHeadline.textContent = data.name; // show name of event series for multi-date
+  } else {
+    btnHeadline.textContent = data.dates[`${subEvent}`].name;
+  }
   btnDetails.append(btnHeadline);
   // location line
   if ((data.dates[`${subEvent}`].location != null && data.dates[`${subEvent}`].location != '' && !data.dates[`${subEvent}`].onlineEvent) || cancelledInfo != '') {
@@ -937,4 +960,29 @@ function atcb_generate_modal_host(host, data, reset = true) {
   return newModalHost.shadowRoot;
 }
 
-export { atcb_generate_label, atcb_generate_button, atcb_generate_dropdown_list, atcb_create_modal, atcb_generate_bg_overlay, atcb_create_atcbl, atcb_generate_modal_host };
+// FUNCTION TO COPY THE BUTTON TO A SECOND SHADOWDOM TO FORCE OVERLAY
+function atcb_generate_overlay_dom(host, data) {
+  const newHost = atcb_generate_modal_host(host, data);
+  atcb_set_fullsize(newHost.querySelector('.atcb-modal-host-initialized'));
+  // get all top-level nodes from host
+  const nodes = Array.from(host.children);
+  // duplicate all nodes into newHost, except for any style tag
+  nodes.forEach((node) => {
+    if (node.tagName != 'STYLE') {
+      newHost.querySelector('.atcb-modal-host-initialized').append(node.cloneNode(true));
+    }
+  });
+  // remove the id from the <button> to prevent duplicate ids
+  newHost.querySelector('button.atcb-button').removeAttribute('id');
+  // set the opacity of the original button to 0
+  host.host.classList.add('atcb-shadow-hide');
+  host.querySelector('.atcb-initialized').style.opacity = '0';
+  // set the dimension and position of the .atcb-initialized to the one in the original host
+  atcb_position_shadow_button(host, newHost);
+  // listener for any scroll activity
+  window.addEventListener('scroll', atcb_position_shadow_button_listener);
+  window.addEventListener('resize', atcb_position_shadow_button_listener);
+  return newHost.querySelector('.atcb-modal-host-initialized');
+}
+
+export { atcb_generate_label, atcb_generate_button, atcb_generate_dropdown_list, atcb_create_modal, atcb_generate_bg_overlay, atcb_generate_overlay_dom, atcb_create_atcbl, atcb_generate_modal_host };

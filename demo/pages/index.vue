@@ -27,7 +27,7 @@ const localePath = useLocalePath();
         href="https://www.producthunt.com/posts/add-to-calendar-button-generator?utm_source=badge-top-post-badge&utm_medium=badge&utm_souce=badge-add&#0045;to&#0045;calendar&#0045;button&#0045;generator"
         target="_blank"
         rel="noopener"
-        class="hidden self-center drop-shadow-light-md dark:block md:self-start"
+        class="drop-shadow-light-md hidden self-center dark:block md:self-start"
         ><img src="/assets/img/ph-badge-dark.svg" alt="Product of the Day | Product Hunt" style="width: 250px; height: 54px;" width="250" height="54"
       /></a>
       <a href="https://www.producthunt.com/posts/add-to-calendar-button-generator?utm_source=badge-top-post-badge&utm_medium=badge&utm_souce=badge-add&#0045;to&#0045;calendar&#0045;button&#0045;generator" target="_blank" rel="noopener" class="block self-center drop-shadow dark:hidden md:self-start"
@@ -38,7 +38,7 @@ const localePath = useLocalePath();
 
   <div id="demo" class="mt-20 bg-gradient-to-tr from-zinc-300 to-zinc-200 pb-16 pt-12 shadow-lg dark:from-zinc-800 dark:via-zinc-800 dark:to-zinc-700 dark:shadow-xl">
     <div class="container">
-      <h2 class="pb-8 underline decoration-primary-light decoration-2 dark:decoration-primary-dark"><BeakerIcon class="-mt-1 mr-3 inline-block h-6 w-6" aria-hidden="true" />{{ $t('navigation.playground') }}</h2>
+      <h2 class="decoration-primary-light dark:decoration-primary-dark pb-8 underline decoration-2"><BeakerIcon class="-mt-1 mr-3 inline-block h-6 w-6" aria-hidden="true" />{{ $t('navigation.playground') }}</h2>
     </div>
     <DelayHydration>
       <ClientOnly>
@@ -56,12 +56,12 @@ const localePath = useLocalePath();
   </div>
 
   <div id="installation" class="container mt-12 pt-12">
-    <h2 class="pb-8 underline decoration-primary-light decoration-2 dark:decoration-primary-dark"><WrenchScrewdriverIcon class="-mt-1 mr-3 inline-block h-6 w-6" aria-hidden="true" />{{ $t('content.home.headline_installation') }}</h2>
+    <h2 class="decoration-primary-light dark:decoration-primary-dark pb-8 underline decoration-2"><WrenchScrewdriverIcon class="-mt-1 mr-3 inline-block h-6 w-6" aria-hidden="true" />{{ $t('content.home.headline_installation') }}</h2>
     <IntegrationGuidesOverview />
   </div>
 
   <div id="features" class="container">
-    <h2 class="mt-20 pb-8 underline decoration-primary-light decoration-2 dark:decoration-primary-dark"><SparklesIcon class="-mt-1 mr-3 inline-block h-6 w-6" aria-hidden="true" />{{ $t('content.home.headline_functionality') }}</h2>
+    <h2 class="decoration-primary-light dark:decoration-primary-dark mt-20 pb-8 underline decoration-2"><SparklesIcon class="-mt-1 mr-3 inline-block h-6 w-6" aria-hidden="true" />{{ $t('content.home.headline_functionality') }}</h2>
     <div>{{ $t('content.home.functionality_intro') }}</div>
     <FeaturesBlock />
   </div>
@@ -80,7 +80,7 @@ const localePath = useLocalePath();
   </div>
 
   <div id="faq" class="container" itemscope itemtype="https://schema.org/FAQPage">
-    <h2 class="mt-20 pb-12 text-center underline decoration-primary-light decoration-2 dark:decoration-primary-dark">{{ $t('content.home.headline_faq') }}</h2>
+    <h2 class="decoration-primary-light dark:decoration-primary-dark mt-20 pb-12 text-center underline decoration-2">{{ $t('content.home.headline_faq') }}</h2>
     <FaqBlock />
   </div>
 </template>

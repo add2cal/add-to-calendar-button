@@ -5,7 +5,7 @@
  *
  * Style: Neumorphism
  *
- * Version: 2.3.4
+ * Version: 2.4.0
  * Creator: Jens Kuerschner (https://jenskuerschner.de)
  * Project: https://github.com/add2cal/add-to-calendar-button
  * License: Elastic License 2.0 (ELv2) (https://github.com/add2cal/add-to-calendar-button/blob/main/LICENSE.txt)
@@ -29,8 +29,8 @@
   --btn-background-hover: #fff;
   --btn-text: #444;
   --btn-text-hover: #111;
-  --btn-shadow: rgba(40 40 40 / 30%) 0.3em 0.3em 0.6em, rgba(255 255 255 / 60%) -0.2em -0.2em 0.4em;
-  --btn-shadow-hover: rgba(40 40 40 / 50%) 0.4em 0.4em 0.8em, rgba(255 255 255 / 90%) -0.3em -0.3em 0.6em;
+  --btn-shadow: rgba(40 40 40 / 30%) 0.3em 0.3em 0.6em,rgba(255 255 255 / 70%) -0.1em -0.1em 0.3em;
+  --btn-shadow-hover: rgba(40 40 40 / 50%) 0.4em 0.4em 0.8em, rgba(255 255 255 / 90%) -0.2em -0.2em 0.5em;
   --btn-shadow-active: inset rgba(40 40 40 / 40%) 0.15em 0.15em 0.3em, inset rgba(255 255 255 / 90%) -0.2em -0.2em 0.5em;
   --list-background: #f5f5f5;
   --list-background-hover: #fff;
@@ -38,7 +38,7 @@
   --list-text-hover: #111;
   --list-close-background: #e5e5e5;
   --list-close-text: #777;
-  --list-shadow: rgba(40 40 40 / 30%) 0.4em 0.4em 0.8em, rgba(255 255 255 / 90%) -0.4em -0.4em 0.9em;
+  --list-shadow: rgba(40 40 40 / 30%) 0.4em 0.4em 0.8em,rgba(255 255 255 / 80%) -0.2em -0.2em 0.5em;
   --modal-text: #111;
   --modal-background: #f5f5f5;
   --modal-btn-bar: #c6c8cd;
@@ -77,15 +77,15 @@
   --btn-background-hover: #373737;
   --btn-text: #dedede;
   --btn-text-hover: #f1f1f1;
-  --btn-shadow: rgba(0 0 0 / 70%) 0.3em 0.3em 0.6em, rgba(230 230 230 / 15%) -0.1em -0.1em 0.5em;
-  --btn-shadow-hover: rgba(0 0 0 / 80%) 0.4em 0.4em 0.9em, rgba(230 230 230 / 15%) -0.2em -0.2em 0.5em;
+  --btn-shadow: rgba(0 0 0 / 70%) 0.3em 0.3em 0.6em,rgba(230 230 230 / 30%) -0.05em -0.05em 0.4em;
+  --btn-shadow-hover: rgba(0 0 0 / 80%) 0.4em 0.4em 0.9em,rgba(230 230 230 / 35%) -0.08em -0.08em 0.5em;
   --btn-shadow-active: inset rgba(0 0 0 / 80%) 0.15em 0.15em 0.25em, inset rgba(230 230 230 / 15%) -0.2em -0.2em 0.6em;
   --list-background: #2e2e2e;
   --list-background-hover: #373737;
   --list-text: #dedede;
   --list-text-hover: #f1f1f1;
   --list-close-background: #282828;
-  --list-shadow: rgba(0 0 0) 0.3em 0.3em 1em, rgba(230 230 230 / 15%) -0.1em -0.1em 0.8em;
+  --list-shadow: rgba(0 0 0) 0.3em 0.3em 1em,rgba(230 230 230 / 40%) -0.08em -0.08em 0.6em;
   --modal-text: #f1f1f1;
   --modal-background: #242424;
   --modal-btn-bar: #38383a;
@@ -176,7 +176,7 @@
   -webkit-user-select: none;
   -webkit-tap-highlight-color: transparent;
   width: auto;
-  transition: box-shadow 0.1s ease-in-out;
+  transition: box-shadow 0.1s ease-in-out, background-color 0.1s ease-in-out;
   z-index: 1;
 }
 
@@ -322,8 +322,8 @@
   text-align: left;
   touch-action: manipulation;
   -webkit-tap-highlight-color: transparent;
-  transition: box-shadow 0.1s ease-in-out, padding 0.1s ease-in-out,
-    margin 0.1s ease-in-out;
+  transition: box-shadow 0.15s ease-in-out, padding 0.15s ease-in-out,
+    margin 0.15s ease-in-out;
 }
 
 .atcb-rtl .atcb-list-item {
@@ -462,19 +462,29 @@
   padding-top: 2.6em;
 }
 
-.atcb-modal-content {
+.atcb-modal-content {  
   background-color: var(--modal-background);
   font-size: 1em;
-  padding: 0.3em 2.5em 2.25em;
+  padding: .3em 2.5em 2.25em;
+}
+
+.atcb-modal-icon + .atcb-modal-content {
+  border-radius: 6px 6px 0 0;
+  margin-top: -2.6em;
+  padding-top: 2.6em;
 }
 
 @media (width <= 575px) {
   .atcb-modal-headline {
     padding: 1.8em 1em 1em;
   }
+  
+  .atcb-modal-content {  
+    padding: .3em 1.5em 1.5em;
+  }
 
-  .atcb-modal-content {
-    padding: 0.3em 1em 2em;
+  .atcb-modal-icon + .atcb-modal-content {
+    padding-top: 1.8em;
   }
 }
 

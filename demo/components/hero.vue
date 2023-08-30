@@ -10,33 +10,33 @@ const localePath = useLocalePath();
 
 <template>
   <div class="hero-container">
-    <div class="container flex justify-end py-3 xs:justify-between xs:py-0">
-      <div class="-mt-1 hidden w-auto max-w-[150px] grow xs:block">
+    <div class="xs:justify-between xs:py-0 container flex justify-end py-3">
+      <div class="xs:block -mt-1 hidden w-auto max-w-[150px] grow">
         <Logo class="force-light" />
       </div>
       <NavigationBar />
     </div>
     <div class="container">
       <div class="relative z-20">
-        <div class="absolute left-0 top-0 m-auto grid w-full grid-cols-1 justify-items-center pb-20 pt-8 xs:py-24 md:py-28 lg:grid-cols-2 lg:py-16">
+        <div class="xs:py-24 absolute left-0 top-0 m-auto grid w-full grid-cols-1 justify-items-center pb-20 pt-8 md:py-28 lg:grid-cols-2 lg:py-16">
           <div class="grid grid-cols-1 justify-items-center pb-5 md:grid-cols-2 lg:grid-cols-1 lg:py-20">
             <div class="max-w-[400px] self-center pb-14 md:pb-0 lg:pb-16">
-              <div class="mx-auto -mt-4 mb-16 block w-auto max-w-[280px] xs:hidden">
+              <div class="xs:hidden mx-auto -mt-4 mb-16 block w-auto max-w-[280px]">
                 <Logo class="force-light" variation="mobile" />
               </div>
               <h1 class="text-white">
-                <span class="hidden xs:block">{{ $t('content.home.header_prefix') }}</span>
-                <span class="hidden xs:block">Add to Calendar Button</span>
-                <span class="block text-4xl opacity-70 xs:hidden">{{ $t('content.home.header_slogan') }}</span>
+                <span class="xs:block hidden">{{ $t('content.home.header_prefix') }}</span>
+                <span class="xs:block hidden">Add to Calendar Button</span>
+                <span class="xs:hidden block text-4xl opacity-70">{{ $t('content.home.header_slogan') }}</span>
               </h1>
-              <h2 class="mt-5 hidden italic text-white opacity-70 xs:block">{{ $t('content.home.header_slogan') }}</h2>
+              <h2 class="xs:block mt-5 hidden italic text-white opacity-70">{{ $t('content.home.header_slogan') }}</h2>
             </div>
-            <div class="grid max-w-[400px] grid-cols-1 justify-items-center gap-6 self-center xs:grid-cols-2 md:grid-cols-1 lg:grid-cols-2">
-              <div class="hidden xs:block">
+            <div class="xs:grid-cols-2 grid max-w-[400px] grid-cols-1 justify-items-center gap-6 self-center md:grid-cols-1 lg:grid-cols-2">
+              <div class="xs:block hidden">
                 <NuxtLink :to="{path: localePath('index'), hash: '#installation'}" class="button-secondary order-first w-40 text-white md:order-last lg:order-first">{{ $t('labels.getStarted') }}</NuxtLink>
               </div>
               <div>
-                <NuxtLink :to="{path: localePath('index'), hash: '#demo'}" class="button-primary-animated order-first w-40 text-white md:order-last lg:order-first">{{ $t('labels.demo') }} <ArrowDownIcon class="-mt-1 ml-2 inline-block h-4 w-4 xs:hidden" aria-hidden="true" /></NuxtLink>
+                <NuxtLink :to="{path: localePath('index'), hash: '#demo'}" class="button-primary-animated order-first w-40 text-white md:order-last lg:order-first">{{ $t('labels.demo') }} <ArrowDownIcon class="xs:hidden -mt-1 ml-2 inline-block h-4 w-4" aria-hidden="true" /></NuxtLink>
               </div>
             </div>
           </div>
@@ -46,7 +46,7 @@ const localePath = useLocalePath();
         </div>
       </div>
       <div class="relative z-10 flex justify-end overflow-hidden">
-        <div class="w-full max-w-full pt-64 opacity-10 dark:opacity-[0.05] xs:pt-48 sm:pt-28 md:max-w-[450px] md:pt-28 lg:max-w-[600px] lg:pt-32 xl:max-w-[750px] xl:pt-12">
+        <div class="xs:pt-48 w-full max-w-full pt-64 opacity-10 dark:opacity-[0.05] sm:pt-28 md:max-w-[450px] md:pt-28 lg:max-w-[600px] lg:pt-32 xl:max-w-[750px] xl:pt-12">
           <svg version="1.1" style="width:100%; height:auto; min-height:300px;" viewBox="0 0 808 572" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
             <g transform="translate(-186.89 -51.542)" opacity=".62861">
               <path
@@ -69,7 +69,7 @@ const localePath = useLocalePath();
       </DelayHydration>
     </div>
   </div>
-  <div :class="view.atTopOfPage ? 'top-[-80px]' : 'top-0'" class="fixed z-50 w-full bg-gradient-to-tr from-primary to-primary-light py-3 shadow-xl transition-all dark:from-primary-darkest dark:to-primary-darker lg:hidden">
+  <div :class="view.atTopOfPage ? 'top-[-80px]' : 'top-0'" class="from-primary to-primary-light dark:from-primary-darkest dark:to-primary-darker fixed z-50 w-full bg-gradient-to-tr py-3 shadow-xl transition-all lg:hidden">
     <div class="container flex justify-between">
       <div class="-ml-3 -mt-1 w-auto max-w-[100px] grow xl:ml-0">
         <Logo variation="mobile-small" class="force-light" />

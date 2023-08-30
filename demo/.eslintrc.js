@@ -15,7 +15,7 @@ module.exports = {
 
   extends: ['plugin:@typescript-eslint/recommended', 'plugin:nuxt/recommended', 'plugin:vue/vue3-recommended', 'plugin:prettier/recommended', 'plugin:tailwindcss/recommended'],
 
-  plugins: ['@typescript-eslint', 'tailwindcss'],
+  plugins: ['@typescript-eslint', 'tailwindcss', 'prettier'],
 
   ignorePatterns: ['*.min.*', 'dist/*', '.output/*'],
 
@@ -25,6 +25,5 @@ module.exports = {
     'tailwindcss/no-custom-classname': 'off',
     'vue/attribute-hyphenation': 'off',
     'vue/require-default-prop': 'off',
-    'tailwindcss/classnames-order': 'off',
   },
 };

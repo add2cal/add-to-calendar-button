@@ -7,7 +7,7 @@ import { mergeDeep } from '@/utils/array';
 
 const today = new Date();
 const futureDay = new Date();
-futureDay.setDate(today.getDate() + 180);
+futureDay.setDate(today.getDate() + 14);
 const defaultDate = futureDay.getFullYear() + '-' + ('0' + (futureDay.getMonth() + 1)).slice(-2) + '-' + ('0' + futureDay.getDate()).slice(-2);
 
 export const getDefaultDateRecurrenceAttrs = (): DateRecurrenceAttrs => ({

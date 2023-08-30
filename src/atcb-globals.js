@@ -5,14 +5,14 @@
  *  Add to Calendar Button
  *  ++++++++++++++++++++++
  *
- *  Version: 2.3.4
+ *  Version: 2.4.0
  *  Creator: Jens Kuerschner (https://jenskuerschner.de)
  *  Project: https://github.com/add2cal/add-to-calendar-button
  *  License: Elastic License 2.0 (ELv2) (https://github.com/add2cal/add-to-calendar-button/blob/main/LICENSE.txt)
  *  Note:    DO NOT REMOVE THE COPYRIGHT NOTICE ABOVE!
  *
  */
-const atcbVersion = '2.3.4';
+const atcbVersion = '2.4.0';
 
 // DEFINING CSS
 const atcbCssTemplate = {};
@@ -50,7 +50,7 @@ const atcbIsAndroid = atcbIsBrowser()
       return false;
     };
 // Chrome
-/*const isChrome = atcbIsBrowser()
+/*const atcbIsChrome = atcbIsBrowser()
   ? () => {
       if (/chrome|chromium|crios|google inc/i.test(navigator.userAgent || navigator.vendor)) {
         return true;
@@ -179,6 +179,11 @@ const atcbWcParams = [
   'hidden',
   'hideButton',
   'pastDateHandling',
+  'proxy',
+  'fakeMobile',
+  'fakeIOS',
+  'fakeAndroid',
+  'forceOverlay',
 ];
 const atcbWcBooleanParams = [
   'debug',
@@ -200,6 +205,11 @@ const atcbWcBooleanParams = [
   'disabled',
   'hidden',
   'hideButton',
+  'proxy',
+  'fakeMobile',
+  'fakeIOS',
+  'fakeAndroid',
+  'forceOverlay',
 ];
 const atcbWcObjectParams = ['customLabels', 'ty', 'rsvp'];
 const atcbWcObjectArrayParams = ['dates'];

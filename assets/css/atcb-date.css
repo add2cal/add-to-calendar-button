@@ -5,7 +5,7 @@
  *
  * Style: Date
  *
- * Version: 2.3.4
+ * Version: 2.4.0
  * Creator: Jens Kuerschner (https://jenskuerschner.de)
  * Project: https://github.com/add2cal/add-to-calendar-button
  * License: Elastic License 2.0 (ELv2) (https://github.com/add2cal/add-to-calendar-button/blob/main/LICENSE.txt)
@@ -595,13 +595,23 @@
   padding: .3em 2.5em 2.25em;
 }
 
+.atcb-modal-icon + .atcb-modal-content {
+  border-radius: 6px 6px 0 0;
+  margin-top: -2.6em;
+  padding-top: 2.6em;
+}
+
 @media (width <= 575px) {
   .atcb-modal-headline {
     padding: 1.8em 1em 1em;
   }
-
+  
   .atcb-modal-content {  
-    padding: .3em 1em 2em;
+    padding: .3em 1.5em 1.5em;
+  }
+
+  .atcb-modal-icon + .atcb-modal-content {
+    padding-top: 1.8em;
   }
 }
 

@@ -64,7 +64,7 @@ const localePath = useLocalePath();
         <Meta name="description" :content="description" />
       </Head>
       <Body>
-        <div class="h-5 w-full bg-gradient-to-tr from-primary via-primary to-primary-light shadow-lg dark:from-primary dark:via-primary-dark dark:to-primary-dark"></div>
+        <div class="from-primary via-primary to-primary-light dark:from-primary dark:via-primary-dark dark:to-primary-dark h-5 w-full bg-gradient-to-tr shadow-lg"></div>
         <div class="container mb-20 mt-16 text-center md:text-left">
           <div v-if="statusCode == 404" class="m-20 mx-auto max-w-sm">
             <svg version="1.1" viewBox="0 0 819.92 844.36" xmlns="http://www.w3.org/2000/svg">
@@ -343,7 +343,7 @@ const localePath = useLocalePath();
             </svg>
           </div>
           <div class="text-center">
-            <h1 class="underline decoration-primary-light decoration-4 dark:decoration-primary-dark">{{ statusCode }}: {{ t("content.404.intro") }}</h1>
+            <h1 class="decoration-primary-light dark:decoration-primary-dark underline decoration-4">{{ statusCode }}: {{ t("content.404.intro") }}</h1>
             <div v-if="statusCode != 404" class="mx-3 my-20">{{ props.error?.message }}</div>
             <NuxtLink v-if="statusCode == 404" :to="localePath('index')" class="button-primary mx-3 my-20"> <ArrowUturnLeftIcon class="-mt-0.5 mr-2 inline-block h-4 w-4" aria-hidden="true" />{{ t("content.404.back") }} </NuxtLink>
             <div v-else class="h-32"></div>

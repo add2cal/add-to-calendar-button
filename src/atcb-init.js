@@ -3,7 +3,7 @@
  *  Add to Calendar Button
  *  ++++++++++++++++++++++
  *
- *  Version: 2.3.4
+ *  Version: 2.4.0
  *  Creator: Jens Kuerschner (https://jenskuerschner.de)
  *  Project: https://github.com/add2cal/add-to-calendar-button
  *  License: Elastic License 2.0 (ELv2) (https://github.com/add2cal/add-to-calendar-button/blob/main/LICENSE.txt)
@@ -53,15 +53,15 @@ if (atcbIsBrowser()) {
         // if no data yet, we try reading attributes or the innerHTML of the host element
         try {
           this.data = atcb_read_attributes(this);
-          this.loaded = true;
         } catch (e) {
           if (this.debug) {
             atcb_render_debug_msg(this.shadowRoot, e);
           }
-          this.loaded = true;
           return;
+        } finally {
+          this.data.proKey = '';
+          this.loaded = true;
         }
-        this.data.proKey = '';
       }
       this.initButton();
     }
@@ -271,7 +271,6 @@ function atcb_build_button(host, data, debug = false) {
       // create schema.org data (https://schema.org/Event), if possible; and add it to the regular DOM
       if (!data.hideRichData && data.name && data.dates[0].location && data.dates[0].startDate) {
         atcb_generate_rich_data(data, host.host);
-        data.schemaEl = host.host.previousSibling;
       }
     }
     // log event
@@ -287,8 +286,9 @@ function atcb_cleanup(host, data) {
   // cleaning up a little bit
   atcb_close(host);
   atcb_unset_global_event_listener(data.identifier);
-  if (data.schemaEl != null) {
-    data.schemaEl.remove();
+  const schemaEl = document.getElementById('atcb-schema-' + data.identifier);
+  if (schemaEl) {
+    schemaEl.remove();
   }
   Array.from(host.querySelectorAll('.atcb-debug-error-msg'))
     .concat(Array.from(host.querySelectorAll('style')))
@@ -323,7 +323,7 @@ function atcb_load_css(host, rootObj = null, style = '', inline = false, buttons
       return null;
     }
     if (cspnonceRegex.test(host.host.getAttribute('cspnonce'))) {
-      throw new Error("cspnonce input contains forbidden characters.");
+      throw new Error('cspnonce input contains forbidden characters.');
     }
     return host.host.getAttribute('cspnonce');
   })();
@@ -436,7 +436,7 @@ function atcb_render_debug_msg(host, error) {
 }
 
 // prepare data when not using the web component, but some custom trigger instead
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
+// eslint-disable-next-line no-unused-vars, @typescript-eslint/no-unused-vars
 function atcb_action(data, triggerElement, keyboardTrigger = false) {
   // return if not within a browser environment
   if (!atcbIsBrowser()) {
@@ -509,7 +509,7 @@ function atcb_action(data, triggerElement, keyboardTrigger = false) {
   if (!data.blockInteraction) {
     // prepare shadow dom and load style (not necessary if iCal or Apple, and not on mobile and not multi-date with organizer)
     let host = null;
-    if (!oneOption || (data.options[0] !== 'apple' && data.options[0] !== 'ical') || (data.dates && data.dates.length > 1 && data.dates.organizer) || (atcbIsMobile())) {
+    if (!oneOption || (data.options[0] !== 'apple' && data.options[0] !== 'ical') || (data.dates && data.dates.length > 1 && data.dates.organizer) || atcbIsMobile()) {
       host = document.createElement('div');
       host.id = 'atcb-customTrigger-' + data.identifier + '-host';
       if (root == document.body) {
@@ -625,7 +625,7 @@ function atcb_set_global_event_listener(host, data) {
     document.addEventListener('keyup', atcb_global_listener_keyup);
     // global listener for arrow key optionlist navigation
     document.addEventListener('keydown', atcb_global_listener_keydown);
-    // Global listener for any screen changes
+    // global listener for any screen changes
     window.addEventListener('resize', atcb_global_listener_resize);
   }
 }
