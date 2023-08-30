@@ -3,7 +3,7 @@
  *  Add to Calendar Button
  *  ++++++++++++++++++++++
  *
- *  Version: 2.4.0
+ *  Version: 2.4.1
  *  Creator: Jens Kuerschner (https://jenskuerschner.de)
  *  Project: https://github.com/add2cal/add-to-calendar-button
  *  License: Elastic License 2.0 (ELv2) (https://github.com/add2cal/add-to-calendar-button/blob/main/LICENSE.txt)
@@ -949,11 +949,11 @@ function atcb_generate_modal_host(host, data, reset = true) {
     newModalHost.setAttribute('cspnonce', host.host.getAttribute('cspnonce'));
   }
   newModalHost.setAttribute('atcb-button-id', data.identifier);
-  newModalHost.setAttribute('style', 'transform:translate3D(0, 0, 0);visibility:visible;opacity:1;position:fixed;top:0;left:0;display:flex;z-index:13999998;');
+  newModalHost.setAttribute('style', 'transform:translate3D(0, 0, 0);visibility:visible;opacity:1;position:fixed;top:0;left:0;width:100%;height:100%;display:flex;z-index:13999998;');
   document.body.append(newModalHost);
   newModalHost.attachShadow({ mode: 'open', delegateFocus: true });
   const elem = document.createElement('template');
-  elem.innerHTML = '<div class="atcb-modal-host-initialized" style="translate3D(0, 0, 0);visibility:visible;opacity:1;position:fixed;top:0;left:0;display:flex;z-index:13999999;"></div>';
+  elem.innerHTML = '<div class="atcb-modal-host-initialized" style="translate3D(0, 0, 0);visibility:visible;opacity:1;position:fixed;top:0;left:0;width:100%;height:100%;display:flex;z-index:13999999;"></div>';
   newModalHost.shadowRoot.append(elem.content.cloneNode(true));
   atcb_set_light_mode(newModalHost.shadowRoot, data);
   atcb_load_css(newModalHost.shadowRoot, null, data.buttonStyle, false, false, data.customCss);
