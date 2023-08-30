@@ -18,6 +18,7 @@ import { atcb_generate_time, atcb_secure_url } from './atcb-util.js';
 // multi-date events are not 100% compliant with schema.org, since this is still a little broken and not supported by Google
 function atcb_generate_rich_data(data, parent) {
   const schemaEl = document.createElement('script');
+  schemaEl.id = 'atcb-schema-' + data.identifier;
   if (parent.hasAttribute('cspnonce')) {
     const cspnonceRegex = /[`'"()[\]{}<>\s]/;
     if (cspnonceRegex.test(parent.getAttribute('cspnonce'))) {
@@ -26,12 +27,13 @@ function atcb_generate_rich_data(data, parent) {
     schemaEl.setAttribute('nonce', parent.getAttribute('cspnonce'));
   }
   schemaEl.type = 'application/ld+json';
+  const id = data.name.replace(/\s/g, '');
   const schemaContentMulti = [];
   if (data.dates.length > 1) {
     const parts = [];
     parts.push('"@context":"https://schema.org"');
     parts.push('"@type":"EventSeries"');
-    parts.push('"@id":"' + data.name.replace(/\s/g, '') + '"');
+    parts.push('"@id":"' + id + '"');
     parts.push('"name":"' + data.name + '",');
     schemaContentMulti.push('{\r\n' + parts.join(',\r\n') + '\r\n');
   }
@@ -41,9 +43,9 @@ function atcb_generate_rich_data(data, parent) {
     schemaContent.push('"@context":"https://schema.org"');
     schemaContent.push('"@type":"Event"');
     if (data.dates.length > 1) {
-      schemaContent.push('"@id":"' + data.name.replace(/\s/g, '') + '-' + (i + 1) + '"');
+      schemaContent.push('"@id":"' + id + '-' + (i + 1) + '"');
     }
-    if (data.dates[`${i}`].status == 'CANCELLED') {
+    if (data.dates[`${i}`].status === 'CANCELLED') {
       schemaContent.push('"eventStatus":"https://schema.org/EventCancelled"');
     }
     schemaContent.push('"name":"' + data.dates[`${i}`].name + '"');
@@ -52,21 +54,21 @@ function atcb_generate_rich_data(data, parent) {
     }
     const formattedDate = atcb_generate_time(data.dates[`${i}`], 'delimiters', 'general', true);
     schemaContent.push('"startDate":"' + formattedDate.start + '"');
-    if (formattedDate.duration != null) {
+    if (formattedDate.duration) {
       schemaContent.push('"duration":"' + formattedDate.duration + '"');
     }
     schemaContent.push(data.dates[`${i}`].onlineEvent ? '"eventAttendanceMode":"https://schema.org/OnlineEventAttendanceMode",\r\n"location": {\r\n"@type":"VirtualLocation",\r\n"url":"' + data.dates[`${i}`].location + '"\r\n}' : '"location":"' + data.dates[`${i}`].location + '"');
-    if (data.recurrence != null && data.recurrence != '') {
+    if (data.recurrence && data.recurrence !== '') {
       schemaContent.push(...atcb_generate_rich_data_recurrence(data, formattedDate));
     } else {
       schemaContent.push('"endDate":"' + formattedDate.end + '"');
     }
-    if (data.dates[`${i}`].organizer != null && data.dates[`${i}`].organizer != '') {
+    if (data.dates[`${i}`].organizer && data.dates[`${i}`].organizer !== '') {
       const organizerParts = data.dates[`${i}`].organizer.split('|');
       schemaContent.push('"organizer":{\r\n"@type":"Person",\r\n"name":"' + organizerParts[0] + '",\r\n"email":"' + organizerParts[1] + '"\r\n}');
     }
     const imageData = [];
-    if (data.images != null) {
+    if (data.images) {
       if (Array.isArray(data.images)) {
         for (let i = 0; i < data.images.length; i++) {
           if (atcb_secure_url(data.images[`${i}`], data.debug) && data.images[`${i}`].startsWith('http')) {
@@ -89,16 +91,19 @@ function atcb_generate_rich_data(data, parent) {
   } else {
     schemaEl.textContent = schemaContentFull[0];
   }
-  parent.parentNode.insertBefore(schemaEl, parent);
+  // insert schemaEl at the beginning of <body> to make sure it gets read early
+  document.body.insertBefore(schemaEl, document.body.firstChild);
 }
 
 function atcb_generate_rich_data_recurrence(data, formattedDate) {
   const schemaRecurrenceContent = [];
   schemaRecurrenceContent.push('"eventSchedule": { "@type": "Schedule"');
   schemaRecurrenceContent.push('"scheduleTimezone":"' + data.dates[0].timeZone + '"');
-  const repeatFrequency = 'P' + data.recurrence_interval + data.recurrence_frequency.substring(0, 1);
-  schemaRecurrenceContent.push('"repeatFrequency":"' + repeatFrequency + '"');
-  if (data.recurrence_byDay != null && data.recurrence_byDay != '') {
+  if (data.recurrence_interval && data.recurrence_interval !== '' && data.recurrence_frequency && data.recurrence_frequency !== '') {
+    const repeatFrequency = 'P' + data.recurrence_interval + data.recurrence_frequency.substring(0, 1);
+    schemaRecurrenceContent.push('"repeatFrequency":"' + repeatFrequency + '"');
+  }
+  if (data.recurrence_byDay && data.recurrence_byDay !== '') {
     const byDayString = (function () {
       if (/\d/.test(data.recurrence_byDay)) {
         return '"' + data.recurrence_byDay + '"';
@@ -122,21 +127,21 @@ function atcb_generate_rich_data_recurrence(data, formattedDate) {
     })();
     schemaRecurrenceContent.push('"byDay":' + byDayString);
   }
-  if (data.recurrence_byMonth != null && data.recurrence_byMonth != '') {
+  if (data.recurrence_byMonth && data.recurrence_byMonth !== '') {
     const byMonthString = data.recurrence_byMonth.includes(',') ? '[' + data.recurrence_byMonth + ']' : data.recurrence_byMonth;
     schemaRecurrenceContent.push('"byMonth":"' + byMonthString + '"');
   }
-  if (data.recurrence_byMonthDay != null && data.recurrence_byMonthDay != '') {
+  if (data.recurrence_byMonthDay && data.recurrence_byMonthDay !== '') {
     const byMonthDayString = data.recurrence_byMonthDay.includes(',') ? '[' + data.recurrence_byMonthDay + ']' : data.recurrence_byMonthDay;
     schemaRecurrenceContent.push('"byMonthDay":"' + byMonthDayString + '"');
   }
-  if (data.recurrence_count != null && data.recurrence_count != '') {
+  if (data.recurrence_count && data.recurrence_count !== '') {
     schemaRecurrenceContent.push('"repeatCount":"' + data.recurrence_count + '"');
   }
-  if (data.recurrence_until != null && data.recurrence_until != '') {
+  if (data.recurrence_until && data.recurrence_until !== '') {
     schemaRecurrenceContent.push('"endDate":"' + data.recurrence_until + '"');
   }
-  if (data.startTime != null && data.startTime != '' && data.endTime != null && data.endTime != '') {
+  if (data.startTime && data.startTime !== '' && data.endTime && data.endTime !== '') {
     schemaRecurrenceContent.push('"startTime":"' + data.startTime + ':00"');
     schemaRecurrenceContent.push('"endTime":"' + data.endTime + ':00"');
     schemaRecurrenceContent.push('"duration":"' + formattedDate.duration + '"');

@@ -691,6 +691,22 @@ definePageMeta({
                 Der Dropdown-Stil berücksichtigt auch die Position auf dem Bildschirm und zeigt die Liste je nach Situation über oder unter dem Button an. Nutze den Wert "dropdown-static", bzw. "dropup-static", um sie immer unterhalb oder oberhalb anzuzeigen.
               </td>
             </tr>
+            <tr id="forceoverlay">
+              <th scope="row">forceOverlay</th>
+              <td>
+                <em>Boolean</em><br /><br /><span class="label">{{ $t('content.config.default') }}:</span>False
+              </td>
+              <td v-if="locale=='en'">
+                This option renders the dropdown together with the button above everything else - similar to the modal option.<br />
+                This can be useful, if your layout and HTML structure conflicts with the default, where the dropdown gets rendered next to the button.<br /><br />
+                However, it comes with some small performance drawbacks.
+              </td>
+              <td v-else>
+                Diese Option rendert das Dropdown zusammen mit dem Button über allem anderen - ähnlich der Modal-Option.<br />
+                Dies kann nützlich sein, wenn dein Layout und die HTML-Struktur nicht mit der Standard-Option, bei der das Dropdown direkt am Button gerendert wird, kompatibel ist.<br /><br />
+                Aufgrund der zusätzlichen Berechnungen geht dies mit kleinen Performance-Einbußen einher.
+              </td>
+            </tr>
             <tr id="hidebackground">
               <th scope="row">hideBackground</th>
               <td>
