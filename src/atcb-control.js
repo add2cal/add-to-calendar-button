@@ -11,8 +11,8 @@
  *
  */
 
-import { atcb_generate_dropdown_list, atcb_generate_bg_overlay, atcb_create_atcbl, atcb_generate_modal_host } from './atcb-generate.js';
-import { atcb_position_list, atcb_manage_body_scroll, atcb_set_fullsize, atcb_set_sizes } from './atcb-util.js';
+import { atcb_generate_dropdown_list, atcb_generate_bg_overlay, atcb_generate_overlay_dom, atcb_create_atcbl, atcb_generate_modal_host } from './atcb-generate.js';
+import { atcb_position_list, atcb_position_shadow_button_listener, atcb_manage_body_scroll, atcb_set_fullsize, atcb_set_sizes } from './atcb-util.js';
 import { atcbStates } from './atcb-globals.js';
 import { atcb_log_event } from './atcb-event';
 
@@ -64,8 +64,8 @@ function atcb_open(host, data, button = null, keyboardTrigger = false, generated
     list.classList.add('atcb-modal');
   }
   // render the items depending on the liststyle
+  const bgOverlay = atcb_generate_bg_overlay(host, data.trigger, data.listStyle === 'modal', !data.hideBackground);
   if (data.listStyle === 'modal') {
-    const bgOverlay = atcb_generate_bg_overlay(host, data.trigger, true, !data.hideBackground);
     // define background overlay in its own new modal shadowDOM
     const modalHost = atcb_generate_modal_host(host, data);
     // append background overlay and list to the modal shadowDOM; and init helper functions
@@ -79,7 +79,10 @@ function atcb_open(host, data, button = null, keyboardTrigger = false, generated
     // set overlay size just to be sure
     atcb_set_fullsize(bgOverlay);
   } else {
-    const bgOverlay = atcb_generate_bg_overlay(host, data.trigger, false, !data.hideBackground);
+    if (data.forceOverlay) {
+      host = atcb_generate_overlay_dom(host, data);
+      button = host.querySelector('button.atcb-button');
+    }
     host.querySelector('.atcb-initialized').append(listWrapper);
     listWrapper.append(list);
     if (data.buttonStyle != 'default') {
@@ -198,6 +201,15 @@ function atcb_close(host, keyboardTrigger = false) {
       .concat(Array.from(host.querySelectorAll('#add-to-calendar-button-reference')))
       .concat(Array.from(host.querySelectorAll('#atcb-bgoverlay')))
       .forEach((el) => el.remove());
+    // show original button again (forceOverlay case)
+    const hiddenButton = document.querySelector('.atcb-shadow-hide');
+    if (hiddenButton) {
+      hiddenButton.shadowRoot.querySelector('.atcb-initialized').style.opacity = '1';
+      hiddenButton.classList.remove('atcb-shadow-hide');
+      // also remove the event listener
+      window.removeEventListener('scroll', atcb_position_shadow_button_listener);
+      window.removeEventListener('resize', atcb_position_shadow_button_listener);
+    }
     // reset active state
     atcbStates['active'] = '';
   }

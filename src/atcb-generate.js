@@ -14,7 +14,7 @@
 import { atcbIcon, atcbStates, atcbDefaultTarget } from './atcb-globals.js';
 import { atcb_toggle, atcb_close } from './atcb-control.js';
 import { atcb_generate_links } from './atcb-links.js';
-import { atcb_generate_time, atcb_manage_body_scroll, atcb_set_fullsize, atcb_set_sizes, atcb_debounce, atcb_debounce_leading } from './atcb-util.js';
+import { atcb_generate_time, atcb_position_shadow_button, atcb_position_shadow_button_listener, atcb_manage_body_scroll, atcb_set_fullsize, atcb_set_sizes, atcb_debounce, atcb_debounce_leading } from './atcb-util.js';
 import { atcb_set_fully_successful } from './atcb-links';
 import { atcb_translate_hook } from './atcb-i18n.js';
 import { atcb_load_css, atcb_set_light_mode } from './atcb-init';
@@ -960,4 +960,29 @@ function atcb_generate_modal_host(host, data, reset = true) {
   return newModalHost.shadowRoot;
 }
 
-export { atcb_generate_label, atcb_generate_button, atcb_generate_dropdown_list, atcb_create_modal, atcb_generate_bg_overlay, atcb_create_atcbl, atcb_generate_modal_host };
+// FUNCTION TO COPY THE BUTTON TO A SECOND SHADOWDOM TO FORCE OVERLAY
+function atcb_generate_overlay_dom(host, data) {
+  const newHost = atcb_generate_modal_host(host, data);
+  atcb_set_fullsize(newHost.querySelector('.atcb-modal-host-initialized'));
+  // get all top-level nodes from host
+  const nodes = Array.from(host.children);
+  // duplicate all nodes into newHost, except for any style tag
+  nodes.forEach((node) => {
+    if (node.tagName != 'STYLE') {
+      newHost.querySelector('.atcb-modal-host-initialized').append(node.cloneNode(true));
+    }
+  });
+  // remove the id from the <button> to prevent duplicate ids
+  newHost.querySelector('button.atcb-button').removeAttribute('id');
+  // set the opacity of the original button to 0
+  host.host.classList.add('atcb-shadow-hide');
+  host.querySelector('.atcb-initialized').style.opacity = '0';
+  // set the dimension and position of the .atcb-initialized to the one in the original host
+  atcb_position_shadow_button(host, newHost);
+  // listener for any scroll activity
+  window.addEventListener('scroll', atcb_position_shadow_button_listener);
+  window.addEventListener('resize', atcb_position_shadow_button_listener);
+  return newHost.querySelector('.atcb-modal-host-initialized');
+}
+
+export { atcb_generate_label, atcb_generate_button, atcb_generate_dropdown_list, atcb_create_modal, atcb_generate_bg_overlay, atcb_generate_overlay_dom, atcb_create_atcbl, atcb_generate_modal_host };

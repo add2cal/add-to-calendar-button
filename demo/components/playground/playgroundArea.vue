@@ -34,8 +34,8 @@ watch(showMC, val => {
 <template>
   <div class="md:container">
     <div :class="[ !showCode ? 'rounded-none md:rounded-md' : 'rounded-none md:rounded-t-md' ]" class="grid grid-cols-1 border-b-2 border-zinc-400 shadow-lg dark:border-zinc-600 md:grid-cols-2 md:border-2 lg:grid-cols-3">
-      <div id="mobile-input" class="flex justify-center bg-gradient-to-tr from-primary-dark to-primary-light p-3 dark:to-primary md:hidden">
-        <AdjustmentsHorizontalIcon class="mr-14 block h-8 w-8 cursor-pointer text-white hover:text-secondary" @click="(showMC = !showMC)" />
+      <div id="mobile-input" class="from-primary-dark to-primary-light dark:to-primary flex justify-center bg-gradient-to-tr p-3 md:hidden">
+        <AdjustmentsHorizontalIcon class="hover:text-secondary mr-14 block h-8 w-8 cursor-pointer text-white" @click="(showMC = !showMC)" />
         <LightModeSwitch class="self-center" />
       </div>
       <div id="date-input" :class="{ 'lg:rounded-bl-md-none rounded-bl-md': !showCode }" class="hidden rounded-tl-md bg-zinc-200 p-3 dark:bg-zinc-800 md:block">
@@ -50,7 +50,7 @@ watch(showMC, val => {
         class="grid-bg row-span-2 flex justify-center rounded-tl-none border-0 border-zinc-400 bg-zinc-100 px-3 py-8 dark:border-zinc-600 dark:bg-zinc-900 md:rounded-tr-md md:border-l-2 lg:row-span-1 lg:rounded-tr-none"
       >
         <div class="sticky top-[30vh] z-30 h-auto py-10 md:h-[500px] md:py-0">
-          <add-to-calendar-button v-bind="mapAttrsObject(data)" debug />
+          <add-to-calendar-button v-bind="mapAttrsObject(data)" debug forceOverlay />
         </div>
       </div>
       <div id="style-input" :class="[ !showCode ? 'rounded-bl-md lg:rounded-r-md lg:rounded-bl-none' : 'rounded-none lg:rounded-tr-md' ]" class="hidden border-l-0 border-t-2 border-zinc-400 bg-zinc-200 p-3 dark:border-zinc-600 dark:bg-zinc-800 md:block lg:border-l-2 lg:border-t-0">
@@ -62,7 +62,7 @@ watch(showMC, val => {
       </div>
     </div>
     <div id="code-output" :class="[ !showCode ? 'mx-8 bg-zinc-300 dark:bg-zinc-800' : 'mx-2 bg-zinc-200 pb-0 dark:bg-zinc-800 md:mx-0' ]" class="rounded-b-md border-2 border-t-0 border-zinc-400 p-2 shadow-lg transition-all dark:border-zinc-600">
-      <div class="cursor-pointer text-center text-sm font-semibold text-zinc-600 hover:text-black dark:text-zinc-400 dark:hover:text-secondary" @click="showCode = !showCode">
+      <div class="dark:hover:text-secondary cursor-pointer text-center text-sm font-semibold text-zinc-600 hover:text-black dark:text-zinc-400" @click="showCode = !showCode">
         <span :class="{ hidden: showCode }"><EyeIcon class="-mt-1 mr-2 inline-block h-5 w-5" aria-hidden="true" />{{ t('labels.showCode') }}</span>
         <span :class="{ hidden: !showCode }"><EyeSlashIcon class="-mt-1 mr-2 inline-block h-5 w-5" aria-hidden="true" />{{ t('labels.hideCode') }}</span>
       </div>
@@ -89,7 +89,7 @@ watch(showMC, val => {
         <LayoutAttrs v-model="data.layout" mobile />
       </div>
     </div>
-    <div class="sticky bottom-0 left-0 flex h-20 w-full cursor-pointer justify-center bg-secondary text-lg font-semibold text-zinc-700 hover:bg-secondary-light hover:text-black" @click="(showMC = !showMC)">
+    <div class="bg-secondary hover:bg-secondary-light sticky bottom-0 left-0 flex h-20 w-full cursor-pointer justify-center text-lg font-semibold text-zinc-700 hover:text-black" @click="(showMC = !showMC)">
       <div class="flex self-center">
         <div>
           <CheckIcon class="-mt-1.5 mr-2 inline-block h-7 w-7" aria-hidden="true" />

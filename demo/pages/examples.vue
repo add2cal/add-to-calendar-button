@@ -77,7 +77,7 @@ watch(locale, value => {
 <template>
   <div class="grid grid-cols-1 lg:grid-cols-[minmax(0,1fr)_192px]">
     <div class="pr-0 lg:pr-8 xl:pr-12 2xl:pr-20">
-      <h1 class="mb-16 underline decoration-primary-light decoration-4 dark:decoration-primary-dark">
+      <h1 class="decoration-primary-light dark:decoration-primary-dark mb-16 underline decoration-4">
         {{ $t('navigation.examples') }}
       </h1>
       <div v-if="locale=='en'">
@@ -111,6 +111,7 @@ watch(locale, value => {
               options="'Apple','Google','iCal','Outlook.com','Microsoft 365','Microsoft Teams','Yahoo'"
               lightMode="bodyScheme"
               :language="locale"
+              debug
             ></add-to-calendar-button>
           </div>
           <div class="flex-1 overflow-x-auto">
