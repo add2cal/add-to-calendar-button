@@ -132,7 +132,7 @@ const loadJsdelivrStats = async () => {
 <template>
   <div class="-mt-16 block px-8 pb-16 sm:hidden">
     <div class="inline-block">
-      <div class="fade-in m-2 flex flex-col rounded-3xl bg-zinc-800/70 px-5 py-3 text-white xs:flex-row xs:rounded-full">
+      <div class="fade-in xs:flex-row xs:rounded-full m-2 flex flex-col rounded-3xl bg-zinc-800/70 px-5 py-3 text-white">
         <div class="flex">
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="mr-2 inline-block h-4 w-4 self-center">
             <path
@@ -141,13 +141,13 @@ const loadJsdelivrStats = async () => {
               clip-rule="evenodd"
             />
           </svg>
-          <span class="text-md self-center font-semibold underline decoration-primary decoration-2 underline-offset-4">{{ isLoading ? '...' : $n(data.github.stars) }}</span>
+          <span class="text-md decoration-primary self-center font-semibold underline decoration-2 underline-offset-4">{{ isLoading ? '...' : $n(data.github.stars) }}</span>
         </div>
-        <span class="self-center pt-2 text-xs font-normal text-zinc-100 opacity-80 xs:pl-2 xs:pt-0">{{ $t('labels.stats.stars') }}</span>
+        <span class="xs:pl-2 xs:pt-0 self-center pt-2 text-xs font-normal text-zinc-100 opacity-80">{{ $t('labels.stats.stars') }}</span>
       </div>
     </div>
     <div class="inline-block">
-      <div class="fade-in m-2 flex flex-col rounded-3xl bg-zinc-800/70 px-5 py-3 text-white xs:flex-row xs:rounded-full">
+      <div class="fade-in xs:flex-row xs:rounded-full m-2 flex flex-col rounded-3xl bg-zinc-800/70 px-5 py-3 text-white">
         <div class="flex">
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="mr-2 inline-block h-4 w-4 self-center">
             <path
@@ -159,13 +159,13 @@ const loadJsdelivrStats = async () => {
               clip-rule="evenodd"
             />
           </svg>
-          <span class="text-md self-center font-semibold underline decoration-primary decoration-2 underline-offset-4">{{ isLoading ? '...' : $n(data.npm.totalInstallations) }}</span>
+          <span class="text-md decoration-primary self-center font-semibold underline decoration-2 underline-offset-4">{{ isLoading ? '...' : $n(data.npm.totalInstallations) }}</span>
         </div>
-        <span class="self-center pt-2 text-xs font-normal text-zinc-100 opacity-80 xs:pl-2 xs:pt-0">{{ $t('labels.stats.npm_total') }}</span>
+        <span class="xs:pl-2 xs:pt-0 self-center pt-2 text-xs font-normal text-zinc-100 opacity-80">{{ $t('labels.stats.npm_total') }}</span>
       </div>
     </div>
     <div class="inline-block">
-      <div class="fade-in m-2 flex flex-col rounded-3xl bg-zinc-800/70 px-5 py-3 text-white xs:flex-row xs:rounded-full">
+      <div class="fade-in xs:flex-row xs:rounded-full m-2 flex flex-col rounded-3xl bg-zinc-800/70 px-5 py-3 text-white">
         <div class="flex">
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="mr-2 inline-block h-4 w-4 self-center">
             <path
@@ -174,9 +174,9 @@ const loadJsdelivrStats = async () => {
               clip-rule="evenodd"
             />
           </svg>
-          <span class="text-md self-center font-semibold underline decoration-primary decoration-2 underline-offset-4">{{ isLoading ? '...' : $n(data.jsdelivr.montlyHits) }}</span>
+          <span class="text-md decoration-primary self-center font-semibold underline decoration-2 underline-offset-4">{{ isLoading ? '...' : $n(data.jsdelivr.montlyHits) }}</span>
         </div>
-        <span class="self-center pt-2 text-xs font-normal text-zinc-100 opacity-80 xs:pl-2 xs:pt-0">{{ $t('labels.stats.cdn') }}</span>
+        <span class="xs:pl-2 xs:pt-0 self-center pt-2 text-xs font-normal text-zinc-100 opacity-80">{{ $t('labels.stats.cdn') }}</span>
       </div>
     </div>
   </div>
@@ -209,7 +209,7 @@ const loadJsdelivrStats = async () => {
                   clip-rule="evenodd"
                 />
               </svg>
-              <span class="underline decoration-primary decoration-2 underline-offset-4 group-hover:decoration-primary-light group-hover:underline-offset-1">{{ isLoading ? '...' : $n(data.github.stars) }}</span>
+              <span class="decoration-primary group-hover:decoration-primary-light underline decoration-2 underline-offset-4 group-hover:underline-offset-1">{{ isLoading ? '...' : $n(data.github.stars) }}</span>
               <span class="pl-1 font-normal text-zinc-200 group-hover:text-zinc-100">{{ $t('labels.stats.stars') }}</span>
               <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="ml-0.5 mt-0.5 hidden h-3 w-3 group-hover:inline-block" aria-hidden="true">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 6H5.25A2.25 2.25 0 003 8.25v10.5A2.25 2.25 0 005.25 21h10.5A2.25 2.25 0 0018 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25" />
@@ -227,7 +227,7 @@ const loadJsdelivrStats = async () => {
                   clip-rule="evenodd"
                 />
               </svg>
-              <span class="underline decoration-primary decoration-2 underline-offset-4 group-hover:decoration-primary-light group-hover:underline-offset-1">{{ isLoading ? '...' : $n(data.npm.totalInstallations) }}</span>
+              <span class="decoration-primary group-hover:decoration-primary-light underline decoration-2 underline-offset-4 group-hover:underline-offset-1">{{ isLoading ? '...' : $n(data.npm.totalInstallations) }}</span>
               <span class="pl-1 font-normal text-zinc-200 group-hover:text-zinc-100">{{ $t('labels.stats.npm_total') }}</span>
               <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="ml-0.5 mt-0.5 hidden h-3 w-3 group-hover:inline-block" aria-hidden="true">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 6H5.25A2.25 2.25 0 003 8.25v10.5A2.25 2.25 0 005.25 21h10.5A2.25 2.25 0 0018 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25" />
@@ -245,7 +245,7 @@ const loadJsdelivrStats = async () => {
                   clip-rule="evenodd"
                 />
               </svg>
-              <span class="underline decoration-primary decoration-2 underline-offset-4 group-hover:decoration-primary-light group-hover:underline-offset-1">{{ isLoading ? '...' : $n(data.npm.weeklyInstallations) }}</span>
+              <span class="decoration-primary group-hover:decoration-primary-light underline decoration-2 underline-offset-4 group-hover:underline-offset-1">{{ isLoading ? '...' : $n(data.npm.weeklyInstallations) }}</span>
               <span class="pl-1 font-normal text-zinc-200 group-hover:text-zinc-100">{{ $t('labels.stats.npm_weekly') }}</span>
               <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="ml-0.5 mt-0.5 hidden h-3 w-3 group-hover:inline-block" aria-hidden="true">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 6H5.25A2.25 2.25 0 003 8.25v10.5A2.25 2.25 0 005.25 21h10.5A2.25 2.25 0 0018 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25" />
@@ -260,7 +260,7 @@ const loadJsdelivrStats = async () => {
                   clip-rule="evenodd"
                 />
               </svg>
-              <span class="underline decoration-primary decoration-2 underline-offset-4 group-hover:decoration-primary-light group-hover:underline-offset-1">{{ isLoading ? '...' : $n(data.jsdelivr.montlyHits) }}</span>
+              <span class="decoration-primary group-hover:decoration-primary-light underline decoration-2 underline-offset-4 group-hover:underline-offset-1">{{ isLoading ? '...' : $n(data.jsdelivr.montlyHits) }}</span>
               <span class="pl-1 font-normal text-zinc-200 group-hover:text-zinc-100">{{ $t('labels.stats.cdn') }}</span>
               <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="ml-0.5 mt-0.5 hidden h-3 w-3 group-hover:inline-block" aria-hidden="true">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 6H5.25A2.25 2.25 0 003 8.25v10.5A2.25 2.25 0 005.25 21h10.5A2.25 2.25 0 0018 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25" />

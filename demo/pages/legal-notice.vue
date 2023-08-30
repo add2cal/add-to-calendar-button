@@ -12,7 +12,7 @@ useHead({
 </script>
 
 <template>
-  <h1 class="mb-16 underline decoration-primary-light decoration-4 dark:decoration-primary-dark">{{ $t('navigation.legal-notice') }}</h1>
+  <h1 class="decoration-primary-light dark:decoration-primary-dark mb-16 underline decoration-4">{{ $t('navigation.legal-notice') }}</h1>
   <p>{{ $t('content.legal.intro') }}</p>
   <p class="select-none pt-6 text-sm">
     <strong>Peltmonger Projects</strong><br />

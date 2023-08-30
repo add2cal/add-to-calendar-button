@@ -111,7 +111,6 @@ watch(locale, value => {
               options="'Apple','Google','iCal','Outlook.com','Microsoft 365','Microsoft Teams','Yahoo'"
               lightMode="bodyScheme"
               :language="locale"
-              debug
             ></add-to-calendar-button>
           </div>
           <div class="flex-1 overflow-x-auto">

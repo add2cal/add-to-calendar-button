@@ -15,7 +15,7 @@ definePageMeta({
 <template>
   <div class="grid grid-cols-1 lg:grid-cols-[minmax(0,1fr)_192px]">
     <div class="pr-0 lg:pr-8 xl:pr-12 2xl:pr-20">
-      <h1 class="mb-16 underline decoration-primary-light decoration-4 dark:decoration-primary-dark">
+      <h1 class="decoration-primary-light dark:decoration-primary-dark mb-16 underline decoration-4">
         {{ $t('navigation.configuration') }}
       </h1>
       <div v-if="locale=='en'">
@@ -68,7 +68,7 @@ definePageMeta({
           </thead>
           <tbody>
             <tr id="prokey" class="hidden">
-              <th scope="row" class="text-base text-primary dark:text-primary-light">proKey</th>
+              <th scope="row" class="text-primary dark:text-primary-light text-base">proKey</th>
               <td><em>String</em></td>
               <td v-if="locale=='en'">
                 If you are using the PRO service, you can use the "proKey" attribute to connect the button to a specific event of yours.<br />

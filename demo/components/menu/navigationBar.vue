@@ -35,8 +35,8 @@ watch(showMM, val => {
     <Bars3Icon :class="{ hidden: showMM }" class="block h-10 w-10 cursor-pointer self-center rounded-md border border-transparent p-0 leading-none opacity-100 hover:border-white hover:p-1 hover:opacity-80 lg:hidden" @click="(showMM = !showMM)" />
   </nav>
   <!-- mobile menu -->
-  <nav :class="{ hidden: !showMM }" class="fixed left-0 top-0 z-50 h-full w-full overflow-y-auto bg-gradient-to-tr from-primary from-40% to-primary-dark dark:from-primary-darkest dark:to-primary-darker" style="max-height: 100dvh;">
-    <XMarkIcon class="fixed right-8 top-8 block h-10 w-10 cursor-pointer text-white hover:text-secondary" @click="(showMM = !showMM)" />
+  <nav :class="{ hidden: !showMM }" class="from-primary to-primary-dark dark:from-primary-darkest dark:to-primary-darker fixed left-0 top-0 z-50 h-full w-full overflow-y-auto bg-gradient-to-tr from-40%" style="max-height: 100dvh;">
+    <XMarkIcon class="hover:text-secondary fixed right-8 top-8 block h-10 w-10 cursor-pointer text-white" @click="(showMM = !showMM)" />
     <div class="grid grid-cols-1 gap-10 px-6 pb-12 pt-24 text-white">
       <Menu @close-mobile-menu="(showMM = false)" />
       <a class="mx-auto w-8 self-center py-2 leading-none opacity-80 hover:text-black hover:opacity-100" target="_blank" rel="noopener" href="https://github.com/add2cal/add-to-calendar-button"><LogoGithub /></a>

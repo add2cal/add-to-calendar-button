@@ -83,7 +83,7 @@ onUnmounted(() => {
 <template>
   <div class="grid grid-cols-1 lg:grid-cols-[minmax(0,1fr)_192px]">
     <div class="pr-0 lg:pr-8 xl:pr-12 2xl:pr-20">
-      <h1 class="mb-16 underline decoration-primary-light decoration-4 dark:decoration-primary-dark">
+      <h1 class="decoration-primary-light dark:decoration-primary-dark mb-16 underline decoration-4">
         {{ $t('navigation.advanced-use') }}
       </h1>
       <div v-if="locale=='en'">
