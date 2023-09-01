@@ -17,9 +17,9 @@ import { atcb_check_required, atcb_validate } from './atcb-validate.js';
 import { atcb_generate_button } from './atcb-generate.js';
 import { atcb_generate_rich_data } from './atcb-generate-rich-data.js';
 import { atcb_close, atcb_toggle } from './atcb-control.js';
-import { atcb_generate_links } from './atcb-links';
+import { atcb_generate_links } from './atcb-links.js';
 import { atcb_secure_content, atcb_manage_body_scroll, atcb_set_fullsize } from './atcb-util.js';
-import { atcb_log_event } from './atcb-event';
+import { atcb_log_event } from './atcb-event.js';
 
 let atcbInitialGlobalInit = false;
 let atcbBtnCount = 0;
@@ -49,7 +49,7 @@ if (atcbIsBrowser()) {
       if (this.getAttribute('proKey') != null && this.getAttribute('proKey') != '') {
         this.data = atcb_get_pro_data(this.getAttribute('proKey'));
       }
-      if (this.data.name == null || this.data.name == '') {
+      if (!this.data.name || this.data.name === '') {
         // if no data yet, we try reading attributes or the innerHTML of the host element
         try {
           this.data = atcb_read_attributes(this);
@@ -170,7 +170,6 @@ if (atcbIsBrowser()) {
 // read data attributes
 function atcb_read_attributes(el) {
   let data = {};
-  data['hideBranding'] = true;
   for (let i = 0; i < atcbWcParams.length; i++) {
     // reading data, but removing real code line breaks before parsing.
     // use [br] in the description to create a line break.
@@ -444,7 +443,6 @@ function atcb_action(data, triggerElement, keyboardTrigger = false) {
   }
   // get data
   data = atcb_secure_content(data);
-  data.hideBranding = true;
   // pull data from PRO server, if key is given
   if (data.proKey != null && data.proKey != '') {
     data = atcb_get_pro_data(data.proKey);
@@ -591,15 +589,25 @@ function atcb_get_pro_data(licenseKey) {
    *  @preserve
    *  PER LICENSE AGREEMENT, YOU ARE NOT ALLOWED TO REMOVE OR CHANGE THIS FUNCTION!
    */
-  const data = {};
   if (licenseKey != null && licenseKey != '') {
-    data.proKey = licenseKey;
-    data.identifier = licenseKey;
-    // TODO: Pull data from server
-    console.error('Add to Calendar Button proKey invalid! Falling back to local data...');
-    // data.proKey = '';
+    // Try to read data from server https://event.caldn.net/{{licenseKey}}/config.json and log error if not possible
+    try {
+      const xhr = new XMLHttpRequest();
+      xhr.open('GET', 'https://event.caldn.net/' + licenseKey + '/config.json', false);
+      xhr.send();
+      if (xhr.status === 200) {
+        const data = JSON.parse(xhr.responseText);
+        data.proKey = licenseKey;
+        data.identifier = licenseKey;
+        return data;
+      } else {
+        throw new Error('Not possible to read proKey config from server...');
+      }
+    } catch (e) {
+      console.error('Add to Calendar Button proKey invalid or server not responding! Falling back to local data...');
+    }
   }
-  return data;
+  return {};
 }
 
 // GLOBAL KEYBOARD AND DEVICE LISTENERS

@@ -5,6 +5,7 @@ on:
     branches:
       - main
       - dev
+      - next
 
 jobs:
   build_and_deploy_job:

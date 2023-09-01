@@ -115,7 +115,7 @@ watch(props, () => {
           <input
             :id="elInputID"
             ref="searchInput"
-            class="autocomplete-input caret-secondary focus-visible:ring-secondary/75 truncate rounded-md bg-zinc-50 py-2 pl-3 pr-10 text-left text-sm focus:outline-none focus-visible:ring group-hover:bg-white dark:bg-zinc-700 dark:group-hover:bg-zinc-600"
+            class="autocomplete-input caret-secondary focus-visible:ring-secondary/75 placeholder:text-xs truncate rounded-md bg-zinc-50 py-2 pl-3 pr-10 text-left text-sm focus:outline-none focus-visible:ring group-hover:bg-white dark:bg-zinc-700 dark:group-hover:bg-zinc-600"
             :placeholder="$t('labels.inputs.search_time_zone')"
             :aria-label="$t('labels.inputs.search_time_zone')"
             @focus="onSearchInputFocus"

@@ -72,7 +72,8 @@
     "dev": "cd demo && npm run dev",
     "build:all": "npm run build && npm run build:demo",
     "build:demo": "cd demo && npm run generate",
-    "build": "npx grunt"
+    "build": "npx grunt",
+    "build:pro": "npx grunt --pro=true"
   },
   "dependencies": {
     "timezones-ical-library": "^1.7.1"

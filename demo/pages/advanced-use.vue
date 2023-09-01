@@ -138,6 +138,7 @@ onUnmounted(() => {
               lightMode="bodyScheme"
               :language="locale"
               hideRichData
+              hideBranding
             ></add-to-calendar-button>
           </div>
           <div class="flex-1 overflow-x-auto">
@@ -197,6 +198,7 @@ onUnmounted(() => {
               lightMode="bodyScheme"
               :language="locale"
               hideRichData
+              hideBranding
             ></add-to-calendar-button>
           </div>
           <div class="flex-1 overflow-x-auto">
@@ -259,6 +261,7 @@ onUnmounted(() => {
               lightMode="bodyScheme"
               :language="locale"
               hideRichData
+              hideBranding
             ></add-to-calendar-button>
           </div>
           <div class="flex-1 overflow-x-auto">
@@ -395,6 +398,7 @@ onUnmounted(() => {
               :description="$t('demo_data.description_alt2')"
               :language="locale"
               hideRichData
+              hideBranding
             ></add-to-calendar-button>
           </div>
           <div class="flex-1 overflow-x-auto">
@@ -447,6 +451,7 @@ onUnmounted(() => {
               lightMode="bodyScheme"
               :language="locale"
               hideRichData
+              hideBranding
             ></add-to-calendar-button>
           </div>
           <div class="flex-1 overflow-x-auto">
@@ -508,6 +513,7 @@ onUnmounted(() => {
               lightMode="bodyScheme"
               :language="locale"
               hideRichData
+              hideBranding
             ></add-to-calendar-button>
           </div>
           <div class="flex-1 overflow-x-auto">
@@ -575,6 +581,7 @@ onUnmounted(() => {
               lightMode="bodyScheme"
               :language="locale"
               hideRichData
+              hideBranding
             ></add-to-calendar-button>
           </div>
           <div class="flex-1 overflow-x-auto">
@@ -625,6 +632,7 @@ onUnmounted(() => {
               lightMode="bodyScheme"
               :language="locale"
               hideRichData
+              hideBranding
             ></add-to-calendar-button>
           </div>
           <div class="flex-1 overflow-x-auto">
@@ -693,6 +701,7 @@ onUnmounted(() => {
               lightMode="bodyScheme"
               :language="locale"
               hideRichData
+              hideBranding
             ></add-to-calendar-button>
           </div>
           <div class="flex-1 overflow-x-auto">
@@ -786,6 +795,7 @@ onUnmounted(() => {
               lightMode="bodyScheme"
               :language="locale"
               hideRichData
+              hideBranding
             ></add-to-calendar-button>
           </div>
           <div class="flex-1 overflow-x-auto">
@@ -859,6 +869,7 @@ onUnmounted(() => {
               lightMode="bodyScheme"
               :language="locale"
               hideRichData
+              hideBranding
             ></add-to-calendar-button>
           </div>
           <div class="flex-1 overflow-x-auto">

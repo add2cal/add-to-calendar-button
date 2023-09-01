@@ -5,6 +5,10 @@ declare module 'add-to-calendar-button' {
       [key: string]: string;
     };
   };
+  export const cssVariables: {
+    [key: string]: string;
+  };
+  export function atcb_generate_ty(host: HTMLElement, data: object): null;
   export function atcb_action(
     config: {
       proKey?: string;

@@ -13,13 +13,20 @@
 
 import { tzlib_get_offset } from 'timezones-ical-library';
 import { atcbIsMobile, atcbIsiOS, atcbDefaultTarget } from './atcb-globals.js';
-import { atcb_log_event } from './atcb-event';
+import { atcb_log_event } from './atcb-event.js';
 import { atcbStates } from './atcb-globals.js';
+import { atcb_generate_ty } from './atcb-generate-pro.js';
 
 // SHARED FUNCTION HOOK FOR WHEN EVENT GOT SAVED
 function atcb_saved_hook(host, data) {
   // log event
   atcb_log_event('success', data.identifier, data.identifier);
+  // trigger ty modal, if given
+  if (data.ty) {
+    setTimeout(() => {
+      atcb_generate_ty(host, data);
+    }, 1000);
+  }
 }
 
 // SHARED FUNCTION TO SAVE A FILE

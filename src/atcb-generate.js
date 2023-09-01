@@ -15,10 +15,10 @@ import { atcbIcon, atcbStates, atcbDefaultTarget } from './atcb-globals.js';
 import { atcb_toggle, atcb_close } from './atcb-control.js';
 import { atcb_generate_links } from './atcb-links.js';
 import { atcb_generate_time, atcb_position_shadow_button, atcb_position_shadow_button_listener, atcb_manage_body_scroll, atcb_set_fullsize, atcb_set_sizes, atcb_debounce, atcb_debounce_leading } from './atcb-util.js';
-import { atcb_set_fully_successful } from './atcb-links';
+import { atcb_set_fully_successful } from './atcb-links.js';
 import { atcb_translate_hook } from './atcb-i18n.js';
-import { atcb_load_css, atcb_set_light_mode } from './atcb-init';
-import { atcb_log_event } from './atcb-event';
+import { atcb_load_css, atcb_set_light_mode } from './atcb-init.js';
+import { atcb_log_event } from './atcb-event.js';
 
 // GENERATE THE ACTUAL BUTTON
 // helper function to generate the labels for the button and list options
@@ -431,11 +431,11 @@ function atcb_create_modal(host, data, icon = '', headline, content = '', button
     modalContent.innerHTML = content;
     modal.append(modalContent);
   }
+  if (!data.hideBranding) {
+    atcb_create_atcbl(modalHost, false);
+  }
   // add subEvent buttons (array with type first and subEvent numbers following)
   if (subEvents.length > 1) {
-    if (!data.hideBranding) {
-      atcb_create_atcbl(modalHost, false);
-    }
     const modalsubEventsContent = document.createElement('div');
     modalsubEventsContent.classList.add('atcb-modal-content');
     modal.append(modalsubEventsContent);

@@ -14,7 +14,7 @@
 import { atcb_generate_dropdown_list, atcb_generate_bg_overlay, atcb_generate_overlay_dom, atcb_create_atcbl, atcb_generate_modal_host } from './atcb-generate.js';
 import { atcb_position_list, atcb_position_shadow_button_listener, atcb_manage_body_scroll, atcb_set_fullsize, atcb_set_sizes } from './atcb-util.js';
 import { atcbStates } from './atcb-globals.js';
-import { atcb_log_event } from './atcb-event';
+import { atcb_log_event } from './atcb-event.js';
 
 // FUNCTIONS TO CONTROL THE INTERACTION
 function atcb_toggle(host, action, data = '', button = null, keyboardTrigger = false, generatedButton = false) {

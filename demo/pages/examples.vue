@@ -111,6 +111,7 @@ watch(locale, value => {
               options="'Apple','Google','iCal','Outlook.com','Microsoft 365','Microsoft Teams','Yahoo'"
               lightMode="bodyScheme"
               :language="locale"
+              hideBranding
             ></add-to-calendar-button>
           </div>
           <div class="flex-1 overflow-x-auto">
@@ -155,6 +156,7 @@ watch(locale, value => {
               lightMode="bodyScheme"
               :language="locale"
               hideRichData
+              hideBranding
             ></add-to-calendar-button>
           </div>
           <div class="flex-1 overflow-x-auto">
@@ -200,6 +202,7 @@ watch(locale, value => {
               options="'Apple','Google','iCal','Outlook.com','Yahoo'"
               lightMode="bodyScheme"
               :language="locale"
+              hideBranding
             ></add-to-calendar-button>
           </div>
           <div class="flex-1 overflow-x-auto">
@@ -249,6 +252,7 @@ watch(locale, value => {
               lightMode="bodyScheme"
               :language="locale"
               hideRichData
+              hideBranding
             ></add-to-calendar-button>
           </div>
           <div class="flex-1 overflow-x-auto">
@@ -297,6 +301,7 @@ watch(locale, value => {
               lightMode="bodyScheme"
               :language="locale"
               hideRichData
+              hideBranding
             ></add-to-calendar-button>
           </div>
           <div class="flex-1 overflow-x-auto">
@@ -361,6 +366,7 @@ watch(locale, value => {
               lightMode="bodyScheme"
               :language="locale"
               hideRichData
+              hideBranding
             ></add-to-calendar-button>
           </div>
           <div class="flex-1 overflow-x-auto">
@@ -441,6 +447,7 @@ watch(locale, value => {
               lightMode="bodyScheme"
               :language="locale"
               hideRichData
+              hideBranding
             ></add-to-calendar-button>
           </div>
           <div class="flex-1 overflow-x-auto">
@@ -502,6 +509,7 @@ watch(locale, value => {
               lightMode="bodyScheme"
               :language="locale"
               hideRichData
+              hideBranding
             ></add-to-calendar-button>
           </div>
           <div class="overflow-x-auto">
@@ -550,6 +558,7 @@ watch(locale, value => {
               lightMode="bodyScheme"
               :language="locale"
               hideRichData
+              hideBranding
             ></add-to-calendar-button>
           </div>
           <div class="flex-1 overflow-x-auto">
@@ -597,6 +606,7 @@ watch(locale, value => {
               lightMode="bodyScheme"
               :language="locale"
               hideRichData
+              hideBranding
             ></add-to-calendar-button>
           </div>
           <div class="overflow-x-auto">
