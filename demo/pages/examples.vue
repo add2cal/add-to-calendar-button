@@ -100,6 +100,7 @@ watch(locale, value => {
         <p v-else>Dies ist das gewöhnliche Standard-Setup mit allen verfügbaren Kalender-Links und einer definierten Zeitzone</p>
         <div class="block w-full justify-between md:flex">
           <div class="flex w-full flex-none justify-center p-6 pt-8 md:w-[300px]">
+            <add-to-calendar-button proKey="a6ee910b-2390-4679-8d31-dc03ac7cb26b"></add-to-calendar-button>
             <add-to-calendar-button
               :name="$t('demo_data.name')"
               :startDate="defaultDate"
