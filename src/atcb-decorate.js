@@ -3,7 +3,7 @@
  *  Add to Calendar Button
  *  ++++++++++++++++++++++
  *
- *  Version: 2.4.1
+ *  Version: 2.4.2
  *  Creator: Jens Kuerschner (https://jenskuerschner.de)
  *  Project: https://github.com/add2cal/add-to-calendar-button
  *  License: Elastic License 2.0 (ELv2) (https://github.com/add2cal/add-to-calendar-button/blob/main/LICENSE.txt)
@@ -37,10 +37,10 @@ function atcb_decorate_data(data) {
 function atcb_decorate_data_boolean(data) {
   for (let i = 0; i < atcbWcBooleanParams.length; i++) {
     const attr = atcbWcBooleanParams[`${i}`];
-    if (data[`${attr}`] != null && (data[`${attr}`] === 'true' || data[`${attr}`] === true)) {
-      data[`${attr}`] = true;
-    } else {
+    if (data[`${attr}`] == null || data[`${attr}`] === '') {
       data[`${attr}`] = false;
+    } else {
+      data[`${attr}`] = true;
     }
   }
   return data;
