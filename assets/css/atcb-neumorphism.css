@@ -193,10 +193,6 @@
   padding: 0;
 }
 
-.atcb-button:disabled {
-  min-width: 0;
-}
-
 .atcb-rtl .atcb-button {
   direction: rtl;
   text-align: right;

@@ -5,7 +5,7 @@ declare module 'add-to-calendar-button' {
       [key: string]: string;
     };
   };
-  export const cssVariables: {
+  export const cssStyles: {
     [key: string]: string;
   };
   export function atcb_generate_ty(host: HTMLElement, data: object): null;

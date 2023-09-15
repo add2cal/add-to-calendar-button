@@ -121,7 +121,7 @@ module.exports = function (grunt) {
         options: {
           stripBanners: true,
           banner: "import { tzlib_get_ical_block, tzlib_get_offset, tzlib_get_timezones } from 'timezones-ical-library';\r\n",
-          footer: grunt.option('pro') ? 'export { atcb_action, i18nStrings, atcbCssTemplate as cssVariables, atcb_generate_ty };' : 'export { atcb_action, i18nStrings, atcbCssTemplate as cssVariables };',
+          footer: grunt.option('pro') ? 'export { atcb_action, i18nStrings, atcbCssTemplate as cssStyles, atcb_generate_ty };' : 'export { atcb_action, i18nStrings, atcbCssTemplate as cssStyles };',
           process: (content) => prepareFinalFile(content),
         },
       },
@@ -131,7 +131,7 @@ module.exports = function (grunt) {
         options: {
           stripBanners: true,
           banner: "// eslint-disable-next-line @typescript-eslint/no-var-requires\r\nconst tzlibActions = require('timezones-ical-library');\r\n",
-          footer: grunt.option('pro') ? 'module.exports = { atcb_action, i18nStrings, atcbCssTemplate as cssVariables, atcb_generate_ty };' : 'module.exports = { atcb_action, i18nStrings, atcbCssTemplate as cssVariables };',
+          footer: grunt.option('pro') ? 'module.exports = { atcb_action, i18nStrings, atcbCssTemplate as cssStyles, atcb_generate_ty };' : 'module.exports = { atcb_action, i18nStrings, atcbCssTemplate as cssStyles };',
           process: (content) => prepareFinalFile(content, true, true, true),
         },
       },

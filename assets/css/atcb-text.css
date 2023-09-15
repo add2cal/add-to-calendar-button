@@ -188,8 +188,7 @@
   z-index: 1;
 }
 
-.atcb-button.atcb-no-text,
-.atcb-button:disabled {
+.atcb-button.atcb-no-text {
   min-width: 0;
 }
 

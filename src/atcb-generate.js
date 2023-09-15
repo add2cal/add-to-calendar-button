@@ -174,7 +174,7 @@ function atcb_generate_label_content(data, parent, type, icon, text, oneOption) 
 }
 
 // generate the triggering button
-function atcb_generate_button(host, button, data, debug = false) {
+function atcb_generate_button(host, button, data) {
   // determine whether we are looking for the 1-option case (also with buttonsList)
   const oneOption = (function () {
     if (data.options.length === 1 || (data.buttonsList && data.buttonStyle != 'date')) {
@@ -248,7 +248,7 @@ function atcb_generate_button(host, button, data, debug = false) {
       buttonTrigger.append(btnCheck);
     }
   });
-  if (debug) {
+  if (data.debug) {
     console.log('Add to Calendar Button "' + data.identifier + '" created');
   }
 }
@@ -939,11 +939,11 @@ function atcb_generate_modal_host(host, data, reset = true) {
   // create host element and add shadowDOM
   let newModalHost = document.createElement('div');
   newModalHost.id = data.identifier + '-modal-host';
-  if (host.host.hasAttribute('styleLight')) {
-    newModalHost.setAttribute('styleLight', host.host.getAttribute('styleLight'));
+  if (data.styleLight) {
+    newModalHost.setAttribute('styleLight', data.styleLight);
   }
-  if (host.host.hasAttribute('styleDark')) {
-    newModalHost.setAttribute('styleDark', host.host.getAttribute('styleDark'));
+  if (data.styleDark) {
+    newModalHost.setAttribute('styleDark', data.styleDark);
   }
   if (host.host.hasAttribute('cspnonce')) {
     newModalHost.setAttribute('cspnonce', host.host.getAttribute('cspnonce'));
@@ -956,7 +956,7 @@ function atcb_generate_modal_host(host, data, reset = true) {
   elem.innerHTML = '<div class="atcb-modal-host-initialized" style="translate3D(0, 0, 0);visibility:visible;opacity:1;position:fixed;top:0;left:0;width:100%;height:100%;display:flex;z-index:13999999;"></div>';
   newModalHost.shadowRoot.append(elem.content.cloneNode(true));
   atcb_set_light_mode(newModalHost.shadowRoot, data);
-  atcb_load_css(newModalHost.shadowRoot, null, data.buttonStyle, false, false, data.customCss);
+  atcb_load_css(newModalHost.shadowRoot, null, data);
   return newModalHost.shadowRoot;
 }
 

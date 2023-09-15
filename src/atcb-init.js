@@ -11,7 +11,7 @@
  *
  */
 
-import { atcbVersion, atcbIsBrowser, atcbStates, atcbWcParams, atcbWcBooleanParams, atcbWcObjectParams, atcbWcObjectArrayParams, atcbWcArrayParams, atcbCssTemplate, atcbIsMobile } from './atcb-globals.js';
+import { atcbVersion, atcbIsBrowser, atcbStates, atcbWcParams, atcbWcBooleanParams, atcbWcObjectParams, atcbWcObjectArrayParams, atcbWcArrayParams, atcbCssTemplate } from './atcb-globals.js';
 import { atcb_decorate_data } from './atcb-decorate.js';
 import { atcb_check_required, atcb_validate } from './atcb-validate.js';
 import { atcb_generate_button } from './atcb-generate.js';
@@ -20,6 +20,7 @@ import { atcb_close, atcb_toggle } from './atcb-control.js';
 import { atcb_generate_links } from './atcb-links.js';
 import { atcb_secure_content, atcb_manage_body_scroll, atcb_set_fullsize } from './atcb-util.js';
 import { atcb_log_event } from './atcb-event.js';
+import { atcb_generate_rsvp } from './atcb-generate-pro.js';
 
 let atcbInitialGlobalInit = false;
 let atcbBtnCount = 0;
@@ -47,7 +48,7 @@ if (atcbIsBrowser()) {
       this.debug = this.hasAttribute('debug');
       // checking for PRO key and pull data if given
       if (this.getAttribute('proKey') != null && this.getAttribute('proKey') != '') {
-        this.data = atcb_get_pro_data(this.getAttribute('proKey'));
+        this.data = await atcb_get_pro_data(this.getAttribute('proKey'));
       }
       if (!this.data.name || this.data.name === '') {
         // if no data yet, we try reading attributes or the innerHTML of the host element
@@ -134,7 +135,11 @@ if (atcbIsBrowser()) {
           if (!/^[\w\-_]+$/.test(this.data.identifier)) {
             this.data.identifier = '';
             if (this.debug) {
-              console.warn('Add to Calendar Button generation: identifier invalid - using auto numbers instead');
+              let prefix = 'Add to Calendar Button';
+              if (this.data.rsvp && Object.keys(this.data.rsvp).length > 0) {
+                prefix = 'RSVP';
+              }
+              console.warn(prefix + ' generation: identifier invalid - using auto numbers instead');
             }
           } else {
             this.data.identifier = 'atcb-btn-' + this.data.identifier;
@@ -147,12 +152,12 @@ if (atcbIsBrowser()) {
         this.identifier = this.data.identifier;
       }
       this.setAttribute('atcb-button-id', this.data.identifier);
-      // build the button
+      // build
       try {
         this.style.visibility = 'visible';
         this.style.opacity = '1';
         this.style.position = 'relative';
-        atcb_build_button(this.shadowRoot, this.data, this.debug);
+        atcb_build_button(this.shadowRoot, this.data);
       } catch (e) {
         if (this.debug) {
           atcb_render_debug_msg(this.shadowRoot, e);
@@ -250,7 +255,7 @@ function atcb_read_attributes(el) {
 }
 
 // build the button
-function atcb_build_button(host, data, debug = false) {
+function atcb_build_button(host, data) {
   // Rewrite dynamic dates, standardize line breaks and transform urls in the description
   data = atcb_decorate_data(data);
   if (atcb_validate(data)) {
@@ -258,15 +263,18 @@ function atcb_build_button(host, data, debug = false) {
     // ... and on success, load css and generate the button
     atcb_set_light_mode(host, data);
     rootObj.setAttribute('lang', data.language);
-    atcb_load_css(host, rootObj, data.buttonStyle, data.inline, data.buttonsList, data.customCss);
+    atcb_load_css(host, rootObj, data);
     atcb_setup_state_management(data);
     // set global event listeners
     atcb_set_global_event_listener(host, data);
-    atcb_init_log(data.proKey, debug);
-    // generate RSVP form (if not hidden)
-    // generate the actual button (if not hidden)
+    atcb_init_log(data.proKey, data.debug);
+    // generate the actual button or RSVP form (if not hidden)
     if (!data.hidden) {
-      atcb_generate_button(host, rootObj, data, debug);
+      if (typeof atcb_generate_rsvp === 'function' && data.rsvp && Object.keys(data.rsvp).length > 0) {
+        atcb_generate_rsvp(host.shadowRoot, data, false, data.inlineRsvp);
+      } else {
+        atcb_generate_button(host, rootObj, data);
+      }
       // create schema.org data (https://schema.org/Event), if possible; and add it to the regular DOM
       if (!data.hideRichData && data.name && data.dates[0].location && data.dates[0].startDate) {
         atcb_generate_rich_data(data, host.host);
@@ -274,7 +282,7 @@ function atcb_build_button(host, data, debug = false) {
     }
     // log event
     atcb_log_event('initialization', data.identifier, data.identifier);
-  } else if (debug) {
+  } else if (data.debug) {
     console.error(data.validationError);
     throw new Error(data.validationError);
   }
@@ -315,7 +323,7 @@ function atcb_set_light_mode(shadowRoot, data) {
 }
 
 // load the right css
-function atcb_load_css(host, rootObj = null, style = '', inline = false, buttonsList = false, customCss = '') {
+function atcb_load_css(host, rootObj = null, data) {
   const cspnonceRegex = /[`'"()[\]{}<>\s]/;
   const nonceVal = (function () {
     if (!host.host.hasAttribute('cspnonce')) {
@@ -338,11 +346,11 @@ function atcb_load_css(host, rootObj = null, style = '', inline = false, buttons
     document.head.append(cssGlobalContent);
   }
   // we load custom styles dynamically
-  if (customCss != '' && style == 'custom') {
+  if (data.customCss != '' && data.buttonStyle == 'custom') {
     const cssFile = document.createElement('link');
     cssFile.setAttribute('rel', 'stylesheet');
     cssFile.setAttribute('type', 'text/css');
-    cssFile.setAttribute('href', customCss);
+    cssFile.setAttribute('href', data.customCss);
     if (nonceVal) {
       cssFile.setAttribute('nonce', nonceVal);
     }
@@ -359,20 +367,20 @@ function atcb_load_css(host, rootObj = null, style = '', inline = false, buttons
       placeholder.style.cssText = 'width: 150px; height: 40px; border-radius: 200px; background-color: #777; opacity: .3;';
       host.prepend(placeholder);
       // second, load the actual css (and remove the placeholder as soon as it is loaded)
-      loadExternalCssAsynch(cssFile, host, rootObj, placeholder, inline, buttonsList);
+      loadExternalCssAsynch(cssFile, host, rootObj, placeholder, data.inline, data.buttonsList);
     }
     return;
   }
   // otherwise, we load it from a variable
-  if (style != 'none' && atcbCssTemplate[`${style}`] != null) {
+  if (data.buttonStyle != 'none' && atcbCssTemplate[`${data.buttonStyle}`] != null) {
     const cssContent = document.createElement('style');
     if (nonceVal) {
       cssContent.setAttribute('nonce', nonceVal);
     }
     // get custom override information
     const overrideDefaultCss = (function () {
-      if (host.host.hasAttribute('styleLight')) {
-        const output = ':host { ' + atcb_secure_content(host.host.getAttribute('styleLight').replace(/(\\r\\n|\\n|\\r)/g, ''), false) + ' }';
+      if (data.styleLight) {
+        const output = ':host { ' + atcb_secure_content(data.styleLight.replace(/(\\r\\n|\\n|\\r)/g, ''), false) + ' }';
         return output;
       }
       return '';
@@ -385,14 +393,14 @@ function atcb_load_css(host, rootObj = null, style = '', inline = false, buttons
       return '';
     })();
     // add style to element
-    cssContent.innerText = atcbCssTemplate[`${style}`] + overrideDefaultCss + overrideDarkCss;
+    cssContent.innerText = atcbCssTemplate[`${data.buttonStyle}`] + overrideDefaultCss + overrideDarkCss;
     host.prepend(cssContent);
   }
   if (rootObj != null) {
-    if (inline) {
+    if (data.inline) {
       rootObj.style.display = 'inline-block';
     } else {
-      if (buttonsList) {
+      if (data.buttonsList) {
         rootObj.style.display = 'flex';
         rootObj.style.flexWrap = 'wrap';
         rootObj.style.justifyContent = 'center';
@@ -503,45 +511,45 @@ function atcb_action(data, triggerElement, keyboardTrigger = false) {
   }
   // log event
   atcb_log_event('initialization', data.identifier, data.identifier);
-  // we would only render something, if interaction is not blocked
-  if (!data.blockInteraction) {
-    // prepare shadow dom and load style (not necessary if iCal or Apple, and not on mobile and not multi-date with organizer)
-    let host = null;
-    if (!oneOption || (data.options[0] !== 'apple' && data.options[0] !== 'ical') || (data.dates && data.dates.length > 1 && data.dates.organizer) || atcbIsMobile()) {
-      host = document.createElement('div');
-      host.id = 'atcb-customTrigger-' + data.identifier + '-host';
-      if (root == document.body) {
-        document.body.append(host);
-      } else {
-        root.after(host);
-      }
-      if (triggerElement) {
-        const btnDim = triggerElement.getBoundingClientRect();
-        host.style.position = 'relative';
-        host.style.left = -btnDim.width + 'px';
-        host.style.top = btnDim.height + 'px';
-      }
-      host.setAttribute('atcb-button-id', data.identifier);
-      host.attachShadow({ mode: 'open', delegateFocus: true });
-      const elem = document.createElement('template');
-      elem.innerHTML = template;
-      host.shadowRoot.append(elem.content.cloneNode(true));
-      const rootObj = host.shadowRoot.querySelector('.atcb-initialized');
-      atcb_setup_state_management(data);
-      atcb_set_light_mode(host.shadowRoot, data);
-      host.shadowRoot.querySelector('.atcb-initialized').setAttribute('lang', data.language);
-      atcb_load_css(host.shadowRoot, rootObj, data.buttonStyle, false, false, data.customCss);
-      // set global event listeners
-      atcb_set_global_event_listener(host.shadowRoot, data);
+  // we would only render something, if interaction is not blocked and button not hidden
+  if (!data.blockInteraction && !data.hidden) {
+    // prepare shadow dom and load style
+    const host = document.createElement('div');
+    host.id = 'atcb-customTrigger-' + data.identifier + '-host';
+    if (root === document.body) {
+      document.body.append(host);
+    } else {
+      root.after(host);
     }
+    if (triggerElement) {
+      const btnDim = triggerElement.getBoundingClientRect();
+      host.style.position = 'relative';
+      host.style.left = -btnDim.width + 'px';
+      host.style.top = btnDim.height + 'px';
+    }
+    host.setAttribute('atcb-button-id', data.identifier);
+    host.attachShadow({ mode: 'open', delegateFocus: true });
+    const elem = document.createElement('template');
+    elem.innerHTML = template;
+    host.shadowRoot.append(elem.content.cloneNode(true));
+    const rootObj = host.shadowRoot.querySelector('.atcb-initialized');
+    atcb_setup_state_management(data);
+    atcb_set_light_mode(host.shadowRoot, data);
+    host.shadowRoot.querySelector('.atcb-initialized').setAttribute('lang', data.language);
+    atcb_load_css(host.shadowRoot, rootObj, data);
+    // set global event listeners
+    atcb_set_global_event_listener(host.shadowRoot, data);
     // if all is fine, ...
-    // trigger link at the oneoption case, or ...
+    // ... trigger RSVP form, or ...
+    if (typeof atcb_generate_rsvp === 'function' && data.rsvp && Object.keys(data.rsvp).length > 0) {
+      atcb_generate_rsvp(host.shadowRoot, data, triggerElement, keyboardTrigger);
+    }
+    // ... trigger link at the oneOption case, or ...
     if (oneOption) {
       atcb_generate_links(host.shadowRoot, data.options[0], data, 'all', keyboardTrigger);
-      // log event
       atcb_log_event('openSingletonLink', data.identifier, data.identifier);
     } else {
-      // open the options list
+      // ... open the options list
       atcb_toggle(host.shadowRoot, 'open', data, triggerElement, keyboardTrigger);
     }
   }
@@ -577,14 +585,14 @@ function atcb_init_log(pro = '', debug = false) {
       console.log('Add to Calendar PRO script initialized' + versionOutput + ' | https://add-to-calendar-pro.com');
     } else {
       console.log('%c\nAdd to Calendar Button script initialized' + versionOutput + '\n' + 'see https://add-to-calendar-button.com for details.\n', 'font-weight: bold;');
-      //console.log('✨ %cPRO version available at https://add-to-calendar-pro.com ← check it out!', 'font-weight: bold; line-height: 60px;');
+      console.log('✨ %cPRO version available at https://add-to-calendar-pro.com ← check it out!', 'font-weight: bold; line-height: 60px;');
     }
     atcbInitialGlobalInit = true;
   }
 }
 
 // PULLING PRO DATA
-function atcb_get_pro_data(licenseKey) {
+async function atcb_get_pro_data(licenseKey) {
   /*!
    *  @preserve
    *  PER LICENSE AGREEMENT, YOU ARE NOT ALLOWED TO REMOVE OR CHANGE THIS FUNCTION!
@@ -592,17 +600,14 @@ function atcb_get_pro_data(licenseKey) {
   if (licenseKey != null && licenseKey != '') {
     // Try to read data from server https://event.caldn.net/{{licenseKey}}/config.json and log error if not possible
     try {
-      const xhr = new XMLHttpRequest();
-      xhr.open('GET', 'https://event.caldn.net/' + licenseKey + '/config.json', false);
-      xhr.send();
-      if (xhr.status === 200) {
-        const data = JSON.parse(xhr.responseText);
+      const response = await fetch('https://event.caldn.net/' + licenseKey + '/config.json');
+      if (response.ok) {
+        const data = await response.json();
         data.proKey = licenseKey;
         data.identifier = licenseKey;
         return data;
-      } else {
-        throw new Error('Not possible to read proKey config from server...');
       }
+      throw new Error('Not possible to read proKey config from server...');
     } catch (e) {
       console.error('Add to Calendar Button proKey invalid or server not responding! Falling back to local data...');
     }

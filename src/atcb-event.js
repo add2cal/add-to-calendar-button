@@ -58,13 +58,20 @@ function atcb_push_to_data_layer(event, trigger) {
     case 'openSubEventLink':
       action = 'Opened';
       break;
+    case 'openRSVP':
+      action = 'Opened';
+      break;
     case 'success':
       action = 'Saved';
       break;
+    case 'successRSVP':
+      action = 'Saved';
+      break;
   }
+  const category = event === 'openRSVP' || event === 'successRSVP' ? 'Add-to-Calendar-RSVP' : 'Add-to-Calendar-Button';
   const atcbDataLayer = (window.dataLayer = window.dataLayer || []);
   atcbDataLayer.push({
-    eventCategory: 'Add-to-Calendar-Button',
+    eventCategory: category,
     eventAction: action,
     eventLabel: trigger,
     event: event,

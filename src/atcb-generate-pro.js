@@ -14,9 +14,17 @@
 import { atcb_set_fullsize, atcb_rewrite_html_elements, atcb_copy_to_clipboard, atcb_secure_content } from './atcb-util.js';
 import { atcb_generate_modal_host, atcb_create_modal } from './atcb-generate.js';
 import { atcb_translate_hook } from './atcb-i18n.js';
+import { atcb_log_event } from './atcb-event.js';
+import { atcb_decorate_data } from './atcb-decorate.js';
 
 // FUNCTION TO GENERATE A THANK YOU NOTE
 function atcb_generate_ty(host, data) {
+  // if host is no shadowRoot, try to get the child shadowRoot (case, if called directly)
+  if (!host.host) {
+    host = host.shadowRoot;
+    // in this case, we also decorate the data (again)
+    data = atcb_decorate_data(data);
+  }
   const copyIcon =
     '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M8.25 7.5V6.108c0-1.135.845-2.098 1.976-2.192.373-.03.748-.057 1.123-.08M15.75 18H18a2.25 2.25 0 002.25-2.25V6.108c0-1.135-.845-2.098-1.976-2.192a48.424 48.424 0 00-1.123-.08M15.75 18.75v-1.875a3.375 3.375 0 00-3.375-3.375h-1.5a1.125 1.125 0 01-1.125-1.125v-1.5A3.375 3.375 0 006.375 7.5H5.25m11.9-3.664A2.251 2.251 0 0015 2.25h-1.5a2.251 2.251 0 00-2.15 1.586m5.8 0c.065.21.1.433.1.664v.75h-6V4.5c0-.231.035-.454.1-.664M6.75 7.5H4.875c-.621 0-1.125.504-1.125 1.125v12c0 .621.504 1.125 1.125 1.125h9.75c.621 0 1.125-.504 1.125-1.125V16.5a9 9 0 00-9-9z" /></svg>';
   const copiedIcon =
@@ -129,7 +137,7 @@ function atcb_generate_ty(host, data) {
           field.type +
           '"' +
           (field.type === 'number' ? ' min="0"' : '') +
-          ((field.type === 'checkbox' || field.type === 'radio') && field.default && field.default === 'true' ? ' checked' : '') +
+          ((field.type === 'checkbox' || field.type === 'radio') && field.default && (field.default === 'true' || field.default === true) ? ' checked' : '') +
           ' name="' +
           fieldName +
           '" id="' +
@@ -235,6 +243,60 @@ function atcb_generate_ty(host, data) {
         tyFormSubmit.click();
       }
     });
+  }
+}
+
+// FUNCTION TO GENERATE AN RSVP FORM
+function atcb_generate_rsvp(host, data, keyboardTrigger = false, inline = false) {
+  // abort if proKey is not given and we are also not at localhost or add-to-calendar-pro.com
+  /*!
+   *  @preserve
+   *  PER LICENSE AGREEMENT, YOU ARE NOT ALLOWED TO REMOVE OR CHANGE THIS FUNCTION!
+   */
+  if ((!data.proKey || data.proKey === '') && !window.location.hostname.match(/^(localhost|.*\.add-to-calendar-pro.com)$/)) {
+    //return;
+  }
+  /*
+  On load:
+  if button and expired, show
+  if button and booked out, show
+  if inline, show expired inline
+  if modal, pull stats and show booked out if booked out
+  Render form.
+  if maxpp, show amount and limit to maxpp or max (whatever is lower)
+  */
+  atcb_log_event('openRSVP', data.identifier, data.identifier);
+
+
+  /*
+  On validation:
+  check required
+  check form (especially email)
+  check against max
+  check against expired
+  */
+
+  /*
+  try to submit:
+  on fail, check error:
+  - prokey wrong -> general error
+  - email wrong -> email error
+  - invalid status or inactive -> general error
+  - no rsvp -> general error
+  - rsvp expired -> expired
+  - limit exceeded -> if = 1 -> booked out; else: limit exceeded (+ pull stats again)
+  */
+
+  /*
+  on success:
+  if DOI, show instruction
+  if no DOI, show thank you + button
+  if not inline, show checkmark
+  */
+  atcb_log_event('successRSVP', data.identifier, data.identifier);
+
+  if (data.debug) {
+    console.log('RSVP form for "' + data.identifier + '" created');
   }
 }
 
