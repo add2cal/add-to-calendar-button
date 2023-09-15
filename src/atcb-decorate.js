@@ -37,9 +37,9 @@ function atcb_decorate_data(data) {
 function atcb_decorate_data_boolean(data) {
   for (let i = 0; i < atcbWcBooleanParams.length; i++) {
     const attr = atcbWcBooleanParams[`${i}`];
-    if (data[`${attr}`] == null || data[`${attr}`] === '') {
+    if (!data[`${attr}`] === null) {
       data[`${attr}`] = false;
-    } else {
+    } else if (data[`${attr}`] === '') {
       data[`${attr}`] = true;
     }
   }

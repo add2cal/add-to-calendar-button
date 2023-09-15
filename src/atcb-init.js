@@ -11,7 +11,7 @@
  *
  */
 
-import { atcbVersion, atcbIsBrowser, atcbStates, atcbWcParams, atcbWcBooleanParams, atcbWcObjectParams, atcbWcObjectArrayParams, atcbWcArrayParams, atcbWcNumberParams, atcbCssTemplate, atcbIsMobile } from './atcb-globals.js';
+import { atcbVersion, atcbIsBrowser, atcbStates, atcbWcParams, atcbWcBooleanParams, atcbWcObjectParams, atcbWcObjectArrayParams, atcbWcArrayParams, atcbWcNumberParams, atcbCssTemplate } from './atcb-globals.js';
 import { atcb_decorate_data } from './atcb-decorate.js';
 import { atcb_check_required, atcb_validate } from './atcb-validate.js';
 import { atcb_generate_button } from './atcb-generate.js';
@@ -45,9 +45,11 @@ if (atcbIsBrowser()) {
 
     async connectedCallback() {
       // initial data fetch
-      this.debug = this.hasAttribute('debug');
+      // first getting debug attr and saving it here - this is somehow independet of its copy at the data object
+      const debugVal = this.getAttribute('debug');
+      this.debug = this.hasAttribute('debug') && (!debugVal || debugVal === 'true' || debugVal === '') ? true : false;
       // checking for PRO key and pull data if given
-      if (this.getAttribute('proKey') != null && this.getAttribute('proKey') != '') {
+      if (this.hasAttribute('proKey') && this.getAttribute('proKey') !== '') {
         this.data = await atcb_get_pro_data(this.getAttribute('proKey'));
       }
       if (!this.data.name || this.data.name === '') {
@@ -183,13 +185,8 @@ function atcb_read_attributes(el) {
       let inputVal = atcb_secure_content(el.getAttribute(`${attr}`).replace(/(\\r\\n|\\n|\\r)/g, ''), false);
       let val;
       if (atcbWcBooleanParams.includes(attr)) {
-        // if a boolean param has no value, it is handles as prop and set true
-        if (inputVal == '') {
-          val = true;
-        } else {
-          // otherwise, we parse the text
-          val = inputVal === 'true';
-        }
+        // if a boolean param has no value, it is handled as prop and set true
+        val = !inputVal || inputVal === '' || inputVal.toLowerCase() === 'true' ? true : false;
       } else if (atcbWcObjectParams.includes(attr)) {
         val = JSON.parse(inputVal);
       } else if (atcbWcObjectArrayParams.includes(attr)) {
@@ -388,8 +385,8 @@ function atcb_load_css(host, rootObj = null, data) {
       return '';
     })();
     const overrideDarkCss = (function () {
-      if (host.host.hasAttribute('styleDark')) {
-        const output = ':host(.atcb-dark), :host-context(html.atcb-dark):host(.atcb-bodyScheme), :host-context(body.atcb-dark):host(.atcb-bodyScheme) { ' + atcb_secure_content(host.host.getAttribute('styleDark').replace(/(\\r\\n|\\n|\\r)/g, ''), false) + ' }';
+      if (data.styleDark) {
+        const output = ':host(.atcb-dark), :host-context(html.atcb-dark):host(.atcb-bodyScheme), :host-context(body.atcb-dark):host(.atcb-bodyScheme) { ' + atcb_secure_content(data.styleDark.replace(/(\\r\\n|\\n|\\r)/g, ''), false) + ' }';
         return output;
       }
       return '';
