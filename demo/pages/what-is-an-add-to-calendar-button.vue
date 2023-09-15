@@ -21,7 +21,7 @@ const defaultDate = nextDay.getFullYear() + '-' + ('0' + (nextDay.getMonth() + 1
 <template>
   <View_DE v-if="locale=='de'" />
   <div v-else>
-    <h1 class="decoration-primary-light dark:decoration-primary-dark mb-16 underline decoration-4">What is an Add to Calendar Button?</h1>
+    <h1 class="mb-16 underline decoration-primary-light decoration-4 dark:decoration-primary-dark">What is an Add to Calendar Button?</h1>
     <h2 class="mb-10">Options to get events saved</h2>
     <p>
       Adding events to your calendar can help keep you organized and up-to-date on upcoming tasks, commitments, and events. However, manually entering events into your calendar can often be tedious and time-consuming.<br />
@@ -133,7 +133,7 @@ const defaultDate = nextDay.getFullYear() + '-' + ('0' + (nextDay.getMonth() + 1
   <div class="pb-8 pt-24 text-center">
     <NuxtLink
       :to="localePath('index')"
-      class="from-secondary via-secondary to-secondary-light hover:via-secondary-light hover:to-secondary-light max-w-xl rounded-xl bg-gradient-to-tr px-12 py-8 text-center text-xl font-semibold text-zinc-700 shadow-md hover:text-black hover:no-underline hover:shadow-xl"
+      class="max-w-xl rounded-xl bg-gradient-to-tr from-secondary via-secondary to-secondary-light px-12 py-8 text-center text-xl font-semibold text-zinc-700 shadow-md hover:via-secondary-light hover:to-secondary-light hover:text-black hover:no-underline hover:shadow-xl"
     >
       <RocketLaunchIcon class="-mt-0.5 mr-3 inline-block h-8 w-8" aria-hidden="true" />
       {{ $t('labels.clickHereLearnMore') }}

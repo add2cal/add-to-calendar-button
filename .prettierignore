@@ -6,14 +6,9 @@ coverage
 *.min.*
 
 # Ignore some folders
-.nuxt
-.nitro
-.cache
-.output
 .env
 dist
-dist-dev
-public
+demo
 
 # Ignore html files
 *.html

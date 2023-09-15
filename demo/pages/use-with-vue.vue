@@ -33,7 +33,7 @@ watch(locale, value => {
 <template>
   <div class="grid grid-cols-1 lg:grid-cols-[minmax(0,1fr)_192px]">
     <div class="pr-0 lg:pr-8 xl:pr-12 2xl:pr-20">
-      <h1 class="decoration-primary-light dark:decoration-primary-dark mb-16 underline decoration-4">{{ $t('content.guide.vue.headline') }}</h1>
+      <h1 class="mb-16 underline decoration-primary-light decoration-4 dark:decoration-primary-dark">{{ $t('content.guide.vue.headline') }}</h1>
       <div class="px-0 md:px-3 lg:px-5">
         <h2 class="mb-6">{{ $t('content.guide.step1') }}: {{ $t('content.guide.step_npm') }}</h2>
         <p>{{ $t('content.guide.install_npm') }}</p>

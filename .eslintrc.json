@@ -26,7 +26,7 @@
 
   "plugins": ["@typescript-eslint", "prettier"],
 
-  "ignorePatterns": ["*.min.*", "dist/*", "Gruntfile.js", "set-release.js", "demo/dist/*"],
+  "ignorePatterns": ["*.min.*", "dist/*", "demo/*", "Gruntfile.js", "set-release.js"],
 
   "rules": {
     // TO-DO: Enable rules to find and optimize code style

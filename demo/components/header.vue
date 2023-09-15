@@ -7,7 +7,7 @@ const localePath = useLocalePath();
 
 <template>
   <div class="h-[90px] w-full lg:hidden"></div>
-  <div :class="view.atTopOfPage ? 'py-5 shadow-lg' : 'py-3 shadow-xl lg:py-5 lg:shadow-lg'" class="from-primary to-primary-light dark:from-primary-darkest dark:to-primary-darker fixed top-0 z-50 w-full bg-gradient-to-tr from-50% transition-all lg:relative">
+  <div :class="view.atTopOfPage ? 'py-5 shadow-lg' : 'py-3 shadow-xl lg:py-5 lg:shadow-lg'" class="fixed top-0 z-50 w-full bg-gradient-to-tr from-primary from-50% to-primary-light transition-all dark:from-primary-darkest dark:to-primary-darker lg:relative">
     <div class="container flex justify-between">
       <div :class="view.atTopOfPage ? '-ml-2 max-w-[150px]' : '-ml-3 max-w-[100px] lg:-ml-2 lg:max-w-[150px]'" class="-mt-1 w-auto grow transition-all xl:ml-0">
         <NuxtLink :to="localePath('index')"><Logo class="force-light" /></NuxtLink>
