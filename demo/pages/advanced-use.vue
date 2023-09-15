@@ -933,12 +933,12 @@ onUnmounted(() => {
         </div>
         <div class="block w-full justify-between pt-4 md:flex">
           <div class="flex w-full flex-none justify-center p-6 pt-8 md:w-[300px]">
-            <button id="my-default-button" style="background:#ffa255; color:#000; padding:8px 16px; height:fit-content; display:block; border-radius: 21px;">{{ $t('labels.clickHere') }}</button>
+            <button id="my-default-button" class="h-fit rounded-full border-2 border-secondary bg-secondary px-4 py-2 text-zinc-800 hover:bg-secondary-light hover:text-black hover:shadow-lg">{{ $t('labels.clickHere') }}</button>
           </div>
           <div class="flex-1 overflow-x-auto">
             <LazyCodeBlock class="line-numbers">
               <pre>
-&lt;button id="my-default-button" style="background:#ffa255; color:#000; padding:8px 16px; height:fit-content; display:block; border-radius: 21px;"&gt;{{ $t('labels.clickHere') }}&lt;/button&gt;
+&lt;button id="my-default-button"&gt;{{ $t('labels.clickHere') }}&lt;/button&gt;
 
 &lt;script type="application/javascript"&gt;
   const config = {

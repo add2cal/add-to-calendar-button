@@ -7,7 +7,7 @@ import LightModeSwitchPlaceholder from "@/components/placeholders/lightModeSwitc
 
 import Logo from "@/components/logos/logoMain.vue";
 import LogoGithub from "@/components/logos/logoGithub.vue";
-import LogoTwitter from "@/components/logos/logoTwitter.vue";
+import LogoX from "@/components/logos/logoX.vue";
 import LogoNpm from "@/components/logos/logoNpm.vue";
 
 const localePath = useLocalePath();
@@ -59,8 +59,8 @@ function topFunction() {
           </div>
           <div class="flex justify-center space-x-6 pt-3 sm:pt-0">
             <a class="footer-icon-base w-9 hover:text-black dark:hover:text-white" target="_blank" rel="noopener" href="https://github.com/add2cal/add-to-calendar-button"><LogoGithub /></a>
-            <a class="footer-icon-base hover:text-twitter dark:hover:text-twitter w-9" target="_blank" rel="noopener" href="https://twitter.com/add2calendar"><LogoTwitter /></a>
-            <a class="footer-icon-base hover:text-npm  dark:hover:text-npm w-12" target="_blank" rel="noopener" href="https://www.npmjs.com/package/add-to-calendar-button"><LogoNpm /></a>
+            <a class="footer-icon-base w-8 hover:text-black dark:hover:text-white" target="_blank" rel="noopener" href="https://x.com/add2calendar"><LogoX /></a>
+            <a class="footer-icon-base w-12  hover:text-npm dark:hover:text-npm" target="_blank" rel="noopener" href="https://www.npmjs.com/package/add-to-calendar-button"><LogoNpm /></a>
           </div>
         </div>
         <div role="button" class="mx-auto flex w-fit cursor-pointer justify-center pt-10 opacity-40 hover:-mt-2 hover:pb-2 hover:opacity-100 md:hidden" :aria-label="$t('labels.toTop')" @click="topFunction()"><ArrowUpIcon class="h-6 w-6" aria-hidden="true" /></div>
