@@ -131,7 +131,7 @@ module.exports = function (grunt) {
         options: {
           stripBanners: true,
           banner: "// eslint-disable-next-line @typescript-eslint/no-var-requires\r\nconst tzlibActions = require('timezones-ical-library');\r\n",
-          footer: grunt.option('pro') ? 'module.exports = { atcb_action, i18nStrings, atcbCssTemplate as cssStyles };' : 'module.exports = { atcb_action, i18nStrings, atcbCssTemplate as cssStyles };',
+          footer: grunt.option('pro') ? 'module.exports = { atcb_action, i18nStrings, cssStyles: atcbCssTemplate };' : 'module.exports = { atcb_action, i18nStrings, cssStyles: atcbCssTemplate };',
           process: (content) => prepareFinalFile(content, true, true, true),
         },
       },
