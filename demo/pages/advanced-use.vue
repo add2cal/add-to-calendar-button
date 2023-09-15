@@ -83,7 +83,7 @@ onUnmounted(() => {
 <template>
   <div class="grid grid-cols-1 lg:grid-cols-[minmax(0,1fr)_192px]">
     <div class="pr-0 lg:pr-8 xl:pr-12 2xl:pr-20">
-      <h1 class="decoration-primary-light dark:decoration-primary-dark mb-16 underline decoration-4">
+      <h1 class="mb-16 underline decoration-primary-light decoration-4 dark:decoration-primary-dark">
         {{ $t('navigation.advanced-use') }}
       </h1>
       <div v-if="locale=='en'">
@@ -944,12 +944,12 @@ onUnmounted(() => {
         </div>
         <div class="block w-full justify-between pt-4 md:flex">
           <div class="flex w-full flex-none justify-center p-6 pt-8 md:w-[300px]">
-            <button id="my-default-button" style="background:#ffa255; color:#000; padding:8px 16px; height:fit-content; display:block; border-radius: 21px;">{{ $t('labels.clickHere') }}</button>
+            <button id="my-default-button" class="h-fit rounded-full border-2 border-secondary bg-secondary px-4 py-2 text-zinc-800 hover:bg-secondary-light hover:text-black hover:shadow-lg">{{ $t('labels.clickHere') }}</button>
           </div>
           <div class="flex-1 overflow-x-auto">
             <LazyCodeBlock class="line-numbers">
               <pre>
-&lt;button id="my-default-button" style="background:#ffa255; color:#000; padding:8px 16px; height:fit-content; display:block; border-radius: 21px;"&gt;{{ $t('labels.clickHere') }}&lt;/button&gt;
+&lt;button id="my-default-button"&gt;{{ $t('labels.clickHere') }}&lt;/button&gt;
 
 &lt;script type="application/javascript"&gt;
   const config = {

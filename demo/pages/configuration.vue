@@ -15,7 +15,7 @@ definePageMeta({
 <template>
   <div class="grid grid-cols-1 lg:grid-cols-[minmax(0,1fr)_192px]">
     <div class="pr-0 lg:pr-8 xl:pr-12 2xl:pr-20">
-      <h1 class="decoration-primary-light dark:decoration-primary-dark mb-16 underline decoration-4">
+      <h1 class="mb-16 underline decoration-primary-light decoration-4 dark:decoration-primary-dark">
         {{ $t('navigation.configuration') }}
       </h1>
       <div v-if="locale=='en'">
@@ -68,7 +68,7 @@ definePageMeta({
           </thead>
           <tbody>
             <tr id="prokey" class="hidden">
-              <th scope="row" class="text-primary dark:text-primary-light text-base">proKey</th>
+              <th scope="row" class="text-base text-primary dark:text-primary-light">proKey</th>
               <td><em>String</em></td>
               <td v-if="locale=='en'">
                 If you are using the PRO service, you can use the "proKey" attribute to connect the button to a specific event of yours.<br />
@@ -217,7 +217,7 @@ definePageMeta({
             <tr id="sequence">
               <th scope="row">sequence</th>
               <td>
-                <em>Stringified bigInt</em><br /><br /><span class="label">{{ $t('content.config.default') }}:</span>0
+                <em>Number</em><br /><br /><span class="label">{{ $t('content.config.default') }}:</span>0
               </td>
               <td v-if="locale=='en'">
                 Needs to be a positive integer number.<br />Needs to grow when you make changes to the event.<br /><br />
@@ -286,7 +286,7 @@ definePageMeta({
             </tr>
             <tr id="dates">
               <th scope="row">dates</th>
-              <td><em>Stringified Array of Objects</em></td>
+              <td><em>Array of Objects</em></td>
               <td v-if="locale=='en'">
                 If you want to define an event series, you can use the dates object.<br /><br />
                 It basically holds the same information as the top level, but enables you to define multiple events. Except for date and time information, all other attributes, if not provided in the dates object, use the top level information as fallback. There is one special case with the "UID",
@@ -378,7 +378,7 @@ definePageMeta({
             <tr id="recurrence_interval">
               <th scope="row">recurrence_interval</th>
               <td>
-                <em>Stringified bigInt</em><br /><br /><span class="label">{{ $t('content.config.default') }}:</span>1
+                <em>Number</em><br /><br /><span class="label">{{ $t('content.config.default') }}:</span>1
               </td>
               <td v-if="locale=='en'">
                 Defines the interval between iterations.<br />
@@ -403,7 +403,7 @@ definePageMeta({
             </tr>
             <tr id="recurrence_count">
               <th scope="row">recurrence_count</th>
-              <td><em>Stringified bigInt</em></td>
+              <td><em>Number</em></td>
               <td v-if="locale=='en'">
                 Defines an upper limit of repetitions.<br />
                 If recurrence_until and recurrence_count are given, whatever comes first overrides the other. If none are given, it would repeat indefinitely.
@@ -579,7 +579,7 @@ definePageMeta({
             <tr id="options">
               <th scope="row">options</th>
               <td>
-                <em>Stringified Array</em><br /><br /><span class="font-semibold text-red-700">{{ $t('content.config.required') }}</span
+                <em>Array</em><br /><br /><span class="font-semibold text-red-700">{{ $t('content.config.required') }}</span
                 ><br /><br /><span class="label block">{{ $t('content.config.options') }}:</span>Apple, Google, iCal, Microsoft365, MicrosoftTeams, Outlook.com, Yahoo
               </td>
               <td v-if="locale=='en'">
@@ -838,7 +838,7 @@ definePageMeta({
             </tr>
             <tr id="customlabels">
               <th scope="row">customLabels</th>
-              <td><em>Stringified Object</em></td>
+              <td><em>Object</em></td>
               <td v-if="locale=='en'">
                 For all text blocks, which are not already customizable via other options (like the word "Close"), you can specify the "customLabels" option.<br />
                 There, you need to specify a JSON structure and define any text you want to override. Check the
@@ -907,7 +907,7 @@ definePageMeta({
           <tbody>
             <tr id="images">
               <th scope="row">images</th>
-              <td><em>Stringified Array</em><br /><br /><span class="format">URLs</span></td>
+              <td><em>Array</em><br /><br /><span class="format">URLs</span></td>
               <td v-if="locale=='en'">
                 Images are used to enrich the rich data and therefore how an event might appear, for example, at the Google search results.<br />
                 It is recommended to define at least 1 image via an absolute url with at least 720px width.<br />

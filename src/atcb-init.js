@@ -3,7 +3,7 @@
  *  Add to Calendar Button
  *  ++++++++++++++++++++++
  *
- *  Version: 2.4.1
+ *  Version: 2.4.2
  *  Creator: Jens Kuerschner (https://jenskuerschner.de)
  *  Project: https://github.com/add2cal/add-to-calendar-button
  *  License: Elastic License 2.0 (ELv2) (https://github.com/add2cal/add-to-calendar-button/blob/main/LICENSE.txt)
@@ -11,7 +11,7 @@
  *
  */
 
-import { atcbVersion, atcbIsBrowser, atcbStates, atcbWcParams, atcbWcBooleanParams, atcbWcObjectParams, atcbWcObjectArrayParams, atcbWcArrayParams, atcbCssTemplate } from './atcb-globals.js';
+import { atcbVersion, atcbIsBrowser, atcbStates, atcbWcParams, atcbWcBooleanParams, atcbWcObjectParams, atcbWcObjectArrayParams, atcbWcArrayParams, atcbWcNumberParams, atcbCssTemplate, atcbIsMobile } from './atcb-globals.js';
 import { atcb_decorate_data } from './atcb-decorate.js';
 import { atcb_check_required, atcb_validate } from './atcb-validate.js';
 import { atcb_generate_button } from './atcb-generate.js';
@@ -220,6 +220,8 @@ function atcb_read_attributes(el) {
         } else {
           val = cleanedInput.split('","');
         }
+      } else if (atcbWcNumberParams.includes(attr)) {
+        val = parseInt(inputVal);
       } else {
         val = inputVal;
       }

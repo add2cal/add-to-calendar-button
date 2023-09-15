@@ -41,7 +41,6 @@ module.exports = {
         'background-dark': '#1b1d21',
         text: '#333',
         'text-dark': '#e6e2ed',
-        twitter: '#1da1f2',
         npm: '#cb3837',
         angular: '#C3002F',
         astro: '#0F172A',

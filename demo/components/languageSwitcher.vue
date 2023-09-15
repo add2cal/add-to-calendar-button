@@ -26,7 +26,7 @@ watch(currentLanguage, val => {
           </span>
           <span class="label">{{ currentLanguage.name }}</span>
           <span class="arrow">
-            <ChevronDownIcon class="ui-open:rotate-180 h-5 w-5 text-gray-400 transition-transform" aria-hidden="true" />
+            <ChevronDownIcon class="h-5 w-5 text-gray-400 transition-transform ui-open:rotate-180" aria-hidden="true" />
           </span>
         </ListboxButton>
 
@@ -36,7 +36,7 @@ watch(currentLanguage, val => {
               <li
                 :class="[
                   active ? 'bg-secondary-light text-zinc-900' : 'text-gray-800 dark:text-zinc-200',
-                  'hover:bg-secondary-light relative cursor-pointer select-none py-2 pl-10 pr-4 text-left',
+                  'relative cursor-pointer select-none py-2 pl-10 pr-4 text-left hover:bg-secondary-light',
                 ]"
               >
                 <span :class="[selected ? 'font-semibold' : 'font-normal', 'block truncate']">{{ entry.name }}</span>

@@ -13,9 +13,16 @@ module.exports = {
     parser: '@typescript-eslint/parser',
   },
 
-  extends: ['plugin:@typescript-eslint/recommended', 'plugin:nuxt/recommended', 'plugin:vue/vue3-recommended', 'plugin:prettier/recommended', 'plugin:tailwindcss/recommended'],
+  overrides: [
+    {
+      files: ['*.vue'],
+      parser: 'vue-eslint-parser',
+    },
+  ],
 
-  plugins: ['@typescript-eslint', 'tailwindcss', 'prettier'],
+  extends: ['plugin:@typescript-eslint/recommended', 'plugin:nuxt/recommended', 'plugin:vue/vue3-recommended', 'plugin:prettier/recommended'],
+
+  plugins: ['@typescript-eslint', 'prettier'],
 
   ignorePatterns: ['*.min.*', 'dist/*', '.output/*'],
 

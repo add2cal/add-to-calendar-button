@@ -46,14 +46,14 @@ export default defineNuxtConfig({
       // the following needs to match the settings in ./public/staticwebapp.config.json
       contentSecurityPolicy: {
         'base-uri': ["'self'"],
-        'font-src': ["'self'", 'data:'],
+        'font-src': ["'self' data:"],
         'form-action': ["'self'"],
         'frame-ancestors': ["'self'"],
-        'img-src': ["'self'", 'https://add-to-calendar-button.com', 'data:'],
+        'img-src': ["'self' https://add-to-calendar-button.com data:"],
         'object-src': ["'none'"],
         'script-src-attr': ["'self'"],
-        'script-src': ["'self'", "'unsafe-inline'", 'https://add-to-calendar-button.com', 'https://a.add-to-calendar-button.com'],
-        'style-src': ["'self'", "'unsafe-inline'", 'https://add-to-calendar-button.com'],
+        'script-src': ["'self' 'unsafe-inline' https://*.add-to-calendar-button.com"],
+        'style-src': ["'self' 'unsafe-inline' https://add-to-calendar-button.com"],
         'upgrade-insecure-requests': true,
       },
       referrerPolicy: 'strict-origin-when-cross-origin',
