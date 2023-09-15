@@ -1,7 +1,7 @@
 <template>
   <div class="-mt-16 block px-8 pb-16 sm:hidden">
     <div class="inline-block">
-      <div class="fade-in xs:flex-row xs:rounded-full m-2 flex flex-col rounded-3xl bg-zinc-800/70 px-5 py-3 text-white">
+      <div class="fade-in m-2 flex flex-col rounded-3xl bg-zinc-800/70 px-5 py-3 text-white xs:flex-row xs:rounded-full">
         <div class="flex">
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="mr-2 inline-block h-4 w-4 self-center">
             <path
@@ -10,13 +10,13 @@
               clip-rule="evenodd"
             />
           </svg>
-          <span class="text-md decoration-primary self-center font-semibold underline decoration-2 underline-offset-4">...</span>
+          <span class="text-md self-center font-semibold underline decoration-primary decoration-2 underline-offset-4">...</span>
         </div>
-        <span class="xs:pl-2 xs:pt-0 self-center pt-2 text-xs font-normal text-zinc-100 opacity-80">{{ $t('labels.stats.stars') }}</span>
+        <span class="self-center pt-2 text-xs font-normal text-zinc-100 opacity-80 xs:pl-2 xs:pt-0">{{ $t('labels.stats.stars') }}</span>
       </div>
     </div>
     <div class="inline-block">
-      <div class="fade-in xs:flex-row xs:rounded-full m-2 flex flex-col rounded-3xl bg-zinc-800/70 px-5 py-3 text-white">
+      <div class="fade-in m-2 flex flex-col rounded-3xl bg-zinc-800/70 px-5 py-3 text-white xs:flex-row xs:rounded-full">
         <div class="flex">
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="mr-2 inline-block h-4 w-4 self-center">
             <path
@@ -28,13 +28,13 @@
               clip-rule="evenodd"
             />
           </svg>
-          <span class="text-md decoration-primary self-center font-semibold underline decoration-2 underline-offset-4">...</span>
+          <span class="text-md self-center font-semibold underline decoration-primary decoration-2 underline-offset-4">...</span>
         </div>
-        <span class="xs:pl-2 xs:pt-0 self-center pt-2 text-xs font-normal text-zinc-100 opacity-80">{{ $t('labels.stats.npm_total') }}</span>
+        <span class="self-center pt-2 text-xs font-normal text-zinc-100 opacity-80 xs:pl-2 xs:pt-0">{{ $t('labels.stats.npm_total') }}</span>
       </div>
     </div>
     <div class="inline-block">
-      <div class="fade-in xs:flex-row xs:rounded-full m-2 flex flex-col rounded-3xl bg-zinc-800/70 px-5 py-3 text-white">
+      <div class="fade-in m-2 flex flex-col rounded-3xl bg-zinc-800/70 px-5 py-3 text-white xs:flex-row xs:rounded-full">
         <div class="flex">
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="mr-2 inline-block h-4 w-4 self-center">
             <path
@@ -43,9 +43,9 @@
               clip-rule="evenodd"
             />
           </svg>
-          <span class="text-md decoration-primary self-center font-semibold underline decoration-2 underline-offset-4">...</span>
+          <span class="text-md self-center font-semibold underline decoration-primary decoration-2 underline-offset-4">...</span>
         </div>
-        <span class="xs:pl-2 xs:pt-0 self-center pt-2 text-xs font-normal text-zinc-100 opacity-80">{{ $t('labels.stats.cdn') }}</span>
+        <span class="self-center pt-2 text-xs font-normal text-zinc-100 opacity-80 xs:pl-2 xs:pt-0">{{ $t('labels.stats.cdn') }}</span>
       </div>
     </div>
   </div>

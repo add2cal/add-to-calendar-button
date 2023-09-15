@@ -3,7 +3,7 @@
  *  Add to Calendar Button
  *  ++++++++++++++++++++++
  *
- *  Version: 2.4.1
+ *  Version: 2.4.2
  *  Creator: Jens Kuerschner (https://jenskuerschner.de)
  *  Project: https://github.com/add2cal/add-to-calendar-button
  *  License: Elastic License 2.0 (ELv2) (https://github.com/add2cal/add-to-calendar-button/blob/main/LICENSE.txt)
@@ -258,9 +258,9 @@ function atcb_validate_uid(data, msgPrefix, i, msgSuffix) {
 
 // validate sequence number if given and set it 0 if not
 function atcb_validate_sequence(data, msgPrefix, i, msgSuffix) {
-  if (!/^\d+$/.test(data.dates[`${i}`].sequence)) {
+  if (data.dates[`${i}`].sequence != null && (data.dates[`${i}`].sequence < 0 || data.dates[`${i}`].sequence % 1 != 0)) {
     if (data.debug) {
-      console.log(msgPrefix + ': sequence needs to be a number. Used the default 0 instead' + msgSuffix);
+      console.log(msgPrefix + ': sequence needs to be a full number >= 0. Used the default 0 instead' + msgSuffix);
     }
     data.dates[`${i}`].sequence = 0;
   }
@@ -364,7 +364,7 @@ function atcb_validate_rrule(data, msgPrefix) {
 }
 // also validate the simplyfied recurrence settings (if provided), since any error there would be also hidden in the RRULE
 function atcb_validate_rrule_simplyfied(data, msgPrefix) {
-  if (data.recurrence_interval != null && data.recurrence_interval != '' && !/^\d+$/.test(data.recurrence_interval)) {
+  if (data.recurrence_interval != null && (data.recurrence_interval < 1 || data.recurrence_interval % 1 != 0)) {
     data.validationError = msgPrefix + ' failed: recurrence data (interval) misspelled';
     return false;
   }
@@ -372,7 +372,7 @@ function atcb_validate_rrule_simplyfied(data, msgPrefix) {
     data.validationError = msgPrefix + ' failed: recurrence data (until) misspelled';
     return false;
   }
-  if (data.recurrence_count != null && data.recurrence_count != '' && !/^\d+$/.test(data.recurrence_count)) {
+  if (data.recurrence_count != null && (data.recurrence_count < 1 || data.recurrence_count % 1 != 0)) {
     data.validationError = msgPrefix + ' failed: recurrence data (interval) misspelled';
     return false;
   }

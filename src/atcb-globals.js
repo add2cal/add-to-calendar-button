@@ -5,14 +5,14 @@
  *  Add to Calendar Button
  *  ++++++++++++++++++++++
  *
- *  Version: 2.4.1
+ *  Version: 2.4.2
  *  Creator: Jens Kuerschner (https://jenskuerschner.de)
  *  Project: https://github.com/add2cal/add-to-calendar-button
  *  License: Elastic License 2.0 (ELv2) (https://github.com/add2cal/add-to-calendar-button/blob/main/LICENSE.txt)
  *  Note:    DO NOT REMOVE THE COPYRIGHT NOTICE ABOVE!
  *
  */
-const atcbVersion = '2.4.1';
+const atcbVersion = '2.4.2';
 
 // DEFINING CSS
 const atcbCssTemplate = {};
@@ -128,20 +128,20 @@ const atcbWcParams = [
   'timeZone',
   'location',
   'status',
-  'sequence',
   'uid',
   'organizer',
   'attendee',
   'icsFile',
   'images',
   'recurrence',
-  'recurrence_interval',
   'recurrence_until',
-  'recurrence_count',
   'recurrence_byDay',
   'recurrence_byMonth',
   'recurrence_byMonthDay',
   'recurrence_weekstart',
+  'sequence',
+  'recurrence_interval',
+  'recurrence_count',
   'availability',
   'created',
   'updated',
@@ -214,6 +214,7 @@ const atcbWcBooleanParams = [
 const atcbWcObjectParams = ['customLabels', 'ty', 'rsvp'];
 const atcbWcObjectArrayParams = ['dates'];
 const atcbWcArrayParams = ['images', 'options'];
+const atcbWcNumberParams = ['sequence', 'recurrence_interval', 'recurrence_count'];
 
 // DEFINING GLOBAL ICONS
 const atcbIcon = {
@@ -263,6 +264,7 @@ export {
   atcbWcObjectParams,
   atcbWcObjectArrayParams,
   atcbWcArrayParams,
+  atcbWcNumberParams,
   atcbIcon,
   atcbCssTemplate,
 };

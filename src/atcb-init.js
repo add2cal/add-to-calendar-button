@@ -3,7 +3,7 @@
  *  Add to Calendar Button
  *  ++++++++++++++++++++++
  *
- *  Version: 2.4.1
+ *  Version: 2.4.2
  *  Creator: Jens Kuerschner (https://jenskuerschner.de)
  *  Project: https://github.com/add2cal/add-to-calendar-button
  *  License: Elastic License 2.0 (ELv2) (https://github.com/add2cal/add-to-calendar-button/blob/main/LICENSE.txt)
@@ -11,7 +11,7 @@
  *
  */
 
-import { atcbVersion, atcbIsBrowser, atcbStates, atcbWcParams, atcbWcBooleanParams, atcbWcObjectParams, atcbWcObjectArrayParams, atcbWcArrayParams, atcbCssTemplate, atcbIsMobile } from './atcb-globals.js';
+import { atcbVersion, atcbIsBrowser, atcbStates, atcbWcParams, atcbWcBooleanParams, atcbWcObjectParams, atcbWcObjectArrayParams, atcbWcArrayParams, atcbWcNumberParams, atcbCssTemplate, atcbIsMobile } from './atcb-globals.js';
 import { atcb_decorate_data } from './atcb-decorate.js';
 import { atcb_check_required, atcb_validate } from './atcb-validate.js';
 import { atcb_generate_button } from './atcb-generate.js';
@@ -216,6 +216,8 @@ function atcb_read_attributes(el) {
         } else {
           val = cleanedInput.split('","');
         }
+      } else if (atcbWcNumberParams.includes(attr)) {
+        val = parseInt(inputVal);
       } else {
         val = inputVal;
       }
@@ -508,23 +510,22 @@ function atcb_action(data, triggerElement, keyboardTrigger = false) {
   // we would only render something, if interaction is not blocked
   if (!data.blockInteraction) {
     // prepare shadow dom and load style (not necessary if iCal or Apple, and not on mobile and not multi-date with organizer)
-    let host = null;
+    const host = document.createElement('div');
+    host.id = 'atcb-customTrigger-' + data.identifier + '-host';
+    if (root == document.body) {
+      document.body.append(host);
+    } else {
+      root.after(host);
+    }
+    host.setAttribute('atcb-button-id', data.identifier);
+    host.attachShadow({ mode: 'open', delegateFocus: true });
     if (!oneOption || (data.options[0] !== 'apple' && data.options[0] !== 'ical') || (data.dates && data.dates.length > 1 && data.dates.organizer) || atcbIsMobile()) {
-      host = document.createElement('div');
-      host.id = 'atcb-customTrigger-' + data.identifier + '-host';
-      if (root == document.body) {
-        document.body.append(host);
-      } else {
-        root.after(host);
-      }
       if (triggerElement) {
         const btnDim = triggerElement.getBoundingClientRect();
         host.style.position = 'relative';
         host.style.left = -btnDim.width + 'px';
         host.style.top = btnDim.height + 'px';
       }
-      host.setAttribute('atcb-button-id', data.identifier);
-      host.attachShadow({ mode: 'open', delegateFocus: true });
       const elem = document.createElement('template');
       elem.innerHTML = template;
       host.shadowRoot.append(elem.content.cloneNode(true));

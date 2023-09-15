@@ -48,7 +48,7 @@ defineEmits(['update:modelValue']);
         v-else
         :aria-label="label"
         :value="modelValue"
-        class="caret-secondary block w-full flex-1 placeholder:text-xs focus:outline-none"
+        class="block w-full flex-1 caret-secondary placeholder:text-xs focus:outline-none"
         :class="props.type == 'range' ? 'form-range cursor-ew-resize appearance-none bg-transparent p-0 focus:ring-0' : 'rounded-md bg-zinc-50 px-3 py-2 text-sm leading-5 shadow hover:bg-white hover:shadow-md focus:bg-white focus-visible:ring focus-visible:ring-secondary/75 dark:bg-zinc-700 dark:hover:bg-zinc-600 dark:focus:bg-zinc-600'"
         :type="props.type"
         :placeholder="props.placeholder"

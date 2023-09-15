@@ -4,7 +4,7 @@ import "add-to-calendar-button";
 
 <template>
   <div>
-    <h1 class="decoration-primary-light dark:decoration-primary-dark mb-16 underline decoration-4">Was ist ein Add to Calendar Button?</h1>
+    <h1 class="mb-16 underline decoration-primary-light decoration-4 dark:decoration-primary-dark">Was ist ein Add to Calendar Button?</h1>
     <h2 class="mb-10">Wie Events einfach gespeichert werden können</h2>
     <p>
       Das Hinzufügen von Ereignissen zu einem Kalender kann dabei helfen, sich zu organisieren und über anstehende Aufgaben, Verpflichtungen und Ereignisse auf dem Laufenden zu bleiben. Das manuelle Eintragen von Ereignissen in Kalender kann jedoch oft mühsam und zeitaufwändig sein.<br />
