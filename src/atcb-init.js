@@ -530,13 +530,13 @@ function atcb_action(data, triggerElement, keyboardTrigger = false) {
       elem.innerHTML = template;
       host.shadowRoot.append(elem.content.cloneNode(true));
       const rootObj = host.shadowRoot.querySelector('.atcb-initialized');
-      atcb_setup_state_management(data);
       atcb_set_light_mode(host.shadowRoot, data);
       host.shadowRoot.querySelector('.atcb-initialized').setAttribute('lang', data.language);
       atcb_load_css(host.shadowRoot, rootObj, data.buttonStyle, false, false, data.customCss);
       // set global event listeners
       atcb_set_global_event_listener(host.shadowRoot, data);
     }
+    atcb_setup_state_management(data);
     // if all is fine, ...
     // trigger link at the oneoption case, or ...
     if (oneOption) {
