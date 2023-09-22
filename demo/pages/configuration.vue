@@ -490,16 +490,18 @@ definePageMeta({
                 As an alternative to providing a specific predefined event, you can also host a calendar and offer it for subscription (requires a hosted calendar).<br />
                 To offer the subscription via the button, you need to also specify the icsFile option.<br /><br />
                 "Name" and "startDate" would be still required for organizational purposes, but every other event parameter can be skipped in the subscription case.<br />
-                For Microsoft services, the "Name" will be used as name for the calendar.<br /><br />
+                For Microsoft services, the "Name" will be used as name for the calendar.<br />
                 Microsoft Teams is not yet supported and will be automatically disabled.<br /><br />
+                If the user's browser does not recognize any installed calendar app, this might lead to a blank screen. The PRO version mitigates this with some explenatory middleware screen.<br /><br />
                 <NuxtLink :to="{path: localePath('advanced-use'), hash: '#case-3'}">{{ $t('labels.example') }} <ArrowRightIcon class="-mt-0.5 mr-0.5 inline-block h-3 w-3" aria-hidden="true" /></NuxtLink>
               </td>
               <td v-else>
                 Alternativ zur Angabe eines bestimmten vordefinierten Events kannst du auch einen Kalender bereitstellen und ihn zum Abonnieren anbieten (erfordert einen gehosteten Kalender).<br />
                 Um das Abonnement über den Button anzubieten, musst du zusätzlich die icsFile-Option definieren.<br /><br />
                 "Name" und "startDate" wären für organisatorische Zwecke immer noch erforderlich, aber jeder andere Event-Parameter kann im Abonnementfall übersprungen werden.<br />
-                Für Microsoft-Dienste wird der "Name" als Name für den Kalender verwendet.<br /><br />
+                Für Microsoft-Dienste wird der "Name" als Name für den Kalender verwendet.<br />
                 Microsoft Teams wird derzeit nicht unterstützt und automatisch deaktiviert.<br /><br />
+                Sollte der Browser des Nutzers keine installierte Kalender-App erkennen, kann dies zu einer leeren Seite führen. Die PRO-Version optimiert dies mit einem erklärenden Zwischenbildschirm.<br /><br />
                 <NuxtLink :to="{path: localePath('advanced-use'), hash: '#case-3'}">{{ $t('labels.example') }} <ArrowRightIcon class="-mt-0.5 mr-0.5 inline-block h-3 w-3" aria-hidden="true" /></NuxtLink>
               </td>
             </tr>

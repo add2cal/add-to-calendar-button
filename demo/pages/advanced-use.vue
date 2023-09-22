@@ -428,7 +428,7 @@ onUnmounted(() => {
           <p>
             "name" and "startDate" are still required for organizational purposes, but every other event parameter can be skipped in this case.<br />
             For Microsoft services, the "name" will be used as name for the calendar.<br />
-            <span class="text-sm italic">(Microsoft Teams is not yet supported and will be automatically disabled.)</span>
+            <span class="text-sm italic">(If the user's browser does not recognize any installed calendar app, this might lead to a blank screen. The PRO version mitigates this with some explenatory middleware screen.)</span>
           </p>
         </div>
         <div v-else>
@@ -437,7 +437,7 @@ onUnmounted(() => {
           <p>
             "name" und "startDate" sind aus technisch-organisatorischen Gründen weiterhin verpflichtende Angaben. Alle weiteren Parameter sind in diesem Fall aber optional.<br />
             Bei Microsoft-Diensten wird der "name" als Name für den geteilten Kalender genutzt.<br />
-            <span class="text-sm italic">(Microsoft Teams wird noch nicht unterstützt und der Link automatisch deaktiviert.</span>
+            <span class="text-sm italic">(Sollte der Browser des Nutzers keine installierte Kalender-App erkennen, kann dies zu einer leeren Seite führen. Die PRO-Version optimiert dies mit einem erklärenden Zwischenbildschirm.)</span>
           </p>
         </div>
         <div class="block w-full justify-between pt-4 md:flex">

@@ -55,7 +55,7 @@ if (atcbIsBrowser()) {
       if (!this.data.name || this.data.name === '') {
         // if no data yet, we try reading attributes or the innerHTML of the host element
         try {
-          this.data = atcb_read_attributes(this);
+          this.data = atcb_read_attributes(this, this.debug);
         } catch (e) {
           if (this.debug) {
             atcb_render_debug_msg(this.shadowRoot, e);
@@ -112,7 +112,7 @@ if (atcbIsBrowser()) {
       elem.innerHTML = template;
       this.shadowRoot.append(elem.content.cloneNode(true));
       try {
-        this.data = atcb_read_attributes(this);
+        this.data = atcb_read_attributes(this, this.debug);
       } catch (e) {
         if (this.debug) {
           atcb_render_debug_msg(this.shadowRoot, e);
@@ -175,7 +175,7 @@ if (atcbIsBrowser()) {
 }
 
 // read data attributes
-function atcb_read_attributes(el) {
+function atcb_read_attributes(el, debug = false) {
   let data = {};
   for (let i = 0; i < atcbWcParams.length; i++) {
     // reading data, but removing real code line breaks before parsing.
@@ -244,7 +244,7 @@ function atcb_read_attributes(el) {
       return '';
     })();
     // abort on missing input data
-    if (atcbJsonInput.length == 0) {
+    if (atcbJsonInput.length === 0 && debug) {
       console.error(data.validationError);
       throw new Error('Add to Calendar Button generation failed: no data provided or missing required fields - see console logs for details');
     }
