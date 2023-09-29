@@ -54,7 +54,7 @@ export default defineNuxtConfig({
         'script-src-attr': ["'self'"],
         'script-src': ["'self' 'unsafe-inline' https://*.add-to-calendar-button.com"],
         'style-src': ["'self' 'unsafe-inline' https://add-to-calendar-button.com"],
-        //'upgrade-insecure-requests': true,
+        'upgrade-insecure-requests': true,
       },
       referrerPolicy: 'strict-origin-when-cross-origin',
       strictTransportSecurity: {
