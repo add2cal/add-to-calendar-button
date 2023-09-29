@@ -43,19 +43,8 @@ export default defineNuxtConfig({
       crossOriginResourcePolicy: 'cross-origin',
       crossOriginOpenerPolicy: 'same-origin',
       crossOriginEmbedderPolicy: 'unsafe-none',
+      contentSecurityPolicy: false,
       // the following needs to match the settings in ./public/staticwebapp.config.json
-      contentSecurityPolicy: {
-        'base-uri': ["'self'"],
-        'font-src': ["'self' data:"],
-        'form-action': ["'self'"],
-        'frame-ancestors': ["'self'"],
-        'img-src': ["'self' https://add-to-calendar-button.com data:"],
-        'object-src': ["'none'"],
-        'script-src-attr': ["'self'"],
-        'script-src': ["'self' 'unsafe-inline' https://*.add-to-calendar-button.com"],
-        'style-src': ["'self' 'unsafe-inline' https://add-to-calendar-button.com"],
-        'upgrade-insecure-requests': true,
-      },
       referrerPolicy: 'strict-origin-when-cross-origin',
       strictTransportSecurity: {
         maxAge: 31536000,
