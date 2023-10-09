@@ -121,7 +121,7 @@ export default defineNuxtConfig({
       noscript: [{ innerHTML: 'Please enable JavaScript to view this website.' }],
     },
   },
-  schemaOrg: {
+  site: {
     host: baseUrl,
     tagPosition: 'head',
   },
@@ -142,7 +142,7 @@ export default defineNuxtConfig({
       ],
     },
     client: {
-      installPrompt: true,
+      installPrompt: false,
     },
     manifestFilename: 'manifest.json',
     manifest: {
