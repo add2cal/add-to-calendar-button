@@ -2,6 +2,7 @@
 import { defineNuxtConfig } from 'nuxt/config';
 
 const baseUrl = process.env.NUXT_PUBLIC_SITE_URL || 'https://add-to-calendar-button.com';
+const robots = process.env.NUXT_PUBLIC_ROBOTS || 'index, follow';
 
 export default defineNuxtConfig({
   modules: ['@nuxtjs/i18n', '@nuxtjs/tailwindcss', 'nuxt-headlessui', 'nuxt-security', 'nuxt-schema-org', '@vite-pwa/nuxt', 'nuxt-simple-sitemap', 'nuxt-delay-hydration'],
@@ -77,7 +78,7 @@ export default defineNuxtConfig({
         { 'http-equiv': 'X-UA-Compatible', content: 'IE=edge' },
         { name: 'author', content: 'Add to Calendar' },
         { name: 'publisher', content: 'Add to Calendar' },
-        { name: 'robots', content: 'index, follow' },
+        { name: 'robots', content: robots },
         { property: 'og:type', content: 'website' },
         { property: 'og:site_name', content: 'Add to Calendar Button' },
         { property: 'og:image', content: baseUrl + '/assets/img/fb.png' },

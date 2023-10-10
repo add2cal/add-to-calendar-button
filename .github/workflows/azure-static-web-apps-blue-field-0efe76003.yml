@@ -8,13 +8,15 @@ on:
       - next
 
 jobs:
-  build_and_deploy_job:
+  build_and_deploy_job_main:
     runs-on: ubuntu-latest
-    name: Build and Deploy Job
+    if: github.ref == 'refs/heads/main'
+    name: Build and Deploy Job [main]
     steps:
       - uses: actions/checkout@v3
         with:
           submodules: true
+          lfs: false
       - name: Build And Deploy
         id: builddeploy
         uses: Azure/static-web-apps-deploy@v1
@@ -30,3 +32,30 @@ jobs:
           output_location: 'demo/.output/public'
           is_static_export: true
           ###### End of Repository/Build Configurations ######
+
+  build_and_deploy_job_dev:
+    runs-on: ubuntu-latest
+    if: github.ref != 'refs/heads/main'
+    name: Build and Deploy Job [dev]
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          submodules: true
+          lfs: false
+      - name: Build And Deploy
+        id: builddeploy
+        uses: Azure/static-web-apps-deploy@v1
+        with:
+          azure_static_web_apps_api_token: ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN_BLUE_FIELD_0EFE76003 }}
+          action: 'upload'
+          production_branch: 'main'
+          ###### Repository/Build Configurations - These values can be configured to match your app requirements. ######
+          # For more information regarding Static Web App workflow configurations, please visit: https://aka.ms/swaworkflowconfig
+          app_build_command: 'npm ci && npm run build && cd demo && npm ci && npm run generate'
+          app_location: '/'
+          api_location: ''
+          output_location: 'demo/.output/public'
+          is_static_export: true
+          ###### End of Repository/Build Configurations ######
+        env:
+          NUXT_PUBLIC_ROBOTS: 'noindex, nofollow'
