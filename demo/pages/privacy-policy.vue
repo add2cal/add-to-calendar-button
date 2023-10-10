@@ -25,7 +25,7 @@ useHead({
         />
       </svg>
       <div class="mx-4 p-2 text-left">
-        <p class="pb-4 pt-2 text-xl font-bold leading-3">{{ $t('content.privacy.no-cookies') }}!</p>
+        <p class="pb-4 text-xl font-bold leading-6">{{ $t('content.privacy.no-cookies') }}!</p>
         <p>
           {{ $t('content.privacy.no-cookies-details-1') }}<br />
           {{ $t('content.privacy.no-cookies-details-2') }}<br />

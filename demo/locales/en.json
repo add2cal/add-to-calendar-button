@@ -446,8 +446,8 @@
       "intro": "Information in accordance with section 5 TMG and section 55 para. 2 RStV:"
     },
     "privacy": {
-      "no-cookies": "No Cookies are possible",
-      "no-cookies-details-1": "We are not using any cookies. We are also not following you around the web or sharing your data with any third party for marketing or tracking purposes.",
+      "no-cookies": "No Cookie Banner is possible",
+      "no-cookies-details-1": "We are not using any tracking cookies on this website and are not following you around the web or sharing your data with any third party for marketing or analytics purposes.",
       "no-cookies-details-2": "Therefore, we do not need to bother you with a cookie banner.",
       "no-cookies-details-3": "The following information explains how we process data apart from this."
     }
