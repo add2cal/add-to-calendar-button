@@ -199,7 +199,7 @@ You like this project? It would be awesome if you would support it, so it lives 
 - ✍️ Leave a review at [ProductHunt](https://www.producthunt.com/products/add-to-calendar-button-generator/reviews).
 - 💌 Send us some positive feedback at the [discussion board](https://github.com/add2cal/add-to-calendar-button/discussions).
 
-<br />
+<br /><br />
 
 ## ⚡ Changelog
 
@@ -208,7 +208,7 @@ You like this project? It would be awesome if you would support it, so it lives 
 
 Find all changes in the dedicated file at [CHANGELOG.md](CHANGELOG.md).
 
-<br />
+<br /><br />
 
 ## 🙌 Contributing
 
@@ -220,7 +220,7 @@ Anyone is welcome to contribute, but mind the [guidelines](.github/CONTRIBUTING.
 
 **IMPORTANT NOTE:** Run `npm install` and `npm run format` to auto-lint!
 
-<br />
+<br /><br />
 
 ## 📃 Copyright and License
 
