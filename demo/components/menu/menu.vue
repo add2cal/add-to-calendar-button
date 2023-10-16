@@ -20,6 +20,6 @@ const { locale } = useI18n();
 }
 
 .menu-item-pro {
-  @apply m-auto rounded-md border-2 text-white hover:text-black border-secondary from-secondary to-secondary-light py-2 px-3 hover:border-secondary-light hover:bg-gradient-to-tr hover:no-underline hover:shadow-md text-2xl lg:text-base;
+  @apply m-auto rounded-md border-2 text-white hover:text-black border-secondary from-secondary to-secondary-light py-2 px-3 hover:border-0 hover:px-4 hover:py-3 hover:bg-gradient-to-tr hover:no-underline hover:shadow-md text-2xl lg:text-base;
 }
 </style>

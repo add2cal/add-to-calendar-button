@@ -98,7 +98,7 @@
       "label_short": "Statistics",
       "stars": "GitHub stars",
       "npm_total": "npm installations",
-      "npm_weekly": "weekly npm installations",
+      "npm_monthly": "monthly npm installations",
       "cdn": "monthly CDN hits",
       "version": "latest version",
       "update": "last update"
