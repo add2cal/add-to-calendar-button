@@ -339,7 +339,7 @@ function atcb_generate_microsoft(data, date, type = '365') {
     // tmp workaround to reflect the fact that Microsoft is routing mobile traffic differently
     // TODO: remove this, when Microsoft has fixed this
     if (atcbIsMobile() || data.fakeMobile) {
-      return '/calendar/0/deeplink/compose?path=%2Fcalendar%2Faction%2Fcompose&rru=addevent';
+      return '/calendar/deeplink/compose?path=%2Fcalendar%2Faction%2Fcompose&rru=addevent';
     }
     return '/calendar/action/compose?rru=addevent';
   })();
