@@ -889,7 +889,7 @@ onUnmounted(() => {
           </p>
           <p>
             Theoretically, you do not need to provide a button element. However, it is recommended to do so, since it will optimize the user experience a lot (like focusing the element on closing the modal, etc.).<br />
-            If you provide a specific button, you can also choose between the overlay-dropdown list or the modal (default) style. Latter one is strongly recommended.
+            If you provide a specific button, you can only choose between the "overlay" list style or the "modal" (default) style. Latter one is strongly recommended.
           </p>
           <h3 class="mb-3 mt-8">{{ $t('content.guide.step1') }}: Import</h3>
           <p>
