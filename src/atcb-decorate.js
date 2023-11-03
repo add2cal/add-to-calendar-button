@@ -397,12 +397,16 @@ function atcb_decorate_data_extend(data) {
     } else {
       data.dates[`${i}`].onlineEvent = false;
     }
-    // for the uid, we do not copy from the top level, but rather generate it per event (except for the first one)
+    // for the uid, we do not simply copy from the top level, but iterate it to keep it unique
     if (data.dates[`${i}`].uid == null) {
-      if (i == 0 && data.uid != null && data.uid != '') {
+      if (i === 0 && data.uid !== null && data.uid !== '') {
         data.dates[0].uid = data.uid;
       } else {
-        data.dates[`${i}`].uid = atcb_generate_uuid();
+        if (data.uid !== null && data.uid !== '') {
+          data.dates[`${i}`].uid = data.uid + '-' + (i + 1);
+        } else {
+          data.dates[`${i}`].uid = atcb_generate_uuid();
+        }
       }
     }
   }

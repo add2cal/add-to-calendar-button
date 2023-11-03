@@ -11,6 +11,7 @@
   "files": [
     "dist",
     "test",
+    "assets/css/*.css",
     "index.d.ts",
     ".eslintrc.json",
     "CHANGELOG.md",
@@ -20,6 +21,18 @@
     ".": {
       "import": "./dist/module/index.js",
       "require": "./dist/commonjs/index.js"
+    },
+    "./no-pro": {
+      "import": "./dist/module/no-pro.js",
+      "require": "./dist/commonjs/no-pro.js"
+    },
+    "./unstyle": {
+      "import": "./dist/module/unstyle.js",
+      "require": "./dist/commonjs/unstyle.js"
+    },
+    "./no-pro-unstyle": {
+      "import": "./dist/module/no-pro-unstyle.js",
+      "require": "./dist/commonjs/no-pro-unstyle.js"
     }
   },
   "types": "index.d.ts",
@@ -72,8 +85,7 @@
     "dev": "cd demo && npm run dev",
     "build:all": "npm run build && npm run build:demo",
     "build:demo": "cd demo && npm run generate",
-    "build": "npx grunt",
-    "build:pro": "npx grunt --pro=true"
+    "build": "npx grunt"
   },
   "dependencies": {
     "timezones-ical-library": "^1.7.1"

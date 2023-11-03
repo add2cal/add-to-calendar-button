@@ -512,13 +512,15 @@ definePageMeta({
                 The iCal/ics file gets created dynamically.<br />
                 This has some drawbacks as it might be blocked in some rare cases.<br />
                 With this option, you can redirect to an existing ics file instead.<br /><br />
-                In the subscription case, you need to define the external calendar here.
+                In the subscription case, you need to define the external calendar here.<br /><br />
+                If you have multiple dates and an organizer or status set, you would need to prepare multiple ics files, where the one for the first date is specified here, while all subsequent dates look for a file with the same name and a number (starting with 2) appended (e.g. "event-2.ics").
               </td>
               <td v-else>
                 Die iCal/ics-Datei wir dynamisch generiert.<br />
                 Dies hat den Nachteil, dass der Prozess in seltenen Fällen vom Browser des Nutzers blockiert werden kann.<br />
                 Mit dieser Option kannst du stattdessen auf eine bestehende ics-Datei verweisen.<br /><br />
-                Im "subscribe"-Fall muss hier der externe Kalender referenziert werden.
+                Im "subscribe"-Fall muss hier der externe Kalender referenziert werden.<br /><br />
+                Falls du mehrere Termine und einen "organizer" oder "status" definiert hast, musst du mehrere ics-Dateien vorhalten. Die Datei für den ersten Termin wird hier referenziert, während alle weiteren Termine eine Datei mit dem gleichen Namen zzgl. einer fortlaufende Nummer (beginnend mit 2) benötigen (bspw. "event-2.ics").
               </td>
             </tr>
             <tr id="icalfilename">
