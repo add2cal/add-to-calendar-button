@@ -37,6 +37,9 @@
     "startConfiguring": "Jetzt konfigurieren",
     "exploreExamples": "Beispiele erkunden",
     "example": "Beispiel",
+    "discoverPro": "Entdecke das PRO-Angebot",
+    "discoverProDetails": "Mehr Funktionen (wie RSVP) und deutlich weniger Stress dank ics-Datei-Hosting, No-Code-Bearbeitung und vielem mehr.",
+    "learnMore": "Mehr erfahren",
     "inputs": {
       "name": "Titel",
       "description": "Beschreibung",

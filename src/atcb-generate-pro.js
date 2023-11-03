@@ -267,7 +267,6 @@ function atcb_generate_rsvp(host, data, keyboardTrigger = false, inline = false)
   */
   atcb_log_event('openRSVP', data.identifier, data.identifier);
 
-
   /*
   On validation:
   check required

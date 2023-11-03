@@ -82,7 +82,7 @@ const clear = () => {
           class="relative grid w-full cursor-pointer rounded-md bg-zinc-50 py-2 pl-3 text-left text-sm shadow hover:bg-white hover:shadow-md focus:outline-none focus-visible:ring focus-visible:ring-secondary/75 dark:bg-zinc-700 dark:hover:bg-zinc-600"
         >
           <span class="block h-auto min-h-[20px] truncate">
-            <span v-if="modelValue==''" class="font-normal text-xs text-gray-400">{{ props.placeholder }}<span v-if="!props.placeholder" v-t="'labels.inputs.select_option'"></span></span>
+            <span v-if="modelValue==''" class="text-xs font-normal text-gray-400">{{ props.placeholder }}<span v-if="!props.placeholder" v-t="'labels.inputs.select_option'"></span></span>
             <template v-for="(selected, index) in selectedOptions">
               <template v-if="(index !== 0)">,&nbsp;</template>
               <slot name="selected" :option="selected">

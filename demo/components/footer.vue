@@ -11,6 +11,7 @@ import LogoX from "@/components/logos/logoX.vue";
 import LogoNpm from "@/components/logos/logoNpm.vue";
 
 const localePath = useLocalePath();
+const { locale } = useI18n();
 </script>
 
 <script lang="ts">
@@ -20,15 +21,33 @@ function topFunction() {
 </script>
 
 <template>
+  <div class="w-full bg-gradient-to-tr from-brand-blue-dark to-brand-blue text-white drop-shadow-2xl dark:drop-shadow-light-lg">
+    <div class="container grid grid-cols-1 sm:grid-cols-2">
+      <div class="mx-auto -mt-4 w-32 sm:mx-0 sm:w-48 md:w-64 lg:mx-auto lg:-mt-6 lg:w-80">
+        <img class="drop-shadow-xl" alt="Get blown away by the PRO offering" width="800" height="920" src="/assets/img/bomb.webp" />
+      </div>
+      <div class="flex flex-col items-center gap-8 pb-14 pt-10 md:pb-24 md:pt-16 lg:pb-24 lg:pt-20">
+        <div>
+          <h2 class="text-3xl drop-shadow-lg md:text-4xl lg:text-5xl">{{ $t('labels.discoverPro') }}</h2>
+          <p class="mt-3 opacity-70 lg:mt-6">{{ $t('labels.discoverProDetails') }}</p>
+        </div>
+        <a target="_blank" rel="noopener" :href="'https://add-to-calendar-pro.com' + (locale !== 'en' ? '/' + locale : '')" class="button-primary-animated w-40 text-white">{{ $t('labels.learnMore') }}</a>
+      </div>
+    </div>
+  </div>
   <div class="max-w-full bg-gradient-to-t from-zinc-100 to-gray-300 dark:from-zinc-800 dark:to-zinc-900">
     <div class="container">
       <div class="mx-6 pb-16 pt-12 md:m-auto md:pt-16">
         <div class="flex flex-col-reverse items-center sm:flex-row sm:justify-between">
           <div class="hidden w-auto max-w-[200px] sm:block">
-            <NuxtLink :to="localePath('index')"><Logo variation="footer" /></NuxtLink>
+            <NuxtLink :to="localePath('index')">
+              <Logo variation="footer" />
+            </NuxtLink>
           </div>
           <div class="flex">
-            <div role="button" class="mr-8 hidden cursor-pointer self-center opacity-40 hover:pb-2 hover:opacity-100 md:inline-block" :aria-label="$t('labels.toTop')" @click="topFunction()"><ArrowUpIcon class="h-6 w-6" aria-hidden="true" /></div>
+            <div role="button" class="mr-8 hidden cursor-pointer self-center opacity-40 hover:pb-2 hover:opacity-100 md:inline-block" :aria-label="$t('labels.toTop')" @click="topFunction()">
+              <ArrowUpIcon class="h-6 w-6" aria-hidden="true" />
+            </div>
             <div class="inline-block"><LanguageSwitcher /></div>
           </div>
         </div>
@@ -58,8 +77,8 @@ function topFunction() {
             </ClientOnly>
           </div>
           <div class="flex justify-center space-x-6 pt-3 sm:pt-0">
-            <a class="footer-icon-base w-9 hover:text-black dark:hover:text-white" target="_blank" rel="noopener" href="https://github.com/add2cal/add-to-calendar-button"><LogoGithub /></a>
-            <a class="footer-icon-base w-8 hover:text-black dark:hover:text-white" target="_blank" rel="noopener" href="https://x.com/add2calendar"><LogoX /></a>
+            <a class="footer-icon-base w-9 hover:text-primary dark:hover:text-primary" target="_blank" rel="noopener" href="https://github.com/add2cal/add-to-calendar-button"><LogoGithub /></a>
+            <a class="footer-icon-base w-8 hover:text-primary dark:hover:text-primary" target="_blank" rel="noopener" href="https://x.com/add2calendar"><LogoX /></a>
             <a class="footer-icon-base w-12  hover:text-npm dark:hover:text-npm" target="_blank" rel="noopener" href="https://www.npmjs.com/package/add-to-calendar-button"><LogoNpm /></a>
           </div>
         </div>

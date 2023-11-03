@@ -67,15 +67,15 @@ definePageMeta({
             </tr>
           </thead>
           <tbody>
-            <tr id="prokey" class="hidden">
-              <th scope="row" class="text-base text-primary dark:text-primary-light">proKey</th>
+            <tr id="prokey">
+              <th scope="row" class="text-base text-primary-dark dark:text-primary-light">proKey</th>
               <td><em>String</em></td>
               <td v-if="locale=='en'">
                 If you are using the PRO service, you can use the "proKey" attribute to connect the button to a specific event of yours.<br />
                 <span class="mt-2 block font-semibold">In this case, no other parameters need to be defined in the code, since this is 100% managed at the Add to Calendar PRO admin panel.</span>
               </td>
               <td v-else>
-                Wenn du unseren PRO-Servie nutzt, kannst du das "proKey"-Attribut nutzen, um den Button mit einem bestimmten Event zu verknüpfen.<br />
+                Wenn du unseren PRO-Service nutzt, kannst du das "proKey"-Attribut nutzen, um den Button mit einem bestimmten Event zu verknüpfen.<br />
                 <span class="mt-2 block font-semibold">In diesem Fall müssen ansonsten keine weiteren Parameter im Code definiert werden, da die weitere Verwaltung zu 100% im Add to Calendar PRO Admin-Bereich erfolgt.</span>
               </td>
             </tr>
@@ -520,7 +520,8 @@ definePageMeta({
                 Dies hat den Nachteil, dass der Prozess in seltenen Fällen vom Browser des Nutzers blockiert werden kann.<br />
                 Mit dieser Option kannst du stattdessen auf eine bestehende ics-Datei verweisen.<br /><br />
                 Im "subscribe"-Fall muss hier der externe Kalender referenziert werden.<br /><br />
-                Falls du mehrere Termine und einen "organizer" oder "status" definiert hast, musst du mehrere ics-Dateien vorhalten. Die Datei für den ersten Termin wird hier referenziert, während alle weiteren Termine eine Datei mit dem gleichen Namen zzgl. einer fortlaufende Nummer (beginnend mit 2) benötigen (bspw. "event-2.ics").
+                Falls du mehrere Termine und einen "organizer" oder "status" definiert hast, musst du mehrere ics-Dateien vorhalten. Die Datei für den ersten Termin wird hier referenziert, während alle weiteren Termine eine Datei mit dem gleichen Namen zzgl. einer fortlaufende Nummer (beginnend mit
+                2) benötigen (bspw. "event-2.ics").
               </td>
             </tr>
             <tr id="icalfilename">
