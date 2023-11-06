@@ -5,7 +5,7 @@
  *
  * Style: 3D
  *
- * Version: 2.4.3
+ * Version: 2.5.0
  * Creator: Jens Kuerschner (https://jenskuerschner.de)
  * Project: https://github.com/add2cal/add-to-calendar-button
  * License: Elastic License 2.0 (ELv2) (https://github.com/add2cal/add-to-calendar-button/blob/main/LICENSE.txt)
@@ -28,6 +28,9 @@
   --btn-background: #f5f5f5;
   --btn-hover-background: #fff;
   --btn-border: #d2d2d2;
+  --btn-border-radius: 6px;
+  --btn-padding-x: 1em;
+  --btn-padding-y: .65em;
   --btn-text: #333;
   --btn-hover-text: #000;
   --btn-shadow: rgba(0 0 0 / 20%) 2px 5px 18px -1px, rgba(0 0 0 / 15%) 2px 2px 10px -3px;
@@ -40,6 +43,8 @@
   --list-hover-text: #000;
   --list-close-background: #e5e5e5;
   --list-close-text: #777;
+  --list-border-radius: 6px;
+  --list-padding: .8em;
   --list-shadow: rgba(0 0 0 / 20%) 2px 5px 18px -1px, rgba(0 0 0 / 40%) 2px 2px 10px -3px;
   --list-modal-shadow: rgba(0 0 0 / 60%) 3px 6px 40px -5px, rgba(0 0 0 / 60%) 3px 3px 15px -4px;
   --modal-text: #000;
@@ -52,6 +57,7 @@
   --modal-btn-text: #2e2e2e;
   --modal-btn-hover-text: #161616;
   --modal-btn-secondary-text: #666567;
+  --modal-border-radius: 6px;
   --modal-shadow: drop-shadow(5px 8px 30px rgba(0 0 0 / 70%));
   --modal-btn-shadow: rgba(0 0 0 / 10%) 2px 3px 10px -3px,rgba(0 0 0 / 25%) 1px 1px 8px -4px;
   --modal-btn-hover-shadow: rgba(0 0 0 / 35%) 3px 5px 15px -2px,rgba(0 0 0 / 20%) 2px 4px 25px -6px;
@@ -63,6 +69,7 @@
   --date-btn-cal-background: #313132;
   --date-btn-background: #eae9ed;
   --date-btn-hover-background: #fff;
+  --date-btn-headline-line-clamp: 1;
   --date-btn-shadow: rgba(0 0 0 / 40%) 1px 3px 15px -4px, rgba(0 0 0 / 20%) 1px 1px 8px -4px;
   --date-btn-hover-shadow: rgba(0 0 0 / 40%) 4px 6px 18px -1px, rgba(0 0 0 / 35%) 4px 5px 25px -2px;
   --checkmark-background: drop-shadow(0 0 3px #ffffff);
@@ -164,7 +171,7 @@
   align-items: center;
   background-color: var(--btn-background);
   border: 1px solid var(--btn-border);
-  border-radius: 6px;
+  border-radius: var(--btn-border-radius);
   box-shadow: var(--btn-shadow);
   color: var(--btn-text);
   cursor: pointer;
@@ -177,7 +184,7 @@
   margin: 0;
   max-width: 350px;
   min-width: 10em;
-  padding: .65em 1em;
+  padding: var(--btn-padding-y) var(--btn-padding-x);
   position: relative;
   text-align: center;
   touch-action: manipulation;
@@ -220,7 +227,7 @@
   box-shadow: var(--btn-active-shadow);
   color: var(--btn-hover-text);
   margin: -.13em;
-  padding: .78em 1.13em;
+  padding: calc(var(--btn-padding-y) + .13em) var(--btn-padding-x + .13em);
 }
 
 .atcb-button.atcb-active:not(.atcb-modal-style, .atcb-dropup, .atcb-dropoverlay) {
@@ -245,8 +252,9 @@
  */
 
 .atcb-icon {
-  height: 1em;
-  margin-bottom: .3em;
+  width: 1em;
+  margin-top: .2em;
+  height: auto;
   margin-right: .8em;
   flex-grow: 0;
   flex-shrink: 0;
@@ -298,7 +306,7 @@
 
 .atcb-list {
   background-color: var(--list-background);
-  border-radius: 0 0 6px 6px;
+  border-radius: 0 0 var(--list-border-radius) var(--list-border-radius);
   box-sizing: border-box;
   box-shadow: var(--list-shadow);
   color: var(--list-text);
@@ -381,7 +389,7 @@
   display: flex;
   font-size: 1em;
   line-height: 1.75em;
-  padding: .8em;
+  padding: var(--list-padding);
   text-align: left;
   touch-action: manipulation;
   -webkit-tap-highlight-color: transparent;
@@ -405,38 +413,38 @@
 }
 
 .atcb-list-item:last-child {
-  border-radius: 0 0 6px 6px;
+  border-radius: 0 0 var(--list-border-radius) var(--list-border-radius);
 }
 
 .atcb-dropup .atcb-list-item:last-child {
   border-radius: 0;
-  padding-bottom: 1.5em;
+  padding-bottom: calc(var(--list-padding) + .7em);
 }
 
 .atcb-dropup .atcb-list-item:first-child,
 .atcb-dropoverlay .atcb-list .atcb-list-item:first-child,
 .atcb-list.atcb-modal .atcb-list-item:first-child,
 .atcb-dropup .atcb-list {
-  border-radius: 6px 6px 0 0;
+  border-radius: var(--list-border-radius) var(--list-border-radius) 0 0;
 }
 
 .atcb-dropoverlay .atcb-list .atcb-list-item:only-child,
 .atcb-list.atcb-modal .atcb-list-item:only-child {
-  border-radius: 6px;
+  border-radius: var(--list-border-radius);
 }
 
 .atcb-list.atcb-generated-button:not(.atcb-modal) .atcb-list-item:first-child {
-  padding-top: 1.5em;
+  padding-top: calc(var(--list-padding) + .7em);
 }
 
 .atcb-dropup .atcb-list.atcb-generated-button:not(.atcb-modal) .atcb-list-item:first-child,
 .atcb-dropoverlay .atcb-list.atcb-generated-button:not(.atcb-modal) .atcb-list-item:first-child {
-  padding-top: .8em;
+  padding-top: var(--list-padding);
 }
 
 .atcb-dropoverlay .atcb-list,
 .atcb-list.atcb-modal {
-  border-radius: 6px;
+  border-radius: var(--list-border-radius);
 }
 
 .atcb-list.atcb-modal {
@@ -525,7 +533,7 @@
 /* content */
 .atcb-modal-headline {
   background-color: var(--modal-background);
-  border-radius: 6px 6px 0 0;
+  border-radius: var(--modal-border-radius) var(--modal-border-radius) 0 0;
   font-size: 1.3em;
   font-weight: 600;
   line-height: 1.5em;
@@ -546,7 +554,7 @@
 }
 
 .atcb-modal-icon + .atcb-modal-content {
-  border-radius: 6px 6px 0 0;
+  border-radius: var(--modal-border-radius) var(--modal-border-radius) 0 0;
   margin-top: -2.6em;
   padding-top: 2.6em;
 }
@@ -568,7 +576,7 @@
 /* buttons */
 .atcb-modal-buttons {
   background-color: var(--modal-btn-bar);
-  border-radius: 0 0 6px 6px;
+  border-radius: 0 0 var(--modal-border-radius) var(--modal-border-radius);
   box-sizing: border-box;
   padding: .8em 1em;
   text-align: center;
@@ -583,7 +591,7 @@ button.atcb-modal-btn,
 a.atcb-modal-btn {
   background-color: var(--modal-btn-secondary-background);
   border: 0;
-  border-radius: 6px;
+  border-radius: var(--btn-border-radius);
   box-shadow: var(--modal-btn-shadow);
   color: var(--modal-btn-secondary-text);
   cursor: pointer;
@@ -641,7 +649,7 @@ a.atcb-modal-btn:focus-visible{
   box-shadow: var(--date-btn-shadow);
   background-color: var(--date-btn-background);
   border: 0;
-  border-radius: 6px;
+  border-radius: 4px;
   padding: 0;
   margin: 0;
   touch-action: manipulation;
@@ -756,7 +764,7 @@ a.atcb-modal-btn:focus-visible{
   margin-bottom: .5em;
   overflow: hidden;
   display: -webkit-box;
-  -webkit-line-clamp: 1;
+  -webkit-line-clamp: var(--date-btn-headline-line-clamp);
   -webkit-box-orient: vertical;
 }
 

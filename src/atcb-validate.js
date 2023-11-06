@@ -3,7 +3,7 @@
  *  Add to Calendar Button
  *  ++++++++++++++++++++++
  *
- *  Version: 2.4.3
+ *  Version: 2.5.0
  *  Creator: Jens Kuerschner (https://jenskuerschner.de)
  *  Project: https://github.com/add2cal/add-to-calendar-button
  *  License: Elastic License 2.0 (ELv2) (https://github.com/add2cal/add-to-calendar-button/blob/main/LICENSE.txt)
@@ -230,8 +230,11 @@ function atcb_validate_attendee(data, msgPrefix, i, msgSuffix) {
       data.validationError = msgPrefix + ' failed: if an attendee is set, you also need to set the organizer' + msgSuffix;
       return false;
     }
-    // additionally, we check the same format as with the organizer (only 1 attendee possible)
+    // additionally, we check the same format as with the organizer or simple email (only 1 attendee possible)
     const attendeeParts = data.dates[`${i}`].attendee.split('|');
+    if (attendeeParts.length === 1 && !atcb_validEmail(attendeeParts[0])) {
+      return true;
+    }
     if (attendeeParts.length != 2 || attendeeParts[0].length > 50 || attendeeParts[1].length > 80 || !atcb_validEmail(attendeeParts[1])) {
       data.validationError = msgPrefix + ' failed: attendee needs to match the schema "NAME|EMAIL" with a valid email address' + msgSuffix;
       return false;

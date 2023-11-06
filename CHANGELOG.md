@@ -2,6 +2,7 @@
 
 ## Version 2
 
+- v2.5 : [introducing PRO offering](https://add-to-calendar-pro.com/), default branding (check hideBranding option for disabling it), more css var options, bundle-size optimization option, attendee optimization, a lot of fixes
 - v2.4 : forceOverlay, fixes
 - v2.3 : pastDateHandling, disable option, static-dropup listStyle option, date style optimized, buttonsList optimized, better iOS support, new languages
 - v2.2 : "attendee" option, lazy external css loading, fixes

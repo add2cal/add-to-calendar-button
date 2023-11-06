@@ -268,7 +268,7 @@ definePageMeta({
                 <em>String</em><br /><br /><span class="format">{{ $t('content.config.organizer_default') }}</span>
               </td>
               <td v-if="locale=='en'">
-                Use the schema "NAME|EMAIL" (e.g. "John Doe|john.doe@gmail.com").<br />
+                Use the schema "NAME|EMAIL" (e.g. "John Doe|john.doe@gmail.com"), or email only as the name is optional.<br />
                 With setting this option, you would be able to update an event in a user's calendar, if this user loads the new iCal file as well.<br /><br />
                 Only 1 attendee can be specified<br />
                 This attendee needs to be the person saving the event.<br />
@@ -276,7 +276,7 @@ definePageMeta({
                 When you specify an attendee, you also need to specify an organizer.
               </td>
               <td v-else>
-                Schema "NAME|E-MAIL" (bspw. "Max Muster|max.muster@gmail.com").<br />
+                Schema "NAME|E-MAIL" (bspw. "Max Muster|max.muster@gmail.com") oder einfach nur eine E-Mail-Adresse (Name ist optional).<br />
                 Mit dieser Option kannst du ein Event im Kalender eines Nutzers aktualisieren, wenn dieser Nutzer auch die neue iCal-Datei speichert.<br /><br />
                 Es kann nur 1 "attendee" gesetzt werden<br />
                 Diese Person muss gleichzeitig diejenige sein, die das Event speichert.<br />
@@ -816,12 +816,12 @@ definePageMeta({
               <td v-if="locale=='en'">
                 Each button comes with a dark and light mode.<br /><br />
                 Set the option lightMode to "dark" or "light" explicitly, or use "system" to automatically adapt to the user's default setting.<br />
-                You can also use "bodyScheme" to look for the class "atcb-dark" at the html or body tag and connect the button dynamically to the style of your website.
+                You can also use "bodyScheme" to look for the class "atcb-dark" (or "dark") at the html or body tag and connect the button dynamically to the style of your website.
               </td>
               <td v-else>
                 Jeder Button kommt mit einem Dark- und Light-Theme.<br /><br />
                 Mit der Optiomn "lightMode" kann dies explizit ausgewählt werden. Du kannst auch den Wert "system" nutzen, um automatisch den Wert des Betriebssystems des Nutzers zu übernehmen.<br />
-                Mit dem Wert "bodyScheme" wird automatisch nach der class "atcb-dark" im html oder body tag Ausschau gehalten - der Button lässt sich in diesem Fall dynamisch dem Stil der Webseite anpassen.
+                Mit dem Wert "bodyScheme" wird automatisch nach der class "atcb-dark" (oder "dark") im html oder body tag Ausschau gehalten - der Button lässt sich in diesem Fall dynamisch dem Stil der Webseite anpassen.
               </td>
             </tr>
             <tr id="language">
@@ -995,6 +995,16 @@ definePageMeta({
               <td v-if="locale=='en'">This will add an attribute "nonce" with the provided value to all inline script and style tags. Useful for strict Content-Security-Policy environments.</td>
               <td v-else>Diese Option fügt allen inline script und style tags ein Attribut "nonce" mit dem angegebenen Wert hinzu. Nützlich für strikte Content-Security-Policy Umgebungen.</td>
             </tr>-->
+            <tr id="instance">
+              <th scope="row">instance</th>
+              <td>
+                <em>Number</em>
+              </td>
+              <td v-if="locale=='en'">Use this attribute to force a re-rendering of the button by counting its value 1 up.</td>
+              <td v-else>
+                Nutze dieses Attribut, um einen Button durch Hochzählen des Werts neu zu rendern.
+              </td>
+            </tr>
             <tr id="debug">
               <th scope="row">debug</th>
               <td>

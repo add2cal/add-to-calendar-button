@@ -5,7 +5,7 @@
  *
  * Style: Date
  *
- * Version: 2.4.3
+ * Version: 2.5.0
  * Creator: Jens Kuerschner (https://jenskuerschner.de)
  * Project: https://github.com/add2cal/add-to-calendar-button
  * License: Elastic License 2.0 (ELv2) (https://github.com/add2cal/add-to-calendar-button/blob/main/LICENSE.txt)
@@ -61,6 +61,7 @@
   --date-btn-cal-background: #313132;
   --date-btn-background: #eae9ed;
   --date-btn-hover-background: #fff;
+  --date-btn-headline-line-clamp: 1;
   --date-btn-shadow: rgba(0 0 0 / 40%) 1px 3px 15px -4px, rgba(0 0 0 / 20%) 1px 1px 8px -4px;
   --date-btn-hover-shadow: rgba(0 0 0 / 40%) 4px 6px 18px -1px, rgba(0 0 0 / 35%) 4px 5px 25px -2px;
   --checkmark-background: drop-shadow(0 0 3px #ffffff);
@@ -311,7 +312,7 @@
   margin-bottom: .5em;
   overflow: hidden;
   display: -webkit-box;
-  -webkit-line-clamp: 1;
+  -webkit-line-clamp: var(--date-btn-headline-line-clamp);
   -webkit-box-orient: vertical;
 }
 

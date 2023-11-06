@@ -92,6 +92,22 @@ Simple and convenient integration of 1 or many buttons, configurable directly wi
 
 <br />
 
+## 🚀 Go PRO
+
+- ics file generation and hosting for better compatibility.
+- RSVP, incl. automatic updates sent to attendees, GDPR features, and more.
+- More customization - all no-code.
+- API, webhooks, and more technical toys.
+- Share events among all kinds of channels - email, social media, ...
+
+Check the details at [add-to-calendar-pro.com](https://add-to-calendar-pro.com)!
+
+<br />
+
+---
+
+<br />
+
 ## 📦 Installation / Setup
 
 ### Option 1: simple (CDN)
@@ -108,7 +124,7 @@ Place the script tag inside the `<head>` section.
 
 ### Option 2: npm
 
-Import the package using the following npm command:
+Install the package using the following npm command:
 
 ```sh
 npm install add-to-calendar-button
@@ -182,7 +198,7 @@ A time zone is not required, but recommended.
 
 <br /><br />
 
-[More Examples](https://add-to-calendar-button.com/examples) • [Full Configuration Documentation](https://add-to-calendar-button.com/configuration)
+[More Examples](https://add-to-calendar-button.com/examples) • [Full Configuration Documentation](https://add-to-calendar-button.com/configuration) • [PRO Version](https://add-to-calendar-pro.com)
 
 <br />
 
@@ -246,23 +262,24 @@ In doubt, simply ask and we find a way. :)
 
 ## 💜 Kudos go to
 
-[uxwing.com](https://uxwing.com) as well as all contributors:
+...all amazing contributors:
 
-<a href="https://github.com/jekuer"><img src="https://avatars.githubusercontent.com/u/8572883?v=4" title="jekuer" width="60" height="60"></a>
-<a href="https://github.com/add-to-calendar"><img src="https://avatars.githubusercontent.com/u/110406429?s=96&v=4" title="add-to-calendar" width="60" height="60"></a>
+<a href="https://github.com/jekuer"><img src="https://avatars.githubusercontent.com/u/8572883?v=4" title="Jens Kuerschner" width="60" height="60"></a>
+<a href="https://github.com/add-to-calendar"><img src="https://avatars.githubusercontent.com/u/110406429?s=96&v=4" title="Add to Calendar Team" width="60" height="60"></a>
 <a href="https://github.com/chadoh"><img src="https://avatars.githubusercontent.com/u/221614?v=4" title="chadoh" width="60" height="60"></a>
-<a href="https://github.com/turcuciprian"><img src="https://avatars.githubusercontent.com/u/3309840?v=4" title="turcuciprian" width="60" height="60"></a>
-<a href="https://github.com/lizakorab"><img src="https://avatars.githubusercontent.com/u/72821189?v=4" title="lizakorab" width="60" height="60"></a>
-<a href="https://github.com/bryan-brancotte"><img src="https://avatars.githubusercontent.com/u/11556772?v=4" title="bryan-brancotte" width="60" height="60"></a>
+<a href="https://github.com/turcuciprian"><img src="https://avatars.githubusercontent.com/u/3309840?v=4" title="Ciprian Turcu" width="60" height="60"></a>
+<a href="https://github.com/lizakorab"><img src="https://avatars.githubusercontent.com/u/72821189?v=4" title="Liza Korab" width="60" height="60"></a>
+<a href="https://github.com/bryan-brancotte"><img src="https://avatars.githubusercontent.com/u/11556772?v=4" title="Bryan Brancotte" width="60" height="60"></a>
 <a href="https://github.com/nticaric"><img src="https://avatars.githubusercontent.com/u/824840?v=4" title="nticaric" width="60" height="60"></a>
 <a href="https://github.com/Ortovoxx"><img src="https://avatars.githubusercontent.com/u/56805259?v=4" title="Ortovoxx" width="60" height="60"></a>
 <a href="https://github.com/purushu007"><img src="https://avatars.githubusercontent.com/u/70796763?v=4" title="Purushu" width="60" height="60"></a>
 <a href="https://github.com/cabello"><img src="https://avatars.githubusercontent.com/u/60936?v=4" title="Danilo Cabello" width="60" height="60"></a>
 <a href="https://github.com/Goudarz"><img src="https://avatars.githubusercontent.com/u/3191949?v=4" title="Goudarz" width="60" height="60"></a>
 <a href="https://github.com/ragnarkurm"><img src="https://avatars.githubusercontent.com/u/5205088?v=4" title="Ragnar Kurm" width="60" height="60"></a>
-<a href="https://github.com/emilebosch"><img src="https://avatars.githubusercontent.com/u/303135?v=4" title="emilebosch" width="60" height="60"></a>
+<a href="https://github.com/emilebosch"><img src="https://avatars.githubusercontent.com/u/303135?v=4" title="Emile Bosch" width="60" height="60"></a>
 <a href="https://github.com/killerrin"><img src="https://avatars.githubusercontent.com/u/3269687?v=4" title="killerrin" width="60" height="60"></a>
 <a href="https://github.com/acm-will"><img src="https://avatars.githubusercontent.com/u/103984058?v=4" title="acm-will" width="60" height="60"></a>
+<a href="https://github.com/pbaumard"><img src="https://avatars.githubusercontent.com/u/6176006?v=4" title="Pierre Baumard" width="60" height="60"></a>
 <a href="https://github.com/chris-at-fabius-labs"><img src="https://avatars.githubusercontent.com/u/108754665?v=4" title="chris-at-fabius-labs" width="60" height="60"></a>
 <a href="https://github.com/ssaaiidd"><img src="https://avatars.githubusercontent.com/u/29234802?v=4" title="ssaaiidd" width="60" height="60"></a>
 <a href="https://github.com/c0rychu"><img src="https://avatars.githubusercontent.com/u/55235141?v=4" title="Cory Chu" width="60" height="60"></a>

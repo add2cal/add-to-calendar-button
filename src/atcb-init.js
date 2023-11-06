@@ -3,7 +3,7 @@
  *  Add to Calendar Button
  *  ++++++++++++++++++++++
  *
- *  Version: 2.4.3
+ *  Version: 2.5.0
  *  Creator: Jens Kuerschner (https://jenskuerschner.de)
  *  Project: https://github.com/add2cal/add-to-calendar-button
  *  License: Elastic License 2.0 (ELv2) (https://github.com/add2cal/add-to-calendar-button/blob/main/LICENSE.txt)
@@ -310,7 +310,14 @@ function atcb_set_light_mode(shadowRoot, data) {
   shadowRoot.host.classList.remove('atcb-dark', 'atcb-light', 'atcb-bodyScheme');
   const hostLightMode = (function () {
     if (data.lightMode == 'bodyScheme') {
-      if (document.body.classList.contains('atcb-dark') || document.documentElement.classList.contains('atcb-dark')) {
+      if (
+        document.body.classList.contains('atcb-dark') ||
+        document.documentElement.classList.contains('atcb-dark') ||
+        document.body.classList.contains('atcp-dark') ||
+        document.documentElement.classList.contains('atcp-dark') ||
+        document.body.classList.contains('dark') ||
+        document.documentElement.classList.contains('dark')
+      ) {
         return 'dark';
       } else {
         return 'light';
@@ -344,6 +351,21 @@ function atcb_load_css(host, rootObj = null, data) {
     }
     document.head.append(cssGlobalContent);
   }
+  // get custom override information
+  const overrideDefaultCss = (function () {
+    if (data.styleLight) {
+      const output = ':host { ' + atcb_secure_content(data.styleLight.replace(/(\\r\\n|\\n|\\r)/g, ''), false) + ' }';
+      return output;
+    }
+    return '';
+  })();
+  const overrideDarkCss = (function () {
+    if (data.styleDark) {
+      const output = ':host(.atcb-dark), :host-context(html.atcb-dark):host(.atcb-bodyScheme), :host-context(body.atcb-dark):host(.atcb-bodyScheme) { ' + atcb_secure_content(data.styleDark.replace(/(\\r\\n|\\n|\\r)/g, ''), false) + ' }';
+      return output;
+    }
+    return '';
+  })();
   // we load custom styles dynamically
   if (data.customCss != '' && data.buttonStyle == 'custom') {
     const cssFile = document.createElement('link');
@@ -366,7 +388,7 @@ function atcb_load_css(host, rootObj = null, data) {
       placeholder.style.cssText = 'width: 150px; height: 40px; border-radius: 200px; background-color: #777; opacity: .3;';
       host.prepend(placeholder);
       // second, load the actual css (and remove the placeholder as soon as it is loaded)
-      loadExternalCssAsynch(cssFile, host, rootObj, placeholder, data.inline, data.buttonsList);
+      loadExternalCssAsynch(cssFile, host, rootObj, placeholder, data.inline, data.buttonsList, overrideDefaultCss + overrideDarkCss);
     }
     return;
   }
@@ -376,21 +398,6 @@ function atcb_load_css(host, rootObj = null, data) {
     if (nonceVal) {
       cssContent.setAttribute('nonce', nonceVal);
     }
-    // get custom override information
-    const overrideDefaultCss = (function () {
-      if (data.styleLight) {
-        const output = ':host { ' + atcb_secure_content(data.styleLight.replace(/(\\r\\n|\\n|\\r)/g, ''), false) + ' }';
-        return output;
-      }
-      return '';
-    })();
-    const overrideDarkCss = (function () {
-      if (data.styleDark) {
-        const output = ':host(.atcb-dark), :host-context(html.atcb-dark):host(.atcb-bodyScheme), :host-context(body.atcb-dark):host(.atcb-bodyScheme) { ' + atcb_secure_content(data.styleDark.replace(/(\\r\\n|\\n|\\r)/g, ''), false) + ' }';
-        return output;
-      }
-      return '';
-    })();
     // add style to element
     cssContent.innerText = atcbCssTemplate[`${data.buttonStyle}`] + overrideDefaultCss + overrideDarkCss;
     host.prepend(cssContent);
@@ -410,7 +417,14 @@ function atcb_load_css(host, rootObj = null, data) {
   }
 }
 
-async function loadExternalCssAsynch(cssFile, host, rootObj, placeholder = null, inline = false, buttonsList = false) {
+async function loadExternalCssAsynch(cssFile, host, rootObj, placeholder = null, inline = false, buttonsList = false, overrideCss = '') {
+  // load custom override information
+  if (overrideCss != '') {
+    const cssContent = document.createElement('style');
+    cssContent.innerText = overrideCss;
+    host.prepend(cssContent);
+  }
+  // load external css
   host.prepend(cssFile);
   // remove placeholder and render object as soon as loaded - only relevant if given
   await new Promise((resolve) => {

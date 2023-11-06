@@ -45,6 +45,7 @@ const configOptions = [
   "subscribe",
   "icsFile",
   "iCalFileName",
+  "instance",
   "created",
   "updated",
   "buttonStyle",

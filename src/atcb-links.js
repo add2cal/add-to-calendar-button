@@ -3,7 +3,7 @@
  *  Add to Calendar Button
  *  ++++++++++++++++++++++
  *
- *  Version: 2.4.3
+ *  Version: 2.5.0
  *  Creator: Jens Kuerschner (https://jenskuerschner.de)
  *  Project: https://github.com/add2cal/add-to-calendar-button
  *  License: Elastic License 2.0 (ELv2) (https://github.com/add2cal/add-to-calendar-button/blob/main/LICENSE.txt)
@@ -528,11 +528,15 @@ function atcb_generate_ical(host, data, subEvent = 'all', keyboardTrigger = fals
     }
     if (data.dates[`${i}`].organizer != null && data.dates[`${i}`].organizer != '') {
       const organizerParts = data.dates[`${i}`].organizer.split('|');
-      ics_lines.push('ORGANIZER;CN="' + atcb_rewrite_ical_text(organizerParts[0], false, true) + '":MAILTO:' + organizerParts[1]);
+      ics_lines.push('ORGANIZER;CN=' + atcb_rewrite_ical_text(organizerParts[0], false, true) + ':MAILTO:' + organizerParts[1]);
     }
     if (data.dates[`${i}`].attendee != null && data.dates[`${i}`].attendee != '') {
       const attendeeParts = data.dates[`${i}`].attendee.split('|');
-      ics_lines.push('ATTENDEE;ROLE=REQ-PARTICIPANT;CN="' + atcb_rewrite_ical_text(attendeeParts[0], false, true) + '":MAILTO:' + attendeeParts[1]);
+      if (attendeeParts.length === 2) {
+        ics_lines.push('ATTENDEE;CUTYPE=INDIVIDUAL;ROLE=REQ-PARTICIPANT;PARTSTAT=ACCEPTED;CN=' + atcb_rewrite_ical_text(attendeeParts[0], false, true) + ';X-NUM-GUESTS=0:mailto:' + attendeeParts[1]);
+      } else {
+        ics_lines.push('ATTENDEE;CUTYPE=INDIVIDUAL;ROLE=REQ-PARTICIPANT;PARTSTAT=ACCEPTED;CN=' + attendeeParts[0] + ';X-NUM-GUESTS=0:mailto:' + attendeeParts[0]);
+      }
     }
     if (data.recurrence != null && data.recurrence != '') {
       ics_lines.push(data.recurrence);
