@@ -827,6 +827,10 @@ a.atcb-modal-btn:focus-visible {
   padding-bottom: .15em;
 }
 
+.atcb-icon.atcb-icon-trigger {
+  padding-bottom: .2em;
+}
+
 .atcb-icon.atcb-icon-apple svg {
   fill: currentcolor;
 }

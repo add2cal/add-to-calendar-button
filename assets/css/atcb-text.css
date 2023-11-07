@@ -287,7 +287,7 @@
   height: 1em;
   line-height: 1em;
   margin-right: .8em;
-  width: 1em;
+  width: .9em;
 }
 
 .atcb-rtl .atcb-icon {
@@ -460,7 +460,9 @@
 }
 
 .atcb-list-item .atcb-icon {
+  height: 1em;
   margin-right: 0.7em;
+  width: 1em;
 }
 
 .atcb-rtl .atcb-list-item .atcb-icon {
