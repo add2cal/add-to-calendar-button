@@ -1,7 +1,6 @@
 <script setup lang="ts">
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import CodeBlock from "@/components/codeBlock.vue";
-import NextSteps from "@/components/integration/nextSteps.vue";
 import GuideSidebar from "@/components/integration/guideSidebar.vue";
 const { locale } = useI18n();
 
@@ -90,7 +89,6 @@ import { NgModule, CUSTOM_ELEMENTS_SCHEMA  } from '@angular/core';
 &gt;&lt;/add-to-calendar-button&gt;</pre
           >
         </LazyCodeBlock>
-        <NextSteps />
       </div>
     </div>
     <div class="hidden border-l border-zinc-300 pl-8 text-xs dark:border-zinc-700 lg:block xl:pl-12">

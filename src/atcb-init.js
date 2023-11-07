@@ -361,13 +361,15 @@ function atcb_load_css(host, rootObj = null, data) {
   })();
   const overrideDarkCss = (function () {
     if (data.styleDark) {
-      const output = ':host(.atcb-dark), :host-context(html.atcb-dark):host(.atcb-bodyScheme), :host-context(body.atcb-dark):host(.atcb-bodyScheme) { ' + atcb_secure_content(data.styleDark.replace(/(\\r\\n|\\n|\\r)/g, ''), false) + ' }';
+      // the next line is commented out, since it is currently not possible to use the :host-context selector in Safari and Firefox - the workaround is the global mutation observer setting the style at the host. We keep this line as a reminder, though.
+      //const output = ':host(.atcb-dark), :host-context(html.atcb-dark):host(.atcb-bodyScheme), :host-context(body.atcb-dark):host(.atcb-bodyScheme) { ' + atcb_secure_content(data.styleDark.replace(/(\\r\\n|\\n|\\r)/g, ''), false) + ' }';
+      const output = ':host(.atcb-dark) { ' + atcb_secure_content(data.styleDark.replace(/(\\r\\n|\\n|\\r)/g, ''), false) + ' }';
       return output;
     }
     return '';
   })();
   // we load custom styles dynamically
-  if (data.customCss != '' && data.buttonStyle == 'custom') {
+  if (data.customCss && data.customCss !== '') {
     const cssFile = document.createElement('link');
     cssFile.setAttribute('rel', 'stylesheet');
     cssFile.setAttribute('type', 'text/css');
@@ -610,8 +612,8 @@ async function atcb_get_pro_data(licenseKey) {
    *  @preserve
    *  PER LICENSE AGREEMENT, YOU ARE NOT ALLOWED TO REMOVE OR CHANGE THIS FUNCTION!
    */
-  if (licenseKey != null && licenseKey != '') {
-    // Try to read data from server https://event.caldn.net/{{licenseKey}}/config.json and log error if not possible
+  if (licenseKey && licenseKey !== '') {
+    // Try to read data from server and log error if not possible
     try {
       const response = await fetch('https://event.caldn.net/' + licenseKey + '/config.json');
       if (response.ok) {

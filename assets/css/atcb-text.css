@@ -196,6 +196,13 @@
 
 .atcb-button.atcb-no-text {
   min-width: 0;
+  display: flex;
+  align-content: center;
+  justify-content: center;
+  align-items: center;
+  height: 3em;
+  width: 3em;
+  padding: 0;
 }
 
 .atcb-rtl .atcb-button {
@@ -275,12 +282,12 @@
  */
 
 .atcb-icon {
-  width: 1em;
-  margin-top: .2em;
-  height: auto;
-  margin-right: .8em;
   flex-grow: 0;
   flex-shrink: 0;
+  height: 1em;
+  line-height: 1em;
+  margin-right: .8em;
+  width: 1em;
 }
 
 .atcb-rtl .atcb-icon {
@@ -294,9 +301,9 @@
 }
 
 .atcb-icon svg {
-  height: 100%;
   fill: currentcolor;
-  width: auto;
+  height: 100%;
+  width: 100%;
 }
 
 .atcb-icon-trigger svg {
@@ -453,9 +460,7 @@
 }
 
 .atcb-list-item .atcb-icon {
-  margin-bottom: 0.1em;
   margin-right: 0.7em;
-  width: 1.125em;
 }
 
 .atcb-rtl .atcb-list-item .atcb-icon {
@@ -526,8 +531,8 @@
 }
 
 .atcb-modal-icon svg {
-  height: auto;
   fill: currentcolor;
+  height: 100%;
   width: 100%;
 }
 
@@ -901,24 +906,32 @@ a.atcb-modal-btn:focus-visible{
  * Icon specifics
  */
 
-.atcb-icon .atcb-icon-apple svg {
-  fill: var(--btn-text);
+.atcb-icon.atcb-icon-ms365, .atcb-icon.outlookcom {
+  padding-bottom: .5em;
 }
 
-.atcb-icon .atcb-icon-ical svg {
-  fill: var(--btn-text);
+.atcb-icon.atcb-icon-apple, .atcb-icon.atcb-icon-ical {
+  padding-bottom: .15em;
 }
 
-.atcb-icon .atcb-icon-ms365 svg {
+.atcb-icon.atcb-icon-apple svg {
+  fill: currentcolor;
+}
+
+.atcb-icon.atcb-icon-ical svg {
+  fill: currentcolor;
+}
+
+.atcb-icon.atcb-icon-ms365 svg {
   fill: var(--icon-ms365-color);
 }
 
-.atcb-icon .atcb-icon-yahoo svg {
+.atcb-icon.atcb-icon-yahoo svg {
   fill: var(--icon-yahoo-color);
 }
 
-.atcb-icon .atcb-icon-google svg,
-.atcb-icon .atcb-icon-msteams svg,
-.atcb-icon .atcb-icon-outlookcom svg {
+.atcb-icon.atcb-icon-google svg,
+.atcb-icon.atcb-icon-msteams svg,
+.atcb-icon.atcb-icon-outlookcom svg {
   filter: var(--icon-filter);
 }

@@ -124,6 +124,8 @@ export default defineNuxtConfig({
   },
   site: {
     host: baseUrl,
+    url: baseUrl,
+    name: 'Add to Calendar Button',
     tagPosition: 'head',
   },
   pwa: {

@@ -3,6 +3,7 @@ import { atcb_action } from "add-to-calendar-button";
 import { ArrowTopRightOnSquareIcon } from '@heroicons/vue/24/outline';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import CodeBlock from "@/components/codeBlock.vue";
+import Interstitial from '@/components/interstitial.vue';
 const { t, locale } = useI18n();
 
 definePageMeta({
@@ -662,6 +663,7 @@ onUnmounted(() => {
           </div>
         </div>
       </section>
+      <Interstitial />
       <section id="case-6">
         <h2 class="mb-4 mt-14 border-t border-zinc-300 pt-14 dark:border-zinc-700">6. {{ $t('content.advanced.6_long') }}</h2>
         <div v-if="locale=='en'">

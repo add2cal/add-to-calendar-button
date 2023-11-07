@@ -1,7 +1,6 @@
 <script setup lang="ts">
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import CodeBlock from "@/components/codeBlock.vue";
-import NextSteps from "@/components/integration/nextSteps.vue";
 import GuideSidebar from "@/components/integration/guideSidebar.vue";
 import { ArrowTopRightOnSquareIcon } from '@heroicons/vue/24/outline';
 const { locale } = useI18n();
@@ -63,8 +62,6 @@ watch(locale, value => {
         </LazyCodeBlock>
         <p class="text-sm italic">{{ $t('content.guide.wordpress.shortcode2') }}</p>
         <p class="pt-6 font-semibold italic">{{ $t('content.guide.step_use_simple') }}</p>
-        <div class="mt-14 border-t border-zinc-300 dark:border-zinc-700"></div>
-        <NextSteps />
       </div>
     </div>
     <div class="hidden border-l border-zinc-300 pl-8 text-xs dark:border-zinc-700 lg:block xl:pl-12">

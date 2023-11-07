@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import ConfigSearch from '@/components/controls/configSearch.vue';
 import ConfigSearchPlaceholder from '@/components/placeholders/configSearchPlaceholder.vue';
+import Interstitial from '@/components/interstitial.vue';
 import { ArrowRightIcon, ArrowTopRightOnSquareIcon } from '@heroicons/vue/24/outline';
 
 const { locale } = useI18n();
@@ -568,6 +569,8 @@ definePageMeta({
         </table>
       </div>
 
+      <Interstitial />
+
       <h3 id="style-parameters" class="mt-12 pt-4">{{ $t('content.config.layout_params') }}</h3>
       <div class="my-8 overflow-x-auto rounded-lg shadow-sm">
         <table>
@@ -896,6 +899,8 @@ definePageMeta({
           </tbody>
         </table>
       </div>
+
+      <Interstitial />
 
       <h3 id="additional-parameters" class="mt-12 pt-4">{{ $t('content.config.additional_params') }}</h3>
       <div class="my-8 overflow-x-auto rounded-lg shadow-sm">

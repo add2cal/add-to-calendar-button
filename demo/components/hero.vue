@@ -10,26 +10,23 @@ const localePath = useLocalePath();
 
 <template>
   <div class="hero-container">
-    <div class="container flex justify-end py-3 xs:justify-between xs:py-0">
-      <div class="-mt-1 hidden w-auto max-w-[150px] grow xs:block">
+    <div class="container flex justify-between">
+      <div class="-mt-1 w-auto max-w-[150px] grow">
         <Logo class="force-light" />
       </div>
       <NavigationBar />
     </div>
     <div class="container">
       <div class="relative z-20">
-        <div class="absolute left-0 top-0 m-auto grid w-full grid-cols-1 justify-items-center pb-20 pt-8 xs:py-24 md:py-28 lg:grid-cols-2 lg:py-16">
+        <div class="absolute left-0 top-0 m-auto grid w-full grid-cols-1 justify-items-center pb-20 pt-20 xs:py-24 md:py-28 lg:grid-cols-2 lg:py-16">
           <div class="grid grid-cols-1 justify-items-center pb-5 md:grid-cols-2 lg:grid-cols-1 lg:py-20">
             <div class="max-w-[400px] self-center pb-14 md:pb-0 lg:pb-16">
-              <div class="mx-auto -mt-4 mb-16 block w-auto max-w-[280px] xs:hidden">
-                <Logo class="force-light" variation="mobile" />
-              </div>
-              <h1 class="text-white">
+              <h1 class="text-white drop-shadow-lg">
                 <span class="hidden xs:block">{{ $t('content.home.header_prefix') }}</span>
                 <span class="hidden xs:block">Add to Calendar Button</span>
-                <span class="block text-4xl opacity-70 xs:hidden">{{ $t('content.home.header_slogan') }}</span>
+                <span class="block text-5xl leading-[3.8rem] xs:hidden">{{ $t('content.home.header_slogan') }}</span>
               </h1>
-              <h2 class="mt-5 hidden italic text-white opacity-70 xs:block">{{ $t('content.home.header_slogan') }}</h2>
+              <h2 class="mt-5 text-2xl sm:text-3xl hidden italic text-white opacity-70 xs:block">{{ $t('content.home.header_slogan') }}</h2>
             </div>
             <div class="grid max-w-[400px] grid-cols-1 justify-items-center gap-6 self-center xs:grid-cols-2 md:grid-cols-1 lg:grid-cols-2">
               <div class="hidden xs:block">

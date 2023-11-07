@@ -3,6 +3,7 @@ import "add-to-calendar-button";
 import { ArrowRightIcon, ArrowTopRightOnSquareIcon } from '@heroicons/vue/24/outline';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import CodeBlock from "@/components/codeBlock.vue";
+import Interstitial from '@/components/interstitial.vue';
 
 const { t, locale } = useI18n();
 
@@ -408,6 +409,8 @@ watch(locale, value => {
           </div>
         </div>
       </section>
+      
+      <Interstitial />
 
       <section id="case-6">
         <h2 class="mb-4 mt-14 border-t border-zinc-300 pt-14 dark:border-zinc-700">{{ $t('content.examples.example') }} 6: {{ $t('content.examples.6_long') }}</h2>

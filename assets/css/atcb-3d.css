@@ -198,6 +198,13 @@
 
 .atcb-button.atcb-no-text {
   min-width: 0;
+  display: flex;
+  align-content: center;
+  justify-content: center;
+  align-items: center;
+  height: 3em;
+  width: 3em;
+  padding: 0;
 }
 
 .atcb-rtl .atcb-button {
@@ -230,6 +237,13 @@
   padding: calc(var(--btn-padding-y) + .13em) var(--btn-padding-x + .13em);
 }
 
+.atcb-button.atcb-no-text:focus,
+.atcb-button.atcb-no-text:hover {
+  height: 3.26em;
+  width: 3.26em;
+  padding: 0;
+}
+
 .atcb-button.atcb-active:not(.atcb-modal-style, .atcb-dropup, .atcb-dropoverlay) {
   box-shadow: var(--btn-active-shadow);
   transform: perspective(100px) rotateX(12deg) translate3d(0, 0, 2px);
@@ -252,12 +266,12 @@
  */
 
 .atcb-icon {
-  width: 1em;
-  margin-top: .2em;
-  height: auto;
-  margin-right: .8em;
   flex-grow: 0;
   flex-shrink: 0;
+  height: 1em;
+  line-height: 1em;
+  margin-right: .8em;
+  width: 1em;
 }
 
 .atcb-rtl .atcb-icon {
@@ -271,9 +285,9 @@
 }
 
 .atcb-icon svg {
-  height: 100%;
   fill: currentcolor;
-  width: auto;
+  height: 100%;
+  width: 100%;
 }
 
 .atcb-text {
@@ -452,14 +466,12 @@
 }
 
 .atcb-list-item .atcb-icon {
-  margin-bottom: .5em;
-  margin-right: .6em;
-  width: 1.125em;
+  margin-right: .7em;
 }
 
 .atcb-rtl .atcb-list-item .atcb-icon {
   margin-right: 0;
-  margin-left: .6em;
+  margin-left: .7em;
 }
 
 .atcb-no-text .atcb-list-item .atcb-icon {
@@ -525,8 +537,8 @@
 }
 
 .atcb-modal-icon svg {
-  height: auto;
   fill: currentcolor;
+  height: 100%;
   width: 100%;
 }
 
@@ -900,24 +912,32 @@ a.atcb-modal-btn:focus-visible{
  * Icon specifics
  */
 
- .atcb-icon .atcb-icon-apple svg {
+.atcb-icon.atcb-icon-ms365, .atcb-icon.outlookcom {
+  padding-bottom: .5em;
+}
+
+.atcb-icon.atcb-icon-apple, .atcb-icon.atcb-icon-ical {
+  padding-bottom: .15em;
+}
+
+.atcb-icon.atcb-icon-apple svg {
   fill: currentcolor;
 }
 
-.atcb-icon .atcb-icon-ical svg {
+.atcb-icon.atcb-icon-ical svg {
   fill: currentcolor;
 }
 
-.atcb-icon .atcb-icon-ms365 svg {
+.atcb-icon.atcb-icon-ms365 svg {
   fill: var(--icon-ms365-color);
 }
 
-.atcb-icon .atcb-icon-yahoo svg {
+.atcb-icon.atcb-icon-yahoo svg {
   fill: var(--icon-yahoo-color);
 }
 
-.atcb-icon .atcb-icon-google svg,
-.atcb-icon .atcb-icon-msteams svg,
-.atcb-icon .atcb-icon-outlookcom svg {
+.atcb-icon.atcb-icon-google svg,
+.atcb-icon.atcb-icon-msteams svg,
+.atcb-icon.atcb-icon-outlookcom svg {
   filter: var(--icon-filter);
 }

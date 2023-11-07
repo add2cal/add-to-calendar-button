@@ -40,6 +40,7 @@
     "proConfig": "Want to configure all details as easy as this?",
     "discoverPro": "Discover the PRO offering",
     "discoverProDetails": "More functionality (like RSVP) and way less trouble thanks to managed ics file hosting, no-code customization, and more.",
+    "discoverProDetails_short": "Want more functionality and way less trouble?",
     "learnMore": "Learn more",
     "inputs": {
       "name": "Subject",

@@ -31,7 +31,7 @@ function topFunction() {
           <h2 class="text-3xl drop-shadow-lg md:text-4xl lg:text-5xl">{{ $t('labels.discoverPro') }}</h2>
           <p class="mt-3 opacity-70 lg:mt-6">{{ $t('labels.discoverProDetails') }}</p>
         </div>
-        <a target="_blank" rel="noopener" :href="'https://add-to-calendar-pro.com' + (locale !== 'en' ? '/' + locale : '')" class="button-primary-animated w-40 text-white">{{ $t('labels.learnMore') }}</a>
+        <a target="_blank" rel="noopener" :href="'https://add-to-calendar-pro.com' + (locale !== 'en' ? '/' + locale : '')" class="button-primary-animated text-white">{{ $t('labels.learnMore') }}</a>
       </div>
     </div>
   </div>

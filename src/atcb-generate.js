@@ -158,8 +158,9 @@ function atcb_generate_label_content(data, parent, type, icon, text, oneOption) 
     return;
   }
   if (icon) {
-    const iconEl = document.createElement('span');
+    const iconEl = document.createElement('div');
     iconEl.classList.add('atcb-icon');
+    iconEl.classList.add(`atcb-icon-${type}`);
     iconEl.innerHTML = atcbIcon[`${type}`];
     parent.append(iconEl);
   }

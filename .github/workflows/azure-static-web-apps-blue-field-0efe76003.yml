@@ -28,9 +28,8 @@ jobs:
           # For more information regarding Static Web App workflow configurations, please visit: https://aka.ms/swaworkflowconfig
           app_build_command: 'npm ci && npm run build && cd demo && npm ci && npm run generate'
           app_location: '/'
-          api_location: ''
           output_location: 'demo/.output/public'
-          is_static_export: true
+          skip_api_build: true
           ###### End of Repository/Build Configurations ######
 
   build_and_deploy_job_dev:
@@ -53,9 +52,8 @@ jobs:
           # For more information regarding Static Web App workflow configurations, please visit: https://aka.ms/swaworkflowconfig
           app_build_command: 'npm ci && npm run build && cd demo && npm ci && npm run generate'
           app_location: '/'
-          api_location: ''
           output_location: 'demo/.output/public'
-          is_static_export: true
+          skip_api_build: true
           ###### End of Repository/Build Configurations ######
         env:
           NUXT_PUBLIC_ROBOTS: 'noindex, nofollow'
