@@ -398,4 +398,4 @@ function atcb_validate_rrule_simplyfied(data, msgPrefix) {
   return true;
 }
 
-export { atcb_check_required, atcb_validate };
+export { atcb_check_required, atcb_validate, atcb_validate_options };

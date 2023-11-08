@@ -27,11 +27,22 @@ import { atcb_rewrite_html_elements } from './atcb-util.js';
 // right-to-left languages
 const rtlLanguages = ['ar', 'fa'];
 
+// calendar names (except for iCal file, same in every language, but included to be adjustable)
+const calendarNames = {
+  apple: 'Apple',
+  google: 'Google',
+  ms365: 'Microsoft 365',
+  msteams: 'Microsoft Teams',
+  outlookcom: 'Outlook.com',
+  yahoo: 'Yahoo',
+};
+
 // the database object
 const i18nStrings = {
   en: {
     'label.addtocalendar': 'Add to Calendar',
-    'label.icalfile': 'iCal File',
+    ical: 'iCal File',
+    ...calendarNames,
     close: 'Close',
     'modal.button.default': 'Click me',
     'modal.webview.ical.h': 'Open your browser',
@@ -56,7 +67,8 @@ const i18nStrings = {
   },
   de: {
     'label.addtocalendar': 'Im Kalender speichern',
-    'label.icalfile': 'iCal-Datei',
+    ical: 'iCal-Datei',
+    ...calendarNames,
     close: 'Schließen',
     'modal.button.default': 'Klick mich',
     'modal.webview.ical.h': 'Öffne deinen Browser',
@@ -81,7 +93,8 @@ const i18nStrings = {
   },
   es: {
     'label.addtocalendar': 'Añadir al Calendario',
-    'label.icalfile': 'iCal Ficha',
+    ical: 'iCal Ficha',
+    ...calendarNames,
     close: 'Ciérralo',
     'modal.button.default': 'Haz clic mí',
     'modal.webview.ical.h': 'Abra su browser',
@@ -106,7 +119,8 @@ const i18nStrings = {
   },
   pt: {
     'label.addtocalendar': 'Incluir no Calendário',
-    'label.icalfile': 'Ficheiro iCal',
+    ical: 'Ficheiro iCal',
+    ...calendarNames,
     close: 'Fechar',
     'modal.button.default': 'Clicar-me',
     'modal.webview.ical.h': 'Abra o seu browser',
@@ -131,7 +145,8 @@ const i18nStrings = {
   },
   fr: {
     'label.addtocalendar': "Ajouter à l'Agenda",
-    'label.icalfile': 'Fichier iCal',
+    ical: 'Fichier iCal',
+    ...calendarNames,
     close: 'Fermer',
     'modal.button.default': 'Cliquez-moi',
     'modal.webview.ical.h': 'Ouvrez votre navigateur',
@@ -156,7 +171,8 @@ const i18nStrings = {
   },
   nl: {
     'label.addtocalendar': 'Opslaan in Agenda',
-    'label.icalfile': 'iCal File',
+    ical: 'iCal File',
+    ...calendarNames,
     close: 'Sluiten',
     'modal.button.default': 'Klik me',
     'modal.webview.ical.h': 'Open uw browser',
@@ -181,7 +197,8 @@ const i18nStrings = {
   },
   tr: {
     'label.addtocalendar': 'Takvime Ekle',
-    'label.icalfile': 'iCal Dosyası',
+    ical: 'iCal Dosyası',
+    ...calendarNames,
     close: 'Kapat',
     'modal.button.default': 'Beni tıklayın',
     'modal.webview.ical.h': 'Tarayıcınızı açın',
@@ -206,7 +223,8 @@ const i18nStrings = {
   },
   zh: {
     'label.addtocalendar': '添加到日历',
-    'label.icalfile': 'iCal 文件',
+    ical: 'iCal 文件',
+    ...calendarNames,
     close: '关',
     'modal.button.default': '点我',
     'modal.webview.ical.h': '打开浏览器',
@@ -231,7 +249,8 @@ const i18nStrings = {
   },
   ar: {
     'label.addtocalendar': 'إضافة إلى التقويم',
-    'label.icalfile': 'ملف iCal',
+    ical: 'ملف iCal',
+    ...calendarNames,
     close: 'قريب',
     'modal.button.default': 'انقر فوق لي',
     'modal.webview.ical.h': 'افتح المستعرض الخاص بك',
@@ -256,7 +275,8 @@ const i18nStrings = {
   },
   hi: {
     'label.addtocalendar': 'कैलेंडर में जोड़ें',
-    'label.icalfile': 'iCal फ़ाइल',
+    ical: 'iCal फ़ाइल',
+    ...calendarNames,
     close: 'बंद करना',
     'modal.button.default': 'मुझे क्लिक करें',
     'modal.webview.ical.h': 'अपना ब्राउज़र खोलें',
@@ -281,7 +301,8 @@ const i18nStrings = {
   },
   pl: {
     'label.addtocalendar': 'Dodaj do kalendarza',
-    'label.icalfile': 'Plik iCal',
+    ical: 'Plik iCal',
+    ...calendarNames,
     close: 'Zamknij',
     'modal.button.default': 'Kliknij mnie',
     'modal.webview.ical.h': 'Otwórz przeglądarkę',
@@ -306,7 +327,8 @@ const i18nStrings = {
   },
   id: {
     'label.addtocalendar': 'Tambahkan ke Kalender',
-    'label.icalfile': 'File iCal',
+    ical: 'File iCal',
+    ...calendarNames,
     close: 'Tutup',
     'modal.button.default': 'Klik saya',
     'modal.webview.ical.h': 'Buka browser Anda',
@@ -331,7 +353,8 @@ const i18nStrings = {
   },
   no: {
     'label.addtocalendar': 'Legg til i kalenderen',
-    'label.icalfile': 'iCal-fil',
+    ical: 'iCal-fil',
+    ...calendarNames,
     close: 'Lukk',
     'modal.button.default': 'Klikk på meg',
     'modal.webview.ical.h': 'Åpne nettleseren din',
@@ -356,7 +379,8 @@ const i18nStrings = {
   },
   fi: {
     'label.addtocalendar': 'Lisää kalenteriin',
-    'label.icalfile': 'iCal-tiedosto',
+    ical: 'iCal-tiedosto',
+    ...calendarNames,
     close: 'Sulje',
     'modal.button.default': 'Klikkaa minua',
     'modal.webview.ical.h': 'Avaa selain',
@@ -381,7 +405,8 @@ const i18nStrings = {
   },
   sv: {
     'label.addtocalendar': 'Lägg till i kalender',
-    'label.icalfile': 'iCal-fil',
+    ical: 'iCal-fil',
+    ...calendarNames,
     close: 'Stäng',
     'modal.button.default': 'Klicka på mig',
     'modal.webview.ical.h': 'Öppna din webbläsare',
@@ -406,7 +431,8 @@ const i18nStrings = {
   },
   cs: {
     'label.addtocalendar': 'Přidat do kalendáře',
-    'label.icalfile': 'Soubor iCal',
+    ical: 'Soubor iCal',
+    ...calendarNames,
     close: 'Zavřít',
     'modal.button.default': 'Klikněte na mě',
     'modal.webview.ical.h': 'Otevřete prohlížeč',
@@ -431,7 +457,8 @@ const i18nStrings = {
   },
   ja: {
     'label.addtocalendar': 'カレンダーに追加',
-    'label.icalfile': 'iCalファイル',
+    ical: 'iCalファイル',
+    ...calendarNames,
     close: '閉じる',
     'modal.button.default': 'クリックしてください',
     'modal.webview.ical.h': 'ブラウザを起動する',
@@ -456,7 +483,8 @@ const i18nStrings = {
   },
   it: {
     'label.addtocalendar': 'Aggiungi al calendario',
-    'label.icalfile': 'File iCal',
+    ical: 'File iCal',
+    ...calendarNames,
     close: 'Chiudere',
     'modal.button.default': 'Clicca su di me',
     'modal.webview.ical.h': 'Aprire il browser',
@@ -481,7 +509,8 @@ const i18nStrings = {
   },
   ko: {
     'label.addtocalendar': '캘린더에 추가',
-    'label.icalfile': 'iCal 파일',
+    ical: 'iCal 파일',
+    ...calendarNames,
     close: '닫다',
     'modal.button.default': '클릭 해주세요',
     'modal.webview.ical.h': '브라우저 열기',
@@ -506,7 +535,8 @@ const i18nStrings = {
   },
   vi: {
     'label.addtocalendar': 'Thêm vào Lịch',
-    'label.icalfile': 'Tệp iCal',
+    ical: 'Tệp iCal',
+    ...calendarNames,
     close: 'Đóng',
     'modal.button.default': 'Nhấp vào đây',
     'modal.webview.ical.h': 'Mở trình duyệt của bạn',
@@ -531,7 +561,8 @@ const i18nStrings = {
   },
   ro: {
     'label.addtocalendar': 'Adauga In Calendar',
-    'label.icalfile': 'Fisier iCal',
+    ical: 'Fisier iCal',
+    ...calendarNames,
     close: 'Inchide',
     'modal.button.default': 'Apasa-ma',
     'modal.webview.ical.h': 'Deschide browserul',
@@ -556,7 +587,8 @@ const i18nStrings = {
   },
   fa: {
     'label.addtocalendar': 'افزودن به تقویم',
-    'label.icalfile': 'پرونده iCal',
+    ical: 'پرونده iCal',
+    ...calendarNames,
     close: 'بستن',
     'modal.button.default': 'اینجا کلیک کنید',
     'modal.webview.ical.h': 'مرورگر خود را باز کنید',
@@ -580,7 +612,8 @@ const i18nStrings = {
   },
   et: {
     'label.addtocalendar': 'Lisa kalendrisse',
-    'label.icalfile': 'iCal fail',
+    ical: 'iCal fail',
+    ...calendarNames,
     close: 'Sulge',
     'modal.button.default': 'Kliki siia',
     'modal.webview.ical.h': 'Ava oma veebilehitseja',

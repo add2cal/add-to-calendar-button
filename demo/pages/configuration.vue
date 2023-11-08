@@ -592,14 +592,12 @@ definePageMeta({
               </td>
               <td v-if="locale=='en'">
                 Array of options to use in the list.<br /><br />
-                You can also override the label per option here. Simply add a pipe between the option name and your label (e.g. "Google|My custom Google Label").<br />
                 If you only specify 1 calendar type, the button would show the calendar's icon instead of the default one and redirect directly instead of opening a list (singleton case).<br /><br />
                 Some options might be dynamically excluded based on other settings!<br />
                 "iCal" will be replaced by "Apple" on iOS devices.
               </td>
               <td v-else>
                 Array an Kalender-Arten, die in der Liste erscheinen.<br /><br />
-                Du kannst das Label jeweils direkt überschreiben. Füge hierzu ein Pipe-Symbol nach dem Kalender-Namen, gefolgt von deinem Label-Text ein (bspw. "Google|Mein Google-Label").<br />
                 Sofern du nur 1 Option definierst wird der Button das Icon dieser Option anzeigen sowie direkt die jeweilige Kalender-Aktion auslösen und keine Auswahlliste öffnen (Singleton-Case).<br /><br />
                 Optionen können deaktiviert werden, wenn sie aufgrund anderere Einstellungen nicht unterstützt werden!<br />
                 Auf iOS-Geräten wird die iCal-Option durch "Apple" ersetzt.
@@ -848,19 +846,18 @@ definePageMeta({
               <th scope="row">customLabels</th>
               <td><em>Object</em></td>
               <td v-if="locale=='en'">
-                For all text blocks, which are not already customizable via other options (like the word "Close"), you can specify the "customLabels" option.<br />
+                You can alter all text blocks via the "customLabels" option.<br />
                 There, you need to specify a JSON structure and define any text you want to override. Check the
                 <a href="https://github.com/add2cal/add-to-calendar-button/blob/main/src/atcb-i18n.js" target="_blank" rel="noopener" class="whitespace-nowrap">atcb-i18n.js file <ArrowTopRightOnSquareIcon class="-mt-0.5 mr-0.5 inline-block h-3 w-3" aria-hidden="true" /></a> for the available keys.
-                Mind to transform those keys to lower case strings without any whitespaces!<br />
-                Any custom label will also override any translation.<br />You can use the same HTML pseudo tags as with the description option here.<br /><br />
+                Any custom label will also override any translation.<br />For text blocks, you can use the same HTML pseudo tags as with the description option here.<br /><br />
                 <NuxtLink :to="{path: localePath('advanced-use'), hash: '#case-4'}">{{ $t('labels.example') }} <ArrowRightIcon class="-mt-0.5 mr-0.5 inline-block h-3 w-3" aria-hidden="true" /></NuxtLink>
               </td>
               <td v-else>
-                Text-Blöcke, die nicht bereits durch andere Optionen bearbeitbar sind (bspw. das Wort "Schließen"), können über die Option "customLabels" verändert werden.<br />
+                Text-Blöcke können über die Option "customLabels" verändert werden.<br />
                 Hierbei muss eine JSON-Struktur mit den zu überschreibenden Texten definiert werden. Sieh dir die
                 <a href="https://github.com/add2cal/add-to-calendar-button/blob/main/src/atcb-i18n.js" target="_blank" rel="noopener" class="whitespace-nowrap">atcb-i18n.js-Datei <ArrowTopRightOnSquareIcon class="-mt-0.5 mr-0.5 inline-block h-3 w-3" aria-hidden="true" /></a> für eine Liste der
-                verfügbaren Keys an. Beachte, dass die Keys hier zu Kleinbuchstaben transformiert und Leerzeichen entfernt werden müssen!<br />
-                Ein so manipulierter Text überschreibt auch jegliche Übersetzung.<br />Du kannst hierbei die gleichen HTML-Pseudo-Tags nutzen, wie sie auch in der "description"-Option möglich sind.<br /><br />
+                verfügbaren Keys an.<br />
+                Ein so manipulierter Text überschreibt auch jegliche Übersetzung.<br />Für Text-Blöcke kannst hierbei die gleichen HTML-Pseudo-Tags nutzen, wie sie auch in der "description"-Option möglich sind.<br /><br />
                 <NuxtLink :to="{path: localePath('advanced-use'), hash: '#case-4'}">{{ $t('labels.example') }} <ArrowRightIcon class="-mt-0.5 mr-0.5 inline-block h-3 w-3" aria-hidden="true" /></NuxtLink>
               </td>
             </tr>

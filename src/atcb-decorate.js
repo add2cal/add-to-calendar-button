@@ -123,19 +123,12 @@ function atcb_decorate_data_rrule(data) {
 function atcb_decorate_data_options(data) {
   // iterrate over the options and generate the new clean arrays (for options and labels)
   const newOptions = [];
-  data.optionLabels = [];
   let iCalGiven = false;
   let appleGiven = false;
   for (let i = 0; i < data.options.length; i++) {
     // preparing the input options and labels
     const cleanOption = data.options[`${i}`].split('|');
     const optionName = cleanOption[0].toLowerCase().replace('microsoft', 'ms').replace(/\./, '');
-    const optionLabel = (function () {
-      if (cleanOption[1] != null) {
-        return cleanOption[1];
-      }
-      return '';
-    })();
     if (optionName === 'apple') {
       appleGiven = true;
     }
@@ -154,20 +147,17 @@ function atcb_decorate_data_options(data) {
       continue;
     }
     newOptions.push(optionName);
-    data.optionLabels.push(optionLabel);
   }
   // since the above can lead to excluding all options, we add the iCal option as default, if not other option is left
   if (newOptions.length === 0) {
     if (!atcbIsiOS()) {
       newOptions.push('ical');
-      data.optionLabels.push('');
     }
     iCalGiven = true;
   }
   // for iOS, we force the Apple option (if it is not there, but iCal was)
   if (atcbIsiOS() && iCalGiven && !appleGiven) {
     newOptions.push('apple');
-    data.optionLabels.push('');
   }
   // last but not least, override the options at the main data object
   data.options = newOptions;

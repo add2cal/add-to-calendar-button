@@ -29,7 +29,7 @@ let defaultLangJS = (function () {
   }
   return '';
 })();
-let defaultCustCloseLabel =  JSON.stringify({ "close":t('demo_data.cust_close_label') });
+let defaultCustLabels = t('demo_data.custom_labels');
 
 // config for atcb_action example
 let config:object = {
@@ -52,7 +52,7 @@ watch(locale, value => {
     defaultLang = '';
     defaultLangJS = '';
   }
-  defaultCustCloseLabel = JSON.stringify({ "close":t('demo_data.cust_close_label') });
+  defaultCustLabels = t('demo_data.custom_labels');
   config = {
     name: t('demo_data.name'),
     description: t('demo_data.description_alt1'),
@@ -476,26 +476,24 @@ onUnmounted(() => {
         <h2 class="mb-4 mt-14 border-t border-zinc-300 pt-14 dark:border-zinc-700">4. {{ $t('content.advanced.4_long') }}</h2>
         <div v-if="locale=='en'">
           <p>You can change any text blocks.</p>
-          <p>For the button label you can simply specify the "label" option, while for the calendar option labels in the list, you can set a custom text by separating it with a "|" from the option (e.g. "Google|My Label").</p>
+          <p>For the button label you can simply specify the "label" option.</p>
           <p>
             For all other text blocks (like the "Close" at the modal list type), you can specify the "customLabels" option.<br />
             There, you need to specify a JSON structure and define any text you want to override.<br />
             Check the <a href="https://github.com/add2cal/add-to-calendar-button/blob/main/src/atcb-i18n.js" target="_blank" rel="noopener">atcb-i18n.js <ArrowTopRightOnSquareIcon class="-mt-0.5 mr-0.5 inline-block h-4 w-4" aria-hidden="true" /></a> file at the repository for the available
             keys/options.<br />
-            <span class="font-semibold">Mind that for the "customLabels" option, all keys need to be transformed to lower case strings without any whitespaces!</span><br />
             Any custom label will also override any translation.
           </p>
           <p class="text-sm italic">(In case you are only looking for translating labels, check the "language" option instead!)</p>
         </div>
         <div v-else>
           <p>Du kannst grundsätzlich jeden Text-Block anpassen.</p>
-          <p>Für den Text auf dem Button kannst du hierzu ganz einfach die "label"-Option nutzen. Die Texte der einzelnen Kalender-Links kannst du individualisieren, indem du deinen Text mit einem "|" getrennt direkt hinter den Kalender-Typ schreibst (bspw. "Google|Mein Label").</p>
+          <p>Für den Text auf dem Button kannst du hierzu ganz einfach die "label"-Option nutzen.</p>
           <p>
             Für alle anderen Text-Blöcke (bspw. "Schließen" im Modal-Listen-Typ) kannst du die Option "customLabels" nutzen.<br />
             Hierbei musst du eine JSON-Struktur spezifizieren, die den jeweiligen Text zu dem zu ändernden Text-Key definiert.<br />
             Wirf einen Blick auf die Quellcode-Datei <a href="https://github.com/add2cal/add-to-calendar-button/blob/main/src/atcb-i18n.js" target="_blank" rel="noopener">atcb-i18n.js <ArrowTopRightOnSquareIcon class="-mt-0.5 mr-0.5 inline-block h-4 w-4" aria-hidden="true" /></a> in unserem
             Repository. Sie beinhaltet alle verfügbaren Optionen (Text-Keys).<br />
-            <span class="font-semibold">Beachte, dass die Keys für die "customLabel"-Option zu Kleinbuchstaben transformiert und Leerzeichen entfernt werden müssen!</span><br />
             Texte werden je nach gewählter Sprache übersetzt. Ein individueller Text wird auch jede Übersetzung überschreiben.
           </p>
           <p class="text-sm italic">(Falls du Texte lediglich übersetzen möchtest, prüfe zunächst die "language"-Option!)</p>
@@ -508,9 +506,9 @@ onUnmounted(() => {
               startTime="10:15"
               endTime="23:30"
               :label="$t('demo_data.name_custom_1')"
-              :options="$t('demo_data.options_labels')"
+              options="'Apple','Google','iCal','Outlook.com','Yahoo'"
               listStyle="modal"
-              :customLabels="defaultCustCloseLabel"
+              :customLabels="defaultCustLabels"
               lightMode="bodyScheme"
               :language="locale"
               hideRichData
@@ -526,9 +524,9 @@ onUnmounted(() => {
   startTime="10:15"
   endTime="23:30"
   label="{{ $t('demo_data.name_custom_1') }}"
-  options="{{ $t('demo_data.options_labels') }}"
+  options="'Apple','Google','iCal','Outlook.com','Yahoo'"
   listStyle="modal"
-  customLabels='{{ defaultCustCloseLabel }}'
+  customLabels='{{ defaultCustLabels }}'
   lightMode="bodyScheme"{{ defaultLang }}
 &gt;&lt;/add-to-calendar-button&gt;
 </pre

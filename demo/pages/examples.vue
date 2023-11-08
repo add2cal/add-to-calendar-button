@@ -416,20 +416,20 @@ watch(locale, value => {
         <h2 class="mb-4 mt-14 border-t border-zinc-300 pt-14 dark:border-zinc-700">{{ $t('content.examples.example') }} 6: {{ $t('content.examples.6_long') }}</h2>
         <div v-if="locale=='en'">
           <p>
-            You can customize the button's label as well as the ones of each calendar option.<br />
+            You can customize the button's label as well as all other text labels.<br />
             In the example, we also set the listStyle to an overlay list, slightly reduce the size, and set a custom ics file name.
           </p>
           <p class="text-sm italic">
-            If you want to change system text blocks, you can do so with the "customLabels" option - check the <NuxtLink :to="{path: localePath('configuration'), hash: '#customlabels'}">"{{ $t('navigation.configuration') }}"</NuxtLink> page for details.
+            If you want to change other text blocks, you can do so with the "customLabels" option - check the <NuxtLink :to="{path: localePath('configuration'), hash: '#customlabels'}">"{{ $t('navigation.configuration') }}"</NuxtLink> page as well as our <NuxtLink :to="{path: localePath('advanced-use'), hash: '#case-4'}">Advanced Example</NuxtLink> for details.
           </p>
         </div>
         <div v-else>
           <p>
-            Du kannst den Text auf dem Button sowie für die jeweiligen Kalendar-Links individuell gestalten.<br />
+            Du kannst den Text auf dem Button sowie alle anderen Texte individuell gestalten.<br />
             Im Beispiel haben wir zudem den listStyle zu einer überlagernden Liste (overlay) verändert, an der Skalierung gedreht und auch der ics-Datei einen eigenen Namen gegeben.
           </p>
           <p class="text-sm italic">
-            Weitere System-Texte können mit der "customLabels"-Option verändert werden. Die <NuxtLink :to="{path: localePath('configuration'), hash: '#customlabels'}">"{{ $t('navigation.configuration') }}"</NuxtLink>-Seite weiß mehr.
+            Weitere Texte können mit der "customLabels"-Option verändert werden. Die <NuxtLink :to="{path: localePath('configuration'), hash: '#customlabels'}">"{{ $t('navigation.configuration') }}"</NuxtLink>-Seite und unser <NuxtLink :to="{path: localePath('advanced-use'), hash: '#case-4'}">Profi-Beispiel</NuxtLink> beinhalten mehr Details.
           </p>
         </div>
         <div class="block w-full justify-between md:flex">
@@ -443,7 +443,7 @@ watch(locale, value => {
               :location="$t('demo_data.location')"
               :label="$t('demo_data.name_custom_1')"
               :description="$t('demo_data.description_alt1')"
-              :options="$t('demo_data.options_labels')"
+              options="'Apple','Google','iCal','Outlook.com','Yahoo'"
               iCalFileName="Reminder-Event"
               listStyle="overlay"
               size="5"
@@ -464,7 +464,7 @@ watch(locale, value => {
   timeZone="{{ $t('demo_data.default_timezone') }}"
   location="{{ $t('demo_data.location') }}"
   description="{{ $t('demo_data.description_alt1') }}"
-  options="{{ $t('demo_data.options_labels') }}"
+  options="'Apple','Google','iCal','Outlook.com','Yahoo'"
   label="{{ $t('demo_data.name_custom_1') }}"
   iCalFileName="Reminder-Event"
   listStyle="overlay"

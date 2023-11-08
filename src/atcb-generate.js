@@ -136,23 +136,17 @@ function atcb_generate_label_content(data, parent, type, icon, text, oneOption) 
     }
     return atcb_translate_hook('label.addtocalendar', data);
   })();
-  // if there is only 1 option, we use the trigger text on the option label
-  if (text == '' && data.options.length === 1) {
-    text = defaultTriggerText;
-  }
   // defining text labels
-  const labelText = {
-    trigger: text || defaultTriggerText,
-    apple: text || 'Apple',
-    google: text || 'Google',
-    ical: text || atcb_translate_hook('label.icalfile', data),
-    msteams: text || 'Microsoft Teams',
-    ms365: text || 'Microsoft 365',
-    outlookcom: text || 'Outlook.com',
-    yahoo: text || 'Yahoo',
-    close: atcb_translate_hook('close', data),
-  };
-  text = labelText[`${type}`];
+  // if there is only 1 option, we use the trigger text on the option label
+  if (text === '') {
+    if (data.options.length === 1 || type === 'trigger') {
+      text = defaultTriggerText;
+    } else if (type === 'close') {
+      text = atcb_translate_hook('close', data);
+    } else {
+      text = atcb_translate_hook(type, data);
+    }
+  }
   // add icon and text label (not in the date style trigger case)
   if (data.buttonStyle == 'date' && (type == 'trigger' || oneOption)) {
     return;
@@ -222,7 +216,7 @@ function atcb_generate_button(host, button, data) {
       // if buttonsList is true and we have more than 1 option, use the option as label
       const label = (function () {
         if (data.buttonsList && data.options.length > 1) {
-          return data.optionLabels[0];
+          return atcb_translate_hook(`label.${data.options[0]}`, data);
         }
         return data.label;
       })();
@@ -273,7 +267,7 @@ function atcb_generate_dropdown_list(host, data) {
     optionItem.dataset.optionNumber = listCount;
     optionsList.append(optionItem);
     // generate the label incl. individual eventListener
-    atcb_generate_label(host, data, optionItem, option, !data.hideIconList, data.optionLabels[listCount - 1]);
+    atcb_generate_label(host, data, optionItem, option, !data.hideIconList);
   });
   // in the modal case, we also render a close option
   if (data.listStyle === 'modal') {

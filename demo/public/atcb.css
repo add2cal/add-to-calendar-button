@@ -843,8 +843,16 @@ a.atcb-modal-btn:focus-visible{
  * Icon specifics
  */
 
+.atcb-icon.atcb-icon-ms365, .atcb-icon.outlookcom {
+  padding-bottom: .5em;
+}
+
 .atcb-icon.atcb-icon-apple, .atcb-icon.atcb-icon-ical {
   padding-bottom: .15em;
+}
+
+.atcb-icon.atcb-icon-trigger {
+  padding-bottom: .2em;
 }
 
 .atcb-icon.atcb-icon-apple svg {

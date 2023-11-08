@@ -75,7 +75,7 @@ function atcb_generate_ty(host, data) {
   let tyContent = '<div class="ty">';
   // intro text
   if (tyData.text && tyData.text !== '') {
-    tyContent += '<p>' + atcb_rewrite_html_elements(tyData.text) + '</p>';
+    tyContent += atcb_rewrite_html_elements(tyData.text);
   }
   // share buttons, if type = share
   if (tyData.type === 'share') {
@@ -91,6 +91,7 @@ function atcb_generate_ty(host, data) {
     </p>`; // TODO: Add to i18n strings
   }
   // form, if type = form
+  let header = {};
   if (tyData.type === 'form') {
     const label = (function () {
       if (tyData.button_label && tyData.button_label !== '') {
@@ -98,19 +99,23 @@ function atcb_generate_ty(host, data) {
       }
       return atcb_translate_hook('submit', data); // TODO: Add to i18n strings
     })();
-    tyContent += '<form action="' + tyData.url + '" id="' + data.identifier + '-ty-form" class="ty-form">'; // TODO: Set action URL!
+    tyContent += '<div class="' + data.identifier + '-ty-form">';
     // for each field, add respective html
-    let i = 0;
     let n = 0;
     let prevType = '';
-    tyData.fields.forEach(function (field) {
-      i++;
+    for (let i = 1; i <= tyData.fields.length; i++) {
+      const field = tyData.fields[i - 1];
+      if (!field.name || field.name === '') {
+        continue;
+      }
+      if (field.type === 'hidden' && field.name.toLowerCase() === 'header') {
+        header = JSON.parse(field.default);
+        continue;
+      }
       if ((prevType === 'radio' && field.type !== 'radio') || prevType !== 'radio') {
         n = i;
       }
-      const fieldId = data.identifier + '-ty-' + i;
-      field.fieldId = fieldId;
-      const fieldName = data.identifier + '-ty-' + n;
+      tyData.fields[i - 1].fieldId = data.identifier + '-ty-' + i;
       const fieldValue = field.default || '';
       const fieldLabel = field.label || '';
       const fieldPlaceholder = field.placeholder || '';
@@ -129,7 +134,7 @@ function atcb_generate_ty(host, data) {
         }
         // add label
         if ((field.type === 'text' || field.type === 'number') && field.label && field.label !== '') {
-          fieldHtml += '<label for="' + fieldId + '">' + field.label + (field.required ? '<span>*</span>' : '') + '</label>';
+          fieldHtml += '<label for="' + field.fieldId + '">' + field.label + (field.required ? '<span>*</span>' : '') + '</label>';
         }
         // add input
         fieldHtml +=
@@ -139,9 +144,9 @@ function atcb_generate_ty(host, data) {
           (field.type === 'number' ? ' min="0"' : '') +
           ((field.type === 'checkbox' || field.type === 'radio') && field.default && (field.default === 'true' || field.default === true) ? ' checked' : '') +
           ' name="' +
-          fieldName +
+          field.name +
           '" id="' +
-          fieldId +
+          field.fieldId +
           '" placeholder="' +
           fieldPlaceholder +
           '" aria-label="' +
@@ -151,7 +156,7 @@ function atcb_generate_ty(host, data) {
           '" />';
         // add label for checkboxes and radio buttons
         if ((field.type === 'checkbox' || field.type === 'radio') && field.label && field.label !== '') {
-          fieldHtml += '<label for="' + fieldId + '" class="ty-sublabel">' + field.label + (field.required ? '<span>*</span>' : '') + '</label>';
+          fieldHtml += '<label for="' + field.fieldId + '" class="ty-sublabel">' + field.label + (field.required ? '<span>*</span>' : '') + '</label>';
         }
         if (field.type === 'radio') {
           fieldHtml += '</div>';
@@ -159,13 +164,13 @@ function atcb_generate_ty(host, data) {
       }
       tyContent += fieldHtml;
       prevType = field.type;
-    });
+    }
     if (prevType !== 'hidden') {
       tyContent += '</div>';
     }
     tyContent += '<p id="submit-error">' + atcb_translate_hook('label.form.required.error', data) + '</p>'; // TODO: Add to i18n strings
     tyContent += '<p class="ty-pt"><button id="ty-form-submit" class="atcb-modal-btn atcb-modal-btn-primary atcb-modal-btn-border">' + label + '</button></p>';
-    tyContent += '</form>';
+    tyContent += '</div>';
   }
   // button with url param, if provided and type = link
   if (tyData.type === 'link') {
@@ -230,9 +235,12 @@ function atcb_generate_ty(host, data) {
           }
         }
       });
-      // submit form
+      // submit data
       if (valid) {
-        tyForm.submit();
+        const request = sendPostRequest(tyHost, tyData.url, tyData.fields, header);
+        if (request) {
+          tyForm.classList.add('ty-success');
+        }
       } else {
         tyForm.classList.add('ty-error');
       }
@@ -243,6 +251,47 @@ function atcb_generate_ty(host, data) {
         tyFormSubmit.click();
       }
     });
+  }
+}
+
+// FUNCTION TO SEND A REQUEST TO THE SERVER
+async function sendPostRequest(host, url, fields, header = {}) {
+  let formData = new FormData();
+  let data = {};
+  if (Object.keys(header).length === 0) {
+    // if there is no header information, we use FormData
+    fields.forEach((field) => {
+      console.log(field.fieldId);
+      let inputElement = host.getElementById(field.fieldId);
+      if (inputElement) {
+        formData.append(field.name, inputElement.value);
+      }
+      console.log(formData);
+    });
+  } else {
+    // otherwise, we prepare and send data as JSON
+    header['Content-Type'] = 'application/json';
+    fields.forEach((field) => {
+      let inputElement = host.getElementById(field.fieldId);
+      if (inputElement) {
+        data[field.name] = inputElement.value;
+      }
+    });
+  }
+  // Send the FormData object using fetch
+  try {
+    const response = await fetch(url, {
+      method: 'POST',
+      headers: header,
+      body: Object.keys(data).length === 0 ? formData : JSON.stringify(data),
+    });
+    if (!response.ok) {
+      throw new Error('Network response was not ok ' + response.statusText);
+    }
+    return true;
+  } catch (error) {
+    console.error('Error:', error);
+    return false;
   }
 }
 
