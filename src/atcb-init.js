@@ -11,7 +11,7 @@
  *
  */
 
-import { atcbVersion, atcbIsBrowser, atcbStates, atcbWcParams, atcbWcBooleanParams, atcbWcObjectParams, atcbWcObjectArrayParams, atcbWcArrayParams, atcbWcNumberParams, atcbCssTemplate } from './atcb-globals.js';
+import { atcbVersion, atcbIsBrowser, atcbStates, atcbWcParams, atcbWcProParams, atcbWcBooleanParams, atcbWcObjectParams, atcbWcObjectArrayParams, atcbWcArrayParams, atcbWcNumberParams, atcbCssTemplate } from './atcb-globals.js';
 import { atcb_decorate_data } from './atcb-decorate.js';
 import { atcb_check_required, atcb_validate } from './atcb-validate.js';
 import { atcb_generate_button } from './atcb-generate.js';
@@ -50,12 +50,13 @@ if (atcbIsBrowser()) {
       this.debug = this.hasAttribute('debug') && (!debugVal || debugVal === 'true' || debugVal === '') ? true : false;
       // checking for PRO key and pull data if given
       if (this.hasAttribute('proKey') && this.getAttribute('proKey') !== '') {
-        this.data = await atcb_get_pro_data(this.getAttribute('proKey'));
+        this.data = await atcb_get_pro_data(this.getAttribute('proKey'), this);
+        if (this.data.proKey) this.proKey = this.data.proKey;
       }
       if (!this.data.name || this.data.name === '') {
         // if no data yet, we try reading attributes or the innerHTML of the host element
         try {
-          this.data = atcb_read_attributes(this, this.debug);
+          this.data = atcb_process_inline_data(this, this.debug);
         } catch (e) {
           if (this.debug) {
             atcb_render_debug_msg(this.shadowRoot, e);
@@ -81,7 +82,14 @@ if (atcbIsBrowser()) {
     }
 
     static get observedAttributes() {
-      const observeAdditionally = ['instance'];
+      const observeAdditionally = ['instance', 'proKey'];
+      if (this.proKey != null && this.proKey != '') {
+        return atcbWcProParams
+          .map((element) => {
+            return element.toLowerCase();
+          })
+          .concat(observeAdditionally);
+      }
       return atcbWcParams
         .map((element) => {
           return element.toLowerCase();
@@ -89,13 +97,9 @@ if (atcbIsBrowser()) {
         .concat(observeAdditionally);
     }
 
-    attributeChangedCallback(name, oldValue, newValue) {
+    async attributeChangedCallback(name, oldValue, newValue) {
       // updating whenever attributes update
-      // but not if we are loading external data (which may not change dynamically)
-      if (this.data.proKey != null && this.data.proKey != '') {
-        return;
-      }
-      // also return, if this is the very first run
+      // return, if this is the very first run
       if (!this.loaded) {
         return;
       }
@@ -111,13 +115,19 @@ if (atcbIsBrowser()) {
       const elem = document.createElement('template');
       elem.innerHTML = template;
       this.shadowRoot.append(elem.content.cloneNode(true));
-      try {
-        this.data = atcb_read_attributes(this, this.debug);
-      } catch (e) {
-        if (this.debug) {
-          atcb_render_debug_msg(this.shadowRoot, e);
+      if (this.hasAttribute('proKey') && this.getAttribute('proKey') !== '') {
+        this.data = await atcb_get_pro_data(this.getAttribute('proKey'), this);
+        if (this.data.proKey) this.proKey = this.data.proKey;
+      }
+      if (!this.data.name || this.data.name === '') {
+        try {
+          this.data = atcb_process_inline_data(this, this.debug);
+        } catch (e) {
+          if (this.debug) {
+            atcb_render_debug_msg(this.shadowRoot, e);
+          }
+          return;
         }
-        return;
       }
       this.initButton();
     }
@@ -174,13 +184,39 @@ if (atcbIsBrowser()) {
   }
 }
 
+// process inline data
+function atcb_process_inline_data(el, debug = false) {
+  let data = atcb_read_attributes(el);
+  // if we receive no or not enough data that way, we try to get a potential JSON from the innerHTML
+  if (!atcb_check_required(data)) {
+    const slotInput = el.innerHTML;
+    const atcbJsonInput = (function () {
+      if (slotInput != '') {
+        try {
+          return JSON.parse(atcb_secure_content(slotInput.replace(/(\\r\\n|\\n|\\r)/g, ''), false));
+        } catch (e) {
+          throw new Error('Add to Calendar Button generation failed: JSON content provided, but badly formatted (in doubt, try some tool like https://jsonformatter.org/ to validate).\r\nError message: ' + e);
+        }
+      }
+      return '';
+    })();
+    // abort on missing input data
+    if (atcbJsonInput.length === 0 && debug) {
+      console.error(data.validationError);
+      throw new Error('Add to Calendar Button generation failed: no data provided or missing required fields - see console logs for details');
+    }
+    data = atcbJsonInput;
+  }
+  return data;
+}
+
 // read data attributes
-function atcb_read_attributes(el, debug = false) {
+function atcb_read_attributes(el, params = atcbWcParams) {
   let data = {};
-  for (let i = 0; i < atcbWcParams.length; i++) {
+  for (let i = 0; i < params.length; i++) {
     // reading data, but removing real code line breaks before parsing.
     // use [br] in the description to create a line break.
-    let attr = atcbWcParams[`${i}`];
+    let attr = params[`${i}`];
     if (el.hasAttribute(`${attr}`)) {
       let inputVal = atcb_secure_content(el.getAttribute(`${attr}`).replace(/(\\r\\n|\\n|\\r)/g, ''), false);
       let val;
@@ -224,31 +260,6 @@ function atcb_read_attributes(el, debug = false) {
       }
       data[`${attr}`] = val;
     }
-    // getting identifier separartely
-    const identifierAttr = el.getAttribute('identifier');
-    if (identifierAttr != null && identifierAttr != '') {
-      data['identifier'] = atcb_secure_content(identifierAttr.replace(/(\\r\\n|\\n|\\r)/g, ''), false);
-    }
-  }
-  // if we receive no or not enough data that way, we try to get a potential JSON from the innerHTML
-  if (!atcb_check_required(data)) {
-    const slotInput = el.innerHTML;
-    const atcbJsonInput = (function () {
-      if (slotInput != '') {
-        try {
-          return JSON.parse(atcb_secure_content(slotInput.replace(/(\\r\\n|\\n|\\r)/g, ''), false));
-        } catch (e) {
-          throw new Error('Add to Calendar Button generation failed: JSON content provided, but badly formatted (in doubt, try some tool like https://jsonformatter.org/ to validate).\r\nError message: ' + e);
-        }
-      }
-      return '';
-    })();
-    // abort on missing input data
-    if (atcbJsonInput.length === 0 && debug) {
-      console.error(data.validationError);
-      throw new Error('Add to Calendar Button generation failed: no data provided or missing required fields - see console logs for details');
-    }
-    data = atcbJsonInput;
   }
   return data;
 }
@@ -345,7 +356,7 @@ function atcb_load_css(host, rootObj = null, data) {
     const cssGlobalContent = document.createElement('style');
     cssGlobalContent.id = 'atcb-global-style';
     const scrollBarWidth = window.innerWidth - document.documentElement.clientWidth;
-    cssGlobalContent.innerText = '.atcb-modal-no-scroll { overflow-y: hidden !important; -webkit-overflow-scrolling: touch; } body.atcb-modal-no-scroll { padding-right: ' + scrollBarWidth + 'px; }';
+    cssGlobalContent.innerText = '.atcb-modal-no-scroll{overflow-y:hidden !important;-webkit-overflow-scrolling:touch;} body.atcb-modal-no-scroll{padding-right:' + scrollBarWidth + 'px;}';
     if (nonceVal) {
       cssGlobalContent.setAttribute('nonce', nonceVal);
     }
@@ -354,8 +365,7 @@ function atcb_load_css(host, rootObj = null, data) {
   // get custom override information
   const overrideDefaultCss = (function () {
     if (data.styleLight) {
-      const output = ':host { ' + atcb_secure_content(data.styleLight.replace(/(\\r\\n|\\n|\\r)/g, ''), false) + ' }';
-      return output;
+      return ':host{' + atcb_secure_content(data.styleLight.replace(/(\\r\\n|\\n|\\r)/g, ''), false) + '}';
     }
     return '';
   })();
@@ -363,8 +373,7 @@ function atcb_load_css(host, rootObj = null, data) {
     if (data.styleDark) {
       // the next line is commented out, since it is currently not possible to use the :host-context selector in Safari and Firefox - the workaround is the global mutation observer setting the style at the host. We keep this line as a reminder, though.
       //const output = ':host(.atcb-dark), :host-context(html.atcb-dark):host(.atcb-bodyScheme), :host-context(body.atcb-dark):host(.atcb-bodyScheme) { ' + atcb_secure_content(data.styleDark.replace(/(\\r\\n|\\n|\\r)/g, ''), false) + ' }';
-      const output = ':host(.atcb-dark) { ' + atcb_secure_content(data.styleDark.replace(/(\\r\\n|\\n|\\r)/g, ''), false) + ' }';
-      return output;
+      return ':host(.atcb-dark){' + atcb_secure_content(data.styleDark.replace(/(\\r\\n|\\n|\\r)/g, ''), false) + '}';
     }
     return '';
   })();
@@ -459,17 +468,23 @@ function atcb_render_debug_msg(host, error) {
 
 // prepare data when not using the web component, but some custom trigger instead
 // eslint-disable-next-line no-unused-vars, @typescript-eslint/no-unused-vars
-function atcb_action(data, triggerElement, keyboardTrigger = false) {
+async function atcb_action(inputData, triggerElement, keyboardTrigger = false) {
   // return if not within a browser environment
   if (!atcbIsBrowser()) {
     return;
   }
   // get data
-  data = atcb_secure_content(data);
-  // pull data from PRO server, if key is given
-  if (data.proKey != null && data.proKey != '') {
-    data = atcb_get_pro_data(data.proKey);
-  }
+  let data = await (async function () {
+    const cleanedInput = atcb_secure_content(inputData);
+    // pull data from PRO server, if key is given
+    if (cleanedInput.proKey != null && cleanedInput.proKey != '') {
+      const proData = await atcb_get_pro_data(cleanedInput.proKey, null, cleanedInput);
+      if (proData.name && proData.name != '') {
+        return proData;
+      }
+    }
+    return cleanedInput;
+  })();
   // decorate & validate data
   data.debug = data.debug === 'true';
   if (!atcb_check_required(data)) {
@@ -607,7 +622,7 @@ function atcb_init_log(pro = '', debug = false) {
 }
 
 // PULLING PRO DATA
-async function atcb_get_pro_data(licenseKey) {
+async function atcb_get_pro_data(licenseKey, el = null, directData = {}) {
   /*!
    *  @preserve
    *  PER LICENSE AGREEMENT, YOU ARE NOT ALLOWED TO REMOVE OR CHANGE THIS FUNCTION!
@@ -615,9 +630,16 @@ async function atcb_get_pro_data(licenseKey) {
   if (licenseKey && licenseKey !== '') {
     // Try to read data from server and log error if not possible
     try {
-      const response = await fetch('https://event.caldn.net/' + licenseKey + '/config.json');
+      //const response = await fetch('https://event.caldn.net/' + licenseKey + '/config.json');
+      const response = await fetch('https://caldn.blob.core.windows.net/eventdata/' + licenseKey + '/config.json');
       if (response.ok) {
         const data = await response.json();
+        const dataOverrides = el ? atcb_read_attributes(el, atcbWcProParams) : directData;
+        atcbWcProParams.forEach((key) => {
+          if (Object.prototype.hasOwnProperty.call(dataOverrides, key)) {
+            data[`${key}`] = dataOverrides[`${key}`];
+          }
+        });
         data.proKey = licenseKey;
         data.identifier = licenseKey;
         return data;

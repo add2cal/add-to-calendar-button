@@ -150,7 +150,7 @@ const i18nStrings = {
     close: 'Fermer',
     'modal.button.default': 'Cliquez-moi',
     'modal.webview.ical.h': 'Ouvrez votre navigateur',
-    'modal.webview.ical.text': "Malheureusement, les navigateurs intégrés aux applications ont des problèmes avec la manière dont nous créons les fichiers de calendrier.",
+    'modal.webview.ical.text': 'Malheureusement, les navigateurs intégrés aux applications ont des problèmes avec la manière dont nous créons les fichiers de calendrier.',
     'modal.clipboard.text': 'Nous avons automatiquement copié une URL magique dans votre presse-papier.',
     'modal.webview.ical.steps': '<ol><li><strong>Ouvrez un autre navigateur</strong> sur votre smartphone ;</li><li><strong>Collez</strong> le contenu du presse-papier et continuez.</li></ol>',
     'modal.opensafari.ical.h': 'Ouvrir Safari',

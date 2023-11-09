@@ -25,6 +25,7 @@
   --base-font-size-s: 16px;
   --font: arial, helvetica, sans-serif;
   --keyboard-focus: #1e90ff;
+  --wrapper-padding: 5px 12px 12px 5px;
   --btn-background: #f5f5f5;
   --btn-hover-background: #fff;
   --btn-text: #444;
@@ -68,7 +69,7 @@
   --date-btn-headline-line-clamp: 1;
   --date-btn-shadow: rgba(40 40 40 / 40%) 0.2em 0.2em 0.8em, rgba(255 255 255 / 80%) -0.2em -0.2em 0.4em;
   --date-btn-hover-shadow: rgba(40 40 40 / 50%) 0.3em 0.4em 1em, rgba(255 255 255) -0.3em -0.3em 0.7em;
-  --checkmark-background: drop-shadow(0 0 3px #ffffff);
+  --checkmark-background: drop-shadow(0 0 3px #fff);
   --overlay-background: #dcdcdc;
   --overlay-cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='%23777' width='16' height='16' viewBox='0 0 122.878 122.88'%3E%3Cpath d='M1.426 8.313a4.87 4.87 0 0 1 0-6.886 4.87 4.87 0 0 1 6.886 0l53.127 53.127 53.127-53.127a4.87 4.87 0 0 1 6.887 0 4.87 4.87 0 0 1 0 6.886L68.324 61.439l53.128 53.128a4.87 4.87 0 0 1-6.887 6.886L61.438 68.326 8.312 121.453a4.87 4.87 0 0 1-6.886 0 4.87 4.87 0 0 1 0-6.886l53.127-53.128L1.426 8.313h0z'/%3E%3C/svg%3E") 16 16, crosshair;
   --icon-ms365-color: #ea3e23;
@@ -155,7 +156,7 @@
 
 .atcb-button-wrapper {
   display: block;
-  padding: 5px;
+  padding: var(--wrapper-padding);
   position: relative;
 }
 
@@ -192,8 +193,7 @@
   min-width: 0;
   border-radius: 100%;
   display: flex;
-  align-content: center;
-  justify-content: center;
+  place-content: center center;
   align-items: center;
   height: 3em;
   width: 3em;
@@ -427,6 +427,12 @@
   -webkit-tap-highlight-color: transparent;
 }
 
+@media (width > 575px) {
+  .atcb-modal-box {
+    min-width: 500px;
+  }
+}
+
 .atcb-modal-box.atcb-rtl {
   text-align: right;
   direction: rtl;
@@ -456,7 +462,7 @@
   font-size: 1.3em;
   font-weight: 600;
   line-height: 1.5em;
-  padding: 1.8em 2em 1.3em;
+  padding: 1.8em 1.5em 1.3em;
   text-transform: uppercase;
   text-align: center;
 }
@@ -469,7 +475,7 @@
 .atcb-modal-content {  
   background-color: var(--modal-background);
   font-size: 1em;
-  padding: .3em 2.5em 2.25em;
+  padding: .3em 2em 2.2em;
 }
 
 .atcb-modal-icon + .atcb-modal-content {
@@ -497,7 +503,7 @@
   background-color: var(--modal-btn-bar);
   border-radius: 0 0 var(--modal-border-radius) var(--modal-border-radius);
   box-sizing: border-box;
-  padding: 0.8em 1em;
+  padding: .6em;
   text-align: center;
   width: 100%;
   display: flex;
@@ -528,6 +534,11 @@ a.atcb-modal-btn {
   user-select: none;
   -webkit-user-select: none;
   -webkit-tap-highlight-color: transparent;
+}
+
+button.atcb-modal-btn.btn-small,
+a.atcb-modal-btn.btn-small {
+  padding: .6em .8em;
 }
 
 button.atcb-modal-btn.atcb-modal-btn-primary,

@@ -38,7 +38,7 @@ let config:object = {
   startDate: defaultDate,
   startTime: "10:15",
   endTime: "23:30",
-  options: ["Google|" + t('demo_data.options_label_single_dummy'), "iCal"],
+  options: ["Google", "iCal"],
   timeZone: t('demo_data.default_timezone'),
   lightMode: "bodyScheme",
   language: locale.value
@@ -59,7 +59,7 @@ watch(locale, value => {
     startDate: defaultDate,
     startTime: "10:15",
     endTime: "23:30",
-    options: ["Google|" + t('demo_data.options_label_single_dummy'), "iCal"],
+    options: ["Google", "iCal"],
     timeZone: t('demo_data.default_timezone'),
     lightMode: "bodyScheme",
     language: locale.value
@@ -900,7 +900,7 @@ onUnmounted(() => {
           </p>
           <p>
             Theoretically, you do not need to provide a button element. However, it is recommended to do so, since it will optimize the user experience a lot (like focusing the element on closing the modal, etc.).<br />
-            If you provide a specific button, you can also choose between the overlay-dropdown list or the modal (default) style. Latter one is strongly recommended.
+            If you do not provide a specific button, the list will automatically show as modal. If provided, you can opt for the overlay-dropdown list style via the listStyle option (mind that all other options are not supported in the atcb_action case). The modal style is strongly recommended.
           </p>
           <h3 class="mb-3 mt-8">{{ $t('content.guide.step1') }}: Import</h3>
           <p>
@@ -915,7 +915,7 @@ onUnmounted(() => {
           </p>
           <p>
             Theoretisch muss dieses Element kein Button sein. Wir raten allerdings stark dazu, da es die User Experience wesentlich positiv beeinflusst (bspw. durch die Unterstützung von Tastatur-Navigation, etc.).<br />
-            Wenn du ein Button-Element nutzt, kannst du auch zwischen einem Overlay-Dropdown und dem Modal-Stil wählen. Letzteres ist der Standard und wird auch empfohlen.
+            Wenn du kein Button-Element nutzt, öffnet sich die Kalendar-Liste als Modal. Gibt es ein Button-Element kannst du auch den Overlay-Dropdown-Stil über die Option listStyle wählen (beachte, dass die übrigen Optionen mit atcb_action nicht unterstützt werden). Der Modal-Stil ist der Standard und wird auch empfohlen.
           </p>
           <h3 class="mb-3 mt-8">{{ $t('content.guide.step1') }}: Import</h3>
           <p>
@@ -958,7 +958,7 @@ onUnmounted(() => {
     startDate: "{{ defaultDate }}",
     startTime: "10:15",
     endTime: "23:30",
-    options: ["Google|{{ $t('demo_data.options_label_single_dummy') }}", "iCal"],
+    options: ["Google", "iCal"],
     timeZone: "{{ $t('demo_data.default_timezone') }}"{{ defaultLangJS }}
   };
   const button = document.getElementById('my-default-button');

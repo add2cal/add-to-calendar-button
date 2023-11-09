@@ -437,6 +437,12 @@ function atcb_generate_ical(host, data, subEvent = 'all', keyboardTrigger = fals
   const filename = atcb_determine_ical_filename(data, subEvent);
   // check for a given explicit file...
   const givenIcsFile = (function () {
+    // ignore a given file, if there is an attendee provided at the host level, as this would need to be added to the file
+    const potentialHostAttendee = host.host.getAttribute('attendee') || '';
+    if (data.attendee != null && data.attendee != '' && potentialHostAttendee !== '') {
+      return '';
+    }
+    // otherwise, we check for a given explicit file
     if (subEvent != 'all' && data.dates[`${subEvent}`].icsFile != null && data.dates[`${subEvent}`].icsFile != '') {
       return data.dates[`${subEvent}`].icsFile;
     }

@@ -12,7 +12,7 @@
  */
 
 import { tzlib_get_offset } from 'timezones-ical-library';
-import { atcbIsiOS, atcbIsBrowser, atcbValidRecurrOptions, atcbInvalidSubscribeOptions, atcbiOSInvalidOptions, atcbWcBooleanParams } from './atcb-globals.js';
+import { atcbIsiOS, atcbIsAndroid, atcbIsBrowser, atcbValidRecurrOptions, atcbInvalidSubscribeOptions, atcbiOSInvalidOptions, atcbWcBooleanParams } from './atcb-globals.js';
 import { atcb_format_datetime, atcb_rewrite_html_elements, atcb_generate_uuid } from './atcb-util.js';
 import { availableLanguages, rtlLanguages } from './atcb-i18n';
 
@@ -119,15 +119,30 @@ function atcb_decorate_data_rrule(data) {
   return data;
 }
 
-// cleanup options, standardizing names and splitting off custom labels
+// cleanup options, standardizing names, and check for mobile special rules
 function atcb_decorate_data_options(data) {
-  // iterrate over the options and generate the new clean arrays (for options and labels)
+  // define the actual options to check
+  const theOptions = (function () {
+    if (atcbIsiOS() || data.fakeIOS) {
+      if (data.optionsIOS && data.optionsIOS.length > 0) {
+        return data.optionsIOS;
+      }
+      if (data.optionsMobile && data.optionsMobile.length > 0) {
+        return data.optionsMobile;
+      }
+    }
+    if ((atcbIsAndroid() || data.fakeMobile || data.fakeAndroid) && data.optionsMobile && data.optionsMobile.length > 0) {
+      return data.optionsMobile;
+    }
+    return data.options;
+  })();
+  // iterrate over the options and generate the new clean arrays
   const newOptions = [];
   let iCalGiven = false;
   let appleGiven = false;
-  for (let i = 0; i < data.options.length; i++) {
-    // preparing the input options and labels
-    const cleanOption = data.options[`${i}`].split('|');
+  for (let i = 0; i < theOptions.length; i++) {
+    // preparing the input options
+    const cleanOption = theOptions[`${i}`].split('|');
     const optionName = cleanOption[0].toLowerCase().replace('microsoft', 'ms').replace(/\./, '');
     if (optionName === 'apple') {
       appleGiven = true;
@@ -135,7 +150,7 @@ function atcb_decorate_data_options(data) {
     if (optionName === 'ical') {
       iCalGiven = true;
     }
-    // next, fill the new arrays (where the labels array already sits inside the main data object)
+    // next, fill the new arrays
     // do not consider options, which should not appear on iOS (e.g. iCal, since we have the Apple option instead)
     // in the recurrence case, we leave out all options, which do not support it in general, as well as Apple and iCal for rrules with "until"
     // and in the subscribe case, we also skip options, which are not made for subscribing (MS Teams)
@@ -148,7 +163,7 @@ function atcb_decorate_data_options(data) {
     }
     newOptions.push(optionName);
   }
-  // since the above can lead to excluding all options, we add the iCal option as default, if not other option is left
+  // since the above can lead to excluding all options, we add the iCal option as default, if no other option is left
   if (newOptions.length === 0) {
     if (!atcbIsiOS()) {
       newOptions.push('ical');

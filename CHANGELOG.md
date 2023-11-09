@@ -6,7 +6,8 @@
   - ✨ [introducing PRO offering](https://add-to-calendar-pro.com/)
   - ⚠️ Breaking: default branding (check hideBranding option for disabling it)
   - ⚠️ Breaking: if you want to customize calendar option labels, you need need to do this via the customLabels option 
-  - more css var options
+  - new optionsMobile und optionsIOS options to specify device-specific calendar types
+  - more css var options and subtle style fixes
   - bundle-size optimization option
   - attendee optimization
   - a lot of fixes

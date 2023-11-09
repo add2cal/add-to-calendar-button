@@ -114,10 +114,11 @@ const atcbInvalidSubscribeOptions = ['msteams'];
 const atcbiOSInvalidOptions = ['ical'];
 const atcbStates = [];
 
-// DEFINING THE WEB COMPONENT ATTRIBUTES (not including the proKey options)
+// DEFINING THE WEB COMPONENT ATTRIBUTES
 const atcbWcParams = [
   'debug',
   'cspnonce',
+  'identifier',
   'name',
   'dates',
   'description',
@@ -147,6 +148,8 @@ const atcbWcParams = [
   'updated',
   'subscribe',
   'options',
+  'optionsMobile',
+  'optionsIOS',
   'iCalFileName',
   'listStyle',
   'buttonStyle',
@@ -162,8 +165,6 @@ const atcbWcParams = [
   'hideBranding',
   'size',
   'label',
-  'ty',
-  'rsvp',
   'inline',
   'inlineRsvp',
   'customLabels',
@@ -179,7 +180,31 @@ const atcbWcParams = [
   'hidden',
   'hideButton',
   'pastDateHandling',
-  'proxy',
+  'fakeMobile',
+  'fakeIOS',
+  'fakeAndroid',
+  'forceOverlay',
+  'rsvp',
+  'cta',
+];
+const atcbWcProParams = [
+  'debug',
+  'cspnonce',
+  'attendee',
+  'images',
+  'size',
+  'inline',
+  'inlineRsvp',
+  'customLabels',
+  'customCss',
+  'lightMode',
+  'language',
+  'bypassWebViewCheck',
+  'blockInteraction',
+  'styleLight',
+  'styleDark',
+  'disabled',
+  'hidden',
   'fakeMobile',
   'fakeIOS',
   'fakeAndroid',
@@ -213,7 +238,7 @@ const atcbWcBooleanParams = [
 ];
 const atcbWcObjectParams = ['customLabels', 'ty', 'rsvp'];
 const atcbWcObjectArrayParams = ['dates'];
-const atcbWcArrayParams = ['images', 'options'];
+const atcbWcArrayParams = ['images', 'options', 'optionsMobile', 'optionsIOS'];
 const atcbWcNumberParams = ['sequence', 'recurrence_interval', 'recurrence_count'];
 
 // DEFINING GLOBAL ICONS
@@ -259,6 +284,7 @@ export {
   atcbiOSInvalidOptions,
   atcbStates,
   atcbWcParams,
+  atcbWcProParams,
   atcbWcBooleanParams,
   atcbWcObjectParams,
   atcbWcObjectArrayParams,

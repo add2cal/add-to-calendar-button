@@ -464,9 +464,9 @@ function atcb_create_modal(host, data, icon = '', headline, content = '', button
       }
     }
   }
-  // add buttons (array of objects; attributes: href, type, label, primary(boolean))
+  // add buttons (array of objects; attributes: href, type, label, primary(boolean), small(boolean))
   if (buttons.length == 0) {
-    buttons.push({ type: 'close', label: atcb_translate_hook('close', data) });
+    buttons.push({ type: 'close', label: atcb_translate_hook('close', data), small: true });
   }
   const modalButtons = document.createElement('div');
   modalButtons.classList.add('atcb-modal-buttons');
@@ -485,6 +485,9 @@ function atcb_create_modal(host, data, icon = '', headline, content = '', button
     modalButton.classList.add('atcb-modal-btn');
     if (button.primary) {
       modalButton.classList.add('atcb-modal-btn-primary');
+    }
+    if (button.small) {
+      modalButton.classList.add('btn-small');
     }
     if (button.label == null || button.label == '') {
       button.label = atcb_translate_hook('modal.button.default', data);

@@ -594,13 +594,15 @@ definePageMeta({
                 Array of options to use in the list.<br /><br />
                 If you only specify 1 calendar type, the button would show the calendar's icon instead of the default one and redirect directly instead of opening a list (singleton case).<br /><br />
                 Some options might be dynamically excluded based on other settings!<br />
-                "iCal" will be replaced by "Apple" on iOS devices.
+                "iCal" will be replaced by "Apple" on iOS devices.<br /><br />
+                You can specify a different set of options for mobile devices via the optionsMobile option. If you also set the optionsIOS option, this will account for iOS (not Mac!), while optionsMobile accounts for Android and other mobile devices.
               </td>
               <td v-else>
                 Array an Kalender-Arten, die in der Liste erscheinen.<br /><br />
                 Sofern du nur 1 Option definierst wird der Button das Icon dieser Option anzeigen sowie direkt die jeweilige Kalender-Aktion auslösen und keine Auswahlliste öffnen (Singleton-Case).<br /><br />
                 Optionen können deaktiviert werden, wenn sie aufgrund anderere Einstellungen nicht unterstützt werden!<br />
-                Auf iOS-Geräten wird die iCal-Option durch "Apple" ersetzt.
+                Auf iOS-Geräten wird die iCal-Option durch "Apple" ersetzt.<br /><br />
+                Du kannst eine andere Liste an Optionen für mobile Geräte definieren, indem du die optionsMobile-Option nutzt. Wenn du auch die optionsIOS-Option setzt, wird diese für iOS (nicht Mac!) berücksichtigt, während optionsMobile für Android und andere mobile Geräte gilt.
               </td>
             </tr>
             <tr id="buttonstyle">

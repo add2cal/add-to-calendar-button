@@ -232,11 +232,11 @@ function atcb_validate_attendee(data, msgPrefix, i, msgSuffix) {
     }
     // additionally, we check the same format as with the organizer or simple email (only 1 attendee possible)
     const attendeeParts = data.dates[`${i}`].attendee.split('|');
-    if (attendeeParts.length === 1 && !atcb_validEmail(attendeeParts[0])) {
+    if (attendeeParts.length === 1 && atcb_validEmail(attendeeParts[0])) {
       return true;
     }
     if (attendeeParts.length !== 2 || attendeeParts[0].length > 50 || attendeeParts[1].length > 80 || !atcb_validEmail(attendeeParts[1])) {
-      data.validationError = msgPrefix + ' failed: attendee needs to match the schema "NAME|EMAIL" with a valid email address' + msgSuffix;
+      data.validationError = msgPrefix + ' failed: attendee needs to be a valid email address or match the schema "NAME|EMAIL" with EMAIL being a valid email address' + msgSuffix;
       return false;
     }
   }
