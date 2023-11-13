@@ -372,7 +372,7 @@ async function atcb_generate_rsvp(host, data, keyboardTrigger = false, inline = 
   })();
   if (!inline || directModal) {
     atcb_set_fullsize(rsvpHost.querySelector('.atcb-modal-host-initialized'));
-    atcb_create_modal(rsvpHost, data, 'rsvp', rsvpData.headline, rsvpContent, [], [], keyboardTrigger, {}, false);
+    atcb_create_modal(rsvpHost, data, undefined, rsvpData.headline, rsvpContent, [], [], keyboardTrigger, {}, false);
   } else {
     const rsvpInlineWrapper = document.createElement('div');
     rsvpInlineWrapper.classList.add('rsvp-wrapper');
