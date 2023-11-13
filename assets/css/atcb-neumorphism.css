@@ -25,7 +25,7 @@
   --base-font-size-s: 16px;
   --font: arial, helvetica, sans-serif;
   --keyboard-focus: #1e90ff;
-  --wrapper-padding: 5px 12px 12px 5px;
+  --wrapper-padding: 0px;
   --btn-background: #f5f5f5;
   --btn-hover-background: #fff;
   --btn-text: #444;
@@ -176,7 +176,6 @@
   line-height: 1.5em;
   margin: 0;
   max-width: 350px;
-  min-width: 10em;
   padding: var(--btn-padding-y) var(--btn-padding-x);
   position: relative;
   text-align: center;
@@ -263,10 +262,6 @@
 
 .atcb-text {
   overflow-wrap: anywhere;
-}
-
-.atcb-button:disabled .atcb-text {
-  letter-spacing: .1em;
 }
 
 /******************************
@@ -840,6 +835,11 @@ a.atcb-modal-btn:focus-visible {
 
 .atcb-icon.atcb-icon-trigger {
   padding-bottom: .2em;
+}
+
+.atcb-icon.atcb-icon-rsvp {
+  height: 1.5em;
+  width: 1.5em;
 }
 
 .atcb-icon.atcb-icon-apple svg {

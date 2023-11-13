@@ -19,6 +19,7 @@ import { atcb_set_fully_successful } from './atcb-links.js';
 import { atcb_translate_hook } from './atcb-i18n.js';
 import { atcb_load_css, atcb_set_light_mode } from './atcb-init.js';
 import { atcb_log_event } from './atcb-event.js';
+import { atcb_generate_rsvp } from './atcb-generate-pro.js';
 
 // GENERATE THE ACTUAL BUTTON
 // helper function to generate the labels for the button and list options
@@ -26,28 +27,41 @@ function atcb_generate_label(host, data, parent, type, icon = false, text = '', 
   // setting IDs and adding event listeners
   switch (type) {
     case 'trigger':
+    case 'rsvp':
     default:
       parent.id = data.identifier;
       if (!data.blockInteraction) {
         parent.addEventListener('keyup', function (event) {
           if (event.key === 'Enter' || event.code == 'Space' || (event.key === 'Alt' && event.key === 'Control' && event.code === 'Space')) {
             event.preventDefault();
-            atcb_toggle(host, 'auto', data, parent, true, true);
+            if (type === 'rsvp' && typeof atcb_generate_rsvp === 'function') {
+              atcb_generate_rsvp(host, data, true, false, true, parent);
+            } else {
+              atcb_toggle(host, 'auto', data, parent, true, true);
+            }
           }
         });
         parent.addEventListener(
           'touchend',
           atcb_debounce_leading((event) => {
             event.preventDefault();
-            atcb_toggle(host, 'auto', data, parent, false, true);
+            if (type === 'rsvp' && typeof atcb_generate_rsvp === 'function') {
+              atcb_generate_rsvp(host, data, false, false, true, parent);
+            } else {
+              atcb_toggle(host, 'auto', data, parent, false, true);
+            }
           }),
         );
-        if (data.trigger === 'click') {
+        if (data.trigger === 'click' || (type === 'rsvp' && typeof atcb_generate_rsvp === 'function')) {
           parent.addEventListener(
             'mouseup',
             atcb_debounce_leading((event) => {
               event.preventDefault();
-              atcb_toggle(host, 'auto', data, parent, false, true);
+              if (type === 'rsvp' && typeof atcb_generate_rsvp === 'function') {
+                atcb_generate_rsvp(host, data, false, false, true, parent);
+              } else {
+                atcb_toggle(host, 'auto', data, parent, false, true);
+              }
             }),
           );
         } else {
@@ -192,7 +206,7 @@ function atcb_generate_button(host, button, data) {
     buttonTrigger.classList.add('atcb-button');
     if (data.disabled) {
       buttonTrigger.setAttribute('disabled', true);
-      buttonTrigger.style.cssText = 'opacity: .75; cursor: not-allowed; filter: brightness(95%); border-style: dashed;';
+      buttonTrigger.style.cssText = 'opacity: .75; cursor: not-allowed; filter: brightness(95%); border-style: dashed; box-shadow: none;';
     }
     if (data.hideTextLabelButton) {
       buttonTrigger.classList.add('atcb-no-text');
@@ -284,7 +298,7 @@ function atcb_generate_dropdown_list(host, data) {
 }
 
 // create the background overlay, which also acts as trigger to close any dropdowns
-function atcb_generate_bg_overlay(host, trigger = '', modal = false, darken = true) {
+function atcb_generate_bg_overlay(host, trigger = '', modal = false, darken = true, closable = true) {
   const bgOverlay = (function () {
     if (modal) {
       return document.createElement('dialog');
@@ -300,46 +314,48 @@ function atcb_generate_bg_overlay(host, trigger = '', modal = false, darken = tr
   }
   bgOverlay.role = 'button';
   bgOverlay.tabIndex = 0;
-  bgOverlay.addEventListener(
-    'mouseup',
-    atcb_debounce_leading((e) => {
-      if (e.target !== e.currentTarget) return;
-      atcb_log_event('closeList', 'Background Hit', atcbStates['active']);
-      atcb_toggle(host, 'close');
-    }),
-  );
-  let fingerMoved = false;
-  bgOverlay.addEventListener(
-    'touchstart',
-    atcb_debounce_leading(() => (fingerMoved = false)),
-    { passive: true },
-  );
-  bgOverlay.addEventListener(
-    'touchmove',
-    atcb_debounce_leading(() => (fingerMoved = true)),
-    { passive: true },
-  );
-  bgOverlay.addEventListener(
-    'touchend',
-    atcb_debounce((e) => {
-      if (fingerMoved !== false || e.target !== e.currentTarget) return;
-      atcb_log_event('closeList', 'Background Hit', atcbStates['active']);
-      atcb_toggle(host, 'close');
-    }),
-    { passive: true },
-  );
-  if (trigger !== 'click') {
+  if (closable) {
     bgOverlay.addEventListener(
-      'mousemove',
+      'mouseup',
       atcb_debounce_leading((e) => {
         if (e.target !== e.currentTarget) return;
         atcb_log_event('closeList', 'Background Hit', atcbStates['active']);
         atcb_toggle(host, 'close');
       }),
     );
-  } else {
-    // if trigger is not set to 'click', we render a close icon, when hovering over the background
-    bgOverlay.classList.add('atcb-click');
+    let fingerMoved = false;
+    bgOverlay.addEventListener(
+      'touchstart',
+      atcb_debounce_leading(() => (fingerMoved = false)),
+      { passive: true },
+    );
+    bgOverlay.addEventListener(
+      'touchmove',
+      atcb_debounce_leading(() => (fingerMoved = true)),
+      { passive: true },
+    );
+    bgOverlay.addEventListener(
+      'touchend',
+      atcb_debounce((e) => {
+        if (fingerMoved !== false || e.target !== e.currentTarget) return;
+        atcb_log_event('closeList', 'Background Hit', atcbStates['active']);
+        atcb_toggle(host, 'close');
+      }),
+      { passive: true },
+    );
+    if (trigger !== 'click') {
+      bgOverlay.addEventListener(
+        'mousemove',
+        atcb_debounce_leading((e) => {
+          if (e.target !== e.currentTarget) return;
+          atcb_log_event('closeList', 'Background Hit', atcbStates['active']);
+          atcb_toggle(host, 'close');
+        }),
+      );
+    } else {
+      // if trigger is not set to 'click', we render a close icon, when hovering over the background
+      bgOverlay.classList.add('atcb-click');
+    }
   }
   return bgOverlay;
 }
@@ -348,7 +364,7 @@ function atcb_generate_bg_overlay(host, trigger = '', modal = false, darken = tr
 function atcb_create_atcbl(host, atList = true) {
   const atcbL = document.createElement('div');
   atcbL.id = 'add-to-calendar-button-reference';
-  atcbL.style.cssText = 'width: 130px; padding: 5px; height: auto; opacity: .8; transform: translate3d(0, 0, 0); z-index: 15000000;';
+  atcbL.style.cssText = 'width: 130px; padding: 5px; height: auto; opacity: .8; transform: translate3d(0, 0, 0); z-index: 15000000; stroke-width: 4; stroke-linecap: round; stroke: #fff; filter: drop-shadow(0px 0px 2px #fff);';
   setTimeout(() => {
     atcbL.innerHTML = '<a href="https://add-to-calendar-pro.com" target="_blank" rel="noopener">' + atcbIcon['atcb'] + '</a>';
   }, 500);
@@ -364,14 +380,14 @@ function atcb_create_atcbl(host, atList = true) {
 
 // FUNCTION TO CREATE MODALS
 // this is only about special communication modals - not the list style modal
-function atcb_create_modal(host, data, icon = '', headline, content = '', buttons = [], subEvents = [], keyboardTrigger = false, goto = {}) {
+function atcb_create_modal(host, data, icon = '', headline, content = '', buttons = [], subEvents = [], keyboardTrigger = false, goto = {}, closable = true) {
   atcbStates['active'] = data.identifier;
   // setting the stage
   const modalHost = atcb_generate_modal_host(host, data, false);
   const bgOverlay = (function () {
     const el = modalHost.getElementById('atcb-bgoverlay');
     if (!el) {
-      const newOverlay = atcb_generate_bg_overlay(host, 'click', true, !data.hideBackground);
+      const newOverlay = atcb_generate_bg_overlay(host, 'click', true, !data.hideBackground, closable);
       modalHost.querySelector('.atcb-modal-host-initialized').append(newOverlay);
       return newOverlay;
     }
@@ -460,7 +476,7 @@ function atcb_create_modal(host, data, icon = '', headline, content = '', button
       } else {
         // if blocked, we also add styles
         modalSubEventButton.setAttribute('disabled', true);
-        modalSubEventButton.style.cssText = 'opacity: .75; cursor: not-allowed; filter: brightness(95%); border-style: dashed;';
+        modalSubEventButton.style.cssText = 'opacity: .75; cursor: not-allowed; filter: brightness(95%); border-style: dashed; box-shadow: none;';
       }
     }
   }

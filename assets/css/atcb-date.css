@@ -25,7 +25,7 @@
   --base-font-size-s: 16px;
   --font: arial, helvetica, sans-serif;
   --keyboard-focus: #1e90ff;
-  --wrapper-padding: 5px;
+  --wrapper-padding: 0px;
   --btn-background: #f5f5f5;
   --btn-hover-background: #fff;
   --btn-border: #d2d2d2;
@@ -291,10 +291,6 @@
   font-size: 1em;
   padding: .3em;
   box-sizing: border-box;
-}
-
-.atcb-button:disabled .atcb-date-btn-hover {
-  letter-spacing: .1em;
 }
 
 .atcb-button:hover .atcb-date-btn-details,

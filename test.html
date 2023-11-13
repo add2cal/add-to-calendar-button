@@ -21,9 +21,10 @@
       options="'iCal'"
       language="en"
       debug
-      buttonStyle="round"
       lightMode="light"
-      rsvp='{"max":50,"maxpp":2,"expires":"2023-09-29T22:00:00","headline":"my test rsvp headline","text":"Welcome!\nThis is my rsvp.\n\nenjoy!","fields":[{"type":"text","label":"Text only ","required":false,"placeholder":"put you stuff here....","default":"prefilled data "},{"type":"number","label":"numbers only (required)","required":true,"placeholder":"place a number here...","default":"5"},{"type":"checkbox","label":"a required check","required":true,"default":false},{"type":"label","label":"And some simple message towards the end","required":false}]}'
+      organizer="Maxl|webmaster@jenskuerschner.de"
+      attendee="jekuer@gmail.com"
+      rsvp='{"max":50,"maxpp":2,"maybe_option":true,"initial_confirmation":true,"expires":"2023-11-29T22:00:00","headline":"my test rsvp headline","text":"[p]Welcome![/p][p]This is my rsvp. enjoy![/p]","fields":[{"type":"checkbox","label":"Please confirm","required":true,"default":false,"name":"confirm"},{"type":"hidden","label":"","required":true,"name":"hidden_secret","default":"abz"},{"type":"label","label":"And some simple message towards the end","required":false}]}'
       ty='{"type":"form","text":"Sample Text, which is a little big longer,[br]so we can see how the modal behaves here.","url":"https://webhook.site/1003b24b-d825-4152-bdbf-93f0322bf30b","button_label":"Go","fields":[{"type":"label","name":"label_only","label":"Only some random text"},{"type":"text","name":"mytext","label":"Required Text","required":true},{"type":"checkbox","name":"my_check","label":"checkbox label","required":true,"default":"true"},{"type":"radio","name":"my_radio","label":"radio 1","required":false},{"type":"radio","name":"my_radio","label":"radio 2","default":"true","required":false},{"type":"number","name":"my_number","label":"My Number","required":false,"default":"2","placeholder":"5"},{"type":"hidden","name":"my_secret","label":"and some hidden field","default":"secret information"}]}'
     ></add-to-calendar-button>
 
@@ -41,12 +42,12 @@
       fakeMobile
       language="en"
       debug
-      buttonStyle="round"
+      buttonStyle="default"
       lightMode="light"
       ty='{"type":"form","text":"Sample Text, which is a little big longer,[br]so we can see how the modal behaves here.","url":"https://webhook.site/1003b24b-d825-4152-bdbf-93f0322bf30b","button_label":"Go","fields":[{"type":"label","name":"label_only","label":"Only some random text"},{"type":"text","name":"mytext","label":"Required Text","required":true},{"type":"checkbox","name":"my_check","label":"checkbox label","required":true,"default":"true"},{"type":"radio","name":"my_radio","label":"radio 1","required":false},{"type":"radio","name":"my_radio","label":"radio 2","default":"true","required":false},{"type":"number","name":"my_number","label":"My Number","required":false,"default":"2","placeholder":"5"},{"type":"hidden","name":"my_secret","label":"and some hidden field","default":"secret information"}]}'
     ></add-to-calendar-button>
 
-    <div style="width:50px;height:50px;background-color:red;"></div>
+    <div style="width:50px;height:50px;"></div>
 
     <add-to-calendar-button
       name="testName"
@@ -59,22 +60,18 @@
       options="'iCal'"
       language="en"
       debug
-      buttonStyle="round"
+      buttonStyle="flat"
       lightMode="light"
       ty='{"type":"share","text":"Sample Text, which is a little big longer,[br]so we can see how the modal behaves here.","url":"https://webhook.site/1003b24b-d825-4152-bdbf-93f0322bf30b","button_label":"Go","fields":[{"type":"label","name":"label_only","label":"Only some random text"},{"type":"text","name":"mytext","label":"Required Text","required":true},{"type":"checkbox","name":"my_check","label":"checkbox label","required":true,"default":"true"},{"type":"radio","name":"my_radio","label":"radio 1","required":false},{"type":"radio","name":"my_radio","label":"radio 2","default":"true","required":false},{"type":"number","name":"my_number","label":"My Number","required":false,"default":"2","placeholder":"5"},{"type":"hidden","name":"my_secret","label":"and some hidden field","default":"secret information"}]}'
     ></add-to-calendar-button>
 
   </div>
-  <div style="width:500px;height:50px;background-color:green;margin:auto;"></div>
 
   <div style="padding-top:100px; margin: 0 auto;display: flex; justify-content: center;">
-
     <add-to-calendar-button proKey="3e535b4f-a1b0-4223-99ea-94cf3d95dcef" debug></add-to-calendar-button>
-
   </div>
 
-  <button id="my-default-button">Click here</button>
-  
+  <button id="my-default-button" style="margin-top:50px;cursor:pointer;">Click here</button>  
   <script type="application/javascript">
     const config = {
       proKey: "3e535b4f-a1b0-4223-99ea-94cf3d95dcef",

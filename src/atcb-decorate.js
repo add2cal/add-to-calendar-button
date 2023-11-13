@@ -37,10 +37,14 @@ function atcb_decorate_data(data) {
 function atcb_decorate_data_boolean(data) {
   for (let i = 0; i < atcbWcBooleanParams.length; i++) {
     const attr = atcbWcBooleanParams[`${i}`];
-    if (!data[`${attr}`] === null) {
+    if (data[`${attr}`]) {
+      // only do something if not already a boolean
+      if (typeof data[`${attr}`] !== 'boolean') {
+        const val = data[`${attr}`].toString().trim().toLowerCase() || '';
+        data[`${attr}`] = val === '' || val === 'true' ? true : false;
+      }
+    } else {
       data[`${attr}`] = false;
-    } else if (data[`${attr}`] === '') {
-      data[`${attr}`] = true;
     }
   }
   return data;

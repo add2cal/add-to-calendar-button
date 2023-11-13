@@ -22,7 +22,7 @@ function atcb_saved_hook(host, data) {
   // log event
   atcb_log_event('success', data.identifier, data.identifier);
   // trigger ty modal, if given
-  if (data.ty) {
+  if (data.ty && typeof atcb_generate_ty === 'function') {
     setTimeout(() => {
       atcb_generate_ty(host, data);
     }, 1000);
@@ -179,7 +179,7 @@ function atcb_format_datetime(datetime, style = 'delimiters', includeTime = true
 // SHARED FUNCTION TO SECURE DATA
 function atcb_secure_content(data, isJSON = true) {
   // strip HTML tags (especially since stupid Safari adds stuff) - except for <br>
-  const toClean = isJSON ? JSON.stringify(data) : data;
+  const toClean = isJSON ? JSON.stringify(data) : data.toString();
   const cleanedUp = toClean.replace(/(<(?!br)([^>]+)>)/gi, '');
   if (isJSON) {
     return JSON.parse(cleanedUp);
@@ -299,7 +299,7 @@ function atcb_position_list(host, trigger, list, blockUpwards = false, blockDown
     // read trigger dimensions again, since after adjusting the top value of the list, something might have changed (e.g. re-adjustment due to missing scrollbars at this point in time)
     triggerDim = trigger.getBoundingClientRect();
     list.style.minWidth = triggerDim.width + 'px';
-    if ((list.classList.contains('atcb-dropdown') && !list.classList.contains('atcb-style-round')) || list.classList.contains('atcb-style-text') || list.classList.contains('atcb-style-neumorphism')) {
+    if (list.classList.contains('atcb-dropdown') && !list.classList.contains('atcb-style-round') && !list.classList.contains('atcb-style-text') && !list.classList.contains('atcb-style-neumorphism')) {
       list.style.maxWidth = triggerDim.width + 'px';
     }
     // read list dimensions again, since we altered the width in the step before

@@ -151,6 +151,7 @@
   align-items: center;
   background-color: var(--btn-background);
   border: 0.2em solid var(--btn-border);
+  box-sizing: content-box;
   color: var(--btn-text);
   cursor: pointer;
   display: flex;
@@ -160,8 +161,7 @@
   justify-content: center;
   line-height: 1.5em;
   margin: 0;
-  max-width: 350px;
-  min-width: 10em;
+  max-width: 300px;
   padding: var(--btn-padding-y) var(--btn-padding-x);
   top: 0;
   left: 0;
@@ -176,8 +176,11 @@
   z-index: 1;
 }
 
+.atcb-button:not(.atcb-no-text, .atcb-modal-style, .atcb-dropoverlay, .atcb-single) {
+  min-width: calc(11em - 2 * var(--btn-padding-x));
+}
+
 .atcb-button.atcb-no-text {
-  min-width: 0;
   display: flex;
   place-content: center center;
   align-items: center;
@@ -268,10 +271,6 @@
 
 .atcb-text {
   overflow-wrap: anywhere;
-}
-
-.atcb-button:disabled .atcb-text {
-  letter-spacing: .1em;
 }
 
 /******************************
@@ -844,6 +843,11 @@ a.atcb-modal-btn:focus-visible{
 
 .atcb-icon.atcb-icon-apple, .atcb-icon.atcb-icon-ical {
   padding-bottom: .15em;
+}
+
+.atcb-icon.atcb-icon-rsvp {
+  height: 1.5em;
+  width: 1.5em;
 }
 
 .atcb-icon.atcb-icon-apple svg {

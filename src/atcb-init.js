@@ -64,9 +64,9 @@ if (atcbIsBrowser()) {
           return;
         } finally {
           this.data.proKey = '';
-          this.loaded = true;
         }
       }
+      this.loaded = true;
       this.initButton();
     }
 
@@ -281,7 +281,7 @@ function atcb_build_button(host, data) {
     // generate the actual button or RSVP form (if not hidden)
     if (!data.hidden) {
       if (typeof atcb_generate_rsvp === 'function' && data.rsvp && Object.keys(data.rsvp).length > 0) {
-        atcb_generate_rsvp(host.shadowRoot, data, false, data.inlineRsvp);
+        atcb_generate_rsvp(host, data, false, data.inlineRsvp, false, rootObj);
       } else {
         atcb_generate_button(host, rootObj, data);
       }
@@ -309,6 +309,8 @@ function atcb_cleanup(host, data) {
   }
   Array.from(host.querySelectorAll('.atcb-debug-error-msg'))
     .concat(Array.from(host.querySelectorAll('style')))
+    .concat(Array.from(host.querySelectorAll('link')))
+    .concat(Array.from(host.querySelectorAll('.atcb-placeholder')))
     .concat(Array.from(host.querySelectorAll('.atcb-button-wrapper')))
     .forEach((el) => el.remove());
   delete atcbStates[`${data.identifier}`];
@@ -396,6 +398,7 @@ function atcb_load_css(host, rootObj = null, data) {
       // else, it should be rather non-blocking.
       // first, create a button placeholder
       const placeholder = document.createElement('div');
+      placeholder.classList.add('atcb-placeholder');
       placeholder.style.cssText = 'width: 150px; height: 40px; border-radius: 200px; background-color: #777; opacity: .3;';
       host.prepend(placeholder);
       // second, load the actual css (and remove the placeholder as soon as it is loaded)
@@ -572,7 +575,7 @@ async function atcb_action(inputData, triggerElement, keyboardTrigger = false) {
     // if all is fine, ...
     // ... trigger RSVP form, or ...
     if (typeof atcb_generate_rsvp === 'function' && data.rsvp && Object.keys(data.rsvp).length > 0) {
-      atcb_generate_rsvp(host.shadowRoot, data, triggerElement, keyboardTrigger);
+      atcb_generate_rsvp(host, data, keyboardTrigger, false, true, triggerElement);
     }
     // ... trigger link at the oneOption case, or ...
     if (oneOption) {

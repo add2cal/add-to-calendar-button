@@ -319,10 +319,6 @@
   overflow-wrap: anywhere;
 }
 
-.atcb-button:disabled .atcb-text {
-  letter-spacing: .1em;
-}
-
 /******************************
  * Options List
  */
@@ -925,6 +921,11 @@ a.atcb-modal-btn:focus-visible{
 
 .atcb-icon.atcb-icon-apple, .atcb-icon.atcb-icon-ical {
   padding-bottom: .15em;
+}
+
+.atcb-icon.atcb-icon-rsvp {
+  height: 1.5em;
+  width: 1.5em;
 }
 
 .atcb-icon.atcb-icon-apple svg {
