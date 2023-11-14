@@ -184,6 +184,10 @@ function atcb_decorate_data_options(data) {
 }
 
 function atcb_decorate_data_style(data) {
+  // set inline if inlineRSVP
+  if (data.inlineRSVP) {
+    data.inline = true;
+  }
   // set default listStyle
   if (data.listStyle == null || data.listStyle == '') {
     data.listStyle = 'dropdown';

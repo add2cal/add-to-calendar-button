@@ -88,7 +88,7 @@ function atcb_generate_label(host, data, parent, type, icon = false, text = '', 
           'click',
           atcb_debounce_leading(() => {
             if (oneOption) {
-              host.querySelector('#' + parent.id).blur();
+              host.querySelector('#' + parent.id)?.blur();
               atcb_log_event('openSingletonLink', parent.id, data.identifier);
             } else {
               atcb_toggle(host, 'close');
@@ -101,7 +101,7 @@ function atcb_generate_label(host, data, parent, type, icon = false, text = '', 
           if (event.key === 'Enter') {
             event.preventDefault();
             if (oneOption) {
-              host.querySelector('#' + parent.id).blur();
+              host.querySelector('#' + parent.id)?.blur();
               atcb_log_event('openSingletonLink', parent.id, data.identifier);
             } else {
               atcb_toggle(host, 'close');
@@ -162,7 +162,7 @@ function atcb_generate_label_content(data, parent, type, icon, text, oneOption) 
     }
   }
   // add icon and text label (not in the date style trigger case)
-  if (data.buttonStyle == 'date' && (type == 'trigger' || oneOption)) {
+  if (data.buttonStyle === 'date' && (type == 'trigger' || oneOption)) {
     return;
   }
   if (icon) {
@@ -206,7 +206,6 @@ function atcb_generate_button(host, button, data) {
     buttonTrigger.classList.add('atcb-button');
     if (data.disabled) {
       buttonTrigger.setAttribute('disabled', true);
-      buttonTrigger.style.cssText = 'opacity: .75; cursor: not-allowed; filter: brightness(95%); border-style: dashed; box-shadow: none;';
     }
     if (data.hideTextLabelButton) {
       buttonTrigger.classList.add('atcb-no-text');
@@ -221,7 +220,7 @@ function atcb_generate_button(host, button, data) {
     buttonTrigger.setAttribute('aria-expanded', false); // aria-expanded default value on button generate
     buttonTriggerWrapper.append(buttonTrigger);
     // generate the label incl. eventListeners
-    if (data.buttonStyle == 'date') {
+    if (data.buttonStyle === 'date') {
       atcb_generate_date_button(data, buttonTrigger);
     }
     // if there is only 1 calendar option, we directly show this at the button, but with the trigger's label text (small exception for the date style)
@@ -422,21 +421,21 @@ function atcb_create_modal(host, data, icon = '', headline, content = '', button
   // set overlay size just to be sure
   atcb_set_fullsize(bgOverlay);
   // add icon
-  if (icon != '' && !data.hideIconModal) {
+  if (icon !== '' && !data.hideIconModal) {
     const modalIcon = document.createElement('div');
     modalIcon.classList.add('atcb-modal-icon');
     modalIcon.innerHTML = atcbIcon[`${icon}`];
     modal.append(modalIcon);
   }
   // add headline
-  if (headline && headline != '') {
+  if (headline && headline !== '') {
     const modalHeadline = document.createElement('div');
     modalHeadline.classList.add('atcb-modal-headline');
     modalHeadline.textContent = headline;
     modal.append(modalHeadline);
   }
   // add text content
-  if (content != '') {
+  if (content !== '') {
     const modalContent = document.createElement('div');
     modalContent.classList.add('atcb-modal-content');
     modalContent.innerHTML = content;
@@ -461,8 +460,8 @@ function atcb_create_modal(host, data, icon = '', headline, content = '', button
       modalsubEventsContent.append(modalSubEventButton);
       atcb_generate_date_button(data, modalSubEventButton, i);
       // interaction only if not overdue and blocked
-      if (!data.dates[i - 1].overdue || data.pastDateHandling == 'none') {
-        if (i == 1 && keyboardTrigger) {
+      if (!data.dates[i - 1].overdue || data.pastDateHandling === 'none') {
+        if (i === 1 && keyboardTrigger) {
           modalSubEventButton.focus();
         }
         modalSubEventButton.addEventListener(
@@ -476,12 +475,11 @@ function atcb_create_modal(host, data, icon = '', headline, content = '', button
       } else {
         // if blocked, we also add styles
         modalSubEventButton.setAttribute('disabled', true);
-        modalSubEventButton.style.cssText = 'opacity: .75; cursor: not-allowed; filter: brightness(95%); border-style: dashed; box-shadow: none;';
       }
     }
   }
-  // add buttons (array of objects; attributes: href, type, label, primary(boolean), small(boolean))
-  if (buttons.length == 0) {
+  // add buttons (array of objects; attributes: href, type, label, primary(boolean), small(boolean), id)
+  if (buttons.length === 0) {
     buttons.push({ type: 'close', label: atcb_translate_hook('close', data), small: true });
   }
   const modalButtons = document.createElement('div');
@@ -489,7 +487,7 @@ function atcb_create_modal(host, data, icon = '', headline, content = '', button
   modal.append(modalButtons);
   buttons.forEach((button, index) => {
     let modalButton;
-    if (button.href != null && button.href != '') {
+    if (button.href && button.href !== '') {
       modalButton = document.createElement('a');
       modalButton.setAttribute('target', atcbDefaultTarget);
       modalButton.setAttribute('href', button.href);
@@ -498,6 +496,9 @@ function atcb_create_modal(host, data, icon = '', headline, content = '', button
       modalButton = document.createElement('button');
       modalButton.type = 'button';
     }
+    if (button.id && button.id !== '') {
+      modalButton.id = button.id;
+    }
     modalButton.classList.add('atcb-modal-btn');
     if (button.primary) {
       modalButton.classList.add('atcb-modal-btn-primary');
@@ -505,12 +506,12 @@ function atcb_create_modal(host, data, icon = '', headline, content = '', button
     if (button.small) {
       modalButton.classList.add('btn-small');
     }
-    if (button.label == null || button.label == '') {
+    if (!button.label || button.label === '') {
       button.label = atcb_translate_hook('modal.button.default', data);
     }
     modalButton.textContent = button.label;
     modalButtons.append(modalButton);
-    if (index == 0 && subEvents.length < 2 && keyboardTrigger) {
+    if (index === 0 && subEvents.length < 2 && keyboardTrigger) {
       modalButton.focus();
     }
     switch (button.type) {

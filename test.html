@@ -6,7 +6,7 @@
   <meta name="description" content="">
   <meta name="viewport" content="width=device-width, initial-scale=1">
 </head>
-<body style="background-color:#f5f5f5; text-align:center;">
+<body style="background-color:#b2a9a9; text-align:center;">
 
   <div style="padding-top:100px; margin: 0 auto;display: flex; justify-content: center;">
 
@@ -18,15 +18,18 @@
       timeZone="Europe/Berlin"
       location="Somewhere"
       description="This is my description for you"
-      options="'iCal'"
-      language="en"
+      options="'iCal','apple','google','ms365','outlookcom','yahoo'"
+      language="de"
       debug
       lightMode="light"
       organizer="Maxl|webmaster@jenskuerschner.de"
       attendee="jekuer@gmail.com"
-      rsvp='{"max":50,"maxpp":2,"maybe_option":true,"initial_confirmation":true,"expires":"2023-11-29T22:00:00","headline":"my test rsvp headline","text":"[p]Welcome![/p][p]This is my rsvp. enjoy![/p]","fields":[{"type":"checkbox","label":"Please confirm","required":true,"default":false,"name":"confirm"},{"type":"hidden","label":"","required":true,"name":"hidden_secret","default":"abz"},{"type":"label","label":"And some simple message towards the end","required":false}]}'
-      ty='{"type":"form","text":"Sample Text, which is a little big longer,[br]so we can see how the modal behaves here.","url":"https://webhook.site/1003b24b-d825-4152-bdbf-93f0322bf30b","button_label":"Go","fields":[{"type":"label","name":"label_only","label":"Only some random text"},{"type":"text","name":"mytext","label":"Required Text","required":true},{"type":"checkbox","name":"my_check","label":"checkbox label","required":true,"default":"true"},{"type":"radio","name":"my_radio","label":"radio 1","required":false},{"type":"radio","name":"my_radio","label":"radio 2","default":"true","required":false},{"type":"number","name":"my_number","label":"My Number","required":false,"default":"2","placeholder":"5"},{"type":"hidden","name":"my_secret","label":"and some hidden field","default":"secret information"}]}'
+      styleLight="--accent-color:green;"
+      buttonStyle="default"
+      rsvp='{"max":50,"maxpp":2,"maybe_option":true,"initial_confirmation":false,"expires":"2023-11-29T22:00:00","headline":"my test rsvp headline","text":"[p]Welcome![/p][p]This is my rsvp. enjoy![/p]","fields":[{"type":"checkbox","label":"Please confirm","required":true,"default":false,"name":"confirm"},{"type":"hidden","label":"","required":true,"name":"hidden_secret","default":"abz"},{"type":"label","label":"And some simple message towards the end","required":false}]}'
     ></add-to-calendar-button>
+
+    <div style="width:50px;height:50px;"></div>
 
     <add-to-calendar-button
       name="testName"
@@ -37,14 +40,14 @@
       location="Somewhere"
       description="This is my description for you"
       options="iCal"
-      optionsMobile="'Google','Yahoo'"
+      optionsMobile="'Google'"
       optionsIOS="Apple"
       fakeMobile
       language="en"
       debug
       buttonStyle="default"
-      lightMode="light"
-      ty='{"type":"form","text":"Sample Text, which is a little big longer,[br]so we can see how the modal behaves here.","url":"https://webhook.site/1003b24b-d825-4152-bdbf-93f0322bf30b","button_label":"Go","fields":[{"type":"label","name":"label_only","label":"Only some random text"},{"type":"text","name":"mytext","label":"Required Text","required":true},{"type":"checkbox","name":"my_check","label":"checkbox label","required":true,"default":"true"},{"type":"radio","name":"my_radio","label":"radio 1","required":false},{"type":"radio","name":"my_radio","label":"radio 2","default":"true","required":false},{"type":"number","name":"my_number","label":"My Number","required":false,"default":"2","placeholder":"5"},{"type":"hidden","name":"my_secret","label":"and some hidden field","default":"secret information"}]}'
+      lightMode="dark"
+      ty='{"type":"form","text":"Sample Text, which is a little big longer,[br]so we can see how the modal behaves here.","url":"https://webhook.site/1003b24b-d825-4152-bdbf-93f0322bf30b","button_label":"Go","fields":[{"type":"text","name":"mytext","label":"Required Text","required":true},{"type":"checkbox","name":"my_check","label":"checkbox label","required":true,"default":"true"},{"type":"label","name":"label_only","label":"Only some random text"},{"type":"radio","name":"my_radio","label":"radio 1","required":false},{"type":"radio","name":"my_radio","label":"radio 2","default":"true","required":false},{"type":"number","name":"my_number","label":"My Number","required":false,"default":"2","placeholder":"5"},{"type":"hidden","name":"my_secret","label":"and some hidden field","default":"secret information"}]}'
     ></add-to-calendar-button>
 
     <div style="width:50px;height:50px;"></div>

@@ -50,10 +50,10 @@ function atcb_generate_ty(host, data) {
   }
   // define default headline
   if (!tyData.headline || tyData.headline === '') {
-    tyData.headline = atcb_translate_hook('thank_you', data); // TODO: Add to i18n strings
+    tyData.headline = atcb_translate_hook('thankyou', data) + '!';
   }
   // prepare content with...
-  let tyContent = '<div class="pro"><p id="ty-success-msg">' + atcb_translate_hook('sent_successfully', data) + '</p><div id="ty-content">'; // TODO: Add to i18n strings
+  let tyContent = '<div class="pro"><p id="ty-success-msg">' + atcb_translate_hook('form.success', data) + '</p><div id="ty-content">';
   // intro text
   if (tyData.text && tyData.text !== '') {
     tyContent += atcb_rewrite_html_elements(tyData.text);
@@ -69,7 +69,7 @@ function atcb_generate_ty(host, data) {
       ${copyIcon}
       ${atcb_translate_hook('label.share.copy', data)}
     </button>
-    </p>`; // TODO: Add to i18n strings
+    </p>`;
   }
   // form, if type = form
   let header = {};
@@ -78,7 +78,7 @@ function atcb_generate_ty(host, data) {
       if (tyData.button_label && tyData.button_label !== '') {
         return tyData.button_label;
       }
-      return atcb_translate_hook('submit', data); // TODO: Add to i18n strings
+      return atcb_translate_hook('submit', data);
     })();
     tyContent += '<form id="' + data.identifier + '-ty-form" class="pro-form">';
     const customForm = atcb_build_form(tyData.fields, data.identifier + '-ty');
@@ -107,7 +107,7 @@ function atcb_generate_ty(host, data) {
     const copyBtn = tyHost.getElementById('atcb-ty-share-copy');
     copyBtn.addEventListener('click', function () {
       atcb_copy_to_clipboard(tyData.url);
-      copyBtn.innerHTML = copiedIcon + atcb_translate_hook('label.share.copied', data); // TODO: Add to i18n strings
+      copyBtn.innerHTML = copiedIcon + atcb_translate_hook('label.share.copied', data) + '!';
       setTimeout(function () {
         copyBtn.innerHTML = copyIcon + atcb_translate_hook('label.share.copy', data);
       }, 3000);
@@ -131,7 +131,7 @@ function atcb_generate_ty(host, data) {
       tyFormSubmit.style.display = 'none';
       let valid = atcb_validate_form(tyHost, tyData.fields);
       if (!valid) {
-        errorMsg.textContent = atcb_translate_hook('label.form.error.required', data);
+        errorMsg.textContent = atcb_translate_hook('form.error.required', data) + '.';
       }
       // submit data
       if (valid) {
@@ -165,7 +165,7 @@ function atcb_generate_ty(host, data) {
           tyHost.getElementById('ty-content').style.display = 'none';
           return;
         }
-        errorMsg.textContent = atcb_translate_hook('label.form.error.sending', data);
+        errorMsg.textContent = atcb_translate_hook('form.error.sending', data) + '.';
       }
       tyForm.classList.add('form-error');
       tyFormSubmitting.style.display = 'none';
@@ -214,8 +214,10 @@ async function atcb_generate_rsvp(host, data, keyboardTrigger = false, inline = 
     return false;
   })();
   if (expired || bookedOut) {
-    data.disabled = true;
     data.blockInteraction = true;
+  }
+  if (data.blockInteraction) {
+    data.disabled = true;
   }
   // if we are not calling the modal directly and do not need to render it inline, we render a button first
   if (!directModal && !inline && triggerEl) {
@@ -232,7 +234,6 @@ async function atcb_generate_rsvp(host, data, keyboardTrigger = false, inline = 
     buttonTrigger.classList.add('atcb-button', 'atcb-click', 'atcb-single');
     if (data.disabled) {
       buttonTrigger.setAttribute('disabled', true);
-      buttonTrigger.style.cssText = 'opacity: .75; cursor: not-allowed; filter: brightness(95%); border-style: dashed; box-shadow: none;';
     }
     if (data.hideTextLabelButton) {
       buttonTrigger.classList.add('atcb-no-text');
@@ -246,7 +247,7 @@ async function atcb_generate_rsvp(host, data, keyboardTrigger = false, inline = 
         return atcb_translate_hook('label.rsvp.expired', data);
       }
       if (bookedOut) {
-        return atcb_translate_hook('label.rsvp.booked_out', data);
+        return atcb_translate_hook('label.rsvp.bookedout', data);
       }
       return atcb_translate_hook('label.rsvp', data);
     })();
@@ -264,22 +265,23 @@ async function atcb_generate_rsvp(host, data, keyboardTrigger = false, inline = 
   let rsvpContent = '<div class="pro">';
   // define default headline
   if (!rsvpData.headline || rsvpData.headline === '') {
-    rsvpData.headline = atcb_translate_hook('rsvp', data); // TODO: Add to i18n strings
+    rsvpData.headline = atcb_translate_hook('label.rsvp', data);
   }
   // show success message, if already sent
-  const sentStatus = localStorage.getItem(data.proKey + '-rsvp-sent');
-  if (sentStatus && sentStatus === 'true') {
+  const sentStatus = localStorage.getItem(data.proKey + '-rsvp-sent') || false;
+  if (sentStatus) {
     rsvpContent += '<div id="rsvp-sent-content">';
-    rsvpContent += '<p>' + atcb_translate_hook('already sent', data) + '</p>'; // TODO: Add to i18n strings
+    rsvpContent += '<p>' + atcb_translate_hook('form.success.already', data) + '</p>';
     // button
-    rsvpContent += '<div id="rsvp-atcb"></div>';
-    rsvpContent += '<button id="pro-form-restart" class="atcb-modal-btn atcb-modal-btn btn-small atcb-modal-btn-border">' + atcb_translate_hook('label.rsvp.restart', data) + '</button>';
+    if (!data.hideButton) rsvpContent += '<div id="rsvp-atcb"></div>';
+    if (data.inlineRsvp) rsvpContent += '<button id="pro-form-restart" ' + (data.disabled && 'disabled') + ' class="atcb-modal-btn atcb-modal-btn btn-small atcb-modal-btn-border">' + atcb_translate_hook('label.rsvp.restart', data) + '</button>';
     rsvpContent += '</div>';
   }
-  rsvpContent += '<div id="rsvp-success-msg-doi">DOI</div>';
-  rsvpContent += '<div id="rsvp-success-msg">Thanks -> Button</div>';
-  rsvpContent += '<div id="rsvp-success-msg-demo">Demo</div>';
-  rsvpContent += '<div id="rsvp-content" ' + (sentStatus && sentStatus === 'true' ? 'style="display:none;"' : '') + '>';
+  rsvpContent += '<div id="rsvp-success-msg">' + atcb_translate_hook('form.success.sent', data) + '</div>';
+  rsvpContent += '<div id="rsvp-success-msg-email">' + atcb_translate_hook('form.success.email', data) + '</div>';
+  rsvpContent += '<div id="rsvp-success-msg-doi">' + atcb_translate_hook('form.success.doi', data) + '</div>';
+  rsvpContent += '<div id="rsvp-success-msg-demo">' + atcb_translate_hook('form.success.demo', data) + '</div>';
+  rsvpContent += '<div id="rsvp-content" ' + (sentStatus ? 'style="display:none;"' : '') + '>';
   // intro text
   if (rsvpData.text && rsvpData.text !== '') {
     rsvpContent += atcb_rewrite_html_elements(rsvpData.text);
@@ -288,44 +290,53 @@ async function atcb_generate_rsvp(host, data, keyboardTrigger = false, inline = 
   // add status, amount, and email fields based on situation
   const staticID = data.proKey || 'demo-rsvp';
   if (rsvpData.initial_confirmation === false) {
+    rsvpContent += '<div id="rsvp-status-group">';
+    rsvpContent += '<p>' + atcb_translate_hook('form.status', data) + '</p>';
     rsvpContent +=
-      '<div class="pro-field"><div class="pro-field-checkradio"><input type="radio" name="' +
+      '<div class="pro-field pro-field-type-radio"><div><input type="radio" name="' +
       staticID +
       '-status" id="' +
       data.identifier +
       '-rsvp-status-confirmed" aria-label="' +
-      atcb_translate_hook('label.form.status.confirmed', data) +
-      '" checked value="confirmed" /><label for="' +
+      atcb_translate_hook('form.status.confirmed', data) +
+      '" checked value="confirmed" ' +
+      (data.disabled && 'disabled') +
+      ' /><label for="' +
       data.identifier +
-      '-rsvp-status-confirmed" class="pro-checkradio-label">' +
-      atcb_translate_hook('label.form.status.confirmed', data) +
-      '</label></div>';
+      '-rsvp-status-confirmed" class="status-confirmed"><span>' +
+      atcb_translate_hook('form.status.confirmed', data) +
+      '</span></label></div>';
     if (rsvpData.maybe_option === true) {
       rsvpContent +=
-        '<div class="pro-field-checkradio"><input type="radio" name="' +
+        '<div><input type="radio" name="' +
         staticID +
         '-status" id="' +
         data.identifier +
         '-rsvp-status-undecided" aria-label="' +
-        atcb_translate_hook('label.form.status.undecided', data) +
-        '" value="undecided" /><label for="' +
+        atcb_translate_hook('form.status.undecided', data) +
+        '" value="undecided" ' +
+        (data.disabled && 'disabled') +
+        ' /><label for="' +
         data.identifier +
-        '-rsvp-status-undecided" class="pro-checkradio-label">' +
-        atcb_translate_hook('label.form.status.undecided', data) +
-        '</label></div>';
+        '-rsvp-status-undecided" class="status-undecided"><span>' +
+        atcb_translate_hook('form.status.undecided', data) +
+        '</span></label></div>';
     }
     rsvpContent +=
-      '<div class="pro-field-checkradio"><input type="radio" name="' +
+      '<div><input type="radio" name="' +
       staticID +
       '-status" id="' +
       data.identifier +
       '-rsvp-status-declined" aria-label="' +
-      atcb_translate_hook('label.form.status.declined', data) +
-      '" value="declined" /><label for="' +
+      atcb_translate_hook('form.status.declined', data) +
+      '" value="declined" ' +
+      (data.disabled && 'disabled') +
+      ' /><label for="' +
       data.identifier +
-      '-rsvp-status-declined" class="pro-checkradio-label">' +
-      atcb_translate_hook('label.form.status.declined', data) +
-      '</label></div></div>';
+      '-rsvp-status-declined" class="status-declined"><span>' +
+      atcb_translate_hook('form.status.declined', data) +
+      '</span></label></div></div>';
+    rsvpContent += '</div>';
   } else {
     hiddenContent += '<input type="hidden" name="' + staticID + '-status" id="' + data.identifier + '-rsvp-status-confirmed" value="confirmed" />';
   }
@@ -333,8 +344,8 @@ async function atcb_generate_rsvp(host, data, keyboardTrigger = false, inline = 
   if (maxAmount === 1) {
     hiddenContent += '<input type="hidden" name="' + staticID + '-amount" id="' + data.identifier + '-rsvp-amount" value="1" />';
   } else {
-    rsvpContent += '<div class="pro-field"><label for="' + data.identifier + '-rsvp-amount">' + atcb_translate_hook('label.form.amount', data) + ' (' + atcb_translate_hook('label.form.amount_max', data) + ': ' + maxAmount + ')<span>*</span></label>';
-    rsvpContent += '<input type="number" name="' + staticID + '-amount" min="1" max="' + maxAmount + '" id="' + data.identifier + '-rsvp-amount" aria-label="' + atcb_translate_hook('label.form.amount', data) + '" value="1" /></div>';
+    rsvpContent += '<div class="pro-field"><label for="' + data.identifier + '-rsvp-amount">' + atcb_translate_hook('form.amount', data) + ' (' + atcb_translate_hook('form.max', data) + ' ' + maxAmount + ')<span>*</span></label>';
+    rsvpContent += '<input type="number" name="' + staticID + '-amount" min="1" max="' + maxAmount + '" id="' + data.identifier + '-rsvp-amount" ' + (data.disabled && 'disabled') + ' aria-label="' + atcb_translate_hook('form.amount', data) + '" value="1" /></div>';
   }
   const attendee = (function () {
     if (data.attendee && data.attendee !== '') {
@@ -349,17 +360,21 @@ async function atcb_generate_rsvp(host, data, keyboardTrigger = false, inline = 
   if (attendee !== '') {
     hiddenContent += '<input type="hidden" name="' + staticID + '-email" id="' + data.identifier + '-rsvp-email" value="' + attendee + '" />';
   } else {
-    rsvpContent += '<div class="pro-field"><label for="' + data.identifier + '-rsvp-email">' + atcb_translate_hook('label.form.email', data) + '<span>*</span></label>';
-    rsvpContent += '<input type="email" name="' + staticID + '-email" id="' + data.identifier + '-rsvp-email" aria-label="' + atcb_translate_hook('label.form.email', data) + '" value="" /></div>';
+    rsvpContent += '<div class="pro-field"><label for="' + data.identifier + '-rsvp-email">' + atcb_translate_hook('form.email', data) + '<span>*</span></label>';
+    rsvpContent += '<input type="email" name="' + staticID + '-email" id="' + data.identifier + '-rsvp-email" aria-label="' + atcb_translate_hook('form.email', data) + '" value="" /></div>';
   }
   // add custom fields
-  const customForm = atcb_build_form(rsvpData.fields, data.identifier + '-rsvp');
+  const customForm = atcb_build_form(rsvpData.fields, data.identifier + '-rsvp', data.disabled);
   rsvpData.fields = customForm.fields;
   rsvpContent += customForm.html;
   rsvpContent += hiddenContent;
   rsvpContent += '<p id="submit-error"></p>';
   rsvpContent +=
-    '<p class="pro-pt"><button type="submit" id="pro-form-submit" class="atcb-modal-btn atcb-modal-btn-primary atcb-modal-btn-border">' + atcb_translate_hook('submit', data) + '</button><span id="pro-form-submitting" class="pro-waiting"><span>.</span><span>.</span><span>.</span></span></p>';
+    '<p class="pro-pt"><button type="submit" id="pro-form-submit" ' +
+    (data.disabled && 'disabled') +
+    ' class="atcb-modal-btn atcb-modal-btn-primary atcb-modal-btn-border">' +
+    atcb_translate_hook('submit', data) +
+    '</button><span id="pro-form-submitting" class="pro-waiting"><span>.</span><span>.</span><span>.</span></span></p>';
   rsvpContent += '</form>';
   rsvpContent += '</div></div>';
 
@@ -372,26 +387,68 @@ async function atcb_generate_rsvp(host, data, keyboardTrigger = false, inline = 
   })();
   if (!inline || directModal) {
     atcb_set_fullsize(rsvpHost.querySelector('.atcb-modal-host-initialized'));
-    atcb_create_modal(rsvpHost, data, undefined, rsvpData.headline, rsvpContent, [], [], keyboardTrigger, {}, false);
+    atcb_create_modal(
+      rsvpHost,
+      data,
+      undefined,
+      rsvpData.headline,
+      rsvpContent,
+      [
+        { type: 'none', label: atcb_translate_hook('label.rsvp.restart', data), small: true, primary: true, id: 'pro-form-restart' },
+        { type: 'close', label: atcb_translate_hook('close', data), small: true, id: 'modal-btn-close' },
+        { type: 'close', label: atcb_translate_hook('cancel', data), small: true, id: 'modal-btn-cancel' },
+      ],
+      [],
+      keyboardTrigger,
+      {},
+      false,
+    );
   } else {
     const rsvpInlineWrapper = document.createElement('div');
-    rsvpInlineWrapper.classList.add('rsvp-wrapper');
+    rsvpInlineWrapper.classList.add('atcb-modal-box', 'rsvp-inline-wrapper');
     if (data.rtl) {
       rsvpInlineWrapper.classList.add('atcb-rtl');
     }
     triggerEl.append(rsvpInlineWrapper);
-    rsvpInlineWrapper.innerHTML = rsvpContent;
+    const rsvpInlineHeadline = document.createElement('div');
+    rsvpInlineHeadline.classList.add('atcb-modal-headline');
+    rsvpInlineWrapper.append(rsvpInlineHeadline);
+    rsvpInlineHeadline.innerHTML = rsvpData.headline;
+    const rsvpInlineContent = document.createElement('div');
+    rsvpInlineContent.classList.add('atcb-modal-content');
+    rsvpInlineWrapper.append(rsvpInlineContent);
+    if (expired) {
+      rsvpInlineContent.innerHTML = '<div class="pro"><p>' + atcb_translate_hook('label.rsvp.expired', data) + '</p></div>';
+      return;
+    } else if (bookedOut) {
+      rsvpInlineContent.innerHTML = '<div class="pro"><p>' + atcb_translate_hook('label.rsvp.bookedout', data) + '</p></div>';
+      return;
+    } else {
+      rsvpInlineContent.innerHTML = rsvpContent;
+    }
   }
+  const closeBtn = rsvpHost.getElementById('modal-btn-close');
+  const cancelBtn = rsvpHost.getElementById('modal-btn-cancel');
+  const restartBtn = rsvpHost.getElementById('pro-form-restart');
   atcb_log_event('openRSVP', data.identifier, data.identifier);
   if (data.debug) {
     console.log('RSVP form for "' + data.identifier + '" created');
   }
   // if we are on the already-sent-screen, we render an atcb if not disabled
-  if (sentStatus && sentStatus === 'true') {
+  if (sentStatus) {
+    if (cancelBtn) cancelBtn.style.display = 'none';
     const atcbHost = rsvpHost.getElementById('rsvp-atcb');
     if (atcbHost && !data.hideButton) {
-      atcb_generate_button(host, atcbHost, data);
+      // make a copy of the data
+      const atcbData = JSON.parse(JSON.stringify(data));
+      // force individual buttons without label
+      atcbData.hideTextLabelButton = true;
+      atcbData.buttonsList = true;
+      atcb_generate_button(host, atcbHost, atcbData);
     }
+  } else {
+    if (closeBtn) closeBtn.style.display = 'none';
+    if (restartBtn) restartBtn.style.display = 'none';
   }
   // validation and processing of the form
   // validate and submit
@@ -417,7 +474,7 @@ async function atcb_generate_rsvp(host, data, keyboardTrigger = false, inline = 
       valid = false;
     }
     if (!valid) {
-      errorMsg.textContent = atcb_translate_hook('label.form.error.required', data);
+      errorMsg.textContent = atcb_translate_hook('form.error.required', data) + '.';
     }
     // submit data
     if (valid) {
@@ -426,6 +483,8 @@ async function atcb_generate_rsvp(host, data, keyboardTrigger = false, inline = 
         rsvpHost.getElementById('rsvp-success-msg-demo').style.display = 'block';
         rsvpHost.getElementById('rsvp-content').style.display = 'none';
         atcb_log_event('successRSVP', data.identifier, data.identifier);
+        if (cancelBtn) cancelBtn.style.display = 'none';
+        if (closeBtn) closeBtn.style.display = 'block';
         localStorage.setItem(data.proKey + '-rsvp-sent', true); // TODO: Remove
         return;
       }
@@ -465,28 +524,31 @@ async function atcb_generate_rsvp(host, data, keyboardTrigger = false, inline = 
       }
       const request = await sendPostRequest('https://rsvp.add-to-calendar-pro.com/24586219-9910-41fe-9b59-df53de9db7af', bodyData, { rsvp: true });
       if (request === 'doi' || request === true) {
+        rsvpHost.getElementById('rsvp-success-msg').style.display = 'block';
         if (request === 'doi') {
           rsvpHost.getElementById('rsvp-success-msg-doi').style.display = 'block';
         } else {
-          rsvpHost.getElementById('rsvp-success-msg').style.display = 'block';
+          rsvpHost.getElementById('rsvp-success-msg-email').style.display = 'block';
         }
         rsvpHost.getElementById('rsvp-content').style.display = 'none';
+        if (cancelBtn) cancelBtn.style.display = 'none';
+        if (closeBtn) closeBtn.style.display = 'block';
         atcb_log_event('successRSVP', data.identifier, data.identifier);
         localStorage.setItem(data.proKey + '-rsvp-sent', true);
         return;
       }
       if (request.error && request.error === 2) {
-        errorMsg.textContent = atcb_translate_hook('label.form.error.email', data);
+        errorMsg.textContent = atcb_translate_hook('form.error.email', data) + '.';
       } else if (request.error && request.error === 5) {
-        errorMsg.textContent = atcb_translate_hook('label.rsvp.expired', data);
+        errorMsg.textContent = atcb_translate_hook('label.rsvp.expired', data) + '.';
       } else if (request.error && request.error === 6) {
         if (amount > 1) {
-          errorMsg.textContent = atcb_translate_hook('label.rsvp.booked_out_multiple', data);
+          errorMsg.textContent = atcb_translate_hook('form.error.bookedoutmany', data) + '.';
         } else {
-          errorMsg.textContent = atcb_translate_hook('label.rsvp.booked_out', data);
+          errorMsg.textContent = atcb_translate_hook('label.rsvp.bookedout', data) + '.';
         }
       } else {
-        errorMsg.textContent = atcb_translate_hook('label.form.error.sending', data);
+        errorMsg.textContent = atcb_translate_hook('form.error.sending', data) + '.';
       }
     }
     rsvpForm.classList.add('form-error');
@@ -504,6 +566,9 @@ async function atcb_generate_rsvp(host, data, keyboardTrigger = false, inline = 
     e.preventDefault();
     rsvpHost.getElementById('rsvp-sent-content').style.display = 'none';
     rsvpHost.getElementById('rsvp-content').style.display = 'block';
+    if (closeBtn) closeBtn.style.display = 'none';
+    if (restartBtn) restartBtn.style.display = 'none';
+    if (cancelBtn) cancelBtn.style.display = 'block';
   });
   rsvpRestart.addEventListener('keyup', function (event) {
     if (event.key === 'Enter') {
@@ -514,7 +579,7 @@ async function atcb_generate_rsvp(host, data, keyboardTrigger = false, inline = 
 }
 
 // SHARED FORM FUNCTIONS
-function atcb_build_form(fields, identifier = '') {
+function atcb_build_form(fields, identifier = '', disabled = false) {
   /*!
    *  @preserve
    *  PER LICENSE AGREEMENT, YOU ARE NOT ALLOWED TO REMOVE OR CHANGE THIS FUNCTION!
@@ -541,16 +606,16 @@ function atcb_build_form(fields, identifier = '') {
       fieldHtml += '</div>';
     }
     if (field.type !== 'hidden' && i === n) {
-      fieldHtml += '<div class="pro-field' + (field.type === 'checkbox' ? ' pro-field-checkradio' : '') + '">';
+      fieldHtml += '<div class="pro-field' + ' pro-field-type-' + field.type + '">';
     }
     if (field.type === 'label') {
       fieldHtml += '<p>' + fieldLabel + '</p>';
     } else {
       if (field.type === 'radio') {
-        fieldHtml += '<div class="pro-field-checkradio">';
+        fieldHtml += '<div>';
       }
       // add label
-      if ((field.type === 'text' || field.type === 'number') && fieldLabel !== '') {
+      if ((field.type === 'text' || field.type === 'number') && (fieldLabel !== '' || field.required)) {
         fieldHtml += '<label for="' + field.fieldId + '">' + fieldLabel + (field.required ? '<span>*</span>' : '') + '</label>';
       }
       // add input
@@ -569,15 +634,17 @@ function atcb_build_form(fields, identifier = '') {
           field.fieldId +
           '" placeholder="' +
           fieldPlaceholder +
-          '" aria-label="' +
+          '" ' +
+          (disabled && 'disabled') +
+          ' aria-label="' +
           fieldLabel +
           '" value="' +
           fieldValue +
           '" />';
       }
       // add label for checkboxes and radio buttons
-      if ((field.type === 'checkbox' || field.type === 'radio') && fieldLabel !== '') {
-        fieldHtml += '<label for="' + field.fieldId + '" class="pro-checkradio-label">' + fieldLabel + (field.required ? '<span>*</span>' : '') + '</label>';
+      if ((field.type === 'checkbox' || field.type === 'radio') && (fieldLabel !== '' || field.required)) {
+        fieldHtml += '<label for="' + field.fieldId + '">' + fieldLabel + (field.required ? '<span>*</span>' : '') + '</label>';
       }
       if (field.type === 'radio') {
         fieldHtml += '</div>';
