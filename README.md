@@ -162,13 +162,14 @@ You can then configure the button by simply adding the options as attributes to 
 
 Mind that for auto-generating rich snippets, a location would be mandatory as well.
 
-A time zone is not required, but recommended.
+Calendar type options and time zone information are not required, but recommended.
 
 ```html
 <add-to-calendar-button
   name="Add the title of your event"
   startDate="2022-02-21"
   options="['Google']"
+  timeZone="America/Los_Angeles"
 >
 </add-to-calendar-button>
 ```

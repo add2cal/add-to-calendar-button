@@ -12,7 +12,7 @@
  */
 
 import { atcb_set_fullsize, atcb_rewrite_html_elements, atcb_copy_to_clipboard, atcb_secure_content, atcb_set_sizes, atcb_validEmail } from './atcb-util.js';
-import { atcb_generate_button, atcb_generate_modal_host, atcb_create_modal, atcb_generate_label } from './atcb-generate.js';
+import { atcb_generate_button, atcb_generate_modal_host, atcb_create_modal, atcb_generate_label, atcb_create_atcbl } from './atcb-generate.js';
 import { atcb_translate_hook } from './atcb-i18n.js';
 import { atcb_log_event } from './atcb-event.js';
 import { atcb_decorate_data } from './atcb-decorate.js';
@@ -38,7 +38,7 @@ function atcb_generate_ty(host, data) {
    *  PER LICENSE AGREEMENT, YOU ARE NOT ALLOWED TO REMOVE OR CHANGE THIS FUNCTION!
    */
   if ((!data.proKey || data.proKey === '') && !window.location.hostname.match(/^(localhost|.*\.add-to-calendar-pro.com)$/)) {
-    //return;
+    return;
   }
   const tyHost = atcb_generate_modal_host(host, data);
   atcb_set_fullsize(tyHost.querySelector('.atcb-modal-host-initialized'));
@@ -277,9 +277,7 @@ async function atcb_generate_rsvp(host, data, keyboardTrigger = false, inline = 
     if (data.inlineRsvp) rsvpContent += '<button id="pro-form-restart" ' + (data.disabled && 'disabled') + ' class="atcb-modal-btn atcb-modal-btn btn-small atcb-modal-btn-border">' + atcb_translate_hook('label.rsvp.restart', data) + '</button>';
     rsvpContent += '</div>';
   }
-  rsvpContent += '<div id="rsvp-success-msg">' + atcb_translate_hook('form.success.sent', data) + '</div>';
-  rsvpContent += '<div id="rsvp-success-msg-email">' + atcb_translate_hook('form.success.email', data) + '</div>';
-  rsvpContent += '<div id="rsvp-success-msg-doi">' + atcb_translate_hook('form.success.doi', data) + '</div>';
+  rsvpContent += '<div id="rsvp-success-msg"><p>' + atcb_translate_hook('form.success.sent', data) + '</p><p id="rsvp-success-msg-email">' + atcb_translate_hook('form.success.email', data) + '</p><p id="rsvp-success-msg-doi">' + atcb_translate_hook('form.success.doi', data) + '</p></div>';
   rsvpContent += '<div id="rsvp-success-msg-demo">' + atcb_translate_hook('form.success.demo', data) + '</div>';
   rsvpContent += '<div id="rsvp-content" ' + (sentStatus ? 'style="display:none;"' : '') + '>';
   // intro text
@@ -417,6 +415,10 @@ async function atcb_generate_rsvp(host, data, keyboardTrigger = false, inline = 
     const rsvpInlineContent = document.createElement('div');
     rsvpInlineContent.classList.add('atcb-modal-content');
     rsvpInlineWrapper.append(rsvpInlineContent);
+    if (!data.hideBranding) {
+      const atcbL = atcb_create_atcbl(rsvpHost, false, true);
+      rsvpInlineWrapper.append(atcbL);
+    }
     if (expired) {
       rsvpInlineContent.innerHTML = '<div class="pro"><p>' + atcb_translate_hook('label.rsvp.expired', data) + '</p></div>';
       return;
@@ -443,6 +445,7 @@ async function atcb_generate_rsvp(host, data, keyboardTrigger = false, inline = 
       const atcbData = JSON.parse(JSON.stringify(data));
       // force individual buttons without label
       atcbData.hideTextLabelButton = true;
+      atcbData.hideIconButton = false;
       atcbData.buttonsList = true;
       atcb_generate_button(host, atcbHost, atcbData);
     }
@@ -485,14 +488,13 @@ async function atcb_generate_rsvp(host, data, keyboardTrigger = false, inline = 
         atcb_log_event('successRSVP', data.identifier, data.identifier);
         if (cancelBtn) cancelBtn.style.display = 'none';
         if (closeBtn) closeBtn.style.display = 'block';
-        localStorage.setItem(data.proKey + '-rsvp-sent', true); // TODO: Remove
         return;
       }
       const bodyData = [];
       bodyData.push({ name: 'prokey', value: data.proKey });
       bodyData.push({ name: 'language', value: data.language });
-      const statusVal = rsvpHost.querySelector('[name="' + data.proKey + '-status"]:checked').value;
-      bodyData.push({ name: 'status', value: statusVal });
+      const statusValEl = rsvpHost.querySelector('[name="' + data.proKey + '-status"]:checked');
+      bodyData.push({ name: 'status', value: statusValEl ? statusValEl.value : 'confirmed' });
       bodyData.push({ name: 'amount', value: amount });
       bodyData.push({ name: 'email', value: rsvpHost.getElementById(data.identifier + '-rsvp-email').value });
       const bodyData_payload = {};

@@ -587,8 +587,7 @@ definePageMeta({
             <tr id="options">
               <th scope="row">options</th>
               <td>
-                <em>Array</em><br /><br /><span class="font-semibold text-red-700">{{ $t('content.config.required') }}</span
-                ><br /><br /><span class="label block">{{ $t('content.config.options') }}:</span>Apple, Google, iCal, Microsoft365, MicrosoftTeams, Outlook.com, Yahoo
+                <em>Array</em><br /><br /><span class="label block">{{ $t('content.config.options') }}:</span>Apple, Google, iCal, Microsoft365, MicrosoftTeams, Outlook.com, Yahoo
               </td>
               <td v-if="locale=='en'">
                 Array of options to use in the list.<br /><br />

@@ -575,15 +575,16 @@ async function atcb_action(inputData, triggerElement, keyboardTrigger = false) {
     // if all is fine, ...
     // ... trigger RSVP form, or ...
     if (typeof atcb_generate_rsvp === 'function' && data.rsvp && Object.keys(data.rsvp).length > 0) {
-      atcb_generate_rsvp(host, data, keyboardTrigger, false, true, triggerElement);
-    }
-    // ... trigger link at the oneOption case, or ...
-    if (oneOption) {
-      atcb_generate_links(host.shadowRoot, data.options[0], data, 'all', keyboardTrigger);
-      atcb_log_event('openSingletonLink', data.identifier, data.identifier);
+      atcb_generate_rsvp(host.shadowRoot, data, keyboardTrigger, false, true, triggerElement);
     } else {
-      // ... open the options list
-      atcb_toggle(host.shadowRoot, 'open', data, triggerElement, keyboardTrigger);
+      // ... trigger link at the oneOption case, or ...
+      if (oneOption) {
+        atcb_generate_links(host.shadowRoot, data.options[0], data, 'all', keyboardTrigger);
+        atcb_log_event('openSingletonLink', data.identifier, data.identifier);
+      } else {
+        // ... open the options list
+        atcb_toggle(host.shadowRoot, 'open', data, triggerElement, keyboardTrigger);
+      }
     }
   }
   atcb_init_log(data.proKey, data.debug);
@@ -633,10 +634,12 @@ async function atcb_get_pro_data(licenseKey, el = null, directData = {}) {
   if (licenseKey && licenseKey !== '') {
     // Try to read data from server and log error if not possible
     try {
-      //const response = await fetch('https://event.caldn.net/' + licenseKey + '/config.json');
-      const response = await fetch('https://caldn.blob.core.windows.net/eventdata/' + licenseKey + '/config.json');
+      const response = await fetch('https://event.caldn.net/' + licenseKey + '/config.json');
       if (response.ok) {
         const data = await response.json();
+        if (!data.name || data.name === '') {
+          throw new Error('Not possible to read proKey config from server...');
+        }
         const dataOverrides = el ? atcb_read_attributes(el, atcbWcProParams) : directData;
         atcbWcProParams.forEach((key) => {
           if (Object.prototype.hasOwnProperty.call(dataOverrides, key)) {

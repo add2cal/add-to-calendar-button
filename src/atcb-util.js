@@ -318,13 +318,11 @@ function atcb_position_list(host, trigger, list, blockUpwards = false, blockDown
   list.style.position = 'absolute';
   list.style.display = 'block';
   // adjust branding message, if set
-  const atcbL = host.querySelector('#add-to-calendar-button-reference');
+  const atcbL = host.querySelector('#atcb-reference');
   if (atcbL) {
     if (originalTrigger.classList.contains('atcb-dropup')) {
       originalTrigger.parentNode.parentNode.after(atcbL);
-      atcbL.style.padding = '5px 15px';
-      atcbL.style.position = 'absolute';
-      atcbL.style.left = btnDim.left + 'px';
+      atcbL.classList.add('atcb-dropup');
     }
   }
 }

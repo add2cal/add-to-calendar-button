@@ -138,7 +138,7 @@ function atcb_decorate_data_options(data) {
     if ((atcbIsAndroid() || data.fakeMobile || data.fakeAndroid) && data.optionsMobile && data.optionsMobile.length > 0) {
       return data.optionsMobile;
     }
-    return data.options;
+    return data.options || ['ical'];
   })();
   // iterrate over the options and generate the new clean arrays
   const newOptions = [];

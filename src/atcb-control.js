@@ -198,7 +198,7 @@ function atcb_close(host, keyboardTrigger = false) {
     // remove dropdowns, modals, and bg overlays (should only be one of each at max)
     Array.from(host.querySelectorAll('.atcb-list-wrapper'))
       .concat(Array.from(host.querySelectorAll('.atcb-list')))
-      .concat(Array.from(host.querySelectorAll('#add-to-calendar-button-reference')))
+      .concat(Array.from(host.querySelectorAll('#atcb-reference')))
       .concat(Array.from(host.querySelectorAll('#atcb-bgoverlay')))
       .forEach((el) => el.remove());
     // show original button again (forceOverlay case)

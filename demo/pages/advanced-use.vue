@@ -162,7 +162,7 @@ onUnmounted(() => {
         </div>
         <div class="block w-full justify-between pt-4 md:flex">
           <div class="flex w-full flex-none justify-center p-6 pt-8 md:w-[300px]">
-            <add-to-calendar-button :name="$t('demo_data.name')" :startDate="defaultDate" options="'Apple','Google','iCal'" buttonStyle="flat" hideIconList buttonsList hideBackground size="5" :label="$t('demo_data.name_custom_3')" lightMode="bodyScheme" :language="locale"></add-to-calendar-button>
+            <add-to-calendar-button :name="$t('demo_data.name')" :startDate="defaultDate" options="'Apple','Google','iCal'" buttonStyle="flat" hideIconList buttonsList hideBackground :label="$t('demo_data.name_custom_3')" lightMode="bodyScheme" :language="locale"></add-to-calendar-button>
           </div>
           <div class="flex-1 overflow-x-auto">
             <LazyCodeBlock class="line-numbers">
@@ -175,7 +175,6 @@ onUnmounted(() => {
   hideIconList
   buttonsList
   hideBackground
-  size="5"
   label="{{ $t('demo_data.name_custom_3') }}"
   lightMode="bodyScheme"{{ defaultLang }}
 &gt;&lt;/add-to-calendar-button&gt;

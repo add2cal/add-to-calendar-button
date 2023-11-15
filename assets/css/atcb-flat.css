@@ -185,7 +185,7 @@
 }
 
 .atcb-button:not(.atcb-no-text, .atcb-modal-style, .atcb-dropoverlay, .atcb-single) {
-  min-width: calc(11em - 2 * var(--btn-padding-x));
+  min-width: calc(11.6em - 2 * var(--btn-padding-x));
 }
 
 .atcb-button.atcb-no-text {
@@ -648,6 +648,7 @@ a.atcb-modal-btn:not([disabled]):hover {
   align-items: center;
   display: flex;
   flex-direction: column;
+  flex-shrink: 0;
 }
 
 .atcb-subevent-btn:hover .atcb-date-btn-left {
@@ -732,6 +733,11 @@ a.atcb-modal-btn:not([disabled]):hover {
   color: var(--date-btn-text-secondary);
 }
 
+.atcb-date-btn-content.atcb-date-btn-cancelled {
+  color: var(--form-error);
+  font-weight: bold;
+}
+
 .atcb-date-btn-content-location {
   overflow: hidden;
   display: -webkit-box;
@@ -744,7 +750,7 @@ a.atcb-modal-btn:not([disabled]):hover {
   display: inline-block;
   height: 0.8em;
   width: 1.3em;
-  flex: 0 0 1.3em;
+  flex-shrink: 0;
 }
 
 .atcb-rtl .atcb-date-btn-content-icon {
@@ -921,16 +927,16 @@ a.atcb-modal-btn:not([disabled]):hover {
   width: fit-content;
 }
 
-.pro a,
-.pro a:visited,
-.pro a:active {
+.pro a:not(.atcb-modal-btn),
+.pro a:not(.atcb-modal-btn):visited,
+.pro a:not(.atcb-modal-btn):active {
   color: var(--modal-btn-text);
   text-decoration: underline;
   text-decoration-thickness: 2px;
   text-decoration-color: var(--accent-color);
 }
 
-.pro a:hover {
+.pro a:not(.atcb-modal-btn):hover {
   color: var(--accent-color);
   text-decoration: none;
 }
@@ -1158,12 +1164,26 @@ a.atcb-modal-btn:not([disabled]):hover {
 #rsvp-success-msg-email,
 #rsvp-success-msg-doi,
 #rsvp-success-msg-demo {
-  color: var(--form-success);
   display: none;
   font-weight: bold;
   line-height: 1.6em;
-  padding: 1.5em 0;
+  padding-top: 0.5em;
   text-align: center;
+}
+
+#ty-success-msg,
+#rsvp-success-msg,
+#rsvp-success-msg-demo {
+  padding: 1.5em 0;
+}
+
+#rsvp-success-msg-email,
+#rsvp-success-msg-demo {
+  color: var(--form-success);
+}
+
+#rsvp-success-msg-doi {
+  color: var(--form-error);
 }
 
 #pro-form-submit {
@@ -1269,4 +1289,56 @@ a.atcb-modal-btn:not([disabled]):hover {
   margin-right: .5em;
   stroke: currentcolor;
   width: auto;
+}
+
+/******************************
+ * PRO Reference
+ */
+
+ #atcb-reference {
+  box-sizing: border-box;
+  filter: drop-shadow(0 0 3px rgba(255 255 255 / 80%));
+  height: auto;
+  padding: 10px 5px;
+  text-align: center;
+  transform: translate3d(0, 0, 0);
+  width: 100%;
+  white-space: nowrap;
+  z-index: 15000000;
+}
+
+#atcb-reference.atcb-dropup {
+  position: absolute;
+}
+
+/* :host-context(html.atcb-dark):host(.atcb-bodyScheme) #atcb-reference,
+:host-context(body.atcb-dark):host(.atcb-bodyScheme) #atcb-reference, */
+:host(.atcb-dark) #atcb-reference {
+  filter: drop-shadow(0 0 5px #000);
+}
+
+#atcb-reference a,
+#atcb-reference a:active,
+#atcb-reference a:visited {
+  color: var(--list-hover-text);
+  font-family: 'Paytone One', 'Arial Black', 'Helvetica Bold', 'Tahoma Bold', Impact, 'Trebuchet MS Bold', Inter, sans-serif;
+  font-size: 10px;
+  opacity: .4;
+  text-decoration: none;
+}
+
+#atcb-reference.fixed-ref a {
+  opacity: .6;
+}
+
+#atcb-reference a:hover {
+  opacity: .9;
+  text-decoration: none;
+}
+
+#atcb-reference.fixed-ref {
+  position: fixed;
+  bottom: 15px;
+  right: 30px;
+  text-align: right;
 }

@@ -21,11 +21,6 @@ function atcb_check_required(data) {
     data.validationError = null;
   }
   // in this first step, we only check for the bare minimum, so we can abort early on really broken setups. We will do further validation later.
-  // check for at least 1 option
-  if (!data.options || data.options.length < 1) {
-    data.validationError = 'Add to Calendar Button generation failed: no valid options set';
-    return false;
-  }
   // check for min required data (without "options")
   // name is always required on top level (in the multi-date setup this would be the name of the event series)
   if (!data.name || data.name === '') {
@@ -117,6 +112,10 @@ function atcb_validate_buttonStyle(data, msgPrefix) {
     data.validationError = msgPrefix + ' failed: buttonStyle "custom" selected, but no customCss file provided';
     return false;
   }
+  if (data.rsvp && (data.buttonStyle === 'date' || data.buttonStyle === 'none')) {
+    data.validationError = msgPrefix + ' failed: buttonStyle ' + data.buttonStyle + ' is not compatible with the RSVP functionality';
+    return false;
+  }
   return true;
 }
 
@@ -149,12 +148,7 @@ function atcb_validate_updated(data, msgPrefix) {
 
 // validate options
 function atcb_validate_options(data, msgPrefix) {
-  // we check for valid options again, since they might have been changed during decoration
-  if (data.options === null || data.options.length < 1) {
-    data.validationError = msgPrefix + ' failed: no valid options available';
-    return false;
-  }
-  // we also double-check whether options are valid
+  // we double-check whether options are valid
   if (
     !data.options.every(function (option) {
       if (!atcbOptions.includes(option)) {

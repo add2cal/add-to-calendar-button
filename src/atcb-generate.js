@@ -360,19 +360,20 @@ function atcb_generate_bg_overlay(host, trigger = '', modal = false, darken = tr
 }
 
 // SMALL LOGO
-function atcb_create_atcbl(host, atList = true) {
+function atcb_create_atcbl(host, atList = true, returnEl = false) {
   const atcbL = document.createElement('div');
-  atcbL.id = 'add-to-calendar-button-reference';
-  atcbL.style.cssText = 'width: 130px; padding: 5px; height: auto; opacity: .8; transform: translate3d(0, 0, 0); z-index: 15000000; stroke-width: 4; stroke-linecap: round; stroke: #fff; filter: drop-shadow(0px 0px 2px #fff);';
+  atcbL.id = 'atcb-reference';
   setTimeout(() => {
-    atcbL.innerHTML = '<a href="https://add-to-calendar-pro.com" target="_blank" rel="noopener">' + atcbIcon['atcb'] + '</a>';
+    atcbL.innerHTML = '<a href="https://add-to-calendar-pro.com" target="_blank" rel="noopener">Add-to-Calendar-PRO.com</a>';
   }, 500);
   if (atList) {
     host.querySelector('.atcb-initialized .atcb-list-wrapper').append(atcbL);
+  } else if (returnEl) {
+    return atcbL;
   } else {
     if (window.innerHeight > 1000 || window.innerWidth > 1000) {
       host.append(atcbL);
-      atcbL.style.cssText += 'position: fixed; bottom: 15px; right: 30px;';
+      atcbL.classList.add('fixed-ref');
     }
   }
 }
@@ -682,7 +683,7 @@ function atcb_generate_date_button(data, parent, subEvent = 'all') {
         } else {
           timeString = startDateInfo.toLocaleString(data.language, formatOptionsStart.DateTimeLong);
         }
-        if (data.language == 'en') {
+        if (data.language === 'en') {
           timeString = timeString.replace(/:00/, '');
         }
         timeBlocks.push(timeString);
@@ -691,7 +692,7 @@ function atcb_generate_date_button(data, parent, subEvent = 'all') {
         }
         timeBlocks.push('-');
         timeString = endDateInfo.toLocaleTimeString(data.language, formatOptionsEnd.Time);
-        if (data.language == 'en') {
+        if (data.language === 'en') {
           timeString = timeString.replace(/:00/, '');
         }
         timeBlocks.push(timeString);
@@ -711,7 +712,7 @@ function atcb_generate_date_button(data, parent, subEvent = 'all') {
         } else {
           timeString = startDateInfo.toLocaleString(data.language, formatOptionsStart.DateTimeLong);
         }
-        if (data.language == 'en') {
+        if (data.language === 'en') {
           timeString = timeString.replace(/:00/, '');
         }
         timeBlocks.push(timeString);
@@ -725,7 +726,7 @@ function atcb_generate_date_button(data, parent, subEvent = 'all') {
         timeBlocks.push(endDateInfo.toLocaleDateString(data.language, formatOptionsEnd.DateLong));
       } else {
         let timeString = endDateInfo.toLocaleString(data.language, formatOptionsEnd.DateTimeLong);
-        if (data.language == 'en') {
+        if (data.language === 'en') {
           timeString = timeString.replace(/:00/, '');
         }
         timeBlocks.push(timeString);
@@ -813,27 +814,26 @@ function atcb_generate_date_button(data, parent, subEvent = 'all') {
   }
   btnDetails.append(btnHeadline);
   // location line
-  if ((data.dates[`${subEvent}`].location != null && data.dates[`${subEvent}`].location != '' && !data.dates[`${subEvent}`].onlineEvent) || cancelledInfo != '') {
+  if ((data.dates[`${subEvent}`].location && data.dates[`${subEvent}`].location !== '' && !data.dates[`${subEvent}`].onlineEvent) || cancelledInfo !== '') {
     const btnLocation = document.createElement('div');
     btnLocation.classList.add('atcb-date-btn-content');
     btnDetails.append(btnLocation);
     if (cancelledInfo != '') {
+      btnLocation.classList.add('atcb-date-btn-cancelled');
       btnLocation.textContent = cancelledInfo;
-      btnLocation.style.fontWeight = '600';
-      btnLocation.style.color = '#9c1a23';
     } else {
-      btnLocation.classList.add('atcb-date-btn-content-location');
       const btnLocationIcon = document.createElement('span');
       btnLocationIcon.classList.add('atcb-date-btn-content-icon');
       btnLocationIcon.innerHTML = atcbIcon['location'];
       btnLocation.append(btnLocationIcon);
       const btnLocationText = document.createElement('span');
+      btnLocationText.classList.add('atcb-date-btn-content-location');
       btnLocationText.textContent = data.dates[`${subEvent}`].location;
       btnLocation.append(btnLocationText);
     }
   } else {
     // in case we would not show date details as well, show description instead
-    if (data.dates[`${subEvent}`].description != '' && fullTimeInfo.length == 0 && (data.recurrence == null || data.recurrence == '')) {
+    if (data.dates[`${subEvent}`].description !== '' && fullTimeInfo.length === 0 && (!data.recurrence || data.recurrence === '')) {
       const btnDescription = document.createElement('div');
       btnDescription.classList.add('atcb-date-btn-content');
       btnDescription.textContent = data.dates[`${subEvent}`].description;
