@@ -914,7 +914,8 @@ onUnmounted(() => {
           </p>
           <p>
             Theoretisch muss dieses Element kein Button sein. Wir raten allerdings stark dazu, da es die User Experience wesentlich positiv beeinflusst (bspw. durch die Unterstützung von Tastatur-Navigation, etc.).<br />
-            Wenn du kein Button-Element nutzt, öffnet sich die Kalendar-Liste als Modal. Gibt es ein Button-Element kannst du auch den Overlay-Dropdown-Stil über die Option listStyle wählen (beachte, dass die übrigen Optionen mit atcb_action nicht unterstützt werden). Der Modal-Stil ist der Standard und wird auch empfohlen.
+            Wenn du kein Button-Element nutzt, öffnet sich die Kalendar-Liste als Modal. Gibt es ein Button-Element kannst du auch den Overlay-Dropdown-Stil über die Option listStyle wählen (beachte, dass die übrigen Optionen mit atcb_action nicht unterstützt werden). Der Modal-Stil ist der Standard
+            und wird auch empfohlen.
           </p>
           <h3 class="mb-3 mt-8">{{ $t('content.guide.step1') }}: Import</h3>
           <p>
@@ -980,9 +981,7 @@ onUnmounted(() => {
             However, if you include it as a ES module, this behavior usually changes.<br />
             Besides some JavaScript frameworks offering other tricks to load components asynchronously, you can try the following to optimize the loading behavior and bundle size.
           </p>
-          <p>
-            Unfortunately, we cannot offer any easy tree-shaking solution, as this contradicts the way we are building the script - being a flexible web component, which can adapt on runtime.
-          </p>
+          <p>Unfortunately, we cannot offer any easy tree-shaking solution, as this contradicts the way we are building the script - being a flexible web component, which can adapt on runtime.</p>
           <p>
             <strong>The ES package comes in 4 flavors:</strong>
           </p>
@@ -1006,9 +1005,7 @@ onUnmounted(() => {
             Wenn du es allerdings als ES Modul einbindest, ändert sich dieses Verhalten in der Regel.<br />
             Neben dem Umstand, dass einige JavaScript-Frameworks andere Kniffe anbieten, um Komponenten asynchron zu laden, kannst du folgendes versuchen, um das Ladeverhalten und die Bundle-Size zu optimieren.
           </p>
-          <p>
-            Leider können wir keine einfache Tree-Shaking-Lösung anbieten, da dies dem Ansatz des Skripts widerspricht - ein flexibler Web-Component, welcher sich zur Laufzeit anpassen lässt.
-          </p>
+          <p>Leider können wir keine einfache Tree-Shaking-Lösung anbieten, da dies dem Ansatz des Skripts widerspricht - ein flexibler Web-Component, welcher sich zur Laufzeit anpassen lässt.</p>
           <p>
             <strong>Das ES-Package kommt in 4 Varianten:</strong>
           </p>

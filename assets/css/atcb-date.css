@@ -985,12 +985,8 @@ a.atcb-modal-btn:not([disabled]):hover {
   display: none;
   font-weight: bold;
   line-height: 1.6em;
-  padding-top: 0.5em;
-  text-align: center;
-}
-
-#ty-success-msg {
   padding: 1.5em 0;
+  text-align: center;
 }
 
 #pro-form-submit {

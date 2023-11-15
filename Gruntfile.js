@@ -51,7 +51,20 @@ function prepareFinalFile(content, stripAllImport = true, stripAllExport = true,
 }
 
 const jsCoreFilesToCombine = ['src/atcb-globals.js', 'src/atcb-decorate.js', 'src/atcb-validate.js', 'src/atcb-control.js', 'src/atcb-generate.js', 'src/atcb-generate-rich-data.js', 'src/atcb-links.js', 'src/atcb-util.js', 'src/atcb-event.js', 'src/atcb-i18n.js', 'src/atcb-init.js'];
-const jsCoreFilesToCombinePro = ['src/atcb-globals.js', 'src/atcb-decorate.js', 'src/atcb-validate.js', 'src/atcb-control.js', 'src/atcb-generate.js', 'src/atcb-generate-rich-data.js', 'src/atcb-generate-pro.js', 'src/atcb-links.js', 'src/atcb-util.js', 'src/atcb-event.js', 'src/atcb-i18n.js', 'src/atcb-init.js'];
+const jsCoreFilesToCombinePro = [
+  'src/atcb-globals.js',
+  'src/atcb-decorate.js',
+  'src/atcb-validate.js',
+  'src/atcb-control.js',
+  'src/atcb-generate.js',
+  'src/atcb-generate-rich-data.js',
+  'src/atcb-generate-pro.js',
+  'src/atcb-links.js',
+  'src/atcb-util.js',
+  'src/atcb-event.js',
+  'src/atcb-i18n.js',
+  'src/atcb-init.js',
+];
 
 // The config.
 module.exports = function (grunt) {

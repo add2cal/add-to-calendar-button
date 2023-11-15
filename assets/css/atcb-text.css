@@ -233,16 +233,13 @@
 }
 
 .atcb-button.atcb-active:not(.atcb-modal-style, .atcb-dropoverlay) {
-  z-index: 15000000;
-}
-
-.atcb-button.atcb-active:not(.atcb-modal-style, .atcb-dropoverlay) {
   background-size: 100% 10%;
   border-radius: 3px 3px 11px 11px;
   background-position: 0 0;
   background-color: var(--btn-background);
   color: var(--btn-text);
   text-shadow: none;
+  z-index: 15000000;
 }
 
 .atcb-button.atcb-single:not([disabled]):focus,

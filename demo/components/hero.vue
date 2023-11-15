@@ -26,7 +26,7 @@ const localePath = useLocalePath();
                 <span class="hidden xs:block">Add to Calendar Button</span>
                 <span class="block text-5xl leading-[3.8rem] xs:hidden">{{ $t('content.home.header_slogan') }}</span>
               </h1>
-              <h2 class="mt-5 text-2xl sm:text-3xl hidden italic text-white opacity-70 xs:block">{{ $t('content.home.header_slogan') }}</h2>
+              <h2 class="mt-5 hidden text-2xl italic text-white opacity-70 xs:block sm:text-3xl">{{ $t('content.home.header_slogan') }}</h2>
             </div>
             <div class="grid max-w-[400px] grid-cols-1 justify-items-center gap-6 self-center xs:grid-cols-2 md:grid-cols-1 lg:grid-cols-2">
               <div class="hidden xs:block">

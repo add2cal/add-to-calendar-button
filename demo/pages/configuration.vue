@@ -1004,9 +1004,7 @@ definePageMeta({
                 <em>Number</em>
               </td>
               <td v-if="locale=='en'">Use this attribute to force a re-rendering of the button by counting its value 1 up.</td>
-              <td v-else>
-                Nutze dieses Attribut, um einen Button durch Hochzählen des Werts neu zu rendern.
-              </td>
+              <td v-else>Nutze dieses Attribut, um einen Button durch Hochzählen des Werts neu zu rendern.</td>
             </tr>
             <tr id="debug">
               <th scope="row">debug</th>

@@ -409,7 +409,7 @@ watch(locale, value => {
           </div>
         </div>
       </section>
-      
+
       <Interstitial />
 
       <section id="case-6">
@@ -420,7 +420,8 @@ watch(locale, value => {
             In the example, we also set the listStyle to an overlay list, slightly reduce the size, and set a custom ics file name.
           </p>
           <p class="text-sm italic">
-            If you want to change other text blocks, you can do so with the "customLabels" option - check the <NuxtLink :to="{path: localePath('configuration'), hash: '#customlabels'}">"{{ $t('navigation.configuration') }}"</NuxtLink> page as well as our <NuxtLink :to="{path: localePath('advanced-use'), hash: '#case-4'}">Advanced Example</NuxtLink> for details.
+            If you want to change other text blocks, you can do so with the "customLabels" option - check the <NuxtLink :to="{path: localePath('configuration'), hash: '#customlabels'}">"{{ $t('navigation.configuration') }}"</NuxtLink> page as well as our
+            <NuxtLink :to="{path: localePath('advanced-use'), hash: '#case-4'}">Advanced Example</NuxtLink> for details.
           </p>
         </div>
         <div v-else>
@@ -429,7 +430,8 @@ watch(locale, value => {
             Im Beispiel haben wir zudem den listStyle zu einer überlagernden Liste (overlay) verändert, an der Skalierung gedreht und auch der ics-Datei einen eigenen Namen gegeben.
           </p>
           <p class="text-sm italic">
-            Weitere Texte können mit der "customLabels"-Option verändert werden. Die <NuxtLink :to="{path: localePath('configuration'), hash: '#customlabels'}">"{{ $t('navigation.configuration') }}"</NuxtLink>-Seite und unser <NuxtLink :to="{path: localePath('advanced-use'), hash: '#case-4'}">Profi-Beispiel</NuxtLink> beinhalten mehr Details.
+            Weitere Texte können mit der "customLabels"-Option verändert werden. Die <NuxtLink :to="{path: localePath('configuration'), hash: '#customlabels'}">"{{ $t('navigation.configuration') }}"</NuxtLink>-Seite und unser
+            <NuxtLink :to="{path: localePath('advanced-use'), hash: '#case-4'}">Profi-Beispiel</NuxtLink> beinhalten mehr Details.
           </p>
         </div>
         <div class="block w-full justify-between md:flex">
