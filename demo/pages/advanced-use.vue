@@ -355,7 +355,7 @@ onUnmounted(() => {
           <p>
             Those rules are set up as HTML pseudo tags, which get transformed automatically.<br />
             <span class="text-sm italic">(If you are using the WordPress Plugin Shortcode, ']' would break your code. Instead of [*], you could also use {*} here.)</span><br />
-            <span class="text-sm italic">(Yahoo and Microsoft Teams are not fully supported and automatically transformed to plain text.)</span>
+            <span class="text-sm italic">(Yahoo and Microsoft Teams are not fully supported and automatically transformed to plain text. Apple calendar only supports line breaks and hyperlinks.)</span>
           </p>
         </div>
         <div v-else>
@@ -366,7 +366,7 @@ onUnmounted(() => {
           <p>
             Diese Regeln setzt du über HTML-Pseudo-Tags, die am Ende automatisch in echtes HTML transformiert werden.<br />
             <span class="text-sm italic">(Wenn du den WordPress Plugin Shortcode nutzt, stört ']' den Code. In diesem Fall kannst du {*} anstelle von [*] nutzen.)</span><br />
-            <span class="text-sm italic">(Yahoo und Microsoft Teams werden diesbezüglich leider nicht unterstützt und automatisch in Plain Text umgewandelt.)</span>
+            <span class="text-sm italic">(Yahoo und Microsoft Teams werden diesbezüglich leider nicht unterstützt und automatisch in Plain Text umgewandelt. Der Apple-Kalender unterstützt auch nur Zeilenumbrüche und Links.)</span>
           </p>
         </div>
         <p class="mt-6">
@@ -993,7 +993,7 @@ onUnmounted(() => {
           </ol>
           <p>
             To reduce the bundle size, you can use the unstyle version with <CodeBlock inline>import 'add-to-calendar-button/unstyle'</CodeBlock> and add the css manually to your project via the customCss option.<br />
-            For the css file, you can make use of the jsDelivr CDN - find possible files at <a target="_blank" rel="noopener" href="https://www.jsdelivr.com/package/npm/add-to-calendar-button?tab=files&path=assets%2Fcss">https://www.jsdelivr.com/package/npm/add-to-calendar-button</a>.<br />
+            For the css file, you can make use of the jsDelivr CDN - find possible files at <a target="_blank" rel="noopener" href="https://www.jsdelivr.com/package/npm/add-to-calendar-button?tab=files&path=assets%2Fcss">jsdelivr</a>.<br />
             This, of course, makes changing the style more difficult and adds an additional request to the network, but would reduce the bundle size by ~ 30%.<br />
             In the end, it depends on your project and strategy, which version is the best for you.
           </p>
