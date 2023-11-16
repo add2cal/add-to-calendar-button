@@ -26,6 +26,7 @@
   --font: arial, helvetica, sans-serif;
   --accent-color: #1e90ff;
   --wrapper-padding: 0px;
+  --buttonslist-gap: 5px;
   --btn-underline: #a9ceff;
   --btn-border: #a8a8a8;
   --btn-padding-x: .75em;
@@ -163,6 +164,10 @@
 /******************************
  * The triggering button
  */
+
+.atcb-initialized.atcb-buttons-list {
+  gap: var(--buttonslist-gap);
+}
 
 .atcb-button-wrapper {
   display: block;

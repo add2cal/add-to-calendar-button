@@ -26,7 +26,7 @@ let atcbInitialGlobalInit = false;
 let atcbBtnCount = 0;
 const lightModeMutationObserver = [];
 
-const template = `<div class="atcb-initialized" style="display:none;position:relative;width:fit-content;"></div>`;
+const template = `<div class="atcb-initialized atcb-hidden"></div>`;
 
 // we cannot load the custom element server-side - therefore, we check for a browser environment first
 if (atcbIsBrowser()) {
@@ -341,18 +341,21 @@ function atcb_set_light_mode(shadowRoot, data) {
   shadowRoot.host.classList.add('atcb-' + hostLightMode);
 }
 
+// get csp nonce
+function atcb_csp_nonce(host) {
+  const cspnonceRegex = /[`'"()[\]{}<>\s]/;
+  if (!host.host.hasAttribute('cspnonce')) {
+    return null;
+  }
+  if (cspnonceRegex.test(host.host.getAttribute('cspnonce'))) {
+    throw new Error('cspnonce input contains forbidden characters.');
+  }
+  return host.host.getAttribute('cspnonce');
+}
+
 // load the right css
 function atcb_load_css(host, rootObj = null, data) {
-  const cspnonceRegex = /[`'"()[\]{}<>\s]/;
-  const nonceVal = (function () {
-    if (!host.host.hasAttribute('cspnonce')) {
-      return null;
-    }
-    if (cspnonceRegex.test(host.host.getAttribute('cspnonce'))) {
-      throw new Error('cspnonce input contains forbidden characters.');
-    }
-    return host.host.getAttribute('cspnonce');
-  })();
+  const nonceVal = atcb_csp_nonce(host);
   // add global no-scroll style
   if (!document.getElementById('atcb-global-style')) {
     const cssGlobalContent = document.createElement('style');
@@ -364,6 +367,14 @@ function atcb_load_css(host, rootObj = null, data) {
     }
     document.head.append(cssGlobalContent);
   }
+  // add hidden style
+  const generalCssContent = document.createElement('style');
+  generalCssContent.innerText =
+    '.atcb-initialized { display: block; position: relative; width: fit-content; }.atcb-initialized.atcb-inline { display: inline-block; }.atcb-initialized.atcb-buttons-list { display: flex; flex-wrap: wrap; justify-content: center; gap: var(--buttonslist-gap); }.atcb-hidden { display: none; }';
+  if (nonceVal) {
+    generalCssContent.setAttribute('nonce', nonceVal);
+  }
+  host.prepend(generalCssContent);
   // get custom override information
   const overrideDefaultCss = (function () {
     if (data.styleLight) {
@@ -393,21 +404,26 @@ function atcb_load_css(host, rootObj = null, data) {
       // first, hide the content
       host.host.style.display = 'none';
       // second, load the actual css (and re-show the content as soon as it is loaded)
-      loadExternalCssAsynch(cssFile, host, host.host);
+      loadExternalCssAsynch(cssFile, host, host.host, nonceVal);
     } else {
       // else, it should be rather non-blocking.
       // first, create a button placeholder
       const placeholder = document.createElement('div');
       placeholder.classList.add('atcb-placeholder');
-      placeholder.style.cssText = 'width: 150px; height: 40px; border-radius: 200px; background-color: #777; opacity: .3;';
       host.prepend(placeholder);
+      const placeholderCssContent = document.createElement('style');
+      placeholderCssContent.innerText = '.atcb-placeholder { background-color: #777; border-radius: 200px; height: 40px; opacity: .3; width: 150px; }';
+      if (nonceVal) {
+        placeholderCssContent.setAttribute('nonce', nonceVal);
+      }
+      host.prepend(placeholderCssContent);
       // second, load the actual css (and remove the placeholder as soon as it is loaded)
-      loadExternalCssAsynch(cssFile, host, rootObj, placeholder, data.inline, data.buttonsList, overrideDefaultCss + overrideDarkCss);
+      loadExternalCssAsynch(cssFile, host, rootObj, nonceVal, placeholder, data.inline, data.buttonsList, overrideDefaultCss + overrideDarkCss);
     }
     return;
   }
   // otherwise, we load it from a variable
-  if (data.buttonStyle != 'none' && atcbCssTemplate[`${data.buttonStyle}`] != null) {
+  if (data.buttonStyle !== 'none' && atcbCssTemplate[`${data.buttonStyle}`] != null) {
     const cssContent = document.createElement('style');
     if (nonceVal) {
       cssContent.setAttribute('nonce', nonceVal);
@@ -419,52 +435,61 @@ function atcb_load_css(host, rootObj = null, data) {
   if (rootObj != null) {
     if (data.inline) {
       rootObj.style.display = 'inline-block';
+      rootObj.classList.add('atcb-inline');
     } else {
       if (data.buttonsList) {
-        rootObj.style.display = 'flex';
-        rootObj.style.flexWrap = 'wrap';
-        rootObj.style.justifyContent = 'center';
-      } else {
-        rootObj.style.display = 'block';
+        rootObj.classList.add('atcb-buttons-list');
       }
     }
+    rootObj.classList.remove('atcb-hidden');
   }
 }
 
-async function loadExternalCssAsynch(cssFile, host, rootObj, placeholder = null, inline = false, buttonsList = false, overrideCss = '') {
+async function loadExternalCssAsynch(cssFile, host, rootObj, nonceVal = null, placeholder = null, inline = false, buttonsList = false, overrideCss = '') {
   // load custom override information
-  if (overrideCss != '') {
+  if (overrideCss !== '') {
     const cssContent = document.createElement('style');
     cssContent.innerText = overrideCss;
+    if (nonceVal) {
+      cssContent.setAttribute('nonce', nonceVal);
+    }
     host.prepend(cssContent);
   }
   // load external css
-  host.prepend(cssFile);
-  // remove placeholder and render object as soon as loaded - only relevant if given
-  await new Promise((resolve) => {
-    cssFile.onload = resolve;
-  });
-  if (placeholder != null) {
-    placeholder.remove();
-  }
-  if (inline) {
-    rootObj.style.display = 'inline-block';
-  } else {
-    if (buttonsList) {
-      rootObj.style.display = 'flex';
-      rootObj.style.flexWrap = 'wrap';
-      rootObj.style.justifyContent = 'center';
-    } else {
-      rootObj.style.display = 'block';
+  try {
+    host.prepend(cssFile);
+    // remove placeholder and render object as soon as loaded - only relevant if given
+    await new Promise((resolve) => {
+      cssFile.onload = resolve;
+    });
+    if (placeholder) {
+      placeholder.remove();
     }
+    if (inline) {
+      rootObj.style.display = 'inline-block';
+      rootObj.classList.add('atcb-inline');
+    } else {
+      if (buttonsList) {
+        rootObj.classList.add('atcb-buttons-list');
+      }
+    }
+    rootObj.classList.remove('atcb-hidden');
+  } catch (e) {
+    console.log(e);
   }
 }
 
 function atcb_render_debug_msg(host, error) {
   if (host.querySelector('.atcb-debug-error-msg')) return;
+  const nonceVal = atcb_csp_nonce(host);
   const errorBanner = document.createElement('div');
   errorBanner.classList.add('atcb-debug-error-msg');
-  errorBanner.style.cssText = 'color: #bf2e2e; font-size: 12px; font-weight: bold; padding: 12px 15px; border: 2px solid #bf2e2e; max-width: 180px; border-radius: 13px;';
+  const cssContent = document.createElement('style');
+  cssContent.innerText = '.atcb-debug-error-msg { color: #bf2e2e; font-size: 12px; font-weight: bold; padding: 12px 15px; border: 2px solid #bf2e2e; max-width: 180px; border-radius: 13px; }';
+  if (nonceVal) {
+    cssContent.setAttribute('nonce', nonceVal);
+  }
+  host.prepend(cssContent);
   errorBanner.textContent = error;
   host.append(errorBanner);
 }
