@@ -128,14 +128,14 @@ function atcb_decorate_data_options(data) {
   // define the actual options to check
   const theOptions = (function () {
     if (atcbIsiOS() || data.fakeIOS) {
-      if (data.optionsIOS && data.optionsIOS.length > 0) {
+      if (data.optionsIOS) {
         return data.optionsIOS;
       }
-      if (data.optionsMobile && data.optionsMobile.length > 0) {
+      if (data.optionsMobile) {
         return data.optionsMobile;
       }
     }
-    if ((atcbIsAndroid() || data.fakeMobile || data.fakeAndroid) && data.optionsMobile && data.optionsMobile.length > 0) {
+    if ((atcbIsAndroid() || data.fakeMobile || data.fakeAndroid) && data.optionsMobile) {
       return data.optionsMobile;
     }
     return data.options || ['ical'];

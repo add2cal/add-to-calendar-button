@@ -1,6 +1,6 @@
 {
   "name": "add-to-calendar-button",
-  "version": "2.5.0-next.1",
+  "version": "2.5.0-next.2",
   "engines": {
     "node": ">=16.18.1",
     "npm": ">=8.19.2"
@@ -23,16 +23,16 @@
       "require": "./dist/commonjs/index.js"
     },
     "./no-pro": {
-      "import": "./dist/module/no-pro.js",
-      "require": "./dist/commonjs/no-pro.js"
+      "import": "./dist/module/no-pro/index.js",
+      "require": "./dist/commonjs/no-pro/index.js"
     },
     "./unstyle": {
-      "import": "./dist/module/unstyle.js",
-      "require": "./dist/commonjs/unstyle.js"
+      "import": "./dist/module/unstyle/index.js",
+      "require": "./dist/commonjs/unstyle/index.js"
     },
     "./no-pro-unstyle": {
-      "import": "./dist/module/no-pro-unstyle.js",
-      "require": "./dist/commonjs/no-pro-unstyle.js"
+      "import": "./dist/module/no-pro-unstyle/index.js",
+      "require": "./dist/commonjs/no-pro-unstyle/index.js"
     }
   },
   "types": "index.d.ts",

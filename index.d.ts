@@ -1,5 +1,36 @@
 /* eslint-disable no-unused-vars */
 
+// MODULES
+// default
+declare module 'add-to-calendar-button' {
+  export function atcb_action(config: ATCBActionEventConfig, triggerElement?: HTMLElement, keyboardTrigger?: boolean): Promise<string>;
+  export const i18nStrings: {
+    [key: string]: {
+      [key: string]: string;
+    };
+  };
+  export const cssStyles: {
+    [key: string]: string;
+  };
+  export function atcb_generate_ty(host: HTMLElement, data: object): null;
+}
+
+// no-pro
+declare module 'add-to-calendar-button/no-pro' {
+  export function atcb_action(config: ATCBActionEventConfig, triggerElement?: HTMLElement, keyboardTrigger?: boolean): Promise<string>;
+}
+
+// unstyle
+declare module 'add-to-calendar-button/unstyle' {
+  export function atcb_action(config: ATCBActionEventConfig, triggerElement?: HTMLElement, keyboardTrigger?: boolean): Promise<string>;
+  export function atcb_generate_ty(host: HTMLElement, data: object): null;
+}
+
+// no-pro-unstyle
+declare module 'add-to-calendar-button/no-pro-unstyle' {
+  export function atcb_action(config: ATCBActionEventConfig, triggerElement?: HTMLElement, keyboardTrigger?: boolean): Promise<string>;
+}
+
 // INTERFACES
 interface ATCBActionEventConfig {
   proKey?: string;
@@ -82,34 +113,3 @@ interface EventDate {
 export type CustomLabelsObjectType = {
   [key: string]: string | null;
 };
-
-// MODULES
-// default
-declare module 'add-to-calendar-button' {
-  export const i18nStrings: {
-    [key: string]: {
-      [key: string]: string;
-    };
-  };
-  export const cssStyles: {
-    [key: string]: string;
-  };
-  export function atcb_generate_ty(host: HTMLElement, data: object): null;
-  export function atcb_action(config: ATCBActionEventConfig, triggerElement?: HTMLElement, keyboardTrigger?: boolean): string;
-}
-
-// no-pro
-declare module 'add-to-calendar-button/no-pro' {
-  export function atcb_action(config: ATCBActionEventConfig, triggerElement?: HTMLElement, keyboardTrigger?: boolean): string;
-}
-
-// unstyle
-declare module 'add-to-calendar-button/unstyle' {
-  export function atcb_generate_ty(host: HTMLElement, data: object): null;
-  export function atcb_action(config: ATCBActionEventConfig, triggerElement?: HTMLElement, keyboardTrigger?: boolean): string;
-}
-
-// no-pro-unstyle
-declare module 'add-to-calendar-button/no-pro-unstyle' {
-  export function atcb_action(config: ATCBActionEventConfig, triggerElement?: HTMLElement, keyboardTrigger?: boolean): string;
-}

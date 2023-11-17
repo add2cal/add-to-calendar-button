@@ -172,7 +172,7 @@ module.exports = function (grunt) {
       },
       module_no_pro: {
         src: jsCoreFilesToCombine,
-        dest: 'dist/module/no-pro.js',
+        dest: 'dist/module/no-pro/index.js',
         options: {
           stripBanners: true,
           banner: "import { tzlib_get_ical_block, tzlib_get_offset, tzlib_get_timezones } from 'timezones-ical-library';\r\n",
@@ -182,7 +182,7 @@ module.exports = function (grunt) {
       },
       module_unstyle: {
         src: jsCoreFilesToCombinePro,
-        dest: 'dist/module/unstyle.js',
+        dest: 'dist/module/unstyle/index.js',
         options: {
           stripBanners: true,
           banner: "import { tzlib_get_ical_block, tzlib_get_offset, tzlib_get_timezones } from 'timezones-ical-library';\r\n",
@@ -192,7 +192,7 @@ module.exports = function (grunt) {
       },
       module_no_pro_unstyle: {
         src: jsCoreFilesToCombine,
-        dest: 'dist/module/no-pro-unstyle.js',
+        dest: 'dist/module/no-pro-unstyle/index.js',
         options: {
           stripBanners: true,
           banner: "import { tzlib_get_ical_block, tzlib_get_offset, tzlib_get_timezones } from 'timezones-ical-library';\r\n",
@@ -212,7 +212,7 @@ module.exports = function (grunt) {
       },
       commonJS_no_pro: {
         src: jsCoreFilesToCombine,
-        dest: 'dist/commonjs/no-pro.js',
+        dest: 'dist/commonjs/no-pro/index.js',
         options: {
           stripBanners: true,
           banner: "// eslint-disable-next-line @typescript-eslint/no-var-requires\r\nconst tzlibActions = require('timezones-ical-library');\r\n",
@@ -222,7 +222,7 @@ module.exports = function (grunt) {
       },
       commonJS_unstyle: {
         src: jsCoreFilesToCombinePro,
-        dest: 'dist/commonjs/unstyle.js',
+        dest: 'dist/commonjs/unstyle/index.js',
         options: {
           stripBanners: true,
           banner: "// eslint-disable-next-line @typescript-eslint/no-var-requires\r\nconst tzlibActions = require('timezones-ical-library');\r\n",
@@ -232,7 +232,7 @@ module.exports = function (grunt) {
       },
       commonJS_no_pro_unstyle: {
         src: jsCoreFilesToCombine,
-        dest: 'dist/commonjs/no-pro-unstyle.js',
+        dest: 'dist/commonjs/no-pro-unstyle/index.js',
         options: {
           stripBanners: true,
           banner: "// eslint-disable-next-line @typescript-eslint/no-var-requires\r\nconst tzlibActions = require('timezones-ical-library');\r\n",

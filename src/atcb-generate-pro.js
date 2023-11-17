@@ -460,124 +460,128 @@ async function atcb_generate_rsvp(host, data, keyboardTrigger = false, inline = 
   const rsvpFormSubmit = rsvpHost.getElementById('pro-form-submit');
   const rsvpFormSubmitting = rsvpHost.getElementById('pro-form-submitting');
   const rsvpRestart = rsvpHost.getElementById('pro-form-restart');
-  rsvpFormSubmit.addEventListener('click', async function (e) {
-    e.preventDefault();
-    rsvpFormSubmitting.style.display = 'block';
-    rsvpFormSubmit.style.display = 'none';
-    const staticFields = [
-      { type: 'email', name: data.proKey + '-email', fieldId: data.identifier + '-rsvp-email', required: true },
-      { type: 'number', name: data.proKey + '-amount', fieldId: data.identifier + '-rsvp-amount', required: true },
-    ];
-    let valid = atcb_validate_form(rsvpHost, [...staticFields, ...rsvpData.fields]);
-    // if maxpp, make sure amount is not bigger
-    const amountEl = rsvpHost.getElementById(data.identifier + '-rsvp-amount');
-    const amount = parseInt(amountEl.value) || 1;
-    if (rsvpData.maxpp && rsvpData.maxpp > 0 && amount > rsvpData.maxpp) {
-      amountEl.classList.add('error');
-      valid = false;
-    }
-    if (!valid) {
-      errorMsg.textContent = atcb_translate_hook('form.error.required', data) + '.';
-    }
-    // submit data
-    if (valid) {
-      if (!data.proKey || data.proKey === '') {
-        // if no prokey, we just show a demo success message
-        rsvpHost.getElementById('rsvp-success-msg-demo').style.display = 'block';
-        rsvpHost.getElementById('rsvp-content').style.display = 'none';
-        atcb_log_event('successRSVP', data.identifier, data.identifier);
-        if (cancelBtn) cancelBtn.style.display = 'none';
-        if (closeBtn) closeBtn.style.display = 'block';
-        return;
+  if (rsvpFormSubmit) {
+    rsvpFormSubmit.addEventListener('click', async function (e) {
+      e.preventDefault();
+      rsvpFormSubmitting.style.display = 'block';
+      rsvpFormSubmit.style.display = 'none';
+      const staticFields = [
+        { type: 'email', name: data.proKey + '-email', fieldId: data.identifier + '-rsvp-email', required: true },
+        { type: 'number', name: data.proKey + '-amount', fieldId: data.identifier + '-rsvp-amount', required: true },
+      ];
+      let valid = atcb_validate_form(rsvpHost, [...staticFields, ...rsvpData.fields]);
+      // if maxpp, make sure amount is not bigger
+      const amountEl = rsvpHost.getElementById(data.identifier + '-rsvp-amount');
+      const amount = parseInt(amountEl.value) || 1;
+      if (rsvpData.maxpp && rsvpData.maxpp > 0 && amount > rsvpData.maxpp) {
+        amountEl.classList.add('error');
+        valid = false;
       }
-      const bodyData = [];
-      bodyData.push({ name: 'prokey', value: data.proKey });
-      bodyData.push({ name: 'language', value: data.language });
-      const statusValEl = rsvpHost.querySelector('[name="' + data.proKey + '-status"]:checked');
-      bodyData.push({ name: 'status', value: statusValEl ? statusValEl.value : 'confirmed' });
-      bodyData.push({ name: 'amount', value: amount });
-      bodyData.push({ name: 'email', value: rsvpHost.getElementById(data.identifier + '-rsvp-email').value });
-      const bodyData_payload = {};
-      let skipRadio = false;
-      rsvpData.fields.forEach((field) => {
-        // push fields to data array except for labels - for radio buttons, we only push the checked one
-        if (field.type !== 'label') {
-          if (field.type === 'radio') {
-            if (!skipRadio) {
-              const radioGroup = rsvpHost.querySelectorAll('[name="' + field.name + '"]');
-              radioGroup.forEach(function (radio) {
-                if (radio.checked) {
-                  bodyData_payload[field.name] = radio.value;
-                }
-              });
-              skipRadio = true;
+      if (!valid) {
+        errorMsg.textContent = atcb_translate_hook('form.error.required', data) + '.';
+      }
+      // submit data
+      if (valid) {
+        if (!data.proKey || data.proKey === '') {
+          // if no prokey, we just show a demo success message
+          rsvpHost.getElementById('rsvp-success-msg-demo').style.display = 'block';
+          rsvpHost.getElementById('rsvp-content').style.display = 'none';
+          atcb_log_event('successRSVP', data.identifier, data.identifier);
+          if (cancelBtn) cancelBtn.style.display = 'none';
+          if (closeBtn) closeBtn.style.display = 'block';
+          return;
+        }
+        const bodyData = [];
+        bodyData.push({ name: 'prokey', value: data.proKey });
+        bodyData.push({ name: 'language', value: data.language });
+        const statusValEl = rsvpHost.querySelector('[name="' + data.proKey + '-status"]:checked');
+        bodyData.push({ name: 'status', value: statusValEl ? statusValEl.value : 'confirmed' });
+        bodyData.push({ name: 'amount', value: amount });
+        bodyData.push({ name: 'email', value: rsvpHost.getElementById(data.identifier + '-rsvp-email').value });
+        const bodyData_payload = {};
+        let skipRadio = false;
+        rsvpData.fields.forEach((field) => {
+          // push fields to data array except for labels - for radio buttons, we only push the checked one
+          if (field.type !== 'label') {
+            if (field.type === 'radio') {
+              if (!skipRadio) {
+                const radioGroup = rsvpHost.querySelectorAll('[name="' + field.name + '"]');
+                radioGroup.forEach(function (radio) {
+                  if (radio.checked) {
+                    bodyData_payload[field.name] = radio.value;
+                  }
+                });
+                skipRadio = true;
+              }
+            } else if (field.type === 'checkbox') {
+              bodyData_payload[field.name] = rsvpHost.getElementById(field.fieldId).checked;
+              skipRadio = false;
+            } else {
+              bodyData_payload[field.name] = rsvpHost.getElementById(field.fieldId).value;
+              skipRadio = false;
             }
-          } else if (field.type === 'checkbox') {
-            bodyData_payload[field.name] = rsvpHost.getElementById(field.fieldId).checked;
-            skipRadio = false;
-          } else {
-            bodyData_payload[field.name] = rsvpHost.getElementById(field.fieldId).value;
-            skipRadio = false;
           }
+        });
+        if (Object.keys(bodyData_payload).length > 0) {
+          bodyData.push({ name: 'payload', value: bodyData_payload });
         }
-      });
-      if (Object.keys(bodyData_payload).length > 0) {
-        bodyData.push({ name: 'payload', value: bodyData_payload });
-      }
-      const request = await sendPostRequest('https://rsvp.add-to-calendar-pro.com/24586219-9910-41fe-9b59-df53de9db7af', bodyData, { rsvp: true });
-      if (request === 'doi' || request === true) {
-        rsvpHost.getElementById('rsvp-success-msg').style.display = 'block';
-        if (request === 'doi') {
-          rsvpHost.getElementById('rsvp-success-msg-doi').style.display = 'block';
+        const request = await sendPostRequest('https://rsvp.add-to-calendar-pro.com/24586219-9910-41fe-9b59-df53de9db7af', bodyData, { rsvp: true });
+        if (request === 'doi' || request === true) {
+          rsvpHost.getElementById('rsvp-success-msg').style.display = 'block';
+          if (request === 'doi') {
+            rsvpHost.getElementById('rsvp-success-msg-doi').style.display = 'block';
+          } else {
+            rsvpHost.getElementById('rsvp-success-msg-email').style.display = 'block';
+          }
+          rsvpHost.getElementById('rsvp-content').style.display = 'none';
+          if (cancelBtn) cancelBtn.style.display = 'none';
+          if (closeBtn) closeBtn.style.display = 'block';
+          atcb_log_event('successRSVP', data.identifier, data.identifier);
+          localStorage.setItem(data.proKey + '-rsvp-sent', true);
+          return;
+        }
+        if (request.error && request.error === 2) {
+          errorMsg.textContent = atcb_translate_hook('form.error.email', data) + '.';
+        } else if (request.error && request.error === 5) {
+          errorMsg.textContent = atcb_translate_hook('label.rsvp.expired', data) + '.';
+        } else if (request.error && request.error === 6) {
+          if (amount > 1) {
+            errorMsg.textContent = atcb_translate_hook('form.error.bookedoutmany', data) + '.';
+          } else {
+            errorMsg.textContent = atcb_translate_hook('label.rsvp.bookedout', data) + '.';
+          }
         } else {
-          rsvpHost.getElementById('rsvp-success-msg-email').style.display = 'block';
+          errorMsg.textContent = atcb_translate_hook('form.error.sending', data) + '.';
         }
-        rsvpHost.getElementById('rsvp-content').style.display = 'none';
-        if (cancelBtn) cancelBtn.style.display = 'none';
-        if (closeBtn) closeBtn.style.display = 'block';
-        atcb_log_event('successRSVP', data.identifier, data.identifier);
-        localStorage.setItem(data.proKey + '-rsvp-sent', true);
-        return;
       }
-      if (request.error && request.error === 2) {
-        errorMsg.textContent = atcb_translate_hook('form.error.email', data) + '.';
-      } else if (request.error && request.error === 5) {
-        errorMsg.textContent = atcb_translate_hook('label.rsvp.expired', data) + '.';
-      } else if (request.error && request.error === 6) {
-        if (amount > 1) {
-          errorMsg.textContent = atcb_translate_hook('form.error.bookedoutmany', data) + '.';
-        } else {
-          errorMsg.textContent = atcb_translate_hook('label.rsvp.bookedout', data) + '.';
-        }
-      } else {
-        errorMsg.textContent = atcb_translate_hook('form.error.sending', data) + '.';
+      rsvpForm.classList.add('form-error');
+      rsvpFormSubmitting.style.display = 'none';
+      rsvpFormSubmit.style.display = 'block';
+    });
+    rsvpFormSubmit.addEventListener('keyup', function (event) {
+      if (event.key === 'Enter') {
+        event.preventDefault();
+        rsvpFormSubmit.click();
       }
-    }
-    rsvpForm.classList.add('form-error');
-    rsvpFormSubmitting.style.display = 'none';
-    rsvpFormSubmit.style.display = 'block';
-  });
-  rsvpFormSubmit.addEventListener('keyup', function (event) {
-    if (event.key === 'Enter') {
-      event.preventDefault();
-      rsvpFormSubmit.click();
-    }
-  });
+    });
+  }
   // reset
-  rsvpRestart.addEventListener('click', function (e) {
-    e.preventDefault();
-    rsvpHost.getElementById('rsvp-sent-content').style.display = 'none';
-    rsvpHost.getElementById('rsvp-content').style.display = 'block';
-    if (closeBtn) closeBtn.style.display = 'none';
-    if (restartBtn) restartBtn.style.display = 'none';
-    if (cancelBtn) cancelBtn.style.display = 'block';
-  });
-  rsvpRestart.addEventListener('keyup', function (event) {
-    if (event.key === 'Enter') {
-      event.preventDefault();
-      rsvpRestart.click();
-    }
-  });
+  if (rsvpRestart) {
+    rsvpRestart.addEventListener('click', function (e) {
+      e.preventDefault();
+      rsvpHost.getElementById('rsvp-sent-content').style.display = 'none';
+      rsvpHost.getElementById('rsvp-content').style.display = 'block';
+      if (closeBtn) closeBtn.style.display = 'none';
+      if (restartBtn) restartBtn.style.display = 'none';
+      if (cancelBtn) cancelBtn.style.display = 'block';
+    });
+    rsvpRestart.addEventListener('keyup', function (event) {
+      if (event.key === 'Enter') {
+        event.preventDefault();
+        rsvpRestart.click();
+      }
+    });
+  }
 }
 
 // SHARED FORM FUNCTIONS

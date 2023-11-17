@@ -258,6 +258,10 @@ function atcb_read_attributes(el, params = atcbWcParams) {
       } else {
         val = inputVal;
       }
+      // only set, if no empty object or empty array
+      if ((typeof val === 'object' && Object.keys(val).length === 0) || (Array.isArray(val) && (val.length === 0 || (val.length === 1 && val[0] === '')))) {
+        continue;
+      }
       data[`${attr}`] = val;
     }
   }
@@ -495,7 +499,6 @@ function atcb_render_debug_msg(host, error) {
 }
 
 // prepare data when not using the web component, but some custom trigger instead
-// eslint-disable-next-line no-unused-vars, @typescript-eslint/no-unused-vars
 async function atcb_action(inputData, triggerElement, keyboardTrigger = false) {
   // return if not within a browser environment
   if (!atcbIsBrowser()) {
@@ -797,4 +800,4 @@ function atcb_unset_global_event_listener(identifier) {
   }
 }
 
-export { atcb_unset_global_event_listener, atcb_load_css, atcb_set_light_mode };
+export { atcb_action, atcb_unset_global_event_listener, atcb_load_css, atcb_set_light_mode };
