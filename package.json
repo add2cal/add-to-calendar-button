@@ -13,6 +13,9 @@
     "test",
     "assets/css/*.css",
     "index.d.ts",
+    "unstyle/index.d.ts",
+    "no-pro/index.d.ts",
+    "no-pro-unstyle/index.d.ts",
     ".eslintrc.json",
     "CHANGELOG.md",
     ".npmignore"
@@ -88,14 +91,14 @@
     "build": "npx grunt"
   },
   "dependencies": {
-    "timezones-ical-library": "^1.7.1"
+    "timezones-ical-library": "^1.7.2"
   },
   "devDependencies": {
-    "@open-wc/testing": "^3.2.2",
-    "@typescript-eslint/eslint-plugin": "^6.9.1",
-    "@typescript-eslint/parser": "^6.9.1",
+    "@open-wc/testing": "^4.0.0",
+    "@typescript-eslint/eslint-plugin": "^6.11.0",
+    "@typescript-eslint/parser": "^6.11.0",
     "@web/test-runner": "^0.18.0",
-    "eslint": "^8.52.0",
+    "eslint": "^8.53.0",
     "eslint-config-prettier": "^9.0.0",
     "eslint-plugin-commonjs": "^1.0.2",
     "eslint-plugin-prettier": "^5.0.1",
@@ -107,8 +110,8 @@
     "grunt-contrib-uglify": "^5.2.2",
     "grunt-file-creator": "^0.1.3",
     "grunt-version": "^3.0.1",
-    "prettier": "3.0.3",
-    "prettier-plugin-tailwindcss": "^0.5.6",
+    "prettier": "3.1.0",
+    "prettier-plugin-tailwindcss": "^0.5.7",
     "stylelint": "^15.11.0",
     "stylelint-config-standard": "^34.0.0"
   }

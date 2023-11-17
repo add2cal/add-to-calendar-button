@@ -574,7 +574,7 @@ function atcb_generate_ical(host, data, subEvent = 'all', keyboardTrigger = fals
   // in in-app browser cases (WebView), we offer a copy option, since the on-the-fly client side generation is usually not supported
   // for Android, we are more specific than with iOS and only go for specific apps at the moment
   // for Chrome on iOS we basically do the same
-  if ((atcbIsiOS() && !atcbIsSafari()) || (atcbIsWebView() && (atcbIsiOS() || (atcbIsAndroid() && atcbIsProblematicWebView())))) {
+  if (atcbIsWebView() && (atcbIsiOS() || (atcbIsAndroid() && atcbIsProblematicWebView()))) {
     atcb_ical_copy_note(host, dataUrl, data, keyboardTrigger);
     return;
   }
