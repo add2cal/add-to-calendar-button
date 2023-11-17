@@ -192,7 +192,7 @@ function atcb_generate_button(host, button, data) {
     return false;
   })();
   const optionSplit = oneOption ? data.options : ['default'];
-  optionSplit.forEach(function (option) {
+  optionSplit.forEach(function (option, index) {
     // generate the wrapper div
     const buttonTriggerWrapper = document.createElement('div');
     buttonTriggerWrapper.classList.add('atcb-button-wrapper');
@@ -223,13 +223,13 @@ function atcb_generate_button(host, button, data) {
     if (data.buttonStyle === 'date') {
       atcb_generate_date_button(data, buttonTrigger);
     }
-    // if there is only 1 calendar option, we directly show this at the button, but with the trigger's label text (small exception for the date style)
+    // if there is only 1 calendar option, we directly show this at the button, but with the trigger's label text
     if (oneOption) {
       buttonTrigger.classList.add('atcb-single');
       // if buttonsList is true and we have more than 1 option, use the option as label
       const label = (function () {
         if (data.buttonsList && data.options.length > 1) {
-          return atcb_translate_hook(`label.${data.options[0]}`, data);
+          return atcb_translate_hook(`${data.options[`${index}`]}`, data);
         }
         return data.label;
       })();
