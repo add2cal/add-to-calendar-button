@@ -1,4 +1,5 @@
 <script setup lang="ts">
+// @ts-expect-error - named import may TS-fail here due to the workspace type integration of the script
 import { atcb_action } from "add-to-calendar-button";
 import { ArrowTopRightOnSquareIcon } from '@heroicons/vue/24/outline';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars

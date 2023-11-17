@@ -5,7 +5,7 @@ const baseUrl = process.env.NUXT_PUBLIC_SITE_URL || 'https://add-to-calendar-but
 const robots = process.env.NUXT_PUBLIC_ROBOTS || 'index, follow';
 
 export default defineNuxtConfig({
-  modules: ['@nuxtjs/i18n', '@nuxtjs/tailwindcss', 'nuxt-headlessui', 'nuxt-security', 'nuxt-schema-org', '@vite-pwa/nuxt', 'nuxt-simple-sitemap', 'nuxt-delay-hydration'],
+  modules: ['@nuxtjs/i18n', '@nuxtjs/tailwindcss', 'nuxt-headlessui', 'nuxt-security', '@vite-pwa/nuxt', 'nuxt-simple-sitemap', 'nuxt-schema-org', 'nuxt-delay-hydration'],
   vue: {
     compilerOptions: {
       // treat all tags starting with "add-" as custom elements
@@ -126,7 +126,6 @@ export default defineNuxtConfig({
     host: baseUrl,
     url: baseUrl,
     name: 'Add to Calendar Button',
-    tagPosition: 'head',
   },
   pwa: {
     registerType: 'autoUpdate',
