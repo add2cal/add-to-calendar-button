@@ -457,7 +457,7 @@ function atcb_generate_ical(host, data, subEvent = 'all', keyboardTrigger = fals
     return;
   }
   // else, we directly load it (not if iOS and WebView - will be catched further down - except it is explicitely bridged)
-  if (givenIcsFile != '' && (!atcbIsiOS() || !atcbIsWebView() || data.bypassWebViewCheck == true)) {
+  if (givenIcsFile !== '' && (!atcbIsiOS() || !atcbIsWebView() || data.bypassWebViewCheck)) {
     // replace the protocol at givenIcsFile (https or http) with webcal for non-Safari on iOS browsers. Opens the subscription dialog, but best we get atm
     if (atcbIsiOS() && !atcbIsSafari()) {
       atcb_save_file(givenIcsFile.replace(/^https?:\/\//, 'webcal://'), filename);
@@ -574,7 +574,7 @@ function atcb_generate_ical(host, data, subEvent = 'all', keyboardTrigger = fals
   // in in-app browser cases (WebView), we offer a copy option, since the on-the-fly client side generation is usually not supported
   // for Android, we are more specific than with iOS and only go for specific apps at the moment
   // for Chrome on iOS we basically do the same
-  if (atcbIsWebView() && (atcbIsiOS() || (atcbIsAndroid() && atcbIsProblematicWebView()))) {
+  if ((atcbIsiOS() && !atcbIsSafari()) || (atcbIsWebView() && (atcbIsiOS() || (atcbIsAndroid() && atcbIsProblematicWebView())))) {
     atcb_ical_copy_note(host, dataUrl, data, keyboardTrigger);
     return;
   }
