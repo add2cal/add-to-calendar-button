@@ -50,7 +50,8 @@ if (atcbIsBrowser()) {
       this.debug = this.hasAttribute('debug') && (!debugVal || debugVal === 'true' || debugVal === '') ? true : false;
       // checking for PRO key and pull data if given
       if (this.hasAttribute('proKey') && this.getAttribute('proKey') !== '') {
-        this.data = await atcb_get_pro_data(this.getAttribute('proKey'), this);
+        const dev = this.hasAttribute('dev') && (this.getAttribute('dev') === null || this.getAttribute('dev') === '' || this.getAttribute('dev') === 'true') ? true : false;
+        this.data = await atcb_get_pro_data(this.getAttribute('proKey'), this, { dev: dev });
         if (this.data.proKey) this.proKey = this.data.proKey;
       }
       if (!this.data.name || this.data.name === '') {
@@ -662,7 +663,7 @@ async function atcb_get_pro_data(licenseKey, el = null, directData = {}) {
   if (licenseKey && licenseKey !== '') {
     // Try to read data from server and log error if not possible
     try {
-      const response = await fetch('https://event.caldn.net/' + licenseKey + '/config.json');
+      const response = await fetch((directData.dev ? 'https://caldn.blob.core.windows.net/eventdata-dev/' : 'https://event.caldn.net/') + licenseKey + '/config.json');
       if (response.ok) {
         const data = await response.json();
         if (!data.name || data.name === '') {

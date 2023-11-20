@@ -414,7 +414,7 @@ function atcb_open_cal_url(data, type, url, subscribe = false, target = '') {
     if (data.proxy && data.proKey && data.proKey != '') {
       const urlType = subscribe ? 's' : 'o';
       const query = url ? '?url=' + encodeURIComponent(url) : '';
-      url = 'https://caldn.net/' + data.proKey + '/' + urlType + '/' + type + query;
+      url = (data.dev ? 'https://dev.caldn.net/' : 'https://caldn.net/') + data.proKey + '/' + urlType + '/' + type + query;
       if (!atcb_secure_url(url)) {
         return;
       }

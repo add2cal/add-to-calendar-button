@@ -186,6 +186,7 @@ const atcbWcParams = [
   'forceOverlay',
   'rsvp',
   'ty',
+  'dev',
 ];
 const atcbWcProParams = [
   'debug',
@@ -209,6 +210,7 @@ const atcbWcProParams = [
   'fakeIOS',
   'fakeAndroid',
   'forceOverlay',
+  'dev',
 ];
 const atcbWcBooleanParams = [
   'debug',
@@ -235,6 +237,7 @@ const atcbWcBooleanParams = [
   'fakeIOS',
   'fakeAndroid',
   'forceOverlay',
+  'dev',
 ];
 const atcbWcObjectParams = ['customLabels', 'ty', 'rsvp'];
 const atcbWcObjectArrayParams = ['dates'];

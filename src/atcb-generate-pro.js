@@ -197,7 +197,7 @@ async function atcb_generate_rsvp(host, data, keyboardTrigger = false, inline = 
   const bookedOut = await (async function () {
     if (data.rsvp && data.rsvp.max && data.proKey && data.proKey !== '') {
       try {
-        const response = await fetch('https://rsvp.add-to-calendar-pro.com/dffb8bbd-ee5e-4a4f-a7ea-503af98ca468?prokey=' + data.proKey, {
+        const response = await fetch('https://rsvp.add-to-calendar-pro.com/dffb8bbd-ee5e-4a4f-a7ea-503af98ca468?prokey=' + data.proKey + (data.dev ? '&dev=true' : ''), {
           method: 'GET',
         });
         if (!response.ok) {
@@ -498,6 +498,7 @@ async function atcb_generate_rsvp(host, data, keyboardTrigger = false, inline = 
         bodyData.push({ name: 'status', value: statusValEl ? statusValEl.value : 'confirmed' });
         bodyData.push({ name: 'amount', value: amount });
         bodyData.push({ name: 'email', value: rsvpHost.getElementById(data.identifier + '-rsvp-email').value });
+        if (data.dev) bodyData.push({ name: 'dev', value: true });
         const bodyData_payload = {};
         let skipRadio = false;
         rsvpData.fields.forEach((field) => {

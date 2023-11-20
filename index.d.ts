@@ -95,6 +95,7 @@ interface ATCBActionEventConfig {
   fakeIOS?: boolean;
   fakeAndroid?: boolean;
   forceOverlay?: boolean;
+  dev?: boolean;
 }
 
 interface EventDate {
