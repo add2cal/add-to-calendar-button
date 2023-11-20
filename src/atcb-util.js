@@ -212,22 +212,22 @@ function atcb_validEmail(email) {
 // SHARED FUNCTION TO REPLACE HTML PSEUDO ELEMENTS
 function atcb_rewrite_html_elements(content, clear = false, iCalBreaks = false) {
   if (clear) {
+    // for line breaks, we add a space instead (or \\n for iCal)
+    if (iCalBreaks) {
+      content = content.replace(/(\[br\s?\/?\]|\{br\s?\/?\}|(\[\/p\](?=.))|(\{\/p\}(?=.)))/gi, '\\n');
+    } else {
+      content = content.replace(/(\[br\s?\/?\]|\{br\s?\/?\}|(\[\/p\](?=.))|(\{\/p\}(?=.)))/gi, ' ');
+    }
     // remove any pseudo elements
     content = content.replace(/\[(|\/)(url|hr|p|b|strong|u|i|em|li|ul|ol|h\d)\]|((\|.*)\[\/url\])/gi, '');
     content = content.replace(/\{(|\/)(url|hr|p|b|strong|u|i|em|li|ul|ol|h\d)\}|((\|.*)\{\/url\})/gi, '');
-    // for line breaks, we add a space instead (or \\n for iCal)
-    if (iCalBreaks) {
-      content = content.replace(/(\[br\]|\{br\})/gi, '\\n');
-    } else {
-      content = content.replace(/(\[br\]|\{br\})/gi, ' ');
-    }
     // also remove any special characters
     content = content.replace(/&[#a-zA-Z0-9]{1,9};/gi, '');
     // and build html for the rest
     // supporting: br, hr, p, strong, u, i, em, li, ul, ol, h (like h1, h2, h3, ...), url (= a)
   } else {
-    content = content.replace(/\[(\/|)(br|hr|p|b|strong|u|i|em|li|ul|ol|h\d)\]/gi, '<$1$2>');
-    content = content.replace(/\{(\/|)(br|hr|p|b|strong|u|i|em|li|ul|ol|h\d)\}/gi, '<$1$2>');
+    content = content.replace(/\[(\/|)(br|hr|p|b|strong|u|i|em|li|ul|ol|h\d)(\s?\/?)\]/gi, '<$1$2$3>');
+    content = content.replace(/\{(\/|)(br|hr|p|b|strong|u|i|em|li|ul|ol|h\d)(\s?\/?)\}/gi, '<$1$2$3>');
     content = content.replace(/\[url\]([\w&$+.,:;=~!*'?@^%#|\s\-()/]*)\[\/url\]/gi, function (match, p1) {
       return atcb_parse_url_code(p1);
     });
