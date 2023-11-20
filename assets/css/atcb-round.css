@@ -273,7 +273,6 @@
   left: 0;
   right: 0;
   margin: 0 auto;
-  transition: border-width 0.1s linear 0.1s;
 }
 
 .atcb-button:not(.atcb-modal-style, .atcb-dropoverlay, .atcb-dropup, .atcb-no-text)::before {
@@ -293,6 +292,7 @@
 .atcb-button.atcb-active:not(.atcb-modal-style, .atcb-dropoverlay, .atcb-dropup, .atcb-no-text)::before,
 .atcb-button.atcb-active.atcb-dropup::after {
   border-width: 0.35em;
+  transition: border-width 0.1s linear 0.1s;
 }
 
 .atcb-button.atcb-active.atcb-dropoverlay {
