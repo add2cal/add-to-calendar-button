@@ -4,7 +4,7 @@
 
 - v2.5 : PRO option and more
   - ✨ [introducing PRO offering](https://add-to-calendar-pro.com/)
-  - ⚠️ Breaking: default branding (check hideBranding option for disabling it)
+  - ⚠️ Breaking: default branding activated in order to support this free open source project (if you do not want to support this project, use the hideBranding option to disable it)
   - ⚠️ Breaking: if you want to customize calendar option labels, you need need to do this via the customLabels option
   - ⚠️ Breaking: some inline style got moved to the css. If you use your own custom css, double-check
   - new optionsMobile und optionsIOS options to specify device-specific calendar types

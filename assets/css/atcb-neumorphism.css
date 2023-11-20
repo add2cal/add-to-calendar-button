@@ -736,13 +736,15 @@ a.atcb-modal-btn:not([disabled]):hover {
 .atcb-date-btn-content-icon {
   display: inline-block;
   height: 0.8em;
-  width: 1.3em;
+  margin-right: .4em;
+  margin-left: .0;
+  width: 0.9em;
   flex-shrink: 0;
 }
 
 .atcb-rtl .atcb-date-btn-content-icon {
   margin-right: 0;
-  margin-left: .5em;
+  margin-left: .4em;
 }
 
 .atcb-initialized[lang="zh"] .atcb-date-btn-content:not(.atcb-date-btn-content-location) .atcb-date-btn-content-icon,
