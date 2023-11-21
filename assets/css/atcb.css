@@ -629,6 +629,7 @@ a.atcb-modal-btn:not([disabled]):hover {
   user-select: none;
   -webkit-user-select: none;
   -webkit-tap-highlight-color: transparent;
+  width: 100%;
 }
 
 .atcb-subevent-btn:hover {
@@ -695,6 +696,10 @@ a.atcb-modal-btn:not([disabled]):hover {
   color: var(--date-btn-text);
   min-width: 12.5em;
   overflow-wrap: anywhere;
+}
+
+.atcb-subevent-btn .atcb-date-btn-right {
+  width: 100%;
 }
 
 .atcb-date-btn-details {

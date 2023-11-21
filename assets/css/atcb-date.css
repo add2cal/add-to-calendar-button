@@ -186,6 +186,10 @@
   -webkit-tap-highlight-color: transparent;
 }
 
+.atcb-subevent-btn {
+  width: 100%;
+}
+
 .atcb-button {
   box-shadow: var(--btn-shadow);
   min-width: 17.5em;
@@ -276,6 +280,10 @@
   color: var(--date-btn-text);
   min-width: 12.5em;
   overflow-wrap: anywhere;
+}
+
+.atcb-subevent-btn .atcb-date-btn-right {
+  width: 100%;
 }
 
 .atcb-date-btn-details {

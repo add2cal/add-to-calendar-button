@@ -359,7 +359,7 @@ async function atcb_generate_rsvp(host, data, keyboardTrigger = false, inline = 
     hiddenContent += '<input type="hidden" name="' + staticID + '-email" id="' + data.identifier + '-rsvp-email" value="' + attendee + '" />';
   } else {
     rsvpContent += '<div class="pro-field"><label for="' + data.identifier + '-rsvp-email">' + atcb_translate_hook('form.email', data) + '<span>*</span></label>';
-    rsvpContent += '<input type="email" name="' + staticID + '-email" id="' + data.identifier + '-rsvp-email" aria-label="' + atcb_translate_hook('form.email', data) + '" value="" /></div>';
+    rsvpContent += '<input type="email" name="' + staticID + '-email" id="' + data.identifier + '-rsvp-email" ' + (data.disabled && 'disabled') + ' aria-label="' + atcb_translate_hook('form.email', data) + '" value="" /></div>';
   }
   // add custom fields
   const customForm = atcb_build_form(rsvpData.fields, data.identifier + '-rsvp', data.disabled);
