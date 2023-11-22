@@ -1001,6 +1001,7 @@ a.atcb-modal-btn:not([disabled]):hover {
  .rsvp-inline-wrapper {
   filter: none;
   min-width: 100%;
+  margin-bottom: 0;
 }
 
 .rsvp-inline-wrapper .atcb-modal-headline,
@@ -1008,6 +1009,7 @@ a.atcb-modal-btn:not([disabled]):hover {
   background-color: transparent;
   border-radius: 0;
   box-sizing: border-box;
+  padding: 0;
   width: 100%;
 }
 
