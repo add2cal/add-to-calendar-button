@@ -81,9 +81,11 @@ function atcb_generate_ty(host, data) {
       return atcb_translate_hook('submit', data);
     })();
     tyContent += '<form id="' + data.identifier + '-ty-form" class="pro-form">';
-    const customForm = atcb_build_form(tyData.fields, data.identifier + '-ty');
-    tyData.fields = customForm.fields;
-    tyContent += customForm.html;
+    if (tyData.fields && tyData.fields.length > 0) {
+      const customForm = atcb_build_form(tyData.fields, data.identifier + '-ty');
+      tyData.fields = customForm.fields;
+      tyContent += customForm.html;
+    }
     tyContent += '<p id="submit-error"></p>';
     tyContent += '<p class="pro-pt"><button type="submit" id="pro-form-submit" class="atcb-modal-btn atcb-modal-btn-primary atcb-modal-btn-border">' + label + '</button><span id="pro-form-submitting" class="pro-waiting"><span>.</span><span>.</span><span>.</span></span></p>';
     tyContent += '</form>';
@@ -362,9 +364,11 @@ async function atcb_generate_rsvp(host, data, keyboardTrigger = false, inline = 
     rsvpContent += '<input type="email" name="' + staticID + '-email" id="' + data.identifier + '-rsvp-email" ' + (data.disabled && 'disabled') + ' aria-label="' + atcb_translate_hook('form.email', data) + '" value="" /></div>';
   }
   // add custom fields
-  const customForm = atcb_build_form(rsvpData.fields, data.identifier + '-rsvp', data.disabled);
-  rsvpData.fields = customForm.fields;
-  rsvpContent += customForm.html;
+  if (rsvpData.fields && rsvpData.fields.length > 0) {
+    const customForm = atcb_build_form(rsvpData.fields, data.identifier + '-rsvp', data.disabled);
+    rsvpData.fields = customForm.fields;
+    rsvpContent += customForm.html;
+  }
   rsvpContent += hiddenContent;
   rsvpContent += '<p id="submit-error"></p>';
   rsvpContent +=
@@ -596,9 +600,12 @@ function atcb_build_form(fields, identifier = '', disabled = false) {
   // for each field, add respective html
   let n = 0;
   let prevType = '';
+  let skipped = false;
   for (let i = 1; i <= fields.length; i++) {
+    skipped = false;
     const field = fields[i - 1];
     if (field.type !== 'label' && (!field.name || field.name === '')) {
+      skipped = true;
       continue;
     }
     if ((prevType === 'radio' && field.type !== 'radio') || prevType !== 'radio') {
@@ -609,7 +616,7 @@ function atcb_build_form(fields, identifier = '', disabled = false) {
     const fieldLabel = field.label || '';
     const fieldPlaceholder = field.type === 'radio' ? '' : field.placeholder || '';
     let fieldHtml = '';
-    if (prevType !== 'hidden' && i === n && i !== 1) {
+    if (prevType !== 'hidden' && i === n && i !== 1 && !skipped) {
       fieldHtml += '</div>';
     }
     if (field.type !== 'hidden' && i === n) {
