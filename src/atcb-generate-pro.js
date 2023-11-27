@@ -199,7 +199,7 @@ async function atcb_generate_rsvp(host, data, keyboardTrigger = false, inline = 
   const bookedOut = await (async function () {
     if (data.rsvp && data.rsvp.max && data.proKey && data.proKey !== '') {
       try {
-        const response = await fetch('https://rsvp.add-to-calendar-pro.com/dffb8bbd-ee5e-4a4f-a7ea-503af98ca468?prokey=' + data.proKey + (data.dev ? '&dev=true' : ''), {
+        const response = await fetch('https://api.add-to-calendar-pro.com/dffb8bbd-ee5e-4a4f-a7ea-503af98ca468?prokey=' + data.proKey + (data.dev ? '&dev=true' : ''), {
           method: 'GET',
         });
         if (!response.ok) {
@@ -530,7 +530,7 @@ async function atcb_generate_rsvp(host, data, keyboardTrigger = false, inline = 
         if (Object.keys(bodyData_payload).length > 0) {
           bodyData.push({ name: 'payload', value: bodyData_payload });
         }
-        const request = await sendPostRequest('https://rsvp.add-to-calendar-pro.com/24586219-9910-41fe-9b59-df53de9db7af', bodyData, { rsvp: true });
+        const request = await sendPostRequest('https://api.add-to-calendar-pro.com/24586219-9910-41fe-9b59-df53de9db7af', bodyData, { rsvp: true });
         if (request === 'doi' || request === true) {
           rsvpHost.getElementById('rsvp-success-msg').style.display = 'block';
           if (request === 'doi') {
