@@ -14,7 +14,7 @@
 import { atcbIcon, atcbStates, atcbDefaultTarget } from './atcb-globals.js';
 import { atcb_toggle, atcb_close } from './atcb-control.js';
 import { atcb_generate_links } from './atcb-links.js';
-import { atcb_generate_time, atcb_position_shadow_button, atcb_position_shadow_button_listener, atcb_manage_body_scroll, atcb_set_fullsize, atcb_set_sizes, atcb_debounce, atcb_debounce_leading } from './atcb-util.js';
+import { atcb_generate_time, atcb_generate_timestring, atcb_position_shadow_button, atcb_position_shadow_button_listener, atcb_manage_body_scroll, atcb_set_fullsize, atcb_set_sizes, atcb_debounce, atcb_debounce_leading } from './atcb-util.js';
 import { atcb_set_fully_successful } from './atcb-links.js';
 import { atcb_translate_hook } from './atcb-i18n.js';
 import { atcb_load_css, atcb_set_light_mode } from './atcb-init.js';
@@ -588,155 +588,7 @@ function atcb_generate_date_button(data, parent, subEvent = 'all') {
   } else if (data.dates.length == 1) {
     subEvent = 0;
   }
-  const fullTimeInfo = (function () {
-    let startDateInfo, endDateInfo, timeZoneInfoStart, timeZoneInfoEnd;
-    let formattedTimeStart = {};
-    let formattedTimeEnd = {};
-    let timeBlocks = [];
-    let timeZoneInfoStringStart = '';
-    let timeZoneInfoStringEnd = '';
-    if (subEvent == 'all') {
-      // we are looking at multiple sub-events, which should be considered all together
-      formattedTimeStart = atcb_generate_time(data.dates[0]);
-      formattedTimeEnd = atcb_generate_time(data.dates[data.dates.length - 1]);
-      timeZoneInfoStart = data.dates[0].timeZone;
-      timeZoneInfoEnd = data.dates[data.dates.length - 1].timeZone;
-    } else {
-      // we are looking at 1 or many sub-events, but we consider only one specific
-      formattedTimeStart = atcb_generate_time(data.dates[`${subEvent}`]);
-      formattedTimeEnd = formattedTimeStart;
-      timeZoneInfoStart = data.dates[`${subEvent}`].timeZone;
-      timeZoneInfoEnd = timeZoneInfoStart;
-    }
-    startDateInfo = new Date(formattedTimeStart.start);
-    endDateInfo = new Date(formattedTimeEnd.end);
-    // set GMT for allday events to prevent any time zone mismatches
-    if (formattedTimeStart.allday) {
-      timeZoneInfoStart = 'GMT';
-    }
-    if (formattedTimeEnd.allday) {
-      timeZoneInfoEnd = 'GMT';
-    }
-    // in the case of an online event (or magic location), convert the time zone
-    const browserTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
-    const magicLocationPhrases = ['global', 'world-wide', 'worldwide', 'online'];
-    const convertable = (function () {
-      let i = 0;
-      let j = data.dates.length - 1;
-      if (subEvent != 'all') {
-        i = j = subEvent;
-      }
-      for (i; i <= j; i++) {
-        const magicLocation = (function () {
-          if (data.dates[`${i}`].location != null && data.dates[`${i}`].location != '') {
-            if (magicLocationPhrases.includes(data.dates[`${i}`].location.toLowerCase())) {
-              return true;
-            }
-          }
-          return false;
-        })();
-        if (!magicLocation && !data.dates[`${i}`].onlineEvent) {
-          return false;
-        }
-      }
-      return true;
-    })();
-    if (convertable) {
-      timeZoneInfoStart = timeZoneInfoEnd = browserTimezone;
-    } else {
-      // determine time zone strings
-      if (!formattedTimeStart.allday && browserTimezone != timeZoneInfoStart && timeZoneInfoStart != timeZoneInfoEnd) {
-        timeZoneInfoStringStart = '(' + timeZoneInfoStart + ')';
-      }
-      if ((!formattedTimeEnd.allday && browserTimezone != timeZoneInfoEnd) || timeZoneInfoStart != timeZoneInfoEnd) {
-        timeZoneInfoStringEnd = '(' + timeZoneInfoEnd + ')';
-      }
-    }
-    // drop the year, if it is the current one
-    const now = new Date();
-    const dropYearStart = (function () {
-      if (startDateInfo.getFullYear() == now.getFullYear()) {
-        return true;
-      }
-      return false;
-    })();
-    const dropYearEnd = (function () {
-      if (endDateInfo.getFullYear() == now.getFullYear()) {
-        return true;
-      }
-      return false;
-    })();
-    // get the options to format the date
-    const formatOptionsStart = get_format_options(timeZoneInfoStart, dropYearStart, data.language);
-    const formatOptionsEnd = get_format_options(timeZoneInfoEnd, dropYearEnd, data.language);
-    // start = end
-    if (startDateInfo.toLocaleDateString(data.language, formatOptionsEnd.DateLong) === endDateInfo.toLocaleDateString(data.language, formatOptionsEnd.DateLong)) {
-      // allday vs. timed
-      if (formattedTimeStart.allday) {
-        if (!dropYearStart) {
-          timeBlocks.push(startDateInfo.toLocaleDateString(data.language, formatOptionsStart.DateLong));
-        }
-      } else {
-        let timeString = '';
-        if (dropYearStart) {
-          timeString = startDateInfo.toLocaleString(data.language, formatOptionsStart.Time);
-        } else {
-          timeString = startDateInfo.toLocaleString(data.language, formatOptionsStart.DateTimeLong);
-        }
-        if (data.language === 'en') {
-          timeString = timeString.replace(/:00/, '');
-        }
-        timeBlocks.push(timeString);
-        if (timeZoneInfoStringStart != '') {
-          timeBlocks.push(timeZoneInfoStringStart);
-        }
-        timeBlocks.push('-');
-        timeString = endDateInfo.toLocaleTimeString(data.language, formatOptionsEnd.Time);
-        if (data.language === 'en') {
-          timeString = timeString.replace(/:00/, '');
-        }
-        timeBlocks.push(timeString);
-        if (timeZoneInfoStringEnd != '') {
-          timeBlocks.push(timeZoneInfoStringEnd);
-        }
-      }
-    } else {
-      // start != end
-      // allday vs. timed (start)
-      if (formattedTimeStart.allday) {
-        timeBlocks.push(startDateInfo.toLocaleDateString(data.language, formatOptionsStart.DateLong));
-      } else {
-        let timeString = '';
-        if (dropYearStart) {
-          timeString = startDateInfo.toLocaleString(data.language, formatOptionsStart.Time);
-        } else {
-          timeString = startDateInfo.toLocaleString(data.language, formatOptionsStart.DateTimeLong);
-        }
-        if (data.language === 'en') {
-          timeString = timeString.replace(/:00/, '');
-        }
-        timeBlocks.push(timeString);
-      }
-      if (timeZoneInfoStringStart != '') {
-        timeBlocks.push(timeZoneInfoStringStart);
-      }
-      timeBlocks.push('-');
-      // allday vs. timed (end)
-      if (formattedTimeEnd.allday) {
-        timeBlocks.push(endDateInfo.toLocaleDateString(data.language, formatOptionsEnd.DateLong));
-      } else {
-        let timeString = endDateInfo.toLocaleString(data.language, formatOptionsEnd.DateTimeLong);
-        if (data.language === 'en') {
-          timeString = timeString.replace(/:00/, '');
-        }
-        timeBlocks.push(timeString);
-      }
-      if (timeZoneInfoStringEnd != '') {
-        timeBlocks.push(timeZoneInfoStringEnd);
-      }
-    }
-    return timeBlocks;
-  })();
+  const fullTimeInfo = atcb_generate_timestring(data.dates, data.language, subEvent);
   const hoverText = (function () {
     if (subEvent != 'all' && data.dates[`${subEvent}`].status == 'CANCELLED') {
       return atcb_translate_hook('date.status.cancelled', data) + '<br>' + atcb_translate_hook('date.status.cancelled.cta', data);
@@ -883,61 +735,6 @@ function atcb_generate_date_button(data, parent, subEvent = 'all') {
     btnCheck.innerHTML = atcbIcon['checkmark'];
     parent.append(btnCheck);
   }
-}
-
-function get_format_options(timeZoneInfo, dropYear = false, language = 'en') {
-  const hoursFormat = (function () {
-    if (language == 'en') {
-      return 'h12'; // 12am -> 1am -> .. -> 12pm -> 1pm -> ...
-    }
-    return 'h23'; // 00:00 -> 01:00 -> 12:00 -> 13:00 -> ...
-  })();
-  if (dropYear) {
-    return {
-      DateLong: {
-        timeZone: timeZoneInfo,
-        month: 'short',
-        day: 'numeric',
-      },
-      DateTimeLong: {
-        timeZone: timeZoneInfo,
-        month: 'short',
-        day: 'numeric',
-        hour: 'numeric',
-        minute: '2-digit',
-        hourCycle: hoursFormat,
-      },
-      Time: {
-        timeZone: timeZoneInfo,
-        hour: 'numeric',
-        minute: '2-digit',
-        hourCycle: hoursFormat,
-      },
-    };
-  }
-  return {
-    DateLong: {
-      timeZone: timeZoneInfo,
-      year: 'numeric',
-      month: 'numeric',
-      day: 'numeric',
-    },
-    DateTimeLong: {
-      timeZone: timeZoneInfo,
-      year: 'numeric',
-      month: 'numeric',
-      day: 'numeric',
-      hour: 'numeric',
-      minute: '2-digit',
-      hourCycle: hoursFormat,
-    },
-    Time: {
-      timeZone: timeZoneInfo,
-      hour: 'numeric',
-      minute: '2-digit',
-      hourCycle: hoursFormat,
-    },
-  };
 }
 
 // FUNCTION TO BUILD A SECOND SHADOWDOM FOR MODALS

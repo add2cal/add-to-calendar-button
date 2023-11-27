@@ -166,7 +166,7 @@ module.exports = function (grunt) {
         options: {
           stripBanners: true,
           banner: "import { tzlib_get_ical_block, tzlib_get_offset, tzlib_get_timezones } from 'timezones-ical-library';\r\n",
-          footer: 'export { atcb_action, i18nStrings, atcbCssTemplate as cssStyles, atcb_generate_ty };',
+          footer: 'export { atcb_action, i18nStrings, atcbCssTemplate as cssStyles, atcb_generate_ty, atcb_generate_timestring };',
           process: (content) => prepareFinalFile(content),
         },
       },
@@ -186,7 +186,7 @@ module.exports = function (grunt) {
         options: {
           stripBanners: true,
           banner: "import { tzlib_get_ical_block, tzlib_get_offset, tzlib_get_timezones } from 'timezones-ical-library';\r\n",
-          footer: 'export { atcb_action, i18nStrings, atcbCssTemplate as cssStyles, atcb_generate_ty };',
+          footer: 'export { atcb_action, i18nStrings, atcb_generate_ty, atcb_generate_timestring };',
           process: (content) => prepareFinalFile(content, true, true, false, true),
         },
       },
@@ -196,7 +196,7 @@ module.exports = function (grunt) {
         options: {
           stripBanners: true,
           banner: "import { tzlib_get_ical_block, tzlib_get_offset, tzlib_get_timezones } from 'timezones-ical-library';\r\n",
-          footer: 'export { atcb_action, i18nStrings, atcbCssTemplate as cssStyles };',
+          footer: 'export { atcb_action, i18nStrings };',
           process: (content) => prepareFinalFile(content, true, true, false, true),
         },
       },
@@ -206,7 +206,7 @@ module.exports = function (grunt) {
         options: {
           stripBanners: true,
           banner: "// eslint-disable-next-line @typescript-eslint/no-var-requires\r\nconst tzlibActions = require('timezones-ical-library');\r\n",
-          footer: 'module.exports = { atcb_action, i18nStrings, cssStyles: atcbCssTemplate, atcb_generate_ty };',
+          footer: 'module.exports = { atcb_action, i18nStrings, cssStyles: atcbCssTemplate, atcb_generate_ty, atcb_generate_timestring };',
           process: (content) => prepareFinalFile(content, true, true, true),
         },
       },
@@ -216,7 +216,7 @@ module.exports = function (grunt) {
         options: {
           stripBanners: true,
           banner: "// eslint-disable-next-line @typescript-eslint/no-var-requires\r\nconst tzlibActions = require('timezones-ical-library');\r\n",
-          footer: 'module.exports = { atcb_action, i18nStrings, cssStyles: atcbCssTemplate, atcb_generate_ty };',
+          footer: 'module.exports = { atcb_action, i18nStrings, cssStyles: atcbCssTemplate };',
           process: (content) => prepareFinalFile(content, true, true, true),
         },
       },
@@ -226,7 +226,7 @@ module.exports = function (grunt) {
         options: {
           stripBanners: true,
           banner: "// eslint-disable-next-line @typescript-eslint/no-var-requires\r\nconst tzlibActions = require('timezones-ical-library');\r\n",
-          footer: 'module.exports = { atcb_action, i18nStrings, cssStyles: atcbCssTemplate, atcb_generate_ty };',
+          footer: 'module.exports = { atcb_action, i18nStrings, atcb_generate_ty, atcb_generate_timestring };',
           process: (content) => prepareFinalFile(content, true, true, true, true),
         },
       },
@@ -236,7 +236,7 @@ module.exports = function (grunt) {
         options: {
           stripBanners: true,
           banner: "// eslint-disable-next-line @typescript-eslint/no-var-requires\r\nconst tzlibActions = require('timezones-ical-library');\r\n",
-          footer: 'module.exports = { atcb_action, i18nStrings, cssStyles: atcbCssTemplate, atcb_generate_ty };',
+          footer: 'module.exports = { atcb_action, i18nStrings };',
           process: (content) => prepareFinalFile(content, true, true, true, true),
         },
       },

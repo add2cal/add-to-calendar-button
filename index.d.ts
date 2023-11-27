@@ -13,6 +13,7 @@ declare module 'add-to-calendar-button' {
     [key: string]: string;
   };
   export function atcb_generate_ty(host: HTMLElement, data: object): null;
+  export function atcb_generate_timestring(dates: EventDate[], language?: string, subEvent?: string, browserTimeOverride?: boolean, enforceYear?: boolean): string;
 }
 
 // no-pro
@@ -26,6 +27,7 @@ declare module 'add-to-calendar-button/no-pro' {
 declare module 'add-to-calendar-button/unstyle' {
   export function atcb_action(config: ATCBActionEventConfig, triggerElement?: HTMLElement, keyboardTrigger?: boolean): Promise<string>;
   export function atcb_generate_ty(host: HTMLElement, data: object): null;
+  export function atcb_generate_timestring(dates: EventDate[], language?: string, subEvent?: string, browserTimeOverride?: boolean, enforceYear?: boolean): string;
 }
 
 // no-pro-unstyle
