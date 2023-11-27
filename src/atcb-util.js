@@ -60,6 +60,8 @@ function atcb_generate_time(data, style = 'delimiters', targetCal = 'general', a
   if (data.startTime != null && data.startTime != '' && data.endTime != null && data.endTime != '') {
     // for the input, we assume GMT/UTC per default
     const newStartDate = new Date(data.startDate + 'T' + data.startTime + ':00.000+00:00');
+    // we re-adjust the endDate for the case where the time string generation gets rather called directly
+    if (!data.endDate) data.endDate = data.startDate;
     const newEndDate = new Date(data.endDate + 'T' + data.endTime + ':00.000+00:00');
     const durationMS = newEndDate - newStartDate;
     const durationHours = Math.floor(durationMS / 1000 / 60 / 60);
