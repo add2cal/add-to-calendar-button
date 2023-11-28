@@ -178,7 +178,7 @@ function atcb_format_datetime(datetime, style = 'delimiters', includeTime = true
   return output;
 }
 
-function atcb_generate_timestring(dates, language = 'en', subEvent = 'all', browserTimeOverride = false, enforceYear = false) {
+function atcb_generate_timestring(dates, language = 'en', subEvent = 'all', browserTimeOverride = false, enforceYear = false, hideTimeZone = false) {
   let startDateInfo, endDateInfo, timeZoneInfoStart, timeZoneInfoEnd;
   let formattedTimeStart = {};
   let formattedTimeEnd = {};
@@ -277,7 +277,7 @@ function atcb_generate_timestring(dates, language = 'en', subEvent = 'all', brow
         timeString = timeString.replace(/:00/, '');
       }
       timeBlocks.push(timeString);
-      if (timeZoneInfoStringStart !== '') {
+      if (timeZoneInfoStringStart !== '' && !hideTimeZone) {
         timeBlocks.push(timeZoneInfoStringStart);
       }
       timeBlocks.push('-');
@@ -286,7 +286,7 @@ function atcb_generate_timestring(dates, language = 'en', subEvent = 'all', brow
         timeString = timeString.replace(/:00/, '');
       }
       timeBlocks.push(timeString);
-      if (timeZoneInfoStringEnd !== '') {
+      if (timeZoneInfoStringEnd !== '' && !hideTimeZone) {
         timeBlocks.push(timeZoneInfoStringEnd);
       }
     }
@@ -307,7 +307,7 @@ function atcb_generate_timestring(dates, language = 'en', subEvent = 'all', brow
       }
       timeBlocks.push(timeString);
     }
-    if (timeZoneInfoStringStart !== '') {
+    if (timeZoneInfoStringStart !== '' && !hideTimeZone) {
       timeBlocks.push(timeZoneInfoStringStart);
     }
     timeBlocks.push('-');
@@ -321,7 +321,7 @@ function atcb_generate_timestring(dates, language = 'en', subEvent = 'all', brow
       }
       timeBlocks.push(timeString);
     }
-    if (timeZoneInfoStringEnd !== '') {
+    if (timeZoneInfoStringEnd !== '' && !hideTimeZone) {
       timeBlocks.push(timeZoneInfoStringEnd);
     }
   }
