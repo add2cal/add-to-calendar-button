@@ -180,6 +180,7 @@ const atcbWcParams = [
   'hidden',
   'hideButton',
   'pastDateHandling',
+  'proxy',
   'fakeMobile',
   'fakeIOS',
   'fakeAndroid',

@@ -449,8 +449,8 @@ function atcb_generate_ical(host, data, subEvent = 'all', keyboardTrigger = fals
     return '';
   })();
   // if we are in proxy mode, we can directly redirect
-  if (givenIcsFile && givenIcsFile !== '' && data.proxy) {
-    atcb_open_cal_url(data, 'ical', givenIcsFile, false, subEvent);
+  if (data.proxy) {
+    atcb_open_cal_url(data, 'ical', 'https://add-to-calendar-pro.com', false, subEvent);
     return;
   }
   // else, we directly load it (not if iOS and WebView - will be catched further down - except it is explicitely bridged)
