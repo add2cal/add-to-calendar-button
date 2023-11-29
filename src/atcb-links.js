@@ -45,27 +45,12 @@ function atcb_generate_links(host, type, data, subEvent = 'all', keyboardTrigger
     } else {
       // in some cases, we want to inform the user about specifics for the link type, before actually following the link
       if (!skipDoubleLink) {
-        if (atcbIsiOS() && linkType === 'google') {
-          atcb_create_modal(
-            host,
-            data,
-            'warning',
-            '',
-            atcb_translate_hook('modal.crios.google.text', data),
-            [
-              {
-                label: atcb_translate_hook('continue', data),
-                primary: true,
-                type: '2timeslink',
-              },
-              { label: atcb_translate_hook('cancel', data) },
-            ],
-            [],
-            keyboardTrigger,
-            { type: type, id: subEvent + 1 },
-          );
-          return;
-        }
+        // nothing to show here at the moment...
+        // if something comes up, we can use something like the following:
+        // if (atcbIsiOS() && linkType === 'google') {
+        // atcb_create_modal(host, data, 'warning', '', atcb_translate_hook('modal.warn.1.text', data), [{ label: atcb_translate_hook('continue', data), primary: true, type: '2timeslink' },{ label: atcb_translate_hook('cancel', data) }], [], keyboardTrigger, { type: type, id: subEvent + 1 });
+        // return;
+        // }
       }
       // apart from that, we generate the link
       switch (linkType) {
@@ -73,19 +58,19 @@ function atcb_generate_links(host, type, data, subEvent = 'all', keyboardTrigger
           atcb_generate_ical(host, data, subEvent, keyboardTrigger);
           break;
         case 'google':
-          atcb_generate_google(data, data.dates[`${subEvent}`]);
+          atcb_generate_google(data, data.dates[`${subEvent}`], subEvent);
           break;
         case 'msteams':
-          atcb_generate_msteams(data, data.dates[`${subEvent}`]);
+          atcb_generate_msteams(data, data.dates[`${subEvent}`], subEvent);
           break;
         case 'ms365':
-          atcb_generate_microsoft(data, data.dates[`${subEvent}`]);
+          atcb_generate_microsoft(data, data.dates[`${subEvent}`], subEvent);
           break;
         case 'outlookcom':
-          atcb_generate_microsoft(data, data.dates[`${subEvent}`], 'outlook');
+          atcb_generate_microsoft(data, data.dates[`${subEvent}`], subEvent, 'outlook');
           break;
         case 'yahoo':
-          atcb_generate_yahoo(data, data.dates[`${subEvent}`]);
+          atcb_generate_yahoo(data, data.dates[`${subEvent}`], subEvent);
           break;
       }
     }
@@ -258,7 +243,7 @@ function atcb_subscribe_microsoft(data, fileUrl, calName, type = '365') {
 
 // FUNCTION TO GENERATE THE GOOGLE URL
 // See specs at: https://github.com/InteractionDesignFoundation/add-event-to-calendar-docs/blob/main/services/google.md (unofficial)
-function atcb_generate_google(data, date) {
+function atcb_generate_google(data, date, subEvent = 'all') {
   const urlParts = [];
   urlParts.push('https://calendar.google.com/calendar/render?action=TEMPLATE');
   // generate and add date
@@ -303,12 +288,12 @@ function atcb_generate_google(data, date) {
     })();
     urlParts.push(availabilityPart);
   }
-  atcb_open_cal_url(data, 'google', urlParts.join('&'));
+  atcb_open_cal_url(data, 'google', urlParts.join('&'), false, subEvent);
 }
 
 // FUNCTION TO GENERATE THE YAHOO URL
 // See specs at: https://github.com/InteractionDesignFoundation/add-event-to-calendar-docs/blob/main/services/yahoo.md (unofficial)
-function atcb_generate_yahoo(data, date) {
+function atcb_generate_yahoo(data, date, subEvent = 'all') {
   const urlParts = [];
   urlParts.push('https://calendar.yahoo.com/?v=60');
   // generate and add date
@@ -328,12 +313,12 @@ function atcb_generate_yahoo(data, date) {
     // using descriptionHtmlFree instead of description, since Yahoo does not support html tags in a stable way
     urlParts.push('desc=' + encodeURIComponent(date.descriptionHtmlFree));
   }
-  atcb_open_cal_url(data, 'yahoo', urlParts.join('&'));
+  atcb_open_cal_url(data, 'yahoo', urlParts.join('&'), false, subEvent);
 }
 
 // FUNCTION TO GENERATE THE MICROSOFT 365 OR OUTLOOK WEB URL
 // See specs at: TODO: add some documentation here, if it exists
-function atcb_generate_microsoft(data, date, type = '365') {
+function atcb_generate_microsoft(data, date, subEvent = 'all', type = '365') {
   const urlParts = [];
   const basePath = (function () {
     // tmp workaround to reflect the fact that Microsoft is routing mobile traffic differently
@@ -368,13 +353,13 @@ function atcb_generate_microsoft(data, date, type = '365') {
   if (date.description != null && date.description != '') {
     urlParts.push('body=' + encodeURIComponent(date.description));
   }
-  atcb_open_cal_url(data, type, urlParts.join('&'));
+  atcb_open_cal_url(data, type, urlParts.join('&'), false, subEvent);
 }
 
 // FUNCTION TO GENERATE THE MICROSOFT TEAMS URL
 // See specs at: https://learn.microsoft.com/en-us/microsoftteams/platform/concepts/build-and-test/deep-link-workflow?tabs=teamsjs-v2#deep-link-to-open-a-meeting-scheduling-dialog
 // Mind that this is still in development mode by Microsoft! Location, html tags and linebreaks in the description are not supported yet.
-function atcb_generate_msteams(data, date) {
+function atcb_generate_msteams(data, date, subEvent = 'all') {
   const urlParts = [];
   const baseUrl = 'https://teams.microsoft.com/l/meeting/new?';
   // generate and add date
@@ -402,18 +387,30 @@ function atcb_generate_msteams(data, date) {
     // using descriptionHtmlFree instead of description, since Teams does not support html tags
     urlParts.push('content=' + locationString + encodeURIComponent(date.descriptionHtmlFree));
   }
-  atcb_open_cal_url(data, 'msteams', baseUrl + urlParts.join('&'));
+  atcb_open_cal_url(data, 'msteams', baseUrl + urlParts.join('&'), false, subEvent);
 }
 
 // FUNCTION TO OPEN THE URL
-function atcb_open_cal_url(data, type, url, subscribe = false, target = '') {
+function atcb_open_cal_url(data, type, url, subscribe = false, subEvent = null, target = '') {
   if (target == '') {
     target = atcbDefaultTarget;
   }
   if (atcb_secure_url(url)) {
     if (data.proxy && data.proKey && data.proKey != '') {
       const urlType = subscribe ? 's' : 'o';
-      const query = url ? '?url=' + encodeURIComponent(url) : '';
+      const query = (function () {
+        const parts = [];
+        if (data.attendee != null && data.attendee != '') {
+          parts.push('attendee=' + encodeURIComponent(data.attendee));
+        }
+        if (data.dates && data.dates.length > 1 && subEvent !== null && subEvent !== 'all') {
+          parts.push('sub-event=' + subEvent);
+        }
+        if (parts.length > 0) {
+          return '?' + parts.join('&');
+        }
+        return '';
+      })();
       url = (data.dev ? 'https://dev.caldn.net/' : 'https://caldn.net/') + data.proKey + '/' + urlType + '/' + type + query;
       if (!atcb_secure_url(url)) {
         return;
@@ -453,7 +450,7 @@ function atcb_generate_ical(host, data, subEvent = 'all', keyboardTrigger = fals
   })();
   // if we are in proxy mode, we can directly redirect
   if (givenIcsFile && givenIcsFile !== '' && data.proxy) {
-    atcb_open_cal_url(data, 'ical', givenIcsFile);
+    atcb_open_cal_url(data, 'ical', givenIcsFile, false, subEvent);
     return;
   }
   // else, we directly load it (not if iOS and WebView - will be catched further down - except it is explicitely bridged)
