@@ -28,7 +28,7 @@ const atcbIsBrowser = () => {
 // iOS
 const atcbIsiOS = atcbIsBrowser()
   ? () => {
-      if ((/iPad|iPhone|iPod/i.test(navigator.userAgent || navigator.vendor || window.opera) && !window.MSStream) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1)) {
+      if ((/iPad|iPhone|iPod/i.test(navigator.userAgent || window.opera) && !window.MSStream) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1)) {
         return true;
       } else {
         return false;
@@ -40,7 +40,7 @@ const atcbIsiOS = atcbIsBrowser()
 // Android
 const atcbIsAndroid = atcbIsBrowser()
   ? () => {
-      if (/android/i.test(navigator.userAgent || navigator.vendor || window.opera) && !window.MSStream) {
+      if (/android/i.test(navigator.userAgent || window.opera) && !window.MSStream) {
         return true;
       } else {
         return false;
@@ -52,7 +52,7 @@ const atcbIsAndroid = atcbIsBrowser()
 // Chrome
 /*const atcbIsChrome = atcbIsBrowser()
   ? () => {
-      if (/chrome|chromium|crios|google inc/i.test(navigator.userAgent || navigator.vendor)) {
+      if (/chrome|chromium|crios|google inc/i.test(navigator.userAgent)) {
         return true;
       } else {
         return false;
@@ -64,7 +64,7 @@ const atcbIsAndroid = atcbIsBrowser()
 // Safari
 const atcbIsSafari = atcbIsBrowser()
   ? () => {
-      if (/^((?!chrome|android|crios|fxios).)*safari/i.test(navigator.userAgent || navigator.vendor)) {
+      if (/^((?!chrome|android|crios|fxios).)*safari/i.test(navigator.userAgent)) {
         return true;
       } else {
         return false;
@@ -84,7 +84,7 @@ const atcbIsMobile = () => {
 // WebView (iOS and Android)
 const atcbIsWebView = atcbIsBrowser()
   ? () => {
-      if (/(; ?wv|(iPhone|iPod|iPad).*AppleWebKit(?!.*Safari))/i.test(navigator.userAgent || navigator.vendor)) {
+      if (/(; ?wv|(iPhone|iPod|iPad).*AppleWebKit(?!.*Safari))/i.test(navigator.userAgent)) {
         return true;
       } else {
         return false;
@@ -96,7 +96,7 @@ const atcbIsWebView = atcbIsBrowser()
 // checking for problematic apps
 const atcbIsProblematicWebView = atcbIsBrowser()
   ? () => {
-      if (/(Instagram)/i.test(navigator.userAgent || navigator.vendor || window.opera)) {
+      if (/(Instagram)/i.test(navigator.userAgent || window.opera)) {
         return true;
       } else {
         return false;
