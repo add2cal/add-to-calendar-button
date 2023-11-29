@@ -353,7 +353,7 @@ function atcb_generate_microsoft(data, date, subEvent = 'all', type = '365') {
   if (date.description != null && date.description != '') {
     urlParts.push('body=' + encodeURIComponent(date.description));
   }
-  atcb_open_cal_url(data, type, urlParts.join('&'), false, subEvent);
+  atcb_open_cal_url(data, type === 'outlook' ? 'outlookcom' : 'ms365', urlParts.join('&'), false, subEvent);
 }
 
 // FUNCTION TO GENERATE THE MICROSOFT TEAMS URL
