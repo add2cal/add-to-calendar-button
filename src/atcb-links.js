@@ -23,11 +23,11 @@ function atcb_generate_links(host, type, data, subEvent = 'all', keyboardTrigger
   // we differentiate between the type the user triggered and the type of link it shall activate
   let linkType = type;
   // the apple type would trigger the same as ical, for example
-  if (type == 'apple') {
+  if (type === 'apple') {
     linkType = 'ical';
   }
   // adjust for subEvent and case
-  if (subEvent != 'all') {
+  if (subEvent !== 'all') {
     subEvent = parseInt(subEvent) - 1;
   } else if (data.dates.length == 1) {
     subEvent = 0;
@@ -38,9 +38,9 @@ function atcb_generate_links(host, type, data, subEvent = 'all', keyboardTrigger
     return;
   }
   // for single-date events or if a specific subEvent is given, we can simply call the respective endpoints
-  if (subEvent != 'all') {
+  if (subEvent !== 'all') {
     // for cancelled dates, we show a modal - except for iCal, where we can send Cancel-ics-files
-    if (data.dates[`${subEvent}`].status == 'CANCELLED' && linkType != 'ical') {
+    if (data.dates[`${subEvent}`].status === 'CANCELLED' && linkType !== 'ical') {
       atcb_create_modal(host, data, 'warning', atcb_translate_hook('date.status.cancelled', data), atcb_translate_hook('date.status.cancelled.cta', data), [], [], keyboardTrigger);
     } else {
       // in some cases, we want to inform the user about specifics for the link type, before actually following the link
@@ -98,7 +98,7 @@ function atcb_generate_links(host, type, data, subEvent = 'all', keyboardTrigger
 function atcb_generate_multidate_links(host, type, linkType, data, keyboardTrigger, multiDateModal) {
   // in the multi-date event case, when all subEvent have no organizer AND are not cancelled, we can also go the short way (for iCal)
   if (
-    linkType == 'ical' &&
+    linkType === 'ical' &&
     data.dates.every(function (theSubEvent) {
       if (theSubEvent.status == 'CANCELLED' || (theSubEvent.organizer != null && theSubEvent.organizer != '')) {
         return false;
