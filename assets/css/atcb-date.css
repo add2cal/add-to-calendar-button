@@ -192,8 +192,8 @@
 
 .atcb-button {
   box-shadow: var(--btn-shadow);
-  min-width: 17.5em;
-  max-width: 16em;
+  min-width: 16em;
+  max-width: 18em;
   position: relative;
   z-index: 1;
 }
@@ -257,7 +257,7 @@
 
 .atcb-date-btn-day {
   color: var(--date-btn-cal-day-text);
-  font-weight: 300;
+  font-weight: 400;
   font-size: 2em;
   word-break: keep-all;
   padding-bottom: .1em;
@@ -308,7 +308,7 @@
   justify-content: center;
   font-weight: 600;
   font-size: 1em;
-  padding: .3em;
+  padding: .4em .7em;
   box-sizing: border-box;
 }
 
