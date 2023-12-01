@@ -1286,6 +1286,8 @@ a.atcb-modal-btn:not([disabled]):hover {
 
 #rsvp-success-msg-doi {
   color: var(--form-error);
+  padding-top: 1em;
+  font-size: .8em;
 }
 
 #pro-form-submit {
