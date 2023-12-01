@@ -91,7 +91,7 @@ const i18nStrings = {
     'date.status.cancelled': 'Dieser Termin wurde abgesagt.',
     'date.status.cancelled.cta': 'Bitte aktualisiere deinen Kalender!',
     'modal.subscribe.yahoo.h': 'Kalender zu Yahoo hinzufügen',
-    'modal.subscribe.yahoo.text': '<ol><li>Öffne den Yahoo-Kalender.</li><li>Klicke auf den "Aktionen" Tab.</li><li>Wähle "Weiteren Kalendern folgen".</li><li>Wähle einen Namen und füge die URL aus deiner Zwischenablage in das URL-Feld ein.</li></ol>',
+    'modal.subscribe.yahoo.text': '<ol><li>Öffne den Yahoo-Kalender.</li><li>Klicke auf den "Aktionen"-Tab.</li><li>Wähle "Weiteren Kalendern folgen".</li><li>Wähle einen Namen und füge die URL aus deiner Zwischenablage in das URL-Feld ein.</li></ol>',
     'modal.subscribe.yahoo.button': 'Yahoo-Kalender öffnen',
     close: 'Schließen',
     continue: 'Weiter',
