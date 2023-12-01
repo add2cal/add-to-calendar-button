@@ -269,7 +269,7 @@ function atcb_decorate_light_mode(lightMode = '') {
 
 function atcb_decorate_data_i18n(data) {
   // set language if not set
-  if (data.language == null || data.language == '' || !availableLanguages.includes(data.language)) {
+  if (!data.language || data.language == '' || !availableLanguages.includes(data.language)) {
     data.language = 'en';
   }
   // reduce language identifier, if long version is used
@@ -287,10 +287,10 @@ function atcb_decorate_data_i18n(data) {
 
 // optimize date and time information
 function atcb_decorate_data_dates(data) {
-  if (data.dates != null && data.dates.length > 0) {
+  if (data.dates && data.dates.length > 0) {
     for (let i = 0; i < data.dates.length; i++) {
       // get global time zone, if not set within the date block, but globally
-      if (data.dates[`${i}`].timeZone == null) {
+      if (!data.dates[`${i}`].timeZone) {
         data.dates[`${i}`].timeZone = data.timeZone;
       }
       // cleanup different date-time formats
@@ -326,11 +326,11 @@ function atcb_decorate_data_dates(data) {
   // calculate current time
   const now = new Date();
   // set created date
-  if (data.created == null || data.created == '') {
+  if (!data.created || data.created == '') {
     data.created = atcb_format_datetime(now, 'clean', true);
   }
   // set updated date
-  if (data.updated == null || data.updated == '') {
+  if (!data.updated || data.updated == '') {
     data.updated = atcb_format_datetime(now, 'clean', true);
   }
   return data;
@@ -338,11 +338,11 @@ function atcb_decorate_data_dates(data) {
 
 function atcb_decorate_data_meta(data) {
   // set default status on top level
-  if (data.status == null || data.status == '') {
+  if (!data.status || data.status == '') {
     data.status = 'CONFIRMED';
   }
   // set default sequence on top level
-  if (data.sequence == null || data.sequence == '') {
+  if (!data.sequence || data.sequence == '') {
     data.sequence = 0;
   }
   return data;
@@ -554,4 +554,4 @@ function atcb_decorate_data_button_status_handling(data) {
   return data;
 }
 
-export { atcb_decorate_data };
+export { atcb_decorate_data, atcb_decorate_data_dates };
