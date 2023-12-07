@@ -444,7 +444,7 @@ function atcb_date_cleanup(dateTimeData) {
   const endpoints = ['start', 'end'];
   endpoints.forEach(function (point) {
     // validate first (we set some text instead, so the later validation picks it up as an error)
-    if (!/^(\d{4}-\d{2}-\d{2}T?(?:\d{2}:\d{2}|)Z?|today(?:\+\d{1,4}|))$/.test(dateTimeData[point + 'Date'])) {
+    if (!/^(\d{4}-\d{2}-\d{2}T?(?:\d{2}:\d{2}|)Z?|today(?:\+\d{1,4}|))$/i.test(dateTimeData[point + 'Date'])) {
       dateTimeData[point + 'Date'] = 'badly-formed';
     } else {
       // second, if valid, clean up
