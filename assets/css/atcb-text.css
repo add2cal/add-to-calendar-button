@@ -1014,6 +1014,10 @@ a.atcb-modal-btn:not([disabled]):hover {
   width: 100%;
 }
 
+.rsvp-inline-wrapper .atcb-modal-headline {
+  padding-bottom: 1.5em;
+}
+
 .pro {
   text-align: center;
 }
