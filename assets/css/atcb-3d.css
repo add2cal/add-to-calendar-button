@@ -63,6 +63,7 @@
   --modal-btn-secondary-text: #666567;
   --modal-btn-shadow: rgba(0 0 0 / 10%) 0 4px 10px -2px, rgba(0 0 0 / 10%) 0 2px 3px -1px;
   --modal-btn-hover-shadow: rgba(0 0 0 / 25%) 0 5px 13px -2px, rgba(0 0 0 / 20%) 0 3px 5px -2px;
+  --modal-headline-text-transform: none;
   --input-border-radius: 6px;
   --input-background: #fff;
   --status-active-text: #fff;
@@ -559,7 +560,7 @@
   font-weight: 600;
   line-height: 1.5em;
   padding: 1.8em 1.5em 1.3em;
-  text-transform: uppercase;
+  text-transform: var(--modal-headline-text-transform);
   text-align: center;
 }
 
