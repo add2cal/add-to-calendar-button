@@ -431,8 +431,10 @@ function atcb_rewrite_html_elements(content, clear = false, iCalBreaks = false) 
       content = content.replace(/(\[br\s?\/?\]|\{br\s?\/?\}|(\[\/p\](?=.))|(\{\/p\}(?=.)))/gi, ' ');
     }
     // remove any pseudo elements
-    content = content.replace(/\[(|\/)(url|hr|p|b|strong|u|i|em|li|ul|ol|h\d)\]|((\|.*)\[\/url\])/gi, '');
-    content = content.replace(/\{(|\/)(url|hr|p|b|strong|u|i|em|li|ul|ol|h\d)\}|((\|.*)\{\/url\})/gi, '');
+    content = content.replace(/\[url\]([^|]+)\|[^[]*\[\/url\]/gi, '$1');
+    content = content.replace(/\{url\}([^|]+)\|[^[]*\{\/url\}/gi, '$1');
+    content = content.replace(/\[(|\/)(hr|p|b|strong|u|i|em|li|ul|ol|h\d)\]/gi, '');
+    content = content.replace(/\{(|\/)(hr|p|b|strong|u|i|em|li|ul|ol|h\d)\}/gi, '');
     // also remove any special characters
     content = content.replace(/&[#a-zA-Z0-9]{1,9};/gi, '');
     // and build html for the rest

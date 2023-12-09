@@ -16,6 +16,9 @@ export default defineNuxtConfig({
     compressPublicAssets: {
       brotli: true,
     },
+    prerender: {
+      ignore: ['/manifest.json'],
+    },
   },
   ssr: true,
   spaLoadingTemplate: false,
