@@ -126,6 +126,8 @@ const defaultDate = nextDay.getFullYear() + '-' + ('0' + (nextDay.getMonth() + 1
         buttonStyle="round"
         size="8"
         :language="locale"
+        hideBranding
+        hideRichData
       ></add-to-calendar-button>
     </div>
     <p class="mt-10 italic">{{ $t('content.seo.example_disclaimer') }}</p>

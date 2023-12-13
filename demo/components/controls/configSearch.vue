@@ -17,7 +17,7 @@ const search = ref('');
 const searchInput = ref();
 
 const configOptions = [
-  //"proKey",
+  "proKey",
   "options",
   "name",
   "description",
@@ -45,6 +45,7 @@ const configOptions = [
   "subscribe",
   "icsFile",
   "iCalFileName",
+  "instance",
   "created",
   "updated",
   "buttonStyle",
@@ -154,7 +155,7 @@ const onSearchInputBlur = () => {
           <input
             :id="elInputID"
             ref="searchInput"
-            class="autocomplete-input truncate rounded-md bg-zinc-50 py-2 pl-3 pr-10 text-left text-sm caret-secondary focus:outline-none focus-visible:ring focus-visible:ring-secondary/75 group-hover:bg-white dark:bg-zinc-700 dark:group-hover:bg-zinc-600"
+            class="autocomplete-input truncate rounded-md bg-zinc-50 py-2 pl-3 pr-10 text-left text-sm caret-secondary placeholder:text-xs focus:outline-none focus-visible:ring focus-visible:ring-secondary/75 group-hover:bg-white dark:bg-zinc-700 dark:group-hover:bg-zinc-600"
             :placeholder="$t('labels.inputs.search')"
             :aria-label="$t('labels.inputs.search')"
             @focus="onSearchInputFocus"

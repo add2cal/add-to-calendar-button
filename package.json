@@ -1,6 +1,6 @@
 {
   "name": "add-to-calendar-button",
-  "version": "2.4.3",
+  "version": "2.5.0",
   "engines": {
     "node": ">=16.18.1",
     "npm": ">=8.19.2"
@@ -11,7 +11,11 @@
   "files": [
     "dist",
     "test",
+    "assets/css/*.css",
     "index.d.ts",
+    "unstyle/index.d.ts",
+    "no-pro/index.d.ts",
+    "no-pro-unstyle/index.d.ts",
     ".eslintrc.json",
     "CHANGELOG.md",
     ".npmignore"
@@ -20,6 +24,18 @@
     ".": {
       "import": "./dist/module/index.js",
       "require": "./dist/commonjs/index.js"
+    },
+    "./no-pro": {
+      "import": "./dist/module/no-pro/index.js",
+      "require": "./dist/commonjs/no-pro/index.js"
+    },
+    "./unstyle": {
+      "import": "./dist/module/unstyle/index.js",
+      "require": "./dist/commonjs/unstyle/index.js"
+    },
+    "./no-pro-unstyle": {
+      "import": "./dist/module/no-pro-unstyle/index.js",
+      "require": "./dist/commonjs/no-pro-unstyle/index.js"
     }
   },
   "types": "index.d.ts",
@@ -75,17 +91,17 @@
     "build": "npx grunt"
   },
   "dependencies": {
-    "timezones-ical-library": "^1.7.1"
+    "timezones-ical-library": "^1.7.2"
   },
   "devDependencies": {
-    "@open-wc/testing": "^3.2.0",
-    "@typescript-eslint/eslint-plugin": "^6.7.4",
-    "@typescript-eslint/parser": "^6.7.4",
-    "@web/test-runner": "^0.17.1",
-    "eslint": "^8.51.0",
-    "eslint-config-prettier": "^9.0.0",
+    "@open-wc/testing": "^4.0.0",
+    "@typescript-eslint/eslint-plugin": "^6.13.2",
+    "@typescript-eslint/parser": "^6.13.2",
+    "@web/test-runner": "^0.18.0",
+    "eslint": "^8.55.0",
+    "eslint-config-prettier": "^9.1.0",
     "eslint-plugin-commonjs": "^1.0.2",
-    "eslint-plugin-prettier": "^5.0.0",
+    "eslint-plugin-prettier": "^5.0.1",
     "eslint-plugin-security": "^1.7.1",
     "grunt": ">=1.6.1",
     "grunt-contrib-clean": "^2.0.1",
@@ -94,8 +110,9 @@
     "grunt-contrib-uglify": "^5.2.2",
     "grunt-file-creator": "^0.1.3",
     "grunt-version": "^3.0.1",
-    "prettier": "3.0.3",
-    "stylelint": "^15.10.3",
-    "stylelint-config-standard": "^34.0.0"
+    "prettier": "3.1.0",
+    "prettier-plugin-tailwindcss": "^0.5.9",
+    "stylelint": "^16.0.1",
+    "stylelint-config-standard": "^35.0.0"
   }
 }

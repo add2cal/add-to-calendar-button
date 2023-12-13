@@ -3,7 +3,7 @@
  *  Add to Calendar Button
  *  ++++++++++++++++++++++
  *
- *  Version: 2.4.3
+ *  Version: 2.5.0
  *  Creator: Jens Kuerschner (https://jenskuerschner.de)
  *  Project: https://github.com/add2cal/add-to-calendar-button
  *  License: Elastic License 2.0 (ELv2) (https://github.com/add2cal/add-to-calendar-button/blob/main/LICENSE.txt)
@@ -12,7 +12,7 @@
  */
 
 import { tzlib_get_offset } from 'timezones-ical-library';
-import { atcbIsiOS, atcbIsBrowser, atcbValidRecurrOptions, atcbInvalidSubscribeOptions, atcbiOSInvalidOptions, atcbWcBooleanParams } from './atcb-globals.js';
+import { atcbIsiOS, atcbIsAndroid, atcbIsBrowser, atcbValidRecurrOptions, atcbInvalidSubscribeOptions, atcbiOSInvalidOptions, atcbWcBooleanParams } from './atcb-globals.js';
 import { atcb_format_datetime, atcb_rewrite_html_elements, atcb_generate_uuid } from './atcb-util.js';
 import { availableLanguages, rtlLanguages } from './atcb-i18n';
 
@@ -37,10 +37,14 @@ function atcb_decorate_data(data) {
 function atcb_decorate_data_boolean(data) {
   for (let i = 0; i < atcbWcBooleanParams.length; i++) {
     const attr = atcbWcBooleanParams[`${i}`];
-    if (data[`${attr}`] == null || data[`${attr}`] === '') {
-      data[`${attr}`] = false;
+    if (data[`${attr}`]) {
+      // only do something if not already a boolean
+      if (typeof data[`${attr}`] !== 'boolean') {
+        const val = data[`${attr}`].toString().trim().toLowerCase() || '';
+        data[`${attr}`] = val === '' || val === 'true' ? true : false;
+      }
     } else {
-      data[`${attr}`] = true;
+      data[`${attr}`] = false;
     }
   }
   return data;
@@ -119,30 +123,38 @@ function atcb_decorate_data_rrule(data) {
   return data;
 }
 
-// cleanup options, standardizing names and splitting off custom labels
+// cleanup options, standardizing names, and check for mobile special rules
 function atcb_decorate_data_options(data) {
-  // iterrate over the options and generate the new clean arrays (for options and labels)
+  // define the actual options to check
+  const theOptions = (function () {
+    if (atcbIsiOS() || data.fakeIOS) {
+      if (data.optionsIOS) {
+        return data.optionsIOS;
+      }
+      if (data.optionsMobile) {
+        return data.optionsMobile;
+      }
+    }
+    if ((atcbIsAndroid() || data.fakeMobile || data.fakeAndroid) && data.optionsMobile) {
+      return data.optionsMobile;
+    }
+    return data.options || ['ical'];
+  })();
+  // iterrate over the options and generate the new clean arrays
   const newOptions = [];
-  data.optionLabels = [];
   let iCalGiven = false;
   let appleGiven = false;
-  for (let i = 0; i < data.options.length; i++) {
-    // preparing the input options and labels
-    const cleanOption = data.options[`${i}`].split('|');
+  for (let i = 0; i < theOptions.length; i++) {
+    // preparing the input options
+    const cleanOption = theOptions[`${i}`].split('|');
     const optionName = cleanOption[0].toLowerCase().replace('microsoft', 'ms').replace(/\./, '');
-    const optionLabel = (function () {
-      if (cleanOption[1] != null) {
-        return cleanOption[1];
-      }
-      return '';
-    })();
     if (optionName === 'apple') {
       appleGiven = true;
     }
     if (optionName === 'ical') {
       iCalGiven = true;
     }
-    // next, fill the new arrays (where the labels array already sits inside the main data object)
+    // next, fill the new arrays
     // do not consider options, which should not appear on iOS (e.g. iCal, since we have the Apple option instead)
     // in the recurrence case, we leave out all options, which do not support it in general, as well as Apple and iCal for rrules with "until"
     // and in the subscribe case, we also skip options, which are not made for subscribing (MS Teams)
@@ -154,20 +166,17 @@ function atcb_decorate_data_options(data) {
       continue;
     }
     newOptions.push(optionName);
-    data.optionLabels.push(optionLabel);
   }
-  // since the above can lead to excluding all options, we add the iCal option as default, if not other option is left
+  // since the above can lead to excluding all options, we add the iCal option as default, if no other option is left
   if (newOptions.length === 0) {
     if (!atcbIsiOS()) {
       newOptions.push('ical');
-      data.optionLabels.push('');
     }
     iCalGiven = true;
   }
   // for iOS, we force the Apple option (if it is not there, but iCal was)
   if (atcbIsiOS() && iCalGiven && !appleGiven) {
     newOptions.push('apple');
-    data.optionLabels.push('');
   }
   // last but not least, override the options at the main data object
   data.options = newOptions;
@@ -175,6 +184,10 @@ function atcb_decorate_data_options(data) {
 }
 
 function atcb_decorate_data_style(data) {
+  // set inline if inlineRSVP
+  if (data.inlineRSVP) {
+    data.inline = true;
+  }
   // set default listStyle
   if (data.listStyle == null || data.listStyle == '') {
     data.listStyle = 'dropdown';
@@ -256,7 +269,7 @@ function atcb_decorate_light_mode(lightMode = '') {
 
 function atcb_decorate_data_i18n(data) {
   // set language if not set
-  if (data.language == null || data.language == '' || !availableLanguages.includes(data.language)) {
+  if (!data.language || data.language == '' || !availableLanguages.includes(data.language)) {
     data.language = 'en';
   }
   // reduce language identifier, if long version is used
@@ -274,10 +287,10 @@ function atcb_decorate_data_i18n(data) {
 
 // optimize date and time information
 function atcb_decorate_data_dates(data) {
-  if (data.dates != null && data.dates.length > 0) {
+  if (data.dates && data.dates.length > 0) {
     for (let i = 0; i < data.dates.length; i++) {
       // get global time zone, if not set within the date block, but globally
-      if (data.dates[`${i}`].timeZone == null) {
+      if (!data.dates[`${i}`].timeZone) {
         data.dates[`${i}`].timeZone = data.timeZone;
       }
       // cleanup different date-time formats
@@ -313,11 +326,11 @@ function atcb_decorate_data_dates(data) {
   // calculate current time
   const now = new Date();
   // set created date
-  if (data.created == null || data.created == '') {
+  if (!data.created || data.created == '') {
     data.created = atcb_format_datetime(now, 'clean', true);
   }
   // set updated date
-  if (data.updated == null || data.updated == '') {
+  if (!data.updated || data.updated == '') {
     data.updated = atcb_format_datetime(now, 'clean', true);
   }
   return data;
@@ -325,11 +338,11 @@ function atcb_decorate_data_dates(data) {
 
 function atcb_decorate_data_meta(data) {
   // set default status on top level
-  if (data.status == null || data.status == '') {
+  if (!data.status || data.status == '') {
     data.status = 'CONFIRMED';
   }
   // set default sequence on top level
-  if (data.sequence == null || data.sequence == '') {
+  if (!data.sequence || data.sequence == '') {
     data.sequence = 0;
   }
   return data;
@@ -397,12 +410,16 @@ function atcb_decorate_data_extend(data) {
     } else {
       data.dates[`${i}`].onlineEvent = false;
     }
-    // for the uid, we do not copy from the top level, but rather generate it per event (except for the first one)
+    // for the uid, we do not simply copy from the top level, but iterate it to keep it unique
     if (data.dates[`${i}`].uid == null) {
-      if (i == 0 && data.uid != null && data.uid != '') {
+      if (i === 0 && data.uid !== null && data.uid !== '') {
         data.dates[0].uid = data.uid;
       } else {
-        data.dates[`${i}`].uid = atcb_generate_uuid();
+        if (data.uid !== null && data.uid !== '') {
+          data.dates[`${i}`].uid = data.uid + '-' + (i + 1);
+        } else {
+          data.dates[`${i}`].uid = atcb_generate_uuid();
+        }
       }
     }
   }
@@ -427,7 +444,7 @@ function atcb_date_cleanup(dateTimeData) {
   const endpoints = ['start', 'end'];
   endpoints.forEach(function (point) {
     // validate first (we set some text instead, so the later validation picks it up as an error)
-    if (!/^(\d{4}-\d{2}-\d{2}T?(?:\d{2}:\d{2}|)Z?|today(?:\+\d{1,4}|))$/.test(dateTimeData[point + 'Date'])) {
+    if (!/^(\d{4}-\d{2}-\d{2}T?(?:\d{2}:\d{2}|)Z?|today(?:\+\d{1,4}|))$/i.test(dateTimeData[point + 'Date'])) {
       dateTimeData[point + 'Date'] = 'badly-formed';
     } else {
       // second, if valid, clean up
@@ -537,4 +554,4 @@ function atcb_decorate_data_button_status_handling(data) {
   return data;
 }
 
-export { atcb_decorate_data };
+export { atcb_decorate_data, atcb_decorate_data_dates };

@@ -3,7 +3,7 @@
  *  Add to Calendar Button
  *  ++++++++++++++++++++++
  *
- *  Version: 2.4.3
+ *  Version: 2.5.0
  *  Creator: Jens Kuerschner (https://jenskuerschner.de)
  *  Project: https://github.com/add2cal/add-to-calendar-button
  *  License: Elastic License 2.0 (ELv2) (https://github.com/add2cal/add-to-calendar-button/blob/main/LICENSE.txt)
@@ -14,7 +14,7 @@
 import { atcb_generate_dropdown_list, atcb_generate_bg_overlay, atcb_generate_overlay_dom, atcb_create_atcbl, atcb_generate_modal_host } from './atcb-generate.js';
 import { atcb_position_list, atcb_position_shadow_button_listener, atcb_manage_body_scroll, atcb_set_fullsize, atcb_set_sizes } from './atcb-util.js';
 import { atcbStates } from './atcb-globals.js';
-import { atcb_log_event } from './atcb-event';
+import { atcb_log_event } from './atcb-event.js';
 
 // FUNCTIONS TO CONTROL THE INTERACTION
 function atcb_toggle(host, action, data = '', button = null, keyboardTrigger = false, generatedButton = false) {
@@ -198,7 +198,7 @@ function atcb_close(host, keyboardTrigger = false) {
     // remove dropdowns, modals, and bg overlays (should only be one of each at max)
     Array.from(host.querySelectorAll('.atcb-list-wrapper'))
       .concat(Array.from(host.querySelectorAll('.atcb-list')))
-      .concat(Array.from(host.querySelectorAll('#add-to-calendar-button-reference')))
+      .concat(Array.from(host.querySelectorAll('#atcb-reference')))
       .concat(Array.from(host.querySelectorAll('#atcb-bgoverlay')))
       .forEach((el) => el.remove());
     // show original button again (forceOverlay case)

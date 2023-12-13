@@ -3,7 +3,7 @@
  *  Add to Calendar Button
  *  ++++++++++++++++++++++
  *
- *  Version: 2.4.3
+ *  Version: 2.5.0
  *  Creator: Jens Kuerschner (https://jenskuerschner.de)
  *  Project: https://github.com/add2cal/add-to-calendar-button
  *  License: Elastic License 2.0 (ELv2) (https://github.com/add2cal/add-to-calendar-button/blob/main/LICENSE.txt)
@@ -14,11 +14,12 @@
 import { atcbIcon, atcbStates, atcbDefaultTarget } from './atcb-globals.js';
 import { atcb_toggle, atcb_close } from './atcb-control.js';
 import { atcb_generate_links } from './atcb-links.js';
-import { atcb_generate_time, atcb_position_shadow_button, atcb_position_shadow_button_listener, atcb_manage_body_scroll, atcb_set_fullsize, atcb_set_sizes, atcb_debounce, atcb_debounce_leading } from './atcb-util.js';
-import { atcb_set_fully_successful } from './atcb-links';
+import { atcb_generate_time, atcb_generate_timestring, atcb_position_shadow_button, atcb_position_shadow_button_listener, atcb_manage_body_scroll, atcb_set_fullsize, atcb_set_sizes, atcb_debounce, atcb_debounce_leading } from './atcb-util.js';
+import { atcb_set_fully_successful } from './atcb-links.js';
 import { atcb_translate_hook } from './atcb-i18n.js';
-import { atcb_load_css, atcb_set_light_mode } from './atcb-init';
-import { atcb_log_event } from './atcb-event';
+import { atcb_load_css, atcb_set_light_mode } from './atcb-init.js';
+import { atcb_log_event } from './atcb-event.js';
+import { atcb_generate_rsvp } from './atcb-generate-pro.js';
 
 // GENERATE THE ACTUAL BUTTON
 // helper function to generate the labels for the button and list options
@@ -26,28 +27,41 @@ function atcb_generate_label(host, data, parent, type, icon = false, text = '', 
   // setting IDs and adding event listeners
   switch (type) {
     case 'trigger':
+    case 'rsvp':
     default:
       parent.id = data.identifier;
       if (!data.blockInteraction) {
         parent.addEventListener('keyup', function (event) {
           if (event.key === 'Enter' || event.code == 'Space' || (event.key === 'Alt' && event.key === 'Control' && event.code === 'Space')) {
             event.preventDefault();
-            atcb_toggle(host, 'auto', data, parent, true, true);
+            if (type === 'rsvp' && typeof atcb_generate_rsvp === 'function') {
+              atcb_generate_rsvp(host, data, true, false, true, parent);
+            } else {
+              atcb_toggle(host, 'auto', data, parent, true, true);
+            }
           }
         });
         parent.addEventListener(
           'touchend',
           atcb_debounce_leading((event) => {
             event.preventDefault();
-            atcb_toggle(host, 'auto', data, parent, false, true);
+            if (type === 'rsvp' && typeof atcb_generate_rsvp === 'function') {
+              atcb_generate_rsvp(host, data, false, false, true, parent);
+            } else {
+              atcb_toggle(host, 'auto', data, parent, false, true);
+            }
           }),
         );
-        if (data.trigger === 'click') {
+        if (data.trigger === 'click' || (type === 'rsvp' && typeof atcb_generate_rsvp === 'function')) {
           parent.addEventListener(
             'mouseup',
             atcb_debounce_leading((event) => {
               event.preventDefault();
-              atcb_toggle(host, 'auto', data, parent, false, true);
+              if (type === 'rsvp' && typeof atcb_generate_rsvp === 'function') {
+                atcb_generate_rsvp(host, data, false, false, true, parent);
+              } else {
+                atcb_toggle(host, 'auto', data, parent, false, true);
+              }
             }),
           );
         } else {
@@ -74,7 +88,7 @@ function atcb_generate_label(host, data, parent, type, icon = false, text = '', 
           'click',
           atcb_debounce_leading(() => {
             if (oneOption) {
-              host.querySelector('#' + parent.id).blur();
+              host.querySelector('#' + parent.id)?.blur();
               atcb_log_event('openSingletonLink', parent.id, data.identifier);
             } else {
               atcb_toggle(host, 'close');
@@ -87,7 +101,7 @@ function atcb_generate_label(host, data, parent, type, icon = false, text = '', 
           if (event.key === 'Enter') {
             event.preventDefault();
             if (oneOption) {
-              host.querySelector('#' + parent.id).blur();
+              host.querySelector('#' + parent.id)?.blur();
               atcb_log_event('openSingletonLink', parent.id, data.identifier);
             } else {
               atcb_toggle(host, 'close');
@@ -136,30 +150,25 @@ function atcb_generate_label_content(data, parent, type, icon, text, oneOption) 
     }
     return atcb_translate_hook('label.addtocalendar', data);
   })();
-  // if there is only 1 option, we use the trigger text on the option label
-  if (text == '' && data.options.length === 1) {
-    text = defaultTriggerText;
-  }
   // defining text labels
-  const labelText = {
-    trigger: text || defaultTriggerText,
-    apple: text || 'Apple',
-    google: text || 'Google',
-    ical: text || atcb_translate_hook('label.icalfile', data),
-    msteams: text || 'Microsoft Teams',
-    ms365: text || 'Microsoft 365',
-    outlookcom: text || 'Outlook.com',
-    yahoo: text || 'Yahoo',
-    close: atcb_translate_hook('close', data),
-  };
-  text = labelText[`${type}`];
+  // if there is only 1 option, we use the trigger text on the option label
+  if (text === '') {
+    if (data.options.length === 1 || type === 'trigger') {
+      text = defaultTriggerText;
+    } else if (type === 'close') {
+      text = atcb_translate_hook('close', data);
+    } else {
+      text = atcb_translate_hook(type, data);
+    }
+  }
   // add icon and text label (not in the date style trigger case)
-  if (data.buttonStyle == 'date' && (type == 'trigger' || oneOption)) {
+  if (data.buttonStyle === 'date' && (type == 'trigger' || oneOption)) {
     return;
   }
   if (icon) {
-    const iconEl = document.createElement('span');
+    const iconEl = document.createElement('div');
     iconEl.classList.add('atcb-icon');
+    iconEl.classList.add(`atcb-icon-${type}`);
     iconEl.innerHTML = atcbIcon[`${type}`];
     parent.append(iconEl);
   }
@@ -174,7 +183,7 @@ function atcb_generate_label_content(data, parent, type, icon, text, oneOption) 
 }
 
 // generate the triggering button
-function atcb_generate_button(host, button, data, debug = false) {
+function atcb_generate_button(host, button, data) {
   // determine whether we are looking for the 1-option case (also with buttonsList)
   const oneOption = (function () {
     if (data.options.length === 1 || (data.buttonsList && data.buttonStyle != 'date')) {
@@ -183,7 +192,7 @@ function atcb_generate_button(host, button, data, debug = false) {
     return false;
   })();
   const optionSplit = oneOption ? data.options : ['default'];
-  optionSplit.forEach(function (option) {
+  optionSplit.forEach(function (option, index) {
     // generate the wrapper div
     const buttonTriggerWrapper = document.createElement('div');
     buttonTriggerWrapper.classList.add('atcb-button-wrapper');
@@ -197,7 +206,6 @@ function atcb_generate_button(host, button, data, debug = false) {
     buttonTrigger.classList.add('atcb-button');
     if (data.disabled) {
       buttonTrigger.setAttribute('disabled', true);
-      buttonTrigger.style.cssText = 'opacity: .75; cursor: not-allowed; filter: brightness(95%); border-style: dashed;';
     }
     if (data.hideTextLabelButton) {
       buttonTrigger.classList.add('atcb-no-text');
@@ -212,16 +220,16 @@ function atcb_generate_button(host, button, data, debug = false) {
     buttonTrigger.setAttribute('aria-expanded', false); // aria-expanded default value on button generate
     buttonTriggerWrapper.append(buttonTrigger);
     // generate the label incl. eventListeners
-    if (data.buttonStyle == 'date') {
+    if (data.buttonStyle === 'date') {
       atcb_generate_date_button(data, buttonTrigger);
     }
-    // if there is only 1 calendar option, we directly show this at the button, but with the trigger's label text (small exception for the date style)
+    // if there is only 1 calendar option, we directly show this at the button, but with the trigger's label text
     if (oneOption) {
       buttonTrigger.classList.add('atcb-single');
       // if buttonsList is true and we have more than 1 option, use the option as label
       const label = (function () {
         if (data.buttonsList && data.options.length > 1) {
-          return data.optionLabels[0];
+          return atcb_translate_hook(`${data.options[`${index}`]}`, data);
         }
         return data.label;
       })();
@@ -248,7 +256,7 @@ function atcb_generate_button(host, button, data, debug = false) {
       buttonTrigger.append(btnCheck);
     }
   });
-  if (debug) {
+  if (data.debug) {
     console.log('Add to Calendar Button "' + data.identifier + '" created');
   }
 }
@@ -272,7 +280,7 @@ function atcb_generate_dropdown_list(host, data) {
     optionItem.dataset.optionNumber = listCount;
     optionsList.append(optionItem);
     // generate the label incl. individual eventListener
-    atcb_generate_label(host, data, optionItem, option, !data.hideIconList, data.optionLabels[listCount - 1]);
+    atcb_generate_label(host, data, optionItem, option, !data.hideIconList);
   });
   // in the modal case, we also render a close option
   if (data.listStyle === 'modal') {
@@ -289,7 +297,7 @@ function atcb_generate_dropdown_list(host, data) {
 }
 
 // create the background overlay, which also acts as trigger to close any dropdowns
-function atcb_generate_bg_overlay(host, trigger = '', modal = false, darken = true) {
+function atcb_generate_bg_overlay(host, trigger = '', modal = false, darken = true, closable = true) {
   const bgOverlay = (function () {
     if (modal) {
       return document.createElement('dialog');
@@ -305,78 +313,81 @@ function atcb_generate_bg_overlay(host, trigger = '', modal = false, darken = tr
   }
   bgOverlay.role = 'button';
   bgOverlay.tabIndex = 0;
-  bgOverlay.addEventListener(
-    'mouseup',
-    atcb_debounce_leading((e) => {
-      if (e.target !== e.currentTarget) return;
-      atcb_log_event('closeList', 'Background Hit', atcbStates['active']);
-      atcb_toggle(host, 'close');
-    }),
-  );
-  let fingerMoved = false;
-  bgOverlay.addEventListener(
-    'touchstart',
-    atcb_debounce_leading(() => (fingerMoved = false)),
-    { passive: true },
-  );
-  bgOverlay.addEventListener(
-    'touchmove',
-    atcb_debounce_leading(() => (fingerMoved = true)),
-    { passive: true },
-  );
-  bgOverlay.addEventListener(
-    'touchend',
-    atcb_debounce((e) => {
-      if (fingerMoved !== false || e.target !== e.currentTarget) return;
-      atcb_log_event('closeList', 'Background Hit', atcbStates['active']);
-      atcb_toggle(host, 'close');
-    }),
-    { passive: true },
-  );
-  if (trigger !== 'click') {
+  if (closable) {
     bgOverlay.addEventListener(
-      'mousemove',
+      'mouseup',
       atcb_debounce_leading((e) => {
         if (e.target !== e.currentTarget) return;
         atcb_log_event('closeList', 'Background Hit', atcbStates['active']);
         atcb_toggle(host, 'close');
       }),
     );
-  } else {
-    // if trigger is not set to 'click', we render a close icon, when hovering over the background
-    bgOverlay.classList.add('atcb-click');
+    let fingerMoved = false;
+    bgOverlay.addEventListener(
+      'touchstart',
+      atcb_debounce_leading(() => (fingerMoved = false)),
+      { passive: true },
+    );
+    bgOverlay.addEventListener(
+      'touchmove',
+      atcb_debounce_leading(() => (fingerMoved = true)),
+      { passive: true },
+    );
+    bgOverlay.addEventListener(
+      'touchend',
+      atcb_debounce((e) => {
+        if (fingerMoved !== false || e.target !== e.currentTarget) return;
+        atcb_log_event('closeList', 'Background Hit', atcbStates['active']);
+        atcb_toggle(host, 'close');
+      }),
+      { passive: true },
+    );
+    if (trigger !== 'click') {
+      bgOverlay.addEventListener(
+        'mousemove',
+        atcb_debounce_leading((e) => {
+          if (e.target !== e.currentTarget) return;
+          atcb_log_event('closeList', 'Background Hit', atcbStates['active']);
+          atcb_toggle(host, 'close');
+        }),
+      );
+    } else {
+      // if trigger is not set to 'click', we render a close icon, when hovering over the background
+      bgOverlay.classList.add('atcb-click');
+    }
   }
   return bgOverlay;
 }
 
 // SMALL LOGO
-function atcb_create_atcbl(host, atList = true) {
+function atcb_create_atcbl(host, atList = true, returnEl = false) {
   const atcbL = document.createElement('div');
-  atcbL.id = 'add-to-calendar-button-reference';
-  atcbL.style.cssText = 'width: 130px; padding: 5px; height: auto; opacity: .8; transform: translate3d(0, 0, 0); z-index: 15000000;';
+  atcbL.id = 'atcb-reference';
   setTimeout(() => {
-    atcbL.innerHTML = '<a href="https://add-to-calendar-pro.com" target="_blank" rel="noopener">' + atcbIcon['atcb'] + '</a>';
+    atcbL.innerHTML = '<a href="https://add-to-calendar-pro.com" target="_blank" rel="noopener">Add-to-Calendar-PRO.com</a>';
   }, 500);
   if (atList) {
     host.querySelector('.atcb-initialized .atcb-list-wrapper').append(atcbL);
+  } else if (returnEl) {
+    return atcbL;
   } else {
     if (window.innerHeight > 1000 || window.innerWidth > 1000) {
       host.append(atcbL);
-      atcbL.style.cssText += 'position: fixed; bottom: 15px; right: 30px;';
+      atcbL.classList.add('fixed-ref');
     }
   }
 }
 
 // FUNCTION TO CREATE MODALS
 // this is only about special communication modals - not the list style modal
-function atcb_create_modal(host, data, icon = '', headline, content = '', buttons = [], subEvents = [], keyboardTrigger = false, goto = {}) {
+function atcb_create_modal(host, data, icon = '', headline, content = '', buttons = [], subEvents = [], keyboardTrigger = false, goto = {}, closable = true) {
   atcbStates['active'] = data.identifier;
   // setting the stage
   const modalHost = atcb_generate_modal_host(host, data, false);
   const bgOverlay = (function () {
     const el = modalHost.getElementById('atcb-bgoverlay');
     if (!el) {
-      const newOverlay = atcb_generate_bg_overlay(host, 'click', true, !data.hideBackground);
+      const newOverlay = atcb_generate_bg_overlay(host, 'click', true, !data.hideBackground, closable);
       modalHost.querySelector('.atcb-modal-host-initialized').append(newOverlay);
       return newOverlay;
     }
@@ -411,31 +422,31 @@ function atcb_create_modal(host, data, icon = '', headline, content = '', button
   // set overlay size just to be sure
   atcb_set_fullsize(bgOverlay);
   // add icon
-  if (icon != '' && !data.hideIconModal) {
+  if (icon !== '' && !data.hideIconModal) {
     const modalIcon = document.createElement('div');
     modalIcon.classList.add('atcb-modal-icon');
     modalIcon.innerHTML = atcbIcon[`${icon}`];
     modal.append(modalIcon);
   }
   // add headline
-  if (headline && headline != '') {
+  if (headline && headline !== '') {
     const modalHeadline = document.createElement('div');
     modalHeadline.classList.add('atcb-modal-headline');
     modalHeadline.textContent = headline;
     modal.append(modalHeadline);
   }
   // add text content
-  if (content != '') {
+  if (content !== '') {
     const modalContent = document.createElement('div');
     modalContent.classList.add('atcb-modal-content');
     modalContent.innerHTML = content;
     modal.append(modalContent);
   }
+  if (!data.hideBranding) {
+    atcb_create_atcbl(modalHost, false);
+  }
   // add subEvent buttons (array with type first and subEvent numbers following)
   if (subEvents.length > 1) {
-    if (!data.hideBranding) {
-      atcb_create_atcbl(modalHost, false);
-    }
     const modalsubEventsContent = document.createElement('div');
     modalsubEventsContent.classList.add('atcb-modal-content');
     modal.append(modalsubEventsContent);
@@ -450,8 +461,8 @@ function atcb_create_modal(host, data, icon = '', headline, content = '', button
       modalsubEventsContent.append(modalSubEventButton);
       atcb_generate_date_button(data, modalSubEventButton, i);
       // interaction only if not overdue and blocked
-      if (!data.dates[i - 1].overdue || data.pastDateHandling == 'none') {
-        if (i == 1 && keyboardTrigger) {
+      if (!data.dates[i - 1].overdue || data.pastDateHandling === 'none') {
+        if (i === 1 && keyboardTrigger) {
           modalSubEventButton.focus();
         }
         modalSubEventButton.addEventListener(
@@ -465,20 +476,19 @@ function atcb_create_modal(host, data, icon = '', headline, content = '', button
       } else {
         // if blocked, we also add styles
         modalSubEventButton.setAttribute('disabled', true);
-        modalSubEventButton.style.cssText = 'opacity: .75; cursor: not-allowed; filter: brightness(95%); border-style: dashed;';
       }
     }
   }
-  // add buttons (array of objects; attributes: href, type, label, primary(boolean))
-  if (buttons.length == 0) {
-    buttons.push({ type: 'close', label: atcb_translate_hook('close', data) });
+  // add buttons (array of objects; attributes: href, type, label, primary(boolean), small(boolean), id)
+  if (buttons.length === 0) {
+    buttons.push({ type: 'close', label: atcb_translate_hook('close', data), small: true });
   }
   const modalButtons = document.createElement('div');
   modalButtons.classList.add('atcb-modal-buttons');
   modal.append(modalButtons);
   buttons.forEach((button, index) => {
     let modalButton;
-    if (button.href != null && button.href != '') {
+    if (button.href && button.href !== '') {
       modalButton = document.createElement('a');
       modalButton.setAttribute('target', atcbDefaultTarget);
       modalButton.setAttribute('href', button.href);
@@ -487,16 +497,22 @@ function atcb_create_modal(host, data, icon = '', headline, content = '', button
       modalButton = document.createElement('button');
       modalButton.type = 'button';
     }
+    if (button.id && button.id !== '') {
+      modalButton.id = button.id;
+    }
     modalButton.classList.add('atcb-modal-btn');
     if (button.primary) {
       modalButton.classList.add('atcb-modal-btn-primary');
     }
-    if (button.label == null || button.label == '') {
+    if (button.small) {
+      modalButton.classList.add('btn-small');
+    }
+    if (!button.label || button.label === '') {
       button.label = atcb_translate_hook('modal.button.default', data);
     }
     modalButton.textContent = button.label;
     modalButtons.append(modalButton);
-    if (index == 0 && subEvents.length < 2 && keyboardTrigger) {
+    if (index === 0 && subEvents.length < 2 && keyboardTrigger) {
       modalButton.focus();
     }
     switch (button.type) {
@@ -572,155 +588,7 @@ function atcb_generate_date_button(data, parent, subEvent = 'all') {
   } else if (data.dates.length == 1) {
     subEvent = 0;
   }
-  const fullTimeInfo = (function () {
-    let startDateInfo, endDateInfo, timeZoneInfoStart, timeZoneInfoEnd;
-    let formattedTimeStart = {};
-    let formattedTimeEnd = {};
-    let timeBlocks = [];
-    let timeZoneInfoStringStart = '';
-    let timeZoneInfoStringEnd = '';
-    if (subEvent == 'all') {
-      // we are looking at multiple sub-events, which should be considered all together
-      formattedTimeStart = atcb_generate_time(data.dates[0]);
-      formattedTimeEnd = atcb_generate_time(data.dates[data.dates.length - 1]);
-      timeZoneInfoStart = data.dates[0].timeZone;
-      timeZoneInfoEnd = data.dates[data.dates.length - 1].timeZone;
-    } else {
-      // we are looking at 1 or many sub-events, but we consider only one specific
-      formattedTimeStart = atcb_generate_time(data.dates[`${subEvent}`]);
-      formattedTimeEnd = formattedTimeStart;
-      timeZoneInfoStart = data.dates[`${subEvent}`].timeZone;
-      timeZoneInfoEnd = timeZoneInfoStart;
-    }
-    startDateInfo = new Date(formattedTimeStart.start);
-    endDateInfo = new Date(formattedTimeEnd.end);
-    // set GMT for allday events to prevent any time zone mismatches
-    if (formattedTimeStart.allday) {
-      timeZoneInfoStart = 'GMT';
-    }
-    if (formattedTimeEnd.allday) {
-      timeZoneInfoEnd = 'GMT';
-    }
-    // in the case of an online event (or magic location), convert the time zone
-    const browserTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
-    const magicLocationPhrases = ['global', 'world-wide', 'worldwide', 'online'];
-    const convertable = (function () {
-      let i = 0;
-      let j = data.dates.length - 1;
-      if (subEvent != 'all') {
-        i = j = subEvent;
-      }
-      for (i; i <= j; i++) {
-        const magicLocation = (function () {
-          if (data.dates[`${i}`].location != null && data.dates[`${i}`].location != '') {
-            if (magicLocationPhrases.includes(data.dates[`${i}`].location.toLowerCase())) {
-              return true;
-            }
-          }
-          return false;
-        })();
-        if (!magicLocation && !data.dates[`${i}`].onlineEvent) {
-          return false;
-        }
-      }
-      return true;
-    })();
-    if (convertable) {
-      timeZoneInfoStart = timeZoneInfoEnd = browserTimezone;
-    } else {
-      // determine time zone strings
-      if (!formattedTimeStart.allday && browserTimezone != timeZoneInfoStart && timeZoneInfoStart != timeZoneInfoEnd) {
-        timeZoneInfoStringStart = '(' + timeZoneInfoStart + ')';
-      }
-      if ((!formattedTimeEnd.allday && browserTimezone != timeZoneInfoEnd) || timeZoneInfoStart != timeZoneInfoEnd) {
-        timeZoneInfoStringEnd = '(' + timeZoneInfoEnd + ')';
-      }
-    }
-    // drop the year, if it is the current one
-    const now = new Date();
-    const dropYearStart = (function () {
-      if (startDateInfo.getFullYear() == now.getFullYear()) {
-        return true;
-      }
-      return false;
-    })();
-    const dropYearEnd = (function () {
-      if (endDateInfo.getFullYear() == now.getFullYear()) {
-        return true;
-      }
-      return false;
-    })();
-    // get the options to format the date
-    const formatOptionsStart = get_format_options(timeZoneInfoStart, dropYearStart, data.language);
-    const formatOptionsEnd = get_format_options(timeZoneInfoEnd, dropYearEnd, data.language);
-    // start = end
-    if (startDateInfo.toLocaleDateString(data.language, formatOptionsEnd.DateLong) === endDateInfo.toLocaleDateString(data.language, formatOptionsEnd.DateLong)) {
-      // allday vs. timed
-      if (formattedTimeStart.allday) {
-        if (!dropYearStart) {
-          timeBlocks.push(startDateInfo.toLocaleDateString(data.language, formatOptionsStart.DateLong));
-        }
-      } else {
-        let timeString = '';
-        if (dropYearStart) {
-          timeString = startDateInfo.toLocaleString(data.language, formatOptionsStart.Time);
-        } else {
-          timeString = startDateInfo.toLocaleString(data.language, formatOptionsStart.DateTimeLong);
-        }
-        if (data.language == 'en') {
-          timeString = timeString.replace(/:00/, '');
-        }
-        timeBlocks.push(timeString);
-        if (timeZoneInfoStringStart != '') {
-          timeBlocks.push(timeZoneInfoStringStart);
-        }
-        timeBlocks.push('-');
-        timeString = endDateInfo.toLocaleTimeString(data.language, formatOptionsEnd.Time);
-        if (data.language == 'en') {
-          timeString = timeString.replace(/:00/, '');
-        }
-        timeBlocks.push(timeString);
-        if (timeZoneInfoStringEnd != '') {
-          timeBlocks.push(timeZoneInfoStringEnd);
-        }
-      }
-    } else {
-      // start != end
-      // allday vs. timed (start)
-      if (formattedTimeStart.allday) {
-        timeBlocks.push(startDateInfo.toLocaleDateString(data.language, formatOptionsStart.DateLong));
-      } else {
-        let timeString = '';
-        if (dropYearStart) {
-          timeString = startDateInfo.toLocaleString(data.language, formatOptionsStart.Time);
-        } else {
-          timeString = startDateInfo.toLocaleString(data.language, formatOptionsStart.DateTimeLong);
-        }
-        if (data.language == 'en') {
-          timeString = timeString.replace(/:00/, '');
-        }
-        timeBlocks.push(timeString);
-      }
-      if (timeZoneInfoStringStart != '') {
-        timeBlocks.push(timeZoneInfoStringStart);
-      }
-      timeBlocks.push('-');
-      // allday vs. timed (end)
-      if (formattedTimeEnd.allday) {
-        timeBlocks.push(endDateInfo.toLocaleDateString(data.language, formatOptionsEnd.DateLong));
-      } else {
-        let timeString = endDateInfo.toLocaleString(data.language, formatOptionsEnd.DateTimeLong);
-        if (data.language == 'en') {
-          timeString = timeString.replace(/:00/, '');
-        }
-        timeBlocks.push(timeString);
-      }
-      if (timeZoneInfoStringEnd != '') {
-        timeBlocks.push(timeZoneInfoStringEnd);
-      }
-    }
-    return timeBlocks;
-  })();
+  const fullTimeInfo = atcb_generate_timestring(data.dates, data.language, subEvent);
   const hoverText = (function () {
     if (subEvent != 'all' && data.dates[`${subEvent}`].status == 'CANCELLED') {
       return atcb_translate_hook('date.status.cancelled', data) + '<br>' + atcb_translate_hook('date.status.cancelled.cta', data);
@@ -798,27 +666,26 @@ function atcb_generate_date_button(data, parent, subEvent = 'all') {
   }
   btnDetails.append(btnHeadline);
   // location line
-  if ((data.dates[`${subEvent}`].location != null && data.dates[`${subEvent}`].location != '' && !data.dates[`${subEvent}`].onlineEvent) || cancelledInfo != '') {
+  if ((data.dates[`${subEvent}`].location && data.dates[`${subEvent}`].location !== '' && !data.dates[`${subEvent}`].onlineEvent) || cancelledInfo !== '') {
     const btnLocation = document.createElement('div');
     btnLocation.classList.add('atcb-date-btn-content');
     btnDetails.append(btnLocation);
     if (cancelledInfo != '') {
+      btnLocation.classList.add('atcb-date-btn-cancelled');
       btnLocation.textContent = cancelledInfo;
-      btnLocation.style.fontWeight = '600';
-      btnLocation.style.color = '#9c1a23';
     } else {
-      btnLocation.classList.add('atcb-date-btn-content-location');
       const btnLocationIcon = document.createElement('span');
       btnLocationIcon.classList.add('atcb-date-btn-content-icon');
       btnLocationIcon.innerHTML = atcbIcon['location'];
       btnLocation.append(btnLocationIcon);
       const btnLocationText = document.createElement('span');
+      btnLocationText.classList.add('atcb-date-btn-content-location');
       btnLocationText.textContent = data.dates[`${subEvent}`].location;
       btnLocation.append(btnLocationText);
     }
   } else {
     // in case we would not show date details as well, show description instead
-    if (data.dates[`${subEvent}`].description != '' && fullTimeInfo.length == 0 && (data.recurrence == null || data.recurrence == '')) {
+    if (data.dates[`${subEvent}`].description !== '' && fullTimeInfo.length === 0 && (!data.recurrence || data.recurrence === '')) {
       const btnDescription = document.createElement('div');
       btnDescription.classList.add('atcb-date-btn-content');
       btnDescription.textContent = data.dates[`${subEvent}`].description;
@@ -870,61 +737,6 @@ function atcb_generate_date_button(data, parent, subEvent = 'all') {
   }
 }
 
-function get_format_options(timeZoneInfo, dropYear = false, language = 'en') {
-  const hoursFormat = (function () {
-    if (language == 'en') {
-      return 'h12'; // 12am -> 1am -> .. -> 12pm -> 1pm -> ...
-    }
-    return 'h23'; // 00:00 -> 01:00 -> 12:00 -> 13:00 -> ...
-  })();
-  if (dropYear) {
-    return {
-      DateLong: {
-        timeZone: timeZoneInfo,
-        month: 'short',
-        day: 'numeric',
-      },
-      DateTimeLong: {
-        timeZone: timeZoneInfo,
-        month: 'short',
-        day: 'numeric',
-        hour: 'numeric',
-        minute: '2-digit',
-        hourCycle: hoursFormat,
-      },
-      Time: {
-        timeZone: timeZoneInfo,
-        hour: 'numeric',
-        minute: '2-digit',
-        hourCycle: hoursFormat,
-      },
-    };
-  }
-  return {
-    DateLong: {
-      timeZone: timeZoneInfo,
-      year: 'numeric',
-      month: 'numeric',
-      day: 'numeric',
-    },
-    DateTimeLong: {
-      timeZone: timeZoneInfo,
-      year: 'numeric',
-      month: 'numeric',
-      day: 'numeric',
-      hour: 'numeric',
-      minute: '2-digit',
-      hourCycle: hoursFormat,
-    },
-    Time: {
-      timeZone: timeZoneInfo,
-      hour: 'numeric',
-      minute: '2-digit',
-      hourCycle: hoursFormat,
-    },
-  };
-}
-
 // FUNCTION TO BUILD A SECOND SHADOWDOM FOR MODALS
 function atcb_generate_modal_host(host, data, reset = true) {
   // to clean-up the stage, we first close anything left open
@@ -939,11 +751,11 @@ function atcb_generate_modal_host(host, data, reset = true) {
   // create host element and add shadowDOM
   let newModalHost = document.createElement('div');
   newModalHost.id = data.identifier + '-modal-host';
-  if (host.host.hasAttribute('styleLight')) {
-    newModalHost.setAttribute('styleLight', host.host.getAttribute('styleLight'));
+  if (data.styleLight) {
+    newModalHost.setAttribute('styleLight', data.styleLight);
   }
-  if (host.host.hasAttribute('styleDark')) {
-    newModalHost.setAttribute('styleDark', host.host.getAttribute('styleDark'));
+  if (data.styleDark) {
+    newModalHost.setAttribute('styleDark', data.styleDark);
   }
   if (host.host.hasAttribute('cspnonce')) {
     newModalHost.setAttribute('cspnonce', host.host.getAttribute('cspnonce'));
@@ -956,7 +768,7 @@ function atcb_generate_modal_host(host, data, reset = true) {
   elem.innerHTML = '<div class="atcb-modal-host-initialized" style="translate3D(0, 0, 0);visibility:visible;opacity:1;position:fixed;top:0;left:0;width:100%;height:100%;display:flex;z-index:13999999;"></div>';
   newModalHost.shadowRoot.append(elem.content.cloneNode(true));
   atcb_set_light_mode(newModalHost.shadowRoot, data);
-  atcb_load_css(newModalHost.shadowRoot, null, data.buttonStyle, false, false, data.customCss);
+  atcb_load_css(newModalHost.shadowRoot, null, data);
   return newModalHost.shadowRoot;
 }
 

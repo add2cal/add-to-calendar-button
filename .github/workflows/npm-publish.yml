@@ -11,10 +11,10 @@ jobs:
   test:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-node@v3
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
         with:
-          node-version: 18
+          node-version: 20
           registry-url: https://registry.npmjs.org/
           cache: 'npm'
       - run: npm ci
@@ -23,15 +23,20 @@ jobs:
   build-and-publish:
     needs: test
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
     steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-node@v3
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
         with:
-          node-version: 18
+          node-version: 20
           registry-url: https://registry.npmjs.org/
           cache: 'npm'
+      - run: npm install -g npm
       - run: npm ci
       - run: npm run build
-      - run: npm publish
+      - name: Publish package
+        run: npm publish --provenance --tag ${{ github.event.release.prerelease && 'next' || 'latest' }}
         env:
-          NODE_AUTH_TOKEN: ${{secrets.NPM_SECRET}}
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_SECRET }}

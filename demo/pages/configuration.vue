@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import ConfigSearch from '@/components/controls/configSearch.vue';
 import ConfigSearchPlaceholder from '@/components/placeholders/configSearchPlaceholder.vue';
+import Interstitial from '@/components/interstitial.vue';
 import { ArrowRightIcon, ArrowTopRightOnSquareIcon } from '@heroicons/vue/24/outline';
 
 const { locale } = useI18n();
@@ -67,15 +68,15 @@ definePageMeta({
             </tr>
           </thead>
           <tbody>
-            <tr id="prokey" class="hidden">
-              <th scope="row" class="text-base text-primary dark:text-primary-light">proKey</th>
+            <tr id="prokey">
+              <th scope="row" class="text-base text-primary-dark dark:text-primary-light">proKey</th>
               <td><em>String</em></td>
               <td v-if="locale=='en'">
                 If you are using the PRO service, you can use the "proKey" attribute to connect the button to a specific event of yours.<br />
                 <span class="mt-2 block font-semibold">In this case, no other parameters need to be defined in the code, since this is 100% managed at the Add to Calendar PRO admin panel.</span>
               </td>
               <td v-else>
-                Wenn du unseren PRO-Servie nutzt, kannst du das "proKey"-Attribut nutzen, um den Button mit einem bestimmten Event zu verknüpfen.<br />
+                Wenn du unseren PRO-Service nutzt, kannst du das "proKey"-Attribut nutzen, um den Button mit einem bestimmten Event zu verknüpfen.<br />
                 <span class="mt-2 block font-semibold">In diesem Fall müssen ansonsten keine weiteren Parameter im Code definiert werden, da die weitere Verwaltung zu 100% im Add to Calendar PRO Admin-Bereich erfolgt.</span>
               </td>
             </tr>
@@ -104,14 +105,14 @@ definePageMeta({
                 Supports HTML pseudo tags for formatting: [url], [br], [hr], [p], [strong], [u], [i], [em], [li], [ul], [ol], [h*] (like h1, h2, h3, ...).<br />
                 Define a link text with the following schema: [url]https://....|URL Text[/url].<br /><br />
                 (In case of compatibility issues, you can use curly {*} instead of square [*] brackets here.)<br /><br />
-                (Yahoo and Microsoft Teams are not fully supported and automatically transformed to plain text.)<br /><br />
+                (Apple, Yahoo, and Microsoft Teams are not fully supported and automatically transformed to plain text, supporting only line breaks and hyperlinks.)<br /><br />
                 <NuxtLink :to="{path: localePath('advanced-use'), hash: '#case-2'}">{{ $t('labels.example') }} <ArrowRightIcon class="-mt-0.5 mr-0.5 inline-block h-3 w-3" aria-hidden="true" /></NuxtLink>
               </td>
               <td v-else>
                 Unterstützt HTML-Pseudo-Tags zur Formatierung: [url], [br], [hr], [p], [strong], [u], [i], [em], [li], [ul], [ol], [h*] (wie etwa h1, h2, h3, ...).<br />
                 Einen Link-Text spezifizierst du mit folgendem Schema: [url]https://....|URL Text[/url].<br /><br />
                 (Bei Kompatibilitätsproblemen kannst du auch geschweifte {*} anstelle von eckigen [*] Klammern nutzen.)<br /><br />
-                (Yahoo und Microsoft Teams werden hierbei nicht vollständig unterstützt und der Wert automatisch zu Plain Text transformiert.)<br /><br />
+                (Apple, Yahoo und Microsoft Teams werden hierbei nicht vollständig unterstützt und der Wert automatisch zu Plain Text transformiert, womit nur Zeilenumbrüche und Links dargestellt werden.)<br /><br />
                 <NuxtLink :to="{path: localePath('advanced-use'), hash: '#case-2'}">{{ $t('labels.example') }} <ArrowRightIcon class="-mt-0.5 mr-0.5 inline-block h-3 w-3" aria-hidden="true" /></NuxtLink>
               </td>
             </tr>
@@ -268,7 +269,7 @@ definePageMeta({
                 <em>String</em><br /><br /><span class="format">{{ $t('content.config.organizer_default') }}</span>
               </td>
               <td v-if="locale=='en'">
-                Use the schema "NAME|EMAIL" (e.g. "John Doe|john.doe@gmail.com").<br />
+                Use the schema "NAME|EMAIL" (e.g. "John Doe|john.doe@gmail.com"), or email only as the name is optional.<br />
                 With setting this option, you would be able to update an event in a user's calendar, if this user loads the new iCal file as well.<br /><br />
                 Only 1 attendee can be specified<br />
                 This attendee needs to be the person saving the event.<br />
@@ -276,7 +277,7 @@ definePageMeta({
                 When you specify an attendee, you also need to specify an organizer.
               </td>
               <td v-else>
-                Schema "NAME|E-MAIL" (bspw. "Max Muster|max.muster@gmail.com").<br />
+                Schema "NAME|E-MAIL" (bspw. "Max Muster|max.muster@gmail.com") oder einfach nur eine E-Mail-Adresse (Name ist optional).<br />
                 Mit dieser Option kannst du ein Event im Kalender eines Nutzers aktualisieren, wenn dieser Nutzer auch die neue iCal-Datei speichert.<br /><br />
                 Es kann nur 1 "attendee" gesetzt werden<br />
                 Diese Person muss gleichzeitig diejenige sein, die das Event speichert.<br />
@@ -490,16 +491,18 @@ definePageMeta({
                 As an alternative to providing a specific predefined event, you can also host a calendar and offer it for subscription (requires a hosted calendar).<br />
                 To offer the subscription via the button, you need to also specify the icsFile option.<br /><br />
                 "Name" and "startDate" would be still required for organizational purposes, but every other event parameter can be skipped in the subscription case.<br />
-                For Microsoft services, the "Name" will be used as name for the calendar.<br /><br />
+                For Microsoft services, the "Name" will be used as name for the calendar.<br />
                 Microsoft Teams is not yet supported and will be automatically disabled.<br /><br />
+                If the user's browser does not recognize any installed calendar app, this might lead to a blank screen. The PRO version mitigates this with some explenatory middleware screen.<br /><br />
                 <NuxtLink :to="{path: localePath('advanced-use'), hash: '#case-3'}">{{ $t('labels.example') }} <ArrowRightIcon class="-mt-0.5 mr-0.5 inline-block h-3 w-3" aria-hidden="true" /></NuxtLink>
               </td>
               <td v-else>
                 Alternativ zur Angabe eines bestimmten vordefinierten Events kannst du auch einen Kalender bereitstellen und ihn zum Abonnieren anbieten (erfordert einen gehosteten Kalender).<br />
                 Um das Abonnement über den Button anzubieten, musst du zusätzlich die icsFile-Option definieren.<br /><br />
                 "Name" und "startDate" wären für organisatorische Zwecke immer noch erforderlich, aber jeder andere Event-Parameter kann im Abonnementfall übersprungen werden.<br />
-                Für Microsoft-Dienste wird der "Name" als Name für den Kalender verwendet.<br /><br />
+                Für Microsoft-Dienste wird der "Name" als Name für den Kalender verwendet.<br />
                 Microsoft Teams wird derzeit nicht unterstützt und automatisch deaktiviert.<br /><br />
+                Sollte der Browser des Nutzers keine installierte Kalender-App erkennen, kann dies zu einer leeren Seite führen. Die PRO-Version optimiert dies mit einem erklärenden Zwischenbildschirm.<br /><br />
                 <NuxtLink :to="{path: localePath('advanced-use'), hash: '#case-3'}">{{ $t('labels.example') }} <ArrowRightIcon class="-mt-0.5 mr-0.5 inline-block h-3 w-3" aria-hidden="true" /></NuxtLink>
               </td>
             </tr>
@@ -510,13 +513,16 @@ definePageMeta({
                 The iCal/ics file gets created dynamically.<br />
                 This has some drawbacks as it might be blocked in some rare cases.<br />
                 With this option, you can redirect to an existing ics file instead.<br /><br />
-                In the subscription case, you need to define the external calendar here.
+                In the subscription case, you need to define the external calendar here.<br /><br />
+                If you have multiple dates and an organizer or status set, you would need to prepare multiple ics files, where the one for the first date is specified here, while all subsequent dates look for a file with the same name and a number (starting with 2) appended (e.g. "event-2.ics").
               </td>
               <td v-else>
                 Die iCal/ics-Datei wir dynamisch generiert.<br />
                 Dies hat den Nachteil, dass der Prozess in seltenen Fällen vom Browser des Nutzers blockiert werden kann.<br />
                 Mit dieser Option kannst du stattdessen auf eine bestehende ics-Datei verweisen.<br /><br />
-                Im "subscribe"-Fall muss hier der externe Kalender referenziert werden.
+                Im "subscribe"-Fall muss hier der externe Kalender referenziert werden.<br /><br />
+                Falls du mehrere Termine und einen "organizer" oder "status" definiert hast, musst du mehrere ics-Dateien vorhalten. Die Datei für den ersten Termin wird hier referenziert, während alle weiteren Termine eine Datei mit dem gleichen Namen zzgl. einer fortlaufende Nummer (beginnend mit
+                2) benötigen (bspw. "event-2.ics").
               </td>
             </tr>
             <tr id="icalfilename">
@@ -563,6 +569,8 @@ definePageMeta({
         </table>
       </div>
 
+      <Interstitial />
+
       <h3 id="style-parameters" class="mt-12 pt-4">{{ $t('content.config.layout_params') }}</h3>
       <div class="my-8 overflow-x-auto rounded-lg shadow-sm">
         <table>
@@ -579,22 +587,21 @@ definePageMeta({
             <tr id="options">
               <th scope="row">options</th>
               <td>
-                <em>Array</em><br /><br /><span class="font-semibold text-red-700">{{ $t('content.config.required') }}</span
-                ><br /><br /><span class="label block">{{ $t('content.config.options') }}:</span>Apple, Google, iCal, Microsoft365, MicrosoftTeams, Outlook.com, Yahoo
+                <em>Array</em><br /><br /><span class="label block">{{ $t('content.config.options') }}:</span>Apple, Google, iCal, Microsoft365, MicrosoftTeams, Outlook.com, Yahoo
               </td>
               <td v-if="locale=='en'">
                 Array of options to use in the list.<br /><br />
-                You can also override the label per option here. Simply add a pipe between the option name and your label (e.g. "Google|My custom Google Label").<br />
                 If you only specify 1 calendar type, the button would show the calendar's icon instead of the default one and redirect directly instead of opening a list (singleton case).<br /><br />
                 Some options might be dynamically excluded based on other settings!<br />
-                "iCal" will be replaced by "Apple" on iOS devices.
+                "iCal" will be replaced by "Apple" on iOS devices.<br /><br />
+                You can specify a different set of options for mobile devices via the optionsMobile option. If you also set the optionsIOS option, this will account for iOS (not Mac!), while optionsMobile accounts for Android and other mobile devices.
               </td>
               <td v-else>
                 Array an Kalender-Arten, die in der Liste erscheinen.<br /><br />
-                Du kannst das Label jeweils direkt überschreiben. Füge hierzu ein Pipe-Symbol nach dem Kalender-Namen, gefolgt von deinem Label-Text ein (bspw. "Google|Mein Google-Label").<br />
                 Sofern du nur 1 Option definierst wird der Button das Icon dieser Option anzeigen sowie direkt die jeweilige Kalender-Aktion auslösen und keine Auswahlliste öffnen (Singleton-Case).<br /><br />
                 Optionen können deaktiviert werden, wenn sie aufgrund anderere Einstellungen nicht unterstützt werden!<br />
-                Auf iOS-Geräten wird die iCal-Option durch "Apple" ersetzt.
+                Auf iOS-Geräten wird die iCal-Option durch "Apple" ersetzt.<br /><br />
+                Du kannst eine andere Liste an Optionen für mobile Geräte definieren, indem du die optionsMobile-Option nutzt. Wenn du auch die optionsIOS-Option setzt, wird diese für iOS (nicht Mac!) berücksichtigt, während optionsMobile für Android und andere mobile Geräte gilt.
               </td>
             </tr>
             <tr id="buttonstyle">
@@ -811,12 +818,12 @@ definePageMeta({
               <td v-if="locale=='en'">
                 Each button comes with a dark and light mode.<br /><br />
                 Set the option lightMode to "dark" or "light" explicitly, or use "system" to automatically adapt to the user's default setting.<br />
-                You can also use "bodyScheme" to look for the class "atcb-dark" at the html or body tag and connect the button dynamically to the style of your website.
+                You can also use "bodyScheme" to look for the class "atcb-dark" (or "dark") at the html or body tag and connect the button dynamically to the style of your website.
               </td>
               <td v-else>
                 Jeder Button kommt mit einem Dark- und Light-Theme.<br /><br />
                 Mit der Optiomn "lightMode" kann dies explizit ausgewählt werden. Du kannst auch den Wert "system" nutzen, um automatisch den Wert des Betriebssystems des Nutzers zu übernehmen.<br />
-                Mit dem Wert "bodyScheme" wird automatisch nach der class "atcb-dark" im html oder body tag Ausschau gehalten - der Button lässt sich in diesem Fall dynamisch dem Stil der Webseite anpassen.
+                Mit dem Wert "bodyScheme" wird automatisch nach der class "atcb-dark" (oder "dark") im html oder body tag Ausschau gehalten - der Button lässt sich in diesem Fall dynamisch dem Stil der Webseite anpassen.
               </td>
             </tr>
             <tr id="language">
@@ -840,19 +847,18 @@ definePageMeta({
               <th scope="row">customLabels</th>
               <td><em>Object</em></td>
               <td v-if="locale=='en'">
-                For all text blocks, which are not already customizable via other options (like the word "Close"), you can specify the "customLabels" option.<br />
+                You can alter all text blocks via the "customLabels" option.<br />
                 There, you need to specify a JSON structure and define any text you want to override. Check the
                 <a href="https://github.com/add2cal/add-to-calendar-button/blob/main/src/atcb-i18n.js" target="_blank" rel="noopener" class="whitespace-nowrap">atcb-i18n.js file <ArrowTopRightOnSquareIcon class="-mt-0.5 mr-0.5 inline-block h-3 w-3" aria-hidden="true" /></a> for the available keys.
-                Mind to transform those keys to lower case strings without any whitespaces!<br />
-                Any custom label will also override any translation.<br />You can use the same HTML pseudo tags as with the description option here.<br /><br />
+                Any custom label will also override any translation.<br />For text blocks, you can use the same HTML pseudo tags as with the description option here.<br /><br />
                 <NuxtLink :to="{path: localePath('advanced-use'), hash: '#case-4'}">{{ $t('labels.example') }} <ArrowRightIcon class="-mt-0.5 mr-0.5 inline-block h-3 w-3" aria-hidden="true" /></NuxtLink>
               </td>
               <td v-else>
-                Text-Blöcke, die nicht bereits durch andere Optionen bearbeitbar sind (bspw. das Wort "Schließen"), können über die Option "customLabels" verändert werden.<br />
+                Text-Blöcke können über die Option "customLabels" verändert werden.<br />
                 Hierbei muss eine JSON-Struktur mit den zu überschreibenden Texten definiert werden. Sieh dir die
                 <a href="https://github.com/add2cal/add-to-calendar-button/blob/main/src/atcb-i18n.js" target="_blank" rel="noopener" class="whitespace-nowrap">atcb-i18n.js-Datei <ArrowTopRightOnSquareIcon class="-mt-0.5 mr-0.5 inline-block h-3 w-3" aria-hidden="true" /></a> für eine Liste der
-                verfügbaren Keys an. Beachte, dass die Keys hier zu Kleinbuchstaben transformiert und Leerzeichen entfernt werden müssen!<br />
-                Ein so manipulierter Text überschreibt auch jegliche Übersetzung.<br />Du kannst hierbei die gleichen HTML-Pseudo-Tags nutzen, wie sie auch in der "description"-Option möglich sind.<br /><br />
+                verfügbaren Keys an.<br />
+                Ein so manipulierter Text überschreibt auch jegliche Übersetzung.<br />Für Text-Blöcke kannst hierbei die gleichen HTML-Pseudo-Tags nutzen, wie sie auch in der "description"-Option möglich sind.<br /><br />
                 <NuxtLink :to="{path: localePath('advanced-use'), hash: '#case-4'}">{{ $t('labels.example') }} <ArrowRightIcon class="-mt-0.5 mr-0.5 inline-block h-3 w-3" aria-hidden="true" /></NuxtLink>
               </td>
             </tr>
@@ -891,6 +897,8 @@ definePageMeta({
           </tbody>
         </table>
       </div>
+
+      <Interstitial />
 
       <h3 id="additional-parameters" class="mt-12 pt-4">{{ $t('content.config.additional_params') }}</h3>
       <div class="my-8 overflow-x-auto rounded-lg shadow-sm">
@@ -990,6 +998,14 @@ definePageMeta({
               <td v-if="locale=='en'">This will add an attribute "nonce" with the provided value to all inline script and style tags. Useful for strict Content-Security-Policy environments.</td>
               <td v-else>Diese Option fügt allen inline script und style tags ein Attribut "nonce" mit dem angegebenen Wert hinzu. Nützlich für strikte Content-Security-Policy Umgebungen.</td>
             </tr>-->
+            <tr id="instance">
+              <th scope="row">instance</th>
+              <td>
+                <em>Number</em>
+              </td>
+              <td v-if="locale=='en'">Use this attribute to force a re-rendering of the button by counting its value 1 up.</td>
+              <td v-else>Nutze dieses Attribut, um einen Button durch Hochzählen des Werts neu zu rendern.</td>
+            </tr>
             <tr id="debug">
               <th scope="row">debug</th>
               <td>

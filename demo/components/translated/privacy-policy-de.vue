@@ -49,6 +49,10 @@
     Google Ireland Limited<br />
     Gordon House, Barrow Street<br />
     Dublin 4, Irland<br />
+    <br />
+    Cloudflare Germany GmbH<br />
+    Rosental 7<br />
+    80331 München, Germany<br />
   </p>
   <h3>Auftragsverarbeitung</h3>
   <p>

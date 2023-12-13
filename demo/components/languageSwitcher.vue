@@ -3,14 +3,28 @@ import { set, LSKey } from '@/utils/localStorage';
 import { Listbox, ListboxButton, ListboxOptions, ListboxOption } from '@headlessui/vue';
 import { LanguageIcon, CheckIcon, ChevronDownIcon } from '@heroicons/vue/20/solid';
 
-const { locale, locales } = useI18n();
+type LocaleObject = {
+  code: string;
+  name: string;
+};
+
+interface ExtendedI18n extends ReturnType<typeof useI18n> {
+  locales: ComputedRef<LocaleObject[]>;
+}
+
+const { locale, locales } = useI18n() as ExtendedI18n;
 const switchLocalePath = useSwitchLocalePath();
 
 const currentId = locales.value.findIndex((e: { code: string; }) => e.code === locale.value);
-const currentLanguage = ref(locales.value[currentId]);
+function getLocaleObject(index: number): LocaleObject | null {
+  const item = locales.value[index];
+  return typeof item === 'object' && 'code' in item ? item : null;
+}
+const currentLanguage = ref<LocaleObject|null>(getLocaleObject(currentId));
 
 // push route when locale change has been detected
-watch(currentLanguage, val => {
+watch(currentLanguage, (val: LocaleObject|null) => {
+  if (!val) return;
   set(LSKey.LANG, val.code);
   navigateTo(switchLocalePath(val.code));
 });
@@ -24,7 +38,7 @@ watch(currentLanguage, val => {
           <span class="icon">
             <LanguageIcon class="h-5 w-5" aria-hidden="true" />
           </span>
-          <span class="label">{{ currentLanguage.name }}</span>
+          <span class="label">{{ currentLanguage?.name }}</span>
           <span class="arrow">
             <ChevronDownIcon class="h-5 w-5 text-gray-400 transition-transform ui-open:rotate-180" aria-hidden="true" />
           </span>

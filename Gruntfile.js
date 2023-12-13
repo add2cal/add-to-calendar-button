@@ -1,31 +1,33 @@
 const fs = require('fs');
 
-function prepareFinalFile(content, stripAllImport = true, stripAllExport = true, transformToCommonJS = false) {
+function prepareFinalFile(content, stripAllImport = true, stripAllExport = true, transformToCommonJS = false, skipStyles = false) {
   // remove TimeZones iCal Library version output (do not do this, if your are using the time zone library standalone!)
   content = content.replace(/^console\.log\('Add to Calendar TimeZones iCal Library loaded \(version ' \+ tzlibVersion \+ '\)'\);$/m, '');
   // add style inline
-  const styleRegex = /const\satcbCssTemplate\s=\s\{\};/;
-  if (styleRegex.test(content)) {
-    const availableStyles = ['default', '3d', 'flat', 'round', 'neumorphism', 'text', 'date'];
-    let inlineStyleOutput = 'const atcbCssTemplate = {';
-    availableStyles.forEach((style) => {
-      const styleString = (function () {
-        if (style != 'default') {
-          return '-' + style;
-        }
-        return '';
-      })();
-      // determining the input data. Mind that we remove any multiple "." as well as backslashs for security reasons - should not be used anyway
-      const cssFileContent = fs
-        .readFileSync('./assets/css/atcb' + styleString + '.min.css')
-        .toString()
-        .replace(/\.{2,}/g, '')
-        .replace(/\\/g, '')
-        .replace(/"/g, '\\"');
-      inlineStyleOutput += '\r\n"' + style + '": "' + cssFileContent + '",';
-    });
-    inlineStyleOutput += '\r\n};\r\n';
-    content = content.replace(styleRegex, inlineStyleOutput);
+  if (!skipStyles) {
+    const styleRegex = /const\satcbCssTemplate\s=\s\{\};/;
+    if (styleRegex.test(content)) {
+      const availableStyles = ['default', '3d', 'flat', 'round', 'neumorphism', 'text', 'date'];
+      let inlineStyleOutput = 'const atcbCssTemplate = {';
+      availableStyles.forEach((style) => {
+        const styleString = (function () {
+          if (style != 'default') {
+            return '-' + style;
+          }
+          return '';
+        })();
+        // determining the input data. Mind that we remove any multiple "." as well as backslashs for security reasons - should not be used anyway
+        const cssFileContent = fs
+          .readFileSync('./assets/css/atcb' + styleString.replace(/[^a-z0-9-]/gi, '') + '.min.css')
+          .toString()
+          .replace(/\.{2,}/g, '')
+          .replace(/\\/g, '')
+          .replace(/"/g, '\\"');
+        inlineStyleOutput += '\r\n"' + style + '": "' + cssFileContent + '",';
+      });
+      inlineStyleOutput += '\r\n};\r\n';
+      content = content.replace(styleRegex, inlineStyleOutput);
+    }
   }
   if (stripAllImport) {
     // remove all import statements
@@ -49,7 +51,20 @@ function prepareFinalFile(content, stripAllImport = true, stripAllExport = true,
 }
 
 const jsCoreFilesToCombine = ['src/atcb-globals.js', 'src/atcb-decorate.js', 'src/atcb-validate.js', 'src/atcb-control.js', 'src/atcb-generate.js', 'src/atcb-generate-rich-data.js', 'src/atcb-links.js', 'src/atcb-util.js', 'src/atcb-event.js', 'src/atcb-i18n.js', 'src/atcb-init.js'];
-const jsCoreFilesToCombinePro = ['src/atcb-globals.js', 'src/atcb-decorate.js', 'src/atcb-validate.js', 'src/atcb-control.js', 'src/atcb-generate.js', 'src/atcb-generate-rich-data.js', 'src/atcb-links.js', 'src/atcb-util.js', 'src/atcb-event.js', 'src/atcb-i18n.js', 'src/atcb-init.js'];
+const jsCoreFilesToCombinePro = [
+  'src/atcb-globals.js',
+  'src/atcb-decorate.js',
+  'src/atcb-validate.js',
+  'src/atcb-control.js',
+  'src/atcb-generate.js',
+  'src/atcb-generate-rich-data.js',
+  'src/atcb-generate-pro.js',
+  'src/atcb-links.js',
+  'src/atcb-util.js',
+  'src/atcb-event.js',
+  'src/atcb-i18n.js',
+  'src/atcb-init.js',
+];
 
 // The config.
 module.exports = function (grunt) {
@@ -78,11 +93,11 @@ module.exports = function (grunt) {
         src: ['demo/components/footer.vue'],
       },
     },
-    // cleans old built files
+    // clean old build files
     clean: {
       oldBuildFiles: ['dist/', 'assets/css/*.min.css', 'assets/css/*.min.css.map', 'demo_assets/css/*.min.css', 'demo_assets/css/*.min.css.map', 'demo_assets/js/*.js.css', 'demo_assets/js/*.min.js.map'],
     },
-    // minifies the css file
+    // minify css files
     cssmin: {
       minify: {
         files: [
@@ -103,10 +118,10 @@ module.exports = function (grunt) {
         ],
       },
     },
-    // generate the distributable JavaScript files (and also add a customized css file to the demo)
+    // generate the distributable JS files (and also add a customized css file to the demo)
     concat: {
       main: {
-        src: grunt.option('pro') ? ['node_modules/timezones-ical-library/dist/tzlib.js', ...jsCoreFilesToCombinePro] : ['node_modules/timezones-ical-library/dist/tzlib.js', ...jsCoreFilesToCombine],
+        src: ['node_modules/timezones-ical-library/dist/tzlib.js', ...jsCoreFilesToCombinePro],
         dest: 'dist/atcb.js',
         options: {
           stripBanners: true,
@@ -115,24 +130,114 @@ module.exports = function (grunt) {
           process: (content) => prepareFinalFile(content),
         },
       },
+      main_no_pro: {
+        src: ['node_modules/timezones-ical-library/dist/tzlib.js', ...jsCoreFilesToCombine],
+        dest: 'dist/atcb-no-pro.js',
+        options: {
+          stripBanners: true,
+          banner: '( function(atcbGlobal) { atcbGlobal.atcb_action = function (data, triggerElement, keyboardTrigger = false) {return atcb_action(data, triggerElement, keyboardTrigger);}',
+          footer: ' } )(window);',
+          process: (content) => prepareFinalFile(content),
+        },
+      },
+      main_unstyle: {
+        src: ['node_modules/timezones-ical-library/dist/tzlib.js', ...jsCoreFilesToCombinePro],
+        dest: 'dist/atcb-unstyle.js',
+        options: {
+          stripBanners: true,
+          banner: '( function(atcbGlobal) { atcbGlobal.atcb_action = function (data, triggerElement, keyboardTrigger = false) {return atcb_action(data, triggerElement, keyboardTrigger);}',
+          footer: ' } )(window);',
+          process: (content) => prepareFinalFile(content, true, true, false, true),
+        },
+      },
+      main_no_pro_unstyle: {
+        src: ['node_modules/timezones-ical-library/dist/tzlib.js', ...jsCoreFilesToCombine],
+        dest: 'dist/atcb-no-pro-unstyle.js',
+        options: {
+          stripBanners: true,
+          banner: '( function(atcbGlobal) { atcbGlobal.atcb_action = function (data, triggerElement, keyboardTrigger = false) {return atcb_action(data, triggerElement, keyboardTrigger);}',
+          footer: ' } )(window);',
+          process: (content) => prepareFinalFile(content, true, true, false, true),
+        },
+      },
       module: {
-        src: grunt.option('pro') ? jsCoreFilesToCombinePro : jsCoreFilesToCombine,
+        src: jsCoreFilesToCombinePro,
         dest: 'dist/module/index.js',
         options: {
           stripBanners: true,
           banner: "import { tzlib_get_ical_block, tzlib_get_offset, tzlib_get_timezones } from 'timezones-ical-library';\r\n",
-          footer: grunt.option('pro') ? 'export { atcb_action, i18nStrings, atcbCssTemplate as cssStyles };' : 'export { atcb_action, i18nStrings, atcbCssTemplate as cssStyles };',
+          footer: 'export { atcb_action, i18nStrings, atcbCssTemplate as cssStyles, atcb_generate_ty, atcb_generate_timestring };',
           process: (content) => prepareFinalFile(content),
         },
       },
+      module_no_pro: {
+        src: jsCoreFilesToCombine,
+        dest: 'dist/module/no-pro/index.js',
+        options: {
+          stripBanners: true,
+          banner: "import { tzlib_get_ical_block, tzlib_get_offset, tzlib_get_timezones } from 'timezones-ical-library';\r\n",
+          footer: 'export { atcb_action, i18nStrings, atcbCssTemplate as cssStyles };',
+          process: (content) => prepareFinalFile(content),
+        },
+      },
+      module_unstyle: {
+        src: jsCoreFilesToCombinePro,
+        dest: 'dist/module/unstyle/index.js',
+        options: {
+          stripBanners: true,
+          banner: "import { tzlib_get_ical_block, tzlib_get_offset, tzlib_get_timezones } from 'timezones-ical-library';\r\n",
+          footer: 'export { atcb_action, i18nStrings, atcb_generate_ty, atcb_generate_timestring };',
+          process: (content) => prepareFinalFile(content, true, true, false, true),
+        },
+      },
+      module_no_pro_unstyle: {
+        src: jsCoreFilesToCombine,
+        dest: 'dist/module/no-pro-unstyle/index.js',
+        options: {
+          stripBanners: true,
+          banner: "import { tzlib_get_ical_block, tzlib_get_offset, tzlib_get_timezones } from 'timezones-ical-library';\r\n",
+          footer: 'export { atcb_action, i18nStrings };',
+          process: (content) => prepareFinalFile(content, true, true, false, true),
+        },
+      },
       commonJS: {
-        src: grunt.option('pro') ? jsCoreFilesToCombinePro : jsCoreFilesToCombine,
+        src: jsCoreFilesToCombinePro,
         dest: 'dist/commonjs/index.js',
         options: {
           stripBanners: true,
           banner: "// eslint-disable-next-line @typescript-eslint/no-var-requires\r\nconst tzlibActions = require('timezones-ical-library');\r\n",
-          footer: grunt.option('pro') ? 'module.exports = { atcb_action, i18nStrings, cssStyles: atcbCssTemplate };' : 'module.exports = { atcb_action, i18nStrings, cssStyles: atcbCssTemplate };',
+          footer: 'module.exports = { atcb_action, i18nStrings, cssStyles: atcbCssTemplate, atcb_generate_ty, atcb_generate_timestring };',
           process: (content) => prepareFinalFile(content, true, true, true),
+        },
+      },
+      commonJS_no_pro: {
+        src: jsCoreFilesToCombine,
+        dest: 'dist/commonjs/no-pro/index.js',
+        options: {
+          stripBanners: true,
+          banner: "// eslint-disable-next-line @typescript-eslint/no-var-requires\r\nconst tzlibActions = require('timezones-ical-library');\r\n",
+          footer: 'module.exports = { atcb_action, i18nStrings, cssStyles: atcbCssTemplate };',
+          process: (content) => prepareFinalFile(content, true, true, true),
+        },
+      },
+      commonJS_unstyle: {
+        src: jsCoreFilesToCombinePro,
+        dest: 'dist/commonjs/unstyle/index.js',
+        options: {
+          stripBanners: true,
+          banner: "// eslint-disable-next-line @typescript-eslint/no-var-requires\r\nconst tzlibActions = require('timezones-ical-library');\r\n",
+          footer: 'module.exports = { atcb_action, i18nStrings, atcb_generate_ty, atcb_generate_timestring };',
+          process: (content) => prepareFinalFile(content, true, true, true, true),
+        },
+      },
+      commonJS_no_pro_unstyle: {
+        src: jsCoreFilesToCombine,
+        dest: 'dist/commonjs/no-pro-unstyle/index.js',
+        options: {
+          stripBanners: true,
+          banner: "// eslint-disable-next-line @typescript-eslint/no-var-requires\r\nconst tzlibActions = require('timezones-ical-library');\r\n",
+          footer: 'module.exports = { atcb_action, i18nStrings };',
+          process: (content) => prepareFinalFile(content, true, true, true, true),
         },
       },
       cssDemo: {
@@ -143,7 +248,7 @@ module.exports = function (grunt) {
         },
       },
     },
-    // creates files to support the dist structure
+    // create files to support the dist structure
     'file-creator': {
       'package.json ES Module': {
         'dist/module/package.json': function (fs, fd, done) {
@@ -164,7 +269,7 @@ module.exports = function (grunt) {
         },
       },
     },
-    // minifies the main js file
+    // minify the main js file
     uglify: {
       options: {
         compress: true,
@@ -176,9 +281,9 @@ module.exports = function (grunt) {
           comments: 'some',
         },
       },
-      newBuild: {
+      minify_main_js: {
         files: {
-          'dist/atcb.js': ['dist/atcb.js'],
+          'dist/atcb.min.js': ['dist/atcb.js'], // only going for the main one here, as this gets copied and used in other projects, while the special builds are only delivered via CDN and minified there
         },
       },
     },
