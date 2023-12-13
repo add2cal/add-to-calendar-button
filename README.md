@@ -152,13 +152,23 @@ A button can be easily created by using the respective custom element.
 
 ```html
 <add-to-calendar-button></add-to-calendar-button>
+<!-- OR simply ... -->
+<add-to-calendar-button />
 ```
 
 You can then configure the button by simply adding the options as attributes to it. Boolean values (true/false) can be set as `optionName="true"` or simply by adding `optionName` to the tag. Not setting it at all would be automatically translate to "false".
 
 <br />
 
-### Minimal structure (required)
+### Structure (PRO)
+
+```html
+<add-to-calendar-button proKey="prokey-of-your-event" />
+```
+
+<br />
+
+### Minimal structure (no PRO)
 
 Mind that for auto-generating rich snippets, a location would be mandatory as well.
 
@@ -170,13 +180,12 @@ Calendar type options and time zone information are not required, but recommende
   startDate="2022-02-21"
   options="['Google']"
   timeZone="America/Los_Angeles"
->
-</add-to-calendar-button>
+/>
 ```
 
 <br />
 
-### A more powerful example
+### A more powerful example (no PRO)
 
 ```html
 <add-to-calendar-button
@@ -193,8 +202,7 @@ Calendar type options and time zone information are not required, but recommende
   inline
   listStyle="modal"
   iCalFileName="Reminder-Event"
->
-</add-to-calendar-button>
+/>
 ```
 
 <br /><br />
