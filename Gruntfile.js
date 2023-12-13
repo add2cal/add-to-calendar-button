@@ -18,7 +18,7 @@ function prepareFinalFile(content, stripAllImport = true, stripAllExport = true,
         })();
         // determining the input data. Mind that we remove any multiple "." as well as backslashs for security reasons - should not be used anyway
         const cssFileContent = fs
-          .readFileSync('./assets/css/atcb' + styleString.replace(/(\/|\\)/g, '') + '.min.css')
+          .readFileSync('./assets/css/atcb' + styleString.replace(/[^a-z]/gi, '') + '.min.css')
           .toString()
           .replace(/\.{2,}/g, '')
           .replace(/\\/g, '')
