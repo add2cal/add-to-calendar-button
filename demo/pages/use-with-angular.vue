@@ -42,7 +42,7 @@ watch(locale, value => {
           <pre>import 'add-to-calendar-button';</pre>
         </LazyCodeBlock>
         <h2 class="mb-6 mt-20">{{ $t('content.guide.step3') }}: {{ $t('content.guide.angular.step_optimize') }}</h2>
-        <p>{{ $t('content.guide.angular.config_1') }}<span class="font-semibold italic">CUSTOM_ELEMENTS_SCHEMA</span>{{ $t('content.guide.angular.config_2') }}<span class="font-semibold italic">@NgModule</span>{{ $t('content.guide.angular.config_3') }}.</p>
+        <p>{{ $t('content.guide.angular.config_1') }}<span class="font-semibold italic">CUSTOM_ELEMENTS_SCHEMA</span>{{ $t('content.guide.angular.config_2') }}<span class="font-semibold italic">@NgModule/@Component</span>{{ $t('content.guide.angular.config_3') }}.</p>
         <LazyCodeBlock language="javascript" class="line-numbers">
           <pre>
 // app.module.ts

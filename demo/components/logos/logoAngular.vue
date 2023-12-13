@@ -1,11 +1,24 @@
 <template>
-  <svg class="h-auto w-full fill-black group-hover:fill-white dark:fill-white" role="img" title="Angular" version="1.1" viewBox="0 0 699.2 740" xmlns="http://www.w3.org/2000/svg">
-    <g transform="translate(-130,-109.8)">
-      <polygon points="829.2 233.1 562.6 109.8 804.1 629.5" />
-      <polygon points="297.2 745.8 479.6 849.8 662 745.8 624.9 655.9 334.3 655.9" />
-      <polygon points="479.6 307 384.1 539.3 575.2 539.3" />
-      <polygon points="155.1 629.5 396.6 109.8 130 233.1" />
+  <svg class="h-auto w-full group-hover:fill-white" role="img" title="Angular" version="1.1" viewBox="0 0 223 236" xmlns="http://www.w3.org/2000/svg">
+    <g clip-path="url(#a)" class="group-hover:fill-white">
+      <path fill="url(#b)" class="group-hover:fill-white" d="m222.077 39.192-8.019 125.923L137.387 0l84.69 39.192Zm-53.105 162.825-57.933 33.056-57.934-33.056 11.783-28.556h92.301l11.783 28.556ZM111.039 62.675l30.357 73.803H80.681l30.358-73.803ZM7.937 165.115 0 39.192 84.69 0 7.937 165.115Z"></path>
+      <path fill="url(#c)" class="group-hover:fill-white" d="m222.077 39.192-8.019 125.923L137.387 0l84.69 39.192Zm-53.105 162.825-57.933 33.056-57.934-33.056 11.783-28.556h92.301l11.783 28.556ZM111.039 62.675l30.357 73.803H80.681l30.358-73.803ZM7.937 165.115 0 39.192 84.69 0 7.937 165.115Z"></path>
     </g>
+    <defs>
+      <linearGradient id="b" x1="49.009" x2="225.829" y1="213.75" y2="129.722" gradientUnits="userSpaceOnUse">
+        <stop stop-color="#E40035"></stop>
+        <stop offset=".24" stop-color="#F60A48"></stop>
+        <stop offset=".352" stop-color="#F20755"></stop>
+        <stop offset=".494" stop-color="#DC087D"></stop>
+        <stop offset=".745" stop-color="#9717E7"></stop>
+        <stop offset="1" stop-color="#6C00F5"></stop>
+      </linearGradient>
+      <linearGradient id="c" x1="41.025" x2="156.741" y1="28.344" y2="160.344" gradientUnits="userSpaceOnUse">
+        <stop stop-color="#FF31D9"></stop>
+        <stop offset="1" stop-color="#FF5BE1" stop-opacity="0"></stop>
+      </linearGradient>
+      <clipPath id="a"><path fill="#fff" d="M0 0h223v236H0z"></path></clipPath>
+    </defs>
   </svg>
 </template>
 
