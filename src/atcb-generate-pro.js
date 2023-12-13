@@ -628,37 +628,10 @@ function atcb_build_form(fields, identifier = '', disabled = false) {
       if (field.type === 'radio') {
         fieldHtml += '<div>';
       }
-      // add label
-      if ((field.type === 'text' || field.type === 'number') && (fieldLabel !== '' || field.required)) {
-        fieldHtml += '<label for="' + field.fieldId + '">' + fieldLabel + (field.required ? '<span>*</span>' : '') + '</label>';
-      }
-      // add input
       if (field.type === 'hidden') {
         hiddenForm += '<input type="hidden" name="' + field.name + '" id="' + field.fieldId + '" value="' + fieldValue + '" />';
       } else {
-        fieldHtml +=
-          '<input type="' +
-          field.type +
-          '"' +
-          (field.type === 'number' ? ' min="0"' : '') +
-          ((field.type === 'checkbox' || field.type === 'radio') && field.default && (field.default === 'true' || field.default === true) ? ' checked' : '') +
-          ' name="' +
-          field.name +
-          '" id="' +
-          field.fieldId +
-          '" placeholder="' +
-          fieldPlaceholder +
-          '" ' +
-          (disabled && 'disabled') +
-          ' aria-label="' +
-          fieldLabel +
-          '" value="' +
-          fieldValue +
-          '" />';
-      }
-      // add label for checkboxes and radio buttons
-      if ((field.type === 'checkbox' || field.type === 'radio') && (fieldLabel !== '' || field.required)) {
-        fieldHtml += '<label for="' + field.fieldId + '">' + fieldLabel + (field.required ? '<span>*</span>' : '') + '</label>';
+        fieldHtml += atcb_create_field_html(field.type, field.name, fieldLabel, field.fieldId, field.required, fieldValue, field.default, fieldPlaceholder, disabled);
       }
       if (field.type === 'radio') {
         fieldHtml += '</div>';
@@ -672,6 +645,39 @@ function atcb_build_form(fields, identifier = '', disabled = false) {
   }
   form += hiddenForm;
   return { html: form, fields: fields };
+}
+
+function atcb_create_field_html(type, name, fieldLabel, fieldId, required = false, fieldValue, defaultVal = null, fieldPlaceholder = '', disabled = false) {
+  let fieldHtml = '';
+  // add label
+  if ((type === 'text' || type === 'number') && (fieldLabel !== '' || required)) {
+    fieldHtml += '<label for="' + fieldId + '">' + fieldLabel + (required ? '<span>*</span>' : '') + '</label>';
+  }
+  // add input
+  fieldHtml +=
+    '<input type="' +
+    type +
+    '"' +
+    (type === 'number' ? ' min="0"' : '') +
+    ((type === 'checkbox' || type === 'radio') && defaultVal && (defaultVal === 'true' || defaultVal === true) ? ' checked' : '') +
+    ' name="' +
+    name +
+    '" id="' +
+    fieldId +
+    '" placeholder="' +
+    fieldPlaceholder +
+    '" ' +
+    (disabled && 'disabled') +
+    ' aria-label="' +
+    fieldLabel +
+    '" value="' +
+    fieldValue +
+    '" />';
+  // add label for checkboxes and radio buttons
+  if ((type === 'checkbox' || type === 'radio') && (fieldLabel !== '' || required)) {
+    fieldHtml += '<label for="' + fieldId + '">' + fieldLabel + (required ? '<span>*</span>' : '') + '</label>';
+  }
+  return fieldHtml;
 }
 
 function atcb_validate_form(host, fields) {
