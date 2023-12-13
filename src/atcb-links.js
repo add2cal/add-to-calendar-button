@@ -3,7 +3,7 @@
  *  Add to Calendar Button
  *  ++++++++++++++++++++++
  *
- *  Version: 2.4.3
+ *  Version: 2.5.0
  *  Creator: Jens Kuerschner (https://jenskuerschner.de)
  *  Project: https://github.com/add2cal/add-to-calendar-button
  *  License: Elastic License 2.0 (ELv2) (https://github.com/add2cal/add-to-calendar-button/blob/main/LICENSE.txt)
@@ -23,11 +23,11 @@ function atcb_generate_links(host, type, data, subEvent = 'all', keyboardTrigger
   // we differentiate between the type the user triggered and the type of link it shall activate
   let linkType = type;
   // the apple type would trigger the same as ical, for example
-  if (type == 'apple') {
+  if (type === 'apple') {
     linkType = 'ical';
   }
   // adjust for subEvent and case
-  if (subEvent != 'all') {
+  if (subEvent !== 'all') {
     subEvent = parseInt(subEvent) - 1;
   } else if (data.dates.length == 1) {
     subEvent = 0;
@@ -38,34 +38,19 @@ function atcb_generate_links(host, type, data, subEvent = 'all', keyboardTrigger
     return;
   }
   // for single-date events or if a specific subEvent is given, we can simply call the respective endpoints
-  if (subEvent != 'all') {
+  if (subEvent !== 'all') {
     // for cancelled dates, we show a modal - except for iCal, where we can send Cancel-ics-files
-    if (data.dates[`${subEvent}`].status == 'CANCELLED' && linkType != 'ical') {
+    if (data.dates[`${subEvent}`].status === 'CANCELLED' && linkType !== 'ical') {
       atcb_create_modal(host, data, 'warning', atcb_translate_hook('date.status.cancelled', data), atcb_translate_hook('date.status.cancelled.cta', data), [], [], keyboardTrigger);
     } else {
       // in some cases, we want to inform the user about specifics for the link type, before actually following the link
       if (!skipDoubleLink) {
-        if (atcbIsiOS() && linkType === 'google') {
-          atcb_create_modal(
-            host,
-            data,
-            'warning',
-            '',
-            atcb_translate_hook('modal.crios.google.text', data),
-            [
-              {
-                label: atcb_translate_hook('continue', data),
-                primary: true,
-                type: '2timeslink',
-              },
-              { label: atcb_translate_hook('cancel', data) },
-            ],
-            [],
-            keyboardTrigger,
-            { type: type, id: subEvent + 1 },
-          );
-          return;
-        }
+        // nothing to show here at the moment...
+        // if something comes up, we can use something like the following:
+        // if (atcbIsiOS() && linkType === 'google') {
+        // atcb_create_modal(host, data, 'warning', '', atcb_translate_hook('modal.warn.1.text', data), [{ label: atcb_translate_hook('continue', data), primary: true, type: '2timeslink' },{ label: atcb_translate_hook('cancel', data) }], [], keyboardTrigger, { type: type, id: subEvent + 1 });
+        // return;
+        // }
       }
       // apart from that, we generate the link
       switch (linkType) {
@@ -73,19 +58,19 @@ function atcb_generate_links(host, type, data, subEvent = 'all', keyboardTrigger
           atcb_generate_ical(host, data, subEvent, keyboardTrigger);
           break;
         case 'google':
-          atcb_generate_google(data, data.dates[`${subEvent}`]);
+          atcb_generate_google(data, data.dates[`${subEvent}`], subEvent);
           break;
         case 'msteams':
-          atcb_generate_msteams(data, data.dates[`${subEvent}`]);
+          atcb_generate_msteams(data, data.dates[`${subEvent}`], subEvent);
           break;
         case 'ms365':
-          atcb_generate_microsoft(data, data.dates[`${subEvent}`]);
+          atcb_generate_microsoft(data, data.dates[`${subEvent}`], subEvent);
           break;
         case 'outlookcom':
-          atcb_generate_microsoft(data, data.dates[`${subEvent}`], 'outlook');
+          atcb_generate_microsoft(data, data.dates[`${subEvent}`], subEvent, 'outlook');
           break;
         case 'yahoo':
-          atcb_generate_yahoo(data, data.dates[`${subEvent}`]);
+          atcb_generate_yahoo(data, data.dates[`${subEvent}`], subEvent);
           break;
       }
     }
@@ -113,7 +98,7 @@ function atcb_generate_links(host, type, data, subEvent = 'all', keyboardTrigger
 function atcb_generate_multidate_links(host, type, linkType, data, keyboardTrigger, multiDateModal) {
   // in the multi-date event case, when all subEvent have no organizer AND are not cancelled, we can also go the short way (for iCal)
   if (
-    linkType == 'ical' &&
+    linkType === 'ical' &&
     data.dates.every(function (theSubEvent) {
       if (theSubEvent.status == 'CANCELLED' || (theSubEvent.organizer != null && theSubEvent.organizer != '')) {
         return false;
@@ -258,7 +243,7 @@ function atcb_subscribe_microsoft(data, fileUrl, calName, type = '365') {
 
 // FUNCTION TO GENERATE THE GOOGLE URL
 // See specs at: https://github.com/InteractionDesignFoundation/add-event-to-calendar-docs/blob/main/services/google.md (unofficial)
-function atcb_generate_google(data, date) {
+function atcb_generate_google(data, date, subEvent = 'all') {
   const urlParts = [];
   urlParts.push('https://calendar.google.com/calendar/render?action=TEMPLATE');
   // generate and add date
@@ -303,12 +288,12 @@ function atcb_generate_google(data, date) {
     })();
     urlParts.push(availabilityPart);
   }
-  atcb_open_cal_url(data, 'google', urlParts.join('&'));
+  atcb_open_cal_url(data, 'google', urlParts.join('&'), false, subEvent);
 }
 
 // FUNCTION TO GENERATE THE YAHOO URL
 // See specs at: https://github.com/InteractionDesignFoundation/add-event-to-calendar-docs/blob/main/services/yahoo.md (unofficial)
-function atcb_generate_yahoo(data, date) {
+function atcb_generate_yahoo(data, date, subEvent = 'all') {
   const urlParts = [];
   urlParts.push('https://calendar.yahoo.com/?v=60');
   // generate and add date
@@ -328,12 +313,12 @@ function atcb_generate_yahoo(data, date) {
     // using descriptionHtmlFree instead of description, since Yahoo does not support html tags in a stable way
     urlParts.push('desc=' + encodeURIComponent(date.descriptionHtmlFree));
   }
-  atcb_open_cal_url(data, 'yahoo', urlParts.join('&'));
+  atcb_open_cal_url(data, 'yahoo', urlParts.join('&'), false, subEvent);
 }
 
 // FUNCTION TO GENERATE THE MICROSOFT 365 OR OUTLOOK WEB URL
 // See specs at: TODO: add some documentation here, if it exists
-function atcb_generate_microsoft(data, date, type = '365') {
+function atcb_generate_microsoft(data, date, subEvent = 'all', type = '365') {
   const urlParts = [];
   const basePath = (function () {
     // tmp workaround to reflect the fact that Microsoft is routing mobile traffic differently
@@ -368,13 +353,13 @@ function atcb_generate_microsoft(data, date, type = '365') {
   if (date.description != null && date.description != '') {
     urlParts.push('body=' + encodeURIComponent(date.description));
   }
-  atcb_open_cal_url(data, type, urlParts.join('&'));
+  atcb_open_cal_url(data, type === 'outlook' ? 'outlookcom' : 'ms365', urlParts.join('&'), false, subEvent);
 }
 
 // FUNCTION TO GENERATE THE MICROSOFT TEAMS URL
 // See specs at: https://learn.microsoft.com/en-us/microsoftteams/platform/concepts/build-and-test/deep-link-workflow?tabs=teamsjs-v2#deep-link-to-open-a-meeting-scheduling-dialog
 // Mind that this is still in development mode by Microsoft! Location, html tags and linebreaks in the description are not supported yet.
-function atcb_generate_msteams(data, date) {
+function atcb_generate_msteams(data, date, subEvent = 'all') {
   const urlParts = [];
   const baseUrl = 'https://teams.microsoft.com/l/meeting/new?';
   // generate and add date
@@ -402,19 +387,31 @@ function atcb_generate_msteams(data, date) {
     // using descriptionHtmlFree instead of description, since Teams does not support html tags
     urlParts.push('content=' + locationString + encodeURIComponent(date.descriptionHtmlFree));
   }
-  atcb_open_cal_url(data, 'msteams', baseUrl + urlParts.join('&'));
+  atcb_open_cal_url(data, 'msteams', baseUrl + urlParts.join('&'), false, subEvent);
 }
 
 // FUNCTION TO OPEN THE URL
-function atcb_open_cal_url(data, type, url, subscribe = false, target = '') {
+function atcb_open_cal_url(data, type, url, subscribe = false, subEvent = null, target = '') {
   if (target == '') {
     target = atcbDefaultTarget;
   }
   if (atcb_secure_url(url)) {
     if (data.proxy && data.proKey && data.proKey != '') {
       const urlType = subscribe ? 's' : 'o';
-      const query = url ? '?url=' + encodeURIComponent(url) : '';
-      url = 'https://caldn.net/' + data.proKey + '/' + urlType + '/' + type + query;
+      const query = (function () {
+        const parts = [];
+        if (data.attendee != null && data.attendee != '') {
+          parts.push('attendee=' + encodeURIComponent(data.attendee));
+        }
+        if (data.dates && data.dates.length > 1 && subEvent !== null && subEvent !== 'all') {
+          parts.push('sub-event=' + subEvent);
+        }
+        if (parts.length > 0) {
+          return '?' + parts.join('&');
+        }
+        return '';
+      })();
+      url = (data.dev ? 'https://dev.caldn.net/' : 'https://caldn.net/') + data.proKey + '/' + urlType + '/' + type + query;
       if (!atcb_secure_url(url)) {
         return;
       }
@@ -437,6 +434,12 @@ function atcb_generate_ical(host, data, subEvent = 'all', keyboardTrigger = fals
   const filename = atcb_determine_ical_filename(data, subEvent);
   // check for a given explicit file...
   const givenIcsFile = (function () {
+    // ignore a given file, if there is an attendee provided at the host level, as this would need to be added to the file
+    const potentialHostAttendee = host.host.getAttribute('attendee') || '';
+    if (data.attendee && data.attendee !== '' && potentialHostAttendee !== '') {
+      return '';
+    }
+    // otherwise, we check for a given explicit file
     if (subEvent != 'all' && data.dates[`${subEvent}`].icsFile != null && data.dates[`${subEvent}`].icsFile != '') {
       return data.dates[`${subEvent}`].icsFile;
     }
@@ -446,12 +449,12 @@ function atcb_generate_ical(host, data, subEvent = 'all', keyboardTrigger = fals
     return '';
   })();
   // if we are in proxy mode, we can directly redirect
-  if (givenIcsFile && givenIcsFile !== '' && data.proxy) {
-    atcb_open_cal_url(data, 'ical', givenIcsFile);
+  if (data.proxy) {
+    atcb_open_cal_url(data, 'ical', 'https://add-to-calendar-pro.com', false, subEvent);
     return;
   }
   // else, we directly load it (not if iOS and WebView - will be catched further down - except it is explicitely bridged)
-  if (givenIcsFile != '' && (!atcbIsiOS() || !atcbIsWebView() || data.bypassWebViewCheck == true)) {
+  if (givenIcsFile !== '' && (!atcbIsiOS() || !atcbIsWebView() || data.bypassWebViewCheck)) {
     // replace the protocol at givenIcsFile (https or http) with webcal for non-Safari on iOS browsers. Opens the subscription dialog, but best we get atm
     if (atcbIsiOS() && !atcbIsSafari()) {
       atcb_save_file(givenIcsFile.replace(/^https?:\/\//, 'webcal://'), filename);
@@ -528,11 +531,15 @@ function atcb_generate_ical(host, data, subEvent = 'all', keyboardTrigger = fals
     }
     if (data.dates[`${i}`].organizer != null && data.dates[`${i}`].organizer != '') {
       const organizerParts = data.dates[`${i}`].organizer.split('|');
-      ics_lines.push('ORGANIZER;CN="' + atcb_rewrite_ical_text(organizerParts[0], false, true) + '":MAILTO:' + organizerParts[1]);
+      ics_lines.push('ORGANIZER;CN=' + atcb_rewrite_ical_text(organizerParts[0], false, true) + ':MAILTO:' + organizerParts[1]);
     }
     if (data.dates[`${i}`].attendee != null && data.dates[`${i}`].attendee != '') {
       const attendeeParts = data.dates[`${i}`].attendee.split('|');
-      ics_lines.push('ATTENDEE;ROLE=REQ-PARTICIPANT;CN="' + atcb_rewrite_ical_text(attendeeParts[0], false, true) + '":MAILTO:' + attendeeParts[1]);
+      if (attendeeParts.length === 2) {
+        ics_lines.push('ATTENDEE;CUTYPE=INDIVIDUAL;ROLE=REQ-PARTICIPANT;PARTSTAT=ACCEPTED;CN=' + atcb_rewrite_ical_text(attendeeParts[0], false, true) + ';X-NUM-GUESTS=0:mailto:' + attendeeParts[1]);
+      } else {
+        ics_lines.push('ATTENDEE;CUTYPE=INDIVIDUAL;ROLE=REQ-PARTICIPANT;PARTSTAT=ACCEPTED;CN=' + attendeeParts[0] + ';X-NUM-GUESTS=0:mailto:' + attendeeParts[0]);
+      }
     }
     if (data.recurrence != null && data.recurrence != '') {
       ics_lines.push(data.recurrence);

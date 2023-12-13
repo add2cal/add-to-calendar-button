@@ -25,7 +25,7 @@ useHead({
         />
       </svg>
       <div class="mx-4 p-2 text-left">
-        <p class="pb-4 pt-2 text-xl font-bold leading-3">{{ $t('content.privacy.no-cookies') }}!</p>
+        <p class="pb-4 text-xl font-bold leading-6">{{ $t('content.privacy.no-cookies') }}!</p>
         <p>
           {{ $t('content.privacy.no-cookies-details-1') }}<br />
           {{ $t('content.privacy.no-cookies-details-2') }}<br />
@@ -83,6 +83,10 @@ useHead({
         Google Ireland Limited<br />
         Gordon House, Barrow Street<br />
         Dublin 4, Irland<br />
+        <br />
+        Cloudflare, Inc.<br />
+        101 Townsend St.<br />
+        San Francisco, CA 94107
       </p>
       <h3>Data processing</h3>
       <p>We have concluded a data processing agreement (DPA) for the use of the above-mentioned service. This is a contract mandated by data privacy laws that guarantees that they process personal data of our website visitors only based on our instructions and in compliance with the GDPR.</p>

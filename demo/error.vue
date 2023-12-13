@@ -57,7 +57,7 @@ const localePath = useLocalePath();
           <Meta :id="meta.id" :property="meta.property" :content="meta.content" />
         </template>
         <Meta name="keywords" :content="t('meta.keywords')" />
-        <Meta property="og:title" :content="title" />
+        <Meta property="og:site_name" :content="title" />
         <Meta name="twitter:title" :content="title" />
         <Meta property="og:description" :content="description" />
         <Meta name="twitter:description" :content="description" />

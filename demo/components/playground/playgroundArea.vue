@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import LightModeSwitch from "@/components/lightModeSwitch.vue";
-import { EyeIcon, EyeSlashIcon, AdjustmentsHorizontalIcon, CheckIcon } from '@heroicons/vue/24/outline';
+import { EyeIcon, EyeSlashIcon, AdjustmentsHorizontalIcon, CheckIcon, ArrowTopRightOnSquareIcon } from '@heroicons/vue/24/outline';
 import "add-to-calendar-button";
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import CodeBlock from "@/components/codeBlock.vue";
@@ -9,7 +9,7 @@ import LayoutAttrs from "@/components/playground/attrs/layoutAttrs.vue";
 import { mapAttrsObject, attrsToHtmlString } from '@/utils/attrs';
 import { set, LSKey } from '@/utils/localStorage';
 import { getInitialAttrs } from '@/utils/attrs/default';
-const { t } = useI18n();
+const { t, locale } = useI18n();
 
 const showCode = ref(false);
 
@@ -50,7 +50,7 @@ watch(showMC, val => {
         class="grid-bg row-span-2 flex justify-center rounded-tl-none border-0 border-zinc-400 bg-zinc-100 px-3 py-8 dark:border-zinc-600 dark:bg-zinc-900 md:rounded-tr-md md:border-l-2 lg:row-span-1 lg:rounded-tr-none"
       >
         <div class="sticky top-[30vh] z-30 h-auto py-10 md:h-[500px] md:py-0">
-          <add-to-calendar-button v-bind="mapAttrsObject(data)" debug />
+          <add-to-calendar-button v-bind="mapAttrsObject(data)" debug hideRichData hideBranding />
         </div>
       </div>
       <div id="style-input" :class="[ !showCode ? 'rounded-bl-md lg:rounded-r-md lg:rounded-bl-none' : 'rounded-none lg:rounded-tr-md' ]" class="hidden border-l-0 border-t-2 border-zinc-400 bg-zinc-200 p-3 dark:border-zinc-600 dark:bg-zinc-800 md:block lg:border-l-2 lg:border-t-0">
@@ -59,6 +59,13 @@ watch(showMC, val => {
           <LightModeSwitch />
         </div>
         <LayoutAttrs v-model="data.layout" />
+        <div class="mx-auto mt-8 text-center text-xs">
+          {{ t('labels.proConfig') }}
+          <a class="mt-1 block" target="_blank" rel="noopener" :href="'https://add-to-calendar-pro.com' + (locale !== 'en' ? '/' + locale : '')">
+            {{ t('labels.discoverPro') }}
+            <ArrowTopRightOnSquareIcon class="-mt-0.5 mr-0.5 inline-block h-3 w-3" aria-hidden="true" />
+          </a>
+        </div>
       </div>
     </div>
     <div id="code-output" :class="[ !showCode ? 'mx-8 bg-zinc-300 dark:bg-zinc-800' : 'mx-2 bg-zinc-200 pb-0 dark:bg-zinc-800 md:mx-0' ]" class="rounded-b-md border-2 border-t-0 border-zinc-400 p-2 shadow-lg transition-all dark:border-zinc-600">

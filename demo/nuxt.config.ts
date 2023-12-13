@@ -2,9 +2,10 @@
 import { defineNuxtConfig } from 'nuxt/config';
 
 const baseUrl = process.env.NUXT_PUBLIC_SITE_URL || 'https://add-to-calendar-button.com';
+const robots = process.env.NUXT_PUBLIC_ROBOTS || 'index, follow';
 
 export default defineNuxtConfig({
-  modules: ['@nuxtjs/i18n', '@nuxtjs/tailwindcss', 'nuxt-headlessui', 'nuxt-security', 'nuxt-schema-org', '@vite-pwa/nuxt', 'nuxt-simple-sitemap', 'nuxt-delay-hydration'],
+  modules: ['@nuxtjs/i18n', '@nuxtjs/tailwindcss', 'nuxt-headlessui', 'nuxt-security', '@vite-pwa/nuxt', 'nuxt-simple-sitemap', 'nuxt-schema-org', 'nuxt-delay-hydration'],
   vue: {
     compilerOptions: {
       // treat all tags starting with "add-" as custom elements
@@ -14,6 +15,9 @@ export default defineNuxtConfig({
   nitro: {
     compressPublicAssets: {
       brotli: true,
+    },
+    prerender: {
+      ignore: ['/manifest.json'],
     },
   },
   ssr: true,
@@ -43,19 +47,8 @@ export default defineNuxtConfig({
       crossOriginResourcePolicy: 'cross-origin',
       crossOriginOpenerPolicy: 'same-origin',
       crossOriginEmbedderPolicy: 'unsafe-none',
+      contentSecurityPolicy: false,
       // the following needs to match the settings in ./public/staticwebapp.config.json
-      contentSecurityPolicy: {
-        'base-uri': ["'self'"],
-        'font-src': ["'self' data:"],
-        'form-action': ["'self'"],
-        'frame-ancestors': ["'self'"],
-        'img-src': ["'self' https://add-to-calendar-button.com data:"],
-        'object-src': ["'none'"],
-        'script-src-attr': ["'self'"],
-        'script-src': ["'self' 'unsafe-inline' https://*.add-to-calendar-button.com"],
-        'style-src': ["'self' 'unsafe-inline' https://add-to-calendar-button.com"],
-        'upgrade-insecure-requests': true,
-      },
       referrerPolicy: 'strict-origin-when-cross-origin',
       strictTransportSecurity: {
         maxAge: 31536000,
@@ -88,13 +81,12 @@ export default defineNuxtConfig({
         { 'http-equiv': 'X-UA-Compatible', content: 'IE=edge' },
         { name: 'author', content: 'Add to Calendar' },
         { name: 'publisher', content: 'Add to Calendar' },
-        { name: 'robots', content: 'index, follow' },
+        { name: 'robots', content: robots },
         { property: 'og:type', content: 'website' },
         { property: 'og:site_name', content: 'Add to Calendar Button' },
         { property: 'og:image', content: baseUrl + '/assets/img/fb.png' },
         { name: 'twitter:card', content: 'summary_large_image' },
-        { name: 'twitter:site', content: baseUrl },
-        { name: 'twitter:creator', content: 'add2calendar' },
+        { name: 'twitter:site', content: '@add2calendar' },
         { name: 'twitter:image', content: baseUrl + '/assets/img/tw.png' },
         { name: 'msapplication-TileColor', content: '#9755ff' },
         { name: 'msapplication-TileImage', content: baseUrl + '/assets/favicons/mstile-144x144.png' },
@@ -132,9 +124,10 @@ export default defineNuxtConfig({
       noscript: [{ innerHTML: 'Please enable JavaScript to view this website.' }],
     },
   },
-  schemaOrg: {
+  site: {
     host: baseUrl,
-    tagPosition: 'head',
+    url: baseUrl,
+    name: 'Add to Calendar Button',
   },
   pwa: {
     registerType: 'autoUpdate',
@@ -153,7 +146,7 @@ export default defineNuxtConfig({
       ],
     },
     client: {
-      installPrompt: true,
+      installPrompt: false,
     },
     manifestFilename: 'manifest.json',
     manifest: {

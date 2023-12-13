@@ -1,38 +1,8 @@
 /* eslint-disable no-unused-vars */
 
-// MODULES
-// default
-declare module 'add-to-calendar-button' {
-  export function atcb_action(config: ATCBActionEventConfig, triggerElement?: HTMLElement, keyboardTrigger?: boolean): Promise<string>;
-  export const i18nStrings: {
-    [key: string]: {
-      [key: string]: string;
-    };
-  };
-  export const cssStyles: {
-    [key: string]: string;
-  };
-  export function atcb_generate_ty(host: HTMLElement, data: object): null;
-  export function atcb_generate_timestring(dates: EventDate[], language?: string, subEvent?: string | number, decorate?: boolean, browserTimeOverride?: boolean, enforceYear?: boolean, hideTimeZone?: boolean): string[];
-}
-
+// MODULE
 // no-pro
-// referenced in its own index.d.ts file, but also kept here as backup!
 declare module 'add-to-calendar-button/no-pro' {
-  export function atcb_action(config: ATCBActionEventConfig, triggerElement?: HTMLElement, keyboardTrigger?: boolean): Promise<string>;
-}
-
-// unstyle
-// referenced in its own index.d.ts file, but also kept here as backup!
-declare module 'add-to-calendar-button/unstyle' {
-  export function atcb_action(config: ATCBActionEventConfig, triggerElement?: HTMLElement, keyboardTrigger?: boolean): Promise<string>;
-  export function atcb_generate_ty(host: HTMLElement, data: object): null;
-  export function atcb_generate_timestring(dates: EventDate[], language?: string, subEvent?: string | number, decorate?: boolean, browserTimeOverride?: boolean, enforceYear?: boolean, hideTimeZone?: boolean): string[];
-}
-
-// no-pro-unstyle
-// referenced in its own index.d.ts file, but also kept here as backup!
-declare module 'add-to-calendar-button/no-pro-unstyle' {
   export function atcb_action(config: ATCBActionEventConfig, triggerElement?: HTMLElement, keyboardTrigger?: boolean): Promise<string>;
 }
 

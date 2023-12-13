@@ -1,8 +1,10 @@
 <script setup lang="ts">
+// @ts-expect-error - named import may TS-fail here due to the workspace type integration of the script
 import { atcb_action } from "add-to-calendar-button";
 import { ArrowTopRightOnSquareIcon } from '@heroicons/vue/24/outline';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import CodeBlock from "@/components/codeBlock.vue";
+import Interstitial from '@/components/interstitial.vue';
 const { t, locale } = useI18n();
 
 definePageMeta({
@@ -28,7 +30,7 @@ let defaultLangJS = (function () {
   }
   return '';
 })();
-let defaultCustCloseLabel =  JSON.stringify({ "close":t('demo_data.cust_close_label') });
+let defaultCustLabels = t('demo_data.custom_labels');
 
 // config for atcb_action example
 let config:object = {
@@ -37,7 +39,7 @@ let config:object = {
   startDate: defaultDate,
   startTime: "10:15",
   endTime: "23:30",
-  options: ["Google|" + t('demo_data.options_label_single_dummy'), "iCal"],
+  options: ["Google", "iCal"],
   timeZone: t('demo_data.default_timezone'),
   lightMode: "bodyScheme",
   language: locale.value
@@ -51,14 +53,14 @@ watch(locale, value => {
     defaultLang = '';
     defaultLangJS = '';
   }
-  defaultCustCloseLabel = JSON.stringify({ "close":t('demo_data.cust_close_label') });
+  defaultCustLabels = t('demo_data.custom_labels');
   config = {
     name: t('demo_data.name'),
     description: t('demo_data.description_alt1'),
     startDate: defaultDate,
     startTime: "10:15",
     endTime: "23:30",
-    options: ["Google|" + t('demo_data.options_label_single_dummy'), "iCal"],
+    options: ["Google", "iCal"],
     timeZone: t('demo_data.default_timezone'),
     lightMode: "bodyScheme",
     language: locale.value
@@ -138,6 +140,7 @@ onUnmounted(() => {
               lightMode="bodyScheme"
               :language="locale"
               hideRichData
+              hideBranding
             ></add-to-calendar-button>
           </div>
           <div class="flex-1 overflow-x-auto">
@@ -160,7 +163,7 @@ onUnmounted(() => {
         </div>
         <div class="block w-full justify-between pt-4 md:flex">
           <div class="flex w-full flex-none justify-center p-6 pt-8 md:w-[300px]">
-            <add-to-calendar-button :name="$t('demo_data.name')" :startDate="defaultDate" options="'Apple','Google','iCal'" buttonStyle="flat" hideIconList buttonsList hideBackground size="5" :label="$t('demo_data.name_custom_3')" lightMode="bodyScheme" :language="locale"></add-to-calendar-button>
+            <add-to-calendar-button :name="$t('demo_data.name')" :startDate="defaultDate" options="'Apple','Google','iCal'" buttonStyle="flat" hideIconList buttonsList hideBackground :label="$t('demo_data.name_custom_3')" lightMode="bodyScheme" :language="locale"></add-to-calendar-button>
           </div>
           <div class="flex-1 overflow-x-auto">
             <LazyCodeBlock class="line-numbers">
@@ -173,7 +176,6 @@ onUnmounted(() => {
   hideIconList
   buttonsList
   hideBackground
-  size="5"
   label="{{ $t('demo_data.name_custom_3') }}"
   lightMode="bodyScheme"{{ defaultLang }}
 &gt;&lt;/add-to-calendar-button&gt;
@@ -197,6 +199,7 @@ onUnmounted(() => {
               lightMode="bodyScheme"
               :language="locale"
               hideRichData
+              hideBranding
             ></add-to-calendar-button>
           </div>
           <div class="flex-1 overflow-x-auto">
@@ -259,6 +262,7 @@ onUnmounted(() => {
               lightMode="bodyScheme"
               :language="locale"
               hideRichData
+              hideBranding
             ></add-to-calendar-button>
           </div>
           <div class="flex-1 overflow-x-auto">
@@ -352,7 +356,7 @@ onUnmounted(() => {
           <p>
             Those rules are set up as HTML pseudo tags, which get transformed automatically.<br />
             <span class="text-sm italic">(If you are using the WordPress Plugin Shortcode, ']' would break your code. Instead of [*], you could also use {*} here.)</span><br />
-            <span class="text-sm italic">(Yahoo and Microsoft Teams are not fully supported and automatically transformed to plain text.)</span>
+            <span class="text-sm italic">(Apple, Yahoo, and Microsoft Teams are not fully supported and automatically transformed to plain text, supporting only line breaks and hyperlinks.)</span>
           </p>
         </div>
         <div v-else>
@@ -363,7 +367,7 @@ onUnmounted(() => {
           <p>
             Diese Regeln setzt du über HTML-Pseudo-Tags, die am Ende automatisch in echtes HTML transformiert werden.<br />
             <span class="text-sm italic">(Wenn du den WordPress Plugin Shortcode nutzt, stört ']' den Code. In diesem Fall kannst du {*} anstelle von [*] nutzen.)</span><br />
-            <span class="text-sm italic">(Yahoo und Microsoft Teams werden diesbezüglich leider nicht unterstützt und automatisch in Plain Text umgewandelt.)</span>
+            <span class="text-sm italic">(Apple, Yahoo und Microsoft Teams werden hierbei nicht vollständig unterstützt und der Wert automatisch zu Plain Text transformiert, womit nur Zeilenumbrüche und Links dargestellt werden.)</span>
           </p>
         </div>
         <p class="mt-6">
@@ -395,6 +399,7 @@ onUnmounted(() => {
               :description="$t('demo_data.description_alt2')"
               :language="locale"
               hideRichData
+              hideBranding
             ></add-to-calendar-button>
           </div>
           <div class="flex-1 overflow-x-auto">
@@ -424,7 +429,7 @@ onUnmounted(() => {
           <p>
             "name" and "startDate" are still required for organizational purposes, but every other event parameter can be skipped in this case.<br />
             For Microsoft services, the "name" will be used as name for the calendar.<br />
-            <span class="text-sm italic">(Microsoft Teams is not yet supported and will be automatically disabled.)</span>
+            <span class="text-sm italic">(If the user's browser does not recognize any installed calendar app, this might lead to a blank screen. The PRO version mitigates this with some explenatory middleware screen.)</span>
           </p>
         </div>
         <div v-else>
@@ -433,7 +438,7 @@ onUnmounted(() => {
           <p>
             "name" und "startDate" sind aus technisch-organisatorischen Gründen weiterhin verpflichtende Angaben. Alle weiteren Parameter sind in diesem Fall aber optional.<br />
             Bei Microsoft-Diensten wird der "name" als Name für den geteilten Kalender genutzt.<br />
-            <span class="text-sm italic">(Microsoft Teams wird noch nicht unterstützt und der Link automatisch deaktiviert.</span>
+            <span class="text-sm italic">(Sollte der Browser des Nutzers keine installierte Kalender-App erkennen, kann dies zu einer leeren Seite führen. Die PRO-Version optimiert dies mit einem erklärenden Zwischenbildschirm.)</span>
           </p>
         </div>
         <div class="block w-full justify-between pt-4 md:flex">
@@ -447,6 +452,7 @@ onUnmounted(() => {
               lightMode="bodyScheme"
               :language="locale"
               hideRichData
+              hideBranding
             ></add-to-calendar-button>
           </div>
           <div class="flex-1 overflow-x-auto">
@@ -470,26 +476,24 @@ onUnmounted(() => {
         <h2 class="mb-4 mt-14 border-t border-zinc-300 pt-14 dark:border-zinc-700">4. {{ $t('content.advanced.4_long') }}</h2>
         <div v-if="locale=='en'">
           <p>You can change any text blocks.</p>
-          <p>For the button label you can simply specify the "label" option, while for the calendar option labels in the list, you can set a custom text by separating it with a "|" from the option (e.g. "Google|My Label").</p>
+          <p>For the button label you can simply specify the "label" option.</p>
           <p>
             For all other text blocks (like the "Close" at the modal list type), you can specify the "customLabels" option.<br />
             There, you need to specify a JSON structure and define any text you want to override.<br />
             Check the <a href="https://github.com/add2cal/add-to-calendar-button/blob/main/src/atcb-i18n.js" target="_blank" rel="noopener">atcb-i18n.js <ArrowTopRightOnSquareIcon class="-mt-0.5 mr-0.5 inline-block h-4 w-4" aria-hidden="true" /></a> file at the repository for the available
             keys/options.<br />
-            <span class="font-semibold">Mind that for the "customLabels" option, all keys need to be transformed to lower case strings without any whitespaces!</span><br />
             Any custom label will also override any translation.
           </p>
           <p class="text-sm italic">(In case you are only looking for translating labels, check the "language" option instead!)</p>
         </div>
         <div v-else>
           <p>Du kannst grundsätzlich jeden Text-Block anpassen.</p>
-          <p>Für den Text auf dem Button kannst du hierzu ganz einfach die "label"-Option nutzen. Die Texte der einzelnen Kalender-Links kannst du individualisieren, indem du deinen Text mit einem "|" getrennt direkt hinter den Kalender-Typ schreibst (bspw. "Google|Mein Label").</p>
+          <p>Für den Text auf dem Button kannst du hierzu ganz einfach die "label"-Option nutzen.</p>
           <p>
             Für alle anderen Text-Blöcke (bspw. "Schließen" im Modal-Listen-Typ) kannst du die Option "customLabels" nutzen.<br />
             Hierbei musst du eine JSON-Struktur spezifizieren, die den jeweiligen Text zu dem zu ändernden Text-Key definiert.<br />
             Wirf einen Blick auf die Quellcode-Datei <a href="https://github.com/add2cal/add-to-calendar-button/blob/main/src/atcb-i18n.js" target="_blank" rel="noopener">atcb-i18n.js <ArrowTopRightOnSquareIcon class="-mt-0.5 mr-0.5 inline-block h-4 w-4" aria-hidden="true" /></a> in unserem
             Repository. Sie beinhaltet alle verfügbaren Optionen (Text-Keys).<br />
-            <span class="font-semibold">Beachte, dass die Keys für die "customLabel"-Option zu Kleinbuchstaben transformiert und Leerzeichen entfernt werden müssen!</span><br />
             Texte werden je nach gewählter Sprache übersetzt. Ein individueller Text wird auch jede Übersetzung überschreiben.
           </p>
           <p class="text-sm italic">(Falls du Texte lediglich übersetzen möchtest, prüfe zunächst die "language"-Option!)</p>
@@ -502,12 +506,13 @@ onUnmounted(() => {
               startTime="10:15"
               endTime="23:30"
               :label="$t('demo_data.name_custom_1')"
-              :options="$t('demo_data.options_labels')"
+              options="'Apple','Google','iCal','Outlook.com','Yahoo'"
               listStyle="modal"
-              :customLabels="defaultCustCloseLabel"
+              :customLabels="defaultCustLabels"
               lightMode="bodyScheme"
               :language="locale"
               hideRichData
+              hideBranding
             ></add-to-calendar-button>
           </div>
           <div class="flex-1 overflow-x-auto">
@@ -519,9 +524,9 @@ onUnmounted(() => {
   startTime="10:15"
   endTime="23:30"
   label="{{ $t('demo_data.name_custom_1') }}"
-  options="{{ $t('demo_data.options_labels') }}"
+  options="'Apple','Google','iCal','Outlook.com','Yahoo'"
   listStyle="modal"
-  customLabels='{{ defaultCustCloseLabel }}'
+  customLabels='{{ defaultCustLabels }}'
   lightMode="bodyScheme"{{ defaultLang }}
 &gt;&lt;/add-to-calendar-button&gt;
 </pre
@@ -575,6 +580,7 @@ onUnmounted(() => {
               lightMode="bodyScheme"
               :language="locale"
               hideRichData
+              hideBranding
             ></add-to-calendar-button>
           </div>
           <div class="flex-1 overflow-x-auto">
@@ -625,6 +631,7 @@ onUnmounted(() => {
               lightMode="bodyScheme"
               :language="locale"
               hideRichData
+              hideBranding
             ></add-to-calendar-button>
           </div>
           <div class="flex-1 overflow-x-auto">
@@ -654,6 +661,7 @@ onUnmounted(() => {
           </div>
         </div>
       </section>
+      <Interstitial />
       <section id="case-6">
         <h2 class="mb-4 mt-14 border-t border-zinc-300 pt-14 dark:border-zinc-700">6. {{ $t('content.advanced.6_long') }}</h2>
         <div v-if="locale=='en'">
@@ -693,6 +701,7 @@ onUnmounted(() => {
               lightMode="bodyScheme"
               :language="locale"
               hideRichData
+              hideBranding
             ></add-to-calendar-button>
           </div>
           <div class="flex-1 overflow-x-auto">
@@ -786,6 +795,7 @@ onUnmounted(() => {
               lightMode="bodyScheme"
               :language="locale"
               hideRichData
+              hideBranding
             ></add-to-calendar-button>
           </div>
           <div class="flex-1 overflow-x-auto">
@@ -859,6 +869,7 @@ onUnmounted(() => {
               lightMode="bodyScheme"
               :language="locale"
               hideRichData
+              hideBranding
             ></add-to-calendar-button>
           </div>
           <div class="flex-1 overflow-x-auto">
@@ -889,7 +900,7 @@ onUnmounted(() => {
           </p>
           <p>
             Theoretically, you do not need to provide a button element. However, it is recommended to do so, since it will optimize the user experience a lot (like focusing the element on closing the modal, etc.).<br />
-            If you provide a specific button, you can also choose between the overlay-dropdown list or the modal (default) style. Latter one is strongly recommended.
+            If you do not provide a specific button, the list will automatically show as modal. If provided, you can opt for the overlay-dropdown list style via the listStyle option (mind that all other options are not supported in the atcb_action case). The modal style is strongly recommended.
           </p>
           <h3 class="mb-3 mt-8">{{ $t('content.guide.step1') }}: Import</h3>
           <p>
@@ -904,7 +915,8 @@ onUnmounted(() => {
           </p>
           <p>
             Theoretisch muss dieses Element kein Button sein. Wir raten allerdings stark dazu, da es die User Experience wesentlich positiv beeinflusst (bspw. durch die Unterstützung von Tastatur-Navigation, etc.).<br />
-            Wenn du ein Button-Element nutzt, kannst du auch zwischen einem Overlay-Dropdown und dem Modal-Stil wählen. Letzteres ist der Standard und wird auch empfohlen.
+            Wenn du kein Button-Element nutzt, öffnet sich die Kalendar-Liste als Modal. Gibt es ein Button-Element kannst du auch den Overlay-Dropdown-Stil über die Option listStyle wählen (beachte, dass die übrigen Optionen mit atcb_action nicht unterstützt werden). Der Modal-Stil ist der Standard
+            und wird auch empfohlen.
           </p>
           <h3 class="mb-3 mt-8">{{ $t('content.guide.step1') }}: Import</h3>
           <p>
@@ -947,7 +959,7 @@ onUnmounted(() => {
     startDate: "{{ defaultDate }}",
     startTime: "10:15",
     endTime: "23:30",
-    options: ["Google|{{ $t('demo_data.options_label_single_dummy') }}", "iCal"],
+    options: ["Google", "iCal"],
     timeZone: "{{ $t('demo_data.default_timezone') }}"{{ defaultLangJS }}
   };
   const button = document.getElementById('my-default-button');
@@ -959,6 +971,57 @@ onUnmounted(() => {
               >
             </LazyCodeBlock>
           </div>
+        </div>
+      </section>
+      <section id="case-11">
+        <h2 class="mb-4 mt-14 border-t border-zinc-300 pt-14 dark:border-zinc-700">11. {{ $t('content.advanced.11_long') }}</h2>
+        <div v-if="locale=='en'">
+          <p>
+            First things first:<br />
+            Wherever possible, we load the script asynchronously, so it will not block the rendering of your page.<br />
+            However, if you include it as a ES module, this behavior usually changes.<br />
+            Besides some JavaScript frameworks offering other tricks to load components asynchronously, you can try the following to optimize the loading behavior and bundle size.
+          </p>
+          <p>Unfortunately, we cannot offer any easy tree-shaking solution, as this contradicts the way we are building the script - being a flexible web component, which can adapt on runtime.</p>
+          <p>
+            <strong>The ES package comes in 4 flavors:</strong>
+          </p>
+          <ol class="ml-6 list-decimal pb-4 pt-2">
+            <li class="text-left">Default: Includes everything and therefore reduces the risk of failure.</li>
+            <li class="text-left">no-pro: This is basically the default, if you are not using the <a target="_blank" rel="noopener" href="https://add-to-calendar-pro.com">PRO version</a> of the script.</li>
+            <li class="text-left">unstyle: This is the default, but without integrated css (style).</li>
+            <li class="text-left">no-pro-unstyle: No integrated css, no PRO functionalities.</li>
+          </ol>
+          <p>
+            To reduce the bundle size, you can use the unstyle version with <CodeBlock inline>import 'add-to-calendar-button/unstyle'</CodeBlock> and add the css manually to your project via the customCss option.<br />
+            For the css file, you can make use of the jsDelivr CDN - find possible files at <a target="_blank" rel="noopener" href="https://www.jsdelivr.com/package/npm/add-to-calendar-button?tab=files&path=assets%2Fcss">jsdelivr</a>.<br />
+            This, of course, makes changing the style more difficult and adds an additional request to the network, but would reduce the bundle size by ~ 30%.<br />
+            In the end, it depends on your project and strategy, which version is the best for you.
+          </p>
+        </div>
+        <div v-else>
+          <p>
+            First things first:<br />
+            Woimmer möglich, laden wir das Skript asynchron, sodass es das Rendern deiner Seite nicht blockiert.<br />
+            Wenn du es allerdings als ES Modul einbindest, ändert sich dieses Verhalten in der Regel.<br />
+            Neben dem Umstand, dass einige JavaScript-Frameworks andere Kniffe anbieten, um Komponenten asynchron zu laden, kannst du folgendes versuchen, um das Ladeverhalten und die Bundle-Size zu optimieren.
+          </p>
+          <p>Leider können wir keine einfache Tree-Shaking-Lösung anbieten, da dies dem Ansatz des Skripts widerspricht - ein flexibler Web-Component, welcher sich zur Laufzeit anpassen lässt.</p>
+          <p>
+            <strong>Das ES-Package kommt in 4 Varianten:</strong>
+          </p>
+          <ol class="ml-6 list-decimal pb-4 pt-2">
+            <li class="text-left">Default: Beinhaltet alles und reduziert das Risiko von Fehlfunktionen.</li>
+            <li class="text-left">no-pro: Entspricht dem Default, solange du nicht die <a target="_blank" rel="noopener" href="https://add-to-calendar-pro.com/de">PRO version</a> nutzt.</li>
+            <li class="text-left">unstyle: Entspricht dem Default, aber ohne CSS-Informationen (Style).</li>
+            <li class="text-left">no-pro-unstyle: Kein integriertes css, keine PRO-Funktionalitäten.</li>
+          </ol>
+          <p>
+            Um die Bundle-Size zu reduzieren, kannst du die unstyle Version mit <CodeBlock inline>import 'add-to-calendar-button/unstyle'</CodeBlock> nutzen und das CSS manuell über die customCss Option einbinden.<br />
+            Für die CSS-Datei, kannst du das jsDelivr CDN nutzen - mögliche Dateien findest du unter <a target="_blank" rel="noopener" href="https://www.jsdelivr.com/package/npm/add-to-calendar-button?tab=files&path=assets%2Fcss">https://www.jsdelivr.com/package/npm/add-to-calendar-button</a>.<br />
+            Dies macht es natürlich schwieriger das Design zur Laufzeit anzupassen und fügt eine weitere Anfrage zum Netzwerk hinzu, würde die Bundle-Size aber um ~ 30% reduzieren.<br />
+            Letztendlich hängt es von deinem Projekt und deiner Strategie ab, welche Version für dich die beste ist.
+          </p>
         </div>
       </section>
     </div>
@@ -974,6 +1037,7 @@ onUnmounted(() => {
         <NuxtLink :to="'#case-8'" class="my-4 block">#8: {{ $t('content.advanced.8_short') }}</NuxtLink>
         <NuxtLink :to="'#case-9'" class="my-4 block">#9: {{ $t('content.advanced.9_short') }}</NuxtLink>
         <NuxtLink :to="'#case-10'" class="my-4 block">#10: {{ $t('content.advanced.10_short') }}</NuxtLink>
+        <NuxtLink :to="'#case-11'" class="my-4 block">#11: {{ $t('content.advanced.11_short') }}</NuxtLink>
       </div>
     </div>
   </div>

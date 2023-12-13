@@ -3,7 +3,7 @@
  *  Add to Calendar Button
  *  ++++++++++++++++++++++
  *
- *  Version: 2.4.3
+ *  Version: 2.5.0
  *  Creator: Jens Kuerschner (https://jenskuerschner.de)
  *  Project: https://github.com/add2cal/add-to-calendar-button
  *  License: Elastic License 2.0 (ELv2) (https://github.com/add2cal/add-to-calendar-button/blob/main/LICENSE.txt)
@@ -13,13 +13,21 @@
 
 import { tzlib_get_offset } from 'timezones-ical-library';
 import { atcbIsMobile, atcbIsiOS, atcbDefaultTarget } from './atcb-globals.js';
-import { atcb_log_event } from './atcb-event';
+import { atcb_log_event } from './atcb-event.js';
 import { atcbStates } from './atcb-globals.js';
+import { atcb_generate_ty } from './atcb-generate-pro.js';
+import { atcb_decorate_data_dates } from './atcb-decorate.js';
 
 // SHARED FUNCTION HOOK FOR WHEN EVENT GOT SAVED
 function atcb_saved_hook(host, data) {
   // log event
   atcb_log_event('success', data.identifier, data.identifier);
+  // trigger ty modal, if given
+  if (data.ty && typeof atcb_generate_ty === 'function') {
+    setTimeout(() => {
+      atcb_generate_ty(host, data);
+    }, 1000);
+  }
 }
 
 // SHARED FUNCTION TO SAVE A FILE
@@ -53,6 +61,8 @@ function atcb_generate_time(data, style = 'delimiters', targetCal = 'general', a
   if (data.startTime != null && data.startTime != '' && data.endTime != null && data.endTime != '') {
     // for the input, we assume GMT/UTC per default
     const newStartDate = new Date(data.startDate + 'T' + data.startTime + ':00.000+00:00');
+    // we re-adjust the endDate for the case where the time string generation gets rather called directly
+    if (!data.endDate) data.endDate = data.startDate;
     const newEndDate = new Date(data.endDate + 'T' + data.endTime + ':00.000+00:00');
     const durationMS = newEndDate - newStartDate;
     const durationHours = Math.floor(durationMS / 1000 / 60 / 60);
@@ -169,10 +179,219 @@ function atcb_format_datetime(datetime, style = 'delimiters', includeTime = true
   return output;
 }
 
+function atcb_generate_timestring(dates, language = 'en', subEvent = 'all', decorate = false, browserTimeOverride = false, enforceYear = false, hideTimeZone = false) {
+  if (decorate) {
+    // if this function gets called directly, we might want to decorate raw data first
+    dates = atcb_decorate_data_dates({ dates: dates }).dates;
+  }
+  let startDateInfo, endDateInfo, timeZoneInfoStart, timeZoneInfoEnd;
+  let formattedTimeStart = {};
+  let formattedTimeEnd = {};
+  let timeBlocks = [];
+  let timeZoneInfoStringStart = '';
+  let timeZoneInfoStringEnd = '';
+  const browserTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+  if (subEvent === 'all') {
+    // we are looking at multiple sub-events, which should be considered all together
+    formattedTimeStart = atcb_generate_time(dates[0]);
+    formattedTimeEnd = atcb_generate_time(dates[dates.length - 1]);
+    timeZoneInfoStart = browserTimeOverride ? browserTimezone : dates[0].timeZone;
+    timeZoneInfoEnd = browserTimeOverride ? browserTimezone : dates[dates.length - 1].timeZone;
+  } else {
+    // we are looking at 1 or many sub-events, but we consider only one specific
+    formattedTimeStart = atcb_generate_time(dates[`${subEvent}`]);
+    formattedTimeEnd = formattedTimeStart;
+    timeZoneInfoStart = browserTimeOverride ? browserTimezone : dates[`${subEvent}`].timeZone;
+    timeZoneInfoEnd = timeZoneInfoStart;
+  }
+  startDateInfo = new Date(formattedTimeStart.start);
+  endDateInfo = new Date(formattedTimeEnd.end);
+  // set GMT for allday events to prevent any time zone mismatches
+  if (formattedTimeStart.allday) {
+    timeZoneInfoStart = 'GMT';
+  }
+  if (formattedTimeEnd.allday) {
+    timeZoneInfoEnd = 'GMT';
+  }
+  // in the case of an online event (or magic location), convert the time zone
+  const magicLocationPhrases = ['global', 'world-wide', 'worldwide', 'online'];
+  const convertable = (function () {
+    let i = 0;
+    let j = dates.length - 1;
+    if (subEvent != 'all') {
+      i = j = subEvent;
+    }
+    for (i; i <= j; i++) {
+      const magicLocation = (function () {
+        if (dates[`${i}`].location && dates[`${i}`].location !== '') {
+          if (magicLocationPhrases.includes(dates[`${i}`].location.toLowerCase())) {
+            return true;
+          }
+        }
+        return false;
+      })();
+      if (!magicLocation && !dates[`${i}`].onlineEvent) {
+        return false;
+      }
+    }
+    return true;
+  })();
+  if (convertable) {
+    timeZoneInfoStart = timeZoneInfoEnd = browserTimezone;
+  } else {
+    // determine time zone strings
+    if (!formattedTimeStart.allday && browserTimezone !== timeZoneInfoStart && timeZoneInfoStart !== timeZoneInfoEnd) {
+      timeZoneInfoStringStart = '(' + timeZoneInfoStart + ')';
+    }
+    if ((!formattedTimeEnd.allday && browserTimezone !== timeZoneInfoEnd) || timeZoneInfoStart !== timeZoneInfoEnd) {
+      timeZoneInfoStringEnd = '(' + timeZoneInfoEnd + ')';
+    }
+  }
+  // drop the year, if it is the current one (and not enforced)
+  const now = new Date();
+  const dropYearStart = (function () {
+    if (!enforceYear && startDateInfo.getFullYear() === now.getFullYear()) {
+      return true;
+    }
+    return false;
+  })();
+  const dropYearEnd = (function () {
+    if (!enforceYear && endDateInfo.getFullYear() === now.getFullYear()) {
+      return true;
+    }
+    return false;
+  })();
+  // get the options to format the date
+  const formatOptionsStart = get_format_options(timeZoneInfoStart, dropYearStart, language);
+  const formatOptionsEnd = get_format_options(timeZoneInfoEnd, dropYearEnd, language);
+  // start = end
+  if (startDateInfo.toLocaleDateString(language, formatOptionsEnd.DateLong) === endDateInfo.toLocaleDateString(language, formatOptionsEnd.DateLong)) {
+    // allday vs. timed
+    if (formattedTimeStart.allday) {
+      if (!dropYearStart) {
+        timeBlocks.push(startDateInfo.toLocaleDateString(language, formatOptionsStart.DateLong));
+      }
+    } else {
+      let timeString = '';
+      if (dropYearStart) {
+        timeString = startDateInfo.toLocaleString(language, formatOptionsStart.Time);
+      } else {
+        timeString = startDateInfo.toLocaleString(language, formatOptionsStart.DateTimeLong);
+      }
+      if (language === 'en') {
+        timeString = timeString.replace(/:00/, '');
+      }
+      timeBlocks.push(timeString);
+      if (timeZoneInfoStringStart !== '' && !hideTimeZone) {
+        timeBlocks.push(timeZoneInfoStringStart);
+      }
+      timeBlocks.push('-');
+      timeString = endDateInfo.toLocaleTimeString(language, formatOptionsEnd.Time);
+      if (language === 'en') {
+        timeString = timeString.replace(/:00/, '');
+      }
+      timeBlocks.push(timeString);
+      if (timeZoneInfoStringEnd !== '' && !hideTimeZone) {
+        timeBlocks.push(timeZoneInfoStringEnd);
+      }
+    }
+  } else {
+    // start != end
+    // allday vs. timed (start)
+    if (formattedTimeStart.allday) {
+      timeBlocks.push(startDateInfo.toLocaleDateString(language, formatOptionsStart.DateLong));
+    } else {
+      let timeString = '';
+      if (dropYearStart) {
+        timeString = startDateInfo.toLocaleString(language, formatOptionsStart.Time);
+      } else {
+        timeString = startDateInfo.toLocaleString(language, formatOptionsStart.DateTimeLong);
+      }
+      if (language === 'en') {
+        timeString = timeString.replace(/:00/, '');
+      }
+      timeBlocks.push(timeString);
+    }
+    if (timeZoneInfoStringStart !== '' && !hideTimeZone) {
+      timeBlocks.push(timeZoneInfoStringStart);
+    }
+    timeBlocks.push('-');
+    // allday vs. timed (end)
+    if (formattedTimeEnd.allday) {
+      timeBlocks.push(endDateInfo.toLocaleDateString(language, formatOptionsEnd.DateLong));
+    } else {
+      let timeString = endDateInfo.toLocaleString(language, formatOptionsEnd.DateTimeLong);
+      if (language === 'en') {
+        timeString = timeString.replace(/:00/, '');
+      }
+      timeBlocks.push(timeString);
+    }
+    if (timeZoneInfoStringEnd !== '' && !hideTimeZone) {
+      timeBlocks.push(timeZoneInfoStringEnd);
+    }
+  }
+  return timeBlocks;
+}
+
+function get_format_options(timeZoneInfo, dropYear = false, language = 'en') {
+  const hoursFormat = (function () {
+    if (language === 'en') {
+      return 'h12'; // 12am -> 1am -> .. -> 12pm -> 1pm -> ...
+    }
+    return 'h23'; // 00:00 -> 01:00 -> 12:00 -> 13:00 -> ...
+  })();
+  if (dropYear) {
+    return {
+      DateLong: {
+        timeZone: timeZoneInfo,
+        month: 'short',
+        day: 'numeric',
+      },
+      DateTimeLong: {
+        timeZone: timeZoneInfo,
+        month: 'short',
+        day: 'numeric',
+        hour: 'numeric',
+        minute: '2-digit',
+        hourCycle: hoursFormat,
+      },
+      Time: {
+        timeZone: timeZoneInfo,
+        hour: 'numeric',
+        minute: '2-digit',
+        hourCycle: hoursFormat,
+      },
+    };
+  }
+  return {
+    DateLong: {
+      timeZone: timeZoneInfo,
+      year: 'numeric',
+      month: 'numeric',
+      day: 'numeric',
+    },
+    DateTimeLong: {
+      timeZone: timeZoneInfo,
+      year: 'numeric',
+      month: 'numeric',
+      day: 'numeric',
+      hour: 'numeric',
+      minute: '2-digit',
+      hourCycle: hoursFormat,
+    },
+    Time: {
+      timeZone: timeZoneInfo,
+      hour: 'numeric',
+      minute: '2-digit',
+      hourCycle: hoursFormat,
+    },
+  };
+}
+
 // SHARED FUNCTION TO SECURE DATA
 function atcb_secure_content(data, isJSON = true) {
   // strip HTML tags (especially since stupid Safari adds stuff) - except for <br>
-  const toClean = isJSON ? JSON.stringify(data) : data;
+  const toClean = isJSON ? JSON.stringify(data) : data.toString();
   const cleanedUp = toClean.replace(/(<(?!br)([^>]+)>)/gi, '');
   if (isJSON) {
     return JSON.parse(cleanedUp);
@@ -183,7 +402,7 @@ function atcb_secure_content(data, isJSON = true) {
 
 // SHARED FUNCTION TO SECURE URLS
 function atcb_secure_url(url, throwError = true) {
-  if (url.match(/((\.\.\/)|(\.\.\\)|(%2e%2e%2f)|(%252e%252e%252f)|(%2e%2e\/)|(%252e%252e\/)|(\.\.%2f)|(\.\.%252f)|(%2e%2e%5c)|(%252e%252e%255c)|(%2e%2e\\)|(%252e%252e\\)|(\.\.%5c)|(\.\.%255c)|(\.\.%c0%af)|(\.\.%25c0%25af)|(\.\.%c1%9c)|(\.\.%25c1%259c))/gi)) {
+  if (url && url.match(/((\.\.\/)|(\.\.\\)|(%2e%2e%2f)|(%252e%252e%252f)|(%2e%2e\/)|(%252e%252e\/)|(\.\.%2f)|(\.\.%252f)|(%2e%2e%5c)|(%252e%252e%255c)|(%2e%2e\\)|(%252e%252e\\)|(\.\.%5c)|(\.\.%255c)|(\.\.%c0%af)|(\.\.%25c0%25af)|(\.\.%c1%9c)|(\.\.%25c1%259c))/gi)) {
     if (throwError) {
       console.error('Seems like the generated URL includes at least one security issue and got blocked. Please check the calendar button parameters!');
     }
@@ -205,22 +424,24 @@ function atcb_validEmail(email) {
 // SHARED FUNCTION TO REPLACE HTML PSEUDO ELEMENTS
 function atcb_rewrite_html_elements(content, clear = false, iCalBreaks = false) {
   if (clear) {
-    // remove any pseudo elements
-    content = content.replace(/\[(|\/)(url|hr|p|b|strong|u|i|em|li|ul|ol|h\d)\]|((\|.*)\[\/url\])/gi, '');
-    content = content.replace(/\{(|\/)(url|hr|p|b|strong|u|i|em|li|ul|ol|h\d)\}|((\|.*)\{\/url\})/gi, '');
     // for line breaks, we add a space instead (or \\n for iCal)
     if (iCalBreaks) {
-      content = content.replace(/(\[br\]|\{br\})/gi, '\\n');
+      content = content.replace(/(\[br\s?\/?\]|\{br\s?\/?\}|(\[\/p\](?=.))|(\{\/p\}(?=.)))/gi, '\\n');
     } else {
-      content = content.replace(/(\[br\]|\{br\})/gi, ' ');
+      content = content.replace(/(\[br\s?\/?\]|\{br\s?\/?\}|(\[\/p\](?=.))|(\{\/p\}(?=.)))/gi, ' ');
     }
+    // remove any pseudo elements
+    content = content.replace(/\[url\]([^|]+)\|[^[]*\[\/url\]/gi, '$1');
+    content = content.replace(/\{url\}([^|]+)\|[^[]*\{\/url\}/gi, '$1');
+    content = content.replace(/\[(|\/)(hr|p|b|strong|u|i|em|li|ul|ol|h\d)\]/gi, '');
+    content = content.replace(/\{(|\/)(hr|p|b|strong|u|i|em|li|ul|ol|h\d)\}/gi, '');
     // also remove any special characters
     content = content.replace(/&[#a-zA-Z0-9]{1,9};/gi, '');
     // and build html for the rest
     // supporting: br, hr, p, strong, u, i, em, li, ul, ol, h (like h1, h2, h3, ...), url (= a)
   } else {
-    content = content.replace(/\[(\/|)(br|hr|p|b|strong|u|i|em|li|ul|ol|h\d)\]/gi, '<$1$2>');
-    content = content.replace(/\{(\/|)(br|hr|p|b|strong|u|i|em|li|ul|ol|h\d)\}/gi, '<$1$2>');
+    content = content.replace(/\[(\/|)(br|hr|p|b|strong|u|i|em|li|ul|ol|h\d)(\s?\/?)\]/gi, '<$1$2$3>');
+    content = content.replace(/\{(\/|)(br|hr|p|b|strong|u|i|em|li|ul|ol|h\d)(\s?\/?)\}/gi, '<$1$2$3>');
     content = content.replace(/\[url\]([\w&$+.,:;=~!*'?@^%#|\s\-()/]*)\[\/url\]/gi, function (match, p1) {
       return atcb_parse_url_code(p1);
     });
@@ -292,7 +513,7 @@ function atcb_position_list(host, trigger, list, blockUpwards = false, blockDown
     // read trigger dimensions again, since after adjusting the top value of the list, something might have changed (e.g. re-adjustment due to missing scrollbars at this point in time)
     triggerDim = trigger.getBoundingClientRect();
     list.style.minWidth = triggerDim.width + 'px';
-    if ((list.classList.contains('atcb-dropdown') && !list.classList.contains('atcb-style-round')) || list.classList.contains('atcb-style-text') || list.classList.contains('atcb-style-neumorphism')) {
+    if (list.classList.contains('atcb-dropdown') && !list.classList.contains('atcb-style-round') && !list.classList.contains('atcb-style-text') && !list.classList.contains('atcb-style-neumorphism')) {
       list.style.maxWidth = triggerDim.width + 'px';
     }
     // read list dimensions again, since we altered the width in the step before
@@ -311,13 +532,11 @@ function atcb_position_list(host, trigger, list, blockUpwards = false, blockDown
   list.style.position = 'absolute';
   list.style.display = 'block';
   // adjust branding message, if set
-  const atcbL = host.querySelector('#add-to-calendar-button-reference');
+  const atcbL = host.querySelector('#atcb-reference');
   if (atcbL) {
     if (originalTrigger.classList.contains('atcb-dropup')) {
       originalTrigger.parentNode.parentNode.after(atcbL);
-      atcbL.style.padding = '5px 15px';
-      atcbL.style.position = 'absolute';
-      atcbL.style.left = btnDim.left + 'px';
+      atcbL.classList.add('atcb-dropup');
     }
   }
 }
@@ -444,6 +663,7 @@ export {
   atcb_save_file,
   atcb_generate_time,
   atcb_format_datetime,
+  atcb_generate_timestring,
   atcb_secure_content,
   atcb_secure_url,
   atcb_validEmail,
