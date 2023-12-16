@@ -361,7 +361,7 @@ function atcb_csp_nonce(host) {
 }
 
 // load the right css
-function atcb_load_css(host, rootObj = null, data) {
+async function atcb_load_css(host, rootObj = null, data) {
   const nonceVal = atcb_csp_nonce(host);
   // add global no-scroll style
   if (!document.getElementById('atcb-global-style')) {
@@ -407,11 +407,9 @@ function atcb_load_css(host, rootObj = null, data) {
       cssFile.setAttribute('nonce', nonceVal);
     }
     // if we have no rootObject, we are loading a modal in a new shadowDOM, which can and should be blocking.
-    if (rootObj == null) {
-      // first, hide the content
-      host.host.style.display = 'none';
-      // second, load the actual css (and re-show the content as soon as it is loaded)
-      loadExternalCssAsynch(cssFile, host, host.host, nonceVal);
+    if (!rootObj) {
+      // load the actual css (and re-show the content as soon as it is loaded)
+      await loadExternalCssAsynch(cssFile, host, null, nonceVal, null, false, false, overrideDefaultCss + overrideDarkCss);
     } else {
       // else, it should be rather non-blocking.
       // first, create a button placeholder
@@ -430,7 +428,7 @@ function atcb_load_css(host, rootObj = null, data) {
     return;
   }
   // otherwise, we load it from a variable
-  if (data.buttonStyle !== 'none' && atcbCssTemplate[`${data.buttonStyle}`] != null) {
+  if (data.buttonStyle !== 'none' && atcbCssTemplate[`${data.buttonStyle}`]) {
     const cssContent = document.createElement('style');
     if (nonceVal) {
       cssContent.setAttribute('nonce', nonceVal);
@@ -439,7 +437,7 @@ function atcb_load_css(host, rootObj = null, data) {
     cssContent.innerText = atcbCssTemplate[`${data.buttonStyle}`] + overrideDefaultCss + overrideDarkCss;
     host.prepend(cssContent);
   }
-  if (rootObj != null) {
+  if (rootObj) {
     if (data.inline) {
       rootObj.style.display = 'inline-block';
       rootObj.classList.add('atcb-inline');
@@ -452,7 +450,7 @@ function atcb_load_css(host, rootObj = null, data) {
   }
 }
 
-async function loadExternalCssAsynch(cssFile, host, rootObj, nonceVal = null, placeholder = null, inline = false, buttonsList = false, overrideCss = '') {
+async function loadExternalCssAsynch(cssFile, host, rootObj = null, nonceVal = null, placeholder = null, inline = false, buttonsList = false, overrideCss = '') {
   // load custom override information
   if (overrideCss !== '') {
     const cssContent = document.createElement('style');
@@ -469,18 +467,20 @@ async function loadExternalCssAsynch(cssFile, host, rootObj, nonceVal = null, pl
     await new Promise((resolve) => {
       cssFile.onload = resolve;
     });
-    if (placeholder) {
-      placeholder.remove();
-    }
-    if (inline) {
-      rootObj.style.display = 'inline-block';
-      rootObj.classList.add('atcb-inline');
-    } else {
-      if (buttonsList) {
-        rootObj.classList.add('atcb-buttons-list');
+    if (rootObj) {
+      if (placeholder) {
+        placeholder.remove();
       }
+      if (inline) {
+        rootObj.style.display = 'inline-block';
+        rootObj.classList.add('atcb-inline');
+      } else {
+        if (buttonsList) {
+          rootObj.classList.add('atcb-buttons-list');
+        }
+      }
+      rootObj.classList.remove('atcb-hidden');
     }
-    rootObj.classList.remove('atcb-hidden');
   } catch (e) {
     console.log(e);
   }

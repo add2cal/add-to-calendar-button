@@ -18,7 +18,7 @@ import { atcb_log_event } from './atcb-event.js';
 import { atcb_decorate_data } from './atcb-decorate.js';
 
 // FUNCTION TO GENERATE A THANK YOU NOTE
-function atcb_generate_ty(host, data) {
+async function atcb_generate_ty(host, data) {
   // if host is no shadowRoot, try to get the child shadowRoot (case, if called directly)
   if (!host.host) {
     host = host.shadowRoot;
@@ -40,7 +40,7 @@ function atcb_generate_ty(host, data) {
   if ((!data.proKey || data.proKey === '') && !window.location.hostname.match(/^(localhost|.*\.add-to-calendar-pro.com)$/)) {
     return;
   }
-  const tyHost = atcb_generate_modal_host(host, data);
+  const tyHost = await atcb_generate_modal_host(host, data);
   atcb_set_fullsize(tyHost.querySelector('.atcb-modal-host-initialized'));
   // get data
   const tyData = data.ty;
@@ -381,9 +381,9 @@ async function atcb_generate_rsvp(host, data, keyboardTrigger = false, inline = 
   rsvpContent += '</div></div>';
 
   // the host for the form now is either the host or the modal host
-  const rsvpHost = (function () {
+  const rsvpHost = (async function () {
     if (!inline || directModal) {
-      return atcb_generate_modal_host(host, data);
+      return await atcb_generate_modal_host(host, data);
     }
     return host;
   })();

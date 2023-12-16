@@ -30,7 +30,7 @@ function atcb_toggle(host, action, data = '', button = null, keyboardTrigger = f
 }
 
 // show the dropdown list + background overlay
-function atcb_open(host, data, button = null, keyboardTrigger = false, generatedButton = false) {
+async function atcb_open(host, data, button = null, keyboardTrigger = false, generatedButton = false) {
   // abort early if an add to calendar dropdown or modal already opened
   if (host.querySelector('.atcb-list') || host.querySelector('.atcb-modal')) return;
   // log event
@@ -67,7 +67,7 @@ function atcb_open(host, data, button = null, keyboardTrigger = false, generated
   const bgOverlay = atcb_generate_bg_overlay(host, data.trigger, data.listStyle === 'modal', !data.hideBackground);
   if (data.listStyle === 'modal') {
     // define background overlay in its own new modal shadowDOM
-    const modalHost = atcb_generate_modal_host(host, data);
+    const modalHost = await atcb_generate_modal_host(host, data);
     // append background overlay and list to the modal shadowDOM; and init helper functions
     modalHost.querySelector('.atcb-modal-host-initialized').append(bgOverlay);
     bgOverlay.append(list);
