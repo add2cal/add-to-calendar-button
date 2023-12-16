@@ -63,9 +63,8 @@ if (atcbIsBrowser()) {
           if (this.debug) {
             atcb_render_debug_msg(this.shadowRoot, e);
           }
-          return;
-        } finally {
           this.loaded = true;
+          return;
         }
       }
       this.loaded = true;
@@ -85,7 +84,7 @@ if (atcbIsBrowser()) {
 
     static get observedAttributes() {
       const observeAdditionally = ['instance', 'proKey'];
-      if (!this.proKey && this.proKey !== '') {
+      if (this.proKey && this.proKey !== '') {
         return atcbWcProParams
           .map((element) => {
             return element.toLowerCase();
