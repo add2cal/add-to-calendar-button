@@ -3,7 +3,7 @@
  *  Add to Calendar Button
  *  ++++++++++++++++++++++
  *
- *  Version: 2.5.0
+ *  Version: 2.5.1
  *  Creator: Jens Kuerschner (https://jenskuerschner.de)
  *  Project: https://github.com/add2cal/add-to-calendar-button
  *  License: Elastic License 2.0 (ELv2) (https://github.com/add2cal/add-to-calendar-button/blob/main/LICENSE.txt)
@@ -58,7 +58,7 @@ function atcb_save_file(file, filename) {
 
 // SHARED FUNCTION TO GENERATE A TIME STRING
 function atcb_generate_time(data, style = 'delimiters', targetCal = 'general', addTimeZoneOffset = false) {
-  if (data.startTime != null && data.startTime != '' && data.endTime != null && data.endTime != '') {
+  if (data.startTime && data.startTime !== '' && data.endTime && data.endTime !== '') {
     // for the input, we assume GMT/UTC per default
     const newStartDate = new Date(data.startDate + 'T' + data.startTime + ':00.000+00:00');
     // we re-adjust the endDate for the case where the time string generation gets rather called directly
@@ -114,7 +114,7 @@ function atcb_generate_time(data, style = 'delimiters', targetCal = 'general', a
   } else {
     // would be an allday event then
     const startDate = data.startDate.split('-');
-    const endDate = data.endDate.split('-');
+    const endDate = data.endDate ? data.endDate.split('-') : startDate;
     // we set 12 o clock as time to prevent Daylight saving time to interfere with any calculation here
     const newStartDate = new Date(Date.UTC(startDate[0], startDate[1] - 1, startDate[2], 12, 0, 0));
     const newEndDate = new Date(Date.UTC(endDate[0], endDate[1] - 1, endDate[2], 12, 0, 0));

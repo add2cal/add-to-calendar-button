@@ -3,7 +3,7 @@
  *  Add to Calendar Button
  *  ++++++++++++++++++++++
  *
- *  Version: 2.5.0
+ *  Version: 2.5.1
  *  Creator: Jens Kuerschner (https://jenskuerschner.de)
  *  Project: https://github.com/add2cal/add-to-calendar-button
  *  License: Elastic License 2.0 (ELv2) (https://github.com/add2cal/add-to-calendar-button/blob/main/LICENSE.txt)
@@ -55,6 +55,7 @@ if (atcbIsBrowser()) {
         if (this.data.proKey) this.proKey = this.data.proKey;
       }
       if (!this.data.name || this.data.name === '') {
+        this.data.proKey = '';
         // if no data yet, we try reading attributes or the innerHTML of the host element
         try {
           this.data = atcb_process_inline_data(this, this.debug);
@@ -62,9 +63,8 @@ if (atcbIsBrowser()) {
           if (this.debug) {
             atcb_render_debug_msg(this.shadowRoot, e);
           }
+          this.loaded = true;
           return;
-        } finally {
-          this.data.proKey = '';
         }
       }
       this.loaded = true;
@@ -84,7 +84,7 @@ if (atcbIsBrowser()) {
 
     static get observedAttributes() {
       const observeAdditionally = ['instance', 'proKey'];
-      if (this.proKey != null && this.proKey != '') {
+      if (this.proKey && this.proKey !== '') {
         return atcbWcProParams
           .map((element) => {
             return element.toLowerCase();
@@ -192,18 +192,20 @@ function atcb_process_inline_data(el, debug = false) {
   if (!atcb_check_required(data)) {
     const slotInput = el.innerHTML;
     const atcbJsonInput = (function () {
-      if (slotInput != '') {
+      if (slotInput !== '') {
         try {
           return JSON.parse(atcb_secure_content(slotInput.replace(/(\\r\\n|\\n|\\r)/g, ''), false));
         } catch (e) {
           throw new Error('Add to Calendar Button generation failed: JSON content provided, but badly formatted (in doubt, try some tool like https://jsonformatter.org/ to validate).\r\nError message: ' + e);
         }
       }
-      return '';
+      return null;
     })();
     // abort on missing input data
-    if (atcbJsonInput.length === 0 && debug) {
-      console.error(data.validationError);
+    if (!atcbJsonInput || (Array.isArray(atcbJsonInput) && atcbJsonInput.length === 0) || (typeof atcbJsonInput === 'object' && Object.keys(atcbJsonInput).length === 0)) {
+      if (debug) {
+        console.error(data.validationError);
+      }
       throw new Error('Add to Calendar Button generation failed: no data provided or missing required fields - see console logs for details');
     }
     data = atcbJsonInput;
