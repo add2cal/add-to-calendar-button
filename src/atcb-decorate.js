@@ -554,4 +554,4 @@ function atcb_decorate_data_button_status_handling(data) {
   return data;
 }
 
-export { atcb_decorate_data, atcb_decorate_data_dates };
+export { atcb_decorate_data, atcb_decorate_data_dates, atcb_decorate_data_timezone };
