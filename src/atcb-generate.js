@@ -3,7 +3,7 @@
  *  Add to Calendar Button
  *  ++++++++++++++++++++++
  *
- *  Version: 2.5.1
+ *  Version: 2.5.2
  *  Creator: Jens Kuerschner (https://jenskuerschner.de)
  *  Project: https://github.com/add2cal/add-to-calendar-button
  *  License: Elastic License 2.0 (ELv2) (https://github.com/add2cal/add-to-calendar-button/blob/main/LICENSE.txt)
@@ -380,10 +380,10 @@ function atcb_create_atcbl(host, atList = true, returnEl = false) {
 
 // FUNCTION TO CREATE MODALS
 // this is only about special communication modals - not the list style modal
-function atcb_create_modal(host, data, icon = '', headline, content = '', buttons = [], subEvents = [], keyboardTrigger = false, goto = {}, closable = true) {
+async function atcb_create_modal(host, data, icon = '', headline, content = '', buttons = [], subEvents = [], keyboardTrigger = false, goto = {}, closable = true) {
   atcbStates['active'] = data.identifier;
   // setting the stage
-  const modalHost = atcb_generate_modal_host(host, data, false);
+  const modalHost = await atcb_generate_modal_host(host, data, false);
   const bgOverlay = (function () {
     const el = modalHost.getElementById('atcb-bgoverlay');
     if (!el) {
@@ -569,7 +569,7 @@ function atcb_create_modal(host, data, icon = '', headline, content = '', button
   // hide prev modal
   if (modalCount > 1) {
     const prevModal = modalHost.querySelector('.atcb-modal[data-modal-nr="' + (modalCount - 1) + '"]');
-    prevModal.style.display = 'none';
+    prevModal.classList.add('atcb-hidden');
   }
   // set scroll behavior
   atcb_manage_body_scroll(modalHost, modalWrapper);
@@ -738,7 +738,7 @@ function atcb_generate_date_button(data, parent, subEvent = 'all') {
 }
 
 // FUNCTION TO BUILD A SECOND SHADOWDOM FOR MODALS
-function atcb_generate_modal_host(host, data, reset = true) {
+async function atcb_generate_modal_host(host, data, reset = true) {
   // to clean-up the stage, we first close anything left open
   const existingModalHost = document.getElementById(data.identifier + '-modal-host');
   if (!reset && existingModalHost) {
@@ -751,12 +751,6 @@ function atcb_generate_modal_host(host, data, reset = true) {
   // create host element and add shadowDOM
   let newModalHost = document.createElement('div');
   newModalHost.id = data.identifier + '-modal-host';
-  if (data.styleLight) {
-    newModalHost.setAttribute('styleLight', data.styleLight);
-  }
-  if (data.styleDark) {
-    newModalHost.setAttribute('styleDark', data.styleDark);
-  }
   if (host.host.hasAttribute('cspnonce')) {
     newModalHost.setAttribute('cspnonce', host.host.getAttribute('cspnonce'));
   }
@@ -765,16 +759,16 @@ function atcb_generate_modal_host(host, data, reset = true) {
   document.body.append(newModalHost);
   newModalHost.attachShadow({ mode: 'open', delegateFocus: true });
   const elem = document.createElement('template');
-  elem.innerHTML = '<div class="atcb-modal-host-initialized" style="translate3D(0, 0, 0);visibility:visible;opacity:1;position:fixed;top:0;left:0;width:100%;height:100%;display:flex;z-index:13999999;"></div>';
+  elem.innerHTML = '<div class="atcb-modal-host-initialized" style="transform:translate3D(0, 0, 0);visibility:visible;opacity:1;position:fixed;top:0;left:0;width:100%;height:100%;display:flex;z-index:13999999;"></div>';
   newModalHost.shadowRoot.append(elem.content.cloneNode(true));
   atcb_set_light_mode(newModalHost.shadowRoot, data);
-  atcb_load_css(newModalHost.shadowRoot, null, data);
+  await atcb_load_css(newModalHost.shadowRoot, null, data);
   return newModalHost.shadowRoot;
 }
 
 // FUNCTION TO COPY THE BUTTON TO A SECOND SHADOWDOM TO FORCE OVERLAY
-function atcb_generate_overlay_dom(host, data) {
-  const newHost = atcb_generate_modal_host(host, data);
+async function atcb_generate_overlay_dom(host, data) {
+  const newHost = await atcb_generate_modal_host(host, data);
   atcb_set_fullsize(newHost.querySelector('.atcb-modal-host-initialized'));
   // get all top-level nodes from host
   const nodes = Array.from(host.children);

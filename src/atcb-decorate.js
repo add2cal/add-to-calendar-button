@@ -3,7 +3,7 @@
  *  Add to Calendar Button
  *  ++++++++++++++++++++++
  *
- *  Version: 2.5.1
+ *  Version: 2.5.2
  *  Creator: Jens Kuerschner (https://jenskuerschner.de)
  *  Project: https://github.com/add2cal/add-to-calendar-button
  *  License: Elastic License 2.0 (ELv2) (https://github.com/add2cal/add-to-calendar-button/blob/main/LICENSE.txt)
@@ -554,4 +554,4 @@ function atcb_decorate_data_button_status_handling(data) {
   return data;
 }
 
-export { atcb_decorate_data, atcb_decorate_data_dates };
+export { atcb_decorate_data, atcb_decorate_data_dates, atcb_decorate_data_timezone };

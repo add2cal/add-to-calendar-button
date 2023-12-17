@@ -3,7 +3,7 @@
  *  Add to Calendar Button
  *  ++++++++++++++++++++++
  *
- *  Version: 2.5.1
+ *  Version: 2.5.2
  *  Creator: Jens Kuerschner (https://jenskuerschner.de)
  *  Project: https://github.com/add2cal/add-to-calendar-button
  *  License: Elastic License 2.0 (ELv2) (https://github.com/add2cal/add-to-calendar-button/blob/main/LICENSE.txt)
@@ -16,7 +16,7 @@ import { atcbIsMobile, atcbIsiOS, atcbDefaultTarget } from './atcb-globals.js';
 import { atcb_log_event } from './atcb-event.js';
 import { atcbStates } from './atcb-globals.js';
 import { atcb_generate_ty } from './atcb-generate-pro.js';
-import { atcb_decorate_data_dates } from './atcb-decorate.js';
+import { atcb_decorate_data_dates, atcb_decorate_data_timezone } from './atcb-decorate.js';
 
 // SHARED FUNCTION HOOK FOR WHEN EVENT GOT SAVED
 function atcb_saved_hook(host, data) {
@@ -182,7 +182,8 @@ function atcb_format_datetime(datetime, style = 'delimiters', includeTime = true
 function atcb_generate_timestring(dates, language = 'en', subEvent = 'all', decorate = false, browserTimeOverride = false, enforceYear = false, hideTimeZone = false) {
   if (decorate) {
     // if this function gets called directly, we might want to decorate raw data first
-    dates = atcb_decorate_data_dates({ dates: dates }).dates;
+    const tmpRootTZ = atcb_decorate_data_timezone();
+    dates = atcb_decorate_data_dates({ dates: dates, timeZone: tmpRootTZ }).dates;
   }
   let startDateInfo, endDateInfo, timeZoneInfoStart, timeZoneInfoEnd;
   let formattedTimeStart = {};
