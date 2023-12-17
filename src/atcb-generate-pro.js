@@ -3,7 +3,7 @@
  *  Add to Calendar Button
  *  ++++++++++++++++++++++
  *
- *  Version: 2.5.2
+ *  Version: 2.5.3
  *  Creator: Jens Kuerschner (https://jenskuerschner.de)
  *  Project: https://github.com/add2cal/add-to-calendar-button
  *  License: Elastic License 2.0 (ELv2) (https://github.com/add2cal/add-to-calendar-button/blob/main/LICENSE.txt)
@@ -102,7 +102,7 @@ async function atcb_generate_ty(host, data) {
   }
   tyContent += '</div></div>';
   // create modal
-  atcb_create_modal(tyHost, data, 'checkmark', tyData.headline, tyContent);
+  await atcb_create_modal(tyHost, data, 'checkmark', tyData.headline, tyContent);
   // set enhanced click functionality
   // copy to clipboard, if type = share
   if (tyData.type === 'share') {
@@ -381,15 +381,11 @@ async function atcb_generate_rsvp(host, data, keyboardTrigger = false, inline = 
   rsvpContent += '</div></div>';
 
   // the host for the form now is either the host or the modal host
-  const rsvpHost = (async function () {
-    if (!inline || directModal) {
-      return await atcb_generate_modal_host(host, data);
-    }
-    return host;
-  })();
+  let rsvpHost = null;
   if (!inline || directModal) {
+    rsvpHost = await atcb_generate_modal_host(host, data);
     atcb_set_fullsize(rsvpHost.querySelector('.atcb-modal-host-initialized'));
-    atcb_create_modal(
+    await atcb_create_modal(
       rsvpHost,
       data,
       undefined,
@@ -406,6 +402,7 @@ async function atcb_generate_rsvp(host, data, keyboardTrigger = false, inline = 
       false,
     );
   } else {
+    rsvpHost = host;
     const rsvpInlineWrapper = document.createElement('div');
     rsvpInlineWrapper.classList.add('atcb-modal-box', 'rsvp-inline-wrapper');
     if (data.rtl) {
