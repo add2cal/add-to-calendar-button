@@ -59,18 +59,17 @@ export default defineNuxtConfig({
       xDownloadOptions: 'noopen',
       xFrameOptions: 'SAMEORIGIN',
       permissionsPolicy: {
-        midi: ['()'],
-        gyroscope: ['(*)'],
-        'encrypted-media': ['(*)'],
-        payment: ['()'],
-        camera: ['()'],
-        'display-capture': ['()'],
-        fullscreen: ['()'],
-        geolocation: ['()'],
-        microphone: ['()'],
+        midi: [],
+        payment: [],
+        camera: [],
+        geolocation: [],
+        microphone: [],
       },
     },
-    allowedMethodsRestricter: ['GET'],
+    allowedMethodsRestricter: {
+      methods: ['GET'],
+      throwError: true,
+    }
   },
   app: {
     rootId: 'atcb-demo',
