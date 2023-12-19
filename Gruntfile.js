@@ -269,7 +269,7 @@ module.exports = function (grunt) {
         },
       },
     },
-    // minify the main js file
+    // minify js files
     uglify: {
       options: {
         compress: true,
@@ -283,7 +283,12 @@ module.exports = function (grunt) {
       },
       minify_main_js: {
         files: {
-          'dist/atcb.min.js': ['dist/atcb.js'], // only going for the main one here, as this gets copied and used in other projects, while the special builds are only delivered via CDN and minified there
+          'dist/atcb.min.js': ['dist/atcb.js'], // only going for the main and unstyle ones here, as those get copied and used in other projects, while others are only delivered via CDN and minified there
+        },
+      },
+      minify_unstyle_js: {
+        files: {
+          'dist/atcb-unstyle.min.js': ['dist/atcb-unstyle.js'],
         },
       },
     },
