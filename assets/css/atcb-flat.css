@@ -511,6 +511,11 @@
   padding: .3em 2em 2.2em;
 }
 
+.atcb-modal-content-subevents {
+  margin: auto;
+  width: fit-content;
+}
+
 .atcb-modal-icon + .atcb-modal-content {
   padding-top: 0;
 }
@@ -685,7 +690,7 @@ a.atcb-modal-btn:not([disabled]):hover {
 .atcb-date-btn-right {
   position: relative;
   color: var(--date-btn-text);
-  min-width: 12.5em;
+  min-width: 13.5em;
   overflow-wrap: anywhere;
 }
 
@@ -780,7 +785,7 @@ a.atcb-modal-btn:not([disabled]):hover {
 .atcb-date-btn-content-icon svg {
   height: 100%;
   fill: currentcolor;
-  width: auto;
+  width: 100%
 }
 
 .atcb-date-btn-content + .atcb-date-btn-content {
@@ -1359,7 +1364,8 @@ a.atcb-modal-btn:not([disabled]):hover {
 
 #atcb-reference.fixed-ref {
   position: fixed;
-  bottom: 15px;
+  bottom: 10px;
   right: 30px;
   text-align: right;
+  width: auto;
 }

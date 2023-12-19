@@ -49,9 +49,13 @@ if (atcbIsBrowser()) {
       const debugVal = this.getAttribute('debug');
       this.debug = this.hasAttribute('debug') && (!debugVal || debugVal === 'true' || debugVal === '') ? true : false;
       // checking for PRO key and pull data if given
-      if (this.hasAttribute('proKey') && this.getAttribute('proKey') !== '') {
+      if ((this.hasAttribute('proKey') && this.getAttribute('proKey') !== '') || (this.hasAttribute('prokey') && this.getAttribute('prokey') !== '')) {
         const dev = this.hasAttribute('dev') && (this.getAttribute('dev') === null || this.getAttribute('dev') === '' || this.getAttribute('dev') === 'true') ? true : false;
-        this.data = await atcb_get_pro_data(this.getAttribute('proKey'), this, { dev: dev });
+        if (this.hasAttribute('proKey') && this.getAttribute('proKey') !== '') {
+          this.data = await atcb_get_pro_data(this.getAttribute('proKey'), this, { dev: dev });
+        } else {
+          this.data = await atcb_get_pro_data(this.getAttribute('prokey'), this, { dev: dev });
+        }
         if (this.data.proKey) this.proKey = this.data.proKey;
       }
       if (!this.data.name || this.data.name === '') {
@@ -83,7 +87,7 @@ if (atcbIsBrowser()) {
     }
 
     static get observedAttributes() {
-      const observeAdditionally = ['instance', 'proKey'];
+      const observeAdditionally = ['instance', 'prokey', 'proKey'];
       if (this.proKey && this.proKey !== '') {
         return atcbWcProParams
           .map((element) => {
@@ -117,6 +121,10 @@ if (atcbIsBrowser()) {
       elem.innerHTML = template;
       this.shadowRoot.append(elem.content.cloneNode(true));
       if (this.hasAttribute('proKey') && this.getAttribute('proKey') !== '') {
+        this.data = await atcb_get_pro_data(this.getAttribute('proKey'), this);
+        if (this.data.proKey) this.proKey = this.data.proKey;
+      } else if (this.hasAttribute('prokey') && this.getAttribute('prokey') !== '') {
+        // double-checking for lower-case version
         this.data = await atcb_get_pro_data(this.getAttribute('proKey'), this);
         if (this.data.proKey) this.proKey = this.data.proKey;
       }

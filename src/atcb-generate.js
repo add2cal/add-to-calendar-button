@@ -447,9 +447,12 @@ async function atcb_create_modal(host, data, icon = '', headline, content = '', 
   }
   // add subEvent buttons (array with type first and subEvent numbers following)
   if (subEvents.length > 1) {
+    const modalsubEventsContentWrapper = document.createElement('div');
+    modalsubEventsContentWrapper.classList.add('atcb-modal-content');
+    modal.append(modalsubEventsContentWrapper);
     const modalsubEventsContent = document.createElement('div');
-    modalsubEventsContent.classList.add('atcb-modal-content');
-    modal.append(modalsubEventsContent);
+    modalsubEventsContent.classList.add('atcb-modal-content-subevents');
+    modalsubEventsContentWrapper.append(modalsubEventsContent);
     for (let i = 1; i < subEvents.length; i++) {
       const modalSubEventButton = document.createElement('button');
       modalSubEventButton.type = 'button';
