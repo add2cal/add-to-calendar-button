@@ -1348,11 +1348,11 @@ a.atcb-modal-btn:not([disabled]):hover {
   box-sizing: border-box;
   filter: drop-shadow(0 0 3px rgba(255 255 255 / 80%));
   height: auto;
-  padding: 10px 5px;
-  text-align: center;
+  padding: 8px 0;
   transform: translate3d(0, 0, 0);
-  width: 100%;
-  white-space: nowrap;
+  width: 150px;
+  max-width: 100%;
+  margin: auto;
   z-index: 15000000;
 }
 
@@ -1369,9 +1369,6 @@ a.atcb-modal-btn:not([disabled]):hover {
 #atcb-reference a,
 #atcb-reference a:active,
 #atcb-reference a:visited {
-  color: var(--list-hover-text);
-  font-family: 'Paytone One', 'Arial Black', 'Helvetica Bold', 'Tahoma Bold', Impact, 'Trebuchet MS Bold', Inter, sans-serif;
-  font-size: 10px;
   opacity: .4;
   text-decoration: none;
 }
@@ -1385,11 +1382,13 @@ a.atcb-modal-btn:not([disabled]):hover {
   text-decoration: none;
 }
 
+#atcb-reference svg {
+  fill: var(--list-text);
+}
+
 #atcb-reference.fixed-ref {
   position: fixed;
   bottom: 10px;
   right: 30px;
-  text-align: right;
-  width: auto;
 }
 :host { --btn-background: #ffa255; }:host(.atcb-dark), :host-context(html.atcb-dark):host(.atcb-bodyScheme), :host-context(body.atcb-dark):host(.atcb-bodyScheme) { --btn-background: #000; }

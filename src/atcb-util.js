@@ -536,7 +536,7 @@ function atcb_position_list(host, trigger, list, blockUpwards = false, blockDown
   const atcbL = host.querySelector('#atcb-reference');
   if (atcbL) {
     if (originalTrigger.classList.contains('atcb-dropup')) {
-      originalTrigger.parentNode.parentNode.after(atcbL);
+      originalTrigger.parentNode.after(atcbL);
       atcbL.classList.add('atcb-dropup');
     }
   }
