@@ -1415,10 +1415,12 @@ a.atcb-modal-btn:not([disabled]):hover {
   height: auto;
   padding: 8px 0;
   transform: translate3d(0, 0, 0);
-  width: 150px;
-  max-width: 100%;
-  margin: auto;
+  width: 100%;
   z-index: 15000000;
+}
+
+#atcb-reference.fixed-ref {
+  width: auto;
 }
 
 #atcb-reference.atcb-dropup {
@@ -1435,6 +1437,10 @@ a.atcb-modal-btn:not([disabled]):hover {
 #atcb-reference a:active,
 #atcb-reference a:visited {
   opacity: .4;
+  width: 150px;
+  max-width: 100%;
+  margin: auto;
+  display: block;
   text-decoration: none;
 }
 
@@ -1454,5 +1460,5 @@ a.atcb-modal-btn:not([disabled]):hover {
 #atcb-reference.fixed-ref {
   position: fixed;
   bottom: 10px;
-  right: 30px;
+  right: 40px;
 }
