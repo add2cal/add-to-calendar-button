@@ -3,7 +3,7 @@
  *  Add to Calendar Button
  *  ++++++++++++++++++++++
  *
- *  Version: 2.5.3
+ *  Version: 2.5.4
  *  Creator: Jens Kuerschner (https://jenskuerschner.de)
  *  Project: https://github.com/add2cal/add-to-calendar-button
  *  License: Elastic License 2.0 (ELv2) (https://github.com/add2cal/add-to-calendar-button/blob/main/LICENSE.txt)
@@ -80,7 +80,7 @@ async function atcb_open(host, data, button = null, keyboardTrigger = false, gen
     atcb_set_fullsize(bgOverlay);
   } else {
     if (data.forceOverlay) {
-      host = atcb_generate_overlay_dom(host, data);
+      host = await atcb_generate_overlay_dom(host, data);
       button = host.querySelector('button.atcb-button');
     }
     host.querySelector('.atcb-initialized').append(listWrapper);

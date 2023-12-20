@@ -5,7 +5,7 @@
  *
  * Style: Date
  *
- * Version: 2.5.3
+ * Version: 2.5.4
  * Creator: Jens Kuerschner (https://jenskuerschner.de)
  * Project: https://github.com/add2cal/add-to-calendar-button
  * License: Elastic License 2.0 (ELv2) (https://github.com/add2cal/add-to-calendar-button/blob/main/LICENSE.txt)
@@ -279,7 +279,7 @@
 .atcb-date-btn-right {
   position: relative;
   color: var(--date-btn-text);
-  min-width: 12.5em;
+  min-width: 13.5em;
   overflow-wrap: anywhere;
 }
 
@@ -376,7 +376,7 @@
 .atcb-date-btn-content-icon svg {
   height: 100%;
   fill: currentcolor;
-  width: 100%;
+  width: 100%
 }
 
 .atcb-date-btn-content + .atcb-date-btn-content {
@@ -631,6 +631,11 @@
   background-color: var(--modal-background);
   font-size: 1em;
   padding: .3em 2em 2.2em;
+}
+
+.atcb-modal-content-subevents {
+  margin: auto;
+  width: fit-content;
 }
 
 .atcb-modal-icon + .atcb-modal-content {
@@ -1143,7 +1148,8 @@ a.atcb-modal-btn:not([disabled]):hover {
 
 #atcb-reference.fixed-ref {
   position: fixed;
-  bottom: 15px;
+  bottom: 10px;
   right: 30px;
   text-align: right;
+  width: auto;
 }
