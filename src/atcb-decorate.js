@@ -3,7 +3,7 @@
  *  Add to Calendar Button
  *  ++++++++++++++++++++++
  *
- *  Version: 2.5.5
+ *  Version: 2.5.6
  *  Creator: Jens Kuerschner (https://jenskuerschner.de)
  *  Project: https://github.com/add2cal/add-to-calendar-button
  *  License: Elastic License 2.0 (ELv2) (https://github.com/add2cal/add-to-calendar-button/blob/main/LICENSE.txt)
@@ -52,7 +52,7 @@ function atcb_decorate_data_boolean(data) {
 
 // set time zone
 function atcb_decorate_data_timezone(tz = null) {
-  if (!tz || tz == '') {
+  if (!tz || tz === '') {
     return 'GMT';
   }
   return tz;
@@ -60,7 +60,7 @@ function atcb_decorate_data_timezone(tz = null) {
 
 // format RRULE
 function atcb_decorate_data_rrule(data) {
-  if (data.recurrence != null && data.recurrence != '') {
+  if (data.recurrence && data.recurrence !== '') {
     // remove spaces and force upper case
     data.recurrence = data.recurrence.replace(/\s+/g, '').toUpperCase();
     // pre-validate
@@ -86,11 +86,11 @@ function atcb_decorate_data_rrule(data) {
       } else {
         data.recurrence_simplyfied = true;
         // set interval if not given
-        if (data.recurrence_interval == null || data.recurrence_interval == '') {
+        if (!data.recurrence_interval || data.recurrence_interval === '') {
           data.recurrence_interval = 1;
         }
         // set weekstart if not given
-        if (data.recurrence_weekstart == null || (data.recurrence_weekstart == '') | (data.recurrence_weekstart.length > 2)) {
+        if (!data.recurrence_weekstart || (data.recurrence_weekstart === '') | (data.recurrence_weekstart.length > 2)) {
           data.recurrence_weekstart = 'MO';
         }
         // save frequency before overriding the main recurrence data
@@ -98,23 +98,23 @@ function atcb_decorate_data_rrule(data) {
         // generate the RRULE from easy rules
         data.recurrence = 'RRULE:FREQ=' + data.recurrence + ';WKST=' + data.recurrence_weekstart + ';INTERVAL=' + data.recurrence_interval;
         // TODO: If "until" is given, translate it into a "count" and remove the "until" (here and in the above block). This would be way more stable!
-        if (data.recurrence_until != null && data.recurrence_until != '') {
-          if (data.endTime != null && data.endTime != '') {
+        if (data.recurrence_until && data.recurrence_until !== '') {
+          if (data.endTime && data.endTime !== '') {
             data.recurrence = data.recurrence + ';UNTIL=' + data.recurrence_until.replace(/-/g, '').slice(0, 8) + 'T' + data.endTime.replace(':', '') + '00';
           } else {
             data.recurrence = data.recurrence + ';UNTIL=' + data.recurrence_until.replace(/-/g, '').slice(0, 8);
           }
         }
-        if (data.recurrence_count != null && data.recurrence_count != '') {
+        if (data.recurrence_count && data.recurrence_count !== '') {
           data.recurrence = data.recurrence + ';COUNT=' + data.recurrence_count;
         }
-        if (data.recurrence_byDay != null && data.recurrence_byDay != '') {
+        if (data.recurrence_byDay && data.recurrence_byDay !== '') {
           data.recurrence = data.recurrence + ';BYDAY=' + data.recurrence_byDay;
         }
-        if (data.recurrence_byMonth != null && data.recurrence_byMonth != '') {
+        if (data.recurrence_byMonth && data.recurrence_byMonth !== '') {
           data.recurrence = data.recurrence + ';BYMONTH=' + data.recurrence_byMonth;
         }
-        if (data.recurrence_byMonthDay != null && data.recurrence_byMonthDay != '') {
+        if (data.recurrence_byMonthDay && data.recurrence_byMonthDay !== '') {
           data.recurrence = data.recurrence + ';BYMONTHDAY=' + data.recurrence_byMonthDay;
         }
       }
@@ -160,7 +160,7 @@ function atcb_decorate_data_options(data) {
     // and in the subscribe case, we also skip options, which are not made for subscribing (MS Teams)
     if (
       (atcbIsiOS() && atcbiOSInvalidOptions.includes(optionName)) ||
-      (data.recurrence != null && data.recurrence != '' && (!atcbValidRecurrOptions.includes(optionName) || (data.recurrence_until != null && data.recurrence_until != '' && (optionName === 'apple' || optionName === 'ical')) || (atcbIsiOS() && optionName === 'google'))) ||
+      (data.recurrence && data.recurrence !== '' && (!atcbValidRecurrOptions.includes(optionName) || (data.recurrence_until && data.recurrence_until !== '' && (optionName === 'apple' || optionName === 'ical')) || (atcbIsiOS() && optionName === 'google'))) ||
       (data.subscribe && atcbInvalidSubscribeOptions.includes(optionName))
     ) {
       continue;
@@ -189,7 +189,7 @@ function atcb_decorate_data_style(data) {
     data.inline = true;
   }
   // set default listStyle
-  if (data.listStyle == null || data.listStyle == '') {
+  if (!data.listStyle || data.listStyle === '') {
     data.listStyle = 'dropdown';
   }
   // helping var
@@ -204,7 +204,7 @@ function atcb_decorate_data_style(data) {
     data.trigger = 'click';
   }
   // set button style and force click on styles, where the dropdown is not attached to the button
-  if (data.buttonStyle != null && data.buttonStyle != '' && data.buttonStyle != 'default') {
+  if (data.buttonStyle && data.buttonStyle !== '' && data.buttonStyle != 'default') {
     if (data.buttonStyle == 'round' || data.buttonStyle == 'text' || data.buttonStyle == 'date' || data.buttonStyle == 'neumorphism') {
       data.trigger = 'click';
     }
@@ -231,7 +231,7 @@ function atcb_decorate_data_style(data) {
 function atcb_decorate_sizes(size) {
   const sizes = [];
   sizes['l'] = sizes['m'] = sizes['s'] = 16;
-  if (size != null && size != '') {
+  if (size && size !== '') {
     const sizeParts = size.split('|');
     for (let i = 0; i < sizeParts.length; i++) {
       sizeParts[`${i}`] = parseInt(sizeParts[`${i}`]);
@@ -269,7 +269,7 @@ function atcb_decorate_light_mode(lightMode = '') {
 
 function atcb_decorate_data_i18n(data) {
   // set language if not set
-  if (!data.language || data.language == '' || !availableLanguages.includes(data.language)) {
+  if (!data.language || data.language === '' || !availableLanguages.includes(data.language)) {
     data.language = 'en';
   }
   // reduce language identifier, if long version is used
@@ -326,11 +326,11 @@ function atcb_decorate_data_dates(data) {
   // calculate current time
   const now = new Date();
   // set created date
-  if (!data.created || data.created == '') {
+  if (!data.created || data.created === '') {
     data.created = atcb_format_datetime(now, 'clean', true);
   }
   // set updated date
-  if (!data.updated || data.updated == '') {
+  if (!data.updated || data.updated === '') {
     data.updated = atcb_format_datetime(now, 'clean', true);
   }
   return data;
@@ -338,18 +338,18 @@ function atcb_decorate_data_dates(data) {
 
 function atcb_decorate_data_meta(data) {
   // set default status on top level
-  if (!data.status || data.status == '') {
+  if (!data.status || data.status === '') {
     data.status = 'CONFIRMED';
   }
   // set default sequence on top level
-  if (!data.sequence || data.sequence == '') {
+  if (!data.sequence || data.sequence === '') {
     data.sequence = 0;
   }
   return data;
 }
 
 function atcb_decorate_data_description(data, i) {
-  if (data.dates[`${i}`].description != null && data.dates[`${i}`].description != '') {
+  if (data.dates[`${i}`].description && data.dates[`${i}`].description !== '') {
     // remove any "wrong" line breaks
     data.dates[`${i}`].description = data.dates[`${i}`].description.replace(/(\\r\\n|\\n|\\r|<br(\s|\s\/|\/|)>)/g, '');
     // store a clean description copy without the URL magic for Yahoo, MS Teams, ...
@@ -360,7 +360,7 @@ function atcb_decorate_data_description(data, i) {
     data.dates[`${i}`].description = atcb_rewrite_html_elements(data.dates[`${i}`].description);
   } else {
     // if not given per subEvent, we copy from the global one or set '', if not provided at all
-    if (data.dates[`${i}`].description == null && data.description != null && data.description != '') {
+    if (!data.dates[`${i}`].description && data.description && data.description !== '') {
       // remove any "wrong" line breaks
       data.description = data.description.replace(/(\\r\\n|\\n|\\r|<br(\s|\s\/|\/|)>)/g, '');
       // set data for subEvent
@@ -379,29 +379,29 @@ function atcb_decorate_data_extend(data) {
   for (let i = 0; i < data.dates.length; i++) {
     data = atcb_decorate_data_description(data, i);
     // for name, we also check for empty, because it is required
-    if (data.dates[`${i}`].name == null || data.dates[`${i}`].name == '') {
+    if (!data.dates[`${i}`].name || data.dates[`${i}`].name === '') {
       data.dates[`${i}`].name = data.name;
     }
-    if (data.dates[`${i}`].status == null) {
+    if (!data.dates[`${i}`].status) {
       data.dates[`${i}`].status = data.status.toUpperCase();
     } else {
       data.dates[`${i}`].status = data.dates[`${i}`].status.toUpperCase();
     }
-    if (data.dates[`${i}`].sequence == null) {
+    if (!data.dates[`${i}`].sequence) {
       data.dates[`${i}`].sequence = data.sequence;
     }
-    if (data.dates[`${i}`].organizer == null && data.organizer != null) {
+    if (!data.dates[`${i}`].organizer && data.organizer) {
       data.dates[`${i}`].organizer = data.organizer;
     }
-    if (data.dates[`${i}`].attendee == null && data.attendee != null) {
+    if (!data.dates[`${i}`].attendee && data.attendee) {
       data.dates[`${i}`].attendee = data.attendee;
     }
-    if (data.dates[`${i}`].availability == null && data.availability != null) {
+    if (!data.dates[`${i}`].availability && data.availability) {
       data.dates[`${i}`].availability = data.availability.toLowerCase();
-    } else if (data.dates[`${i}`].availability != null) {
+    } else if (data.dates[`${i}`].availability) {
       data.dates[`${i}`].availability = data.dates[`${i}`].availability.toLowerCase();
     }
-    if (data.dates[`${i}`].location == null && data.location != null) {
+    if (!data.dates[`${i}`].location && data.location) {
       data.dates[`${i}`].location = data.location;
     }
     // for the location, we also set the online flag here
@@ -411,11 +411,11 @@ function atcb_decorate_data_extend(data) {
       data.dates[`${i}`].onlineEvent = false;
     }
     // for the uid, we do not simply copy from the top level, but iterate it to keep it unique
-    if (data.dates[`${i}`].uid == null) {
-      if (i === 0 && data.uid !== null && data.uid !== '') {
+    if (!data.dates[`${i}`].uid) {
+      if (i === 0 && data.uid && data.uid !== '') {
         data.dates[0].uid = data.uid;
       } else {
-        if (data.uid !== null && data.uid !== '') {
+        if (data.uid && data.uid !== '') {
           data.dates[`${i}`].uid = data.uid + '-' + (i + 1);
         } else {
           data.dates[`${i}`].uid = atcb_generate_uuid();
@@ -424,7 +424,7 @@ function atcb_decorate_data_extend(data) {
     }
   }
   // we also copy recurrence, but just for easier access and only for the first array element. Multi-date events cannot be recurrent
-  if (data.recurrence != null && data.recurrence != '') {
+  if (data.recurrence && data.recurrence !== '') {
     data.dates[0].recurrence = data.recurrence;
   }
   // last but not least, we sort any subEvent by start data ascending
@@ -437,7 +437,7 @@ function atcb_decorate_data_extend(data) {
 // CALCULATE AND CLEAN UP THE ACTUAL DATES
 function atcb_date_cleanup(dateTimeData) {
   // set endDate = startDate, if not provided
-  if (dateTimeData.endDate == null || dateTimeData.endDate == '') {
+  if (!dateTimeData.endDate || dateTimeData.endDate === '') {
     dateTimeData.endDate = dateTimeData.startDate;
   }
   // parse date+time format (unofficial alternatives to the main implementation)
@@ -448,18 +448,18 @@ function atcb_date_cleanup(dateTimeData) {
       dateTimeData[point + 'Date'] = 'badly-formed';
     } else {
       // second, if valid, clean up
-      if (dateTimeData[point + 'Date'] != null) {
+      if (dateTimeData[point + 'Date']) {
         // remove any milliseconds information
         dateTimeData[point + 'Date'] = dateTimeData[point + 'Date'].replace(/\.\d{3}/, '').replace('Z', '');
         // identify a possible time information within the date string
         const tmpSplitStartDate = dateTimeData[point + 'Date'].split('T');
-        if (tmpSplitStartDate[1] != null) {
+        if (tmpSplitStartDate[1]) {
           dateTimeData[point + 'Date'] = tmpSplitStartDate[0];
           dateTimeData[point + 'Time'] = tmpSplitStartDate[1];
         }
       }
       // remove any seconds from time information
-      if (dateTimeData[point + 'Time'] != null && dateTimeData[point + 'Time'].length === 8) {
+      if (dateTimeData[point + 'Time'] && dateTimeData[point + 'Time'].length === 8) {
         const timeStr = dateTimeData[point + 'Time'];
         dateTimeData[point + 'Time'] = timeStr.substring(0, timeStr.length - 3);
       }
@@ -512,7 +512,7 @@ function atcb_date_calculation(dateString) {
     }
     return new Date(Date.UTC(dateParts[0], dateParts[1] - 1, dateParts[2]));
   })();
-  if (dateStringParts[1] != null && dateStringParts[1] > 0) {
+  if (dateStringParts[1] && dateStringParts[1] > 0) {
     newDate.setDate(newDate.getDate() + parseInt(dateStringParts[1]));
   }
   try {
@@ -525,7 +525,7 @@ function atcb_date_calculation(dateString) {
 
 function atcb_decorate_data_button_status_handling(data) {
   // first, check for how we should handle the behavior on overdue events
-  if (data.pastDateHandling == null || (data.pastDateHandling != 'disable' && data.pastDateHandling != 'hide')) {
+  if (!data.pastDateHandling || (data.pastDateHandling != 'disable' && data.pastDateHandling != 'hide')) {
     data.pastDateHandling = 'none';
   }
   const overdue = (function () {

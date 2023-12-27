@@ -3,7 +3,7 @@
  *  Add to Calendar Button
  *  ++++++++++++++++++++++
  *
- *  Version: 2.5.5
+ *  Version: 2.5.6
  *  Creator: Jens Kuerschner (https://jenskuerschner.de)
  *  Project: https://github.com/add2cal/add-to-calendar-button
  *  License: Elastic License 2.0 (ELv2) (https://github.com/add2cal/add-to-calendar-button/blob/main/LICENSE.txt)
@@ -505,7 +505,7 @@ function atcb_generate_ical(host, data, subEvent = 'all', keyboardTrigger = fals
       if (formattedDate.allday) {
         return ';VALUE=DATE';
       }
-      if (data.dates[`${i}`].timeZone != null && data.dates[`${i}`].timeZone != '') {
+      if (data.dates[`${i}`].timeZone && data.dates[`${i}`].timeZone !== '') {
         const timeZoneBlock = tzlib_get_ical_block(data.dates[`${i}`].timeZone);
         if (!usedTimeZones.includes(data.dates[`${i}`].timeZone)) {
           ics_lines.push(timeZoneBlock[0]);
@@ -515,25 +515,27 @@ function atcb_generate_ical(host, data, subEvent = 'all', keyboardTrigger = fals
       }
     })();
     ics_lines.push('BEGIN:VEVENT');
-    ics_lines.push('UID:' + data.dates[`${i}`].uid);
+    if (data.dates[`${i}`].uid && data.dates[`${i}`].uid !== '') {
+      ics_lines.push('UID:' + data.dates[`${i}`].uid);
+    }
     ics_lines.push('DTSTAMP:' + atcb_format_datetime(now, 'clean', true));
     ics_lines.push('DTSTART' + timeAddon + ':' + formattedDate.start);
     ics_lines.push('DTEND' + timeAddon + ':' + formattedDate.end);
     ics_lines.push('SUMMARY:' + atcb_rewrite_ical_text(data.dates[`${i}`].name, true));
-    if (data.dates[`${i}`].descriptionHtmlFreeICal != null && data.dates[`${i}`].descriptionHtmlFreeICal != '') {
+    if (data.dates[`${i}`].descriptionHtmlFreeICal && data.dates[`${i}`].descriptionHtmlFreeICal !== '') {
       ics_lines.push('DESCRIPTION:' + atcb_rewrite_ical_text(data.dates[`${i}`].descriptionHtmlFreeICal, true));
     }
-    if (data.dates[`${i}`].description != null && data.dates[`${i}`].description != '') {
+    if (data.dates[`${i}`].description && data.dates[`${i}`].description !== '') {
       ics_lines.push('X-ALT-DESC;FMTTYPE=text/html:\r\n <!DOCTYPE HTML PUBLIC ""-//W3C//DTD HTML 3.2//EN"">\r\n <HTML><BODY>\r\n ' + atcb_rewrite_ical_text(data.dates[`${i}`].description, true) + '\r\n </BODY></HTML>');
     }
-    if (data.dates[`${i}`].location != null && data.dates[`${i}`].location != '') {
+    if (data.dates[`${i}`].location && data.dates[`${i}`].location !== '') {
       ics_lines.push('LOCATION:' + atcb_rewrite_ical_text(data.dates[`${i}`].location, true));
     }
-    if (data.dates[`${i}`].organizer != null && data.dates[`${i}`].organizer != '') {
+    if (data.dates[`${i}`].organizer && data.dates[`${i}`].organizer !== '') {
       const organizerParts = data.dates[`${i}`].organizer.split('|');
       ics_lines.push('ORGANIZER;CN=' + atcb_rewrite_ical_text(organizerParts[0], false, true) + ':MAILTO:' + organizerParts[1]);
     }
-    if (data.dates[`${i}`].attendee != null && data.dates[`${i}`].attendee != '') {
+    if (data.dates[`${i}`].attendee && data.dates[`${i}`].attendee !== '') {
       const attendeeParts = data.dates[`${i}`].attendee.split('|');
       if (attendeeParts.length === 2) {
         ics_lines.push('ATTENDEE;CUTYPE=INDIVIDUAL;ROLE=REQ-PARTICIPANT;PARTSTAT=ACCEPTED;CN=' + atcb_rewrite_ical_text(attendeeParts[0], false, true) + ';X-NUM-GUESTS=0:mailto:' + attendeeParts[1]);
@@ -541,10 +543,10 @@ function atcb_generate_ical(host, data, subEvent = 'all', keyboardTrigger = fals
         ics_lines.push('ATTENDEE;CUTYPE=INDIVIDUAL;ROLE=REQ-PARTICIPANT;PARTSTAT=ACCEPTED;CN=' + attendeeParts[0] + ';X-NUM-GUESTS=0:mailto:' + attendeeParts[0]);
       }
     }
-    if (data.recurrence != null && data.recurrence != '') {
+    if (data.recurrence && data.recurrence !== '') {
       ics_lines.push(data.recurrence);
     }
-    if (data.dates[`${i}`].availability != null && data.dates[`${i}`].availability != '') {
+    if (data.dates[`${i}`].availability && data.dates[`${i}`].availability !== '') {
       const transpVal = (function () {
         if (data.dates[`${i}`].availability == 'free') {
           return 'TRANSPARENT';
