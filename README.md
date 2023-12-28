@@ -294,6 +294,7 @@ In doubt, simply ask and we find a way. :)
 <a href="https://github.com/c0rychu"><img src="https://avatars.githubusercontent.com/u/55235141?v=4" title="Cory Chu" width="60" height="60"></a>
 <a href="https://github.com/jenniferbacon01"><img src="https://avatars.githubusercontent.com/u/28692326?v=4" title="Jenny Bacon" width="60" height="60"></a>
 <a href="https://github.com/Denperidge"><img src="https://avatars.githubusercontent.com/u/27348469?v=4" title="Cat" width="60" height="60"></a>
+<a href="https://github.com/julamb"><img src="https://avatars.githubusercontent.com/u/3592718?v=4" title="julamb" width="60" height="60"></a>
 <a href="https://github.com/apps/dependabot"><img src="https://avatars.githubusercontent.com/in/29110?v=4" title="dependabot[bot]" width="60" height="60"></a>
 
 <br />

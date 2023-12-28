@@ -1,5 +1,12 @@
 /* eslint-disable no-unused-vars */
 
+/* ATTENTION!
+ * If you are updating types here, also update the types in the following files:
+ * - no-pro/index.d.ts
+ * - unstyle/index.d.ts
+ * - no-pro-unstyle/index.d.ts
+ */
+
 // MODULES
 // default
 declare module 'add-to-calendar-button' {
