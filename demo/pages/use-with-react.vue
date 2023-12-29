@@ -38,14 +38,15 @@ watch(locale, value => {
         <p>{{ $t('content.guide.react.pick_intro') }}</p>
         <ul class="my-4 list-disc pl-6">
           <li class="text-left">{{ $t('content.guide.react.pick_option1') }}</li>
-          <li class="mt-3 text-left">{{ $t('content.guide.react.pick_option2') }}</li>
           <li class="mt-3 text-left">
-            {{ $t('content.guide.react.pick_option3_1') }}<a href="https://github.com/add2cal/add-to-calendar-button-react" target="_blank" rel="noopener">{{ $t('content.guide.react.pick_option3_2') }} <ArrowTopRightOnSquareIcon class="-mt-0.5 mr-0.5 inline-block h-4 w-4" aria-hidden="true" /></a
-            >{{ $t('content.guide.react.pick_option3_3') }}
+            {{ $t('content.guide.react.pick_option2_1') }}
+            <a href="https://github.com/add2cal/add-to-calendar-button-react" target="_blank" rel="noopener">
+              {{ $t('content.guide.react.pick_option2_2') }} <ArrowTopRightOnSquareIcon class="-mt-0.5 mr-0.5 inline-block h-4 w-4" aria-hidden="true" />
+            </a>
+            {{ $t('content.guide.react.pick_option2_3') }}
           </li>
         </ul>
         <p class="pt-5">{{ $t('content.guide.options_intro_1') }}</p>
-        <p class="italic">{{ $t('content.guide.options_intro_2') }}</p>
         <h2 class="mb-6 mt-20">{{ $t('content.guide.step1') }}: {{ $t('content.guide.step_npm') }}</h2>
         <h3 class="mb-6">{{ $t('content.guide.optionA') }}: Web Component</h3>
         <p>{{ $t('content.guide.install_npm') }}</p>
@@ -66,23 +67,7 @@ watch(locale, value => {
         <LazyCodeBlock language="javascript">
           <pre>import { AddToCalendarButton } from 'add-to-calendar-button-react';</pre>
         </LazyCodeBlock>
-        <h2 class="mb-6 mt-20">{{ $t('content.guide.step3') }}: {{ $t('content.guide.react.step_optimize_ts') }}</h2>
-        <p class="font-semibold">{{ $t('content.guide.react.optimize_ts_1') }}</p>
-        <p>{{ $t('content.guide.react.optimize_ts_2') }}</p>
-        <LazyCodeBlock language="javascript" class="line-numbers">
-          <pre>
-// global.d.ts
-
-declare global {
-  namespace JSX {
-    interface IntrinsicElements {
-      ['add-to-calendar-button']: CustomElement&lt;AddToCalendarButton&gt;;
-    }
-  }
-}</pre
-          >
-        </LazyCodeBlock>
-        <h2 class="mb-6 mt-20">{{ $t('content.guide.step4') }}: {{ $t('content.guide.step_use') }}</h2>
+        <h2 class="mb-6 mt-20">{{ $t('content.guide.step3') }}: {{ $t('content.guide.step_use') }}</h2>
         <h3 class="mb-6">{{ $t('content.guide.optionA') }}: Web Component</h3>
         <p>
           {{ $t('content.guide.step_use_start') }}
