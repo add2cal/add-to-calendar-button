@@ -8,8 +8,7 @@ export default defineNuxtConfig({
   modules: ['@nuxtjs/i18n', '@nuxtjs/tailwindcss', 'nuxt-headlessui', 'nuxt-security', '@vite-pwa/nuxt', 'nuxt-simple-sitemap', 'nuxt-schema-org', 'nuxt-delay-hydration'],
   vue: {
     compilerOptions: {
-      // treat all tags starting with "add-" as custom elements
-      isCustomElement: (tag) => tag.startsWith('add-'),
+      isCustomElement: (tag) => tag === 'add-to-calendar-button',
     },
   },
   nitro: {

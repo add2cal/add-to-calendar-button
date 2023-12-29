@@ -1,7 +1,7 @@
 /* eslint-disable no-unused-vars */
 
 /* ATTENTION!
- * If you are updating types here, also update the types in the following files:
+ * If you are updating things here, also double-check the following depending files:
  * - no-pro/index.d.ts
  * - unstyle/index.d.ts
  * - no-pro-unstyle/index.d.ts
@@ -43,7 +43,7 @@ declare module 'add-to-calendar-button/no-pro-unstyle' {
   export function atcb_action(config: ATCBActionEventConfig, triggerElement?: HTMLElement, keyboardTrigger?: boolean): Promise<string>;
 }
 
-// INTERFACES
+// INTERFACES AND TYPES
 export interface ATCBActionEventConfig {
   proKey?: string;
   name?: string;
@@ -110,7 +110,7 @@ export interface ATCBActionEventConfig {
 export type AddToCalendarButtonType = {
   proKey?: string;
   name?: string;
-  dates?: EventDate[];
+  dates?: EventDate[] | string;
   description?: string;
   startDate?: string;
   startTime?: string;
@@ -119,16 +119,16 @@ export type AddToCalendarButtonType = {
   timeZone?: string;
   location?: string;
   status?: 'TENTATIVE' | 'CONFIRMED' | 'CANCELLED';
-  sequence?: number;
+  sequence?: number | string;
   uid?: string;
   organizer?: string;
   attendee?: string;
   icsFile?: string;
   images?: string[] | string;
   recurrence?: string;
-  recurrence_interval?: number;
+  recurrence_interval?: number | string;
   recurrence_until?: string;
-  recurrence_count?: number;
+  recurrence_count?: number | string;
   recurrence_byDay?: string;
   recurrence_byMonth?: string;
   recurrence_byMonthDay?: string;
@@ -137,51 +137,51 @@ export type AddToCalendarButtonType = {
   created?: string;
   updated?: string;
   identifier?: string;
-  subscribe?: boolean;
-  options?: ('Apple' | 'Google' | 'iCal' | 'Microsoft365' | 'MicrosoftTeams' | 'Outlook.com' | 'Yahoo')[];
-  optionsMobile?: ('Apple' | 'Google' | 'iCal' | 'Microsoft365' | 'MicrosoftTeams' | 'Outlook.com' | 'Yahoo')[];
-  optionsIOS?: ('Apple' | 'Google' | 'iCal' | 'Microsoft365' | 'MicrosoftTeams' | 'Outlook.com' | 'Yahoo')[];
+  subscribe?: boolean | string;
+  options?: ('Apple' | 'Google' | 'iCal' | 'Microsoft365' | 'MicrosoftTeams' | 'Outlook.com' | 'Yahoo')[] | string;
+  optionsMobile?: ('Apple' | 'Google' | 'iCal' | 'Microsoft365' | 'MicrosoftTeams' | 'Outlook.com' | 'Yahoo')[] | string;
+  optionsIOS?: ('Apple' | 'Google' | 'iCal' | 'Microsoft365' | 'MicrosoftTeams' | 'Outlook.com' | 'Yahoo')[] | string;
   iCalFileName?: string;
   listStyle?: 'dropdown' | 'dropdown-static' | 'dropup-static' | 'overlay' | 'modal';
   buttonStyle?: 'default' | '3d' | 'flat' | 'round' | 'neumorphism' | 'text' | 'date' | 'custom' | 'none';
   trigger?: 'hover' | 'click';
-  inline?: boolean;
-  buttonsList?: boolean;
-  hideIconButton?: boolean;
-  hideIconList?: boolean;
-  hideIconModal?: boolean;
-  hideTextLabelButton?: boolean;
-  hideTextLabelList?: boolean;
-  hideBackground?: boolean;
-  hideCheckmark?: boolean;
-  hideBranding?: boolean;
-  hideButton?: boolean;
+  inline?: boolean | string;
+  buttonsList?: boolean | string;
+  hideIconButton?: boolean | string;
+  hideIconList?: boolean | string;
+  hideIconModal?: boolean | string;
+  hideTextLabelButton?: boolean | string;
+  hideTextLabelList?: boolean | string;
+  hideBackground?: boolean | string;
+  hideCheckmark?: boolean | string;
+  hideBranding?: boolean | string;
+  hideButton?: boolean | string;
   size?: string;
   label?: string;
   inlineRsvp?: string;
-  customLabels?: CustomLabelsObjectType;
+  customLabels?: CustomLabelsObjectType | string;
   customCss?: string;
   lightMode?: 'system' | 'dark' | 'light' | 'bodyScheme';
   language?: 'en' | 'de' | 'nl' | 'fa' | 'fr' | 'es' | 'et' | 'pt' | 'tr' | 'zh' | 'ar' | 'hi' | 'pl' | 'ro' | 'id' | 'no' | 'fi' | 'sv' | 'cs' | 'ja' | 'it' | 'ko' | 'vi';
-  hideRichData?: boolean;
-  ty?: object;
-  rsvp?: object;
-  bypassWebViewCheck?: boolean;
-  debug?: boolean;
+  hideRichData?: boolean | string;
+  ty?: object | string;
+  rsvp?: object | string;
+  bypassWebViewCheck?: boolean | string;
+  debug?: boolean | string;
   cspnonce?: string;
-  blockInteraction?: boolean;
+  blockInteraction?: boolean | string;
   styleLight?: string;
   styleDark?: string;
-  disabled?: boolean;
-  hidden?: boolean;
+  disabled?: boolean | string;
+  hidden?: boolean | string;
   pastDateHandling?: string;
-  proxy?: boolean;
-  fakeMobile?: boolean;
-  fakeIOS?: boolean;
-  fakeAndroid?: boolean;
-  forceOverlay?: boolean;
-  instance?: number;
-  dev?: boolean;
+  proxy?: boolean | string;
+  fakeMobile?: boolean | string;
+  fakeIOS?: boolean | string;
+  fakeAndroid?: boolean | string;
+  forceOverlay?: boolean | string;
+  instance?: number | string;
+  dev?: boolean | string;
 };
 
 export interface EventDate {
@@ -204,6 +204,7 @@ export type CustomLabelsObjectType = {
   [key: string]: string | null;
 };
 
+// WEB COMPONENT DECLARATION
 declare global {
   interface HTMLElementTagNameMap {
     'add-to-calendar-button': AddToCalendarButtonType;
