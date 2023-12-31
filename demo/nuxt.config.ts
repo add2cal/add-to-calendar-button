@@ -5,11 +5,10 @@ const baseUrl = process.env.NUXT_PUBLIC_SITE_URL || 'https://add-to-calendar-but
 const robots = process.env.NUXT_PUBLIC_ROBOTS || 'index, follow';
 
 export default defineNuxtConfig({
-  modules: ['@nuxtjs/i18n', '@nuxtjs/tailwindcss', 'nuxt-headlessui', 'nuxt-security', '@vite-pwa/nuxt', 'nuxt-simple-sitemap', 'nuxt-schema-org', 'nuxt-delay-hydration'],
+  modules: ['@nuxtjs/i18n', '@nuxtjs/tailwindcss', 'nuxt-headlessui', 'nuxt-security', 'nuxt-schema-org', '@nuxt/image', '@vite-pwa/nuxt', 'nuxt-simple-sitemap', 'nuxt-delay-hydration'],
   vue: {
     compilerOptions: {
-      // treat all tags starting with "add-" as custom elements
-      isCustomElement: (tag) => tag.startsWith('add-'),
+      isCustomElement: (tag) => tag === 'add-to-calendar-button',
     },
   },
   nitro: {
@@ -69,7 +68,10 @@ export default defineNuxtConfig({
     allowedMethodsRestricter: {
       methods: ['GET'],
       throwError: true,
-    }
+    },
+  },
+  image: {
+    quality: 90,
   },
   app: {
     rootId: 'atcb-demo',
@@ -118,6 +120,12 @@ export default defineNuxtConfig({
         { rel: 'dns-prefetch', href: 'https://api.github.com' },
         { rel: 'dns-prefetch', href: 'https://api.npmjs.org' },
         { rel: 'dns-prefetch', href: 'https://data.jsdelivr.com' },
+        { rel: 'preload', as: 'font', type: 'font/woff2', href: baseUrl + '/assets/fonts/paytone-one-v18-latin-regular.woff2', crossorigin: 'anonymous' },
+        { rel: 'preload', as: 'font', type: 'font/woff2', href: baseUrl + '/assets/fonts/inter-v12-latin-300.woff2', crossorigin: 'anonymous' },
+        { rel: 'preload', as: 'font', type: 'font/woff2', href: baseUrl + '/assets/fonts/inter-v12-latin-regular.woff2', crossorigin: 'anonymous' },
+        { rel: 'preload', as: 'font', type: 'font/woff2', href: baseUrl + '/assets/fonts/inter-v12-latin-600.woff2', crossorigin: 'anonymous' },
+        { rel: 'preload', as: 'font', type: 'font/woff2', href: baseUrl + '/assets/fonts/inter-v12-latin-800.woff2', crossorigin: 'anonymous' },
+        { rel: 'preload', as: 'font', type: 'font/woff2', href: baseUrl + '/assets/fonts/fira-mono-v14-latin-regular.woff2', crossorigin: 'anonymous' },
       ],
       script: [{ async: true, defer: true, 'data-website-id': 'd178e769-c435-4de9-87e5-48b0ec339f62', src: 'https://a.add-to-calendar-button.com/atcba.js', 'data-host-url': 'https://a.add-to-calendar-button.com', 'data-domains': 'add-to-calendar-button.com' }],
       noscript: [{ innerHTML: 'Please enable JavaScript to view this website.' }],

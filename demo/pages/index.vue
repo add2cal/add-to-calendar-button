@@ -28,17 +28,20 @@ const localePath = useLocalePath();
         target="_blank"
         rel="noopener"
         class="hidden self-center drop-shadow-light-md dark:block md:self-start"
-        ><img src="/assets/img/ph-badge-dark.svg" alt="Product of the Day | Product Hunt" style="width: 250px; height: 54px;" width="250" height="54"
+        ><nuxt-img placeholder loading="lazy" src="/assets/img/ph-badge-dark.svg" alt="Product of the Day | Product Hunt" width="250" height="54"
       /></a>
       <a href="https://www.producthunt.com/posts/add-to-calendar-button-generator?utm_source=badge-top-post-badge&utm_medium=badge&utm_souce=badge-add&#0045;to&#0045;calendar&#0045;button&#0045;generator" target="_blank" rel="noopener" class="block self-center drop-shadow dark:hidden md:self-start"
-        ><img src="/assets/img/ph-badge-light.svg" alt="Product of the Day | Product Hunt" style="width: 250px; height: 54px;" width="250" height="54"
+        ><nuxt-img placeholder loading="lazy" src="/assets/img/ph-badge-light.svg" alt="Product of the Day | Product Hunt" width="250" height="54"
       /></a>
     </div>
   </div>
 
   <div id="demo" class="mt-20 bg-gradient-to-tr from-zinc-300 to-zinc-200 pb-16 pt-12 shadow-lg dark:from-zinc-800 dark:via-zinc-800 dark:to-zinc-700 dark:shadow-xl">
     <div class="container">
-      <h2 class="pb-8 underline decoration-primary-light decoration-2 dark:decoration-primary-dark"><BeakerIcon class="-mt-1 mr-3 inline-block h-6 w-6" aria-hidden="true" />{{ $t('navigation.playground') }}</h2>
+      <h2 class="pb-8 underline decoration-primary-light decoration-2 dark:decoration-primary-dark">
+        <BeakerIcon class="-mt-1 mr-3 inline-block h-6 w-6" aria-hidden="true" />
+        {{ $t('navigation.playground') }}
+      </h2>
     </div>
     <DelayHydration>
       <ClientOnly>
@@ -56,12 +59,18 @@ const localePath = useLocalePath();
   </div>
 
   <div id="installation" class="container mt-12 pt-12">
-    <h2 class="pb-8 underline decoration-primary-light decoration-2 dark:decoration-primary-dark"><WrenchScrewdriverIcon class="-mt-1 mr-3 inline-block h-6 w-6" aria-hidden="true" />{{ $t('content.home.headline_installation') }}</h2>
+    <h2 class="pb-8 underline decoration-primary-light decoration-2 dark:decoration-primary-dark">
+      <WrenchScrewdriverIcon class="-mt-1 mr-3 inline-block h-6 w-6" aria-hidden="true" />
+      {{ $t('content.home.headline_installation') }}
+    </h2>
     <IntegrationGuidesOverview />
   </div>
 
   <div id="features" class="container">
-    <h2 class="mt-20 pb-8 underline decoration-primary-light decoration-2 dark:decoration-primary-dark"><SparklesIcon class="-mt-1 mr-3 inline-block h-6 w-6" aria-hidden="true" />{{ $t('content.home.headline_functionality') }}</h2>
+    <h2 class="mt-20 pb-8 underline decoration-primary-light decoration-2 dark:decoration-primary-dark">
+      <SparklesIcon class="-mt-1 mr-3 inline-block h-6 w-6" aria-hidden="true" />
+      {{ $t('content.home.headline_functionality') }}
+    </h2>
     <div>{{ $t('content.home.functionality_intro') }}</div>
     <FeaturesBlock />
   </div>
@@ -71,10 +80,16 @@ const localePath = useLocalePath();
 
     <div class="mx-8 grid grid-cols-1 text-center md:grid-cols-2">
       <div class="py-6 sm:p-6 md:text-right">
-        <NuxtLink class="button-primary w-full max-w-xs" :to="localePath('examples')">{{ $t('content.home.button_examples') }} <ArrowRightIcon class="-mt-0.5 ml-2 inline-block h-4 w-4" aria-hidden="true" /></NuxtLink>
+        <NuxtLink class="button-primary w-full max-w-xs" :to="localePath('examples')">
+          {{ $t('content.home.button_examples') }}
+          <ArrowRightIcon class="-mt-0.5 ml-2 inline-block h-4 w-4" aria-hidden="true" />
+        </NuxtLink>
       </div>
       <div class="py-6 sm:p-6 md:text-left">
-        <NuxtLink class="button-primary w-full max-w-xs" :to="localePath('configuration')">{{ $t('content.home.button_configure') }} <ArrowRightIcon class="-mt-0.5 ml-2 inline-block h-4 w-4" aria-hidden="true" /></NuxtLink>
+        <NuxtLink class="button-primary w-full max-w-xs" :to="localePath('configuration')">
+          {{ $t('content.home.button_configure') }}
+          <ArrowRightIcon class="-mt-0.5 ml-2 inline-block h-4 w-4" aria-hidden="true" />
+        </NuxtLink>
       </div>
     </div>
   </div>

@@ -5,7 +5,7 @@
  *
  * Style: Neumorphism
  *
- * Version: 2.5.6
+ * Version: 2.5.7
  * Creator: Jens Kuerschner (https://jenskuerschner.de)
  * Project: https://github.com/add2cal/add-to-calendar-button
  * License: Elastic License 2.0 (ELv2) (https://github.com/add2cal/add-to-calendar-button/blob/main/LICENSE.txt)
@@ -1335,6 +1335,9 @@ a.atcb-modal-btn:not([disabled]):hover {
 }
 
 #atcb-reference.fixed-ref {
+  position: fixed;
+  bottom: 10px;
+  right: 40px;
   width: auto;
 }
 
@@ -1370,10 +1373,4 @@ a.atcb-modal-btn:not([disabled]):hover {
 
 #atcb-reference svg {
   fill: var(--list-text);
-}
-
-#atcb-reference.fixed-ref {
-  position: fixed;
-  bottom: 10px;
-  right: 40px;
 }

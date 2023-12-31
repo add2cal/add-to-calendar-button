@@ -2,13 +2,12 @@
 import LightModeSwitch from "@/components/lightModeSwitch.vue";
 import { EyeIcon, EyeSlashIcon, AdjustmentsHorizontalIcon, CheckIcon, ArrowTopRightOnSquareIcon } from '@heroicons/vue/24/outline';
 import "add-to-calendar-button";
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-import CodeBlock from "@/components/codeBlock.vue";
 import DateAttrs from "@/components/playground/attrs/dateAttrs.vue";
 import LayoutAttrs from "@/components/playground/attrs/layoutAttrs.vue";
 import { mapAttrsObject, attrsToHtmlString } from '@/utils/attrs';
 import { set, LSKey } from '@/utils/localStorage';
 import { getInitialAttrs } from '@/utils/attrs/default';
+const LazyCodeBlock = defineAsyncComponent(() => import('@/components/codeBlock.vue'));
 const { t, locale } = useI18n();
 
 const showCode = ref(false);
@@ -74,9 +73,7 @@ watch(showMC, val => {
         <span :class="{ hidden: !showCode }"><EyeSlashIcon class="-mt-1 mr-2 inline-block h-5 w-5" aria-hidden="true" />{{ t('labels.hideCode') }}</span>
       </div>
       <div :class="{ hidden: !showCode }" class="m-2 mt-3">
-        <LazyCodeBlock class="line-numbers">
-          {{ attrsToHtmlString(data) }}
-        </LazyCodeBlock>
+        <LazyCodeBlock>{{ attrsToHtmlString(data) }}</LazyCodeBlock>
       </div>
     </div>
   </div>

@@ -3,7 +3,7 @@
  *  Add to Calendar Button
  *  ++++++++++++++++++++++
  *
- *  Version: 2.5.6
+ *  Version: 2.5.7
  *  Creator: Jens Kuerschner (https://jenskuerschner.de)
  *  Project: https://github.com/add2cal/add-to-calendar-button
  *  License: Elastic License 2.0 (ELv2) (https://github.com/add2cal/add-to-calendar-button/blob/main/LICENSE.txt)
@@ -345,7 +345,9 @@ function atcb_generate_microsoft(data, date, subEvent = 'all', type = '365') {
   }
   // add details (if set)
   if (date.name != null && date.name != '') {
-    urlParts.push('subject=' + encodeURIComponent(date.name));
+    // for the name, we need to replace any ampersand in the name, as Microsoft does not parse it correctly
+    // TODO: remove this, when Microsoft has fixed this
+    urlParts.push('subject=' + encodeURIComponent(date.name.replace(/&/g, '&#xFF06;')));
   }
   if (date.location != null && date.location != '') {
     urlParts.push('location=' + encodeURIComponent(date.location));
