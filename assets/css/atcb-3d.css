@@ -1413,6 +1413,9 @@ a.atcb-modal-btn:not([disabled]):hover {
 }
 
 #atcb-reference.fixed-ref {
+  position: fixed;
+  bottom: 10px;
+  right: 40px;
   width: auto;
 }
 
@@ -1448,10 +1451,4 @@ a.atcb-modal-btn:not([disabled]):hover {
 
 #atcb-reference svg {
   fill: var(--list-text);
-}
-
-#atcb-reference.fixed-ref {
-  position: fixed;
-  bottom: 10px;
-  right: 40px;
 }
