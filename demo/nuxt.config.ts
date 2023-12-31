@@ -5,7 +5,7 @@ const baseUrl = process.env.NUXT_PUBLIC_SITE_URL || 'https://add-to-calendar-but
 const robots = process.env.NUXT_PUBLIC_ROBOTS || 'index, follow';
 
 export default defineNuxtConfig({
-  modules: ['@nuxtjs/i18n', '@nuxtjs/tailwindcss', 'nuxt-headlessui', 'nuxt-security', '@vite-pwa/nuxt', 'nuxt-simple-sitemap', 'nuxt-schema-org', 'nuxt-delay-hydration'],
+  modules: ['@nuxtjs/i18n', '@nuxtjs/tailwindcss', 'nuxt-headlessui', 'nuxt-security', 'nuxt-schema-org', '@nuxt/image', '@vite-pwa/nuxt', 'nuxt-simple-sitemap', 'nuxt-delay-hydration'],
   vue: {
     compilerOptions: {
       isCustomElement: (tag) => tag === 'add-to-calendar-button',
@@ -69,6 +69,9 @@ export default defineNuxtConfig({
       methods: ['GET'],
       throwError: true,
     },
+  },
+  image: {
+    quality: 90,
   },
   app: {
     rootId: 'atcb-demo',

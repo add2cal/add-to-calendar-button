@@ -1,6 +1,6 @@
 <script setup lang="ts">
 // @ts-expect-error - named import may TS-fail here due to the workspace type integration of the script
-import { atcb_action } from "add-to-calendar-button/unstyle";
+import { atcb_action } from "add-to-calendar-button";
 import { ArrowTopRightOnSquareIcon } from '@heroicons/vue/24/outline';
 import Interstitial from '@/components/interstitial.vue';
 const LazyCodeBlock = defineAsyncComponent(() => import('@/components/codeBlock.vue'));

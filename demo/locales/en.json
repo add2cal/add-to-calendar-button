@@ -22,6 +22,8 @@
   },
   "labels": {
     "toTop": "to top",
+    "copy_code": "Copy code",
+    "copied": "Copied",
     "enableDarkMode": "Enable Dark Mode",
     "markThis": "Mark this",
     "clickHere": "Click here",

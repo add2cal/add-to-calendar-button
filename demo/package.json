@@ -33,6 +33,7 @@
   ],
   "dependencies": {
     "@heroicons/vue": "^2.0.18",
+    "@nuxt/image": "^1.1.0",
     "@trevoreyre/autocomplete-js": "^2.4.1",
     "timezones-ical-library": "^1.7.2",
     "vue-marquee-text-component": "^2.0.1"
