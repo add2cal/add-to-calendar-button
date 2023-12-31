@@ -2,10 +2,9 @@
 import { EyeIcon, EyeSlashIcon, AdjustmentsHorizontalIcon } from '@heroicons/vue/24/outline';
 import "add-to-calendar-button";
 import LightModeSwitchPlaceholder from "@/components/placeholders/lightModeSwitchPlaceholder.vue";
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-import CodeBlock from "@/components/codeBlock.vue";
 import DateAttrsPlaceholder from "@/components/placeholders/playgroundDateAttrsPlaceholder.vue";
 import LayoutAttrsPlaceholder from "@/components/placeholders/playgroundLayoutAttrsPlaceholder.vue";
+const LazyCodeBlock = defineAsyncComponent(() => import('@/components/codeBlock.vue'));
 const { t } = useI18n();
 
 const showCode = ref(false);
@@ -50,7 +49,7 @@ const showCode = ref(false);
         <span :class="{ hidden: !showCode }"><EyeSlashIcon class="-mt-1 mr-2 inline-block h-5 w-5" aria-hidden="true" />{{ t('labels.hideCode') }}</span>
       </div>
       <div :class="{ hidden: !showCode }" class="m-2 mt-3">
-        <LazyCodeBlock class="line-numbers">...</LazyCodeBlock>
+        <LazyCodeBlock>...</LazyCodeBlock>
       </div>
     </div>
   </div>

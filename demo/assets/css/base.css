@@ -10,8 +10,8 @@
     font-style: normal;
     font-weight: 400;
     src: local('Paytone One'),
-        url('../fonts/paytone-one-v18-latin-regular.woff2') format('woff2'),
-        url('../fonts/paytone-one-v18-latin-regular.ttf') format('truetype');
+        url('/assets/fonts/paytone-one-v18-latin-regular.woff2') format('woff2'),
+        url('/assets/fonts/paytone-one-v18-latin-regular.ttf') format('truetype');
   }
 
   /* inter-300 - latin */
@@ -21,8 +21,8 @@
     font-style: normal;
     font-weight: 300;
     src: local('Inter Light'),
-        url('../fonts/inter-v12-latin-300.woff2') format('woff2'),
-        url('../fonts/inter-v12-latin-300.ttf') format('truetype');
+        url('/assets/fonts/inter-v12-latin-300.woff2') format('woff2'),
+        url('/assets/fonts/inter-v12-latin-300.ttf') format('truetype');
   }
 
   /* inter-regular - latin */
@@ -32,8 +32,8 @@
     font-style: normal;
     font-weight: 400;
     src: local('Inter'),
-        url('../fonts/inter-v12-latin-regular.woff2') format('woff2'),
-        url('../fonts/inter-v12-latin-regular.ttf') format('truetype');
+        url('/assets/fonts/inter-v12-latin-regular.woff2') format('woff2'),
+        url('/assets/fonts/inter-v12-latin-regular.ttf') format('truetype');
   }
 
   /* inter-600 - latin */
@@ -43,8 +43,8 @@
     font-style: normal;
     font-weight: 600;
     src: local('Inter SemiBold'),
-        url('../fonts/inter-v12-latin-600.woff2') format('woff2'),
-        url('../fonts/inter-v12-latin-600.ttf') format('truetype');
+        url('/assets/fonts/inter-v12-latin-600.woff2') format('woff2'),
+        url('/assets/fonts/inter-v12-latin-600.ttf') format('truetype');
   }
 
   /* inter-800 - latin */
@@ -54,8 +54,8 @@
     font-style: normal;
     font-weight: 800;
     src: local('Inter ExtraBold'),
-        url('../fonts/inter-v12-latin-800.woff2') format('woff2'),
-        url('../fonts/inter-v12-latin-800.ttf') format('truetype');
+        url('/assets/fonts/inter-v12-latin-800.woff2') format('woff2'),
+        url('/assets/fonts/inter-v12-latin-800.ttf') format('truetype');
   }
 
   /* fira-mono-regular - latin */
@@ -65,8 +65,8 @@
     font-style: normal;
     font-weight: 400;
     src: local('Fira Mono'),
-        url('../fonts/fira-mono-v14-latin-regular.woff2') format('woff2'),
-        url('../fonts/fira-mono-v14-latin-regular.ttf') format('truetype');
+        url('/assets/fonts/fira-mono-v14-latin-regular.woff2') format('woff2'),
+        url('/assets/fonts/fira-mono-v14-latin-regular.ttf') format('truetype');
   }
 
   /* fira-mono-700 - latin */
@@ -75,8 +75,8 @@
     font-family: 'Fira Mono';
     font-style: normal;
     font-weight: 700;
-    src: url('../fonts/fira-mono-v14-latin-700.woff2') format('woff2'),
-        url('../fonts/fira-mono-v14-latin-700.ttf') format('truetype');
+    src: url('/assets/fonts/fira-mono-v14-latin-700.woff2') format('woff2'),
+        url('/assets/fonts/fira-mono-v14-latin-700.ttf') format('truetype');
   }
 
   /* selection color */
@@ -128,12 +128,6 @@
 
   p+p {
     margin-top: .8em;
-  }
-
-  code[class*="language-"],
-  pre[class*="language-"] {
-    background: none;
-    font-family: 'Fira Mono', Consolas, Courier, monospace;
   }
 
   label.required::after {

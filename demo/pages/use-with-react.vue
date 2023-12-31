@@ -1,8 +1,7 @@
 <script setup lang="ts">
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-import CodeBlock from "@/components/codeBlock.vue";
 import GuideSidebar from "@/components/integration/guideSidebar.vue";
 import { ArrowTopRightOnSquareIcon } from '@heroicons/vue/24/outline';
+const LazyCodeBlock = defineAsyncComponent(() => import('@/components/codeBlock.vue'));
 const { locale } = useI18n();
 
 definePageMeta({
@@ -41,7 +40,8 @@ watch(locale, value => {
           <li class="mt-3 text-left">
             {{ $t('content.guide.react.pick_option2_1') }}
             <a href="https://github.com/add2cal/add-to-calendar-button-react" target="_blank" rel="noopener">
-              {{ $t('content.guide.react.pick_option2_2') }} <ArrowTopRightOnSquareIcon class="-mt-0.5 mr-0.5 inline-block h-4 w-4" aria-hidden="true" />
+              {{ $t('content.guide.react.pick_option2_2') }}
+              <ArrowTopRightOnSquareIcon class="-mt-0.5 mr-0.5 inline-block h-4 w-4" aria-hidden="true" />
             </a>
             {{ $t('content.guide.react.pick_option2_3') }}
           </li>
@@ -50,10 +50,10 @@ watch(locale, value => {
         <h2 class="mb-6 mt-20">{{ $t('content.guide.step1') }}: {{ $t('content.guide.step_npm') }}</h2>
         <h3 class="mb-6">{{ $t('content.guide.optionA') }}: Web Component</h3>
         <p>{{ $t('content.guide.install_npm') }}</p>
-        <LazyCodeBlock><pre>npm install add-to-calendar-button</pre></LazyCodeBlock>
+        <LazyCodeBlock language="shell"><pre>npm install add-to-calendar-button</pre></LazyCodeBlock>
         <h3 class="mb-6 mt-12">{{ $t('content.guide.optionB') }}: React Wrapper</h3>
         <p>{{ $t('content.guide.react.install_wrapper') }}</p>
-        <LazyCodeBlock>
+        <LazyCodeBlock language="shell">
           <pre>npm install add-to-calendar-button-react</pre>
         </LazyCodeBlock>
         <h2 class="mb-6 mt-20">{{ $t('content.guide.step2') }}: {{ $t('content.guide.step_import') }}</h2>
@@ -73,7 +73,7 @@ watch(locale, value => {
           {{ $t('content.guide.step_use_start') }}
         </p>
         <p>{{ $t('content.guide.step_use_example') }}</p>
-        <LazyCodeBlock class="line-numbers">
+        <LazyCodeBlock>
           <pre>
 &lt;add-to-calendar-button
   name="{{ $t('demo_data.name_dummy') }}"
@@ -90,7 +90,7 @@ watch(locale, value => {
         <h3 class="mb-6 mt-12">{{ $t('content.guide.optionB') }}: React Wrapper</h3>
         <p>{{ $t('content.guide.react.start_wrapper_1') }}</p>
         <p>{{ $t('content.guide.react.start_wrapper_2') }}</p>
-        <LazyCodeBlock language="javascript" class="line-numbers">
+        <LazyCodeBlock language="javascript">
           <pre>
 &lt;AddToCalendarButton
   name="{{ $t('demo_data.name_dummy') }}"

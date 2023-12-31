@@ -1,7 +1,6 @@
 <script setup lang="ts">
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-import CodeBlock from "@/components/codeBlock.vue";
 import GuideSidebar from "@/components/integration/guideSidebar.vue";
+const LazyCodeBlock = defineAsyncComponent(() => import('@/components/codeBlock.vue'));
 const { locale } = useI18n();
 
 definePageMeta({
@@ -45,9 +44,9 @@ watch(locale, value => {
         </LazyCodeBlock>
         <h3 class="mb-6 mt-20">{{ $t('content.guide.optionB') }}: {{ $t('content.guide.step_npm') }}</h3>
         <p>{{ $t('content.guide.astro.npm_alternative_1') }}</p>
-        <LazyCodeBlock><pre>npm install add-to-calendar-button</pre></LazyCodeBlock>
+        <LazyCodeBlock language="shell"><pre>npm install add-to-calendar-button</pre></LazyCodeBlock>
         <div class="mb-6 mt-10 font-bold">{{ $t('content.guide.astro.npm_alternative_2') }}</div>
-        <LazyCodeBlock class="line-numbers">
+        <LazyCodeBlock>
           <pre>
 &lt;script type="module" hoist&gt;
   const observer = new IntersectionObserver((entries) => {
@@ -68,7 +67,7 @@ watch(locale, value => {
         </p>
         <p class="font-semibold italic">{{ $t('content.guide.step_use_simple') }}</p>
         <p>{{ $t('content.guide.step_use_example') }}</p>
-        <LazyCodeBlock class="line-numbers">
+        <LazyCodeBlock>
           <pre>
 &lt;add-to-calendar-button
   name="{{ $t('demo_data.name_dummy') }}"

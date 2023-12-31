@@ -1,8 +1,7 @@
 <script setup lang="ts">
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-import CodeBlock from "@/components/codeBlock.vue";
 import GuideSidebar from "@/components/integration/guideSidebar.vue";
 import { ArrowTopRightOnSquareIcon } from '@heroicons/vue/24/outline';
+const LazyCodeBlock = defineAsyncComponent(() => import('@/components/codeBlock.vue'));
 const { locale } = useI18n();
 
 definePageMeta({
@@ -36,7 +35,11 @@ watch(locale, value => {
       <div class="px-0 md:px-3 lg:px-5">
         <h2 class="mb-6">{{ $t('content.guide.step1') }}: {{ $t('content.guide.wordpress.step_install') }}</h2>
         <p>
-          {{ $t('content.guide.wordpress.install_1') }}<a :href="wpUrl" target="_blank" rel="noopener">{{ $t('content.guide.wordpress.install_2') }} <ArrowTopRightOnSquareIcon class="-mt-0.5 mr-0.5 inline-block h-4 w-4" aria-hidden="true" /></a>
+          {{ $t('content.guide.wordpress.install_1') }}
+          <a :href="wpUrl" target="_blank" rel="noopener">
+            {{ $t('content.guide.wordpress.install_2') }}
+            <ArrowTopRightOnSquareIcon class="-mt-0.5 mr-0.5 inline-block h-4 w-4" aria-hidden="true" />
+          </a>
         </p>
         <ul class="my-4 list-disc pl-6">
           <li class="text-left">{{ $t('content.guide.wordpress.install_way_1') }}<br />{{ $t('content.guide.wordpress.install_way_1_search') }}: <code>add2cal</code></li>

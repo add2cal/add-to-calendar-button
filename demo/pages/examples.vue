@@ -1,9 +1,8 @@
 <script setup lang="ts">
 import "add-to-calendar-button";
 import { ArrowRightIcon, ArrowTopRightOnSquareIcon } from '@heroicons/vue/24/outline';
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-import CodeBlock from "@/components/codeBlock.vue";
 import Interstitial from '@/components/interstitial.vue';
+const LazyCodeBlock = defineAsyncComponent(() => import('@/components/codeBlock.vue'));
 
 const { t, locale } = useI18n();
 
@@ -116,7 +115,7 @@ watch(locale, value => {
             ></add-to-calendar-button>
           </div>
           <div class="flex-1 overflow-x-auto">
-            <LazyCodeBlock class="line-numbers">
+            <LazyCodeBlock>
               <pre>
 &lt;add-to-calendar-button
   name="{{ $t('demo_data.name') }}"
@@ -161,7 +160,7 @@ watch(locale, value => {
             ></add-to-calendar-button>
           </div>
           <div class="flex-1 overflow-x-auto">
-            <LazyCodeBlock class="line-numbers">
+            <LazyCodeBlock>
               <pre>
 &lt;add-to-calendar-button
   name="{{ $t('demo_data.name') }}"
@@ -207,7 +206,7 @@ watch(locale, value => {
             ></add-to-calendar-button>
           </div>
           <div class="flex-1 overflow-x-auto">
-            <LazyCodeBlock class="line-numbers">
+            <LazyCodeBlock>
               <pre>
 &lt;add-to-calendar-button
   name="{{ $t('demo_data.name') }}"
@@ -257,7 +256,7 @@ watch(locale, value => {
             ></add-to-calendar-button>
           </div>
           <div class="flex-1 overflow-x-auto">
-            <LazyCodeBlock class="line-numbers">
+            <LazyCodeBlock>
               <pre>
 &lt;add-to-calendar-button
   name="{{ $t('demo_data.name') }}"
@@ -306,7 +305,7 @@ watch(locale, value => {
             ></add-to-calendar-button>
           </div>
           <div class="flex-1 overflow-x-auto">
-            <LazyCodeBlock class="line-numbers">
+            <LazyCodeBlock>
               <pre>
 &lt;add-to-calendar-button
   name="{{ $t('demo_data.name') }}"
@@ -371,7 +370,7 @@ watch(locale, value => {
             ></add-to-calendar-button>
           </div>
           <div class="flex-1 overflow-x-auto">
-            <LazyCodeBlock class="line-numbers">
+            <LazyCodeBlock>
               <pre>
 &lt;add-to-calendar-button
   name="{{ $t('demo_data.name_series') }}"
@@ -456,7 +455,7 @@ watch(locale, value => {
             ></add-to-calendar-button>
           </div>
           <div class="flex-1 overflow-x-auto">
-            <LazyCodeBlock class="line-numbers">
+            <LazyCodeBlock>
               <pre>
 &lt;add-to-calendar-button
   name="{{ $t('demo_data.name') }}"
@@ -518,7 +517,7 @@ watch(locale, value => {
             ></add-to-calendar-button>
           </div>
           <div class="overflow-x-auto">
-            <LazyCodeBlock class="line-numbers">
+            <LazyCodeBlock>
               <pre>
 &lt;add-to-calendar-button
   name="{{ $t('demo_data.name') }}"
@@ -567,7 +566,7 @@ watch(locale, value => {
             ></add-to-calendar-button>
           </div>
           <div class="flex-1 overflow-x-auto">
-            <LazyCodeBlock class="line-numbers">
+            <LazyCodeBlock>
               <pre>
 &lt;add-to-calendar-button
   name="{{ $t('demo_data.name') }}"
@@ -615,7 +614,7 @@ watch(locale, value => {
             ></add-to-calendar-button>
           </div>
           <div class="overflow-x-auto">
-            <LazyCodeBlock class="line-numbers">
+            <LazyCodeBlock>
               <pre>
 &lt;add-to-calendar-button
   name="{{ $t('demo_data.name') }}"

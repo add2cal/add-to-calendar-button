@@ -1,8 +1,7 @@
 <script setup lang="ts">
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-import CodeBlock from "@/components/codeBlock.vue";
 import GuideSidebar from "@/components/integration/guideSidebar.vue";
 import { ArrowTopRightOnSquareIcon } from '@heroicons/vue/24/outline';
+const LazyCodeBlock = defineAsyncComponent(() => import('@/components/codeBlock.vue'));
 const { locale } = useI18n();
 
 definePageMeta({
@@ -36,7 +35,7 @@ watch(locale, value => {
       <div class="px-0 md:px-3 lg:px-5">
         <h2 class="mb-6">{{ $t('content.guide.step1') }}: {{ $t('content.guide.step_npm') }}</h2>
         <p>{{ $t('content.guide.install_npm') }}</p>
-        <LazyCodeBlock><pre>npm install add-to-calendar-button</pre></LazyCodeBlock>
+        <LazyCodeBlock language="shell"><pre>npm install add-to-calendar-button</pre></LazyCodeBlock>
         <h2 class="mb-6 mt-20">{{ $t('content.guide.step2') }}: {{ $t('content.guide.step_import') }}</h2>
         <p>{{ $t('content.guide.import_npm') }}</p>
         <LazyCodeBlock language="javascript">
@@ -55,7 +54,7 @@ watch(locale, value => {
           {{ $t('content.guide.vue.config_3') }}:
           <a href="https://vuejs.org/guide/extras/web-components.html#using-custom-elements-in-vue" target="_blank" rel="noopener" class="whitespace-nowrap">{{ $t('labels.clickHere') }} <ArrowTopRightOnSquareIcon class="-mt-0.5 mr-0.5 inline-block h-4 w-4" aria-hidden="true" /></a>.
         </p>
-        <LazyCodeBlock language="javascript" class="line-numbers">
+        <LazyCodeBlock language="javascript">
           <pre>
 // vite.config.js or vite.config.ts
 
@@ -65,7 +64,7 @@ compilerOptions: {
           >
         </LazyCodeBlock>
         <p>{{ $t('content.guide.vue.config_4') }}<br />{{ $t('content.guide.vue.config_5') }}</p>
-        <LazyCodeBlock language="javascript" class="line-numbers">
+        <LazyCodeBlock language="javascript">
           <pre>
 // vite.config.js or vite.config.ts
 
@@ -80,7 +79,7 @@ compilerOptions: {
         </p>
         <p class="font-semibold italic">{{ $t('content.guide.step_use_simple') }}</p>
         <p>{{ $t('content.guide.step_use_example') }}</p>
-        <LazyCodeBlock class="line-numbers">
+        <LazyCodeBlock>
           <pre>
 &lt;add-to-calendar-button
   name="{{ $t('demo_data.name_dummy') }}"

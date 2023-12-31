@@ -1,7 +1,6 @@
 <script setup lang="ts">
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-import CodeBlock from "@/components/codeBlock.vue";
 import GuideSidebar from "@/components/integration/guideSidebar.vue";
+const LazyCodeBlock = defineAsyncComponent(() => import('@/components/codeBlock.vue'));
 const { locale } = useI18n();
 
 definePageMeta({
@@ -42,7 +41,7 @@ watch(locale, value => {
         <p>{{ $t('content.guide.step_use_start') }}</p>
         <p class="font-semibold italic">{{ $t('content.guide.step_use_simple') }}</p>
         <p>{{ $t('content.guide.step_use_example') }}</p>
-        <LazyCodeBlock class="line-numbers">
+        <LazyCodeBlock>
           <pre>
 &lt;add-to-calendar-button
   name="{{ $t('demo_data.name_dummy') }}"

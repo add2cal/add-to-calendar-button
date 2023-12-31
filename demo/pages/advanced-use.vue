@@ -2,9 +2,8 @@
 // @ts-expect-error - named import may TS-fail here due to the workspace type integration of the script
 import { atcb_action } from "add-to-calendar-button/unstyle";
 import { ArrowTopRightOnSquareIcon } from '@heroicons/vue/24/outline';
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-import CodeBlock from "@/components/codeBlock.vue";
 import Interstitial from '@/components/interstitial.vue';
+const LazyCodeBlock = defineAsyncComponent(() => import('@/components/codeBlock.vue'));
 const { t, locale } = useI18n();
 
 definePageMeta({
@@ -144,7 +143,7 @@ onUnmounted(() => {
             ></add-to-calendar-button>
           </div>
           <div class="flex-1 overflow-x-auto">
-            <LazyCodeBlock class="line-numbers">
+            <LazyCodeBlock>
               <pre>
 &lt;add-to-calendar-button
   name="{{ $t('demo_data.name') }}"
@@ -166,7 +165,7 @@ onUnmounted(() => {
             <add-to-calendar-button :name="$t('demo_data.name')" :startDate="defaultDate" options="'Apple','Google','iCal'" buttonStyle="flat" hideIconList buttonsList hideBackground :label="$t('demo_data.name_custom_3')" lightMode="bodyScheme" :language="locale"></add-to-calendar-button>
           </div>
           <div class="flex-1 overflow-x-auto">
-            <LazyCodeBlock class="line-numbers">
+            <LazyCodeBlock>
               <pre>
 &lt;add-to-calendar-button
   name="{{ $t('demo_data.name') }}"
@@ -203,7 +202,7 @@ onUnmounted(() => {
             ></add-to-calendar-button>
           </div>
           <div class="flex-1 overflow-x-auto">
-            <LazyCodeBlock class="line-numbers">
+            <LazyCodeBlock>
               <pre>
 &lt;add-to-calendar-button
   name="{{ $t('demo_data.name_custom_4') }}"
@@ -267,7 +266,7 @@ onUnmounted(() => {
             ></add-to-calendar-button>
           </div>
           <div class="flex-1 overflow-x-auto">
-            <LazyCodeBlock class="line-numbers">
+            <LazyCodeBlock>
               <pre>
 &lt;add-to-calendar-button 
   styleLight="--btn-background: #2f4377; --btn-text: #fff; --font: Georgia, 'Times New Roman', Times, serif;"
@@ -316,7 +315,7 @@ onUnmounted(() => {
             <add-to-calendar-button :name="$t('demo_data.name')" :startDate="defaultDate" options="'Apple','Google','iCal'" lightMode="bodyScheme" :language="locale" customCss="https://add-to-calendar-button.com/atcb.css" buttonStyle="custom" listStyle="modal" hideRichData> </add-to-calendar-button>
           </div>
           <div class="flex-1 overflow-x-auto">
-            <LazyCodeBlock class="line-numbers">
+            <LazyCodeBlock>
               <pre>
 &lt;add-to-calendar-button
   name="{{ $t('demo_data.name') }}"
@@ -405,7 +404,7 @@ onUnmounted(() => {
             ></add-to-calendar-button>
           </div>
           <div class="flex-1 overflow-x-auto">
-            <LazyCodeBlock class="line-numbers">
+            <LazyCodeBlock>
               <pre>
 &lt;add-to-calendar-button
   name="{{ $t('demo_data.name') }}"
@@ -458,7 +457,7 @@ onUnmounted(() => {
             ></add-to-calendar-button>
           </div>
           <div class="flex-1 overflow-x-auto">
-            <LazyCodeBlock class="line-numbers">
+            <LazyCodeBlock>
               <pre>
 &lt;add-to-calendar-button
   name="{{ $t('demo_data.name_subscription') }}"
@@ -518,7 +517,7 @@ onUnmounted(() => {
             ></add-to-calendar-button>
           </div>
           <div class="flex-1 overflow-x-auto">
-            <LazyCodeBlock class="line-numbers">
+            <LazyCodeBlock>
               <pre>
 &lt;add-to-calendar-button
   name="{{ $t('demo_data.name') }}"
@@ -586,7 +585,7 @@ onUnmounted(() => {
             ></add-to-calendar-button>
           </div>
           <div class="flex-1 overflow-x-auto">
-            <LazyCodeBlock class="line-numbers">
+            <LazyCodeBlock>
               <pre>
 &lt;add-to-calendar-button
   name="{{ $t('demo_data.name') }}"
@@ -637,7 +636,7 @@ onUnmounted(() => {
             ></add-to-calendar-button>
           </div>
           <div class="flex-1 overflow-x-auto">
-            <LazyCodeBlock class="line-numbers">
+            <LazyCodeBlock>
               <pre>
 &lt;add-to-calendar-button
   name="{{ $t('demo_data.name') }}"
@@ -707,7 +706,7 @@ onUnmounted(() => {
             ></add-to-calendar-button>
           </div>
           <div class="flex-1 overflow-x-auto">
-            <LazyCodeBlock class="line-numbers">
+            <LazyCodeBlock>
               <pre>
 &lt;add-to-calendar-button
   name="{{ $t('demo_data.name') }}"
@@ -801,7 +800,7 @@ onUnmounted(() => {
             ></add-to-calendar-button>
           </div>
           <div class="flex-1 overflow-x-auto">
-            <LazyCodeBlock class="line-numbers">
+            <LazyCodeBlock>
               <pre>
 &lt;add-to-calendar-button
   name="{{ $t('demo_data.name') }}"
@@ -875,7 +874,7 @@ onUnmounted(() => {
             ></add-to-calendar-button>
           </div>
           <div class="flex-1 overflow-x-auto">
-            <LazyCodeBlock class="line-numbers">
+            <LazyCodeBlock>
               <pre>
 &lt;add-to-calendar-button
   name="{{ $t('demo_data.name_dummy') }}"
@@ -950,7 +949,7 @@ onUnmounted(() => {
             <button id="my-default-button" class="h-fit rounded-full border-2 border-secondary bg-secondary px-4 py-2 text-zinc-800 hover:bg-secondary-light hover:text-black hover:shadow-lg">{{ $t('labels.clickHere') }}</button>
           </div>
           <div class="flex-1 overflow-x-auto">
-            <LazyCodeBlock class="line-numbers">
+            <LazyCodeBlock>
               <pre>
 &lt;button id="my-default-button"&gt;{{ $t('labels.clickHere') }}&lt;/button&gt;
 
