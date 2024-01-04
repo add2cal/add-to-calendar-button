@@ -5,7 +5,7 @@
  *
  * Style: Round
  *
- * Version: 2.5.7
+ * Version: 2.5.8
  * Creator: Jens Kuerschner (https://jenskuerschner.de)
  * Project: https://github.com/add2cal/add-to-calendar-button
  * License: Elastic License 2.0 (ELv2) (https://github.com/add2cal/add-to-calendar-button/blob/main/LICENSE.txt)
@@ -235,7 +235,8 @@
 }
 
 .atcb-button.atcb-no-text:focus,
-.atcb-button.atcb-no-text:hover {
+.atcb-button.atcb-no-text:hover,
+.atcb-button.atcb-no-text.atcb-active {
   height: 3.26em;
   width: 3.26em;
   padding: 0;
@@ -265,7 +266,7 @@
   padding: calc(var(--btn-padding-y) + .28em) calc(var(--btn-padding-x) + .13em);
 }
 
-.atcb-button:not(.atcb-modal-style, .atcb-dropoverlay, .atcb-dropup, .atcb-no-text)::before,
+.atcb-button:not(.atcb-modal-style, .atcb-dropoverlay, .atcb-dropup)::before,
 .atcb-button.atcb-dropup::after {
   content: "";
   width: 0;
@@ -276,7 +277,7 @@
   margin: 0 auto;
 }
 
-.atcb-button:not(.atcb-modal-style, .atcb-dropoverlay, .atcb-dropup, .atcb-no-text)::before {
+.atcb-button:not(.atcb-modal-style, .atcb-dropoverlay, .atcb-dropup)::before {
   top: 100%;
   border: 0 solid transparent;
   border-bottom: none;
@@ -290,7 +291,7 @@
   border-bottom-color: var(--btn-border);
 }
 
-.atcb-button.atcb-active:not(.atcb-modal-style, .atcb-dropoverlay, .atcb-dropup, .atcb-no-text)::before,
+.atcb-button.atcb-active:not(.atcb-modal-style, .atcb-dropoverlay, .atcb-dropup)::before,
 .atcb-button.atcb-active.atcb-dropup::after {
   border-width: 0.35em;
   transition: border-width 0.1s linear 0.1s;
@@ -349,7 +350,6 @@
   box-sizing: border-box;
   position: absolute;
   z-index: 14000090;
-  min-width: 12.5em;
   width: auto;
 }
 
@@ -470,16 +470,17 @@
 }
 
 .atcb-list-item .atcb-icon {
-  margin-right: .7em;
-}
-
-.atcb-rtl .atcb-list-item .atcb-icon {
-  margin-right: 0;
-  margin-left: .7em;
-}
-
-.atcb-no-text .atcb-list-item .atcb-icon {
   margin: 0 auto;
+}
+
+.atcb-list-item .atcb-icon + .atcb-text {
+  margin-left: .7em;
+  width: 100%;
+}
+
+.atcb-rtl .atcb-list-item .atcb-icon + .atcb-text {
+  margin-left: 0;
+  margin-right: .7em;
 }
 
 .atcb-list-item-close {
@@ -501,8 +502,8 @@
 .atcb-modal {
   display: block;
   margin: auto;
-  min-width: 250px;
   width: auto;
+  min-width: auto;
   position: relative;
   z-index: 14000090;
 }

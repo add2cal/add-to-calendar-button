@@ -3,7 +3,7 @@
  *  Add to Calendar Button
  *  ++++++++++++++++++++++
  *
- *  Version: 2.5.7
+ *  Version: 2.5.8
  *  Creator: Jens Kuerschner (https://jenskuerschner.de)
  *  Project: https://github.com/add2cal/add-to-calendar-button
  *  License: Elastic License 2.0 (ELv2) (https://github.com/add2cal/add-to-calendar-button/blob/main/LICENSE.txt)
@@ -513,9 +513,11 @@ function atcb_position_list(host, trigger, list, blockUpwards = false, blockDown
     }
     // read trigger dimensions again, since after adjusting the top value of the list, something might have changed (e.g. re-adjustment due to missing scrollbars at this point in time)
     triggerDim = trigger.getBoundingClientRect();
-    list.style.minWidth = triggerDim.width + 'px';
-    if (list.classList.contains('atcb-dropdown') && !list.classList.contains('atcb-style-round') && !list.classList.contains('atcb-style-text') && !list.classList.contains('atcb-style-neumorphism')) {
-      list.style.maxWidth = triggerDim.width + 'px';
+    if (!list.classList.contains('atcb-style-round') && !list.classList.contains('atcb-style-text') && !list.classList.contains('atcb-style-neumorphism')) {
+      list.style.minWidth = triggerDim.width + 'px';
+      if (list.classList.contains('atcb-dropdown')) {
+        list.style.maxWidth = triggerDim.width + 'px';
+      }
     }
     // read list dimensions again, since we altered the width in the step before
     listDim = list.getBoundingClientRect();
@@ -526,7 +528,7 @@ function atcb_position_list(host, trigger, list, blockUpwards = false, blockDown
     // read list dimensions again, since we altered it in the steps before
     const listDim = list.getBoundingClientRect();
     list.style.width = listDim.width + 'px';
-    const sideMargin = Math.round((btnDim.width - listDim.width) / 4);
+    const sideMargin = Math.round((btnDim.width - listDim.width) / 2);
     list.style.margin = -Math.round((listDim.height + btnDim.height) / 2) + 'px ' + sideMargin + 'px 0 ' + sideMargin + 'px';
   }
   // changing the list's position back to absolute and display to block
@@ -543,10 +545,14 @@ function atcb_position_list(host, trigger, list, blockUpwards = false, blockDown
 }
 
 // SHARED FUNCTION TO CALCULATE THE POSITION OF THE SHADOW OVERLAY BUTTON
-function atcb_position_shadow_button(originalEl, shadowEl) {
-  const wrapperDim = originalEl.querySelector('.atcb-initialized').getBoundingClientRect();
-  const newWrapper = shadowEl.querySelector('.atcb-initialized');
-  newWrapper.style.width = wrapperDim.width + 'px';
+function atcb_position_shadow_button(originalShadowHost, modalShadowHost) {
+  const wrapperDim = originalShadowHost.querySelector('.atcb-initialized ').getBoundingClientRect();
+  const newWrapper = modalShadowHost.querySelector('.atcb-initialized');
+  let widthVal = wrapperDim.width;
+  if (wrapperDim.width < 250) {
+    widthVal = 250;
+  }
+  newWrapper.style.width = widthVal + 'px';
   newWrapper.style.height = wrapperDim.height + 'px';
   newWrapper.style.top = wrapperDim.top + 'px';
   newWrapper.style.left = wrapperDim.left + 'px';
