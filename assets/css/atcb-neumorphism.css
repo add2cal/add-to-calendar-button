@@ -5,7 +5,7 @@
  *
  * Style: Neumorphism
  *
- * Version: 2.5.7
+ * Version: 2.5.8
  * Creator: Jens Kuerschner (https://jenskuerschner.de)
  * Project: https://github.com/add2cal/add-to-calendar-button
  * License: Elastic License 2.0 (ELv2) (https://github.com/add2cal/add-to-calendar-button/blob/main/LICENSE.txt)
@@ -293,7 +293,6 @@
 .atcb-list-wrapper {
   box-sizing: border-box;
   position: absolute;
-  min-width: 12.5em;
   width: auto;
   animation: list-entrance 600ms ease 0s 1 normal forwards;
   z-index: 15000000;
@@ -381,16 +380,17 @@
 }
 
 .atcb-list-item .atcb-icon {
-  margin-right: 0.7em;
-}
-
-.atcb-rtl .atcb-list-item .atcb-icon {
-  margin-right: 0;
-  margin-left: 0.7em;
-}
-
-.atcb-no-text .atcb-list-item .atcb-icon {
   margin: 0 auto;
+}
+
+.atcb-list-item .atcb-icon + .atcb-text {
+  margin-left: .7em;
+  width: 100%;
+}
+
+.atcb-rtl .atcb-list-item .atcb-icon + .atcb-text {
+  margin-left: 0;
+  margin-right: .7em;
 }
 
 .atcb-list-item-close {
@@ -412,8 +412,8 @@
 .atcb-modal {
   display: block;
   margin: auto;
-  min-width: 250px;
   width: auto;
+  min-width: auto;
   position: relative;
   z-index: 14000090;
 }
