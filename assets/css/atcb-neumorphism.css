@@ -45,6 +45,7 @@
   --list-close-text: #777;
   --list-border-radius: 11px;
   --list-padding: 1em;
+  --list-min-width: 100%;
   --list-shadow: rgba(40 40 40 / 30%) 0.4em 0.4em 0.8em,rgba(255 255 255 / 80%) -0.2em -0.2em 0.5em;
   --modal-text: #111;
   --modal-background: #f5f5f5;
@@ -316,7 +317,7 @@
   color: var(--list-text);
   display: block;
   font-family: var(--font);
-  min-width: 100%;
+  min-width: var(--list-min-width);
   position: relative;
   user-select: none;
   -webkit-user-select: none;

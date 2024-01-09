@@ -45,7 +45,8 @@
   --list-close-background: #e5e5e5;
   --list-close-text: #777;
   --list-border-radius: 11px;
-  --list-padding: .8em;
+  --list-padding: .8em 1.2em;
+  --list-min-width: 100%;
   --list-shadow: rgba(0 0 0 / 20%) 0 4px 13px -2px, rgba(0 0 0 / 23%) 0 2px 4px -1px;
   --list-modal-shadow: rgba(0 0 0 / 50%) 0 4px 30px -3px, rgba(0 0 0 / 30%) 0 2px 8px -2px;
   --modal-text: #000;
@@ -415,7 +416,7 @@
   color: var(--list-text);
   display: block;
   font-family: var(--font);
-  min-width: 100%;
+  min-width: var(--list-min-width);
   position: relative;
   user-select: none;
   -webkit-user-select: none;
