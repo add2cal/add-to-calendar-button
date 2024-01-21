@@ -77,9 +77,9 @@ function atcb_generate_rich_data(data, parent) {
         }
       }
     } else {
-      imageData.push('"https://add-to-calendar-button.com/demo_assets/img/1x1.png"');
-      imageData.push('"https://add-to-calendar-button.com/demo_assets/img/4x3.png"');
-      imageData.push('"https://add-to-calendar-button.com/demo_assets/img/16x9.png"');
+      imageData.push('"https://add-to-calendar-button.com/assets/img/1x1.png"');
+      imageData.push('"https://add-to-calendar-button.com/assets/img/4x3.png"');
+      imageData.push('"https://add-to-calendar-button.com/assets/img/16x9.png"');
     }
     if (imageData.length > 0) {
       schemaContent.push('"image":[\r\n' + imageData.join(',\r\n') + ']');

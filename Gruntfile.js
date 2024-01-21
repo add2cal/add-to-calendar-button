@@ -95,7 +95,7 @@ module.exports = function (grunt) {
     },
     // clean old build files
     clean: {
-      oldBuildFiles: ['dist/', 'assets/css/*.min.css', 'assets/css/*.min.css.map', 'demo_assets/css/*.min.css', 'demo_assets/css/*.min.css.map', 'demo_assets/js/*.js.css', 'demo_assets/js/*.min.js.map'],
+      oldBuildFiles: ['dist/', 'assets/css/*.min.css', 'assets/css/*.min.css.map'],
     },
     // minify css files
     cssmin: {
@@ -106,13 +106,6 @@ module.exports = function (grunt) {
             cwd: 'assets/css',
             src: ['*.css', '!*.min.css'],
             dest: 'assets/css',
-            ext: '.min.css',
-          },
-          {
-            expand: true,
-            cwd: 'demo_assets/css',
-            src: ['*.css', '!*.min.css'],
-            dest: 'demo_assets/css',
             ext: '.min.css',
           },
         ],
