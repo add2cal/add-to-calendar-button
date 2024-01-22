@@ -349,27 +349,28 @@ function atcb_decorate_data_meta(data) {
 }
 
 function atcb_decorate_data_description(data, i) {
-  if (data.dates[`${i}`].description && data.dates[`${i}`].description !== '') {
+  const cleanDescription = (desc) => desc.replace(/(\\r\\n|\\n|\\r|<br(\s*\/?)>)/g, '');
+  let description = data.dates[`${i}`].description || data.description || '';
+  if (description) {
     // remove any "wrong" line breaks
-    data.dates[`${i}`].description = data.dates[`${i}`].description.replace(/(\\r\\n|\\n|\\r|<br(\s|\s\/|\/|)>)/g, '');
-    // store a clean description copy without the URL magic for Yahoo, MS Teams, ...
-    data.dates[`${i}`].descriptionHtmlFree = atcb_rewrite_html_elements(data.dates[`${i}`].description, true);
-    // ... and iCal
-    data.dates[`${i}`].descriptionHtmlFreeICal = atcb_rewrite_html_elements(data.dates[`${i}`].description, true, true);
-    // ...and transform pseudo elements for the regular one
-    data.dates[`${i}`].description = atcb_rewrite_html_elements(data.dates[`${i}`].description);
-  } else {
-    // if not given per subEvent, we copy from the global one or set '', if not provided at all
-    if (!data.dates[`${i}`].description && data.description && data.description !== '') {
-      // remove any "wrong" line breaks
-      data.description = data.description.replace(/(\\r\\n|\\n|\\r|<br(\s|\s\/|\/|)>)/g, '');
-      // set data for subEvent
-      data.dates[`${i}`].descriptionHtmlFree = atcb_rewrite_html_elements(data.description, true);
-      data.dates[`${i}`].descriptionHtmlFreeICal = atcb_rewrite_html_elements(data.description, true, true);
-      data.dates[`${i}`].description = atcb_rewrite_html_elements(data.description);
-    } else {
-      data.dates[`${i}`].descriptionHtmlFree = data.dates[`${i}`].description = '';
+    description = cleanDescription(description);
+    // for each key in data.customVar, we replace any placeholders (%%placeholder%%) with the value
+    if (data.customVar) {
+      for (const key in data.customVar) {
+        const sanitizedKey = key.replace(/[^a-zA-Z0-9\-_.]/g, '');
+        // eslint-disable-next-line security/detect-non-literal-regexp
+        description = description.replace(new RegExp(`%%${sanitizedKey}%%`, 'g'), data.customVar[`${key}`]);
+      }
     }
+    // store a clean description copy without the URL magic for Yahoo, MS Teams, ...
+    const descriptionHtmlFree = atcb_rewrite_html_elements(description, true);
+    // ... and iCal
+    const descriptionHtmlFreeICal = atcb_rewrite_html_elements(description, true, true);
+    // ...and transform pseudo elements for the regular one
+    description = atcb_rewrite_html_elements(description);
+    data.dates[`${i}`] = { ...data.dates[`${i}`], description, descriptionHtmlFree, descriptionHtmlFreeICal };
+  } else {
+    data.dates[`${i}`].descriptionHtmlFree = data.dates[`${i}`].descriptionHtmlFreeICal = data.dates[`${i}`].description = '';
   }
   return data;
 }
@@ -420,6 +421,16 @@ function atcb_decorate_data_extend(data) {
         } else {
           data.dates[`${i}`].uid = atcb_generate_uuid();
         }
+      }
+    }
+    // for each key in data.customVar, we replace any placeholders (%%placeholder%%) in name and location with the value
+    if (data.customVar) {
+      for (const key in data.customVar) {
+        const sanitizedKey = key.replace(/[^a-zA-Z0-9\-_.]/g, '');
+        // eslint-disable-next-line security/detect-non-literal-regexp
+        data.dates[`${i}`].name = data.dates[`${i}`].name.replace(new RegExp(`%%${sanitizedKey}%%`, 'g'), data.customVar[`${key}`]);
+        // eslint-disable-next-line security/detect-non-literal-regexp
+        data.dates[`${i}`].location = data.dates[`${i}`].location.replace(new RegExp(`%%${sanitizedKey}%%`, 'g'), data.customVar[`${key}`]);
       }
     }
   }

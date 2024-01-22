@@ -187,6 +187,7 @@ const atcbWcParams = [
   'forceOverlay',
   'rsvp',
   'ty',
+  'customVar',
   'dev',
 ];
 const atcbWcProParams = [
@@ -211,6 +212,7 @@ const atcbWcProParams = [
   'fakeIOS',
   'fakeAndroid',
   'forceOverlay',
+  'customVar',
   'dev',
 ];
 const atcbWcBooleanParams = [
@@ -240,7 +242,7 @@ const atcbWcBooleanParams = [
   'forceOverlay',
   'dev',
 ];
-const atcbWcObjectParams = ['customLabels', 'ty', 'rsvp'];
+const atcbWcObjectParams = ['customLabels', 'ty', 'rsvp', 'customVar'];
 const atcbWcObjectArrayParams = ['dates'];
 const atcbWcArrayParams = ['images', 'options', 'optionsMobile', 'optionsIOS'];
 const atcbWcNumberParams = ['sequence', 'recurrence_interval', 'recurrence_count'];

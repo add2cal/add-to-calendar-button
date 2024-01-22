@@ -673,7 +673,7 @@ async function atcb_get_pro_data(licenseKey, el = null, directData = {}) {
   if (licenseKey && licenseKey !== '') {
     // Try to read data from server and log error if not possible
     try {
-      const response = await fetch((directData.dev ? 'https://caldn.blob.core.windows.net/eventdata-dev/' : 'https://event.caldn.net/') + licenseKey + '/config.json');
+      const response = await fetch((directData.dev ? 'https://event-dev.caldn.net/' : 'https://event.caldn.net/') + licenseKey + '/config.json');
       if (response.ok) {
         const data = await response.json();
         if (!data.name || data.name === '') {
