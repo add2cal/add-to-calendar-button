@@ -2,7 +2,7 @@
 <script setup lang="ts">
 import { ClipboardIcon, ClipboardDocumentCheckIcon } from '@heroicons/vue/24/outline';
 import { getHighlighterCore } from 'shikiji/core';
-import { getWasmInlined } from 'shikiji/wasm';
+import getWasm from 'shikiji/wasm';
 import githublight from 'shikiji/themes/github-light.mjs';
 import githubdark from 'shikiji/themes/github-dark.mjs';
 
@@ -13,7 +13,7 @@ const highlighter = await getHighlighterCore({
     import('shikiji/langs/javascript.mjs'),
     import('shikiji/langs/html.mjs'),
   ],
-  loadWasm: getWasmInlined
+  loadWasm: getWasm
 })
 
 const props = defineProps({
