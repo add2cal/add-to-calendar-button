@@ -192,13 +192,6 @@ function atcb_decorate_data_style(data) {
   if (!data.listStyle || data.listStyle === '') {
     data.listStyle = 'dropdown';
   }
-  // helping var
-  const isDropdown = (function () {
-    if (data.listStyle == 'dropdown' || data.listStyle == 'dropdown-static' || data.listStyle == 'dropup-static') {
-      return true;
-    }
-    return false;
-  })();
   // force click trigger on modal style
   if (data.listStyle === 'modal') {
     data.trigger = 'click';
@@ -208,15 +201,11 @@ function atcb_decorate_data_style(data) {
     if (data.buttonStyle == 'round' || data.buttonStyle == 'text' || data.buttonStyle == 'date' || data.buttonStyle == 'neumorphism') {
       data.trigger = 'click';
     }
-    // for the date style, we even block the dropdown completely and fall back to overlay
-    if (data.buttonStyle == 'date' && isDropdown) {
-      data.listStyle = 'overlay';
-    }
   } else {
     data.buttonStyle = 'default';
   }
-  // force overlay when the button label is ommited, but the list labels are not (which would make the list need to be larger than the button) - at dropdown cases
-  if ((data.buttonStyle == 'default' || data.buttonStyle == '3d' || data.buttonStyle == 'flat') && isDropdown && !data.hideTextLabelList && data.hideTextLabelButton) {
+  // force overlay when the button label is ommited, but the list labels are not (which would make the list need to be way larger than the button) - at dropdown cases
+  if ((data.buttonStyle == 'default' || data.buttonStyle == '3d' || data.buttonStyle == 'flat') && !data.hideTextLabelList && data.hideTextLabelButton && (data.listStyle == 'dropdown' || data.listStyle == 'dropdown-static' || data.listStyle == 'dropup-static')) {
     data.listStyle = 'overlay';
   }
   // force buttonsList false on date style button
