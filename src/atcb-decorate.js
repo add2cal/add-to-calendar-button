@@ -3,7 +3,7 @@
  *  Add to Calendar Button
  *  ++++++++++++++++++++++
  *
- *  Version: 2.5.8
+ *  Version: 2.5.9
  *  Creator: Jens Kuerschner (https://jenskuerschner.de)
  *  Project: https://github.com/add2cal/add-to-calendar-button
  *  License: Elastic License 2.0 (ELv2) (https://github.com/add2cal/add-to-calendar-button/blob/main/LICENSE.txt)
@@ -192,13 +192,6 @@ function atcb_decorate_data_style(data) {
   if (!data.listStyle || data.listStyle === '') {
     data.listStyle = 'dropdown';
   }
-  // helping var
-  const isDropdown = (function () {
-    if (data.listStyle == 'dropdown' || data.listStyle == 'dropdown-static' || data.listStyle == 'dropup-static') {
-      return true;
-    }
-    return false;
-  })();
   // force click trigger on modal style
   if (data.listStyle === 'modal') {
     data.trigger = 'click';
@@ -208,15 +201,11 @@ function atcb_decorate_data_style(data) {
     if (data.buttonStyle == 'round' || data.buttonStyle == 'text' || data.buttonStyle == 'date' || data.buttonStyle == 'neumorphism') {
       data.trigger = 'click';
     }
-    // for the date style, we even block the dropdown completely and fall back to overlay
-    if (data.buttonStyle == 'date' && isDropdown) {
-      data.listStyle = 'overlay';
-    }
   } else {
     data.buttonStyle = 'default';
   }
-  // force overlay when the button label is ommited, but the list labels are not (which would make the list need to be larger than the button) - at dropdown cases
-  if ((data.buttonStyle == 'default' || data.buttonStyle == '3d' || data.buttonStyle == 'flat') && isDropdown && !data.hideTextLabelList && data.hideTextLabelButton) {
+  // force overlay when the button label is ommited, but the list labels are not (which would make the list need to be way larger than the button) - at dropdown cases
+  if ((data.buttonStyle == 'default' || data.buttonStyle == '3d' || data.buttonStyle == 'flat') && !data.hideTextLabelList && data.hideTextLabelButton && (data.listStyle == 'dropdown' || data.listStyle == 'dropdown-static' || data.listStyle == 'dropup-static')) {
     data.listStyle = 'overlay';
   }
   // force buttonsList false on date style button
@@ -349,27 +338,28 @@ function atcb_decorate_data_meta(data) {
 }
 
 function atcb_decorate_data_description(data, i) {
-  if (data.dates[`${i}`].description && data.dates[`${i}`].description !== '') {
+  const cleanDescription = (desc) => desc.replace(/(\\r\\n|\\n|\\r|<br(\s*\/?)>)/g, '');
+  let description = data.dates[`${i}`].description || data.description || '';
+  if (description) {
     // remove any "wrong" line breaks
-    data.dates[`${i}`].description = data.dates[`${i}`].description.replace(/(\\r\\n|\\n|\\r|<br(\s|\s\/|\/|)>)/g, '');
-    // store a clean description copy without the URL magic for Yahoo, MS Teams, ...
-    data.dates[`${i}`].descriptionHtmlFree = atcb_rewrite_html_elements(data.dates[`${i}`].description, true);
-    // ... and iCal
-    data.dates[`${i}`].descriptionHtmlFreeICal = atcb_rewrite_html_elements(data.dates[`${i}`].description, true, true);
-    // ...and transform pseudo elements for the regular one
-    data.dates[`${i}`].description = atcb_rewrite_html_elements(data.dates[`${i}`].description);
-  } else {
-    // if not given per subEvent, we copy from the global one or set '', if not provided at all
-    if (!data.dates[`${i}`].description && data.description && data.description !== '') {
-      // remove any "wrong" line breaks
-      data.description = data.description.replace(/(\\r\\n|\\n|\\r|<br(\s|\s\/|\/|)>)/g, '');
-      // set data for subEvent
-      data.dates[`${i}`].descriptionHtmlFree = atcb_rewrite_html_elements(data.description, true);
-      data.dates[`${i}`].descriptionHtmlFreeICal = atcb_rewrite_html_elements(data.description, true, true);
-      data.dates[`${i}`].description = atcb_rewrite_html_elements(data.description);
-    } else {
-      data.dates[`${i}`].descriptionHtmlFree = data.dates[`${i}`].description = '';
+    description = cleanDescription(description);
+    // for each key in data.customVar, we replace any placeholders (%%placeholder%%) with the value
+    if (data.customVar) {
+      for (const key in data.customVar) {
+        const sanitizedKey = key.replace(/[^a-zA-Z0-9\-_.]/g, '');
+        // eslint-disable-next-line security/detect-non-literal-regexp
+        description = description.replace(new RegExp(`%%${sanitizedKey}%%`, 'g'), data.customVar[`${key}`]);
+      }
     }
+    // store a clean description copy without the URL magic for Yahoo, MS Teams, ...
+    const descriptionHtmlFree = atcb_rewrite_html_elements(description, true);
+    // ... and iCal
+    const descriptionHtmlFreeICal = atcb_rewrite_html_elements(description, true, true);
+    // ...and transform pseudo elements for the regular one
+    description = atcb_rewrite_html_elements(description);
+    data.dates[`${i}`] = { ...data.dates[`${i}`], description, descriptionHtmlFree, descriptionHtmlFreeICal };
+  } else {
+    data.dates[`${i}`].descriptionHtmlFree = data.dates[`${i}`].descriptionHtmlFreeICal = data.dates[`${i}`].description = '';
   }
   return data;
 }
@@ -420,6 +410,16 @@ function atcb_decorate_data_extend(data) {
         } else {
           data.dates[`${i}`].uid = atcb_generate_uuid();
         }
+      }
+    }
+    // for each key in data.customVar, we replace any placeholders (%%placeholder%%) in name and location with the value
+    if (data.customVar) {
+      for (const key in data.customVar) {
+        const sanitizedKey = key.replace(/[^a-zA-Z0-9\-_.]/g, '');
+        // eslint-disable-next-line security/detect-non-literal-regexp
+        data.dates[`${i}`].name = data.dates[`${i}`].name.replace(new RegExp(`%%${sanitizedKey}%%`, 'g'), data.customVar[`${key}`]);
+        // eslint-disable-next-line security/detect-non-literal-regexp
+        data.dates[`${i}`].location = data.dates[`${i}`].location.replace(new RegExp(`%%${sanitizedKey}%%`, 'g'), data.customVar[`${key}`]);
       }
     }
   }

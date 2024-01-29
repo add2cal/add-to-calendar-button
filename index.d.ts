@@ -104,6 +104,7 @@ export interface ATCBActionEventConfig {
   fakeIOS?: boolean;
   fakeAndroid?: boolean;
   forceOverlay?: boolean;
+  customVar?: CustomLabelsObjectType;
   dev?: boolean;
 }
 
@@ -181,6 +182,7 @@ export type AddToCalendarButtonType = {
   fakeAndroid?: boolean | string;
   forceOverlay?: boolean | string;
   instance?: number | string;
+  customVar?: CustomLabelsObjectType | string;
   dev?: boolean | string;
 };
 

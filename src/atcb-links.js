@@ -3,7 +3,7 @@
  *  Add to Calendar Button
  *  ++++++++++++++++++++++
  *
- *  Version: 2.5.8
+ *  Version: 2.5.9
  *  Creator: Jens Kuerschner (https://jenskuerschner.de)
  *  Project: https://github.com/add2cal/add-to-calendar-button
  *  License: Elastic License 2.0 (ELv2) (https://github.com/add2cal/add-to-calendar-button/blob/main/LICENSE.txt)
@@ -385,7 +385,7 @@ function atcb_generate_msteams(data, date, subEvent = 'all') {
     urlParts.push('location=' + locationString);
     locationString += ' // '; // preparing the workaround putting the location into the description, since the native field is not supported yet
   }
-  if (date.descriptionHtmlFree != null && date.descriptionHtmlFree != '') {
+  if (date.descriptionHtmlFree && date.descriptionHtmlFree != '') {
     // using descriptionHtmlFree instead of description, since Teams does not support html tags
     urlParts.push('content=' + locationString + encodeURIComponent(date.descriptionHtmlFree));
   }
@@ -402,8 +402,11 @@ function atcb_open_cal_url(data, type, url, subscribe = false, subEvent = null, 
       const urlType = subscribe ? 's' : 'o';
       const query = (function () {
         const parts = [];
-        if (data.attendee != null && data.attendee != '') {
+        if (data.attendee && data.attendee !== '') {
           parts.push('attendee=' + encodeURIComponent(data.attendee));
+        }
+        if (data.customVar && typeof data.customVar === 'object' && Object.keys(data.customVar).length > 0) {
+          parts.push('customvar=' + encodeURIComponent(JSON.stringify(data.customVar)));
         }
         if (data.dates && data.dates.length > 1 && subEvent !== null && subEvent !== 'all') {
           parts.push('sub-event=' + subEvent);
@@ -436,9 +439,10 @@ function atcb_generate_ical(host, data, subEvent = 'all', keyboardTrigger = fals
   const filename = atcb_determine_ical_filename(data, subEvent);
   // check for a given explicit file...
   const givenIcsFile = (function () {
-    // ignore a given file, if there is an attendee provided at the host level, as this would need to be added to the file
+    // ignore a given file, if there is an attendee or customVar provided at the host level, as this would need to be added to the file
     const potentialHostAttendee = host.host.getAttribute('attendee') || '';
-    if (data.attendee && data.attendee !== '' && potentialHostAttendee !== '') {
+    const potentialHostCustomVar = host.host.getAttribute('customVar') || '';
+    if ((data.attendee && data.attendee !== '' && potentialHostAttendee !== '') || (data.customVar && data.customVar !== '' && potentialHostCustomVar !== '')) {
       return '';
     }
     // otherwise, we check for a given explicit file
@@ -457,11 +461,6 @@ function atcb_generate_ical(host, data, subEvent = 'all', keyboardTrigger = fals
   }
   // else, we directly load it (not if iOS and WebView - will be catched further down - except it is explicitely bridged)
   if (givenIcsFile !== '' && (!atcbIsiOS() || !atcbIsWebView() || data.bypassWebViewCheck)) {
-    // replace the protocol at givenIcsFile (https or http) with webcal for non-Safari on iOS browsers. Opens the subscription dialog, but best we get atm
-    if (atcbIsiOS() && !atcbIsSafari()) {
-      atcb_save_file(givenIcsFile.replace(/^https?:\/\//, 'webcal://'), filename);
-      return;
-    }
     atcb_save_file(givenIcsFile, filename);
     return;
   }

@@ -5,7 +5,7 @@
  *
  * Style: Default
  *
- * Version: 2.5.8
+ * Version: 2.5.9
  * Creator: Jens Kuerschner (https://jenskuerschner.de)
  * Project: https://github.com/add2cal/add-to-calendar-button
  * License: Elastic License 2.0 (ELv2) (https://github.com/add2cal/add-to-calendar-button/blob/main/LICENSE.txt)
@@ -33,6 +33,7 @@
   --btn-border-radius: 6px;
   --btn-padding-x: 1em;
   --btn-padding-y: .65em;
+  --btn-font-weight: 600;
   --btn-text: #333;
   --btn-hover-text: #000;
   --btn-shadow: rgba(0 0 0 / 10%) 0 4px 10px -2px, rgba(0 0 0 / 15%) 0 2px 2px -1px;
@@ -62,6 +63,7 @@
   --modal-btn-secondary-background: #e2e1e6;
   --modal-btn-hover-background: #fff;
   --modal-btn-border: #d2d2d2;
+  --modal-btn-font-weight: 600;
   --modal-btn-text: #2e2e2e;
   --modal-btn-hover-text: #161616;
   --modal-btn-secondary-text: #666567;
@@ -190,7 +192,7 @@
   display: flex;
   font-family: var(--font);
   font-size: 1em;
-  font-weight: 600;
+  font-weight: var(--btn-font-weight);
   justify-content: center;
   line-height: 1.5em;
   margin: .13em;
@@ -562,7 +564,7 @@ a.atcb-modal-btn {
   display: inline-block;
   font-family: var(--font);
   font-size: .9em;
-  font-weight: 600;
+  font-weight: var(--modal-btn-font-weight);
   line-height: 1em;
   margin: .625em;
   padding: 1em 1.25em;
