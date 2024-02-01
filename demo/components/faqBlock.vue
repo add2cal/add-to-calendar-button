@@ -165,13 +165,13 @@ let wpUrl = (function () {
           <div v-if="locale=='en'" itemprop="text">
             Yes. The Add to Calendar Button in its Opens Source version is free to use for everyone. You can use it for your personal projects as well as for your business.<br />
             This is even guaranteed by the <a href="https://archiveprogram.github.com/" target="_blank" rel="noopener">GitHub Archive Program</a>!<br />
-            Still, mind the license, which is available at the <a href="https://github.com/add2cal/add-to-calendar-button/blob/main/LICENSE.txt" target="_blank" rel="noopener">code repository</a>.<br />
+            Still, mind the license, which is available at the <a href="https://github.com/add2cal/add-to-calendar-button/blob/main/LICENSE.txt" target="_blank" rel="license">code repository</a>.<br />
             Bottom line, it is free as long as you <u>do not remove the copyright information</u> and <u>do not build your own managed event sharing solution</u> on top of it!
           </div>
           <div v-else itemprop="text">
             Ja. Der Add to Calendar Button in seiner Open Source Version ist für jeden kostenfrei nutzbar. Du kannst ihn für deine persönlichen Projekte ebenso nutzen wie für dein Unternehmen.<br />
             Dies wird sogar durch das <a href="https://archiveprogram.github.com/" target="_blank" rel="noopener">GitHub Archive Program</a> garantiert!<br />
-            Beachte jedoch die Lizenz, die im <a href="https://github.com/add2cal/add-to-calendar-button/blob/main/LICENSE.txt" target="_blank" rel="noopener">Code-Repository</a> einsehbar ist.<br />
+            Beachte jedoch die Lizenz, die im <a href="https://github.com/add2cal/add-to-calendar-button/blob/main/LICENSE.txt" target="_blank" rel="license">Code-Repository</a> einsehbar ist.<br />
             Zusammengefasst ist der Button kostenfrei, solange du <u>nicht die Urheberrechts-Informationen entfernst</u> und <u>keine eigene Event-Sharing-Lösung auf Basis des Add to Calendar Buttons entwickelst</u>!
           </div>
         </DisclosurePanel>

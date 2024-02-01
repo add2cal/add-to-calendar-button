@@ -60,7 +60,7 @@ watch(showMC, val => {
         <LayoutAttrs v-model="data.layout" />
         <div class="mx-auto mt-8 text-center text-xs">
           {{ t('labels.proConfig') }}
-          <a class="mt-1 block" target="_blank" rel="noopener" :href="'https://add-to-calendar-pro.com' + (locale !== 'en' ? '/' + locale : '')">
+          <a class="mt-1 block" target="_blank" rel="author" :href="'https://add-to-calendar-pro.com' + (locale !== 'en' ? '/' + locale : '')">
             {{ t('labels.discoverPro') }}
             <ArrowTopRightOnSquareIcon class="-mt-0.5 mr-0.5 inline-block h-3 w-3" aria-hidden="true" />
           </a>

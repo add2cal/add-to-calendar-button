@@ -989,7 +989,7 @@ onUnmounted(() => {
           </p>
           <ol class="ml-6 list-decimal pb-4 pt-2">
             <li class="text-left">Default: Includes everything and therefore reduces the risk of failure.</li>
-            <li class="text-left">no-pro: This is basically the default, if you are not using the <a target="_blank" rel="noopener" href="https://add-to-calendar-pro.com">PRO version</a> of the script.</li>
+            <li class="text-left">no-pro: This is basically the default, if you are not using the <a target="_blank" rel="author" href="https://add-to-calendar-pro.com">PRO version</a> of the script.</li>
             <li class="text-left">unstyle: This is the default, but without integrated css (style).</li>
             <li class="text-left">no-pro-unstyle: No integrated css, no PRO functionalities.</li>
           </ol>
@@ -1013,7 +1013,7 @@ onUnmounted(() => {
           </p>
           <ol class="ml-6 list-decimal pb-4 pt-2">
             <li class="text-left">Default: Beinhaltet alles und reduziert das Risiko von Fehlfunktionen.</li>
-            <li class="text-left">no-pro: Entspricht dem Default, solange du nicht die <a target="_blank" rel="noopener" href="https://add-to-calendar-pro.com/de">PRO version</a> nutzt.</li>
+            <li class="text-left">no-pro: Entspricht dem Default, solange du nicht die <a target="_blank" rel="author" href="https://add-to-calendar-pro.com/de">PRO version</a> nutzt.</li>
             <li class="text-left">unstyle: Entspricht dem Default, aber ohne CSS-Informationen (Style).</li>
             <li class="text-left">no-pro-unstyle: Kein integriertes css, keine PRO-Funktionalitäten.</li>
           </ol>
