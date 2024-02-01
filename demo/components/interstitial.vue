@@ -10,7 +10,7 @@ const { locale } = useI18n();
       </div>
       <div class="flex flex-col items-center gap-8 pb-12 pt-8 sm:col-span-2 sm:pb-8 md:col-span-1 md:pb-12 md:pt-10 lg:pb-16 lg:pt-14">
         <h3 class="text-center drop-shadow-lg">{{ $t('labels.discoverProDetails_short') }}</h3>
-        <a target="_blank" rel="noopener" :href="'https://add-to-calendar-pro.com' + (locale !== 'en' ? '/' + locale : '')" class="button-primary-animated text-white">{{ $t('labels.discoverPro') }}</a>
+        <a target="_blank" rel="author" :href="'https://add-to-calendar-pro.com' + (locale !== 'en' ? '/' + locale : '')" class="button-primary-animated text-white">{{ $t('labels.discoverPro') }}</a>
       </div>
     </div>
   </div>

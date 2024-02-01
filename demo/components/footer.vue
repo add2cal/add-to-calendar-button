@@ -31,7 +31,7 @@ function topFunction() {
           <h2 class="text-3xl drop-shadow-lg md:text-4xl lg:text-5xl">{{ $t('labels.discoverPro') }}</h2>
           <p class="mt-3 opacity-70 lg:mt-6">{{ $t('labels.discoverProDetails') }}</p>
         </div>
-        <a target="_blank" rel="noopener" :href="'https://add-to-calendar-pro.com' + (locale !== 'en' ? '/' + locale : '')" class="button-primary-animated text-white">{{ $t('labels.learnMore') }}</a>
+        <a target="_blank" rel="author" :href="'https://add-to-calendar-pro.com' + (locale !== 'en' ? '/' + locale : '')" class="button-primary-animated text-white">{{ $t('labels.learnMore') }}</a>
       </div>
     </div>
   </div>
@@ -59,12 +59,12 @@ function topFunction() {
             <NuxtLink :to="localePath('privacy-policy')">{{ $t('navigation.privacy-policy') }}</NuxtLink>
             <span class="inline sm:hidden md:inline"> | </span>
             <span class="inline whitespace-nowrap pt-0 sm:block sm:pt-2 md:inline md:pt-0">
-              <a href="https://github.com/add2cal/add-to-calendar-button/blob/main/LICENSE.txt" class="inline-block p-1 sm:p-0" target="_blank" rel="noopener">
+              <a href="https://github.com/add2cal/add-to-calendar-button/blob/main/LICENSE.txt" class="inline-block p-1 sm:p-0" target="_blank" rel="license">
                 {{ $t('navigation.license') }}
                 <ArrowTopRightOnSquareIcon class="-mt-0.5 mr-0.5 inline-block h-3 w-3" aria-hidden="true" />
               </a>
               |
-              <a href="https://github.com/add2cal/add-to-calendar-button/discussions" class="inline-block p-1 sm:p-0" target="_blank" rel="noopener">
+              <a href="https://github.com/add2cal/add-to-calendar-button/discussions" class="inline-block p-1 sm:p-0" target="_blank" rel="help">
                 {{ $t('navigation.help') }}
                 <ArrowTopRightOnSquareIcon class="-mt-0.5 mr-0.5 inline-block h-3 w-3" aria-hidden="true" />
               </a>

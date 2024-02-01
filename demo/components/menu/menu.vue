@@ -11,7 +11,7 @@ const { locale } = useI18n();
   <NuxtLink :to="{path: localePath('index'), hash: '#installation'}" class="menu-item" @click="emit('close-mobile-menu')"> {{ $t('navigation.installation') }} </NuxtLink>
   <NuxtLink :to="localePath('configuration')" class="menu-item" @click="emit('close-mobile-menu')"> {{ $t('navigation.configuration') }} </NuxtLink>
   <NuxtLink :to="localePath('examples')" class="menu-item" @click="emit('close-mobile-menu')"> {{ $t('navigation.examples') }} </NuxtLink>
-  <a class="menu-item-pro" target="_self" rel="noopener" :href="'https://add-to-calendar-pro.com' + (locale !== 'en' ? '/' + locale : '')" @click="emit('close-mobile-menu')"> <SparklesIcon class="mr-2 inline-block h-5 w-5" aria-hidden="true" />go PRO </a>
+  <a class="menu-item-pro" target="_self" rel="author" :href="'https://add-to-calendar-pro.com' + (locale !== 'en' ? '/' + locale : '')" @click="emit('close-mobile-menu')"> <SparklesIcon class="mr-2 inline-block h-5 w-5" aria-hidden="true" />go PRO </a>
 </template>
 
 <style scoped>
