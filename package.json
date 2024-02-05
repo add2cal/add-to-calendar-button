@@ -95,7 +95,7 @@
     "build": "npx grunt"
   },
   "dependencies": {
-    "timezones-ical-library": "^1.7.2"
+    "timezones-ical-library": "^1.8.0"
   },
   "devDependencies": {
     "@open-wc/testing": "^4.0.0",
