@@ -258,7 +258,7 @@ onUnmounted(() => {
               :name="$t('demo_data.name')"
               :startDate="defaultDate"
               options="'Apple','Google','iCal'"
-              size="5"
+              size="7"
               lightMode="bodyScheme"
               :language="locale"
               hideRichData
@@ -274,7 +274,7 @@ onUnmounted(() => {
   name="{{ $t('demo_data.name') }}"
   startDate="{{ defaultDate }}"
   options="'Apple','Google','iCal'"
-  size="5"
+  size="7"
   lightMode="bodyScheme"{{ defaultLang }}
 &gt;&lt;/add-to-calendar-button&gt;
 </pre
