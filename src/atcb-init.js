@@ -3,7 +3,7 @@
  *  Add to Calendar Button
  *  ++++++++++++++++++++++
  *
- *  Version: 2.5.9
+ *  Version: 2.5.10
  *  Creator: Jens Kuerschner (https://jenskuerschner.de)
  *  Project: https://github.com/add2cal/add-to-calendar-button
  *  License: Elastic License 2.0 (ELv2) (https://github.com/add2cal/add-to-calendar-button/blob/main/LICENSE.txt)
@@ -519,7 +519,10 @@ async function atcb_action(inputData, triggerElement, keyboardTrigger = false) {
   let data = await (async function () {
     const cleanedInput = atcb_secure_content(inputData);
     // pull data from PRO server, if key is given
-    if (cleanedInput.proKey != null && cleanedInput.proKey != '') {
+    if (cleanedInput.prokey && cleanedInput.prokey !== '') {
+      cleanedInput.proKey = cleanedInput.prokey;
+    }
+    if (cleanedInput.proKey && cleanedInput.proKey !== '') {
       const proData = await atcb_get_pro_data(cleanedInput.proKey, null, cleanedInput);
       if (proData.name && proData.name != '') {
         return proData;
@@ -540,11 +543,11 @@ async function atcb_action(inputData, triggerElement, keyboardTrigger = false) {
   if (triggerElement) {
     root = triggerElement;
     // overriding the identifier with the id of the triggering element
-    if (triggerElement.id != null && triggerElement.id != '') {
+    if (triggerElement.id && triggerElement.id !== '') {
       data.identifier = triggerElement.id;
     } else {
       // however, if the trigger has no id, we set it with the identifier or a default fallback
-      if (data.identifier != null && data.identifier != '' && /^[\w\-_]+$/.test(data.identifier)) {
+      if (data.identifier && data.identifier != '' && /^[\w\-_]+$/.test(data.identifier)) {
         data.identifier = 'atcb-btn-' + data.identifier;
       } else {
         data.identifier = 'atcb-btn-custom';
