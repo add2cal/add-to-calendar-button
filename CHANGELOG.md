@@ -2,6 +2,7 @@
 
 ## Version 2
 
+- v2.6 : useUserTZ, css ::part, formatting of urls in description
 - v2.5 : PRO option and more
   - ✨ [introducing PRO offering](https://add-to-calendar-pro.com/)
   - ⚠️ Breaking: default branding activated in order to support this free open source project (if you do not want to support this project, use the hideBranding option to disable it)

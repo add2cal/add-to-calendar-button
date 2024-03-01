@@ -3,7 +3,7 @@
  *  Add to Calendar Button
  *  ++++++++++++++++++++++
  *
- *  Version: 2.5.10
+ *  Version: 2.6.0
  *  Creator: Jens Kuerschner (https://jenskuerschner.de)
  *  Project: https://github.com/add2cal/add-to-calendar-button
  *  License: Elastic License 2.0 (ELv2) (https://github.com/add2cal/add-to-calendar-button/blob/main/LICENSE.txt)
@@ -162,19 +162,21 @@ function atcb_generate_label_content(data, parent, type, icon, text, oneOption) 
     }
   }
   // add icon and text label (not in the date style trigger case)
-  if (data.buttonStyle === 'date' && (type == 'trigger' || oneOption)) {
+  if (data.buttonStyle === 'date' && (type === 'trigger' || oneOption)) {
     return;
   }
   if (icon) {
     const iconEl = document.createElement('div');
     iconEl.classList.add('atcb-icon');
+    iconEl.setAttribute('part', type === 'trigger' ? 'atcb-button-icon' : 'atcb-list-icon');
     iconEl.classList.add(`atcb-icon-${type}`);
     iconEl.innerHTML = atcbIcon[`${type}`];
     parent.append(iconEl);
   }
-  if (((type == 'trigger' || oneOption) && !data.hideTextLabelButton) || (!oneOption && type != 'trigger' && !data.hideTextLabelList)) {
+  if (((type === 'trigger' || oneOption) && !data.hideTextLabelButton) || (!oneOption && type !== 'trigger' && !data.hideTextLabelList)) {
     const textEl = document.createElement('span');
     textEl.classList.add('atcb-text');
+    textEl.setAttribute('part', type === 'trigger' ? 'atcb-button-text' : 'atcb-list-text');
     textEl.textContent = text;
     parent.append(textEl);
   }
@@ -196,6 +198,7 @@ function atcb_generate_button(host, button, data) {
     // generate the wrapper div
     const buttonTriggerWrapper = document.createElement('div');
     buttonTriggerWrapper.classList.add('atcb-button-wrapper');
+    buttonTriggerWrapper.setAttribute('part', 'atcb-button-wrapper');
     if (data.rtl) {
       buttonTriggerWrapper.classList.add('atcb-rtl');
     }
@@ -204,6 +207,7 @@ function atcb_generate_button(host, button, data) {
     // generate the button trigger div
     const buttonTrigger = document.createElement('button');
     buttonTrigger.classList.add('atcb-button');
+    buttonTrigger.setAttribute('part', 'atcb-button');
     if (data.disabled) {
       buttonTrigger.setAttribute('disabled', true);
     }
@@ -265,6 +269,7 @@ function atcb_generate_button(host, button, data) {
 function atcb_generate_dropdown_list(host, data) {
   const optionsList = document.createElement('div');
   optionsList.classList.add('atcb-list');
+  optionsList.setAttribute('part', 'atcb-list');
   optionsList.role = 'list';
   if (data.rtl) {
     optionsList.classList.add('atcb-rtl');
@@ -274,6 +279,7 @@ function atcb_generate_dropdown_list(host, data) {
   data.options.forEach(function (option) {
     const optionItem = document.createElement('div');
     optionItem.classList.add('atcb-list-item');
+    optionItem.setAttribute('part', 'atcb-list-item');
     optionItem.role = 'link';
     optionItem.tabIndex = 0;
     listCount++;
@@ -286,6 +292,7 @@ function atcb_generate_dropdown_list(host, data) {
   if (data.listStyle === 'modal') {
     const optionItem = document.createElement('div');
     optionItem.classList.add('atcb-list-item', 'atcb-list-item-close');
+    optionItem.setAttribute('part', 'atcb-list-item-close');
     optionItem.role = 'button';
     optionItem.tabIndex = 0;
     listCount++;
@@ -416,6 +423,7 @@ async function atcb_create_modal(host, data, icon = '', headline, content = '', 
   // create box
   const modal = document.createElement('div');
   modal.classList.add('atcb-modal-box');
+  modal.setAttribute('part', 'atcb-modal-box');
   if (data.rtl) {
     modal.classList.add('atcb-rtl');
   }

@@ -26,6 +26,7 @@ const configOptions = [
   "endDate",
   "endTime",
   "timeZone",
+  "useUserTZ",
   "location",
   "status",
   "sequence",

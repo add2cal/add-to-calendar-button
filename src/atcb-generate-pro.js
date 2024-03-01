@@ -3,7 +3,7 @@
  *  Add to Calendar Button
  *  ++++++++++++++++++++++
  *
- *  Version: 2.5.10
+ *  Version: 2.6.0
  *  Creator: Jens Kuerschner (https://jenskuerschner.de)
  *  Project: https://github.com/add2cal/add-to-calendar-button
  *  License: Elastic License 2.0 (ELv2) (https://github.com/add2cal/add-to-calendar-button/blob/main/LICENSE.txt)
@@ -405,6 +405,7 @@ async function atcb_generate_rsvp(host, data, keyboardTrigger = false, inline = 
     rsvpHost = host;
     const rsvpInlineWrapper = document.createElement('div');
     rsvpInlineWrapper.classList.add('atcb-modal-box', 'rsvp-inline-wrapper');
+    rsvpInlineWrapper.setAttribute('part', 'atcb-modal-box');
     if (data.rtl) {
       rsvpInlineWrapper.classList.add('atcb-rtl');
     }
