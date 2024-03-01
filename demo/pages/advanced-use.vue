@@ -1,5 +1,4 @@
 <script setup lang="ts">
-// @ts-expect-error - named import may TS-fail here due to the workspace type integration of the script
 import { atcb_action } from "add-to-calendar-button";
 import { ArrowTopRightOnSquareIcon } from '@heroicons/vue/24/outline';
 import Interstitial from '@/components/interstitial.vue';
@@ -332,6 +331,74 @@ onUnmounted(() => {
           </div>
         </div>
         <div v-if="locale=='en'">
+          <h3 class="mb-3 mt-8">Target elements via ::part</h3>
+          <p>
+            You can use the <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/::part" target="_blank" rel="noopener">css ::part selector <ArrowTopRightOnSquareIcon class="-mt-0.5 mr-0.5 inline-block h-4 w-4" aria-hidden="true" /></a> to directly style pre-selected elements from your regular
+            css code.
+          </p>
+          <p>The following elements are available for this approach:</p>
+          <ul class="ml-6 list-disc pb-4 pt-2 text-sm">
+            <li class="text-left">atcb-button-wrapper</li>
+            <li class="text-left">atcb-button</li>
+            <li class="text-left">atcb-button-icon</li>
+            <li class="text-left">atcb-button-text</li>
+            <li class="text-left">atcb-list-wrapper</li>
+            <li class="text-left">atcb-list</li>
+            <li class="text-left">atcb-list-item</li>
+            <li class="text-left">atcb-list-item-close</li>
+            <li class="text-left">atcb-list-icon</li>
+            <li class="text-left">atcb-list-text</li>
+            <li class="text-left">atcb-modal-box</li>
+          </ul>
+        </div>
+        <div v-else>
+          <h3 class="mb-3 mt-8">Elemente via ::part selektieren</h3>
+          <p>
+            Du kannst den <a href="https://developer.mozilla.org/de/docs/Web/CSS/::part" target="_blank" rel="noopener">css ::part selector <ArrowTopRightOnSquareIcon class="-mt-0.5 mr-0.5 inline-block h-4 w-4" aria-hidden="true" /></a> nutzen, um vorselektierte Elemente direkt über deinen regulären
+            CSS-Code zu stylen.
+          </p>
+          <p>Nachfolgende Elemente stehen hierzu zur Verfügung:</p>
+          <ul class="ml-6 list-disc pb-4 pt-2 text-sm">
+            <li class="text-left">atcb-button-wrapper</li>
+            <li class="text-left">atcb-button</li>
+            <li class="text-left">atcb-button-icon</li>
+            <li class="text-left">atcb-button-text</li>
+            <li class="text-left">atcb-list-wrapper</li>
+            <li class="text-left">atcb-list</li>
+            <li class="text-left">atcb-list-item</li>
+            <li class="text-left">atcb-list-item-close</li>
+            <li class="text-left">atcb-list-icon</li>
+            <li class="text-left">atcb-list-text</li>
+            <li class="text-left">atcb-modal-box</li>
+          </ul>
+        </div>
+        <div class="block w-full justify-between pt-4 md:flex">
+          <div class="flex w-full flex-none justify-center p-6 pt-8 md:w-[300px]">
+            <add-to-calendar-button id="css-part-example" :name="$t('demo_data.name')" :startDate="defaultDate" options="'Apple','Google','iCal'" lightMode="bodyScheme" :language="locale" hideRichData> </add-to-calendar-button>
+          </div>
+          <div class="flex-1 overflow-x-auto">
+            <LazyCodeBlock>
+              <pre>
+&lt;add-to-calendar-button
+  id="css-part-example"
+  name="{{ $t('demo_data.name') }}"
+  startDate="{{ defaultDate }}"
+  options="'Apple','Google','iCal'"
+  lightMode="bodyScheme"{{ defaultLang }}
+&gt;&lt;/add-to-calendar-button&gt;
+
+&lt;style&gt;
+  add-to-calendar-button#css-part-example::part(atcb-button) {
+    background-color: #264f3c;
+    color: #fff;
+  }
+&lt;/style&gt;
+</pre
+              >
+            </LazyCodeBlock>
+          </div>
+        </div>
+        <div v-if="locale=='en'">
           <h3 class="mb-3 mt-8">Use a custom object as button</h3>
           <p>
             Last but not least, you could also stick to a provided style, but use your own triggering object.<br />
@@ -374,7 +441,7 @@ onUnmounted(() => {
         <p class="mt-6">
           <span class="font-semibold">{{ $t('content.advanced.supported_tags') }}:</span>
         </p>
-        <ul class="ml-6 list-disc pb-4 pt-2">
+        <ul class="ml-6 list-disc pb-4 pt-2 text-sm">
           <li class="text-left">[hr]</li>
           <li class="text-left">[p] ... [/p]</li>
           <li class="text-left">[br]</li>
@@ -749,7 +816,7 @@ onUnmounted(() => {
           <p>Wir speichern alle Events direct im Data Layer, der wiederum bspw. vom Google Tag Manager und Google Analytics gelesen werden kann.</p>
         </div>
         <p class="mt-6 font-semibold">{{ $t('content.advanced.available_events') }}:</p>
-        <ul class="ml-6 list-disc py-3">
+        <ul class="ml-6 list-disc py-3 text-sm">
           <li class="text-left">initialization</li>
           <li class="text-left">openList</li>
           <li class="text-left">closeList</li>
@@ -1043,3 +1110,10 @@ onUnmounted(() => {
     </div>
   </div>
 </template>
+
+<style scoped>
+add-to-calendar-button#css-part-example::part(atcb-button) {
+  background-color: #264f3c;
+  color: #fff;
+}
+</style>

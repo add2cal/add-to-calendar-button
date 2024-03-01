@@ -3,7 +3,7 @@
  *  Add to Calendar Button
  *  ++++++++++++++++++++++
  *
- *  Version: 2.5.10
+ *  Version: 2.6.0
  *  Creator: Jens Kuerschner (https://jenskuerschner.de)
  *  Project: https://github.com/add2cal/add-to-calendar-button
  *  License: Elastic License 2.0 (ELv2) (https://github.com/add2cal/add-to-calendar-button/blob/main/LICENSE.txt)
@@ -13,7 +13,7 @@
 
 import { tzlib_get_offset } from 'timezones-ical-library';
 import { atcbIsiOS, atcbIsAndroid, atcbIsBrowser, atcbValidRecurrOptions, atcbInvalidSubscribeOptions, atcbiOSInvalidOptions, atcbWcBooleanParams } from './atcb-globals.js';
-import { atcb_format_datetime, atcb_rewrite_html_elements, atcb_generate_uuid } from './atcb-util.js';
+import { atcb_translate_via_time_zone, atcb_format_datetime, atcb_rewrite_html_elements, atcb_generate_uuid } from './atcb-util.js';
 import { availableLanguages, rtlLanguages } from './atcb-i18n';
 
 // CLEAN DATA BEFORE FURTHER VALIDATION (CONSIDERING SPECIAL RULES AND SCHEMES)
@@ -279,8 +279,12 @@ function atcb_decorate_data_dates(data) {
   if (data.dates && data.dates.length > 0) {
     for (let i = 0; i < data.dates.length; i++) {
       // get global time zone, if not set within the date block, but globally
-      if (!data.dates[`${i}`].timeZone) {
+      if (!data.dates[`${i}`].timeZone && data.timeZone) {
         data.dates[`${i}`].timeZone = data.timeZone;
+      }
+      // get global useUserTZ, if not set within the date block, but globally
+      if (!data.dates[`${i}`].useUserTZ && data.useUserTZ) {
+        data.dates[`${i}`].useUserTZ = data.useUserTZ;
       }
       // cleanup different date-time formats
       const cleanedUpDates = atcb_date_cleanup(data.dates[`${i}`]);
@@ -296,10 +300,11 @@ function atcb_decorate_data_dates(data) {
     }
   } else {
     // in the single case, we do the same, but without the looping
-    const cleanedUpDates = atcb_date_cleanup(data);
-    // in addition, we directly move this information into the dates array block for better consistency at the next steps
     data.dates = [];
     data.dates[0] = new Object();
+    if (data.useUserTZ) data.dates[0].useUserTZ = data.useUserTZ;
+    const cleanedUpDates = atcb_date_cleanup(data);
+    // in addition, we directly move this information into the dates array block for better consistency at the next steps
     data.startTime = data.dates[0].startTime = cleanedUpDates.startTime;
     data.endTime = data.dates[0].endTime = cleanedUpDates.endTime;
     data.timeZone = data.dates[0].timeZone = cleanedUpDates.timeZone;
@@ -466,8 +471,19 @@ function atcb_date_cleanup(dateTimeData) {
     }
   });
   // update time zone, if special case set to go for the user's browser
-  if (dateTimeData.timeZone == 'currentBrowser') {
-    dateTimeData.timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+  if (dateTimeData.timeZone === 'currentBrowser' || dateTimeData.useUserTZ) {
+    const browserTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone || 'GMT';
+    // for the useUserTZ, we also recalculate the start and end date (and time) to the user's time zone based on the given time zone
+    if (dateTimeData.useUserTZ && dateTimeData.startTime && dateTimeData.startTime !== '' && dateTimeData.endTime && dateTimeData.endTime !== '') {
+      const newStartDateTime = atcb_translate_via_time_zone(dateTimeData.startDate, dateTimeData.startTime, dateTimeData.timeZone, browserTimezone);
+      const newEndDateTime = atcb_translate_via_time_zone(dateTimeData.endDate, dateTimeData.endTime, dateTimeData.timeZone, browserTimezone);
+      dateTimeData.startDate = newStartDateTime[0];
+      dateTimeData.startTime = newStartDateTime[1];
+      dateTimeData.endDate = newEndDateTime[0];
+      dateTimeData.endTime = newEndDateTime[1];
+    }
+    // in both cases, the time zone is set to the user's time zone
+    dateTimeData.timeZone = browserTimezone;
   }
   return dateTimeData;
 }

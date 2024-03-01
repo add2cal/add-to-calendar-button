@@ -22,7 +22,7 @@
     ]
   },
 
-  "extends": ["plugin:@typescript-eslint/recommended", "eslint:recommended", "plugin:security/recommended", "plugin:prettier/recommended"],
+  "extends": ["plugin:@typescript-eslint/recommended", "eslint:recommended", "plugin:security/recommended-legacy", "plugin:prettier/recommended"],
 
   "plugins": ["@typescript-eslint", "prettier"],
 

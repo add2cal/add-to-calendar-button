@@ -3,7 +3,7 @@
  *  Add to Calendar Button
  *  ++++++++++++++++++++++
  *
- *  Version: 2.5.10
+ *  Version: 2.6.0
  *  Creator: Jens Kuerschner (https://jenskuerschner.de)
  *  Project: https://github.com/add2cal/add-to-calendar-button
  *  License: Elastic License 2.0 (ELv2) (https://github.com/add2cal/add-to-calendar-button/blob/main/LICENSE.txt)
@@ -177,6 +177,32 @@ function atcb_format_datetime(datetime, style = 'delimiters', includeTime = true
   })();
   const output = removeZ ? datetime.toISOString().replace(regex, '').replace('Z', '') : datetime.toISOString().replace(regex, '');
   return output;
+}
+
+function offsetToMilliseconds(offset) {
+  const sign = offset[0] === '+' ? 1 : -1;
+  const hours = parseInt(offset.substring(1, 3), 10);
+  const minutes = parseInt(offset.substring(3, 5), 10);
+  const totalMinutes = (hours * 60 + minutes) * sign;
+  const milliseconds = totalMinutes * 60000;
+  return milliseconds;
+}
+
+function atcb_translate_via_time_zone(date, time, baseTimeZone, targetTimeZone) {
+  const dateTime = new Date(`${date}T${time}:00Z`);
+  const offset = tzlib_get_offset(baseTimeZone, date, time); // would return something like +0200
+  const dateTimeUTC = new Date(dateTime.getTime() - offsetToMilliseconds(offset));
+  const formatter = new Intl.DateTimeFormat('en-CA', {
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+    hour: '2-digit',
+    minute: '2-digit',
+    timeZone: targetTimeZone,
+    hour12: false,
+  });
+  const dateInTargetTimeZone = formatter.format(dateTimeUTC);
+  return ([date, time] = dateInTargetTimeZone.split(', '));
 }
 
 function atcb_generate_timestring(dates, language = 'en', subEvent = 'all', decorate = false, browserTimeOverride = false, enforceYear = false, hideTimeZone = false) {
@@ -432,8 +458,12 @@ function atcb_rewrite_html_elements(content, clear = false, iCalBreaks = false) 
       content = content.replace(/(\[br\s?\/?\]|\{br\s?\/?\}|(\[\/p\](?=.))|(\{\/p\}(?=.)))/gi, ' ');
     }
     // remove any pseudo elements
-    content = content.replace(/\[url\]([^|]+)\|[^[]*\[\/url\]/gi, '$1');
-    content = content.replace(/\{url\}([^|]+)\|[^[]*\{\/url\}/gi, '$1');
+    content = content.replace(/\[url\](.+)\[\/url\]/gi, (match, p1) => {
+      return p1.split('|')[0];
+    });
+    content = content.replace(/\{url\}(.+)\{\/url\}/gi, (match, p1) => {
+      return p1.split('|')[0];
+    });
     content = content.replace(/\[(|\/)(hr|p|b|strong|u|i|em|li|ul|ol|h\d)\]/gi, '');
     content = content.replace(/\{(|\/)(hr|p|b|strong|u|i|em|li|ul|ol|h\d)\}/gi, '');
     // also remove any special characters
@@ -441,14 +471,14 @@ function atcb_rewrite_html_elements(content, clear = false, iCalBreaks = false) 
     // and build html for the rest
     // supporting: br, hr, p, strong, u, i, em, li, ul, ol, h (like h1, h2, h3, ...), url (= a)
   } else {
+    content = content.replace(/\[url\]((?:(?!\[\/url\])[\w&$+.,:;=~!*'?@^%#|\s\-()[\]/])*)\[\/url\]/gi, function (match, p1) {
+      return atcb_parse_url_code(p1);
+    });
+    content = content.replace(/\{url\}((?:(?!\[\/url\])[\w&$+.,:;=~!*'?@^%#|\s\-()[\]/])*)\{\/url\}/gi, function (match, p1) {
+      return atcb_parse_url_code(p1);
+    });
     content = content.replace(/\[(\/|)(br|hr|p|b|strong|u|i|em|li|ul|ol|h\d)(\s?\/?)\]/gi, '<$1$2$3>');
     content = content.replace(/\{(\/|)(br|hr|p|b|strong|u|i|em|li|ul|ol|h\d)(\s?\/?)\}/gi, '<$1$2$3>');
-    content = content.replace(/\[url\]([\w&$+.,:;=~!*'?@^%#|\s\-()/]*)\[\/url\]/gi, function (match, p1) {
-      return atcb_parse_url_code(p1);
-    });
-    content = content.replace(/\{url\}([\w&$+.,:;=~!*'?@^%#|\s\-()/]*)\{\/url\}/gi, function (match, p1) {
-      return atcb_parse_url_code(p1);
-    });
   }
   return content;
 }
@@ -671,6 +701,7 @@ export {
   atcb_save_file,
   atcb_generate_time,
   atcb_format_datetime,
+  atcb_translate_via_time_zone,
   atcb_generate_timestring,
   atcb_secure_content,
   atcb_secure_url,

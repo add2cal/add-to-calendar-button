@@ -5,7 +5,7 @@
  *
  * Style: Date
  *
- * Version: 2.5.10
+ * Version: 2.6.0
  * Creator: Jens Kuerschner (https://jenskuerschner.de)
  * Project: https://github.com/add2cal/add-to-calendar-button
  * License: Elastic License 2.0 (ELv2) (https://github.com/add2cal/add-to-calendar-button/blob/main/LICENSE.txt)
@@ -205,17 +205,6 @@
   text-align: right;
 }
 
-.atcb-button:not(.atcb-active):hover,
-.atcb-subevent-btn:hover {
-  align-items: center;
-}
-
-.atcb-subevent-btn:hover,
-.atcb-subevent-btn:focus {
-  background-color: var(--date-btn-hover-background);
-  box-shadow: var(--date-btn-hover-shadow);  
-}
-
 .atcb-button:focus,
 .atcb-button:hover {
   background-color: var(--btn-hover-background);
@@ -225,6 +214,17 @@
 .atcb-button:focus-visible,
 .atcb-subevent-btn:focus-visible {
   outline: 2px solid var(--accent-color);
+}
+
+.atcb-button:not(.atcb-active):hover,
+.atcb-subevent-btn:hover {
+  align-items: center;
+}
+
+.atcb-subevent-btn:hover,
+.atcb-subevent-btn:focus {
+  background-color: var(--date-btn-hover-background);
+  box-shadow: var(--date-btn-hover-shadow);  
 }
 
 .atcb-button.atcb-active:not(.atcb-modal-style, .atcb-dropoverlay) {
@@ -318,14 +318,14 @@
   box-sizing: border-box;
 }
 
-.atcb-button:not(.atcb-active):hover .atcb-date-btn-details,
-.atcb-subevent-btn:hover .atcb-date-btn-details {
-  opacity: 0;
+.atcb-subevent-btn:hover .atcb-date-btn-hover,
+.atcb-button:not(.atcb-active):hover .atcb-date-btn-hover {
+  opacity: 1;
 }
 
-.atcb-button:not(.atcb-active):hover .atcb-date-btn-hover,
-.atcb-subevent-btn:hover .atcb-date-btn-hover {
-  opacity: 1;
+.atcb-subevent-btn:hover .atcb-date-btn-details,
+.atcb-button:not(.atcb-active):hover .atcb-date-btn-details {
+  opacity: 0;
 }
 
 .atcb-date-btn-headline {

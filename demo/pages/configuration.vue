@@ -183,6 +183,24 @@ definePageMeta({
                 Eine Zeitzone ist nur relevant, wenn startTime und endTime spezifiziert sind.
               </td>
             </tr>
+            <tr id="useusertz">
+              <th scope="row">useUserTZ</th>
+              <td>
+                <em>Boolean</em><br /><br /><span class="label">{{ $t('content.config.default') }}:</span>False
+              </td>
+              <td v-if="locale=='en'">
+                This option would transform time and time zone to the respective user's settings.<br /><br />
+                If you set this option to "true", the time zone would be ignored and the time would be transformed to the user's time zone.<br />
+                This is different to the artificial "browserTime" time zone, which would only transform the time zone, but not the time itself.<br />
+                <b>Use with caution, as manipulating the time zone per user can have unwanted side effects. This usually should be done by the user's calendar app!</b>
+              </td>
+              <td v-else>
+                Diese Option transformiert Zeit und Zeitzone in die Einstellungen des jeweiligen Nutzers.<br /><br />
+                Wenn du diese Option auf "true" setzt, wird die Zeitzone ignoriert und die Zeit in die des Nutzers umgerechnet.<br />
+                Dies verhält sich anders als die künstliche "browserTime"-Zeitzone, welche nur die Zeitzone, nicht aber die Zeit selbst, anpasst.<br />
+                <b>Verwende diese Option mit Bedacht, da das Manipulieren der Zeitzone pro Nutzer unerwünschte Nebeneffekte haben kann. Dies sollte normalerweise vom Kalender-Programm des Nutzers übernommen werden!</b>
+              </td>
+            </tr>
             <tr id="location">
               <th scope="row">location</th>
               <td>
@@ -301,6 +319,7 @@ definePageMeta({
                   <li>endDate</li>
                   <li>endTime</li>
                   <li>timeZone</li>
+                  <li>useUserTZ</li>
                   <li>location</li>
                   <li>status</li>
                   <li>sequence</li>
@@ -325,6 +344,7 @@ definePageMeta({
                   <li>endDate</li>
                   <li>endTime</li>
                   <li>timeZone</li>
+                  <li>useUserTZ</li>
                   <li>location</li>
                   <li>status</li>
                   <li>sequence</li>
