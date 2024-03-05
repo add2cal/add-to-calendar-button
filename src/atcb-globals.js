@@ -214,6 +214,7 @@ const atcbWcProParams = [
   'fakeAndroid',
   'forceOverlay',
   'customVar',
+  'proxy',
   'dev',
 ];
 const atcbWcBooleanParams = [
