@@ -126,7 +126,10 @@ export default defineNuxtConfig({
         { rel: 'preload', as: 'font', type: 'font/woff2', href: '/assets/fonts/inter-v12-latin-800.woff2', crossorigin: 'anonymous' },
         { rel: 'preload', as: 'font', type: 'font/woff2', href: '/assets/fonts/fira-mono-v14-latin-regular.woff2', crossorigin: 'anonymous' },
       ],
-      script: [{ async: true, defer: true, 'data-website-id': 'd178e769-c435-4de9-87e5-48b0ec339f62', src: 'https://a.add-to-calendar-button.com/atcba.js', 'data-host-url': 'https://a.add-to-calendar-button.com', 'data-domains': 'add-to-calendar-button.com' }],
+      script: 
+      process.env.NUXT_PUBLIC_DEV && process.env.NUXT_PUBLIC_DEV === 'true'
+        ? []
+        : [{ async: true, defer: true, 'data-website-id': 'd178e769-c435-4de9-87e5-48b0ec339f62', src: 'https://a.add-to-calendar-button.com/atcba.js', 'data-host-url': 'https://a.add-to-calendar-button.com', 'data-domains': 'add-to-calendar-button.com' }],
       noscript: [{ innerHTML: 'Please enable JavaScript to view this website.' }],
     },
   },
