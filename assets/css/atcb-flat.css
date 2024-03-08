@@ -46,6 +46,8 @@
   --list-close-text-hover: #777;
   --list-padding: .8em;
   --modal-text: #000;
+  --modal-text-align: left;
+  --modal-text-align-rtl: right;
   --modal-background: #f5f5f5;
   --modal-btn-bar: #bababa;
   --modal-btn-background: #f5f5f5;
@@ -56,6 +58,7 @@
   --modal-btn-text: #2e2e2e;
   --modal-btn-hover-text: #161616;
   --modal-btn-secondary-text: #676767;
+  --modal-headline-text-align: center;
   --modal-headline-text-transform: uppercase;
   --input-background: #fff;
   --status-active-text: #fff;
@@ -463,7 +466,7 @@
   box-sizing: border-box;  
   font-family: var(--font);
   line-height: 1.5em;
-  text-align: left;
+  text-align: var(--modal-text-align);
   user-select: none;
   -webkit-user-select: none;
   touch-action: manipulation;
@@ -480,7 +483,7 @@
 }
 
 .atcb-modal-box.atcb-rtl {
-  text-align: right;
+  text-align: var(--modal-text-align-rtl);
   direction: rtl;
   padding: 1.25em 1em 1.25em 2em;
 }
@@ -506,7 +509,7 @@
   line-height: 1.5em;
   padding: 1.8em 1.5em 1.3em;
   text-transform: var(--modal-headline-text-transform);
-  text-align: center;
+  text-align: var(--modal-headline-text-align);
 }
 
 .atcb-modal-icon + .atcb-modal-headline {
