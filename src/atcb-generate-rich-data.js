@@ -4,7 +4,7 @@
  *  ++++++++++++++++++++++
  *
  *  Version: 2.6.1
- *  Creator: Jens Kuerschner (https://jenskuerschner.de)
+ *  Creator: Jens Kuerschner (https://jekuer.com)
  *  Project: https://github.com/add2cal/add-to-calendar-button
  *  License: Elastic License 2.0 (ELv2) (https://github.com/add2cal/add-to-calendar-button/blob/main/LICENSE.txt)
  *  Note:    DO NOT REMOVE THE COPYRIGHT NOTICE ABOVE!
