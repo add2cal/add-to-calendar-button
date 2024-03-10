@@ -19,7 +19,7 @@ import { atcb_set_fully_successful } from './atcb-links.js';
 import { atcb_translate_hook } from './atcb-i18n.js';
 import { atcb_load_css, atcb_set_light_mode } from './atcb-init.js';
 import { atcb_log_event } from './atcb-event.js';
-import { atcb_generate_rsvp } from './atcb-generate-pro.js';
+import { atcb_generate_rsvp_form } from './atcb-generate-pro.js';
 
 // GENERATE THE ACTUAL BUTTON
 // helper function to generate the labels for the button and list options
@@ -34,8 +34,8 @@ function atcb_generate_label(host, data, parent, type, icon = false, text = '', 
         parent.addEventListener('keyup', function (event) {
           if (event.key === 'Enter' || event.code == 'Space' || (event.key === 'Alt' && event.key === 'Control' && event.code === 'Space')) {
             event.preventDefault();
-            if (type === 'rsvp' && typeof atcb_generate_rsvp === 'function') {
-              atcb_generate_rsvp(host, data, true, false, true, parent);
+            if (type === 'rsvp' && typeof atcb_generate_rsvp_form === 'function') {
+              atcb_generate_rsvp_form(host, data, parent, true);
             } else {
               atcb_toggle(host, 'auto', data, parent, true, true);
             }
@@ -45,20 +45,20 @@ function atcb_generate_label(host, data, parent, type, icon = false, text = '', 
           'touchend',
           atcb_debounce_leading((event) => {
             event.preventDefault();
-            if (type === 'rsvp' && typeof atcb_generate_rsvp === 'function') {
-              atcb_generate_rsvp(host, data, false, false, true, parent);
+            if (type === 'rsvp' && typeof atcb_generate_rsvp_form === 'function') {
+              atcb_generate_rsvp_form(host, data, parent);
             } else {
               atcb_toggle(host, 'auto', data, parent, false, true);
             }
           }),
         );
-        if (data.trigger === 'click' || (type === 'rsvp' && typeof atcb_generate_rsvp === 'function')) {
+        if (data.trigger === 'click' || (type === 'rsvp' && typeof atcb_generate_rsvp_form === 'function')) {
           parent.addEventListener(
             'mouseup',
             atcb_debounce_leading((event) => {
               event.preventDefault();
-              if (type === 'rsvp' && typeof atcb_generate_rsvp === 'function') {
-                atcb_generate_rsvp(host, data, false, false, true, parent);
+              if (type === 'rsvp' && typeof atcb_generate_rsvp_form === 'function') {
+                atcb_generate_rsvp_form(host, data, parent);
               } else {
                 atcb_toggle(host, 'auto', data, parent, false, true);
               }
@@ -389,14 +389,14 @@ function atcb_create_atcbl(host, atList = true, returnEl = false) {
 
 // FUNCTION TO CREATE MODALS
 // this is only about special communication modals - not the list style modal
-async function atcb_create_modal(host, data, icon = '', headline, content = '', buttons = [], subEvents = [], keyboardTrigger = false, goto = {}, closable = true) {
+async function atcb_create_modal(mainHost, data, icon = '', headline, content = '', buttons = [], subEvents = [], keyboardTrigger = false, goto = {}, closable = true) {
   atcbStates['active'] = data.identifier;
   // setting the stage
-  const modalHost = await atcb_generate_modal_host(host, data, false);
+  const modalHost = await atcb_generate_modal_host(mainHost, data, false);
   const bgOverlay = (function () {
     const el = modalHost.getElementById('atcb-bgoverlay');
     if (!el) {
-      const newOverlay = atcb_generate_bg_overlay(host, 'click', true, !data.hideBackground, closable);
+      const newOverlay = atcb_generate_bg_overlay(mainHost, 'click', true, !data.hideBackground, closable);
       modalHost.querySelector('.atcb-modal-host-initialized').append(newOverlay);
       return newOverlay;
     }
@@ -411,7 +411,7 @@ async function atcb_create_modal(host, data, icon = '', headline, content = '', 
   modalWrapper.focus({ preventScroll: true });
   modalWrapper.blur();
   const parentButton = (function () {
-    const hostEl = host.getElementById(data.identifier);
+    const hostEl = mainHost.getElementById(data.identifier);
     if (hostEl) {
       return hostEl;
     }
@@ -483,7 +483,7 @@ async function atcb_create_modal(host, data, icon = '', headline, content = '', 
           atcb_debounce(() => {
             atcb_log_event('openSubEventLink', modalSubEventButton.id, data.identifier);
             modalSubEventButton.blur();
-            atcb_generate_links(host, subEvents[0], data, subEvents[`${i}`], keyboardTrigger, true);
+            atcb_generate_links(mainHost, subEvents[0], data, subEvents[`${i}`], keyboardTrigger, true);
           }),
         );
       } else {
@@ -535,13 +535,13 @@ async function atcb_create_modal(host, data, icon = '', headline, content = '', 
           'click',
           atcb_debounce(() => {
             atcb_log_event('closeList', 'Modal Close Button', atcbStates['active']);
-            atcb_close(host);
+            atcb_close(mainHost);
           }),
         );
         modalButton.addEventListener('keyup', function (event) {
           if (event.key === 'Enter' || event.code == 'Space' || (event.key === 'Alt' && event.key === 'Control' && event.code === 'Space')) {
             atcb_log_event('closeList', 'Modal Close Button', atcbStates['active']);
-            atcb_toggle(host, 'close', '', '', true);
+            atcb_toggle(mainHost, 'close', '', '', true);
           }
         });
         break;
@@ -549,14 +549,14 @@ async function atcb_create_modal(host, data, icon = '', headline, content = '', 
         modalButton.addEventListener(
           'click',
           atcb_debounce(() => {
-            atcb_close(host);
-            atcb_subscribe_yahoo_modal_switch(host, data);
+            atcb_close(mainHost);
+            atcb_subscribe_yahoo_modal_switch(mainHost, data);
           }),
         );
         modalButton.addEventListener('keyup', function (event) {
           if (event.key === 'Enter' || event.code == 'Space' || (event.key === 'Alt' && event.key === 'Control' && event.code === 'Space')) {
-            atcb_toggle(host, 'close', '', '', true);
-            atcb_subscribe_yahoo_modal_switch(host, data, keyboardTrigger);
+            atcb_toggle(mainHost, 'close', '', '', true);
+            atcb_subscribe_yahoo_modal_switch(mainHost, data, keyboardTrigger);
           }
         });
         break;
@@ -564,14 +564,14 @@ async function atcb_create_modal(host, data, icon = '', headline, content = '', 
         modalButton.addEventListener(
           'click',
           atcb_debounce(() => {
-            atcb_close(host);
-            atcb_generate_links(host, goto.type, data, goto.id, keyboardTrigger, false, true);
+            atcb_close(mainHost);
+            atcb_generate_links(mainHost, goto.type, data, goto.id, keyboardTrigger, false, true);
           }),
         );
         modalButton.addEventListener('keyup', function (event) {
           if (event.key === 'Enter' || event.code == 'Space' || (event.key === 'Alt' && event.key === 'Control' && event.code === 'Space')) {
-            atcb_toggle(host, 'close', '', '', true);
-            atcb_generate_links(host, goto.type, data, goto.id, keyboardTrigger, false, true);
+            atcb_toggle(mainHost, 'close', '', '', true);
+            atcb_generate_links(mainHost, goto.type, data, goto.id, keyboardTrigger, false, true);
           }
         });
         break;

@@ -462,13 +462,12 @@
   touch-action: manipulation;
   width: 100%;
   margin-bottom: 20px;
-  max-width: 32em;
   -webkit-tap-highlight-color: transparent;
 }
 
 @media (width > 575px) {
   .atcb-modal-box {
-    min-width: 500px;
+    width: 32em;
   }
 }
 

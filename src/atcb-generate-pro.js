@@ -18,12 +18,14 @@ import { atcb_log_event } from './atcb-event.js';
 import { atcb_decorate_data } from './atcb-decorate.js';
 
 // FUNCTION TO GENERATE A THANK YOU NOTE
-async function atcb_generate_ty(host, data) {
+async function atcb_generate_ty(hostEl, dataObj) {
+  let host = hostEl;
+  let data = dataObj;
   // if host is no shadowRoot, try to get the child shadowRoot (case, if called directly)
-  if (!host.host) {
+  if (!hostEl.host) {
     host = host.shadowRoot;
     // in this case, we also decorate the data (again)
-    data = atcb_decorate_data(data);
+    data = await atcb_decorate_data(data);
   }
   // inline svg icons
   const copyIcon =
@@ -183,84 +185,12 @@ async function atcb_generate_ty(host, data) {
 }
 
 // FUNCTION TO GENERATE AN RSVP FORM
-async function atcb_generate_rsvp(host, data, keyboardTrigger = false, inline = false, directModal = false, triggerEl = null) {
+async function atcb_generate_rsvp_form(host, data, hostEl, keyboardTrigger = false) {
   /*!
    *  @preserve
    *  PER LICENSE AGREEMENT, YOU ARE NOT ALLOWED TO REMOVE OR CHANGE THIS FUNCTION!
    */
-
-  // determine whether RSVP is expired or booked out
-  const expired = (function () {
-    if (data.rsvp && data.rsvp.expires && new Date(data.rsvp.expires) < new Date()) {
-      return true;
-    }
-    return false;
-  })();
-  const bookedOut = await (async function () {
-    if (data.rsvp && data.rsvp.max && data.proKey && data.proKey !== '') {
-      try {
-        const response = await fetch('https://api.add-to-calendar-pro.com/dffb8bbd-ee5e-4a4f-a7ea-503af98ca468?prokey=' + data.proKey + (data.dev ? '&dev=true' : ''), {
-          method: 'GET',
-        });
-        if (!response.ok) {
-          throw new Error('Network response was not ok');
-        }
-        const responseJson = await response.json();
-        if (parseInt(responseJson.total) >= data.rsvp.max) {
-          return true;
-        }
-      } catch (error) {
-        console.error('Error:', error);
-      }
-    }
-    return false;
-  })();
-  if (expired || bookedOut) {
-    data.blockInteraction = true;
-  }
-  if (data.blockInteraction) {
-    data.disabled = true;
-  }
-  // if we are not calling the modal directly and do not need to render it inline, we render a button first
-  if (!directModal && !inline && triggerEl) {
-    // generate the wrapper div
-    const buttonTriggerWrapper = document.createElement('div');
-    buttonTriggerWrapper.classList.add('atcb-button-wrapper');
-    if (data.rtl) {
-      buttonTriggerWrapper.classList.add('atcb-rtl');
-    }
-    triggerEl.append(buttonTriggerWrapper);
-    atcb_set_sizes(buttonTriggerWrapper, data.sizes);
-    // generate the button trigger div
-    const buttonTrigger = document.createElement('button');
-    buttonTrigger.classList.add('atcb-button', 'atcb-click', 'atcb-single');
-    if (data.disabled) {
-      buttonTrigger.setAttribute('disabled', true);
-    }
-    if (data.hideTextLabelButton) {
-      buttonTrigger.classList.add('atcb-no-text');
-    }
-    buttonTrigger.type = 'button';
-    buttonTrigger.setAttribute('aria-expanded', false); // aria-expanded default value on button generate
-    buttonTriggerWrapper.append(buttonTrigger);
-    // determine label
-    const label = (function () {
-      if (expired) {
-        return atcb_translate_hook('label.rsvp.expired', data);
-      }
-      if (bookedOut) {
-        return atcb_translate_hook('label.rsvp.bookedout', data);
-      }
-      return atcb_translate_hook('label.rsvp', data);
-    })();
-    // generate the label incl. eventListeners
-    atcb_generate_label(host, data, buttonTrigger, 'rsvp', !data.hideIconButton, label, true);
-    if (data.debug) {
-      console.log('Add to Calendar RSVP Button "' + data.identifier + '" created');
-    }
-    return;
-  }
-  // in all other cases, we prepare the form
+  // prepare the form
   const rsvpData = data.rsvp;
   // prepare content with...
   let hiddenContent = '';
@@ -382,7 +312,7 @@ async function atcb_generate_rsvp(host, data, keyboardTrigger = false, inline = 
 
   // the host for the form now is either the host or the modal host
   let rsvpHost = null;
-  if (!inline || directModal) {
+  if (!data.inlineRsvp) {
     rsvpHost = await atcb_generate_modal_host(host, data);
     atcb_set_fullsize(rsvpHost.querySelector('.atcb-modal-host-initialized'));
     await atcb_create_modal(
@@ -409,7 +339,7 @@ async function atcb_generate_rsvp(host, data, keyboardTrigger = false, inline = 
     if (data.rtl) {
       rsvpInlineWrapper.classList.add('atcb-rtl');
     }
-    triggerEl.append(rsvpInlineWrapper);
+    hostEl.append(rsvpInlineWrapper);
     const rsvpInlineHeadline = document.createElement('div');
     rsvpInlineHeadline.classList.add('atcb-modal-headline');
     rsvpInlineWrapper.append(rsvpInlineHeadline);
@@ -421,10 +351,10 @@ async function atcb_generate_rsvp(host, data, keyboardTrigger = false, inline = 
       const atcbL = atcb_create_atcbl(rsvpHost, false, true);
       rsvpInlineWrapper.append(atcbL);
     }
-    if (expired) {
+    if (rsvpData.expired) {
       rsvpInlineContent.innerHTML = '<div class="pro"><p>' + atcb_translate_hook('label.rsvp.expired', data) + '</p></div>';
       return;
-    } else if (bookedOut) {
+    } else if (rsvpData.bookedOut) {
       rsvpInlineContent.innerHTML = '<div class="pro"><p>' + atcb_translate_hook('label.rsvp.bookedout', data) + '</p></div>';
       return;
     } else {
@@ -585,6 +515,66 @@ async function atcb_generate_rsvp(host, data, keyboardTrigger = false, inline = 
       }
     });
   }
+}
+
+async function atcb_generate_rsvp_button(host, data) {
+  const btnHostEl = host.querySelector('.atcb-initialized');
+  // generate the wrapper div
+  const buttonTriggerWrapper = document.createElement('div');
+  buttonTriggerWrapper.classList.add('atcb-button-wrapper');
+  if (data.rtl) {
+    buttonTriggerWrapper.classList.add('atcb-rtl');
+  }
+  btnHostEl.append(buttonTriggerWrapper);
+  atcb_set_sizes(buttonTriggerWrapper, data.sizes);
+  // generate the button trigger div
+  const buttonTrigger = document.createElement('button');
+  buttonTrigger.classList.add('atcb-button', 'atcb-click', 'atcb-single');
+  if (data.disabled) {
+    buttonTrigger.setAttribute('disabled', true);
+  }
+  if (data.hideTextLabelButton) {
+    buttonTrigger.classList.add('atcb-no-text');
+  }
+  buttonTrigger.type = 'button';
+  buttonTrigger.setAttribute('aria-expanded', false); // aria-expanded default value on button generate
+  buttonTriggerWrapper.append(buttonTrigger);
+  // determine label
+  const label = (function () {
+    if (data.rsvp.expired) {
+      return atcb_translate_hook('label.rsvp.expired', data);
+    }
+    if (data.rsvp.bookedOut) {
+      return atcb_translate_hook('label.rsvp.bookedout', data);
+    }
+    return atcb_translate_hook('label.rsvp', data);
+  })();
+  // generate the label incl. eventListeners
+  atcb_generate_label(host, data, buttonTrigger, 'rsvp', !data.hideIconButton, label, true);
+  if (data.debug) {
+    console.log('Add to Calendar RSVP Button "' + data.identifier + '" created');
+  }
+  return true;
+}
+
+async function atcb_check_booked_out(data) {
+  if (data.rsvp && data.rsvp.max && data.proKey && data.proKey !== '') {
+    try {
+      const response = await fetch('https://api.add-to-calendar-pro.com/dffb8bbd-ee5e-4a4f-a7ea-503af98ca468?prokey=' + data.proKey + (data.dev ? '&dev=true' : ''), {
+        method: 'GET',
+      });
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+      const responseJson = await response.json();
+      if (parseInt(responseJson.total) >= data.rsvp.max) {
+        return true;
+      }
+    } catch (error) {
+      console.error('Error:', error);
+    }
+  }
+  return false;
 }
 
 // SHARED FORM FUNCTIONS
@@ -778,4 +768,4 @@ async function sendPostRequest(url, fields, header = {}) {
   }
 }
 
-export { atcb_generate_ty, atcb_generate_rsvp };
+export { atcb_generate_ty, atcb_generate_rsvp_form, atcb_generate_rsvp_button, atcb_check_booked_out };
