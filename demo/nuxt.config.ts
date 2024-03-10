@@ -5,7 +5,7 @@ const baseUrl = process.env.NUXT_PUBLIC_SITE_URL || 'https://add-to-calendar-but
 const robots = process.env.NUXT_PUBLIC_ROBOTS || 'index, follow';
 
 export default defineNuxtConfig({
-  modules: ['@nuxtjs/i18n', '@nuxtjs/tailwindcss', 'nuxt-headlessui', 'nuxt-security', 'nuxt-schema-org', '@nuxt/image', '@vite-pwa/nuxt', 'nuxt-simple-sitemap', 'nuxt-delay-hydration'],
+  modules: ['@nuxtjs/i18n', '@nuxtjs/tailwindcss', 'nuxt-headlessui', 'nuxt-security', 'nuxt-schema-org', '@nuxt/image', '@vite-pwa/nuxt', '@nuxtjs/sitemap', 'nuxt-delay-hydration'],
   vue: {
     compilerOptions: {
       isCustomElement: (tag) => tag === 'add-to-calendar-button',
@@ -28,7 +28,6 @@ export default defineNuxtConfig({
   },
   experimental: {
     payloadExtraction: true,
-    inlineSSRStyles: true,
   },
   delayHydration: {
     mode: 'manual',
@@ -43,7 +42,7 @@ export default defineNuxtConfig({
     basicAuth: false,
     csrf: false,
     headers: {
-      crossOriginResourcePolicy: 'cross-origin',
+      crossOriginResourcePolicy: 'same-origin',
       crossOriginOpenerPolicy: 'same-origin',
       crossOriginEmbedderPolicy: 'unsafe-none',
       contentSecurityPolicy: false,
@@ -120,14 +119,17 @@ export default defineNuxtConfig({
         { rel: 'dns-prefetch', href: 'https://api.github.com' },
         { rel: 'dns-prefetch', href: 'https://api.npmjs.org' },
         { rel: 'dns-prefetch', href: 'https://data.jsdelivr.com' },
-        { rel: 'preload', as: 'font', type: 'font/woff2', href: baseUrl + '/assets/fonts/paytone-one-v18-latin-regular.woff2', crossorigin: 'anonymous' },
-        { rel: 'preload', as: 'font', type: 'font/woff2', href: baseUrl + '/assets/fonts/inter-v12-latin-300.woff2', crossorigin: 'anonymous' },
-        { rel: 'preload', as: 'font', type: 'font/woff2', href: baseUrl + '/assets/fonts/inter-v12-latin-regular.woff2', crossorigin: 'anonymous' },
-        { rel: 'preload', as: 'font', type: 'font/woff2', href: baseUrl + '/assets/fonts/inter-v12-latin-600.woff2', crossorigin: 'anonymous' },
-        { rel: 'preload', as: 'font', type: 'font/woff2', href: baseUrl + '/assets/fonts/inter-v12-latin-800.woff2', crossorigin: 'anonymous' },
-        { rel: 'preload', as: 'font', type: 'font/woff2', href: baseUrl + '/assets/fonts/fira-mono-v14-latin-regular.woff2', crossorigin: 'anonymous' },
+        { rel: 'preload', as: 'font', type: 'font/woff2', href: '/assets/fonts/paytone-one-v18-latin-regular.woff2', crossorigin: 'anonymous' },
+        { rel: 'preload', as: 'font', type: 'font/woff2', href: '/assets/fonts/inter-v12-latin-300.woff2', crossorigin: 'anonymous' },
+        { rel: 'preload', as: 'font', type: 'font/woff2', href: '/assets/fonts/inter-v12-latin-regular.woff2', crossorigin: 'anonymous' },
+        { rel: 'preload', as: 'font', type: 'font/woff2', href: '/assets/fonts/inter-v12-latin-600.woff2', crossorigin: 'anonymous' },
+        { rel: 'preload', as: 'font', type: 'font/woff2', href: '/assets/fonts/inter-v12-latin-800.woff2', crossorigin: 'anonymous' },
+        { rel: 'preload', as: 'font', type: 'font/woff2', href: '/assets/fonts/fira-mono-v14-latin-regular.woff2', crossorigin: 'anonymous' },
       ],
-      script: [{ async: true, defer: true, 'data-website-id': 'd178e769-c435-4de9-87e5-48b0ec339f62', src: 'https://a.add-to-calendar-button.com/atcba.js', 'data-host-url': 'https://a.add-to-calendar-button.com', 'data-domains': 'add-to-calendar-button.com' }],
+      script: 
+      process.env.NUXT_PUBLIC_DEV && process.env.NUXT_PUBLIC_DEV === 'true'
+        ? []
+        : [{ async: true, defer: true, 'data-website-id': 'd178e769-c435-4de9-87e5-48b0ec339f62', src: 'https://a.add-to-calendar-button.com/atcba.js', 'data-host-url': 'https://a.add-to-calendar-button.com', 'data-domains': 'add-to-calendar-button.com' }],
       noscript: [{ innerHTML: 'Please enable JavaScript to view this website.' }],
     },
   },

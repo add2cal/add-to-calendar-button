@@ -58,3 +58,4 @@ jobs:
         env:
           NUXT_PUBLIC_SITE_URL: 'https://blue-field-0efe76003-dev.westeurope.2.azurestaticapps.net'
           NUXT_PUBLIC_ROBOTS: 'noindex, nofollow'
+          NUXT_PUBLIC_DEV: true

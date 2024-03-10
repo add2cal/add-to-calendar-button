@@ -249,7 +249,7 @@ Anyone is welcome to contribute, but mind the [guidelines](.github/CONTRIBUTING.
 
 ## 📃 Copyright and License
 
-Copyright (c) [Jens Kuerschner](https://jenskuerschner.de).
+Copyright (c) [Jens Kuerschner](https://jekuer.com).
 
 Licensed under [Elastic License 2.0 (ELv2)](LICENSE.txt).
 

@@ -3,8 +3,8 @@
  *  Add to Calendar Button
  *  ++++++++++++++++++++++
  *
- *  Version: 2.6.0
- *  Creator: Jens Kuerschner (https://jenskuerschner.de)
+ *  Version: 2.6.1
+ *  Creator: Jens Kuerschner (https://jekuer.com)
  *  Project: https://github.com/add2cal/add-to-calendar-button
  *  License: Elastic License 2.0 (ELv2) (https://github.com/add2cal/add-to-calendar-button/blob/main/LICENSE.txt)
  *  Note:    DO NOT REMOVE THE COPYRIGHT NOTICE ABOVE!
@@ -15,9 +15,10 @@ import { tzlib_get_offset } from 'timezones-ical-library';
 import { atcbIsiOS, atcbIsAndroid, atcbIsBrowser, atcbValidRecurrOptions, atcbInvalidSubscribeOptions, atcbiOSInvalidOptions, atcbWcBooleanParams } from './atcb-globals.js';
 import { atcb_translate_via_time_zone, atcb_format_datetime, atcb_rewrite_html_elements, atcb_generate_uuid } from './atcb-util.js';
 import { availableLanguages, rtlLanguages } from './atcb-i18n';
+import { atcb_check_booked_out } from './atcb-generate-pro.js';
 
 // CLEAN DATA BEFORE FURTHER VALIDATION (CONSIDERING SPECIAL RULES AND SCHEMES)
-function atcb_decorate_data(data) {
+async function atcb_decorate_data(data) {
   data = atcb_decorate_data_boolean(data);
   data.timeZone = atcb_decorate_data_timezone(data.timeZone);
   data = atcb_decorate_data_rrule(data);
@@ -30,6 +31,7 @@ function atcb_decorate_data(data) {
   data = atcb_decorate_data_meta(data);
   data = atcb_decorate_data_extend(data);
   data = atcb_decorate_data_button_status_handling(data);
+  data = await atcb_decorate_data_rsvp(data);
   return data;
 }
 
@@ -566,6 +568,25 @@ function atcb_decorate_data_button_status_handling(data) {
   // second, block interaction if disabled or hidden
   if (data.disabled || data.hidden) {
     data.blockInteraction = true;
+  }
+  return data;
+}
+
+async function atcb_decorate_data_rsvp(data) {
+  if (typeof atcb_check_booked_out !== 'function' || !data.rsvp || Object.keys(data.rsvp).length === 0) return data;
+  // determine whether RSVP is expired or booked out
+  data.rsvp.expired = (function () {
+    if (data.rsvp && data.rsvp.expires && new Date(data.rsvp.expires) < new Date()) {
+      return true;
+    }
+    return false;
+  })();
+  data.rsvp.bookedOut = await atcb_check_booked_out(data);
+  if (data.rsvp.expired || data.rsvp.bookedOut) {
+    data.blockInteraction = true;
+  }
+  if (data.blockInteraction) {
+    data.disabled = true;
   }
   return data;
 }

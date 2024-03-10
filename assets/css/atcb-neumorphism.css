@@ -5,8 +5,8 @@
  *
  * Style: Neumorphism
  *
- * Version: 2.6.0
- * Creator: Jens Kuerschner (https://jenskuerschner.de)
+ * Version: 2.6.1
+ * Creator: Jens Kuerschner (https://jekuer.com)
  * Project: https://github.com/add2cal/add-to-calendar-button
  * License: Elastic License 2.0 (ELv2) (https://github.com/add2cal/add-to-calendar-button/blob/main/LICENSE.txt)
  * Note:    DO NOT REMOVE THE COPYRIGHT NOTICE ABOVE!
@@ -49,6 +49,8 @@
   --list-min-width: 100%;
   --list-shadow: rgba(40 40 40 / 30%) 0.4em 0.4em 0.8em,rgba(255 255 255 / 80%) -0.2em -0.2em 0.5em;
   --modal-text: #111;
+  --modal-text-align: left;
+  --modal-text-align-rtl: right;
   --modal-background: #f5f5f5;
   --modal-border-radius: 9px;
   --modal-shadow: drop-shadow(5px 8px 30px rgba(0 0 0 / 70%));
@@ -62,6 +64,7 @@
   --modal-btn-secondary-text: #666567;
   --modal-btn-shadow: rgba(40 40 40 / 15%) 0.2em 0.2em 0.4em, rgba(255 255 255 / 30%) -0.1em -0.1em 0.3em;
   --modal-btn-hover-shadow: rgba(40 40 40 / 40%) 0.4em 0.4em 0.7em, rgba(255 255 255 / 70%) -0.2em -0.2em 0.5em;
+  --modal-headline-text-align: center;
   --modal-headline-text-transform: none;
   --input-border-radius: 6px;
   --input-background: #fff;
@@ -429,24 +432,23 @@
   box-sizing: border-box;
   font-family: var(--font);
   line-height: 1.5em;
-  text-align: left;
+  text-align: var(--modal-text-align);
   user-select: none;
   -webkit-user-select: none;
   touch-action: manipulation;
   width: 100%;
   margin-bottom: 20px;
-  max-width: 32em;
   -webkit-tap-highlight-color: transparent;
 }
 
 @media (width > 575px) {
   .atcb-modal-box {
-    min-width: 500px;
+    width: 32em;
   }
 }
 
 .atcb-modal-box.atcb-rtl {
-  text-align: right;
+  text-align: var(--modal-text-align-rtl);
   direction: rtl;
   padding: 1.25em 1em 1.25em 2em;
 }
@@ -476,7 +478,7 @@
   line-height: 1.5em;
   padding: 1.8em 1.5em 1.3em;
   text-transform: var(--modal-headline-text-transform);
-  text-align: center;
+  text-align: var(--modal-headline-text-align);
 }
 
 .atcb-modal-icon + .atcb-modal-headline {

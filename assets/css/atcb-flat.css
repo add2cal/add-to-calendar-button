@@ -5,8 +5,8 @@
  *
  * Style: Flat
  *
- * Version: 2.6.0
- * Creator: Jens Kuerschner (https://jenskuerschner.de)
+ * Version: 2.6.1
+ * Creator: Jens Kuerschner (https://jekuer.com)
  * Project: https://github.com/add2cal/add-to-calendar-button
  * License: Elastic License 2.0 (ELv2) (https://github.com/add2cal/add-to-calendar-button/blob/main/LICENSE.txt)
  * Note:    DO NOT REMOVE THE COPYRIGHT NOTICE ABOVE!
@@ -46,6 +46,8 @@
   --list-close-text-hover: #777;
   --list-padding: .8em;
   --modal-text: #000;
+  --modal-text-align: left;
+  --modal-text-align-rtl: right;
   --modal-background: #f5f5f5;
   --modal-btn-bar: #bababa;
   --modal-btn-background: #f5f5f5;
@@ -56,6 +58,7 @@
   --modal-btn-text: #2e2e2e;
   --modal-btn-hover-text: #161616;
   --modal-btn-secondary-text: #676767;
+  --modal-headline-text-align: center;
   --modal-headline-text-transform: uppercase;
   --input-background: #fff;
   --status-active-text: #fff;
@@ -463,24 +466,23 @@
   box-sizing: border-box;  
   font-family: var(--font);
   line-height: 1.5em;
-  text-align: left;
+  text-align: var(--modal-text-align);
   user-select: none;
   -webkit-user-select: none;
   touch-action: manipulation;
   width: 100%;
   margin-bottom: 20px;
-  max-width: 32em;
   -webkit-tap-highlight-color: transparent;
 }
 
 @media (width > 575px) {
   .atcb-modal-box {
-    min-width: 500px;
+    width: 32em;
   }
 }
 
 .atcb-modal-box.atcb-rtl {
-  text-align: right;
+  text-align: var(--modal-text-align-rtl);
   direction: rtl;
   padding: 1.25em 1em 1.25em 2em;
 }
@@ -506,7 +508,7 @@
   line-height: 1.5em;
   padding: 1.8em 1.5em 1.3em;
   text-transform: var(--modal-headline-text-transform);
-  text-align: center;
+  text-align: var(--modal-headline-text-align);
 }
 
 .atcb-modal-icon + .atcb-modal-headline {

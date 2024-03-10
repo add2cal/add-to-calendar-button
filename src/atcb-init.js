@@ -3,8 +3,8 @@
  *  Add to Calendar Button
  *  ++++++++++++++++++++++
  *
- *  Version: 2.6.0
- *  Creator: Jens Kuerschner (https://jenskuerschner.de)
+ *  Version: 2.6.1
+ *  Creator: Jens Kuerschner (https://jekuer.com)
  *  Project: https://github.com/add2cal/add-to-calendar-button
  *  License: Elastic License 2.0 (ELv2) (https://github.com/add2cal/add-to-calendar-button/blob/main/LICENSE.txt)
  *  Note:    DO NOT REMOVE THE COPYRIGHT NOTICE ABOVE!
@@ -20,7 +20,7 @@ import { atcb_close, atcb_toggle } from './atcb-control.js';
 import { atcb_generate_links } from './atcb-links.js';
 import { atcb_secure_content, atcb_manage_body_scroll, atcb_set_fullsize } from './atcb-util.js';
 import { atcb_log_event } from './atcb-event.js';
-import { atcb_generate_rsvp } from './atcb-generate-pro.js';
+import { atcb_generate_rsvp_form, atcb_generate_rsvp_button } from './atcb-generate-pro.js';
 
 let atcbInitialGlobalInit = false;
 let atcbBtnCount = 0;
@@ -72,7 +72,7 @@ if (atcbIsBrowser()) {
         }
       }
       this.loaded = true;
-      this.initButton();
+      await this.initButton();
     }
 
     disconnectedCallback() {
@@ -138,10 +138,10 @@ if (atcbIsBrowser()) {
           return;
         }
       }
-      this.initButton();
+      await this.initButton();
     }
 
-    initButton() {
+    async initButton() {
       if (!this.initialized) {
         this.initialized = true;
         atcbBtnCount = atcbBtnCount + 1;
@@ -178,7 +178,7 @@ if (atcbIsBrowser()) {
         this.style.visibility = 'visible';
         this.style.opacity = '1';
         this.style.position = 'relative';
-        atcb_build_button(this.shadowRoot, this.data);
+        return atcb_build_button(this.shadowRoot, this.data);
       } catch (e) {
         if (this.debug) {
           atcb_render_debug_msg(this.shadowRoot, e);
@@ -280,9 +280,9 @@ function atcb_read_attributes(el, params = atcbWcParams) {
 }
 
 // build the button
-function atcb_build_button(host, data) {
+async function atcb_build_button(host, data) {
   // Rewrite dynamic dates, standardize line breaks and transform urls in the description
-  data = atcb_decorate_data(data);
+  data = await atcb_decorate_data(data);
   if (atcb_validate(data)) {
     const rootObj = host.querySelector('.atcb-initialized');
     // ... and on success, load css and generate the button
@@ -295,8 +295,12 @@ function atcb_build_button(host, data) {
     atcb_init_log(data.proKey, data.debug);
     // generate the actual button or RSVP form (if not hidden)
     if (!data.hidden) {
-      if (typeof atcb_generate_rsvp === 'function' && data.rsvp && Object.keys(data.rsvp).length > 0) {
-        atcb_generate_rsvp(host, data, false, data.inlineRsvp, false, rootObj);
+      if (typeof atcb_generate_rsvp_form === 'function' && data.rsvp && Object.keys(data.rsvp).length > 0) {
+        if (!data.inlineRsvp) {
+          await atcb_generate_rsvp_button(host, data);
+        } else {
+          await atcb_generate_rsvp_form(host, data, rootObj);
+        }
       } else {
         atcb_generate_button(host, rootObj, data);
       }
@@ -311,6 +315,7 @@ function atcb_build_button(host, data) {
     console.error(data.validationError);
     throw new Error(data.validationError);
   }
+  return true;
 }
 
 // destroy the button
@@ -384,8 +389,8 @@ async function atcb_load_css(host, rootObj = null, data) {
   }
   // add hidden style
   const generalCssContent = document.createElement('style');
-  generalCssContent.innerText =
-    '.atcb-initialized { display: block; position: relative; width: fit-content; }.atcb-initialized.atcb-inline { display: inline-block; }.atcb-initialized.atcb-buttons-list { display: flex; flex-wrap: wrap; justify-content: center; gap: var(--buttonslist-gap); }.atcb-hidden { display: none; }';
+  const initWidth = data.inlineRsvp && data.rsvp && Object.keys(data.rsvp).length > 0 ? '100%' : 'fit-content';
+  generalCssContent.innerText = `.atcb-initialized { display: block; position: relative; width: ${initWidth}; }.atcb-initialized.atcb-inline { display: inline-block; }.atcb-initialized.atcb-buttons-list { display: flex; flex-wrap: wrap; justify-content: center; gap: var(--buttonslist-gap); }.atcb-hidden { display: none; }`;
   if (nonceVal) {
     generalCssContent.setAttribute('nonce', nonceVal);
   }
@@ -536,7 +541,7 @@ async function atcb_action(inputData, triggerElement, keyboardTrigger = false) {
     console.error(data.validationError);
     return;
   }
-  data = atcb_decorate_data(data);
+  data = await atcb_decorate_data(data);
   let root = document.body;
   // we always force the click trigger in the custom case
   data.trigger = 'click';
@@ -616,8 +621,8 @@ async function atcb_action(inputData, triggerElement, keyboardTrigger = false) {
     atcb_set_global_event_listener(host.shadowRoot, data);
     // if all is fine, ...
     // ... trigger RSVP form, or ...
-    if (typeof atcb_generate_rsvp === 'function' && data.rsvp && Object.keys(data.rsvp).length > 0) {
-      atcb_generate_rsvp(host.shadowRoot, data, keyboardTrigger, false, true, triggerElement);
+    if (typeof atcb_generate_rsvp_form === 'function' && data.rsvp && Object.keys(data.rsvp).length > 0) {
+      atcb_generate_rsvp_form(host.shadowRoot, data, triggerElement, keyboardTrigger);
     } else {
       // ... trigger link at the oneOption case, or ...
       if (oneOption) {

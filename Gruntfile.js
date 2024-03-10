@@ -56,9 +56,9 @@ const jsCoreFilesToCombinePro = [
   'src/atcb-decorate.js',
   'src/atcb-validate.js',
   'src/atcb-control.js',
+  'src/atcb-generate-pro.js',
   'src/atcb-generate.js',
   'src/atcb-generate-rich-data.js',
-  'src/atcb-generate-pro.js',
   'src/atcb-links.js',
   'src/atcb-util.js',
   'src/atcb-event.js',
@@ -265,7 +265,7 @@ module.exports = function (grunt) {
     // minify js files
     uglify: {
       options: {
-        compress: true,
+        compress: false,
         mangle: true,
         beautify: false,
         sourceMap: false,
@@ -296,5 +296,6 @@ module.exports = function (grunt) {
   grunt.loadNpmTasks('grunt-version');
 
   // Register task(s).
-  grunt.registerTask('default', ['clean', 'cssmin', 'concat', 'file-creator', 'uglify']);
+  grunt.registerTask('default', ['clean', 'cssmin', 'concat', 'file-creator']);
+  grunt.registerTask('uglifyMain', ['clean', 'cssmin', 'concat', 'file-creator', 'uglify']);
 };
