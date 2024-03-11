@@ -178,12 +178,13 @@ if (atcbIsBrowser()) {
         this.style.visibility = 'visible';
         this.style.opacity = '1';
         this.style.position = 'relative';
-        return atcb_build_button(this.shadowRoot, this.data);
+        await atcb_build_button(this.shadowRoot, this.data);
+        return true;
       } catch (e) {
         if (this.debug) {
           atcb_render_debug_msg(this.shadowRoot, e);
         }
-        return;
+        return false;
       }
     }
   }
