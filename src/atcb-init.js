@@ -3,7 +3,7 @@
  *  Add to Calendar Button
  *  ++++++++++++++++++++++
  *
- *  Version: 2.6.1
+ *  Version: 2.6.2
  *  Creator: Jens Kuerschner (https://jekuer.com)
  *  Project: https://github.com/add2cal/add-to-calendar-button
  *  License: Elastic License 2.0 (ELv2) (https://github.com/add2cal/add-to-calendar-button/blob/main/LICENSE.txt)
@@ -62,9 +62,10 @@ if (atcbIsBrowser()) {
         this.data.proKey = '';
         // if no data yet, we try reading attributes or the innerHTML of the host element
         try {
-          this.data = atcb_process_inline_data(this, this.debug);
+          this.data = await atcb_process_inline_data(this, this.debug);
         } catch (e) {
           if (this.debug) {
+            console.error(e);
             atcb_render_debug_msg(this.shadowRoot, e);
           }
           this.loaded = true;
@@ -130,9 +131,10 @@ if (atcbIsBrowser()) {
       }
       if (!this.data.name || this.data.name === '') {
         try {
-          this.data = atcb_process_inline_data(this, this.debug);
+          this.data = await atcb_process_inline_data(this, this.debug);
         } catch (e) {
           if (this.debug) {
+            console.error(e);
             atcb_render_debug_msg(this.shadowRoot, e);
           }
           return;
@@ -182,6 +184,7 @@ if (atcbIsBrowser()) {
         return true;
       } catch (e) {
         if (this.debug) {
+          console.error(e.message ? e.message : e);
           atcb_render_debug_msg(this.shadowRoot, e);
         }
         return false;
@@ -195,29 +198,29 @@ if (atcbIsBrowser()) {
 }
 
 // process inline data
-function atcb_process_inline_data(el, debug = false) {
-  let data = atcb_read_attributes(el);
-  // if we receive no or not enough data that way, we try to get a potential JSON from the innerHTML
-  if (!atcb_check_required(data)) {
-    const slotInput = el.innerHTML;
-    const atcbJsonInput = (function () {
-      if (slotInput !== '') {
-        try {
-          return JSON.parse(atcb_secure_content(slotInput.replace(/(\\r\\n|\\n|\\r)/g, ''), false));
-        } catch (e) {
-          throw new Error('Add to Calendar Button generation failed: JSON content provided, but badly formatted (in doubt, try some tool like https://jsonformatter.org/ to validate).\r\nError message: ' + e);
-        }
-      }
-      return null;
-    })();
-    // abort on missing input data
-    if (!atcbJsonInput || (Array.isArray(atcbJsonInput) && atcbJsonInput.length === 0) || (typeof atcbJsonInput === 'object' && Object.keys(atcbJsonInput).length === 0)) {
+async function atcb_process_inline_data(el, debug = false) {
+  let data;
+  try {
+    // Attempt to read attributes directly and validate
+    data = atcb_read_attributes(el);
+    await atcb_check_required(data);
+  } catch (e) {
+    // If the above fails, try to parse and validate JSON from innerHTML
+    const slotInput = el.innerHTML.trim();
+    if (!slotInput) {
+      throw new Error('Add to Calendar Button generation failed: No data provided.');
+    }
+    try {
+      const atcbJsonInput = JSON.parse(atcb_secure_content(slotInput.replace(/(\r\n|\n|\r)/g, ''), false));
+      await atcb_check_required(atcbJsonInput);
+      data = atcbJsonInput;
+    } catch (jsonError) {
+      // Log detailed error for debugging
       if (debug) {
-        console.error(data.validationError);
+        console.error(jsonError);
       }
       throw new Error('Add to Calendar Button generation failed: no data provided or missing required fields - see console logs for details');
     }
-    data = atcbJsonInput;
   }
   return data;
 }
@@ -282,9 +285,10 @@ function atcb_read_attributes(el, params = atcbWcParams) {
 
 // build the button
 async function atcb_build_button(host, data) {
-  // Rewrite dynamic dates, standardize line breaks and transform urls in the description
-  data = await atcb_decorate_data(data);
-  if (atcb_validate(data)) {
+  try {
+    // Rewrite dynamic dates, standardize line breaks and transform urls in the description
+    data = await atcb_decorate_data(data);
+    await atcb_validate(data);
     const rootObj = host.querySelector('.atcb-initialized');
     // ... and on success, load css and generate the button
     atcb_set_light_mode(host, data);
@@ -312,11 +316,10 @@ async function atcb_build_button(host, data) {
     }
     // log event
     atcb_log_event('initialization', data.identifier, data.identifier);
-  } else if (data.debug) {
-    console.error(data.validationError);
-    throw new Error(data.validationError);
+    return true;
+  } catch (e) {
+    throw new Error(e.message);
   }
-  return true;
 }
 
 // destroy the button
@@ -538,9 +541,13 @@ async function atcb_action(inputData, triggerElement, keyboardTrigger = false) {
   })();
   // decorate & validate data
   data.debug = data.debug === 'true';
-  if (!atcb_check_required(data)) {
-    console.error(data.validationError);
-    return;
+  try {
+    await atcb_check_required(data);
+  } catch (e) {
+    if (data.debug) {
+      console.error(e);
+    }
+    throw new Error('Add to Calendar Button generation failed: no data provided or missing required fields - see console logs for details');
   }
   data = await atcb_decorate_data(data);
   let root = document.body;
@@ -569,9 +576,11 @@ async function atcb_action(inputData, triggerElement, keyboardTrigger = false) {
     // if no button is defined, fallback to listStyle "modal" in any case
     data.listStyle = 'modal';
   }
-  if (!atcb_validate(data)) {
-    console.error(data.validationError);
-    return;
+  try {
+    await atcb_validate(data);
+  } catch (e) {
+    console.error(e);
+    return false;
   }
   // determine whether we are looking for the 1-option case (also with buttonsList)
   const oneOption = (function () {
