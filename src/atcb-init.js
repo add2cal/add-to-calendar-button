@@ -3,7 +3,7 @@
  *  Add to Calendar Button
  *  ++++++++++++++++++++++
  *
- *  Version: 2.6.3
+ *  Version: 2.6.4
  *  Creator: Jens Kuerschner (https://jekuer.com)
  *  Project: https://github.com/add2cal/add-to-calendar-button
  *  License: Elastic License 2.0 (ELv2) (https://github.com/add2cal/add-to-calendar-button/blob/main/LICENSE.txt)
@@ -39,6 +39,7 @@ if (atcbIsBrowser()) {
       this.shadowRoot.append(elem.content.cloneNode(true));
       this.state = {
         initializing: false,
+        initialized: false,
         ready: false,
         updatePending: false,
       };
@@ -76,11 +77,13 @@ if (atcbIsBrowser()) {
             atcb_render_debug_msg(this.shadowRoot, e);
           }
           this.state.initializing = false;
+          this.state.ready = true;
           return;
         }
       }
       await this.initButton();
       this.state.initializing = false;
+      this.state.initialized = true;
       this.state.ready = true;
       return;
     }
@@ -118,7 +121,7 @@ if (atcbIsBrowser()) {
         return;
       }
       // mind that this only observes the actual attributes, not the innerHTML of the host (one would need to alter the instance attribute for that case)!
-      if (this.debug && this.state.ready) {
+      if (this.debug && this.state.initialized) {
         // we only mention this, if it has been initialized (with Angular, e.g., a bound variable will get infused after the initial loading)
         console.log(`${name}'s value has been changed from ${oldValue} to ${newValue}`);
       }
@@ -164,7 +167,7 @@ if (atcbIsBrowser()) {
     }
 
     async initButton() {
-      if (!this.state.ready) {
+      if (!this.state.initialized) {
         atcbBtnCount = atcbBtnCount + 1;
       }
       // set identifier first, no matter further validation
