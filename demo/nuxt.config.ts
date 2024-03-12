@@ -35,6 +35,7 @@ export default defineNuxtConfig({
   },
   security: {
     enabled: process.env.NODE_ENV === 'development' ? false : true,
+    removeLoggers: false,
     xssValidator: {
       stripIgnoreTag: true,
     },
