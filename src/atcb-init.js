@@ -33,6 +33,7 @@ if (atcbIsBrowser()) {
   class AddToCalendarButton extends HTMLElement {
     constructor() {
       super();
+      this._initialized = new Promise((resolve) => (this._initializedResolver = resolve));
       const elem = document.createElement('template');
       elem.innerHTML = template;
       this.attachShadow({ mode: 'open', delegateFocus: true });
@@ -47,8 +48,16 @@ if (atcbIsBrowser()) {
       this.error = false;
     }
 
-    async connectedCallback() {
-      if (this.state.initializing || this.state.ready) {
+    connectedCallback() {
+      if (!this.initializing) {
+        this.initializing = true;
+        // Defer the update to ensure it's non-blocking
+        setTimeout(() => this.initializeComponent(), 0);
+      }
+    }
+
+    async initializeComponent() {
+      if (this.state.ready) {
         return;
       }
       // initial data fetch
@@ -85,7 +94,12 @@ if (atcbIsBrowser()) {
       this.state.initializing = false;
       this.state.initialized = true;
       this.state.ready = true;
+      this._initializedResolver();
       return;
+    }
+
+    whenInitialized() {
+      return this._initialized;
     }
 
     disconnectedCallback() {
@@ -117,7 +131,7 @@ if (atcbIsBrowser()) {
 
     attributeChangedCallback(name, oldValue, newValue) {
       // return, if this is the very first run
-      if (this.state.initializing || !this.state.ready) {
+      if (!this.state.ready) {
         return;
       }
       // mind that this only observes the actual attributes, not the innerHTML of the host (one would need to alter the instance attribute for that case)!
