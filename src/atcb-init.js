@@ -3,7 +3,7 @@
  *  Add to Calendar Button
  *  ++++++++++++++++++++++
  *
- *  Version: 2.6.2
+ *  Version: 2.6.3
  *  Creator: Jens Kuerschner (https://jekuer.com)
  *  Project: https://github.com/add2cal/add-to-calendar-button
  *  License: Elastic License 2.0 (ELv2) (https://github.com/add2cal/add-to-calendar-button/blob/main/LICENSE.txt)
@@ -158,9 +158,7 @@ if (atcbIsBrowser()) {
           return;
         }
       }
-      console.log('clean up');
       atcb_cleanup(this.shadowRoot, this.identifier);
-      console.log('start init');
       await this.initButton();
       this.updatePending = false;
     }
@@ -359,7 +357,6 @@ function atcb_cleanup(host, identifier) {
     .concat(Array.from(host.querySelectorAll('.atcb-button-wrapper')))
     .forEach((el) => el.remove());
   delete atcbStates[`${identifier}`];
-  console.log('cleaned up');
 }
 
 // set light mode
