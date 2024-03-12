@@ -37,14 +37,21 @@ if (atcbIsBrowser()) {
       elem.innerHTML = template;
       this.attachShadow({ mode: 'open', delegateFocus: true });
       this.shadowRoot.append(elem.content.cloneNode(true));
-      this.loaded = false;
-      this.initialized = false;
+      this.state = {
+        initializing: false,
+        ready: false,
+        updatePending: false,
+      };
       this.data = {};
       this.error = false;
     }
 
     async connectedCallback() {
+      if (this.state.initializing || this.state.ready) {
+        return;
+      }
       // initial data fetch
+      this.state.initializing = true;
       // first getting debug attr and saving it here - this is somehow independet of its copy at the data object
       const debugVal = this.getAttribute('debug');
       this.debug = this.hasAttribute('debug') && (!debugVal || debugVal === 'true' || debugVal === '') ? true : false;
@@ -68,21 +75,23 @@ if (atcbIsBrowser()) {
             console.error(e);
             atcb_render_debug_msg(this.shadowRoot, e);
           }
-          this.loaded = true;
+          this.state.initializing = false;
           return;
         }
       }
-      this.loaded = true;
       await this.initButton();
+      this.state.initializing = false;
+      this.state.ready = true;
+      return;
     }
 
     disconnectedCallback() {
-      atcb_cleanup(this.shadowRoot, this.data);
+      atcb_cleanup(this.shadowRoot, this.identifier);
       if (this.debug) {
-        console.log('Add to Calendar Button "' + this.data.identifier + '" destroyed');
+        console.log('Add to Calendar Button "' + this.identifier + '" destroyed');
       }
       // reset the count, if all buttons got destroyed
-      if (document.querySelectorAll('add-to-calendar-button').length == 0) {
+      if (document.querySelectorAll('add-to-calendar-button').length === 0) {
         atcbBtnCount = 0;
       }
     }
@@ -103,19 +112,27 @@ if (atcbIsBrowser()) {
         .concat(observeAdditionally);
     }
 
-    async attributeChangedCallback(name, oldValue, newValue) {
-      // updating whenever attributes update
+    attributeChangedCallback(name, oldValue, newValue) {
       // return, if this is the very first run
-      if (!this.loaded) {
+      if (this.state.initializing || !this.state.ready) {
         return;
       }
-      // in all other cases, destroy and rebuild the button
       // mind that this only observes the actual attributes, not the innerHTML of the host (one would need to alter the instance attribute for that case)!
-      if (this.debug && this.initialized) {
+      if (this.debug && this.state.ready) {
         // we only mention this, if it has been initialized (with Angular, e.g., a bound variable will get infused after the initial loading)
         console.log(`${name}'s value has been changed from ${oldValue} to ${newValue}`);
       }
-      atcb_cleanup(this.shadowRoot, this.data);
+      // Set a flag or enqueue changes without directly invoking async operations
+      if (!this.updatePending) {
+        this.updatePending = true;
+        // Defer the update to ensure it's non-blocking
+        setTimeout(() => this.updateComponent(), 0);
+      }
+    }
+
+    async updateComponent() {
+      if (!this.updatePending) return;
+      // destroy and rebuild the button
       this.data = {};
       this.shadowRoot.querySelector('.atcb-initialized').remove();
       const elem = document.createElement('template');
@@ -126,7 +143,7 @@ if (atcbIsBrowser()) {
         if (this.data.proKey) this.proKey = this.data.proKey;
       } else if (this.hasAttribute('prokey') && this.getAttribute('prokey') !== '') {
         // double-checking for lower-case version
-        this.data = await atcb_get_pro_data(this.getAttribute('proKey'), this);
+        this.data = await atcb_get_pro_data(this.getAttribute('prokey'), this);
         if (this.data.proKey) this.proKey = this.data.proKey;
       }
       if (!this.data.name || this.data.name === '') {
@@ -137,24 +154,28 @@ if (atcbIsBrowser()) {
             console.error(e);
             atcb_render_debug_msg(this.shadowRoot, e);
           }
+          this.updatePending = false;
           return;
         }
       }
+      console.log('clean up');
+      atcb_cleanup(this.shadowRoot, this.identifier);
+      console.log('start init');
       await this.initButton();
+      this.updatePending = false;
     }
 
     async initButton() {
-      if (!this.initialized) {
-        this.initialized = true;
+      if (!this.state.ready) {
         atcbBtnCount = atcbBtnCount + 1;
       }
       // set identifier first, no matter further validation
       // we use a stored one if available (the case, if destroyed before)
-      if (this.identifier && this.identifier != '') {
+      if (this.identifier && this.identifier !== '') {
         this.data.identifier = this.identifier;
       } else {
         // and create one in all other cases
-        if (this.data.identifier && this.data.identifier != '') {
+        if (this.data.identifier && this.data.identifier !== '') {
           if (!/^[\w\-_]+$/.test(this.data.identifier)) {
             this.data.identifier = '';
             if (this.debug) {
@@ -171,7 +192,7 @@ if (atcbIsBrowser()) {
         if (this.data.identifier == null || this.data.identifier == '') {
           this.data.identifier = 'atcb-btn-' + atcbBtnCount;
         }
-        // we are copying the value to presever it over re-building the data object
+        // we are copying the value to preserve it over re-building the data object
         this.identifier = this.data.identifier;
       }
       this.setAttribute('atcb-button-id', this.data.identifier);
@@ -323,11 +344,11 @@ async function atcb_build_button(host, data) {
 }
 
 // destroy the button
-function atcb_cleanup(host, data) {
+function atcb_cleanup(host, identifier) {
   // cleaning up a little bit
   atcb_close(host);
-  atcb_unset_global_event_listener(data.identifier);
-  const schemaEl = document.getElementById('atcb-schema-' + data.identifier);
+  atcb_unset_global_event_listener(identifier);
+  const schemaEl = document.getElementById('atcb-schema-' + identifier);
   if (schemaEl) {
     schemaEl.remove();
   }
@@ -337,7 +358,8 @@ function atcb_cleanup(host, data) {
     .concat(Array.from(host.querySelectorAll('.atcb-placeholder')))
     .concat(Array.from(host.querySelectorAll('.atcb-button-wrapper')))
     .forEach((el) => el.remove());
-  delete atcbStates[`${data.identifier}`];
+  delete atcbStates[`${identifier}`];
+  console.log('cleaned up');
 }
 
 // set light mode
