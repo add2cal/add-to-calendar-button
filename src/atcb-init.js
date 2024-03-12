@@ -33,6 +33,7 @@ if (atcbIsBrowser()) {
   class AddToCalendarButton extends HTMLElement {
     constructor() {
       super();
+      this._initialized = new Promise((resolve) => (this._initializedResolver = resolve));
       const elem = document.createElement('template');
       elem.innerHTML = template;
       this.attachShadow({ mode: 'open', delegateFocus: true });
@@ -93,7 +94,12 @@ if (atcbIsBrowser()) {
       this.state.initializing = false;
       this.state.initialized = true;
       this.state.ready = true;
+      this._initializedResolver();
       return;
+    }
+
+    whenInitialized() {
+      return this._initialized;
     }
 
     disconnectedCallback() {
