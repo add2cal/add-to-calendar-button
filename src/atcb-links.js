@@ -3,7 +3,7 @@
  *  Add to Calendar Button
  *  ++++++++++++++++++++++
  *
- *  Version: 2.6.1
+ *  Version: 2.6.2
  *  Creator: Jens Kuerschner (https://jekuer.com)
  *  Project: https://github.com/add2cal/add-to-calendar-button
  *  License: Elastic License 2.0 (ELv2) (https://github.com/add2cal/add-to-calendar-button/blob/main/LICENSE.txt)
@@ -381,9 +381,9 @@ function atcb_generate_msteams(data, date, subEvent = 'all') {
   }
   let locationString = '';
   if (date.location != null && date.location != '') {
-    locationString = encodeURIComponent(date.location);
-    urlParts.push('location=' + locationString);
+    locationString = date.location;
     locationString += ' // '; // preparing the workaround putting the location into the description, since the native field is not supported yet
+    urlParts.push('location=' + encodeURIComponent(locationString));
   }
   if (date.descriptionHtmlFree && date.descriptionHtmlFree != '') {
     // using descriptionHtmlFree instead of description, since Teams does not support html tags

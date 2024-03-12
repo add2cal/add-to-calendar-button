@@ -3,7 +3,7 @@
  *  Add to Calendar Button
  *  ++++++++++++++++++++++
  *
- *  Version: 2.6.1
+ *  Version: 2.6.2
  *  Creator: Jens Kuerschner (https://jekuer.com)
  *  Project: https://github.com/add2cal/add-to-calendar-button
  *  License: Elastic License 2.0 (ELv2) (https://github.com/add2cal/add-to-calendar-button/blob/main/LICENSE.txt)
@@ -458,10 +458,10 @@ function atcb_rewrite_html_elements(content, clear = false, iCalBreaks = false) 
       content = content.replace(/(\[br\s?\/?\]|\{br\s?\/?\}|(\[\/p\](?=.))|(\{\/p\}(?=.)))/gi, ' ');
     }
     // remove any pseudo elements
-    content = content.replace(/\[url\](.+)\[\/url\]/gi, (match, p1) => {
+    content = content.replace(/\[url\](.+?)\[\/url\]/gi, (match, p1) => {
       return p1.split('|')[0];
     });
-    content = content.replace(/\{url\}(.+)\{\/url\}/gi, (match, p1) => {
+    content = content.replace(/\{url\}(.+?)\{\/url\}/gi, (match, p1) => {
       return p1.split('|')[0];
     });
     content = content.replace(/\[(|\/)(hr|p|b|strong|u|i|em|li|ul|ol|h\d)\]/gi, '');
