@@ -5,7 +5,7 @@
  *
  * Style: Default
  *
- * Version: 2.6.5
+ * Version: 2.6.6
  * Creator: Jens Kuerschner (https://jekuer.com)
  * Project: https://github.com/add2cal/add-to-calendar-button
  * License: Elastic License 2.0 (ELv2) (https://github.com/add2cal/add-to-calendar-button/blob/main/LICENSE.txt)
@@ -953,8 +953,14 @@ a.atcb-modal-btn:not([disabled]):hover {
   margin-bottom: 0;
 }
 
+.atcb-modal-content.no-headline {
+  border-radius: var(--modal-border-radius) var(--modal-border-radius) 0 0;
+  padding-top: 1.8em;
+}
+
 .rsvp-inline-wrapper .atcb-modal-headline,
-.rsvp-inline-wrapper .atcb-modal-content {
+.rsvp-inline-wrapper .atcb-modal-content,
+.rsvp-inline-wrapper.atcb-modal-box {
   background-color: transparent;
   border-radius: 0;
   box-sizing: border-box;
@@ -1004,10 +1010,17 @@ a.atcb-modal-btn:not([disabled]):hover {
 }
 
 .pro-form {
+  text-align: left;
+}
+
+.pro-form:not(.no-intro) {
   border-top: 1px solid var(--modal-btn-border);
   margin-top: 1.5em;
   padding-top: 1.5em;
-  text-align: left;
+}
+
+.pro-form.no-intro:not(.no-headline) {
+  padding-top: .5em;
 }
 
 .pro-field + .pro-field {

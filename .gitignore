@@ -17,3 +17,7 @@
 # dist folder.
 /dist
 demo/dist
+
+# tmp testing files.
+testing.html
+example.html
