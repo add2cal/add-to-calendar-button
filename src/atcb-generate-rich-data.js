@@ -3,7 +3,7 @@
  *  Add to Calendar Button
  *  ++++++++++++++++++++++
  *
- *  Version: 2.6.5
+ *  Version: 2.6.6
  *  Creator: Jens Kuerschner (https://jekuer.com)
  *  Project: https://github.com/add2cal/add-to-calendar-button
  *  License: Elastic License 2.0 (ELv2) (https://github.com/add2cal/add-to-calendar-button/blob/main/LICENSE.txt)
@@ -47,6 +47,8 @@ function atcb_generate_rich_data(data, parent) {
     }
     if (data.dates[`${i}`].status === 'CANCELLED') {
       schemaContent.push('"eventStatus":"https://schema.org/EventCancelled"');
+    } else {
+      schemaContent.push('"eventStatus":"https://schema.org/EventScheduled"');
     }
     schemaContent.push('"name":"' + data.dates[`${i}`].name + '"');
     if (data.dates[`${i}`].descriptionHtmlFree) {

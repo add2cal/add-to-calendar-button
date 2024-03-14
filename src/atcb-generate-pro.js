@@ -3,7 +3,7 @@
  *  Add to Calendar Button
  *  ++++++++++++++++++++++
  *
- *  Version: 2.6.5
+ *  Version: 2.6.6
  *  Creator: Jens Kuerschner (https://jekuer.com)
  *  Project: https://github.com/add2cal/add-to-calendar-button
  *  License: Elastic License 2.0 (ELv2) (https://github.com/add2cal/add-to-calendar-button/blob/main/LICENSE.txt)
@@ -76,13 +76,14 @@ async function atcb_generate_ty(hostEl, dataObj) {
   // form, if type = form
   let header = {};
   if (tyData.type === 'form') {
+    const noIntro = !tyData.text || tyData.text === '' || tyData.text === undefined;
     const label = (function () {
       if (tyData.button_label && tyData.button_label !== '') {
         return tyData.button_label;
       }
       return atcb_translate_hook('submit', data);
     })();
-    tyContent += '<form id="' + data.identifier + '-ty-form" class="pro-form">';
+    tyContent += '<form id="' + data.identifier + '-ty-form" class="pro-form' + (noIntro ? ' no-intro' : '') + '">';
     if (tyData.fields && tyData.fields.length > 0) {
       const customForm = atcb_build_form(tyData.fields, data.identifier + '-ty');
       tyData.fields = customForm.fields;
@@ -192,13 +193,11 @@ async function atcb_generate_rsvp_form(host, data, hostEl, keyboardTrigger = fal
    */
   // prepare the form
   const rsvpData = data.rsvp;
+  const noIntro = !rsvpData.text || rsvpData.text === '' || rsvpData.text === undefined;
+  const noHeadline = !rsvpData.headline || rsvpData.headline === '' || rsvpData.headline === undefined;
   // prepare content with...
   let hiddenContent = '';
   let rsvpContent = '<div class="pro">';
-  // define default headline
-  if (!rsvpData.headline || rsvpData.headline === '') {
-    rsvpData.headline = atcb_translate_hook('label.rsvp', data);
-  }
   // show success message, if already sent
   const sentStatus = localStorage.getItem(data.proKey + '-rsvp-sent') || false;
   if (sentStatus) {
@@ -216,7 +215,7 @@ async function atcb_generate_rsvp_form(host, data, hostEl, keyboardTrigger = fal
   if (rsvpData.text && rsvpData.text !== '') {
     rsvpContent += atcb_rewrite_html_elements(rsvpData.text);
   }
-  rsvpContent += '<form id="' + data.identifier + '-rsvp-form" class="pro-form">';
+  rsvpContent += '<form id="' + data.identifier + '-rsvp-form" class="pro-form' + (noIntro ? ' no-intro' : '') + (noHeadline ? ' no-headline' : '') + '">';
   // add status, amount, and email fields based on situation
   const staticID = data.proKey || 'demo-rsvp';
   if (rsvpData.initial_confirmation === false) {
@@ -340,10 +339,12 @@ async function atcb_generate_rsvp_form(host, data, hostEl, keyboardTrigger = fal
       rsvpInlineWrapper.classList.add('atcb-rtl');
     }
     hostEl.append(rsvpInlineWrapper);
-    const rsvpInlineHeadline = document.createElement('div');
-    rsvpInlineHeadline.classList.add('atcb-modal-headline');
-    rsvpInlineWrapper.append(rsvpInlineHeadline);
-    rsvpInlineHeadline.innerHTML = rsvpData.headline;
+    if (rsvpData.headline) {
+      const rsvpInlineHeadline = document.createElement('div');
+      rsvpInlineHeadline.classList.add('atcb-modal-headline');
+      rsvpInlineWrapper.append(rsvpInlineHeadline);
+      rsvpInlineHeadline.innerHTML = rsvpData.headline;
+    }
     const rsvpInlineContent = document.createElement('div');
     rsvpInlineContent.classList.add('atcb-modal-content');
     rsvpInlineWrapper.append(rsvpInlineContent);

@@ -3,7 +3,7 @@
  *  Add to Calendar Button
  *  ++++++++++++++++++++++
  *
- *  Version: 2.6.5
+ *  Version: 2.6.6
  *  Creator: Jens Kuerschner (https://jekuer.com)
  *  Project: https://github.com/add2cal/add-to-calendar-button
  *  License: Elastic License 2.0 (ELv2) (https://github.com/add2cal/add-to-calendar-button/blob/main/LICENSE.txt)
@@ -391,6 +391,7 @@ function atcb_create_atcbl(host, atList = true, returnEl = false) {
 // this is only about special communication modals - not the list style modal
 async function atcb_create_modal(mainHost, data, icon = '', headline, content = '', buttons = [], subEvents = [], keyboardTrigger = false, goto = {}, closable = true) {
   atcbStates['active'] = data.identifier;
+  const noHeadline = !headline || headline === '' || headline === undefined;
   // setting the stage
   const modalHost = await atcb_generate_modal_host(mainHost, data, false);
   const bgOverlay = (function () {
@@ -439,7 +440,7 @@ async function atcb_create_modal(mainHost, data, icon = '', headline, content = 
     modal.append(modalIcon);
   }
   // add headline
-  if (headline && headline !== '') {
+  if (!noHeadline) {
     const modalHeadline = document.createElement('div');
     modalHeadline.classList.add('atcb-modal-headline');
     modalHeadline.textContent = headline;
@@ -449,6 +450,7 @@ async function atcb_create_modal(mainHost, data, icon = '', headline, content = 
   if (content !== '') {
     const modalContent = document.createElement('div');
     modalContent.classList.add('atcb-modal-content');
+    if (noHeadline) modalContent.classList.add('no-headline');
     modalContent.innerHTML = content;
     modal.append(modalContent);
   }
