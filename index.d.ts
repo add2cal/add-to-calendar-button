@@ -109,7 +109,7 @@ export interface ATCBActionEventConfig {
   dev?: boolean;
 }
 
-export type AddToCalendarButtonType = {
+export type AddToCalendarButtonType = HTMLElement & {
   proKey?: string;
   name?: string;
   dates?: EventDate[] | string;
