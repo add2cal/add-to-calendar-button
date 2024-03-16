@@ -5,7 +5,7 @@
  *
  * Style: Flat
  *
- * Version: 2.6.6
+ * Version: 2.6.7
  * Creator: Jens Kuerschner (https://jekuer.com)
  * Project: https://github.com/add2cal/add-to-calendar-button
  * License: Elastic License 2.0 (ELv2) (https://github.com/add2cal/add-to-calendar-button/blob/main/LICENSE.txt)
@@ -40,6 +40,7 @@
   --list-hover-background: #fff;
   --list-border: #545454;
   --list-text: #333;
+  --list-font-weight: 400;
   --list-hover-text: #000;
   --list-close-background: #545454;
   --list-close-text: #b0b0b0;
@@ -306,6 +307,7 @@
 
 .atcb-list-wrapper {
   box-sizing: border-box;
+  font-weight: var(--list-font-weight);
   padding: 0 2px 0 6px;
   position: absolute;
   z-index: 16000090;
