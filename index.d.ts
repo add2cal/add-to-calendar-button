@@ -109,7 +109,7 @@ export interface ATCBActionEventConfig {
   dev?: boolean;
 }
 
-export type AddToCalendarButtonType = HTMLElement & {
+export type AddToCalendarButtonType = {
   proKey?: string;
   name?: string;
   dates?: EventDate[] | string;
@@ -212,7 +212,7 @@ export type CustomLabelsObjectType = {
 // WEB COMPONENT DECLARATION
 declare global {
   interface HTMLElementTagNameMap {
-    'add-to-calendar-button': AddToCalendarButtonType;
+    'add-to-calendar-button': HTMLElement & AddToCalendarButtonType;
   }
   namespace JSX {
     interface IntrinsicElements {
