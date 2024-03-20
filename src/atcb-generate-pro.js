@@ -3,7 +3,7 @@
  *  Add to Calendar Button
  *  ++++++++++++++++++++++
  *
- *  Version: 2.6.8
+ *  Version: 2.6.9
  *  Creator: Jens Kuerschner (https://jekuer.com)
  *  Project: https://github.com/add2cal/add-to-calendar-button
  *  License: Elastic License 2.0 (ELv2) (https://github.com/add2cal/add-to-calendar-button/blob/main/LICENSE.txt)
@@ -85,6 +85,21 @@ async function atcb_generate_ty(hostEl, dataObj) {
     })();
     tyContent += '<form id="' + data.identifier + '-ty-form" class="pro-form' + (noIntro ? ' no-intro' : '') + '">';
     if (tyData.fields && tyData.fields.length > 0) {
+      // if there is a field with name "header" of type "hidden" and a value with a valid JSON string, we set the header
+      const headerField = tyData.fields.find((field) => field.name === 'header' && field.type === 'hidden');
+      if (headerField && headerField.default && headerField.default !== '' && headerField.default.startsWith('{')) {
+        try {
+          header = JSON.parse(headerField.default);
+          // if header is still empty, we set an entry "atcb" with the value "true" as default to make sure the request is sent as JSON
+          if (Object.keys(header).length === 0) {
+            header.atcb = true;
+          }
+          // delete this field from the fields array
+          tyData.fields = tyData.fields.filter((field) => field.name !== 'header');
+        } catch (e) {
+          /* do nothing */
+        }
+      }
       const customForm = atcb_build_form(tyData.fields, data.identifier + '-ty');
       tyData.fields = customForm.fields;
       tyContent += customForm.html;

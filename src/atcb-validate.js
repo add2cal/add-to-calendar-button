@@ -3,7 +3,7 @@
  *  Add to Calendar Button
  *  ++++++++++++++++++++++
  *
- *  Version: 2.6.8
+ *  Version: 2.6.9
  *  Creator: Jens Kuerschner (https://jekuer.com)
  *  Project: https://github.com/add2cal/add-to-calendar-button
  *  License: Elastic License 2.0 (ELv2) (https://github.com/add2cal/add-to-calendar-button/blob/main/LICENSE.txt)
@@ -25,6 +25,10 @@ async function atcb_check_required(data) {
   }
   // regarding event specifics, we start by checking for multi-date setups
   if (data.dates != null && data.dates.length > 0) {
+    // return early if there are more than 1 dates and the subscribe option being set
+    if (data.subscribe === true && data.dates.length > 1) {
+      throw new Error('Add to Calendar Button generation failed: a subscription calendar cannot be a multi-date setup');
+    }
     const requiredMultiField = ['name', 'startDate'];
     const requiredMultiFieldFlex = ['name'];
     return requiredMultiField.every(function (field) {
@@ -34,7 +38,13 @@ async function atcb_check_required(data) {
           (!requiredMultiFieldFlex.includes(`${field}`) && (!data.dates[`${i}`][`${field}`] || data.dates[`${i}`][`${field}`] === '')) ||
           (requiredMultiFieldFlex.includes(`${field}`) && (!data.dates[`${i}`][`${field}`] || data.dates[`${i}`][`${field}`] === '') && (!data[`${field}`] || data[`${field}`] === ''))
         ) {
-          throw new Error('Add to Calendar Button generation failed: required setting missing [dates array object #' + (i + 1) + '/' + data.dates.length + '] => [' + field + ']');
+          if (!data.subscribe || field !== 'startDate') {
+            // we do not check for startDate in the subscribe mode, since it is not required there
+            throw new Error('Add to Calendar Button generation failed: required setting missing [dates array object #' + (i + 1) + '/' + data.dates.length + '] => [' + field + ']');
+          } else {
+            // we even set it to "today" if it is missing in the subscribe mode
+            data.dates[`${i}`].startDate = 'today';
+          }
         }
       }
       return true;
@@ -43,7 +53,13 @@ async function atcb_check_required(data) {
     const requiredSingleField = ['startDate'];
     return requiredSingleField.every(function (field) {
       if (!data[`${field}`] || data[`${field}`] === '') {
-        throw new Error('Add to Calendar Button generation failed: required setting missing [' + field + ']');
+        if (!data.subscribe || field !== 'startDate') {
+          // we do not check for startDate in the subscribe mode, since it is not required there
+          throw new Error('Add to Calendar Button generation failed: required setting missing [' + field + ']');
+        } else {
+          // we even set it to "today" if it is missing in the subscribe mode
+          data.startDate = 'today';
+        }
       }
       return true;
     });

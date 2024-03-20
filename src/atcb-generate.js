@@ -3,7 +3,7 @@
  *  Add to Calendar Button
  *  ++++++++++++++++++++++
  *
- *  Version: 2.6.8
+ *  Version: 2.6.9
  *  Creator: Jens Kuerschner (https://jekuer.com)
  *  Project: https://github.com/add2cal/add-to-calendar-button
  *  License: Elastic License 2.0 (ELv2) (https://github.com/add2cal/add-to-calendar-button/blob/main/LICENSE.txt)
@@ -161,6 +161,8 @@ function atcb_generate_label_content(data, parent, type, icon, text, oneOption) 
       text = atcb_translate_hook(type, data);
     }
   }
+  // also add text as aria-label to the parent element
+  parent.setAttribute('aria-label', oneOption ? atcb_translate_hook('label.addtocalendar', data) + ': ' + data.name + ': ' + text : type === 'trigger' ? text + ': ' + data.name : text);
   // add icon and text label (not in the date style trigger case)
   if (data.buttonStyle === 'date' && (type === 'trigger' || oneOption)) {
     return;
@@ -180,8 +182,6 @@ function atcb_generate_label_content(data, parent, type, icon, text, oneOption) 
     textEl.textContent = text;
     parent.append(textEl);
   }
-  // also add text as aria-label to the parent element
-  parent.setAttribute('aria-label', text);
 }
 
 // generate the triggering button
