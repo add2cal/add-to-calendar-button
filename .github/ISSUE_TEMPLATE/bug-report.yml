@@ -40,5 +40,10 @@ body:
         2. Browser (e.g. Chrome)
         3. Version number of the application (e.g. 1.9.1)
         4. How you include the script (e.g. via the React Wrapper, WordPress Plugin, the Vanilla Javascript way, ...)
+      value: |
+        1. Device and OS:
+        2. Browser:
+        3. Version number of the application:
+        4. How you include the script:
     validations:
       required: true

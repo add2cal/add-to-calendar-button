@@ -345,8 +345,8 @@ async function atcb_build_button(host, data) {
       } else {
         atcb_generate_button(host, rootObj, data);
       }
-      // create schema.org data (https://schema.org/Event), if possible; and add it to the regular DOM
-      if (!data.hideRichData && data.name && data.dates[0].location && data.dates[0].startDate) {
+      // create schema.org data (https://schema.org/Event), if possible; not in the subscription case; and add it to the regular DOM
+      if (!data.hideRichData && !data.subscribe && data.name && data.dates[0].location && data.dates[0].startDate) {
         atcb_generate_rich_data(data, host.host);
       }
     }

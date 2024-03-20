@@ -496,8 +496,9 @@ onUnmounted(() => {
           <p>You can also offer your users the option to subscribe to a calendar, instead of only saving static events.</p>
           <p>To get this to work, you would simply need to set the public address (an .ics file) of the calendar as the "icsFile" option and set the "subscribe" option to true.</p>
           <p>
-            "name" and "startDate" are still required for organizational purposes, but every other event parameter can be skipped in this case.<br />
+            "name" is still required, but every other event parameter can be skipped in this case.<br />
             For Microsoft services, the "name" will be used as name for the calendar.<br />
+            Mind that there won't be rich data for the subscribe option.<br />
             <span class="text-sm italic">(If the user's browser does not recognize any installed calendar app, this might lead to a blank screen. The PRO version mitigates this with some explenatory middleware screen.)</span>
           </p>
         </div>
@@ -505,8 +506,9 @@ onUnmounted(() => {
           <p>Du kannst deinen Nutzern auch die Möglichkeit bieten, einen Kalender zu abonnieren - anstelle davon einen statischen Termin zu speichern.</p>
           <p>Damit dies funktioniert, benötigst du einen öffentlich zugänglichen Kalender (.ics-Datei), dessen Adresse du über die "icsFile"-Option definierst. Setze nun noch die Option "subscribe" und du bist schon fertig.</p>
           <p>
-            "name" und "startDate" sind aus technisch-organisatorischen Gründen weiterhin verpflichtende Angaben. Alle weiteren Parameter sind in diesem Fall aber optional.<br />
+            "name" ist weiterhin eine verpflichtende Angabe. Alle weiteren Parameter sind in diesem Fall aber optional.<br />
             Bei Microsoft-Diensten wird der "name" als Name für den geteilten Kalender genutzt.<br />
+            Beachte, dass es für den Abonnement-Modus keine Rich-Data-Generierung gibt.<br />
             <span class="text-sm italic">(Sollte der Browser des Nutzers keine installierte Kalender-App erkennen, kann dies zu einer leeren Seite führen. Die PRO-Version optimiert dies mit einem erklärenden Zwischenbildschirm.)</span>
           </p>
         </div>
@@ -514,7 +516,6 @@ onUnmounted(() => {
           <div class="flex w-full flex-none justify-center p-6 pt-8 md:w-[300px]">
             <add-to-calendar-button
               :name="$t('demo_data.name_subscription')"
-              :startDate="defaultDate"
               subscribe
               icsFile="https://add2cal.github.io/ics-demo/demo-calendar.ics"
               options="'Apple','Google','iCal','Outlook.com','Microsoft 365','Microsoft Teams','Yahoo'"
@@ -529,7 +530,6 @@ onUnmounted(() => {
               <pre>
 &lt;add-to-calendar-button
   name="{{ $t('demo_data.name_subscription') }}"
-  startDate="{{ defaultDate }}"
   subscribe
   icsFile="https://add2cal.github.io/ics-demo/demo-calendar.ics"
   options="'Apple','Google','iCal','Outlook.com','Microsoft 365','Microsoft Teams','Yahoo'"
