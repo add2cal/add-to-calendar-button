@@ -44,7 +44,7 @@ export default defineNuxtConfig({
     csrf: false,
     headers: {
       crossOriginResourcePolicy: 'same-origin',
-      crossOriginOpenerPolicy: 'same-origin',
+      crossOriginOpenerPolicy: 'unsafe-none',
       crossOriginEmbedderPolicy: 'unsafe-none',
       contentSecurityPolicy: false,
       // the following needs to match the settings in ./public/staticwebapp.config.json
