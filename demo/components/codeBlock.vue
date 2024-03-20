@@ -1,17 +1,17 @@
 <!-- eslint-disable vue/no-v-html -->
 <script setup lang="ts">
 import { ClipboardIcon, ClipboardDocumentCheckIcon } from '@heroicons/vue/24/outline';
-import { getHighlighterCore } from 'shikiji/core';
-import getWasm from 'shikiji/wasm';
-import githublight from 'shikiji/themes/github-light.mjs';
-import githubdark from 'shikiji/themes/github-dark.mjs';
+import { getHighlighterCore } from 'shiki/core';
+import getWasm from 'shiki/wasm';
+import githublight from 'shiki/themes/github-light.mjs';
+import githubdark from 'shiki/themes/github-dark.mjs';
 
 const highlighter = await getHighlighterCore({
   themes: [githublight, githubdark],
   langs: [
-    import('shikiji/langs/shellscript.mjs'),
-    import('shikiji/langs/javascript.mjs'),
-    import('shikiji/langs/html.mjs'),
+    import('shiki/langs/shellscript.mjs'),
+    import('shiki/langs/javascript.mjs'),
+    import('shiki/langs/html.mjs'),
   ],
   loadWasm: getWasm
 })
