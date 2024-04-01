@@ -301,6 +301,17 @@
         "npm_alternative_1": "Alternatively, install the package from the npm registry.",
         "npm_alternative_2": "...and setup an Observer to load the script properly:"
       },
+      "nextjs": {
+        "headline": "How to install the Add to Calendar Button with Next.js",
+        "intro_1": "Since Nextjs does not play that nicely with web components, we strongly recommend to use our ",
+        "intro_2": "official Add to Calendar Button React Wrapper",
+        "intro_3": " instead of the default one.",
+        "intro_4": "It already mitigates all the potential problems and issues.",
+        "start_wrapper": "Start using it by adding a <AddtoCalendarButton> tag to your source code."
+      },
+      "nuxt": {
+        "headline": "How to install the Add to Calendar Button with Nuxt 3"
+      },
       "react": {
         "headline": "How to install the Add to Calendar Button with React",
         "step_pick": "Pick a solution",
@@ -330,6 +341,14 @@
         "config_3": "This can go into your vite.config.js or other places depending on your setup. Check the official Vue documentation for more details",
         "config_4": "In case the Add to Calendar Button is the only Web Component in your project, you could also be a little bit more explicit here.",
         "config_5": "In this case, our recommendation is to define tags, which start with \"add-\" as \"custom elements\"."
+      },
+      "wix": {
+        "headline": "How to install the Add to Calendar Button in Wix",
+        "intro_1": "Wix is a rather special case, as it does not allow the direct smooth integration of Web Components. It is possible, but comes with a lot of restrictions and difficulties.",
+        "intro_2": "That's why we have built a dedicated plugin for Wix, which you can find in the Wix App Market.",
+        "intro_3": "This plugin is a wrapper around the Web Component, which makes it work seamlessly within the Wix environment, while you still get the power of our famous Add to Calendar Button script.",
+        "intro_4": "Once installed, you can add Add to Calendar Buttons as native Wix blocks in a no-code style. You can even define a global default style to make event management with Wix even more convenient.",
+        "link": "Find the plugin here"
       },
       "wordpress": {
         "headline": "How to install the Add to Calendar Button with WordPress",
