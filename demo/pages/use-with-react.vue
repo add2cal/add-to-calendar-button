@@ -39,7 +39,7 @@ watch(locale, value => {
           <li class="text-left">{{ $t('content.guide.react.pick_option1') }}</li>
           <li class="mt-3 text-left">
             {{ $t('content.guide.react.pick_option2_1') }}
-            <a href="https://github.com/add2cal/add-to-calendar-button-react" target="_blank" rel="noopener">
+            <a href="https://github.com/add2cal/add-to-calendar-button-react" target="_blank">
               {{ $t('content.guide.react.pick_option2_2') }}
               <ArrowTopRightOnSquareIcon class="-mt-0.5 mr-0.5 inline-block h-4 w-4" aria-hidden="true" />
             </a>

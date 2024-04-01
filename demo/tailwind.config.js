@@ -50,6 +50,7 @@ module.exports = {
         react: '#00d8ff',
         svelte: '#FF3E19',
         vue: '#42b883',
+        nuxt: '#08C678',
         wordpress: '#21759b',
         javascript: '#f7df1e',
       },

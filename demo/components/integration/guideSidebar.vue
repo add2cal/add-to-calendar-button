@@ -5,6 +5,9 @@ import Astro from "@/components/logos/logoAstro.vue";
 import React from "@/components/logos/logoReact.vue";
 import Svelte from "@/components/logos/logoSvelte.vue";
 import Vue from "@/components/logos/logoVue.vue";
+import NextJS from "@/components/logos/logoNextJS.vue";
+import Nuxt from "@/components/logos/logoNuxt.vue";
+import Wix from "@/components/logos/logoWix.vue";
 import WordPress from "@/components/logos/logoWordPress.vue";
 
 const localePath = useLocalePath();
@@ -27,8 +30,13 @@ export default {
     <Astro v-else-if="(stack=='astro')" class="w-24" />
     <React v-else-if="(stack=='react')" class="w-24" />
     <Svelte v-else-if="(stack=='svelte')" class="w-24" />
+    <NextJS v-else-if="(stack=='nextjs')" class="w-24" />
+    <Nuxt v-else-if="(stack=='nuxt')" class="w-24" />
     <Vue v-else-if="(stack=='vue')" class="w-24" />
-    <span v-else-if="(stack=='wordpress')" class="text-wordpress dark:text-white"><WordPress class="w-24" /></span>
+    <Wix v-else-if="(stack=='wix')" class="w-24" />
+    <span v-else-if="(stack=='wordpress')" class="text-wordpress dark:text-white">
+      <WordPress class="w-24" />
+    </span>
     <CodeBracketIcon v-else class="w-24" />
   </div>
 
