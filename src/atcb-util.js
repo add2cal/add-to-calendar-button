@@ -3,7 +3,7 @@
  *  Add to Calendar Button
  *  ++++++++++++++++++++++
  *
- *  Version: 2.6.9
+ *  Version: 2.6.10
  *  Creator: Jens Kuerschner (https://jekuer.com)
  *  Project: https://github.com/add2cal/add-to-calendar-button
  *  License: Elastic License 2.0 (ELv2) (https://github.com/add2cal/add-to-calendar-button/blob/main/LICENSE.txt)
@@ -192,6 +192,7 @@ function atcb_translate_via_time_zone(date, time, baseTimeZone, targetTimeZone) 
   const dateTime = new Date(`${date}T${time}:00Z`);
   const offset = tzlib_get_offset(baseTimeZone, date, time); // would return something like +0200
   const dateTimeUTC = new Date(dateTime.getTime() - offsetToMilliseconds(offset));
+  // Format the date and time in the target time zone
   const formatter = new Intl.DateTimeFormat('en-CA', {
     year: 'numeric',
     month: '2-digit',
@@ -199,7 +200,7 @@ function atcb_translate_via_time_zone(date, time, baseTimeZone, targetTimeZone) 
     hour: '2-digit',
     minute: '2-digit',
     timeZone: targetTimeZone,
-    hour12: false,
+    hourCycle: 'h23',
   });
   const dateInTargetTimeZone = formatter.format(dateTimeUTC);
   return ([date, time] = dateInTargetTimeZone.split(', '));
