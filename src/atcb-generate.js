@@ -161,12 +161,13 @@ function atcb_generate_label_content(data, parent, type, icon, text, oneOption) 
       text = atcb_translate_hook(type, data);
     }
   }
-  // also add text as aria-label to the parent element
-  parent.setAttribute('aria-label', oneOption ? atcb_translate_hook('label.addtocalendar', data) + ': ' + data.name + ': ' + text : type === 'trigger' ? text + ': ' + data.name : text);
-  // add icon and text label (not in the date style trigger case)
+  // stop here for the date style trigger button
   if (data.buttonStyle === 'date' && (type === 'trigger' || oneOption)) {
     return;
   }
+  // add text as aria-label to the parent element
+  parent.setAttribute('aria-label', oneOption ? atcb_translate_hook('label.addtocalendar', data) + ' (' + atcb_translate_hook(type, data) + '): ' + data.name : type === 'trigger' ? text + ': ' + data.name : text);
+  // add icon and text label
   if (icon) {
     const iconEl = document.createElement('div');
     iconEl.classList.add('atcb-icon');
@@ -225,7 +226,7 @@ function atcb_generate_button(host, button, data) {
     buttonTriggerWrapper.append(buttonTrigger);
     // generate the label incl. eventListeners
     if (data.buttonStyle === 'date') {
-      atcb_generate_date_button(data, buttonTrigger);
+      atcb_generate_date_button(data, buttonTrigger, 'all', oneOption);
     }
     // if there is only 1 calendar option, we directly show this at the button, but with the trigger's label text
     if (oneOption) {
@@ -597,7 +598,7 @@ function atcb_subscribe_yahoo_modal_switch(host, data, keyboardTrigger) {
 }
 
 // FUNCTION TO GENERATE A MORE DETAILED DATE BUTTON
-function atcb_generate_date_button(data, parent, subEvent = 'all') {
+function atcb_generate_date_button(data, parent, subEvent = 'all', oneOption = false) {
   if (subEvent != 'all') {
     subEvent = parseInt(subEvent) - 1;
   } else if (data.dates.length == 1) {
@@ -674,11 +675,8 @@ function atcb_generate_date_button(data, parent, subEvent = 'all') {
   // headline
   const btnHeadline = document.createElement('div');
   btnHeadline.classList.add('atcb-date-btn-headline');
-  if (data.dates.length > 1 && subEventAll) {
-    btnHeadline.textContent = data.name; // show name of event series for multi-date
-  } else {
-    btnHeadline.textContent = data.dates[`${subEvent}`].name;
-  }
+  const btnHeadlineText = data.dates.length > 1 && subEventAll ? data.name : data.dates[`${subEvent}`].name; // show name of event series for multi-date
+  btnHeadline.textContent = btnHeadlineText;
   btnDetails.append(btnHeadline);
   // location line
   if ((data.dates[`${subEvent}`].location && data.dates[`${subEvent}`].location !== '' && !data.dates[`${subEvent}`].onlineEvent) || cancelledInfo !== '') {
@@ -750,6 +748,17 @@ function atcb_generate_date_button(data, parent, subEvent = 'all') {
     btnCheck.innerHTML = atcbIcon['checkmark'];
     parent.append(btnCheck);
   }
+  // set aria label
+  // TODO: Make this more accessible by using more detailed date information (could be also generated in a more central place - maybe decoration part); also merge this with the label generation for better structure
+  const ariaLabel =
+    hoverText.replace(/<br>/g, ' ').replace(/\+\s/g, '') +
+    (oneOption ? ' (' + atcb_translate_hook(data.options[0], data) + ')' : '') +
+    ': ' +
+    btnHeadlineText +
+    (data.dates[`${subEvent}`].location && data.dates[`${subEvent}`].location !== '' ? ', ' + data.dates[`${subEvent}`].location : '') +
+    ', ' +
+    fullTimeInfo.join(' ');
+  parent.setAttribute('aria-label', ariaLabel);
 }
 
 // FUNCTION TO BUILD A SECOND SHADOWDOM FOR MODALS
