@@ -214,7 +214,7 @@ function atcb_subscribe_ical(data, fileUrl) {
 // GOOGLE
 function atcb_subscribe_google(data, fileUrl) {
   const baseUrl = 'https://calendar.google.com/calendar/r?cid=';
-  const appLink = 'googlecalendar://calendar/';
+  const appLink = 'googlecalendar://calendar/r?cid=';
   const newFileUrl = (function () {
     const fileUrlRegex = /^(https?:\/\/|webcal:\/\/|\/\/)calendar\.google\.com\//;
     if (fileUrlRegex.test(fileUrl)) {
