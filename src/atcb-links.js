@@ -213,7 +213,8 @@ function atcb_subscribe_ical(data, fileUrl) {
 
 // GOOGLE
 function atcb_subscribe_google(data, fileUrl) {
-  const baseUrl = 'https://calendar.google.com/calendar?cid=';
+  const baseUrl = 'https://calendar.google.com/calendar/r?cid=';
+  const baseUrlApp = 'calendar.google.com/calendar?cid=';
   const fileUrlRegex = /^(https?:\/\/|webcal:\/\/|\/\/)calendar\.google\.com\//;
   const newFileUrl = (function () {
     if (fileUrlRegex.test(fileUrl)) {
@@ -221,12 +222,12 @@ function atcb_subscribe_google(data, fileUrl) {
     }
     return encodeURIComponent(fileUrl);
   })();
-  if (atcbIsAndroid() && fileUrlRegex.test(fileUrl)) {
-    atcb_open_cal_url(data, 'google', baseUrl.replace(/^(https?:\/\/|webcal:\/\/|\/\/)/, 'intent://') + newFileUrl + '#Intent;scheme=https;package=com.google.android.calendar;end', true);
+  if (atcbIsAndroid()) {
+    atcb_open_cal_url(data, 'google', 'intent://' + baseUrlApp + newFileUrl + '#Intent;scheme=https;package=com.google.android.calendar;end', true);
     return;
   }
-  if (atcbIsiOS() && fileUrlRegex.test(fileUrl)) {
-    atcb_open_cal_url(data, 'google', baseUrl.replace(/^(https?:\/\/|webcal:\/\/|\/\/)/, 'googlecalendar://') + newFileUrl, true);
+  if (atcbIsiOS() && atcbIsSafari() && fileUrlRegex.test(fileUrl)) {
+    atcb_open_cal_url(data, 'google', 'googlecalendar://' + baseUrlApp + newFileUrl, true);
     return;
   }
   atcb_open_cal_url(data, 'google', baseUrl + newFileUrl, true);

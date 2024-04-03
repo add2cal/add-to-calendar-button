@@ -43,14 +43,12 @@ const localePath = useLocalePath();
         {{ $t('navigation.playground') }}
       </h2>
     </div>
-    <DelayHydration>
-      <ClientOnly>
-        <LazyPlaygroundArea />
-        <template #fallback>
-          <PlaygroundAreaPlaceholder />
-        </template>
-      </ClientOnly>
-    </DelayHydration>
+    <ClientOnly>
+      <LazyPlaygroundArea />
+      <template #fallback>
+        <PlaygroundAreaPlaceholder />
+      </template>
+    </ClientOnly>
     <div class="container hidden md:block">
       <div class="py-4 text-center text-sm italic text-zinc-400 dark:text-zinc-500">
         {{ $t('content.home.demoDisclaimer') }} <NuxtLink :to="localePath('configuration')">"{{ $t('labels.clickHere') }}"</NuxtLink>
