@@ -222,11 +222,7 @@ function atcb_subscribe_google(data, fileUrl) {
     return encodeURIComponent(fileUrl);
   })();
   if (atcbIsAndroid()) {
-    atcb_open_cal_url(data, 'google', newFileUrl.replace('https://', 'intent://') + '#Intent;scheme=https;package=com.google.android.calendar;S.browser_fallback_url=' + newFileUrl + ';end', true);
-    return;
-  }
-  if (atcbIsiOS()) {
-    atcb_open_cal_url(data, 'google', newFileUrl.replace('https://', 'googlecalendar://'), true);
+    atcb_open_cal_url(data, 'google', newFileUrl.replace('https://', 'intent://') + '#Intent;scheme=https;package=com.google.android.calendar;end', true);
     return;
   }
   atcb_open_cal_url(data, 'google', baseUrl + newFileUrl, true);
