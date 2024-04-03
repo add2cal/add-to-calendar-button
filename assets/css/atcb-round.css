@@ -457,7 +457,6 @@
 .atcb-list-item:focus-visible {
   background-color: var(--list-hover-background);
   color: var(--accent-color);
-  font-weight: 600;
   outline: none;
 }
 
