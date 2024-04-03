@@ -226,7 +226,7 @@ function atcb_subscribe_google(data, fileUrl) {
     atcb_open_cal_url(data, 'google', 'intent://' + baseUrlApp + newFileUrl + '#Intent;scheme=https;package=com.google.android.calendar;end', true);
     return;
   }
-  if (atcbIsiOS() && atcbIsSafari() && fileUrlRegex.test(fileUrl)) {
+  if (atcbIsiOS()) {
     atcb_open_cal_url(data, 'google', 'googlecalendar://' + baseUrlApp + newFileUrl, true);
     return;
   }
