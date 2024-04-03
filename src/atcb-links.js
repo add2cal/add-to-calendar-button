@@ -222,7 +222,7 @@ function atcb_subscribe_google(data, fileUrl) {
     return encodeURIComponent(fileUrl);
   })();
   if (atcbIsAndroid()) {
-    atcb_open_cal_url(data, 'google', newFileUrl.replace('https://', 'intent://') + '#Intent;scheme=https;package=com.google.android.calendar;end', true);
+    atcb_open_cal_url(data, 'google', fileUrl.replace(/^(https?:\/\/|webcal:\/\/|\/\/)/, 'intent://') + '#Intent;scheme=https;package=com.google.android.calendar;end', true);
     return;
   }
   atcb_open_cal_url(data, 'google', baseUrl + newFileUrl, true);
