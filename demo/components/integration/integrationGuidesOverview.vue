@@ -31,7 +31,7 @@ const localePath = useLocalePath();
           <NextJS class="self-center p-4 group-hover:drop-shadow-light-xl" />
           <div class="self-center p-4 pt-0">Next.js</div>
         </NuxtLink>
-        <NuxtLink class="tech-stack-button hover:border-nuxt hover:from-nuxt hover:to-nuxt dark:hover:border-nuxt dark:hover:from-nuxt dark:hover:to-nuxt group h-32 w-32 hover:text-white dark:hover:text-white xs:h-36 xs:w-40" :to="localePath('use-with-nuxt')">
+        <NuxtLink class="tech-stack-button group h-32 w-32 hover:border-nuxt hover:from-nuxt hover:to-nuxt hover:text-white dark:hover:border-nuxt dark:hover:from-nuxt dark:hover:to-nuxt dark:hover:text-white xs:h-36 xs:w-40" :to="localePath('use-with-nuxt')">
           <Nuxt class="self-center p-4" />
           <div class="self-center p-4 pt-0">Nuxt 3</div>
         </NuxtLink>

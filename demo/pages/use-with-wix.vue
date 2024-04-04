@@ -1,30 +1,10 @@
 <script setup lang="ts">
 import { ArrowTopRightOnSquareIcon } from '@heroicons/vue/24/solid';
 import GuideSidebar from "@/components/integration/guideSidebar.vue";
-const LazyCodeBlock = defineAsyncComponent(() => import('@/components/codeBlock.vue'));
-const { locale } = useI18n();
 
 definePageMeta({
   title: 'navigation.use-with-svelte',
   description: 'meta.use-with-svelte.description',
-});
-
-const today = new Date();
-const nextDay = new Date();
-nextDay.setDate(today.getDate() + 3);
-const defaultDate = nextDay.getFullYear() + '-' + ('0' + (nextDay.getMonth() + 1)).slice(-2) + '-' + ('0' + nextDay.getDate()).slice(-2);
-let defaultLang = (function () {
-  if (locale.value != 'en') {
-    return '\n  language="' + locale.value + '"';
-  }
-  return '';
-})();
-watch(locale, value => {
-  if (value != 'en') {
-    defaultLang = '\n  language="' + locale.value + '"';
-  } else {
-    defaultLang = '';
-  }
 });
 </script>
 
@@ -37,9 +17,9 @@ watch(locale, value => {
         <p class="font-semibold">{{ $t('content.guide.wix.intro_2') }}</p>
         <p>{{ $t('content.guide.wix.intro_3') }}</p>
         <p>{{ $t('content.guide.wix.intro_4') }}</p>
-        <a class="button-primary mt-10 mb-16 !flex w-fit mx-auto md:mx-0" href="https://www.wix.com/app-market/add-to-calendar-button" target="_blank">
+        <a class="button-primary mx-auto mb-16 mt-10 !flex w-fit md:mx-0" href="https://www.wix.com/app-market/add-to-calendar-button" target="_blank">
           <span>{{ $t('content.guide.wix.link') }}</span>
-          <ArrowTopRightOnSquareIcon class="w-4 h-4 ml-2" />
+          <ArrowTopRightOnSquareIcon class="ml-2 h-4 w-4" />
         </a>
       </div>
     </div>
