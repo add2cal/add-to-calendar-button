@@ -3,7 +3,7 @@
  *  Add to Calendar Button
  *  ++++++++++++++++++++++
  *
- *  Version: 2.6.9
+ *  Version: 2.6.10
  *  Creator: Jens Kuerschner (https://jekuer.com)
  *  Project: https://github.com/add2cal/add-to-calendar-button
  *  License: Elastic License 2.0 (ELv2) (https://github.com/add2cal/add-to-calendar-button/blob/main/LICENSE.txt)
@@ -290,12 +290,11 @@ function atcb_decorate_data_dates(data) {
       }
       // cleanup different date-time formats
       const cleanedUpDates = atcb_date_cleanup(data.dates[`${i}`]);
+      data.dates[`${i}`].startDate = cleanedUpDates.startDate;
+      data.dates[`${i}`].endDate = cleanedUpDates.endDate;
       data.dates[`${i}`].startTime = cleanedUpDates.startTime;
       data.dates[`${i}`].endTime = cleanedUpDates.endTime;
       data.dates[`${i}`].timeZone = cleanedUpDates.timeZone;
-      // calculate the real date values in case that there are some special rules included (e.g. adding days dynamically)
-      data.dates[`${i}`].startDate = atcb_date_calculation(cleanedUpDates.startDate);
-      data.dates[`${i}`].endDate = atcb_date_calculation(cleanedUpDates.endDate);
       // calculating more special meta information
       data.dates[`${i}`].timestamp = atcb_date_specials_calculation('timestamp', data.dates[`${i}`].startDate, data.dates[`${i}`].startTime, data.dates[`${i}`].timeZone);
       data.dates[`${i}`].overdue = atcb_date_specials_calculation('overdue', data.dates[`${i}`].endDate, data.dates[`${i}`].endTime, data.dates[`${i}`].timeZone);
@@ -307,11 +306,12 @@ function atcb_decorate_data_dates(data) {
     if (data.useUserTZ) data.dates[0].useUserTZ = data.useUserTZ;
     const cleanedUpDates = atcb_date_cleanup(data);
     // in addition, we directly move this information into the dates array block for better consistency at the next steps
+    data.startDate = data.dates[0].startDate = cleanedUpDates.startDate;
+    data.endDate = data.dates[0].endDate = cleanedUpDates.endDate;
     data.startTime = data.dates[0].startTime = cleanedUpDates.startTime;
     data.endTime = data.dates[0].endTime = cleanedUpDates.endTime;
     data.timeZone = data.dates[0].timeZone = cleanedUpDates.timeZone;
-    data.startDate = data.dates[0].startDate = atcb_date_calculation(cleanedUpDates.startDate);
-    data.endDate = data.dates[0].endDate = atcb_date_calculation(cleanedUpDates.endDate);
+    // calculating more special meta information
     if (!data.recurrence) {
       data.dates[0].overdue = atcb_date_specials_calculation('overdue', data.endDate, data.endTime, data.timeZone);
     } else {
@@ -447,13 +447,15 @@ function atcb_date_cleanup(dateTimeData) {
   if (!dateTimeData.endDate || dateTimeData.endDate === '') {
     dateTimeData.endDate = dateTimeData.startDate;
   }
-  // parse date+time format (unofficial alternatives to the main implementation)
+  // parse date+time format (unofficial alternatives to the main implementation); also calculate any dynamic dates
   const endpoints = ['start', 'end'];
   endpoints.forEach(function (point) {
     // validate first (we set some text instead, so the later validation picks it up as an error)
     if (!/^(\d{4}-\d{2}-\d{2}T?(?:\d{2}:\d{2}|)Z?|today(?:\+\d{1,4}|))$/i.test(dateTimeData[point + 'Date'])) {
       dateTimeData[point + 'Date'] = 'badly-formed';
     } else {
+      // dynamic date replacement
+      dateTimeData[point + 'Date'] = atcb_date_calculation(dateTimeData[point + 'Date']);
       // second, if valid, clean up
       if (dateTimeData[point + 'Date']) {
         // remove any milliseconds information

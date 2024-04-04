@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import GuideSidebar from "@/components/integration/guideSidebar.vue";
-import { ArrowTopRightOnSquareIcon } from '@heroicons/vue/24/outline';
 const LazyCodeBlock = defineAsyncComponent(() => import('@/components/codeBlock.vue'));
 const { locale } = useI18n();
 

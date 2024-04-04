@@ -5,7 +5,7 @@
  *
  * Style: Default
  *
- * Version: 2.6.9
+ * Version: 2.6.10
  * Creator: Jens Kuerschner (https://jekuer.com)
  * Project: https://github.com/add2cal/add-to-calendar-button
  * License: Elastic License 2.0 (ELv2) (https://github.com/add2cal/add-to-calendar-button/blob/main/LICENSE.txt)
@@ -369,7 +369,6 @@
 .atcb-list-item:focus-visible {
   background-color: var(--list-hover-background);
   color: var(--accent-color);
-  font-weight: 600;
   outline: none;
 }
 
