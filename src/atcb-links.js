@@ -3,7 +3,7 @@
  *  Add to Calendar Button
  *  ++++++++++++++++++++++
  *
- *  Version: 2.6.10
+ *  Version: 2.6.11
  *  Creator: Jens Kuerschner (https://jekuer.com)
  *  Project: https://github.com/add2cal/add-to-calendar-button
  *  License: Elastic License 2.0 (ELv2) (https://github.com/add2cal/add-to-calendar-button/blob/main/LICENSE.txt)
@@ -222,11 +222,11 @@ function atcb_subscribe_google(data, fileUrl) {
     }
     return encodeURIComponent(fileUrl);
   })();
-  if (atcbIsAndroid()) {
+  if (atcbIsAndroid() || data.fakeAndroid) {
     atcb_open_cal_url(data, 'google', 'intent://' + baseUrlApp + newFileUrl + '#Intent;scheme=https;package=com.google.android.calendar;end', true);
     return;
   }
-  if (atcbIsiOS() && atcbIsSafari() && fileUrlRegex.test(fileUrl)) {
+  if (((atcbIsiOS() && atcbIsSafari()) || data.fakeIOS) && fileUrlRegex.test(fileUrl)) {
     // since Apple is a little unstable here, we only go for the more or less safe cases
     atcb_open_cal_url(data, 'google', 'googlecalendar://' + baseUrlApp + newFileUrl, true);
     return;
