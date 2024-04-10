@@ -161,8 +161,8 @@ function atcb_decorate_data_options(data) {
     // in the recurrence case, we leave out all options, which do not support it in general, as well as Apple and iCal for rrules with "until"
     // and in the subscribe case, we also skip options, which are not made for subscribing (MS Teams)
     if (
-      (atcbIsiOS() && atcbiOSInvalidOptions.includes(optionName)) ||
-      (data.recurrence && data.recurrence !== '' && (!atcbValidRecurrOptions.includes(optionName) || (data.recurrence_until && data.recurrence_until !== '' && (optionName === 'apple' || optionName === 'ical')) || (atcbIsiOS() && optionName === 'google'))) ||
+      ((atcbIsiOS() || data.fakeIOS) && atcbiOSInvalidOptions.includes(optionName)) ||
+      (data.recurrence && data.recurrence !== '' && (!atcbValidRecurrOptions.includes(optionName) || (data.recurrence_until && data.recurrence_until !== '' && (optionName === 'apple' || optionName === 'ical')) || ((atcbIsiOS() || data.fakeIOS) && optionName === 'google'))) ||
       (data.subscribe && atcbInvalidSubscribeOptions.includes(optionName))
     ) {
       continue;
@@ -171,13 +171,13 @@ function atcb_decorate_data_options(data) {
   }
   // since the above can lead to excluding all options, we add the iCal option as default, if no other option is left
   if (newOptions.length === 0) {
-    if (!atcbIsiOS()) {
+    if (!atcbIsiOS() && !data.fakeIOS) {
       newOptions.push('ical');
     }
     iCalGiven = true;
   }
   // for iOS, we force the Apple option (if it is not there, but iCal was)
-  if (atcbIsiOS() && iCalGiven && !appleGiven) {
+  if ((atcbIsiOS() || data.fakeIOS) && iCalGiven && !appleGiven) {
     newOptions.push('apple');
   }
   // last but not least, override the options at the main data object
