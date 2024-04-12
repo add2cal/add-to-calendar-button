@@ -5,7 +5,7 @@
  *
  * Style: Text
  *
- * Version: 2.6.11
+ * Version: 2.6.12
  * Creator: Jens Kuerschner (https://jekuer.com)
  * Project: https://github.com/add2cal/add-to-calendar-button
  * License: Elastic License 2.0 (ELv2) (https://github.com/add2cal/add-to-calendar-button/blob/main/LICENSE.txt)
@@ -340,6 +340,7 @@
 
 .atcb-button .atcb-icon-trigger::after {
   content: "+";
+  font-family: Arial, Helvetica, sans-serif;
   font-size: 1.5em;
 }
 

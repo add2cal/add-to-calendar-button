@@ -5,14 +5,14 @@
  *  Add to Calendar Button
  *  ++++++++++++++++++++++
  *
- *  Version: 2.6.11
+ *  Version: 2.6.12
  *  Creator: Jens Kuerschner (https://jekuer.com)
  *  Project: https://github.com/add2cal/add-to-calendar-button
  *  License: Elastic License 2.0 (ELv2) (https://github.com/add2cal/add-to-calendar-button/blob/main/LICENSE.txt)
  *  Note:    DO NOT REMOVE THE COPYRIGHT NOTICE ABOVE!
  *
  */
-const atcbVersion = '2.6.11';
+const atcbVersion = '2.6.12';
 
 // DEFINING CSS
 const atcbCssTemplate = {};
@@ -111,7 +111,8 @@ const atcbDefaultTarget = atcbIsWebView() ? '_system' : '_blank';
 const atcbOptions = ['apple', 'google', 'ical', 'ms365', 'outlookcom', 'msteams', 'yahoo'];
 const atcbValidRecurrOptions = ['apple', 'google', 'ical'];
 const atcbInvalidSubscribeOptions = ['msteams'];
-const atcbiOSInvalidOptions = ['ical'];
+const atcbIOSInvalidOptions = ['ical'];
+const atcbAndroidInvalidOptions = ['apple'];
 const atcbStates = [];
 
 // DEFINING THE WEB COMPONENT ATTRIBUTES
@@ -290,7 +291,8 @@ export {
   atcbOptions,
   atcbValidRecurrOptions,
   atcbInvalidSubscribeOptions,
-  atcbiOSInvalidOptions,
+  atcbIOSInvalidOptions,
+  atcbAndroidInvalidOptions,
   atcbStates,
   atcbWcParams,
   atcbWcProParams,

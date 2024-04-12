@@ -3,7 +3,7 @@
  *  Add to Calendar Button
  *  ++++++++++++++++++++++
  *
- *  Version: 2.6.11
+ *  Version: 2.6.12
  *  Creator: Jens Kuerschner (https://jekuer.com)
  *  Project: https://github.com/add2cal/add-to-calendar-button
  *  License: Elastic License 2.0 (ELv2) (https://github.com/add2cal/add-to-calendar-button/blob/main/LICENSE.txt)
@@ -12,7 +12,7 @@
  */
 
 import { tzlib_get_offset } from 'timezones-ical-library';
-import { atcbIsiOS, atcbIsAndroid, atcbIsBrowser, atcbValidRecurrOptions, atcbInvalidSubscribeOptions, atcbiOSInvalidOptions, atcbWcBooleanParams } from './atcb-globals.js';
+import { atcbIsiOS, atcbIsAndroid, atcbIsBrowser, atcbValidRecurrOptions, atcbInvalidSubscribeOptions, atcbIOSInvalidOptions, atcbAndroidInvalidOptions, atcbWcBooleanParams } from './atcb-globals.js';
 import { atcb_translate_via_time_zone, atcb_format_datetime, atcb_rewrite_html_elements, atcb_generate_uuid } from './atcb-util.js';
 import { availableLanguages, rtlLanguages } from './atcb-i18n';
 import { atcb_check_booked_out } from './atcb-generate-pro.js';
@@ -130,20 +130,20 @@ function atcb_decorate_data_options(data) {
   // define the actual options to check
   const theOptions = (function () {
     if (atcbIsiOS() || data.fakeIOS) {
-      if (data.optionsIOS) {
+      if (data.optionsIOS && data.optionsIOS.length > 0) {
         return data.optionsIOS;
       }
-      if (data.optionsMobile) {
+      if (data.optionsMobile && data.optionsMobile.length > 0) {
         return data.optionsMobile;
       }
     }
-    if ((atcbIsAndroid() || data.fakeMobile || data.fakeAndroid) && data.optionsMobile) {
+    if ((atcbIsAndroid() || data.fakeMobile || data.fakeAndroid) && data.optionsMobile && data.optionsMobile.length > 0) {
       return data.optionsMobile;
     }
     return data.options || ['ical'];
   })();
   // iterrate over the options and generate the new clean arrays
-  const newOptions = [];
+  let newOptions = [];
   let iCalGiven = false;
   let appleGiven = false;
   for (let i = 0; i < theOptions.length; i++) {
@@ -161,24 +161,33 @@ function atcb_decorate_data_options(data) {
     // in the recurrence case, we leave out all options, which do not support it in general, as well as Apple and iCal for rrules with "until"
     // and in the subscribe case, we also skip options, which are not made for subscribing (MS Teams)
     if (
-      (atcbIsiOS() && atcbiOSInvalidOptions.includes(optionName)) ||
-      (data.recurrence && data.recurrence !== '' && (!atcbValidRecurrOptions.includes(optionName) || (data.recurrence_until && data.recurrence_until !== '' && (optionName === 'apple' || optionName === 'ical')) || (atcbIsiOS() && optionName === 'google'))) ||
+      ((atcbIsiOS() || data.fakeIOS) && atcbIOSInvalidOptions.includes(optionName)) ||
+      ((atcbIsAndroid() || data.fakeMobile || data.fakeAndroid) && atcbAndroidInvalidOptions.includes(optionName)) ||
+      (data.recurrence && data.recurrence !== '' && (!atcbValidRecurrOptions.includes(optionName) || (data.recurrence_until && data.recurrence_until !== '' && (optionName === 'apple' || optionName === 'ical')) || ((atcbIsiOS() || data.fakeIOS) && optionName === 'google'))) ||
       (data.subscribe && atcbInvalidSubscribeOptions.includes(optionName))
     ) {
       continue;
     }
     newOptions.push(optionName);
   }
+  // if we are in a subscription case and the icsFile starts with https://calendar.google.com/calendar/ and does not end with .ics, we only set the google option as everything else would not work
+  if (data.subscribe && data.icsFile && data.icsFile.startsWith('https://calendar.google.com/calendar/') && !data.icsFile.endsWith('.ics')) {
+    newOptions = ['google'];
+  }
   // since the above can lead to excluding all options, we add the iCal option as default, if no other option is left
   if (newOptions.length === 0) {
-    if (!atcbIsiOS()) {
+    if (!atcbIsiOS() && !data.fakeIOS) {
       newOptions.push('ical');
     }
     iCalGiven = true;
   }
   // for iOS, we force the Apple option (if it is not there, but iCal was)
-  if (atcbIsiOS() && iCalGiven && !appleGiven) {
+  if ((atcbIsiOS() || data.fakeIOS) && iCalGiven && !appleGiven) {
     newOptions.push('apple');
+  }
+  // and for Android, the other way around
+  if ((atcbIsAndroid() || data.fakeMobile || data.fakeAndroid) && appleGiven && !iCalGiven) {
+    newOptions.push('ical');
   }
   // last but not least, override the options at the main data object
   data.options = newOptions;

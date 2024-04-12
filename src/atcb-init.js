@@ -3,7 +3,7 @@
  *  Add to Calendar Button
  *  ++++++++++++++++++++++
  *
- *  Version: 2.6.11
+ *  Version: 2.6.12
  *  Creator: Jens Kuerschner (https://jekuer.com)
  *  Project: https://github.com/add2cal/add-to-calendar-button
  *  License: Elastic License 2.0 (ELv2) (https://github.com/add2cal/add-to-calendar-button/blob/main/LICENSE.txt)
@@ -67,11 +67,10 @@ if (atcbIsBrowser()) {
       this.debug = this.hasAttribute('debug') && (!debugVal || debugVal === 'true' || debugVal === '') ? true : false;
       // checking for PRO key and pull data if given
       if ((this.hasAttribute('proKey') && this.getAttribute('proKey') !== '') || (this.hasAttribute('prokey') && this.getAttribute('prokey') !== '')) {
-        const dev = this.hasAttribute('dev') && (this.getAttribute('dev') === null || this.getAttribute('dev') === '' || this.getAttribute('dev') === 'true') ? true : false;
         if (this.hasAttribute('proKey') && this.getAttribute('proKey') !== '') {
-          this.data = await atcb_get_pro_data(this.getAttribute('proKey'), this, { dev: dev });
+          this.data = await atcb_get_pro_data(this.getAttribute('proKey'), this);
         } else {
-          this.data = await atcb_get_pro_data(this.getAttribute('prokey'), this, { dev: dev });
+          this.data = await atcb_get_pro_data(this.getAttribute('prokey'), this);
         }
         if (this.data.proKey) this.proKey = this.data.proKey;
       }
@@ -727,13 +726,13 @@ async function atcb_get_pro_data(licenseKey, el = null, directData = {}) {
   if (licenseKey && licenseKey !== '') {
     // Try to read data from server and log error if not possible
     try {
-      const response = await fetch((directData.dev ? 'https://event-dev.caldn.net/' : 'https://event.caldn.net/') + licenseKey + '/config.json');
+      const dataOverrides = el ? atcb_read_attributes(el, atcbWcProParams) : directData;
+      const response = await fetch((dataOverrides.dev ? 'https://event-dev.caldn.net/' : 'https://event.caldn.net/') + licenseKey + '/config.json');
       if (response.ok) {
         const data = await response.json();
         if (!data.name || data.name === '') {
           throw new Error('Not possible to read proKey config from server...');
         }
-        const dataOverrides = el ? atcb_read_attributes(el, atcbWcProParams) : directData;
         atcbWcProParams.forEach((key) => {
           if (Object.prototype.hasOwnProperty.call(dataOverrides, key)) {
             data[`${key}`] = dataOverrides[`${key}`];

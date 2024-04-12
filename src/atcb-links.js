@@ -3,7 +3,7 @@
  *  Add to Calendar Button
  *  ++++++++++++++++++++++
  *
- *  Version: 2.6.11
+ *  Version: 2.6.12
  *  Creator: Jens Kuerschner (https://jekuer.com)
  *  Project: https://github.com/add2cal/add-to-calendar-button
  *  License: Elastic License 2.0 (ELv2) (https://github.com/add2cal/add-to-calendar-button/blob/main/LICENSE.txt)
@@ -67,7 +67,7 @@ function atcb_generate_links(host, type, data, subEvent = 'all', keyboardTrigger
           atcb_generate_microsoft(data, data.dates[`${subEvent}`], subEvent);
           break;
         case 'outlookcom':
-          atcb_generate_microsoft(data, data.dates[`${subEvent}`], subEvent, 'outlook');
+          atcb_generate_microsoft(data, data.dates[`${subEvent}`], subEvent, 'outlookcom');
           break;
         case 'yahoo':
           atcb_generate_yahoo(data, data.dates[`${subEvent}`], subEvent);
@@ -128,7 +128,7 @@ function atcb_generate_subscribe_links(host, linkType, data, keyboardTrigger) {
   const adjustedFileUrl = data.icsFile.replace('https://', 'webcal://');
   switch (linkType) {
     case 'ical': // also for apple (see above)
-      if (atcbIsAndroid() || data.fakeAndroid) {
+      if (atcbIsAndroid() || data.fakeMobile || data.fakeAndroid) {
         atcb_subscribe_ical(data, data.icsFile);
         break;
       }
@@ -141,7 +141,7 @@ function atcb_generate_subscribe_links(host, linkType, data, keyboardTrigger) {
       atcb_subscribe_microsoft(data, adjustedFileUrl, data.name);
       break;
     case 'outlookcom':
-      atcb_subscribe_microsoft(data, adjustedFileUrl, data.name, 'outlook');
+      atcb_subscribe_microsoft(data, adjustedFileUrl, data.name, 'outlookcom');
       break;
     case 'yahoo':
       if (data.proxy) {
@@ -222,7 +222,7 @@ function atcb_subscribe_google(data, fileUrl) {
     }
     return encodeURIComponent(fileUrl);
   })();
-  if (atcbIsAndroid() || data.fakeAndroid) {
+  if (atcbIsAndroid() || data.fakeMobile || data.fakeAndroid) {
     atcb_open_cal_url(data, 'google', 'intent://' + baseUrlApp + newFileUrl + '#Intent;scheme=https;package=com.google.android.calendar;end', true);
     return;
   }
@@ -235,10 +235,10 @@ function atcb_subscribe_google(data, fileUrl) {
 }
 
 // MICROSOFT
-function atcb_subscribe_microsoft(data, fileUrl, calName, type = '365') {
+function atcb_subscribe_microsoft(data, fileUrl, calName, type = 'ms365') {
   const urlParts = [];
   const baseUrl = (function () {
-    if (type == 'outlook') {
+    if (type == 'outlookcom') {
       return 'https://outlook.live.com/calendar/0/addfromweb/?';
     } else {
       return 'https://outlook.office.com/calendar/0/addfromweb/?';
@@ -261,18 +261,18 @@ function atcb_generate_google(data, date, subEvent = 'all') {
   urlParts.push('dates=' + encodeURIComponent(formattedDate.start) + '%2F' + encodeURIComponent(formattedDate.end));
   // setting time zone if given and not GMT +/- something, since this is not supported by Google Calendar
   // also do not set for all-day events, since this can lead to Google Calendar trying to adjust times
-  if (date.timeZone != null && date.timeZone != '' && !/(GMT[+|-]\d{1,2}|Etc\/U|Etc\/Zulu|CET|CST6CDT|EET|EST|EST5EDT|MET|MST|MST7MDT|PST8PDT|WET)/i.test(date.timeZone) && !formattedDate.allday) {
+  if (date.timeZone && date.timeZone !== '' && !/(GMT[+|-]\d{1,2}|Etc\/U|Etc\/Zulu|CET|CST6CDT|EET|EST|EST5EDT|MET|MST|MST7MDT|PST8PDT|WET)/i.test(date.timeZone) && !formattedDate.allday) {
     urlParts.push('ctz=' + date.timeZone);
   }
   // add details (if set)
-  if (date.name != null && date.name != '') {
+  if (date.name && date.name !== '') {
     urlParts.push('text=' + encodeURIComponent(date.name));
   }
   const tmpDataDescription = [];
-  if (date.description != null && date.description != '') {
+  if (date.description && date.description !== '') {
     tmpDataDescription.push(date.description);
   }
-  if (date.location != null && date.location != '') {
+  if (date.location && date.location !== '') {
     urlParts.push('location=' + encodeURIComponent(date.location));
     // TODO: Find a better solution for the next temporary workaround.
     if (atcbIsiOS() || data.fakeIOS) {
@@ -286,10 +286,10 @@ function atcb_generate_google(data, date, subEvent = 'all') {
   if (tmpDataDescription.length > 0) {
     urlParts.push('details=' + encodeURIComponent(tmpDataDescription.join('')));
   }
-  if (date.recurrence != null && date.recurrence != '') {
+  if (date.recurrence && date.recurrence !== '') {
     urlParts.push('recur=' + encodeURIComponent(date.recurrence));
   }
-  if (date.availability != null && date.availability != '') {
+  if (date.availability && date.availability !== '') {
     const availabilityPart = (function () {
       if (date.availability == 'free') {
         return 'crm=AVAILABLE&trp=false';
@@ -313,13 +313,13 @@ function atcb_generate_yahoo(data, date, subEvent = 'all') {
     urlParts.push('dur=allday');
   }
   // add details (if set)
-  if (date.name != null && date.name != '') {
+  if (date.name && date.name !== '') {
     urlParts.push('title=' + encodeURIComponent(date.name));
   }
-  if (date.location != null && date.location != '') {
+  if (date.location && date.location !== '') {
     urlParts.push('in_loc=' + encodeURIComponent(date.location));
   }
-  if (date.descriptionHtmlFree != null && date.descriptionHtmlFree != '') {
+  if (date.descriptionHtmlFree && date.descriptionHtmlFree !== '') {
     // using descriptionHtmlFree instead of description, since Yahoo does not support html tags in a stable way
     urlParts.push('desc=' + encodeURIComponent(date.descriptionHtmlFree));
   }
@@ -328,7 +328,7 @@ function atcb_generate_yahoo(data, date, subEvent = 'all') {
 
 // FUNCTION TO GENERATE THE MICROSOFT 365 OR OUTLOOK WEB URL
 // See specs at: TODO: add some documentation here, if it exists
-function atcb_generate_microsoft(data, date, subEvent = 'all', type = '365') {
+function atcb_generate_microsoft(data, date, subEvent = 'all', type = 'ms365') {
   const urlParts = [];
   const basePath = (function () {
     // tmp workaround to reflect the fact that Microsoft is routing mobile traffic differently
@@ -339,7 +339,7 @@ function atcb_generate_microsoft(data, date, subEvent = 'all', type = '365') {
     return '/calendar/action/compose?rru=addevent';
   })();
   const baseUrl = (function () {
-    if (type == 'outlook') {
+    if (type == 'outlookcom') {
       return 'https://outlook.live.com' + basePath;
     } else {
       return 'https://outlook.office.com' + basePath;
@@ -354,18 +354,18 @@ function atcb_generate_microsoft(data, date, subEvent = 'all', type = '365') {
     urlParts.push('allday=true');
   }
   // add details (if set)
-  if (date.name != null && date.name != '') {
+  if (date.name && date.name !== '') {
     // for the name, we need to replace any ampersand in the name, as Microsoft does not parse it correctly
     // TODO: remove this, when Microsoft has fixed this
     urlParts.push('subject=' + encodeURIComponent(date.name.replace(/&/g, '&#xFF06;')));
   }
-  if (date.location != null && date.location != '') {
+  if (date.location && date.location !== '') {
     urlParts.push('location=' + encodeURIComponent(date.location));
   }
-  if (date.description != null && date.description != '') {
+  if (date.description && date.description !== '') {
     urlParts.push('body=' + encodeURIComponent(date.description));
   }
-  atcb_open_cal_url(data, type === 'outlook' ? 'outlookcom' : 'ms365', urlParts.join('&'), false, subEvent);
+  atcb_open_cal_url(data, type, urlParts.join('&'), false, subEvent);
 }
 
 // FUNCTION TO GENERATE THE MICROSOFT TEAMS URL
@@ -386,11 +386,11 @@ function atcb_generate_msteams(data, date, subEvent = 'all') {
     urlParts.push('endTime=' + formattedDate.end);
   }
   // add details (if set)
-  if (date.name != null && date.name != '') {
+  if (date.name && date.name !== '') {
     urlParts.push('subject=' + encodeURIComponent(date.name));
   }
   let locationString = '';
-  if (date.location != null && date.location != '') {
+  if (date.location && date.location !== '') {
     locationString = date.location;
     locationString += ' // '; // preparing the workaround putting the location into the description, since the native field is not supported yet
     urlParts.push('location=' + encodeURIComponent(locationString));
@@ -404,11 +404,11 @@ function atcb_generate_msteams(data, date, subEvent = 'all') {
 
 // FUNCTION TO OPEN THE URL
 function atcb_open_cal_url(data, type, url, subscribe = false, subEvent = null, target = '') {
-  if (target == '') {
+  if (target === '') {
     target = atcbDefaultTarget;
   }
   if (atcb_secure_url(url)) {
-    if (data.proxy && data.proKey && data.proKey != '') {
+    if (data.proxy && data.proKey && data.proKey !== '') {
       const urlType = subscribe ? 's' : 'o';
       const query = (function () {
         const parts = [];

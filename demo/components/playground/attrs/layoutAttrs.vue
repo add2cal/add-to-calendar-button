@@ -78,7 +78,7 @@ function onHideTextOptionsUpdate(options: string[]) {
   <div class="grid">
     <Select v-model="internalValue[LayoutAttrsKey.OPTIONS]" multiselect :label="t(`labels.inputs.${[LayoutAttrsKey.OPTIONS]}`.toLocaleLowerCase())" :options="Object.values(Option)" class="mb-3 border-b border-zinc-400 pb-4 dark:border-zinc-600" />
 
-    <div class="z-0 mb-3 flex items-center justify-between">
+    <div class="z-10 mb-3 flex items-center justify-between">
       <Select v-model="internalValue[LayoutAttrsKey.BUTTON_STYLE]" :label="t(`labels.inputs.${[LayoutAttrsKey.BUTTON_STYLE]}`.toLocaleLowerCase())" :options="Object.values(ButtonStyle)" class="mr-5 flex-1" />
       <Switch v-model="internalValue[LayoutAttrsKey.IS_BUTTONS_LIST]" :label="t(`labels.inputs.${[LayoutAttrsKey.IS_BUTTONS_LIST]}`.toLocaleLowerCase())" class="pb-0 pt-6" />
     </div>

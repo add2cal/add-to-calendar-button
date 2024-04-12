@@ -3,7 +3,7 @@
  *  Add to Calendar Button
  *  ++++++++++++++++++++++
  *
- *  Version: 2.6.11
+ *  Version: 2.6.12
  *  Creator: Jens Kuerschner (https://jekuer.com)
  *  Project: https://github.com/add2cal/add-to-calendar-button
  *  License: Elastic License 2.0 (ELv2) (https://github.com/add2cal/add-to-calendar-button/blob/main/LICENSE.txt)
@@ -65,13 +65,9 @@ function atcb_generate_label(host, data, parent, type, icon = false, text = '', 
             }),
           );
         } else {
-          parent.addEventListener(
-            'mouseenter',
-            atcb_debounce_leading((event) => {
-              event.preventDefault();
-              atcb_toggle(host, 'open', data, parent, false, true);
-            }),
-          );
+          parent.addEventListener('mouseenter', function () {
+            atcb_toggle(host, 'open', data, parent, false, true);
+          });
         }
       }
       break;
