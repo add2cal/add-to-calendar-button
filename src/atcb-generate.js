@@ -65,13 +65,9 @@ function atcb_generate_label(host, data, parent, type, icon = false, text = '', 
             }),
           );
         } else {
-          parent.addEventListener(
-            'mouseenter',
-            atcb_debounce_leading((event) => {
-              event.preventDefault();
-              atcb_toggle(host, 'open', data, parent, false, true);
-            }),
-          );
+          parent.addEventListener('mouseenter', function () {
+            atcb_toggle(host, 'open', data, parent, false, true);
+          });
         }
       }
       break;

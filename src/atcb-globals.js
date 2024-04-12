@@ -111,7 +111,8 @@ const atcbDefaultTarget = atcbIsWebView() ? '_system' : '_blank';
 const atcbOptions = ['apple', 'google', 'ical', 'ms365', 'outlookcom', 'msteams', 'yahoo'];
 const atcbValidRecurrOptions = ['apple', 'google', 'ical'];
 const atcbInvalidSubscribeOptions = ['msteams'];
-const atcbiOSInvalidOptions = ['ical'];
+const atcbIOSInvalidOptions = ['ical'];
+const atcbAndroidInvalidOptions = ['apple'];
 const atcbStates = [];
 
 // DEFINING THE WEB COMPONENT ATTRIBUTES
@@ -290,7 +291,8 @@ export {
   atcbOptions,
   atcbValidRecurrOptions,
   atcbInvalidSubscribeOptions,
-  atcbiOSInvalidOptions,
+  atcbIOSInvalidOptions,
+  atcbAndroidInvalidOptions,
   atcbStates,
   atcbWcParams,
   atcbWcProParams,

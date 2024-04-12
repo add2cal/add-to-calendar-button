@@ -182,7 +182,7 @@
   box-shadow: var(--date-btn-shadow);
   background-color: var(--date-btn-background);
   border: 0;
-  border-radius: calc(var(--btn-border-radius) + 3px) var(--btn-border-radius) var(--btn-border-radius) calc(var(--btn-border-radius) + 3px);
+  border-radius: var(--btn-border-radius);
   padding: 0;
   margin: 0;
   touch-action: manipulation;
@@ -244,7 +244,7 @@
 }
 
 .atcb-date-btn-left {
-  border-radius: calc(var(--btn-border-radius) + 3px) 0 0 calc(var(--btn-border-radius) + 3px);
+  border-radius: var(--btn-border-radius) 0 0 var(--btn-border-radius);
   align-self: stretch;
   background-color: var(--date-btn-cal-background);
   color: var(--date-btn-hover-background);
@@ -257,7 +257,7 @@
 }
 
 .atcb-rtl .atcb-date-btn-left {
-  border-radius: 0 calc(var(--btn-border-radius) + 3px) calc(var(--btn-border-radius) + 3px) 0;
+  border-radius: 0 var(--btn-border-radius) var(--btn-border-radius) 0;
 }
 
 .atcb-button:hover .atcb-date-btn-left,
