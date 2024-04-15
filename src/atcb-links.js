@@ -38,9 +38,11 @@ function atcb_generate_links(host, type, data, subEvent = 'all', keyboardTrigger
     return;
   }
   // for single-date events or if a specific subEvent is given, we can simply call the respective endpoints
+  let isCancelled = false;
   if (subEvent !== 'all') {
     // for cancelled dates, we show a modal - except for iCal, where we can send Cancel-ics-files
     if (data.dates[`${subEvent}`].status === 'CANCELLED' && linkType !== 'ical') {
+      isCancelled = true;
       atcb_create_modal(host, data, 'warning', atcb_translate_hook('date.status.cancelled', data), atcb_translate_hook('date.status.cancelled.cta', data), [], [], keyboardTrigger);
     } else {
       // in some cases, we want to inform the user about specifics for the link type, before actually following the link
@@ -87,7 +89,7 @@ function atcb_generate_links(host, type, data, subEvent = 'all', keyboardTrigger
       return value < 1;
     });
     if (filteredStates.length == 0) {
-      atcb_set_fully_successful(host, data, multiDateModal);
+      atcb_set_fully_successful(host, data, multiDateModal, isCancelled);
     }
     return;
   }
@@ -193,13 +195,13 @@ function atcb_generate_subscribe_links(host, linkType, data, keyboardTrigger) {
   atcb_set_fully_successful(host, data);
 }
 
-function atcb_set_fully_successful(host, data, multiDateModal = false) {
+function atcb_set_fully_successful(host, data, multiDateModal = false, cancelled = false) {
   const trigger = host.getElementById(data.identifier);
   if (trigger) {
     trigger.classList.add('atcb-saved');
   }
-  atcb_saved_hook(host, data);
-  if (multiDateModal && host.querySelectorAll('.atcb-modal[data-modal-nr]').length < 2) {
+  if (!cancelled) atcb_saved_hook(host, data);
+  if (!cancelled && multiDateModal && host.querySelectorAll('.atcb-modal[data-modal-nr]').length < 2) {
     atcb_toggle(host, 'close');
   }
 }
@@ -442,7 +444,7 @@ function atcb_open_cal_url(data, type, url, subscribe = false, subEvent = null, 
 // FUNCTION TO GENERATE THE iCAL FILE (also for apple - see above)
 // See specs at: https://www.rfc-editor.org/rfc/rfc5545.html
 function atcb_generate_ical(host, data, subEvent = 'all', keyboardTrigger = false) {
-  if (subEvent != 'all') {
+  if (subEvent !== 'all') {
     subEvent = parseInt(subEvent);
   }
   // define the right filename
@@ -456,10 +458,10 @@ function atcb_generate_ical(host, data, subEvent = 'all', keyboardTrigger = fals
       return '';
     }
     // otherwise, we check for a given explicit file
-    if (subEvent != 'all' && data.dates[`${subEvent}`].icsFile != null && data.dates[`${subEvent}`].icsFile != '') {
+    if (subEvent !== 'all' && data.dates[`${subEvent}`].icsFile && data.dates[`${subEvent}`].icsFile !== '') {
       return data.dates[`${subEvent}`].icsFile;
     }
-    if (data.icsFile != null && data.icsFile != '') {
+    if (data.icsFile && data.icsFile !== '') {
       return data.icsFile;
     }
     return '';
@@ -484,11 +486,11 @@ function atcb_generate_ical(host, data, subEvent = 'all', keyboardTrigger = fals
   if (subEvent == 'all') {
     ics_lines.push('METHOD:PUBLISH');
   } else {
-    if (data.dates[`${subEvent}`].status != null && data.dates[`${subEvent}`].status == 'CANCELLED') {
+    if (data.dates[`${subEvent}`].status && data.dates[`${subEvent}`].status === 'CANCELLED') {
       ics_lines.push('METHOD:CANCEL');
     } else {
       // for all other cases, we use REQUEST for organized/hosted events, ...
-      if (data.dates[`${subEvent}`].organizer != null && data.dates[`${subEvent}`].organizer != '') {
+      if (data.dates[`${subEvent}`].organizer && data.dates[`${subEvent}`].organizer != '') {
         ics_lines.push('METHOD:REQUEST');
       } else {
         // and PUBLISH for events without a host

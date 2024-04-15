@@ -28,7 +28,7 @@ const atcbIsBrowser = () => {
 // iOS
 const atcbIsiOS = atcbIsBrowser()
   ? () => {
-      if ((/iPad|iPhone|iPod/i.test(navigator.userAgent || window.opera) && !window.MSStream) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1)) {
+      if (/iPad|iPhone|iPod/i.test(navigator.userAgent) && !/MSStream/i.test(navigator.userAgent)) {
         return true;
       } else {
         return false;
@@ -40,7 +40,7 @@ const atcbIsiOS = atcbIsBrowser()
 // Android
 const atcbIsAndroid = atcbIsBrowser()
   ? () => {
-      if (/android/i.test(navigator.userAgent || window.opera) && !window.MSStream) {
+      if (/android/i.test(navigator.userAgent) && !/MSStream/i.test(navigator.userAgent)) {
         return true;
       } else {
         return false;
@@ -96,7 +96,7 @@ const atcbIsWebView = atcbIsBrowser()
 // checking for problematic apps
 const atcbIsProblematicWebView = atcbIsBrowser()
   ? () => {
-      if (/(Instagram)/i.test(navigator.userAgent || window.opera)) {
+      if (/(Instagram)/i.test(navigator.userAgent)) {
         return true;
       } else {
         return false;

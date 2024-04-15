@@ -585,6 +585,7 @@ async function atcb_create_modal(mainHost, data, icon = '', headline, content = 
   }
   // set scroll behavior
   atcb_manage_body_scroll(modalHost, modalWrapper);
+  return;
 }
 
 // FUNCTION TO SWICH THE YAHOO SUBSCRIBE MODAL
