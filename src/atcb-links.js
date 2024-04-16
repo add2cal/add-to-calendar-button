@@ -3,7 +3,7 @@
  *  Add to Calendar Button
  *  ++++++++++++++++++++++
  *
- *  Version: 2.6.12
+ *  Version: 2.6.13
  *  Creator: Jens Kuerschner (https://jekuer.com)
  *  Project: https://github.com/add2cal/add-to-calendar-button
  *  License: Elastic License 2.0 (ELv2) (https://github.com/add2cal/add-to-calendar-button/blob/main/LICENSE.txt)
@@ -40,7 +40,7 @@ function atcb_generate_links(host, type, data, subEvent = 'all', keyboardTrigger
   // for single-date events or if a specific subEvent is given, we can simply call the respective endpoints
   if (subEvent !== 'all') {
     // for cancelled dates, we show a modal - except for iCal, where we can send Cancel-ics-files
-    if (data.dates[`${subEvent}`].status === 'CANCELLED' && linkType !== 'ical') {
+    if (data.dates[`${subEvent}`].status.toLowerCase() === 'cancelled' && linkType !== 'ical') {
       atcb_create_modal(host, data, 'warning', atcb_translate_hook('date.status.cancelled', data), atcb_translate_hook('date.status.cancelled.cta', data), [], [], keyboardTrigger);
     } else {
       // in some cases, we want to inform the user about specifics for the link type, before actually following the link
@@ -73,21 +73,21 @@ function atcb_generate_links(host, type, data, subEvent = 'all', keyboardTrigger
           atcb_generate_yahoo(data, data.dates[`${subEvent}`], subEvent);
           break;
       }
-    }
-    // we mark the clicked date - in the multi-date case, this would be one out of many
-    const modalHost = document.getElementById(data.identifier + '-modal-host');
-    if (modalHost) {
-      const subEventButton = modalHost.shadowRoot.getElementById(data.identifier + '-' + type + '-' + (subEvent + 1));
-      if (subEventButton) {
-        subEventButton.classList.add('atcb-saved');
+      // we mark the clicked date - in the multi-date case, this would be one out of many - not for cancelled (ical case)
+      const modalHost = document.getElementById(data.identifier + '-modal-host');
+      if (modalHost) {
+        const subEventButton = modalHost.shadowRoot.getElementById(data.identifier + '-' + type + '-' + (subEvent + 1));
+        if (subEventButton) {
+          subEventButton.classList.add('atcb-saved');
+        }
       }
-    }
-    atcbStates[`${data.identifier}`][`${type}`][`${subEvent}`]++;
-    const filteredStates = atcbStates[`${data.identifier}`][`${type}`].filter(function (value) {
-      return value < 1;
-    });
-    if (filteredStates.length == 0) {
-      atcb_set_fully_successful(host, data, multiDateModal);
+      if (data.dates[`${subEvent}`].status.toLowerCase() !== 'cancelled') atcbStates[`${data.identifier}`][`${type}`][`${subEvent}`]++;
+      const filteredStates = atcbStates[`${data.identifier}`][`${type}`].filter(function (value) {
+        return value < 1;
+      });
+      if (filteredStates.length == 0) {
+        atcb_set_fully_successful(host, data, multiDateModal);
+      }
     }
     return;
   }
@@ -100,7 +100,7 @@ function atcb_generate_multidate_links(host, type, linkType, data, keyboardTrigg
   if (
     linkType === 'ical' &&
     data.dates.every(function (theSubEvent) {
-      if (theSubEvent.status == 'CANCELLED' || (theSubEvent.organizer != null && theSubEvent.organizer != '')) {
+      if (theSubEvent.status.toLowerCase() == 'cancelled' || (theSubEvent.organizer != null && theSubEvent.organizer != '')) {
         return false;
       }
       return true;
@@ -128,7 +128,7 @@ function atcb_generate_subscribe_links(host, linkType, data, keyboardTrigger) {
   const adjustedFileUrl = data.icsFile.replace('https://', 'webcal://');
   switch (linkType) {
     case 'ical': // also for apple (see above)
-      if (atcbIsAndroid() || data.fakeMobile || data.fakeAndroid) {
+      if (atcbIsAndroid() || data.fakeAndroid) {
         atcb_subscribe_ical(data, data.icsFile);
         break;
       }
@@ -222,7 +222,7 @@ function atcb_subscribe_google(data, fileUrl) {
     }
     return encodeURIComponent(fileUrl);
   })();
-  if (atcbIsAndroid() || data.fakeMobile || data.fakeAndroid) {
+  if (atcbIsAndroid() || data.fakeAndroid) {
     atcb_open_cal_url(data, 'google', 'intent://' + baseUrlApp + newFileUrl + '#Intent;scheme=https;package=com.google.android.calendar;end', true);
     return;
   }
@@ -442,7 +442,7 @@ function atcb_open_cal_url(data, type, url, subscribe = false, subEvent = null, 
 // FUNCTION TO GENERATE THE iCAL FILE (also for apple - see above)
 // See specs at: https://www.rfc-editor.org/rfc/rfc5545.html
 function atcb_generate_ical(host, data, subEvent = 'all', keyboardTrigger = false) {
-  if (subEvent != 'all') {
+  if (subEvent !== 'all') {
     subEvent = parseInt(subEvent);
   }
   // define the right filename
@@ -456,10 +456,10 @@ function atcb_generate_ical(host, data, subEvent = 'all', keyboardTrigger = fals
       return '';
     }
     // otherwise, we check for a given explicit file
-    if (subEvent != 'all' && data.dates[`${subEvent}`].icsFile != null && data.dates[`${subEvent}`].icsFile != '') {
+    if (subEvent !== 'all' && data.dates[`${subEvent}`].icsFile && data.dates[`${subEvent}`].icsFile !== '') {
       return data.dates[`${subEvent}`].icsFile;
     }
-    if (data.icsFile != null && data.icsFile != '') {
+    if (data.icsFile && data.icsFile !== '') {
       return data.icsFile;
     }
     return '';
@@ -484,11 +484,11 @@ function atcb_generate_ical(host, data, subEvent = 'all', keyboardTrigger = fals
   if (subEvent == 'all') {
     ics_lines.push('METHOD:PUBLISH');
   } else {
-    if (data.dates[`${subEvent}`].status != null && data.dates[`${subEvent}`].status == 'CANCELLED') {
+    if (data.dates[`${subEvent}`].status && data.dates[`${subEvent}`].status.toLowerCase() === 'cancelled') {
       ics_lines.push('METHOD:CANCEL');
     } else {
       // for all other cases, we use REQUEST for organized/hosted events, ...
-      if (data.dates[`${subEvent}`].organizer != null && data.dates[`${subEvent}`].organizer != '') {
+      if (data.dates[`${subEvent}`].organizer && data.dates[`${subEvent}`].organizer != '') {
         ics_lines.push('METHOD:REQUEST');
       } else {
         // and PUBLISH for events without a host

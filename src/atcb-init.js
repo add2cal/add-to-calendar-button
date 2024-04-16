@@ -3,7 +3,7 @@
  *  Add to Calendar Button
  *  ++++++++++++++++++++++
  *
- *  Version: 2.6.12
+ *  Version: 2.6.13
  *  Creator: Jens Kuerschner (https://jekuer.com)
  *  Project: https://github.com/add2cal/add-to-calendar-button
  *  License: Elastic License 2.0 (ELv2) (https://github.com/add2cal/add-to-calendar-button/blob/main/LICENSE.txt)
@@ -692,7 +692,12 @@ function atcb_setup_state_management(data) {
   for (let i = 0; i < data.options.length; i++) {
     singleDates[data.options[`${i}`]] = [];
     for (let id = 1; id <= data.dates.length; id++) {
-      singleDates[data.options[`${i}`]].push(0);
+      // if cancelled and not ical type, we push 1, else 0
+      if (data.dates[id - 1].status.toLowerCase() === 'cancelled') {
+        singleDates[data.options[`${i}`]].push(1);
+      } else {
+        singleDates[data.options[`${i}`]].push(0);
+      }
     }
   }
   atcbStates[data.identifier] = singleDates;
