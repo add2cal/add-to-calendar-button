@@ -45,7 +45,7 @@ function atcb_generate_rich_data(data, parent) {
     if (data.dates.length > 1) {
       schemaContent.push('"@id":"' + id + '-' + (i + 1) + '"');
     }
-    if (data.dates[`${i}`].status === 'CANCELLED') {
+    if (data.dates[`${i}`].status.toLowerCase() === 'cancelled') {
       schemaContent.push('"eventStatus":"https://schema.org/EventCancelled"');
     } else {
       schemaContent.push('"eventStatus":"https://schema.org/EventScheduled"');

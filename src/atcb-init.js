@@ -692,7 +692,12 @@ function atcb_setup_state_management(data) {
   for (let i = 0; i < data.options.length; i++) {
     singleDates[data.options[`${i}`]] = [];
     for (let id = 1; id <= data.dates.length; id++) {
-      singleDates[data.options[`${i}`]].push(0);
+      // if cancelled and not ical type, we push 1, else 0
+      if (data.dates[id - 1].status.toLowerCase() === 'cancelled') {
+        singleDates[data.options[`${i}`]].push(1);
+      } else {
+        singleDates[data.options[`${i}`]].push(0);
+      }
     }
   }
   atcbStates[data.identifier] = singleDates;

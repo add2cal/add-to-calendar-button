@@ -146,7 +146,7 @@ function atcb_close(host, keyboardTrigger = false) {
   if (allModals.length > 1) {
     existingModalHost.shadowRoot.querySelectorAll('.atcb-modal[data-modal-nr="' + allModals.length + '"]')[0].remove();
     const nextModal = existingModalHost.shadowRoot.querySelectorAll('.atcb-modal[data-modal-nr="' + (allModals.length - 1) + '"]')[0];
-    nextModal.style.display = 'block';
+    nextModal.classList.remove('atcb-hidden');
     let focusEl = nextModal;
     const availableButtons = nextModal.getElementsByTagName('button');
     if (availableButtons.length > 0) {

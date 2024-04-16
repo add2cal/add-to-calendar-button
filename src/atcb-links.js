@@ -38,11 +38,9 @@ function atcb_generate_links(host, type, data, subEvent = 'all', keyboardTrigger
     return;
   }
   // for single-date events or if a specific subEvent is given, we can simply call the respective endpoints
-  let isCancelled = false;
   if (subEvent !== 'all') {
     // for cancelled dates, we show a modal - except for iCal, where we can send Cancel-ics-files
-    if (data.dates[`${subEvent}`].status === 'CANCELLED' && linkType !== 'ical') {
-      isCancelled = true;
+    if (data.dates[`${subEvent}`].status.toLowerCase() === 'cancelled' && linkType !== 'ical') {
       atcb_create_modal(host, data, 'warning', atcb_translate_hook('date.status.cancelled', data), atcb_translate_hook('date.status.cancelled.cta', data), [], [], keyboardTrigger);
     } else {
       // in some cases, we want to inform the user about specifics for the link type, before actually following the link
@@ -75,21 +73,21 @@ function atcb_generate_links(host, type, data, subEvent = 'all', keyboardTrigger
           atcb_generate_yahoo(data, data.dates[`${subEvent}`], subEvent);
           break;
       }
-    }
-    // we mark the clicked date - in the multi-date case, this would be one out of many
-    const modalHost = document.getElementById(data.identifier + '-modal-host');
-    if (modalHost) {
-      const subEventButton = modalHost.shadowRoot.getElementById(data.identifier + '-' + type + '-' + (subEvent + 1));
-      if (subEventButton) {
-        subEventButton.classList.add('atcb-saved');
+      // we mark the clicked date - in the multi-date case, this would be one out of many - not for cancelled (ical case)
+      const modalHost = document.getElementById(data.identifier + '-modal-host');
+      if (modalHost) {
+        const subEventButton = modalHost.shadowRoot.getElementById(data.identifier + '-' + type + '-' + (subEvent + 1));
+        if (subEventButton) {
+          subEventButton.classList.add('atcb-saved');
+        }
       }
-    }
-    atcbStates[`${data.identifier}`][`${type}`][`${subEvent}`]++;
-    const filteredStates = atcbStates[`${data.identifier}`][`${type}`].filter(function (value) {
-      return value < 1;
-    });
-    if (filteredStates.length == 0) {
-      atcb_set_fully_successful(host, data, multiDateModal, isCancelled);
+      if (data.dates[`${subEvent}`].status.toLowerCase() !== 'cancelled') atcbStates[`${data.identifier}`][`${type}`][`${subEvent}`]++;
+      const filteredStates = atcbStates[`${data.identifier}`][`${type}`].filter(function (value) {
+        return value < 1;
+      });
+      if (filteredStates.length == 0) {
+        atcb_set_fully_successful(host, data, multiDateModal);
+      }
     }
     return;
   }
@@ -102,7 +100,7 @@ function atcb_generate_multidate_links(host, type, linkType, data, keyboardTrigg
   if (
     linkType === 'ical' &&
     data.dates.every(function (theSubEvent) {
-      if (theSubEvent.status == 'CANCELLED' || (theSubEvent.organizer != null && theSubEvent.organizer != '')) {
+      if (theSubEvent.status.toLowerCase() == 'cancelled' || (theSubEvent.organizer != null && theSubEvent.organizer != '')) {
         return false;
       }
       return true;
@@ -130,7 +128,7 @@ function atcb_generate_subscribe_links(host, linkType, data, keyboardTrigger) {
   const adjustedFileUrl = data.icsFile.replace('https://', 'webcal://');
   switch (linkType) {
     case 'ical': // also for apple (see above)
-      if (atcbIsAndroid() || data.fakeMobile || data.fakeAndroid) {
+      if (atcbIsAndroid() || data.fakeAndroid) {
         atcb_subscribe_ical(data, data.icsFile);
         break;
       }
@@ -195,13 +193,13 @@ function atcb_generate_subscribe_links(host, linkType, data, keyboardTrigger) {
   atcb_set_fully_successful(host, data);
 }
 
-function atcb_set_fully_successful(host, data, multiDateModal = false, cancelled = false) {
+function atcb_set_fully_successful(host, data, multiDateModal = false) {
   const trigger = host.getElementById(data.identifier);
   if (trigger) {
     trigger.classList.add('atcb-saved');
   }
-  if (!cancelled) atcb_saved_hook(host, data);
-  if (!cancelled && multiDateModal && host.querySelectorAll('.atcb-modal[data-modal-nr]').length < 2) {
+  atcb_saved_hook(host, data);
+  if (multiDateModal && host.querySelectorAll('.atcb-modal[data-modal-nr]').length < 2) {
     atcb_toggle(host, 'close');
   }
 }
@@ -224,7 +222,7 @@ function atcb_subscribe_google(data, fileUrl) {
     }
     return encodeURIComponent(fileUrl);
   })();
-  if (atcbIsAndroid() || data.fakeMobile || data.fakeAndroid) {
+  if (atcbIsAndroid() || data.fakeAndroid) {
     atcb_open_cal_url(data, 'google', 'intent://' + baseUrlApp + newFileUrl + '#Intent;scheme=https;package=com.google.android.calendar;end', true);
     return;
   }
@@ -486,7 +484,7 @@ function atcb_generate_ical(host, data, subEvent = 'all', keyboardTrigger = fals
   if (subEvent == 'all') {
     ics_lines.push('METHOD:PUBLISH');
   } else {
-    if (data.dates[`${subEvent}`].status && data.dates[`${subEvent}`].status === 'CANCELLED') {
+    if (data.dates[`${subEvent}`].status && data.dates[`${subEvent}`].status.toLowerCase() === 'cancelled') {
       ics_lines.push('METHOD:CANCEL');
     } else {
       // for all other cases, we use REQUEST for organized/hosted events, ...

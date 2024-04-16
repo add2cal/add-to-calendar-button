@@ -162,7 +162,7 @@ function atcb_decorate_data_options(data) {
     // and in the subscribe case, we also skip options, which are not made for subscribing (MS Teams)
     if (
       ((atcbIsiOS() || data.fakeIOS) && atcbIOSInvalidOptions.includes(optionName)) ||
-      ((atcbIsAndroid() || data.fakeMobile || data.fakeAndroid) && atcbAndroidInvalidOptions.includes(optionName)) ||
+      ((atcbIsAndroid() || data.fakeAndroid) && atcbAndroidInvalidOptions.includes(optionName)) ||
       (data.recurrence && data.recurrence !== '' && (!atcbValidRecurrOptions.includes(optionName) || (data.recurrence_until && data.recurrence_until !== '' && (optionName === 'apple' || optionName === 'ical')) || ((atcbIsiOS() || data.fakeIOS) && optionName === 'google'))) ||
       (data.subscribe && atcbInvalidSubscribeOptions.includes(optionName))
     ) {
@@ -191,7 +191,7 @@ function atcb_decorate_data_options(data) {
     newOptions.push('apple');
   }
   // and for Android, the other way around
-  if ((atcbIsAndroid() || data.fakeMobile || data.fakeAndroid) && appleGiven && !iCalGiven) {
+  if ((atcbIsAndroid() || data.fakeAndroid) && appleGiven && !iCalGiven) {
     newOptions.push('ical');
   }
   // last but not least, override the options at the main data object
@@ -562,7 +562,7 @@ function atcb_decorate_data_button_status_handling(data) {
   if (!data.pastDateHandling || (data.pastDateHandling != 'disable' && data.pastDateHandling != 'hide')) {
     data.pastDateHandling = 'none';
   }
-  const overdue = (function () {
+  data.allOverdue = (function () {
     for (let i = 0; i < data.dates.length; i++) {
       if (!data.dates[`${i}`].overdue) {
         // we return false if at least one event is not overdue
@@ -572,16 +572,23 @@ function atcb_decorate_data_button_status_handling(data) {
     // in other cases, all dates would be overdue and therefore also the overall event
     return true;
   })();
-  data.allOverdue = false;
-  if (overdue) {
-    data.allOverdue = true;
+  if (data.allOverdue) {
     if (data.pastDateHandling == 'disable') {
       data.disabled = true;
     } else if (data.pastDateHandling == 'hide') {
       data.hidden = true;
     }
   }
-  // second, block interaction if disabled or hidden
+  // second, check whether all dates are status "cancelled"
+  data.allCancelled = (function () {
+    for (let i = 0; i < data.dates.length; i++) {
+      if (!data.dates[`${i}`].status || data.dates[`${i}`].status.toLowerCase() !== 'cancelled') {
+        return false;
+      }
+    }
+    return true;
+  })();
+  // third, block interaction if disabled or hidden
   if (data.disabled || data.hidden) {
     data.blockInteraction = true;
   }

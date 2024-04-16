@@ -190,7 +190,8 @@ async function atcb_validate_date_blocks(data, msgPrefix) {
 
 // validate status
 async function atcb_validate_status(data, msgPrefix, i, msgSuffix) {
-  if (data.dates[`${i}`].status !== 'TENTATIVE' && data.dates[`${i}`].status !== 'CONFIRMED' && data.dates[`${i}`].status !== 'CANCELLED') {
+  const allowedStatuses = ['tentative', 'confirmed', 'cancelled'];
+  if (!allowedStatuses.includes(data.dates[`${i}`].status.toLowerCase())) {
     throw new Error(msgPrefix + ' failed: event status needs to be TENTATIVE, CONFIRMED, or CANCELLED' + msgSuffix);
   }
   return true;

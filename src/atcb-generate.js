@@ -250,7 +250,7 @@ function atcb_generate_button(host, button, data) {
       buttonTrigger.append(buttonDropdownAnchor);
     }
     // add checkmark (hidden first) (if button is not disabled already)
-    if (!data.hideCheckmark && !data.hideTextLabelButton && !data.buttonsList && !data.disabled) {
+    if (!data.hideCheckmark && !data.hideTextLabelButton && !data.buttonsList && !data.disabled && !data.allCancelled) {
       const btnCheck = document.createElement('div');
       btnCheck.classList.add('atcb-checkmark');
       btnCheck.innerHTML = atcbIcon['checkmark'];
@@ -603,11 +603,11 @@ function atcb_generate_date_button(data, parent, subEvent = 'all', oneOption = f
   }
   const fullTimeInfo = atcb_generate_timestring(data.dates, data.language, subEvent);
   const hoverText = (function () {
-    if (subEvent != 'all' && data.dates[`${subEvent}`].status == 'CANCELLED') {
+    if ((subEvent !== 'all' && data.dates[`${subEvent}`].status.toLowerCase() === 'cancelled') || (subEvent === 'all' && data.allCancelled)) {
       return atcb_translate_hook('date.status.cancelled', data) + '<br>' + atcb_translate_hook('date.status.cancelled.cta', data);
     }
     if (data.pastDateHandling != 'none') {
-      if ((subEvent == 'all' && data.allOverdue) || (subEvent != 'all' && data.dates[`${subEvent}`].overdue)) {
+      if ((subEvent === 'all' && data.allOverdue) || (subEvent != 'all' && data.dates[`${subEvent}`].overdue)) {
         return atcb_translate_hook('expired', data);
       }
     }
@@ -617,7 +617,7 @@ function atcb_generate_date_button(data, parent, subEvent = 'all', oneOption = f
     return '+ ' + atcb_translate_hook('label.addtocalendar', data);
   })();
   const cancelledInfo = (function () {
-    if (subEvent != 'all' && data.dates[`${subEvent}`].status == 'CANCELLED') {
+    if ((subEvent !== 'all' && data.dates[`${subEvent}`].status.toLowerCase() === 'cancelled') || (subEvent === 'all' && data.allCancelled)) {
       return atcb_translate_hook('date.status.cancelled', data);
     }
     return '';
@@ -739,7 +739,7 @@ function atcb_generate_date_button(data, parent, subEvent = 'all', oneOption = f
   btnHover.classList.add('atcb-date-btn-hover');
   btnHover.innerHTML = hoverText;
   btnRight.append(btnHover);
-  if (!data.hideCheckmark) {
+  if (!data.hideCheckmark && data.dates[`${subEvent}`].status.toLowerCase() !== 'cancelled') {
     const btnCheck = document.createElement('div');
     btnCheck.classList.add('atcb-checkmark');
     btnCheck.innerHTML = atcbIcon['checkmark'];
@@ -762,11 +762,11 @@ function atcb_generate_date_button(data, parent, subEvent = 'all', oneOption = f
 async function atcb_generate_modal_host(host, data, reset = true) {
   // to clean-up the stage, we first close anything left open
   const existingModalHost = document.getElementById(data.identifier + '-modal-host');
-  if (!reset && existingModalHost) {
-    // return existing one, if we do not want to rebuild
-    return existingModalHost.shadowRoot;
-  }
   if (existingModalHost) {
+    if (!reset) {
+      // return existing one, if we do not want to rebuild
+      return existingModalHost.shadowRoot;
+    }
     existingModalHost.remove();
   }
   // create host element and add shadowDOM
