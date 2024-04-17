@@ -129,6 +129,7 @@ function atcb_generate_subscribe_links(host, linkType, data, keyboardTrigger) {
   switch (linkType) {
     case 'ical': // also for apple (see above)
       if (atcbIsAndroid() || data.fakeAndroid) {
+        // workaround for Android as it does not play nicely with webcal (still leads to wrong behavior. TODO: Rather show an error message here)
         atcb_subscribe_ical(data, data.icsFile);
         break;
       }
