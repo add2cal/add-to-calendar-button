@@ -427,7 +427,7 @@ function atcb_open_cal_url(data, type, url, subscribe = false, subEvent = null, 
         }
         return '';
       })();
-      url = (data.dev ? 'https://dev.caldn.net/' : 'https://caldn.net/') + data.proKey + '/' + urlType + '/' + type + query;
+      url = (data.dev ? 'https://dev.caldn.net/' : 'https://go.caldn.net/') + data.proKey + '/' + urlType + '/' + type + query;
       if (!atcb_secure_url(url)) {
         return;
       }
