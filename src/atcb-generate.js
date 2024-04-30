@@ -3,7 +3,7 @@
  *  Add to Calendar Button
  *  ++++++++++++++++++++++
  *
- *  Version: 2.6.13
+ *  Version: 2.6.14
  *  Creator: Jens Kuerschner (https://jekuer.com)
  *  Project: https://github.com/add2cal/add-to-calendar-button
  *  License: Elastic License 2.0 (ELv2) (https://github.com/add2cal/add-to-calendar-button/blob/main/LICENSE.txt)
@@ -644,24 +644,8 @@ function atcb_generate_date_button(data, parent, subEvent = 'all', oneOption = f
   btnLeft.append(btnDay);
   const btnMonth = document.createElement('div');
   btnMonth.classList.add('atcb-date-btn-month');
-  btnDay.textContent = (function () {
-    if (allDay) {
-      return startDate.toLocaleString(data.language, { day: 'numeric' });
-    }
-    return startDate.toLocaleString(data.language, {
-      day: 'numeric',
-      timeZone: timeZone,
-    });
-  })();
-  btnMonth.textContent = (function () {
-    if (allDay) {
-      return startDate.toLocaleString(data.language, { month: 'short' });
-    }
-    return startDate.toLocaleString(data.language, {
-      month: 'short',
-      timeZone: timeZone,
-    });
-  })();
+  btnDay.textContent = startDate.toLocaleString(data.language, { day: 'numeric', timeZone: allDay ? 'UTC' : timeZone });
+  btnMonth.textContent = startDate.toLocaleString(data.language, { month: 'short', timeZone: allDay ? 'UTC' : timeZone });
   btnLeft.append(btnMonth);
   const btnRight = document.createElement('div');
   btnRight.classList.add('atcb-date-btn-right');

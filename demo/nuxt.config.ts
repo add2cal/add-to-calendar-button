@@ -112,7 +112,6 @@ export default defineNuxtConfig({
         { rel: 'apple-touch-icon', sizes: '180x180', href: baseUrl + '/assets/favicons/apple-touch-icon-180x180.png' },
         { rel: 'mask-icon', color: '#9755ff', href: baseUrl + '/assets/favicons/safari-pinned-tab.svg' },
         { rel: 'dns-prefetch', href: 'https://a.add-to-calendar-button.com' },
-        { rel: 'dns-prefetch', href: 'https://caldn.net' },
         { rel: 'dns-prefetch', href: 'https://api.github.com' },
         { rel: 'dns-prefetch', href: 'https://api.npmjs.org' },
         { rel: 'dns-prefetch', href: 'https://data.jsdelivr.com' },

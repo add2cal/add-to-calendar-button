@@ -3,7 +3,7 @@
  *  Add to Calendar Button
  *  ++++++++++++++++++++++
  *
- *  Version: 2.6.13
+ *  Version: 2.6.14
  *  Creator: Jens Kuerschner (https://jekuer.com)
  *  Project: https://github.com/add2cal/add-to-calendar-button
  *  License: Elastic License 2.0 (ELv2) (https://github.com/add2cal/add-to-calendar-button/blob/main/LICENSE.txt)
@@ -129,6 +129,7 @@ function atcb_generate_subscribe_links(host, linkType, data, keyboardTrigger) {
   switch (linkType) {
     case 'ical': // also for apple (see above)
       if (atcbIsAndroid() || data.fakeAndroid) {
+        // workaround for Android as it does not play nicely with webcal (still leads to wrong behavior. TODO: Rather show an error message here)
         atcb_subscribe_ical(data, data.icsFile);
         break;
       }
@@ -426,7 +427,7 @@ function atcb_open_cal_url(data, type, url, subscribe = false, subEvent = null, 
         }
         return '';
       })();
-      url = (data.dev ? 'https://dev.caldn.net/' : 'https://caldn.net/') + data.proKey + '/' + urlType + '/' + type + query;
+      url = (data.dev ? 'https://dev.caldn.net/' : 'https://go.caldn.net/') + data.proKey + '/' + urlType + '/' + type + query;
       if (!atcb_secure_url(url)) {
         return;
       }
