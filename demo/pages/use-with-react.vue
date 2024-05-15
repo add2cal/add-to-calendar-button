@@ -106,6 +106,7 @@ watch(locale, value => {
         </LazyCodeBlock>
         <p class="font-semibold">{{ $t('content.guide.react.start_wrapper_3') }}</p>
         <p>{{ $t('content.guide.react.start_wrapper_4') }}<br />{{ $t('content.guide.react.start_wrapper_5') }}</p>
+        <p class="font-semibold my-10">{{ $t('content.guide.step_use_client') }}</p>
       </div>
     </div>
     <div class="hidden border-l border-zinc-300 pl-8 text-xs dark:border-zinc-700 lg:block xl:pl-12">
