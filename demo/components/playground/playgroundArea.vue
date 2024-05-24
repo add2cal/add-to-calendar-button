@@ -93,7 +93,7 @@ watch(showMC, val => {
         <LayoutAttrs v-model="data.layout" mobile />
       </div>
     </div>
-    <div class="sticky bottom-0 left-0 flex h-20 w-full cursor-pointer justify-center bg-secondary text-lg font-semibold text-zinc-700 hover:bg-secondary-light hover:text-black" @click="(showMC = !showMC)">
+    <div class="sticky bottom-0 left-0 z-50 flex h-20 w-full cursor-pointer justify-center bg-secondary text-lg font-semibold text-zinc-700 hover:bg-secondary-light hover:text-black" @click="(showMC = !showMC)">
       <div class="flex self-center">
         <div>
           <CheckIcon class="-mt-1.5 mr-2 inline-block h-7 w-7" aria-hidden="true" />
