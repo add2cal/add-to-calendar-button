@@ -21,7 +21,7 @@ useSchemaOrg([
 <template>
   <VitePwaManifest />
   <NuxtLayout>
-    <NuxtLoadingIndicator :throttle="5" color="#ffa255" :height="5" />
+    <NuxtLoadingIndicator color="#ffa255" :height="5" />
     <NuxtPage />
   </NuxtLayout>
 </template>

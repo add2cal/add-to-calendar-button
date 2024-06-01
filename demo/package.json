@@ -39,14 +39,14 @@
     "vue-marquee-text-component": "^2.0.1"
   },
   "devDependencies": {
-    "@headlessui/tailwindcss": "^0.2.0",
+    "@headlessui/tailwindcss": "^0.2.1",
     "@nuxtjs/i18n": "^8.3.1",
-    "@nuxtjs/sitemap": "^5.1.5",
+    "@nuxtjs/sitemap": "^5.2.0",
     "@nuxtjs/tailwindcss": "^6.12.0",
-    "@types/node": "^20.12.12",
-    "@typescript-eslint/eslint-plugin": "^7.9.0",
-    "@typescript-eslint/parser": "^7.9.0",
-    "@vite-pwa/nuxt": "^0.7.0",
+    "@types/node": "^20.12.13",
+    "@typescript-eslint/eslint-plugin": "^7.11.0",
+    "@typescript-eslint/parser": "^7.11.0",
+    "@vite-pwa/nuxt": "^0.8.0",
     "@vue/eslint-config-standard": "^8.0.1",
     "eslint": "^8.57.0",
     "eslint-config-prettier": "^9.1.0",
@@ -58,11 +58,11 @@
     "nuxt-schema-org": "^3.3.6",
     "nuxt-security": "^1.4.3",
     "prettier": "^3.2.5",
-    "prettier-plugin-tailwindcss": "^0.5.14",
-    "shiki": "^1.5.2",
+    "prettier-plugin-tailwindcss": "^0.6.0",
+    "shiki": "^1.6.1",
     "typescript": "^5.4.5",
     "vue-eslint-parser": "^9.4.2",
-    "vue-tsc": "^2.0.18"
+    "vue-tsc": "^2.0.19"
   },
   "overrides": {
     "vue": "latest"
