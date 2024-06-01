@@ -335,7 +335,8 @@ onUnmounted(() => {
           <h3 class="mb-3 mt-8">Target elements via ::part</h3>
           <p>
             You can use the <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/::part" target="_blank" rel="noopener">css ::part selector <ArrowTopRightOnSquareIcon class="-mt-0.5 mr-0.5 inline-block h-4 w-4" aria-hidden="true" /></a> to directly style pre-selected elements from your regular
-            css code.
+            css code.<br />
+            Mind that modals (and therefore also the button, when using "forceOverlay") are rendered in a new DOM element and you need to use the general selector ".add-to-calendar" or "#atcb-btn-<i>identifierOfTheButton</i>-modal-host" for this.
           </p>
           <p>The following elements are available for this approach:</p>
           <ul class="ml-6 list-disc pb-4 pt-2 text-sm">
@@ -356,7 +357,8 @@ onUnmounted(() => {
           <h3 class="mb-3 mt-8">Elemente via ::part selektieren</h3>
           <p>
             Du kannst den <a href="https://developer.mozilla.org/de/docs/Web/CSS/::part" target="_blank" rel="noopener">css ::part selector <ArrowTopRightOnSquareIcon class="-mt-0.5 mr-0.5 inline-block h-4 w-4" aria-hidden="true" /></a> nutzen, um vorselektierte Elemente direkt über deinen regulären
-            CSS-Code zu stylen.
+            CSS-Code zu stylen.<br />
+            Beachte, dass Modals (damit auch der Button, bei Nutzung von "forceOverlay") in einem neuen DOM-Element gerendert werden und hierfür der allgemeine Selektor ".add-to-calendar" oder "#atcb-btn-<i>identifierDesButtons</i>-modal-host" genutzt werden muss.
           </p>
           <p>Nachfolgende Elemente stehen hierzu zur Verfügung:</p>
           <ul class="ml-6 list-disc pb-4 pt-2 text-sm">
@@ -375,7 +377,7 @@ onUnmounted(() => {
         </div>
         <div class="block w-full justify-between pt-4 md:flex">
           <div class="flex w-full flex-none justify-center p-6 pt-8 md:w-[300px]">
-            <add-to-calendar-button id="css-part-example" :name="$t('demo_data.name')" :startDate="defaultDate" options="'Apple','Google','iCal'" lightMode="bodyScheme" :language="locale" hideRichData hideBranding> </add-to-calendar-button>
+            <add-to-calendar-button id="css-part-example" identifier="css-part-example" :name="$t('demo_data.name')" :startDate="defaultDate" options="'Apple','Google','iCal'" lightMode="bodyScheme" :language="locale" hideRichData hideBranding> </add-to-calendar-button>
           </div>
           <div class="flex-1 overflow-x-auto">
             <LazyCodeBlock>
@@ -389,10 +391,17 @@ onUnmounted(() => {
 &gt;&lt;/add-to-calendar-button&gt;
 
 &lt;style&gt;
-  add-to-calendar-button#css-part-example::part(atcb-button) {
+  add-to-calendar-button#css-part-example::part(atcb-button),
+  #atcb-btn-css-part-example-modal-host::part(atcb-button) {
     background-color: #264f3c;
     color: #fff;
   }
+  /* or, for all buttons and modals:
+  .add-to-calendar::part(atcb-button) {
+    background-color: #264f3c;
+    color: #fff;
+  }
+  */
 &lt;/style&gt;
 </pre
               >
@@ -1112,8 +1121,9 @@ onUnmounted(() => {
   </div>
 </template>
 
-<style scoped>
-add-to-calendar-button#css-part-example::part(atcb-button) {
+<style>
+add-to-calendar-button#css-part-example::part(atcb-button),
+#atcb-btn-css-part-example-modal-host::part(atcb-button) {
   background-color: #264f3c;
   color: #fff;
 }
