@@ -11,23 +11,24 @@ const LazyCodeBlock = defineAsyncComponent(() => import('@/components/codeBlock.
 const { t, locale } = useI18n();
 
 const showCode = ref(false);
-
-const data = ref(getInitialAttrs(t('defaults.name'), t('defaults.description'), t('defaults.location')))
-
-watch(data, () => {
-  set(LSKey.ATTRS, data.value);
-}, { deep: true });
-
 const showMC = ref(false);
 
-// blocking page scrolling, if the mobile menu is open
-watch(showMC, val => {
-  if (val) {
-    document.documentElement.style.overflow = "hidden";
-  } else {
-    document.documentElement.style.overflow = "auto";
-  }
-});
+const data = ref( getInitialAttrs(t('defaults.name'), t('defaults.description'), t('defaults.location')) );
+
+if (import.meta.client) {
+  watch(data, () => {
+    set(LSKey.ATTRS, data.value);
+  }, { deep: true });
+
+  // blocking page scrolling, if the mobile menu is open
+  watch(showMC, val => {
+    if (val) {
+      document.documentElement.style.overflow = "hidden";
+    } else {
+      document.documentElement.style.overflow = "auto";
+    }
+  });
+}
 </script>
 
 <template>
@@ -41,7 +42,12 @@ watch(showMC, val => {
         <div class="mb-4 text-sm font-semibold uppercase text-zinc-800 dark:text-zinc-200">
           {{ t('labels.dateInput') }}
         </div>
-        <DateAttrs v-model="data.date" />
+        <ClientOnly>
+          <DateAttrs v-model="data.date" />
+          <template #fallback>
+            <DateAttrs v-model="data.date" disabled />
+          </template>
+        </ClientOnly>
       </div>
       <div
         id="rendering"
@@ -49,7 +55,15 @@ watch(showMC, val => {
         class="grid-bg row-span-2 flex justify-center rounded-tl-none border-0 border-zinc-400 bg-zinc-100 px-3 py-8 dark:border-zinc-600 dark:bg-zinc-900 md:rounded-tr-md md:border-l-2 lg:row-span-1 lg:rounded-tr-none"
       >
         <div class="sticky top-[30vh] z-30 h-auto py-10 md:h-[500px] md:py-0">
-          <add-to-calendar-button v-bind="mapAttrsObject(data)" debug hideRichData hideBranding />
+          <ClientOnly>
+            <add-to-calendar-button v-bind="mapAttrsObject(data)" debug hideRichData hideBranding />
+            <template #fallback>
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" class="mx-auto h-16 w-16 animate-spin text-primary">
+                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+              </svg>
+            </template>
+          </ClientOnly>
         </div>
       </div>
       <div id="style-input" :class="[ !showCode ? 'rounded-bl-md lg:rounded-r-md lg:rounded-bl-none' : 'rounded-none lg:rounded-tr-md' ]" class="hidden border-l-0 border-t-2 border-zinc-400 bg-zinc-200 p-3 dark:border-zinc-600 dark:bg-zinc-800 md:block lg:border-l-2 lg:border-t-0">
@@ -57,7 +71,12 @@ watch(showMC, val => {
           <span>{{ t('labels.layoutInput') }}</span>
           <LightModeSwitch />
         </div>
-        <LayoutAttrs v-model="data.layout" />
+        <ClientOnly>
+          <LayoutAttrs v-model="data.layout" />
+          <template #fallback>
+            <LayoutAttrs v-model="data.layout" disabled />
+          </template>
+        </ClientOnly>
         <div class="mx-auto mt-8 text-center text-xs">
           {{ t('labels.proConfig') }}
           <a class="mt-1 block" target="_blank" rel="author" :href="'https://add-to-calendar-pro.com' + (locale !== 'en' ? '/' + locale : '')">

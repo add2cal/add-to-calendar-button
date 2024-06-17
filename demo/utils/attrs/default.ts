@@ -66,7 +66,7 @@ export const getDefaultAttrs = (defaultName: string, defaultDescription: string,
 
 export const getInitialAttrs = (defaultName: string, defaultDescription: string, defaultLocation: string): Attrs => {
   const defaultData = getDefaultAttrs(defaultName, defaultDescription, defaultLocation);
-  const cachedData = get(LSKey.ATTRS);
+  const cachedData = import.meta.client ? get(LSKey.ATTRS) : null;
   const cachedDataParsed = (function () {
     if (cachedData) {
       return JSON.parse(cachedData);
@@ -74,7 +74,7 @@ export const getInitialAttrs = (defaultName: string, defaultDescription: string,
   })();
 
   const overrideData = (function () {
-    if (!cachedDataParsed) {
+    if (import.meta.client && !cachedDataParsed) {
       return { layout: { [LayoutAttrsKey.LANGUAGE]: get(LSKey.LANG) } };
     }
     return {};

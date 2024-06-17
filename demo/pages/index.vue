@@ -3,7 +3,6 @@ import { ArrowRightIcon, WrenchScrewdriverIcon, BeakerIcon, SparklesIcon } from 
 import IntegrationGuidesOverview from "@/components/integration/integrationGuidesOverview.vue";
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import PlaygroundArea from "@/components/playground/playgroundArea.vue";
-import PlaygroundAreaPlaceholder from "@/components/placeholders/playgroundAreaPlaceholder.vue";
 import FeaturesBlock from "@/components/featuresBlock.vue";
 import FaqBlock from "@/components/faqBlock.vue";
 
@@ -43,12 +42,7 @@ const localePath = useLocalePath();
         {{ $t('navigation.playground') }}
       </h2>
     </div>
-    <ClientOnly>
-      <PlaygroundArea />
-      <template #fallback>
-        <PlaygroundAreaPlaceholder />
-      </template>
-    </ClientOnly>
+    <PlaygroundArea />
     <div class="container hidden md:block">
       <div class="py-4 text-center text-sm italic text-zinc-400 dark:text-zinc-500">
         {{ $t('content.home.demoDisclaimer') }} <NuxtLink :to="localePath('configuration')">"{{ $t('labels.clickHere') }}"</NuxtLink>

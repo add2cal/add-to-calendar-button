@@ -15,6 +15,10 @@ const props = defineProps({
     type: Object,
     default: () => getDefaultDateRecurrenceAttrs()
   },
+  disabled: {
+    type: Boolean,
+    default: false
+  }
 });
 
 const emit = defineEmits(['update:modelValue']);
@@ -40,24 +44,24 @@ const i18nFrequencyOptions = computed(() =>
 <template>
   <div class="my-3 grid grid-cols-2 items-center gap-3 border-y border-zinc-400 px-1 pb-4 pt-2 dark:border-zinc-600">
     <div class="text-sm font-semibold uppercase text-zinc-700 dark:text-zinc-300">{{ t('labels.inputs.recurrence.headline') }}</div>
-    <Switch v-model="internalValue[DateRecurrenceAttrsKey.IS_SIMPLE]" class="justify-end" :label="t(`labels.inputs.recurrence.${[DateRecurrenceAttrsKey.IS_SIMPLE]}`.toLocaleLowerCase())" />
+    <Switch v-model="internalValue[DateRecurrenceAttrsKey.IS_SIMPLE]" :disabled="props.disabled" class="justify-end" :label="t(`labels.inputs.recurrence.${[DateRecurrenceAttrsKey.IS_SIMPLE]}`.toLocaleLowerCase())" />
 
-    <Input v-if="!internalValue[DateRecurrenceAttrsKey.IS_SIMPLE]" v-model="internalValue[DateRecurrenceAttrsKey.RRULE_VALUE]" :label="t(`labels.inputs.recurrence.${[DateRecurrenceAttrsKey.RRULE_VALUE]}`.toLocaleLowerCase())" type="text" placeholder="RRULE:FREQ=..." class="col-span-2" />
+    <Input v-show="!internalValue[DateRecurrenceAttrsKey.IS_SIMPLE]" v-model="internalValue[DateRecurrenceAttrsKey.RRULE_VALUE]" :disabled="props.disabled" :label="t(`labels.inputs.recurrence.${[DateRecurrenceAttrsKey.RRULE_VALUE]}`.toLocaleLowerCase())" type="text" placeholder="RRULE:FREQ=..." class="col-span-2" />
 
-    <template v-else>
+    <div v-show="internalValue[DateRecurrenceAttrsKey.IS_SIMPLE]" class="grid grid-cols-2 gap-3 col-span-2">
       <div class="col-span-2">
         <label class="block text-sm text-zinc-600 dark:text-zinc-400">
           {{ t('labels.inputs.recurrence.repeat_every') }}
         </label>
         <div class="grid grid-cols-3">
-          <Input v-model="internalValue[DateRecurrenceAttrsKey.INTERVAL]" :label="t(`labels.inputs.recurrence.${[DateRecurrenceAttrsKey.INTERVAL]}`.toLocaleLowerCase())" hidelabel type="number" :min="1" />
-          <Select v-model="internalValue[DateRecurrenceAttrsKey.FREQUENCY]" :label="t(`labels.inputs.recurrence.${[DateRecurrenceAttrsKey.FREQUENCY]}`.toLocaleLowerCase())" hidelabel :options="i18nFrequencyOptions" byKey="key" byValue="value" clearable class="col-span-2" />
+          <Input v-model="internalValue[DateRecurrenceAttrsKey.INTERVAL]" :disabled="props.disabled" :label="t(`labels.inputs.recurrence.${[DateRecurrenceAttrsKey.INTERVAL]}`.toLocaleLowerCase())" hidelabel type="number" :min="1" />
+          <Select v-model="internalValue[DateRecurrenceAttrsKey.FREQUENCY]" :disabled="props.disabled" :label="t(`labels.inputs.recurrence.${[DateRecurrenceAttrsKey.FREQUENCY]}`.toLocaleLowerCase())" hidelabel :options="i18nFrequencyOptions" byKey="key" byValue="value" clearable class="col-span-2" />
         </div>
       </div>
-      <Input v-model="internalValue[DateRecurrenceAttrsKey.BY_DAY]" :label="t(`labels.inputs.recurrence.${[DateRecurrenceAttrsKey.BY_DAY]}`.toLocaleLowerCase())" type="text" :placeholder="t('labels.inputs.recurrence.placeholder.by_day')" />
-      <Select v-model="internalValue[DateRecurrenceAttrsKey.BY_MONTH]" :options="monthList" multiselect :label="t(`labels.inputs.recurrence.${[DateRecurrenceAttrsKey.BY_MONTH]}`.toLocaleLowerCase())" byKey="key" byValue="value" />
-      <Input v-model="internalValue[DateRecurrenceAttrsKey.BY_MONTH_DAY]" :label="t(`labels.inputs.recurrence.${[DateRecurrenceAttrsKey.BY_MONTH_DAY]}`.toLocaleLowerCase())" type="text" :placeholder="t('labels.inputs.recurrence.placeholder.by_month_day')" />
-      <Input v-model="internalValue[DateRecurrenceAttrsKey.COUNT]" :label="t(`labels.inputs.recurrence.${[DateRecurrenceAttrsKey.COUNT]}`.toLocaleLowerCase())" type="number" :min="0" />
-    </template>
+      <Input v-model="internalValue[DateRecurrenceAttrsKey.BY_DAY]" :disabled="props.disabled" :label="t(`labels.inputs.recurrence.${[DateRecurrenceAttrsKey.BY_DAY]}`.toLocaleLowerCase())" type="text" :placeholder="t('labels.inputs.recurrence.placeholder.by_day')" />
+      <Select v-model="internalValue[DateRecurrenceAttrsKey.BY_MONTH]" :disabled="props.disabled" :options="monthList" multiselect :label="t(`labels.inputs.recurrence.${[DateRecurrenceAttrsKey.BY_MONTH]}`.toLocaleLowerCase())" byKey="key" byValue="value" />
+      <Input v-model="internalValue[DateRecurrenceAttrsKey.BY_MONTH_DAY]" :disabled="props.disabled" :label="t(`labels.inputs.recurrence.${[DateRecurrenceAttrsKey.BY_MONTH_DAY]}`.toLocaleLowerCase())" type="text" :placeholder="t('labels.inputs.recurrence.placeholder.by_month_day')" />
+      <Input v-model="internalValue[DateRecurrenceAttrsKey.COUNT]" :disabled="props.disabled" :label="t(`labels.inputs.recurrence.${[DateRecurrenceAttrsKey.COUNT]}`.toLocaleLowerCase())" type="number" :min="0" />
+    </div>
   </div>
 </template>

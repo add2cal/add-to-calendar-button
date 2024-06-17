@@ -62,7 +62,7 @@ if (import.meta.client) {
       </span>
     </Switch>
     <template #fallback>
-      <div class="h-[1.35rem] w-10 animate-pulse rounded-full bg-zinc-300 dark:bg-zinc-700"></div>
+      <div class="h-[1.5rem] w-10 animate-pulse rounded-full bg-zinc-300 dark:bg-zinc-700"></div>
     </template>
   </ClientOnly>
 </template>
