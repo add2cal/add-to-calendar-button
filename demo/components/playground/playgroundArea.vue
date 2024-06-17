@@ -1,19 +1,31 @@
 <script setup lang="ts">
 import LightModeSwitch from "@/components/lightModeSwitch.vue";
 import { EyeIcon, EyeSlashIcon, AdjustmentsHorizontalIcon, CheckIcon, ArrowTopRightOnSquareIcon } from '@heroicons/vue/24/outline';
-import "add-to-calendar-button";
 import DateAttrs from "@/components/playground/attrs/dateAttrs.vue";
 import LayoutAttrs from "@/components/playground/attrs/layoutAttrs.vue";
 import { mapAttrsObject, attrsToHtmlString } from '@/utils/attrs';
 import { set, LSKey } from '@/utils/localStorage';
 import { getInitialAttrs } from '@/utils/attrs/default';
+import { isbot } from "isbot";
 const LazyCodeBlock = defineAsyncComponent(() => import('@/components/codeBlock.vue'));
 const { t, locale } = useI18n();
 
 const showCode = ref(false);
 const showMC = ref(false);
+const loaded = ref(false);
+const isBot = ref<boolean>(true);
+if (import.meta.client) {
+  isBot.value = isbot(navigator.userAgent);
+}
 
 const data = ref( getInitialAttrs(t('defaults.name'), t('defaults.description'), t('defaults.location')) );
+
+async function loadAtcbScript () {
+  import('add-to-calendar-button').then(() => {
+    loaded.value = true;
+    return;
+  });
+}
 
 if (import.meta.client) {
   watch(data, () => {
@@ -28,6 +40,11 @@ if (import.meta.client) {
       document.documentElement.style.overflow = "auto";
     }
   });
+
+  // load atcb script
+  if (!isBot.value) {
+    loadAtcbScript();
+  }
 }
 </script>
 
@@ -50,15 +67,11 @@ if (import.meta.client) {
         class="grid-bg row-span-2 flex justify-center rounded-tl-none border-0 border-zinc-400 bg-zinc-100 px-3 py-8 dark:border-zinc-600 dark:bg-zinc-900 md:rounded-tr-md md:border-l-2 lg:row-span-1 lg:rounded-tr-none"
       >
         <div class="sticky top-[30vh] z-30 h-auto py-10 md:h-[500px] md:py-0">
-          <ClientOnly>
-            <add-to-calendar-button v-bind="mapAttrsObject(data)" debug hideRichData hideBranding />
-            <template #fallback>
-              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" class="mx-auto h-16 w-16 animate-spin text-primary">
-                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-              </svg>
-            </template>
-          </ClientOnly>
+            <add-to-calendar-button v-if="loaded" v-bind="mapAttrsObject(data)" debug hideRichData hideBranding />
+            <svg v-else xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" class="mx-auto h-16 w-16 animate-spin text-primary">
+              <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+              <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+            </svg>
         </div>
       </div>
       <div id="style-input" :class="[ !showCode ? 'rounded-bl-md lg:rounded-r-md lg:rounded-bl-none' : 'rounded-none lg:rounded-tr-md' ]" class="hidden border-l-0 border-t-2 border-zinc-400 bg-zinc-200 p-3 dark:border-zinc-600 dark:bg-zinc-800 md:block lg:border-l-2 lg:border-t-0">
