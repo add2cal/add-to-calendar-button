@@ -1026,6 +1026,14 @@ definePageMeta({
               <td v-if="locale=='en'">Use this attribute to force a re-rendering of the button by counting its value 1 up.</td>
               <td v-else>Nutze dieses Attribut, um einen Button durch Hochzählen des Werts neu zu rendern.</td>
             </tr>
+            <tr id="prooverride">
+              <th scope="row">proOverride</th>
+              <td>
+                <em>Boolean</em><br /><br /><span class="label">{{ $t('content.config.default') }}:</span>False
+              </td>
+              <td v-if="locale=='en'">With this option enabled, any setting would override its corresponding one from the PRO app. Use with caution, as this can lead to inconsistencies across systems!</td>
+              <td v-else>Ist diese Option aktiv, überschreiben jegliche Einstellungen die korrespondierenden Werte, die über die PRO-App gesetzt wurden. Nutze dies mit Vorsicht, da sich hierdurch sehr leicht Inkonsistenzen über diverse Systeme ergeben können!</td>
+            </tr>
             <tr id="debug">
               <th scope="row">debug</th>
               <td>

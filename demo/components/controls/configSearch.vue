@@ -75,6 +75,7 @@ const configOptions = [
   "hideBranding",
   "debug",
   "forceOverlay",
+  "proOverride",
   //"cspnonce",
   "styleLight",
   "styleDark",

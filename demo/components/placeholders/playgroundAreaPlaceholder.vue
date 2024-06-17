@@ -1,7 +1,7 @@
 <script setup lang="ts">
+import LightModeSwitch from "@/components/lightModeSwitch.vue";
 import { EyeIcon, EyeSlashIcon, AdjustmentsHorizontalIcon } from '@heroicons/vue/24/outline';
 import "add-to-calendar-button";
-import LightModeSwitchPlaceholder from "@/components/placeholders/lightModeSwitchPlaceholder.vue";
 import DateAttrsPlaceholder from "@/components/placeholders/playgroundDateAttrsPlaceholder.vue";
 import LayoutAttrsPlaceholder from "@/components/placeholders/playgroundLayoutAttrsPlaceholder.vue";
 const LazyCodeBlock = defineAsyncComponent(() => import('@/components/codeBlock.vue'));
@@ -15,7 +15,7 @@ const showCode = ref(false);
     <div :class="[ !showCode ? 'rounded-none md:rounded-md' : 'rounded-none md:rounded-t-md' ]" class="grid grid-cols-1 border-b-2 border-zinc-400 shadow-lg dark:border-zinc-600 md:grid-cols-2 md:border-2 lg:grid-cols-3">
       <div id="mobile-input" class="flex justify-center bg-gradient-to-tr from-primary-dark to-primary-light p-3 dark:to-primary md:hidden">
         <AdjustmentsHorizontalIcon class="mr-14 block h-8 w-8 cursor-progress text-zinc-300" />
-        <LightModeSwitchPlaceholder class="self-center" />
+        <LightModeSwitch class="self-center" />
       </div>
       <div id="date-input" :class="{ 'lg:rounded-bl-md-none rounded-bl-md': !showCode }" class="hidden rounded-tl-md bg-zinc-200 p-3 dark:bg-zinc-800 md:block">
         <div class="mb-4 text-sm font-semibold uppercase text-zinc-800 dark:text-zinc-200">
@@ -38,7 +38,7 @@ const showCode = ref(false);
       <div id="style-input" :class="[ !showCode ? 'rounded-bl-md lg:rounded-r-md lg:rounded-bl-none' : 'rounded-none lg:rounded-tr-md' ]" class="hidden border-l-0 border-t-2 border-zinc-400 bg-zinc-200 p-3 dark:border-zinc-600 dark:bg-zinc-800 md:block lg:border-l-2 lg:border-t-0">
         <div class="mb-4 flex justify-between text-sm font-semibold uppercase text-zinc-800 dark:text-zinc-200">
           <span>{{ t('labels.layoutInput') }}</span>
-          <LightModeSwitchPlaceholder />
+          <LightModeSwitch />
         </div>
         <LayoutAttrsPlaceholder />
       </div>

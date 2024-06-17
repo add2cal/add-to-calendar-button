@@ -4,8 +4,10 @@ import {
   ListboxButton,
   ListboxOptions,
   ListboxOption,
+  provideUseId,
 } from '@headlessui/vue';
 import { CheckIcon, ChevronDownIcon, XMarkIcon } from '@heroicons/vue/20/solid';
+provideUseId(() => useId());
 
 const props = defineProps({
   modelValue: {
