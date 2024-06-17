@@ -44,7 +44,7 @@ const localePath = useLocalePath();
       </h2>
     </div>
     <ClientOnly>
-      <LazyPlaygroundArea />
+      <PlaygroundArea />
       <template #fallback>
         <PlaygroundAreaPlaceholder />
       </template>
