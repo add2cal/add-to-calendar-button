@@ -42,12 +42,7 @@ if (import.meta.client) {
         <div class="mb-4 text-sm font-semibold uppercase text-zinc-800 dark:text-zinc-200">
           {{ t('labels.dateInput') }}
         </div>
-        <ClientOnly>
-          <DateAttrs v-model="data.date" />
-          <template #fallback>
-            <DateAttrs v-model="data.date" disabled />
-          </template>
-        </ClientOnly>
+        <DateAttrs v-model="data.date" />
       </div>
       <div
         id="rendering"
@@ -71,12 +66,7 @@ if (import.meta.client) {
           <span>{{ t('labels.layoutInput') }}</span>
           <LightModeSwitch />
         </div>
-        <ClientOnly>
-          <LayoutAttrs v-model="data.layout" />
-          <template #fallback>
-            <LayoutAttrs v-model="data.layout" disabled />
-          </template>
-        </ClientOnly>
+        <LayoutAttrs v-model="data.layout" />
         <div class="mx-auto mt-8 text-center text-xs">
           {{ t('labels.proConfig') }}
           <a class="mt-1 block" target="_blank" rel="author" :href="'https://add-to-calendar-pro.com' + (locale !== 'en' ? '/' + locale : '')">
