@@ -270,7 +270,7 @@
       "step_cdn_p1": "Lade das Skript, indem du den nachfolgenden \"Script Tag\" im head-Bereich deiner Webseite einfügst.",
       "step_cdn_p2": "Das Skript lädt automatisch auf nicht-blockierende Art und Weise. Daher ist es im Zweifel nicht entscheidend, wo genau es platziert wird.",
       "step_use": "Loslegen",
-      "step_use_start": "Beginne mit der Nutzung, indem du einen <add-to-calendar-button> Tag in deinem HTML-Quellcode einfügst - mit den Optionen als Attribute.",
+      "step_use_start": "Beginne mit der Nutzung, indem du einen {'<'}add-to-calendar-button{'>'} Tag in deinem HTML-Quellcode einfügst - mit den Optionen als Attribute.",
       "step_use_simple": "Ganz genau - es ist derart einfach.",
       "step_use_example": "Dein Code kann hierbei bspw. wie folgt aussehen.",
       "step_use_client": "Beachte, dass der Button nur client-seitig funktioniert! Nutze 'use client'; entsprechend.",
@@ -308,7 +308,7 @@
         "intro_2": "offiziellen Add to Calendar Button React Wrappers",
         "intro_3": " anstelle des Standard Web Components.",
         "intro_4": "Dieser Wrapper behandelt die meisten potentiellen Probleme und Schwierigkeiten automatisch.",
-        "start_wrapper": "Beginne mit der Nutzung, indem du einen <AddtoCalendarButton> Tag in deinem Quellcode einfügst."
+        "start_wrapper": "Beginne mit der Nutzung, indem du einen {'<'}AddtoCalendarButton{'>'} Tag in deinem Quellcode einfügst."
       },
       "nuxt": {
         "headline": "Wie man den Add to Calendar Button mit Nuxt 3 nutzt"
@@ -323,7 +323,7 @@
         "pick_option2_3": " genutzt werden. Dieser beinhaltet eine stärkere TypeScript- und React-Unterstützung.",
         "install_wrapper": "Falls du den spezialisierteren React-Wrapper nutzt, installierst du stattdessen folgendes Package:",
         "import_wrapper": "Bei der Implementierung des React Wrappers sieht das Import-Statement etwas anders aus.",
-        "start_wrapper_1": "Wenn du die React-Wrapper-Lösung gewählt hast, spezifierst du einen Button über den Tag <AddtoCalendarButton>. Im Grunde nutzt du damit die importierte React-Komponente anstelle des \"Custom Elements\" (Web Component).",
+        "start_wrapper_1": "Wenn du die React-Wrapper-Lösung gewählt hast, spezifierst du einen Button über den Tag {'<'}AddtoCalendarButton{'>'}. Im Grunde nutzt du damit die importierte React-Komponente anstelle des \"Custom Elements\" (Web Component).",
         "start_wrapper_2": "Dein Code sieht dann eher wie folgt aus:",
         "start_wrapper_3": "Beachte, dass du mit der Wrapper-Lösung Arrays als tatsächliche Arrays definieren kannst, während sie bei der Nutzung des Web Components in Strings umgewandelt werden müssen!",
         "start_wrapper_4": "Merke dir diese Unterschiede, wenn du weiter nach Beispielen stöberst.",

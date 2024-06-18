@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import { SwitchGroup, SwitchLabel, Switch } from '@headlessui/vue';
+import { SwitchGroup, SwitchLabel, Switch, provideUseId } from '@headlessui/vue';
+provideUseId(() => useId());
 
 const props = defineProps({
   modelValue: {

@@ -237,13 +237,11 @@ export default defineNuxtConfig({
     },
   },
   i18n: {
+    detectBrowserLanguage: false,
     strategy: 'prefix_except_default',
     types: 'composition',
     langDir: 'locales',
     lazy: true,
-    compilation: {
-      strictMessage: false,
-    },
     baseUrl: baseUrl,
     defaultLocale: 'en',
     locales: [

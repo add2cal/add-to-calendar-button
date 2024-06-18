@@ -3,7 +3,6 @@ import { ArrowUpIcon, ArrowTopRightOnSquareIcon } from '@heroicons/vue/24/solid'
 
 import LanguageSwitcher from "@/components/languageSwitcher.vue";
 import LightModeSwitch from "@/components/lightModeSwitch.vue";
-import LightModeSwitchPlaceholder from "@/components/placeholders/lightModeSwitchPlaceholder.vue";
 
 import Logo from "@/components/logos/logoMain.vue";
 import LogoGithub from "@/components/logos/logoGithub.vue";
@@ -71,21 +70,16 @@ function topFunction() {
             </span>
             <div class="mt-6 text-xs sm:mt-5 md:mt-3">
               <span class="font-semibold text-zinc-500 dark:text-zinc-400"> &copy; {{new Date().getFullYear()}} </span>
-              <span class="lowercase text-zinc-400 dark:text-zinc-500"> , Current Version: 2.6.16 </span>
+              <span class="lowercase text-zinc-400 dark:text-zinc-500"> , Current Version: 2.6.17 </span>
             </div>
           </div>
           <div class="hidden self-center sm:block">
-            <ClientOnly>
-              <LightModeSwitch />
-              <template #fallback>
-                <LightModeSwitchPlaceholder />
-              </template>
-            </ClientOnly>
+            <LightModeSwitch />
           </div>
           <div class="flex justify-center space-x-6 pt-3 sm:pt-0">
             <a class="footer-icon-base w-9 hover:text-primary dark:hover:text-primary" target="_blank" rel="noopener" href="https://github.com/add2cal/add-to-calendar-button"><LogoGithub /></a>
             <a class="footer-icon-base w-8 hover:text-primary dark:hover:text-primary" target="_blank" rel="noopener" href="https://x.com/add2calendar"><LogoX /></a>
-            <a class="footer-icon-base w-12  hover:text-npm dark:hover:text-npm" target="_blank" rel="noopener" href="https://www.npmjs.com/package/add-to-calendar-button"><LogoNpm /></a>
+            <a class="footer-icon-base w-12 hover:text-npm dark:hover:text-npm" target="_blank" rel="noopener" href="https://www.npmjs.com/package/add-to-calendar-button"><LogoNpm /></a>
           </div>
         </div>
         <div role="button" class="mx-auto flex w-fit cursor-pointer justify-center pt-10 opacity-40 hover:-mt-2 hover:pb-2 hover:opacity-100 md:hidden" :aria-label="$t('labels.toTop')" @click="topFunction()"><ArrowUpIcon class="h-6 w-6" aria-hidden="true" /></div>

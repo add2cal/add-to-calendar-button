@@ -75,6 +75,7 @@ const configOptions = [
   "hideBranding",
   "debug",
   "forceOverlay",
+  "proOverride",
   //"cspnonce",
   "styleLight",
   "styleDark",
@@ -114,24 +115,26 @@ const elNoResultsID = (function() {
 })();
 
 onMounted(() => {
-  new Autocomplete('#' + elID, {
-    search: (input: string) => {
-      search.value = input;
-      return getFilteredOptions();
-    },
-    onSubmit: (value: string) => {
-      if (value !== undefined) {
-        const goTo = value.toLowerCase();
-        searchInput.value && searchInput.value.blur();
-        searchInput.value.value = '';
-        // push the route, but add some delay to work around some android soft keyboard issues
-        setTimeout( () => navigateTo({path: localePath('configuration'), hash: '#' + goTo}), 200);
-      }
-    },
-    autoSelect: true,
-    debounceTime: 100,
-  });
-})
+  if (import.meta.client) {
+    new Autocomplete('#' + elID, {
+      search: (input: string) => {
+        search.value = input;
+        return getFilteredOptions();
+      },
+      onSubmit: (value: string) => {
+        if (value !== undefined) {
+          const goTo = value.toLowerCase();
+          searchInput.value && searchInput.value.blur();
+          searchInput.value.value = '';
+          // push the route, but add some delay to work around some android soft keyboard issues
+          setTimeout( () => navigateTo({path: localePath('configuration'), hash: '#' + goTo}), 200);
+        }
+      },
+      autoSelect: true,
+      debounceTime: 100,
+    });
+  }
+});
 
 const onSearchInputFocus = () => {
   isInputFocused.value = true;
@@ -166,8 +169,8 @@ const onSearchInputBlur = () => {
             <MagnifyingGlassIcon class="h-5 w-5 text-gray-400" aria-hidden="true" />
           </span>
         </div>
-        <ul class="autocomplete-result-list absolute z-10 mt-2.5 max-h-36 w-full overflow-auto rounded-md bg-white py-1 text-sm shadow-lg ring ring-secondary/75 focus:outline-none dark:bg-zinc-700" />
-        <ul v-if="isInputFocused && !getFilteredOptions().length" :id="elNoResultsID" class="autocomplete-result-list absolute z-10 mt-3 max-h-36 w-full overflow-auto rounded-md bg-white py-1 text-sm shadow-lg ring ring-red-600/75 focus:outline-none dark:bg-zinc-700">
+        <ul style="visibility:hidden" class="autocomplete-result-list absolute z-10 mt-2.5 max-h-36 w-full overflow-auto rounded-md bg-white py-1 text-sm shadow-lg ring ring-secondary/75 focus:outline-none dark:bg-zinc-700" />
+        <ul v-if="isInputFocused && !getFilteredOptions().length" :id="elNoResultsID" style="visibility:hidden" class="autocomplete-result-list absolute z-10 mt-3 max-h-36 w-full overflow-auto rounded-md bg-white py-1 text-sm shadow-lg ring ring-red-600/75 focus:outline-none dark:bg-zinc-700">
           <li v-t="'labels.inputs.nothing_found'" class="no-result relative cursor-default select-none px-4 py-2 italic">Nothing found.</li>
         </ul>
       </div>

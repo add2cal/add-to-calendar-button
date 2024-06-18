@@ -1,9 +1,10 @@
 <script setup lang="ts">
 import { ChevronUpIcon } from '@heroicons/vue/24/outline';
-import { Disclosure, DisclosureButton, DisclosurePanel } from '@headlessui/vue';
+import { Disclosure, DisclosureButton, DisclosurePanel, provideUseId } from '@headlessui/vue';
 
 const { locale } = useI18n();
 const localePath = useLocalePath();
+provideUseId(() => useId());
 
 let wpUrl = (function () {
   if (locale.value == 'de') {

@@ -65,7 +65,7 @@ watch(locale, value => {
 &gt;&lt;/AddToCalendarButton&gt;</pre
           >
         </LazyCodeBlock>
-        <p class="font-semibold mb-10">{{ $t('content.guide.step_use_client') }}</p>
+        <p class="mb-10 font-semibold">{{ $t('content.guide.step_use_client') }}</p>
       </div>
     </div>
     <div class="hidden border-l border-zinc-300 pl-8 text-xs dark:border-zinc-700 lg:block xl:pl-12">

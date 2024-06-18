@@ -5,14 +5,14 @@
  *  Add to Calendar Button
  *  ++++++++++++++++++++++
  *
- *  Version: 2.6.16
+ *  Version: 2.6.17
  *  Creator: Jens Kuerschner (https://jekuer.com)
  *  Project: https://github.com/add2cal/add-to-calendar-button
  *  License: Elastic License 2.0 (ELv2) (https://github.com/add2cal/add-to-calendar-button/blob/main/LICENSE.txt)
  *  Note:    DO NOT REMOVE THE COPYRIGHT NOTICE ABOVE!
  *
  */
-const atcbVersion = '2.6.16';
+const atcbVersion = '2.6.17';
 
 // DEFINING CSS
 const atcbCssTemplate = {};
@@ -118,6 +118,7 @@ const atcbStates = [];
 // DEFINING THE WEB COMPONENT ATTRIBUTES
 const atcbWcParams = [
   'debug',
+  'prooOverride',
   'cspnonce',
   'identifier',
   'name',
@@ -194,6 +195,7 @@ const atcbWcParams = [
 ];
 const atcbWcProParams = [
   'debug',
+  'prooOverride',
   'cspnonce',
   'attendee',
   'images',
@@ -220,6 +222,7 @@ const atcbWcProParams = [
 ];
 const atcbWcBooleanParams = [
   'debug',
+  'prooOverride',
   'useUserTZ',
   'hideIconButton',
   'hideIconList',

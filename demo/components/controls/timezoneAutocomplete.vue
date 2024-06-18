@@ -13,6 +13,10 @@ const props = defineProps({
   mobile: {
     type: Boolean,
     default: false
+  },
+  disabled: {
+    type: Boolean,
+    default: false
   }
 });
 
@@ -63,21 +67,23 @@ onMounted(() => {
     searchInput.value && (searchInput.value.value = props.modelValue)
   }
 
-  new Autocomplete('#' + elID, {
-    search: (input: string) => {
-      search.value = input;
-      return getFilteredTimezoneOptions();
-    },
-    onSubmit: (value: string) => {
-      if (value !== undefined) {
-        emit('update:modelValue', value);
-        searchInput.value && searchInput.value.blur();
-      }
-    },
-    autoSelect: true,
-    debounceTime: 100,
-  });
-})
+  if (import.meta.client) {
+    new Autocomplete('#' + elID, {
+      search: (input: string) => {
+        search.value = input;
+        return getFilteredTimezoneOptions();
+      },
+      onSubmit: (value: string) => {
+        if (value !== undefined) {
+          emit('update:modelValue', value);
+          searchInput.value && searchInput.value.blur();
+        }
+      },
+      autoSelect: true,
+      debounceTime: 100,
+    });
+  }
+});
 
 const onSearchInputFocus = () => {
   isInputFocused.value = true;
@@ -99,9 +105,11 @@ const onSearchInputBlur = () => {
 }
 
 // watch props changes to synch mobile and desktop field here
-watch(props, () => {
-  searchInput.value && (searchInput.value.value = props.modelValue);
-});
+if (import.meta.client) {
+  watch(props, () => {
+    searchInput.value && (searchInput.value.value = props.modelValue);
+  });
+}
 </script>
 
 <template>
@@ -115,7 +123,8 @@ watch(props, () => {
           <input
             :id="elInputID"
             ref="searchInput"
-            class="autocomplete-input truncate rounded-md bg-zinc-50 py-2 pl-3 pr-10 text-left text-sm caret-secondary placeholder:text-xs focus:outline-none focus-visible:ring focus-visible:ring-secondary/75 group-hover:bg-white dark:bg-zinc-700 dark:group-hover:bg-zinc-600"
+            :disabled="disabled"
+            :class="[disabled && 'cursor-progress', 'autocomplete-input truncate rounded-md bg-zinc-50 py-2 pl-3 pr-10 text-left text-sm caret-secondary placeholder:text-xs focus:outline-none focus-visible:ring focus-visible:ring-secondary/75 group-hover:bg-white dark:bg-zinc-700 dark:group-hover:bg-zinc-600']"
             :placeholder="$t('labels.inputs.search_time_zone')"
             :aria-label="$t('labels.inputs.search_time_zone')"
             @focus="onSearchInputFocus"
@@ -125,8 +134,8 @@ watch(props, () => {
             <MagnifyingGlassIcon class="h-5 w-5 text-gray-400" aria-hidden="true" />
           </span>
         </div>
-        <ul class="autocomplete-result-list absolute z-10 mt-2.5 max-h-36 w-full overflow-auto rounded-md bg-white py-1 text-sm shadow-lg ring ring-secondary/75 focus:outline-none dark:bg-zinc-700" />
-        <ul v-if="isInputFocused && !getFilteredTimezoneOptions().length" :id="elNoResultsID" class="autocomplete-result-list absolute z-10 mt-3 max-h-36 w-full overflow-auto rounded-md bg-white py-1 text-sm shadow-lg ring ring-red-600/75 focus:outline-none dark:bg-zinc-700">
+        <ul style="visibility:hidden" class="autocomplete-result-list absolute z-10 mt-2.5 max-h-36 w-full overflow-auto rounded-md bg-white py-1 text-sm shadow-lg ring ring-secondary/75 focus:outline-none dark:bg-zinc-700" />
+        <ul v-if="isInputFocused && !getFilteredTimezoneOptions().length" :id="elNoResultsID" style="visibility:hidden" class="autocomplete-result-list absolute z-10 mt-3 max-h-36 w-full overflow-auto rounded-md bg-white py-1 text-sm shadow-lg ring ring-red-600/75 focus:outline-none dark:bg-zinc-700">
           <li v-t="'labels.inputs.nothing_found'" class="no-result relative cursor-default select-none px-4 py-2 italic">Nothing found.</li>
         </ul>
       </div>

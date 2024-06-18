@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import ConfigSearch from '@/components/controls/configSearch.vue';
-import ConfigSearchPlaceholder from '@/components/placeholders/configSearchPlaceholder.vue';
 import Interstitial from '@/components/interstitial.vue';
 import { ArrowRightIcon, ArrowTopRightOnSquareIcon } from '@heroicons/vue/24/outline';
 
@@ -47,12 +46,7 @@ definePageMeta({
       </div>
 
       <div class="mx-auto mt-14 block border-y border-zinc-300 px-5 pb-7 pt-6 dark:border-zinc-700 md:mx-0 lg:hidden">
-        <ClientOnly>
-          <ConfigSearch :mobile="true" label />
-          <template #fallback>
-            <ConfigSearchPlaceholder label />
-          </template>
-        </ClientOnly>
+        <ConfigSearch :mobile="true" label />
       </div>
 
       <h3 id="event-parameters" class="mt-12 pt-4">{{ $t('content.config.event_params') }}</h3>
@@ -1026,6 +1020,14 @@ definePageMeta({
               <td v-if="locale=='en'">Use this attribute to force a re-rendering of the button by counting its value 1 up.</td>
               <td v-else>Nutze dieses Attribut, um einen Button durch Hochzählen des Werts neu zu rendern.</td>
             </tr>
+            <tr id="prooverride">
+              <th scope="row">proOverride</th>
+              <td>
+                <em>Boolean</em><br /><br /><span class="label">{{ $t('content.config.default') }}:</span>False
+              </td>
+              <td v-if="locale=='en'">With this option enabled, any setting would override its corresponding one from the PRO app. Use with caution, as this can lead to inconsistencies across systems!</td>
+              <td v-else>Ist diese Option aktiv, überschreiben jegliche Einstellungen die korrespondierenden Werte, die über die PRO-App gesetzt wurden. Nutze dies mit Vorsicht, da sich hierdurch sehr leicht Inkonsistenzen über diverse Systeme ergeben können!</td>
+            </tr>
             <tr id="debug">
               <th scope="row">debug</th>
               <td>
@@ -1069,12 +1071,7 @@ definePageMeta({
     </div>
     <div class="hidden border-l border-zinc-300 pl-8 text-sm dark:border-zinc-700 lg:block">
       <div class="sticky top-0 pt-4">
-        <ClientOnly>
-          <ConfigSearch class="mb-10" />
-          <template #fallback>
-            <ConfigSearchPlaceholder class="mb-10" />
-          </template>
-        </ClientOnly>
+        <ConfigSearch class="mb-10" />
         <NuxtLink :to="'#event-parameters'" class="side-nav">{{ $t('content.config.event_params') }}</NuxtLink>
         <NuxtLink :to="'#style-parameters'" class="side-nav">{{ $t('content.config.layout_params') }}</NuxtLink>
         <NuxtLink :to="'#additional-parameters'" class="side-nav">{{ $t('content.config.additional_params') }}</NuxtLink>

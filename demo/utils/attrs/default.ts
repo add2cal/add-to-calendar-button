@@ -1,4 +1,5 @@
-import { type DateAttrs, type DateRecurrenceAttrs, type LayoutAttrs, type Attrs, DateAttrsKey, DateRecurrenceAttrsKey, LayoutAttrsKey, HideIconOption, HideTextOption } from '@/models/attrs';
+import type { DateAttrs, DateRecurrenceAttrs, LayoutAttrs, Attrs } from '@/models/attrs';
+import { DateAttrsKey, DateRecurrenceAttrsKey, LayoutAttrsKey, HideIconOption, HideTextOption } from '@/models/attrs';
 import { Option, Size, DefaultButtonStyle, DefaultListStyle, DefaultTrigger, DefaultLightMode, DefaultPastDateHandling } from '@/models/addToCalendarButton';
 import { DefaultLanguageCode } from '@/models/language';
 import { getBrowserTimezone } from '@/utils/timezone';
@@ -21,14 +22,14 @@ export const getDefaultDateRecurrenceAttrs = (): DateRecurrenceAttrs => ({
   [DateRecurrenceAttrsKey.BY_MONTH_DAY]: '',
 });
 
-export const getDefaultDateAttrs = (defaultName: string, defaultDescription: string, defaultLocation: string): DateAttrs => ({
+export const getDefaultDateAttrs = (defaultName: string, defaultDescription: string, defaultLocation: string, goBlank: boolean = false): DateAttrs => ({
   [DateAttrsKey.NAME]: defaultName,
   [DateAttrsKey.DESCRIPTION]: defaultDescription,
-  [DateAttrsKey.START_DATE]: defaultDate,
-  [DateAttrsKey.START_TIME]: '10:15',
+  [DateAttrsKey.START_DATE]: goBlank ? '' : defaultDate,
+  [DateAttrsKey.START_TIME]: goBlank ? '' : '10:15',
   [DateAttrsKey.END_DATE]: '',
-  [DateAttrsKey.END_TIME]: '17:45',
-  [DateAttrsKey.TIMEZONE]: getBrowserTimezone(),
+  [DateAttrsKey.END_TIME]: goBlank ? '' : '17:45',
+  [DateAttrsKey.TIMEZONE]: goBlank ? '' : getBrowserTimezone(),
   [DateAttrsKey.LOCATION]: defaultLocation,
   [DateAttrsKey.STATUS]: '',
   [DateAttrsKey.ORGANIZER]: {
@@ -59,14 +60,14 @@ export const getDefaultLayoutAttrs = (): LayoutAttrs => ({
   [LayoutAttrsKey.PAST_DATE_HANDLING]: DefaultPastDateHandling,
 });
 
-export const getDefaultAttrs = (defaultName: string, defaultDescription: string, defaultLocation: string): Attrs => ({
-  date: getDefaultDateAttrs(defaultName, defaultDescription, defaultLocation),
+export const getDefaultAttrs = (defaultName: string, defaultDescription: string, defaultLocation: string, goBlank: boolean = false): Attrs => ({
+  date: getDefaultDateAttrs(defaultName, defaultDescription, defaultLocation, goBlank),
   layout: getDefaultLayoutAttrs(),
 });
 
 export const getInitialAttrs = (defaultName: string, defaultDescription: string, defaultLocation: string): Attrs => {
   const defaultData = getDefaultAttrs(defaultName, defaultDescription, defaultLocation);
-  const cachedData = get(LSKey.ATTRS);
+  const cachedData = import.meta.client ? get(LSKey.ATTRS) : null;
   const cachedDataParsed = (function () {
     if (cachedData) {
       return JSON.parse(cachedData);
@@ -74,7 +75,7 @@ export const getInitialAttrs = (defaultName: string, defaultDescription: string,
   })();
 
   const overrideData = (function () {
-    if (!cachedDataParsed) {
+    if (import.meta.client && !cachedDataParsed) {
       return { layout: { [LayoutAttrsKey.LANGUAGE]: get(LSKey.LANG) } };
     }
     return {};
@@ -82,3 +83,7 @@ export const getInitialAttrs = (defaultName: string, defaultDescription: string,
 
   return !!cachedDataParsed && typeof cachedDataParsed === 'object' ? mergeDeep(defaultData, cachedDataParsed) : mergeDeep(defaultData, overrideData);
 };
+
+export const getInitialAttrsBlank = (): Attrs => {
+  return getDefaultAttrs('', '', '', true);
+}
