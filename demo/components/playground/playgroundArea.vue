@@ -5,7 +5,7 @@ import DateAttrs from "@/components/playground/attrs/dateAttrs.vue";
 import LayoutAttrs from "@/components/playground/attrs/layoutAttrs.vue";
 import { mapAttrsObject, attrsToHtmlString } from '@/utils/attrs';
 import { set, LSKey } from '@/utils/localStorage';
-import { getInitialAttrs } from '@/utils/attrs/default';
+import { getInitialAttrs, getInitialAttrsBlank } from '@/utils/attrs/default';
 import { isbot } from "isbot";
 const LazyCodeBlock = defineAsyncComponent(() => import('@/components/codeBlock.vue'));
 const { t, locale } = useI18n();
@@ -18,7 +18,7 @@ if (import.meta.client) {
   isBot.value = isbot(navigator.userAgent);
 }
 
-const data = ref( getInitialAttrs(t('defaults.name'), t('defaults.description'), t('defaults.location')) );
+const data = ref( getInitialAttrsBlank() );
 
 async function loadAtcbScript () {
   import('add-to-calendar-button').then(() => {
@@ -28,6 +28,10 @@ async function loadAtcbScript () {
 }
 
 if (import.meta.client) {
+  onMounted(() => {
+    data.value = getInitialAttrs(t('defaults.name'), t('defaults.description'), t('defaults.location'));
+  });
+
   watch(data, () => {
     set(LSKey.ATTRS, data.value);
   }, { deep: true });
@@ -59,7 +63,7 @@ if (import.meta.client) {
         <div class="mb-4 text-sm font-semibold uppercase text-zinc-800 dark:text-zinc-200">
           {{ t('labels.dateInput') }}
         </div>
-        <DateAttrs v-model="data.date" />
+        <DateAttrs v-model="data.date" :disabled="!loaded" />
       </div>
       <div
         id="rendering"
@@ -79,7 +83,7 @@ if (import.meta.client) {
           <span>{{ t('labels.layoutInput') }}</span>
           <LightModeSwitch />
         </div>
-        <LayoutAttrs v-model="data.layout" />
+        <LayoutAttrs v-model="data.layout" :disabled="!loaded" />
         <div class="mx-auto mt-8 text-center text-xs">
           {{ t('labels.proConfig') }}
           <a class="mt-1 block" target="_blank" rel="author" :href="'https://add-to-calendar-pro.com' + (locale !== 'en' ? '/' + locale : '')">
@@ -91,11 +95,15 @@ if (import.meta.client) {
     </div>
     <div id="code-output" :class="[ !showCode ? 'mx-8 bg-zinc-300 dark:bg-zinc-800' : 'mx-2 bg-zinc-200 pb-0 dark:bg-zinc-800 md:mx-0' ]" class="rounded-b-md border-2 border-t-0 border-zinc-400 p-2 shadow-lg transition-all dark:border-zinc-600">
       <div class="cursor-pointer text-center text-sm font-semibold text-zinc-600 hover:text-black dark:text-zinc-400 dark:hover:text-secondary" @click="showCode = !showCode">
-        <span :class="{ hidden: showCode }"> <EyeIcon class="-mt-1 mr-2 inline-block h-5 w-5" aria-hidden="true" />{{ t('labels.showCode') }} </span>
-        <span :class="{ hidden: !showCode }"> <EyeSlashIcon class="-mt-1 mr-2 inline-block h-5 w-5" aria-hidden="true" />{{ t('labels.hideCode') }} </span>
+        <span :class="{ hidden: showCode }">
+          <EyeIcon class="-mt-1 mr-2 inline-block h-5 w-5" aria-hidden="true" />{{ t('labels.showCode') }}
+        </span>
+        <span :class="{ hidden: !showCode }">
+          <EyeSlashIcon class="-mt-1 mr-2 inline-block h-5 w-5" aria-hidden="true" />{{ t('labels.hideCode') }}
+        </span>
       </div>
       <div :class="{ hidden: !showCode }" class="m-2 mt-3">
-        <LazyCodeBlock>{{ attrsToHtmlString(data) }}</LazyCodeBlock>
+        <LazyCodeBlock v-if="loaded">{{ attrsToHtmlString(data) }}</LazyCodeBlock>
       </div>
     </div>
   </div>

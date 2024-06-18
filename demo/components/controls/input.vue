@@ -43,7 +43,7 @@ defineEmits(['update:modelValue']);
     </label>
     <div class="flex items-center py-2 pl-2">
       <template v-if="props.type !== 'range'">
-          <input v-if="props.disabled" :type="props.type" :placeholder="props.placeholder" disabled :aria-label="label" class="block w-full flex-1 cursor-progress rounded-md bg-zinc-50 px-3 py-2 text-sm leading-5 shadow dark:bg-zinc-700" :value="modelValue" />
+          <input v-if="props.disabled" :type="props.type" :placeholder="props.placeholder" disabled :aria-label="label" class="block w-full flex-1 placeholder:text-xs cursor-progress rounded-md bg-zinc-50 px-3 py-2 text-sm leading-5 shadow dark:bg-zinc-700" :value="modelValue" />
           <input
             v-else
             :aria-label="label"

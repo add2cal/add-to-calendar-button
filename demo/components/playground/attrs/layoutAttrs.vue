@@ -14,6 +14,10 @@ const props = defineProps({
   modelValue: {
     type: Object,
     default: getDefaultLayoutAttrs()
+  },
+  disabled: {
+    type: Boolean,
+    default: false
   }
 });
 
@@ -24,6 +28,10 @@ const internalValue = ref(props.modelValue || getDefaultLayoutAttrs());
 watch(internalValue, () => {
   emit('update:modelValue', internalValue);
 }, { deep: true });
+
+watch(() => props.modelValue, (val) => {
+  internalValue.value = val;
+}, { immediate: true });
 
 const languageOptions = computed(() =>
   Object.values(LanguageCode).map((item) =>
@@ -76,20 +84,21 @@ function onHideTextOptionsUpdate(options: string[]) {
 
 <template>
   <div class="grid">
-    <Select v-model="internalValue[LayoutAttrsKey.OPTIONS]" multiselect :label="t(`labels.inputs.${[LayoutAttrsKey.OPTIONS]}`.toLocaleLowerCase())" :options="Object.values(Option)" class="z-20 mb-3 border-b border-zinc-400 pb-4 dark:border-zinc-600" />
+    <Select v-model="internalValue[LayoutAttrsKey.OPTIONS]" :disabled="disabled" multiselect :label="t(`labels.inputs.${[LayoutAttrsKey.OPTIONS]}`.toLocaleLowerCase())" :options="Object.values(Option)" class="z-20 mb-3 border-b border-zinc-400 pb-4 dark:border-zinc-600" />
 
     <div class="z-10 mb-3 flex items-center justify-between">
-      <Select v-model="internalValue[LayoutAttrsKey.BUTTON_STYLE]" :label="t(`labels.inputs.${[LayoutAttrsKey.BUTTON_STYLE]}`.toLocaleLowerCase())" :options="Object.values(ButtonStyle)" class="mr-5 flex-1" />
-      <Switch v-model="internalValue[LayoutAttrsKey.IS_BUTTONS_LIST]" :label="t(`labels.inputs.${[LayoutAttrsKey.IS_BUTTONS_LIST]}`.toLocaleLowerCase())" class="pb-0 pt-6" />
+      <Select v-model="internalValue[LayoutAttrsKey.BUTTON_STYLE]" :disabled="disabled" :label="t(`labels.inputs.${[LayoutAttrsKey.BUTTON_STYLE]}`.toLocaleLowerCase())" :options="Object.values(ButtonStyle)" class="mr-5 flex-1" />
+      <Switch v-model="internalValue[LayoutAttrsKey.IS_BUTTONS_LIST]" :disabled="disabled" :label="t(`labels.inputs.${[LayoutAttrsKey.IS_BUTTONS_LIST]}`.toLocaleLowerCase())" class="pb-0 pt-6" />
     </div>
-    <Input v-model="internalValue[LayoutAttrsKey.LABEL]" :label="t(`labels.inputs.${[LayoutAttrsKey.LABEL]}`.toLocaleLowerCase())" type="text" class="mb-3" />
-    <Select v-model="internalValue[LayoutAttrsKey.TRIGGER]" :label="t(`labels.inputs.${[LayoutAttrsKey.TRIGGER]}`.toLocaleLowerCase())" :options="triggerOptions" byKey="key" byValue="value" class="mb-3" />
+    <Input v-model="internalValue[LayoutAttrsKey.LABEL]" :disabled="disabled" :label="t(`labels.inputs.${[LayoutAttrsKey.LABEL]}`.toLocaleLowerCase())" type="text" class="mb-3" />
+    <Select v-model="internalValue[LayoutAttrsKey.TRIGGER]" :disabled="disabled" :label="t(`labels.inputs.${[LayoutAttrsKey.TRIGGER]}`.toLocaleLowerCase())" :options="triggerOptions" byKey="key" byValue="value" class="mb-3" />
 
-    <Select v-model="internalValue[LayoutAttrsKey.LIST_STYLE]" :label="t(`labels.inputs.${[LayoutAttrsKey.LIST_STYLE]}`.toLocaleLowerCase())" :options="Object.values(ListStyle)" class="mb-3" />
-    <Switch v-model="internalValue[LayoutAttrsKey.HIDE_BACKGROUND]" :label="t(`labels.inputs.${[LayoutAttrsKey.HIDE_BACKGROUND]}`.toLocaleLowerCase())" class="mb-3" />
+    <Select v-model="internalValue[LayoutAttrsKey.LIST_STYLE]" :disabled="disabled" :label="t(`labels.inputs.${[LayoutAttrsKey.LIST_STYLE]}`.toLocaleLowerCase())" :options="Object.values(ListStyle)" class="mb-3" />
+    <Switch v-model="internalValue[LayoutAttrsKey.HIDE_BACKGROUND]" :disabled="disabled" :label="t(`labels.inputs.${[LayoutAttrsKey.HIDE_BACKGROUND]}`.toLocaleLowerCase())" class="mb-3" />
 
     <Select
       :modelValue="Object.keys(internalValue[LayoutAttrsKey.HIDE_ICON_OPTIONS] ? internalValue[LayoutAttrsKey.HIDE_ICON_OPTIONS] : {}).filter((key) => !!internalValue[LayoutAttrsKey.HIDE_ICON_OPTIONS][key])"
+      :disabled="disabled"
       :label="t(`labels.inputs.${[LayoutAttrsKey.HIDE_ICON_OPTIONS]}`.toLocaleLowerCase())"
       :options="i18nHideIconOptions"
       byKey="key"
@@ -100,6 +109,7 @@ function onHideTextOptionsUpdate(options: string[]) {
     />
     <Select
       :modelValue="Object.keys(internalValue[LayoutAttrsKey.HIDE_TEXT_OPTIONS] ? internalValue[LayoutAttrsKey.HIDE_TEXT_OPTIONS] : {}).filter((key) => !!internalValue[LayoutAttrsKey.HIDE_TEXT_OPTIONS][key])"
+      :disabled="disabled"
       :label="t(`labels.inputs.${[LayoutAttrsKey.HIDE_TEXT_OPTIONS]}`.toLocaleLowerCase())"
       :options="i18nHideTextOptions"
       byKey="key"
@@ -108,14 +118,14 @@ function onHideTextOptionsUpdate(options: string[]) {
       class="mb-3"
       @update:model-value="onHideTextOptionsUpdate"
     />
-    <Switch v-model="internalValue[LayoutAttrsKey.HIDE_CHECKMARK]" :label="t(`labels.inputs.${[LayoutAttrsKey.HIDE_CHECKMARK]}`.toLocaleLowerCase())" class="mb-3" />
+    <Switch v-model="internalValue[LayoutAttrsKey.HIDE_CHECKMARK]" :disabled="disabled" :label="t(`labels.inputs.${[LayoutAttrsKey.HIDE_CHECKMARK]}`.toLocaleLowerCase())" class="mb-3" />
 
-    <Input v-model="internalValue[LayoutAttrsKey.SIZE]" :label="t(`labels.inputs.${[LayoutAttrsKey.SIZE]}`.toLocaleLowerCase())" type="range" :min="Size.min" :max="Size.max" class="mb-3" />
+    <Input v-model="internalValue[LayoutAttrsKey.SIZE]" :disabled="disabled" :label="t(`labels.inputs.${[LayoutAttrsKey.SIZE]}`.toLocaleLowerCase())" type="range" :min="Size.min" :max="Size.max" class="mb-3" />
 
-    <Select v-model="internalValue[LayoutAttrsKey.LIGHT_MODE]" :label="t(`labels.inputs.${[LayoutAttrsKey.LIGHT_MODE]}`.toLocaleLowerCase())" :options="Object.values(LightMode)" class="mb-3" />
+    <Select v-model="internalValue[LayoutAttrsKey.LIGHT_MODE]" :disabled="disabled" :label="t(`labels.inputs.${[LayoutAttrsKey.LIGHT_MODE]}`.toLocaleLowerCase())" :options="Object.values(LightMode)" class="mb-3" />
 
-    <Select v-model="internalValue[LayoutAttrsKey.PAST_DATE_HANDLING]" :label="t(`labels.inputs.${[LayoutAttrsKey.PAST_DATE_HANDLING]}`.toLocaleLowerCase())" :options="Object.values(PastDateHandling)" class="mb-3" />
+    <Select v-model="internalValue[LayoutAttrsKey.PAST_DATE_HANDLING]" :disabled="disabled" :label="t(`labels.inputs.${[LayoutAttrsKey.PAST_DATE_HANDLING]}`.toLocaleLowerCase())" :options="Object.values(PastDateHandling)" class="mb-3" />
 
-    <Select v-model="internalValue[LayoutAttrsKey.LANGUAGE]" :label="t(`labels.inputs.${[LayoutAttrsKey.LANGUAGE]}`.toLocaleLowerCase())" :options="languageOptions" byKey="key" byValue="value" />
+    <Select v-model="internalValue[LayoutAttrsKey.LANGUAGE]" :disabled="disabled" :label="t(`labels.inputs.${[LayoutAttrsKey.LANGUAGE]}`.toLocaleLowerCase())" :options="languageOptions" byKey="key" byValue="value" />
   </div>
 </template>

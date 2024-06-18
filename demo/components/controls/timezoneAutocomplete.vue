@@ -13,6 +13,10 @@ const props = defineProps({
   mobile: {
     type: Boolean,
     default: false
+  },
+  disabled: {
+    type: Boolean,
+    default: false
   }
 });
 
@@ -119,7 +123,8 @@ if (import.meta.client) {
           <input
             :id="elInputID"
             ref="searchInput"
-            class="autocomplete-input truncate rounded-md bg-zinc-50 py-2 pl-3 pr-10 text-left text-sm caret-secondary placeholder:text-xs focus:outline-none focus-visible:ring focus-visible:ring-secondary/75 group-hover:bg-white dark:bg-zinc-700 dark:group-hover:bg-zinc-600"
+            :disabled="disabled"
+            :class="[disabled && 'cursor-progress', 'autocomplete-input truncate rounded-md bg-zinc-50 py-2 pl-3 pr-10 text-left text-sm caret-secondary placeholder:text-xs focus:outline-none focus-visible:ring focus-visible:ring-secondary/75 group-hover:bg-white dark:bg-zinc-700 dark:group-hover:bg-zinc-600']"
             :placeholder="$t('labels.inputs.search_time_zone')"
             :aria-label="$t('labels.inputs.search_time_zone')"
             @focus="onSearchInputFocus"
