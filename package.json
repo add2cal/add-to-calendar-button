@@ -96,7 +96,6 @@
     "build": "npx grunt"
   },
   "dependencies": {
-    "isbot": "^5.1.9",
     "timezones-ical-library": "^1.8.2"
   },
   "devDependencies": {
