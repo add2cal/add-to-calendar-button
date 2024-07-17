@@ -20,6 +20,7 @@
     "build": "nuxt build",
     "dev": "nuxt dev --port 3233",
     "generate": "nuxt generate",
+    "generate-full": "cd .. && npm run build && cd demo && npm run generate",
     "preview": "nuxt preview",
     "postinstall": "nuxt prepare",
     "type-check": "vue-tsc --noEmit",

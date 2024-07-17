@@ -14,6 +14,7 @@ export default defineNuxtConfig({
   },
 
   nitro: {
+    preset: 'static',
     compressPublicAssets: {
       brotli: true,
     },
