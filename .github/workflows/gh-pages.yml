@@ -1,7 +1,7 @@
 name: Deploy GitHub Pages
 
 on:
-  # currently paused in favor of Azure Static Webapps
+  # currently paused in favor of Cloudflare Pages
   #push:
   #branches: ['main']
   workflow_dispatch:
