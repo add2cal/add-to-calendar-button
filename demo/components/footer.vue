@@ -23,7 +23,7 @@ function topFunction() {
   <div class="w-full bg-gradient-to-tr from-brand-blue-dark to-brand-blue text-white drop-shadow-2xl dark:drop-shadow-light-lg">
     <div class="container grid grid-cols-1 sm:grid-cols-2">
       <div class="mx-auto -mt-4 w-32 sm:mx-0 sm:w-48 md:w-64 lg:mx-auto lg:-mt-6 lg:w-80">
-        <nuxt-img placeholder loading="lazy" sizes="128px sm:192px md:256px lg:320px" class="drop-shadow-xl" alt="Get blown away by the PRO offering" width="800" height="920" src="/assets/img/bomb.webp" />
+        <nuxt-img loading="lazy" sizes="128px sm:192px md:256px lg:320px" class="drop-shadow-xl" alt="Get blown away by the PRO offering" width="800" height="920" src="/assets/img/bomb.webp" />
       </div>
       <div class="flex flex-col items-center gap-8 pb-14 pt-10 md:pb-24 md:pt-16 lg:pb-24 lg:pt-20">
         <div>
