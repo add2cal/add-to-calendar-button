@@ -6,11 +6,13 @@ const robots = process.env.NUXT_PUBLIC_ROBOTS || 'index, follow';
 
 export default defineNuxtConfig({
   modules: ['@nuxtjs/i18n', '@nuxtjs/tailwindcss', 'nuxt-headlessui', 'nuxt-security', 'nuxt-schema-org', '@nuxt/image', '@vite-pwa/nuxt', '@nuxtjs/sitemap'],
+
   vue: {
     compilerOptions: {
       isCustomElement: (tag) => tag === 'add-to-calendar-button',
     },
   },
+
   nitro: {
     compressPublicAssets: {
       brotli: true,
@@ -19,16 +21,20 @@ export default defineNuxtConfig({
       ignore: ['/manifest.json'],
     },
   },
+
   ssr: true,
   spaLoadingTemplate: false,
+
   runtimeConfig: {
     public: {
       siteUrl: baseUrl,
     },
   },
+
   experimental: {
     payloadExtraction: true,
   },
+
   security: {
     enabled: process.env.NODE_ENV === 'development' ? false : true,
     removeLoggers: false,
@@ -66,9 +72,11 @@ export default defineNuxtConfig({
       throwError: true,
     },
   },
+
   image: {
     quality: 90,
   },
+
   app: {
     rootId: 'atcb-demo',
     head: {
@@ -129,11 +137,13 @@ export default defineNuxtConfig({
       noscript: [{ innerHTML: 'Please enable JavaScript to view this website.' }],
     },
   },
+
   site: {
     host: baseUrl,
     url: baseUrl,
     name: 'Add to Calendar Button',
   },
+
   pwa: {
     registerType: 'autoUpdate',
     registerWebManifestInRouteRules: true,
@@ -236,6 +246,7 @@ export default defineNuxtConfig({
       ],
     },
   },
+
   i18n: {
     detectBrowserLanguage: false,
     strategy: 'prefix_except_default',
@@ -260,12 +271,14 @@ export default defineNuxtConfig({
     ],
     vueI18n: './nuxt.i18n.config.ts',
   },
+
   tailwindcss: {
     cssPath: '~/assets/css/main.css',
     configPath: '~/tailwind.config.js',
     exposeConfig: false,
     viewer: false,
   },
+
   sitemap: {
     urls: [
       {
@@ -290,4 +303,6 @@ export default defineNuxtConfig({
       changefreq: 'daily',
     },
   },
+
+  compatibilityDate: '2024-07-17',
 });
