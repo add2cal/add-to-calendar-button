@@ -50,9 +50,17 @@ const i18nFrequencyOptions = computed(() =>
     <div class="text-sm font-semibold uppercase text-zinc-700 dark:text-zinc-300">{{ t('labels.inputs.recurrence.headline') }}</div>
     <Switch v-model="internalValue[DateRecurrenceAttrsKey.IS_SIMPLE]" :disabled="disabled" class="justify-end" :label="t(`labels.inputs.recurrence.${[DateRecurrenceAttrsKey.IS_SIMPLE]}`.toLocaleLowerCase())" />
 
-    <Input v-show="!internalValue[DateRecurrenceAttrsKey.IS_SIMPLE]" v-model="internalValue[DateRecurrenceAttrsKey.RRULE_VALUE]" :disabled="disabled" :label="t(`labels.inputs.recurrence.${[DateRecurrenceAttrsKey.RRULE_VALUE]}`.toLocaleLowerCase())" type="text" placeholder="RRULE:FREQ=..." class="col-span-2" />
+    <Input
+      v-show="!internalValue[DateRecurrenceAttrsKey.IS_SIMPLE]"
+      v-model="internalValue[DateRecurrenceAttrsKey.RRULE_VALUE]"
+      :disabled="disabled"
+      :label="t(`labels.inputs.recurrence.${[DateRecurrenceAttrsKey.RRULE_VALUE]}`.toLocaleLowerCase())"
+      type="text"
+      placeholder="RRULE:FREQ=..."
+      class="col-span-2"
+    />
 
-    <div v-show="internalValue[DateRecurrenceAttrsKey.IS_SIMPLE]" class="grid grid-cols-2 gap-3 col-span-2">
+    <div v-show="internalValue[DateRecurrenceAttrsKey.IS_SIMPLE]" class="col-span-2 grid grid-cols-2 gap-3">
       <div class="col-span-2">
         <label class="block text-sm text-zinc-600 dark:text-zinc-400">
           {{ t('labels.inputs.recurrence.repeat_every') }}

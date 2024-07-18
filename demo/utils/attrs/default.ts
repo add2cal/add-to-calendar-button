@@ -86,4 +86,4 @@ export const getInitialAttrs = (defaultName: string, defaultDescription: string,
 
 export const getInitialAttrsBlank = (): Attrs => {
   return getDefaultAttrs('', '', '', true);
-}
+};
