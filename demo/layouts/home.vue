@@ -33,6 +33,7 @@ const description = computed(() => t('meta.description'));
         <Meta name="description" :content="description" />
       </Head>
       <Body>
+        <noscript>Please enable JavaScript to view this website.</noscript>
         <HeroHeader />
         <div class="mb-20 mt-16 text-center md:text-left">
           <slot />

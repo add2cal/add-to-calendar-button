@@ -135,7 +135,6 @@ export default defineNuxtConfig({
         process.env.NUXT_PUBLIC_DEV && process.env.NUXT_PUBLIC_DEV === 'true'
           ? []
           : [{ async: true, defer: true, 'data-website-id': 'd178e769-c435-4de9-87e5-48b0ec339f62', src: 'https://a.add-to-calendar-button.com/atcba.js', 'data-host-url': 'https://a.add-to-calendar-button.com', 'data-domains': 'add-to-calendar-button.com' }],
-      noscript: [{ innerHTML: 'Please enable JavaScript to view this website.' }],
     },
   },
 
@@ -305,5 +304,11 @@ export default defineNuxtConfig({
     },
   },
 
-  compatibilityDate: '2024-07-17',
+  devtools: {
+    timeline: {
+      enabled: true,
+    },
+  },
+
+  compatibilityDate: '2024-07-18',
 });

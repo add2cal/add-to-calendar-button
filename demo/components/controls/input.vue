@@ -43,32 +43,32 @@ defineEmits(['update:modelValue']);
     </label>
     <div class="flex items-center py-2 pl-2">
       <template v-if="props.type !== 'range'">
-          <input v-if="props.disabled" :type="props.type" :placeholder="props.placeholder" disabled :aria-label="label" class="block w-full flex-1 placeholder:text-xs cursor-progress rounded-md bg-zinc-50 px-3 py-2 text-sm leading-5 shadow dark:bg-zinc-700" :value="modelValue" />
-          <input
-            v-else
-            :aria-label="label"
-            :value="modelValue"
-            class="block w-full flex-1 caret-secondary placeholder:text-xs focus:outline-none rounded-md bg-zinc-50 px-3 py-2 text-sm leading-5 shadow hover:bg-white hover:shadow-md focus:bg-white focus-visible:ring focus-visible:ring-secondary/75 dark:bg-zinc-700 dark:hover:bg-zinc-600 dark:focus:bg-zinc-600"
-            :type="props.type"
-            :placeholder="props.placeholder"
-            @input="$emit('update:modelValue', ($event.target as HTMLInputElement).value)"
-          />
+        <input v-if="props.disabled" :type="props.type" :placeholder="props.placeholder" disabled :aria-label="label" class="block w-full flex-1 cursor-progress rounded-md bg-zinc-50 px-3 py-2 text-sm leading-5 shadow placeholder:text-xs dark:bg-zinc-700" :value="modelValue" />
+        <input
+          v-else
+          :aria-label="label"
+          :value="modelValue"
+          class="block w-full flex-1 rounded-md bg-zinc-50 px-3 py-2 text-sm leading-5 caret-secondary shadow placeholder:text-xs hover:bg-white hover:shadow-md focus:bg-white focus:outline-none focus-visible:ring focus-visible:ring-secondary/75 dark:bg-zinc-700 dark:hover:bg-zinc-600 dark:focus:bg-zinc-600"
+          :type="props.type"
+          :placeholder="props.placeholder"
+          @input="$emit('update:modelValue', ($event.target as HTMLInputElement).value)"
+        />
       </template>
       <template v-else>
-          <input v-if="props.disabled" :placeholder="props.placeholder" :aria-label="label" type="range" :min="props.min" :value="6" :max="props.max" disabled class="form-range block w-full flex-1 cursor-progress appearance-none bg-transparent p-0" />
-          <input
-            v-else
-            :aria-label="label"
-            :value="modelValue"
-            class="block w-full flex-1 caret-secondary placeholder:text-xs focus:outline-none form-range cursor-ew-resize appearance-none bg-transparent p-0 focus:ring-0'"
-            type="range"
-            :placeholder="props.placeholder"
-            :min="props.min"
-            :max="props.max"
-            step="1"
-            @input="$emit('update:modelValue', ($event.target as HTMLInputElement).value)"
-          />
-          <div class="ml-3 inline-block min-w-[32px] cursor-default rounded-lg bg-zinc-100 px-2 py-1 text-center text-xs font-semibold opacity-70 dark:bg-zinc-700">{{ props.disabled ? '-' : modelValue }}</div>
+        <input v-if="props.disabled" :placeholder="props.placeholder" :aria-label="label" type="range" :min="props.min" :value="6" :max="props.max" disabled class="form-range block w-full flex-1 cursor-progress appearance-none bg-transparent p-0" />
+        <input
+          v-else
+          :aria-label="label"
+          :value="modelValue"
+          class="form-range focus:ring-0' block w-full flex-1 cursor-ew-resize appearance-none bg-transparent p-0 caret-secondary placeholder:text-xs focus:outline-none"
+          type="range"
+          :placeholder="props.placeholder"
+          :min="props.min"
+          :max="props.max"
+          step="1"
+          @input="$emit('update:modelValue', ($event.target as HTMLInputElement).value)"
+        />
+        <div class="ml-3 inline-block min-w-[32px] cursor-default rounded-lg bg-zinc-100 px-2 py-1 text-center text-xs font-semibold opacity-70 dark:bg-zinc-700">{{ props.disabled ? '-' : modelValue }}</div>
       </template>
     </div>
   </div>

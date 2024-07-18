@@ -34,6 +34,7 @@ const description = computed(() => route.meta.description ? t(route.meta.descrip
         <Meta name="description" :content="description" />
       </Head>
       <Body>
+        <noscript>Please enable JavaScript to view this website.</noscript>
         <Header />
         <div class="container relative z-10 mb-20 mt-16 text-center md:text-left">
           <slot />
