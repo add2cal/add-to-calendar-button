@@ -19,6 +19,7 @@ export default defineNuxtConfig({
       brotli: true,
     },
     prerender: {
+      autoSubfolderIndex: false,
       ignore: ['/manifest.json'],
     },
   },
