@@ -123,7 +123,7 @@ if (atcbIsBrowser()) {
     }
 
     static get observedAttributes() {
-      const observeAdditionally = ['instance', 'prokey', 'proKey'];
+      const observeAdditionally = ['instance', 'prokey', 'proKey', 'prooverride', 'proOverride'];
       if (this.proKey && this.proKey !== '') {
         return atcbWcProParams
           .map((element) => {
