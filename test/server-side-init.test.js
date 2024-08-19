@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-require-imports */
 /* eslint-disable no-undef */
 
 // simple import of the atcb JS, to ensure it can load in Node

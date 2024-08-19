@@ -73,7 +73,7 @@ const loadGitHubRepoData = async () => {
   if (response.ok) {
     const json = await response.json();
 
-    json?.stargazers_count && (data.value.github.stars = json.stargazers_count);
+    if (json?.stargazers_count) data.value.github.stars = json.stargazers_count;
   }
 }
 
@@ -120,7 +120,7 @@ const loadJsdelivrStats = async () => {
   const response = await fetch(jsdelivrStatsUrl);
   if (response.ok) {
     const json = await response.json();
-    json?.hits.total && (data.value.jsdelivr.montlyHits = json.hits.total);
+    if (json?.hits.total) data.value.jsdelivr.montlyHits = json.hits.total;
   }
 };
 </script>

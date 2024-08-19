@@ -1,6 +1,6 @@
 {
   "name": "add-to-calendar-button",
-  "version": "2.6.18",
+  "version": "2.6.19",
   "engines": {
     "node": ">=18.17.0",
     "npm": ">=9.6.7"
@@ -108,6 +108,7 @@
     "eslint-plugin-commonjs": "^1.0.2",
     "eslint-plugin-prettier": "^5.2.1",
     "eslint-plugin-security": "^3.0.1",
+    "eslint-plugin-wc": "^2.1.0",
     "grunt": ">=1.6.1",
     "grunt-contrib-clean": "^2.0.1",
     "grunt-contrib-concat": "^2.1.0",

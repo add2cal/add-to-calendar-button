@@ -124,7 +124,7 @@ onMounted(() => {
       onSubmit: (value: string) => {
         if (value !== undefined) {
           const goTo = value.toLowerCase();
-          searchInput.value && searchInput.value.blur();
+          if (searchInput.value) searchInput.value.blur();
           searchInput.value.value = '';
           // push the route, but add some delay to work around some android soft keyboard issues
           setTimeout( () => navigateTo({path: localePath('configuration'), hash: '#' + goTo}), 200);
@@ -138,7 +138,7 @@ onMounted(() => {
 
 const onSearchInputFocus = () => {
   isInputFocused.value = true;
-  searchInput.value && searchInput.value.select();
+  if (searchInput.value) searchInput.value.select();
 }
 
 const onSearchInputBlur = () => {

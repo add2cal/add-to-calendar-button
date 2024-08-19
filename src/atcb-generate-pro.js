@@ -3,7 +3,7 @@
  *  Add to Calendar Button
  *  ++++++++++++++++++++++
  *
- *  Version: 2.6.18
+ *  Version: 2.6.19
  *  Creator: Jens Kuerschner (https://jekuer.com)
  *  Project: https://github.com/add2cal/add-to-calendar-button
  *  License: Elastic License 2.0 (ELv2) (https://github.com/add2cal/add-to-calendar-button/blob/main/LICENSE.txt)
@@ -291,19 +291,19 @@ async function atcb_generate_rsvp_form(host, data, hostEl, keyboardTrigger = fal
     rsvpContent += '<div class="pro-field"><label for="' + data.identifier + '-rsvp-amount">' + atcb_translate_hook('form.amount', data) + ' (' + atcb_translate_hook('form.max', data) + ' ' + maxAmount + ')<span>*</span></label>';
     rsvpContent += '<input type="number" name="' + staticID + '-amount" min="1" max="' + maxAmount + '" id="' + data.identifier + '-rsvp-amount" ' + (data.disabled && 'disabled') + ' aria-label="' + atcb_translate_hook('form.amount', data) + '" value="1" /></div>';
   }
+  const attendee = (function () {
+    if (data.attendee && data.attendee !== '') {
+      const attendeeParts = data.attendee.split('|');
+      if (attendeeParts.length > 1) {
+        return attendeeParts[1];
+      }
+      return attendeeParts[0];
+    }
+    return null;
+  })();
   const customEmailField = rsvpData.fields?.find((field) => field.name === 'email');
   if (!customEmailField) {
-    const attendee = (function () {
-      if (data.attendee && data.attendee !== '') {
-        const attendeeParts = data.attendee.split('|');
-        if (attendeeParts.length > 1) {
-          return attendeeParts[1];
-        }
-        return attendeeParts[0];
-      }
-      return '';
-    })();
-    if (attendee !== '') {
+    if (attendee) {
       hiddenContent += '<input type="hidden" name="email" id="' + data.identifier + '-rsvp-email" value="' + attendee + '" />';
     } else {
       rsvpContent += '<div class="pro-field"><label for="' + data.identifier + '-rsvp-email">' + atcb_translate_hook('form.email', data) + '<span>*</span></label>';
@@ -312,7 +312,7 @@ async function atcb_generate_rsvp_form(host, data, hostEl, keyboardTrigger = fal
   } else {
     rsvpData.fields = rsvpData.fields.map((field) => {
       if (field.name === 'email') {
-        return { ...field, required: true };
+        return { ...field, required: true, type: 'email', default: attendee !== '' && attendee || field.default };
       }
       return field;
     });
@@ -669,7 +669,7 @@ function atcb_build_form(fields, identifier = '', disabled = false) {
 function atcb_create_field_html(type, name, fieldLabel, fieldId, required = false, fieldValue, defaultVal = null, fieldPlaceholder = '', disabled = false) {
   let fieldHtml = '';
   // add label
-  if ((type === 'text' || type === 'number') && fieldLabel !== '') {
+  if ((type === 'text' || type === 'email' || type === 'number') && fieldLabel !== '') {
     fieldHtml += '<label for="' + fieldId + '">' + fieldLabel + (required ? '<span>*</span>' : '') + '</label>';
   }
   // add input
