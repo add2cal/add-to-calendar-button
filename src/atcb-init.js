@@ -223,9 +223,7 @@ if (atcbIsBrowser()) {
       this.classList.add('add-to-calendar');
       // build
       try {
-        this.style.visibility = 'visible';
-        this.style.opacity = '1';
-        this.style.position = 'relative';
+        this.setAttribute('style', 'visibility:visible;opacity:1;position:relative;outline:none !important;');
         await atcb_build_button(this.shadowRoot, this.data);
         return true;
       } catch (e) {
