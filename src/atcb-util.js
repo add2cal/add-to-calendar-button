@@ -472,10 +472,10 @@ function atcb_rewrite_html_elements(content, clear = false, iCalBreaks = false) 
     // and build html for the rest
     // supporting: br, hr, p, strong, u, i, em, li, ul, ol, h (like h1, h2, h3, ...), url (= a)
   } else {
-    content = content.replace(/\[url\]((?:(?!\[\/url\])[\w&$+.,:;=~!*'?@^%#|\s\-()[\]/])*)\[\/url\]/gi, function (match, p1) {
+    content = content.replace(/\[url\]((?:(?!\[\/url\]).)*)\[\/url\]/gi, function (match, p1) {
       return atcb_parse_url_code(p1);
     });
-    content = content.replace(/\{url\}((?:(?!\[\/url\])[\w&$+.,:;=~!*'?@^%#|\s\-()[\]/])*)\{\/url\}/gi, function (match, p1) {
+    content = content.replace(/\{url\}((?:(?!\[\/url\]).)*)\{\/url\}/gi, function (match, p1) {
       return atcb_parse_url_code(p1);
     });
     content = content.replace(/\[(\/|)(br|hr|p|b|strong|u|i|em|li|ul|ol|h\d)(\s?\/?)\]/gi, '<$1$2$3>');
