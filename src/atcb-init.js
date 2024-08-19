@@ -250,7 +250,7 @@ async function atcb_process_inline_data(el, debug = false) {
     // Attempt to read attributes directly and validate
     data = atcb_read_attributes(el);
     await atcb_check_required(data);
-  } catch (e) {
+  } catch {
     // If the above fails, try to parse and validate JSON from innerHTML
     const slotInput = el.innerHTML.trim();
     if (!slotInput) {
@@ -768,7 +768,7 @@ async function atcb_get_pro_data(licenseKey, el = null, directData = {}) {
         return data;
       }
       throw new Error('Not possible to read proKey config from server...');
-    } catch (e) {
+    } catch {
       console.error('Add to Calendar Button proKey invalid or server not responding! Falling back to local data...');
     }
   }

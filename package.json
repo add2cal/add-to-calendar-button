@@ -117,7 +117,7 @@
     "grunt-version": "^3.0.1",
     "prettier": "3.3.3",
     "prettier-plugin-tailwindcss": "^0.6.6",
-    "stylelint": "^16.8.1",
+    "stylelint": "^16.8.2",
     "stylelint-config-standard": "^36.0.1"
   }
 }

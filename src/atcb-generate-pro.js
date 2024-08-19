@@ -96,7 +96,7 @@ async function atcb_generate_ty(hostEl, dataObj) {
           }
           // delete this field from the fields array
           tyData.fields = tyData.fields.filter((field) => field.name !== 'header');
-        } catch (e) {
+        } catch {
           /* do nothing */
         }
       }
@@ -654,7 +654,7 @@ function atcb_build_form(fields, identifier = '', disabled = false) {
 function atcb_create_field_html(type, name, fieldLabel, fieldId, required = false, fieldValue, defaultVal = null, fieldPlaceholder = '', disabled = false) {
   let fieldHtml = '';
   // add label
-  if ((type === 'text' || type === 'number') && (fieldLabel !== '' || required)) {
+  if ((type === 'text' || type === 'number') && fieldLabel !== '') {
     fieldHtml += '<label for="' + fieldId + '">' + fieldLabel + (required ? '<span>*</span>' : '') + '</label>';
   }
   // add input
