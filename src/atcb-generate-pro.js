@@ -291,21 +291,31 @@ async function atcb_generate_rsvp_form(host, data, hostEl, keyboardTrigger = fal
     rsvpContent += '<div class="pro-field"><label for="' + data.identifier + '-rsvp-amount">' + atcb_translate_hook('form.amount', data) + ' (' + atcb_translate_hook('form.max', data) + ' ' + maxAmount + ')<span>*</span></label>';
     rsvpContent += '<input type="number" name="' + staticID + '-amount" min="1" max="' + maxAmount + '" id="' + data.identifier + '-rsvp-amount" ' + (data.disabled && 'disabled') + ' aria-label="' + atcb_translate_hook('form.amount', data) + '" value="1" /></div>';
   }
-  const attendee = (function () {
-    if (data.attendee && data.attendee !== '') {
-      const attendeeParts = data.attendee.split('|');
-      if (attendeeParts.length > 1) {
-        return attendeeParts[1];
+  const customEmailField = rsvpData.fields?.find((field) => field.name === 'email');
+  if (!customEmailField) {
+    const attendee = (function () {
+      if (data.attendee && data.attendee !== '') {
+        const attendeeParts = data.attendee.split('|');
+        if (attendeeParts.length > 1) {
+          return attendeeParts[1];
+        }
+        return attendeeParts[0];
       }
-      return attendeeParts[0];
+      return '';
+    })();
+    if (attendee !== '') {
+      hiddenContent += '<input type="hidden" name="email" id="' + data.identifier + '-rsvp-email" value="' + attendee + '" />';
+    } else {
+      rsvpContent += '<div class="pro-field"><label for="' + data.identifier + '-rsvp-email">' + atcb_translate_hook('form.email', data) + '<span>*</span></label>';
+      rsvpContent += '<input type="email" name="email" id="' + data.identifier + '-rsvp-email" ' + (data.disabled && 'disabled') + ' aria-label="' + atcb_translate_hook('form.email', data) + '" value="" /></div>';
     }
-    return '';
-  })();
-  if (attendee !== '') {
-    hiddenContent += '<input type="hidden" name="' + staticID + '-email" id="' + data.identifier + '-rsvp-email" value="' + attendee + '" />';
   } else {
-    rsvpContent += '<div class="pro-field"><label for="' + data.identifier + '-rsvp-email">' + atcb_translate_hook('form.email', data) + '<span>*</span></label>';
-    rsvpContent += '<input type="email" name="' + staticID + '-email" id="' + data.identifier + '-rsvp-email" ' + (data.disabled && 'disabled') + ' aria-label="' + atcb_translate_hook('form.email', data) + '" value="" /></div>';
+    rsvpData.fields = rsvpData.fields.map((field) => {
+      if (field.name === 'email') {
+        return { ...field, required: true };
+      }
+      return field;
+    });
   }
   // add custom fields
   if (rsvpData.fields && rsvpData.fields.length > 0) {
@@ -413,10 +423,8 @@ async function atcb_generate_rsvp_form(host, data, hostEl, keyboardTrigger = fal
       e.preventDefault();
       rsvpFormSubmitting.style.display = 'block';
       rsvpFormSubmit.style.display = 'none';
-      const staticFields = [
-        { type: 'email', name: data.proKey + '-email', fieldId: data.identifier + '-rsvp-email', required: true },
-        { type: 'number', name: data.proKey + '-amount', fieldId: data.identifier + '-rsvp-amount', required: true },
-      ];
+      const staticFields = [{ type: 'number', name: data.proKey + '-amount', fieldId: data.identifier + '-rsvp-amount', required: true }];
+      if (!customEmailField) staticFields.push({ type: 'email', name: 'email', fieldId: data.identifier + '-rsvp-email', required: true });
       let valid = atcb_validate_form(rsvpHost, [...staticFields, ...rsvpData.fields]);
       // if maxpp, make sure amount is not bigger
       const amountEl = rsvpHost.getElementById(data.identifier + '-rsvp-amount');
@@ -439,17 +447,24 @@ async function atcb_generate_rsvp_form(host, data, hostEl, keyboardTrigger = fal
           if (closeBtn) closeBtn.style.display = 'block';
           return;
         }
+        let fieldsCopy = JSON.parse(JSON.stringify(rsvpData.fields));
         const bodyData = [];
         bodyData.push({ name: 'prokey', value: data.proKey });
         bodyData.push({ name: 'language', value: data.language });
         const statusValEl = rsvpHost.querySelector('[name="' + data.proKey + '-status"]:checked');
         bodyData.push({ name: 'status', value: statusValEl ? statusValEl.value : 'confirmed' });
         bodyData.push({ name: 'amount', value: amount });
-        bodyData.push({ name: 'email', value: rsvpHost.getElementById(data.identifier + '-rsvp-email').value });
+        if (!customEmailField) {
+          bodyData.push({ name: 'email', value: rsvpHost.getElementById(data.identifier + '-rsvp-email').value });
+        } else {
+          const emailFieldId = fieldsCopy.find((field) => field.name === 'email')?.fieldId;
+          bodyData.push({ name: 'email', value: rsvpHost.getElementById(emailFieldId).value });
+          fieldsCopy = fieldsCopy.filter((field) => field.fieldId !== emailFieldId);
+        }
         if (data.dev) bodyData.push({ name: 'dev', value: true });
         const bodyData_payload = {};
         let skipRadio = false;
-        rsvpData.fields.forEach((field) => {
+        fieldsCopy.forEach((field) => {
           // push fields to data array except for labels - for radio buttons, we only push the checked one
           if (field.type !== 'label') {
             if (field.type === 'radio') {
