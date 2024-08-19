@@ -3,7 +3,7 @@
  *  Add to Calendar Button
  *  ++++++++++++++++++++++
  *
- *  Version: 2.6.18
+ *  Version: 2.6.19
  *  Creator: Jens Kuerschner (https://jekuer.com)
  *  Project: https://github.com/add2cal/add-to-calendar-button
  *  License: Elastic License 2.0 (ELv2) (https://github.com/add2cal/add-to-calendar-button/blob/main/LICENSE.txt)
@@ -123,7 +123,7 @@ if (atcbIsBrowser()) {
     }
 
     static get observedAttributes() {
-      const observeAdditionally = ['instance', 'prokey', 'proKey'];
+      const observeAdditionally = ['instance', 'prokey', 'proKey', 'prooverride', 'proOverride'];
       if (this.proKey && this.proKey !== '') {
         return atcbWcProParams
           .map((element) => {
@@ -223,9 +223,7 @@ if (atcbIsBrowser()) {
       this.classList.add('add-to-calendar');
       // build
       try {
-        this.style.visibility = 'visible';
-        this.style.opacity = '1';
-        this.style.position = 'relative';
+        this.setAttribute('style', 'visibility:visible;opacity:1;position:relative;outline:none !important;');
         await atcb_build_button(this.shadowRoot, this.data);
         return true;
       } catch (e) {
@@ -250,7 +248,7 @@ async function atcb_process_inline_data(el, debug = false) {
     // Attempt to read attributes directly and validate
     data = atcb_read_attributes(el);
     await atcb_check_required(data);
-  } catch (e) {
+  } catch {
     // If the above fails, try to parse and validate JSON from innerHTML
     const slotInput = el.innerHTML.trim();
     if (!slotInput) {
@@ -768,7 +766,7 @@ async function atcb_get_pro_data(licenseKey, el = null, directData = {}) {
         return data;
       }
       throw new Error('Not possible to read proKey config from server...');
-    } catch (e) {
+    } catch {
       console.error('Add to Calendar Button proKey invalid or server not responding! Falling back to local data...');
     }
   }

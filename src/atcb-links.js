@@ -3,7 +3,7 @@
  *  Add to Calendar Button
  *  ++++++++++++++++++++++
  *
- *  Version: 2.6.18
+ *  Version: 2.6.19
  *  Creator: Jens Kuerschner (https://jekuer.com)
  *  Project: https://github.com/add2cal/add-to-calendar-button
  *  License: Elastic License 2.0 (ELv2) (https://github.com/add2cal/add-to-calendar-button/blob/main/LICENSE.txt)
@@ -480,7 +480,8 @@ function atcb_generate_ical(host, data, subEvent = 'all', keyboardTrigger = fals
   })();
   // if we are in proxy mode, we can directly redirect
   if (data.proxy) {
-    atcb_open_cal_url(data, 'ical', 'https://add-to-calendar-pro.com', false, subEvent);
+    const langUrlPart = data.language && data.language === 'de' ? data.language + '/' : '';
+    atcb_open_cal_url(data, 'ical', 'https://caldn.net/' + langUrlPart + 'no-ics-file', false, subEvent);
     return;
   }
   // else, we directly load it (not if iOS and WebView - will be catched further down - except it is explicitely bridged)

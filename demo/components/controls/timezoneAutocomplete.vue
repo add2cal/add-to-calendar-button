@@ -64,7 +64,7 @@ const elNoResultsID = (function() {
 
 onMounted(() => {
   if (props.modelValue && getFilteredTimezoneOptions().includes(props.modelValue.toString())) {
-    searchInput.value && (searchInput.value.value = props.modelValue)
+    if (searchInput.value) searchInput.value.value = props.modelValue;
   }
 
   if (import.meta.client) {
@@ -76,7 +76,7 @@ onMounted(() => {
       onSubmit: (value: string) => {
         if (value !== undefined) {
           emit('update:modelValue', value);
-          searchInput.value && searchInput.value.blur();
+          if (searchInput.value) searchInput.value.blur();
         }
       },
       autoSelect: true,
@@ -87,7 +87,7 @@ onMounted(() => {
 
 const onSearchInputFocus = () => {
   isInputFocused.value = true;
-  searchInput.value && searchInput.value.select();
+  if (searchInput.value) searchInput.value.select();
 }
 
 const onSearchInputBlur = () => {
@@ -107,7 +107,7 @@ const onSearchInputBlur = () => {
 // watch props changes to synch mobile and desktop field here
 if (import.meta.client) {
   watch(props, () => {
-    searchInput.value && (searchInput.value.value = props.modelValue);
+    if (searchInput.value) searchInput.value.value = props.modelValue;
   });
 }
 </script>

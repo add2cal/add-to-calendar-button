@@ -95,8 +95,14 @@ if (import.meta.client) {
     </div>
     <div id="code-output" :class="[ !showCode ? 'mx-8 bg-zinc-300 dark:bg-zinc-800' : 'mx-2 bg-zinc-200 pb-0 dark:bg-zinc-800 md:mx-0' ]" class="rounded-b-md border-2 border-t-0 border-zinc-400 p-2 shadow-lg transition-all dark:border-zinc-600">
       <div class="cursor-pointer text-center text-sm font-semibold text-zinc-600 hover:text-black dark:text-zinc-400 dark:hover:text-secondary" @click="showCode = !showCode">
-        <span :class="{ hidden: showCode }"> <EyeIcon class="-mt-1 mr-2 inline-block h-5 w-5" aria-hidden="true" />{{ t('labels.showCode') }} </span>
-        <span :class="{ hidden: !showCode }"> <EyeSlashIcon class="-mt-1 mr-2 inline-block h-5 w-5" aria-hidden="true" />{{ t('labels.hideCode') }} </span>
+        <span :class="{ hidden: showCode }">
+          <EyeIcon class="-mt-1 mr-2 inline-block h-5 w-5" aria-hidden="true" />
+          {{ t('labels.showCode') }}
+        </span>
+        <span :class="{ hidden: !showCode }">
+          <EyeSlashIcon class="-mt-1 mr-2 inline-block h-5 w-5" aria-hidden="true" />
+          {{ t('labels.hideCode') }}
+        </span>
       </div>
       <div :class="{ hidden: !showCode }" class="m-2 mt-3">
         <LazyCodeBlock v-if="loaded">{{ attrsToHtmlString(data) }}</LazyCodeBlock>
