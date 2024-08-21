@@ -312,7 +312,7 @@ async function atcb_generate_rsvp_form(host, data, hostEl, keyboardTrigger = fal
   } else {
     rsvpData.fields = rsvpData.fields.map((field) => {
       if (field.name === 'email') {
-        return { ...field, required: true, type: 'email', default: attendee !== '' && attendee || field.default };
+        return { ...field, required: true, type: 'email', default: attendee !== '' ? attendee : field.default };
       }
       return field;
     });

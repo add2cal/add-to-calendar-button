@@ -382,6 +382,7 @@ function atcb_create_atcbl(host, atList = true, returnEl = false) {
       atcbL.classList.add('fixed-ref');
     }
   }
+  if (returnEl) return null;
 }
 
 // FUNCTION TO CREATE MODALS
