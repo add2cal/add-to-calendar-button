@@ -209,7 +209,7 @@ async function atcb_validate_availability(data, msgPrefix, i, msgSuffix) {
 async function atcb_validate_organizer(data, msgPrefix, i, msgSuffix) {
   if (data.dates[`${i}`].organizer && data.dates[`${i}`].organizer !== '') {
     const organizerParts = data.dates[`${i}`].organizer.split('|');
-    if (organizerParts.length !== 2 || organizerParts[0].length > 50 || organizerParts[1].length > 80 || !atcb_validEmail(organizerParts[1])) {
+    if (organizerParts.length !== 2 || organizerParts[0].length > 50 || organizerParts[1].length > 100 || !atcb_validEmail(organizerParts[1])) {
       throw new Error(msgPrefix + ' failed: organizer needs to match the schema "NAME|EMAIL" with a valid email address' + msgSuffix);
     }
   }
@@ -228,7 +228,7 @@ async function atcb_validate_attendee(data, msgPrefix, i, msgSuffix) {
     if (attendeeParts.length === 1 && atcb_validEmail(attendeeParts[0])) {
       return true;
     }
-    if (attendeeParts.length !== 2 || attendeeParts[0].length > 50 || attendeeParts[1].length > 80 || !atcb_validEmail(attendeeParts[1])) {
+    if (attendeeParts.length !== 2 || attendeeParts[0].length > 50 || attendeeParts[1].length > 100 || !atcb_validEmail(attendeeParts[1])) {
       throw new Error(msgPrefix + ' failed: attendee needs to be a valid email address or match the schema "NAME|EMAIL" with EMAIL being a valid email address' + msgSuffix);
     }
   }
