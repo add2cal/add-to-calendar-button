@@ -3,7 +3,7 @@
  *  Add to Calendar Button
  *  ++++++++++++++++++++++
  *
- *  Version: 2.6.19
+ *  Version: 2.6.20
  *  Creator: Jens Kuerschner (https://jekuer.com)
  *  Project: https://github.com/add2cal/add-to-calendar-button
  *  License: Elastic License 2.0 (ELv2) (https://github.com/add2cal/add-to-calendar-button/blob/main/LICENSE.txt)
@@ -312,7 +312,7 @@ async function atcb_generate_rsvp_form(host, data, hostEl, keyboardTrigger = fal
   } else {
     rsvpData.fields = rsvpData.fields.map((field) => {
       if (field.name === 'email') {
-        return { ...field, required: true, type: 'email', default: attendee !== '' && attendee || field.default };
+        return { ...field, required: true, type: 'email', default: attendee !== '' ? attendee : field.default };
       }
       return field;
     });

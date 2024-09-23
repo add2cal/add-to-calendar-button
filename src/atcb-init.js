@@ -3,7 +3,7 @@
  *  Add to Calendar Button
  *  ++++++++++++++++++++++
  *
- *  Version: 2.6.19
+ *  Version: 2.6.20
  *  Creator: Jens Kuerschner (https://jekuer.com)
  *  Project: https://github.com/add2cal/add-to-calendar-button
  *  License: Elastic License 2.0 (ELv2) (https://github.com/add2cal/add-to-calendar-button/blob/main/LICENSE.txt)
@@ -14,7 +14,7 @@
 import { atcbVersion, atcbIsBrowser, atcbStates, atcbWcParams, atcbWcProParams, atcbWcBooleanParams, atcbWcObjectParams, atcbWcObjectArrayParams, atcbWcArrayParams, atcbWcNumberParams, atcbCssTemplate } from './atcb-globals.js';
 import { atcb_decorate_data } from './atcb-decorate.js';
 import { atcb_check_required, atcb_validate } from './atcb-validate.js';
-import { atcb_generate_button } from './atcb-generate.js';
+import { atcb_generate_button, atcb_create_atcbl } from './atcb-generate.js';
 import { atcb_generate_rich_data } from './atcb-generate-rich-data.js';
 import { atcb_close, atcb_toggle } from './atcb-control.js';
 import { atcb_generate_links } from './atcb-links.js';
@@ -220,7 +220,6 @@ if (atcbIsBrowser()) {
         this.identifier = this.data.identifier;
       }
       this.setAttribute('atcb-button-id', this.data.identifier);
-      this.classList.add('add-to-calendar');
       // build
       try {
         this.setAttribute('style', 'visibility:visible;opacity:1;position:relative;outline:none !important;');
@@ -330,6 +329,7 @@ function atcb_read_attributes(el, params = atcbWcParams) {
 // build the button
 async function atcb_build_button(host, data) {
   try {
+    host.host.classList.add('add-to-calendar');
     // Rewrite dynamic dates, standardize line breaks and transform urls in the description
     data = await atcb_decorate_data(data);
     await atcb_validate(data);
@@ -360,6 +360,9 @@ async function atcb_build_button(host, data) {
     }
     // log event
     atcb_log_event('initialization', data.identifier, data.identifier);
+    if (!data.proKey && data.hideBranding && !document.getElementById('atcb-reference')) {
+      atcb_create_atcbl(document.body, false, false, true);
+    }
     return true;
   } catch (e) {
     throw new Error(e.message);

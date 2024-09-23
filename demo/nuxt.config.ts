@@ -51,7 +51,7 @@ export default defineNuxtConfig({
       crossOriginOpenerPolicy: 'unsafe-none',
       crossOriginEmbedderPolicy: 'unsafe-none',
       contentSecurityPolicy: false,
-      // the following needs to match the settings in ./public/staticwebapp.config.json
+      // the following needs to match the settings in ./public/_headers
       referrerPolicy: 'strict-origin-when-cross-origin',
       strictTransportSecurity: {
         maxAge: 31536000,
@@ -70,7 +70,7 @@ export default defineNuxtConfig({
       },
     },
     allowedMethodsRestricter: {
-      methods: ['GET'],
+      methods: ['GET', 'HEAD', 'OPTIONS'],
       throwError: true,
     },
   },

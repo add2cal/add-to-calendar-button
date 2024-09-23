@@ -5,7 +5,7 @@
  *
  * Style: Flat
  *
- * Version: 2.6.19
+ * Version: 2.6.20
  * Creator: Jens Kuerschner (https://jekuer.com)
  * Project: https://github.com/add2cal/add-to-calendar-button
  * License: Elastic License 2.0 (ELv2) (https://github.com/add2cal/add-to-calendar-button/blob/main/LICENSE.txt)
@@ -1349,6 +1349,7 @@ a.atcb-modal-btn:not([disabled]):hover {
   filter: drop-shadow(0 0 3px rgba(255 255 255 / 80%));
   height: auto;
   padding: 8px 0;
+  text-align: center;
   transform: translate3d(0, 0, 0);
   width: 100%;
   z-index: 15000000;
@@ -1365,6 +1366,10 @@ a.atcb-modal-btn:not([disabled]):hover {
   position: absolute;
 }
 
+.atcb-modal-host-initialized #atcb-reference.atcb-dropup {
+  text-align: left;
+}
+
 /* :host-context(html.atcb-dark):host(.atcb-bodyScheme) #atcb-reference,
 :host-context(body.atcb-dark):host(.atcb-bodyScheme) #atcb-reference, */
 :host(.atcb-dark) #atcb-reference {
@@ -1378,7 +1383,7 @@ a.atcb-modal-btn:not([disabled]):hover {
   width: 150px;
   max-width: 100%;
   margin: auto;
-  display: block;
+  display: inline-block;
   text-decoration: none;
 }
 
