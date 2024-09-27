@@ -1,6 +1,6 @@
 {
-  "name": "add-to-calendar-button",
-  "version": "2.6.20",
+  "name": "aold-atcb",
+  "version": "1.0.0",
   "engines": {
     "node": ">=18.17.0",
     "npm": ">=9.6.7"

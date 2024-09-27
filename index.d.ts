@@ -9,7 +9,7 @@
 
 // MODULES
 // default
-declare module 'add-to-calendar-button' {
+declare module 'aold-atcb' {
   export function atcb_action(config: ATCBActionEventConfig, triggerElement?: HTMLElement, keyboardTrigger?: boolean): Promise<string>;
   export const i18nStrings: {
     [key: string]: {
@@ -25,13 +25,13 @@ declare module 'add-to-calendar-button' {
 
 // no-pro
 // referenced in its own index.d.ts file, but also kept here as backup!
-declare module 'add-to-calendar-button/no-pro' {
+declare module 'aold-atcb/no-pro' {
   export function atcb_action(config: ATCBActionEventConfig, triggerElement?: HTMLElement, keyboardTrigger?: boolean): Promise<string>;
 }
 
 // unstyle
 // referenced in its own index.d.ts file, but also kept here as backup!
-declare module 'add-to-calendar-button/unstyle' {
+declare module 'aold-atcb/unstyle' {
   export function atcb_action(config: ATCBActionEventConfig, triggerElement?: HTMLElement, keyboardTrigger?: boolean): Promise<string>;
   export function atcb_generate_ty(host: HTMLElement, data: object): null;
   export function atcb_generate_timestring(dates: EventDate[], language?: string, subEvent?: string | number, decorate?: boolean, browserTimeOverride?: boolean, enforceYear?: boolean, hideTimeZone?: boolean): string[];
@@ -39,7 +39,7 @@ declare module 'add-to-calendar-button/unstyle' {
 
 // no-pro-unstyle
 // referenced in its own index.d.ts file, but also kept here as backup!
-declare module 'add-to-calendar-button/no-pro-unstyle' {
+declare module 'aold-atcb/no-pro-unstyle' {
   export function atcb_action(config: ATCBActionEventConfig, triggerElement?: HTMLElement, keyboardTrigger?: boolean): Promise<string>;
 }
 
@@ -214,11 +214,11 @@ export type CustomLabelsObjectType = {
 // WEB COMPONENT DECLARATION
 declare global {
   interface HTMLElementTagNameMap {
-    'add-to-calendar-button': HTMLElement & AddToCalendarButtonType;
+    'aold-atcb': HTMLElement & AddToCalendarButtonType;
   }
   namespace JSX {
     interface IntrinsicElements {
-      ['add-to-calendar-button']: AddToCalendarButtonType;
+      ['aold-atcb']: AddToCalendarButtonType;
     }
   }
 }
