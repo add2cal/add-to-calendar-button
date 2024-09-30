@@ -1,6 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
-/* eslint-disable no-undef */
-
 import { fixture, html, expect } from '@open-wc/testing';
 import '../../dist/module/index.js';
 
