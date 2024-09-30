@@ -113,7 +113,7 @@ async function atcb_validate_buttonStyle(data, msgPrefix) {
   if (!availableStyles.includes(data.buttonStyle)) {
     throw new Error(msgPrefix + ' failed: provided buttonStyle invalid');
   }
-  if (data.customCss && data.customCss !== '' && (!atcb_secure_url(data.customCss, false) || !/\.css($|\?)/.test(data.customCss))) {
+  if (data.customCss && data.customCss !== '' && (!atcb_secure_url(data.customCss, false) || !/\.css(?:$|\?)/.test(data.customCss))) {
     throw new Error(msgPrefix + ' failed: customCss provided, but no valid url');
   }
   if ((!data.customCss || data.customCss === '') && data.buttonStyle === 'custom') {
@@ -238,7 +238,7 @@ async function atcb_validate_attendee(data, msgPrefix, i, msgSuffix) {
 // validate UID
 async function atcb_validate_uid(data, msgPrefix, i, msgSuffix) {
   // must have less then 255 characters and only allowes for alpha characters, numbers, and dashes; see https://icalendar.org/New-Properties-for-iCalendar-RFC-7986/5-3-uid-property.html
-  if (!/^(\w|-){1,254}$/.test(data.dates[`${i}`].uid)) {
+  if (!/^(?:\w|-){1,254}$/.test(data.dates[`${i}`].uid)) {
     if (data.debug) {
       console.warn(msgPrefix + ': UID not valid. May only contain alpha, digits, and dashes; and be less than 255 characters. Falling back to an automated value!' + msgSuffix);
     }
@@ -326,7 +326,7 @@ async function atcb_validate_rrule(data, msgPrefix) {
     throw new Error(msgPrefix + ' failed: RRULE and multi-date set at the same time');
   }
   // validate any given RRULE
-  if (data.recurrence && data.recurrence !== '' && !/^RRULE:[\w=;,:+-/\\]+$/i.test(data.recurrence)) {
+  if (data.recurrence && data.recurrence !== '' && !/^RRULE:[\w=;,:+\-/\\]+$/i.test(data.recurrence)) {
     throw new Error(msgPrefix + ' failed: RRULE data misspelled');
   }
   return true;
@@ -336,22 +336,22 @@ async function atcb_validate_rrule_simplyfied(data, msgPrefix) {
   if (data.recurrence_interval && (data.recurrence_interval < 1 || data.recurrence_interval % 1 !== 0)) {
     throw new Error(msgPrefix + ' failed: recurrence data (interval) misspelled');
   }
-  if (data.recurrence_until && data.recurrence_until !== '' && !/^(\d|-|:)+$/i.test(data.recurrence_until)) {
+  if (data.recurrence_until && data.recurrence_until !== '' && !/^[\d\-:]+$/.test(data.recurrence_until)) {
     throw new Error(msgPrefix + ' failed: recurrence data (until) misspelled');
   }
   if (data.recurrence_count && (data.recurrence_count < 1 || data.recurrence_count % 1 !== 0)) {
     throw new Error(msgPrefix + ' failed: recurrence data (interval) misspelled');
   }
-  if (data.recurrence_byMonth && data.recurrence_byMonth !== '' && !/^(\d|,)+$/.test(data.recurrence_byMonth)) {
+  if (data.recurrence_byMonth && data.recurrence_byMonth !== '' && !/^[\d,]+$/.test(data.recurrence_byMonth)) {
     throw new Error(msgPrefix + ' failed: recurrence data (byMonth) misspelled');
   }
-  if (data.recurrence_byMonthDay && data.recurrence_byMonthDay !== '' && !/^(\d|,)+$/.test(data.recurrence_byMonthDay)) {
+  if (data.recurrence_byMonthDay && data.recurrence_byMonthDay !== '' && !/^[\d,]+$/.test(data.recurrence_byMonthDay)) {
     throw new Error(msgPrefix + ' failed: recurrence data (byMonthDay) misspelled');
   }
-  if (data.recurrence_byDay && data.recurrence_byDay !== '' && !/^(\d|-|MO|TU|WE|TH|FR|SA|SU|,)+$/im.test(data.recurrence_byDay)) {
+  if (data.recurrence_byDay && data.recurrence_byDay !== '' && !/^(?:[\d,-]|MO|TU|WE|TH|FR|SA|SU)+$/im.test(data.recurrence_byDay)) {
     throw new Error(msgPrefix + ' failed: recurrence data (byDay) misspelled');
   }
-  if (data.recurrence_weekstart && data.recurrence_weekstart !== '' && !/^(MO|TU|WE|TH|FR|SA|SU)$/im.test(data.recurrence_weekstart)) {
+  if (data.recurrence_weekstart && data.recurrence_weekstart !== '' && !/^(?:MO|TU|WE|TH|FR|SA|SU)$/im.test(data.recurrence_weekstart)) {
     throw new Error(msgPrefix + ' failed: recurrence data (weekstart) misspelled');
   }
   return true;

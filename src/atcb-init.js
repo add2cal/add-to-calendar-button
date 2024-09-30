@@ -200,7 +200,7 @@ if (atcbIsBrowser()) {
       } else {
         // and create one in all other cases
         if (this.data.identifier && this.data.identifier !== '') {
-          if (!/^[\w\-_]+$/.test(this.data.identifier)) {
+          if (!/^[\w-]+$/.test(this.data.identifier)) {
             this.data.identifier = '';
             if (this.debug) {
               let prefix = 'Add to Calendar Button';
@@ -432,7 +432,7 @@ async function atcb_load_css(host, rootObj = null, data) {
     const cssGlobalContent = document.createElement('style');
     cssGlobalContent.id = 'atcb-global-style';
     const scrollBarWidth = window.innerWidth - document.documentElement.clientWidth;
-    cssGlobalContent.innerText = '.atcb-modal-no-scroll{overflow-y:hidden !important;-webkit-overflow-scrolling:touch;} body.atcb-modal-no-scroll{padding-right:' + scrollBarWidth + 'px;}';
+    cssGlobalContent.innerText = '.atcb-modal-no-scroll{overflow-y:hidden !important;-webkit-overflow-scrolling:touch;} body.atcb-modal-no-scroll{padding-right:' + scrollBarWidth + 'px;}.atcb-attribution{display:none;}';
     if (nonceVal) {
       cssGlobalContent.setAttribute('nonce', nonceVal);
     }
@@ -607,7 +607,7 @@ async function atcb_action(inputData, triggerElement, keyboardTrigger = false) {
       data.identifier = triggerElement.id;
     } else {
       // however, if the trigger has no id, we set it with the identifier or a default fallback
-      if (data.identifier && data.identifier != '' && /^[\w\-_]+$/.test(data.identifier)) {
+      if (data.identifier && data.identifier != '' && /^[\w-]+$/.test(data.identifier)) {
         data.identifier = 'atcb-btn-' + data.identifier;
       } else {
         data.identifier = 'atcb-btn-custom';

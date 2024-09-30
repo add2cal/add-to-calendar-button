@@ -198,7 +198,7 @@ module.exports = function (grunt) {
         dest: 'dist/commonjs/index.js',
         options: {
           stripBanners: true,
-          banner: "// eslint-disable-next-line @typescript-eslint/no-var-requires\r\nconst tzlibActions = require('timezones-ical-library');\r\n",
+          banner: "const tzlibActions = require('timezones-ical-library');\r\n",
           footer: 'module.exports = { atcb_action, i18nStrings, cssStyles: atcbCssTemplate, atcb_generate_ty, atcb_generate_timestring };',
           process: (content) => prepareFinalFile(content, true, true, true),
         },
@@ -208,7 +208,7 @@ module.exports = function (grunt) {
         dest: 'dist/commonjs/no-pro/index.js',
         options: {
           stripBanners: true,
-          banner: "// eslint-disable-next-line @typescript-eslint/no-var-requires\r\nconst tzlibActions = require('timezones-ical-library');\r\n",
+          banner: "const tzlibActions = require('timezones-ical-library');\r\n",
           footer: 'module.exports = { atcb_action, i18nStrings, cssStyles: atcbCssTemplate };',
           process: (content) => prepareFinalFile(content, true, true, true),
         },
@@ -218,7 +218,7 @@ module.exports = function (grunt) {
         dest: 'dist/commonjs/unstyle/index.js',
         options: {
           stripBanners: true,
-          banner: "// eslint-disable-next-line @typescript-eslint/no-var-requires\r\nconst tzlibActions = require('timezones-ical-library');\r\n",
+          banner: "const tzlibActions = require('timezones-ical-library');\r\n",
           footer: 'module.exports = { atcb_action, i18nStrings, atcb_generate_ty, atcb_generate_timestring };',
           process: (content) => prepareFinalFile(content, true, true, true, true),
         },
@@ -228,7 +228,7 @@ module.exports = function (grunt) {
         dest: 'dist/commonjs/no-pro-unstyle/index.js',
         options: {
           stripBanners: true,
-          banner: "// eslint-disable-next-line @typescript-eslint/no-var-requires\r\nconst tzlibActions = require('timezones-ical-library');\r\n",
+          banner: "const tzlibActions = require('timezones-ical-library');\r\n",
           footer: 'module.exports = { atcb_action, i18nStrings };',
           process: (content) => prepareFinalFile(content, true, true, true, true),
         },
@@ -255,12 +255,6 @@ module.exports = function (grunt) {
           done();
         },
       },
-      '.eslintrc.json commonJS': {
-        'dist/commonjs/.eslintrc.json': function (fs, fd, done) {
-          fs.writeSync(fd, '{ "extends": "../../.eslintrc.json", "env": { "node": true }, "plugins": ["commonjs"] }');
-          done();
-        },
-      },
     },
     // minify js files
     uglify: {
@@ -269,7 +263,6 @@ module.exports = function (grunt) {
         mangle: true,
         beautify: false,
         sourceMap: false,
-        banner: '/* eslint-disable @typescript-eslint/no-unused-vars */',
         output: {
           comments: 'some',
         },

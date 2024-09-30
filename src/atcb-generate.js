@@ -390,6 +390,7 @@ function atcb_create_atcbl(host, atList = true, returnEl = false, licenseNoteOnl
   } else {
     atcbL.innerHTML = 'Using the <a href="https://add-to-calendar-pro.com" target="_blank" rel="noopener referrer">Add to Calendar Button</a>, licensed under the Elastic License 2.0 (ELv2).';
     atcbL.setAttribute('style', 'display:none !important');
+    atcbL.classList.add('atcb-attribution');
     host.append(atcbL);
   }
   if (returnEl) return null;

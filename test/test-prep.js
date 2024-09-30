@@ -1,7 +1,3 @@
-/* eslint-disable @typescript-eslint/no-require-imports */
-/* eslint-disable no-undef */
-/* eslint-disable @typescript-eslint/no-var-requires */
-// eslint-disable-next-line security/detect-child-process
 const execSync = require('child_process').execSync;
 
 // preparing the files

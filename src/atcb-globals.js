@@ -64,7 +64,7 @@ const atcbIsAndroid = atcbIsBrowser()
 // Safari
 const atcbIsSafari = atcbIsBrowser()
   ? () => {
-      if (/^((?!chrome|android|crios|fxios).)*safari/i.test(navigator.userAgent)) {
+      if (/^(?:(?!chrome|android|crios|fxios).)*safari/i.test(navigator.userAgent)) {
         return true;
       } else {
         return false;
@@ -84,7 +84,7 @@ const atcbIsMobile = () => {
 // WebView (iOS and Android)
 const atcbIsWebView = atcbIsBrowser()
   ? () => {
-      if (/(; ?wv|(iPhone|iPod|iPad).*AppleWebKit(?!.*Safari))/i.test(navigator.userAgent)) {
+      if (/; ?wv|(?:iPhone|iPod|iPad).*AppleWebKit(?!.*Safari)/i.test(navigator.userAgent)) {
         return true;
       } else {
         return false;
@@ -96,7 +96,7 @@ const atcbIsWebView = atcbIsBrowser()
 // checking for problematic apps
 const atcbIsProblematicWebView = atcbIsBrowser()
   ? () => {
-      if (/(Instagram)/i.test(navigator.userAgent)) {
+      if (/Instagram/i.test(navigator.userAgent)) {
         return true;
       } else {
         return false;
