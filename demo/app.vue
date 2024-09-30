@@ -2,7 +2,7 @@
 import { set, LSKey } from '@/utils/localStorage';
 const { locale } = useI18n();
 
-if (process.client) {
+if (import.meta.client) {
   set(LSKey.LANG, locale.value);
 }
 

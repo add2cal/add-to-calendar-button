@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { ArrowRightIcon, WrenchScrewdriverIcon, BeakerIcon, SparklesIcon } from '@heroicons/vue/24/outline';
 import IntegrationGuidesOverview from "@/components/integration/integrationGuidesOverview.vue";
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import PlaygroundArea from "@/components/playground/playgroundArea.vue";
 import FeaturesBlock from "@/components/featuresBlock.vue";
 import FaqBlock from "@/components/faqBlock.vue";

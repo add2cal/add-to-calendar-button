@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 export const mergeDeep = (objA: any, objB: any) => {
   if (objB) {
     Object.keys(objB).forEach((key) => {

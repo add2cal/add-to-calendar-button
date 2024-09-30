@@ -1,5 +1,3 @@
-/* eslint-disable @typescript-eslint/no-require-imports */
-/* eslint-disable no-undef */
 /** @type {import('tailwindcss').Config} */
 module.exports = {
   content: ['./index.html', './src/**/*.{vue,js,ts,jsx,tsx}'],
@@ -68,6 +66,5 @@ module.exports = {
       },
     },
   },
-  // eslint-disable-next-line @typescript-eslint/no-var-requires
   plugins: [require('@headlessui/tailwindcss')({ prefix: 'ui' })],
 };

@@ -23,7 +23,7 @@ if (statusCode == 404 && route.path.startsWith('/en/')) {
   navigateTo(newPath, { redirectCode: 301 });
 }
 
-if (process.client) {
+if (import.meta.client) {
   set(LSKey.LANG, locale.value);
 }
 

@@ -6,7 +6,7 @@ const { locale } = useI18n();
 const localePath = useLocalePath();
 provideUseId(() => useId());
 
-let wpUrl = (function () {
+const wpUrl = (function () {
   if (locale.value == 'de') {
     return 'https://de.wordpress.org/plugins/add-to-calendar-button';
   }

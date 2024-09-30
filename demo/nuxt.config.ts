@@ -5,7 +5,7 @@ const baseUrl = process.env.NUXT_PUBLIC_SITE_URL || 'https://add-to-calendar-but
 const robots = process.env.NUXT_PUBLIC_ROBOTS || 'index, follow';
 
 export default defineNuxtConfig({
-  modules: ['@nuxtjs/i18n', '@nuxtjs/tailwindcss', 'nuxt-headlessui', 'nuxt-security', 'nuxt-schema-org', '@nuxt/image', '@vite-pwa/nuxt', '@nuxtjs/sitemap'],
+  modules: ['@nuxtjs/i18n', '@nuxtjs/tailwindcss', 'nuxt-headlessui', 'nuxt-security', 'nuxt-schema-org', '@nuxt/image', '@vite-pwa/nuxt', '@nuxtjs/sitemap', '@nuxt/eslint'],
 
   vue: {
     compilerOptions: {

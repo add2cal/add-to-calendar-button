@@ -59,7 +59,7 @@ const selectedOptions = computed(() => {
     return [];
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+
   return props.options.filter((option: any) => {
     const key = option && props.byValue ? option[props.byValue] : option;
     return Array.isArray(props.modelValue) ? props.modelValue.includes(key) : props.modelValue === key
