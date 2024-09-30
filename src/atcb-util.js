@@ -3,7 +3,7 @@
  *  Add to Calendar Button
  *  ++++++++++++++++++++++
  *
- *  Version: 2.6.20
+ *  Version: 2.6.21
  *  Creator: Jens Kuerschner (https://jekuer.com)
  *  Project: https://github.com/add2cal/add-to-calendar-button
  *  License: Elastic License 2.0 (ELv2) (https://github.com/add2cal/add-to-calendar-button/blob/main/LICENSE.txt)
@@ -74,7 +74,7 @@ function atcb_generate_time(data, style = 'delimiters', targetCal = 'general', a
       return durationHours + ':' + ('0' + durationMinutes).slice(-2);
     })();
     // (see https://tz.add-to-calendar-technology.com/api/zones.json for available TZ names)
-    if (targetCal == 'ical' || (targetCal == 'google' && !/(GMT[+|-]\d{1,2}|Etc\/U|Etc\/Zulu|CET|CST6CDT|EET|EST|EST5EDT|MET|MST|MST7MDT|PST8PDT|WET)/i.test(data.timeZone))) {
+    if (targetCal == 'ical' || (targetCal == 'google' && !/GMT[+|-]\d{1,2}|Etc\/U|Etc\/Zulu|CET|CST6CDT|EET|EST|MET|MST|PST8PDT|WET/i.test(data.timeZone))) {
       // in the iCal case, we simply return and cut off the Z. Same applies to Google, except for GMT +/- time zones, which are not supported there.
       // everything else will be done by injecting the VTIMEZONE block at the iCal function
       return {
@@ -443,7 +443,7 @@ function atcb_secure_url(url, throwError = true) {
 // SHARED FUNCTION TO VALIDATE EMAIL ADDRESSES
 function atcb_validEmail(email) {
   // rough format check first
-  if (!/^.{0,70}@.{1,30}\.[a-zA-Z]{2,9}$/.test(email)) {
+  if (!/^.{0,70}@.{1,30}\.[a-z]{2,9}$/i.test(email)) {
     return false;
   }
   return true;
@@ -465,10 +465,10 @@ function atcb_rewrite_html_elements(content, clear = false, iCalBreaks = false) 
     content = content.replace(/\{url\}(.+?)\{\/url\}/gi, (match, p1) => {
       return p1.split('|')[0];
     });
-    content = content.replace(/\[(|\/)(hr|p|b|strong|u|i|em|li|ul|ol|h\d)\]/gi, '');
-    content = content.replace(/\{(|\/)(hr|p|b|strong|u|i|em|li|ul|ol|h\d)\}/gi, '');
+    content = content.replace(/\[\/?(hr|[pbui]|strong|em|li|ul|ol|h\d)\]/gi, '');
+    content = content.replace(/\{\/?(hr|[pbui]|strong|em|li|ul|ol|h\d)\}/gi, '');
     // also remove any special characters
-    content = content.replace(/&[#a-zA-Z0-9]{1,9};/gi, '');
+    content = content.replace(/&[#a-z0-9]{1,9};/gi, '');
     // and build html for the rest
     // supporting: br, hr, p, strong, u, i, em, li, ul, ol, h (like h1, h2, h3, ...), url (= a)
   } else {
@@ -478,8 +478,8 @@ function atcb_rewrite_html_elements(content, clear = false, iCalBreaks = false) 
     content = content.replace(/\{url\}((?:(?!\[\/url\]).)*)\{\/url\}/gi, function (match, p1) {
       return atcb_parse_url_code(p1);
     });
-    content = content.replace(/\[(\/|)(br|hr|p|b|strong|u|i|em|li|ul|ol|h\d)(\s?\/?)\]/gi, '<$1$2$3>');
-    content = content.replace(/\{(\/|)(br|hr|p|b|strong|u|i|em|li|ul|ol|h\d)(\s?\/?)\}/gi, '<$1$2$3>');
+    content = content.replace(/\[(\/)?(br|hr|[pbui]|strong|em|li|ul|ol|h\d)(\s?\/?)\]/gi, '<$1$2$3>');
+    content = content.replace(/\{(\/)?(br|hr|[pbui]|strong|em|li|ul|ol|h\d)(\s?\/?)\}/gi, '<$1$2$3>');
   }
   return content;
 }

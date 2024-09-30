@@ -3,7 +3,7 @@
  *  Add to Calendar Button
  *  ++++++++++++++++++++++
  *
- *  Version: 2.6.20
+ *  Version: 2.6.21
  *  Creator: Jens Kuerschner (https://jekuer.com)
  *  Project: https://github.com/add2cal/add-to-calendar-button
  *  License: Elastic License 2.0 (ELv2) (https://github.com/add2cal/add-to-calendar-button/blob/main/LICENSE.txt)
@@ -66,7 +66,7 @@ function atcb_decorate_data_rrule(data) {
     // remove spaces and force upper case
     data.recurrence = data.recurrence.replace(/\s+/g, '').toUpperCase();
     // pre-validate
-    if (!/^(RRULE:[\w=;,:+-/\\]+|daily|weekly|monthly|yearly)$/im.test(data.recurrence)) {
+    if (!/^(?:RRULE:[\w=;,:+\-/\\]+|daily|weekly|monthly|yearly)$/im.test(data.recurrence)) {
       data.recurrence = '!wrong rrule format!';
     } else {
       // check if RRULE already
@@ -367,8 +367,7 @@ function atcb_decorate_data_description(data, i) {
     // for each key in data.customVar, we replace any placeholders (%%placeholder%%) with the value
     if (data.customVar) {
       for (const key in data.customVar) {
-        const sanitizedKey = key.replace(/[^a-zA-Z0-9\-_.]/g, '');
-        // eslint-disable-next-line security/detect-non-literal-regexp
+        const sanitizedKey = key.replace(/[^\w\-.]/g, '');
         description = description.replace(new RegExp(`%%${sanitizedKey}%%`, 'g'), data.customVar[`${key}`]);
       }
     }
@@ -436,10 +435,8 @@ function atcb_decorate_data_extend(data) {
     // for each key in data.customVar, we replace any placeholders (%%placeholder%%) in name and location with the value
     if (data.customVar) {
       for (const key in data.customVar) {
-        const sanitizedKey = key.replace(/[^a-zA-Z0-9\-_.]/g, '');
-        // eslint-disable-next-line security/detect-non-literal-regexp
+        const sanitizedKey = key.replace(/[^\w\-.]/g, '');
         data.dates[`${i}`].name = data.dates[`${i}`].name.replace(new RegExp(`%%${sanitizedKey}%%`, 'g'), data.customVar[`${key}`]);
-        // eslint-disable-next-line security/detect-non-literal-regexp
         data.dates[`${i}`].location = data.dates[`${i}`].location.replace(new RegExp(`%%${sanitizedKey}%%`, 'g'), data.customVar[`${key}`]);
       }
     }
@@ -465,7 +462,7 @@ function atcb_date_cleanup(dateTimeData) {
   const endpoints = ['start', 'end'];
   endpoints.forEach(function (point) {
     // validate first (we set some text instead, so the later validation picks it up as an error)
-    if (!/^(\d{4}-\d{2}-\d{2}T?(?:\d{2}:\d{2}|)Z?|today(?:\+\d{1,4}|))$/i.test(dateTimeData[point + 'Date'])) {
+    if (!/^(?:\d{4}-\d{2}-\d{2}T?(?:\d{2}:\d{2})?Z?|today(?:\+\d{1,4})?)$/i.test(dateTimeData[point + 'Date'])) {
       dateTimeData[point + 'Date'] = 'badly-formed';
     } else {
       // dynamic date replacement

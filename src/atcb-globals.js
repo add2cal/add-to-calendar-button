@@ -5,14 +5,14 @@
  *  Add to Calendar Button
  *  ++++++++++++++++++++++
  *
- *  Version: 2.6.20
+ *  Version: 2.6.21
  *  Creator: Jens Kuerschner (https://jekuer.com)
  *  Project: https://github.com/add2cal/add-to-calendar-button
  *  License: Elastic License 2.0 (ELv2) (https://github.com/add2cal/add-to-calendar-button/blob/main/LICENSE.txt)
  *  Note:    DO NOT REMOVE THE COPYRIGHT NOTICE ABOVE!
  *
  */
-const atcbVersion = '2.6.20';
+const atcbVersion = '2.6.21';
 
 // DEFINING CSS
 const atcbCssTemplate = {};
@@ -64,7 +64,7 @@ const atcbIsAndroid = atcbIsBrowser()
 // Safari
 const atcbIsSafari = atcbIsBrowser()
   ? () => {
-      if (/^((?!chrome|android|crios|fxios).)*safari/i.test(navigator.userAgent)) {
+      if (/^(?:(?!chrome|android|crios|fxios).)*safari/i.test(navigator.userAgent)) {
         return true;
       } else {
         return false;
@@ -84,7 +84,7 @@ const atcbIsMobile = () => {
 // WebView (iOS and Android)
 const atcbIsWebView = atcbIsBrowser()
   ? () => {
-      if (/(; ?wv|(iPhone|iPod|iPad).*AppleWebKit(?!.*Safari))/i.test(navigator.userAgent)) {
+      if (/; ?wv|(?:iPhone|iPod|iPad).*AppleWebKit(?!.*Safari)/i.test(navigator.userAgent)) {
         return true;
       } else {
         return false;
@@ -96,7 +96,7 @@ const atcbIsWebView = atcbIsBrowser()
 // checking for problematic apps
 const atcbIsProblematicWebView = atcbIsBrowser()
   ? () => {
-      if (/(Instagram)/i.test(navigator.userAgent)) {
+      if (/Instagram/i.test(navigator.userAgent)) {
         return true;
       } else {
         return false;

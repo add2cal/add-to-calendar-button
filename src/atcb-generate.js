@@ -3,7 +3,7 @@
  *  Add to Calendar Button
  *  ++++++++++++++++++++++
  *
- *  Version: 2.6.20
+ *  Version: 2.6.21
  *  Creator: Jens Kuerschner (https://jekuer.com)
  *  Project: https://github.com/add2cal/add-to-calendar-button
  *  License: Elastic License 2.0 (ELv2) (https://github.com/add2cal/add-to-calendar-button/blob/main/LICENSE.txt)
@@ -389,7 +389,8 @@ function atcb_create_atcbl(host, atList = true, returnEl = false, licenseNoteOnl
     }
   } else {
     atcbL.innerHTML = 'Using the <a href="https://add-to-calendar-pro.com" target="_blank" rel="noopener referrer">Add to Calendar Button</a>, licensed under the Elastic License 2.0 (ELv2).';
-    atcbL.setAttribute('style', 'none !important');
+    atcbL.setAttribute('style', 'display:none !important');
+    atcbL.classList.add('atcb-attribution');
     host.append(atcbL);
   }
   if (returnEl) return null;

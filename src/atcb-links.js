@@ -3,7 +3,7 @@
  *  Add to Calendar Button
  *  ++++++++++++++++++++++
  *
- *  Version: 2.6.20
+ *  Version: 2.6.21
  *  Creator: Jens Kuerschner (https://jekuer.com)
  *  Project: https://github.com/add2cal/add-to-calendar-button
  *  License: Elastic License 2.0 (ELv2) (https://github.com/add2cal/add-to-calendar-button/blob/main/LICENSE.txt)
@@ -216,7 +216,7 @@ function atcb_subscribe_ical(data, fileUrl) {
 function atcb_subscribe_google(data, fileUrl) {
   const baseUrl = 'https://calendar.google.com/calendar/r?cid=';
   const baseUrlApp = 'calendar.google.com/calendar?cid=';
-  const fileUrlRegex = /^(https?:\/\/|webcal:\/\/|\/\/)calendar\.google\.com\//;
+  const fileUrlRegex = /^(?:https?:\/\/|webcal:\/\/|\/\/)calendar\.google\.com\//;
   const newFileUrl = (function () {
     if (fileUrlRegex.test(fileUrl)) {
       return fileUrl.replace(/^(.)*\?cid=/, '');
@@ -262,7 +262,7 @@ function atcb_generate_google(data, date, subEvent = 'all') {
   urlParts.push('dates=' + encodeURIComponent(formattedDate.start) + '%2F' + encodeURIComponent(formattedDate.end));
   // setting time zone if given and not GMT +/- something, since this is not supported by Google Calendar
   // also do not set for all-day events, since this can lead to Google Calendar trying to adjust times
-  if (date.timeZone && date.timeZone !== '' && !/(GMT[+|-]\d{1,2}|Etc\/U|Etc\/Zulu|CET|CST6CDT|EET|EST|EST5EDT|MET|MST|MST7MDT|PST8PDT|WET)/i.test(date.timeZone) && !formattedDate.allday) {
+  if (date.timeZone && date.timeZone !== '' && !/GMT[+|-]\d{1,2}|Etc\/U|Etc\/Zulu|CET|CST6CDT|EET|EST|MET|MST|PST8PDT|WET/i.test(date.timeZone) && !formattedDate.allday) {
     urlParts.push('ctz=' + date.timeZone);
   }
   // add details (if set)
@@ -445,7 +445,6 @@ function atcb_open_cal_url(data, type, url, subscribe = false, subEvent = null, 
         return;
       }
     }
-    // eslint-disable-next-line security/detect-non-literal-fs-filename
     const newTab = window.open(url, target);
     if (newTab) {
       newTab.focus();
