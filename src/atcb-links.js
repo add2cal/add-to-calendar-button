@@ -229,7 +229,7 @@ function atcb_subscribe_google(data, fileUrl) {
     return encodeURIComponent(fileUrl);
   })();
   if (atcbIsAndroid() || data.fakeAndroid) {
-    atcb_open_cal_url(data, 'google', 'intent://' + baseUrlApp + newFileUrl.replace('webcal://', 'https://') + '#Intent;scheme=https;package=com.google.android.calendar;end', true);
+    atcb_open_cal_url(data, 'google', 'intent://' + baseUrlApp + newFileUrl + '#Intent;scheme=webcal;package=com.google.android.calendar;end', true);
     return;
   }
   if (((atcbIsiOS() && atcbIsSafari()) || data.fakeIOS) && fileUrlRegex.test(fileUrl)) {
@@ -261,7 +261,7 @@ function atcb_subscribe_microsoft(data, fileUrl, calName, type = 'ms365') {
 // See specs at: https://github.com/InteractionDesignFoundation/add-event-to-calendar-docs/blob/main/services/google.md (unofficial)
 function atcb_generate_google(data, date, subEvent = 'all') {
   const urlParts = [];
-  const baseUrl = 'https://calendar.google.com/calendar/r/eventedit?';
+  urlParts.push('https://calendar.google.com/calendar/render?action=TEMPLATE');
   // generate and add date
   const formattedDate = atcb_generate_time(date, 'clean', 'google');
   urlParts.push('dates=' + encodeURIComponent(formattedDate.start) + '%2F' + encodeURIComponent(formattedDate.end));
@@ -304,7 +304,7 @@ function atcb_generate_google(data, date, subEvent = 'all') {
     })();
     urlParts.push(availabilityPart);
   }
-  atcb_open_cal_url(data, 'google', baseUrl + urlParts.join('&'), false, subEvent);
+  atcb_open_cal_url(data, 'google', urlParts.join('&'), false, subEvent);
 }
 
 // FUNCTION TO GENERATE THE YAHOO URL

@@ -83,8 +83,7 @@ if (atcbIsBrowser()) {
           this.data = await atcb_get_pro_data(this.getAttribute('prokey'), this);
         }
         if (this.data.proKey) this.proKey = this.data.proKey;
-      }
-      if (!this.data.name || this.data.name === '') {
+      } else {
         this.data.proKey = '';
         // if no data yet, we try reading attributes or the innerHTML of the host element
         try {
@@ -171,8 +170,7 @@ if (atcbIsBrowser()) {
         // double-checking for lower-case version
         this.data = await atcb_get_pro_data(this.getAttribute('prokey'), this);
         if (this.data.proKey) this.proKey = this.data.proKey;
-      }
-      if (!this.data.name || this.data.name === '') {
+      } else {
         try {
           this.data = await atcb_process_inline_data(this, this.debug);
         } catch (e) {
@@ -770,7 +768,7 @@ async function atcb_get_pro_data(licenseKey, el = null, directData = {}) {
       }
       throw new Error('Not possible to read proKey config from server...');
     } catch {
-      console.error('Add to Calendar Button proKey invalid or server not responding! Falling back to local data...');
+      console.error('Add to Calendar Button proKey invalid or server not responding!');
     }
   }
   return {};
