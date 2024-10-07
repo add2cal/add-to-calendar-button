@@ -209,6 +209,11 @@ function atcb_set_fully_successful(host, data, multiDateModal = false) {
 
 // ICAL
 function atcb_subscribe_ical(data, fileUrl) {
+  // for Chrome on iOS, we can not directly open the file, but we can show a modal with instructions
+  if ((atcbIsiOS() && !atcbIsSafari()) || data.fakeIOS) {
+    atcb_ical_copy_note(host, dataUrl, data, keyboardTrigger);
+    return;
+  }
   atcb_open_cal_url(data, 'ical', fileUrl, true);
 }
 
@@ -224,7 +229,7 @@ function atcb_subscribe_google(data, fileUrl) {
     return encodeURIComponent(fileUrl);
   })();
   if (atcbIsAndroid() || data.fakeAndroid) {
-    atcb_open_cal_url(data, 'google', 'intent://' + baseUrlApp + newFileUrl + '#Intent;scheme=https;package=com.google.android.calendar;end', true);
+    atcb_open_cal_url(data, 'google', 'intent://' + baseUrlApp + newFileUrl.replace('webcal://', 'https://') + '#Intent;scheme=https;package=com.google.android.calendar;end', true);
     return;
   }
   if (((atcbIsiOS() && atcbIsSafari()) || data.fakeIOS) && fileUrlRegex.test(fileUrl)) {
@@ -256,7 +261,7 @@ function atcb_subscribe_microsoft(data, fileUrl, calName, type = 'ms365') {
 // See specs at: https://github.com/InteractionDesignFoundation/add-event-to-calendar-docs/blob/main/services/google.md (unofficial)
 function atcb_generate_google(data, date, subEvent = 'all') {
   const urlParts = [];
-  urlParts.push('https://calendar.google.com/calendar/render?action=TEMPLATE');
+  const baseUrl = 'https://calendar.google.com/calendar/r/eventedit?';
   // generate and add date
   const formattedDate = atcb_generate_time(date, 'clean', 'google');
   urlParts.push('dates=' + encodeURIComponent(formattedDate.start) + '%2F' + encodeURIComponent(formattedDate.end));
@@ -299,7 +304,7 @@ function atcb_generate_google(data, date, subEvent = 'all') {
     })();
     urlParts.push(availabilityPart);
   }
-  atcb_open_cal_url(data, 'google', urlParts.join('&'), false, subEvent);
+  atcb_open_cal_url(data, 'google', baseUrl + urlParts.join('&'), false, subEvent);
 }
 
 // FUNCTION TO GENERATE THE YAHOO URL

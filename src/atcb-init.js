@@ -748,9 +748,6 @@ async function atcb_get_pro_data(licenseKey, el = null, directData = {}) {
       const response = await fetch((dataOverrides.dev ? 'https://event-dev.caldn.net/' : 'https://event.caldn.net/') + licenseKey + '/config.json');
       if (response.ok) {
         const data = await response.json();
-        if (!data.name || data.name === '') {
-          throw new Error('Not possible to read proKey config from server...');
-        }
         if (proOverride) {
           atcbWcParams.forEach((key) => {
             if (Object.prototype.hasOwnProperty.call(dataOverrides, key) && ['hideBranding', 'hidebranding', 'rsvp', 'ty'].indexOf(key) === -1) {
@@ -763,6 +760,9 @@ async function atcb_get_pro_data(licenseKey, el = null, directData = {}) {
               data[`${key}`] = dataOverrides[`${key}`];
             }
           });
+        }
+        if (!data.name || data.name === '') {
+          throw new Error('Not possible to read proKey config from server...');
         }
         data.proKey = licenseKey;
         data.identifier = licenseKey;
