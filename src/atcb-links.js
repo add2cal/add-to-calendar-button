@@ -229,8 +229,7 @@ function atcb_subscribe_google(data, fileUrl) {
     return encodeURIComponent(fileUrl);
   })();
   if (atcbIsAndroid() || data.fakeAndroid) {
-    const androidUrl = baseUrlApp + newFileUrl;
-    androidUrl.replace('webcal:', 'https:');
+    const androidUrl = baseUrlApp + newFileUrl.replace('webcal%3A%2F%2F', 'https%3A%2F%2F');
     atcb_open_cal_url(data, 'google', 'intent://' + androidUrl + '#Intent;scheme=https;package=com.google.android.calendar;end', true);
     return;
   }
