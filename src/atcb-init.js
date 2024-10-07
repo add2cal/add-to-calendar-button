@@ -76,27 +76,27 @@ if (atcbIsBrowser()) {
         this.proOverride = !proOverrideVal || proOverrideVal === 'true' || proOverrideVal === '' ? true : false;
       }
       // checking for PRO key and pull data if given
-      if ((this.hasAttribute('proKey') && this.getAttribute('proKey') !== '') || (this.hasAttribute('prokey') && this.getAttribute('prokey') !== '')) {
-        if (this.hasAttribute('proKey') && this.getAttribute('proKey') !== '') {
-          this.data = await atcb_get_pro_data(this.getAttribute('proKey'), this);
-        } else {
-          this.data = await atcb_get_pro_data(this.getAttribute('prokey'), this);
-        }
-        if (this.data.proKey) this.proKey = this.data.proKey;
-      } else {
-        this.data.proKey = '';
-        // if no data yet, we try reading attributes or the innerHTML of the host element
-        try {
-          this.data = await atcb_process_inline_data(this, this.debug);
-        } catch (e) {
-          if (this.debug) {
-            console.error(e);
-            atcb_render_debug_msg(this.shadowRoot, e);
+      try {
+        if ((this.hasAttribute('proKey') && this.getAttribute('proKey') !== '') || (this.hasAttribute('prokey') && this.getAttribute('prokey') !== '')) {
+          if (this.hasAttribute('proKey') && this.getAttribute('proKey') !== '') {
+            this.data = await atcb_get_pro_data(this.getAttribute('proKey'), this);
+          } else {
+            this.data = await atcb_get_pro_data(this.getAttribute('prokey'), this);
           }
-          this.state.initializing = false;
-          this.state.ready = true;
-          return;
+          if (this.data.proKey) this.proKey = this.data.proKey;
+        } else {
+          this.data.proKey = '';
+          // if no data yet, we try reading attributes or the innerHTML of the host element
+          this.data = await atcb_process_inline_data(this, this.debug);
         }
+      } catch (e) {
+        if (this.debug) {
+          console.error(e);
+          atcb_render_debug_msg(this.shadowRoot, e);
+        }
+        this.state.initializing = false;
+        this.state.ready = true;
+        return;
       }
       await this.initButton();
       this.state.initializing = false;
@@ -163,24 +163,24 @@ if (atcbIsBrowser()) {
       const elem = document.createElement('template');
       elem.innerHTML = template;
       this.shadowRoot.append(elem.content.cloneNode(true));
-      if (this.hasAttribute('proKey') && this.getAttribute('proKey') !== '') {
-        this.data = await atcb_get_pro_data(this.getAttribute('proKey'), this);
-        if (this.data.proKey) this.proKey = this.data.proKey;
-      } else if (this.hasAttribute('prokey') && this.getAttribute('prokey') !== '') {
-        // double-checking for lower-case version
-        this.data = await atcb_get_pro_data(this.getAttribute('prokey'), this);
-        if (this.data.proKey) this.proKey = this.data.proKey;
-      } else {
-        try {
+      try {
+        if (this.hasAttribute('proKey') && this.getAttribute('proKey') !== '') {
+          this.data = await atcb_get_pro_data(this.getAttribute('proKey'), this);
+          if (this.data.proKey) this.proKey = this.data.proKey;
+        } else if (this.hasAttribute('prokey') && this.getAttribute('prokey') !== '') {
+          // double-checking for lower-case version
+          this.data = await atcb_get_pro_data(this.getAttribute('prokey'), this);
+          if (this.data.proKey) this.proKey = this.data.proKey;
+        } else {
           this.data = await atcb_process_inline_data(this, this.debug);
-        } catch (e) {
-          if (this.debug) {
-            console.error(e);
-            atcb_render_debug_msg(this.shadowRoot, e);
-          }
-          this.updatePending = false;
-          return;
         }
+      } catch (e) {
+        if (this.debug) {
+          console.error(e);
+          atcb_render_debug_msg(this.shadowRoot, e);
+        }
+        this.updatePending = false;
+        return;
       }
       atcb_cleanup(this.shadowRoot, this.identifier);
       await this.initButton();
@@ -570,20 +570,29 @@ async function atcb_action(inputData, triggerElement, keyboardTrigger = false) {
     return;
   }
   // get data
-  let data = await (async function () {
-    const cleanedInput = atcb_secure_content(inputData);
-    // pull data from PRO server, if key is given
-    if (cleanedInput.prokey && cleanedInput.prokey !== '') {
-      cleanedInput.proKey = cleanedInput.prokey;
-    }
-    if (cleanedInput.proKey && cleanedInput.proKey !== '') {
-      const proData = await atcb_get_pro_data(cleanedInput.proKey, null, cleanedInput);
-      if (proData.name && proData.name != '') {
-        return proData;
+  let data;
+  try {
+    data = await (async function () {
+      const cleanedInput = atcb_secure_content(inputData);
+      // pull data from PRO server, if key is given
+      if (cleanedInput.prokey && cleanedInput.prokey !== '') {
+        cleanedInput.proKey = cleanedInput.prokey;
       }
-    }
-    return cleanedInput;
-  })();
+      if (cleanedInput.proKey && cleanedInput.proKey !== '') {
+        try {
+          const proData = await atcb_get_pro_data(cleanedInput.proKey, null, cleanedInput);
+          return proData;
+        } catch (e) {
+          throw new Error(e.message);
+        }
+      } else {
+        return cleanedInput;
+      }
+    })();
+  } catch (e) {
+    console.error(e);
+    return;
+  }
   // decorate & validate data
   data.debug = data.debug === 'true';
   try {
@@ -768,7 +777,7 @@ async function atcb_get_pro_data(licenseKey, el = null, directData = {}) {
       }
       throw new Error('Not possible to read proKey config from server...');
     } catch {
-      console.error('Add to Calendar Button proKey invalid or server not responding!');
+      throw new Error('Add to Calendar Button proKey invalid or server not responding!');
     }
   }
   return {};
