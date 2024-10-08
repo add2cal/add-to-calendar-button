@@ -133,7 +133,7 @@ function atcb_generate_subscribe_links(host, linkType, data, keyboardTrigger) {
         atcb_subscribe_ical(data, data.icsFile);
         break;
       }
-      atcb_subscribe_ical(data, adjustedFileUrl);
+      atcb_subscribe_ical(data, adjustedFileUrl, host, keyboardTrigger);
       break;
     case 'google':
       atcb_subscribe_google(data, adjustedFileUrl);
@@ -208,10 +208,10 @@ function atcb_set_fully_successful(host, data, multiDateModal = false) {
 // GENERATING SUBSCRIPTION URLS AND FILES
 
 // ICAL
-function atcb_subscribe_ical(data, fileUrl) {
+function atcb_subscribe_ical(data, fileUrl, host = null, keyboardTrigger = false) {
   // for Chrome on iOS, we can not directly open the file, but we can show a modal with instructions
   if ((atcbIsiOS() || data.fakeIOS) && !atcbIsSafari()) {
-    atcb_ical_copy_note(host, dataUrl, data, keyboardTrigger);
+    atcb_ical_copy_note(host, fileUrl, data, keyboardTrigger);
     return;
   }
   atcb_open_cal_url(data, 'ical', fileUrl, true);
@@ -603,7 +603,7 @@ function atcb_generate_ical(host, data, subEvent = 'all', keyboardTrigger = fals
   // in in-app browser cases (WebView), we offer a copy option, since the on-the-fly client side generation is usually not supported
   // for Android, we are more specific than with iOS and only go for specific apps at the moment
   // for Chrome on iOS we basically do the same
-  if ((atcbIsiOS() && !atcbIsSafari()) || (atcbIsWebView() && (atcbIsiOS() || (atcbIsAndroid() && atcbIsProblematicWebView())))) {
+  if (((atcbIsiOS() || data.fakeIOS) && !atcbIsSafari()) || (atcbIsWebView() && (atcbIsiOS() || data.fakeIOS || ((atcbIsAndroid() || data.fakeAndroid) && atcbIsProblematicWebView())))) {
     atcb_ical_copy_note(host, dataUrl, data, keyboardTrigger);
     return;
   }
@@ -634,7 +634,7 @@ function atcb_ical_copy_note(host, dataUrl, data, keyboardTrigger) {
   // putting the download url to the clipboard
   atcb_copy_to_clipboard(dataUrl);
   // creating the modal
-  if (atcbIsiOS() && !atcbIsSafari()) {
+  if ((atcbIsiOS() || data.fakeIOS) && !atcbIsSafari()) {
     atcb_create_modal(
       host,
       data,
