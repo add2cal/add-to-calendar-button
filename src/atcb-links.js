@@ -210,7 +210,7 @@ function atcb_set_fully_successful(host, data, multiDateModal = false) {
 // ICAL
 function atcb_subscribe_ical(data, fileUrl) {
   // for Chrome on iOS, we can not directly open the file, but we can show a modal with instructions
-  if ((atcbIsiOS() && !atcbIsSafari()) || data.fakeIOS) {
+  if ((atcbIsiOS() || data.fakeIOS) && !atcbIsSafari()) {
     atcb_ical_copy_note(host, dataUrl, data, keyboardTrigger);
     return;
   }
