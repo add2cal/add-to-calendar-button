@@ -222,16 +222,17 @@ function atcb_subscribe_google(data, fileUrl) {
   const baseUrl = 'https://calendar.google.com/calendar/r?cid=';
   const baseUrlApp = 'calendar.google.com/calendar?cid=';
   const fileUrlRegex = /^(?:https?:\/\/|webcal:\/\/|\/\/)calendar\.google\.com\//;
-  let isGoogleCID = false;
+  let isGoogleCal = false;
   const newFileUrl = (function () {
     if (fileUrlRegex.test(fileUrl)) {
-      isGoogleCID = true;
+      isGoogleCal = true;
       return fileUrl.replace(/^(.)*\?cid=/, '');
     }
     return encodeURIComponent(fileUrl);
   })();
-  if ((atcbIsAndroid() || data.fakeAndroid) && isGoogleCID) {
-    atcb_open_cal_url(data, 'google', 'intent://' + baseUrlApp + newFileUrl + '#Intent;scheme=https;package=com.google.android.calendar;end', true);
+  if (atcbIsAndroid() || data.fakeAndroid) {
+    const app = isGoogleCal ? 'com.google.android.calendar' : 'com.android.chrome'; // temporary workaround as the app currently no longer supports subscriptions of external calendars
+    atcb_open_cal_url(data, 'google', 'intent://' + baseUrlApp + newFileUrl + '#Intent;scheme=https;package=' + app + ';end', true);
     return;
   }
   if (((atcbIsiOS() && atcbIsSafari()) || data.fakeIOS) && fileUrlRegex.test(fileUrl)) {
