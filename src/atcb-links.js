@@ -232,7 +232,7 @@ function atcb_subscribe_google(data, fileUrl) {
   })();
   if (atcbIsAndroid() || data.fakeAndroid) {
     const app = isGoogleCal ? 'com.google.android.calendar' : 'com.android.chrome'; // temporary workaround as the app currently no longer supports subscriptions of external calendars
-    atcb_open_cal_url(data, 'google', 'intent://' + baseUrlApp + newFileUrl + '#Intent;scheme=https;package=' + app + ';end', true);
+    atcb_open_cal_url(data, 'google', 'intent://' + baseUrlApp + newFileUrl + '#Intent;scheme=https;action=android.intent.action.VIEW;package=' + app + ';end', true);
     return;
   }
   if (((atcbIsiOS() && atcbIsSafari()) || data.fakeIOS) && fileUrlRegex.test(fileUrl)) {
