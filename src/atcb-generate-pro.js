@@ -332,7 +332,7 @@ async function atcb_generate_rsvp_form(host, data, hostEl, keyboardTrigger = fal
     atcb_translate_hook('submit', data) +
     '</button><span id="pro-form-submitting" class="pro-waiting"><span>.</span><span>.</span><span>.</span></span></p>';
   if (rsvpData.seatsLeft && rsvpData.seatsLeft > 0) {
-    rsvpContent += '<p class="pro-field">' + atcb_translate_hook('form.seatsleft', data) + ' ' + rsvpData.seatsLeft + '</p>';
+    rsvpContent += '<p class="pro-form-fine">' + atcb_translate_hook('form.seatsleft', data) + ': <b>' + rsvpData.seatsLeft + '</b></p>';
   }
   rsvpContent += '</form>';
   rsvpContent += '</div></div>';

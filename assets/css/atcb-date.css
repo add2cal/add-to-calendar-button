@@ -1021,6 +1021,13 @@ a.atcb-modal-btn:not([disabled]):hover {
   min-width: 150px;
 }
 
+.pro-form-fine {
+  font-size: .8em;
+  margin: .5em auto 1em auto;
+  opacity: .75;
+  text-align: center;
+}
+
 .pro-waiting {
   background-color: var(--modal-btn-background);
   border: 1px solid var(--modal-btn-border);
@@ -1085,7 +1092,7 @@ a.atcb-modal-btn:not([disabled]):hover {
 
 /* overrides */
 
-.atcb-modal-content .pro p {
+.atcb-modal-content .pro p:not(.pro-form-fine) {
   margin: 0;
 }
 
