@@ -5,7 +5,7 @@
  *
  * Style: Neumorphism
  *
- * Version: 2.6.21
+ * Version: 2.7.0
  * Creator: Jens Kuerschner (https://jekuer.com)
  * Project: https://github.com/add2cal/add-to-calendar-button
  * License: Elastic License 2.0 (ELv2) (https://github.com/add2cal/add-to-calendar-button/blob/main/LICENSE.txt)
@@ -1240,6 +1240,17 @@ a.atcb-modal-btn:not([disabled]):hover {
   min-width: 150px;
 }
 
+.pro-form-fine {
+  font-size: .8em;
+  margin: .5em auto 1em;
+  opacity: .75;
+  text-align: center;
+}
+
+.pro-form.form-error .pro-form-fine {
+  opacity: 0;
+}
+
 .pro-waiting {
   background-color: var(--modal-btn-background);
   border: 1px solid var(--modal-btn-border);
@@ -1314,7 +1325,7 @@ a.atcb-modal-btn:not([disabled]):hover {
   color: inherit;
 }
 
-.atcb-modal-content .pro p {
+.atcb-modal-content .pro p:not(.pro-form-fine) {
   margin: 0;
 }
 

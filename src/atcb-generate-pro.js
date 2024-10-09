@@ -3,7 +3,7 @@
  *  Add to Calendar Button
  *  ++++++++++++++++++++++
  *
- *  Version: 2.6.21
+ *  Version: 2.7.0
  *  Creator: Jens Kuerschner (https://jekuer.com)
  *  Project: https://github.com/add2cal/add-to-calendar-button
  *  License: Elastic License 2.0 (ELv2) (https://github.com/add2cal/add-to-calendar-button/blob/main/LICENSE.txt)
@@ -331,6 +331,9 @@ async function atcb_generate_rsvp_form(host, data, hostEl, keyboardTrigger = fal
     ' class="atcb-modal-btn atcb-modal-btn-primary atcb-modal-btn-border">' +
     atcb_translate_hook('submit', data) +
     '</button><span id="pro-form-submitting" class="pro-waiting"><span>.</span><span>.</span><span>.</span></span></p>';
+  if (rsvpData.seatsLeft && rsvpData.seatsLeft > 0) {
+    rsvpContent += '<p class="pro-form-fine">' + atcb_translate_hook('form.seatsleft', data) + ': <b>' + rsvpData.seatsLeft + '</b></p>';
+  }
   rsvpContent += '</form>';
   rsvpContent += '</div></div>';
 
@@ -588,24 +591,20 @@ async function atcb_generate_rsvp_button(host, data) {
   return true;
 }
 
-async function atcb_check_booked_out(data) {
-  if (data.rsvp && data.rsvp.max && data.proKey && data.proKey !== '') {
-    try {
-      const response = await fetch('https://api.add-to-calendar-pro.com/dffb8bbd-ee5e-4a4f-a7ea-503af98ca468?prokey=' + data.proKey + (data.dev ? '&dev=true' : ''), {
-        method: 'GET',
-      });
-      if (!response.ok) {
-        throw new Error('Network response was not ok');
-      }
-      const responseJson = await response.json();
-      if (parseInt(responseJson.total) >= data.rsvp.max) {
-        return true;
-      }
-    } catch (error) {
-      console.error('Error:', error);
+async function atcb_check_bookings(proKey, dev = false) {
+  try {
+    const response = await fetch('https://api.add-to-calendar-pro.com/dffb8bbd-ee5e-4a4f-a7ea-503af98ca468?prokey=' + proKey + (dev ? '&dev=true' : ''), {
+      method: 'GET',
+    });
+    if (!response.ok) {
+      throw new Error('Network response was not ok');
     }
+    const responseJson = await response.json();
+    return parseInt(responseJson.total);
+  } catch (error) {
+    console.error('Error:', error);
   }
-  return false;
+  return 0;
 }
 
 // SHARED FORM FUNCTIONS
@@ -799,4 +798,4 @@ async function sendPostRequest(url, fields, header = {}) {
   }
 }
 
-export { atcb_generate_ty, atcb_generate_rsvp_form, atcb_generate_rsvp_button, atcb_check_booked_out };
+export { atcb_generate_ty, atcb_generate_rsvp_form, atcb_generate_rsvp_button, atcb_check_bookings };

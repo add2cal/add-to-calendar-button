@@ -3,7 +3,7 @@
  *  Add to Calendar Button
  *  ++++++++++++++++++++++
  *
- *  Version: 2.6.21
+ *  Version: 2.7.0
  *  Creator: Jens Kuerschner (https://jekuer.com)
  *  Project: https://github.com/add2cal/add-to-calendar-button
  *  License: Elastic License 2.0 (ELv2) (https://github.com/add2cal/add-to-calendar-button/blob/main/LICENSE.txt)
@@ -15,7 +15,7 @@ import { tzlib_get_offset } from 'timezones-ical-library';
 import { atcbIsiOS, atcbIsAndroid, atcbIsMobile, atcbIsBrowser, atcbValidRecurrOptions, atcbInvalidSubscribeOptions, atcbIOSInvalidOptions, atcbAndroidInvalidOptions, atcbWcBooleanParams } from './atcb-globals.js';
 import { atcb_translate_via_time_zone, atcb_format_datetime, atcb_rewrite_html_elements, atcb_generate_uuid } from './atcb-util.js';
 import { availableLanguages, rtlLanguages } from './atcb-i18n';
-import { atcb_check_booked_out } from './atcb-generate-pro.js';
+import { atcb_check_bookings } from './atcb-generate-pro.js';
 
 // CLEAN DATA BEFORE FURTHER VALIDATION (CONSIDERING SPECIAL RULES AND SCHEMES)
 async function atcb_decorate_data(data) {
@@ -593,20 +593,27 @@ function atcb_decorate_data_button_status_handling(data) {
 }
 
 async function atcb_decorate_data_rsvp(data) {
-  if (typeof atcb_check_booked_out !== 'function' || !data.rsvp || Object.keys(data.rsvp).length === 0) return data;
-  // determine whether RSVP is expired or booked out
+  if (typeof atcb_check_bookings !== 'function' || !data.rsvp || !data.proKey || Object.keys(data.rsvp).length === 0) return data;
+  // determine whether RSVP is expired
   data.rsvp.expired = (function () {
     if (data.rsvp && data.rsvp.expires && new Date(data.rsvp.expires) < new Date()) {
       return true;
     }
     return false;
   })();
-  data.rsvp.bookedOut = await atcb_check_booked_out(data);
-  if (data.rsvp.expired || data.rsvp.bookedOut) {
-    data.blockInteraction = true;
-  }
-  if (data.blockInteraction) {
-    data.disabled = true;
+  // determine whether RSVP is booked out and set # seats left
+  if (data.rsvp.max) {
+    const bookings = await atcb_check_bookings(data.proKey, data.dev);
+    data.rsvp.seatsLeft = data.rsvp.max - bookings;
+    if (data.rsvp.seatsLeft < 1) {
+      data.rsvp.bookedOut = true;
+    }
+    if (data.rsvp.expired || data.rsvp.bookedOut) {
+      data.blockInteraction = true;
+    }
+    if (data.blockInteraction) {
+      data.disabled = true;
+    }
   }
   return data;
 }

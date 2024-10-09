@@ -5,7 +5,7 @@
  *
  * Style: Flat
  *
- * Version: 2.6.21
+ * Version: 2.7.0
  * Creator: Jens Kuerschner (https://jekuer.com)
  * Project: https://github.com/add2cal/add-to-calendar-button
  * License: Elastic License 2.0 (ELv2) (https://github.com/add2cal/add-to-calendar-button/blob/main/LICENSE.txt)
@@ -1231,14 +1231,25 @@ a.atcb-modal-btn:not([disabled]):hover {
 
 #rsvp-success-msg-doi {
   color: var(--form-error);
-  padding-top: 1em;
   font-size: .8em;
+  padding-top: 1em;
 }
 
 #pro-form-submit {
   display: block;
   margin: auto;
   min-width: 150px;
+}
+
+.pro-form-fine {
+  font-size: .8em;
+  padding: .5em auto 1em;
+  opacity: .75;
+  text-align: center;
+}
+
+.pro-form.form-error .pro-form-fine {
+  opacity: 0;
 }
 
 .pro-waiting {
@@ -1315,7 +1326,7 @@ a.atcb-modal-btn:not([disabled]):hover {
   color: inherit;
 }
 
-.atcb-modal-content .pro p {
+.atcb-modal-content .pro p:not(.pro-form-fine) {
   margin: 0;
 }
 

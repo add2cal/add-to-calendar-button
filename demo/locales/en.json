@@ -369,7 +369,7 @@
         "block_step2": "Click at the appearing button.",
         "block_step3": "Add the attributes of your choice at the input on the right side \"Block\" settings.",
         "shortcode1": "Alternatively, you can also use the shortcode [add-to-calendar-button] and add the attributes directly to it:",
-        "shortcode2": "Mind that you cannot use '[' and ']' characters in this case! For content formatting, you can use {'{'}*{'}'} instead of [*].",
+        "shortcode2": "Mind that you cannot use '[' and ']' characters inside a shortcode! For content formatting, you can use {'{'}*{'}'} instead of [*].",
         "shortcode_description": "Description with {'{'}b{'}'}bold{'{'}/b{'}'} text."
       },
       "next": {

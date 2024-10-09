@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { DefaultButtonStyle, DefaultListStyle, DefaultTrigger, Size } from '@/models/addToCalendarButton';
 import { AttrsKey, ComponentAttrKeyMap, DateAttrsKey, DateRecurrenceAttrsKey, LayoutAttrsKey, type Attrs } from '@/models/attrs';
 import { DefaultLanguageCode } from '@/models/language';
