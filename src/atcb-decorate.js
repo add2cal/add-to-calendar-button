@@ -367,8 +367,9 @@ function atcb_decorate_data_description(data, i) {
     // for each key in data.customVar, we replace any placeholders (%%placeholder%%) with the value
     if (data.customVar) {
       for (const key in data.customVar) {
-        const sanitizedKey = key.replace(/[^\w\-.]/g, '');
-        description = description.replace(new RegExp(`%%${sanitizedKey}%%`, 'g'), data.customVar[`${key}`]);
+        const sanitizedKey = '%%' + key.replace(/[^\w\-.]/g, '') + '%%';
+        // eslint-disable-next-line security/detect-non-literal-regexp
+        description = description.replace(new RegExp(sanitizedKey, 'gi'), data.customVar[`${key}`]);
       }
     }
     // store a clean description copy without the URL magic for Yahoo, MS Teams, ...
@@ -435,9 +436,11 @@ function atcb_decorate_data_extend(data) {
     // for each key in data.customVar, we replace any placeholders (%%placeholder%%) in name and location with the value
     if (data.customVar) {
       for (const key in data.customVar) {
-        const sanitizedKey = key.replace(/[^\w\-.]/g, '');
-        data.dates[`${i}`].name = data.dates[`${i}`].name.replace(new RegExp(`%%${sanitizedKey}%%`, 'g'), data.customVar[`${key}`]);
-        data.dates[`${i}`].location = data.dates[`${i}`].location.replace(new RegExp(`%%${sanitizedKey}%%`, 'g'), data.customVar[`${key}`]);
+        const sanitizedKey = '%%' + key.replace(/[^\w\-.]/g, '') + '%%';
+        // eslint-disable-next-line security/detect-non-literal-regexp
+        data.dates[`${i}`].name = data.dates[`${i}`].name.replace(new RegExp(sanitizedKey, 'gi'), data.customVar[`${key}`]);
+        // eslint-disable-next-line security/detect-non-literal-regexp
+        data.dates[`${i}`].location = data.dates[`${i}`].location.replace(new RegExp(sanitizedKey, 'gi'), data.customVar[`${key}`]);
       }
     }
   }
@@ -454,6 +457,14 @@ function atcb_decorate_data_extend(data) {
 
 // CALCULATE AND CLEAN UP THE ACTUAL DATES
 function atcb_date_cleanup(dateTimeData) {
+  // Utility function to validate date format
+  function isValidDateFormat(dateStr) {
+    return /^\d\d\d\d-\d\d-\d\d(?:T\d\d:\d\d)?(?::\d\d)?(?:.\d\d\d)?Z?$/i.test(dateStr);
+  }
+  // Utility function to validate 'today' format
+  function isValidTodayFormat(dateStr) {
+    return /^today(?:\+(?:\d|\d\d|\d\d\d|\d\d\d\d))?$/i.test(dateStr);
+  }
   // set endDate = startDate, if not provided
   if (!dateTimeData.endDate || dateTimeData.endDate === '') {
     dateTimeData.endDate = dateTimeData.startDate;
@@ -461,16 +472,15 @@ function atcb_date_cleanup(dateTimeData) {
   // parse date+time format (unofficial alternatives to the main implementation); also calculate any dynamic dates
   const endpoints = ['start', 'end'];
   endpoints.forEach(function (point) {
+    const dateStr = dateTimeData[point + 'Date'];
     // validate first (we set some text instead, so the later validation picks it up as an error)
-    if (!/^(?:\d{4}-\d{2}-\d{2}T?(?:\d{2}:\d{2})?Z?|today(?:\+\d{1,4})?)$/i.test(dateTimeData[point + 'Date'])) {
+    if (!isValidDateFormat(dateStr) && !isValidTodayFormat(dateStr)) {
       dateTimeData[point + 'Date'] = 'badly-formed';
     } else {
       // dynamic date replacement
-      dateTimeData[point + 'Date'] = atcb_date_calculation(dateTimeData[point + 'Date']);
+      if (isValidTodayFormat(dateStr)) dateTimeData[point + 'Date'] = atcb_date_calculation(dateStr);
       // second, if valid, clean up
       if (dateTimeData[point + 'Date']) {
-        // remove any milliseconds information
-        dateTimeData[point + 'Date'] = dateTimeData[point + 'Date'].replace(/\.\d{3}/, '').replace('Z', '');
         // identify a possible time information within the date string
         const tmpSplitStartDate = dateTimeData[point + 'Date'].split('T');
         if (tmpSplitStartDate[1]) {
@@ -478,10 +488,9 @@ function atcb_date_cleanup(dateTimeData) {
           dateTimeData[point + 'Time'] = tmpSplitStartDate[1];
         }
       }
-      // remove any seconds from time information
-      if (dateTimeData[point + 'Time'] && dateTimeData[point + 'Time'].length === 8) {
-        const timeStr = dateTimeData[point + 'Time'];
-        dateTimeData[point + 'Time'] = timeStr.substring(0, timeStr.length - 3);
+      // remove any seconds and more from time information
+      if (dateTimeData[point + 'Time'] && dateTimeData[point + 'Time'].length > 5) {
+        dateTimeData[point + 'Time'] = dateTimeData[point + 'Time'].substring(0, 5);
       }
     }
   });
@@ -536,13 +545,7 @@ function atcb_date_calculation(dateString) {
   // check for any dynamic additions and adjust
   const dateStringParts = dateString.split('+');
   const dateParts = dateStringParts[0].split('-');
-  let newDate = (function () {
-    // backwards compatibility for version <1.5.0
-    if (dateParts[0].length < 4) {
-      return new Date(Date.UTC(dateParts[2], dateParts[0] - 1, dateParts[1]));
-    }
-    return new Date(Date.UTC(dateParts[0], dateParts[1] - 1, dateParts[2]));
-  })();
+  const newDate = new Date(Date.UTC(dateParts[0], dateParts[1] - 1, dateParts[2].substring(0, 2)));
   if (dateStringParts[1] && dateStringParts[1] > 0) {
     newDate.setDate(newDate.getDate() + parseInt(dateStringParts[1]));
   }
