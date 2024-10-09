@@ -2,6 +2,7 @@
 
 ## Version 2
 
+- v2.7 : Showing open seats on RSVP, better subscription handling
 - v2.6 : useUserTZ, css ::part, formatting of urls in description
 - v2.5 : PRO option and more
   - ✨ [introducing PRO offering](https://add-to-calendar-pro.com/)
