@@ -1,6 +1,7 @@
 import js from '@eslint/js';
 import prettierRecommended from 'eslint-plugin-prettier/recommended';
 import regexpEslint from 'eslint-plugin-regexp';
+import pluginSecurity from 'eslint-plugin-security';
 import wcEslint from 'eslint-plugin-wc';
 
 export default [
@@ -13,6 +14,7 @@ export default [
   regexpEslint.configs['flat/recommended'],
   wcEslint.configs['flat/recommended'],
   prettierRecommended,
+  pluginSecurity.configs.recommended,
   // overrides
   {
     files: ['**/*.{js,mjs,cjs}'],
