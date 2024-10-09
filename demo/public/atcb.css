@@ -1263,7 +1263,7 @@ a.atcb-modal-btn:not([disabled]):hover {
 
 .pro-form-fine {
   font-size: .8em;
-  margin: .5em auto 1em auto;
+  margin: .5em auto 1em;
   opacity: .75;
   text-align: center;
 }
