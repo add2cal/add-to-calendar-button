@@ -47,7 +47,7 @@ function atcb_generate_links(host, type, data, subEvent = 'all', keyboardTrigger
       if (!skipDoubleLink) {
         // nothing to show here at the moment...
         // if something comes up, we can use something like the following:
-        // if (atcbIsiOS() && linkType === 'google') {
+        // if ((atcbIsiOS() || data.fakeIOS) && linkType === 'google') {
         // atcb_create_modal(host, data, 'warning', '', atcb_translate_hook('modal.warn.1.text', data), [{ label: atcb_translate_hook('continue', data), primary: true, type: '2timeslink' },{ label: atcb_translate_hook('cancel', data) }], [], keyboardTrigger, { type: type, id: subEvent + 1 });
         // return;
         // }
@@ -210,7 +210,7 @@ function atcb_set_fully_successful(host, data, multiDateModal = false) {
 // ICAL
 function atcb_subscribe_ical(data, fileUrl, host = null, keyboardTrigger = false) {
   // for Chrome on iOS, we can not directly open the file, but we can show a modal with instructions
-  if ((atcbIsiOS() || data.fakeIOS) && !atcbIsSafari()) {
+  if ((atcbIsiOS() && !atcbIsSafari()) || data.fakeIOS) {
     atcb_ical_copy_note(host, fileUrl, data, keyboardTrigger);
     return;
   }
@@ -485,11 +485,12 @@ function atcb_generate_ical(host, data, subEvent = 'all', keyboardTrigger = fals
   // if we are in proxy mode, we can directly redirect
   if (data.proxy) {
     const langUrlPart = data.language && data.language === 'de' ? data.language + '/' : '';
-    atcb_open_cal_url(data, 'ical', 'https://caldn.net/' + langUrlPart + 'no-ics-file', false, subEvent);
+    const url = (data.dev ? 'https://dev.caldn.net/' : 'https://caldn.net/') + langUrlPart + 'no-ics-file';
+    atcb_open_cal_url(data, 'ical', url, false, subEvent);
     return;
   }
   // else, we directly load it (not if iOS and WebView - will be catched further down - except it is explicitely bridged)
-  if (givenIcsFile !== '' && (!atcbIsiOS() || !atcbIsWebView() || data.bypassWebViewCheck)) {
+  if (givenIcsFile !== '' && ((!atcbIsiOS() && !data.fakeIOS) || !atcbIsWebView() || data.bypassWebViewCheck)) {
     atcb_save_file(givenIcsFile, filename);
     return;
   }
@@ -603,7 +604,7 @@ function atcb_generate_ical(host, data, subEvent = 'all', keyboardTrigger = fals
   // in in-app browser cases (WebView), we offer a copy option, since the on-the-fly client side generation is usually not supported
   // for Android, we are more specific than with iOS and only go for specific apps at the moment
   // for Chrome on iOS we basically do the same
-  if (((atcbIsiOS() || data.fakeIOS) && !atcbIsSafari()) || (atcbIsWebView() && (atcbIsiOS() || data.fakeIOS || ((atcbIsAndroid() || data.fakeAndroid) && atcbIsProblematicWebView())))) {
+  if ((atcbIsiOS() && !atcbIsSafari()) || (atcbIsWebView() && (atcbIsiOS() || data.fakeIOS || ((atcbIsAndroid() || data.fakeAndroid) && atcbIsProblematicWebView())))) {
     atcb_ical_copy_note(host, dataUrl, data, keyboardTrigger);
     return;
   }
@@ -634,7 +635,7 @@ function atcb_ical_copy_note(host, dataUrl, data, keyboardTrigger) {
   // putting the download url to the clipboard
   atcb_copy_to_clipboard(dataUrl);
   // creating the modal
-  if ((atcbIsiOS() || data.fakeIOS) && !atcbIsSafari()) {
+  if ((atcbIsiOS() && !atcbIsSafari()) || data.fakeIOS) {
     atcb_create_modal(
       host,
       data,
