@@ -507,7 +507,7 @@ onUnmounted(() => {
           <p>
             "name" is still required, but every other event parameter can be skipped in this case.<br />
             For Microsoft services, the "name" will be used as name for the calendar.<br />
-            Mind that there won't be rich data for the subscribe option.<br />
+            Mind that there won't be rich data for the subscribe option and Microsoft Teams is not yet supported and will be automatically disabled. Same applies for other Microsoft services on mobile devices.<br />
             <span class="text-sm italic">(If the user's browser does not recognize any installed calendar app, this might lead to a blank screen. The PRO version mitigates this with some explenatory middleware screen.)</span>
             <span class="block text-sm font-semibold italic text-red-500">(The Google Calendar App currently also has issues with this type. The PRO version mitigates this as well!)</span>
           </p>
@@ -518,7 +518,7 @@ onUnmounted(() => {
           <p>
             "name" ist weiterhin eine verpflichtende Angabe. Alle weiteren Parameter sind in diesem Fall aber optional.<br />
             Bei Microsoft-Diensten wird der "name" als Name für den geteilten Kalender genutzt.<br />
-            Beachte, dass es für den Abonnement-Modus keine Rich-Data-Generierung gibt.<br />
+            Beachte, dass es für den Abonnement-Modus keine Rich-Data-Generierung gibt und Microsoft Teams noch nicht unterstützt und daher deaktiviert wird. Gleiches gilt für andere Microsoft-Dienste auf mobilen Geräten.<br />
             <span class="text-sm italic">(Sollte der Browser des Nutzers keine installierte Kalender-App erkennen, kann dies zu einer leeren Seite führen. Die PRO-Version optimiert dies mit einem erklärenden Zwischenbildschirm.)</span>
             <span class="block text-sm font-semibold italic text-red-500">(Die Google Kalendar-App hat aktuell auch Probleme mit diesem Prozess. Die PRO-Version optimiert auch das!)</span>
           </p>

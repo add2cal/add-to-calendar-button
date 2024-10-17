@@ -506,7 +506,7 @@ definePageMeta({
                 To offer the subscription via the button, you need to also specify the icsFile option.<br /><br />
                 "Name" and "startDate" would be still required for organizational purposes, but every other event parameter can be skipped in the subscription case.<br />
                 For Microsoft services, the "Name" will be used as name for the calendar.<br />
-                Microsoft Teams is not yet supported and will be automatically disabled.<br /><br />
+                Microsoft Teams is not yet supported and will be automatically disabled. Same applies for other Microsoft services on mobile devices.<br /><br />
                 If the user's browser does not recognize any installed calendar app, this might lead to a blank screen. The PRO version mitigates this with some explenatory middleware screen.<br /><br />
                 <NuxtLink :to="{path: localePath('advanced-use'), hash: '#case-3'}">{{ $t('labels.example') }} <ArrowRightIcon class="-mt-0.5 mr-0.5 inline-block h-3 w-3" aria-hidden="true" /></NuxtLink>
               </td>
@@ -515,7 +515,7 @@ definePageMeta({
                 Um das Abonnement über den Button anzubieten, musst du zusätzlich die icsFile-Option definieren.<br /><br />
                 "Name" und "startDate" wären für organisatorische Zwecke immer noch erforderlich, aber jeder andere Event-Parameter kann im Abonnementfall übersprungen werden.<br />
                 Für Microsoft-Dienste wird der "Name" als Name für den Kalender verwendet.<br />
-                Microsoft Teams wird derzeit nicht unterstützt und automatisch deaktiviert.<br /><br />
+                Microsoft Teams wird derzeit nicht unterstützt und automatisch deaktiviert. Gleiches gilt für andere Microsoft-Dienste auf mobilen Geräten.<br /><br />
                 Sollte der Browser des Nutzers keine installierte Kalender-App erkennen, kann dies zu einer leeren Seite führen. Die PRO-Version optimiert dies mit einem erklärenden Zwischenbildschirm.<br /><br />
                 <NuxtLink :to="{path: localePath('advanced-use'), hash: '#case-3'}">{{ $t('labels.example') }} <ArrowRightIcon class="-mt-0.5 mr-0.5 inline-block h-3 w-3" aria-hidden="true" /></NuxtLink>
               </td>

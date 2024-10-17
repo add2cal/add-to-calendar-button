@@ -368,9 +368,12 @@
         "block_step1": "Add a new block and search for \"Add to Calendar Button\".",
         "block_step2": "Click at the appearing button.",
         "block_step3": "Add the attributes of your choice at the input on the right side \"Block\" settings.",
+        "block_pro": "When using our PRO service, you can activate the respective option. This will also allow you to link dynamic data to the button - like meta or ACF field values.",
         "shortcode1": "Alternatively, you can also use the shortcode [add-to-calendar-button] and add the attributes directly to it:",
+        "shortcode_pro": "The linking of dynamic data is also possible with the shortcode. Check our PRO documentation for more information and guidance.",
         "shortcode2": "Mind that you cannot use '[' and ']' characters inside a shortcode! For content formatting, you can use {'{'}*{'}'} instead of [*].",
-        "shortcode_description": "Description with {'{'}b{'}'}bold{'{'}/b{'}'} text."
+        "shortcode_description": "Description with {'{'}b{'}'}bold{'{'}/b{'}'} text.",
+        "pro_docs": "To the PRO documentation"
       },
       "next": {
         "headline": "Next Steps",

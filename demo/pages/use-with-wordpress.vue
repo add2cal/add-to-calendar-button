@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import GuideSidebar from "@/components/integration/guideSidebar.vue";
-import { ArrowTopRightOnSquareIcon } from '@heroicons/vue/24/outline';
+import { ArrowTopRightOnSquareIcon, ArrowRightIcon } from '@heroicons/vue/24/outline';
 const LazyCodeBlock = defineAsyncComponent(() => import('@/components/codeBlock.vue'));
 const { locale } = useI18n();
 
@@ -58,13 +58,18 @@ watch(locale, value => {
           <li class="mt-3">{{ $t('content.guide.wordpress.block_step2') }}</li>
           <li class="mt-3">{{ $t('content.guide.wordpress.block_step3') }}</li>
         </ol>
+        <p>{{ $t('content.guide.wordpress.block_pro') }}</p>
         <h3 class="mb-6 mt-12">B: Shortcode</h3>
         <p>{{ $t('content.guide.wordpress.shortcode1') }}</p>
         <LazyCodeBlock>
           <pre>[add-to-calendar-button name="{{ $t('demo_data.name_dummy') }}" options="'Apple','Google'" startDate="{{ defaultDate }}" description="{{ $t('content.guide.wordpress.shortcode_description') }}"]</pre>
         </LazyCodeBlock>
+        <p>{{ $t('content.guide.wordpress.shortcode_pro') }}</p>
         <p class="text-sm italic">{{ $t('content.guide.wordpress.shortcode2') }}</p>
-        <p class="pt-6 font-semibold italic">{{ $t('content.guide.step_use_simple') }}</p>
+        <a rel="author" target="_blank" :href="'https://docs.add-to-calendar-pro.com' + (locale !== 'en' ? '/' + locale : '') + '/integration/wordpress.html'" class="button-primary mx-auto mt-6 w-fit self-center sm:mx-0">
+          {{ $t('content.guide.wordpress.pro_docs') }}<ArrowRightIcon class="-mt-0.5 ml-2 inline-block h-4 w-4" aria-hidden="true" />
+        </a>
+        <p class="pt-10 font-semibold italic">{{ $t('content.guide.step_use_simple') }}</p>
       </div>
     </div>
     <div class="hidden border-l border-zinc-300 pl-8 text-xs dark:border-zinc-700 lg:block xl:pl-12">
