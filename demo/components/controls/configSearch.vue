@@ -159,7 +159,7 @@ const onSearchInputBlur = () => {
           <input
             :id="elInputID"
             ref="searchInput"
-            class="autocomplete-input truncate rounded-md bg-zinc-50 py-2 pl-3 pr-10 text-left text-sm caret-secondary placeholder:text-xs focus:outline-none focus-visible:ring focus-visible:ring-secondary/75 group-hover:bg-white dark:bg-zinc-700 dark:group-hover:bg-zinc-600"
+            class="autocomplete-input w-full truncate rounded-md bg-zinc-50 py-2 pl-3 pr-10 text-left text-sm caret-secondary placeholder:text-xs focus:outline-none focus-visible:ring focus-visible:ring-secondary/75 group-hover:bg-white dark:bg-zinc-700 dark:group-hover:bg-zinc-600"
             :placeholder="$t('labels.inputs.search')"
             :aria-label="$t('labels.inputs.search')"
             @focus="onSearchInputFocus"

@@ -5,7 +5,7 @@
  *
  * Style: Flat
  *
- * Version: 2.7.2
+ * Version: 2.7.3
  * Creator: Jens Kuerschner (https://jekuer.com)
  * Project: https://github.com/add2cal/add-to-calendar-button
  * License: Elastic License 2.0 (ELv2) (https://github.com/add2cal/add-to-calendar-button/blob/main/LICENSE.txt)
@@ -750,6 +750,7 @@ a.atcb-modal-btn:not([disabled]):hover {
   overflow: hidden;
   display: -webkit-box;
   -webkit-line-clamp: var(--date-btn-headline-line-clamp);
+  line-clamp: var(--date-btn-headline-line-clamp);
   -webkit-box-orient: vertical;
 }
 
@@ -769,6 +770,7 @@ a.atcb-modal-btn:not([disabled]):hover {
   overflow: hidden;
   display: -webkit-box;
   -webkit-line-clamp: 1;
+  line-clamp: 1;
   -webkit-box-orient: vertical;
   word-break: break-all;
 }
@@ -1375,6 +1377,7 @@ a.atcb-modal-btn:not([disabled]):hover {
 
 #atcb-reference.atcb-dropup {
   position: absolute;
+  margin-top: -5px;
 }
 
 .atcb-modal-host-initialized #atcb-reference.atcb-dropup {
