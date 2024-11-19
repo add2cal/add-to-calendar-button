@@ -5,7 +5,7 @@
   X-DNS-Prefetch-Control: on
   X-Download-Options: noopen
   Cross-Origin-Opener-Policy: unsafe-none
-  Cross-Origin-Resource-Policy: same-origin
+  Cross-Origin-Resource-Policy: cross-origin
   Cross-Origin-Embedder-Policy: unsafe-none
   Strict-Transport-Security: max-age=31536000; includeSubDomains
   Referrer-Policy: strict-origin-when-cross-origin
