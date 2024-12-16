@@ -20,6 +20,7 @@ export enum LanguageCode {
   PT = 'pt',
   SV = 'sv',
   TR = 'tr',
+  UK = 'uk',
   VI = 'vi',
   ZH = 'zh',
 }
@@ -48,6 +49,7 @@ export const LanguageNames = {
   [LanguageCode.PT]: 'Portugese',
   [LanguageCode.SV]: 'Swedish',
   [LanguageCode.TR]: 'Turkish',
+  [LanguageCode.UK]: 'Ukrainian',
   [LanguageCode.VI]: 'Vietnamnese',
   [LanguageCode.ZH]: 'Chinese',
 };
