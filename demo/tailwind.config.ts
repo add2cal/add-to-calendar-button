@@ -1,4 +1,6 @@
-/** @type {import('tailwindcss').Config} */
+import type { Config } from 'tailwindcss';
+import headlessui from '@headlessui/tailwindcss';
+
 export default {
   content: ['./index.html', './src/**/*.{vue,js,ts,jsx,tsx}'],
   darkMode: ['class', '.atcb-dark'],
@@ -66,5 +68,5 @@ export default {
       },
     },
   },
-  plugins: [require('@headlessui/tailwindcss')({ prefix: 'ui' })],
-};
+  plugins: [headlessui({ prefix: 'ui' })],
+} satisfies Config;

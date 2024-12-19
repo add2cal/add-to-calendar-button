@@ -3,7 +3,7 @@
  *  Add to Calendar Button
  *  ++++++++++++++++++++++
  *
- *  Version: 2.7.3
+ *  Version: 2.8.0
  *  Creator: Jens Kuerschner (https://jekuer.com)
  *  Project: https://github.com/add2cal/add-to-calendar-button
  *  License: Elastic License 2.0 (ELv2) (https://github.com/add2cal/add-to-calendar-button/blob/main/LICENSE.txt)
@@ -851,10 +851,10 @@ const i18nStrings = {
     'label.share.copy': 'Скопіювати посилання',
     'label.share.copied': 'Скопійовано',
     'label.share.email.subject': 'Збережіть цю подію',
-    'form.error.required': 'Ви не заповнили всі обов\'язкові поля',
+    'form.error.required': "Ви не заповнили всі обов'язкові поля",
     'form.error.sending': 'Сталася проблема з відправленням вашої відповіді. Спробуйте ще раз пізніше.',
-    'form.success': 'Успішно відправлено!'
-  }
+    'form.success': 'Успішно відправлено!',
+  },
 };
 
 const availableLanguages = Object.keys(i18nStrings);

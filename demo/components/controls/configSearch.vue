@@ -170,8 +170,8 @@ const onSearchInputBlur = () => {
           </span>
         </div>
         <ul style="visibility:hidden" class="autocomplete-result-list absolute z-10 mt-2.5 max-h-36 w-full overflow-auto rounded-md bg-white py-1 text-sm shadow-lg ring ring-secondary/75 focus:outline-none dark:bg-zinc-700" />
-        <ul v-if="isInputFocused && !getFilteredOptions().length" :id="elNoResultsID" style="visibility:hidden" class="autocomplete-result-list absolute z-10 mt-3 max-h-36 w-full overflow-auto rounded-md bg-white py-1 text-sm shadow-lg ring ring-red-600/75 focus:outline-none dark:bg-zinc-700">
-          <li v-t="'labels.inputs.nothing_found'" class="no-result relative cursor-default select-none px-4 py-2 italic">Nothing found.</li>
+        <ul v-if="isInputFocused && !getFilteredOptions().length" :id="elNoResultsID" class="autocomplete-result-list absolute z-10 mt-3 max-h-36 w-full overflow-auto rounded-md bg-white py-1 text-sm shadow-lg ring ring-red-600/75 focus:outline-none dark:bg-zinc-700">
+          <li class="no-result relative cursor-default select-none px-4 py-2 italic">{{ $t('labels.inputs.nothing_found') }}</li>
         </ul>
       </div>
     </div>
