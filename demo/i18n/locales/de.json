@@ -295,12 +295,18 @@
       },
       "astro": {
         "headline": "Wie man den Add to Calendar Button mit Astro nutzt",
-        "step_pick_solution": "Wähle ein Vorgehen",
-        "ssg_intro_1": "Für Static Site Generators (SSG) empfehlen wir generell die Nutzung des Add to Calendar Buttons via CDN.",
-        "ssg_intro_2": "Alternativ kannst du aber auch das npm Package installieren und das Modul über eine Observer-Funktion implementieren.",
+        "step_pick_solution": "Wähle das beste Vorgehen",
+        "intro_1": "Du kannst einfach das Add to Calendar Button Skript via CDN laden und so wie in der allgemeinen HTML-Anleitung beschrieben integrieren. Hierbei muss du darauf achten, dass das Ganze nur client-seitig geschieht. Zudem ist dieser Weg nicht ganz ideal.",
+        "intro_2": "Wir empfehlen die Nutzung des React-Wrapper npm-Packages, die Erstellung einer benutzerdefinierten JSX-Komponente und die Integration dieser Komponente mit dem Attribut 'client:only=\"react\"'.",
         "step_setup": "Setup",
-        "npm_alternative_1": "Alternativ kannst du das Package auch aus der npm Registry installieren.",
-        "npm_alternative_2": "...und einen Observer aufsetzen, der das Skript entsprechend lädt:"
+        "setup_1": "Erstelle eine neue Komponente",
+        "new_component": "Erstelle eine neue Komponente im components-Verzeichnis deines Astro-Projekts. Nenne diese \"AddtoCalendarButton.tsx\". Falls du mehrere Buttons nutzen möchtest, kannst du entweder mehrere Komponenten erstellen oder das Ganze über entsprechende Props dynamisch gestalten.",
+        "setup_2": "Installiere das React-Wrapper npm-Package",
+        "npm_setup_1": "Installiere das Package über die npm Registry.",
+        "npm_setup_2": "...und importiere es in deine Komponente.",
+        "step_define": "Definiere den Button",
+        "define": "Definiere den Button in deiner Komponente. In unserem Beispiel haben wir das Label als Prop definiert, um es dynamisch zu halten.",
+        "use": "Du kannst die Komponente nun überall importieren, wo sie benötigt wird und sie wie jede andere benutzten."
       },
       "nextjs": {
         "headline": "Wie man den Add to Calendar Button mit Next.js nutzt",

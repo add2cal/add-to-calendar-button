@@ -2,17 +2,9 @@
 import { set, LSKey } from '@/utils/localStorage';
 import { Listbox, ListboxButton, ListboxOptions, ListboxOption } from '@headlessui/vue';
 import { LanguageIcon, CheckIcon, ChevronDownIcon } from '@heroicons/vue/20/solid';
+import type { LocaleObject } from '@nuxtjs/i18n';
 
-type LocaleObject = {
-  code: string;
-  name: string;
-};
-
-interface ExtendedI18n extends ReturnType<typeof useI18n> {
-  locales: ComputedRef<LocaleObject[]>;
-}
-
-const { locale, locales } = useI18n() as ExtendedI18n;
+const { locale, locales } = useI18n();
 const switchLocalePath = useSwitchLocalePath();
 
 const currentId = locales.value.findIndex((e: { code: string; }) => e.code === locale.value);

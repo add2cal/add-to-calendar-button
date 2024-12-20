@@ -6,9 +6,7 @@ const route = useRoute();
 const { t } = useI18n();
 
 const head = useLocaleHead({
-  addDirAttribute: true,
-  identifierAttribute: 'id',
-  addSeoAttributes: true
+  key: 'id'
 });
 
 const title = computed(() => route.meta.title ? t('meta.title', { title: t(route.meta.title.toString()) }) : t('meta.title_main') + ' | ' + t('meta.title_slug'));

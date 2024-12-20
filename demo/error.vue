@@ -28,9 +28,7 @@ if (import.meta.client) {
 }
 
 const head = useLocaleHead({
-  addDirAttribute: true,
-  identifierAttribute: 'id',
-  addSeoAttributes: true
+  key: 'id'
 });
 
 const title = computed(() =>  t('meta.title', { title: t('meta.404.title') }));

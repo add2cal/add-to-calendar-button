@@ -37,7 +37,7 @@ if (import.meta.client) {
   }, { deep: true });
 
   // blocking page scrolling, if the mobile menu is open
-  watch(showMC, val => {
+  watch(showMC, (val: any) => {
     if (val) {
       document.documentElement.style.overflow = "hidden";
     } else {

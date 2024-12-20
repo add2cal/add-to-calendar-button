@@ -3,7 +3,7 @@
  *  Add to Calendar Button
  *  ++++++++++++++++++++++
  *
- *  Version: 2.7.3
+ *  Version: 2.8.0
  *  Creator: Jens Kuerschner (https://jekuer.com)
  *  Project: https://github.com/add2cal/add-to-calendar-button
  *  License: Elastic License 2.0 (ELv2) (https://github.com/add2cal/add-to-calendar-button/blob/main/LICENSE.txt)
@@ -819,6 +819,41 @@ const i18nStrings = {
     'form.error.required': 'Sa pole kõiki nõutavaid välju korrektselt täitnud',
     'form.error.sending': 'Sinu vastuse saatmisel tekkis probleem. Palun proovi hiljem uuesti',
     'form.success': 'Edukalt saadetud!',
+  },
+  uk: {
+    'label.addtocalendar': 'Додати до календаря',
+    ical: 'Файл iCal',
+    ...calendarNames,
+    'modal.button.default': 'Натисни мене',
+    'modal.webview.ical.h': 'Відкрийте ваш браузер',
+    'modal.webview.ical.text': 'На жаль, браузери у додатках мають проблеми з обробкою файлу календаря, який ми створюємо.',
+    'modal.clipboard.text': 'Ми автоматично скопіювали магічний URL у ваш буфер обміну.',
+    'modal.webview.ical.steps': '<ol><li><strong>Відкрийте інший браузер</strong> на своєму телефоні, ...</li><li><strong>Вставте</strong> скопійований вміст і перейдіть.</li></ol>',
+    'modal.opensafari.ical.h': 'Відкрити Safari',
+    'modal.opensafari.ical.text': 'На жаль, iOS має проблеми з генерацією та відкриттям файлу календаря поза Safari.',
+    'modal.opensafari.ical.steps': '<ol><li><strong>Відкрийте Safari</strong>, ...</li><li><strong>Вставте</strong> скопійований вміст і перейдіть.</li></ol>',
+    'modal.multidate.h': 'Це серія подій',
+    'modal.multidate.text': 'Додайте окремі події по одній:',
+    'date.status.cancelled': 'Цю дату скасовано.',
+    'date.status.cancelled.cta': 'Оновіть свій календар, будь ласка!',
+    'modal.subscribe.yahoo.h': 'Додати календар до Yahoo',
+    'modal.subscribe.yahoo.text': '<ol><li>Відкрийте зараз календар Yahoo.</li><li>Натисніть вкладку «Дії».</li><li>Натисніть «Підписатися на інші календарі».</li><li>Введіть назву та вставте вміст буфера обміну в поле URL.</li></ol>',
+    'modal.subscribe.yahoo.button': 'Відкрити Yahoo Календар',
+    close: 'Закрити',
+    continue: 'Продовжити',
+    cancel: 'Скасувати',
+    expired: 'Термін дії закінчився',
+    recurring: 'Повторюваний',
+    thankyou: 'Дякуємо',
+    submit: 'Відправити',
+    'label.rsvp': 'RSVP',
+    'label.share.email': 'Поділитися через Email',
+    'label.share.copy': 'Скопіювати посилання',
+    'label.share.copied': 'Скопійовано',
+    'label.share.email.subject': 'Збережіть цю подію',
+    'form.error.required': "Ви не заповнили всі обов'язкові поля",
+    'form.error.sending': 'Сталася проблема з відправленням вашої відповіді. Спробуйте ще раз пізніше.',
+    'form.success': 'Успішно відправлено!',
   },
 };
 

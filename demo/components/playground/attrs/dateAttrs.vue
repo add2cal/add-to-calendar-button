@@ -34,7 +34,7 @@ watch(internalValue, () => {
   emit('update:modelValue', internalValue);
 }, { deep: true });
 
-watch(() => props.modelValue, (val) => {
+watch(() => props.modelValue, (val: any) => {
   internalValue.value = val;
 }, { immediate: true });
 
