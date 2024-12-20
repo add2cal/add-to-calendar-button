@@ -295,12 +295,18 @@
       },
       "astro": {
         "headline": "How to install the Add to Calendar Button with Astro",
-        "step_pick_solution": "Pick a solution",
-        "ssg_intro_1": "For static site generators (SSG), we generally recommend to load the Add to Calendar Button script via CDN.",
-        "ssg_intro_2": "Alternatively, you can still use the npm package and include the module via an observer function.",
+        "step_pick_solution": "Pick the best solution",
+        "intro_1": "You can simply load the Add to Calendar Button script via CDN and integrate as described at the default HTML guide. However, this some at some cost and you would need to take precaution to only load and render it on the client.",
+        "intro_2": "We recommend to use the React wrapper npm package, create a custom JSX component, and then integrate this component with 'client:only=\"react\"' attribute.",
         "step_setup": "Setup",
-        "npm_alternative_1": "Alternatively, install the package from the npm registry.",
-        "npm_alternative_2": "...and setup an Observer to load the script properly:"
+        "setup_1": "Create a new component",
+        "new_component": "Create a new component in the components folder and name it \"AddtoCalendarButton.tsx\". If you have multiple buttons, you can either create multiple components or make it accept the props you need to customize it.",
+        "setup_2": "Add the React wrapper package",
+        "npm_setup_1": "Install the package from the npm registry.",
+        "npm_setup_2": "...and import it into your new component:",
+        "step_define": "Define the button",
+        "define": "Define the button in your new component. In our example, we also added a label prop to illustrate how you can make it more dynamic.",
+        "use": "You can now import this component wherever you need it and use it like any other Astro component."
       },
       "nextjs": {
         "headline": "How to install the Add to Calendar Button with Next.js",

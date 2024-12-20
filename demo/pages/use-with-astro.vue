@@ -14,13 +14,13 @@ nextDay.setDate(today.getDate() + 3);
 const defaultDate = nextDay.getFullYear() + '-' + ('0' + (nextDay.getMonth() + 1)).slice(-2) + '-' + ('0' + nextDay.getDate()).slice(-2);
 let defaultLang = (function () {
   if (locale.value != 'en') {
-    return '\n  language="' + locale.value + '"';
+    return '\n      language="' + locale.value + '"';
   }
   return '';
 })();
 watch(locale, value => {
   if (value != 'en') {
-    defaultLang = '\n  language="' + locale.value + '"';
+    defaultLang = '\n      language="' + locale.value + '"';
   } else {
     defaultLang = '';
   }
@@ -33,54 +33,58 @@ watch(locale, value => {
       <h1 class="mb-16 underline decoration-primary-light decoration-4 dark:decoration-primary-dark">{{ $t('content.guide.astro.headline') }}</h1>
       <div class="px-0 md:px-3 lg:px-5">
         <h2 class="mb-6">{{ $t('content.guide.step0') }}: {{ $t('content.guide.astro.step_pick_solution') }}</h2>
-        <p>{{ $t('content.guide.astro.ssg_intro_1') }}<br />{{ $t('content.guide.astro.ssg_intro_2') }}</p>
-        <p class="pt-5">{{ $t('content.guide.options_intro_1') }}</p>
-        <p class="italic">{{ $t('content.guide.options_intro_2') }}</p>
+        <p>{{ $t('content.guide.astro.intro_1') }}</p>
+        <p>{{ $t('content.guide.astro.intro_2') }}</p>
         <h2 class="mb-6 mt-20">{{ $t('content.guide.step1') }}: {{ $t('content.guide.astro.step_setup') }}</h2>
-        <h3 class="mb-6">{{ $t('content.guide.optionA') }}: {{ $t('content.guide.step_cdn') }}</h3>
-        <p>{{ $t('content.guide.step_cdn_p1') }}<br />{{ $t('content.guide.step_cdn_p2') }}</p>
-        <LazyCodeBlock>
-          <pre>&lt;script src="https://cdn.jsdelivr.net/npm/add-to-calendar-button@2" async defer&gt;&lt;/script&gt;</pre>
-        </LazyCodeBlock>
-        <h3 class="mb-6 mt-20">{{ $t('content.guide.optionB') }}: {{ $t('content.guide.step_npm') }}</h3>
-        <p>{{ $t('content.guide.astro.npm_alternative_1') }}</p>
-        <LazyCodeBlock language="shell"><pre>npm install add-to-calendar-button</pre></LazyCodeBlock>
-        <div class="mb-6 mt-10 font-bold">{{ $t('content.guide.astro.npm_alternative_2') }}</div>
-        <LazyCodeBlock>
+        <h3 class="mb-6">{{ $t('content.guide.astro.setup_1') }}</h3>
+        <p>{{ $t('content.guide.astro.new_component') }}</p>
+        <h3 class="mb-6 mt-20">{{ $t('content.guide.astro.setup_2') }}</h3>
+        <p>{{ $t('content.guide.astro.npm_setup_1') }}</p>
+        <LazyCodeBlock language="shell"><pre>npm install add-to-calendar-button-react</pre></LazyCodeBlock>
+        <div class="mb-6 mt-10 font-bold">{{ $t('content.guide.astro.npm_setup_2') }}</div>
+        <LazyCodeBlock language="js"><pre>import { AddToCalendarButton } from 'add-to-calendar-button-react';</pre></LazyCodeBlock>
+        <h2 class="mb-6 mt-20">{{ $t('content.guide.step2') }}: {{ $t('content.guide.astro.step_define') }}</h2>
+        <p>
+          {{ $t('content.guide.astro.define') }}
+        </p>
+        <LazyCodeBlock language="js">
           <pre>
-&lt;script type="module" hoist&gt;
-  const observer = new IntersectionObserver((entries) => {
-    for (const entry of entries) {
-      if (!entry.isIntersecting) continue;
-      observer.disconnect();
-      import('../../node_modules/add-to-calendar-button/dist/module/index.js');
-    }
-  });
-  const instances = document.querySelectorAll('add-to-calendar-button');
-  for (const instance of instances) observer.observe(instance);
-&lt;/script&gt;</pre
+import { AddToCalendarButton } from 'add-to-calendar-button-react';
+import type { AddToCalendarButtonType } from 'add-to-calendar-button-react';
+
+export default function atcb(props: AddToCalendarButtonType) {
+  return (
+    &lt;AddToCalendarButton
+      label={props.label}
+      name="{{ $t('demo_data.name_dummy') }}"
+      options="'Apple','Google'"
+      location="{{ $t('demo_data.location') }}"
+      startDate="{{ defaultDate }}"
+      endDate="{{ defaultDate }}"
+      startTime="10:15"
+      endTime="23:30"
+      timeZone="{{ $t('demo_data.default_timezone') }}"{{ defaultLang }}
+      options="'Apple','Google','iCal','Outlook.com','Yahoo'"
+    &gt;&lt;/AddToCalendarButton&gt;
+  );
+}</pre
           >
         </LazyCodeBlock>
-        <h2 class="mb-6 mt-20">{{ $t('content.guide.step2') }}: {{ $t('content.guide.step_use') }}</h2>
-        <p>
-          {{ $t('content.guide.step_use_start') }}
-        </p>
-        <p class="font-semibold italic">{{ $t('content.guide.step_use_simple') }}</p>
+        <h2 class="mb-6 mt-20">{{ $t('content.guide.step3') }}: {{ $t('content.guide.step_use') }}</h2>
+        <p>{{ $t('content.guide.astro.use') }}</p>
         <p>{{ $t('content.guide.step_use_example') }}</p>
         <LazyCodeBlock>
           <pre>
-&lt;add-to-calendar-button
-  name="{{ $t('demo_data.name_dummy') }}"
-  options="'Apple','Google'"
-  location="{{ $t('demo_data.location') }}"
-  startDate="{{ defaultDate }}"
-  endDate="{{ defaultDate }}"
-  startTime="10:15"
-  endTime="23:30"
-  timeZone="{{ $t('demo_data.default_timezone') }}"{{ defaultLang }}
-&gt;&lt;/add-to-calendar-button&gt;</pre
+---
+import AddToCalendarButton from '../components/AddToCalendarButton.tsx';
+import Layout from '../layouts/Layout.astro';
+---
+&lt;Layout&gt;
+&lt;AddToCalendarButton client:only="react" label="Woohooo" /&gt;
+&lt;/Layout&gt;</pre
           >
         </LazyCodeBlock>
+        <p class="font-semibold italic">{{ $t('content.guide.step_use_simple') }}</p>
       </div>
     </div>
     <div class="hidden border-l border-zinc-300 pl-8 text-xs dark:border-zinc-700 lg:block xl:pl-12">
