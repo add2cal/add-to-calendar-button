@@ -33,6 +33,17 @@ export enum LanguageCode {
   TR = 'tr',
   VI = 'vi',
   ZH = 'zh',
+  
+  HY = 'hy',
+  AZ = 'az',
+  BE = 'be',
+  BS = 'bs',
+  KA = 'ka',
+  HE = 'he',
+  SQ = 'sq',
+  LV = 'lv',
+  MK = 'mk',
+  UK = 'uk',
 }
 
 export const DefaultLanguageCode = LanguageCode.EN;
@@ -72,4 +83,15 @@ export const LanguageNames = {
   [LanguageCode.TR]: 'Turkish',
   [LanguageCode.VI]: 'Vietnamnese',
   [LanguageCode.ZH]: 'Chinese',
+  [LanguageCode.HY]:  'Armenian', 
+  [LanguageCode.AZ]:  'Azerbaijani', 
+  [LanguageCode.BE]:  'Belarusian', 
+  [LanguageCode.BS]:  'Bosnian', 
+  [LanguageCode.KA]:  'Georgian', 
+  [LanguageCode.HE]:  'Hebrew', 
+  [LanguageCode.SQ]:  'Albanian', 
+  [LanguageCode.LV]:  'Latvian', 
+  [LanguageCode.MK]:  'Macedonian', 
+  [LanguageCode.UK]:  'Ukrainian', 
+
 };

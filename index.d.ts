@@ -92,7 +92,7 @@ export interface ATCBActionEventConfig {
   customLabels?: CustomLabelsObjectType;
   customCss?: string;
   lightMode?: 'system' | 'dark' | 'light' | 'bodyScheme';
-  language?: 'en' | 'de' | 'nl' | 'fa' | 'fr' | 'es' | 'et' | 'pt' | 'tr' | 'zh' | 'ar' | 'hi' | 'hr' | 'pl' | 'ro' | 'id' | 'no' | 'fi' | 'sv' | 'cs' | 'ja' | 'it' | 'ko' | 'vi' | 'bg' | 'da' | 'el' | 'hu' | 'lt' | 'mt' | 'ru' | 'sk' | 'sl' | 'sr';
+  language?: 'en' | 'de' | 'nl' | 'fa' | 'fr' | 'es' | 'et' | 'pt' | 'tr' | 'zh' | 'ar' | 'hi' | 'hr' | 'pl' | 'ro' | 'id' | 'no' | 'fi' | 'sv' | 'cs' | 'ja' | 'it' | 'ko' | 'vi' | 'bg' | 'da' | 'el' | 'hu' | 'lt' | 'mt' | 'ru' | 'sk' | 'sl' | 'sr' | 'hy' | 'az' | 'be' | 'bs' | 'ka' | 'he' | 'sq' | 'lv' | 'mk' | 'uk' ;
   hideRichData?: boolean;
   ty?: object;
   bypassWebViewCheck?: boolean;
@@ -166,7 +166,7 @@ export type AddToCalendarButtonType = {
   customLabels?: CustomLabelsObjectType | string;
   customCss?: string;
   lightMode?: 'system' | 'dark' | 'light' | 'bodyScheme';
-  language?: 'en' | 'de' | 'nl' | 'fa' | 'fr' | 'es' | 'et' | 'pt' | 'tr' | 'zh' | 'ar' | 'hi' | 'hr' | 'pl' | 'ro' | 'id' | 'no' | 'fi' | 'sv' | 'cs' | 'ja' | 'it' | 'ko' | 'vi' | 'bg' | 'da' | 'el' | 'hu' | 'lt' | 'mt' | 'ru' | 'sk' | 'sl' | 'sr';
+  language?: 'en' | 'de' | 'nl' | 'fa' | 'fr' | 'es' | 'et' | 'pt' | 'tr' | 'zh' | 'ar' | 'hi' | 'hr' | 'pl' | 'ro' | 'id' | 'no' | 'fi' | 'sv' | 'cs' | 'ja' | 'it' | 'ko' | 'vi' | 'bg' | 'da' | 'el' | 'hu' | 'lt' | 'mt' | 'ru' | 'sk' | 'sl' | 'sr' | 'hy' | 'az' | 'be' | 'bs' | 'ka' | 'he' | 'sq' | 'lv' | 'mk' | 'uk';
   hideRichData?: boolean | string;
   ty?: object | string;
   rsvp?: object | string;

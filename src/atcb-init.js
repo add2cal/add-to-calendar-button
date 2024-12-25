@@ -117,7 +117,7 @@ if (atcbIsBrowser()) {
         console.log('Add to Calendar Button "' + this.identifier + '" destroyed');
       }
       // reset the count, if all buttons got destroyed
-      if (document.querySelectorAll('add-to-calendar-button').length === 0) {
+      if (document.querySelectorAll('aold-atcb').length === 0) {
         atcbBtnCount = 0;
       }
     }
@@ -235,8 +235,8 @@ if (atcbIsBrowser()) {
     }
   }
 
-  if (!customElements.get('add-to-calendar-button')) {
-    customElements.define('add-to-calendar-button', AddToCalendarButton);
+  if (!customElements.get('aold-atcb')) {
+    customElements.define('aold-atcb', AddToCalendarButton);
   }
 }
 

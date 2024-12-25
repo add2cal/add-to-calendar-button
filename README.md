@@ -1,3 +1,19 @@
+# for create tgz file
+```bash
+npm install
+npm run build
+npm pack
+```
+
+# if you want to publish 
+
+```bash
+npm install
+npm run build
+npm publish
+```
+
+
 ![Add to Calendar Button](https://github.com/add2cal/add-to-calendar-button/blob/main/assets/img/readme-header.png?raw=true)
 
 [![Code Quality](https://img.shields.io/codacy/grade/572c0a102d7b4f39b792439dcd2e8aad/main?style=for-the-badge)](https://app.codacy.com/gh/add2cal/add-to-calendar-button/dashboard)
