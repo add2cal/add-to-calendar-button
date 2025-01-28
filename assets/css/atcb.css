@@ -237,7 +237,7 @@
 .atcb-button:not([disabled]):focus,
 .atcb-button:not([disabled]):hover {
   background-color: var(--btn-hover-background);
-  box-shadow: var(--btn-hover-shadow);
+  /* box-shadow: var(--btn-hover-shadow); */
   color: var(--btn-hover-text);
   margin: 0;
   padding: calc(var(--btn-padding-y) + .13em) calc(var(--btn-padding-x) + .13em);
