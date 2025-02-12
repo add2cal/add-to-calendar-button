@@ -44,7 +44,7 @@
     "@trevoreyre/autocomplete-js": "^3.0.3",
     "@vite-pwa/nuxt": "^0.10.6",
     "isbot": "^5.1.19",
-    "nuxt": "^3.15.0",
+    "nuxt": "^3.15.4",
     "nuxt-headlessui": "^1.2.0",
     "nuxt-schema-org": "^4.0.4",
     "nuxt-security": "^2.1.5",
