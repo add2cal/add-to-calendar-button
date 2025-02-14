@@ -34,7 +34,7 @@ function atcb_generate_links(host, type, data, subEvent = 'all', keyboardTrigger
   }
   // if this is a calendar subscription case, we can take the short route here
   if (data.subscribe) {
-    atcb_generate_subscribe_links(host, linkType, data, keyboardTrigger);
+    atcb_generate_subscribe_links(host, type, linkType, data, keyboardTrigger);
     return;
   }
   // for single-date events or if a specific subEvent is given, we can simply call the respective endpoints
@@ -55,7 +55,7 @@ function atcb_generate_links(host, type, data, subEvent = 'all', keyboardTrigger
       // apart from that, we generate the link
       switch (linkType) {
         case 'ical': // also for apple (see above)
-          atcb_generate_ical(host, data, subEvent, keyboardTrigger);
+          atcb_generate_ical(host, data, type, subEvent, keyboardTrigger);
           break;
         case 'google':
           atcb_generate_google(data, data.dates[`${subEvent}`], subEvent);
@@ -106,7 +106,7 @@ function atcb_generate_multidate_links(host, type, linkType, data, keyboardTrigg
       return true;
     })
   ) {
-    atcb_generate_ical(host, data, 'all', keyboardTrigger);
+    atcb_generate_ical(host, data, type, 'all', keyboardTrigger);
     // we mark the whole event as clicked
     for (let i = 0; i < atcbStates[`${data.identifier}`][`${type}`].length; i++) {
       atcbStates[`${data.identifier}`][`${type}`][`${i}`]++;
@@ -124,16 +124,16 @@ function atcb_generate_multidate_links(host, type, linkType, data, keyboardTrigg
   }
 }
 
-function atcb_generate_subscribe_links(host, linkType, data, keyboardTrigger) {
+function atcb_generate_subscribe_links(host, type, linkType, data, keyboardTrigger) {
   const adjustedFileUrl = data.icsFile.replace('https://', 'webcal://');
   switch (linkType) {
     case 'ical': // also for apple (see above)
       if (atcbIsAndroid() || data.fakeAndroid) {
         // workaround for Android as it does not play nicely with webcal (still leads to wrong behavior. TODO: Rather show an error message here)
-        atcb_subscribe_ical(data, data.icsFile);
+        atcb_subscribe_ical(data, data.icsFile, type);
         break;
       }
-      atcb_subscribe_ical(data, adjustedFileUrl, host, keyboardTrigger);
+      atcb_subscribe_ical(data, adjustedFileUrl, type, host, keyboardTrigger);
       break;
     case 'google':
       atcb_subscribe_google(data, adjustedFileUrl);
@@ -208,13 +208,13 @@ function atcb_set_fully_successful(host, data, multiDateModal = false) {
 // GENERATING SUBSCRIPTION URLS AND FILES
 
 // ICAL
-function atcb_subscribe_ical(data, fileUrl, host = null, keyboardTrigger = false) {
+function atcb_subscribe_ical(data, fileUrl, type, host = null, keyboardTrigger = false) {
   // for Chrome on iOS, we can not directly open the file, but we can show a modal with instructions
   if (atcbIsiOS() && !atcbIsSafari()) {
     atcb_ical_copy_note(host, fileUrl, data, keyboardTrigger);
     return;
   }
-  atcb_open_cal_url(data, 'ical', fileUrl, true);
+  atcb_open_cal_url(data, type, fileUrl, true);
 }
 
 // GOOGLE
@@ -459,7 +459,7 @@ function atcb_open_cal_url(data, type, url, subscribe = false, subEvent = null, 
 
 // FUNCTION TO GENERATE THE iCAL FILE (also for apple - see above)
 // See specs at: https://www.rfc-editor.org/rfc/rfc5545.html
-function atcb_generate_ical(host, data, subEvent = 'all', keyboardTrigger = false) {
+function atcb_generate_ical(host, data, type, subEvent = 'all', keyboardTrigger = false) {
   if (subEvent !== 'all') {
     subEvent = parseInt(subEvent);
   }
@@ -486,7 +486,7 @@ function atcb_generate_ical(host, data, subEvent = 'all', keyboardTrigger = fals
   if (data.proxy) {
     const langUrlPart = data.language && data.language === 'de' ? data.language + '/' : '';
     const url = (data.dev ? 'https://dev.caldn.net/' : 'https://caldn.net/') + langUrlPart + 'no-ics-file';
-    atcb_open_cal_url(data, 'ical', url, false, subEvent);
+    atcb_open_cal_url(data, type, url, false, subEvent);
     return;
   }
   // else, we directly load it (not if iOS and WebView - will be catched further down - except it is explicitely bridged)
