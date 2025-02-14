@@ -464,7 +464,6 @@ async function atcb_generate_rsvp_form(host, data, hostEl, keyboardTrigger = fal
           bodyData.push({ name: 'email', value: rsvpHost.getElementById(emailFieldId).value });
           fieldsCopy = fieldsCopy.filter((field) => field.fieldId !== emailFieldId);
         }
-        if (data.dev) bodyData.push({ name: 'dev', value: true });
         const bodyData_payload = {};
         let skipRadio = false;
         fieldsCopy.forEach((field) => {
@@ -492,7 +491,7 @@ async function atcb_generate_rsvp_form(host, data, hostEl, keyboardTrigger = fal
         if (Object.keys(bodyData_payload).length > 0) {
           bodyData.push({ name: 'payload', value: bodyData_payload });
         }
-        const request = await sendPostRequest('https://api.add-to-calendar-pro.com/24586219-9910-41fe-9b59-df53de9db7af', bodyData, { rsvp: true });
+        const request = await sendPostRequest(`https://api${data.dev ? '-dev' : ''}.add-to-calendar-pro.com/24586219-9910-41fe-9b59-df53de9db7af`, bodyData, { rsvp: true });
         if (request === 'doi' || request === true) {
           rsvpHost.getElementById('rsvp-success-msg').style.display = 'block';
           if (request === 'doi') {
@@ -593,7 +592,7 @@ async function atcb_generate_rsvp_button(host, data) {
 
 async function atcb_check_bookings(proKey, dev = false) {
   try {
-    const response = await fetch('https://api.add-to-calendar-pro.com/dffb8bbd-ee5e-4a4f-a7ea-503af98ca468?prokey=' + proKey + (dev ? '&dev=true' : ''), {
+    const response = await fetch(`https://${dev ? '-dev' : ''}.add-to-calendar-pro.com/dffb8bbd-ee5e-4a4f-a7ea-503af98ca468?prokey=${proKey}`, {
       method: 'GET',
     });
     if (!response.ok) {
