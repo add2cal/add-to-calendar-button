@@ -229,7 +229,7 @@ function atcb_subscribe_google(data, fileUrl) {
     return encodeURIComponent(fileUrl);
   })();
   if (atcbIsAndroid() || data.fakeAndroid) {
-    atcb_open_cal_url(data, 'google', 'intent://' + baseUrlApp + newFileUrl + '#Intent;scheme=https;package=com.google.android.calendar;end', true);
+    atcb_open_cal_url(data, 'google', 'intent://' + baseUrlApp + newFileUrl.replace('webcal', 'https') + '#Intent;scheme=https;package=com.google.android.calendar;end', true);
     return;
   }
   if (((atcbIsiOS() && atcbIsSafari()) || data.fakeIOS) && fileUrlRegex.test(fileUrl)) {
