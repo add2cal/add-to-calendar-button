@@ -592,7 +592,7 @@ async function atcb_generate_rsvp_button(host, data) {
 
 async function atcb_check_bookings(proKey, dev = false) {
   try {
-    const response = await fetch(`https://${dev ? '-dev' : ''}.add-to-calendar-pro.com/dffb8bbd-ee5e-4a4f-a7ea-503af98ca468?prokey=${proKey}`, {
+    const response = await fetch(`https://api${dev ? '-dev' : ''}.add-to-calendar-pro.com/dffb8bbd-ee5e-4a4f-a7ea-503af98ca468?prokey=${proKey}`, {
       method: 'GET',
     });
     if (!response.ok) {
