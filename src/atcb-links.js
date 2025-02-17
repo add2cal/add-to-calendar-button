@@ -221,15 +221,15 @@ function atcb_subscribe_ical(data, fileUrl, type, host = null, keyboardTrigger =
 function atcb_subscribe_google(data, fileUrl) {
   const baseUrl = 'https://calendar.google.com/calendar/r?cid=';
   const baseUrlApp = 'calendar.google.com/calendar?cid=';
-  const fileUrlRegex = /^(?:https?:\/\/|webcal:\/\/|\/\/)calendar\.google\.com\//;
+  const fileUrlRegex = /^(?:webcal:\/\/|\/\/)calendar\.google\.com\//;
   const newFileUrl = (function () {
     if (fileUrlRegex.test(fileUrl)) {
       return fileUrl.replace(/^(.)*\?cid=/, '');
     }
     return encodeURIComponent(fileUrl);
   })();
-  if (atcbIsAndroid() || data.fakeAndroid) {
-    atcb_open_cal_url(data, 'google', 'intent://' + baseUrlApp + newFileUrl.replace('webcal', 'https') + '#Intent;scheme=https;package=com.google.android.calendar;end', true);
+  if ((atcbIsAndroid() || data.fakeAndroid) && !newFileUrl.startsWith('webcal')) {
+    atcb_open_cal_url(data, 'google', 'intent://' + baseUrlApp + newFileUrl + '#Intent;scheme=https;package=com.google.android.calendar;end', true);
     return;
   }
   if (((atcbIsiOS() && atcbIsSafari()) || data.fakeIOS) && fileUrlRegex.test(fileUrl)) {
