@@ -219,7 +219,7 @@ function atcb_subscribe_ical(data, fileUrl, type, host = null, keyboardTrigger =
 
 // GOOGLE
 function atcb_subscribe_google(data, fileUrl) {
-  const baseUrl = 'https://calendar.google.com/calendar/r?cid=';
+  const baseUrl = 'https://calendar.google.com/calendar/u/0/r?cid=';
   const baseUrlApp = 'calendar.google.com/calendar?cid=';
   const fileUrlRegex = /^(?:webcal:\/\/|\/\/)calendar\.google\.com\//;
   let isGoogleCal = false;
