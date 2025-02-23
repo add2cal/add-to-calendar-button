@@ -214,7 +214,7 @@ async function atcb_generate_rsvp_form(host, data, hostEl, keyboardTrigger = fal
   let hiddenContent = '';
   let rsvpContent = '<div class="pro">';
   // show success message, if already sent
-  const sentStatus = localStorage.getItem(data.proKey + '-rsvp-sent') || false;
+  const sentStatus = localStorage.getItem(data.proKey + '-rsvp-sent') === 'true' || null;
   if (sentStatus) {
     rsvpContent += '<div id="rsvp-sent-content">';
     rsvpContent += '<p>' + atcb_translate_hook('form.success.already', data) + '</p>';
@@ -225,7 +225,7 @@ async function atcb_generate_rsvp_form(host, data, hostEl, keyboardTrigger = fal
   }
   rsvpContent += '<div id="rsvp-success-msg"><p>' + atcb_translate_hook('form.success.sent', data) + '</p><p id="rsvp-success-msg-email">' + atcb_translate_hook('form.success.email', data) + '</p><p id="rsvp-success-msg-doi">' + atcb_translate_hook('form.success.doi', data) + '</p></div>';
   rsvpContent += '<div id="rsvp-success-msg-demo">' + atcb_translate_hook('form.success.demo', data) + '</div>';
-  rsvpContent += '<div id="rsvp-content" ' + (sentStatus ? 'style="display:none;"' : '') + '>';
+  rsvpContent += '<div id="rsvp-content">';
   // intro text
   if (rsvpData.text && rsvpData.text !== '') {
     rsvpContent += atcb_rewrite_html_elements(rsvpData.text);
@@ -390,6 +390,7 @@ async function atcb_generate_rsvp_form(host, data, hostEl, keyboardTrigger = fal
       rsvpInlineContent.innerHTML = rsvpContent;
     }
   }
+  if (sentStatus) rsvpHost.getElementById('rsvp-content').style.display = 'none';
   const closeBtn = rsvpHost.getElementById('modal-btn-close');
   const cancelBtn = rsvpHost.getElementById('modal-btn-cancel');
   const restartBtn = rsvpHost.getElementById('pro-form-restart');

@@ -220,7 +220,10 @@ if (atcbIsBrowser()) {
       this.setAttribute('atcb-button-id', this.data.identifier);
       // build
       try {
-        this.setAttribute('style', 'visibility:visible;opacity:1;position:relative;outline:none !important;');
+        this.style.visibility = 'visible';
+        this.style.opacity = '1';
+        this.style.position = 'relative';
+        this.style.outline = 'none !important';
         await atcb_build_button(this.shadowRoot, this.data);
         return true;
       } catch (e) {
