@@ -136,7 +136,7 @@ function atcb_generate_subscribe_links(host, type, linkType, data, keyboardTrigg
       atcb_subscribe_ical(data, adjustedFileUrl, type, host, keyboardTrigger);
       break;
     case 'google':
-      atcb_subscribe_google(data, data.icsFile);
+      atcb_subscribe_google(data, adjustedFileUrl);
       break;
     case 'ms365':
       atcb_subscribe_microsoft(data, adjustedFileUrl, data.name);
@@ -219,16 +219,18 @@ function atcb_subscribe_ical(data, fileUrl, type, host = null, keyboardTrigger =
 
 // GOOGLE
 function atcb_subscribe_google(data, fileUrl) {
-  const baseUrl = 'https://calendar.google.com/calendar/r?';
-  const baseUrlApp = 'calendar.google.com/calendar?';
-  const fileUrlRegex = /^(?:https:\/\/|\/\/)calendar\.google\.com\//;
+  const baseUrl = 'https://calendar.google.com/calendar/r?cid=';
+  const baseUrlApp = 'calendar.google.com/calendar?cid=';
+  const fileUrlRegex = /^(?:webcal:\/\/|\/\/)calendar\.google\.com\//;
+  let isGoogleCal = false;
   const newFileUrl = (function () {
     if (fileUrlRegex.test(fileUrl)) {
-      return fileUrl.replace(/^(.)*\?cid=/, 'cid=');
+      isGoogleCal = true;
+      return fileUrl.replace(/^(.)*\?cid=/, '');
     }
-    return 'url=' + encodeURIComponent(fileUrl);
+    return encodeURIComponent(fileUrl);
   })();
-  if (atcbIsAndroid() || data.fakeAndroid) {
+  if ((atcbIsAndroid() || data.fakeAndroid) && isGoogleCal) {
     atcb_open_cal_url(data, 'google', 'intent://' + baseUrlApp + newFileUrl + '#Intent;scheme=https;package=com.google.android.calendar;end', true);
     return;
   }
