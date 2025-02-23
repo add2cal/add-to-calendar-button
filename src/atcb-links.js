@@ -263,7 +263,7 @@ function atcb_subscribe_microsoft(data, fileUrl, calName, type = 'ms365') {
 // See specs at: https://github.com/InteractionDesignFoundation/add-event-to-calendar-docs/blob/main/services/google.md (unofficial)
 function atcb_generate_google(data, date, subEvent = 'all') {
   const urlParts = [];
-  urlParts.push('https://calendar.google.com/calendar/render?action=TEMPLATE');
+  urlParts.push('https://calendar.google.com/calendar/r/eventedit?');
   // generate and add date
   const formattedDate = atcb_generate_time(date, 'clean', 'google');
   urlParts.push('dates=' + encodeURIComponent(formattedDate.start) + '%2F' + encodeURIComponent(formattedDate.end));
@@ -306,7 +306,13 @@ function atcb_generate_google(data, date, subEvent = 'all') {
     })();
     urlParts.push(availabilityPart);
   }
-  atcb_open_cal_url(data, 'google', urlParts.join('&'), false, subEvent);
+  let fullUrl = urlParts.join('&');
+  if (atcbIsAndroid() || data.fakeAndroid) {
+    fullUrl = 'intent://' + fullUrl.slice(8) + '#Intent;scheme=https;package=com.google.android.calendar;end';
+  } else if ((atcbIsiOS() && atcbIsSafari()) || data.fakeIOS) {
+    fullUrl = 'googlecalendar://' + fullUrl.slice(8);
+  }
+  atcb_open_cal_url(data, 'google', fullUrl, false, subEvent);
 }
 
 // FUNCTION TO GENERATE THE YAHOO URL
