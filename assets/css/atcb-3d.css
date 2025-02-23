@@ -1065,6 +1065,7 @@ a.atcb-modal-btn:not([disabled]):hover {
   display: flex;
   flex-wrap: wrap;
   gap: .4em;
+  justify-content: center;
 }
 
 .pro-form {
@@ -1197,7 +1198,7 @@ a.atcb-modal-btn:not([disabled]):hover {
   align-items: center;
   display: flex;
   flex-wrap: wrap;
-  gap: 1.2em;
+  gap: 3%;
   justify-content: center;
   margin-top: 1em;
 }
@@ -1205,6 +1206,7 @@ a.atcb-modal-btn:not([disabled]):hover {
 @media (width <= 575px) {
   #rsvp-status-group .pro-field {
     flex-direction: column;
+    gap: 1.2em;
   }
 
   #rsvp-status-group .pro-field div {
