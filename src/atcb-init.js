@@ -752,7 +752,7 @@ async function atcb_get_pro_data(licenseKey, el = null, directData = {}) {
     try {
       const proOverride = el ? el.proOverride : directData.proOverride;
       const dataOverrides = el ? atcb_read_attributes(el, proOverride ? atcbWcParams : atcbWcProParams) : directData;
-      const response = await fetch((dataOverrides.dev ? 'https://event-dev.caldn.net/' : 'https://event.caldn.net/') + licenseKey + '/config.json');
+      const response = await fetch(`https://${dataOverrides.dev ? 'event-dev.caldn.net' : 'event.caldn.net'}/${licenseKey}/config.json`);
       if (response.ok) {
         const data = await response.json();
         if (proOverride) {
@@ -770,6 +770,10 @@ async function atcb_get_pro_data(licenseKey, el = null, directData = {}) {
         }
         if (!data.name || data.name === '') {
           throw new Error('Not possible to read proKey config from server...');
+        }
+        if (data.landingpage.domain && data.landingpage.domain !== '' && atcb_secure_url(data.landingpage.domain)) {
+          data.domain = data.landingpage.domain;
+          delete data.landingpage;
         }
         data.proKey = licenseKey;
         data.identifier = licenseKey;

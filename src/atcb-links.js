@@ -222,13 +222,18 @@ function atcb_subscribe_google(data, fileUrl) {
   const baseUrl = 'https://calendar.google.com/calendar/r?cid=';
   const baseUrlApp = 'calendar.google.com/calendar?cid=';
   const fileUrlRegex = /^(?:webcal:\/\/|\/\/)calendar\.google\.com\//;
+  let isGoogleCal = false;
   const newFileUrl = (function () {
     if (fileUrlRegex.test(fileUrl)) {
+      isGoogleCal = true;
       return fileUrl.replace(/^(.)*\?cid=/, '');
+    }
+    if (atcbIsAndroid() || data.fakeAndroid) {
+      return encodeURIComponent(fileurl.replace('webcal://', 'https://'));
     }
     return encodeURIComponent(fileUrl);
   })();
-  if ((atcbIsAndroid() || data.fakeAndroid) && !newFileUrl.startsWith('webcal')) {
+  if ((atcbIsAndroid() || data.fakeAndroid) && isGoogleCal) {
     atcb_open_cal_url(data, 'google', 'intent://' + baseUrlApp + newFileUrl + '#Intent;scheme=https;package=com.google.android.calendar;end', true);
     return;
   }
@@ -422,34 +427,35 @@ function atcb_generate_msteams(data, date, subEvent = 'all') {
 }
 
 // FUNCTION TO OPEN THE URL
-function atcb_open_cal_url(data, type, url, subscribe = false, subEvent = null, target = '') {
+function atcb_open_cal_url(data, type, url = '', subscribe = false, subEvent = null, target = '') {
   if (target === '') {
     target = atcbDefaultTarget;
   }
-  if (atcb_secure_url(url)) {
-    if (data.proxy && data.proKey && data.proKey !== '') {
-      const urlType = subscribe ? 's' : 'o';
-      const query = (function () {
-        const parts = [];
-        if (data.attendee && data.attendee !== '') {
-          parts.push('attendee=' + encodeURIComponent(data.attendee));
-        }
-        if (data.customVar && typeof data.customVar === 'object' && Object.keys(data.customVar).length > 0) {
-          parts.push('customvar=' + encodeURIComponent(JSON.stringify(data.customVar)));
-        }
-        if (data.dates && data.dates.length > 1 && subEvent !== null && subEvent !== 'all') {
-          parts.push('sub-event=' + subEvent);
-        }
-        if (parts.length > 0) {
-          return '?' + parts.join('&');
-        }
-        return '';
-      })();
-      url = (data.dev ? 'https://dev.caldn.net/' : 'https://caldn.net/') + data.proKey + '/' + urlType + '/' + type + query;
-      if (!atcb_secure_url(url)) {
-        return;
+  if (data.proxy && data.proKey && data.proKey !== '') {
+    const urlType = subscribe ? 's' : 'o';
+    const query = (function () {
+      const parts = [];
+      if (data.attendee && data.attendee !== '') {
+        parts.push('attendee=' + encodeURIComponent(data.attendee));
       }
+      if (data.customVar && typeof data.customVar === 'object' && Object.keys(data.customVar).length > 0) {
+        parts.push('customvar=' + encodeURIComponent(JSON.stringify(data.customVar)));
+      }
+      if (data.dates && data.dates.length > 1 && subEvent !== null && subEvent !== 'all') {
+        parts.push('sub-event=' + subEvent);
+      }
+      if (parts.length > 0) {
+        return '?' + parts.join('&');
+      }
+      return '';
+    })();
+    const host = data.domain ? data.domain : data.dev ? 'dev.caldn.net' : 'caldn.net';
+    url = `https://${host}/${data.proKey}/${urlType}/${type}${query}`;
+    if (!atcb_secure_url(url)) {
+      return;
     }
+  }
+  if (atcb_secure_url(url)) {
     const newTab = window.open(url, target);
     if (newTab) {
       newTab.focus();
@@ -484,9 +490,7 @@ function atcb_generate_ical(host, data, type, subEvent = 'all', keyboardTrigger 
   })();
   // if we are in proxy mode, we can directly redirect
   if (data.proxy) {
-    const langUrlPart = data.language && data.language === 'de' ? data.language + '/' : '';
-    const url = (data.dev ? 'https://dev.caldn.net/' : 'https://caldn.net/') + langUrlPart + 'no-ics-file';
-    atcb_open_cal_url(data, type, url, false, subEvent);
+    atcb_open_cal_url(data, type, '', false, subEvent);
     return;
   }
   // else, we directly load it (not if iOS and WebView - will be catched further down - except it is explicitely bridged)

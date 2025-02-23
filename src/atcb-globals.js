@@ -191,6 +191,7 @@ const atcbWcParams = [
   'rsvp',
   'ty',
   'customVar',
+  'domain',
   'dev',
 ];
 const atcbWcProParams = [
@@ -218,6 +219,7 @@ const atcbWcProParams = [
   'forceOverlay',
   'customVar',
   'proxy',
+  'domain',
   'dev',
 ];
 const atcbWcBooleanParams = [
