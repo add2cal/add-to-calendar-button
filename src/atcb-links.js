@@ -229,7 +229,7 @@ function atcb_subscribe_google(data, fileUrl) {
       return fileUrl.replace(/^(.)*\?cid=/, '');
     }
     if (atcbIsAndroid() || data.fakeAndroid) {
-      return encodeURIComponent(fileurl.replace('webcal://', 'https://'));
+      return encodeURIComponent(fileUrl.replace('webcal://', 'https://'));
     }
     return encodeURIComponent(fileUrl);
   })();
