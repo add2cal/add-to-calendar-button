@@ -3,7 +3,7 @@
  *  Add to Calendar Button
  *  ++++++++++++++++++++++
  *
- *  Version: 2.8.2
+ *  Version: 2.8.3
  *  Creator: Jens Kuerschner (https://jekuer.com)
  *  Project: https://github.com/add2cal/add-to-calendar-button
  *  License: Elastic License 2.0 (ELv2) (https://github.com/add2cal/add-to-calendar-button/blob/main/LICENSE.txt)
@@ -702,7 +702,7 @@ function atcb_generate_date_button(data, parent, subEvent = 'all', oneOption = f
       btnDetails.append(btnDescription);
     } else {
       // in other cases, at least give the headline the option to grow
-      btnHeadline.sstyle.lineClamp = '2';
+      btnHeadline.style.lineClamp = '2';
       // and center, if nothing else is here
       if (fullTimeInfo.length == 0 && (data.recurrence == null || data.recurrence == '')) {
         btnRight.style.alignSelf = 'center';
