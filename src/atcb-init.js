@@ -225,7 +225,6 @@ if (atcbIsBrowser()) {
         this.style.position = 'relative';
         this.style.outline = 'none !important';
         await atcb_build_button(this.shadowRoot, this.data);
-        this.shadowRoot.host.classList.add('_reflow' + new Date().getTime());
         return true;
       } catch (e) {
         if (this.debug) {
