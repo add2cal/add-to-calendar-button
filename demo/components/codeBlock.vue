@@ -1,19 +1,17 @@
 <!-- eslint-disable vue/no-v-html -->
 <script setup lang="ts">
 import { ClipboardIcon, ClipboardDocumentCheckIcon } from '@heroicons/vue/24/outline';
-import { getHighlighterCore } from 'shiki/core';
-import getWasm from 'shiki/wasm';
+import { createHighlighter } from 'shiki'
 import githublight from 'shiki/themes/github-light.mjs';
 import githubdark from 'shiki/themes/github-dark.mjs';
 
-const highlighter = await getHighlighterCore({
+const highlighter = await createHighlighter({
   themes: [githublight, githubdark],
   langs: [
     import('shiki/langs/shellscript.mjs'),
     import('shiki/langs/javascript.mjs'),
     import('shiki/langs/html.mjs'),
-  ],
-  loadWasm: getWasm
+  ]
 })
 
 const props = defineProps({
@@ -36,7 +34,7 @@ const props = defineProps({
 });
 
 // get the code from the default slot
-const slots = useSlots();
+const slots = useSlots() as { default?: () => any[] };
 const codeBlock = computed(() => {
   if (slots.default) {
     const string = slots.default().map(vNode => {

@@ -3,7 +3,7 @@
  *  Add to Calendar Button
  *  ++++++++++++++++++++++
  *
- *  Version: 2.8.1
+ *  Version: 2.8.2
  *  Creator: Jens Kuerschner (https://jekuer.com)
  *  Project: https://github.com/add2cal/add-to-calendar-button
  *  License: Elastic License 2.0 (ELv2) (https://github.com/add2cal/add-to-calendar-button/blob/main/LICENSE.txt)
@@ -34,7 +34,7 @@ function atcb_generate_links(host, type, data, subEvent = 'all', keyboardTrigger
   }
   // if this is a calendar subscription case, we can take the short route here
   if (data.subscribe) {
-    atcb_generate_subscribe_links(host, linkType, data, keyboardTrigger);
+    atcb_generate_subscribe_links(host, type, linkType, data, keyboardTrigger);
     return;
   }
   // for single-date events or if a specific subEvent is given, we can simply call the respective endpoints
@@ -55,7 +55,7 @@ function atcb_generate_links(host, type, data, subEvent = 'all', keyboardTrigger
       // apart from that, we generate the link
       switch (linkType) {
         case 'ical': // also for apple (see above)
-          atcb_generate_ical(host, data, subEvent, keyboardTrigger);
+          atcb_generate_ical(host, data, type, subEvent, keyboardTrigger);
           break;
         case 'google':
           atcb_generate_google(data, data.dates[`${subEvent}`], subEvent);
@@ -106,7 +106,7 @@ function atcb_generate_multidate_links(host, type, linkType, data, keyboardTrigg
       return true;
     })
   ) {
-    atcb_generate_ical(host, data, 'all', keyboardTrigger);
+    atcb_generate_ical(host, data, type, 'all', keyboardTrigger);
     // we mark the whole event as clicked
     for (let i = 0; i < atcbStates[`${data.identifier}`][`${type}`].length; i++) {
       atcbStates[`${data.identifier}`][`${type}`][`${i}`]++;
@@ -124,16 +124,16 @@ function atcb_generate_multidate_links(host, type, linkType, data, keyboardTrigg
   }
 }
 
-function atcb_generate_subscribe_links(host, linkType, data, keyboardTrigger) {
+function atcb_generate_subscribe_links(host, type, linkType, data, keyboardTrigger) {
   const adjustedFileUrl = data.icsFile.replace('https://', 'webcal://');
   switch (linkType) {
     case 'ical': // also for apple (see above)
       if (atcbIsAndroid() || data.fakeAndroid) {
         // workaround for Android as it does not play nicely with webcal (still leads to wrong behavior. TODO: Rather show an error message here)
-        atcb_subscribe_ical(data, data.icsFile);
+        atcb_subscribe_ical(data, data.icsFile, type);
         break;
       }
-      atcb_subscribe_ical(data, adjustedFileUrl, host, keyboardTrigger);
+      atcb_subscribe_ical(data, adjustedFileUrl, type, host, keyboardTrigger);
       break;
     case 'google':
       atcb_subscribe_google(data, adjustedFileUrl);
@@ -208,27 +208,29 @@ function atcb_set_fully_successful(host, data, multiDateModal = false) {
 // GENERATING SUBSCRIPTION URLS AND FILES
 
 // ICAL
-function atcb_subscribe_ical(data, fileUrl, host = null, keyboardTrigger = false) {
+function atcb_subscribe_ical(data, fileUrl, type, host = null, keyboardTrigger = false) {
   // for Chrome on iOS, we can not directly open the file, but we can show a modal with instructions
   if (atcbIsiOS() && !atcbIsSafari()) {
     atcb_ical_copy_note(host, fileUrl, data, keyboardTrigger);
     return;
   }
-  atcb_open_cal_url(data, 'ical', fileUrl, true);
+  atcb_open_cal_url(data, type, fileUrl, true);
 }
 
 // GOOGLE
 function atcb_subscribe_google(data, fileUrl) {
-  const baseUrl = 'https://calendar.google.com/calendar/r?cid=';
+  const baseUrl = 'https://calendar.google.com/calendar/u/0/r?cid=';
   const baseUrlApp = 'calendar.google.com/calendar?cid=';
-  const fileUrlRegex = /^(?:https?:\/\/|webcal:\/\/|\/\/)calendar\.google\.com\//;
+  const fileUrlRegex = /^(?:webcal:\/\/|\/\/)calendar\.google\.com\//;
+  let isGoogleCal = false;
   const newFileUrl = (function () {
     if (fileUrlRegex.test(fileUrl)) {
+      isGoogleCal = true;
       return fileUrl.replace(/^(.)*\?cid=/, '');
     }
     return encodeURIComponent(fileUrl);
   })();
-  if (atcbIsAndroid() || data.fakeAndroid) {
+  if ((atcbIsAndroid() || data.fakeAndroid) && isGoogleCal) {
     atcb_open_cal_url(data, 'google', 'intent://' + baseUrlApp + newFileUrl + '#Intent;scheme=https;package=com.google.android.calendar;end', true);
     return;
   }
@@ -261,7 +263,7 @@ function atcb_subscribe_microsoft(data, fileUrl, calName, type = 'ms365') {
 // See specs at: https://github.com/InteractionDesignFoundation/add-event-to-calendar-docs/blob/main/services/google.md (unofficial)
 function atcb_generate_google(data, date, subEvent = 'all') {
   const urlParts = [];
-  urlParts.push('https://calendar.google.com/calendar/render?action=TEMPLATE');
+  urlParts.push('https://calendar.google.com/calendar/r/eventedit?');
   // generate and add date
   const formattedDate = atcb_generate_time(date, 'clean', 'google');
   urlParts.push('dates=' + encodeURIComponent(formattedDate.start) + '%2F' + encodeURIComponent(formattedDate.end));
@@ -304,7 +306,13 @@ function atcb_generate_google(data, date, subEvent = 'all') {
     })();
     urlParts.push(availabilityPart);
   }
-  atcb_open_cal_url(data, 'google', urlParts.join('&'), false, subEvent);
+  let fullUrl = urlParts.join('&');
+  if (atcbIsAndroid() || data.fakeAndroid) {
+    fullUrl = 'intent://' + fullUrl.slice(8) + '#Intent;scheme=https;package=com.google.android.calendar;end';
+  } else if ((atcbIsiOS() && atcbIsSafari()) || data.fakeIOS) {
+    fullUrl = 'googlecalendar://' + fullUrl.slice(8);
+  }
+  atcb_open_cal_url(data, 'google', fullUrl, false, subEvent);
 }
 
 // FUNCTION TO GENERATE THE YAHOO URL
@@ -422,34 +430,35 @@ function atcb_generate_msteams(data, date, subEvent = 'all') {
 }
 
 // FUNCTION TO OPEN THE URL
-function atcb_open_cal_url(data, type, url, subscribe = false, subEvent = null, target = '') {
+function atcb_open_cal_url(data, type, url = '', subscribe = false, subEvent = null, target = '') {
   if (target === '') {
     target = atcbDefaultTarget;
   }
-  if (atcb_secure_url(url)) {
-    if (data.proxy && data.proKey && data.proKey !== '') {
-      const urlType = subscribe ? 's' : 'o';
-      const query = (function () {
-        const parts = [];
-        if (data.attendee && data.attendee !== '') {
-          parts.push('attendee=' + encodeURIComponent(data.attendee));
-        }
-        if (data.customVar && typeof data.customVar === 'object' && Object.keys(data.customVar).length > 0) {
-          parts.push('customvar=' + encodeURIComponent(JSON.stringify(data.customVar)));
-        }
-        if (data.dates && data.dates.length > 1 && subEvent !== null && subEvent !== 'all') {
-          parts.push('sub-event=' + subEvent);
-        }
-        if (parts.length > 0) {
-          return '?' + parts.join('&');
-        }
-        return '';
-      })();
-      url = (data.dev ? 'https://dev.caldn.net/' : 'https://caldn.net/') + data.proKey + '/' + urlType + '/' + type + query;
-      if (!atcb_secure_url(url)) {
-        return;
+  if (data.proxy && data.proKey && data.proKey !== '') {
+    const urlType = subscribe ? 's' : 'o';
+    const query = (function () {
+      const parts = [];
+      if (data.attendee && data.attendee !== '') {
+        parts.push('attendee=' + encodeURIComponent(data.attendee));
       }
+      if (data.customVar && typeof data.customVar === 'object' && Object.keys(data.customVar).length > 0) {
+        parts.push('customvar=' + encodeURIComponent(JSON.stringify(data.customVar)));
+      }
+      if (data.dates && data.dates.length > 1 && subEvent !== null && subEvent !== 'all') {
+        parts.push('sub-event=' + subEvent);
+      }
+      if (parts.length > 0) {
+        return '?' + parts.join('&');
+      }
+      return '';
+    })();
+    const host = data.domain ? data.domain : data.dev ? 'dev.caldn.net' : 'caldn.net';
+    url = `https://${host}/${data.proKey}/${urlType}/${type}${query}`;
+    if (!atcb_secure_url(url)) {
+      return;
     }
+  }
+  if (atcb_secure_url(url)) {
     const newTab = window.open(url, target);
     if (newTab) {
       newTab.focus();
@@ -459,7 +468,7 @@ function atcb_open_cal_url(data, type, url, subscribe = false, subEvent = null, 
 
 // FUNCTION TO GENERATE THE iCAL FILE (also for apple - see above)
 // See specs at: https://www.rfc-editor.org/rfc/rfc5545.html
-function atcb_generate_ical(host, data, subEvent = 'all', keyboardTrigger = false) {
+function atcb_generate_ical(host, data, type, subEvent = 'all', keyboardTrigger = false) {
   if (subEvent !== 'all') {
     subEvent = parseInt(subEvent);
   }
@@ -484,9 +493,7 @@ function atcb_generate_ical(host, data, subEvent = 'all', keyboardTrigger = fals
   })();
   // if we are in proxy mode, we can directly redirect
   if (data.proxy) {
-    const langUrlPart = data.language && data.language === 'de' ? data.language + '/' : '';
-    const url = (data.dev ? 'https://dev.caldn.net/' : 'https://caldn.net/') + langUrlPart + 'no-ics-file';
-    atcb_open_cal_url(data, 'ical', url, false, subEvent);
+    atcb_open_cal_url(data, type, '', false, subEvent);
     return;
   }
   // else, we directly load it (not if iOS and WebView - will be catched further down - except it is explicitely bridged)

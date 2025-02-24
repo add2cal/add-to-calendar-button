@@ -76,7 +76,7 @@ const configOptions = [
   "debug",
   "forceOverlay",
   "proOverride",
-  //"cspnonce",
+  "cspnonce",
   "styleLight",
   "styleDark",
 ];

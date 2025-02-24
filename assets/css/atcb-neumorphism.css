@@ -5,7 +5,7 @@
  *
  * Style: Neumorphism
  *
- * Version: 2.8.1
+ * Version: 2.8.2
  * Creator: Jens Kuerschner (https://jekuer.com)
  * Project: https://github.com/add2cal/add-to-calendar-button
  * License: Elastic License 2.0 (ELv2) (https://github.com/add2cal/add-to-calendar-button/blob/main/LICENSE.txt)
@@ -23,7 +23,7 @@
   --base-font-size-l: 16px;
   --base-font-size-m: 16px;
   --base-font-size-s: 16px;
-  --font: arial, helvetica, "Twemoji Mozilla", "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji", "EmojiOne Color", "Android Emoji", sans-serif;
+  --font: arial, helvetica, "Twemoji Mozilla", "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "EmojiOne Color", "Android Emoji", sans-serif;
   --accent-color: #1e90ff;
   --wrapper-padding: 0px;
   --buttonslist-gap: 5px;
@@ -979,6 +979,7 @@ a.atcb-modal-btn:not([disabled]):hover {
   display: flex;
   flex-wrap: wrap;
   gap: .4em;
+  justify-content: center;
 }
 
 .pro-form {
@@ -1122,7 +1123,7 @@ a.atcb-modal-btn:not([disabled]):hover {
   align-items: center;
   display: flex;
   flex-wrap: wrap;
-  gap: 1.2em;
+  gap: 3%;
   justify-content: center;
   margin-top: 1em;
 }
@@ -1130,6 +1131,7 @@ a.atcb-modal-btn:not([disabled]):hover {
 @media (width <= 575px) {
   #rsvp-status-group .pro-field {
     flex-direction: column;
+    gap: 1.2em;
   }
 
   #rsvp-status-group .pro-field div {

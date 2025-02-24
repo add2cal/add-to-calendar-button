@@ -3,7 +3,7 @@
  *  Add to Calendar Button
  *  ++++++++++++++++++++++
  *
- *  Version: 2.8.1
+ *  Version: 2.8.2
  *  Creator: Jens Kuerschner (https://jekuer.com)
  *  Project: https://github.com/add2cal/add-to-calendar-button
  *  License: Elastic License 2.0 (ELv2) (https://github.com/add2cal/add-to-calendar-button/blob/main/LICENSE.txt)
@@ -214,7 +214,7 @@ async function atcb_generate_rsvp_form(host, data, hostEl, keyboardTrigger = fal
   let hiddenContent = '';
   let rsvpContent = '<div class="pro">';
   // show success message, if already sent
-  const sentStatus = localStorage.getItem(data.proKey + '-rsvp-sent') || false;
+  const sentStatus = localStorage.getItem(data.proKey + '-rsvp-sent') === 'true' || null;
   if (sentStatus) {
     rsvpContent += '<div id="rsvp-sent-content">';
     rsvpContent += '<p>' + atcb_translate_hook('form.success.already', data) + '</p>';
@@ -225,7 +225,7 @@ async function atcb_generate_rsvp_form(host, data, hostEl, keyboardTrigger = fal
   }
   rsvpContent += '<div id="rsvp-success-msg"><p>' + atcb_translate_hook('form.success.sent', data) + '</p><p id="rsvp-success-msg-email">' + atcb_translate_hook('form.success.email', data) + '</p><p id="rsvp-success-msg-doi">' + atcb_translate_hook('form.success.doi', data) + '</p></div>';
   rsvpContent += '<div id="rsvp-success-msg-demo">' + atcb_translate_hook('form.success.demo', data) + '</div>';
-  rsvpContent += '<div id="rsvp-content" ' + (sentStatus ? 'style="display:none;"' : '') + '>';
+  rsvpContent += '<div id="rsvp-content">';
   // intro text
   if (rsvpData.text && rsvpData.text !== '') {
     rsvpContent += atcb_rewrite_html_elements(rsvpData.text);
@@ -390,6 +390,7 @@ async function atcb_generate_rsvp_form(host, data, hostEl, keyboardTrigger = fal
       rsvpInlineContent.innerHTML = rsvpContent;
     }
   }
+  if (sentStatus) rsvpHost.getElementById('rsvp-content').style.display = 'none';
   const closeBtn = rsvpHost.getElementById('modal-btn-close');
   const cancelBtn = rsvpHost.getElementById('modal-btn-cancel');
   const restartBtn = rsvpHost.getElementById('pro-form-restart');
@@ -464,7 +465,6 @@ async function atcb_generate_rsvp_form(host, data, hostEl, keyboardTrigger = fal
           bodyData.push({ name: 'email', value: rsvpHost.getElementById(emailFieldId).value });
           fieldsCopy = fieldsCopy.filter((field) => field.fieldId !== emailFieldId);
         }
-        if (data.dev) bodyData.push({ name: 'dev', value: true });
         const bodyData_payload = {};
         let skipRadio = false;
         fieldsCopy.forEach((field) => {
@@ -492,7 +492,7 @@ async function atcb_generate_rsvp_form(host, data, hostEl, keyboardTrigger = fal
         if (Object.keys(bodyData_payload).length > 0) {
           bodyData.push({ name: 'payload', value: bodyData_payload });
         }
-        const request = await sendPostRequest('https://api.add-to-calendar-pro.com/24586219-9910-41fe-9b59-df53de9db7af', bodyData, { rsvp: true });
+        const request = await sendPostRequest(`https://api${data.dev ? '-dev' : ''}.add-to-calendar-pro.com/24586219-9910-41fe-9b59-df53de9db7af`, bodyData, { rsvp: true });
         if (request === 'doi' || request === true) {
           rsvpHost.getElementById('rsvp-success-msg').style.display = 'block';
           if (request === 'doi') {
@@ -593,7 +593,7 @@ async function atcb_generate_rsvp_button(host, data) {
 
 async function atcb_check_bookings(proKey, dev = false) {
   try {
-    const response = await fetch('https://api.add-to-calendar-pro.com/dffb8bbd-ee5e-4a4f-a7ea-503af98ca468?prokey=' + proKey + (dev ? '&dev=true' : ''), {
+    const response = await fetch(`https://api${dev ? '-dev' : ''}.add-to-calendar-pro.com/dffb8bbd-ee5e-4a4f-a7ea-503af98ca468?prokey=${proKey}`, {
       method: 'GET',
     });
     if (!response.ok) {

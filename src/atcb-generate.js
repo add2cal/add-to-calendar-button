@@ -3,7 +3,7 @@
  *  Add to Calendar Button
  *  ++++++++++++++++++++++
  *
- *  Version: 2.8.1
+ *  Version: 2.8.2
  *  Creator: Jens Kuerschner (https://jekuer.com)
  *  Project: https://github.com/add2cal/add-to-calendar-button
  *  License: Elastic License 2.0 (ELv2) (https://github.com/add2cal/add-to-calendar-button/blob/main/LICENSE.txt)
@@ -389,7 +389,7 @@ function atcb_create_atcbl(host, atList = true, returnEl = false, licenseNoteOnl
     }
   } else {
     atcbL.innerHTML = 'Using the <a href="https://add-to-calendar-pro.com" target="_blank" rel="noopener referrer">Add to Calendar Button</a>, licensed under the Elastic License 2.0 (ELv2).';
-    atcbL.setAttribute('style', 'display:none !important');
+    atcbL.style.display = 'none !important';
     atcbL.classList.add('atcb-attribution');
     host.append(atcbL);
   }
@@ -695,15 +695,19 @@ function atcb_generate_date_button(data, parent, subEvent = 'all', oneOption = f
       const btnDescription = document.createElement('div');
       btnDescription.classList.add('atcb-date-btn-content');
       btnDescription.textContent = data.dates[`${subEvent}`].descriptionHtmlFree;
-      btnDescription.style.cssText = 'overflow: hidden; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;';
+      btnDescription.style.overflow = 'hidden';
+      btnDescription.style.display = '-webkit-box';
+      btnDescription.style.lineClamp = '2';
+      btnDescription.style.boxOrient = 'vertical';
       btnDetails.append(btnDescription);
     } else {
       // in other cases, at least give the headline the option to grow
-      btnHeadline.style.cssText = '-webkit-line-clamp: 2;';
+      btnHeadline.sstyle.lineClamp = '2';
       // and center, if nothing else is here
       if (fullTimeInfo.length == 0 && (data.recurrence == null || data.recurrence == '')) {
         btnRight.style.alignSelf = 'center';
-        btnHeadline.style.cssText = 'text-align: center; -webkit-line-clamp: 2;';
+        btnHeadline.style.textAlign = 'center';
+        btnHeadline.style.lineClamp = '2';
       }
     }
   }
@@ -773,7 +777,16 @@ async function atcb_generate_modal_host(host, data, reset = true) {
   }
   newModalHost.setAttribute('atcb-button-id', data.identifier);
   newModalHost.classList.add('add-to-calendar');
-  newModalHost.setAttribute('style', 'transform:translate3D(0, 0, 0);visibility:visible;opacity:1;position:fixed;top:0;left:0;width:100%;height:100%;display:flex;z-index:13999998;');
+  newModalHost.style.transform = 'translate3D(0, 0, 0)';
+  newModalHost.style.visibility = 'visible';
+  newModalHost.style.opacity = '1';
+  newModalHost.style.position = 'fixed';
+  newModalHost.style.top = '0';
+  newModalHost.style.left = '0';
+  newModalHost.style.width = '100%';
+  newModalHost.style.height = '100%';
+  newModalHost.style.display = 'flex';
+  newModalHost.style.zIndex = '13999998';
   document.body.append(newModalHost);
   newModalHost.attachShadow({ mode: 'open', delegateFocus: true });
   const elem = document.createElement('template');
