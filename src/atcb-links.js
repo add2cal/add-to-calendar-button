@@ -3,7 +3,7 @@
  *  Add to Calendar Button
  *  ++++++++++++++++++++++
  *
- *  Version: 2.8.3
+ *  Version: 2.8.4
  *  Creator: Jens Kuerschner (https://jekuer.com)
  *  Project: https://github.com/add2cal/add-to-calendar-button
  *  License: Elastic License 2.0 (ELv2) (https://github.com/add2cal/add-to-calendar-button/blob/main/LICENSE.txt)
@@ -263,7 +263,11 @@ function atcb_subscribe_microsoft(data, fileUrl, calName, type = 'ms365') {
 // See specs at: https://github.com/InteractionDesignFoundation/add-event-to-calendar-docs/blob/main/services/google.md (unofficial)
 function atcb_generate_google(data, date, subEvent = 'all') {
   const urlParts = [];
-  urlParts.push('https://calendar.google.com/calendar/r/eventedit?');
+  if (atcbIsMobile() || data.fakeMobile) {
+    urlParts.push('https://calendar.google.com/calendar/render?action=TEMPLATE&');
+  } else {
+    urlParts.push('https://calendar.google.com/calendar/r/eventedit?');
+  }
   // generate and add date
   const formattedDate = atcb_generate_time(date, 'clean', 'google');
   urlParts.push('dates=' + encodeURIComponent(formattedDate.start) + '%2F' + encodeURIComponent(formattedDate.end));
