@@ -1,6 +1,6 @@
 {
   "name": "add-to-calendar-button",
-  "version": "2.8.4",
+  "version": "2.8.5",
   "engines": {
     "node": ">=18.17.0",
     "npm": ">=9.6.7"
@@ -103,7 +103,7 @@
     "@open-wc/testing": "^4.0.0",
     "@web/test-runner": "^0.20.0",
     "eslint": "^9.21.0",
-    "eslint-config-prettier": "^10.0.1",
+    "eslint-config-prettier": "^10.0.2",
     "eslint-plugin-prettier": "^5.2.3",
     "eslint-plugin-regexp": "^2.7.0",
     "eslint-plugin-security": "^3.0.1",
