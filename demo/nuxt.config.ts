@@ -121,7 +121,7 @@ export default defineNuxtConfig({
         { rel: 'apple-touch-icon', sizes: '152x152', href: baseUrl + '/assets/favicons/apple-touch-icon-152x152.png' },
         { rel: 'apple-touch-icon', sizes: '180x180', href: baseUrl + '/assets/favicons/apple-touch-icon-180x180.png' },
         { rel: 'mask-icon', color: '#9755ff', href: baseUrl + '/assets/favicons/safari-pinned-tab.svg' },
-        { rel: 'dns-prefetch', href: 'https://a.add-to-calendar-button.com' },
+        { rel: 'dns-prefetch', href: 'https://a.add-to-calendar-pro.com' },
         { rel: 'dns-prefetch', href: 'https://api.github.com' },
         { rel: 'dns-prefetch', href: 'https://api.npmjs.org' },
         { rel: 'dns-prefetch', href: 'https://data.jsdelivr.com' },
@@ -135,7 +135,7 @@ export default defineNuxtConfig({
       script:
         process.env.NUXT_PUBLIC_DEV && process.env.NUXT_PUBLIC_DEV === 'true'
           ? []
-          : [{ async: true, defer: true, 'data-website-id': 'd178e769-c435-4de9-87e5-48b0ec339f62', src: 'https://a.add-to-calendar-button.com/atcba.js', 'data-host-url': 'https://a.add-to-calendar-button.com', 'data-domains': 'add-to-calendar-button.com' }],
+          : [{ async: true, defer: true, 'data-website-id': 'd178e769-c435-4de9-87e5-48b0ec339f62', src: 'https://a.add-to-calendar-pro.com/atcba.js', 'data-host-url': 'https://a.add-to-calendar-pro.com', 'data-domains': 'add-to-calendar-button.com' }],
     },
   },
 
