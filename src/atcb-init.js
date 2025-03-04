@@ -3,7 +3,7 @@
  *  Add to Calendar Button
  *  ++++++++++++++++++++++
  *
- *  Version: 2.8.5
+ *  Version: 2.8.6
  *  Creator: Jens Kuerschner (https://jekuer.com)
  *  Project: https://github.com/add2cal/add-to-calendar-button
  *  License: Elastic License 2.0 (ELv2) (https://github.com/add2cal/add-to-calendar-button/blob/main/LICENSE.txt)
@@ -283,9 +283,21 @@ function atcb_read_attributes(el, params = atcbWcParams) {
         // if a boolean param has no value, it is handled as prop and set true
         val = !inputVal || inputVal === '' || inputVal.toLowerCase() === 'true' ? true : false;
       } else if (atcbWcObjectParams.includes(attr)) {
-        val = JSON.parse(inputVal);
+        const cleanedInput = (function () {
+          if (!inputVal || inputVal === '') {
+            return '{}';
+          }
+          if (inputVal.substring(0, 1) != '{') {
+            return '{' + inputVal + '}';
+          }
+          return inputVal;
+        })();
+        val = JSON.parse(cleanedInput);
       } else if (atcbWcObjectArrayParams.includes(attr)) {
         const cleanedInput = (function () {
+          if (!inputVal || inputVal === '') {
+            return '[]';
+          }
           if (inputVal.substring(0, 1) != '[') {
             return '[' + inputVal + ']';
           }
@@ -760,7 +772,7 @@ async function atcb_get_pro_data(licenseKey, el = null, directData = {}) {
         const data = await response.json();
         if (proOverride) {
           atcbWcParams.forEach((key) => {
-            if (Object.prototype.hasOwnProperty.call(dataOverrides, key) && ['hideBranding', 'hidebranding', 'rsvp', 'ty'].indexOf(key) === -1) {
+            if (Object.prototype.hasOwnProperty.call(dataOverrides, key) && ['hideBranding', 'hidebranding', 'ty', 'rsvp'].indexOf(key) === -1) {
               data[`${key}`] = dataOverrides[`${key}`];
             }
           });
@@ -770,6 +782,9 @@ async function atcb_get_pro_data(licenseKey, el = null, directData = {}) {
               data[`${key}`] = dataOverrides[`${key}`];
             }
           });
+        }
+        if (dataOverrides.rsvp && Object.prototype.hasOwnProperty.call(dataOverrides.rsvp, 'none')) {
+          delete data.rsvp;
         }
         if (!data.name || data.name === '') {
           throw new Error('Not possible to read proKey config from server...');
