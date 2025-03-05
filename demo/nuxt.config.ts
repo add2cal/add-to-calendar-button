@@ -15,9 +15,6 @@ export default defineNuxtConfig({
 
   nitro: {
     preset: 'static',
-    compressPublicAssets: {
-      brotli: true,
-    },
     prerender: {
       autoSubfolderIndex: false,
       ignore: ['/manifest.json'],
