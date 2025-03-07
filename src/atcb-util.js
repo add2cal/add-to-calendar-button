@@ -478,8 +478,9 @@ function atcb_rewrite_html_elements(content, clear = false, iCalBreaks = false) 
     content = content.replace(/\{url\}((?:(?!\[\/url\]).)*)\{\/url\}/gi, function (match, p1) {
       return atcb_parse_url_code(p1);
     });
-    content = content.replace(/\[(\/)?(br|hr|[pbui]|strong|em|li|ul|ol|h\d)(\s?\/?)\]/gi, '<$1$2$3>');
-    content = content.replace(/\{(\/)?(br|hr|[pbui]|strong|em|li|ul|ol|h\d)(\s?\/?)\}/gi, '<$1$2$3>');
+    // replacing all psudo open and close braces by angle tags
+    content = content.replaceAll("[", '<');
+    content = content.replaceAll("]", '>');
   }
   return content;
 }
