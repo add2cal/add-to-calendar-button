@@ -194,6 +194,8 @@ function atcb_decorate_data_options(data) {
   if ((atcbIsAndroid() || data.fakeAndroid) && appleGiven && !iCalGiven) {
     newOptions.push('ical');
   }
+  // at the end, we sort the options alphabetically
+  newOptions.sort();
   // last but not least, override the options at the main data object
   data.options = newOptions;
   return data;
