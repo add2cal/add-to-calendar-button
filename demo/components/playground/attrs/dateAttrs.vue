@@ -31,7 +31,7 @@ const emit = defineEmits(['update:modelValue']);
 const internalValue = ref(props.modelValue || getDefaultDateAttrs(t('defaults.name'), t('defaults.description'), t('defaults.location')));
 
 watch(internalValue, () => {
-  emit('update:modelValue', internalValue);
+  emit('update:modelValue', internalValue.value);
 }, { deep: true });
 
 watch(() => props.modelValue, (val: any) => {
@@ -50,26 +50,26 @@ const i18nAvailabilityOptions = computed(() =>
 
 <template>
   <div class="grid">
-    <Input v-model="internalValue[DateAttrsKey.NAME]" :disabled="disabled" required :label="t(`labels.inputs.${[DateAttrsKey.NAME]}`.toLocaleLowerCase())" type="text" class="mb-3" />
-    <Input v-model="internalValue[DateAttrsKey.DESCRIPTION]" :disabled="disabled" :label="t(`labels.inputs.${[DateAttrsKey.DESCRIPTION]}`.toLocaleLowerCase())" type="text" class="mb-3" />
+    <Input v-model="internalValue[DateAttrsKey.NAME]" :disabled="disabled" required :label="$t(`labels.inputs.${[DateAttrsKey.NAME]}`.toLocaleLowerCase())" type="text" class="mb-3" />
+    <Input v-model="internalValue[DateAttrsKey.DESCRIPTION]" :disabled="disabled" :label="$t(`labels.inputs.${[DateAttrsKey.DESCRIPTION]}`.toLocaleLowerCase())" type="text" class="mb-3" />
     <div class="mb-3 grid grid-cols-2 gap-3">
-      <Input v-model="internalValue[DateAttrsKey.START_DATE]" :disabled="disabled" :label="t(`labels.inputs.${[DateAttrsKey.START_DATE]}`.toLocaleLowerCase())" type="text" placeholder="YYYY-MM-DD" />
-      <Input v-model="internalValue[DateAttrsKey.START_TIME]" :disabled="disabled" :label="t(`labels.inputs.${[DateAttrsKey.START_TIME]}`.toLocaleLowerCase())" type="text" placeholder="HH:MM" />
+      <Input v-model="internalValue[DateAttrsKey.START_DATE]" :disabled="disabled" :label="$t(`labels.inputs.${[DateAttrsKey.START_DATE]}`.toLocaleLowerCase())" type="text" placeholder="YYYY-MM-DD" />
+      <Input v-model="internalValue[DateAttrsKey.START_TIME]" :disabled="disabled" :label="$t(`labels.inputs.${[DateAttrsKey.START_TIME]}`.toLocaleLowerCase())" type="text" placeholder="HH:MM" />
     </div>
     <div class="mb-3 grid grid-cols-2 gap-3">
-      <Input v-model="internalValue[DateAttrsKey.END_DATE]" :disabled="disabled" :label="t(`labels.inputs.${[DateAttrsKey.END_DATE]}`.toLocaleLowerCase())" type="text" placeholder="YYYY-MM-DD" />
-      <Input v-model="internalValue[DateAttrsKey.END_TIME]" :disabled="disabled" :label="t(`labels.inputs.${[DateAttrsKey.END_TIME]}`.toLocaleLowerCase())" type="text" placeholder="HH:MM" />
+      <Input v-model="internalValue[DateAttrsKey.END_DATE]" :disabled="disabled" :label="$t(`labels.inputs.${[DateAttrsKey.END_DATE]}`.toLocaleLowerCase())" type="text" placeholder="YYYY-MM-DD" />
+      <Input v-model="internalValue[DateAttrsKey.END_TIME]" :disabled="disabled" :label="$t(`labels.inputs.${[DateAttrsKey.END_TIME]}`.toLocaleLowerCase())" type="text" placeholder="HH:MM" />
     </div>
-    <TimezoneAutocomplete v-model="internalValue[DateAttrsKey.TIMEZONE]" :disabled="disabled" :label="t(`labels.inputs.${[DateAttrsKey.TIMEZONE]}`.toLocaleLowerCase())" class="mb-3" :mobile="mobile ? true : false" />
-    <Input v-model="internalValue[DateAttrsKey.LOCATION]" :disabled="disabled" :label="t(`labels.inputs.${[DateAttrsKey.LOCATION]}`.toLocaleLowerCase())" type="text" class="mb-3" />
+    <TimezoneAutocomplete v-model="internalValue[DateAttrsKey.TIMEZONE]" :disabled="disabled" :label="$t(`labels.inputs.${[DateAttrsKey.TIMEZONE]}`.toLocaleLowerCase())" class="mb-3" :mobile="mobile ? true : false" />
+    <Input v-model="internalValue[DateAttrsKey.LOCATION]" :disabled="disabled" :label="$t(`labels.inputs.${[DateAttrsKey.LOCATION]}`.toLocaleLowerCase())" type="text" class="mb-3" />
     <Recurrence v-model="internalValue[DateAttrsKey.RECURRENCE_OBJECT]" :disabled="disabled" />
-    <Select v-model="internalValue[DateAttrsKey.AVAILABILITY]" :disabled="disabled" :label="t(`labels.inputs.${[DateAttrsKey.AVAILABILITY]}`.toLocaleLowerCase())" :options="i18nAvailabilityOptions" byKey="key" byValue="value" clearable class="mb-3" />
+    <Select v-model="internalValue[DateAttrsKey.AVAILABILITY]" :disabled="disabled" :label="$t(`labels.inputs.${[DateAttrsKey.AVAILABILITY]}`.toLocaleLowerCase())" :options="i18nAvailabilityOptions" byKey="key" byValue="value" clearable class="mb-3" />
     <div class="mb-3 grid grid-cols-2 gap-3">
-      <Input v-model="internalValue[DateAttrsKey.ORGANIZER][DateAttrsKey.ORGANIZER_NAME]" :disabled="disabled" :label="t(`labels.inputs.${[DateAttrsKey.ORGANIZER_NAME]}`.toLocaleLowerCase())" type="text" />
-      <Input v-model="internalValue[DateAttrsKey.ORGANIZER][DateAttrsKey.ORGANIZER_EMAIL]" :disabled="disabled" :label="t(`labels.inputs.${[DateAttrsKey.ORGANIZER_EMAIL]}`.toLocaleLowerCase())" type="email" />
+      <Input v-model="internalValue[DateAttrsKey.ORGANIZER][DateAttrsKey.ORGANIZER_NAME]" :disabled="disabled" :label="$t(`labels.inputs.${[DateAttrsKey.ORGANIZER_NAME]}`.toLocaleLowerCase())" type="text" />
+      <Input v-model="internalValue[DateAttrsKey.ORGANIZER][DateAttrsKey.ORGANIZER_EMAIL]" :disabled="disabled" :label="$t(`labels.inputs.${[DateAttrsKey.ORGANIZER_EMAIL]}`.toLocaleLowerCase())" type="email" />
     </div>
-    <Switch v-model="internalValue[DateAttrsKey.IS_SUBSCRIBED]" :disabled="disabled" :label="t(`labels.inputs.${[DateAttrsKey.IS_SUBSCRIBED]}`.toLocaleLowerCase())" class="mb-3" />
-    <Input v-model="internalValue[DateAttrsKey.ISC_FILE]" :disabled="disabled" :label="t(`labels.inputs.${[DateAttrsKey.ISC_FILE]}`.toLocaleLowerCase())" placeholder="https://..." type="text" class="mb-3" />
-    <Input v-model="internalValue[DateAttrsKey.ICAL_FILE_NAME]" :disabled="disabled" :label="t(`labels.inputs.${[DateAttrsKey.ICAL_FILE_NAME]}`.toLocaleLowerCase())" type="text" />
+    <Switch v-model="internalValue[DateAttrsKey.IS_SUBSCRIBED]" :disabled="disabled" :label="$t(`labels.inputs.${[DateAttrsKey.IS_SUBSCRIBED]}`.toLocaleLowerCase())" class="mb-3" />
+    <Input v-model="internalValue[DateAttrsKey.ISC_FILE]" :disabled="disabled" :label="$t(`labels.inputs.${[DateAttrsKey.ISC_FILE]}`.toLocaleLowerCase())" placeholder="https://..." type="text" class="mb-3" />
+    <Input v-model="internalValue[DateAttrsKey.ICAL_FILE_NAME]" :disabled="disabled" :label="$t(`labels.inputs.${[DateAttrsKey.ICAL_FILE_NAME]}`.toLocaleLowerCase())" type="text" />
   </div>
 </template>

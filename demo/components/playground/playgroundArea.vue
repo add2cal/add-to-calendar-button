@@ -61,7 +61,7 @@ if (import.meta.client) {
       </div>
       <div id="date-input" :class="{ 'lg:rounded-bl-md-none rounded-bl-md': !showCode }" class="hidden rounded-tl-md bg-zinc-200 p-3 dark:bg-zinc-800 md:block">
         <div class="mb-4 text-sm font-semibold uppercase text-zinc-800 dark:text-zinc-200">
-          {{ t('labels.dateInput') }}
+          {{ $t('labels.dateInput') }}
         </div>
         <DateAttrs v-model="data.date" :disabled="!loaded" />
       </div>
@@ -80,14 +80,14 @@ if (import.meta.client) {
       </div>
       <div id="style-input" :class="[ !showCode ? 'rounded-bl-md lg:rounded-r-md lg:rounded-bl-none' : 'rounded-none lg:rounded-tr-md' ]" class="hidden border-l-0 border-t-2 border-zinc-400 bg-zinc-200 p-3 dark:border-zinc-600 dark:bg-zinc-800 md:block lg:border-l-2 lg:border-t-0">
         <div class="mb-4 flex justify-between text-sm font-semibold uppercase text-zinc-800 dark:text-zinc-200">
-          <span>{{ t('labels.layoutInput') }}</span>
+          <span>{{ $t('labels.layoutInput') }}</span>
           <LightModeSwitch />
         </div>
         <LayoutAttrs v-model="data.layout" :disabled="!loaded" />
-        <div class="mx-auto mt-8 text-center text-xs">
-          {{ t('labels.proConfig') }}
+        <div class="mx-auto mb-5 mt-8 text-center text-xs">
+          {{ $t('labels.proConfig') }}
           <a class="mt-1 block" target="_blank" rel="author" :href="'https://add-to-calendar-pro.com' + (locale !== 'en' ? '/' + locale : '')">
-            {{ t('labels.discoverPro') }}
+            {{ $t('labels.discoverPro') }}
             <ArrowTopRightOnSquareIcon class="-mt-0.5 mr-0.5 inline-block h-3 w-3" aria-hidden="true" />
           </a>
         </div>
@@ -97,11 +97,11 @@ if (import.meta.client) {
       <div class="cursor-pointer text-center text-sm font-semibold text-zinc-600 hover:text-black dark:text-zinc-400 dark:hover:text-secondary" @click="showCode = !showCode">
         <span :class="{ hidden: showCode }">
           <EyeIcon class="-mt-1 mr-2 inline-block h-5 w-5" aria-hidden="true" />
-          {{ t('labels.showCode') }}
+          {{ $t('labels.showCode') }}
         </span>
         <span :class="{ hidden: !showCode }">
           <EyeSlashIcon class="-mt-1 mr-2 inline-block h-5 w-5" aria-hidden="true" />
-          {{ t('labels.hideCode') }}
+          {{ $t('labels.hideCode') }}
         </span>
       </div>
       <div :class="{ hidden: !showCode }" class="m-2 mt-3">
@@ -113,13 +113,13 @@ if (import.meta.client) {
   <nav :class="{ hidden: !showMC }" class="fixed left-0 top-0 z-50 h-full w-full overflow-y-auto overflow-x-hidden bg-zinc-200 dark:bg-zinc-800 lg:hidden">
     <div class="grid grid-cols-1 gap-10 pb-24">
       <div class="bg-zinc-500 p-4 font-semibold uppercase text-zinc-100 dark:bg-zinc-700 dark:text-zinc-400">
-        {{ t('labels.dateInput') }}
+        {{ $t('labels.dateInput') }}
       </div>
       <div class="px-8 text-left">
         <DateAttrs v-model="data.date" mobile />
       </div>
       <div class="bg-zinc-500 p-4 font-semibold uppercase text-zinc-100 dark:bg-zinc-700 dark:text-zinc-400">
-        {{ t('labels.layoutInput') }}
+        {{ $t('labels.layoutInput') }}
       </div>
       <div class="px-8 text-left">
         <LayoutAttrs v-model="data.layout" mobile />

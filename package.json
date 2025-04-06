@@ -1,6 +1,6 @@
 {
   "name": "add-to-calendar-button",
-  "version": "2.8.6",
+  "version": "2.8.7",
   "engines": {
     "node": ">=18.17.0",
     "npm": ">=9.6.7"
@@ -99,15 +99,15 @@
     "timezones-ical-library": "^1.9.1"
   },
   "devDependencies": {
-    "@eslint/js": "^9.21.0",
+    "@eslint/js": "^9.24.0",
     "@open-wc/testing": "^4.0.0",
     "@web/test-runner": "^0.20.0",
-    "eslint": "^9.21.0",
-    "eslint-config-prettier": "^10.0.2",
-    "eslint-plugin-prettier": "^5.2.3",
+    "eslint": "^9.24.0",
+    "eslint-config-prettier": "^10.1.1",
+    "eslint-plugin-prettier": "^5.2.6",
     "eslint-plugin-regexp": "^2.7.0",
     "eslint-plugin-security": "^3.0.1",
-    "eslint-plugin-wc": "^2.2.1",
+    "eslint-plugin-wc": "^3.0.0",
     "grunt": ">=1.6.1",
     "grunt-contrib-clean": "^2.0.1",
     "grunt-contrib-concat": "^2.1.0",
@@ -117,7 +117,7 @@
     "grunt-version": "^3.0.1",
     "prettier": "3.5.3",
     "prettier-plugin-tailwindcss": "^0.6.11",
-    "stylelint": "^16.15.0",
-    "stylelint-config-standard": "^37.0.0"
+    "stylelint": "^16.18.0",
+    "stylelint-config-standard": "^38.0.0"
   }
 }

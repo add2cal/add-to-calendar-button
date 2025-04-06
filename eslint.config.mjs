@@ -2,7 +2,7 @@ import js from '@eslint/js';
 import prettierRecommended from 'eslint-plugin-prettier/recommended';
 import regexpEslint from 'eslint-plugin-regexp';
 import pluginSecurity from 'eslint-plugin-security';
-import wcEslint from 'eslint-plugin-wc';
+import { configs } from 'eslint-plugin-wc';
 
 export default [
   // general ignores
@@ -11,8 +11,8 @@ export default [
   },
   // general rules
   js.configs.recommended,
+  configs['flat/recommended'],
   regexpEslint.configs['flat/recommended'],
-  wcEslint.configs['flat/recommended'],
   prettierRecommended,
   pluginSecurity.configs.recommended,
   // overrides

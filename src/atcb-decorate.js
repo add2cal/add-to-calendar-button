@@ -3,7 +3,7 @@
  *  Add to Calendar Button
  *  ++++++++++++++++++++++
  *
- *  Version: 2.8.6
+ *  Version: 2.8.7
  *  Creator: Jens Kuerschner (https://jekuer.com)
  *  Project: https://github.com/add2cal/add-to-calendar-button
  *  License: Elastic License 2.0 (ELv2) (https://github.com/add2cal/add-to-calendar-button/blob/main/LICENSE.txt)
@@ -194,6 +194,8 @@ function atcb_decorate_data_options(data) {
   if ((atcbIsAndroid() || data.fakeAndroid) && appleGiven && !iCalGiven) {
     newOptions.push('ical');
   }
+  // at the end, we sort the options alphabetically
+  newOptions.sort();
   // last but not least, override the options at the main data object
   data.options = newOptions;
   return data;
@@ -448,7 +450,7 @@ function atcb_decorate_data_extend(data) {
   if (data.recurrence && data.recurrence !== '') {
     data.dates[0].recurrence = data.recurrence;
   }
-  // last but not least, we sort any subEvent by start data ascending
+  // last but not least, we sort any subEvent by start date ascending
   if (data.dates.length > 1) {
     data.dates.sort((a, b) => a.timestamp - b.timestamp);
   }
