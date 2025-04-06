@@ -51,8 +51,8 @@
   --list-shadow: rgba(0 0 0 / 20%) 0 4px 13px -2px, rgba(0 0 0 / 23%) 0 2px 4px -1px;
   --list-modal-shadow: rgba(0 0 0 / 50%) 0 4px 30px -3px, rgba(0 0 0 / 30%) 0 2px 8px -2px;
   --modal-text: #000;
-  --modal-text-align: left;
-  --modal-text-align-rtl: right;
+  --modal-text-align: center;
+  --modal-text-align-rtl: center;
   --modal-background: #f5f5f5;
   --modal-border-radius: 6px;
   --modal-shadow: drop-shadow(3px 6px 25px rgba(0 0 0 / 65%));
@@ -538,6 +538,16 @@
   text-align: var(--modal-text-align-rtl);
   direction: rtl;
   padding: 1.25em 1em 1.25em 2em;
+}
+
+.atcb-modal-content ul,
+.atcb-modal-content ol {
+  text-align: left;
+}
+
+.atcb-modal-box.atcb-rtl ul,
+.atcb-modal-box.atcb-rtl ol {
+  text-align: right;
 }
 
 /* icon */

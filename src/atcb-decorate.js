@@ -450,7 +450,7 @@ function atcb_decorate_data_extend(data) {
   if (data.recurrence && data.recurrence !== '') {
     data.dates[0].recurrence = data.recurrence;
   }
-  // last but not least, we sort any subEvent by start data ascending
+  // last but not least, we sort any subEvent by start date ascending
   if (data.dates.length > 1) {
     data.dates.sort((a, b) => a.timestamp - b.timestamp);
   }

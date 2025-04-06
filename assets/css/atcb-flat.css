@@ -47,8 +47,8 @@
   --list-close-text-hover: #777;
   --list-padding: .8em;
   --modal-text: #000;
-  --modal-text-align: left;
-  --modal-text-align-rtl: right;
+  --modal-text-align: center;
+  --modal-text-align-rtl: center;
   --modal-background: #f5f5f5;
   --modal-btn-bar: #bababa;
   --modal-btn-background: #f5f5f5;
@@ -487,6 +487,16 @@
   text-align: var(--modal-text-align-rtl);
   direction: rtl;
   padding: 1.25em 1em 1.25em 2em;
+}
+
+.atcb-modal-content ul,
+.atcb-modal-content ol {
+  text-align: left;
+}
+
+.atcb-modal-box.atcb-rtl ul,
+.atcb-modal-box.atcb-rtl ol {
+  text-align: right;
 }
 
 /* icon */
