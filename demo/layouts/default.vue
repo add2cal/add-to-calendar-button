@@ -24,7 +24,7 @@ const description = computed(() => route.meta.description ? t(route.meta.descrip
         <template v-for="meta in head.meta" :key="meta.id">
           <Meta :id="meta.id" :property="meta.property" :content="meta.content" />
         </template>
-        <Meta name="keywords" :content="t('meta.keywords')" />
+        <Meta name="keywords" :content="$t('meta.keywords')" />
         <Meta property="og:site_name" :content="title" />
         <Meta name="twitter:title" :content="title" />
         <Meta property="og:description" :content="description" />
