@@ -9,7 +9,6 @@ import {
 import { CheckIcon, ChevronDownIcon, XMarkIcon } from '@heroicons/vue/20/solid';
 
 provideUseId(() => useId());
-const { t } = useI18n();
 
 type NullableString = string | null | undefined;
 
@@ -124,7 +123,7 @@ const getOptionLabel = (option: SelectOption) => {
           >
             <span class="block h-auto min-h-[20px] truncate">
               <span v-if="!modelValue || modelValue === '' || (Array.isArray(modelValue) && modelValue.length === 0)" class="text-xs font-normal text-zinc-400">
-                {{ placeholder || t('labels.inputs.select_option') }}
+                {{ placeholder || $t('labels.inputs.select_option') }}
               </span>
               <template v-for="(selected, index) in selectedOptions" v-else :key="index">
                 <template v-if="index !== 0">,&nbsp;</template>

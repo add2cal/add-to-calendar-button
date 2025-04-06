@@ -341,9 +341,9 @@ const localePath = useLocalePath();
             </svg>
           </div>
           <div class="text-center">
-            <h1 class="underline decoration-primary-light decoration-4 dark:decoration-primary-dark">{{ statusCode }}: {{ t("content.404.intro") }}</h1>
+            <h1 class="underline decoration-primary-light decoration-4 dark:decoration-primary-dark">{{ statusCode }}: {{ $t("content.404.intro") }}</h1>
             <div v-if="statusCode != 404" class="mx-3 my-20">{{ props.error?.message }}</div>
-            <NuxtLink v-if="statusCode == 404" :to="localePath('index')" class="button-primary mx-3 my-20"> <ArrowUturnLeftIcon class="-mt-0.5 mr-2 inline-block h-4 w-4" aria-hidden="true" />{{ t("content.404.back") }} </NuxtLink>
+            <NuxtLink v-if="statusCode == 404" :to="localePath('index')" class="button-primary mx-3 my-20"> <ArrowUturnLeftIcon class="-mt-0.5 mr-2 inline-block h-4 w-4" aria-hidden="true" />{{ $t("content.404.back") }} </NuxtLink>
             <div v-else class="h-32"></div>
           </div>
         </div>

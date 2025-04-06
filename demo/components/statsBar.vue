@@ -3,6 +3,13 @@ import { get, set, LSKey } from '@/utils/localStorage';
 import { mergeDeep } from '@/utils/array';
 import MarqueeText from 'vue-marquee-text-component';
 
+const { locale } = useI18n();
+
+// on locale change, update component
+watch(locale, () => {
+  marqueeKey.value += 1;
+});
+
 const data = ref({
   github: {
     stars: 1200,

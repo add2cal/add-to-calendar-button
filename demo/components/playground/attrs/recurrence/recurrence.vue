@@ -47,7 +47,7 @@ const i18nFrequencyOptions = computed(() =>
 
 <template>
   <div class="my-3 grid grid-cols-2 items-center gap-3 border-y border-zinc-400 px-1 pb-4 pt-2 dark:border-zinc-600">
-    <div class="text-sm font-semibold uppercase text-zinc-700 dark:text-zinc-300">{{ t('labels.inputs.recurrence.headline') }}</div>
+    <div class="text-sm font-semibold uppercase text-zinc-700 dark:text-zinc-300">{{ $t('labels.inputs.recurrence.headline') }}</div>
     <Switch v-model="internalValue[DateRecurrenceAttrsKey.IS_SIMPLE]" :disabled="disabled" class="justify-end" :label="t(`labels.inputs.recurrence.${[DateRecurrenceAttrsKey.IS_SIMPLE]}`.toLocaleLowerCase())" />
 
     <Input
@@ -63,7 +63,7 @@ const i18nFrequencyOptions = computed(() =>
     <div v-show="internalValue[DateRecurrenceAttrsKey.IS_SIMPLE]" class="col-span-2 grid grid-cols-2 gap-3">
       <div class="col-span-2">
         <label class="block text-sm text-zinc-600 dark:text-zinc-400">
-          {{ t('labels.inputs.recurrence.repeat_every') }}
+          {{ $t('labels.inputs.recurrence.repeat_every') }}
         </label>
         <div class="grid grid-cols-3">
           <Input v-model="internalValue[DateRecurrenceAttrsKey.INTERVAL]" :disabled="disabled" :label="t(`labels.inputs.recurrence.${[DateRecurrenceAttrsKey.INTERVAL]}`.toLocaleLowerCase())" hidelabel type="number" :min="1" />
