@@ -581,7 +581,7 @@
 
 .atcb-modal-content ul,
 .atcb-modal-content ol {
-  margin: auto;
+  margin: 1em auto;
   text-align: left;
   width: fit-content;
 }
