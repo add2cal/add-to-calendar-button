@@ -697,7 +697,9 @@ function atcb_generate_date_button(data, parent, subEvent = 'all', oneOption = f
       btnDescription.textContent = data.dates[`${subEvent}`].descriptionHtmlFree;
       btnDescription.style.overflow = 'hidden';
       btnDescription.style.display = '-webkit-box';
+      btnDescription.style.webkitLineClamp = '2';
       btnDescription.style.lineClamp = '2';
+      btnDescription.style.webkitBoxOrient = 'vertical';
       btnDescription.style.boxOrient = 'vertical';
       btnDetails.append(btnDescription);
     } else {
