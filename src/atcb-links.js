@@ -3,7 +3,7 @@
  *  Add to Calendar Button
  *  ++++++++++++++++++++++
  *
- *  Version: 2.8.8
+ *  Version: 2.8.9
  *  Creator: Jens Kuerschner (https://jekuer.com)
  *  Project: https://github.com/add2cal/add-to-calendar-button
  *  License: Elastic License 2.0 (ELv2) (https://github.com/add2cal/add-to-calendar-button/blob/main/LICENSE.txt)
@@ -233,11 +233,6 @@ function atcb_subscribe_google(data, fileUrl) {
     atcb_open_cal_url(data, 'google', 'intent://' + baseUrlApp + newFileUrl + '#Intent;scheme=https;package=com.google.android.calendar;end', true);
     return;
   }
-  if (((atcbIsiOS() && atcbIsSafari()) || data.fakeIOS) && isGoogleCalId) {
-    // since Apple is a little unstable here, we only go for the more or less safe cases
-    atcb_open_cal_url(data, 'google', 'googlecalendar://' + baseUrlApp + newFileUrl, true);
-    return;
-  }
   atcb_open_cal_url(data, 'google', baseUrl + newFileUrl, true);
 }
 
@@ -312,8 +307,6 @@ function atcb_generate_google(data, date, subEvent = 'all') {
   let fullUrl = urlParts.join('&');
   if (atcbIsAndroid() || data.fakeAndroid) {
     fullUrl = 'intent://' + fullUrl.slice(8) + '#Intent;scheme=https;package=com.google.android.calendar;end';
-  } else if ((atcbIsiOS() && atcbIsSafari()) || data.fakeIOS) {
-    fullUrl = 'googlecalendar://' + fullUrl.slice(8);
   }
   atcb_open_cal_url(data, 'google', fullUrl, false, subEvent);
 }
