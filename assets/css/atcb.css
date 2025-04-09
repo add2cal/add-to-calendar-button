@@ -769,7 +769,6 @@ a.atcb-modal-btn:not([disabled]):hover {
   display: -webkit-box;
   -webkit-line-clamp: var(--date-btn-headline-line-clamp);
   line-clamp: var(--date-btn-headline-line-clamp);
-  -webkit-box-orient: vertical;
 }
 
 .atcb-date-btn-content {
@@ -789,7 +788,6 @@ a.atcb-modal-btn:not([disabled]):hover {
   display: -webkit-box;
   -webkit-line-clamp: 1;
   line-clamp: 1;
-  -webkit-box-orient: vertical;
   word-break: break-all;
 }
 

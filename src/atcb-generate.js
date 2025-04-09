@@ -483,7 +483,7 @@ async function atcb_create_modal(mainHost, data, icon = '', headline, content = 
       }
       modalSubEventButton.classList.add('atcb-subevent-btn');
       modalsubEventsContent.append(modalSubEventButton);
-      atcb_generate_date_button(data, modalSubEventButton, i);
+      atcb_generate_date_button(data, modalSubEventButton, i, false, true);
       // interaction only if not overdue and blocked
       if (!data.dates[i - 1].overdue || data.pastDateHandling === 'none') {
         if (i === 1 && keyboardTrigger) {
@@ -607,23 +607,23 @@ function atcb_subscribe_yahoo_modal_switch(host, data, keyboardTrigger) {
 }
 
 // FUNCTION TO GENERATE A MORE DETAILED DATE BUTTON
-function atcb_generate_date_button(data, parent, subEvent = 'all', oneOption = false) {
-  if (subEvent != 'all') {
+function atcb_generate_date_button(data, parent, subEvent = 'all', oneOption = false, forceFullDate = false) {
+  if (subEvent !== 'all') {
     subEvent = parseInt(subEvent) - 1;
-  } else if (data.dates.length == 1) {
+  } else if (data.dates.length === 1) {
     subEvent = 0;
   }
-  const fullTimeInfo = atcb_generate_timestring(data.dates, data.language, subEvent);
+  const fullTimeInfo = atcb_generate_timestring(data.dates, data.language, subEvent, false, false, forceFullDate);
   const hoverText = (function () {
     if ((subEvent !== 'all' && data.dates[`${subEvent}`].status.toLowerCase() === 'cancelled') || (subEvent === 'all' && data.allCancelled)) {
       return atcb_translate_hook('date.status.cancelled', data) + '<br>' + atcb_translate_hook('date.status.cancelled.cta', data);
     }
-    if (data.pastDateHandling != 'none') {
-      if ((subEvent === 'all' && data.allOverdue) || (subEvent != 'all' && data.dates[`${subEvent}`].overdue)) {
+    if (data.pastDateHandling !== 'none') {
+      if ((subEvent === 'all' && data.allOverdue) || (subEvent !== 'all' && data.dates[`${subEvent}`].overdue)) {
         return atcb_translate_hook('expired', data);
       }
     }
-    if (data.label && data.label != '') {
+    if (data.label && data.label !== '') {
       return data.label;
     }
     return '+ ' + atcb_translate_hook('label.addtocalendar', data);
@@ -635,7 +635,7 @@ function atcb_generate_date_button(data, parent, subEvent = 'all', oneOption = f
     return '';
   })();
   const recurringString = (function () {
-    if (fullTimeInfo.length == 0) {
+    if (fullTimeInfo.length === 0) {
       return atcb_translate_hook('recurring', data) + ' &#x27F3;';
     }
     return '&#x27F3;';
@@ -699,8 +699,6 @@ function atcb_generate_date_button(data, parent, subEvent = 'all', oneOption = f
       btnDescription.style.display = '-webkit-box';
       btnDescription.style.webkitLineClamp = '2';
       btnDescription.style.lineClamp = '2';
-      btnDescription.style.webkitBoxOrient = 'vertical';
-      btnDescription.style.boxOrient = 'vertical';
       btnDetails.append(btnDescription);
     } else {
       // in other cases, at least give the headline the option to grow
