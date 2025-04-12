@@ -257,9 +257,9 @@
   padding: calc(var(--btn-padding-y) + .13em) calc(var(--btn-padding-x) + .13em);
 }
 
-.atcb-button.atcb-no-text:focus,
-.atcb-button.atcb-no-text:hover,
-.atcb-button.atcb-no-text.atcb-active {
+.atcb-button:not([disabled]).atcb-no-text:focus,
+.atcb-button:not([disabled]).atcb-no-text:hover,
+.atcb-button:not([disabled]).atcb-no-text.atcb-active {
   height: 3.26em;
   width: 3.26em;
   padding: 0 !important;
