@@ -48,15 +48,15 @@
     "nuxt-headlessui": "^1.2.0",
     "nuxt-schema-org": "^5.0.4",
     "nuxt-security": "^2.2.0",
-    "shiki": "^3.2.1",
+    "shiki": "^3.2.2",
     "timezones-ical-library": "^1.9.1",
     "vue-marquee-text-component": "^2.0.1"
   },
   "devDependencies": {
-    "@types/node": "^22.14.0",
+    "@types/node": "^22.14.1",
     "@typescript-eslint/parser": "^8.29.1",
     "eslint": "^9.24.0",
-    "eslint-config-prettier": "^10.1.1",
+    "eslint-config-prettier": "^10.1.2",
     "eslint-plugin-prettier": "^5.2.6",
     "prettier": "^3.5.3",
     "prettier-plugin-tailwindcss": "^0.6.11",
