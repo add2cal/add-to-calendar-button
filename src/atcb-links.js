@@ -378,9 +378,7 @@ function atcb_generate_microsoft(data, date, subEvent = 'all', type = 'ms365') {
   }
   // add details (if set)
   if (date.name && date.name !== '') {
-    // for the name, we need to replace any ampersand in the name, as Microsoft does not parse it correctly
-    // TODO: remove this, when Microsoft has fixed this
-    urlParts.push('subject=' + encodeURIComponent(date.name.replace(/&/g, '&#xFF06;')));
+    urlParts.push('subject=' + encodeURIComponent(date.name));
   }
   if (date.location && date.location !== '') {
     urlParts.push('location=' + encodeURIComponent(date.location));
