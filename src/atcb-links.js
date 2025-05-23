@@ -359,7 +359,7 @@ function atcb_generate_microsoft(data, date, subEvent = 'all', type = 'ms365') {
     if (atcbIsMobile() || data.fakeMobile) {
       return '/calendar/0/deeplink/compose?path=%2Fcalendar%2Faction%2Fcompose&rru=addevent';
     }
-    return '/calendar/action/compose?rru=addevent';
+    return '/calendar/0/action/compose?rru=addevent';
   })();
   const baseUrl = (function () {
     if (type == 'outlookcom') {
