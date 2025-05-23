@@ -110,6 +110,7 @@
   --list-text: #dedede;
   --list-hover-text: #f1f1f1;
   --list-close-background: #282828;
+  --list-close-text: #777;
   --list-shadow: rgb(0 0 0 / 60%) 0 4px 20px -2px, rgb(0 0 0 / 40%) 0 2px 4px -1px;
   --list-modal-shadow: rgb(0 0 0 / 40%) -1px 3px 30px 2px;
   --modal-text: #f1f1f1;
