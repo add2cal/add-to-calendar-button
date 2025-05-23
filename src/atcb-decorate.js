@@ -216,7 +216,7 @@ function atcb_decorate_data_style(data) {
   }
   // set button style and force click on styles, where the dropdown is not attached to the button
   if (data.buttonStyle && data.buttonStyle !== '' && data.buttonStyle != 'default') {
-    if (data.buttonStyle == 'round' || data.buttonStyle == 'text' || data.buttonStyle == 'date' || data.buttonStyle == 'neumorphism') {
+    if (data.buttonStyle == 'simple' || data.buttonStyle == 'round' || data.buttonStyle == 'text' || data.buttonStyle == 'date' || data.buttonStyle == 'neumorphism') {
       data.trigger = 'click';
     }
   } else {

@@ -544,7 +544,7 @@ function atcb_position_list(host, trigger, list, blockUpwards = false, blockDown
     }
     // read trigger dimensions again, since after adjusting the top value of the list, something might have changed (e.g. re-adjustment due to missing scrollbars at this point in time)
     triggerDim = trigger.getBoundingClientRect();
-    if (!list.classList.contains('atcb-style-round') && !list.classList.contains('atcb-style-text') && !list.classList.contains('atcb-style-neumorphism')) {
+    if (!list.classList.contains('atcb-style-simple') && !list.classList.contains('atcb-style-round') && !list.classList.contains('atcb-style-text') && !list.classList.contains('atcb-style-neumorphism')) {
       list.style.minWidth = triggerDim.width + 'px';
       if (list.classList.contains('atcb-dropdown')) {
         list.style.maxWidth = triggerDim.width + 'px';

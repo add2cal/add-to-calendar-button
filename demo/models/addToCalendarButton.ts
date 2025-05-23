@@ -38,6 +38,7 @@ export const DefaultListStyle = ListStyle.DROPDOWN;
 
 export enum ButtonStyle {
   DEFAULT = 'default',
+  SIMPLE = 'simple',
   '3D' = '3d',
   FLAT = 'flat',
   ROUND = 'round',

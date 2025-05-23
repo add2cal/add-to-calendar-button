@@ -109,7 +109,7 @@ async function atcb_validate_icsFile(data, msgPrefix, i = '', msgSuffix = '') {
 
 // validate button style
 async function atcb_validate_buttonStyle(data, msgPrefix) {
-  const availableStyles = ['default', '3d', 'flat', 'round', 'neumorphism', 'text', 'date', 'custom', 'none'];
+  const availableStyles = ['default', 'simple', '3d', 'flat', 'round', 'neumorphism', 'text', 'date', 'custom', 'none'];
   if (!availableStyles.includes(data.buttonStyle)) {
     throw new Error(msgPrefix + ' failed: provided buttonStyle invalid');
   }
