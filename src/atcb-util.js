@@ -496,18 +496,55 @@ function atcb_parse_url_code(input) {
   return '<a href="' + urlText[0] + '" target="' + atcbDefaultTarget + '" rel="noopener">' + text + '</a>';
 }
 
-// SHARED FUNCTION TO FORMAT iCAL TEXT
-function atcb_rewrite_ical_text(content, truncate = true, inQuotes = false) {
+// SHARED FUNCTIONS TO FORMAT iCAL TEXT
+function atcb_rewrite_ical_text(content, inQuotes = false) {
   if (inQuotes) {
     content = content.replace(/"/g, '');
   } else {
     content = content.replace(/\\/g, '\\\\').replace(/(,|;)/g, '\\$1').replace(/\\\\n/g, '\\n');
   }
-  if (truncate) {
-    // adjusting for intended line breaks + making sure it does not exceed 75 characters per line
-    content = content.replace(/.{60}/g, '$&' + '\r\n ');
-  }
   return content;
+}
+
+function atcb_format_ical_lines(content) {
+  content = content.split('\r\n');
+  const result = [];
+  for (let line of content) {
+    if (!line || line.length <= 65) {
+      result.push(line);
+      continue;
+    }
+    let currentLine = '';
+    let position = 0;
+    const foldedLines = [];
+    while (position < line.length) {
+      const char = line.charAt(position);
+      // Check for emoji or surrogate pairs (multibyte characters)
+      const isHighSurrogate = char.charCodeAt(0) >= 0xd800 && char.charCodeAt(0) <= 0xdbff;
+      const isEscapedChar = position > 0 && line.charAt(position - 1) === '\\';
+      // If adding this character would exceed 65 characters and it's safe to break here. We aim for 65 to have space left for special cases
+      if ((currentLine + char).length > 65 && !isHighSurrogate && !isEscapedChar) {
+        foldedLines.push(currentLine);
+        currentLine = '';
+      }
+      currentLine += char;
+      position++;
+      // If this was a high surrogate, make sure we include its pair in the same line
+      if (isHighSurrogate && position < line.length) {
+        currentLine += line.charAt(position);
+        position++;
+      }
+    }
+    if (currentLine.length > 0) {
+      foldedLines.push(currentLine);
+    }
+    result.push(foldedLines[0]);
+    for (let i = 1; i < foldedLines.length; i++) {
+      result.push(' ' + foldedLines[`${i}`]);
+    }
+  }
+
+  return result.join('\r\n');
 }
 
 // SHARED FUNCTION TO CALCULATE THE POSITION OF THE DROPDOWN LIST
@@ -709,6 +746,7 @@ export {
   atcb_validEmail,
   atcb_rewrite_html_elements,
   atcb_rewrite_ical_text,
+  atcb_format_ical_lines,
   atcb_position_list,
   atcb_position_shadow_button,
   atcb_position_shadow_button_listener,
