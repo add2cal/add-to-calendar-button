@@ -49,7 +49,7 @@
   --list-border-radius: 0px;
   --list-padding: .8em 1.2em;
   --list-min-width: 100%;
-  --list-modal-shadow: rgb(0 0 0 / 25%) 0 4px 30px -3px, rgba(0, 0, 0, 20%) 0 2px 8px -2px;
+  --list-modal-shadow: rgb(0 0 0 / 25%) 0 4px 30px -3px, rgb(0 0 0 / 20%) 0 2px 8px -2px;
   --modal-text: #000;
   --modal-text-align: center;
   --modal-text-align-rtl: center;
@@ -952,14 +952,13 @@ a.atcb-modal-btn:not([disabled]):hover {
  * Icon specifics
  */
 
-.atcb-icon.atcb-icon-ms365, .atcb-icon-outlookcom {
+.atcb-icon-outlookcom,
+.atcb-icon.atcb-icon-ms365 {
   padding-bottom: .05em;
 }
 
-.atcb-icon.atcb-icon-apple, .atcb-icon.atcb-icon-ical {
-  padding-bottom: .15em;
-}
-
+.atcb-icon.atcb-icon-apple,
+.atcb-icon.atcb-icon-ical,
 .atcb-icon.atcb-icon-trigger {
   padding-bottom: .15em;
 }
@@ -969,10 +968,7 @@ a.atcb-modal-btn:not([disabled]):hover {
   width: 1.5em;
 }
 
-.atcb-icon.atcb-icon-apple svg {
-  fill: currentcolor;
-}
-
+.atcb-icon.atcb-icon-apple svg,
 .atcb-icon.atcb-icon-ical svg {
   fill: currentcolor;
 }
@@ -981,40 +977,66 @@ a.atcb-modal-btn:not([disabled]):hover {
   fill: var(--icon-ms365-color);
 }
 
-.atcb-button:not([disabled]):focus .atcb-icon.atcb-icon-ms365 svg,
-.atcb-button:not([disabled]):hover .atcb-icon.atcb-icon-ms365 svg,
-.atcb-button.atcb-active:not(.atcb-modal-style, .atcb-dropoverlay, .atcb-no-text) .atcb-icon.atcb-icon-ms365 svg,
-.atcb-button.atcb-single:not(.atcb-no-text, [disabled]):focus .atcb-icon.atcb-icon-ms365 svg,
-.atcb-button.atcb-single:not(.atcb-no-text, [disabled]):hover .atcb-icon.atcb-icon-ms365 svg,
-.atcb-button.atcb-active.atcb-no-text:not(.atcb-modal-style, .atcb-dropoverlay) .atcb-icon.atcb-icon-ms365 svg,
-.atcb-button.atcb-single.atcb-no-text:not([disabled]):focus .atcb-icon.atcb-icon-ms365 svg,
-.atcb-button.atcb-single.atcb-no-text:not([disabled]):hover .atcb-icon.atcb-icon-ms365 svg,
-.atcb-list-item:hover .atcb-icon.atcb-icon-ms365 svg,
-.atcb-list-item:focus-visible .atcb-icon.atcb-icon-ms365 svg {
-  fill: var(--icon-hover-ms365-color);
-}
-
 .atcb-icon.atcb-icon-yahoo svg {
   fill: var(--icon-yahoo-color);
-}
-
-.atcb-button:not([disabled]):focus .atcb-icon.atcb-icon-yahoo svg,
-.atcb-button:not([disabled]):hover .atcb-icon.atcb-icon-yahoo svg,
-.atcb-button.atcb-active:not(.atcb-modal-style, .atcb-dropoverlay, .atcb-no-text) .atcb-icon.atcb-icon-yahoo svg,
-.atcb-button.atcb-single:not(.atcb-no-text, [disabled]):focus .atcb-icon.atcb-icon-yahoo svg,
-.atcb-button.atcb-single:not(.atcb-no-text, [disabled]):hover .atcb-icon.atcb-icon-yahoo svg,
-.atcb-button.atcb-active.atcb-no-text:not(.atcb-modal-style, .atcb-dropoverlay) .atcb-icon.atcb-icon-yahoo svg,
-.atcb-button.atcb-single.atcb-no-text:not([disabled]):focus .atcb-icon.atcb-icon-yahoo svg,
-.atcb-button.atcb-single.atcb-no-text:not([disabled]):hover .atcb-icon.atcb-icon-yahoo svg,
-.atcb-list-item:hover .atcb-icon.atcb-icon-yahoo svg,
-.atcb-list-item:focus-visible .atcb-icon.atcb-icon-yahoo svg {
-  fill: var(--icon-hover-yahoo-color);
 }
 
 .atcb-icon.atcb-icon-google svg,
 .atcb-icon.atcb-icon-msteams svg,
 .atcb-icon.atcb-icon-outlookcom svg {
   filter: var(--icon-filter);
+}
+
+.pro .atcb-modal-btn svg {
+  fill: none;
+  height: 1.5em;
+  margin-right: .5em;
+  stroke: currentcolor;
+  width: auto;
+}
+
+.atcb-list-item:hover .atcb-icon.atcb-icon-ms365 svg,
+.atcb-list-item:focus-visible .atcb-icon.atcb-icon-ms365 svg {
+  fill: var(--icon-hover-ms365-color);
+}
+
+.atcb-list-item:hover .atcb-icon.atcb-icon-yahoo svg,
+.atcb-list-item:focus-visible .atcb-icon.atcb-icon-yahoo svg {
+  fill: var(--icon-hover-yahoo-color);
+}
+
+.atcb-button:not([disabled]):focus .atcb-icon.atcb-icon-ms365 svg,
+.atcb-button:not([disabled]):hover .atcb-icon.atcb-icon-ms365 svg,
+.atcb-button.atcb-active:not(.atcb-modal-style, .atcb-dropoverlay, .atcb-no-text) .atcb-icon.atcb-icon-ms365 svg {
+  fill: var(--icon-hover-ms365-color);
+}
+
+.atcb-button:not([disabled]):focus .atcb-icon.atcb-icon-yahoo svg,
+.atcb-button:not([disabled]):hover .atcb-icon.atcb-icon-yahoo svg,
+.atcb-button.atcb-active:not(.atcb-modal-style, .atcb-dropoverlay, .atcb-no-text) .atcb-icon.atcb-icon-yahoo svg {
+  fill: var(--icon-hover-yahoo-color);
+}
+
+.atcb-button.atcb-single:not(.atcb-no-text, [disabled]):focus .atcb-icon.atcb-icon-ms365 svg,
+.atcb-button.atcb-single:not(.atcb-no-text, [disabled]):hover .atcb-icon.atcb-icon-ms365 svg,
+.atcb-button.atcb-active.atcb-no-text:not(.atcb-modal-style, .atcb-dropoverlay) .atcb-icon.atcb-icon-ms365 svg {
+  fill: var(--icon-hover-ms365-color);
+}
+
+.atcb-button.atcb-single:not(.atcb-no-text, [disabled]):focus .atcb-icon.atcb-icon-yahoo svg,
+.atcb-button.atcb-single:not(.atcb-no-text, [disabled]):hover .atcb-icon.atcb-icon-yahoo svg,
+.atcb-button.atcb-active.atcb-no-text:not(.atcb-modal-style, .atcb-dropoverlay) .atcb-icon.atcb-icon-yahoo svg {
+  fill: var(--icon-hover-yahoo-color);
+}
+
+.atcb-button.atcb-single.atcb-no-text:not([disabled]):focus .atcb-icon.atcb-icon-ms365 svg,
+.atcb-button.atcb-single.atcb-no-text:not([disabled]):hover .atcb-icon.atcb-icon-ms365 svg {
+  fill: var(--icon-hover-ms365-color);
+}
+
+.atcb-button.atcb-single.atcb-no-text:not([disabled]):focus .atcb-icon.atcb-icon-yahoo svg,
+.atcb-button.atcb-single.atcb-no-text:not([disabled]):hover .atcb-icon.atcb-icon-yahoo svg {
+  fill: var(--icon-hover-yahoo-color);
 }
 
 /******************************
@@ -1426,14 +1448,6 @@ a.atcb-modal-btn:not([disabled]):hover {
 .pro .btn-flex {
   align-items: center;
   display: flex;
-}
-
-.pro .atcb-modal-btn svg {
-  fill: none;
-  height: 1.5em;
-  margin-right: .5em;
-  stroke: currentcolor;
-  width: auto;
 }
 
 /******************************
