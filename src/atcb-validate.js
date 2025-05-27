@@ -3,7 +3,7 @@
  *  Add to Calendar Button
  *  ++++++++++++++++++++++
  *
- *  Version: 2.8.9
+ *  Version: 2.9.0
  *  Creator: Jens Kuerschner (https://jekuer.com)
  *  Project: https://github.com/add2cal/add-to-calendar-button
  *  License: Elastic License 2.0 (ELv2) (https://github.com/add2cal/add-to-calendar-button/blob/main/LICENSE.txt)
@@ -109,7 +109,7 @@ async function atcb_validate_icsFile(data, msgPrefix, i = '', msgSuffix = '') {
 
 // validate button style
 async function atcb_validate_buttonStyle(data, msgPrefix) {
-  const availableStyles = ['default', '3d', 'flat', 'round', 'neumorphism', 'text', 'date', 'custom', 'none'];
+  const availableStyles = ['default', 'simple', '3d', 'flat', 'round', 'neumorphism', 'text', 'date', 'custom', 'none'];
   if (!availableStyles.includes(data.buttonStyle)) {
     throw new Error(msgPrefix + ' failed: provided buttonStyle invalid');
   }
@@ -210,7 +210,7 @@ async function atcb_validate_organizer(data, msgPrefix, i, msgSuffix) {
   if (data.dates[`${i}`].organizer && data.dates[`${i}`].organizer !== '') {
     const organizerParts = data.dates[`${i}`].organizer.split('|');
     if (organizerParts.length !== 2 || organizerParts[0].length > 50 || organizerParts[1].length > 100 || !atcb_validEmail(organizerParts[1])) {
-      throw new Error(msgPrefix + ' failed: organizer needs to match the schema "NAME|EMAIL" with a valid email address' + msgSuffix);
+      throw new Error(msgPrefix + ' failed: organizer needs to match the schema "NAME|EMAIL" with a valid email address, where the name is <50 and email <100 characters' + msgSuffix);
     }
   }
   return true;

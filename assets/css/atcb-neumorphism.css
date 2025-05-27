@@ -5,7 +5,7 @@
  *
  * Style: Neumorphism
  *
- * Version: 2.8.9
+ * Version: 2.9.0
  * Creator: Jens Kuerschner (https://jekuer.com)
  * Project: https://github.com/add2cal/add-to-calendar-button
  * License: Elastic License 2.0 (ELv2) (https://github.com/add2cal/add-to-calendar-button/blob/main/LICENSE.txt)
@@ -107,6 +107,7 @@
   --list-text: #dedede;
   --list-hover-text: #f1f1f1;
   --list-close-background: #282828;
+  --list-close-text: #777;
   --list-shadow: rgb(0 0 0) 0.3em 0.3em 1em,rgb(230 230 230 / 40%) -0.08em -0.08em 0.6em;
   --modal-text: #f1f1f1;
   --modal-background: #242424;

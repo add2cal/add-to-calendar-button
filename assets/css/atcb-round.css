@@ -5,7 +5,7 @@
  *
  * Style: Round
  *
- * Version: 2.8.9
+ * Version: 2.9.0
  * Creator: Jens Kuerschner (https://jekuer.com)
  * Project: https://github.com/add2cal/add-to-calendar-button
  * License: Elastic License 2.0 (ELv2) (https://github.com/add2cal/add-to-calendar-button/blob/main/LICENSE.txt)
@@ -111,6 +111,7 @@
   --list-text: #dedede;
   --list-hover-text: #f1f1f1;
   --list-close-background: #282828;
+  --list-close-text: #777;
   --list-shadow: rgb(0 0 0 / 60%) 0 4px 20px -2px, rgb(0 0 0 / 40%) 0 2px 4px -1px;
   --list-modal-shadow: rgb(0 0 0 / 40%) -1px 3px 30px 2px;
   --modal-text: #f1f1f1;
@@ -241,9 +242,9 @@
   padding: calc(var(--btn-padding-y) + .13em) calc(var(--btn-padding-x) + .13em);
 }
 
-.atcb-button.atcb-no-text:focus,
-.atcb-button.atcb-no-text:hover,
-.atcb-button.atcb-no-text.atcb-active {
+.atcb-button:not([disabled]).atcb-no-text:focus,
+.atcb-button:not([disabled]).atcb-no-text:hover,
+.atcb-button:not([disabled]).atcb-no-text.atcb-active {
   height: 3.26em;
   width: 3.26em;
   padding: 0;

@@ -280,6 +280,7 @@ In doubt, simply ask and we find a way. :)
 <a href="https://github.com/bryan-brancotte"><img src="https://avatars.githubusercontent.com/u/11556772?v=4" title="Bryan Brancotte" width="60" height="60"></a>
 <a href="https://github.com/nticaric"><img src="https://avatars.githubusercontent.com/u/824840?v=4" title="nticaric" width="60" height="60"></a>
 <a href="https://github.com/Ortovoxx"><img src="https://avatars.githubusercontent.com/u/56805259?v=4" title="Ortovoxx" width="60" height="60"></a>
+<a href="https://github.com/resentment-industries"><img src="https://avatars.githubusercontent.com/u/113481246?v=4" title="Logic" width="60" height="60"></a>
 <a href="https://github.com/purushu007"><img src="https://avatars.githubusercontent.com/u/70796763?v=4" title="Purushu" width="60" height="60"></a>
 <a href="https://github.com/cabello"><img src="https://avatars.githubusercontent.com/u/60936?v=4" title="Danilo Cabello" width="60" height="60"></a>
 <a href="https://github.com/Goudarz"><img src="https://avatars.githubusercontent.com/u/3191949?v=4" title="Goudarz" width="60" height="60"></a>

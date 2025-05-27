@@ -3,7 +3,7 @@
  *  Add to Calendar Button
  *  ++++++++++++++++++++++
  *
- *  Version: 2.8.9
+ *  Version: 2.9.0
  *  Creator: Jens Kuerschner (https://jekuer.com)
  *  Project: https://github.com/add2cal/add-to-calendar-button
  *  License: Elastic License 2.0 (ELv2) (https://github.com/add2cal/add-to-calendar-button/blob/main/LICENSE.txt)
@@ -14,7 +14,7 @@
 import { tzlib_get_ical_block } from 'timezones-ical-library';
 import { atcbVersion, atcbIsMobile, atcbIsiOS, atcbIsAndroid, atcbIsSafari, atcbIsWebView, atcbIsProblematicWebView, atcbDefaultTarget, atcbStates } from './atcb-globals.js';
 import { atcb_toggle } from './atcb-control.js';
-import { atcb_saved_hook, atcb_save_file, atcb_generate_time, atcb_format_datetime, atcb_secure_url, atcb_copy_to_clipboard, atcb_rewrite_ical_text } from './atcb-util.js';
+import { atcb_saved_hook, atcb_save_file, atcb_generate_time, atcb_format_datetime, atcb_secure_url, atcb_copy_to_clipboard, atcb_rewrite_ical_text, atcb_format_ical_lines } from './atcb-util.js';
 import { atcb_create_modal } from './atcb-generate.js';
 import { atcb_translate_hook } from './atcb-i18n.js';
 
@@ -359,7 +359,7 @@ function atcb_generate_microsoft(data, date, subEvent = 'all', type = 'ms365') {
     if (atcbIsMobile() || data.fakeMobile) {
       return '/calendar/0/deeplink/compose?path=%2Fcalendar%2Faction%2Fcompose&rru=addevent';
     }
-    return '/calendar/action/compose?rru=addevent';
+    return '/calendar/0/action/compose?rru=addevent';
   })();
   const baseUrl = (function () {
     if (type == 'outlookcom') {
@@ -378,9 +378,7 @@ function atcb_generate_microsoft(data, date, subEvent = 'all', type = 'ms365') {
   }
   // add details (if set)
   if (date.name && date.name !== '') {
-    // for the name, we need to replace any ampersand in the name, as Microsoft does not parse it correctly
-    // TODO: remove this, when Microsoft has fixed this
-    urlParts.push('subject=' + encodeURIComponent(date.name.replace(/&/g, '&#xFF06;')));
+    urlParts.push('subject=' + encodeURIComponent(date.name));
   }
   if (date.location && date.location !== '') {
     urlParts.push('location=' + encodeURIComponent(date.location));
@@ -555,24 +553,24 @@ function atcb_generate_ical(host, data, type, subEvent = 'all', keyboardTrigger 
     ics_lines.push('DTSTAMP:' + atcb_format_datetime(now, 'clean', true));
     ics_lines.push('DTSTART' + timeAddon + ':' + formattedDate.start);
     ics_lines.push('DTEND' + timeAddon + ':' + formattedDate.end);
-    ics_lines.push('SUMMARY:' + atcb_rewrite_ical_text(data.dates[`${i}`].name, true));
+    ics_lines.push('SUMMARY:' + atcb_rewrite_ical_text(data.dates[`${i}`].name));
     if (data.dates[`${i}`].descriptionHtmlFreeICal && data.dates[`${i}`].descriptionHtmlFreeICal !== '') {
-      ics_lines.push('DESCRIPTION:' + atcb_rewrite_ical_text(data.dates[`${i}`].descriptionHtmlFreeICal, true));
+      ics_lines.push('DESCRIPTION:' + atcb_rewrite_ical_text(data.dates[`${i}`].descriptionHtmlFreeICal));
     }
     if (data.dates[`${i}`].description && data.dates[`${i}`].description !== '') {
-      ics_lines.push('X-ALT-DESC;FMTTYPE=text/html:\r\n <!DOCTYPE HTML PUBLIC ""-//W3C//DTD HTML 3.2//EN"">\r\n <HTML><BODY>\r\n ' + atcb_rewrite_ical_text(data.dates[`${i}`].description, true) + '\r\n </BODY></HTML>');
+      ics_lines.push('X-ALT-DESC;FMTTYPE=text/html:\r\n <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">\r\n <HTML><BODY>\r\n ' + atcb_rewrite_ical_text(data.dates[`${i}`].description) + '\r\n </BODY></HTML>');
     }
     if (data.dates[`${i}`].location && data.dates[`${i}`].location !== '') {
-      ics_lines.push('LOCATION:' + atcb_rewrite_ical_text(data.dates[`${i}`].location, true));
+      ics_lines.push('LOCATION:' + atcb_rewrite_ical_text(data.dates[`${i}`].location));
     }
     if (data.dates[`${i}`].organizer && data.dates[`${i}`].organizer !== '') {
       const organizerParts = data.dates[`${i}`].organizer.split('|');
-      ics_lines.push('ORGANIZER;CN=' + atcb_rewrite_ical_text(organizerParts[0], false, true) + ':MAILTO:' + organizerParts[1]);
+      ics_lines.push('ORGANIZER;CN=' + atcb_rewrite_ical_text(organizerParts[0], true) + ':MAILTO:' + organizerParts[1]);
     }
     if (data.dates[`${i}`].attendee && data.dates[`${i}`].attendee !== '') {
       const attendeeParts = data.dates[`${i}`].attendee.split('|');
       if (attendeeParts.length === 2) {
-        ics_lines.push('ATTENDEE;CUTYPE=INDIVIDUAL;ROLE=REQ-PARTICIPANT;PARTSTAT=ACCEPTED;CN=' + atcb_rewrite_ical_text(attendeeParts[0], false, true) + ';X-NUM-GUESTS=0:mailto:' + attendeeParts[1]);
+        ics_lines.push('ATTENDEE;CUTYPE=INDIVIDUAL;ROLE=REQ-PARTICIPANT;PARTSTAT=ACCEPTED;CN=' + atcb_rewrite_ical_text(attendeeParts[0], true) + ';X-NUM-GUESTS=0:mailto:' + attendeeParts[1]);
       } else {
         ics_lines.push('ATTENDEE;CUTYPE=INDIVIDUAL;ROLE=REQ-PARTICIPANT;PARTSTAT=ACCEPTED;CN=' + attendeeParts[0] + ';X-NUM-GUESTS=0:mailto:' + attendeeParts[0]);
       }
@@ -602,7 +600,8 @@ function atcb_generate_ical(host, data, type, subEvent = 'all', keyboardTrigger 
       return givenIcsFile;
     }
     // otherwise, we generate it from the array
-    return 'data:text/calendar;charset=utf-8,' + encodeURIComponent(ics_lines.join('\r\n'));
+    const icsContent = atcb_format_ical_lines(ics_lines.join('\r\n'));
+    return 'data:text/calendar;charset=utf-8,' + encodeURIComponent(icsContent);
   })();
   // in in-app browser cases (WebView), we offer a copy option, since the on-the-fly client side generation is usually not supported
   // for Android, we are more specific than with iOS and only go for specific apps at the moment

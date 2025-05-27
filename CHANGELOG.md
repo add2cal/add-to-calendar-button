@@ -2,6 +2,7 @@
 
 ## Version 2
 
+- v2.9 : New style "simple", better ical generation
 - v2.8 : Ukranian language
 - v2.7 : Showing open seats on RSVP, better subscription handling
 - v2.6 : useUserTZ, css ::part, formatting of urls in description

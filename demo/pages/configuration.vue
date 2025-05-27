@@ -621,7 +621,7 @@ definePageMeta({
             <tr id="buttonstyle">
               <th scope="row">buttonStyle</th>
               <td>
-                <em>String</em><br /><br /><span class="label block">{{ $t('content.config.options') }}:</span>default, 3d, flat, round, neumorphism, text, date, custom, none<br /><br /><span class="label">{{ $t('content.config.default') }}:</span>default
+                <em>String</em><br /><br /><span class="label block">{{ $t('content.config.options') }}:</span>default, simple, 3d, flat, round, neumorphism, text, date, custom, none<br /><br /><span class="label">{{ $t('content.config.default') }}:</span>default
               </td>
               <td v-if="locale=='en'">
                 There are multiple integrated button styles, which also affect a lot of other parameters.<br />

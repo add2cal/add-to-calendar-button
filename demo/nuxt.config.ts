@@ -144,6 +144,7 @@ export default defineNuxtConfig({
 
   pwa: {
     registerType: 'autoUpdate',
+    selfDestroying: true,
     registerWebManifestInRouteRules: true,
     useCredentials: true,
     workbox: {

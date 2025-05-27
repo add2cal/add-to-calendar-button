@@ -82,7 +82,7 @@ export interface ATCBActionEventConfig {
   optionsIOS?: ('Apple' | 'Google' | 'iCal' | 'Microsoft365' | 'MicrosoftTeams' | 'Outlook.com' | 'Yahoo')[];
   iCalFileName?: string;
   listStyle?: 'overlay' | 'modal';
-  buttonStyle?: 'default' | '3d' | 'flat' | 'round' | 'neumorphism' | 'text' | 'date' | 'custom' | 'none';
+  buttonStyle?: 'default' | 'simple' | '3d' | 'flat' | 'round' | 'neumorphism' | 'text' | 'date' | 'custom' | 'none';
   hideIconList?: boolean;
   hideIconModal?: boolean;
   hideTextLabelList?: boolean;
@@ -149,7 +149,7 @@ export type AddToCalendarButtonType = {
   optionsIOS?: ('Apple' | 'Google' | 'iCal' | 'Microsoft365' | 'MicrosoftTeams' | 'Outlook.com' | 'Yahoo')[] | string;
   iCalFileName?: string;
   listStyle?: 'dropdown' | 'dropdown-static' | 'dropup-static' | 'overlay' | 'modal';
-  buttonStyle?: 'default' | '3d' | 'flat' | 'round' | 'neumorphism' | 'text' | 'date' | 'custom' | 'none';
+  buttonStyle?: 'default' | 'simple' | '3d' | 'flat' | 'round' | 'neumorphism' | 'text' | 'date' | 'custom' | 'none';
   trigger?: 'hover' | 'click';
   inline?: boolean | string;
   buttonsList?: boolean | string;

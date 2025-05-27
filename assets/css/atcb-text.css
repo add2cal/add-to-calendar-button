@@ -5,7 +5,7 @@
  *
  * Style: Text
  *
- * Version: 2.8.9
+ * Version: 2.9.0
  * Creator: Jens Kuerschner (https://jekuer.com)
  * Project: https://github.com/add2cal/add-to-calendar-button
  * License: Elastic License 2.0 (ELv2) (https://github.com/add2cal/add-to-calendar-button/blob/main/LICENSE.txt)
@@ -109,6 +109,7 @@
   --list-text: #dedede;
   --list-hover-text: #fff;
   --list-close-background: #282828;
+  --list-close-text: #777;
   --list-shadow: rgb(255 255 255 / 5%) -12px -5px 20px -8px, rgb(255 255 255 / 6%) -7px -5px 15px -3px, rgb(0 0 0 / 50%) 2px 5px 18px -1px, rgb(0 0 0 / 40%) 3px 3px 20px -3px;
   --list-modal-shadow: rgb(255 255 255 / 8%) -12px -5px 30px -8px, rgb(255 255 255 / 8%) -7px -5px 15px -3px, rgb(0 0 0 / 60%) 4px 6px 50px -4px, rgb(0 0 0 / 90%) 8px 12px 40px -2px;
   --modal-text: #f1f1f1;

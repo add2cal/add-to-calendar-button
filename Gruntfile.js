@@ -7,7 +7,7 @@ function prepareFinalFile(content, stripAllImport = true, stripAllExport = true,
   if (!skipStyles) {
     const styleRegex = /const\satcbCssTemplate\s=\s\{\};/;
     if (styleRegex.test(content)) {
-      const availableStyles = ['default', '3d', 'flat', 'round', 'neumorphism', 'text', 'date'];
+      const availableStyles = ['default', 'simple', '3d', 'flat', 'round', 'neumorphism', 'text', 'date'];
       let inlineStyleOutput = 'const atcbCssTemplate = {';
       availableStyles.forEach((style) => {
         const styleString = (function () {
