@@ -507,9 +507,9 @@ function atcb_rewrite_ical_text(content, inQuotes = false) {
 }
 
 function atcb_format_ical_lines(content) {
-  content = content.split('\r\n');
+  const contentArr = content.split('\r\n');
   const result = [];
-  for (let line of content) {
+  for (let line of contentArr) {
     if (!line || line.length <= 65) {
       result.push(line);
       continue;
