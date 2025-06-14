@@ -1447,7 +1447,8 @@ a.atcb-modal-btn:not([disabled]):hover {
 
  #atcb-reference {
   box-sizing: border-box;
-  filter: drop-shadow(0 0 3px rgb(255 255 255 / 80%));
+  color: #000;
+  filter: drop-shadow( 1px 0px 0px #fff) drop-shadow(-1px 0px 0px #fff) drop-shadow( 0px 1px 0px #fff) drop-shadow( 0px -1px 0px #fff);
   height: auto;
   padding: 8px 0;
   text-align: center;
@@ -1475,13 +1476,14 @@ a.atcb-modal-btn:not([disabled]):hover {
 /* :host-context(html.atcb-dark):host(.atcb-bodyScheme) #atcb-reference,
 :host-context(body.atcb-dark):host(.atcb-bodyScheme) #atcb-reference, */
 :host(.atcb-dark) #atcb-reference {
-  filter: drop-shadow(0 0 5px #000);
+  color: #fff;
+  filter:drop-shadow( 1px 0px 0px #000) drop-shadow(-1px 0px 0px #000) drop-shadow( 0px 1px 0px #000) drop-shadow( 0px -1px 0px #000);
 }
 
 #atcb-reference a,
 #atcb-reference a:active,
 #atcb-reference a:visited {
-  opacity: .4;
+  opacity: .8;
   width: 150px;
   max-width: 100%;
   margin: auto;
@@ -1489,12 +1491,8 @@ a.atcb-modal-btn:not([disabled]):hover {
   text-decoration: none;
 }
 
-#atcb-reference.fixed-ref a {
-  opacity: .6;
-}
-
 #atcb-reference a:hover {
-  opacity: .9;
+  opacity: 1;
   text-decoration: none;
 }
 

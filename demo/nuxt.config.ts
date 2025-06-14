@@ -248,6 +248,9 @@ export default defineNuxtConfig({
 
   i18n: {
     detectBrowserLanguage: false,
+    bundle: {
+      optimizeTranslationDirective: false,
+    },
     strategy: 'prefix_except_default',
     types: 'composition',
     lazy: true,
