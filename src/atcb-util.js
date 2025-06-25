@@ -252,7 +252,7 @@ function atcb_generate_timestring(dates, language = 'en', subEvent = 'all', deco
     for (i; i <= j; i++) {
       const magicLocation = (function () {
         if (dates[`${i}`].location && dates[`${i}`].location !== '') {
-          if (magicLocationPhrases.includes(dates[`${i}`].location.toLowerCase())) {
+          if (magicLocationPhrases.includes(dates[`${i}`].location.toLowerCase().trim())) {
             return true;
           }
         }
