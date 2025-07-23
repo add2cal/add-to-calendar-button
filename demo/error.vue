@@ -27,9 +27,7 @@ if (import.meta.client) {
   set(LSKey.LANG, locale.value);
 }
 
-const head = useLocaleHead({
-  key: 'id'
-});
+const head = useLocaleHead();
 
 const title = computed(() =>  t('meta.title', { title: t('meta.404.title') }));
 const description = computed(() => t('meta.description'));

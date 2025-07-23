@@ -4,9 +4,7 @@ import Footer from "@/components/footer.vue";
 
 const { t } = useI18n();
 
-const head = useLocaleHead({
-  key: 'id'
-});
+const head = useLocaleHead();
 
 const title = computed(() => t('meta.title_main') + ' | ' + t('meta.title_slug'));
 const description = computed(() => t('meta.description'));

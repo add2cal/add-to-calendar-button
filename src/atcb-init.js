@@ -797,6 +797,18 @@ async function atcb_get_pro_data(licenseKey, el = null, directData = {}) {
           data.domain = data.landingpage.domain;
           delete data.landingpage;
         }
+        if ((!data.proxy || data.proxy === '') && (!data.hideBranding || data.hideBranding === '')) {
+          for (let i = 0; i < data.dates.length; i++) {
+            if (data.dates[`${i}`].description && data.dates[`${i}`].description !== '') {
+              data.dates[`${i}`].description += '[br][br][p]Powered by add-to-calendar-pro.com[/p]';
+            } else {
+              data.dates[`${i}`].description = 'Powered by add-to-calendar-pro.com';
+            }
+          }
+          if (data.description && data.description !== '') {
+            data.description += 'Powered by add-to-calendar-pro.com';
+          }
+        }
         data.proKey = licenseKey;
         data.identifier = licenseKey;
         return data;
