@@ -36,7 +36,7 @@
   "dependencies": {
     "@headlessui/tailwindcss": "^0.2.2",
     "@heroicons/vue": "^2.2.0",
-    "@nuxt/eslint": "^1.4.1",
+    "@nuxt/eslint": "^1.7.1",
     "@nuxt/image": "^1.10.0",
     "@nuxtjs/i18n": "^9.5.4",
     "@nuxtjs/sitemap": "^7.3.0",
