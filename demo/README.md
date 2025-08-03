@@ -2,7 +2,7 @@
 
 This sub-repository holds the demo page for the [Add to Calendar Button](https://add-to-calendar-button.com/).
 
-It is built with Nuxt 3 and includes the button script directly from the parent repository via the npm workspaces config.
+It is built with Nuxt and includes the button script directly from the parent repository via the npm workspaces config.
 Therefore, you can not use this sub-repository standalone!
 But you also don't need to. You can call the important npm commands directly from the root. Check the package.json scripts from the parent repository!
 
@@ -14,9 +14,9 @@ Contributing to this demo page follows the same rules as with the parent reposit
 
 <br />
 
-## Working with Nuxt 3
+## Working with Nuxt
 
-Look at the [Nuxt 3 documentation](https://nuxt.com/docs/getting-started/introduction) to learn more.
+Look at the [Nuxt documentation](https://nuxt.com/docs/getting-started/introduction) to learn more.
 
 ## Setup
 

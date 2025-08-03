@@ -4,8 +4,8 @@ const LazyCodeBlock = defineAsyncComponent(() => import('@/components/codeBlock.
 const { locale } = useI18n();
 
 definePageMeta({
-  title: 'navigation.use-with-react',
-  description: 'meta.use-with-react.description',
+  title: 'navigation.use-with-next',
+  description: 'meta.use-with-next.description',
 });
 
 const today = new Date();

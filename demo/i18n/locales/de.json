@@ -12,6 +12,9 @@
     "use-with-angular": "Setup mit Angular",
     "use-with-astro": "Setup mit Astro",
     "use-with-react": "Setup mit React",
+    "use-with-next": "Setup mit Next.js",
+    "use-with-nuxt": "Setup mit Nuxt",
+    "use-with-wix": "Setup mit Wix",
     "use-with-svelte": "Setup mit Svelte",
     "use-with-vue": "Setup mit Vue",
     "use-with-wordpress": "Nutzung mit WordPress",
@@ -173,6 +176,15 @@
     "use-with-react": {
       "description": "Alle Details und Anleitung, wie du den wohl komplettesten Add to Calendar Button in unter 1 Minute in React (mit oder ohne TypeScript) implementierst."
     },
+    "use-with-next": {
+      "description": "Alle Details und Anleitung, wie du den wohl komplettesten Add to Calendar Button in unter 1 Minute mit Next.js implementierst."
+    },
+    "use-with-nuxt": {
+      "description": "Alle Details und Anleitung, wie du den wohl komplettesten Add to Calendar Button in unter 1 Minute mit Nuxt implementierst."
+    },
+    "use-with-wix": {
+      "description": "Alle Details und Anleitung, wie du den wohl komplettesten Add to Calendar Button in unter 1 Minute mit Wix nutzt."
+    },
     "use-with-svelte": {
       "description": "Alle Details und Anleitung, wie du den wahrscheinlich komplettesten Add to Calendar Button in unter 1 Minute mit Svelte implementierst."
     },
@@ -317,7 +329,7 @@
         "start_wrapper": "Beginne mit der Nutzung, indem du einen {'<'}AddtoCalendarButton{'>'} Tag in deinem Quellcode einfügst."
       },
       "nuxt": {
-        "headline": "Wie man den Add to Calendar Button mit Nuxt 3 nutzt"
+        "headline": "Wie man den Add to Calendar Button mit Nuxt nutzt"
       },
       "react": {
         "headline": "Wie man den Add to Calendar Button unter React installiert",
