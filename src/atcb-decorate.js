@@ -3,7 +3,7 @@
  *  Add to Calendar Button
  *  ++++++++++++++++++++++
  *
- *  Version: 2.9.1
+ *  Version: 2.10.0
  *  Creator: Jens Kuerschner (https://jekuer.com)
  *  Project: https://github.com/add2cal/add-to-calendar-button
  *  License: Elastic License 2.0 (ELv2) (https://github.com/add2cal/add-to-calendar-button/blob/main/LICENSE.txt)
@@ -157,12 +157,12 @@ function atcb_decorate_data_options(data) {
       iCalGiven = true;
     }
     // next, fill the new arrays
-    // do not consider options, which should not appear on iOS (e.g. iCal, since we have the Apple option instead)
+    // do not consider options, which should not appear on iOS (e.g. iCal, since we have the Apple option instead) - except they are given explicitly
     // in the recurrence case, we leave out all options, which do not support it in general, as well as Apple and iCal for rrules with "until"
     // and in the subscribe case, we also skip options, which are not made for subscribing (MS Teams)
     if (
-      ((atcbIsiOS() || data.fakeIOS) && atcbIOSInvalidOptions.includes(optionName)) ||
-      ((atcbIsAndroid() || data.fakeAndroid) && atcbAndroidInvalidOptions.includes(optionName)) ||
+      ((atcbIsiOS() || data.fakeIOS) && atcbIOSInvalidOptions.includes(optionName) && (!data.optionsIOS || data.optionsIOS.length === 0)) ||
+      ((atcbIsAndroid() || data.fakeAndroid) && atcbAndroidInvalidOptions.includes(optionName) && (!data.optionsMobile || data.optionsMobile.length === 0)) ||
       (data.recurrence && data.recurrence !== '' && (!atcbValidRecurrOptions.includes(optionName) || (data.recurrence_until && data.recurrence_until !== '' && (optionName === 'apple' || optionName === 'ical')) || ((atcbIsiOS() || data.fakeIOS) && optionName === 'google'))) ||
       (data.subscribe && atcbInvalidSubscribeOptions.includes(optionName))
     ) {
@@ -461,7 +461,7 @@ function atcb_decorate_data_extend(data) {
 function atcb_date_cleanup(dateTimeData) {
   // Utility function to validate date format
   function isValidDateFormat(dateStr) {
-    return /^\d\d\d\d-\d\d-\d\d(?:T\d\d:\d\d)?(?::\d\d)?(?:.\d\d\d)?Z?$/i.test(dateStr);
+    return /^\d\d\d\d-\d\d-\d\d(?:T\d\d:\d\d)?(?::\d\d)?(?:.\d\d\d)?Z?(?:\+(?:\d|\d\d|\d\d\d|\d\d\d\d))?$/i.test(dateStr);
   }
   // Utility function to validate 'today' format
   function isValidTodayFormat(dateStr) {
@@ -479,8 +479,8 @@ function atcb_date_cleanup(dateTimeData) {
     if (!isValidDateFormat(dateStr) && !isValidTodayFormat(dateStr)) {
       dateTimeData[point + 'Date'] = 'badly-formed';
     } else {
-      // dynamic date replacement
-      if (isValidTodayFormat(dateStr)) dateTimeData[point + 'Date'] = atcb_date_calculation(dateStr);
+      // dynamic date replacement (if dateStr includes a +)
+      if (/\+/.test(dateStr)) dateTimeData[point + 'Date'] = atcb_date_calculation(dateStr);
       // second, if valid, clean up
       if (dateTimeData[point + 'Date']) {
         // identify a possible time information within the date string

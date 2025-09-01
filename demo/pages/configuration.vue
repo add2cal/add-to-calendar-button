@@ -265,13 +265,13 @@ definePageMeta({
               <td v-if="locale=='en'">
                 Use the schema "NAME|EMAIL" (e.g. "John Doe|john.doe@gmail.com").<br /><br />
                 The organizer will appear within the schema.org rich data as well as the iCal file.<br />
-                Setting this option will also change the style of the iCal information from being an event to simply save to an event invitation one can accept or decline.<br /><br />
+                Setting this option will also change how ics files (iCal) are processed. Calendars will no longer simply save the event, but look at it as an event invitation one can accept or decline.<br /><br />
                 <NuxtLink :to="{path: localePath('advanced-use'), hash: '#case-5'}">{{ $t('labels.example') }} <ArrowRightIcon class="-mt-0.5 mr-0.5 inline-block h-3 w-3" aria-hidden="true" /></NuxtLink>
               </td>
               <td v-else>
                 Schema "NAME|E-MAIL" (bspw. "Max Muster|max.muster@gmail.com").<br /><br />
                 Der "Organizer" wird innerhalb der Schema.org-Daten sowie in iCal-Dateien integriert.<br />
-                Sofern diese Option gesetzt wird, verändert sich auch die iCal-Struktur. Anstelle eines einfachen Events wird eine Event-Einladung, der man zu- oder absagen kann, erzeugt.<br /><br />
+                Sofern diese Option gesetzt wird, werden ics-Dateien (iCal) von Kalendern auch anders gehandhabt. Anstatt einfach nur das Event zu speichern, wird es als Einladung betrachtet, die man annehmen oder ablehnen kann.<br /><br />
                 <NuxtLink :to="{path: localePath('advanced-use'), hash: '#case-5'}">{{ $t('labels.example') }} <ArrowRightIcon class="-mt-0.5 mr-0.5 inline-block h-3 w-3" aria-hidden="true" /></NuxtLink>
               </td>
             </tr>

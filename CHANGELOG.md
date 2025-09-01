@@ -2,6 +2,7 @@
 
 ## Version 2
 
+- v2.10 : Hungarian language, no more X cursor, no different button icon for oneOption cases, create 1 ics file if organizer is the same, subtle style updates, allow to override auto-option-cleanup on mobile via mobile Options
 - v2.9 : New style "simple", better ical generation
 - v2.8 : Ukranian language
 - v2.7 : Showing open seats on RSVP, better subscription handling

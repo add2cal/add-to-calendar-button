@@ -3,7 +3,7 @@
  *  Add to Calendar Button
  *  ++++++++++++++++++++++
  *
- *  Version: 2.9.1
+ *  Version: 2.10.0
  *  Creator: Jens Kuerschner (https://jekuer.com)
  *  Project: https://github.com/add2cal/add-to-calendar-button
  *  License: Elastic License 2.0 (ELv2) (https://github.com/add2cal/add-to-calendar-button/blob/main/LICENSE.txt)
@@ -131,6 +131,7 @@ function atcb_generate_label(host, data, parent, type, icon = false, text = '', 
 }
 
 function atcb_generate_label_content(data, parent, type, icon, text, oneOption) {
+  if (!data.buttonsList && oneOption) type = 'trigger';
   const defaultTriggerText = (function () {
     if (data.pastDateHandling != 'none') {
       let allOverdue = true;
@@ -790,7 +791,7 @@ async function atcb_generate_modal_host(host, data, reset = true) {
   document.body.append(newModalHost);
   newModalHost.attachShadow({ mode: 'open', delegateFocus: true });
   const elem = document.createElement('template');
-  elem.innerHTML = '<div class="atcb-modal-host-initialized" style="transform:translate3D(0, 0, 0);visibility:visible;opacity:1;position:fixed;top:0;left:0;width:100%;height:100%;display:flex;z-index:13999999;"></div>';
+  elem.innerHTML = '<div class="atcb-modal-host-initialized"></div>';
   newModalHost.shadowRoot.append(elem.content.cloneNode(true));
   atcb_set_light_mode(newModalHost.shadowRoot, data);
   await atcb_load_css(newModalHost.shadowRoot, null, data);
