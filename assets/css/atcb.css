@@ -1381,7 +1381,7 @@ a.atcb-modal-btn:not([disabled]):hover {
 #atcb-reference {
   box-sizing: border-box;
   color: #000;
-  filter: drop-shadow( 1px 0px 0px #fff) drop-shadow(-1px 0px 0px #fff) drop-shadow( 0px 1px 0px #fff) drop-shadow( 0px -1px 0px #fff);
+  filter: drop-shadow( 1px 0 0 #fff) drop-shadow(-1px 0 0 #fff) drop-shadow( 0 1px 0 #fff) drop-shadow( 0 -1px 0 #fff);
   height: auto;
   padding: 8px 0;
   text-align: center;
@@ -1410,7 +1410,7 @@ a.atcb-modal-btn:not([disabled]):hover {
 :host-context(body.atcb-dark):host(.atcb-bodyScheme) #atcb-reference, */
 :host(.atcb-dark) #atcb-reference {
   color: #fff;
-  filter:drop-shadow( 1px 0px 0px #000) drop-shadow(-1px 0px 0px #000) drop-shadow( 0px 1px 0px #000) drop-shadow( 0px -1px 0px #000);
+  filter:drop-shadow( 1px 0 0 #000) drop-shadow(-1px 0 0 #000) drop-shadow( 0 1px 0 #000) drop-shadow( 0 -1px 0 #000);
 }
 
 #atcb-reference a,
