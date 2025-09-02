@@ -218,7 +218,7 @@
       "intro_block_4": "Entwickelt als Web Component, der sich quasi überall fast von alleine integriert. Enjoy!",
       "headline_installation": "Integration in dein Web-Project",
       "headline_functionality": "Features",
-      "functionality_intro": "Einfache und unkomplizierte Integration von 1 oder mehreren Buttons, direkt im HTML-Code konfigurierbar!",
+      "functionality_intro": "Einfache und unkomplizierte Integration von 1 oder mehreren Add to Calendar Buttons, direkt im HTML-Code konfigurierbar!",
       "next": "Wohin als nächstes?",
       "button_examples": "Beispiele entdecken",
       "button_configure": "Alle Einstellungs-Möglichkeiten",
@@ -407,6 +407,7 @@
       }
     },
     "config": {
+      "title": "Add to Calendar Button Konfiguration",
       "event_params": "Event-Parameter",
       "layout_params": "Layout-Parameter",
       "additional_params": "Weitere Parameter",

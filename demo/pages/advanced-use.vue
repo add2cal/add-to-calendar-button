@@ -88,7 +88,7 @@ onUnmounted(() => {
       </h1>
       <div v-if="locale=='en'">
         <p>
-          On this page, we want to show you more special cases.<br />
+          On this page, we want to show you more special cases for our Add to Calendar Buttons.<br />
           Additionally, you will learn how to customize even the smallest parts of the button.
         </p>
         <p class="italic">We do not recommend to use those advanced options, if you are no experienced developer, since they can be really tricky and break the usual behavior!</p>
@@ -98,7 +98,7 @@ onUnmounted(() => {
       </div>
       <div v-else>
         <p>
-          Auf dieser Seite zeigen wir etwas speziellere Fälle.<br />
+          Auf dieser Seite zeigen wir etwas speziellere Fälle für unsere Add to Calendar Buttons.<br />
           Darüber hinaus lernst du hier, wie du den Button in jedem noch so kleinen Detail konfigurieren kannst.
         </p>
         <p class="italic">Wenn du kein erfahrener Entwickler bist, raten wir von der Nutzung dieser Profi-Optionen explizit ab, da sie in der Umsetzung teilweise herausfordernd sein können und bei falscher Umsetzung das reguläres Verhalten der Anwendung stören!</p>

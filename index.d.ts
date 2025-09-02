@@ -94,7 +94,7 @@ export interface ATCBActionEventConfig {
   customLabels?: CustomLabelsObjectType;
   customCss?: string;
   lightMode?: 'system' | 'dark' | 'light' | 'bodyScheme';
-  language?: 'en' | 'de' | 'nl' | 'fa' | 'fr' | 'es' | 'et' | 'pt' | 'tr' | 'zh' | 'ar' | 'hi' | 'pl' | 'ro' | 'id' | 'no' | 'fi' | 'sv' | 'cs' | 'ja' | 'it' | 'ko' | 'vi';
+  language?: 'en' | 'de' | 'nl' | 'fa' | 'fr' | 'es' | 'et' | 'pt' | 'tr' | 'zh' | 'ar' | 'hi' | 'pl' | 'ro' | 'id' | 'no' | 'fi' | 'sv' | 'cs' | 'ja' | 'it' | 'ko' | 'vi' | 'hu';
   hideRichData?: boolean;
   ty?: object;
   bypassWebViewCheck?: boolean;
@@ -168,7 +168,7 @@ export type AddToCalendarButtonType = {
   customLabels?: CustomLabelsObjectType | string;
   customCss?: string;
   lightMode?: 'system' | 'dark' | 'light' | 'bodyScheme';
-  language?: 'en' | 'de' | 'nl' | 'fa' | 'fr' | 'es' | 'et' | 'pt' | 'tr' | 'zh' | 'ar' | 'hi' | 'pl' | 'ro' | 'id' | 'no' | 'fi' | 'sv' | 'cs' | 'ja' | 'it' | 'ko' | 'vi';
+  language?: 'en' | 'de' | 'nl' | 'fa' | 'fr' | 'es' | 'et' | 'pt' | 'tr' | 'zh' | 'ar' | 'hi' | 'pl' | 'ro' | 'id' | 'no' | 'fi' | 'sv' | 'cs' | 'ja' | 'it' | 'ko' | 'vi' | 'hu';
   hideRichData?: boolean | string;
   ty?: object | string;
   rsvp?: object | string;

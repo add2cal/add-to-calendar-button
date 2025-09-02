@@ -889,7 +889,7 @@ const i18nStrings = {
     'form.error.required': 'Nem töltöttél ki megfelelően minden kötelező mezőt',
     'form.error.sending': 'Hiba történt a válasz küldése során. Kérjük, próbáld újra később',
     'form.success': 'Sikeresen elküldve!',
-  }
+  },
 };
 
 const availableLanguages = Object.keys(i18nStrings);
