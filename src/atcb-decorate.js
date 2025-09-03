@@ -127,78 +127,120 @@ function atcb_decorate_data_rrule(data) {
 
 // cleanup options, standardizing names, and check for mobile special rules
 function atcb_decorate_data_options(data) {
-  // define the actual options to check
-  const theOptions = (function () {
-    if (atcbIsiOS() || data.fakeIOS) {
-      if (data.optionsIOS && data.optionsIOS.length > 0) {
-        return data.optionsIOS;
-      }
-      if (data.optionsMobile && data.optionsMobile.length > 0) {
-        return data.optionsMobile;
-      }
+  const theOptions = atcb_determine_options_source(data);
+  let { newOptions, iCalGiven, appleGiven } = atcb_process_options(theOptions, data);
+  newOptions = atcb_handle_special_google_calendar_case(data, newOptions);
+  ({ newOptions, iCalGiven } = atcb_ensure_fallback_options(newOptions, data, iCalGiven));
+  newOptions = atcb_adjust_platform_specific_options(newOptions, data, iCalGiven, appleGiven);
+  // sort options alphabetically and update data
+  newOptions.sort();
+  data.options = newOptions;
+  return data;
+}
+
+// determine which options array to use based on platform and availability
+function atcb_determine_options_source(data) {
+  if (atcbIsiOS() || data.fakeIOS) {
+    if (data.optionsIOS && data.optionsIOS.length > 0) {
+      return data.optionsIOS;
     }
-    if ((atcbIsAndroid() || data.fakeMobile || data.fakeAndroid) && data.optionsMobile && data.optionsMobile.length > 0) {
+    if (data.optionsMobile && data.optionsMobile.length > 0) {
       return data.optionsMobile;
     }
-    return data.options || ['ical'];
-  })();
-  // iterrate over the options and generate the new clean arrays
+  }
+  if ((atcbIsAndroid() || data.fakeMobile || data.fakeAndroid) && data.optionsMobile && data.optionsMobile.length > 0) {
+    return data.optionsMobile;
+  }
+  return data.options || ['ical'];
+}
+
+// process options array and filter invalid options
+function atcb_process_options(theOptions, data) {
   let newOptions = [];
   let iCalGiven = false;
   let appleGiven = false;
   for (let i = 0; i < theOptions.length; i++) {
-    // preparing the input options
-    const cleanOption = theOptions[`${i}`].split('|');
-    const optionName = cleanOption[0].toLowerCase().replace('microsoft', 'ms').replace(/\./, '');
-    if (optionName === 'apple') {
-      appleGiven = true;
-    }
-    if (optionName === 'ical') {
-      iCalGiven = true;
-    }
-    // next, fill the new arrays
-    // do not consider options, which should not appear on iOS (e.g. iCal, since we have the Apple option instead) - except they are given explicitly
-    // in the recurrence case, we leave out all options, which do not support it in general, as well as Apple and iCal for rrules with "until"
-    // and in the subscribe case, we also skip options, which are not made for subscribing (MS Teams)
-    if (
-      ((atcbIsiOS() || data.fakeIOS) && atcbIOSInvalidOptions.includes(optionName) && (!data.optionsIOS || data.optionsIOS.length === 0)) ||
-      ((atcbIsAndroid() || data.fakeAndroid) && atcbAndroidInvalidOptions.includes(optionName) && (!data.optionsMobile || data.optionsMobile.length === 0)) ||
-      (data.recurrence && data.recurrence !== '' && (!atcbValidRecurrOptions.includes(optionName) || (data.recurrence_until && data.recurrence_until !== '' && (optionName === 'apple' || optionName === 'ical')) || ((atcbIsiOS() || data.fakeIOS) && optionName === 'google'))) ||
-      (data.subscribe && atcbInvalidSubscribeOptions.includes(optionName))
-    ) {
-      continue;
-    }
-    // tmp patch to reflect the fact that Microsoft is routing mobile traffic differently. We handle regular events on the link level, but subscription cases need to be stripped out
-    // TODO: remove this, when Microsoft has fixed this
-    if ((atcbIsMobile() || data.fakeMobile) && data.subscribe && (optionName === 'ms365' || optionName === 'outlookcom')) {
+    const optionName = atcb_normalize_option_name(theOptions[`${i}`]);
+    // track which ical-type options were provided
+    if (optionName === 'apple') appleGiven = true;
+    if (optionName === 'ical') iCalGiven = true;
+    // skip invalid options based on various criteria
+    if (atcb_should_skip_option(optionName, data)) {
       continue;
     }
     newOptions.push(optionName);
   }
-  // if we are in a subscription case and the icsFile starts with https://calendar.google.com/calendar/ and does not end with .ics, we only set the google option as everything else would not work
+  return { newOptions, iCalGiven, appleGiven };
+}
+
+// normalize option name (clean and standardize)
+function atcb_normalize_option_name(option) {
+  const cleanOption = option.split('|');
+  return cleanOption[0].toLowerCase().replace('microsoft', 'ms').replace(/\./, '');
+}
+
+// determine if an option should be skipped based on platform and context
+function atcb_should_skip_option(optionName, data) {
+  return atcb_is_platform_invalid_option(optionName, data) || atcb_is_recurrence_invalid_option(optionName, data) || atcb_is_subscription_invalid_option(optionName, data) || atcb_is_microsoft_mobile_subscription_case(optionName, data);
+}
+
+// check if option is invalid for current platform
+function atcb_is_platform_invalid_option(optionName, data) {
+  const isIOSWithInvalidOption = (atcbIsiOS() || data.fakeIOS) && atcbIOSInvalidOptions.includes(optionName) && (!data.optionsIOS || data.optionsIOS.length === 0);
+  const isAndroidWithInvalidOption = (atcbIsAndroid() || data.fakeMobile || data.fakeAndroid) && atcbAndroidInvalidOptions.includes(optionName) && (!data.optionsMobile || data.optionsMobile.length === 0);
+  return isIOSWithInvalidOption || isAndroidWithInvalidOption;
+}
+
+// check if option is invalid for recurrence events (includes Apple and iCal for rrules with "until")
+function atcb_is_recurrence_invalid_option(optionName, data) {
+  if (!data.recurrence || data.recurrence === '') return false;
+  const isInvalidForRecurrence = !atcbValidRecurrOptions.includes(optionName);
+  const isAppleOrIcalWithUntil = data.recurrence_until && data.recurrence_until !== '' && (optionName === 'apple' || optionName === 'ical');
+  const isGoogleOnIOS = (atcbIsiOS() || data.fakeIOS) && optionName === 'google';
+  return isInvalidForRecurrence || isAppleOrIcalWithUntil || isGoogleOnIOS;
+}
+
+// check if option is invalid for subscription events
+function atcb_is_subscription_invalid_option(optionName, data) {
+  return data.subscribe && atcbInvalidSubscribeOptions.includes(optionName);
+}
+
+// tmp patch to reflect the fact that Microsoft is routing mobile traffic differently. We handle regular events on the link level, but subscription cases need to be stripped out
+// TODO: remove this, when Microsoft has fixed this
+function atcb_is_microsoft_mobile_subscription_case(optionName, data) {
+  return (atcbIsMobile() || data.fakeMobile) && data.subscribe && (optionName === 'ms365' || optionName === 'outlookcom');
+}
+
+// if we are in a subscription case and the icsFile starts with https://calendar.google.com/calendar/ and does not end with .ics, we only set the google option as everything else would not work
+function atcb_handle_special_google_calendar_case(data, newOptions) {
   if (data.subscribe && data.icsFile && data.icsFile.startsWith('https://calendar.google.com/calendar/') && !data.icsFile.endsWith('.ics')) {
-    newOptions = ['google'];
+    return ['google'];
   }
-  // since the above can lead to excluding all options, we add the iCal option as default, if no other option is left
+  return newOptions;
+}
+
+// since the above can lead to excluding all options, we add the iCal option as default, if no other option is left
+function atcb_ensure_fallback_options(newOptions, data, iCalGiven) {
   if (newOptions.length === 0) {
-    if (!atcbIsiOS() && !data.fakeIOS) {
+    if (!(atcbIsiOS() && !data.fakeIOS)) {
       newOptions.push('ical');
     }
     iCalGiven = true;
   }
-  // for iOS, we force the Apple option (if it is not there, but iCal was)
+  return { newOptions, iCalGiven };
+}
+
+// adjust options based on platform-specific requirements
+function atcb_adjust_platform_specific_options(newOptions, data, iCalGiven, appleGiven) {
+  // for iOS, force Apple option if iCal was given but Apple wasn't
   if ((atcbIsiOS() || data.fakeIOS) && iCalGiven && !appleGiven) {
     newOptions.push('apple');
   }
-  // and for Android, the other way around
-  if ((atcbIsAndroid() || data.fakeAndroid) && appleGiven && !iCalGiven) {
+  // for Android, force iCal option if Apple was given but iCal wasn't
+  if ((atcbIsAndroid() || data.fakeMobile || data.fakeAndroid) && appleGiven && !iCalGiven) {
     newOptions.push('ical');
   }
-  // at the end, we sort the options alphabetically
-  newOptions.sort();
-  // last but not least, override the options at the main data object
-  data.options = newOptions;
-  return data;
+  return newOptions;
 }
 
 function atcb_decorate_data_style(data) {
@@ -388,63 +430,13 @@ function atcb_decorate_data_description(data, i) {
 }
 
 function atcb_decorate_data_extend(data) {
-  // in that step, we also copy global values to date objects, if not set nested
+  // process each date entry to extend with global values
   for (let i = 0; i < data.dates.length; i++) {
     data = atcb_decorate_data_description(data, i);
-    // for name, we also check for empty, because it is required
-    if (!data.dates[`${i}`].name || data.dates[`${i}`].name === '') {
-      data.dates[`${i}`].name = data.name;
-    }
-    if (!data.dates[`${i}`].status) {
-      data.dates[`${i}`].status = data.status.toUpperCase();
-    } else {
-      data.dates[`${i}`].status = data.dates[`${i}`].status.toUpperCase();
-    }
-    if (!data.dates[`${i}`].sequence) {
-      data.dates[`${i}`].sequence = data.sequence;
-    }
-    if (!data.dates[`${i}`].organizer && data.organizer) {
-      data.dates[`${i}`].organizer = data.organizer;
-    }
-    if (!data.dates[`${i}`].attendee && data.attendee) {
-      data.dates[`${i}`].attendee = data.attendee;
-    }
-    if (!data.dates[`${i}`].availability && data.availability) {
-      data.dates[`${i}`].availability = data.availability.toLowerCase();
-    } else if (data.dates[`${i}`].availability) {
-      data.dates[`${i}`].availability = data.dates[`${i}`].availability.toLowerCase();
-    }
-    if (!data.dates[`${i}`].location && data.location) {
-      data.dates[`${i}`].location = data.location;
-    }
-    // for the location, we also set the online flag here
-    if (data.dates[`${i}`].location && data.dates[`${i}`].location.startsWith('http')) {
-      data.dates[`${i}`].onlineEvent = true;
-    } else {
-      data.dates[`${i}`].onlineEvent = false;
-    }
-    // for the uid, we do not simply copy from the top level, but iterate it to keep it unique
-    if (!data.dates[`${i}`].uid) {
-      if (i === 0 && data.uid && data.uid !== '') {
-        data.dates[0].uid = data.uid;
-      } else {
-        if (data.uid && data.uid !== '') {
-          data.dates[`${i}`].uid = data.uid + '-' + (i + 1);
-        } else {
-          data.dates[`${i}`].uid = atcb_generate_uuid();
-        }
-      }
-    }
-    // for each key in data.customVar, we replace any placeholders (%%placeholder%%) in name and location with the value
-    if (data.customVar) {
-      for (const key in data.customVar) {
-        const sanitizedKey = '%%' + key.replace(/[^\w\-.]/g, '') + '%%';
-        // eslint-disable-next-line security/detect-non-literal-regexp
-        data.dates[`${i}`].name = data.dates[`${i}`].name.replace(new RegExp(sanitizedKey, 'gi'), data.customVar[`${key}`]);
-        // eslint-disable-next-line security/detect-non-literal-regexp
-        data.dates[`${i}`].location = data.dates[`${i}`].location.replace(new RegExp(sanitizedKey, 'gi'), data.customVar[`${key}`]);
-      }
-    }
+    data = atcb_extend_date_with_global_values(data, i);
+    data = atcb_set_online_event_flag(data, i);
+    data = atcb_generate_unique_uid(data, i);
+    data = atcb_replace_custom_variables(data, i);
   }
   // we also copy recurrence, but just for easier access and only for the first array element. Multi-date events cannot be recurrent
   if (data.recurrence && data.recurrence !== '') {
@@ -455,6 +447,95 @@ function atcb_decorate_data_extend(data) {
     data.dates.sort((a, b) => a.timestamp - b.timestamp);
   }
   return data;
+}
+
+// extend a single date entry with global values where not already set
+function atcb_extend_date_with_global_values(data, dateIndex) {
+  const dateEntry = data.dates[`${dateIndex}`];
+  // copy global values to date entry using reusable copy function
+  atcb_copy_global_to_date_entry(dateEntry, 'name', data.name, { allowEmpty: true });
+  atcb_copy_global_to_date_entry(dateEntry, 'status', data.status, { transform: 'upper', applyTransformAlways: true });
+  atcb_copy_global_to_date_entry(dateEntry, 'sequence', data.sequence);
+  atcb_copy_global_to_date_entry(dateEntry, 'organizer', data.organizer);
+  atcb_copy_global_to_date_entry(dateEntry, 'attendee', data.attendee);
+  atcb_copy_global_to_date_entry(dateEntry, 'availability', data.availability, { transform: 'lower', applyTransformAlways: true });
+  atcb_copy_global_to_date_entry(dateEntry, 'location', data.location);
+  return data;
+}
+
+// reusable function to copy a property from global data to date entry with optional transformation
+function atcb_copy_global_to_date_entry(dateEntry, property, globalValue, options = {}) {
+  const { allowEmpty = false, transform = null, applyTransformAlways = false } = options;
+  // determine if we should copy the global value
+  const shouldCopy = allowEmpty ? (!dateEntry[`${property}`] || dateEntry[`${property}`] === '') && globalValue !== undefined : !dateEntry[`${property}`] && globalValue;
+  if (shouldCopy) {
+    dateEntry[`${property}`] = atcb_apply_transformation(globalValue, transform);
+  } else if (applyTransformAlways && dateEntry[`${property}`]) {
+    // apply transformation to existing value if specified
+    dateEntry[`${property}`] = atcb_apply_transformation(dateEntry[`${property}`], transform);
+  }
+}
+
+// apply transformation to a value based on type
+function atcb_apply_transformation(value, transform) {
+  if (!transform || !value) return value;
+  switch (transform) {
+    case 'upper':
+      return value.toString().toUpperCase();
+    case 'lower':
+      return value.toString().toLowerCase();
+    default:
+      return value;
+  }
+}
+
+// set online event flag based on location URL
+function atcb_set_online_event_flag(data, dateIndex) {
+  const dateEntry = data.dates[`${dateIndex}`];
+  if (dateEntry.location && dateEntry.location.startsWith('http')) {
+    dateEntry.onlineEvent = true;
+  } else {
+    dateEntry.onlineEvent = false;
+  }
+  return data;
+}
+
+// generate unique UID for date entry
+function atcb_generate_unique_uid(data, dateIndex) {
+  const dateEntry = data.dates[`${dateIndex}`];
+  if (!dateEntry.uid) {
+    if (dateIndex === 0 && data.uid && data.uid !== '') {
+      // first entry gets the base UID
+      dateEntry.uid = data.uid;
+    } else if (data.uid && data.uid !== '') {
+      // subsequent entries get incremented UID
+      dateEntry.uid = `${data.uid}-${dateIndex + 1}`;
+    } else {
+      // no global UID, generate new one
+      dateEntry.uid = atcb_generate_uuid();
+    }
+  }
+  return data;
+}
+
+// replace custom variable placeholders in name and location
+function atcb_replace_custom_variables(data, dateIndex) {
+  if (!data.customVar) return data;
+  const dateEntry = data.dates[`${dateIndex}`];
+  for (const key in data.customVar) {
+    const value = data.customVar[`${key}`];
+    dateEntry.name = atcb_replace_placeholder(dateEntry.name, value);
+    dateEntry.location = atcb_replace_placeholder(dateEntry.location, value);
+  }
+  return data;
+}
+
+// replace placeholder in text with value
+function atcb_replace_placeholder(text, value) {
+  const placeholder = '%%' + key.replace(/[^\w\-.]/g, '') + '%%';
+  if (!text) return text;
+  // eslint-disable-next-line security/detect-non-literal-regexp
+  return text.replace(new RegExp(placeholder, 'gi'), value);
 }
 
 // CALCULATE AND CLEAN UP THE ACTUAL DATES
