@@ -454,23 +454,23 @@ function atcb_extend_date_with_global_values(data, dateIndex) {
   const dateEntry = data.dates[`${dateIndex}`];
   // copy global values to date entry using reusable copy function
   atcb_copy_global_to_date_entry(dateEntry, 'name', data.name, { allowEmpty: false });
-  atcb_copy_global_to_date_entry(dateEntry, 'status', data.status, { transform: 'upper', applyTransformAlways: true });
+  atcb_copy_global_to_date_entry(dateEntry, 'status', data.status, { transform: 'upper' });
   atcb_copy_global_to_date_entry(dateEntry, 'sequence', data.sequence);
   atcb_copy_global_to_date_entry(dateEntry, 'organizer', data.organizer);
   atcb_copy_global_to_date_entry(dateEntry, 'attendee', data.attendee);
-  atcb_copy_global_to_date_entry(dateEntry, 'availability', data.availability, { transform: 'lower', applyTransformAlways: true });
+  atcb_copy_global_to_date_entry(dateEntry, 'availability', data.availability, { transform: 'lower' });
   atcb_copy_global_to_date_entry(dateEntry, 'location', data.location);
   return data;
 }
 
 // reusable function to copy a property from global data to date entry with optional transformation
 function atcb_copy_global_to_date_entry(dateEntry, property, globalValue, options = {}) {
-  const { allowEmpty = true, transform = null, applyTransformAlways = false } = options;
+  const { allowEmpty = true, transform = null } = options;
   // determine if we should copy the global value
   const shouldCopy = !allowEmpty ? (!dateEntry[`${property}`] || dateEntry[`${property}`] === '') && globalValue !== undefined : !dateEntry[`${property}`] && globalValue;
   if (shouldCopy) {
     dateEntry[`${property}`] = atcb_apply_transformation(globalValue, transform);
-  } else if (applyTransformAlways && dateEntry[`${property}`]) {
+  } else if (transform && dateEntry[`${property}`]) {
     // apply transformation to existing value if specified
     dateEntry[`${property}`] = atcb_apply_transformation(dateEntry[`${property}`], transform);
   }

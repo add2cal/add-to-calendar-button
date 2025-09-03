@@ -777,7 +777,7 @@ async function atcb_get_pro_data(licenseKey, el = null, directData = {}) {
         if (proOverride) {
           const hostname = window?.location.hostname || '';
           atcbWcParams.forEach((key) => {
-            if ((Object.prototype.hasOwnProperty.call(dataOverrides, key) && ['hideBranding', 'hidebranding', 'ty', 'rsvp'].indexOf(key) === -1) || hostname === 'caldn.net') {
+            if ((Object.prototype.hasOwnProperty.call(dataOverrides, key) && ['hideBranding', 'ty', 'rsvp'].indexOf(key) === -1) || hostname === 'caldn.net') {
               data[`${key}`] = dataOverrides[`${key}`];
             }
           });
