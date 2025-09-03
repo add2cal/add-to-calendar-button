@@ -250,20 +250,19 @@ export default defineNuxtConfig({
     detectBrowserLanguage: false,
     strategy: 'prefix_except_default',
     types: 'composition',
-    lazy: true,
     baseUrl: baseUrl,
     defaultLocale: 'en',
     locales: [
       {
         code: 'en',
         language: 'en',
-        file: 'en.json',
+        file: { path: 'en.json', cache: false },
         name: 'English',
       },
       {
         code: 'de',
         language: 'de',
-        file: 'de.json',
+        file: { path: 'de.json', cache: false },
         name: 'Deutsch',
       },
     ],

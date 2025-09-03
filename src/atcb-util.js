@@ -3,7 +3,7 @@
  *  Add to Calendar Button
  *  ++++++++++++++++++++++
  *
- *  Version: 2.9.1
+ *  Version: 2.10.0
  *  Creator: Jens Kuerschner (https://jekuer.com)
  *  Project: https://github.com/add2cal/add-to-calendar-button
  *  License: Elastic License 2.0 (ELv2) (https://github.com/add2cal/add-to-calendar-button/blob/main/LICENSE.txt)
@@ -252,7 +252,7 @@ function atcb_generate_timestring(dates, language = 'en', subEvent = 'all', deco
     for (i; i <= j; i++) {
       const magicLocation = (function () {
         if (dates[`${i}`].location && dates[`${i}`].location !== '') {
-          if (magicLocationPhrases.includes(dates[`${i}`].location.toLowerCase())) {
+          if (magicLocationPhrases.includes(dates[`${i}`].location.toLowerCase().trim())) {
             return true;
           }
         }
@@ -507,9 +507,9 @@ function atcb_rewrite_ical_text(content, inQuotes = false) {
 }
 
 function atcb_format_ical_lines(content) {
-  content = content.split('\r\n');
+  const contentArr = content.split('\r\n');
   const result = [];
-  for (let line of content) {
+  for (let line of contentArr) {
     if (!line || line.length <= 65) {
       result.push(line);
       continue;

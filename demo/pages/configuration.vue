@@ -16,7 +16,7 @@ definePageMeta({
   <div class="grid grid-cols-1 lg:grid-cols-[minmax(0,1fr)_192px]">
     <div class="pr-0 lg:pr-8 xl:pr-12 2xl:pr-20">
       <h1 class="mb-16 underline decoration-primary-light decoration-4 dark:decoration-primary-dark">
-        {{ $t('navigation.configuration') }}
+        {{ $t('content.config.title') }}
       </h1>
       <div v-if="locale=='en'">
         <p>The following list holds all potential attributes to set up and customize your next Add to Calendar Button.</p>
@@ -265,13 +265,13 @@ definePageMeta({
               <td v-if="locale=='en'">
                 Use the schema "NAME|EMAIL" (e.g. "John Doe|john.doe@gmail.com").<br /><br />
                 The organizer will appear within the schema.org rich data as well as the iCal file.<br />
-                Setting this option will also change the style of the iCal information from being an event to simply save to an event invitation one can accept or decline.<br /><br />
+                Setting this option will also change how ics files (iCal) are processed. Calendars will no longer simply save the event, but look at it as an event invitation one can accept or decline.<br /><br />
                 <NuxtLink :to="{path: localePath('advanced-use'), hash: '#case-5'}">{{ $t('labels.example') }} <ArrowRightIcon class="-mt-0.5 mr-0.5 inline-block h-3 w-3" aria-hidden="true" /></NuxtLink>
               </td>
               <td v-else>
                 Schema "NAME|E-MAIL" (bspw. "Max Muster|max.muster@gmail.com").<br /><br />
                 Der "Organizer" wird innerhalb der Schema.org-Daten sowie in iCal-Dateien integriert.<br />
-                Sofern diese Option gesetzt wird, verändert sich auch die iCal-Struktur. Anstelle eines einfachen Events wird eine Event-Einladung, der man zu- oder absagen kann, erzeugt.<br /><br />
+                Sofern diese Option gesetzt wird, werden ics-Dateien (iCal) von Kalendern auch anders gehandhabt. Anstatt einfach nur das Event zu speichern, wird es als Einladung betrachtet, die man annehmen oder ablehnen kann.<br /><br />
                 <NuxtLink :to="{path: localePath('advanced-use'), hash: '#case-5'}">{{ $t('labels.example') }} <ArrowRightIcon class="-mt-0.5 mr-0.5 inline-block h-3 w-3" aria-hidden="true" /></NuxtLink>
               </td>
             </tr>
@@ -843,7 +843,7 @@ definePageMeta({
             <tr id="language">
               <th scope="row">language</th>
               <td>
-                <em>String</em><br /><br /><span class="label block">{{ $t('content.config.options') }}:</span>ar, cs, de, en, es, et, fa, fi, fr, hi, id, it, ja, ko, nl, no, ro, pl, pt, sv, tr, vi, zh<br /><br /><span class="label">{{ $t('content.config.default') }}:</span>en
+                <em>String</em><br /><br /><span class="label block">{{ $t('content.config.options') }}:</span>ar, cs, de, en, es, et, fa, fi, fr, hi, hu, id, it, ja, ko, nl, no, ro, pl, pt, sv, tr, vi, zh<br /><br /><span class="label">{{ $t('content.config.default') }}:</span>en
               </td>
               <td v-if="locale=='en'">
                 If you want to have the text blocks in another language than English, you can use the included translations (i18n).<br /><br />

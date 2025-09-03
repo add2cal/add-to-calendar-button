@@ -5,7 +5,7 @@
  *
  * Style: Simple
  *
- * Version: 2.9.1
+ * Version: 2.10.0
  * Creator: Jens Kuerschner (https://jekuer.com)
  * Project: https://github.com/add2cal/add-to-calendar-button
  * License: Elastic License 2.0 (ELv2) (https://github.com/add2cal/add-to-calendar-button/blob/main/LICENSE.txt)
@@ -29,6 +29,7 @@
   --buttonslist-gap: 5px;
   --btn-background: #fff;
   --btn-hover-background: #283768;
+  --btn-hover-border: #333;
   --btn-border-width: 1px;
   --btn-border: #333;
   --btn-border-radius: 0;
@@ -49,13 +50,13 @@
   --list-border-radius: 0px;
   --list-padding: .8em 1.2em;
   --list-min-width: 100%;
-  --list-modal-shadow: rgb(0 0 0 / 25%) 0 4px 30px -3px, rgb(0 0 0 / 20%) 0 2px 8px -2px;
+  --list-modal-shadow: rgb(0 0 0 / 12%) 0 4px 33px -3px, rgb(0 0 0 / 10%) 0 2px 8px -2px;
   --modal-text: #000;
   --modal-text-align: center;
   --modal-text-align-rtl: center;
   --modal-background: #f5f5f5;
   --modal-border-radius: 0px;
-  --modal-shadow: drop-shadow(3px 6px 25px rgb(0 0 0 / 30%));
+  --modal-shadow: drop-shadow(3px 6px 28px rgb(0 0 0 / 14%));
   --modal-btn-bar: #c6c8cd;
   --modal-btn-background: #fff;
   --modal-btn-secondary-background: #e2e1e6;
@@ -83,7 +84,6 @@
   --date-btn-headline-line-clamp: 1;
   --checkmark-background: drop-shadow(0 0 3px #fff);
   --overlay-background: rgb(20 20 20 / 40%);
-  --overlay-cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='%23777' width='16' height='16' viewBox='0 0 122.878 122.88'%3E%3Cpath d='M1.426 8.313a4.87 4.87 0 0 1 0-6.886 4.87 4.87 0 0 1 6.886 0l53.127 53.127 53.127-53.127a4.87 4.87 0 0 1 6.887 0 4.87 4.87 0 0 1 0 6.886L68.324 61.439l53.128 53.128a4.87 4.87 0 0 1-6.887 6.886L61.438 68.326 8.312 121.453a4.87 4.87 0 0 1-6.886 0 4.87 4.87 0 0 1 0-6.886l53.127-53.128L1.426 8.313h0z'/%3E%3C/svg%3E") 16 16, crosshair;
   --icon-ms365-color: #ea3e23;
   --icon-hover-ms365-color: #fff;
   --icon-yahoo-color: #5f01d1;
@@ -98,6 +98,7 @@
 :host(.atcb-dark) {
   --btn-background: #182244;
   --btn-hover-background: #283768;
+  --btn-hover-border: #283768;
   --btn-border: #283768;
   --btn-text: #dedede;
   --btn-hover-text: #f1f1f1;
@@ -108,10 +109,10 @@
   --list-close-background: #121213;
   --list-close-text: #cacaca;
   --list-border: #283768;
-  --list-modal-shadow: rgb(0 0 0 / 40%) -1px 3px 30px 2px;
+  --list-modal-shadow: rgb(0 0 0 / 14%) -1px 3px 33px 2px;
   --modal-text: #f1f1f1;
   --modal-background: #242424;
-  --modal-shadow: drop-shadow(3px 6px 25px rgb(0 0 0 / 50%));
+  --modal-shadow: drop-shadow(3px 6px 28px rgb(0 0 0 / 16%));
   --modal-btn-bar: #38383a;
   --modal-btn-background: #181819;
   --modal-btn-secondary-background: #2e2d30;
@@ -236,6 +237,7 @@
 .atcb-button.atcb-single.atcb-no-text:not([disabled]):focus,
 .atcb-button.atcb-single.atcb-no-text:not([disabled]):hover {
   background-color: var(--btn-hover-background);
+  border-color: var(--btn-hover-border);
   color: var(--btn-hover-text);
 }
 
@@ -258,14 +260,14 @@
   top: 100%;
   border: 0 solid transparent;
   border-bottom: none;
-  border-top-color: var(--btn-border);
+  border-top-color: var(--btn-hover-border);
 }
 
 .atcb-button.atcb-dropup::after {
   bottom: 100%;
   border: 0 solid transparent;
   border-top: none;
-  border-bottom-color: var(--btn-border);
+  border-bottom-color: var(--btn-hover-border);
 }
 
 .atcb-button.atcb-active:not(.atcb-modal-style, .atcb-dropoverlay, .atcb-dropup)::before,
@@ -944,10 +946,6 @@ a.atcb-modal-btn:not([disabled]):hover {
   }
 }
 
-#atcb-bgoverlay.atcb-click:hover {
-  cursor: var(--overlay-cursor);
-}
-
 /******************************
  * Icon specifics
  */
@@ -1456,7 +1454,8 @@ a.atcb-modal-btn:not([disabled]):hover {
 
  #atcb-reference {
   box-sizing: border-box;
-  filter: drop-shadow(0 0 3px rgb(255 255 255 / 80%));
+  color: #000;
+  filter: drop-shadow( 1px 0 0 #fff) drop-shadow(-1px 0 0 #fff) drop-shadow( 0 1px 0 #fff) drop-shadow( 0 -1px 0 #fff);
   height: auto;
   padding: 8px 0;
   text-align: center;
@@ -1484,13 +1483,14 @@ a.atcb-modal-btn:not([disabled]):hover {
 /* :host-context(html.atcb-dark):host(.atcb-bodyScheme) #atcb-reference,
 :host-context(body.atcb-dark):host(.atcb-bodyScheme) #atcb-reference, */
 :host(.atcb-dark) #atcb-reference {
-  filter: drop-shadow(0 0 5px #000);
+  color: #fff;
+  filter:drop-shadow( 1px 0 0 #000) drop-shadow(-1px 0 0 #000) drop-shadow( 0 1px 0 #000) drop-shadow( 0 -1px 0 #000);
 }
 
 #atcb-reference a,
 #atcb-reference a:active,
 #atcb-reference a:visited {
-  opacity: .4;
+  opacity: .8;
   width: 150px;
   max-width: 100%;
   margin: auto;
@@ -1498,12 +1498,8 @@ a.atcb-modal-btn:not([disabled]):hover {
   text-decoration: none;
 }
 
-#atcb-reference.fixed-ref a {
-  opacity: .6;
-}
-
 #atcb-reference a:hover {
-  opacity: .9;
+  opacity: 1;
   text-decoration: none;
 }
 

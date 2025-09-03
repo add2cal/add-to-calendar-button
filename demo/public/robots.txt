@@ -1,2 +1,4 @@
 User-agent:*
 Allow:/
+
+Sitemap: https://add-to-calendar-button.com/sitemap_index.xml

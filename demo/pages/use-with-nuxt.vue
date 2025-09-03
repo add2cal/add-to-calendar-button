@@ -5,8 +5,8 @@ const LazyCodeBlock = defineAsyncComponent(() => import('@/components/codeBlock.
 const { locale } = useI18n();
 
 definePageMeta({
-  title: 'navigation.use-with-vue',
-  description: 'meta.use-with-vue.description',
+  title: 'navigation.use-with-nuxt',
+  description: 'meta.use-with-nuxt.description',
 });
 
 const today = new Date();

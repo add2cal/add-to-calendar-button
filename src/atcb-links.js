@@ -3,7 +3,7 @@
  *  Add to Calendar Button
  *  ++++++++++++++++++++++
  *
- *  Version: 2.9.1
+ *  Version: 2.10.0
  *  Creator: Jens Kuerschner (https://jekuer.com)
  *  Project: https://github.com/add2cal/add-to-calendar-button
  *  License: Elastic License 2.0 (ELv2) (https://github.com/add2cal/add-to-calendar-button/blob/main/LICENSE.txt)
@@ -96,16 +96,8 @@ function atcb_generate_links(host, type, data, subEvent = 'all', keyboardTrigger
 }
 
 function atcb_generate_multidate_links(host, type, linkType, data, keyboardTrigger, multiDateModal) {
-  // in the multi-date event case, when all subEvent have no organizer AND are not cancelled, we can also go the short way (for iCal)
-  if (
-    linkType === 'ical' &&
-    data.dates.every(function (theSubEvent) {
-      if (theSubEvent.status.toLowerCase() == 'cancelled' || (theSubEvent.organizer != null && theSubEvent.organizer != '')) {
-        return false;
-      }
-      return true;
-    })
-  ) {
+  // in the multi-date event case, when all subEvent have no organizer OR the same organizer AND are not cancelled, we can also go the short way (for iCal)
+  if (linkType === 'ical' && !data.dates.some((theSubEvent) => theSubEvent.status.toLowerCase() === 'cancelled') && data.dates.every((theSubEvent) => (theSubEvent.organizer || '') === (data.dates[0].organizer || ''))) {
     atcb_generate_ical(host, data, type, 'all', keyboardTrigger);
     // we mark the whole event as clicked
     for (let i = 0; i < atcbStates[`${data.identifier}`][`${type}`].length; i++) {
@@ -501,18 +493,22 @@ function atcb_generate_ical(host, data, type, subEvent = 'all', keyboardTrigger 
   ics_lines.push('PRODID:-// https://add-to-calendar-pro.com // button v' + atcbVersion + ' //EN');
   ics_lines.push('CALSCALE:GREGORIAN');
   // we set CANCEL, whenever the status says so
-  // mind that in the multi-date case (where we create 1 ics file), it will always be PUBLISH
-  if (subEvent == 'all') {
-    ics_lines.push('METHOD:PUBLISH');
+  // mind that in the multi-date case (where we create 1 ics file), CANCEL is no option
+  if (subEvent === 'all') {
+    // we use REQUEST for organized/hosted events, ...
+    if (data.dates[0].organizer && data.dates[0].organizer !== '') {
+      ics_lines.push('METHOD:REQUEST');
+    } else {
+      // and PUBLISH for events without a host
+      ics_lines.push('METHOD:PUBLISH');
+    }
   } else {
     if (data.dates[`${subEvent}`].status && data.dates[`${subEvent}`].status.toLowerCase() === 'cancelled') {
       ics_lines.push('METHOD:CANCEL');
     } else {
-      // for all other cases, we use REQUEST for organized/hosted events, ...
-      if (data.dates[`${subEvent}`].organizer && data.dates[`${subEvent}`].organizer != '') {
+      if (data.dates[`${subEvent}`].organizer && data.dates[`${subEvent}`].organizer !== '') {
         ics_lines.push('METHOD:REQUEST');
       } else {
-        // and PUBLISH for events without a host
         ics_lines.push('METHOD:PUBLISH');
       }
     }

@@ -33,7 +33,7 @@ const localePath = useLocalePath();
         </NuxtLink>
         <NuxtLink class="tech-stack-button group h-32 w-32 hover:border-nuxt hover:from-nuxt hover:to-nuxt hover:text-white dark:hover:border-nuxt dark:hover:from-nuxt dark:hover:to-nuxt dark:hover:text-white xs:h-36 xs:w-40" :to="localePath('use-with-nuxt')">
           <Nuxt class="self-center p-4" />
-          <div class="self-center p-4 pt-0">Nuxt 3</div>
+          <div class="self-center p-4 pt-0">Nuxt</div>
         </NuxtLink>
         <NuxtLink class="tech-stack-button group h-32 w-32 hover:border-react hover:from-react hover:to-react hover:text-white dark:hover:border-react dark:hover:from-react dark:hover:to-react dark:hover:text-white xs:h-36 xs:w-40" :to="localePath('use-with-react')">
           <React class="self-center p-4" />

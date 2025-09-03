@@ -3,7 +3,7 @@
  *  Add to Calendar Button
  *  ++++++++++++++++++++++
  *
- *  Version: 2.9.1
+ *  Version: 2.10.0
  *  Creator: Jens Kuerschner (https://jekuer.com)
  *  Project: https://github.com/add2cal/add-to-calendar-button
  *  License: Elastic License 2.0 (ELv2) (https://github.com/add2cal/add-to-calendar-button/blob/main/LICENSE.txt)
@@ -775,8 +775,9 @@ async function atcb_get_pro_data(licenseKey, el = null, directData = {}) {
       if (response.ok) {
         const data = await response.json();
         if (proOverride) {
+          const hostname = window?.location.hostname || '';
           atcbWcParams.forEach((key) => {
-            if (Object.prototype.hasOwnProperty.call(dataOverrides, key) && ['hideBranding', 'hidebranding', 'ty', 'rsvp'].indexOf(key) === -1) {
+            if ((Object.prototype.hasOwnProperty.call(dataOverrides, key) && ['hideBranding', 'hidebranding', 'ty', 'rsvp'].indexOf(key) === -1) || hostname === 'caldn.net') {
               data[`${key}`] = dataOverrides[`${key}`];
             }
           });
@@ -796,6 +797,18 @@ async function atcb_get_pro_data(licenseKey, el = null, directData = {}) {
         if (data.landingpage.domain && data.landingpage.domain !== '' && atcb_secure_url(data.landingpage.domain)) {
           data.domain = data.landingpage.domain;
           delete data.landingpage;
+        }
+        if ((!data.proxy || data.proxy === '') && (!data.hideBranding || data.hideBranding === '')) {
+          for (let i = 0; i < data.dates.length; i++) {
+            if (data.dates[`${i}`].description && data.dates[`${i}`].description !== '') {
+              data.dates[`${i}`].description += '[br][br][p]Powered by add-to-calendar-pro.com[/p]';
+            } else {
+              data.dates[`${i}`].description = 'Powered by add-to-calendar-pro.com';
+            }
+          }
+          if (data.description && data.description !== '') {
+            data.description += 'Powered by add-to-calendar-pro.com';
+          }
         }
         data.proKey = licenseKey;
         data.identifier = licenseKey;

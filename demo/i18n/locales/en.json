@@ -12,6 +12,9 @@
     "use-with-angular": "How to use with Angular",
     "use-with-astro": "How to use with Astro",
     "use-with-react": "How to use with React",
+    "use-with-next": "How to use with Next.js",
+    "use-with-nuxt": "How to use with Nuxt",
+    "use-with-wix": "How to use with Wix",
     "use-with-svelte": "How to use with Svelte",
     "use-with-vue": "How to use with Vue",
     "use-with-wordpress": "How to use with WordPress",
@@ -148,8 +151,8 @@
   },
   "meta": {
     "title": "{title} {'|'} Free Add to Calendar Button",
-    "title_main": "Try this Free Add to Calendar Button",
-    "title_slug": "convenient event sharing",
+    "title_main": "Free Add to Calendar Button",
+    "title_slug": "the only really free one",
     "keywords": "calendar, event, sharing, button, script, widget, rsvp, javascript, angular, react, vue, svelte, astro, web component, outlook, ical, microsoft, teams, apple, google, yahoo, free",
     "description": "Experience the interactive demo and tutorials on how to create a button, which adds events to your users' calendars. Free, quick, and convenient.",
     "404": {
@@ -172,6 +175,15 @@
     },
     "use-with-react": {
       "description": "Learn how to install and implement the maybe most powerful and stable Add to Calendar Button in under 1 minutes; using React with or without TypeScript."
+    },
+    "use-with-next": {
+      "description": "Learn how to install and implement the maybe most powerful and stable Add to Calendar Button in under 1 minutes with Next.js."
+    },
+    "use-with-nuxt": {
+      "description": "Learn how to install and implement the maybe most powerful and stable Add to Calendar Button in under 1 minutes with Nuxt."
+    },
+    "use-with-wix": {
+      "description": "Learn how to install and implement the maybe most powerful and stable Add to Calendar Button in under 1 minutes with Wix."
     },
     "use-with-svelte": {
       "description": "Learn how to install and implement the Add to Calendar Button in under 1 minutes with Svelte. Making use of the maybe most powerful and stable library."
@@ -206,7 +218,7 @@
       "intro_block_4": "Built as a Web Component, that you can easily integrate basically everywhere. Enjoy!",
       "headline_installation": "Bringing it to your web project",
       "headline_functionality": "Functionality",
-      "functionality_intro": "Simple and convenient integration of 1 or many buttons, configurable directly within the HTML code!",
+      "functionality_intro": "Simple and convenient integration of 1 or many Add to Calendar Buttons, configurable directly within the HTML code!",
       "next": "What's next?",
       "button_examples": "Explore Examples",
       "button_configure": "Learn how to configure",
@@ -317,7 +329,7 @@
         "start_wrapper": "Start using it by adding a {'<'}AddtoCalendarButton{'>'} tag to your source code."
       },
       "nuxt": {
-        "headline": "How to install the Add to Calendar Button with Nuxt 3"
+        "headline": "How to install the Add to Calendar Button with Nuxt"
       },
       "react": {
         "headline": "How to install the Add to Calendar Button with React",
@@ -395,6 +407,7 @@
       }
     },
     "config": {
+      "title": "Add to Calendar Button Configuration",
       "event_params": "Event parameters",
       "layout_params": "Layout parameters",
       "additional_params": "Additional parameters",

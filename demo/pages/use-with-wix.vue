@@ -3,8 +3,8 @@ import { ArrowTopRightOnSquareIcon } from '@heroicons/vue/24/solid';
 import GuideSidebar from "@/components/integration/guideSidebar.vue";
 
 definePageMeta({
-  title: 'navigation.use-with-svelte',
-  description: 'meta.use-with-svelte.description',
+  title: 'navigation.use-with-wix',
+  description: 'meta.use-with-wix.description',
 });
 </script>
 

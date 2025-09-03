@@ -82,14 +82,14 @@ watch(locale, value => {
       </h1>
       <div v-if="locale=='en'">
         <p>The following examples are demonstrating the most interesting functionality.<br />We recommend you to play with the demo to experience all variations.</p>
-        <p class="italic">The buttons on this share some parameters. They all have the same dates (except the dynamic one), the default style, and adapt to the lightMode of the website.</p>
+        <p class="italic">The Add to Calendar Buttons on this page share some parameters. They all have the same dates (except the dynamic one), the default style, and adapt to the lightMode of the website.</p>
         <p>
           For more advanced expert cases, have a look at the <NuxtLink :to="localePath('advanced-use')">"{{ $t('navigation.advanced-use') }}"</NuxtLink> page.
         </p>
       </div>
       <div v-else>
         <p>Die nachfolgenden Beispiele veranschaulichen die spannendsten Funktionalitäten.<br />Wir empfehlen mit der Demo zu experimentieren, um weitere Varianten zu erleben.</p>
-        <p class="italic">Die Beispiele auf dieser Seite haben ein paar Gemeinsamkeiten. Sie nutzen alle die gleichen Zeiten (außer das Dynamik-Beispiel), den Standard-Stil, und passen sich dem lightMode der Webseite an.</p>
+        <p class="italic">Die Add to Calendar Buttons auf dieser Seite haben ein paar Gemeinsamkeiten. Sie nutzen alle die gleichen Zeiten (außer das Dynamik-Beispiel), den Standard-Stil, und passen sich dem lightMode der Webseite an.</p>
         <p>
           Speziellere Beispiele und Erläuterung von komplexeren Konfigurationen findest du in der <NuxtLink :to="localePath('advanced-use')">"{{ $t('navigation.advanced-use') }}"</NuxtLink>.
         </p>
