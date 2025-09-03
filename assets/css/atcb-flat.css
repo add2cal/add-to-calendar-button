@@ -29,6 +29,7 @@
   --buttonslist-gap: 8px;
   --btn-background: #f5f5f5;
   --btn-hover-background: #fff;
+  --btn-hover-border: #545454;
   --btn-border: #545454;
   --btn-padding-x: 1.2em;
   --btn-padding-y: .8em;
@@ -86,6 +87,7 @@
 :host(.atcb-dark) {
   --btn-background: #222;
   --btn-hover-background: #373737;
+  --btn-hover-border: #515151;
   --btn-border: #515151;
   --btn-shadow: #000;
   --btn-text: #dedede;
@@ -226,6 +228,7 @@
 .atcb-button:not([disabled]):focus,
 .atcb-button:not([disabled]):hover {
   background-color: var(--btn-hover-background);
+  border-color: var(--btn-hover-border);
   top: 0;
   left: 0;
   box-shadow: 0 0 0 0 var(--btn-shadow);
@@ -240,6 +243,7 @@
 .atcb-button.atcb-single:not([disabled]):focus,
 .atcb-button.atcb-single:not([disabled]):hover {
   background-color: var(--btn-hover-background);
+  border-color: var(--btn-hover-border);
   top: -5px;
   left: -5px;
   box-shadow: 5px 5px 0 0 var(--btn-shadow);
