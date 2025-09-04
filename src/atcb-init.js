@@ -354,7 +354,7 @@ async function atcb_build_button(host, data) {
     atcb_setup_state_management(data);
     // set global event listeners
     atcb_set_global_event_listener(host, data);
-    atcb_init_log(data.proKey, data.debug);
+    atcb_init_log(data.proKey, data.hideBranding, data.debug);
     // generate the actual button or RSVP form (if not hidden)
     if (!data.hidden) {
       if (typeof atcb_generate_rsvp_form === 'function' && data.rsvp && Object.keys(data.rsvp).length > 0) {
@@ -717,7 +717,7 @@ async function atcb_action(inputData, triggerElement, keyboardTrigger = false) {
       }
     }
   }
-  atcb_init_log(data.proKey, data.debug);
+  atcb_init_log(data.proKey, data.hideBranding, data.debug);
   if (data.debug) {
     console.log('Add to Calendar Button "' + data.identifier + '" triggered');
   }
@@ -742,7 +742,7 @@ function atcb_setup_state_management(data) {
 }
 
 // SHARED FUNCTION TO GENERATE THE INIT LOG MESSAGE
-function atcb_init_log(pro = '', debug = false) {
+function atcb_init_log(pro = '', hide = false, debug = false) {
   if (!atcbInitialGlobalInit) {
     const versionOutput = (function () {
       if (debug) {
@@ -750,8 +750,8 @@ function atcb_init_log(pro = '', debug = false) {
       }
       return '';
     })();
-    if (pro != '') {
-      console.log('Add to Calendar PRO script initialized' + versionOutput + ' | https://add-to-calendar-pro.com');
+    if (pro !== '') {
+      if (!hide || debug) console.log('Add to Calendar PRO script initialized' + versionOutput + ' | https://add-to-calendar-pro.com');
     } else {
       console.log('%c\nAdd to Calendar Button script initialized' + versionOutput + '\n' + 'see https://add-to-calendar-button.com for details.\n', 'font-weight: bold;');
       console.log('✨ %cPRO version available at https://add-to-calendar-pro.com ← check it out!', 'font-weight: bold; line-height: 60px;');
