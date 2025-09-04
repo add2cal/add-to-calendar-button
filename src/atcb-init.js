@@ -3,7 +3,7 @@
  *  Add to Calendar Button
  *  ++++++++++++++++++++++
  *
- *  Version: 2.11.1
+ *  Version: 2.11.2
  *  Creator: Jens Kuerschner (https://jekuer.com)
  *  Project: https://github.com/add2cal/add-to-calendar-button
  *  License: Elastic License 2.0 (ELv2) (https://github.com/add2cal/add-to-calendar-button/blob/main/LICENSE.txt)
@@ -775,10 +775,10 @@ async function atcb_get_pro_data(licenseKey, el = null, directData = {}) {
       if (response.ok) {
         const data = await response.json();
         if (proOverride) {
-          const host = window?.location.hostname || '';
+          const host = window.location.hostname || '';
           const domain = host.split('.').slice(-2).join('.');
           atcbWcParams.forEach((key) => {
-            if ((Object.prototype.hasOwnProperty.call(dataOverrides, key) && ['hideBranding', 'ty', 'rsvp'].indexOf(key) === -1) || domain === 'caldn.net' || domain === 'add-to-calendar-pro.com') {
+            if (Object.prototype.hasOwnProperty.call(dataOverrides, key) && (['hideBranding', 'ty', 'rsvp'].indexOf(key) === -1 || domain === 'caldn.net' || domain === 'add-to-calendar-pro.com')) {
               data[`${key}`] = dataOverrides[`${key}`];
             }
           });
@@ -816,8 +816,9 @@ async function atcb_get_pro_data(licenseKey, el = null, directData = {}) {
         return data;
       }
       throw new Error('Not possible to read proKey config from server...');
-    } catch {
-      throw new Error('Add to Calendar Button proKey invalid or server not responding!');
+    } catch (originalError) {
+      console.error(originalError);
+      throw new Error('proKey invalid or server not responding!');
     }
   }
   return {};
