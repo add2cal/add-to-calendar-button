@@ -775,9 +775,10 @@ async function atcb_get_pro_data(licenseKey, el = null, directData = {}) {
       if (response.ok) {
         const data = await response.json();
         if (proOverride) {
-          const hostname = window?.location.hostname || '';
+          const host = window?.location.hostname || '';
+          const domain = host.split('.').slice(-2).join('.');
           atcbWcParams.forEach((key) => {
-            if ((Object.prototype.hasOwnProperty.call(dataOverrides, key) && ['hideBranding', 'ty', 'rsvp'].indexOf(key) === -1) || hostname === 'caldn.net') {
+            if ((Object.prototype.hasOwnProperty.call(dataOverrides, key) && ['hideBranding', 'ty', 'rsvp'].indexOf(key) === -1) || domain === 'caldn.net' || domain === 'add-to-calendar-pro.com') {
               data[`${key}`] = dataOverrides[`${key}`];
             }
           });
