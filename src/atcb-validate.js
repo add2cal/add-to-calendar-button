@@ -3,7 +3,7 @@
  *  Add to Calendar Button
  *  ++++++++++++++++++++++
  *
- *  Version: 2.10.0
+ *  Version: 2.11.0
  *  Creator: Jens Kuerschner (https://jekuer.com)
  *  Project: https://github.com/add2cal/add-to-calendar-button
  *  License: Elastic License 2.0 (ELv2) (https://github.com/add2cal/add-to-calendar-button/blob/main/LICENSE.txt)
@@ -19,7 +19,7 @@ import { atcb_secure_url, atcb_validEmail, atcb_generate_uuid } from './atcb-uti
 async function atcb_check_required(data) {
   // in this first step, we only check for the bare minimum, so we can abort early on really broken setups. We will do further validation later.
   // check for min required data (without "options")
-  // name is always required on top level (in the multi-date setup this would be the name of the event series)
+  // name is always required on root level (in the multi-date setup this would be the name of the event series)
   if ((!data.name || data.name === '') && (!data.dates || data.dates.length === 0)) {
     throw new Error('Add to Calendar Button generation failed: required name information missing');
   }

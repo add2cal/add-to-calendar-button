@@ -3,7 +3,7 @@
  *  Add to Calendar Button
  *  ++++++++++++++++++++++
  *
- *  Version: 2.10.0
+ *  Version: 2.11.0
  *  Creator: Jens Kuerschner (https://jekuer.com)
  *  Project: https://github.com/add2cal/add-to-calendar-button
  *  License: Elastic License 2.0 (ELv2) (https://github.com/add2cal/add-to-calendar-button/blob/main/LICENSE.txt)
@@ -777,7 +777,7 @@ async function atcb_get_pro_data(licenseKey, el = null, directData = {}) {
         if (proOverride) {
           const hostname = window?.location.hostname || '';
           atcbWcParams.forEach((key) => {
-            if ((Object.prototype.hasOwnProperty.call(dataOverrides, key) && ['hideBranding', 'hidebranding', 'ty', 'rsvp'].indexOf(key) === -1) || hostname === 'caldn.net') {
+            if ((Object.prototype.hasOwnProperty.call(dataOverrides, key) && ['hideBranding', 'ty', 'rsvp'].indexOf(key) === -1) || hostname === 'caldn.net') {
               data[`${key}`] = dataOverrides[`${key}`];
             }
           });

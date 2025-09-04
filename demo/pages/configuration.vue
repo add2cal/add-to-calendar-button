@@ -302,8 +302,8 @@ definePageMeta({
               <td><em>Array of Objects</em></td>
               <td v-if="locale=='en'">
                 If you want to define an event series, you can use the dates object.<br /><br />
-                It basically holds the same information as the top level, but enables you to define multiple events. Except for date and time information, all other attributes, if not provided in the dates object, use the top level information as fallback. There is one special case with the "UID",
-                which only uses the top level information for the first sub-event (since it needs to be unique). All subsequent sub-events will receive randomly generated new UIDs.<br /><br />
+                It basically holds the same date structure as the root level, but enables you to define multiple events. Root level values override values in the dates object - except for the name if there are multiple dates (then, the root name will become the title of the event series). There is
+                one special case with the "UID", which only uses the root level information for the first sub-event (since it needs to be unique). All subsequent sub-events will receive randomly generated new UIDs.<br /><br />
                 <span class="underline">Attributes per sub-event block:</span><br />
                 <ul class="list-disc pl-5 pt-2">
                   <li>name</li>
@@ -327,8 +327,8 @@ definePageMeta({
               </td>
               <td v-else>
                 Mit dem "dates"-Objekt kannst du eine Termin-Reihe spezifizieren.<br /><br />
-                Es beinhaltet im Grunde die gleichen Parameter wie die Haupt-Ebene, bietet aber die Möglichkeit mehrere Events zu definieren. Abgesehen von Datums- und Zeitangaben wird für die möglichken Parameter stets eine Information auf der Haupt-Ebene genutzt, sofern sie innerhalb des
-                "dates"-Elements fehlt. Für die "UID" geschieht dies allerdings nur für das erste Event (da die ID einzigartig sein muss). Weitere Events erhalten eine eigene, zufällig generierte ID.<br /><br />
+                Es beinhaltet die gleichen Termin-Parameter wie die Haupt-Ebene, bietet aber die Möglichkeit mehrere Events zu definieren. Root-Level-Werte überschreiben Werte im "dates"-Objekt - mit Ausnahme des Namens, wenn es mehrere Termine gibt (dann wird der Root-Name zum Titel der
+                Veranstaltungsreihe). Die "UID" wird nur für das erste Event übernommen (da die ID einzigartig sein muss). Weitere Events erhalten eine eigene, zufällig generierte ID.<br /><br />
                 <span class="underline">Attribute je Sub-Event-Block:</span><br />
                 <ul class="list-disc pl-5 pt-2">
                   <li>name</li>

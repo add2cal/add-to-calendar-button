@@ -2,6 +2,7 @@
 
 ## Version 2
 
+- v2.11 : ⚠️ Breaking: When setting the dates objects and respective attributes on the root level, root values always override the dates object (except for name in the multi-date case)
 - v2.10 : Hungarian language, no more X cursor, no different button icons for oneOption cases, create 1 ics file if organizer is the same, subtle style updates, allow to override automatic option-cleanup on mobile via mobile Options
 - v2.9 : New style "simple", better ical generation
 - v2.8 : Ukranian language

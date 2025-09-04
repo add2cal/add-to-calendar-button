@@ -3,7 +3,7 @@
  *  Add to Calendar Button
  *  ++++++++++++++++++++++
  *
- *  Version: 2.10.0
+ *  Version: 2.11.0
  *  Creator: Jens Kuerschner (https://jekuer.com)
  *  Project: https://github.com/add2cal/add-to-calendar-button
  *  License: Elastic License 2.0 (ELv2) (https://github.com/add2cal/add-to-calendar-button/blob/main/LICENSE.txt)
@@ -13,14 +13,14 @@
 
 import { tzlib_get_offset } from 'timezones-ical-library';
 import { atcbIsiOS, atcbIsAndroid, atcbIsMobile, atcbIsBrowser, atcbValidRecurrOptions, atcbInvalidSubscribeOptions, atcbIOSInvalidOptions, atcbAndroidInvalidOptions, atcbWcBooleanParams } from './atcb-globals.js';
-import { atcb_translate_via_time_zone, atcb_format_datetime, atcb_rewrite_html_elements, atcb_generate_uuid } from './atcb-util.js';
+import { atcb_translate_via_time_zone, atcb_format_datetime, atcb_rewrite_html_elements, atcb_generate_uuid, atcb_apply_transformation } from './atcb-util.js';
 import { availableLanguages, rtlLanguages } from './atcb-i18n';
 import { atcb_check_bookings } from './atcb-generate-pro.js';
 
 // CLEAN DATA BEFORE FURTHER VALIDATION (CONSIDERING SPECIAL RULES AND SCHEMES)
 async function atcb_decorate_data(data) {
   data = atcb_decorate_data_boolean(data);
-  data.timeZone = atcb_decorate_data_timezone(data.timeZone);
+  data = atcb_decorate_data_defaults(data);
   data = atcb_decorate_data_rrule(data);
   data = atcb_decorate_data_options(data);
   data = atcb_decorate_data_style(data);
@@ -28,8 +28,6 @@ async function atcb_decorate_data(data) {
   data.lightMode = atcb_decorate_light_mode(data.lightMode);
   data = atcb_decorate_data_i18n(data);
   data = atcb_decorate_data_dates(data);
-  data = atcb_decorate_data_meta(data);
-  data = atcb_decorate_data_extend(data);
   data = atcb_decorate_data_button_status_handling(data);
   data = await atcb_decorate_data_rsvp(data);
   return data;
@@ -52,12 +50,24 @@ function atcb_decorate_data_boolean(data) {
   return data;
 }
 
-// set time zone
-function atcb_decorate_data_timezone(tz = null) {
-  if (!tz || tz === '') {
-    return 'GMT';
+function atcb_decorate_data_defaults(data) {
+  // set time zone
+  if (!data.timeZone || data.timeZone === '') {
+    data.timeZone = 'GMT';
   }
-  return tz;
+  // set default status
+  if (!data.status || data.status === '') {
+    data.status = 'CONFIRMED';
+  }
+  // set default sequence
+  if (!data.sequence || data.sequence === '') {
+    data.sequence = 0;
+  }
+  // set language if not set
+  if (!data.language || data.language === '' || !availableLanguages.includes(data.language)) {
+    data.language = 'en';
+  }
+  return data;
 }
 
 // format RRULE
@@ -317,10 +327,6 @@ function atcb_decorate_light_mode(lightMode = '') {
 }
 
 function atcb_decorate_data_i18n(data) {
-  // set language if not set
-  if (!data.language || data.language === '' || !availableLanguages.includes(data.language)) {
-    data.language = 'en';
-  }
   // reduce language identifier, if long version is used
   if (data.language.length > 2) {
     data.language = data.language.substring(0, 2);
@@ -336,46 +342,23 @@ function atcb_decorate_data_i18n(data) {
 
 // optimize date and time information
 function atcb_decorate_data_dates(data) {
-  if (data.dates && data.dates.length > 0) {
-    for (let i = 0; i < data.dates.length; i++) {
-      // get global time zone, if not set within the date block, but globally
-      if (!data.dates[`${i}`].timeZone && data.timeZone) {
-        data.dates[`${i}`].timeZone = data.timeZone;
-      }
-      // get global useUserTZ, if not set within the date block, but globally
-      if (!data.dates[`${i}`].useUserTZ && data.useUserTZ) {
-        data.dates[`${i}`].useUserTZ = data.useUserTZ;
-      }
-      // cleanup different date-time formats
-      const cleanedUpDates = atcb_date_cleanup(data.dates[`${i}`]);
-      data.dates[`${i}`].startDate = cleanedUpDates.startDate;
-      data.dates[`${i}`].endDate = cleanedUpDates.endDate;
-      data.dates[`${i}`].startTime = cleanedUpDates.startTime;
-      data.dates[`${i}`].endTime = cleanedUpDates.endTime;
-      data.dates[`${i}`].timeZone = cleanedUpDates.timeZone;
-      // calculating more special meta information
-      data.dates[`${i}`].timestamp = atcb_date_specials_calculation('timestamp', data.dates[`${i}`].startDate, data.dates[`${i}`].startTime, data.dates[`${i}`].timeZone);
-      data.dates[`${i}`].overdue = atcb_date_specials_calculation('overdue', data.dates[`${i}`].endDate, data.dates[`${i}`].endTime, data.dates[`${i}`].timeZone);
-    }
-  } else {
-    // in the single case, we do the same, but without the looping
-    data.dates = [];
-    data.dates[0] = new Object();
-    if (data.useUserTZ) data.dates[0].useUserTZ = data.useUserTZ;
-    const cleanedUpDates = atcb_date_cleanup(data);
-    // in addition, we directly move this information into the dates array block for better consistency at the next steps
-    data.startDate = data.dates[0].startDate = cleanedUpDates.startDate;
-    data.endDate = data.dates[0].endDate = cleanedUpDates.endDate;
-    data.startTime = data.dates[0].startTime = cleanedUpDates.startTime;
-    data.endTime = data.dates[0].endTime = cleanedUpDates.endTime;
-    data.timeZone = data.dates[0].timeZone = cleanedUpDates.timeZone;
-    // calculating more special meta information
-    if (!data.recurrence) {
-      data.dates[0].overdue = atcb_date_specials_calculation('overdue', data.endDate, data.endTime, data.timeZone);
-    } else {
-      // TODO: optimize for recurrence, where there is no endDate, but a count limit. We should calculate a recurrence endDate first and then do not need to change anything here.
-      data.dates[0].overdue = false;
-    }
+  // if there is no dates array, we create one with the name of the event (will be filled further afterwards)
+  if (!data.dates || !Array.isArray(data.dates)) {
+    data.dates = [{ name: data.name }];
+  }
+  // we copy recurrence from root, but just for easier access and only for the first array element. Multi-date events cannot be recurrent
+  if (data.recurrence && data.recurrence !== '') {
+    data.dates[0].recurrence = data.recurrence;
+  }
+  // process each date entry and decorate it
+  for (let i = 0; i < data.dates.length; i++) {
+    data = atcb_move_root_values_into_dates(data, i);
+    data = atcb_dates_cleanup(data, i);
+    data = atcb_generate_unique_uid(data, i);
+    data = atcb_transform_strings(data, i);
+    data = atcb_decorate_data_description(data, i);
+    data = atcb_replace_custom_variables(data, i);
+    data = atcb_set_online_event_flag(data, i);
   }
   // calculate current time
   const now = new Date();
@@ -387,35 +370,78 @@ function atcb_decorate_data_dates(data) {
   if (!data.updated || data.updated === '') {
     data.updated = atcb_format_datetime(now, 'clean', true);
   }
-  return data;
-}
-
-function atcb_decorate_data_meta(data) {
-  // set default status on top level
-  if (!data.status || data.status === '') {
-    data.status = 'CONFIRMED';
-  }
-  // set default sequence on top level
-  if (!data.sequence || data.sequence === '') {
-    data.sequence = 0;
+  // last but not least, we sort any subEvent by start date ascending
+  if (data.dates.length > 1) {
+    data.dates.sort((a, b) => a.timestamp - b.timestamp);
   }
   return data;
 }
 
+// override the dates information with values on the root level
+function atcb_move_root_values_into_dates(data, i) {
+  const dateEntry = data.dates[`${i}`];
+  const properties = ['description', 'startDate', 'startTime', 'endDate', 'endTime', 'timeZone', 'useUserTZ', 'location', 'status', 'sequence', 'availability', 'organizer', 'attendee'];
+  // do it for name only if data.dates is not >1 as in this case, name would be used for the event series title
+  if (data.dates.length === 1) {
+    properties.unshift('name');
+  }
+  properties.forEach((prop) => {
+    if (data[`${prop}`] && data[`${prop}`] !== '') {
+      dateEntry[`${prop}`] = data[`${prop}`];
+    }
+  });
+  // TODO: delete root values and only use the dates object from here on
+  return data;
+}
+
+// cleanup different date-time formats
+function atcb_dates_cleanup(data, i) {
+  const dateEntry = data.dates[`${i}`];
+  const cleanedUpDates = atcb_date_cleanup(dateEntry);
+  dateEntry.startDate = cleanedUpDates.startDate;
+  dateEntry.endDate = cleanedUpDates.endDate;
+  dateEntry.startTime = cleanedUpDates.startTime;
+  dateEntry.endTime = cleanedUpDates.endTime;
+  dateEntry.timeZone = cleanedUpDates.timeZone;
+  // calculating more special meta information
+  dateEntry.timestamp = atcb_date_specials_calculation('timestamp', dateEntry.startDate, dateEntry.startTime, dateEntry.timeZone);
+  dateEntry.overdue = atcb_date_specials_calculation('overdue', dateEntry.endDate, dateEntry.endTime, dateEntry.timeZone);
+  return data;
+}
+
+// generate unique UID for date entry
+function atcb_generate_unique_uid(data, i) {
+  const dateEntry = data.dates[`${i}`];
+  if (!dateEntry.uid) {
+    if (i === 0 && data.uid && data.uid !== '') {
+      // first entry gets the base UID
+      dateEntry.uid = data.uid;
+    } else if (data.uid && data.uid !== '') {
+      // subsequent entries get incremented UID
+      dateEntry.uid = `${data.uid}-${i + 1}`;
+    } else {
+      // no global UID, generate new one
+      dateEntry.uid = atcb_generate_uuid();
+    }
+  }
+  return data;
+}
+
+// transform strings
+function atcb_transform_strings(data, i) {
+  const dateEntry = data.dates[`${i}`];
+  dateEntry.status = atcb_apply_transformation(dateEntry.status, 'upper');
+  dateEntry.availability = atcb_apply_transformation(dateEntry.availability, 'lower');
+  return data;
+}
+
+// clean up the description and create copies for different formats
 function atcb_decorate_data_description(data, i) {
   const cleanDescription = (desc) => desc.replace(/(\\r\\n|\\n|\\r|<br(\s*\/?)>)/g, '');
-  let description = data.dates[`${i}`].description || data.description || '';
+  let description = data.dates[`${i}`].description;
   if (description) {
     // remove any "wrong" line breaks
     description = cleanDescription(description);
-    // for each key in data.customVar, we replace any placeholders (%%placeholder%%) with the value
-    if (data.customVar) {
-      for (const key in data.customVar) {
-        const sanitizedKey = '%%' + key.replace(/[^\w\-.]/g, '') + '%%';
-        // eslint-disable-next-line security/detect-non-literal-regexp
-        description = description.replace(new RegExp(sanitizedKey, 'gi'), data.customVar[`${key}`]);
-      }
-    }
     // store a clean description copy without the URL magic for Yahoo, MS Teams, ...
     const descriptionHtmlFree = atcb_rewrite_html_elements(description, true);
     // ... and iCal
@@ -429,99 +455,21 @@ function atcb_decorate_data_description(data, i) {
   return data;
 }
 
-function atcb_decorate_data_extend(data) {
-  // process each date entry to extend with global values
-  for (let i = 0; i < data.dates.length; i++) {
-    data = atcb_decorate_data_description(data, i);
-    data = atcb_extend_date_with_global_values(data, i);
-    data = atcb_set_online_event_flag(data, i);
-    data = atcb_generate_unique_uid(data, i);
-    data = atcb_replace_custom_variables(data, i);
-  }
-  // we also copy recurrence, but just for easier access and only for the first array element. Multi-date events cannot be recurrent
-  if (data.recurrence && data.recurrence !== '') {
-    data.dates[0].recurrence = data.recurrence;
-  }
-  // last but not least, we sort any subEvent by start date ascending
-  if (data.dates.length > 1) {
-    data.dates.sort((a, b) => a.timestamp - b.timestamp);
-  }
-  return data;
-}
-
-// extend a single date entry with global values where not already set
-function atcb_extend_date_with_global_values(data, dateIndex) {
-  const dateEntry = data.dates[`${dateIndex}`];
-  // copy global values to date entry using reusable copy function
-  atcb_copy_global_to_date_entry(dateEntry, 'name', data.name, { allowEmpty: true });
-  atcb_copy_global_to_date_entry(dateEntry, 'status', data.status, { transform: 'upper', applyTransformAlways: true });
-  atcb_copy_global_to_date_entry(dateEntry, 'sequence', data.sequence);
-  atcb_copy_global_to_date_entry(dateEntry, 'organizer', data.organizer);
-  atcb_copy_global_to_date_entry(dateEntry, 'attendee', data.attendee);
-  atcb_copy_global_to_date_entry(dateEntry, 'availability', data.availability, { transform: 'lower', applyTransformAlways: true });
-  atcb_copy_global_to_date_entry(dateEntry, 'location', data.location);
-  return data;
-}
-
-// reusable function to copy a property from global data to date entry with optional transformation
-function atcb_copy_global_to_date_entry(dateEntry, property, globalValue, options = {}) {
-  const { allowEmpty = false, transform = null, applyTransformAlways = false } = options;
-  // determine if we should copy the global value
-  const shouldCopy = allowEmpty ? (!dateEntry[`${property}`] || dateEntry[`${property}`] === '') && globalValue !== undefined : !dateEntry[`${property}`] && globalValue;
-  if (shouldCopy) {
-    dateEntry[`${property}`] = atcb_apply_transformation(globalValue, transform);
-  } else if (applyTransformAlways && dateEntry[`${property}`]) {
-    // apply transformation to existing value if specified
-    dateEntry[`${property}`] = atcb_apply_transformation(dateEntry[`${property}`], transform);
-  }
-}
-
-// apply transformation to a value based on type
-function atcb_apply_transformation(value, transform) {
-  if (!transform || !value) return value;
-  switch (transform) {
-    case 'upper':
-      return value.toString().toUpperCase();
-    case 'lower':
-      return value.toString().toLowerCase();
-    default:
-      return value;
-  }
-}
-
 // set online event flag based on location URL
-function atcb_set_online_event_flag(data, dateIndex) {
-  const dateEntry = data.dates[`${dateIndex}`];
+function atcb_set_online_event_flag(data, i) {
+  const dateEntry = data.dates[`${i}`];
   if (dateEntry.location && dateEntry.location.startsWith('http')) {
     dateEntry.onlineEvent = true;
   } else {
-    dateEntry.onlineEvent = false;
-  }
-  return data;
-}
-
-// generate unique UID for date entry
-function atcb_generate_unique_uid(data, dateIndex) {
-  const dateEntry = data.dates[`${dateIndex}`];
-  if (!dateEntry.uid) {
-    if (dateIndex === 0 && data.uid && data.uid !== '') {
-      // first entry gets the base UID
-      dateEntry.uid = data.uid;
-    } else if (data.uid && data.uid !== '') {
-      // subsequent entries get incremented UID
-      dateEntry.uid = `${data.uid}-${dateIndex + 1}`;
-    } else {
-      // no global UID, generate new one
-      dateEntry.uid = atcb_generate_uuid();
-    }
+    dateEntry.v = false;
   }
   return data;
 }
 
 // replace custom variable placeholders in name and location
-function atcb_replace_custom_variables(data, dateIndex) {
+function atcb_replace_custom_variables(data, i) {
   if (!data.customVar) return data;
-  const dateEntry = data.dates[`${dateIndex}`];
+  const dateEntry = data.dates[`${i}`];
   for (const key in data.customVar) {
     const value = data.customVar[`${key}`];
     dateEntry.name = atcb_replace_placeholder(dateEntry.name, value);
@@ -704,4 +652,4 @@ async function atcb_decorate_data_rsvp(data) {
   return data;
 }
 
-export { atcb_decorate_data, atcb_decorate_data_dates, atcb_decorate_data_timezone };
+export { atcb_decorate_data, atcb_decorate_data_dates };

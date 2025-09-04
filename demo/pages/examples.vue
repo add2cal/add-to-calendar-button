@@ -338,7 +338,7 @@ watch(locale, value => {
           </p>
           <p>
             You define those parts by placing them as separate objects in a dates array.<br />
-            Individual date and time information would be required - global ones will be ignored.<br />
+            Individual date and time information would be required. Root values override individual ones (except for the name, if there is more than 1 date - in this case, the name will be used for the event series title).<br />
             Events get automatically sorted based on their startDate.<br />
             You can omit the starting '[' and ending ']', if necessary (e.g. when using the WordPress Shortcode).
           </p>
@@ -350,7 +350,7 @@ watch(locale, value => {
           </p>
           <p>
             Du kannst diese einzelnen Teile mit dem "dates" Objekt in einem Event spezifizieren.<br />
-            Zeit-Informationen je Sub-Event sind verpflichtend - Daten auf übergeordneter Ebene werden ignoriert.<br />
+            Zeit-Informationen je Sub-Event sind verpflichtend. Werte auf der Basis-Ebene überschreiben Werte in dem "dates" Objekt (außer "name", falls es mehr als 1 Termin gibt. In diesem Fall wird der Name für den Titel der Veranstaltungsreihe verwendet).<br />
             Sub-Events werden automatisch nach StartDate sortiert.<br />
             Falls nötig, kannst du die '[' und ']' Zeichen aussparen (bspw. bei Nutzung des WordPress Shortcodes).
           </p>
