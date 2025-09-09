@@ -3,7 +3,7 @@
  *  Add to Calendar Button
  *  ++++++++++++++++++++++
  *
- *  Version: 2.11.2
+ *  Version: 2.11.3
  *  Creator: Jens Kuerschner (https://jekuer.com)
  *  Project: https://github.com/add2cal/add-to-calendar-button
  *  License: Elastic License 2.0 (ELv2) (https://github.com/add2cal/add-to-calendar-button/blob/main/LICENSE.txt)
@@ -508,8 +508,8 @@ function atcb_date_cleanup(dateTimeData) {
     if (!isValidDateFormat(dateStr) && !isValidTodayFormat(dateStr)) {
       dateTimeData[point + 'Date'] = 'badly-formed';
     } else {
-      // dynamic date replacement (if dateStr includes a +)
-      if (/\+/.test(dateStr)) dateTimeData[point + 'Date'] = atcb_date_calculation(dateStr);
+      // dynamic date replacement (if dateStr includes a + or is today format)
+      if (/\+/.test(dateStr) || isValidTodayFormat(dateStr)) dateTimeData[point + 'Date'] = atcb_date_calculation(dateStr);
       // second, if valid, clean up
       if (dateTimeData[point + 'Date']) {
         // identify a possible time information within the date string
