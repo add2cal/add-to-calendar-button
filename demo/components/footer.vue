@@ -70,7 +70,7 @@ function topFunction() {
             </span>
             <div class="mt-6 text-xs sm:mt-5 md:mt-3">
               <span class="font-semibold text-zinc-500 dark:text-zinc-400"> &copy; {{new Date().getFullYear()}} </span>
-              <span class="lowercase text-zinc-400 dark:text-zinc-500"> , Current Version: 2.11.2 </span>
+              <span class="lowercase text-zinc-400 dark:text-zinc-500"> , Current Version: 2.11.3 </span>
             </div>
           </div>
           <div class="hidden self-center sm:block">
