@@ -3,7 +3,7 @@
  *  Add to Calendar Button
  *  ++++++++++++++++++++++
  *
- *  Version: 2.11.3
+ *  Version: 2.11.4
  *  Creator: Jens Kuerschner (https://jekuer.com)
  *  Project: https://github.com/add2cal/add-to-calendar-button
  *  License: Elastic License 2.0 (ELv2) (https://github.com/add2cal/add-to-calendar-button/blob/main/LICENSE.txt)
@@ -62,6 +62,11 @@ function atcb_decorate_data_defaults(data) {
   // set default sequence
   if (!data.sequence || data.sequence === '') {
     data.sequence = 0;
+  } else {
+    data.sequence = parseInt(data.sequence);
+    if (isNaN(data.sequence) || data.sequence < 0) {
+      data.sequence = 0;
+    }
   }
   // set language if not set
   if (!data.language || data.language === '' || !availableLanguages.includes(data.language)) {
@@ -386,7 +391,8 @@ function atcb_move_root_values_into_dates(data, i) {
     properties.unshift('name');
   }
   properties.forEach((prop) => {
-    if (data[`${prop}`] && data[`${prop}`] !== '') {
+    // only override if value is given on root level (mind sequence, where 0 is a valid value)
+    if ((data[`${prop}`] && data[`${prop}`] !== '') || (prop === 'sequence' && data[`${prop}`] === 0)) {
       dateEntry[`${prop}`] = data[`${prop}`];
     }
   });
