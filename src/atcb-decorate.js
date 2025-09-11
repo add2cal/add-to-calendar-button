@@ -3,7 +3,7 @@
  *  Add to Calendar Button
  *  ++++++++++++++++++++++
  *
- *  Version: 2.11.4
+ *  Version: 2.11.5
  *  Creator: Jens Kuerschner (https://jekuer.com)
  *  Project: https://github.com/add2cal/add-to-calendar-button
  *  License: Elastic License 2.0 (ELv2) (https://github.com/add2cal/add-to-calendar-button/blob/main/LICENSE.txt)
@@ -50,23 +50,33 @@ function atcb_decorate_data_boolean(data) {
   return data;
 }
 
-function atcb_decorate_data_defaults(data) {
+function atcb_set_date_defaults(dateEntry) {
   // set time zone
-  if (!data.timeZone || data.timeZone === '') {
-    data.timeZone = 'GMT';
+  if (!dateEntry.timeZone || dateEntry.timeZone === '') {
+    dateEntry.timeZone = 'GMT';
   }
   // set default status
-  if (!data.status || data.status === '') {
-    data.status = 'CONFIRMED';
+  if (!dateEntry.status || dateEntry.status === '') {
+    dateEntry.status = 'CONFIRMED';
   }
   // set default sequence
-  if (!data.sequence || data.sequence === '') {
-    data.sequence = 0;
+  if (!dateEntry.sequence || dateEntry.sequence === '') {
+    dateEntry.sequence = 0;
   } else {
-    data.sequence = parseInt(data.sequence);
-    if (isNaN(data.sequence) || data.sequence < 0) {
-      data.sequence = 0;
+    dateEntry.sequence = parseInt(dateEntry.sequence);
+    if (isNaN(dateEntry.sequence) || dateEntry.sequence < 0) {
+      dateEntry.sequence = 0;
     }
+  }
+}
+
+function atcb_decorate_data_defaults(data) {
+  if (data.dates) {
+    for (let i = 0; i < data.dates.length; i++) {
+      atcb_set_date_defaults(data.dates[`${i}`]);
+    }
+  } else {
+    atcb_set_date_defaults(data);
   }
   // set language if not set
   if (!data.language || data.language === '' || !availableLanguages.includes(data.language)) {
