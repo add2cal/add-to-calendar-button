@@ -620,10 +620,21 @@ function atcb_decorate_data_button_status_handling(data) {
     return true;
   })();
   if (data.allOverdue) {
-    if (data.pastDateHandling == 'disable') {
+    if (data.pastDateHandling === 'disable') {
       data.disabled = true;
-    } else if (data.pastDateHandling == 'hide') {
+    } else if (data.pastDateHandling === 'hide') {
       data.hidden = true;
+    }
+  } else {
+    // if there are >1 dates, we drop those that are overdue, if the handling is set to hide
+    if (data.pastDateHandling === 'hide' && data.dates.length > 1) {
+      const filteredDates = [];
+      for (let i = 0; i < data.dates.length; i++) {
+        if (!data.dates[`${i}`].overdue) {
+          filteredDates.push(data.dates[`${i}`]);
+        }
+      }
+      data.dates = filteredDates;
     }
   }
   // second, check whether all dates are status "cancelled"

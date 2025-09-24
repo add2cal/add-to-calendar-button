@@ -644,6 +644,14 @@ function atcb_generate_date_button(data, parent, subEvent = 'all', oneOption = f
   let subEventAll = false;
   if (subEvent === 'all') {
     subEvent = 0;
+    if (!data.allOverdue) {
+      for (let i = 0; i < data.dates.length; i++) {
+        if (!data.dates[`${i}`].overdue) {
+          subEvent = i;
+          break;
+        }
+      }
+    }
     subEventAll = true;
   }
   const startDate = new Date(atcb_generate_time(data.dates[`${subEvent}`]).start);

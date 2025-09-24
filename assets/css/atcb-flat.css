@@ -782,10 +782,8 @@ a.atcb-modal-btn:not([disabled]):hover {
 
 .atcb-date-btn-content-location {
   overflow: hidden;
-  display: -webkit-box;
-  -webkit-line-clamp: 1;
-  line-clamp: 1;
-  word-break: break-all;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .atcb-date-btn-content-icon {
