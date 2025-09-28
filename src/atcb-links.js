@@ -3,7 +3,7 @@
  *  Add to Calendar Button
  *  ++++++++++++++++++++++
  *
- *  Version: 2.11.5
+ *  Version: 2.12.0
  *  Creator: Jens Kuerschner (https://jekuer.com)
  *  Project: https://github.com/add2cal/add-to-calendar-button
  *  License: Elastic License 2.0 (ELv2) (https://github.com/add2cal/add-to-calendar-button/blob/main/LICENSE.txt)
@@ -534,11 +534,13 @@ function atcb_generate_ical(host, data, type, subEvent = 'all', keyboardTrigger 
         return ';VALUE=DATE';
       }
       if (data.dates[`${i}`].timeZone && data.dates[`${i}`].timeZone !== '') {
-        const timeZoneBlock = tzlib_get_ical_block(data.dates[`${i}`].timeZone);
-        if (!usedTimeZones.includes(data.dates[`${i}`].timeZone)) {
+        // for certain time zones (mostly GMT +/- something and some US time zones), we use GMT and a converted datetime as this would not be supported by Google Calendar and one could use the ics there
+        const timeZone = /GMT[+|-]\d{1,2}|Etc\/U|Etc\/Zulu|CET|CST6CDT|EET|EST|MET|MST|PST8PDT|WET/i.test(data.dates[`${i}`].timeZone) ? 'GMT' : data.dates[`${i}`].timeZone;
+        const timeZoneBlock = tzlib_get_ical_block(timeZone);
+        if (!usedTimeZones.includes(timeZone)) {
           ics_lines.push(timeZoneBlock[0]);
         }
-        usedTimeZones.push(data.dates[`${i}`].timeZone);
+        usedTimeZones.push(timeZone);
         return ';' + timeZoneBlock[1];
       }
     })();

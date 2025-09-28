@@ -408,12 +408,12 @@ definePageMeta({
               <th scope="row">recurrence_until</th>
               <td><em>String</em></td>
               <td v-if="locale=='en'">
-                Defines an end date.<br /><br />
-                <span class="text-red-700">Mind that this does not work in many applications! Rather use the count option.</span>
+                Defines an end date.<br />
+                We automatically convert this into the correct COUNT value as UNTIL is not supported by all applications.
               </td>
               <td v-else>
-                Definiert ein End-Datum.<br /><br />
-                <span class="text-red-700">Beachte, dass dies von vielen Anwendungen nicht unterstützt wird! Nutze stattdessen lieber die "count"-Option.</span>
+                Definiert ein End-Datum.<br />
+                Wir wandeln diesen Wert automatisch in einen korrekten COUNT-Wert um, da UNTIL nicht von allen Anwendungen unterstützt wird.
               </td>
             </tr>
             <tr id="recurrence_count">

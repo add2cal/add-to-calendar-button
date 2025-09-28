@@ -3,7 +3,7 @@
  *  Add to Calendar Button
  *  ++++++++++++++++++++++
  *
- *  Version: 2.11.5
+ *  Version: 2.12.0
  *  Creator: Jens Kuerschner (https://jekuer.com)
  *  Project: https://github.com/add2cal/add-to-calendar-button
  *  License: Elastic License 2.0 (ELv2) (https://github.com/add2cal/add-to-calendar-button/blob/main/LICENSE.txt)
@@ -13,7 +13,7 @@
 
 import { tzlib_get_offset } from 'timezones-ical-library';
 import { atcbIsiOS, atcbIsAndroid, atcbIsMobile, atcbIsBrowser, atcbValidRecurrOptions, atcbInvalidSubscribeOptions, atcbIOSInvalidOptions, atcbAndroidInvalidOptions, atcbWcBooleanParams } from './atcb-globals.js';
-import { atcb_translate_via_time_zone, atcb_format_datetime, atcb_rewrite_html_elements, atcb_generate_uuid, atcb_apply_transformation } from './atcb-util.js';
+import { atcb_translate_via_time_zone, atcb_format_datetime, atcb_rewrite_html_elements, atcb_generate_uuid, atcb_apply_transformation, atcb_getNextOccurrence, atcb_parseRRule } from './atcb-util.js';
 import { availableLanguages, rtlLanguages } from './atcb-i18n';
 import { atcb_check_bookings } from './atcb-generate-pro.js';
 
@@ -22,6 +22,9 @@ async function atcb_decorate_data(data) {
   data = atcb_decorate_data_boolean(data);
   data = atcb_decorate_data_defaults(data);
   data = atcb_decorate_data_rrule(data);
+  if (data.recurrence && data.recurrence !== '' && (!data.dates || data.dates.length === 1)) {
+    data = atcb_decorate_data_recurring_events(data);
+  }
   data = atcb_decorate_data_options(data);
   data = atcb_decorate_data_style(data);
   data.sizes = atcb_decorate_sizes(data.size);
@@ -90,60 +93,118 @@ function atcb_decorate_data_rrule(data) {
   if (data.recurrence && data.recurrence !== '') {
     // remove spaces and force upper case
     data.recurrence = data.recurrence.replace(/\s+/g, '').toUpperCase();
-    // pre-validate
-    if (!/^(?:RRULE:[\w=;,:+\-/\\]+|daily|weekly|monthly|yearly)$/im.test(data.recurrence)) {
-      data.recurrence = '!wrong rrule format!';
+    // if RRULE is set, we parse date from it
+    if (/^RRULE:/i.test(data.recurrence)) {
+      data.recurrence_simplyfied = false;
+      const rruleParts = atcb_parseRRule(data.recurrence, false);
+      data.recurrence_until = rruleParts.UNTIL;
+      data.recurrence_count = rruleParts.COUNT;
+      data.recurrence_byDay = rruleParts.BYDAY;
+      data.recurrence_byMonth = rruleParts.BYMONTH;
+      data.recurrence_byMonthDay = rruleParts.BYMONTHDAY;
+      data.recurrence_interval = rruleParts.INTERVAL;
+      data.recurrence_frequency = rruleParts.FREQ;
     } else {
-      // check if RRULE already
-      if (/^RRULE:/i.test(data.recurrence)) {
-        data.recurrence_simplyfied = false;
-        // draw easy rules from RRULE if possible
-        const rruleParts = data.recurrence.substring(6).split(';');
-        const rruleObj = new Object();
-        rruleParts.forEach(function (rule) {
-          rruleObj[rule.split('=')[0]] = rule.split('=')[1];
-        });
-        data.recurrence_until = rruleObj.UNTIL ? rruleObj.UNTIL : '';
-        data.recurrence_count = rruleObj.COUNT ? rruleObj.COUNT : '';
-        data.recurrence_byDay = rruleObj.BYDAY ? rruleObj.BYDAY : '';
-        data.recurrence_byMonth = rruleObj.BYMONTH ? rruleObj.BYMONTH : '';
-        data.recurrence_byMonthDay = rruleObj.BYMONTHDAY ? rruleObj.BYMONTHDAY : '';
-        data.recurrence_interval = rruleObj.INTERVAL ? rruleObj.INTERVAL : 1;
-        data.recurrence_frequency = rruleObj.FREQ ? rruleObj.FREQ : '';
-      } else {
-        data.recurrence_simplyfied = true;
-        // set interval if not given
-        if (!data.recurrence_interval || data.recurrence_interval === '') {
-          data.recurrence_interval = 1;
+      // otherwise, we create an RRULE from the easy rules
+      data.recurrence_simplyfied = true;
+      // set interval if not given
+      if (!data.recurrence_interval || data.recurrence_interval === '') {
+        data.recurrence_interval = 1;
+      }
+      // set weekstart if not given
+      if (!data.recurrence_weekstart || (data.recurrence_weekstart === '') | (data.recurrence_weekstart.length > 2)) {
+        data.recurrence_weekstart = 'MO';
+      }
+      // save frequency before overriding the main recurrence data
+      data.recurrence_frequency = data.recurrence;
+      // generate the RRULE from easy rules
+      data.recurrence = 'RRULE:FREQ=' + data.recurrence + ';WKST=' + data.recurrence_weekstart + ';INTERVAL=' + data.recurrence_interval;
+      // TODO: If "until" is given, translate it into a "count" and remove the "until" (here and in the above block). This would be way more stable!
+      if (data.recurrence_until && data.recurrence_until !== '') {
+        if (data.endTime && data.endTime !== '') {
+          data.recurrence = data.recurrence + ';UNTIL=' + data.recurrence_until.replace(/-/g, '').slice(0, 8) + 'T' + data.endTime.replace(':', '') + '00';
+        } else {
+          data.recurrence = data.recurrence + ';UNTIL=' + data.recurrence_until.replace(/-/g, '').slice(0, 8);
         }
-        // set weekstart if not given
-        if (!data.recurrence_weekstart || (data.recurrence_weekstart === '') | (data.recurrence_weekstart.length > 2)) {
-          data.recurrence_weekstart = 'MO';
-        }
-        // save frequency before overriding the main recurrence data
-        data.recurrence_frequency = data.recurrence;
-        // generate the RRULE from easy rules
-        data.recurrence = 'RRULE:FREQ=' + data.recurrence + ';WKST=' + data.recurrence_weekstart + ';INTERVAL=' + data.recurrence_interval;
-        // TODO: If "until" is given, translate it into a "count" and remove the "until" (here and in the above block). This would be way more stable!
-        if (data.recurrence_until && data.recurrence_until !== '') {
-          if (data.endTime && data.endTime !== '') {
-            data.recurrence = data.recurrence + ';UNTIL=' + data.recurrence_until.replace(/-/g, '').slice(0, 8) + 'T' + data.endTime.replace(':', '') + '00';
-          } else {
-            data.recurrence = data.recurrence + ';UNTIL=' + data.recurrence_until.replace(/-/g, '').slice(0, 8);
-          }
-        }
-        if (data.recurrence_count && data.recurrence_count !== '') {
-          data.recurrence = data.recurrence + ';COUNT=' + data.recurrence_count;
-        }
-        if (data.recurrence_byDay && data.recurrence_byDay !== '') {
-          data.recurrence = data.recurrence + ';BYDAY=' + data.recurrence_byDay;
-        }
-        if (data.recurrence_byMonth && data.recurrence_byMonth !== '') {
-          data.recurrence = data.recurrence + ';BYMONTH=' + data.recurrence_byMonth;
-        }
-        if (data.recurrence_byMonthDay && data.recurrence_byMonthDay !== '') {
-          data.recurrence = data.recurrence + ';BYMONTHDAY=' + data.recurrence_byMonthDay;
-        }
+      }
+      if (data.recurrence_count && data.recurrence_count !== '') {
+        data.recurrence = data.recurrence + ';COUNT=' + data.recurrence_count;
+      }
+      if (data.recurrence_byDay && data.recurrence_byDay !== '') {
+        data.recurrence = data.recurrence + ';BYDAY=' + data.recurrence_byDay;
+      }
+      if (data.recurrence_byMonth && data.recurrence_byMonth !== '') {
+        data.recurrence = data.recurrence + ';BYMONTH=' + data.recurrence_byMonth;
+      }
+      if (data.recurrence_byMonthDay && data.recurrence_byMonthDay !== '') {
+        data.recurrence = data.recurrence + ';BYMONTHDAY=' + data.recurrence_byMonthDay;
+      }
+    }
+  }
+  return data;
+}
+
+// Adjust recurring events for next data
+function atcb_decorate_data_recurring_events(data) {
+  const startDate = data.dates?.[0].startDate || data.startDate;
+  const startTime = data.dates?.[0].startTime || data.startTime;
+  const startDateTime = (function () {
+    if (startTime) {
+      const offset = tzlib_get_offset(data.dates?.[0].timeZone || data.timeZone, startDate, startTime);
+      return new Date(startDate + ' ' + startTime + ':00 GMT' + offset);
+    }
+    return new Date(startDate + 'T00:00:00Z');
+  })();
+  const occurenceData = atcb_getNextOccurrence(data.recurrence, startDateTime);
+  if (!occurenceData || !occurenceData.nextOccurrence) {
+    // if no next occurrence could be determined, we just return the original data (e.g. if there is no end to the recurrence)
+    return data;
+  }
+  const nextOccurrence =
+    String(occurenceData.nextOccurrence.getFullYear()) +
+    '-' +
+    String(occurenceData.nextOccurrence.getMonth() + 1).padStart(2, '0') +
+    '-' +
+    String(occurenceData.nextOccurrence.getDate()).padStart(2, '0') +
+    (startTime && startTime !== '' ? 'T' + String(occurenceData.nextOccurrence.getHours()).padStart(2, '0') + ':' + String(occurenceData.nextOccurrence.getMinutes()).padStart(2, '0') : '');
+  // determine start date from next occurrence Date object
+  data.startDate = nextOccurrence.slice(0, 10);
+  if (startTime && startTime !== '') {
+    data.startTime = nextOccurrence.slice(11, 16);
+  }
+  // determine new end date based on duration between start and end of original event
+  const endDate = data.dates?.[0].endDate || data.endDate || startDate;
+  const endTime = data.dates?.[0].endTime || data.endTime || '';
+  const diff = new Date(endDate + (endTime && endTime !== '' ? 'T' + endTime : 'T' + startTime)) - new Date(startDate + (startTime && startTime !== '' ? 'T' + startTime : ''));
+  const newEndDateTime = new Date(occurenceData.nextOccurrence.getTime() + diff);
+  const newEndDateTimeString =
+    String(newEndDateTime.getFullYear()) +
+    '-' +
+    String(newEndDateTime.getMonth() + 1).padStart(2, '0') +
+    '-' +
+    String(newEndDateTime.getDate()).padStart(2, '0') +
+    (endTime && endTime !== '' ? 'T' + String(newEndDateTime.getHours()).padStart(2, '0') + ':' + String(newEndDateTime.getMinutes()).padStart(2, '0') : '');
+  data.endDate = newEndDateTimeString.slice(0, 10);
+  if (endTime && endTime !== '') {
+    data.endTime = newEndDateTimeString.slice(11, 16);
+  }
+  // set count
+  if (occurenceData.adjustedCount < 2) {
+    // drop whole reccurence
+    data.recurrence = '';
+    data.recurrence_frequency = '';
+    data.recurrence_interval = '';
+  } else {
+    data.recurrence_count = occurenceData.adjustedCount;
+    // adjust RRULE accordingly
+    data.recurrence = data.recurrence.replace(/;?COUNT=\d+/i, ';COUNT=' + data.recurrence_count);
+    // drop until (as it is not supported by some calendars)
+    if (data.recurrence_until && data.recurrence_until !== '') {
+      data.recurrence_until = '';
+      data.recurrence = data.recurrence.replace(/;?UNTIL=\w+/i, ';COUNT=' + data.recurrence_count);
+
+      if (data.dates && data.dates[0].recurrence) {
+        data.dates[0].recurrence = data.dates[0].recurrence.replace(/;?UNTIL=\w+/i, ';COUNT=' + data.recurrence_count);
       }
     }
   }
@@ -152,11 +213,12 @@ function atcb_decorate_data_rrule(data) {
 
 // cleanup options, standardizing names, and check for mobile special rules
 function atcb_decorate_data_options(data) {
-  const theOptions = atcb_determine_options_source(data);
-  let { newOptions, iCalGiven, appleGiven } = atcb_process_options(theOptions, data);
+  const { options, source } = atcb_determine_options_source(data);
+  let { newOptions, iCalGiven, appleGiven } = atcb_process_options(options, data);
   newOptions = atcb_handle_special_google_calendar_case(data, newOptions);
-  ({ newOptions, iCalGiven } = atcb_ensure_fallback_options(newOptions, data, iCalGiven));
-  newOptions = atcb_adjust_platform_specific_options(newOptions, data, iCalGiven, appleGiven);
+  ({ newOptions, iCalGiven } = atcb_ensure_fallback_options(newOptions, iCalGiven));
+  const mobileOptionsUsedWithIcs = source !== 'general' && (options.includes('ical') || options.includes('apple'));
+  newOptions = atcb_adjust_platform_specific_options(newOptions, data, iCalGiven, appleGiven, mobileOptionsUsedWithIcs);
   // sort options alphabetically and update data
   newOptions.sort();
   data.options = newOptions;
@@ -165,18 +227,22 @@ function atcb_decorate_data_options(data) {
 
 // determine which options array to use based on platform and availability
 function atcb_determine_options_source(data) {
+  let source = 'general';
+  let options = data.options || ['ical'];
   if (atcbIsiOS() || data.fakeIOS) {
     if (data.optionsIOS && data.optionsIOS.length > 0) {
-      return data.optionsIOS;
+      source = 'ios';
+      options = data.optionsIOS;
     }
     if (data.optionsMobile && data.optionsMobile.length > 0) {
-      return data.optionsMobile;
+      source = 'mobile';
+      options = data.optionsMobile;
     }
+  } else if ((atcbIsAndroid() || data.fakeMobile || data.fakeAndroid) && data.optionsMobile && data.optionsMobile.length > 0) {
+    source = 'mobile';
+    options = data.optionsMobile;
   }
-  if ((atcbIsAndroid() || data.fakeMobile || data.fakeAndroid) && data.optionsMobile && data.optionsMobile.length > 0) {
-    return data.optionsMobile;
-  }
-  return data.options || ['ical'];
+  return { options, source };
 }
 
 // process options array and filter invalid options
@@ -211,7 +277,7 @@ function atcb_should_skip_option(optionName, data) {
 
 // check if option is invalid for current platform
 function atcb_is_platform_invalid_option(optionName, data) {
-  const isIOSWithInvalidOption = (atcbIsiOS() || data.fakeIOS) && atcbIOSInvalidOptions.includes(optionName) && (!data.optionsIOS || data.optionsIOS.length === 0);
+  const isIOSWithInvalidOption = (atcbIsiOS() || data.fakeIOS) && atcbIOSInvalidOptions.includes(optionName) && (!data.optionsIOS || data.optionsIOS.length === 0) && (!data.optionsMobile || data.optionsMobile.length === 0);
   const isAndroidWithInvalidOption = (atcbIsAndroid() || data.fakeMobile || data.fakeAndroid) && atcbAndroidInvalidOptions.includes(optionName) && (!data.optionsMobile || data.optionsMobile.length === 0);
   return isIOSWithInvalidOption || isAndroidWithInvalidOption;
 }
@@ -245,27 +311,32 @@ function atcb_handle_special_google_calendar_case(data, newOptions) {
 }
 
 // since the above can lead to excluding all options, we add the iCal option as default, if no other option is left
-function atcb_ensure_fallback_options(newOptions, data, iCalGiven) {
+function atcb_ensure_fallback_options(newOptions, iCalGiven) {
   if (newOptions.length === 0) {
-    if (!(atcbIsiOS() && !data.fakeIOS)) {
-      newOptions.push('ical');
-    }
+    newOptions.push('ical');
     iCalGiven = true;
   }
   return { newOptions, iCalGiven };
 }
 
 // adjust options based on platform-specific requirements
-function atcb_adjust_platform_specific_options(newOptions, data, iCalGiven, appleGiven) {
-  // for iOS, force Apple option if iCal was given but Apple wasn't
-  if ((atcbIsiOS() || data.fakeIOS) && iCalGiven && !appleGiven) {
-    newOptions.push('apple');
+function atcb_adjust_platform_specific_options(options, data, iCalGiven, appleGiven, mobileOptionsUsed = false) {
+  // generally, only adjust if not intentionally specified via mobile options
+  if (!mobileOptionsUsed) {
+    // for iOS, force Apple option if iCal was given but Apple wasn't
+    if ((atcbIsiOS() || data.fakeIOS) && iCalGiven && !appleGiven) {
+      options.push('apple');
+      // drop iCal option, since it does not make sense on iOS (as the apple option covers it)
+      options = options.filter((option) => option !== 'ical');
+    }
+    // for Android, force iCal option if Apple was given but iCal wasn't
+    else if ((atcbIsAndroid() || data.fakeMobile || data.fakeAndroid) && appleGiven && !iCalGiven) {
+      options.push('ical');
+      // drop Apple option, since it does not make sense on Android
+      options = options.filter((option) => option !== 'apple');
+    }
   }
-  // for Android, force iCal option if Apple was given but iCal wasn't
-  if ((atcbIsAndroid() || data.fakeMobile || data.fakeAndroid) && appleGiven && !iCalGiven) {
-    newOptions.push('ical');
-  }
-  return newOptions;
+  return options;
 }
 
 function atcb_decorate_data_style(data) {
@@ -569,7 +640,7 @@ function atcb_date_specials_calculation(type, dateString, timeString = null, tim
       return new Date(dateString);
     })();
     if (type === 'timestamp') {
-      // create timestamps (only for sorting)
+      // create timestamps (for sorting and rrule calculations)
       return tmpDate.getTime();
     }
     // determine whether a date is overdue or not
@@ -604,9 +675,10 @@ function atcb_date_calculation(dateString) {
   }
 }
 
+// Adjust for past events
 function atcb_decorate_data_button_status_handling(data) {
   // first, check for how we should handle the behavior on overdue events
-  if (!data.pastDateHandling || (data.pastDateHandling != 'disable' && data.pastDateHandling != 'hide')) {
+  if (!data.pastDateHandling || (data.pastDateHandling !== 'disable' && data.pastDateHandling !== 'hide')) {
     data.pastDateHandling = 'none';
   }
   data.allOverdue = (function () {

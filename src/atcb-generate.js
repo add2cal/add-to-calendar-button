@@ -3,7 +3,7 @@
  *  Add to Calendar Button
  *  ++++++++++++++++++++++
  *
- *  Version: 2.11.5
+ *  Version: 2.12.0
  *  Creator: Jens Kuerschner (https://jekuer.com)
  *  Project: https://github.com/add2cal/add-to-calendar-button
  *  License: Elastic License 2.0 (ELv2) (https://github.com/add2cal/add-to-calendar-button/blob/main/LICENSE.txt)
@@ -627,7 +627,7 @@ function atcb_generate_date_button(data, parent, subEvent = 'all', oneOption = f
     if (data.label && data.label !== '') {
       return data.label;
     }
-    return '+ ' + atcb_translate_hook('label.addtocalendar', data);
+    return atcb_translate_hook('label.addtocalendar', data);
   })();
   const cancelledInfo = (function () {
     if ((subEvent !== 'all' && data.dates[`${subEvent}`].status.toLowerCase() === 'cancelled') || (subEvent === 'all' && data.allCancelled)) {
@@ -753,6 +753,13 @@ function atcb_generate_date_button(data, parent, subEvent = 'all', oneOption = f
     btnCheck.classList.add('atcb-checkmark');
     btnCheck.innerHTML = atcbIcon['checkmark'];
     parent.append(btnCheck);
+  }
+  // small + at the corner
+  if (!data.dates[`${subEvent}`].overdue || data.pastDateHandling === 'none') {
+    const btnPlus = document.createElement('div');
+    btnPlus.classList.add('atcb-date-btn-plus');
+    btnPlus.innerHTML = '+';
+    parent.append(btnPlus);
   }
   // set aria label
   // TODO: Make this more accessible by using more detailed date information (could be also generated in a more central place - maybe decoration part); also merge this with the label generation for better structure
