@@ -900,7 +900,7 @@ a.atcb-modal-btn:not([disabled]):hover {
 
 .atcb-date-btn-plus {
   position: absolute;
-  border-radius: 4px 0 4px 0;
+  border-radius: 4px 0;
   bottom: 0;
   right: 0;
   background: var(--date-btn-cal-background);
