@@ -3,7 +3,7 @@
  *  Add to Calendar Button
  *  ++++++++++++++++++++++
  *
- *  Version: 2.11.5
+ *  Version: 2.12.0
  *  Creator: Jens Kuerschner (https://jekuer.com)
  *  Project: https://github.com/add2cal/add-to-calendar-button
  *  License: Elastic License 2.0 (ELv2) (https://github.com/add2cal/add-to-calendar-button/blob/main/LICENSE.txt)
@@ -74,8 +74,8 @@ function atcb_generate_time(data, style = 'delimiters', targetCal = 'general', a
       return durationHours + ':' + ('0' + durationMinutes).slice(-2);
     })();
     // (see https://tz.add-to-calendar-technology.com/api/zones.json for available TZ names)
-    if (targetCal == 'ical' || (targetCal == 'google' && !/GMT[+|-]\d{1,2}|Etc\/U|Etc\/Zulu|CET|CST6CDT|EET|EST|MET|MST|PST8PDT|WET/i.test(data.timeZone))) {
-      // in the iCal case, we simply return and cut off the Z. Same applies to Google, except for GMT +/- time zones, which are not supported there.
+    if ((targetCal == 'ical' || targetCal == 'google') && !/GMT[+|-]\d{1,2}|Etc\/U|Etc\/Zulu|CET|CST6CDT|EET|EST|MET|MST|PST8PDT|WET/i.test(data.timeZone)) {
+      // in the iCal or Google case, we simply return and cut off the Z. Google does not support GMT +/- time zones (and we also adjust ical as it can be used for Google calendar).
       // everything else will be done by injecting the VTIMEZONE block at the iCal function
       return {
         start: atcb_format_datetime(newStartDate, 'clean', true, true),
@@ -634,7 +634,7 @@ function atcb_position_shadow_button_listener() {
   }
 }
 
-// // SHARED FUNCTION TO CALCULATE WHETHER WE BLOCK SCROLLING OR NOT (WHEN MODAL OR LIST IS LARGER THAN THE SCREEN HEIGHT)
+// // SHARED FUNCTION TO CALCULATE WHETHER WE BLOCK SCROLLING OR NOT
 function atcb_manage_body_scroll(host, modalObj = null) {
   const modal = (function () {
     // if a specific modal is defined, we take it. Otherwise we go for the latest one
@@ -652,14 +652,8 @@ function atcb_manage_body_scroll(host, modalObj = null) {
   if (modal == null) {
     return;
   }
-  const modalDim = modal.getBoundingClientRect();
-  if (modalDim.height + 150 > window.innerHeight) {
-    document.body.classList.add('atcb-modal-no-scroll');
-    document.documentElement.classList.add('atcb-modal-no-scroll');
-  } else {
-    document.body.classList.remove('atcb-modal-no-scroll');
-    document.documentElement.classList.remove('atcb-modal-no-scroll');
-  }
+  document.body.classList.add('atcb-modal-no-scroll');
+  document.documentElement.classList.add('atcb-modal-no-scroll');
 }
 
 // SHARED FUNCTION TO DEFINE WIDTH AND HEIGHT FOR "FULLSCREEN" FULLSIZE ELEMENTS
@@ -693,6 +687,145 @@ function atcb_apply_transformation(value, transform) {
     default:
       return value;
   }
+}
+
+// SHARED FUNCTION TO PARSE RRULES
+function atcb_parseRRule(rruleStr, deep = true) {
+  const parts = rruleStr
+    .replace('RRULE:', '')
+    .split(';')
+    .reduce((acc, part) => {
+      const [key, value] = part.split('=');
+      acc[`${key}`] = value;
+      return acc;
+    }, {});
+  if (!parts.FREQ) throw new Error('RRULE must have FREQ');
+  // Parse components
+  parts.FREQ = parts.FREQ.toUpperCase();
+  parts.INTERVAL = parseInt(parts.INTERVAL || 1, 10);
+  parts.COUNT = parts.COUNT ? parseInt(parts.COUNT, 10) : null;
+  if (parts.UNTIL) {
+    const untilStr = parts.UNTIL;
+    parts.UNTIL = deep ? new Date(Date.UTC(parseInt(untilStr.slice(0, 4), 10), parseInt(untilStr.slice(4, 6), 10) - 1, parseInt(untilStr.slice(6, 8), 10), parseInt(untilStr.slice(9, 11) || 0, 10), parseInt(untilStr.slice(11, 13) || 0, 10))) : untilStr;
+  }
+  if (parts.BYWEEKDAY || parts.BYDAY) {
+    const dayMap = { SU: 0, MO: 1, TU: 2, WE: 3, TH: 4, FR: 5, SA: 6 };
+    parts.BYWEEKDAY = deep
+      ? (parts.BYWEEKDAY || parts.BYDAY)
+          .split(',')
+          .map((day) => dayMap[day.trim().toUpperCase()])
+          .filter((n) => n !== undefined)
+      : parts.BYWEEKDAY || parts.BYDAY;
+  }
+  parts.BYMONTH = deep && parts.BYMONTH ? parts.BYMONTH.split(',').map((n) => parseInt(n, 10)) : parts.BYMONTH;
+  parts.BYYEARDAY = deep && parts.BYYEARDAY ? parts.BYYEARDAY.split(',').map((n) => parseInt(n, 10)) : parts.BYYEARDAY;
+  parts.BYMONTHDAY = deep && parts.BYMONTHDAY ? parts.BYMONTHDAY.split(',').map((n) => parseInt(n, 10)) : parts.BYMONTHDAY;
+  parts.BYWEEKNO = deep && parts.BYWEEKNO ? parts.BYWEEKNO.split(',').map((n) => parseInt(n, 10)) : parts.BYWEEKNO;
+  parts.BYHOUR = deep && parts.BYHOUR ? parts.BYHOUR.split(',').map((n) => parseInt(n, 10)) : parts.BYHOUR;
+  return parts;
+}
+
+// Calculate day of year (1-366)
+function getDayOfYear(date) {
+  const start = new Date(Date.UTC(date.getUTCFullYear(), 0, 1));
+  return Math.floor((date - start) / (1000 * 60 * 60 * 24)) + 1;
+}
+
+// Calculate ISO week number
+function getWeekNumber(date) {
+  const d = new Date(Date.UTC(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate()));
+  d.setUTCDate(d.getUTCDate() + 4 - (d.getUTCDay() || 7));
+  const yearStart = new Date(Date.UTC(d.getUTCFullYear(), 0, 1));
+  return Math.ceil(((d - yearStart) / 86400000 + 1) / 7);
+}
+
+// Check if date matches the FREQ and INTERVAL from start
+function matchesFreq(date, rrule, startDate) {
+  const interval = rrule.INTERVAL;
+  switch (rrule.FREQ) {
+    case 'YEARLY':
+      return (date.getUTCFullYear() - startDate.getUTCFullYear()) % interval === 0;
+    case 'MONTHLY': {
+      const months = (date.getUTCFullYear() - startDate.getUTCFullYear()) * 12 + (date.getUTCMonth() - startDate.getUTCMonth());
+      return months % interval === 0;
+    }
+    case 'WEEKLY': {
+      const daysW = Math.floor((date - startDate) / 86400000);
+      const weeks = Math.floor(daysW / 7);
+      return weeks % interval === 0;
+    }
+    case 'DAILY': {
+      const days = Math.floor((date - startDate) / 86400000);
+      return days % interval === 0;
+    }
+    default:
+      return true;
+  }
+}
+
+// Check if date matches all BY* rules, with implicit filters
+function matchesRRule(date, rrule, startDate) {
+  // Explicit BY rules
+  if (rrule.BYMONTH && !rrule.BYMONTH.includes(date.getUTCMonth() + 1)) return false;
+  if (rrule.BYYEARDAY && !rrule.BYYEARDAY.includes(getDayOfYear(date))) return false;
+  if (rrule.BYMONTHDAY && !rrule.BYMONTHDAY.includes(date.getUTCDate())) return false;
+  if (rrule.BYWEEKNO && !rrule.BYWEEKNO.includes(getWeekNumber(date))) return false;
+  if (rrule.BYWEEKDAY && !rrule.BYWEEKDAY.includes(date.getUTCDay())) return false;
+  if (rrule.BYHOUR && !rrule.BYHOUR.includes(date.getUTCHours())) return false;
+  // Implicit filters
+  if (!rrule.BYHOUR && date.getUTCHours() !== startDate.getUTCHours()) return false;
+  if (rrule.FREQ === 'WEEKLY' && !rrule.BYWEEKDAY && date.getUTCDay() !== startDate.getUTCDay()) return false;
+  if (rrule.FREQ === 'MONTHLY' && !rrule.BYMONTHDAY && !rrule.BYWEEKDAY && date.getUTCDate() !== startDate.getUTCDate()) return false;
+  if (rrule.FREQ === 'YEARLY' && !rrule.BYMONTH && date.getUTCMonth() !== startDate.getUTCMonth()) return false;
+  if (rrule.FREQ === 'YEARLY' && !rrule.BYMONTHDAY && !rrule.BYWEEKDAY && !rrule.BYYEARDAY && !rrule.BYWEEKNO && date.getUTCDate() !== startDate.getUTCDate()) return false;
+  return true;
+}
+
+// Get next occurrence and last if no next
+function atcb_getNextOccurrence(rruleStr, startDateTime) {
+  const rrule = atcb_parseRRule(rruleStr);
+  // abort early if no end
+  if (!rrule.COUNT && !rrule.UNTIL) {
+    return {
+      nextOccurrence: null,
+      adjustedCount: null,
+    };
+  }
+  // Get now (user's current time)
+  const now = new Date();
+  // Iterate from start date, collecting valid occurrences
+  const stepMs = rrule.BYHOUR ? 60 * 60 * 1000 : 24 * 60 * 60 * 1000;
+  let currentDate = startDateTime;
+  let occurrences = [];
+  let count = 0;
+  let maxIterations = 10000;
+  // Collect all valid occurrences up to COUNT or UNTIL
+  while (true) {
+    if (matchesFreq(currentDate, rrule, startDateTime) && matchesRRule(currentDate, rrule, startDateTime)) {
+      occurrences.push(currentDate);
+      count++;
+      if (rrule.COUNT && count >= rrule.COUNT) break;
+    }
+    if (rrule.UNTIL && currentDate > rrule.UNTIL) break;
+    currentDate = new Date(currentDate.getTime() + stepMs);
+    if (--maxIterations <= 0) throw new Error('Max iterations reached');
+  }
+  // Find next occurrence (first after now)
+  let nextDate = null;
+  let countDate = 0;
+  for (let d of occurrences) {
+    if (d > now) {
+      nextDate = d;
+      break;
+    }
+    countDate++;
+  }
+  // If no next, use last occurrence
+  const lastDate = occurrences.length > 0 ? occurrences[occurrences.length - 1] : null;
+  return {
+    nextOccurrence: nextDate || lastDate,
+    adjustedCount: rrule.COUNT ? rrule.COUNT - countDate : count - countDate,
+  };
 }
 
 // SHARED FUNCTION TO COPY TO CLIPBOARD
@@ -767,6 +900,8 @@ export {
   atcb_set_sizes,
   atcb_generate_uuid,
   atcb_apply_transformation,
+  atcb_parseRRule,
+  atcb_getNextOccurrence,
   atcb_copy_to_clipboard,
   atcb_debounce,
   atcb_debounce_leading,

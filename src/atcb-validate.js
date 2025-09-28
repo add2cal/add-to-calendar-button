@@ -3,7 +3,7 @@
  *  Add to Calendar Button
  *  ++++++++++++++++++++++
  *
- *  Version: 2.11.5
+ *  Version: 2.12.0
  *  Creator: Jens Kuerschner (https://jekuer.com)
  *  Project: https://github.com/add2cal/add-to-calendar-button
  *  License: Elastic License 2.0 (ELv2) (https://github.com/add2cal/add-to-calendar-button/blob/main/LICENSE.txt)
@@ -340,7 +340,7 @@ async function atcb_validate_rrule_simplyfied(data, msgPrefix) {
     throw new Error(msgPrefix + ' failed: recurrence data (until) misspelled');
   }
   if (data.recurrence_count && (data.recurrence_count < 1 || data.recurrence_count % 1 !== 0)) {
-    throw new Error(msgPrefix + ' failed: recurrence data (interval) misspelled');
+    throw new Error(msgPrefix + ' failed: recurrence data (count) misspelled');
   }
   if (data.recurrence_byMonth && data.recurrence_byMonth !== '' && !/^[\d,]+$/.test(data.recurrence_byMonth)) {
     throw new Error(msgPrefix + ' failed: recurrence data (byMonth) misspelled');

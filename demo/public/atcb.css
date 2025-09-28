@@ -5,7 +5,7 @@
  *
  * Style: Default
  *
- * Version: 2.11.5
+ * Version: 2.12.0
  * Creator: Jens Kuerschner (https://jekuer.com)
  * Project: https://github.com/add2cal/add-to-calendar-button
  * License: Elastic License 2.0 (ELv2) (https://github.com/add2cal/add-to-calendar-button/blob/main/LICENSE.txt)
@@ -683,7 +683,6 @@ a.atcb-modal-btn:not([disabled]):hover {
   border-radius: 4px 0 0 4px;
   align-self: stretch;
   background-color: var(--date-btn-cal-background);
-  color: var(--date-btn-hover-background);
   padding: .7em .8em .8em;
   width: 2.7em;
   align-items: center;
@@ -789,10 +788,8 @@ a.atcb-modal-btn:not([disabled]):hover {
 
 .atcb-date-btn-content-location {
   overflow: hidden;
-  display: -webkit-box;
-  -webkit-line-clamp: 1;
-  line-clamp: 1;
-  word-break: break-all;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .atcb-date-btn-content-icon {
@@ -823,11 +820,34 @@ a.atcb-modal-btn:not([disabled]):hover {
 
 .atcb-date-btn-content + .atcb-date-btn-content {
   margin-top: .3em;
+  padding-right: .6em;
 }
 
 .atcb-date-btn-content-text span:not(.atcb-icon-ical) {
   padding-right: .3em;
   display: inline-block;
+}
+
+.atcb-date-btn-plus {
+  position: absolute;
+  border-radius: 4px 0 4px 0;
+  bottom: 0;
+  right: 0;
+  background: var(--date-btn-cal-background);
+  color: var(--date-btn-cal-day-text);
+  display: flex;
+  font-size: .9em;
+  font-weight: normal;
+  height: 1em;
+  width: 1em;
+  padding: .1em;
+  justify-content: center;
+  align-items: center;
+}
+
+.atcb-button:focus-visible .atcb-date-btn-plus ,
+.atcb-subevent-btn:focus-visible .atcb-date-btn-plus  {
+  background-color: var(--accent-color);
 }
 
 /******************************
