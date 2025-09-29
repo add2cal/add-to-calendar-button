@@ -766,13 +766,23 @@ function matchesFreq(date, rrule, startDate) {
 // Check if date matches all BY* rules, with implicit filters
 function matchesRRule(date, rrule, startDate) {
   // Explicit BY rules
+  if (!matchesBYRules(date, rrule)) return false;
+  // Implicit filters
+  if (!matchesImplicitRules(date, rrule, startDate)) return false;
+  return true;
+}
+
+function matchesBYRules(date, rrule) {
   if (rrule.BYMONTH && !rrule.BYMONTH.includes(date.getUTCMonth() + 1)) return false;
   if (rrule.BYYEARDAY && !rrule.BYYEARDAY.includes(getDayOfYear(date))) return false;
   if (rrule.BYMONTHDAY && !rrule.BYMONTHDAY.includes(date.getUTCDate())) return false;
   if (rrule.BYWEEKNO && !rrule.BYWEEKNO.includes(getWeekNumber(date))) return false;
   if (rrule.BYWEEKDAY && !rrule.BYWEEKDAY.includes(date.getUTCDay())) return false;
   if (rrule.BYHOUR && !rrule.BYHOUR.includes(date.getUTCHours())) return false;
-  // Implicit filters
+  return true;
+}
+
+function matchesImplicitRules(date, rrule, startDate) {
   if (!rrule.BYHOUR && date.getUTCHours() !== startDate.getUTCHours()) return false;
   if (rrule.FREQ === 'WEEKLY' && !rrule.BYWEEKDAY && date.getUTCDay() !== startDate.getUTCDay()) return false;
   if (rrule.FREQ === 'MONTHLY' && !rrule.BYMONTHDAY && !rrule.BYWEEKDAY && date.getUTCDate() !== startDate.getUTCDate()) return false;
