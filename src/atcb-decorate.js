@@ -3,7 +3,7 @@
  *  Add to Calendar Button
  *  ++++++++++++++++++++++
  *
- *  Version: 2.12.1
+ *  Version: 2.12.2
  *  Creator: Jens Kuerschner (https://jekuer.com)
  *  Project: https://github.com/add2cal/add-to-calendar-button
  *  License: Elastic License 2.0 (ELv2) (https://github.com/add2cal/add-to-calendar-button/blob/main/LICENSE.txt)
@@ -175,7 +175,7 @@ function atcb_decorate_data_recurring_events(data) {
   // determine new end date based on duration between start and end of original event
   const endDate = data.dates?.[0].endDate || data.endDate || startDate;
   const endTime = data.dates?.[0].endTime || data.endTime || '';
-  const diff = new Date(endDate + (endTime && endTime !== '' ? 'T' + endTime : 'T' + startTime)) - new Date(startDate + (startTime && startTime !== '' ? 'T' + startTime : ''));
+  const diff = new Date(endDate + (endTime && endTime !== '' ? 'T' + endTime : '')) - new Date(startDate + (startTime && startTime !== '' ? 'T' + startTime : ''));
   const newEndDateTime = new Date(occurenceData.nextOccurrence.getTime() + diff);
   const newEndDateTimeString =
     String(newEndDateTime.getFullYear()) +
@@ -284,13 +284,12 @@ function atcb_is_platform_invalid_option(optionName, data) {
   return isIOSWithInvalidOption || isAndroidWithInvalidOption;
 }
 
-// check if option is invalid for recurrence events (includes Apple and iCal for rrules with "until")
+// check if option is invalid for recurrence events
 function atcb_is_recurrence_invalid_option(optionName, data) {
   if (!data.recurrence || data.recurrence === '') return false;
   const isInvalidForRecurrence = !atcbValidRecurrOptions.includes(optionName);
-  const isAppleOrIcalWithUntil = data.recurrence_until && data.recurrence_until !== '' && (optionName === 'apple' || optionName === 'ical');
   const isGoogleOnIOS = (atcbIsiOS() || data.fakeIOS) && optionName === 'google';
-  return isInvalidForRecurrence || isAppleOrIcalWithUntil || isGoogleOnIOS;
+  return isInvalidForRecurrence || isGoogleOnIOS;
 }
 
 // check if option is invalid for subscription events
