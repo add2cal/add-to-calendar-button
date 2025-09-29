@@ -787,10 +787,9 @@ a.atcb-modal-btn:not([disabled]):hover {
 
 .atcb-date-btn-content-icon {
   display: inline-block;
-  height: 0.8em;
-  margin-right: .4em;
-  margin-left: .0;
-  width: 0.9em;
+  height: .9em;
+  margin: .075em .4em 0 0;
+  width: .9em;
   flex-shrink: 0;
 }
 
