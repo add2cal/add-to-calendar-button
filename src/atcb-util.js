@@ -3,7 +3,7 @@
  *  Add to Calendar Button
  *  ++++++++++++++++++++++
  *
- *  Version: 2.12.0
+ *  Version: 2.12.1
  *  Creator: Jens Kuerschner (https://jekuer.com)
  *  Project: https://github.com/add2cal/add-to-calendar-button
  *  License: Elastic License 2.0 (ELv2) (https://github.com/add2cal/add-to-calendar-button/blob/main/LICENSE.txt)
@@ -784,13 +784,6 @@ function matchesRRule(date, rrule, startDate) {
 // Get next occurrence and last if no next
 function atcb_getNextOccurrence(rruleStr, startDateTime) {
   const rrule = atcb_parseRRule(rruleStr);
-  // abort early if no end
-  if (!rrule.COUNT && !rrule.UNTIL) {
-    return {
-      nextOccurrence: null,
-      adjustedCount: null,
-    };
-  }
   // Get now (user's current time)
   const now = new Date();
   // Iterate from start date, collecting valid occurrences
@@ -807,8 +800,12 @@ function atcb_getNextOccurrence(rruleStr, startDateTime) {
       if (rrule.COUNT && count >= rrule.COUNT) break;
     }
     if (rrule.UNTIL && currentDate > rrule.UNTIL) break;
+    if (!rrule.COUNT && !rrule.UNTIL && occurrences.length > 0 && currentDate > now) break; // no need to collect all if there is no end
     currentDate = new Date(currentDate.getTime() + stepMs);
-    if (--maxIterations <= 0) throw new Error('Max iterations reached');
+    if (--maxIterations <= 0) {
+      console.log('Max iterations reached. Using what got calculated so far.');
+      break;
+    }
   }
   // Find next occurrence (first after now)
   let nextDate = null;
@@ -821,9 +818,13 @@ function atcb_getNextOccurrence(rruleStr, startDateTime) {
     countDate++;
   }
   // If no next, use last occurrence
-  const lastDate = occurrences.length > 0 ? occurrences[occurrences.length - 1] : null;
+  const lastDate = occurrences.length > 1 ? occurrences[occurrences.length - 1] : null;
+  if (!nextDate) {
+    nextDate = lastDate;
+    countDate = countDate - 1;
+  }
   return {
-    nextOccurrence: nextDate || lastDate,
+    nextOccurrence: nextDate,
     adjustedCount: rrule.COUNT ? rrule.COUNT - countDate : count - countDate,
   };
 }

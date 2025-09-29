@@ -3,7 +3,7 @@
  *  Add to Calendar Button
  *  ++++++++++++++++++++++
  *
- *  Version: 2.12.0
+ *  Version: 2.12.1
  *  Creator: Jens Kuerschner (https://jekuer.com)
  *  Project: https://github.com/add2cal/add-to-calendar-button
  *  License: Elastic License 2.0 (ELv2) (https://github.com/add2cal/add-to-calendar-button/blob/main/LICENSE.txt)
@@ -188,23 +188,25 @@ function atcb_decorate_data_recurring_events(data) {
   if (endTime && endTime !== '') {
     data.endTime = newEndDateTimeString.slice(11, 16);
   }
-  // set count
-  if (occurenceData.adjustedCount < 2) {
-    // drop whole reccurence
-    data.recurrence = '';
-    data.recurrence_frequency = '';
-    data.recurrence_interval = '';
-  } else {
-    data.recurrence_count = occurenceData.adjustedCount;
-    // adjust RRULE accordingly
-    data.recurrence = data.recurrence.replace(/;?COUNT=\d+/i, ';COUNT=' + data.recurrence_count);
-    // drop until (as it is not supported by some calendars)
-    if (data.recurrence_until && data.recurrence_until !== '') {
-      data.recurrence_until = '';
-      data.recurrence = data.recurrence.replace(/;?UNTIL=\w+/i, ';COUNT=' + data.recurrence_count);
+  // set count (if given)
+  if ((data.recurrence_count && data.recurrence_count !== '') || (data.recurrence_until && data.recurrence_until !== '')) {
+    if (occurenceData.adjustedCount < 2) {
+      // drop whole reccurence
+      data.recurrence = '';
+      data.recurrence_frequency = '';
+      data.recurrence_interval = '';
+    } else {
+      data.recurrence_count = occurenceData.adjustedCount;
+      // adjust RRULE accordingly
+      data.recurrence = data.recurrence.replace(/;?COUNT=\d+/i, ';COUNT=' + data.recurrence_count);
+      // drop until (as it is not supported by some calendars)
+      if (data.recurrence_until && data.recurrence_until !== '') {
+        data.recurrence_until = '';
+        data.recurrence = data.recurrence.replace(/;?UNTIL=\w+/i, ';COUNT=' + data.recurrence_count);
 
-      if (data.dates && data.dates[0].recurrence) {
-        data.dates[0].recurrence = data.dates[0].recurrence.replace(/;?UNTIL=\w+/i, ';COUNT=' + data.recurrence_count);
+        if (data.dates && data.dates[0].recurrence) {
+          data.dates[0].recurrence = data.dates[0].recurrence.replace(/;?UNTIL=\w+/i, ';COUNT=' + data.recurrence_count);
+        }
       }
     }
   }
