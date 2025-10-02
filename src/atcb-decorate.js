@@ -3,7 +3,7 @@
  *  Add to Calendar Button
  *  ++++++++++++++++++++++
  *
- *  Version: 2.12.2
+ *  Version: 2.12.3
  *  Creator: Jens Kuerschner (https://jekuer.com)
  *  Project: https://github.com/add2cal/add-to-calendar-button
  *  License: Elastic License 2.0 (ELv2) (https://github.com/add2cal/add-to-calendar-button/blob/main/LICENSE.txt)
@@ -21,10 +21,7 @@ import { atcb_check_bookings } from './atcb-generate-pro.js';
 async function atcb_decorate_data(data) {
   data = atcb_decorate_data_boolean(data);
   data = atcb_decorate_data_defaults(data);
-  data = atcb_decorate_data_rrule(data);
-  if (data.recurrence && data.recurrence !== '' && (!data.dates || data.dates.length === 1)) {
-    data = atcb_decorate_data_recurring_events(data);
-  }
+  data = atcb_decorate_data_recurrence(data);
   data = atcb_decorate_data_options(data);
   data = atcb_decorate_data_style(data);
   data.sizes = atcb_decorate_sizes(data.size);
@@ -88,57 +85,64 @@ function atcb_decorate_data_defaults(data) {
   return data;
 }
 
+// format recurrence
+function atcb_decorate_data_recurrence(data) {
+  if (data.recurrence && data.recurrence !== '') {
+    data = atcb_decorate_data_rrule(data);
+    data = atcb_decorate_data_recurring_events(data);
+  }
+  return data;
+}
+
 // format RRULE
 function atcb_decorate_data_rrule(data) {
-  if (data.recurrence && data.recurrence !== '') {
-    // remove spaces and force upper case
-    data.recurrence = data.recurrence.replace(/\s+/g, '').toUpperCase();
-    // if RRULE is set, we parse date from it
-    if (/^RRULE:/i.test(data.recurrence)) {
-      data.recurrence_simplyfied = false;
-      const rruleParts = atcb_parseRRule(data.recurrence, false);
-      data.recurrence_until = rruleParts.UNTIL;
-      data.recurrence_count = rruleParts.COUNT;
-      data.recurrence_byDay = rruleParts.BYDAY;
-      data.recurrence_byMonth = rruleParts.BYMONTH;
-      data.recurrence_byMonthDay = rruleParts.BYMONTHDAY;
-      data.recurrence_interval = rruleParts.INTERVAL;
-      data.recurrence_frequency = rruleParts.FREQ;
-    } else {
-      // otherwise, we create an RRULE from the easy rules
-      data.recurrence_simplyfied = true;
-      // set interval if not given
-      if (!data.recurrence_interval || data.recurrence_interval === '') {
-        data.recurrence_interval = 1;
+  // remove spaces and force upper case
+  data.recurrence = data.recurrence.replace(/\s+/g, '').toUpperCase();
+  // if RRULE is set, we parse date from it
+  if (/^RRULE:/i.test(data.recurrence)) {
+    data.recurrence_simplyfied = false;
+    const rruleParts = atcb_parseRRule(data.recurrence, false);
+    data.recurrence_until = rruleParts.UNTIL;
+    data.recurrence_count = rruleParts.COUNT;
+    data.recurrence_byDay = rruleParts.BYDAY;
+    data.recurrence_byMonth = rruleParts.BYMONTH;
+    data.recurrence_byMonthDay = rruleParts.BYMONTHDAY;
+    data.recurrence_interval = rruleParts.INTERVAL;
+    data.recurrence_frequency = rruleParts.FREQ;
+  } else {
+    // otherwise, we create an RRULE from the easy rules
+    data.recurrence_simplyfied = true;
+    // set interval if not given
+    if (!data.recurrence_interval || data.recurrence_interval === '') {
+      data.recurrence_interval = 1;
+    }
+    // set weekstart if not given
+    if (!data.recurrence_weekstart || (data.recurrence_weekstart === '') | (data.recurrence_weekstart.length > 2)) {
+      data.recurrence_weekstart = 'MO';
+    }
+    // save frequency before overriding the main recurrence data
+    data.recurrence_frequency = data.recurrence;
+    // generate the RRULE from easy rules
+    data.recurrence = 'RRULE:FREQ=' + data.recurrence + ';WKST=' + data.recurrence_weekstart + ';INTERVAL=' + data.recurrence_interval;
+    // TODO: If "until" is given, translate it into a "count" and remove the "until" (here and in the above block). This would be way more stable!
+    if (data.recurrence_until && data.recurrence_until !== '') {
+      if (data.endTime && data.endTime !== '') {
+        data.recurrence = data.recurrence + ';UNTIL=' + data.recurrence_until.replace(/-/g, '').slice(0, 8) + 'T' + data.endTime.replace(':', '') + '00';
+      } else {
+        data.recurrence = data.recurrence + ';UNTIL=' + data.recurrence_until.replace(/-/g, '').slice(0, 8);
       }
-      // set weekstart if not given
-      if (!data.recurrence_weekstart || (data.recurrence_weekstart === '') | (data.recurrence_weekstart.length > 2)) {
-        data.recurrence_weekstart = 'MO';
-      }
-      // save frequency before overriding the main recurrence data
-      data.recurrence_frequency = data.recurrence;
-      // generate the RRULE from easy rules
-      data.recurrence = 'RRULE:FREQ=' + data.recurrence + ';WKST=' + data.recurrence_weekstart + ';INTERVAL=' + data.recurrence_interval;
-      // TODO: If "until" is given, translate it into a "count" and remove the "until" (here and in the above block). This would be way more stable!
-      if (data.recurrence_until && data.recurrence_until !== '') {
-        if (data.endTime && data.endTime !== '') {
-          data.recurrence = data.recurrence + ';UNTIL=' + data.recurrence_until.replace(/-/g, '').slice(0, 8) + 'T' + data.endTime.replace(':', '') + '00';
-        } else {
-          data.recurrence = data.recurrence + ';UNTIL=' + data.recurrence_until.replace(/-/g, '').slice(0, 8);
-        }
-      }
-      if (data.recurrence_count && data.recurrence_count !== '') {
-        data.recurrence = data.recurrence + ';COUNT=' + data.recurrence_count;
-      }
-      if (data.recurrence_byDay && data.recurrence_byDay !== '') {
-        data.recurrence = data.recurrence + ';BYDAY=' + data.recurrence_byDay;
-      }
-      if (data.recurrence_byMonth && data.recurrence_byMonth !== '') {
-        data.recurrence = data.recurrence + ';BYMONTH=' + data.recurrence_byMonth;
-      }
-      if (data.recurrence_byMonthDay && data.recurrence_byMonthDay !== '') {
-        data.recurrence = data.recurrence + ';BYMONTHDAY=' + data.recurrence_byMonthDay;
-      }
+    }
+    if (data.recurrence_count && data.recurrence_count !== '') {
+      data.recurrence = data.recurrence + ';COUNT=' + data.recurrence_count;
+    }
+    if (data.recurrence_byDay && data.recurrence_byDay !== '') {
+      data.recurrence = data.recurrence + ';BYDAY=' + data.recurrence_byDay;
+    }
+    if (data.recurrence_byMonth && data.recurrence_byMonth !== '') {
+      data.recurrence = data.recurrence + ';BYMONTH=' + data.recurrence_byMonth;
+    }
+    if (data.recurrence_byMonthDay && data.recurrence_byMonthDay !== '') {
+      data.recurrence = data.recurrence + ';BYMONTHDAY=' + data.recurrence_byMonthDay;
     }
   }
   return data;
@@ -752,4 +756,4 @@ async function atcb_decorate_data_rsvp(data) {
   return data;
 }
 
-export { atcb_decorate_data, atcb_decorate_data_dates };
+export { atcb_decorate_data, atcb_decorate_data_recurrence, atcb_decorate_data_dates };

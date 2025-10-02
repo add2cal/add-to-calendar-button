@@ -3,7 +3,7 @@
  *  Add to Calendar Button
  *  ++++++++++++++++++++++
  *
- *  Version: 2.12.2
+ *  Version: 2.12.3
  *  Creator: Jens Kuerschner (https://jekuer.com)
  *  Project: https://github.com/add2cal/add-to-calendar-button
  *  License: Elastic License 2.0 (ELv2) (https://github.com/add2cal/add-to-calendar-button/blob/main/LICENSE.txt)
@@ -16,7 +16,7 @@ import { atcbIsMobile, atcbIsiOS, atcbDefaultTarget } from './atcb-globals.js';
 import { atcb_log_event } from './atcb-event.js';
 import { atcbStates } from './atcb-globals.js';
 import { atcb_generate_ty } from './atcb-generate-pro.js';
-import { atcb_decorate_data_dates } from './atcb-decorate.js';
+import { atcb_decorate_data_dates, atcb_decorate_data_recurrence } from './atcb-decorate.js';
 
 // SHARED FUNCTION HOOK FOR WHEN EVENT GOT SAVED
 function atcb_saved_hook(host, data) {
@@ -209,6 +209,7 @@ function atcb_translate_via_time_zone(date, time, baseTimeZone, targetTimeZone) 
 function atcb_generate_timestring(dates, language = 'en', subEvent = 'all', decorate = false, browserTimeOverride = false, enforceYear = false, hideTimeZone = false) {
   if (decorate) {
     // if this function gets called directly, we might want to decorate raw data first
+    dates = atcb_decorate_data_recurrence({ dates: dates }).dates;
     dates = atcb_decorate_data_dates({ dates: dates }).dates;
   }
   let startDateInfo, endDateInfo, timeZoneInfoStart, timeZoneInfoEnd;
@@ -808,9 +809,9 @@ function atcb_getNextOccurrence(rruleStr, startDateTime) {
       occurrences.push(currentDate);
       count++;
       if (rrule.COUNT && count >= rrule.COUNT) break;
+      if (!rrule.COUNT && !rrule.UNTIL && occurrences.length > 0 && currentDate > now) break; // no need to collect all if there is no end
     }
     if (rrule.UNTIL && currentDate > rrule.UNTIL) break;
-    if (!rrule.COUNT && !rrule.UNTIL && occurrences.length > 0 && currentDate > now) break; // no need to collect all if there is no end
     currentDate = new Date(currentDate.getTime() + stepMs);
     if (--maxIterations <= 0) {
       console.log('Max iterations reached. Using what got calculated so far.');
@@ -828,9 +829,8 @@ function atcb_getNextOccurrence(rruleStr, startDateTime) {
     countDate++;
   }
   // If no next, use last occurrence
-  const lastDate = occurrences.length > 1 ? occurrences[occurrences.length - 1] : null;
   if (!nextDate) {
-    nextDate = lastDate;
+    nextDate = occurrences.length > 1 ? occurrences[occurrences.length - 1] : null;
     countDate = countDate - 1;
   }
   return {

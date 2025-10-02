@@ -3,7 +3,7 @@
  *  Add to Calendar Button
  *  ++++++++++++++++++++++
  *
- *  Version: 2.12.2
+ *  Version: 2.12.3
  *  Creator: Jens Kuerschner (https://jekuer.com)
  *  Project: https://github.com/add2cal/add-to-calendar-button
  *  License: Elastic License 2.0 (ELv2) (https://github.com/add2cal/add-to-calendar-button/blob/main/LICENSE.txt)
@@ -594,7 +594,7 @@ function atcb_generate_ical(host, data, type, subEvent = 'all', keyboardTrigger 
   ics_lines.push('END:VCALENDAR');
   const dataUrl = (function () {
     // if we got to this point with an explicitely given iCal file, we are on an iOS device (but at some wrong environment). In this case, we use this as dataUrl to then show a modal
-    if (givenIcsFile != '') {
+    if (givenIcsFile !== '') {
       return givenIcsFile;
     }
     // otherwise, we generate it from the array
