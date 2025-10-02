@@ -887,10 +887,20 @@ function atcb_global_listener_keydown(event) {
       if (event.key === 'ArrowDown' && currFocusOption.dataset.optionNumber < optionListCount) {
         targetFocus = parseInt(currFocusOption.dataset.optionNumber) + 1;
       } else if (event.key === 'Tab') {
-        if (currFocusOption.dataset.optionNumber < optionListCount) {
-          targetFocus = parseInt(currFocusOption.dataset.optionNumber) + 1;
+        if (event.shiftKey) {
+          // Shift+Tab: navigate backwards
+          if (currFocusOption.dataset.optionNumber > 1) {
+            targetFocus = parseInt(currFocusOption.dataset.optionNumber) - 1;
+          } else {
+            targetFocus = optionListCount;
+          }
         } else {
-          targetFocus = 1;
+          // Tab: navigate forwards
+          if (currFocusOption.dataset.optionNumber < optionListCount) {
+            targetFocus = parseInt(currFocusOption.dataset.optionNumber) + 1;
+          } else {
+            targetFocus = 1;
+          }
         }
       } else if (event.key === 'ArrowUp' && currFocusOption.dataset.optionNumber >= 1) {
         targetFocus = parseInt(currFocusOption.dataset.optionNumber) - 1;
