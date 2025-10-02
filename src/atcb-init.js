@@ -3,7 +3,7 @@
  *  Add to Calendar Button
  *  ++++++++++++++++++++++
  *
- *  Version: 2.12.3
+ *  Version: 2.12.4
  *  Creator: Jens Kuerschner (https://jekuer.com)
  *  Project: https://github.com/add2cal/add-to-calendar-button
  *  License: Elastic License 2.0 (ELv2) (https://github.com/add2cal/add-to-calendar-button/blob/main/LICENSE.txt)
@@ -887,10 +887,20 @@ function atcb_global_listener_keydown(event) {
       if (event.key === 'ArrowDown' && currFocusOption.dataset.optionNumber < optionListCount) {
         targetFocus = parseInt(currFocusOption.dataset.optionNumber) + 1;
       } else if (event.key === 'Tab') {
-        if (currFocusOption.dataset.optionNumber < optionListCount) {
-          targetFocus = parseInt(currFocusOption.dataset.optionNumber) + 1;
+        if (event.shiftKey) {
+          // Shift+Tab: navigate backwards
+          if (currFocusOption.dataset.optionNumber > 1) {
+            targetFocus = parseInt(currFocusOption.dataset.optionNumber) - 1;
+          } else {
+            targetFocus = optionListCount;
+          }
         } else {
-          targetFocus = 1;
+          // Tab: navigate forwards
+          if (currFocusOption.dataset.optionNumber < optionListCount) {
+            targetFocus = parseInt(currFocusOption.dataset.optionNumber) + 1;
+          } else {
+            targetFocus = 1;
+          }
         }
       } else if (event.key === 'ArrowUp' && currFocusOption.dataset.optionNumber >= 1) {
         targetFocus = parseInt(currFocusOption.dataset.optionNumber) - 1;
