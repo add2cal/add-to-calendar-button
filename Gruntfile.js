@@ -159,7 +159,7 @@ module.exports = function (grunt) {
         options: {
           stripBanners: true,
           banner: "import { tzlib_get_ical_block, tzlib_get_offset, tzlib_get_timezones } from 'timezones-ical-library';\r\n",
-          footer: 'export { atcb_action, i18nStrings, atcbCssTemplate as cssStyles, atcb_generate_ty, atcb_generate_timestring, atcb_decorate_data_dates };',
+          footer: 'export { atcb_action, i18nStrings, atcbCssTemplate as cssStyles, atcb_generate_ty, atcb_generate_timestring, atcb_decorate_data_recurrence, atcb_decorate_data_dates };',
           process: (content) => prepareFinalFile(content),
         },
       },
@@ -179,7 +179,7 @@ module.exports = function (grunt) {
         options: {
           stripBanners: true,
           banner: "import { tzlib_get_ical_block, tzlib_get_offset, tzlib_get_timezones } from 'timezones-ical-library';\r\n",
-          footer: 'export { atcb_action, i18nStrings, atcb_generate_ty, atcb_generate_timestring, atcb_decorate_data_dates };',
+          footer: 'export { atcb_action, i18nStrings, atcb_generate_ty, atcb_generate_timestring, atcb_decorate_data_recurrence, atcb_decorate_data_dates };',
           process: (content) => prepareFinalFile(content, true, true, false, true),
         },
       },
@@ -199,7 +199,7 @@ module.exports = function (grunt) {
         options: {
           stripBanners: true,
           banner: "const tzlibActions = require('timezones-ical-library');\r\n",
-          footer: 'module.exports = { atcb_action, i18nStrings, cssStyles: atcbCssTemplate, atcb_generate_ty, atcb_generate_timestring, atcb_decorate_data_dates };',
+          footer: 'module.exports = { atcb_action, i18nStrings, cssStyles: atcbCssTemplate, atcb_generate_ty, atcb_generate_timestring, atcb_decorate_data_recurrence, atcb_decorate_data_dates };',
           process: (content) => prepareFinalFile(content, true, true, true),
         },
       },
@@ -219,7 +219,7 @@ module.exports = function (grunt) {
         options: {
           stripBanners: true,
           banner: "const tzlibActions = require('timezones-ical-library');\r\n",
-          footer: 'module.exports = { atcb_action, i18nStrings, atcb_generate_ty, atcb_generate_timestring, atcb_decorate_data_dates };',
+          footer: 'module.exports = { atcb_action, i18nStrings, atcb_generate_ty, atcb_generate_timestring, atcb_decorate_data_recurrence, atcb_decorate_data_dates };',
           process: (content) => prepareFinalFile(content, true, true, true, true),
         },
       },
