@@ -756,4 +756,4 @@ async function atcb_decorate_data_rsvp(data) {
   return data;
 }
 
-export { atcb_decorate_data, atcb_decorate_data_recurrence, atcb_decorate_data_dates };
+export { atcb_decorate_data, atcb_decorate_data_dates };
