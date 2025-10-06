@@ -3,7 +3,7 @@
  *  Add to Calendar Button
  *  ++++++++++++++++++++++
  *
- *  Version: 2.12.4
+ *  Version: 2.12.5
  *  Creator: Jens Kuerschner (https://jekuer.com)
  *  Project: https://github.com/add2cal/add-to-calendar-button
  *  License: Elastic License 2.0 (ELv2) (https://github.com/add2cal/add-to-calendar-button/blob/main/LICENSE.txt)
@@ -792,14 +792,22 @@ function matchesImplicitRules(date, rrule, startDate) {
 }
 
 // Get next occurrence and last if no next
-function atcb_getNextOccurrence(rruleStr, startDateTime) {
+function atcb_getNextOccurrence(rruleStr, startDateTime, allday) {
   const rrule = atcb_parseRRule(rruleStr);
-  // Get now (user's current time)
+  // Normalize UNTIL for all-day rules: treat as inclusive end-of-day
+  if (allday && rrule.UNTIL instanceof Date) {
+    const untilEod = new Date(rrule.UNTIL);
+    // set to 23:59:59.999 UTC to include the day entirely
+    untilEod.setUTCHours(23, 59, 59, 999);
+    rrule.UNTIL = untilEod;
+  }
+  // Get now (user's current time, but as UTC and 00:00)
   const now = new Date();
+  now.setUTCHours(0, 0, 0, 0);
   // Iterate from start date, collecting valid occurrences
   const stepMs = rrule.BYHOUR ? 60 * 60 * 1000 : 24 * 60 * 60 * 1000;
   let currentDate = startDateTime;
-  let occurrences = [];
+  const occurrences = [];
   let count = 0;
   let maxIterations = 10000;
   // Collect all valid occurrences up to COUNT or UNTIL
@@ -808,20 +816,21 @@ function atcb_getNextOccurrence(rruleStr, startDateTime) {
       occurrences.push(currentDate);
       count++;
       if (rrule.COUNT && count >= rrule.COUNT) break;
-      if (!rrule.COUNT && !rrule.UNTIL && occurrences.length > 0 && currentDate > now) break; // no need to collect all if there is no end
+      // If no end (COUNT/UNTIL), we can stop once we've reached/passed now
+      if (!rrule.COUNT && !rrule.UNTIL && occurrences.length > 0 && (allday ? currentDate >= now : currentDate > now)) break;
     }
     if (rrule.UNTIL && currentDate > rrule.UNTIL) break;
     currentDate = new Date(currentDate.getTime() + stepMs);
     if (--maxIterations <= 0) {
-      console.log('Max iterations reached. Using what got calculated so far.');
+      // Reached safety cap while generating occurrences
       break;
     }
   }
-  // Find next occurrence (first after now)
+  // Find next occurrence (first not before now)
   let nextDate = null;
   let countDate = 0;
-  for (let d of occurrences) {
-    if (d > now) {
+  for (const d of occurrences) {
+    if (allday ? d >= now : d > now) {
       nextDate = d;
       break;
     }
