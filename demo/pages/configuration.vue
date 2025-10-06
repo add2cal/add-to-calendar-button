@@ -406,7 +406,7 @@ definePageMeta({
             </tr>
             <tr id="recurrence_until">
               <th scope="row">recurrence_until</th>
-              <td><em>String</em></td>
+              <td><em>String</em><br /><br /><span class="format">YYYYMMDDTHHMMSSZ</span></td>
               <td v-if="locale=='en'">
                 Defines an end date.<br />
                 We automatically convert this into the correct COUNT value as UNTIL is not supported by all applications.

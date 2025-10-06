@@ -3,7 +3,7 @@
  *  Add to Calendar Button
  *  ++++++++++++++++++++++
  *
- *  Version: 2.12.4
+ *  Version: 2.12.5
  *  Creator: Jens Kuerschner (https://jekuer.com)
  *  Project: https://github.com/add2cal/add-to-calendar-button
  *  License: Elastic License 2.0 (ELv2) (https://github.com/add2cal/add-to-calendar-button/blob/main/LICENSE.txt)
@@ -124,13 +124,12 @@ function atcb_decorate_data_rrule(data) {
     data.recurrence_frequency = data.recurrence;
     // generate the RRULE from easy rules
     data.recurrence = 'RRULE:FREQ=' + data.recurrence + ';WKST=' + data.recurrence_weekstart + ';INTERVAL=' + data.recurrence_interval;
-    // TODO: If "until" is given, translate it into a "count" and remove the "until" (here and in the above block). This would be way more stable!
     if (data.recurrence_until && data.recurrence_until !== '') {
-      if (data.endTime && data.endTime !== '') {
-        data.recurrence = data.recurrence + ';UNTIL=' + data.recurrence_until.replace(/-/g, '').slice(0, 8) + 'T' + data.endTime.replace(':', '') + '00';
-      } else {
-        data.recurrence = data.recurrence + ';UNTIL=' + data.recurrence_until.replace(/-/g, '').slice(0, 8);
+      // if only date, add time
+      if (data.recurrence_until.length < 9) {
+        data.recurrence_until += 'T235959Z';
       }
+      data.recurrence = data.recurrence + ';UNTIL=' + data.recurrence_until;
     }
     if (data.recurrence_count && data.recurrence_count !== '') {
       data.recurrence = data.recurrence + ';COUNT=' + data.recurrence_count;
@@ -153,13 +152,15 @@ function atcb_decorate_data_recurring_events(data) {
   const startDate = data.dates?.[0].startDate || data.startDate;
   const startTime = data.dates?.[0].startTime || data.startTime;
   const startDateTime = (function () {
-    if (startTime) {
+    if (startTime && startTime !== '') {
       const offset = tzlib_get_offset(data.dates?.[0].timeZone || data.timeZone, startDate, startTime);
       return new Date(startDate + ' ' + startTime + ':00 GMT' + offset);
     }
     return new Date(startDate + 'T00:00:00Z');
   })();
-  const occurenceData = atcb_getNextOccurrence(data.recurrence, startDateTime);
+  // allday should be true when there is NO explicit startTime
+  const isAllDay = !(startTime && startTime !== '');
+  const occurenceData = atcb_getNextOccurrence(data.recurrence, startDateTime, isAllDay);
   if (!occurenceData || !occurenceData.nextOccurrence) {
     // if no next occurrence could be determined, we just return the original data (e.g. if there is no end to the recurrence)
     return data;
@@ -553,7 +554,7 @@ function atcb_set_online_event_flag(data, i) {
   if (dateEntry.location && dateEntry.location.startsWith('http')) {
     dateEntry.onlineEvent = true;
   } else {
-    dateEntry.v = false;
+    dateEntry.onlineEvent = false;
   }
   return data;
 }
@@ -564,14 +565,14 @@ function atcb_replace_custom_variables(data, i) {
   const dateEntry = data.dates[`${i}`];
   for (const key in data.customVar) {
     const value = data.customVar[`${key}`];
-    dateEntry.name = atcb_replace_placeholder(dateEntry.name, value);
-    dateEntry.location = atcb_replace_placeholder(dateEntry.location, value);
+    dateEntry.name = atcb_replace_placeholder(dateEntry.name, key, value);
+    dateEntry.location = atcb_replace_placeholder(dateEntry.location, key, value);
   }
   return data;
 }
 
 // replace placeholder in text with value
-function atcb_replace_placeholder(text, value) {
+function atcb_replace_placeholder(text, key, value) {
   const placeholder = '%%' + key.replace(/[^\w\-.]/g, '') + '%%';
   if (!text) return text;
   // eslint-disable-next-line security/detect-non-literal-regexp
