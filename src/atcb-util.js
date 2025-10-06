@@ -3,7 +3,7 @@
  *  Add to Calendar Button
  *  ++++++++++++++++++++++
  *
- *  Version: 2.12.5
+ *  Version: 2.12.6
  *  Creator: Jens Kuerschner (https://jekuer.com)
  *  Project: https://github.com/add2cal/add-to-calendar-button
  *  License: Elastic License 2.0 (ELv2) (https://github.com/add2cal/add-to-calendar-button/blob/main/LICENSE.txt)
@@ -812,6 +812,8 @@ function atcb_getNextOccurrence(rruleStr, startDateTime, allday) {
   let maxIterations = 10000;
   // Collect all valid occurrences up to COUNT or UNTIL
   while (true) {
+    // Stop before pushing when we've passed UNTIL
+    if (rrule.UNTIL && currentDate > rrule.UNTIL) break;
     if (matchesFreq(currentDate, rrule, startDateTime) && matchesRRule(currentDate, rrule, startDateTime)) {
       occurrences.push(currentDate);
       count++;
@@ -819,7 +821,6 @@ function atcb_getNextOccurrence(rruleStr, startDateTime, allday) {
       // If no end (COUNT/UNTIL), we can stop once we've reached/passed now
       if (!rrule.COUNT && !rrule.UNTIL && occurrences.length > 0 && (allday ? currentDate >= now : currentDate > now)) break;
     }
-    if (rrule.UNTIL && currentDate > rrule.UNTIL) break;
     currentDate = new Date(currentDate.getTime() + stepMs);
     if (--maxIterations <= 0) {
       // Reached safety cap while generating occurrences
