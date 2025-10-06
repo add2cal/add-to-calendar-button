@@ -125,6 +125,7 @@ function atcb_decorate_data_rrule(data) {
     // generate the RRULE from easy rules
     data.recurrence = 'RRULE:FREQ=' + data.recurrence + ';WKST=' + data.recurrence_weekstart + ';INTERVAL=' + data.recurrence_interval;
     if (data.recurrence_until && data.recurrence_until !== '') {
+      data.recurrence_until = data.recurrence_until.replace(/[-:]/g, '');
       // if only date, add time
       if (data.recurrence_until.length < 9) {
         data.recurrence_until += 'T235959Z';
