@@ -180,7 +180,7 @@ function atcb_decorate_data_recurring_events(data) {
   // determine new end date based on duration between start and end of original event
   const endDate = data.dates?.[0].endDate || data.endDate || startDate;
   const endTime = data.dates?.[0].endTime || data.endTime || '';
-  const diff = new Date(endDate + (endTime && endTime !== '' ? 'T' + endTime : '')) - new Date(startDate + (startTime && startTime !== '' ? 'T' + startTime : ''));
+  const diff = new Date(endDate + (endTime && endTime !== '' ? 'T' + endTime : '')).getTime() - new Date(startDate + (startTime && startTime !== '' ? 'T' + startTime : '')).getTime();
   const newEndDateTime = new Date(occurenceData.nextOccurrence.getTime() + diff);
   const newEndDateTimeString =
     String(newEndDateTime.getFullYear()) +
