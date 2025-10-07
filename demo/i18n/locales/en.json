@@ -520,7 +520,7 @@
     "description_sub_1": "This is the first part to check the Add to Calendar Button script at [url]https://add-to-calendar-button.com/[/url]",
     "description_sub_2": "This is the second part to check the Add to Calendar Button script at [url]https://add-to-calendar-button.com/[/url]",
     "description_sub_3": "This is the third part to check the Add to Calendar Button script at [url]https://add-to-calendar-button.com/[/url]",
-    "default_timezone": "America/Los_Angeles",
+    "default_timezone": "EST",
     "location": "World Wide Web",
     "options_label_single_dummy": "My custom label",
     "custom_labels": "{'{'}\"close\":\"Close the list again\", \"apple\":\"Apple is ok for me\", \"google\":\"Add to Google Cal\", \"outlookcom\":\"Use Outlook instead\", \"yahoo\":\"Yahoo, really?\", \"ical\":\"iCall ftw!\"{'}'}",

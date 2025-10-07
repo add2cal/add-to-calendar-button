@@ -3,7 +3,7 @@
  *  Add to Calendar Button
  *  ++++++++++++++++++++++
  *
- *  Version: 2.12.6
+ *  Version: 2.12.7
  *  Creator: Jens Kuerschner (https://jekuer.com)
  *  Project: https://github.com/add2cal/add-to-calendar-button
  *  License: Elastic License 2.0 (ELv2) (https://github.com/add2cal/add-to-calendar-button/blob/main/LICENSE.txt)
@@ -28,7 +28,6 @@ async function atcb_decorate_data(data) {
   data.lightMode = atcb_decorate_light_mode(data.lightMode);
   data = atcb_decorate_data_i18n(data);
   data = atcb_decorate_data_dates(data);
-  data = atcb_decorate_data_button_status_handling(data);
   data = await atcb_decorate_data_rsvp(data);
   return data;
 }
@@ -453,6 +452,8 @@ function atcb_decorate_data_dates(data) {
     data = atcb_replace_custom_variables(data, i);
     data = atcb_set_online_event_flag(data, i);
   }
+  // check for past events
+  data = atcb_decorate_data_button_status_handling(data);
   // calculate current time
   const now = new Date();
   // set created date
