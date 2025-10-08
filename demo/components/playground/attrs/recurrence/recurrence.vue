@@ -73,7 +73,7 @@ const i18nFrequencyOptions = computed(() =>
       <Input v-model="internalValue[DateRecurrenceAttrsKey.BY_DAY]" :disabled="disabled" :label="$t(`labels.inputs.recurrence.${[DateRecurrenceAttrsKey.BY_DAY]}`.toLocaleLowerCase())" type="text" :placeholder="$t('labels.inputs.recurrence.placeholder.by_day')" />
       <Select v-model="internalValue[DateRecurrenceAttrsKey.BY_MONTH]" :disabled="disabled" :options="monthList" multiselect :label="$t(`labels.inputs.recurrence.${[DateRecurrenceAttrsKey.BY_MONTH]}`.toLocaleLowerCase())" byKey="key" byValue="value" />
       <Input v-model="internalValue[DateRecurrenceAttrsKey.BY_MONTH_DAY]" :disabled="disabled" :label="$t(`labels.inputs.recurrence.${[DateRecurrenceAttrsKey.BY_MONTH_DAY]}`.toLocaleLowerCase())" type="text" :placeholder="$t('labels.inputs.recurrence.placeholder.by_month_day')" />
-      <Input v-model="internalValue[DateRecurrenceAttrsKey.COUNT]" :disabled="disabled" :label="$t(`labels.inputs.recurrence.${[DateRecurrenceAttrsKey.COUNT]}`.toLocaleLowerCase())" type="number" :min="0" />
+      <Input v-model="internalValue[DateRecurrenceAttrsKey.COUNT]" :disabled="disabled" :label="$t(`labels.inputs.recurrence.${[DateRecurrenceAttrsKey.COUNT]}`.toLocaleLowerCase())" type="number" :min="1" />
     </div>
   </div>
 </template>
