@@ -628,7 +628,7 @@ function atcb_determine_ical_filename(data, subEvent) {
       return filenamePart + filenameSuffix;
     }
   }
-  return 'event-to-save-in-my-calendar' + filenameSuffix;
+  return 'event' + filenameSuffix;
 }
 
 function atcb_ical_copy_note(host, dataUrl, data, keyboardTrigger) {
