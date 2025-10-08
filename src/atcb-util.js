@@ -3,7 +3,7 @@
  *  Add to Calendar Button
  *  ++++++++++++++++++++++
  *
- *  Version: 2.12.7
+ *  Version: 2.12.8
  *  Creator: Jens Kuerschner (https://jekuer.com)
  *  Project: https://github.com/add2cal/add-to-calendar-button
  *  License: Elastic License 2.0 (ELv2) (https://github.com/add2cal/add-to-calendar-button/blob/main/LICENSE.txt)
@@ -634,7 +634,7 @@ function atcb_position_shadow_button_listener() {
   }
 }
 
-// // SHARED FUNCTION TO CALCULATE WHETHER WE BLOCK SCROLLING OR NOT
+// SHARED FUNCTION TO CALCULATE WHETHER WE BLOCK SCROLLING OR NOT
 function atcb_manage_body_scroll(host, modalObj = null) {
   const modal = (function () {
     // if a specific modal is defined, we take it. Otherwise we go for the latest one
@@ -702,33 +702,59 @@ function atcb_parseRRule(rruleStr, deep = true) {
   if (!parts.FREQ) throw new Error('RRULE must have FREQ');
   // Parse components
   parts.FREQ = parts.FREQ.toUpperCase();
-  parts.INTERVAL = parseInt(parts.INTERVAL || 1, 10);
-  parts.COUNT = parts.COUNT ? parseInt(parts.COUNT, 10) : null;
+  parts.INTERVAL = parseInt(parts.INTERVAL.toString() || '1', 10);
+  parts.COUNT = parts.COUNT ? parseInt(parts.COUNT.toString(), 10) : null;
   if (parts.UNTIL) {
-    const untilStr = parts.UNTIL;
-    parts.UNTIL = deep ? new Date(Date.UTC(parseInt(untilStr.slice(0, 4), 10), parseInt(untilStr.slice(4, 6), 10) - 1, parseInt(untilStr.slice(6, 8), 10), parseInt(untilStr.slice(9, 11) || 0, 10), parseInt(untilStr.slice(11, 13) || 0, 10))) : untilStr;
+    const untilStr = parts.UNTIL.toString();
+    parts.UNTIL = deep ? new Date(Date.UTC(parseInt(untilStr.slice(0, 4), 10), parseInt(untilStr.slice(4, 6), 10) - 1, parseInt(untilStr.slice(6, 8), 10), parseInt(untilStr.slice(9, 11) || '0', 10), parseInt(untilStr.slice(11, 13) || '0', 10))) : untilStr;
   }
   if (parts.BYWEEKDAY || parts.BYDAY) {
     const dayMap = { SU: 0, MO: 1, TU: 2, WE: 3, TH: 4, FR: 5, SA: 6 };
     parts.BYWEEKDAY = deep
       ? (parts.BYWEEKDAY || parts.BYDAY)
+          ?.toString()
           .split(',')
           .map((day) => dayMap[day.trim().toUpperCase()])
           .filter((n) => n !== undefined)
       : parts.BYWEEKDAY || parts.BYDAY;
   }
-  parts.BYMONTH = deep && parts.BYMONTH ? parts.BYMONTH.split(',').map((n) => parseInt(n, 10)) : parts.BYMONTH;
-  parts.BYYEARDAY = deep && parts.BYYEARDAY ? parts.BYYEARDAY.split(',').map((n) => parseInt(n, 10)) : parts.BYYEARDAY;
-  parts.BYMONTHDAY = deep && parts.BYMONTHDAY ? parts.BYMONTHDAY.split(',').map((n) => parseInt(n, 10)) : parts.BYMONTHDAY;
-  parts.BYWEEKNO = deep && parts.BYWEEKNO ? parts.BYWEEKNO.split(',').map((n) => parseInt(n, 10)) : parts.BYWEEKNO;
-  parts.BYHOUR = deep && parts.BYHOUR ? parts.BYHOUR.split(',').map((n) => parseInt(n, 10)) : parts.BYHOUR;
+  parts.BYMONTH =
+    deep && parts.BYMONTH
+      ? parts.BYMONTH.toString()
+          .split(',')
+          .map((n) => parseInt(n, 10))
+      : parts.BYMONTH;
+  parts.BYYEARDAY =
+    deep && parts.BYYEARDAY
+      ? parts.BYYEARDAY.toString()
+          .split(',')
+          .map((n) => parseInt(n, 10))
+      : parts.BYYEARDAY;
+  parts.BYMONTHDAY =
+    deep && parts.BYMONTHDAY
+      ? parts.BYMONTHDAY.toString()
+          .split(',')
+          .map((n) => parseInt(n, 10))
+      : parts.BYMONTHDAY;
+  parts.BYWEEKNO =
+    deep && parts.BYWEEKNO
+      ? parts.BYWEEKNO.toString()
+          .split(',')
+          .map((n) => parseInt(n, 10))
+      : parts.BYWEEKNO;
+  parts.BYHOUR =
+    deep && parts.BYHOUR
+      ? parts.BYHOUR.toString()
+          .split(',')
+          .map((n) => parseInt(n, 10))
+      : parts.BYHOUR;
   return parts;
 }
 
 // Calculate day of year (1-366)
 function getDayOfYear(date) {
   const start = new Date(Date.UTC(date.getUTCFullYear(), 0, 1));
-  return Math.floor((date - start) / (1000 * 60 * 60 * 24)) + 1;
+  return Math.floor((date.getTime() - start.getTime()) / (1000 * 60 * 60 * 24)) + 1;
 }
 
 // Calculate ISO week number
@@ -736,12 +762,12 @@ function getWeekNumber(date) {
   const d = new Date(Date.UTC(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate()));
   d.setUTCDate(d.getUTCDate() + 4 - (d.getUTCDay() || 7));
   const yearStart = new Date(Date.UTC(d.getUTCFullYear(), 0, 1));
-  return Math.ceil(((d - yearStart) / 86400000 + 1) / 7);
+  return Math.ceil(((d.getTime() - yearStart.getTime()) / 86400000 + 1) / 7);
 }
 
 // Check if date matches the FREQ and INTERVAL from start
 function matchesFreq(date, rrule, startDate) {
-  const interval = rrule.INTERVAL;
+  const interval = parseInt(rrule.INTERVAL.toString(), 10) || 1;
   switch (rrule.FREQ) {
     case 'YEARLY':
       return (date.getUTCFullYear() - startDate.getUTCFullYear()) % interval === 0;
@@ -750,12 +776,12 @@ function matchesFreq(date, rrule, startDate) {
       return months % interval === 0;
     }
     case 'WEEKLY': {
-      const daysW = Math.floor((date - startDate) / 86400000);
+      const daysW = Math.floor((date.getTime() - startDate.getTime()) / 86400000);
       const weeks = Math.floor(daysW / 7);
       return weeks % interval === 0;
     }
     case 'DAILY': {
-      const days = Math.floor((date - startDate) / 86400000);
+      const days = Math.floor((date.getTime() - startDate.getTime()) / 86400000);
       return days % interval === 0;
     }
     default:
@@ -839,8 +865,15 @@ function atcb_getNextOccurrence(rruleStr, startDateTime, allday) {
   }
   // If no next, use last occurrence
   if (!nextDate) {
-    nextDate = occurrences.length > 1 ? occurrences[occurrences.length - 1] : null;
-    countDate = countDate - 1;
+    if (occurrences.length > 1) {
+      nextDate = occurrences[occurrences.length - 1];
+      countDate = countDate - 1;
+    } else if (occurrences.length === 1) {
+      nextDate = occurrences[0];
+    } else {
+      nextDate = startDateTime;
+      countDate = 1;
+    }
   }
   return {
     nextOccurrence: nextDate,
