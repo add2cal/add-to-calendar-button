@@ -870,6 +870,9 @@ function atcb_getNextOccurrence(rruleStr, startDateTime, allday) {
       countDate = countDate - 1;
     } else if (occurrences.length === 1) {
       nextDate = occurrences[0];
+    } else {
+      nextDate = startDateTime;
+      countDate = 1;
     }
   }
   return {
