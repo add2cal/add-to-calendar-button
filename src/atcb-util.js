@@ -3,7 +3,7 @@
  *  Add to Calendar Button
  *  ++++++++++++++++++++++
  *
- *  Version: 2.12.8
+ *  Version: 2.12.9
  *  Creator: Jens Kuerschner (https://jekuer.com)
  *  Project: https://github.com/add2cal/add-to-calendar-button
  *  License: Elastic License 2.0 (ELv2) (https://github.com/add2cal/add-to-calendar-button/blob/main/LICENSE.txt)
@@ -689,6 +689,68 @@ function atcb_apply_transformation(value, transform) {
   }
 }
 
+// HELPER: Parse BYDAY/BYWEEKDAY tokens into plain weekdays and ordinal structures
+function atcb_parseByWeekdayTokens(rawByDay) {
+  const tokens = rawByDay ? rawByDay.toString().split(',') : [];
+  const mapWeekdayCode = (wd) => {
+    switch (wd) {
+      case 'SU':
+        return 0;
+      case 'MO':
+        return 1;
+      case 'TU':
+        return 2;
+      case 'WE':
+        return 3;
+      case 'TH':
+        return 4;
+      case 'FR':
+        return 5;
+      case 'SA':
+        return 6;
+      default:
+        return undefined;
+    }
+  };
+  const plainWeekdays = [];
+  const ordinals = [];
+  for (const tok of tokens) {
+    const t = tok.trim().toUpperCase();
+    if (t.length < 2) continue;
+    const wd = t.slice(-2);
+    const day = mapWeekdayCode(wd);
+    if (day === undefined) continue;
+    const prefix = t.slice(0, t.length - 2);
+    if (prefix) {
+      // parse optional signed ordinal without regex
+      let sign = 1;
+      let digits = prefix;
+      if (digits[0] === '+') {
+        digits = digits.slice(1);
+      } else if (digits[0] === '-') {
+        sign = -1;
+        digits = digits.slice(1);
+      }
+      if (!digits || digits.length > 2) continue;
+      let validDigits = true;
+      for (let i = 0; i < digits.length; i++) {
+        const code = digits.charCodeAt(i);
+        if (code < 48 || code > 57) {
+          validDigits = false;
+          break;
+        }
+      }
+      if (!validDigits) continue;
+      const abs = parseInt(digits, 10);
+      if (abs < 1 || abs > 53) continue; // guard rails per RFC (month up to 5, year up to 53)
+      ordinals.push({ n: sign * abs, day });
+    } else {
+      plainWeekdays.push(day);
+    }
+  }
+  return { plainWeekdays, ordinals };
+}
+
 // SHARED FUNCTION TO PARSE RRULES
 function atcb_parseRRule(rruleStr, deep = true) {
   const parts = rruleStr
@@ -702,21 +764,23 @@ function atcb_parseRRule(rruleStr, deep = true) {
   if (!parts.FREQ) throw new Error('RRULE must have FREQ');
   // Parse components
   parts.FREQ = parts.FREQ.toUpperCase();
-  parts.INTERVAL = parseInt(parts.INTERVAL.toString() || '1', 10);
+  // Ensure INTERVAL defaults to 1 if not explicitly provided
+  parts.INTERVAL = parts.INTERVAL ? parseInt(parts.INTERVAL.toString(), 10) : 1;
   parts.COUNT = parts.COUNT ? parseInt(parts.COUNT.toString(), 10) : null;
   if (parts.UNTIL) {
     const untilStr = parts.UNTIL.toString();
     parts.UNTIL = deep ? new Date(Date.UTC(parseInt(untilStr.slice(0, 4), 10), parseInt(untilStr.slice(4, 6), 10) - 1, parseInt(untilStr.slice(6, 8), 10), parseInt(untilStr.slice(9, 11) || '0', 10), parseInt(untilStr.slice(11, 13) || '0', 10))) : untilStr;
   }
+  // Parse BYDAY/ByWeekDay, keeping both plain weekdays and ordinal forms
   if (parts.BYWEEKDAY || parts.BYDAY) {
-    const dayMap = { SU: 0, MO: 1, TU: 2, WE: 3, TH: 4, FR: 5, SA: 6 };
-    parts.BYWEEKDAY = deep
-      ? (parts.BYWEEKDAY || parts.BYDAY)
-          ?.toString()
-          .split(',')
-          .map((day) => dayMap[day.trim().toUpperCase()])
-          .filter((n) => n !== undefined)
-      : parts.BYWEEKDAY || parts.BYDAY;
+    const rawByDay = (parts.BYWEEKDAY || parts.BYDAY)?.toString();
+    if (deep) {
+      const { plainWeekdays, ordinals } = atcb_parseByWeekdayTokens(rawByDay);
+      parts.BYWEEKDAY = plainWeekdays.length ? plainWeekdays : null;
+      parts.BYDAY_ORDINALS = ordinals.length ? ordinals : null;
+    } else {
+      parts.BYWEEKDAY = parts.BYWEEKDAY || parts.BYDAY;
+    }
   }
   parts.BYMONTH =
     deep && parts.BYMONTH
@@ -803,17 +867,86 @@ function matchesBYRules(date, rrule) {
   if (rrule.BYYEARDAY && !rrule.BYYEARDAY.includes(getDayOfYear(date))) return false;
   if (rrule.BYMONTHDAY && !rrule.BYMONTHDAY.includes(date.getUTCDate())) return false;
   if (rrule.BYWEEKNO && !rrule.BYWEEKNO.includes(getWeekNumber(date))) return false;
-  if (rrule.BYWEEKDAY && !rrule.BYWEEKDAY.includes(date.getUTCDay())) return false;
+  // Weekday filter (checking both, plain days as well as more complex structures -> splitted apart to ordinals)
+  // Evaluate plain weekday condition
+  const hasPlainWeekday = !!(rrule.BYWEEKDAY && rrule.BYWEEKDAY.length);
+  const plainWeekdayOk = hasPlainWeekday ? rrule.BYWEEKDAY.includes(date.getUTCDay()) : null;
+  // Ordinal BYDAY handling (e.g., 1MO, -1FR)
+  let ordinalOk = null;
+  if (rrule.BYDAY_ORDINALS && Array.isArray(rrule.BYDAY_ORDINALS) && rrule.BYDAY_ORDINALS.length > 0) {
+    const dow = date.getUTCDay(); // day of week
+    const year = date.getUTCFullYear();
+    const month = date.getUTCMonth();
+    const dayOfYear = getDayOfYear(date);
+    const daysInMonth = new Date(Date.UTC(year, month + 1, 0)).getUTCDate();
+    const daysInYear = getDayOfYear(new Date(Date.UTC(year, 11, 31)));
+
+    const isNthWeekdayOfMonth = (n, weekday) => {
+      if (n === 0) return false;
+      if (n > 0) {
+        // Validates whether a given date matches the Nth weekday
+        const firstOfMonth = new Date(Date.UTC(year, month, 1));
+        const firstDow = firstOfMonth.getUTCDay();
+        const offset = (weekday - firstDow + 7) % 7;
+        const targetDay = 1 + offset + (n - 1) * 7;
+        return targetDay >= 1 && targetDay <= daysInMonth && date.getUTCDate() === targetDay;
+      } else {
+        // if negative, we count backwards (like last FR in a month)
+        const lastOfMonth = new Date(Date.UTC(year, month + 1, 0));
+        const lastDow = lastOfMonth.getUTCDay();
+        const backOffset = (lastDow - weekday + 7) % 7;
+        const targetDay = lastOfMonth.getUTCDate() - backOffset + (n + 1) * 7; // n negative
+        return targetDay >= 1 && targetDay <= daysInMonth && date.getUTCDate() === targetDay;
+      }
+    };
+
+    const isNthWeekdayOfYear = (n, weekday) => {
+      if (n === 0) return false;
+      if (n > 0) {
+        const jan1 = new Date(Date.UTC(year, 0, 1));
+        const jan1Dow = jan1.getUTCDay();
+        const offset = (weekday - jan1Dow + 7) % 7;
+        const targetDoy = 1 + offset + (n - 1) * 7;
+        return targetDoy >= 1 && targetDoy <= daysInYear && dayOfYear === targetDoy;
+      } else {
+        const dec31 = new Date(Date.UTC(year, 11, 31));
+        const dec31Dow = dec31.getUTCDay();
+        const backOffset = (dec31Dow - weekday + 7) % 7;
+        const targetDoy = daysInYear - backOffset + (n + 1) * 7; // n negative
+        return targetDoy >= 1 && targetDoy <= daysInYear && dayOfYear === targetDoy;
+      }
+    };
+
+    // Match if any ordinal item matches context (MONTHLY: within month, YEARLY: within month if BYMONTH given, else within year)
+    const anyOrdinalMatch = rrule.BYDAY_ORDINALS.some(({ n, day }) => {
+      if (day !== dow) return false;
+      if (rrule.FREQ === 'MONTHLY') return isNthWeekdayOfMonth(n, day);
+      if (rrule.FREQ === 'YEARLY') {
+        if (rrule.BYMONTH && rrule.BYMONTH.length > 0) return isNthWeekdayOfMonth(n, day);
+        if (!rrule.BYWEEKNO) return isNthWeekdayOfYear(n, day);
+        // Ordinal BYDAY with YEARLY+BYWEEKNO is invalid per RFC; treat as non-match
+        return false;
+      }
+      // For other frequencies, numeric BYDAY is not applicable; treat as non-match
+      return false;
+    });
+    ordinalOk = anyOrdinalMatch;
+  }
+  // Combine weekday conditions: if both present, apply union (either may match). If only one type is present, it must match.
+  if (plainWeekdayOk === false && ordinalOk === false) return false;
+  if (plainWeekdayOk === false && ordinalOk === null) return false;
+  if (ordinalOk === false && plainWeekdayOk === null) return false;
   if (rrule.BYHOUR && !rrule.BYHOUR.includes(date.getUTCHours())) return false;
   return true;
 }
 
 function matchesImplicitRules(date, rrule, startDate) {
   if (!rrule.BYHOUR && date.getUTCHours() !== startDate.getUTCHours()) return false;
-  if (rrule.FREQ === 'WEEKLY' && !rrule.BYWEEKDAY && date.getUTCDay() !== startDate.getUTCDay()) return false;
-  if (rrule.FREQ === 'MONTHLY' && !rrule.BYMONTHDAY && !rrule.BYWEEKDAY && date.getUTCDate() !== startDate.getUTCDate()) return false;
+  const hasByWeekdayAny = !!(rrule.BYWEEKDAY && rrule.BYWEEKDAY.length) || !!(rrule.BYDAY_ORDINALS && rrule.BYDAY_ORDINALS.length);
+  if (rrule.FREQ === 'WEEKLY' && !hasByWeekdayAny && date.getUTCDay() !== startDate.getUTCDay()) return false;
+  if (rrule.FREQ === 'MONTHLY' && !rrule.BYMONTHDAY && !hasByWeekdayAny && date.getUTCDate() !== startDate.getUTCDate()) return false;
   if (rrule.FREQ === 'YEARLY' && !rrule.BYMONTH && date.getUTCMonth() !== startDate.getUTCMonth()) return false;
-  if (rrule.FREQ === 'YEARLY' && !rrule.BYMONTHDAY && !rrule.BYWEEKDAY && !rrule.BYYEARDAY && !rrule.BYWEEKNO && date.getUTCDate() !== startDate.getUTCDate()) return false;
+  if (rrule.FREQ === 'YEARLY' && !rrule.BYMONTHDAY && !hasByWeekdayAny && !rrule.BYYEARDAY && !rrule.BYWEEKNO && date.getUTCDate() !== startDate.getUTCDate()) return false;
   return true;
 }
 
@@ -836,22 +969,24 @@ function atcb_getNextOccurrence(rruleStr, startDateTime, allday) {
   const occurrences = [];
   let count = 0;
   let maxIterations = 10000;
-  // Collect all valid occurrences up to COUNT or UNTIL
+  // Collect all valid occurrences up to COUNT or UNTIL, or until first future match is found
   while (true) {
     // Stop before pushing when we've passed UNTIL
     if (rrule.UNTIL && currentDate > rrule.UNTIL) break;
-    if (matchesFreq(currentDate, rrule, startDateTime) && matchesRRule(currentDate, rrule, startDateTime)) {
+    const isMatch = matchesFreq(currentDate, rrule, startDateTime) && matchesRRule(currentDate, rrule, startDateTime);
+    if (isMatch) {
       occurrences.push(currentDate);
       count++;
+      // If there's a COUNT limit, stop when reached
       if (rrule.COUNT && count >= rrule.COUNT) break;
-      // If no end (COUNT/UNTIL), we can stop once we've reached/passed now
-      if (!rrule.COUNT && !rrule.UNTIL && occurrences.length > 0 && (allday ? currentDate >= now : currentDate > now)) break;
+      // If no end (COUNT/UNTIL), stop as soon as we've captured the first occurrence not before now
+      if (!rrule.COUNT && !rrule.UNTIL && (allday ? currentDate >= now : currentDate > now)) break;
     }
-    currentDate = new Date(currentDate.getTime() + stepMs);
     if (--maxIterations <= 0) {
       // Reached safety cap while generating occurrences
       break;
     }
+    currentDate = new Date(currentDate.getTime() + stepMs);
   }
   // Find next occurrence (first not before now)
   let nextDate = null;

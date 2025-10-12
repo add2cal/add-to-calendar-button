@@ -428,7 +428,7 @@ definePageMeta({
                 Sofern recurrence_until und recurrence_count definiert sind, gilt, was zuerst eintritt. Sofern keiner der Werte gegeben ist, erfolgt die Wiederholung endlos.
               </td>
             </tr>
-            <tr id="recurrence_byDay">
+            <tr id="recurrence_byday">
               <th scope="row">recurrence_byDay</th>
               <td><em>String</em></td>
               <td v-if="locale=='en'">
@@ -444,7 +444,7 @@ definePageMeta({
                 Mehrere Tage möglich; durch Komma getrennt.
               </td>
             </tr>
-            <tr id="recurrence_byMonthDay">
+            <tr id="recurrence_bymonthday">
               <th scope="row">recurrence_byMonthDay</th>
               <td><em>String</em></td>
               <td v-if="locale=='en'">
@@ -458,7 +458,7 @@ definePageMeta({
                 Mehrere Werte möglich; durch Komma getrennt.
               </td>
             </tr>
-            <tr id="recurrence_byMonth">
+            <tr id="recurrence_bymonth">
               <th scope="row">recurrence_byMonth</th>
               <td>
                 <em>String</em><br /><br /><span class="label block">{{ $t('content.config.options') }}:</span>1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12
