@@ -1,6 +1,6 @@
 {
   "name": "add-to-calendar-button",
-  "version": "2.12.8",
+  "version": "2.12.9",
   "engines": {
     "node": ">=18.17.0",
     "npm": ">=9.6.7"

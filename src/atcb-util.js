@@ -3,7 +3,7 @@
  *  Add to Calendar Button
  *  ++++++++++++++++++++++
  *
- *  Version: 2.12.8
+ *  Version: 2.12.9
  *  Creator: Jens Kuerschner (https://jekuer.com)
  *  Project: https://github.com/add2cal/add-to-calendar-button
  *  License: Elastic License 2.0 (ELv2) (https://github.com/add2cal/add-to-calendar-button/blob/main/LICENSE.txt)
@@ -861,14 +861,14 @@ function matchesBYRules(date, rrule) {
   if (rrule.BYYEARDAY && !rrule.BYYEARDAY.includes(getDayOfYear(date))) return false;
   if (rrule.BYMONTHDAY && !rrule.BYMONTHDAY.includes(date.getUTCDate())) return false;
   if (rrule.BYWEEKNO && !rrule.BYWEEKNO.includes(getWeekNumber(date))) return false;
-  // Plain weekday filter
+  // Weekday filter (checking both, plain days as well as more complex structures -> splitted apart to ordinals)
   // Evaluate plain weekday condition
   const hasPlainWeekday = !!(rrule.BYWEEKDAY && rrule.BYWEEKDAY.length);
   const plainWeekdayOk = hasPlainWeekday ? rrule.BYWEEKDAY.includes(date.getUTCDay()) : null;
   // Ordinal BYDAY handling (e.g., 1MO, -1FR)
   let ordinalOk = null;
   if (rrule.BYDAY_ORDINALS && Array.isArray(rrule.BYDAY_ORDINALS) && rrule.BYDAY_ORDINALS.length > 0) {
-    const dow = date.getUTCDay();
+    const dow = date.getUTCDay(); // day of week
     const year = date.getUTCFullYear();
     const month = date.getUTCMonth();
     const dayOfYear = getDayOfYear(date);
@@ -878,12 +878,14 @@ function matchesBYRules(date, rrule) {
     const isNthWeekdayOfMonth = (n, weekday) => {
       if (n === 0) return false;
       if (n > 0) {
+        // Validates whether a given date matches the Nth weekday
         const firstOfMonth = new Date(Date.UTC(year, month, 1));
         const firstDow = firstOfMonth.getUTCDay();
         const offset = (weekday - firstDow + 7) % 7;
         const targetDay = 1 + offset + (n - 1) * 7;
         return targetDay >= 1 && targetDay <= daysInMonth && date.getUTCDate() === targetDay;
       } else {
+        // if negative, we count backwards (like last FR in a month)
         const lastOfMonth = new Date(Date.UTC(year, month + 1, 0));
         const lastDow = lastOfMonth.getUTCDay();
         const backOffset = (lastDow - weekday + 7) % 7;
@@ -974,11 +976,11 @@ function atcb_getNextOccurrence(rruleStr, startDateTime, allday) {
       // If no end (COUNT/UNTIL), stop as soon as we've captured the first occurrence not before now
       if (!rrule.COUNT && !rrule.UNTIL && (allday ? currentDate >= now : currentDate > now)) break;
     }
-    currentDate = new Date(currentDate.getTime() + stepMs);
     if (--maxIterations <= 0) {
       // Reached safety cap while generating occurrences
       break;
     }
+    currentDate = new Date(currentDate.getTime() + stepMs);
   }
   // Find next occurrence (first not before now)
   let nextDate = null;
