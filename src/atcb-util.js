@@ -689,6 +689,68 @@ function atcb_apply_transformation(value, transform) {
   }
 }
 
+// HELPER: Parse BYDAY/BYWEEKDAY tokens into plain weekdays and ordinal structures
+function atcb_parseByWeekdayTokens(rawByDay) {
+  const tokens = rawByDay ? rawByDay.toString().split(',') : [];
+  const mapWeekdayCode = (wd) => {
+    switch (wd) {
+      case 'SU':
+        return 0;
+      case 'MO':
+        return 1;
+      case 'TU':
+        return 2;
+      case 'WE':
+        return 3;
+      case 'TH':
+        return 4;
+      case 'FR':
+        return 5;
+      case 'SA':
+        return 6;
+      default:
+        return undefined;
+    }
+  };
+  const plainWeekdays = [];
+  const ordinals = [];
+  for (const tok of tokens) {
+    const t = tok.trim().toUpperCase();
+    if (t.length < 2) continue;
+    const wd = t.slice(-2);
+    const day = mapWeekdayCode(wd);
+    if (day === undefined) continue;
+    const prefix = t.slice(0, t.length - 2);
+    if (prefix) {
+      // parse optional signed ordinal without regex
+      let sign = 1;
+      let digits = prefix;
+      if (digits[0] === '+') {
+        digits = digits.slice(1);
+      } else if (digits[0] === '-') {
+        sign = -1;
+        digits = digits.slice(1);
+      }
+      if (!digits || digits.length > 2) continue;
+      let validDigits = true;
+      for (let i = 0; i < digits.length; i++) {
+        const code = digits.charCodeAt(i);
+        if (code < 48 || code > 57) {
+          validDigits = false;
+          break;
+        }
+      }
+      if (!validDigits) continue;
+      const abs = parseInt(digits, 10);
+      if (abs < 1 || abs > 53) continue; // guard rails per RFC (month up to 5, year up to 53)
+      ordinals.push({ n: sign * abs, day });
+    } else {
+      plainWeekdays.push(day);
+    }
+  }
+  return { plainWeekdays, ordinals };
+}
+
 // SHARED FUNCTION TO PARSE RRULES
 function atcb_parseRRule(rruleStr, deep = true) {
   const parts = rruleStr
@@ -712,64 +774,8 @@ function atcb_parseRRule(rruleStr, deep = true) {
   // Parse BYDAY/ByWeekDay, keeping both plain weekdays and ordinal forms
   if (parts.BYWEEKDAY || parts.BYDAY) {
     const rawByDay = (parts.BYWEEKDAY || parts.BYDAY)?.toString();
-    const tokens = rawByDay ? rawByDay.split(',') : [];
-    const mapWeekdayCode = (wd) => {
-      switch (wd) {
-        case 'SU':
-          return 0;
-        case 'MO':
-          return 1;
-        case 'TU':
-          return 2;
-        case 'WE':
-          return 3;
-        case 'TH':
-          return 4;
-        case 'FR':
-          return 5;
-        case 'SA':
-          return 6;
-        default:
-          return undefined;
-      }
-    };
     if (deep) {
-      const plainWeekdays = [];
-      const ordinals = [];
-      for (const tok of tokens) {
-        const t = tok.trim().toUpperCase();
-        if (t.length < 2) continue;
-        const wd = t.slice(-2);
-        const day = mapWeekdayCode(wd);
-        if (day === undefined) continue;
-        const prefix = t.slice(0, t.length - 2);
-        if (prefix) {
-          // parse optional signed ordinal without regex
-          let sign = 1;
-          let digits = prefix;
-          if (digits[0] === '+') {
-            digits = digits.slice(1);
-          } else if (digits[0] === '-') {
-            sign = -1;
-            digits = digits.slice(1);
-          }
-          if (!digits || digits.length > 2) continue;
-          let validDigits = true;
-          for (let i = 0; i < digits.length; i++) {
-            const code = digits.charCodeAt(i);
-            if (code < 48 || code > 57) {
-              validDigits = false;
-              break;
-            }
-          }
-          if (!validDigits) continue;
-          const abs = parseInt(digits, 10);
-          if (abs < 1 || abs > 53) continue; // guard rails per RFC (month up to 5, year up to 53)
-          ordinals.push({ n: sign * abs, day });
-        } else {
-          plainWeekdays.push(day);
-        }
-      }
+      const { plainWeekdays, ordinals } = atcb_parseByWeekdayTokens(rawByDay);
       parts.BYWEEKDAY = plainWeekdays.length ? plainWeekdays : null;
       parts.BYDAY_ORDINALS = ordinals.length ? ordinals : null;
     } else {
