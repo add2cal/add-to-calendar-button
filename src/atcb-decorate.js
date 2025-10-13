@@ -3,7 +3,7 @@
  *  Add to Calendar Button
  *  ++++++++++++++++++++++
  *
- *  Version: 2.12.9
+ *  Version: 2.12.10
  *  Creator: Jens Kuerschner (https://jekuer.com)
  *  Project: https://github.com/add2cal/add-to-calendar-button
  *  License: Elastic License 2.0 (ELv2) (https://github.com/add2cal/add-to-calendar-button/blob/main/LICENSE.txt)
@@ -151,13 +151,16 @@ function atcb_decorate_data_rrule(data) {
 function atcb_decorate_data_recurring_events(data) {
   const startDate = data.dates?.[0].startDate || data.startDate;
   const startTime = data.dates?.[0].startTime || data.startTime;
+  const tzid = data.dates?.[0].timeZone || data.timeZone || 'UTC';
+
+  const offset = startTime && startTime !== '' ? tzlib_get_offset(tzid, startDate, startTime) : '';
   const startDateTime = (function () {
     if (startTime && startTime !== '') {
-      const offset = tzlib_get_offset(data.dates?.[0].timeZone || data.timeZone, startDate, startTime);
       return new Date(startDate + ' ' + startTime + ':00 GMT' + offset);
     }
     return new Date(startDate + 'T00:00:00Z');
   })();
+
   // allday should be true when there is NO explicit startTime
   const isAllDay = !(startTime && startTime !== '');
   const occurenceData = atcb_getNextOccurrence(data.recurrence, startDateTime, isAllDay);
@@ -165,34 +168,37 @@ function atcb_decorate_data_recurring_events(data) {
     // if no next occurrence could be determined, we just return the original data (e.g. if there is no end to the recurrence)
     return data;
   }
-  const nextOccurrence =
-    String(occurenceData.nextOccurrence.getFullYear()) +
-    '-' +
-    String(occurenceData.nextOccurrence.getMonth() + 1).padStart(2, '0') +
-    '-' +
-    String(occurenceData.nextOccurrence.getDate()).padStart(2, '0') +
-    (startTime && startTime !== '' ? 'T' + String(occurenceData.nextOccurrence.getHours()).padStart(2, '0') + ':' + String(occurenceData.nextOccurrence.getMinutes()).padStart(2, '0') : '');
-  // determine start date from next occurrence Date object
-  data.startDate = nextOccurrence.slice(0, 10);
-  if (startTime && startTime !== '') {
-    data.startTime = nextOccurrence.slice(11, 16);
+
+  // Helper: format a Date in a specific IANA time zone, safely (no host TZ bleed)
+  function formatInTz(dateObj, timeZone, includeTime) {
+    const opts = includeTime ? { timeZone, hour12: false, year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit' } : { timeZone, hour12: false, year: 'numeric', month: '2-digit', day: '2-digit' };
+    const parts = new Intl.DateTimeFormat('en-CA', opts).formatToParts(dateObj);
+    const get = (t) => parts.find((p) => p.type === t)?.value || '';
+    return {
+      date: `${get('year')}-${get('month')}-${get('day')}`,
+      time: includeTime ? `${get('hour')}:${get('minute')}` : '',
+    };
   }
+
+  // Determine next start date/time in the event’s time zone
+  const nextLocal = formatInTz(occurenceData.nextOccurrence, tzid, !!(startTime && startTime !== ''));
+  data.startDate = nextLocal.date;
+  if (startTime && startTime !== '') {
+    data.startTime = nextLocal.time; // respects BYHOUR/BYMINUTE and DST correctly
+  }
+
   // determine new end date based on duration between start and end of original event
   const endDate = data.dates?.[0].endDate || data.endDate || startDate;
   const endTime = data.dates?.[0].endTime || data.endTime || '';
   const diff = new Date(endDate + (endTime && endTime !== '' ? 'T' + endTime : '')).getTime() - new Date(startDate + (startTime && startTime !== '' ? 'T' + startTime : '')).getTime();
+
   const newEndDateTime = new Date(occurenceData.nextOccurrence.getTime() + diff);
-  const newEndDateTimeString =
-    String(newEndDateTime.getFullYear()) +
-    '-' +
-    String(newEndDateTime.getMonth() + 1).padStart(2, '0') +
-    '-' +
-    String(newEndDateTime.getDate()).padStart(2, '0') +
-    (endTime && endTime !== '' ? 'T' + String(newEndDateTime.getHours()).padStart(2, '0') + ':' + String(newEndDateTime.getMinutes()).padStart(2, '0') : '');
-  data.endDate = newEndDateTimeString.slice(0, 10);
+  const nextEndLocal = formatInTz(newEndDateTime, tzid, !!(endTime && endTime !== ''));
+  data.endDate = nextEndLocal.date;
   if (endTime && endTime !== '') {
-    data.endTime = newEndDateTimeString.slice(11, 16);
+    data.endTime = nextEndLocal.time;
   }
+
   // set count (if given)
   if ((data.recurrence_count && data.recurrence_count !== '') || (data.recurrence_until && data.recurrence_until !== '')) {
     if (occurenceData.adjustedCount < 2) {
@@ -208,7 +214,6 @@ function atcb_decorate_data_recurring_events(data) {
       if (data.recurrence_until && data.recurrence_until !== '') {
         data.recurrence_until = '';
         data.recurrence = data.recurrence.replace(/;?UNTIL=\w+/i, ';COUNT=' + data.recurrence_count);
-
         if (data.dates && data.dates[0].recurrence) {
           data.dates[0].recurrence = data.dates[0].recurrence.replace(/;?UNTIL=\w+/i, ';COUNT=' + data.recurrence_count);
         }
