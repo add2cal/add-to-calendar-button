@@ -3,7 +3,7 @@
  *  Add to Calendar Button
  *  ++++++++++++++++++++++
  *
- *  Version: 2.12.10
+ *  Version: 2.12.11
  *  Creator: Jens Kuerschner (https://jekuer.com)
  *  Project: https://github.com/add2cal/add-to-calendar-button
  *  License: Elastic License 2.0 (ELv2) (https://github.com/add2cal/add-to-calendar-button/blob/main/LICENSE.txt)
@@ -152,15 +152,16 @@ function atcb_decorate_data_recurring_events(data) {
   const startDate = data.dates?.[0].startDate || data.startDate;
   const startTime = data.dates?.[0].startTime || data.startTime;
   const tzid = data.dates?.[0].timeZone || data.timeZone || 'UTC';
-
   const offset = startTime && startTime !== '' ? tzlib_get_offset(tzid, startDate, startTime) : '';
+
   const startDateTime = (function () {
     if (startTime && startTime !== '') {
       return new Date(startDate + ' ' + startTime + ':00 GMT' + offset);
     }
-    return new Date(startDate + 'T00:00:00Z');
+    // FIX: anchor all-day start at local midnight in event TZ (not UTC midnight)
+    const localMidnightOffset = tzlib_get_offset(tzid, startDate, '00:00');
+    return new Date(`${startDate} 00:00:00 GMT${localMidnightOffset}`);
   })();
-
   // allday should be true when there is NO explicit startTime
   const isAllDay = !(startTime && startTime !== '');
   const occurenceData = atcb_getNextOccurrence(data.recurrence, startDateTime, isAllDay);
@@ -168,7 +169,6 @@ function atcb_decorate_data_recurring_events(data) {
     // if no next occurrence could be determined, we just return the original data (e.g. if there is no end to the recurrence)
     return data;
   }
-
   // Helper: format a Date in a specific IANA time zone, safely (no host TZ bleed)
   function formatInTz(dateObj, timeZone, includeTime) {
     const opts = includeTime ? { timeZone, hour12: false, year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit' } : { timeZone, hour12: false, year: 'numeric', month: '2-digit', day: '2-digit' };
@@ -179,26 +179,38 @@ function atcb_decorate_data_recurring_events(data) {
       time: includeTime ? `${get('hour')}:${get('minute')}` : '',
     };
   }
-
-  // Determine next start date/time in the event’s time zone
-  const nextLocal = formatInTz(occurenceData.nextOccurrence, tzid, !!(startTime && startTime !== ''));
-  data.startDate = nextLocal.date;
+  // If RRULE explicitly sets time BYHOUR (not supporting MINUTE/SECOND), respect it; otherwise keep the original wall time
+  const hasExplicitTimeRule = /;BYHOUR=/i.test(data.recurrence);
+  // Determine next date in event TZ (no time)
+  const nextLocalDate = formatInTz(occurenceData.nextOccurrence, tzid, false).date;
+  // Determine next start time
+  let nextStartTime = '';
   if (startTime && startTime !== '') {
-    data.startTime = nextLocal.time; // respects BYHOUR/BYMINUTE and DST correctly
+    nextStartTime = hasExplicitTimeRule
+      ? formatInTz(occurenceData.nextOccurrence, tzid, true).time // RRULE drives time
+      : startTime; // preserve original wall time across DST
   }
-
-  // determine new end date based on duration between start and end of original event
+  // Set next start date/time
+  data.startDate = nextLocalDate;
+  if (nextStartTime) {
+    data.startTime = nextStartTime;
+  }
+  // determine new end date based on duration between original start/end in event TZ
   const endDate = data.dates?.[0].endDate || data.endDate || startDate;
   const endTime = data.dates?.[0].endTime || data.endTime || '';
-  const diff = new Date(endDate + (endTime && endTime !== '' ? 'T' + endTime : '')).getTime() - new Date(startDate + (startTime && startTime !== '' ? 'T' + startTime : '')).getTime();
+  // Build original start/end instants in the event TZ
+  const origStart = startTime && startTime !== '' ? new Date(`${startDate} ${startTime}:00 GMT${tzlib_get_offset(tzid, startDate, startTime)}`) : new Date(`${startDate} 00:00:00 GMT${tzlib_get_offset(tzid, startDate, '00:00')}`);
 
-  const newEndDateTime = new Date(occurenceData.nextOccurrence.getTime() + diff);
+  const origEnd = endTime && endTime !== '' ? new Date(`${endDate} ${endTime}:00 GMT${tzlib_get_offset(tzid, endDate, endTime)}`) : new Date(`${endDate} 00:00:00 GMT${tzlib_get_offset(tzid, endDate, '00:00')}`);
+  const diff = origEnd.getTime() - origStart.getTime();
+  // Compute the new end by adding the original duration to the next start instant in event TZ
+  const newStartInstant = nextStartTime ? new Date(`${data.startDate} ${nextStartTime}:00 GMT${tzlib_get_offset(tzid, data.startDate, nextStartTime)}`) : new Date(`${data.startDate} 00:00:00 GMT${tzlib_get_offset(tzid, data.startDate, '00:00')}`);
+  const newEndDateTime = new Date(newStartInstant.getTime() + diff);
   const nextEndLocal = formatInTz(newEndDateTime, tzid, !!(endTime && endTime !== ''));
   data.endDate = nextEndLocal.date;
   if (endTime && endTime !== '') {
     data.endTime = nextEndLocal.time;
   }
-
   // set count (if given)
   if ((data.recurrence_count && data.recurrence_count !== '') || (data.recurrence_until && data.recurrence_until !== '')) {
     if (occurenceData.adjustedCount < 2) {
