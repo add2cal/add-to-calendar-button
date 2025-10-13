@@ -732,14 +732,7 @@ function atcb_parseByWeekdayTokens(rawByDay) {
         digits = digits.slice(1);
       }
       if (!digits || digits.length > 2) continue;
-      let validDigits = true;
-      for (let i = 0; i < digits.length; i++) {
-        const code = digits.charCodeAt(i);
-        if (code < 48 || code > 57) {
-          validDigits = false;
-          break;
-        }
-      }
+      const validDigits = typeof digits === 'string' && /^\d+$/.test(digits);
       if (!validDigits) continue;
       const abs = parseInt(digits, 10);
       if (abs < 1 || abs > 53) continue; // guard rails per RFC (month up to 5, year up to 53)
