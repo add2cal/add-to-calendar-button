@@ -3,7 +3,7 @@
  *  Add to Calendar Button
  *  ++++++++++++++++++++++
  *
- *  Version: 2.12.11
+ *  Version: 2.12.12
  *  Creator: Jens Kuerschner (https://jekuer.com)
  *  Project: https://github.com/add2cal/add-to-calendar-button
  *  License: Elastic License 2.0 (ELv2) (https://github.com/add2cal/add-to-calendar-button/blob/main/LICENSE.txt)
@@ -944,7 +944,7 @@ function matchesImplicitRules(date, rrule, startDate) {
 }
 
 // Get next occurrence and last if no next
-function atcb_getNextOccurrence(rruleStr, startDateTime, allday) {
+function atcb_getNextOccurrence(rruleStr, startDateTime, diff, allday) {
   const rrule = atcb_parseRRule(rruleStr);
   // Normalize UNTIL for all-day rules: treat as inclusive end-of-day
   if (allday && rrule.UNTIL instanceof Date) {
@@ -953,9 +953,9 @@ function atcb_getNextOccurrence(rruleStr, startDateTime, allday) {
     untilEod.setUTCHours(23, 59, 59, 999);
     rrule.UNTIL = untilEod;
   }
-  // Get now (user's current time, but as UTC and 00:00)
+  // Get now (user's current time minus diff to measure against the end time)
   const now = new Date();
-  now.setUTCHours(0, 0, 0, 0);
+  const upperEnd = new Date(now.getTime() - diff);
   // Iterate from start date, collecting valid occurrences
   const stepMs = rrule.BYHOUR ? 60 * 60 * 1000 : 24 * 60 * 60 * 1000;
   let currentDate = startDateTime;
@@ -972,8 +972,8 @@ function atcb_getNextOccurrence(rruleStr, startDateTime, allday) {
       count++;
       // If there's a COUNT limit, stop when reached
       if (rrule.COUNT && count >= rrule.COUNT) break;
-      // If no end (COUNT/UNTIL), stop as soon as we've captured the first occurrence not before now
-      if (!rrule.COUNT && !rrule.UNTIL && (allday ? currentDate >= now : currentDate > now)) break;
+      // If no end (COUNT/UNTIL), stop as soon as we've captured the first occurrence not before upperEnd
+      if (!rrule.COUNT && !rrule.UNTIL && (allday ? currentDate >= upperEnd : currentDate > upperEnd)) break;
     }
     if (--maxIterations <= 0) {
       // Reached safety cap while generating occurrences
@@ -981,11 +981,11 @@ function atcb_getNextOccurrence(rruleStr, startDateTime, allday) {
     }
     currentDate = new Date(currentDate.getTime() + stepMs);
   }
-  // Find next occurrence (first not before now)
+  // Find next occurrence (first not before upperEnd)
   let nextDate = null;
   let countDate = 0;
   for (const d of occurrences) {
-    if (allday ? d >= now : d > now) {
+    if (allday ? d >= upperEnd : d > upperEnd) {
       nextDate = d;
       break;
     }
