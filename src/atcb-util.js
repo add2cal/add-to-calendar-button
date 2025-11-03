@@ -3,7 +3,7 @@
  *  Add to Calendar Button
  *  ++++++++++++++++++++++
  *
- *  Version: 2.12.12
+ *  Version: 2.12.13
  *  Creator: Jens Kuerschner (https://jekuer.com)
  *  Project: https://github.com/add2cal/add-to-calendar-button
  *  License: Elastic License 2.0 (ELv2) (https://github.com/add2cal/add-to-calendar-button/blob/main/LICENSE.txt)
@@ -74,7 +74,7 @@ function atcb_generate_time(data, style = 'delimiters', targetCal = 'general', a
       return durationHours + ':' + ('0' + durationMinutes).slice(-2);
     })();
     // (see https://tz.add-to-calendar-technology.com/api/zones.json for available TZ names)
-    if ((targetCal == 'ical' || targetCal == 'google') && !/GMT[+|-]\d{1,2}|Etc\/U|Etc\/Zulu|CET|CST6CDT|EET|EST|MET|MST|PST8PDT|WET/i.test(data.timeZone)) {
+    if ((targetCal == 'ical' || targetCal == 'google') && !/GMT[+|-]\d{1,2}|Etc\/U|Etc\/Zulu|CET|CST6CDT|EET|EST|MET|MST|PST8PDT|WET|PST|PDT|MDT|CST|CDT|EDT|EEST|CEST|HST|HDT|AKST|AKDT|AST|ADT|AEST|AEDT|NZST|NZDT|IST|IDT|WEST|ACST|ACDT|BST/i.test(data.timeZone)) {
       // in the iCal or Google case, we simply return and cut off the Z. Google does not support GMT +/- time zones (and we also adjust ical as it can be used for Google calendar).
       // everything else will be done by injecting the VTIMEZONE block at the iCal function
       return {
@@ -1009,6 +1009,38 @@ function atcb_getNextOccurrence(rruleStr, startDateTime, diff, allday) {
   };
 }
 
+// SHARED FUNCTION TO MAP SPECIFIC TIME ZONES
+function atcb_map_special_time_zones(timeZone) {
+  if (!timeZone) return 'GMT';
+  const mapping = {
+    PST: 'PST8PDT',
+    PDT: 'PST8PDT',
+    MST: 'MST7MDT',
+    MDT: 'MST7MDT',
+    CST: 'CST6CDT',
+    CDT: 'CST6CDT',
+    EST: 'EST5EDT',
+    EDT: 'EST5EDT',
+    HDT: 'US/Hawaii',
+    HST: 'US/Hawaii',
+    AKST: 'US/Alaska',
+    AKDT: 'US/Alaska',
+    IST: 'Asia/Jerusalem',
+    IDT: 'Asia/Jerusalem',
+    AEST: 'Australia/Brisbane',
+    AEDT: 'Australia/ACT',
+    ACST: 'Australia/North',
+    ACDT: 'Australia/South',
+    NZST: 'NZ',
+    NZDT: 'NZ',
+    BST: 'Europe/London',
+    AST: 'America/Puerto_Rico',
+    ADT: 'Canada/Atlantic',
+    WEST: 'Europe/Lisbon',
+  };
+  return mapping[`${timeZone.toUpperCase()}`] || 'GMT';
+}
+
 // SHARED FUNCTION TO COPY TO CLIPBOARD
 function atcb_copy_to_clipboard(dataString) {
   const tmpInput = document.createElement('input');
@@ -1083,6 +1115,7 @@ export {
   atcb_apply_transformation,
   atcb_parseRRule,
   atcb_getNextOccurrence,
+  atcb_map_special_time_zones,
   atcb_copy_to_clipboard,
   atcb_debounce,
   atcb_debounce_leading,
