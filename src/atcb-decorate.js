@@ -3,7 +3,7 @@
  *  Add to Calendar Button
  *  ++++++++++++++++++++++
  *
- *  Version: 2.12.12
+ *  Version: 2.12.13
  *  Creator: Jens Kuerschner (https://jekuer.com)
  *  Project: https://github.com/add2cal/add-to-calendar-button
  *  License: Elastic License 2.0 (ELv2) (https://github.com/add2cal/add-to-calendar-button/blob/main/LICENSE.txt)
@@ -11,9 +11,9 @@
  *
  */
 
-import { tzlib_get_offset } from 'timezones-ical-library';
+import { tzlib_get_offset, tzlib_get_timezones } from 'timezones-ical-library';
 import { atcbIsiOS, atcbIsAndroid, atcbIsMobile, atcbIsBrowser, atcbValidRecurrOptions, atcbInvalidSubscribeOptions, atcbIOSInvalidOptions, atcbAndroidInvalidOptions, atcbWcBooleanParams } from './atcb-globals.js';
-import { atcb_translate_via_time_zone, atcb_format_datetime, atcb_rewrite_html_elements, atcb_generate_uuid, atcb_apply_transformation, atcb_getNextOccurrence, atcb_parseRRule } from './atcb-util.js';
+import { atcb_translate_via_time_zone, atcb_format_datetime, atcb_rewrite_html_elements, atcb_generate_uuid, atcb_apply_transformation, atcb_getNextOccurrence, atcb_map_special_time_zones, atcb_parseRRule } from './atcb-util.js';
 import { availableLanguages, rtlLanguages } from './atcb-i18n';
 import { atcb_check_bookings } from './atcb-generate-pro.js';
 
@@ -656,7 +656,11 @@ function atcb_date_cleanup(dateTimeData) {
   });
   // update time zone, if special case set to go for the user's browser
   if (dateTimeData.timeZone === 'currentBrowser' || dateTimeData.useUserTZ) {
-    const browserTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone || 'GMT';
+    let browserTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone || 'GMT';
+    const validTimeZones = tzlib_get_timezones();
+    if (!validTimeZones.includes(browserTimezone)) {
+      browserTimezone = atcb_map_special_time_zones(browserTimezone); // manual mapping of special cases
+    }
     // for the useUserTZ, we also recalculate the start and end date (and time) to the user's time zone based on the given time zone
     if (dateTimeData.useUserTZ && dateTimeData.startTime && dateTimeData.startTime !== '' && dateTimeData.endTime && dateTimeData.endTime !== '') {
       const newStartDateTime = atcb_translate_via_time_zone(dateTimeData.startDate, dateTimeData.startTime, dateTimeData.timeZone, browserTimezone);
