@@ -222,7 +222,15 @@ function atcb_subscribe_google(data, fileUrl) {
     return encodeURIComponent(fileUrl);
   })();
   if ((atcbIsAndroid() || data.fakeAndroid) && isGoogleCalId) {
-    atcb_open_cal_url(data, 'google', 'intent://' + baseUrlApp + newFileUrl + '#Intent;scheme=https;package=com.google.android.calendar;end', true);
+    if (!atcbIsWebView()) {
+      const httpsUrl = baseUrl + newFileUrl;
+      const fallback = encodeURIComponent(httpsUrl);
+      const intentUrl = 'intent://' + baseUrlApp + newFileUrl + '#Intent;scheme=https;package=com.google.android.calendar;S.browser_fallback_url=' + fallback + ';end';
+      atcb_open_cal_url(data, 'google', intentUrl, true);
+    } else {
+      // In WebViews, avoid intent scheme and open the regular https URL
+      atcb_open_cal_url(data, 'google', baseUrl + newFileUrl, true);
+    }
     return;
   }
   atcb_open_cal_url(data, 'google', baseUrl + newFileUrl, true);
@@ -298,7 +306,11 @@ function atcb_generate_google(data, date, subEvent = 'all') {
   }
   let fullUrl = urlParts.join('&');
   if (atcbIsAndroid() || data.fakeAndroid) {
-    fullUrl = 'intent://' + fullUrl.slice(8) + '#Intent;scheme=https;package=com.google.android.calendar;end';
+    // Avoid using intents inside WebViews; add a browser fallback for robustness
+    if (!atcbIsWebView()) {
+      const fallback = encodeURIComponent(fullUrl);
+      fullUrl = 'intent://' + fullUrl.slice(8) + '#Intent;scheme=https;package=com.google.android.calendar;S.browser_fallback_url=' + fallback + ';end';
+    }
   }
   atcb_open_cal_url(data, 'google', fullUrl, false, subEvent);
 }
