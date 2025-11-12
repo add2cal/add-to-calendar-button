@@ -290,6 +290,7 @@ In doubt, simply ask and we find a way. :)
 <a href="https://github.com/acm-will"><img src="https://avatars.githubusercontent.com/u/103984058?v=4" title="acm-will" width="60" height="60"></a>
 <a href="https://github.com/sukharenko"><img src="https://avatars.githubusercontent.com/u/2049036?v=4" title="Yevgen Sukharenko" width="60" height="60"></a>
 <a href="https://github.com/pbaumard"><img src="https://avatars.githubusercontent.com/u/6176006?v=4" title="Pierre Baumard" width="60" height="60"></a>
+<a href="https://github.com/hananamar"><img src="https://avatars.githubusercontent.com/u/1096604?v=4" title="Hanan Amar" width="60" height="60"></a>
 <a href="https://github.com/rocky-premise"><img src="https://avatars.githubusercontent.com/u/230592673?v=4" title="Rocky Assad" width="60" height="60"></a>
 <a href="https://github.com/brenjt"><img src="https://avatars.githubusercontent.com/u/1713885?v=4" title="Brennan" width="60" height="60"></a>
 <a href="https://github.com/chris-at-fabius-labs"><img src="https://avatars.githubusercontent.com/u/108754665?v=4" title="chris-at-fabius-labs" width="60" height="60"></a>
