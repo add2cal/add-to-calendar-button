@@ -25,7 +25,7 @@ import { atcb_rewrite_html_elements } from './atcb-util.js';
  */
 
 // right-to-left languages
-const rtlLanguages = ['ar', 'fa'];
+const rtlLanguages = ['ar', 'fa', 'he'];
 
 // calendar names (except for iCal file, same in every language, but included to be adjustable)
 const calendarNames = {
@@ -889,6 +889,41 @@ const i18nStrings = {
     'form.error.required': 'Nem töltöttél ki megfelelően minden kötelező mezőt',
     'form.error.sending': 'Hiba történt a válasz küldése során. Kérjük, próbáld újra később',
     'form.success': 'Sikeresen elküldve!',
+  },
+  he: {
+    'label.addtocalendar': 'הוספה ליומן',
+    ical: 'קובץ iCal',
+    ...calendarNames,
+    'modal.button.default': 'לחצו כאן',
+    'modal.webview.ical.h': 'פתיחה בדפדפן',
+    'modal.webview.ical.text': 'לצערנו, לדפדפנים בתוך אפליקציות יש בעיות עם הדרך שבה אנחנו יוצרים את קובץ היומן.',
+    'modal.clipboard.text': 'העתקנו אוטומטית כתובת קסומה אל הלוח שלך.',
+    'modal.webview.ical.steps': '<ol><li><strong>פתח דפדפן אחר</strong> בטלפון שלך, ...</li><li><strong>הדבק</strong> את התוכן מהלוח, וצא לדרך.</li></ol>',
+    'modal.opensafari.ical.h': 'פתח את ספארי',
+    'modal.opensafari.ical.text': 'לצערנו, ל-iOS יש בעיות ביצירה ופתיחה של קובץ היומן מחוץ לספארי.',
+    'modal.opensafari.ical.steps': '<ol><li><strong>פתח את ספארי</strong>, ...</li><li><strong>הדבק</strong> את התוכן מהלוח, וצא לדרך.</li></ol>',
+    'modal.multidate.h': 'זו סדרת אירועים',
+    'modal.multidate.text': 'הוסף את האירועים הבודדים אחד אחד:',
+    'date.status.cancelled': 'תאריך זה בוטל.',
+    'date.status.cancelled.cta': 'יש לעדכן את היומן!',
+    'modal.subscribe.yahoo.h': 'הוספה ליומן Yahoo',
+    'modal.subscribe.yahoo.text': '<ol><li>פתח את יומן Yahoo.</li><li>לחץ על טאב "פעולות".</li><li>לחץ על "עקוב אחר יומנים אחרים".</li><li>קבע שם, והדבק את תוכן הלוח שלך לשדה הכתובת.</li></ol>',
+    'modal.subscribe.yahoo.button': 'פתח את יומן Yahoo',
+    close: 'סגירה',
+    continue: 'המשך',
+    cancel: 'ביטול',
+    expired: 'פג תוקף',
+    recurring: 'חוזר',
+    thankyou: 'תודה',
+    submit: 'שליחה',
+    'label.rsvp': 'אישור הגעה',
+    'label.share.email': 'שיתוף במייל',
+    'label.share.copy': 'העתק קישור',
+    'label.share.copied': 'הועתק',
+    'label.share.email.subject': 'שמירת אירוע זה',
+    'form.error.required': 'לא מילאת בהלכה את כל השדות',
+    'form.error.sending': 'אירעה שגיאה בעת שליחת בקשתך. אנא נסו שוב מאוחר יותר',
+    'form.success': 'נשלח בהצלחה!',
   },
 };
 
