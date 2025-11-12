@@ -41,7 +41,6 @@
     "@nuxtjs/i18n": "^10.2.0",
     "@nuxtjs/sitemap": "^7.4.7",
     "@nuxtjs/tailwindcss": "^6.14.0",
-    "@trevoreyre/autocomplete-js": "^3.0.3",
     "@vite-pwa/nuxt": "^1.0.7",
     "isbot": "^5.1.32",
     "nuxt": "^4.2.0",

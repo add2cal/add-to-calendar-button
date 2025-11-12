@@ -3,7 +3,7 @@ import { ref, computed, watch } from "vue";
 import Input from "@/components/controls/input.vue";
 import Select from "@/components/controls/select.vue";
 import Switch from "@/components/controls/switch.vue";
-import TimezoneAutocomplete from '@/components/controls/timezoneAutocomplete.vue';
+import Autocomplete from "~/components/controls/autocomplete.vue";
 import Recurrence from "@/components/playground/attrs/recurrence/recurrence.vue";
 import { Availability } from "@/models/addToCalendarButton";
 import { DateAttrsKey } from "@/models/attrs";
@@ -60,7 +60,7 @@ const i18nAvailabilityOptions = computed(() =>
       <Input v-model="internalValue[DateAttrsKey.END_DATE]" :disabled="disabled" :label="$t(`labels.inputs.${[DateAttrsKey.END_DATE]}`.toLocaleLowerCase())" type="text" placeholder="YYYY-MM-DD" />
       <Input v-model="internalValue[DateAttrsKey.END_TIME]" :disabled="disabled" :label="$t(`labels.inputs.${[DateAttrsKey.END_TIME]}`.toLocaleLowerCase())" type="text" placeholder="HH:MM" />
     </div>
-    <TimezoneAutocomplete v-model="internalValue[DateAttrsKey.TIMEZONE]" :disabled="disabled" :label="$t(`labels.inputs.${[DateAttrsKey.TIMEZONE]}`.toLocaleLowerCase())" class="mb-3" :mobile="mobile ? true : false" />
+    <Autocomplete v-model="internalValue[DateAttrsKey.TIMEZONE]" mode="timezone" forceMatch :disabled="disabled" :label="$t(`labels.inputs.${[DateAttrsKey.TIMEZONE]}`.toLocaleLowerCase())" :placeholder="t('labels.inputs.search_time_zone')" class="mb-3" />
     <Input v-model="internalValue[DateAttrsKey.LOCATION]" :disabled="disabled" :label="$t(`labels.inputs.${[DateAttrsKey.LOCATION]}`.toLocaleLowerCase())" type="text" class="mb-3" />
     <Recurrence v-model="internalValue[DateAttrsKey.RECURRENCE_OBJECT]" :disabled="disabled" />
     <Select v-model="internalValue[DateAttrsKey.AVAILABILITY]" :disabled="disabled" :label="$t(`labels.inputs.${[DateAttrsKey.AVAILABILITY]}`.toLocaleLowerCase())" :options="i18nAvailabilityOptions" byKey="key" byValue="value" clearable class="mb-3" />

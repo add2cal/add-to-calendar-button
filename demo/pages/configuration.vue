@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import ConfigSearch from '@/components/controls/configSearch.vue';
+import Autocomplete from '~/components/controls/autocomplete.vue';
 import Interstitial from '@/components/interstitial.vue';
 import { ArrowRightIcon, ArrowTopRightOnSquareIcon } from '@heroicons/vue/24/outline';
 
@@ -9,6 +9,85 @@ const localePath = useLocalePath();
 definePageMeta({
   title: 'navigation.configuration',
   description: 'meta.configuration.description',
+});
+
+const configOptions = [
+  "proKey",
+  "options",
+  "name",
+  "description",
+  "startDate",
+  "startTime",
+  "endDate",
+  "endTime",
+  "timeZone",
+  "useUserTZ",
+  "location",
+  "status",
+  "sequence",
+  "uid",
+  "organizer",
+  "attendee",
+  "dates",
+  "recurrence",
+  "recurrence_interval",
+  "recurrence_until",
+  "recurrence_count",
+  "recurrence_byDay",
+  "recurrence_byMonthDay",
+  "recurrence_byMonth",
+  "recurrence_weekstart",
+  "availability",
+  "subscribe",
+  "icsFile",
+  "iCalFileName",
+  "instance",
+  "created",
+  "updated",
+  "buttonStyle",
+  "inline",
+  "customCss",
+  "buttonsList",
+  "label",
+  "trigger",
+  "listStyle",
+  "hideBackground",
+  "hideIconButton",
+  "hideIconList",
+  "hideIconModal",
+  "hideTextLabelButton",
+  "hideTextLabelList",
+  "hideCheckmark",
+  "pastDateHandling",
+  "size",
+  "lightMode",
+  "language",
+  "customLabels",
+  "images",
+  "hideRichData",
+  "identifier",
+  "bypassWebViewCheck",
+  "hideBranding",
+  "debug",
+  "forceOverlay",
+  "proOverride",
+  "cspnonce",
+  "styleLight",
+  "styleDark",
+];
+
+const searchSelection = ref<string | null>(null);
+
+// on search, scroll to the respective parameter and clear selection
+watch(searchSelection, (newVal) => {
+  if (newVal) {
+    const element = document.getElementById(newVal.toLowerCase());
+    if (element) {
+      // push the route, but add some delay to work around some android soft keyboard issues
+      setTimeout(() => navigateTo({ path: localePath('configuration'), hash: '#' + newVal.toLowerCase() }), 200);
+    }
+    searchSelection.value = null;
+  }
 });
 </script>
 
@@ -45,8 +124,9 @@ definePageMeta({
         </p>
       </div>
 
-      <div class="mx-auto mt-14 block border-y border-zinc-300 px-5 pb-7 pt-6 dark:border-zinc-700 md:mx-0 lg:hidden">
-        <ConfigSearch :mobile="true" label />
+      <div class="mx-auto mt-14 flex items-center justify-center border-y border-zinc-300 px-5 pb-7 pt-6 dark:border-zinc-700 md:mx-0 md:justify-start md:px-0 lg:hidden">
+        <label class="hidden pr-5 text-sm text-zinc-600 dark:text-zinc-400 sm:inline-block">{{ $t('content.config.find_params') }}: </label>
+        <Autocomplete v-model="searchSelection" :options="configOptions" :label="$t('content.config.find_params')" hidelabel :placeholder="$t('labels.inputs.search')" styleClass="block sm:inline-block" />
       </div>
 
       <h3 id="event-parameters" class="mt-12 pt-4">{{ $t('content.config.event_params') }}</h3>
@@ -1071,7 +1151,7 @@ definePageMeta({
     </div>
     <div class="hidden border-l border-zinc-300 pl-8 text-sm dark:border-zinc-700 lg:block">
       <div class="sticky top-0 pt-4">
-        <ConfigSearch class="mb-10" />
+        <Autocomplete v-model="searchSelection" :options="configOptions" :label="$t('content.config.find_params')" :placeholder="$t('labels.inputs.search')" class="mb-10" styleClass="" hidelabel />
         <NuxtLink :to="'#event-parameters'" class="side-nav">{{ $t('content.config.event_params') }}</NuxtLink>
         <NuxtLink :to="'#style-parameters'" class="side-nav">{{ $t('content.config.layout_params') }}</NuxtLink>
         <NuxtLink :to="'#additional-parameters'" class="side-nav">{{ $t('content.config.additional_params') }}</NuxtLink>
