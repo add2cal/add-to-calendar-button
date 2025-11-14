@@ -1066,8 +1066,13 @@ async function atcb_copy_to_clipboard(dataString) {
     } else if (window && document.queryCommandSupported && document.queryCommandSupported('copy')) {
       // falling back to legacy
       const container = document.createElement('textarea');
+      const previouslyFocusedElement = document.activeElement;
       container.textContent = v;
-      container.style.position = 'fixed';
+      container.setAttribute('readonly', ''); // Prevent keyboard from showing on mobile
+      container.style.contain = 'strict';
+      container.style.position = 'absolute';
+      container.style.left = '-9999px';
+      container.style.fontSize = '12pt'; // Prevent zooming on iOS
       container.style.pointerEvents = 'none';
       container.style.opacity = '0';
       container.style.border = 'none';
@@ -1087,9 +1092,15 @@ async function atcb_copy_to_clipboard(dataString) {
       try {
         document.execCommand('copy');
         document.body.removeChild(container);
+        if (previouslyFocusedElement) {
+          previouslyFocusedElement.focus();
+        }
         resolve('Copied!');
       } catch (e) {
         document.body.removeChild(container);
+        if (previouslyFocusedElement) {
+          previouslyFocusedElement.focus();
+        }
         reject(e);
       }
     } else {
