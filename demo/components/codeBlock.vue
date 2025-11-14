@@ -89,25 +89,27 @@ async function copyToClipboard(text: string) {
     return navigator.clipboard.writeText(text);
   } catch {
     const element = document.createElement('textarea');
-    const previouslyFocusedElement = document.activeElement;
+    const prevFocus = document.activeElement;
     element.value = text;
     // Prevent keyboard from showing on mobile
     element.setAttribute('readonly', '');
     element.style.contain = 'strict';
     element.style.position = 'fixed';
+    element.style.top = '-9999px';
     element.style.left = '-9999px';
+    element.style.opacity = '0';
+    element.style.outline = 'none';
+    element.style.pointerEvents = 'none';
     element.style.fontSize = '12pt'; // Prevent zooming on iOS
     document.body.appendChild(element);
+    element.focus();
     element.select();
     // Explicit selection workaround for iOS
     element.selectionStart = 0;
     element.selectionEnd = text.length;
     document.execCommand('copy');
     document.body.removeChild(element);
-    // Get the focus back on the previously focused element, if any
-    if (previouslyFocusedElement) {
-      (previouslyFocusedElement as HTMLElement).focus();
-    }
+    if (prevFocus && typeof (prevFocus as HTMLElement).focus === 'function') (prevFocus as HTMLElement).focus();
   }
 }
 </script>
