@@ -1043,69 +1043,75 @@ function atcb_map_special_time_zones(timeZone) {
 
 // SHARED FUNCTION TO COPY TO CLIPBOARD
 async function atcb_copy_to_clipboard(dataString) {
-  const v = dataString?.trim?.() ?? '';
-  return await new Promise((resolve, reject) => {
-    if (!v) reject('No value to copy!');
-    const isHttps = typeof window !== 'undefined' && typeof window.location !== 'undefined' && window.location.protocol === 'https:';
-    if (isHttps && typeof navigator !== 'undefined' && typeof navigator.clipboard !== 'undefined' && typeof navigator.permissions !== 'undefined') {
-      // the new way of doing things
-      // mind that this will not work on insecure origins (http://) as well as if the page is not focused or there is no user interaction
-      const type = 'text/plain';
-      const blob = new Blob([v], { type });
-      const data = [new ClipboardItem({ [type]: blob })];
-      navigator.permissions.query({ name: 'clipboard-write' }).then((permission) => {
-        if (permission.state === 'granted' || permission.state === 'prompt') {
-          navigator.clipboard
-            .write(data)
-            .then(() => resolve('Copied!'))
-            .catch(reject);
-        } else {
-          reject(new Error('Permission not granted!'));
-        }
-      });
-    } else if (window && document.queryCommandSupported && document.queryCommandSupported('copy')) {
-      // falling back to legacy
-      const container = document.createElement('textarea');
-      const previouslyFocusedElement = document.activeElement;
-      container.textContent = v;
-      container.setAttribute('readonly', ''); // Prevent keyboard from showing on mobile
-      container.style.contain = 'strict';
-      container.style.position = 'fixed';
-      container.style.fontSize = '12pt'; // Prevent zooming on iOS
-      container.style.pointerEvents = 'none';
-      container.style.opacity = '0';
-      container.style.border = 'none';
-      container.style.outline = 'none';
-      container.style.boxShadow = 'none';
-      container.style.background = 'transparent';
-      document.body.appendChild(container);
+  const v = (dataString ?? '').toString().trim();
+  if (!v) throw new Error('No value to copy!');
+  // Helper: legacy copy using a hidden textarea
+  const legacyCopy = () => {
+    if (typeof window === 'undefined' || typeof document === 'undefined') return false;
+    if (!document.queryCommandSupported || !document.queryCommandSupported('copy')) return false;
+    const ta = document.createElement('textarea');
+    const prevFocus = document.activeElement;
+    ta.value = v;
+    ta.setAttribute('readonly', '');
+    ta.style.contain = 'strict';
+    ta.style.position = 'fixed';
+    ta.style.top = '-9999px';
+    ta.style.left = '-9999px';
+    ta.style.opacity = '0';
+    ta.style.outline = 'none';
+    ta.style.pointerEvents = 'none';
+    ta.style.fontSize = '12pt'; // Prevent zooming on iOS
+    document.body.appendChild(ta);
+    try {
+      ta.focus();
+      ta.select();
       if (atcbIsiOS()) {
-        window.getSelection()?.removeAllRanges();
-        const range = document.createRange();
-        range.selectNodeContents(container);
-        window.getSelection()?.addRange(range);
-      } else {
-        container.focus();
-        container.select();
+        ta.selectionStart = 0;
+        ta.selectionEnd = v.length;
       }
-      try {
-        document.execCommand('copy');
-        document.body.removeChild(container);
-        if (previouslyFocusedElement) {
-          previouslyFocusedElement.focus();
-        }
-        resolve('Copied!');
-      } catch (e) {
-        document.body.removeChild(container);
-        if (previouslyFocusedElement) {
-          previouslyFocusedElement.focus();
-        }
-        reject(e);
-      }
-    } else {
-      reject(new Error('None of copying methods are supported by this browser!'));
+      const ok = document.execCommand('copy');
+      document.body.removeChild(ta);
+      if (prevFocus && typeof prevFocus.focus === 'function') prevFocus.focus();
+      return ok;
+    } catch {
+      document.body.removeChild(ta);
+      if (prevFocus && typeof prevFocus.focus === 'function') prevFocus.focus();
+      return false;
     }
-  });
+  };
+  const secure = (() => {
+    try {
+      if (typeof window === 'undefined') return false;
+      if ('isSecureContext' in window) return window.isSecureContext;
+      return window.location && window.location.protocol === 'https:';
+    } catch {
+      return false;
+    }
+  })();
+  // Try modern Clipboard API first when in a secure context
+  if (secure && typeof navigator !== 'undefined' && navigator.clipboard) {
+    try {
+      if (typeof navigator.clipboard.writeText === 'function') {
+        await navigator.clipboard.writeText(v);
+        return 'Copied!';
+      }
+    } catch {
+      // fall through to alternative methods
+    }
+    try {
+      if (typeof window !== 'undefined' && typeof window.ClipboardItem !== 'undefined' && typeof navigator.clipboard.write === 'function') {
+        const type = 'text/plain';
+        const blob = new Blob([v], { type });
+        const data = [new ClipboardItem({ [type]: blob })];
+        await navigator.clipboard.write(data);
+        return 'Copied!';
+      }
+    } catch {
+      // fall through to legacy
+    }
+  }
+  if (legacyCopy()) return 'Copied!';
+  throw new Error('Clipboard copy not supported in this environment');
 }
 
 // SHARED DEBOUNCE FUNCTIONS
