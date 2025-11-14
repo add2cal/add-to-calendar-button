@@ -709,7 +709,7 @@ async function atcb_action(inputData, triggerElement, keyboardTrigger = false) {
     } else {
       // ... trigger link at the oneOption case, or ...
       if (oneOption) {
-        atcb_generate_links(host.shadowRoot, data.options[0], data, 'all', keyboardTrigger);
+        await atcb_generate_links(host.shadowRoot, data.options[0], data, 'all', keyboardTrigger);
         atcb_log_event('openSingletonLink', data.identifier, data.identifier);
       } else {
         // ... open the options list

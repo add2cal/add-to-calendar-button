@@ -125,12 +125,16 @@ async function atcb_generate_ty(hostEl, dataObj) {
   // copy to clipboard, if type = share
   if (tyData.type === 'share') {
     const copyBtn = tyHost.getElementById('atcb-ty-share-copy');
-    copyBtn.addEventListener('click', function () {
-      atcb_copy_to_clipboard(tyData.url);
-      copyBtn.innerHTML = copiedIcon + atcb_translate_hook('label.share.copied', data) + '!';
-      setTimeout(function () {
-        copyBtn.innerHTML = copyIcon + atcb_translate_hook('label.share.copy', data);
-      }, 3000);
+    copyBtn.addEventListener('click', async function () {
+      try {
+        await atcb_copy_to_clipboard(tyData.url);
+        copyBtn.innerHTML = copiedIcon + atcb_translate_hook('label.share.copied', data) + '!';
+        setTimeout(function () {
+          copyBtn.innerHTML = copyIcon + atcb_translate_hook('label.share.copy', data);
+        }, 3000);
+      } catch (error) {
+        console.error('Error copying to clipboard:', error);
+      }
     });
     copyBtn.addEventListener('keyup', function (event) {
       if (event.key === 'Enter') {
