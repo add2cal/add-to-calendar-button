@@ -3,7 +3,7 @@
  *  Add to Calendar Button
  *  ++++++++++++++++++++++
  *
- *  Version: 2.13.0
+ *  Version: 2.13.1
  *  Creator: Jens Kuerschner (https://jekuer.com)
  *  Project: https://github.com/add2cal/add-to-calendar-button
  *  License: Elastic License 2.0 (ELv2) (https://github.com/add2cal/add-to-calendar-button/blob/main/LICENSE.txt)
@@ -82,7 +82,7 @@ function atcb_generate_label(host, data, parent, type, icon = false, text = '', 
       if (!data.blockInteraction) {
         parent.addEventListener(
           'click',
-          atcb_debounce_leading(() => {
+          atcb_debounce_leading(async () => {
             if (oneOption) {
               host.querySelector('#' + parent.id)?.blur();
               atcb_log_event('openSingletonLink', parent.id, data.identifier);
@@ -90,10 +90,10 @@ function atcb_generate_label(host, data, parent, type, icon = false, text = '', 
               atcb_toggle(host, 'close');
               atcb_log_event('openCalendarLink', parent.id, data.identifier);
             }
-            atcb_generate_links(host, type, data);
+            await atcb_generate_links(host, type, data);
           }),
         );
-        parent.addEventListener('keyup', function (event) {
+        parent.addEventListener('keyup', async function (event) {
           if (event.key === 'Enter') {
             event.preventDefault();
             if (oneOption) {
@@ -103,7 +103,7 @@ function atcb_generate_label(host, data, parent, type, icon = false, text = '', 
               atcb_toggle(host, 'close');
               atcb_log_event('openCalendarLink', parent.id, data.identifier);
             }
-            atcb_generate_links(host, type, data, 'all', true);
+            await atcb_generate_links(host, type, data, 'all', true);
           }
         });
       }
@@ -492,10 +492,10 @@ async function atcb_create_modal(mainHost, data, icon = '', headline, content = 
         }
         modalSubEventButton.addEventListener(
           'click',
-          atcb_debounce(() => {
+          atcb_debounce(async () => {
             atcb_log_event('openSubEventLink', modalSubEventButton.id, data.identifier);
             modalSubEventButton.blur();
-            atcb_generate_links(mainHost, subEvents[0], data, subEvents[`${i}`], keyboardTrigger, true);
+            await atcb_generate_links(mainHost, subEvents[0], data, subEvents[`${i}`], keyboardTrigger, true);
           }),
         );
       } else {
@@ -560,30 +560,30 @@ async function atcb_create_modal(mainHost, data, icon = '', headline, content = 
       case 'yahoo2nd': // for yahoo subscribe modal, where we guide the user through the process
         modalButton.addEventListener(
           'click',
-          atcb_debounce(() => {
+          atcb_debounce(async () => {
             atcb_close(mainHost);
-            atcb_subscribe_yahoo_modal_switch(mainHost, data);
+            await atcb_subscribe_yahoo_modal_switch(mainHost, data);
           }),
         );
-        modalButton.addEventListener('keyup', function (event) {
+        modalButton.addEventListener('keyup', async function (event) {
           if (event.key === 'Enter' || event.code == 'Space' || (event.key === 'Alt' && event.key === 'Control' && event.code === 'Space')) {
             atcb_toggle(mainHost, 'close', '', '', true);
-            atcb_subscribe_yahoo_modal_switch(mainHost, data, keyboardTrigger);
+            await atcb_subscribe_yahoo_modal_switch(mainHost, data, keyboardTrigger);
           }
         });
         break;
       case '2timeslink': // for the note that the user shall click the button twice
         modalButton.addEventListener(
           'click',
-          atcb_debounce(() => {
+          atcb_debounce(async () => {
             atcb_close(mainHost);
-            atcb_generate_links(mainHost, goto.type, data, goto.id, keyboardTrigger, false, true);
+            await atcb_generate_links(mainHost, goto.type, data, goto.id, keyboardTrigger, false, true);
           }),
         );
-        modalButton.addEventListener('keyup', function (event) {
+        modalButton.addEventListener('keyup', async function (event) {
           if (event.key === 'Enter' || event.code == 'Space' || (event.key === 'Alt' && event.key === 'Control' && event.code === 'Space')) {
             atcb_toggle(mainHost, 'close', '', '', true);
-            atcb_generate_links(mainHost, goto.type, data, goto.id, keyboardTrigger, false, true);
+            await atcb_generate_links(mainHost, goto.type, data, goto.id, keyboardTrigger, false, true);
           }
         });
         break;
@@ -602,9 +602,9 @@ async function atcb_create_modal(mainHost, data, icon = '', headline, content = 
 }
 
 // FUNCTION TO SWICH THE YAHOO SUBSCRIBE MODAL
-function atcb_subscribe_yahoo_modal_switch(host, data, keyboardTrigger) {
+async function atcb_subscribe_yahoo_modal_switch(host, data, keyboardTrigger) {
   atcb_set_fully_successful(host, data);
-  atcb_generate_links(host, 'yahoo2nd', data, 'all', keyboardTrigger);
+  await atcb_generate_links(host, 'yahoo2nd', data, 'all', keyboardTrigger);
 }
 
 // FUNCTION TO GENERATE A MORE DETAILED DATE BUTTON

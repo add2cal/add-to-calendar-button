@@ -3,7 +3,7 @@
  *  Add to Calendar Button
  *  ++++++++++++++++++++++
  *
- *  Version: 2.13.0
+ *  Version: 2.13.1
  *  Creator: Jens Kuerschner (https://jekuer.com)
  *  Project: https://github.com/add2cal/add-to-calendar-button
  *  License: Elastic License 2.0 (ELv2) (https://github.com/add2cal/add-to-calendar-button/blob/main/LICENSE.txt)
@@ -125,12 +125,16 @@ async function atcb_generate_ty(hostEl, dataObj) {
   // copy to clipboard, if type = share
   if (tyData.type === 'share') {
     const copyBtn = tyHost.getElementById('atcb-ty-share-copy');
-    copyBtn.addEventListener('click', function () {
-      atcb_copy_to_clipboard(tyData.url);
-      copyBtn.innerHTML = copiedIcon + atcb_translate_hook('label.share.copied', data) + '!';
-      setTimeout(function () {
-        copyBtn.innerHTML = copyIcon + atcb_translate_hook('label.share.copy', data);
-      }, 3000);
+    copyBtn.addEventListener('click', async function () {
+      try {
+        await atcb_copy_to_clipboard(tyData.url);
+        copyBtn.innerHTML = copiedIcon + atcb_translate_hook('label.share.copied', data) + '!';
+        setTimeout(function () {
+          copyBtn.innerHTML = copyIcon + atcb_translate_hook('label.share.copy', data);
+        }, 3000);
+      } catch (error) {
+        console.error('Error copying to clipboard:', error);
+      }
     });
     copyBtn.addEventListener('keyup', function (event) {
       if (event.key === 'Enter') {

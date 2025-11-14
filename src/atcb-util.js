@@ -3,7 +3,7 @@
  *  Add to Calendar Button
  *  ++++++++++++++++++++++
  *
- *  Version: 2.13.0
+ *  Version: 2.13.1
  *  Creator: Jens Kuerschner (https://jekuer.com)
  *  Project: https://github.com/add2cal/add-to-calendar-button
  *  License: Elastic License 2.0 (ELv2) (https://github.com/add2cal/add-to-calendar-button/blob/main/LICENSE.txt)
@@ -1042,29 +1042,70 @@ function atcb_map_special_time_zones(timeZone) {
 }
 
 // SHARED FUNCTION TO COPY TO CLIPBOARD
-function atcb_copy_to_clipboard(dataString) {
-  const tmpInput = document.createElement('input');
-  document.body.append(tmpInput);
-  const editable = tmpInput.contentEditable;
-  const readOnly = tmpInput.readOnly;
-  tmpInput.contentEditable = true;
-  tmpInput.readOnly = false;
-  tmpInput.value = dataString;
-  if (atcbIsiOS()) {
-    var range = document.createRange();
-    range.selectNodeContents(tmpInput);
-    var selection = window.getSelection();
-    selection.removeAllRanges();
-    selection.addRange(range);
-    tmpInput.setSelectionRange(0, 999999);
-  } else {
-    tmpInput.select();
-  }
-  tmpInput.contentEditable = editable;
-  tmpInput.readOnly = readOnly;
-  document.execCommand('copy');
-  tmpInput.remove();
-  // navigator.clipboard.writeText(dataString); would require a lot more hacks on many systems, but could be something for the future (see https://developer.mozilla.org/en-US/docs/Web/API/Clipboard/writeText)
+async function atcb_copy_to_clipboard(dataString) {
+  const v = dataString?.trim?.() ?? '';
+  return await new Promise((resolve, reject) => {
+    if (!v) reject('No value to copy!');
+    const isHttps = typeof window !== 'undefined' && typeof window.location !== 'undefined' && window.location.protocol === 'https:';
+    if (isHttps && typeof navigator !== 'undefined' && typeof navigator.clipboard !== 'undefined' && typeof navigator.permissions !== 'undefined') {
+      // the new way of doing things
+      // mind that this will not work on insecure origins (http://) as well as if the page is not focused or there is no user interaction
+      const type = 'text/plain';
+      const blob = new Blob([v], { type });
+      const data = [new ClipboardItem({ [type]: blob })];
+      navigator.permissions.query({ name: 'clipboard-write' }).then((permission) => {
+        if (permission.state === 'granted' || permission.state === 'prompt') {
+          navigator.clipboard
+            .write(data)
+            .then(() => resolve('Copied!'))
+            .catch(reject);
+        } else {
+          reject(new Error('Permission not granted!'));
+        }
+      });
+    } else if (window && document.queryCommandSupported && document.queryCommandSupported('copy')) {
+      // falling back to legacy
+      const container = document.createElement('textarea');
+      const previouslyFocusedElement = document.activeElement;
+      container.textContent = v;
+      container.setAttribute('readonly', ''); // Prevent keyboard from showing on mobile
+      container.style.contain = 'strict';
+      container.style.position = 'fixed';
+      container.style.fontSize = '12pt'; // Prevent zooming on iOS
+      container.style.pointerEvents = 'none';
+      container.style.opacity = '0';
+      container.style.border = 'none';
+      container.style.outline = 'none';
+      container.style.boxShadow = 'none';
+      container.style.background = 'transparent';
+      document.body.appendChild(container);
+      if (atcbIsiOS()) {
+        window.getSelection()?.removeAllRanges();
+        const range = document.createRange();
+        range.selectNodeContents(container);
+        window.getSelection()?.addRange(range);
+      } else {
+        container.focus();
+        container.select();
+      }
+      try {
+        document.execCommand('copy');
+        document.body.removeChild(container);
+        if (previouslyFocusedElement) {
+          previouslyFocusedElement.focus();
+        }
+        resolve('Copied!');
+      } catch (e) {
+        document.body.removeChild(container);
+        if (previouslyFocusedElement) {
+          previouslyFocusedElement.focus();
+        }
+        reject(e);
+      }
+    } else {
+      reject(new Error('None of copying methods are supported by this browser!'));
+    }
+  });
 }
 
 // SHARED DEBOUNCE FUNCTIONS

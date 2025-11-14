@@ -3,7 +3,7 @@
  *  Add to Calendar Button
  *  ++++++++++++++++++++++
  *
- *  Version: 2.13.0
+ *  Version: 2.13.1
  *  Creator: Jens Kuerschner (https://jekuer.com)
  *  Project: https://github.com/add2cal/add-to-calendar-button
  *  License: Elastic License 2.0 (ELv2) (https://github.com/add2cal/add-to-calendar-button/blob/main/LICENSE.txt)
@@ -19,7 +19,7 @@ import { atcb_create_modal } from './atcb-generate.js';
 import { atcb_translate_hook } from './atcb-i18n.js';
 
 // MIDDLEWARE FUNCTION TO GENERATE THE CALENDAR LINKS
-function atcb_generate_links(host, type, data, subEvent = 'all', keyboardTrigger = false, multiDateModal = false, skipDoubleLink = false) {
+async function atcb_generate_links(host, type, data, subEvent = 'all', keyboardTrigger = false, multiDateModal = false, skipDoubleLink = false) {
   // we differentiate between the type the user triggered and the type of link it shall activate
   let linkType = type;
   // the apple type would trigger the same as ical, for example
@@ -34,7 +34,7 @@ function atcb_generate_links(host, type, data, subEvent = 'all', keyboardTrigger
   }
   // if this is a calendar subscription case, we can take the short route here
   if (data.subscribe) {
-    atcb_generate_subscribe_links(host, type, linkType, data, keyboardTrigger);
+    await atcb_generate_subscribe_links(host, type, linkType, data, keyboardTrigger);
     return;
   }
   // for single-date events or if a specific subEvent is given, we can simply call the respective endpoints
@@ -116,8 +116,9 @@ function atcb_generate_multidate_links(host, type, linkType, data, keyboardTrigg
   }
 }
 
-function atcb_generate_subscribe_links(host, type, linkType, data, keyboardTrigger) {
+async function atcb_generate_subscribe_links(host, type, linkType, data, keyboardTrigger) {
   const adjustedFileUrl = data.icsFile.replace('https://', 'webcal://');
+  let copied = false;
   switch (linkType) {
     case 'ical': // also for apple (see above)
       if (atcbIsAndroid() || data.fakeAndroid) {
@@ -141,7 +142,13 @@ function atcb_generate_subscribe_links(host, type, linkType, data, keyboardTrigg
         atcb_open_cal_url(data, 'yahoo', '', true);
         return;
       }
-      atcb_copy_to_clipboard(data.icsFile);
+      try {
+        await atcb_copy_to_clipboard(data.icsFile);
+        copied = true;
+      } catch (e) {
+        console.warn(e);
+        copied = false; // TODO: Alter the modal text based on whether it was copied or not
+      }
       atcb_create_modal(
         host,
         data,
@@ -162,7 +169,13 @@ function atcb_generate_subscribe_links(host, type, linkType, data, keyboardTrigg
       );
       return;
     case 'yahoo2nd':
-      atcb_copy_to_clipboard(data.icsFile);
+      try {
+        await atcb_copy_to_clipboard(data.icsFile);
+        copied = true;
+      } catch (e) {
+        console.warn(e);
+        copied = false; // TODO: Alter the modal text based on whether it was copied or not
+      }
       atcb_create_modal(
         host,
         data,
@@ -643,9 +656,16 @@ function atcb_determine_ical_filename(data, subEvent) {
   return 'event' + filenameSuffix;
 }
 
-function atcb_ical_copy_note(host, dataUrl, data, keyboardTrigger) {
+async function atcb_ical_copy_note(host, dataUrl, data, keyboardTrigger) {
   // putting the download url to the clipboard
-  atcb_copy_to_clipboard(dataUrl);
+  let copied = false;
+  try {
+    await atcb_copy_to_clipboard(dataUrl);
+    copied = true;
+  } catch (e) {
+    console.warn(e);
+    copied = false; // TODO: Alter the modal text based on whether it was copied or not
+  }
   // creating the modal
   if (atcbIsiOS() && !atcbIsSafari()) {
     atcb_create_modal(
