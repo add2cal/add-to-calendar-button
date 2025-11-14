@@ -94,7 +94,7 @@ async function copyToClipboard(text: string) {
     // Prevent keyboard from showing on mobile
     element.setAttribute('readonly', '');
     element.style.contain = 'strict';
-    element.style.position = 'absolute';
+    element.style.position = 'fixed';
     element.style.left = '-9999px';
     element.style.fontSize = '12pt'; // Prevent zooming on iOS
     document.body.appendChild(element);

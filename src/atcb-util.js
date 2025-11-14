@@ -1070,8 +1070,7 @@ async function atcb_copy_to_clipboard(dataString) {
       container.textContent = v;
       container.setAttribute('readonly', ''); // Prevent keyboard from showing on mobile
       container.style.contain = 'strict';
-      container.style.position = 'absolute';
-      container.style.left = '-9999px';
+      container.style.position = 'fixed';
       container.style.fontSize = '12pt'; // Prevent zooming on iOS
       container.style.pointerEvents = 'none';
       container.style.opacity = '0';
