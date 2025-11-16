@@ -1,7 +1,8 @@
 <!-- eslint-disable vue/no-v-html -->
 <script setup lang="ts">
 import { ClipboardIcon, ClipboardDocumentCheckIcon } from '@heroicons/vue/24/outline';
-import { createHighlighter } from 'shiki'
+import { createHighlighter } from 'shiki';
+import { copyValue } from '@/utils/clipboard';
 import githublight from 'shiki/themes/github-light.mjs';
 import githubdark from 'shiki/themes/github-dark.mjs';
 
@@ -70,7 +71,7 @@ function copyCodeFromElement(el: HTMLElement | null) {
   if (isShell) {
     text = text.replace(/^ *(\$|>) /gm, '').trim();
   }
-  copyToClipboard(text).then(() => {
+  copyValue(text).then(() => {
     el.classList.add('copied');
     copied.value = true;
     clearTimeout(timeoutIdMap.get(el));
@@ -83,42 +84,13 @@ function copyCodeFromElement(el: HTMLElement | null) {
     timeoutIdMap.set(el, timeoutId);
   });
 }
-
-async function copyToClipboard(text: string) {
-  try {
-    return navigator.clipboard.writeText(text);
-  } catch {
-    const element = document.createElement('textarea');
-    const prevFocus = document.activeElement;
-    element.value = text;
-    // Prevent keyboard from showing on mobile
-    element.setAttribute('readonly', '');
-    element.style.contain = 'strict';
-    element.style.position = 'fixed';
-    element.style.top = '-9999px';
-    element.style.left = '-9999px';
-    element.style.opacity = '0';
-    element.style.outline = 'none';
-    element.style.pointerEvents = 'none';
-    element.style.fontSize = '12pt'; // Prevent zooming on iOS
-    document.body.appendChild(element);
-    element.focus();
-    element.select();
-    // Explicit selection workaround for iOS
-    element.selectionStart = 0;
-    element.selectionEnd = text.length;
-    document.execCommand('copy');
-    document.body.removeChild(element);
-    if (prevFocus && typeof (prevFocus as HTMLElement).focus === 'function') (prevFocus as HTMLElement).focus();
-  }
-}
 </script>
 
 <template>
   <div :class="['code-block', props.slim ? 'slim my-3 text-xs lg:text-sm' : 'my-5 text-sm', 'group relative w-full rounded-md border border-gray-300 bg-zinc-100 dark:border-zinc-700 dark:bg-zinc-900', props.class]">
     <button
       :title="$t('labels.copy_code')"
-      :class="['copy', props.slim ? 'right-1 top-1' : 'right-2 top-2', 'absolute z-10 flex h-9 items-center justify-center rounded-md border border-zinc-400 bg-zinc-100 px-2 text-zinc-700 opacity-0 transition-transform hover:shadow-lg focus:opacity-100 group-hover:opacity-100 dark:border-zinc-600 dark:bg-zinc-800 dark:text-zinc-300', copied ? 'w-auto cursor-default' : 'w-9 cursor-pointer hover:border-secondary-dark hover:bg-secondary hover:text-black hover:dark:border-secondary-dark hover:dark:bg-secondary hover:dark:text-black']"
+      :class="['copy', props.slim ? 'right-1 top-1' : 'right-2 top-2', 'absolute z-10 flex h-9 items-center justify-center rounded-md border border-zinc-400 bg-zinc-100 px-2 text-zinc-700 transition-transform hover:shadow-lg focus:opacity-100 group-hover:opacity-100 dark:border-zinc-600 dark:bg-zinc-800 dark:text-zinc-300 lg:opacity-0', copied ? 'w-auto cursor-default' : 'w-9 cursor-pointer hover:border-secondary-dark hover:bg-secondary hover:text-black hover:dark:border-secondary-dark hover:dark:bg-secondary hover:dark:text-black']"
       @click="copyCodeFromElement($event.currentTarget as HTMLElement)"
     >
       <span v-if="copied" class="pl-1 pr-3 text-xs font-semibold">{{ $t('labels.copied') }}</span>

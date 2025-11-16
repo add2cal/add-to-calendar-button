@@ -1081,9 +1081,13 @@ async function atcb_copy_to_clipboard(dataString) {
   };
   const secure = (() => {
     try {
-      if (typeof window === 'undefined') return false;
-      if ('isSecureContext' in window) return window.isSecureContext;
-      return window.location && window.location.protocol === 'https:';
+      // check for isSecureContext first
+      if (typeof window !== 'undefined' && 'isSecureContext' in window && window.isSecureContext) return true;
+      // check for protocol as fallback
+      if (typeof window !== 'undefined' && window.location && window.location.protocol === 'https:') return true;
+      // if localhost, also return true
+      if (typeof window !== 'undefined' && window.location && (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')) return true;
+      return false;
     } catch {
       return false;
     }
