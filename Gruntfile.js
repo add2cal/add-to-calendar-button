@@ -241,6 +241,42 @@ module.exports = function (grunt) {
         },
       },
     },
+    // transpile CommonJS output to broadly compatible ES5
+    babel: {
+      commonjs_es5: {
+        options: {
+          sourceMap: false,
+          compact: true,
+          // Only keep comments that explicitly include @preserve
+          generatorOpts: {
+            comments: false,
+            shouldPrintComment: function (val) {
+              return /@preserve/i.test(val);
+            },
+          },
+          presets: [
+            [
+              '@babel/preset-env',
+              {
+                targets: { ie: '11' }, // broad compatibility
+                bugfixes: true,
+                modules: 'commonjs',
+                loose: true,
+              },
+            ],
+          ],
+        },
+        files: [
+          {
+            expand: true,
+            cwd: 'dist/commonjs',
+            src: ['**/*.js'],
+            dest: 'dist/commonjs',
+            ext: '.js',
+          },
+        ],
+      },
+    },
     // create files to support the dist structure
     'file-creator': {
       'package.json ES Module': {
@@ -287,8 +323,9 @@ module.exports = function (grunt) {
   grunt.loadNpmTasks('grunt-contrib-concat');
   grunt.loadNpmTasks('grunt-file-creator');
   grunt.loadNpmTasks('grunt-version');
+  grunt.loadNpmTasks('grunt-babel');
 
   // Register task(s).
-  grunt.registerTask('default', ['clean', 'cssmin', 'concat', 'file-creator']);
-  grunt.registerTask('uglifyMain', ['clean', 'cssmin', 'concat', 'file-creator', 'uglify']);
+  grunt.registerTask('default', ['clean', 'cssmin', 'concat', 'file-creator', 'babel']);
+  grunt.registerTask('uglifyMain', ['clean', 'cssmin', 'concat', 'file-creator', 'babel', 'uglify']);
 };

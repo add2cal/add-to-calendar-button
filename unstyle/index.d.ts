@@ -14,7 +14,7 @@ declare module 'add-to-calendar-button/unstyle' {
 // WEB COMPONENT DECLARATION
 declare global {
   interface HTMLElementTagNameMap {
-    'add-to-calendar-button': AddToCalendarButtonType;
+    'add-to-calendar-button': HTMLElement & AddToCalendarButtonType;
   }
   namespace JSX {
     interface IntrinsicElements {
