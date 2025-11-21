@@ -70,9 +70,9 @@ export interface ATCBActionEventConfig {
   recurrence_interval?: number;
   recurrence_until?: string;
   recurrence_count?: number;
-  recurrence_byDay?: string;
-  recurrence_byMonth?: string;
-  recurrence_byMonthDay?: string;
+  recurrence_byDay?: string[] | string;
+  recurrence_byMonth?: string[] | string | number[] | number;
+  recurrence_byMonthDay?: string[] | string | number[] | number;
   recurrence_weekstart?: string;
   availability?: 'busy' | 'free';
   created?: string;
@@ -137,9 +137,9 @@ export type AddToCalendarButtonType = {
   recurrence_interval?: number | string;
   recurrence_until?: string;
   recurrence_count?: number | string;
-  recurrence_byDay?: string;
-  recurrence_byMonth?: string;
-  recurrence_byMonthDay?: string;
+  recurrence_byDay?: string[] | string;
+  recurrence_byMonth?: string[] | string | number[] | number;
+  recurrence_byMonthDay?: string[] | string | number[] | number;
   recurrence_weekstart?: string;
   availability?: 'busy' | 'free';
   created?: string;

@@ -5,14 +5,14 @@
  *  Add to Calendar Button
  *  ++++++++++++++++++++++
  *
- *  Version: 2.13.2
+ *  Version: 2.13.3
  *  Creator: Jens Kuerschner (https://jekuer.com)
  *  Project: https://github.com/add2cal/add-to-calendar-button
  *  License: Elastic License 2.0 (ELv2) (https://github.com/add2cal/add-to-calendar-button/blob/main/LICENSE.txt)
  *  Note:    DO NOT REMOVE THE COPYRIGHT NOTICE ABOVE!
  *
  */
-const atcbVersion = '2.13.2';
+const atcbVersion = '2.13.3';
 
 // DEFINING CSS
 const atcbCssTemplate = {};
@@ -253,7 +253,7 @@ const atcbWcBooleanParams = [
 ];
 const atcbWcObjectParams = ['customLabels', 'ty', 'rsvp', 'customVar'];
 const atcbWcObjectArrayParams = ['dates'];
-const atcbWcArrayParams = ['images', 'options', 'optionsMobile', 'optionsIOS'];
+const atcbWcArrayParams = ['recurrence_byDay', 'recurrence_byMonth', 'recurrence_byMonthDay', 'images', 'options', 'optionsMobile', 'optionsIOS'];
 const atcbWcNumberParams = ['sequence', 'recurrence_interval', 'recurrence_count'];
 
 // DEFINING GLOBAL ICONS
