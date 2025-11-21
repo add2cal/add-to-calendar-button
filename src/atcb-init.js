@@ -3,7 +3,7 @@
  *  Add to Calendar Button
  *  ++++++++++++++++++++++
  *
- *  Version: 2.13.2
+ *  Version: 2.13.3
  *  Creator: Jens Kuerschner (https://jekuer.com)
  *  Project: https://github.com/add2cal/add-to-calendar-button
  *  License: Elastic License 2.0 (ELv2) (https://github.com/add2cal/add-to-calendar-button/blob/main/LICENSE.txt)
@@ -305,24 +305,21 @@ function atcb_read_attributes(el, params = atcbWcParams) {
         })();
         val = JSON.parse(cleanedInput);
       } else if (atcbWcArrayParams.includes(attr)) {
-        const cleanedInput = (function () {
-          let newVal = inputVal;
-          if (inputVal.includes('"') || inputVal.includes("'")) {
-            if (inputVal.includes('[')) {
-              newVal = inputVal.substring(2, inputVal.length - 2);
-            } else {
-              newVal = inputVal.substring(1, inputVal.length - 1);
-            }
-          }
-          if (!inputVal.includes('|')) {
-            newVal = newVal.replace(/\s/g, '');
-          }
-          return newVal;
-        })();
-        if (cleanedInput.includes("','")) {
-          val = cleanedInput.split("','");
+        val = inputVal;
+        if (inputVal.includes('[')) {
+          val = val.substring(1, val.length - 1);
+        }
+        if (inputVal.includes('"') || inputVal.includes("'")) {
+          val = val.substring(1, val.length - 1);
+        }
+        if (!inputVal.includes('|')) {
+          // legacy support for translating options within the array. As this could include spaces, we skip them here
+          val = val.replace(/\s/g, '');
+        }
+        if (val.includes("','")) {
+          val = val.split("','");
         } else {
-          val = cleanedInput.split('","');
+          val = val.split('","');
         }
       } else if (atcbWcNumberParams.includes(attr)) {
         val = parseInt(inputVal);
