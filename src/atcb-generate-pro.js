@@ -3,7 +3,7 @@
  *  Add to Calendar Button
  *  ++++++++++++++++++++++
  *
- *  Version: 2.13.3
+ *  Version: 2.13.4
  *  Creator: Jens Kuerschner (https://jekuer.com)
  *  Project: https://github.com/add2cal/add-to-calendar-button
  *  License: Elastic License 2.0 (ELv2) (https://github.com/add2cal/add-to-calendar-button/blob/main/LICENSE.txt)
@@ -433,7 +433,8 @@ async function atcb_generate_rsvp_form(host, data, hostEl, keyboardTrigger = fal
       rsvpFormSubmit.style.display = 'none';
       const staticFields = [{ type: 'number', name: data.proKey + '-amount', fieldId: data.identifier + '-rsvp-amount', required: true }];
       if (!customEmailField) staticFields.push({ type: 'email', name: 'email', fieldId: data.identifier + '-rsvp-email', required: true });
-      let valid = atcb_validate_form(rsvpHost, [...staticFields, ...rsvpData.fields]);
+      const dynamicFields = Array.isArray(rsvpData.fields) ? rsvpData.fields : [];
+      let valid = atcb_validate_form(rsvpHost, [...staticFields, ...dynamicFields]);
       // if maxpp, make sure amount is not bigger
       const amountEl = rsvpHost.getElementById(data.identifier + '-rsvp-amount');
       const amount = parseInt(amountEl.value) || 1;
@@ -455,7 +456,7 @@ async function atcb_generate_rsvp_form(host, data, hostEl, keyboardTrigger = fal
           if (closeBtn) closeBtn.style.display = 'block';
           return;
         }
-        let fieldsCopy = JSON.parse(JSON.stringify(rsvpData.fields));
+        let fieldsCopy = rsvpData.fields ? JSON.parse(JSON.stringify(rsvpData.fields)) : [];
         const bodyData = [];
         bodyData.push({ name: 'prokey', value: data.proKey });
         bodyData.push({ name: 'language', value: data.language });
