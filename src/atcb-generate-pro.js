@@ -433,7 +433,8 @@ async function atcb_generate_rsvp_form(host, data, hostEl, keyboardTrigger = fal
       rsvpFormSubmit.style.display = 'none';
       const staticFields = [{ type: 'number', name: data.proKey + '-amount', fieldId: data.identifier + '-rsvp-amount', required: true }];
       if (!customEmailField) staticFields.push({ type: 'email', name: 'email', fieldId: data.identifier + '-rsvp-email', required: true });
-      let valid = atcb_validate_form(rsvpHost, [...staticFields, ...rsvpData.fields]);
+      const dynamicFields = Array.isArray(rsvpData.fields) ? rsvpData.fields : [];
+      let valid = atcb_validate_form(rsvpHost, [...staticFields, ...dynamicFields]);
       // if maxpp, make sure amount is not bigger
       const amountEl = rsvpHost.getElementById(data.identifier + '-rsvp-amount');
       const amount = parseInt(amountEl.value) || 1;
