@@ -456,7 +456,7 @@ async function atcb_generate_rsvp_form(host, data, hostEl, keyboardTrigger = fal
           if (closeBtn) closeBtn.style.display = 'block';
           return;
         }
-        let fieldsCopy = JSON.parse(JSON.stringify(rsvpData.fields));
+        let fieldsCopy = rsvpData.fields ? JSON.parse(JSON.stringify(rsvpData.fields)) : [];
         const bodyData = [];
         bodyData.push({ name: 'prokey', value: data.proKey });
         bodyData.push({ name: 'language', value: data.language });
