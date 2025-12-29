@@ -440,14 +440,8 @@ watch(searchSelection, (newVal) => {
                 Defines recurring events.<br /><br />
                 This will deactivate the Yahoo and Microsoft (and Google at iOS) options, since they do not support it at the moment (users could still use iCal in this case). If no option is left then, iCal will be set as fallback.<br />
                 Mind that it is not possible to use more than 1 dates (dates option) and recurrence.<br /><br />
-                You can use any valid <a href="https://www.rfc-editor.org/rfc/rfc5545" target="_blank" rel="noopener" class="whitespace-nowrap">RRULE <ArrowTopRightOnSquareIcon class="-mt-0.5 mr-0.5 inline-block h-3 w-3" aria-hidden="true" /></a> to define the respective rule (<a
-                  href="https://icalendar.org/rrule-tool.html"
-                  target="_blank"
-                  rel="noopener"
-                  class="whitespace-nowrap"
-                  >click here for a generator <ArrowTopRightOnSquareIcon class="-mt-0.5 mr-0.5 inline-block h-3 w-3" aria-hidden="true" /></a
-                >).<br />
-                Mind that the startDate needs to be valid within the given recurrence ruleset!<br /><br />
+                You can use any valid <a href="https://www.rfc-editor.org/rfc/rfc5545" target="_blank" rel="noopener" class="whitespace-nowrap">RRULE <ArrowTopRightOnSquareIcon class="-mt-0.5 mr-0.5 inline-block h-3 w-3" aria-hidden="true" /></a> except for BYHOUR, BYMINUTE, and BYSECOND to define
+                the respective rule (<a href="https://icalendar.org/rrule-tool.html" target="_blank" rel="noopener" class="whitespace-nowrap">click here for a generator <ArrowTopRightOnSquareIcon class="-mt-0.5 mr-0.5 inline-block h-3 w-3" aria-hidden="true" /></a>).<br /><br />
                 As an alternative to the RRULE, you could also specify the following more specific reccurence settings, which will then generate the RRULE for you in the background (see next parameters).<br />
                 In this case, for the "recurrence" field, you would define the frequency (daily, weekly, monthly, yearly) instead of the RRULE.<br /><br />
                 <NuxtLink :to="{path: localePath('examples'), hash: '#case-4'}">{{ $t('labels.example') }} <ArrowRightIcon class="-mt-0.5 mr-0.5 inline-block h-3 w-3" aria-hidden="true" /></NuxtLink>
@@ -457,14 +451,8 @@ watch(searchSelection, (newVal) => {
                 Diese Optione deaktiviert die Yahoo- und Microsoft-Kalendar-Optionen (sowie Google unter iOS), da die Funktion dort aktuell nicht unterstützt wird (in diesen Fällen können Nutzer weiterhin auf die iCal-Datei zurückgreifen). Bleibt keine Option übrig, wird iCal als Fallback
                 aktiviert.<br />
                 Beachte, dass es nicht möglich ist, mehr als 1 Termin (dates option) gemeinsam mit der recurrence option zu verwenden.<br /><br />
-                Du kannst jede valide <a href="https://www.rfc-editor.org/rfc/rfc5545" target="_blank" rel="noopener" class="whitespace-nowrap">RRULE <ArrowTopRightOnSquareIcon class="-mt-0.5 mr-0.5 inline-block h-3 w-3" aria-hidden="true" /></a> nutzen, um eine entsprechende Regel anzuwenden (<a
-                  href="https://icalendar.org/rrule-tool.html"
-                  target="_blank"
-                  rel="noopener"
-                  class="whitespace-nowrap"
-                  >Generator-Tool <ArrowTopRightOnSquareIcon class="-mt-0.5 mr-0.5 inline-block h-3 w-3" aria-hidden="true" /></a
-                >).<br />
-                Beachte, dass das startDate ein valides Datum innerhalb des definierten Regelwerks sein muss!<br /><br />
+                Du kannst jede valide <a href="https://www.rfc-editor.org/rfc/rfc5545" target="_blank" rel="noopener" class="whitespace-nowrap">RRULE <ArrowTopRightOnSquareIcon class="-mt-0.5 mr-0.5 inline-block h-3 w-3" aria-hidden="true" /></a> mit Ausnahme von BYHOUR, BYMINUTE und BYSECOND
+                nutzen, um eine entsprechende Regel anzuwenden (<a href="https://icalendar.org/rrule-tool.html" target="_blank" rel="noopener" class="whitespace-nowrap">Generator-Tool <ArrowTopRightOnSquareIcon class="-mt-0.5 mr-0.5 inline-block h-3 w-3" aria-hidden="true" /></a>).<br /><br />
                 Alternativ zur RRULE kannst du auch die folgenden einfacheren und spezifischeren Einstellungen nutzen. Diese generieren die RRULE automatisch für dich im Hintergrund.<br />
                 In diesem Fall würdest du als Wert für die "recurrence"-Option lediglich die Frequenz (täglich, wöchentlich, ...) anstelle der kompletten RRULE definieren.<br /><br />
                 <NuxtLink :to="{path: localePath('examples'), hash: '#case-4'}">{{ $t('labels.example') }} <ArrowRightIcon class="-mt-0.5 mr-0.5 inline-block h-3 w-3" aria-hidden="true" /></NuxtLink>
