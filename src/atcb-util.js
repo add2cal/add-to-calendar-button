@@ -3,7 +3,7 @@
  *  Add to Calendar Button
  *  ++++++++++++++++++++++
  *
- *  Version: 2.13.4
+ *  Version: 2.13.5
  *  Creator: Jens Kuerschner (https://jekuer.com)
  *  Project: https://github.com/add2cal/add-to-calendar-button
  *  License: Elastic License 2.0 (ELv2) (https://github.com/add2cal/add-to-calendar-button/blob/main/LICENSE.txt)
@@ -799,46 +799,175 @@ function atcb_parseRRule(rruleStr, deep = true) {
           .split(',')
           .map((n) => parseInt(n, 10))
       : parts.BYWEEKNO;
-  parts.BYHOUR =
-    deep && parts.BYHOUR
-      ? parts.BYHOUR.toString()
-          .split(',')
-          .map((n) => parseInt(n, 10))
-      : parts.BYHOUR;
+
+  // We do not support BYHOUR (or other sub-daily expansion rules) in this project.
+  // If provided, ignore it to keep wall-clock recurrences stable and predictable.
+  if (parts.BYHOUR) {
+    delete parts.BYHOUR;
+  }
   return parts;
 }
 
-// Calculate day of year (1-366)
-function getDayOfYear(date) {
-  const start = new Date(Date.UTC(date.getUTCFullYear(), 0, 1));
-  return Math.floor((date.getTime() - start.getTime()) / (1000 * 60 * 60 * 24)) + 1;
+function pad2(n) {
+  return String(n).padStart(2, '0');
 }
 
-// Calculate ISO week number
-function getWeekNumber(date) {
-  const d = new Date(Date.UTC(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate()));
+function toIsoOffset(off) {
+  if (!off || off === 'Z' || off === '+0000' || off === '-0000' || off === '+00:00' || off === '-00:00') return 'Z';
+  const raw = String(off).replace(/^GMT/i, '');
+  if (/^[+-]\d{2}:\d{2}$/.test(raw)) return raw;
+  if (/^[+-]\d{4}$/.test(raw)) return `${raw.slice(0, 3)}:${raw.slice(3)}`;
+  const sign = raw.startsWith('-') ? '-' : '+';
+  const digits = raw.replace(/\D/g, '').padStart(4, '0').slice(0, 4);
+  return `${sign}${digits.slice(0, 2)}:${digits.slice(2)}`;
+}
+
+const tzPartsFormatterCache = new Map();
+function getTzPartsFormatter(timeZone) {
+  const key = timeZone || 'UTC';
+  const cached = tzPartsFormatterCache.get(key);
+  if (cached) return cached;
+  const fmt = new Intl.DateTimeFormat('en-US', {
+    timeZone: key,
+    hour12: false,
+    hourCycle: 'h23',
+    weekday: 'short',
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+    hour: '2-digit',
+    minute: '2-digit',
+    second: '2-digit',
+  });
+  tzPartsFormatterCache.set(key, fmt);
+  return fmt;
+}
+
+function getTzParts(dateObj, timeZone) {
+  if (!(dateObj instanceof Date) || !isFinite(dateObj.getTime())) return null;
+  try {
+    const parts = getTzPartsFormatter(timeZone).formatToParts(dateObj);
+    const get = (t) => parts.find((p) => p.type === t)?.value || '';
+    const weekdayShort = get('weekday');
+    let weekday = null;
+    switch (weekdayShort) {
+      case 'Sun':
+        weekday = 0;
+        break;
+      case 'Mon':
+        weekday = 1;
+        break;
+      case 'Tue':
+        weekday = 2;
+        break;
+      case 'Wed':
+        weekday = 3;
+        break;
+      case 'Thu':
+        weekday = 4;
+        break;
+      case 'Fri':
+        weekday = 5;
+        break;
+      case 'Sat':
+        weekday = 6;
+        break;
+    }
+    const year = parseInt(get('year'), 10);
+    const month = parseInt(get('month'), 10);
+    const day = parseInt(get('day'), 10);
+    const hour = parseInt(get('hour'), 10);
+    const minute = parseInt(get('minute'), 10);
+    const second = parseInt(get('second'), 10);
+    if (![year, month, day, hour, minute, second].every((n) => Number.isFinite(n))) return null;
+    // If we couldn't map the weekday token, derive weekday from the calendar date.
+    // This is deterministic and avoids hard failures if Intl returns a different abbreviation.
+    if (weekday === null) {
+      weekday = new Date(Date.UTC(year, month - 1, day)).getUTCDay();
+    }
+    return { year, month, day, hour, minute, second, weekday };
+  } catch {
+    return null;
+  }
+}
+
+function getUtcParts(dateObj) {
+  return {
+    year: dateObj.getUTCFullYear(),
+    month: dateObj.getUTCMonth() + 1,
+    day: dateObj.getUTCDate(),
+    hour: dateObj.getUTCHours(),
+    minute: dateObj.getUTCMinutes(),
+    second: dateObj.getUTCSeconds(),
+    weekday: dateObj.getUTCDay(),
+  };
+}
+
+function getDayOfYearFromYmd(year, month0, day) {
+  const start = Date.UTC(year, 0, 1);
+  const current = Date.UTC(year, month0, day);
+  return Math.floor((current - start) / 86400000) + 1;
+}
+
+function getWeekNumberFromYmd(year, month0, day) {
+  const d = new Date(Date.UTC(year, month0, day));
   d.setUTCDate(d.getUTCDate() + 4 - (d.getUTCDay() || 7));
   const yearStart = new Date(Date.UTC(d.getUTCFullYear(), 0, 1));
   return Math.ceil(((d.getTime() - yearStart.getTime()) / 86400000 + 1) / 7);
 }
 
+function enrichParts(parts) {
+  const month0 = parts.month - 1;
+  return {
+    ...parts,
+    month0,
+    dayOfYear: getDayOfYearFromYmd(parts.year, month0, parts.day),
+    weekNumber: getWeekNumberFromYmd(parts.year, month0, parts.day),
+  };
+}
+
+function getPartsForTimeZone(dateObj, timeZone) {
+  const tzParts = timeZone ? getTzParts(dateObj, timeZone) : null;
+  return enrichParts(tzParts || getUtcParts(dateObj));
+}
+
+// Add/subtract days while preserving wall-clock time (hh:mm) in the provided time zone.
+// Optional dateParts lets callers reuse already-computed TZ parts to avoid extra Intl work.
+// Note: we still need to ask tzlib for the offset per date because it can change across DST.
+function addLocalDays(dateObj, days, timeZone, hhmm, dateParts = null) {
+  const p = dateParts || getPartsForTimeZone(dateObj, timeZone);
+  const month0 = Number.isFinite(p.month0) ? p.month0 : Number.isFinite(p.month) ? p.month - 1 : 0;
+  const baseUtc = Date.UTC(p.year, month0, p.day) + days * 86400000;
+  const d = new Date(baseUtc);
+  const dateStr = `${d.getUTCFullYear()}-${pad2(d.getUTCMonth() + 1)}-${pad2(d.getUTCDate())}`;
+  const safeTimeZone = timeZone || 'UTC';
+  try {
+    const off = tzlib_get_offset(safeTimeZone, dateStr, hhmm);
+    return new Date(`${dateStr}T${hhmm}:00${toIsoOffset(off)}`);
+  } catch {
+    return new Date(dateObj.getTime() + days * 86400000);
+  }
+}
+
 // Check if date matches the FREQ and INTERVAL from start
-function matchesFreq(date, rrule, startDate) {
+function matchesFreq(date, rrule, startDate, timeZone, dateParts, startParts) {
   const interval = parseInt(rrule.INTERVAL.toString(), 10) || 1;
+  const dp = dateParts || getPartsForTimeZone(date, timeZone);
+  const sp = startParts || getPartsForTimeZone(startDate, timeZone);
   switch (rrule.FREQ) {
     case 'YEARLY':
-      return (date.getUTCFullYear() - startDate.getUTCFullYear()) % interval === 0;
+      return (dp.year - sp.year) % interval === 0;
     case 'MONTHLY': {
-      const months = (date.getUTCFullYear() - startDate.getUTCFullYear()) * 12 + (date.getUTCMonth() - startDate.getUTCMonth());
+      const months = (dp.year - sp.year) * 12 + (dp.month0 - sp.month0);
       return months % interval === 0;
     }
     case 'WEEKLY': {
-      const daysW = Math.floor((date.getTime() - startDate.getTime()) / 86400000);
+      const daysW = Math.floor((Date.UTC(dp.year, dp.month0, dp.day) - Date.UTC(sp.year, sp.month0, sp.day)) / 86400000);
       const weeks = Math.floor(daysW / 7);
       return weeks % interval === 0;
     }
     case 'DAILY': {
-      const days = Math.floor((date.getTime() - startDate.getTime()) / 86400000);
+      const days = Math.floor((Date.UTC(dp.year, dp.month0, dp.day) - Date.UTC(sp.year, sp.month0, sp.day)) / 86400000);
       return days % interval === 0;
     }
     default:
@@ -847,49 +976,50 @@ function matchesFreq(date, rrule, startDate) {
 }
 
 // Check if date matches all BY* rules, with implicit filters
-function matchesRRule(date, rrule, startDate) {
+function matchesRRule(date, rrule, startDate, timeZone, dateParts, startParts) {
   // Explicit BY rules
-  if (!matchesBYRules(date, rrule)) return false;
+  if (!matchesBYRules(date, rrule, timeZone, dateParts)) return false;
   // Implicit filters
-  if (!matchesImplicitRules(date, rrule, startDate)) return false;
+  if (!matchesImplicitRules(date, rrule, startDate, timeZone, dateParts, startParts)) return false;
   return true;
 }
 
-function matchesBYRules(date, rrule) {
-  if (rrule.BYMONTH && !rrule.BYMONTH.includes(date.getUTCMonth() + 1)) return false;
-  if (rrule.BYYEARDAY && !rrule.BYYEARDAY.includes(getDayOfYear(date))) return false;
-  if (rrule.BYMONTHDAY && !rrule.BYMONTHDAY.includes(date.getUTCDate())) return false;
-  if (rrule.BYWEEKNO && !rrule.BYWEEKNO.includes(getWeekNumber(date))) return false;
+function matchesBYRules(date, rrule, timeZone, dateParts) {
+  const dp = dateParts || getPartsForTimeZone(date, timeZone);
+  if (rrule.BYMONTH && !rrule.BYMONTH.includes(dp.month)) return false;
+  if (rrule.BYYEARDAY && !rrule.BYYEARDAY.includes(dp.dayOfYear)) return false;
+  if (rrule.BYMONTHDAY && !rrule.BYMONTHDAY.includes(dp.day)) return false;
+  if (rrule.BYWEEKNO && !rrule.BYWEEKNO.includes(dp.weekNumber)) return false;
   // Weekday filter (checking both, plain days as well as more complex structures -> splitted apart to ordinals)
   // Evaluate plain weekday condition
   const hasPlainWeekday = !!(rrule.BYWEEKDAY && rrule.BYWEEKDAY.length);
-  const plainWeekdayOk = hasPlainWeekday ? rrule.BYWEEKDAY.includes(date.getUTCDay()) : null;
+  const plainWeekdayOk = hasPlainWeekday ? rrule.BYWEEKDAY.includes(dp.weekday) : null;
   // Ordinal BYDAY handling (e.g., 1MO, -1FR)
   let ordinalOk = null;
   if (rrule.BYDAY_ORDINALS && Array.isArray(rrule.BYDAY_ORDINALS) && rrule.BYDAY_ORDINALS.length > 0) {
-    const dow = date.getUTCDay(); // day of week
-    const year = date.getUTCFullYear();
-    const month = date.getUTCMonth();
-    const dayOfYear = getDayOfYear(date);
-    const daysInMonth = new Date(Date.UTC(year, month + 1, 0)).getUTCDate();
-    const daysInYear = getDayOfYear(new Date(Date.UTC(year, 11, 31)));
+    const dow = dp.weekday; // day of week in DTSTART tz
+    const year = dp.year;
+    const month0 = dp.month0;
+    const dayOfYear = dp.dayOfYear;
+    const daysInMonth = new Date(Date.UTC(year, month0 + 1, 0)).getUTCDate();
+    const daysInYear = getDayOfYearFromYmd(year, 11, 31);
 
     const isNthWeekdayOfMonth = (n, weekday) => {
       if (n === 0) return false;
       if (n > 0) {
         // Validates whether a given date matches the Nth weekday
-        const firstOfMonth = new Date(Date.UTC(year, month, 1));
+        const firstOfMonth = new Date(Date.UTC(year, month0, 1));
         const firstDow = firstOfMonth.getUTCDay();
         const offset = (weekday - firstDow + 7) % 7;
         const targetDay = 1 + offset + (n - 1) * 7;
-        return targetDay >= 1 && targetDay <= daysInMonth && date.getUTCDate() === targetDay;
+        return targetDay >= 1 && targetDay <= daysInMonth && dp.day === targetDay;
       } else {
         // if negative, we count backwards (like last FR in a month)
-        const lastOfMonth = new Date(Date.UTC(year, month + 1, 0));
+        const lastOfMonth = new Date(Date.UTC(year, month0 + 1, 0));
         const lastDow = lastOfMonth.getUTCDay();
         const backOffset = (lastDow - weekday + 7) % 7;
         const targetDay = lastOfMonth.getUTCDate() - backOffset + (n + 1) * 7; // n negative
-        return targetDay >= 1 && targetDay <= daysInMonth && date.getUTCDate() === targetDay;
+        return targetDay >= 1 && targetDay <= daysInMonth && dp.day === targetDay;
       }
     };
 
@@ -929,23 +1059,27 @@ function matchesBYRules(date, rrule) {
   if (plainWeekdayOk === false && ordinalOk === false) return false;
   if (plainWeekdayOk === false && ordinalOk === null) return false;
   if (ordinalOk === false && plainWeekdayOk === null) return false;
-  if (rrule.BYHOUR && !rrule.BYHOUR.includes(date.getUTCHours())) return false;
   return true;
 }
 
-function matchesImplicitRules(date, rrule, startDate) {
-  if (!rrule.BYHOUR && date.getUTCHours() !== startDate.getUTCHours()) return false;
+function matchesImplicitRules(date, rrule, startDate, timeZone, dateParts, startParts) {
+  const dp = dateParts || getPartsForTimeZone(date, timeZone);
+  const sp = startParts || getPartsForTimeZone(startDate, timeZone);
+  // Without BYHOUR support, hour always comes from DTSTART.
+  if (dp.hour !== sp.hour) return false;
   const hasByWeekdayAny = !!(rrule.BYWEEKDAY && rrule.BYWEEKDAY.length) || !!(rrule.BYDAY_ORDINALS && rrule.BYDAY_ORDINALS.length);
-  if (rrule.FREQ === 'WEEKLY' && !hasByWeekdayAny && date.getUTCDay() !== startDate.getUTCDay()) return false;
-  if (rrule.FREQ === 'MONTHLY' && !rrule.BYMONTHDAY && !hasByWeekdayAny && date.getUTCDate() !== startDate.getUTCDate()) return false;
-  if (rrule.FREQ === 'YEARLY' && !rrule.BYMONTH && date.getUTCMonth() !== startDate.getUTCMonth()) return false;
-  if (rrule.FREQ === 'YEARLY' && !rrule.BYMONTHDAY && !hasByWeekdayAny && !rrule.BYYEARDAY && !rrule.BYWEEKNO && date.getUTCDate() !== startDate.getUTCDate()) return false;
+  if (rrule.FREQ === 'WEEKLY' && !hasByWeekdayAny && dp.weekday !== sp.weekday) return false;
+  if (rrule.FREQ === 'MONTHLY' && !rrule.BYMONTHDAY && !hasByWeekdayAny && dp.day !== sp.day) return false;
+  if (rrule.FREQ === 'YEARLY' && !rrule.BYMONTH && dp.month0 !== sp.month0) return false;
+  if (rrule.FREQ === 'YEARLY' && !rrule.BYMONTHDAY && !hasByWeekdayAny && !rrule.BYYEARDAY && !rrule.BYWEEKNO && dp.day !== sp.day) return false;
   return true;
 }
 
 // Get next occurrence and last if no next
-function atcb_getNextOccurrence(rruleStr, startDateTime, diff, allday) {
+function atcb_getNextOccurrence(rruleStr, startDateTime, diff, allday, tzid = 'UTC') {
   const rrule = atcb_parseRRule(rruleStr);
+  const startParts = getPartsForTimeZone(startDateTime, tzid);
+  const baseHhmm = `${pad2(startParts.hour)}:${pad2(startParts.minute)}`;
   // Normalize UNTIL for all-day rules: treat as inclusive end-of-day
   if (allday && rrule.UNTIL instanceof Date) {
     const untilEod = new Date(rrule.UNTIL);
@@ -957,7 +1091,6 @@ function atcb_getNextOccurrence(rruleStr, startDateTime, diff, allday) {
   const now = new Date();
   const upperEnd = new Date(now.getTime() - diff);
   // Iterate from start date, collecting valid occurrences
-  const stepMs = rrule.BYHOUR ? 60 * 60 * 1000 : 24 * 60 * 60 * 1000;
   let currentDate = startDateTime;
   const occurrences = [];
   let count = 0;
@@ -966,7 +1099,8 @@ function atcb_getNextOccurrence(rruleStr, startDateTime, diff, allday) {
   while (true) {
     // Stop before pushing when we've passed UNTIL
     if (rrule.UNTIL && currentDate > rrule.UNTIL) break;
-    const isMatch = matchesFreq(currentDate, rrule, startDateTime) && matchesRRule(currentDate, rrule, startDateTime);
+    const currentParts = getPartsForTimeZone(currentDate, tzid);
+    const isMatch = matchesFreq(currentDate, rrule, startDateTime, tzid, currentParts, startParts) && matchesRRule(currentDate, rrule, startDateTime, tzid, currentParts, startParts);
     if (isMatch) {
       occurrences.push(currentDate);
       count++;
@@ -979,7 +1113,7 @@ function atcb_getNextOccurrence(rruleStr, startDateTime, diff, allday) {
       // Reached safety cap while generating occurrences
       break;
     }
-    currentDate = new Date(currentDate.getTime() + stepMs);
+    currentDate = addLocalDays(currentDate, 1, tzid, baseHhmm, currentParts);
   }
   // Find next occurrence (first not before upperEnd)
   let nextDate = null;

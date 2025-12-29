@@ -3,7 +3,7 @@
  *  Add to Calendar Button
  *  ++++++++++++++++++++++
  *
- *  Version: 2.13.4
+ *  Version: 2.13.5
  *  Creator: Jens Kuerschner (https://jekuer.com)
  *  Project: https://github.com/add2cal/add-to-calendar-button
  *  License: Elastic License 2.0 (ELv2) (https://github.com/add2cal/add-to-calendar-button/blob/main/LICENSE.txt)
@@ -186,7 +186,7 @@ function atcb_decorate_data_recurring_events(data) {
   })();
 
   const isAllDay = !(startTime && startTime !== '');
-  const occurenceData = atcb_getNextOccurrence(data.recurrence, startDateTime, diff, isAllDay);
+  const occurenceData = atcb_getNextOccurrence(data.recurrence, startDateTime, diff, isAllDay, tzid);
   if (!occurenceData || !occurenceData.nextOccurrence) {
     return data;
   }
@@ -197,7 +197,7 @@ function atcb_decorate_data_recurring_events(data) {
       return { date: '', time: '' };
     }
     try {
-      const opts = includeTime ? { timeZone, hour12: false, year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit' } : { timeZone, hour12: false, year: 'numeric', month: '2-digit', day: '2-digit' };
+      const opts = includeTime ? { timeZone, hour12: false, hourCycle: 'h23', year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit' } : { timeZone, year: 'numeric', month: '2-digit', day: '2-digit' };
       const parts = new Intl.DateTimeFormat('en-CA', opts).formatToParts(dateObj);
       const get = (t) => parts.find((p) => p.type === t)?.value || '';
       return { date: `${get('year')}-${get('month')}-${get('day')}`, time: includeTime ? `${get('hour')}:${get('minute')}` : '' };
@@ -206,23 +206,17 @@ function atcb_decorate_data_recurring_events(data) {
     }
   }
 
-  const hasExplicitTimeRule = /;BYHOUR=/i.test(data.recurrence);
-
   const nextLocalDate = formatInTz(occurenceData.nextOccurrence, tzid, false).date;
-  let nextStartTime = '';
-  if (startTime && startTime !== '') {
-    nextStartTime = hasExplicitTimeRule ? formatInTz(occurenceData.nextOccurrence, tzid, true).time : startTime;
-  }
 
   if (nextLocalDate) {
     data.startDate = nextLocalDate;
-    if (nextStartTime) data.startTime = nextStartTime;
+    if (startTime) data.startTime = startTime; // This project intentionally does not support BYHOUR (or other sub-daily expansion rules), so we keep the original wall-clock time.
   } else {
     // If formatting failed, keep original dates to avoid Safari crash
     return data;
   }
 
-  const newStartInstant = nextStartTime ? new Date(`${data.startDate}T${nextStartTime}:00${toIsoOffset(tzlib_get_offset(tzid, data.startDate, nextStartTime))}`) : new Date(`${data.startDate}T00:00:00${toIsoOffset(tzlib_get_offset(tzid, data.startDate, '00:00'))}`);
+  const newStartInstant = startTime ? new Date(`${data.startDate}T${startTime}:00${toIsoOffset(tzlib_get_offset(tzid, data.startDate, startTime))}`) : new Date(`${data.startDate}T00:00:00${toIsoOffset(tzlib_get_offset(tzid, data.startDate, '00:00'))}`);
 
   const newEndDateTime = new Date(newStartInstant.getTime() + diff);
   const nextEndLocal = formatInTz(newEndDateTime, tzid, !!(endTime && endTime !== ''));
