@@ -7,7 +7,7 @@ import { configs } from 'eslint-plugin-wc';
 export default [
   // general ignores
   {
-    ignores: ['**/*.d.ts', '**/*.min.*', 'dist/*', 'demo/*', 'Gruntfile.js', 'set-release.js', 'node_modules/', '.github/'],
+    ignores: ['**/*.d.ts', '**/*.min.*', 'dist/*', 'demo/*', 'Gruntfile.js', 'set-release.js', 'node_modules/', '.github/', 'grunt-wrapper/'],
   },
   // general rules
   js.configs.recommended,

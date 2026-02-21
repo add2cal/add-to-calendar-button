@@ -114,42 +114,34 @@ module.exports = function (grunt) {
     // generate the distributable JS files (and also add a customized css file to the demo)
     concat: {
       main: {
-        src: ['node_modules/timezones-ical-library/dist/tzlib.js', ...jsCoreFilesToCombinePro],
+        src: ['node_modules/timezones-ical-library/dist/tzlib.js', 'grunt-wrapper/atcb-wrapper-start.js', ...jsCoreFilesToCombinePro, 'grunt-wrapper/atcb-wrapper-end.js'],
         dest: 'dist/atcb.js',
         options: {
           stripBanners: true,
-          banner: '( function(atcbGlobal) { atcbGlobal.atcb_action = function (data, triggerElement, keyboardTrigger = false) {return atcb_action(data, triggerElement, keyboardTrigger);}',
-          footer: ' } )(window);',
           process: (content) => prepareFinalFile(content),
         },
       },
       main_no_pro: {
-        src: ['node_modules/timezones-ical-library/dist/tzlib.js', ...jsCoreFilesToCombine],
+        src: ['node_modules/timezones-ical-library/dist/tzlib.js', 'grunt-wrapper/atcb-wrapper-start.js', ...jsCoreFilesToCombine, 'grunt-wrapper/atcb-wrapper-end.js'],
         dest: 'dist/atcb-no-pro.js',
         options: {
           stripBanners: true,
-          banner: '( function(atcbGlobal) { atcbGlobal.atcb_action = function (data, triggerElement, keyboardTrigger = false) {return atcb_action(data, triggerElement, keyboardTrigger);}',
-          footer: ' } )(window);',
           process: (content) => prepareFinalFile(content),
         },
       },
       main_unstyle: {
-        src: ['node_modules/timezones-ical-library/dist/tzlib.js', ...jsCoreFilesToCombinePro],
+        src: ['node_modules/timezones-ical-library/dist/tzlib.js', 'grunt-wrapper/atcb-wrapper-start.js', ...jsCoreFilesToCombinePro, 'grunt-wrapper/atcb-wrapper-end.js'],
         dest: 'dist/atcb-unstyle.js',
         options: {
           stripBanners: true,
-          banner: '( function(atcbGlobal) { atcbGlobal.atcb_action = function (data, triggerElement, keyboardTrigger = false) {return atcb_action(data, triggerElement, keyboardTrigger);}',
-          footer: ' } )(window);',
           process: (content) => prepareFinalFile(content, true, true, false, true),
         },
       },
       main_no_pro_unstyle: {
-        src: ['node_modules/timezones-ical-library/dist/tzlib.js', ...jsCoreFilesToCombine],
+        src: ['node_modules/timezones-ical-library/dist/tzlib.js', 'grunt-wrapper/atcb-wrapper-start.js', ...jsCoreFilesToCombine, 'grunt-wrapper/atcb-wrapper-end.js'],
         dest: 'dist/atcb-no-pro-unstyle.js',
         options: {
           stripBanners: true,
-          banner: '( function(atcbGlobal) { atcbGlobal.atcb_action = function (data, triggerElement, keyboardTrigger = false) {return atcb_action(data, triggerElement, keyboardTrigger);}',
-          footer: ' } )(window);',
           process: (content) => prepareFinalFile(content, true, true, false, true),
         },
       },
