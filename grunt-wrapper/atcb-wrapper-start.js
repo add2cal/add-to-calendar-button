@@ -1,0 +1,1 @@
+( function(atcbGlobal) { atcbGlobal.atcb_action = function (data, triggerElement, keyboardTrigger = false) {return atcb_action(data, triggerElement, keyboardTrigger);}
