@@ -1,6 +1,6 @@
 {
   "name": "add-to-calendar-button",
-  "version": "2.13.6",
+  "version": "2.13.7",
   "engines": {
     "node": ">=18.17.0",
     "npm": ">=9.6.7"
@@ -96,7 +96,7 @@
     "build": "npx grunt"
   },
   "dependencies": {
-    "timezones-ical-library": "^2.1.1"
+    "timezones-ical-library": "^2.1.2"
   },
   "devDependencies": {
     "@eslint/js": "^9.39.2",

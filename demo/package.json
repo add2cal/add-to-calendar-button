@@ -48,7 +48,7 @@
     "nuxt-schema-org": "^5.0.10",
     "nuxt-security": "^2.5.1",
     "shiki": "^3.22.0",
-    "timezones-ical-library": "^2.1.1",
+    "timezones-ical-library": "^2.1.2",
     "vue-marquee-text-component": "^2.0.1"
   },
   "devDependencies": {
