@@ -3,7 +3,7 @@
  *  Add to Calendar Button
  *  ++++++++++++++++++++++
  *
- *  Version: 2.13.5
+ *  Version: 2.13.6
  *  Creator: Jens Kuerschner (https://jekuer.com)
  *  Project: https://github.com/add2cal/add-to-calendar-button
  *  License: Elastic License 2.0 (ELv2) (https://github.com/add2cal/add-to-calendar-button/blob/main/LICENSE.txt)
@@ -513,7 +513,7 @@ function atcb_move_root_values_into_dates(data, i) {
       dateEntry[`${prop}`] = data[`${prop}`];
     }
   });
-  // TODO: delete root values and only use the dates object from here on
+  // TODO: delete root values and only use the dates object from here on (except for "name")
   return data;
 }
 
@@ -597,6 +597,7 @@ function atcb_replace_custom_variables(data, i) {
     const value = data.customVar[`${key}`];
     dateEntry.name = atcb_replace_placeholder(dateEntry.name, key, value);
     dateEntry.location = atcb_replace_placeholder(dateEntry.location, key, value);
+    dateEntry.description = atcb_replace_placeholder(dateEntry.description, key, value);
   }
   return data;
 }
