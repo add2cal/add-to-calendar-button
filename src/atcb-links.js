@@ -3,7 +3,7 @@
  *  Add to Calendar Button
  *  ++++++++++++++++++++++
  *
- *  Version: 2.13.8
+ *  Version: 2.13.9
  *  Creator: Jens Kuerschner (https://jekuer.com)
  *  Project: https://github.com/add2cal/add-to-calendar-button
  *  License: Elastic License 2.0 (ELv2) (https://github.com/add2cal/add-to-calendar-button/blob/main/LICENSE.txt)
@@ -435,7 +435,7 @@ function atcb_generate_msteams(data, date, subEvent = 'all') {
   }
   if (date.descriptionHtmlFree && date.descriptionHtmlFree != '') {
     // using descriptionHtmlFree instead of description, since Teams does not support html tags
-    urlParts.push('content=' + locationString + encodeURIComponent(date.descriptionHtmlFree));
+    urlParts.push('content=' + encodeURIComponent(locationString + date.descriptionHtmlFree));
   }
   atcb_open_cal_url(data, 'msteams', baseUrl + urlParts.join('&'), false, subEvent);
 }
