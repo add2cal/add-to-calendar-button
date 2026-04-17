@@ -2,6 +2,7 @@
   "name": "add-to-calendar-button-demo",
   "version": "0.0.0",
   "private": true,
+  "type": "module",
   "engines": {
     "node": ">=20.0.0",
     "npm": ">=9.6.7"
