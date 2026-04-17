@@ -1,6 +1,6 @@
 {
   "name": "add-to-calendar-button",
-  "version": "2.13.8",
+  "version": "2.13.9",
   "engines": {
     "node": ">=18.17.0",
     "npm": ">=9.6.7"
@@ -96,21 +96,21 @@
     "build": "npx grunt"
   },
   "dependencies": {
-    "timezones-ical-library": "^2.1.2"
+    "timezones-ical-library": "^2.1.3"
   },
   "devDependencies": {
     "@eslint/js": "^9.39.2",
     "@open-wc/testing": "^4.0.0",
     "@web/test-runner": "^0.20.2",
     "@babel/core": "^7.29.0",
-    "@babel/preset-env": "^7.29.0",
+    "@babel/preset-env": "^7.29.2",
     "eslint": "^9.39.2",
     "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-prettier": "^5.5.5",
     "eslint-plugin-regexp": "^2.10.0",
     "eslint-plugin-security": "^3.0.1",
     "eslint-plugin-wc": "^3.1.0",
-    "grunt": ">=1.6.1",
+    "grunt": ">=1.6.2",
     "grunt-contrib-clean": "^2.0.1",
     "grunt-contrib-concat": "^2.1.0",
     "grunt-contrib-cssmin": "^5.0.0",
@@ -118,7 +118,7 @@
     "grunt-babel": "^8.0.0",
     "grunt-file-creator": "^0.1.3",
     "grunt-version": "^3.0.2",
-    "prettier": "3.8.1",
+    "prettier": "3.8.3",
     "prettier-plugin-tailwindcss": "^0.7.2",
     "stylelint": "^16.26.1",
     "stylelint-config-standard": "^39.0.1"
