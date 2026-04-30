@@ -269,7 +269,7 @@ async function atcb_validate_datetime(data, msgPrefix, i, msgSuffix) {
   dates.forEach((date) => {
     const dateString = selectedDate[`${date}`];
     if (dateString.length !== 10) {
-      throw new Error(`${msgPrefix} failed: date misspelled [-> YYYY-MM-DD]${msgSuffix}`);
+      throw new Error(`${msgPrefix} failed: date misspelled [${dateString} -> YYYY-MM-DD]${msgSuffix}`);
     }
     const dateParts = dateString.split('-');
     if (dateParts.length !== 3) {
@@ -283,7 +283,7 @@ async function atcb_validate_datetime(data, msgPrefix, i, msgSuffix) {
     const timeString = selectedDate[`${time}`];
     if (timeString) {
       if (timeString.length !== 5) {
-        throw new Error(`${msgPrefix} failed: time misspelled [-> HH:MM]${msgSuffix}`);
+        throw new Error(`${msgPrefix} failed: time misspelled [${timeString} -> HH:MM]${msgSuffix}`);
       }
       const timeParts = timeString.split(':');
       // Validate the time parts

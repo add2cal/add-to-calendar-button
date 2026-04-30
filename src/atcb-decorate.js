@@ -8,13 +8,13 @@ import { atcb_check_bookings } from './atcb-generate-pro.js';
 async function atcb_decorate_data(data) {
   data = atcb_decorate_data_boolean(data);
   data = atcb_decorate_data_defaults(data);
-  data = atcb_decorate_data_recurrence(data);
   data = atcb_decorate_data_options(data);
   data = atcb_decorate_data_style(data);
   data.sizes = atcb_decorate_sizes(data.size);
   data.lightMode = atcb_decorate_light_mode(data.lightMode);
   data = atcb_decorate_data_i18n(data);
   data = atcb_decorate_data_dates(data);
+  data = atcb_decorate_data_recurrence(data);
   data = await atcb_decorate_data_rsvp(data);
   return data;
 }
@@ -141,14 +141,15 @@ function atcb_decorate_data_recurring_events(data) {
   const endDate = data.dates?.[0].endDate || data.endDate || startDate;
   const endTime = data.dates?.[0].endTime || data.endTime || '';
   const tzid = data.dates?.[0].timeZone || data.timeZone || 'UTC';
-  const diff = (function () {
-    if (endTime && endTime !== '' && startTime && startTime !== '') {
-      const origStart = startTime && startTime !== '' ? new Date(`${startDate}T${startTime}:00${toIsoOffset(tzlib_get_offset(tzid, startDate, startTime))}`) : new Date(`${startDate}T00:00:00${toIsoOffset(tzlib_get_offset(tzid, startDate, '00:00'))}`);
-      const origEnd = endTime && endTime !== '' ? new Date(`${endDate}T${endTime}:00${toIsoOffset(tzlib_get_offset(tzid, endDate, endTime))}`) : new Date(`${endDate}T00:00:00${toIsoOffset(tzlib_get_offset(tzid, endDate, '00:00'))}`);
-      return origEnd.getTime() - origStart.getTime();
-    }
-    return 0;
-  })();
+  const diff =
+    (function () {
+      if (endTime && endTime !== '' && startTime && startTime !== '') {
+        const origStart = startTime && startTime !== '' ? new Date(`${startDate}T${startTime}:00${toIsoOffset(tzlib_get_offset(tzid, startDate, startTime))}`) : new Date(`${startDate}T00:00:00${toIsoOffset(tzlib_get_offset(tzid, startDate, '00:00'))}`);
+        const origEnd = endTime && endTime !== '' ? new Date(`${endDate}T${endTime}:00${toIsoOffset(tzlib_get_offset(tzid, endDate, endTime))}`) : new Date(`${endDate}T00:00:00${toIsoOffset(tzlib_get_offset(tzid, endDate, '00:00'))}`);
+        return origEnd.getTime() - origStart.getTime();
+      }
+      return;
+    })() || 0;
 
   // Helper: normalize offsets into ISO form ±HH:MM (or 'Z')
   function toIsoOffset(off) {

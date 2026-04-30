@@ -7,7 +7,7 @@ import { configs } from 'eslint-plugin-wc';
 export default [
   // general ignores
   {
-    ignores: ['**/*.d.ts', '**/*.min.*', 'dist/*', 'demo/*', 'Gruntfile.js', 'set-release.js', 'node_modules/', '.github/', 'grunt-wrapper/'],
+    ignores: ['**/*.d.ts', '**/*.min.*', 'dist/*', 'demo/**', 'Gruntfile.js', 'set-release.js', 'node_modules/', '.github/', 'grunt-wrapper/'],
   },
   // general rules
   js.configs.recommended,
@@ -22,6 +22,7 @@ export default [
       'prettier/prettier': 'error',
       'no-mixed-spaces-and-tabs': ['error', 'smart-tabs'],
       'no-undef': 'off',
+      'preserve-caught-error': 'off',
       'no-unused-vars': [
         'warn',
         {

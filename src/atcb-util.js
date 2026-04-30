@@ -176,6 +176,9 @@ function offsetToMilliseconds(offset) {
 }
 
 function atcb_translate_via_time_zone(date, time, baseTimeZone, targetTimeZone) {
+  if (baseTimeZone === 'currentBrowser') {
+    baseTimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+  }
   const dateTime = new Date(`${date}T${time}:00Z`);
   const offset = tzlib_get_offset(baseTimeZone, date, time); // would return something like +0200
   const dateTimeUTC = new Date(dateTime.getTime() - offsetToMilliseconds(offset));
@@ -190,7 +193,7 @@ function atcb_translate_via_time_zone(date, time, baseTimeZone, targetTimeZone) 
     hourCycle: 'h23',
   });
   const dateInTargetTimeZone = formatter.format(dateTimeUTC);
-  return ([date, time] = dateInTargetTimeZone.split(', '));
+  return dateInTargetTimeZone.split(', '); // returns [date, time]
 }
 
 function atcb_generate_timestring(dates, language = 'en', subEvent = 'all', decorate = false, browserTimeOverride = false, enforceYear = false, hideTimeZone = false) {
@@ -199,8 +202,8 @@ function atcb_generate_timestring(dates, language = 'en', subEvent = 'all', deco
     dates = atcb_decorate_data_dates({ dates: dates }).dates;
   }
   let startDateInfo, endDateInfo, timeZoneInfoStart, timeZoneInfoEnd;
-  let formattedTimeStart = {};
-  let formattedTimeEnd = {};
+  let formattedTimeStart;
+  let formattedTimeEnd;
   let timeBlocks = [];
   let timeZoneInfoStringStart = '';
   let timeZoneInfoStringEnd = '';
@@ -286,7 +289,7 @@ function atcb_generate_timestring(dates, language = 'en', subEvent = 'all', deco
         timeBlocks.push(startDateInfo.toLocaleDateString(language, formatOptionsStart.DateLong));
       }
     } else {
-      let timeString = '';
+      let timeString;
       if (dropYearStart) {
         timeString = startDateInfo.toLocaleString(language, formatOptionsStart.Time);
       } else {
@@ -315,7 +318,7 @@ function atcb_generate_timestring(dates, language = 'en', subEvent = 'all', deco
     if (formattedTimeStart.allday) {
       timeBlocks.push(startDateInfo.toLocaleDateString(language, formatOptionsStart.DateLong));
     } else {
-      let timeString = '';
+      let timeString;
       if (dropYearStart) {
         timeString = startDateInfo.toLocaleString(language, formatOptionsStart.Time);
       } else {

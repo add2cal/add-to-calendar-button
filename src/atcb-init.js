@@ -54,7 +54,7 @@ if (atcbIsBrowser()) {
       this.debug = this.hasAttribute('debug') && (!debugVal || debugVal === 'true' || debugVal === '') ? true : false;
       // same for proOverride
       if (this.hasAttribute('proOverride') || this.hasAttribute('prooverride')) {
-        let proOverrideVal = null;
+        let proOverrideVal;
         if (this.hasAttribute('proOverride') && this.getAttribute('proOverride') !== '') {
           proOverrideVal = this.getAttribute('proOverride');
         } else {
