@@ -11,7 +11,7 @@ import { atcb_generate_rsvp_form, atcb_generate_rsvp_button } from './atcb-gener
 
 let atcbInitialGlobalInit = false;
 let atcbBtnCount = 0;
-const lightModeMutationObserver = [];
+const lightModeMutationObserver = new Map();
 
 const template = `<div class="atcb-initialized atcb-hidden"></div>`;
 
@@ -818,15 +818,21 @@ function atcb_set_global_event_listener(host, data) {
   }
   // temporary listener to any class change at the body or html for the light mode Safari/Firefox hack
   if (data.lightMode == 'bodyScheme') {
-    lightModeMutationObserver[data.identifier] = new MutationObserver(function (mutationsList) {
+    // disconnect any previous observer for this identifier to avoid leaking observers
+    const existingObserver = lightModeMutationObserver.get(data.identifier);
+    if (existingObserver) {
+      existingObserver.disconnect();
+    }
+    const observer = new MutationObserver(function (mutationsList) {
       mutationsList.forEach((mutation) => {
         if (mutation.attributeName === 'class') {
           atcb_set_light_mode(host, data);
         }
       });
     });
-    lightModeMutationObserver[data.identifier].observe(document.documentElement, { attributes: true });
-    lightModeMutationObserver[data.identifier].observe(document.body, { attributes: true });
+    observer.observe(document.documentElement, { attributes: true });
+    observer.observe(document.body, { attributes: true });
+    lightModeMutationObserver.set(data.identifier, observer);
   }
   if (!atcbInitialGlobalInit) {
     // global listener for ESC key to close dropdown
@@ -929,8 +935,10 @@ function atcb_global_listener_resize() {
 }
 
 function atcb_unset_global_event_listener(identifier) {
-  if (typeof lightModeMutationObserver[`${identifier}`] !== 'undefined') {
-    lightModeMutationObserver[`${identifier}`].disconnect();
+  const observer = lightModeMutationObserver.get(identifier);
+  if (observer) {
+    observer.disconnect();
+    lightModeMutationObserver.delete(identifier);
   }
 }
 
