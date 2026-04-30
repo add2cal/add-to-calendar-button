@@ -8,7 +8,6 @@ import { atcb_check_bookings } from './atcb-generate-pro.js';
 async function atcb_decorate_data(data) {
   data = atcb_decorate_data_boolean(data);
   data = atcb_decorate_data_defaults(data);
-  data = atcb_decorate_data_recurrence(data);
   data = atcb_decorate_data_options(data);
   data = atcb_decorate_data_style(data);
   data.sizes = atcb_decorate_sizes(data.size);
@@ -71,22 +70,13 @@ function atcb_decorate_data_defaults(data) {
   return data;
 }
 
-// format recurrence
-function atcb_decorate_data_recurrence(data) {
-  if (data.recurrence && data.recurrence !== '') {
-    data = atcb_decorate_data_rrule(data);
-    data = atcb_decorate_data_recurring_events(data);
-  }
-  return data;
-}
-
 // format RRULE
 function atcb_decorate_data_rrule(data) {
   // remove spaces and force upper case
   data.recurrence = data.recurrence.replace(/\s+/g, '').toUpperCase();
   // if RRULE is set, we parse date from it
   if (/^RRULE:/i.test(data.recurrence)) {
-    data.recurrence_simplyfied = false;
+    data.recurrence_simplified = false;
     const rruleParts = atcb_parseRRule(data.recurrence, false);
     data.recurrence_until = rruleParts.UNTIL;
     data.recurrence_count = rruleParts.COUNT;
@@ -97,7 +87,7 @@ function atcb_decorate_data_rrule(data) {
     data.recurrence_frequency = rruleParts.FREQ;
   } else {
     // otherwise, we create an RRULE from the easy rules
-    data.recurrence_simplyfied = true;
+    data.recurrence_simplified = true;
     // set interval if not given
     if (!data.recurrence_interval || data.recurrence_interval === '') {
       data.recurrence_interval = 1;
@@ -136,11 +126,11 @@ function atcb_decorate_data_rrule(data) {
 
 // Adjust recurring events for next data
 function atcb_decorate_data_recurring_events(data) {
-  const startDate = data.dates?.[0].startDate || data.startDate;
-  const startTime = data.dates?.[0].startTime || data.startTime;
-  const endDate = data.dates?.[0].endDate || data.endDate || startDate;
-  const endTime = data.dates?.[0].endTime || data.endTime || '';
-  const tzid = data.dates?.[0].timeZone || data.timeZone || 'UTC';
+  const startDate = data.dates[0].startDate;
+  const startTime = data.dates[0].startTime;
+  const endDate = data.dates[0].endDate || startDate;
+  const endTime = data.dates[0].endTime || '';
+  const tzid = data.dates[0].timeZone || 'UTC';
   const diff =
     (function () {
       if (endTime && endTime !== '' && startTime && startTime !== '') {
@@ -453,6 +443,13 @@ function atcb_decorate_data_dates(data) {
   // if there is no dates array, we create one with the name of the event (will be filled further afterwards)
   if (!data.dates || !Array.isArray(data.dates)) {
     data.dates = [{ name: data.name }];
+  }
+  // recurring event adjustments need cleaned dates first; clean the first date once before recurrence shifting
+  if (data.recurrence && data.recurrence !== '') {
+    data = atcb_decorate_data_rrule(data);
+    data = atcb_move_root_values_into_dates(data, 0);
+    data = atcb_dates_cleanup(data, 0);
+    data = atcb_decorate_data_recurring_events(data);
   }
   // we copy recurrence from root, but just for easier access and only for the first array element. Multi-date events cannot be recurrent
   if (data.recurrence && data.recurrence !== '') {
@@ -780,4 +777,4 @@ async function atcb_decorate_data_rsvp(data) {
   return data;
 }
 
-export { atcb_decorate_data, atcb_decorate_data_dates, atcb_decorate_data_recurrence };
+export { atcb_decorate_data, atcb_decorate_data_dates };

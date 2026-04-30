@@ -65,8 +65,8 @@ async function atcb_validate(data) {
     await atcb_validate_options(data, msgPrefix);
     await atcb_validate_date_blocks(data, msgPrefix);
     await atcb_validate_rrule(data, msgPrefix);
-    if (data.recurrence_simplyfied) {
-      await atcb_validate_rrule_simplyfied(data, msgPrefix);
+    if (data.recurrence_simplified) {
+      await atcb_validate_rrule_simplified(data, msgPrefix);
     }
     // on passing the validation, return true
     return true;
@@ -318,8 +318,8 @@ async function atcb_validate_rrule(data, msgPrefix) {
   }
   return true;
 }
-// also validate the simplyfied recurrence settings (if provided), since any error there would be also hidden in the RRULE
-async function atcb_validate_rrule_simplyfied(data, msgPrefix) {
+// also validate the simplified recurrence settings (if provided), since any error there would be also hidden in the RRULE
+async function atcb_validate_rrule_simplified(data, msgPrefix) {
   if (data.recurrence_interval && (data.recurrence_interval < 1 || data.recurrence_interval % 1 !== 0)) {
     throw new Error(msgPrefix + ' failed: recurrence data (interval) misspelled');
   }
