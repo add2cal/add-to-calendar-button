@@ -8,13 +8,13 @@ import { atcb_check_bookings } from './atcb-generate-pro.js';
 async function atcb_decorate_data(data) {
   data = atcb_decorate_data_boolean(data);
   data = atcb_decorate_data_defaults(data);
+  data = atcb_decorate_data_recurrence(data);
   data = atcb_decorate_data_options(data);
   data = atcb_decorate_data_style(data);
   data.sizes = atcb_decorate_sizes(data.size);
   data.lightMode = atcb_decorate_light_mode(data.lightMode);
   data = atcb_decorate_data_i18n(data);
   data = atcb_decorate_data_dates(data);
-  data = atcb_decorate_data_recurrence(data);
   data = await atcb_decorate_data_rsvp(data);
   return data;
 }
