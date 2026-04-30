@@ -490,7 +490,11 @@
       "example_disclaimer": "But to be fair - this is just one out of so many configurable options!"
     },
     "legal": {
-      "intro": "Information in accordance with section 5 TMG and section 55 para. 2 RStV:"
+      "intro": "Information in accordance with section 5 TMG and section 55 para. 2 RStV:",
+      "registeredOffice": "Registered office",
+      "commercialRegister": "Commercial register",
+      "representative": "Managing Director",
+      "vat": "VAT ID"
     },
     "privacy": {
       "no-cookies": "No Cookie Banner is possible",

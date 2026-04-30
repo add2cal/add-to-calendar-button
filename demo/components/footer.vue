@@ -69,8 +69,8 @@ function topFunction() {
               </a>
             </span>
             <div class="mt-6 text-xs sm:mt-5 md:mt-3">
-              <span class="font-semibold text-zinc-500 dark:text-zinc-400"> &copy; {{new Date().getFullYear()}} </span>
-              <span class="lowercase text-zinc-400 dark:text-zinc-500"> , Current Version: 2.13.9 </span>
+              <span class="font-semibold text-zinc-500 dark:text-zinc-400"> &copy; {{new Date().getFullYear()}} Calendarverse GmbH</span>
+              <span class="lowercase text-zinc-400 dark:text-zinc-500">, Current Version: 2.13.10 </span>
             </div>
           </div>
           <div class="hidden self-center sm:block">

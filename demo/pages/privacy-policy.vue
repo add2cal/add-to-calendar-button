@@ -101,12 +101,16 @@ useHead({
       <h3>Information about the responsible party (referred to as the &ldquo;controller&rdquo; in the GDPR)</h3>
       <p>The data processing controller on this website is:</p>
       <p>
-        Jens K&uuml;rschner<br />
-        Tal 44<br />
-        80331 M&uuml;nchen<br />
+        Calendarverse GmbH<br />
+        Beta-Str. 10a<br />
+        85774 Unterf&ouml;hring<br />
         GERMANY
       </p>
-
+      <p>
+        Registered Office: Unterf&ouml;hring<br />
+        Commercial Register: HRB 312016, Amtsgericht M&uuml;nchen<br />
+        Managing Director: Jens K&uuml;rschner
+      </p>
       <p>
         Email: <span style="display:none; ">are-</span><span style="display:inline; ">&#x73;&#x75;&#x70;&#x70;&#x6F;&#x72;&#x74;</span><span style="display:none; ">-xya34</span><span style="display:inline; ">[at]</span><span style="display:none; ">ddks-</span
         ><span style="display:inline; ">&#97;&#100;&#100;&#45;&#116;&#111;&#45;&#99;&#97;&#108;&#101;&#110;&#100;&#97;&#114;&#45;&#112;&#114;&#111;&#46;&#99;&#111;&#109;</span>

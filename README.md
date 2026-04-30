@@ -9,7 +9,7 @@
 
 # Your next Add to Calendar Button
 
-The convenient JavaScript Web Component, which lets you reliably create beautiful buttons, where people can add events to their calendars.
+The convenient Web Component, which lets you reliably create beautiful buttons, where people can add events to their calendars.
 
 [![#1 Product of the Day on ProductHunt](https://api.producthunt.com/widgets/embed-image/v1/top-post-badge.svg?post_id=319458&theme=dark&period=daily)](https://www.producthunt.com/products/add-to-calendar-button-generator)
 
@@ -116,7 +116,7 @@ You can use the jsDelivr CDN and load the respective script directly into your w
 Place the script tag inside the `<head>` section.
 
 ```html
-<script src="https://cdn.jsdelivr.net/npm/add-to-calendar-button@2" async defer></script>
+<script src="https://cdn.jsdelivr.net/npm/add-to-calendar-button" async defer></script>
 ```
 
 <br />
@@ -248,7 +248,7 @@ Anyone is welcome to contribute, but mind the [guidelines](.github/CONTRIBUTING.
 
 ## 📃 Copyright and License
 
-Copyright (c) [Jens Kuerschner](https://jekuer.com).
+Copyright (c) [Jens Kuerschner](https://jekuer.com) (Calendarverse GmbH).
 
 Licensed under [Elastic License 2.0 (ELv2)](LICENSE.txt).
 
