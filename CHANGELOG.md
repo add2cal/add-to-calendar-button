@@ -2,6 +2,7 @@
 
 ## Version 2
 
+- v2.14 : Dropping atcb_decorate_data_recurrence export; various bug fixes
 - v2.13 : Hebrew language
 - v2.12 : ⚠️ Breaking: Date buttons now show the next possible date in multi-date and recurrence cases. Recurrence UNTIL support. Mitigating edge cases where ics files with unsupported time zones loaded into Google calendar. Always block background scroll on modals open
 - v2.11 : ⚠️ Breaking: When setting the dates objects and respective attributes on the root level, root values always override the dates object (except for name in the multi-date case)
