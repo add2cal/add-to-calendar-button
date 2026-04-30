@@ -13,6 +13,29 @@ export default defineNuxtConfig({
     },
   },
 
+  vite: {
+    optimizeDeps: {
+      include: [
+        '@vue/devtools-core',
+        '@vue/devtools-kit',
+        '@unhead/schema-org/vue',
+        '@heroicons/vue/24/outline',
+        '@heroicons/vue/24/solid',
+        '@headlessui/vue',
+        '@heroicons/vue/20/solid',
+        'isbot',
+        'timezones-ical-library',
+        'vue-marquee-text-component', // CJS
+        'shiki',
+        'shiki/themes/github-light.mjs',
+        'shiki/themes/github-dark.mjs',
+        'shiki/langs/shellscript.mjs',
+        'shiki/langs/javascript.mjs',
+        'shiki/langs/html.mjs',
+      ],
+    },
+  },
+
   nitro: {
     preset: 'static',
     prerender: {
@@ -83,8 +106,8 @@ export default defineNuxtConfig({
       meta: [
         { 'http-equiv': 'content-type', content: 'text/html; charset=utf-8' },
         { 'http-equiv': 'X-UA-Compatible', content: 'IE=edge' },
-        { name: 'author', content: 'Add to Calendar' },
-        { name: 'publisher', content: 'Add to Calendar' },
+        { name: 'author', content: 'Calendarverse GmbH' },
+        { name: 'publisher', content: 'Calendarverse GmbH' },
         { name: 'robots', content: robots },
         { property: 'og:type', content: 'website' },
         { property: 'og:site_name', content: 'Add to Calendar Button' },

@@ -1,16 +1,3 @@
-/*
- *  ++++++++++++++++++++++
- *  Add to Calendar Button
- *  ++++++++++++++++++++++
- *
- *  Version: 2.13.9
- *  Creator: Jens Kuerschner (https://jekuer.com)
- *  Project: https://github.com/add2cal/add-to-calendar-button
- *  License: Elastic License 2.0 (ELv2) (https://github.com/add2cal/add-to-calendar-button/blob/main/LICENSE.txt)
- *  Note:    DO NOT REMOVE THE COPYRIGHT NOTICE ABOVE!
- *
- */
-
 import { atcb_set_fullsize, atcb_rewrite_html_elements, atcb_copy_to_clipboard, atcb_secure_content, atcb_set_sizes, atcb_validEmail } from './atcb-util.js';
 import { atcb_generate_button, atcb_generate_modal_host, atcb_create_modal, atcb_generate_label, atcb_create_atcbl } from './atcb-generate.js';
 import { atcb_translate_hook } from './atcb-i18n.js';

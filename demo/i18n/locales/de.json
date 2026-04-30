@@ -490,7 +490,11 @@
       "example_disclaimer": "Um fair zu sein - dies ist nur eine von zahlreichen möglichen Konfigurationen!"
     },
     "legal": {
-      "intro": "Angaben gemäß § 5 TMG und § 55 Abs. 2 RStV:"
+      "intro": "Angaben gemäß § 5 TMG und § 55 Abs. 2 RStV:",
+      "registeredOffice": "Sitz der Gesellschaft",
+      "commercialRegister": "Handelsregister",
+      "representative": "Geschäftsführer",
+      "vat": "Umsatzsteuer-ID"
     },
     "privacy": {
       "no-cookies": "Cookie-frei geht auch",

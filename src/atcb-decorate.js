@@ -1,16 +1,3 @@
-/*
- *  ++++++++++++++++++++++
- *  Add to Calendar Button
- *  ++++++++++++++++++++++
- *
- *  Version: 2.13.9
- *  Creator: Jens Kuerschner (https://jekuer.com)
- *  Project: https://github.com/add2cal/add-to-calendar-button
- *  License: Elastic License 2.0 (ELv2) (https://github.com/add2cal/add-to-calendar-button/blob/main/LICENSE.txt)
- *  Note:    DO NOT REMOVE THE COPYRIGHT NOTICE ABOVE!
- *
- */
-
 import { tzlib_get_offset, tzlib_get_timezones } from 'timezones-ical-library';
 import { atcbIsiOS, atcbIsAndroid, atcbIsMobile, atcbIsBrowser, atcbValidRecurrOptions, atcbInvalidSubscribeOptions, atcbIOSInvalidOptions, atcbAndroidInvalidOptions, atcbWcBooleanParams } from './atcb-globals.js';
 import { atcb_translate_via_time_zone, atcb_format_datetime, atcb_rewrite_html_elements, atcb_generate_uuid, atcb_apply_transformation, atcb_getNextOccurrence, atcb_map_special_time_zones, atcb_parseRRule } from './atcb-util.js';

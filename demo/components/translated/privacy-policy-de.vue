@@ -70,12 +70,16 @@
   <h3>Hinweis zur verantwortlichen Stelle</h3>
   <p>Die verantwortliche Stelle f&uuml;r die Datenverarbeitung auf dieser Website ist:</p>
   <p>
-    Jens K&uuml;rschner<br />
-    Tal 44<br />
-    80331 M&uuml;nchen<br />
+    Calendarverse GmbH<br />
+    Beta-Str. 10a<br />
+    85774 Unterf&ouml;hring<br />
     GERMANY
   </p>
-
+  <p>
+    Sitz der Gesellschaft: Unterf&ouml;hring<br />
+    Handelsregister: HRB 312016, Amtsgericht M&uuml;nchen<br />
+    Gesch&auml;ftsf&uuml;hrer: Jens K&uuml;rschner
+  </p>
   <p>
     E-Mail: <span style="display:none; ">are-</span><span style="display:inline; ">&#x73;&#x75;&#x70;&#x70;&#x6F;&#x72;&#x74;</span><span style="display:none; ">-xya34</span><span style="display:inline; ">[at]</span><span style="display:none; ">ddks-</span
     ><span style="display:inline; ">&#97;&#100;&#100;&#45;&#116;&#111;&#45;&#99;&#97;&#108;&#101;&#110;&#100;&#97;&#114;&#45;&#112;&#114;&#111;&#46;&#99;&#111;&#109;</span>
