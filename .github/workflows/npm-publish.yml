@@ -52,7 +52,7 @@ jobs:
           registry-url: https://registry.npmjs.org/
           cache: 'npm'
       - run: npm ci
-      - run: npm run eslint
+      - run: npm run lint
       - run: npm run test
 
   build-and-publish:
