@@ -8,6 +8,9 @@ export default withNuxt([
   prettierRecommended,
   {
     files: ['**/*.js', '**/*.ts', '**/*.vue'],
+    plugins: {
+      '@typescript-eslint': tseslint.plugin,
+    },
     languageOptions: {
       parser: vueParser,
       parserOptions: {
@@ -29,14 +32,8 @@ export default withNuxt([
       '@typescript-eslint/no-unused-vars': ['warn', { caughtErrors: 'none', argsIgnorePattern: '^_', destructuredArrayIgnorePattern: '^_' }],
     },
   },
-])
-  .override('nuxt/vue/rules', {
-    rules: {
-      'vue/no-v-html': 'off',
-    },
-  })
-  .override('nuxt/typescript/rules', {
-    rules: {
-      '@typescript-eslint/no-explicit-any': 'off',
-    },
-  });
+]).override('nuxt/vue/rules', {
+  rules: {
+    'vue/no-v-html': 'off',
+  },
+});

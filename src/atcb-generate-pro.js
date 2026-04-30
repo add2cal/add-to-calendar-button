@@ -610,12 +610,12 @@ function atcb_build_form(fields, identifier = '', disabled = false) {
   // for each field, add respective html
   let n = 0;
   let prevType = '';
-  let skipped = false;
+  let prevSkipped;
   for (let i = 1; i <= fields.length; i++) {
-    skipped = false;
+    prevSkipped = false;
     const field = fields[i - 1];
     if (field.type !== 'label' && (!field.name || field.name === '')) {
-      skipped = true;
+      prevSkipped = true;
       continue;
     }
     if ((prevType === 'radio' && field.type !== 'radio') || prevType !== 'radio') {
@@ -626,7 +626,7 @@ function atcb_build_form(fields, identifier = '', disabled = false) {
     const fieldLabel = field.label || '';
     const fieldPlaceholder = field.type === 'radio' ? '' : field.placeholder || '';
     let fieldHtml = '';
-    if (prevType !== 'hidden' && i === n && i !== 1 && !skipped) {
+    if (prevType !== 'hidden' && i === n && i !== 1) {
       fieldHtml += '</div>';
     }
     if (field.type !== 'hidden' && i === n) {
@@ -650,7 +650,7 @@ function atcb_build_form(fields, identifier = '', disabled = false) {
     form += fieldHtml;
     prevType = field.type;
   }
-  if (prevType !== 'hidden') {
+  if (prevType !== 'hidden' || prevSkipped) {
     form += '</div>';
   }
   form += hiddenForm;
@@ -754,7 +754,7 @@ async function sendPostRequest(url, fields, header = {}) {
    */
   let formData = new FormData();
   let data = {};
-  let requestData = {};
+  let requestData;
   if (Object.keys(header).length === 0) {
     // if there is no header information, we use FormData
     fields.forEach((field) => {
