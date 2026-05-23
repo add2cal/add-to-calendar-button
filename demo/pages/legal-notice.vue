@@ -25,7 +25,7 @@ useHead({
     <br />
     <strong>{{ $t('content.legal.registeredOffice') }}:</strong> Unterf&ouml;hring<br />
     <strong>{{ $t('content.legal.commercialRegister') }}:</strong> HRB 312016, Amtsgericht M&uuml;nchen<br />
-    <strong>{{ $t('content.legal.vat') }}:</strong> tba<br />
+    <strong>{{ $t('content.legal.vat') }}:</strong> DE462121269<br />
     <strong>{{ $t('content.legal.representative') }}:</strong> Jens K&uuml;rschner<br />
   </p>
 </template>
