@@ -20,9 +20,6 @@
  :host {
   width: fit-content;
 
-  --base-font-size-l: 16px;
-  --base-font-size-m: 16px;
-  --base-font-size-s: 16px;
   --font: arial, helvetica, "Twemoji Mozilla", "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "EmojiOne Color", "Android Emoji", sans-serif;
   --accent-color: #1e90ff;
   --wrapper-padding: 1px;
@@ -513,6 +510,32 @@
   }
 }
 
+@media (width <= 575px) {
+  .atcb-modal-box {
+    filter: none;
+    margin-bottom: 0;
+    display: flex;
+    min-height: 100%;
+    flex-direction: column;
+  }
+
+  .atcb-modal-host-initialized #atcb-bgoverlay {
+    padding: 0;
+    background-color: var(--modal-background);
+  }
+
+  .atcb-modal {
+    width: 100%;
+    min-height: 100dvh;
+    margin: 0;
+  }
+
+  .atcb-modal-buttons {
+    border-radius: 0;
+    margin-top: auto;
+  }
+}
+
 .atcb-modal-box.atcb-rtl {
   text-align: var(--modal-text-align-rtl);
   direction: rtl;
@@ -582,8 +605,17 @@
 }
 
 @media (width <= 575px) {
+  .atcb-modal-icon {
+    margin: 0 auto;
+  }
+
   .atcb-modal-headline {
     padding: 1.8em 1em 1em;
+  }
+
+  .atcb-modal-icon + .atcb-modal-headline {
+    margin-top: 0;
+    padding-top: 0;
   }
   
   .atcb-modal-content {  
@@ -591,7 +623,7 @@
   }
 
   .atcb-modal-icon + .atcb-modal-content {
-    padding-top: 1.8em;
+    padding-top: 0;
   }
 }
 
@@ -750,6 +782,41 @@ a.atcb-modal-btn:not([disabled]):hover {
   color: var(--date-btn-cal-month-text);
   font-weight: 600;
   font-size: 1em;
+}
+
+@media (width <= 414px) {
+  .atcb-date-btn-left {
+    width: fit-content;
+  }
+
+  .atcb-date-btn-day {
+    font-size: 1.7em;
+  }
+
+  .atcb-date-btn-month {
+    font-size: .8em;
+  }
+
+  .atcb-date-btn-right {
+    min-width: 10em;
+  }
+}
+
+@media (width <= 575px) {
+  .atcb-button {
+    min-width: 13em;
+    width: 100%;
+    margin: auto;
+  }
+
+  dialog .atcb-list.atcb-modal {
+    display: flex;
+    flex-direction: column;
+  }
+
+  dialog .atcb-list-item-close {
+    margin-top: auto;
+  }
 }
 
 .atcb-date-btn-right {
@@ -919,6 +986,11 @@ a.atcb-modal-btn:not([disabled]):hover {
  * Background Overlay
  */
 
+.atcb-modal-host-initialized {
+  width: 100dvw;
+  height: 100dvh;
+}
+
 #atcb-bgoverlay {
   backdrop-filter: blur(2px);
   -webkit-backdrop-filter: blur(2px);
@@ -926,9 +998,7 @@ a.atcb-modal-btn:not([disabled]):hover {
   border: 0;
   box-sizing: border-box;
   display: flex;
-
-  /* could become simply 100dvh in the future - with regular padding then */
-  height: calc(100vh + 100px);
+  height: 100dvh;
   inset-inline: 0;
   left: 0;
   right: 0;
@@ -936,13 +1006,9 @@ a.atcb-modal-btn:not([disabled]):hover {
   min-height: 100%;
   min-width: 100%;
   overflow-y: auto;
-  padding: 20px 20px 130px;
+  padding: 20px;
   position: fixed;
-  width: 100vw;
-  z-index: 14000000;
-}
-
-#atcb-bgoverlay:not(dialog) {
+  width: 100dvw;
   animation: atcb-bgoverlay-animate 0.2s ease 0s 1 normal forwards;
   opacity: 0;
 }

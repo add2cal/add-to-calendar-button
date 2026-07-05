@@ -1,4 +1,4 @@
-import { atcb_set_fullsize, atcb_rewrite_html_elements, atcb_copy_to_clipboard, atcb_secure_content, atcb_set_sizes, atcb_validEmail } from './atcb-util.js';
+import { atcb_rewrite_html_elements, atcb_copy_to_clipboard, atcb_secure_content, atcb_set_sizes, atcb_validEmail } from './atcb-util.js';
 import { atcb_generate_button, atcb_generate_modal_host, atcb_create_modal, atcb_generate_label, atcb_create_atcbl } from './atcb-generate.js';
 import { atcb_translate_hook } from './atcb-i18n.js';
 import { atcb_log_event } from './atcb-event.js';
@@ -30,7 +30,6 @@ async function atcb_generate_ty(hostEl, dataObj) {
     return;
   }
   const tyHost = await atcb_generate_modal_host(host, data);
-  atcb_set_fullsize(tyHost.querySelector('.atcb-modal-host-initialized'));
   // get data
   const tyData = data.ty;
   // set default, if type is missing required information
@@ -332,7 +331,6 @@ async function atcb_generate_rsvp_form(host, data, hostEl, keyboardTrigger = fal
   let rsvpHost = null;
   if (!data.inlineRsvp) {
     rsvpHost = await atcb_generate_modal_host(host, data);
-    atcb_set_fullsize(rsvpHost.querySelector('.atcb-modal-host-initialized'));
     await atcb_create_modal(
       rsvpHost,
       data,

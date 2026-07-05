@@ -5,7 +5,7 @@ import { atcb_generate_button, atcb_create_atcbl } from './atcb-generate.js';
 import { atcb_generate_rich_data } from './atcb-generate-rich-data.js';
 import { atcb_close, atcb_toggle } from './atcb-control.js';
 import { atcb_generate_links } from './atcb-links.js';
-import { atcb_secure_content, atcb_manage_body_scroll, atcb_set_fullsize } from './atcb-util.js';
+import { atcb_secure_content, atcb_manage_body_scroll } from './atcb-util.js';
 import { atcb_log_event } from './atcb-event.js';
 import { atcb_generate_rsvp_form, atcb_generate_rsvp_button } from './atcb-generate-pro.js';
 
@@ -440,7 +440,7 @@ async function atcb_load_css(host, rootObj = null, data) {
   // add hidden style
   const generalCssContent = document.createElement('style');
   const initWidth = data.inlineRsvp && data.rsvp && Object.keys(data.rsvp).length > 0 ? '100%' : 'fit-content';
-  generalCssContent.innerText = `.atcb-initialized { display: block; position: relative; width: ${initWidth}; }.atcb-initialized.atcb-inline { display: inline-block; }.atcb-initialized.atcb-buttons-list { display: flex; flex-wrap: wrap; justify-content: center; gap: var(--buttonslist-gap); }.atcb-hidden { display: none; }`;
+  generalCssContent.innerText = `.atcb-initialized { display: block; position: relative; width: ${initWidth}; }.atcb-initialized.atcb-inline { display: inline-block; }.atcb-initialized.atcb-buttons-list { display: flex; flex-wrap: wrap; justify-content: center; gap: var(--buttonslist-gap); }.atcb-hidden { display: none; }@media (width <= 575px) { .atcb-initialized { width: 100%; } }`;
   if (nonceVal) {
     generalCssContent.setAttribute('nonce', nonceVal);
   }
@@ -928,7 +928,6 @@ function atcb_global_listener_resize() {
   if (host) {
     const activeOverlay = host.querySelector('#atcb-bgoverlay');
     if (activeOverlay) {
-      atcb_set_fullsize(activeOverlay);
       atcb_manage_body_scroll(host);
     }
   }

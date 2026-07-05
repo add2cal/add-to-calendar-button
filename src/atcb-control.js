@@ -1,5 +1,5 @@
 import { atcb_generate_dropdown_list, atcb_generate_bg_overlay, atcb_generate_overlay_dom, atcb_create_atcbl, atcb_generate_modal_host } from './atcb-generate.js';
-import { atcb_position_list, atcb_position_shadow_button_listener, atcb_manage_body_scroll, atcb_set_fullsize, atcb_set_sizes } from './atcb-util.js';
+import { atcb_position_list, atcb_position_shadow_button_listener, atcb_manage_body_scroll, atcb_set_sizes } from './atcb-util.js';
 import { atcbStates } from './atcb-globals.js';
 import { atcb_log_event } from './atcb-event.js';
 
@@ -64,8 +64,6 @@ async function atcb_open(host, data, button = null, keyboardTrigger = false, gen
     }
     atcb_set_sizes(list, data.sizes);
     atcb_manage_body_scroll(modalHost);
-    // set overlay size just to be sure
-    atcb_set_fullsize(bgOverlay);
   } else {
     if (data.forceOverlay) {
       host = await atcb_generate_overlay_dom(host, data);
@@ -96,8 +94,6 @@ async function atcb_open(host, data, button = null, keyboardTrigger = false, gen
         atcb_position_list(host, button, listWrapper);
       }
     }, 5);
-    // set overlay size just to be sure
-    atcb_set_fullsize(bgOverlay);
   }
   // give keyboard focus to first item in list, if possible
   const focusEl = (function () {
