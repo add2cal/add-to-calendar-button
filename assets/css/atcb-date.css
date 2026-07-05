@@ -308,6 +308,10 @@
   dialog .atcb-list-item-close {
     margin-top: auto;
   }
+
+  dialog .atcb-list-item {
+    padding: 1.5em;
+  }
 }
 
 .atcb-date-btn-right {
