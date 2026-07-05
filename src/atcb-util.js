@@ -646,12 +646,6 @@ function atcb_manage_body_scroll(host, modalObj = null) {
   document.documentElement.classList.add('atcb-modal-no-scroll');
 }
 
-// SHARED FUNCTION TO DEFINE WIDTH AND HEIGHT FOR "FULLSCREEN" FULLSIZE ELEMENTS
-function atcb_set_fullsize(el) {
-  el.style.width = window.innerWidth + 'px';
-  el.style.height = window.innerHeight + 100 + 'px';
-}
-
 // SHARED FUNCTION TO UPDATE GLOBAL SIZES
 function atcb_set_sizes(el, sizes) {
   el.style.setProperty('--base-font-size-l', sizes['l'] + 'px');
@@ -1284,7 +1278,6 @@ export {
   atcb_position_shadow_button,
   atcb_position_shadow_button_listener,
   atcb_manage_body_scroll,
-  atcb_set_fullsize,
   atcb_set_sizes,
   atcb_generate_uuid,
   atcb_apply_transformation,

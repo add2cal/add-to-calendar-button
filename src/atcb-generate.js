@@ -1,7 +1,7 @@
 import { atcbIcon, atcbStates, atcbDefaultTarget } from './atcb-globals.js';
 import { atcb_toggle, atcb_close } from './atcb-control.js';
 import { atcb_generate_links } from './atcb-links.js';
-import { atcb_generate_time, atcb_generate_timestring, atcb_position_shadow_button, atcb_position_shadow_button_listener, atcb_manage_body_scroll, atcb_set_fullsize, atcb_set_sizes, atcb_debounce, atcb_debounce_leading } from './atcb-util.js';
+import { atcb_generate_time, atcb_generate_timestring, atcb_position_shadow_button, atcb_position_shadow_button_listener, atcb_manage_body_scroll, atcb_set_sizes, atcb_debounce, atcb_debounce_leading } from './atcb-util.js';
 import { atcb_set_fully_successful } from './atcb-links.js';
 import { atcb_translate_hook } from './atcb-i18n.js';
 import { atcb_load_css, atcb_set_light_mode } from './atcb-init.js';
@@ -427,8 +427,6 @@ async function atcb_create_modal(mainHost, data, icon = '', headline, content = 
   }
   modalWrapper.append(modal);
   atcb_set_sizes(modal, data.sizes);
-  // set overlay size just to be sure
-  atcb_set_fullsize(bgOverlay);
   // add icon
   if (icon !== '' && !data.hideIconModal) {
     const modalIcon = document.createElement('div');
@@ -803,7 +801,6 @@ async function atcb_generate_modal_host(host, data, reset = true) {
 // FUNCTION TO COPY THE BUTTON TO A SECOND SHADOWDOM TO FORCE OVERLAY
 async function atcb_generate_overlay_dom(host, data) {
   const newHost = await atcb_generate_modal_host(host, data);
-  atcb_set_fullsize(newHost.querySelector('.atcb-modal-host-initialized'));
   // get all top-level nodes from host
   const nodes = Array.from(host.children);
   // duplicate all nodes into newHost, except for any style tag
