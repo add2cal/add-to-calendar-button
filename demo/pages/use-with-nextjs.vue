@@ -62,8 +62,7 @@ watch(locale, value => {
   startTime="10:15"
   endTime="23:30"
   timeZone="{{ $t('demo_data.default_timezone') }}"{{ defaultLang }}
-&gt;&lt;/AddToCalendarButton&gt;</pre
-          >
+&gt;&lt;/AddToCalendarButton&gt;</pre>
         </LazyCodeBlock>
         <p class="mb-10 font-semibold">{{ $t('content.guide.step_use_client') }}</p>
       </div>

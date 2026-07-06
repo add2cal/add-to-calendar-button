@@ -154,8 +154,7 @@ onUnmounted(() => {
   label="{{ $t('demo_data.options_label_single_dummy') }}"
   lightMode="bodyScheme"{{ defaultLang }}
 &gt;&lt;/add-to-calendar-button&gt;
-</pre
-              >
+</pre>
             </LazyCodeBlock>
           </div>
         </div>
@@ -177,8 +176,7 @@ onUnmounted(() => {
   label="{{ $t('demo_data.name_custom_3') }}"
   lightMode="bodyScheme"{{ defaultLang }}
 &gt;&lt;/add-to-calendar-button&gt;
-</pre
-              >
+</pre>
             </LazyCodeBlock>
           </div>
         </div>
@@ -215,8 +213,7 @@ onUnmounted(() => {
   size="5"
   lightMode="bodyScheme"{{ defaultLang }}
 &gt;&lt;/add-to-calendar-button&gt;
-</pre
-              >
+</pre>
             </LazyCodeBlock>
           </div>
         </div>
@@ -276,8 +273,7 @@ onUnmounted(() => {
   hideIconButton
   lightMode="bodyScheme"{{ defaultLang }}
 &gt;&lt;/add-to-calendar-button&gt;
-</pre
-              >
+</pre>
             </LazyCodeBlock>
           </div>
         </div>
@@ -326,8 +322,7 @@ onUnmounted(() => {
   buttonStyle="custom"
   listStyle="modal"
 &gt;&lt;/add-to-calendar-button&gt;
-</pre
-              >
+</pre>
             </LazyCodeBlock>
           </div>
         </div>
@@ -403,8 +398,7 @@ onUnmounted(() => {
   }
   */
 &lt;/style&gt;
-</pre
-              >
+</pre>
             </LazyCodeBlock>
           </div>
         </div>
@@ -493,8 +487,7 @@ onUnmounted(() => {
   lightMode="bodyScheme"
   description="{{ $t('demo_data.description_alt2') }}"{{ defaultLang }}
 &gt;&lt;/add-to-calendar-button&gt;
-</pre
-              >
+</pre>
             </LazyCodeBlock>
           </div>
         </div>
@@ -546,8 +539,7 @@ onUnmounted(() => {
   options="'Apple','Google','iCal','Outlook.com','Microsoft 365','Microsoft Teams','Yahoo'"
   lightMode="bodyScheme"{{ defaultLang }}
 &gt;&lt;/add-to-calendar-button&gt;
-</pre
-              >
+</pre>
             </LazyCodeBlock>
           </div>
         </div>
@@ -609,8 +601,7 @@ onUnmounted(() => {
   customLabels='{{ defaultCustLabels }}'
   lightMode="bodyScheme"{{ defaultLang }}
 &gt;&lt;/add-to-calendar-button&gt;
-</pre
-              >
+</pre>
             </LazyCodeBlock>
           </div>
         </div>
@@ -684,8 +675,7 @@ onUnmounted(() => {
   iCalFileName="{{ $t('demo_data.iCal_confirmed') }}"
   lightMode="bodyScheme"{{ defaultLang }}
 &gt;&lt;/add-to-calendar-button&gt;
-</pre
-              >
+</pre>
             </LazyCodeBlock>
           </div>
         </div>
@@ -735,8 +725,7 @@ onUnmounted(() => {
   iCalFileName="{{ $t('demo_data.iCal_cancelled') }}"
   lightMode="bodyScheme"{{ defaultLang }}
 &gt;&lt;/add-to-calendar-button&gt;
-</pre
-              >
+</pre>
             </LazyCodeBlock>
           </div>
         </div>
@@ -797,8 +786,7 @@ onUnmounted(() => {
   identifier="my-custom-id"
   lightMode="bodyScheme"{{ defaultLang }}
 &gt;&lt;/add-to-calendar-button&gt;
-</pre
-              >
+</pre>
             </LazyCodeBlock>
           </div>
         </div>
@@ -892,8 +880,7 @@ onUnmounted(() => {
   options="'Apple','Google','iCal'"
   lightMode="bodyScheme"{{ defaultLang }}
 &gt;&lt;/add-to-calendar-button&gt;
-</pre
-              >
+</pre>
             </LazyCodeBlock>
           </div>
         </div>
@@ -965,8 +952,7 @@ onUnmounted(() => {
   bypassWebViewCheck
   lightMode="bodyScheme"{{ defaultLang }}
 &gt;&lt;/add-to-calendar-button&gt;
-</pre
-              >
+</pre>
             </LazyCodeBlock>
           </div>
         </div>
@@ -1047,8 +1033,7 @@ onUnmounted(() => {
     button.addEventListener('click', () => atcb_action(config, button));
   }
 &lt;/script&gt;
-</pre
-              >
+</pre>
             </LazyCodeBlock>
           </div>
         </div>

@@ -60,8 +60,7 @@ watch(locale, value => {
 
 compilerOptions: {
   isCustomElement: (tag) => tag.includes('-')
-}</pre
-          >
+}</pre>
         </LazyCodeBlock>
         <p>{{ $t('content.guide.vue.config_4') }}<br />{{ $t('content.guide.vue.config_5') }}</p>
         <LazyCodeBlock language="javascript">
@@ -70,8 +69,7 @@ compilerOptions: {
 
 compilerOptions: {
   isCustomElement: (tag) => tag.startsWith('add-')
-}</pre
-          >
+}</pre>
         </LazyCodeBlock>
         <h2 class="mb-6 mt-20">{{ $t('content.guide.step4') }}: {{ $t('content.guide.step_use') }}</h2>
         <p>
@@ -90,8 +88,7 @@ compilerOptions: {
   startTime="10:15"
   endTime="23:30"
   timeZone="{{ $t('demo_data.default_timezone') }}"{{ defaultLang }}
-&gt;&lt;/add-to-calendar-button&gt;</pre
-          >
+&gt;&lt;/add-to-calendar-button&gt;</pre>
         </LazyCodeBlock>
       </div>
     </div>

@@ -5,7 +5,7 @@
  *
  * Style: Text
  *
- * Version: 2.14.0
+ * Version: 2.15.0
  * Creator: Jens Kuerschner (https://jekuer.com)
  * Project: https://github.com/add2cal/add-to-calendar-button
  * License: Elastic License 2.0 (ELv2) (https://github.com/add2cal/add-to-calendar-button/blob/main/LICENSE.txt)
@@ -840,12 +840,6 @@ a.atcb-modal-btn:not([disabled]):hover {
 }
 
 @media (width <= 575px) {
-  .atcb-button {
-    min-width: 13em;
-    width: 100%;
-    margin: auto;
-  }
-
   dialog .atcb-list.atcb-modal {
     display: flex;
     flex-direction: column;
@@ -853,6 +847,10 @@ a.atcb-modal-btn:not([disabled]):hover {
 
   dialog .atcb-list-item-close {
     margin-top: auto;
+  }
+
+  dialog .atcb-list-item {
+    padding: 1.5em;
   }
 }
 
