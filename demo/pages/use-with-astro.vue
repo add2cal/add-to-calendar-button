@@ -67,8 +67,7 @@ export default function atcb(props: AddToCalendarButtonType) {
       options="'Apple','Google','iCal','Outlook.com','Yahoo'"
     &gt;&lt;/AddToCalendarButton&gt;
   );
-}</pre
-          >
+}</pre>
         </LazyCodeBlock>
         <h2 class="mb-6 mt-20">{{ $t('content.guide.step3') }}: {{ $t('content.guide.step_use') }}</h2>
         <p>{{ $t('content.guide.astro.use') }}</p>
@@ -81,8 +80,7 @@ import Layout from '../layouts/Layout.astro';
 ---
 &lt;Layout&gt;
 &lt;AddToCalendarButton client:only="react" label="Woohooo" /&gt;
-&lt;/Layout&gt;</pre
-          >
+&lt;/Layout&gt;</pre>
         </LazyCodeBlock>
         <p class="font-semibold italic">{{ $t('content.guide.step_use_simple') }}</p>
       </div>

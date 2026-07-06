@@ -15,3 +15,7 @@ demo
 
 # Ignore css files
 *.css
+
+# Ignore helper files
+grunt-wrapper/atcb-wrapper-end.js
+grunt-wrapper/atcb-wrapper-start.js

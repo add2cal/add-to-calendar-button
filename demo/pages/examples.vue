@@ -128,8 +128,7 @@ watch(locale, value => {
   options="'Apple','Google','iCal','Outlook.com','Microsoft 365','Microsoft Teams','Yahoo'"
   lightMode="bodyScheme"{{ defaultLang }}
 &gt;&lt;/add-to-calendar-button&gt;
-</pre
-              >
+</pre>
             </LazyCodeBlock>
           </div>
         </div>
@@ -170,8 +169,7 @@ watch(locale, value => {
   options="'Apple','Google','iCal','Outlook.com','Microsoft 365','Microsoft Teams','Yahoo'"
   lightMode="bodyScheme"{{ defaultLang }}
 &gt;&lt;/add-to-calendar-button&gt;
-</pre
-              >
+</pre>
             </LazyCodeBlock>
           </div>
         </div>
@@ -219,8 +217,7 @@ watch(locale, value => {
   options="'Apple','Google','iCal','Outlook.com','Yahoo'"
   lightMode="bodyScheme"{{ defaultLang }}
 &gt;&lt;/add-to-calendar-button&gt;
-</pre
-              >
+</pre>
             </LazyCodeBlock>
           </div>
         </div>
@@ -270,8 +267,7 @@ watch(locale, value => {
   recurrence="RRULE:FREQ=WEEKLY;INTERVAL=1;WKST=MO;BYDAY=WE,FR;COUNT=6"
   lightMode="bodyScheme"{{ defaultLang }}
 &gt;&lt;/add-to-calendar-button&gt;
-</pre
-              >
+</pre>
             </LazyCodeBlock>
           </div>
         </div>
@@ -322,8 +318,7 @@ watch(locale, value => {
   recurrence_byDay="WE,FR"
   lightMode="bodyScheme"{{ defaultLang }}
 &gt;&lt;/add-to-calendar-button&gt;
-</pre
-              >
+</pre>
             </LazyCodeBlock>
           </div>
         </div>
@@ -402,8 +397,7 @@ watch(locale, value => {
   options="'Apple','Google','iCal','Outlook.com','Yahoo'"
   lightMode="bodyScheme"{{ defaultLang }}
 &gt;&lt;/add-to-calendar-button&gt;
-</pre
-              >
+</pre>
             </LazyCodeBlock>
           </div>
         </div>
@@ -472,8 +466,7 @@ watch(locale, value => {
   size="5"
   lightMode="bodyScheme"{{ defaultLang }}
 &gt;&lt;/add-to-calendar-button&gt;
-</pre
-              >
+</pre>
             </LazyCodeBlock>
           </div>
         </div>
@@ -533,8 +526,7 @@ watch(locale, value => {
   listStyle="modal"
   lightMode="bodyScheme"{{ defaultLang }}
 &gt;&lt;/add-to-calendar-button&gt;
-</pre
-              >
+</pre>
             </LazyCodeBlock>
           </div>
         </div>
@@ -578,8 +570,7 @@ watch(locale, value => {
   options="Google"
   lightMode="bodyScheme"{{ defaultLang }}
 &gt;&lt;/add-to-calendar-button&gt;
-</pre
-              >
+</pre>
             </LazyCodeBlock>
           </div>
         </div>
@@ -629,8 +620,7 @@ watch(locale, value => {
   buttonStyle="round"
   lightMode="bodyScheme"{{ defaultLang }}
 &gt;&lt;/add-to-calendar-button&gt;
-</pre
-              >
+</pre>
             </LazyCodeBlock>
           </div>
         </div>

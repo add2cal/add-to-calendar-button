@@ -84,8 +84,7 @@ watch(locale, value => {
   startTime="10:15"
   endTime="23:30"
   timeZone="{{ $t('demo_data.default_timezone') }}"{{ defaultLang }}
-&gt;&lt;/add-to-calendar-button&gt;</pre
-          >
+&gt;&lt;/add-to-calendar-button&gt;</pre>
         </LazyCodeBlock>
         <h3 class="mb-6 mt-12">{{ $t('content.guide.optionB') }}: React Wrapper</h3>
         <p>{{ $t('content.guide.react.start_wrapper_1') }}</p>
@@ -101,8 +100,7 @@ watch(locale, value => {
   startTime="10:15"
   endTime="23:30"
   timeZone="{{ $t('demo_data.default_timezone') }}"{{ defaultLang }}
-&gt;&lt;/AddToCalendarButton&gt;</pre
-          >
+&gt;&lt;/AddToCalendarButton&gt;</pre>
         </LazyCodeBlock>
         <p class="font-semibold">{{ $t('content.guide.react.start_wrapper_3') }}</p>
         <p>{{ $t('content.guide.react.start_wrapper_4') }}<br />{{ $t('content.guide.react.start_wrapper_5') }}</p>
