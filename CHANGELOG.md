@@ -2,6 +2,7 @@
 
 ## Version 2
 
+- v2.15 : Better responsive versions on very small screens for modals and date buttons
 - v2.14 : Dropping atcb_decorate_data_recurrence export; various bug fixes
 - v2.13 : Hebrew language
 - v2.12 : ⚠️ Breaking: Date buttons now show the next possible date in multi-date and recurrence cases. Recurrence UNTIL support. Mitigating edge cases where ics files with unsupported time zones loaded into Google calendar. Always block background scroll on modals open
