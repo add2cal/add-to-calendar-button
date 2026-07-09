@@ -881,3 +881,20 @@ During implementation, the actual v2.15 source was cross-checked. The following 
 - `test/wc-tests-full/f-*.test.js` — Full Cartesian Suite (runs with `npm run test:prod`)
 - `test/helpers/` — mount, capture (window.open + file-save interception, UA override), ics parser, dom, datalayer helpers
 - `test/fixtures/` — event configs (incl. 2050 DST corners), PRO mock payloads + fetch mock, matrix definitions with `isValid()` constraint logic and an Intl-based tz oracle
+
+### Post-implementation docs revalidation (add-to-calendar-button.com/configuration, v2.15.0)
+
+Cross-check of the implemented suite against the official configuration docs. Test code required NO changes; the following PLAN-prose corrections are recorded:
+
+| Item | Plan said | Docs say (authoritative) |
+|------|-----------|--------------------------|
+| iCalFileName default | `event` | `event-to-save-in-my-calendar` |
+| buttonStyle list | (Decision #8 list without `simple` in some spots) | `default, simple, 3d, flat, round, neumorphism, text, date, custom, none` — `simple` is valid; `custom` requires customCss |
+| `hideButton` (plan §1 D7 / M-group) | listed as a config boolean | does NOT exist; granular set is `hideIconButton`, `hideIconList`, `hideIconModal`, `hideTextLabelButton`, `hideTextLabelList` |
+| `size` format (M-29) | `l\|m\|s` | numeric 0-10 scale, pipe-delimited large\|medium\|small, e.g. `"8\|6\|4"` (default `"6\|6\|6"`) |
+| recurrence deactivation | confirmed | docs explicitly state: recurrence disables Yahoo, ALL Microsoft options, and Google on iOS (iCal as fallback) — matches Decision #3 + Round-1 refinement |
+| recurrence + dates | not stated | mutually exclusive per docs — do not combine multi-date arrays with recurrence |
+| attendee | `Name\|email` | email-only also allowed; exactly ONE attendee supported |
+| RRULE parts | — | BYHOUR/BYMINUTE/BYSECOND are NOT supported by the button |
+
+Docs are silent on: `dev`/`proxy`/`domain`/`fake*` flags (source-verified instead), exact customLabels keys (defer to atcb-i18n.js), hover-to-click conversion on touch, en-fallback for unknown languages (source-verified: falls back to en).
