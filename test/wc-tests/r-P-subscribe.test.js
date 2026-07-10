@@ -4,7 +4,7 @@
 import { expect, aTimeout } from '@open-wc/testing';
 import { mountAtcb } from '../helpers/mount.js';
 import { interceptWindowOpen } from '../helpers/capture.js';
-import { clickSingleton, openList, renderedOptions, clickOption } from '../helpers/dom.js';
+import { clickSingleton, openList, renderedOptions, clickOption, modalHost, initFailed } from '../helpers/dom.js';
 
 const SUB = {
   name: 'Subscribe Cal',
@@ -62,7 +62,7 @@ describe('Group P - Subscribe mode', () => {
       await clickOption(host, 'yahoo');
       await aTimeout(150);
       expect(wo.calls.length, 'no direct yahoo url').to.equal(0);
-      const modal = document.getElementById('atcb-p03-modal-host');
+      const modal = modalHost(host);
       expect(modal, 'manual instructions modal').to.exist;
       expect(modal.shadowRoot.querySelector('.atcb-modal-box')).to.exist;
     } finally {
@@ -97,7 +97,8 @@ describe('Group P - Subscribe mode', () => {
       ]),
       identifier: 'atcb-p05',
     });
-    await aTimeout(100);
-    expect(host.shadowRoot.querySelector('.atcb-initialized')).to.not.exist;
+    await aTimeout(200);
+    // failed-init shadow roots crash headless-shell on querySelector - use the attribute contract
+    expect(initFailed(host)).to.equal(true);
   });
 });

@@ -81,7 +81,8 @@ describe('Group U - Edge cases & regressions', () => {
     }
   });
 
-  it('U-17: negative-offset tz crossing midnight shifts the UTC calendar day', async () => {
+  it('U-17: negative-offset tz crossing midnight shifts the UTC calendar day (Yahoo UTC output)', async () => {
+    // Google gets wall-clock + ctz, so the UTC day shift is observable in the Yahoo URL (st/et in UTC)
     const wo = interceptWindowOpen();
     try {
       const { host } = await mountAtcb({
@@ -90,12 +91,13 @@ describe('Group U - Edge cases & regressions', () => {
         startTime: '23:30',
         endTime: '23:45',
         timeZone: 'America/New_York', // 23:30 EDT = 03:30 UTC on the NEXT day
-        options: "'Google'",
+        options: "'Yahoo'",
         trigger: 'click',
         identifier: 'atcb-u17',
       });
       await clickSingleton(host);
-      expect(new URL(wo.calls[0].url).searchParams.get('dates')).to.include('20500616T033000Z');
+      const url = new URL(wo.calls[0].url);
+      expect(url.searchParams.get('st')).to.equal('20500616T033000Z');
     } finally {
       wo.restore();
     }

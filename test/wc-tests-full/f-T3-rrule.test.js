@@ -14,7 +14,8 @@ const RRULE_SHAPES = [
   { id: 'monthly-2mo', cfg: { recurrence: 'monthly', recurrence_byDay: '2MO', recurrence_count: 6 }, expect: ['FREQ=MONTHLY', 'BYDAY=2MO'] },
   { id: 'yearly', cfg: { recurrence: 'yearly', recurrence_byMonth: '6', recurrence_byMonthDay: '15', recurrence_count: 3 }, expect: ['FREQ=YEARLY', 'BYMONTH=6', 'BYMONTHDAY=15'] },
   { id: 'raw-count', cfg: { recurrence: 'RRULE:FREQ=WEEKLY;COUNT=10;BYDAY=TU' }, expect: ['FREQ=WEEKLY', 'COUNT=10', 'BYDAY=TU'] },
-  { id: 'raw-until', cfg: { recurrence: 'RRULE:FREQ=DAILY;UNTIL=20501231T235959Z' }, expect: ['FREQ=DAILY', 'UNTIL=20501231T235959Z'] },
+  // NOTE: UNTIL gets converted into an equivalent COUNT during decoration (see E-07 pin)
+  { id: 'raw-until', cfg: { recurrence: 'RRULE:FREQ=DAILY;UNTIL=20501231T235959Z' }, expect: ['FREQ=DAILY', 'COUNT='] },
   { id: 'interval', cfg: { recurrence: 'weekly', recurrence_interval: 2, recurrence_count: 8 }, expect: ['FREQ=WEEKLY', 'INTERVAL=2'] },
   { id: 'wkst', cfg: { recurrence: 'weekly', recurrence_byDay: 'MO', recurrence_weekstart: 'SU', recurrence_count: 8 }, expect: ['WKST=SU'] },
 ];

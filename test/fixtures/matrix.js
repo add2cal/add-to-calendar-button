@@ -74,6 +74,28 @@ export function wallToUtcClean(dateStr, timeStr, timeZone) {
   return `${dt.getUTCFullYear()}${p(dt.getUTCMonth() + 1)}${p(dt.getUTCDate())}T${p(dt.getUTCHours())}${p(dt.getUTCMinutes())}${p(dt.getUTCSeconds())}Z`;
 }
 
+/**
+ * Offset string oracle: returns the UTC offset ('+HH:MM'/'-HH:MM') that the given
+ * wall-clock time in the given IANA tz has - via Intl, independent of the lib's tz library.
+ */
+export function wallOffsetString(dateStr, timeStr, timeZone) {
+  const [y, mo, d] = dateStr.split('-').map(Number);
+  const [h, mi] = timeStr.split(':').map(Number);
+  const wallAsUtc = Date.UTC(y, mo - 1, d, h, mi, 0);
+  let guess = wallAsUtc;
+  for (let i = 0; i < 3; i++) {
+    const offset = tzOffsetAt(guess, timeZone);
+    const next = wallAsUtc - offset;
+    if (next === guess) break;
+    guess = next;
+  }
+  const offsetMin = Math.round(tzOffsetAt(guess, timeZone) / 60000);
+  const sign = offsetMin < 0 ? '-' : '+';
+  const abs = Math.abs(offsetMin);
+  const p = (n) => String(n).padStart(2, '0');
+  return `${sign}${p(Math.floor(abs / 60))}:${p(abs % 60)}`;
+}
+
 function tzOffsetAt(utcMillis, timeZone) {
   const dtf = new Intl.DateTimeFormat('en-US', {
     timeZone,

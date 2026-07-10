@@ -41,14 +41,14 @@ describe('Group G - ICS / Apple output', () => {
     expect(ics.method).to.equal('REQUEST');
     const org = ics.events[0].prop('ORGANIZER');
     expect(org).to.include('CN=Jane Doe');
-    expect(org).to.include('mailto:jane@example.com');
+    expect(org.toLowerCase()).to.include('mailto:jane@example.com');
   });
 
   it('G-04: attendee line rendered with organizer present', async () => {
     const { ics } = await icsFor({ ...CFG.singleTimedNY, organizer: 'Jane Doe|jane@example.com', attendee: 'John Guest|john@example.com' }, 'atcb-g04');
     const att = ics.events[0].prop('ATTENDEE');
     expect(att).to.exist;
-    expect(att).to.include('mailto:john@example.com');
+    expect(att.toLowerCase()).to.include('mailto:john@example.com');
   });
 
   it('G-05: auto UID is a stable UUID per render', async () => {
@@ -57,9 +57,17 @@ describe('Group G - ICS / Apple output', () => {
     expect(uid).to.match(/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i);
   });
 
-  it('G-06: supplied UID preserved verbatim', async () => {
-    const { ics } = await icsFor({ ...CFG.singleTimedNY, uid: 'my-custom-uid-123@example.com' }, 'atcb-g06');
-    expect(ics.events[0].value('UID')).to.equal('my-custom-uid-123@example.com');
+  it('G-06: supplied UID preserved verbatim (word chars + dashes only per RFC 7986)', async () => {
+    const { ics } = await icsFor({ ...CFG.singleTimedNY, uid: 'my-custom-uid-123' }, 'atcb-g06');
+    expect(ics.events[0].value('UID')).to.equal('my-custom-uid-123');
+  });
+
+  it('G-06b: UID with forbidden characters falls back to a generated UUID', async () => {
+    // the lib validates uid against /^(?:\w|-){1,254}$/ and regenerates on mismatch
+    const { ics } = await icsFor({ ...CFG.singleTimedNY, uid: 'invalid@uid.com' }, 'atcb-g06b');
+    const uid = ics.events[0].value('UID');
+    expect(uid).to.not.equal('invalid@uid.com');
+    expect(uid).to.match(/^[0-9a-f-]{36}$/i);
   });
 
   it('G-07: SUMMARY special characters are escaped per RFC 5545', async () => {

@@ -4,7 +4,7 @@
  */
 import { expect } from '@open-wc/testing';
 import { mountAtcb, baseEvent } from '../helpers/mount.js';
-import { openList } from '../helpers/dom.js';
+import { openList, pressEsc, optionEl } from '../helpers/dom.js';
 import { atcb_translate_hook, rtlLanguages } from '../../src/atcb-i18n.js';
 import { interceptFileSave } from '../helpers/capture.js';
 import { clickSingleton } from '../helpers/dom.js';
@@ -37,6 +37,7 @@ describe('Group O - Localization & i18n', () => {
     expect(shadow.querySelector('.atcb-rtl')).to.exist;
     await openList(host);
     expect(shadow.querySelector('.atcb-list.atcb-rtl')).to.exist;
+    await pressEsc();
   });
 
   it('O-05/O-06: customLabels override specific keys; others stay language defaults', async () => {
@@ -50,7 +51,7 @@ describe('Group O - Localization & i18n', () => {
     );
     expect(shadow.querySelector('.atcb-text').textContent.trim()).to.equal('Termin sichern!');
     await openList(host);
-    const googleItem = shadow.getElementById('atcb-o05-google');
+    const googleItem = optionEl(host, 'google');
     expect(googleItem.textContent).to.include(atcb_translate_hook('google', { language: 'de' }));
   });
 

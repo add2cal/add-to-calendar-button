@@ -7,7 +7,7 @@ import { expect, aTimeout } from '@open-wc/testing';
 import { mountAtcb } from '../helpers/mount.js';
 import { mockProFetch, proEvtConfig, PRO_EVT_KEY } from '../fixtures/pro.js';
 import { interceptFileSave } from '../helpers/capture.js';
-import { openList, clickOption, trigger } from '../helpers/dom.js';
+import { openList, clickOption, trigger, optionEl, initFailed } from '../helpers/dom.js';
 import { decodeIcsHref, parseIcs } from '../helpers/ics.js';
 
 describe('Group R - PRO proKey fetch & override', () => {
@@ -27,9 +27,10 @@ describe('Group R - PRO proKey fetch & override', () => {
   it('R-02: PRO fetch 404 -> button does not render', async () => {
     const mock = mockProFetch({}); // unknown key -> 404
     try {
-      const { shadow } = await mountAtcb({ proKey: 'ffffffff-0000-0000-0000-000000000000', identifier: 'atcb-r02' });
-      await aTimeout(150);
-      expect(shadow.querySelector('.atcb-initialized')).to.not.exist;
+      const { host } = await mountAtcb({ proKey: 'ffffffff-0000-0000-0000-000000000000', identifier: 'atcb-r02' });
+      await aTimeout(200);
+      // failed-init shadow roots crash headless-shell on querySelector - use the attribute contract
+      expect(initFailed(host)).to.equal(true);
     } finally {
       mock.restore();
     }
@@ -38,9 +39,9 @@ describe('Group R - PRO proKey fetch & override', () => {
   it('R-03: PRO fetch network error -> button does not render', async () => {
     const mock = mockProFetch({ [PRO_EVT_KEY]: proEvtConfig() }, { networkError: true });
     try {
-      const { shadow } = await mountAtcb({ proKey: PRO_EVT_KEY, identifier: 'atcb-r03' });
-      await aTimeout(150);
-      expect(shadow.querySelector('.atcb-initialized')).to.not.exist;
+      const { host } = await mountAtcb({ proKey: PRO_EVT_KEY, identifier: 'atcb-r03' });
+      await aTimeout(200);
+      expect(initFailed(host)).to.equal(true);
     } finally {
       mock.restore();
     }
@@ -133,7 +134,7 @@ describe('Group R - PRO proKey fetch & override', () => {
         identifier: 'atcb-r13',
       });
       await openList(host);
-      expect(host.shadowRoot.getElementById('atcb-r13-yahoo'), 'yahoo removed for recurrence').to.not.exist;
+      expect(optionEl(host, 'yahoo'), 'yahoo removed for recurrence').to.not.exist;
       await clickOption(host, 'ical');
       const ics = parseIcs(decodeIcsHref(fs.saves[0].href));
       expect(ics.events[0].value('RRULE')).to.include('FREQ=DAILY');

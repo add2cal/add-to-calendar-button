@@ -5,17 +5,19 @@
  */
 import { expect } from '@open-wc/testing';
 import { mountAtcb, baseEvent } from '../helpers/mount.js';
+import { btnId } from '../helpers/dom.js';
 
-function schemaFor(identifier) {
-  const el = document.getElementById('atcb-schema-' + identifier);
+function schemaFor(host) {
+  // schema script id carries the (prefixed) canonical identifier
+  const el = document.getElementById('atcb-schema-' + btnId(host));
   if (!el) return null;
   return { el, json: JSON.parse(el.textContent) };
 }
 
 describe('Group Q - Schema.org rich data', () => {
   it('Q-01: default event -> Event JSON-LD with core fields', async () => {
-    await mountAtcb(baseEvent({ identifier: 'atcb-q01' }));
-    const schema = schemaFor('atcb-q01');
+    const { host } = await mountAtcb(baseEvent({ identifier: 'atcb-q01' }));
+    const schema = schemaFor(host);
     expect(schema, 'schema script injected').to.exist;
     expect(schema.el.getAttribute('type')).to.equal('application/ld+json');
     expect(schema.json['@type']).to.equal('Event');
@@ -24,13 +26,13 @@ describe('Group Q - Schema.org rich data', () => {
   });
 
   it('Q-02: hideRichData suppresses the schema script', async () => {
-    await mountAtcb(baseEvent({ hideRichData: 'true', identifier: 'atcb-q02' }));
-    expect(document.getElementById('atcb-schema-atcb-q02')).to.not.exist;
+    const { host } = await mountAtcb(baseEvent({ hideRichData: 'true', identifier: 'atcb-q02' }));
+    expect(document.getElementById('atcb-schema-' + btnId(host))).to.not.exist;
   });
 
   it('Q-04: online event -> OnlineEventAttendanceMode + VirtualLocation', async () => {
-    await mountAtcb(baseEvent({ location: 'https://meet.example.com/room-1', identifier: 'atcb-q04' }));
-    const schema = schemaFor('atcb-q04');
+    const { host } = await mountAtcb(baseEvent({ location: 'https://meet.example.com/room-1', identifier: 'atcb-q04' }));
+    const schema = schemaFor(host);
     expect(schema).to.exist;
     const flat = JSON.stringify(schema.json);
     expect(flat).to.include('OnlineEventAttendanceMode');
@@ -39,28 +41,28 @@ describe('Group Q - Schema.org rich data', () => {
   });
 
   it('Q-05: organizer lands in the schema', async () => {
-    await mountAtcb(baseEvent({ organizer: 'Jane Doe|jane@example.com', identifier: 'atcb-q05' }));
-    const schema = schemaFor('atcb-q05');
+    const { host } = await mountAtcb(baseEvent({ organizer: 'Jane Doe|jane@example.com', identifier: 'atcb-q05' }));
+    const schema = schemaFor(host);
     const flat = JSON.stringify(schema.json);
     expect(flat).to.include('Jane Doe');
   });
 
   it('Q-06: images array is transported', async () => {
-    await mountAtcb(baseEvent({ images: '["https://example.com/img1.png","https://example.com/img2.png"]', identifier: 'atcb-q06' }));
-    const schema = schemaFor('atcb-q06');
+    const { host } = await mountAtcb(baseEvent({ images: '["https://example.com/img1.png","https://example.com/img2.png"]', identifier: 'atcb-q06' }));
+    const schema = schemaFor(host);
     const img = schema.json.image;
     expect(img).to.be.an('array');
     expect(img).to.include('https://example.com/img1.png');
   });
 
   it('Q-07: cspnonce is applied to the schema script tag', async () => {
-    await mountAtcb(baseEvent({ cspnonce: 'test-nonce-123', identifier: 'atcb-q07' }));
-    const schema = schemaFor('atcb-q07');
+    const { host } = await mountAtcb(baseEvent({ cspnonce: 'test-nonce-123', identifier: 'atcb-q07' }));
+    const schema = schemaFor(host);
     expect(schema.el.nonce === 'test-nonce-123' || schema.el.getAttribute('nonce') === 'test-nonce-123').to.equal(true);
   });
 
   it('Q-08: multi-date -> EventSeries with per-date subEvents', async () => {
-    await mountAtcb({
+    const { host } = await mountAtcb({
       name: 'Series Schema',
       location: 'Venue 5',
       dates: JSON.stringify([
@@ -70,7 +72,7 @@ describe('Group Q - Schema.org rich data', () => {
       options: "'Google'",
       identifier: 'atcb-q08',
     });
-    const schema = schemaFor('atcb-q08');
+    const schema = schemaFor(host);
     expect(schema).to.exist;
     const flat = JSON.stringify(schema.json);
     expect(flat).to.include('EventSeries');
@@ -79,7 +81,7 @@ describe('Group Q - Schema.org rich data', () => {
   });
 
   it('Q-10: subscribe mode never injects rich data', async () => {
-    await mountAtcb({
+    const { host } = await mountAtcb({
       name: 'Sub NoSchema',
       subscribe: 'true',
       icsFile: 'https://example.com/cal.ics',
@@ -88,6 +90,6 @@ describe('Group Q - Schema.org rich data', () => {
       options: "'Google'",
       identifier: 'atcb-q10',
     });
-    expect(document.getElementById('atcb-schema-atcb-q10')).to.not.exist;
+    expect(document.getElementById('atcb-schema-' + btnId(host))).to.not.exist;
   });
 });

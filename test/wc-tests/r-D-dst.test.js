@@ -5,19 +5,29 @@
 import { expect } from '@open-wc/testing';
 import { mountAtcb } from '../helpers/mount.js';
 import { interceptWindowOpen, interceptFileSave } from '../helpers/capture.js';
-import { clickSingleton } from '../helpers/dom.js';
+import { clickSingleton, modalHost } from '../helpers/dom.js';
 import { decodeIcsHref, parseIcs } from '../helpers/ics.js';
-import { DST, utcClean } from '../fixtures/events.js';
+import { DST } from '../fixtures/events.js';
 
-async function googleDates(config, id) {
+/**
+ * Google receives wall-clock + ctz (no offsets visible), so the numeric DST-offset
+ * math (timezones-ical-library) is verified via the TEAMS url, which carries
+ * full ISO strings WITH offsets.
+ */
+async function teamsTimes(config, id) {
   const wo = interceptWindowOpen();
   try {
-    const { host } = await mountAtcb({ ...config, options: "'Google'", trigger: 'click', identifier: id });
+    const { host } = await mountAtcb({ ...config, options: "'MicrosoftTeams'", trigger: 'click', identifier: id });
     await clickSingleton(host);
-    return new URL(wo.calls[0].url).searchParams.get('dates');
+    const url = new URL(wo.calls[0].url);
+    return { start: url.searchParams.get('startTime'), end: url.searchParams.get('endTime') };
   } finally {
     wo.restore();
   }
+}
+
+function iso(c, time, offset) {
+  return `${c.startDate}T${time}:00${offset}`;
 }
 
 async function icsEvent(config, id) {
@@ -34,21 +44,23 @@ async function icsEvent(config, id) {
 describe('Group D - DST & timezone corners', () => {
   it('D-01: NY event 1h before 2050 spring-forward uses EST (-05:00)', async () => {
     const c = DST.nyPreSpring;
-    const dates = await googleDates(c, 'atcb-d01');
-    expect(dates).to.equal(`${utcClean(c.startDate, c.startTime, c.expectOffset)}/${utcClean(c.startDate, c.endTime, c.expectOffset)}`);
+    const t = await teamsTimes(c, 'atcb-d01');
+    expect(t.start).to.equal(iso(c, c.startTime, c.expectOffset));
+    expect(t.end).to.equal(iso(c, c.endTime, c.expectOffset));
   });
 
   it('D-02: NY event after spring-forward uses EDT (-04:00)', async () => {
     const c = DST.nyPostSpring;
-    const dates = await googleDates(c, 'atcb-d02');
-    expect(dates).to.equal(`${utcClean(c.startDate, c.startTime, c.expectOffset)}/${utcClean(c.startDate, c.endTime, c.expectOffset)}`);
+    const t = await teamsTimes(c, 'atcb-d02');
+    expect(t.start).to.equal(iso(c, c.startTime, c.expectOffset));
+    expect(t.end).to.equal(iso(c, c.endTime, c.expectOffset));
   });
 
-  it('D-03: NY event SPANNING spring-forward -> 2h real elapsed, wall-clock ICS literals', async () => {
+  it('D-03: NY event SPANNING spring-forward -> start EST, end EDT, wall-clock ICS literals', async () => {
     const c = DST.nySpanSpring;
-    const dates = await googleDates(c, 'atcb-d03a');
-    // start 01:00 EST (-05), end 04:00 EDT (-04) -> UTC 06:00 to 08:00 (2h real)
-    expect(dates).to.equal(`${utcClean(c.startDate, c.startTime, '-05:00')}/${utcClean(c.startDate, c.endTime, '-04:00')}`);
+    const t = await teamsTimes(c, 'atcb-d03a');
+    expect(t.start).to.equal(iso(c, c.startTime, '-05:00'));
+    expect(t.end).to.equal(iso(c, c.endTime, '-04:00'));
     const ev = await icsEvent(c, 'atcb-d03b');
     expect(ev.prop('DTSTART')).to.include('20500313T010000');
     expect(ev.prop('DTEND')).to.include('20500313T040000');
@@ -56,34 +68,36 @@ describe('Group D - DST & timezone corners', () => {
 
   it('D-04: NY event before fall-back uses EDT (-04:00)', async () => {
     const c = DST.nyPreFall;
-    const dates = await googleDates(c, 'atcb-d04');
-    expect(dates).to.equal(`${utcClean(c.startDate, c.startTime, c.expectOffset)}/${utcClean(c.startDate, c.endTime, c.expectOffset)}`);
+    const t = await teamsTimes(c, 'atcb-d04');
+    expect(t.start).to.equal(iso(c, c.startTime, c.expectOffset));
   });
 
   it('D-05: NY event after fall-back uses EST (-05:00)', async () => {
     const c = DST.nyPostFall;
-    const dates = await googleDates(c, 'atcb-d05');
-    expect(dates).to.equal(`${utcClean(c.startDate, c.startTime, c.expectOffset)}/${utcClean(c.startDate, c.endTime, c.expectOffset)}`);
+    const t = await teamsTimes(c, 'atcb-d05');
+    expect(t.start).to.equal(iso(c, c.startTime, c.expectOffset));
   });
 
-  it('D-06: NY event SPANNING fall-back -> extra hour of real elapsed time', async () => {
+  it('D-06: NY event SPANNING fall-back -> start EDT, end EST', async () => {
     const c = DST.nySpanFall;
-    const dates = await googleDates(c, 'atcb-d06');
-    // start 00:30 EDT (-04), end 03:00 EST (-05)
-    expect(dates).to.equal(`${utcClean(c.startDate, c.startTime, '-04:00')}/${utcClean(c.startDate, c.endTime, '-05:00')}`);
+    const t = await teamsTimes(c, 'atcb-d06');
+    expect(t.start).to.equal(iso(c, c.startTime, '-04:00'));
+    expect(t.end).to.equal(iso(c, c.endTime, '-05:00'));
   });
 
   it('D-08: Sydney autumn transition (+11 -> +10) applies per date', async () => {
     const a = DST.sydneyAutumn;
-    expect(await googleDates(a, 'atcb-d08a')).to.equal(`${utcClean(a.startDate, a.startTime, a.expectOffset)}/${utcClean(a.startDate, a.endTime, a.expectOffset)}`);
+    const ta = await teamsTimes(a, 'atcb-d08a');
+    expect(ta.start).to.equal(iso(a, a.startTime, a.expectOffset));
     const b = DST.sydneyWinter;
-    expect(await googleDates(b, 'atcb-d08b')).to.equal(`${utcClean(b.startDate, b.startTime, b.expectOffset)}/${utcClean(b.startDate, b.endTime, b.expectOffset)}`);
+    const tb = await teamsTimes(b, 'atcb-d08b');
+    expect(tb.start).to.equal(iso(b, b.startTime, b.expectOffset));
   });
 
   it('D-09: Tokyo unaffected by NY DST date', async () => {
     const c = DST.tokyoDuringNyDst;
-    const dates = await googleDates(c, 'atcb-d09');
-    expect(dates).to.equal(`${utcClean(c.startDate, c.startTime, c.expectOffset)}/${utcClean(c.startDate, c.endTime, c.expectOffset)}`);
+    const t = await teamsTimes(c, 'atcb-d09');
+    expect(t.start).to.equal(iso(c, c.startTime, c.expectOffset));
   });
 
   it('D-10: multi-date series across a DST boundary -> per-date offsets, one VTIMEZONE', async () => {
@@ -102,7 +116,7 @@ describe('Group D - DST & timezone corners', () => {
       });
       // singleton option with multi-date opens the date-selection modal; grab the ICS via the "all" flow instead:
       await clickSingleton(host);
-      const modal = document.getElementById('atcb-d10-modal-host');
+      const modal = modalHost(host);
       if (fs.saves.length === 0 && modal) {
         // click first sub-event save-all button if present, otherwise per-date buttons
         const shadowBtns = modal.shadowRoot.querySelectorAll('button');

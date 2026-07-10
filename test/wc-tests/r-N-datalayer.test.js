@@ -6,7 +6,7 @@
 import { expect, aTimeout } from '@open-wc/testing';
 import { mountAtcb, baseEvent } from '../helpers/mount.js';
 import { interceptWindowOpen } from '../helpers/capture.js';
-import { openList, clickOption, clickSingleton, pressEsc } from '../helpers/dom.js';
+import { openList, clickOption, clickSingleton, pressEsc, btnId, modalHost, subEventBtn } from '../helpers/dom.js';
 import { resetDataLayer, removeDataLayer, dlEvents } from '../helpers/datalayer.js';
 
 describe('Group N - dataLayer / tracking', () => {
@@ -18,8 +18,10 @@ describe('Group N - dataLayer / tracking', () => {
     expect(init.length).to.equal(1);
     expect(init[0].eventCategory).to.equal('Add-to-Calendar-Button');
     expect(init[0].eventAction).to.equal('Initialized');
-    expect(init[0].eventLabel).to.equal('atcb-n01');
-    expect(host.getAttribute('atcb-last-event')).to.equal('initialization:atcb-n01');
+    // NOTE: the lib prefixes custom identifiers with 'atcb-btn-'
+    expect(init[0].eventLabel).to.equal(btnId(host));
+    expect(btnId(host)).to.equal('atcb-btn-atcb-n01');
+    expect(host.getAttribute('atcb-last-event')).to.equal('initialization:' + btnId(host));
   });
 
   it('N-02/N-03: openList and closeList push with correct actions', async () => {
@@ -43,8 +45,9 @@ describe('Group N - dataLayer / tracking', () => {
       await clickOption(host, 'google');
       const evts = dlEvents('openCalendarLink');
       expect(evts.length).to.equal(1);
-      expect(evts[0].eventLabel).to.equal('atcb-n04-google');
-      expect(host.getAttribute('atcb-last-event')).to.equal('openCalendarLink:atcb-n04-google');
+      expect(evts[0].eventLabel).to.equal(btnId(host) + '-google');
+      // the attribute mirrors the LATEST event; the click chain continues to 'success', so only
+      // assert the openCalendarLink push itself here (attribute lifecycle is covered in N-01/N-02)
     } finally {
       wo.restore();
     }
@@ -72,10 +75,10 @@ describe('Group N - dataLayer / tracking', () => {
       const { host } = await mountAtcb({ name: 'SubSeries', dates: JSON.stringify(dates), options: "['Google','iCal']", trigger: 'click', identifier: 'atcb-n06' });
       await openList(host);
       await clickOption(host, 'google');
-      const modal = document.getElementById('atcb-n06-modal-host');
-      const btn = modal.shadowRoot.getElementById('atcb-n06-google-1');
+      expect(modalHost(host)).to.exist;
+      const btn = subEventBtn(host, 'google', 1);
       btn.dispatchEvent(new MouseEvent('click', { bubbles: true, cancelable: true, view: window }));
-      await aTimeout(80);
+      await aTimeout(700); // trailing debounce on sub-event buttons
       expect(dlEvents('openSubEventLink').length).to.equal(1);
     } finally {
       wo.restore();
@@ -99,7 +102,7 @@ describe('Group N - dataLayer / tracking', () => {
   it('N-10: missing window.dataLayer is created on demand - no crash, attribute still mirrors', async () => {
     removeDataLayer();
     const { host } = await mountAtcb(baseEvent({ identifier: 'atcb-n10' }));
-    expect(host.getAttribute('atcb-last-event')).to.equal('initialization:atcb-n10');
+    expect(host.getAttribute('atcb-last-event')).to.equal('initialization:' + btnId(host));
     expect(Array.isArray(window.dataLayer)).to.equal(true);
   });
 

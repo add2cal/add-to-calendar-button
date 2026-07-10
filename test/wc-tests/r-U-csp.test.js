@@ -11,6 +11,7 @@
  */
 import { expect, aTimeout } from '@open-wc/testing';
 import { mountAtcb, baseEvent } from '../helpers/mount.js';
+import { btnId } from '../helpers/dom.js';
 
 const NONCE = 'test-nonce-42';
 
@@ -50,17 +51,17 @@ function waitFor(fn, timeout = 4000, step = 100) {
 
 describe('Group U - CSP environment 2x2', () => {
   it('U-25: no CSP + no nonce -> renders (default case)', async () => {
-    const { shadow } = await mountAtcb(baseEvent({ identifier: 'atcb-u25' }));
+    const { host, shadow } = await mountAtcb(baseEvent({ identifier: 'atcb-u25' }));
     expect(shadow.querySelector('.atcb-initialized')).to.exist;
-    const schema = document.getElementById('atcb-schema-atcb-u25');
+    const schema = document.getElementById('atcb-schema-' + btnId(host));
     expect(schema).to.exist;
     expect(schema.getAttribute('nonce')).to.equal(null);
   });
 
   it('U-24: no CSP + nonce set -> renders with nonce attributes, no errors', async () => {
-    const { shadow } = await mountAtcb(baseEvent({ cspnonce: NONCE, identifier: 'atcb-u24' }));
+    const { host, shadow } = await mountAtcb(baseEvent({ cspnonce: NONCE, identifier: 'atcb-u24' }));
     expect(shadow.querySelector('.atcb-initialized')).to.exist;
-    const schema = document.getElementById('atcb-schema-atcb-u24');
+    const schema = document.getElementById('atcb-schema-' + btnId(host));
     expect(schema).to.exist;
     expect(schema.nonce === NONCE || schema.getAttribute('nonce') === NONCE).to.equal(true);
   });
@@ -85,7 +86,7 @@ describe('Group U - CSP environment 2x2', () => {
       doc.body.appendChild(el);
       const initialized = await waitFor(() => el.shadowRoot && el.shadowRoot.querySelector('.atcb-initialized'));
       expect(initialized, 'component initialized under CSP').to.exist;
-      const schema = doc.getElementById('atcb-schema-atcb-u22');
+      const schema = doc.getElementById('atcb-schema-' + el.getAttribute('atcb-button-id'));
       if (schema) {
         expect(schema.nonce === NONCE || schema.getAttribute('nonce') === NONCE).to.equal(true);
       }

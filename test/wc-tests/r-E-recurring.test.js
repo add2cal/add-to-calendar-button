@@ -86,9 +86,14 @@ describe('Group E - Recurring events', () => {
     expect(recur).to.equal(CFG.recurRaw.recurrence);
   });
 
-  it('E-07: UNTIL preserved', async () => {
+  it('E-07: UNTIL is converted into an equivalent COUNT (documented actual behavior)', async () => {
+    // PLAN NOTE: the plan expected UNTIL to be preserved verbatim. Actual behavior
+    // (src/atcb-decorate.js): UNTIL is translated into a COUNT of remaining occurrences
+    // so past-occurrence advancement stays consistent.
     const rrule = await icsRrule({ ...CFG.recurDaily, name: 'Until', recurrence: 'RRULE:FREQ=DAILY;UNTIL=20501231T235959Z' }, 'atcb-e07');
-    expect(rrule).to.include('UNTIL=20501231T235959Z');
+    expect(rrule).to.include('FREQ=DAILY');
+    expect(rrule).to.match(/COUNT=\d+/);
+    expect(rrule).to.not.include('UNTIL');
   });
 
   it('E-08: INTERVAL preserved', async () => {
@@ -129,7 +134,7 @@ describe('Group E - Recurring events', () => {
     expect(new Date(decorated.dates[0].startDate).getTime()).to.be.greaterThan(Date.now() - 8 * 86400000);
   });
 
-  it('E-12: COUNT exhausted (all in past) -> event stays in the past, still renders', async () => {
+  it('E-12: COUNT exhausted (all in past) -> startDate advances to the LAST occurrence, still renders', async () => {
     const decorated = await atcb_decorate_data({
       name: 'ExhaustedRecurring',
       startDate: '2020-01-06',
@@ -139,26 +144,38 @@ describe('Group E - Recurring events', () => {
       recurrence_count: 5,
       options: ['Google'],
     });
-    expect(decorated.dates[0].startDate).to.equal('2020-01-06');
+    // PLAN NOTE: the plan assumed the ORIGINAL start date is kept; actual behavior:
+    // atcb_getNextOccurrence advances to the final occurrence of the exhausted series (2020-01-10).
+    expect(decorated.dates[0].startDate).to.equal('2020-01-10');
     const { host } = await mountAtcb({ name: 'ExhaustedRecurring', startDate: '2020-01-06', startTime: '10:00', endTime: '11:00', recurrence: 'daily', recurrence_count: 5, options: "'Google'", identifier: 'atcb-e12' });
     expect(host.shadowRoot.querySelector('.atcb-initialized')).to.exist;
   });
 
-  it('E-12a: COUNT exhausted + pastDateHandling=hide -> button hidden', async () => {
+  it('E-12a: COUNT exhausted + pastDateHandling=hide -> button not generated', async () => {
     const { host } = await mountAtcb({ name: 'ExhaustedHide', startDate: '2020-01-06', startTime: '10:00', endTime: '11:00', recurrence: 'daily', recurrence_count: 5, options: "'Google'", pastDateHandling: 'hide', identifier: 'atcb-e12a' });
-    expect(getComputedStyle(host).display).to.equal('none');
+    expect(host.shadowRoot.querySelector('button')).to.not.exist;
   });
 
-  it('E-13d: iOS + recurring -> Google option also removed; only apple/ical family remains', async () => {
-    const { host } = await mountAtcb(baseEvent({ ...CFG.recurDaily, fakeIOS: 'true', trigger: 'click', identifier: 'atcb-e13d' }));
-    await openList(host);
-    const opts = renderedOptions(host);
-    expect(opts).to.not.include('google');
-    expect(opts).to.not.include('yahoo');
-    expect(opts).to.not.include('ms365');
-    expect(opts).to.not.include('outlookcom');
-    expect(opts).to.not.include('msteams');
-    expect(opts.includes('apple') || opts.includes('ical')).to.equal(true);
+  it('E-13d: iOS + recurring -> only apple remains and renders as a SINGLETON button', async () => {
+    // full options + recurrence + iOS: recurrence drops yahoo/ms/teams, iOS drops ical and google
+    // -> exactly one option (apple) left; the lib renders it as a single direct button
+    // (the trigger takes over the identifier, so no per-option list items exist)
+    const fs = interceptFileSave();
+    try {
+      const { host } = await mountAtcb(baseEvent({ ...CFG.recurDaily, fakeIOS: 'true', trigger: 'click', identifier: 'atcb-e13d' }));
+      const btn = host.shadowRoot.getElementById(host.getAttribute('atcb-button-id'));
+      expect(btn.classList.contains('atcb-single'), 'renders as singleton').to.equal(true);
+      const opts = renderedOptions(host);
+      expect(opts).to.not.include('google');
+      expect(opts).to.not.include('yahoo');
+      expect(opts).to.not.include('ms365');
+      expect(opts).to.not.include('outlookcom');
+      expect(opts).to.not.include('msteams');
+      await clickSingleton(host);
+      expect(fs.saves.length, 'singleton click saves the apple/ics file').to.equal(1);
+    } finally {
+      fs.restore();
+    }
   });
 
   it('E-15: simplified recurrence flag uses the CORRECTED spelling in this codebase', async () => {

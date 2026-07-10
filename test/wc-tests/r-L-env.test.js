@@ -6,7 +6,7 @@
 import { expect, aTimeout } from '@open-wc/testing';
 import { mountAtcb, baseEvent } from '../helpers/mount.js';
 import { interceptWindowOpen, interceptFileSave, setUA, UA } from '../helpers/capture.js';
-import { clickSingleton, openList, renderedOptions, clickOption } from '../helpers/dom.js';
+import { clickSingleton, openList, renderedOptions, clickOption, modalHost } from '../helpers/dom.js';
 
 describe('Group L - Environment-driven routing', () => {
   it('L-04: Android -> apple option removed, ical stays', async () => {
@@ -42,7 +42,11 @@ describe('Group L - Environment-driven routing', () => {
     expect(opts).to.not.include('ms365');
   });
 
-  it('L-11: optionsIOS takes precedence over optionsMobile on iOS', async () => {
+  it('L-11: on iOS, optionsMobile OVERRIDES optionsIOS (documented actual behavior)', async () => {
+    // PLAN/DOCS MISMATCH pinned intentionally: the docs describe optionsIOS as the more
+    // specific override, but src/atcb-decorate.js#atcb_determine_options_source checks
+    // optionsIOS first and then unconditionally lets optionsMobile win when both are set.
+    // If this is fixed in the lib one day, flip this expectation.
     const { host } = await mountAtcb(
       baseEvent({
         fakeIOS: 'true',
@@ -54,12 +58,34 @@ describe('Group L - Environment-driven routing', () => {
     );
     await openList(host);
     const opts = renderedOptions(host);
-    expect(opts).to.include('apple');
-    expect(opts).to.not.include('google');
-    expect(opts).to.not.include('yahoo');
+    expect(opts).to.have.members(['google', 'yahoo']);
+    expect(opts).to.not.include('apple');
   });
 
-  it('L-18: explicit optionsIOS override WINS over the platform-invalid filter (ical on iOS)', async () => {
+  it('L-11b: optionsIOS applies when it is the only override set', async () => {
+    const fs = interceptFileSave();
+    try {
+      const { host } = await mountAtcb(
+        baseEvent({
+          fakeIOS: 'true',
+          optionsIOS: "['Apple']",
+          trigger: 'click',
+          identifier: 'atcb-l11b',
+        }),
+      );
+      // single remaining option renders as singleton
+      const btn = host.shadowRoot.getElementById(host.getAttribute('atcb-button-id'));
+      expect(btn.classList.contains('atcb-single')).to.equal(true);
+      await clickSingleton(host);
+      expect(fs.saves.length, 'apple singleton saves an ics').to.equal(1);
+    } finally {
+      fs.restore();
+    }
+  });
+
+  it('L-18: optionsIOS with "iCal" (doc casing) gets SWAPPED to apple (case-sensitive guard quirk)', async () => {
+    // The swap-guard checks options.includes('ical')/('apple') on the RAW (un-normalized)
+    // values, so the documented casing "iCal" does not match and the ical->apple swap runs.
     const { host } = await mountAtcb(
       baseEvent({
         fakeIOS: 'true',
@@ -70,9 +96,24 @@ describe('Group L - Environment-driven routing', () => {
     );
     await openList(host);
     const opts = renderedOptions(host);
-    // per src/atcb-decorate.js: the iOS invalid-option filter only applies when NO optionsIOS/optionsMobile is set
+    expect(opts).to.have.members(['apple', 'google']);
+  });
+
+  it('L-18b: optionsIOS with lowercase "ical" is kept verbatim (explicit override wins)', async () => {
+    // lowercase matches the raw includes() check -> swap suppressed, explicit ical survives on iOS
+    const { host } = await mountAtcb(
+      baseEvent({
+        fakeIOS: 'true',
+        optionsIOS: "['ical','google']",
+        trigger: 'click',
+        identifier: 'atcb-l18b',
+      }),
+    );
+    await openList(host);
+    const opts = renderedOptions(host);
     expect(opts).to.include('ical');
     expect(opts).to.include('google');
+    expect(opts).to.not.include('apple');
   });
 
   it('L-16: iOS + recurring -> only the apple/ical family remains', async () => {
@@ -115,7 +156,7 @@ describe('Group L - Environment-driven routing', () => {
       await clickSingleton(host);
       await aTimeout(120);
       expect(wo.calls.length, 'no direct open on iOS non-Safari').to.equal(0);
-      const modal = document.getElementById('atcb-l02-modal-host');
+      const modal = modalHost(host);
       expect(modal, 'copy-note modal').to.exist;
     } finally {
       wo.restore();

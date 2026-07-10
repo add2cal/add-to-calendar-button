@@ -101,7 +101,7 @@ describe('Group M - UI / interaction', () => {
       const { host, shadow } = await mountAtcb({ ...baseEvent({ identifier: 'atcb-m13' }), options: "['Google','Apple']", buttonsList: 'true', trigger: 'click' });
       const buttons = shadow.querySelectorAll('button.atcb-button');
       expect(buttons.length).to.equal(2);
-      const googleBtn = shadow.getElementById('atcb-m13-google');
+      const googleBtn = optionEl(host, 'google');
       expect(googleBtn).to.exist;
       googleBtn.dispatchEvent(new MouseEvent('click', { bubbles: true, cancelable: true, view: window }));
       await aTimeout(80);
@@ -163,11 +163,11 @@ describe('Group M - UI / interaction', () => {
     expect(listEl(host)).to.exist;
   });
 
-  it('M-22/M-23: explicit light/dark mode set the scheme classes', async () => {
-    const { shadow } = await mountAtcb(baseEvent({ lightMode: 'dark', identifier: 'atcb-m23' }));
-    expect(shadow.querySelector('.atcb-dark')).to.exist;
-    const { shadow: s2 } = await mountAtcb(baseEvent({ lightMode: 'light', identifier: 'atcb-m22' }));
-    expect(s2.querySelector('.atcb-light')).to.exist;
+  it('M-22/M-23: explicit light/dark mode set the scheme class on the HOST element', async () => {
+    const { host } = await mountAtcb(baseEvent({ lightMode: 'dark', identifier: 'atcb-m23' }));
+    expect(host.classList.contains('atcb-dark')).to.equal(true);
+    const { host: h2 } = await mountAtcb(baseEvent({ lightMode: 'light', identifier: 'atcb-m22' }));
+    expect(h2.classList.contains('atcb-light')).to.equal(true);
   });
 
   it('M-27: styleLight custom CSS variables land on the host style', async () => {

@@ -22,10 +22,22 @@ export function proEvtConfig(overrides = {}) {
     timeZone: 'America/New_York',
     location: 'Demo Location 1, 10115 Berlin',
     options: ['Google', 'Apple', 'iCal', 'Microsoft365', 'Outlook.com', 'Yahoo'],
-    listStyle: 'modal',
+    listStyle: 'dropdown',
     trigger: 'click',
     label: 'Save the PRO date',
     landingpage: {},
+    // the real config.json is pre-structured with a dates array - atcb_get_pro_data iterates it
+    dates: [
+      {
+        name: 'PRO Demo Event',
+        description: 'A PRO demo event.',
+        startDate: '2050-08-20',
+        startTime: '14:00',
+        endTime: '15:00',
+        timeZone: 'America/New_York',
+        location: 'Demo Location 1, 10115 Berlin',
+      },
+    ],
     ...overrides,
   };
 }
@@ -53,6 +65,17 @@ export function proRsvpConfig(overrides = {}) {
       ],
     },
     landingpage: {},
+    dates: [
+      {
+        name: 'PRO RSVP Demo Event',
+        description: 'A PRO RSVP demo event.',
+        startDate: '2050-09-10',
+        startTime: '18:00',
+        endTime: '20:00',
+        timeZone: 'Europe/Berlin',
+        location: 'Demo Location 2, 10115 Berlin',
+      },
+    ],
     ...overrides,
   };
 }
@@ -80,10 +103,11 @@ export function mockProFetch(map = {}, { status = 200, networkError = false } = 
       return new Response(JSON.stringify(payload), { status: 200, headers: { 'Content-Type': 'application/json' } });
     }
     if (u.includes('api.add-to-calendar-pro.com') || u.includes('api-dev.add-to-calendar-pro.com')) {
-      // seat checks etc. - out of scope, return empty ok
-      return new Response(JSON.stringify({}), { status: 200, headers: { 'Content-Type': 'application/json' } });
+      // seat check endpoint returns { total } - RSVP API behavior itself is out of scope
+      return new Response(JSON.stringify({ total: '0' }), { status: 200, headers: { 'Content-Type': 'application/json' } });
     }
-    throw new Error('Unexpected fetch in test (add a mock): ' + u);
+    // pass everything else through - the test runner itself communicates via fetch!
+    return original.call(window, url, init);
   };
   return {
     calls,

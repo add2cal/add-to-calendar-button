@@ -898,3 +898,27 @@ Cross-check of the implemented suite against the official configuration docs. Te
 | RRULE parts | — | BYHOUR/BYMINUTE/BYSECOND are NOT supported by the button |
 
 Docs are silent on: `dev`/`proxy`/`domain`/`fake*` flags (source-verified instead), exact customLabels keys (defer to atcb-i18n.js), hover-to-click conversion on touch, en-fallback for unknown languages (source-verified: falls back to en).
+
+### Run-phase corrections (first green run, v2.15, real-browser execution)
+
+The suite was executed against the built library in headless Chromium. Both tiers are green
+(Reduced: 215 passing / Full Cartesian: 210 passing). These ACTUAL behaviors were pinned during
+the run phase (tests carry PLAN NOTE / DOCS MISMATCH comments where relevant):
+
+| Finding | Detail |
+|---------|--------|
+| Identifier prefixing | Custom `identifier` values are prefixed: `data.identifier = 'atcb-btn-' + identifier`. All DOM ids (trigger, options, modal host, schema script) carry the prefix; tests derive ids from the reflected `atcb-button-id` attribute. |
+| Google URL semantics | Google receives WALL-CLOCK times + `ctz` param (no UTC conversion, no `Z`). Numeric DST offsets are only observable in the Teams URL (ISO with offset) and Yahoo (`st`/`et` in UTC). Group D + F.T2 assert offsets via Teams against an independent Intl oracle. Default (no timeZone) → `ctz=GMT`. `availability` maps to `crm=AVAILABLE&trp=false` / `crm=BUSY&trp=true`. |
+| Cancelled ICS | Cancelled events ship as `METHOD:CANCEL` (not PUBLISH). Non-iCal options show the warning modal and open no URL (H-08 confirmed). |
+| UNTIL → COUNT | Raw-RRULE `UNTIL` is converted into an equivalent `COUNT` during decoration (E-07, F.T3 pins). |
+| COUNT exhausted | A fully-past recurring series advances `startDate` to the LAST occurrence (not the original start) — E-12 pins `2020-01-10` for a 5-day daily series starting `2020-01-06`. |
+| **optionsIOS vs optionsMobile (LIB/DOCS MISMATCH)** | On iOS, `optionsMobile` OVERRIDES `optionsIOS` when both are set (`atcb_determine_options_source` checks iOS first, then unconditionally lets mobile win). Docs imply the opposite. Pinned in L-11 with a loud comment — flip the expectation if the lib gets fixed. |
+| **Case-sensitive swap guard (LIB QUIRK)** | The iCal↔Apple platform swap suppression checks `options.includes('ical')` on RAW (un-normalized) values: `optionsIOS="['iCal']"` (docs casing) gets swapped to Apple, while `"['ical']"` (lowercase) is kept verbatim. Pinned in L-18/L-18b. |
+| Singleton rendering | When only one option remains (e.g. iOS + recurring -> apple), the lib renders a single direct button whose id is the plain identifier - no per-option list items exist (E-13d, L-11b). |
+| Modal forces click | `listStyle=modal` coerces `trigger` to click; hover does not open (F.T5a pin, confirmed in src). Modal content renders into the light-DOM modal host (`{id}-modal-host`), not the component shadow. |
+| hidden / pastDateHandling=hide | Generation is skipped entirely (`if (!data.hidden)`) - host display stays unchanged; assert absence of button content, not display:none. |
+| Mixed organizers | Multi-date with DIFFERING organizers does NOT produce one combined file - the per-date selection modal opens instead; each per-date ICS carries its own METHOD (REQUEST with organizer). Confirms the single-file grouping rule (F-13). |
+| uid charset | `uid` must match `/^(?:\w|-){1,254}$/` (RFC 7986); invalid values fall back to a generated UUID (G-06/G-06b). `MAILTO:` in ORGANIZER/ATTENDEE is uppercase. |
+| Missing-name WC error | The web-component path reports 'No data provided.' (not the function-level 'required name information missing'). |
+| Sub-event debounce | Sub-event buttons use a TRAILING debounce (~500ms) - tests wait 700ms after clicking. |
+| Test-infra notes | (1) chrome-headless-shell v150 crashes the renderer on `querySelector` against the shadow root of a FAILED-init element - tests use the `initFailed()` attribute contract instead. (2) `window.fetch` mocks MUST pass unknown URLs through to the original fetch - the test runner itself communicates via fetch. (3) PRO server payloads are pre-structured with a `dates` array - fixtures must mirror that. |

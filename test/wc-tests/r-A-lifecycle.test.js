@@ -4,7 +4,7 @@
 import { expect, aTimeout, fixture } from '@open-wc/testing';
 import { mountAtcb, mountAtcbNoWait, baseEvent } from '../helpers/mount.js';
 import { resetDataLayer, dlEvents } from '../helpers/datalayer.js';
-import { trigger, openList, listEl, modalHost } from '../helpers/dom.js';
+import { trigger, openList, listEl, modalHost, initFailed } from '../helpers/dom.js';
 import { atcb_action } from '../../dist/module/index.js';
 
 describe('Group A - Lifecycle & registration', () => {
@@ -21,9 +21,11 @@ describe('Group A - Lifecycle & registration', () => {
 
   it('A-02: missing name (debug off) -> silent no-render', async () => {
     const el = await mountAtcbNoWait({ startDate: '2050-02-14' });
-    await aTimeout(200);
-    expect(el.shadowRoot.querySelector('.atcb-initialized')).to.not.exist;
-    expect(el.shadowRoot.querySelector('button')).to.not.exist;
+    await aTimeout(300);
+    // failed-init elements never receive the atcb-button-id attribute;
+    // avoid querySelector on their shadow root (headless-shell renderer crash - see helpers/dom.js)
+    expect(initFailed(el)).to.equal(true);
+    expect(el.shadowRoot.childElementCount, 'no rendered button content').to.be.at.most(1);
   });
 
   it('A-03: missing name + debug -> visible error block', async () => {
@@ -33,17 +35,17 @@ describe('Group A - Lifecycle & registration', () => {
     try {
       const el = await mountAtcbNoWait({ startDate: '2050-02-14', debug: 'true' });
       await aTimeout(200);
-      expect(errors.join(' ')).to.include('name');
+      expect(errors.join(' ')).to.include('failed');
       expect(el.shadowRoot.querySelector('.atcb-debug-error-msg')).to.exist;
     } finally {
       console.error = orig;
     }
   });
 
-  it('A-04: hidden=true renders nothing visible', async () => {
+  it('A-04: hidden=true skips button generation entirely', async () => {
+    // per src/atcb-init.js: `if (!data.hidden)` gates generation - no button lands in the shadow DOM
     const { host } = await mountAtcb(baseEvent({ hidden: 'true', identifier: 'atcb-a04' }));
-    const display = getComputedStyle(host).display;
-    expect(display).to.equal('none');
+    expect(host.shadowRoot.querySelector('button')).to.not.exist;
   });
 
   it('A-05: disabled=true renders but click no-ops', async () => {

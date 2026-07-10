@@ -12,13 +12,30 @@ import { aTimeout } from '@open-wc/testing';
 
 export const ALL_OPTIONS = ['apple', 'google', 'ical', 'ms365', 'outlookcom', 'msteams', 'yahoo'];
 
+/**
+ * Canonical button id. NOTE: the lib PREFIXES custom identifiers with 'atcb-btn-'
+ * (src/atcb-init.js), so always derive ids from the reflected atcb-button-id attribute.
+ */
+export function btnId(host) {
+  return host.getAttribute('atcb-button-id');
+}
+
+/**
+ * True when initialization failed (silent error path).
+ * NOTE: do NOT run querySelector against the shadow root of a failed-init element -
+ * chrome-headless-shell can crash the renderer on it (observed with v150).
+ * Property access (attributes, childElementCount) is safe.
+ */
+export function initFailed(host) {
+  return host.getAttribute('atcb-button-id') === null;
+}
+
 export function trigger(host) {
-  return host.shadowRoot.getElementById(host.getAttribute('identifier') || host.getAttribute('atcb-button-id'));
+  return host.shadowRoot.getElementById(btnId(host));
 }
 
 export function optionEl(host, type) {
-  const id = (host.getAttribute('identifier') || host.getAttribute('atcb-button-id')) + '-' + type;
-  return host.shadowRoot.getElementById(id);
+  return host.shadowRoot.getElementById(btnId(host) + '-' + type);
 }
 
 export function renderedOptions(host) {
@@ -59,8 +76,13 @@ export async function clickSingleton(host) {
 }
 
 export function modalHost(host) {
-  const id = (host.getAttribute('identifier') || host.getAttribute('atcb-button-id')) + '-modal-host';
-  return document.getElementById(id);
+  return document.getElementById(btnId(host) + '-modal-host');
+}
+
+export function subEventBtn(host, type, n) {
+  const modal = modalHost(host);
+  if (!modal) return null;
+  return modal.shadowRoot.getElementById(`${btnId(host)}-${type}-${n}`);
 }
 
 export async function pressEsc() {

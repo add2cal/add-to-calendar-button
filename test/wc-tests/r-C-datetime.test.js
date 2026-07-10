@@ -22,6 +22,18 @@ async function googleUrlFor(config, id) {
   }
 }
 
+async function teamsTimes(config, id) {
+  const wo = interceptWindowOpen();
+  try {
+    const { host } = await mountAtcb({ ...config, options: "'MicrosoftTeams'", trigger: 'click', identifier: id });
+    await clickSingleton(host);
+    const url = new URL(wo.calls[0].url);
+    return { start: url.searchParams.get('startTime'), end: url.searchParams.get('endTime') };
+  } finally {
+    wo.restore();
+  }
+}
+
 async function icsFor(config, id) {
   const fs = interceptFileSave();
   try {
@@ -47,16 +59,22 @@ describe('Group C - Date / time / timezone (single event)', () => {
 
     const url = await googleUrlFor(CFG.singleTimedNY, 'atcb-c01b');
     expect(url.origin + url.pathname).to.equal('https://calendar.google.com/calendar/r/eventedit');
-    const dates = url.searchParams.get('dates');
-    // 2050-06-15 is EDT (-04:00)
-    expect(dates).to.equal(`${utcClean('2050-06-15', '10:00', '-04:00')}/${utcClean('2050-06-15', '11:00', '-04:00')}`);
+    // Google receives WALL-CLOCK times plus the ctz param (no UTC conversion, no Z suffix)
+    expect(url.searchParams.get('dates')).to.equal('20500615T100000/20500615T110000');
     expect(url.searchParams.get('ctz')).to.equal('America/New_York');
     expect(url.searchParams.get('text')).to.equal('NY Timed');
+    // the DST-aware numeric offset is observable in the Teams URL (ISO with offset)
+    const teams = await teamsTimes(CFG.singleTimedNY, 'atcb-c01c');
+    expect(teams.start).to.equal('2050-06-15T10:00:00-04:00'); // EDT
+    expect(teams.end).to.equal('2050-06-15T11:00:00-04:00');
   });
 
   it('C-02: Tokyo timed (no DST) -> +09:00 math in Google URL, TZID in ICS', async () => {
     const url = await googleUrlFor(CFG.singleTimedTokyo, 'atcb-c02a');
-    expect(url.searchParams.get('dates')).to.equal(`${utcClean('2050-06-15', '10:00', '+09:00')}/${utcClean('2050-06-15', '11:00', '+09:00')}`);
+    expect(url.searchParams.get('dates')).to.equal('20500615T100000/20500615T110000');
+    expect(url.searchParams.get('ctz')).to.equal('Asia/Tokyo');
+    const teams = await teamsTimes(CFG.singleTimedTokyo, 'atcb-c02c');
+    expect(teams.start).to.equal('2050-06-15T10:00:00+09:00');
     const ics = await icsFor(CFG.singleTimedTokyo, 'atcb-c02b');
     expect(ics.events[0].prop('DTSTART')).to.include('TZID=Asia/Tokyo');
   });
@@ -66,9 +84,11 @@ describe('Group C - Date / time / timezone (single event)', () => {
     expect(url.searchParams.get('dates')).to.equal(`${utcClean('2050-06-15', '10:00', '+00:00')}/${utcClean('2050-06-15', '11:00', '+00:00')}`);
   });
 
-  it('C-04: no timeZone -> GMT semantics (no shift)', async () => {
+  it('C-04: no timeZone -> defaults to GMT (wall-clock + ctz=GMT)', async () => {
     const url = await googleUrlFor(CFG.singleTimedNoTz, 'atcb-c04');
-    expect(url.searchParams.get('dates')).to.equal(`${utcClean('2050-06-15', '10:00', '+00:00')}/${utcClean('2050-06-15', '11:00', '+00:00')}`);
+    expect(url.searchParams.get('dates')).to.equal('20500615T100000/20500615T110000');
+    // the lib defaults the timeZone to GMT, which is transported as ctz
+    expect(url.searchParams.get('ctz')).to.equal('GMT');
   });
 
   it('C-06: special tz alias (CET) -> mapped; Google gets no ctz param', async () => {
@@ -88,9 +108,10 @@ describe('Group C - Date / time / timezone (single event)', () => {
     expect(url.searchParams.get('ctz'), 'no ctz for all-day').to.equal(null);
   });
 
-  it('C-08: multi-day timed -> range spans days', async () => {
+  it('C-08: multi-day timed -> range spans days (wall-clock + ctz)', async () => {
     const url = await googleUrlFor(CFG.multiDayTimed, 'atcb-c08');
-    expect(url.searchParams.get('dates')).to.equal(`${utcClean('2050-06-15', '10:00', '-04:00')}/${utcClean('2050-06-17', '16:00', '-04:00')}`);
+    expect(url.searchParams.get('dates')).to.equal('20500615T100000/20500617T160000');
+    expect(url.searchParams.get('ctz')).to.equal('America/New_York');
   });
 
   it('C-09: multi-day all-day -> DTEND is end date +1', async () => {
@@ -113,9 +134,9 @@ describe('Group C - Date / time / timezone (single event)', () => {
     expect(trigger(host)).to.exist;
   });
 
-  it('C-12: pastDateHandling=hide hides the button', async () => {
+  it('C-12: pastDateHandling=hide skips button generation', async () => {
     const { host } = await mountAtcb({ name: 'Past Hide', startDate: '2020-01-01', options: "'Google'", pastDateHandling: 'hide', identifier: 'atcb-c12' });
-    expect(getComputedStyle(host).display).to.equal('none');
+    expect(host.shadowRoot.querySelector('button')).to.not.exist;
   });
 
   it('C-13: pastDateHandling=disable renders but disables', async () => {
@@ -146,7 +167,8 @@ describe('Group C - Date / time / timezone (single event)', () => {
   it('C-15: status CANCELLED -> ICS STATUS:CANCELLED (iCal path still works)', async () => {
     const ics = await icsFor({ ...CFG.singleTimedNY, status: 'CANCELLED' }, 'atcb-c15');
     expect(ics.events[0].prop('STATUS')).to.include('CANCELLED');
-    expect(ics.method).to.equal('PUBLISH');
+    // cancelled events ship as proper iCal cancellations
+    expect(ics.method).to.equal('CANCEL');
   });
 
   it('C-16: timeZone="currentBrowser" resolves to the browser timezone', async () => {

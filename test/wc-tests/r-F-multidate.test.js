@@ -4,7 +4,7 @@
 import { expect, aTimeout } from '@open-wc/testing';
 import { mountAtcb } from '../helpers/mount.js';
 import { interceptWindowOpen, interceptFileSave } from '../helpers/capture.js';
-import { clickSingleton, openList, clickOption } from '../helpers/dom.js';
+import { clickSingleton, openList, clickOption, modalHost, subEventBtn, initFailed } from '../helpers/dom.js';
 import { decodeIcsHref, parseIcs } from '../helpers/ics.js';
 import { CFG } from '../fixtures/events.js';
 import { resetDataLayer, dlEvents } from '../helpers/datalayer.js';
@@ -18,13 +18,13 @@ function multiDateConfig(extra = {}, datesOverride = null) {
   };
 }
 
-async function clickSubEvent(identifier, type, n) {
-  const modal = document.getElementById(identifier + '-modal-host');
-  expect(modal, 'multi-date selection modal host').to.exist;
-  const btn = modal.shadowRoot.getElementById(`${identifier}-${type}-${n}`);
+async function clickSubEvent(host, type, n) {
+  expect(modalHost(host), 'multi-date selection modal host').to.exist;
+  const btn = subEventBtn(host, type, n);
   expect(btn, `sub-event button ${type}-${n}`).to.exist;
   btn.dispatchEvent(new MouseEvent('click', { bubbles: true, cancelable: true, view: window }));
-  await aTimeout(60);
+  // sub-event buttons use a TRAILING debounce - give it time to fire
+  await aTimeout(700);
   return btn;
 }
 
@@ -86,7 +86,7 @@ describe('Group F - Multi-date / event series', () => {
       const { host } = await mountAtcb(multiDateConfig({ options: "['Google','iCal']", trigger: 'click', identifier: 'atcb-f04' }));
       await openList(host);
       await clickOption(host, 'google');
-      const btn = await clickSubEvent('atcb-f04', 'google', 2);
+      const btn = await clickSubEvent(host, 'google', 2);
       expect(wo.calls.length).to.equal(1);
       const url = new URL(wo.calls[0].url);
       expect(url.searchParams.get('dates')).to.include('20500708');
@@ -103,35 +103,49 @@ describe('Group F - Multi-date / event series', () => {
       subscribe: 'true',
       icsFile: 'https://example.com/cal.ics',
     });
-    await aTimeout(100);
-    expect(host.shadowRoot.querySelector('.atcb-initialized')).to.not.exist;
+    await aTimeout(200);
+    // failed-init shadow roots crash headless-shell on querySelector - use the attribute contract
+    expect(initFailed(host)).to.equal(true);
   });
 
-  it('F-08/F-11: mixed past/future entries with pastDateHandling -> button renders; past entry marked/filtered in modal', async () => {
+  it('F-08: mixed past/future + pastDateHandling=hide -> past entries FILTERED, button stays', async () => {
+    // per src/atcb-decorate.js: with >1 dates and hide, overdue entries are dropped from data.dates;
+    // the whole button only disappears when ALL entries are overdue (F-10)
+    const wo = interceptWindowOpen();
+    try {
+      const dates = [
+        { name: 'Past', startDate: '2020-01-01', startTime: '10:00', endTime: '11:00' },
+        { name: 'Future', startDate: '2050-01-01', startTime: '10:00', endTime: '11:00' },
+      ];
+      const { host } = await mountAtcb({ name: 'MixedSeries', dates: JSON.stringify(dates), options: "['Google','iCal']", trigger: 'click', pastDateHandling: 'hide', identifier: 'atcb-f08' });
+      expect(host.shadowRoot.querySelector('button'), 'button renders when only SOME dates are past').to.exist;
+      await openList(host);
+      await clickOption(host, 'google');
+      // only ONE (future) date remains -> direct link, no sub-event selection modal
+      expect(wo.calls.length).to.equal(1);
+      expect(new URL(wo.calls[0].url).searchParams.get('dates')).to.include('20500101');
+    } finally {
+      wo.restore();
+    }
+  });
+
+  it('F-11: mixed past/future + pastDateHandling=disable -> renders normally (disable only fires when ALL are past)', async () => {
     const dates = [
       { name: 'Past', startDate: '2020-01-01', startTime: '10:00', endTime: '11:00' },
       { name: 'Future', startDate: '2050-01-01', startTime: '10:00', endTime: '11:00' },
     ];
-    const { host } = await mountAtcb({ name: 'MixedSeries', dates: JSON.stringify(dates), options: "['Google','iCal']", trigger: 'click', pastDateHandling: 'disable', identifier: 'atcb-f08' });
-    expect(getComputedStyle(host).display, 'whole button must NOT disappear when only some dates are past').to.not.equal('none');
+    const { host } = await mountAtcb({ name: 'MixedDisable', dates: JSON.stringify(dates), options: "['Google','iCal']", trigger: 'click', pastDateHandling: 'disable', identifier: 'atcb-f11' });
     await openList(host);
-    await clickOption(host, 'google');
-    const modal = document.getElementById('atcb-f08-modal-host');
-    expect(modal).to.exist;
-    const b1 = modal.shadowRoot.getElementById('atcb-f08-google-1');
-    const b2 = modal.shadowRoot.getElementById('atcb-f08-google-2');
-    expect(b2).to.exist;
-    const b1Disabled = !b1 || b1.disabled || b1.getAttribute('disabled') !== null || b1.className.includes('disabled');
-    expect(b1Disabled, 'past sub-event is disabled or hidden').to.equal(true);
+    expect(host.shadowRoot.querySelector('.atcb-list'), 'list opens - not disabled').to.exist;
   });
 
-  it('F-10: ALL entries past + pastDateHandling=hide -> whole button hidden', async () => {
+  it('F-10: ALL entries past + pastDateHandling=hide -> whole button not generated', async () => {
     const dates = [
       { name: 'Past1', startDate: '2020-01-01' },
       { name: 'Past2', startDate: '2020-02-01' },
     ];
     const { host } = await mountAtcb({ name: 'AllPast', dates: JSON.stringify(dates), options: "'Google'", pastDateHandling: 'hide', identifier: 'atcb-f10' });
-    expect(getComputedStyle(host).display).to.equal('none');
+    expect(host.shadowRoot.querySelector('button')).to.not.exist;
   });
 
   it('F-09: per-entry name override -> per-VEVENT SUMMARY', async () => {
@@ -148,7 +162,9 @@ describe('Group F - Multi-date / event series', () => {
     }
   });
 
-  it('F-13/G-19: organizer only on one entry -> per-date ORGANIZER line; file-level METHOD follows first date', async () => {
+  it('F-13/G-19: DIFFERING organizers -> no single combined file; per-date selection with per-date METHOD', async () => {
+    // Confirms the grouping rule: one ICS file only when all entries share the same (or no)
+    // organizer. With mixed organizers the lib opens the per-date selection instead.
     const fs = interceptFileSave();
     try {
       const dates = [
@@ -157,13 +173,19 @@ describe('Group F - Multi-date / event series', () => {
       ];
       const { host } = await mountAtcb({ name: 'OrgSeries', dates: JSON.stringify(dates), options: "'iCal'", trigger: 'click', identifier: 'atcb-f13' });
       await clickSingleton(host);
-      expect(fs.saves.length).to.be.greaterThan(0);
-      const ics = parseIcs(decodeIcsHref(fs.saves[0].href));
-      const withOrg = ics.events.find((e) => (e.value('SUMMARY') || '').includes('WithOrg'));
-      const noOrg = ics.events.find((e) => (e.value('SUMMARY') || '').includes('NoOrg'));
-      expect(withOrg.prop('ORGANIZER')).to.exist;
-      expect(withOrg.prop('ORGANIZER')).to.include('orga@example.com');
-      expect(noOrg.prop('ORGANIZER')).to.not.exist;
+      expect(fs.saves.length, 'no direct combined download').to.equal(0);
+      expect(modalHost(host), 'per-date selection modal opens').to.exist;
+      // date 2 (with organizer) -> REQUEST invite with ORGANIZER line
+      const btn2 = subEventBtn(host, 'ical', 2);
+      expect(btn2).to.exist;
+      btn2.dispatchEvent(new MouseEvent('click', { bubbles: true, cancelable: true, view: window }));
+      await aTimeout(700);
+      expect(fs.saves.length).to.equal(1);
+      const ics2 = parseIcs(decodeIcsHref(fs.saves[0].href));
+      expect(ics2.events.length).to.equal(1);
+      expect(ics2.events[0].prop('ORGANIZER')).to.exist;
+      expect(ics2.events[0].prop('ORGANIZER').toLowerCase()).to.include('mailto:orga@example.com');
+      expect(ics2.method).to.equal('REQUEST');
     } finally {
       fs.restore();
     }

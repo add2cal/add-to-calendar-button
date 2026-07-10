@@ -4,7 +4,7 @@
 import { expect, aTimeout } from '@open-wc/testing';
 import { mountAtcb } from '../helpers/mount.js';
 import { interceptWindowOpen, interceptFileSave } from '../helpers/capture.js';
-import { clickSingleton, openList, clickOption, optionEl } from '../helpers/dom.js';
+import { clickSingleton, openList, clickOption, optionEl, modalHost } from '../helpers/dom.js';
 import { decodeIcsHref, parseIcs } from '../helpers/ics.js';
 import { CFG } from '../fixtures/events.js';
 
@@ -70,18 +70,28 @@ describe('Group H - Google output', () => {
       await aTimeout(80);
       // no calendar URL opened - a warning modal shows up instead
       expect(wo.calls.length, 'no window.open for cancelled non-ical').to.equal(0);
-      const modal = document.getElementById('atcb-h08-modal-host');
+      const modal = modalHost(host);
       expect(modal, 'warning modal host').to.exist;
       expect(modal.shadowRoot.querySelector('.atcb-modal-box')).to.exist;
       const googleItem = optionEl(host, 'google');
       expect(googleItem?.classList.contains('atcb-saved') || false, 'no saved checkmark for cancelled').to.equal(false);
 
-      // iCal on the same cancelled event delivers a STATUS:CANCELLED ics
-      await openList(host);
-      await clickOption(host, 'ical');
+      // iCal on a cancelled event delivers a proper cancellation ics (fresh mount - the warning modal blocks the first instance)
+      const { host: host2 } = await mountAtcb({
+        ...CFG.singleTimedNY,
+        name: 'Cancelled Event',
+        status: 'CANCELLED',
+        options: "'iCal'",
+        trigger: 'click',
+        identifier: 'atcb-h08b',
+      });
+      const btn2 = host2.shadowRoot.getElementById(host2.getAttribute('atcb-button-id'));
+      btn2.dispatchEvent(new MouseEvent('click', { bubbles: true, cancelable: true, view: window }));
+      await aTimeout(100);
       expect(fs.saves.length).to.equal(1);
       const ics = parseIcs(decodeIcsHref(fs.saves[0].href));
       expect(ics.events[0].prop('STATUS')).to.include('CANCELLED');
+      expect(ics.method, 'cancellation ships as METHOD:CANCEL').to.equal('CANCEL');
     } finally {
       wo.restore();
       fs.restore();

@@ -9,6 +9,7 @@
  */
 import { expect, aTimeout } from '@open-wc/testing';
 import { mountAtcb } from '../helpers/mount.js';
+import { modalHost, optionEl, btnId } from '../helpers/dom.js';
 import { mockProFetch, proRsvpConfig, PRO_RSVP_KEY } from '../fixtures/pro.js';
 import { resetDataLayer, dlEvents } from '../helpers/datalayer.js';
 
@@ -18,12 +19,12 @@ describe('Group T - PRO RSVP (render + client-side only)', () => {
   it('T-01: RSVP config renders the RSVP entry point INSTEAD of calendar-link options', async () => {
     const mock = mockProFetch({ [PRO_RSVP_KEY]: proRsvpConfig() });
     try {
-      const { shadow } = await mountAtcb({ proKey: PRO_RSVP_KEY, identifier: 'atcb-t01' });
+      const { host, shadow } = await mountAtcb({ proKey: PRO_RSVP_KEY, identifier: 'atcb-t01' });
       expect(shadow.querySelector('.atcb-initialized')).to.exist;
       expect(shadow.querySelector('button'), 'an interactive entry point renders').to.exist;
       // no calendar option list items pre-rendered in the RSVP flow
-      expect(shadow.getElementById('atcb-t01-google')).to.not.exist;
-      expect(shadow.getElementById('atcb-t01-ical')).to.not.exist;
+      expect(optionEl(host, 'google')).to.not.exist;
+      expect(optionEl(host, 'ical')).to.not.exist;
     } finally {
       mock.restore();
     }
@@ -33,7 +34,7 @@ describe('Group T - PRO RSVP (render + client-side only)', () => {
     const mock = mockProFetch({ [PRO_RSVP_KEY]: proRsvpConfig() });
     try {
       const { host, shadow } = await mountAtcb({ proKey: PRO_RSVP_KEY, trigger: 'click', identifier: 'atcb-t10' });
-      const btn = shadow.getElementById('atcb-t10') || shadow.querySelector('button');
+      const btn = shadow.getElementById(btnId(host)) || shadow.querySelector('button');
       btn.dispatchEvent(new MouseEvent('mouseup', { bubbles: true, cancelable: true, view: window }));
       btn.dispatchEvent(new MouseEvent('click', { bubbles: true, cancelable: true, view: window }));
       await aTimeout(200);
@@ -41,7 +42,7 @@ describe('Group T - PRO RSVP (render + client-side only)', () => {
       expect(rsvpOpened.length, 'openRSVP event pushed').to.be.greaterThan(0);
       expect(rsvpOpened[0].eventCategory).to.equal('Add-to-Calendar-RSVP');
       expect(host.getAttribute('atcb-last-event')).to.include('openRSVP');
-      const modal = document.getElementById('atcb-t10-modal-host');
+      const modal = modalHost(host);
       const formHost = modal || host;
       expect(formHost.shadowRoot.querySelector('form, .atcb-modal-box'), 'form UI present').to.exist;
     } finally {
@@ -54,7 +55,7 @@ describe('Group T - PRO RSVP (render + client-side only)', () => {
     try {
       const { host, shadow } = await mountAtcb({ proKey: PRO_RSVP_KEY, inlineRsvp: 'true', identifier: 'atcb-t02' });
       await aTimeout(200);
-      const modal = document.getElementById('atcb-t02-modal-host');
+      const modal = modalHost(host);
       const formPresent = shadow.querySelector('form') || (modal && modal.shadowRoot.querySelector('form')) || host.shadowRoot.querySelector('.atcb-modal-box');
       expect(formPresent, 'inline RSVP form rendered without interaction').to.exist;
     } finally {
@@ -67,7 +68,7 @@ describe('Group T - PRO RSVP (render + client-side only)', () => {
     try {
       const { host, shadow } = await mountAtcb({ proKey: PRO_RSVP_KEY, inlineRsvp: 'true', identifier: 'atcb-t22' });
       await aTimeout(200);
-      const modal = document.getElementById('atcb-t22-modal-host');
+      const modal = modalHost(host);
       const root = (modal && modal.shadowRoot) || shadow;
       const emailInput = root.querySelector('input[type="email"], input[name*="email" i]');
       expect(emailInput, 'email field rendered from rsvp.fields').to.exist;
