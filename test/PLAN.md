@@ -922,3 +922,18 @@ the run phase (tests carry PLAN NOTE / DOCS MISMATCH comments where relevant):
 | Missing-name WC error | The web-component path reports 'No data provided.' (not the function-level 'required name information missing'). |
 | Sub-event debounce | Sub-event buttons use a TRAILING debounce (~500ms) - tests wait 700ms after clicking. |
 | Test-infra notes | (1) Several Chrome builds crash the renderer when the shadow root of a FAILED-init element is accessed (headless-shell v150: `querySelector`; other builds: other accessors) - failed-init tests never touch the shadow root and assert via the `initFailed()` attribute contract + console capture instead. (2) `window.fetch` mocks MUST pass unknown URLs through to the original fetch - the test runner itself communicates via fetch. (3) PRO server payloads are pre-structured with a `dates` array - fixtures must mirror that. (4) Runner concurrency is capped adaptively (half the cores, max 2, `WTR_CONCURRENCY` to override): parallel tabs each load the full bundle + dozens of components, and starved/OOM-killed tabs surface as "browser disconnected" or blanket mocha timeouts. |
+
+### Tier 0 - Smoke Suite (CI default)
+
+Added post-implementation as the everyday CI tier. One file (`test/wc-tests-smoke/s-smoke.test.js`),
+18 tests, ~3s of test runtime (plus build): the matrix collapses to **{Desktop, Mobile} x {OSS, PRO}**
+plus one RSVP render check. One question per cell: is the button fundamentally working -
+init, option set, link/ICS generation, tracking, PRO fetch/override/proxy, silent 404 failure.
+
+**Tier wiring (package.json):**
+
+| Script | Content | When |
+|--------|---------|------|
+| `npm run test` | wc-load + recurrence-tz + Smoke Suite (S-01..S-16) | DEFAULT - every CI run / PR |
+| `npm run test:extended` | + full Reduced Suite (groups A-U, ~215 cases) | on demand / pre-merge |
+| `npm run test:prod` | + Full Cartesian matrix (~210 parameterized cases) | on demand / releases |
