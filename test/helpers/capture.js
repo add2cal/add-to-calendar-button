@@ -84,3 +84,53 @@ export const UA = {
   androidWebView: 'Mozilla/5.0 (Linux; Android 14; Pixel 8; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/125.0.0.0 Mobile Safari/537.36',
   instagramIOS: 'Mozilla/5.0 (iPhone; CPU iPhone OS 17_4 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148 Instagram 320.0.0.0 (iPhone14,2; iOS 17_4)',
 };
+
+/**
+ * Temporarily silences console methods for tests that INTENTIONALLY exercise
+ * error paths (the lib catches and console-logs those errors internally).
+ * Returns { messages, restore }.
+ */
+export function muteConsole(methods = ['error', 'warn']) {
+  const messages = [];
+  const originals = {};
+  for (const m of methods) {
+    // eslint-disable-next-line no-console
+    originals[m] = console[m];
+    // eslint-disable-next-line no-console
+    console[m] = (...args) => messages.push(args.map(String).join(' '));
+  }
+  return {
+    messages,
+    restore() {
+      for (const m of methods) {
+        // eslint-disable-next-line no-console
+        console[m] = originals[m];
+      }
+    },
+  };
+}
+
+/**
+ * Installs a working navigator.clipboard stub for headless/insecure contexts where
+ * the Clipboard API is unavailable (the lib would otherwise log its fallback error).
+ * Returns { texts, restore }.
+ */
+export function stubClipboard() {
+  const texts = [];
+  const original = Object.getOwnPropertyDescriptor(Navigator.prototype, 'clipboard');
+  Object.defineProperty(navigator, 'clipboard', {
+    configurable: true,
+    value: {
+      writeText: async (t) => {
+        texts.push(String(t));
+      },
+    },
+  });
+  return {
+    texts,
+    restore() {
+      delete navigator.clipboard;
+      if (original) Object.defineProperty(Navigator.prototype, 'clipboard', original);
+    },
+  };
+}

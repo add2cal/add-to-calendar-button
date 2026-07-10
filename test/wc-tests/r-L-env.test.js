@@ -5,7 +5,7 @@
  */
 import { expect, aTimeout } from '@open-wc/testing';
 import { mountAtcb, baseEvent } from '../helpers/mount.js';
-import { interceptWindowOpen, interceptFileSave, setUA, UA } from '../helpers/capture.js';
+import { interceptWindowOpen, interceptFileSave, setUA, UA, muteConsole, stubClipboard } from '../helpers/capture.js';
 import { clickSingleton, openList, renderedOptions, clickOption, modalHost } from '../helpers/dom.js';
 
 describe('Group L - Environment-driven routing', () => {
@@ -151,6 +151,8 @@ describe('Group L - Environment-driven routing', () => {
   it('L-02: iOS non-Safari browser (Chrome on iOS) -> subscribe ical shows copy-note modal instead of opening', async () => {
     const restoreUA = setUA(UA.iosChrome);
     const wo = interceptWindowOpen();
+    const clip = stubClipboard(); // headless envs lack the Clipboard API
+    const mute = muteConsole();
     try {
       const { host } = await mountAtcb({
         name: 'iOS Chrome Sub',
@@ -165,7 +167,10 @@ describe('Group L - Environment-driven routing', () => {
       expect(wo.calls.length, 'no direct open on iOS non-Safari').to.equal(0);
       const modal = modalHost(host);
       expect(modal, 'copy-note modal').to.exist;
+      expect(clip.texts.join(' '), 'ics url copied to clipboard').to.include('example.com/cal.ics');
     } finally {
+      mute.restore();
+      clip.restore();
       wo.restore();
       restoreUA();
     }

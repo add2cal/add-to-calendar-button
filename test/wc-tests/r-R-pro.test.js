@@ -6,6 +6,7 @@
 import { expect, aTimeout } from '@open-wc/testing';
 import { mountAtcb } from '../helpers/mount.js';
 import { mockProFetch, proEvtConfig, PRO_EVT_KEY } from '../fixtures/pro.js';
+import { muteConsole } from '../helpers/capture.js';
 import { interceptFileSave } from '../helpers/capture.js';
 import { openList, clickOption, trigger, optionEl, initFailed } from '../helpers/dom.js';
 import { decodeIcsHref, parseIcs } from '../helpers/ics.js';
@@ -26,23 +27,28 @@ describe('Group R - PRO proKey fetch & override', () => {
 
   it('R-02: PRO fetch 404 -> button does not render', async () => {
     const mock = mockProFetch({}); // unknown key -> 404
+    const mute = muteConsole(); // the lib intentionally console-errors this failure
     try {
       const { host } = await mountAtcb({ proKey: 'ffffffff-0000-0000-0000-000000000000', identifier: 'atcb-r02' });
       await aTimeout(200);
       // failed-init shadow roots crash headless-shell on querySelector - use the attribute contract
       expect(initFailed(host)).to.equal(true);
+      expect(mute.messages.join(' ')).to.include('proKey');
     } finally {
+      mute.restore();
       mock.restore();
     }
   });
 
   it('R-03: PRO fetch network error -> button does not render', async () => {
     const mock = mockProFetch({ [PRO_EVT_KEY]: proEvtConfig() }, { networkError: true });
+    const mute = muteConsole(); // the lib intentionally console-errors this failure
     try {
       const { host } = await mountAtcb({ proKey: PRO_EVT_KEY, identifier: 'atcb-r03' });
       await aTimeout(200);
       expect(initFailed(host)).to.equal(true);
     } finally {
+      mute.restore();
       mock.restore();
     }
   });

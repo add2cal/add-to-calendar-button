@@ -3,7 +3,7 @@
  */
 import { expect, aTimeout } from '@open-wc/testing';
 import { mountAtcb } from '../helpers/mount.js';
-import { interceptWindowOpen } from '../helpers/capture.js';
+import { interceptWindowOpen, muteConsole, stubClipboard } from '../helpers/capture.js';
 import { clickSingleton, openList, renderedOptions, clickOption, modalHost, initFailed } from '../helpers/dom.js';
 
 const SUB = {
@@ -56,6 +56,8 @@ describe('Group P - Subscribe mode', () => {
 
   it('P-03: Yahoo subscribe opens the manual-instructions modal instead of a URL', async () => {
     const wo = interceptWindowOpen();
+    const clip = stubClipboard(); // headless envs lack the Clipboard API
+    const mute = muteConsole();
     try {
       const { host } = await mountAtcb({ ...SUB, options: "['Yahoo','Google']", identifier: 'atcb-p03' });
       await openList(host);
@@ -65,7 +67,10 @@ describe('Group P - Subscribe mode', () => {
       const modal = modalHost(host);
       expect(modal, 'manual instructions modal').to.exist;
       expect(modal.shadowRoot.querySelector('.atcb-modal-box')).to.exist;
+      expect(clip.texts.join(' '), 'ics url copied for manual yahoo subscribe').to.include('example.com/team-calendar.ics');
     } finally {
+      mute.restore();
+      clip.restore();
       wo.restore();
     }
   });
