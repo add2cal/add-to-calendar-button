@@ -42,24 +42,30 @@ describe('Group L - Environment-driven routing', () => {
     expect(opts).to.not.include('ms365');
   });
 
-  it('L-11: on iOS, optionsMobile OVERRIDES optionsIOS (documented actual behavior)', async () => {
-    // PLAN/DOCS MISMATCH pinned intentionally: the docs describe optionsIOS as the more
-    // specific override, but src/atcb-decorate.js#atcb_determine_options_source checks
-    // optionsIOS first and then unconditionally lets optionsMobile win when both are set.
-    // If this is fixed in the lib one day, flip this expectation.
-    const { host } = await mountAtcb(
-      baseEvent({
-        fakeIOS: 'true',
-        optionsMobile: "['Google','Yahoo']",
-        optionsIOS: "['Apple']",
-        trigger: 'click',
-        identifier: 'atcb-l11',
-      }),
-    );
-    await openList(host);
-    const opts = renderedOptions(host);
-    expect(opts).to.have.members(['google', 'yahoo']);
-    expect(opts).to.not.include('apple');
+  it('L-11: on iOS, optionsIOS takes precedence over optionsMobile', async () => {
+    // the more specific optionsIOS wins; optionsMobile only serves as fallback (fixed in this branch)
+    const fs = interceptFileSave();
+    try {
+      const { host } = await mountAtcb(
+        baseEvent({
+          fakeIOS: 'true',
+          optionsMobile: "['Google','Yahoo']",
+          optionsIOS: "['Apple']",
+          trigger: 'click',
+          identifier: 'atcb-l11',
+        }),
+      );
+      // single remaining option renders as singleton apple button
+      const btn = host.shadowRoot.getElementById(host.getAttribute('atcb-button-id'));
+      expect(btn.classList.contains('atcb-single')).to.equal(true);
+      const opts = renderedOptions(host);
+      expect(opts).to.not.include('google');
+      expect(opts).to.not.include('yahoo');
+      await clickSingleton(host);
+      expect(fs.saves.length, 'apple singleton saves an ics').to.equal(1);
+    } finally {
+      fs.restore();
+    }
   });
 
   it('L-11b: optionsIOS applies when it is the only override set', async () => {
@@ -83,9 +89,9 @@ describe('Group L - Environment-driven routing', () => {
     }
   });
 
-  it('L-18: optionsIOS with "iCal" (doc casing) gets SWAPPED to apple (case-sensitive guard quirk)', async () => {
-    // The swap-guard checks options.includes('ical')/('apple') on the RAW (un-normalized)
-    // values, so the documented casing "iCal" does not match and the ical->apple swap runs.
+  it('L-18: explicit optionsIOS with "iCal" (doc casing) is kept verbatim - no swap', async () => {
+    // option-name matching is case-normalized (fixed in this branch), so the explicit
+    // iCal override survives on iOS regardless of input casing
     const { host } = await mountAtcb(
       baseEvent({
         fakeIOS: 'true',
@@ -96,11 +102,12 @@ describe('Group L - Environment-driven routing', () => {
     );
     await openList(host);
     const opts = renderedOptions(host);
-    expect(opts).to.have.members(['apple', 'google']);
+    expect(opts).to.include('ical');
+    expect(opts).to.include('google');
+    expect(opts).to.not.include('apple');
   });
 
-  it('L-18b: optionsIOS with lowercase "ical" is kept verbatim (explicit override wins)', async () => {
-    // lowercase matches the raw includes() check -> swap suppressed, explicit ical survives on iOS
+  it('L-18b: optionsIOS with lowercase "ical" behaves identically (case-insensitive)', async () => {
     const { host } = await mountAtcb(
       baseEvent({
         fakeIOS: 'true',
