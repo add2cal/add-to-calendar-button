@@ -3,6 +3,9 @@
 Behavior-driven test suite for the add-to-calendar-button web component, running on
 `@open-wc/testing` + `@web/test-runner` in a real Chromium browser.
 
+The complete list of all test cases lives in `.ai/TEST-CASES.md` - read that instead of
+parsing the test files when you need an overview of what is covered.
+
 The suite tests by USE CASE, not by internal function: every test mounts the real
 component, interacts with it like a user (click, hover, keyboard), and asserts the
 observable outcome (rendered options, generated calendar URL, downloaded ICS content,
@@ -149,3 +152,5 @@ guards are tested.
   reusing the helpers; name it with the group prefix and a short scenario.
 - New dimension sweep: extend the dimension arrays and `isValid()` in
   `test/fixtures/matrix.js` and add or extend a `test/wc-tests-full/f-*.test.js` template.
+- Always update `.ai/TEST-CASES.md` in the same commit when adding, renaming, or removing
+  test cases; it mirrors the `it()` titles and is the quick reference for coverage.
