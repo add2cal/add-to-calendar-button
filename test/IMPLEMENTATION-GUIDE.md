@@ -46,7 +46,7 @@ Add npm scripts to `package.json`:
 {
   "scripts": {
     "test": "node test/test-prep.js && npx web-test-runner test/wc-tests/{wc-load,recurrence-tz,r-*}.test.js --node-resolve",
-    "test:prod": "node test/test-prep.js && npx web-test-runner test/wc-tests/{wc-load,recurrence-tz,r-*,f-*}.test.js --node-resolve",
+    "test:full": "node test/test-prep.js && npx web-test-runner test/wc-tests/{wc-load,recurrence-tz,r-*,f-*}.test.js --node-resolve",
     "test:cross": "node test/test-prep.js && npx web-test-runner test/wc-tests/{wc-load,recurrence-tz,r-*,f-*}.test.js --node-resolve --playwright --browsers chromium firefox webkit"
   }
 }

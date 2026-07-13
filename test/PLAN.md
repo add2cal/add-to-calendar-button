@@ -10,7 +10,7 @@ _Test plan for the add-to-calendar-button test suite. Built collaboratively (mai
 
 - **Smoke Suite (S) — THE DEFAULT (`npm run test`)** — one file, 16 cases: the matrix collapsed to {Desktop, Mobile} x {OSS, PRO} plus an RSVP render check. Seconds of test runtime; built for every CI run. See the "Smoke Suite" section for the case list.
 - **Reduced Suite (R)** — explicit, hand-written cases (groups A-U, ~215 as implemented). On demand via `npm run test:extended` (pre-merge / deeper checks).
-- **Full Cartesian Suite (F)** — parameterized templates that expand into the production-release matrix (~210 as implemented). On demand via `npm run test:prod` (releases).
+- **Full Cartesian Suite (F)** — parameterized templates that expand into the production-release matrix (~210 as implemented). On demand via `npm run test:full` (releases).
 
 Every R-case has an ID like `C-04` (Group C, case 4). Every F-template has an ID like `F.T1`. Where an R-case is also a representative cell of an F-template, both IDs are listed.
 
@@ -694,7 +694,7 @@ Two extensions:
    - `cross-browser` → same as `prod` + Playwright launchers for Firefox + WebKit
 2. Add npm scripts:
    - `npm run test` → existing behavior, expanded to `dev` group (Reduced Suite). Runs on every PR.
-   - `npm run test:prod` → `prod` group (Reduced + Full Cartesian). Runs on release branch / pre-tag.
+   - `npm run test:full` → `prod` group (Reduced + Full Cartesian). Runs on release branch / pre-tag.
    - `npm run test:cross` → `cross-browser` group (3 browsers × all cases). Runs nightly.
 
 **Per-test helpers (`test/helpers/`):**
@@ -758,12 +758,12 @@ for (const [env, cfg, out] of cells) {
 **CI pipeline split (as shipped — three tiers):**
 - **Every CI run / PR:** `npm run test` — Smoke Suite (S-01..S-16) + the two pre-existing quick tests. Seconds of test runtime (the grunt build dominates wall time).
 - **Pre-merge / on demand:** `npm run test:extended` — adds the full Reduced Suite (groups A-U).
-- **Releases / on demand:** `npm run test:prod` — additionally runs the Full Cartesian matrix.
+- **Releases / on demand:** `npm run test:full` — additionally runs the Full Cartesian matrix.
 - (A Playwright cross-browser tier remains possible as a future addition per Decision #9; not wired up yet.)
 - Note: the runner executes test files strictly serially (`concurrency: 1` in web-test-runner.config.mjs) — load-bearing, see Test-infra notes.
 
 **Coverage:**
-`@web/test-runner` supports v8 coverage natively. Add `--coverage` to `test:prod`. Configure thresholds in `web-test-runner.config.mjs`:
+`@web/test-runner` supports v8 coverage natively. Add `--coverage` to `test:full`. Configure thresholds in `web-test-runner.config.mjs`:
 - `./src` line coverage > 90%
 - Branch coverage > 85%
 - Per-file thresholds for hot files (`atcb-links.js`, `atcb-decorate.js`, `atcb-util.js`) > 95%
@@ -881,7 +881,7 @@ During implementation, the actual v2.15 source was cross-checked. The following 
 
 **Suite layout as implemented:**
 - `test/wc-tests/r-*.test.js` — Reduced Suite (runs with `npm run test`, alongside the two pre-existing tests)
-- `test/wc-tests-full/f-*.test.js` — Full Cartesian Suite (runs with `npm run test:prod`)
+- `test/wc-tests-full/f-*.test.js` — Full Cartesian Suite (runs with `npm run test:full`)
 - `test/helpers/` — mount, capture (window.open + file-save interception, UA override), ics parser, dom, datalayer helpers
 - `test/fixtures/` — event configs (incl. 2050 DST corners), PRO mock payloads + fetch mock, matrix definitions with `isValid()` constraint logic and an Intl-based tz oracle
 
@@ -940,7 +940,7 @@ silent 404 failure.
 |--------|---------|------|
 | `npm run test` | wc-load + recurrence-tz + Smoke Suite (S-01..S-16) | DEFAULT - every CI run / PR |
 | `npm run test:extended` | + full Reduced Suite (groups A-U, ~215 cases) | on demand / pre-merge |
-| `npm run test:prod` | + Full Cartesian matrix (~210 parameterized cases) | on demand / releases |
+| `npm run test:full` | + Full Cartesian matrix (~210 parameterized cases) | on demand / releases |
 
 **Smoke case list:**
 

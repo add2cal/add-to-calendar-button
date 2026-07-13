@@ -5,7 +5,7 @@
  * Answers one question per cell: "is the button fundamentally working?" - init, option set,
  * link/ICS generation, tracking. Everything deeper lives in the on-demand tiers:
  *   npm run test:extended -> Reduced Suite (groups A-U, test/wc-tests/r-*)
- *   npm run test:prod     -> + Full Cartesian matrix (test/wc-tests-full/f-*)
+ *   npm run test:full     -> + Full Cartesian matrix (test/wc-tests-full/f-*)
  */
 import { expect, aTimeout } from '@open-wc/testing';
 import { mountAtcb, baseEvent } from '../helpers/mount.js';

@@ -83,7 +83,7 @@ Vanilla JS in `./src` — no TypeScript, no framework. Web Component / Shadow DO
 
 - `npm run test` — DEFAULT/CI tier: pre-existing quick tests + the Smoke Suite (`test/wc-tests-smoke/`, {Desktop, Mobile} x {OSS, PRO} + RSVP render, ~3s test runtime). Runs a full build first via `test/test-prep.js`.
 - `npm run test:extended` — adds the full Reduced Suite (groups A–U in `test/wc-tests/r-*.test.js`, ~215 cases). On demand / pre-merge.
-- `npm run test:prod` — additionally runs the Full Cartesian Suite in `test/wc-tests-full/` (`f-*.test.js`). On demand / releases.
+- `npm run test:full` — additionally runs the Full Cartesian Suite in `test/wc-tests-full/` (`f-*.test.js`). On demand / releases.
 - `test/PLAN.md` — the complete case list (both tiers), decisions log, and v2.15 source-verified corrections.
 - `test/IMPLEMENTATION-GUIDE.md` — conventions, helpers, and gotchas for writing further tests.
 - Helpers in `test/helpers/` (mount, window.open/file-save interception, ICS parser); fixtures in `test/fixtures/`.
