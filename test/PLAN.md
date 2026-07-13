@@ -6,10 +6,11 @@ _Test plan for the add-to-calendar-button test suite. Built collaboratively (mai
 
 ## 0. How to read this plan
 
-**Two tiers, one source of truth.**
+**Three tiers, one source of truth.**
 
-- **Reduced Suite (R)** — explicit, hand-written cases for dev runs / PR checks. Fast, high signal. ~150 cases.
-- **Full Cartesian Suite (F)** — parameterized templates that expand via nested loops around `it()` (or `mocha-each`) into the production-release matrix. ~700–2,000 cases depending on which dimensions we fully cross.
+- **Smoke Suite (S) — THE DEFAULT (`npm run test`)** — one file, 16 cases: the matrix collapsed to {Desktop, Mobile} x {OSS, PRO} plus an RSVP render check. Seconds of test runtime; built for every CI run. See the "Smoke Suite" section for the case list.
+- **Reduced Suite (R)** — explicit, hand-written cases (groups A-U, ~215 as implemented). On demand via `npm run test:extended` (pre-merge / deeper checks).
+- **Full Cartesian Suite (F)** — parameterized templates that expand into the production-release matrix (~210 as implemented). On demand via `npm run test:prod` (releases).
 
 Every R-case has an ID like `C-04` (Group C, case 4). Every F-template has an ID like `F.T1`. Where an R-case is also a representative cell of an F-template, both IDs are listed.
 
@@ -754,10 +755,12 @@ for (const [env, cfg, out] of cells) {
 - **Option presence/absence:** `host.shadowRoot.querySelectorAll('.atcb-list-item[data-modal-nr]')` enumerates rendered options; `assertOptionAbsent(host, 'yahoo')` checks no list item has the yahoo identifier.
 - **Async state:** `await elementUpdated(host)` after attribute changes, `await aTimeout(50)` for debounced interactions.
 
-**CI pipeline split (your two-tier idea):**
-- **PR / dev runs:** `npm run test` — Reduced Suite + existing tests. Target ~150 + 3 cases, < 30s wall time, single browser (Chromium).
-- **Pre-release:** `npm run test:prod` — adds Full Cartesian. ~945 cases, expect 3–8 min single-browser.
-- **Nightly cross-browser:** `npm run test:cross` — Playwright Chromium + Firefox + WebKit. Same cases × 3 browsers. ~2,835 case-runs.
+**CI pipeline split (as shipped — three tiers):**
+- **Every CI run / PR:** `npm run test` — Smoke Suite (S-01..S-16) + the two pre-existing quick tests. Seconds of test runtime (the grunt build dominates wall time).
+- **Pre-merge / on demand:** `npm run test:extended` — adds the full Reduced Suite (groups A-U).
+- **Releases / on demand:** `npm run test:prod` — additionally runs the Full Cartesian matrix.
+- (A Playwright cross-browser tier remains possible as a future addition per Decision #9; not wired up yet.)
+- Note: the runner executes test files strictly serially (`concurrency: 1` in web-test-runner.config.mjs) — load-bearing, see Test-infra notes.
 
 **Coverage:**
 `@web/test-runner` supports v8 coverage natively. Add `--coverage` to `test:prod`. Configure thresholds in `web-test-runner.config.mjs`:
@@ -926,9 +929,10 @@ the run phase (tests carry PLAN NOTE / DOCS MISMATCH comments where relevant):
 ### Tier 0 - Smoke Suite (CI default)
 
 Added post-implementation as the everyday CI tier. One file (`test/wc-tests-smoke/s-smoke.test.js`),
-18 tests, ~3s of test runtime (plus build): the matrix collapses to **{Desktop, Mobile} x {OSS, PRO}**
-plus one RSVP render check. One question per cell: is the button fundamentally working -
-init, option set, link/ICS generation, tracking, PRO fetch/override/proxy, silent 404 failure.
+16 cases, ~3-5s of test runtime (plus the build, which dominates wall time): the matrix collapses to
+**{Desktop, Mobile} x {OSS, PRO}** plus one RSVP render check. One question per cell: is the button
+fundamentally working - init, option set, link/ICS generation, tracking, PRO fetch/override/proxy,
+silent 404 failure.
 
 **Tier wiring (package.json):**
 
@@ -937,3 +941,41 @@ init, option set, link/ICS generation, tracking, PRO fetch/override/proxy, silen
 | `npm run test` | wc-load + recurrence-tz + Smoke Suite (S-01..S-16) | DEFAULT - every CI run / PR |
 | `npm run test:extended` | + full Reduced Suite (groups A-U, ~215 cases) | on demand / pre-merge |
 | `npm run test:prod` | + Full Cartesian matrix (~210 parameterized cases) | on demand / releases |
+
+**Smoke case list:**
+
+_OSS x Desktop_
+
+| ID | Scenario | Bundled assertions |
+|----|----------|---------------------|
+| S-01 | Init + full option list | `.atcb-initialized`; list opens on click; all seven options rendered; in-list attribution present |
+| S-02 | Google link correctness | desktop `calendar/r/eventedit` base; `text`, wall-clock `dates`, `ctz` params |
+| S-03 | ICS download validity | one file saved with `_blank` target; VCALENDAR + `METHOD:PUBLISH`; SUMMARY + `DTSTART;TZID` + VTIMEZONE |
+| S-04 | All-day formats | Google `dates=YYYYMMDD/YYYYMMDD`; ICS `DTSTART;VALUE=DATE` |
+| S-05 | Recurring basics | yahoo/ms365/outlookcom/msteams absent, google present; ICS RRULE carries FREQ + BYDAY |
+| S-06 | Tracking chain | `initialization` once; `openSingletonLink` + `success` after click; `eventCategory` correct; `atcb-last-event` mirrors latest event |
+
+_OSS x Mobile_
+
+| ID | Scenario | Bundled assertions |
+|----|----------|---------------------|
+| S-07 | Android option swap + download target | apple absent / ical present; saved file targets `_self` (real UA override - the target branch reads navigator.userAgent) |
+| S-08 | Android Google intent | `intent://` wrapper with `package=com.google.android.calendar` + browser fallback |
+| S-09 | iOS option swap | ical absent / apple present |
+| S-10 | Mobile modal UX | modal opens on click; body scroll locked; ESC unlocks |
+
+_PRO x Desktop_
+
+| ID | Scenario | Bundled assertions |
+|----|----------|---------------------|
+| S-11 | PRO fetch + server-driven render | config.json fetched for the demo proKey; server label rendered; ICS SUMMARY = server name; powered-by note appended |
+| S-12 | proOverride | local `name` wins over server config in the ICS |
+| S-13 | Proxy routing | google click opens `https://caldn.net/{proKey}/o/google` |
+| S-14 | Invalid proKey (404) | silent failure - `initFailed()` contract, no crash, console muted |
+
+_PRO x Mobile_
+
+| ID | Scenario | Bundled assertions |
+|----|----------|---------------------|
+| S-15 | PRO render under mobile flavor | initializes; apple swapped out per platform rules; google present |
+| S-16 | PRO RSVP render | RSVP entry point renders INSTEAD of calendar option items |
