@@ -1,5 +1,5 @@
 /**
- * Reduced Suite - Group O: Localization & i18n (plan §14)
+ * Reduced Suite - Group O: Localization & i18n (case list: .ai/TEST-CASES.md)
  * Uses atcb_translate_hook as the source of truth to avoid hardcoding translations.
  */
 import { expect } from '@open-wc/testing';

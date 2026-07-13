@@ -1,5 +1,5 @@
 /**
- * Reduced Suite - Group M: UI / interaction (plan §12)
+ * Reduced Suite - Group M: UI / interaction (case list: .ai/TEST-CASES.md)
  */
 import { expect, aTimeout } from '@open-wc/testing';
 import { mountAtcb, baseEvent } from '../helpers/mount.js';

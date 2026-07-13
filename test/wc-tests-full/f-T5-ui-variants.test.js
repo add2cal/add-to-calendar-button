@@ -1,5 +1,5 @@
 /**
- * Full Cartesian Suite - F.T5a: listStyle x trigger + F.T5b: buttonStyle samples (plan §20)
+ * Full Cartesian Suite - F.T5a: listStyle x trigger + F.T5b: buttonStyle samples (case list: .ai/TEST-CASES.md)
  */
 import { expect, aTimeout } from '@open-wc/testing';
 import { mountAtcb, baseEvent } from '../helpers/mount.js';

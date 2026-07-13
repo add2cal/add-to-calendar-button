@@ -1,5 +1,5 @@
 /**
- * Reduced Suite - Group P: Subscribe mode (plan §15)
+ * Reduced Suite - Group P: Subscribe mode (case list: .ai/TEST-CASES.md)
  */
 import { expect, aTimeout } from '@open-wc/testing';
 import { mountAtcb } from '../helpers/mount.js';

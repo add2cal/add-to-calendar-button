@@ -1,5 +1,5 @@
 /**
- * Full Cartesian Suite - F.T2: DST x Timezone matrix (plan §20)
+ * Full Cartesian Suite - F.T2: DST x Timezone matrix (case list: .ai/TEST-CASES.md)
  * Google receives wall-clock + ctz (no offsets visible), so the numeric DST math of
  * timezones-ical-library is cross-checked via the TEAMS url (ISO strings WITH offset)
  * against an independent Intl-based oracle.

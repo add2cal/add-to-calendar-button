@@ -1,5 +1,5 @@
 /**
- * Reduced Suite - Group A: Lifecycle & registration (plan §2)
+ * Reduced Suite - Group A: Lifecycle & registration (case list: .ai/TEST-CASES.md)
  */
 import { expect, aTimeout, fixture } from '@open-wc/testing';
 import { mountAtcb, mountAtcbNoWait, baseEvent } from '../helpers/mount.js';

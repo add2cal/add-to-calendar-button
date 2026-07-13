@@ -1,5 +1,5 @@
 /**
- * Reduced Suite - Group I/J/K: Outlook (MS365 + Outlook.com), Yahoo, MS Teams (plan §10)
+ * Reduced Suite - Group I/J/K: Outlook (MS365 + Outlook.com), Yahoo, MS Teams (case list: .ai/TEST-CASES.md)
  * Recurring deactivates Yahoo + ALL Microsoft options - covered in r-E; cross-checked here.
  */
 import { expect } from '@open-wc/testing';

@@ -1,5 +1,5 @@
 /**
- * Reduced Suite - Group Q: Schema.org rich data (plan §16)
+ * Reduced Suite - Group Q: Schema.org rich data (case list: .ai/TEST-CASES.md)
  * Rich data is injected into the light DOM as <script type="application/ld+json" id="atcb-schema-{identifier}">.
  * It requires name + location + startDate and is skipped in subscribe mode.
  */

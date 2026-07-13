@@ -1,5 +1,5 @@
 /**
- * Reduced Suite - Group C: Date / time / timezone for single events (plan §4)
+ * Reduced Suite - Group C: Date / time / timezone for single events (case list: .ai/TEST-CASES.md)
  * User-path tests: mount singleton button -> click -> capture generated URL / ICS.
  */
 import { expect, aTimeout } from '@open-wc/testing';

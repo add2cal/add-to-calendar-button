@@ -1,5 +1,5 @@
 /**
- * Full Cartesian Suite - F.T9: Multi-date x tz-mix x sequence x uid (plan §20)
+ * Full Cartesian Suite - F.T9: Multi-date x tz-mix x sequence x uid (case list: .ai/TEST-CASES.md)
  */
 import { expect } from '@open-wc/testing';
 import { mountAtcb } from '../helpers/mount.js';

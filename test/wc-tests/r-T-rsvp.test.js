@@ -1,7 +1,7 @@
 /**
- * Reduced Suite - Group T: PRO RSVP - rendering, client-side validation & license guards ONLY (plan §18)
+ * Reduced Suite - Group T: PRO RSVP - rendering, client-side validation & license guards ONLY (case list: .ai/TEST-CASES.md)
  *
- * RSVP API behavior is OUT OF SCOPE per plan §0: no submit flows, no server responses,
+ * RSVP API behavior is OUT OF SCOPE by design (see .ai/TEST-STRATEGY.md): no submit flows, no server responses,
  * no thank-you states, no seat checks. The RSVP form REPLACES the calendar-link button.
  *
  * Note: @web/test-runner serves from localhost, which the license guard explicitly allows,

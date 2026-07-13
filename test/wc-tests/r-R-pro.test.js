@@ -1,5 +1,5 @@
 /**
- * Reduced Suite - Group R: PRO - proKey fetch & override (plan §17)
+ * Reduced Suite - Group R: PRO - proKey fetch & override (case list: .ai/TEST-CASES.md)
  * All PRO fetches are mocked (no live API). Demo proKeys drive the flows;
  * config variations are layered via proOverride per the PRO docs.
  */

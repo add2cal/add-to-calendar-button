@@ -1,5 +1,5 @@
 /**
- * Reduced Suite - Group U: CSP environment 2x2 (plan §19, U-22..U-25)
+ * Reduced Suite - Group U: CSP environment 2x2 (case list: .ai/TEST-CASES.md)
  *
  * Env axis:   CSP-required (strict meta CSP inside an iframe) vs no CSP (test page default)
  * Nonce axis: cspnonce set vs not set

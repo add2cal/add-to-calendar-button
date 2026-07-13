@@ -1,5 +1,5 @@
 /**
- * Full Cartesian Suite - F.T3: RRULE shape x active output + F.T3b: option availability (plan §20)
+ * Full Cartesian Suite - F.T3: RRULE shape x active output + F.T3b: option availability (case list: .ai/TEST-CASES.md)
  */
 import { expect } from '@open-wc/testing';
 import { mountAtcb, baseEvent } from '../helpers/mount.js';

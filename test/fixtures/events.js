@@ -1,5 +1,5 @@
 /**
- * Event config fixtures - canonical config shapes (plan §1 D5) + DST corner configs (plan group D).
+ * Event config fixtures - canonical config shapes (see .ai/TEST-CASES.md, groups C and D).
  * All dates far in the future (2050) so "past event" auto-handling never kicks in unintentionally.
  *
  * DST boundaries used (assuming current IANA rules continue):

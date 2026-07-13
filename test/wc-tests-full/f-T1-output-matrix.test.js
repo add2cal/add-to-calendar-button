@@ -1,5 +1,5 @@
 /**
- * Full Cartesian Suite - F.T1: Output correctness across {Env x Config x Service} (plan §20)
+ * Full Cartesian Suite - F.T1: Output correctness across {Env x Config x Service} (case list: .ai/TEST-CASES.md)
  * Every valid cell mounts the component with the env's fake flags, clicks the service,
  * and asserts the produced URL / ICS is structurally correct.
  */

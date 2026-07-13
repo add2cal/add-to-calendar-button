@@ -1,5 +1,5 @@
 /**
- * Reduced Suite - Group U: Edge cases & regressions (plan §19)
+ * Reduced Suite - Group U: Edge cases & regressions (case list: .ai/TEST-CASES.md)
  * U-01 lives in the existing recurrence-tz.test.js; U-15 in server-side-init.test.js.
  * The CSP 2x2 (U-22..25) lives in r-U-csp.test.js.
  */

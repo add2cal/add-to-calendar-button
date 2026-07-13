@@ -1,5 +1,5 @@
 /**
- * Reduced Suite - Group N: dataLayer / tracking (plan §13)
+ * Reduced Suite - Group N: dataLayer / tracking (case list: .ai/TEST-CASES.md)
  * Push shape: { eventCategory, eventAction, eventLabel, event } +
  * 'atcb-last-event' attribute mirror = `${event}:${trigger}` on the host element.
  */

@@ -1,5 +1,5 @@
 /**
- * Reduced Suite - Group F: Multi-date / event series (plan §7)
+ * Reduced Suite - Group F: Multi-date / event series (case list: .ai/TEST-CASES.md)
  */
 import { expect, aTimeout } from '@open-wc/testing';
 import { mountAtcb } from '../helpers/mount.js';

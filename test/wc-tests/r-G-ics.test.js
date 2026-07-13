@@ -1,5 +1,5 @@
 /**
- * Reduced Suite - Group G: ICS / Apple output (plan §8)
+ * Reduced Suite - Group G: ICS / Apple output (case list: .ai/TEST-CASES.md)
  */
 import { expect } from '@open-wc/testing';
 import { mountAtcb } from '../helpers/mount.js';

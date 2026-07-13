@@ -1,7 +1,7 @@
 /**
  * PRO fixtures + fetch mocking.
  *
- * All PRO config fetches are FULLY MOCKED - no live API calls (per test plan §0).
+ * All PRO config fetches are FULLY MOCKED - no live API calls (by design, see .ai/TEST-STRATEGY.md).
  * The demo proKeys drive realistic configs; variations are layered via proOverride
  * (see https://docs.add-to-calendar-pro.com/integration/general#overwrite-settings).
  */

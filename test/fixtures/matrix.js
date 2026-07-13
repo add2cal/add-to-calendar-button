@@ -1,5 +1,5 @@
 /**
- * Full Cartesian Suite - dimension definitions + constraint logic (plan §20).
+ * Full Cartesian Suite - dimension definitions + constraint logic (case list: .ai/TEST-CASES.md).
  * The isValid() function encodes the option-availability rules from src/atcb-decorate.js:
  *  - recurrence keeps only apple/google/ical; google additionally removed on iOS
  *  - ical removed on iOS, apple removed on Android (unless optionsIOS/optionsMobile override)

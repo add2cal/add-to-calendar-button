@@ -1,5 +1,5 @@
 /**
- * Reduced Suite - Group E: Recurring events (plan §6)
+ * Reduced Suite - Group E: Recurring events (case list: .ai/TEST-CASES.md)
  * Recurrence deactivates options not in atcbValidRecurrOptions (['apple','google','ical']);
  * Google is additionally removed on iOS.
  */
@@ -87,9 +87,8 @@ describe('Group E - Recurring events', () => {
   });
 
   it('E-07: UNTIL is converted into an equivalent COUNT (documented actual behavior)', async () => {
-    // PLAN NOTE: the plan expected UNTIL to be preserved verbatim. Actual behavior
-    // (src/atcb-decorate.js): UNTIL is translated into a COUNT of remaining occurrences
-    // so past-occurrence advancement stays consistent.
+    // NOTE (src/atcb-decorate.js): UNTIL is translated into a COUNT of remaining
+    // occurrences so past-occurrence advancement stays consistent.
     const rrule = await icsRrule({ ...CFG.recurDaily, name: 'Until', recurrence: 'RRULE:FREQ=DAILY;UNTIL=20501231T235959Z' }, 'atcb-e07');
     expect(rrule).to.include('FREQ=DAILY');
     expect(rrule).to.match(/COUNT=\d+/);
@@ -144,8 +143,8 @@ describe('Group E - Recurring events', () => {
       recurrence_count: 5,
       options: ['Google'],
     });
-    // PLAN NOTE: the plan assumed the ORIGINAL start date is kept; actual behavior:
-    // atcb_getNextOccurrence advances to the final occurrence of the exhausted series (2020-01-10).
+    // NOTE: atcb_getNextOccurrence advances a fully-past series to its FINAL
+    // occurrence (2020-01-10 here), not the original start date.
     expect(decorated.dates[0].startDate).to.equal('2020-01-10');
     const { host } = await mountAtcb({ name: 'ExhaustedRecurring', startDate: '2020-01-06', startTime: '10:00', endTime: '11:00', recurrence: 'daily', recurrence_count: 5, options: "'Google'", identifier: 'atcb-e12' });
     expect(host.shadowRoot.querySelector('.atcb-initialized')).to.exist;
@@ -180,8 +179,8 @@ describe('Group E - Recurring events', () => {
 
   it('E-15: simplified recurrence flag uses the CORRECTED spelling in this codebase', async () => {
     const decorated = await atcb_decorate_data({ ...CFG.recurDaily, options: ['Google'] });
-    // NOTE - PLAN MISMATCH: the plan expected the legacy misspelled key `recurrence_simplyfied`.
-    // This codebase has fixed the spelling; pinning the corrected contract here.
+    // NOTE: pins the internal flag key spelling (`recurrence_simplified`); it is read
+    // by both the decorator and the validator and must stay in sync between them.
     expect(decorated.recurrence_simplified).to.equal(true);
     expect(decorated.recurrence_simplyfied).to.equal(undefined);
     const raw = await atcb_decorate_data({ ...CFG.recurRaw, options: ['Google'] });

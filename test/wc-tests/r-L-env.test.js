@@ -1,5 +1,5 @@
 /**
- * Reduced Suite - Group L: Environment-driven routing (plan §11)
+ * Reduced Suite - Group L: Environment-driven routing (case list: .ai/TEST-CASES.md)
  * Uses the lib's fake flags (fakeIOS/fakeAndroid/fakeMobile) plus runtime UA overrides
  * (env detection functions read navigator.userAgent at call time).
  */

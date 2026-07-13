@@ -1,5 +1,5 @@
 /**
- * Reduced Suite - Group B: Config validation & error paths (plan §3)
+ * Reduced Suite - Group B: Config validation & error paths (case list: .ai/TEST-CASES.md)
  * Function-level tests against src (mirrors the init pipeline: check_required -> decorate -> validate).
  */
 import { expect } from '@open-wc/testing';
@@ -75,8 +75,8 @@ describe('Group B - Config validation & error paths', () => {
   });
 
   it('B-09: unsupported FREQ values pass the syntax check (documented actual behavior)', async () => {
-    // PLAN NOTE: the plan expected SECONDLY to throw; validation only checks characters,
-    // semantic FREQ checking is delegated to the consuming calendar apps.
+    // NOTE: validation only checks characters; semantic FREQ checking (e.g. SECONDLY)
+    // is delegated to the consuming calendar apps.
     const data = await runPipeline({ ...base, recurrence: 'RRULE:FREQ=SECONDLY' });
     expect(data.recurrence).to.include('SECONDLY');
   });

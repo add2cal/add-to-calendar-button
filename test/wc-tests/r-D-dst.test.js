@@ -1,5 +1,5 @@
 /**
- * Reduced Suite - Group D: DST & timezone corners (plan §5)
+ * Reduced Suite - Group D: DST & timezone corners (case list: .ai/TEST-CASES.md)
  * Highest-bug-risk surface: events around the 2050 DST transitions.
  */
 import { expect } from '@open-wc/testing';

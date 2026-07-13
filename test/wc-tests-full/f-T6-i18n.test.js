@@ -1,5 +1,5 @@
 /**
- * Full Cartesian Suite - F.T6: Localization x output (plan §20)
+ * Full Cartesian Suite - F.T6: Localization x output (case list: .ai/TEST-CASES.md)
  * Top-5 major languages + the 3 RTL languages; label correctness via atcb_translate_hook
  * as oracle, ICS content integrity per language.
  */

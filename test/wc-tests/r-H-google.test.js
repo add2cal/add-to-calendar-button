@@ -1,5 +1,5 @@
 /**
- * Reduced Suite - Group H: Google output + cancelled-click fork (plan §9)
+ * Reduced Suite - Group H: Google output + cancelled-click fork (case list: .ai/TEST-CASES.md)
  */
 import { expect, aTimeout } from '@open-wc/testing';
 import { mountAtcb } from '../helpers/mount.js';
