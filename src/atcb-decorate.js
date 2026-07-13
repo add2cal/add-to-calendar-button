@@ -230,7 +230,8 @@ function atcb_decorate_data_options(data) {
   let { newOptions, iCalGiven, appleGiven } = atcb_process_options(options, data);
   newOptions = atcb_handle_special_google_calendar_case(data, newOptions);
   ({ newOptions, iCalGiven } = atcb_ensure_fallback_options(newOptions, iCalGiven));
-  const mobileOptionsUsedWithIcs = source !== 'general' && (options.includes('ical') || options.includes('apple'));
+  const normalizedSourceOptions = options.map((option) => atcb_normalize_option_name(option));
+  const mobileOptionsUsedWithIcs = source !== 'general' && (normalizedSourceOptions.includes('ical') || normalizedSourceOptions.includes('apple'));
   newOptions = atcb_adjust_platform_specific_options(newOptions, data, iCalGiven, appleGiven, mobileOptionsUsedWithIcs);
   // sort options alphabetically and update data
   newOptions.sort();
@@ -243,11 +244,11 @@ function atcb_determine_options_source(data) {
   let source = 'general';
   let options = data.options || ['ical'];
   if (atcbIsiOS() || data.fakeIOS) {
+    // the more specific optionsIOS wins over optionsMobile; the latter only serves as fallback
     if (data.optionsIOS && data.optionsIOS.length > 0) {
       source = 'ios';
       options = data.optionsIOS;
-    }
-    if (data.optionsMobile && data.optionsMobile.length > 0) {
+    } else if (data.optionsMobile && data.optionsMobile.length > 0) {
       source = 'mobile';
       options = data.optionsMobile;
     }
