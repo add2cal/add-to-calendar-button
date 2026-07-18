@@ -59,6 +59,8 @@ step('Node CJS require (root, style, locale, deprecated variant)', () => {
       "assert.ok(m.i18nStrings['de'], 'locale module registers itself');",
       "const shim = require('add-to-calendar-button/no-pro');",
       "assert.strictEqual(shim.atcb_action, m.atcb_action, 'deprecated variant re-exports the main module');",
+      "const ssr = require('add-to-calendar-button/ssr');",
+      "assert.ok(ssr.atcb_generate_ssr_html({ name: 'X' }).includes('shadowrootmode'), 'ssr shell renders via require');",
       "console.log('cjs consumption ok');",
     ].join('\n'),
   );
@@ -75,11 +77,13 @@ step('Node ESM import (root, style, locale, deprecated variant)', () => {
       "import { css } from 'add-to-calendar-button/styles/3d';",
       "import { strings } from 'add-to-calendar-button/i18n/de';",
       "import * as shim from 'add-to-calendar-button/unstyle';",
+      "import { atcb_generate_ssr_html } from 'add-to-calendar-button/ssr';",
       "assert.strictEqual(typeof m.atcb_action, 'function', 'atcb_action exported');",
       "assert.ok(css.includes('--btn-active-shadow-up'), '3d css delta content');",
       "assert.ok(JSON.stringify(strings).includes('Im Kalender speichern'), 'de strings content');",
       "assert.ok(m.i18nStrings['de'], 'locale module registers itself');",
       "assert.strictEqual(shim.atcb_action, m.atcb_action, 'deprecated variant re-exports the main module');",
+      "assert.ok(atcb_generate_ssr_html({ name: 'X' }).includes('shadowrootmode'), 'ssr shell renders via import');",
       "console.log('esm consumption ok');",
     ].join('\n'),
   );

@@ -31,6 +31,11 @@
       "import": "./dist/locales/*.js",
       "require": "./dist/locales/*.cjs"
     },
+    "./ssr": {
+      "types": "./dist/ssr/index.d.ts",
+      "import": "./dist/ssr/index.js",
+      "require": "./dist/ssr/index.cjs"
+    },
     "./no-pro": {
       "types": "./dist/index.d.ts",
       "import": "./dist/module/no-pro/index.js",
@@ -109,7 +114,8 @@
     "build:demo": "cd demo && npm run generate",
     "build:min": "node scripts/build.mjs --min",
     "build": "node scripts/build.mjs",
-    "test:package": "node scripts/test-package.mjs"
+    "test:package": "node scripts/test-package.mjs",
+    "test:ssr": "node scripts/build.mjs && node --test test/ssr-node/"
   },
   "dependencies": {
     "lit": "^3.3.3",

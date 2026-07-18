@@ -1,6 +1,7 @@
 import { atcbIsBrowser, atcbWcBooleanParams } from './globals';
 import { atcb_decorate_data_options } from './decorate-options';
 import { atcb_decorate_data_dates } from './decorate-dates';
+import { atcb_decorate_sizes } from './sizes';
 import { availableLanguages, rtlLanguages } from '../i18n/index';
 import { atcb_check_bookings } from '../ui/pro';
 import type { ATCBConfig, ATCBInputConfig, ATCBDateEntry } from '../types';
@@ -107,34 +108,6 @@ function atcb_decorate_data_style(data: ATCBConfig): ATCBConfig {
   }
   // return result
   return data;
-}
-
-// prepare sizes
-function atcb_decorate_sizes(size?: string): { [key: string]: number | string } {
-  const sizes: { [key: string]: number | string } = [] as unknown as { [key: string]: number | string };
-  sizes['l'] = sizes['m'] = sizes['s'] = 16;
-  if (size && size !== '') {
-    const sizeParts: (string | number)[] = size.split('|');
-    for (let i = 0; i < sizeParts.length; i++) {
-      sizeParts[`${i}`] = parseInt(sizeParts[`${i}`] as string);
-    }
-    if ((sizeParts[0] as number) >= 0 && (sizeParts[0] as number) < 11) {
-      sizes['l'] = sizes['m'] = sizes['s'] = 10 + (sizeParts[0] as number);
-    }
-    if (sizeParts.length > 2) {
-      if ((sizeParts[1] as number) >= 0 && (sizeParts[1] as number) < 11) {
-        sizes['m'] = 10 + (sizeParts[1] as number);
-      }
-      if ((sizeParts[2] as number) >= 0 && (sizeParts[2] as number) < 11) {
-        sizes['s'] = 10 + (sizeParts[2] as number);
-      }
-    } else if (sizeParts.length == 2) {
-      if ((sizeParts[1] as number) >= 0 && (sizeParts[1] as number) < 11) {
-        sizes['m'] = sizes['s'] = 10 + (sizeParts[1] as number);
-      }
-    }
-  }
-  return sizes;
 }
 
 // determine dark mode

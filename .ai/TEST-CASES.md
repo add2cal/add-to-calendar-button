@@ -398,3 +398,24 @@ throwaway consumer and asserts every consumption path - Node CJS require, Node E
 ./styles/*, ./i18n/*, deprecated variant subpaths), types under moduleResolution bundler AND node16,
 and a vite build importing one extra style plus one extra locale with content and size-bound checks
 (locale subsetting proven by asserting absence of a not-imported locale).
+
+## Group S - SSR shell render (test/ssr-node/render.test.mjs, `npm run test:ssr`)
+
+Plain Node WITHOUT DOM emulation (the ssr entry must be DOM-free); string assertions against dist/ssr.
+
+- S-01: environment is DOM-free (no document, no window)
+- S-02: ESM and CJS entries expose the same generator
+- S-03: default shell carries host attributes (official kebab names), DSD template, styles and the real label
+- S-04: buttonStyle selects exactly its delta; unknown styles fall back to default
+- S-05: size attribute maps to the font-size custom properties (same math as the client)
+- S-06: date style renders skeleton spans instead of computed date parts
+- S-07: inline RSVP renders a full-width skeleton block
+- S-08: rtl languages mark the wrapper; hidden config keeps the shell hidden
+- S-09: attribute values and label text are escaped
+- S-10: unknown languages fall back to the english label
+
+## Group Z - SSR shell hydration (test/wc-tests/r-Z-ssr-hydration.test.js)
+
+- Z-01: the shell paints before init and is swapped for the real button without layout shift
+- Z-02: hydrated DOM matches a client-only render of the same config (normalized outerHTML equality)
+- Z-03: without declarative shadow DOM (innerHTML path) the element initializes client-only and drops the inert template

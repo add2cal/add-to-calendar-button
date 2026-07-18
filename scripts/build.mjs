@@ -173,6 +173,68 @@ async function buildLib() {
   }
 }
 
+// ---------- step 2b: ssr entry (es + cjs) ----------
+
+const SSR_CSS_HOOK = 'const atcbSsrCssTemplate: { [key: string]: string } = {};';
+const SSR_LABELS_HOOK = 'const atcbSsrLabels: { [key: string]: string } = {};';
+
+function injectSsrData(code, id) {
+  if (!id.replaceAll('\\', '/').endsWith('src/ssr/index.ts')) return null;
+  if (!code.includes(SSR_CSS_HOOK) || !code.includes(SSR_LABELS_HOOK)) {
+    throw new Error('ssr/index.ts: css/labels hooks not found - build assumption broken');
+  }
+  // the ssr bundle is server-only: carrying every style delta and every default
+  // label is size-uncritical and keeps the shell fetch-free
+  const cssMap = { core: cssArtifacts.coreFull };
+  for (const style of AVAILABLE_STYLES) {
+    cssMap[`${style}`] = cssArtifacts.deltas[`${style}`];
+  }
+  const labels = {};
+  for (const file of fs.readdirSync(r('src/i18n/locales'))) {
+    if (!file.endsWith('.json')) continue;
+    const pack = JSON.parse(fs.readFileSync(r('src/i18n/locales', file), 'utf8'));
+    if (pack.label && typeof pack.label.addtocalendar === 'string') {
+      labels[file.replace(/\.json$/, '')] = pack.label.addtocalendar;
+    }
+  }
+  return code.replace(SSR_CSS_HOOK, `const atcbSsrCssTemplate: { [key: string]: string } = ${JSON.stringify(cssMap)};`).replace(SSR_LABELS_HOOK, `const atcbSsrLabels: { [key: string]: string } = ${JSON.stringify(labels)};`);
+}
+
+async function buildSsr() {
+  for (const format of ['es', 'cjs']) {
+    await viteBuild({
+      configFile: false,
+      logLevel: 'warn',
+      resolve: format === 'cjs' ? { conditions: ['node', 'production', 'module', 'import', 'default'] } : undefined,
+      plugins: [
+        {
+          name: 'atcb-ssr-data',
+          enforce: 'pre',
+          transform(code, id) {
+            const result = injectSsrData(code, id);
+            return result === null ? null : { code: result, map: null };
+          },
+        },
+      ],
+      build: {
+        outDir: 'dist',
+        emptyOutDir: false,
+        minify: false,
+        target: 'es2020',
+        lib: {
+          entry: r('src/ssr/index.ts'),
+          formats: [format],
+          fileName: () => (format === 'es' ? 'ssr/index.js' : 'ssr/index.cjs'),
+        },
+        rollupOptions: {
+          external: ['timezones-ical-library'],
+        },
+      },
+    });
+  }
+  fs.writeFileSync(r('dist/ssr/package.json'), '{ "type": "module" }');
+}
+
 // ---------- step 3: esbuild browser build (iife) ----------
 
 async function buildBrowser({ minify }) {
@@ -205,11 +267,13 @@ async function buildBrowser({ minify }) {
 // ---------- step 4: public types ----------
 
 function buildTypes() {
-  // flat single-file declaration bundle: no deep d.ts import graph to resolve, which
+  // flat single-file declaration bundles: no deep d.ts import graph to resolve, which
   // keeps the types working for every consumer moduleResolution (bundler, node16, classic)
   execSync('npx dts-bundle-generator -o dist/index.d.ts --inline-declare-global --no-check --no-banner src/index.ts', { cwd: root, stdio: ['ignore', 'ignore', 'inherit'] });
-  const generated = fs.readFileSync(r('dist/index.d.ts'), 'utf8');
-  fs.writeFileSync(r('dist/index.d.ts'), licenseBanner('Public type declarations (generated from src - do not edit)') + '\n' + generated);
+  execSync('npx dts-bundle-generator -o dist/ssr/index.d.ts --inline-declare-global --no-check --no-banner src/ssr/index.ts', { cwd: root, stdio: ['ignore', 'ignore', 'inherit'] });
+  for (const file of ['dist/index.d.ts', 'dist/ssr/index.d.ts']) {
+    fs.writeFileSync(r(file), licenseBanner('Public type declarations (generated from src - do not edit)') + '\n' + fs.readFileSync(r(file), 'utf8'));
+  }
 }
 
 // ---------- step 5: finalize ----------
@@ -324,6 +388,19 @@ function sanityCheck() {
   if (!types.includes('ATCBActionEventConfig') || !types.includes('AddToCalendarButtonType')) problems.push('dist/index.d.ts: public types missing');
   if (!types.includes('declare global')) problems.push('dist/index.d.ts: global element declarations missing');
   if (!types.includes('atcb_action')) problems.push('dist/index.d.ts: atcb_action declaration missing');
+  // ssr entry: all style deltas and all default labels baked in, both module formats
+  for (const file of ['index.js', 'index.cjs', 'index.d.ts', 'package.json']) {
+    if (!fs.existsSync(r('dist/ssr', file))) problems.push(`dist/ssr/${file} missing`);
+  }
+  if (fs.existsSync(r('dist/ssr/index.js'))) {
+    const ssrBuild = fs.readFileSync(r('dist/ssr/index.js'), 'utf8');
+    for (const style of AVAILABLE_STYLES) {
+      // eslint-disable-next-line security/detect-non-literal-regexp -- style names come from the literal AVAILABLE_STYLES list above
+      if (!new RegExp(`["']?${style.replace(/[^a-z0-9]/g, '\\$&')}["']?:\\s*["']`).test(ssrBuild)) problems.push(`dist/ssr/index.js: ${style} css delta not baked in`);
+    }
+    if (!ssrBuild.includes('Im Kalender speichern')) problems.push('dist/ssr/index.js: localized default labels not baked in');
+    if (!ssrBuild.includes('atcb_generate_ssr_html')) problems.push('dist/ssr/index.js: atcb_generate_ssr_html export missing');
+  }
   // deprecation shims: present, tiny, and re-exporting/loading the main artifact
   for (const variant of DEPRECATED_VARIANTS) {
     for (const [file, marker] of [
@@ -355,6 +432,7 @@ const started = Date.now();
 cleanOldBuildFiles();
 buildCssArtifacts();
 await buildLib();
+await buildSsr();
 await buildBrowser({ minify: false });
 if (withMin) {
   await buildBrowser({ minify: true });

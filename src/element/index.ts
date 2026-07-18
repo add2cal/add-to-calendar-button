@@ -39,6 +39,7 @@ if (atcbIsBrowser()) {
     };
 
     declare _buttonTemplate: TemplateResult | null;
+    _ssrShellNodes: Element[];
     _initialized: Promise<void>;
     _initializedResolver!: () => void;
     state: { initializing: boolean; initialized: boolean; ready: boolean; updatePending: boolean };
@@ -54,11 +55,20 @@ if (atcbIsBrowser()) {
     constructor() {
       super();
       this._initialized = new Promise((resolve) => (this._initializedResolver = resolve));
-      // attach the shadow root exactly like v2 did (Lit adopts a pre-attached root via
-      // createRenderRoot below). Mind that `delegateFocus` is the historic misspelling of
-      // `delegatesFocus` - it is preserved on purpose until the phase 9 WCAG pass, since
-      // fixing it changes focus behavior.
-      this.attachShadow({ mode: 'open', delegateFocus: true } as unknown as ShadowRootInit);
+      // a server-rendered declarative shadow root may already exist at upgrade time.
+      // Adopt it instead of re-attaching (attachShadow would CLEAR the declarative
+      // root) and remember its nodes: they keep the shell painted until the real
+      // render is ready to swap in (see removeSsrShell)
+      if (this.shadowRoot) {
+        this._ssrShellNodes = Array.from(this.shadowRoot.children);
+      } else {
+        // attach the shadow root exactly like v2 did (Lit adopts a pre-attached root via
+        // createRenderRoot below). Mind that `delegateFocus` is the historic misspelling of
+        // `delegatesFocus` - it is preserved on purpose until the phase 9 WCAG pass, since
+        // fixing it changes focus behavior.
+        this.attachShadow({ mode: 'open', delegateFocus: true } as unknown as ShadowRootInit);
+        this._ssrShellNodes = [];
+      }
       this._buttonTemplate = null;
       this.state = {
         initializing: false,
@@ -68,6 +78,16 @@ if (atcbIsBrowser()) {
       };
       this.data = {};
       this.error = false;
+    }
+
+    // drop the server-rendered shell in the same synchronous block that makes the real
+    // render visible: the browser never paints the in-between state, so the shell is
+    // replaced without layout shift
+    removeSsrShell(): void {
+      for (const node of this._ssrShellNodes) {
+        node.remove();
+      }
+      this._ssrShellNodes = [];
     }
 
     override createRenderRoot(): ShadowRoot {
@@ -82,6 +102,11 @@ if (atcbIsBrowser()) {
 
     override connectedCallback(): void {
       super.connectedCallback();
+      // browsers without declarative shadow DOM leave the server-rendered template as
+      // an inert light-DOM child - drop it and initialize client-only
+      if (this._ssrShellNodes.length === 0) {
+        this.querySelector(':scope > template[shadowrootmode]')?.remove();
+      }
       if (!this.initializing) {
         this.initializing = true;
         // Defer the update to ensure it's non-blocking
@@ -183,7 +208,7 @@ if (atcbIsBrowser()) {
       this.data = {};
       this._buttonTemplate = null;
       await this.updateComplete;
-      const rootObj = this.shadowRoot!.querySelector('.atcb-initialized') as HTMLElement | null;
+      const rootObj = this.shadowRoot!.querySelector('.atcb-initialized:not([data-atcb-ssr])') as HTMLElement | null;
       if (rootObj) {
         // reset the shell to its pristine state (v2 recreated the node; we reuse the
         // lit-rendered one). Foreign element children (e.g. an RSVP form) are removed;
@@ -273,7 +298,7 @@ if (atcbIsBrowser()) {
         // translations are needed synchronously at render time - load the pack first
         await atcb_ensure_locale(data);
         await atcb_validate(data);
-        const rootObj = host.querySelector('.atcb-initialized') as HTMLElement;
+        const rootObj = host.querySelector('.atcb-initialized:not([data-atcb-ssr])') as HTMLElement;
         // ... and on success, load css and generate the button
         atcb_set_light_mode(host, data);
         rootObj.setAttribute('lang', data.language!);
@@ -310,6 +335,8 @@ if (atcbIsBrowser()) {
             atcb_generate_rich_data(data, host.host);
           }
         }
+        // the real render is complete - swap out a server-rendered shell, if any
+        this.removeSsrShell();
         // log event
         atcb_log_event('initialization', data.identifier!, data.identifier!);
         if (!data.proKey && data.hideBranding && !document.getElementById('atcb-reference')) {
@@ -317,6 +344,7 @@ if (atcbIsBrowser()) {
         }
         return true;
       } catch (e) {
+        this.removeSsrShell();
         throw new Error((e as { message?: string }).message);
       }
     }
