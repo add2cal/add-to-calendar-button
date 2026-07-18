@@ -60,6 +60,8 @@
       "required": "Du har inte fyllt i alla nödvändiga fält korrekt",
       "sending": "Det uppstod ett problem när ditt svar skickades. Försök igen senare"
     },
-    "success": "Skickat framgångsrikt!"
+    "success": {
+      "title": "Skickat framgångsrikt!"
+    }
   }
 }

@@ -60,6 +60,8 @@
       "required": "Je hebt niet alle vereiste velden correct ingevuld",
       "sending": "Er was een probleem met het versturen van je antwoord. Probeer het later opnieuw"
     },
-    "success": "Succesvol verstuurd!"
+    "success": {
+      "title": "Succesvol verstuurd!"
+    }
   }
 }

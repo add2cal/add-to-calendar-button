@@ -60,6 +60,8 @@
       "required": "Nevyplnil jsi správně všechna požadovaná pole",
       "sending": "Při odesílání tvé odpovědi došlo k problému. Zkus to prosím později znovu"
     },
-    "success": "Úspěšně odesláno!"
+    "success": {
+      "title": "Úspěšně odesláno!"
+    }
   }
 }

@@ -1,12 +1,14 @@
 {
   "label": {
     "addtocalendar": "Hozzáadás a naptárhoz",
-    "rsvp": "Válasz",
     "share": {
       "email": "Megosztás e-mailben",
       "copy": "Link másolása",
       "copied": "Másolva",
       "email_subject": "Mentsd el ezt az eseményt"
+    },
+    "rsvp": {
+      "title": "Válasz"
     }
   },
   "ical": "iCal fájl",
@@ -61,6 +63,8 @@
       "required": "Nem töltöttél ki megfelelően minden kötelező mezőt",
       "sending": "Hiba történt a válasz küldése során. Kérjük, próbáld újra később"
     },
-    "success": "Sikeresen elküldve!"
+    "success": {
+      "title": "Sikeresen elküldve!"
+    }
   }
 }

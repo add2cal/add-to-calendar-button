@@ -60,6 +60,8 @@
       "required": "Nu ai completat corect toate câmpurile necesare",
       "sending": "A apărut o problemă la trimiterea răspunsului tău. Încearcă din nou mai târziu"
     },
-    "success": "Trimis cu succes!"
+    "success": {
+      "title": "Trimis cu succes!"
+    }
   }
 }

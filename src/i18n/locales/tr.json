@@ -60,6 +60,8 @@
       "required": "Gerekli tüm alanları doğru şekilde doldurmadınız",
       "sending": "Yanıtınızı gönderirken bir sorun oluştu. Lütfen daha sonra tekrar deneyin"
     },
-    "success": "Başarıyla gönderildi!"
+    "success": {
+      "title": "Başarıyla gönderildi!"
+    }
   }
 }

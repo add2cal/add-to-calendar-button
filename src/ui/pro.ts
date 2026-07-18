@@ -94,7 +94,7 @@ async function atcb_generate_ty(hostEl: ShadowRoot | HTMLElement, dataObj: ATCBC
     tyData.headline = atcb_translate_hook('thankyou', data) + '!';
   }
   // prepare content with...
-  let tyContent = '<div class="pro"><p id="ty-success-msg">' + atcb_translate_hook('form.success', data) + '</p><div id="ty-content">';
+  let tyContent = '<div class="pro"><p id="ty-success-msg">' + atcb_translate_hook('form.success.title', data) + '</p><div id="ty-content">';
   // intro text
   if (tyData.text && tyData.text !== '') {
     tyContent += atcb_rewrite_html_elements(tyData.text);
@@ -278,7 +278,7 @@ async function atcb_generate_rsvp_form(host: ShadowRoot, data: ATCBConfig, hostE
   const staticID = data.proKey || 'demo-rsvp';
   if (rsvpData.initial_confirmation === false) {
     rsvpContent += '<div id="rsvp-status-group">';
-    rsvpContent += '<p>' + atcb_translate_hook('form.status', data) + '</p>';
+    rsvpContent += '<p>' + atcb_translate_hook('form.status.title', data) + '</p>';
     rsvpContent +=
       '<div class="pro-field pro-field-type-radio"><div><input type="radio" name="' +
       staticID +
@@ -628,7 +628,7 @@ async function atcb_generate_rsvp_button(host: ShadowRoot, data: ATCBConfig): Pr
     if (rsvpData.bookedOut) {
       return atcb_translate_hook('label.rsvp.bookedout', data);
     }
-    return atcb_translate_hook('label.rsvp', data);
+    return atcb_translate_hook('label.rsvp.title', data);
   })();
   // generate the label incl. eventListeners
   atcb_generate_label(host, data, buttonTrigger, 'rsvp', !data.hideIconButton, label, true);

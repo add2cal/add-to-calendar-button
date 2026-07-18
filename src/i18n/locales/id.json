@@ -60,6 +60,8 @@
       "required": "Kamu belum mengisi semua kolom yang diperlukan dengan benar",
       "sending": "Ada masalah saat mengirim jawabanmu. Coba lagi nanti"
     },
-    "success": "Berhasil terkirim!"
+    "success": {
+      "title": "Berhasil terkirim!"
+    }
   }
 }

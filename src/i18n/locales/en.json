@@ -1,12 +1,14 @@
 {
   "label": {
     "addtocalendar": "Add to Calendar",
-    "rsvp": "RSVP",
     "share": {
       "email": "Share via Email",
       "copy": "Copy Link",
       "copied": "Copied",
       "email_subject": "Save this event"
+    },
+    "rsvp": {
+      "title": "RSVP"
     }
   },
   "ical": "iCal File",
@@ -61,6 +63,8 @@
       "required": "You did not properly fill all required fields",
       "sending": "There was a problem sending your response. Please try again later"
     },
-    "success": "Sent successfully!"
+    "success": {
+      "title": "Sent successfully!"
+    }
   }
 }

@@ -60,6 +60,8 @@
       "required": "Du har ikke fylt ut alle de nødvendige feltene riktig",
       "sending": "Det oppsto et problem med å sende svaret ditt. Vennligst prøv igjen senere"
     },
-    "success": "Sendt suksessfullt!"
+    "success": {
+      "title": "Sendt suksessfullt!"
+    }
   }
 }

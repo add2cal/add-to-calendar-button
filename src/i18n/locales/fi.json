@@ -60,6 +60,8 @@
       "required": "Et täyttänyt kaikkia vaadittuja kenttiä oikein",
       "sending": "Vastauksen lähettämisessä ilmeni ongelma. Yritä myöhemmin uudelleen"
     },
-    "success": "Lähetetty onnistuneesti!"
+    "success": {
+      "title": "Lähetetty onnistuneesti!"
+    }
   }
 }

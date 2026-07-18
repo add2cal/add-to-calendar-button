@@ -60,6 +60,8 @@
       "required": "No has completado correctamente todos los campos requeridos",
       "sending": "Hubo un problema al enviar tu respuesta. Por favor, inténtalo de nuevo más tarde"
     },
-    "success": "Enviado con éxito!"
+    "success": {
+      "title": "Enviado con éxito!"
+    }
   }
 }

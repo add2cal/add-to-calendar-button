@@ -60,6 +60,8 @@
       "required": "Bạn chưa điền đúng tất cả các trường bắt buộc",
       "sending": "Có sự cố khi gửi phản hồi của bạn. Vui lòng thử lại sau"
     },
-    "success": "Gửi thành công!"
+    "success": {
+      "title": "Gửi thành công!"
+    }
   }
 }

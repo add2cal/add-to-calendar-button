@@ -60,6 +60,8 @@
       "required": "Nie wypełniłeś wszystkich wymaganych pól poprawnie",
       "sending": "Wystąpił problem z wysłaniem twojej odpowiedzi. Spróbuj ponownie później"
     },
-    "success": "Wysłano pomyślnie!"
+    "success": {
+      "title": "Wysłano pomyślnie!"
+    }
   }
 }

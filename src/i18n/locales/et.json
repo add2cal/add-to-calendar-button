@@ -59,6 +59,8 @@
       "required": "Sa pole kõiki nõutavaid välju korrektselt täitnud",
       "sending": "Sinu vastuse saatmisel tekkis probleem. Palun proovi hiljem uuesti"
     },
-    "success": "Edukalt saadetud!"
+    "success": {
+      "title": "Edukalt saadetud!"
+    }
   }
 }
