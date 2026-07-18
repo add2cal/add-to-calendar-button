@@ -10,6 +10,10 @@ Open-source web component (`<add-to-calendar-button>`) that renders an "Add to C
 - PRO docs: https://docs.add-to-calendar-pro.com
 - License: Elastic License 2.0
 
+## Active project: v3 refactor (branch `refactor/v3`)
+
+A full rewrite to Lit + strict TypeScript + Vite is in progress, executed phase by phase against the behavior test suite. Plan, locked decisions, phase gates, and execution rules live in **`.ai/REFACTOR-PLAN.md`** — read it before touching anything on `refactor/v3` or its `v3/phase-*` branches. Where that plan explicitly supersedes statements in this file (browser floor, build system, TypeScript — notably gotcha 15), the plan wins on those branches.
+
 ## Source structure (`/src` only — ignore `/dist`, `/assets/css`)
 
 | File | Role |
