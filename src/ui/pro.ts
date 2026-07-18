@@ -102,7 +102,7 @@ async function atcb_generate_ty(hostEl: ShadowRoot | HTMLElement, dataObj: ATCBC
   // share buttons, if type = share
   if (tyData.type === 'share') {
     tyContent += `<p class="pro-pt pro-share-buttons">
-    <a href="mailto:?subject=${encodeURIComponent(atcb_translate_hook('label.share.email.subject', data))}&body=%0A&#10142;%20${encodeURIComponent(tyData.url!)}%0A%0A" target="_blank" rel="noopener" class="atcb-modal-btn atcb-modal-btn-primary atcb-modal-btn-border btn-flex">
+    <a href="mailto:?subject=${encodeURIComponent(atcb_translate_hook('label.share.email_subject', data))}&body=%0A&#10142;%20${encodeURIComponent(tyData.url!)}%0A%0A" target="_blank" rel="noopener" class="atcb-modal-btn atcb-modal-btn-primary atcb-modal-btn-border btn-flex">
       ${mailIcon}
       ${atcb_translate_hook('label.share.email', data)}
     </a>

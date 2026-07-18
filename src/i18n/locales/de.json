@@ -5,7 +5,7 @@
       "email": "Per E-Mail teilen",
       "copy": "Link kopieren",
       "copied": "Kopiert",
-      "email.subject": "Merke dir diesen Termin"
+      "email_subject": "Merke dir diesen Termin"
     }
   },
   "ical": "iCal-Datei",
@@ -45,7 +45,7 @@
   "date": {
     "status": {
       "cancelled": "Dieser Termin wurde abgesagt.",
-      "cancelled.cta": "Bitte aktualisiere deinen Kalender!"
+      "cancelled_cta": "Bitte aktualisiere deinen Kalender!"
     }
   },
   "close": "Schließen",

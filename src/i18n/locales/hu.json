@@ -6,7 +6,7 @@
       "email": "Megosztás e-mailben",
       "copy": "Link másolása",
       "copied": "Másolva",
-      "email.subject": "Mentsd el ezt az eseményt"
+      "email_subject": "Mentsd el ezt az eseményt"
     }
   },
   "ical": "iCal fájl",
@@ -46,7 +46,7 @@
   "date": {
     "status": {
       "cancelled": "Ez a dátum lemondásra került.",
-      "cancelled.cta": "Kérjük, frissítsd a naptáradat!"
+      "cancelled_cta": "Kérjük, frissítsd a naptáradat!"
     }
   },
   "close": "Bezárás",

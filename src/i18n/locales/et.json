@@ -5,7 +5,7 @@
       "email": "Jaga e-posti teel",
       "copy": "Kopeeri link",
       "copied": "Kopeeritud",
-      "email.subject": "Pane see kuupäev kirja"
+      "email_subject": "Pane see kuupäev kirja"
     }
   },
   "ical": "iCal fail",
@@ -45,7 +45,7 @@
   "date": {
     "status": {
       "cancelled": "See kuupäev on tühistatud.",
-      "cancelled.cta": "Palun uuenda oma kalendrit!"
+      "cancelled_cta": "Palun uuenda oma kalendrit!"
     }
   },
   "close": "Sulge",

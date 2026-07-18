@@ -5,7 +5,7 @@
       "email": "Bagikan via email",
       "copy": "Salin tautan",
       "copied": "Tersalin",
-      "email.subject": "Ingat tanggal ini"
+      "email_subject": "Ingat tanggal ini"
     }
   },
   "ical": "File iCal",
@@ -45,7 +45,7 @@
   "date": {
     "status": {
       "cancelled": "Tanggal ini dibatalkan.",
-      "cancelled.cta": "Perbarui kalender Anda!"
+      "cancelled_cta": "Perbarui kalender Anda!"
     }
   },
   "close": "Tutup",

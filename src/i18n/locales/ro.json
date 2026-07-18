@@ -5,7 +5,7 @@
       "email": "Distribuie prin e-mail",
       "copy": "Copiază linkul",
       "copied": "Copiat",
-      "email.subject": "Ține minte această dată"
+      "email_subject": "Ține minte această dată"
     }
   },
   "ical": "Fisier iCal",
@@ -45,7 +45,7 @@
   "date": {
     "status": {
       "cancelled": "Aceasta data a fost anulata.",
-      "cancelled.cta": "Te rugam sa-ti updatezi calendarul!"
+      "cancelled_cta": "Te rugam sa-ti updatezi calendarul!"
     }
   },
   "close": "Inchide",

@@ -6,7 +6,7 @@
       "email": "שיתוף במייל",
       "copy": "העתק קישור",
       "copied": "הועתק",
-      "email.subject": "שמירת אירוע זה"
+      "email_subject": "שמירת אירוע זה"
     }
   },
   "ical": "קובץ iCal",
@@ -46,7 +46,7 @@
   "date": {
     "status": {
       "cancelled": "תאריך זה בוטל.",
-      "cancelled.cta": "יש לעדכן את היומן!"
+      "cancelled_cta": "יש לעדכן את היומן!"
     }
   },
   "close": "סגירה",

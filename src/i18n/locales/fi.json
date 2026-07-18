@@ -5,7 +5,7 @@
       "email": "Jaa sähköpostitse",
       "copy": "Kopioi linkki",
       "copied": "Kopioitu",
-      "email.subject": "Muista tämä päivämäärä"
+      "email_subject": "Muista tämä päivämäärä"
     }
   },
   "ical": "iCal-tiedosto",
@@ -45,7 +45,7 @@
   "date": {
     "status": {
       "cancelled": "Tämä päivämäärä peruttiin.",
-      "cancelled.cta": "Päivitä kalenterisi!"
+      "cancelled_cta": "Päivitä kalenterisi!"
     }
   },
   "close": "Sulje",

@@ -5,7 +5,7 @@
       "email": "Compartir por E-mail",
       "copy": "Copiar enlace",
       "copied": "Copiado",
-      "email.subject": "Recuerda esta fecha"
+      "email_subject": "Recuerda esta fecha"
     }
   },
   "ical": "iCal Ficha",
@@ -45,7 +45,7 @@
   "date": {
     "status": {
       "cancelled": "Esta fecha fue cancelada.",
-      "cancelled.cta": "Actualice su calendario!"
+      "cancelled_cta": "Actualice su calendario!"
     }
   },
   "close": "Ciérralo",

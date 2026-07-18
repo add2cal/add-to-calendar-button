@@ -5,7 +5,7 @@
       "email": "이메일로 공유하기",
       "copy": "링크 복사하기",
       "copied": "복사됨",
-      "email.subject": "이 날짜를 기억하세요"
+      "email_subject": "이 날짜를 기억하세요"
     }
   },
   "ical": "iCal 파일",
@@ -45,7 +45,7 @@
   "date": {
     "status": {
       "cancelled": "이 날짜는 취소되었습니다.",
-      "cancelled.cta": "캘린더를 업데이트하세요!"
+      "cancelled_cta": "캘린더를 업데이트하세요!"
     }
   },
   "close": "닫다",

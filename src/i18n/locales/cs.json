@@ -5,7 +5,7 @@
       "email": "Sdílet e-mailem",
       "copy": "Kopírovat odkaz",
       "copied": "Zkopírováno",
-      "email.subject": "Zapamatuj si tento termín"
+      "email_subject": "Zapamatuj si tento termín"
     }
   },
   "ical": "Soubor iCal",
@@ -45,7 +45,7 @@
   "date": {
     "status": {
       "cancelled": "Toto datum bylo zrušeno.",
-      "cancelled.cta": "Aktualizujte svůj kalendář!"
+      "cancelled_cta": "Aktualizujte svůj kalendář!"
     }
   },
   "close": "Zavřít",

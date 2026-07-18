@@ -151,7 +151,7 @@ function dateButtonMeta(data: ATCBConfig, subEventIn: string | number = 'all', f
   const fullTimeInfo = atcb_generate_timestring(data.dates!, data.formatLocale || data.language, subEvent as 'all' | number, false, false, forceFullDate);
   const hoverText = (function () {
     if ((subEvent !== 'all' && data.dates![`${subEvent}`]!.status!.toLowerCase() === 'cancelled') || (subEvent === 'all' && data.allCancelled)) {
-      return atcb_translate_hook('date.status.cancelled', data) + '<br>' + atcb_translate_hook('date.status.cancelled.cta', data);
+      return atcb_translate_hook('date.status.cancelled', data) + '<br>' + atcb_translate_hook('date.status.cancelled_cta', data);
     }
     if (data.pastDateHandling !== 'none') {
       if ((subEvent === 'all' && data.allOverdue) || (subEvent !== 'all' && data.dates![`${subEvent}`]!.overdue)) {

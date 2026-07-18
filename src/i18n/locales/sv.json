@@ -5,7 +5,7 @@
       "email": "Dela via e-post",
       "copy": "Kopiera länk",
       "copied": "Kopierat",
-      "email.subject": "Kom ihåg detta datum"
+      "email_subject": "Kom ihåg detta datum"
     }
   },
   "ical": "iCal-fil",
@@ -45,7 +45,7 @@
   "date": {
     "status": {
       "cancelled": "Detta datum har ställts in.",
-      "cancelled.cta": "Uppdatera din kalender!"
+      "cancelled_cta": "Uppdatera din kalender!"
     }
   },
   "close": "Stäng",

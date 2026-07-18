@@ -5,7 +5,7 @@
       "email": "Delen via E-mail",
       "copy": "Link kopiëren",
       "copied": "Gekopieerd",
-      "email.subject": "Onthoud deze datum"
+      "email_subject": "Onthoud deze datum"
     }
   },
   "ical": "iCal File",
@@ -45,7 +45,7 @@
   "date": {
     "status": {
       "cancelled": "Deze datum is geannuleerd.",
-      "cancelled.cta": "Uw agenda bijwerken!"
+      "cancelled_cta": "Uw agenda bijwerken!"
     }
   },
   "close": "Sluiten",

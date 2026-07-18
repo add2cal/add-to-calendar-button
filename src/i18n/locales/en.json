@@ -6,7 +6,7 @@
       "email": "Share via Email",
       "copy": "Copy Link",
       "copied": "Copied",
-      "email.subject": "Save this event"
+      "email_subject": "Save this event"
     }
   },
   "ical": "iCal File",
@@ -46,7 +46,7 @@
   "date": {
     "status": {
       "cancelled": "This date got cancelled.",
-      "cancelled.cta": "Please update your calendar!"
+      "cancelled_cta": "Please update your calendar!"
     }
   },
   "close": "Close",

@@ -5,7 +5,7 @@
       "email": "E-posta ile Paylaş",
       "copy": "Bağlantıyı Kopyala",
       "copied": "Kopyalandı",
-      "email.subject": "Bu Tarihi Unutma"
+      "email_subject": "Bu Tarihi Unutma"
     }
   },
   "ical": "iCal Dosyası",
@@ -45,7 +45,7 @@
   "date": {
     "status": {
       "cancelled": "Bu tarih iptal edildi.",
-      "cancelled.cta": "Lütfen takviminizi güncelleyin!"
+      "cancelled_cta": "Lütfen takviminizi güncelleyin!"
     }
   },
   "close": "Kapat",

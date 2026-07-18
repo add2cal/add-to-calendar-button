@@ -5,7 +5,7 @@
       "email": "Partager par E-mail",
       "copy": "Copier le lien",
       "copied": "Copié",
-      "email.subject": "Retenez cette date"
+      "email_subject": "Retenez cette date"
     }
   },
   "ical": "Fichier iCal",
@@ -45,7 +45,7 @@
   "date": {
     "status": {
       "cancelled": "Cet évènement est annulé.",
-      "cancelled.cta": "Actualisez votre agenda !"
+      "cancelled_cta": "Actualisez votre agenda !"
     }
   },
   "close": "Fermer",

@@ -5,7 +5,7 @@
       "email": "通过电子邮件分享",
       "copy": "复制链接",
       "copied": "已复制",
-      "email.subject": "记住这个日期"
+      "email_subject": "记住这个日期"
     }
   },
   "ical": "iCal 文件",
@@ -45,7 +45,7 @@
   "date": {
     "status": {
       "cancelled": "此日期已取消。",
-      "cancelled.cta": "请更新您的日历!"
+      "cancelled_cta": "请更新您的日历!"
     }
   },
   "close": "关",

@@ -5,7 +5,7 @@
       "email": "Chia sẻ qua Email",
       "copy": "Sao chép liên kết",
       "copied": "Đã sao chép",
-      "email.subject": "Ghi nhớ ngày này"
+      "email_subject": "Ghi nhớ ngày này"
     }
   },
   "ical": "Tệp iCal",
@@ -45,7 +45,7 @@
   "date": {
     "status": {
       "cancelled": "Ngày này đã bị hủy.",
-      "cancelled.cta": "Cập nhật lịch của bạn!"
+      "cancelled_cta": "Cập nhật lịch của bạn!"
     }
   },
   "close": "Đóng",

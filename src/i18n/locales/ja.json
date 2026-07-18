@@ -5,7 +5,7 @@
       "email": "メールで共有",
       "copy": "リンクをコピー",
       "copied": "コピー済み",
-      "email.subject": "この日付を覚えておいて"
+      "email_subject": "この日付を覚えておいて"
     }
   },
   "ical": "iCalファイル",
@@ -45,7 +45,7 @@
   "date": {
     "status": {
       "cancelled": "この日はキャンセルになりました。",
-      "cancelled.cta": "カレンダーを更新する!"
+      "cancelled_cta": "カレンダーを更新する!"
     }
   },
   "close": "閉じる",

@@ -62,9 +62,8 @@ const atcbPendingLocaleLoads: Map<string, Promise<boolean>> = new Map();
  * Translation packs are authored as nested objects for easy editing
  * ("label": { "addtocalendar": ... }); the runtime registry works with flat
  * dotted identifiers ("label.addtocalendar"), so packs get flattened on
- * registration. Flat packs pass through unchanged, and a key that is itself
- * dotted inside a level (used where a key doubles as a group name, like
- * "email" next to "email.subject") joins naturally.
+ * registration. Flat packs pass through unchanged, and dotted keys inside a
+ * level join naturally, so mixed structures register correctly too.
  */
 type NestedTranslations = { [key: string]: string | NestedTranslations };
 

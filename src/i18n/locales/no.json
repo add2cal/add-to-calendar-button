@@ -5,7 +5,7 @@
       "email": "Del via e-post",
       "copy": "Kopier lenke",
       "copied": "Kopiert",
-      "email.subject": "Husk denne datoen"
+      "email_subject": "Husk denne datoen"
     }
   },
   "ical": "iCal-fil",
@@ -45,7 +45,7 @@
   "date": {
     "status": {
       "cancelled": "Denne datoen ble avlyst.",
-      "cancelled.cta": "Oppdater kalenderen din!"
+      "cancelled_cta": "Oppdater kalenderen din!"
     }
   },
   "close": "Lukk",
