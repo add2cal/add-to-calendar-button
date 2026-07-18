@@ -6,6 +6,12 @@
       "copy": "Kopioi linkki",
       "copied": "Kopioitu",
       "email_subject": "Muista tämä päivämäärä"
+    },
+    "rsvp": {
+      "title": "RSVP",
+      "expired": "Vanhentunut",
+      "bookedout": "Varattu",
+      "restart": "Uusi RSVP-vastaus"
     }
   },
   "ical": "iCal-tiedosto",
@@ -58,10 +64,27 @@
   "form": {
     "error": {
       "required": "Et täyttänyt kaikkia vaadittuja kenttiä oikein",
-      "sending": "Vastauksen lähettämisessä ilmeni ongelma. Yritä myöhemmin uudelleen"
+      "sending": "Vastauksen lähettämisessä ilmeni ongelma. Yritä myöhemmin uudelleen",
+      "email": "Sähköpostiosoitteesi ei kelpaa",
+      "bookedoutmany": "Varattu - yritä vähemmällä osallistujamäärällä"
     },
     "success": {
-      "title": "Lähetetty onnistuneesti!"
-    }
+      "title": "Lähetetty onnistuneesti!",
+      "sent": "Vastauksesi on lähetetty. Kiitos!",
+      "email": "Sinun pitäisi saada vahvistussähköposti.",
+      "doi": "Jotta vastauksesi on voimassa, avaa nyt vahvistuslinkki juuri lähettämässämme sähköpostissa (seuraavan 30 minuutin kuluessa).",
+      "demo": "Kiitos. RSVP-demo päättyy tähän.",
+      "already": "Olet jo lähettänyt vastauksen."
+    },
+    "status": {
+      "title": "Osallistutko?",
+      "confirmed": "Kyllä",
+      "undecided": "Ehkä",
+      "declined": "Ei"
+    },
+    "amount": "Osallistujien määrä",
+    "max": "maks.",
+    "email": "Sähköpostiosoite",
+    "seatsleft": "Vapaita paikkoja"
   }
 }

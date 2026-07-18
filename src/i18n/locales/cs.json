@@ -6,6 +6,12 @@
       "copy": "Kopírovat odkaz",
       "copied": "Zkopírováno",
       "email_subject": "Zapamatuj si tento termín"
+    },
+    "rsvp": {
+      "title": "RSVP",
+      "expired": "Vypršelo",
+      "bookedout": "Obsazeno",
+      "restart": "Nová odpověď na RSVP"
     }
   },
   "ical": "Soubor iCal",
@@ -58,10 +64,27 @@
   "form": {
     "error": {
       "required": "Nevyplnil jsi správně všechna požadovaná pole",
-      "sending": "Při odesílání tvé odpovědi došlo k problému. Zkus to prosím později znovu"
+      "sending": "Při odesílání tvé odpovědi došlo k problému. Zkus to prosím později znovu",
+      "email": "Tvá e-mailová adresa není platná",
+      "bookedoutmany": "Obsazeno - zkuste to s menším počtem účastníků"
     },
     "success": {
-      "title": "Úspěšně odesláno!"
-    }
+      "title": "Úspěšně odesláno!",
+      "sent": "Tvá odpověď byla odeslána. Děkuji!",
+      "email": "Měl bys dostat potvrzovací e-mail.",
+      "doi": "Aby byla tvá odpověď platná, musíš nyní otevřít potvrzovací odkaz v e-mailu, který jsme ti právě poslali (během následujících 30 minut).",
+      "demo": "Děkuji. Demo RSVP končí zde.",
+      "already": "Již jsi odeslal odpověď."
+    },
+    "status": {
+      "title": "Zúčastníš se?",
+      "confirmed": "Ano",
+      "undecided": "Možná",
+      "declined": "Ne"
+    },
+    "amount": "Počet účastníků",
+    "max": "max.",
+    "email": "E-mailová adresa",
+    "seatsleft": "Volná místa"
   }
 }

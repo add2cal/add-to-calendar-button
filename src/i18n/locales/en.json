@@ -8,7 +8,10 @@
       "email_subject": "Save this event"
     },
     "rsvp": {
-      "title": "RSVP"
+      "title": "RSVP",
+      "expired": "Expired",
+      "bookedout": "Booked out",
+      "restart": "New RSVP Reply"
     }
   },
   "ical": "iCal File",
@@ -61,10 +64,27 @@
   "form": {
     "error": {
       "required": "You did not properly fill all required fields",
-      "sending": "There was a problem sending your response. Please try again later"
+      "sending": "There was a problem sending your response. Please try again later",
+      "email": "Your email address is not valid",
+      "bookedoutmany": "Booked out - try with less attendees"
     },
     "success": {
-      "title": "Sent successfully!"
-    }
+      "title": "Sent successfully!",
+      "sent": "Your reply has been sent. Thank you!",
+      "email": "You should have received a confirmation email.",
+      "doi": "To make it count, you now need to open the confirmation link in the email we just sent you (within the next 30 minutes).",
+      "demo": "Thank you. The RSVP demo ends here.",
+      "already": "You already replied."
+    },
+    "status": {
+      "title": "Are you joining?",
+      "confirmed": "Yes",
+      "undecided": "Maybe",
+      "declined": "No"
+    },
+    "amount": "Number of attendees",
+    "max": "max.",
+    "email": "Email address",
+    "seatsleft": "Open slots"
   }
 }

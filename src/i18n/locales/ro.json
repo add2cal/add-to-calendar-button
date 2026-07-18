@@ -6,6 +6,12 @@
       "copy": "Copiază linkul",
       "copied": "Copiat",
       "email_subject": "Ține minte această dată"
+    },
+    "rsvp": {
+      "title": "RSVP",
+      "expired": "Expirat",
+      "bookedout": "Locuri epuizate",
+      "restart": "Nou răspuns RSVP"
     }
   },
   "ical": "Fisier iCal",
@@ -58,10 +64,27 @@
   "form": {
     "error": {
       "required": "Nu ai completat corect toate câmpurile necesare",
-      "sending": "A apărut o problemă la trimiterea răspunsului tău. Încearcă din nou mai târziu"
+      "sending": "A apărut o problemă la trimiterea răspunsului tău. Încearcă din nou mai târziu",
+      "email": "Adresa ta de e-mail nu este validă",
+      "bookedoutmany": "Locuri epuizate - încearcă cu mai puțini participanți"
     },
     "success": {
-      "title": "Trimis cu succes!"
-    }
+      "title": "Trimis cu succes!",
+      "sent": "Răspunsul tău a fost trimis. Mulțumesc!",
+      "email": "Ar trebui să fi primit un e-mail de confirmare.",
+      "doi": "Pentru ca răspunsul tău să fie valid, trebuie să deschizi acum linkul de confirmare din e-mailul pe care tocmai l-am trimis (în următoarele 30 de minute).",
+      "demo": "Mulțumesc. Demonstrația RSVP se încheie aici.",
+      "already": "Ai trimis deja un răspuns."
+    },
+    "status": {
+      "title": "Vei participa?",
+      "confirmed": "Da",
+      "undecided": "Poate",
+      "declined": "Nu"
+    },
+    "amount": "Numărul de participanți",
+    "max": "max.",
+    "email": "Adresa de e-mail",
+    "seatsleft": "Locuri disponibile"
   }
 }

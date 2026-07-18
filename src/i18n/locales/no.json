@@ -6,6 +6,12 @@
       "copy": "Kopier lenke",
       "copied": "Kopiert",
       "email_subject": "Husk denne datoen"
+    },
+    "rsvp": {
+      "title": "RSVP",
+      "expired": "Utløpt",
+      "bookedout": "Fullt",
+      "restart": "Ny RSVP-svar"
     }
   },
   "ical": "iCal-fil",
@@ -58,10 +64,27 @@
   "form": {
     "error": {
       "required": "Du har ikke fylt ut alle de nødvendige feltene riktig",
-      "sending": "Det oppsto et problem med å sende svaret ditt. Vennligst prøv igjen senere"
+      "sending": "Det oppsto et problem med å sende svaret ditt. Vennligst prøv igjen senere",
+      "email": "E-postadressen din er ikke gyldig",
+      "bookedoutmany": "Fullt - prøv med færre deltakere"
     },
     "success": {
-      "title": "Sendt suksessfullt!"
-    }
+      "title": "Sendt suksessfullt!",
+      "sent": "Svaret ditt har blitt sendt. Takk!",
+      "email": "Du burde ha mottatt en bekreftelses-e-post.",
+      "doi": "For at svaret ditt skal være gyldig, må du nå åpne bekreftelseslenken i e-posten vi nettopp sendte deg (innen de neste 30 minuttene).",
+      "demo": "Takk. RSVP-demoen avsluttes her.",
+      "already": "Du har allerede sendt et svar."
+    },
+    "status": {
+      "title": "Deltar du?",
+      "confirmed": "Ja",
+      "undecided": "Kanskje",
+      "declined": "Nei"
+    },
+    "amount": "Antall deltakere",
+    "max": "maks.",
+    "email": "E-postadresse",
+    "seatsleft": "Ledige plasser"
   }
 }

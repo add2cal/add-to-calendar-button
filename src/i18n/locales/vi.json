@@ -6,6 +6,12 @@
       "copy": "Sao chép liên kết",
       "copied": "Đã sao chép",
       "email_subject": "Ghi nhớ ngày này"
+    },
+    "rsvp": {
+      "title": "RSVP",
+      "expired": "Hết hạn",
+      "bookedout": "Đã đầy",
+      "restart": "Trả lời RSVP mới"
     }
   },
   "ical": "Tệp iCal",
@@ -58,10 +64,27 @@
   "form": {
     "error": {
       "required": "Bạn chưa điền đúng tất cả các trường bắt buộc",
-      "sending": "Có sự cố khi gửi phản hồi của bạn. Vui lòng thử lại sau"
+      "sending": "Có sự cố khi gửi phản hồi của bạn. Vui lòng thử lại sau",
+      "email": "Địa chỉ email của bạn không hợp lệ",
+      "bookedoutmany": "Đã đầy - thử với số lượng người tham gia ít hơn"
     },
     "success": {
-      "title": "Gửi thành công!"
-    }
+      "title": "Gửi thành công!",
+      "sent": "Phản hồi của bạn đã được gửi. Cảm ơn!",
+      "email": "Bạn sẽ nhận được email xác nhận.",
+      "doi": "Để phản hồi của bạn có hiệu lực, bạn cần mở liên kết xác nhận trong email mà chúng tôi vừa gửi (trong 30 phút tới).",
+      "demo": "Cảm ơn. Bản demo RSVP kết thúc tại đây.",
+      "already": "Bạn đã gửi phản hồi."
+    },
+    "status": {
+      "title": "Bạn có tham gia không?",
+      "confirmed": "Có",
+      "undecided": "Có thể",
+      "declined": "Không"
+    },
+    "amount": "Số người tham gia",
+    "max": "tối đa.",
+    "email": "Địa chỉ Email",
+    "seatsleft": "Địa điểm có sẵn"
   }
 }

@@ -6,6 +6,12 @@
       "copy": "复制链接",
       "copied": "已复制",
       "email_subject": "记住这个日期"
+    },
+    "rsvp": {
+      "title": "RSVP",
+      "expired": "已过期",
+      "bookedout": "已满",
+      "restart": "新的RSVP回复"
     }
   },
   "ical": "iCal 文件",
@@ -58,10 +64,27 @@
   "form": {
     "error": {
       "required": "你没有正确填写所有必填字段",
-      "sending": "发送你的回复时出现问题。请稍后再试"
+      "sending": "发送你的回复时出现问题。请稍后再试",
+      "email": "你的电子邮箱地址无效",
+      "bookedoutmany": "已满 - 尝试减少参与者数量"
     },
     "success": {
-      "title": "成功发送！"
-    }
+      "title": "成功发送！",
+      "sent": "你的回复已发送。谢谢！",
+      "email": "你应该已经收到一封确认电子邮件。",
+      "doi": "为了使你的回复有效，你需要打开我们刚刚发送给你的电子邮件中的确认链接。(在接下来的30分钟内)",
+      "demo": "谢谢。RSVP演示到此结束。",
+      "already": "你已经发送了回复。"
+    },
+    "status": {
+      "title": "你会参加吗？",
+      "confirmed": "是",
+      "undecided": "可能",
+      "declined": "否"
+    },
+    "amount": "参与者数量",
+    "max": "最大",
+    "email": "电子邮箱地址",
+    "seatsleft": "可用的地方"
   }
 }

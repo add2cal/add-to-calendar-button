@@ -6,6 +6,12 @@
       "copy": "Salin tautan",
       "copied": "Tersalin",
       "email_subject": "Ingat tanggal ini"
+    },
+    "rsvp": {
+      "title": "RSVP",
+      "expired": "Kedaluwarsa",
+      "bookedout": "Penuh",
+      "restart": "RSVP Baru"
     }
   },
   "ical": "File iCal",
@@ -58,10 +64,27 @@
   "form": {
     "error": {
       "required": "Kamu belum mengisi semua kolom yang diperlukan dengan benar",
-      "sending": "Ada masalah saat mengirim jawabanmu. Coba lagi nanti"
+      "sending": "Ada masalah saat mengirim jawabanmu. Coba lagi nanti",
+      "email": "Alamat email kamu tidak valid",
+      "bookedoutmany": "Penuh - coba dengan peserta lebih sedikit"
     },
     "success": {
-      "title": "Berhasil terkirim!"
-    }
+      "title": "Berhasil terkirim!",
+      "sent": "Jawabanmu telah dikirim. Terima kasih!",
+      "email": "Kamu seharusnya menerima email konfirmasi.",
+      "doi": "Untuk validasi jawabanmu, kamu harus membuka tautan konfirmasi dalam email yang baru kami kirim (dalam 30 menit ke depan).",
+      "demo": "Terima kasih. Demo RSVP berakhir di sini.",
+      "already": "Kamu sudah mengirim jawaban."
+    },
+    "status": {
+      "title": "Apakah kamu akan menghadiri?",
+      "confirmed": "Ya",
+      "undecided": "Mungkin",
+      "declined": "Tidak"
+    },
+    "amount": "Jumlah peserta",
+    "max": "maks.",
+    "email": "Alamat email",
+    "seatsleft": "Tempat yang tersedia"
   }
 }

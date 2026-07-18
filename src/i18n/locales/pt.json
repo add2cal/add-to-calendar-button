@@ -6,6 +6,12 @@
       "copy": "Copiar link",
       "copied": "Copiado",
       "email_subject": "Lembre-se desta data"
+    },
+    "rsvp": {
+      "title": "RSVP",
+      "expired": "Expirado",
+      "bookedout": "Esgotado",
+      "restart": "Nova resposta RSVP"
     }
   },
   "ical": "Ficheiro iCal",
@@ -58,10 +64,27 @@
   "form": {
     "error": {
       "required": "Você não preencheu todos os campos obrigatórios corretamente",
-      "sending": "Houve um problema ao enviar sua resposta. Por favor, tente novamente mais tarde"
+      "sending": "Houve um problema ao enviar sua resposta. Por favor, tente novamente mais tarde",
+      "email": "Seu endereço de e-mail não é válido",
+      "bookedoutmany": "Esgotado - tente com menos participantes"
     },
     "success": {
-      "title": "Enviado com sucesso!"
-    }
+      "title": "Enviado com sucesso!",
+      "sent": "Sua resposta foi enviada. Obrigado!",
+      "email": "Você deve ter recebido um e-mail de confirmação.",
+      "doi": "Para que sua resposta seja válida, você precisa abrir o link de confirmação no e-mail que acabamos de enviar (nos próximos 30 minutos).",
+      "demo": "Obrigado. A demonstração RSVP termina aqui.",
+      "already": "Você já enviou uma resposta."
+    },
+    "status": {
+      "title": "Você vai participar?",
+      "confirmed": "Sim",
+      "undecided": "Talvez",
+      "declined": "Não"
+    },
+    "amount": "Número de participantes",
+    "max": "máx.",
+    "email": "Endereço de e-mail",
+    "seatsleft": "Assentos disponíveis"
   }
 }

@@ -6,6 +6,12 @@
       "copy": "Link kopiëren",
       "copied": "Gekopieerd",
       "email_subject": "Onthoud deze datum"
+    },
+    "rsvp": {
+      "title": "RSVP",
+      "expired": "Verlopen",
+      "bookedout": "Volgeboekt",
+      "restart": "Nieuwe RSVP-antwoord"
     }
   },
   "ical": "iCal File",
@@ -58,10 +64,27 @@
   "form": {
     "error": {
       "required": "Je hebt niet alle vereiste velden correct ingevuld",
-      "sending": "Er was een probleem met het versturen van je antwoord. Probeer het later opnieuw"
+      "sending": "Er was een probleem met het versturen van je antwoord. Probeer het later opnieuw",
+      "email": "Je e-mailadres is niet geldig",
+      "bookedoutmany": "Volgeboekt - probeer het met minder deelnemers"
     },
     "success": {
-      "title": "Succesvol verstuurd!"
-    }
+      "title": "Succesvol verstuurd!",
+      "sent": "Je antwoord is verzonden. Bedankt!",
+      "email": "Je zou een bevestigingsmail moeten hebben ontvangen.",
+      "doi": "Om je antwoord geldig te maken, moet je nu de bevestigingslink in de e-mail openen die we je zojuist hebben gestuurd (binnen de volgende 30 minuten).",
+      "demo": "Bedankt. De RSVP-demo eindigt hier.",
+      "already": "Je hebt al een antwoord gestuurd."
+    },
+    "status": {
+      "title": "Neem je deel?",
+      "confirmed": "Ja",
+      "undecided": "Misschien",
+      "declined": "Nee"
+    },
+    "amount": "Aantal deelnemers",
+    "max": "max.",
+    "email": "E-mailadres",
+    "seatsleft": "Beschikbare plaatsen"
   }
 }

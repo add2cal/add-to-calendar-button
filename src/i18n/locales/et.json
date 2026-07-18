@@ -6,6 +6,12 @@
       "copy": "Kopeeri link",
       "copied": "Kopeeritud",
       "email_subject": "Pane see kuupäev kirja"
+    },
+    "rsvp": {
+      "title": "RSVP",
+      "expired": "Aegunud",
+      "bookedout": "Välja müüdud",
+      "restart": "Uus RSVP-vastus"
     }
   },
   "ical": "iCal fail",
@@ -57,10 +63,27 @@
   "form": {
     "error": {
       "required": "Sa pole kõiki nõutavaid välju korrektselt täitnud",
-      "sending": "Sinu vastuse saatmisel tekkis probleem. Palun proovi hiljem uuesti"
+      "sending": "Sinu vastuse saatmisel tekkis probleem. Palun proovi hiljem uuesti",
+      "email": "Sinu e-posti aadress ei ole kehtiv",
+      "bookedoutmany": "Välja müüdud - proovi vähemate osalejatega"
     },
     "success": {
-      "title": "Edukalt saadetud!"
-    }
+      "title": "Edukalt saadetud!",
+      "sent": "Sinu vastus on saadetud. Aitäh!",
+      "email": "Sa peaksid olema saanud kinnituse e-kirja.",
+      "doi": "Sinu vastus kehtib, kui oled avanud meie poolt just saadetud e-kirja kinnituslingi (järgmise 30 minuti jooksul).",
+      "demo": "Aitäh. RSVP-demo lõpeb siin.",
+      "already": "Oled juba vastuse saatnud."
+    },
+    "status": {
+      "title": "Kas sa osaled?",
+      "confirmed": "Jah",
+      "undecided": "Võib-olla",
+      "declined": "Ei"
+    },
+    "amount": "Osalejate arv",
+    "max": "max.",
+    "email": "E-posti aadress",
+    "seatsleft": "Vabad kohad"
   }
 }
