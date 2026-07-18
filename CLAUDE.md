@@ -16,20 +16,20 @@ A full rewrite to Lit + strict TypeScript + Vite is in progress, executed phase 
 
 ## Source structure (`/src` only — ignore `/dist`, `/assets/css`)
 
-| File | Role |
-|------|------|
-| `atcb-init.js` | `AddToCalendarButton` custom element, `atcb_action` imperative API, PRO data fetch, global ESC listener |
-| `atcb-decorate.js` | Config normalization pipeline (largest file) |
-| `atcb-validate.js` | Two-phase validation (`atcb_check_required` + `atcb_validate`) |
-| `atcb-globals.js` | Module-load env detection, constants, `atcbWcParams` web-component attribute list |
-| `atcb-links.js` | Calendar URL/ICS construction per service |
-| `atcb-control.js` | Open/close/toggle, dropdown positioning, body-scroll lock |
-| `atcb-generate.js` | DOM construction (button, list, modal) |
-| `atcb-generate-pro.js` | PRO/RSVP/CTA UI — license-guarded with `@preserve` blocks |
-| `atcb-generate-rich-data.js` | Schema.org JSON-LD injection |
-| `atcb-util.js` | Time formatters, RRULE parser, escapers, debounce, position |
-| `atcb-i18n.js` | Translation strings keyed by ISO 639-1 code |
-| `atcb-event.js` | dataLayer pushes + `atcb-last-event` host attribute |
+| File                         | Role                                                                                                    |
+| ---------------------------- | ------------------------------------------------------------------------------------------------------- |
+| `atcb-init.js`               | `AddToCalendarButton` custom element, `atcb_action` imperative API, PRO data fetch, global ESC listener |
+| `atcb-decorate.js`           | Config normalization pipeline (largest file)                                                            |
+| `atcb-validate.js`           | Two-phase validation (`atcb_check_required` + `atcb_validate`)                                          |
+| `atcb-globals.js`            | Module-load env detection, constants, `atcbWcParams` web-component attribute list                       |
+| `atcb-links.js`              | Calendar URL/ICS construction per service                                                               |
+| `atcb-control.js`            | Open/close/toggle, dropdown positioning, body-scroll lock                                               |
+| `atcb-generate.js`           | DOM construction (button, list, modal)                                                                  |
+| `atcb-generate-pro.js`       | PRO/RSVP/CTA UI — license-guarded with `@preserve` blocks                                               |
+| `atcb-generate-rich-data.js` | Schema.org JSON-LD injection                                                                            |
+| `atcb-util.js`               | Time formatters, RRULE parser, escapers, debounce, position                                             |
+| `atcb-i18n.js`               | Translation strings keyed by ISO 639-1 code                                                             |
+| `atcb-event.js`              | dataLayer pushes + `atcb-last-event` host attribute                                                     |
 
 ## Tech stack
 
@@ -48,7 +48,7 @@ Vanilla JS in `./src` — no TypeScript, no framework. Web Component / Shadow DO
 5. **Recurring-event option deactivation.** When `recurrence` is set, the lib REMOVES from the dropdown:
    - Yahoo, MS365, Outlook.com, MS Teams — all envs
    - Google — iOS only
-   
+
    Apple/iCal stays. Enforced in `atcb-decorate.js` option filtering.
 
 6. **`hideBranding=true` is OSS-only.** With a valid `proKey`, the small "Add to Calendar PRO" branding is enforced regardless of the flag — even with `proOverride=true`. Intentional.
@@ -92,6 +92,7 @@ Vanilla JS in `./src` — no TypeScript, no framework. Web Component / Shadow DO
 - Helpers in `test/helpers/` (mount, window.open/file-save interception, ICS parser); fixtures in `test/fixtures/`.
 
 Existing baseline tests (don't break):
+
 - `test/server-side-init.test.js` — CJS smoke
 - `test/wc-tests/wc-load.test.js` — WC init smoke
 - `test/wc-tests/recurrence-tz.test.js` — Berlin midnight regression

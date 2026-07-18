@@ -15,11 +15,11 @@ dataLayer pushes). Internal wiring is never asserted directly.
 
 Three tiers share one helper/fixture layer. Only the smallest runs by default.
 
-| Script | Tier | Content | When |
-|--------|------|---------|------|
-| `npm run test` | Smoke | 16 cases: {Desktop, Mobile} x {OSS, PRO} + RSVP render (`test/wc-tests-smoke/`), plus the two long-standing quick tests | DEFAULT - every CI run / PR |
-| `npm run test:extended` | Reduced | + groups A-U, ~215 hand-written cases (`test/wc-tests/r-*.test.js`) | on demand / pre-merge |
-| `npm run test:full` | Full Cartesian | + ~210 parameterized matrix cases (`test/wc-tests-full/f-*.test.js`) | on demand / releases |
+| Script                  | Tier           | Content                                                                                                                 | When                        |
+| ----------------------- | -------------- | ----------------------------------------------------------------------------------------------------------------------- | --------------------------- |
+| `npm run test`          | Smoke          | 16 cases: {Desktop, Mobile} x {OSS, PRO} + RSVP render (`test/wc-tests-smoke/`), plus the two long-standing quick tests | DEFAULT - every CI run / PR |
+| `npm run test:extended` | Reduced        | + groups A-U, ~215 hand-written cases (`test/wc-tests/r-*.test.js`)                                                     | on demand / pre-merge       |
+| `npm run test:full`     | Full Cartesian | + ~210 parameterized matrix cases (`test/wc-tests-full/f-*.test.js`)                                                    | on demand / releases        |
 
 Every script first runs `test/test-prep.js`, which builds `dist/` (the WC-level tests
 import the built module) and executes the Node import smoke test.

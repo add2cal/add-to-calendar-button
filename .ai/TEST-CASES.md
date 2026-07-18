@@ -358,4 +358,3 @@ the pattern `<template> | <dimension values>`.
 - Pattern: `F.T9 | dates=<n> | tz=<mix> | seq=<n|-> | uid=<value|->`
 - Dimensions: dates {1, 2, 3} x tz {same, mixed} x sequence {unset, 2} x uid {unset, fixed}
 - Total: **24 cases**
-
