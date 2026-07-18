@@ -1,30 +1,49 @@
-import { atcbVersion, atcbIsBrowser, atcbStates, atcbWcParams, atcbWcProParams, atcbWcBooleanParams, atcbWcObjectParams, atcbWcObjectArrayParams, atcbWcArrayParams, atcbWcNumberParams, atcbCssTemplate } from './atcb-globals.js';
-import { atcb_decorate_data } from './atcb-decorate.js';
-import { atcb_check_required, atcb_validate } from './atcb-validate.js';
-import { atcb_generate_button, atcb_create_atcbl } from './atcb-generate.js';
-import { atcb_generate_rich_data } from './atcb-generate-rich-data.js';
-import { atcb_close, atcb_toggle } from './atcb-control.js';
-import { atcb_generate_links } from './atcb-links.js';
-import { atcb_secure_content, atcb_manage_body_scroll } from './atcb-util.js';
-import { atcb_log_event } from './atcb-event.js';
-import { atcb_generate_rsvp_form, atcb_generate_rsvp_button } from './atcb-generate-pro.js';
+import { atcbVersion, atcbIsBrowser, atcbStates, atcbWcParams, atcbWcProParams, atcbWcBooleanParams, atcbWcObjectParams, atcbWcObjectArrayParams, atcbWcArrayParams, atcbWcNumberParams, atcbCssTemplate } from './atcb-globals';
+import { atcb_decorate_data } from './atcb-decorate';
+import { atcb_check_required, atcb_validate } from './atcb-validate';
+import { atcb_generate_button, atcb_create_atcbl } from './atcb-generate';
+import { atcb_generate_rich_data } from './atcb-generate-rich-data';
+import { atcb_close, atcb_toggle } from './atcb-control';
+import { atcb_generate_links } from './atcb-links';
+import { atcb_secure_content, atcb_manage_body_scroll, atcb_secure_url } from './atcb-util';
+import { atcb_log_event } from './atcb-event';
+import { atcb_generate_rsvp_form, atcb_generate_rsvp_button } from './atcb-generate-pro';
+import type { ATCBInputConfig, ATCBConfig, ATCBStateEntry } from './types';
 
 let atcbInitialGlobalInit = false;
 let atcbBtnCount = 0;
-const lightModeMutationObserver = new Map();
+const lightModeMutationObserver: Map<string, MutationObserver> = new Map();
 
 const template = `<div class="atcb-initialized atcb-hidden"></div>`;
+
+// structural stand-in for the AddToCalendarButton custom element, since the class itself
+// is block-scoped inside the atcbIsBrowser() guard below and not usable as a type out here
+interface ATCBHostElement extends HTMLElement {
+  proOverride?: boolean;
+}
 
 // we cannot load the custom element server-side - therefore, we check for a browser environment first
 if (atcbIsBrowser()) {
   class AddToCalendarButton extends HTMLElement {
+    _initialized: Promise<void>;
+    _initializedResolver!: () => void;
+    state: { initializing: boolean; initialized: boolean; ready: boolean; updatePending: boolean };
+    data: ATCBConfig;
+    error: boolean;
+    debug?: boolean;
+    proOverride?: boolean;
+    proKey?: string;
+    identifier?: string;
+    initializing?: boolean;
+    updatePending?: boolean;
+
     constructor() {
       super();
       this._initialized = new Promise((resolve) => (this._initializedResolver = resolve));
       const elem = document.createElement('template');
       elem.innerHTML = template;
-      this.attachShadow({ mode: 'open', delegateFocus: true });
-      this.shadowRoot.append(elem.content.cloneNode(true));
+      this.attachShadow({ mode: 'open', delegateFocus: true } as unknown as ShadowRootInit);
+      this.shadowRoot!.append(elem.content.cloneNode(true));
       this.state = {
         initializing: false,
         initialized: false,
@@ -35,7 +54,7 @@ if (atcbIsBrowser()) {
       this.error = false;
     }
 
-    connectedCallback() {
+    connectedCallback(): void {
       if (!this.initializing) {
         this.initializing = true;
         // Defer the update to ensure it's non-blocking
@@ -43,7 +62,7 @@ if (atcbIsBrowser()) {
       }
     }
 
-    async initializeComponent() {
+    async initializeComponent(): Promise<void> {
       if (this.state.ready) {
         return;
       }
@@ -66,20 +85,20 @@ if (atcbIsBrowser()) {
       try {
         if ((this.hasAttribute('proKey') && this.getAttribute('proKey') !== '') || (this.hasAttribute('prokey') && this.getAttribute('prokey') !== '')) {
           if (this.hasAttribute('proKey') && this.getAttribute('proKey') !== '') {
-            this.data = await atcb_get_pro_data(this.getAttribute('proKey'), this);
+            this.data = await atcb_get_pro_data(this.getAttribute('proKey')!, this);
           } else {
-            this.data = await atcb_get_pro_data(this.getAttribute('prokey'), this);
+            this.data = await atcb_get_pro_data(this.getAttribute('prokey')!, this);
           }
           if (this.data.proKey) this.proKey = this.data.proKey;
         } else {
           this.data.proKey = '';
           // if no data yet, we try reading attributes or the innerHTML of the host element
-          this.data = await atcb_process_inline_data(this, this.debug);
+          this.data = (await atcb_process_inline_data(this, this.debug)) as unknown as ATCBConfig;
         }
       } catch (e) {
         if (this.debug) {
           console.error(e);
-          atcb_render_debug_msg(this.shadowRoot, e);
+          atcb_render_debug_msg(this.shadowRoot!, e);
         }
         this.error = true;
         this.state.initializing = false;
@@ -95,12 +114,12 @@ if (atcbIsBrowser()) {
       return;
     }
 
-    whenInitialized() {
+    whenInitialized(): Promise<void> {
       return this._initialized;
     }
 
-    disconnectedCallback() {
-      atcb_cleanup(this.shadowRoot, this.identifier);
+    disconnectedCallback(): void {
+      atcb_cleanup(this.shadowRoot!, this.identifier);
       if (this.debug) {
         console.log('Add to Calendar Button "' + this.identifier + '" destroyed');
       }
@@ -110,9 +129,9 @@ if (atcbIsBrowser()) {
       }
     }
 
-    static get observedAttributes() {
+    static get observedAttributes(): string[] {
       const observeAdditionally = ['instance', 'prokey', 'proKey', 'prooverride', 'proOverride'];
-      if (this.proKey && this.proKey !== '') {
+      if ((this as unknown as { proKey?: string }).proKey && (this as unknown as { proKey?: string }).proKey !== '') {
         return atcbWcProParams
           .map((element) => {
             return element.toLowerCase();
@@ -126,7 +145,7 @@ if (atcbIsBrowser()) {
         .concat(observeAdditionally);
     }
 
-    attributeChangedCallback(name, oldValue, newValue) {
+    attributeChangedCallback(name: string, oldValue: string | null, newValue: string | null): void {
       // return, if this is the very first run
       if (!this.state.ready) {
         return;
@@ -144,39 +163,39 @@ if (atcbIsBrowser()) {
       }
     }
 
-    async updateComponent() {
+    async updateComponent(): Promise<void> {
       if (!this.updatePending) return;
       // destroy and rebuild the button
       this.data = {};
-      this.shadowRoot.querySelector('.atcb-initialized').remove();
+      this.shadowRoot!.querySelector('.atcb-initialized')!.remove();
       const elem = document.createElement('template');
       elem.innerHTML = template;
-      this.shadowRoot.append(elem.content.cloneNode(true));
+      this.shadowRoot!.append(elem.content.cloneNode(true));
       try {
         if (this.hasAttribute('proKey') && this.getAttribute('proKey') !== '') {
-          this.data = await atcb_get_pro_data(this.getAttribute('proKey'), this);
+          this.data = await atcb_get_pro_data(this.getAttribute('proKey')!, this);
           if (this.data.proKey) this.proKey = this.data.proKey;
         } else if (this.hasAttribute('prokey') && this.getAttribute('prokey') !== '') {
           // double-checking for lower-case version
-          this.data = await atcb_get_pro_data(this.getAttribute('prokey'), this);
+          this.data = await atcb_get_pro_data(this.getAttribute('prokey')!, this);
           if (this.data.proKey) this.proKey = this.data.proKey;
         } else {
-          this.data = await atcb_process_inline_data(this, this.debug);
+          this.data = (await atcb_process_inline_data(this, this.debug)) as unknown as ATCBConfig;
         }
       } catch (e) {
         if (this.debug) {
           console.error(e);
-          atcb_render_debug_msg(this.shadowRoot, e);
+          atcb_render_debug_msg(this.shadowRoot!, e);
         }
         this.updatePending = false;
         return;
       }
-      atcb_cleanup(this.shadowRoot, this.identifier);
+      atcb_cleanup(this.shadowRoot!, this.identifier);
       await this.initButton();
       this.updatePending = false;
     }
 
-    async initButton() {
+    async initButton(): Promise<boolean> {
       if (!this.state.initialized) {
         atcbBtnCount = atcbBtnCount + 1;
       }
@@ -206,19 +225,19 @@ if (atcbIsBrowser()) {
         // we are copying the value to preserve it over re-building the data object
         this.identifier = this.data.identifier;
       }
-      this.setAttribute('atcb-button-id', this.data.identifier);
+      this.setAttribute('atcb-button-id', this.data.identifier!);
       // build
       try {
         this.style.visibility = 'visible';
         this.style.opacity = '1';
         this.style.position = 'relative';
         this.style.outline = 'none';
-        await atcb_build_button(this.shadowRoot, this.data);
+        await atcb_build_button(this.shadowRoot!, this.data);
         return true;
       } catch (e) {
         if (this.debug) {
-          console.error(e.message ? e.message : e);
-          atcb_render_debug_msg(this.shadowRoot, e);
+          console.error((e as { message?: string }).message ? (e as { message?: string }).message : e);
+          atcb_render_debug_msg(this.shadowRoot!, e);
         }
         return false;
       }
@@ -231,8 +250,8 @@ if (atcbIsBrowser()) {
 }
 
 // process inline data
-async function atcb_process_inline_data(el, debug = false) {
-  let data;
+async function atcb_process_inline_data(el: ATCBHostElement, debug = false): Promise<ATCBInputConfig> {
+  let data: ATCBInputConfig;
   try {
     // Attempt to read attributes directly and validate
     data = atcb_read_attributes(el);
@@ -244,7 +263,7 @@ async function atcb_process_inline_data(el, debug = false) {
       throw new Error('Add to Calendar Button generation failed: No data provided.');
     }
     try {
-      const atcbJsonInput = JSON.parse(atcb_secure_content(slotInput.replace(/(\r\n|\n|\r)/g, ''), false));
+      const atcbJsonInput = JSON.parse(atcb_secure_content(slotInput.replace(/(\r\n|\n|\r)/g, ''), false) as string) as ATCBInputConfig;
       await atcb_check_required(atcbJsonInput);
       data = atcbJsonInput;
     } catch (jsonError) {
@@ -259,19 +278,19 @@ async function atcb_process_inline_data(el, debug = false) {
 }
 
 // read data attributes
-function atcb_read_attributes(el, params = atcbWcParams) {
-  let data = {};
+function atcb_read_attributes(el: ATCBHostElement, params: (keyof ATCBInputConfig)[] = atcbWcParams): ATCBInputConfig {
+  const data: { [key: string]: unknown } = {};
   for (let i = 0; i < params.length; i++) {
     // reading data, but removing real code line breaks before parsing.
     // use [br] in the description to create a line break.
-    let attr = params[`${i}`];
+    const attr = params[`${i}`]!;
     if (el.hasAttribute(`${attr}`)) {
-      let inputVal = atcb_secure_content(el.getAttribute(`${attr}`).replace(/(\\r\\n|\\n|\\r)/g, ''), false);
-      let val;
-      if (atcbWcBooleanParams.includes(attr)) {
+      const inputVal = atcb_secure_content(el.getAttribute(`${attr}`)!.replace(/(\\r\\n|\\n|\\r)/g, ''), false) as string;
+      let val: unknown;
+      if ((atcbWcBooleanParams as (keyof ATCBInputConfig)[]).includes(attr)) {
         // if a boolean param has no value, it is handled as prop and set true
         val = !inputVal || inputVal === '' || inputVal.toLowerCase() === 'true' ? true : false;
-      } else if (atcbWcObjectParams.includes(attr)) {
+      } else if ((atcbWcObjectParams as (keyof ATCBInputConfig)[]).includes(attr)) {
         const cleanedInput = (function () {
           if (!inputVal || inputVal === '') {
             return '{}';
@@ -282,7 +301,7 @@ function atcb_read_attributes(el, params = atcbWcParams) {
           return inputVal;
         })();
         val = JSON.parse(cleanedInput);
-      } else if (atcbWcObjectArrayParams.includes(attr)) {
+      } else if ((atcbWcObjectArrayParams as (keyof ATCBInputConfig)[]).includes(attr)) {
         const cleanedInput = (function () {
           if (!inputVal || inputVal === '') {
             return '[]';
@@ -293,49 +312,49 @@ function atcb_read_attributes(el, params = atcbWcParams) {
           return inputVal;
         })();
         val = JSON.parse(cleanedInput);
-      } else if (atcbWcArrayParams.includes(attr)) {
-        val = inputVal;
+      } else if ((atcbWcArrayParams as (keyof ATCBInputConfig)[]).includes(attr)) {
+        let arrVal = inputVal;
         if (inputVal.includes('[')) {
-          val = val.substring(1, val.length - 1);
+          arrVal = arrVal.substring(1, arrVal.length - 1);
         }
         if (inputVal.includes('"') || inputVal.includes("'")) {
-          val = val.substring(1, val.length - 1);
+          arrVal = arrVal.substring(1, arrVal.length - 1);
         }
         if (!inputVal.includes('|')) {
           // legacy support for translating options within the array. As this could include spaces, we skip them here
-          val = val.replace(/\s/g, '');
+          arrVal = arrVal.replace(/\s/g, '');
         }
-        if (val.includes("','")) {
-          val = val.split("','");
+        if (arrVal.includes("','")) {
+          val = arrVal.split("','");
         } else {
-          val = val.split('","');
+          val = arrVal.split('","');
         }
-      } else if (atcbWcNumberParams.includes(attr)) {
+      } else if ((atcbWcNumberParams as (keyof ATCBInputConfig)[]).includes(attr)) {
         val = parseInt(inputVal);
       } else {
         val = inputVal;
       }
       // only set, if no empty object or empty array
-      if ((typeof val === 'object' && Object.keys(val).length === 0) || (Array.isArray(val) && (val.length === 0 || (val.length === 1 && val[0] === '')))) {
+      if ((typeof val === 'object' && val !== null && Object.keys(val).length === 0) || (Array.isArray(val) && (val.length === 0 || (val.length === 1 && val[0] === '')))) {
         continue;
       }
       data[`${attr}`] = val;
     }
   }
-  return data;
+  return data as ATCBInputConfig;
 }
 
 // build the button
-async function atcb_build_button(host, data) {
+async function atcb_build_button(host: ShadowRoot, data: ATCBConfig): Promise<boolean> {
   try {
-    host.host.classList.add('add-to-calendar');
+    (host.host as Element).classList.add('add-to-calendar');
     // Rewrite dynamic dates, standardize line breaks and transform urls in the description
     data = await atcb_decorate_data(data);
     await atcb_validate(data);
-    const rootObj = host.querySelector('.atcb-initialized');
+    const rootObj = host.querySelector('.atcb-initialized') as HTMLElement;
     // ... and on success, load css and generate the button
     atcb_set_light_mode(host, data);
-    rootObj.setAttribute('lang', data.language);
+    rootObj.setAttribute('lang', data.language!);
     atcb_load_css(host, rootObj, data);
     atcb_setup_state_management(data);
     // set global event listeners
@@ -353,23 +372,23 @@ async function atcb_build_button(host, data) {
         atcb_generate_button(host, rootObj, data);
       }
       // create schema.org data (https://schema.org/Event), if possible; not in the subscription case; and add it to the regular DOM
-      if (!data.hideRichData && !data.subscribe && data.name && data.dates[0].location && data.dates[0].startDate) {
+      if (!data.hideRichData && !data.subscribe && data.name && data.dates![0]!.location && data.dates![0]!.startDate) {
         atcb_generate_rich_data(data, host.host);
       }
     }
     // log event
-    atcb_log_event('initialization', data.identifier, data.identifier);
+    atcb_log_event('initialization', data.identifier!, data.identifier!);
     if (!data.proKey && data.hideBranding && !document.getElementById('atcb-reference')) {
-      atcb_create_atcbl(document.body, false, false, true);
+      atcb_create_atcbl(document.body as unknown as ShadowRoot, false, false, true);
     }
     return true;
   } catch (e) {
-    throw new Error(e.message);
+    throw new Error((e as { message?: string }).message);
   }
 }
 
 // destroy the button
-function atcb_cleanup(host, identifier) {
+function atcb_cleanup(host: ShadowRoot, identifier?: string): void {
   // cleaning up a little bit
   atcb_close(host);
   atcb_unset_global_event_listener(identifier);
@@ -387,10 +406,10 @@ function atcb_cleanup(host, identifier) {
 }
 
 // set light mode
-function atcb_set_light_mode(shadowRoot, data) {
+function atcb_set_light_mode(shadowRoot: ShadowRoot, data: ATCBConfig): void {
   // Safari + Firefox combat hack
   // could be removed (together with the global mutation observer on that) as soon as those browsers support the :host-context selector
-  shadowRoot.host.classList.remove('atcb-dark', 'atcb-light', 'atcb-bodyScheme');
+  (shadowRoot.host as Element).classList.remove('atcb-dark', 'atcb-light', 'atcb-bodyScheme');
   const hostLightMode = (function () {
     if (data.lightMode == 'bodyScheme') {
       if (
@@ -408,23 +427,23 @@ function atcb_set_light_mode(shadowRoot, data) {
     }
     return data.lightMode;
   })();
-  shadowRoot.host.classList.add('atcb-' + hostLightMode);
+  (shadowRoot.host as Element).classList.add('atcb-' + hostLightMode);
 }
 
 // get csp nonce
-function atcb_csp_nonce(host) {
+function atcb_csp_nonce(host: ShadowRoot): string | null {
   const cspnonceRegex = /[`'"()[\]{}<>\s]/;
-  if (!host.host.hasAttribute('cspnonce')) {
+  if (!(host.host as Element).hasAttribute('cspnonce')) {
     return null;
   }
-  if (cspnonceRegex.test(host.host.getAttribute('cspnonce'))) {
+  if (cspnonceRegex.test((host.host as Element).getAttribute('cspnonce')!)) {
     throw new Error('cspnonce input contains forbidden characters.');
   }
-  return host.host.getAttribute('cspnonce');
+  return (host.host as Element).getAttribute('cspnonce');
 }
 
 // load the right css
-async function atcb_load_css(host, rootObj = null, data) {
+async function atcb_load_css(host: ShadowRoot, rootObj: HTMLElement | null = null, data: ATCBConfig): Promise<void> {
   const nonceVal = atcb_csp_nonce(host);
   // add global no-scroll style
   if (!document.getElementById('atcb-global-style')) {
@@ -513,7 +532,7 @@ async function atcb_load_css(host, rootObj = null, data) {
   }
 }
 
-async function loadExternalCssAsynch(cssFile, host, rootObj = null, nonceVal = null, placeholder = null, inline = false, buttonsList = false, overrideCss = '') {
+async function loadExternalCssAsynch(cssFile: HTMLLinkElement, host: ShadowRoot, rootObj: HTMLElement | null = null, nonceVal: string | null = null, placeholder: HTMLElement | null = null, inline: boolean = false, buttonsList: boolean = false, overrideCss: string = ''): Promise<void> {
   // load custom override information
   if (overrideCss !== '') {
     const cssContent = document.createElement('style');
@@ -549,7 +568,7 @@ async function loadExternalCssAsynch(cssFile, host, rootObj = null, nonceVal = n
   }
 }
 
-function atcb_render_debug_msg(host, error) {
+function atcb_render_debug_msg(host: ShadowRoot, error: unknown): void {
   if (host.querySelector('.atcb-debug-error-msg')) return;
   const nonceVal = atcb_csp_nonce(host);
   const errorBanner = document.createElement('div');
@@ -560,42 +579,42 @@ function atcb_render_debug_msg(host, error) {
     cssContent.setAttribute('nonce', nonceVal);
   }
   host.prepend(cssContent);
-  errorBanner.textContent = error;
+  errorBanner.textContent = error as string;
   host.append(errorBanner);
 }
 
 // prepare data when not using the web component, but some custom trigger instead
-async function atcb_action(inputData, triggerElement, keyboardTrigger = false) {
+async function atcb_action(inputData: ATCBInputConfig, triggerElement?: HTMLElement, keyboardTrigger = false): Promise<string> {
   // return if not within a browser environment
   if (!atcbIsBrowser()) {
-    return;
+    return undefined as unknown as string;
   }
   // get data
-  let data;
+  let data: ATCBConfig;
   try {
     data = await (async function () {
-      const cleanedInput = atcb_secure_content(inputData);
+      const cleanedInput = atcb_secure_content(inputData) as ATCBInputConfig & { prokey?: string; proOverride?: boolean };
       // pull data from PRO server, if key is given
       if (cleanedInput.prokey && cleanedInput.prokey !== '') {
         cleanedInput.proKey = cleanedInput.prokey;
       }
       if (cleanedInput.proKey && cleanedInput.proKey !== '') {
         try {
-          const proData = await atcb_get_pro_data(cleanedInput.proKey, null, cleanedInput);
+          const proData = await atcb_get_pro_data(cleanedInput.proKey, undefined, cleanedInput);
           return proData;
         } catch (e) {
-          throw new Error(e.message);
+          throw new Error((e as { message?: string }).message);
         }
       } else {
-        return cleanedInput;
+        return cleanedInput as unknown as ATCBConfig;
       }
     })();
   } catch (e) {
     console.error(e);
-    return;
+    return undefined as unknown as string;
   }
   // decorate & validate data
-  data.debug = data.debug === 'true';
+  data.debug = (data.debug as unknown as string) === 'true';
   try {
     await atcb_check_required(data);
   } catch (e) {
@@ -605,7 +624,7 @@ async function atcb_action(inputData, triggerElement, keyboardTrigger = false) {
     throw new Error('Add to Calendar Button generation failed: no data provided or missing required fields - see console logs for details');
   }
   data = await atcb_decorate_data(data);
-  let root = document.body;
+  let root: HTMLElement = document.body;
   // we always force the click trigger in the custom case
   data.trigger = 'click';
   if (triggerElement) {
@@ -635,11 +654,11 @@ async function atcb_action(inputData, triggerElement, keyboardTrigger = false) {
     await atcb_validate(data);
   } catch (e) {
     console.error(e);
-    return false;
+    return false as unknown as string;
   }
   // determine whether we are looking for the 1-option case (also with buttonsList)
   const oneOption = (function () {
-    if (data.options.length === 1) {
+    if (data.options!.length === 1) {
       return true;
     }
     return false;
@@ -647,7 +666,7 @@ async function atcb_action(inputData, triggerElement, keyboardTrigger = false) {
   // to clean-up the stage, we first close anything left open
   const potentialExistingHost = document.getElementById('atcb-customTrigger-' + data.identifier + '-host');
   if (potentialExistingHost) {
-    atcb_close(potentialExistingHost.shadowRoot, false);
+    atcb_close(potentialExistingHost.shadowRoot!, false);
     // unset whatever possible for customTriggers
     if (atcbStates[`${atcbStates['active']}`]) {
       delete atcbStates[`${atcbStates['active']}`];
@@ -655,7 +674,7 @@ async function atcb_action(inputData, triggerElement, keyboardTrigger = false) {
     potentialExistingHost.remove();
   }
   // log event
-  atcb_log_event('initialization', data.identifier, data.identifier);
+  atcb_log_event('initialization', data.identifier!, data.identifier!);
   // we would only render something, if interaction is not blocked and button not hidden
   if (!data.blockInteraction && !data.hidden) {
     // prepare shadow dom and load style
@@ -677,29 +696,29 @@ async function atcb_action(inputData, triggerElement, keyboardTrigger = false) {
       host.style.top = btnDim.height + 'px';
     }
     host.setAttribute('atcb-button-id', data.identifier);
-    host.attachShadow({ mode: 'open', delegateFocus: true });
+    host.attachShadow({ mode: 'open', delegateFocus: true } as unknown as ShadowRootInit);
     const elem = document.createElement('template');
     elem.innerHTML = template;
-    host.shadowRoot.append(elem.content.cloneNode(true));
-    const rootObj = host.shadowRoot.querySelector('.atcb-initialized');
+    host.shadowRoot!.append(elem.content.cloneNode(true));
+    const rootObj = host.shadowRoot!.querySelector('.atcb-initialized') as HTMLElement;
     atcb_setup_state_management(data);
-    atcb_set_light_mode(host.shadowRoot, data);
-    host.shadowRoot.querySelector('.atcb-initialized').setAttribute('lang', data.language);
-    atcb_load_css(host.shadowRoot, rootObj, data);
+    atcb_set_light_mode(host.shadowRoot!, data);
+    (host.shadowRoot!.querySelector('.atcb-initialized') as HTMLElement).setAttribute('lang', data.language!);
+    atcb_load_css(host.shadowRoot!, rootObj, data);
     // set global event listeners
-    atcb_set_global_event_listener(host.shadowRoot, data);
+    atcb_set_global_event_listener(host.shadowRoot!, data);
     // if all is fine, ...
     // ... trigger RSVP form, or ...
     if (typeof atcb_generate_rsvp_form === 'function' && data.rsvp && Object.keys(data.rsvp).length > 0) {
-      atcb_generate_rsvp_form(host.shadowRoot, data, triggerElement, keyboardTrigger);
+      atcb_generate_rsvp_form(host.shadowRoot!, data, triggerElement!, keyboardTrigger);
     } else {
       // ... trigger link at the oneOption case, or ...
       if (oneOption) {
-        await atcb_generate_links(host.shadowRoot, data.options[0], data, 'all', keyboardTrigger);
-        atcb_log_event('openSingletonLink', data.identifier, data.identifier);
+        await atcb_generate_links(host.shadowRoot!, data.options![0]!, data, 'all', keyboardTrigger);
+        atcb_log_event('openSingletonLink', data.identifier!, data.identifier!);
       } else {
         // ... open the options list
-        atcb_toggle(host.shadowRoot, 'open', data, triggerElement, keyboardTrigger);
+        atcb_toggle(host.shadowRoot!, 'open', data, triggerElement ?? null, keyboardTrigger);
       }
     }
   }
@@ -707,28 +726,28 @@ async function atcb_action(inputData, triggerElement, keyboardTrigger = false) {
   if (data.debug) {
     console.log('Add to Calendar Button "' + data.identifier + '" triggered');
   }
-  return data.identifier;
+  return data.identifier as string;
 }
 
 // update global state management
-function atcb_setup_state_management(data) {
-  const singleDates = [];
-  for (let i = 0; i < data.options.length; i++) {
-    singleDates[data.options[`${i}`]] = [];
-    for (let id = 1; id <= data.dates.length; id++) {
+function atcb_setup_state_management(data: ATCBConfig): void {
+  const singleDates: { [key: string]: number[] } = {};
+  for (let i = 0; i < data.options!.length; i++) {
+    singleDates[data.options![`${i}`]!] = [];
+    for (let id = 1; id <= data.dates!.length; id++) {
       // if cancelled and not ical type, we push 1, else 0
-      if (data.dates[id - 1].status.toLowerCase() === 'cancelled') {
-        singleDates[data.options[`${i}`]].push(1);
+      if ((data.dates![id - 1]!.status as string).toLowerCase() === 'cancelled') {
+        singleDates[data.options![`${i}`]!]!.push(1);
       } else {
-        singleDates[data.options[`${i}`]].push(0);
+        singleDates[data.options![`${i}`]!]!.push(0);
       }
     }
   }
-  atcbStates[data.identifier] = singleDates;
+  atcbStates[data.identifier!] = singleDates as unknown as ATCBStateEntry;
 }
 
 // SHARED FUNCTION TO GENERATE THE INIT LOG MESSAGE
-function atcb_init_log(pro = '', hide = false, debug = false) {
+function atcb_init_log(pro: string = '', hide: boolean = false, debug: boolean = false): void {
   if (!atcbInitialGlobalInit) {
     const versionOutput = (function () {
       if (debug) {
@@ -747,7 +766,7 @@ function atcb_init_log(pro = '', hide = false, debug = false) {
 }
 
 // PULLING PRO DATA
-async function atcb_get_pro_data(licenseKey, el = null, directData = {}) {
+async function atcb_get_pro_data(licenseKey?: string, el?: ATCBHostElement, directData: ATCBInputConfig & { proOverride?: boolean } = {}): Promise<ATCBConfig> {
   /*!
    *  @preserve
    *  PER LICENSE AGREEMENT, YOU ARE NOT ALLOWED TO REMOVE OR CHANGE THIS FUNCTION!
@@ -756,41 +775,41 @@ async function atcb_get_pro_data(licenseKey, el = null, directData = {}) {
     // Try to read data from server and log error if not possible
     try {
       const proOverride = el ? el.proOverride : directData.proOverride;
-      const dataOverrides = el ? atcb_read_attributes(el, proOverride ? atcbWcParams : atcbWcProParams) : directData;
+      const dataOverrides: { [key: string]: unknown } = el ? (atcb_read_attributes(el, proOverride ? atcbWcParams : atcbWcProParams) as unknown as { [key: string]: unknown }) : (directData as unknown as { [key: string]: unknown });
       const response = await fetch(`https://${dataOverrides.dev ? 'event-dev.caldn.net' : 'event.caldn.net'}/${licenseKey}/config.json`);
       if (response.ok) {
-        const data = await response.json();
+        const data = (await response.json()) as ATCBConfig;
         if (proOverride) {
           const host = window.location.hostname || '';
           const domain = host.split('.').slice(-2).join('.');
           atcbWcParams.forEach((key) => {
             if (Object.prototype.hasOwnProperty.call(dataOverrides, key) && (['hideBranding', 'ty', 'rsvp'].indexOf(key) === -1 || domain === 'caldn.net' || domain === 'add-to-calendar-pro.com')) {
-              data[`${key}`] = dataOverrides[`${key}`];
+              (data as { [key: string]: unknown })[`${key}`] = dataOverrides[`${key}`];
             }
           });
         } else {
           atcbWcProParams.forEach((key) => {
             if (Object.prototype.hasOwnProperty.call(dataOverrides, key)) {
-              data[`${key}`] = dataOverrides[`${key}`];
+              (data as { [key: string]: unknown })[`${key}`] = dataOverrides[`${key}`];
             }
           });
         }
         if (dataOverrides.rsvp && Object.prototype.hasOwnProperty.call(dataOverrides.rsvp, 'none')) {
           delete data.rsvp;
         }
-        if ((!data.name || data.name === '') && (!data.dates || data.dates[0].name === '')) {
+        if ((!data.name || data.name === '') && (!data.dates || data.dates[0]!.name === '')) {
           throw new Error('Not possible to read proKey config from server...');
         }
-        if (data.landingpage.domain && data.landingpage.domain !== '' && atcb_secure_url(data.landingpage.domain)) {
-          data.domain = data.landingpage.domain;
+        if (data.landingpage!.domain && (data.landingpage!.domain as string) !== '' && atcb_secure_url(data.landingpage!.domain as string)) {
+          data.domain = data.landingpage!.domain as string;
           delete data.landingpage;
         }
-        if ((!data.proxy || data.proxy === '') && (!data.hideBranding || data.hideBranding === '')) {
-          for (let i = 0; i < data.dates.length; i++) {
-            if (data.dates[`${i}`].description && data.dates[`${i}`].description !== '') {
-              data.dates[`${i}`].description += '[br][br][p]Powered by add-to-calendar-pro.com[/p]';
+        if ((!data.proxy || (data.proxy as unknown as string) === '') && (!data.hideBranding || (data.hideBranding as unknown as string) === '')) {
+          for (let i = 0; i < data.dates!.length; i++) {
+            if (data.dates![`${i}`]!.description && data.dates![`${i}`]!.description !== '') {
+              data.dates![`${i}`]!.description += '[br][br][p]Powered by add-to-calendar-pro.com[/p]';
             } else {
-              data.dates[`${i}`].description = 'Powered by add-to-calendar-pro.com';
+              data.dates![`${i}`]!.description = 'Powered by add-to-calendar-pro.com';
             }
           }
           if (data.description && data.description !== '') {
@@ -807,11 +826,11 @@ async function atcb_get_pro_data(licenseKey, el = null, directData = {}) {
       throw new Error('proKey invalid or server not responding!');
     }
   }
-  return {};
+  return {} as ATCBConfig;
 }
 
 // GLOBAL KEYBOARD AND DEVICE LISTENERS
-function atcb_set_global_event_listener(host, data) {
+function atcb_set_global_event_listener(host: ShadowRoot, data: ATCBConfig): void {
   // return, if we are not in a browser
   if (!atcbIsBrowser()) {
     return;
@@ -819,7 +838,7 @@ function atcb_set_global_event_listener(host, data) {
   // temporary listener to any class change at the body or html for the light mode Safari/Firefox hack
   if (data.lightMode == 'bodyScheme') {
     // disconnect any previous observer for this identifier to avoid leaking observers
-    const existingObserver = lightModeMutationObserver.get(data.identifier);
+    const existingObserver = lightModeMutationObserver.get(data.identifier!);
     if (existingObserver) {
       existingObserver.disconnect();
     }
@@ -832,7 +851,7 @@ function atcb_set_global_event_listener(host, data) {
     });
     observer.observe(document.documentElement, { attributes: true });
     observer.observe(document.body, { attributes: true });
-    lightModeMutationObserver.set(data.identifier, observer);
+    lightModeMutationObserver.set(data.identifier!, observer);
   }
   if (!atcbInitialGlobalInit) {
     // global listener for ESC key to close dropdown
@@ -844,84 +863,84 @@ function atcb_set_global_event_listener(host, data) {
   }
 }
 
-function atcb_global_listener_keyup(event) {
-  const host = (function () {
+function atcb_global_listener_keyup(event: KeyboardEvent): void {
+  const host: ShadowRoot | null = (function () {
     const root = document.querySelector('[atcb-button-id="' + atcbStates['active'] + '"]');
     if (root) {
-      return root.shadowRoot;
+      return (root as HTMLElement).shadowRoot;
     }
     return null;
   })();
   if (host && event.key === 'Escape') {
-    atcb_log_event('closeList', 'Ecs Hit', atcbStates['active']);
+    atcb_log_event('closeList', 'Ecs Hit', atcbStates['active'] as unknown as string);
     atcb_toggle(host, 'close', '', '', true);
   }
 }
 
-function atcb_global_listener_keydown(event) {
-  const host = (function () {
+function atcb_global_listener_keydown(event: KeyboardEvent): void {
+  const host: ShadowRoot | null = (function () {
     const root = document.querySelector('[atcb-button-id="' + atcbStates['active'] + '"]');
-    const rootModal = document.getElementById(atcbStates['active'] + '-modal-host');
+    const rootModal = document.getElementById((atcbStates['active'] as unknown as string) + '-modal-host');
     if (rootModal) {
-      return rootModal.shadowRoot;
+      return (rootModal as HTMLElement).shadowRoot;
     }
     if (root) {
-      return root.shadowRoot;
+      return (root as HTMLElement).shadowRoot;
     }
     return null;
   })();
   if (host && host.querySelector('.atcb-list') && (event.key === 'ArrowDown' || event.key === 'ArrowUp' || event.key === 'Tab')) {
     event.preventDefault();
     let targetFocus = 0;
-    let currFocusOption = host.activeElement;
+    const currFocusOption = (host as unknown as { activeElement: Element | null }).activeElement as HTMLElement | null;
     const optionListCount = host.querySelectorAll('.atcb-list-item').length;
     if (currFocusOption && currFocusOption.classList.contains('atcb-list-item')) {
-      if (event.key === 'ArrowDown' && currFocusOption.dataset.optionNumber < optionListCount) {
-        targetFocus = parseInt(currFocusOption.dataset.optionNumber) + 1;
+      if (event.key === 'ArrowDown' && (currFocusOption.dataset.optionNumber as unknown as number) < optionListCount) {
+        targetFocus = parseInt(currFocusOption.dataset.optionNumber!) + 1;
       } else if (event.key === 'Tab') {
         if (event.shiftKey) {
           // Shift+Tab: navigate backwards
-          if (currFocusOption.dataset.optionNumber > 1) {
-            targetFocus = parseInt(currFocusOption.dataset.optionNumber) - 1;
+          if ((currFocusOption.dataset.optionNumber as unknown as number) > 1) {
+            targetFocus = parseInt(currFocusOption.dataset.optionNumber!) - 1;
           } else {
             targetFocus = optionListCount;
           }
         } else {
           // Tab: navigate forwards
-          if (currFocusOption.dataset.optionNumber < optionListCount) {
-            targetFocus = parseInt(currFocusOption.dataset.optionNumber) + 1;
+          if ((currFocusOption.dataset.optionNumber as unknown as number) < optionListCount) {
+            targetFocus = parseInt(currFocusOption.dataset.optionNumber!) + 1;
           } else {
             targetFocus = 1;
           }
         }
-      } else if (event.key === 'ArrowUp' && currFocusOption.dataset.optionNumber >= 1) {
-        targetFocus = parseInt(currFocusOption.dataset.optionNumber) - 1;
+      } else if (event.key === 'ArrowUp' && (currFocusOption.dataset.optionNumber as unknown as number) >= 1) {
+        targetFocus = parseInt(currFocusOption.dataset.optionNumber!) - 1;
       }
       if (targetFocus > 0) {
-        host.querySelector('.atcb-list-item[data-option-number="' + targetFocus + '"]').focus();
+        (host.querySelector('.atcb-list-item[data-option-number="' + targetFocus + '"]') as HTMLElement)!.focus();
       }
     } else {
       switch (event.key) {
         default:
-          host.querySelector('.atcb-list-item[data-option-number="1"]').focus();
+          (host.querySelector('.atcb-list-item[data-option-number="1"]') as HTMLElement)!.focus();
           break;
         case 'ArrowUp':
-          host.querySelector('.atcb-list-item[data-option-number="' + optionListCount + '"]').focus();
+          (host.querySelector('.atcb-list-item[data-option-number="' + optionListCount + '"]') as HTMLElement)!.focus();
           break;
       }
     }
   }
 }
 
-function atcb_global_listener_resize() {
-  const host = (function () {
+function atcb_global_listener_resize(): void {
+  const host: ShadowRoot | null = (function () {
     const root = document.querySelector('[atcb-button-id="' + atcbStates['active'] + '"]');
-    const rootModal = document.getElementById(atcbStates['active'] + '-modal-host');
+    const rootModal = document.getElementById((atcbStates['active'] as unknown as string) + '-modal-host');
     if (rootModal) {
-      return rootModal.shadowRoot;
+      return (rootModal as HTMLElement).shadowRoot;
     }
     if (root) {
-      return root.shadowRoot;
+      return (root as HTMLElement).shadowRoot;
     }
     return null;
   })();
@@ -933,11 +952,11 @@ function atcb_global_listener_resize() {
   }
 }
 
-function atcb_unset_global_event_listener(identifier) {
-  const observer = lightModeMutationObserver.get(identifier);
+function atcb_unset_global_event_listener(identifier?: string): void {
+  const observer = lightModeMutationObserver.get(identifier!);
   if (observer) {
     observer.disconnect();
-    lightModeMutationObserver.delete(identifier);
+    lightModeMutationObserver.delete(identifier!);
   }
 }
 

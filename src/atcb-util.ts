@@ -1,14 +1,15 @@
 import { tzlib_get_offset } from 'timezones-ical-library';
-import { atcbIsMobile, atcbIsiOS, atcbDefaultTarget } from './atcb-globals.js';
-import { atcb_log_event } from './atcb-event.js';
-import { atcbStates } from './atcb-globals.js';
-import { atcb_generate_ty } from './atcb-generate-pro.js';
-import { atcb_decorate_data_dates } from './atcb-decorate.js';
+import { atcbIsMobile, atcbIsiOS, atcbDefaultTarget } from './atcb-globals';
+import { atcb_log_event } from './atcb-event';
+import { atcbStates } from './atcb-globals';
+import { atcb_generate_ty } from './atcb-generate-pro';
+import { atcb_decorate_data_dates } from './atcb-decorate';
+import type { ATCBConfig, ATCBDateEntry, ATCBDateEntryInput } from './types';
 
 // SHARED FUNCTION HOOK FOR WHEN EVENT GOT SAVED
-function atcb_saved_hook(host, data) {
+function atcb_saved_hook(host: ShadowRoot, data: ATCBConfig): void {
   // log event
-  atcb_log_event('success', data.identifier, data.identifier);
+  atcb_log_event('success', data.identifier as string, data.identifier as string);
   // trigger ty modal, if given
   if (data.ty && typeof atcb_generate_ty === 'function') {
     setTimeout(() => {
@@ -18,9 +19,9 @@ function atcb_saved_hook(host, data) {
 }
 
 // SHARED FUNCTION TO SAVE A FILE
-function atcb_save_file(file, filename) {
+function atcb_save_file(file: string, filename: string): void {
   try {
-    const save = document.createElementNS('http://www.w3.org/1999/xhtml', 'a');
+    const save = document.createElementNS('http://www.w3.org/1999/xhtml', 'a') as HTMLAnchorElement;
     save.rel = 'noopener';
     save.href = file;
     // not using default target here, since this needs to happen _self on iOS (abstracted to mobile in general) and _blank at Firefox (abstracted to other setups) due to potential cross-origin restrictions
@@ -37,21 +38,21 @@ function atcb_save_file(file, filename) {
       cancelable: false,
     });
     save.dispatchEvent(evt);
-    (window.URL || window.webkitURL).revokeObjectURL(save.href);
+    (window.URL || (window as unknown as { webkitURL: typeof URL }).webkitURL).revokeObjectURL(save.href);
   } catch (e) {
     console.error(e);
   }
 }
 
 // SHARED FUNCTION TO GENERATE A TIME STRING
-function atcb_generate_time(data, style = 'delimiters', targetCal = 'general', addTimeZoneOffset = false) {
+function atcb_generate_time(data: ATCBConfig | ATCBDateEntry, style = 'delimiters', targetCal = 'general', addTimeZoneOffset = false): { start: string; end: string; duration: string; allday: false } | { start: string; end: string; allday: true } {
   if (data.startTime && data.startTime !== '' && data.endTime && data.endTime !== '') {
     // for the input, we assume GMT/UTC per default
     const newStartDate = new Date(data.startDate + 'T' + data.startTime + ':00.000+00:00');
     // we re-adjust the endDate for the case where the time string generation gets rather called directly
     if (!data.endDate) data.endDate = data.startDate;
     const newEndDate = new Date(data.endDate + 'T' + data.endTime + ':00.000+00:00');
-    const durationMS = newEndDate - newStartDate;
+    const durationMS = (newEndDate as unknown as number) - (newStartDate as unknown as number);
     const durationHours = Math.floor(durationMS / 1000 / 60 / 60);
     const durationMinutes = Math.floor(((durationMS - durationHours * 60 * 60 * 1000) / 1000 / 60) % 60);
     const durationString = (function () {
@@ -61,7 +62,7 @@ function atcb_generate_time(data, style = 'delimiters', targetCal = 'general', a
       return durationHours + ':' + ('0' + durationMinutes).slice(-2);
     })();
     // (see https://tz.add-to-calendar-technology.com/api/zones.json for available TZ names)
-    if ((targetCal == 'ical' || targetCal == 'google') && !/GMT[+|-]\d{1,2}|Etc\/U|Etc\/Zulu|CET|CST6CDT|EET|EST|MET|MST|PST8PDT|WET|PST|PDT|MDT|CST|CDT|EDT|EEST|CEST|HST|HDT|AKST|AKDT|AST|ADT|AEST|AEDT|NZST|NZDT|IST|IDT|WEST|ACST|ACDT|BST/i.test(data.timeZone)) {
+    if ((targetCal == 'ical' || targetCal == 'google') && !/GMT[+|-]\d{1,2}|Etc\/U|Etc\/Zulu|CET|CST6CDT|EET|EST|MET|MST|PST8PDT|WET|PST|PDT|MDT|CST|CDT|EDT|EEST|CEST|HST|HDT|AKST|AKDT|AST|ADT|AEST|AEDT|NZST|NZDT|IST|IDT|WEST|ACST|ACDT|BST/i.test(data.timeZone!)) {
       // in the iCal or Google case, we simply return and cut off the Z. Google does not support GMT +/- time zones (and we also adjust ical as it can be used for Google calendar).
       // everything else will be done by injecting the VTIMEZONE block at the iCal function
       return {
@@ -72,8 +73,8 @@ function atcb_generate_time(data, style = 'delimiters', targetCal = 'general', a
       };
     }
     // we get the correct offset via the timeZones iCal Library
-    const offsetStart = tzlib_get_offset(data.timeZone, data.startDate, data.startTime);
-    const offsetEnd = tzlib_get_offset(data.timeZone, data.endDate, data.endTime);
+    const offsetStart = tzlib_get_offset(data.timeZone!, data.startDate!, data.startTime!);
+    const offsetEnd = tzlib_get_offset(data.timeZone!, data.endDate!, data.endTime!);
     // if we need to add the offset to the datetime string, do so respectively
     if (addTimeZoneOffset) {
       const formattedOffsetStart = offsetStart.slice(0, 3) + ':' + offsetStart.slice(3);
@@ -87,8 +88,8 @@ function atcb_generate_time(data, style = 'delimiters', targetCal = 'general', a
     }
     // in other cases, we substract the offset from the dates
     // (substraction to reflect the fact that the user assumed his timezone and to convert to UTC; since calendars assume UTC and add offsets again)
-    const calcOffsetStart = parseInt(offsetStart[0] + 1) * -1 * ((parseInt(offsetStart.substring(1, 3)) * 60 + parseInt(offsetStart.substring(3, 5))) * 60 * 1000);
-    const calcOffsetEnd = parseInt(offsetEnd[0] + 1) * -1 * ((parseInt(offsetEnd.substring(1, 3)) * 60 + parseInt(offsetEnd.substring(3, 5))) * 60 * 1000);
+    const calcOffsetStart = parseInt(offsetStart[0]! + 1) * -1 * ((parseInt(offsetStart.substring(1, 3)) * 60 + parseInt(offsetStart.substring(3, 5))) * 60 * 1000);
+    const calcOffsetEnd = parseInt(offsetEnd[0]! + 1) * -1 * ((parseInt(offsetEnd.substring(1, 3)) * 60 + parseInt(offsetEnd.substring(3, 5))) * 60 * 1000);
     newStartDate.setTime(newStartDate.getTime() + calcOffsetStart);
     newEndDate.setTime(newEndDate.getTime() + calcOffsetEnd);
     // return formatted data
@@ -100,11 +101,11 @@ function atcb_generate_time(data, style = 'delimiters', targetCal = 'general', a
     };
   } else {
     // would be an allday event then
-    const startDate = data.startDate.split('-');
+    const startDate = data.startDate!.split('-');
     const endDate = data.endDate ? data.endDate.split('-') : startDate;
     // we set 12 o clock as time to prevent Daylight saving time to interfere with any calculation here
-    const newStartDate = new Date(Date.UTC(startDate[0], startDate[1] - 1, startDate[2], 12, 0, 0));
-    const newEndDate = new Date(Date.UTC(endDate[0], endDate[1] - 1, endDate[2], 12, 0, 0));
+    const newStartDate = new Date(Date.UTC(startDate[0] as unknown as number, (startDate[1] as unknown as number) - 1, startDate[2] as unknown as number, 12, 0, 0));
+    const newEndDate = new Date(Date.UTC(endDate[0] as unknown as number, (endDate[1] as unknown as number) - 1, endDate[2] as unknown as number, 12, 0, 0));
     // increment the end day by 1 for Google Calendar, iCal, and Microsoft (but only if mobile, since desktop does not need this)
     // TODO: remove Microsoft from this list as soon as they fixed their bugs
     if (targetCal === 'google' || (targetCal === 'microsoft' && !atcbIsMobile()) || targetCal === 'msteams' || targetCal === 'ical') {
@@ -148,7 +149,7 @@ function atcb_generate_time(data, style = 'delimiters', targetCal = 'general', a
   }
 }
 
-function atcb_format_datetime(datetime, style = 'delimiters', includeTime = true, removeZ = false) {
+function atcb_format_datetime(datetime: Date, style = 'delimiters', includeTime = true, removeZ = false): string {
   const regex = (function () {
     // defines what gets cut off
     if (includeTime) {
@@ -166,7 +167,7 @@ function atcb_format_datetime(datetime, style = 'delimiters', includeTime = true
   return output;
 }
 
-function offsetToMilliseconds(offset) {
+function offsetToMilliseconds(offset: string): number {
   const sign = offset[0] === '+' ? 1 : -1;
   const hours = parseInt(offset.substring(1, 3), 10);
   const minutes = parseInt(offset.substring(3, 5), 10);
@@ -175,7 +176,7 @@ function offsetToMilliseconds(offset) {
   return milliseconds;
 }
 
-function atcb_translate_via_time_zone(date, time, baseTimeZone, targetTimeZone) {
+function atcb_translate_via_time_zone(date: string, time: string, baseTimeZone: string, targetTimeZone: string): string[] {
   if (baseTimeZone === 'currentBrowser') {
     baseTimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
   }
@@ -196,33 +197,33 @@ function atcb_translate_via_time_zone(date, time, baseTimeZone, targetTimeZone) 
   return dateInTargetTimeZone.split(', '); // returns [date, time]
 }
 
-function atcb_generate_timestring(dates, language = 'en', subEvent = 'all', decorate = false, browserTimeOverride = false, enforceYear = false, hideTimeZone = false) {
+function atcb_generate_timestring(dates: ATCBDateEntryInput[], language = 'en', subEvent: 'all' | number = 'all', decorate = false, browserTimeOverride = false, enforceYear = false, hideTimeZone = false): string[] {
   if (decorate) {
     // if this function gets called directly, we might want to decorate raw data first
-    dates = atcb_decorate_data_dates({ dates: dates }).dates;
+    dates = atcb_decorate_data_dates({ dates: dates }).dates!;
   }
-  let startDateInfo, endDateInfo, timeZoneInfoStart, timeZoneInfoEnd;
-  let formattedTimeStart;
-  let formattedTimeEnd;
-  let timeBlocks = [];
+  let timeZoneInfoStart: string, timeZoneInfoEnd: string;
+  let formattedTimeStart: { start: string; end: string; duration: string; allday: false } | { start: string; end: string; allday: true };
+  let formattedTimeEnd: { start: string; end: string; duration: string; allday: false } | { start: string; end: string; allday: true };
+  const timeBlocks: string[] = [];
   let timeZoneInfoStringStart = '';
   let timeZoneInfoStringEnd = '';
   const browserTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
   if (subEvent === 'all') {
     // we are looking at multiple sub-events, which should be considered all together
-    formattedTimeStart = atcb_generate_time(dates[0]);
-    formattedTimeEnd = atcb_generate_time(dates[dates.length - 1]);
-    timeZoneInfoStart = browserTimeOverride ? browserTimezone : dates[0].timeZone;
-    timeZoneInfoEnd = browserTimeOverride ? browserTimezone : dates[dates.length - 1].timeZone;
+    formattedTimeStart = atcb_generate_time(dates[0]! as ATCBDateEntry);
+    formattedTimeEnd = atcb_generate_time(dates[dates.length - 1]! as ATCBDateEntry);
+    timeZoneInfoStart = browserTimeOverride ? browserTimezone : dates[0]!.timeZone!;
+    timeZoneInfoEnd = browserTimeOverride ? browserTimezone : dates[dates.length - 1]!.timeZone!;
   } else {
     // we are looking at 1 or many sub-events, but we consider only one specific
-    formattedTimeStart = atcb_generate_time(dates[`${subEvent}`]);
+    formattedTimeStart = atcb_generate_time(dates[`${subEvent}`]! as ATCBDateEntry);
     formattedTimeEnd = formattedTimeStart;
-    timeZoneInfoStart = browserTimeOverride ? browserTimezone : dates[`${subEvent}`].timeZone;
+    timeZoneInfoStart = browserTimeOverride ? browserTimezone : dates[`${subEvent}`]!.timeZone!;
     timeZoneInfoEnd = timeZoneInfoStart;
   }
-  startDateInfo = new Date(formattedTimeStart.start);
-  endDateInfo = new Date(formattedTimeEnd.end);
+  const startDateInfo = new Date(formattedTimeStart.start);
+  const endDateInfo = new Date(formattedTimeEnd.end);
   // set GMT for allday events to prevent any time zone mismatches
   if (formattedTimeStart.allday) {
     timeZoneInfoStart = 'GMT';
@@ -240,14 +241,14 @@ function atcb_generate_timestring(dates, language = 'en', subEvent = 'all', deco
     }
     for (i; i <= j; i++) {
       const magicLocation = (function () {
-        if (dates[`${i}`].location && dates[`${i}`].location !== '') {
-          if (magicLocationPhrases.includes(dates[`${i}`].location.toLowerCase().trim())) {
+        if (dates[`${i}`]!.location && dates[`${i}`]!.location !== '') {
+          if (magicLocationPhrases.includes(dates[`${i}`]!.location!.toLowerCase().trim())) {
             return true;
           }
         }
         return false;
       })();
-      if (!magicLocation && !dates[`${i}`].onlineEvent) {
+      if (!magicLocation && !(dates[`${i}`] as ATCBDateEntry).onlineEvent) {
         return false;
       }
     }
@@ -350,7 +351,7 @@ function atcb_generate_timestring(dates, language = 'en', subEvent = 'all', deco
   return timeBlocks;
 }
 
-function get_format_options(timeZoneInfo, dropYear = false, language = 'en') {
+function get_format_options(timeZoneInfo: string, dropYear = false, language = 'en'): { DateLong: Intl.DateTimeFormatOptions; DateTimeLong: Intl.DateTimeFormatOptions; Time: Intl.DateTimeFormatOptions } {
   const hoursFormat = (function () {
     if (language === 'en') {
       return 'h12'; // 12am -> 1am -> .. -> 12pm -> 1pm -> ...
@@ -406,9 +407,9 @@ function get_format_options(timeZoneInfo, dropYear = false, language = 'en') {
 }
 
 // SHARED FUNCTION TO SECURE DATA
-function atcb_secure_content(data, isJSON = true) {
+function atcb_secure_content(data: unknown, isJSON = true): unknown {
   // strip HTML tags (especially since stupid Safari adds stuff) - except for <br>
-  const toClean = isJSON ? JSON.stringify(data) : data.toString();
+  const toClean = isJSON ? JSON.stringify(data) : (data as { toString(): string }).toString();
   const cleanedUp = toClean.replace(/(<(?!br)([^>]+)>)/gi, '');
   if (isJSON) {
     return JSON.parse(cleanedUp);
@@ -418,7 +419,7 @@ function atcb_secure_content(data, isJSON = true) {
 }
 
 // SHARED FUNCTION TO SECURE URLS
-function atcb_secure_url(url, throwError = true) {
+function atcb_secure_url(url: string, throwError = true): boolean {
   if (url && url.match(/((\.\.\/)|(\.\.\\)|(%2e%2e%2f)|(%252e%252e%252f)|(%2e%2e\/)|(%252e%252e\/)|(\.\.%2f)|(\.\.%252f)|(%2e%2e%5c)|(%252e%252e%255c)|(%2e%2e\\)|(%252e%252e\\)|(\.\.%5c)|(\.\.%255c)|(\.\.%c0%af)|(\.\.%25c0%25af)|(\.\.%c1%9c)|(\.\.%25c1%259c))/gi)) {
     if (throwError) {
       console.error('Seems like the generated URL includes at least one security issue and got blocked. Please check the calendar button parameters!');
@@ -430,7 +431,7 @@ function atcb_secure_url(url, throwError = true) {
 }
 
 // SHARED FUNCTION TO VALIDATE EMAIL ADDRESSES
-function atcb_validEmail(email) {
+function atcb_validEmail(email: string): boolean {
   // rough format check first
   if (!/^.{0,70}@.{1,30}\.[a-z]{2,9}$/i.test(email)) {
     return false;
@@ -439,7 +440,7 @@ function atcb_validEmail(email) {
 }
 
 // SHARED FUNCTION TO REPLACE HTML PSEUDO ELEMENTS
-function atcb_rewrite_html_elements(content, clear = false, iCalBreaks = false) {
+function atcb_rewrite_html_elements(content: string, clear = false, iCalBreaks = false): string {
   if (clear) {
     // for line breaks, we add a space instead (or \\n for iCal)
     if (iCalBreaks) {
@@ -448,11 +449,11 @@ function atcb_rewrite_html_elements(content, clear = false, iCalBreaks = false) 
       content = content.replace(/(\[br\s?\/?\]|\{br\s?\/?\}|(\[\/p\](?=.))|(\{\/p\}(?=.)))/gi, ' ');
     }
     // remove any pseudo elements
-    content = content.replace(/\[url\](.+?)\[\/url\]/gi, (match, p1) => {
-      return p1.split('|')[0];
+    content = content.replace(/\[url\](.+?)\[\/url\]/gi, (match: string, p1: string) => {
+      return p1.split('|')[0]!;
     });
-    content = content.replace(/\{url\}(.+?)\{\/url\}/gi, (match, p1) => {
-      return p1.split('|')[0];
+    content = content.replace(/\{url\}(.+?)\{\/url\}/gi, (match: string, p1: string) => {
+      return p1.split('|')[0]!;
     });
     content = content.replace(/\[\/?(hr|[pbui]|strong|em|li|ul|ol|h\d)\]/gi, '');
     content = content.replace(/\{\/?(hr|[pbui]|strong|em|li|ul|ol|h\d)\}/gi, '');
@@ -461,10 +462,10 @@ function atcb_rewrite_html_elements(content, clear = false, iCalBreaks = false) 
   } else {
     // and build html for the rest
     // supporting: br, hr, p, strong, u, i, em, li, ul, ol, h (like h1, h2, h3, ...), url (= a)
-    content = content.replace(/\[url\]((?:(?!\[\/url\]).)*)\[\/url\]/gi, function (match, p1) {
+    content = content.replace(/\[url\]((?:(?!\[\/url\]).)*)\[\/url\]/gi, function (match: string, p1: string) {
       return atcb_parse_url_code(p1);
     });
-    content = content.replace(/\{url\}((?:(?!\[\/url\]).)*)\{\/url\}/gi, function (match, p1) {
+    content = content.replace(/\{url\}((?:(?!\[\/url\]).)*)\{\/url\}/gi, function (match: string, p1: string) {
       return atcb_parse_url_code(p1);
     });
     content = content.replace(/\[(\/)?(br|hr|[pbui]|strong|em|li|ul|ol|h\d)(\s?\/?)\]/gi, '<$1$2$3>');
@@ -473,7 +474,7 @@ function atcb_rewrite_html_elements(content, clear = false, iCalBreaks = false) 
   return content;
 }
 
-function atcb_parse_url_code(input) {
+function atcb_parse_url_code(input: string): string {
   const urlText = input.split('|');
   const text = (function () {
     if (urlText.length > 1 && urlText[1] != '') {
@@ -486,7 +487,7 @@ function atcb_parse_url_code(input) {
 }
 
 // SHARED FUNCTIONS TO FORMAT iCAL TEXT
-function atcb_rewrite_ical_text(content, inQuotes = false) {
+function atcb_rewrite_ical_text(content: string, inQuotes = false): string {
   if (inQuotes) {
     content = content.replace(/"/g, '');
   } else {
@@ -495,17 +496,17 @@ function atcb_rewrite_ical_text(content, inQuotes = false) {
   return content;
 }
 
-function atcb_format_ical_lines(content) {
+function atcb_format_ical_lines(content: string): string {
   const contentArr = content.split('\r\n');
-  const result = [];
-  for (let line of contentArr) {
+  const result: string[] = [];
+  for (const line of contentArr) {
     if (!line || line.length <= 65) {
       result.push(line);
       continue;
     }
     let currentLine = '';
     let position = 0;
-    const foldedLines = [];
+    const foldedLines: string[] = [];
     while (position < line.length) {
       const char = line.charAt(position);
       // Check for emoji or surrogate pairs (multibyte characters)
@@ -527,7 +528,7 @@ function atcb_format_ical_lines(content) {
     if (currentLine.length > 0) {
       foldedLines.push(currentLine);
     }
-    result.push(foldedLines[0]);
+    result.push(foldedLines[0]!);
     for (let i = 1; i < foldedLines.length; i++) {
       result.push(' ' + foldedLines[`${i}`]);
     }
@@ -537,12 +538,12 @@ function atcb_format_ical_lines(content) {
 }
 
 // SHARED FUNCTION TO CALCULATE THE POSITION OF THE DROPDOWN LIST
-function atcb_position_list(host, trigger, list, blockUpwards = false, blockDownwards = false) {
+function atcb_position_list(host: ShadowRoot, trigger: HTMLElement, list: HTMLElement, blockUpwards = false, blockDownwards = false): void {
   // check for position anchor
   let anchorSet = false;
   const originalTrigger = trigger;
   if (trigger.querySelector('.atcb-dropdown-anchor') !== null) {
-    trigger = trigger.querySelector('.atcb-dropdown-anchor');
+    trigger = trigger.querySelector('.atcb-dropdown-anchor')!;
     anchorSet = true;
   }
   // changing the lists css position and display type temporarily to get the ideal width of the content
@@ -551,7 +552,7 @@ function atcb_position_list(host, trigger, list, blockUpwards = false, blockDown
   // calculate position
   let triggerDim = trigger.getBoundingClientRect();
   const btnDim = originalTrigger.getBoundingClientRect();
-  const btnParentDim = originalTrigger.parentNode.getBoundingClientRect();
+  const btnParentDim = (originalTrigger.parentNode as Element).getBoundingClientRect();
   const viewportHeight = document.documentElement.clientHeight;
   if (anchorSet === true && !list.classList.contains('atcb-dropoverlay')) {
     let listDim = list.getBoundingClientRect();
@@ -595,16 +596,16 @@ function atcb_position_list(host, trigger, list, blockUpwards = false, blockDown
   const atcbL = host.querySelector('#atcb-reference');
   if (atcbL) {
     if (originalTrigger.classList.contains('atcb-dropup')) {
-      originalTrigger.parentNode.after(atcbL);
+      (originalTrigger.parentNode as Element).after(atcbL);
       atcbL.classList.add('atcb-dropup');
     }
   }
 }
 
 // SHARED FUNCTION TO CALCULATE THE POSITION OF THE SHADOW OVERLAY BUTTON
-function atcb_position_shadow_button(originalShadowHost, modalShadowHost) {
-  const wrapperDim = originalShadowHost.querySelector('.atcb-initialized ').getBoundingClientRect();
-  const newWrapper = modalShadowHost.querySelector('.atcb-initialized');
+function atcb_position_shadow_button(originalShadowHost: ShadowRoot, modalShadowHost: ShadowRoot): void {
+  const wrapperDim = originalShadowHost.querySelector('.atcb-initialized ')!.getBoundingClientRect();
+  const newWrapper = modalShadowHost.querySelector('.atcb-initialized') as HTMLElement;
   let widthVal = wrapperDim.width;
   if (wrapperDim.width < 250) {
     widthVal = 250;
@@ -615,18 +616,18 @@ function atcb_position_shadow_button(originalShadowHost, modalShadowHost) {
   newWrapper.style.left = wrapperDim.left + 'px';
 }
 
-function atcb_position_shadow_button_listener() {
-  const active = atcbStates['active'];
+function atcb_position_shadow_button_listener(): void {
+  const active = atcbStates['active'] as unknown as string;
   if (active !== null && active !== '') {
-    const originalEl = document.querySelector('add-to-calendar-button[atcb-button-id=' + active + ']').shadowRoot;
-    const shadowEl = document.querySelector('div[atcb-button-id=' + active + ']').shadowRoot;
+    const originalEl = document.querySelector('add-to-calendar-button[atcb-button-id=' + active + ']')!.shadowRoot!;
+    const shadowEl = document.querySelector('div[atcb-button-id=' + active + ']')!.shadowRoot!;
     atcb_position_shadow_button(originalEl, shadowEl);
   }
 }
 
 // SHARED FUNCTION TO CALCULATE WHETHER WE BLOCK SCROLLING OR NOT
-function atcb_manage_body_scroll(host, modalObj = null) {
-  const modal = (function () {
+function atcb_manage_body_scroll(host: ShadowRoot, modalObj: Element | null = null): void {
+  const modal = (function (): Element | null | undefined {
     // if a specific modal is defined, we take it. Otherwise we go for the latest one
     if (modalObj != null) {
       return modalObj;
@@ -647,36 +648,36 @@ function atcb_manage_body_scroll(host, modalObj = null) {
 }
 
 // SHARED FUNCTION TO UPDATE GLOBAL SIZES
-function atcb_set_sizes(el, sizes) {
+function atcb_set_sizes(el: HTMLElement, sizes: { [key: string]: number | string }): void {
   el.style.setProperty('--base-font-size-l', sizes['l'] + 'px');
   el.style.setProperty('--base-font-size-m', sizes['m'] + 'px');
   el.style.setProperty('--base-font-size-s', sizes['s'] + 'px');
 }
 
 // SHARED FUNCTION TO GENERATE UUIDs
-function atcb_generate_uuid() {
+function atcb_generate_uuid(): string {
   //const id = crypto.randomUUID(); // lacking support of Safari < 15.4 and Firefox < 95, which is too important for now
-  const id = ([1e7] + -1e3 + -4e3 + -8e3 + -1e11).replace(/[018]/g, (c) => (c ^ (crypto.getRandomValues(new Uint8Array(1))[0] & (15 >> (c / 4)))).toString(16));
+  const id = (([1e7] as unknown as string) + -1e3 + -4e3 + -8e3 + -1e11).replace(/[018]/g, (c) => ((c as unknown as number) ^ (crypto.getRandomValues(new Uint8Array(1))[0]! & (15 >> ((c as unknown as number) / 4)))).toString(16));
   return id;
 }
 
 // SHARED FUNCTION TO TRANSFORM A STRING
-function atcb_apply_transformation(value, transform) {
+function atcb_apply_transformation(value: unknown, transform?: string): unknown {
   if (!transform || !value) return value;
   switch (transform) {
     case 'upper':
-      return value.toString().toUpperCase();
+      return (value as { toString(): string }).toString().toUpperCase();
     case 'lower':
-      return value.toString().toLowerCase();
+      return (value as { toString(): string }).toString().toLowerCase();
     default:
       return value;
   }
 }
 
 // HELPER: Parse BYDAY/BYWEEKDAY tokens into plain weekdays and ordinal structures
-function atcb_parseByWeekdayTokens(rawByDay) {
+function atcb_parseByWeekdayTokens(rawByDay: string | undefined): { plainWeekdays: number[]; ordinals: { n: number; day: number }[] } {
   const tokens = rawByDay ? rawByDay.toString().split(',') : [];
-  const mapWeekdayCode = (wd) => {
+  const mapWeekdayCode = (wd: string): number | undefined => {
     switch (wd) {
       case 'SU':
         return 0;
@@ -696,8 +697,8 @@ function atcb_parseByWeekdayTokens(rawByDay) {
         return undefined;
     }
   };
-  const plainWeekdays = [];
-  const ordinals = [];
+  const plainWeekdays: number[] = [];
+  const ordinals: { n: number; day: number }[] = [];
   for (const tok of tokens) {
     const t = tok.trim().toUpperCase();
     if (t.length < 2) continue;
@@ -728,19 +729,27 @@ function atcb_parseByWeekdayTokens(rawByDay) {
   return { plainWeekdays, ordinals };
 }
 
+// Dynamically-keyed RRULE parts accumulator: starts as raw string key/value pairs from the
+// RRULE string, then individual keys get progressively reparsed in place into richer types
+// (numbers, Dates, arrays, ordinal structures) - kept as one loose index-signature type per
+// key rather than a strict interface, to reflect the same dynamic reassignment the JS did.
+type ATCBRRuleParts = {
+  [key: string]: string | number | boolean | Date | number[] | { n: number; day: number }[] | null | undefined;
+};
+
 // SHARED FUNCTION TO PARSE RRULES
-function atcb_parseRRule(rruleStr, deep = true) {
-  const parts = rruleStr
+function atcb_parseRRule(rruleStr: string, deep = true): ATCBRRuleParts {
+  const parts: ATCBRRuleParts = rruleStr
     .replace('RRULE:', '')
     .split(';')
-    .reduce((acc, part) => {
+    .reduce((acc: ATCBRRuleParts, part: string) => {
       const [key, value] = part.split('=');
       acc[`${key}`] = value;
       return acc;
     }, {});
   if (!parts.FREQ) throw new Error('RRULE must have FREQ');
   // Parse components
-  parts.FREQ = parts.FREQ.toUpperCase();
+  parts.FREQ = (parts.FREQ as string).toUpperCase();
   // Ensure INTERVAL defaults to 1 if not explicitly provided
   parts.INTERVAL = parts.INTERVAL ? parseInt(parts.INTERVAL.toString(), 10) : 1;
   parts.COUNT = parts.COUNT ? parseInt(parts.COUNT.toString(), 10) : null;
@@ -792,11 +801,11 @@ function atcb_parseRRule(rruleStr, deep = true) {
   return parts;
 }
 
-function pad2(n) {
+function pad2(n: number): string {
   return String(n).padStart(2, '0');
 }
 
-function toIsoOffset(off) {
+function toIsoOffset(off: string): string {
   if (!off || off === 'Z' || off === '+0000' || off === '-0000' || off === '+00:00' || off === '-00:00') return 'Z';
   const raw = String(off).replace(/^GMT/i, '');
   if (/^[+-]\d{2}:\d{2}$/.test(raw)) return raw;
@@ -806,8 +815,8 @@ function toIsoOffset(off) {
   return `${sign}${digits.slice(0, 2)}:${digits.slice(2)}`;
 }
 
-const tzPartsFormatterCache = new Map();
-function getTzPartsFormatter(timeZone) {
+const tzPartsFormatterCache = new Map<string, Intl.DateTimeFormat>();
+function getTzPartsFormatter(timeZone: string): Intl.DateTimeFormat {
   const key = timeZone || 'UTC';
   const cached = tzPartsFormatterCache.get(key);
   if (cached) return cached;
@@ -827,13 +836,31 @@ function getTzPartsFormatter(timeZone) {
   return fmt;
 }
 
-function getTzParts(dateObj, timeZone) {
+// Base calendar parts as read off a Date in a given time zone (or UTC).
+type ATCBDateParts = {
+  year: number;
+  month: number;
+  day: number;
+  hour: number;
+  minute: number;
+  second: number;
+  weekday: number;
+};
+
+// ATCBDateParts plus derived fields used by the RRULE BY*-rule matchers.
+type ATCBEnrichedDateParts = ATCBDateParts & {
+  month0: number;
+  dayOfYear: number;
+  weekNumber: number;
+};
+
+function getTzParts(dateObj: Date, timeZone: string): ATCBDateParts | null {
   if (!(dateObj instanceof Date) || !isFinite(dateObj.getTime())) return null;
   try {
     const parts = getTzPartsFormatter(timeZone).formatToParts(dateObj);
-    const get = (t) => parts.find((p) => p.type === t)?.value || '';
+    const get = (t: string): string => parts.find((p) => p.type === t)?.value || '';
     const weekdayShort = get('weekday');
-    let weekday = null;
+    let weekday: number | null = null;
     switch (weekdayShort) {
       case 'Sun':
         weekday = 0;
@@ -875,7 +902,7 @@ function getTzParts(dateObj, timeZone) {
   }
 }
 
-function getUtcParts(dateObj) {
+function getUtcParts(dateObj: Date): ATCBDateParts {
   return {
     year: dateObj.getUTCFullYear(),
     month: dateObj.getUTCMonth() + 1,
@@ -887,20 +914,20 @@ function getUtcParts(dateObj) {
   };
 }
 
-function getDayOfYearFromYmd(year, month0, day) {
+function getDayOfYearFromYmd(year: number, month0: number, day: number): number {
   const start = Date.UTC(year, 0, 1);
   const current = Date.UTC(year, month0, day);
   return Math.floor((current - start) / 86400000) + 1;
 }
 
-function getWeekNumberFromYmd(year, month0, day) {
+function getWeekNumberFromYmd(year: number, month0: number, day: number): number {
   const d = new Date(Date.UTC(year, month0, day));
   d.setUTCDate(d.getUTCDate() + 4 - (d.getUTCDay() || 7));
   const yearStart = new Date(Date.UTC(d.getUTCFullYear(), 0, 1));
   return Math.ceil(((d.getTime() - yearStart.getTime()) / 86400000 + 1) / 7);
 }
 
-function enrichParts(parts) {
+function enrichParts(parts: ATCBDateParts): ATCBEnrichedDateParts {
   const month0 = parts.month - 1;
   return {
     ...parts,
@@ -910,7 +937,7 @@ function enrichParts(parts) {
   };
 }
 
-function getPartsForTimeZone(dateObj, timeZone) {
+function getPartsForTimeZone(dateObj: Date, timeZone: string): ATCBEnrichedDateParts {
   const tzParts = timeZone ? getTzParts(dateObj, timeZone) : null;
   return enrichParts(tzParts || getUtcParts(dateObj));
 }
@@ -918,7 +945,7 @@ function getPartsForTimeZone(dateObj, timeZone) {
 // Add/subtract days while preserving wall-clock time (hh:mm) in the provided time zone.
 // Optional dateParts lets callers reuse already-computed TZ parts to avoid extra Intl work.
 // Note: we still need to ask tzlib for the offset per date because it can change across DST.
-function addLocalDays(dateObj, days, timeZone, hhmm, dateParts = null) {
+function addLocalDays(dateObj: Date, days: number, timeZone: string, hhmm: string, dateParts: ATCBEnrichedDateParts | null = null): Date {
   const p = dateParts || getPartsForTimeZone(dateObj, timeZone);
   const month0 = Number.isFinite(p.month0) ? p.month0 : Number.isFinite(p.month) ? p.month - 1 : 0;
   const baseUtc = Date.UTC(p.year, month0, p.day) + days * 86400000;
@@ -934,8 +961,8 @@ function addLocalDays(dateObj, days, timeZone, hhmm, dateParts = null) {
 }
 
 // Check if date matches the FREQ and INTERVAL from start
-function matchesFreq(date, rrule, startDate, timeZone, dateParts, startParts) {
-  const interval = parseInt(rrule.INTERVAL.toString(), 10) || 1;
+function matchesFreq(date: Date, rrule: ATCBRRuleParts, startDate: Date, timeZone: string, dateParts: ATCBEnrichedDateParts | null, startParts: ATCBEnrichedDateParts | null): boolean {
+  const interval = parseInt((rrule.INTERVAL as number).toString(), 10) || 1;
   const dp = dateParts || getPartsForTimeZone(date, timeZone);
   const sp = startParts || getPartsForTimeZone(startDate, timeZone);
   switch (rrule.FREQ) {
@@ -960,7 +987,7 @@ function matchesFreq(date, rrule, startDate, timeZone, dateParts, startParts) {
 }
 
 // Check if date matches all BY* rules, with implicit filters
-function matchesRRule(date, rrule, startDate, timeZone, dateParts, startParts) {
+function matchesRRule(date: Date, rrule: ATCBRRuleParts, startDate: Date, timeZone: string, dateParts: ATCBEnrichedDateParts | null, startParts: ATCBEnrichedDateParts | null): boolean {
   // Explicit BY rules
   if (!matchesBYRules(date, rrule, timeZone, dateParts)) return false;
   // Implicit filters
@@ -968,18 +995,18 @@ function matchesRRule(date, rrule, startDate, timeZone, dateParts, startParts) {
   return true;
 }
 
-function matchesBYRules(date, rrule, timeZone, dateParts) {
+function matchesBYRules(date: Date, rrule: ATCBRRuleParts, timeZone: string, dateParts: ATCBEnrichedDateParts | null): boolean {
   const dp = dateParts || getPartsForTimeZone(date, timeZone);
-  if (rrule.BYMONTH && !rrule.BYMONTH.includes(dp.month)) return false;
-  if (rrule.BYYEARDAY && !rrule.BYYEARDAY.includes(dp.dayOfYear)) return false;
-  if (rrule.BYMONTHDAY && !rrule.BYMONTHDAY.includes(dp.day)) return false;
-  if (rrule.BYWEEKNO && !rrule.BYWEEKNO.includes(dp.weekNumber)) return false;
+  if (rrule.BYMONTH && !(rrule.BYMONTH as number[]).includes(dp.month)) return false;
+  if (rrule.BYYEARDAY && !(rrule.BYYEARDAY as number[]).includes(dp.dayOfYear)) return false;
+  if (rrule.BYMONTHDAY && !(rrule.BYMONTHDAY as number[]).includes(dp.day)) return false;
+  if (rrule.BYWEEKNO && !(rrule.BYWEEKNO as number[]).includes(dp.weekNumber)) return false;
   // Weekday filter (checking both, plain days as well as more complex structures -> splitted apart to ordinals)
   // Evaluate plain weekday condition
-  const hasPlainWeekday = !!(rrule.BYWEEKDAY && rrule.BYWEEKDAY.length);
-  const plainWeekdayOk = hasPlainWeekday ? rrule.BYWEEKDAY.includes(dp.weekday) : null;
+  const hasPlainWeekday = !!(rrule.BYWEEKDAY && (rrule.BYWEEKDAY as number[]).length);
+  const plainWeekdayOk: boolean | null = hasPlainWeekday ? (rrule.BYWEEKDAY as number[]).includes(dp.weekday) : null;
   // Ordinal BYDAY handling (e.g., 1MO, -1FR)
-  let ordinalOk = null;
+  let ordinalOk: boolean | null = null;
   if (rrule.BYDAY_ORDINALS && Array.isArray(rrule.BYDAY_ORDINALS) && rrule.BYDAY_ORDINALS.length > 0) {
     const dow = dp.weekday; // day of week in DTSTART tz
     const year = dp.year;
@@ -988,7 +1015,7 @@ function matchesBYRules(date, rrule, timeZone, dateParts) {
     const daysInMonth = new Date(Date.UTC(year, month0 + 1, 0)).getUTCDate();
     const daysInYear = getDayOfYearFromYmd(year, 11, 31);
 
-    const isNthWeekdayOfMonth = (n, weekday) => {
+    const isNthWeekdayOfMonth = (n: number, weekday: number): boolean => {
       if (n === 0) return false;
       if (n > 0) {
         // Validates whether a given date matches the Nth weekday
@@ -1007,7 +1034,7 @@ function matchesBYRules(date, rrule, timeZone, dateParts) {
       }
     };
 
-    const isNthWeekdayOfYear = (n, weekday) => {
+    const isNthWeekdayOfYear = (n: number, weekday: number): boolean => {
       if (n === 0) return false;
       if (n > 0) {
         const jan1 = new Date(Date.UTC(year, 0, 1));
@@ -1025,11 +1052,11 @@ function matchesBYRules(date, rrule, timeZone, dateParts) {
     };
 
     // Match if any ordinal item matches context (MONTHLY: within month, YEARLY: within month if BYMONTH given, else within year)
-    const anyOrdinalMatch = rrule.BYDAY_ORDINALS.some(({ n, day }) => {
+    const anyOrdinalMatch = (rrule.BYDAY_ORDINALS as { n: number; day: number }[]).some(({ n, day }) => {
       if (day !== dow) return false;
       if (rrule.FREQ === 'MONTHLY') return isNthWeekdayOfMonth(n, day);
       if (rrule.FREQ === 'YEARLY') {
-        if (rrule.BYMONTH && rrule.BYMONTH.length > 0) return isNthWeekdayOfMonth(n, day);
+        if (rrule.BYMONTH && (rrule.BYMONTH as number[]).length > 0) return isNthWeekdayOfMonth(n, day);
         if (!rrule.BYWEEKNO) return isNthWeekdayOfYear(n, day);
         // Ordinal BYDAY with YEARLY+BYWEEKNO is invalid per RFC; treat as non-match
         return false;
@@ -1046,12 +1073,12 @@ function matchesBYRules(date, rrule, timeZone, dateParts) {
   return true;
 }
 
-function matchesImplicitRules(date, rrule, startDate, timeZone, dateParts, startParts) {
+function matchesImplicitRules(date: Date, rrule: ATCBRRuleParts, startDate: Date, timeZone: string, dateParts: ATCBEnrichedDateParts | null, startParts: ATCBEnrichedDateParts | null): boolean {
   const dp = dateParts || getPartsForTimeZone(date, timeZone);
   const sp = startParts || getPartsForTimeZone(startDate, timeZone);
   // Without BYHOUR support, hour always comes from DTSTART.
   if (dp.hour !== sp.hour) return false;
-  const hasByWeekdayAny = !!(rrule.BYWEEKDAY && rrule.BYWEEKDAY.length) || !!(rrule.BYDAY_ORDINALS && rrule.BYDAY_ORDINALS.length);
+  const hasByWeekdayAny = !!(rrule.BYWEEKDAY && (rrule.BYWEEKDAY as number[]).length) || !!(rrule.BYDAY_ORDINALS && (rrule.BYDAY_ORDINALS as { n: number; day: number }[]).length);
   if (rrule.FREQ === 'WEEKLY' && !hasByWeekdayAny && dp.weekday !== sp.weekday) return false;
   if (rrule.FREQ === 'MONTHLY' && !rrule.BYMONTHDAY && !hasByWeekdayAny && dp.day !== sp.day) return false;
   if (rrule.FREQ === 'YEARLY' && !rrule.BYMONTH && dp.month0 !== sp.month0) return false;
@@ -1060,7 +1087,7 @@ function matchesImplicitRules(date, rrule, startDate, timeZone, dateParts, start
 }
 
 // Get next occurrence and last if no next
-function atcb_getNextOccurrence(rruleStr, startDateTime, diff, allday, tzid = 'UTC') {
+function atcb_getNextOccurrence(rruleStr: string, startDateTime: Date, diff: number, allday: boolean, tzid = 'UTC'): { nextOccurrence: Date; adjustedCount: number } {
   const rrule = atcb_parseRRule(rruleStr);
   const startParts = getPartsForTimeZone(startDateTime, tzid);
   const baseHhmm = `${pad2(startParts.hour)}:${pad2(startParts.minute)}`;
@@ -1076,20 +1103,20 @@ function atcb_getNextOccurrence(rruleStr, startDateTime, diff, allday, tzid = 'U
   const upperEnd = new Date(now.getTime() - diff);
   // Iterate from start date, collecting valid occurrences
   let currentDate = startDateTime;
-  const occurrences = [];
+  const occurrences: Date[] = [];
   let count = 0;
   let maxIterations = 10000;
   // Collect all valid occurrences up to COUNT or UNTIL, or until first future match is found
   while (true) {
     // Stop before pushing when we've passed UNTIL
-    if (rrule.UNTIL && currentDate > rrule.UNTIL) break;
+    if (rrule.UNTIL && currentDate > (rrule.UNTIL as Date)) break;
     const currentParts = getPartsForTimeZone(currentDate, tzid);
     const isMatch = matchesFreq(currentDate, rrule, startDateTime, tzid, currentParts, startParts) && matchesRRule(currentDate, rrule, startDateTime, tzid, currentParts, startParts);
     if (isMatch) {
       occurrences.push(currentDate);
       count++;
       // If there's a COUNT limit, stop when reached
-      if (rrule.COUNT && count >= rrule.COUNT) break;
+      if (rrule.COUNT && count >= (rrule.COUNT as number)) break;
       // If no end (COUNT/UNTIL), stop as soon as we've captured the first occurrence not before upperEnd
       if (!rrule.COUNT && !rrule.UNTIL && (allday ? currentDate >= upperEnd : currentDate > upperEnd)) break;
     }
@@ -1100,7 +1127,7 @@ function atcb_getNextOccurrence(rruleStr, startDateTime, diff, allday, tzid = 'U
     currentDate = addLocalDays(currentDate, 1, tzid, baseHhmm, currentParts);
   }
   // Find next occurrence (first not before upperEnd)
-  let nextDate = null;
+  let nextDate: Date | null = null;
   let countDate = 0;
   for (const d of occurrences) {
     if (allday ? d >= upperEnd : d > upperEnd) {
@@ -1112,10 +1139,10 @@ function atcb_getNextOccurrence(rruleStr, startDateTime, diff, allday, tzid = 'U
   // If no next, use last occurrence
   if (!nextDate) {
     if (occurrences.length > 1) {
-      nextDate = occurrences[occurrences.length - 1];
+      nextDate = occurrences[occurrences.length - 1]!;
       countDate = countDate - 1;
     } else if (occurrences.length === 1) {
-      nextDate = occurrences[0];
+      nextDate = occurrences[0]!;
     } else {
       nextDate = startDateTime;
       countDate = 1;
@@ -1123,14 +1150,14 @@ function atcb_getNextOccurrence(rruleStr, startDateTime, diff, allday, tzid = 'U
   }
   return {
     nextOccurrence: nextDate,
-    adjustedCount: rrule.COUNT ? rrule.COUNT - countDate : count - countDate,
+    adjustedCount: rrule.COUNT ? (rrule.COUNT as number) - countDate : count - countDate,
   };
 }
 
 // SHARED FUNCTION TO MAP SPECIFIC TIME ZONES
-function atcb_map_special_time_zones(timeZone) {
+function atcb_map_special_time_zones(timeZone: string): string {
   if (!timeZone) return 'GMT';
-  const mapping = {
+  const mapping: { [key: string]: string } = {
     PST: 'PST8PDT',
     PDT: 'PST8PDT',
     MST: 'MST7MDT',
@@ -1160,15 +1187,15 @@ function atcb_map_special_time_zones(timeZone) {
 }
 
 // SHARED FUNCTION TO COPY TO CLIPBOARD
-async function atcb_copy_to_clipboard(dataString) {
-  const v = (dataString ?? '').toString().trim();
+async function atcb_copy_to_clipboard(dataString: unknown): Promise<string> {
+  const v = ((dataString ?? '') as { toString(): string }).toString().trim();
   if (!v) throw new Error('No value to copy!');
   // Helper: legacy copy using a hidden textarea
-  const legacyCopy = () => {
+  const legacyCopy = (): boolean => {
     if (typeof window === 'undefined' || typeof document === 'undefined') return false;
     if (!document.queryCommandSupported || !document.queryCommandSupported('copy')) return false;
     const ta = document.createElement('textarea');
-    const prevFocus = document.activeElement;
+    const prevFocus = document.activeElement as HTMLElement | null;
     ta.value = v;
     ta.setAttribute('readonly', '');
     ta.style.contain = 'strict';
@@ -1238,9 +1265,9 @@ async function atcb_copy_to_clipboard(dataString) {
 
 // SHARED DEBOUNCE FUNCTIONS
 // going for last call debounce
-function atcb_debounce(func, timeout = 200) {
-  let timer;
-  return (...args) => {
+function atcb_debounce<A extends unknown[]>(this: void, func: (...args: A) => unknown, timeout = 200): (...args: A) => void {
+  let timer: ReturnType<typeof setTimeout> | undefined;
+  return (...args: A) => {
     clearTimeout(timer);
     timer = setTimeout(() => {
       func.apply(this, args);
@@ -1248,9 +1275,9 @@ function atcb_debounce(func, timeout = 200) {
   };
 }
 // dropping subsequent calls debounce
-function atcb_debounce_leading(func, timeout = 300) {
-  let timer;
-  return (...args) => {
+function atcb_debounce_leading<A extends unknown[]>(this: void, func: (...args: A) => unknown, timeout = 300): (...args: A) => void {
+  let timer: ReturnType<typeof setTimeout> | undefined;
+  return (...args: A) => {
     if (!timer) {
       func.apply(this, args);
     }

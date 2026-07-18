@@ -1,12 +1,13 @@
 import { tzlib_get_ical_block } from 'timezones-ical-library';
-import { atcbVersion, atcbIsMobile, atcbIsiOS, atcbIsAndroid, atcbIsSafari, atcbIsWebView, atcbIsProblematicWebView, atcbDefaultTarget, atcbStates } from './atcb-globals.js';
-import { atcb_toggle } from './atcb-control.js';
-import { atcb_saved_hook, atcb_save_file, atcb_generate_time, atcb_format_datetime, atcb_secure_url, atcb_copy_to_clipboard, atcb_rewrite_ical_text, atcb_format_ical_lines } from './atcb-util.js';
-import { atcb_create_modal } from './atcb-generate.js';
-import { atcb_translate_hook } from './atcb-i18n.js';
+import { atcbVersion, atcbIsMobile, atcbIsiOS, atcbIsAndroid, atcbIsSafari, atcbIsWebView, atcbIsProblematicWebView, atcbDefaultTarget, atcbStates } from './atcb-globals';
+import { atcb_toggle } from './atcb-control';
+import { atcb_saved_hook, atcb_save_file, atcb_generate_time, atcb_format_datetime, atcb_secure_url, atcb_copy_to_clipboard, atcb_rewrite_ical_text, atcb_format_ical_lines } from './atcb-util';
+import { atcb_create_modal } from './atcb-generate';
+import { atcb_translate_hook } from './atcb-i18n';
+import type { ATCBConfig, ATCBDateEntry } from './types';
 
 // MIDDLEWARE FUNCTION TO GENERATE THE CALENDAR LINKS
-async function atcb_generate_links(host, type, data, subEvent = 'all', keyboardTrigger = false, multiDateModal = false, skipDoubleLink = false) {
+async function atcb_generate_links(host: ShadowRoot, type: string, data: ATCBConfig, subEvent: 'all' | number | string = 'all', keyboardTrigger = false, multiDateModal = false, skipDoubleLink = false): Promise<void> {
   // we differentiate between the type the user triggered and the type of link it shall activate
   let linkType = type;
   // the apple type would trigger the same as ical, for example
@@ -15,8 +16,8 @@ async function atcb_generate_links(host, type, data, subEvent = 'all', keyboardT
   }
   // adjust for subEvent and case
   if (subEvent !== 'all') {
-    subEvent = parseInt(subEvent) - 1;
-  } else if (data.dates.length == 1) {
+    subEvent = parseInt(subEvent as string) - 1;
+  } else if (data.dates!.length == 1) {
     subEvent = 0;
   }
   // if this is a calendar subscription case, we can take the short route here
@@ -27,8 +28,8 @@ async function atcb_generate_links(host, type, data, subEvent = 'all', keyboardT
   // for single-date events or if a specific subEvent is given, we can simply call the respective endpoints
   if (subEvent !== 'all') {
     // for cancelled dates, we show a modal - except for iCal, where we can send Cancel-ics-files
-    if (data.dates[`${subEvent}`].status.toLowerCase() === 'cancelled' && linkType !== 'ical') {
-      atcb_create_modal(host, data, 'warning', atcb_translate_hook('date.status.cancelled', data), atcb_translate_hook('date.status.cancelled.cta', data), [], [], keyboardTrigger);
+    if (data.dates![`${subEvent}`]!.status!.toLowerCase() === 'cancelled' && linkType !== 'ical') {
+      atcb_create_modal(host, data, 'warning', atcb_translate_hook('date.status.cancelled', data), atcb_translate_hook('date.status.cancelled.cta', data), [] as unknown as never[], [] as unknown as never[], keyboardTrigger);
     } else {
       // in some cases, we want to inform the user about specifics for the link type, before actually following the link
       if (!skipDoubleLink) {
@@ -45,31 +46,31 @@ async function atcb_generate_links(host, type, data, subEvent = 'all', keyboardT
           atcb_generate_ical(host, data, type, subEvent, keyboardTrigger);
           break;
         case 'google':
-          atcb_generate_google(data, data.dates[`${subEvent}`], subEvent);
+          atcb_generate_google(data, data.dates![`${subEvent}`]!, subEvent);
           break;
         case 'msteams':
-          atcb_generate_msteams(data, data.dates[`${subEvent}`], subEvent);
+          atcb_generate_msteams(data, data.dates![`${subEvent}`]!, subEvent);
           break;
         case 'ms365':
-          atcb_generate_microsoft(data, data.dates[`${subEvent}`], subEvent);
+          atcb_generate_microsoft(data, data.dates![`${subEvent}`]!, subEvent);
           break;
         case 'outlookcom':
-          atcb_generate_microsoft(data, data.dates[`${subEvent}`], subEvent, 'outlookcom');
+          atcb_generate_microsoft(data, data.dates![`${subEvent}`]!, subEvent, 'outlookcom');
           break;
         case 'yahoo':
-          atcb_generate_yahoo(data, data.dates[`${subEvent}`], subEvent);
+          atcb_generate_yahoo(data, data.dates![`${subEvent}`]!, subEvent);
           break;
       }
       // we mark the clicked date - in the multi-date case, this would be one out of many - not for cancelled (ical case)
       const modalHost = document.getElementById(data.identifier + '-modal-host');
       if (modalHost) {
-        const subEventButton = modalHost.shadowRoot.getElementById(data.identifier + '-' + type + '-' + (subEvent + 1));
+        const subEventButton = modalHost.shadowRoot!.getElementById(data.identifier + '-' + type + '-' + ((subEvent as number) + 1));
         if (subEventButton) {
           subEventButton.classList.add('atcb-saved');
         }
       }
-      if (data.dates[`${subEvent}`].status.toLowerCase() !== 'cancelled') atcbStates[`${data.identifier}`][`${type}`][`${subEvent}`]++;
-      const filteredStates = atcbStates[`${data.identifier}`][`${type}`].filter(function (value) {
+      if (data.dates![`${subEvent}`]!.status!.toLowerCase() !== 'cancelled') (atcbStates![`${data.identifier}`]![`${type}`] as unknown as number[])[subEvent as number]!++;
+      const filteredStates = (atcbStates![`${data.identifier}`]![`${type}`] as unknown as number[]).filter(function (value: number) {
         return value < 1;
       });
       if (filteredStates.length == 0) {
@@ -82,35 +83,35 @@ async function atcb_generate_links(host, type, data, subEvent = 'all', keyboardT
   atcb_generate_multidate_links(host, type, linkType, data, keyboardTrigger, multiDateModal);
 }
 
-function atcb_generate_multidate_links(host, type, linkType, data, keyboardTrigger, multiDateModal) {
+function atcb_generate_multidate_links(host: ShadowRoot, type: string, linkType: string, data: ATCBConfig, keyboardTrigger: boolean, multiDateModal: boolean): void {
   // in the multi-date event case, when all subEvent have no organizer OR the same organizer AND are not cancelled, we can also go the short way (for iCal)
-  if (linkType === 'ical' && !data.dates.some((theSubEvent) => theSubEvent.status.toLowerCase() === 'cancelled') && data.dates.every((theSubEvent) => (theSubEvent.organizer || '') === (data.dates[0].organizer || ''))) {
+  if (linkType === 'ical' && !data.dates!.some((theSubEvent) => theSubEvent.status!.toLowerCase() === 'cancelled') && data.dates!.every((theSubEvent) => (theSubEvent.organizer || '') === (data.dates![0]!.organizer || ''))) {
     atcb_generate_ical(host, data, type, 'all', keyboardTrigger);
     // we mark the whole event as clicked
-    for (let i = 0; i < atcbStates[`${data.identifier}`][`${type}`].length; i++) {
-      atcbStates[`${data.identifier}`][`${type}`][`${i}`]++;
+    for (let i = 0; i < (atcbStates![`${data.identifier}`]![`${type}`] as unknown as number[]).length; i++) {
+      (atcbStates![`${data.identifier}`]![`${type}`] as unknown as number[])[`${i}` as unknown as number]!++;
     }
     atcb_set_fully_successful(host, data, multiDateModal);
     return;
   }
   // for multi-date events in all other cases, we show an intermediate layer
   if (!multiDateModal) {
-    const individualButtons = [type];
-    for (let i = 0; i < data.dates.length; i++) {
+    const individualButtons: (string | number)[] = [type];
+    for (let i = 0; i < data.dates!.length; i++) {
       individualButtons.push(i + 1);
     }
-    atcb_create_modal(host, data, type, atcb_translate_hook('modal.multidate.h', data), atcb_translate_hook('modal.multidate.text', data), [], individualButtons, keyboardTrigger);
+    atcb_create_modal(host, data, type, atcb_translate_hook('modal.multidate.h', data), atcb_translate_hook('modal.multidate.text', data), [] as unknown as never[], individualButtons as unknown as never[], keyboardTrigger);
   }
 }
 
-async function atcb_generate_subscribe_links(host, type, linkType, data, keyboardTrigger) {
-  const adjustedFileUrl = data.icsFile.replace('https://', 'webcal://');
+async function atcb_generate_subscribe_links(host: ShadowRoot, type: string, linkType: string, data: ATCBConfig, keyboardTrigger: boolean): Promise<void> {
+  const adjustedFileUrl = data.icsFile!.replace('https://', 'webcal://');
   let copied = false;
   switch (linkType) {
     case 'ical': // also for apple (see above)
       if (atcbIsAndroid() || data.fakeAndroid) {
         // workaround for Android as it does not play nicely with webcal (still leads to wrong behavior. TODO: Rather show an error message here)
-        atcb_subscribe_ical(data, data.icsFile, type);
+        atcb_subscribe_ical(data, data.icsFile!, type);
         break;
       }
       atcb_subscribe_ical(data, adjustedFileUrl, type, host, keyboardTrigger);
@@ -119,10 +120,10 @@ async function atcb_generate_subscribe_links(host, type, linkType, data, keyboar
       atcb_subscribe_google(data, adjustedFileUrl);
       break;
     case 'ms365':
-      atcb_subscribe_microsoft(data, adjustedFileUrl, data.name);
+      atcb_subscribe_microsoft(data, adjustedFileUrl, data.name!);
       break;
     case 'outlookcom':
-      atcb_subscribe_microsoft(data, adjustedFileUrl, data.name, 'outlookcom');
+      atcb_subscribe_microsoft(data, adjustedFileUrl, data.name!, 'outlookcom');
       break;
     case 'yahoo':
       if (data.proxy) {
@@ -150,8 +151,8 @@ async function atcb_generate_subscribe_links(host, type, linkType, data, keyboar
             href: 'https://www.yahoo.com/calendar',
           },
           { label: atcb_translate_hook('cancel', data) },
-        ],
-        [],
+        ] as unknown as never[],
+        [] as unknown as never[],
         keyboardTrigger,
       );
       return;
@@ -176,8 +177,8 @@ async function atcb_generate_subscribe_links(host, type, linkType, data, keyboar
             href: 'https://www.yahoo.com/calendar',
           },
           { label: atcb_translate_hook('cancel', data) },
-        ],
-        [],
+        ] as unknown as never[],
+        [] as unknown as never[],
         keyboardTrigger,
       );
       return;
@@ -186,8 +187,8 @@ async function atcb_generate_subscribe_links(host, type, linkType, data, keyboar
   atcb_set_fully_successful(host, data);
 }
 
-function atcb_set_fully_successful(host, data, multiDateModal = false) {
-  const trigger = host.getElementById(data.identifier);
+function atcb_set_fully_successful(host: ShadowRoot, data: ATCBConfig, multiDateModal = false): void {
+  const trigger = host.getElementById(data.identifier as string);
   if (trigger) {
     trigger.classList.add('atcb-saved');
   }
@@ -200,17 +201,17 @@ function atcb_set_fully_successful(host, data, multiDateModal = false) {
 // GENERATING SUBSCRIPTION URLS AND FILES
 
 // ICAL
-function atcb_subscribe_ical(data, fileUrl, type, host = null, keyboardTrigger = false) {
+function atcb_subscribe_ical(data: ATCBConfig, fileUrl: string, type: string, host: ShadowRoot | null = null, keyboardTrigger = false): void {
   // for Chrome on iOS, we can not directly open the file, but we can show a modal with instructions
   if (atcbIsiOS() && !atcbIsSafari()) {
-    atcb_ical_copy_note(host, fileUrl, data, keyboardTrigger);
+    atcb_ical_copy_note(host as unknown as ShadowRoot, fileUrl, data, keyboardTrigger);
     return;
   }
   atcb_open_cal_url(data, type, fileUrl, true);
 }
 
 // GOOGLE
-function atcb_subscribe_google(data, fileUrl) {
+function atcb_subscribe_google(data: ATCBConfig, fileUrl: string): void {
   const baseUrl = 'https://calendar.google.com/calendar/u/0/r?cid=';
   const baseUrlApp = 'calendar.google.com/calendar?cid=';
   let isGoogleCalId = false;
@@ -237,8 +238,8 @@ function atcb_subscribe_google(data, fileUrl) {
 }
 
 // MICROSOFT
-function atcb_subscribe_microsoft(data, fileUrl, calName, type = 'ms365') {
-  const urlParts = [];
+function atcb_subscribe_microsoft(data: ATCBConfig, fileUrl: string, calName: string, type = 'ms365'): void {
+  const urlParts: string[] = [];
   const baseUrl = (function () {
     if (type == 'outlookcom') {
       return 'https://outlook.live.com/calendar/0/addfromweb/?';
@@ -255,8 +256,8 @@ function atcb_subscribe_microsoft(data, fileUrl, calName, type = 'ms365') {
 
 // FUNCTION TO GENERATE THE GOOGLE URL
 // See specs at: https://github.com/InteractionDesignFoundation/add-event-to-calendar-docs/blob/main/services/google.md (unofficial)
-function atcb_generate_google(data, date, subEvent = 'all') {
-  const urlParts = [];
+function atcb_generate_google(data: ATCBConfig, date: ATCBDateEntry, subEvent: 'all' | number | string = 'all'): void {
+  const urlParts: string[] = [];
   if (atcbIsMobile() || data.fakeMobile) {
     urlParts.push('https://calendar.google.com/calendar/render?action=TEMPLATE&');
   } else {
@@ -274,7 +275,7 @@ function atcb_generate_google(data, date, subEvent = 'all') {
   if (date.name && date.name !== '') {
     urlParts.push('text=' + encodeURIComponent(date.name));
   }
-  const tmpDataDescription = [];
+  const tmpDataDescription: string[] = [];
   if (date.description && date.description !== '') {
     tmpDataDescription.push(date.description);
   }
@@ -293,7 +294,7 @@ function atcb_generate_google(data, date, subEvent = 'all') {
     urlParts.push('details=' + encodeURIComponent(tmpDataDescription.join('')));
   }
   if (date.recurrence && date.recurrence !== '') {
-    urlParts.push('recur=' + encodeURIComponent(date.recurrence));
+    urlParts.push('recur=' + encodeURIComponent(date.recurrence as string));
   }
   if (date.availability && date.availability !== '') {
     const availabilityPart = (function () {
@@ -317,8 +318,8 @@ function atcb_generate_google(data, date, subEvent = 'all') {
 
 // FUNCTION TO GENERATE THE YAHOO URL
 // See specs at: https://github.com/InteractionDesignFoundation/add-event-to-calendar-docs/blob/main/services/yahoo.md (unofficial)
-function atcb_generate_yahoo(data, date, subEvent = 'all') {
-  const urlParts = [];
+function atcb_generate_yahoo(data: ATCBConfig, date: ATCBDateEntry, subEvent: 'all' | number | string = 'all'): void {
+  const urlParts: string[] = [];
   urlParts.push('https://calendar.yahoo.com/?v=60');
   // generate and add date
   const formattedDate = atcb_generate_time(date, 'clean');
@@ -348,15 +349,15 @@ function atcb_generate_yahoo(data, date, subEvent = 'all') {
   }
   if (date.descriptionHtmlFree && date.descriptionHtmlFree !== '') {
     // using descriptionHtmlFree instead of description, since Yahoo does not support html tags in a stable way
-    urlParts.push('desc=' + encodeURIComponent(date.descriptionHtmlFree));
+    urlParts.push('desc=' + encodeURIComponent(date.descriptionHtmlFree as string));
   }
   atcb_open_cal_url(data, 'yahoo', urlParts.join('&'), false, subEvent);
 }
 
 // FUNCTION TO GENERATE THE MICROSOFT 365 OR OUTLOOK WEB URL
 // See specs at: TODO: add some documentation here, if it exists
-function atcb_generate_microsoft(data, date, subEvent = 'all', type = 'ms365') {
-  const urlParts = [];
+function atcb_generate_microsoft(data: ATCBConfig, date: ATCBDateEntry, subEvent: 'all' | number | string = 'all', type = 'ms365'): void {
+  const urlParts: string[] = [];
   const basePath = (function () {
     // tmp workaround to reflect the fact that Microsoft is routing mobile traffic differently
     // TODO: remove this, when Microsoft has fixed this
@@ -396,8 +397,8 @@ function atcb_generate_microsoft(data, date, subEvent = 'all', type = 'ms365') {
 // FUNCTION TO GENERATE THE MICROSOFT TEAMS URL
 // See specs at: https://learn.microsoft.com/en-us/microsoftteams/platform/concepts/build-and-test/deep-link-workflow?tabs=teamsjs-v2#deep-link-to-open-a-meeting-scheduling-dialog
 // Mind that this is still in development mode by Microsoft! Location, html tags and linebreaks in the description are not supported yet.
-function atcb_generate_msteams(data, date, subEvent = 'all') {
-  const urlParts = [];
+function atcb_generate_msteams(data: ATCBConfig, date: ATCBDateEntry, subEvent: 'all' | number | string = 'all'): void {
+  const urlParts: string[] = [];
   const baseUrl = 'https://teams.microsoft.com/l/meeting/new?';
   // generate and add date
   const formattedDate = atcb_generate_time(date, 'delimiters', 'msteams', true);
@@ -428,14 +429,14 @@ function atcb_generate_msteams(data, date, subEvent = 'all') {
 }
 
 // FUNCTION TO OPEN THE URL
-function atcb_open_cal_url(data, type, url = '', subscribe = false, subEvent = null, target = '') {
+function atcb_open_cal_url(data: ATCBConfig, type: string, url = '', subscribe = false, subEvent: 'all' | number | string | null = null, target = ''): void {
   if (target === '') {
     target = atcbDefaultTarget;
   }
   if (data.proxy && data.proKey && data.proKey !== '') {
     const urlType = subscribe ? 's' : 'o';
     const query = (function () {
-      const parts = [];
+      const parts: string[] = [];
       if (data.attendee && data.attendee !== '') {
         parts.push('attendee=' + encodeURIComponent(data.attendee));
       }
@@ -466,9 +467,9 @@ function atcb_open_cal_url(data, type, url = '', subscribe = false, subEvent = n
 
 // FUNCTION TO GENERATE THE iCAL FILE (also for apple - see above)
 // See specs at: https://www.rfc-editor.org/rfc/rfc5545.html
-function atcb_generate_ical(host, data, type, subEvent = 'all', keyboardTrigger = false) {
+function atcb_generate_ical(host: ShadowRoot, data: ATCBConfig, type: string, subEvent: 'all' | number | string = 'all', keyboardTrigger = false): void {
   if (subEvent !== 'all') {
-    subEvent = parseInt(subEvent);
+    subEvent = parseInt(subEvent as string);
   }
   // define the right filename
   const filename = atcb_determine_ical_filename(data, subEvent);
@@ -477,18 +478,18 @@ function atcb_generate_ical(host, data, type, subEvent = 'all', keyboardTrigger 
     // ignore a given file, if there is an attendee or customVar provided at the host level, as this would need to be added to the file
     const potentialHostAttendee = host.host.getAttribute('attendee') || '';
     const potentialHostCustomVar = host.host.getAttribute('customVar') || '';
-    if ((data.attendee && data.attendee !== '' && potentialHostAttendee !== '') || (data.customVar && data.customVar !== '' && potentialHostCustomVar !== '')) {
+    if ((data.attendee && data.attendee !== '' && potentialHostAttendee !== '') || (data.customVar && (data.customVar as unknown) !== '' && potentialHostCustomVar !== '')) {
       return '';
     }
     // otherwise, we check for a given explicit file
-    if (subEvent !== 'all' && data.dates[`${subEvent}`].icsFile && data.dates[`${subEvent}`].icsFile !== '') {
-      return data.dates[`${subEvent}`].icsFile;
+    if (subEvent !== 'all' && data.dates![`${subEvent}`]!.icsFile && data.dates![`${subEvent}`]!.icsFile !== '') {
+      return data.dates![`${subEvent}`]!.icsFile;
     }
     if (data.icsFile && data.icsFile !== '') {
       return data.icsFile;
     }
     return '';
-  })();
+  })() as string;
   // if we are in proxy mode, we can directly redirect
   if (data.proxy) {
     atcb_open_cal_url(data, type, '', false, subEvent);
@@ -508,79 +509,82 @@ function atcb_generate_ical(host, data, type, subEvent = 'all', keyboardTrigger 
   // mind that in the multi-date case (where we create 1 ics file), CANCEL is no option
   if (subEvent === 'all') {
     // we use REQUEST for organized/hosted events, ...
-    if (data.dates[0].organizer && data.dates[0].organizer !== '') {
+    if (data.dates![0]!.organizer && data.dates![0]!.organizer !== '') {
       ics_lines.push('METHOD:REQUEST');
     } else {
       // and PUBLISH for events without a host
       ics_lines.push('METHOD:PUBLISH');
     }
   } else {
-    if (data.dates[`${subEvent}`].status && data.dates[`${subEvent}`].status.toLowerCase() === 'cancelled') {
+    if (data.dates![`${subEvent}`]!.status && (data.dates![`${subEvent}`]!.status as string).toLowerCase() === 'cancelled') {
       ics_lines.push('METHOD:CANCEL');
     } else {
-      if (data.dates[`${subEvent}`].organizer && data.dates[`${subEvent}`].organizer !== '') {
+      if (data.dates![`${subEvent}`]!.organizer && data.dates![`${subEvent}`]!.organizer !== '') {
         ics_lines.push('METHOD:REQUEST');
       } else {
         ics_lines.push('METHOD:PUBLISH');
       }
     }
   }
-  const usedTimeZones = [];
+  const usedTimeZones: string[] = [];
   const loopStart = (function () {
     if (subEvent != 'all') {
-      return subEvent;
+      return subEvent as number;
     }
     return 0;
   })();
   const loopEnd = (function () {
     if (subEvent != 'all') {
-      return subEvent;
+      return subEvent as number;
     }
-    return data.dates.length - 1;
+    return data.dates!.length - 1;
   })();
   for (let i = loopStart; i <= loopEnd; i++) {
-    const formattedDate = atcb_generate_time(data.dates[`${i}`], 'clean', 'ical');
+    const formattedDate = atcb_generate_time(data.dates![`${i}`]!, 'clean', 'ical');
     // get the timezone addon string for dates and include time zone information, if set and if not allday (not necessary in that case)
     const timeAddon = (function () {
       if (formattedDate.allday) {
         return ';VALUE=DATE';
       }
-      if (data.dates[`${i}`].timeZone && data.dates[`${i}`].timeZone !== '') {
+      if (data.dates![`${i}`]!.timeZone && data.dates![`${i}`]!.timeZone !== '') {
         // for certain time zones (mostly GMT +/- something and some US time zones), we use GMT and a converted datetime as this would not be supported by Google Calendar and one could use the ics there
-        const timeZone = /GMT[+|-]\d{1,2}|Etc\/U|Etc\/Zulu|CET|CST6CDT|EET|EST|MET|MST|PST8PDT|WET|PST|PDT|MDT|CST|CDT|EDT|EEST|CEST|HST|HDT|AKST|AKDT|AST|ADT|AEST|AEDT|NZST|NZDT|IST|IDT|WEST|ACST|ACDT|BST/i.test(data.dates[`${i}`].timeZone) ? 'GMT' : data.dates[`${i}`].timeZone;
+        const timeZone = /GMT[+|-]\d{1,2}|Etc\/U|Etc\/Zulu|CET|CST6CDT|EET|EST|MET|MST|PST8PDT|WET|PST|PDT|MDT|CST|CDT|EDT|EEST|CEST|HST|HDT|AKST|AKDT|AST|ADT|AEST|AEDT|NZST|NZDT|IST|IDT|WEST|ACST|ACDT|BST/i.test(data.dates![`${i}`]!.timeZone as string)
+          ? 'GMT'
+          : (data.dates![`${i}`]!.timeZone as string);
         const timeZoneBlock = tzlib_get_ical_block(timeZone);
         if (!usedTimeZones.includes(timeZone)) {
-          ics_lines.push(timeZoneBlock[0]);
+          ics_lines.push(timeZoneBlock[0]!);
         }
         usedTimeZones.push(timeZone);
         return ';' + timeZoneBlock[1];
       }
+      return undefined;
     })();
     ics_lines.push('BEGIN:VEVENT');
-    if (data.dates[`${i}`].uid && data.dates[`${i}`].uid !== '') {
-      ics_lines.push('UID:' + data.dates[`${i}`].uid);
+    if (data.dates![`${i}`]!.uid && data.dates![`${i}`]!.uid !== '') {
+      ics_lines.push('UID:' + data.dates![`${i}`]!.uid);
     }
     ics_lines.push('DTSTAMP:' + atcb_format_datetime(now, 'clean', true));
     ics_lines.push('DTSTART' + timeAddon + ':' + formattedDate.start);
     ics_lines.push('DTEND' + timeAddon + ':' + formattedDate.end);
-    ics_lines.push('SUMMARY:' + atcb_rewrite_ical_text(data.dates[`${i}`].name));
-    if (data.dates[`${i}`].descriptionHtmlFreeICal && data.dates[`${i}`].descriptionHtmlFreeICal !== '') {
-      ics_lines.push('DESCRIPTION:' + atcb_rewrite_ical_text(data.dates[`${i}`].descriptionHtmlFreeICal));
+    ics_lines.push('SUMMARY:' + atcb_rewrite_ical_text(data.dates![`${i}`]!.name!));
+    if (data.dates![`${i}`]!.descriptionHtmlFreeICal && data.dates![`${i}`]!.descriptionHtmlFreeICal !== '') {
+      ics_lines.push('DESCRIPTION:' + atcb_rewrite_ical_text(data.dates![`${i}`]!.descriptionHtmlFreeICal as string));
     }
-    if (data.dates[`${i}`].description && data.dates[`${i}`].description !== '') {
-      ics_lines.push('X-ALT-DESC;FMTTYPE=text/html:\r\n <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">\r\n <HTML><BODY>\r\n ' + atcb_rewrite_ical_text(data.dates[`${i}`].description) + '\r\n </BODY></HTML>');
+    if (data.dates![`${i}`]!.description && data.dates![`${i}`]!.description !== '') {
+      ics_lines.push('X-ALT-DESC;FMTTYPE=text/html:\r\n <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">\r\n <HTML><BODY>\r\n ' + atcb_rewrite_ical_text(data.dates![`${i}`]!.description!) + '\r\n </BODY></HTML>');
     }
-    if (data.dates[`${i}`].location && data.dates[`${i}`].location !== '') {
-      ics_lines.push('LOCATION:' + atcb_rewrite_ical_text(data.dates[`${i}`].location));
+    if (data.dates![`${i}`]!.location && data.dates![`${i}`]!.location !== '') {
+      ics_lines.push('LOCATION:' + atcb_rewrite_ical_text(data.dates![`${i}`]!.location!));
     }
-    if (data.dates[`${i}`].organizer && data.dates[`${i}`].organizer !== '') {
-      const organizerParts = data.dates[`${i}`].organizer.split('|');
-      ics_lines.push('ORGANIZER;CN=' + atcb_rewrite_ical_text(organizerParts[0], true) + ':MAILTO:' + organizerParts[1]);
+    if (data.dates![`${i}`]!.organizer && data.dates![`${i}`]!.organizer !== '') {
+      const organizerParts = (data.dates![`${i}`]!.organizer as string).split('|');
+      ics_lines.push('ORGANIZER;CN=' + atcb_rewrite_ical_text(organizerParts[0]!, true) + ':MAILTO:' + organizerParts[1]);
     }
-    if (data.dates[`${i}`].attendee && data.dates[`${i}`].attendee !== '') {
-      const attendeeParts = data.dates[`${i}`].attendee.split('|');
+    if (data.dates![`${i}`]!.attendee && data.dates![`${i}`]!.attendee !== '') {
+      const attendeeParts = (data.dates![`${i}`]!.attendee as string).split('|');
       if (attendeeParts.length === 2) {
-        ics_lines.push('ATTENDEE;CUTYPE=INDIVIDUAL;ROLE=REQ-PARTICIPANT;PARTSTAT=ACCEPTED;CN=' + atcb_rewrite_ical_text(attendeeParts[0], true) + ';X-NUM-GUESTS=0:mailto:' + attendeeParts[1]);
+        ics_lines.push('ATTENDEE;CUTYPE=INDIVIDUAL;ROLE=REQ-PARTICIPANT;PARTSTAT=ACCEPTED;CN=' + atcb_rewrite_ical_text(attendeeParts[0]!, true) + ';X-NUM-GUESTS=0:mailto:' + attendeeParts[1]);
       } else {
         ics_lines.push('ATTENDEE;CUTYPE=INDIVIDUAL;ROLE=REQ-PARTICIPANT;PARTSTAT=ACCEPTED;CN=' + attendeeParts[0] + ';X-NUM-GUESTS=0:mailto:' + attendeeParts[0]);
       }
@@ -588,17 +592,17 @@ function atcb_generate_ical(host, data, type, subEvent = 'all', keyboardTrigger 
     if (data.recurrence && data.recurrence !== '') {
       ics_lines.push(data.recurrence);
     }
-    if (data.dates[`${i}`].availability && data.dates[`${i}`].availability !== '') {
+    if (data.dates![`${i}`]!.availability && data.dates![`${i}`]!.availability !== '') {
       const transpVal = (function () {
-        if (data.dates[`${i}`].availability == 'free') {
+        if (data.dates![`${i}`]!.availability == 'free') {
           return 'TRANSPARENT';
         }
         return 'OPAQUE';
       })();
       ics_lines.push('TRANSP:' + transpVal);
     }
-    ics_lines.push('SEQUENCE:' + data.dates[`${i}`].sequence);
-    ics_lines.push('STATUS:' + data.dates[`${i}`].status);
+    ics_lines.push('SEQUENCE:' + data.dates![`${i}`]!.sequence);
+    ics_lines.push('STATUS:' + data.dates![`${i}`]!.status);
     ics_lines.push('CREATED:' + data.created);
     ics_lines.push('LAST-MODIFIED:' + data.updated);
     ics_lines.push('END:VEVENT');
@@ -624,10 +628,10 @@ function atcb_generate_ical(host, data, type, subEvent = 'all', keyboardTrigger 
   atcb_save_file(dataUrl, filename);
 }
 
-function atcb_determine_ical_filename(data, subEvent) {
+function atcb_determine_ical_filename(data: ATCBConfig, subEvent: 'all' | number | string): string {
   const filenameSuffix = (function () {
     if (subEvent != 'all' && subEvent != 0) {
-      return '-' + parseInt(subEvent) + 1;
+      return '-' + parseInt(subEvent as string) + 1;
     }
     return '';
   })();
@@ -635,7 +639,7 @@ function atcb_determine_ical_filename(data, subEvent) {
     return data.iCalFileName + filenameSuffix;
   }
   if (data.icsFile != null && data.icsFile != '') {
-    const filenamePart = data.icsFile.split('/').pop().split('.')[0];
+    const filenamePart = data.icsFile.split('/').pop()!.split('.')[0];
     if (filenamePart != '') {
       return filenamePart + filenameSuffix;
     }
@@ -643,7 +647,7 @@ function atcb_determine_ical_filename(data, subEvent) {
   return 'event' + filenameSuffix;
 }
 
-async function atcb_ical_copy_note(host, dataUrl, data, keyboardTrigger) {
+async function atcb_ical_copy_note(host: ShadowRoot, dataUrl: string, data: ATCBConfig, keyboardTrigger: boolean): Promise<void> {
   // putting the download url to the clipboard
   let copied = false;
   try {
@@ -661,13 +665,22 @@ async function atcb_ical_copy_note(host, dataUrl, data, keyboardTrigger) {
       'warning',
       atcb_translate_hook('modal.opensafari.ical.h', data),
       atcb_translate_hook('modal.opensafari.ical.text', data) + '<br>' + atcb_translate_hook('modal.clipboard.text', data) + '<br>' + atcb_translate_hook('modal.opensafari.ical.steps', data),
-      [],
-      [],
+      [] as unknown as never[],
+      [] as unknown as never[],
       keyboardTrigger,
     );
     return;
   }
-  atcb_create_modal(host, data, 'warning', atcb_translate_hook('modal.webview.ical.h', data), atcb_translate_hook('modal.webview.ical.text', data) + '<br>' + atcb_translate_hook('modal.clipboard.text', data) + '<br>' + atcb_translate_hook('modal.webview.ical.steps', data), [], [], keyboardTrigger);
+  atcb_create_modal(
+    host,
+    data,
+    'warning',
+    atcb_translate_hook('modal.webview.ical.h', data),
+    atcb_translate_hook('modal.webview.ical.text', data) + '<br>' + atcb_translate_hook('modal.clipboard.text', data) + '<br>' + atcb_translate_hook('modal.webview.ical.steps', data),
+    [] as unknown as never[],
+    [] as unknown as never[],
+    keyboardTrigger,
+  );
 }
 
 export { atcb_generate_links, atcb_set_fully_successful };

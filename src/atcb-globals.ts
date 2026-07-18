@@ -13,13 +13,15 @@
  *  Note:    DO NOT REMOVE THE COPYRIGHT NOTICE ABOVE!
  *
  */
-const atcbVersion = '2.15.0';
+import type { ATCBInputConfig, ATCBStateEntry } from './types';
+
+const atcbVersion: string = '2.15.0';
 
 // DEFINING CSS
-const atcbCssTemplate = {};
+const atcbCssTemplate: { [key: string]: string } = {};
 
 // CHECKING FOR SPECIFIC DEVICED AND SYSTEMS
-const atcbIsBrowser = () => {
+const atcbIsBrowser = (): boolean => {
   if (typeof window === 'undefined') {
     return false;
   } else {
@@ -27,7 +29,7 @@ const atcbIsBrowser = () => {
   }
 };
 // iOS
-const atcbIsiOS = atcbIsBrowser()
+const atcbIsiOS: () => boolean = atcbIsBrowser()
   ? () => {
       if (/iPad|iPhone|iPod/i.test(navigator.userAgent) && !/MSStream/i.test(navigator.userAgent)) {
         return true;
@@ -39,7 +41,7 @@ const atcbIsiOS = atcbIsBrowser()
       return false;
     };
 // Android
-const atcbIsAndroid = atcbIsBrowser()
+const atcbIsAndroid: () => boolean = atcbIsBrowser()
   ? () => {
       if (/android/i.test(navigator.userAgent) && !/MSStream/i.test(navigator.userAgent)) {
         return true;
@@ -63,7 +65,7 @@ const atcbIsAndroid = atcbIsBrowser()
       return false;
     };*/
 // Safari
-const atcbIsSafari = atcbIsBrowser()
+const atcbIsSafari: () => boolean = atcbIsBrowser()
   ? () => {
       if (/^(?:(?!chrome|android|crios|fxios).)*safari/i.test(navigator.userAgent)) {
         return true;
@@ -75,7 +77,7 @@ const atcbIsSafari = atcbIsBrowser()
       return false;
     };
 // Mobile
-const atcbIsMobile = () => {
+const atcbIsMobile = (): boolean => {
   if (atcbIsAndroid() || atcbIsiOS()) {
     return true;
   } else {
@@ -83,7 +85,7 @@ const atcbIsMobile = () => {
   }
 };
 // WebView (iOS and Android)
-const atcbIsWebView = atcbIsBrowser()
+const atcbIsWebView: () => boolean = atcbIsBrowser()
   ? () => {
       if (/; ?wv|(?:iPhone|iPod|iPad).*AppleWebKit(?!.*Safari)/i.test(navigator.userAgent)) {
         return true;
@@ -95,7 +97,7 @@ const atcbIsWebView = atcbIsBrowser()
       return false;
     };
 // checking for problematic apps
-const atcbIsProblematicWebView = atcbIsBrowser()
+const atcbIsProblematicWebView: () => boolean = atcbIsBrowser()
   ? () => {
       if (/Instagram/i.test(navigator.userAgent)) {
         return true;
@@ -108,16 +110,17 @@ const atcbIsProblematicWebView = atcbIsBrowser()
     };
 
 // DEFINE GLOBAL VARIABLES
-const atcbDefaultTarget = atcbIsWebView() ? '_system' : '_blank';
-const atcbOptions = ['apple', 'google', 'ical', 'ms365', 'outlookcom', 'msteams', 'yahoo'];
-const atcbValidRecurrOptions = ['apple', 'google', 'ical'];
-const atcbInvalidSubscribeOptions = ['msteams'];
-const atcbIOSInvalidOptions = ['ical'];
-const atcbAndroidInvalidOptions = ['apple'];
-const atcbStates = [];
+const atcbDefaultTarget: string = atcbIsWebView() ? '_system' : '_blank';
+const atcbOptions: string[] = ['apple', 'google', 'ical', 'ms365', 'outlookcom', 'msteams', 'yahoo'];
+const atcbValidRecurrOptions: string[] = ['apple', 'google', 'ical'];
+const atcbInvalidSubscribeOptions: string[] = ['msteams'];
+const atcbIOSInvalidOptions: string[] = ['ical'];
+const atcbAndroidInvalidOptions: string[] = ['apple'];
+// runtime keyed map living on an array instance (kept as-is for exact v2 behavior parity)
+const atcbStates = [] as unknown as { [key: string]: ATCBStateEntry };
 
 // DEFINING THE WEB COMPONENT ATTRIBUTES
-const atcbWcParams = [
+const atcbWcParams: (keyof ATCBInputConfig)[] = [
   'debug',
   'proOverride',
   'cspnonce',
@@ -195,7 +198,7 @@ const atcbWcParams = [
   'domain',
   'dev',
 ];
-const atcbWcProParams = [
+const atcbWcProParams: (keyof ATCBInputConfig)[] = [
   'debug',
   'proOverride',
   'cspnonce',
@@ -223,7 +226,7 @@ const atcbWcProParams = [
   'domain',
   'dev',
 ];
-const atcbWcBooleanParams = [
+const atcbWcBooleanParams: (keyof ATCBInputConfig)[] = [
   'debug',
   'proOverride',
   'useUserTZ',
@@ -252,13 +255,13 @@ const atcbWcBooleanParams = [
   'forceOverlay',
   'dev',
 ];
-const atcbWcObjectParams = ['customLabels', 'ty', 'rsvp', 'customVar'];
-const atcbWcObjectArrayParams = ['dates'];
-const atcbWcArrayParams = ['recurrence_byDay', 'recurrence_byMonth', 'recurrence_byMonthDay', 'images', 'options', 'optionsMobile', 'optionsIOS'];
-const atcbWcNumberParams = ['sequence', 'recurrence_interval', 'recurrence_count'];
+const atcbWcObjectParams: (keyof ATCBInputConfig)[] = ['customLabels', 'ty', 'rsvp', 'customVar'];
+const atcbWcObjectArrayParams: (keyof ATCBInputConfig)[] = ['dates'];
+const atcbWcArrayParams: (keyof ATCBInputConfig)[] = ['recurrence_byDay', 'recurrence_byMonth', 'recurrence_byMonthDay', 'images', 'options', 'optionsMobile', 'optionsIOS'];
+const atcbWcNumberParams: (keyof ATCBInputConfig)[] = ['sequence', 'recurrence_interval', 'recurrence_count'];
 
 // DEFINING GLOBAL ICONS
-const atcbIcon = {
+const atcbIcon: { [key: string]: string } = {
   trigger:
     '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200.016"><path d="M132.829 7.699c0-4.248 4.199-7.699 9.391-7.699s9.391 3.451 9.391 7.699v33.724c0 4.248-4.199 7.699-9.391 7.699s-9.391-3.451-9.391-7.699zm-5.941 123.747c2.979 0 5.404 2.425 5.404 5.404s-2.425 5.404-5.404 5.404l-21.077-.065-.065 21.045c0 2.979-2.425 5.404-5.404 5.404s-5.404-2.425-5.404-5.404l.065-21.061-21.045-.081c-2.979 0-5.404-2.425-5.404-5.404s2.425-5.404 5.404-5.404l21.061.065.065-21.045c0-2.979 2.425-5.404 5.404-5.404s5.404 2.425 5.404 5.404l-.065 21.077 21.061.065zM48.193 7.699C48.193 3.451 52.393 0 57.585 0s9.391 3.451 9.391 7.699v33.724c0 4.248-4.199 7.699-9.391 7.699s-9.391-3.451-9.391-7.699zM10.417 73.763h179.167V34.945c0-1.302-.537-2.49-1.4-3.369-.863-.863-2.051-1.4-3.369-1.4h-17.171c-2.881 0-5.208-2.327-5.208-5.208s2.327-5.208 5.208-5.208h17.171c4.183 0 7.975 1.709 10.726 4.46S200 30.762 200 34.945v44.043 105.843c0 4.183-1.709 7.975-4.46 10.726s-6.543 4.46-10.726 4.46H15.186c-4.183 0-7.975-1.709-10.726-4.46C1.709 192.79 0 188.997 0 184.814V78.988 34.945c0-4.183 1.709-7.975 4.46-10.726s6.543-4.46 10.726-4.46h18.343c2.881 0 5.208 2.327 5.208 5.208s-2.327 5.208-5.208 5.208H15.186c-1.302 0-2.49.537-3.369 1.4-.863.863-1.4 2.051-1.4 3.369zm179.167 10.433H10.417v100.618c0 1.302.537 2.49 1.4 3.369.863.863 2.051 1.4 3.369 1.4h169.629c1.302 0 2.49-.537 3.369-1.4.863-.863 1.4-2.051 1.4-3.369zM82.08 30.176c-2.881 0-5.208-2.327-5.208-5.208s2.327-5.208 5.208-5.208h34.977c2.881 0 5.208 2.327 5.208 5.208s-2.327 5.208-5.208 5.208z"/></svg>',
   apple:

@@ -1,31 +1,33 @@
 import { tzlib_get_offset, tzlib_get_timezones } from 'timezones-ical-library';
-import { atcbIsiOS, atcbIsAndroid, atcbIsMobile, atcbIsBrowser, atcbValidRecurrOptions, atcbInvalidSubscribeOptions, atcbIOSInvalidOptions, atcbAndroidInvalidOptions, atcbWcBooleanParams } from './atcb-globals.js';
-import { atcb_translate_via_time_zone, atcb_format_datetime, atcb_rewrite_html_elements, atcb_generate_uuid, atcb_apply_transformation, atcb_getNextOccurrence, atcb_map_special_time_zones, atcb_parseRRule } from './atcb-util.js';
+import { atcbIsiOS, atcbIsAndroid, atcbIsMobile, atcbIsBrowser, atcbValidRecurrOptions, atcbInvalidSubscribeOptions, atcbIOSInvalidOptions, atcbAndroidInvalidOptions, atcbWcBooleanParams } from './atcb-globals';
+import { atcb_translate_via_time_zone, atcb_format_datetime, atcb_rewrite_html_elements, atcb_generate_uuid, atcb_apply_transformation, atcb_getNextOccurrence, atcb_map_special_time_zones, atcb_parseRRule } from './atcb-util';
 import { availableLanguages, rtlLanguages } from './atcb-i18n';
-import { atcb_check_bookings } from './atcb-generate-pro.js';
+import { atcb_check_bookings } from './atcb-generate-pro';
+import type { ATCBConfig, ATCBInputConfig, ATCBDateEntry } from './types';
 
 // CLEAN DATA BEFORE FURTHER VALIDATION (CONSIDERING SPECIAL RULES AND SCHEMES)
-async function atcb_decorate_data(data) {
-  data = atcb_decorate_data_boolean(data);
-  data = atcb_decorate_data_defaults(data);
-  data = atcb_decorate_data_options(data);
-  data = atcb_decorate_data_style(data);
-  data.sizes = atcb_decorate_sizes(data.size);
-  data.lightMode = atcb_decorate_light_mode(data.lightMode);
-  data = atcb_decorate_data_i18n(data);
-  data = atcb_decorate_data_dates(data);
-  data = await atcb_decorate_data_rsvp(data);
-  return data;
+async function atcb_decorate_data(data: ATCBConfig | ATCBInputConfig): Promise<ATCBConfig> {
+  let cfg = data as ATCBConfig;
+  cfg = atcb_decorate_data_boolean(cfg);
+  cfg = atcb_decorate_data_defaults(cfg);
+  cfg = atcb_decorate_data_options(cfg);
+  cfg = atcb_decorate_data_style(cfg);
+  cfg.sizes = atcb_decorate_sizes(cfg.size as string | undefined);
+  cfg.lightMode = atcb_decorate_light_mode(cfg.lightMode);
+  cfg = atcb_decorate_data_i18n(cfg);
+  cfg = atcb_decorate_data_dates(cfg);
+  cfg = await atcb_decorate_data_rsvp(cfg);
+  return cfg;
 }
 
 // setting boolean parameters right, since they can be provided or not
-function atcb_decorate_data_boolean(data) {
+function atcb_decorate_data_boolean(data: ATCBConfig): ATCBConfig {
   for (let i = 0; i < atcbWcBooleanParams.length; i++) {
-    const attr = atcbWcBooleanParams[`${i}`];
+    const attr = atcbWcBooleanParams[`${i}`]! as string;
     if (data[`${attr}`]) {
       // only do something if not already a boolean
       if (typeof data[`${attr}`] !== 'boolean') {
-        const val = data[`${attr}`].toString().trim().toLowerCase() || '';
+        const val = (data[`${attr}`] as unknown as { toString(): string }).toString().trim().toLowerCase() || '';
         data[`${attr}`] = val === '' || val === 'true' ? true : false;
       }
     } else {
@@ -35,7 +37,7 @@ function atcb_decorate_data_boolean(data) {
   return data;
 }
 
-function atcb_set_date_defaults(dateEntry) {
+function atcb_set_date_defaults(dateEntry: ATCBDateEntry | ATCBConfig): void {
   // set time zone
   if (!dateEntry.timeZone || dateEntry.timeZone === '') {
     dateEntry.timeZone = 'GMT';
@@ -48,17 +50,17 @@ function atcb_set_date_defaults(dateEntry) {
   if (!dateEntry.sequence || dateEntry.sequence === '') {
     dateEntry.sequence = 0;
   } else {
-    dateEntry.sequence = parseInt(dateEntry.sequence);
+    dateEntry.sequence = parseInt(dateEntry.sequence as string);
     if (isNaN(dateEntry.sequence) || dateEntry.sequence < 0) {
       dateEntry.sequence = 0;
     }
   }
 }
 
-function atcb_decorate_data_defaults(data) {
+function atcb_decorate_data_defaults(data: ATCBConfig): ATCBConfig {
   if (data.dates) {
     for (let i = 0; i < data.dates.length; i++) {
-      atcb_set_date_defaults(data.dates[`${i}`]);
+      atcb_set_date_defaults(data.dates[`${i}`]!);
     }
   } else {
     atcb_set_date_defaults(data);
@@ -71,20 +73,20 @@ function atcb_decorate_data_defaults(data) {
 }
 
 // format RRULE
-function atcb_decorate_data_rrule(data) {
+function atcb_decorate_data_rrule(data: ATCBConfig): ATCBConfig {
   // remove spaces and force upper case
-  data.recurrence = data.recurrence.replace(/\s+/g, '').toUpperCase();
+  data.recurrence = data.recurrence!.replace(/\s+/g, '').toUpperCase();
   // if RRULE is set, we parse date from it
   if (/^RRULE:/i.test(data.recurrence)) {
     data.recurrence_simplified = false;
     const rruleParts = atcb_parseRRule(data.recurrence, false);
-    data.recurrence_until = rruleParts.UNTIL;
-    data.recurrence_count = rruleParts.COUNT;
-    data.recurrence_byDay = rruleParts.BYDAY;
-    data.recurrence_byMonth = rruleParts.BYMONTH;
-    data.recurrence_byMonthDay = rruleParts.BYMONTHDAY;
-    data.recurrence_interval = rruleParts.INTERVAL;
-    data.recurrence_frequency = rruleParts.FREQ;
+    data.recurrence_until = rruleParts.UNTIL as string | undefined;
+    data.recurrence_count = rruleParts.COUNT as number | undefined;
+    data.recurrence_byDay = rruleParts.BYDAY as string | undefined;
+    data.recurrence_byMonth = rruleParts.BYMONTH as string | undefined;
+    data.recurrence_byMonthDay = rruleParts.BYMONTHDAY as string | undefined;
+    data.recurrence_interval = rruleParts.INTERVAL as number | undefined;
+    data.recurrence_frequency = rruleParts.FREQ as string | undefined;
   } else {
     // otherwise, we create an RRULE from the easy rules
     data.recurrence_simplified = true;
@@ -93,7 +95,7 @@ function atcb_decorate_data_rrule(data) {
       data.recurrence_interval = 1;
     }
     // set weekstart if not given
-    if (!data.recurrence_weekstart || (data.recurrence_weekstart === '') | (data.recurrence_weekstart.length > 2)) {
+    if (!data.recurrence_weekstart || Number(data.recurrence_weekstart === '') | Number(data.recurrence_weekstart.length > 2)) {
       data.recurrence_weekstart = 'MO';
     }
     // save frequency before overriding the main recurrence data
@@ -125,24 +127,24 @@ function atcb_decorate_data_rrule(data) {
 }
 
 // Adjust recurring events for next data
-function atcb_decorate_data_recurring_events(data) {
-  const startDate = data.dates[0].startDate;
-  const startTime = data.dates[0].startTime;
-  const endDate = data.dates[0].endDate || startDate;
-  const endTime = data.dates[0].endTime || '';
-  const tzid = data.dates[0].timeZone || 'UTC';
+function atcb_decorate_data_recurring_events(data: ATCBConfig): ATCBConfig {
+  const startDate = data.dates![0]!.startDate;
+  const startTime = data.dates![0]!.startTime;
+  const endDate = data.dates![0]!.endDate || startDate;
+  const endTime = data.dates![0]!.endTime || '';
+  const tzid = data.dates![0]!.timeZone || 'UTC';
   const diff =
     (function () {
       if (endTime && endTime !== '' && startTime && startTime !== '') {
-        const origStart = startTime && startTime !== '' ? new Date(`${startDate}T${startTime}:00${toIsoOffset(tzlib_get_offset(tzid, startDate, startTime))}`) : new Date(`${startDate}T00:00:00${toIsoOffset(tzlib_get_offset(tzid, startDate, '00:00'))}`);
-        const origEnd = endTime && endTime !== '' ? new Date(`${endDate}T${endTime}:00${toIsoOffset(tzlib_get_offset(tzid, endDate, endTime))}`) : new Date(`${endDate}T00:00:00${toIsoOffset(tzlib_get_offset(tzid, endDate, '00:00'))}`);
+        const origStart = startTime && startTime !== '' ? new Date(`${startDate}T${startTime}:00${toIsoOffset(tzlib_get_offset(tzid, startDate!, startTime))}`) : new Date(`${startDate}T00:00:00${toIsoOffset(tzlib_get_offset(tzid, startDate!, '00:00'))}`);
+        const origEnd = endTime && endTime !== '' ? new Date(`${endDate}T${endTime}:00${toIsoOffset(tzlib_get_offset(tzid, endDate!, endTime))}`) : new Date(`${endDate}T00:00:00${toIsoOffset(tzlib_get_offset(tzid, endDate!, '00:00'))}`);
         return origEnd.getTime() - origStart.getTime();
       }
       return;
     })() || 0;
 
   // Helper: normalize offsets into ISO form ±HH:MM (or 'Z')
-  function toIsoOffset(off) {
+  function toIsoOffset(off: string | undefined): string {
     if (!off || off === 'Z' || off === '+0000' || off === '-0000' || off === '+00:00' || off === '-00:00') return 'Z';
     const raw = String(off).replace(/^GMT/i, '');
     if (/^[+-]\d{2}:\d{2}$/.test(raw)) return raw;
@@ -153,31 +155,31 @@ function atcb_decorate_data_recurring_events(data) {
     return `${sign}${digits.slice(0, 2)}:${digits.slice(2)}`;
   }
 
-  const offset = startTime && startTime !== '' ? tzlib_get_offset(tzid, startDate, startTime) : '';
+  const offset = startTime && startTime !== '' ? tzlib_get_offset(tzid, startDate!, startTime) : '';
   const startDateTime = (function () {
     if (startTime && startTime !== '') {
       const isoOff = toIsoOffset(offset);
       return new Date(`${startDate}T${startTime}:00${isoOff}`);
     }
-    const localMidnightOffset = toIsoOffset(tzlib_get_offset(tzid, startDate, '00:00'));
+    const localMidnightOffset = toIsoOffset(tzlib_get_offset(tzid, startDate!, '00:00'));
     return new Date(`${startDate}T00:00:00${localMidnightOffset}`);
   })();
 
   const isAllDay = !(startTime && startTime !== '');
-  const occurenceData = atcb_getNextOccurrence(data.recurrence, startDateTime, diff, isAllDay, tzid);
+  const occurenceData = atcb_getNextOccurrence(data.recurrence!, startDateTime, diff, isAllDay, tzid);
   if (!occurenceData || !occurenceData.nextOccurrence) {
     return data;
   }
 
   // format Date in specific tz; guard invalid dates for Safari
-  function formatInTz(dateObj, timeZone, includeTime) {
+  function formatInTz(dateObj: Date, timeZone: string, includeTime: boolean): { date: string; time: string } {
     if (!(dateObj instanceof Date) || !isFinite(dateObj.getTime())) {
       return { date: '', time: '' };
     }
     try {
       const opts = includeTime ? { timeZone, hour12: false, hourCycle: 'h23', year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit' } : { timeZone, year: 'numeric', month: '2-digit', day: '2-digit' };
-      const parts = new Intl.DateTimeFormat('en-CA', opts).formatToParts(dateObj);
-      const get = (t) => parts.find((p) => p.type === t)?.value || '';
+      const parts = new Intl.DateTimeFormat('en-CA', opts as Intl.DateTimeFormatOptions).formatToParts(dateObj);
+      const get = (t: string) => parts.find((p) => p.type === t)?.value || '';
       return { date: `${get('year')}-${get('month')}-${get('day')}`, time: includeTime ? `${get('hour')}:${get('minute')}` : '' };
     } catch {
       return { date: '', time: '' };
@@ -211,12 +213,12 @@ function atcb_decorate_data_recurring_events(data) {
       data.recurrence_interval = '';
     } else {
       data.recurrence_count = occurenceData.adjustedCount;
-      data.recurrence = data.recurrence.replace(/;?COUNT=\d+/i, ';COUNT=' + data.recurrence_count);
+      data.recurrence = data.recurrence!.replace(/;?COUNT=\d+/i, ';COUNT=' + data.recurrence_count);
       if (data.recurrence_until && data.recurrence_until !== '') {
         data.recurrence_until = '';
         data.recurrence = data.recurrence.replace(/;?UNTIL=\w+/i, ';COUNT=' + data.recurrence_count);
-        if (data.dates && data.dates[0].recurrence) {
-          data.dates[0].recurrence = data.dates[0].recurrence.replace(/;?UNTIL=\w+/i, ';COUNT=' + data.recurrence_count);
+        if (data.dates && data.dates[0]!.recurrence) {
+          data.dates[0]!.recurrence = (data.dates[0]!.recurrence as string).replace(/;?UNTIL=\w+/i, ';COUNT=' + data.recurrence_count);
         }
       }
     }
@@ -225,9 +227,12 @@ function atcb_decorate_data_recurring_events(data) {
 }
 
 // cleanup options, standardizing names, and check for mobile special rules
-function atcb_decorate_data_options(data) {
+function atcb_decorate_data_options(data: ATCBConfig): ATCBConfig {
   const { options, source } = atcb_determine_options_source(data);
-  let { newOptions, iCalGiven, appleGiven } = atcb_process_options(options, data);
+  const processedOptions = atcb_process_options(options, data);
+  let newOptions = processedOptions.newOptions;
+  let iCalGiven = processedOptions.iCalGiven;
+  const appleGiven = processedOptions.appleGiven;
   newOptions = atcb_handle_special_google_calendar_case(data, newOptions);
   ({ newOptions, iCalGiven } = atcb_ensure_fallback_options(newOptions, iCalGiven));
   const normalizedSourceOptions = options.map((option) => atcb_normalize_option_name(option));
@@ -240,7 +245,7 @@ function atcb_decorate_data_options(data) {
 }
 
 // determine which options array to use based on platform and availability
-function atcb_determine_options_source(data) {
+function atcb_determine_options_source(data: ATCBConfig): { options: string[]; source: string } {
   let source = 'general';
   let options = data.options || ['ical'];
   if (atcbIsiOS() || data.fakeIOS) {
@@ -260,12 +265,12 @@ function atcb_determine_options_source(data) {
 }
 
 // process options array and filter invalid options
-function atcb_process_options(theOptions, data) {
-  let newOptions = [];
+function atcb_process_options(theOptions: string[], data: ATCBConfig): { newOptions: string[]; iCalGiven: boolean; appleGiven: boolean } {
+  const newOptions: string[] = [];
   let iCalGiven = false;
   let appleGiven = false;
   for (let i = 0; i < theOptions.length; i++) {
-    const optionName = atcb_normalize_option_name(theOptions[`${i}`]);
+    const optionName = atcb_normalize_option_name(theOptions[`${i}`]!);
     // track which ical-type options were provided
     if (optionName === 'apple') appleGiven = true;
     if (optionName === 'ical') iCalGiven = true;
@@ -279,44 +284,44 @@ function atcb_process_options(theOptions, data) {
 }
 
 // normalize option name (clean and standardize)
-function atcb_normalize_option_name(option) {
+function atcb_normalize_option_name(option: string): string {
   const cleanOption = option.split('|');
-  return cleanOption[0].toLowerCase().replace('microsoft', 'ms').replace(/\./, '');
+  return cleanOption[0]!.toLowerCase().replace('microsoft', 'ms').replace(/\./, '');
 }
 
 // determine if an option should be skipped based on platform and context
-function atcb_should_skip_option(optionName, data) {
+function atcb_should_skip_option(optionName: string, data: ATCBConfig): boolean {
   return atcb_is_platform_invalid_option(optionName, data) || atcb_is_recurrence_invalid_option(optionName, data) || atcb_is_subscription_invalid_option(optionName, data) || atcb_is_microsoft_mobile_subscription_case(optionName, data);
 }
 
 // check if option is invalid for current platform
-function atcb_is_platform_invalid_option(optionName, data) {
-  const isIOSWithInvalidOption = (atcbIsiOS() || data.fakeIOS) && atcbIOSInvalidOptions.includes(optionName) && (!data.optionsIOS || data.optionsIOS.length === 0) && (!data.optionsMobile || data.optionsMobile.length === 0);
-  const isAndroidWithInvalidOption = (atcbIsAndroid() || data.fakeMobile || data.fakeAndroid) && atcbAndroidInvalidOptions.includes(optionName) && (!data.optionsMobile || data.optionsMobile.length === 0);
+function atcb_is_platform_invalid_option(optionName: string, data: ATCBConfig): boolean {
+  const isIOSWithInvalidOption = !!((atcbIsiOS() || data.fakeIOS) && atcbIOSInvalidOptions.includes(optionName) && (!data.optionsIOS || data.optionsIOS.length === 0) && (!data.optionsMobile || data.optionsMobile.length === 0));
+  const isAndroidWithInvalidOption = !!((atcbIsAndroid() || data.fakeMobile || data.fakeAndroid) && atcbAndroidInvalidOptions.includes(optionName) && (!data.optionsMobile || data.optionsMobile.length === 0));
   return isIOSWithInvalidOption || isAndroidWithInvalidOption;
 }
 
 // check if option is invalid for recurrence events
-function atcb_is_recurrence_invalid_option(optionName, data) {
+function atcb_is_recurrence_invalid_option(optionName: string, data: ATCBConfig): boolean {
   if (!data.recurrence || data.recurrence === '') return false;
   const isInvalidForRecurrence = !atcbValidRecurrOptions.includes(optionName);
-  const isGoogleOnIOS = (atcbIsiOS() || data.fakeIOS) && optionName === 'google';
+  const isGoogleOnIOS = !!((atcbIsiOS() || data.fakeIOS) && optionName === 'google');
   return isInvalidForRecurrence || isGoogleOnIOS;
 }
 
 // check if option is invalid for subscription events
-function atcb_is_subscription_invalid_option(optionName, data) {
-  return data.subscribe && atcbInvalidSubscribeOptions.includes(optionName);
+function atcb_is_subscription_invalid_option(optionName: string, data: ATCBConfig): boolean {
+  return !!(data.subscribe && atcbInvalidSubscribeOptions.includes(optionName));
 }
 
 // tmp patch to reflect the fact that Microsoft is routing mobile traffic differently. We handle regular events on the link level, but subscription cases need to be stripped out
 // TODO: remove this, when Microsoft has fixed this
-function atcb_is_microsoft_mobile_subscription_case(optionName, data) {
-  return (atcbIsMobile() || data.fakeMobile) && data.subscribe && (optionName === 'ms365' || optionName === 'outlookcom');
+function atcb_is_microsoft_mobile_subscription_case(optionName: string, data: ATCBConfig): boolean {
+  return !!((atcbIsMobile() || data.fakeMobile) && data.subscribe && (optionName === 'ms365' || optionName === 'outlookcom'));
 }
 
 // if we are in a subscription case and the icsFile starts with https://calendar.google.com/calendar/ and does not end with .ics, we only set the google option as everything else would not work
-function atcb_handle_special_google_calendar_case(data, newOptions) {
+function atcb_handle_special_google_calendar_case(data: ATCBConfig, newOptions: string[]): string[] {
   if (data.subscribe && data.icsFile && data.icsFile.startsWith('https://calendar.google.com/calendar/') && !data.icsFile.endsWith('.ics')) {
     return ['google'];
   }
@@ -324,7 +329,7 @@ function atcb_handle_special_google_calendar_case(data, newOptions) {
 }
 
 // since the above can lead to excluding all options, we add the iCal option as default, if no other option is left
-function atcb_ensure_fallback_options(newOptions, iCalGiven) {
+function atcb_ensure_fallback_options(newOptions: string[], iCalGiven: boolean): { newOptions: string[]; iCalGiven: boolean } {
   if (newOptions.length === 0) {
     newOptions.push('ical');
     iCalGiven = true;
@@ -333,7 +338,7 @@ function atcb_ensure_fallback_options(newOptions, iCalGiven) {
 }
 
 // adjust options based on platform-specific requirements
-function atcb_adjust_platform_specific_options(options, data, iCalGiven, appleGiven, mobileOptionsUsed = false) {
+function atcb_adjust_platform_specific_options(options: string[], data: ATCBConfig, iCalGiven: boolean, appleGiven: boolean, mobileOptionsUsed: boolean = false): string[] {
   // generally, only adjust if not intentionally specified via mobile options
   if (!mobileOptionsUsed) {
     // for iOS, force Apple option if iCal was given but Apple wasn't
@@ -352,7 +357,7 @@ function atcb_adjust_platform_specific_options(options, data, iCalGiven, appleGi
   return options;
 }
 
-function atcb_decorate_data_style(data) {
+function atcb_decorate_data_style(data: ATCBConfig): ATCBConfig {
   // set inline if inlineRSVP
   if (data.inlineRSVP) {
     data.inline = true;
@@ -386,27 +391,27 @@ function atcb_decorate_data_style(data) {
 }
 
 // prepare sizes
-function atcb_decorate_sizes(size) {
-  const sizes = [];
+function atcb_decorate_sizes(size?: string): { [key: string]: number | string } {
+  const sizes: { [key: string]: number | string } = [] as unknown as { [key: string]: number | string };
   sizes['l'] = sizes['m'] = sizes['s'] = 16;
   if (size && size !== '') {
-    const sizeParts = size.split('|');
+    const sizeParts: (string | number)[] = size.split('|');
     for (let i = 0; i < sizeParts.length; i++) {
-      sizeParts[`${i}`] = parseInt(sizeParts[`${i}`]);
+      sizeParts[`${i}`] = parseInt(sizeParts[`${i}`] as string);
     }
-    if (sizeParts[0] >= 0 && sizeParts[0] < 11) {
-      sizes['l'] = sizes['m'] = sizes['s'] = 10 + sizeParts[0];
+    if ((sizeParts[0] as number) >= 0 && (sizeParts[0] as number) < 11) {
+      sizes['l'] = sizes['m'] = sizes['s'] = 10 + (sizeParts[0] as number);
     }
     if (sizeParts.length > 2) {
-      if (sizeParts[1] >= 0 && sizeParts[1] < 11) {
-        sizes['m'] = 10 + sizeParts[1];
+      if ((sizeParts[1] as number) >= 0 && (sizeParts[1] as number) < 11) {
+        sizes['m'] = 10 + (sizeParts[1] as number);
       }
-      if (sizeParts[2] >= 0 && sizeParts[2] < 11) {
-        sizes['s'] = 10 + sizeParts[2];
+      if ((sizeParts[2] as number) >= 0 && (sizeParts[2] as number) < 11) {
+        sizes['s'] = 10 + (sizeParts[2] as number);
       }
     } else if (sizeParts.length == 2) {
-      if (sizeParts[1] >= 0 && sizeParts[1] < 11) {
-        sizes['m'] = sizes['s'] = 10 + sizeParts[1];
+      if ((sizeParts[1] as number) >= 0 && (sizeParts[1] as number) < 11) {
+        sizes['m'] = sizes['s'] = 10 + (sizeParts[1] as number);
       }
     }
   }
@@ -414,7 +419,7 @@ function atcb_decorate_sizes(size) {
 }
 
 // determine dark mode
-function atcb_decorate_light_mode(lightMode = '') {
+function atcb_decorate_light_mode(lightMode: string = ''): string {
   if (lightMode == 'system' && atcbIsBrowser()) {
     const prefersDarkScheme = window.matchMedia('(prefers-color-scheme: dark)');
     return prefersDarkScheme.matches ? 'dark' : 'light';
@@ -425,13 +430,13 @@ function atcb_decorate_light_mode(lightMode = '') {
   return lightMode;
 }
 
-function atcb_decorate_data_i18n(data) {
+function atcb_decorate_data_i18n(data: ATCBConfig): ATCBConfig {
   // reduce language identifier, if long version is used
-  if (data.language.length > 2) {
-    data.language = data.language.substring(0, 2);
+  if (data.language!.length > 2) {
+    data.language = data.language!.substring(0, 2);
   }
   // set right-to-left for relevant languages
-  if (rtlLanguages.includes(data.language)) {
+  if (rtlLanguages.includes(data.language!)) {
     data.rtl = true;
   } else {
     data.rtl = false;
@@ -440,57 +445,58 @@ function atcb_decorate_data_i18n(data) {
 }
 
 // optimize date and time information
-function atcb_decorate_data_dates(data) {
+function atcb_decorate_data_dates(data: ATCBConfig | ATCBInputConfig): ATCBConfig {
   // if there is no dates array, we create one with the name of the event (will be filled further afterwards)
   if (!data.dates || !Array.isArray(data.dates)) {
     data.dates = [{ name: data.name }];
   }
+  let cfg = data as ATCBConfig;
   // recurring event adjustments need cleaned dates first; clean the first date once before recurrence shifting
-  if (data.recurrence && data.recurrence !== '') {
-    data = atcb_decorate_data_rrule(data);
-    data = atcb_move_root_values_into_dates(data, 0);
-    data = atcb_dates_cleanup(data, 0);
-    data = atcb_decorate_data_recurring_events(data);
+  if (cfg.recurrence && cfg.recurrence !== '') {
+    cfg = atcb_decorate_data_rrule(cfg);
+    cfg = atcb_move_root_values_into_dates(cfg, 0);
+    cfg = atcb_dates_cleanup(cfg, 0);
+    cfg = atcb_decorate_data_recurring_events(cfg);
   }
   // we copy recurrence from root, but just for easier access and only for the first array element. Multi-date events cannot be recurrent
-  if (data.recurrence && data.recurrence !== '') {
-    data.dates[0].recurrence = data.recurrence;
+  if (cfg.recurrence && cfg.recurrence !== '') {
+    cfg.dates![0]!.recurrence = cfg.recurrence;
   }
   // process each date entry and decorate it
-  for (let i = 0; i < data.dates.length; i++) {
-    data = atcb_move_root_values_into_dates(data, i);
-    data = atcb_dates_cleanup(data, i);
-    data = atcb_generate_unique_uid(data, i);
-    data = atcb_transform_strings(data, i);
-    data = atcb_decorate_data_description(data, i);
-    data = atcb_replace_custom_variables(data, i);
-    data = atcb_set_online_event_flag(data, i);
+  for (let i = 0; i < cfg.dates!.length; i++) {
+    cfg = atcb_move_root_values_into_dates(cfg, i);
+    cfg = atcb_dates_cleanup(cfg, i);
+    cfg = atcb_generate_unique_uid(cfg, i);
+    cfg = atcb_transform_strings(cfg, i);
+    cfg = atcb_decorate_data_description(cfg, i);
+    cfg = atcb_replace_custom_variables(cfg, i);
+    cfg = atcb_set_online_event_flag(cfg, i);
   }
   // check for past events
-  data = atcb_decorate_data_button_status_handling(data);
+  cfg = atcb_decorate_data_button_status_handling(cfg);
   // calculate current time
   const now = new Date();
   // set created date
-  if (!data.created || data.created === '') {
-    data.created = atcb_format_datetime(now, 'clean', true);
+  if (!cfg.created || cfg.created === '') {
+    cfg.created = atcb_format_datetime(now, 'clean', true);
   }
   // set updated date
-  if (!data.updated || data.updated === '') {
-    data.updated = atcb_format_datetime(now, 'clean', true);
+  if (!cfg.updated || cfg.updated === '') {
+    cfg.updated = atcb_format_datetime(now, 'clean', true);
   }
   // last but not least, we sort any subEvent by start date ascending
-  if (data.dates.length > 1) {
-    data.dates.sort((a, b) => a.timestamp - b.timestamp);
+  if (cfg.dates!.length > 1) {
+    cfg.dates!.sort((a, b) => (a.timestamp as number) - (b.timestamp as number));
   }
-  return data;
+  return cfg;
 }
 
 // override the dates information with values on the root level
-function atcb_move_root_values_into_dates(data, i) {
-  const dateEntry = data.dates[`${i}`];
+function atcb_move_root_values_into_dates(data: ATCBConfig, i: number): ATCBConfig {
+  const dateEntry = data.dates![`${i}`]!;
   const properties = ['description', 'startDate', 'startTime', 'endDate', 'endTime', 'timeZone', 'useUserTZ', 'location', 'status', 'sequence', 'availability', 'organizer', 'attendee'];
   // do it for name only if data.dates is not >1 as in this case, name would be used for the event series title
-  if (data.dates.length === 1) {
+  if (data.dates!.length === 1) {
     properties.unshift('name');
   }
   properties.forEach((prop) => {
@@ -504,8 +510,8 @@ function atcb_move_root_values_into_dates(data, i) {
 }
 
 // cleanup different date-time formats
-function atcb_dates_cleanup(data, i) {
-  const dateEntry = data.dates[`${i}`];
+function atcb_dates_cleanup(data: ATCBConfig, i: number): ATCBConfig {
+  const dateEntry = data.dates![`${i}`]!;
   const cleanedUpDates = atcb_date_cleanup(dateEntry);
   dateEntry.startDate = cleanedUpDates.startDate;
   dateEntry.endDate = cleanedUpDates.endDate;
@@ -514,13 +520,13 @@ function atcb_dates_cleanup(data, i) {
   dateEntry.timeZone = cleanedUpDates.timeZone;
   // calculating more special meta information
   dateEntry.timestamp = atcb_date_specials_calculation('timestamp', dateEntry.startDate, dateEntry.startTime, dateEntry.timeZone);
-  dateEntry.overdue = atcb_date_specials_calculation('overdue', dateEntry.endDate, dateEntry.endTime, dateEntry.timeZone);
+  dateEntry.overdue = atcb_date_specials_calculation('overdue', dateEntry.endDate, dateEntry.endTime, dateEntry.timeZone) as boolean;
   return data;
 }
 
 // generate unique UID for date entry
-function atcb_generate_unique_uid(data, i) {
-  const dateEntry = data.dates[`${i}`];
+function atcb_generate_unique_uid(data: ATCBConfig, i: number): ATCBConfig {
+  const dateEntry = data.dates![`${i}`]!;
   if (!dateEntry.uid) {
     if (i === 0 && data.uid && data.uid !== '') {
       // first entry gets the base UID
@@ -537,17 +543,17 @@ function atcb_generate_unique_uid(data, i) {
 }
 
 // transform strings
-function atcb_transform_strings(data, i) {
-  const dateEntry = data.dates[`${i}`];
-  dateEntry.status = atcb_apply_transformation(dateEntry.status, 'upper');
+function atcb_transform_strings(data: ATCBConfig, i: number): ATCBConfig {
+  const dateEntry = data.dates![`${i}`]!;
+  dateEntry.status = atcb_apply_transformation(dateEntry.status, 'upper') as string | undefined;
   dateEntry.availability = atcb_apply_transformation(dateEntry.availability, 'lower');
   return data;
 }
 
 // clean up the description and create copies for different formats
-function atcb_decorate_data_description(data, i) {
-  const cleanDescription = (desc) => desc.replace(/(\\r\\n|\\n|\\r|<br(\s*\/?)>)/g, '');
-  let description = data.dates[`${i}`].description;
+function atcb_decorate_data_description(data: ATCBConfig, i: number): ATCBConfig {
+  const cleanDescription = (desc: string) => desc.replace(/(\\r\\n|\\n|\\r|<br(\s*\/?)>)/g, '');
+  let description = data.dates![`${i}`]!.description;
   if (description) {
     // remove any "wrong" line breaks
     description = cleanDescription(description);
@@ -557,17 +563,17 @@ function atcb_decorate_data_description(data, i) {
     const descriptionHtmlFreeICal = atcb_rewrite_html_elements(description, true, true);
     // ...and transform pseudo elements for the regular one
     description = atcb_rewrite_html_elements(description);
-    data.dates[`${i}`] = { ...data.dates[`${i}`], description, descriptionHtmlFree, descriptionHtmlFreeICal };
+    data.dates![`${i}`] = { ...data.dates![`${i}`], description, descriptionHtmlFree, descriptionHtmlFreeICal };
   } else {
-    data.dates[`${i}`].descriptionHtmlFree = data.dates[`${i}`].descriptionHtmlFreeICal = data.dates[`${i}`].description = '';
+    data.dates![`${i}`]!.descriptionHtmlFree = data.dates![`${i}`]!.descriptionHtmlFreeICal = data.dates![`${i}`]!.description = '';
   }
   return data;
 }
 
 // set online event flag based on location URL
-function atcb_set_online_event_flag(data, i) {
-  const dateEntry = data.dates[`${i}`];
-  if (dateEntry.location && dateEntry.location.startsWith('http')) {
+function atcb_set_online_event_flag(data: ATCBConfig, i: number): ATCBConfig {
+  const dateEntry = data.dates![`${i}`]!;
+  if (dateEntry.location && (dateEntry.location as string).startsWith('http')) {
     dateEntry.onlineEvent = true;
   } else {
     dateEntry.onlineEvent = false;
@@ -576,35 +582,35 @@ function atcb_set_online_event_flag(data, i) {
 }
 
 // replace custom variable placeholders in name and location
-function atcb_replace_custom_variables(data, i) {
+function atcb_replace_custom_variables(data: ATCBConfig, i: number): ATCBConfig {
   if (!data.customVar) return data;
-  const dateEntry = data.dates[`${i}`];
+  const dateEntry = data.dates![`${i}`]!;
   for (const key in data.customVar) {
     const value = data.customVar[`${key}`];
-    dateEntry.name = atcb_replace_placeholder(dateEntry.name, key, value);
-    dateEntry.location = atcb_replace_placeholder(dateEntry.location, key, value);
-    dateEntry.description = atcb_replace_placeholder(dateEntry.description, key, value);
+    dateEntry.name = atcb_replace_placeholder(dateEntry.name as string | undefined, key, value);
+    dateEntry.location = atcb_replace_placeholder(dateEntry.location as string | undefined, key, value);
+    dateEntry.description = atcb_replace_placeholder(dateEntry.description as string | undefined, key, value);
   }
   return data;
 }
 
 // replace placeholder in text with value
-function atcb_replace_placeholder(text, key, value) {
+function atcb_replace_placeholder(text: string | undefined, key: string, value: unknown): string | undefined {
   const placeholder = '%%' + key.replace(/[^\w\-.]/g, '') + '%%';
   if (!text) return text;
   // eslint-disable-next-line security/detect-non-literal-regexp
-  return text.replace(new RegExp(placeholder, 'gi'), value);
+  return text.replace(new RegExp(placeholder, 'gi'), value as string);
 }
 
 // CALCULATE AND CLEAN UP THE ACTUAL DATES
-function atcb_date_cleanup(dateTimeData) {
+function atcb_date_cleanup(dateTimeData: ATCBDateEntry): ATCBDateEntry {
   // Utility function to validate date format
-  function isValidDateFormat(dateStr) {
-    return /^\d\d\d\d-\d\d-\d\d(?:T\d\d:\d\d)?(?::\d\d)?(?:.\d\d\d)?Z?(?:\+(?:\d|\d\d|\d\d\d|\d\d\d\d))?$/i.test(dateStr);
+  function isValidDateFormat(dateStr: unknown): boolean {
+    return /^\d\d\d\d-\d\d-\d\d(?:T\d\d:\d\d)?(?::\d\d)?(?:.\d\d\d)?Z?(?:\+(?:\d|\d\d|\d\d\d|\d\d\d\d))?$/i.test(dateStr as string);
   }
   // Utility function to validate 'today' format
-  function isValidTodayFormat(dateStr) {
-    return /^today(?:\+(?:\d|\d\d|\d\d\d|\d\d\d\d))?$/i.test(dateStr);
+  function isValidTodayFormat(dateStr: unknown): boolean {
+    return /^today(?:\+(?:\d|\d\d|\d\d\d|\d\d\d\d))?$/i.test(dateStr as string);
   }
   // set endDate = startDate, if not provided
   if (!dateTimeData.endDate || dateTimeData.endDate === '') {
@@ -613,39 +619,39 @@ function atcb_date_cleanup(dateTimeData) {
   // parse date+time format (unofficial alternatives to the main implementation); also calculate any dynamic dates
   const endpoints = ['start', 'end'];
   endpoints.forEach(function (point) {
-    const dateStr = dateTimeData[point + 'Date'];
+    const dateStr = dateTimeData[`${point}Date`] as string;
     // validate first (we set some text instead, so the later validation picks it up as an error)
     if (!isValidDateFormat(dateStr) && !isValidTodayFormat(dateStr)) {
-      dateTimeData[point + 'Date'] = 'badly-formed';
+      dateTimeData[`${point}Date`] = 'badly-formed';
     } else {
       // dynamic date replacement (if dateStr includes a + or is today format)
-      if (/\+/.test(dateStr) || isValidTodayFormat(dateStr)) dateTimeData[point + 'Date'] = atcb_date_calculation(dateStr);
+      if (/\+/.test(dateStr) || isValidTodayFormat(dateStr)) dateTimeData[`${point}Date`] = atcb_date_calculation(dateStr);
       // second, if valid, clean up
-      if (dateTimeData[point + 'Date']) {
+      if (dateTimeData[`${point}Date`]) {
         // identify a possible time information within the date string
-        const tmpSplitStartDate = dateTimeData[point + 'Date'].split('T');
+        const tmpSplitStartDate = (dateTimeData[`${point}Date`] as string).split('T');
         if (tmpSplitStartDate[1]) {
-          dateTimeData[point + 'Date'] = tmpSplitStartDate[0];
-          dateTimeData[point + 'Time'] = tmpSplitStartDate[1];
+          dateTimeData[`${point}Date`] = tmpSplitStartDate[0];
+          dateTimeData[`${point}Time`] = tmpSplitStartDate[1];
         }
       }
       // remove any seconds and more from time information
-      if (dateTimeData[point + 'Time'] && dateTimeData[point + 'Time'].length > 5) {
-        dateTimeData[point + 'Time'] = dateTimeData[point + 'Time'].substring(0, 5);
+      if (dateTimeData[`${point}Time`] && (dateTimeData[`${point}Time`] as string).length > 5) {
+        dateTimeData[`${point}Time`] = (dateTimeData[`${point}Time`] as string).substring(0, 5);
       }
     }
   });
   // update time zone, if special case set to go for the user's browser
   if (dateTimeData.timeZone === 'currentBrowser' || dateTimeData.useUserTZ) {
     let browserTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone || 'GMT';
-    const validTimeZones = tzlib_get_timezones();
+    const validTimeZones = tzlib_get_timezones() as string[];
     if (!validTimeZones.includes(browserTimezone)) {
       browserTimezone = atcb_map_special_time_zones(browserTimezone); // manual mapping of special cases
     }
     // for the useUserTZ, we also recalculate the start and end date (and time) to the user's time zone based on the given time zone
     if (dateTimeData.useUserTZ && dateTimeData.startTime && dateTimeData.startTime !== '' && dateTimeData.endTime && dateTimeData.endTime !== '') {
-      const newStartDateTime = atcb_translate_via_time_zone(dateTimeData.startDate, dateTimeData.startTime, dateTimeData.timeZone, browserTimezone);
-      const newEndDateTime = atcb_translate_via_time_zone(dateTimeData.endDate, dateTimeData.endTime, dateTimeData.timeZone, browserTimezone);
+      const newStartDateTime = atcb_translate_via_time_zone(dateTimeData.startDate!, dateTimeData.startTime, dateTimeData.timeZone!, browserTimezone);
+      const newEndDateTime = atcb_translate_via_time_zone(dateTimeData.endDate!, dateTimeData.endTime, dateTimeData.timeZone!, browserTimezone);
       dateTimeData.startDate = newStartDateTime[0];
       dateTimeData.startTime = newStartDateTime[1];
       dateTimeData.endDate = newEndDateTime[0];
@@ -657,14 +663,14 @@ function atcb_date_cleanup(dateTimeData) {
   return dateTimeData;
 }
 
-function atcb_date_specials_calculation(type, dateString, timeString = null, timeZone) {
+function atcb_date_specials_calculation(type: string, dateString: string | undefined, timeString: string | undefined | null = null, timeZone: string | undefined): number | boolean {
   try {
     const tmpDate = (function () {
       if (timeString) {
-        const offsetEnd = tzlib_get_offset(timeZone, dateString, timeString);
+        const offsetEnd = tzlib_get_offset(timeZone as string, dateString as string, timeString);
         return new Date(dateString + ' ' + timeString + ':00 GMT' + offsetEnd);
       }
-      return new Date(dateString);
+      return new Date(dateString as string);
     })();
     if (type === 'timestamp') {
       // create timestamps (for sorting and rrule calculations)
@@ -682,16 +688,16 @@ function atcb_date_specials_calculation(type, dateString, timeString = null, tim
   }
 }
 
-function atcb_date_calculation(dateString) {
+function atcb_date_calculation(dateString: string): string | false {
   // replace "today" with the current date first
   const today = new Date();
   const todayString = today.getUTCFullYear() + '-' + (today.getUTCMonth() + 1) + '-' + today.getUTCDate();
   dateString = dateString.replace(/today/gi, todayString);
   // check for any dynamic additions and adjust
   const dateStringParts = dateString.split('+');
-  const dateParts = dateStringParts[0].split('-');
-  const newDate = new Date(Date.UTC(dateParts[0], dateParts[1] - 1, dateParts[2].substring(0, 2)));
-  if (dateStringParts[1] && dateStringParts[1] > 0) {
+  const dateParts = dateStringParts[0]!.split('-');
+  const newDate = new Date(Date.UTC(dateParts[0] as unknown as number, (dateParts[1] as unknown as number) - 1, dateParts[2]!.substring(0, 2) as unknown as number));
+  if (dateStringParts[1] && (dateStringParts[1] as unknown as number) > 0) {
     newDate.setDate(newDate.getDate() + parseInt(dateStringParts[1]));
   }
   try {
@@ -703,14 +709,14 @@ function atcb_date_calculation(dateString) {
 }
 
 // Adjust for past events
-function atcb_decorate_data_button_status_handling(data) {
+function atcb_decorate_data_button_status_handling(data: ATCBConfig): ATCBConfig {
   // first, check for how we should handle the behavior on overdue events
   if (!data.pastDateHandling || (data.pastDateHandling !== 'disable' && data.pastDateHandling !== 'hide')) {
     data.pastDateHandling = 'none';
   }
   data.allOverdue = (function () {
-    for (let i = 0; i < data.dates.length; i++) {
-      if (!data.dates[`${i}`].overdue) {
+    for (let i = 0; i < data.dates!.length; i++) {
+      if (!data.dates![`${i}`]!.overdue) {
         // we return false if at least one event is not overdue
         return false;
       }
@@ -726,11 +732,11 @@ function atcb_decorate_data_button_status_handling(data) {
     }
   } else {
     // if there are >1 dates, we drop those that are overdue, if the handling is set to hide
-    if (data.pastDateHandling === 'hide' && data.dates.length > 1) {
-      const filteredDates = [];
-      for (let i = 0; i < data.dates.length; i++) {
-        if (!data.dates[`${i}`].overdue) {
-          filteredDates.push(data.dates[`${i}`]);
+    if (data.pastDateHandling === 'hide' && data.dates!.length > 1) {
+      const filteredDates: ATCBDateEntry[] = [];
+      for (let i = 0; i < data.dates!.length; i++) {
+        if (!data.dates![`${i}`]!.overdue) {
+          filteredDates.push(data.dates![`${i}`]!);
         }
       }
       data.dates = filteredDates;
@@ -738,8 +744,8 @@ function atcb_decorate_data_button_status_handling(data) {
   }
   // second, check whether all dates are status "cancelled"
   data.allCancelled = (function () {
-    for (let i = 0; i < data.dates.length; i++) {
-      if (!data.dates[`${i}`].status || data.dates[`${i}`].status.toLowerCase() !== 'cancelled') {
+    for (let i = 0; i < data.dates!.length; i++) {
+      if (!data.dates![`${i}`]!.status || (data.dates![`${i}`]!.status as string).toLowerCase() !== 'cancelled') {
         return false;
       }
     }
@@ -752,11 +758,11 @@ function atcb_decorate_data_button_status_handling(data) {
   return data;
 }
 
-async function atcb_decorate_data_rsvp(data) {
+async function atcb_decorate_data_rsvp(data: ATCBConfig): Promise<ATCBConfig> {
   if (typeof atcb_check_bookings !== 'function' || !data.rsvp || !data.proKey || Object.keys(data.rsvp).length === 0) return data;
   // determine whether RSVP is expired
   data.rsvp.expired = (function () {
-    if (data.rsvp && data.rsvp.expires && new Date(data.rsvp.expires) < new Date()) {
+    if (data.rsvp && data.rsvp.expires && new Date(data.rsvp.expires as string) < new Date()) {
       return true;
     }
     return false;
@@ -764,8 +770,8 @@ async function atcb_decorate_data_rsvp(data) {
   // determine whether RSVP is booked out and set # seats left
   if (data.rsvp.max) {
     const bookings = await atcb_check_bookings(data.proKey, data.dev);
-    data.rsvp.seatsLeft = data.rsvp.max - bookings;
-    if (data.rsvp.seatsLeft < 1) {
+    data.rsvp.seatsLeft = (data.rsvp.max as number) - bookings;
+    if ((data.rsvp.seatsLeft as number) < 1) {
       data.rsvp.bookedOut = true;
     }
     if (data.rsvp.expired || data.rsvp.bookedOut) {

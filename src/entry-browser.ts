@@ -3,8 +3,9 @@
  * Importing atcb-init.js registers the <add-to-calendar-button> custom element;
  * the only global exposed is window.atcb_action (matching the former Grunt wrapper).
  */
-import { atcb_action } from './atcb-init.js';
+import { atcb_action } from './atcb-init';
+import type { ATCBInputConfig } from './types';
 
-window.atcb_action = function (data, triggerElement, keyboardTrigger = false) {
+window.atcb_action = function (data: ATCBInputConfig, triggerElement?: HTMLElement, keyboardTrigger = false): Promise<string> {
   return atcb_action(data, triggerElement, keyboardTrigger);
 };

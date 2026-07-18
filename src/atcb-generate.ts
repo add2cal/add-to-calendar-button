@@ -1,25 +1,26 @@
-import { atcbIcon, atcbStates, atcbDefaultTarget } from './atcb-globals.js';
-import { atcb_toggle, atcb_close } from './atcb-control.js';
-import { atcb_generate_links } from './atcb-links.js';
-import { atcb_generate_time, atcb_generate_timestring, atcb_position_shadow_button, atcb_position_shadow_button_listener, atcb_manage_body_scroll, atcb_set_sizes, atcb_debounce, atcb_debounce_leading } from './atcb-util.js';
-import { atcb_set_fully_successful } from './atcb-links.js';
-import { atcb_translate_hook } from './atcb-i18n.js';
-import { atcb_load_css, atcb_set_light_mode } from './atcb-init.js';
-import { atcb_log_event } from './atcb-event.js';
-import { atcb_generate_rsvp_form } from './atcb-generate-pro.js';
+import { atcbIcon, atcbStates, atcbDefaultTarget } from './atcb-globals';
+import { atcb_toggle, atcb_close } from './atcb-control';
+import { atcb_generate_links } from './atcb-links';
+import { atcb_generate_time, atcb_generate_timestring, atcb_position_shadow_button, atcb_position_shadow_button_listener, atcb_manage_body_scroll, atcb_set_sizes, atcb_debounce, atcb_debounce_leading } from './atcb-util';
+import { atcb_set_fully_successful } from './atcb-links';
+import { atcb_translate_hook } from './atcb-i18n';
+import { atcb_load_css, atcb_set_light_mode } from './atcb-init';
+import { atcb_log_event } from './atcb-event';
+import { atcb_generate_rsvp_form } from './atcb-generate-pro';
+import type { ATCBConfig, ATCBStateEntry } from './types';
 
 // GENERATE THE ACTUAL BUTTON
 // helper function to generate the labels for the button and list options
-function atcb_generate_label(host, data, parent, type, icon = false, text = '', oneOption = false) {
+function atcb_generate_label(host: ShadowRoot, data: ATCBConfig, parent: HTMLElement, type: string, icon: boolean = false, text: string = '', oneOption: boolean = false): void {
   // setting IDs and adding event listeners
   switch (type) {
     case 'trigger':
     case 'rsvp':
     default:
-      parent.id = data.identifier;
+      parent.id = data.identifier as string;
       if (!data.blockInteraction) {
-        parent.addEventListener('keyup', function (event) {
-          if (event.key === 'Enter' || event.code == 'Space' || (event.key === 'Alt' && event.key === 'Control' && event.code === 'Space')) {
+        parent.addEventListener('keyup', function (event: KeyboardEvent) {
+          if (event.key === 'Enter' || event.code == 'Space' || ((event.key as string) === 'Alt' && event.key === 'Control' && event.code === 'Space')) {
             event.preventDefault();
             if (type === 'rsvp' && typeof atcb_generate_rsvp_form === 'function') {
               atcb_generate_rsvp_form(host, data, parent, true);
@@ -30,7 +31,7 @@ function atcb_generate_label(host, data, parent, type, icon = false, text = '', 
         });
         parent.addEventListener(
           'touchend',
-          atcb_debounce_leading((event) => {
+          atcb_debounce_leading((event: TouchEvent) => {
             event.preventDefault();
             if (type === 'rsvp' && typeof atcb_generate_rsvp_form === 'function') {
               atcb_generate_rsvp_form(host, data, parent);
@@ -42,7 +43,7 @@ function atcb_generate_label(host, data, parent, type, icon = false, text = '', 
         if (data.trigger === 'click' || (type === 'rsvp' && typeof atcb_generate_rsvp_form === 'function')) {
           parent.addEventListener(
             'mouseup',
-            atcb_debounce_leading((event) => {
+            atcb_debounce_leading((event: MouseEvent) => {
               event.preventDefault();
               if (type === 'rsvp' && typeof atcb_generate_rsvp_form === 'function') {
                 atcb_generate_rsvp_form(host, data, parent);
@@ -71,24 +72,24 @@ function atcb_generate_label(host, data, parent, type, icon = false, text = '', 
           'click',
           atcb_debounce_leading(async () => {
             if (oneOption) {
-              host.querySelector('#' + parent.id)?.blur();
-              atcb_log_event('openSingletonLink', parent.id, data.identifier);
+              (host.querySelector('#' + parent.id) as HTMLElement | null)?.blur();
+              atcb_log_event('openSingletonLink', parent.id, data.identifier as string);
             } else {
               atcb_toggle(host, 'close');
-              atcb_log_event('openCalendarLink', parent.id, data.identifier);
+              atcb_log_event('openCalendarLink', parent.id, data.identifier as string);
             }
             await atcb_generate_links(host, type, data);
           }),
         );
-        parent.addEventListener('keyup', async function (event) {
+        parent.addEventListener('keyup', async function (event: KeyboardEvent) {
           if (event.key === 'Enter') {
             event.preventDefault();
             if (oneOption) {
-              host.querySelector('#' + parent.id)?.blur();
-              atcb_log_event('openSingletonLink', parent.id, data.identifier);
+              (host.querySelector('#' + parent.id) as HTMLElement | null)?.blur();
+              atcb_log_event('openSingletonLink', parent.id, data.identifier as string);
             } else {
               atcb_toggle(host, 'close');
-              atcb_log_event('openCalendarLink', parent.id, data.identifier);
+              atcb_log_event('openCalendarLink', parent.id, data.identifier as string);
             }
             await atcb_generate_links(host, type, data, 'all', true);
           }
@@ -100,14 +101,14 @@ function atcb_generate_label(host, data, parent, type, icon = false, text = '', 
       parent.addEventListener(
         'click',
         atcb_debounce(() => {
-          atcb_log_event('closeList', 'List Close Button', atcbStates['active']);
+          atcb_log_event('closeList', 'List Close Button', atcbStates['active'] as unknown as string);
           atcb_toggle(host, 'close');
         }),
       );
-      parent.addEventListener('keyup', function (event) {
+      parent.addEventListener('keyup', function (event: KeyboardEvent) {
         if (event.key === 'Enter') {
           event.preventDefault();
-          atcb_log_event('closeList', 'List Close Button', atcbStates['active']);
+          atcb_log_event('closeList', 'List Close Button', atcbStates['active'] as unknown as string);
           atcb_toggle(host, 'close', data, 'all', true);
         }
       });
@@ -117,13 +118,13 @@ function atcb_generate_label(host, data, parent, type, icon = false, text = '', 
   atcb_generate_label_content(data, parent, type, icon, text, oneOption);
 }
 
-function atcb_generate_label_content(data, parent, type, icon, text, oneOption) {
+function atcb_generate_label_content(data: ATCBConfig, parent: HTMLElement, type: string, icon: boolean, text: string, oneOption: boolean): void {
   if (!data.buttonsList && oneOption) type = 'trigger';
   const defaultTriggerText = (function () {
     if (data.pastDateHandling != 'none') {
       let allOverdue = true;
-      for (let i = 0; i < data.dates.length; i++) {
-        if (!data.dates[`${i}`].overdue) {
+      for (let i = 0; i < data.dates!.length; i++) {
+        if (!data.dates![`${i}`]!.overdue) {
           allOverdue = false;
           break;
         }
@@ -137,7 +138,7 @@ function atcb_generate_label_content(data, parent, type, icon, text, oneOption) 
   // defining text labels
   // if there is only 1 option, we use the trigger text on the option label
   if (text === '') {
-    if (data.options.length === 1 || type === 'trigger') {
+    if (data.options!.length === 1 || type === 'trigger') {
       text = defaultTriggerText;
     } else if (type === 'close') {
       text = atcb_translate_hook('close', data);
@@ -157,7 +158,7 @@ function atcb_generate_label_content(data, parent, type, icon, text, oneOption) 
     iconEl.classList.add('atcb-icon');
     iconEl.setAttribute('part', type === 'trigger' ? 'atcb-button-icon' : 'atcb-list-icon');
     iconEl.classList.add(`atcb-icon-${type}`);
-    iconEl.innerHTML = atcbIcon[`${type}`];
+    iconEl.innerHTML = atcbIcon[`${type}`]!;
     parent.append(iconEl);
   }
   if (((type === 'trigger' || oneOption) && !data.hideTextLabelButton) || (!oneOption && type !== 'trigger' && !data.hideTextLabelList)) {
@@ -170,15 +171,15 @@ function atcb_generate_label_content(data, parent, type, icon, text, oneOption) 
 }
 
 // generate the triggering button
-function atcb_generate_button(host, button, data) {
+function atcb_generate_button(host: ShadowRoot, button: HTMLElement, data: ATCBConfig): void {
   // determine whether we are looking for the 1-option case (also with buttonsList)
   const oneOption = (function () {
-    if (data.options.length === 1 || (data.buttonsList && data.buttonStyle != 'date')) {
+    if (data.options!.length === 1 || (data.buttonsList && data.buttonStyle != 'date')) {
       return true;
     }
     return false;
   })();
-  const optionSplit = oneOption ? data.options : ['default'];
+  const optionSplit = oneOption ? data.options! : ['default'];
   optionSplit.forEach(function (option, index) {
     // generate the wrapper div
     const buttonTriggerWrapper = document.createElement('div');
@@ -188,13 +189,13 @@ function atcb_generate_button(host, button, data) {
       buttonTriggerWrapper.classList.add('atcb-rtl');
     }
     button.append(buttonTriggerWrapper);
-    atcb_set_sizes(buttonTriggerWrapper, data.sizes);
+    atcb_set_sizes(buttonTriggerWrapper, data.sizes!);
     // generate the button trigger div
     const buttonTrigger = document.createElement('button');
     buttonTrigger.classList.add('atcb-button');
     buttonTrigger.setAttribute('part', 'atcb-button');
     if (data.disabled) {
-      buttonTrigger.setAttribute('disabled', true);
+      buttonTrigger.setAttribute('disabled', true as unknown as string);
     }
     if (data.hideTextLabelButton) {
       buttonTrigger.classList.add('atcb-no-text');
@@ -206,7 +207,7 @@ function atcb_generate_button(host, button, data) {
       buttonTrigger.classList.add('atcb-dropoverlay');
     }
     buttonTrigger.type = 'button';
-    buttonTrigger.setAttribute('aria-expanded', false); // aria-expanded default value on button generate
+    buttonTrigger.setAttribute('aria-expanded', false as unknown as string); // aria-expanded default value on button generate
     buttonTriggerWrapper.append(buttonTrigger);
     // generate the label incl. eventListeners
     if (data.buttonStyle === 'date') {
@@ -217,15 +218,15 @@ function atcb_generate_button(host, button, data) {
       buttonTrigger.classList.add('atcb-single');
       // if buttonsList is true and we have more than 1 option, use the option as label
       const label = (function () {
-        if (data.buttonsList && data.options.length > 1) {
-          return atcb_translate_hook(`${data.options[`${index}`]}`, data);
+        if (data.buttonsList && data.options!.length > 1) {
+          return atcb_translate_hook(`${data.options![`${index}`]}`, data);
         }
         return data.label;
       })();
       // generate label
       atcb_generate_label(host, data, buttonTrigger, option, !data.hideIconButton, label, true);
       // override the id for the oneOption button, since the button always needs to have the button id, while it received the option id from the labeling function
-      buttonTrigger.id = data.identifier;
+      buttonTrigger.id = data.identifier as string;
       // but in case we simply render one button per option, only use the identifier for the first one and also add the info for the option
       if (data.buttonsList) {
         buttonTrigger.id = data.identifier + '-' + option;
@@ -241,7 +242,7 @@ function atcb_generate_button(host, button, data) {
     if (!data.hideCheckmark && !data.hideTextLabelButton && !data.buttonsList && !data.disabled && !data.allCancelled) {
       const btnCheck = document.createElement('div');
       btnCheck.classList.add('atcb-checkmark');
-      btnCheck.innerHTML = atcbIcon['checkmark'];
+      btnCheck.innerHTML = atcbIcon['checkmark']!;
       buttonTrigger.append(btnCheck);
     }
   });
@@ -251,7 +252,7 @@ function atcb_generate_button(host, button, data) {
 }
 
 // generate the dropdown list (can also appear wihtin a modal, if option is set)
-function atcb_generate_dropdown_list(host, data) {
+function atcb_generate_dropdown_list(host: ShadowRoot, data: ATCBConfig): HTMLDivElement {
   const optionsList = document.createElement('div');
   optionsList.classList.add('atcb-list');
   optionsList.setAttribute('part', 'atcb-list');
@@ -261,14 +262,14 @@ function atcb_generate_dropdown_list(host, data) {
   }
   // generate the list items
   let listCount = 0;
-  data.options.forEach(function (option) {
+  data.options!.forEach(function (option) {
     const optionItem = document.createElement('div');
     optionItem.classList.add('atcb-list-item');
     optionItem.setAttribute('part', 'atcb-list-item');
     optionItem.role = 'link';
     optionItem.tabIndex = 0;
     listCount++;
-    optionItem.dataset.optionNumber = listCount;
+    optionItem.dataset.optionNumber = `${listCount}`;
     optionsList.append(optionItem);
     // generate the label incl. individual eventListener
     atcb_generate_label(host, data, optionItem, option, !data.hideIconList);
@@ -281,7 +282,7 @@ function atcb_generate_dropdown_list(host, data) {
     optionItem.role = 'button';
     optionItem.tabIndex = 0;
     listCount++;
-    optionItem.dataset.optionNumber = listCount;
+    optionItem.dataset.optionNumber = `${listCount}`;
     optionsList.append(optionItem);
     atcb_generate_label(host, data, optionItem, 'close', !data.hideIconList);
   }
@@ -289,15 +290,15 @@ function atcb_generate_dropdown_list(host, data) {
 }
 
 // create the background overlay, which also acts as trigger to close any dropdowns
-function atcb_generate_bg_overlay(host, trigger = '', modal = false, darken = true, closable = true) {
-  const bgOverlay = (function () {
+function atcb_generate_bg_overlay(host: ShadowRoot, trigger: string = '', modal: boolean = false, darken: boolean = true, closable: boolean = true): HTMLElement {
+  const bgOverlay: HTMLElement = (function () {
     if (modal) {
       return document.createElement('dialog');
     }
     return document.createElement('div');
   })();
   if (modal) {
-    bgOverlay.setAttribute('open', true);
+    bgOverlay.setAttribute('open', true as unknown as string);
   }
   bgOverlay.id = 'atcb-bgoverlay';
   if (!darken) {
@@ -308,9 +309,9 @@ function atcb_generate_bg_overlay(host, trigger = '', modal = false, darken = tr
   if (closable) {
     bgOverlay.addEventListener(
       'mouseup',
-      atcb_debounce_leading((e) => {
+      atcb_debounce_leading((e: MouseEvent) => {
         if (e.target !== e.currentTarget) return;
-        atcb_log_event('closeList', 'Background Hit', atcbStates['active']);
+        atcb_log_event('closeList', 'Background Hit', atcbStates['active'] as unknown as string);
         atcb_toggle(host, 'close');
       }),
     );
@@ -327,9 +328,9 @@ function atcb_generate_bg_overlay(host, trigger = '', modal = false, darken = tr
     );
     bgOverlay.addEventListener(
       'touchend',
-      atcb_debounce((e) => {
+      atcb_debounce((e: TouchEvent) => {
         if (fingerMoved !== false || e.target !== e.currentTarget) return;
-        atcb_log_event('closeList', 'Background Hit', atcbStates['active']);
+        atcb_log_event('closeList', 'Background Hit', atcbStates['active'] as unknown as string);
         atcb_toggle(host, 'close');
       }),
       { passive: true },
@@ -337,9 +338,9 @@ function atcb_generate_bg_overlay(host, trigger = '', modal = false, darken = tr
     if (trigger !== 'click') {
       bgOverlay.addEventListener(
         'mousemove',
-        atcb_debounce_leading((e) => {
+        atcb_debounce_leading((e: MouseEvent) => {
           if (e.target !== e.currentTarget) return;
-          atcb_log_event('closeList', 'Background Hit', atcbStates['active']);
+          atcb_log_event('closeList', 'Background Hit', atcbStates['active'] as unknown as string);
           atcb_toggle(host, 'close');
         }),
       );
@@ -356,7 +357,7 @@ function atcb_generate_bg_overlay(host, trigger = '', modal = false, darken = tr
  *  @preserve
  *  PER LICENSE AGREEMENT, YOU ARE NOT ALLOWED TO REMOVE OR CHANGE THIS FUNCTION!
  */
-function atcb_create_atcbl(host, atList = true, returnEl = false, licenseNoteOnly = false) {
+function atcb_create_atcbl(host: ShadowRoot, atList: boolean = true, returnEl: boolean = false, licenseNoteOnly: boolean = false): HTMLDivElement | null | void {
   const atcbL = document.createElement('div');
   atcbL.id = 'atcb-reference';
   if (!licenseNoteOnly) {
@@ -366,7 +367,7 @@ function atcb_create_atcbl(host, atList = true, returnEl = false, licenseNoteOnl
       atcbL.innerHTML = '<a href="https://add-to-calendar-pro.com" target="_blank" rel="noopener">' + svg + '</a>';
     }, 500);
     if (atList) {
-      host.querySelector('.atcb-initialized .atcb-list-wrapper').append(atcbL);
+      host.querySelector('.atcb-initialized .atcb-list-wrapper')!.append(atcbL);
     } else if (returnEl) {
       return atcbL;
     } else {
@@ -386,8 +387,19 @@ function atcb_create_atcbl(host, atList = true, returnEl = false, licenseNoteOnl
 
 // FUNCTION TO CREATE MODALS
 // this is only about special communication modals - not the list style modal
-async function atcb_create_modal(mainHost, data, icon = '', headline, content = '', buttons = [], subEvents = [], keyboardTrigger = false, goto = {}, closable = true) {
-  atcbStates['active'] = data.identifier;
+async function atcb_create_modal(
+  mainHost: ShadowRoot,
+  data: ATCBConfig,
+  icon: string = '',
+  headline?: string,
+  content: string = '',
+  buttons: { href?: string; type?: string; label?: string; primary?: boolean; small?: boolean; id?: string }[] = [],
+  subEvents: (string | number)[] = [],
+  keyboardTrigger: boolean = false,
+  goto: { type?: string; id?: string } = {},
+  closable: boolean = true,
+): Promise<void> {
+  atcbStates['active'] = data.identifier as unknown as ATCBStateEntry;
   const noHeadline = !headline || headline === '' || headline === undefined;
   // setting the stage
   const modalHost = await atcb_generate_modal_host(mainHost, data, false);
@@ -395,7 +407,7 @@ async function atcb_create_modal(mainHost, data, icon = '', headline, content = 
     const el = modalHost.getElementById('atcb-bgoverlay');
     if (!el) {
       const newOverlay = atcb_generate_bg_overlay(mainHost, 'click', true, !data.hideBackground, closable);
-      modalHost.querySelector('.atcb-modal-host-initialized').append(newOverlay);
+      modalHost.querySelector('.atcb-modal-host-initialized')!.append(newOverlay);
       return newOverlay;
     }
     return el;
@@ -404,16 +416,16 @@ async function atcb_create_modal(mainHost, data, icon = '', headline, content = 
   modalWrapper.classList.add('atcb-modal');
   bgOverlay.append(modalWrapper);
   const modalCount = modalHost.querySelectorAll('.atcb-modal').length;
-  modalWrapper.dataset.modalNr = modalCount;
+  modalWrapper.dataset.modalNr = `${modalCount}`;
   modalWrapper.tabIndex = 0;
   modalWrapper.focus({ preventScroll: true });
   modalWrapper.blur();
   const parentButton = (function () {
-    const hostEl = mainHost.getElementById(data.identifier);
+    const hostEl = mainHost.getElementById(data.identifier as string);
     if (hostEl) {
       return hostEl;
     }
-    return document.getElementById(data.identifier);
+    return document.getElementById(data.identifier as string);
   })();
   if (parentButton) {
     parentButton.classList.add('atcb-active-modal');
@@ -426,19 +438,19 @@ async function atcb_create_modal(mainHost, data, icon = '', headline, content = 
     modal.classList.add('atcb-rtl');
   }
   modalWrapper.append(modal);
-  atcb_set_sizes(modal, data.sizes);
+  atcb_set_sizes(modal, data.sizes!);
   // add icon
   if (icon !== '' && !data.hideIconModal) {
     const modalIcon = document.createElement('div');
     modalIcon.classList.add('atcb-modal-icon');
-    modalIcon.innerHTML = atcbIcon[`${icon}`];
+    modalIcon.innerHTML = atcbIcon[`${icon}`]!;
     modal.append(modalIcon);
   }
   // add headline
   if (!noHeadline) {
     const modalHeadline = document.createElement('div');
     modalHeadline.classList.add('atcb-modal-headline');
-    modalHeadline.textContent = headline;
+    modalHeadline.textContent = headline as string;
     modal.append(modalHeadline);
   }
   // add text content
@@ -464,28 +476,28 @@ async function atcb_create_modal(mainHost, data, icon = '', headline, content = 
       const modalSubEventButton = document.createElement('button');
       modalSubEventButton.type = 'button';
       modalSubEventButton.id = data.identifier + '-' + subEvents[0] + '-' + i;
-      if (atcbStates[`${data.identifier}`][`${subEvents[0]}`][i - 1] > 0) {
+      if ((atcbStates[`${data.identifier}`]![`${subEvents[0]}`] as unknown as number[])[i - 1]! > 0) {
         modalSubEventButton.classList.add('atcb-saved');
       }
       modalSubEventButton.classList.add('atcb-subevent-btn');
       modalsubEventsContent.append(modalSubEventButton);
       atcb_generate_date_button(data, modalSubEventButton, i, false, true);
       // interaction only if not overdue and blocked
-      if (!data.dates[i - 1].overdue || data.pastDateHandling === 'none') {
+      if (!data.dates![i - 1]!.overdue || data.pastDateHandling === 'none') {
         if (i === 1 && keyboardTrigger) {
           modalSubEventButton.focus();
         }
         modalSubEventButton.addEventListener(
           'click',
           atcb_debounce(async () => {
-            atcb_log_event('openSubEventLink', modalSubEventButton.id, data.identifier);
+            atcb_log_event('openSubEventLink', modalSubEventButton.id, data.identifier as string);
             modalSubEventButton.blur();
-            await atcb_generate_links(mainHost, subEvents[0], data, subEvents[`${i}`], keyboardTrigger, true);
+            await atcb_generate_links(mainHost, subEvents[0] as string, data, subEvents[`${i}`] as string | number, keyboardTrigger, true);
           }),
         );
       } else {
         // if blocked, we also add styles
-        modalSubEventButton.setAttribute('disabled', true);
+        modalSubEventButton.setAttribute('disabled', true as unknown as string);
       }
     }
   }
@@ -497,7 +509,7 @@ async function atcb_create_modal(mainHost, data, icon = '', headline, content = 
   modalButtons.classList.add('atcb-modal-buttons');
   modal.append(modalButtons);
   buttons.forEach((button, index) => {
-    let modalButton;
+    let modalButton: HTMLAnchorElement | HTMLButtonElement;
     if (button.href && button.href !== '') {
       modalButton = document.createElement('a');
       modalButton.setAttribute('target', atcbDefaultTarget);
@@ -531,13 +543,13 @@ async function atcb_create_modal(mainHost, data, icon = '', headline, content = 
         modalButton.addEventListener(
           'click',
           atcb_debounce(() => {
-            atcb_log_event('closeList', 'Modal Close Button', atcbStates['active']);
+            atcb_log_event('closeList', 'Modal Close Button', atcbStates['active'] as unknown as string);
             atcb_close(mainHost);
           }),
         );
-        modalButton.addEventListener('keyup', function (event) {
-          if (event.key === 'Enter' || event.code == 'Space' || (event.key === 'Alt' && event.key === 'Control' && event.code === 'Space')) {
-            atcb_log_event('closeList', 'Modal Close Button', atcbStates['active']);
+        (modalButton as HTMLElement).addEventListener('keyup', function (event: KeyboardEvent) {
+          if (event.key === 'Enter' || event.code == 'Space' || ((event.key as string) === 'Alt' && event.key === 'Control' && event.code === 'Space')) {
+            atcb_log_event('closeList', 'Modal Close Button', atcbStates['active'] as unknown as string);
             atcb_toggle(mainHost, 'close', '', '', true);
           }
         });
@@ -550,8 +562,8 @@ async function atcb_create_modal(mainHost, data, icon = '', headline, content = 
             await atcb_subscribe_yahoo_modal_switch(mainHost, data);
           }),
         );
-        modalButton.addEventListener('keyup', async function (event) {
-          if (event.key === 'Enter' || event.code == 'Space' || (event.key === 'Alt' && event.key === 'Control' && event.code === 'Space')) {
+        (modalButton as HTMLElement).addEventListener('keyup', async function (event: KeyboardEvent) {
+          if (event.key === 'Enter' || event.code == 'Space' || ((event.key as string) === 'Alt' && event.key === 'Control' && event.code === 'Space')) {
             atcb_toggle(mainHost, 'close', '', '', true);
             await atcb_subscribe_yahoo_modal_switch(mainHost, data, keyboardTrigger);
           }
@@ -562,13 +574,13 @@ async function atcb_create_modal(mainHost, data, icon = '', headline, content = 
           'click',
           atcb_debounce(async () => {
             atcb_close(mainHost);
-            await atcb_generate_links(mainHost, goto.type, data, goto.id, keyboardTrigger, false, true);
+            await atcb_generate_links(mainHost, goto.type as string, data, goto.id as string, keyboardTrigger, false, true);
           }),
         );
-        modalButton.addEventListener('keyup', async function (event) {
-          if (event.key === 'Enter' || event.code == 'Space' || (event.key === 'Alt' && event.key === 'Control' && event.code === 'Space')) {
+        (modalButton as HTMLElement).addEventListener('keyup', async function (event: KeyboardEvent) {
+          if (event.key === 'Enter' || event.code == 'Space' || ((event.key as string) === 'Alt' && event.key === 'Control' && event.code === 'Space')) {
             atcb_toggle(mainHost, 'close', '', '', true);
-            await atcb_generate_links(mainHost, goto.type, data, goto.id, keyboardTrigger, false, true);
+            await atcb_generate_links(mainHost, goto.type as string, data, goto.id as string, keyboardTrigger, false, true);
           }
         });
         break;
@@ -579,7 +591,7 @@ async function atcb_create_modal(mainHost, data, icon = '', headline, content = 
   // hide prev modal
   if (modalCount > 1) {
     const prevModal = modalHost.querySelector('.atcb-modal[data-modal-nr="' + (modalCount - 1) + '"]');
-    prevModal.classList.add('atcb-hidden');
+    prevModal!.classList.add('atcb-hidden');
   }
   // set scroll behavior
   atcb_manage_body_scroll(modalHost, modalWrapper);
@@ -587,25 +599,25 @@ async function atcb_create_modal(mainHost, data, icon = '', headline, content = 
 }
 
 // FUNCTION TO SWICH THE YAHOO SUBSCRIBE MODAL
-async function atcb_subscribe_yahoo_modal_switch(host, data, keyboardTrigger) {
+async function atcb_subscribe_yahoo_modal_switch(host: ShadowRoot, data: ATCBConfig, keyboardTrigger?: boolean): Promise<void> {
   atcb_set_fully_successful(host, data);
   await atcb_generate_links(host, 'yahoo2nd', data, 'all', keyboardTrigger);
 }
 
 // FUNCTION TO GENERATE A MORE DETAILED DATE BUTTON
-function atcb_generate_date_button(data, parent, subEvent = 'all', oneOption = false, forceFullDate = false) {
+function atcb_generate_date_button(data: ATCBConfig, parent: HTMLElement, subEvent: string | number = 'all', oneOption: boolean = false, forceFullDate: boolean = false): void {
   if (subEvent !== 'all') {
-    subEvent = parseInt(subEvent) - 1;
-  } else if (data.dates.length === 1) {
+    subEvent = parseInt(subEvent as string) - 1;
+  } else if (data.dates!.length === 1) {
     subEvent = 0;
   }
-  const fullTimeInfo = atcb_generate_timestring(data.dates, data.language, subEvent, false, false, forceFullDate);
+  const fullTimeInfo = atcb_generate_timestring(data.dates!, data.language, subEvent, false, false, forceFullDate);
   const hoverText = (function () {
-    if ((subEvent !== 'all' && data.dates[`${subEvent}`].status.toLowerCase() === 'cancelled') || (subEvent === 'all' && data.allCancelled)) {
+    if ((subEvent !== 'all' && data.dates![`${subEvent}`]!.status!.toLowerCase() === 'cancelled') || (subEvent === 'all' && data.allCancelled)) {
       return atcb_translate_hook('date.status.cancelled', data) + '<br>' + atcb_translate_hook('date.status.cancelled.cta', data);
     }
     if (data.pastDateHandling !== 'none') {
-      if ((subEvent === 'all' && data.allOverdue) || (subEvent !== 'all' && data.dates[`${subEvent}`].overdue)) {
+      if ((subEvent === 'all' && data.allOverdue) || (subEvent !== 'all' && data.dates![`${subEvent}`]!.overdue)) {
         return atcb_translate_hook('expired', data);
       }
     }
@@ -615,7 +627,7 @@ function atcb_generate_date_button(data, parent, subEvent = 'all', oneOption = f
     return atcb_translate_hook('label.addtocalendar', data);
   })();
   const cancelledInfo = (function () {
-    if ((subEvent !== 'all' && data.dates[`${subEvent}`].status.toLowerCase() === 'cancelled') || (subEvent === 'all' && data.allCancelled)) {
+    if ((subEvent !== 'all' && data.dates![`${subEvent}`]!.status!.toLowerCase() === 'cancelled') || (subEvent === 'all' && data.allCancelled)) {
       return atcb_translate_hook('date.status.cancelled', data);
     }
     return '';
@@ -630,8 +642,8 @@ function atcb_generate_date_button(data, parent, subEvent = 'all', oneOption = f
   if (subEvent === 'all') {
     subEvent = 0;
     if (!data.allOverdue) {
-      for (let i = 0; i < data.dates.length; i++) {
-        if (!data.dates[`${i}`].overdue) {
+      for (let i = 0; i < data.dates!.length; i++) {
+        if (!data.dates![`${i}`]!.overdue) {
           subEvent = i;
           break;
         }
@@ -639,9 +651,9 @@ function atcb_generate_date_button(data, parent, subEvent = 'all', oneOption = f
     }
     subEventAll = true;
   }
-  const startDate = new Date(atcb_generate_time(data.dates[`${subEvent}`]).start);
-  const allDay = atcb_generate_time(data.dates[`${subEvent}`]).allday;
-  const timeZone = data.dates[`${subEvent}`].timeZone;
+  const startDate = new Date(atcb_generate_time(data.dates![`${subEvent}`]!).start);
+  const allDay = atcb_generate_time(data.dates![`${subEvent}`]!).allday;
+  const timeZone = data.dates![`${subEvent}`]!.timeZone;
   const btnLeft = document.createElement('div');
   btnLeft.classList.add('atcb-date-btn-left');
   parent.append(btnLeft);
@@ -650,8 +662,8 @@ function atcb_generate_date_button(data, parent, subEvent = 'all', oneOption = f
   btnLeft.append(btnDay);
   const btnMonth = document.createElement('div');
   btnMonth.classList.add('atcb-date-btn-month');
-  btnDay.textContent = startDate.toLocaleString(data.language, { day: 'numeric', timeZone: allDay ? 'UTC' : timeZone });
-  btnMonth.textContent = startDate.toLocaleString(data.language, { month: 'short', timeZone: allDay ? 'UTC' : timeZone });
+  btnDay.textContent = startDate.toLocaleString(data.language, { day: 'numeric', timeZone: allDay ? 'UTC' : (timeZone as string) });
+  btnMonth.textContent = startDate.toLocaleString(data.language, { month: 'short', timeZone: allDay ? 'UTC' : (timeZone as string) });
   btnLeft.append(btnMonth);
   const btnRight = document.createElement('div');
   btnRight.classList.add('atcb-date-btn-right');
@@ -662,11 +674,11 @@ function atcb_generate_date_button(data, parent, subEvent = 'all', oneOption = f
   // headline
   const btnHeadline = document.createElement('div');
   btnHeadline.classList.add('atcb-date-btn-headline');
-  const btnHeadlineText = data.dates.length > 1 && subEventAll ? data.name : data.dates[`${subEvent}`].name; // show name of event series for multi-date
-  btnHeadline.textContent = btnHeadlineText;
+  const btnHeadlineText = data.dates!.length > 1 && subEventAll ? data.name : data.dates![`${subEvent}`]!.name; // show name of event series for multi-date
+  btnHeadline.textContent = btnHeadlineText as string;
   btnDetails.append(btnHeadline);
   // location line
-  if ((data.dates[`${subEvent}`].location && data.dates[`${subEvent}`].location !== '' && !data.dates[`${subEvent}`].onlineEvent) || cancelledInfo !== '') {
+  if ((data.dates![`${subEvent}`]!.location && data.dates![`${subEvent}`]!.location !== '' && !data.dates![`${subEvent}`]!.onlineEvent) || cancelledInfo !== '') {
     const btnLocation = document.createElement('div');
     btnLocation.classList.add('atcb-date-btn-content');
     btnDetails.append(btnLocation);
@@ -676,32 +688,32 @@ function atcb_generate_date_button(data, parent, subEvent = 'all', oneOption = f
     } else {
       const btnLocationIcon = document.createElement('span');
       btnLocationIcon.classList.add('atcb-date-btn-content-icon');
-      btnLocationIcon.innerHTML = atcbIcon['location'];
+      btnLocationIcon.innerHTML = atcbIcon['location']!;
       btnLocation.append(btnLocationIcon);
       const btnLocationText = document.createElement('span');
       btnLocationText.classList.add('atcb-date-btn-content-location');
-      btnLocationText.textContent = data.dates[`${subEvent}`].location;
+      btnLocationText.textContent = data.dates![`${subEvent}`]!.location as string;
       btnLocation.append(btnLocationText);
     }
   } else {
     // in case we would not show date details as well, show description instead
-    if (data.dates[`${subEvent}`].description !== '' && fullTimeInfo.length === 0 && (!data.recurrence || data.recurrence === '')) {
+    if (data.dates![`${subEvent}`]!.description !== '' && fullTimeInfo.length === 0 && (!data.recurrence || data.recurrence === '')) {
       const btnDescription = document.createElement('div');
       btnDescription.classList.add('atcb-date-btn-content');
-      btnDescription.textContent = data.dates[`${subEvent}`].descriptionHtmlFree;
+      btnDescription.textContent = data.dates![`${subEvent}`]!.descriptionHtmlFree as string;
       btnDescription.style.overflow = 'hidden';
       btnDescription.style.display = '-webkit-box';
       btnDescription.style.webkitLineClamp = '2';
-      btnDescription.style.lineClamp = '2';
+      (btnDescription.style as unknown as Record<string, string>).lineClamp = '2';
       btnDetails.append(btnDescription);
     } else {
       // in other cases, at least give the headline the option to grow
-      btnHeadline.style.lineClamp = '2';
+      (btnHeadline.style as unknown as Record<string, string>).lineClamp = '2';
       // and center, if nothing else is here
       if (fullTimeInfo.length == 0 && (data.recurrence == null || data.recurrence == '')) {
         btnRight.style.alignSelf = 'center';
         btnHeadline.style.textAlign = 'center';
-        btnHeadline.style.lineClamp = '2';
+        (btnHeadline.style as unknown as Record<string, string>).lineClamp = '2';
       }
     }
   }
@@ -712,12 +724,12 @@ function atcb_generate_date_button(data, parent, subEvent = 'all', oneOption = f
     btnDetails.append(btnDateTime);
     const btnDateTimeIcon = document.createElement('span');
     btnDateTimeIcon.classList.add('atcb-date-btn-content-icon');
-    btnDateTimeIcon.innerHTML = atcbIcon['ical'];
+    btnDateTimeIcon.innerHTML = atcbIcon['ical']!;
     btnDateTime.append(btnDateTimeIcon);
     const btnDateTimeText = document.createElement('span');
     btnDateTimeText.classList.add('atcb-date-btn-content-text');
     btnDateTime.append(btnDateTimeText);
-    fullTimeInfo.forEach(function (block) {
+    fullTimeInfo.forEach(function (block: string) {
       const btnDateTimeTextBlock = document.createElement('span');
       btnDateTimeTextBlock.textContent = block;
       btnDateTimeText.append(btnDateTimeTextBlock);
@@ -731,16 +743,16 @@ function atcb_generate_date_button(data, parent, subEvent = 'all', oneOption = f
   // hover text
   const btnHover = document.createElement('div');
   btnHover.classList.add('atcb-date-btn-hover');
-  btnHover.innerHTML = hoverText;
+  btnHover.innerHTML = hoverText as string;
   btnRight.append(btnHover);
-  if (!data.hideCheckmark && data.dates[`${subEvent}`].status.toLowerCase() !== 'cancelled') {
+  if (!data.hideCheckmark && data.dates![`${subEvent}`]!.status!.toLowerCase() !== 'cancelled') {
     const btnCheck = document.createElement('div');
     btnCheck.classList.add('atcb-checkmark');
-    btnCheck.innerHTML = atcbIcon['checkmark'];
+    btnCheck.innerHTML = atcbIcon['checkmark']!;
     parent.append(btnCheck);
   }
   // small + at the corner
-  if (!data.dates[`${subEvent}`].overdue || data.pastDateHandling === 'none') {
+  if (!data.dates![`${subEvent}`]!.overdue || data.pastDateHandling === 'none') {
     const btnPlus = document.createElement('div');
     btnPlus.classList.add('atcb-date-btn-plus');
     btnPlus.innerHTML = '+';
@@ -749,34 +761,34 @@ function atcb_generate_date_button(data, parent, subEvent = 'all', oneOption = f
   // set aria label
   // TODO: Make this more accessible by using more detailed date information (could be also generated in a more central place - maybe decoration part); also merge this with the label generation for better structure
   const ariaLabel =
-    hoverText.replace(/<br>/g, ' ').replace(/\+\s/g, '') +
-    (oneOption ? ' (' + atcb_translate_hook(data.options[0], data) + ')' : '') +
+    (hoverText as string).replace(/<br>/g, ' ').replace(/\+\s/g, '') +
+    (oneOption ? ' (' + atcb_translate_hook(data.options![0] as string, data) + ')' : '') +
     ': ' +
     btnHeadlineText +
-    (data.dates[`${subEvent}`].location && data.dates[`${subEvent}`].location !== '' ? ', ' + data.dates[`${subEvent}`].location : '') +
+    (data.dates![`${subEvent}`]!.location && data.dates![`${subEvent}`]!.location !== '' ? ', ' + data.dates![`${subEvent}`]!.location : '') +
     ', ' +
     fullTimeInfo.join(' ');
   parent.setAttribute('aria-label', ariaLabel);
 }
 
 // FUNCTION TO BUILD A SECOND SHADOWDOM FOR MODALS
-async function atcb_generate_modal_host(host, data, reset = true) {
+async function atcb_generate_modal_host(host: ShadowRoot, data: ATCBConfig, reset: boolean = true): Promise<ShadowRoot> {
   // to clean-up the stage, we first close anything left open
   const existingModalHost = document.getElementById(data.identifier + '-modal-host');
   if (existingModalHost) {
     if (!reset) {
       // return existing one, if we do not want to rebuild
-      return existingModalHost.shadowRoot;
+      return existingModalHost.shadowRoot!;
     }
     existingModalHost.remove();
   }
   // create host element and add shadowDOM
-  let newModalHost = document.createElement('div');
+  const newModalHost = document.createElement('div');
   newModalHost.id = data.identifier + '-modal-host';
   if (host.host.hasAttribute('cspnonce')) {
-    newModalHost.setAttribute('cspnonce', host.host.getAttribute('cspnonce'));
+    newModalHost.setAttribute('cspnonce', host.host.getAttribute('cspnonce')!);
   }
-  newModalHost.setAttribute('atcb-button-id', data.identifier);
+  newModalHost.setAttribute('atcb-button-id', data.identifier as string);
   newModalHost.classList.add('add-to-calendar');
   newModalHost.style.transform = 'translate3D(0, 0, 0)';
   newModalHost.style.visibility = 'visible';
@@ -789,31 +801,31 @@ async function atcb_generate_modal_host(host, data, reset = true) {
   newModalHost.style.display = 'flex';
   newModalHost.style.zIndex = '13999998';
   document.body.append(newModalHost);
-  newModalHost.attachShadow({ mode: 'open', delegateFocus: true });
+  newModalHost.attachShadow({ mode: 'open', delegateFocus: true } as unknown as ShadowRootInit);
   const elem = document.createElement('template');
   elem.innerHTML = '<div class="atcb-modal-host-initialized"></div>';
-  newModalHost.shadowRoot.append(elem.content.cloneNode(true));
-  atcb_set_light_mode(newModalHost.shadowRoot, data);
-  await atcb_load_css(newModalHost.shadowRoot, null, data);
-  return newModalHost.shadowRoot;
+  newModalHost.shadowRoot!.append(elem.content.cloneNode(true));
+  atcb_set_light_mode(newModalHost.shadowRoot!, data);
+  await atcb_load_css(newModalHost.shadowRoot!, null, data);
+  return newModalHost.shadowRoot!;
 }
 
 // FUNCTION TO COPY THE BUTTON TO A SECOND SHADOWDOM TO FORCE OVERLAY
-async function atcb_generate_overlay_dom(host, data) {
+async function atcb_generate_overlay_dom(host: ShadowRoot, data: ATCBConfig): Promise<Element | null> {
   const newHost = await atcb_generate_modal_host(host, data);
   // get all top-level nodes from host
   const nodes = Array.from(host.children);
   // duplicate all nodes into newHost, except for any style tag
   nodes.forEach((node) => {
     if (node.tagName != 'STYLE') {
-      newHost.querySelector('.atcb-modal-host-initialized').append(node.cloneNode(true));
+      newHost.querySelector('.atcb-modal-host-initialized')!.append(node.cloneNode(true));
     }
   });
   // remove the id from the <button> to prevent duplicate ids
-  newHost.querySelector('button.atcb-button').removeAttribute('id');
+  newHost.querySelector('button.atcb-button')!.removeAttribute('id');
   // set the opacity of the original button to 0
   host.host.classList.add('atcb-shadow-hide');
-  host.querySelector('.atcb-initialized').style.opacity = '0';
+  (host.querySelector('.atcb-initialized') as HTMLElement | null)!.style.opacity = '0';
   // set the dimension and position of the .atcb-initialized to the one in the original host
   atcb_position_shadow_button(host, newHost);
   // listener for any scroll activity

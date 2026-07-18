@@ -1,4 +1,5 @@
-import { atcb_rewrite_html_elements } from './atcb-util.js';
+import { atcb_rewrite_html_elements } from './atcb-util';
+import type { ATCBConfig, I18nStrings } from './types';
 
 // TRANSLATIONS
 
@@ -12,10 +13,10 @@ import { atcb_rewrite_html_elements } from './atcb-util.js';
  */
 
 // right-to-left languages
-const rtlLanguages = ['ar', 'fa', 'he'];
+const rtlLanguages: string[] = ['ar', 'fa', 'he'];
 
 // calendar names (except for iCal file, same in every language, but included to be adjustable)
-const calendarNames = {
+const calendarNames: { [key: string]: string } = {
   apple: 'Apple',
   google: 'Google',
   ms365: 'Microsoft 365',
@@ -25,7 +26,7 @@ const calendarNames = {
 };
 
 // the database object
-const i18nStrings = {
+const i18nStrings: I18nStrings = {
   en: {
     'label.addtocalendar': 'Add to Calendar',
     ical: 'iCal File',
@@ -914,25 +915,25 @@ const i18nStrings = {
   },
 };
 
-const availableLanguages = Object.keys(i18nStrings);
+const availableLanguages: string[] = Object.keys(i18nStrings);
 
 // hook, which can be used to override all potential "hard" strings by setting the key as option key and the intended string as value
-function atcb_translate_hook(identifier, data) {
+function atcb_translate_hook(identifier: string, data: ATCBConfig): string {
   if (data.customLabels && data.customLabels[`${identifier}`] && data.customLabels[`${identifier}`] !== '') {
-    return atcb_rewrite_html_elements(data.customLabels[`${identifier}`]);
+    return atcb_rewrite_html_elements(data.customLabels[`${identifier}`]!);
   } else {
     return atcb_translate(identifier, data.language);
   }
 }
 
-function atcb_translate(identifier, language) {
+function atcb_translate(identifier: string, language?: string): string {
   // set default language
   if (!language) {
     language = 'en';
   }
   // return string, if available
-  if (i18nStrings[`${language}`][`${identifier}`]) {
-    return i18nStrings[`${language}`][`${identifier}`];
+  if (i18nStrings[`${language}`]![`${identifier}`]) {
+    return i18nStrings[`${language}`]![`${identifier}`]!;
   }
   // try English as fallback, if not already used before
   if (language !== 'en') {

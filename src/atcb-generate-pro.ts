@@ -1,16 +1,66 @@
-import { atcb_rewrite_html_elements, atcb_copy_to_clipboard, atcb_secure_content, atcb_set_sizes, atcb_validEmail } from './atcb-util.js';
-import { atcb_generate_button, atcb_generate_modal_host, atcb_create_modal, atcb_generate_label, atcb_create_atcbl } from './atcb-generate.js';
-import { atcb_translate_hook } from './atcb-i18n.js';
-import { atcb_log_event } from './atcb-event.js';
-import { atcb_decorate_data } from './atcb-decorate.js';
+import { atcb_rewrite_html_elements, atcb_copy_to_clipboard, atcb_secure_content, atcb_set_sizes, atcb_validEmail } from './atcb-util';
+import { atcb_generate_button, atcb_generate_modal_host, atcb_create_modal, atcb_generate_label, atcb_create_atcbl } from './atcb-generate';
+import { atcb_translate_hook } from './atcb-i18n';
+import { atcb_log_event } from './atcb-event';
+import { atcb_decorate_data } from './atcb-decorate';
+import type { ATCBConfig } from './types';
+
+// local shape for one entry of a custom PRO form (ty or rsvp), as produced/consumed by the shared form helpers
+interface ATCBProFormField {
+  name?: string;
+  type?: string;
+  label?: string;
+  placeholder?: string;
+  default?: string | boolean;
+  required?: boolean;
+  fieldId?: string;
+  [key: string]: unknown;
+}
+
+// local shape for data.ty, decorated PRO "thank you" config
+interface ATCBTyData {
+  type?: string;
+  url?: string;
+  headline?: string;
+  text?: string;
+  button_label?: string;
+  fields?: ATCBProFormField[];
+  [key: string]: unknown;
+}
+
+// local shape for data.rsvp, decorated PRO RSVP config
+interface ATCBRsvpData {
+  text?: string;
+  headline?: string;
+  initial_confirmation?: boolean;
+  maybe_option?: boolean;
+  maxpp?: number;
+  seatsLeft?: number;
+  expired?: boolean;
+  bookedOut?: boolean;
+  fields?: ATCBProFormField[];
+  [key: string]: unknown;
+}
+
+// local shape of one entry sent to sendPostRequest
+interface ATCBPostField {
+  name: string;
+  value: unknown;
+}
+
+// local shape of the sendPostRequest result when the server responds with an error payload
+interface ATCBPostErrorResult {
+  error?: number;
+  [key: string]: unknown;
+}
 
 // FUNCTION TO GENERATE A THANK YOU NOTE
-async function atcb_generate_ty(hostEl, dataObj) {
-  let host = hostEl;
+async function atcb_generate_ty(hostEl: ShadowRoot | HTMLElement, dataObj: ATCBConfig): Promise<void> {
+  let host = hostEl as ShadowRoot;
   let data = dataObj;
   // if host is no shadowRoot, try to get the child shadowRoot (case, if called directly)
-  if (!hostEl.host) {
-    host = host.shadowRoot;
+  if (!(hostEl as ShadowRoot).host) {
+    host = (hostEl as HTMLElement).shadowRoot as ShadowRoot;
     // in this case, we also decorate the data (again)
     data = await atcb_decorate_data(data);
   }
@@ -29,9 +79,9 @@ async function atcb_generate_ty(hostEl, dataObj) {
   if ((!data.proKey || data.proKey === '') && !window.location.hostname.match(/^(localhost|.*\.add-to-calendar-pro.com)$/)) {
     return;
   }
-  const tyHost = await atcb_generate_modal_host(host, data);
+  const tyHost = (await atcb_generate_modal_host(host, data))!;
   // get data
-  const tyData = data.ty;
+  const tyData = data.ty as ATCBTyData;
   // set default, if type is missing required information
   if ((tyData.type === 'link' || tyData.type === 'form') && (!tyData.url || tyData.url === '' || !tyData.url.startsWith('http'))) {
     tyData.type = 'text';
@@ -49,7 +99,7 @@ async function atcb_generate_ty(hostEl, dataObj) {
   // share buttons, if type = share
   if (tyData.type === 'share') {
     tyContent += `<p class="pro-pt pro-share-buttons">
-    <a href="mailto:?subject=${encodeURIComponent(atcb_translate_hook('label.share.email.subject', data))}&body=%0A&#10142;%20${encodeURIComponent(tyData.url)}%0A%0A" target="_blank" rel="noopener" class="atcb-modal-btn atcb-modal-btn-primary atcb-modal-btn-border btn-flex">
+    <a href="mailto:?subject=${encodeURIComponent(atcb_translate_hook('label.share.email.subject', data))}&body=%0A&#10142;%20${encodeURIComponent(tyData.url!)}%0A%0A" target="_blank" rel="noopener" class="atcb-modal-btn atcb-modal-btn-primary atcb-modal-btn-border btn-flex">
       ${mailIcon}
       ${atcb_translate_hook('label.share.email', data)}
     </a>
@@ -60,7 +110,7 @@ async function atcb_generate_ty(hostEl, dataObj) {
     </p>`;
   }
   // form, if type = form
-  let header = {};
+  let header: { [key: string]: unknown } = {};
   if (tyData.type === 'form') {
     const noIntro = !tyData.text || tyData.text === '' || tyData.text === undefined;
     const label = (function () {
@@ -73,9 +123,9 @@ async function atcb_generate_ty(hostEl, dataObj) {
     if (tyData.fields && tyData.fields.length > 0) {
       // if there is a field with name "header" of type "hidden" and a value with a valid JSON string, we set the header
       const headerField = tyData.fields.find((field) => field.name === 'header' && field.type === 'hidden');
-      if (headerField && headerField.default && headerField.default !== '' && headerField.default.startsWith('{')) {
+      if (headerField && headerField.default && headerField.default !== '' && (headerField.default as string).startsWith('{')) {
         try {
-          header = JSON.parse(headerField.default);
+          header = JSON.parse(headerField.default as string);
           // if header is still empty, we set an entry "atcb" with the value "true" as default to make sure the request is sent as JSON
           if (Object.keys(header).length === 0) {
             header.atcb = true;
@@ -110,7 +160,7 @@ async function atcb_generate_ty(hostEl, dataObj) {
   // set enhanced click functionality
   // copy to clipboard, if type = share
   if (tyData.type === 'share') {
-    const copyBtn = tyHost.getElementById('atcb-ty-share-copy');
+    const copyBtn = tyHost.getElementById('atcb-ty-share-copy') as HTMLButtonElement;
     copyBtn.addEventListener('click', async function () {
       try {
         await atcb_copy_to_clipboard(tyData.url);
@@ -123,7 +173,7 @@ async function atcb_generate_ty(hostEl, dataObj) {
       }
     });
     copyBtn.addEventListener('keyup', function (event) {
-      if (event.key === 'Enter') {
+      if ((event as KeyboardEvent).key === 'Enter') {
         event.preventDefault();
         copyBtn.click();
       }
@@ -131,48 +181,48 @@ async function atcb_generate_ty(hostEl, dataObj) {
   }
   // validate and submit form, if type = form
   if (tyData.type === 'form') {
-    const tyForm = tyHost.getElementById(data.identifier + '-ty-form');
-    const errorMsg = tyHost.getElementById('submit-error');
-    const tyFormSubmit = tyHost.getElementById('pro-form-submit');
-    const tyFormSubmitting = tyHost.getElementById('pro-form-submitting');
+    const tyForm = tyHost.getElementById(data.identifier + '-ty-form') as HTMLFormElement;
+    const errorMsg = tyHost.getElementById('submit-error') as HTMLElement;
+    const tyFormSubmit = tyHost.getElementById('pro-form-submit') as HTMLButtonElement;
+    const tyFormSubmitting = tyHost.getElementById('pro-form-submitting') as HTMLElement;
     tyFormSubmit.addEventListener('click', async function (e) {
       e.preventDefault();
       tyFormSubmitting.style.display = 'block';
       tyFormSubmit.style.display = 'none';
-      let valid = atcb_validate_form(tyHost, tyData.fields);
+      const valid = atcb_validate_form(tyHost, tyData.fields!);
       if (!valid) {
         errorMsg.textContent = atcb_translate_hook('form.error.required', data) + '.';
       }
       // submit data
       if (valid) {
-        const bodyData = [];
+        const bodyData: ATCBPostField[] = [];
         let skipRadio = false;
-        tyData.fields.forEach((field) => {
+        tyData.fields!.forEach((field) => {
           // push fields to data array except for labels - for radio buttons, we only push the checked one
           if (field.type !== 'label') {
             if (field.type === 'radio') {
               if (!skipRadio) {
                 const radioGroup = tyHost.querySelectorAll('[name="' + field.name + '"]');
                 radioGroup.forEach(function (radio) {
-                  if (radio.checked) {
-                    bodyData.push({ name: field.name, value: radio.value });
+                  if ((radio as HTMLInputElement).checked) {
+                    bodyData.push({ name: field.name as string, value: (radio as HTMLInputElement).value });
                   }
                 });
                 skipRadio = true;
               }
             } else if (field.type === 'checkbox') {
-              bodyData.push({ name: field.name, value: tyHost.getElementById(field.fieldId).checked });
+              bodyData.push({ name: field.name as string, value: (tyHost.getElementById(field.fieldId as string) as HTMLInputElement).checked });
               skipRadio = false;
             } else {
-              bodyData.push({ name: field.name, value: tyHost.getElementById(field.fieldId).value });
+              bodyData.push({ name: field.name as string, value: (tyHost.getElementById(field.fieldId as string) as HTMLInputElement).value });
               skipRadio = false;
             }
           }
         });
-        const request = await sendPostRequest(tyData.url, bodyData, header);
+        const request = await sendPostRequest(tyData.url as string, bodyData, header);
         if (request === true) {
-          tyHost.getElementById('ty-success-msg').style.display = 'block';
-          tyHost.getElementById('ty-content').style.display = 'none';
+          (tyHost.getElementById('ty-success-msg') as HTMLElement).style.display = 'block';
+          (tyHost.getElementById('ty-content') as HTMLElement).style.display = 'none';
           return;
         }
         errorMsg.textContent = atcb_translate_hook('form.error.sending', data) + '.';
@@ -182,7 +232,7 @@ async function atcb_generate_ty(hostEl, dataObj) {
       tyFormSubmit.style.display = 'block';
     });
     tyFormSubmit.addEventListener('keyup', function (event) {
-      if (event.key === 'Enter') {
+      if ((event as KeyboardEvent).key === 'Enter') {
         event.preventDefault();
         tyFormSubmit.click();
       }
@@ -191,13 +241,13 @@ async function atcb_generate_ty(hostEl, dataObj) {
 }
 
 // FUNCTION TO GENERATE AN RSVP FORM
-async function atcb_generate_rsvp_form(host, data, hostEl, keyboardTrigger = false) {
+async function atcb_generate_rsvp_form(host: ShadowRoot, data: ATCBConfig, hostEl: HTMLElement, keyboardTrigger: boolean = false): Promise<void> {
   /*!
    *  @preserve
    *  PER LICENSE AGREEMENT, YOU ARE NOT ALLOWED TO REMOVE OR CHANGE THIS FUNCTION!
    */
   // prepare the form
-  const rsvpData = data.rsvp;
+  const rsvpData = data.rsvp as ATCBRsvpData;
   const noIntro = !rsvpData.text || rsvpData.text === '' || rsvpData.text === undefined;
   const noHeadline = !rsvpData.headline || rsvpData.headline === '' || rsvpData.headline === undefined;
   // prepare content with...
@@ -300,9 +350,9 @@ async function atcb_generate_rsvp_form(host, data, hostEl, keyboardTrigger = fal
       rsvpContent += '<input type="email" name="email" id="' + data.identifier + '-rsvp-email" ' + (data.disabled && 'disabled') + ' aria-label="' + atcb_translate_hook('form.email', data) + '" value="" /></div>';
     }
   } else {
-    rsvpData.fields = rsvpData.fields.map((field) => {
+    rsvpData.fields = rsvpData.fields!.map((field): ATCBProFormField => {
       if (field.name === 'email') {
-        return { ...field, required: true, type: 'email', default: attendee !== '' ? attendee : field.default };
+        return { ...field, required: true, type: 'email', default: (attendee !== '' ? attendee : field.default) as string | boolean };
       }
       return field;
     });
@@ -328,9 +378,9 @@ async function atcb_generate_rsvp_form(host, data, hostEl, keyboardTrigger = fal
   rsvpContent += '</div></div>';
 
   // the host for the form now is either the host or the modal host
-  let rsvpHost = null;
+  let rsvpHost = null as unknown as ShadowRoot;
   if (!data.inlineRsvp) {
-    rsvpHost = await atcb_generate_modal_host(host, data);
+    rsvpHost = (await atcb_generate_modal_host(host, data)) as ShadowRoot;
     await atcb_create_modal(
       rsvpHost,
       data,
@@ -341,7 +391,7 @@ async function atcb_generate_rsvp_form(host, data, hostEl, keyboardTrigger = fal
         { type: 'none', label: atcb_translate_hook('label.rsvp.restart', data), small: true, primary: true, id: 'pro-form-restart' },
         { type: 'close', label: atcb_translate_hook('close', data), small: true, id: 'modal-btn-close' },
         { type: 'close', label: atcb_translate_hook('cancel', data), small: true, id: 'modal-btn-cancel' },
-      ],
+      ] as never[],
       [],
       keyboardTrigger,
       {},
@@ -367,7 +417,7 @@ async function atcb_generate_rsvp_form(host, data, hostEl, keyboardTrigger = fal
     rsvpInlineWrapper.append(rsvpInlineContent);
     if (!data.hideBranding) {
       const atcbL = atcb_create_atcbl(rsvpHost, false, true);
-      rsvpInlineWrapper.append(atcbL);
+      rsvpInlineWrapper.append(atcbL as HTMLDivElement);
     }
     if (rsvpData.expired) {
       rsvpInlineContent.innerHTML = '<div class="pro"><p>' + atcb_translate_hook('label.rsvp.expired', data) + '</p></div>';
@@ -379,11 +429,11 @@ async function atcb_generate_rsvp_form(host, data, hostEl, keyboardTrigger = fal
       rsvpInlineContent.innerHTML = rsvpContent;
     }
   }
-  if (sentStatus) rsvpHost.getElementById('rsvp-content').style.display = 'none';
-  const closeBtn = rsvpHost.getElementById('modal-btn-close');
-  const cancelBtn = rsvpHost.getElementById('modal-btn-cancel');
-  const restartBtn = rsvpHost.getElementById('pro-form-restart');
-  atcb_log_event('openRSVP', data.identifier, data.identifier);
+  if (sentStatus) (rsvpHost.getElementById('rsvp-content') as HTMLElement).style.display = 'none';
+  const closeBtn = rsvpHost.getElementById('modal-btn-close') as HTMLElement | null;
+  const cancelBtn = rsvpHost.getElementById('modal-btn-cancel') as HTMLElement | null;
+  const restartBtn = rsvpHost.getElementById('pro-form-restart') as HTMLElement | null;
+  atcb_log_event('openRSVP', data.identifier as string, data.identifier as string);
   if (data.debug) {
     console.log('RSVP form for "' + data.identifier + '" created');
   }
@@ -398,7 +448,7 @@ async function atcb_generate_rsvp_form(host, data, hostEl, keyboardTrigger = fal
       atcbData.hideTextLabelButton = true;
       atcbData.hideIconButton = false;
       atcbData.buttonsList = true;
-      atcb_generate_button(host, atcbHost, atcbData);
+      atcb_generate_button(host, atcbHost as HTMLElement, atcbData);
     }
   } else {
     if (closeBtn) closeBtn.style.display = 'none';
@@ -406,22 +456,22 @@ async function atcb_generate_rsvp_form(host, data, hostEl, keyboardTrigger = fal
   }
   // validation and processing of the form
   // validate and submit
-  const rsvpForm = rsvpHost.getElementById(data.identifier + '-rsvp-form');
-  const errorMsg = rsvpHost.getElementById('submit-error');
-  const rsvpFormSubmit = rsvpHost.getElementById('pro-form-submit');
-  const rsvpFormSubmitting = rsvpHost.getElementById('pro-form-submitting');
-  const rsvpRestart = rsvpHost.getElementById('pro-form-restart');
+  const rsvpForm = rsvpHost.getElementById(data.identifier + '-rsvp-form') as HTMLFormElement;
+  const errorMsg = rsvpHost.getElementById('submit-error') as HTMLElement;
+  const rsvpFormSubmit = rsvpHost.getElementById('pro-form-submit') as HTMLButtonElement | null;
+  const rsvpFormSubmitting = rsvpHost.getElementById('pro-form-submitting') as HTMLElement;
+  const rsvpRestart = rsvpHost.getElementById('pro-form-restart') as HTMLElement | null;
   if (rsvpFormSubmit) {
     rsvpFormSubmit.addEventListener('click', async function (e) {
       e.preventDefault();
       rsvpFormSubmitting.style.display = 'block';
       rsvpFormSubmit.style.display = 'none';
-      const staticFields = [{ type: 'number', name: data.proKey + '-amount', fieldId: data.identifier + '-rsvp-amount', required: true }];
+      const staticFields: ATCBProFormField[] = [{ type: 'number', name: data.proKey + '-amount', fieldId: data.identifier + '-rsvp-amount', required: true }];
       if (!customEmailField) staticFields.push({ type: 'email', name: 'email', fieldId: data.identifier + '-rsvp-email', required: true });
       const dynamicFields = Array.isArray(rsvpData.fields) ? rsvpData.fields : [];
       let valid = atcb_validate_form(rsvpHost, [...staticFields, ...dynamicFields]);
       // if maxpp, make sure amount is not bigger
-      const amountEl = rsvpHost.getElementById(data.identifier + '-rsvp-amount');
+      const amountEl = rsvpHost.getElementById(data.identifier + '-rsvp-amount') as HTMLInputElement;
       const amount = parseInt(amountEl.value) || 1;
       if (rsvpData.maxpp && rsvpData.maxpp > 0 && amount > rsvpData.maxpp) {
         amountEl.classList.add('error');
@@ -434,28 +484,28 @@ async function atcb_generate_rsvp_form(host, data, hostEl, keyboardTrigger = fal
       if (valid) {
         if (!data.proKey || data.proKey === '') {
           // if no prokey, we just show a demo success message
-          rsvpHost.getElementById('rsvp-success-msg-demo').style.display = 'block';
-          rsvpHost.getElementById('rsvp-content').style.display = 'none';
-          atcb_log_event('successRSVP', data.identifier, data.identifier);
+          (rsvpHost.getElementById('rsvp-success-msg-demo') as HTMLElement).style.display = 'block';
+          (rsvpHost.getElementById('rsvp-content') as HTMLElement).style.display = 'none';
+          atcb_log_event('successRSVP', data.identifier as string, data.identifier as string);
           if (cancelBtn) cancelBtn.style.display = 'none';
           if (closeBtn) closeBtn.style.display = 'block';
           return;
         }
-        let fieldsCopy = rsvpData.fields ? JSON.parse(JSON.stringify(rsvpData.fields)) : [];
-        const bodyData = [];
+        let fieldsCopy: ATCBProFormField[] = rsvpData.fields ? JSON.parse(JSON.stringify(rsvpData.fields)) : [];
+        const bodyData: ATCBPostField[] = [];
         bodyData.push({ name: 'prokey', value: data.proKey });
         bodyData.push({ name: 'language', value: data.language });
-        const statusValEl = rsvpHost.querySelector('[name="' + data.proKey + '-status"]:checked');
+        const statusValEl = rsvpHost.querySelector('[name="' + data.proKey + '-status"]:checked') as HTMLInputElement | null;
         bodyData.push({ name: 'status', value: statusValEl ? statusValEl.value : 'confirmed' });
         bodyData.push({ name: 'amount', value: amount });
         if (!customEmailField) {
-          bodyData.push({ name: 'email', value: rsvpHost.getElementById(data.identifier + '-rsvp-email').value });
+          bodyData.push({ name: 'email', value: (rsvpHost.getElementById(data.identifier + '-rsvp-email') as HTMLInputElement).value });
         } else {
-          const emailFieldId = fieldsCopy.find((field) => field.name === 'email')?.fieldId;
-          bodyData.push({ name: 'email', value: rsvpHost.getElementById(emailFieldId).value });
+          const emailFieldId = fieldsCopy.find((field) => field.name === 'email')?.fieldId as string;
+          bodyData.push({ name: 'email', value: (rsvpHost.getElementById(emailFieldId) as HTMLInputElement).value });
           fieldsCopy = fieldsCopy.filter((field) => field.fieldId !== emailFieldId);
         }
-        const bodyData_payload = {};
+        const bodyData_payload: { [key: string]: unknown } = {};
         let skipRadio = false;
         fieldsCopy.forEach((field) => {
           // push fields to data array except for labels - for radio buttons, we only push the checked one
@@ -464,17 +514,17 @@ async function atcb_generate_rsvp_form(host, data, hostEl, keyboardTrigger = fal
               if (!skipRadio) {
                 const radioGroup = rsvpHost.querySelectorAll('[name="' + field.name + '"]');
                 radioGroup.forEach(function (radio) {
-                  if (radio.checked) {
-                    bodyData_payload[field.name] = radio.value;
+                  if ((radio as HTMLInputElement).checked) {
+                    bodyData_payload[field.name as string] = (radio as HTMLInputElement).value;
                   }
                 });
                 skipRadio = true;
               }
             } else if (field.type === 'checkbox') {
-              bodyData_payload[field.name] = rsvpHost.getElementById(field.fieldId).checked;
+              bodyData_payload[field.name as string] = (rsvpHost.getElementById(field.fieldId as string) as HTMLInputElement).checked;
               skipRadio = false;
             } else {
-              bodyData_payload[field.name] = rsvpHost.getElementById(field.fieldId).value;
+              bodyData_payload[field.name as string] = (rsvpHost.getElementById(field.fieldId as string) as HTMLInputElement).value;
               skipRadio = false;
             }
           }
@@ -484,24 +534,26 @@ async function atcb_generate_rsvp_form(host, data, hostEl, keyboardTrigger = fal
         }
         const request = await sendPostRequest(`https://api${data.dev ? '-dev' : ''}.add-to-calendar-pro.com/24586219-9910-41fe-9b59-df53de9db7af`, bodyData, { rsvp: true });
         if (request === 'doi' || request === true) {
-          rsvpHost.getElementById('rsvp-success-msg').style.display = 'block';
+          (rsvpHost.getElementById('rsvp-success-msg') as HTMLElement).style.display = 'block';
           if (request === 'doi') {
-            rsvpHost.getElementById('rsvp-success-msg-doi').style.display = 'block';
+            (rsvpHost.getElementById('rsvp-success-msg-doi') as HTMLElement).style.display = 'block';
           } else {
-            rsvpHost.getElementById('rsvp-success-msg-email').style.display = 'block';
+            (rsvpHost.getElementById('rsvp-success-msg-email') as HTMLElement).style.display = 'block';
           }
-          rsvpHost.getElementById('rsvp-content').style.display = 'none';
+          (rsvpHost.getElementById('rsvp-content') as HTMLElement).style.display = 'none';
           if (cancelBtn) cancelBtn.style.display = 'none';
           if (closeBtn) closeBtn.style.display = 'block';
-          atcb_log_event('successRSVP', data.identifier, data.identifier);
-          localStorage.setItem(data.proKey + '-rsvp-sent', true);
+          atcb_log_event('successRSVP', data.identifier as string, data.identifier as string);
+          // note: original passes a boolean here; Storage.setItem stringifies it at runtime to "true" (matching the getItem check above)
+          localStorage.setItem(data.proKey + '-rsvp-sent', true as unknown as string);
           return;
         }
-        if (request.error && request.error === 2) {
+        const requestResult = request as ATCBPostErrorResult;
+        if (requestResult.error && requestResult.error === 2) {
           errorMsg.textContent = atcb_translate_hook('form.error.email', data) + '.';
-        } else if (request.error && request.error === 5) {
+        } else if (requestResult.error && requestResult.error === 5) {
           errorMsg.textContent = atcb_translate_hook('label.rsvp.expired', data) + '.';
-        } else if (request.error && request.error === 6) {
+        } else if (requestResult.error && requestResult.error === 6) {
           if (amount > 1) {
             errorMsg.textContent = atcb_translate_hook('form.error.bookedoutmany', data) + '.';
           } else {
@@ -516,7 +568,7 @@ async function atcb_generate_rsvp_form(host, data, hostEl, keyboardTrigger = fal
       rsvpFormSubmit.style.display = 'block';
     });
     rsvpFormSubmit.addEventListener('keyup', function (event) {
-      if (event.key === 'Enter') {
+      if ((event as KeyboardEvent).key === 'Enter') {
         event.preventDefault();
         rsvpFormSubmit.click();
       }
@@ -526,14 +578,14 @@ async function atcb_generate_rsvp_form(host, data, hostEl, keyboardTrigger = fal
   if (rsvpRestart) {
     rsvpRestart.addEventListener('click', function (e) {
       e.preventDefault();
-      rsvpHost.getElementById('rsvp-sent-content').style.display = 'none';
-      rsvpHost.getElementById('rsvp-content').style.display = 'block';
+      (rsvpHost.getElementById('rsvp-sent-content') as HTMLElement).style.display = 'none';
+      (rsvpHost.getElementById('rsvp-content') as HTMLElement).style.display = 'block';
       if (closeBtn) closeBtn.style.display = 'none';
       if (restartBtn) restartBtn.style.display = 'none';
       if (cancelBtn) cancelBtn.style.display = 'block';
     });
     rsvpRestart.addEventListener('keyup', function (event) {
-      if (event.key === 'Enter') {
+      if ((event as KeyboardEvent).key === 'Enter') {
         event.preventDefault();
         rsvpRestart.click();
       }
@@ -541,8 +593,8 @@ async function atcb_generate_rsvp_form(host, data, hostEl, keyboardTrigger = fal
   }
 }
 
-async function atcb_generate_rsvp_button(host, data) {
-  const btnHostEl = host.querySelector('.atcb-initialized');
+async function atcb_generate_rsvp_button(host: ShadowRoot, data: ATCBConfig): Promise<boolean> {
+  const btnHostEl = host.querySelector('.atcb-initialized') as HTMLElement;
   // generate the wrapper div
   const buttonTriggerWrapper = document.createElement('div');
   buttonTriggerWrapper.classList.add('atcb-button-wrapper');
@@ -550,25 +602,27 @@ async function atcb_generate_rsvp_button(host, data) {
     buttonTriggerWrapper.classList.add('atcb-rtl');
   }
   btnHostEl.append(buttonTriggerWrapper);
-  atcb_set_sizes(buttonTriggerWrapper, data.sizes);
+  atcb_set_sizes(buttonTriggerWrapper, data.sizes!);
   // generate the button trigger div
   const buttonTrigger = document.createElement('button');
   buttonTrigger.classList.add('atcb-button', 'atcb-click', 'atcb-single');
   if (data.disabled) {
-    buttonTrigger.setAttribute('disabled', true);
+    // note: original passes a boolean here; Element.setAttribute stringifies it at runtime
+    buttonTrigger.setAttribute('disabled', true as unknown as string);
   }
   if (data.hideTextLabelButton) {
     buttonTrigger.classList.add('atcb-no-text');
   }
   buttonTrigger.type = 'button';
-  buttonTrigger.setAttribute('aria-expanded', false); // aria-expanded default value on button generate
+  buttonTrigger.setAttribute('aria-expanded', false as unknown as string); // aria-expanded default value on button generate
   buttonTriggerWrapper.append(buttonTrigger);
   // determine label
+  const rsvpData = data.rsvp as ATCBRsvpData;
   const label = (function () {
-    if (data.rsvp.expired) {
+    if (rsvpData.expired) {
       return atcb_translate_hook('label.rsvp.expired', data);
     }
-    if (data.rsvp.bookedOut) {
+    if (rsvpData.bookedOut) {
       return atcb_translate_hook('label.rsvp.bookedout', data);
     }
     return atcb_translate_hook('label.rsvp', data);
@@ -581,7 +635,7 @@ async function atcb_generate_rsvp_button(host, data) {
   return true;
 }
 
-async function atcb_check_bookings(proKey, dev = false) {
+async function atcb_check_bookings(proKey: string, dev: boolean = false): Promise<number> {
   try {
     const response = await fetch(`https://api${dev ? '-dev' : ''}.add-to-calendar-pro.com/dffb8bbd-ee5e-4a4f-a7ea-503af98ca468?prokey=${proKey}`, {
       method: 'GET',
@@ -589,8 +643,8 @@ async function atcb_check_bookings(proKey, dev = false) {
     if (!response.ok) {
       throw new Error('Network response was not ok');
     }
-    const responseJson = await response.json();
-    return parseInt(responseJson.total);
+    const responseJson = (await response.json()) as { [key: string]: unknown };
+    return parseInt(responseJson.total as string);
   } catch (error) {
     console.error('Error:', error);
   }
@@ -598,7 +652,7 @@ async function atcb_check_bookings(proKey, dev = false) {
 }
 
 // SHARED FORM FUNCTIONS
-function atcb_build_form(fields, identifier = '', disabled = false) {
+function atcb_build_form(fields: ATCBProFormField[], identifier: string = '', disabled: boolean = false): { html: string; fields: ATCBProFormField[] } {
   /*!
    *  @preserve
    *  PER LICENSE AGREEMENT, YOU ARE NOT ALLOWED TO REMOVE OR CHANGE THIS FUNCTION!
@@ -608,10 +662,10 @@ function atcb_build_form(fields, identifier = '', disabled = false) {
   // for each field, add respective html
   let n = 0;
   let prevType = '';
-  let prevSkipped;
+  let prevSkipped: boolean | undefined;
   for (let i = 1; i <= fields.length; i++) {
     prevSkipped = false;
-    const field = fields[i - 1];
+    const field = fields[i - 1]!;
     if (field.type !== 'label' && (!field.name || field.name === '')) {
       prevSkipped = true;
       continue;
@@ -619,7 +673,7 @@ function atcb_build_form(fields, identifier = '', disabled = false) {
     if ((prevType === 'radio' && field.type !== 'radio') || prevType !== 'radio') {
       n = i;
     }
-    fields[i - 1].fieldId = identifier + '-' + i;
+    fields[i - 1]!.fieldId = identifier + '-' + i;
     const fieldValue = field.type === 'radio' ? field.placeholder || '' : field.default || '';
     const fieldLabel = field.label || '';
     const fieldPlaceholder = field.type === 'radio' ? '' : field.placeholder || '';
@@ -639,14 +693,14 @@ function atcb_build_form(fields, identifier = '', disabled = false) {
       if (field.type === 'hidden') {
         hiddenForm += '<input type="hidden" name="' + field.name + '" id="' + field.fieldId + '" value="' + fieldValue + '" />';
       } else {
-        fieldHtml += atcb_create_field_html(field.type, field.name, fieldLabel, field.fieldId, field.required, fieldValue, field.default, fieldPlaceholder, disabled);
+        fieldHtml += atcb_create_field_html(field.type as string, field.name as string, fieldLabel, field.fieldId as string, field.required, fieldValue, field.default as string | boolean, fieldPlaceholder, disabled);
       }
       if (field.type === 'radio') {
         fieldHtml += '</div>';
       }
     }
     form += fieldHtml;
-    prevType = field.type;
+    prevType = field.type as string;
   }
   if (prevType !== 'hidden' || prevSkipped) {
     form += '</div>';
@@ -655,7 +709,7 @@ function atcb_build_form(fields, identifier = '', disabled = false) {
   return { html: form, fields: fields };
 }
 
-function atcb_create_field_html(type, name, fieldLabel, fieldId, required = false, fieldValue, defaultVal = null, fieldPlaceholder = '', disabled = false) {
+function atcb_create_field_html(type: string, name: string, fieldLabel: string, fieldId: string, required: boolean = false, fieldValue: string | boolean, defaultVal: string | boolean | null = null, fieldPlaceholder: string = '', disabled: boolean = false): string {
   let fieldHtml = '';
   // add label
   if ((type === 'text' || type === 'email' || type === 'number') && fieldLabel !== '') {
@@ -688,7 +742,7 @@ function atcb_create_field_html(type, name, fieldLabel, fieldId, required = fals
   return fieldHtml;
 }
 
-function atcb_validate_form(host, fields) {
+function atcb_validate_form(host: ShadowRoot, fields: ATCBProFormField[]): boolean {
   /*!
    *  @preserve
    *  PER LICENSE AGREEMENT, YOU ARE NOT ALLOWED TO REMOVE OR CHANGE THIS FUNCTION!
@@ -696,9 +750,9 @@ function atcb_validate_form(host, fields) {
   let state = true;
   fields.forEach(function (field) {
     if (field.type !== 'label' && field.type !== 'radio') {
-      const input = host.getElementById(field.fieldId);
+      const input = host.getElementById(field.fieldId as string) as HTMLInputElement;
       if (field.type !== 'checkbox') {
-        input.value = atcb_secure_content(input.value.trim());
+        input.value = atcb_secure_content(input.value.trim()) as string;
         if (field.type === 'number') {
           input.value = input.value.replace(/\D/g, '');
         }
@@ -728,16 +782,16 @@ function atcb_validate_form(host, fields) {
       const radioGroup = host.querySelectorAll('[name="' + field.name + '"]');
       let checked = false;
       radioGroup.forEach(function (radio) {
-        if (radio.checked) {
+        if ((radio as HTMLInputElement).checked) {
           checked = true;
         }
       });
       if (checked === false) {
-        radioGroup[0].classList.add('error');
+        (radioGroup[0] as HTMLInputElement).classList.add('error');
         state = false;
         return;
       } else {
-        radioGroup[0].classList.remove('error');
+        (radioGroup[0] as HTMLInputElement).classList.remove('error');
       }
     }
   });
@@ -745,18 +799,18 @@ function atcb_validate_form(host, fields) {
 }
 
 // FUNCTION TO SEND A REQUEST TO THE SERVER
-async function sendPostRequest(url, fields, header = {}) {
+async function sendPostRequest(url: string, fields: ATCBPostField[], header: { [key: string]: unknown } = {}): Promise<boolean | 'doi' | ATCBPostErrorResult> {
   /*!
    *  @preserve
    *  PER LICENSE AGREEMENT, YOU ARE NOT ALLOWED TO REMOVE OR CHANGE THIS FUNCTION!
    */
-  let formData = new FormData();
-  let data = {};
-  let requestData;
+  const formData = new FormData();
+  const data: { [key: string]: unknown } = {};
+  let requestData: RequestInit;
   if (Object.keys(header).length === 0) {
     // if there is no header information, we use FormData
     fields.forEach((field) => {
-      formData.append(field.name, field.value);
+      formData.append(field.name, field.value as string);
     });
     requestData = { method: 'POST', body: formData };
   } else {
@@ -767,12 +821,12 @@ async function sendPostRequest(url, fields, header = {}) {
     fields.forEach((field) => {
       data[field.name] = field.value;
     });
-    requestData = { method: 'POST', headers: header, body: JSON.stringify(data) };
+    requestData = { method: 'POST', headers: header as HeadersInit, body: JSON.stringify(data) };
   }
   // Send the FormData object using fetch
   try {
     const response = await fetch(url, requestData);
-    const responseJson = await response.json();
+    const responseJson = (await response.json()) as ATCBPostErrorResult;
     if (!response.ok) {
       console.error('Network response was not ok');
       if (responseJson.error) return responseJson;

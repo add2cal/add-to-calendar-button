@@ -14,13 +14,20 @@
 // Serialized pages are deterministic on every machine. The smoke tier (CI default)
 // runs its tests in seconds anyway - the build dominates wall time, not the runner.
 // Override for experiments via WTR_CONCURRENCY.
+import { esbuildPlugin } from '@web/dev-server-esbuild';
+
 export default {
   // resolve bare module specifiers here (instead of the --node-resolve CLI flag) so we can
   // request the "production" export condition: lit (pulled in by @open-wc/testing's fixture)
   // then loads its production build and stops printing the "Lit is in dev mode" banner.
+  // extensions includes .ts so the extensionless relative imports inside src resolve
+  // to the TypeScript sources (function-level tests import from ../../src directly).
   nodeResolve: {
     exportConditions: ['production', 'default'],
+    extensions: ['.mjs', '.js', '.ts', '.json'],
   },
+  // transpile TypeScript sources on the fly for tests that import from src
+  plugins: [esbuildPlugin({ ts: true })],
   testsFinishTimeout: 300000,
   browserStartTimeout: 60000,
   concurrency: Number(process.env.WTR_CONCURRENCY || 1),
