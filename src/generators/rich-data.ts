@@ -1,5 +1,6 @@
-import { atcb_generate_time, atcb_secure_url } from './atcb-util';
-import type { ATCBConfig } from './types';
+import { atcb_generate_time } from '../core/dates';
+import { atcb_secure_url } from '../core/text';
+import type { ATCBConfig } from '../types';
 
 // generate schema.org rich data
 // see https://developers.google.com/search/docs/advanced/structured-data/event for more details on how this affects Google search results
@@ -127,12 +128,12 @@ function atcb_generate_rich_data_recurrence(data: ATCBConfig, formattedDate: Ret
   if (data.recurrence_until && data.recurrence_until !== '') {
     schemaRecurrenceContent.push('"endDate":"' + data.recurrence_until + '"');
   }
-  if (data.startTime && data.startTime !== '' && data.endTime && data.endTime !== '') {
-    schemaRecurrenceContent.push('"startTime":"' + data.startTime + ':00"');
-    schemaRecurrenceContent.push('"endTime":"' + data.endTime + ':00"');
+  if (data.dates![0]!.startTime && data.dates![0]!.startTime !== '' && data.dates![0]!.endTime && data.dates![0]!.endTime !== '') {
+    schemaRecurrenceContent.push('"startTime":"' + data.dates![0]!.startTime + ':00"');
+    schemaRecurrenceContent.push('"endTime":"' + data.dates![0]!.endTime + ':00"');
     schemaRecurrenceContent.push('"duration":"' + ('duration' in formattedDate ? formattedDate.duration : undefined) + '"');
   }
-  schemaRecurrenceContent.push('"startDate":"' + data.startDate + '" }');
+  schemaRecurrenceContent.push('"startDate":"' + data.dates![0]!.startDate + '" }');
   return schemaRecurrenceContent;
 }
 

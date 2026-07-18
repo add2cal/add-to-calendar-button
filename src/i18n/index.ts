@@ -1,5 +1,5 @@
-import { atcb_rewrite_html_elements } from './atcb-util';
-import type { ATCBConfig, I18nStrings } from './types';
+import { atcb_rewrite_html_elements } from '../core/text';
+import type { ATCBConfig, I18nStrings } from '../types';
 
 // TRANSLATIONS
 

@@ -1,9 +1,11 @@
-import { atcb_rewrite_html_elements, atcb_copy_to_clipboard, atcb_secure_content, atcb_set_sizes, atcb_validEmail } from './atcb-util';
-import { atcb_generate_button, atcb_generate_modal_host, atcb_create_modal, atcb_generate_label, atcb_create_atcbl } from './atcb-generate';
-import { atcb_translate_hook } from './atcb-i18n';
-import { atcb_log_event } from './atcb-event';
-import { atcb_decorate_data } from './atcb-decorate';
-import type { ATCBConfig } from './types';
+import { atcb_rewrite_html_elements, atcb_secure_content } from '../core/text';
+import { atcb_set_sizes } from './positioning';
+import { atcb_copy_to_clipboard, atcb_validEmail } from '../core/util';
+import { atcb_generate_button, atcb_generate_modal_host, atcb_create_modal, atcb_generate_label, atcb_create_atcbl } from './generate';
+import { atcb_translate_hook } from '../i18n/index';
+import { atcb_log_event } from '../core/events';
+import { atcb_decorate_data } from '../core/decorate';
+import type { ATCBConfig } from '../types';
 
 // local shape for one entry of a custom PRO form (ty or rsvp), as produced/consumed by the shared form helpers
 interface ATCBProFormField {
@@ -332,8 +334,8 @@ async function atcb_generate_rsvp_form(host: ShadowRoot, data: ATCBConfig, hostE
     rsvpContent += '<input type="number" name="' + staticID + '-amount" min="1" max="' + maxAmount + '" id="' + data.identifier + '-rsvp-amount" ' + (data.disabled && 'disabled') + ' aria-label="' + atcb_translate_hook('form.amount', data) + '" value="1" /></div>';
   }
   const attendee = (function () {
-    if (data.attendee && data.attendee !== '') {
-      const attendeeParts = data.attendee.split('|');
+    if (data.dates![0]!.attendee && data.dates![0]!.attendee !== '') {
+      const attendeeParts = data.dates![0]!.attendee.split('|');
       if (attendeeParts.length > 1) {
         return attendeeParts[1];
       }

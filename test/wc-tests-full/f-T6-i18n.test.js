@@ -8,7 +8,7 @@ import { mountAtcb } from '../helpers/mount.js';
 import { interceptFileSave } from '../helpers/capture.js';
 import { clickSingleton } from '../helpers/dom.js';
 import { decodeIcsHref, parseIcs } from '../helpers/ics.js';
-import { atcb_translate_hook, rtlLanguages } from '../../src/atcb-i18n.ts';
+import { atcb_translate_hook, rtlLanguages } from '../../src/i18n/index.ts';
 import { LANGUAGES } from '../fixtures/matrix.js';
 
 let n = 0;

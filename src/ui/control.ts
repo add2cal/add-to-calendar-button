@@ -1,8 +1,8 @@
-import { atcb_generate_dropdown_list, atcb_generate_bg_overlay, atcb_generate_overlay_dom, atcb_create_atcbl, atcb_generate_modal_host } from './atcb-generate';
-import { atcb_position_list, atcb_position_shadow_button_listener, atcb_manage_body_scroll, atcb_set_sizes } from './atcb-util';
-import { atcbStates } from './atcb-globals';
-import { atcb_log_event } from './atcb-event';
-import type { ATCBConfig, ATCBStateEntry } from './types';
+import { atcb_generate_dropdown_list, atcb_generate_bg_overlay, atcb_generate_overlay_dom, atcb_create_atcbl, atcb_generate_modal_host } from './generate';
+import { setActiveButton } from '../core/store';
+import { atcb_position_list, atcb_position_shadow_button_listener, atcb_manage_body_scroll, atcb_set_sizes } from './positioning';
+import { atcb_log_event } from '../core/events';
+import type { ATCBConfig } from '../types';
 
 // FUNCTIONS TO CONTROL THE INTERACTION
 function atcb_toggle(host: ShadowRoot, action: string, data: ATCBConfig | string = '', button: HTMLElement | string | null = null, keyboardTrigger: boolean = false, generatedButton: boolean = false): void {
@@ -24,7 +24,7 @@ async function atcb_open(host: ShadowRoot, data: ATCBConfig, button: HTMLElement
   // log event
   atcb_log_event('openList', data.identifier!, data.identifier!);
   // generate list and prepare wrapper
-  atcbStates['active'] = data.identifier as unknown as ATCBStateEntry;
+  setActiveButton(data.identifier!);
   const list = atcb_generate_dropdown_list(host, data);
   const listWrapper = document.createElement('div');
   listWrapper.classList.add('atcb-list-wrapper');
@@ -196,7 +196,7 @@ function atcb_close(host: ShadowRoot, keyboardTrigger: boolean = false): void {
       window.removeEventListener('resize', atcb_position_shadow_button_listener);
     }
     // reset active state
-    atcbStates['active'] = '' as unknown as ATCBStateEntry;
+    setActiveButton('');
   }
 }
 

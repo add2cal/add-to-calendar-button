@@ -16,32 +16,41 @@ A full rewrite to Lit + strict TypeScript + Vite is in progress, executed phase 
 
 ## Source structure (`/src` only — ignore `/dist`, `/assets/css`)
 
-| File                         | Role                                                                                                    |
-| ---------------------------- | ------------------------------------------------------------------------------------------------------- |
-| `atcb-init.js`               | `AddToCalendarButton` custom element, `atcb_action` imperative API, PRO data fetch, global ESC listener |
-| `atcb-decorate.js`           | Config normalization pipeline (largest file)                                                            |
-| `atcb-validate.js`           | Two-phase validation (`atcb_check_required` + `atcb_validate`)                                          |
-| `atcb-globals.js`            | Module-load env detection, constants, `atcbWcParams` web-component attribute list                       |
-| `atcb-links.js`              | Calendar URL/ICS construction per service                                                               |
-| `atcb-control.js`            | Open/close/toggle, dropdown positioning, body-scroll lock                                               |
-| `atcb-generate.js`           | DOM construction (button, list, modal)                                                                  |
-| `atcb-generate-pro.js`       | PRO/RSVP/CTA UI — license-guarded with `@preserve` blocks                                               |
-| `atcb-generate-rich-data.js` | Schema.org JSON-LD injection                                                                            |
-| `atcb-util.js`               | Time formatters, RRULE parser, escapers, debounce, position                                             |
-| `atcb-i18n.js`               | Translation strings keyed by ISO 639-1 code                                                             |
-| `atcb-event.js`              | dataLayer pushes + `atcb-last-event` host attribute                                                     |
+| Path                            | Role                                                                                                |
+| ------------------------------- | --------------------------------------------------------------------------------------------------- |
+| `element/index.ts`              | `AddToCalendarButton` custom element, attribute scan, PRO data fetch, global ESC listener           |
+| `action/index.ts`               | `atcb_action` imperative API                                                                        |
+| `core/store.ts`                 | Per-instance state store (active button, per-option counters, config)                               |
+| `core/decorate.ts`              | Config normalization orchestrator (+ `decorate-dates` / `decorate-recurrence` / `decorate-options`) |
+| `core/validate.ts`              | Two-phase validation (`atcb_check_required` + `atcb_validate`)                                      |
+| `core/globals.ts`               | Module-load env detection, constants, WC attribute param lists                                      |
+| `core/dates.ts`                 | Time formatting, timestring, RRULE parsing, occurrence math, special tz map                         |
+| `core/text.ts`                  | Sanitizers and content rewriters (secure content/url, html/ical rewrite)                            |
+| `core/util.ts`                  | Misc: debounce, uuid, clipboard, file saving                                                        |
+| `core/events.ts`                | dataLayer pushes + `atcb-last-event` host attribute                                                 |
+| `ui/generate.ts`                | DOM construction (button, list, modal)                                                              |
+| `ui/control.ts`                 | Open/close/toggle, body-scroll lock                                                                 |
+| `ui/positioning.ts`             | Dropdown/button positioning                                                                         |
+| `ui/pro.ts`                     | PRO/RSVP/CTA UI — license-guarded with `@preserve` blocks                                           |
+| `generators/index.ts`           | Per-option link dispatch + shared success handling                                                  |
+| `generators/google.ts` etc.     | One module per calendar service (google, yahoo, outlook, msteams, ical)                             |
+| `generators/rich-data.ts`       | Schema.org JSON-LD injection                                                                        |
+| `i18n/index.ts`                 | Translation strings keyed by ISO 639-1 code                                                         |
+| `styles/css-template.ts`        | Style template store — the build inlines minified css here                                          |
+| `types.ts`                      | Shared internal types (input vs decorated config)                                                   |
+| `index.ts` / `entry-browser.ts` | Package / classic-script entries                                                                    |
 
 ## Tech stack
 
-Vanilla JS in `./src` — no TypeScript, no framework. Web Component / Shadow DOM. External dep: `timezones-ical-library` for VTIMEZONE blocks and DST-aware offsets. Build: Grunt. Test: `@open-wc/testing` on `@web/test-runner`.
+Strict TypeScript in `./src` (vanilla web component; Lit lands in refactor phase 4). Shadow DOM. External dep: `timezones-ical-library` for VTIMEZONE blocks and DST-aware offsets. Build: Vite + esbuild via `scripts/build.mjs`. Test: `@open-wc/testing` on `@web/test-runner` (transpiles src TS on the fly).
 
 ## Critical gotchas (read before changing anything)
 
-1. **`recurrence_simplified` is the internal simplified-RRULE flag** (historically misspelled as `recurrence_simplyfied`; the spelling is FIXED in this codebase). It is read in BOTH `atcb-validate.js` and `atcb-decorate.js` — any rename must update both call sites simultaneously or simplified-RRULE validation is silently bypassed. Test `E-15` in `test/wc-tests/r-E-recurring.test.js` pins the key.
+1. **`recurrence_simplified` is the internal simplified-RRULE flag** (historically misspelled as `recurrence_simplyfied`; the spelling is FIXED in this codebase). It is read in BOTH `core/validate.ts` and `core/decorate-recurrence.ts` — any rename must update both call sites simultaneously or simplified-RRULE validation is silently bypassed. Test `E-15` pins the key.
 
-2. **`@preserve` blocks are license guards.** Found in `atcb-generate-pro.js` (RSVP, CTA, branding). Removing them violates the Elastic License 2.0. The license check is `(proKey || hostname matches localhost / *.add-to-calendar-pro.com)`.
+2. **`@preserve` blocks are license guards.** Found in `ui/pro.ts` (RSVP, CTA, branding). Removing them violates the Elastic License 2.0. The license check is `(proKey || hostname matches localhost / *.add-to-calendar-pro.com)`.
 
-3. **Env detection runs at module load.** `atcbIsiOS()`, `atcbIsAndroid()`, `atcbIsSafari()`, `atcbIsMobile()`, `atcbIsWebView()`, `atcbIsProblematicWebView()` are evaluated once when `atcb-globals.js` is imported. To force a different env at runtime, use the config flags `fakeMobile` / `fakeIOS` / `fakeAndroid`.
+3. **Env detection runs at module load.** `atcbIsiOS()`, `atcbIsAndroid()`, `atcbIsSafari()`, `atcbIsMobile()`, `atcbIsWebView()`, `atcbIsProblematicWebView()` are evaluated once when `core/globals.ts` is imported. To force a different env at runtime, use the config flags `fakeMobile` / `fakeIOS` / `fakeAndroid`.
 
 4. **`connectedCallback` defers init via `setTimeout(initializeComponent, 0)`.** The component is NOT initialized synchronously after `appendChild()`. Always `await el.whenInitialized()`.
 
@@ -49,7 +58,7 @@ Vanilla JS in `./src` — no TypeScript, no framework. Web Component / Shadow DO
    - Yahoo, MS365, Outlook.com, MS Teams — all envs
    - Google — iOS only
 
-   Apple/iCal stays. Enforced in `atcb-decorate.js` option filtering.
+   Apple/iCal stays. Enforced in `core/decorate-options.ts`.
 
 6. **`hideBranding=true` is OSS-only.** With a valid `proKey`, the small "Add to Calendar PRO" branding is enforced regardless of the flag — even with `proOverride=true`. Intentional.
 
@@ -75,13 +84,13 @@ Vanilla JS in `./src` — no TypeScript, no framework. Web Component / Shadow DO
 
 ## Where things live
 
-- **Add a calendar service:** new function in `atcb-links.js` → option key in `atcbOptions` (`atcb-globals.js`) → label keys in all languages (`atcb-i18n.js`) → icon SVG.
-- **Add a config field:** add to `atcbWcParams` (and typed sub-list `atcbWcBooleanParams` / `atcbWcObjectParams` / etc.) in `atcb-globals.js` → validator in `atcb-validate.js` → handle in `atcb-decorate.js` → document on website.
-- **Tz / DST bug:** check `atcb-util.js` `atcb_generate_time` and the special-tz regex in `atcb_map_special_time_zones`.
-- **Recurring-event bug:** `atcb-decorate.js` `atcb_decorate_data_rrule` and `atcb_decorate_data_recurring_events`.
-- **UI bug:** `atcb-control.js` (open/close/position) or `atcb-generate.js` (DOM structure).
-- **Schema.org / SEO:** `atcb-generate-rich-data.js`.
-- **i18n / new language:** `atcb-i18n.js` `i18nStrings` map; add to `availableLanguages` export.
+- **Add a calendar service:** new module in `generators/` + dispatch in `generators/index.ts` → option key in `atcbOptions` (`core/globals.ts`) → label keys in all languages (`i18n/index.ts`) → icon SVG.
+- **Add a config field:** add to `atcbWcParams` (and its typed sub-lists) in `core/globals.ts` AND `ATCBInputConfig` in `types.ts` → validator in `core/validate.ts` → handle in `core/decorate*.ts` → document on website.
+- **Tz / DST bug:** check `core/dates.ts` `atcb_generate_time` and the special-tz regex in `atcb_map_special_time_zones`.
+- **Recurring-event bug:** `core/decorate-recurrence.ts`.
+- **UI bug:** `ui/control.ts` / `ui/positioning.ts` (open/close/position) or `ui/generate.ts` (DOM structure).
+- **Schema.org / SEO:** `generators/rich-data.ts`.
+- **i18n / new language:** `i18n/index.ts` `i18nStrings` map; add to `availableLanguages` export.
 
 ## Testing
 
@@ -105,7 +114,7 @@ Existing baseline tests (don't break):
 ## What NOT to change
 
 - `recurrence_simplified` key name (must stay in sync between decorate + validate; pinned by test E-15)
-- `@preserve` blocks in `atcb-generate-pro.js` and `atcb-generate-rich-data.js`
+- `@preserve` blocks in `ui/pro.ts` and `generators/rich-data.ts`
 - Elastic License 2.0 banner
 - License-check regex (`proKey || localhost || *.add-to-calendar-pro.com`)
 - 5ms `setTimeout` race guard in `atcb_open`

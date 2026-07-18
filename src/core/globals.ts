@@ -13,12 +13,9 @@
  *  Note:    DO NOT REMOVE THE COPYRIGHT NOTICE ABOVE!
  *
  */
-import type { ATCBInputConfig, ATCBStateEntry } from './types';
+import type { ATCBInputConfig } from '../types';
 
 const atcbVersion: string = '2.15.0';
-
-// DEFINING CSS
-const atcbCssTemplate: { [key: string]: string } = {};
 
 // CHECKING FOR SPECIFIC DEVICED AND SYSTEMS
 const atcbIsBrowser = (): boolean => {
@@ -116,8 +113,6 @@ const atcbValidRecurrOptions: string[] = ['apple', 'google', 'ical'];
 const atcbInvalidSubscribeOptions: string[] = ['msteams'];
 const atcbIOSInvalidOptions: string[] = ['ical'];
 const atcbAndroidInvalidOptions: string[] = ['apple'];
-// runtime keyed map living on an array instance (kept as-is for exact v2 behavior parity)
-const atcbStates = [] as unknown as { [key: string]: ATCBStateEntry };
 
 // DEFINING THE WEB COMPONENT ATTRIBUTES
 const atcbWcParams: (keyof ATCBInputConfig)[] = [
@@ -302,7 +297,6 @@ export {
   atcbInvalidSubscribeOptions,
   atcbIOSInvalidOptions,
   atcbAndroidInvalidOptions,
-  atcbStates,
   atcbWcParams,
   atcbWcProParams,
   atcbWcBooleanParams,
@@ -311,5 +305,4 @@ export {
   atcbWcArrayParams,
   atcbWcNumberParams,
   atcbIcon,
-  atcbCssTemplate,
 };

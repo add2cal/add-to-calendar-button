@@ -1,7 +1,8 @@
 import { tzlib_get_timezones } from 'timezones-ical-library';
-import { atcbOptions } from './atcb-globals';
-import { atcb_secure_url, atcb_validEmail, atcb_generate_uuid } from './atcb-util';
-import type { ATCBConfig, ATCBInputConfig, ATCBDateEntry } from './types';
+import { atcbOptions } from './globals';
+import { atcb_secure_url } from './text';
+import { atcb_validEmail, atcb_generate_uuid } from './util';
+import type { ATCBConfig, ATCBInputConfig, ATCBDateEntry } from '../types';
 
 // CHECK FOR REQUIRED FIELDS
 async function atcb_check_required(data: ATCBInputConfig): Promise<boolean> {

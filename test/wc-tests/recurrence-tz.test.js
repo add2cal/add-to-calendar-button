@@ -1,5 +1,5 @@
 import { expect } from '@open-wc/testing';
-import { atcb_decorate_data } from '../../src/atcb-decorate.ts';
+import { atcb_decorate_data } from '../../src/core/decorate.ts';
 
 describe('recurrence timezone evaluation', () => {
   it('does not shift startDate for weekly BYDAY near midnight in Europe/Berlin', async function () {

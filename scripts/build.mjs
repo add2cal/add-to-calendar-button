@@ -74,9 +74,9 @@ function buildCssTemplate() {
 }
 
 function injectCssTemplate(code, id) {
-  if (!id.replaceAll('\\', '/').endsWith('src/atcb-globals.ts')) return null;
+  if (!id.replaceAll('\\', '/').endsWith('src/styles/css-template.ts')) return null;
   if (!CSS_TEMPLATE_HOOK.test(code)) {
-    throw new Error('atcb-globals.ts: css template hook not found - build assumption broken');
+    throw new Error('styles/css-template.ts: css template hook not found - build assumption broken');
   }
   return code.replace(CSS_TEMPLATE_HOOK, buildCssTemplate());
 }
@@ -138,7 +138,7 @@ async function buildBrowser({ unstyle, minify }) {
           {
             name: 'atcb-inline-css',
             setup(build) {
-              build.onLoad({ filter: /atcb-globals\.ts$/ }, (args) => {
+              build.onLoad({ filter: /css-template\.ts$/ }, (args) => {
                 const code = fs.readFileSync(args.path, 'utf8');
                 const result = injectCssTemplate(code, args.path);
                 return result === null ? undefined : { contents: result, loader: 'ts' };

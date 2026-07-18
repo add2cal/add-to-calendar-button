@@ -1,14 +1,16 @@
-import { atcbVersion, atcbIsBrowser, atcbStates, atcbWcParams, atcbWcProParams, atcbWcBooleanParams, atcbWcObjectParams, atcbWcObjectArrayParams, atcbWcArrayParams, atcbWcNumberParams, atcbCssTemplate } from './atcb-globals';
-import { atcb_decorate_data } from './atcb-decorate';
-import { atcb_check_required, atcb_validate } from './atcb-validate';
-import { atcb_generate_button, atcb_create_atcbl } from './atcb-generate';
-import { atcb_generate_rich_data } from './atcb-generate-rich-data';
-import { atcb_close, atcb_toggle } from './atcb-control';
-import { atcb_generate_links } from './atcb-links';
-import { atcb_secure_content, atcb_manage_body_scroll, atcb_secure_url } from './atcb-util';
-import { atcb_log_event } from './atcb-event';
-import { atcb_generate_rsvp_form, atcb_generate_rsvp_button } from './atcb-generate-pro';
-import type { ATCBInputConfig, ATCBConfig, ATCBStateEntry } from './types';
+import { atcbVersion, atcbIsBrowser, atcbWcParams, atcbWcProParams, atcbWcBooleanParams, atcbWcObjectParams, atcbWcObjectArrayParams, atcbWcArrayParams, atcbWcNumberParams } from '../core/globals';
+import { getActiveButton, createButtonInstance, deleteButtonInstance } from '../core/store';
+import { atcbCssTemplate } from '../styles/css-template';
+import { atcb_decorate_data } from '../core/decorate';
+import { atcb_check_required, atcb_validate } from '../core/validate';
+import { atcb_generate_button, atcb_create_atcbl } from '../ui/generate';
+import { atcb_generate_rich_data } from '../generators/rich-data';
+import { atcb_close, atcb_toggle } from '../ui/control';
+import { atcb_secure_content, atcb_secure_url } from '../core/text';
+import { atcb_manage_body_scroll } from '../ui/positioning';
+import { atcb_log_event } from '../core/events';
+import { atcb_generate_rsvp_form, atcb_generate_rsvp_button } from '../ui/pro';
+import type { ATCBInputConfig, ATCBConfig } from '../types';
 
 let atcbInitialGlobalInit = false;
 let atcbBtnCount = 0;
@@ -402,7 +404,7 @@ function atcb_cleanup(host: ShadowRoot, identifier?: string): void {
     .concat(Array.from(host.querySelectorAll('.atcb-placeholder')))
     .concat(Array.from(host.querySelectorAll('.atcb-button-wrapper')))
     .forEach((el) => el.remove());
-  delete atcbStates[`${identifier}`];
+  deleteButtonInstance(`${identifier}`);
 }
 
 // set light mode
@@ -583,152 +585,6 @@ function atcb_render_debug_msg(host: ShadowRoot, error: unknown): void {
   host.append(errorBanner);
 }
 
-// prepare data when not using the web component, but some custom trigger instead
-async function atcb_action(inputData: ATCBInputConfig, triggerElement?: HTMLElement, keyboardTrigger = false): Promise<string> {
-  // return if not within a browser environment
-  if (!atcbIsBrowser()) {
-    return undefined as unknown as string;
-  }
-  // get data
-  let data: ATCBConfig;
-  try {
-    data = await (async function () {
-      const cleanedInput = atcb_secure_content(inputData) as ATCBInputConfig & { prokey?: string; proOverride?: boolean };
-      // pull data from PRO server, if key is given
-      if (cleanedInput.prokey && cleanedInput.prokey !== '') {
-        cleanedInput.proKey = cleanedInput.prokey;
-      }
-      if (cleanedInput.proKey && cleanedInput.proKey !== '') {
-        try {
-          const proData = await atcb_get_pro_data(cleanedInput.proKey, undefined, cleanedInput);
-          return proData;
-        } catch (e) {
-          throw new Error((e as { message?: string }).message);
-        }
-      } else {
-        return cleanedInput as unknown as ATCBConfig;
-      }
-    })();
-  } catch (e) {
-    console.error(e);
-    return undefined as unknown as string;
-  }
-  // decorate & validate data
-  data.debug = (data.debug as unknown as string) === 'true';
-  try {
-    await atcb_check_required(data);
-  } catch (e) {
-    if (data.debug) {
-      console.error(e);
-    }
-    throw new Error('Add to Calendar Button generation failed: no data provided or missing required fields - see console logs for details');
-  }
-  data = await atcb_decorate_data(data);
-  let root: HTMLElement = document.body;
-  // we always force the click trigger in the custom case
-  data.trigger = 'click';
-  if (triggerElement) {
-    root = triggerElement;
-    // overriding the identifier with the id of the triggering element
-    if (triggerElement.id && triggerElement.id !== '') {
-      data.identifier = triggerElement.id;
-    } else {
-      // however, if the trigger has no id, we set it with the identifier or a default fallback
-      if (data.identifier && data.identifier != '' && /^[\w-]+$/.test(data.identifier)) {
-        data.identifier = 'atcb-btn-' + data.identifier;
-      } else {
-        data.identifier = 'atcb-btn-custom';
-      }
-      triggerElement.id = data.identifier;
-    }
-    // for custom triggers, we block any dropdown, since this would look shit 99% of the time. Overlay is a little better, but modal would be recommended
-    if (data.listStyle === 'dropdown' || data.listStyle === 'dropdown-static' || data.listStyle === 'dropup-static') {
-      data.listStyle = 'modal';
-    }
-  } else {
-    data.identifier = 'atcb-btn-custom';
-    // if no button is defined, fallback to listStyle "modal" in any case
-    data.listStyle = 'modal';
-  }
-  try {
-    await atcb_validate(data);
-  } catch (e) {
-    console.error(e);
-    return false as unknown as string;
-  }
-  // determine whether we are looking for the 1-option case (also with buttonsList)
-  const oneOption = (function () {
-    if (data.options!.length === 1) {
-      return true;
-    }
-    return false;
-  })();
-  // to clean-up the stage, we first close anything left open
-  const potentialExistingHost = document.getElementById('atcb-customTrigger-' + data.identifier + '-host');
-  if (potentialExistingHost) {
-    atcb_close(potentialExistingHost.shadowRoot!, false);
-    // unset whatever possible for customTriggers
-    if (atcbStates[`${atcbStates['active']}`]) {
-      delete atcbStates[`${atcbStates['active']}`];
-    }
-    potentialExistingHost.remove();
-  }
-  // log event
-  atcb_log_event('initialization', data.identifier!, data.identifier!);
-  // we would only render something, if interaction is not blocked and button not hidden
-  if (!data.blockInteraction && !data.hidden) {
-    // prepare shadow dom and load style
-    const host = document.createElement('div');
-    // if config includes cspnonce, we add it to the host
-    if (data.cspnonce && data.cspnonce !== '') {
-      host.setAttribute('cspnonce', data.cspnonce);
-    }
-    host.id = 'atcb-customTrigger-' + data.identifier + '-host';
-    if (root === document.body) {
-      document.body.append(host);
-    } else {
-      root.after(host);
-    }
-    if (triggerElement) {
-      const btnDim = triggerElement.getBoundingClientRect();
-      host.style.position = 'relative';
-      host.style.left = -btnDim.width + 'px';
-      host.style.top = btnDim.height + 'px';
-    }
-    host.setAttribute('atcb-button-id', data.identifier);
-    host.attachShadow({ mode: 'open', delegateFocus: true } as unknown as ShadowRootInit);
-    const elem = document.createElement('template');
-    elem.innerHTML = template;
-    host.shadowRoot!.append(elem.content.cloneNode(true));
-    const rootObj = host.shadowRoot!.querySelector('.atcb-initialized') as HTMLElement;
-    atcb_setup_state_management(data);
-    atcb_set_light_mode(host.shadowRoot!, data);
-    (host.shadowRoot!.querySelector('.atcb-initialized') as HTMLElement).setAttribute('lang', data.language!);
-    atcb_load_css(host.shadowRoot!, rootObj, data);
-    // set global event listeners
-    atcb_set_global_event_listener(host.shadowRoot!, data);
-    // if all is fine, ...
-    // ... trigger RSVP form, or ...
-    if (typeof atcb_generate_rsvp_form === 'function' && data.rsvp && Object.keys(data.rsvp).length > 0) {
-      atcb_generate_rsvp_form(host.shadowRoot!, data, triggerElement!, keyboardTrigger);
-    } else {
-      // ... trigger link at the oneOption case, or ...
-      if (oneOption) {
-        await atcb_generate_links(host.shadowRoot!, data.options![0]!, data, 'all', keyboardTrigger);
-        atcb_log_event('openSingletonLink', data.identifier!, data.identifier!);
-      } else {
-        // ... open the options list
-        atcb_toggle(host.shadowRoot!, 'open', data, triggerElement ?? null, keyboardTrigger);
-      }
-    }
-  }
-  atcb_init_log(data.proKey, data.hideBranding, data.debug);
-  if (data.debug) {
-    console.log('Add to Calendar Button "' + data.identifier + '" triggered');
-  }
-  return data.identifier as string;
-}
-
 // update global state management
 function atcb_setup_state_management(data: ATCBConfig): void {
   const singleDates: { [key: string]: number[] } = {};
@@ -743,7 +599,7 @@ function atcb_setup_state_management(data: ATCBConfig): void {
       }
     }
   }
-  atcbStates[data.identifier!] = singleDates as unknown as ATCBStateEntry;
+  createButtonInstance(data.identifier!, data, singleDates);
 }
 
 // SHARED FUNCTION TO GENERATE THE INIT LOG MESSAGE
@@ -865,22 +721,22 @@ function atcb_set_global_event_listener(host: ShadowRoot, data: ATCBConfig): voi
 
 function atcb_global_listener_keyup(event: KeyboardEvent): void {
   const host: ShadowRoot | null = (function () {
-    const root = document.querySelector('[atcb-button-id="' + atcbStates['active'] + '"]');
+    const root = document.querySelector('[atcb-button-id="' + getActiveButton() + '"]');
     if (root) {
       return (root as HTMLElement).shadowRoot;
     }
     return null;
   })();
   if (host && event.key === 'Escape') {
-    atcb_log_event('closeList', 'Ecs Hit', atcbStates['active'] as unknown as string);
+    atcb_log_event('closeList', 'Ecs Hit', getActiveButton());
     atcb_toggle(host, 'close', '', '', true);
   }
 }
 
 function atcb_global_listener_keydown(event: KeyboardEvent): void {
   const host: ShadowRoot | null = (function () {
-    const root = document.querySelector('[atcb-button-id="' + atcbStates['active'] + '"]');
-    const rootModal = document.getElementById((atcbStates['active'] as unknown as string) + '-modal-host');
+    const root = document.querySelector('[atcb-button-id="' + getActiveButton() + '"]');
+    const rootModal = document.getElementById(getActiveButton() + '-modal-host');
     if (rootModal) {
       return (rootModal as HTMLElement).shadowRoot;
     }
@@ -934,8 +790,8 @@ function atcb_global_listener_keydown(event: KeyboardEvent): void {
 
 function atcb_global_listener_resize(): void {
   const host: ShadowRoot | null = (function () {
-    const root = document.querySelector('[atcb-button-id="' + atcbStates['active'] + '"]');
-    const rootModal = document.getElementById((atcbStates['active'] as unknown as string) + '-modal-host');
+    const root = document.querySelector('[atcb-button-id="' + getActiveButton() + '"]');
+    const rootModal = document.getElementById(getActiveButton() + '-modal-host');
     if (rootModal) {
       return (rootModal as HTMLElement).shadowRoot;
     }
@@ -960,4 +816,4 @@ function atcb_unset_global_event_listener(identifier?: string): void {
   }
 }
 
-export { atcb_action, atcb_unset_global_event_listener, atcb_load_css, atcb_set_light_mode };
+export { template as atcbShadowTemplate, atcb_unset_global_event_listener, atcb_load_css, atcb_set_light_mode, atcb_get_pro_data, atcb_init_log, atcb_setup_state_management, atcb_set_global_event_listener };

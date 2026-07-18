@@ -1,4 +1,4 @@
-import { atcbIsBrowser } from './atcb-globals';
+import { atcbIsBrowser } from './globals';
 
 // LOG/TRACK FUNCTION
 // add information to the parent element, which can be used for tracking

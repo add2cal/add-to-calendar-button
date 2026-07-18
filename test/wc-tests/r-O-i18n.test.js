@@ -5,7 +5,7 @@
 import { expect } from '@open-wc/testing';
 import { mountAtcb, baseEvent } from '../helpers/mount.js';
 import { openList, pressEsc, optionEl } from '../helpers/dom.js';
-import { atcb_translate_hook, rtlLanguages } from '../../src/atcb-i18n.ts';
+import { atcb_translate_hook, rtlLanguages } from '../../src/i18n/index.ts';
 import { interceptFileSave } from '../helpers/capture.js';
 import { clickSingleton } from '../helpers/dom.js';
 import { decodeIcsHref, parseIcs } from '../helpers/ics.js';

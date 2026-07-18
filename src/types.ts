@@ -243,13 +243,6 @@ export interface ATCBConfig {
 }
 
 /**
- * Global per-button runtime state (window.atcbStates entries).
- */
-export interface ATCBStateEntry {
-  [key: string]: unknown;
-}
-
-/**
  * Translation map shape: language code -> key -> string.
  */
 export type I18nStrings = {
@@ -262,7 +255,6 @@ export type I18nStrings = {
 declare global {
   interface Window {
     dataLayer?: { [key: string]: unknown }[];
-    atcbStates?: { [key: string]: ATCBStateEntry };
     atcb_action?: (data: ATCBInputConfig, triggerElement?: HTMLElement, keyboardTrigger?: boolean) => Promise<string>;
   }
 }

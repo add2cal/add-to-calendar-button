@@ -1,13 +1,15 @@
-import { atcbIcon, atcbStates, atcbDefaultTarget } from './atcb-globals';
-import { atcb_toggle, atcb_close } from './atcb-control';
-import { atcb_generate_links } from './atcb-links';
-import { atcb_generate_time, atcb_generate_timestring, atcb_position_shadow_button, atcb_position_shadow_button_listener, atcb_manage_body_scroll, atcb_set_sizes, atcb_debounce, atcb_debounce_leading } from './atcb-util';
-import { atcb_set_fully_successful } from './atcb-links';
-import { atcb_translate_hook } from './atcb-i18n';
-import { atcb_load_css, atcb_set_light_mode } from './atcb-init';
-import { atcb_log_event } from './atcb-event';
-import { atcb_generate_rsvp_form } from './atcb-generate-pro';
-import type { ATCBConfig, ATCBStateEntry } from './types';
+import { atcbIcon, atcbDefaultTarget } from '../core/globals';
+import { setActiveButton, getActiveButton, getOptionStates } from '../core/store';
+import { atcb_toggle, atcb_close } from './control';
+import { atcb_generate_links, atcb_set_fully_successful } from '../generators/index';
+import { atcb_generate_time, atcb_generate_timestring } from '../core/dates';
+import { atcb_position_shadow_button, atcb_position_shadow_button_listener, atcb_manage_body_scroll, atcb_set_sizes } from './positioning';
+import { atcb_debounce, atcb_debounce_leading } from '../core/util';
+import { atcb_translate_hook } from '../i18n/index';
+import { atcb_load_css, atcb_set_light_mode } from '../element/index';
+import { atcb_log_event } from '../core/events';
+import { atcb_generate_rsvp_form } from './pro';
+import type { ATCBConfig } from '../types';
 
 // GENERATE THE ACTUAL BUTTON
 // helper function to generate the labels for the button and list options
@@ -101,14 +103,14 @@ function atcb_generate_label(host: ShadowRoot, data: ATCBConfig, parent: HTMLEle
       parent.addEventListener(
         'click',
         atcb_debounce(() => {
-          atcb_log_event('closeList', 'List Close Button', atcbStates['active'] as unknown as string);
+          atcb_log_event('closeList', 'List Close Button', getActiveButton());
           atcb_toggle(host, 'close');
         }),
       );
       parent.addEventListener('keyup', function (event: KeyboardEvent) {
         if (event.key === 'Enter') {
           event.preventDefault();
-          atcb_log_event('closeList', 'List Close Button', atcbStates['active'] as unknown as string);
+          atcb_log_event('closeList', 'List Close Button', getActiveButton());
           atcb_toggle(host, 'close', data, 'all', true);
         }
       });
@@ -311,7 +313,7 @@ function atcb_generate_bg_overlay(host: ShadowRoot, trigger: string = '', modal:
       'mouseup',
       atcb_debounce_leading((e: MouseEvent) => {
         if (e.target !== e.currentTarget) return;
-        atcb_log_event('closeList', 'Background Hit', atcbStates['active'] as unknown as string);
+        atcb_log_event('closeList', 'Background Hit', getActiveButton());
         atcb_toggle(host, 'close');
       }),
     );
@@ -330,7 +332,7 @@ function atcb_generate_bg_overlay(host: ShadowRoot, trigger: string = '', modal:
       'touchend',
       atcb_debounce((e: TouchEvent) => {
         if (fingerMoved !== false || e.target !== e.currentTarget) return;
-        atcb_log_event('closeList', 'Background Hit', atcbStates['active'] as unknown as string);
+        atcb_log_event('closeList', 'Background Hit', getActiveButton());
         atcb_toggle(host, 'close');
       }),
       { passive: true },
@@ -340,7 +342,7 @@ function atcb_generate_bg_overlay(host: ShadowRoot, trigger: string = '', modal:
         'mousemove',
         atcb_debounce_leading((e: MouseEvent) => {
           if (e.target !== e.currentTarget) return;
-          atcb_log_event('closeList', 'Background Hit', atcbStates['active'] as unknown as string);
+          atcb_log_event('closeList', 'Background Hit', getActiveButton());
           atcb_toggle(host, 'close');
         }),
       );
@@ -399,7 +401,7 @@ async function atcb_create_modal(
   goto: { type?: string; id?: string } = {},
   closable: boolean = true,
 ): Promise<void> {
-  atcbStates['active'] = data.identifier as unknown as ATCBStateEntry;
+  setActiveButton(data.identifier!);
   const noHeadline = !headline || headline === '' || headline === undefined;
   // setting the stage
   const modalHost = await atcb_generate_modal_host(mainHost, data, false);
@@ -476,7 +478,7 @@ async function atcb_create_modal(
       const modalSubEventButton = document.createElement('button');
       modalSubEventButton.type = 'button';
       modalSubEventButton.id = data.identifier + '-' + subEvents[0] + '-' + i;
-      if ((atcbStates[`${data.identifier}`]![`${subEvents[0]}`] as unknown as number[])[i - 1]! > 0) {
+      if (getOptionStates(data.identifier!)[`${subEvents[0]}`]![i - 1]! > 0) {
         modalSubEventButton.classList.add('atcb-saved');
       }
       modalSubEventButton.classList.add('atcb-subevent-btn');
@@ -543,13 +545,13 @@ async function atcb_create_modal(
         modalButton.addEventListener(
           'click',
           atcb_debounce(() => {
-            atcb_log_event('closeList', 'Modal Close Button', atcbStates['active'] as unknown as string);
+            atcb_log_event('closeList', 'Modal Close Button', getActiveButton());
             atcb_close(mainHost);
           }),
         );
         (modalButton as HTMLElement).addEventListener('keyup', function (event: KeyboardEvent) {
           if (event.key === 'Enter' || event.code == 'Space' || ((event.key as string) === 'Alt' && event.key === 'Control' && event.code === 'Space')) {
-            atcb_log_event('closeList', 'Modal Close Button', atcbStates['active'] as unknown as string);
+            atcb_log_event('closeList', 'Modal Close Button', getActiveButton());
             atcb_toggle(mainHost, 'close', '', '', true);
           }
         });
