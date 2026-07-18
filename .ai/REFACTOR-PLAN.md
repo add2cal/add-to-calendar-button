@@ -183,9 +183,17 @@ Cut `refactor/v3`, add this plan, record baseline metrics above. Reference the p
 4. Extend `scripts/set-version.mjs` to accept prerelease versions (the release flow below uses `3.0.0-next.1` style versions, which the current x.y.z-only validation rejects).
 5. Gate: full suite still green; docs changes reviewed by the maintainer.
 
+### Phase 12 - Cleanup and AI docs (the very last step before handover)
+
+1. Comment sweep across ALL code added or touched during this refactor (src/, scripts/, test helpers and groups): remove every reference to the refactoring, its phases, and this plan. Once merged back into the main repository, nobody cares about the refactoring steps. Comments must be independent of the refactor, generally valid, and provide additional value on their own - they explain WHY code is the way it is, they are not documentation and not history. Examples of what to remove or rewrite: "(v3 phase 5)", "formerly atcb_generate_button", "preserved until the phase 9 WCAG pass" (resolved by then anyway), "the phase 4 render rewrite", "extracted from the element module in phase 3". References to living documents (like .ai/TEST-CASES.md in test file headers) stay - they point at current truth, not history.
+2. AI docs proposal: draft additional `.ai/` content that guides any future AI agent working on this repository, and propose it to the maintainer. Candidates: an ARCHITECTURE doc (module map, data flow through decorate/validate/render, the store, the style and i18n pipelines, build outputs and their consumers), a RELEASE doc (build artifacts, version tooling incl. prerelease flow, what ships where - npm, CDN, generated assets), and guidance on which existing behaviors are contracts vs internals. Keep each doc evergreen: no phase numbers, no refactor history.
+3. As part of that proposal: recommend what happens to `.ai/REFACTOR-PLAN.md` itself on the merge to main - it is refactor history and should NOT travel to the main repository as-is; its evergreen content (architecture, constraints, conventions) moves into the new docs first.
+4. CLAUDE.md optimization based on the learnings of the whole refactor: accurate gotchas for the new architecture (attribute layer, registry, store, Lit lifecycle), removal of superseded v2 notes and of the "Active project" section, updated file map, and the practical lessons that repeatedly mattered during execution (e.g. comparing expected vs actual TEST COUNTS after structural changes - a failed module import shows as a passing file with 0 tests; assets/css being generated; the css template build hooks).
+5. Gate: full suite green after the comment sweep (comments only - zero behavior change), maintainer approves the AI docs proposal and the new CLAUDE.md.
+
 ## Handover and release flow (maintainer-side)
 
-Everything after phase 11 happens WITHOUT the executing agent, but the plan and all deliverables must anticipate it:
+Everything after phase 12 happens WITHOUT the executing agent, but the plan and all deliverables must anticipate it:
 
 1. The maintainer reviews the finished refactor on this fork; iteration rounds on review findings are expected - keep phase branches and gates operational until sign-off.
 2. On approval, the maintainer merges the result into the MAIN package and publishes it as version `3.0.0-next.1` - a PRE-RELEASE (npm next dist-tag). It is not the official release.
@@ -234,3 +242,4 @@ Practical consequences for executing agents: never assume `refactor/v3` is the e
 - [ ] Phase 9 - v3 features
 - [ ] Phase 10 - Hardening and release preparation
 - [ ] Phase 11 - Documentation and release preparation (release notes, CHANGELOG block, demo content update, prerelease-capable version tooling)
+- [ ] Phase 12 - Cleanup and AI docs (refactor-reference comment sweep, evergreen .ai docs proposal, CLAUDE.md optimization)
