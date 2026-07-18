@@ -11,6 +11,15 @@ import { decodeIcsHref, parseIcs } from '../helpers/ics.js';
 import { CFG } from '../fixtures/events.js';
 import { ENVS, SERVICES, SERVICE_ATTR, isValid, URL_BASE } from '../fixtures/matrix.js';
 
+// which query param carries the event name, per URL-based service
+const NAME_PARAM = new Map([
+  ['google', 'text'],
+  ['ms365', 'subject'],
+  ['outlookcom', 'subject'],
+  ['msteams', 'subject'],
+  ['yahoo', 'title'],
+]);
+
 const CONFIGS = [
   { id: 'C01-timedNY', cfg: CFG.singleTimedNY },
   { id: 'C07-allday', cfg: CFG.allDaySingle },
@@ -38,7 +47,7 @@ describe(`F.T1 - output matrix (${cells.length} valid cells)`, () => {
         const { host } = await mountAtcb({
           ...cfg,
           ...env.flags,
-          options: `'${SERVICE_ATTR[service]}'`,
+          options: `'${SERVICE_ATTR.get(service)}'`,
           trigger: 'click',
           identifier: testId,
         });
@@ -58,14 +67,14 @@ describe(`F.T1 - output matrix (${cells.length} valid cells)`, () => {
         } else {
           expect(wo.calls.length, 'calendar url opened').to.equal(1);
           const url = wo.calls[0].url;
-          const bases = URL_BASE[service];
+          const bases = URL_BASE.get(service);
           expect(
             bases.some((b) => url.startsWith(b)),
             `unexpected base for ${service}: ${url.slice(0, 90)}`,
           ).to.equal(true);
           if (!url.startsWith('intent://')) {
             const parsed = new URL(url);
-            const nameParam = { google: 'text', ms365: 'subject', outlookcom: 'subject', msteams: 'subject', yahoo: 'title' }[service];
+            const nameParam = NAME_PARAM.get(service);
             expect(parsed.searchParams.get(nameParam), `name transported in ${nameParam}`).to.include(cfg.name);
           }
           if (cfg.recurrence && service === 'google' && !url.startsWith('intent://')) {

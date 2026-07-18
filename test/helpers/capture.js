@@ -92,19 +92,16 @@ export const UA = {
  */
 export function muteConsole(methods = ['error', 'warn']) {
   const messages = [];
-  const originals = {};
+  const originals = new Map();
   for (const m of methods) {
-    // eslint-disable-next-line no-console
-    originals[m] = console[m];
-    // eslint-disable-next-line no-console
-    console[m] = (...args) => messages.push(args.map(String).join(' '));
+    originals.set(m, Reflect.get(console, m));
+    Reflect.set(console, m, (...args) => messages.push(args.map(String).join(' ')));
   }
   return {
     messages,
     restore() {
-      for (const m of methods) {
-        // eslint-disable-next-line no-console
-        console[m] = originals[m];
+      for (const [m, fn] of originals) {
+        Reflect.set(console, m, fn);
       }
     },
   };

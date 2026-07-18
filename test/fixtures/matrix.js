@@ -15,15 +15,15 @@ export const ENVS = [
 export const SERVICES = ['apple', 'google', 'ical', 'ms365', 'outlookcom', 'msteams', 'yahoo'];
 
 // maps internal service ids to config attribute spellings
-export const SERVICE_ATTR = {
-  apple: 'Apple',
-  google: 'Google',
-  ical: 'iCal',
-  ms365: 'Microsoft365',
-  outlookcom: 'Outlook.com',
-  msteams: 'MicrosoftTeams',
-  yahoo: 'Yahoo',
-};
+export const SERVICE_ATTR = new Map([
+  ['apple', 'Apple'],
+  ['google', 'Google'],
+  ['ical', 'iCal'],
+  ['ms365', 'Microsoft365'],
+  ['outlookcom', 'Outlook.com'],
+  ['msteams', 'MicrosoftTeams'],
+  ['yahoo', 'Yahoo'],
+]);
 
 export function isValid(env, cfg, service) {
   const recurring = !!cfg.recurrence;
@@ -41,13 +41,13 @@ export function isValid(env, cfg, service) {
   return true;
 }
 
-export const URL_BASE = {
-  google: ['https://calendar.google.com/calendar/r/eventedit?', 'https://calendar.google.com/calendar/render?action=TEMPLATE', 'intent://calendar.google.com/'],
-  ms365: ['https://outlook.office.com/calendar/0/action/compose', 'https://outlook.office.com/calendar/0/deeplink/compose'],
-  outlookcom: ['https://outlook.live.com/calendar/0/action/compose', 'https://outlook.live.com/calendar/0/deeplink/compose'],
-  msteams: ['https://teams.microsoft.com/l/meeting/new?'],
-  yahoo: ['https://calendar.yahoo.com/?v=60'],
-};
+export const URL_BASE = new Map([
+  ['google', ['https://calendar.google.com/calendar/r/eventedit?', 'https://calendar.google.com/calendar/render?action=TEMPLATE', 'intent://calendar.google.com/']],
+  ['ms365', ['https://outlook.office.com/calendar/0/action/compose', 'https://outlook.office.com/calendar/0/deeplink/compose']],
+  ['outlookcom', ['https://outlook.live.com/calendar/0/action/compose', 'https://outlook.live.com/calendar/0/deeplink/compose']],
+  ['msteams', ['https://teams.microsoft.com/l/meeting/new?']],
+  ['yahoo', ['https://calendar.yahoo.com/?v=60']],
+]);
 
 export const BUTTON_STYLES = ['default', 'simple', '3d', 'flat', 'round', 'neumorphism', 'text', 'date', 'none'];
 
@@ -107,10 +107,7 @@ function tzOffsetAt(utcMillis, timeZone) {
     minute: '2-digit',
     second: '2-digit',
   });
-  const parts = {};
-  for (const { type, value } of dtf.formatToParts(new Date(utcMillis))) {
-    parts[type] = value;
-  }
+  const parts = Object.fromEntries(dtf.formatToParts(new Date(utcMillis)).map(({ type, value }) => [type, value]));
   const asUtc = Date.UTC(Number(parts.year), Number(parts.month) - 1, Number(parts.day), Number(parts.hour), Number(parts.minute), Number(parts.second));
   return asUtc - utcMillis;
 }

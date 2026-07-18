@@ -29,10 +29,10 @@ function cspIframe(cspContent) {
 }
 
 function waitFor(fn, timeout = 4000, step = 100) {
-  return new Promise((resolve, reject) => {
+  return new Promise((resolve) => {
     const started = Date.now();
     const timer = setInterval(() => {
-      let result = null;
+      let result;
       try {
         result = fn();
       } catch {

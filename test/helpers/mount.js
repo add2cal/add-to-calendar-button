@@ -1,12 +1,9 @@
-/* eslint-disable security/detect-object-injection */
 /**
  * Mount helper for <add-to-calendar-button> web component tests.
  * Serializes config objects to attributes (JSON for objects/arrays) and awaits full init.
  */
 import { fixture } from '@open-wc/testing';
 import '../../dist/module/index.js';
-
-const OBJECT_PARAMS = ['options', 'dates', 'rsvp', 'ty', 'customLabels', 'customCss', 'images', 'customVar', 'optionsMobile', 'optionsIOS', 'styleLight', 'styleDark'];
 
 /**
  * Serialize a config value to an attribute string.

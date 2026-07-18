@@ -4,7 +4,7 @@
 import { expect, aTimeout } from '@open-wc/testing';
 import { mountAtcb, baseEvent } from '../helpers/mount.js';
 import { interceptWindowOpen } from '../helpers/capture.js';
-import { trigger, openList, listEl, clickOption, clickSingleton, pressEsc, optionEl } from '../helpers/dom.js';
+import { trigger, openList, listEl, clickSingleton, pressEsc, optionEl } from '../helpers/dom.js';
 import { resetDataLayer, dlEvents } from '../helpers/datalayer.js';
 
 describe('Group M - UI / interaction', () => {

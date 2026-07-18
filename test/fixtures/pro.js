@@ -91,10 +91,10 @@ export function mockProFetch(map = {}, { status = 200, networkError = false } = 
   window.fetch = async (url, init) => {
     const u = String(url);
     calls.push({ url: u, init });
-    const m = u.match(/^https:\/\/event(-dev)?\.caldn\.net\/([^/]+)\/config\.json$/);
+    const m = u.match(/^https:\/\/event(?:-dev)?\.caldn\.net\/([^/]+)\/config\.json$/);
     if (m) {
       if (networkError) throw new TypeError('Failed to fetch (mocked network error)');
-      const key = m[2];
+      const key = m[1];
       // eslint-disable-next-line security/detect-object-injection
       const payload = map[key];
       if (!payload || status !== 200) {
