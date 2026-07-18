@@ -9,7 +9,7 @@ import { interceptWindowOpen, interceptFileSave } from '../helpers/capture.js';
 import { clickSingleton, renderedOptions, openList } from '../helpers/dom.js';
 import { decodeIcsHref, parseIcs } from '../helpers/ics.js';
 import { CFG } from '../fixtures/events.js';
-import { atcb_decorate_data } from '../../src/atcb-decorate.ts';
+import { atcb_decorate_data } from '../../src/core/decorate.ts';
 
 async function icsRrule(config, id) {
   const fs = interceptFileSave();

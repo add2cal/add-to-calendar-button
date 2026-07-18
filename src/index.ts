@@ -4,9 +4,9 @@
  * importing this module registers the <add-to-calendar-button> custom element
  * (side effect of atcb-init.js) and exposes the imperative API.
  */
-export { atcb_action } from './atcb-init';
-export { i18nStrings } from './atcb-i18n';
-export { atcbCssTemplate as cssStyles } from './atcb-globals';
-export { atcb_generate_ty } from './atcb-generate-pro';
-export { atcb_generate_timestring } from './atcb-util';
-export { atcb_decorate_data_dates } from './atcb-decorate';
+export { atcb_action } from './action/index';
+export { i18nStrings } from './i18n/index';
+export { atcbCssTemplate as cssStyles } from './styles/css-template';
+export { atcb_generate_ty } from './ui/pro';
+export { atcb_generate_timestring } from './core/dates';
+export { atcb_decorate_data_dates } from './core/decorate';
