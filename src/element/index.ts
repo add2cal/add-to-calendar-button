@@ -1,15 +1,18 @@
+import { LitElement, html, nothing, type TemplateResult } from 'lit';
 import { atcbVersion, atcbIsBrowser, atcbWcParams, atcbWcProParams, atcbWcBooleanParams, atcbWcObjectParams, atcbWcObjectArrayParams, atcbWcArrayParams, atcbWcNumberParams } from '../core/globals';
 import { getActiveButton, createButtonInstance, deleteButtonInstance } from '../core/store';
 import { atcbCssTemplate } from '../styles/css-template';
 import { atcb_decorate_data } from '../core/decorate';
 import { atcb_check_required, atcb_validate } from '../core/validate';
-import { atcb_generate_button, atcb_create_atcbl } from '../ui/generate';
+import { atcb_create_atcbl } from '../ui/generate';
+import { buttonTemplate } from '../ui/templates';
 import { atcb_generate_rich_data } from '../generators/rich-data';
 import { atcb_close, atcb_toggle } from '../ui/control';
 import { atcb_secure_content, atcb_secure_url } from '../core/text';
-import { atcb_manage_body_scroll } from '../ui/positioning';
+import { atcb_manage_body_scroll, atcb_set_sizes } from '../ui/positioning';
 import { atcb_log_event } from '../core/events';
 import { atcb_generate_rsvp_form, atcb_generate_rsvp_button } from '../ui/pro';
+import { resolveAttributeName, hasConfigAttribute, getConfigAttribute, observedConfigAttributes } from '../compat/attributes';
 import type { ATCBInputConfig, ATCBConfig } from '../types';
 
 let atcbInitialGlobalInit = false;
@@ -26,7 +29,15 @@ interface ATCBHostElement extends HTMLElement {
 
 // we cannot load the custom element server-side - therefore, we check for a browser environment first
 if (atcbIsBrowser()) {
-  class AddToCalendarButton extends HTMLElement {
+  class AddToCalendarButton extends LitElement {
+    // internal reactive state driving the lit render (no public reactive properties on
+    // purpose: config params like `hidden`/`disabled` would collide with native element
+    // semantics; attribute-driven re-initialization below provides the reactivity)
+    static override properties = {
+      _buttonTemplate: { state: true, attribute: false },
+    };
+
+    declare _buttonTemplate: TemplateResult | null;
     _initialized: Promise<void>;
     _initializedResolver!: () => void;
     state: { initializing: boolean; initialized: boolean; ready: boolean; updatePending: boolean };
@@ -42,10 +53,12 @@ if (atcbIsBrowser()) {
     constructor() {
       super();
       this._initialized = new Promise((resolve) => (this._initializedResolver = resolve));
-      const elem = document.createElement('template');
-      elem.innerHTML = template;
+      // attach the shadow root exactly like v2 did (Lit adopts a pre-attached root via
+      // createRenderRoot below). Mind that `delegateFocus` is the historic misspelling of
+      // `delegatesFocus` - it is preserved on purpose until the phase 9 WCAG pass, since
+      // fixing it changes focus behavior.
       this.attachShadow({ mode: 'open', delegateFocus: true } as unknown as ShadowRootInit);
-      this.shadowRoot!.append(elem.content.cloneNode(true));
+      this._buttonTemplate = null;
       this.state = {
         initializing: false,
         initialized: false,
@@ -56,7 +69,18 @@ if (atcbIsBrowser()) {
       this.error = false;
     }
 
-    connectedCallback(): void {
+    override createRenderRoot(): ShadowRoot {
+      return this.shadowRoot!;
+    }
+
+    override render(): TemplateResult {
+      // the shell div carries NO bindings on itself: the init pipeline mutates its
+      // classes/lang imperatively (exactly like v2), and static parts survive re-renders
+      return html`<div class="atcb-initialized atcb-hidden">${this._buttonTemplate ?? nothing}</div>`;
+    }
+
+    override connectedCallback(): void {
+      super.connectedCallback();
       if (!this.initializing) {
         this.initializing = true;
         // Defer the update to ensure it's non-blocking
@@ -68,29 +92,23 @@ if (atcbIsBrowser()) {
       if (this.state.ready) {
         return;
       }
+      // make sure the first lit render (the shell) has happened
+      await this.updateComplete;
       // initial data fetch
       this.state.initializing = true;
       // first getting debug attr and saving it here - this is somehow independet of its copy at the data object
-      const debugVal = this.getAttribute('debug');
-      this.debug = this.hasAttribute('debug') && (!debugVal || debugVal === 'true' || debugVal === '') ? true : false;
+      const debugVal = getConfigAttribute(this, 'debug');
+      this.debug = hasConfigAttribute(this, 'debug') && (!debugVal || debugVal === 'true' || debugVal === '') ? true : false;
       // same for proOverride
-      if (this.hasAttribute('proOverride') || this.hasAttribute('prooverride')) {
-        let proOverrideVal;
-        if (this.hasAttribute('proOverride') && this.getAttribute('proOverride') !== '') {
-          proOverrideVal = this.getAttribute('proOverride');
-        } else {
-          proOverrideVal = this.getAttribute('prooverride');
-        }
+      if (hasConfigAttribute(this, 'proOverride')) {
+        const proOverrideVal = getConfigAttribute(this, 'proOverride');
         this.proOverride = !proOverrideVal || proOverrideVal === 'true' || proOverrideVal === '' ? true : false;
       }
       // checking for PRO key and pull data if given
       try {
-        if ((this.hasAttribute('proKey') && this.getAttribute('proKey') !== '') || (this.hasAttribute('prokey') && this.getAttribute('prokey') !== '')) {
-          if (this.hasAttribute('proKey') && this.getAttribute('proKey') !== '') {
-            this.data = await atcb_get_pro_data(this.getAttribute('proKey')!, this);
-          } else {
-            this.data = await atcb_get_pro_data(this.getAttribute('prokey')!, this);
-          }
+        const proKeyVal = getConfigAttribute(this, 'proKey');
+        if (proKeyVal && proKeyVal !== '') {
+          this.data = await atcb_get_pro_data(proKeyVal, this);
           if (this.data.proKey) this.proKey = this.data.proKey;
         } else {
           this.data.proKey = '';
@@ -120,7 +138,8 @@ if (atcbIsBrowser()) {
       return this._initialized;
     }
 
-    disconnectedCallback(): void {
+    override disconnectedCallback(): void {
+      super.disconnectedCallback();
       atcb_cleanup(this.shadowRoot!, this.identifier);
       if (this.debug) {
         console.log('Add to Calendar Button "' + this.identifier + '" destroyed');
@@ -131,23 +150,15 @@ if (atcbIsBrowser()) {
       }
     }
 
-    static get observedAttributes(): string[] {
-      const observeAdditionally = ['instance', 'prokey', 'proKey', 'prooverride', 'proOverride'];
-      if ((this as unknown as { proKey?: string }).proKey && (this as unknown as { proKey?: string }).proKey !== '') {
-        return atcbWcProParams
-          .map((element) => {
-            return element.toLowerCase();
-          })
-          .concat(observeAdditionally);
-      }
-      return atcbWcParams
-        .map((element) => {
-          return element.toLowerCase();
-        })
-        .concat(observeAdditionally);
+    static override get observedAttributes(): string[] {
+      // keep Lit's own observed attributes (also triggers its class finalization) and add
+      // the official kebab-case names, the legacy spellings, and the control attributes
+      const litObserved = (super.observedAttributes as string[] | undefined) ?? [];
+      return [...new Set([...litObserved, ...observedConfigAttributes(atcbWcParams)])];
     }
 
-    attributeChangedCallback(name: string, oldValue: string | null, newValue: string | null): void {
+    override attributeChangedCallback(name: string, oldValue: string | null, newValue: string | null): void {
+      super.attributeChangedCallback(name, oldValue, newValue);
       // return, if this is the very first run
       if (!this.state.ready) {
         return;
@@ -169,17 +180,22 @@ if (atcbIsBrowser()) {
       if (!this.updatePending) return;
       // destroy and rebuild the button
       this.data = {};
-      this.shadowRoot!.querySelector('.atcb-initialized')!.remove();
-      const elem = document.createElement('template');
-      elem.innerHTML = template;
-      this.shadowRoot!.append(elem.content.cloneNode(true));
+      this._buttonTemplate = null;
+      await this.updateComplete;
+      const rootObj = this.shadowRoot!.querySelector('.atcb-initialized') as HTMLElement | null;
+      if (rootObj) {
+        // reset the shell to its pristine state (v2 recreated the node; we reuse the
+        // lit-rendered one). Foreign element children (e.g. an RSVP form) are removed;
+        // lit's marker comment nodes must survive, so only element nodes go
+        Array.from(rootObj.children).forEach((child) => child.remove());
+        rootObj.className = 'atcb-initialized atcb-hidden';
+        rootObj.removeAttribute('lang');
+        rootObj.removeAttribute('style');
+      }
       try {
-        if (this.hasAttribute('proKey') && this.getAttribute('proKey') !== '') {
-          this.data = await atcb_get_pro_data(this.getAttribute('proKey')!, this);
-          if (this.data.proKey) this.proKey = this.data.proKey;
-        } else if (this.hasAttribute('prokey') && this.getAttribute('prokey') !== '') {
-          // double-checking for lower-case version
-          this.data = await atcb_get_pro_data(this.getAttribute('prokey')!, this);
+        const proKeyVal = getConfigAttribute(this, 'proKey');
+        if (proKeyVal && proKeyVal !== '') {
+          this.data = await atcb_get_pro_data(proKeyVal, this);
           if (this.data.proKey) this.proKey = this.data.proKey;
         } else {
           this.data = (await atcb_process_inline_data(this, this.debug)) as unknown as ATCBConfig;
@@ -234,7 +250,7 @@ if (atcbIsBrowser()) {
         this.style.opacity = '1';
         this.style.position = 'relative';
         this.style.outline = 'none';
-        await atcb_build_button(this.shadowRoot!, this.data);
+        await this.buildButton();
         return true;
       } catch (e) {
         if (this.debug) {
@@ -242,6 +258,59 @@ if (atcbIsBrowser()) {
           atcb_render_debug_msg(this.shadowRoot!, e);
         }
         return false;
+      }
+    }
+
+    // build the button (formerly the module-level atcb_build_button)
+    async buildButton(): Promise<boolean> {
+      const host = this.shadowRoot!;
+      try {
+        (host.host as Element).classList.add('add-to-calendar');
+        // Rewrite dynamic dates, standardize line breaks and transform urls in the description
+        const data = await atcb_decorate_data(this.data);
+        this.data = data;
+        await atcb_validate(data);
+        const rootObj = host.querySelector('.atcb-initialized') as HTMLElement;
+        // ... and on success, load css and generate the button
+        atcb_set_light_mode(host, data);
+        rootObj.setAttribute('lang', data.language!);
+        atcb_load_css(host, rootObj, data);
+        atcb_setup_state_management(data);
+        // set global event listeners
+        atcb_set_global_event_listener(host, data);
+        atcb_init_log(data.proKey, data.hideBranding, data.debug);
+        // generate the actual button or RSVP form (if not hidden)
+        if (!data.hidden) {
+          if (typeof atcb_generate_rsvp_form === 'function' && data.rsvp && Object.keys(data.rsvp).length > 0) {
+            if (!data.inlineRsvp) {
+              await atcb_generate_rsvp_button(host, data);
+            } else {
+              await atcb_generate_rsvp_form(host, data, rootObj);
+            }
+          } else {
+            // render the button via the lit template and finish up imperatively
+            this._buttonTemplate = buttonTemplate(host, data);
+            await this.updateComplete;
+            host.querySelectorAll('.atcb-button-wrapper').forEach((wrapper) => {
+              atcb_set_sizes(wrapper as HTMLElement, data.sizes!);
+            });
+            if (data.debug) {
+              console.log('Add to Calendar Button "' + data.identifier + '" created');
+            }
+          }
+          // create schema.org data (https://schema.org/Event), if possible; not in the subscription case; and add it to the regular DOM
+          if (!data.hideRichData && !data.subscribe && data.name && data.dates![0]!.location && data.dates![0]!.startDate) {
+            atcb_generate_rich_data(data, host.host);
+          }
+        }
+        // log event
+        atcb_log_event('initialization', data.identifier!, data.identifier!);
+        if (!data.proKey && data.hideBranding && !document.getElementById('atcb-reference')) {
+          atcb_create_atcbl(document.body as unknown as ShadowRoot, false, false, true);
+        }
+        return true;
+      } catch (e) {
+        throw new Error((e as { message?: string }).message);
       }
     }
   }
@@ -279,15 +348,16 @@ async function atcb_process_inline_data(el: ATCBHostElement, debug = false): Pro
   return data;
 }
 
-// read data attributes
+// read data attributes (official kebab-case names win over legacy spellings)
 function atcb_read_attributes(el: ATCBHostElement, params: (keyof ATCBInputConfig)[] = atcbWcParams): ATCBInputConfig {
   const data: { [key: string]: unknown } = {};
   for (let i = 0; i < params.length; i++) {
     // reading data, but removing real code line breaks before parsing.
     // use [br] in the description to create a line break.
     const attr = params[`${i}`]!;
-    if (el.hasAttribute(`${attr}`)) {
-      const inputVal = atcb_secure_content(el.getAttribute(`${attr}`)!.replace(/(\\r\\n|\\n|\\r)/g, ''), false) as string;
+    const attributeName = resolveAttributeName(el, attr);
+    if (attributeName !== null) {
+      const inputVal = atcb_secure_content(el.getAttribute(attributeName)!.replace(/(\\r\\n|\\n|\\r)/g, ''), false) as string;
       let val: unknown;
       if ((atcbWcBooleanParams as (keyof ATCBInputConfig)[]).includes(attr)) {
         // if a boolean param has no value, it is handled as prop and set true
@@ -344,49 +414,6 @@ function atcb_read_attributes(el: ATCBHostElement, params: (keyof ATCBInputConfi
     }
   }
   return data as ATCBInputConfig;
-}
-
-// build the button
-async function atcb_build_button(host: ShadowRoot, data: ATCBConfig): Promise<boolean> {
-  try {
-    (host.host as Element).classList.add('add-to-calendar');
-    // Rewrite dynamic dates, standardize line breaks and transform urls in the description
-    data = await atcb_decorate_data(data);
-    await atcb_validate(data);
-    const rootObj = host.querySelector('.atcb-initialized') as HTMLElement;
-    // ... and on success, load css and generate the button
-    atcb_set_light_mode(host, data);
-    rootObj.setAttribute('lang', data.language!);
-    atcb_load_css(host, rootObj, data);
-    atcb_setup_state_management(data);
-    // set global event listeners
-    atcb_set_global_event_listener(host, data);
-    atcb_init_log(data.proKey, data.hideBranding, data.debug);
-    // generate the actual button or RSVP form (if not hidden)
-    if (!data.hidden) {
-      if (typeof atcb_generate_rsvp_form === 'function' && data.rsvp && Object.keys(data.rsvp).length > 0) {
-        if (!data.inlineRsvp) {
-          await atcb_generate_rsvp_button(host, data);
-        } else {
-          await atcb_generate_rsvp_form(host, data, rootObj);
-        }
-      } else {
-        atcb_generate_button(host, rootObj, data);
-      }
-      // create schema.org data (https://schema.org/Event), if possible; not in the subscription case; and add it to the regular DOM
-      if (!data.hideRichData && !data.subscribe && data.name && data.dates![0]!.location && data.dates![0]!.startDate) {
-        atcb_generate_rich_data(data, host.host);
-      }
-    }
-    // log event
-    atcb_log_event('initialization', data.identifier!, data.identifier!);
-    if (!data.proKey && data.hideBranding && !document.getElementById('atcb-reference')) {
-      atcb_create_atcbl(document.body as unknown as ShadowRoot, false, false, true);
-    }
-    return true;
-  } catch (e) {
-    throw new Error((e as { message?: string }).message);
-  }
 }
 
 // destroy the button

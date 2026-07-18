@@ -358,3 +358,11 @@ the pattern `<template> | <dimension values>`.
 - Pattern: `F.T9 | dates=<n> | tz=<mix> | seq=<n|-> | uid=<value|->`
 - Dimensions: dates {1, 2, 3} x tz {same, mixed} x sequence {unset, 2} x uid {unset, fixed}
 - Total: **24 cases**
+
+## Group V - Official kebab-case attributes (test/wc-tests/r-V-attributes.test.js)
+
+- V-01: full config via official kebab names renders and produces a correct Google link
+- V-02: official name wins over legacy spelling when both are present
+- V-03: prokey (official spelling exception) triggers the PRO flow
+- V-04: special-case mappings work (ical-file-name, use-user-tz accepted)
+- V-05: runtime change of an official attribute re-initializes the button

@@ -2,12 +2,12 @@ import { atcbIcon, atcbDefaultTarget } from '../core/globals';
 import { setActiveButton, getActiveButton, getOptionStates } from '../core/store';
 import { atcb_toggle, atcb_close } from './control';
 import { atcb_generate_links, atcb_set_fully_successful } from '../generators/index';
-import { atcb_generate_time, atcb_generate_timestring } from '../core/dates';
 import { atcb_position_shadow_button, atcb_position_shadow_button_listener, atcb_manage_body_scroll, atcb_set_sizes } from './positioning';
 import { atcb_debounce, atcb_debounce_leading } from '../core/util';
 import { atcb_translate_hook } from '../i18n/index';
 import { atcb_load_css, atcb_set_light_mode } from '../element/index';
 import { atcb_log_event } from '../core/events';
+import { renderDateButtonContent } from './templates';
 import { atcb_generate_rsvp_form } from './pro';
 import type { ATCBConfig } from '../types';
 
@@ -169,87 +169,6 @@ function atcb_generate_label_content(data: ATCBConfig, parent: HTMLElement, type
     textEl.setAttribute('part', type === 'trigger' ? 'atcb-button-text' : 'atcb-list-text');
     textEl.textContent = text;
     parent.append(textEl);
-  }
-}
-
-// generate the triggering button
-function atcb_generate_button(host: ShadowRoot, button: HTMLElement, data: ATCBConfig): void {
-  // determine whether we are looking for the 1-option case (also with buttonsList)
-  const oneOption = (function () {
-    if (data.options!.length === 1 || (data.buttonsList && data.buttonStyle != 'date')) {
-      return true;
-    }
-    return false;
-  })();
-  const optionSplit = oneOption ? data.options! : ['default'];
-  optionSplit.forEach(function (option, index) {
-    // generate the wrapper div
-    const buttonTriggerWrapper = document.createElement('div');
-    buttonTriggerWrapper.classList.add('atcb-button-wrapper');
-    buttonTriggerWrapper.setAttribute('part', 'atcb-button-wrapper');
-    if (data.rtl) {
-      buttonTriggerWrapper.classList.add('atcb-rtl');
-    }
-    button.append(buttonTriggerWrapper);
-    atcb_set_sizes(buttonTriggerWrapper, data.sizes!);
-    // generate the button trigger div
-    const buttonTrigger = document.createElement('button');
-    buttonTrigger.classList.add('atcb-button');
-    buttonTrigger.setAttribute('part', 'atcb-button');
-    if (data.disabled) {
-      buttonTrigger.setAttribute('disabled', true as unknown as string);
-    }
-    if (data.hideTextLabelButton) {
-      buttonTrigger.classList.add('atcb-no-text');
-    }
-    if (data.trigger === 'click') {
-      buttonTrigger.classList.add('atcb-click');
-    }
-    if (data.listStyle === 'overlay') {
-      buttonTrigger.classList.add('atcb-dropoverlay');
-    }
-    buttonTrigger.type = 'button';
-    buttonTrigger.setAttribute('aria-expanded', false as unknown as string); // aria-expanded default value on button generate
-    buttonTriggerWrapper.append(buttonTrigger);
-    // generate the label incl. eventListeners
-    if (data.buttonStyle === 'date') {
-      atcb_generate_date_button(data, buttonTrigger, 'all', oneOption);
-    }
-    // if there is only 1 calendar option, we directly show this at the button, but with the trigger's label text
-    if (oneOption) {
-      buttonTrigger.classList.add('atcb-single');
-      // if buttonsList is true and we have more than 1 option, use the option as label
-      const label = (function () {
-        if (data.buttonsList && data.options!.length > 1) {
-          return atcb_translate_hook(`${data.options![`${index}`]}`, data);
-        }
-        return data.label;
-      })();
-      // generate label
-      atcb_generate_label(host, data, buttonTrigger, option, !data.hideIconButton, label, true);
-      // override the id for the oneOption button, since the button always needs to have the button id, while it received the option id from the labeling function
-      buttonTrigger.id = data.identifier as string;
-      // but in case we simply render one button per option, only use the identifier for the first one and also add the info for the option
-      if (data.buttonsList) {
-        buttonTrigger.id = data.identifier + '-' + option;
-      }
-    } else {
-      atcb_generate_label(host, data, buttonTrigger, 'trigger', !data.hideIconButton, data.label);
-      // create an empty anchor div to place the dropdown, while the position can be defined via CSS
-      const buttonDropdownAnchor = document.createElement('div');
-      buttonDropdownAnchor.classList.add('atcb-dropdown-anchor');
-      buttonTrigger.append(buttonDropdownAnchor);
-    }
-    // add checkmark (hidden first) (if button is not disabled already)
-    if (!data.hideCheckmark && !data.hideTextLabelButton && !data.buttonsList && !data.disabled && !data.allCancelled) {
-      const btnCheck = document.createElement('div');
-      btnCheck.classList.add('atcb-checkmark');
-      btnCheck.innerHTML = atcbIcon['checkmark']!;
-      buttonTrigger.append(btnCheck);
-    }
-  });
-  if (data.debug) {
-    console.log('Add to Calendar Button "' + data.identifier + '" created');
   }
 }
 
@@ -483,7 +402,7 @@ async function atcb_create_modal(
       }
       modalSubEventButton.classList.add('atcb-subevent-btn');
       modalsubEventsContent.append(modalSubEventButton);
-      atcb_generate_date_button(data, modalSubEventButton, i, false, true);
+      renderDateButtonContent(data, modalSubEventButton, `${i}`, false, true);
       // interaction only if not overdue and blocked
       if (!data.dates![i - 1]!.overdue || data.pastDateHandling === 'none') {
         if (i === 1 && keyboardTrigger) {
@@ -607,172 +526,6 @@ async function atcb_subscribe_yahoo_modal_switch(host: ShadowRoot, data: ATCBCon
 }
 
 // FUNCTION TO GENERATE A MORE DETAILED DATE BUTTON
-function atcb_generate_date_button(data: ATCBConfig, parent: HTMLElement, subEvent: string | number = 'all', oneOption: boolean = false, forceFullDate: boolean = false): void {
-  if (subEvent !== 'all') {
-    subEvent = parseInt(subEvent as string) - 1;
-  } else if (data.dates!.length === 1) {
-    subEvent = 0;
-  }
-  const fullTimeInfo = atcb_generate_timestring(data.dates!, data.language, subEvent, false, false, forceFullDate);
-  const hoverText = (function () {
-    if ((subEvent !== 'all' && data.dates![`${subEvent}`]!.status!.toLowerCase() === 'cancelled') || (subEvent === 'all' && data.allCancelled)) {
-      return atcb_translate_hook('date.status.cancelled', data) + '<br>' + atcb_translate_hook('date.status.cancelled.cta', data);
-    }
-    if (data.pastDateHandling !== 'none') {
-      if ((subEvent === 'all' && data.allOverdue) || (subEvent !== 'all' && data.dates![`${subEvent}`]!.overdue)) {
-        return atcb_translate_hook('expired', data);
-      }
-    }
-    if (data.label && data.label !== '') {
-      return data.label;
-    }
-    return atcb_translate_hook('label.addtocalendar', data);
-  })();
-  const cancelledInfo = (function () {
-    if ((subEvent !== 'all' && data.dates![`${subEvent}`]!.status!.toLowerCase() === 'cancelled') || (subEvent === 'all' && data.allCancelled)) {
-      return atcb_translate_hook('date.status.cancelled', data);
-    }
-    return '';
-  })();
-  const recurringString = (function () {
-    if (fullTimeInfo.length === 0) {
-      return atcb_translate_hook('recurring', data) + ' &#x27F3;';
-    }
-    return '&#x27F3;';
-  })();
-  let subEventAll = false;
-  if (subEvent === 'all') {
-    subEvent = 0;
-    if (!data.allOverdue) {
-      for (let i = 0; i < data.dates!.length; i++) {
-        if (!data.dates![`${i}`]!.overdue) {
-          subEvent = i;
-          break;
-        }
-      }
-    }
-    subEventAll = true;
-  }
-  const startDate = new Date(atcb_generate_time(data.dates![`${subEvent}`]!).start);
-  const allDay = atcb_generate_time(data.dates![`${subEvent}`]!).allday;
-  const timeZone = data.dates![`${subEvent}`]!.timeZone;
-  const btnLeft = document.createElement('div');
-  btnLeft.classList.add('atcb-date-btn-left');
-  parent.append(btnLeft);
-  const btnDay = document.createElement('div');
-  btnDay.classList.add('atcb-date-btn-day');
-  btnLeft.append(btnDay);
-  const btnMonth = document.createElement('div');
-  btnMonth.classList.add('atcb-date-btn-month');
-  btnDay.textContent = startDate.toLocaleString(data.language, { day: 'numeric', timeZone: allDay ? 'UTC' : (timeZone as string) });
-  btnMonth.textContent = startDate.toLocaleString(data.language, { month: 'short', timeZone: allDay ? 'UTC' : (timeZone as string) });
-  btnLeft.append(btnMonth);
-  const btnRight = document.createElement('div');
-  btnRight.classList.add('atcb-date-btn-right');
-  parent.append(btnRight);
-  const btnDetails = document.createElement('div');
-  btnDetails.classList.add('atcb-date-btn-details');
-  btnRight.append(btnDetails);
-  // headline
-  const btnHeadline = document.createElement('div');
-  btnHeadline.classList.add('atcb-date-btn-headline');
-  const btnHeadlineText = data.dates!.length > 1 && subEventAll ? data.name : data.dates![`${subEvent}`]!.name; // show name of event series for multi-date
-  btnHeadline.textContent = btnHeadlineText as string;
-  btnDetails.append(btnHeadline);
-  // location line
-  if ((data.dates![`${subEvent}`]!.location && data.dates![`${subEvent}`]!.location !== '' && !data.dates![`${subEvent}`]!.onlineEvent) || cancelledInfo !== '') {
-    const btnLocation = document.createElement('div');
-    btnLocation.classList.add('atcb-date-btn-content');
-    btnDetails.append(btnLocation);
-    if (cancelledInfo != '') {
-      btnLocation.classList.add('atcb-date-btn-cancelled');
-      btnLocation.textContent = cancelledInfo;
-    } else {
-      const btnLocationIcon = document.createElement('span');
-      btnLocationIcon.classList.add('atcb-date-btn-content-icon');
-      btnLocationIcon.innerHTML = atcbIcon['location']!;
-      btnLocation.append(btnLocationIcon);
-      const btnLocationText = document.createElement('span');
-      btnLocationText.classList.add('atcb-date-btn-content-location');
-      btnLocationText.textContent = data.dates![`${subEvent}`]!.location as string;
-      btnLocation.append(btnLocationText);
-    }
-  } else {
-    // in case we would not show date details as well, show description instead
-    if (data.dates![`${subEvent}`]!.description !== '' && fullTimeInfo.length === 0 && (!data.recurrence || data.recurrence === '')) {
-      const btnDescription = document.createElement('div');
-      btnDescription.classList.add('atcb-date-btn-content');
-      btnDescription.textContent = data.dates![`${subEvent}`]!.descriptionHtmlFree as string;
-      btnDescription.style.overflow = 'hidden';
-      btnDescription.style.display = '-webkit-box';
-      btnDescription.style.webkitLineClamp = '2';
-      (btnDescription.style as unknown as Record<string, string>).lineClamp = '2';
-      btnDetails.append(btnDescription);
-    } else {
-      // in other cases, at least give the headline the option to grow
-      (btnHeadline.style as unknown as Record<string, string>).lineClamp = '2';
-      // and center, if nothing else is here
-      if (fullTimeInfo.length == 0 && (data.recurrence == null || data.recurrence == '')) {
-        btnRight.style.alignSelf = 'center';
-        btnHeadline.style.textAlign = 'center';
-        (btnHeadline.style as unknown as Record<string, string>).lineClamp = '2';
-      }
-    }
-  }
-  // datetime line
-  if (fullTimeInfo.length > 0 || (data.recurrence != null && data.recurrence != '')) {
-    const btnDateTime = document.createElement('div');
-    btnDateTime.classList.add('atcb-date-btn-content');
-    btnDetails.append(btnDateTime);
-    const btnDateTimeIcon = document.createElement('span');
-    btnDateTimeIcon.classList.add('atcb-date-btn-content-icon');
-    btnDateTimeIcon.innerHTML = atcbIcon['ical']!;
-    btnDateTime.append(btnDateTimeIcon);
-    const btnDateTimeText = document.createElement('span');
-    btnDateTimeText.classList.add('atcb-date-btn-content-text');
-    btnDateTime.append(btnDateTimeText);
-    fullTimeInfo.forEach(function (block: string) {
-      const btnDateTimeTextBlock = document.createElement('span');
-      btnDateTimeTextBlock.textContent = block;
-      btnDateTimeText.append(btnDateTimeTextBlock);
-    });
-    if (data.recurrence != null && data.recurrence != '') {
-      const recurSign = document.createElement('span');
-      recurSign.innerHTML = recurringString;
-      btnDateTimeText.append(recurSign);
-    }
-  }
-  // hover text
-  const btnHover = document.createElement('div');
-  btnHover.classList.add('atcb-date-btn-hover');
-  btnHover.innerHTML = hoverText as string;
-  btnRight.append(btnHover);
-  if (!data.hideCheckmark && data.dates![`${subEvent}`]!.status!.toLowerCase() !== 'cancelled') {
-    const btnCheck = document.createElement('div');
-    btnCheck.classList.add('atcb-checkmark');
-    btnCheck.innerHTML = atcbIcon['checkmark']!;
-    parent.append(btnCheck);
-  }
-  // small + at the corner
-  if (!data.dates![`${subEvent}`]!.overdue || data.pastDateHandling === 'none') {
-    const btnPlus = document.createElement('div');
-    btnPlus.classList.add('atcb-date-btn-plus');
-    btnPlus.innerHTML = '+';
-    parent.append(btnPlus);
-  }
-  // set aria label
-  // TODO: Make this more accessible by using more detailed date information (could be also generated in a more central place - maybe decoration part); also merge this with the label generation for better structure
-  const ariaLabel =
-    (hoverText as string).replace(/<br>/g, ' ').replace(/\+\s/g, '') +
-    (oneOption ? ' (' + atcb_translate_hook(data.options![0] as string, data) + ')' : '') +
-    ': ' +
-    btnHeadlineText +
-    (data.dates![`${subEvent}`]!.location && data.dates![`${subEvent}`]!.location !== '' ? ', ' + data.dates![`${subEvent}`]!.location : '') +
-    ', ' +
-    fullTimeInfo.join(' ');
-  parent.setAttribute('aria-label', ariaLabel);
-}
-
 // FUNCTION TO BUILD A SECOND SHADOWDOM FOR MODALS
 async function atcb_generate_modal_host(host: ShadowRoot, data: ATCBConfig, reset: boolean = true): Promise<ShadowRoot> {
   // to clean-up the stage, we first close anything left open
@@ -836,4 +589,4 @@ async function atcb_generate_overlay_dom(host: ShadowRoot, data: ATCBConfig): Pr
   return newHost.querySelector('.atcb-modal-host-initialized');
 }
 
-export { atcb_generate_label, atcb_generate_button, atcb_generate_dropdown_list, atcb_create_modal, atcb_generate_bg_overlay, atcb_generate_overlay_dom, atcb_create_atcbl, atcb_generate_modal_host };
+export { atcb_generate_label, atcb_generate_dropdown_list, atcb_create_modal, atcb_generate_bg_overlay, atcb_generate_overlay_dom, atcb_create_atcbl, atcb_generate_modal_host };

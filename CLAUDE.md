@@ -18,7 +18,9 @@ A full rewrite to Lit + strict TypeScript + Vite is in progress, executed phase 
 
 | Path                            | Role                                                                                                |
 | ------------------------------- | --------------------------------------------------------------------------------------------------- |
-| `element/index.ts`              | `AddToCalendarButton` custom element, attribute scan, PRO data fetch, global ESC listener           |
+| `element/index.ts`              | `AddToCalendarButton` LitElement, attribute scan, PRO data fetch, global ESC listener               |
+| `ui/templates.ts`               | lit-html templates for the button path (incl. date-style content)                                   |
+| `compat/attributes.ts`          | Official kebab-case attribute names + legacy alias resolution (official wins)                       |
 | `action/index.ts`               | `atcb_action` imperative API                                                                        |
 | `core/store.ts`                 | Per-instance state store (active button, per-option counters, config)                               |
 | `core/decorate.ts`              | Config normalization orchestrator (+ `decorate-dates` / `decorate-recurrence` / `decorate-options`) |
@@ -42,7 +44,7 @@ A full rewrite to Lit + strict TypeScript + Vite is in progress, executed phase 
 
 ## Tech stack
 
-Strict TypeScript in `./src` (vanilla web component; Lit lands in refactor phase 4). Shadow DOM. External dep: `timezones-ical-library` for VTIMEZONE blocks and DST-aware offsets. Build: Vite + esbuild via `scripts/build.mjs`. Test: `@open-wc/testing` on `@web/test-runner` (transpiles src TS on the fly).
+Strict TypeScript in `./src`. LitElement web component (shell + button rendered via lit-html templates in `ui/templates.ts`; dropdown/modal/overlay layers imperative by design). Shadow DOM. Deps: `lit` (external in the ES build, bundled in CJS + browser bundles) and `timezones-ical-library` for VTIMEZONE blocks and DST-aware offsets. Build: Vite + esbuild via `scripts/build.mjs`. Test: `@open-wc/testing` on `@web/test-runner` (transpiles src TS on the fly).
 
 ## Critical gotchas (read before changing anything)
 
@@ -127,7 +129,7 @@ Existing baseline tests (don't break):
 - Function names: `atcb_*` prefix for all lib functions (snake_case)
 - Constants: `atcb*` camelCase (no underscore separator), e.g. `atcbOptions`, `atcbIOSInvalidOptions`
 - Boolean configs accept `true`, `'true'`, `'1'`, bare attribute presence — coerced in `atcb-decorate.js`
-- HTML web-component attributes are case-insensitive; the lib reads them lowercase
+- Official attribute names are kebab-case (`start-date`; exception: `prokey`); legacy lowercased-camelCase spellings keep working via `compat/attributes.ts`, official wins when both are set
 - Object/array attributes accepted as JSON strings (e.g. `options='["Google","Apple"]'`)
 
 ## Common pitfalls when adding code

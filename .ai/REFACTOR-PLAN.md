@@ -2,7 +2,7 @@
 
 Full modernization of the add-to-calendar-button web component. This document is the single source of truth for the refactor: goals, locked decisions, constraints, phases, and gates. It is written so that any agent or developer can execute a phase without additional context. Read `CLAUDE.md` and `.ai/TEST-STRATEGY.md` first.
 
-Scope is the web component only. The `demo/` folder is out of scope (separate project), but may be used to validate changes.
+Scope is the web component only. The `demo/` folder is out of scope on a technical level (separate project), but may be used to validate changes - and its CONTENT (it is the official documentation) gets updated in phase 11 to match the new functionality.
 
 ## Mission
 
@@ -168,13 +168,31 @@ Cut `refactor/v3`, add this plan, record baseline metrics above. Reference the p
 4. WCAG pass: audit roles, aria labels and states, focus order, focus trap and restore for modal, keyboard interaction against WAI-ARIA menu and dialog patterns; resolve the date-info a11y TODO at former `atcb-generate.js` line 750; add automated axe checks as a new test group.
 5. Gate: `npm run test:extended` plus all new feature tests green.
 
-### Phase 10 - Hardening and release
+### Phase 10 - Hardening
 
 1. Security review: no unsanitized HTML through lit templates (no unsafeHTML unless proven safe), URL scheme allowlisting for user-provided links, description `[url]` syntax sanitization, prototype-pollution-safe config merging (especially the PRO override merge), `npm audit` clean, run a static scan (CodeQL or semgrep) and address findings. Document results in this file.
 2. Memory-leak review: every listener, observer (including the `bodyScheme` MutationObserver), timer, debounce, light-DOM modal host and store entry is cleaned up on disconnect; repeated mount-unmount cycles hold heap steady in a browser test; fix and pin findings.
 3. Before-and-after size report; v2 to v3 migration guide (`.ai/MIGRATION-V3.md` draft for the website team); list of documentation pages needing updates as a handoff artifact.
-4. Release: `v3.0.0-alpha` from `refactor/v3` via npm dist-tag, iterate to beta, final after maintainer validation.
-5. Gate: `npm run test:full` green on both browsers, all new suites green, size goals met or consciously waived.
+4. Gate: `npm run test:full` green on both browsers, all new suites green, size goals met or consciously waived. Release preparation follows in phase 11; the actual release is maintainer-side (see the handover section).
+
+### Phase 11 - Documentation and release preparation
+
+1. Release notes: a complete, consumer-facing draft covering everything v3 changes (new attribute names with the legacy-alias guarantee, style/i18n loading, SSR shell, dropped variant builds with their shims, size wins, migration pointers).
+2. CHANGELOG.md: add the v3.0.0 block following the file's existing format.
+3. `demo/` CONTENT update: the demo is the official documentation at add-to-calendar-button.com - update its content (configuration reference, examples, advanced-use pages) to match the new functionality. STRICTLY content only: no technical changes to the demo app itself (framework, build, tooling stay untouched; a possible migration from Nuxt to Astro with the Stardrive boilerplate will be decided separately AFTER the content upgrade and is out of scope here).
+4. Extend `scripts/set-version.mjs` to accept prerelease versions (the release flow below uses `3.0.0-next.1` style versions, which the current x.y.z-only validation rejects).
+5. Gate: full suite still green; docs changes reviewed by the maintainer.
+
+## Handover and release flow (maintainer-side)
+
+Everything after phase 11 happens WITHOUT the executing agent, but the plan and all deliverables must anticipate it:
+
+1. The maintainer reviews the finished refactor on this fork; iteration rounds on review findings are expected - keep phase branches and gates operational until sign-off.
+2. On approval, the maintainer merges the result into the MAIN package and publishes it as version `3.0.0-next.1` - a PRE-RELEASE (npm next dist-tag). It is not the official release.
+3. The pre-release gets tested extensively in the wild; findings may flow back as fix iterations (suite gates stay the safety net).
+4. Only after that bake period is v3 migrated into the official release.
+
+Practical consequences for executing agents: never assume `refactor/v3` is the end of the line (deliverables must survive a fork-to-main transfer); keep the version-bump tooling prerelease-capable; treat the release-notes and CHANGELOG drafts from phase 11 as the maintainer's publishing material, written to be shippable as-is.
 
 ## Risks and mitigations
 
@@ -190,7 +208,7 @@ Cut `refactor/v3`, add this plan, record baseline metrics above. Reference the p
 
 ## Out of scope / deferred
 
-- `demo/` modernization (separate project; used only for validation here).
+- `demo/` TECHNICAL modernization (separate project; a possible Nuxt-to-Astro migration with the Stardrive boilerplate is decided after the phase 11 content upgrade). Demo CONTENT is in scope via phase 11.
 - Full SSR of the decorated button (evaluate as a fast-follow after v3.0).
 - Website documentation content updates (handoff list produced in Phase 10).
 - Upstreaming strategy to add2cal/add-to-calendar-button (decided after v3 stabilizes on this fork).
@@ -205,10 +223,12 @@ Cut `refactor/v3`, add this plan, record baseline metrics above. Reference the p
   - Pre-existing bugs found during conversion (do NOT fix before their phase): attachShadow uses misspelled `delegateFocus` (3 sites, silently inactive - fix in phase 9 WCAG pass); dead `event.key === 'Alt' && event.key === 'Control'` conditions (4 sites - phase 9 keyboard audit); atcb_validate_icsFile checks the root icsFile even for per-date entries (fix with test in phase 3); dead `.length` check on getElementById result in atcb_close (phase 3 cleanup); static observedAttributes reads `this.proKey` which is always undefined there (resolved naturally by the phase 4 Lit migration); bitwise `|` on booleans in the recurrence weekstart check (phase 3 cleanup); trailing-space selector '.atcb-initialized ' in atcb-util positioning (verify intent in phase 3)
 - [x] Phase 3 - Architecture (folder structure core/ui/generators/i18n/element/action/styles applied; util split into core/dates + core/text + core/util + ui/positioning; decorate split into orchestrator + dates + recurrence + options modules; links split into per-service generators with acyclic dispatch; atcb_action extracted to action/; per-instance store in core/store.ts replaces the atcbStates array-as-map global, entries deleted on disconnect; decorate root-values TODO resolved: root date fields are deleted after being moved into the dates entries, with the four remaining root readers migrated to dates[0]; full suite 441/441 green, extended green on both browsers)
   - Deferred deliberately: internal atcb_ function-name prefix removal (cosmetic churn, happens opportunistically from phase 4); full parameter de-threading of the render call chains (lands with the phase 4 Lit rewrite - the store already holds the authoritative config per instance)
-- [ ] Phase 4 - Lit migration
+- [x] Phase 4 - Lit migration (host element is a LitElement adopting the constructor-attached shadow root; whenInitialized/deferred-init/attribute-scan contracts preserved verbatim; button rendering ported to lit-html templates in ui/templates.ts, consumed reactively by the element and via standalone render by the PRO rsvp flow and the modal date buttons; transient layers - dropdown list, modal, overlay - stay imperative by design; official kebab-case attributes with legacy aliases and official-wins precedence via compat/attributes.ts, prokey exception included; new test group V pins the official names; full suite 446/446 green on both browsers)
+  - Notes: no PUBLIC per-param Lit reactive properties on purpose (config params like hidden/disabled would collide with native element semantics; internal reactive state drives the render; property-based config support is a follow-up candidate for phase 7); the delegateFocus misspelling is intentionally preserved until the phase 9 WCAG pass; lit is external in the ES build (npm dedupe), bundled in the CJS build via lit's node condition (lit ships ESM-only) and in the browser bundles (+~10 KB gzip, reclaimed in phases 5/6); the dead pro-branch in observedAttributes was dropped (observed set is a superset now)
 - [ ] Phase 5 - Styles
 - [ ] Phase 6 - i18n
 - [ ] Phase 7 - Packaging and compat
 - [ ] Phase 8 - SSR shell
 - [ ] Phase 9 - v3 features
-- [ ] Phase 10 - Hardening and release
+- [ ] Phase 10 - Hardening and release preparation
+- [ ] Phase 11 - Documentation and release preparation (release notes, CHANGELOG block, demo content update, prerelease-capable version tooling)
