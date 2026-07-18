@@ -105,6 +105,7 @@
     "build": "node scripts/build.mjs"
   },
   "dependencies": {
+    "lit": "^3.3.3",
     "timezones-ical-library": "^2.2.1"
   },
   "devDependencies": {

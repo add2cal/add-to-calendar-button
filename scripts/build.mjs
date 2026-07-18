@@ -85,36 +85,48 @@ function injectCssTemplate(code, id) {
 
 async function buildLib({ unstyle }) {
   const sub = unstyle ? '/unstyle' : '';
-  await viteBuild({
-    configFile: false,
-    logLevel: 'warn',
-    plugins: unstyle
-      ? []
-      : [
-          {
-            name: 'atcb-inline-css',
-            enforce: 'pre', // must run before vite transpiles the TS source
-            transform(code, id) {
-              const result = injectCssTemplate(code, id);
-              return result === null ? null : { code: result, map: null };
+  // the ES build keeps lit external (npm consumers get deduping + tree-shaking);
+  // the CJS build bundles lit because lit ships ESM-only and cannot be require()d
+  const externals = {
+    es: ['timezones-ical-library', /^lit(\/|$)/, /^lit-html(\/|$)/, /^lit-element(\/|$)/, /^@lit\//],
+    cjs: ['timezones-ical-library'],
+  };
+  for (const format of ['es', 'cjs']) {
+    await viteBuild({
+      configFile: false,
+      logLevel: 'warn',
+      // the CJS build is consumed by Node (SSR require): resolve lit through its 'node'
+      // export condition so the bundled code uses the SSR dom shim instead of touching
+      // HTMLElement at module scope
+      resolve: format === 'cjs' ? { conditions: ['node', 'production', 'module', 'import', 'default'] } : undefined,
+      plugins: unstyle
+        ? []
+        : [
+            {
+              name: 'atcb-inline-css',
+              enforce: 'pre', // must run before vite transpiles the TS source
+              transform(code, id) {
+                const result = injectCssTemplate(code, id);
+                return result === null ? null : { code: result, map: null };
+              },
             },
-          },
-        ],
-    build: {
-      outDir: 'dist',
-      emptyOutDir: false,
-      minify: false,
-      target: TARGET,
-      lib: {
-        entry: r('src/index.ts'),
-        formats: ['es', 'cjs'],
-        fileName: (format) => (format === 'es' ? `module${sub}/index.js` : `commonjs${sub}/index.js`),
+          ],
+      build: {
+        outDir: 'dist',
+        emptyOutDir: false,
+        minify: false,
+        target: TARGET,
+        lib: {
+          entry: r('src/index.ts'),
+          formats: [format],
+          fileName: () => (format === 'es' ? `module${sub}/index.js` : `commonjs${sub}/index.js`),
+        },
+        rollupOptions: {
+          external: externals[format],
+        },
       },
-      rollupOptions: {
-        external: ['timezones-ical-library'],
-      },
-    },
-  });
+    });
+  }
 }
 
 // ---------- step 3: esbuild browser builds (iife) ----------
@@ -185,8 +197,14 @@ function sanityCheck() {
   if (!moduleBuild.includes("from 'timezones-ical-library'") && !moduleBuild.includes('from "timezones-ical-library"')) {
     problems.push('dist/module/index.js: timezones-ical-library should stay external');
   }
+  if (!moduleBuild.includes("from 'lit") && !moduleBuild.includes('from "lit')) {
+    problems.push('dist/module/index.js: lit should stay external');
+  }
   if (!cjsBuild.includes('timezones-ical-library')) problems.push('dist/commonjs/index.js: timezones-ical-library require missing');
+  if (/require\(["']lit["']\)/.test(cjsBuild)) problems.push('dist/commonjs/index.js: lit must be bundled (no CJS entry upstream)');
+  if (!cjsBuild.includes('LitElement') && !cjsBuild.includes('ReactiveElement')) problems.push('dist/commonjs/index.js: bundled lit code missing');
   if (styled.includes("from 'timezones-ical-library'")) problems.push('dist/atcb.js: timezones-ical-library should be bundled');
+  if (!styled.includes('LitElement') && !styled.includes('ReactiveElement')) problems.push('dist/atcb.js: bundled lit code missing');
   if (withMin && !fs.readFileSync(r('dist/atcb.min.js'), 'utf8').includes('@preserve')) {
     problems.push('dist/atcb.min.js: @preserve license blocks missing after minification');
   }

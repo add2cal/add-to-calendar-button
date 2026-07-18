@@ -1,7 +1,8 @@
 import { atcb_rewrite_html_elements, atcb_secure_content } from '../core/text';
 import { atcb_set_sizes } from './positioning';
 import { atcb_copy_to_clipboard, atcb_validEmail } from '../core/util';
-import { atcb_generate_button, atcb_generate_modal_host, atcb_create_modal, atcb_generate_label, atcb_create_atcbl } from './generate';
+import { atcb_generate_modal_host, atcb_create_modal, atcb_generate_label, atcb_create_atcbl } from './generate';
+import { renderButton } from './templates';
 import { atcb_translate_hook } from '../i18n/index';
 import { atcb_log_event } from '../core/events';
 import { atcb_decorate_data } from '../core/decorate';
@@ -450,7 +451,7 @@ async function atcb_generate_rsvp_form(host: ShadowRoot, data: ATCBConfig, hostE
       atcbData.hideTextLabelButton = true;
       atcbData.hideIconButton = false;
       atcbData.buttonsList = true;
-      atcb_generate_button(host, atcbHost as HTMLElement, atcbData);
+      renderButton(host, atcbHost as HTMLElement, atcbData);
     }
   } else {
     if (closeBtn) closeBtn.style.display = 'none';
