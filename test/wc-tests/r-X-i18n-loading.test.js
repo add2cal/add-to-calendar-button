@@ -78,6 +78,23 @@ describe('Group X - locale loading', () => {
     expect(us, 'locale-dependent formatting differs').to.not.equal(gb);
   });
 
+  it('X-06: customLabels wins over every locale resolution layer, incl. identifiers unknown to the core', async () => {
+    // PRO relies on customLabels to inject additional translations that the core script
+    // does not ship - the hook must return them before any registry lookup or fetch
+    const { host } = await mountAtcb(
+      baseEvent({
+        language: 'de',
+        customLabels: '{"label.addtocalendar": "X06 override", "pro.only.identifier": "X06 pro string"}',
+        identifier: 'atcb-x06',
+      }),
+    );
+    expect(triggerAria(host), 'customLabels override beats the loaded de pack').to.include('X06 override');
+    // unknown-to-core identifiers resolve through customLabels exactly like v2
+    const { atcb_translate_hook: hookOracle } = await import('../helpers/i18n.js');
+    expect(hookOracle('pro.only.identifier', { language: 'de', customLabels: { 'pro.only.identifier': 'X06 pro string' } })).to.equal('X06 pro string');
+    expect(hookOracle('pro.only.identifier', { language: 'de' }), 'without customLabels the raw identifier returns (v2 behavior)').to.equal('pro.only.identifier');
+  });
+
   it('X-05: unknown language falls back to english without any locale fetch', async () => {
     const fetchCalls = [];
     const originalFetch = window.fetch;

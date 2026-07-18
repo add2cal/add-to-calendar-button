@@ -382,3 +382,4 @@ the pattern `<template> | <dimension values>`.
 - X-03: regional pack wins for its exact locale; missing regional falls back to base english
 - X-04: date formatting respects the full locale (en-US vs en-GB ordering differs)
 - X-05: unknown language falls back to english without any locale fetch
+- X-06: customLabels wins over every locale resolution layer, incl. identifiers unknown to the core
