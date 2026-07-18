@@ -27,7 +27,8 @@
       }
     },
     "clipboard": {
-      "text": "We automatically copied a magical URL into your clipboard."
+      "text": "We automatically copied a magical URL into your clipboard.",
+      "failed": "Copying to your clipboard failed. Please copy the following link manually:"
     },
     "opensafari": {
       "ical": {

@@ -124,6 +124,23 @@
   width: fit-content;
 }
 
+/* manual-copy fallback input (shown when the automatic clipboard write failed) */
+.atcb-modal-clipboard-input {
+  background-color: transparent;
+  border: 1px solid currentcolor;
+  border-radius: 6px;
+  box-sizing: border-box;
+  color: inherit;
+  cursor: text;
+  direction: ltr;
+  font-family: monospace;
+  font-size: .9em;
+  margin: .5em 0;
+  max-width: 100%;
+  padding: .5em .6em;
+  width: 100%;
+}
+
 button.atcb-modal-btn.btn-small,
 a.atcb-modal-btn.btn-small {
   padding: .6em .8em;

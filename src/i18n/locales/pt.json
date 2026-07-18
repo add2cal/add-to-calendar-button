@@ -27,7 +27,8 @@
       }
     },
     "clipboard": {
-      "text": "Copiámos automaticamente um URL mágico para a sua área de transferência."
+      "text": "Copiámos automaticamente um URL mágico para a sua área de transferência.",
+      "failed": "Não foi possível copiar para a área de transferência. Copie o seguinte link manualmente:"
     },
     "opensafari": {
       "ical": {

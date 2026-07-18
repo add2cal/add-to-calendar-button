@@ -27,7 +27,8 @@
       }
     },
     "clipboard": {
-      "text": "Vi har automatiskt kopierat en magisk URL till ditt klippblock."
+      "text": "Vi har automatiskt kopierat en magisk URL till ditt klippblock.",
+      "failed": "Kopiering till urklipp misslyckades. Kopiera följande länk manuellt:"
     },
     "opensafari": {
       "ical": {

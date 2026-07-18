@@ -419,3 +419,31 @@ Plain Node WITHOUT DOM emulation (the ssr entry must be DOM-free); string assert
 - Z-01: the shell paints before init and is swapped for the real button without layout shift
 - Z-02: hydrated DOM matches a client-only render of the same config (normalized outerHTML equality)
 - Z-03: without declarative shadow DOM (innerHTML path) the element initializes client-only and drops the inert template
+
+## Group E2 - Recurrence fast-forward (test/wc-tests/r-E2-recurrence-fastforward.test.js)
+
+Key property: the match predicates are absolute (calendar math from the start date), so shifting the
+start by k whole periods must not change the next occurrence, and remaining COUNTs shift by exactly k.
+
+- E2-01: performance - daily recurrence starting 1980 resolves in under 50 ms (and is CURRENT, not capped)
+- E2-02: phase-shift property - unbounded daily/weekly rules yield the same next occurrence from an old and a recent start
+- E2-03: phase-shift property holds for monthly and yearly rules
+- E2-04: COUNT consumption - remaining count from an old start equals the k-shifted recent twin
+- E2-05: exhausted COUNT series lands on the final occurrence (fast-forwarded)
+- E2-06: exhausted UNTIL series lands on the final occurrence before UNTIL (fast-forwarded)
+- E2-07: bounded rules with BY* filters keep the exact iteration (no jump)
+- E2-08: unbounded rules with BY* filters do fast-forward and stay correct
+
+## Group AX - Automated a11y checks (test/wc-tests/r-AX-a11y.test.js)
+
+axe-core, WCAG 2.1 A/AA tags; color-contrast excluded (theme- and user-configurable, unstable headless).
+
+- AX-01: default trigger button has no violations
+- AX-02: open dropdown list has no violations (menu pattern: role menu + menuitem entries)
+- AX-03: date-style button has no violations
+- AX-04: modal dialog has no violations and uses a native dialog with aria-modal + accessible name
+
+## Clipboard fallback (in test/wc-tests/r-P-subscribe.test.js)
+
+- P-03b: Yahoo subscribe with a failing clipboard shows the honest failure text (new modal.clipboard.failed
+  key in all 26 packs) plus a readonly manual-copy input with select-on-focus

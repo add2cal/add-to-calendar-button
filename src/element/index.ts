@@ -62,11 +62,9 @@ if (atcbIsBrowser()) {
       if (this.shadowRoot) {
         this._ssrShellNodes = Array.from(this.shadowRoot.children);
       } else {
-        // attach the shadow root exactly like v2 did (Lit adopts a pre-attached root via
-        // createRenderRoot below). Mind that `delegateFocus` is the historic misspelling of
-        // `delegatesFocus` - it is preserved on purpose until the phase 9 WCAG pass, since
-        // fixing it changes focus behavior.
-        this.attachShadow({ mode: 'open', delegateFocus: true } as unknown as ShadowRootInit);
+        // attach the shadow root in the constructor (Lit adopts a pre-attached root via
+        // createRenderRoot below); delegatesFocus forwards host.focus() to the button
+        this.attachShadow({ mode: 'open', delegatesFocus: true });
         this._ssrShellNodes = [];
       }
       this._buttonTemplate = null;
@@ -808,6 +806,26 @@ function atcb_global_listener_keydown(event: KeyboardEvent): void {
     }
     return null;
   })();
+  // dialog pattern: while a modal without an option list is open, Tab cycles through
+  // the modal's own focusable elements instead of escaping into the page behind it
+  if (host && !host.querySelector('.atcb-list') && host.querySelector('.atcb-modal') && event.key === 'Tab') {
+    event.preventDefault();
+    const modals = host.querySelectorAll('.atcb-modal[data-modal-nr]');
+    const topModal = modals.length > 0 ? modals[modals.length - 1]! : host.querySelector('.atcb-modal')!;
+    const focusables = Array.from(topModal.querySelectorAll<HTMLElement>('button, a[href], input, select, textarea, [tabindex]:not([tabindex="-1"])')).filter((el) => !el.hasAttribute('disabled'));
+    if (focusables.length > 0) {
+      const active = (host as unknown as { activeElement: Element | null }).activeElement;
+      const currentIndex = focusables.findIndex((el) => el === active);
+      const nextIndex = (function () {
+        if (event.shiftKey) {
+          return currentIndex <= 0 ? focusables.length - 1 : currentIndex - 1;
+        }
+        return currentIndex === -1 || currentIndex === focusables.length - 1 ? 0 : currentIndex + 1;
+      })();
+      focusables[`${nextIndex}`]!.focus();
+    }
+    return;
+  }
   if (host && host.querySelector('.atcb-list') && (event.key === 'ArrowDown' || event.key === 'ArrowUp' || event.key === 'Tab')) {
     event.preventDefault();
     let targetFocus = 0;

@@ -797,6 +797,67 @@ function atcb_getNextOccurrence(rruleStr: string, startDateTime: Date, diff: num
   const occurrences: Date[] = [];
   let count = 0;
   let maxIterations = 10000;
+  // ---------- fast-forward for old start dates ----------
+  // Stepping day by day through decades is slow and silently capped by maxIterations.
+  // Jump arithmetically to a period boundary aligned with the start, at least two
+  // intervals before the relevant window, then let the day-stepper take over. The
+  // match predicates are absolute (calendar math from the start date), so a jump can
+  // never change WHICH dates match - only the occurrence COUNTING is stateful. When
+  // COUNT or UNTIL is in play, the number of occurrences consumed by the skipped span
+  // must be exact: that is only derivable arithmetically for plain rules with one
+  // occurrence per interval period (no BY* filters, no month-day anchors that skip
+  // shorter months, no Feb 29 anchor), so everything else keeps the full iteration.
+  let skippedOccurrences = 0;
+  {
+    const ffInterval = parseInt((rrule.INTERVAL as number | string | undefined)?.toString() || '1', 10) || 1;
+    const freq = rrule.FREQ as string | undefined;
+    const bounded = Boolean(rrule.COUNT) || Boolean(rrule.UNTIL);
+    const hasByRules = Boolean(rrule.BYDAY || rrule.BYMONTH || rrule.BYMONTHDAY || rrule.BYYEARDAY || rrule.BYWEEKNO || rrule.BYSETPOS);
+    const plainCountable = !hasByRules && (freq === 'DAILY' || freq === 'WEEKLY' || (freq === 'MONTHLY' && startParts.day <= 28) || (freq === 'YEARLY' && !(startParts.month0 === 1 && startParts.day === 29)));
+    if ((freq === 'DAILY' || freq === 'WEEKLY' || freq === 'MONTHLY' || freq === 'YEARLY') && (!bounded || plainCountable)) {
+      // never jump past UNTIL: an exhausted series must still land on its final occurrence
+      const target = rrule.UNTIL instanceof Date && rrule.UNTIL < upperEnd ? rrule.UNTIL : upperEnd;
+      const targetParts = getPartsForTimeZone(target, tzid);
+      const startUtcDay = Date.UTC(startParts.year, startParts.month0, startParts.day);
+      const targetUtcDay = Date.UTC(targetParts.year, targetParts.month0, targetParts.day);
+      const periodsToSkip = (function () {
+        if (freq === 'DAILY' || freq === 'WEEKLY') {
+          const periodDays = (freq === 'WEEKLY' ? 7 : 1) * ffInterval;
+          return Math.floor((targetUtcDay - startUtcDay) / 86400000 / periodDays) - 2;
+        }
+        if (freq === 'MONTHLY') {
+          const months = (targetParts.year - startParts.year) * 12 + (targetParts.month0 - startParts.month0);
+          return Math.floor(months / ffInterval) - 2;
+        }
+        return Math.floor((targetParts.year - startParts.year) / ffInterval) - 2;
+      })();
+      // keep at least the two final occurrences iterable, so the exhausted-series
+      // logic still walks onto the real last occurrence
+      const cappedPeriods = rrule.COUNT ? Math.min(periodsToSkip, Math.max(0, (rrule.COUNT as number) - 2)) : periodsToSkip;
+      if (cappedPeriods > 0) {
+        const jumped = (function () {
+          if (freq === 'DAILY' || freq === 'WEEKLY') {
+            return addLocalDays(startDateTime, cappedPeriods * (freq === 'WEEKLY' ? 7 : 1) * ffInterval, tzid, baseHhmm);
+          }
+          const monthsTotal = startParts.month0 + (freq === 'MONTHLY' ? cappedPeriods * ffInterval : 0);
+          const targetYear = startParts.year + (freq === 'YEARLY' ? cappedPeriods * ffInterval : 0) + Math.floor(monthsTotal / 12);
+          const targetMonth0 = ((monthsTotal % 12) + 12) % 12;
+          const dateStr = `${targetYear}-${pad2(targetMonth0 + 1)}-${pad2(startParts.day)}`;
+          try {
+            return new Date(`${dateStr}T${baseHhmm}:00${toIsoOffset(tzlib_get_offset(tzid, dateStr, baseHhmm))}`);
+          } catch {
+            return null;
+          }
+        })();
+        if (jumped && isFinite(jumped.getTime()) && jumped > startDateTime) {
+          currentDate = jumped;
+          // occurrences consumed by the skipped span (only tracked where exact)
+          skippedOccurrences = bounded ? cappedPeriods : 0;
+          count = skippedOccurrences;
+        }
+      }
+    }
+  }
   // Collect all valid occurrences up to COUNT or UNTIL, or until first future match is found
   while (true) {
     // Stop before pushing when we've passed UNTIL
@@ -841,7 +902,7 @@ function atcb_getNextOccurrence(rruleStr: string, startDateTime: Date, diff: num
   }
   return {
     nextOccurrence: nextDate,
-    adjustedCount: rrule.COUNT ? (rrule.COUNT as number) - countDate : count - countDate,
+    adjustedCount: rrule.COUNT ? (rrule.COUNT as number) - (countDate + skippedOccurrences) : count - (countDate + skippedOccurrences),
   };
 }
 

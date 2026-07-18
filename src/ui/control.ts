@@ -1,3 +1,4 @@
+import { atcb_result_channel } from '../core/globals';
 import { atcb_generate_dropdown_list, atcb_generate_bg_overlay, atcb_generate_overlay_dom, atcb_create_atcbl, atcb_generate_modal_host } from './generate';
 import { setActiveButton } from '../core/store';
 import { atcb_position_list, atcb_position_shadow_button_listener, atcb_manage_body_scroll, atcb_set_sizes } from './positioning';
@@ -6,6 +7,10 @@ import type { ATCBConfig } from '../types';
 
 // FUNCTIONS TO CONTROL THE INTERACTION
 function atcb_toggle(host: ShadowRoot, action: string, data: ATCBConfig | string = '', button: HTMLElement | string | null = null, keyboardTrigger: boolean = false, generatedButton: boolean = false): void {
+  // programmatic flows expecting a computed value cannot show ui - suppress the list
+  if (atcb_result_channel.active()) {
+    return;
+  }
   // check for state and adjust accordingly
   // action can be 'open', 'close', or 'auto'
   if (action == 'open') {

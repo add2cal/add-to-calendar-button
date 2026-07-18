@@ -27,7 +27,8 @@
       }
     },
     "clipboard": {
-      "text": "Olemme automaattisesti kopioineet maagisen URL-osoitteen leikepöydällesi."
+      "text": "Olemme automaattisesti kopioineet maagisen URL-osoitteen leikepöydällesi.",
+      "failed": "Kopiointi leikepöydälle epäonnistui. Kopioi seuraava linkki manuaalisesti:"
     },
     "opensafari": {
       "ical": {

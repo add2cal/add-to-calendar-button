@@ -27,7 +27,8 @@
       }
     },
     "clipboard": {
-      "text": "Kalendri veebi aadress on automaatselt kopeeritud sinu lõikelauale."
+      "text": "Kalendri veebi aadress on automaatselt kopeeritud sinu lõikelauale.",
+      "failed": "Lõikelauale kopeerimine ebaõnnestus. Palun kopeeri järgnev link käsitsi:"
     },
     "opensafari": {
       "ical": {

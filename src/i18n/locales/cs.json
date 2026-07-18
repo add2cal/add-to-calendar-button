@@ -27,7 +27,8 @@
       }
     },
     "clipboard": {
-      "text": "Do schránky jsme automaticky zkopírovali kouzelnou adresu URL."
+      "text": "Do schránky jsme automaticky zkopírovali kouzelnou adresu URL.",
+      "failed": "Kopírování do schránky se nezdařilo. Zkopíruj následující odkaz ručně:"
     },
     "opensafari": {
       "ical": {

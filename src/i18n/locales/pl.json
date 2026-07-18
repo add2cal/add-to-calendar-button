@@ -27,7 +27,8 @@
       }
     },
     "clipboard": {
-      "text": "Automatycznie skopiowaliśmy magiczny adres URL do schowka."
+      "text": "Automatycznie skopiowaliśmy magiczny adres URL do schowka.",
+      "failed": "Kopiowanie do schowka nie powiodło się. Skopiuj poniższy link ręcznie:"
     },
     "opensafari": {
       "ical": {

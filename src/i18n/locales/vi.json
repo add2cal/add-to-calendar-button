@@ -27,7 +27,8 @@
       }
     },
     "clipboard": {
-      "text": "Chúng tôi đã tự động sao chép một URL ma thuật vào khay nhớ tạm của bạn."
+      "text": "Chúng tôi đã tự động sao chép một URL ma thuật vào khay nhớ tạm của bạn.",
+      "failed": "Sao chép vào bộ nhớ tạm không thành công. Vui lòng sao chép liên kết sau theo cách thủ công:"
     },
     "opensafari": {
       "ical": {

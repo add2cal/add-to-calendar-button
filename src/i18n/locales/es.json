@@ -27,7 +27,8 @@
       }
     },
     "clipboard": {
-      "text": "Hemos copiado automáticamente una URL mágica en su portapapeles."
+      "text": "Hemos copiado automáticamente una URL mágica en su portapapeles.",
+      "failed": "No se pudo copiar al portapapeles. Por favor, copia el siguiente enlace manualmente:"
     },
     "opensafari": {
       "ical": {

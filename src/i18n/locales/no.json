@@ -27,7 +27,8 @@
       }
     },
     "clipboard": {
-      "text": "Vi kopierte automatisk en magisk URL til utklippstavlen din."
+      "text": "Vi kopierte automatisk en magisk URL til utklippstavlen din.",
+      "failed": "Kopiering til utklippstavlen mislyktes. Kopier følgende lenke manuelt:"
     },
     "opensafari": {
       "ical": {

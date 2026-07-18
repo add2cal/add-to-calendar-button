@@ -27,7 +27,8 @@
       }
     },
     "clipboard": {
-      "text": "Abbiamo copiato automaticamente un URL magico negli appunti."
+      "text": "Abbiamo copiato automaticamente un URL magico negli appunti.",
+      "failed": "La copia negli appunti non è riuscita. Copia manualmente il seguente link:"
     },
     "opensafari": {
       "ical": {
