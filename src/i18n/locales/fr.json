@@ -1,21 +1,53 @@
 {
-  "label.addtocalendar": "Ajouter à l'Agenda",
+  "label": {
+    "addtocalendar": "Ajouter à l'Agenda",
+    "share": {
+      "email": "Partager par E-mail",
+      "copy": "Copier le lien",
+      "copied": "Copié",
+      "email.subject": "Retenez cette date"
+    }
+  },
   "ical": "Fichier iCal",
-  "modal.button.default": "Cliquez-moi",
-  "modal.webview.ical.h": "Ouvrez votre navigateur",
-  "modal.webview.ical.text": "Malheureusement, les navigateurs intégrés aux applications ont des problèmes avec la manière dont nous créons les fichiers de calendrier.",
-  "modal.clipboard.text": "Nous avons automatiquement copié une URL magique dans votre presse-papier.",
-  "modal.webview.ical.steps": "<ol><li><strong>Ouvrez un autre navigateur</strong> sur votre smartphone ;</li><li><strong>Collez</strong> le contenu du presse-papier et continuez.</li></ol>",
-  "modal.opensafari.ical.h": "Ouvrir Safari",
-  "modal.opensafari.ical.text": "Malheureusement, iOS rencontre des problèmes pour générer et ouvrir le fichier de calendrier en dehors de Safari.",
-  "modal.opensafari.ical.steps": "<ol><li><strong>Ouvrez Safari</strong> ;</li><li><strong>Collez</strong> le contenu du presse-papier et continuez.</li></ol>",
-  "modal.multidate.h": "Ceci est une liste d’évènements",
-  "modal.multidate.text": "Ajouter les évènements un par un :",
-  "date.status.cancelled": "Cet évènement est annulé.",
-  "date.status.cancelled.cta": "Actualisez votre agenda !",
-  "modal.subscribe.yahoo.h": "Ajouter un agenda à Yahoo",
-  "modal.subscribe.yahoo.text": "<ol><li>Ouvrez l’Agenda Yahoo ;</li><li>Cliquez sur l’onglet « Actions » ;</li><li>Sélectionnez « Suivre d’autres agendas » ;</li><li>Choisissez un nom et collez le contenu de votre presse-papier dans le champ URL.</li></ol>",
-  "modal.subscribe.yahoo.button": "Ouvrir le calendrier Yahoo",
+  "modal": {
+    "button": {
+      "default": "Cliquez-moi"
+    },
+    "webview": {
+      "ical": {
+        "h": "Ouvrez votre navigateur",
+        "text": "Malheureusement, les navigateurs intégrés aux applications ont des problèmes avec la manière dont nous créons les fichiers de calendrier.",
+        "steps": "<ol><li><strong>Ouvrez un autre navigateur</strong> sur votre smartphone ;</li><li><strong>Collez</strong> le contenu du presse-papier et continuez.</li></ol>"
+      }
+    },
+    "clipboard": {
+      "text": "Nous avons automatiquement copié une URL magique dans votre presse-papier."
+    },
+    "opensafari": {
+      "ical": {
+        "h": "Ouvrir Safari",
+        "text": "Malheureusement, iOS rencontre des problèmes pour générer et ouvrir le fichier de calendrier en dehors de Safari.",
+        "steps": "<ol><li><strong>Ouvrez Safari</strong> ;</li><li><strong>Collez</strong> le contenu du presse-papier et continuez.</li></ol>"
+      }
+    },
+    "multidate": {
+      "h": "Ceci est une liste d’évènements",
+      "text": "Ajouter les évènements un par un :"
+    },
+    "subscribe": {
+      "yahoo": {
+        "h": "Ajouter un agenda à Yahoo",
+        "text": "<ol><li>Ouvrez l’Agenda Yahoo ;</li><li>Cliquez sur l’onglet « Actions » ;</li><li>Sélectionnez « Suivre d’autres agendas » ;</li><li>Choisissez un nom et collez le contenu de votre presse-papier dans le champ URL.</li></ol>",
+        "button": "Ouvrir le calendrier Yahoo"
+      }
+    }
+  },
+  "date": {
+    "status": {
+      "cancelled": "Cet évènement est annulé.",
+      "cancelled.cta": "Actualisez votre agenda !"
+    }
+  },
   "close": "Fermer",
   "continue": "Continuer",
   "cancel": "Annuler",
@@ -23,11 +55,11 @@
   "recurring": "Récurrent",
   "thankyou": "Merci",
   "submit": "Envoyer",
-  "label.share.email": "Partager par E-mail",
-  "label.share.copy": "Copier le lien",
-  "label.share.copied": "Copié",
-  "label.share.email.subject": "Retenez cette date",
-  "form.error.required": "Tu n'as pas correctement rempli tous les champs requis",
-  "form.error.sending": "Il y a eu un problème lors de l'envoi de ta réponse. Veuillez réessayer plus tard",
-  "form.success": "Envoyé avec succès!"
+  "form": {
+    "error": {
+      "required": "Tu n'as pas correctement rempli tous les champs requis",
+      "sending": "Il y a eu un problème lors de l'envoi de ta réponse. Veuillez réessayer plus tard"
+    },
+    "success": "Envoyé avec succès!"
+  }
 }

@@ -268,7 +268,7 @@ function sanityCheck() {
   }
   if (!moduleBuild.includes('atcbStyleRelPath = "../styles/"') && !moduleBuild.includes("atcbStyleRelPath = '../styles/'")) problems.push('dist/module/index.js: style relpath not adjusted');
   if (!moduleBuild.includes('atcbLocaleRelPath = "../locales/"') && !moduleBuild.includes("atcbLocaleRelPath = '../locales/'")) problems.push('dist/module/index.js: locale relpath not adjusted');
-  if (!styled.includes('label.addtocalendar')) problems.push('dist/atcb.js: english translations missing');
+  if (!styled.includes('addtocalendar')) problems.push('dist/atcb.js: english translations missing');
   if (styled.includes('Zum Kalender hinzu') || moduleBuild.includes('Zum Kalender hinzu')) problems.push('bundles must not inline non-english locales');
   if (!fs.existsSync(r('dist/locales', 'de.json')) || !fs.existsSync(r('dist/locales', 'de.js'))) problems.push('dist/locales assets missing');
   if (!styled.includes('@preserve')) problems.push('dist/atcb.js: @preserve license blocks missing');

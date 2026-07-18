@@ -1,21 +1,53 @@
 {
-  "label.addtocalendar": "Añadir al Calendario",
+  "label": {
+    "addtocalendar": "Añadir al Calendario",
+    "share": {
+      "email": "Compartir por E-mail",
+      "copy": "Copiar enlace",
+      "copied": "Copiado",
+      "email.subject": "Recuerda esta fecha"
+    }
+  },
   "ical": "iCal Ficha",
-  "modal.button.default": "Haz clic mí",
-  "modal.webview.ical.h": "Abra su browser",
-  "modal.webview.ical.text": "Lamentablemente, los browsers in-app tienen problemas con la forma en que generamos el archivo del calendario.",
-  "modal.clipboard.text": "Hemos copiado automáticamente una URL mágica en su portapapeles.",
-  "modal.webview.ical.steps": "<ol><li><strong>Abre otro browser</strong> en tu smartphone, ...</li><li>Utilice la función de <strong>pegar</strong> para continuar.</li></ol>",
-  "modal.opensafari.ical.h": "Abrir Safari",
-  "modal.opensafari.ical.text": "Desafortunadamente, iOS tiene algunos problemas para generar y abrir el archivo de calendario fuera de Safari.",
-  "modal.opensafari.ical.steps": "<ol><li><strong>Abrir Safari</strong>, ...</li><li>Utilice la función de <strong>pegar</strong> para continuar.</li></ol>",
-  "modal.multidate.h": "Esta es una serie de fechas",
-  "modal.multidate.text": "Añada las fechas individuales a su calendario en orden:",
-  "date.status.cancelled": "Esta fecha fue cancelada.",
-  "date.status.cancelled.cta": "Actualice su calendario!",
-  "modal.subscribe.yahoo.h": "Añadir calendario a Yahoo",
-  "modal.subscribe.yahoo.text": "<ol><li>Abra el calendario de Yahoo.</li><li>Haga clic en la pestaña \"Acciones\".</li><li>Seleccione \"Seguir otros calendarios\".</li><li>Elige un nombre y pega la URL de tu portapapeles en el campo URL.</li></ol>",
-  "modal.subscribe.yahoo.button": "Abrir calendario de Yahoo",
+  "modal": {
+    "button": {
+      "default": "Haz clic mí"
+    },
+    "webview": {
+      "ical": {
+        "h": "Abra su browser",
+        "text": "Lamentablemente, los browsers in-app tienen problemas con la forma en que generamos el archivo del calendario.",
+        "steps": "<ol><li><strong>Abre otro browser</strong> en tu smartphone, ...</li><li>Utilice la función de <strong>pegar</strong> para continuar.</li></ol>"
+      }
+    },
+    "clipboard": {
+      "text": "Hemos copiado automáticamente una URL mágica en su portapapeles."
+    },
+    "opensafari": {
+      "ical": {
+        "h": "Abrir Safari",
+        "text": "Desafortunadamente, iOS tiene algunos problemas para generar y abrir el archivo de calendario fuera de Safari.",
+        "steps": "<ol><li><strong>Abrir Safari</strong>, ...</li><li>Utilice la función de <strong>pegar</strong> para continuar.</li></ol>"
+      }
+    },
+    "multidate": {
+      "h": "Esta es una serie de fechas",
+      "text": "Añada las fechas individuales a su calendario en orden:"
+    },
+    "subscribe": {
+      "yahoo": {
+        "h": "Añadir calendario a Yahoo",
+        "text": "<ol><li>Abra el calendario de Yahoo.</li><li>Haga clic en la pestaña \"Acciones\".</li><li>Seleccione \"Seguir otros calendarios\".</li><li>Elige un nombre y pega la URL de tu portapapeles en el campo URL.</li></ol>",
+        "button": "Abrir calendario de Yahoo"
+      }
+    }
+  },
+  "date": {
+    "status": {
+      "cancelled": "Esta fecha fue cancelada.",
+      "cancelled.cta": "Actualice su calendario!"
+    }
+  },
   "close": "Ciérralo",
   "continue": "Continuar",
   "cancel": "Cancelar",
@@ -23,11 +55,11 @@
   "recurring": "Periódica",
   "thankyou": "Gracias",
   "submit": "Enviar",
-  "label.share.email": "Compartir por E-mail",
-  "label.share.copy": "Copiar enlace",
-  "label.share.copied": "Copiado",
-  "label.share.email.subject": "Recuerda esta fecha",
-  "form.error.required": "No has completado correctamente todos los campos requeridos",
-  "form.error.sending": "Hubo un problema al enviar tu respuesta. Por favor, inténtalo de nuevo más tarde",
-  "form.success": "Enviado con éxito!"
+  "form": {
+    "error": {
+      "required": "No has completado correctamente todos los campos requeridos",
+      "sending": "Hubo un problema al enviar tu respuesta. Por favor, inténtalo de nuevo más tarde"
+    },
+    "success": "Enviado con éxito!"
+  }
 }

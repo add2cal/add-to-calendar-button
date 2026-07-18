@@ -1,21 +1,53 @@
 {
-  "label.addtocalendar": "캘린더에 추가",
+  "label": {
+    "addtocalendar": "캘린더에 추가",
+    "share": {
+      "email": "이메일로 공유하기",
+      "copy": "링크 복사하기",
+      "copied": "복사됨",
+      "email.subject": "이 날짜를 기억하세요"
+    }
+  },
   "ical": "iCal 파일",
-  "modal.button.default": "클릭 해주세요",
-  "modal.webview.ical.h": "브라우저 열기",
-  "modal.webview.ical.text": "불행히도 인앱 브라우저는 캘린더 파일을 생성하는 방식에 문제가 있습니다.",
-  "modal.clipboard.text": "매직 URL을 클립보드에 자동으로 복사했습니다.",
-  "modal.webview.ical.steps": "<ol><li>휴대전화에서 다른 브라우저 열기, ...</li><li>클립보드 내용을 붙여넣고 이동합니다.</li></ol>",
-  "modal.opensafari.ical.h": "Safari 열기",
-  "modal.opensafari.ical.text": "안타깝게도 iOS에는 Safari 외부에서 캘린더 파일을 생성하고 여는 데 몇 가지 문제가 있습니다.",
-  "modal.opensafari.ical.steps": "<ol><li><strong>Safari 열기</strong>, ...</li><li>클립보드 내용을 붙여넣고 이동합니다.</li></ol>",
-  "modal.multidate.h": "이벤트 시리즈입니다",
-  "modal.multidate.text": "개별 부품을 하나씩 추가:",
-  "date.status.cancelled": "이 날짜는 취소되었습니다.",
-  "date.status.cancelled.cta": "캘린더를 업데이트하세요!",
-  "modal.subscribe.yahoo.h": "Yahoo에 캘린더 추가",
-  "modal.subscribe.yahoo.text": "<ol><li>Yahoo 캘린더를 엽니다.</li><li>\"동작\" 탭을 클릭합니다.</li><li>\"다른 일정관리 팔로우\"를 선택합니다.</li><li>이름을 선택하고 클립보드의 URL을 URL 필드에 붙여넣습니다.</li></ol>",
-  "modal.subscribe.yahoo.button": "야후 캘린더 열기",
+  "modal": {
+    "button": {
+      "default": "클릭 해주세요"
+    },
+    "webview": {
+      "ical": {
+        "h": "브라우저 열기",
+        "text": "불행히도 인앱 브라우저는 캘린더 파일을 생성하는 방식에 문제가 있습니다.",
+        "steps": "<ol><li>휴대전화에서 다른 브라우저 열기, ...</li><li>클립보드 내용을 붙여넣고 이동합니다.</li></ol>"
+      }
+    },
+    "clipboard": {
+      "text": "매직 URL을 클립보드에 자동으로 복사했습니다."
+    },
+    "opensafari": {
+      "ical": {
+        "h": "Safari 열기",
+        "text": "안타깝게도 iOS에는 Safari 외부에서 캘린더 파일을 생성하고 여는 데 몇 가지 문제가 있습니다.",
+        "steps": "<ol><li><strong>Safari 열기</strong>, ...</li><li>클립보드 내용을 붙여넣고 이동합니다.</li></ol>"
+      }
+    },
+    "multidate": {
+      "h": "이벤트 시리즈입니다",
+      "text": "개별 부품을 하나씩 추가:"
+    },
+    "subscribe": {
+      "yahoo": {
+        "h": "Yahoo에 캘린더 추가",
+        "text": "<ol><li>Yahoo 캘린더를 엽니다.</li><li>\"동작\" 탭을 클릭합니다.</li><li>\"다른 일정관리 팔로우\"를 선택합니다.</li><li>이름을 선택하고 클립보드의 URL을 URL 필드에 붙여넣습니다.</li></ol>",
+        "button": "야후 캘린더 열기"
+      }
+    }
+  },
+  "date": {
+    "status": {
+      "cancelled": "이 날짜는 취소되었습니다.",
+      "cancelled.cta": "캘린더를 업데이트하세요!"
+    }
+  },
   "close": "닫다",
   "continue": "계속하다",
   "cancel": "취소",
@@ -23,11 +55,11 @@
   "recurring": "되풀이",
   "thankyou": "감사합니다",
   "submit": "제출하기",
-  "label.share.email": "이메일로 공유하기",
-  "label.share.copy": "링크 복사하기",
-  "label.share.copied": "복사됨",
-  "label.share.email.subject": "이 날짜를 기억하세요",
-  "form.error.required": "필수 필드를 모두 올바르게 채우지 않았습니다",
-  "form.error.sending": "응답을 보내는 데 문제가 발생했습니다. 나중에 다시 시도해주세요",
-  "form.success": "성공적으로 전송됨!"
+  "form": {
+    "error": {
+      "required": "필수 필드를 모두 올바르게 채우지 않았습니다",
+      "sending": "응답을 보내는 데 문제가 발생했습니다. 나중에 다시 시도해주세요"
+    },
+    "success": "성공적으로 전송됨!"
+  }
 }

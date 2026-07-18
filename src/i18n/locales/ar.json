@@ -1,21 +1,53 @@
 {
-  "label.addtocalendar": "إضافة إلى التقويم",
+  "label": {
+    "addtocalendar": "إضافة إلى التقويم",
+    "share": {
+      "email": "مشاركة عبر البريد الإلكتروني",
+      "copy": "نسخ الرابط",
+      "copied": "تم النسخ",
+      "email.subject": "تذكر هذا الموعد"
+    }
+  },
   "ical": "ملف iCal",
-  "modal.button.default": "انقر فوق لي",
-  "modal.webview.ical.h": "افتح المستعرض الخاص بك",
-  "modal.webview.ical.text": "لسوء الحظ ، تواجه المتصفحات داخل التطبيق مشاكل في طريقة إنشاء ملف التقويم.",
-  "modal.clipboard.text": "قمنا تلقائيًا بنسخ عنوان URL سحري إلى الحافظة الخاصة بك.",
-  "modal.webview.ical.steps": "<ol><li>افتح أي متصفح آخر على هاتفك الذكي, ...</li><li>.الصق محتوى الحافظة واذهب</li></ol>",
-  "modal.opensafari.ical.h": "افتح Safari",
-  "modal.opensafari.ical.text": "لسوء الحظ ، يواجه iOS بعض المشكلات في إنشاء ملف التقويم وفتحه خارج Safari.",
-  "modal.opensafari.ical.steps": "<ol><li><strong>افتح Safari</strong>, ...</li><li>الصق محتوى الحافظة واذهب.</li></ol>",
-  "modal.multidate.h": "هذه سلسلة أحداث",
-  "modal.multidate.text": "أضف الأجزاء الفردية واحدة تلو الأخرى:",
-  "date.status.cancelled": "تم إلغاء هذا التاريخ.",
-  "date.status.cancelled.cta": "الرجاء تحديث التقويم الخاص بك!",
-  "modal.subscribe.yahoo.h": "أضف التقويم إلى Yahoo",
-  "modal.subscribe.yahoo.text": "<ol><li>افتح تقويم Yahoo.</li><li>انقر فوق علامة التبويب \"الإجراءات\".</li><li>حدد \"متابعة تقويمات أخرى\".</li><li>اختر اسمًا والصق عنوان URL من الحافظة الخاصة بك في حقل URL.</li></ol>",
-  "modal.subscribe.yahoo.button": "افتح تقويم ياهو",
+  "modal": {
+    "button": {
+      "default": "انقر فوق لي"
+    },
+    "webview": {
+      "ical": {
+        "h": "افتح المستعرض الخاص بك",
+        "text": "لسوء الحظ ، تواجه المتصفحات داخل التطبيق مشاكل في طريقة إنشاء ملف التقويم.",
+        "steps": "<ol><li>افتح أي متصفح آخر على هاتفك الذكي, ...</li><li>.الصق محتوى الحافظة واذهب</li></ol>"
+      }
+    },
+    "clipboard": {
+      "text": "قمنا تلقائيًا بنسخ عنوان URL سحري إلى الحافظة الخاصة بك."
+    },
+    "opensafari": {
+      "ical": {
+        "h": "افتح Safari",
+        "text": "لسوء الحظ ، يواجه iOS بعض المشكلات في إنشاء ملف التقويم وفتحه خارج Safari.",
+        "steps": "<ol><li><strong>افتح Safari</strong>, ...</li><li>الصق محتوى الحافظة واذهب.</li></ol>"
+      }
+    },
+    "multidate": {
+      "h": "هذه سلسلة أحداث",
+      "text": "أضف الأجزاء الفردية واحدة تلو الأخرى:"
+    },
+    "subscribe": {
+      "yahoo": {
+        "h": "أضف التقويم إلى Yahoo",
+        "text": "<ol><li>افتح تقويم Yahoo.</li><li>انقر فوق علامة التبويب \"الإجراءات\".</li><li>حدد \"متابعة تقويمات أخرى\".</li><li>اختر اسمًا والصق عنوان URL من الحافظة الخاصة بك في حقل URL.</li></ol>",
+        "button": "افتح تقويم ياهو"
+      }
+    }
+  },
+  "date": {
+    "status": {
+      "cancelled": "تم إلغاء هذا التاريخ.",
+      "cancelled.cta": "الرجاء تحديث التقويم الخاص بك!"
+    }
+  },
   "close": "قريب",
   "continue": "استمر",
   "cancel": "إحباط",
@@ -23,11 +55,11 @@
   "recurring": "يتكرر",
   "thankyou": "شكرا",
   "submit": "إرسال",
-  "label.share.email": "مشاركة عبر البريد الإلكتروني",
-  "label.share.copy": "نسخ الرابط",
-  "label.share.copied": "تم النسخ",
-  "label.share.email.subject": "تذكر هذا الموعد",
-  "form.error.required": "لم تقم بملء جميع الحقول المطلوبة بشكل صحيح",
-  "form.error.sending": "حدثت مشكلة أثناء إرسال ردك. الرجاء المحاولة لاحقاً",
-  "form.success": "تم الإرسال بنجاح!"
+  "form": {
+    "error": {
+      "required": "لم تقم بملء جميع الحقول المطلوبة بشكل صحيح",
+      "sending": "حدثت مشكلة أثناء إرسال ردك. الرجاء المحاولة لاحقاً"
+    },
+    "success": "تم الإرسال بنجاح!"
+  }
 }

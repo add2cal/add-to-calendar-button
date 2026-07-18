@@ -1,21 +1,53 @@
 {
-  "label.addtocalendar": "Opslaan in Agenda",
+  "label": {
+    "addtocalendar": "Opslaan in Agenda",
+    "share": {
+      "email": "Delen via E-mail",
+      "copy": "Link kopiëren",
+      "copied": "Gekopieerd",
+      "email.subject": "Onthoud deze datum"
+    }
+  },
   "ical": "iCal File",
-  "modal.button.default": "Klik me",
-  "modal.webview.ical.h": "Open uw browser",
-  "modal.webview.ical.text": "Helaas hebben in-app browsers problemen met de manier waarop wij kalenderbestanden maken.",
-  "modal.clipboard.text": "We hebben automatisch een magische URL naar je klembord gekopieerd.",
-  "modal.webview.ical.steps": "<ol><li><strong>Open een andere browser</strong> op uw smartphone, ...</li><li>Gebruik de <strong>insert</strong> functie om verder te gaan.</li></ol>",
-  "modal.opensafari.ical.h": "Open Safari",
-  "modal.opensafari.ical.text": "Helaas heeft iOS enkele problemen met het genereren en openen van het agendabestand buiten Safari.",
-  "modal.opensafari.ical.steps": "<ol><li><strong>Open Safari</strong>, ...</li><li>Gebruik de <strong>insert</strong> functie om verder te gaan.</li></ol>",
-  "modal.multidate.h": "Dit is een reeks data",
-  "modal.multidate.text": "Voeg de afzonderlijke delen één voor één toe:",
-  "date.status.cancelled": "Deze datum is geannuleerd.",
-  "date.status.cancelled.cta": "Uw agenda bijwerken!",
-  "modal.subscribe.yahoo.h": "Toevoegen aan Yahoo",
-  "modal.subscribe.yahoo.text": "<ol><li>Open de Yahoo calendar.</li><li>Klik op de \"Acties\" tab.</li><li>Selecteer \"Volg Andere Agenda's\".</li><li>Kies een naam en plak de URL van uw klembord in het URL-veld.</li></ol>",
-  "modal.subscribe.yahoo.button": "Open Yahoo Agenda",
+  "modal": {
+    "button": {
+      "default": "Klik me"
+    },
+    "webview": {
+      "ical": {
+        "h": "Open uw browser",
+        "text": "Helaas hebben in-app browsers problemen met de manier waarop wij kalenderbestanden maken.",
+        "steps": "<ol><li><strong>Open een andere browser</strong> op uw smartphone, ...</li><li>Gebruik de <strong>insert</strong> functie om verder te gaan.</li></ol>"
+      }
+    },
+    "clipboard": {
+      "text": "We hebben automatisch een magische URL naar je klembord gekopieerd."
+    },
+    "opensafari": {
+      "ical": {
+        "h": "Open Safari",
+        "text": "Helaas heeft iOS enkele problemen met het genereren en openen van het agendabestand buiten Safari.",
+        "steps": "<ol><li><strong>Open Safari</strong>, ...</li><li>Gebruik de <strong>insert</strong> functie om verder te gaan.</li></ol>"
+      }
+    },
+    "multidate": {
+      "h": "Dit is een reeks data",
+      "text": "Voeg de afzonderlijke delen één voor één toe:"
+    },
+    "subscribe": {
+      "yahoo": {
+        "h": "Toevoegen aan Yahoo",
+        "text": "<ol><li>Open de Yahoo calendar.</li><li>Klik op de \"Acties\" tab.</li><li>Selecteer \"Volg Andere Agenda's\".</li><li>Kies een naam en plak de URL van uw klembord in het URL-veld.</li></ol>",
+        "button": "Open Yahoo Agenda"
+      }
+    }
+  },
+  "date": {
+    "status": {
+      "cancelled": "Deze datum is geannuleerd.",
+      "cancelled.cta": "Uw agenda bijwerken!"
+    }
+  },
   "close": "Sluiten",
   "continue": "Doorgaan",
   "cancel": "Annuleren",
@@ -23,11 +55,11 @@
   "recurring": "Terugkerend",
   "thankyou": "Bedankt",
   "submit": "Versturen",
-  "label.share.email": "Delen via E-mail",
-  "label.share.copy": "Link kopiëren",
-  "label.share.copied": "Gekopieerd",
-  "label.share.email.subject": "Onthoud deze datum",
-  "form.error.required": "Je hebt niet alle vereiste velden correct ingevuld",
-  "form.error.sending": "Er was een probleem met het versturen van je antwoord. Probeer het later opnieuw",
-  "form.success": "Succesvol verstuurd!"
+  "form": {
+    "error": {
+      "required": "Je hebt niet alle vereiste velden correct ingevuld",
+      "sending": "Er was een probleem met het versturen van je antwoord. Probeer het later opnieuw"
+    },
+    "success": "Succesvol verstuurd!"
+  }
 }

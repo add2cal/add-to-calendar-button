@@ -1,21 +1,53 @@
 {
-  "label.addtocalendar": "Thêm vào Lịch",
+  "label": {
+    "addtocalendar": "Thêm vào Lịch",
+    "share": {
+      "email": "Chia sẻ qua Email",
+      "copy": "Sao chép liên kết",
+      "copied": "Đã sao chép",
+      "email.subject": "Ghi nhớ ngày này"
+    }
+  },
   "ical": "Tệp iCal",
-  "modal.button.default": "Nhấp vào đây",
-  "modal.webview.ical.h": "Mở trình duyệt của bạn",
-  "modal.webview.ical.text": "Rất tiếc, các trình duyệt trong ứng dụng gặp sự cố với cách chúng tôi tạo tệp lịch.",
-  "modal.clipboard.text": "Chúng tôi đã tự động sao chép một URL ma thuật vào khay nhớ tạm của bạn.",
-  "modal.webview.ical.steps": "<ol><li><strong> Mở trình duyệt khác </strong> trên điện thoại của bạn, ...</li><li><strong> Dán </strong> nội dung khay nhớ tạm và bắt đầu.</li></ol>",
-  "modal.opensafari.ical.h": "Mở Safari",
-  "modal.opensafari.ical.text": "Rất tiếc, iOS gặp một số sự cố khi tạo và mở tệp lịch bên ngoài Safari.",
-  "modal.opensafari.ical.steps": "<ol><li><strong>Mở Safari</strong>, ...</li><li><strong> Dán </strong> nội dung khay nhớ tạm và bắt đầu.</li></ol>",
-  "modal.multidate.h": "Đây là một chuỗi sự kiện",
-  "modal.multidate.text": "Thêm từng phần riêng lẻ một:",
-  "date.status.cancelled": "Ngày này đã bị hủy.",
-  "date.status.cancelled.cta": "Cập nhật lịch của bạn!",
-  "modal.subscribe.yahoo.h": "Thêm lịch vào Yahoo",
-  "modal.subscribe.yahoo.text": "<ol><li>Mở Lịch Yahoo.</li><li>Nhấp vào tab \"Hành động\".</li><li>Chọn \"Theo dõi các Lịch khác\".</li><li>Chọn tên và dán URL từ khay nhớ tạm của bạn vào trường URL.</li></ol>",
-  "modal.subscribe.yahoo.button": "Mở lịch Yahoo",
+  "modal": {
+    "button": {
+      "default": "Nhấp vào đây"
+    },
+    "webview": {
+      "ical": {
+        "h": "Mở trình duyệt của bạn",
+        "text": "Rất tiếc, các trình duyệt trong ứng dụng gặp sự cố với cách chúng tôi tạo tệp lịch.",
+        "steps": "<ol><li><strong> Mở trình duyệt khác </strong> trên điện thoại của bạn, ...</li><li><strong> Dán </strong> nội dung khay nhớ tạm và bắt đầu.</li></ol>"
+      }
+    },
+    "clipboard": {
+      "text": "Chúng tôi đã tự động sao chép một URL ma thuật vào khay nhớ tạm của bạn."
+    },
+    "opensafari": {
+      "ical": {
+        "h": "Mở Safari",
+        "text": "Rất tiếc, iOS gặp một số sự cố khi tạo và mở tệp lịch bên ngoài Safari.",
+        "steps": "<ol><li><strong>Mở Safari</strong>, ...</li><li><strong> Dán </strong> nội dung khay nhớ tạm và bắt đầu.</li></ol>"
+      }
+    },
+    "multidate": {
+      "h": "Đây là một chuỗi sự kiện",
+      "text": "Thêm từng phần riêng lẻ một:"
+    },
+    "subscribe": {
+      "yahoo": {
+        "h": "Thêm lịch vào Yahoo",
+        "text": "<ol><li>Mở Lịch Yahoo.</li><li>Nhấp vào tab \"Hành động\".</li><li>Chọn \"Theo dõi các Lịch khác\".</li><li>Chọn tên và dán URL từ khay nhớ tạm của bạn vào trường URL.</li></ol>",
+        "button": "Mở lịch Yahoo"
+      }
+    }
+  },
+  "date": {
+    "status": {
+      "cancelled": "Ngày này đã bị hủy.",
+      "cancelled.cta": "Cập nhật lịch của bạn!"
+    }
+  },
   "close": "Đóng",
   "continue": "Tiếp tục",
   "cancel": "Hủy bỏ",
@@ -23,11 +55,11 @@
   "recurring": "Định kỳ",
   "thankyou": "Cảm ơn",
   "submit": "Gửi",
-  "label.share.email": "Chia sẻ qua Email",
-  "label.share.copy": "Sao chép liên kết",
-  "label.share.copied": "Đã sao chép",
-  "label.share.email.subject": "Ghi nhớ ngày này",
-  "form.error.required": "Bạn chưa điền đúng tất cả các trường bắt buộc",
-  "form.error.sending": "Có sự cố khi gửi phản hồi của bạn. Vui lòng thử lại sau",
-  "form.success": "Gửi thành công!"
+  "form": {
+    "error": {
+      "required": "Bạn chưa điền đúng tất cả các trường bắt buộc",
+      "sending": "Có sự cố khi gửi phản hồi của bạn. Vui lòng thử lại sau"
+    },
+    "success": "Gửi thành công!"
+  }
 }

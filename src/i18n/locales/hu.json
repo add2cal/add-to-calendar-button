@@ -1,21 +1,54 @@
 {
-  "label.addtocalendar": "Hozzáadás a naptárhoz",
+  "label": {
+    "addtocalendar": "Hozzáadás a naptárhoz",
+    "rsvp": "Válasz",
+    "share": {
+      "email": "Megosztás e-mailben",
+      "copy": "Link másolása",
+      "copied": "Másolva",
+      "email.subject": "Mentsd el ezt az eseményt"
+    }
+  },
   "ical": "iCal fájl",
-  "modal.button.default": "Kattints ide",
-  "modal.webview.ical.h": "Nyisd meg a böngészőt",
-  "modal.webview.ical.text": "Sajnos az alkalmazáson belüli böngészőknek problémái vannak a naptárfájl generálásával.",
-  "modal.clipboard.text": "Automatikusan átmásoltunk egy varázslatos URL-t a vágólapodra.",
-  "modal.webview.ical.steps": "<ol><li><strong>Nyiss meg egy másik böngészőt</strong> a telefonodon, ...</li><li><strong>Illeszd be</strong> a vágólap tartalmát és menj.</li></ol>",
-  "modal.opensafari.ical.h": "Safari megnyitása",
-  "modal.opensafari.ical.text": "Sajnos az iOS-nek problémái vannak a naptárfájl generálásával és megnyitásával a Safarin kívül.",
-  "modal.opensafari.ical.steps": "<ol><li><strong>Nyisd meg a Safarit</strong>, ...</li><li><strong>Illeszd be</strong> a vágólap tartalmát és menj.</li></ol>",
-  "modal.multidate.h": "Ez egy eseménysorozat",
-  "modal.multidate.text": "Add hozzá az egyes eseményeket egyenként:",
-  "date.status.cancelled": "Ez a dátum lemondásra került.",
-  "date.status.cancelled.cta": "Kérjük, frissítsd a naptáradat!",
-  "modal.subscribe.yahoo.h": "Naptár hozzáadása a Yahoo-hoz",
-  "modal.subscribe.yahoo.text": "<ol><li>Nyisd meg a Yahoo Naptárt most.</li><li>Kattints a \"Actions\" fülre.</li><li>Válaszd a \"Follow Other Calendars\" opciót.</li><li>Adj meg egy nevet és illeszd be a vágólap tartalmát az URL mezőbe.</li></ol>",
-  "modal.subscribe.yahoo.button": "Yahoo Naptár megnyitása",
+  "modal": {
+    "button": {
+      "default": "Kattints ide"
+    },
+    "webview": {
+      "ical": {
+        "h": "Nyisd meg a böngészőt",
+        "text": "Sajnos az alkalmazáson belüli böngészőknek problémái vannak a naptárfájl generálásával.",
+        "steps": "<ol><li><strong>Nyiss meg egy másik böngészőt</strong> a telefonodon, ...</li><li><strong>Illeszd be</strong> a vágólap tartalmát és menj.</li></ol>"
+      }
+    },
+    "clipboard": {
+      "text": "Automatikusan átmásoltunk egy varázslatos URL-t a vágólapodra."
+    },
+    "opensafari": {
+      "ical": {
+        "h": "Safari megnyitása",
+        "text": "Sajnos az iOS-nek problémái vannak a naptárfájl generálásával és megnyitásával a Safarin kívül.",
+        "steps": "<ol><li><strong>Nyisd meg a Safarit</strong>, ...</li><li><strong>Illeszd be</strong> a vágólap tartalmát és menj.</li></ol>"
+      }
+    },
+    "multidate": {
+      "h": "Ez egy eseménysorozat",
+      "text": "Add hozzá az egyes eseményeket egyenként:"
+    },
+    "subscribe": {
+      "yahoo": {
+        "h": "Naptár hozzáadása a Yahoo-hoz",
+        "text": "<ol><li>Nyisd meg a Yahoo Naptárt most.</li><li>Kattints a \"Actions\" fülre.</li><li>Válaszd a \"Follow Other Calendars\" opciót.</li><li>Adj meg egy nevet és illeszd be a vágólap tartalmát az URL mezőbe.</li></ol>",
+        "button": "Yahoo Naptár megnyitása"
+      }
+    }
+  },
+  "date": {
+    "status": {
+      "cancelled": "Ez a dátum lemondásra került.",
+      "cancelled.cta": "Kérjük, frissítsd a naptáradat!"
+    }
+  },
   "close": "Bezárás",
   "continue": "Folytatás",
   "cancel": "Mégse",
@@ -23,12 +56,11 @@
   "recurring": "Ismétlődő",
   "thankyou": "Köszönjük",
   "submit": "Küldés",
-  "label.rsvp": "Válasz",
-  "label.share.email": "Megosztás e-mailben",
-  "label.share.copy": "Link másolása",
-  "label.share.copied": "Másolva",
-  "label.share.email.subject": "Mentsd el ezt az eseményt",
-  "form.error.required": "Nem töltöttél ki megfelelően minden kötelező mezőt",
-  "form.error.sending": "Hiba történt a válasz küldése során. Kérjük, próbáld újra később",
-  "form.success": "Sikeresen elküldve!"
+  "form": {
+    "error": {
+      "required": "Nem töltöttél ki megfelelően minden kötelező mezőt",
+      "sending": "Hiba történt a válasz küldése során. Kérjük, próbáld újra később"
+    },
+    "success": "Sikeresen elküldve!"
+  }
 }

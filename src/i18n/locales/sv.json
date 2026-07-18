@@ -1,21 +1,53 @@
 {
-  "label.addtocalendar": "Lägg till i kalender",
+  "label": {
+    "addtocalendar": "Lägg till i kalender",
+    "share": {
+      "email": "Dela via e-post",
+      "copy": "Kopiera länk",
+      "copied": "Kopierat",
+      "email.subject": "Kom ihåg detta datum"
+    }
+  },
   "ical": "iCal-fil",
-  "modal.button.default": "Klicka på mig",
-  "modal.webview.ical.h": "Öppna din webbläsare",
-  "modal.webview.ical.text": "Tyvärr har webbläsare i appen problem med hur vi genererar kalenderfilen.",
-  "modal.clipboard.text": "Vi har automatiskt kopierat en magisk URL till ditt klippblock.",
-  "modal.webview.ical.steps": "<ol><li><strong>Öppna en annan webbläsare</strong> på telefonen, ...</li><li><strong>Insätt</strong> innehållet i klippbordet och kör.</li></ol>",
-  "modal.opensafari.ical.h": "Öppna Safari",
-  "modal.opensafari.ical.text": "Tyvärr har iOS vissa problem med att generera och öppna kalenderfilen utanför Safari.",
-  "modal.opensafari.ical.steps": "<ol><li><strong>Öppna Safari</strong>, ...</li><li><strong>Insätt</strong> innehållet i klippbordet och kör.</li></ol>",
-  "modal.multidate.h": "Detta är en evenemangsserie",
-  "modal.multidate.text": "Lägg till de enskilda delarna en efter en:",
-  "date.status.cancelled": "Detta datum har ställts in.",
-  "date.status.cancelled.cta": "Uppdatera din kalender!",
-  "modal.subscribe.yahoo.h": "Lägg till kalender i Yahoo",
-  "modal.subscribe.yahoo.text": "<ol><li>Öppna Yahoo-kalendern.</li><li>Klicka på fliken \"Åtgärder\".</li><li>Välj \"Följ andra kalendrar\".</li><li>Välj ett namn och klistra in URL:en från klippbordet i URL-fältet.</li></ol>",
-  "modal.subscribe.yahoo.button": "Öppna Yahoo-kalendern",
+  "modal": {
+    "button": {
+      "default": "Klicka på mig"
+    },
+    "webview": {
+      "ical": {
+        "h": "Öppna din webbläsare",
+        "text": "Tyvärr har webbläsare i appen problem med hur vi genererar kalenderfilen.",
+        "steps": "<ol><li><strong>Öppna en annan webbläsare</strong> på telefonen, ...</li><li><strong>Insätt</strong> innehållet i klippbordet och kör.</li></ol>"
+      }
+    },
+    "clipboard": {
+      "text": "Vi har automatiskt kopierat en magisk URL till ditt klippblock."
+    },
+    "opensafari": {
+      "ical": {
+        "h": "Öppna Safari",
+        "text": "Tyvärr har iOS vissa problem med att generera och öppna kalenderfilen utanför Safari.",
+        "steps": "<ol><li><strong>Öppna Safari</strong>, ...</li><li><strong>Insätt</strong> innehållet i klippbordet och kör.</li></ol>"
+      }
+    },
+    "multidate": {
+      "h": "Detta är en evenemangsserie",
+      "text": "Lägg till de enskilda delarna en efter en:"
+    },
+    "subscribe": {
+      "yahoo": {
+        "h": "Lägg till kalender i Yahoo",
+        "text": "<ol><li>Öppna Yahoo-kalendern.</li><li>Klicka på fliken \"Åtgärder\".</li><li>Välj \"Följ andra kalendrar\".</li><li>Välj ett namn och klistra in URL:en från klippbordet i URL-fältet.</li></ol>",
+        "button": "Öppna Yahoo-kalendern"
+      }
+    }
+  },
+  "date": {
+    "status": {
+      "cancelled": "Detta datum har ställts in.",
+      "cancelled.cta": "Uppdatera din kalender!"
+    }
+  },
   "close": "Stäng",
   "continue": "Fortsätta",
   "cancel": "Avbryt",
@@ -23,11 +55,11 @@
   "recurring": "Återkommande",
   "thankyou": "Tack",
   "submit": "Skicka",
-  "label.share.email": "Dela via e-post",
-  "label.share.copy": "Kopiera länk",
-  "label.share.copied": "Kopierat",
-  "label.share.email.subject": "Kom ihåg detta datum",
-  "form.error.required": "Du har inte fyllt i alla nödvändiga fält korrekt",
-  "form.error.sending": "Det uppstod ett problem när ditt svar skickades. Försök igen senare",
-  "form.success": "Skickat framgångsrikt!"
+  "form": {
+    "error": {
+      "required": "Du har inte fyllt i alla nödvändiga fält korrekt",
+      "sending": "Det uppstod ett problem när ditt svar skickades. Försök igen senare"
+    },
+    "success": "Skickat framgångsrikt!"
+  }
 }

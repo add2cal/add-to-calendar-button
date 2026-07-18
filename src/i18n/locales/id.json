@@ -1,21 +1,53 @@
 {
-  "label.addtocalendar": "Tambahkan ke Kalender",
+  "label": {
+    "addtocalendar": "Tambahkan ke Kalender",
+    "share": {
+      "email": "Bagikan via email",
+      "copy": "Salin tautan",
+      "copied": "Tersalin",
+      "email.subject": "Ingat tanggal ini"
+    }
+  },
   "ical": "File iCal",
-  "modal.button.default": "Klik saya",
-  "modal.webview.ical.h": "Buka browser Anda",
-  "modal.webview.ical.text": "Sayangnya, browser dalam aplikasi memiliki masalah dengan cara kami menghasilkan file kalender.",
-  "modal.clipboard.text": "Kami telah secara otomatis menyalin URL ajaib ke clipboard Anda.",
-  "modal.webview.ical.steps": "<ol><li><strong>Buka peramban lain</strong> pada ponsel Anda, ...</li><li>Tempelkan konten clipboard dan pergi.</li></ol>",
-  "modal.opensafari.ical.h": "Buka Safari",
-  "modal.opensafari.ical.text": "Sayangnya, iOS memiliki beberapa masalah dalam membuat dan membuka file kalender di luar Safari.",
-  "modal.opensafari.ical.steps": "<ol><li><strong>Buka Safari</strong>, ...</li><li>Tempelkan konten clipboard dan pergi.</li></ol>",
-  "modal.multidate.h": "Ini adalah rangkaian acara",
-  "modal.multidate.text": "Tambahkan masing-masing bagian satu per satu:",
-  "date.status.cancelled": "Tanggal ini dibatalkan.",
-  "date.status.cancelled.cta": "Perbarui kalender Anda!",
-  "modal.subscribe.yahoo.h": "Tambahkan kalender ke Yahoo",
-  "modal.subscribe.yahoo.text": "<ol><li>Buka kalender Yahoo.</li><li>Klik pada tab \"Tindakan\".</li><li>Pilih \"Ikuti Kalender Lain\".</li><li>Pilih nama dan tempelkan URL dari clipboard Anda ke bidang URL.</li></ol>",
-  "modal.subscribe.yahoo.button": "Buka kalender Yahoo",
+  "modal": {
+    "button": {
+      "default": "Klik saya"
+    },
+    "webview": {
+      "ical": {
+        "h": "Buka browser Anda",
+        "text": "Sayangnya, browser dalam aplikasi memiliki masalah dengan cara kami menghasilkan file kalender.",
+        "steps": "<ol><li><strong>Buka peramban lain</strong> pada ponsel Anda, ...</li><li>Tempelkan konten clipboard dan pergi.</li></ol>"
+      }
+    },
+    "clipboard": {
+      "text": "Kami telah secara otomatis menyalin URL ajaib ke clipboard Anda."
+    },
+    "opensafari": {
+      "ical": {
+        "h": "Buka Safari",
+        "text": "Sayangnya, iOS memiliki beberapa masalah dalam membuat dan membuka file kalender di luar Safari.",
+        "steps": "<ol><li><strong>Buka Safari</strong>, ...</li><li>Tempelkan konten clipboard dan pergi.</li></ol>"
+      }
+    },
+    "multidate": {
+      "h": "Ini adalah rangkaian acara",
+      "text": "Tambahkan masing-masing bagian satu per satu:"
+    },
+    "subscribe": {
+      "yahoo": {
+        "h": "Tambahkan kalender ke Yahoo",
+        "text": "<ol><li>Buka kalender Yahoo.</li><li>Klik pada tab \"Tindakan\".</li><li>Pilih \"Ikuti Kalender Lain\".</li><li>Pilih nama dan tempelkan URL dari clipboard Anda ke bidang URL.</li></ol>",
+        "button": "Buka kalender Yahoo"
+      }
+    }
+  },
+  "date": {
+    "status": {
+      "cancelled": "Tanggal ini dibatalkan.",
+      "cancelled.cta": "Perbarui kalender Anda!"
+    }
+  },
   "close": "Tutup",
   "continue": "Lanjutkan",
   "cancel": "Batal",
@@ -23,11 +55,11 @@
   "recurring": "Berulang",
   "thankyou": "Terima kasih",
   "submit": "Kirim",
-  "label.share.email": "Bagikan via email",
-  "label.share.copy": "Salin tautan",
-  "label.share.copied": "Tersalin",
-  "label.share.email.subject": "Ingat tanggal ini",
-  "form.error.required": "Kamu belum mengisi semua kolom yang diperlukan dengan benar",
-  "form.error.sending": "Ada masalah saat mengirim jawabanmu. Coba lagi nanti",
-  "form.success": "Berhasil terkirim!"
+  "form": {
+    "error": {
+      "required": "Kamu belum mengisi semua kolom yang diperlukan dengan benar",
+      "sending": "Ada masalah saat mengirim jawabanmu. Coba lagi nanti"
+    },
+    "success": "Berhasil terkirim!"
+  }
 }

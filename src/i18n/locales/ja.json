@@ -1,21 +1,53 @@
 {
-  "label.addtocalendar": "カレンダーに追加",
+  "label": {
+    "addtocalendar": "カレンダーに追加",
+    "share": {
+      "email": "メールで共有",
+      "copy": "リンクをコピー",
+      "copied": "コピー済み",
+      "email.subject": "この日付を覚えておいて"
+    }
+  },
   "ical": "iCalファイル",
-  "modal.button.default": "クリックしてください",
-  "modal.webview.ical.h": "ブラウザを起動する",
-  "modal.webview.ical.text": "残念ながら、アプリ内ブラウザは、カレンダーファイルの生成方法に問題があります。",
-  "modal.clipboard.text": "魔法のURLを自動的にクリップボードにコピーしています。",
-  "modal.webview.ical.steps": "<ol><li>スマートフォンで別のブラウザを起動する, ...</li><li>クリップボードの内容を貼り付けて行く。</li></ol>",
-  "modal.opensafari.ical.h": "オープンSafari",
-  "modal.opensafari.ical.text": "残念ながら、iOS では、Safari の外でカレンダー ファイルを生成したり開いたりする際にいくつかの問題があります。",
-  "modal.opensafari.ical.steps": "<ol><li><strong>オープンSafari</strong>, ...</li><li>クリップボードの内容を貼り付けて行く。</li></ol>",
-  "modal.multidate.h": "イベントシリーズです",
-  "modal.multidate.text": "個々のパーツを一つずつ追加していく:",
-  "date.status.cancelled": "この日はキャンセルになりました。",
-  "date.status.cancelled.cta": "カレンダーを更新する!",
-  "modal.subscribe.yahoo.h": "Yahooにカレンダーを追加する",
-  "modal.subscribe.yahoo.text": "<ol><li>Yahooカレンダーを開く。</li><li>[実行] タブをクリックします。</li><li>[その他のカレンダーのフォロー] を選択します。</li><li>名前を決めて、クリップボードにあるURLをURL欄に貼り付けます。</li></ol>",
-  "modal.subscribe.yahoo.button": "Yahooカレンダーを開く",
+  "modal": {
+    "button": {
+      "default": "クリックしてください"
+    },
+    "webview": {
+      "ical": {
+        "h": "ブラウザを起動する",
+        "text": "残念ながら、アプリ内ブラウザは、カレンダーファイルの生成方法に問題があります。",
+        "steps": "<ol><li>スマートフォンで別のブラウザを起動する, ...</li><li>クリップボードの内容を貼り付けて行く。</li></ol>"
+      }
+    },
+    "clipboard": {
+      "text": "魔法のURLを自動的にクリップボードにコピーしています。"
+    },
+    "opensafari": {
+      "ical": {
+        "h": "オープンSafari",
+        "text": "残念ながら、iOS では、Safari の外でカレンダー ファイルを生成したり開いたりする際にいくつかの問題があります。",
+        "steps": "<ol><li><strong>オープンSafari</strong>, ...</li><li>クリップボードの内容を貼り付けて行く。</li></ol>"
+      }
+    },
+    "multidate": {
+      "h": "イベントシリーズです",
+      "text": "個々のパーツを一つずつ追加していく:"
+    },
+    "subscribe": {
+      "yahoo": {
+        "h": "Yahooにカレンダーを追加する",
+        "text": "<ol><li>Yahooカレンダーを開く。</li><li>[実行] タブをクリックします。</li><li>[その他のカレンダーのフォロー] を選択します。</li><li>名前を決めて、クリップボードにあるURLをURL欄に貼り付けます。</li></ol>",
+        "button": "Yahooカレンダーを開く"
+      }
+    }
+  },
+  "date": {
+    "status": {
+      "cancelled": "この日はキャンセルになりました。",
+      "cancelled.cta": "カレンダーを更新する!"
+    }
+  },
   "close": "閉じる",
   "continue": "続ける",
   "cancel": "キャンセル",
@@ -23,11 +55,11 @@
   "recurring": "繰り返し",
   "thankyou": "ありがとう",
   "submit": "送信",
-  "label.share.email": "メールで共有",
-  "label.share.copy": "リンクをコピー",
-  "label.share.copied": "コピー済み",
-  "label.share.email.subject": "この日付を覚えておいて",
-  "form.error.required": "必要なフィールドをすべて正しく入力していません",
-  "form.error.sending": "あなたの回答を送信する際に問題が発生しました。後で再試行してください",
-  "form.success": "正常に送信されました！"
+  "form": {
+    "error": {
+      "required": "必要なフィールドをすべて正しく入力していません",
+      "sending": "あなたの回答を送信する際に問題が発生しました。後で再試行してください"
+    },
+    "success": "正常に送信されました！"
+  }
 }

@@ -1,21 +1,53 @@
 {
-  "label.addtocalendar": "Lisää kalenteriin",
+  "label": {
+    "addtocalendar": "Lisää kalenteriin",
+    "share": {
+      "email": "Jaa sähköpostitse",
+      "copy": "Kopioi linkki",
+      "copied": "Kopioitu",
+      "email.subject": "Muista tämä päivämäärä"
+    }
+  },
   "ical": "iCal-tiedosto",
-  "modal.button.default": "Klikkaa minua",
-  "modal.webview.ical.h": "Avaa selain",
-  "modal.webview.ical.text": "Valitettavasti sovelluksen sisäisillä selaimilla on ongelmia kalenteritiedoston luomisessa.",
-  "modal.clipboard.text": "Olemme automaattisesti kopioineet maagisen URL-osoitteen leikepöydällesi.",
-  "modal.webview.ical.steps": "<ol><li><strong>Avaa toinen selain</strong> puhelimessasi., ...</li><li><strong>liitä</strong> leikepöydän sisältö ja lähde.</li></ol>",
-  "modal.opensafari.ical.h": "Avaa Safari",
-  "modal.opensafari.ical.text": "Valitettavasti iOS:llä on ongelmia kalenteritiedoston luomisessa ja avaamisessa Safarin ulkopuolella.",
-  "modal.opensafari.ical.steps": "<ol><li><strong>Avaa Safari</strong>, ...</li><li><strong>liitä</strong> leikepöydän sisältö ja lähde.</li></ol>",
-  "modal.multidate.h": "Tämä on tapahtumasarja",
-  "modal.multidate.text": "Lisää yksittäiset osat yksi kerrallaan:",
-  "date.status.cancelled": "Tämä päivämäärä peruttiin.",
-  "date.status.cancelled.cta": "Päivitä kalenterisi!",
-  "modal.subscribe.yahoo.h": "Lisää kalenteri Yahoo",
-  "modal.subscribe.yahoo.text": "<ol><li>Avaa Yahoo-kalenteri.</li><li>Napsauta \"Toiminnot\"-välilehteä.</li><li>Valitse \"Seuraa muiden kalentereita\".</li><li>Valitse nimi ja liitä URL-osoite leikepöydältäsi URL-kenttään.</li></ol>",
-  "modal.subscribe.yahoo.button": "Avaa Yahoo-kalenteri",
+  "modal": {
+    "button": {
+      "default": "Klikkaa minua"
+    },
+    "webview": {
+      "ical": {
+        "h": "Avaa selain",
+        "text": "Valitettavasti sovelluksen sisäisillä selaimilla on ongelmia kalenteritiedoston luomisessa.",
+        "steps": "<ol><li><strong>Avaa toinen selain</strong> puhelimessasi., ...</li><li><strong>liitä</strong> leikepöydän sisältö ja lähde.</li></ol>"
+      }
+    },
+    "clipboard": {
+      "text": "Olemme automaattisesti kopioineet maagisen URL-osoitteen leikepöydällesi."
+    },
+    "opensafari": {
+      "ical": {
+        "h": "Avaa Safari",
+        "text": "Valitettavasti iOS:llä on ongelmia kalenteritiedoston luomisessa ja avaamisessa Safarin ulkopuolella.",
+        "steps": "<ol><li><strong>Avaa Safari</strong>, ...</li><li><strong>liitä</strong> leikepöydän sisältö ja lähde.</li></ol>"
+      }
+    },
+    "multidate": {
+      "h": "Tämä on tapahtumasarja",
+      "text": "Lisää yksittäiset osat yksi kerrallaan:"
+    },
+    "subscribe": {
+      "yahoo": {
+        "h": "Lisää kalenteri Yahoo",
+        "text": "<ol><li>Avaa Yahoo-kalenteri.</li><li>Napsauta \"Toiminnot\"-välilehteä.</li><li>Valitse \"Seuraa muiden kalentereita\".</li><li>Valitse nimi ja liitä URL-osoite leikepöydältäsi URL-kenttään.</li></ol>",
+        "button": "Avaa Yahoo-kalenteri"
+      }
+    }
+  },
+  "date": {
+    "status": {
+      "cancelled": "Tämä päivämäärä peruttiin.",
+      "cancelled.cta": "Päivitä kalenterisi!"
+    }
+  },
   "close": "Sulje",
   "continue": "Jatkaa",
   "cancel": "Peruuta",
@@ -23,11 +55,11 @@
   "recurring": "Toistuva",
   "thankyou": "Kiitos",
   "submit": "Lähetä",
-  "label.share.email": "Jaa sähköpostitse",
-  "label.share.copy": "Kopioi linkki",
-  "label.share.copied": "Kopioitu",
-  "label.share.email.subject": "Muista tämä päivämäärä",
-  "form.error.required": "Et täyttänyt kaikkia vaadittuja kenttiä oikein",
-  "form.error.sending": "Vastauksen lähettämisessä ilmeni ongelma. Yritä myöhemmin uudelleen",
-  "form.success": "Lähetetty onnistuneesti!"
+  "form": {
+    "error": {
+      "required": "Et täyttänyt kaikkia vaadittuja kenttiä oikein",
+      "sending": "Vastauksen lähettämisessä ilmeni ongelma. Yritä myöhemmin uudelleen"
+    },
+    "success": "Lähetetty onnistuneesti!"
+  }
 }

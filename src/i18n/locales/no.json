@@ -1,21 +1,53 @@
 {
-  "label.addtocalendar": "Legg til i kalenderen",
+  "label": {
+    "addtocalendar": "Legg til i kalenderen",
+    "share": {
+      "email": "Del via e-post",
+      "copy": "Kopier lenke",
+      "copied": "Kopiert",
+      "email.subject": "Husk denne datoen"
+    }
+  },
   "ical": "iCal-fil",
-  "modal.button.default": "Klikk på meg",
-  "modal.webview.ical.h": "Åpne nettleseren din",
-  "modal.webview.ical.text": "Dessverre har nettlesere i appen problemer med måten vi genererer kalenderfilen på.",
-  "modal.clipboard.text": "Vi kopierte automatisk en magisk URL til utklippstavlen din.",
-  "modal.webview.ical.steps": "<ol><li><strong>Åpne en annen nettleser</strong> på telefonen, ...</li><li><strong>Lim inn</strong> innholdet på utklippstavlen og gå.</li></ol>",
-  "modal.opensafari.ical.h": "Åpne Safari",
-  "modal.opensafari.ical.text": "Dessverre har iOS noen problemer med å generere og åpne kalenderfilen utenfor Safari.",
-  "modal.opensafari.ical.steps": "<ol><li><strong>Åpne Safari</strong>, ...</li><li><strong>Lim inn</strong> innholdet på utklippstavlen og gå.</li></ol>",
-  "modal.multidate.h": "Dette er en avtaleserie",
-  "modal.multidate.text": "Legg til de enkelte datoene i kalenderen din i rekkefølge:",
-  "date.status.cancelled": "Denne datoen ble avlyst.",
-  "date.status.cancelled.cta": "Oppdater kalenderen din!",
-  "modal.subscribe.yahoo.h": "Legg til kalender til Yahoo",
-  "modal.subscribe.yahoo.text": "<ol><li>Åpne Yahoo-kalenderen.</li><li>Klikk på «Handlinger»-fanen.</li><li>Velg «Følg andre kalendere».</li><li>Velg et navn og lim inn URL-en fra utklippstavlen i URL-feltet.</li></ol>",
-  "modal.subscribe.yahoo.button": "Åpne Yahoo-kalenderen",
+  "modal": {
+    "button": {
+      "default": "Klikk på meg"
+    },
+    "webview": {
+      "ical": {
+        "h": "Åpne nettleseren din",
+        "text": "Dessverre har nettlesere i appen problemer med måten vi genererer kalenderfilen på.",
+        "steps": "<ol><li><strong>Åpne en annen nettleser</strong> på telefonen, ...</li><li><strong>Lim inn</strong> innholdet på utklippstavlen og gå.</li></ol>"
+      }
+    },
+    "clipboard": {
+      "text": "Vi kopierte automatisk en magisk URL til utklippstavlen din."
+    },
+    "opensafari": {
+      "ical": {
+        "h": "Åpne Safari",
+        "text": "Dessverre har iOS noen problemer med å generere og åpne kalenderfilen utenfor Safari.",
+        "steps": "<ol><li><strong>Åpne Safari</strong>, ...</li><li><strong>Lim inn</strong> innholdet på utklippstavlen og gå.</li></ol>"
+      }
+    },
+    "multidate": {
+      "h": "Dette er en avtaleserie",
+      "text": "Legg til de enkelte datoene i kalenderen din i rekkefølge:"
+    },
+    "subscribe": {
+      "yahoo": {
+        "h": "Legg til kalender til Yahoo",
+        "text": "<ol><li>Åpne Yahoo-kalenderen.</li><li>Klikk på «Handlinger»-fanen.</li><li>Velg «Følg andre kalendere».</li><li>Velg et navn og lim inn URL-en fra utklippstavlen i URL-feltet.</li></ol>",
+        "button": "Åpne Yahoo-kalenderen"
+      }
+    }
+  },
+  "date": {
+    "status": {
+      "cancelled": "Denne datoen ble avlyst.",
+      "cancelled.cta": "Oppdater kalenderen din!"
+    }
+  },
   "close": "Lukk",
   "continue": "Fortsette",
   "cancel": "Avbryt",
@@ -23,11 +55,11 @@
   "recurring": "Tilbakevendende",
   "thankyou": "Takk",
   "submit": "Send inn",
-  "label.share.email": "Del via e-post",
-  "label.share.copy": "Kopier lenke",
-  "label.share.copied": "Kopiert",
-  "label.share.email.subject": "Husk denne datoen",
-  "form.error.required": "Du har ikke fylt ut alle de nødvendige feltene riktig",
-  "form.error.sending": "Det oppsto et problem med å sende svaret ditt. Vennligst prøv igjen senere",
-  "form.success": "Sendt suksessfullt!"
+  "form": {
+    "error": {
+      "required": "Du har ikke fylt ut alle de nødvendige feltene riktig",
+      "sending": "Det oppsto et problem med å sende svaret ditt. Vennligst prøv igjen senere"
+    },
+    "success": "Sendt suksessfullt!"
+  }
 }

@@ -1,21 +1,54 @@
 {
-  "label.addtocalendar": "Add to Calendar",
+  "label": {
+    "addtocalendar": "Add to Calendar",
+    "rsvp": "RSVP",
+    "share": {
+      "email": "Share via Email",
+      "copy": "Copy Link",
+      "copied": "Copied",
+      "email.subject": "Save this event"
+    }
+  },
   "ical": "iCal File",
-  "modal.button.default": "Click me",
-  "modal.webview.ical.h": "Open your browser",
-  "modal.webview.ical.text": "Unfortunately, in-app browsers have problems with the way we generate the calendar file.",
-  "modal.clipboard.text": "We automatically copied a magical URL into your clipboard.",
-  "modal.webview.ical.steps": "<ol><li><strong>Open another browser</strong> on your phone, ...</li><li><strong>Paste</strong> the clipboard content and go.</li></ol>",
-  "modal.opensafari.ical.h": "Open Safari",
-  "modal.opensafari.ical.text": "Unfortunately, iOS has some problems generating and opening the calendar file outside of Safari.",
-  "modal.opensafari.ical.steps": "<ol><li><strong>Open Safari</strong>, ...</li><li><strong>Paste</strong> the clipboard content and go.</li></ol>",
-  "modal.multidate.h": "This is an event series",
-  "modal.multidate.text": "Add the individual events one by one:",
-  "date.status.cancelled": "This date got cancelled.",
-  "date.status.cancelled.cta": "Please update your calendar!",
-  "modal.subscribe.yahoo.h": "Add Calendar to Yahoo",
-  "modal.subscribe.yahoo.text": "<ol><li>Open now the Yahoo Calendar.</li><li>Click the \"Actions\" tab.</li><li>Hit \"Follow Other Calendars\".</li><li>Set a name and paste the clipboard content into the url field.</li></ol>",
-  "modal.subscribe.yahoo.button": "Open Yahoo Calendar",
+  "modal": {
+    "button": {
+      "default": "Click me"
+    },
+    "webview": {
+      "ical": {
+        "h": "Open your browser",
+        "text": "Unfortunately, in-app browsers have problems with the way we generate the calendar file.",
+        "steps": "<ol><li><strong>Open another browser</strong> on your phone, ...</li><li><strong>Paste</strong> the clipboard content and go.</li></ol>"
+      }
+    },
+    "clipboard": {
+      "text": "We automatically copied a magical URL into your clipboard."
+    },
+    "opensafari": {
+      "ical": {
+        "h": "Open Safari",
+        "text": "Unfortunately, iOS has some problems generating and opening the calendar file outside of Safari.",
+        "steps": "<ol><li><strong>Open Safari</strong>, ...</li><li><strong>Paste</strong> the clipboard content and go.</li></ol>"
+      }
+    },
+    "multidate": {
+      "h": "This is an event series",
+      "text": "Add the individual events one by one:"
+    },
+    "subscribe": {
+      "yahoo": {
+        "h": "Add Calendar to Yahoo",
+        "text": "<ol><li>Open now the Yahoo Calendar.</li><li>Click the \"Actions\" tab.</li><li>Hit \"Follow Other Calendars\".</li><li>Set a name and paste the clipboard content into the url field.</li></ol>",
+        "button": "Open Yahoo Calendar"
+      }
+    }
+  },
+  "date": {
+    "status": {
+      "cancelled": "This date got cancelled.",
+      "cancelled.cta": "Please update your calendar!"
+    }
+  },
   "close": "Close",
   "continue": "Continue",
   "cancel": "Cancel",
@@ -23,12 +56,11 @@
   "recurring": "Recurring",
   "thankyou": "Thank you",
   "submit": "Submit",
-  "label.rsvp": "RSVP",
-  "label.share.email": "Share via Email",
-  "label.share.copy": "Copy Link",
-  "label.share.copied": "Copied",
-  "label.share.email.subject": "Save this event",
-  "form.error.required": "You did not properly fill all required fields",
-  "form.error.sending": "There was a problem sending your response. Please try again later",
-  "form.success": "Sent successfully!"
+  "form": {
+    "error": {
+      "required": "You did not properly fill all required fields",
+      "sending": "There was a problem sending your response. Please try again later"
+    },
+    "success": "Sent successfully!"
+  }
 }

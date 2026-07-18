@@ -1,21 +1,53 @@
 {
-  "label.addtocalendar": "Přidat do kalendáře",
+  "label": {
+    "addtocalendar": "Přidat do kalendáře",
+    "share": {
+      "email": "Sdílet e-mailem",
+      "copy": "Kopírovat odkaz",
+      "copied": "Zkopírováno",
+      "email.subject": "Zapamatuj si tento termín"
+    }
+  },
   "ical": "Soubor iCal",
-  "modal.button.default": "Klikněte na mě",
-  "modal.webview.ical.h": "Otevřete prohlížeč",
-  "modal.webview.ical.text": "Prohlížeče v aplikacích mají bohužel problémy se způsobem generování souboru kalendáře.",
-  "modal.clipboard.text": "Do schránky jsme automaticky zkopírovali kouzelnou adresu URL.",
-  "modal.webview.ical.steps": "<ol><li><strong>Otevření jiného prohlížeče</strong> v telefonu, ...</li><li><strong>Vložte</strong> obsah schránky a přejděte.</li></ol>",
-  "modal.opensafari.ical.h": "Otevřít Safari",
-  "modal.opensafari.ical.text": "Bohužel má iOS nějaké problémy s generováním a otevíráním souboru kalendáře mimo Safari.",
-  "modal.opensafari.ical.steps": "<ol><li><strong>Otevřít Safari</strong>, ...</li><li><strong>Vložte</strong> obsah schránky a přejděte.</li></ol>",
-  "modal.multidate.h": "Jedná se o sérii událostí",
-  "modal.multidate.text": "Přidávejte jednotlivé díly jeden po druhém:",
-  "date.status.cancelled": "Toto datum bylo zrušeno.",
-  "date.status.cancelled.cta": "Aktualizujte svůj kalendář!",
-  "modal.subscribe.yahoo.h": "Přidat kalendář do Yahoo",
-  "modal.subscribe.yahoo.text": "<ol><li>Otevřete kalendář Yahoo.</li><li>Klikněte na kartu \"Akce\".</li><li>Vyberte možnost \"Sledovat další kalendáře\".</li><li>Vyberte název a vložte adresu URL ze schránky do pole URL.</li></ol>",
-  "modal.subscribe.yahoo.button": "Otevřete kalendář Yahoo",
+  "modal": {
+    "button": {
+      "default": "Klikněte na mě"
+    },
+    "webview": {
+      "ical": {
+        "h": "Otevřete prohlížeč",
+        "text": "Prohlížeče v aplikacích mají bohužel problémy se způsobem generování souboru kalendáře.",
+        "steps": "<ol><li><strong>Otevření jiného prohlížeče</strong> v telefonu, ...</li><li><strong>Vložte</strong> obsah schránky a přejděte.</li></ol>"
+      }
+    },
+    "clipboard": {
+      "text": "Do schránky jsme automaticky zkopírovali kouzelnou adresu URL."
+    },
+    "opensafari": {
+      "ical": {
+        "h": "Otevřít Safari",
+        "text": "Bohužel má iOS nějaké problémy s generováním a otevíráním souboru kalendáře mimo Safari.",
+        "steps": "<ol><li><strong>Otevřít Safari</strong>, ...</li><li><strong>Vložte</strong> obsah schránky a přejděte.</li></ol>"
+      }
+    },
+    "multidate": {
+      "h": "Jedná se o sérii událostí",
+      "text": "Přidávejte jednotlivé díly jeden po druhém:"
+    },
+    "subscribe": {
+      "yahoo": {
+        "h": "Přidat kalendář do Yahoo",
+        "text": "<ol><li>Otevřete kalendář Yahoo.</li><li>Klikněte na kartu \"Akce\".</li><li>Vyberte možnost \"Sledovat další kalendáře\".</li><li>Vyberte název a vložte adresu URL ze schránky do pole URL.</li></ol>",
+        "button": "Otevřete kalendář Yahoo"
+      }
+    }
+  },
+  "date": {
+    "status": {
+      "cancelled": "Toto datum bylo zrušeno.",
+      "cancelled.cta": "Aktualizujte svůj kalendář!"
+    }
+  },
   "close": "Zavřít",
   "continue": "Pokračovat",
   "cancel": "Storno",
@@ -23,11 +55,11 @@
   "recurring": "Opakující se",
   "thankyou": "Děkuji",
   "submit": "Odeslat",
-  "label.share.email": "Sdílet e-mailem",
-  "label.share.copy": "Kopírovat odkaz",
-  "label.share.copied": "Zkopírováno",
-  "label.share.email.subject": "Zapamatuj si tento termín",
-  "form.error.required": "Nevyplnil jsi správně všechna požadovaná pole",
-  "form.error.sending": "Při odesílání tvé odpovědi došlo k problému. Zkus to prosím později znovu",
-  "form.success": "Úspěšně odesláno!"
+  "form": {
+    "error": {
+      "required": "Nevyplnil jsi správně všechna požadovaná pole",
+      "sending": "Při odesílání tvé odpovědi došlo k problému. Zkus to prosím později znovu"
+    },
+    "success": "Úspěšně odesláno!"
+  }
 }

@@ -25,7 +25,7 @@ const calendarNames: { [key: string]: string } = {
  * falling back to their base language, then to English.
  */
 const i18nStrings: I18nStrings = {
-  en: { ...calendarNames, ...enStrings },
+  en: { ...calendarNames, ...atcb_flatten_translations(enStrings as NestedTranslations) },
 };
 
 // build hook: relative path from THIS bundle's location to the locale assets
@@ -59,11 +59,34 @@ const atcbLocaleScriptBase: string = (() => {
 const atcbPendingLocaleLoads: Map<string, Promise<boolean>> = new Map();
 
 /**
- * Registers a translation pack under a language code (base like "de" or regional
- * like "en_GB"). Public API used by the generated locale modules and custom setups.
+ * Translation packs are authored as nested objects for easy editing
+ * ("label": { "addtocalendar": ... }); the runtime registry works with flat
+ * dotted identifiers ("label.addtocalendar"), so packs get flattened on
+ * registration. Flat packs pass through unchanged, and a key that is itself
+ * dotted inside a level (used where a key doubles as a group name, like
+ * "email" next to "email.subject") joins naturally.
  */
-function atcb_register_locale(language: string, strings: { [key: string]: string }): void {
-  i18nStrings[`${language}`] = { ...calendarNames, ...strings };
+type NestedTranslations = { [key: string]: string | NestedTranslations };
+
+function atcb_flatten_translations(strings: NestedTranslations, prefix: string = ''): { [key: string]: string } {
+  const flat: { [key: string]: string } = {};
+  for (const [key, value] of Object.entries(strings)) {
+    if (typeof value === 'string') {
+      flat[prefix + key] = value;
+    } else {
+      Object.assign(flat, atcb_flatten_translations(value, prefix + key + '.'));
+    }
+  }
+  return flat;
+}
+
+/**
+ * Registers a translation pack under a language code (base like "de" or regional
+ * like "en_GB"). Accepts nested or flat packs. Public API used by the generated
+ * locale modules and custom setups.
+ */
+function atcb_register_locale(language: string, strings: NestedTranslations | { [key: string]: string }): void {
+  i18nStrings[`${language}`] = { ...calendarNames, ...atcb_flatten_translations(strings as NestedTranslations) };
 }
 
 function atcb_locale_base_url(data: ATCBConfig): string {
@@ -102,7 +125,7 @@ async function atcb_ensure_locale(data: ATCBConfig): Promise<void> {
         try {
           const response = await fetch(base + language + '.json');
           if (!response.ok) throw new Error('status ' + response.status);
-          const strings = (await response.json()) as { [key: string]: string };
+          const strings = (await response.json()) as NestedTranslations;
           atcb_register_locale(language, strings);
           return true;
         } catch (e) {
