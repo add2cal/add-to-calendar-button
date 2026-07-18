@@ -54,10 +54,11 @@ function minifyCss() {
 
 // ---------- shared: inline style templates ----------
 
-const CSS_TEMPLATE_HOOK = 'const atcbCssTemplate = {};';
+// matches the annotated TS declaration in src/atcb-globals.ts
+const CSS_TEMPLATE_HOOK = /const atcbCssTemplate: \{ \[key: string\]: string \} = \{\};/;
 
 function buildCssTemplate() {
-  let output = 'const atcbCssTemplate = {';
+  let output = 'const atcbCssTemplate: { [key: string]: string } = {';
   for (const style of AVAILABLE_STYLES) {
     const suffix = style !== 'default' ? `-${style}` : '';
     // mirror the former Grunt escaping: strip multi-dots and backslashes, escape double quotes
@@ -73,9 +74,9 @@ function buildCssTemplate() {
 }
 
 function injectCssTemplate(code, id) {
-  if (!id.replaceAll('\\', '/').endsWith('src/atcb-globals.js')) return null;
-  if (!code.includes(CSS_TEMPLATE_HOOK)) {
-    throw new Error('atcb-globals.js: css template hook not found - build assumption broken');
+  if (!id.replaceAll('\\', '/').endsWith('src/atcb-globals.ts')) return null;
+  if (!CSS_TEMPLATE_HOOK.test(code)) {
+    throw new Error('atcb-globals.ts: css template hook not found - build assumption broken');
   }
   return code.replace(CSS_TEMPLATE_HOOK, buildCssTemplate());
 }
@@ -92,6 +93,7 @@ async function buildLib({ unstyle }) {
       : [
           {
             name: 'atcb-inline-css',
+            enforce: 'pre', // must run before vite transpiles the TS source
             transform(code, id) {
               const result = injectCssTemplate(code, id);
               return result === null ? null : { code: result, map: null };
@@ -104,7 +106,7 @@ async function buildLib({ unstyle }) {
       minify: false,
       target: TARGET,
       lib: {
-        entry: r('src/index.js'),
+        entry: r('src/index.ts'),
         formats: ['es', 'cjs'],
         fileName: (format) => (format === 'es' ? `module${sub}/index.js` : `commonjs${sub}/index.js`),
       },
@@ -121,7 +123,7 @@ async function buildBrowser({ unstyle, minify }) {
   const base = unstyle ? 'atcb-unstyle' : 'atcb';
   const outfile = r('dist', `${base}${minify ? '.min' : ''}.js`);
   await esbuild.build({
-    entryPoints: [r('src/entry-browser.js')],
+    entryPoints: [r('src/entry-browser.ts')],
     bundle: true,
     format: 'iife',
     platform: 'browser',
@@ -136,10 +138,10 @@ async function buildBrowser({ unstyle, minify }) {
           {
             name: 'atcb-inline-css',
             setup(build) {
-              build.onLoad({ filter: /atcb-globals\.js$/ }, (args) => {
+              build.onLoad({ filter: /atcb-globals\.ts$/ }, (args) => {
                 const code = fs.readFileSync(args.path, 'utf8');
                 const result = injectCssTemplate(code, args.path);
-                return result === null ? undefined : { contents: result, loader: 'js' };
+                return result === null ? undefined : { contents: result, loader: 'ts' };
               });
             },
           },

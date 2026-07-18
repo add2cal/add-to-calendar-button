@@ -93,7 +93,7 @@
     "eslint:fix": "eslint --fix .",
     "prettier": "npx prettier . --check",
     "prettier:fix": "npm run prettier -- --write",
-    "typecheck": "tsc --noEmit",
+    "typecheck": "tsc --noEmit && tsc --noEmit -p test/types/tsconfig.json",
     "format": "npm run eslint:fix && npm run prettier:fix && cd demo && npm run lint:fix && npm run prettier:fix",
     "test": "node test/test-prep.js && npx web-test-runner \"test/wc-tests/wc-load.test.js\" \"test/wc-tests/recurrence-tz.test.js\" \"test/wc-tests-smoke/*.test.js\"",
     "test:extended": "node test/test-prep.js && npx web-test-runner \"test/wc-tests/*.test.js\" \"test/wc-tests-smoke/*.test.js\"",
@@ -110,6 +110,7 @@
   "devDependencies": {
     "@eslint/js": "^10.0.1",
     "@open-wc/testing": "^4.0.0",
+    "@web/dev-server-esbuild": "^2.0.0",
     "@web/test-runner": "^0.20.2",
     "clean-css": "^5.3.3",
     "esbuild": "^0.28.1",
@@ -121,7 +122,8 @@
     "eslint-plugin-wc": "^3.1.0",
     "prettier": "3.9.4",
     "prettier-plugin-tailwindcss": "^0.8.0",
-    "typescript": "^7.0.2",
+    "typescript": "^5.9.3",
+    "typescript-eslint": "^8.64.0",
     "vite": "^8.1.5"
   }
 }
