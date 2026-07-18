@@ -34,7 +34,7 @@ async function atcb_generate_links(host: ShadowRoot, type: string, data: ATCBCon
   if (subEvent !== 'all') {
     // for cancelled dates, we show a modal - except for iCal, where we can send Cancel-ics-files
     if (data.dates![`${subEvent}`]!.status!.toLowerCase() === 'cancelled' && linkType !== 'ical') {
-      atcb_create_modal(host, data, 'warning', atcb_translate_hook('date.status.cancelled', data), atcb_translate_hook('date.status.cancelled.cta', data), [] as unknown as never[], [] as unknown as never[], keyboardTrigger);
+      atcb_create_modal(host, data, 'warning', atcb_translate_hook('date.status.cancelled', data), atcb_translate_hook('date.status.cancelled_cta', data), [] as unknown as never[], [] as unknown as never[], keyboardTrigger);
     } else {
       // in some cases, we want to inform the user about specifics for the link type, before actually following the link
       if (!skipDoubleLink) {

@@ -93,6 +93,16 @@ function buildCssTemplate() {
 }
 
 const STYLE_RELPATH_HOOK = "const atcbStyleRelPath: string = 'styles/';";
+const LOCALE_RELPATH_HOOK = "const atcbLocaleRelPath: string = 'locales/';";
+
+function injectLocaleRelPath(code, id, relPath) {
+  if (!id.replaceAll('\\', '/').endsWith('src/i18n/index.ts')) return null;
+  if (!code.includes(LOCALE_RELPATH_HOOK)) {
+    throw new Error('i18n/index.ts: locale relpath hook not found - build assumption broken');
+  }
+  if (!relPath || relPath === 'locales/') return code;
+  return code.replace(LOCALE_RELPATH_HOOK, "const atcbLocaleRelPath: string = '" + relPath + "';");
+}
 
 function injectCssTemplate(code, id, relPath) {
   if (!id.replaceAll('\\', '/').endsWith('src/styles/css-template.ts')) return null;
@@ -128,14 +138,25 @@ async function buildLib({ unstyle }) {
       // HTMLElement at module scope
       resolve: format === 'cjs' ? { conditions: ['node', 'production', 'module', 'import', 'default'] } : undefined,
       plugins: unstyle
-        ? []
+        ? [
+            {
+              name: 'atcb-locale-relpath',
+              enforce: 'pre',
+              transform(code, id) {
+                const localeResult = injectLocaleRelPath(code, id, '../locales/');
+                return localeResult === null ? null : { code: localeResult, map: null };
+              },
+            },
+          ]
         : [
             {
               name: 'atcb-inline-css',
               enforce: 'pre', // must run before vite transpiles the TS source
               transform(code, id) {
-                const result = injectCssTemplate(code, id, '../styles/');
-                return result === null ? null : { code: result, map: null };
+                const cssResult = injectCssTemplate(code, id, '../styles/');
+                if (cssResult !== null) return { code: cssResult, map: null };
+                const localeResult = injectLocaleRelPath(code, id, '../locales/');
+                return localeResult === null ? null : { code: localeResult, map: null };
               },
             },
           ],
@@ -207,6 +228,16 @@ function finalize() {
   copyFile('dist/commonjs/unstyle/index.js', 'dist/commonjs/no-pro-unstyle/index.js');
   fs.writeFileSync(r('dist/module/package.json'), '{ "type": "module" }');
   fs.writeFileSync(r('dist/commonjs/package.json'), '{ "type": "commonjs" }');
+  // locale packs as fetchable assets + self-registering ES modules
+  fs.mkdirSync(r('dist/locales'), { recursive: true });
+  for (const file of fs.readdirSync(r('src/i18n/locales'))) {
+    if (!file.endsWith('.json')) continue;
+    const lang = file.replace(/\.json$/, '');
+    const json = fs.readFileSync(r('src/i18n/locales', file), 'utf8');
+    fs.writeFileSync(r('dist/locales', file), JSON.stringify(JSON.parse(json)));
+    const moduleCode = `import { atcb_register_locale } from '../module/index.js';\n\nconst strings = ${JSON.stringify(JSON.parse(json))};\natcb_register_locale('${lang}', strings);\n\nexport { strings };\n`;
+    fs.writeFileSync(r('dist/locales', `${lang}.js`), moduleCode);
+  }
   // style deltas as fetchable assets + self-registering ES modules
   fs.mkdirSync(r('dist/styles'), { recursive: true });
   for (const style of AVAILABLE_STYLES) {
@@ -236,6 +267,10 @@ function sanityCheck() {
     }
   }
   if (!moduleBuild.includes('atcbStyleRelPath = "../styles/"') && !moduleBuild.includes("atcbStyleRelPath = '../styles/'")) problems.push('dist/module/index.js: style relpath not adjusted');
+  if (!moduleBuild.includes('atcbLocaleRelPath = "../locales/"') && !moduleBuild.includes("atcbLocaleRelPath = '../locales/'")) problems.push('dist/module/index.js: locale relpath not adjusted');
+  if (!styled.includes('addtocalendar')) problems.push('dist/atcb.js: english translations missing');
+  if (styled.includes('Zum Kalender hinzu') || moduleBuild.includes('Zum Kalender hinzu')) problems.push('bundles must not inline non-english locales');
+  if (!fs.existsSync(r('dist/locales', 'de.json')) || !fs.existsSync(r('dist/locales', 'de.js'))) problems.push('dist/locales assets missing');
   if (!styled.includes('@preserve')) problems.push('dist/atcb.js: @preserve license blocks missing');
   if (!moduleBuild.includes('@preserve')) problems.push('dist/module/index.js: @preserve license blocks missing');
   if (!moduleBuild.includes("from 'timezones-ical-library'") && !moduleBuild.includes('from "timezones-ical-library"')) {

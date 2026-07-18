@@ -1,0 +1,90 @@
+{
+  "label": {
+    "addtocalendar": "Im Kalender speichern",
+    "share": {
+      "email": "Per E-Mail teilen",
+      "copy": "Link kopieren",
+      "copied": "Kopiert",
+      "email_subject": "Merke dir diesen Termin"
+    },
+    "rsvp": {
+      "title": "RSVP",
+      "expired": "Abgelaufen",
+      "bookedout": "Ausgebucht",
+      "restart": "Neue RSVP-Antwort"
+    }
+  },
+  "ical": "iCal-Datei",
+  "modal": {
+    "button": {
+      "default": "Klick mich"
+    },
+    "webview": {
+      "ical": {
+        "h": "Öffne deinen Browser",
+        "text": "Leider haben In-App-Browser Probleme mit der Art, wie wir Kalender-Dateien erzeugen.",
+        "steps": "<ol><li><strong>Öffne einen anderen Browser</strong> auf deinem Smartphone, ...</li><li>Nutze die <strong>Einfügen</strong>-Funktion, um fortzufahren.</li></ol>"
+      }
+    },
+    "clipboard": {
+      "text": "Wir haben automatisch eine magische URL in deine Zwischenablage kopiert."
+    },
+    "opensafari": {
+      "ical": {
+        "h": "Öffne Safari",
+        "text": "Leider hat iOS einige Probleme beim Generieren und Öffnen der Kalenderdatei außerhalb von Safari.",
+        "steps": "<ol><li><strong>Öffne Safari</strong>, ...</li><li>Nutze die <strong>Einfügen</strong>-Funktion, um fortzufahren.</li></ol>"
+      }
+    },
+    "multidate": {
+      "h": "Dies ist eine Termin-Reihe",
+      "text": "Füge die einzelnen Termine der Reihe nach deinem Kalender hinzu:"
+    },
+    "subscribe": {
+      "yahoo": {
+        "h": "Kalender zu Yahoo hinzufügen",
+        "text": "<ol><li>Öffne den Yahoo-Kalender.</li><li>Klicke auf den \"Aktionen\"-Tab.</li><li>Wähle \"Weiteren Kalendern folgen\".</li><li>Wähle einen Namen und füge die URL aus deiner Zwischenablage in das URL-Feld ein.</li></ol>",
+        "button": "Yahoo-Kalender öffnen"
+      }
+    }
+  },
+  "date": {
+    "status": {
+      "cancelled": "Dieser Termin wurde abgesagt.",
+      "cancelled_cta": "Bitte aktualisiere deinen Kalender!"
+    }
+  },
+  "close": "Schließen",
+  "continue": "Weiter",
+  "cancel": "Abbrechen",
+  "expired": "Abgelaufen",
+  "recurring": "Wiederkehrend",
+  "thankyou": "Danke",
+  "submit": "Absenden",
+  "form": {
+    "error": {
+      "required": "Du hast nicht alle erforderlichen Felder korrekt ausgefüllt",
+      "sending": "Es gab ein Problem beim Senden deiner Antwort. Bitte versuche es später noch einmal",
+      "email": "Deine E-Mail-Adresse ist nicht gültig",
+      "bookedoutmany": "Ausgebucht - versuche es mit weniger Teilnehmern"
+    },
+    "success": {
+      "title": "Erfolgreich gesendet!",
+      "sent": "Deine Antwort wurde gesendet. Danke!",
+      "email": "Du solltest eine Bestätigungs-E-Mail erhalten haben.",
+      "doi": "Damit deine Antwort gültig ist, musst du jetzt noch den Bestätigungslink in der E-Mail öffnen, die wir dir gerade geschickt haben (innerhalb der nächsten 30 Minuten).",
+      "demo": "Danke. Die RSVP-Demo endet hier.",
+      "already": "Du hast bereits eine Antwort gesendet."
+    },
+    "status": {
+      "title": "Nimmst du teil?",
+      "confirmed": "Ja",
+      "undecided": "Vielleicht",
+      "declined": "Nein"
+    },
+    "amount": "Anzahl der Teilnehmer",
+    "max": "max.",
+    "email": "E-Mail-Adresse",
+    "seatsleft": "Freie Plätze"
+  }
+}

@@ -1,0 +1,90 @@
+{
+  "label": {
+    "addtocalendar": "Opslaan in Agenda",
+    "share": {
+      "email": "Delen via E-mail",
+      "copy": "Link kopiëren",
+      "copied": "Gekopieerd",
+      "email_subject": "Onthoud deze datum"
+    },
+    "rsvp": {
+      "title": "RSVP",
+      "expired": "Verlopen",
+      "bookedout": "Volgeboekt",
+      "restart": "Nieuwe RSVP-antwoord"
+    }
+  },
+  "ical": "iCal File",
+  "modal": {
+    "button": {
+      "default": "Klik me"
+    },
+    "webview": {
+      "ical": {
+        "h": "Open uw browser",
+        "text": "Helaas hebben in-app browsers problemen met de manier waarop wij kalenderbestanden maken.",
+        "steps": "<ol><li><strong>Open een andere browser</strong> op uw smartphone, ...</li><li>Gebruik de <strong>insert</strong> functie om verder te gaan.</li></ol>"
+      }
+    },
+    "clipboard": {
+      "text": "We hebben automatisch een magische URL naar je klembord gekopieerd."
+    },
+    "opensafari": {
+      "ical": {
+        "h": "Open Safari",
+        "text": "Helaas heeft iOS enkele problemen met het genereren en openen van het agendabestand buiten Safari.",
+        "steps": "<ol><li><strong>Open Safari</strong>, ...</li><li>Gebruik de <strong>insert</strong> functie om verder te gaan.</li></ol>"
+      }
+    },
+    "multidate": {
+      "h": "Dit is een reeks data",
+      "text": "Voeg de afzonderlijke delen één voor één toe:"
+    },
+    "subscribe": {
+      "yahoo": {
+        "h": "Toevoegen aan Yahoo",
+        "text": "<ol><li>Open de Yahoo calendar.</li><li>Klik op de \"Acties\" tab.</li><li>Selecteer \"Volg Andere Agenda's\".</li><li>Kies een naam en plak de URL van uw klembord in het URL-veld.</li></ol>",
+        "button": "Open Yahoo Agenda"
+      }
+    }
+  },
+  "date": {
+    "status": {
+      "cancelled": "Deze datum is geannuleerd.",
+      "cancelled_cta": "Uw agenda bijwerken!"
+    }
+  },
+  "close": "Sluiten",
+  "continue": "Doorgaan",
+  "cancel": "Annuleren",
+  "expired": "Verlopen",
+  "recurring": "Terugkerend",
+  "thankyou": "Bedankt",
+  "submit": "Versturen",
+  "form": {
+    "error": {
+      "required": "Je hebt niet alle vereiste velden correct ingevuld",
+      "sending": "Er was een probleem met het versturen van je antwoord. Probeer het later opnieuw",
+      "email": "Je e-mailadres is niet geldig",
+      "bookedoutmany": "Volgeboekt - probeer het met minder deelnemers"
+    },
+    "success": {
+      "title": "Succesvol verstuurd!",
+      "sent": "Je antwoord is verzonden. Bedankt!",
+      "email": "Je zou een bevestigingsmail moeten hebben ontvangen.",
+      "doi": "Om je antwoord geldig te maken, moet je nu de bevestigingslink in de e-mail openen die we je zojuist hebben gestuurd (binnen de volgende 30 minuten).",
+      "demo": "Bedankt. De RSVP-demo eindigt hier.",
+      "already": "Je hebt al een antwoord gestuurd."
+    },
+    "status": {
+      "title": "Neem je deel?",
+      "confirmed": "Ja",
+      "undecided": "Misschien",
+      "declined": "Nee"
+    },
+    "amount": "Aantal deelnemers",
+    "max": "max.",
+    "email": "E-mailadres",
+    "seatsleft": "Beschikbare plaatsen"
+  }
+}

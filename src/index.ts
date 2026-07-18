@@ -5,7 +5,7 @@
  * (side effect of atcb-init.js) and exposes the imperative API.
  */
 export { atcb_action } from './action/index';
-export { i18nStrings } from './i18n/index';
+export { i18nStrings, atcb_register_locale } from './i18n/index';
 export { atcbCssTemplate as cssStyles, atcb_register_style } from './styles/css-template';
 export { atcb_generate_ty } from './ui/pro';
 export { atcb_generate_timestring } from './core/dates';

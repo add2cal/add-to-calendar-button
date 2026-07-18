@@ -24,14 +24,20 @@ const atcbKnownStyles = ['default', 'simple', '3d', 'flat', 'round', 'neumorphis
 const atcbScriptBase: string = (() => {
   try {
     if (typeof import.meta !== 'undefined' && import.meta.url) {
-      return new URL('.', import.meta.url).href;
+      // derive the directory via string operations on purpose: the `new URL(rel, import.meta.url)`
+      // pattern gets statically rewritten by bundlers (asset inlining), which must not happen here
+      const src = String(import.meta.url);
+      if (src.indexOf('data:') !== 0 && src.lastIndexOf('/') > -1) {
+        return src.substring(0, src.lastIndexOf('/') + 1);
+      }
     }
   } catch {
     // import.meta unavailable in this bundle format - fall through
   }
   try {
     if (typeof document !== 'undefined' && document.currentScript && (document.currentScript as HTMLScriptElement).src) {
-      return new URL('.', (document.currentScript as HTMLScriptElement).src).href;
+      const src = (document.currentScript as HTMLScriptElement).src;
+      return src.substring(0, src.lastIndexOf('/') + 1);
     }
   } catch {
     // no DOM or opaque script origin - fall through

@@ -1,0 +1,90 @@
+{
+  "label": {
+    "addtocalendar": "添加到日历",
+    "share": {
+      "email": "通过电子邮件分享",
+      "copy": "复制链接",
+      "copied": "已复制",
+      "email_subject": "记住这个日期"
+    },
+    "rsvp": {
+      "title": "RSVP",
+      "expired": "已过期",
+      "bookedout": "已满",
+      "restart": "新的RSVP回复"
+    }
+  },
+  "ical": "iCal 文件",
+  "modal": {
+    "button": {
+      "default": "点我"
+    },
+    "webview": {
+      "ical": {
+        "h": "打开浏览器",
+        "text": "不幸的是，应用内浏览器在我们生成日历文件的方式上存在问题。",
+        "steps": "<ol><li>打开手机上的任何其他浏览器, ...</li><li>粘贴剪贴板内容并开始。</li></ol>"
+      }
+    },
+    "clipboard": {
+      "text": "我们自动将魔术 URL 复制到您的剪贴板。"
+    },
+    "opensafari": {
+      "ical": {
+        "h": "打开 Safari",
+        "text": "不幸的是，iOS 在 Safari 之外生成和打开日历文件时遇到一些问题。",
+        "steps": "<ol><li><strong>打开 Safari</strong>, ...</li><li>粘贴剪贴板内容并开始。</li></ol>"
+      }
+    },
+    "multidate": {
+      "h": "这是一个活动系列",
+      "text": "逐个添加各个部分:"
+    },
+    "subscribe": {
+      "yahoo": {
+        "h": "将日历添加到 Yahoo",
+        "text": "<ol><li>打开 Yahoo 日历。</li><li>点击“操作”标签。</li><li>选择“关注其他日历”。</li><li>选择一个名称并将剪贴板中的 URL 粘贴到 URL 字段中。</li></ol>",
+        "button": "打开雅虎日历"
+      }
+    }
+  },
+  "date": {
+    "status": {
+      "cancelled": "此日期已取消。",
+      "cancelled_cta": "请更新您的日历!"
+    }
+  },
+  "close": "关",
+  "continue": "继续",
+  "cancel": "中止",
+  "expired": "已到期",
+  "recurring": "再次发生的",
+  "thankyou": "谢谢",
+  "submit": "提交",
+  "form": {
+    "error": {
+      "required": "你没有正确填写所有必填字段",
+      "sending": "发送你的回复时出现问题。请稍后再试",
+      "email": "你的电子邮箱地址无效",
+      "bookedoutmany": "已满 - 尝试减少参与者数量"
+    },
+    "success": {
+      "title": "成功发送！",
+      "sent": "你的回复已发送。谢谢！",
+      "email": "你应该已经收到一封确认电子邮件。",
+      "doi": "为了使你的回复有效，你需要打开我们刚刚发送给你的电子邮件中的确认链接。(在接下来的30分钟内)",
+      "demo": "谢谢。RSVP演示到此结束。",
+      "already": "你已经发送了回复。"
+    },
+    "status": {
+      "title": "你会参加吗？",
+      "confirmed": "是",
+      "undecided": "可能",
+      "declined": "否"
+    },
+    "amount": "参与者数量",
+    "max": "最大",
+    "email": "电子邮箱地址",
+    "seatsleft": "可用的地方"
+  }
+}

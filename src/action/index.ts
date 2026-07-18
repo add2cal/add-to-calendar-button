@@ -11,6 +11,7 @@ import { atcb_generate_links } from '../generators/index';
 import { atcb_secure_content } from '../core/text';
 import { atcb_log_event } from '../core/events';
 import { atcb_generate_rsvp_form } from '../ui/pro';
+import { atcb_ensure_locale } from '../i18n/index';
 import { atcb_get_pro_data, atcb_init_log, atcb_setup_state_management, atcb_set_global_event_listener, atcb_load_css, atcb_set_light_mode, atcbShadowTemplate } from '../element/index';
 import type { ATCBInputConfig, ATCBConfig } from '../types';
 
@@ -55,6 +56,8 @@ async function atcb_action(inputData: ATCBInputConfig, triggerElement?: HTMLElem
     throw new Error('Add to Calendar Button generation failed: no data provided or missing required fields - see console logs for details');
   }
   data = await atcb_decorate_data(data);
+  // translations are needed synchronously at render time - load the pack first
+  await atcb_ensure_locale(data);
   let root: HTMLElement = document.body;
   // we always force the click trigger in the custom case
   data.trigger = 'click';

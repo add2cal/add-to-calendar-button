@@ -1,0 +1,90 @@
+{
+  "label": {
+    "addtocalendar": "Aggiungi al calendario",
+    "share": {
+      "email": "Condividi via Email",
+      "copy": "Copia il link",
+      "copied": "Copiato",
+      "email_subject": "Ricorda questa data"
+    },
+    "rsvp": {
+      "title": "RSVP",
+      "expired": "Scaduto",
+      "bookedout": "Al completo",
+      "restart": "Nuova risposta RSVP"
+    }
+  },
+  "ical": "File iCal",
+  "modal": {
+    "button": {
+      "default": "Clicca su di me"
+    },
+    "webview": {
+      "ical": {
+        "h": "Aprire il browser",
+        "text": "Purtroppo i browser in-app hanno problemi con il modo in cui generiamo il file del calendario.",
+        "steps": "<ol><li><strong>Aprire un altro browser</strong> sul cellulare, ...</li><li><strong>Incollare</strong> il contenuto degli appunti e partire.</li></ol>"
+      }
+    },
+    "clipboard": {
+      "text": "Abbiamo copiato automaticamente un URL magico negli appunti."
+    },
+    "opensafari": {
+      "ical": {
+        "h": "Aprire Safari",
+        "text": "Sfortunatamente, iOS ha alcuni problemi nella generazione e nell'apertura del file del calendario al di fuori di Safari.",
+        "steps": "<ol><li><strong>Aprire Safari</strong>, ...</li><li><strong>Incollare</strong> il contenuto degli appunti e partire.</li></ol>"
+      }
+    },
+    "multidate": {
+      "h": "Questa è una serie di eventi",
+      "text": "Aggiungere le singole parti una per una:"
+    },
+    "subscribe": {
+      "yahoo": {
+        "h": "Aggiungi il calendario a Yahoo",
+        "text": "<ol><li>Aprire il calendario di Yahoo.</li><li>Fare clic sulla scheda \"Azioni\".</li><li>Selezionare \"Segui altri calendari\".</li><li>Scegliere un nome e incollare l'URL dagli appunti nel campo URL.</li></ol>",
+        "button": "Apri il calendario di Yahoo"
+      }
+    }
+  },
+  "date": {
+    "status": {
+      "cancelled": "La data è stata annullata.",
+      "cancelled_cta": "Aggiornare il calendario!"
+    }
+  },
+  "close": "Chiudere",
+  "continue": "Continuare",
+  "cancel": "Annulla",
+  "expired": "Scaduta",
+  "recurring": "Ricorrente",
+  "thankyou": "Grazie",
+  "submit": "Invia",
+  "form": {
+    "error": {
+      "required": "Non hai compilato correttamente tutti i campi richiesti",
+      "sending": "C'è stato un problema nell'invio della tua risposta. Prova di nuovo più tardi",
+      "email": "Il tuo indirizzo email non è valido",
+      "bookedoutmany": "Al completo - prova con meno partecipanti"
+    },
+    "success": {
+      "title": "Inviato con successo!",
+      "sent": "La tua risposta è stata inviata. Grazie!",
+      "email": "Dovresti ricevere una email di conferma.",
+      "doi": "Per rendere valida la tua risposta, ora devi aprire il link di conferma nell'email che ti abbiamo appena inviato (entro i prossimi 30 minuti).",
+      "demo": "Grazie. La demo RSVP termina qui.",
+      "already": "Hai già inviato una risposta."
+    },
+    "status": {
+      "title": "Parteciperai?",
+      "confirmed": "Sì",
+      "undecided": "Forse",
+      "declined": "No"
+    },
+    "amount": "Numero di partecipanti",
+    "max": "max.",
+    "email": "Indirizzo Email",
+    "seatsleft": "Posti disponibili"
+  }
+}

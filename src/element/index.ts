@@ -7,6 +7,7 @@ import { atcb_check_required, atcb_validate } from '../core/validate';
 import { atcb_create_atcbl } from '../ui/generate';
 import { buttonTemplate } from '../ui/templates';
 import { atcb_generate_rich_data } from '../generators/rich-data';
+import { atcb_ensure_locale } from '../i18n/index';
 import { atcb_close, atcb_toggle } from '../ui/control';
 import { atcb_secure_content, atcb_secure_url } from '../core/text';
 import { atcb_manage_body_scroll, atcb_set_sizes } from '../ui/positioning';
@@ -269,6 +270,8 @@ if (atcbIsBrowser()) {
         // Rewrite dynamic dates, standardize line breaks and transform urls in the description
         const data = await atcb_decorate_data(this.data);
         this.data = data;
+        // translations are needed synchronously at render time - load the pack first
+        await atcb_ensure_locale(data);
         await atcb_validate(data);
         const rootObj = host.querySelector('.atcb-initialized') as HTMLElement;
         // ... and on success, load css and generate the button

@@ -148,10 +148,10 @@ function dateButtonMeta(data: ATCBConfig, subEventIn: string | number = 'all', f
   } else if (data.dates!.length === 1) {
     subEvent = 0;
   }
-  const fullTimeInfo = atcb_generate_timestring(data.dates!, data.language, subEvent as 'all' | number, false, false, forceFullDate);
+  const fullTimeInfo = atcb_generate_timestring(data.dates!, data.formatLocale || data.language, subEvent as 'all' | number, false, false, forceFullDate);
   const hoverText = (function () {
     if ((subEvent !== 'all' && data.dates![`${subEvent}`]!.status!.toLowerCase() === 'cancelled') || (subEvent === 'all' && data.allCancelled)) {
-      return atcb_translate_hook('date.status.cancelled', data) + '<br>' + atcb_translate_hook('date.status.cancelled.cta', data);
+      return atcb_translate_hook('date.status.cancelled', data) + '<br>' + atcb_translate_hook('date.status.cancelled_cta', data);
     }
     if (data.pastDateHandling !== 'none') {
       if ((subEvent === 'all' && data.allOverdue) || (subEvent !== 'all' && data.dates![`${subEvent}`]!.overdue)) {
@@ -202,8 +202,8 @@ function dateButtonContentTemplate(data: ATCBConfig, subEventIn: string | number
   const centerHeadline = !hasLocationLine && !hasDescriptionFallback && fullTimeInfo.length == 0 && (data.recurrence == null || data.recurrence == '');
   const headlineStyle = !hasLocationLine && !hasDescriptionFallback ? `line-clamp:2;${centerHeadline ? 'text-align:center;' : ''}` : '';
   return html`<div class="atcb-date-btn-left">
-      <div class="atcb-date-btn-day">${startDate.toLocaleString(data.language, { day: 'numeric', timeZone: allDay ? 'UTC' : (timeZone as string) })}</div>
-      <div class="atcb-date-btn-month">${startDate.toLocaleString(data.language, { month: 'short', timeZone: allDay ? 'UTC' : (timeZone as string) })}</div>
+      <div class="atcb-date-btn-day">${startDate.toLocaleString(data.formatLocale || data.language, { day: 'numeric', timeZone: allDay ? 'UTC' : (timeZone as string) })}</div>
+      <div class="atcb-date-btn-month">${startDate.toLocaleString(data.formatLocale || data.language, { month: 'short', timeZone: allDay ? 'UTC' : (timeZone as string) })}</div>
     </div>
     <div class="atcb-date-btn-right" style=${centerHeadline ? 'align-self:center' : nothing}>
       <div class="atcb-date-btn-details">

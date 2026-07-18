@@ -1,0 +1,90 @@
+{
+  "label": {
+    "addtocalendar": "Ajouter à l'Agenda",
+    "share": {
+      "email": "Partager par E-mail",
+      "copy": "Copier le lien",
+      "copied": "Copié",
+      "email_subject": "Retenez cette date"
+    },
+    "rsvp": {
+      "title": "RSVP",
+      "expired": "Expiré",
+      "bookedout": "Complet",
+      "restart": "Nouvelle réponse RSVP"
+    }
+  },
+  "ical": "Fichier iCal",
+  "modal": {
+    "button": {
+      "default": "Cliquez-moi"
+    },
+    "webview": {
+      "ical": {
+        "h": "Ouvrez votre navigateur",
+        "text": "Malheureusement, les navigateurs intégrés aux applications ont des problèmes avec la manière dont nous créons les fichiers de calendrier.",
+        "steps": "<ol><li><strong>Ouvrez un autre navigateur</strong> sur votre smartphone ;</li><li><strong>Collez</strong> le contenu du presse-papier et continuez.</li></ol>"
+      }
+    },
+    "clipboard": {
+      "text": "Nous avons automatiquement copié une URL magique dans votre presse-papier."
+    },
+    "opensafari": {
+      "ical": {
+        "h": "Ouvrir Safari",
+        "text": "Malheureusement, iOS rencontre des problèmes pour générer et ouvrir le fichier de calendrier en dehors de Safari.",
+        "steps": "<ol><li><strong>Ouvrez Safari</strong> ;</li><li><strong>Collez</strong> le contenu du presse-papier et continuez.</li></ol>"
+      }
+    },
+    "multidate": {
+      "h": "Ceci est une liste d’évènements",
+      "text": "Ajouter les évènements un par un :"
+    },
+    "subscribe": {
+      "yahoo": {
+        "h": "Ajouter un agenda à Yahoo",
+        "text": "<ol><li>Ouvrez l’Agenda Yahoo ;</li><li>Cliquez sur l’onglet « Actions » ;</li><li>Sélectionnez « Suivre d’autres agendas » ;</li><li>Choisissez un nom et collez le contenu de votre presse-papier dans le champ URL.</li></ol>",
+        "button": "Ouvrir le calendrier Yahoo"
+      }
+    }
+  },
+  "date": {
+    "status": {
+      "cancelled": "Cet évènement est annulé.",
+      "cancelled_cta": "Actualisez votre agenda !"
+    }
+  },
+  "close": "Fermer",
+  "continue": "Continuer",
+  "cancel": "Annuler",
+  "expired": "Expiré",
+  "recurring": "Récurrent",
+  "thankyou": "Merci",
+  "submit": "Envoyer",
+  "form": {
+    "error": {
+      "required": "Tu n'as pas correctement rempli tous les champs requis",
+      "sending": "Il y a eu un problème lors de l'envoi de ta réponse. Veuillez réessayer plus tard",
+      "email": "Ton adresse E-mail n'est pas valide",
+      "bookedoutmany": "Complet - essaie avec moins de participants"
+    },
+    "success": {
+      "title": "Envoyé avec succès!",
+      "sent": "Ta réponse a été envoyée. Merci!",
+      "email": "Tu devrais avoir reçu un E-mail de confirmation.",
+      "doi": "Pour que ta réponse soit valide, tu dois maintenant ouvrir le lien de confirmation dans l'E-mail que nous venons de t'envoyer (dans les 30 prochaines minutes).",
+      "demo": "Merci. La démo RSVP se termine ici.",
+      "already": "Tu as déjà envoyé une réponse."
+    },
+    "status": {
+      "title": "Participeras-tu ?",
+      "confirmed": "Oui",
+      "undecided": "Peut-être",
+      "declined": "Non"
+    },
+    "amount": "Nombre de participants",
+    "max": "max.",
+    "email": "Adresse E-mail",
+    "seatsleft": "Places disponibles"
+  }
+}

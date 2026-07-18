@@ -374,3 +374,12 @@ the pattern `<template> | <dimension values>`.
 - W-03: a pre-registered style is used without fetching
 - W-04: style-source attribute overrides the fetch base
 - W-05: load-all-styles prefetches every delta into the registry
+
+## Group X - Locale loading (test/wc-tests/r-X-i18n-loading.test.js)
+
+- X-01: non-english language fetches its pack once; label matches the oracle; cache prevents refetch
+- X-02: a pre-registered locale is used without fetching
+- X-03: regional pack wins for its exact locale; missing regional falls back to base english
+- X-04: date formatting respects the full locale (en-US vs en-GB ordering differs)
+- X-05: unknown language falls back to english without any locale fetch
+- X-06: customLabels wins over every locale resolution layer, incl. identifiers unknown to the core

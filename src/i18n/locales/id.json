@@ -1,0 +1,90 @@
+{
+  "label": {
+    "addtocalendar": "Tambahkan ke Kalender",
+    "share": {
+      "email": "Bagikan via email",
+      "copy": "Salin tautan",
+      "copied": "Tersalin",
+      "email_subject": "Ingat tanggal ini"
+    },
+    "rsvp": {
+      "title": "RSVP",
+      "expired": "Kedaluwarsa",
+      "bookedout": "Penuh",
+      "restart": "RSVP Baru"
+    }
+  },
+  "ical": "File iCal",
+  "modal": {
+    "button": {
+      "default": "Klik saya"
+    },
+    "webview": {
+      "ical": {
+        "h": "Buka browser Anda",
+        "text": "Sayangnya, browser dalam aplikasi memiliki masalah dengan cara kami menghasilkan file kalender.",
+        "steps": "<ol><li><strong>Buka peramban lain</strong> pada ponsel Anda, ...</li><li>Tempelkan konten clipboard dan pergi.</li></ol>"
+      }
+    },
+    "clipboard": {
+      "text": "Kami telah secara otomatis menyalin URL ajaib ke clipboard Anda."
+    },
+    "opensafari": {
+      "ical": {
+        "h": "Buka Safari",
+        "text": "Sayangnya, iOS memiliki beberapa masalah dalam membuat dan membuka file kalender di luar Safari.",
+        "steps": "<ol><li><strong>Buka Safari</strong>, ...</li><li>Tempelkan konten clipboard dan pergi.</li></ol>"
+      }
+    },
+    "multidate": {
+      "h": "Ini adalah rangkaian acara",
+      "text": "Tambahkan masing-masing bagian satu per satu:"
+    },
+    "subscribe": {
+      "yahoo": {
+        "h": "Tambahkan kalender ke Yahoo",
+        "text": "<ol><li>Buka kalender Yahoo.</li><li>Klik pada tab \"Tindakan\".</li><li>Pilih \"Ikuti Kalender Lain\".</li><li>Pilih nama dan tempelkan URL dari clipboard Anda ke bidang URL.</li></ol>",
+        "button": "Buka kalender Yahoo"
+      }
+    }
+  },
+  "date": {
+    "status": {
+      "cancelled": "Tanggal ini dibatalkan.",
+      "cancelled_cta": "Perbarui kalender Anda!"
+    }
+  },
+  "close": "Tutup",
+  "continue": "Lanjutkan",
+  "cancel": "Batal",
+  "expired": "Kedaluwarsa",
+  "recurring": "Berulang",
+  "thankyou": "Terima kasih",
+  "submit": "Kirim",
+  "form": {
+    "error": {
+      "required": "Kamu belum mengisi semua kolom yang diperlukan dengan benar",
+      "sending": "Ada masalah saat mengirim jawabanmu. Coba lagi nanti",
+      "email": "Alamat email kamu tidak valid",
+      "bookedoutmany": "Penuh - coba dengan peserta lebih sedikit"
+    },
+    "success": {
+      "title": "Berhasil terkirim!",
+      "sent": "Jawabanmu telah dikirim. Terima kasih!",
+      "email": "Kamu seharusnya menerima email konfirmasi.",
+      "doi": "Untuk validasi jawabanmu, kamu harus membuka tautan konfirmasi dalam email yang baru kami kirim (dalam 30 menit ke depan).",
+      "demo": "Terima kasih. Demo RSVP berakhir di sini.",
+      "already": "Kamu sudah mengirim jawaban."
+    },
+    "status": {
+      "title": "Apakah kamu akan menghadiri?",
+      "confirmed": "Ya",
+      "undecided": "Mungkin",
+      "declined": "Tidak"
+    },
+    "amount": "Jumlah peserta",
+    "max": "maks.",
+    "email": "Alamat email",
+    "seatsleft": "Tempat yang tersedia"
+  }
+}

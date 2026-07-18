@@ -14,6 +14,7 @@
 // Serialized pages are deterministic on every machine. The smoke tier (CI default)
 // runs its tests in seconds anyway - the build dominates wall time, not the runner.
 // Override for experiments via WTR_CONCURRENCY.
+import fs from 'node:fs';
 import { esbuildPlugin } from '@web/dev-server-esbuild';
 
 export default {
@@ -26,8 +27,22 @@ export default {
     exportConditions: ['production', 'default'],
     extensions: ['.mjs', '.js', '.ts', '.json'],
   },
+  // serve locale packs as RAW json: the esbuild plugin below compiles served .json
+  // files into JS modules (needed for import statements), which would corrupt the
+  // runtime fetch() of dist/locales/*.json that the component performs
+  middleware: [
+    async (ctx, next) => {
+      if (ctx.path.startsWith('/dist/locales/') && ctx.path.endsWith('.json')) {
+        ctx.type = 'application/json';
+        // eslint-disable-next-line security/detect-non-literal-fs-filename -- test-runner middleware, path shape is asserted above
+        ctx.body = fs.readFileSync('.' + ctx.path, 'utf8');
+        return;
+      }
+      await next();
+    },
+  ],
   // transpile TypeScript sources on the fly for tests that import from src
-  plugins: [esbuildPlugin({ ts: true })],
+  plugins: [esbuildPlugin({ ts: true, json: true })],
   testsFinishTimeout: 300000,
   browserStartTimeout: 60000,
   concurrency: Number(process.env.WTR_CONCURRENCY || 1),
