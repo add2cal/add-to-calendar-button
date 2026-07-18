@@ -366,3 +366,11 @@ the pattern `<template> | <dimension values>`.
 - V-03: prokey (official spelling exception) triggers the PRO flow
 - V-04: special-case mappings work (ical-file-name, use-user-tz accepted)
 - V-05: runtime change of an official attribute re-initializes the button
+
+## Group W - Style registry (test/wc-tests/r-W-styles.test.js)
+
+- W-01: core + default are inline; default style renders without any style fetch
+- W-02: non-default style is fetched from the script origin and applied
+- W-03: a pre-registered style is used without fetching
+- W-04: style-source attribute overrides the fetch base
+- W-05: load-all-styles prefetches every delta into the registry

@@ -128,6 +128,8 @@ export interface ATCBInputConfig {
   blockInteraction?: boolean | string;
   styleLight?: string;
   styleDark?: string;
+  styleSource?: string;
+  loadAllStyles?: boolean | string;
   disabled?: boolean | string;
   hidden?: boolean | string;
   pastDateHandling?: string;
@@ -220,6 +222,8 @@ export interface ATCBConfig {
   blockInteraction?: boolean;
   styleLight?: string;
   styleDark?: string;
+  styleSource?: string;
+  loadAllStyles?: boolean;
   disabled?: boolean;
   hidden?: boolean;
   pastDateHandling?: string;

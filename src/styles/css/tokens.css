@@ -1,0 +1,29 @@
+/*
+ * Add to Calendar Button - shared design tokens (custom properties identical across all styles)
+ * Generated from the v2 per-style stylesheets by scripts/split-css.mjs (phase 5).
+ * Runtime assembly: tokens + core + one style delta (deltas append after core).
+ * License: Elastic License 2.0 (ELv2)
+ */
+
+:host(.atcb-dark) {
+  --btn-text: #dedede;
+  --list-text: #dedede;
+  --modal-text: #f1f1f1;
+  --modal-background: #242424;
+  --modal-btn-background: #181819;
+  --modal-btn-secondary-background: #2e2d30;
+  --modal-btn-hover-background: #434246;
+  --modal-btn-text: #dbdbdb;
+  --modal-btn-hover-text: #fff;
+  --modal-btn-secondary-text: #b8b8b8;
+  --input-background: #434246;
+  --status-active-text: #000;
+  --form-error: #db8680;
+  --form-success: #99de9c;
+  --date-btn-text: #ebebf0;
+  --date-btn-text-secondary: #b5b5bd;
+  --date-btn-cal-day-text: #101010;
+  --date-btn-cal-background: #c7c7cd;
+  --date-btn-hover-background: #474747;
+  --icon-yahoo-color: #bebebe;
+}

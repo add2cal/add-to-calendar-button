@@ -1,7 +1,7 @@
 import { LitElement, html, nothing, type TemplateResult } from 'lit';
 import { atcbVersion, atcbIsBrowser, atcbWcParams, atcbWcProParams, atcbWcBooleanParams, atcbWcObjectParams, atcbWcObjectArrayParams, atcbWcArrayParams, atcbWcNumberParams } from '../core/globals';
 import { getActiveButton, createButtonInstance, deleteButtonInstance } from '../core/store';
-import { atcbCssTemplate } from '../styles/css-template';
+import { atcb_ensure_style, atcb_prefetch_all_styles } from '../styles/css-template';
 import { atcb_decorate_data } from '../core/decorate';
 import { atcb_check_required, atcb_validate } from '../core/validate';
 import { atcb_create_atcbl } from '../ui/generate';
@@ -275,6 +275,10 @@ if (atcbIsBrowser()) {
         atcb_set_light_mode(host, data);
         rootObj.setAttribute('lang', data.language!);
         atcb_load_css(host, rootObj, data);
+        // eagerly prefetch all style deltas when runtime style switching is requested
+        if (data.loadAllStyles) {
+          atcb_prefetch_all_styles(data);
+        }
         atcb_setup_state_management(data);
         // set global event listeners
         atcb_set_global_event_listener(host, data);
@@ -538,14 +542,15 @@ async function atcb_load_css(host: ShadowRoot, rootObj: HTMLElement | null = nul
     }
     return;
   }
-  // otherwise, we load it from a variable
-  if (data.buttonStyle !== 'none' && atcbCssTemplate[`${data.buttonStyle}`]) {
+  // otherwise, we load it from the style registry (inline core+default, on-demand deltas)
+  const styleCss = await atcb_ensure_style(data);
+  if (styleCss) {
     const cssContent = document.createElement('style');
     if (nonceVal) {
       cssContent.setAttribute('nonce', nonceVal);
     }
     // add style to element
-    cssContent.innerText = atcbCssTemplate[`${data.buttonStyle}`] + overrideDefaultCss + overrideDarkCss;
+    cssContent.innerText = styleCss + overrideDefaultCss + overrideDarkCss;
     host.prepend(cssContent);
   }
   if (rootObj) {

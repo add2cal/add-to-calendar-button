@@ -38,7 +38,8 @@ A full rewrite to Lit + strict TypeScript + Vite is in progress, executed phase 
 | `generators/google.ts` etc.     | One module per calendar service (google, yahoo, outlook, msteams, ical)                             |
 | `generators/rich-data.ts`       | Schema.org JSON-LD injection                                                                        |
 | `i18n/index.ts`                 | Translation strings keyed by ISO 639-1 code                                                         |
-| `styles/css-template.ts`        | Style template store — the build inlines minified css here                                          |
+| `styles/css-template.ts`        | Style registry: core+default inline, on-demand deltas, `atcb_register_style`                        |
+| `styles/css/`                   | CSS sources: tokens + core + per-style deltas (split via `scripts/split-css.mjs`)                   |
 | `types.ts`                      | Shared internal types (input vs decorated config)                                                   |
 | `index.ts` / `entry-browser.ts` | Package / classic-script entries                                                                    |
 
@@ -107,6 +108,10 @@ Existing baseline tests (don't break):
 - `test/server-side-init.test.js` — CJS smoke
 - `test/wc-tests/wc-load.test.js` — WC init smoke
 - `test/wc-tests/recurrence-tz.test.js` — Berlin midnight regression
+
+## Styles
+
+`assets/css/*` is GENERATED (reconstructed full stylesheets for CDN hotlinks + customCss compat) — edit the sources in `src/styles/css/` instead. Bundles inline only core + the default style; other styles fetch from `{scriptOrigin}/styles/{name}.css` (override via `style-source`), register via `atcb_register_style`, or prefetch via `load-all-styles`.
 
 ## Build & deploy
 

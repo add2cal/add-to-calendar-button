@@ -39,17 +39,38 @@ function cleanOldBuildFiles() {
   }
 }
 
-function minifyCss() {
-  const cleaner = new CleanCSS({});
-  for (const file of fs.readdirSync(r('assets/css'))) {
-    if (!file.endsWith('.css') || file.endsWith('.min.css')) continue;
-    const source = fs.readFileSync(r('assets/css', file), 'utf8');
-    const result = cleaner.minify(source);
-    if (result.errors.length > 0) {
-      throw new Error(`clean-css failed for ${file}: ${result.errors.join(', ')}`);
-    }
-    fs.writeFileSync(r('assets/css', file.replace(/\.css$/, '.min.css')), result.styles);
+// phase 5: css sources live in src/styles/css (tokens + core + per-style deltas).
+// This step minifies them, reconstructs the v2-compatible full per-style files for
+// CDN hotlinks and customCss consumers, and prepares the delta assets for dist/styles.
+let cssArtifacts = null;
+
+function buildCssArtifacts() {
+  const srcDir = r('src/styles/css');
+  if (!fs.existsSync(path.join(srcDir, 'core.css'))) {
+    throw new Error('src/styles/css sources missing - run `node scripts/split-css.mjs` first');
   }
+  const cleaner = new CleanCSS({});
+  const minify = (file) => {
+    const result = cleaner.minify(fs.readFileSync(path.join(srcDir, file), 'utf8'));
+    if (result.errors.length > 0) throw new Error(`clean-css failed for ${file}: ${result.errors.join(', ')}`);
+    return result.styles;
+  };
+  const version = JSON.parse(fs.readFileSync(r('package.json'), 'utf8')).version;
+  const tokensRaw = fs.readFileSync(path.join(srcDir, 'tokens.css'), 'utf8');
+  const coreRaw = fs.readFileSync(path.join(srcDir, 'core.css'), 'utf8');
+  const tokensMin = minify('tokens.css');
+  const coreMin = minify('core.css');
+  const deltasMin = {};
+  for (const style of AVAILABLE_STYLES) {
+    deltasMin[style] = minify(`${style}.css`);
+    // reconstructed full stylesheet (v2-compatible artifact, generated - do not edit)
+    const suffix = style === 'default' ? '' : `-${style}`;
+    const banner = `/*\n * ++++++++++++++++++++++\n * Add to Calendar Button\n * ++++++++++++++++++++++\n *\n * Style: ${style}\n * GENERATED FILE - built from src/styles/css (tokens + core + ${style} delta). Do not edit.\n *\n * Version: ${version}\n * Creator: Jens Kuerschner (https://jekuer.com)\n * Project: https://github.com/add2cal/add-to-calendar-button\n * License: Elastic License 2.0 (ELv2) (https://github.com/add2cal/add-to-calendar-button/blob/main/LICENSE.txt)\n * Note:    DO NOT REMOVE THE COPYRIGHT NOTICE ABOVE!\n *\n */\n\n`;
+    const deltaRaw = fs.readFileSync(path.join(srcDir, `${style}.css`), 'utf8');
+    fs.writeFileSync(r('assets/css', `atcb${suffix}.css`), banner + tokensRaw + '\n' + coreRaw + '\n' + deltaRaw);
+    fs.writeFileSync(r('assets/css', `atcb${suffix}.min.css`), tokensMin + coreMin + deltasMin[style]);
+  }
+  cssArtifacts = { coreFull: tokensMin + coreMin, deltas: deltasMin };
 }
 
 // ---------- shared: inline style templates ----------
@@ -58,27 +79,34 @@ function minifyCss() {
 const CSS_TEMPLATE_HOOK = /const atcbCssTemplate: \{ \[key: string\]: string \} = \{\};/;
 
 function buildCssTemplate() {
-  let output = 'const atcbCssTemplate: { [key: string]: string } = {';
-  for (const style of AVAILABLE_STYLES) {
-    const suffix = style !== 'default' ? `-${style}` : '';
-    // mirror the former Grunt escaping: strip multi-dots and backslashes, escape double quotes
-    const css = fs
-      .readFileSync(r('assets/css', `atcb${suffix.replace(/[^a-z0-9-]/gi, '')}.min.css`), 'utf8')
+  // mirror the former Grunt escaping: strip multi-dots and backslashes, escape double quotes
+  const esc = (css) =>
+    css
       .replace(/\.{2,}/g, '')
       .replace(/\\/g, '')
       .replace(/"/g, '\\"');
-    output += '\r\n"' + style + '": "' + css + '",';
-  }
+  let output = 'const atcbCssTemplate: { [key: string]: string } = {';
+  output += '\r\n"core": "' + esc(cssArtifacts.coreFull) + '",';
+  output += '\r\n"default": "' + esc(cssArtifacts.deltas['default']) + '",';
   output += '\r\n};\r\n';
   return output;
 }
 
-function injectCssTemplate(code, id) {
+const STYLE_RELPATH_HOOK = "const atcbStyleRelPath: string = 'styles/';";
+
+function injectCssTemplate(code, id, relPath) {
   if (!id.replaceAll('\\', '/').endsWith('src/styles/css-template.ts')) return null;
   if (!CSS_TEMPLATE_HOOK.test(code)) {
     throw new Error('styles/css-template.ts: css template hook not found - build assumption broken');
   }
-  return code.replace(CSS_TEMPLATE_HOOK, buildCssTemplate());
+  let result = code.replace(CSS_TEMPLATE_HOOK, buildCssTemplate());
+  if (relPath && relPath !== 'styles/') {
+    if (!result.includes(STYLE_RELPATH_HOOK)) {
+      throw new Error('styles/css-template.ts: style relpath hook not found - build assumption broken');
+    }
+    result = result.replace(STYLE_RELPATH_HOOK, `const atcbStyleRelPath: string = '${relPath}';`);
+  }
+  return result;
 }
 
 // ---------- step 2: vite library builds (es + cjs) ----------
@@ -106,7 +134,7 @@ async function buildLib({ unstyle }) {
               name: 'atcb-inline-css',
               enforce: 'pre', // must run before vite transpiles the TS source
               transform(code, id) {
-                const result = injectCssTemplate(code, id);
+                const result = injectCssTemplate(code, id, '../styles/');
                 return result === null ? null : { code: result, map: null };
               },
             },
@@ -152,7 +180,7 @@ async function buildBrowser({ unstyle, minify }) {
             setup(build) {
               build.onLoad({ filter: /css-template\.ts$/ }, (args) => {
                 const code = fs.readFileSync(args.path, 'utf8');
-                const result = injectCssTemplate(code, args.path);
+                const result = injectCssTemplate(code, args.path, 'styles/');
                 return result === null ? undefined : { contents: result, loader: 'ts' };
               });
             },
@@ -179,6 +207,13 @@ function finalize() {
   copyFile('dist/commonjs/unstyle/index.js', 'dist/commonjs/no-pro-unstyle/index.js');
   fs.writeFileSync(r('dist/module/package.json'), '{ "type": "module" }');
   fs.writeFileSync(r('dist/commonjs/package.json'), '{ "type": "commonjs" }');
+  // style deltas as fetchable assets + self-registering ES modules
+  fs.mkdirSync(r('dist/styles'), { recursive: true });
+  for (const style of AVAILABLE_STYLES) {
+    fs.writeFileSync(r('dist/styles', `${style}.css`), cssArtifacts.deltas[`${style}`]);
+    const moduleCode = `import { atcb_register_style } from '../module/index.js';\n\nconst css = ${JSON.stringify(cssArtifacts.deltas[`${style}`])};\natcb_register_style('${style}', css);\n\nexport { css };\n`;
+    fs.writeFileSync(r('dist/styles', `${style}.js`), moduleCode);
+  }
 }
 
 function sanityCheck() {
@@ -187,11 +222,20 @@ function sanityCheck() {
   const moduleBuild = fs.readFileSync(r('dist/module/index.js'), 'utf8');
   const cjsBuild = fs.readFileSync(r('dist/commonjs/index.js'), 'utf8');
   const problems = [];
-  // match the inlined style template key in any printer format (quoted, unquoted, minified)
-  const styleKey = /["']?neumorphism["']?:\s*["']/;
-  if (!styleKey.test(styled)) problems.push('dist/atcb.js: styles not inlined');
-  if (styleKey.test(unstyled)) problems.push('dist/atcb-unstyle.js: styles unexpectedly inlined');
-  if (!styleKey.test(moduleBuild)) problems.push('dist/module/index.js: styles not inlined');
+  // match the inlined style template keys in any printer format (quoted, unquoted, minified)
+  const coreKey = /["']?core["']?:\s*["']/;
+  const defaultKey = /["']?default["']?:\s*["']/;
+  const deltaKey = /["']?neumorphism["']?:\s*["']/;
+  if (!coreKey.test(styled) || !defaultKey.test(styled)) problems.push('dist/atcb.js: core/default styles not inlined');
+  if (deltaKey.test(styled)) problems.push('dist/atcb.js: non-default style deltas must NOT be inlined');
+  if (coreKey.test(unstyled)) problems.push('dist/atcb-unstyle.js: styles unexpectedly inlined');
+  if (!coreKey.test(moduleBuild) || !defaultKey.test(moduleBuild)) problems.push('dist/module/index.js: core/default styles not inlined');
+  for (const style of AVAILABLE_STYLES) {
+    if (!fs.existsSync(r('dist/styles', `${style}.css`)) || !fs.existsSync(r('dist/styles', `${style}.js`))) {
+      problems.push(`dist/styles/${style}.css/.js missing`);
+    }
+  }
+  if (!moduleBuild.includes('atcbStyleRelPath = "../styles/"') && !moduleBuild.includes("atcbStyleRelPath = '../styles/'")) problems.push('dist/module/index.js: style relpath not adjusted');
   if (!styled.includes('@preserve')) problems.push('dist/atcb.js: @preserve license blocks missing');
   if (!moduleBuild.includes('@preserve')) problems.push('dist/module/index.js: @preserve license blocks missing');
   if (!moduleBuild.includes("from 'timezones-ical-library'") && !moduleBuild.includes('from "timezones-ical-library"')) {
@@ -217,7 +261,7 @@ function sanityCheck() {
 
 const started = Date.now();
 cleanOldBuildFiles();
-minifyCss();
+buildCssArtifacts();
 await buildLib({ unstyle: false });
 await buildLib({ unstyle: true });
 await buildBrowser({ unstyle: false, minify: false });
