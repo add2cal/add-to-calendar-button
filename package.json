@@ -12,37 +12,43 @@
     "dist",
     "test",
     "assets/css/*.css",
-    "index.d.ts",
-    "unstyle/index.d.ts",
-    "no-pro/index.d.ts",
-    "no-pro-unstyle/index.d.ts",
-    ".eslintrc.json",
     "CHANGELOG.md",
     ".npmignore"
   ],
   "exports": {
     ".": {
-      "types": "./index.d.ts",
+      "types": "./dist/index.d.ts",
       "import": "./dist/module/index.js",
       "require": "./dist/commonjs/index.js"
     },
+    "./styles/*": {
+      "types": "./dist/styles/*.d.ts",
+      "import": "./dist/styles/*.js",
+      "require": "./dist/styles/*.cjs"
+    },
+    "./i18n/*": {
+      "types": "./dist/locales/*.d.ts",
+      "import": "./dist/locales/*.js",
+      "require": "./dist/locales/*.cjs"
+    },
     "./no-pro": {
-      "types": "./no-pro/index.d.ts",
+      "types": "./dist/index.d.ts",
       "import": "./dist/module/no-pro/index.js",
       "require": "./dist/commonjs/no-pro/index.js"
     },
     "./unstyle": {
-      "types": "./unstyle/index.d.ts",
+      "types": "./dist/index.d.ts",
       "import": "./dist/module/unstyle/index.js",
       "require": "./dist/commonjs/unstyle/index.js"
     },
     "./no-pro-unstyle": {
-      "types": "./no-pro-unstyle/index.d.ts",
+      "types": "./dist/index.d.ts",
       "import": "./dist/module/no-pro-unstyle/index.js",
       "require": "./dist/commonjs/no-pro-unstyle/index.js"
-    }
+    },
+    "./package.json": "./package.json"
   },
-  "types": "index.d.ts",
+  "types": "./dist/index.d.ts",
   "jsdelivr": "./dist/atcb.js",
   "repository": {
     "type": "git",
@@ -102,7 +108,8 @@
     "build:all": "npm run build && npm run build:demo",
     "build:demo": "cd demo && npm run generate",
     "build:min": "node scripts/build.mjs --min",
-    "build": "node scripts/build.mjs"
+    "build": "node scripts/build.mjs",
+    "test:package": "node scripts/test-package.mjs"
   },
   "dependencies": {
     "lit": "^3.3.3",
@@ -114,6 +121,7 @@
     "@web/dev-server-esbuild": "^2.0.0",
     "@web/test-runner": "^0.20.2",
     "clean-css": "^5.3.3",
+    "dts-bundle-generator": "^9.5.1",
     "esbuild": "^0.28.1",
     "eslint": "^10.6.0",
     "eslint-config-prettier": "^10.1.8",

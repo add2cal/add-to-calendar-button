@@ -1,36 +1,46 @@
 /**
  * Type compatibility gate (compile-only, no runtime).
  *
- * Asserts that the NEW internal source types remain assignable-compatible with the
- * CURRENT hand-written public types in index.d.ts: everything a v2 consumer wrote
- * against the public types must keep compiling against the real implementation.
+ * Two layers of assignability keep the public type surface honest:
+ *  1. v2 -> current: everything a v2 consumer wrote against the frozen v2 public
+ *     types (v2-public-types.d.ts) must keep satisfying the current public types.
+ *  2. public -> internal: every value satisfying the current public types must be
+ *     accepted by the internal implementation types.
  *
  * Run via `npm run typecheck` (tsc -p test/types/tsconfig.json).
  */
-import type { ATCBActionEventConfig, AddToCalendarButtonType, EventDate } from '../../index';
+import type { V2ATCBActionEventConfig, V2AddToCalendarButtonType, V2EventDate } from './v2-public-types';
 import { atcb_action, atcb_generate_ty, atcb_generate_timestring, atcb_decorate_data_dates, i18nStrings, cssStyles } from '../../src/index';
+import type { ATCBActionEventConfig, AddToCalendarButtonType, EventDate } from '../../src/index';
 import type { ATCBInputConfig, ATCBDateEntryInput } from '../../src/types';
 
 // helper: compile-time assignability assertions
 type Extends<A, B> = A extends B ? true : false;
 type Assert<T extends true> = T;
 
-// 1. the public action config must be accepted by the real atcb_action parameter type
+// 1. v2 consumer values keep satisfying the current public types
+export type V2ActionConfigStillValid = Assert<Extends<V2ATCBActionEventConfig, ATCBActionEventConfig>>;
+export type V2WcConfigStillValid = Assert<Extends<V2AddToCalendarButtonType, AddToCalendarButtonType>>;
+export type V2EventDateStillValid = Assert<Extends<V2EventDate, EventDate>>;
+
+// 2. the public action config must be accepted by the real atcb_action parameter type
 export type ActionConfigAssignable = Assert<Extends<ATCBActionEventConfig, ATCBInputConfig>>;
 
-// 2. the public web component attribute type must be accepted by the internal input config
+// 3. the public web component attribute type must be accepted by the internal input config
 export type WcConfigAssignable = Assert<Extends<AddToCalendarButtonType, ATCBInputConfig>>;
 
-// 3. the public EventDate must be accepted where date entries go
+// 4. the public EventDate must be accepted where date entries go
 export type EventDateAssignable = Assert<Extends<EventDate, ATCBDateEntryInput>>;
 
-// 4. atcb_action accepts a public-typed config object and returns Promise<string>
+// 5. atcb_action accepts v2-typed and current-typed config objects and returns Promise<string>
+declare const v2Config: V2ATCBActionEventConfig;
 declare const publicConfig: ATCBActionEventConfig;
 declare const trigger: HTMLElement;
+export const v2ActionResult: Promise<string> = atcb_action(v2Config, trigger, false);
 export const actionResult: Promise<string> = atcb_action(publicConfig, trigger, false);
 export const actionResultNoTrigger: Promise<string> = atcb_action(publicConfig);
 
-// 5. representative v2 consumer literal keeps compiling against the real implementation
+// 6. representative v2 consumer literal keeps compiling against the real implementation
 export const literalCall: Promise<string> = atcb_action({
   name: 'Compat Check',
   startDate: '2050-06-15',
@@ -47,10 +57,13 @@ export const literalCall: Promise<string> = atcb_action({
   subscribe: false,
 });
 
-// 6. secondary public exports keep their contracts
+// 7. secondary public exports keep their contracts
 export const tyResult: ReturnType<typeof atcb_generate_ty> = atcb_generate_ty(trigger, {});
 declare const eventDates: EventDate[];
 export const timestringResult: string[] = atcb_generate_timestring(eventDates, 'en', 1, true);
 export const decorateResult: object = atcb_decorate_data_dates({ dates: eventDates });
 export const i18nCheck: { [key: string]: { [key: string]: string } } = i18nStrings;
 export const cssCheck: { [key: string]: string } = cssStyles;
+
+// 8. the global element declarations resolve (tag name map + typed attribute surface)
+export const globalTagType: HTMLElement & AddToCalendarButtonType = document.createElement('add-to-calendar-button');

@@ -383,3 +383,18 @@ the pattern `<template> | <dimension values>`.
 - X-04: date formatting respects the full locale (en-US vs en-GB ordering differs)
 - X-05: unknown language falls back to english without any locale fetch
 - X-06: customLabels wins over every locale resolution layer, incl. identifiers unknown to the core
+
+## Group Y - Packaging (test/wc-tests/r-Y-packaging-script.test.js, r-Y-packaging-shim.test.js)
+
+Two separate test files by design: the shim case needs a page where nothing defined the element before.
+
+- Y-01: dist/atcb.js via classic script tag defines the element, exposes window.atcb_action and renders end-to-end
+- Y-02: a deprecated CDN file name (atcb-no-pro.js) logs a one-time deprecation info and loads the main bundle next to it
+
+## Package consumption (scripts/test-package.mjs, `npm run test:package`)
+
+Node-side gate outside the browser runner: builds with --min, packs the tarball, installs it into a
+throwaway consumer and asserts every consumption path - Node CJS require, Node ESM import (root,
+./styles/*, ./i18n/*, deprecated variant subpaths), types under moduleResolution bundler AND node16,
+and a vite build importing one extra style plus one extra locale with content and size-bound checks
+(locale subsetting proven by asserting absence of a not-imported locale).

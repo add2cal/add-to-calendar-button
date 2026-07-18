@@ -3,17 +3,19 @@
  *
  * Steps:
  *  1. Clean dist/ and regenerate assets/css/*.min.css (clean-css, as grunt-contrib-cssmin did).
- *  2. Vite library builds (ES -> dist/module, CJS -> dist/commonjs), styled and unstyle,
- *     with timezones-ical-library kept external and the style templates inlined into
- *     the atcbCssTemplate object (exactly like the former Grunt string replacement).
- *  3. esbuild IIFE builds for classic <script> usage (dist/atcb.js, dist/atcb-unstyle.js),
- *     bundling timezones-ical-library. With --min additionally dist/atcb.min.js and
- *     dist/atcb-unstyle.min.js (replaces `grunt uglifyMain`).
- *  4. Finalize: no-pro variants as copies of the pro builds (they get replaced by proper
- *     deprecation shims in refactor phase 7), module-type package.json markers, sanity checks.
+ *  2. Vite library builds (ES -> dist/module, CJS -> dist/commonjs) with timezones-ical-library
+ *     kept external and the style templates inlined into the atcbCssTemplate object
+ *     (exactly like the former Grunt string replacement).
+ *  3. esbuild IIFE build for classic <script> usage (dist/atcb.js), bundling
+ *     timezones-ical-library. With --min additionally dist/atcb.min.js.
+ *  4. Types: flat public declaration bundle at dist/index.d.ts (generated from source).
+ *  5. Finalize: locale and style assets with ESM/CJS module twins and type stubs,
+ *     deprecation shims for the retired no-pro/unstyle/no-pro-unstyle variants at the
+ *     old npm subpaths and CDN file names, module-type package.json markers, sanity checks.
  *
  * Usage: node scripts/build.mjs [--min]
  */
+import { execSync } from 'node:child_process';
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -28,6 +30,12 @@ const AVAILABLE_STYLES = ['default', 'simple', '3d', 'flat', 'round', 'neumorphi
 
 const r = (...p) => path.join(root, ...p);
 
+const pkg = JSON.parse(fs.readFileSync(r('package.json'), 'utf8'));
+
+function licenseBanner(subject) {
+  return `/*!\n * @preserve\n * Add to Calendar Button\n * ${subject}\n * Version: ${pkg.version}\n * Creator: Jens Kuerschner (https://jekuer.com)\n * Project: https://github.com/add2cal/add-to-calendar-button\n * License: Elastic License 2.0 (ELv2) (https://github.com/add2cal/add-to-calendar-button/blob/main/LICENSE.txt)\n * Note:    DO NOT REMOVE THE COPYRIGHT NOTICE ABOVE!\n */\n`;
+}
+
 // ---------- step 1: clean + css ----------
 
 function cleanOldBuildFiles() {
@@ -39,7 +47,7 @@ function cleanOldBuildFiles() {
   }
 }
 
-// phase 5: css sources live in src/styles/css (tokens + core + per-style deltas).
+// css sources live in src/styles/css (tokens + core + per-style deltas).
 // This step minifies them, reconstructs the v2-compatible full per-style files for
 // CDN hotlinks and customCss consumers, and prepares the delta assets for dist/styles.
 let cssArtifacts = null;
@@ -55,7 +63,6 @@ function buildCssArtifacts() {
     if (result.errors.length > 0) throw new Error(`clean-css failed for ${file}: ${result.errors.join(', ')}`);
     return result.styles;
   };
-  const version = JSON.parse(fs.readFileSync(r('package.json'), 'utf8')).version;
   const tokensRaw = fs.readFileSync(path.join(srcDir, 'tokens.css'), 'utf8');
   const coreRaw = fs.readFileSync(path.join(srcDir, 'core.css'), 'utf8');
   const tokensMin = minify('tokens.css');
@@ -65,7 +72,7 @@ function buildCssArtifacts() {
     deltasMin[style] = minify(`${style}.css`);
     // reconstructed full stylesheet (v2-compatible artifact, generated - do not edit)
     const suffix = style === 'default' ? '' : `-${style}`;
-    const banner = `/*\n * ++++++++++++++++++++++\n * Add to Calendar Button\n * ++++++++++++++++++++++\n *\n * Style: ${style}\n * GENERATED FILE - built from src/styles/css (tokens + core + ${style} delta). Do not edit.\n *\n * Version: ${version}\n * Creator: Jens Kuerschner (https://jekuer.com)\n * Project: https://github.com/add2cal/add-to-calendar-button\n * License: Elastic License 2.0 (ELv2) (https://github.com/add2cal/add-to-calendar-button/blob/main/LICENSE.txt)\n * Note:    DO NOT REMOVE THE COPYRIGHT NOTICE ABOVE!\n *\n */\n\n`;
+    const banner = `/*\n * ++++++++++++++++++++++\n * Add to Calendar Button\n * ++++++++++++++++++++++\n *\n * Style: ${style}\n * GENERATED FILE - built from src/styles/css (tokens + core + ${style} delta). Do not edit.\n *\n * Version: ${pkg.version}\n * Creator: Jens Kuerschner (https://jekuer.com)\n * Project: https://github.com/add2cal/add-to-calendar-button\n * License: Elastic License 2.0 (ELv2) (https://github.com/add2cal/add-to-calendar-button/blob/main/LICENSE.txt)\n * Note:    DO NOT REMOVE THE COPYRIGHT NOTICE ABOVE!\n *\n */\n\n`;
     const deltaRaw = fs.readFileSync(path.join(srcDir, `${style}.css`), 'utf8');
     fs.writeFileSync(r('assets/css', `atcb${suffix}.css`), banner + tokensRaw + '\n' + coreRaw + '\n' + deltaRaw);
     fs.writeFileSync(r('assets/css', `atcb${suffix}.min.css`), tokensMin + coreMin + deltasMin[style]);
@@ -75,7 +82,7 @@ function buildCssArtifacts() {
 
 // ---------- shared: inline style templates ----------
 
-// matches the annotated TS declaration in src/atcb-globals.ts
+// matches the annotated TS declaration in src/styles/css-template.ts
 const CSS_TEMPLATE_HOOK = /const atcbCssTemplate: \{ \[key: string\]: string \} = \{\};/;
 
 function buildCssTemplate() {
@@ -121,8 +128,7 @@ function injectCssTemplate(code, id, relPath) {
 
 // ---------- step 2: vite library builds (es + cjs) ----------
 
-async function buildLib({ unstyle }) {
-  const sub = unstyle ? '/unstyle' : '';
+async function buildLib() {
   // the ES build keeps lit external (npm consumers get deduping + tree-shaking);
   // the CJS build bundles lit because lit ships ESM-only and cannot be require()d
   const externals = {
@@ -137,29 +143,18 @@ async function buildLib({ unstyle }) {
       // export condition so the bundled code uses the SSR dom shim instead of touching
       // HTMLElement at module scope
       resolve: format === 'cjs' ? { conditions: ['node', 'production', 'module', 'import', 'default'] } : undefined,
-      plugins: unstyle
-        ? [
-            {
-              name: 'atcb-locale-relpath',
-              enforce: 'pre',
-              transform(code, id) {
-                const localeResult = injectLocaleRelPath(code, id, '../locales/');
-                return localeResult === null ? null : { code: localeResult, map: null };
-              },
-            },
-          ]
-        : [
-            {
-              name: 'atcb-inline-css',
-              enforce: 'pre', // must run before vite transpiles the TS source
-              transform(code, id) {
-                const cssResult = injectCssTemplate(code, id, '../styles/');
-                if (cssResult !== null) return { code: cssResult, map: null };
-                const localeResult = injectLocaleRelPath(code, id, '../locales/');
-                return localeResult === null ? null : { code: localeResult, map: null };
-              },
-            },
-          ],
+      plugins: [
+        {
+          name: 'atcb-inline-css',
+          enforce: 'pre', // must run before vite transpiles the TS source
+          transform(code, id) {
+            const cssResult = injectCssTemplate(code, id, '../styles/');
+            if (cssResult !== null) return { code: cssResult, map: null };
+            const localeResult = injectLocaleRelPath(code, id, '../locales/');
+            return localeResult === null ? null : { code: localeResult, map: null };
+          },
+        },
+      ],
       build: {
         outDir: 'dist',
         emptyOutDir: false,
@@ -168,7 +163,7 @@ async function buildLib({ unstyle }) {
         lib: {
           entry: r('src/index.ts'),
           formats: [format],
-          fileName: () => (format === 'es' ? `module${sub}/index.js` : `commonjs${sub}/index.js`),
+          fileName: () => (format === 'es' ? 'module/index.js' : 'commonjs/index.js'),
         },
         rollupOptions: {
           external: externals[format],
@@ -178,11 +173,10 @@ async function buildLib({ unstyle }) {
   }
 }
 
-// ---------- step 3: esbuild browser builds (iife) ----------
+// ---------- step 3: esbuild browser build (iife) ----------
 
-async function buildBrowser({ unstyle, minify }) {
-  const base = unstyle ? 'atcb-unstyle' : 'atcb';
-  const outfile = r('dist', `${base}${minify ? '.min' : ''}.js`);
+async function buildBrowser({ minify }) {
+  const outfile = r('dist', `atcb${minify ? '.min' : ''}.js`);
   await esbuild.build({
     entryPoints: [r('src/entry-browser.ts')],
     bundle: true,
@@ -193,63 +187,103 @@ async function buildBrowser({ unstyle, minify }) {
     legalComments: 'inline',
     charset: 'utf8',
     outfile,
-    plugins: unstyle
-      ? []
-      : [
-          {
-            name: 'atcb-inline-css',
-            setup(build) {
-              build.onLoad({ filter: /css-template\.ts$/ }, (args) => {
-                const code = fs.readFileSync(args.path, 'utf8');
-                const result = injectCssTemplate(code, args.path, 'styles/');
-                return result === null ? undefined : { contents: result, loader: 'ts' };
-              });
-            },
-          },
-        ],
+    plugins: [
+      {
+        name: 'atcb-inline-css',
+        setup(build) {
+          build.onLoad({ filter: /css-template\.ts$/ }, (args) => {
+            const code = fs.readFileSync(args.path, 'utf8');
+            const result = injectCssTemplate(code, args.path, 'styles/');
+            return result === null ? undefined : { contents: result, loader: 'ts' };
+          });
+        },
+      },
+    ],
   });
 }
 
-// ---------- step 4: finalize ----------
+// ---------- step 4: public types ----------
 
-function copyFile(from, to) {
-  fs.mkdirSync(path.dirname(r(to)), { recursive: true });
-  fs.copyFileSync(r(from), r(to));
+function buildTypes() {
+  // flat single-file declaration bundle: no deep d.ts import graph to resolve, which
+  // keeps the types working for every consumer moduleResolution (bundler, node16, classic)
+  execSync('npx dts-bundle-generator -o dist/index.d.ts --inline-declare-global --no-check --no-banner src/index.ts', { cwd: root, stdio: ['ignore', 'ignore', 'inherit'] });
+  const generated = fs.readFileSync(r('dist/index.d.ts'), 'utf8');
+  fs.writeFileSync(r('dist/index.d.ts'), licenseBanner('Public type declarations (generated from src - do not edit)') + '\n' + generated);
+}
+
+// ---------- step 5: finalize ----------
+
+const DEPRECATED_VARIANTS = ['no-pro', 'unstyle', 'no-pro-unstyle'];
+
+function variantDeprecationMessage(specifier) {
+  return `[add-to-calendar-button] "${specifier}" is deprecated: styles load on demand and PRO code is license-gated at runtime, so the dedicated variant builds are gone. This entry simply loads the default package - please switch to it directly.`;
+}
+
+function writeVariantShims() {
+  for (const variant of DEPRECATED_VARIANTS) {
+    const specifier = `add-to-calendar-button/${variant}`;
+    const msg = variantDeprecationMessage(specifier);
+    fs.mkdirSync(r('dist/module', variant), { recursive: true });
+    fs.mkdirSync(r('dist/commonjs', variant), { recursive: true });
+    fs.writeFileSync(r('dist/module', variant, 'index.js'), `${licenseBanner(`Deprecation shim for ${specifier}`)}console.info(${JSON.stringify(msg)});\nexport * from '../index.js';\n`);
+    fs.writeFileSync(r('dist/commonjs', variant, 'index.js'), `${licenseBanner(`Deprecation shim for ${specifier}`)}'use strict';\nconsole.info(${JSON.stringify(msg)});\nmodule.exports = require('../index.js');\n`);
+  }
+  // CDN shims at the old file names: tiny loaders that pull in the main bundle from
+  // the same location (document.currentScript keeps this CDN- and path-agnostic)
+  const cdnShim = (file, target) => {
+    const msg = `[add-to-calendar-button] ${file} is deprecated and now only loads ${target} next to it. Please embed ${target} directly.`;
+    return (
+      licenseBanner(`Deprecation shim for ${file}`) +
+      `(function () {\n` +
+      `  if (window.atcbShimLoaded) return;\n` +
+      `  window.atcbShimLoaded = true;\n` +
+      `  console.info(${JSON.stringify(msg)});\n` +
+      `  var current = document.currentScript;\n` +
+      `  var base = current && current.src ? current.src.substring(0, current.src.lastIndexOf('/') + 1) : '';\n` +
+      `  var script = document.createElement('script');\n` +
+      `  script.src = base + ${JSON.stringify(target)};\n` +
+      `  if (current && current.nonce) script.nonce = current.nonce;\n` +
+      `  (document.head || document.documentElement).appendChild(script);\n` +
+      `})();\n`
+    );
+  };
+  for (const variant of ['no-pro', 'unstyle', 'no-pro-unstyle']) {
+    fs.writeFileSync(r('dist', `atcb-${variant}.js`), cdnShim(`atcb-${variant}.js`, 'atcb.js'));
+    if (withMin) {
+      fs.writeFileSync(r('dist', `atcb-${variant}.min.js`), cdnShim(`atcb-${variant}.min.js`, 'atcb.min.js'));
+    }
+  }
 }
 
 function finalize() {
-  // no-pro variants are copies of the pro builds for now (proper shims come in phase 7);
-  // the pro code paths are license-guarded at runtime, so the superset is functionally safe
-  copyFile('dist/atcb.js', 'dist/atcb-no-pro.js');
-  copyFile('dist/atcb-unstyle.js', 'dist/atcb-no-pro-unstyle.js');
-  copyFile('dist/module/index.js', 'dist/module/no-pro/index.js');
-  copyFile('dist/module/unstyle/index.js', 'dist/module/no-pro-unstyle/index.js');
-  copyFile('dist/commonjs/index.js', 'dist/commonjs/no-pro/index.js');
-  copyFile('dist/commonjs/unstyle/index.js', 'dist/commonjs/no-pro-unstyle/index.js');
   fs.writeFileSync(r('dist/module/package.json'), '{ "type": "module" }');
   fs.writeFileSync(r('dist/commonjs/package.json'), '{ "type": "commonjs" }');
-  // locale packs as fetchable assets + self-registering ES modules
+  // locale packs as fetchable assets + self-registering ESM/CJS module twins with type stubs
   fs.mkdirSync(r('dist/locales'), { recursive: true });
   for (const file of fs.readdirSync(r('src/i18n/locales'))) {
     if (!file.endsWith('.json')) continue;
     const lang = file.replace(/\.json$/, '');
-    const json = fs.readFileSync(r('src/i18n/locales', file), 'utf8');
-    fs.writeFileSync(r('dist/locales', file), JSON.stringify(JSON.parse(json)));
-    const moduleCode = `import { atcb_register_locale } from '../module/index.js';\n\nconst strings = ${JSON.stringify(JSON.parse(json))};\natcb_register_locale('${lang}', strings);\n\nexport { strings };\n`;
-    fs.writeFileSync(r('dist/locales', `${lang}.js`), moduleCode);
+    const json = JSON.stringify(JSON.parse(fs.readFileSync(r('src/i18n/locales', file), 'utf8')));
+    fs.writeFileSync(r('dist/locales', file), json);
+    fs.writeFileSync(r('dist/locales', `${lang}.js`), `import { atcb_register_locale } from '../module/index.js';\n\nconst strings = ${json};\natcb_register_locale('${lang}', strings);\n\nexport { strings };\n`);
+    fs.writeFileSync(r('dist/locales', `${lang}.cjs`), `'use strict';\nconst { atcb_register_locale } = require('../commonjs/index.js');\n\nconst strings = ${json};\natcb_register_locale('${lang}', strings);\n\nmodule.exports = { strings };\n`);
+    fs.writeFileSync(r('dist/locales', `${lang}.d.ts`), `declare const strings: {\n\t[key: string]: string | { [key: string]: unknown };\n};\nexport { strings };\n`);
   }
-  // style deltas as fetchable assets + self-registering ES modules
+  // style deltas as fetchable assets + self-registering ESM/CJS module twins with type stubs
   fs.mkdirSync(r('dist/styles'), { recursive: true });
   for (const style of AVAILABLE_STYLES) {
+    const css = JSON.stringify(cssArtifacts.deltas[`${style}`]);
     fs.writeFileSync(r('dist/styles', `${style}.css`), cssArtifacts.deltas[`${style}`]);
-    const moduleCode = `import { atcb_register_style } from '../module/index.js';\n\nconst css = ${JSON.stringify(cssArtifacts.deltas[`${style}`])};\natcb_register_style('${style}', css);\n\nexport { css };\n`;
-    fs.writeFileSync(r('dist/styles', `${style}.js`), moduleCode);
+    fs.writeFileSync(r('dist/styles', `${style}.js`), `import { atcb_register_style } from '../module/index.js';\n\nconst css = ${css};\natcb_register_style('${style}', css);\n\nexport { css };\n`);
+    fs.writeFileSync(r('dist/styles', `${style}.cjs`), `'use strict';\nconst { atcb_register_style } = require('../commonjs/index.js');\n\nconst css = ${css};\natcb_register_style('${style}', css);\n\nmodule.exports = { css };\n`);
+    fs.writeFileSync(r('dist/styles', `${style}.d.ts`), `declare const css: string;\nexport { css };\n`);
   }
+  writeVariantShims();
 }
 
 function sanityCheck() {
   const styled = fs.readFileSync(r('dist/atcb.js'), 'utf8');
-  const unstyled = fs.readFileSync(r('dist/atcb-unstyle.js'), 'utf8');
   const moduleBuild = fs.readFileSync(r('dist/module/index.js'), 'utf8');
   const cjsBuild = fs.readFileSync(r('dist/commonjs/index.js'), 'utf8');
   const problems = [];
@@ -259,18 +293,19 @@ function sanityCheck() {
   const deltaKey = /["']?neumorphism["']?:\s*["']/;
   if (!coreKey.test(styled) || !defaultKey.test(styled)) problems.push('dist/atcb.js: core/default styles not inlined');
   if (deltaKey.test(styled)) problems.push('dist/atcb.js: non-default style deltas must NOT be inlined');
-  if (coreKey.test(unstyled)) problems.push('dist/atcb-unstyle.js: styles unexpectedly inlined');
   if (!coreKey.test(moduleBuild) || !defaultKey.test(moduleBuild)) problems.push('dist/module/index.js: core/default styles not inlined');
   for (const style of AVAILABLE_STYLES) {
-    if (!fs.existsSync(r('dist/styles', `${style}.css`)) || !fs.existsSync(r('dist/styles', `${style}.js`))) {
-      problems.push(`dist/styles/${style}.css/.js missing`);
+    for (const ext of ['css', 'js', 'cjs', 'd.ts']) {
+      if (!fs.existsSync(r('dist/styles', `${style}.${ext}`))) problems.push(`dist/styles/${style}.${ext} missing`);
     }
   }
   if (!moduleBuild.includes('atcbStyleRelPath = "../styles/"') && !moduleBuild.includes("atcbStyleRelPath = '../styles/'")) problems.push('dist/module/index.js: style relpath not adjusted');
   if (!moduleBuild.includes('atcbLocaleRelPath = "../locales/"') && !moduleBuild.includes("atcbLocaleRelPath = '../locales/'")) problems.push('dist/module/index.js: locale relpath not adjusted');
   if (!styled.includes('addtocalendar')) problems.push('dist/atcb.js: english translations missing');
-  if (styled.includes('Zum Kalender hinzu') || moduleBuild.includes('Zum Kalender hinzu')) problems.push('bundles must not inline non-english locales');
-  if (!fs.existsSync(r('dist/locales', 'de.json')) || !fs.existsSync(r('dist/locales', 'de.js'))) problems.push('dist/locales assets missing');
+  if (styled.includes('Im Kalender speichern') || moduleBuild.includes('Im Kalender speichern')) problems.push('bundles must not inline non-english locales');
+  for (const ext of ['json', 'js', 'cjs', 'd.ts']) {
+    if (!fs.existsSync(r('dist/locales', `de.${ext}`))) problems.push(`dist/locales/de.${ext} missing`);
+  }
   if (!styled.includes('@preserve')) problems.push('dist/atcb.js: @preserve license blocks missing');
   if (!moduleBuild.includes('@preserve')) problems.push('dist/module/index.js: @preserve license blocks missing');
   if (!moduleBuild.includes("from 'timezones-ical-library'") && !moduleBuild.includes('from "timezones-ical-library"')) {
@@ -284,6 +319,28 @@ function sanityCheck() {
   if (!cjsBuild.includes('LitElement') && !cjsBuild.includes('ReactiveElement')) problems.push('dist/commonjs/index.js: bundled lit code missing');
   if (styled.includes("from 'timezones-ical-library'")) problems.push('dist/atcb.js: timezones-ical-library should be bundled');
   if (!styled.includes('LitElement') && !styled.includes('ReactiveElement')) problems.push('dist/atcb.js: bundled lit code missing');
+  // public types bundle
+  const types = fs.existsSync(r('dist/index.d.ts')) ? fs.readFileSync(r('dist/index.d.ts'), 'utf8') : '';
+  if (!types.includes('ATCBActionEventConfig') || !types.includes('AddToCalendarButtonType')) problems.push('dist/index.d.ts: public types missing');
+  if (!types.includes('declare global')) problems.push('dist/index.d.ts: global element declarations missing');
+  if (!types.includes('atcb_action')) problems.push('dist/index.d.ts: atcb_action declaration missing');
+  // deprecation shims: present, tiny, and re-exporting/loading the main artifact
+  for (const variant of DEPRECATED_VARIANTS) {
+    for (const [file, marker] of [
+      [r('dist/module', variant, 'index.js'), "export * from '../index.js'"],
+      [r('dist/commonjs', variant, 'index.js'), "require('../index.js')"],
+      [r('dist', `atcb-${variant}.js`), 'script.src = base + "atcb.js"'],
+    ]) {
+      if (!fs.existsSync(file)) {
+        problems.push(`${path.relative(root, file)}: deprecation shim missing`);
+        continue;
+      }
+      const content = fs.readFileSync(file, 'utf8');
+      if (!content.includes(marker)) problems.push(`${path.relative(root, file)}: shim does not delegate to the main artifact`);
+      if (!content.includes('deprecated')) problems.push(`${path.relative(root, file)}: deprecation notice missing`);
+      if (content.length > 2048) problems.push(`${path.relative(root, file)}: shim unexpectedly large (${content.length} bytes)`);
+    }
+  }
   if (withMin && !fs.readFileSync(r('dist/atcb.min.js'), 'utf8').includes('@preserve')) {
     problems.push('dist/atcb.min.js: @preserve license blocks missing after minification');
   }
@@ -297,14 +354,12 @@ function sanityCheck() {
 const started = Date.now();
 cleanOldBuildFiles();
 buildCssArtifacts();
-await buildLib({ unstyle: false });
-await buildLib({ unstyle: true });
-await buildBrowser({ unstyle: false, minify: false });
-await buildBrowser({ unstyle: true, minify: false });
+await buildLib();
+await buildBrowser({ minify: false });
 if (withMin) {
-  await buildBrowser({ unstyle: false, minify: true });
-  await buildBrowser({ unstyle: true, minify: true });
+  await buildBrowser({ minify: true });
 }
+buildTypes();
 finalize();
 sanityCheck();
-console.log(`build done in ${((Date.now() - started) / 1000).toFixed(1)}s${withMin ? ' (incl. minified browser bundles)' : ''}`);
+console.log(`build done in ${((Date.now() - started) / 1000).toFixed(1)}s${withMin ? ' (incl. minified browser bundle)' : ''}`);
