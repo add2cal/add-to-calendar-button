@@ -942,4 +942,4 @@ function atcb_translate(identifier, language) {
   return identifier;
 }
 
-export { atcb_translate_hook, availableLanguages, rtlLanguages };
+export { atcb_translate_hook, availableLanguages, rtlLanguages, i18nStrings };

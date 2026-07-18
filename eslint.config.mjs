@@ -7,7 +7,7 @@ import { configs } from 'eslint-plugin-wc';
 export default [
   // general ignores
   {
-    ignores: ['**/*.d.ts', '**/*.min.*', 'dist/*', 'demo/**', 'Gruntfile.js', 'set-release.js', 'node_modules/', '.github/', 'grunt-wrapper/'],
+    ignores: ['**/*.d.ts', '**/*.min.*', 'dist/*', 'demo/**', 'set-release.js', 'node_modules/', '.github/'],
   },
   // general rules
   js.configs.recommended,
@@ -15,6 +15,14 @@ export default [
   regexpEslint.configs['flat/recommended'],
   prettierRecommended,
   pluginSecurity.configs.recommended,
+  // build tooling: dynamic fs paths are inherent and inputs are repo-controlled
+  {
+    files: ['scripts/**/*.mjs'],
+    rules: {
+      'security/detect-non-literal-fs-filename': 'off',
+      'security/detect-object-injection': 'off',
+    },
+  },
   // overrides
   {
     files: ['**/*.{js,mjs,cjs}'],
