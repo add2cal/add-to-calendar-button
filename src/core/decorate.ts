@@ -67,8 +67,10 @@ function atcb_decorate_data_defaults(data: ATCBConfig): ATCBConfig {
   } else {
     atcb_set_date_defaults(data);
   }
-  // set language if not set
-  if (!data.language || data.language === '' || !availableLanguages.includes(data.language)) {
+  // set language if not set; full locales (en_US / en-GB) are validated via their base
+  if (!data.language || data.language === '') {
+    data.language = 'en';
+  } else if (!availableLanguages.includes(String(data.language).length > 2 ? String(data.language).substring(0, 2) : String(data.language))) {
     data.language = 'en';
   }
   return data;
@@ -148,10 +150,29 @@ function atcb_decorate_light_mode(lightMode: string = ''): string {
 }
 
 function atcb_decorate_data_i18n(data: ATCBConfig): ATCBConfig {
-  // reduce language identifier, if long version is used
-  if (data.language!.length > 2) {
-    data.language = data.language!.substring(0, 2);
+  const raw = String(data.language || 'en');
+  let region = '';
+  // reduce language identifier, if long version is used - keeping the region part
+  // for date formatting and for regional translation packs (like en_GB)
+  if (raw.length > 2) {
+    const match = raw.match(/^([a-z]{2})[-_]([a-z]{2})$/i);
+    if (match) {
+      region = match[2]!.toUpperCase();
+    }
+    data.language = raw.substring(0, 2);
   }
+  // the formatting locale drives Intl date/time output: an explicit region on the
+  // language attribute wins; otherwise the browser region refines the base language
+  const browserRegion = (function () {
+    if (typeof navigator === 'undefined' || !navigator.language) return '';
+    const parts = navigator.language.split('-');
+    const last = parts[parts.length - 1] || '';
+    return parts.length > 1 && /^[a-z]{2}$/i.test(last) ? last.toUpperCase() : '';
+  })();
+  const effectiveRegion = region || browserRegion;
+  data.formatLocale = effectiveRegion ? data.language + '-' + effectiveRegion : data.language;
+  // regional translation packs are looked up first when registered (en_GB before en)
+  data.translationLocale = region ? data.language + '_' + region : data.language;
   // set right-to-left for relevant languages
   if (rtlLanguages.includes(data.language!)) {
     data.rtl = true;

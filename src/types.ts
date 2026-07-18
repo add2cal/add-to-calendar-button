@@ -213,6 +213,8 @@ export interface ATCBConfig {
   customCss?: string;
   lightMode?: string;
   language?: string;
+  formatLocale?: string;
+  translationLocale?: string;
   rtl?: boolean;
   ty?: { [key: string]: unknown };
   rsvp?: { [key: string]: unknown };

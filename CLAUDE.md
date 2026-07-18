@@ -37,7 +37,8 @@ A full rewrite to Lit + strict TypeScript + Vite is in progress, executed phase 
 | `generators/index.ts`           | Per-option link dispatch + shared success handling                                                  |
 | `generators/google.ts` etc.     | One module per calendar service (google, yahoo, outlook, msteams, ical)                             |
 | `generators/rich-data.ts`       | Schema.org JSON-LD injection                                                                        |
-| `i18n/index.ts`                 | Translation strings keyed by ISO 639-1 code                                                         |
+| `i18n/index.ts`                 | Locale registry: en inline, on-demand packs, `atcb_register_locale`, full-locale handling           |
+| `i18n/locales/`                 | Translation sources: one JSON per language (en ships in bundles, rest lazy)                         |
 | `styles/css-template.ts`        | Style registry: core+default inline, on-demand deltas, `atcb_register_style`                        |
 | `styles/css/`                   | CSS sources: tokens + core + per-style deltas (split via `scripts/split-css.mjs`)                   |
 | `types.ts`                      | Shared internal types (input vs decorated config)                                                   |
@@ -93,7 +94,7 @@ Strict TypeScript in `./src`. LitElement web component (shell + button rendered 
 - **Recurring-event bug:** `core/decorate-recurrence.ts`.
 - **UI bug:** `ui/control.ts` / `ui/positioning.ts` (open/close/position) or `ui/generate.ts` (DOM structure).
 - **Schema.org / SEO:** `generators/rich-data.ts`.
-- **i18n / new language:** `i18n/index.ts` `i18nStrings` map; add to `availableLanguages` export.
+- **i18n / new language:** add `i18n/locales/{lang}.json` + the code to `availableLanguages` in `i18n/index.ts`.
 
 ## Testing
 
@@ -140,7 +141,7 @@ Existing baseline tests (don't break):
 ## Common pitfalls when adding code
 
 - **Forgetting to update one of the typed sub-lists** in `atcb-globals.js` (`atcbWcBooleanParams`, `atcbWcObjectParams`, `atcbWcArrayParams`, `atcbWcNumberParams`) — the new attribute won't parse correctly.
-- **Adding a label string in only one language** — `atcb-i18n.js` keys must exist in every language; missing keys silently fall back to English.
+- **Adding a label string in only one language** — the key should exist in every `i18n/locales/*.json`; missing keys silently fall back to English.
 - **Inline scripts/styles without nonce propagation** — break CSP-strict environments. See `atcb-generate-rich-data.js` for the nonce-handling pattern.
 - **Synchronous DOM assertions after mounting** — element is not initialized yet (see gotcha #4).
 - **Modifying `atcb-globals.js` invalid-options arrays** without updating the override-priority logic in `atcb-decorate.js` — `optionsIOS` / `optionsMobile` interaction with `atcbIOSInvalidOptions` / `atcbAndroidInvalidOptions` is subtle.
