@@ -27,7 +27,8 @@
       }
     },
     "clipboard": {
-      "text": "Ti-am copiat automat un URL magic in clipboard"
+      "text": "Ti-am copiat automat un URL magic in clipboard",
+      "failed": "Copierea în clipboard a eșuat. Te rugăm să copiezi manual următorul link:"
     },
     "opensafari": {
       "ical": {

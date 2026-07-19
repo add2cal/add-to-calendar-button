@@ -27,7 +27,8 @@
       }
     },
     "clipboard": {
-      "text": "Kami telah secara otomatis menyalin URL ajaib ke clipboard Anda."
+      "text": "Kami telah secara otomatis menyalin URL ajaib ke clipboard Anda.",
+      "failed": "Gagal menyalin ke papan klip. Silakan salin tautan berikut secara manual:"
     },
     "opensafari": {
       "ical": {

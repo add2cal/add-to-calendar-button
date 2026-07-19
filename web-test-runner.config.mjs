@@ -16,8 +16,13 @@
 // Override for experiments via WTR_CONCURRENCY.
 import fs from 'node:fs';
 import { esbuildPlugin } from '@web/dev-server-esbuild';
+import { chromeLauncher } from '@web/test-runner';
 
 export default {
+  // expose window.gc for the memory-leak regression checks (r-MEM): the flag lets the
+  // heap-stability assertion trigger garbage collection deterministically; the binary
+  // is still resolved via CHROME_PATH like before
+  browsers: [chromeLauncher({ launchOptions: { args: ['--js-flags=--expose-gc'] } })],
   // resolve bare module specifiers here (instead of the --node-resolve CLI flag) so we can
   // request the "production" export condition: lit (pulled in by @open-wc/testing's fixture)
   // then loads its production build and stops printing the "Lit is in dev mode" banner.

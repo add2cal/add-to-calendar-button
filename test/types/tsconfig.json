@@ -4,5 +4,5 @@
     "noEmit": true,
     "noUnusedLocals": false
   },
-  "include": ["./compat.test-d.ts", "../../src", "../../index.d.ts"]
+  "include": ["./compat.test-d.ts", "./v2-public-types.d.ts", "../../src"]
 }

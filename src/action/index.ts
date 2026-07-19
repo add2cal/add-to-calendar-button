@@ -1,8 +1,7 @@
 /**
  * atcb_action - the imperative API for custom triggers (no web component markup needed).
- * Extracted from the element module in v3 phase 3; behavior unchanged.
  */
-import { atcbIsBrowser } from '../core/globals';
+import { atcbIsBrowser, atcb_result_channel } from '../core/globals';
 import { getActiveButton, getButtonInstance, deleteButtonInstance } from '../core/store';
 import { atcb_decorate_data } from '../core/decorate';
 import { atcb_check_required, atcb_validate } from '../core/validate';
@@ -17,8 +16,9 @@ import type { ATCBInputConfig, ATCBConfig } from '../types';
 
 // prepare data when not using the web component, but some custom trigger instead
 async function atcb_action(inputData: ATCBInputConfig, triggerElement?: HTMLElement, keyboardTrigger = false): Promise<string> {
+  const sinkMode = (inputData as { [key: string]: unknown }).sink === true;
   // return if not within a browser environment
-  if (!atcbIsBrowser()) {
+  if (!atcbIsBrowser() && !sinkMode) {
     return undefined as unknown as string;
   }
   // get data
@@ -58,6 +58,24 @@ async function atcb_action(inputData: ATCBInputConfig, triggerElement?: HTMLElem
   data = await atcb_decorate_data(data);
   // translations are needed synchronously at render time - load the pack first
   await atcb_ensure_locale(data);
+  if (sinkMode) {
+    await atcb_validate(data);
+    if (!data.options || data.options.length !== 1) {
+      throw new Error('Add to Calendar Button generation failed: exactly one option required');
+    }
+    atcb_result_channel.open();
+    try {
+      await atcb_generate_links(null as unknown as ShadowRoot, data.options[0]!, data, 'all', false, false, true);
+    } catch (e) {
+      atcb_result_channel.close();
+      throw e instanceof Error ? e : new Error(String(e));
+    }
+    const value = atcb_result_channel.close();
+    if (!value) {
+      throw new Error('Add to Calendar Button generation failed: option does not resolve to a single value');
+    }
+    return value;
+  }
   let root: HTMLElement = document.body;
   // we always force the click trigger in the custom case
   data.trigger = 'click';
@@ -130,7 +148,7 @@ async function atcb_action(inputData: ATCBInputConfig, triggerElement?: HTMLElem
       host.style.top = btnDim.height + 'px';
     }
     host.setAttribute('atcb-button-id', data.identifier);
-    host.attachShadow({ mode: 'open', delegateFocus: true } as unknown as ShadowRootInit);
+    host.attachShadow({ mode: 'open', delegatesFocus: true });
     const elem = document.createElement('template');
     elem.innerHTML = atcbShadowTemplate;
     host.shadowRoot!.append(elem.content.cloneNode(true));

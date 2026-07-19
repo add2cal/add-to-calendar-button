@@ -1,5 +1,7 @@
 <script setup lang="ts">
+import { ArrowRightIcon } from '@heroicons/vue/24/outline';
 import GuideSidebar from "@/components/integration/guideSidebar.vue";
+const localePath = useLocalePath();
 const LazyCodeBlock = defineAsyncComponent(() => import('@/components/codeBlock.vue'));
 
 definePageMeta({
@@ -59,6 +61,10 @@ import Layout from '../layouts/Layout.astro';
 &lt;/Layout&gt;</pre>
         </LazyCodeBlock>
         <p class="font-semibold italic">{{ $t('content.guide.step_use_simple') }}</p>
+        <p class="mb-10">
+          {{ $t('content.guide.ssr_note') }}
+          <NuxtLink :to="{path: localePath('advanced-use'), hash: '#case-12'}">{{ $t('content.advanced.12_long') }} <ArrowRightIcon class="-mt-0.5 mr-0.5 inline-block h-3 w-3" aria-hidden="true" /></NuxtLink>
+        </p>
       </div>
     </div>
     <div class="hidden border-l border-zinc-300 pl-8 text-xs dark:border-zinc-700 lg:block xl:pl-12">

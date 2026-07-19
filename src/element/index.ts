@@ -9,7 +9,7 @@ import { buttonTemplate } from '../ui/templates';
 import { atcb_generate_rich_data } from '../generators/rich-data';
 import { atcb_ensure_locale } from '../i18n/index';
 import { atcb_close, atcb_toggle } from '../ui/control';
-import { atcb_secure_content, atcb_secure_url } from '../core/text';
+import { atcb_secure_content, atcb_secure_url, atcb_strip_unsafe_keys } from '../core/text';
 import { atcb_manage_body_scroll, atcb_set_sizes } from '../ui/positioning';
 import { atcb_log_event } from '../core/events';
 import { atcb_generate_rsvp_form, atcb_generate_rsvp_button } from '../ui/pro';
@@ -39,6 +39,7 @@ if (atcbIsBrowser()) {
     };
 
     declare _buttonTemplate: TemplateResult | null;
+    _ssrShellNodes: Element[];
     _initialized: Promise<void>;
     _initializedResolver!: () => void;
     state: { initializing: boolean; initialized: boolean; ready: boolean; updatePending: boolean };
@@ -54,11 +55,18 @@ if (atcbIsBrowser()) {
     constructor() {
       super();
       this._initialized = new Promise((resolve) => (this._initializedResolver = resolve));
-      // attach the shadow root exactly like v2 did (Lit adopts a pre-attached root via
-      // createRenderRoot below). Mind that `delegateFocus` is the historic misspelling of
-      // `delegatesFocus` - it is preserved on purpose until the phase 9 WCAG pass, since
-      // fixing it changes focus behavior.
-      this.attachShadow({ mode: 'open', delegateFocus: true } as unknown as ShadowRootInit);
+      // a server-rendered declarative shadow root may already exist at upgrade time.
+      // Adopt it instead of re-attaching (attachShadow would CLEAR the declarative
+      // root) and remember its nodes: they keep the shell painted until the real
+      // render is ready to swap in (see removeSsrShell)
+      if (this.shadowRoot) {
+        this._ssrShellNodes = Array.from(this.shadowRoot.children);
+      } else {
+        // attach the shadow root in the constructor (Lit adopts a pre-attached root via
+        // createRenderRoot below); delegatesFocus forwards host.focus() to the button
+        this.attachShadow({ mode: 'open', delegatesFocus: true });
+        this._ssrShellNodes = [];
+      }
       this._buttonTemplate = null;
       this.state = {
         initializing: false,
@@ -70,18 +78,33 @@ if (atcbIsBrowser()) {
       this.error = false;
     }
 
+    // drop the server-rendered shell in the same synchronous block that makes the real
+    // render visible: the browser never paints the in-between state, so the shell is
+    // replaced without layout shift
+    removeSsrShell(): void {
+      for (const node of this._ssrShellNodes) {
+        node.remove();
+      }
+      this._ssrShellNodes = [];
+    }
+
     override createRenderRoot(): ShadowRoot {
       return this.shadowRoot!;
     }
 
     override render(): TemplateResult {
       // the shell div carries NO bindings on itself: the init pipeline mutates its
-      // classes/lang imperatively (exactly like v2), and static parts survive re-renders
+      // classes/lang imperatively, and lit must not fight those mutations on re-render
       return html`<div class="atcb-initialized atcb-hidden">${this._buttonTemplate ?? nothing}</div>`;
     }
 
     override connectedCallback(): void {
       super.connectedCallback();
+      // browsers without declarative shadow DOM leave the server-rendered template as
+      // an inert light-DOM child - drop it and initialize client-only
+      if (this._ssrShellNodes.length === 0) {
+        this.querySelector(':scope > template[shadowrootmode]')?.remove();
+      }
       if (!this.initializing) {
         this.initializing = true;
         // Defer the update to ensure it's non-blocking
@@ -183,7 +206,7 @@ if (atcbIsBrowser()) {
       this.data = {};
       this._buttonTemplate = null;
       await this.updateComplete;
-      const rootObj = this.shadowRoot!.querySelector('.atcb-initialized') as HTMLElement | null;
+      const rootObj = this.shadowRoot!.querySelector('.atcb-initialized:not([data-atcb-ssr])') as HTMLElement | null;
       if (rootObj) {
         // reset the shell to its pristine state (v2 recreated the node; we reuse the
         // lit-rendered one). Foreign element children (e.g. an RSVP form) are removed;
@@ -262,7 +285,7 @@ if (atcbIsBrowser()) {
       }
     }
 
-    // build the button (formerly the module-level atcb_build_button)
+    // build the button
     async buildButton(): Promise<boolean> {
       const host = this.shadowRoot!;
       try {
@@ -273,7 +296,7 @@ if (atcbIsBrowser()) {
         // translations are needed synchronously at render time - load the pack first
         await atcb_ensure_locale(data);
         await atcb_validate(data);
-        const rootObj = host.querySelector('.atcb-initialized') as HTMLElement;
+        const rootObj = host.querySelector('.atcb-initialized:not([data-atcb-ssr])') as HTMLElement;
         // ... and on success, load css and generate the button
         atcb_set_light_mode(host, data);
         rootObj.setAttribute('lang', data.language!);
@@ -310,6 +333,8 @@ if (atcbIsBrowser()) {
             atcb_generate_rich_data(data, host.host);
           }
         }
+        // the real render is complete - swap out a server-rendered shell, if any
+        this.removeSsrShell();
         // log event
         atcb_log_event('initialization', data.identifier!, data.identifier!);
         if (!data.proKey && data.hideBranding && !document.getElementById('atcb-reference')) {
@@ -317,6 +342,7 @@ if (atcbIsBrowser()) {
         }
         return true;
       } catch (e) {
+        this.removeSsrShell();
         throw new Error((e as { message?: string }).message);
       }
     }
@@ -341,7 +367,7 @@ async function atcb_process_inline_data(el: ATCBHostElement, debug = false): Pro
       throw new Error('Add to Calendar Button generation failed: No data provided.');
     }
     try {
-      const atcbJsonInput = JSON.parse(atcb_secure_content(slotInput.replace(/(\r\n|\n|\r)/g, ''), false) as string) as ATCBInputConfig;
+      const atcbJsonInput = atcb_strip_unsafe_keys(JSON.parse(atcb_secure_content(slotInput.replace(/(\r\n|\n|\r)/g, ''), false) as string)) as ATCBInputConfig;
       await atcb_check_required(atcbJsonInput);
       data = atcbJsonInput;
     } catch (jsonError) {
@@ -379,7 +405,7 @@ function atcb_read_attributes(el: ATCBHostElement, params: (keyof ATCBInputConfi
           }
           return inputVal;
         })();
-        val = JSON.parse(cleanedInput);
+        val = atcb_strip_unsafe_keys(JSON.parse(cleanedInput));
       } else if ((atcbWcObjectArrayParams as (keyof ATCBInputConfig)[]).includes(attr)) {
         const cleanedInput = (function () {
           if (!inputVal || inputVal === '') {
@@ -390,7 +416,7 @@ function atcb_read_attributes(el: ATCBHostElement, params: (keyof ATCBInputConfi
           }
           return inputVal;
         })();
-        val = JSON.parse(cleanedInput);
+        val = atcb_strip_unsafe_keys(JSON.parse(cleanedInput));
       } else if ((atcbWcArrayParams as (keyof ATCBInputConfig)[]).includes(attr)) {
         let arrVal = inputVal;
         if (inputVal.includes('[')) {
@@ -669,7 +695,7 @@ async function atcb_get_pro_data(licenseKey?: string, el?: ATCBHostElement, dire
       const dataOverrides: { [key: string]: unknown } = el ? (atcb_read_attributes(el, proOverride ? atcbWcParams : atcbWcProParams) as unknown as { [key: string]: unknown }) : (directData as unknown as { [key: string]: unknown });
       const response = await fetch(`https://${dataOverrides.dev ? 'event-dev.caldn.net' : 'event.caldn.net'}/${licenseKey}/config.json`);
       if (response.ok) {
-        const data = (await response.json()) as ATCBConfig;
+        const data = atcb_strip_unsafe_keys(await response.json()) as ATCBConfig;
         if (proOverride) {
           const host = window.location.hostname || '';
           const domain = host.split('.').slice(-2).join('.');
@@ -780,6 +806,26 @@ function atcb_global_listener_keydown(event: KeyboardEvent): void {
     }
     return null;
   })();
+  // dialog pattern: while a modal without an option list is open, Tab cycles through
+  // the modal's own focusable elements instead of escaping into the page behind it
+  if (host && !host.querySelector('.atcb-list') && host.querySelector('.atcb-modal') && event.key === 'Tab') {
+    event.preventDefault();
+    const modals = host.querySelectorAll('.atcb-modal[data-modal-nr]');
+    const topModal = modals.length > 0 ? modals[modals.length - 1]! : host.querySelector('.atcb-modal')!;
+    const focusables = Array.from(topModal.querySelectorAll<HTMLElement>('button, a[href], input, select, textarea, [tabindex]:not([tabindex="-1"])')).filter((el) => !el.hasAttribute('disabled'));
+    if (focusables.length > 0) {
+      const active = (host as unknown as { activeElement: Element | null }).activeElement;
+      const currentIndex = focusables.findIndex((el) => el === active);
+      const nextIndex = (function () {
+        if (event.shiftKey) {
+          return currentIndex <= 0 ? focusables.length - 1 : currentIndex - 1;
+        }
+        return currentIndex === -1 || currentIndex === focusables.length - 1 ? 0 : currentIndex + 1;
+      })();
+      focusables[`${nextIndex}`]!.focus();
+    }
+    return;
+  }
   if (host && host.querySelector('.atcb-list') && (event.key === 'ArrowDown' || event.key === 'ArrowUp' || event.key === 'Tab')) {
     event.preventDefault();
     let targetFocus = 0;

@@ -8,9 +8,10 @@
  * - ATCBConfig: the decorated shape produced by atcb_decorate_data (flags coerced to
  *   real booleans, options normalized, dates array populated, internal fields added).
  *
- * Migration note (phase 2): decorated fields stay optional on purpose - the runtime
- * behavior of v2 is preserved exactly, so functions guard or assert presence the same
- * way the JS did. Tightening required fields is deferred (see .ai/REFACTOR-PLAN.md).
+ * Decorated fields stay optional on purpose: the decoration pipeline fills them at
+ * runtime and consuming functions guard or assert presence where needed. Tightening
+ * them to required fields would be a type-only change with a large diff surface -
+ * a candidate for a later minor release, not something to mix into feature work.
  */
 
 export type ATCBOptionName = 'Apple' | 'Google' | 'iCal' | 'Microsoft365' | 'MicrosoftTeams' | 'Outlook.com' | 'Yahoo';
@@ -257,10 +258,205 @@ export type I18nStrings = {
   };
 };
 
+// ---------------------------------------------------------------------------
+// Public surface types
+//
+// These are the types consumers import from the package root. They describe the
+// DOCUMENTED configuration surface and stay deliberately narrower than the
+// internal input types above (which additionally accept everything the runtime
+// tolerates). Compatibility contract: every value that satisfies a public type
+// must be accepted by the corresponding internal type, and every config a v2
+// consumer wrote against the v2 typings must keep compiling (asserted by the
+// type gate in test/types/).
+// ---------------------------------------------------------------------------
+
+export type ATCBLanguage = 'en' | 'de' | 'nl' | 'fa' | 'fr' | 'es' | 'et' | 'pt' | 'tr' | 'zh' | 'ar' | 'hi' | 'pl' | 'ro' | 'id' | 'no' | 'fi' | 'sv' | 'cs' | 'ja' | 'it' | 'ko' | 'vi' | 'hu' | 'he' | 'uk';
+
+export type CustomLabelsObjectType = {
+  [key: string]: string | null;
+};
+
+export interface EventDate {
+  name?: string;
+  description?: string;
+  startDate?: string;
+  startTime?: string;
+  endDate?: string;
+  endTime?: string;
+  timeZone?: string;
+  useUserTZ?: boolean;
+  location?: string;
+  status?: 'TENTATIVE' | 'CONFIRMED' | 'CANCELLED';
+  sequence?: number;
+  uid?: string;
+  organizer?: string;
+  attendee?: string;
+}
+
+export interface ATCBActionEventConfig {
+  proKey?: string;
+  name?: string;
+  dates?: EventDate[];
+  description?: string;
+  startDate?: string;
+  startTime?: string;
+  endDate?: string;
+  endTime?: string;
+  timeZone?: string;
+  useUserTZ?: boolean;
+  location?: string;
+  status?: 'TENTATIVE' | 'CONFIRMED' | 'CANCELLED';
+  sequence?: number;
+  uid?: string;
+  organizer?: string;
+  attendee?: string;
+  icsFile?: string;
+  recurrence?: string;
+  recurrence_interval?: number;
+  recurrence_until?: string;
+  recurrence_count?: number;
+  recurrence_byDay?: string[] | string;
+  recurrence_byMonth?: string[] | string | number[] | number;
+  recurrence_byMonthDay?: string[] | string | number[] | number;
+  recurrence_weekstart?: string;
+  availability?: 'busy' | 'free';
+  created?: string;
+  updated?: string;
+  subscribe?: boolean;
+  // the option surface is limited compared to the web component, since the
+  // atcb_action function skips list rendering for single options
+  options?: ATCBOptionName[];
+  optionsMobile?: ATCBOptionName[];
+  optionsIOS?: ATCBOptionName[];
+  iCalFileName?: string;
+  listStyle?: 'overlay' | 'modal';
+  buttonStyle?: ATCBButtonStyle;
+  hideIconList?: boolean;
+  hideIconModal?: boolean;
+  hideTextLabelList?: boolean;
+  hideBackground?: boolean;
+  hideButton?: boolean;
+  hideCheckmark?: boolean;
+  hideBranding?: boolean;
+  size?: string;
+  customLabels?: CustomLabelsObjectType;
+  customCss?: string;
+  lightMode?: ATCBLightMode;
+  language?: ATCBLanguage;
+  hideRichData?: boolean;
+  ty?: object;
+  bypassWebViewCheck?: boolean;
+  debug?: boolean;
+  cspnonce?: string;
+  styleLight?: string;
+  styleDark?: string;
+  styleSource?: string;
+  loadAllStyles?: boolean;
+  proxy?: boolean;
+  fakeMobile?: boolean;
+  fakeIOS?: boolean;
+  fakeAndroid?: boolean;
+  proOverride?: boolean;
+  forceOverlay?: boolean;
+  customVar?: CustomLabelsObjectType;
+  dev?: boolean;
+}
+
+export type AddToCalendarButtonType = {
+  proKey?: string;
+  name?: string;
+  dates?: EventDate[] | string;
+  description?: string;
+  startDate?: string;
+  startTime?: string;
+  endDate?: string;
+  endTime?: string;
+  timeZone?: string;
+  useUserTZ?: boolean;
+  location?: string;
+  status?: 'TENTATIVE' | 'CONFIRMED' | 'CANCELLED';
+  sequence?: number | string;
+  uid?: string;
+  organizer?: string;
+  attendee?: string;
+  icsFile?: string;
+  images?: string[] | string;
+  recurrence?: string;
+  recurrence_interval?: number | string;
+  recurrence_until?: string;
+  recurrence_count?: number | string;
+  recurrence_byDay?: string[] | string;
+  recurrence_byMonth?: string[] | string | number[] | number;
+  recurrence_byMonthDay?: string[] | string | number[] | number;
+  recurrence_weekstart?: string;
+  availability?: 'busy' | 'free';
+  created?: string;
+  updated?: string;
+  identifier?: string;
+  subscribe?: boolean | string;
+  options?: ATCBOptionName[] | string;
+  optionsMobile?: ATCBOptionName[] | string;
+  optionsIOS?: ATCBOptionName[] | string;
+  iCalFileName?: string;
+  listStyle?: ATCBListStyle;
+  buttonStyle?: ATCBButtonStyle;
+  trigger?: 'hover' | 'click';
+  inline?: boolean | string;
+  buttonsList?: boolean | string;
+  hideIconButton?: boolean | string;
+  hideIconList?: boolean | string;
+  hideIconModal?: boolean | string;
+  hideTextLabelButton?: boolean | string;
+  hideTextLabelList?: boolean | string;
+  hideBackground?: boolean | string;
+  hideCheckmark?: boolean | string;
+  hideBranding?: boolean | string;
+  hideButton?: boolean | string;
+  size?: string;
+  label?: string;
+  inlineRsvp?: string;
+  customLabels?: CustomLabelsObjectType | string;
+  customCss?: string;
+  lightMode?: ATCBLightMode;
+  language?: ATCBLanguage;
+  hideRichData?: boolean | string;
+  ty?: object | string;
+  rsvp?: object | string;
+  bypassWebViewCheck?: boolean | string;
+  debug?: boolean | string;
+  cspnonce?: string;
+  blockInteraction?: boolean | string;
+  styleLight?: string;
+  styleDark?: string;
+  styleSource?: string;
+  loadAllStyles?: boolean | string;
+  disabled?: boolean | string;
+  hidden?: boolean | string;
+  pastDateHandling?: string;
+  proxy?: boolean | string;
+  fakeMobile?: boolean | string;
+  fakeIOS?: boolean | string;
+  fakeAndroid?: boolean | string;
+  proOverride?: boolean;
+  forceOverlay?: boolean | string;
+  instance?: number | string;
+  customVar?: CustomLabelsObjectType | string;
+  dev?: boolean | string;
+};
+
 // Global augmentations used across the source
 declare global {
   interface Window {
     dataLayer?: { [key: string]: unknown }[];
     atcb_action?: (data: ATCBInputConfig, triggerElement?: HTMLElement, keyboardTrigger?: boolean) => Promise<string>;
+  }
+  interface HTMLElementTagNameMap {
+    'add-to-calendar-button': HTMLElement & AddToCalendarButtonType;
+  }
+  // eslint-disable-next-line @typescript-eslint/no-namespace
+  namespace JSX {
+    interface IntrinsicElements {
+      ['add-to-calendar-button']: AddToCalendarButtonType;
+    }
   }
 }

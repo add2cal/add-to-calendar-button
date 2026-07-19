@@ -1,55 +1,16 @@
-/* eslint-disable no-unused-vars */
-
-/* ATTENTION!
- * If you are updating things here, also double-check the following depending files:
- * - no-pro/index.d.ts
- * - unstyle/index.d.ts
- * - no-pro-unstyle/index.d.ts
+/**
+ * FROZEN v2 public types (verbatim from the v2.15 index.d.ts, with the ambient
+ * module and global declaration blocks stripped and type names prefixed V2).
+ * This file is the compatibility oracle for the type gate: values typed against
+ * these v2 declarations must keep satisfying the current public types.
+ * Do not update it to match new functionality.
  */
-
-// MODULES
-// default
-declare module 'add-to-calendar-button' {
-  export function atcb_action(config: ATCBActionEventConfig, triggerElement?: HTMLElement, keyboardTrigger?: boolean): Promise<string>;
-  export const i18nStrings: {
-    [key: string]: {
-      [key: string]: string;
-    };
-  };
-  export const cssStyles: {
-    [key: string]: string;
-  };
-  export function atcb_generate_ty(host: HTMLElement, data: object): null;
-  export function atcb_generate_timestring(dates: EventDate[], language?: string, subEvent?: string | number, decorate?: boolean, browserTimeOverride?: boolean, enforceYear?: boolean, hideTimeZone?: boolean): string[];
-  export function atcb_decorate_data_dates(data: object): object;
-}
-
-// no-pro
-// referenced in its own index.d.ts file, but also kept here as backup!
-declare module 'add-to-calendar-button/no-pro' {
-  export function atcb_action(config: ATCBActionEventConfig, triggerElement?: HTMLElement, keyboardTrigger?: boolean): Promise<string>;
-}
-
-// unstyle
-// referenced in its own index.d.ts file, but also kept here as backup!
-declare module 'add-to-calendar-button/unstyle' {
-  export function atcb_action(config: ATCBActionEventConfig, triggerElement?: HTMLElement, keyboardTrigger?: boolean): Promise<string>;
-  export function atcb_generate_ty(host: HTMLElement, data: object): null;
-  export function atcb_generate_timestring(dates: EventDate[], language?: string, subEvent?: string | number, decorate?: boolean, browserTimeOverride?: boolean, enforceYear?: boolean, hideTimeZone?: boolean): string[];
-  export function atcb_decorate_data_dates(data: object): object;
-}
-
-// no-pro-unstyle
-// referenced in its own index.d.ts file, but also kept here as backup!
-declare module 'add-to-calendar-button/no-pro-unstyle' {
-  export function atcb_action(config: ATCBActionEventConfig, triggerElement?: HTMLElement, keyboardTrigger?: boolean): Promise<string>;
-}
-
+/* eslint-disable no-unused-vars */
 // INTERFACES AND TYPES
-export interface ATCBActionEventConfig {
+export interface V2ATCBActionEventConfig {
   proKey?: string;
   name?: string;
-  dates?: EventDate[];
+  dates?: V2EventDate[];
   description?: string;
   startDate?: string;
   startTime?: string;
@@ -91,7 +52,7 @@ export interface ATCBActionEventConfig {
   hideCheckmark?: boolean;
   hideBranding?: boolean;
   size?: string;
-  customLabels?: CustomLabelsObjectType;
+  customLabels?: V2CustomLabelsObjectType;
   customCss?: string;
   lightMode?: 'system' | 'dark' | 'light' | 'bodyScheme';
   language?: 'en' | 'de' | 'nl' | 'fa' | 'fr' | 'es' | 'et' | 'pt' | 'tr' | 'zh' | 'ar' | 'hi' | 'pl' | 'ro' | 'id' | 'no' | 'fi' | 'sv' | 'cs' | 'ja' | 'it' | 'ko' | 'vi' | 'hu';
@@ -108,14 +69,14 @@ export interface ATCBActionEventConfig {
   fakeAndroid?: boolean;
   proOverride?: boolean;
   forceOverlay?: boolean;
-  customVar?: CustomLabelsObjectType;
+  customVar?: V2CustomLabelsObjectType;
   dev?: boolean;
 }
 
-export type AddToCalendarButtonType = {
+export type V2AddToCalendarButtonType = {
   proKey?: string;
   name?: string;
-  dates?: EventDate[] | string;
+  dates?: V2EventDate[] | string;
   description?: string;
   startDate?: string;
   startTime?: string;
@@ -165,7 +126,7 @@ export type AddToCalendarButtonType = {
   size?: string;
   label?: string;
   inlineRsvp?: string;
-  customLabels?: CustomLabelsObjectType | string;
+  customLabels?: V2CustomLabelsObjectType | string;
   customCss?: string;
   lightMode?: 'system' | 'dark' | 'light' | 'bodyScheme';
   language?: 'en' | 'de' | 'nl' | 'fa' | 'fr' | 'es' | 'et' | 'pt' | 'tr' | 'zh' | 'ar' | 'hi' | 'pl' | 'ro' | 'id' | 'no' | 'fi' | 'sv' | 'cs' | 'ja' | 'it' | 'ko' | 'vi' | 'hu';
@@ -188,11 +149,11 @@ export type AddToCalendarButtonType = {
   proOverride?: boolean;
   forceOverlay?: boolean | string;
   instance?: number | string;
-  customVar?: CustomLabelsObjectType | string;
+  customVar?: V2CustomLabelsObjectType | string;
   dev?: boolean | string;
 };
 
-export interface EventDate {
+export interface V2EventDate {
   name?: string;
   description?: string;
   startDate?: string;
@@ -209,18 +170,8 @@ export interface EventDate {
   attendee?: string;
 }
 
-export type CustomLabelsObjectType = {
+export type V2CustomLabelsObjectType = {
   [key: string]: string | null;
 };
 
 // WEB COMPONENT DECLARATION
-declare global {
-  interface HTMLElementTagNameMap {
-    'add-to-calendar-button': HTMLElement & AddToCalendarButtonType;
-  }
-  namespace JSX {
-    interface IntrinsicElements {
-      ['add-to-calendar-button']: AddToCalendarButtonType;
-    }
-  }
-}

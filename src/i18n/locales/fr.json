@@ -27,7 +27,8 @@
       }
     },
     "clipboard": {
-      "text": "Nous avons automatiquement copié une URL magique dans votre presse-papier."
+      "text": "Nous avons automatiquement copié une URL magique dans votre presse-papier.",
+      "failed": "La copie dans ton presse-papiers a échoué. Copie le lien suivant manuellement :"
     },
     "opensafari": {
       "ical": {

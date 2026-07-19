@@ -1,10 +1,10 @@
-import { atcbIsAndroid } from '../core/globals';
+import { atcbIsAndroid, atcb_result_channel } from '../core/globals';
 import { getOptionStates } from '../core/store';
 import { atcb_toggle } from '../ui/control';
-import { atcb_saved_hook, atcb_copy_to_clipboard } from '../core/util';
+import { atcb_saved_hook } from '../core/util';
 import { atcb_create_modal } from '../ui/generate';
 import { atcb_translate_hook } from '../i18n/index';
-import { atcb_generate_ical, atcb_subscribe_ical, atcb_open_cal_url } from './ical';
+import { atcb_generate_ical, atcb_subscribe_ical, atcb_open_cal_url, atcb_clipboard_note_content, atcb_wire_clipboard_input } from './ical';
 import { atcb_generate_google, atcb_subscribe_google } from './google';
 import { atcb_generate_msteams } from './msteams';
 import { atcb_generate_microsoft, atcb_subscribe_microsoft } from './outlook';
@@ -67,6 +67,11 @@ async function atcb_generate_links(host: ShadowRoot, type: string, data: ATCBCon
           break;
       }
       // we mark the clicked date - in the multi-date case, this would be one out of many - not for cancelled (ical case)
+      // programmatic flows got their value with the dispatch above - the saved-state
+      // bookkeeping below is pure ui
+      if (atcb_result_channel.active()) {
+        return;
+      }
       const modalHost = document.getElementById(data.identifier + '-modal-host');
       if (modalHost) {
         const subEventButton = modalHost.shadowRoot!.getElementById(data.identifier + '-' + type + '-' + ((subEvent as number) + 1));
@@ -111,7 +116,7 @@ function atcb_generate_multidate_links(host: ShadowRoot, type: string, linkType:
 
 async function atcb_generate_subscribe_links(host: ShadowRoot, type: string, linkType: string, data: ATCBConfig, keyboardTrigger: boolean): Promise<void> {
   const adjustedFileUrl = data.icsFile!.replace('https://', 'webcal://');
-  let copied = false;
+  let clipboardNote: string;
   switch (linkType) {
     case 'ical': // also for apple (see above)
       if (atcbIsAndroid() || data.fakeAndroid) {
@@ -135,19 +140,13 @@ async function atcb_generate_subscribe_links(host: ShadowRoot, type: string, lin
         atcb_open_cal_url(data, 'yahoo', '', true);
         return;
       }
-      try {
-        await atcb_copy_to_clipboard(data.icsFile);
-        copied = true;
-      } catch (e) {
-        console.warn(e);
-        copied = false; // TODO: Alter the modal text based on whether it was copied or not
-      }
-      atcb_create_modal(
+      clipboardNote = await atcb_clipboard_note_content(data.icsFile as string, data);
+      await atcb_create_modal(
         host,
         data,
         'yahoo',
         atcb_translate_hook('modal.subscribe.yahoo.h', data),
-        atcb_translate_hook('modal.clipboard.text', data) + '<br>' + atcb_translate_hook('modal.subscribe.yahoo.text', data),
+        clipboardNote + '<br>' + atcb_translate_hook('modal.subscribe.yahoo.text', data),
         [
           {
             label: atcb_translate_hook('modal.subscribe.yahoo.button', data),
@@ -160,21 +159,16 @@ async function atcb_generate_subscribe_links(host: ShadowRoot, type: string, lin
         [] as unknown as never[],
         keyboardTrigger,
       );
+      atcb_wire_clipboard_input(data);
       return;
     case 'yahoo2nd':
-      try {
-        await atcb_copy_to_clipboard(data.icsFile);
-        copied = true;
-      } catch (e) {
-        console.warn(e);
-        copied = false; // TODO: Alter the modal text based on whether it was copied or not
-      }
-      atcb_create_modal(
+      clipboardNote = await atcb_clipboard_note_content(data.icsFile as string, data);
+      await atcb_create_modal(
         host,
         data,
         'yahoo',
         atcb_translate_hook('modal.subscribe.yahoo.h', data),
-        atcb_translate_hook('modal.clipboard.text', data) + '<br>' + atcb_translate_hook('modal.subscribe.yahoo.text', data),
+        clipboardNote + '<br>' + atcb_translate_hook('modal.subscribe.yahoo.text', data),
         [
           {
             label: atcb_translate_hook('modal.subscribe.yahoo.button', data),
@@ -186,6 +180,7 @@ async function atcb_generate_subscribe_links(host: ShadowRoot, type: string, lin
         [] as unknown as never[],
         keyboardTrigger,
       );
+      atcb_wire_clipboard_input(data);
       return;
   }
   // mark as successful (except for the Yahoo case, with returned)
@@ -193,6 +188,10 @@ async function atcb_generate_subscribe_links(host: ShadowRoot, type: string, lin
 }
 
 function atcb_set_fully_successful(host: ShadowRoot, data: ATCBConfig, multiDateModal = false): void {
+  // pure ui feedback - nothing to do for programmatic flows
+  if (atcb_result_channel.active()) {
+    return;
+  }
   const trigger = host.getElementById(data.identifier as string);
   if (trigger) {
     trigger.classList.add('atcb-saved');

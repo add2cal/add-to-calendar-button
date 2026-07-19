@@ -131,3 +131,29 @@ export function stubClipboard() {
     },
   };
 }
+
+/**
+ * Force every clipboard strategy to fail: the Clipboard API write throws and the
+ * legacy execCommand path reports itself unsupported. Use to exercise manual-copy
+ * fallbacks. Returns { restore }.
+ */
+export function stubClipboardFailure() {
+  const originalClipboard = Object.getOwnPropertyDescriptor(Navigator.prototype, 'clipboard');
+  Object.defineProperty(navigator, 'clipboard', {
+    configurable: true,
+    value: {
+      writeText: async () => {
+        throw new Error('clipboard denied');
+      },
+    },
+  });
+  const originalQueryCommandSupported = document.queryCommandSupported;
+  document.queryCommandSupported = () => false;
+  return {
+    restore() {
+      delete navigator.clipboard;
+      if (originalClipboard) Object.defineProperty(Navigator.prototype, 'clipboard', originalClipboard);
+      document.queryCommandSupported = originalQueryCommandSupported;
+    },
+  };
+}

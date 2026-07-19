@@ -47,6 +47,8 @@ const configOptions = [
   "buttonStyle",
   "inline",
   "customCss",
+  "styleSource",
+  "loadAllStyles",
   "buttonsList",
   "label",
   "trigger",
@@ -100,6 +102,10 @@ watch(searchSelection, (newVal) => {
       <div v-if="locale=='en'">
         <p>The following list holds all potential attributes to set up and customize your next Add to Calendar Button.</p>
         <p class="mt-8 italic">Check the Demo to play with most of them and explore the examples pages for more extensive descriptions for specific cases.</p>
+        <p class="mt-8">
+          Since v3, every attribute also has an official kebab-case name (like <code>start-date</code> or <code>button-style</code>) - this list shows the classic spellings, which keep working as aliases.<br />
+          If both spellings are present, the kebab-case one wins.
+        </p>
         <p class="hidden lg:block">
           To specify a boolean value within the HTML custom element, you would only add the name as attribute.<br />
           Not setting it would automatically reflect to "false". As an alternative, you could also always write it as a string like <code>attributeName="true"</code>.
@@ -113,6 +119,10 @@ watch(searchSelection, (newVal) => {
       <div v-else>
         <p>Die nachfolgende Liste beinhaltet alle möglichen Attribute, um deinen Add to Calendar Button nach deinen Wünschen zu configurieren.</p>
         <p class="mt-8 italic">Wirf unbedingt auch einen Blick auf unsere Demo, bei welcher du mit den meisten Paramtern live herumspielen kannst - und durchstöbere die "Beispiele"-Seiten für weitere Erläuterungen und speziellere Funktionalitäten.</p>
+        <p class="mt-8">
+          Seit v3 hat jedes Attribut zusätzlich einen offiziellen kebab-case-Namen (etwa <code>start-date</code> oder <code>button-style</code>) - diese Liste zeigt die klassischen Schreibweisen, welche als Alias weiterhin funktionieren.<br />
+          Sind beide Schreibweisen gesetzt, gewinnt die kebab-case-Variante.
+        </p>
         <p class="hidden lg:block">
           Um einen boolschen Wert in dem HTML-Element zu definieren, kannst du einfach nur den Namen als Attribute setzen.<br />
           Wenn er nicht gesetzt ist, definiert das die Option automatisch als "false". Alternativ kannst du den Wert aber auch immer vollständig als String ergänzen: <code>attributeName="true"</code>.
@@ -694,12 +704,15 @@ watch(searchSelection, (newVal) => {
               <td v-if="locale=='en'">
                 There are multiple integrated button styles, which also affect a lot of other parameters.<br />
                 We recommend to play around with them in order to find out how they behave in detail.<br /><br />
-                "none" would simply load no css style at all, while "custom" requires an external css file specified with the "customCss" option.
+                "none" would simply load no css style at all, while "custom" requires an external css file specified with the "customCss" option.<br /><br />
+                Since v3, only the default style is part of the script itself - every other style loads automatically on demand (a few KB), or fetch-free via <code>import 'add-to-calendar-button/styles/3d'</code> and the like when bundling. See the "styleSource" and "loadAllStyles" options for more
+                control.
               </td>
               <td v-else>
                 Es gibt mehrere integrierte Button-Stile (Themes), die auch einige weitere Parameter beeinflussen.<br />
                 Wir empfehlen die Optionen der Reihe nach auszuprobieren, um herauszufinden, wie sie sich im Detail verhalten.<br /><br />
-                "none" würde gar kein CSS laden, während "custom" eine externes CSS-Datei über die "customCss"-Option erfordert.
+                "none" würde gar kein CSS laden, während "custom" eine externes CSS-Datei über die "customCss"-Option erfordert.<br /><br />
+                Seit v3 ist nur der Default-Style Teil des Skripts - jeder andere Style lädt automatisch bei Bedarf (wenige KB), oder ohne Netzwerk-Anfrage via <code>import 'add-to-calendar-button/styles/3d'</code> und Co. beim Bundling. Siehe auch die Optionen "styleSource" und "loadAllStyles".
               </td>
             </tr>
             <tr id="inline">
@@ -728,6 +741,34 @@ watch(searchSelection, (newVal) => {
                 Du kannst eine externe CSS-DAtei anstelle der integrierten Optionen laden.<br />
                 Spezifiziere die URL der Datei hier und nutze die buttonStyle-Option "custom".<br /><br />
                 <NuxtLink :to="{path: localePath('advanced-use'), hash: '#case-1'}">{{ $t('labels.example') }} <ArrowRightIcon class="-mt-0.5 mr-0.5 inline-block h-3 w-3" aria-hidden="true" /></NuxtLink>
+              </td>
+            </tr>
+            <tr id="stylesource">
+              <th scope="row">styleSource</th>
+              <td><em>String</em><br /><br /><span class="format">URL</span></td>
+              <td v-if="locale=='en'">
+                New with v3: Overrides the base url from which on-demand assets (button styles beyond the default, language packs beyond English) are loaded.<br /><br />
+                By default, they load from wherever the script itself is hosted. Set this option if you self-host the script in an exotic setup or want to serve the assets from a dedicated location. The url should point at the directory that contains the <code>styles/</code> and
+                <code>locales/</code> folders.
+              </td>
+              <td v-else>
+                Neu mit v3: Überschreibt die Basis-URL, von welcher On-Demand-Assets (Button-Styles jenseits des Defaults, Sprachpakete jenseits von Englisch) geladen werden.<br /><br />
+                Standardmäßig laden diese von dort, wo auch das Skript selbst gehostet ist. Setze diese Option, wenn du das Skript in einem exotischen Setup selbst hostest oder die Assets von einem dedizierten Ort ausliefern möchtest. Die URL sollte auf das Verzeichnis zeigen, welches die
+                <code>styles/</code>- und <code>locales/</code>-Ordner enthält.
+              </td>
+            </tr>
+            <tr id="loadallstyles">
+              <th scope="row">loadAllStyles</th>
+              <td>
+                <em>Boolean</em><br /><br /><span class="label">{{ $t('content.config.default') }}:</span>False
+              </td>
+              <td v-if="locale=='en'">
+                New with v3: Prefetches every button style delta on initialization.<br /><br />
+                Only useful when you switch the "buttonStyle" at runtime (for example in a live theme switcher) and want the change to apply without any network delay.
+              </td>
+              <td v-else>
+                Neu mit v3: Lädt alle Button-Style-Deltas bereits bei der Initialisierung.<br /><br />
+                Nur sinnvoll, wenn du die "buttonStyle"-Option zur Laufzeit wechselst (etwa in einem Live-Theme-Switcher) und der Wechsel ohne Netzwerk-Verzögerung greifen soll.
               </td>
             </tr>
             <tr id="buttonslist">
@@ -911,18 +952,22 @@ watch(searchSelection, (newVal) => {
             <tr id="language">
               <th scope="row">language</th>
               <td>
-                <em>String</em><br /><br /><span class="label block">{{ $t('content.config.options') }}:</span>ar, cs, de, en, es, et, fa, fi, fr, hi, hu, id, it, ja, ko, nl, no, ro, pl, pt, sv, tr, vi, zh<br /><br /><span class="label">{{ $t('content.config.default') }}:</span>en
+                <em>String</em><br /><br /><span class="label block">{{ $t('content.config.options') }}:</span>ar, cs, de, en, es, et, fa, fi, fr, he, hi, hu, id, it, ja, ko, nl, no, ro, pl, pt, sv, tr, uk, vi, zh<br /><br /><span class="label">{{ $t('content.config.default') }}:</span>en
               </td>
               <td v-if="locale=='en'">
                 If you want to have the text blocks in another language than English, you can use the included translations (i18n).<br /><br />
                 Simply set one of the supported languages as <a href="https://www.w3schools.com/tags/ref_language_codes.asp" target="_blank" rel="noopener" class="whitespace-nowrap">ISO 639-1 code <ArrowTopRightOnSquareIcon class="-mt-0.5 mr-0.5 inline-block h-3 w-3" aria-hidden="true" /></a>.<br />
-                Also supports Right-to-Left (RTL) with Arabic, Persian &amp; Hebrew.
+                Also supports Right-to-Left (RTL) with Arabic, Persian &amp; Hebrew.<br /><br />
+                Since v3, English is part of the script and every other language loads automatically on demand (~3 KB) - or fetch-free via <code>import 'add-to-calendar-button/i18n/de'</code> and the like when bundling.<br />
+                You can also provide a full locale like <code>en_GB</code>: translations then prefer a matching regional pack (falling back to the base language), and dates are formatted in the regional convention.
               </td>
               <td v-else>
                 Sofern du die Text-Blöcke in einer anderen Sprache als Englisch anzeigen möchtest, kannst du die inkludierten Übersetzungen nutzen (i18n).<br /><br />
                 Spezifiere einfach eine der unterstützten Sprachen als
                 <a href="https://www.w3schools.com/tags/ref_language_codes.asp" target="_blank" rel="noopener" class="whitespace-nowrap">ISO 639-1 code <ArrowTopRightOnSquareIcon class="-mt-0.5 mr-0.5 inline-block h-3 w-3" aria-hidden="true" /></a>.<br />
-                Für Arabisch, Persisch und Hebräisch wird zudem Rechts-nach-Links (RTL) für alle Elemente unterstützt und automatisch angewendet.
+                Für Arabisch, Persisch und Hebräisch wird zudem Rechts-nach-Links (RTL) für alle Elemente unterstützt und automatisch angewendet.<br /><br />
+                Seit v3 ist Englisch Teil des Skripts und jede weitere Sprache lädt automatisch bei Bedarf (~3 KB) - oder ohne Netzwerk-Anfrage via <code>import 'add-to-calendar-button/i18n/de'</code> und Co. beim Bundling.<br />
+                Du kannst auch eine vollständige Locale wie <code>en_GB</code> angeben: Übersetzungen bevorzugen dann ein passendes regionales Sprachpaket (mit Fallback auf die Basissprache) und Daten werden in der regionalen Konvention formatiert.
               </td>
             </tr>
             <tr id="customlabels">
@@ -931,16 +976,20 @@ watch(searchSelection, (newVal) => {
               <td v-if="locale=='en'">
                 You can alter all text blocks via the "customLabels" option.<br />
                 There, you need to specify a JSON structure and define any text you want to override. Check the
-                <a href="https://github.com/add2cal/add-to-calendar-button/blob/main/src/atcb-i18n.js" target="_blank" rel="noopener" class="whitespace-nowrap">atcb-i18n.js file <ArrowTopRightOnSquareIcon class="-mt-0.5 mr-0.5 inline-block h-3 w-3" aria-hidden="true" /></a> for the available keys.
-                Any custom label will also override any translation.<br />For text blocks, you can use the same HTML pseudo tags as with the description option here.<br /><br />
+                <a href="https://github.com/add2cal/add-to-calendar-button/tree/main/src/i18n/locales" target="_blank" rel="noopener" class="whitespace-nowrap">locale files <ArrowTopRightOnSquareIcon class="-mt-0.5 mr-0.5 inline-block h-3 w-3" aria-hidden="true" /></a> for the available keys (use
+                the flattened dot notation, like <code>label.addtocalendar</code>). Any custom label will also override any translation.<br />For text blocks, you can use the same HTML pseudo tags as with the description option here.<br /><br />
+                Mind with v3: the keys <code>date.status.cancelled.cta</code>, <code>label.share.email.subject</code>, <code>label.rsvp</code>, <code>form.status</code>, and <code>form.success</code> were renamed to <code>date.status.cancelled_cta</code>, <code>label.share.email_subject</code>,
+                <code>label.rsvp.title</code>, <code>form.status.title</code>, and <code>form.success.title</code>.<br /><br />
                 <NuxtLink :to="{path: localePath('advanced-use'), hash: '#case-4'}">{{ $t('labels.example') }} <ArrowRightIcon class="-mt-0.5 mr-0.5 inline-block h-3 w-3" aria-hidden="true" /></NuxtLink>
               </td>
               <td v-else>
                 Text-Blöcke können über die Option "customLabels" verändert werden.<br />
                 Hierbei muss eine JSON-Struktur mit den zu überschreibenden Texten definiert werden. Sieh dir die
-                <a href="https://github.com/add2cal/add-to-calendar-button/blob/main/src/atcb-i18n.js" target="_blank" rel="noopener" class="whitespace-nowrap">atcb-i18n.js-Datei <ArrowTopRightOnSquareIcon class="-mt-0.5 mr-0.5 inline-block h-3 w-3" aria-hidden="true" /></a> für eine Liste der
-                verfügbaren Keys an.<br />
+                <a href="https://github.com/add2cal/add-to-calendar-button/tree/main/src/i18n/locales" target="_blank" rel="noopener" class="whitespace-nowrap">Sprachdateien <ArrowTopRightOnSquareIcon class="-mt-0.5 mr-0.5 inline-block h-3 w-3" aria-hidden="true" /></a> für eine Liste der
+                verfügbaren Keys an (nutze die flache Punkt-Notation, etwa <code>label.addtocalendar</code>).<br />
                 Ein so manipulierter Text überschreibt auch jegliche Übersetzung.<br />Für Text-Blöcke kannst hierbei die gleichen HTML-Pseudo-Tags nutzen, wie sie auch in der "description"-Option möglich sind.<br /><br />
+                Beachte mit v3: die Keys <code>date.status.cancelled.cta</code>, <code>label.share.email.subject</code>, <code>label.rsvp</code>, <code>form.status</code> und <code>form.success</code> wurden zu <code>date.status.cancelled_cta</code>, <code>label.share.email_subject</code>,
+                <code>label.rsvp.title</code>, <code>form.status.title</code> und <code>form.success.title</code> umbenannt.<br /><br />
                 <NuxtLink :to="{path: localePath('advanced-use'), hash: '#case-4'}">{{ $t('labels.example') }} <ArrowRightIcon class="-mt-0.5 mr-0.5 inline-block h-3 w-3" aria-hidden="true" /></NuxtLink>
               </td>
             </tr>

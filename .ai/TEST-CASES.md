@@ -383,3 +383,84 @@ the pattern `<template> | <dimension values>`.
 - X-04: date formatting respects the full locale (en-US vs en-GB ordering differs)
 - X-05: unknown language falls back to english without any locale fetch
 - X-06: customLabels wins over every locale resolution layer, incl. identifiers unknown to the core
+
+## Group Y - Packaging (test/wc-tests/r-Y-packaging-script.test.js, r-Y-packaging-shim.test.js)
+
+Two separate test files by design: the shim case needs a page where nothing defined the element before.
+
+- Y-01: dist/atcb.js via classic script tag defines the element, exposes window.atcb_action and renders end-to-end
+- Y-02: a deprecated CDN file name (atcb-no-pro.js) logs a one-time deprecation info and loads the main bundle next to it
+
+## Package consumption (scripts/test-package.mjs, `npm run test:package`)
+
+Node-side gate outside the browser runner: builds with --min, packs the tarball, installs it into a
+throwaway consumer and asserts every consumption path - Node CJS require, Node ESM import (root,
+./styles/_, ./i18n/_, deprecated variant subpaths), types under moduleResolution bundler AND node16,
+and a vite build importing one extra style plus one extra locale with content and size-bound checks
+(locale subsetting proven by asserting absence of a not-imported locale).
+
+## Group S - SSR shell render (test/ssr-node/render.test.mjs, `npm run test:ssr`)
+
+Plain Node WITHOUT DOM emulation (the ssr entry must be DOM-free); string assertions against dist/ssr.
+
+- S-01: environment is DOM-free (no document, no window)
+- S-02: ESM and CJS entries expose the same generator
+- S-03: default shell carries host attributes (official kebab names), DSD template, styles and the real label
+- S-04: buttonStyle selects exactly its delta; unknown styles fall back to default
+- S-05: size attribute maps to the font-size custom properties (same math as the client)
+- S-06: date style renders skeleton spans instead of computed date parts
+- S-07: inline RSVP renders a full-width skeleton block
+- S-08: rtl languages mark the wrapper; hidden config keeps the shell hidden
+- S-09: attribute values and label text are escaped
+- S-10: unknown languages fall back to the english label
+
+## Group Z - SSR shell hydration (test/wc-tests/r-Z-ssr-hydration.test.js)
+
+- Z-01: the shell paints before init and is swapped for the real button without layout shift
+- Z-02: hydrated DOM matches a client-only render of the same config (normalized outerHTML equality)
+- Z-03: without declarative shadow DOM (innerHTML path) the element initializes client-only and drops the inert template
+
+## Group E2 - Recurrence fast-forward (test/wc-tests/r-E2-recurrence-fastforward.test.js)
+
+Key property: the match predicates are absolute (calendar math from the start date), so shifting the
+start by k whole periods must not change the next occurrence, and remaining COUNTs shift by exactly k.
+
+- E2-01: performance - daily recurrence starting 1980 resolves in under 50 ms (and is CURRENT, not capped)
+- E2-02: phase-shift property - unbounded daily/weekly rules yield the same next occurrence from an old and a recent start
+- E2-03: phase-shift property holds for monthly and yearly rules
+- E2-04: COUNT consumption - remaining count from an old start equals the k-shifted recent twin
+- E2-05: exhausted COUNT series lands on the final occurrence (fast-forwarded)
+- E2-06: exhausted UNTIL series lands on the final occurrence before UNTIL (fast-forwarded)
+- E2-07: bounded rules with BY* filters keep the exact iteration (no jump)
+- E2-08: unbounded rules with BY* filters do fast-forward and stay correct
+
+## Group AX - Automated a11y checks (test/wc-tests/r-AX-a11y.test.js)
+
+axe-core, WCAG 2.1 A/AA tags; color-contrast excluded (theme- and user-configurable, unstable headless).
+
+- AX-01: default trigger button has no violations
+- AX-02: open dropdown list has no violations (menu pattern: role menu + menuitem entries)
+- AX-03: date-style button has no violations
+- AX-04: modal dialog has no violations and uses a native dialog with aria-modal + accessible name
+
+## Clipboard fallback (in test/wc-tests/r-P-subscribe.test.js)
+
+- P-03b: Yahoo subscribe with a failing clipboard shows the honest failure text (new modal.clipboard.failed
+  key in all 26 packs) plus a readonly manual-copy input with select-on-focus
+
+## Group SEC - Security hardening (test/wc-tests/r-SEC-security.test.js)
+
+- SEC-01: atcb_secure_url allows the legitimate scheme set and relative urls
+- SEC-02: atcb_secure_url blocks script-capable and unexpected schemes (case/whitespace evasion included) and keeps the traversal check
+- SEC-03: description [url] linkifies only safe schemes and escapes attribute breakouts
+- SEC-04: parsed json input cannot pollute the object prototype (unit + end-to-end through the attribute parser)
+- SEC-05: rich data stays valid json when fields contain quotes and backslashes
+
+## Group MEM - Memory-leak regression (test/wc-tests/r-MEM-leaks.test.js)
+
+Runner launches Chrome with --js-flags=--expose-gc so the heap assertion can force collection.
+
+- MEM-01: global document/window listeners register exactly once across many buttons
+- MEM-02: every mutation observer created for bodyScheme is disconnected on unmount (instrumented MutationObserver)
+- MEM-03: unmount while a modal is open removes the modal host and restores body scroll
+- MEM-04: 30 mount-unmount cycles leave no DOM debris and hold the heap steady (< 2 MB growth under forced GC)

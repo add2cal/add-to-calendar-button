@@ -27,7 +27,8 @@
       }
     },
     "clipboard": {
-      "text": "Panonuza otomatik olarak sihirli bir URL kopyaladık."
+      "text": "Panonuza otomatik olarak sihirli bir URL kopyaladık.",
+      "failed": "Panoya kopyalama başarısız oldu. Lütfen aşağıdaki bağlantıyı manuel olarak kopyalayın:"
     },
     "opensafari": {
       "ical": {

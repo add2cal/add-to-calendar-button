@@ -1,4 +1,4 @@
-import { atcbIcon, atcbDefaultTarget } from '../core/globals';
+import { atcb_result_channel, atcbIcon, atcbDefaultTarget } from '../core/globals';
 import { setActiveButton, getActiveButton, getOptionStates } from '../core/store';
 import { atcb_toggle, atcb_close } from './control';
 import { atcb_generate_links, atcb_set_fully_successful } from '../generators/index';
@@ -22,7 +22,7 @@ function atcb_generate_label(host: ShadowRoot, data: ATCBConfig, parent: HTMLEle
       parent.id = data.identifier as string;
       if (!data.blockInteraction) {
         parent.addEventListener('keyup', function (event: KeyboardEvent) {
-          if (event.key === 'Enter' || event.code == 'Space' || ((event.key as string) === 'Alt' && event.key === 'Control' && event.code === 'Space')) {
+          if (event.key === 'Enter' || event.code == 'Space') {
             event.preventDefault();
             if (type === 'rsvp' && typeof atcb_generate_rsvp_form === 'function') {
               atcb_generate_rsvp_form(host, data, parent, true);
@@ -177,7 +177,7 @@ function atcb_generate_dropdown_list(host: ShadowRoot, data: ATCBConfig): HTMLDi
   const optionsList = document.createElement('div');
   optionsList.classList.add('atcb-list');
   optionsList.setAttribute('part', 'atcb-list');
-  optionsList.role = 'list';
+  optionsList.role = 'menu';
   if (data.rtl) {
     optionsList.classList.add('atcb-rtl');
   }
@@ -187,7 +187,7 @@ function atcb_generate_dropdown_list(host: ShadowRoot, data: ATCBConfig): HTMLDi
     const optionItem = document.createElement('div');
     optionItem.classList.add('atcb-list-item');
     optionItem.setAttribute('part', 'atcb-list-item');
-    optionItem.role = 'link';
+    optionItem.role = 'menuitem';
     optionItem.tabIndex = 0;
     listCount++;
     optionItem.dataset.optionNumber = `${listCount}`;
@@ -200,7 +200,7 @@ function atcb_generate_dropdown_list(host: ShadowRoot, data: ATCBConfig): HTMLDi
     const optionItem = document.createElement('div');
     optionItem.classList.add('atcb-list-item', 'atcb-list-item-close');
     optionItem.setAttribute('part', 'atcb-list-item-close');
-    optionItem.role = 'button';
+    optionItem.role = 'menuitem';
     optionItem.tabIndex = 0;
     listCount++;
     optionItem.dataset.optionNumber = `${listCount}`;
@@ -225,8 +225,14 @@ function atcb_generate_bg_overlay(host: ShadowRoot, trigger: string = '', modal:
   if (!darken) {
     bgOverlay.classList.add('atcb-no-bg');
   }
-  bgOverlay.role = 'button';
-  bgOverlay.tabIndex = 0;
+  // the overlay closes on mouse interaction only - keyboard users close via Escape or
+  // the rendered close item, so the overlay itself stays out of the tab order (a
+  // focusable element with no accessible name would fail WCAG); the modal variant is
+  // a native <dialog> and keeps its implicit role
+  if (!modal) {
+    bgOverlay.role = 'presentation';
+  }
+  bgOverlay.tabIndex = -1;
   if (closable) {
     bgOverlay.addEventListener(
       'mouseup',
@@ -320,6 +326,10 @@ async function atcb_create_modal(
   goto: { type?: string; id?: string } = {},
   closable: boolean = true,
 ): Promise<void> {
+  // programmatic flows expecting a computed value cannot show ui - suppress the modal
+  if (atcb_result_channel.active()) {
+    return;
+  }
   setActiveButton(data.identifier!);
   const noHeadline = !headline || headline === '' || headline === undefined;
   // setting the stage
@@ -338,7 +348,8 @@ async function atcb_create_modal(
   bgOverlay.append(modalWrapper);
   const modalCount = modalHost.querySelectorAll('.atcb-modal').length;
   modalWrapper.dataset.modalNr = `${modalCount}`;
-  modalWrapper.tabIndex = 0;
+  // programmatic focus target (scroll anchor), not part of the tab order
+  modalWrapper.tabIndex = -1;
   modalWrapper.focus({ preventScroll: true });
   modalWrapper.blur();
   const parentButton = (function () {
@@ -367,12 +378,29 @@ async function atcb_create_modal(
     modalIcon.innerHTML = atcbIcon[`${icon}`]!;
     modal.append(modalIcon);
   }
-  // add headline
+  // add headline (also serves as the dialog's accessible name)
+  const dialogEl = modalHost.getElementById('atcb-bgoverlay');
+  if (dialogEl) {
+    dialogEl.setAttribute('aria-modal', 'true');
+  }
   if (!noHeadline) {
     const modalHeadline = document.createElement('div');
     modalHeadline.classList.add('atcb-modal-headline');
+    modalHeadline.id = 'atcb-modal-headline-' + modalCount;
     modalHeadline.textContent = headline as string;
     modal.append(modalHeadline);
+    if (dialogEl) {
+      dialogEl.setAttribute('aria-labelledby', modalHeadline.id);
+    }
+  } else if (dialogEl && content !== '') {
+    dialogEl.setAttribute(
+      'aria-label',
+      content
+        .replace(/<[^>]+>/g, ' ')
+        .replace(/\s+/g, ' ')
+        .trim()
+        .substring(0, 100),
+    );
   }
   // add text content
   if (content !== '') {
@@ -469,7 +497,7 @@ async function atcb_create_modal(
           }),
         );
         (modalButton as HTMLElement).addEventListener('keyup', function (event: KeyboardEvent) {
-          if (event.key === 'Enter' || event.code == 'Space' || ((event.key as string) === 'Alt' && event.key === 'Control' && event.code === 'Space')) {
+          if (event.key === 'Enter' || event.code == 'Space') {
             atcb_log_event('closeList', 'Modal Close Button', getActiveButton());
             atcb_toggle(mainHost, 'close', '', '', true);
           }
@@ -484,7 +512,7 @@ async function atcb_create_modal(
           }),
         );
         (modalButton as HTMLElement).addEventListener('keyup', async function (event: KeyboardEvent) {
-          if (event.key === 'Enter' || event.code == 'Space' || ((event.key as string) === 'Alt' && event.key === 'Control' && event.code === 'Space')) {
+          if (event.key === 'Enter' || event.code == 'Space') {
             atcb_toggle(mainHost, 'close', '', '', true);
             await atcb_subscribe_yahoo_modal_switch(mainHost, data, keyboardTrigger);
           }
@@ -499,7 +527,7 @@ async function atcb_create_modal(
           }),
         );
         (modalButton as HTMLElement).addEventListener('keyup', async function (event: KeyboardEvent) {
-          if (event.key === 'Enter' || event.code == 'Space' || ((event.key as string) === 'Alt' && event.key === 'Control' && event.code === 'Space')) {
+          if (event.key === 'Enter' || event.code == 'Space') {
             atcb_toggle(mainHost, 'close', '', '', true);
             await atcb_generate_links(mainHost, goto.type as string, data, goto.id as string, keyboardTrigger, false, true);
           }
@@ -556,7 +584,7 @@ async function atcb_generate_modal_host(host: ShadowRoot, data: ATCBConfig, rese
   newModalHost.style.display = 'flex';
   newModalHost.style.zIndex = '13999998';
   document.body.append(newModalHost);
-  newModalHost.attachShadow({ mode: 'open', delegateFocus: true } as unknown as ShadowRootInit);
+  newModalHost.attachShadow({ mode: 'open', delegatesFocus: true });
   const elem = document.createElement('template');
   elem.innerHTML = '<div class="atcb-modal-host-initialized"></div>';
   newModalHost.shadowRoot!.append(elem.content.cloneNode(true));

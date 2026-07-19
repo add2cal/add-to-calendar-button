@@ -1,7 +1,7 @@
 /**
- * lit-html templates for the button rendering path (v3 phase 4).
+ * lit-html templates for the button rendering path.
  *
- * These templates transcribe the former imperative builders (atcb_generate_button,
+ * These templates produce the same DOM as the imperative ui builders (atcb_generate_label,
  * atcb_generate_date_button and the trigger parts of atcb_generate_label /
  * atcb_generate_label_content) 1:1 - every class, part, id, aria attribute and
  * event wiring is behavior-identical. The transient interaction layers (dropdown
@@ -65,7 +65,7 @@ function iconTemplate(type: string): TemplateResult {
   return html`<div class="atcb-icon atcb-icon-${type}" part=${type === 'trigger' ? 'atcb-button-icon' : 'atcb-list-icon'}>${unsafeHTML(atcbIcon[`${type}`]!)}</div>`;
 }
 
-// ---------- trigger / singleton event handlers (transcribed wiring) ----------
+// ---------- trigger / singleton event handlers ----------
 
 function triggerListeners(host: ShadowRoot, data: ATCBConfig, type: string) {
   const toggleAuto = (parent: HTMLElement, keyboard: boolean) => {
@@ -85,7 +85,7 @@ function triggerListeners(host: ShadowRoot, data: ATCBConfig, type: string) {
   });
   return {
     keyup: (event: KeyboardEvent) => {
-      if (event.key === 'Enter' || event.code == 'Space' || ((event.key as string) === 'Alt' && event.key === 'Control' && event.code === 'Space')) {
+      if (event.key === 'Enter' || event.code == 'Space') {
         event.preventDefault();
         if (type === 'rsvp' && typeof atcb_generate_rsvp_form === 'function') {
           atcb_generate_rsvp_form(host, data, event.currentTarget as HTMLElement, true);
@@ -130,15 +130,27 @@ function singletonListeners(host: ShadowRoot, data: ATCBConfig, type: string) {
 
 function dateButtonAriaLabel(data: ATCBConfig, subEvent: number, subEventAll: boolean, hoverText: string, fullTimeInfo: string[], oneOption: boolean): string {
   const btnHeadlineText = data.dates!.length > 1 && subEventAll ? data.name : data.dates![`${subEvent}`]!.name;
-  return (
-    hoverText.replace(/<br>/g, ' ').replace(/\+\s/g, '') +
-    (oneOption ? ' (' + atcb_translate_hook(data.options![0] as string, data) + ')' : '') +
-    ': ' +
-    btnHeadlineText +
-    (data.dates![`${subEvent}`]!.location && data.dates![`${subEvent}`]!.location !== '' ? ', ' + data.dates![`${subEvent}`]!.location : '') +
-    ', ' +
-    fullTimeInfo.join(' ')
-  );
+  // the visual button abbreviates the date - the label must stand on its own for
+  // assistive tech: always include the year, announce recurrence, and never emit
+  // dangling separators for missing parts
+  const detailedTimeInfo = (function () {
+    const withYear = atcb_generate_timestring(data.dates!, data.formatLocale || data.language, subEvent, false, false, true);
+    if (withYear.length > 0) {
+      return withYear.join(' ');
+    }
+    return fullTimeInfo.join(' ');
+  })();
+  const parts: string[] = [hoverText.replace(/<br>/g, ' ').replace(/\+\s/g, '') + (oneOption ? ' (' + atcb_translate_hook(data.options![0] as string, data) + ')' : '') + ': ' + btnHeadlineText];
+  if (data.dates![`${subEvent}`]!.location && data.dates![`${subEvent}`]!.location !== '') {
+    parts.push(data.dates![`${subEvent}`]!.location as string);
+  }
+  if (detailedTimeInfo !== '') {
+    parts.push(detailedTimeInfo);
+  }
+  if (data.recurrence && data.recurrence !== '') {
+    parts.push(atcb_translate_hook('recurring', data));
+  }
+  return parts.join(', ');
 }
 
 function dateButtonMeta(data: ATCBConfig, subEventIn: string | number = 'all', forceFullDate: boolean = false) {
@@ -237,7 +249,7 @@ function dateButtonContentTemplate(data: ATCBConfig, subEventIn: string | number
     ${!data.dates![`${subEvent}`]!.overdue || data.pastDateHandling === 'none' ? html`<div class="atcb-date-btn-plus">+</div>` : nothing}`;
 }
 
-// ---------- the button (former atcb_generate_button) ----------
+// ---------- the button ----------
 
 function buttonTemplate(host: ShadowRoot, data: ATCBConfig): TemplateResult {
   const oneOption = (function () {
@@ -276,6 +288,7 @@ function buttonTemplate(host: ShadowRoot, data: ATCBConfig): TemplateResult {
         part="atcb-button"
         id=${buttonId}
         disabled=${data.disabled ? 'true' : nothing}
+        aria-haspopup=${!oneOption ? 'true' : nothing}
         aria-expanded="false"
         aria-label=${isDate ? ariaLabel : showLabelAria ? ariaLabel : nothing}
         @keyup=${interactive ? handlers.keyup : nothing}
@@ -296,7 +309,7 @@ function buttonTemplate(host: ShadowRoot, data: ATCBConfig): TemplateResult {
 /**
  * Renders the date-style button CONTENT into an imperatively created parent
  * (used by the modal sub-event buttons) and sets the aria-label on the parent,
- * mirroring the former atcb_generate_date_button behavior.
+ * and sets the aria-label on that parent.
  */
 function renderDateButtonContent(data: ATCBConfig, parent: HTMLElement, subEventIn: string | number = 'all', oneOption: boolean = false, forceFullDate: boolean = false): void {
   const meta = dateButtonMeta(data, subEventIn, forceFullDate);

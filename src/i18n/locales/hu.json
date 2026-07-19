@@ -27,7 +27,8 @@
       }
     },
     "clipboard": {
-      "text": "Automatikusan átmásoltunk egy varázslatos URL-t a vágólapodra."
+      "text": "Automatikusan átmásoltunk egy varázslatos URL-t a vágólapodra.",
+      "failed": "A vágólapra másolás nem sikerült. Kérjük, másold ki az alábbi linket manuálisan:"
     },
     "opensafari": {
       "ical": {

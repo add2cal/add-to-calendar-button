@@ -1,5 +1,26 @@
 # ⚡ Changelog (without patches)
 
+## Version 3
+
+- v3.0 : "lighter, faster, everywhere" full rewrite of the internals - same button, same attributes
+  - a lot smaller: styles beyond the default and languages beyond English now load on demand as tiny assets (ESM bundle -44% raw / -19% gzip vs v2.15; a typical bundler setup saves even more)
+  - new: server-side rendering via the `add-to-calendar-button/ssr` entry - style- and size-correct shells through declarative shadow DOM, hydrated without layout shift
+  - new: per-style and per-locale npm modules (`add-to-calendar-button/styles/3d`, `add-to-calendar-button/i18n/de`) for fetch-free bundling
+  - new: official kebab-case attribute names (`start-date`, `button-style`, ...) - every v2 spelling keeps working as an alias
+  - new: `style-source` and `load-all-styles` options for asset loading control and runtime style switching
+  - new: full-locale support - `language="en_GB"` picks regional translations where available and formats dates in the regional convention
+  - new: Ukrainian added to the officially typed languages; RSVP strings now part of the core language packs
+  - modernized internals: Lit-based web component, strict TypeScript, per-instance state, generated flat type declarations that work with every moduleResolution
+  - accessibility: WAI-ARIA menu pattern for the dropdown, real dialog semantics with a focus trap for modals, working focus delegation, complete date-button labels for screen readers
+  - security: url scheme allowlisting, escaped description links, prototype-pollution-safe input parsing, valid schema.org JSON for any content
+  - recurring events with old start dates now resolve instantly and correctly (the old day-by-day iteration silently capped out about 27 years in)
+  - honest clipboard fallback: when automatic copying fails, a manual-copy field appears instead of a false success message
+  - ⚠️ Breaking: dedicated `no-pro` / `unstyle` / `no-pro-unstyle` builds are gone - the old entry points and CDN file names keep working as tiny shims that load the main package
+  - ⚠️ Breaking: for `customLabels` users overriding exactly these keys: `date.status.cancelled.cta` is now `date.status.cancelled_cta`, `label.share.email.subject` is now `label.share.email_subject`, and `label.rsvp` / `form.status` / `form.success` moved to `label.rsvp.title` / `form.status.title` / `form.success.title`
+  - ⚠️ Breaking: script-capable url schemes (like `javascript:`) are rejected wherever urls are consumed
+  - ⚠️ Breaking: browser floor is now Baseline 2023 for the full experience (bundles target ES2017; declarative shadow DOM is a progressive enhancement)
+  - see the [migration guide](https://add-to-calendar-button.com) for details - existing v2 integrations keep working
+
 ## Version 2
 
 - v2.15 : Better responsive versions on very small screens for modals and date buttons

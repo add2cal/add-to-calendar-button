@@ -3,6 +3,7 @@ import { atcbVersion, atcbIsiOS, atcbIsAndroid, atcbIsSafari, atcbIsWebView, atc
 import { atcb_generate_time, atcb_format_datetime } from '../core/dates';
 import { atcb_secure_url, atcb_rewrite_ical_text, atcb_format_ical_lines } from '../core/text';
 import { atcb_save_file, atcb_copy_to_clipboard } from '../core/util';
+import { atcb_result_channel } from '../core/globals';
 import { atcb_create_modal } from '../ui/generate';
 import { atcb_translate_hook } from '../i18n/index';
 import type { ATCBConfig } from '../types';
@@ -37,6 +38,10 @@ function atcb_open_cal_url(data: ATCBConfig, type: string, url = '', subscribe =
     }
   }
   if (atcb_secure_url(url)) {
+    if (atcb_result_channel.active()) {
+      atcb_result_channel.push(url);
+      return;
+    }
     const newTab = window.open(url, target);
     if (newTab) {
       newTab.focus();
@@ -65,8 +70,8 @@ function atcb_generate_ical(host: ShadowRoot, data: ATCBConfig, type: string, su
   // check for a given explicit file...
   const givenIcsFile = (function () {
     // ignore a given file, if there is an attendee or customVar provided at the host level, as this would need to be added to the file
-    const potentialHostAttendee = host.host.getAttribute('attendee') || '';
-    const potentialHostCustomVar = host.host.getAttribute('customVar') || '';
+    const potentialHostAttendee = (host && host.host && host.host.getAttribute('attendee')) || '';
+    const potentialHostCustomVar = (host && host.host && host.host.getAttribute('customVar')) || '';
     if ((data.attendee && data.attendee !== '' && potentialHostAttendee !== '') || (data.customVar && (data.customVar as unknown) !== '' && potentialHostCustomVar !== '')) {
       return '';
     }
@@ -86,6 +91,10 @@ function atcb_generate_ical(host: ShadowRoot, data: ATCBConfig, type: string, su
   }
   // else, we directly load it (not if iOS and WebView - will be catched further down - except it is explicitely bridged)
   if (givenIcsFile !== '' && ((!atcbIsiOS() && !data.fakeIOS) || !atcbIsWebView() || data.bypassWebViewCheck)) {
+    if (atcb_result_channel.active()) {
+      atcb_result_channel.push(givenIcsFile);
+      return;
+    }
     atcb_save_file(givenIcsFile, filename);
     return;
   }
@@ -197,15 +206,14 @@ function atcb_generate_ical(host: ShadowRoot, data: ATCBConfig, type: string, su
     ics_lines.push('END:VEVENT');
   }
   ics_lines.push('END:VCALENDAR');
-  const dataUrl = (function () {
-    // if we got to this point with an explicitely given iCal file, we are on an iOS device (but at some wrong environment). In this case, we use this as dataUrl to then show a modal
-    if (givenIcsFile !== '') {
-      return givenIcsFile;
-    }
-    // otherwise, we generate it from the array
-    const icsContent = atcb_format_ical_lines(ics_lines.join('\r\n'));
-    return 'data:text/calendar;charset=utf-8,' + encodeURIComponent(icsContent);
-  })();
+  // if we got to this point with an explicitely given iCal file, we are on an iOS device
+  // (but at some wrong environment). In this case, we use it as dataUrl to then show a modal
+  const icsContent = givenIcsFile !== '' ? '' : atcb_format_ical_lines(ics_lines.join('\r\n'));
+  const dataUrl = givenIcsFile !== '' ? givenIcsFile : 'data:text/calendar;charset=utf-8,' + encodeURIComponent(icsContent);
+  if (atcb_result_channel.active()) {
+    atcb_result_channel.push(givenIcsFile !== '' ? givenIcsFile : icsContent);
+    return;
+  }
   // in in-app browser cases (WebView), we offer a copy option, since the on-the-fly client side generation is usually not supported
   // for Android, we are more specific than with iOS and only go for specific apps at the moment
   // for Chrome on iOS we basically do the same
@@ -236,40 +244,60 @@ function atcb_determine_ical_filename(data: ATCBConfig, subEvent: 'all' | number
   return 'event' + filenameSuffix;
 }
 
-async function atcb_ical_copy_note(host: ShadowRoot, dataUrl: string, data: ATCBConfig, keyboardTrigger: boolean): Promise<void> {
-  // putting the download url to the clipboard
-  let copied = false;
+// Copy a link to the clipboard and return the matching modal content: the confirmation
+// text on success, or an honest failure text plus a readonly input carrying the link
+// for manual copying (select-on-focus is wired by atcb_wire_clipboard_input after the
+// modal rendered)
+async function atcb_clipboard_note_content(copyValue: string, data: ATCBConfig): Promise<string> {
   try {
-    await atcb_copy_to_clipboard(dataUrl);
-    copied = true;
+    await atcb_copy_to_clipboard(copyValue);
+    return atcb_translate_hook('modal.clipboard.text', data);
   } catch (e) {
     console.warn(e);
-    copied = false; // TODO: Alter the modal text based on whether it was copied or not
+    const escaped = copyValue.replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;');
+    return atcb_translate_hook('modal.clipboard.failed', data) + '<br><input type="text" class="atcb-modal-clipboard-input" readonly value="' + escaped + '" aria-label="' + atcb_translate_hook('label.share.copy', data) + '" />';
   }
+}
+
+// make a manual-copy input select its content on focus (nothing to do when the
+// clipboard write succeeded and no input was rendered)
+function atcb_wire_clipboard_input(data: ATCBConfig): void {
+  const modalHost = document.getElementById(data.identifier + '-modal-host');
+  const input = modalHost && modalHost.shadowRoot ? (modalHost.shadowRoot.querySelector('.atcb-modal-clipboard-input') as HTMLInputElement | null) : null;
+  if (input) {
+    input.addEventListener('focus', () => input.select());
+  }
+}
+
+async function atcb_ical_copy_note(host: ShadowRoot, dataUrl: string, data: ATCBConfig, keyboardTrigger: boolean): Promise<void> {
+  // putting the download url to the clipboard (with a manual-copy fallback in the note)
+  const clipboardNote = await atcb_clipboard_note_content(dataUrl, data);
   // creating the modal
   if (atcbIsiOS() && !atcbIsSafari()) {
-    atcb_create_modal(
+    await atcb_create_modal(
       host,
       data,
       'warning',
       atcb_translate_hook('modal.opensafari.ical.h', data),
-      atcb_translate_hook('modal.opensafari.ical.text', data) + '<br>' + atcb_translate_hook('modal.clipboard.text', data) + '<br>' + atcb_translate_hook('modal.opensafari.ical.steps', data),
+      atcb_translate_hook('modal.opensafari.ical.text', data) + '<br>' + clipboardNote + '<br>' + atcb_translate_hook('modal.opensafari.ical.steps', data),
       [] as unknown as never[],
       [] as unknown as never[],
       keyboardTrigger,
     );
+    atcb_wire_clipboard_input(data);
     return;
   }
-  atcb_create_modal(
+  await atcb_create_modal(
     host,
     data,
     'warning',
     atcb_translate_hook('modal.webview.ical.h', data),
-    atcb_translate_hook('modal.webview.ical.text', data) + '<br>' + atcb_translate_hook('modal.clipboard.text', data) + '<br>' + atcb_translate_hook('modal.webview.ical.steps', data),
+    atcb_translate_hook('modal.webview.ical.text', data) + '<br>' + clipboardNote + '<br>' + atcb_translate_hook('modal.webview.ical.steps', data),
     [] as unknown as never[],
     [] as unknown as never[],
     keyboardTrigger,
   );
+  atcb_wire_clipboard_input(data);
 }
 
-export { atcb_open_cal_url, atcb_subscribe_ical, atcb_generate_ical, atcb_determine_ical_filename, atcb_ical_copy_note };
+export { atcb_open_cal_url, atcb_subscribe_ical, atcb_generate_ical, atcb_determine_ical_filename, atcb_ical_copy_note, atcb_clipboard_note_content, atcb_wire_clipboard_input };

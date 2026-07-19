@@ -27,7 +27,8 @@
       }
     },
     "clipboard": {
-      "text": "Wir haben automatisch eine magische URL in deine Zwischenablage kopiert."
+      "text": "Wir haben automatisch eine magische URL in deine Zwischenablage kopiert.",
+      "failed": "Das Kopieren in deine Zwischenablage hat nicht funktioniert. Bitte kopiere den folgenden Link manuell:"
     },
     "opensafari": {
       "ical": {

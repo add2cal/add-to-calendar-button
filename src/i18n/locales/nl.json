@@ -27,7 +27,8 @@
       }
     },
     "clipboard": {
-      "text": "We hebben automatisch een magische URL naar je klembord gekopieerd."
+      "text": "We hebben automatisch een magische URL naar je klembord gekopieerd.",
+      "failed": "Kopiëren naar je klembord is mislukt. Kopieer de volgende link handmatig:"
     },
     "opensafari": {
       "ical": {

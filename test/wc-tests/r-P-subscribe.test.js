@@ -3,7 +3,7 @@
  */
 import { expect, aTimeout } from '@open-wc/testing';
 import { mountAtcb } from '../helpers/mount.js';
-import { interceptWindowOpen, muteConsole, stubClipboard } from '../helpers/capture.js';
+import { interceptWindowOpen, muteConsole, stubClipboard, stubClipboardFailure } from '../helpers/capture.js';
 import { clickSingleton, openList, renderedOptions, clickOption, modalHost, initFailed } from '../helpers/dom.js';
 
 const SUB = {
@@ -68,6 +68,33 @@ describe('Group P - Subscribe mode', () => {
       expect(modal, 'manual instructions modal').to.exist;
       expect(modal.shadowRoot.querySelector('.atcb-modal-box')).to.exist;
       expect(clip.texts.join(' '), 'ics url copied for manual yahoo subscribe').to.include('example.com/team-calendar.ics');
+    } finally {
+      mute.restore();
+      clip.restore();
+      wo.restore();
+    }
+  });
+
+  it('P-03b: Yahoo subscribe with a failing clipboard shows the honest fallback with a manual-copy input', async () => {
+    const wo = interceptWindowOpen();
+    const clip = stubClipboardFailure();
+    const mute = muteConsole();
+    try {
+      const { host } = await mountAtcb({ ...SUB, options: "['Yahoo','Google']", identifier: 'atcb-p03b' });
+      await openList(host);
+      await clickOption(host, 'yahoo');
+      await aTimeout(150);
+      const modal = modalHost(host);
+      expect(modal, 'manual instructions modal').to.exist;
+      const content = modal.shadowRoot.querySelector('.atcb-modal-content');
+      expect(content.textContent, 'no success claim').to.not.include('We automatically copied');
+      expect(content.textContent, 'honest failure text').to.include('copy the following link manually');
+      const input = modal.shadowRoot.querySelector('.atcb-modal-clipboard-input');
+      expect(input, 'manual-copy input rendered').to.exist;
+      expect(input.value, 'link in the input').to.include('example.com/team-calendar.ics');
+      expect(input.readOnly, 'input is readonly').to.equal(true);
+      input.focus();
+      expect(input.selectionEnd - input.selectionStart, 'select-on-focus').to.equal(input.value.length);
     } finally {
       mute.restore();
       clip.restore();
