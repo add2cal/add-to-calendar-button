@@ -1044,49 +1044,104 @@ onUnmounted(() => {
           <p>
             First things first:<br />
             Wherever possible, we load the script asynchronously, so it will not block the rendering of your page.<br />
-            However, if you include it as a ES module, this behavior usually changes.<br />
-            Besides some JavaScript frameworks offering other tricks to load components asynchronously, you can try the following to optimize the loading behavior and bundle size.
+            Since v3, the script is also radically split: the bundle only contains the core, the default button style, and English.<br />
+            Every other button style (a few KB each) and language (~3 KB each) loads automatically on demand - from the same location the script itself is served from.
           </p>
-          <p>Unfortunately, we cannot offer any easy tree-shaking solution, as this contradicts the way we are building the script - being a flexible web component, which can adapt on runtime.</p>
-          <p>
-            <strong>The ES package comes in 4 flavors:</strong>
-          </p>
+          <p><strong>You usually do not need to do anything.</strong> But you can take control:</p>
           <ol class="ml-6 list-decimal pb-4 pt-2">
-            <li class="text-left">Default: Includes everything and therefore reduces the risk of failure.</li>
-            <li class="text-left">no-pro: This is basically the default, if you are not using the <a target="_blank" rel="author" href="https://add-to-calendar-pro.com">PRO version</a> of the script.</li>
-            <li class="text-left">unstyle: This is the default, but without integrated css (style).</li>
-            <li class="text-left">no-pro-unstyle: No integrated css, no PRO functionalities.</li>
+            <li class="text-left">When bundling, import exactly what you use - no fetch will ever happen for it:</li>
+          </ol>
+          <LazyCodeBlock>
+            <pre>
+import 'add-to-calendar-button'; // core + default style + English
+import 'add-to-calendar-button/styles/3d'; // the styles you use
+import 'add-to-calendar-button/i18n/de'; // the languages you serve</pre>
+          </LazyCodeBlock>
+          <ol class="ml-6 list-decimal pb-4 pt-2" start="2">
+            <li class="text-left">With the script tag, assets load from the script's own origin. Override the location via the <NuxtLink :to="{path: localePath('configuration'), hash: '#stylesource'}">styleSource</NuxtLink> option if you host them elsewhere.</li>
+            <li class="text-left">If you switch the buttonStyle at runtime, set <NuxtLink :to="{path: localePath('configuration'), hash: '#loadallstyles'}">loadAllStyles</NuxtLink> to prefetch all deltas.</li>
           </ol>
           <p>
-            To reduce the bundle size, you can use the unstyle version with <CodeBlock inline>import 'add-to-calendar-button/unstyle'</CodeBlock> and add the css manually to your project via the customCss option.<br />
-            For the css file, you can make use of the jsDelivr CDN - find possible files at <a target="_blank" rel="noopener" href="https://www.jsdelivr.com/package/npm/add-to-calendar-button?tab=files&path=assets%2Fcss">jsdelivr</a>.<br />
-            This, of course, makes changing the style more difficult and adds an additional request to the network, but would reduce the bundle size by ~ 30%.<br />
-            In the end, it depends on your project and strategy, which version is the best for you.
+            The former <code>no-pro</code>, <code>unstyle</code>, and <code>no-pro-unstyle</code> package variants are deprecated: since styles and languages are lazy anyway, they lost their purpose.<br />
+            The old entry points and CDN file names keep working as tiny shims that load the main package - but please switch to the main entry when you touch the code anyway.
           </p>
         </div>
         <div v-else>
           <p>
             First things first:<br />
             Woimmer möglich, laden wir das Skript asynchron, sodass es das Rendern deiner Seite nicht blockiert.<br />
-            Wenn du es allerdings als ES Modul einbindest, ändert sich dieses Verhalten in der Regel.<br />
-            Neben dem Umstand, dass einige JavaScript-Frameworks andere Kniffe anbieten, um Komponenten asynchron zu laden, kannst du folgendes versuchen, um das Ladeverhalten und die Bundle-Size zu optimieren.
+            Seit v3 ist das Skript zudem radikal aufgeteilt: das Bundle enthält nur den Kern, den Default-Button-Style und Englisch.<br />
+            Jeder weitere Button-Style (wenige KB) und jede weitere Sprache (~3 KB) lädt automatisch bei Bedarf - von dort, wo auch das Skript selbst ausgeliefert wird.
           </p>
-          <p>Leider können wir keine einfache Tree-Shaking-Lösung anbieten, da dies dem Ansatz des Skripts widerspricht - ein flexibler Web-Component, welcher sich zur Laufzeit anpassen lässt.</p>
-          <p>
-            <strong>Das ES-Package kommt in 4 Varianten:</strong>
-          </p>
+          <p><strong>In der Regel musst du nichts weiter tun.</strong> Du kannst aber die Kontrolle übernehmen:</p>
           <ol class="ml-6 list-decimal pb-4 pt-2">
-            <li class="text-left">Default: Beinhaltet alles und reduziert das Risiko von Fehlfunktionen.</li>
-            <li class="text-left">no-pro: Entspricht dem Default, solange du nicht die <a target="_blank" rel="author" href="https://add-to-calendar-pro.com/de">PRO version</a> nutzt.</li>
-            <li class="text-left">unstyle: Entspricht dem Default, aber ohne CSS-Informationen (Style).</li>
-            <li class="text-left">no-pro-unstyle: Kein integriertes css, keine PRO-Funktionalitäten.</li>
+            <li class="text-left">Beim Bundling importierst du exakt das, was du nutzt - dafür findet dann nie eine Netzwerk-Anfrage statt:</li>
+          </ol>
+          <LazyCodeBlock>
+            <pre>
+import 'add-to-calendar-button'; // Kern + Default-Style + Englisch
+import 'add-to-calendar-button/styles/3d'; // deine Styles
+import 'add-to-calendar-button/i18n/de'; // deine Sprachen</pre>
+          </LazyCodeBlock>
+          <ol class="ml-6 list-decimal pb-4 pt-2" start="2">
+            <li class="text-left">Mit dem Script-Tag laden Assets vom Origin des Skripts. Über die <NuxtLink :to="{path: localePath('configuration'), hash: '#stylesource'}">styleSource</NuxtLink>-Option kannst du den Ort überschreiben.</li>
+            <li class="text-left">Wenn du den buttonStyle zur Laufzeit wechselst, lädt <NuxtLink :to="{path: localePath('configuration'), hash: '#loadallstyles'}">loadAllStyles</NuxtLink> alle Deltas vor.</li>
           </ol>
           <p>
-            Um die Bundle-Size zu reduzieren, kannst du die unstyle Version mit <CodeBlock inline>import 'add-to-calendar-button/unstyle'</CodeBlock> nutzen und das CSS manuell über die customCss Option einbinden.<br />
-            Für die CSS-Datei, kannst du das jsDelivr CDN nutzen - mögliche Dateien findest du unter <a target="_blank" rel="noopener" href="https://www.jsdelivr.com/package/npm/add-to-calendar-button?tab=files&path=assets%2Fcss">https://www.jsdelivr.com/package/npm/add-to-calendar-button</a>.<br />
-            Dies macht es natürlich schwieriger das Design zur Laufzeit anzupassen und fügt eine weitere Anfrage zum Netzwerk hinzu, würde die Bundle-Size aber um ~ 30% reduzieren.<br />
-            Letztendlich hängt es von deinem Projekt und deiner Strategie ab, welche Version für dich die beste ist.
+            Die früheren Paket-Varianten <code>no-pro</code>, <code>unstyle</code> und <code>no-pro-unstyle</code> sind deprecated: da Styles und Sprachen ohnehin lazy laden, haben sie ihren Zweck verloren.<br />
+            Die alten Einstiegspunkte und CDN-Dateinamen funktionieren weiterhin als kleine Shims, welche das Haupt-Paket laden - bitte stelle bei Gelegenheit dennoch auf den Haupt-Einstiegspunkt um.
           </p>
+        </div>
+      </section>
+      <section id="case-12">
+        <h2 class="mb-4 mt-14 border-t border-zinc-300 pt-14 dark:border-zinc-700">12. {{ $t('content.advanced.12_long') }}</h2>
+        <div v-if="locale=='en'">
+          <p>
+            New with v3: the button can render a shell on the server.<br />
+            The <code>add-to-calendar-button/ssr</code> entry produces a style- and size-correct placeholder via declarative shadow DOM - it paints before any JavaScript runs, and the client script upgrades it in place without layout shift.
+          </p>
+          <LazyCodeBlock>
+            <pre>
+import { atcb_generate_ssr_html } from 'add-to-calendar-button/ssr';
+
+const html = atcb_generate_ssr_html({
+  name: 'Launch Party',
+  startDate: '2050-06-15',
+  buttonStyle: '3d',
+  language: 'de',
+});
+// drop the returned string into your server-rendered page
+// and load the regular script on the client as usual</pre>
+          </LazyCodeBlock>
+          <p>
+            The shell honors the button style, size, light mode, right-to-left languages, and the label (the localized default or your "label" value).<br />
+            Date-style buttons and inline RSVP render subtle skeletons, since their content requires client-side logic. Everything else happens at hydration.
+          </p>
+          <p class="italic">Browsers without declarative shadow DOM support simply ignore the shell and initialize client-only - no extra handling needed.</p>
+        </div>
+        <div v-else>
+          <p>
+            Neu mit v3: der Button kann eine Hülle auf dem Server rendern.<br />
+            Der <code>add-to-calendar-button/ssr</code>-Einstiegspunkt erzeugt einen Platzhalter mit korrektem Style und Größe via Declarative Shadow DOM - er wird gezeichnet, bevor JavaScript läuft, und das Client-Skript übernimmt ihn ohne Layout-Sprung.
+          </p>
+          <LazyCodeBlock>
+            <pre>
+import { atcb_generate_ssr_html } from 'add-to-calendar-button/ssr';
+
+const html = atcb_generate_ssr_html({
+  name: 'Launch Party',
+  startDate: '2050-06-15',
+  buttonStyle: '3d',
+  language: 'de',
+});
+// füge den zurückgegebenen String in deine server-gerenderte Seite ein
+// und lade das reguläre Skript im Client wie gewohnt</pre>
+          </LazyCodeBlock>
+          <p>
+            Die Hülle berücksichtigt Button-Style, Größe, Light-Mode, Rechts-nach-Links-Sprachen und das Label (der lokalisierte Default oder dein "label"-Wert).<br />
+            Date-Style-Buttons und Inline-RSVP rendern dezente Skeletons, da ihr Inhalt Client-Logik erfordert. Alles Weitere passiert bei der Hydration.
+          </p>
+          <p class="italic">Browser ohne Declarative-Shadow-DOM-Unterstützung ignorieren die Hülle einfach und initialisieren rein client-seitig - ohne weiteres Zutun.</p>
         </div>
       </section>
     </div>
@@ -1103,6 +1158,7 @@ onUnmounted(() => {
         <NuxtLink :to="'#case-9'" class="my-4 block">#9: {{ $t('content.advanced.9_short') }}</NuxtLink>
         <NuxtLink :to="'#case-10'" class="my-4 block">#10: {{ $t('content.advanced.10_short') }}</NuxtLink>
         <NuxtLink :to="'#case-11'" class="my-4 block">#11: {{ $t('content.advanced.11_short') }}</NuxtLink>
+        <NuxtLink :to="'#case-12'" class="my-4 block">#12: {{ $t('content.advanced.12_short') }}</NuxtLink>
       </div>
     </div>
   </div>
