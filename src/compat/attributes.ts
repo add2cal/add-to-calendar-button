@@ -1,5 +1,5 @@
 /**
- * Attribute naming (v3 phase 4).
+ * Attribute naming.
  *
  * Official attribute names are kebab-case ('start-date', 'button-style', ...) with
  * one exception: proKey's official attribute is 'prokey'. The legacy spellings
@@ -30,7 +30,7 @@ function officialAttributeName(param: string): string {
 }
 
 /**
- * The legacy attribute name: what the DOM stored for v2's documented camelCase
+ * The legacy attribute name: what the DOM stores for the documented camelCase
  * attribute names (HTML lowercases attribute names).
  */
 function legacyAttributeName(param: string): string {

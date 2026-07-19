@@ -1,6 +1,6 @@
 /**
- * Version bump script (replaces grunt-version).
- * Updates the version string in package.json, src/*.js banners and constants,
+ * Version bump script.
+ * Updates the version string in package.json, src banners and constants,
  * assets/css/*.css banners, and the demo footer.
  *
  * Accepts release AND prerelease versions (semver): the release flow publishes

@@ -94,7 +94,7 @@ if (atcbIsBrowser()) {
 
     override render(): TemplateResult {
       // the shell div carries NO bindings on itself: the init pipeline mutates its
-      // classes/lang imperatively (exactly like v2), and static parts survive re-renders
+      // classes/lang imperatively, and lit must not fight those mutations on re-render
       return html`<div class="atcb-initialized atcb-hidden">${this._buttonTemplate ?? nothing}</div>`;
     }
 
@@ -285,7 +285,7 @@ if (atcbIsBrowser()) {
       }
     }
 
-    // build the button (formerly the module-level atcb_build_button)
+    // build the button
     async buildButton(): Promise<boolean> {
       const host = this.shadowRoot!;
       try {

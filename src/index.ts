@@ -1,8 +1,7 @@
 /**
  * Main package entry (ES module / CommonJS via build).
- * Mirrors the public export surface of the former Grunt "module" build:
- * importing this module registers the <add-to-calendar-button> custom element
- * (side effect of atcb-init.js) and exposes the imperative API.
+ * Importing this module registers the <add-to-calendar-button> custom element
+ * as a side effect and exposes the imperative API plus the public types.
  */
 export { atcb_action } from './action/index';
 export { i18nStrings, atcb_register_locale } from './i18n/index';

@@ -1,7 +1,7 @@
 /**
- * lit-html templates for the button rendering path (v3 phase 4).
+ * lit-html templates for the button rendering path.
  *
- * These templates transcribe the former imperative builders (atcb_generate_button,
+ * These templates produce the same DOM as the imperative ui builders (atcb_generate_label,
  * atcb_generate_date_button and the trigger parts of atcb_generate_label /
  * atcb_generate_label_content) 1:1 - every class, part, id, aria attribute and
  * event wiring is behavior-identical. The transient interaction layers (dropdown
@@ -65,7 +65,7 @@ function iconTemplate(type: string): TemplateResult {
   return html`<div class="atcb-icon atcb-icon-${type}" part=${type === 'trigger' ? 'atcb-button-icon' : 'atcb-list-icon'}>${unsafeHTML(atcbIcon[`${type}`]!)}</div>`;
 }
 
-// ---------- trigger / singleton event handlers (transcribed wiring) ----------
+// ---------- trigger / singleton event handlers ----------
 
 function triggerListeners(host: ShadowRoot, data: ATCBConfig, type: string) {
   const toggleAuto = (parent: HTMLElement, keyboard: boolean) => {
@@ -249,7 +249,7 @@ function dateButtonContentTemplate(data: ATCBConfig, subEventIn: string | number
     ${!data.dates![`${subEvent}`]!.overdue || data.pastDateHandling === 'none' ? html`<div class="atcb-date-btn-plus">+</div>` : nothing}`;
 }
 
-// ---------- the button (former atcb_generate_button) ----------
+// ---------- the button ----------
 
 function buttonTemplate(host: ShadowRoot, data: ATCBConfig): TemplateResult {
   const oneOption = (function () {
@@ -309,7 +309,7 @@ function buttonTemplate(host: ShadowRoot, data: ATCBConfig): TemplateResult {
 /**
  * Renders the date-style button CONTENT into an imperatively created parent
  * (used by the modal sub-event buttons) and sets the aria-label on the parent,
- * mirroring the former atcb_generate_date_button behavior.
+ * and sets the aria-label on that parent.
  */
 function renderDateButtonContent(data: ATCBConfig, parent: HTMLElement, subEventIn: string | number = 'all', oneOption: boolean = false, forceFullDate: boolean = false): void {
   const meta = dateButtonMeta(data, subEventIn, forceFullDate);

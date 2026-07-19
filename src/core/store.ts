@@ -1,12 +1,10 @@
 /**
- * Per-instance state store (v3 phase 3). Replaces the former atcbStates
+ * Per-instance state store. Replaces a single shared atcbStates
  * array-as-map global. Keyed by the button identifier; entries are created
  * during initialization (atcb_setup_state_management) and removed on
  * cleanup/disconnect.
  *
  * The decorated config is stored per instance as the authoritative copy.
- * Full de-threading of the internal call chains follows with the phase 4
- * render rewrite (see .ai/REFACTOR-PLAN.md).
  */
 import type { ATCBConfig } from '../types';
 
@@ -40,7 +38,7 @@ function getButtonConfig(id: string): ATCBConfig | undefined {
 }
 
 function getOptionStates(id: string): { [option: string]: number[] } {
-  // presence is assumed by callers, exactly like the former atcbStates access did
+  // presence is assumed by callers
   return instances.get(id)!.optionStates;
 }
 

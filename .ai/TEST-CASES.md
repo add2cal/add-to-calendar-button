@@ -395,7 +395,7 @@ Two separate test files by design: the shim case needs a page where nothing defi
 
 Node-side gate outside the browser runner: builds with --min, packs the tarball, installs it into a
 throwaway consumer and asserts every consumption path - Node CJS require, Node ESM import (root,
-./styles/*, ./i18n/*, deprecated variant subpaths), types under moduleResolution bundler AND node16,
+./styles/_, ./i18n/_, deprecated variant subpaths), types under moduleResolution bundler AND node16,
 and a vite build importing one extra style plus one extra locale with content and size-bound checks
 (locale subsetting proven by asserting absence of a not-imported locale).
 

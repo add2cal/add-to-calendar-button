@@ -8,9 +8,10 @@
  * - ATCBConfig: the decorated shape produced by atcb_decorate_data (flags coerced to
  *   real booleans, options normalized, dates array populated, internal fields added).
  *
- * Migration note (phase 2): decorated fields stay optional on purpose - the runtime
- * behavior of v2 is preserved exactly, so functions guard or assert presence the same
- * way the JS did. Tightening required fields is deferred (see .ai/REFACTOR-PLAN.md).
+ * Decorated fields stay optional on purpose: the decoration pipeline fills them at
+ * runtime and consuming functions guard or assert presence where needed. Tightening
+ * them to required fields would be a type-only change with a large diff surface -
+ * a candidate for a later minor release, not something to mix into feature work.
  */
 
 export type ATCBOptionName = 'Apple' | 'Google' | 'iCal' | 'Microsoft365' | 'MicrosoftTeams' | 'Outlook.com' | 'Yahoo';

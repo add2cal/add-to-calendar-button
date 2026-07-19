@@ -1,5 +1,5 @@
 /**
- * Style registry (v3 phase 5).
+ * Style registry.
  *
  * The build inlines the shared core (tokens + core rules) and the DEFAULT style delta
  * into the template map below - unless building the unstyle variants. All other style
@@ -87,7 +87,7 @@ async function atcb_fetch_style(name: string, data: ATCBConfig): Promise<string 
 /**
  * Resolves the full css (core + style delta) for the configured buttonStyle.
  * Returns null when nothing should be injected (style none, unstyle builds,
- * unknown styles, failed loads) - matching the v2 no-stylesheet behavior.
+ * unknown styles, failed loads): the button stays functional, just unstyled.
  */
 async function atcb_ensure_style(data: ATCBConfig): Promise<string | null> {
   const name = (data.buttonStyle as string) || 'default';

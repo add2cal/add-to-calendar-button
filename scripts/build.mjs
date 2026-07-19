@@ -1,11 +1,10 @@
 /**
- * Build orchestrator (replaces the former Grunt pipeline).
+ * Build orchestrator.
  *
  * Steps:
- *  1. Clean dist/ and regenerate assets/css/*.min.css (clean-css, as grunt-contrib-cssmin did).
+ *  1. Clean dist/ and regenerate assets/css/*.min.css (clean-css).
  *  2. Vite library builds (ES -> dist/module, CJS -> dist/commonjs) with timezones-ical-library
- *     kept external and the style templates inlined into the atcbCssTemplate object
- *     (exactly like the former Grunt string replacement).
+ *     kept external and the style templates inlined into the atcbCssTemplate object.
  *  3. esbuild IIFE build for classic <script> usage (dist/atcb.js), bundling
  *     timezones-ical-library. With --min additionally dist/atcb.min.js.
  *  4. Types: flat public declaration bundle at dist/index.d.ts (generated from source).
@@ -48,7 +47,7 @@ function cleanOldBuildFiles() {
 }
 
 // css sources live in src/styles/css (tokens + core + per-style deltas).
-// This step minifies them, reconstructs the v2-compatible full per-style files for
+// This step minifies them, reconstructs the full per-style stylesheets for
 // CDN hotlinks and customCss consumers, and prepares the delta assets for dist/styles.
 let cssArtifacts = null;
 
@@ -86,7 +85,8 @@ function buildCssArtifacts() {
 const CSS_TEMPLATE_HOOK = /const atcbCssTemplate: \{ \[key: string\]: string \} = \{\};/;
 
 function buildCssTemplate() {
-  // mirror the former Grunt escaping: strip multi-dots and backslashes, escape double quotes
+  // escaping keeps the inlined css safe inside a double-quoted string; multi-dot and
+  // backslash sequences never appear in legitimate css here and are stripped defensively
   const esc = (css) =>
     css
       .replace(/\.{2,}/g, '')

@@ -1,7 +1,7 @@
 /**
  * Browser bundle entry (classic <script> tag usage, IIFE build).
- * Importing atcb-init.js registers the <add-to-calendar-button> custom element;
- * the only global exposed is window.atcb_action (matching the former Grunt wrapper).
+ * Loading the bundle registers the <add-to-calendar-button> custom element;
+ * the only global exposed is window.atcb_action.
  */
 import { atcb_action } from './action/index';
 import type { ATCBInputConfig } from './types';

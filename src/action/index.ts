@@ -1,6 +1,5 @@
 /**
  * atcb_action - the imperative API for custom triggers (no web component markup needed).
- * Extracted from the element module in v3 phase 3; behavior unchanged.
  */
 import { atcbIsBrowser, atcb_result_channel } from '../core/globals';
 import { getActiveButton, getButtonInstance, deleteButtonInstance } from '../core/store';
