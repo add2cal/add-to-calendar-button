@@ -464,3 +464,18 @@ Runner launches Chrome with --js-flags=--expose-gc so the heap assertion can for
 - MEM-02: every mutation observer created for bodyScheme is disconnected on unmount (instrumented MutationObserver)
 - MEM-03: unmount while a modal is open removes the modal host and restores body scroll
 - MEM-04: 30 mount-unmount cycles leave no DOM debris and hold the heap steady (< 2 MB growth under forced GC)
+
+## Group ICSX - Extended ics options (test/wc-tests/r-ICSX-ics-extended.test.js)
+
+The ics* options shape ONLY the generated ics file (Apple/iCal); all except icsExdate work per date
+entry (root overrides entries, like the other date fields). icsExdate is root-only (pairs with
+recurrence, which implies a single date entry).
+
+- ICSX-01: the per-event properties emit correctly formatted ics lines (URL, CATEGORIES, CLASS uppercased, PRIORITY, GEO, ATTACH list)
+- ICSX-02: icsReminder renders a display alarm (minutes number converted to -PTnM, ISO duration passthrough, description = event name)
+- ICSX-03: icsGeo emits the Apple structured location only when a location exists, with a matching title (map-preview requirement)
+- ICSX-04: multi-date - per-entry values land in their own events; root values override (dates contract)
+- ICSX-05: icsExdate mirrors the DTSTART form (TZID + wall-clock time for timed, VALUE=DATE for allday)
+- ICSX-06: invalid values fail validation loudly (class enum, priority range, geo format + range, reminder format, url schemes, exdate prerequisites + format)
+- ICSX-07: guardrail - other calendar types ignore the options completely (google url byte-identical, option list untouched)
+- ICSX-08: without the options, none of the new properties appear (output stability)

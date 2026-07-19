@@ -10,6 +10,7 @@
   - new: `style-source` and `load-all-styles` options for asset loading control and runtime style switching
   - new: full-locale support - `language="en_GB"` picks regional translations where available and formats dates in the regional convention
   - new: Ukrainian added to the officially typed languages; RSVP strings now part of the core language packs
+  - new: extended ics options for the Apple/iCal cases (`icsReminder`, `icsUrl`, `icsCategories`, `icsClass`, `icsPriority`, `icsGeo` incl. Apple map preview, `icsAttach`, `icsExdate`) - second-level options that only shape the generated ics file; all other calendar types simply ignore them
   - modernized internals: Lit-based web component, strict TypeScript, per-instance state, generated flat type declarations that work with every moduleResolution
   - accessibility: WAI-ARIA menu pattern for the dropdown, real dialog semantics with a focus trap for modals, working focus delegation, complete date-button labels for screen readers
   - security: url scheme allowlisting, escaped description links, prototype-pollution-safe input parsing, valid schema.org JSON for any content

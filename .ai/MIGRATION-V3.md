@@ -106,6 +106,15 @@ Browsers without declarative shadow DOM fall back to the plain client-only path 
 - schema.org rich data is serialized with proper JSON escaping (quotes in names/locations no
   longer break the JSON-LD).
 
+## Extended ics options (Apple/iCal only)
+
+Eight new second-level options shape the GENERATED ics file and nothing else - every other
+calendar type ignores them silently: `icsReminder` (display alarm), `icsUrl`, `icsCategories`,
+`icsClass`, `icsPriority`, `icsGeo` (+ Apple map preview when `location` is set), `icsAttach`
+(url attachments), `icsExdate` (recurrence exclusions, root-only). All others work per date
+entry in the multi-date case, following the root-overrides-entries contract. Documented under
+the advanced examples section only (deliberately not promoted).
+
 ## Behavior improvements
 
 - Recurring events with old start dates now resolve instantly AND correctly: v2 stepped day by day

@@ -1144,6 +1144,149 @@ const html = atcb_generate_ssr_html({
           <p class="italic">Browser ohne Declarative-Shadow-DOM-Unterstützung ignorieren die Hülle einfach und initialisieren rein client-seitig - ohne weiteres Zutun.</p>
         </div>
       </section>
+      <section id="case-13">
+        <h2 class="mb-4 mt-14 border-t border-zinc-300 pt-14 dark:border-zinc-700">13. {{ $t('content.advanced.13_long') }}</h2>
+        <div v-if="locale=='en'">
+          <p>
+            <strong>These options only affect the generated ics file - they apply to the Apple and iCal options; all other calendar types simply ignore them.</strong>
+          </p>
+          <p>
+            The ics format (RFC 5545) supports more than the common event basics.<br />
+            The following second-level options let you enrich the generated file, while everything else keeps working as usual.
+          </p>
+          <div class="my-8 overflow-x-auto rounded-lg shadow-sm">
+            <table>
+              <thead>
+                <tr>
+                  <th scope="col" class="p-3 font-semibold sm:px-5">Attribute</th>
+                  <th scope="col" class="p-3 font-semibold sm:px-5">Effect</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <th scope="row">icsReminder</th>
+                  <td>Adds a reminder alarm. Set minutes before the event start (like <code>"30"</code>) or an ISO 8601 duration (like <code>"-PT1H"</code>).</td>
+                </tr>
+                <tr>
+                  <th scope="row">icsUrl</th>
+                  <td>Attaches a canonical link (URL property) to the event. Needs to be a valid http(s) url.</td>
+                </tr>
+                <tr>
+                  <th scope="row">icsCategories</th>
+                  <td>Tags the event with a comma-separated list of categories.</td>
+                </tr>
+                <tr>
+                  <th scope="row">icsClass</th>
+                  <td>Sets the classification: <code>PUBLIC</code>, <code>PRIVATE</code>, or <code>CONFIDENTIAL</code>.</td>
+                </tr>
+                <tr>
+                  <th scope="row">icsPriority</th>
+                  <td>Sets the priority from 0 (undefined) over 1 (highest) to 9 (lowest).</td>
+                </tr>
+                <tr>
+                  <th scope="row">icsGeo</th>
+                  <td>Adds geo coordinates as <code>"latitude,longitude"</code>. Combined with the regular "location" option, Apple Calendar renders its map preview.</td>
+                </tr>
+                <tr>
+                  <th scope="row">icsAttach</th>
+                  <td>Attaches files by url (comma-separated list of http(s) urls) - like an agenda PDF or a ticket.</td>
+                </tr>
+                <tr>
+                  <th scope="row">icsExdate</th>
+                  <td>Excludes dates from a recurring event (comma-separated list of YYYY-MM-DD values). Requires the "recurrence" option and is the only one of these options that cannot be set per date entry.</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <p>All options except "icsExdate" can also be set per date entry within the "dates" array in the multi-date case (root-level values override entry values, like with the other date fields).</p>
+          <LazyCodeBlock>
+            <pre>
+&lt;add-to-calendar-button
+  name="Conference Day"
+  startDate="2050-06-15"
+  startTime="10:00"
+  endTime="17:00"
+  timeZone="Europe/Berlin"
+  location="Convention Center Hall 7"
+  options="'Apple','iCal'"
+  icsReminder="30"
+  icsUrl="https://example.com/conference"
+  icsCategories="Conference,Tech"
+  icsGeo="52.5200,13.4050"
+&gt;&lt;/add-to-calendar-button&gt;</pre>
+          </LazyCodeBlock>
+        </div>
+        <div v-else>
+          <p>
+            <strong>Diese Optionen betreffen ausschließlich die generierte ics-Datei - sie gelten für die Apple- und iCal-Optionen; alle anderen Kalender-Typen ignorieren sie einfach.</strong>
+          </p>
+          <p>
+            Das ics-Format (RFC 5545) unterstützt mehr als die üblichen Event-Basics.<br />
+            Mit den folgenden Zweite-Reihe-Optionen kannst du die generierte Datei anreichern, während alles andere wie gewohnt funktioniert.
+          </p>
+          <div class="my-8 overflow-x-auto rounded-lg shadow-sm">
+            <table>
+              <thead>
+                <tr>
+                  <th scope="col" class="p-3 font-semibold sm:px-5">Attribut</th>
+                  <th scope="col" class="p-3 font-semibold sm:px-5">Effekt</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <th scope="row">icsReminder</th>
+                  <td>Fügt eine Erinnerung hinzu. Setze Minuten vor Event-Beginn (etwa <code>"30"</code>) oder eine ISO-8601-Dauer (etwa <code>"-PT1H"</code>).</td>
+                </tr>
+                <tr>
+                  <th scope="row">icsUrl</th>
+                  <td>Hängt einen kanonischen Link (URL-Property) an das Event. Muss eine valide http(s)-URL sein.</td>
+                </tr>
+                <tr>
+                  <th scope="row">icsCategories</th>
+                  <td>Verschlagwortet das Event mit einer kommaseparierten Liste von Kategorien.</td>
+                </tr>
+                <tr>
+                  <th scope="row">icsClass</th>
+                  <td>Setzt die Klassifizierung: <code>PUBLIC</code>, <code>PRIVATE</code> oder <code>CONFIDENTIAL</code>.</td>
+                </tr>
+                <tr>
+                  <th scope="row">icsPriority</th>
+                  <td>Setzt die Priorität von 0 (undefiniert) über 1 (höchste) bis 9 (niedrigste).</td>
+                </tr>
+                <tr>
+                  <th scope="row">icsGeo</th>
+                  <td>Ergänzt Geo-Koordinaten als <code>"Breitengrad,Längengrad"</code>. Zusammen mit der regulären "location"-Option rendert Apple Calendar seine Karten-Vorschau.</td>
+                </tr>
+                <tr>
+                  <th scope="row">icsAttach</th>
+                  <td>Hängt Dateien per URL an (kommaseparierte Liste von http(s)-URLs) - etwa ein Agenda-PDF oder ein Ticket.</td>
+                </tr>
+                <tr>
+                  <th scope="row">icsExdate</th>
+                  <td>Schließt Termine aus einer Terminserie aus (kommaseparierte Liste von YYYY-MM-DD-Werten). Erfordert die "recurrence"-Option und ist die einzige dieser Optionen, die nicht pro Datums-Eintrag gesetzt werden kann.</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <p>Alle Optionen außer "icsExdate" können im Multi-Date-Fall auch pro Datums-Eintrag innerhalb des "dates"-Arrays gesetzt werden (Root-Werte überschreiben Eintrags-Werte, wie bei den anderen Datums-Feldern).</p>
+          <LazyCodeBlock>
+            <pre>
+&lt;add-to-calendar-button
+  name="Konferenz-Tag"
+  startDate="2050-06-15"
+  startTime="10:00"
+  endTime="17:00"
+  timeZone="Europe/Berlin"
+  location="Convention Center Halle 7"
+  options="'Apple','iCal'"
+  icsReminder="30"
+  icsUrl="https://example.com/konferenz"
+  icsCategories="Konferenz,Tech"
+  icsGeo="52.5200,13.4050"
+&gt;&lt;/add-to-calendar-button&gt;</pre>
+          </LazyCodeBlock>
+        </div>
+      </section>
     </div>
     <div class="hidden border-l border-zinc-300 pl-8 text-sm dark:border-zinc-700 lg:block">
       <div class="sticky top-0 pt-4">
@@ -1159,6 +1302,7 @@ const html = atcb_generate_ssr_html({
         <NuxtLink :to="'#case-10'" class="my-4 block">#10: {{ $t('content.advanced.10_short') }}</NuxtLink>
         <NuxtLink :to="'#case-11'" class="my-4 block">#11: {{ $t('content.advanced.11_short') }}</NuxtLink>
         <NuxtLink :to="'#case-12'" class="my-4 block">#12: {{ $t('content.advanced.12_short') }}</NuxtLink>
+        <NuxtLink :to="'#case-13'" class="my-4 block">#13: {{ $t('content.advanced.13_short') }}</NuxtLink>
       </div>
     </div>
   </div>

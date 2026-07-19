@@ -180,6 +180,14 @@ const atcbWcParams: (keyof ATCBInputConfig)[] = [
   'styleDark',
   'styleSource',
   'loadAllStyles',
+  'icsReminder',
+  'icsUrl',
+  'icsCategories',
+  'icsClass',
+  'icsPriority',
+  'icsGeo',
+  'icsAttach',
+  'icsExdate',
   'disabled',
   'hidden',
   'hideButton',
@@ -214,6 +222,14 @@ const atcbWcProParams: (keyof ATCBInputConfig)[] = [
   'styleDark',
   'styleSource',
   'loadAllStyles',
+  'icsReminder',
+  'icsUrl',
+  'icsCategories',
+  'icsClass',
+  'icsPriority',
+  'icsGeo',
+  'icsAttach',
+  'icsExdate',
   'disabled',
   'hidden',
   'fakeMobile',
@@ -257,8 +273,8 @@ const atcbWcBooleanParams: (keyof ATCBInputConfig)[] = [
 ];
 const atcbWcObjectParams: (keyof ATCBInputConfig)[] = ['customLabels', 'ty', 'rsvp', 'customVar'];
 const atcbWcObjectArrayParams: (keyof ATCBInputConfig)[] = ['dates'];
-const atcbWcArrayParams: (keyof ATCBInputConfig)[] = ['recurrence_byDay', 'recurrence_byMonth', 'recurrence_byMonthDay', 'images', 'options', 'optionsMobile', 'optionsIOS'];
-const atcbWcNumberParams: (keyof ATCBInputConfig)[] = ['sequence', 'recurrence_interval', 'recurrence_count'];
+const atcbWcArrayParams: (keyof ATCBInputConfig)[] = ['recurrence_byDay', 'recurrence_byMonth', 'recurrence_byMonthDay', 'images', 'options', 'optionsMobile', 'optionsIOS', 'icsCategories', 'icsAttach', 'icsExdate'];
+const atcbWcNumberParams: (keyof ATCBInputConfig)[] = ['sequence', 'recurrence_interval', 'recurrence_count', 'icsPriority'];
 
 // DEFINING GLOBAL ICONS
 const atcbIcon: { [key: string]: string } = {
