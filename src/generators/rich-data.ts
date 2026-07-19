@@ -22,8 +22,8 @@ function atcb_generate_rich_data(data: ATCBConfig, parent: Element): void {
     const parts: string[] = [];
     parts.push('"@context":"https://schema.org"');
     parts.push('"@type":"EventSeries"');
-    parts.push('"@id":"' + id + '"');
-    parts.push('"name":"' + data.name + '",');
+    parts.push('"@id":' + JSON.stringify(id));
+    parts.push('"name":' + JSON.stringify(data.name) + ',');
     schemaContentMulti.push('{\r\n' + parts.join(',\r\n') + '\r\n');
   }
   const schemaContentFull: string[] = [];
@@ -32,23 +32,25 @@ function atcb_generate_rich_data(data: ATCBConfig, parent: Element): void {
     schemaContent.push('"@context":"https://schema.org"');
     schemaContent.push('"@type":"Event"');
     if (data.dates!.length > 1) {
-      schemaContent.push('"@id":"' + id + '-' + (i + 1) + '"');
+      schemaContent.push('"@id":' + JSON.stringify(id + '-' + (i + 1)));
     }
     if (data.dates![`${i}`]!.status!.toLowerCase() === 'cancelled') {
       schemaContent.push('"eventStatus":"https://schema.org/EventCancelled"');
     } else {
       schemaContent.push('"eventStatus":"https://schema.org/EventScheduled"');
     }
-    schemaContent.push('"name":"' + data.dates![`${i}`]!.name + '"');
+    schemaContent.push('"name":' + JSON.stringify(data.dates![`${i}`]!.name));
     if (data.dates![`${i}`]!.descriptionHtmlFree) {
-      schemaContent.push('"description":"' + data.dates![`${i}`]!.descriptionHtmlFree + '"');
+      schemaContent.push('"description":' + JSON.stringify(data.dates![`${i}`]!.descriptionHtmlFree));
     }
     const formattedDate = atcb_generate_time(data.dates![`${i}`]!, 'delimiters', 'general', true);
     schemaContent.push('"startDate":"' + formattedDate.start + '"');
     if ('duration' in formattedDate && formattedDate.duration) {
       schemaContent.push('"duration":"' + formattedDate.duration + '"');
     }
-    schemaContent.push(data.dates![`${i}`]!.onlineEvent ? '"eventAttendanceMode":"https://schema.org/OnlineEventAttendanceMode",\r\n"location": {\r\n"@type":"VirtualLocation",\r\n"url":"' + data.dates![`${i}`]!.location + '"\r\n}' : '"location":"' + data.dates![`${i}`]!.location + '"');
+    schemaContent.push(
+      data.dates![`${i}`]!.onlineEvent ? '"eventAttendanceMode":"https://schema.org/OnlineEventAttendanceMode",\r\n"location": {\r\n"@type":"VirtualLocation",\r\n"url":' + JSON.stringify(data.dates![`${i}`]!.location) + '\r\n}' : '"location":' + JSON.stringify(data.dates![`${i}`]!.location),
+    );
     if (data.recurrence && data.recurrence !== '') {
       schemaContent.push(...atcb_generate_rich_data_recurrence(data, formattedDate));
     } else {
@@ -56,14 +58,14 @@ function atcb_generate_rich_data(data: ATCBConfig, parent: Element): void {
     }
     if (data.dates![`${i}`]!.organizer && data.dates![`${i}`]!.organizer !== '') {
       const organizerParts = (data.dates![`${i}`]!.organizer as string).split('|');
-      schemaContent.push('"organizer":{\r\n"@type":"Person",\r\n"name":"' + organizerParts[0] + '",\r\n"email":"' + organizerParts[1] + '"\r\n}');
+      schemaContent.push('"organizer":{\r\n"@type":"Person",\r\n"name":' + JSON.stringify(organizerParts[0]) + ',\r\n"email":' + JSON.stringify(organizerParts[1]) + '\r\n}');
     }
     const imageData: string[] = [];
     if (data.images) {
       if (Array.isArray(data.images)) {
         for (let i = 0; i < data.images.length; i++) {
           if (atcb_secure_url(data.images[`${i}`]!, data.debug) && data.images[`${i}`]!.startsWith('http')) {
-            imageData.push('"' + data.images[`${i}`] + '"');
+            imageData.push(JSON.stringify(data.images[`${i}`]));
           }
         }
       }

@@ -115,7 +115,7 @@
     "build:min": "node scripts/build.mjs --min",
     "build": "node scripts/build.mjs",
     "test:package": "node scripts/test-package.mjs",
-    "test:ssr": "node scripts/build.mjs && node --test test/ssr-node/"
+    "test:ssr": "node scripts/build.mjs && node --test \"test/ssr-node/*.test.mjs\""
   },
   "dependencies": {
     "lit": "^3.3.3",

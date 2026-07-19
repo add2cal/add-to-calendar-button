@@ -6,10 +6,29 @@ function atcb_secure_content(data: unknown, isJSON = true): unknown {
   const toClean = isJSON ? JSON.stringify(data) : (data as { toString(): string }).toString();
   const cleanedUp = toClean.replace(/(<(?!br)([^>]+)>)/gi, '');
   if (isJSON) {
-    return JSON.parse(cleanedUp);
+    const parsed = JSON.parse(cleanedUp) as unknown;
+    atcb_strip_unsafe_keys(parsed);
+    return parsed;
   } else {
     return cleanedUp;
   }
+}
+
+// remove prototype-pollution vectors from parsed json input: keys that would write
+// into the prototype chain when copied around have no legitimate use in any config
+function atcb_strip_unsafe_keys(node: unknown): unknown {
+  if (!node || typeof node !== 'object') {
+    return node;
+  }
+  for (const key of ['__proto__', 'constructor', 'prototype']) {
+    if (Object.prototype.hasOwnProperty.call(node, key)) {
+      delete (node as { [key: string]: unknown })[`${key}`];
+    }
+  }
+  for (const value of Object.values(node)) {
+    atcb_strip_unsafe_keys(value);
+  }
+  return node;
 }
 
 // SHARED FUNCTION TO SECURE URLS
@@ -19,9 +38,23 @@ function atcb_secure_url(url: string, throwError = true): boolean {
       console.error('Seems like the generated URL includes at least one security issue and got blocked. Please check the calendar button parameters!');
     }
     return false;
-  } else {
-    return true;
   }
+  // scheme allowlist: relative urls plus everything the button legitimately opens or
+  // links (web, calendar subscriptions, android intents, mail, generated ics payloads);
+  // control characters and whitespace are ignored for the sniff, like browsers do
+  // eslint-disable-next-line no-control-regex -- stripping control characters is the point: browsers ignore them when parsing schemes, so evasion like java\tscript: must be caught
+  const scheme = url ? url.replace(/[\u0000-\u0020\u007f-\u009f]/g, '').match(/^([a-z][a-z0-9+.-]*):/i) : null;
+  if (scheme) {
+    const schemeName = scheme[1]!.toLowerCase();
+    const allowed = ['http', 'https', 'webcal', 'webcals', 'mailto', 'intent'].includes(schemeName) || (schemeName === 'data' && /^data:text\/calendar[;,]/i.test(url.trim()));
+    if (!allowed) {
+      if (throwError) {
+        console.error('Seems like the generated URL includes at least one security issue and got blocked. Please check the calendar button parameters!');
+      }
+      return false;
+    }
+  }
+  return true;
 }
 
 // SHARED FUNCTION TO REPLACE HTML PSEUDO ELEMENTS
@@ -61,14 +94,23 @@ function atcb_rewrite_html_elements(content: string, clear = false, iCalBreaks =
 
 function atcb_parse_url_code(input: string): string {
   const urlText = input.split('|');
+  const url = (urlText[0] || '').trim();
   const text = (function () {
     if (urlText.length > 1 && urlText[1] != '') {
-      return urlText[1];
+      return urlText[1]!;
     } else {
-      return urlText[0];
+      return url;
     }
   })();
-  return '<a href="' + urlText[0] + '" target="' + atcbDefaultTarget + '" rel="noopener">' + text + '</a>';
+  const escapeHtml = (value: string) => value.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  // descriptions often carry third-party content: only linkify explicit web/calendar/
+  // mail schemes (or relative urls) and escape everything - anything else stays text
+  // eslint-disable-next-line no-control-regex -- stripping control characters is the point: browsers ignore them when parsing schemes, so evasion like java\tscript: must be caught
+  const scheme = url.replace(/[\u0000-\u0020\u007f-\u009f]/g, '').match(/^([a-z][a-z0-9+.-]*):/i);
+  if (scheme && !['http', 'https', 'webcal', 'webcals', 'mailto'].includes(scheme[1]!.toLowerCase())) {
+    return escapeHtml(text);
+  }
+  return '<a href="' + escapeHtml(url).replace(/"/g, '&quot;') + '" target="' + atcbDefaultTarget + '" rel="noopener">' + escapeHtml(text) + '</a>';
 }
 
 // SHARED FUNCTIONS TO FORMAT iCAL TEXT
@@ -122,4 +164,4 @@ function atcb_format_ical_lines(content: string): string {
   return result.join('\r\n');
 }
 
-export { atcb_secure_content, atcb_secure_url, atcb_rewrite_html_elements, atcb_rewrite_ical_text, atcb_format_ical_lines };
+export { atcb_secure_content, atcb_secure_url, atcb_strip_unsafe_keys, atcb_rewrite_html_elements, atcb_rewrite_ical_text, atcb_format_ical_lines };

@@ -447,3 +447,20 @@ axe-core, WCAG 2.1 A/AA tags; color-contrast excluded (theme- and user-configura
 
 - P-03b: Yahoo subscribe with a failing clipboard shows the honest failure text (new modal.clipboard.failed
   key in all 26 packs) plus a readonly manual-copy input with select-on-focus
+
+## Group SEC - Security hardening (test/wc-tests/r-SEC-security.test.js)
+
+- SEC-01: atcb_secure_url allows the legitimate scheme set and relative urls
+- SEC-02: atcb_secure_url blocks script-capable and unexpected schemes (case/whitespace evasion included) and keeps the traversal check
+- SEC-03: description [url] linkifies only safe schemes and escapes attribute breakouts
+- SEC-04: parsed json input cannot pollute the object prototype (unit + end-to-end through the attribute parser)
+- SEC-05: rich data stays valid json when fields contain quotes and backslashes
+
+## Group MEM - Memory-leak regression (test/wc-tests/r-MEM-leaks.test.js)
+
+Runner launches Chrome with --js-flags=--expose-gc so the heap assertion can force collection.
+
+- MEM-01: global document/window listeners register exactly once across many buttons
+- MEM-02: every mutation observer created for bodyScheme is disconnected on unmount (instrumented MutationObserver)
+- MEM-03: unmount while a modal is open removes the modal host and restores body scroll
+- MEM-04: 30 mount-unmount cycles leave no DOM debris and hold the heap steady (< 2 MB growth under forced GC)

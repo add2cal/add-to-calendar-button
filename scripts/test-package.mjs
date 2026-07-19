@@ -117,6 +117,7 @@ step('types resolve under moduleResolution bundler and node16', () => {
 step('vite build with one extra style and one extra locale (size-bounded)', async () => {
   const appDir = path.join(consumerDir, 'vite-app');
   fs.mkdirSync(appDir, { recursive: true });
+  // nosemgrep: javascript.lang.security.audit.unknown-value-with-script-tag.unknown-value-with-script-tag -- static test fixture; appDir is the temp TARGET PATH, not html content
   fs.writeFileSync(path.join(appDir, 'index.html'), '<!doctype html><html><head><script type="module" src="/main.js"></script></head><body><add-to-calendar-button name="Probe" startDate="2050-06-15"></add-to-calendar-button></body></html>');
   fs.writeFileSync(path.join(appDir, 'main.js'), ["import 'add-to-calendar-button';", "import 'add-to-calendar-button/styles/3d';", "import 'add-to-calendar-button/i18n/de';"].join('\n'));
   const { build } = await import('vite');

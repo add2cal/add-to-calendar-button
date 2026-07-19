@@ -9,7 +9,7 @@ import { buttonTemplate } from '../ui/templates';
 import { atcb_generate_rich_data } from '../generators/rich-data';
 import { atcb_ensure_locale } from '../i18n/index';
 import { atcb_close, atcb_toggle } from '../ui/control';
-import { atcb_secure_content, atcb_secure_url } from '../core/text';
+import { atcb_secure_content, atcb_secure_url, atcb_strip_unsafe_keys } from '../core/text';
 import { atcb_manage_body_scroll, atcb_set_sizes } from '../ui/positioning';
 import { atcb_log_event } from '../core/events';
 import { atcb_generate_rsvp_form, atcb_generate_rsvp_button } from '../ui/pro';
@@ -367,7 +367,7 @@ async function atcb_process_inline_data(el: ATCBHostElement, debug = false): Pro
       throw new Error('Add to Calendar Button generation failed: No data provided.');
     }
     try {
-      const atcbJsonInput = JSON.parse(atcb_secure_content(slotInput.replace(/(\r\n|\n|\r)/g, ''), false) as string) as ATCBInputConfig;
+      const atcbJsonInput = atcb_strip_unsafe_keys(JSON.parse(atcb_secure_content(slotInput.replace(/(\r\n|\n|\r)/g, ''), false) as string)) as ATCBInputConfig;
       await atcb_check_required(atcbJsonInput);
       data = atcbJsonInput;
     } catch (jsonError) {
@@ -405,7 +405,7 @@ function atcb_read_attributes(el: ATCBHostElement, params: (keyof ATCBInputConfi
           }
           return inputVal;
         })();
-        val = JSON.parse(cleanedInput);
+        val = atcb_strip_unsafe_keys(JSON.parse(cleanedInput));
       } else if ((atcbWcObjectArrayParams as (keyof ATCBInputConfig)[]).includes(attr)) {
         const cleanedInput = (function () {
           if (!inputVal || inputVal === '') {
@@ -416,7 +416,7 @@ function atcb_read_attributes(el: ATCBHostElement, params: (keyof ATCBInputConfi
           }
           return inputVal;
         })();
-        val = JSON.parse(cleanedInput);
+        val = atcb_strip_unsafe_keys(JSON.parse(cleanedInput));
       } else if ((atcbWcArrayParams as (keyof ATCBInputConfig)[]).includes(attr)) {
         let arrVal = inputVal;
         if (inputVal.includes('[')) {
@@ -695,7 +695,7 @@ async function atcb_get_pro_data(licenseKey?: string, el?: ATCBHostElement, dire
       const dataOverrides: { [key: string]: unknown } = el ? (atcb_read_attributes(el, proOverride ? atcbWcParams : atcbWcProParams) as unknown as { [key: string]: unknown }) : (directData as unknown as { [key: string]: unknown });
       const response = await fetch(`https://${dataOverrides.dev ? 'event-dev.caldn.net' : 'event.caldn.net'}/${licenseKey}/config.json`);
       if (response.ok) {
-        const data = (await response.json()) as ATCBConfig;
+        const data = atcb_strip_unsafe_keys(await response.json()) as ATCBConfig;
         if (proOverride) {
           const host = window.location.hostname || '';
           const domain = host.split('.').slice(-2).join('.');
