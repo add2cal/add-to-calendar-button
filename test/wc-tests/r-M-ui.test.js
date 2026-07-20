@@ -4,7 +4,7 @@
 import { expect, aTimeout } from '@open-wc/testing';
 import { mountAtcb, baseEvent } from '../helpers/mount.js';
 import { interceptWindowOpen } from '../helpers/capture.js';
-import { trigger, openList, listEl, clickSingleton, pressEsc, optionEl } from '../helpers/dom.js';
+import { trigger, openList, listEl, clickSingleton, pressEsc, optionEl, modalHost } from '../helpers/dom.js';
 import { resetDataLayer, dlEvents } from '../helpers/datalayer.js';
 
 describe('Group M - UI / interaction', () => {
@@ -217,5 +217,21 @@ describe('Group M - UI / interaction', () => {
     });
     expect(host.shadowRoot.querySelector('.atcb-initialized')).to.exist;
     expect(shadow.querySelector('.atcb-button')).to.exist;
+  });
+
+  it('M-33: modal list stays content-sized, not stretched to the overlay width', async () => {
+    // regression guard: the modal option list carries both .atcb-list (min-width:100%)
+    // and .atcb-modal (min-width:auto) - the latter must win so the list does not fill
+    // the whole overlay on wide viewports
+    const { host } = await mountAtcb(baseEvent({ options: "['Google','Apple','iCal']", listStyle: 'modal', trigger: 'click', identifier: 'atcb-m33' }));
+    await openList(host);
+    await aTimeout(100);
+    const modal = modalHost(host);
+    const list = modal.shadowRoot.querySelector('.atcb-list.atcb-modal');
+    expect(list, 'modal list rendered').to.exist;
+    const listWidth = list.getBoundingClientRect().width;
+    // content-sized: comfortably below the viewport, never near full width
+    expect(listWidth, `list width ${Math.round(listWidth)} should be content-sized`).to.be.lessThan(Math.min(window.innerWidth * 0.9, 500));
+    expect(getComputedStyle(list).minWidth, 'the .atcb-modal min-width:auto wins over .atcb-list min-width:100%').to.equal('auto');
   });
 });

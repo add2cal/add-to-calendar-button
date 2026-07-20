@@ -21,7 +21,9 @@ if (import.meta.client) {
 const data = ref( getInitialAttrsBlank() );
 
 async function loadAtcbScript () {
-  import('add-to-calendar-button').then(() => {
+  // load the component and register every button style, so the playground can switch
+  // to any style without a runtime fetch (kept lazy to preserve the bot/perf deferral)
+  Promise.all([import('add-to-calendar-button'), import('@/utils/atcbStyles')]).then(() => {
     loaded.value = true;
     return;
   });
