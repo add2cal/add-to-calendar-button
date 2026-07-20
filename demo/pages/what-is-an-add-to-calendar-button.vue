@@ -2,6 +2,7 @@
 import View_DE from "@/components/translated/what-is-an-add-to-calendar-button-de.vue";
 import FeaturesBlock from "@/components/featuresBlock.vue";
 import "add-to-calendar-button";
+import "@/utils/atcbStyles";
 import { ArrowRightIcon, WrenchScrewdriverIcon, BeakerIcon, MagnifyingGlassIcon, RocketLaunchIcon } from '@heroicons/vue/24/outline';
 const { locale } = useI18n();
 
@@ -115,19 +116,19 @@ const defaultDate = nextDay.getFullYear() + '-' + ('0' + (nextDay.getMonth() + 1
     <div class="grid-bg flex w-full justify-center rounded-lg py-16 shadow-lg">
       <add-to-calendar-button
         :name="$t('demo_data.name')"
-        :startDate="defaultDate"
-        startTime="10:15"
-        endTime="23:30"
-        timeZone="currentBrowser"
+        :start-date="defaultDate"
+        start-time="10:15"
+        end-time="23:30"
+        time-zone="currentBrowser"
         :location="$t('demo_data.url')"
         :description="$t('demo_data.description')"
         options="'Apple','Google','iCal','Outlook.com','Microsoft 365','Microsoft Teams','Yahoo'"
-        lightMode="bodyScheme"
-        buttonStyle="round"
+        light-mode="bodyScheme"
+        button-style="round"
         size="8"
         :language="locale"
-        hideBranding
-        hideRichData
+        hide-branding
+        hide-rich-data
       ></add-to-calendar-button>
     </div>
     <p class="mt-10 italic">{{ $t('content.seo.example_disclaimer') }}</p>

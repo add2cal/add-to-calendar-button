@@ -3,6 +3,7 @@
  * Function-level tests against src (mirrors the init pipeline: check_required -> decorate -> validate).
  */
 import { expect } from '@open-wc/testing';
+import { muteConsole } from '../helpers/capture.js';
 import { atcb_decorate_data } from '../../src/core/decorate.ts';
 import { atcb_check_required, atcb_validate } from '../../src/core/validate.ts';
 
@@ -65,7 +66,14 @@ describe('Group B - Config validation & error paths', () => {
   });
 
   it('B-07: invalid IANA timezone throws', async () => {
-    await expectFail({ ...base, startTime: '10:00', endTime: '11:00', timeZone: 'Foo/Bar' });
+    // the timezone library logs its own complaint about the bogus zone - keep it out
+    // of the runner output, the thrown error is what this case asserts
+    const mute = muteConsole();
+    try {
+      await expectFail({ ...base, startTime: '10:00', endTime: '11:00', timeZone: 'Foo/Bar' });
+    } finally {
+      mute.restore();
+    }
   });
 
   it('B-08: RRULE with forbidden characters throws (syntax regex)', async () => {

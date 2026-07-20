@@ -479,3 +479,5 @@ recurrence, which implies a single date entry).
 - ICSX-06: invalid values fail validation loudly (class enum, priority range, geo format + range, reminder format, url schemes, exdate prerequisites + format)
 - ICSX-07: guardrail - other calendar types ignore the options completely (google url byte-identical, option list untouched)
 - ICSX-08: without the options, none of the new properties appear (output stability)
+
+- M-33: modal option list stays content-sized (regression: .atcb-modal min-width:auto must beat .atcb-list min-width:100% after the split-css assembly)

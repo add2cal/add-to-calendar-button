@@ -48,6 +48,18 @@ export default {
   ],
   // transpile TypeScript sources on the fly for tests that import from src
   plugins: [esbuildPlugin({ ts: true, json: true })],
+  // the component intentionally logs its init notice and the PRO banner once per page
+  // (product behavior, license-relevant branding) - every test file is a fresh page, so
+  // without this filter the runner echoes the same block dozens of times per tier.
+  // Only these exact known lines are dropped; real warnings and errors surface normally,
+  // and in-page console spies are unaffected (this filters runner OUTPUT only)
+  filterBrowserLogs({ args }) {
+    const text = args.map((arg) => String(arg)).join(' ');
+    if (text.includes('Add to Calendar Button script initialized') || text.includes('Add to Calendar PRO script initialized') || text.includes('PRO version available at https://add-to-calendar-pro.com')) {
+      return false;
+    }
+    return true;
+  },
   testsFinishTimeout: 300000,
   browserStartTimeout: 60000,
   concurrency: Number(process.env.WTR_CONCURRENCY || 1),

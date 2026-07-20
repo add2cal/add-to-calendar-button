@@ -143,6 +143,10 @@ async function buildLib() {
       // export condition so the bundled code uses the SSR dom shim instead of touching
       // HTMLElement at module scope
       resolve: format === 'cjs' ? { conditions: ['node', 'production', 'module', 'import', 'default'] } : undefined,
+      // cjs has no import.meta: replacing it with an empty object is exactly what the
+      // script-base guards are built for (they fall through to document.currentScript /
+      // registered bases) - the define acknowledges that and silences the build warning
+      define: format === 'cjs' ? { 'import.meta': '{}' } : undefined,
       plugins: [
         {
           name: 'atcb-inline-css',
@@ -206,6 +210,8 @@ async function buildSsr() {
       configFile: false,
       logLevel: 'warn',
       resolve: format === 'cjs' ? { conditions: ['node', 'production', 'module', 'import', 'default'] } : undefined,
+      // see buildLib: acknowledge the import.meta -> {} substitution for the cjs format
+      define: format === 'cjs' ? { 'import.meta': '{}' } : undefined,
       plugins: [
         {
           name: 'atcb-ssr-data',

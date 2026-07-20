@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import "add-to-calendar-button";
+import "@/utils/atcbStyles";
 import { ArrowRightIcon, ArrowTopRightOnSquareIcon } from '@heroicons/vue/24/outline';
 import Interstitial from '@/components/interstitial.vue';
 const LazyCodeBlock = defineAsyncComponent(() => import('@/components/codeBlock.vue'));
@@ -102,16 +103,16 @@ watch(locale, value => {
           <div class="flex w-full flex-none justify-center p-6 pt-8 md:w-[300px]">
             <add-to-calendar-button
               :name="$t('demo_data.name')"
-              :startDate="defaultDate"
-              startTime="10:15"
-              endTime="23:30"
-              :timeZone="$t('demo_data.default_timezone')"
+              :start-date="defaultDate"
+              start-time="10:15"
+              end-time="23:30"
+              :time-zone="$t('demo_data.default_timezone')"
               :location="$t('demo_data.location')"
               :description="$t('demo_data.description_alt1')"
               options="'Apple','Google','iCal','Outlook.com','Microsoft 365','Microsoft Teams','Yahoo'"
-              lightMode="bodyScheme"
+              light-mode="bodyScheme"
               :language="locale"
-              hideBranding
+              hide-branding
             ></add-to-calendar-button>
           </div>
           <div class="flex-1 overflow-x-auto">
@@ -119,14 +120,14 @@ watch(locale, value => {
               <pre>
 &lt;add-to-calendar-button
   name="{{ $t('demo_data.name') }}"
-  startDate="{{ defaultDate }}"
-  startTime="10:15"
-  endTime="23:30"
-  timeZone="{{ $t('demo_data.default_timezone') }}"
+  start-date="{{ defaultDate }}"
+  start-time="10:15"
+  end-time="23:30"
+  time-zone="{{ $t('demo_data.default_timezone') }}"
   location="{{ $t('demo_data.location') }}"
   description="{{ $t('demo_data.description_alt1') }}"
   options="'Apple','Google','iCal','Outlook.com','Microsoft 365','Microsoft Teams','Yahoo'"
-  lightMode="bodyScheme"{{ defaultLang }}
+  light-mode="bodyScheme"{{ defaultLang }}
 &gt;&lt;/add-to-calendar-button&gt;
 </pre>
             </LazyCodeBlock>
@@ -148,14 +149,14 @@ watch(locale, value => {
           <div class="flex w-full flex-none justify-center p-6 pt-8 md:w-[300px]">
             <add-to-calendar-button
               :name="$t('demo_data.name')"
-              :startDate="defaultDate"
+              :start-date="defaultDate"
               :location="$t('demo_data.location')"
               :description="$t('demo_data.description_alt1')"
               options="'Apple','Google','iCal','Outlook.com','Microsoft 365','Microsoft Teams','Yahoo'"
-              lightMode="bodyScheme"
+              light-mode="bodyScheme"
               :language="locale"
-              hideRichData
-              hideBranding
+              hide-rich-data
+              hide-branding
             ></add-to-calendar-button>
           </div>
           <div class="flex-1 overflow-x-auto">
@@ -163,11 +164,11 @@ watch(locale, value => {
               <pre>
 &lt;add-to-calendar-button
   name="{{ $t('demo_data.name') }}"
-  startDate="{{ defaultDate }}"
+  start-date="{{ defaultDate }}"
   location="{{ $t('demo_data.location') }}"
   description="{{ $t('demo_data.description_alt1') }}"
   options="'Apple','Google','iCal','Outlook.com','Microsoft 365','Microsoft Teams','Yahoo'"
-  lightMode="bodyScheme"{{ defaultLang }}
+  light-mode="bodyScheme"{{ defaultLang }}
 &gt;&lt;/add-to-calendar-button&gt;
 </pre>
             </LazyCodeBlock>
@@ -191,16 +192,16 @@ watch(locale, value => {
           <div class="flex w-full flex-none justify-center p-6 pt-8 md:w-[300px]">
             <add-to-calendar-button
               :name="$t('demo_data.name')"
-              startDate="today+2"
-              startTime="10:15"
-              endTime="23:30"
-              :timeZone="$t('demo_data.default_timezone')"
+              start-date="today+2"
+              start-time="10:15"
+              end-time="23:30"
+              :time-zone="$t('demo_data.default_timezone')"
               :location="$t('demo_data.url')"
               :description="$t('demo_data.description_alt1')"
               options="'Apple','Google','iCal','Outlook.com','Yahoo'"
-              lightMode="bodyScheme"
+              light-mode="bodyScheme"
               :language="locale"
-              hideBranding
+              hide-branding
             ></add-to-calendar-button>
           </div>
           <div class="flex-1 overflow-x-auto">
@@ -208,14 +209,14 @@ watch(locale, value => {
               <pre>
 &lt;add-to-calendar-button
   name="{{ $t('demo_data.name') }}"
-  startDate="today+2"
-  startTime="10:15"
-  endTime="23:30"
-  timeZone="{{ $t('demo_data.default_timezone') }}"
+  start-date="today+2"
+  start-time="10:15"
+  end-time="23:30"
+  time-zone="{{ $t('demo_data.default_timezone') }}"
   location="{{ $t('demo_data.url') }}"
   description="{{ $t('demo_data.description_alt1') }}"
   options="'Apple','Google','iCal','Outlook.com','Yahoo'"
-  lightMode="bodyScheme"{{ defaultLang }}
+  light-mode="bodyScheme"{{ defaultLang }}
 &gt;&lt;/add-to-calendar-button&gt;
 </pre>
             </LazyCodeBlock>
@@ -238,18 +239,18 @@ watch(locale, value => {
           <div class="flex w-full flex-none justify-center p-6 pt-8 md:w-[300px]">
             <add-to-calendar-button
               :name="$t('demo_data.name')"
-              :startDate="defaultDate"
-              startTime="10:15"
-              endTime="23:30"
-              :timeZone="$t('demo_data.default_timezone')"
+              :start-date="defaultDate"
+              start-time="10:15"
+              end-time="23:30"
+              :time-zone="$t('demo_data.default_timezone')"
               :location="$t('demo_data.location')"
               :description="$t('demo_data.description_alt1')"
               options="'Apple','Google','iCal','Outlook.com','Yahoo'"
               recurrence="RRULE:FREQ=WEEKLY;INTERVAL=1;WKST=MO;BYDAY=WE,FR;COUNT=6"
-              lightMode="bodyScheme"
+              light-mode="bodyScheme"
               :language="locale"
-              hideRichData
-              hideBranding
+              hide-rich-data
+              hide-branding
             ></add-to-calendar-button>
           </div>
           <div class="flex-1 overflow-x-auto">
@@ -257,15 +258,15 @@ watch(locale, value => {
               <pre>
 &lt;add-to-calendar-button
   name="{{ $t('demo_data.name') }}"
-  startDate="{{ defaultDate }}"
-  startTime="10:15"
-  endTime="23:30"
-  timeZone="{{ $t('demo_data.default_timezone') }}"
+  start-date="{{ defaultDate }}"
+  start-time="10:15"
+  end-time="23:30"
+  time-zone="{{ $t('demo_data.default_timezone') }}"
   location="{{ $t('demo_data.location') }}"
   description="{{ $t('demo_data.description_alt1') }}"
   options="'Apple','Google','iCal','Outlook.com','Yahoo'"
   recurrence="RRULE:FREQ=WEEKLY;INTERVAL=1;WKST=MO;BYDAY=WE,FR;COUNT=6"
-  lightMode="bodyScheme"{{ defaultLang }}
+  light-mode="bodyScheme"{{ defaultLang }}
 &gt;&lt;/add-to-calendar-button&gt;
 </pre>
             </LazyCodeBlock>
@@ -283,21 +284,21 @@ watch(locale, value => {
           <div class="flex w-full flex-none justify-center p-6 pt-8 md:w-[300px]">
             <add-to-calendar-button
               :name="$t('demo_data.name')"
-              :startDate="defaultDate"
-              startTime="10:15"
-              endTime="23:30"
-              :timeZone="$t('demo_data.default_timezone')"
+              :start-date="defaultDate"
+              start-time="10:15"
+              end-time="23:30"
+              :time-zone="$t('demo_data.default_timezone')"
               :location="$t('demo_data.location')"
               :description="$t('demo_data.description_alt1')"
               options="'Apple','Google','iCal','Outlook.com','Yahoo'"
               recurrence="weekly"
-              recurrence_interval="1"
-              recurrence_count="6"
-              recurrence_byDay="WE,FR"
-              lightMode="bodyScheme"
+              recurrence-interval="1"
+              recurrence-count="6"
+              recurrence-by-day="WE,FR"
+              light-mode="bodyScheme"
               :language="locale"
-              hideRichData
-              hideBranding
+              hide-rich-data
+              hide-branding
             ></add-to-calendar-button>
           </div>
           <div class="flex-1 overflow-x-auto">
@@ -305,18 +306,18 @@ watch(locale, value => {
               <pre>
 &lt;add-to-calendar-button
   name="{{ $t('demo_data.name') }}"
-  startDate="{{ defaultDate }}"
-  startTime="10:15"
-  endTime="23:30"
-  timeZone="{{ $t('demo_data.default_timezone') }}"
+  start-date="{{ defaultDate }}"
+  start-time="10:15"
+  end-time="23:30"
+  time-zone="{{ $t('demo_data.default_timezone') }}"
   location="{{ $t('demo_data.location') }}"
   description="{{ $t('demo_data.description_alt1') }}"
   options="'Apple','Google','iCal','Outlook.com','Yahoo'"
   recurrence="weekly"
-  recurrence_interval="1"
-  recurrence_count="6"
-  recurrence_byDay="WE,FR"
-  lightMode="bodyScheme"{{ defaultLang }}
+  recurrence-interval="1"
+  recurrence-count="6"
+  recurrence-by-day="WE,FR"
+  light-mode="bodyScheme"{{ defaultLang }}
 &gt;&lt;/add-to-calendar-button&gt;
 </pre>
             </LazyCodeBlock>
@@ -355,13 +356,13 @@ watch(locale, value => {
             <add-to-calendar-button
               :name="$t('demo_data.name_series')"
               :dates="defaultMultiDate"
-              :timeZone="$t('demo_data.default_timezone')"
+              :time-zone="$t('demo_data.default_timezone')"
               :location="$t('demo_data.location')"
               options="'Apple','Google','iCal','Outlook.com','Yahoo'"
-              lightMode="bodyScheme"
+              light-mode="bodyScheme"
               :language="locale"
-              hideRichData
-              hideBranding
+              hide-rich-data
+              hide-branding
             ></add-to-calendar-button>
           </div>
           <div class="flex-1 overflow-x-auto">
@@ -392,10 +393,10 @@ watch(locale, value => {
       "endTime":"20:00"
     }
   ]'
-  timeZone="{{ $t('demo_data.default_timezone') }}"
+  time-zone="{{ $t('demo_data.default_timezone') }}"
   location="{{ $t('demo_data.location') }}"
   options="'Apple','Google','iCal','Outlook.com','Yahoo'"
-  lightMode="bodyScheme"{{ defaultLang }}
+  light-mode="bodyScheme"{{ defaultLang }}
 &gt;&lt;/add-to-calendar-button&gt;
 </pre>
             </LazyCodeBlock>
@@ -431,21 +432,21 @@ watch(locale, value => {
           <div class="flex w-full flex-none justify-center p-6 pt-8 md:w-[300px]">
             <add-to-calendar-button
               :name="$t('demo_data.name')"
-              :startDate="defaultDate"
-              startTime="10:15"
-              endTime="23:30"
-              :timeZone="$t('demo_data.default_timezone')"
+              :start-date="defaultDate"
+              start-time="10:15"
+              end-time="23:30"
+              :time-zone="$t('demo_data.default_timezone')"
               :location="$t('demo_data.location')"
               :label="$t('demo_data.name_custom_1')"
               :description="$t('demo_data.description_alt1')"
               options="'Apple','Google','iCal','Outlook.com','Yahoo'"
-              iCalFileName="Reminder-Event"
-              listStyle="overlay"
+              ical-file-name="Reminder-Event"
+              list-style="overlay"
               size="5"
-              lightMode="bodyScheme"
+              light-mode="bodyScheme"
               :language="locale"
-              hideRichData
-              hideBranding
+              hide-rich-data
+              hide-branding
             ></add-to-calendar-button>
           </div>
           <div class="flex-1 overflow-x-auto">
@@ -453,18 +454,18 @@ watch(locale, value => {
               <pre>
 &lt;add-to-calendar-button
   name="{{ $t('demo_data.name') }}"
-  startDate="{{ defaultDate }}"
-  startTime="10:15"
-  endTime="23:30"
-  timeZone="{{ $t('demo_data.default_timezone') }}"
+  start-date="{{ defaultDate }}"
+  start-time="10:15"
+  end-time="23:30"
+  time-zone="{{ $t('demo_data.default_timezone') }}"
   location="{{ $t('demo_data.location') }}"
   description="{{ $t('demo_data.description_alt1') }}"
   options="'Apple','Google','iCal','Outlook.com','Yahoo'"
   label="{{ $t('demo_data.name_custom_1') }}"
-  iCalFileName="Reminder-Event"
-  listStyle="overlay"
+  ical-file-name="Reminder-Event"
+  list-style="overlay"
   size="5"
-  lightMode="bodyScheme"{{ defaultLang }}
+  light-mode="bodyScheme"{{ defaultLang }}
 &gt;&lt;/add-to-calendar-button&gt;
 </pre>
             </LazyCodeBlock>
@@ -493,20 +494,20 @@ watch(locale, value => {
             <span class="pr-6">{{ $t('demo_data.do_it') }}! →</span>
             <add-to-calendar-button
               :name="$t('demo_data.name')"
-              :startDate="defaultDate"
-              startTime="10:15"
-              endTime="23:30"
-              :timeZone="$t('demo_data.default_timezone')"
+              :start-date="defaultDate"
+              start-time="10:15"
+              end-time="23:30"
+              :time-zone="$t('demo_data.default_timezone')"
               :location="$t('demo_data.location')"
               :label="$t('demo_data.name_custom_2')"
               :description="$t('demo_data.description_alt1')"
               options="'Apple','Google','iCal','Outlook.com','Yahoo'"
-              listStyle="modal"
+              list-style="modal"
               inline
-              lightMode="bodyScheme"
+              light-mode="bodyScheme"
               :language="locale"
-              hideRichData
-              hideBranding
+              hide-rich-data
+              hide-branding
             ></add-to-calendar-button>
           </div>
           <div class="overflow-x-auto">
@@ -514,17 +515,17 @@ watch(locale, value => {
               <pre>
 &lt;add-to-calendar-button
   name="{{ $t('demo_data.name') }}"
-  startDate="{{ defaultDate }}"
-  startTime="10:15"
-  endTime="23:30"
-  timeZone="{{ $t('demo_data.default_timezone') }}"
+  start-date="{{ defaultDate }}"
+  start-time="10:15"
+  end-time="23:30"
+  time-zone="{{ $t('demo_data.default_timezone') }}"
   location="{{ $t('demo_data.location') }}"
   description="{{ $t('demo_data.description_alt1') }}"
   options="'Apple','Google','iCal','Outlook.com','Yahoo'"
   label="{{ $t('demo_data.name_custom_2') }}"
   inline
-  listStyle="modal"
-  lightMode="bodyScheme"{{ defaultLang }}
+  list-style="modal"
+  light-mode="bodyScheme"{{ defaultLang }}
 &gt;&lt;/add-to-calendar-button&gt;
 </pre>
             </LazyCodeBlock>
@@ -545,16 +546,16 @@ watch(locale, value => {
           <div class="flex w-full flex-none justify-center p-6 pt-8 md:w-[300px]">
             <add-to-calendar-button
               :name="$t('demo_data.name')"
-              :startDate="defaultDate"
-              startTime="10:15"
-              endTime="23:30"
-              :timeZone="$t('demo_data.default_timezone')"
+              :start-date="defaultDate"
+              start-time="10:15"
+              end-time="23:30"
+              :time-zone="$t('demo_data.default_timezone')"
               :description="$t('demo_data.description_alt1')"
               options="Google"
-              lightMode="bodyScheme"
+              light-mode="bodyScheme"
               :language="locale"
-              hideRichData
-              hideBranding
+              hide-rich-data
+              hide-branding
             ></add-to-calendar-button>
           </div>
           <div class="flex-1 overflow-x-auto">
@@ -562,13 +563,13 @@ watch(locale, value => {
               <pre>
 &lt;add-to-calendar-button
   name="{{ $t('demo_data.name') }}"
-  startDate="{{ defaultDate }}"
-  startTime="10:15"
-  endTime="23:30"
-  timeZone="{{ $t('demo_data.default_timezone') }}"
+  start-date="{{ defaultDate }}"
+  start-time="10:15"
+  end-time="23:30"
+  time-zone="{{ $t('demo_data.default_timezone') }}"
   description="{{ $t('demo_data.description_alt1') }}"
   options="Google"
-  lightMode="bodyScheme"{{ defaultLang }}
+  light-mode="bodyScheme"{{ defaultLang }}
 &gt;&lt;/add-to-calendar-button&gt;
 </pre>
             </LazyCodeBlock>
@@ -589,19 +590,19 @@ watch(locale, value => {
           <div class="flex justify-center p-6 pt-8">
             <add-to-calendar-button
               :name="$t('demo_data.name')"
-              :startDate="defaultDate"
-              startTime="10:15"
-              endTime="23:30"
-              :timeZone="$t('demo_data.default_timezone')"
+              :start-date="defaultDate"
+              start-time="10:15"
+              end-time="23:30"
+              :time-zone="$t('demo_data.default_timezone')"
               :description="$t('demo_data.description_alt1')"
               options="'Apple','Google','iCal','Outlook.com','Yahoo'"
-              buttonsList
-              hideTextLabelButton
-              buttonStyle="round"
-              lightMode="bodyScheme"
+              buttons-list
+              hide-text-label-button
+              button-style="round"
+              light-mode="bodyScheme"
               :language="locale"
-              hideRichData
-              hideBranding
+              hide-rich-data
+              hide-branding
             ></add-to-calendar-button>
           </div>
           <div class="overflow-x-auto">
@@ -609,16 +610,16 @@ watch(locale, value => {
               <pre>
 &lt;add-to-calendar-button
   name="{{ $t('demo_data.name') }}"
-  startDate="{{ defaultDate }}"
-  startTime="10:15"
-  endTime="23:30"
-  timeZone="{{ $t('demo_data.default_timezone') }}"
+  start-date="{{ defaultDate }}"
+  start-time="10:15"
+  end-time="23:30"
+  time-zone="{{ $t('demo_data.default_timezone') }}"
   description="{{ $t('demo_data.description_alt1') }}"
   options="'Apple','Google','iCal','Outlook.com','Yahoo'"
-  buttonsList
-  hideTextLabelButton
-  buttonStyle="round"
-  lightMode="bodyScheme"{{ defaultLang }}
+  buttons-list
+  hide-text-label-button
+  button-style="round"
+  light-mode="bodyScheme"{{ defaultLang }}
 &gt;&lt;/add-to-calendar-button&gt;
 </pre>
             </LazyCodeBlock>
