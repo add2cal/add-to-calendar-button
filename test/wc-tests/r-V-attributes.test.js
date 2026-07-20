@@ -10,7 +10,7 @@ import { expect, fixture, aTimeout } from '@open-wc/testing';
 import '../../dist/module/index.js';
 import { interceptWindowOpen, interceptFileSave } from '../helpers/capture.js';
 import { clickSingleton, openList, renderedOptions } from '../helpers/dom.js';
-import { decodeIcsHref } from '../helpers/ics.js';
+import { decodeIcsHref, parseIcs } from '../helpers/ics.js';
 import { mockProFetch, proEvtConfig, PRO_EVT_KEY } from '../fixtures/pro.js';
 
 async function mountRaw(attrs) {
@@ -158,6 +158,82 @@ describe('Group V - official kebab-case attributes', () => {
       const ics = decodeIcsHref(fs.saves[0].href);
       expect(ics, 'file still carries the RFC uppercase form').to.include('STATUS:CANCELLED');
       expect(ics, 'cancelled status drives the CANCEL method').to.include('METHOD:CANCEL');
+    } finally {
+      fs.restore();
+    }
+  });
+
+  it('V-08: recurrence via official kebab attributes drives the RRULE', async () => {
+    const fs = interceptFileSave();
+    try {
+      const el = await mountRaw({
+        name: 'Kebab Recurrence',
+        'start-date': '2050-06-15',
+        recurrence: 'weekly',
+        'recurrence-interval': '2',
+        'recurrence-count': '5',
+        'recurrence-by-day': 'MO,WE',
+        options: "'ical'",
+        trigger: 'click',
+        identifier: 'atcb-v08',
+      });
+      await clickSingleton(el);
+      const rrule = parseIcs(decodeIcsHref(fs.saves[0].href)).events[0].prop('RRULE');
+      expect(rrule, 'interval from recurrence-interval').to.include('INTERVAL=2');
+      expect(rrule, 'count from recurrence-count').to.include('COUNT=5');
+      expect(rrule, 'byday from recurrence-by-day').to.include('BYDAY=MO,WE');
+    } finally {
+      fs.restore();
+    }
+  });
+
+  it('V-08b: legacy underscore recurrence attributes still resolve (backwards compat)', async () => {
+    const fs = interceptFileSave();
+    try {
+      const el = await mountRaw({
+        name: 'Underscore Recurrence',
+        'start-date': '2050-06-15',
+        recurrence: 'weekly',
+        // the DOM lowercases these to the legacy names (recurrence_interval, recurrence_byday)
+        recurrence_interval: '2',
+        recurrence_count: '5',
+        recurrence_byDay: 'MO,WE',
+        options: "'ical'",
+        trigger: 'click',
+        identifier: 'atcb-v08b',
+      });
+      await clickSingleton(el);
+      const rrule = parseIcs(decodeIcsHref(fs.saves[0].href)).events[0].prop('RRULE');
+      expect(rrule, 'underscore recurrence still drives the RRULE').to.include('INTERVAL=2');
+      expect(rrule).to.include('COUNT=5');
+      expect(rrule).to.include('BYDAY=MO,WE');
+    } finally {
+      fs.restore();
+    }
+  });
+
+  it('V-09: ics options via official kebab attributes shape the ics file', async () => {
+    const fs = interceptFileSave();
+    try {
+      const el = await mountRaw({
+        name: 'Kebab ICS',
+        'start-date': '2050-06-15',
+        'start-time': '10:00',
+        'end-time': '11:00',
+        'time-zone': 'America/New_York',
+        location: 'Hall 7',
+        'ics-reminder': '30',
+        'ics-url': 'https://example.com/event',
+        'ics-categories': 'Work,Conference',
+        options: "'ical'",
+        trigger: 'click',
+        identifier: 'atcb-v09',
+      });
+      await clickSingleton(el);
+      const ev = parseIcs(decodeIcsHref(fs.saves[0].href)).events[0];
+      expect(ev.value('URL'), 'ics-url').to.equal('https://example.com/event');
+      expect(ev.value('CATEGORIES'), 'ics-categories').to.equal('Work,Conference');
+      expect(ev.prop('TRIGGER'), 'ics-reminder alarm').to.equal('TRIGGER:-PT30M');
     } finally {
       fs.restore();
     }

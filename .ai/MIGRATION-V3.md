@@ -39,6 +39,10 @@ Official attribute names are now kebab-case (`start-date`, `button-style`, `ical
 `prokey`, `use-user-tz`, ...). Every v2 spelling (camelCase/lowercase) keeps working as an alias;
 when both are present, the official name wins.
 
+Attributes that used underscores (`recurrence_interval`, `recurrence_byDay`, ...) now have
+kebab-case official names too (`recurrence-interval`, `recurrence-by-day`, ...); the underscore
+spellings keep working as aliases.
+
 New attributes:
 
 - `style-source`: base url override for on-demand style/locale assets
@@ -124,9 +128,10 @@ Browsers without declarative shadow DOM fall back to the plain client-only path 
 ## Extended ics options (Apple/iCal only)
 
 Eight new second-level options shape the GENERATED ics file and nothing else - every other
-calendar type ignores them silently: `icsReminder` (display alarm), `icsUrl`, `icsCategories`,
-`icsClass`, `icsPriority`, `icsGeo` (+ Apple map preview when `location` is set), `icsAttach`
-(url attachments), `icsExdate` (recurrence exclusions, root-only). All others work per date
+calendar type ignores them silently: `ics-reminder` (display alarm), `ics-url`, `ics-categories`,
+`ics-class`, `ics-priority`, `ics-geo` (+ Apple map preview when `location` is set), `ics-attach`
+(url attachments), `ics-exdate` (recurrence exclusions, root-only). Like every attribute, the
+camelCase spelling (`icsReminder`, ...) still works and is what the `atcb_action` config object uses. All others work per date
 entry in the multi-date case, following the root-overrides-entries contract. Documented under
 the advanced examples section only (deliberately not promoted).
 
