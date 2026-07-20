@@ -488,3 +488,4 @@ recurrence, which implies a single date entry).
 - ICSX-08: without the options, none of the new properties appear (output stability)
 
 - M-33: modal option list stays content-sized (regression: .atcb-modal min-width:auto must beat .atcb-list min-width:100% after the split-css assembly)
+- M-34: list-modal to follow-up modal reuses the same bg overlay node (no destroy/recreate); outgoing options list is dropped after the new modal builds

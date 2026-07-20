@@ -4,7 +4,7 @@
 import { expect, aTimeout } from '@open-wc/testing';
 import { mountAtcb, baseEvent } from '../helpers/mount.js';
 import { interceptWindowOpen } from '../helpers/capture.js';
-import { trigger, openList, listEl, clickSingleton, pressEsc, optionEl, modalHost } from '../helpers/dom.js';
+import { trigger, openList, listEl, clickSingleton, pressEsc, optionEl, modalHost, btnId } from '../helpers/dom.js';
 import { resetDataLayer, dlEvents } from '../helpers/datalayer.js';
 
 describe('Group M - UI / interaction', () => {
@@ -233,5 +233,35 @@ describe('Group M - UI / interaction', () => {
     // content-sized: comfortably below the viewport, never near full width
     expect(listWidth, `list width ${Math.round(listWidth)} should be content-sized`).to.be.lessThan(Math.min(window.innerWidth * 0.9, 500));
     expect(getComputedStyle(list).minWidth, 'the .atcb-modal min-width:auto wins over .atcb-list min-width:100%').to.equal('auto');
+  });
+
+  it('M-34: list-modal -> follow-up modal keeps the same bg overlay alive (no destroy/recreate blink)', async () => {
+    // regression guard for the modal-to-modal transition blink: navigating from the options
+    // list (rendered as modal) to a follow-up modal (multi-date picker) must reuse the same
+    // background overlay node instead of destroying and rebuilding it
+    const { host } = await mountAtcb({
+      name: 'Series',
+      dates: JSON.stringify([{ startDate: '2050-06-15' }, { startDate: '2050-06-16' }]),
+      options: "['google','apple']",
+      listStyle: 'modal',
+      trigger: 'click',
+      identifier: 'atcb-m34',
+    });
+    await openList(host);
+    await aTimeout(50);
+    const mh = modalHost(host);
+    const overlayBefore = mh.shadowRoot.getElementById('atcb-bgoverlay');
+    expect(overlayBefore, 'overlay present with the options list').to.exist;
+    expect(mh.shadowRoot.querySelector('.atcb-list.atcb-modal'), 'options list shown').to.exist;
+    // click Google (multi-date) -> opens the multi-date picker modal
+    const googleOpt = mh.shadowRoot.getElementById(btnId(host) + '-google');
+    expect(googleOpt, 'google option in the modal list').to.exist;
+    googleOpt.dispatchEvent(new MouseEvent('click', { bubbles: true, cancelable: true, view: window, button: 0 }));
+    await aTimeout(150);
+    const mhAfter = modalHost(host);
+    const overlayAfter = mhAfter.shadowRoot.getElementById('atcb-bgoverlay');
+    expect(overlayAfter, 'the SAME overlay node survives the transition (no blink)').to.equal(overlayBefore);
+    expect(mhAfter.shadowRoot.querySelector('.atcb-modal-box'), 'the multi-date modal box is shown').to.exist;
+    expect(mhAfter.shadowRoot.querySelector('.atcb-list.atcb-modal'), 'the outgoing options list was dropped').to.not.exist;
   });
 });
