@@ -162,25 +162,27 @@ async function atcb_generate_subscribe_links(host: ShadowRoot, type: string, lin
       atcb_wire_clipboard_input(data);
       return;
     case 'yahoo2nd':
-      clipboardNote = await atcb_clipboard_note_content(data.icsFile as string, data);
+      // step 2 of the yahoo subscribe flow: the link was already copied to the clipboard
+      // in step 1 (yahoo), so we do NOT copy again here - a second copy of the same value
+      // is pointless and its failure path would wrongly claim copying did not work. The
+      // secondary button just closes the modal (relabeled from cancel to close)
       await atcb_create_modal(
         host,
         data,
         'yahoo',
         atcb_translate_hook('modal.subscribe.yahoo.h', data),
-        clipboardNote + '<br>' + atcb_translate_hook('modal.subscribe.yahoo.text', data),
+        atcb_translate_hook('modal.subscribe.yahoo.text', data),
         [
           {
             label: atcb_translate_hook('modal.subscribe.yahoo.button', data),
             type: 'none',
             href: 'https://www.yahoo.com/calendar',
           },
-          { label: atcb_translate_hook('cancel', data) },
+          { label: atcb_translate_hook('close', data) },
         ] as unknown as never[],
         [] as unknown as never[],
         keyboardTrigger,
       );
-      atcb_wire_clipboard_input(data);
       return;
   }
   // mark as successful (except for the Yahoo case, with returned)

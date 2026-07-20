@@ -10,6 +10,7 @@
   - new: `style-source` and `load-all-styles` options for asset loading control and runtime style switching
   - new: full-locale support - `language="en_GB"` picks regional translations where available and formats dates in the regional convention
   - new: Ukrainian added to the officially typed languages; RSVP strings now part of the core language packs
+  - new: extended ics options for the Apple/iCal cases (`icsReminder`, `icsUrl`, `icsCategories`, `icsClass`, `icsPriority`, `icsGeo` incl. Apple map preview, `icsAttach`, `icsExdate`) - second-level options that only shape the generated ics file; all other calendar types simply ignore them
   - modernized internals: Lit-based web component, strict TypeScript, per-instance state, generated flat type declarations that work with every moduleResolution
   - accessibility: WAI-ARIA menu pattern for the dropdown, real dialog semantics with a focus trap for modals, working focus delegation, complete date-button labels for screen readers
   - security: url scheme allowlisting, escaped description links, prototype-pollution-safe input parsing, valid schema.org JSON for any content
@@ -19,6 +20,8 @@
   - ⚠️ Breaking: for `customLabels` users overriding exactly these keys: `date.status.cancelled.cta` is now `date.status.cancelled_cta`, `label.share.email.subject` is now `label.share.email_subject`, and `label.rsvp` / `form.status` / `form.success` moved to `label.rsvp.title` / `form.status.title` / `form.success.title`
   - ⚠️ Breaking: script-capable url schemes (like `javascript:`) are rejected wherever urls are consumed
   - ⚠️ Breaking: browser floor is now Baseline 2023 for the full experience (bundles target ES2017; declarative shadow DOM is a progressive enhancement)
+  - fix: the modal box and the modal option list are correctly sized again (max width on larger screens, no drop-shadow on fullscreen mobile) - regressions from the v3 style split
+  - fix: the second step of the Yahoo subscription flow no longer re-copies the link (and could no longer wrongly report a copy failure); its secondary button now reads "Close"
   - see the [migration guide](https://add-to-calendar-button.com) for details - existing v2 integrations keep working
 
 ## Version 2

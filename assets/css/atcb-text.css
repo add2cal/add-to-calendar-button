@@ -135,10 +135,11 @@
   z-index: 14000090;
 }
 
-@media (width > 575px) {
-  .atcb-modal-box {
-    width: 32em;
-  }
+/* the modal option list must stay content-sized (it also carries .atcb-list, whose
+   min-width:100% would otherwise stretch it to the full overlay width). Specificity
+   over .atcb-list keeps this order-independent across the split-css assembly */
+.atcb-list.atcb-modal {
+  min-width: auto;
 }
 
 .atcb-modal-box.atcb-rtl {
@@ -720,6 +721,12 @@ a.atcb-modal-btn:disabled {
   width: 100%;
   margin-bottom: 20px;
   -webkit-tap-highlight-color: transparent;
+}
+
+@media (width > 575px) {
+  .atcb-modal-box {
+    width: 32em;
+  }
 }
 
 @media (width <= 575px) {
@@ -1671,4 +1678,11 @@ a.atcb-modal-btn:not([disabled]):hover {
 
 #atcb-reference.atcb-dropup {
   margin-top: -1px;
+}
+
+/* the fullscreen modal on small viewports carries no shadow */
+@media (width <= 575px) {
+  .atcb-modal-box {
+    filter: none;
+  }
 }

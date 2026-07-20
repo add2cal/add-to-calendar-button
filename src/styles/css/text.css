@@ -687,3 +687,10 @@ a.atcb-modal-btn:not([disabled]):hover {
 #atcb-reference.atcb-dropup {
   margin-top: -1px;
 }
+
+/* the fullscreen modal on small viewports carries no shadow */
+@media (width <= 575px) {
+  .atcb-modal-box {
+    filter: none;
+  }
+}
