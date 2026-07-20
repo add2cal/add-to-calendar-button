@@ -132,8 +132,9 @@ calendar type ignores them silently: `ics-reminder` (display alarm), `ics-url`, 
 `ics-class`, `ics-priority`, `ics-geo` (+ Apple map preview when `location` is set), `ics-attach`
 (url attachments), `ics-exdate` (recurrence exclusions, root-only). Like every attribute, the
 camelCase spelling (`icsReminder`, ...) still works and is what the `atcb_action` config object uses. All others work per date
-entry in the multi-date case, following the root-overrides-entries contract. Documented under
-the advanced examples section only (deliberately not promoted).
+entry in the multi-date case, following the root-overrides-entries contract. Documented in the
+advanced examples section and in a dedicated "ICS file options (Apple/iCal only)" subsection of
+the configuration reference, both clearly marked as Apple/iCal-only.
 
 ## Behavior improvements
 
