@@ -40,7 +40,10 @@ describe('Group A - Lifecycle & registration', () => {
   it('A-03: missing name + debug -> visible error block', async () => {
     const errors = [];
     const orig = console.error;
+    const origLog = console.log;
     console.error = (...args) => errors.push(args.join(' '));
+    // swallow the debug destroy log during the in-test removal below
+    console.log = () => {};
     try {
       const el = await mountAtcbNoWait({ startDate: '2050-02-14', debug: 'true' });
       await aTimeout(300);
@@ -48,8 +51,13 @@ describe('Group A - Lifecycle & registration', () => {
       // (renderer-crash class varies across Chrome builds, see A-02)
       expect(errors.join(' ')).to.include('failed');
       expect(initFailed(el)).to.equal(true);
+      // remove the debug element here (instead of at fixture teardown) so its debug-mode
+      // destroy log stays within the muted window and out of the runner output
+      el.remove();
+      await aTimeout(0);
     } finally {
       console.error = orig;
+      console.log = origLog;
     }
   });
 
