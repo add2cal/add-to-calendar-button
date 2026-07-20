@@ -155,7 +155,7 @@ A button can be easily created by using the respective custom element.
 <add-to-calendar-button />
 ```
 
-You can then configure the button by simply adding the options as attributes to it. Boolean values (true/false) can be set as `optionName="true"` or simply by adding `optionName` to the tag. Not setting it at all would be automatically translate to "false".
+You can then configure the button by simply adding the options as attributes to it. Boolean values (true/false) can be set as `option-name="true"` or simply by adding `option-name` to the tag. Not setting it at all would be automatically translate to "false".
 
 <br />
 
