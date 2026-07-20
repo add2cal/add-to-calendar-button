@@ -78,10 +78,16 @@ The options are also inert (documented) when `icsFile` points at a hosted file o
 - ONE new section under the demo's advanced examples (en + de), titled around "Power up the
   ics file", opening with the marker: "These options only affect the generated ics file -
   they apply to the Apple and iCal options; all other calendar types simply ignore them."
-- A compact attribute table inside that section (the options do NOT get rows in the main
-  configuration reference - second-level, not promoted).
+- A compact attribute table inside that section.
 - One live example combining `icsReminder`, `icsUrl`, `icsCategories`, `icsGeo`.
 - Release notes / CHANGELOG: one bullet.
+
+> Amendment (maintainer request, post-implementation): the options ALSO get a dedicated
+> "ICS file options (Apple/iCal only)" subsection in the demo's configuration reference
+> (its own table + side-nav entry + search index entries), clearly marked as Apple/iCal-only
+> and cross-linked to the advanced example. The original "not in the config reference"
+> guardrail is superseded; they remain second-level (own section, explicit scoping marker),
+> just discoverable from the config page too.
 
 ## Test approach
 

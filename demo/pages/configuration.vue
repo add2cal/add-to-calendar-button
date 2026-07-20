@@ -40,6 +40,14 @@ const configOptions = [
   "availability",
   "subscribe",
   "ics-file",
+  "ics-reminder",
+  "ics-url",
+  "ics-categories",
+  "ics-class",
+  "ics-priority",
+  "ics-geo",
+  "ics-attach",
+  "ics-exdate",
   "ical-file-name",
   "instance",
   "created",
@@ -663,6 +671,83 @@ watch(searchSelection, (newVal) => {
         </table>
       </div>
 
+      <h3 id="ics-parameters" class="mt-12 pt-4">{{ $t('content.config.ics_params') }}</h3>
+      <p v-if="locale == 'en'" class="mb-3">
+        <strong>These options only shape the generated ics file - they apply to the "apple" and "ical" calendar types; every other type simply ignores them (no error, no dropped option).</strong><br /><br />
+        All of them except "ics-exdate" can also be set per date entry within the multi-date "dates" array (root-level values override entry values, like the other date fields).
+      </p>
+      <p v-else class="mb-3">
+        <strong>Diese Optionen beeinflussen ausschließlich die generierte ics-Datei - sie gelten für die Kalender-Typen "apple" und "ical"; alle anderen Typen ignorieren sie einfach (kein Fehler, keine entfernte Option).</strong><br /><br />
+        Alle außer "ics-exdate" können im Multi-Date-Fall auch pro Datums-Eintrag im "dates"-Array gesetzt werden (Root-Werte überschreiben Eintrags-Werte, wie bei den anderen Datums-Feldern).
+      </p>
+      <div class="my-8 overflow-x-auto rounded-lg shadow-sm">
+        <table>
+          <thead>
+            <tr>
+              <th scope="col" class="p-3 font-semibold sm:px-5">
+                {{ $t('content.config.name') }}<span class="block pt-1 normal-case md:hidden">({{ $t('content.config.value') }})</span>
+              </th>
+              <th scope="col" class="hidden p-3 font-semibold sm:px-5 md:table-cell">{{ $t('content.config.value') }}</th>
+              <th scope="col" class="p-3 font-semibold sm:px-5">{{ $t('content.config.details') }}</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr id="ics-reminder">
+              <th scope="row">ics-reminder</th>
+              <td><em>String</em> / <em>Number</em></td>
+              <td v-if="locale == 'en'">Adds a reminder alarm. Set the minutes before the event start (like <code>"30"</code>) or a raw ISO 8601 duration (like <code>"-PT1H"</code>).</td>
+              <td v-else>Fügt eine Erinnerung hinzu. Setze die Minuten vor Event-Beginn (etwa <code>"30"</code>) oder eine rohe ISO-8601-Dauer (etwa <code>"-PT1H"</code>).</td>
+            </tr>
+            <tr id="ics-url">
+              <th scope="row">ics-url</th>
+              <td><em>String</em></td>
+              <td v-if="locale == 'en'">Attaches a canonical link (the URL property) to the event. Needs to be a valid http(s) url.</td>
+              <td v-else>Hängt einen kanonischen Link (die URL-Property) an das Event. Muss eine valide http(s)-URL sein.</td>
+            </tr>
+            <tr id="ics-categories">
+              <th scope="row">ics-categories</th>
+              <td><em>String</em> / <em>Array</em></td>
+              <td v-if="locale == 'en'">Tags the event with a comma-separated list of categories.</td>
+              <td v-else>Verschlagwortet das Event mit einer kommaseparierten Liste von Kategorien.</td>
+            </tr>
+            <tr id="ics-class">
+              <th scope="row">ics-class</th>
+              <td>
+                <em>String</em><br /><br /><span class="label block">{{ $t('content.config.options') }}:</span>PUBLIC, PRIVATE, CONFIDENTIAL
+              </td>
+              <td v-if="locale == 'en'">Sets the event classification.</td>
+              <td v-else>Setzt die Klassifizierung des Events.</td>
+            </tr>
+            <tr id="ics-priority">
+              <th scope="row">ics-priority</th>
+              <td>
+                <em>Number</em><br /><br /><span class="label block">{{ $t('content.config.options') }}:</span>0 - 9
+              </td>
+              <td v-if="locale == 'en'">Sets the priority from 0 (undefined) over 1 (highest) to 9 (lowest).</td>
+              <td v-else>Setzt die Priorität von 0 (undefiniert) über 1 (höchste) bis 9 (niedrigste).</td>
+            </tr>
+            <tr id="ics-geo">
+              <th scope="row">ics-geo</th>
+              <td><em>String</em><br /><br /><span class="format">latitude,longitude</span></td>
+              <td v-if="locale == 'en'">Adds geo coordinates. Combined with the regular "location" option, Apple Calendar renders its map preview.</td>
+              <td v-else>Ergänzt Geo-Koordinaten. Zusammen mit der regulären "location"-Option rendert Apple Calendar seine Karten-Vorschau.</td>
+            </tr>
+            <tr id="ics-attach">
+              <th scope="row">ics-attach</th>
+              <td><em>String</em> / <em>Array</em></td>
+              <td v-if="locale == 'en'">Attaches files by url (a comma-separated list of http(s) urls) - like an agenda PDF or a ticket.</td>
+              <td v-else>Hängt Dateien per URL an (eine kommaseparierte Liste von http(s)-URLs) - etwa ein Agenda-PDF oder ein Ticket.</td>
+            </tr>
+            <tr id="ics-exdate">
+              <th scope="row">ics-exdate</th>
+              <td><em>String</em> / <em>Array</em><br /><br /><span class="format">YYYY-MM-DD</span></td>
+              <td v-if="locale == 'en'">Excludes dates from a recurring event (a comma-separated list of dates). Requires the "recurrence" option and is the only one of these options that cannot be set per date entry.</td>
+              <td v-else>Schließt Termine aus einer Terminserie aus (eine kommaseparierte Liste von Terminen). Erfordert die "recurrence"-Option und ist die einzige dieser Optionen, die nicht pro Datums-Eintrag gesetzt werden kann.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
       <Interstitial />
 
       <h3 id="style-parameters" class="mt-12 pt-4">{{ $t('content.config.layout_params') }}</h3>
@@ -1194,6 +1279,7 @@ watch(searchSelection, (newVal) => {
       <div class="sticky top-0 pt-4">
         <Autocomplete v-model="searchSelection" :options="configOptions" :label="$t('content.config.find_params')" :placeholder="$t('labels.inputs.search')" class="mb-10" styleClass="" hidelabel />
         <NuxtLink :to="'#event-parameters'" class="side-nav">{{ $t('content.config.event_params') }}</NuxtLink>
+        <NuxtLink :to="'#ics-parameters'" class="side-nav">{{ $t('content.config.ics_params') }}</NuxtLink>
         <NuxtLink :to="'#style-parameters'" class="side-nav">{{ $t('content.config.layout_params') }}</NuxtLink>
         <NuxtLink :to="'#additional-parameters'" class="side-nav">{{ $t('content.config.additional_params') }}</NuxtLink>
       </div>
