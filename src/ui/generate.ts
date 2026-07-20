@@ -11,6 +11,16 @@ import { renderDateButtonContent } from './templates';
 import { atcb_generate_rsvp_form } from './pro';
 import type { ATCBConfig } from '../types';
 
+// after an option click in a list rendered as modal: if the action opened a follow-up modal,
+// the shared overlay was kept alive and the list already swapped out in-place; if it was a
+// direct redirect/download instead, nothing replaced the list, so we close it now
+function atcb_close_modal_list_if_idle(host: ShadowRoot, data: ATCBConfig): void {
+  const modalHost = document.getElementById(data.identifier + '-modal-host');
+  if (!modalHost || !modalHost.shadowRoot || !modalHost.shadowRoot.querySelector('.atcb-modal-box')) {
+    atcb_toggle(host, 'close');
+  }
+}
+
 // GENERATE THE ACTUAL BUTTON
 // helper function to generate the labels for the button and list options
 function atcb_generate_label(host: ShadowRoot, data: ATCBConfig, parent: HTMLElement, type: string, icon: boolean = false, text: string = '', oneOption: boolean = false): void {
@@ -77,10 +87,17 @@ function atcb_generate_label(host: ShadowRoot, data: ATCBConfig, parent: HTMLEle
               (host.querySelector('#' + parent.id) as HTMLElement | null)?.blur();
               atcb_log_event('openSingletonLink', parent.id, data.identifier as string);
             } else {
-              atcb_toggle(host, 'close');
+              // for a list rendered as modal, keep the shared overlay alive so a follow-up
+              // modal can swap in without the background blinking; other list styles close now
+              if (data.listStyle !== 'modal') {
+                atcb_toggle(host, 'close');
+              }
               atcb_log_event('openCalendarLink', parent.id, data.identifier as string);
             }
             await atcb_generate_links(host, type, data);
+            if (!oneOption && data.listStyle === 'modal') {
+              atcb_close_modal_list_if_idle(host, data);
+            }
           }),
         );
         parent.addEventListener('keyup', async function (event: KeyboardEvent) {
@@ -90,10 +107,15 @@ function atcb_generate_label(host: ShadowRoot, data: ATCBConfig, parent: HTMLEle
               (host.querySelector('#' + parent.id) as HTMLElement | null)?.blur();
               atcb_log_event('openSingletonLink', parent.id, data.identifier as string);
             } else {
-              atcb_toggle(host, 'close');
+              if (data.listStyle !== 'modal') {
+                atcb_toggle(host, 'close');
+              }
               atcb_log_event('openCalendarLink', parent.id, data.identifier as string);
             }
             await atcb_generate_links(host, type, data, 'all', true);
+            if (!oneOption && data.listStyle === 'modal') {
+              atcb_close_modal_list_if_idle(host, data);
+            }
           }
         });
       }
@@ -343,10 +365,17 @@ async function atcb_create_modal(
     }
     return el;
   })();
+  // a previously opened options list (list rendered as modal) shares this overlay. We keep
+  // the overlay alive and only drop the list AFTER the new modal is in place, so the
+  // background is never destroyed and recreated (that destroy/recreate is what caused the
+  // transition blink, since the overlay replays its fade-in animation on every rebuild).
+  const outgoingList = bgOverlay.querySelector('.atcb-list.atcb-modal');
   const modalWrapper = document.createElement('div');
   modalWrapper.classList.add('atcb-modal');
+  modalWrapper.classList.add('atcb-modal-appear');
   bgOverlay.append(modalWrapper);
-  const modalCount = modalHost.querySelectorAll('.atcb-modal').length;
+  // only real modal wrappers are part of the stack - the options list is not numbered
+  const modalCount = modalHost.querySelectorAll('.atcb-modal[data-modal-nr]').length + 1;
   modalWrapper.dataset.modalNr = `${modalCount}`;
   // programmatic focus target (scroll anchor), not part of the tab order
   modalWrapper.tabIndex = -1;
@@ -540,7 +569,12 @@ async function atcb_create_modal(
   // hide prev modal
   if (modalCount > 1) {
     const prevModal = modalHost.querySelector('.atcb-modal[data-modal-nr="' + (modalCount - 1) + '"]');
-    prevModal!.classList.add('atcb-hidden');
+    prevModal?.classList.add('atcb-hidden');
+  }
+  // now that the new modal is fully built, drop the outgoing options list (in-place swap,
+  // overlay stays alive the whole time)
+  if (outgoingList) {
+    outgoingList.remove();
   }
   // set scroll behavior
   atcb_manage_body_scroll(modalHost, modalWrapper);

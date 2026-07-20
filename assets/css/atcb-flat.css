@@ -369,6 +369,22 @@ a.atcb-modal-btn:disabled {
   }
 }
 
+/* a short fade-in for a modal box - matters for the modal-to-modal swap, where the shared
+   background overlay stays alive (so it does not replay its own fade-in) */
+@keyframes atcb-modal-appear {
+  0% {
+    opacity: 0;
+  }
+
+  100% {
+    opacity: 1;
+  }
+}
+
+.atcb-modal.atcb-modal-appear {
+  animation: atcb-modal-appear .15s ease 0s 1 normal both;
+}
+
 .atcb-icon.atcb-icon-ms365 svg {
   fill: var(--icon-ms365-color);
 }
