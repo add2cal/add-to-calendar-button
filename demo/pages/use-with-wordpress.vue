@@ -62,7 +62,7 @@ watch(locale, value => {
         <h3 class="mb-6 mt-12">B: Shortcode</h3>
         <p>{{ $t('content.guide.wordpress.shortcode1') }}</p>
         <LazyCodeBlock>
-          <pre>[add-to-calendar-button name="{{ $t('demo_data.name_dummy') }}" options="'apple','google'" startDate="{{ defaultDate }}" description="{{ $t('content.guide.wordpress.shortcode_description') }}"]</pre>
+          <pre>[add-to-calendar-button name="{{ $t('demo_data.name_dummy') }}" options="'apple','google'" start-date="{{ defaultDate }}" description="{{ $t('content.guide.wordpress.shortcode_description') }}"]</pre>
         </LazyCodeBlock>
         <p>{{ $t('content.guide.wordpress.shortcode_pro') }}</p>
         <p class="text-sm italic">{{ $t('content.guide.wordpress.shortcode2') }}</p>

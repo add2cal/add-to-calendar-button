@@ -46,9 +46,9 @@ dialogs with a working focus trap, `focus()` on the element finally reaches the 
 date-style buttons expose complete labels to screen readers. An axe-core gate keeps it that way.
 
 **The ics file grew up.** Eight second-level options enrich the generated file for the
-Apple/iCal cases - reminders (`icsReminder`), a canonical link (`icsUrl`), categories,
-classification, priority, geo coordinates with Apple's map preview (`icsGeo`), url
-attachments (`icsAttach`), and recurrence exclusions (`icsExdate`). They only shape the
+Apple/iCal cases - reminders (`ics-reminder`), a canonical link (`ics-url`), categories,
+classification, priority, geo coordinates with Apple's map preview (`ics-geo`), url
+attachments (`ics-attach`), and recurrence exclusions (`ics-exdate`). They only shape the
 ics file; every other calendar type simply ignores them. Documented under the advanced
 examples.
 

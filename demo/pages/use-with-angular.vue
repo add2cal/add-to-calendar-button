@@ -67,11 +67,11 @@ import { NgModule, CUSTOM_ELEMENTS_SCHEMA  } from '@angular/core';
   name="{{ $t('demo_data.name_dummy') }}"
   options="'apple','google'"
   location="{{ $t('demo_data.location') }}"
-  startDate="{{ defaultDate }}"
-  endDate="{{ defaultDate }}"
-  startTime="10:15"
-  endTime="23:30"
-  timeZone="{{ $t('demo_data.default_timezone') }}"{{ defaultLang }}
+  start-date="{{ defaultDate }}"
+  end-date="{{ defaultDate }}"
+  start-time="10:15"
+  end-time="23:30"
+  time-zone="{{ $t('demo_data.default_timezone') }}"{{ defaultLang }}
 &gt;&lt;/add-to-calendar-button&gt;</pre>
         </LazyCodeBlock>
         <h2 class="mb-6 mt-20">{{ $t('content.guide.angular.binding_headline') }}</h2>
@@ -82,7 +82,7 @@ import { NgModule, CUSTOM_ELEMENTS_SCHEMA  } from '@angular/core';
 &lt;add-to-calendar-button
   [attr.name]="titleVar"
   options="'apple','google'"
-  [attr.startDate]="dateVar"
+  [attr.start-date]="dateVar"
 &gt;&lt;/add-to-calendar-button&gt;</pre>
         </LazyCodeBlock>
       </div>

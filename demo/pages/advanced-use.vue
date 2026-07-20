@@ -1165,41 +1165,41 @@ const html = atcb_generate_ssr_html({
               </thead>
               <tbody>
                 <tr>
-                  <th scope="row">icsReminder</th>
+                  <th scope="row">ics-reminder</th>
                   <td>Adds a reminder alarm. Set minutes before the event start (like <code>"30"</code>) or an ISO 8601 duration (like <code>"-PT1H"</code>).</td>
                 </tr>
                 <tr>
-                  <th scope="row">icsUrl</th>
+                  <th scope="row">ics-url</th>
                   <td>Attaches a canonical link (URL property) to the event. Needs to be a valid http(s) url.</td>
                 </tr>
                 <tr>
-                  <th scope="row">icsCategories</th>
+                  <th scope="row">ics-categories</th>
                   <td>Tags the event with a comma-separated list of categories.</td>
                 </tr>
                 <tr>
-                  <th scope="row">icsClass</th>
+                  <th scope="row">ics-class</th>
                   <td>Sets the classification: <code>PUBLIC</code>, <code>PRIVATE</code>, or <code>CONFIDENTIAL</code>.</td>
                 </tr>
                 <tr>
-                  <th scope="row">icsPriority</th>
+                  <th scope="row">ics-priority</th>
                   <td>Sets the priority from 0 (undefined) over 1 (highest) to 9 (lowest).</td>
                 </tr>
                 <tr>
-                  <th scope="row">icsGeo</th>
+                  <th scope="row">ics-geo</th>
                   <td>Adds geo coordinates as <code>"latitude,longitude"</code>. Combined with the regular "location" option, Apple Calendar renders its map preview.</td>
                 </tr>
                 <tr>
-                  <th scope="row">icsAttach</th>
+                  <th scope="row">ics-attach</th>
                   <td>Attaches files by url (comma-separated list of http(s) urls) - like an agenda PDF or a ticket.</td>
                 </tr>
                 <tr>
-                  <th scope="row">icsExdate</th>
+                  <th scope="row">ics-exdate</th>
                   <td>Excludes dates from a recurring event (comma-separated list of YYYY-MM-DD values). Requires the "recurrence" option and is the only one of these options that cannot be set per date entry.</td>
                 </tr>
               </tbody>
             </table>
           </div>
-          <p>All options except "icsExdate" can also be set per date entry within the "dates" array in the multi-date case (root-level values override entry values, like with the other date fields).</p>
+          <p>All options except "ics-exdate" can also be set per date entry within the "dates" array in the multi-date case (root-level values override entry values, like with the other date fields).</p>
           <LazyCodeBlock>
             <pre>
 &lt;add-to-calendar-button
@@ -1210,10 +1210,10 @@ const html = atcb_generate_ssr_html({
   time-zone="Europe/Berlin"
   location="Convention Center Hall 7"
   options="'apple','ical'"
-  icsReminder="30"
-  icsUrl="https://example.com/conference"
-  icsCategories="Conference,Tech"
-  icsGeo="52.5200,13.4050"
+  ics-reminder="30"
+  ics-url="https://example.com/conference"
+  ics-categories="Conference,Tech"
+  ics-geo="52.5200,13.4050"
 &gt;&lt;/add-to-calendar-button&gt;</pre>
           </LazyCodeBlock>
         </div>
@@ -1235,41 +1235,41 @@ const html = atcb_generate_ssr_html({
               </thead>
               <tbody>
                 <tr>
-                  <th scope="row">icsReminder</th>
+                  <th scope="row">ics-reminder</th>
                   <td>Fügt eine Erinnerung hinzu. Setze Minuten vor Event-Beginn (etwa <code>"30"</code>) oder eine ISO-8601-Dauer (etwa <code>"-PT1H"</code>).</td>
                 </tr>
                 <tr>
-                  <th scope="row">icsUrl</th>
+                  <th scope="row">ics-url</th>
                   <td>Hängt einen kanonischen Link (URL-Property) an das Event. Muss eine valide http(s)-URL sein.</td>
                 </tr>
                 <tr>
-                  <th scope="row">icsCategories</th>
+                  <th scope="row">ics-categories</th>
                   <td>Verschlagwortet das Event mit einer kommaseparierten Liste von Kategorien.</td>
                 </tr>
                 <tr>
-                  <th scope="row">icsClass</th>
+                  <th scope="row">ics-class</th>
                   <td>Setzt die Klassifizierung: <code>PUBLIC</code>, <code>PRIVATE</code> oder <code>CONFIDENTIAL</code>.</td>
                 </tr>
                 <tr>
-                  <th scope="row">icsPriority</th>
+                  <th scope="row">ics-priority</th>
                   <td>Setzt die Priorität von 0 (undefiniert) über 1 (höchste) bis 9 (niedrigste).</td>
                 </tr>
                 <tr>
-                  <th scope="row">icsGeo</th>
+                  <th scope="row">ics-geo</th>
                   <td>Ergänzt Geo-Koordinaten als <code>"Breitengrad,Längengrad"</code>. Zusammen mit der regulären "location"-Option rendert Apple Calendar seine Karten-Vorschau.</td>
                 </tr>
                 <tr>
-                  <th scope="row">icsAttach</th>
+                  <th scope="row">ics-attach</th>
                   <td>Hängt Dateien per URL an (kommaseparierte Liste von http(s)-URLs) - etwa ein Agenda-PDF oder ein Ticket.</td>
                 </tr>
                 <tr>
-                  <th scope="row">icsExdate</th>
+                  <th scope="row">ics-exdate</th>
                   <td>Schließt Termine aus einer Terminserie aus (kommaseparierte Liste von YYYY-MM-DD-Werten). Erfordert die "recurrence"-Option und ist die einzige dieser Optionen, die nicht pro Datums-Eintrag gesetzt werden kann.</td>
                 </tr>
               </tbody>
             </table>
           </div>
-          <p>Alle Optionen außer "icsExdate" können im Multi-Date-Fall auch pro Datums-Eintrag innerhalb des "dates"-Arrays gesetzt werden (Root-Werte überschreiben Eintrags-Werte, wie bei den anderen Datums-Feldern).</p>
+          <p>Alle Optionen außer "ics-exdate" können im Multi-Date-Fall auch pro Datums-Eintrag innerhalb des "dates"-Arrays gesetzt werden (Root-Werte überschreiben Eintrags-Werte, wie bei den anderen Datums-Feldern).</p>
           <LazyCodeBlock>
             <pre>
 &lt;add-to-calendar-button
@@ -1280,10 +1280,10 @@ const html = atcb_generate_ssr_html({
   time-zone="Europe/Berlin"
   location="Convention Center Halle 7"
   options="'apple','ical'"
-  icsReminder="30"
-  icsUrl="https://example.com/konferenz"
-  icsCategories="Konferenz,Tech"
-  icsGeo="52.5200,13.4050"
+  ics-reminder="30"
+  ics-url="https://example.com/konferenz"
+  ics-categories="Konferenz,Tech"
+  ics-geo="52.5200,13.4050"
 &gt;&lt;/add-to-calendar-button&gt;</pre>
           </LazyCodeBlock>
         </div>

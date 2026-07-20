@@ -20,6 +20,7 @@
   - ⚠️ Breaking: for `customLabels` users overriding exactly these keys: `date.status.cancelled.cta` is now `date.status.cancelled_cta`, `label.share.email.subject` is now `label.share.email_subject`, and `label.rsvp` / `form.status` / `form.success` moved to `label.rsvp.title` / `form.status.title` / `form.success.title`
   - ⚠️ Breaking: script-capable url schemes (like `javascript:`) are rejected wherever urls are consumed
   - ⚠️ Breaking: browser floor is now Baseline 2023 for the full experience (bundles target ES2017; declarative shadow DOM is a progressive enhancement)
+  - all attributes now have kebab-case official names, including the `ics-*` options (`ics-reminder`, `ics-url`, ...) and the former underscore options (`recurrence-interval`, `recurrence-by-day`, ...); the camelCase/underscore spellings keep working as aliases
   - official lowercase config values: calendar types (`apple`, `google`, `ical`, `ms365`, `msteams`, `outlookcom`, `yahoo`) and status (`tentative`, `confirmed`, `cancelled`) - all v2 spellings keep working as aliases (typed via `ATCBOptionNameLegacy` / `ATCBEventStatusLegacy`)
   - fix: the modal box and the modal option list are correctly sized again (max width on larger screens, no drop-shadow on fullscreen mobile) - regressions from the v3 style split
   - fix: the second step of the Yahoo subscription flow no longer re-copies the link (and could no longer wrongly report a copy failure); its secondary button now reads "Close"

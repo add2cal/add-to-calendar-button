@@ -370,6 +370,9 @@ the pattern `<template> | <dimension values>`.
 - V-05: runtime change of an official attribute re-initializes the button
 - V-06: legacy option value spellings via attribute (incl. spaced 'Microsoft 365' forms) resolve to the official keys
 - V-07: uppercase status attribute value keeps working; ics file carries the RFC uppercase form (STATUS/METHOD contract)
+- V-08: recurrence via official kebab attributes (recurrence-interval / recurrence-count / recurrence-by-day) drives the RRULE
+- V-08b: legacy underscore recurrence attributes (recurrence_interval, recurrence_byDay) still resolve (backwards compat)
+- V-09: ics options via official kebab attributes (ics-reminder / ics-url / ics-categories) shape the ics file
 
 ## Group W - Style registry (test/wc-tests/r-W-styles.test.js)
 
