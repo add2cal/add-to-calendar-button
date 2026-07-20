@@ -120,7 +120,7 @@ describe('Group R - PRO proKey fetch & override', () => {
   it('R-11: proOverride options=[Google] switches to singleton mode', async () => {
     const mock = mockProFetch({ [PRO_EVT_KEY]: proEvtConfig() });
     try {
-      const { host } = await mountAtcb({ proKey: PRO_EVT_KEY, proOverride: 'true', options: "'Google'", trigger: 'click', identifier: 'atcb-r11' });
+      const { host } = await mountAtcb({ proKey: PRO_EVT_KEY, proOverride: 'true', options: "'google'", trigger: 'click', identifier: 'atcb-r11' });
       expect(trigger(host).classList.contains('atcb-single')).to.equal(true);
     } finally {
       mock.restore();

@@ -38,7 +38,7 @@ let config:object = {
   startDate: defaultDate,
   startTime: "10:15",
   endTime: "23:30",
-  options: ["Google", "iCal"],
+  options: ["google", "ical"],
   timeZone: t('demo_data.default_timezone'),
   lightMode: "bodyScheme",
   language: locale.value
@@ -59,7 +59,7 @@ watch(locale, value => {
     startDate: defaultDate,
     startTime: "10:15",
     endTime: "23:30",
-    options: ["Google", "iCal"],
+    options: ["google", "ical"],
     timeZone: t('demo_data.default_timezone'),
     lightMode: "bodyScheme",
     language: locale.value
@@ -130,7 +130,7 @@ onUnmounted(() => {
             <add-to-calendar-button
               :name="$t('demo_data.name')"
               :start-date="defaultDate"
-              options="'Apple','Google','iCal'"
+              options="'apple','google','ical'"
               list-style="overlay"
               button-style="round"
               hide-icon-button
@@ -148,7 +148,7 @@ onUnmounted(() => {
 &lt;add-to-calendar-button
   name="{{ $t('demo_data.name') }}"
   start-date="{{ defaultDate }}"
-  options="'Apple','Google','iCal'"
+  options="'apple','google','ical'"
   button-style="round"
   hide-icon-button
   hide-background
@@ -161,7 +161,7 @@ onUnmounted(() => {
         </div>
         <div class="block w-full justify-between pt-4 md:flex">
           <div class="flex w-full flex-none justify-center p-6 pt-8 md:w-[300px]">
-            <add-to-calendar-button :name="$t('demo_data.name')" :start-date="defaultDate" options="'Apple','Google','iCal'" button-style="flat" hide-icon-list buttons-list hide-background :label="$t('demo_data.name_custom_3')" light-mode="bodyScheme" :language="locale"></add-to-calendar-button>
+            <add-to-calendar-button :name="$t('demo_data.name')" :start-date="defaultDate" options="'apple','google','ical'" button-style="flat" hide-icon-list buttons-list hide-background :label="$t('demo_data.name_custom_3')" light-mode="bodyScheme" :language="locale"></add-to-calendar-button>
           </div>
           <div class="flex-1 overflow-x-auto">
             <LazyCodeBlock>
@@ -169,7 +169,7 @@ onUnmounted(() => {
 &lt;add-to-calendar-button
   name="{{ $t('demo_data.name') }}"
   start-date="{{ defaultDate }}"
-  options="'Apple','Google','iCal'"
+  options="'apple','google','ical'"
   button-style="flat"
   hide-icon-list
   buttons-list
@@ -186,7 +186,7 @@ onUnmounted(() => {
             <add-to-calendar-button
               :name="$t('demo_data.name_custom_4')"
               :start-date="defaultDate"
-              options="'Apple','Google','iCal'"
+              options="'apple','google','ical'"
               start-time="10:10"
               end-time="10:40"
               :time-zone="$t('demo_data.default_timezone')"
@@ -205,7 +205,7 @@ onUnmounted(() => {
 &lt;add-to-calendar-button
   name="{{ $t('demo_data.name_custom_4') }}"
   start-date="{{ defaultDate }}"
-  options="'Apple','Google','iCal'"
+  options="'apple','google','ical'"
   start-time="10:10"
   end-time="10:40"
   time-zone="{{ $t('demo_data.default_timezone') }}"
@@ -254,7 +254,7 @@ onUnmounted(() => {
               style-dark="--btn-background: #000;"
               :name="$t('demo_data.name')"
               :start-date="defaultDate"
-              options="'Apple','Google','iCal'"
+              options="'apple','google','ical'"
               hide-icon-button
               light-mode="bodyScheme"
               :language="locale"
@@ -270,7 +270,7 @@ onUnmounted(() => {
   style-dark="--btn-background: #000;"
   name="{{ $t('demo_data.name') }}"
   start-date="{{ defaultDate }}"
-  options="'Apple','Google','iCal'"
+  options="'apple','google','ical'"
   hide-icon-button
   light-mode="bodyScheme"{{ defaultLang }}
 &gt;&lt;/add-to-calendar-button&gt;
@@ -308,7 +308,7 @@ onUnmounted(() => {
         </div>
         <div class="block w-full justify-between pt-4 md:flex">
           <div class="flex w-full flex-none justify-center p-6 pt-8 md:w-[300px]">
-            <add-to-calendar-button :name="$t('demo_data.name')" :start-date="defaultDate" options="'Apple','Google','iCal'" light-mode="bodyScheme" :language="locale" custom-css="https://add-to-calendar-button.com/atcb.css" button-style="custom" list-style="modal" hide-rich-data hide-branding>
+            <add-to-calendar-button :name="$t('demo_data.name')" :start-date="defaultDate" options="'apple','google','ical'" light-mode="bodyScheme" :language="locale" custom-css="https://add-to-calendar-button.com/atcb.css" button-style="custom" list-style="modal" hide-rich-data hide-branding>
             </add-to-calendar-button>
           </div>
           <div class="flex-1 overflow-x-auto">
@@ -317,7 +317,7 @@ onUnmounted(() => {
 &lt;add-to-calendar-button
   name="{{ $t('demo_data.name') }}"
   start-date="{{ defaultDate }}"
-  options="'Apple','Google','iCal'"
+  options="'apple','google','ical'"
   light-mode="bodyScheme"{{ defaultLang }}
   custom-css="https://add-to-calendar-button.com/atcb.css"
   button-style="custom"
@@ -373,7 +373,7 @@ onUnmounted(() => {
         </div>
         <div class="block w-full justify-between pt-4 md:flex">
           <div class="flex w-full flex-none justify-center p-6 pt-8 md:w-[300px]">
-            <add-to-calendar-button id="css-part-example" identifier="css-part-example" :name="$t('demo_data.name')" :start-date="defaultDate" options="'Apple','Google','iCal'" light-mode="bodyScheme" :language="locale" hide-rich-data hide-branding> </add-to-calendar-button>
+            <add-to-calendar-button id="css-part-example" identifier="css-part-example" :name="$t('demo_data.name')" :start-date="defaultDate" options="'apple','google','ical'" light-mode="bodyScheme" :language="locale" hide-rich-data hide-branding> </add-to-calendar-button>
           </div>
           <div class="flex-1 overflow-x-auto">
             <LazyCodeBlock>
@@ -382,7 +382,7 @@ onUnmounted(() => {
   id="css-part-example"
   name="{{ $t('demo_data.name') }}"
   start-date="{{ defaultDate }}"
-  options="'Apple','Google','iCal'"
+  options="'apple','google','ical'"
   light-mode="bodyScheme"{{ defaultLang }}
 &gt;&lt;/add-to-calendar-button&gt;
 
@@ -467,7 +467,7 @@ onUnmounted(() => {
               start-time="10:15"
               end-time="23:30"
               :time-zone="$t('demo_data.default_timezone')"
-              options="'Apple','Google','iCal','Outlook.com','Microsoft 365','Microsoft Teams','Yahoo'"
+              options="'apple','google','ical','outlookcom','ms365','msteams','yahoo'"
               light-mode="bodyScheme"
               :description="$t('demo_data.description_alt2')"
               :language="locale"
@@ -484,7 +484,7 @@ onUnmounted(() => {
   start-time="10:15"
   end-time="23:30"
   time-zone="{{ $t('demo_data.default_timezone') }}"
-  options="'Apple','Google','iCal','Outlook.com','Microsoft 365','Microsoft Teams','Yahoo'"
+  options="'apple','google','ical','outlookcom','ms365','msteams','yahoo'"
   light-mode="bodyScheme"
   description="{{ $t('demo_data.description_alt2') }}"{{ defaultLang }}
 &gt;&lt;/add-to-calendar-button&gt;
@@ -523,7 +523,7 @@ onUnmounted(() => {
               :name="$t('demo_data.name_subscription')"
               subscribe
               ics-file="https://add2cal.github.io/ics-demo/demo-calendar.ics"
-              options="'Apple','Google','iCal','Outlook.com','Microsoft 365','Microsoft Teams','Yahoo'"
+              options="'apple','google','ical','outlookcom','ms365','msteams','yahoo'"
               light-mode="bodyScheme"
               :language="locale"
               hide-rich-data
@@ -537,7 +537,7 @@ onUnmounted(() => {
   name="{{ $t('demo_data.name_subscription') }}"
   subscribe
   ics-file="https://add2cal.github.io/ics-demo/demo-calendar.ics"
-  options="'Apple','Google','iCal','Outlook.com','Microsoft 365','Microsoft Teams','Yahoo'"
+  options="'apple','google','ical','outlookcom','ms365','msteams','yahoo'"
   light-mode="bodyScheme"{{ defaultLang }}
 &gt;&lt;/add-to-calendar-button&gt;
 </pre>
@@ -579,7 +579,7 @@ onUnmounted(() => {
               start-time="10:15"
               end-time="23:30"
               :label="$t('demo_data.name_custom_1')"
-              options="'Apple','Google','iCal','Outlook.com','Yahoo'"
+              options="'apple','google','ical','outlookcom','yahoo'"
               list-style="modal"
               :customLabels="defaultCustLabels"
               light-mode="bodyScheme"
@@ -597,7 +597,7 @@ onUnmounted(() => {
   start-time="10:15"
   end-time="23:30"
   label="{{ $t('demo_data.name_custom_1') }}"
-  options="'Apple','Google','iCal','Outlook.com','Yahoo'"
+  options="'apple','google','ical','outlookcom','yahoo'"
   list-style="modal"
   customLabels='{{ defaultCustLabels }}'
   light-mode="bodyScheme"{{ defaultLang }}
@@ -611,22 +611,22 @@ onUnmounted(() => {
         <h2 class="mb-4 mt-14 border-t border-zinc-300 pt-14 dark:border-zinc-700">5. {{ $t('content.advanced.5_long') }}</h2>
         <div v-if="locale=='en'">
           <p>
-            If you feel confident enough to mess with the rather unusual iCal settings, you can use the options "uid", "sequence", "created", "updated", "attendee", and "status" (TENTATIVE, CONFIRMED, CANCELLED).<br />
+            If you feel confident enough to mess with the rather unusual iCal settings, you can use the options "uid", "sequence", "created", "updated", "attendee", and "status" (tentative, confirmed, cancelled).<br />
             They basically override the respective default values.
           </p>
           <p class="font-semibold">Mind that those options are only supported by the iCal and Apple calendar links!</p>
           <p>To update an existing event (e.g. changing its status) by changing those properties, you would need to have a growing sequence number, newer "updated" date, same "created" date, the same "uid", and also the organizer field (name and email) set.</p>
           <p>
-            Some calendars only work with the "attendee" to be specified as well. And if your "update" to the event is not a status change to "CANCELLED", it is mandatory in all cases!<br />
+            Some calendars only work with the "attendee" to be specified as well. And if your "update" to the event is not a status change to "cancelled", it is mandatory in all cases!<br />
             The attendee needs to be the person saving the event. If you know this, you can make use of this functionality. If not, we would not recommend it.
           </p>
         </div>
         <div v-else>
-          <p>Falls du im Umgang mit iCal-Einstellungen erfahren bist, kannst du die Optionen "uid", "sequence", "created", "updated", "attendee" und "status" (TENTATIVE, CONFIRMED, CANCELLED) manuell steuern.</p>
+          <p>Falls du im Umgang mit iCal-Einstellungen erfahren bist, kannst du die Optionen "uid", "sequence", "created", "updated", "attendee" und "status" (tentative, confirmed, cancelled) manuell steuern.</p>
           <p class="font-semibold">Beachte, dass diese Optionen nur von den iCal und Apple Kalendar-Links unterstützt werden (und auch dann nicht von allen Kalender immer sauber erkannt werden)!</p>
           <p>Um ein bestehendes Event zu aktualisieren (bspw. den Status) muss die "sequence"-Nummer aufsteigen, ein jüngeres "updated"-Datum bei gleichem "created"-Datum gesetzt, die gleiche "uid" und die "organizer"-Option gegeben sein.</p>
           <p>
-            Einige Kalender erfordern zudem einen "attendee". Sollte dein "Update" des Event kein Status-Wechsel auf "CANCELLED" sein, ist dieser in jedem Fall verpflichtend!<br />
+            Einige Kalender erfordern zudem einen "attendee". Sollte dein "Update" des Event kein Status-Wechsel auf "cancelled" sein, ist dieser in jedem Fall verpflichtend!<br />
             Der "attendee" muss die Person sein, die das Event bei sich speichert. Wenn du diese Information hast, kannst du die Update-Funktionalität nutzen. Ansonsten muss davon abgeraten werden.
           </p>
         </div>
@@ -641,13 +641,13 @@ onUnmounted(() => {
               :time-zone="$t('demo_data.default_timezone')"
               :label="$t('demo_data.label_add')"
               :description="$t('demo_data.description_alt3')"
-              options="iCal"
+              options="ical"
               :organizer="$t('demo_data.default_organizer')"
               uid="7060df05-7b3d-4baa-b215-689b85769e5b"
               sequence="1"
               created="20221201T103000Z"
               updated="20221205T154500Z"
-              status="CONFIRMED"
+              status="confirmed"
               :ical-file-name="$t('demo_data.iCal_confirmed')"
               light-mode="bodyScheme"
               :language="locale"
@@ -666,13 +666,13 @@ onUnmounted(() => {
   time-zone="{{ $t('demo_data.default_timezone') }}"
   label="{{ $t('demo_data.label_add') }}"
   description="{{ $t('demo_data.description_alt3') }}"
-  options="iCal"
+  options="ical"
   organizer="{{ $t('demo_data.default_organizer') }}"
   uid="7060df05-7b3d-4baa-b215-689b85769e5b"
   sequence="1"
   created="20221201T103000Z"
   updated="20221205T154500Z"
-  status="CONFIRMED"
+  status="confirmed"
   ical-file-name="{{ $t('demo_data.iCal_confirmed') }}"
   light-mode="bodyScheme"{{ defaultLang }}
 &gt;&lt;/add-to-calendar-button&gt;
@@ -691,13 +691,13 @@ onUnmounted(() => {
               :time-zone="$t('demo_data.default_timezone')"
               :label="$t('demo_data.label_cancel')"
               :description="$t('demo_data.description_alt3')"
-              options="iCal"
+              options="ical"
               :organizer="$t('demo_data.default_organizer')"
               uid="7060df05-7b3d-4baa-b215-689b85769e5b"
               sequence="3"
               created="20221201T103000Z"
               updated="20221218T154500Z"
-              status="CANCELLED"
+              status="cancelled"
               :ical-file-name="$t('demo_data.iCal_cancelled')"
               light-mode="bodyScheme"
               :language="locale"
@@ -716,13 +716,13 @@ onUnmounted(() => {
   time-zone="{{ $t('demo_data.default_timezone') }}"
   label="{{ $t('demo_data.label_cancel') }}"
   description="{{ $t('demo_data.description_alt3') }}"
-  options="iCal"
+  options="ical"
   organizer="{{ $t('demo_data.default_organizer') }}"
   uid="7060df05-7b3d-4baa-b215-689b85769e5b"
   sequence="2"
   created="20221201T103000Z"
   updated="20221218T154500Z"
-  status="CANCELLED"
+  status="cancelled"
   ical-file-name="{{ $t('demo_data.iCal_cancelled') }}"
   light-mode="bodyScheme"{{ defaultLang }}
 &gt;&lt;/add-to-calendar-button&gt;
@@ -766,7 +766,7 @@ onUnmounted(() => {
               start-time="10:15"
               end-time="23:30"
               :time-zone="$t('demo_data.default_timezone')"
-              options="'Apple','Google','iCal','Outlook.com','Microsoft 365','Microsoft Teams','Yahoo'"
+              options="'apple','google','ical','outlookcom','ms365','msteams','yahoo'"
               identifier="my-custom-id"
               light-mode="bodyScheme"
               :language="locale"
@@ -783,7 +783,7 @@ onUnmounted(() => {
   start-time="10:15"
   end-time="23:30"
   time-zone="{{ $t('demo_data.default_timezone') }}"
-  options="'Apple','Google','iCal','Outlook.com','Microsoft 365','Microsoft Teams','Yahoo'"
+  options="'apple','google','ical','outlookcom','ms365','msteams','yahoo'"
   identifier="my-custom-id"
   light-mode="bodyScheme"{{ defaultLang }}
 &gt;&lt;/add-to-calendar-button&gt;
@@ -860,7 +860,7 @@ onUnmounted(() => {
               time-zone="currentBrowser"
               :location="$t('demo_data.location')"
               :description="$t('demo_data.description_alt1')"
-              options="'Apple','Google','iCal'"
+              options="'apple','google','ical'"
               light-mode="bodyScheme"
               :language="locale"
               hide-rich-data
@@ -878,7 +878,7 @@ onUnmounted(() => {
   time-zone="currentBrowser"
   location="{{ $t('demo_data.location') }}"
   description="{{ $t('demo_data.description_alt1') }}"
-  options="'Apple','Google','iCal'"
+  options="'apple','google','ical'"
   light-mode="bodyScheme"{{ defaultLang }}
 &gt;&lt;/add-to-calendar-button&gt;
 </pre>
@@ -931,7 +931,7 @@ onUnmounted(() => {
               :start-date="defaultDate"
               start-time="10:15"
               end-time="23:30"
-              options="iCal"
+              options="ical"
               ics-file="https://add-to-calendar-button.com/demo-event.ics"
               bypass-web-view-check
               light-mode="bodyScheme"
@@ -948,7 +948,7 @@ onUnmounted(() => {
   start-date="{{ defaultDate }}"
   start-time="10:15"
   end-time="23:30"
-  options="iCal"
+  options="ical"
   ics-file="https://add-to-calendar-button.com/demo-event.ics"
   bypass-web-view-check
   light-mode="bodyScheme"{{ defaultLang }}
@@ -1026,7 +1026,7 @@ onUnmounted(() => {
     startDate: "{{ defaultDate }}",
     startTime: "10:15",
     endTime: "23:30",
-    options: ["Google", "iCal"],
+    options: ["google", "ical"],
     timeZone: "{{ $t('demo_data.default_timezone') }}"{{ defaultLangJS }}
   };
   const button = document.getElementById('my-default-button');
@@ -1209,7 +1209,7 @@ const html = atcb_generate_ssr_html({
   end-time="17:00"
   time-zone="Europe/Berlin"
   location="Convention Center Hall 7"
-  options="'Apple','iCal'"
+  options="'apple','ical'"
   icsReminder="30"
   icsUrl="https://example.com/conference"
   icsCategories="Conference,Tech"
@@ -1279,7 +1279,7 @@ const html = atcb_generate_ssr_html({
   end-time="17:00"
   time-zone="Europe/Berlin"
   location="Convention Center Halle 7"
-  options="'Apple','iCal'"
+  options="'apple','ical'"
   icsReminder="30"
   icsUrl="https://example.com/konferenz"
   icsCategories="Konferenz,Tech"

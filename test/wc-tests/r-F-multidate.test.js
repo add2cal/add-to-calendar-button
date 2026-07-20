@@ -34,7 +34,7 @@ describe('Group F - Multi-date / event series', () => {
   it('F-01/F-12: multi-date iCal -> ONE ics file containing all VEVENTs (same/no organizer, none cancelled)', async () => {
     const fs = interceptFileSave();
     try {
-      const { host } = await mountAtcb(multiDateConfig({ options: "'iCal'", trigger: 'click', identifier: 'atcb-f01' }));
+      const { host } = await mountAtcb(multiDateConfig({ options: "'ical'", trigger: 'click', identifier: 'atcb-f01' }));
       await clickSingleton(host);
       expect(fs.saves.length, 'direct single file download, no per-date modal').to.equal(1);
       const ics = parseIcs(decodeIcsHref(fs.saves[0].href));
@@ -49,7 +49,7 @@ describe('Group F - Multi-date / event series', () => {
     const fs = interceptFileSave();
     try {
       const shuffled = [CFG.multiDate.dates[2], CFG.multiDate.dates[0], CFG.multiDate.dates[1]];
-      const { host } = await mountAtcb(multiDateConfig({ options: "'iCal'", trigger: 'click', identifier: 'atcb-f02' }, shuffled));
+      const { host } = await mountAtcb(multiDateConfig({ options: "'ical'", trigger: 'click', identifier: 'atcb-f02' }, shuffled));
       await clickSingleton(host);
       const ics = parseIcs(decodeIcsHref(fs.saves[0].href));
       const starts = ics.events.map((e) => e.prop('DTSTART'));
@@ -69,7 +69,7 @@ describe('Group F - Multi-date / event series', () => {
         { name: 'Berlin', startDate: '2050-07-02', startTime: '10:00', endTime: '11:00', timeZone: 'Europe/Berlin' },
         { name: 'NY2', startDate: '2050-07-03', startTime: '10:00', endTime: '11:00', timeZone: 'America/New_York' },
       ];
-      const { host } = await mountAtcb({ name: 'TZ Series', dates: JSON.stringify(dates), options: "'iCal'", trigger: 'click', identifier: 'atcb-f03' });
+      const { host } = await mountAtcb({ name: 'TZ Series', dates: JSON.stringify(dates), options: "'ical'", trigger: 'click', identifier: 'atcb-f03' });
       await clickSingleton(host);
       const ics = parseIcs(decodeIcsHref(fs.saves[0].href));
       expect(ics.events[0].prop('DTSTART')).to.include('TZID=America/New_York');
@@ -83,7 +83,7 @@ describe('Group F - Multi-date / event series', () => {
   it('F-04/F-05: Google on multi-date opens selection modal; sub-event click emits openSubEventLink + correct URL', async () => {
     const wo = interceptWindowOpen();
     try {
-      const { host } = await mountAtcb(multiDateConfig({ options: "['Google','iCal']", trigger: 'click', identifier: 'atcb-f04' }));
+      const { host } = await mountAtcb(multiDateConfig({ options: "['google','ical']", trigger: 'click', identifier: 'atcb-f04' }));
       await openList(host);
       await clickOption(host, 'google');
       const btn = await clickSubEvent(host, 'google', 2);
@@ -99,7 +99,7 @@ describe('Group F - Multi-date / event series', () => {
 
   it('F-07: multi-date + subscribe throws (silent no-render at WC level)', async () => {
     const { host } = await mountAtcb({
-      ...multiDateConfig({ options: "'Google'", identifier: 'atcb-f07' }),
+      ...multiDateConfig({ options: "'google'", identifier: 'atcb-f07' }),
       subscribe: 'true',
       icsFile: 'https://example.com/cal.ics',
     });
@@ -117,7 +117,7 @@ describe('Group F - Multi-date / event series', () => {
         { name: 'Past', startDate: '2020-01-01', startTime: '10:00', endTime: '11:00' },
         { name: 'Future', startDate: '2050-01-01', startTime: '10:00', endTime: '11:00' },
       ];
-      const { host } = await mountAtcb({ name: 'MixedSeries', dates: JSON.stringify(dates), options: "['Google','iCal']", trigger: 'click', pastDateHandling: 'hide', identifier: 'atcb-f08' });
+      const { host } = await mountAtcb({ name: 'MixedSeries', dates: JSON.stringify(dates), options: "['google','ical']", trigger: 'click', pastDateHandling: 'hide', identifier: 'atcb-f08' });
       expect(host.shadowRoot.querySelector('button'), 'button renders when only SOME dates are past').to.exist;
       await openList(host);
       await clickOption(host, 'google');
@@ -134,7 +134,7 @@ describe('Group F - Multi-date / event series', () => {
       { name: 'Past', startDate: '2020-01-01', startTime: '10:00', endTime: '11:00' },
       { name: 'Future', startDate: '2050-01-01', startTime: '10:00', endTime: '11:00' },
     ];
-    const { host } = await mountAtcb({ name: 'MixedDisable', dates: JSON.stringify(dates), options: "['Google','iCal']", trigger: 'click', pastDateHandling: 'disable', identifier: 'atcb-f11' });
+    const { host } = await mountAtcb({ name: 'MixedDisable', dates: JSON.stringify(dates), options: "['google','ical']", trigger: 'click', pastDateHandling: 'disable', identifier: 'atcb-f11' });
     await openList(host);
     expect(host.shadowRoot.querySelector('.atcb-list'), 'list opens - not disabled').to.exist;
   });
@@ -144,14 +144,14 @@ describe('Group F - Multi-date / event series', () => {
       { name: 'Past1', startDate: '2020-01-01' },
       { name: 'Past2', startDate: '2020-02-01' },
     ];
-    const { host } = await mountAtcb({ name: 'AllPast', dates: JSON.stringify(dates), options: "'Google'", pastDateHandling: 'hide', identifier: 'atcb-f10' });
+    const { host } = await mountAtcb({ name: 'AllPast', dates: JSON.stringify(dates), options: "'google'", pastDateHandling: 'hide', identifier: 'atcb-f10' });
     expect(host.shadowRoot.querySelector('button')).to.not.exist;
   });
 
   it('F-09: per-entry name override -> per-VEVENT SUMMARY', async () => {
     const fs = interceptFileSave();
     try {
-      const { host } = await mountAtcb(multiDateConfig({ options: "'iCal'", trigger: 'click', identifier: 'atcb-f09' }));
+      const { host } = await mountAtcb(multiDateConfig({ options: "'ical'", trigger: 'click', identifier: 'atcb-f09' }));
       await clickSingleton(host);
       const ics = parseIcs(decodeIcsHref(fs.saves[0].href));
       expect(ics.events[0].value('SUMMARY')).to.include('Day 1');
@@ -171,7 +171,7 @@ describe('Group F - Multi-date / event series', () => {
         { name: 'NoOrg', startDate: '2050-07-01', startTime: '10:00', endTime: '11:00' },
         { name: 'WithOrg', startDate: '2050-07-08', startTime: '10:00', endTime: '11:00', organizer: 'Orga|orga@example.com' },
       ];
-      const { host } = await mountAtcb({ name: 'OrgSeries', dates: JSON.stringify(dates), options: "'iCal'", trigger: 'click', identifier: 'atcb-f13' });
+      const { host } = await mountAtcb({ name: 'OrgSeries', dates: JSON.stringify(dates), options: "'ical'", trigger: 'click', identifier: 'atcb-f13' });
       await clickSingleton(host);
       expect(fs.saves.length, 'no direct combined download').to.equal(0);
       expect(modalHost(host), 'per-date selection modal opens').to.exist;

@@ -21,7 +21,7 @@ describe('Group Z - SSR shell hydration', () => {
   it('Z-01: the shell paints before init and is swapped for the real button without layout shift', async () => {
     const container = mountContainer();
     try {
-      const shellHtml = atcb_generate_ssr_html({ name: 'Z01 Event', startDate: '2050-06-15', identifier: 'atcb-z01', options: ['Google', 'Apple'] });
+      const shellHtml = atcb_generate_ssr_html({ name: 'Z01 Event', startDate: '2050-06-15', identifier: 'atcb-z01', options: ['google', 'apple'] });
       container.setHTMLUnsafe(shellHtml);
       const host = container.querySelector('add-to-calendar-button');
       // pre-hydration: the declarative root exists and the shell button is visible
@@ -47,14 +47,14 @@ describe('Group Z - SSR shell hydration', () => {
   it('Z-02: hydrated DOM matches a client-only render of the same config', async () => {
     const container = mountContainer();
     try {
-      container.setHTMLUnsafe(atcb_generate_ssr_html({ name: 'Z02 Event', startDate: '2050-06-15', identifier: 'atcb-z02a', options: ['Google', 'Apple'] }));
+      container.setHTMLUnsafe(atcb_generate_ssr_html({ name: 'Z02 Event', startDate: '2050-06-15', identifier: 'atcb-z02a', options: ['google', 'apple'] }));
       const ssrHost = container.querySelector('add-to-calendar-button');
       await ssrHost.whenInitialized();
       const clientHost = document.createElement('add-to-calendar-button');
       clientHost.setAttribute('name', 'Z02 Event');
       clientHost.setAttribute('startDate', '2050-06-15');
       clientHost.setAttribute('identifier', 'atcb-z02b');
-      clientHost.setAttribute('options', "['Google','Apple']");
+      clientHost.setAttribute('options', "['google','apple']");
       container.appendChild(clientHost);
       await clientHost.whenInitialized();
       const normalize = (root, id) => root.shadowRoot.querySelector('.atcb-initialized').outerHTML.replaceAll(id, 'ID').replace(/\s+/g, ' ');

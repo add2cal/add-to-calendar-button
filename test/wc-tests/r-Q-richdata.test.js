@@ -69,7 +69,7 @@ describe('Group Q - Schema.org rich data', () => {
         { name: 'Part 1', startDate: '2050-07-01', location: 'Venue 5' },
         { name: 'Part 2', startDate: '2050-07-08', location: 'Venue 5' },
       ]),
-      options: "'Google'",
+      options: "'google'",
       identifier: 'atcb-q08',
     });
     const schema = schemaFor(host);
@@ -87,7 +87,7 @@ describe('Group Q - Schema.org rich data', () => {
       icsFile: 'https://example.com/cal.ics',
       location: 'Anywhere',
       startDate: '2050-06-15',
-      options: "'Google'",
+      options: "'google'",
       identifier: 'atcb-q10',
     });
     expect(document.getElementById('atcb-schema-' + btnId(host))).to.not.exist;

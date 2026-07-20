@@ -47,7 +47,7 @@ function atcb_set_date_defaults(dateEntry: ATCBDateEntry | ATCBConfig): void {
   }
   // set default status
   if (!dateEntry.status || dateEntry.status === '') {
-    dateEntry.status = 'CONFIRMED';
+    dateEntry.status = 'confirmed';
   }
   // set default sequence
   if (!dateEntry.sequence || dateEntry.sequence === '') {

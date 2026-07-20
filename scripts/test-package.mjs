@@ -96,7 +96,7 @@ step('Node ESM import (root, style, locale, deprecated variant)', () => {
 const typesProbe = [
   "import type { ATCBActionEventConfig, AddToCalendarButtonType, EventDate } from 'add-to-calendar-button';",
   "import { atcb_action } from 'add-to-calendar-button';",
-  "export const config: ATCBActionEventConfig = { name: 'Probe', startDate: '2050-06-15', options: ['Google'], language: 'de' };",
+  "export const config: ATCBActionEventConfig = { name: 'Probe', startDate: '2050-06-15', options: ['google'], language: 'de' };",
   'export const call: (c: ATCBActionEventConfig) => Promise<string> = atcb_action;',
   "export const date: EventDate = { name: 'Sub' };",
   "export const el: HTMLElement & AddToCalendarButtonType = document.createElement('add-to-calendar-button');",

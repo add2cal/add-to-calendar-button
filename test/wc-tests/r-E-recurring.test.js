@@ -14,7 +14,7 @@ import { atcb_decorate_data } from '../../src/core/decorate.ts';
 async function icsRrule(config, id) {
   const fs = interceptFileSave();
   try {
-    const { host } = await mountAtcb({ ...config, options: "'iCal'", trigger: 'click', identifier: id });
+    const { host } = await mountAtcb({ ...config, options: "'ical'", trigger: 'click', identifier: id });
     await clickSingleton(host);
     const ics = parseIcs(decodeIcsHref(fs.saves[0].href));
     return ics.events[0].value('RRULE');
@@ -26,7 +26,7 @@ async function icsRrule(config, id) {
 async function googleRecur(config, id) {
   const wo = interceptWindowOpen();
   try {
-    const { host } = await mountAtcb({ ...config, options: "'Google'", trigger: 'click', identifier: id });
+    const { host } = await mountAtcb({ ...config, options: "'google'", trigger: 'click', identifier: id });
     await clickSingleton(host);
     return new URL(wo.calls[0].url).searchParams.get('recur');
   } finally {
@@ -108,7 +108,7 @@ describe('Group E - Recurring events', () => {
   it('E-10: recurring all-day -> date-only DTSTART with RRULE', async () => {
     const fs = interceptFileSave();
     try {
-      const { host } = await mountAtcb({ name: 'RecAllday', startDate: '2050-06-15', recurrence: 'daily', recurrence_count: 3, options: "'iCal'", trigger: 'click', identifier: 'atcb-e10' });
+      const { host } = await mountAtcb({ name: 'RecAllday', startDate: '2050-06-15', recurrence: 'daily', recurrence_count: 3, options: "'ical'", trigger: 'click', identifier: 'atcb-e10' });
       await clickSingleton(host);
       const ics = parseIcs(decodeIcsHref(fs.saves[0].href));
       expect(ics.events[0].prop('DTSTART')).to.include('VALUE=DATE');
@@ -128,7 +128,7 @@ describe('Group E - Recurring events', () => {
       recurrence: 'weekly',
       recurrence_byDay: 'MO',
       recurrence_count: 99999,
-      options: ['Google'],
+      options: ['google'],
     });
     expect(new Date(decorated.dates[0].startDate).getTime()).to.be.greaterThan(Date.now() - 8 * 86400000);
   });
@@ -141,17 +141,17 @@ describe('Group E - Recurring events', () => {
       endTime: '11:00',
       recurrence: 'daily',
       recurrence_count: 5,
-      options: ['Google'],
+      options: ['google'],
     });
     // NOTE: atcb_getNextOccurrence advances a fully-past series to its FINAL
     // occurrence (2020-01-10 here), not the original start date.
     expect(decorated.dates[0].startDate).to.equal('2020-01-10');
-    const { host } = await mountAtcb({ name: 'ExhaustedRecurring', startDate: '2020-01-06', startTime: '10:00', endTime: '11:00', recurrence: 'daily', recurrence_count: 5, options: "'Google'", identifier: 'atcb-e12' });
+    const { host } = await mountAtcb({ name: 'ExhaustedRecurring', startDate: '2020-01-06', startTime: '10:00', endTime: '11:00', recurrence: 'daily', recurrence_count: 5, options: "'google'", identifier: 'atcb-e12' });
     expect(host.shadowRoot.querySelector('.atcb-initialized')).to.exist;
   });
 
   it('E-12a: COUNT exhausted + pastDateHandling=hide -> button not generated', async () => {
-    const { host } = await mountAtcb({ name: 'ExhaustedHide', startDate: '2020-01-06', startTime: '10:00', endTime: '11:00', recurrence: 'daily', recurrence_count: 5, options: "'Google'", pastDateHandling: 'hide', identifier: 'atcb-e12a' });
+    const { host } = await mountAtcb({ name: 'ExhaustedHide', startDate: '2020-01-06', startTime: '10:00', endTime: '11:00', recurrence: 'daily', recurrence_count: 5, options: "'google'", pastDateHandling: 'hide', identifier: 'atcb-e12a' });
     expect(host.shadowRoot.querySelector('button')).to.not.exist;
   });
 
@@ -178,12 +178,12 @@ describe('Group E - Recurring events', () => {
   });
 
   it('E-15: simplified recurrence flag uses the CORRECTED spelling in this codebase', async () => {
-    const decorated = await atcb_decorate_data({ ...CFG.recurDaily, options: ['Google'] });
+    const decorated = await atcb_decorate_data({ ...CFG.recurDaily, options: ['google'] });
     // NOTE: pins the internal flag key spelling (`recurrence_simplified`); it is read
     // by both the decorator and the validator and must stay in sync between them.
     expect(decorated.recurrence_simplified).to.equal(true);
     expect(decorated.recurrence_simplyfied).to.equal(undefined);
-    const raw = await atcb_decorate_data({ ...CFG.recurRaw, options: ['Google'] });
+    const raw = await atcb_decorate_data({ ...CFG.recurRaw, options: ['google'] });
     expect(raw.recurrence_simplified).to.equal(false);
   });
 });

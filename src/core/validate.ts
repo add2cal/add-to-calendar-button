@@ -180,7 +180,7 @@ async function atcb_validate_date_blocks(data: ATCBConfig, msgPrefix: string): P
 async function atcb_validate_status(data: ATCBConfig, msgPrefix: string, i: number, msgSuffix: string): Promise<boolean> {
   const allowedStatuses = ['tentative', 'confirmed', 'cancelled'];
   if (!allowedStatuses.includes(data.dates![`${i}`]!.status!.toLowerCase())) {
-    throw new Error(msgPrefix + ' failed: event status needs to be TENTATIVE, CONFIRMED, or CANCELLED' + msgSuffix);
+    throw new Error(msgPrefix + ' failed: event status needs to be tentative, confirmed, or cancelled' + msgSuffix);
   }
   return true;
 }

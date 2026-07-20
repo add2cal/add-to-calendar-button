@@ -33,7 +33,7 @@ async function atcb_generate_links(host: ShadowRoot, type: string, data: ATCBCon
   // for single-date events or if a specific subEvent is given, we can simply call the respective endpoints
   if (subEvent !== 'all') {
     // for cancelled dates, we show a modal - except for iCal, where we can send Cancel-ics-files
-    if (data.dates![`${subEvent}`]!.status!.toLowerCase() === 'cancelled' && linkType !== 'ical') {
+    if (data.dates![`${subEvent}`]!.status === 'cancelled' && linkType !== 'ical') {
       atcb_create_modal(host, data, 'warning', atcb_translate_hook('date.status.cancelled', data), atcb_translate_hook('date.status.cancelled_cta', data), [] as unknown as never[], [] as unknown as never[], keyboardTrigger);
     } else {
       // in some cases, we want to inform the user about specifics for the link type, before actually following the link
@@ -79,7 +79,7 @@ async function atcb_generate_links(host: ShadowRoot, type: string, data: ATCBCon
           subEventButton.classList.add('atcb-saved');
         }
       }
-      if (data.dates![`${subEvent}`]!.status!.toLowerCase() !== 'cancelled') getOptionStates(data.identifier!)[`${type}`]![subEvent as number]!++;
+      if (data.dates![`${subEvent}`]!.status !== 'cancelled') getOptionStates(data.identifier!)[`${type}`]![subEvent as number]!++;
       const filteredStates = getOptionStates(data.identifier!)[`${type}`]!.filter(function (value: number) {
         return value < 1;
       });
@@ -95,7 +95,7 @@ async function atcb_generate_links(host: ShadowRoot, type: string, data: ATCBCon
 
 function atcb_generate_multidate_links(host: ShadowRoot, type: string, linkType: string, data: ATCBConfig, keyboardTrigger: boolean, multiDateModal: boolean): void {
   // in the multi-date event case, when all subEvent have no organizer OR the same organizer AND are not cancelled, we can also go the short way (for iCal)
-  if (linkType === 'ical' && !data.dates!.some((theSubEvent) => theSubEvent.status!.toLowerCase() === 'cancelled') && data.dates!.every((theSubEvent) => (theSubEvent.organizer || '') === (data.dates![0]!.organizer || ''))) {
+  if (linkType === 'ical' && !data.dates!.some((theSubEvent) => theSubEvent.status === 'cancelled') && data.dates!.every((theSubEvent) => (theSubEvent.organizer || '') === (data.dates![0]!.organizer || ''))) {
     atcb_generate_ical(host, data, type, 'all', keyboardTrigger);
     // we mark the whole event as clicked
     for (let i = 0; i < getOptionStates(data.identifier!)[`${type}`]!.length; i++) {

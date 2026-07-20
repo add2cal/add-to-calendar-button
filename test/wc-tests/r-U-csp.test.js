@@ -80,7 +80,7 @@ describe('Group U - CSP environment 2x2', () => {
       el.setAttribute('name', 'CSP Event');
       el.setAttribute('startDate', '2050-06-15');
       el.setAttribute('location', 'CSP City');
-      el.setAttribute('options', "'Google'");
+      el.setAttribute('options', "'google'");
       el.setAttribute('cspnonce', NONCE);
       el.setAttribute('identifier', 'atcb-u22');
       doc.body.appendChild(el);
@@ -110,7 +110,7 @@ describe('Group U - CSP environment 2x2', () => {
       el.setAttribute('name', 'CSP Event NoNonce');
       el.setAttribute('startDate', '2050-06-15');
       el.setAttribute('location', 'CSP City');
-      el.setAttribute('options', "'Google'");
+      el.setAttribute('options', "'google'");
       el.setAttribute('identifier', 'atcb-u23');
       doc.body.appendChild(el);
       await aTimeout(1500);

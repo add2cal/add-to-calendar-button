@@ -65,7 +65,7 @@ import { NgModule, CUSTOM_ELEMENTS_SCHEMA  } from '@angular/core';
           <pre>
 &lt;add-to-calendar-button
   name="{{ $t('demo_data.name_dummy') }}"
-  options="'Apple','Google'"
+  options="'apple','google'"
   location="{{ $t('demo_data.location') }}"
   startDate="{{ defaultDate }}"
   endDate="{{ defaultDate }}"
@@ -81,7 +81,7 @@ import { NgModule, CUSTOM_ELEMENTS_SCHEMA  } from '@angular/core';
           <pre>
 &lt;add-to-calendar-button
   [attr.name]="titleVar"
-  options="'Apple','Google'"
+  options="'apple','google'"
   [attr.startDate]="dateVar"
 &gt;&lt;/add-to-calendar-button&gt;</pre>
         </LazyCodeBlock>

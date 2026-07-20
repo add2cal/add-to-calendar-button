@@ -65,7 +65,7 @@ describe('Group MEM - memory-leak regression', () => {
   });
 
   it('MEM-03: unmount while a modal is open removes the modal host and restores body scroll', async () => {
-    const { host } = await mountAtcb(baseEvent({ identifier: 'atcb-mem03', listStyle: 'modal', trigger: 'click', options: "['Google','Apple']" }));
+    const { host } = await mountAtcb(baseEvent({ identifier: 'atcb-mem03', listStyle: 'modal', trigger: 'click', options: "['google','apple']" }));
     await openList(host);
     await aTimeout(100);
     expect(document.getElementById('atcb-btn-atcb-mem03-modal-host'), 'modal host open').to.exist;

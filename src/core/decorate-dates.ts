@@ -113,7 +113,8 @@ function atcb_generate_unique_uid(data: ATCBConfig, i: number): ATCBConfig {
 // transform strings
 function atcb_transform_strings(data: ATCBConfig, i: number): ATCBConfig {
   const dateEntry = data.dates![`${i}`]!;
-  dateEntry.status = atcb_apply_transformation(dateEntry.status, 'upper') as string | undefined;
+  // status is normalized to the official lowercase form (input is case-insensitive)
+  dateEntry.status = atcb_apply_transformation(dateEntry.status, 'lower') as string | undefined;
   dateEntry.availability = atcb_apply_transformation(dateEntry.availability, 'lower');
   return data;
 }
@@ -313,7 +314,7 @@ function atcb_decorate_data_button_status_handling(data: ATCBConfig): ATCBConfig
   // second, check whether all dates are status "cancelled"
   data.allCancelled = (function () {
     for (let i = 0; i < data.dates!.length; i++) {
-      if (!data.dates![`${i}`]!.status || (data.dates![`${i}`]!.status as string).toLowerCase() !== 'cancelled') {
+      if (!data.dates![`${i}`]!.status || data.dates![`${i}`]!.status !== 'cancelled') {
         return false;
       }
     }

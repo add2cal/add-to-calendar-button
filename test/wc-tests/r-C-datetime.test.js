@@ -13,7 +13,7 @@ import { resetDataLayer } from '../helpers/datalayer.js';
 async function googleUrlFor(config, id) {
   const wo = interceptWindowOpen();
   try {
-    const { host } = await mountAtcb({ ...config, options: "'Google'", trigger: 'click', identifier: id });
+    const { host } = await mountAtcb({ ...config, options: "'google'", trigger: 'click', identifier: id });
     await clickSingleton(host);
     expect(wo.calls.length, 'window.open calls').to.equal(1);
     return new URL(wo.calls[0].url);
@@ -25,7 +25,7 @@ async function googleUrlFor(config, id) {
 async function teamsTimes(config, id) {
   const wo = interceptWindowOpen();
   try {
-    const { host } = await mountAtcb({ ...config, options: "'MicrosoftTeams'", trigger: 'click', identifier: id });
+    const { host } = await mountAtcb({ ...config, options: "'msteams'", trigger: 'click', identifier: id });
     await clickSingleton(host);
     const url = new URL(wo.calls[0].url);
     return { start: url.searchParams.get('startTime'), end: url.searchParams.get('endTime') };
@@ -37,7 +37,7 @@ async function teamsTimes(config, id) {
 async function icsFor(config, id) {
   const fs = interceptFileSave();
   try {
-    const { host } = await mountAtcb({ ...config, options: "'iCal'", trigger: 'click', identifier: id });
+    const { host } = await mountAtcb({ ...config, options: "'ical'", trigger: 'click', identifier: id });
     await clickSingleton(host);
     expect(fs.saves.length, 'file save calls').to.equal(1);
     return parseIcs(decodeIcsHref(fs.saves[0].href));
@@ -130,17 +130,17 @@ describe('Group C - Date / time / timezone (single event)', () => {
   });
 
   it('C-11: past date with default handling still renders normally', async () => {
-    const { host } = await mountAtcb({ name: 'Past', startDate: '2020-01-01', options: "'Google'", trigger: 'click', identifier: 'atcb-c11' });
+    const { host } = await mountAtcb({ name: 'Past', startDate: '2020-01-01', options: "'google'", trigger: 'click', identifier: 'atcb-c11' });
     expect(trigger(host)).to.exist;
   });
 
   it('C-12: pastDateHandling=hide skips button generation', async () => {
-    const { host } = await mountAtcb({ name: 'Past Hide', startDate: '2020-01-01', options: "'Google'", pastDateHandling: 'hide', identifier: 'atcb-c12' });
+    const { host } = await mountAtcb({ name: 'Past Hide', startDate: '2020-01-01', options: "'google'", pastDateHandling: 'hide', identifier: 'atcb-c12' });
     expect(host.shadowRoot.querySelector('button')).to.not.exist;
   });
 
   it('C-13: pastDateHandling=disable renders but disables', async () => {
-    const { host } = await mountAtcb({ name: 'Past Disable', startDate: '2020-01-01', options: "'Google'", trigger: 'click', pastDateHandling: 'disable', identifier: 'atcb-c13' });
+    const { host } = await mountAtcb({ name: 'Past Disable', startDate: '2020-01-01', options: "'google'", trigger: 'click', pastDateHandling: 'disable', identifier: 'atcb-c13' });
     const btn = trigger(host);
     expect(btn).to.exist;
     btn.dispatchEvent(new MouseEvent('mouseup', { bubbles: true, cancelable: true, view: window }));
@@ -155,7 +155,7 @@ describe('Group C - Date / time / timezone (single event)', () => {
     expect(icsBusy.events[0].prop('TRANSP')).to.include('OPAQUE');
     const wo = interceptWindowOpen();
     try {
-      const { host } = await mountAtcb({ ...CFG.singleTimedNY, availability: 'free', options: "'Google'", trigger: 'click', identifier: 'atcb-c14c' });
+      const { host } = await mountAtcb({ ...CFG.singleTimedNY, availability: 'free', options: "'google'", trigger: 'click', identifier: 'atcb-c14c' });
       await clickSingleton(host);
       expect(wo.calls[0].url).to.include('crm=AVAILABLE');
       expect(wo.calls[0].url).to.include('trp=false');
@@ -164,8 +164,8 @@ describe('Group C - Date / time / timezone (single event)', () => {
     }
   });
 
-  it('C-15: status CANCELLED -> ICS STATUS:CANCELLED (iCal path still works)', async () => {
-    const ics = await icsFor({ ...CFG.singleTimedNY, status: 'CANCELLED' }, 'atcb-c15');
+  it('C-15: status cancelled -> ICS STATUS:CANCELLED (file sticks to the RFC uppercase form)', async () => {
+    const ics = await icsFor({ ...CFG.singleTimedNY, status: 'cancelled' }, 'atcb-c15');
     expect(ics.events[0].prop('STATUS')).to.include('CANCELLED');
     // cancelled events ship as proper iCal cancellations
     expect(ics.method).to.equal('CANCEL');

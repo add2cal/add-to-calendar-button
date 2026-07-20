@@ -44,6 +44,21 @@ New attributes:
 - `style-source`: base url override for on-demand style/locale assets
 - `load-all-styles`: prefetch every style delta (for runtime style switching)
 
+## Values: calendar types and status
+
+The official calendar type keys are now lowercase: `apple`, `google`, `ical`, `ms365`,
+`msteams`, `outlookcom`, `yahoo`. Every v2 spelling (`Apple`, `Google`, `iCal`,
+`Microsoft365`, `MicrosoftTeams`, `Outlook.com`, `Yahoo` - any casing) keeps working as
+an alias and normalizes to the same keys. The exported `ATCBOptionName` type now carries
+the lowercase keys; the v2 spellings live in the new `ATCBOptionNameLegacy` type and both
+are accepted everywhere options are typed.
+
+The `status` values are also lowercase now: `tentative`, `confirmed`, `cancelled`
+(default: `confirmed`). Casing makes no functional difference - the uppercase v2 values
+keep working, and the generated ics file always carries the spec's uppercase form
+(`STATUS:CONFIRMED`). The exported `ATCBEventStatus` type is lowercase; the uppercase
+spelling lives in `ATCBEventStatusLegacy`.
+
 ## Styles
 
 Only the core plus the default style are inlined into the bundles. Every other `buttonStyle` loads

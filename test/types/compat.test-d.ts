@@ -57,6 +57,22 @@ export const literalCall: Promise<string> = atcb_action({
   subscribe: false,
 });
 
+// 6b. the v3 official lowercase values compile equally (options keys + status)
+export const officialNamesCall: Promise<string> = atcb_action({
+  name: 'Official Names Check',
+  startDate: '2050-06-15',
+  status: 'confirmed',
+  options: ['apple', 'google', 'ical', 'ms365', 'msteams', 'outlookcom', 'yahoo'],
+});
+
+// 6c. legacy uppercase status and v2 option spellings stay accepted side by side
+export const mixedAliasCall: Promise<string> = atcb_action({
+  name: 'Alias Check',
+  startDate: '2050-06-15',
+  status: 'CANCELLED',
+  options: ['Apple', 'google', 'Outlook.com', 'ms365'],
+});
+
 // 7. secondary public exports keep their contracts
 export const tyResult: ReturnType<typeof atcb_generate_ty> = atcb_generate_ty(trigger, {});
 declare const eventDates: EventDate[];

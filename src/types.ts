@@ -14,9 +14,22 @@
  * a candidate for a later minor release, not something to mix into feature work.
  */
 
-export type ATCBOptionName = 'Apple' | 'Google' | 'iCal' | 'Microsoft365' | 'MicrosoftTeams' | 'Outlook.com' | 'Yahoo';
+export type ATCBOptionName = 'apple' | 'google' | 'ical' | 'ms365' | 'msteams' | 'outlookcom' | 'yahoo';
 
-export type ATCBEventStatus = 'TENTATIVE' | 'CONFIRMED' | 'CANCELLED';
+/**
+ * Legacy v2 option spellings. Still fully supported as aliases: the runtime
+ * normalizes any casing (plus the "Microsoft ..." / "Outlook.com" long forms)
+ * to the official lowercase keys above.
+ */
+export type ATCBOptionNameLegacy = 'Apple' | 'Google' | 'iCal' | 'Microsoft365' | 'MicrosoftTeams' | 'Outlook.com' | 'Yahoo';
+
+export type ATCBEventStatus = 'tentative' | 'confirmed' | 'cancelled';
+
+/**
+ * Legacy v2 status spelling. Still fully supported: status input is
+ * case-insensitive and normalized to lowercase during decoration.
+ */
+export type ATCBEventStatusLegacy = Uppercase<ATCBEventStatus>;
 
 export type ATCBButtonStyle = 'default' | 'simple' | '3d' | 'flat' | 'round' | 'neumorphism' | 'text' | 'date' | 'custom' | 'none';
 
@@ -42,7 +55,7 @@ export interface ATCBDateEntryInput {
   timeZone?: string;
   useUserTZ?: boolean;
   location?: string;
-  status?: ATCBEventStatus | Lowercase<ATCBEventStatus> | string;
+  status?: ATCBEventStatus | ATCBEventStatusLegacy | string;
   sequence?: number | string;
   uid?: string;
   organizer?: string;
@@ -83,7 +96,7 @@ export interface ATCBInputConfig {
   timeZone?: string;
   useUserTZ?: boolean | string;
   location?: string;
-  status?: ATCBEventStatus | string;
+  status?: ATCBEventStatus | ATCBEventStatusLegacy | string;
   sequence?: number | string;
   uid?: string;
   organizer?: string;
@@ -103,9 +116,9 @@ export interface ATCBInputConfig {
   updated?: string;
   identifier?: string;
   subscribe?: boolean | string;
-  options?: ATCBOptionName[] | string[] | string;
-  optionsMobile?: ATCBOptionName[] | string[] | string;
-  optionsIOS?: ATCBOptionName[] | string[] | string;
+  options?: (ATCBOptionName | ATCBOptionNameLegacy)[] | string[] | string;
+  optionsMobile?: (ATCBOptionName | ATCBOptionNameLegacy)[] | string[] | string;
+  optionsIOS?: (ATCBOptionName | ATCBOptionNameLegacy)[] | string[] | string;
   iCalFileName?: string;
   listStyle?: ATCBListStyle | string;
   buttonStyle?: ATCBButtonStyle | string;
@@ -304,7 +317,7 @@ export interface EventDate {
   timeZone?: string;
   useUserTZ?: boolean;
   location?: string;
-  status?: 'TENTATIVE' | 'CONFIRMED' | 'CANCELLED';
+  status?: ATCBEventStatus | ATCBEventStatusLegacy;
   sequence?: number;
   uid?: string;
   organizer?: string;
@@ -331,7 +344,7 @@ export interface ATCBActionEventConfig {
   timeZone?: string;
   useUserTZ?: boolean;
   location?: string;
-  status?: 'TENTATIVE' | 'CONFIRMED' | 'CANCELLED';
+  status?: ATCBEventStatus | ATCBEventStatusLegacy;
   sequence?: number;
   uid?: string;
   organizer?: string;
@@ -351,9 +364,9 @@ export interface ATCBActionEventConfig {
   subscribe?: boolean;
   // the option surface is limited compared to the web component, since the
   // atcb_action function skips list rendering for single options
-  options?: ATCBOptionName[];
-  optionsMobile?: ATCBOptionName[];
-  optionsIOS?: ATCBOptionName[];
+  options?: (ATCBOptionName | ATCBOptionNameLegacy)[];
+  optionsMobile?: (ATCBOptionName | ATCBOptionNameLegacy)[];
+  optionsIOS?: (ATCBOptionName | ATCBOptionNameLegacy)[];
   iCalFileName?: string;
   listStyle?: 'overlay' | 'modal';
   buttonStyle?: ATCBButtonStyle;
@@ -409,7 +422,7 @@ export type AddToCalendarButtonType = {
   timeZone?: string;
   useUserTZ?: boolean;
   location?: string;
-  status?: 'TENTATIVE' | 'CONFIRMED' | 'CANCELLED';
+  status?: ATCBEventStatus | ATCBEventStatusLegacy;
   sequence?: number | string;
   uid?: string;
   organizer?: string;
@@ -429,9 +442,9 @@ export type AddToCalendarButtonType = {
   updated?: string;
   identifier?: string;
   subscribe?: boolean | string;
-  options?: ATCBOptionName[] | string;
-  optionsMobile?: ATCBOptionName[] | string;
-  optionsIOS?: ATCBOptionName[] | string;
+  options?: (ATCBOptionName | ATCBOptionNameLegacy)[] | string;
+  optionsMobile?: (ATCBOptionName | ATCBOptionNameLegacy)[] | string;
+  optionsIOS?: (ATCBOptionName | ATCBOptionNameLegacy)[] | string;
   iCalFileName?: string;
   listStyle?: ATCBListStyle;
   buttonStyle?: ATCBButtonStyle;

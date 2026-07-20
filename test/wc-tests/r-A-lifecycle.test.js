@@ -11,7 +11,7 @@ describe('Group A - Lifecycle & registration', () => {
   beforeEach(() => resetDataLayer());
 
   it('A-01: registers and initializes with minimal config', async () => {
-    const { host, shadow } = await mountAtcb({ name: 'Minimal', startDate: '2050-02-14', options: "'Google'" });
+    const { host, shadow } = await mountAtcb({ name: 'Minimal', startDate: '2050-02-14', options: "'google'" });
     expect(customElements.get('add-to-calendar-button')).to.exist;
     expect(host.getAttribute('atcb-button-id')).to.exist.and.to.not.equal('');
     expect(shadow.querySelector('.atcb-initialized')).to.exist;
@@ -103,7 +103,7 @@ describe('Group A - Lifecycle & registration', () => {
       {
         name: 'Action Event',
         startDate: '2050-02-14',
-        options: ['Google', 'iCal'],
+        options: ['google', 'ical'],
         identifier: 'atcb-a08-trigger',
         listStyle: 'modal',
       },
@@ -135,7 +135,7 @@ describe('Group A - Lifecycle & registration', () => {
   });
 
   it('A-11: init is deferred (non-blocking) - not initialized synchronously after append', async () => {
-    const el = await mountAtcbNoWait({ name: 'Async Contract', startDate: '2050-02-14', options: "'Google'" });
+    const el = await mountAtcbNoWait({ name: 'Async Contract', startDate: '2050-02-14', options: "'google'" });
     // synchronously after append: the deferred setTimeout(initializeComponent, 0) has not run yet
     expect(el.getAttribute('atcb-button-id')).to.equal(null);
     await el.whenInitialized();

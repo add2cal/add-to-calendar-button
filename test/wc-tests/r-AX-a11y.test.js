@@ -38,12 +38,12 @@ async function expectNoViolations(context, label) {
 
 describe('Group AX - automated a11y checks', () => {
   it('AX-01: default trigger button has no WCAG A/AA violations', async () => {
-    const { host } = await mountAtcb(baseEvent({ identifier: 'atcb-ax01', options: "['Google','Apple','iCal']" }));
+    const { host } = await mountAtcb(baseEvent({ identifier: 'atcb-ax01', options: "['google','apple','ical']" }));
     await expectNoViolations(host, 'trigger button');
   });
 
   it('AX-02: open dropdown list has no WCAG A/AA violations', async () => {
-    const { host } = await mountAtcb(baseEvent({ identifier: 'atcb-ax02', options: "['Google','Apple','iCal']", trigger: 'click' }));
+    const { host } = await mountAtcb(baseEvent({ identifier: 'atcb-ax02', options: "['google','apple','ical']", trigger: 'click' }));
     await openList(host);
     await expectNoViolations(host, 'open list');
   });
@@ -54,7 +54,7 @@ describe('Group AX - automated a11y checks', () => {
   });
 
   it('AX-04: modal list dialog has no WCAG A/AA violations and carries dialog semantics', async () => {
-    const { host } = await mountAtcb(baseEvent({ identifier: 'atcb-ax04', options: "['Google','Apple','iCal']", listStyle: 'modal', trigger: 'click' }));
+    const { host } = await mountAtcb(baseEvent({ identifier: 'atcb-ax04', options: "['google','apple','ical']", listStyle: 'modal', trigger: 'click' }));
     await openList(host);
     await aTimeout(100);
     const modal = modalHost(host);

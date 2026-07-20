@@ -113,7 +113,7 @@ watch(searchSelection, (newVal) => {
         <p class="mt-8 hidden lg:block">
           Mind that if you are using the <a href="https://github.com/add2cal/add-to-calendar-button-react" target="_blank" rel="noopener" class="whitespace-nowrap">React wrapper <ArrowTopRightOnSquareIcon class="-mt-0.5 mr-0.5 inline-block h-4 w-4" aria-hidden="true" /></a>, you do not necessarily
           need to stringify any non-string value.<br />
-          You could simply write something like <code>options=['Apple','Google']</code> instead of <code>options="['Apple','Google']"</code>.
+          You could simply write something like <code>options=['apple','google']</code> instead of <code>options="['apple','google']"</code>.
         </p>
       </div>
       <div v-else>
@@ -130,7 +130,7 @@ watch(searchSelection, (newVal) => {
         <p class="mt-8 hidden lg:block">
           Falls du den <a href="https://github.com/add2cal/add-to-calendar-button-react" target="_blank" rel="noopener" class="whitespace-nowrap">React Wrapper <ArrowTopRightOnSquareIcon class="-mt-0.5 mr-0.5 inline-block h-4 w-4" aria-hidden="true" /></a> nutzt, musst du Nicht-String-Werte nicht
           zwingend zu Strings transformieren.<br />
-          In diesem Fall kannst du bspw. auch einfach <code>options=['Apple','Google']</code> anstelle von <code>options="['Apple','Google']"</code> schreiben.
+          In diesem Fall kannst du bspw. auch einfach <code>options=['apple','google']</code> anstelle von <code>options="['apple','google']"</code> schreiben.
         </p>
       </div>
 
@@ -304,16 +304,18 @@ watch(searchSelection, (newVal) => {
             <tr id="status">
               <th scope="row">status</th>
               <td>
-                <em>String</em><br /><br /><span class="label block">{{ $t('content.config.options') }}:</span>TENTATIVE, CONFIRMED, CANCELLED<br /><br /><span class="label">{{ $t('content.config.default') }}:</span>CONFIRMED
+                <em>String</em><br /><br /><span class="label block">{{ $t('content.config.options') }}:</span>tentative, confirmed, cancelled<br /><br /><span class="label">{{ $t('content.config.default') }}:</span>confirmed
               </td>
               <td v-if="locale=='en'">
                 Can be used to manage changes of an event as it is specified within the iCalendar specifications
                 <a href="https://www.rfc-editor.org/rfc/rfc5545#section-3.8.1.11" target="_blank" rel="noopener" class="whitespace-nowrap">RFC5545 <ArrowTopRightOnSquareIcon class="-mt-0.5 mr-0.5 inline-block h-3 w-3" aria-hidden="true" /></a>.<br /><br />
+                Casing makes no difference - the uppercase v2 values keep working, and the generated ics file always carries the spec's uppercase form.<br /><br />
                 <NuxtLink :to="{path: localePath('advanced-use'), hash: '#case-5'}">{{ $t('labels.example') }} <ArrowRightIcon class="-mt-0.5 mr-0.5 inline-block h-3 w-3" aria-hidden="true" /></NuxtLink>
               </td>
               <td v-else>
                 Kann genutzt werden, um Änderungen an einem Event zu verwalten.<br />Gemäß der iCalendar-Spezifikation
                 <a href="https://www.rfc-editor.org/rfc/rfc5545#section-3.8.1.11" target="_blank" rel="noopener" class="whitespace-nowrap">RFC5545 <ArrowTopRightOnSquareIcon class="-mt-0.5 mr-0.5 inline-block h-3 w-3" aria-hidden="true" /></a>.<br /><br />
+                Die Groß- und Kleinschreibung spielt keine Rolle - die alten v2-Werte in Großbuchstaben funktionieren weiterhin und die generierte ics-Datei nutzt stets die Großschreibweise der Spezifikation.<br /><br />
                 <NuxtLink :to="{path: localePath('advanced-use'), hash: '#case-5'}">{{ $t('labels.example') }} <ArrowRightIcon class="-mt-0.5 mr-0.5 inline-block h-3 w-3" aria-hidden="true" /></NuxtLink>
               </td>
             </tr>
@@ -679,20 +681,22 @@ watch(searchSelection, (newVal) => {
             <tr id="options">
               <th scope="row">options</th>
               <td>
-                <em>Array</em><br /><br /><span class="label block">{{ $t('content.config.options') }}:</span>Apple, Google, iCal, Microsoft365, MicrosoftTeams, Outlook.com, Yahoo
+                <em>Array</em><br /><br /><span class="label block">{{ $t('content.config.options') }}:</span>apple, google, ical, ms365, msteams, outlookcom, yahoo
               </td>
               <td v-if="locale=='en'">
                 Array of options to use in the list.<br /><br />
                 If you only specify 1 calendar type, the button would show the calendar's icon instead of the default one and redirect directly instead of opening a list (singleton case).<br /><br />
                 Some options might be dynamically excluded based on other settings!<br />
-                "iCal" will be replaced by "Apple" on iOS devices.<br /><br />
+                "ical" will be replaced by "apple" on iOS devices.<br /><br />
+                The v2 spellings (like "Apple", "Microsoft365", or "Outlook.com") keep working as aliases - casing makes no difference.<br /><br />
                 You can specify a different set of options for mobile devices via the optionsMobile option. If you also set the optionsIOS option, this will account for iOS (not Mac!), while optionsMobile accounts for Android and other mobile devices.
               </td>
               <td v-else>
                 Array an Kalender-Arten, die in der Liste erscheinen.<br /><br />
                 Sofern du nur 1 Option definierst wird der Button das Icon dieser Option anzeigen sowie direkt die jeweilige Kalender-Aktion auslösen und keine Auswahlliste öffnen (Singleton-Case).<br /><br />
                 Optionen können deaktiviert werden, wenn sie aufgrund anderere Einstellungen nicht unterstützt werden!<br />
-                Auf iOS-Geräten wird die iCal-Option durch "Apple" ersetzt.<br /><br />
+                Auf iOS-Geräten wird die ical-Option durch "apple" ersetzt.<br /><br />
+                Die v2-Schreibweisen (bspw. "Apple", "Microsoft365" oder "Outlook.com") funktionieren weiterhin als Alias - Groß- und Kleinschreibung spielt keine Rolle.<br /><br />
                 Du kannst eine andere Liste an Optionen für mobile Geräte definieren, indem du die optionsMobile-Option nutzt. Wenn du auch die optionsIOS-Option setzt, wird diese für iOS (nicht Mac!) berücksichtigt, während optionsMobile für Android und andere mobile Geräte gilt.
               </td>
             </tr>

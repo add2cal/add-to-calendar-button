@@ -83,7 +83,7 @@ describe('Group M - UI / interaction', () => {
   it('M-12: singleton config opens directly with openSingletonLink (no dropdown)', async () => {
     const wo = interceptWindowOpen();
     try {
-      const { host } = await mountAtcb({ ...baseEvent({ identifier: 'atcb-m12' }), options: "'Google'", trigger: 'click' });
+      const { host } = await mountAtcb({ ...baseEvent({ identifier: 'atcb-m12' }), options: "'google'", trigger: 'click' });
       expect(trigger(host).classList.contains('atcb-single')).to.equal(true);
       await clickSingleton(host);
       expect(listEl(host)).to.not.exist;
@@ -98,7 +98,7 @@ describe('Group M - UI / interaction', () => {
   it('M-13: buttonsList renders one button per option', async () => {
     const wo = interceptWindowOpen();
     try {
-      const { host, shadow } = await mountAtcb({ ...baseEvent({ identifier: 'atcb-m13' }), options: "['Google','Apple']", buttonsList: 'true', trigger: 'click' });
+      const { host, shadow } = await mountAtcb({ ...baseEvent({ identifier: 'atcb-m13' }), options: "['google','apple']", buttonsList: 'true', trigger: 'click' });
       const buttons = shadow.querySelectorAll('button.atcb-button');
       expect(buttons.length).to.equal(2);
       const googleBtn = optionEl(host, 'google');
@@ -114,7 +114,7 @@ describe('Group M - UI / interaction', () => {
   it('M-14: saved checkmark + success event after all options were used', async () => {
     const wo = interceptWindowOpen();
     try {
-      const { host } = await mountAtcb({ ...baseEvent({ identifier: 'atcb-m14' }), options: "['Google']", trigger: 'click' });
+      const { host } = await mountAtcb({ ...baseEvent({ identifier: 'atcb-m14' }), options: "['google']", trigger: 'click' });
       await clickSingleton(host);
       await aTimeout(100);
       expect(dlEvents('success').length, 'success fires once all options are done').to.equal(1);
@@ -127,7 +127,7 @@ describe('Group M - UI / interaction', () => {
   it('M-15: hideCheckmark suppresses the saved checkmark', async () => {
     const wo = interceptWindowOpen();
     try {
-      const { host } = await mountAtcb({ ...baseEvent({ identifier: 'atcb-m15' }), options: "['Google']", hideCheckmark: 'true', trigger: 'click' });
+      const { host } = await mountAtcb({ ...baseEvent({ identifier: 'atcb-m15' }), options: "['google']", hideCheckmark: 'true', trigger: 'click' });
       await clickSingleton(host);
       await aTimeout(100);
       expect(trigger(host).querySelector('.atcb-checkmark')).to.not.exist;
@@ -210,7 +210,7 @@ describe('Group M - UI / interaction', () => {
       startTime: '10:00',
       endTime: '11:00',
       timeZone: 'America/New_York',
-      options: "'Google'",
+      options: "'google'",
       buttonStyle: 'date',
       trigger: 'click',
       identifier: 'atcb-m32',
@@ -223,7 +223,7 @@ describe('Group M - UI / interaction', () => {
     // regression guard: the modal option list carries both .atcb-list (min-width:100%)
     // and .atcb-modal (min-width:auto) - the latter must win so the list does not fill
     // the whole overlay on wide viewports
-    const { host } = await mountAtcb(baseEvent({ options: "['Google','Apple','iCal']", listStyle: 'modal', trigger: 'click', identifier: 'atcb-m33' }));
+    const { host } = await mountAtcb(baseEvent({ options: "['google','apple','ical']", listStyle: 'modal', trigger: 'click', identifier: 'atcb-m33' }));
     await openList(host);
     await aTimeout(100);
     const modal = modalHost(host);
