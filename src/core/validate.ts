@@ -65,6 +65,7 @@ async function atcb_validate(data: ATCBConfig): Promise<boolean> {
     await atcb_validate_options(data, msgPrefix);
     await atcb_validate_date_blocks(data, msgPrefix);
     await atcb_validate_rrule(data, msgPrefix);
+    await atcb_validate_ics_extras(data, msgPrefix);
     if (data.recurrence_simplified) {
       await atcb_validate_rrule_simplified(data, msgPrefix);
     }
@@ -307,6 +308,71 @@ async function atcb_validate_datetime(data: ATCBConfig, msgPrefix: string, i: nu
 }
 
 // validate RRULE
+// validate the ics-only extra options (they only shape the generated ics file, but
+// invalid values still fail loudly so misconfigurations do not ship silently)
+async function atcb_validate_ics_extras(data: ATCBConfig, msgPrefix: string): Promise<boolean> {
+  const toList = (value: string[] | string | undefined): string[] => {
+    if (!value) return [];
+    // attribute parsing may deliver arrays whose items still carry commas - flatten those too
+    return (Array.isArray(value) ? value : [String(value)])
+      .flatMap((item) => String(item).split(','))
+      .map((item) => item.trim())
+      .filter((item) => item !== '');
+  };
+  const isHttpUrl = (value: string): boolean => atcb_secure_url(value, false) && /^https?:\/\//i.test(value);
+  for (let i = 0; i < data.dates!.length; i++) {
+    const entry = data.dates![`${i}`]!;
+    const suffix = data.dates!.length > 1 ? ' [dates array object #' + (i + 1) + '/' + data.dates!.length + ']' : '';
+    if (entry.icsClass && !['PUBLIC', 'PRIVATE', 'CONFIDENTIAL'].includes(String(entry.icsClass).toUpperCase())) {
+      throw new Error(msgPrefix + ' failed: icsClass needs to be PUBLIC, PRIVATE, or CONFIDENTIAL' + suffix);
+    }
+    if (entry.icsPriority !== undefined && entry.icsPriority !== '') {
+      const priority = Number(entry.icsPriority);
+      if (!Number.isInteger(priority) || priority < 0 || priority > 9) {
+        throw new Error(msgPrefix + ' failed: icsPriority needs to be an integer between 0 and 9' + suffix);
+      }
+    }
+    // eslint-disable-next-line security/detect-unsafe-regex -- bounded config value, not attacker-controlled input
+    if (entry.icsGeo && !/^-?\d{1,2}(?:\.\d+)?\s*,\s*-?\d{1,3}(?:\.\d+)?$/.test(String(entry.icsGeo).trim())) {
+      throw new Error(msgPrefix + ' failed: icsGeo needs to be "latitude,longitude" decimal coordinates' + suffix);
+    }
+    if (entry.icsGeo) {
+      const [lat, lon] = String(entry.icsGeo)
+        .split(',')
+        .map((part) => parseFloat(part));
+      if (Math.abs(lat!) > 90 || Math.abs(lon!) > 180) {
+        throw new Error(msgPrefix + ' failed: icsGeo coordinates out of range' + suffix);
+      }
+    }
+    // eslint-disable-next-line security/detect-unsafe-regex -- bounded config value, not attacker-controlled input
+    if (entry.icsReminder !== undefined && entry.icsReminder !== '' && !/^\d+$/.test(String(entry.icsReminder)) && !/^-?P(?:\d+[DW])?(?:T(?:\d+[HMS])+)?$/i.test(String(entry.icsReminder))) {
+      throw new Error(msgPrefix + ' failed: icsReminder needs to be minutes before start (number) or an ISO 8601 duration' + suffix);
+    }
+    if (entry.icsUrl && !isHttpUrl(String(entry.icsUrl))) {
+      throw new Error(msgPrefix + ' failed: icsUrl is no valid http(s) url' + suffix);
+    }
+    for (const attachUrl of toList(entry.icsAttach)) {
+      if (!isHttpUrl(attachUrl)) {
+        throw new Error(msgPrefix + ' failed: icsAttach entries need to be valid http(s) urls' + suffix);
+      }
+    }
+  }
+  // exdate is a root-level option by design: it pairs with recurrence, which only
+  // exists on single-date configurations
+  const exdates = toList(data.icsExdate);
+  if (exdates.length > 0) {
+    if (!data.recurrence || data.recurrence === '') {
+      throw new Error(msgPrefix + ' failed: icsExdate requires a recurrence to exclude dates from');
+    }
+    for (const exdate of exdates) {
+      if (!/^\d{4}-\d{2}-\d{2}$/.test(exdate)) {
+        throw new Error(msgPrefix + ' failed: icsExdate entries need to be formatted as YYYY-MM-DD');
+      }
+    }
+  }
+  return true;
+}
+
 async function atcb_validate_rrule(data: ATCBConfig, msgPrefix: string): Promise<boolean> {
   // check for multi-date (which is not allowed)
   if (data.recurrence && data.recurrence !== '' && data.dates!.length > 1) {

@@ -47,6 +47,14 @@ export interface ATCBDateEntryInput {
   uid?: string;
   organizer?: string;
   attendee?: string;
+  // ics-only extras (only reflected in the generated ics file for the apple/ical options)
+  icsReminder?: number | string;
+  icsUrl?: string;
+  icsCategories?: string[] | string;
+  icsClass?: string;
+  icsPriority?: number | string;
+  icsGeo?: string;
+  icsAttach?: string[] | string;
 }
 
 /**
@@ -131,6 +139,15 @@ export interface ATCBInputConfig {
   styleDark?: string;
   styleSource?: string;
   loadAllStyles?: boolean | string;
+  // ics-only extras (only reflected in the generated ics file for the apple/ical options)
+  icsReminder?: number | string;
+  icsUrl?: string;
+  icsCategories?: string[] | string;
+  icsClass?: string;
+  icsPriority?: number | string;
+  icsGeo?: string;
+  icsAttach?: string[] | string;
+  icsExdate?: string[] | string;
   disabled?: boolean | string;
   hidden?: boolean | string;
   pastDateHandling?: string;
@@ -227,6 +244,7 @@ export interface ATCBConfig {
   styleDark?: string;
   styleSource?: string;
   loadAllStyles?: boolean;
+  icsExdate?: string[] | string;
   disabled?: boolean;
   hidden?: boolean;
   pastDateHandling?: string;
@@ -291,6 +309,14 @@ export interface EventDate {
   uid?: string;
   organizer?: string;
   attendee?: string;
+  // only reflected in the generated ics file (Apple/iCal options)
+  icsReminder?: number | string;
+  icsUrl?: string;
+  icsCategories?: string[] | string;
+  icsClass?: 'PUBLIC' | 'PRIVATE' | 'CONFIDENTIAL';
+  icsPriority?: number;
+  icsGeo?: string;
+  icsAttach?: string[] | string;
 }
 
 export interface ATCBActionEventConfig {
@@ -352,6 +378,15 @@ export interface ATCBActionEventConfig {
   styleDark?: string;
   styleSource?: string;
   loadAllStyles?: boolean;
+  // only reflected in the generated ics file (Apple/iCal options)
+  icsReminder?: number | string;
+  icsUrl?: string;
+  icsCategories?: string[] | string;
+  icsClass?: 'PUBLIC' | 'PRIVATE' | 'CONFIDENTIAL';
+  icsPriority?: number;
+  icsGeo?: string;
+  icsAttach?: string[] | string;
+  icsExdate?: string[] | string;
   proxy?: boolean;
   fakeMobile?: boolean;
   fakeIOS?: boolean;
@@ -430,6 +465,15 @@ export type AddToCalendarButtonType = {
   styleDark?: string;
   styleSource?: string;
   loadAllStyles?: boolean | string;
+  // only reflected in the generated ics file (Apple/iCal options)
+  icsReminder?: number | string;
+  icsUrl?: string;
+  icsCategories?: string[] | string;
+  icsClass?: 'PUBLIC' | 'PRIVATE' | 'CONFIDENTIAL';
+  icsPriority?: number | string;
+  icsGeo?: string;
+  icsAttach?: string[] | string;
+  icsExdate?: string[] | string;
   disabled?: boolean | string;
   hidden?: boolean | string;
   pastDateHandling?: string;

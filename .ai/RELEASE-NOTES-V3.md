@@ -45,6 +45,13 @@ languages, and the RSVP strings are part of the core packs.
 dialogs with a working focus trap, `focus()` on the element finally reaches the button, and
 date-style buttons expose complete labels to screen readers. An axe-core gate keeps it that way.
 
+**The ics file grew up.** Eight second-level options enrich the generated file for the
+Apple/iCal cases - reminders (`icsReminder`), a canonical link (`icsUrl`), categories,
+classification, priority, geo coordinates with Apple's map preview (`icsGeo`), url
+attachments (`icsAttach`), and recurrence exclusions (`icsExdate`). They only shape the
+ics file; every other calendar type simply ignores them. Documented under the advanced
+examples.
+
 **It is hardened.** URL scheme allowlisting everywhere urls are consumed, escaped description
 links, prototype-pollution-safe input parsing, and schema.org output that stays valid JSON for
 any content.

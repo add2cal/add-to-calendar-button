@@ -9,6 +9,16 @@ import { atcb_translate_hook } from '../i18n/index';
 import type { ATCBConfig } from '../types';
 
 // FUNCTION TO OPEN THE URL
+// normalize a list-ish ics option value (array or comma-separated string)
+function atcb_ics_option_list(value: string[] | string | undefined): string[] {
+  if (!value) return [];
+  // attribute parsing may deliver arrays whose items still carry commas - flatten those too
+  return (Array.isArray(value) ? value : [String(value)])
+    .flatMap((item) => String(item).split(','))
+    .map((item) => item.trim())
+    .filter((item) => item !== '');
+}
+
 function atcb_open_cal_url(data: ATCBConfig, type: string, url = '', subscribe = false, subEvent: 'all' | number | string | null = null, target = ''): void {
   if (target === '') {
     target = atcbDefaultTarget;
@@ -203,6 +213,59 @@ function atcb_generate_ical(host: ShadowRoot, data: ATCBConfig, type: string, su
     ics_lines.push('STATUS:' + data.dates![`${i}`]!.status);
     ics_lines.push('CREATED:' + data.created);
     ics_lines.push('LAST-MODIFIED:' + data.updated);
+    // ics-only extra options (these shape the generated file only - other calendar
+    // types ignore them by design, since their generators never read these keys)
+    const entry = data.dates![`${i}`]!;
+    if (entry.icsUrl && entry.icsUrl !== '') {
+      ics_lines.push('URL:' + entry.icsUrl);
+    }
+    const categories = atcb_ics_option_list(entry.icsCategories);
+    if (categories.length > 0) {
+      ics_lines.push('CATEGORIES:' + categories.map((category) => atcb_rewrite_ical_text(category)).join(','));
+    }
+    if (entry.icsClass && String(entry.icsClass) !== '') {
+      ics_lines.push('CLASS:' + String(entry.icsClass).toUpperCase());
+    }
+    if (entry.icsPriority !== undefined && String(entry.icsPriority) !== '') {
+      ics_lines.push('PRIORITY:' + parseInt(String(entry.icsPriority), 10));
+    }
+    if (entry.icsGeo && String(entry.icsGeo) !== '') {
+      const [latRaw, lonRaw] = String(entry.icsGeo).split(',');
+      const lat = parseFloat(latRaw!.trim());
+      const lon = parseFloat(lonRaw!.trim());
+      ics_lines.push('GEO:' + lat + ';' + lon);
+      // Apple Calendar only renders its map preview when the structured location's
+      // title matches the LOCATION property - so it is derived, not configurable
+      if (entry.location && entry.location !== '') {
+        ics_lines.push('X-APPLE-STRUCTURED-LOCATION;VALUE=URI;X-APPLE-RADIUS=100;X-TITLE=' + atcb_rewrite_ical_text(entry.location, true) + ':geo:' + lat + ',' + lon);
+      }
+    }
+    for (const attachUrl of atcb_ics_option_list(entry.icsAttach)) {
+      ics_lines.push('ATTACH:' + attachUrl);
+    }
+    // exdate pairs with recurrence (single-date configs only) and mirrors the
+    // DTSTART form: same value type, same time zone reference, same wall-clock time
+    if (i === 0 && data.recurrence && data.recurrence !== '') {
+      const exdates = atcb_ics_option_list(data.icsExdate);
+      if (exdates.length > 0) {
+        const exdateValues = exdates.map((exdate) => {
+          const datePart = exdate.replace(/-/g, '');
+          if (formattedDate.allday) {
+            return datePart;
+          }
+          return datePart + 'T' + (entry.startTime ? entry.startTime.replace(':', '') : '0000') + '00';
+        });
+        ics_lines.push('EXDATE' + (timeAddon || '') + ':' + exdateValues.join(','));
+      }
+    }
+    if (entry.icsReminder !== undefined && String(entry.icsReminder) !== '') {
+      const trigger = /^\d+$/.test(String(entry.icsReminder)) ? '-PT' + parseInt(String(entry.icsReminder), 10) + 'M' : String(entry.icsReminder).toUpperCase();
+      ics_lines.push('BEGIN:VALARM');
+      ics_lines.push('ACTION:DISPLAY');
+      ics_lines.push('DESCRIPTION:' + atcb_rewrite_ical_text(entry.name || 'Reminder'));
+      ics_lines.push('TRIGGER:' + trigger);
+      ics_lines.push('END:VALARM');
+    }
     ics_lines.push('END:VEVENT');
   }
   ics_lines.push('END:VCALENDAR');

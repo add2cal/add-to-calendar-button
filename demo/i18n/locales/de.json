@@ -480,6 +480,8 @@
       "11_short": "Lade-Strategien",
       "12_long": "Server-seitiges Rendern",
       "12_short": "SSR",
+      "13_long": "Die ics-Datei aufwerten (Apple/iCal)",
+      "13_short": "ics-Datei+",
       "supported_tags": "Unterstützte Tags",
       "url_link_text": "Definiere den Link-Text wie folgt: [url]https://....{'|'}Link-Text[/url]",
       "add_event_example": "Der folgende Button fügt ein Event via \"REQUEST\" hinzu.",
