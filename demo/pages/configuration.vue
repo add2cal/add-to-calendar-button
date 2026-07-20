@@ -674,13 +674,11 @@ watch(searchSelection, (newVal) => {
       <h3 id="ics-parameters" class="mt-12 pt-4">{{ $t('content.config.ics_params') }}</h3>
       <p v-if="locale == 'en'" class="mb-3">
         <strong>These options only shape the generated ics file - they apply to the "apple" and "ical" calendar types; every other type simply ignores them (no error, no dropped option).</strong><br /><br />
-        All of them except "ics-exdate" can also be set per date entry within the multi-date "dates" array (root-level values override entry values, like the other date fields). See the
-        <NuxtLink :to="{path: localePath('advanced-use'), hash: '#case-13'}">advanced example <ArrowRightIcon class="-mt-0.5 mr-0.5 inline-block h-3 w-3" aria-hidden="true" /></NuxtLink>.
+        All of them except "ics-exdate" can also be set per date entry within the multi-date "dates" array (root-level values override entry values, like the other date fields).
       </p>
       <p v-else class="mb-3">
         <strong>Diese Optionen beeinflussen ausschließlich die generierte ics-Datei - sie gelten für die Kalender-Typen "apple" und "ical"; alle anderen Typen ignorieren sie einfach (kein Fehler, keine entfernte Option).</strong><br /><br />
-        Alle außer "ics-exdate" können im Multi-Date-Fall auch pro Datums-Eintrag im "dates"-Array gesetzt werden (Root-Werte überschreiben Eintrags-Werte, wie bei den anderen Datums-Feldern). Siehe das
-        <NuxtLink :to="{path: localePath('advanced-use'), hash: '#case-13'}">erweiterte Beispiel <ArrowRightIcon class="-mt-0.5 mr-0.5 inline-block h-3 w-3" aria-hidden="true" /></NuxtLink>.
+        Alle außer "ics-exdate" können im Multi-Date-Fall auch pro Datums-Eintrag im "dates"-Array gesetzt werden (Root-Werte überschreiben Eintrags-Werte, wie bei den anderen Datums-Feldern).
       </p>
       <div class="my-8 overflow-x-auto rounded-lg shadow-sm">
         <table>

@@ -481,8 +481,6 @@
       "11_short": "Loading strategies",
       "12_long": "Server-side rendering",
       "12_short": "SSR",
-      "13_long": "Power up the ics file (Apple/iCal)",
-      "13_short": "ics File+",
       "supported_tags": "Suported tags",
       "url_link_text": "Define a URL text like this: [url]https://....{'|'}URL Text[/url]",
       "add_event_example": "The following button adds an event via \"REQUEST\".",
