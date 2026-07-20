@@ -413,7 +413,7 @@
       "event_params": "Event-Parameter",
       "layout_params": "Layout-Parameter",
       "additional_params": "Weitere Parameter",
-      "ics_params": "ICS-Datei-Optionen (nur Apple/iCal)",
+      "ics_params": "ics-Datei-Optionen",
       "find_params": "Parameter finden",
       "name": "Name",
       "value": "Wert",

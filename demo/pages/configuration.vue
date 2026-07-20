@@ -671,7 +671,7 @@ watch(searchSelection, (newVal) => {
         </table>
       </div>
 
-      <h3 id="ics-parameters" class="mt-12 pt-4">{{ $t('content.config.ics_params') }}</h3>
+      <h3 id="ics-parameters" class="mb-3 mt-12 pt-4">{{ $t('content.config.ics_params') }}</h3>
       <p v-if="locale == 'en'" class="mb-3">
         <strong>These options only shape the generated ics file - they apply to the "apple" and "ical" calendar types; every other type simply ignores them (no error, no dropped option).</strong><br /><br />
         All of them except "ics-exdate" can also be set per date entry within the multi-date "dates" array (root-level values override entry values, like the other date fields).
@@ -713,7 +713,7 @@ watch(searchSelection, (newVal) => {
             <tr id="ics-class">
               <th scope="row">ics-class</th>
               <td>
-                <em>String</em><br /><br /><span class="label block">{{ $t('content.config.options') }}:</span>PUBLIC, PRIVATE, CONFIDENTIAL
+                <em>String</em><br /><br /><span class="label block">{{ $t('content.config.options') }}:</span>public, private, confidential
               </td>
               <td v-if="locale == 'en'">Sets the event classification.</td>
               <td v-else>Setzt die Klassifizierung des Events.</td>

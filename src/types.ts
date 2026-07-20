@@ -326,7 +326,7 @@ export interface EventDate {
   icsReminder?: number | string;
   icsUrl?: string;
   icsCategories?: string[] | string;
-  icsClass?: 'PUBLIC' | 'PRIVATE' | 'CONFIDENTIAL';
+  icsClass?: 'public' | 'private' | 'confidential';
   icsPriority?: number;
   icsGeo?: string;
   icsAttach?: string[] | string;
@@ -395,7 +395,7 @@ export interface ATCBActionEventConfig {
   icsReminder?: number | string;
   icsUrl?: string;
   icsCategories?: string[] | string;
-  icsClass?: 'PUBLIC' | 'PRIVATE' | 'CONFIDENTIAL';
+  icsClass?: 'public' | 'private' | 'confidential';
   icsPriority?: number;
   icsGeo?: string;
   icsAttach?: string[] | string;
@@ -482,7 +482,7 @@ export type AddToCalendarButtonType = {
   icsReminder?: number | string;
   icsUrl?: string;
   icsCategories?: string[] | string;
-  icsClass?: 'PUBLIC' | 'PRIVATE' | 'CONFIDENTIAL';
+  icsClass?: 'public' | 'private' | 'confidential';
   icsPriority?: number | string;
   icsGeo?: string;
   icsAttach?: string[] | string;

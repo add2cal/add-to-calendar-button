@@ -323,8 +323,8 @@ async function atcb_validate_ics_extras(data: ATCBConfig, msgPrefix: string): Pr
   for (let i = 0; i < data.dates!.length; i++) {
     const entry = data.dates![`${i}`]!;
     const suffix = data.dates!.length > 1 ? ' [dates array object #' + (i + 1) + '/' + data.dates!.length + ']' : '';
-    if (entry.icsClass && !['PUBLIC', 'PRIVATE', 'CONFIDENTIAL'].includes(String(entry.icsClass).toUpperCase())) {
-      throw new Error(msgPrefix + ' failed: icsClass needs to be PUBLIC, PRIVATE, or CONFIDENTIAL' + suffix);
+    if (entry.icsClass && !['public', 'private', 'confidential'].includes(String(entry.icsClass).toLowerCase())) {
+      throw new Error(msgPrefix + ' failed: icsClass needs to be public, private, or confidential' + suffix);
     }
     if (entry.icsPriority !== undefined && entry.icsPriority !== '') {
       const priority = Number(entry.icsPriority);
