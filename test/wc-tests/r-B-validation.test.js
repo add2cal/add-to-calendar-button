@@ -26,7 +26,7 @@ async function expectFail(config, msgPart = null) {
   return error;
 }
 
-const base = { name: 'V', startDate: '2050-06-15', options: ['Google'] };
+const base = { name: 'V', startDate: '2050-06-15', options: ['google'] };
 
 describe('Group B - Config validation & error paths', () => {
   it('B-01: invalid icsFile URL throws', async () => {
@@ -39,7 +39,7 @@ describe('Group B - Config validation & error paths', () => {
         name: 'V',
         subscribe: true,
         icsFile: 'https://example.com/cal.ics',
-        options: ['Google'],
+        options: ['google'],
         dates: [
           { name: 'a', startDate: '2050-01-01' },
           { name: 'b', startDate: '2050-01-02' },
@@ -93,7 +93,7 @@ describe('Group B - Config validation & error paths', () => {
     await expectFail(
       {
         name: 'V',
-        options: ['Google'],
+        options: ['google'],
         recurrence: 'RRULE:FREQ=DAILY',
         dates: [
           { name: 'a', startDate: '2050-01-01' },
@@ -117,7 +117,7 @@ describe('Group B - Config validation & error paths', () => {
     let error = null;
     let data = null;
     try {
-      data = await runPipeline({ name: 'V', options: ['Google'], dates: [], startDate: '2050-06-15' });
+      data = await runPipeline({ name: 'V', options: ['google'], dates: [], startDate: '2050-06-15' });
     } catch (e) {
       error = e;
     }
@@ -149,5 +149,23 @@ describe('Group B - Config validation & error paths', () => {
     const data = await runPipeline({ ...base, startTime: '10:00', endTime: '11:00', timeZone: 'Europe/Berlin' });
     expect(data.dates.length).to.equal(1);
     expect(data.dates[0].timeZone).to.equal('Europe/Berlin');
+  });
+
+  it('B-19: legacy v2 option spellings normalize to the official lowercase keys', async () => {
+    const data = await runPipeline({ ...base, options: ['Apple', 'Google', 'iCal', 'Microsoft365', 'MicrosoftTeams', 'Outlook.com', 'Yahoo'] });
+    expect(data.options, 'all legacy spellings resolve and sort to the canonical keys').to.deep.equal(['apple', 'google', 'ical', 'ms365', 'msteams', 'outlookcom', 'yahoo']);
+    // the official lowercase keys resolve to the exact same set
+    const official = await runPipeline({ ...base, options: ['apple', 'google', 'ical', 'ms365', 'msteams', 'outlookcom', 'yahoo'] });
+    expect(official.options).to.deep.equal(data.options);
+  });
+
+  it('B-20: status input is case-insensitive and decorates to lowercase (default: confirmed)', async () => {
+    const upper = await runPipeline({ ...base, status: 'CANCELLED' });
+    expect(upper.dates[0].status, 'legacy uppercase input normalized').to.equal('cancelled');
+    expect(upper.allCancelled, 'uppercase input drives the cancelled logic').to.equal(true);
+    const mixed = await runPipeline({ ...base, status: 'Tentative' });
+    expect(mixed.dates[0].status, 'mixed case input normalized').to.equal('tentative');
+    const unset = await runPipeline({ ...base });
+    expect(unset.dates[0].status, 'default status is lowercase confirmed').to.equal('confirmed');
   });
 });

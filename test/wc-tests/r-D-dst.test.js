@@ -17,7 +17,7 @@ import { DST } from '../fixtures/events.js';
 async function teamsTimes(config, id) {
   const wo = interceptWindowOpen();
   try {
-    const { host } = await mountAtcb({ ...config, options: "'MicrosoftTeams'", trigger: 'click', identifier: id });
+    const { host } = await mountAtcb({ ...config, options: "'msteams'", trigger: 'click', identifier: id });
     await clickSingleton(host);
     const url = new URL(wo.calls[0].url);
     return { start: url.searchParams.get('startTime'), end: url.searchParams.get('endTime') };
@@ -33,7 +33,7 @@ function iso(c, time, offset) {
 async function icsEvent(config, id) {
   const fs = interceptFileSave();
   try {
-    const { host } = await mountAtcb({ ...config, options: "'iCal'", trigger: 'click', identifier: id });
+    const { host } = await mountAtcb({ ...config, options: "'ical'", trigger: 'click', identifier: id });
     await clickSingleton(host);
     return parseIcs(decodeIcsHref(fs.saves[0].href)).events[0];
   } finally {
@@ -110,7 +110,7 @@ describe('Group D - DST & timezone corners', () => {
           { name: 'Before', startDate: '2050-03-12', startTime: '10:00', endTime: '11:00' },
           { name: 'After', startDate: '2050-03-14', startTime: '10:00', endTime: '11:00' },
         ]),
-        options: "'iCal'",
+        options: "'ical'",
         trigger: 'click',
         identifier: 'atcb-d10',
       });

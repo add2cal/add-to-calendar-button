@@ -176,9 +176,9 @@ Calendar type options and time zone information are not required, but recommende
 ```html
 <add-to-calendar-button
   name="Add the title of your event"
-  startDate="2022-02-21"
-  options="['Google']"
-  timeZone="America/Los_Angeles"
+  start-date="2022-02-21"
+  options="['google']"
+  time-zone="America/Los_Angeles"
 />
 ```
 
@@ -190,17 +190,17 @@ Calendar type options and time zone information are not required, but recommende
 <add-to-calendar-button
   name="Add the title of your event"
   description="A nice description does not hurt"
-  startDate="2022-02-21"
-  endDate="2022-03-24"
-  startTime="10:13"
-  endTime="17:57"
+  start-date="2022-02-21"
+  end-date="2022-03-24"
+  start-time="10:13"
+  end-time="17:57"
   location="Somewhere over the rainbow"
-  options="['Apple','Google','iCal','Microsoft365','Outlook.com','Yahoo']"
-  timeZone="Europe/Berlin"
+  options="['apple','google','ical','ms365','outlookcom','yahoo']"
+  time-zone="Europe/Berlin"
   trigger="click"
   inline
-  listStyle="modal"
-  iCalFileName="Reminder-Event"
+  list-style="modal"
+  ical-file-name="Reminder-Event"
 />
 ```
 

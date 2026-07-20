@@ -58,7 +58,10 @@ function atcb_process_options(theOptions: string[], data: ATCBConfig): { newOpti
   return { newOptions, iCalGiven, appleGiven };
 }
 
-// normalize option name (clean and standardize)
+// normalize option name to the official lowercase key ('apple', 'google', 'ical', 'ms365',
+// 'msteams', 'outlookcom', 'yahoo'). Legacy spellings ('Apple', 'Microsoft365', 'Outlook.com',
+// ...) resolve to the same keys, keeping them supported as aliases (any casing works; spaced
+// forms like 'Microsoft 365' are covered by the attribute parser, which strips whitespace)
 function atcb_normalize_option_name(option: string): string {
   const cleanOption = option.split('|');
   return cleanOption[0]!.toLowerCase().replace('microsoft', 'ms').replace(/\./, '');

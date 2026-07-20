@@ -58,7 +58,7 @@ describe('Group O - Localization & i18n', () => {
   it('O-08: ICS SUMMARY stays the configured name regardless of UI language', async () => {
     const fs = interceptFileSave();
     try {
-      const { host } = await mountAtcb({ name: 'Language Agnostic Content', startDate: '2050-06-15', language: 'de', options: "'iCal'", trigger: 'click', identifier: 'atcb-o08' });
+      const { host } = await mountAtcb({ name: 'Language Agnostic Content', startDate: '2050-06-15', language: 'de', options: "'ical'", trigger: 'click', identifier: 'atcb-o08' });
       await clickSingleton(host);
       const ics = parseIcs(decodeIcsHref(fs.saves[0].href));
       expect(ics.events[0].value('SUMMARY')).to.include('Language Agnostic Content');

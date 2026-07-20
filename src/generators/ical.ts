@@ -124,7 +124,7 @@ function atcb_generate_ical(host: ShadowRoot, data: ATCBConfig, type: string, su
       ics_lines.push('METHOD:PUBLISH');
     }
   } else {
-    if (data.dates![`${subEvent}`]!.status && (data.dates![`${subEvent}`]!.status as string).toLowerCase() === 'cancelled') {
+    if (data.dates![`${subEvent}`]!.status && data.dates![`${subEvent}`]!.status === 'cancelled') {
       ics_lines.push('METHOD:CANCEL');
     } else {
       if (data.dates![`${subEvent}`]!.organizer && data.dates![`${subEvent}`]!.organizer !== '') {
@@ -210,7 +210,8 @@ function atcb_generate_ical(host: ShadowRoot, data: ATCBConfig, type: string, su
       ics_lines.push('TRANSP:' + transpVal);
     }
     ics_lines.push('SEQUENCE:' + data.dates![`${i}`]!.sequence);
-    ics_lines.push('STATUS:' + data.dates![`${i}`]!.status);
+    // the ics file sticks to the RFC's canonical uppercase form (input/config is lowercase)
+    ics_lines.push('STATUS:' + String(data.dates![`${i}`]!.status).toUpperCase());
     ics_lines.push('CREATED:' + data.created);
     ics_lines.push('LAST-MODIFIED:' + data.updated);
     // ics-only extra options (these shape the generated file only - other calendar

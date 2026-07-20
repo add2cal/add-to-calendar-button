@@ -11,7 +11,7 @@ import { CFG } from '../fixtures/events.js';
 async function googleUrl(config, id) {
   const wo = interceptWindowOpen();
   try {
-    const { host } = await mountAtcb({ ...config, options: "'Google'", trigger: 'click', identifier: id });
+    const { host } = await mountAtcb({ ...config, options: "'google'", trigger: 'click', identifier: id });
     await clickSingleton(host);
     expect(wo.calls.length).to.equal(1);
     return wo.calls[0].url;
@@ -60,8 +60,8 @@ describe('Group H - Google output', () => {
       const { host } = await mountAtcb({
         ...CFG.singleTimedNY,
         name: 'Cancelled Event',
-        status: 'CANCELLED',
-        options: "['Google','iCal']",
+        status: 'cancelled',
+        options: "['google','ical']",
         trigger: 'click',
         identifier: 'atcb-h08',
       });
@@ -80,8 +80,8 @@ describe('Group H - Google output', () => {
       const { host: host2 } = await mountAtcb({
         ...CFG.singleTimedNY,
         name: 'Cancelled Event',
-        status: 'CANCELLED',
-        options: "'iCal'",
+        status: 'cancelled',
+        options: "'ical'",
         trigger: 'click',
         identifier: 'atcb-h08b',
       });
@@ -101,7 +101,7 @@ describe('Group H - Google output', () => {
   it('H-09: Android flavor wraps the URL into an intent:// with browser fallback', async () => {
     const wo = interceptWindowOpen();
     try {
-      const { host } = await mountAtcb({ ...CFG.singleTimedNY, fakeAndroid: 'true', options: "'Google'", trigger: 'click', identifier: 'atcb-h09' });
+      const { host } = await mountAtcb({ ...CFG.singleTimedNY, fakeAndroid: 'true', options: "'google'", trigger: 'click', identifier: 'atcb-h09' });
       await clickSingleton(host);
       expect(wo.calls.length).to.equal(1);
       const url = wo.calls[0].url;
@@ -116,7 +116,7 @@ describe('Group H - Google output', () => {
   it('H-10: mobile flavor uses the render?action=TEMPLATE base', async () => {
     const wo = interceptWindowOpen();
     try {
-      const { host } = await mountAtcb({ ...CFG.singleTimedNY, fakeMobile: 'true', options: "'Google'", trigger: 'click', identifier: 'atcb-h10' });
+      const { host } = await mountAtcb({ ...CFG.singleTimedNY, fakeMobile: 'true', options: "'google'", trigger: 'click', identifier: 'atcb-h10' });
       await clickSingleton(host);
       // fakeMobile also triggers the Android intent wrap; accept either the intent or the plain mobile base
       const url = wo.calls[0].url;

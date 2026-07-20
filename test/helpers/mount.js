@@ -56,7 +56,7 @@ export function baseEvent(overrides = {}) {
     timeZone: 'America/New_York',
     location: 'Somewhere 1, 12345 Cityplace',
     description: 'A test event description.',
-    options: "['Google','Apple','iCal','Microsoft365','Outlook.com','MicrosoftTeams','Yahoo']",
+    options: "['google','apple','ical','ms365','outlookcom','msteams','yahoo']",
     ...overrides,
   };
 }

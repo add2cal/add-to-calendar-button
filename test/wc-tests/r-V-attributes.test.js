@@ -9,7 +9,8 @@
 import { expect, fixture, aTimeout } from '@open-wc/testing';
 import '../../dist/module/index.js';
 import { interceptWindowOpen, interceptFileSave } from '../helpers/capture.js';
-import { clickSingleton } from '../helpers/dom.js';
+import { clickSingleton, openList, renderedOptions } from '../helpers/dom.js';
+import { decodeIcsHref } from '../helpers/ics.js';
 import { mockProFetch, proEvtConfig, PRO_EVT_KEY } from '../fixtures/pro.js';
 
 async function mountRaw(attrs) {
@@ -33,7 +34,7 @@ describe('Group V - official kebab-case attributes', () => {
         'start-time': '10:00',
         'end-time': '11:00',
         'time-zone': 'America/New_York',
-        options: "'Google'",
+        options: "'google'",
         'button-style': 'flat',
         trigger: 'click',
         identifier: 'atcb-v01',
@@ -60,7 +61,7 @@ describe('Group V - official kebab-case attributes', () => {
         starttime: '09:00',
         'end-time': '11:00',
         'time-zone': 'America/New_York',
-        options: "'Google'",
+        options: "'google'",
         trigger: 'click',
         identifier: 'atcb-v02',
       });
@@ -92,7 +93,7 @@ describe('Group V - official kebab-case attributes', () => {
       const el = await mountRaw({
         name: 'Filename Check',
         'start-date': '2050-06-15',
-        options: "'iCal'",
+        options: "'ical'",
         'ical-file-name': 'kebab-cal-file',
         trigger: 'click',
         identifier: 'atcb-v04',
@@ -109,7 +110,7 @@ describe('Group V - official kebab-case attributes', () => {
     const el = await mountRaw({
       name: 'Before Change',
       'start-date': '2050-06-15',
-      options: "'Google'",
+      options: "'google'",
       trigger: 'click',
       identifier: 'atcb-v05',
     });
@@ -126,5 +127,39 @@ describe('Group V - official kebab-case attributes', () => {
       }
     }
     expect(rebuilt, 'button rebuilt with the new name').to.equal(true);
+  });
+
+  it('V-06: legacy option value spellings (incl. spaced forms) resolve to the official keys', async () => {
+    // v3 renames the option VALUES to lowercase keys; the v2 spellings (any casing,
+    // plus the spaced attribute forms) keep working as aliases
+    const el = await mountRaw({
+      name: 'Legacy Options',
+      'start-date': '2050-06-15',
+      options: "'Apple','Google','iCal','Microsoft 365','Microsoft Teams','Outlook.com','Yahoo'",
+      trigger: 'click',
+      identifier: 'atcb-v06',
+    });
+    await openList(el);
+    expect([...renderedOptions(el)].sort(), 'all seven legacy spellings resolve').to.deep.equal(['apple', 'google', 'ical', 'ms365', 'msteams', 'outlookcom', 'yahoo']);
+  });
+
+  it('V-07: uppercase status attribute value keeps working (case makes no functional difference)', async () => {
+    const fs = interceptFileSave();
+    try {
+      const el = await mountRaw({
+        name: 'Legacy Status',
+        'start-date': '2050-06-15',
+        status: 'CANCELLED',
+        options: "'ical'",
+        trigger: 'click',
+        identifier: 'atcb-v07',
+      });
+      await clickSingleton(el);
+      const ics = decodeIcsHref(fs.saves[0].href);
+      expect(ics, 'file still carries the RFC uppercase form').to.include('STATUS:CANCELLED');
+      expect(ics, 'cancelled status drives the CANCEL method').to.include('METHOD:CANCEL');
+    } finally {
+      fs.restore();
+    }
   });
 });

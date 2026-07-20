@@ -56,7 +56,7 @@ describe('Group N - dataLayer / tracking', () => {
   it('N-05: singleton click pushes openSingletonLink (NOT openCalendarLink)', async () => {
     const wo = interceptWindowOpen();
     try {
-      const { host } = await mountAtcb({ ...baseEvent({ identifier: 'atcb-n05' }), options: "'Google'", trigger: 'click' });
+      const { host } = await mountAtcb({ ...baseEvent({ identifier: 'atcb-n05' }), options: "'google'", trigger: 'click' });
       await clickSingleton(host);
       expect(dlEvents('openSingletonLink').length).to.equal(1);
       expect(dlEvents('openCalendarLink').length).to.equal(0);
@@ -72,7 +72,7 @@ describe('Group N - dataLayer / tracking', () => {
         { name: 'One', startDate: '2050-07-01', startTime: '10:00', endTime: '11:00' },
         { name: 'Two', startDate: '2050-07-08', startTime: '10:00', endTime: '11:00' },
       ];
-      const { host } = await mountAtcb({ name: 'SubSeries', dates: JSON.stringify(dates), options: "['Google','iCal']", trigger: 'click', identifier: 'atcb-n06' });
+      const { host } = await mountAtcb({ name: 'SubSeries', dates: JSON.stringify(dates), options: "['google','ical']", trigger: 'click', identifier: 'atcb-n06' });
       await openList(host);
       await clickOption(host, 'google');
       expect(modalHost(host)).to.exist;
@@ -88,7 +88,7 @@ describe('Group N - dataLayer / tracking', () => {
   it('N-09: success is pushed once all options have been used', async () => {
     const wo = interceptWindowOpen();
     try {
-      const { host } = await mountAtcb({ ...baseEvent({ identifier: 'atcb-n09' }), options: "'Google'", trigger: 'click' });
+      const { host } = await mountAtcb({ ...baseEvent({ identifier: 'atcb-n09' }), options: "'google'", trigger: 'click' });
       await clickSingleton(host);
       await aTimeout(100);
       const success = dlEvents('success');

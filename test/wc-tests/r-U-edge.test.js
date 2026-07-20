@@ -12,7 +12,7 @@ import { decodeIcsHref, parseIcs, unfoldIcs } from '../helpers/ics.js';
 async function icsFor(config, id) {
   const fs = interceptFileSave();
   try {
-    const { host } = await mountAtcb({ ...config, options: "'iCal'", trigger: 'click', identifier: id });
+    const { host } = await mountAtcb({ ...config, options: "'ical'", trigger: 'click', identifier: id });
     await clickSingleton(host);
     return parseIcs(decodeIcsHref(fs.saves[0].href));
   } finally {
@@ -60,7 +60,7 @@ describe('Group U - Edge cases & regressions', () => {
   it('U-14: attribute updates after init re-render the output', async () => {
     const wo = interceptWindowOpen();
     try {
-      const { host } = await mountAtcb({ name: 'Before Update', startDate: '2050-06-15', options: "'Google'", trigger: 'click', identifier: 'atcb-u14' });
+      const { host } = await mountAtcb({ name: 'Before Update', startDate: '2050-06-15', options: "'google'", trigger: 'click', identifier: 'atcb-u14' });
       host.setAttribute('name', 'After Update');
       await aTimeout(300);
       await clickSingleton(host);
@@ -73,7 +73,7 @@ describe('Group U - Edge cases & regressions', () => {
   it('U-16: far-future dates (2099) do not overflow', async () => {
     const wo = interceptWindowOpen();
     try {
-      const { host } = await mountAtcb({ name: 'Future', startDate: '2099-12-31', startTime: '10:00', endTime: '11:00', options: "'Google'", trigger: 'click', identifier: 'atcb-u16' });
+      const { host } = await mountAtcb({ name: 'Future', startDate: '2099-12-31', startTime: '10:00', endTime: '11:00', options: "'google'", trigger: 'click', identifier: 'atcb-u16' });
       await clickSingleton(host);
       expect(new URL(wo.calls[0].url).searchParams.get('dates')).to.include('20991231');
     } finally {
@@ -91,7 +91,7 @@ describe('Group U - Edge cases & regressions', () => {
         startTime: '23:30',
         endTime: '23:45',
         timeZone: 'America/New_York', // 23:30 EDT = 03:30 UTC on the NEXT day
-        options: "'Yahoo'",
+        options: "'yahoo'",
         trigger: 'click',
         identifier: 'atcb-u17',
       });
@@ -115,7 +115,7 @@ describe('Group U - Edge cases & regressions', () => {
     expect(unfoldIcs(ics.raw)).to.include('Very Long Event Title');
     const wo = interceptWindowOpen();
     try {
-      const { host } = await mountAtcb({ name: longTitle, startDate: '2050-06-15', options: "'Google'", trigger: 'click', identifier: 'atcb-u19b' });
+      const { host } = await mountAtcb({ name: longTitle, startDate: '2050-06-15', options: "'google'", trigger: 'click', identifier: 'atcb-u19b' });
       await clickSingleton(host);
       expect(new URL(wo.calls[0].url).searchParams.get('text')).to.include('Very Long Event Title');
     } finally {
@@ -129,7 +129,7 @@ describe('Group U - Edge cases & regressions', () => {
     expect(ics.events[0].value('SUMMARY')).to.include('🎉');
     const wo = interceptWindowOpen();
     try {
-      const { host } = await mountAtcb({ name, startDate: '2050-06-15', options: "'Google'", trigger: 'click', identifier: 'atcb-u20b' });
+      const { host } = await mountAtcb({ name, startDate: '2050-06-15', options: "'google'", trigger: 'click', identifier: 'atcb-u20b' });
       await clickSingleton(host);
       expect(new URL(wo.calls[0].url).searchParams.get('text')).to.equal(name);
     } finally {

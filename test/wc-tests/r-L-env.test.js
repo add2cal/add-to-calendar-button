@@ -29,7 +29,7 @@ describe('Group L - Environment-driven routing', () => {
     const { host } = await mountAtcb(
       baseEvent({
         fakeAndroid: 'true',
-        optionsMobile: "['Google','iCal']",
+        optionsMobile: "['google','ical']",
         trigger: 'click',
         identifier: 'atcb-l10',
       }),
@@ -49,8 +49,8 @@ describe('Group L - Environment-driven routing', () => {
       const { host } = await mountAtcb(
         baseEvent({
           fakeIOS: 'true',
-          optionsMobile: "['Google','Yahoo']",
-          optionsIOS: "['Apple']",
+          optionsMobile: "['google','yahoo']",
+          optionsIOS: "['apple']",
           trigger: 'click',
           identifier: 'atcb-l11',
         }),
@@ -74,7 +74,7 @@ describe('Group L - Environment-driven routing', () => {
       const { host } = await mountAtcb(
         baseEvent({
           fakeIOS: 'true',
-          optionsIOS: "['Apple']",
+          optionsIOS: "['apple']",
           trigger: 'click',
           identifier: 'atcb-l11b',
         }),
@@ -89,9 +89,9 @@ describe('Group L - Environment-driven routing', () => {
     }
   });
 
-  it('L-18: explicit optionsIOS with "iCal" (doc casing) is kept verbatim - no swap', async () => {
-    // option-name matching is case-normalized (fixed in this branch), so the explicit
-    // iCal override survives on iOS regardless of input casing
+  it('L-18: explicit optionsIOS with legacy "iCal" casing is kept verbatim - no swap', async () => {
+    // option-name matching is case-normalized, so the explicit override survives on iOS
+    // regardless of input casing (legacy v2 spellings act as aliases)
     const { host } = await mountAtcb(
       baseEvent({
         fakeIOS: 'true',
@@ -107,7 +107,7 @@ describe('Group L - Environment-driven routing', () => {
     expect(opts).to.not.include('apple');
   });
 
-  it('L-18b: optionsIOS with lowercase "ical" behaves identically (case-insensitive)', async () => {
+  it('L-18b: optionsIOS with the official lowercase "ical" behaves identically', async () => {
     const { host } = await mountAtcb(
       baseEvent({
         fakeIOS: 'true',
@@ -158,7 +158,7 @@ describe('Group L - Environment-driven routing', () => {
         name: 'iOS Chrome Sub',
         subscribe: 'true',
         icsFile: 'https://example.com/cal.ics',
-        options: "'Apple'",
+        options: "'apple'",
         trigger: 'click',
         identifier: 'atcb-l02',
       });
@@ -184,7 +184,7 @@ describe('Group L - Environment-driven routing', () => {
         name: 'iOS Safari Sub',
         subscribe: 'true',
         icsFile: 'https://example.com/cal.ics',
-        options: "'Apple'",
+        options: "'apple'",
         trigger: 'click',
         identifier: 'atcb-l01',
       });
@@ -201,7 +201,7 @@ describe('Group L - Environment-driven routing', () => {
     const restoreUA = setUA(UA.androidChrome);
     const fs = interceptFileSave();
     try {
-      const { host } = await mountAtcb({ name: 'Mobile Save', startDate: '2050-06-15', options: "'iCal'", trigger: 'click', identifier: 'atcb-l15' });
+      const { host } = await mountAtcb({ name: 'Mobile Save', startDate: '2050-06-15', options: "'ical'", trigger: 'click', identifier: 'atcb-l15' });
       await clickSingleton(host);
       expect(fs.saves.length).to.equal(1);
       expect(fs.saves[0].target).to.equal('_self');

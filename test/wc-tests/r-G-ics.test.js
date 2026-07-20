@@ -11,7 +11,7 @@ import { CFG } from '../fixtures/events.js';
 async function icsFor(config, id) {
   const fs = interceptFileSave();
   try {
-    const { host } = await mountAtcb({ ...config, options: "'iCal'", trigger: 'click', identifier: id });
+    const { host } = await mountAtcb({ ...config, options: "'ical'", trigger: 'click', identifier: id });
     await clickSingleton(host);
     expect(fs.saves.length).to.equal(1);
     return { ics: parseIcs(decodeIcsHref(fs.saves[0].href)), save: fs.saves[0] };
@@ -95,7 +95,7 @@ describe('Group G - ICS / Apple output', () => {
     const { ics } = await icsFor(
       {
         ...CFG.singleTimedNY,
-        status: 'TENTATIVE',
+        status: 'tentative',
         sequence: 3,
         created: '20240101T101010Z',
         updated: '20240202T101010Z',
@@ -112,7 +112,7 @@ describe('Group G - ICS / Apple output', () => {
   it('G-12: hosted icsFile is downloaded directly (no inline ICS built)', async () => {
     const fs = interceptFileSave();
     try {
-      const { host } = await mountAtcb({ ...CFG.singleTimedNY, icsFile: 'https://example.com/hosted.ics', options: "'iCal'", trigger: 'click', identifier: 'atcb-g12' });
+      const { host } = await mountAtcb({ ...CFG.singleTimedNY, icsFile: 'https://example.com/hosted.ics', options: "'ical'", trigger: 'click', identifier: 'atcb-g12' });
       await clickSingleton(host);
       expect(fs.saves.length).to.equal(1);
       expect(fs.saves[0].href).to.equal('https://example.com/hosted.ics');
@@ -134,7 +134,7 @@ describe('Group G - ICS / Apple output', () => {
   it('G-17: custom iCalFileName is used for the download', async () => {
     const fs = interceptFileSave();
     try {
-      const { host } = await mountAtcb({ ...CFG.singleTimedNY, iCalFileName: 'my-event-file', options: "'iCal'", trigger: 'click', identifier: 'atcb-g17' });
+      const { host } = await mountAtcb({ ...CFG.singleTimedNY, iCalFileName: 'my-event-file', options: "'ical'", trigger: 'click', identifier: 'atcb-g17' });
       await clickSingleton(host);
       expect(fs.saves[0].download).to.equal('my-event-file.ics');
     } finally {
@@ -145,7 +145,7 @@ describe('Group G - ICS / Apple output', () => {
   it('G-20: desktop file save targets _blank (mobile would use _self)', async () => {
     const fs = interceptFileSave();
     try {
-      const { host } = await mountAtcb({ ...CFG.singleTimedNY, options: "'iCal'", trigger: 'click', identifier: 'atcb-g20' });
+      const { host } = await mountAtcb({ ...CFG.singleTimedNY, options: "'ical'", trigger: 'click', identifier: 'atcb-g20' });
       await clickSingleton(host);
       expect(fs.saves[0].target).to.equal('_blank');
     } finally {

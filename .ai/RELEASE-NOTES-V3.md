@@ -67,6 +67,10 @@ declarations generated straight from the source - one flat file that resolves un
 node16 and classic moduleResolution alike. Official attribute names are kebab-case now
 (`start-date`, `button-style`, ...); every v2 spelling keeps working as an alias.
 
+- Official lowercase config values: calendar types (`apple`, `google`, `ical`, `ms365`,
+  `msteams`, `outlookcom`, `yahoo`) and status (`tentative`, `confirmed`, `cancelled`).
+  All v2 spellings keep working as aliases.
+
 ### Deprecations and breaking changes
 
 - The dedicated `no-pro` / `unstyle` / `no-pro-unstyle` builds are gone. The npm subpaths and

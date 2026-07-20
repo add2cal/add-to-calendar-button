@@ -57,7 +57,7 @@ watch(locale, value => {
           <pre>
 &lt;AddToCalendarButton
   name="{{ $t('demo_data.name_dummy') }}"
-  options={['Apple','Google']}
+  options={['apple','google']}
   location="{{ $t('demo_data.location') }}"
   startDate="{{ defaultDate }}"
   endDate="{{ defaultDate }}"

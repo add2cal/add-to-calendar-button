@@ -28,7 +28,7 @@ const EXTRAS = {
 async function icsFor(config, id) {
   const fs = interceptFileSave();
   try {
-    const { host } = await mountAtcb({ ...config, options: "'iCal'", trigger: 'click', identifier: id });
+    const { host } = await mountAtcb({ ...config, options: "'ical'", trigger: 'click', identifier: id });
     await clickSingleton(host);
     return parseIcs(decodeIcsHref(fs.saves[0].href));
   } finally {
@@ -119,7 +119,7 @@ describe('Group ICSX - extended ics options', () => {
   it('ICSX-06: invalid values fail validation loudly', async () => {
     const mute = muteConsole();
     try {
-      const base = { name: 'V', startDate: '2050-06-15', options: ['iCal'] };
+      const base = { name: 'V', startDate: '2050-06-15', options: ['ical'] };
       await expectValidationFail({ ...base, icsClass: 'SECRET' }, 'icsClass');
       await expectValidationFail({ ...base, icsPriority: '10' }, 'icsPriority');
       await expectValidationFail({ ...base, icsGeo: 'somewhere' }, 'icsGeo');
@@ -137,10 +137,10 @@ describe('Group ICSX - extended ics options', () => {
   it('ICSX-07: guardrail - other calendar types ignore the options completely', async () => {
     const wo = interceptWindowOpen();
     try {
-      const plain = await mountAtcb(baseEvent({ options: "'Google'", trigger: 'click', identifier: 'atcb-icsx07a' }));
+      const plain = await mountAtcb(baseEvent({ options: "'google'", trigger: 'click', identifier: 'atcb-icsx07a' }));
       await clickSingleton(plain.host);
       const plainUrl = wo.calls[0].url;
-      const extras = await mountAtcb(baseEvent({ ...EXTRAS, icsExdate: undefined, options: "'Google'", trigger: 'click', identifier: 'atcb-icsx07b' }));
+      const extras = await mountAtcb(baseEvent({ ...EXTRAS, icsExdate: undefined, options: "'google'", trigger: 'click', identifier: 'atcb-icsx07b' }));
       await clickSingleton(extras.host);
       const extrasUrl = wo.calls[1].url;
       expect(extrasUrl, 'google url byte-identical with ics extras set').to.equal(plainUrl);
@@ -148,7 +148,7 @@ describe('Group ICSX - extended ics options', () => {
       wo.restore();
     }
     // the option list stays untouched as well
-    const { host } = await mountAtcb(baseEvent({ ...EXTRAS, options: "['Google','Apple','Yahoo','Microsoft365']", trigger: 'click', identifier: 'atcb-icsx07c' }));
+    const { host } = await mountAtcb(baseEvent({ ...EXTRAS, options: "['google','apple','yahoo','ms365']", trigger: 'click', identifier: 'atcb-icsx07c' }));
     await openList(host);
     expect(renderedOptions(host)).to.deep.equal(['apple', 'google', 'ms365', 'yahoo']);
     await aTimeout(50);

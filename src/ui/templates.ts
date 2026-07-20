@@ -162,7 +162,7 @@ function dateButtonMeta(data: ATCBConfig, subEventIn: string | number = 'all', f
   }
   const fullTimeInfo = atcb_generate_timestring(data.dates!, data.formatLocale || data.language, subEvent as 'all' | number, false, false, forceFullDate);
   const hoverText = (function () {
-    if ((subEvent !== 'all' && data.dates![`${subEvent}`]!.status!.toLowerCase() === 'cancelled') || (subEvent === 'all' && data.allCancelled)) {
+    if ((subEvent !== 'all' && data.dates![`${subEvent}`]!.status === 'cancelled') || (subEvent === 'all' && data.allCancelled)) {
       return atcb_translate_hook('date.status.cancelled', data) + '<br>' + atcb_translate_hook('date.status.cancelled_cta', data);
     }
     if (data.pastDateHandling !== 'none') {
@@ -176,7 +176,7 @@ function dateButtonMeta(data: ATCBConfig, subEventIn: string | number = 'all', f
     return atcb_translate_hook('label.addtocalendar', data);
   })();
   const cancelledInfo = (function () {
-    if ((subEvent !== 'all' && data.dates![`${subEvent}`]!.status!.toLowerCase() === 'cancelled') || (subEvent === 'all' && data.allCancelled)) {
+    if ((subEvent !== 'all' && data.dates![`${subEvent}`]!.status === 'cancelled') || (subEvent === 'all' && data.allCancelled)) {
       return atcb_translate_hook('date.status.cancelled', data);
     }
     return '';
@@ -245,7 +245,7 @@ function dateButtonContentTemplate(data: ATCBConfig, subEventIn: string | number
       </div>
       <div class="atcb-date-btn-hover">${unsafeHTML(hoverText as string)}</div>
     </div>
-    ${!data.hideCheckmark && data.dates![`${subEvent}`]!.status!.toLowerCase() !== 'cancelled' ? html`<div class="atcb-checkmark">${unsafeHTML(atcbIcon['checkmark']!)}</div>` : nothing}
+    ${!data.hideCheckmark && data.dates![`${subEvent}`]!.status !== 'cancelled' ? html`<div class="atcb-checkmark">${unsafeHTML(atcbIcon['checkmark']!)}</div>` : nothing}
     ${!data.dates![`${subEvent}`]!.overdue || data.pastDateHandling === 'none' ? html`<div class="atcb-date-btn-plus">+</div>` : nothing}`;
 }
 

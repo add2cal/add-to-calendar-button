@@ -81,6 +81,8 @@ Also part of the default run (long-standing quick tests):
 - B-16: invalid availability value throws
 - B-17: invalid status value throws
 - B-18: valid baseline config passes the whole pipeline
+- B-19: legacy v2 option spellings (Apple, Microsoft365, Outlook.com, ...) normalize to the official lowercase keys; official keys resolve identically
+- B-20: status input is case-insensitive and decorates to lowercase; default status is confirmed
 
 ### Group C - Date / time / timezone (single event) (`r-C-datetime.test.js`)
 
@@ -366,6 +368,8 @@ the pattern `<template> | <dimension values>`.
 - V-03: prokey (official spelling exception) triggers the PRO flow
 - V-04: special-case mappings work (ical-file-name, use-user-tz accepted)
 - V-05: runtime change of an official attribute re-initializes the button
+- V-06: legacy option value spellings via attribute (incl. spaced 'Microsoft 365' forms) resolve to the official keys
+- V-07: uppercase status attribute value keeps working; ics file carries the RFC uppercase form (STATUS/METHOD contract)
 
 ## Group W - Style registry (test/wc-tests/r-W-styles.test.js)
 
