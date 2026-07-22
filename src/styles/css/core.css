@@ -151,6 +151,9 @@
    over .atcb-list keeps this order-independent across the split-css assembly */
 .atcb-list.atcb-modal {
   min-width: auto;
+  /* items keep square corners in some styles (and the close item is the DOM's
+     last child) - clipping the rounded container is the robust guard */
+  overflow: hidden;
 }
 
 .atcb-modal-box.atcb-rtl {
