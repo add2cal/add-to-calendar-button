@@ -77,20 +77,17 @@
   background-color: var(--list-close-background);
 }
 
-/* in the modal presentation, the trigger label repeats as a headline on top,
-   with generous end padding to clear the X close control */
 .atcb-list-modal-headline {
   font-weight: 700;
   font-size: 1.05em;
-  padding-block: 1em 1em;
+  padding-block: .8em 1em;
   padding-inline: .9em 3.2em;
   text-align: start;
 }
 
-/* in the modal presentation, the close control is an X in the top end corner */
 .atcb-list.atcb-modal .atcb-list-item-close {
   position: absolute;
-  top: .85em;
+  top: .7em;
   inset-inline-end: .7em;
   height: 2em;
   width: 2em;
@@ -146,13 +143,8 @@
   z-index: 14000090;
 }
 
-/* the modal option list must stay content-sized (it also carries .atcb-list, whose
-   min-width:100% would otherwise stretch it to the full overlay width). Specificity
-   over .atcb-list keeps this order-independent across the split-css assembly */
 .atcb-list.atcb-modal {
-  min-width: auto;
-  /* items keep square corners in some styles (and the close item is the DOM's
-     last child) - clipping the rounded container is the robust guard */
+  min-width: 250px;
   overflow: hidden;
 }
 

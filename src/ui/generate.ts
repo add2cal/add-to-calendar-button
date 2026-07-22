@@ -192,14 +192,6 @@ function atcb_generate_label_content(data: ATCBConfig, parent: HTMLElement, type
     textEl.textContent = text;
     parent.append(textEl);
   }
-  // chevron indicator on the trigger button - only when a list will actually open (more than 1 option)
-  if (type === 'trigger' && !oneOption && !data.buttonsList && !data.hideTextLabelButton) {
-    const chevronEl = document.createElement('div');
-    chevronEl.classList.add('atcb-chevron');
-    chevronEl.setAttribute('part', 'atcb-button-chevron');
-    chevronEl.innerHTML = atcbIcon['chevron']!;
-    parent.append(chevronEl);
-  }
 }
 
 // generate the dropdown list (can also appear wihtin a modal, if option is set)

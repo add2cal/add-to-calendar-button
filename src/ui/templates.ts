@@ -299,6 +299,7 @@ function buttonTemplate(host: ShadowRoot, data: ATCBConfig): TemplateResult {
       >
         ${isDate ? dateButtonContentTemplate(data, 'all', false) : nothing}
         ${!isDate && !data.hideIconButton ? iconTemplate(contentType === 'trigger' ? 'trigger' : option) : nothing}${!isDate && showText ? html`<span class="atcb-text" part=${contentType === 'trigger' ? 'atcb-button-text' : 'atcb-list-text'}>${text}</span>` : nothing}
+        ${!isDate && contentType === 'trigger' && !oneOption && !data.buttonsList && !data.hideTextLabelButton ? html`<div class="atcb-chevron" part="atcb-button-chevron">${unsafeHTML(atcbIcon['chevron']!)}</div>` : nothing}
         ${!oneOption ? html`<div class="atcb-dropdown-anchor"></div>` : nothing}
         ${!data.hideCheckmark && !data.hideTextLabelButton && !data.buttonsList && !data.disabled && !data.allCancelled ? html`<div class="atcb-checkmark">${unsafeHTML(atcbIcon['checkmark']!)}</div>` : nothing}
       </button>

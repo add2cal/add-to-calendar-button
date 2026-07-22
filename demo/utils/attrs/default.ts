@@ -81,7 +81,14 @@ export const getInitialAttrs = (defaultName: string, defaultDescription: string,
     return {};
   })();
 
-  return !!cachedDataParsed && typeof cachedDataParsed === 'object' ? mergeDeep(defaultData, cachedDataParsed) : mergeDeep(defaultData, overrideData);
+  const merged = !!cachedDataParsed && typeof cachedDataParsed === 'object' ? mergeDeep(defaultData, cachedDataParsed) : mergeDeep(defaultData, overrideData);
+
+  const validOptions = Object.values(Option) as string[];
+  if (Array.isArray(merged.layout?.[LayoutAttrsKey.OPTIONS])) {
+    merged.layout[LayoutAttrsKey.OPTIONS] = merged.layout[LayoutAttrsKey.OPTIONS].filter((opt: string) => validOptions.includes(opt));
+  }
+
+  return merged;
 };
 
 export const getInitialAttrsBlank = (): Attrs => {
