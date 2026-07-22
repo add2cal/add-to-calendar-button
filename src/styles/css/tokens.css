@@ -6,8 +6,9 @@
  */
 
 :host(.atcb-dark) {
-  --btn-text: #dedede;
-  --list-text: #dedede;
+  --accent-color: #7ab0ff;
+  --btn-text: #f2f4f7;
+  --list-text: #f2f4f7;
   --modal-text: #f1f1f1;
   --modal-background: #242424;
   --modal-btn-background: #181819;
@@ -20,10 +21,11 @@
   --status-active-text: #000;
   --form-error: #db8680;
   --form-success: #99de9c;
-  --date-btn-text: #ebebf0;
-  --date-btn-text-secondary: #b5b5bd;
-  --date-btn-cal-day-text: #101010;
-  --date-btn-cal-background: #c7c7cd;
-  --date-btn-hover-background: #474747;
+  --date-btn-text: #f2f4f7;
+  --date-btn-text-secondary: #98a2b3;
+  --date-btn-cal-day-text: #101216;
+  --date-btn-cal-background: #c9ccd2;
+  --date-badge-ink: #0b0d10;
+  --date-btn-hover-background: #2b2f35;
   --icon-yahoo-color: #bebebe;
 }

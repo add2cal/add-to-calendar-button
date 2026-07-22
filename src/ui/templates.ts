@@ -225,7 +225,7 @@ function dateButtonContentTemplate(data: ATCBConfig, subEventIn: string | number
             ? cancelledInfo != ''
               ? html`<div class="atcb-date-btn-content atcb-date-btn-cancelled">${cancelledInfo}</div>`
               : html`<div class="atcb-date-btn-content">
-                <span class="atcb-date-btn-content-icon">${unsafeHTML(atcbIcon['location']!)}</span>
+                <span class="atcb-date-btn-content-icon">${unsafeHTML(atcbIcon['pin']!)}</span>
                 <span class="atcb-date-btn-content-location">${data.dates![`${subEvent}`]!.location as string}</span>
               </div>`
             : hasDescriptionFallback
@@ -235,7 +235,7 @@ function dateButtonContentTemplate(data: ATCBConfig, subEventIn: string | number
         ${
           fullTimeInfo.length > 0 || (data.recurrence != null && data.recurrence != '')
             ? html`<div class="atcb-date-btn-content">
-              <span class="atcb-date-btn-content-icon">${unsafeHTML(atcbIcon['ical']!)}</span>
+              <span class="atcb-date-btn-content-icon">${unsafeHTML(atcbIcon['clock']!)}</span>
               <span class="atcb-date-btn-content-text">
                 ${fullTimeInfo.map((block: string) => html`<span>${block}</span>`)}${data.recurrence != null && data.recurrence != '' ? html`<span>${unsafeHTML(recurringString)}</span>` : nothing}
               </span>
@@ -246,7 +246,7 @@ function dateButtonContentTemplate(data: ATCBConfig, subEventIn: string | number
       <div class="atcb-date-btn-hover">${unsafeHTML(hoverText as string)}</div>
     </div>
     ${!data.hideCheckmark && data.dates![`${subEvent}`]!.status !== 'cancelled' ? html`<div class="atcb-checkmark">${unsafeHTML(atcbIcon['checkmark']!)}</div>` : nothing}
-    ${!data.dates![`${subEvent}`]!.overdue || data.pastDateHandling === 'none' ? html`<div class="atcb-date-btn-plus">+</div>` : nothing}`;
+    ${!data.dates![`${subEvent}`]!.overdue || data.pastDateHandling === 'none' ? html`<div class="atcb-date-btn-plus">${unsafeHTML(atcbIcon['plus']!)}</div>` : nothing}`;
 }
 
 // ---------- the button ----------

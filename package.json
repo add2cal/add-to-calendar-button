@@ -114,6 +114,7 @@
     "build:demo": "cd demo && npm run generate",
     "build:min": "node scripts/build.mjs --min",
     "build": "node scripts/build.mjs",
+    "prepack": "npm run build:min",
     "test:package": "node scripts/test-package.mjs",
     "test:ssr": "node scripts/build.mjs && node --test \"test/ssr-node/*.test.mjs\""
   },

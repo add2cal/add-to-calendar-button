@@ -39,6 +39,8 @@ function licenseBanner(subject) {
 
 function cleanOldBuildFiles() {
   fs.rmSync(r('dist'), { recursive: true, force: true });
+  // assets/css is generated (gitignored) - ensure it exists on fresh clones
+  fs.mkdirSync(r('assets/css'), { recursive: true });
   for (const file of fs.readdirSync(r('assets/css'))) {
     if (file.endsWith('.min.css') || file.endsWith('.min.css.map')) {
       fs.rmSync(r('assets/css', file));

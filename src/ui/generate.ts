@@ -192,6 +192,14 @@ function atcb_generate_label_content(data: ATCBConfig, parent: HTMLElement, type
     textEl.textContent = text;
     parent.append(textEl);
   }
+  // chevron indicator on the trigger button - only when a list will actually open (more than 1 option)
+  if (type === 'trigger' && !oneOption && !data.buttonsList && !data.hideTextLabelButton) {
+    const chevronEl = document.createElement('div');
+    chevronEl.classList.add('atcb-chevron');
+    chevronEl.setAttribute('part', 'atcb-button-chevron');
+    chevronEl.innerHTML = atcbIcon['chevron']!;
+    parent.append(chevronEl);
+  }
 }
 
 // generate the dropdown list (can also appear wihtin a modal, if option is set)
@@ -202,6 +210,14 @@ function atcb_generate_dropdown_list(host: ShadowRoot, data: ATCBConfig): HTMLDi
   optionsList.role = 'menu';
   if (data.rtl) {
     optionsList.classList.add('atcb-rtl');
+  }
+  // in the modal case, the trigger label repeats as a headline on top
+  if (data.listStyle === 'modal') {
+    const listHeadline = document.createElement('div');
+    listHeadline.classList.add('atcb-list-modal-headline');
+    listHeadline.setAttribute('part', 'atcb-list-modal-headline');
+    listHeadline.textContent = atcb_translate_hook('label.addtocalendar', data);
+    optionsList.append(listHeadline);
   }
   // generate the list items
   let listCount = 0;

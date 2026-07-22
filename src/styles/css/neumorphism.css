@@ -8,28 +8,30 @@
 :host {
   --wrapper-padding: 0px;
   --buttonslist-gap: 5px;
-  --btn-background: #f5f5f5;
-  --btn-hover-background: #fff;
+  --btn-background: #e8ebf1;
+  --btn-hover-background: #eceff4;
   --btn-font-weight: 600;
-  --btn-text: #444;
-  --btn-hover-text: #111;
-  --btn-border-radius: 15px;
+  --btn-text: #3a4150;
+  --btn-hover-text: #3a4150;
+  --btn-border-radius: 14px;
   --btn-padding-x: 1.2em;
   --btn-padding-y: 1em;
-  --btn-shadow: rgb(40 40 40 / 30%) 0.3em 0.3em 0.6em,rgb(255 255 255 / 70%) -0.1em -0.1em 0.3em;
-  --btn-hover-shadow: rgb(40 40 40 / 50%) 0.4em 0.4em 0.8em, rgb(255 255 255 / 90%) -0.2em -0.2em 0.5em;
-  --btn-active-shadow: inset rgb(40 40 40 / 40%) 0.15em 0.15em 0.3em, inset rgb(255 255 255 / 90%) -0.2em -0.2em 0.5em;
-  --list-background: #f5f5f5;
-  --list-hover-background: #fff;
-  --list-text: #444;
+  --btn-shadow: #c6cbd5 .3em .3em .6em, #fff -.3em -.3em .6em;
+  --btn-hover-shadow: #c2c7d2 .38em .38em .75em, #fff -.38em -.38em .75em;
+  --btn-active-shadow: inset #c6cbd5 .22em .22em .5em, inset #fff -.22em -.22em .5em;
+  --neu-item-pop: #c6cbd5 .22em .22em .45em, #fff -.22em -.22em .45em;
+  --neu-item-inset: inset #c6cbd5 .18em .18em .4em, inset #fff -.18em -.18em .4em;
+  --list-background: #e8ebf1;
+  --list-hover-background: #e8ebf1;
+  --list-text: #3a4150;
   --list-font-weight: 400;
-  --list-hover-text: #111;
+  --list-hover-text: #3a4150;
   --list-close-background: #e5e5e5;
   --list-close-text: #777;
-  --list-border-radius: 11px;
-  --list-padding: 1em;
+  --list-border-radius: 14px;
+  --list-padding: .85em 1em;
   --list-min-width: 100%;
-  --list-shadow: rgb(40 40 40 / 30%) 0.4em 0.4em 0.8em,rgb(255 255 255 / 80%) -0.2em -0.2em 0.5em;
+  --list-shadow: #c2c7d2 .5em .5em 1.1em, #fff -.5em -.5em 1.1em;
   --modal-text: #111;
   --modal-border-radius: 9px;
   --modal-shadow: drop-shadow(5px 8px 30px rgb(0 0 0 / 70%));
@@ -42,8 +44,8 @@
   --modal-btn-hover-shadow: rgb(40 40 40 / 40%) 0.4em 0.4em 0.7em, rgb(255 255 255 / 70%) -0.2em -0.2em 0.5em;
   --modal-headline-text-transform: none;
   --input-border-radius: 6px;
-  --date-btn-text-secondary: #3a3a3f;
-  --date-btn-background: #e3e5ea;
+  --date-btn-text-secondary: #667085;
+  --date-btn-background: #e8ebf1;
   --date-btn-shadow: rgb(0 0 0 / 10%) 0 4px 10px -2px, rgb(0 0 0 / 15%) 0 2px 3px -1px;
   --date-btn-hover-shadow: rgb(0 0 0 / 20%) 0 5px 12px -2px, rgb(0 0 0 / 20%) 0 3px 4px -2px;
   --checkmark-background: drop-shadow(0 0 3px #fff);
@@ -51,24 +53,28 @@
 }
 
 :host(.atcb-dark) {
-  --btn-background: #2e2e2e;
-  --btn-hover-background: #373737;
-  --btn-hover-text: #f1f1f1;
-  --btn-shadow: rgb(0 0 0 / 70%) 0.3em 0.3em 0.6em,rgb(230 230 230 / 20%) -0.05em -0.05em 0.4em;
-  --btn-hover-shadow: rgb(0 0 0 / 90%) 0.4em 0.4em 0.9em,rgb(230 230 230 / 25%) -0.08em -0.08em 0.6em -0.1em;
-  --btn-active-shadow: inset rgb(0 0 0 / 80%) 0.15em 0.15em 0.25em, inset rgb(230 230 230 / 10%) -0.2em -0.2em 0.7em -0.1em;
-  --list-background: #2e2e2e;
-  --list-hover-background: #373737;
-  --list-hover-text: #f1f1f1;
+  --btn-background: #2b2f36;
+  --btn-text: #e6e9ef;
+  --btn-hover-background: #2e323a;
+  --btn-hover-text: #e6e9ef;
+  --btn-shadow: #1f2228 .3em .3em .6em, #373c45 -.3em -.3em .6em;
+  --btn-hover-shadow: #1c1f24 .38em .38em .75em, #3a3f49 -.38em -.38em .75em;
+  --btn-active-shadow: inset #1f2228 .22em .22em .5em, inset #373c45 -.22em -.22em .5em;
+  --neu-item-pop: #1c1f24 .22em .22em .45em, #3a3f49 -.22em -.22em .45em;
+  --neu-item-inset: inset #1f2228 .18em .18em .4em, inset #373c45 -.18em -.18em .4em;
+  --list-background: #2b2f36;
+  --list-text: #e6e9ef;
+  --list-hover-background: #2b2f36;
+  --list-hover-text: #e6e9ef;
   --list-close-background: #282828;
   --list-close-text: #777;
-  --list-shadow: rgb(0 0 0) 0.3em 0.3em 1em,rgb(230 230 230 / 40%) -0.08em -0.08em 0.6em;
+  --list-shadow: #1c1f24 .5em .5em 1.1em, #3a3f49 -.5em -.5em 1.1em;
   --modal-shadow: drop-shadow(5px 8px 35px rgb(0 0 0 / 90%));
   --modal-btn-bar: #38383a;
   --modal-btn-shadow: rgb(0 0 0 / 60%) 0.2em 0.2em 0.6em, rgb(230 230 230 / 15%) -0.1em -0.1em 0.4em;
   --modal-btn-hover-shadow: rgb(0 0 0 / 80%) 0.3em 0.3em 0.8em, rgb(230 230 230 / 15%) -0.1em -0.1em 0.6em;
-  --date-btn-cal-month-text: #3e3e3f;
-  --date-btn-background: #363636;
+  --date-btn-cal-month-text: #4a5058;
+  --date-btn-background: #2b2f36;
   --date-btn-shadow: rgb(0 0 0 / 70%) 0.2em 0.2em 0.8em, rgb(230 230 230 / 15%) -0.1em -0.1em 0.5em;
   --date-btn-hover-shadow: rgb(0 0 0) 0.3em 0.4em 1em, rgb(230 230 230 / 15%) -0.2em -0.2em 0.8em;
   --checkmark-background: drop-shadow(0 0 3px #0a0a0a);
@@ -120,6 +126,7 @@
 
 .atcb-button:focus-visible {
   outline: 2px solid var(--accent-color);
+  outline-offset: .15em;
 }
 
 .atcb-button:not([disabled]):focus,
@@ -138,12 +145,12 @@
 }
 
 .atcb-icon {
-  height: 1em;
-  width: 1em;
+  height: 1.15em;
+  width: 1.15em;
 }
 
 .atcb-rtl .atcb-icon {
-  margin-left: 0.8em;
+  margin-left: .55em;
 }
 
 .atcb-dropdown-anchor {
@@ -173,41 +180,34 @@
   border-radius: var(--list-border-radius);
   box-shadow: var(--list-shadow);
   min-width: var(--list-min-width);
+  padding: .55em;
 }
 
 .atcb-list-item {
+  border-radius: 10px;
   box-shadow: none;
   padding: var(--list-padding);
-  transition: box-shadow 0.15s ease-in-out, padding 0.15s ease-in-out,
-    margin 0.15s ease-in-out;
+  transition: box-shadow 0.15s ease-in-out;
 }
 
 .atcb-list-item:hover {
-  box-shadow: var(--btn-shadow);
-  padding: calc(var(--list-padding) + 0.2em);
-  margin: -0.2em;
+  box-shadow: var(--neu-item-pop);
+  border-radius: 10px;
   position: relative;
   z-index: 15000010;
+}
+
+.atcb-list-item:active {
+  box-shadow: var(--neu-item-inset);
+  border-radius: 10px;
 }
 
 .atcb-list-item:focus-visible {
-  box-shadow: var(--btn-shadow);
-  padding: calc(var(--list-padding) + 0.2em);
-  margin: -0.2em;
+  outline: 2px solid var(--accent-color);
+  outline-offset: -2px;
+  border-radius: 10px;
   position: relative;
   z-index: 15000010;
-}
-
-.atcb-list-item:last-child {
-  border-radius: 0 0 var(--list-border-radius) var(--list-border-radius);
-}
-
-.atcb-list-item:first-child {
-  border-radius: var(--list-border-radius) var(--list-border-radius) 0 0;
-}
-
-.atcb-list-item:only-child {
-  border-radius: var(--list-border-radius);
 }
 
 .atcb-modal-box {
@@ -335,7 +335,7 @@ a.atcb-modal-btn:not([disabled]):hover {
 }
 
 .atcb-date-btn-plus {
-  border-radius: 4px 0;
+  border-radius: 100%;
 }
 
 .atcb-saved .atcb-checkmark {

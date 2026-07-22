@@ -6,29 +6,30 @@
  */
 
 :host {
-  --wrapper-padding: 1px;
+  --wrapper-padding: 0px;
   --buttonslist-gap: 5px;
-  --btn-background: #fff;
-  --btn-hover-background: #283768;
-  --btn-hover-border: #333;
+  --btn-background: transparent;
+  --btn-hover-background: rgb(27 31 36 / 6%);
+  --btn-hover-border: rgb(27 31 36 / 70%);
   --btn-border-width: 1px;
-  --btn-border: #333;
-  --btn-border-radius: 0;
-  --btn-padding-x: 1.1em;
-  --btn-padding-y: .65em;
+  --btn-border: rgb(27 31 36 / 42%);
+  --btn-border-radius: 8px;
+  --btn-padding-x: 1.09em;
+  --btn-padding-y: .7em;
   --btn-font-weight: 600;
-  --btn-text: #000;
-  --btn-hover-text: #fff;
+  --btn-text: #1b1f24;
+  --btn-hover-text: #1b1f24;
   --list-background: #fff;
-  --list-hover-background: #283768;
-  --list-text: #333;
+  --list-border: #e4e7ec;
+  --list-hover-background: #f2f4f7;
+  --list-text: #1b1f24;
   --list-font-weight: 400;
-  --list-hover-text: #fff;
+  --list-hover-text: #1b1f24;
   --list-close-background: #e5e5e5;
   --list-close-text: #777;
   --list-border-width: 1px;
   --list-border: #333;
-  --list-border-radius: 0px;
+  --list-border-radius: 10px;
   --list-padding: .8em 1.2em;
   --list-min-width: 100%;
   --list-modal-shadow: rgb(0 0 0 / 12%) 0 4px 33px -3px, rgb(0 0 0 / 10%) 0 2px 8px -2px;
@@ -44,32 +45,33 @@
   --modal-btn-secondary-text: #666567;
   --modal-headline-text-transform: none;
   --input-border-radius: 3px;
-  --date-btn-text-secondary: #3a3a3f;
-  --date-btn-background: #eae9ed;
+  --date-btn-text-secondary: #667085;
+  --date-btn-background: #fff;
   --checkmark-background: drop-shadow(0 0 3px #fff);
   --overlay-background: rgb(20 20 20 / 40%);
-  --icon-hover-ms365-color: #fff;
-  --icon-hover-yahoo-color: #fff;
+  --icon-hover-ms365-color: #ea3e23;
+  --icon-hover-yahoo-color: #5f01d1;
 }
 
 :host(.atcb-dark) {
-  --btn-background: #182244;
-  --btn-hover-background: #283768;
-  --btn-hover-border: #283768;
-  --btn-border: #283768;
-  --btn-hover-text: #f1f1f1;
-  --list-background: #182244;
-  --list-hover-background: #283768;
-  --list-hover-text: #f1f1f1;
+  --btn-background: transparent;
+  --btn-hover-background: rgb(242 244 247 / 9%);
+  --btn-hover-border: rgb(242 244 247 / 75%);
+  --btn-border: rgb(242 244 247 / 45%);
+  --btn-hover-text: #f2f4f7;
+  --list-background: #24272c;
+  --list-border: #373c43;
+  --list-hover-background: #2f343b;
+  --list-hover-text: #f2f4f7;
   --list-close-background: #121213;
   --list-close-text: #cacaca;
-  --list-border: #283768;
+  --list-border: #373c43;
   --list-modal-shadow: rgb(0 0 0 / 14%) -1px 3px 33px 2px;
   --modal-shadow: drop-shadow(3px 6px 28px rgb(0 0 0 / 16%));
   --modal-btn-bar: #38383a;
   --modal-btn-border: #434246;
-  --date-btn-cal-month-text: #3e3e3f;
-  --date-btn-background: #363636;
+  --date-btn-cal-month-text: #4a5058;
+  --date-btn-background: #24272c;
   --checkmark-background: drop-shadow(0 0 3px #0a0a0a);
   --overlay-background: rgb(20 20 20 / 50%);
   --icon-ms365-color: #bebebe;
@@ -119,6 +121,7 @@
 
 .atcb-button:focus-visible {
   outline: 2px solid var(--accent-color);
+  outline-offset: .15em;
 }
 
 .atcb-button:not([disabled]):focus,
@@ -161,17 +164,16 @@
 
 .atcb-button.atcb-active:not(.atcb-modal-style, .atcb-dropoverlay, .atcb-dropup)::before,
 .atcb-button.atcb-active.atcb-dropup::after {
-  border-width: 0.35em;
-  transition: border-width 0.1s linear 0.1s;
+  border-width: 0;
 }
 
 .atcb-icon {
-  height: 1em;
-  width: 1em;
+  height: 1.15em;
+  width: 1.15em;
 }
 
 .atcb-rtl .atcb-icon {
-  margin-left: .8em;
+  margin-left: .55em;
 }
 
 .atcb-dropdown-anchor {
@@ -366,7 +368,11 @@ a.atcb-modal-btn.atcb-modal-btn-border {
 }
 
 .atcb-date-btn-details {
-  padding: .7em .8em;
+  padding: .7em 1.4em .7em .8em;
+}
+
+.atcb-rtl .atcb-date-btn-details {
+  padding: .7em .8em .7em 1.4em;
 }
 
 .atcb-subevent-btn:hover .atcb-date-btn-details {
@@ -387,7 +393,7 @@ a.atcb-modal-btn.atcb-modal-btn-border {
 }
 
 .atcb-date-btn-plus {
-  border-radius: 4px 0;
+  border-radius: 100%;
 }
 
 .atcb-saved .atcb-checkmark {
