@@ -20,7 +20,7 @@
   --btn-text: #1b1f24;
   --btn-hover-text: #1b1f24;
   --btn-shadow: 0 .22em 0 var(--btn-edge), rgb(16 24 40 / 12%) 0 .35em .65em;
-  --btn-hover-shadow: 0 .5em 0 var(--btn-edge), rgb(16 24 40 / 18%) 0 .85em 1.3em -.1em;
+  --btn-hover-shadow: 0 .35em 0 var(--btn-edge), rgb(16 24 40 / 16%) 0 .6em 1em -.1em;
   --btn-active-shadow: 0 .06em 0 var(--btn-edge);
   --btn-active-shadow-up: 0 -.06em 0 var(--btn-edge);
   --list-background: #fff;
@@ -63,7 +63,7 @@
   --btn-border: #3b4046;
   --btn-hover-text: #f2f4f7;
   --btn-shadow: 0 .22em 0 var(--btn-edge), rgb(0 0 0 / 45%) 0 .35em .65em;
-  --btn-hover-shadow: 0 .5em 0 var(--btn-edge), rgb(0 0 0 / 60%) 0 .85em 1.3em -.1em;
+  --btn-hover-shadow: 0 .35em 0 var(--btn-edge), rgb(0 0 0 / 55%) 0 .6em 1em -.1em;
   --btn-active-shadow: 0 .06em 0 var(--btn-edge);
   --btn-active-shadow-up: 0 -.06em 0 var(--btn-edge);
   --list-background: #24272c;
@@ -144,7 +144,7 @@
   border-color: var(--btn-hover-border);
   box-shadow: var(--btn-hover-shadow);
   color: var(--btn-hover-text);
-  transform: translate3d(0, 0, -12px) translateY(-.28em);
+  transform: translate3d(0, 0, -12px) translateY(-.15em);
   transition: transform 0.1s linear, box-shadow 0.1s linear;
 }
 
@@ -163,12 +163,13 @@
 
 .atcb-button.atcb-active:not(.atcb-modal-style, .atcb-dropoverlay) {
   box-shadow: var(--btn-hover-shadow);
-  transform: translate3d(0, 0, -12px) translateY(-.28em);
+  transform: translate3d(0, 0, -12px) translateY(-.15em);
   transition: transform 0.1s linear, box-shadow 0.1s linear;
 }
 
-/* the click itself presses the button DOWN (edge collapses), lift resumes after */
-.atcb-button:not([disabled]):active {
+/* the click itself presses the button DOWN (edge collapses), lift resumes after.
+   Blocked while the list is already open (e.g. hover-triggered lists). */
+.atcb-button:not([disabled], .atcb-active):active {
   box-shadow: var(--btn-active-shadow);
   transform: translate3d(0, 0, -12px) translateY(.16em);
   transition: transform 0.06s linear, box-shadow 0.06s linear;
@@ -226,11 +227,11 @@
 
 /* floating card with air to the button — like default, no slide animation */
 .atcb-list-wrapper.atcb-dropdown:not(.atcb-dropup, .atcb-dropoverlay) .atcb-list {
-  margin-top: .7em;
+  margin-top: 1.1em;
 }
 
 .atcb-list-wrapper.atcb-dropup .atcb-list {
-  margin-bottom: .7em;
+  margin-bottom: 1.1em;
 }
 
 .atcb-list-wrapper.atcb-dropoverlay {

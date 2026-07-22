@@ -82,16 +82,16 @@
 .atcb-list-modal-headline {
   font-weight: 700;
   font-size: 1.05em;
-  padding-block: .8em .5em;
-  padding-inline: .9em 2.8em;
+  padding-block: 1em 1em;
+  padding-inline: .9em 3.2em;
   text-align: start;
 }
 
 /* in the modal presentation, the close control is an X in the top end corner */
 .atcb-list.atcb-modal .atcb-list-item-close {
   position: absolute;
-  top: .5em;
-  inset-inline-end: .5em;
+  top: .85em;
+  inset-inline-end: .7em;
   height: 2em;
   width: 2em;
   padding: .5em;
