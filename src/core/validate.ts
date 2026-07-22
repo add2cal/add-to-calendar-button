@@ -121,18 +121,24 @@ async function atcb_validate_subscribe(data: ATCBConfig, msgPrefix: string): Pro
   return true;
 }
 
-// validate created input
+// validate icsCreated input (per date entry)
 async function atcb_validate_created(data: ATCBConfig, msgPrefix: string): Promise<boolean> {
-  if (!/^\d{8}T\d{6}Z$/.test(data.created!)) {
-    throw new Error(msgPrefix + ' failed: created date format not valid. Needs to be a full ISO-8601 UTC date and time string, formatted YYYYMMDDTHHMMSSZ');
+  for (let i = 0; i < data.dates!.length; i++) {
+    const suffix = data.dates!.length > 1 ? ' [dates array object #' + (i + 1) + '/' + data.dates!.length + ']' : '';
+    if (!/^\d{8}T\d{6}Z$/.test(data.dates![`${i}`]!.icsCreated!)) {
+      throw new Error(msgPrefix + ' failed: icsCreated date format not valid. Needs to be a full ISO-8601 UTC date and time string, formatted YYYYMMDDTHHMMSSZ' + suffix);
+    }
   }
   return true;
 }
 
-// validate updated input
+// validate icsUpdated input (per date entry)
 async function atcb_validate_updated(data: ATCBConfig, msgPrefix: string): Promise<boolean> {
-  if (!/^\d{8}T\d{6}Z$/.test(data.updated!)) {
-    throw new Error(msgPrefix + ' failed: updated date format not valid. Needs to be a full ISO-8601 UTC date and time string, formatted YYYYMMDDTHHMMSSZ');
+  for (let i = 0; i < data.dates!.length; i++) {
+    const suffix = data.dates!.length > 1 ? ' [dates array object #' + (i + 1) + '/' + data.dates!.length + ']' : '';
+    if (!/^\d{8}T\d{6}Z$/.test(data.dates![`${i}`]!.icsUpdated!)) {
+      throw new Error(msgPrefix + ' failed: icsUpdated date format not valid. Needs to be a full ISO-8601 UTC date and time string, formatted YYYYMMDDTHHMMSSZ' + suffix);
+    }
   }
   return true;
 }

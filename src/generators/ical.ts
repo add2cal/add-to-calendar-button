@@ -212,8 +212,8 @@ function atcb_generate_ical(host: ShadowRoot, data: ATCBConfig, type: string, su
     ics_lines.push('SEQUENCE:' + data.dates![`${i}`]!.sequence);
     // the ics file sticks to the RFC's canonical uppercase form (input/config is lowercase)
     ics_lines.push('STATUS:' + String(data.dates![`${i}`]!.status).toUpperCase());
-    ics_lines.push('CREATED:' + data.created);
-    ics_lines.push('LAST-MODIFIED:' + data.updated);
+    ics_lines.push('CREATED:' + data.dates![`${i}`]!.icsCreated);
+    ics_lines.push('LAST-MODIFIED:' + data.dates![`${i}`]!.icsUpdated);
     // ics-only extra options (these shape the generated file only - other calendar
     // types ignore them by design, since their generators never read these keys)
     const entry = data.dates![`${i}`]!;

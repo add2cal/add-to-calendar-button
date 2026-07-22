@@ -95,6 +95,50 @@ compilerOptions: {
           {{ $t('content.guide.ssr_note') }}
           <NuxtLink :to="{path: localePath('advanced-use'), hash: '#case-12'}">{{ $t('content.advanced.12_long') }} <ArrowRightIcon class="-mt-0.5 mr-0.5 inline-block h-3 w-3" aria-hidden="true" /></NuxtLink>
         </p>
+        <p>{{ $t('content.guide.ssr_example') }}</p>
+        <LazyCodeBlock language="html">
+          <pre>
+&lt;!-- any .vue file in your Nuxt app --&gt;
+&lt;script setup&gt;
+import { atcb_generate_ssr_html } from 'add-to-calendar-button/ssr';
+
+// hydrate the shell without re-parsing it: v-html would re-assign innerHTML
+// during hydration, which does not parse declarative shadow DOM and would
+// destroy the pre-rendered shadow root (visible flash + console warnings)
+const vSsrHtml = {
+  mounted(el, binding) {
+    if (el.querySelector('add-to-calendar-button')) return; // already server-rendered
+    el.innerHTML = binding.value;
+  },
+  getSSRProps: (binding) => ({ innerHTML: binding.value }),
+};
+
+const ssrHtml = atcb_generate_ssr_html({
+  name: 'Reminder to check the add-to-calendar-button demo',
+  options: ['Apple', 'Google'],
+  location: 'World Wide Web',
+  startDate: '{{ defaultDate }}',
+  endDate: '{{ defaultDate }}',
+  startTime: '10:15',
+  endTime: '23:30',
+  timeZone: 'Europe/Berlin',
+});
+
+// client-side upgrade of the shell into the full button
+onMounted(() => import('add-to-calendar-button'));
+&lt;/script&gt;
+
+&lt;template&gt;
+  &lt;div v-ssr-html="ssrHtml"&gt;&lt;/div&gt;
+&lt;/template&gt;</pre>
+        </LazyCodeBlock>
+        <h2 class="mb-6 mt-20">{{ $t('content.guide.nuxt.ssr_notes_headline') }}</h2>
+        <ul class="ml-6 list-disc pb-4">
+          <li class="pb-2">{{ $t('content.guide.nuxt.ssr_note_vhtml') }}</li>
+          <li class="pb-2">{{ $t('content.guide.nuxt.ssr_note_server_only') }}</li>
+          <li class="pb-2">{{ $t('content.guide.nuxt.ssr_note_client_import') }}</li>
+          <li>{{ $t('content.guide.nuxt.ssr_note_attrs') }}</li>
+        </ul>
       </div>
     </div>
     <div class="hidden border-l border-zinc-300 pl-8 text-xs dark:border-zinc-700 lg:block xl:pl-12">

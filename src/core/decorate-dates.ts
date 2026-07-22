@@ -36,7 +36,7 @@ function atcb_decorate_data_dates(data: ATCBConfig | ATCBInputConfig): ATCBConfi
   // the root date values have been moved into the dates entries at this point (except
   // "name", which doubles as the series title) - drop the root copies so the dates array
   // is the single source of truth from here on
-  const movedRootProperties = ['description', 'startDate', 'startTime', 'endDate', 'endTime', 'timeZone', 'useUserTZ', 'location', 'status', 'sequence', 'availability', 'organizer', 'attendee'];
+  const movedRootProperties = ['description', 'startDate', 'startTime', 'endDate', 'endTime', 'timeZone', 'useUserTZ', 'location', 'status', 'sequence', 'availability', 'organizer', 'attendee', 'icsCreated', 'icsUpdated'];
   movedRootProperties.forEach((prop) => {
     delete cfg[`${prop}`];
   });
@@ -44,13 +44,15 @@ function atcb_decorate_data_dates(data: ATCBConfig | ATCBInputConfig): ATCBConfi
   cfg = atcb_decorate_data_button_status_handling(cfg);
   // calculate current time
   const now = new Date();
-  // set created date
-  if (!cfg.created || cfg.created === '') {
-    cfg.created = atcb_format_datetime(now, 'clean', true);
-  }
-  // set updated date
-  if (!cfg.updated || cfg.updated === '') {
-    cfg.updated = atcb_format_datetime(now, 'clean', true);
+  // set icsCreated/icsUpdated defaults per date entry (root values already moved into
+  // the entries at this point; entries without any value get the generation timestamp)
+  for (const dateEntry of cfg.dates!) {
+    if (!dateEntry.icsCreated || dateEntry.icsCreated === '') {
+      dateEntry.icsCreated = atcb_format_datetime(now, 'clean', true);
+    }
+    if (!dateEntry.icsUpdated || dateEntry.icsUpdated === '') {
+      dateEntry.icsUpdated = atcb_format_datetime(now, 'clean', true);
+    }
   }
   // last but not least, we sort any subEvent by start date ascending
   if (cfg.dates!.length > 1) {
@@ -62,7 +64,7 @@ function atcb_decorate_data_dates(data: ATCBConfig | ATCBInputConfig): ATCBConfi
 // override the dates information with values on the root level
 function atcb_move_root_values_into_dates(data: ATCBConfig, i: number): ATCBConfig {
   const dateEntry = data.dates![`${i}`]!;
-  const properties = ['description', 'startDate', 'startTime', 'endDate', 'endTime', 'timeZone', 'useUserTZ', 'location', 'status', 'sequence', 'availability', 'organizer', 'attendee', 'icsReminder', 'icsUrl', 'icsCategories', 'icsClass', 'icsPriority', 'icsGeo', 'icsAttach'];
+  const properties = ['description', 'startDate', 'startTime', 'endDate', 'endTime', 'timeZone', 'useUserTZ', 'location', 'status', 'sequence', 'availability', 'organizer', 'attendee', 'icsReminder', 'icsUrl', 'icsCategories', 'icsClass', 'icsPriority', 'icsGeo', 'icsAttach', 'icsCreated', 'icsUpdated'];
   // do it for name only if data.dates is not >1 as in this case, name would be used for the event series title
   if (data.dates!.length === 1) {
     properties.unshift('name');
@@ -113,9 +115,11 @@ function atcb_generate_unique_uid(data: ATCBConfig, i: number): ATCBConfig {
 // transform strings
 function atcb_transform_strings(data: ATCBConfig, i: number): ATCBConfig {
   const dateEntry = data.dates![`${i}`]!;
-  // status is normalized to the official lowercase form (input is case-insensitive)
+  // status and icsClass are normalized to the official lowercase form (input is case-insensitive)
+  // (the ics generator uppercases them again for the RFC-canonical file output)
   dateEntry.status = atcb_apply_transformation(dateEntry.status, 'lower') as string | undefined;
   dateEntry.availability = atcb_apply_transformation(dateEntry.availability, 'lower');
+  dateEntry.icsClass = atcb_apply_transformation(dateEntry.icsClass, 'lower') as string | undefined;
   return data;
 }
 

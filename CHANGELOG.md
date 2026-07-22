@@ -16,6 +16,7 @@
   - security: url scheme allowlisting, escaped description links, prototype-pollution-safe input parsing, valid schema.org JSON for any content
   - recurring events with old start dates now resolve instantly and correctly (the old day-by-day iteration silently capped out about 27 years in)
   - honest clipboard fallback: when automatic copying fails, a manual-copy field appears instead of a false success message
+  - ⚠️ Breaking: the ics timestamp options were renamed to their ics-only scope: `created` is now `ics-created` (`icsCreated`) and `updated` is now `ics-updated` (`icsUpdated`) - the old names are no longer read
   - ⚠️ Breaking: dedicated `no-pro` / `unstyle` / `no-pro-unstyle` builds are gone - the old entry points and CDN file names keep working as tiny shims that load the main package
   - ⚠️ Breaking: for `customLabels` users overriding exactly these keys: `date.status.cancelled.cta` is now `date.status.cancelled_cta`, `label.share.email.subject` is now `label.share.email_subject`, and `label.rsvp` / `form.status` / `form.success` moved to `label.rsvp.title` / `form.status.title` / `form.success.title`
   - ⚠️ Breaking: script-capable url schemes (like `javascript:`) are rejected wherever urls are consumed

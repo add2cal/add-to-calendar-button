@@ -1,8 +1,6 @@
 <script setup lang="ts">
 import View_DE from "@/components/translated/what-is-an-add-to-calendar-button-de.vue";
 import FeaturesBlock from "@/components/featuresBlock.vue";
-import "add-to-calendar-button";
-import "@/utils/atcbStyles";
 import { ArrowRightIcon, WrenchScrewdriverIcon, BeakerIcon, MagnifyingGlassIcon, RocketLaunchIcon } from '@heroicons/vue/24/outline';
 const { locale } = useI18n();
 
@@ -114,7 +112,7 @@ const defaultDate = nextDay.getFullYear() + '-' + ('0' + (nextDay.getMonth() + 1
   <div class="text-center">
     <h2 class="mb-10 mt-20">... {{ $t('content.seo.example') }}</h2>
     <div class="grid-bg flex w-full justify-center rounded-lg py-16 shadow-lg">
-      <add-to-calendar-button
+      <Atcb
         :name="$t('demo_data.name')"
         :start-date="defaultDate"
         start-time="10:15"
@@ -129,7 +127,7 @@ const defaultDate = nextDay.getFullYear() + '-' + ('0' + (nextDay.getMonth() + 1
         :language="locale"
         hide-branding
         hide-rich-data
-      ></add-to-calendar-button>
+      ></Atcb>
     </div>
     <p class="mt-10 italic">{{ $t('content.seo.example_disclaimer') }}</p>
   </div>

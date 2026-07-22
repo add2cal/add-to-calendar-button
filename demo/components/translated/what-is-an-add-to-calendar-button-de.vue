@@ -1,7 +1,4 @@
-<script setup lang="ts">
-import "add-to-calendar-button";
-import "@/utils/atcbStyles";
-</script>
+<script setup lang="ts"></script>
 
 <template>
   <div>

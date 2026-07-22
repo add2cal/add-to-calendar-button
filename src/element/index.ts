@@ -40,6 +40,7 @@ if (atcbIsBrowser()) {
 
     declare _buttonTemplate: TemplateResult | null;
     _ssrShellNodes: Element[];
+    _deferLitRender: boolean;
     _initialized: Promise<void>;
     _initializedResolver!: () => void;
     state: { initializing: boolean; initialized: boolean; ready: boolean; updatePending: boolean };
@@ -61,11 +62,13 @@ if (atcbIsBrowser()) {
       // render is ready to swap in (see removeSsrShell)
       if (this.shadowRoot) {
         this._ssrShellNodes = Array.from(this.shadowRoot.children);
+        this._deferLitRender = true;
       } else {
         // attach the shadow root in the constructor (Lit adopts a pre-attached root via
         // createRenderRoot below); delegatesFocus forwards host.focus() to the button
         this.attachShadow({ mode: 'open', delegatesFocus: true });
         this._ssrShellNodes = [];
+        this._deferLitRender = false;
       }
       this._buttonTemplate = null;
       this.state = {
@@ -90,6 +93,15 @@ if (atcbIsBrowser()) {
 
     override createRenderRoot(): ShadowRoot {
       return this.shadowRoot!;
+    }
+
+    // while an adopted ssr shell is painted, lit must not touch the shadow root at
+    // all: ANY committed template (even an empty one) clears the root's children and
+    // would wipe the shell, leaving a blank gap until init finishes. Deferring the
+    // update keeps the declarative content untouched (lit's own defer-hydration
+    // pattern); the flag flips once the first real render completes (see below).
+    protected override shouldUpdate(): boolean {
+      return !this._deferLitRender;
     }
 
     override render(): TemplateResult {
@@ -296,11 +308,23 @@ if (atcbIsBrowser()) {
         // translations are needed synchronously at render time - load the pack first
         await atcb_ensure_locale(data);
         await atcb_validate(data);
-        const rootObj = host.querySelector('.atcb-initialized:not([data-atcb-ssr])') as HTMLElement;
+        // with a deferred lit render (adopted ssr shell, see shouldUpdate), the very
+        // first lit commit must already carry the real button: ANY earlier commit
+        // clears the adopted shadow root and would wipe the painted shell. Therefore
+        // the whole preparation below runs against a temporary holder and the
+        // unhide/swap happens in one synchronous block after the single commit.
+        const deferred = this._deferLitRender;
+        let rootObj = host.querySelector('.atcb-initialized:not([data-atcb-ssr])') as HTMLElement | null;
         // ... and on success, load css and generate the button
         atcb_set_light_mode(host, data);
-        rootObj.setAttribute('lang', data.language!);
-        atcb_load_css(host, rootObj, data);
+        if (rootObj) {
+          rootObj.setAttribute('lang', data.language!);
+        }
+        // await the css (an on-demand style delta may need a fetch): the ssr shell
+        // must stay painted until the style node actually sits in the shadow root,
+        // otherwise the freshly rendered button flashes unstyled between shell swap
+        // and style arrival
+        await atcb_load_css(host, rootObj, data);
         // eagerly prefetch all style deltas when runtime style switching is requested
         if (data.loadAllStyles) {
           atcb_prefetch_all_styles(data);
@@ -315,12 +339,25 @@ if (atcbIsBrowser()) {
             if (!data.inlineRsvp) {
               await atcb_generate_rsvp_button(host, data);
             } else {
-              await atcb_generate_rsvp_form(host, data, rootObj);
+              await atcb_generate_rsvp_form(host, data, rootObj as HTMLElement);
             }
           } else {
-            // render the button via the lit template and finish up imperatively
+            // render the button via the lit template - in the deferred case, this is
+            // the FIRST commit, atomically replacing the painted ssr shell
+            this._deferLitRender = false;
             this._buttonTemplate = buttonTemplate(host, data);
             await this.updateComplete;
+            rootObj = host.querySelector('.atcb-initialized:not([data-atcb-ssr])') as HTMLElement | null;
+            if (deferred && rootObj) {
+              rootObj.setAttribute('lang', data.language!);
+              if (data.inline) {
+                rootObj.style.display = 'inline-block';
+                rootObj.classList.add('atcb-inline');
+              } else if (data.buttonsList) {
+                rootObj.classList.add('atcb-buttons-list');
+              }
+              rootObj.classList.remove('atcb-hidden');
+            }
             host.querySelectorAll('.atcb-button-wrapper').forEach((wrapper) => {
               atcb_set_sizes(wrapper as HTMLElement, data.sizes!);
             });
@@ -332,6 +369,12 @@ if (atcbIsBrowser()) {
           if (!data.hideRichData && !data.subscribe && data.name && data.dates![0]!.location && data.dates![0]!.startDate) {
             atcb_generate_rich_data(data, host.host);
           }
+        } else if (this._deferLitRender) {
+          // hidden buttons never render a template - still release the deferral, so
+          // future updates behave normally (the empty wrapper replaces the shell)
+          this._deferLitRender = false;
+          this.requestUpdate();
+          await this.updateComplete;
         }
         // the real render is complete - swap out a server-rendered shell, if any
         this.removeSsrShell();

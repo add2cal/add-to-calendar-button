@@ -57,12 +57,12 @@ describe('Group B - Config validation & error paths', () => {
     await expectFail({ ...base, options: ['NotACalendar'] }, 'invalid option');
   });
 
-  it('B-05: malformed created timestamp throws', async () => {
-    await expectFail({ ...base, created: '2050-13-99' }, 'created');
+  it('B-05: malformed icsCreated timestamp throws', async () => {
+    await expectFail({ ...base, icsCreated: '2050-13-99' }, 'icsCreated');
   });
 
-  it('B-06: malformed updated timestamp throws', async () => {
-    await expectFail({ ...base, updated: 'yesterday' }, 'updated');
+  it('B-06: malformed icsUpdated timestamp throws', async () => {
+    await expectFail({ ...base, icsUpdated: 'yesterday' }, 'icsUpdated');
   });
 
   it('B-07: invalid IANA timezone throws', async () => {

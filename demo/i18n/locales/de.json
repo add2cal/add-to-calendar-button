@@ -189,7 +189,7 @@
       "description": "Alle Details und Anleitung, wie du den wahrscheinlich komplettesten Add to Calendar Button in unter 1 Minute mit Svelte implementierst."
     },
     "use-with-vue": {
-      "description": "Alle Details und Anleitung, wie du den wahrscheinlich komplettesten Add to Calendar Button in unter 1 Minute mit Vue 3 implementierst."
+      "description": "Alle Details und Anleitung, wie du den wahrscheinlich komplettesten Add to Calendar Button in unter 1 Minute mit Vue implementierst."
     },
     "use-with-wordpress": {
       "description": "Alle Details und Anleitung, wie du den wohl komplettesten Add to Calendar Button mit unserem WordPress Plugin nutzt - in unter 1 Minute einsatzbereit."
@@ -287,6 +287,7 @@
       "step_use_example": "Dein Code kann hierbei bspw. wie folgt aussehen.",
       "step_use_client": "Beachte, dass der Button nur client-seitig funktioniert! Nutze 'use client'; entsprechend.",
       "ssr_note": "Neu mit v3: der Button kann zusätzlich eine Hülle auf dem Server vor-rendern - für ein sofortiges, layout-stabiles erstes Zeichnen. Siehe den \"Server-seitiges Rendern\"-Abschnitt auf der Profi-Funktionen-Seite.",
+      "ssr_example": "Ein komplettes Beispiel könnte so aussehen.",
       "step_npm": "npm Installation",
       "install_npm": "Installiere das Package über die npm Registry.",
       "step_import": "Import",
@@ -324,36 +325,24 @@
       },
       "nextjs": {
         "headline": "Wie man den Add to Calendar Button mit Next.js nutzt",
-        "intro_1": "Da Nextjs nicht optimal mit Web Components harmoniert, empfehlen wir die Nutzung des ",
-        "intro_2": "offiziellen Add to Calendar Button React Wrappers",
-        "intro_3": " anstelle des Standard Web Components.",
-        "intro_4": "Dieser Wrapper behandelt die meisten potentiellen Probleme und Schwierigkeiten automatisch.",
-        "start_wrapper": "Beginne mit der Nutzung, indem du einen {'<'}AddtoCalendarButton{'>'} Tag in deinem Quellcode einfügst."
+        "intro": "Da Next.js auf React 19 aufsetzt, werden Web Components vollständig out-of-the-box unterstützt. Nutze den Add to Calendar Button Web Component einfach direkt."
       },
       "nuxt": {
-        "headline": "Wie man den Add to Calendar Button mit Nuxt nutzt"
+        "headline": "Wie man den Add to Calendar Button mit Nuxt nutzt",
+        "ssr_notes_headline": "Nuxt-spezifische SSR-Hinweise",
+        "ssr_note_vhtml": "Rendere die erzeugte Hülle niemals mit v-html: bei der Hydration setzt Vue innerHTML erneut, was Declarative Shadow DOM nicht parst - die vorgerenderte Shadow-Root wird zerstört (Flackern + Konsolen-Warnungen). Nutze eine Direktive, die die Zuweisung überspringt, wenn das Server-Markup bereits vorhanden ist (siehe Beispiel oben).",
+        "ssr_note_server_only": "Halte den add-to-calendar-button/ssr-Import strikt auf der Server-Seite deiner Komponente (Top-Level im Script-Setup ist ok - der Eintrag ist DOM-frei und wird aus dem Client-Bundle tree-geshaked).",
+        "ssr_note_client_import": "Lade das Haupt-Modul add-to-calendar-button nur im Client (z.B. via onMounted(() => import('add-to-calendar-button')) oder ein Client-Only-Plugin) - es registriert das Custom Element, welches die Hülle nahtlos übernimmt.",
+        "ssr_note_attrs": "Attribute funktionieren exakt wie beim Plain-Tag - inklusive kebab-case-Namen und Bare-Boolean-Flags wie buttons-list oder hide-icon-button."
       },
       "react": {
         "headline": "Wie man den Add to Calendar Button unter React installiert",
-        "step_pick": "Wähle eine Lösung",
-        "pick_intro": "Da React-Projekte sehr vielseitig sein können, gibt es auch mehrere mögliche Wege den Add to Calendar Button passend zu integrieren.",
-        "pick_option1": "In eher einfachen Projekten kann das Ganze als Web Component out-of-the-box genutzt werden.",
-        "pick_option2_1": "Alternativ zur nativen Nutzung kann aber auch der ",
-        "pick_option2_2": "offizielle Add to Calendar Button React Wrapper",
-        "pick_option2_3": " genutzt werden. Dieser beinhaltet eine stärkere TypeScript- und React-Unterstützung.",
-        "install_wrapper": "Falls du den spezialisierteren React-Wrapper nutzt, installierst du stattdessen folgendes Package:",
-        "import_wrapper": "Bei der Implementierung des React Wrappers sieht das Import-Statement etwas anders aus.",
-        "start_wrapper_1": "Wenn du die React-Wrapper-Lösung gewählt hast, spezifierst du einen Button über den Tag {'<'}AddtoCalendarButton{'>'}. Im Grunde nutzt du damit die importierte React-Komponente anstelle des \"Custom Elements\" (Web Component).",
-        "start_wrapper_2": "Dein Code sieht dann eher wie folgt aus:",
-        "start_wrapper_3": "Beachte, dass du mit der Wrapper-Lösung Arrays als tatsächliche Arrays definieren kannst, während sie bei der Nutzung des Web Components in Strings umgewandelt werden müssen!",
-        "start_wrapper_4": "Merke dir diese Unterschiede, wenn du weiter nach Beispielen stöberst.",
-        "start_wrapper_5": "Wir besprechen auf anderen Seiten eher die Web-Component-Lösung, die aber ganz einfach auf den React-Wrapper-Stil umgemünzt werden kann."
-      },
-      "svelte": {
-        "headline": "Wie man den Add to Calendar Button unter Svelte installiert"
+        "intro": "Seit React 19 werden Web Components vollständig out-of-the-box unterstützt - ganz ohne Wrapper oder Workarounds. Nutze den Add to Calendar Button Web Component einfach direkt in deinem JSX.",
+        "types_note": "Mit React 19 lassen sich Custom-Element-Properties über TypeScripts Custom-Elements-Support typisieren. Registriere den Element-Typ einmalig (z.B. in einer global.d.ts), um vollständiges Type-Checking zu erhalten:",
+        "types_config_note": "Falls compilerOptions.types in deiner tsconfig gesetzt ist, ergänze react und react-dom neben den bereits vorhandenen Einträgen:"
       },
       "vue": {
-        "headline": "Wie man den Add to Calendar Button unter Vue 3 installiert",
+        "headline": "Wie man den Add to Calendar Button unter Vue installiert",
         "step_optimize": "Optimiere die Vue-Konfiguration",
         "optimize_1": "Theoretisch war es das schon.",
         "optimize_2": "Vue funktioniert wunderbar mit Web Components.",

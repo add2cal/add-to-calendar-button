@@ -73,6 +73,9 @@ node16 and classic moduleResolution alike. Official attribute names are kebab-ca
 
 ### Deprecations and breaking changes
 
+- The ics timestamp options were renamed to match their ics-only scope: `created` is now
+  `ics-created` (config key `icsCreated`) and `updated` is now `ics-updated` (config key
+  `icsUpdated`). The old names are no longer read.
 - The dedicated `no-pro` / `unstyle` / `no-pro-unstyle` builds are gone. The npm subpaths and
   CDN file names keep working as tiny shims that load the main package (styles are lazy anyway,
   and PRO code is license-gated at runtime) - please switch to the main entry.

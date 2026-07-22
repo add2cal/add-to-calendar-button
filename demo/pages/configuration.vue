@@ -48,10 +48,10 @@ const configOptions = [
   "ics-geo",
   "ics-attach",
   "ics-exdate",
+  "ics-created",
+  "ics-updated",
   "ical-file-name",
   "instance",
-  "created",
-  "updated",
   "button-style",
   "inline",
   "custom-css",
@@ -119,8 +119,7 @@ watch(searchSelection, (newVal) => {
           Not setting it would automatically reflect to "false". As an alternative, you could also always write it as a string like <code>attributeName="true"</code>.
         </p>
         <p class="mt-8 hidden lg:block">
-          Mind that if you are using the <a href="https://github.com/add2cal/add-to-calendar-button-react" target="_blank" rel="noopener" class="whitespace-nowrap">React wrapper <ArrowTopRightOnSquareIcon class="-mt-0.5 mr-0.5 inline-block h-4 w-4" aria-hidden="true" /></a>, you do not necessarily
-          need to stringify any non-string value.<br />
+          In frameworks with native web component support (like React 19+), you do not necessarily need to stringify non-string values.<br />
           You could simply write something like <code>options=['apple','google']</code> instead of <code>options="['apple','google']"</code>.
         </p>
       </div>
@@ -136,8 +135,7 @@ watch(searchSelection, (newVal) => {
           Wenn er nicht gesetzt ist, definiert das die Option automatisch als "false". Alternativ kannst du den Wert aber auch immer vollständig als String ergänzen: <code>attributeName="true"</code>.
         </p>
         <p class="mt-8 hidden lg:block">
-          Falls du den <a href="https://github.com/add2cal/add-to-calendar-button-react" target="_blank" rel="noopener" class="whitespace-nowrap">React Wrapper <ArrowTopRightOnSquareIcon class="-mt-0.5 mr-0.5 inline-block h-4 w-4" aria-hidden="true" /></a> nutzt, musst du Nicht-String-Werte nicht
-          zwingend zu Strings transformieren.<br />
+          In Frameworks mit nativem Web-Component-Support (wie React 19+) musst du Nicht-String-Werte nicht zwingend zu Strings transformieren.<br />
           In diesem Fall kannst du bspw. auch einfach <code>options=['apple','google']</code> anstelle von <code>options="['apple','google']"</code> schreiben.
         </p>
       </div>
@@ -339,6 +337,20 @@ watch(searchSelection, (newVal) => {
               <td v-else>
                 Muss eine positive ganze Zahl sein.<br />Muss größer werden, wenn Veränderungen am Event vorgenommen werden.<br /><br />
                 <NuxtLink :to="{path: localePath('advanced-use'), hash: '#case-5'}">{{ $t('labels.example') }} <ArrowRightIcon class="-mt-0.5 mr-0.5 inline-block h-3 w-3" aria-hidden="true" /></NuxtLink>
+              </td>
+            </tr>
+            <tr id="availability">
+              <th scope="row">availability</th>
+              <td>
+                <em>String</em><br /><br /><span class="label block">{{ $t('content.config.options') }}:</span>busy, free<br /><br /><span class="label block">{{ $t('content.config.default') }}:</span>{{ $t('content.config.availability_default') }}
+              </td>
+              <td v-if="locale=='en'">
+                Per default, the event will be marked as busy/free/available based on the user's calendar settings.<br />
+                For Apple, iCal, and Google, you can force this by using the setting availability with options "busy" or "free".
+              </td>
+              <td v-else>
+                Standardmäßig wird ein Event gemäß der Standard-Einstellung im Kalender des jeweiligen Nutzers als beschäftigt/verfügbar gespeichert.<br />
+                Für Apple-, iCal- und Google-Kalender kann dieser Wert mittels dieser Option erzwungen werden.
               </td>
             </tr>
             <tr id="uid">
@@ -570,20 +582,6 @@ watch(searchSelection, (newVal) => {
               <td v-if="locale=='en'">Specify a specific weekday as start of the week.</td>
               <td v-else>Definiert einen bestimmten Wochentag als Wochenstart.</td>
             </tr>
-            <tr id="availability">
-              <th scope="row">availability</th>
-              <td>
-                <em>String</em><br /><br /><span class="label block">{{ $t('content.config.options') }}:</span>busy, free<br /><br /><span class="label block">{{ $t('content.config.default') }}:</span>{{ $t('content.config.availability_default') }}
-              </td>
-              <td v-if="locale=='en'">
-                Per default, the event will be marked as busy/free/available based on the user's calendar settings.<br />
-                For Apple, iCal, and Google, you can force this by using the setting availability with options "busy" or "free".
-              </td>
-              <td v-else>
-                Standardmäßig wird ein Event gemäß der Standard-Einstellung im Kalender des jeweiligen Nutzers als beschäftigt/verfügbar gespeichert.<br />
-                Für Apple-, iCal- und Google-Kalender kann dieser Wert mittels dieser Option erzwungen werden.
-              </td>
-            </tr>
             <tr id="subscribe">
               <th scope="row">subscribe</th>
               <td>
@@ -634,38 +632,6 @@ watch(searchSelection, (newVal) => {
               </td>
               <td v-if="locale=='en'">If you want to define a specific name for any generated ics file (iCal), you can specify it via the ical-file-name option.</td>
               <td v-else>Wenn du einen bestimmten Namen für die generierte ics-Datei (iCal) definieren möchten, kannst du diesen über die Option ical-file-name definieren.</td>
-            </tr>
-            <tr id="created">
-              <th scope="row">created</th>
-              <td>
-                <em>String</em><br /><br /><span class="format">YYYYMMDDTHHMMSSZ</span><br /><br /><span class="label block">{{ $t('content.config.default') }}:</span>{{ $t('content.config.time_val') }}
-              </td>
-              <td v-if="locale=='en'">
-                The "Created" field in the iCal file would default to the time the file gets generated and downloaded.<br />
-                Use this option, if you want to define a specific static timestamp instead.<br /><br />
-                Should be a UTC timestamp like "20231201T103000Z".
-              </td>
-              <td v-else>
-                Das "Created"-Feld in der iCal-Datei erhält grundsätzlich den Zeitpunkt, zu welchem die Datei generiert und heruntergeladen wird.<br />
-                Nutze diese Option, um stattdessen einen bestimmten Timestamp zu setzen.<br /><br />
-                Spezifiziere den Zeitpunkt als UTC Timestamp. Bspw. "20231201T103000Z".
-              </td>
-            </tr>
-            <tr id="updated">
-              <th scope="row">updated</th>
-              <td>
-                <em>String</em><br /><br /><span class="format">YYYYMMDDTHHMMSSZ</span><br /><br /><span class="label block">{{ $t('content.config.default') }}:</span>{{ $t('content.config.time_val') }}
-              </td>
-              <td v-if="locale=='en'">
-                The "Updated" field in the iCal file would default to the time the file gets generated.<br />
-                Use this option, if you want to define a specific static timestamp instead.<br /><br />
-                Should be a UTC timestamp like "20231201T103000Z".
-              </td>
-              <td v-else>
-                Das "Updated"-Feld in der iCal-Datei erhält grundsätzlich den Zeitpunkt, zu welchem die Datei generiert und heruntergeladen wird.<br />
-                Nutze diese Option, um stattdessen einen bestimmten Timestamp zu setzen.<br /><br />
-                Spezifiziere den Zeitpunkt als UTC Timestamp. Bspw. "20231201T103000Z".
-              </td>
             </tr>
           </tbody>
         </table>
@@ -743,6 +709,38 @@ watch(searchSelection, (newVal) => {
               <td><em>String</em> / <em>Array</em><br /><br /><span class="format">YYYY-MM-DD</span></td>
               <td v-if="locale == 'en'">Excludes dates from a recurring event (a comma-separated list of dates). Requires the "recurrence" option and is the only one of these options that cannot be set per date entry.</td>
               <td v-else>Schließt Termine aus einer Terminserie aus (eine kommaseparierte Liste von Terminen). Erfordert die "recurrence"-Option und ist die einzige dieser Optionen, die nicht pro Datums-Eintrag gesetzt werden kann.</td>
+            </tr>
+            <tr id="ics-created">
+              <th scope="row">ics-created</th>
+              <td>
+                <em>String</em><br /><br /><span class="format">YYYYMMDDTHHMMSSZ</span><br /><br /><span class="label block">{{ $t('content.config.default') }}:</span>{{ $t('content.config.time_val') }}
+              </td>
+              <td v-if="locale=='en'">
+                The "Created" field in the iCal file would default to the time the file gets generated and downloaded.<br />
+                Use this option, if you want to define a specific static timestamp instead.<br /><br />
+                Should be a UTC timestamp like "20231201T103000Z".
+              </td>
+              <td v-else>
+                Das "Created"-Feld in der iCal-Datei erhält grundsätzlich den Zeitpunkt, zu welchem die Datei generiert und heruntergeladen wird.<br />
+                Nutze diese Option, um stattdessen einen bestimmten Timestamp zu setzen.<br /><br />
+                Spezifiziere den Zeitpunkt als UTC Timestamp. Bspw. "20231201T103000Z".
+              </td>
+            </tr>
+            <tr id="ics-updated">
+              <th scope="row">ics-updated</th>
+              <td>
+                <em>String</em><br /><br /><span class="format">YYYYMMDDTHHMMSSZ</span><br /><br /><span class="label block">{{ $t('content.config.default') }}:</span>{{ $t('content.config.time_val') }}
+              </td>
+              <td v-if="locale=='en'">
+                The "Updated" field in the iCal file would default to the time the file gets generated.<br />
+                Use this option, if you want to define a specific static timestamp instead.<br /><br />
+                Should be a UTC timestamp like "20231201T103000Z".
+              </td>
+              <td v-else>
+                Das "Updated"-Feld in der iCal-Datei erhält grundsätzlich den Zeitpunkt, zu welchem die Datei generiert und heruntergeladen wird.<br />
+                Nutze diese Option, um stattdessen einen bestimmten Timestamp zu setzen.<br /><br />
+                Spezifiziere den Zeitpunkt als UTC Timestamp. Bspw. "20231201T103000Z".
+              </td>
             </tr>
           </tbody>
         </table>
@@ -823,12 +821,14 @@ watch(searchSelection, (newVal) => {
               <td><em>String</em><br /><br /><span class="format">URL</span></td>
               <td v-if="locale=='en'">
                 You can load an external css file instead of using and customizing the integrated one.<br />
-                Define the url of the file here and set the button-style option to "custom".<br /><br />
+                Define the url of the file here and set the button-style option to "custom".<br />
+                Mind that custom css does not get loaded on SSR!<br /><br />
                 <NuxtLink :to="{path: localePath('advanced-use'), hash: '#case-1'}">{{ $t('labels.example') }} <ArrowRightIcon class="-mt-0.5 mr-0.5 inline-block h-3 w-3" aria-hidden="true" /></NuxtLink>
               </td>
               <td v-else>
                 Du kannst eine externe CSS-DAtei anstelle der integrierten Optionen laden.<br />
-                Spezifiziere die URL der Datei hier und nutze die buttonStyle-Option "custom".<br /><br />
+                Spezifiziere die URL der Datei hier und nutze die buttonStyle-Option "custom".<br />
+                Beachte, dass benutzerdefiniertes CSS im SSR nicht geladen wird!<br /><br />
                 <NuxtLink :to="{path: localePath('advanced-use'), hash: '#case-1'}">{{ $t('labels.example') }} <ArrowRightIcon class="-mt-0.5 mr-0.5 inline-block h-3 w-3" aria-hidden="true" /></NuxtLink>
               </td>
             </tr>

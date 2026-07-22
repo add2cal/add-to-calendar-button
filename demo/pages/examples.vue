@@ -1,6 +1,4 @@
 <script setup lang="ts">
-import "add-to-calendar-button";
-import "@/utils/atcbStyles";
 import { ArrowRightIcon, ArrowTopRightOnSquareIcon } from '@heroicons/vue/24/outline';
 import Interstitial from '@/components/interstitial.vue';
 const LazyCodeBlock = defineAsyncComponent(() => import('@/components/codeBlock.vue'));
@@ -101,7 +99,7 @@ watch(locale, value => {
         <p v-else>Dies ist das gewöhnliche Standard-Setup mit allen verfügbaren Kalender-Links und einer definierten Zeitzone</p>
         <div class="block w-full justify-between md:flex">
           <div class="flex w-full flex-none justify-center p-6 pt-8 md:w-[300px]">
-            <add-to-calendar-button
+            <Atcb
               :name="$t('demo_data.name')"
               :start-date="defaultDate"
               start-time="10:15"
@@ -113,7 +111,7 @@ watch(locale, value => {
               light-mode="bodyScheme"
               :language="locale"
               hide-branding
-            ></add-to-calendar-button>
+            ></Atcb>
           </div>
           <div class="flex-1 overflow-x-auto">
             <LazyCodeBlock>
@@ -147,7 +145,7 @@ watch(locale, value => {
         </p>
         <div class="block w-full justify-between md:flex">
           <div class="flex w-full flex-none justify-center p-6 pt-8 md:w-[300px]">
-            <add-to-calendar-button
+            <Atcb
               :name="$t('demo_data.name')"
               :start-date="defaultDate"
               :location="$t('demo_data.location')"
@@ -157,7 +155,7 @@ watch(locale, value => {
               :language="locale"
               hide-rich-data
               hide-branding
-            ></add-to-calendar-button>
+            ></Atcb>
           </div>
           <div class="flex-1 overflow-x-auto">
             <LazyCodeBlock>
@@ -190,7 +188,7 @@ watch(locale, value => {
         </div>
         <div class="block w-full justify-between md:flex">
           <div class="flex w-full flex-none justify-center p-6 pt-8 md:w-[300px]">
-            <add-to-calendar-button
+            <Atcb
               :name="$t('demo_data.name')"
               start-date="today+2"
               start-time="10:15"
@@ -202,7 +200,7 @@ watch(locale, value => {
               light-mode="bodyScheme"
               :language="locale"
               hide-branding
-            ></add-to-calendar-button>
+            ></Atcb>
           </div>
           <div class="flex-1 overflow-x-auto">
             <LazyCodeBlock>
@@ -237,7 +235,7 @@ watch(locale, value => {
         </p>
         <div class="block w-full justify-between md:flex">
           <div class="flex w-full flex-none justify-center p-6 pt-8 md:w-[300px]">
-            <add-to-calendar-button
+            <Atcb
               :name="$t('demo_data.name')"
               :start-date="defaultDate"
               start-time="10:15"
@@ -251,7 +249,7 @@ watch(locale, value => {
               :language="locale"
               hide-rich-data
               hide-branding
-            ></add-to-calendar-button>
+            ></Atcb>
           </div>
           <div class="flex-1 overflow-x-auto">
             <LazyCodeBlock>
@@ -282,7 +280,7 @@ watch(locale, value => {
         </p>
         <div class="block w-full justify-between md:flex">
           <div class="flex w-full flex-none justify-center p-6 pt-8 md:w-[300px]">
-            <add-to-calendar-button
+            <Atcb
               :name="$t('demo_data.name')"
               :start-date="defaultDate"
               start-time="10:15"
@@ -299,7 +297,7 @@ watch(locale, value => {
               :language="locale"
               hide-rich-data
               hide-branding
-            ></add-to-calendar-button>
+            ></Atcb>
           </div>
           <div class="flex-1 overflow-x-auto">
             <LazyCodeBlock>
@@ -353,17 +351,7 @@ watch(locale, value => {
         </div>
         <div class="block w-full justify-between md:flex">
           <div class="flex w-full flex-none justify-center p-6 pt-8 md:w-[300px]">
-            <add-to-calendar-button
-              :name="$t('demo_data.name_series')"
-              :dates="defaultMultiDate"
-              :time-zone="$t('demo_data.default_timezone')"
-              :location="$t('demo_data.location')"
-              options="'apple','google','ical','outlookcom','yahoo'"
-              light-mode="bodyScheme"
-              :language="locale"
-              hide-rich-data
-              hide-branding
-            ></add-to-calendar-button>
+            <Atcb :name="$t('demo_data.name_series')" :dates="defaultMultiDate" :time-zone="$t('demo_data.default_timezone')" :location="$t('demo_data.location')" options="'apple','google','ical','outlookcom','yahoo'" light-mode="bodyScheme" :language="locale" hide-rich-data hide-branding></Atcb>
           </div>
           <div class="flex-1 overflow-x-auto">
             <LazyCodeBlock>
@@ -430,7 +418,7 @@ watch(locale, value => {
         </div>
         <div class="block w-full justify-between md:flex">
           <div class="flex w-full flex-none justify-center p-6 pt-8 md:w-[300px]">
-            <add-to-calendar-button
+            <Atcb
               :name="$t('demo_data.name')"
               :start-date="defaultDate"
               start-time="10:15"
@@ -447,7 +435,7 @@ watch(locale, value => {
               :language="locale"
               hide-rich-data
               hide-branding
-            ></add-to-calendar-button>
+            ></Atcb>
           </div>
           <div class="flex-1 overflow-x-auto">
             <LazyCodeBlock>
@@ -492,7 +480,7 @@ watch(locale, value => {
         <div>
           <div class="mx-auto p-6 pt-8 text-center">
             <span class="pr-6">{{ $t('demo_data.do_it') }}! →</span>
-            <add-to-calendar-button
+            <Atcb
               :name="$t('demo_data.name')"
               :start-date="defaultDate"
               start-time="10:15"
@@ -508,7 +496,7 @@ watch(locale, value => {
               :language="locale"
               hide-rich-data
               hide-branding
-            ></add-to-calendar-button>
+            ></Atcb>
           </div>
           <div class="overflow-x-auto">
             <LazyCodeBlock>
@@ -544,19 +532,7 @@ watch(locale, value => {
         </p>
         <div class="block w-full justify-between md:flex">
           <div class="flex w-full flex-none justify-center p-6 pt-8 md:w-[300px]">
-            <add-to-calendar-button
-              :name="$t('demo_data.name')"
-              :start-date="defaultDate"
-              start-time="10:15"
-              end-time="23:30"
-              :time-zone="$t('demo_data.default_timezone')"
-              :description="$t('demo_data.description_alt1')"
-              options="google"
-              light-mode="bodyScheme"
-              :language="locale"
-              hide-rich-data
-              hide-branding
-            ></add-to-calendar-button>
+            <Atcb :name="$t('demo_data.name')" :start-date="defaultDate" start-time="10:15" end-time="23:30" :time-zone="$t('demo_data.default_timezone')" :description="$t('demo_data.description_alt1')" options="google" light-mode="bodyScheme" :language="locale" hide-rich-data hide-branding></Atcb>
           </div>
           <div class="flex-1 overflow-x-auto">
             <LazyCodeBlock>
@@ -588,7 +564,7 @@ watch(locale, value => {
         </div>
         <div>
           <div class="flex justify-center p-6 pt-8">
-            <add-to-calendar-button
+            <Atcb
               :name="$t('demo_data.name')"
               :start-date="defaultDate"
               start-time="10:15"
@@ -603,7 +579,7 @@ watch(locale, value => {
               :language="locale"
               hide-rich-data
               hide-branding
-            ></add-to-calendar-button>
+            ></Atcb>
           </div>
           <div class="overflow-x-auto">
             <LazyCodeBlock>

@@ -68,6 +68,8 @@ export interface ATCBDateEntryInput {
   icsPriority?: number | string;
   icsGeo?: string;
   icsAttach?: string[] | string;
+  icsCreated?: string;
+  icsUpdated?: string;
 }
 
 /**
@@ -112,8 +114,8 @@ export interface ATCBInputConfig {
   recurrence_byMonthDay?: string[] | string | number[] | number;
   recurrence_weekstart?: string;
   availability?: 'busy' | 'free' | string;
-  created?: string;
-  updated?: string;
+  icsCreated?: string;
+  icsUpdated?: string;
   identifier?: string;
   subscribe?: boolean | string;
   options?: (ATCBOptionName | ATCBOptionNameLegacy)[] | string[] | string;
@@ -212,8 +214,8 @@ export interface ATCBConfig {
   recurrence_frequency?: string;
   recurrence_simplified?: boolean;
   availability?: string;
-  created?: string;
-  updated?: string;
+  icsCreated?: string;
+  icsUpdated?: string;
   identifier?: string;
   subscribe?: boolean;
   options?: string[];
@@ -359,8 +361,8 @@ export interface ATCBActionEventConfig {
   recurrence_byMonthDay?: string[] | string | number[] | number;
   recurrence_weekstart?: string;
   availability?: 'busy' | 'free';
-  created?: string;
-  updated?: string;
+  icsCreated?: string;
+  icsUpdated?: string;
   subscribe?: boolean;
   // the option surface is limited compared to the web component, since the
   // atcb_action function skips list rendering for single options
@@ -438,8 +440,8 @@ export type AddToCalendarButtonType = {
   recurrence_byMonthDay?: string[] | string | number[] | number;
   recurrence_weekstart?: string;
   availability?: 'busy' | 'free';
-  created?: string;
-  updated?: string;
+  icsCreated?: string;
+  icsUpdated?: string;
   identifier?: string;
   subscribe?: boolean | string;
   options?: (ATCBOptionName | ATCBOptionNameLegacy)[] | string;

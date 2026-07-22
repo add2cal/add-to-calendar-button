@@ -1,6 +1,5 @@
 <script setup lang="ts">
-import { atcb_action } from "add-to-calendar-button";
-import "@/utils/atcbStyles";
+import type { atcb_action as AtcbAction } from 'add-to-calendar-button';
 import { ArrowTopRightOnSquareIcon } from '@heroicons/vue/24/outline';
 import Interstitial from '@/components/interstitial.vue';
 const LazyCodeBlock = defineAsyncComponent(() => import('@/components/codeBlock.vue'));
@@ -66,19 +65,33 @@ watch(locale, value => {
   };
 });
 
+let atcb_action: typeof AtcbAction | null = null;
+if (import.meta.client) {
+  import('add-to-calendar-button').then((mod) => {
+    atcb_action = mod.atcb_action;
+  });
+}
+
 onMounted(() => {
   const button = document.getElementById('my-default-button');
   if (button) {
-    button.addEventListener('click', () => atcb_action(config, button));
+    button.addEventListener('click', triggerAction);
   }
 });
 
 onUnmounted(() => {
   const button = document.getElementById('my-default-button');
   if (button) {
-    button.removeEventListener('click', () => atcb_action(config, button));
+    button.removeEventListener('click', triggerAction);
   }
 });
+
+function triggerAction() {
+  const button = document.getElementById('my-default-button');
+  if (button && atcb_action) {
+    atcb_action(config, button);
+  }
+}
 </script>
 
 <template>
@@ -127,7 +140,7 @@ onUnmounted(() => {
         </div>
         <div class="block w-full justify-between pt-4 md:flex">
           <div class="flex w-full flex-none justify-center p-6 pt-8 md:w-[300px]">
-            <add-to-calendar-button
+            <Atcb
               :name="$t('demo_data.name')"
               :start-date="defaultDate"
               options="'apple','google','ical'"
@@ -140,7 +153,7 @@ onUnmounted(() => {
               :language="locale"
               hide-rich-data
               hide-branding
-            ></add-to-calendar-button>
+            ></Atcb>
           </div>
           <div class="flex-1 overflow-x-auto">
             <LazyCodeBlock>
@@ -161,7 +174,7 @@ onUnmounted(() => {
         </div>
         <div class="block w-full justify-between pt-4 md:flex">
           <div class="flex w-full flex-none justify-center p-6 pt-8 md:w-[300px]">
-            <add-to-calendar-button :name="$t('demo_data.name')" :start-date="defaultDate" options="'apple','google','ical'" button-style="flat" hide-icon-list buttons-list hide-background :label="$t('demo_data.name_custom_3')" light-mode="bodyScheme" :language="locale"></add-to-calendar-button>
+            <Atcb :name="$t('demo_data.name')" :start-date="defaultDate" options="'apple','google','ical'" button-style="flat" hide-icon-list buttons-list hide-background :label="$t('demo_data.name_custom_3')" light-mode="bodyScheme" :language="locale"></Atcb>
           </div>
           <div class="flex-1 overflow-x-auto">
             <LazyCodeBlock>
@@ -183,7 +196,7 @@ onUnmounted(() => {
         </div>
         <div class="block w-full justify-between pt-4 md:flex">
           <div class="flex w-full flex-none justify-center p-6 pt-8 md:w-[300px]">
-            <add-to-calendar-button
+            <Atcb
               :name="$t('demo_data.name_custom_4')"
               :start-date="defaultDate"
               options="'apple','google','ical'"
@@ -197,7 +210,7 @@ onUnmounted(() => {
               :language="locale"
               hide-rich-data
               hide-branding
-            ></add-to-calendar-button>
+            ></Atcb>
           </div>
           <div class="flex-1 overflow-x-auto">
             <LazyCodeBlock>
@@ -249,7 +262,7 @@ onUnmounted(() => {
         </div>
         <div class="block w-full justify-between pt-4 md:flex">
           <div class="flex w-full flex-none justify-center p-6 pt-8 md:w-[300px]">
-            <add-to-calendar-button
+            <Atcb
               style-light="--btn-background: #2f4377; --btn-text: #fff; --font: Georgia, 'Times New Roman', Times, serif;"
               style-dark="--btn-background: #000;"
               :name="$t('demo_data.name')"
@@ -260,7 +273,7 @@ onUnmounted(() => {
               :language="locale"
               hide-rich-data
               hide-branding
-            ></add-to-calendar-button>
+            ></Atcb>
           </div>
           <div class="flex-1 overflow-x-auto">
             <LazyCodeBlock>
@@ -308,8 +321,7 @@ onUnmounted(() => {
         </div>
         <div class="block w-full justify-between pt-4 md:flex">
           <div class="flex w-full flex-none justify-center p-6 pt-8 md:w-[300px]">
-            <add-to-calendar-button :name="$t('demo_data.name')" :start-date="defaultDate" options="'apple','google','ical'" light-mode="bodyScheme" :language="locale" custom-css="https://add-to-calendar-button.com/atcb.css" button-style="custom" list-style="modal" hide-rich-data hide-branding>
-            </add-to-calendar-button>
+            <Atcb :name="$t('demo_data.name')" :start-date="defaultDate" options="'apple','google','ical'" light-mode="bodyScheme" :language="locale" custom-css="https://add-to-calendar-button.com/atcb.css" button-style="custom" list-style="modal" hide-rich-data hide-branding> </Atcb>
           </div>
           <div class="flex-1 overflow-x-auto">
             <LazyCodeBlock>
@@ -373,7 +385,7 @@ onUnmounted(() => {
         </div>
         <div class="block w-full justify-between pt-4 md:flex">
           <div class="flex w-full flex-none justify-center p-6 pt-8 md:w-[300px]">
-            <add-to-calendar-button id="css-part-example" identifier="css-part-example" :name="$t('demo_data.name')" :start-date="defaultDate" options="'apple','google','ical'" light-mode="bodyScheme" :language="locale" hide-rich-data hide-branding> </add-to-calendar-button>
+            <Atcb id="css-part-example" identifier="css-part-example" :name="$t('demo_data.name')" :start-date="defaultDate" options="'apple','google','ical'" light-mode="bodyScheme" :language="locale" hide-rich-data hide-branding> </Atcb>
           </div>
           <div class="flex-1 overflow-x-auto">
             <LazyCodeBlock>
@@ -461,7 +473,7 @@ onUnmounted(() => {
         </ul>
         <div class="block w-full justify-between pt-4 md:flex">
           <div class="flex w-full flex-none justify-center p-6 pt-8 md:w-[300px]">
-            <add-to-calendar-button
+            <Atcb
               :name="$t('demo_data.name')"
               :start-date="defaultDate"
               start-time="10:15"
@@ -473,7 +485,7 @@ onUnmounted(() => {
               :language="locale"
               hide-rich-data
               hide-branding
-            ></add-to-calendar-button>
+            ></Atcb>
           </div>
           <div class="flex-1 overflow-x-auto">
             <LazyCodeBlock>
@@ -519,16 +531,7 @@ onUnmounted(() => {
         </div>
         <div class="block w-full justify-between pt-4 md:flex">
           <div class="flex w-full flex-none justify-center p-6 pt-8 md:w-[300px]">
-            <add-to-calendar-button
-              :name="$t('demo_data.name_subscription')"
-              subscribe
-              ics-file="https://add2cal.github.io/ics-demo/demo-calendar.ics"
-              options="'apple','google','ical','outlookcom','ms365','msteams','yahoo'"
-              light-mode="bodyScheme"
-              :language="locale"
-              hide-rich-data
-              hide-branding
-            ></add-to-calendar-button>
+            <Atcb :name="$t('demo_data.name_subscription')" subscribe ics-file="https://add2cal.github.io/ics-demo/demo-calendar.ics" options="'apple','google','ical','outlookcom','ms365','msteams','yahoo'" light-mode="bodyScheme" :language="locale" hide-rich-data hide-branding></Atcb>
           </div>
           <div class="flex-1 overflow-x-auto">
             <LazyCodeBlock>
@@ -573,7 +576,7 @@ onUnmounted(() => {
         </div>
         <div class="block w-full justify-between pt-4 md:flex">
           <div class="flex w-full flex-none justify-center p-6 pt-8 md:w-[300px]">
-            <add-to-calendar-button
+            <Atcb
               :name="$t('demo_data.name')"
               :start-date="defaultDate"
               start-time="10:15"
@@ -586,7 +589,7 @@ onUnmounted(() => {
               :language="locale"
               hide-rich-data
               hide-branding
-            ></add-to-calendar-button>
+            ></Atcb>
           </div>
           <div class="flex-1 overflow-x-auto">
             <LazyCodeBlock>
@@ -611,20 +614,20 @@ onUnmounted(() => {
         <h2 class="mb-4 mt-14 border-t border-zinc-300 pt-14 dark:border-zinc-700">5. {{ $t('content.advanced.5_long') }}</h2>
         <div v-if="locale=='en'">
           <p>
-            If you feel confident enough to mess with the rather unusual iCal settings, you can use the options "uid", "sequence", "created", "updated", "attendee", and "status" (tentative, confirmed, cancelled).<br />
+            If you feel confident enough to mess with the rather unusual iCal settings, you can use the options "uid", "sequence", "ics-created", "ics-updated", "attendee", and "status" (tentative, confirmed, cancelled).<br />
             They basically override the respective default values.
           </p>
           <p class="font-semibold">Mind that those options are only supported by the iCal and Apple calendar links!</p>
-          <p>To update an existing event (e.g. changing its status) by changing those properties, you would need to have a growing sequence number, newer "updated" date, same "created" date, the same "uid", and also the organizer field (name and email) set.</p>
+          <p>To update an existing event (e.g. changing its status) by changing those properties, you would need to have a growing sequence number, newer "ics-updated" date, same "ics-created" date, the same "uid", and also the organizer field (name and email) set.</p>
           <p>
             Some calendars only work with the "attendee" to be specified as well. And if your "update" to the event is not a status change to "cancelled", it is mandatory in all cases!<br />
             The attendee needs to be the person saving the event. If you know this, you can make use of this functionality. If not, we would not recommend it.
           </p>
         </div>
         <div v-else>
-          <p>Falls du im Umgang mit iCal-Einstellungen erfahren bist, kannst du die Optionen "uid", "sequence", "created", "updated", "attendee" und "status" (tentative, confirmed, cancelled) manuell steuern.</p>
+          <p>Falls du im Umgang mit iCal-Einstellungen erfahren bist, kannst du die Optionen "uid", "sequence", "ics-created", "ics-updated", "attendee" und "status" (tentative, confirmed, cancelled) manuell steuern.</p>
           <p class="font-semibold">Beachte, dass diese Optionen nur von den iCal und Apple Kalendar-Links unterstützt werden (und auch dann nicht von allen Kalender immer sauber erkannt werden)!</p>
-          <p>Um ein bestehendes Event zu aktualisieren (bspw. den Status) muss die "sequence"-Nummer aufsteigen, ein jüngeres "updated"-Datum bei gleichem "created"-Datum gesetzt, die gleiche "uid" und die "organizer"-Option gegeben sein.</p>
+          <p>Um ein bestehendes Event zu aktualisieren (bspw. den Status) muss die "sequence"-Nummer aufsteigen, ein jüngeres "ics-updated"-Datum bei gleichem "ics-created"-Datum gesetzt, die gleiche "uid" und die "organizer"-Option gegeben sein.</p>
           <p>
             Einige Kalender erfordern zudem einen "attendee". Sollte dein "Update" des Event kein Status-Wechsel auf "cancelled" sein, ist dieser in jedem Fall verpflichtend!<br />
             Der "attendee" muss die Person sein, die das Event bei sich speichert. Wenn du diese Information hast, kannst du die Update-Funktionalität nutzen. Ansonsten muss davon abgeraten werden.
@@ -633,7 +636,7 @@ onUnmounted(() => {
         <div class="block w-full justify-between pt-4 md:flex">
           <div class="flex w-full flex-none flex-col items-center justify-start p-6 pt-8 text-center md:w-[300px]">
             <div class="mb-5 text-sm font-semibold">A. {{ $t('content.advanced.add_event_example') }}</div>
-            <add-to-calendar-button
+            <Atcb
               :name="$t('demo_data.name')"
               :start-date="defaultDate"
               start-time="10:15"
@@ -645,15 +648,16 @@ onUnmounted(() => {
               :organizer="$t('demo_data.default_organizer')"
               uid="7060df05-7b3d-4baa-b215-689b85769e5b"
               sequence="1"
-              created="20221201T103000Z"
-              updated="20221205T154500Z"
+              ics-created="20221201T103000Z"
+              ics-updated="20221205T154500Z"
               status="confirmed"
               :ical-file-name="$t('demo_data.iCal_confirmed')"
               light-mode="bodyScheme"
               :language="locale"
               hide-rich-data
               hide-branding
-            ></add-to-calendar-button>
+              debug
+            ></Atcb>
           </div>
           <div class="flex-1 overflow-x-auto">
             <LazyCodeBlock>
@@ -670,8 +674,8 @@ onUnmounted(() => {
   organizer="{{ $t('demo_data.default_organizer') }}"
   uid="7060df05-7b3d-4baa-b215-689b85769e5b"
   sequence="1"
-  created="20221201T103000Z"
-  updated="20221205T154500Z"
+  ics-created="20221201T103000Z"
+  ics-updated="20221205T154500Z"
   status="confirmed"
   ical-file-name="{{ $t('demo_data.iCal_confirmed') }}"
   light-mode="bodyScheme"{{ defaultLang }}
@@ -683,7 +687,7 @@ onUnmounted(() => {
         <div class="block w-full justify-between pt-4 md:flex">
           <div class="flex w-full flex-none flex-col items-center justify-start p-6 pt-8 text-center md:w-[300px]">
             <div class="mb-5 text-sm font-semibold">B. {{ $t('content.advanced.remove_event_example') }}</div>
-            <add-to-calendar-button
+            <Atcb
               :name="$t('demo_data.name')"
               :start-date="defaultDate"
               start-time="10:15"
@@ -695,15 +699,16 @@ onUnmounted(() => {
               :organizer="$t('demo_data.default_organizer')"
               uid="7060df05-7b3d-4baa-b215-689b85769e5b"
               sequence="3"
-              created="20221201T103000Z"
-              updated="20221218T154500Z"
+              ics-created="20221201T103000Z"
+              ics-updated="20221218T154500Z"
               status="cancelled"
               :ical-file-name="$t('demo_data.iCal_cancelled')"
               light-mode="bodyScheme"
               :language="locale"
               hide-rich-data
               hide-branding
-            ></add-to-calendar-button>
+              debug
+            ></Atcb>
           </div>
           <div class="flex-1 overflow-x-auto">
             <LazyCodeBlock>
@@ -720,8 +725,8 @@ onUnmounted(() => {
   organizer="{{ $t('demo_data.default_organizer') }}"
   uid="7060df05-7b3d-4baa-b215-689b85769e5b"
   sequence="2"
-  created="20221201T103000Z"
-  updated="20221218T154500Z"
+  ics-created="20221201T103000Z"
+  ics-updated="20221218T154500Z"
   status="cancelled"
   ical-file-name="{{ $t('demo_data.iCal_cancelled') }}"
   light-mode="bodyScheme"{{ defaultLang }}
@@ -760,7 +765,7 @@ onUnmounted(() => {
         </div>
         <div class="block w-full justify-between pt-4 md:flex">
           <div class="flex w-full flex-none justify-center p-6 pt-8 md:w-[300px]">
-            <add-to-calendar-button
+            <Atcb
               :name="$t('demo_data.name')"
               :start-date="defaultDate"
               start-time="10:15"
@@ -772,7 +777,7 @@ onUnmounted(() => {
               :language="locale"
               hide-rich-data
               hide-branding
-            ></add-to-calendar-button>
+            ></Atcb>
           </div>
           <div class="flex-1 overflow-x-auto">
             <LazyCodeBlock>
@@ -852,7 +857,7 @@ onUnmounted(() => {
         </div>
         <div class="block w-full justify-between pt-4 md:flex">
           <div class="flex w-full flex-none justify-center p-6 pt-8 md:w-[300px]">
-            <add-to-calendar-button
+            <Atcb
               :name="$t('demo_data.name')"
               :start-date="defaultDate"
               start-time="10:00"
@@ -865,7 +870,7 @@ onUnmounted(() => {
               :language="locale"
               hide-rich-data
               hide-branding
-            ></add-to-calendar-button>
+            ></Atcb>
           </div>
           <div class="flex-1 overflow-x-auto">
             <LazyCodeBlock>
@@ -926,19 +931,7 @@ onUnmounted(() => {
         </div>
         <div class="block w-full justify-between pt-4 md:flex">
           <div class="flex w-full flex-none justify-center p-6 pt-8 md:w-[300px]">
-            <add-to-calendar-button
-              :name="$t('demo_data.name_dummy')"
-              :start-date="defaultDate"
-              start-time="10:15"
-              end-time="23:30"
-              options="ical"
-              ics-file="https://add-to-calendar-button.com/demo-event.ics"
-              bypass-web-view-check
-              light-mode="bodyScheme"
-              :language="locale"
-              hide-rich-data
-              hide-branding
-            ></add-to-calendar-button>
+            <Atcb :name="$t('demo_data.name_dummy')" :start-date="defaultDate" start-time="10:15" end-time="23:30" options="ical" ics-file="https://add-to-calendar-button.com/demo-event.ics" bypass-web-view-check light-mode="bodyScheme" :language="locale" hide-rich-data hide-branding></Atcb>
           </div>
           <div class="flex-1 overflow-x-auto">
             <LazyCodeBlock>

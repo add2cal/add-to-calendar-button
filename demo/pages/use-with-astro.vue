@@ -65,6 +65,28 @@ import Layout from '../layouts/Layout.astro';
           {{ $t('content.guide.ssr_note') }}
           <NuxtLink :to="{path: localePath('advanced-use'), hash: '#case-12'}">{{ $t('content.advanced.12_long') }} <ArrowRightIcon class="-mt-0.5 mr-0.5 inline-block h-3 w-3" aria-hidden="true" /></NuxtLink>
         </p>
+        <p>{{ $t('content.guide.ssr_example') }}</p>
+        <LazyCodeBlock language="html">
+          <pre>
+---
+// add-to-calendar.astro
+import { atcb_generate_ssr_html } from 'add-to-calendar-button/ssr';
+
+const html = atcb_generate_ssr_html({
+  name: 'Reminder to check the add-to-calendar-button demo',
+  options: ['Apple', 'Google'],
+  location: 'World Wide Web',
+  startDate: '2050-06-15',
+  startTime: '10:15',
+  endTime: '23:30',
+  timeZone: 'Europe/Berlin',
+});
+---
+&lt;Fragment set:html={html} /&gt;
+&lt;script&gt;
+  import 'add-to-calendar-button'; // client-side upgrade
+&lt;/script&gt;</pre>
+        </LazyCodeBlock>
       </div>
     </div>
     <div class="hidden border-l border-zinc-300 pl-8 text-xs dark:border-zinc-700 lg:block xl:pl-12">

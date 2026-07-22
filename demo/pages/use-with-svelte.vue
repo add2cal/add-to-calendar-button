@@ -1,5 +1,7 @@
 <script setup lang="ts">
+import { ArrowRightIcon } from '@heroicons/vue/24/outline';
 import GuideSidebar from "@/components/integration/guideSidebar.vue";
+const localePath = useLocalePath();
 const LazyCodeBlock = defineAsyncComponent(() => import('@/components/codeBlock.vue'));
 const { locale } = useI18n();
 
@@ -58,6 +60,36 @@ watch(locale, value => {
   end-time="23:30"
   time-zone="{{ $t('demo_data.default_timezone') }}"{{ defaultLang }}
 &gt;&lt;/add-to-calendar-button&gt;</pre>
+        </LazyCodeBlock>
+        <p class="mt-10">
+          {{ $t('content.guide.ssr_note') }}
+          <NuxtLink :to="{path: localePath('advanced-use'), hash: '#case-12'}">{{ $t('content.advanced.12_long') }} <ArrowRightIcon class="-mt-0.5 mr-0.5 inline-block h-3 w-3" aria-hidden="true" /></NuxtLink>
+        </p>
+        <p>{{ $t('content.guide.ssr_example') }}</p>
+        <LazyCodeBlock language="html">
+          <pre>
+&lt;!-- +page.svelte (SvelteKit, SSR enabled) --&gt;
+&lt;script&gt;
+  import { atcb_generate_ssr_html } from 'add-to-calendar-button/ssr';
+  import { onMount } from 'svelte';
+
+  const ssrHtml = atcb_generate_ssr_html({
+    name: 'Reminder to check the add-to-calendar-button demo',
+    options: ['Apple', 'Google'],
+    location: 'World Wide Web',
+    startDate: '{{ defaultDate }}',
+    endDate: '{{ defaultDate }}',
+    startTime: '10:15',
+    endTime: '23:30',
+    timeZone: 'Europe/Berlin',
+  });
+
+  onMount(async () => {
+    await import('add-to-calendar-button'); // client-side upgrade
+  });
+&lt;/script&gt;
+
+{@html ssrHtml}</pre>
         </LazyCodeBlock>
       </div>
     </div>

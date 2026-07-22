@@ -159,6 +159,7 @@ Also part of the default run (long-standing quick tests):
 - G-08: HTML in description is stripped for the plain DESCRIPTION
 - G-09/G-10: location preserved (URL and plain text)
 - G-11: STATUS, SEQUENCE, CREATED, LAST-MODIFIED preserved when supplied
+- G-11b: icsCreated/icsUpdated work per date entry in the multi-date case
 - G-12: hosted icsFile is downloaded directly (no inline ICS built)
 - G-16: long description folds to RFC 5545 line lengths and unfolds losslessly
 - G-17: custom iCalFileName is used for the download

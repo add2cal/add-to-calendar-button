@@ -35,42 +35,70 @@ watch(locale, value => {
       <h1 class="mb-16 underline decoration-primary-light decoration-4 dark:decoration-primary-dark">{{ $t('content.guide.nextjs.headline') }}</h1>
       <div class="px-0 md:px-3 lg:px-5">
         <h2 class="mb-6">{{ $t('content.guide.step1') }}: {{ $t('content.guide.step_npm') }}</h2>
-        <p>
-          {{ $t('content.guide.nextjs.intro_1') }}
-          <a href="https://github.com/add2cal/add-to-calendar-button-react" target="_blank">{{ $t('content.guide.nextjs.intro_2') }}</a>
-          {{ $t('content.guide.nextjs.intro_3') }}
-        </p>
-        <p>{{ $t('content.guide.nextjs.intro_4') }}</p>
-        <LazyCodeBlock language="shell"><pre>npm install add-to-calendar-button-react</pre></LazyCodeBlock>
+        <p>{{ $t('content.guide.nextjs.intro') }}</p>
+        <p>{{ $t('content.guide.install_npm') }}</p>
+        <LazyCodeBlock language="shell"><pre>npm install add-to-calendar-button</pre></LazyCodeBlock>
         <h2 class="mb-6 mt-20">{{ $t('content.guide.step2') }}: {{ $t('content.guide.step_import') }}</h2>
         <p>{{ $t('content.guide.import_npm') }}</p>
         <LazyCodeBlock language="javascript">
-          <pre>import { AddToCalendarButton } from 'add-to-calendar-button-react';</pre>
+          <pre>import 'add-to-calendar-button';</pre>
         </LazyCodeBlock>
         <h2 class="mb-6 mt-20">{{ $t('content.guide.step3') }}: {{ $t('content.guide.step_use') }}</h2>
         <p>
-          {{ $t('content.guide.nextjs.start_wrapper') }}
+          {{ $t('content.guide.step_use_start') }}
         </p>
         <p class="font-semibold italic">{{ $t('content.guide.step_use_simple') }}</p>
         <p>{{ $t('content.guide.step_use_example') }}</p>
-        <LazyCodeBlock language="javascript">
+        <LazyCodeBlock>
           <pre>
-&lt;AddToCalendarButton
+&lt;add-to-calendar-button
   name="{{ $t('demo_data.name_dummy') }}"
-  options={['apple','google']}
+  options="'apple','google'"
   location="{{ $t('demo_data.location') }}"
-  startDate="{{ defaultDate }}"
-  endDate="{{ defaultDate }}"
-  startTime="10:15"
-  endTime="23:30"
-  timeZone="{{ $t('demo_data.default_timezone') }}"{{ defaultLang }}
-&gt;&lt;/AddToCalendarButton&gt;</pre>
+  start-date="{{ defaultDate }}"
+  end-date="{{ defaultDate }}"
+  start-time="10:15"
+  end-time="23:30"
+  time-zone="{{ $t('demo_data.default_timezone') }}"{{ defaultLang }}
+&gt;&lt;/add-to-calendar-button&gt;</pre>
         </LazyCodeBlock>
         <p class="mb-10 font-semibold">{{ $t('content.guide.step_use_client') }}</p>
         <p class="mb-10">
           {{ $t('content.guide.ssr_note') }}
           <NuxtLink :to="{path: localePath('advanced-use'), hash: '#case-12'}">{{ $t('content.advanced.12_long') }} <ArrowRightIcon class="-mt-0.5 mr-0.5 inline-block h-3 w-3" aria-hidden="true" /></NuxtLink>
         </p>
+        <p>{{ $t('content.guide.ssr_example') }}</p>
+        <LazyCodeBlock language="javascript">
+          <pre>
+// app/components/atcb-client.jsx (client upgrade)
+'use client';
+import 'add-to-calendar-button';
+export default function AtcbClient({ html }) {
+  return &lt;div dangerouslySetInnerHTML={html} /&gt;;
+}</pre>
+        </LazyCodeBlock>
+        <LazyCodeBlock language="javascript">
+          <pre>
+// app/page.jsx (server component)
+import { atcb_generate_ssr_html } from 'add-to-calendar-button/ssr';
+import AtcbClient from './components/atcb-client';
+
+export default function Page() {
+  const html = {
+    __html: atcb_generate_ssr_html({
+      name: 'Reminder to check the add-to-calendar-button demo',
+      options: ['Apple', 'Google'],
+      location: 'World Wide Web',
+      startDate: '{{ defaultDate }}',
+      endDate: '{{ defaultDate }}',
+      startTime: '10:15',
+      endTime: '23:30',
+      timeZone: 'Europe/Berlin',
+    }),
+  };
+  return &lt;AtcbClient html={html} /&gt;;
+}</pre>
+        </LazyCodeBlock>
       </div>
     </div>
     <div class="hidden border-l border-zinc-300 pl-8 text-xs dark:border-zinc-700 lg:block xl:pl-12">

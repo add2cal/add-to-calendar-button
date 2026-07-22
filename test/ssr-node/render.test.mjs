@@ -91,3 +91,77 @@ test('S-10: unknown languages fall back to the english label', () => {
   const html = atcb_generate_ssr_html({ name: 'X', language: 'xx' });
   assert.ok(html.includes('Add to Calendar'), 'english fallback label');
 });
+
+test('S-11: kebab-case config keys are normalized like the tag attributes', () => {
+  const html = atcb_generate_ssr_html({ 'name': 'Launch', 'start-date': '2050-06-15', 'button-style': 'round', 'light-mode': 'dark', 'ical-file-name': 'invite', 'use-user-tz': true });
+  assert.ok(html.includes('button-style="round"'), 'kebab input re-serialized as official attribute');
+  assert.ok(html.includes('ical-file-name="invite"'), 'special kebab name normalized');
+  assert.ok(html.includes('use-user-tz="true"'), 'special kebab name normalized 2');
+  assert.ok(html.includes('atcb-dark'), 'light-mode honored for the host class');
+  // the style delta is embedded in the shell styles; a wrong (default) style would
+  // miss the round delta marker class rule
+  assert.ok(!html.includes('NaNpx'), 'sizes still decorated');
+});
+
+test('S-12: buttonsList renders one singleton button per option with per-option icons and skeleton labels', () => {
+  const html = atcb_generate_ssr_html({ name: 'X', options: ['apple', 'google', 'ical'], buttonsList: true, identifier: 'bl1' });
+  assert.ok(html.includes('atcb-buttons-list'), 'flex list class on the root');
+  assert.ok(html.includes('class="atcb-icon atcb-icon-apple"'), 'per-option icon (apple)');
+  assert.ok(html.includes('class="atcb-icon atcb-icon-google"'), 'per-option icon (google)');
+  assert.ok(html.includes('part="atcb-list-text"'), 'label slot per singleton');
+  assert.ok(html.includes('atcb-ssr-skeleton'), 'labels render as skeletons (decoration needs the client)');
+  assert.ok(html.includes('id="atcb-btn-bl1-google"'), 'singleton id rule (identifier-option)');
+  assert.ok(!html.includes('<div class="atcb-dropdown-anchor">'), 'no dropdown anchor on singletons');
+  assert.strictEqual((html.match(/atcb-button atcb-single/g) || []).length, 3, 'exactly 3 singleton buttons');
+});
+
+test('S-13: buttonsList honors option label overrides, kebab input, and the date-style exclusion', () => {
+  const override = atcb_generate_ssr_html({ name: 'X', options: "['apple|Mein Kalender','google']", 'buttons-list': true });
+  assert.ok(override.includes('>Mein Kalender</span>'), 'label override via pipe syntax paints real text');
+  const date = atcb_generate_ssr_html({ name: 'X', options: ['apple', 'google'], buttonsList: true, buttonStyle: 'date' });
+  assert.ok(!date.includes('class="atcb-initialized atcb-buttons-list"'), 'date style never splits (client rule)');
+  assert.ok(!date.includes('atcb-button atcb-single'), 'date style renders no singletons');
+});
+
+test('S-14: hide-icon-button and hide-icon-list drop the respective icons', () => {
+  // (assert on markup, not on the embedded css, which also mentions the classes)
+  const noBtnIcon = atcb_generate_ssr_html({ name: 'X', 'hide-icon-button': true });
+  assert.ok(!noBtnIcon.includes('class="atcb-icon atcb-icon-trigger"'), 'no trigger icon with hide-icon-button');
+  const noListIcon = atcb_generate_ssr_html({ name: 'X', options: ['apple', 'google'], buttonsList: true, hideIconList: true });
+  assert.ok(!noListIcon.includes('class="atcb-icon atcb-icon-apple"') && !noListIcon.includes('class="atcb-icon atcb-icon-google"'), 'no option icons with hide-icon-list');
+  assert.ok(noListIcon.includes('part="atcb-list-text"'), 'label slots still rendered');
+});
+
+test('S-15: bare boolean attributes (empty string, like frameworks serialize them) count as true', () => {
+  const html = atcb_generate_ssr_html({ name: 'X', options: ['apple', 'google'], 'buttons-list': '', 'hide-icon-list': '' });
+  assert.ok(html.includes('atcb-buttons-list'), 'empty-string buttons-list activates the split');
+  assert.ok(!html.includes('class="atcb-icon atcb-icon-apple"'), 'empty-string hide-icon-list drops the icons');
+  const noIcon = atcb_generate_ssr_html({ name: 'X', 'hide-icon-button': '' });
+  assert.ok(!noIcon.includes('class="atcb-icon atcb-icon-trigger"'), 'empty-string hide-icon-button drops the trigger icon');
+});
+
+test('S-16: quoted comma-separated options strings parse like the client attribute parser', () => {
+  const html = atcb_generate_ssr_html({ name: 'X', options: "'apple','google','ical'", buttonsList: true });
+  assert.strictEqual((html.match(/atcb-button atcb-single/g) || []).length, 3, 'quoted csv yields 3 singletons');
+  const mixed = atcb_generate_ssr_html({ name: 'X', options: "'Apple', 'Outlook.com'", buttonsList: true });
+  assert.ok(mixed.includes('atcb-icon-apple') && mixed.includes('atcb-icon-outlookcom'), 'legacy spellings normalize');
+});
+
+test('S-17: custom-css, style-light and style-dark reach the shell', () => {
+  const html = atcb_generate_ssr_html({
+    name: 'X',
+    'button-style': 'custom',
+    'custom-css': 'https://example.com/atcb.css',
+    'style-light': "--btn-background: #2f4377; --btn-text: #fff;",
+    'style-dark': '--btn-background: #000;',
+  });
+  assert.ok(html.includes('<link rel="stylesheet" type="text/css" href="https://example.com/atcb.css">'), 'external css link in the shell');
+  assert.ok(html.includes(':host{--btn-background: #2f4377; --btn-text: #fff;}'), 'styleLight override block');
+  assert.ok(html.includes(':host(.atcb-dark){--btn-background: #000;}'), 'styleDark override block');
+  // (the custom style falls back to the default shell css: a style-less shell would
+  // flash unstyled before the external file arrives - the client shows a placeholder)
+  const evil = atcb_generate_ssr_html({ name: 'X', 'custom-css': 'javascript:alert(1)' });
+  assert.ok(!evil.includes('<link'), 'scheme allowlist blocks hostile css urls');
+  const stripped = atcb_generate_ssr_html({ name: 'X', styleLight: '--x: 1; }</style><script>alert(1)</script>' });
+  assert.ok(!stripped.includes('<script'), 'style override content is html-stripped');
+});

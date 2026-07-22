@@ -97,8 +97,8 @@ describe('Group G - ICS / Apple output', () => {
         ...CFG.singleTimedNY,
         status: 'tentative',
         sequence: 3,
-        created: '20240101T101010Z',
-        updated: '20240202T101010Z',
+        icsCreated: '20240101T101010Z',
+        icsUpdated: '20240202T101010Z',
       },
       'atcb-g11',
     );
@@ -107,6 +107,27 @@ describe('Group G - ICS / Apple output', () => {
     expect(ev.prop('SEQUENCE')).to.include('3');
     expect(ev.prop('CREATED')).to.include('20240101T101010Z');
     expect(ev.prop('LAST-MODIFIED')).to.include('20240202T101010Z');
+  });
+
+  it('G-11b: icsCreated/icsUpdated work per date entry in the multi-date case', async () => {
+    const { ics } = await icsFor(
+      {
+        ...CFG.multiDate,
+        dates: [
+          { name: 'Day 1', startDate: '2050-07-01', startTime: '10:00', endTime: '11:00', icsCreated: '20240101T101010Z', icsUpdated: '20240202T101010Z' },
+          { name: 'Day 2', startDate: '2050-07-08', startTime: '10:00', endTime: '11:00', icsCreated: '20240303T101010Z' },
+          { name: 'Day 3', startDate: '2050-07-15', startTime: '10:00', endTime: '11:00' },
+        ],
+      },
+      'atcb-g11b',
+    );
+    expect(ics.events.length).to.equal(3);
+    expect(ics.events[0].prop('CREATED')).to.include('20240101T101010Z');
+    expect(ics.events[0].prop('LAST-MODIFIED')).to.include('20240202T101010Z');
+    expect(ics.events[1].prop('CREATED')).to.include('20240303T101010Z');
+    // entries without explicit values get the generation timestamp (any valid value)
+    expect(ics.events[1].prop('LAST-MODIFIED')).to.match(/\d{8}T\d{6}Z/);
+    expect(ics.events[2].prop('CREATED')).to.match(/\d{8}T\d{6}Z/);
   });
 
   it('G-12: hosted icsFile is downloaded directly (no inline ICS built)', async () => {
