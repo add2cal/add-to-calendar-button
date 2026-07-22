@@ -246,7 +246,7 @@ function dateButtonContentTemplate(data: ATCBConfig, subEventIn: string | number
       <div class="atcb-date-btn-hover">${unsafeHTML(hoverText as string)}</div>
     </div>
     ${!data.hideCheckmark && data.dates![`${subEvent}`]!.status !== 'cancelled' ? html`<div class="atcb-checkmark">${unsafeHTML(atcbIcon['checkmark']!)}</div>` : nothing}
-    ${!data.dates![`${subEvent}`]!.overdue || data.pastDateHandling === 'none' ? html`<div class="atcb-date-btn-plus">+</div>` : nothing}`;
+    ${!data.dates![`${subEvent}`]!.overdue || data.pastDateHandling === 'none' ? html`<div class="atcb-date-btn-plus">${unsafeHTML(atcbIcon['plus']!)}</div>` : nothing}`;
 }
 
 // ---------- the button ----------

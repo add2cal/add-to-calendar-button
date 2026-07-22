@@ -53,6 +53,11 @@
   overflow-wrap: anywhere;
 }
 
+/* optical correction: sans-serif caps sit high in the box at weight 600 */
+.atcb-button .atcb-icon + .atcb-text {
+  margin-top: .07em;
+}
+
 .atcb-rtl .atcb-list-item {
   direction: rtl;
   text-align: right;
@@ -176,10 +181,10 @@ a.atcb-modal-btn:disabled {
 
 .atcb-date-btn-day {
   color: var(--date-btn-cal-day-text);
-  font-weight: 400;
-  font-size: 2em;
+  font-weight: 600;
+  font-size: 1.7em;
+  line-height: 1.15;
   word-break: keep-all;
-  padding-bottom: .1em;
 }
 
 .atcb-initialized[lang="zh"] .atcb-date-btn-day,
@@ -190,8 +195,10 @@ a.atcb-modal-btn:disabled {
 
 .atcb-date-btn-month {
   color: var(--date-btn-cal-month-text);
-  font-weight: 600;
-  font-size: 1em;
+  font-weight: 700;
+  font-size: .68em;
+  letter-spacing: .14em;
+  text-transform: uppercase;
 }
 
 @media (width <= 414px) {
@@ -581,7 +588,7 @@ a.atcb-modal-btn:disabled {
 :host {
   width: fit-content;
   --font: arial, helvetica, "Twemoji Mozilla", "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "EmojiOne Color", "Android Emoji", sans-serif;
-  --accent-color: #1e90ff;
+  --accent-color: #2f6fed;
   --input-background: #fff;
   --status-active-text: #fff;
   --form-error: #c5372c;
@@ -595,8 +602,9 @@ a.atcb-modal-btn:disabled {
   --modal-headline-text-align: center;
   --date-btn-text: #1d1d1e;
   --date-btn-cal-day-text: #fff;
-  --date-btn-cal-month-text: #d3d2d7;
-  --date-btn-cal-background: #313132;
+  --date-btn-cal-month-text: #c9ccd2;
+  --date-btn-cal-background: #2f3134;
+  --date-badge-ink: #fff;
   --date-btn-hover-background: #fff;
   --date-btn-headline-line-clamp: 1;
   --icon-ms365-color: #ea3e23;
@@ -621,7 +629,7 @@ a.atcb-modal-btn:disabled {
   flex-grow: 0;
   flex-shrink: 0;
   line-height: 1em;
-  margin-right: .8em;
+  margin-right: .55em;
 }
 
 .atcb-rtl .atcb-icon {
@@ -863,18 +871,47 @@ button.atcb-modal-btn:not([disabled]):hover, a.atcb-modal-btn:not([disabled]):ho
 
 .atcb-date-btn-plus {
   position: absolute;
-  bottom: 0;
-  right: 0;
-  background: var(--date-btn-cal-background);
-  color: var(--date-btn-cal-day-text);
+  right: -.7em;
+  top: 50%;
+  transform: translateY(-50%);
+  background: var(--accent-color);
+  border-radius: 100%;
+  box-shadow: 0 0 0 .14em var(--date-btn-background);
+  color: var(--date-badge-ink, #fff);
   display: flex;
   font-size: .9em;
   font-weight: normal;
-  height: 1em;
-  width: 1em;
-  padding: .1em;
+  height: 1.5em;
+  width: 1.5em;
   justify-content: center;
   align-items: center;
+  transition: transform .16s ease;
+}
+
+.atcb-date-btn-plus svg {
+  height: .75em;
+  width: .75em;
+}
+
+.atcb-rtl .atcb-date-btn-plus {
+  right: auto;
+  left: -.7em;
+}
+
+.atcb-button:not(.atcb-active):hover .atcb-date-btn-plus,
+.atcb-subevent-btn:hover .atcb-date-btn-plus {
+  transform: translateY(-50%) scale(1.12);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .atcb-date-btn-plus {
+    transition: none;
+  }
+
+  .atcb-button:not(.atcb-active):hover .atcb-date-btn-plus,
+  .atcb-subevent-btn:hover .atcb-date-btn-plus {
+    transform: translateY(-50%);
+  }
 }
 
 .atcb-saved .atcb-checkmark {

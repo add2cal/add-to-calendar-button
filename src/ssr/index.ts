@@ -99,7 +99,7 @@ function atcb_generate_ssr_html(config: AddToCalendarButtonType & { [key: string
     const inner = (function () {
       if (buttonStyle === 'date') {
         const headline = typeof config.label === 'string' && config.label !== '' ? escapeText(config.label) : typeof config.name === 'string' && config.name !== '' ? escapeText(config.name) : skeletonSpan('12ch');
-        return `<div class="atcb-date-btn-left"><div class="atcb-date-btn-day">${skeletonSpan('2ch')}</div><div class="atcb-date-btn-month">${skeletonSpan('3ch')}</div></div><div class="atcb-date-btn-right"><div class="atcb-date-btn-details"><div class="atcb-date-btn-headline">${headline}</div><div class="atcb-date-btn-content">${skeletonSpan('16ch')}</div></div></div><div class="atcb-date-btn-plus">+</div>`;
+        return `<div class="atcb-date-btn-left"><div class="atcb-date-btn-day">${skeletonSpan('2ch')}</div><div class="atcb-date-btn-month">${skeletonSpan('3ch')}</div></div><div class="atcb-date-btn-right"><div class="atcb-date-btn-details"><div class="atcb-date-btn-headline">${headline}</div><div class="atcb-date-btn-content">${skeletonSpan('16ch')}</div></div></div><div class="atcb-date-btn-plus"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" style="fill:none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M12 5.5v13M5.5 12h13"/></svg></div>`;
       }
       return `<div class="atcb-icon atcb-icon-trigger" part="atcb-button-icon">${atcbIcon['trigger']}</div><span class="atcb-text" part="atcb-button-text">${escapeText(label)}</span><div class="atcb-dropdown-anchor"></div>`;
     })();

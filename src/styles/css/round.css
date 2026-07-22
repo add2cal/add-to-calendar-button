@@ -8,30 +8,30 @@
 :host {
   --wrapper-padding: 1px;
   --buttonslist-gap: 5px;
-  --btn-background: #f5f5f5;
-  --btn-hover-background: #fff;
-  --btn-hover-border: #fff;
-  --btn-border: #d2d2d2;
+  --btn-background: #1b1f24;
+  --btn-hover-background: #2c313a;
+  --btn-hover-border: #2c313a;
+  --btn-border: #1b1f24;
   --btn-border-radius: 500px;
-  --btn-padding-x: 1.3em;
-  --btn-padding-y: .65em;
+  --btn-padding-x: 1.34em;
+  --btn-padding-y: .7em;
   --btn-font-weight: 600;
-  --btn-text: #333;
-  --btn-hover-text: #000;
-  --btn-shadow: rgb(0 0 0 / 10%) 0 4px 14px -2px, rgb(0 0 0 / 12%) 0 2px 6px -1px;
-  --btn-hover-shadow: rgb(0 0 0 / 16%) 0 5px 18px -3px, rgb(0 0 0 / 14%) 0 3px 8px -2px;
-  --btn-active-shadow: rgb(0 0 0 / 18%) 0 6px 18px -3px, rgb(0 0 0 / 14%) 0 4px 10px -2px;
-  --list-background: #f5f5f5;
-  --list-hover-background: #fff;
-  --list-text: #333;
+  --btn-text: #fff;
+  --btn-hover-text: #fff;
+  --btn-shadow: rgb(16 24 40 / 18%) 0 1px 2px;
+  --btn-hover-shadow: rgb(16 24 40 / 22%) 0 4px 10px;
+  --btn-active-shadow: rgb(16 24 40 / 25%) 0 5px 12px;
+  --list-background: #fff;
+  --list-hover-background: #f2f4f7;
+  --list-text: #1b1f24;
   --list-font-weight: 400;
-  --list-hover-text: #000;
+  --list-hover-text: #1b1f24;
   --list-close-background: #e5e5e5;
   --list-close-text: #777;
-  --list-border-radius: 11px;
-  --list-padding: .8em 1.2em;
+  --list-border-radius: 14px;
+  --list-padding: .7em 1.1em;
   --list-min-width: 100%;
-  --list-shadow: rgb(0 0 0 / 12%) 0 4px 18px -2px, rgb(0 0 0 / 14%) 0 2px 8px -1px;
+  --list-shadow: rgb(16 24 40 / 25%) 0 12px 32px -8px, rgb(16 24 40 / 8%) 0 2px 6px -2px;
   --list-modal-shadow: rgb(0 0 0 / 18%) 0 4px 34px -3px, rgb(0 0 0 / 14%) 0 2px 12px -2px;
   --modal-text: #000;
   --modal-border-radius: 9px;
@@ -46,8 +46,8 @@
   --modal-btn-hover-shadow: rgb(0 0 0 / 18%) 3px 5px 18px -2px,rgb(0 0 0 / 14%) 2px 4px 28px -6px;
   --modal-headline-text-transform: none;
   --input-border-radius: 6px;
-  --date-btn-text-secondary: #3a3a3f;
-  --date-btn-background: #eae9ed;
+  --date-btn-text-secondary: #667085;
+  --date-btn-background: #fff;
   --date-btn-shadow: rgb(0 0 0 / 08%) 0 4px 14px -2px, rgb(0 0 0 / 12%) 0 2px 6px -1px;
   --date-btn-hover-shadow: rgb(0 0 0 / 14%) 0 5px 16px -2px, rgb(0 0 0 / 14%) 0 3px 8px -2px;
   --checkmark-background: drop-shadow(0 0 4px #fff);
@@ -55,27 +55,28 @@
 }
 
 :host(.atcb-dark) {
-  --btn-background: #2e2e2e;
-  --btn-hover-background: #373737;
-  --btn-hover-border: #373737;
-  --btn-border: #4d4d4d;
-  --btn-hover-text: #f1f1f1;
-  --btn-shadow: rgb(255 255 255 / 3%) -3px -3px 34px -1px, rgb(0 0 0 / 10%) 2px 3px 14px -2px, rgb(0 0 0 / 12%) 1px 2px 8px -1px;
-  --btn-hover-shadow: rgb(0 0 0 / 18%) 2px 5px 24px -4px, rgb(0 0 0 / 14%) 1px 2px 10px -2px;
-  --btn-active-shadow: rgb(0 0 0 / 20%) 2px 5px 24px -4px, rgb(0 0 0 / 14%) 1px 2px 10px -2px;
-  --list-background: #2e2e2e;
-  --list-hover-background: #373737;
-  --list-hover-text: #f1f1f1;
+  --btn-background: #f2f4f7;
+  --btn-text: #14171b;
+  --btn-hover-background: #fff;
+  --btn-hover-border: #fff;
+  --btn-border: #f2f4f7;
+  --btn-hover-text: #0b0d10;
+  --btn-shadow: rgb(0 0 0 / 40%) 0 1px 2px;
+  --btn-hover-shadow: rgb(0 0 0 / 50%) 0 4px 10px;
+  --btn-active-shadow: rgb(0 0 0 / 55%) 0 5px 12px;
+  --list-background: #24272c;
+  --list-hover-background: #2f343b;
+  --list-hover-text: #f2f4f7;
   --list-close-background: #282828;
   --list-close-text: #777;
-  --list-shadow: rgb(0 0 0 / 12%) 0 4px 24px -2px, rgb(0 0 0 / 14%) 0 2px 10px -1px;
+  --list-shadow: rgb(0 0 0 / 60%) 0 12px 32px -8px, rgb(0 0 0 / 30%) 0 2px 6px -2px;
   --list-modal-shadow: rgb(0 0 0 / 18%) -1px 3px 34px 2px;
   --modal-shadow: drop-shadow(3px 6px 28px rgb(0 0 0 / 30%));
   --modal-btn-bar: #38383a;
   --modal-btn-border: #434246;
   --modal-btn-shadow: rgb(255 255 255 / 3%) -2px -2px 14px,rgb(0 0 0 / 10%) 3px 3px 14px -2px,rgb(0 0 0 / 12%) 1px 2px 10px -1px;
-  --date-btn-cal-month-text: #3e3e3f;
-  --date-btn-background: #363636;
+  --date-btn-cal-month-text: #4a5058;
+  --date-btn-background: #24272c;
   --date-btn-shadow: rgb(0 0 0 / 10%) 0 0 24px -2px, rgb(0 0 0 / 12%) 1px 2px 8px -1px;
   --checkmark-background: drop-shadow(0 0 4px #0a0a0a);
   --overlay-background: rgb(20 20 20 / 60%);
@@ -101,7 +102,7 @@
   font-weight: var(--btn-font-weight);
   justify-content: center;
   line-height: 1.5em;
-  margin: .13em;
+  margin: 0;
   max-width: 350px;
   padding: var(--btn-padding-y) var(--btn-padding-x);
   text-align: center;
@@ -125,6 +126,7 @@
 
 .atcb-button:focus-visible {
   outline: 2px solid var(--accent-color);
+  outline-offset: .15em;
 }
 
 .atcb-button:not([disabled]):focus,
@@ -133,8 +135,6 @@
   border-color: var(--btn-hover-border);
   box-shadow: var(--btn-hover-shadow);
   color: var(--btn-hover-text);
-  margin: 0;
-  padding: calc(var(--btn-padding-y) + .13em) calc(var(--btn-padding-x) + .13em);
 }
 
 .atcb-button:not([disabled]).atcb-no-text:focus,
@@ -152,8 +152,6 @@
   border-color: var(--btn-hover-border);
   box-shadow: var(--btn-active-shadow);
   color: var(--btn-hover-text);
-  margin: 0;
-  padding: calc(var(--btn-padding-y) + .13em) calc(var(--btn-padding-x) + .13em);
 }
 
 .atcb-button.atcb-active.atcb-no-text:not(.atcb-modal-style, .atcb-dropoverlay),
@@ -163,8 +161,6 @@
   border-color: var(--btn-hover-border);
   box-shadow: var(--btn-active-shadow);
   color: var(--btn-hover-text);
-  margin: 0;
-  padding: calc(var(--btn-padding-y) + .28em) calc(var(--btn-padding-x) + .13em);
 }
 
 .atcb-button:not(.atcb-modal-style, .atcb-dropoverlay, .atcb-dropup)::before,
@@ -194,17 +190,16 @@
 
 .atcb-button.atcb-active:not(.atcb-modal-style, .atcb-dropoverlay, .atcb-dropup)::before,
 .atcb-button.atcb-active.atcb-dropup::after {
-  border-width: 0.35em;
-  transition: border-width 0.1s linear 0.1s;
+  border-width: 0;
 }
 
 .atcb-icon {
-  height: 1em;
-  width: 1em;
+  height: 1.15em;
+  width: 1.15em;
 }
 
 .atcb-rtl .atcb-icon {
-  margin-left: .8em;
+  margin-left: .55em;
 }
 
 .atcb-dropdown-anchor {
@@ -407,7 +402,11 @@ a.atcb-modal-btn:not([disabled]):hover {
 }
 
 .atcb-date-btn-details {
-  padding: .7em .8em;
+  padding: .7em 1.4em .7em .8em;
+}
+
+.atcb-rtl .atcb-date-btn-details {
+  padding: .7em .8em .7em 1.4em;
 }
 
 .atcb-subevent-btn:hover .atcb-date-btn-details {
@@ -428,7 +427,7 @@ a.atcb-modal-btn:not([disabled]):hover {
 }
 
 .atcb-date-btn-plus {
-  border-radius: 4px 0;
+  border-radius: 100%;
 }
 
 .atcb-saved .atcb-checkmark {
