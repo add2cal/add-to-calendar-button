@@ -77,6 +77,39 @@
   background-color: var(--list-close-background);
 }
 
+/* in the modal presentation, the close control is an X in the top end corner */
+.atcb-list.atcb-modal .atcb-list-item-close {
+  position: absolute;
+  top: .5em;
+  inset-inline-end: .5em;
+  height: 2em;
+  width: 2em;
+  padding: .5em;
+  justify-content: center;
+  border-radius: 100%;
+  background-color: transparent;
+  z-index: 1;
+}
+
+.atcb-list.atcb-modal .atcb-list-item-close .atcb-text {
+  display: none;
+}
+
+.atcb-list.atcb-modal .atcb-list-item-close .atcb-icon {
+  height: .8em;
+  width: .8em;
+  margin: 0;
+}
+
+.atcb-list.atcb-modal .atcb-list-item-close:hover,
+.atcb-list.atcb-modal .atcb-list-item-close:focus-visible {
+  background-color: var(--list-hover-background);
+}
+
+.atcb-list.atcb-modal .atcb-list-item:not(.atcb-list-item-close):first-child {
+  padding-inline-end: 2.8em;
+}
+
 .atcb-list-item.atcb-list-item-close:not(:focus-visible) {
   color: var(--list-close-text);
 }
@@ -636,6 +669,37 @@ a.atcb-modal-btn:disabled {
   margin-right: 0;
 }
 
+.atcb-chevron {
+  flex-grow: 0;
+  flex-shrink: 0;
+  height: .8em;
+  width: .8em;
+  margin-left: .5em;
+  opacity: .55;
+  transition: transform .16s ease;
+}
+
+.atcb-chevron svg {
+  display: block;
+  height: 100%;
+  width: 100%;
+}
+
+.atcb-rtl .atcb-chevron {
+  margin-left: 0;
+  margin-right: .5em;
+}
+
+.atcb-button.atcb-active .atcb-chevron {
+  transform: rotate(180deg);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .atcb-chevron {
+    transition: none;
+  }
+}
+
 .atcb-dropdown-anchor {
   width: 100%;
   opacity: 0;
@@ -825,12 +889,15 @@ button.atcb-modal-btn:not([disabled]):hover, a.atcb-modal-btn:not([disabled]):ho
 .atcb-date-btn-left {
   align-self: stretch;
   background-color: var(--date-btn-cal-background);
-  padding: .7em .8em .8em;
-  width: 2.7em;
+  padding: .6em .5em;
+  width: 3.2em;
   align-items: center;
+  justify-content: center;
+  text-align: center;
   display: flex;
   flex-direction: column;
   flex-shrink: 0;
+  box-sizing: border-box;
 }
 
 @media (width <= 575px) {

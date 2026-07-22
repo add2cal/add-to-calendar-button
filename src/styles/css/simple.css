@@ -6,7 +6,7 @@
  */
 
 :host {
-  --wrapper-padding: 1px;
+  --wrapper-padding: 0px;
   --buttonslist-gap: 5px;
   --btn-background: transparent;
   --btn-hover-background: rgb(27 31 36 / 6%);

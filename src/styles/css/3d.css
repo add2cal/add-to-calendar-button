@@ -20,7 +20,7 @@
   --btn-text: #1b1f24;
   --btn-hover-text: #1b1f24;
   --btn-shadow: 0 .22em 0 var(--btn-edge), rgb(16 24 40 / 12%) 0 .35em .65em;
-  --btn-hover-shadow: 0 .22em 0 var(--btn-edge), rgb(16 24 40 / 16%) 0 .45em .9em;
+  --btn-hover-shadow: 0 .5em 0 var(--btn-edge), rgb(16 24 40 / 18%) 0 .85em 1.3em -.1em;
   --btn-active-shadow: 0 .06em 0 var(--btn-edge);
   --btn-active-shadow-up: 0 -.06em 0 var(--btn-edge);
   --list-background: #fff;
@@ -62,7 +62,7 @@
   --btn-border: #3b4046;
   --btn-hover-text: #f2f4f7;
   --btn-shadow: 0 .22em 0 var(--btn-edge), rgb(0 0 0 / 45%) 0 .35em .65em;
-  --btn-hover-shadow: 0 .22em 0 var(--btn-edge), rgb(0 0 0 / 55%) 0 .45em .9em;
+  --btn-hover-shadow: 0 .5em 0 var(--btn-edge), rgb(0 0 0 / 60%) 0 .85em 1.3em -.1em;
   --btn-active-shadow: 0 .06em 0 var(--btn-edge);
   --btn-active-shadow-up: 0 -.06em 0 var(--btn-edge);
   --list-background: #24272c;
@@ -142,6 +142,8 @@
   border-color: var(--btn-hover-border);
   box-shadow: var(--btn-hover-shadow);
   color: var(--btn-hover-text);
+  transform: translate3d(0, 0, -12px) translateY(-.28em);
+  transition: transform 0.1s linear, box-shadow 0.1s linear;
 }
 
 .atcb-button.atcb-active:not(.atcb-modal-style, .atcb-dropoverlay) {
@@ -153,25 +155,29 @@
 .atcb-button.atcb-single:not([disabled]):hover {
   background-color: var(--btn-hover-background);
   border-color: var(--btn-hover-border);
-  box-shadow: var(--btn-active-shadow);
+  box-shadow: var(--btn-hover-shadow);
   color: var(--btn-hover-text);
 }
 
-.atcb-button.atcb-active:not(.atcb-modal-style, .atcb-dropup, .atcb-dropoverlay) {
-  box-shadow: var(--btn-active-shadow);
-  transform: translateY(.16em);
+.atcb-button.atcb-active:not(.atcb-modal-style, .atcb-dropoverlay) {
+  box-shadow: var(--btn-hover-shadow);
+  transform: translate3d(0, 0, -12px) translateY(-.28em);
   transition: transform 0.1s linear, box-shadow 0.1s linear;
 }
 
-.atcb-button.atcb-active.atcb-dropup:not(.atcb-modal-style, .atcb-dropoverlay) {
-  box-shadow: var(--btn-active-shadow-up);
-  transform: translateY(-.16em);
-  transition: transform 0.1s linear, box-shadow 0.1s linear;
+/* the click itself presses the button DOWN (edge collapses), lift resumes after */
+.atcb-button:not([disabled]):active {
+  box-shadow: var(--btn-active-shadow);
+  transform: translate3d(0, 0, -12px) translateY(.16em);
+  transition: transform 0.06s linear, box-shadow 0.06s linear;
 }
 
 @media (prefers-reduced-motion: reduce) {
+  .atcb-button:not([disabled]):focus,
+  .atcb-button:not([disabled]):hover,
+  .atcb-button:not([disabled]):active,
   .atcb-button.atcb-active:not(.atcb-modal-style, .atcb-dropoverlay) {
-    transform: none;
+    transform: translate3d(0, 0, -12px);
     transition: none;
   }
 
@@ -202,7 +208,7 @@
 }
 
 .atcb-list-wrapper {
-  padding: 0 4px;
+  padding: 0;
   transform: translate3d(0, 0, 0);
   z-index: 14000090;
 }
@@ -212,6 +218,12 @@
   border-radius: 0 0 var(--list-border-radius) var(--list-border-radius);
   box-shadow: var(--list-shadow);
   min-width: 100%;
+  margin-top: .55em;
+}
+
+.atcb-dropup .atcb-list {
+  margin-top: 0;
+  margin-bottom: .55em;
 }
 
 .atcb-list-wrapper.atcb-dropdown:not(.atcb-dropup, .atcb-dropoverlay) {

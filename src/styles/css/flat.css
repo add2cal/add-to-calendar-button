@@ -156,7 +156,7 @@
 
 .atcb-list-wrapper {
   font-weight: var(--list-font-weight);
-  padding: 0 2px 0 6px;
+  padding: 0;
   z-index: 16000090;
 }
 
