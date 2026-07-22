@@ -5,6 +5,9 @@
 /dist
 demo/dist
 
+# generated style assets (rebuilt from src/styles/css by scripts/build.mjs).
+/assets/css
+
 # tmp testing files.
 testing.html
 example.html
