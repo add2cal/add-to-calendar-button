@@ -77,6 +77,16 @@
   background-color: var(--list-close-background);
 }
 
+/* in the modal presentation, the trigger label repeats as a headline on top,
+   with generous end padding to clear the X close control */
+.atcb-list-modal-headline {
+  font-weight: 700;
+  font-size: 1.05em;
+  padding-block: .8em .5em;
+  padding-inline: .9em 2.8em;
+  text-align: start;
+}
+
 /* in the modal presentation, the close control is an X in the top end corner */
 .atcb-list.atcb-modal .atcb-list-item-close {
   position: absolute;
@@ -106,8 +116,17 @@
   background-color: var(--list-hover-background);
 }
 
-.atcb-list.atcb-modal .atcb-list-item:not(.atcb-list-item-close):first-child {
-  padding-inline-end: 2.8em;
+/* fullscreen on small viewports: no shadow, no margin, no radius */
+@media (width <= 575px) {
+  .atcb-list.atcb-modal {
+    border: 0;
+    border-radius: 0;
+    box-shadow: none;
+    margin: 0;
+    min-height: 100dvh;
+    min-width: 100%;
+    width: 100%;
+  }
 }
 
 .atcb-list-item.atcb-list-item-close:not(:focus-visible) {

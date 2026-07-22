@@ -121,11 +121,11 @@
 }
 
 .atcb-date-btn-left {
-  border-radius: var(--btn-border-radius) 0 0 var(--btn-border-radius);
+  border-radius: calc(var(--btn-border-radius) - 1px) 0 0 calc(var(--btn-border-radius) - 1px);
 }
 
 .atcb-rtl .atcb-date-btn-left {
-  border-radius: 0 var(--btn-border-radius) var(--btn-border-radius) 0;
+  border-radius: 0 calc(var(--btn-border-radius) - 1px) calc(var(--btn-border-radius) - 1px) 0;
 }
 
 .atcb-button:hover .atcb-date-btn-left,
@@ -207,11 +207,13 @@
   box-shadow: var(--list-shadow);
   min-width: 100%;
   padding: .3em;
+}
+
+.atcb-list-wrapper.atcb-dropdown:not(.atcb-dropup, .atcb-dropoverlay) .atcb-list {
   margin-top: .7em;
 }
 
-.atcb-dropup .atcb-list {
-  margin-top: 0;
+.atcb-list-wrapper.atcb-dropup .atcb-list {
   margin-bottom: .7em;
 }
 

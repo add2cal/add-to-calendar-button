@@ -189,11 +189,13 @@
   box-shadow: var(--list-shadow);
   min-width: 100%;
   padding: .3em;
+}
+
+.atcb-list-wrapper.atcb-dropdown:not(.atcb-dropup, .atcb-dropoverlay) .atcb-list {
   margin-top: .7em;
 }
 
-.atcb-dropup .atcb-list {
-  margin-top: 0;
+.atcb-list-wrapper.atcb-dropup .atcb-list {
   margin-bottom: .7em;
 }
 

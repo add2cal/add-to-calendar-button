@@ -24,6 +24,7 @@
   --btn-active-shadow: 0 .06em 0 var(--btn-edge);
   --btn-active-shadow-up: 0 -.06em 0 var(--btn-edge);
   --list-background: #fff;
+  --list-border-color: #e4e7ec;
   --list-hover-background: #f2f4f7;
   --list-text: #1b1f24;
   --list-hover-text: #1b1f24;
@@ -66,6 +67,7 @@
   --btn-active-shadow: 0 .06em 0 var(--btn-edge);
   --btn-active-shadow-up: 0 -.06em 0 var(--btn-edge);
   --list-background: #24272c;
+  --list-border-color: #373c43;
   --list-hover-background: #2f343b;
   --list-hover-text: #f2f4f7;
   --list-close-background: #282828;
@@ -215,112 +217,34 @@
 
 .atcb-list {
   background-color: var(--list-background);
-  border-radius: 0 0 var(--list-border-radius) var(--list-border-radius);
+  border: 1px solid var(--list-border-color);
+  border-radius: var(--list-border-radius);
   box-shadow: var(--list-shadow);
   min-width: 100%;
-  margin-top: .55em;
+  padding: .3em;
 }
 
-.atcb-dropup .atcb-list {
-  margin-top: 0;
-  margin-bottom: .55em;
+/* floating card with air to the button — like default, no slide animation */
+.atcb-list-wrapper.atcb-dropdown:not(.atcb-dropup, .atcb-dropoverlay) .atcb-list {
+  margin-top: .7em;
 }
 
-.atcb-list-wrapper.atcb-dropdown:not(.atcb-dropup, .atcb-dropoverlay) {
-  animation: atcb-list-slide-down 0.4s ease 0.05s 1 normal both;
-  opacity: 0;
-}
-
-.atcb-list-wrapper.atcb-dropup:not(.atcb-dropoverlay) {
-  animation: atcb-list-slide-up 0.4s ease 0.05s 1 normal both;
-  opacity: 0;
+.atcb-list-wrapper.atcb-dropup .atcb-list {
+  margin-bottom: .7em;
 }
 
 .atcb-list-wrapper.atcb-dropoverlay {
   transform: translate3d(0, 0, 2px);
   z-index: 15000000;
-  animation: atcb-list-slide-center 0.3s ease 0s 1 normal both;
-  opacity: 0;
-}
-
-@keyframes atcb-list-slide-down {
-  0% {
-        opacity: 0;
-        transform: rotateX(70deg);
-        transform-origin: top;
-      }
-  
-  100% {
-        opacity: 1;
-        transform: rotateX(0deg);
-        transform-origin: top;
-      }
-}
-
-@keyframes atcb-list-slide-up {
-  0% {
-        opacity: 0;
-        transform: rotateX(70deg);
-        transform-origin: bottom;
-      }
-  
-  100% {
-        opacity: 1;
-        transform: rotateX(0deg);
-        transform-origin: bottom;
-      }
-}
-
-@keyframes atcb-list-slide-center {
-  0% {
-        opacity: 0;
-        transform: scaleY(1);
-      }
-  
-  1% {
-        opacity: 1;
-        transform: scaleY(0);
-      }
-  
-  100% {
-        opacity: 1;
-        transform: scaleY(1);
-      }
 }
 
 .atcb-list-item {
+  background-color: transparent;
+  border-radius: 8px;
   padding: var(--list-padding);
 }
 
-.atcb-list-item:last-child {
-  border-radius: 0 0 var(--list-border-radius) var(--list-border-radius);
-}
-
-.atcb-dropup .atcb-list-item:last-child {
-  border-radius: 0;
-  padding-bottom: calc(var(--list-padding) + .7em);
-}
-
-.atcb-dropup .atcb-list-item:first-child,
-.atcb-dropoverlay .atcb-list .atcb-list-item:first-child,
-.atcb-list.atcb-modal .atcb-list-item:first-child,
-.atcb-dropup .atcb-list {
-  border-radius: var(--list-border-radius) var(--list-border-radius) 0 0;
-}
-
-.atcb-dropoverlay .atcb-list .atcb-list-item:only-child,
-.atcb-list.atcb-modal .atcb-list-item:only-child {
-  border-radius: var(--list-border-radius);
-}
-
-.atcb-list.atcb-generated-button:not(.atcb-modal) .atcb-list-item:first-child {
-  padding-top: calc(var(--list-padding) + .7em);
-}
-
-.atcb-dropup .atcb-list.atcb-generated-button:not(.atcb-modal) .atcb-list-item:first-child,
-.atcb-dropoverlay .atcb-list.atcb-generated-button:not(.atcb-modal) .atcb-list-item:first-child {
-  padding-top: var(--list-padding);
-}
+/* uniform card look: item radii and paddings stay constant in every direction */
 
 .atcb-dropoverlay .atcb-list,
 .atcb-list.atcb-modal {

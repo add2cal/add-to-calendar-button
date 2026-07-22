@@ -210,18 +210,6 @@
   z-index: 15000010;
 }
 
-.atcb-list-item:last-child {
-  border-radius: 0 0 var(--list-border-radius) var(--list-border-radius);
-}
-
-.atcb-list-item:first-child {
-  border-radius: var(--list-border-radius) var(--list-border-radius) 0 0;
-}
-
-.atcb-list-item:only-child {
-  border-radius: var(--list-border-radius);
-}
-
 .atcb-modal-box {
   animation: list-entrance 600ms ease 0s 1 normal forwards;
   filter: var(--modal-shadow);

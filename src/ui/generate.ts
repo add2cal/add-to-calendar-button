@@ -211,6 +211,14 @@ function atcb_generate_dropdown_list(host: ShadowRoot, data: ATCBConfig): HTMLDi
   if (data.rtl) {
     optionsList.classList.add('atcb-rtl');
   }
+  // in the modal case, the trigger label repeats as a headline on top
+  if (data.listStyle === 'modal') {
+    const listHeadline = document.createElement('div');
+    listHeadline.classList.add('atcb-list-modal-headline');
+    listHeadline.setAttribute('part', 'atcb-list-modal-headline');
+    listHeadline.textContent = atcb_translate_hook('label.addtocalendar', data);
+    optionsList.append(listHeadline);
+  }
   // generate the list items
   let listCount = 0;
   data.options!.forEach(function (option) {

@@ -8,16 +8,16 @@
 :host {
   --wrapper-padding: 0px;
   --buttonslist-gap: 5px;
-  --btn-background: #f2f4f7;
-  --btn-hover-background: #fff;
-  --btn-hover-border: #fff;
-  --btn-border: #f2f4f7;
+  --btn-background: #fff;
+  --btn-hover-background: #f7f8fa;
+  --btn-hover-border: #bfc5cd;
+  --btn-border: #d7dbe0;
   --btn-border-radius: 500px;
   --btn-padding-x: 1.34em;
   --btn-padding-y: .7em;
   --btn-font-weight: 600;
-  --btn-text: #14171b;
-  --btn-hover-text: #0b0d10;
+  --btn-text: #1b1f24;
+  --btn-hover-text: #1b1f24;
   --btn-shadow: rgb(16 24 40 / 18%) 0 1px 2px;
   --btn-hover-shadow: rgb(16 24 40 / 22%) 0 4px 10px;
   --btn-active-shadow: rgb(16 24 40 / 25%) 0 5px 12px;
@@ -55,12 +55,11 @@
 }
 
 :host(.atcb-dark) {
-  --btn-background: #1b1f24;
-  --btn-text: #fff;
-  --btn-hover-background: #2c313a;
-  --btn-hover-border: #2c313a;
-  --btn-border: #1b1f24;
-  --btn-hover-text: #fff;
+  --btn-background: #24272c;
+  --btn-hover-background: #2b2f35;
+  --btn-hover-border: #4a5058;
+  --btn-border: #3b4046;
+  --btn-hover-text: #f2f4f7;
   --btn-shadow: rgb(0 0 0 / 40%) 0 1px 2px;
   --btn-hover-shadow: rgb(0 0 0 / 50%) 0 4px 10px;
   --btn-active-shadow: rgb(0 0 0 / 55%) 0 5px 12px;
