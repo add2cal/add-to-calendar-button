@@ -21,6 +21,7 @@ import { fileURLToPath } from 'node:url';
 import { build as viteBuild } from 'vite';
 import esbuild from 'esbuild';
 import CleanCSS from 'clean-css';
+import postcss from 'postcss';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const withMin = process.argv.includes('--min');
@@ -53,6 +54,38 @@ function cleanOldBuildFiles() {
 // CDN hotlinks and customCss consumers, and prepares the delta assets for dist/styles.
 let cssArtifacts = null;
 
+/**
+ * Combines the exact host-level rules contributed by tokens, core, and a style
+ * delta. Keeping the light rule before the dark rule is significant: declarations
+ * shared by both modes must resolve to the dark value on a dark host.
+ */
+function mergeCssParts(...parts) {
+  const root = postcss.parse(parts.join('\n'));
+  root.walkComments((comment) => comment.remove());
+  const hostRules = new Map([
+    [':host', postcss.rule({ selector: ':host' })],
+    [':host(.atcb-dark)', postcss.rule({ selector: ':host(.atcb-dark)' })],
+  ]);
+
+  root.each((node) => {
+    if (node.type !== 'rule') return;
+    const target = hostRules.get(node.selector.trim());
+    if (!target) return;
+    node.each((child) => target.append(child.clone()));
+    node.remove();
+  });
+
+  for (const rule of [...hostRules.values()].reverse()) {
+    if (!rule.nodes?.length) continue;
+    const customProperties = rule.nodes.filter((node) => node.type === 'decl' && node.prop.startsWith('--')).sort((a, b) => a.prop.localeCompare(b.prop));
+    const otherNodes = rule.nodes.filter((node) => node.type !== 'decl' || !node.prop.startsWith('--'));
+    rule.removeAll();
+    rule.append([...otherNodes, ...customProperties]);
+    root.prepend(rule);
+  }
+  return root.toString();
+}
+
 function buildCssArtifacts() {
   const srcDir = r('src/styles/css');
   if (!fs.existsSync(path.join(srcDir, 'core.css'))) {
@@ -66,19 +99,21 @@ function buildCssArtifacts() {
   };
   const tokensRaw = fs.readFileSync(path.join(srcDir, 'tokens.css'), 'utf8');
   const coreRaw = fs.readFileSync(path.join(srcDir, 'core.css'), 'utf8');
-  const tokensMin = minify('tokens.css');
-  const coreMin = minify('core.css');
   const deltasMin = {};
   for (const style of AVAILABLE_STYLES) {
+    const deltaRaw = fs.readFileSync(path.join(srcDir, `${style}.css`), 'utf8');
+    const mergedRaw = mergeCssParts(tokensRaw, coreRaw, deltaRaw);
+    const mergedMinResult = cleaner.minify(mergedRaw);
+    if (mergedMinResult.errors.length > 0) throw new Error(`clean-css failed for merged ${style} css: ${mergedMinResult.errors.join(', ')}`);
+    const mergedMin = mergedMinResult.styles;
     deltasMin[style] = minify(`${style}.css`);
     // reconstructed full stylesheet (v2-compatible artifact, generated - do not edit)
     const suffix = style === 'default' ? '' : `-${style}`;
     const banner = `/*\n * ++++++++++++++++++++++\n * Add to Calendar Button\n * ++++++++++++++++++++++\n *\n * Style: ${style}\n * GENERATED FILE - built from src/styles/css (tokens + core + ${style} delta). Do not edit.\n *\n * Version: ${pkg.version}\n * Creator: Jens Kuerschner (https://jekuer.com)\n * Project: https://github.com/add2cal/add-to-calendar-button\n * License: Elastic License 2.0 (ELv2) (https://github.com/add2cal/add-to-calendar-button/blob/main/LICENSE.txt)\n * Note:    DO NOT REMOVE THE COPYRIGHT NOTICE ABOVE!\n *\n */\n\n`;
-    const deltaRaw = fs.readFileSync(path.join(srcDir, `${style}.css`), 'utf8');
-    fs.writeFileSync(r('assets/css', `atcb${suffix}.css`), banner + tokensRaw + '\n' + coreRaw + '\n' + deltaRaw);
-    fs.writeFileSync(r('assets/css', `atcb${suffix}.min.css`), tokensMin + coreMin + deltasMin[style]);
+    fs.writeFileSync(r('assets/css', `atcb${suffix}.css`), banner + mergedRaw);
+    fs.writeFileSync(r('assets/css', `atcb${suffix}.min.css`), mergedMin);
   }
-  cssArtifacts = { coreFull: tokensMin + coreMin, deltas: deltasMin };
+  cssArtifacts = { coreFull: minify('tokens.css') + minify('core.css'), deltas: deltasMin };
 }
 
 // ---------- shared: inline style templates ----------
@@ -369,6 +404,27 @@ function sanityCheck() {
   for (const style of AVAILABLE_STYLES) {
     for (const ext of ['css', 'js', 'cjs', 'd.ts']) {
       if (!fs.existsSync(r('dist/styles', `${style}.${ext}`))) problems.push(`dist/styles/${style}.${ext} missing`);
+    }
+    const suffix = style === 'default' ? '' : `-${style}`;
+    const fullCssRoot = postcss.parse(fs.readFileSync(r('assets/css', `atcb${suffix}.css`), 'utf8'));
+    const fullCssComments = [];
+    fullCssRoot.walkComments((comment) => fullCssComments.push(comment));
+    if (fullCssComments.length !== 1 || !fullCssComments[0].text.includes('GENERATED FILE')) {
+      problems.push(`assets/css/atcb${suffix}.css: only the generated header comment may remain`);
+    }
+    const fullCssSelectors = fullCssRoot.nodes.filter((node) => node.type === 'rule').map((node) => node.selector.trim());
+    if (fullCssSelectors[0] !== ':host' || fullCssSelectors[1] !== ':host(.atcb-dark)') {
+      problems.push(`assets/css/atcb${suffix}.css: merged host rules must be first (light, then dark)`);
+    }
+    if (fullCssSelectors.filter((selector) => selector === ':host').length !== 1 || fullCssSelectors.filter((selector) => selector === ':host(.atcb-dark)').length !== 1) {
+      problems.push(`assets/css/atcb${suffix}.css: duplicate merged host rules`);
+    }
+    for (const selector of [':host', ':host(.atcb-dark)']) {
+      const rule = fullCssRoot.nodes.find((node) => node.type === 'rule' && node.selector.trim() === selector);
+      const properties = rule?.nodes.filter((node) => node.type === 'decl' && node.prop.startsWith('--')).map((node) => node.prop) ?? [];
+      if (properties.some((property, index) => index > 0 && properties[index - 1].localeCompare(property) > 0)) {
+        problems.push(`assets/css/atcb${suffix}.css: ${selector} custom properties must be alphabetized`);
+      }
     }
   }
   if (!moduleBuild.includes('atcbStyleRelPath = "../styles/"') && !moduleBuild.includes("atcbStyleRelPath = '../styles/'")) problems.push('dist/module/index.js: style relpath not adjusted');
