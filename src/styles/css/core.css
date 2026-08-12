@@ -984,6 +984,10 @@ button.atcb-modal-btn:not([disabled]):hover, a.atcb-modal-btn:not([disabled]):ho
   transform: translateY(-50%) scale(1.12);
 }
 
+.atcb-button.atcb-active .atcb-date-btn-plus {
+  transform: translateY(-50%) rotate(45deg);
+}
+
 @media (prefers-reduced-motion: reduce) {
   .atcb-date-btn-plus {
     transition: none;
