@@ -1,7 +1,7 @@
 /**
- * Per-instance state store. Replaces a single shared atcbStates
+ * Per-instance state store. Replaces the former shared state array
  * array-as-map global. Keyed by the button identifier; entries are created
- * during initialization (atcb_setup_state_management) and removed on
+ * during initialization (setup_state_management) and removed on
  * cleanup/disconnect.
  *
  * The decorated config is stored per instance as the authoritative copy.

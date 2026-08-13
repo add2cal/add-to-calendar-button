@@ -1,15 +1,15 @@
 import { tzlib_get_offset } from 'timezones-ical-library';
-import { atcb_getNextOccurrence, atcb_parseRRule } from './dates';
+import { getNextOccurrence, parseRRule } from './dates';
 import type { ATCBConfig } from '../types';
 
 // format RRULE
-function atcb_decorate_data_rrule(data: ATCBConfig): ATCBConfig {
+function decorate_data_rrule(data: ATCBConfig): ATCBConfig {
   // remove spaces and force upper case
   data.recurrence = data.recurrence!.replace(/\s+/g, '').toUpperCase();
   // if RRULE is set, we parse date from it
   if (/^RRULE:/i.test(data.recurrence)) {
     data.recurrence_simplified = false;
-    const rruleParts = atcb_parseRRule(data.recurrence, false);
+    const rruleParts = parseRRule(data.recurrence, false);
     data.recurrence_until = rruleParts.UNTIL as string | undefined;
     data.recurrence_count = rruleParts.COUNT as number | undefined;
     data.recurrence_byDay = rruleParts.BYDAY as string | undefined;
@@ -57,7 +57,7 @@ function atcb_decorate_data_rrule(data: ATCBConfig): ATCBConfig {
 }
 
 // Adjust recurring events for next data
-function atcb_decorate_data_recurring_events(data: ATCBConfig): ATCBConfig {
+function decorate_data_recurring_events(data: ATCBConfig): ATCBConfig {
   const startDate = data.dates![0]!.startDate;
   const startTime = data.dates![0]!.startTime;
   const endDate = data.dates![0]!.endDate || startDate;
@@ -96,7 +96,7 @@ function atcb_decorate_data_recurring_events(data: ATCBConfig): ATCBConfig {
   })();
 
   const isAllDay = !(startTime && startTime !== '');
-  const occurenceData = atcb_getNextOccurrence(data.recurrence!, startDateTime, diff, isAllDay, tzid);
+  const occurenceData = getNextOccurrence(data.recurrence!, startDateTime, diff, isAllDay, tzid);
   if (!occurenceData || !occurenceData.nextOccurrence) {
     return data;
   }
@@ -156,4 +156,4 @@ function atcb_decorate_data_recurring_events(data: ATCBConfig): ATCBConfig {
   return data;
 }
 
-export { atcb_decorate_data_rrule, atcb_decorate_data_recurring_events };
+export { decorate_data_rrule, decorate_data_recurring_events };

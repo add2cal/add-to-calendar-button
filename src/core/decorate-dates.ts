@@ -1,12 +1,12 @@
 import { tzlib_get_offset, tzlib_get_timezones } from 'timezones-ical-library';
-import { atcb_translate_via_time_zone, atcb_format_datetime, atcb_map_special_time_zones } from './dates';
-import { atcb_rewrite_html_elements } from './text';
-import { atcb_generate_uuid, atcb_apply_transformation } from './util';
-import { atcb_decorate_data_rrule, atcb_decorate_data_recurring_events } from './decorate-recurrence';
+import { translate_via_time_zone, format_datetime, map_special_time_zones } from './dates';
+import { rewrite_html_elements } from './text';
+import { generate_uuid, apply_transformation } from './util';
+import { decorate_data_rrule, decorate_data_recurring_events } from './decorate-recurrence';
 import type { ATCBConfig, ATCBInputConfig, ATCBDateEntry } from '../types';
 
 // optimize date and time information
-function atcb_decorate_data_dates(data: ATCBConfig | ATCBInputConfig): ATCBConfig {
+function decorate_data_dates(data: ATCBConfig | ATCBInputConfig): ATCBConfig {
   // if there is no dates array, we create one with the name of the event (will be filled further afterwards)
   if (!data.dates || !Array.isArray(data.dates)) {
     data.dates = [{ name: data.name }];
@@ -14,10 +14,10 @@ function atcb_decorate_data_dates(data: ATCBConfig | ATCBInputConfig): ATCBConfi
   let cfg = data as ATCBConfig;
   // recurring event adjustments need cleaned dates first; clean the first date once before recurrence shifting
   if (cfg.recurrence && cfg.recurrence !== '') {
-    cfg = atcb_decorate_data_rrule(cfg);
-    cfg = atcb_move_root_values_into_dates(cfg, 0);
-    cfg = atcb_dates_cleanup(cfg, 0);
-    cfg = atcb_decorate_data_recurring_events(cfg);
+    cfg = decorate_data_rrule(cfg);
+    cfg = move_root_values_into_dates(cfg, 0);
+    cfg = dates_cleanup(cfg, 0);
+    cfg = decorate_data_recurring_events(cfg);
   }
   // we copy recurrence from root, but just for easier access and only for the first array element. Multi-date events cannot be recurrent
   if (cfg.recurrence && cfg.recurrence !== '') {
@@ -25,13 +25,13 @@ function atcb_decorate_data_dates(data: ATCBConfig | ATCBInputConfig): ATCBConfi
   }
   // process each date entry and decorate it
   for (let i = 0; i < cfg.dates!.length; i++) {
-    cfg = atcb_move_root_values_into_dates(cfg, i);
-    cfg = atcb_dates_cleanup(cfg, i);
-    cfg = atcb_generate_unique_uid(cfg, i);
-    cfg = atcb_transform_strings(cfg, i);
-    cfg = atcb_decorate_data_description(cfg, i);
-    cfg = atcb_replace_custom_variables(cfg, i);
-    cfg = atcb_set_online_event_flag(cfg, i);
+    cfg = move_root_values_into_dates(cfg, i);
+    cfg = dates_cleanup(cfg, i);
+    cfg = generate_unique_uid(cfg, i);
+    cfg = transform_strings(cfg, i);
+    cfg = decorate_data_description(cfg, i);
+    cfg = replace_custom_variables(cfg, i);
+    cfg = set_online_event_flag(cfg, i);
   }
   // the root date values have been moved into the dates entries at this point (except
   // "name", which doubles as the series title) - drop the root copies so the dates array
@@ -41,17 +41,17 @@ function atcb_decorate_data_dates(data: ATCBConfig | ATCBInputConfig): ATCBConfi
     delete cfg[`${prop}`];
   });
   // check for past events
-  cfg = atcb_decorate_data_button_status_handling(cfg);
+  cfg = decorate_data_button_status_handling(cfg);
   // calculate current time
   const now = new Date();
   // set icsCreated/icsUpdated defaults per date entry (root values already moved into
   // the entries at this point; entries without any value get the generation timestamp)
   for (const dateEntry of cfg.dates!) {
     if (!dateEntry.icsCreated || dateEntry.icsCreated === '') {
-      dateEntry.icsCreated = atcb_format_datetime(now, 'clean', true);
+      dateEntry.icsCreated = format_datetime(now, 'clean', true);
     }
     if (!dateEntry.icsUpdated || dateEntry.icsUpdated === '') {
-      dateEntry.icsUpdated = atcb_format_datetime(now, 'clean', true);
+      dateEntry.icsUpdated = format_datetime(now, 'clean', true);
     }
   }
   // last but not least, we sort any subEvent by start date ascending
@@ -62,9 +62,32 @@ function atcb_decorate_data_dates(data: ATCBConfig | ATCBInputConfig): ATCBConfi
 }
 
 // override the dates information with values on the root level
-function atcb_move_root_values_into_dates(data: ATCBConfig, i: number): ATCBConfig {
+function move_root_values_into_dates(data: ATCBConfig, i: number): ATCBConfig {
   const dateEntry = data.dates![`${i}`]!;
-  const properties = ['description', 'startDate', 'startTime', 'endDate', 'endTime', 'timeZone', 'useUserTZ', 'location', 'status', 'sequence', 'availability', 'organizer', 'attendee', 'icsReminder', 'icsUrl', 'icsCategories', 'icsClass', 'icsPriority', 'icsGeo', 'icsAttach', 'icsCreated', 'icsUpdated'];
+  const properties = [
+    'description',
+    'startDate',
+    'startTime',
+    'endDate',
+    'endTime',
+    'timeZone',
+    'useUserTZ',
+    'location',
+    'status',
+    'sequence',
+    'availability',
+    'organizer',
+    'attendee',
+    'icsReminder',
+    'icsUrl',
+    'icsCategories',
+    'icsClass',
+    'icsPriority',
+    'icsGeo',
+    'icsAttach',
+    'icsCreated',
+    'icsUpdated',
+  ];
   // do it for name only if data.dates is not >1 as in this case, name would be used for the event series title
   if (data.dates!.length === 1) {
     properties.unshift('name');
@@ -75,27 +98,27 @@ function atcb_move_root_values_into_dates(data: ATCBConfig, i: number): ATCBConf
       dateEntry[`${prop}`] = data[`${prop}`];
     }
   });
-  // (the root copies get deleted after all date entries were processed - see atcb_decorate_data_dates)
+  // (the root copies get deleted after all date entries were processed - see decorate_data_dates)
   return data;
 }
 
 // cleanup different date-time formats
-function atcb_dates_cleanup(data: ATCBConfig, i: number): ATCBConfig {
+function dates_cleanup(data: ATCBConfig, i: number): ATCBConfig {
   const dateEntry = data.dates![`${i}`]!;
-  const cleanedUpDates = atcb_date_cleanup(dateEntry);
+  const cleanedUpDates = date_cleanup(dateEntry);
   dateEntry.startDate = cleanedUpDates.startDate;
   dateEntry.endDate = cleanedUpDates.endDate;
   dateEntry.startTime = cleanedUpDates.startTime;
   dateEntry.endTime = cleanedUpDates.endTime;
   dateEntry.timeZone = cleanedUpDates.timeZone;
   // calculating more special meta information
-  dateEntry.timestamp = atcb_date_specials_calculation('timestamp', dateEntry.startDate, dateEntry.startTime, dateEntry.timeZone);
-  dateEntry.overdue = atcb_date_specials_calculation('overdue', dateEntry.endDate, dateEntry.endTime, dateEntry.timeZone) as boolean;
+  dateEntry.timestamp = date_specials_calculation('timestamp', dateEntry.startDate, dateEntry.startTime, dateEntry.timeZone);
+  dateEntry.overdue = date_specials_calculation('overdue', dateEntry.endDate, dateEntry.endTime, dateEntry.timeZone) as boolean;
   return data;
 }
 
 // generate unique UID for date entry
-function atcb_generate_unique_uid(data: ATCBConfig, i: number): ATCBConfig {
+function generate_unique_uid(data: ATCBConfig, i: number): ATCBConfig {
   const dateEntry = data.dates![`${i}`]!;
   if (!dateEntry.uid) {
     if (i === 0 && data.uid && data.uid !== '') {
@@ -106,36 +129,36 @@ function atcb_generate_unique_uid(data: ATCBConfig, i: number): ATCBConfig {
       dateEntry.uid = `${data.uid}-${i + 1}`;
     } else {
       // no global UID, generate new one
-      dateEntry.uid = atcb_generate_uuid();
+      dateEntry.uid = generate_uuid();
     }
   }
   return data;
 }
 
 // transform strings
-function atcb_transform_strings(data: ATCBConfig, i: number): ATCBConfig {
+function transform_strings(data: ATCBConfig, i: number): ATCBConfig {
   const dateEntry = data.dates![`${i}`]!;
   // status and icsClass are normalized to the official lowercase form (input is case-insensitive)
   // (the ics generator uppercases them again for the RFC-canonical file output)
-  dateEntry.status = atcb_apply_transformation(dateEntry.status, 'lower') as string | undefined;
-  dateEntry.availability = atcb_apply_transformation(dateEntry.availability, 'lower');
-  dateEntry.icsClass = atcb_apply_transformation(dateEntry.icsClass, 'lower') as string | undefined;
+  dateEntry.status = apply_transformation(dateEntry.status, 'lower') as string | undefined;
+  dateEntry.availability = apply_transformation(dateEntry.availability, 'lower');
+  dateEntry.icsClass = apply_transformation(dateEntry.icsClass, 'lower') as string | undefined;
   return data;
 }
 
 // clean up the description and create copies for different formats
-function atcb_decorate_data_description(data: ATCBConfig, i: number): ATCBConfig {
+function decorate_data_description(data: ATCBConfig, i: number): ATCBConfig {
   const cleanDescription = (desc: string) => desc.replace(/(\\r\\n|\\n|\\r|<br(\s*\/?)>)/g, '');
   let description = data.dates![`${i}`]!.description;
   if (description) {
     // remove any "wrong" line breaks
     description = cleanDescription(description);
     // store a clean description copy without the URL magic for Yahoo, MS Teams, ...
-    const descriptionHtmlFree = atcb_rewrite_html_elements(description, true);
+    const descriptionHtmlFree = rewrite_html_elements(description, true);
     // ... and iCal
-    const descriptionHtmlFreeICal = atcb_rewrite_html_elements(description, true, true);
+    const descriptionHtmlFreeICal = rewrite_html_elements(description, true, true);
     // ...and transform pseudo elements for the regular one
-    description = atcb_rewrite_html_elements(description);
+    description = rewrite_html_elements(description);
     data.dates![`${i}`] = { ...data.dates![`${i}`], description, descriptionHtmlFree, descriptionHtmlFreeICal };
   } else {
     data.dates![`${i}`]!.descriptionHtmlFree = data.dates![`${i}`]!.descriptionHtmlFreeICal = data.dates![`${i}`]!.description = '';
@@ -144,7 +167,7 @@ function atcb_decorate_data_description(data: ATCBConfig, i: number): ATCBConfig
 }
 
 // set online event flag based on location URL
-function atcb_set_online_event_flag(data: ATCBConfig, i: number): ATCBConfig {
+function set_online_event_flag(data: ATCBConfig, i: number): ATCBConfig {
   const dateEntry = data.dates![`${i}`]!;
   if (dateEntry.location && (dateEntry.location as string).startsWith('http')) {
     dateEntry.onlineEvent = true;
@@ -155,20 +178,20 @@ function atcb_set_online_event_flag(data: ATCBConfig, i: number): ATCBConfig {
 }
 
 // replace custom variable placeholders in name and location
-function atcb_replace_custom_variables(data: ATCBConfig, i: number): ATCBConfig {
+function replace_custom_variables(data: ATCBConfig, i: number): ATCBConfig {
   if (!data.customVar) return data;
   const dateEntry = data.dates![`${i}`]!;
   for (const key in data.customVar) {
     const value = data.customVar[`${key}`];
-    dateEntry.name = atcb_replace_placeholder(dateEntry.name as string | undefined, key, value);
-    dateEntry.location = atcb_replace_placeholder(dateEntry.location as string | undefined, key, value);
-    dateEntry.description = atcb_replace_placeholder(dateEntry.description as string | undefined, key, value);
+    dateEntry.name = replace_placeholder(dateEntry.name as string | undefined, key, value);
+    dateEntry.location = replace_placeholder(dateEntry.location as string | undefined, key, value);
+    dateEntry.description = replace_placeholder(dateEntry.description as string | undefined, key, value);
   }
   return data;
 }
 
 // replace placeholder in text with value
-function atcb_replace_placeholder(text: string | undefined, key: string, value: unknown): string | undefined {
+function replace_placeholder(text: string | undefined, key: string, value: unknown): string | undefined {
   const placeholder = '%%' + key.replace(/[^\w\-.]/g, '') + '%%';
   if (!text) return text;
   // eslint-disable-next-line security/detect-non-literal-regexp
@@ -176,7 +199,7 @@ function atcb_replace_placeholder(text: string | undefined, key: string, value: 
 }
 
 // CALCULATE AND CLEAN UP THE ACTUAL DATES
-function atcb_date_cleanup(dateTimeData: ATCBDateEntry): ATCBDateEntry {
+function date_cleanup(dateTimeData: ATCBDateEntry): ATCBDateEntry {
   // Utility function to validate date format
   function isValidDateFormat(dateStr: unknown): boolean {
     return /^\d\d\d\d-\d\d-\d\d(?:T\d\d:\d\d)?(?::\d\d)?(?:.\d\d\d)?Z?(?:\+(?:\d|\d\d|\d\d\d|\d\d\d\d))?$/i.test(dateStr as string);
@@ -198,7 +221,7 @@ function atcb_date_cleanup(dateTimeData: ATCBDateEntry): ATCBDateEntry {
       dateTimeData[`${point}Date`] = 'badly-formed';
     } else {
       // dynamic date replacement (if dateStr includes a + or is today format)
-      if (/\+/.test(dateStr) || isValidTodayFormat(dateStr)) dateTimeData[`${point}Date`] = atcb_date_calculation(dateStr);
+      if (/\+/.test(dateStr) || isValidTodayFormat(dateStr)) dateTimeData[`${point}Date`] = date_calculation(dateStr);
       // second, if valid, clean up
       if (dateTimeData[`${point}Date`]) {
         // identify a possible time information within the date string
@@ -219,12 +242,12 @@ function atcb_date_cleanup(dateTimeData: ATCBDateEntry): ATCBDateEntry {
     let browserTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone || 'GMT';
     const validTimeZones = tzlib_get_timezones() as string[];
     if (!validTimeZones.includes(browserTimezone)) {
-      browserTimezone = atcb_map_special_time_zones(browserTimezone); // manual mapping of special cases
+      browserTimezone = map_special_time_zones(browserTimezone); // manual mapping of special cases
     }
     // for the useUserTZ, we also recalculate the start and end date (and time) to the user's time zone based on the given time zone
     if (dateTimeData.useUserTZ && dateTimeData.startTime && dateTimeData.startTime !== '' && dateTimeData.endTime && dateTimeData.endTime !== '') {
-      const newStartDateTime = atcb_translate_via_time_zone(dateTimeData.startDate!, dateTimeData.startTime, dateTimeData.timeZone!, browserTimezone);
-      const newEndDateTime = atcb_translate_via_time_zone(dateTimeData.endDate!, dateTimeData.endTime, dateTimeData.timeZone!, browserTimezone);
+      const newStartDateTime = translate_via_time_zone(dateTimeData.startDate!, dateTimeData.startTime, dateTimeData.timeZone!, browserTimezone);
+      const newEndDateTime = translate_via_time_zone(dateTimeData.endDate!, dateTimeData.endTime, dateTimeData.timeZone!, browserTimezone);
       dateTimeData.startDate = newStartDateTime[0];
       dateTimeData.startTime = newStartDateTime[1];
       dateTimeData.endDate = newEndDateTime[0];
@@ -236,7 +259,7 @@ function atcb_date_cleanup(dateTimeData: ATCBDateEntry): ATCBDateEntry {
   return dateTimeData;
 }
 
-function atcb_date_specials_calculation(type: string, dateString: string | undefined, timeString: string | undefined | null = null, timeZone: string | undefined): number | boolean {
+function date_specials_calculation(type: string, dateString: string | undefined, timeString: string | undefined | null = null, timeZone: string | undefined): number | boolean {
   try {
     const tmpDate = (function () {
       if (timeString) {
@@ -261,7 +284,7 @@ function atcb_date_specials_calculation(type: string, dateString: string | undef
   }
 }
 
-function atcb_date_calculation(dateString: string): string | false {
+function date_calculation(dateString: string): string | false {
   // replace "today" with the current date first
   const today = new Date();
   const todayString = today.getUTCFullYear() + '-' + (today.getUTCMonth() + 1) + '-' + today.getUTCDate();
@@ -282,7 +305,7 @@ function atcb_date_calculation(dateString: string): string | false {
 }
 
 // Adjust for past events
-function atcb_decorate_data_button_status_handling(data: ATCBConfig): ATCBConfig {
+function decorate_data_button_status_handling(data: ATCBConfig): ATCBConfig {
   // first, check for how we should handle the behavior on overdue events
   if (!data.pastDateHandling || (data.pastDateHandling !== 'disable' && data.pastDateHandling !== 'hide')) {
     data.pastDateHandling = 'none';
@@ -332,17 +355,17 @@ function atcb_decorate_data_button_status_handling(data: ATCBConfig): ATCBConfig
 }
 
 export {
-  atcb_decorate_data_dates,
-  atcb_move_root_values_into_dates,
-  atcb_dates_cleanup,
-  atcb_generate_unique_uid,
-  atcb_transform_strings,
-  atcb_decorate_data_description,
-  atcb_set_online_event_flag,
-  atcb_replace_custom_variables,
-  atcb_replace_placeholder,
-  atcb_date_cleanup,
-  atcb_date_specials_calculation,
-  atcb_date_calculation,
-  atcb_decorate_data_button_status_handling,
+  decorate_data_dates,
+  move_root_values_into_dates,
+  dates_cleanup,
+  generate_unique_uid,
+  transform_strings,
+  decorate_data_description,
+  set_online_event_flag,
+  replace_custom_variables,
+  replace_placeholder,
+  date_cleanup,
+  date_specials_calculation,
+  date_calculation,
+  decorate_data_button_status_handling,
 };

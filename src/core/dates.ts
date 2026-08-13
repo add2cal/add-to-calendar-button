@@ -1,10 +1,10 @@
 import { tzlib_get_offset } from 'timezones-ical-library';
-import { atcbIsMobile } from './globals';
-import { atcb_decorate_data_dates } from './decorate';
+import { isMobile } from './globals';
+import { decorate_data_dates } from './decorate';
 import type { ATCBConfig, ATCBDateEntry, ATCBDateEntryInput } from '../types';
 
 // SHARED FUNCTION TO GENERATE A TIME STRING
-function atcb_generate_time(data: ATCBConfig | ATCBDateEntry, style = 'delimiters', targetCal = 'general', addTimeZoneOffset = false): { start: string; end: string; duration: string; allday: false } | { start: string; end: string; allday: true } {
+function generate_time(data: ATCBConfig | ATCBDateEntry, style = 'delimiters', targetCal = 'general', addTimeZoneOffset = false): { start: string; end: string; duration: string; allday: false } | { start: string; end: string; allday: true } {
   if (data.startTime && data.startTime !== '' && data.endTime && data.endTime !== '') {
     // for the input, we assume GMT/UTC per default
     const newStartDate = new Date(data.startDate + 'T' + data.startTime + ':00.000+00:00');
@@ -25,8 +25,8 @@ function atcb_generate_time(data: ATCBConfig | ATCBDateEntry, style = 'delimiter
       // in the iCal or Google case, we simply return and cut off the Z. Google does not support GMT +/- time zones (and we also adjust ical as it can be used for Google calendar).
       // everything else will be done by injecting the VTIMEZONE block at the iCal function
       return {
-        start: atcb_format_datetime(newStartDate, 'clean', true, true),
-        end: atcb_format_datetime(newEndDate, 'clean', true, true),
+        start: format_datetime(newStartDate, 'clean', true, true),
+        end: format_datetime(newEndDate, 'clean', true, true),
         duration: durationString,
         allday: false,
       };
@@ -53,8 +53,8 @@ function atcb_generate_time(data: ATCBConfig | ATCBDateEntry, style = 'delimiter
     newEndDate.setTime(newEndDate.getTime() + calcOffsetEnd);
     // return formatted data
     return {
-      start: atcb_format_datetime(newStartDate, style),
-      end: atcb_format_datetime(newEndDate, style),
+      start: format_datetime(newStartDate, style),
+      end: format_datetime(newEndDate, style),
       duration: durationString,
       allday: false,
     };
@@ -67,7 +67,7 @@ function atcb_generate_time(data: ATCBConfig | ATCBDateEntry, style = 'delimiter
     const newEndDate = new Date(Date.UTC(endDate[0] as unknown as number, (endDate[1] as unknown as number) - 1, endDate[2] as unknown as number, 12, 0, 0));
     // increment the end day by 1 for Google Calendar, iCal, and Microsoft (but only if mobile, since desktop does not need this)
     // TODO: remove Microsoft from this list as soon as they fixed their bugs
-    if (targetCal === 'google' || (targetCal === 'microsoft' && !atcbIsMobile()) || targetCal === 'msteams' || targetCal === 'ical') {
+    if (targetCal === 'google' || (targetCal === 'microsoft' && !isMobile()) || targetCal === 'msteams' || targetCal === 'ical') {
       newEndDate.setDate(newEndDate.getDate() + 1);
     }
     // return formatted data
@@ -75,7 +75,7 @@ function atcb_generate_time(data: ATCBConfig | ATCBDateEntry, style = 'delimiter
     // but only on desktop - on mobile devices, we add time information in the user's time zone
     // TODO: optimize this as soon as Microsoft fixed their bugs
     if (targetCal === 'msteams') {
-      if (atcbIsMobile()) {
+      if (isMobile()) {
         // get the time zone offset of the user's browser for the start date
         const offset = newStartDate.getTimezoneOffset();
         // get the ISO string of the offset
@@ -88,27 +88,27 @@ function atcb_generate_time(data: ATCBConfig | ATCBDateEntry, style = 'delimiter
         })();
         // return formatted data
         return {
-          start: atcb_format_datetime(newStartDate, style, false, true) + 'T00:00:00' + formattedOffset,
-          end: atcb_format_datetime(newEndDate, style, false, true) + 'T00:00:00' + formattedOffset,
+          start: format_datetime(newStartDate, style, false, true) + 'T00:00:00' + formattedOffset,
+          end: format_datetime(newEndDate, style, false, true) + 'T00:00:00' + formattedOffset,
           allday: true,
         };
       }
       return {
-        start: atcb_format_datetime(newStartDate, style, false, true) + '+00:00',
-        end: atcb_format_datetime(newEndDate, style, false, true) + '+00:00',
+        start: format_datetime(newStartDate, style, false, true) + '+00:00',
+        end: format_datetime(newEndDate, style, false, true) + '+00:00',
         allday: true,
       };
     }
     // for all others, it is easier
     return {
-      start: atcb_format_datetime(newStartDate, style, false),
-      end: atcb_format_datetime(newEndDate, style, false),
+      start: format_datetime(newStartDate, style, false),
+      end: format_datetime(newEndDate, style, false),
       allday: true,
     };
   }
 }
 
-function atcb_format_datetime(datetime: Date, style = 'delimiters', includeTime = true, removeZ = false): string {
+function format_datetime(datetime: Date, style = 'delimiters', includeTime = true, removeZ = false): string {
   const regex = (function () {
     // defines what gets cut off
     if (includeTime) {
@@ -135,7 +135,7 @@ function offsetToMilliseconds(offset: string): number {
   return milliseconds;
 }
 
-function atcb_translate_via_time_zone(date: string, time: string, baseTimeZone: string, targetTimeZone: string): string[] {
+function translate_via_time_zone(date: string, time: string, baseTimeZone: string, targetTimeZone: string): string[] {
   if (baseTimeZone === 'currentBrowser') {
     baseTimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
   }
@@ -156,10 +156,10 @@ function atcb_translate_via_time_zone(date: string, time: string, baseTimeZone: 
   return dateInTargetTimeZone.split(', '); // returns [date, time]
 }
 
-function atcb_generate_timestring(dates: ATCBDateEntryInput[], language = 'en', subEvent: 'all' | number = 'all', decorate = false, browserTimeOverride = false, enforceYear = false, hideTimeZone = false): string[] {
+function generate_timestring(dates: ATCBDateEntryInput[], language = 'en', subEvent: 'all' | number = 'all', decorate = false, browserTimeOverride = false, enforceYear = false, hideTimeZone = false): string[] {
   if (decorate) {
     // if this function gets called directly, we might want to decorate raw data first
-    dates = atcb_decorate_data_dates({ dates: dates }).dates!;
+    dates = decorate_data_dates({ dates: dates }).dates!;
   }
   let timeZoneInfoStart: string, timeZoneInfoEnd: string;
   let formattedTimeStart: { start: string; end: string; duration: string; allday: false } | { start: string; end: string; allday: true };
@@ -170,13 +170,13 @@ function atcb_generate_timestring(dates: ATCBDateEntryInput[], language = 'en', 
   const browserTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
   if (subEvent === 'all') {
     // we are looking at multiple sub-events, which should be considered all together
-    formattedTimeStart = atcb_generate_time(dates[0]! as ATCBDateEntry);
-    formattedTimeEnd = atcb_generate_time(dates[dates.length - 1]! as ATCBDateEntry);
+    formattedTimeStart = generate_time(dates[0]! as ATCBDateEntry);
+    formattedTimeEnd = generate_time(dates[dates.length - 1]! as ATCBDateEntry);
     timeZoneInfoStart = browserTimeOverride ? browserTimezone : dates[0]!.timeZone!;
     timeZoneInfoEnd = browserTimeOverride ? browserTimezone : dates[dates.length - 1]!.timeZone!;
   } else {
     // we are looking at 1 or many sub-events, but we consider only one specific
-    formattedTimeStart = atcb_generate_time(dates[`${subEvent}`]! as ATCBDateEntry);
+    formattedTimeStart = generate_time(dates[`${subEvent}`]! as ATCBDateEntry);
     formattedTimeEnd = formattedTimeStart;
     timeZoneInfoStart = browserTimeOverride ? browserTimezone : dates[`${subEvent}`]!.timeZone!;
     timeZoneInfoEnd = timeZoneInfoStart;
@@ -366,7 +366,7 @@ function get_format_options(timeZoneInfo: string, dropYear = false, language = '
 }
 
 // HELPER: Parse BYDAY/BYWEEKDAY tokens into plain weekdays and ordinal structures
-function atcb_parseByWeekdayTokens(rawByDay: string | undefined): { plainWeekdays: number[]; ordinals: { n: number; day: number }[] } {
+function parseByWeekdayTokens(rawByDay: string | undefined): { plainWeekdays: number[]; ordinals: { n: number; day: number }[] } {
   const tokens = rawByDay ? rawByDay.toString().split(',') : [];
   const mapWeekdayCode = (wd: string): number | undefined => {
     switch (wd) {
@@ -429,7 +429,7 @@ type ATCBRRuleParts = {
 };
 
 // SHARED FUNCTION TO PARSE RRULES
-function atcb_parseRRule(rruleStr: string, deep = true): ATCBRRuleParts {
+function parseRRule(rruleStr: string, deep = true): ATCBRRuleParts {
   const parts: ATCBRRuleParts = rruleStr
     .replace('RRULE:', '')
     .split(';')
@@ -452,7 +452,7 @@ function atcb_parseRRule(rruleStr: string, deep = true): ATCBRRuleParts {
   if (parts.BYWEEKDAY || parts.BYDAY) {
     const rawByDay = (parts.BYWEEKDAY || parts.BYDAY)?.toString();
     if (deep) {
-      const { plainWeekdays, ordinals } = atcb_parseByWeekdayTokens(rawByDay);
+      const { plainWeekdays, ordinals } = parseByWeekdayTokens(rawByDay);
       parts.BYWEEKDAY = plainWeekdays.length ? plainWeekdays : null;
       parts.BYDAY_ORDINALS = ordinals.length ? ordinals : null;
     } else {
@@ -778,8 +778,8 @@ function matchesImplicitRules(date: Date, rrule: ATCBRRuleParts, startDate: Date
 }
 
 // Get next occurrence and last if no next
-function atcb_getNextOccurrence(rruleStr: string, startDateTime: Date, diff: number, allday: boolean, tzid = 'UTC'): { nextOccurrence: Date; adjustedCount: number } {
-  const rrule = atcb_parseRRule(rruleStr);
+function getNextOccurrence(rruleStr: string, startDateTime: Date, diff: number, allday: boolean, tzid = 'UTC'): { nextOccurrence: Date; adjustedCount: number } {
+  const rrule = parseRRule(rruleStr);
   const startParts = getPartsForTimeZone(startDateTime, tzid);
   const baseHhmm = `${pad2(startParts.hour)}:${pad2(startParts.minute)}`;
   // Normalize UNTIL for all-day rules: treat as inclusive end-of-day
@@ -907,7 +907,7 @@ function atcb_getNextOccurrence(rruleStr: string, startDateTime: Date, diff: num
 }
 
 // SHARED FUNCTION TO MAP SPECIFIC TIME ZONES
-function atcb_map_special_time_zones(timeZone: string): string {
+function map_special_time_zones(timeZone: string): string {
   if (!timeZone) return 'GMT';
   const mapping: { [key: string]: string } = {
     PST: 'PST8PDT',
@@ -938,4 +938,4 @@ function atcb_map_special_time_zones(timeZone: string): string {
   return mapping[`${timeZone.toUpperCase()}`] || 'GMT';
 }
 
-export { atcb_generate_time, atcb_format_datetime, atcb_translate_via_time_zone, atcb_generate_timestring, atcb_parseRRule, atcb_getNextOccurrence, atcb_map_special_time_zones };
+export { generate_time, format_datetime, translate_via_time_zone, generate_timestring, parseRRule, getNextOccurrence, map_special_time_zones };

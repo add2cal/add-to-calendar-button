@@ -1,8 +1,8 @@
-import { atcbIsBrowser } from './globals';
+import { isBrowser } from './globals';
 
 // LOG/TRACK FUNCTION
 // add information to the parent element, which can be used for tracking
-function atcb_log_event(event: string, trigger: string, identifier: string): void {
+function log_event(event: string, trigger: string, identifier: string): void {
   const parentEl: Element | null = (function () {
     // since the id is only used withint the shadowDOM with generated buttons, we can search for custom (atcb_action) ones via document.getElementById
     const customTrigger = document.getElementById(identifier);
@@ -17,14 +17,14 @@ function atcb_log_event(event: string, trigger: string, identifier: string): voi
     parentEl.setAttribute('atcb-last-event', event + ':' + trigger);
   }
   // trigger push to data layer
-  if (atcbIsBrowser()) {
-    atcb_push_to_data_layer(event, trigger);
+  if (isBrowser()) {
+    push_to_data_layer(event, trigger);
   }
 }
 
 // DATA LAYER PUSH (aka EVENT TRACKING)
 // additional helper function to push stuff to the data layer, where it can be consumed directly via Google Analytics (any maybe others)
-function atcb_push_to_data_layer(event: string, trigger: string): void {
+function push_to_data_layer(event: string, trigger: string): void {
   let action: string = '';
   switch (event) {
     case 'initialization':
@@ -56,8 +56,8 @@ function atcb_push_to_data_layer(event: string, trigger: string): void {
       break;
   }
   const category = event === 'openRSVP' || event === 'successRSVP' ? 'Add-to-Calendar-RSVP' : 'Add-to-Calendar-Button';
-  const atcbDataLayer = (window.dataLayer = window.dataLayer || []);
-  atcbDataLayer.push({
+  const dataLayer = (window.dataLayer = window.dataLayer || []);
+  dataLayer.push({
     eventCategory: category,
     eventAction: action,
     eventLabel: trigger,
@@ -65,4 +65,4 @@ function atcb_push_to_data_layer(event: string, trigger: string): void {
   });
 }
 
-export { atcb_log_event };
+export { log_event };

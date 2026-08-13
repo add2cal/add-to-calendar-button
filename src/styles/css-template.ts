@@ -7,7 +7,7 @@
  *  - script tag / CDN: fetched relative to the script's own origin ({base}/styles/{name}.css),
  *    overridable via the style-source attribute
  *  - npm: import the style module (dist/styles/{name}.js), which registers itself via
- *    atcb_register_style
+ *    register_style
  * The load-all-styles attribute prefetches every delta for runtime style switching.
  */
 import type { ATCBConfig } from '../types';
@@ -18,10 +18,10 @@ const atcbCssTemplate: { [key: string]: string } = {};
 // build hook: relative path from THIS bundle's location to the style assets
 const atcbStyleRelPath: string = 'styles/';
 
-const atcbKnownStyles = ['default', 'simple', '3d', 'flat', 'round', 'neumorphism', 'text', 'date'];
+const knownStyles = ['default', 'simple', '3d', 'flat', 'round', 'neumorphism', 'text', 'date'];
 
 // capture the script origin at module load (document.currentScript is null later)
-const atcbScriptBase: string = (() => {
+const scriptBase: string = (() => {
   try {
     if (typeof import.meta !== 'undefined' && import.meta.url) {
       // derive the directory via string operations on purpose: the `new URL(rel, import.meta.url)`
@@ -45,29 +45,29 @@ const atcbScriptBase: string = (() => {
   return '';
 })();
 
-const atcbPendingStyleLoads: Map<string, Promise<string | null>> = new Map();
+const pendingStyleLoads: Map<string, Promise<string | null>> = new Map();
 
 /**
  * Registers a style delta (css text) under a style name. Public API used by the
  * generated style modules (dist/styles/{name}.js) and available for custom setups.
  */
-function atcb_register_style(name: string, css: string): void {
+function register_style(name: string, css: string): void {
   atcbCssTemplate[`${name}`] = css;
 }
 
-function atcb_style_base(data: ATCBConfig): string {
+function style_base(data: ATCBConfig): string {
   if (data.styleSource && data.styleSource !== '') {
     const src = String(data.styleSource);
     return src.endsWith('/') ? src : src + '/';
   }
-  if (atcbScriptBase === '') {
+  if (scriptBase === '') {
     return '';
   }
-  return atcbScriptBase + atcbStyleRelPath;
+  return scriptBase + atcbStyleRelPath;
 }
 
-async function atcb_fetch_style(name: string, data: ATCBConfig): Promise<string | null> {
-  const base = atcb_style_base(data);
+async function fetch_style(name: string, data: ATCBConfig): Promise<string | null> {
+  const base = style_base(data);
   if (base === '') {
     if (data.debug) console.warn('Add to Calendar Button: style "' + name + '" is not registered and no style source could be resolved - import the style module or set the style-source attribute');
     return null;
@@ -76,7 +76,7 @@ async function atcb_fetch_style(name: string, data: ATCBConfig): Promise<string 
     const response = await fetch(base + name + '.css');
     if (!response.ok) throw new Error('status ' + response.status);
     const css = await response.text();
-    atcb_register_style(name, css);
+    register_style(name, css);
     return css;
   } catch (e) {
     if (data.debug) console.error('Add to Calendar Button: loading style "' + name + '" from "' + base + '" failed', e);
@@ -89,7 +89,7 @@ async function atcb_fetch_style(name: string, data: ATCBConfig): Promise<string 
  * Returns null when nothing should be injected (style none, unstyle builds,
  * unknown styles, failed loads): the button stays functional, just unstyled.
  */
-async function atcb_ensure_style(data: ATCBConfig): Promise<string | null> {
+async function ensure_style(data: ATCBConfig): Promise<string | null> {
   const name = (data.buttonStyle as string) || 'default';
   if (name === 'none') {
     return null;
@@ -107,15 +107,15 @@ async function atcb_ensure_style(data: ATCBConfig): Promise<string | null> {
     return null;
   }
   // deduplicate concurrent loads per style name
-  if (!atcbPendingStyleLoads.has(name)) {
-    atcbPendingStyleLoads.set(
+  if (!pendingStyleLoads.has(name)) {
+    pendingStyleLoads.set(
       name,
-      atcb_fetch_style(name, data).finally(() => {
-        atcbPendingStyleLoads.delete(name);
+      fetch_style(name, data).finally(() => {
+        pendingStyleLoads.delete(name);
       }),
     );
   }
-  const css = await atcbPendingStyleLoads.get(name)!;
+  const css = await pendingStyleLoads.get(name)!;
   return css === null ? null : core + css;
 }
 
@@ -123,15 +123,15 @@ async function atcb_ensure_style(data: ATCBConfig): Promise<string | null> {
  * Prefetches all known style deltas (load-all-styles attribute) so styles can be
  * switched at runtime without further requests. Fire-and-forget.
  */
-function atcb_prefetch_all_styles(data: ATCBConfig): void {
+function prefetch_all_styles(data: ATCBConfig): void {
   if (!atcbCssTemplate['core']) {
     return;
   }
-  for (const name of atcbKnownStyles) {
+  for (const name of knownStyles) {
     if (!atcbCssTemplate[`${name}`]) {
-      void atcb_ensure_style({ ...data, buttonStyle: name });
+      void ensure_style({ ...data, buttonStyle: name });
     }
   }
 }
 
-export { atcbCssTemplate, atcb_register_style, atcb_ensure_style, atcb_prefetch_all_styles };
+export { atcbCssTemplate, register_style, ensure_style, prefetch_all_styles };

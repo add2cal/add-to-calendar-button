@@ -44,7 +44,7 @@ export function renderedOptions(host) {
 
 /**
  * Opens the option list by clicking the trigger (config must use trigger="click").
- * Waits past the 5ms positioning timeout in atcb_open.
+ * Waits past the 5ms positioning timeout in open.
  */
 export async function openList(host) {
   const btn = trigger(host);

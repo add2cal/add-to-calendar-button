@@ -1,10 +1,10 @@
-import { atcbIsMobile } from '../core/globals';
-import { atcb_generate_time } from '../core/dates';
-import { atcb_open_cal_url } from './ical';
+import { isMobile } from '../core/globals';
+import { generate_time } from '../core/dates';
+import { open_cal_url } from './ical';
 import type { ATCBConfig, ATCBDateEntry } from '../types';
 
 // MICROSOFT SUBSCRIPTION (MS365 AND OUTLOOK.COM)
-function atcb_subscribe_microsoft(data: ATCBConfig, fileUrl: string, calName: string, type = 'ms365'): void {
+function subscribe_microsoft(data: ATCBConfig, fileUrl: string, calName: string, type = 'ms365'): void {
   const urlParts: string[] = [];
   const baseUrl = (function () {
     if (type == 'outlookcom') {
@@ -15,17 +15,17 @@ function atcb_subscribe_microsoft(data: ATCBConfig, fileUrl: string, calName: st
   })();
   urlParts.push('url=' + encodeURIComponent(fileUrl));
   urlParts.push('name=' + encodeURIComponent(calName));
-  atcb_open_cal_url(data, type, baseUrl + urlParts.join('&'), true);
+  open_cal_url(data, type, baseUrl + urlParts.join('&'), true);
 }
 
 // FUNCTION TO GENERATE THE MICROSOFT 365 OR OUTLOOK WEB URL
 // See specs at: TODO: add some documentation here, if it exists
-function atcb_generate_microsoft(data: ATCBConfig, date: ATCBDateEntry, subEvent: 'all' | number | string = 'all', type = 'ms365'): void {
+function generate_microsoft(data: ATCBConfig, date: ATCBDateEntry, subEvent: 'all' | number | string = 'all', type = 'ms365'): void {
   const urlParts: string[] = [];
   const basePath = (function () {
     // tmp workaround to reflect the fact that Microsoft is routing mobile traffic differently
     // TODO: remove this, when Microsoft has fixed this
-    if (atcbIsMobile() || data.fakeMobile) {
+    if (isMobile() || data.fakeMobile) {
       return '/calendar/0/deeplink/compose?path=%2Fcalendar%2Faction%2Fcompose&rru=addevent';
     }
     return '/calendar/0/action/compose?rru=addevent';
@@ -39,7 +39,7 @@ function atcb_generate_microsoft(data: ATCBConfig, date: ATCBDateEntry, subEvent
   })();
   urlParts.push(baseUrl);
   // generate and add date
-  const formattedDate = atcb_generate_time(date, 'delimiters', 'microsoft');
+  const formattedDate = generate_time(date, 'delimiters', 'microsoft');
   urlParts.push('startdt=' + formattedDate.start);
   urlParts.push('enddt=' + formattedDate.end);
   if (formattedDate.allday) {
@@ -55,7 +55,7 @@ function atcb_generate_microsoft(data: ATCBConfig, date: ATCBDateEntry, subEvent
   if (date.description && date.description !== '') {
     urlParts.push('body=' + encodeURIComponent(date.description));
   }
-  atcb_open_cal_url(data, type, urlParts.join('&'), false, subEvent);
+  open_cal_url(data, type, urlParts.join('&'), false, subEvent);
 }
 
-export { atcb_subscribe_microsoft, atcb_generate_microsoft };
+export { subscribe_microsoft, generate_microsoft };

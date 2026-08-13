@@ -1,9 +1,9 @@
 /**
  * lit-html templates for the button rendering path.
  *
- * These templates produce the same DOM as the imperative ui builders (atcb_generate_label,
- * atcb_generate_date_button and the trigger parts of atcb_generate_label /
- * atcb_generate_label_content) 1:1 - every class, part, id, aria attribute and
+ * These templates produce the same DOM as the imperative ui builders (generate_label,
+ * date-button rendering and the trigger parts of generate_label /
+ * generate_label_content) 1:1 - every class, part, id, aria attribute and
  * event wiring is behavior-identical. The transient interaction layers (dropdown
  * list, modal, overlay) stay imperative by design; they are event-driven,
  * positioned and removed outside the reactive render cycle.
@@ -11,15 +11,15 @@
 import { html, nothing, render } from 'lit';
 import type { TemplateResult } from 'lit';
 import { unsafeHTML } from 'lit/directives/unsafe-html.js';
-import { atcbIcon } from '../core/globals';
-import { atcb_toggle } from './control';
-import { atcb_generate_links } from '../generators/index';
-import { atcb_generate_time, atcb_generate_timestring } from '../core/dates';
-import { atcb_set_sizes } from './positioning';
-import { atcb_debounce_leading } from '../core/util';
-import { atcb_translate_hook } from '../i18n/index';
-import { atcb_log_event } from '../core/events';
-import { atcb_generate_rsvp_form } from './pro';
+import { icons } from '../core/globals';
+import { toggle } from './control';
+import { generate_links } from '../generators/index';
+import { generate_time, generate_timestring } from '../core/dates';
+import { set_sizes } from './positioning';
+import { debounce_leading } from '../core/util';
+import { translate_hook } from '../i18n/index';
+import { log_event } from '../core/events';
+import { generate_rsvp_form } from './pro';
 import type { ATCBConfig } from '../types';
 
 // ---------- label content helpers (trigger / singleton path) ----------
@@ -34,10 +34,10 @@ function defaultTriggerText(data: ATCBConfig): string {
       }
     }
     if (allOverdue) {
-      return atcb_translate_hook('expired', data);
+      return translate_hook('expired', data);
     }
   }
-  return atcb_translate_hook('label.addtocalendar', data);
+  return translate_hook('label.addtocalendar', data);
 }
 
 function labelText(data: ATCBConfig, type: string, text: string): string {
@@ -46,14 +46,14 @@ function labelText(data: ATCBConfig, type: string, text: string): string {
     return defaultTriggerText(data);
   }
   if (type === 'close') {
-    return atcb_translate_hook('close', data);
+    return translate_hook('close', data);
   }
-  return atcb_translate_hook(type, data);
+  return translate_hook(type, data);
 }
 
 function labelAriaLabel(data: ATCBConfig, type: string, text: string, oneOption: boolean): string {
   if (oneOption) {
-    return atcb_translate_hook('label.addtocalendar', data) + ' (' + atcb_translate_hook(type, data) + '): ' + data.name;
+    return translate_hook('label.addtocalendar', data) + ' (' + translate_hook(type, data) + '): ' + data.name;
   }
   if (type === 'trigger') {
     return text + ': ' + data.name;
@@ -62,24 +62,24 @@ function labelAriaLabel(data: ATCBConfig, type: string, text: string, oneOption:
 }
 
 function iconTemplate(type: string): TemplateResult {
-  return html`<div class="atcb-icon atcb-icon-${type}" part=${type === 'trigger' ? 'atcb-button-icon' : 'atcb-list-icon'}>${unsafeHTML(atcbIcon[`${type}`]!)}</div>`;
+  return html`<div class="atcb-icon atcb-icon-${type}" part=${type === 'trigger' ? 'atcb-button-icon' : 'atcb-list-icon'}>${unsafeHTML(icons[`${type}`]!)}</div>`;
 }
 
 // ---------- trigger / singleton event handlers ----------
 
 function triggerListeners(host: ShadowRoot, data: ATCBConfig, type: string) {
   const toggleAuto = (parent: HTMLElement, keyboard: boolean) => {
-    if (type === 'rsvp' && typeof atcb_generate_rsvp_form === 'function') {
-      atcb_generate_rsvp_form(host, data, parent, keyboard);
+    if (type === 'rsvp' && typeof generate_rsvp_form === 'function') {
+      generate_rsvp_form(host, data, parent, keyboard);
     } else {
-      atcb_toggle(host, 'auto', data, parent, keyboard, true);
+      toggle(host, 'auto', data, parent, keyboard, true);
     }
   };
-  const touchendHandler = atcb_debounce_leading((event: TouchEvent) => {
+  const touchendHandler = debounce_leading((event: TouchEvent) => {
     event.preventDefault();
     toggleAuto(event.currentTarget as HTMLElement, false);
   });
-  const mouseupHandler = atcb_debounce_leading((event: MouseEvent) => {
+  const mouseupHandler = debounce_leading((event: MouseEvent) => {
     event.preventDefault();
     toggleAuto(event.currentTarget as HTMLElement, false);
   });
@@ -87,10 +87,10 @@ function triggerListeners(host: ShadowRoot, data: ATCBConfig, type: string) {
     keyup: (event: KeyboardEvent) => {
       if (event.key === 'Enter' || event.code == 'Space') {
         event.preventDefault();
-        if (type === 'rsvp' && typeof atcb_generate_rsvp_form === 'function') {
-          atcb_generate_rsvp_form(host, data, event.currentTarget as HTMLElement, true);
+        if (type === 'rsvp' && typeof generate_rsvp_form === 'function') {
+          generate_rsvp_form(host, data, event.currentTarget as HTMLElement, true);
         } else {
-          atcb_toggle(host, 'auto', data, event.currentTarget as HTMLElement, true, true);
+          toggle(host, 'auto', data, event.currentTarget as HTMLElement, true, true);
         }
       }
     },
@@ -99,18 +99,18 @@ function triggerListeners(host: ShadowRoot, data: ATCBConfig, type: string) {
     mouseenter:
       data.trigger !== 'click' && type !== 'rsvp'
         ? (event: MouseEvent) => {
-            atcb_toggle(host, 'open', data, event.currentTarget as HTMLElement, false, true);
+            toggle(host, 'open', data, event.currentTarget as HTMLElement, false, true);
           }
         : undefined,
   };
 }
 
 function singletonListeners(host: ShadowRoot, data: ATCBConfig, type: string) {
-  const clickHandler = atcb_debounce_leading(async (event: Event) => {
+  const clickHandler = debounce_leading(async (event: Event) => {
     const parent = event.currentTarget as HTMLElement;
     (host.querySelector('#' + parent.id) as HTMLElement | null)?.blur();
-    atcb_log_event('openSingletonLink', parent.id, data.identifier as string);
-    await atcb_generate_links(host, type, data);
+    log_event('openSingletonLink', parent.id, data.identifier as string);
+    await generate_links(host, type, data);
   });
   return {
     click: clickHandler,
@@ -119,8 +119,8 @@ function singletonListeners(host: ShadowRoot, data: ATCBConfig, type: string) {
         event.preventDefault();
         const parent = event.currentTarget as HTMLElement;
         (host.querySelector('#' + parent.id) as HTMLElement | null)?.blur();
-        atcb_log_event('openSingletonLink', parent.id, data.identifier as string);
-        await atcb_generate_links(host, type, data, 'all', true);
+        log_event('openSingletonLink', parent.id, data.identifier as string);
+        await generate_links(host, type, data, 'all', true);
       }
     },
   };
@@ -134,13 +134,13 @@ function dateButtonAriaLabel(data: ATCBConfig, subEvent: number, subEventAll: bo
   // assistive tech: always include the year, announce recurrence, and never emit
   // dangling separators for missing parts
   const detailedTimeInfo = (function () {
-    const withYear = atcb_generate_timestring(data.dates!, data.formatLocale || data.language, subEvent, false, false, true);
+    const withYear = generate_timestring(data.dates!, data.formatLocale || data.language, subEvent, false, false, true);
     if (withYear.length > 0) {
       return withYear.join(' ');
     }
     return fullTimeInfo.join(' ');
   })();
-  const parts: string[] = [hoverText.replace(/<br>/g, ' ').replace(/\+\s/g, '') + (oneOption ? ' (' + atcb_translate_hook(data.options![0] as string, data) + ')' : '') + ': ' + btnHeadlineText];
+  const parts: string[] = [hoverText.replace(/<br>/g, ' ').replace(/\+\s/g, '') + (oneOption ? ' (' + translate_hook(data.options![0] as string, data) + ')' : '') + ': ' + btnHeadlineText];
   if (data.dates![`${subEvent}`]!.location && data.dates![`${subEvent}`]!.location !== '') {
     parts.push(data.dates![`${subEvent}`]!.location as string);
   }
@@ -148,7 +148,7 @@ function dateButtonAriaLabel(data: ATCBConfig, subEvent: number, subEventAll: bo
     parts.push(detailedTimeInfo);
   }
   if (data.recurrence && data.recurrence !== '') {
-    parts.push(atcb_translate_hook('recurring', data));
+    parts.push(translate_hook('recurring', data));
   }
   return parts.join(', ');
 }
@@ -160,30 +160,30 @@ function dateButtonMeta(data: ATCBConfig, subEventIn: string | number = 'all', f
   } else if (data.dates!.length === 1) {
     subEvent = 0;
   }
-  const fullTimeInfo = atcb_generate_timestring(data.dates!, data.formatLocale || data.language, subEvent as 'all' | number, false, false, forceFullDate);
+  const fullTimeInfo = generate_timestring(data.dates!, data.formatLocale || data.language, subEvent as 'all' | number, false, false, forceFullDate);
   const hoverText = (function () {
     if ((subEvent !== 'all' && data.dates![`${subEvent}`]!.status === 'cancelled') || (subEvent === 'all' && data.allCancelled)) {
-      return atcb_translate_hook('date.status.cancelled', data) + '<br>' + atcb_translate_hook('date.status.cancelled_cta', data);
+      return translate_hook('date.status.cancelled', data) + '<br>' + translate_hook('date.status.cancelled_cta', data);
     }
     if (data.pastDateHandling !== 'none') {
       if ((subEvent === 'all' && data.allOverdue) || (subEvent !== 'all' && data.dates![`${subEvent}`]!.overdue)) {
-        return atcb_translate_hook('expired', data);
+        return translate_hook('expired', data);
       }
     }
     if (data.label && data.label !== '') {
       return data.label;
     }
-    return atcb_translate_hook('label.addtocalendar', data);
+    return translate_hook('label.addtocalendar', data);
   })();
   const cancelledInfo = (function () {
     if ((subEvent !== 'all' && data.dates![`${subEvent}`]!.status === 'cancelled') || (subEvent === 'all' && data.allCancelled)) {
-      return atcb_translate_hook('date.status.cancelled', data);
+      return translate_hook('date.status.cancelled', data);
     }
     return '';
   })();
   const recurringString = (function () {
     if (fullTimeInfo.length === 0) {
-      return atcb_translate_hook('recurring', data) + ' &#x27F3;';
+      return translate_hook('recurring', data) + ' &#x27F3;';
     }
     return '&#x27F3;';
   })();
@@ -205,8 +205,8 @@ function dateButtonMeta(data: ATCBConfig, subEventIn: string | number = 'all', f
 
 function dateButtonContentTemplate(data: ATCBConfig, subEventIn: string | number = 'all', forceFullDate: boolean = false): TemplateResult {
   const { subEvent, subEventAll, fullTimeInfo, hoverText, cancelledInfo, recurringString } = dateButtonMeta(data, subEventIn, forceFullDate);
-  const startDate = new Date(atcb_generate_time(data.dates![`${subEvent}`]!).start);
-  const allDay = atcb_generate_time(data.dates![`${subEvent}`]!).allday;
+  const startDate = new Date(generate_time(data.dates![`${subEvent}`]!).start);
+  const allDay = generate_time(data.dates![`${subEvent}`]!).allday;
   const timeZone = data.dates![`${subEvent}`]!.timeZone;
   const btnHeadlineText = data.dates!.length > 1 && subEventAll ? data.name : data.dates![`${subEvent}`]!.name;
   const hasLocationLine = (data.dates![`${subEvent}`]!.location && data.dates![`${subEvent}`]!.location !== '' && !data.dates![`${subEvent}`]!.onlineEvent) || cancelledInfo !== '';
@@ -225,7 +225,7 @@ function dateButtonContentTemplate(data: ATCBConfig, subEventIn: string | number
             ? cancelledInfo != ''
               ? html`<div class="atcb-date-btn-content atcb-date-btn-cancelled">${cancelledInfo}</div>`
               : html`<div class="atcb-date-btn-content">
-                <span class="atcb-date-btn-content-icon">${unsafeHTML(atcbIcon['pin']!)}</span>
+                <span class="atcb-date-btn-content-icon">${unsafeHTML(icons['pin']!)}</span>
                 <span class="atcb-date-btn-content-location">${data.dates![`${subEvent}`]!.location as string}</span>
               </div>`
             : hasDescriptionFallback
@@ -235,7 +235,7 @@ function dateButtonContentTemplate(data: ATCBConfig, subEventIn: string | number
         ${
           fullTimeInfo.length > 0 || (data.recurrence != null && data.recurrence != '')
             ? html`<div class="atcb-date-btn-content">
-              <span class="atcb-date-btn-content-icon">${unsafeHTML(atcbIcon['clock']!)}</span>
+              <span class="atcb-date-btn-content-icon">${unsafeHTML(icons['clock']!)}</span>
               <span class="atcb-date-btn-content-text">
                 ${fullTimeInfo.map((block: string) => html`<span>${block}</span>`)}${data.recurrence != null && data.recurrence != '' ? html`<span>${unsafeHTML(recurringString)}</span>` : nothing}
               </span>
@@ -245,8 +245,8 @@ function dateButtonContentTemplate(data: ATCBConfig, subEventIn: string | number
       </div>
       <div class="atcb-date-btn-hover">${unsafeHTML(hoverText as string)}</div>
     </div>
-    ${!data.hideCheckmark && data.dates![`${subEvent}`]!.status !== 'cancelled' ? html`<div class="atcb-checkmark">${unsafeHTML(atcbIcon['checkmark']!)}</div>` : nothing}
-    ${!data.dates![`${subEvent}`]!.overdue || data.pastDateHandling === 'none' ? html`<div class="atcb-date-btn-plus">${unsafeHTML(atcbIcon['plus']!)}</div>` : nothing}`;
+    ${!data.hideCheckmark && data.dates![`${subEvent}`]!.status !== 'cancelled' ? html`<div class="atcb-checkmark">${unsafeHTML(icons['checkmark']!)}</div>` : nothing}
+    ${!data.dates![`${subEvent}`]!.overdue || data.pastDateHandling === 'none' ? html`<div class="atcb-date-btn-plus">${unsafeHTML(icons['plus']!)}</div>` : nothing}`;
 }
 
 // ---------- the button ----------
@@ -266,7 +266,7 @@ function buttonTemplate(host: ShadowRoot, data: ATCBConfig): TemplateResult {
     // label text (buttonsList with multiple options uses the option label)
     const label = (function () {
       if (oneOption && data.buttonsList && data.options!.length > 1) {
-        return atcb_translate_hook(`${data.options![`${index}`]}`, data);
+        return translate_hook(`${data.options![`${index}`]}`, data);
       }
       return data.label;
     })();
@@ -274,7 +274,7 @@ function buttonTemplate(host: ShadowRoot, data: ATCBConfig): TemplateResult {
     const contentType = oneOption ? (!data.buttonsList ? 'trigger' : option) : 'trigger';
     const text = labelText(data, contentType, label ?? '');
     const showText = ((contentType === 'trigger' || oneOption) && !data.hideTextLabelButton) || (!oneOption && contentType !== 'trigger' && !data.hideTextLabelList);
-    // listener wiring mirrors atcb_generate_label: singletons (incl. date style) get the
+    // listener wiring mirrors generate_label: singletons (incl. date style) get the
     // option handlers, everything else the trigger handlers
     const handlers = oneOption ? singletonListeners(host, data, option) : triggerListeners(host, data, 'trigger');
     const interactive = !data.blockInteraction;
@@ -299,9 +299,9 @@ function buttonTemplate(host: ShadowRoot, data: ATCBConfig): TemplateResult {
       >
         ${isDate ? dateButtonContentTemplate(data, 'all', false) : nothing}
         ${!isDate && !data.hideIconButton ? iconTemplate(contentType === 'trigger' ? 'trigger' : option) : nothing}${!isDate && showText ? html`<span class="atcb-text" part=${contentType === 'trigger' ? 'atcb-button-text' : 'atcb-list-text'}>${text}</span>` : nothing}
-        ${!isDate && contentType === 'trigger' && !oneOption && !data.buttonsList && !data.hideTextLabelButton ? html`<div class="atcb-chevron" part="atcb-button-chevron">${unsafeHTML(atcbIcon['chevron']!)}</div>` : nothing}
+        ${!isDate && contentType === 'trigger' && !oneOption && !data.buttonsList && !data.hideTextLabelButton ? html`<div class="atcb-chevron" part="atcb-button-chevron">${unsafeHTML(icons['chevron']!)}</div>` : nothing}
         ${!oneOption ? html`<div class="atcb-dropdown-anchor"></div>` : nothing}
-        ${!data.hideCheckmark && !data.hideTextLabelButton && !data.buttonsList && !data.disabled && !data.allCancelled ? html`<div class="atcb-checkmark">${unsafeHTML(atcbIcon['checkmark']!)}</div>` : nothing}
+        ${!data.hideCheckmark && !data.hideTextLabelButton && !data.buttonsList && !data.disabled && !data.allCancelled ? html`<div class="atcb-checkmark">${unsafeHTML(icons['checkmark']!)}</div>` : nothing}
       </button>
     </div>`;
   })}`;
@@ -326,7 +326,7 @@ function renderDateButtonContent(data: ATCBConfig, parent: HTMLElement, subEvent
 function renderButton(host: ShadowRoot, container: HTMLElement, data: ATCBConfig): void {
   render(buttonTemplate(host, data), container);
   container.querySelectorAll('.atcb-button-wrapper').forEach((wrapper) => {
-    atcb_set_sizes(wrapper as HTMLElement, data.sizes!);
+    set_sizes(wrapper as HTMLElement, data.sizes!);
   });
   if (data.debug) {
     console.log('Add to Calendar Button "' + data.identifier + '" created');

@@ -9,7 +9,7 @@
  */
 import { expect } from '@open-wc/testing';
 import { i18nStrings, atcb_register_locale, atcb_generate_timestring } from '../../dist/module/index.js';
-import { atcb_translate_hook } from '../helpers/i18n.js';
+import { translate_hook } from '../helpers/i18n.js';
 import { mountAtcb, baseEvent } from '../helpers/mount.js';
 import { btnId } from '../helpers/dom.js';
 
@@ -28,7 +28,7 @@ describe('Group X - locale loading', () => {
     };
     try {
       const { host } = await mountAtcb(baseEvent({ language: 'de', identifier: 'atcb-x01a' }));
-      const expected = atcb_translate_hook('label.addtocalendar', { language: 'de' });
+      const expected = translate_hook('label.addtocalendar', { language: 'de' });
       expect(triggerAria(host), 'german label rendered').to.include(expected);
       expect(i18nStrings['de'], 'de pack cached in the dist registry').to.be.an('object');
       const firstCount = fetchCalls.filter((u) => u.includes('/locales/de.json')).length;
@@ -64,7 +64,7 @@ describe('Group X - locale loading', () => {
       const { host } = await mountAtcb(baseEvent({ language: 'en_GB', identifier: 'atcb-x03a' }));
       expect(triggerAria(host), 'registered regional pack used').to.include('Add to calendar (GB)');
       const { host: host2 } = await mountAtcb(baseEvent({ language: 'en_US', identifier: 'atcb-x03b' }));
-      const expectedEn = atcb_translate_hook('label.addtocalendar', { language: 'en' });
+      const expectedEn = translate_hook('label.addtocalendar', { language: 'en' });
       expect(triggerAria(host2), 'en_US without a pack falls back to en').to.include(expectedEn);
     } finally {
       delete i18nStrings['en_GB'];
@@ -90,7 +90,7 @@ describe('Group X - locale loading', () => {
     );
     expect(triggerAria(host), 'customLabels override beats the loaded de pack').to.include('X06 override');
     // unknown-to-core identifiers resolve through customLabels exactly like v2
-    const { atcb_translate_hook: hookOracle } = await import('../helpers/i18n.js');
+    const { translate_hook: hookOracle } = await import('../helpers/i18n.js');
     expect(hookOracle('pro.only.identifier', { language: 'de', customLabels: { 'pro.only.identifier': 'X06 pro string' } })).to.equal('X06 pro string');
     expect(hookOracle('pro.only.identifier', { language: 'de' }), 'without customLabels the raw identifier returns (documented fallback)').to.equal('pro.only.identifier');
   });
@@ -104,7 +104,7 @@ describe('Group X - locale loading', () => {
     };
     try {
       const { host } = await mountAtcb(baseEvent({ language: 'xx', identifier: 'atcb-x05' }));
-      const expectedEn = atcb_translate_hook('label.addtocalendar', { language: 'en' });
+      const expectedEn = translate_hook('label.addtocalendar', { language: 'en' });
       expect(triggerAria(host)).to.include(expectedEn);
       expect(fetchCalls.filter((u) => u.includes('/locales/')).length, 'no fetch attempt for unknown language').to.equal(0);
     } finally {

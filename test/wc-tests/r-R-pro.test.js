@@ -67,7 +67,7 @@ describe('Group R - PRO proKey fetch & override', () => {
     const mock = mockProFetch({ [PRO_EVT_KEY]: proEvtConfig() });
     try {
       const { shadow } = await mountAtcb({ proKey: PRO_EVT_KEY, language: 'de', identifier: 'atcb-r05' });
-      // language is part of atcbWcProParams -> local attribute wins even without proOverride
+      // language is part of wcProParams -> local attribute wins even without proOverride
       const label = shadow.querySelector('.atcb-text').textContent;
       expect(label).to.include('Save the PRO date'); // server label still used (label not overridable here)
       expect(shadow.querySelector('.atcb-initialized')).to.exist;

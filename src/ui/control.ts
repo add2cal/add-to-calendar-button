@@ -1,36 +1,36 @@
-import { atcb_result_channel } from '../core/globals';
-import { atcb_generate_dropdown_list, atcb_generate_bg_overlay, atcb_generate_overlay_dom, atcb_create_atcbl, atcb_generate_modal_host } from './generate';
+import { resultChannel } from '../core/globals';
+import { generate_dropdown_list, generate_bg_overlay, generate_overlay_dom, create_atcbl, generate_modal_host } from './generate';
 import { setActiveButton } from '../core/store';
-import { atcb_position_list, atcb_position_shadow_button_listener, atcb_manage_body_scroll, atcb_set_sizes } from './positioning';
-import { atcb_log_event } from '../core/events';
+import { position_list, position_shadow_button_listener, manage_body_scroll, set_sizes } from './positioning';
+import { log_event } from '../core/events';
 import type { ATCBConfig } from '../types';
 
 // FUNCTIONS TO CONTROL THE INTERACTION
-function atcb_toggle(host: ShadowRoot, action: string, data: ATCBConfig | string = '', button: HTMLElement | string | null = null, keyboardTrigger: boolean = false, generatedButton: boolean = false): void {
+function toggle(host: ShadowRoot, action: string, data: ATCBConfig | string = '', button: HTMLElement | string | null = null, keyboardTrigger: boolean = false, generatedButton: boolean = false): void {
   // programmatic flows expecting a computed value cannot show ui - suppress the list
-  if (atcb_result_channel.active()) {
+  if (resultChannel.active()) {
     return;
   }
   // check for state and adjust accordingly
   // action can be 'open', 'close', or 'auto'
   if (action == 'open') {
-    atcb_open(host, data as ATCBConfig, button, keyboardTrigger, generatedButton);
+    open(host, data as ATCBConfig, button, keyboardTrigger, generatedButton);
   } else if (action == 'close' || (button as HTMLElement).classList.contains('atcb-active') || host.querySelector('.atcb-active-modal')) {
-    atcb_close(host, keyboardTrigger);
+    close(host, keyboardTrigger);
   } else {
-    atcb_open(host, data as ATCBConfig, button, keyboardTrigger, generatedButton);
+    open(host, data as ATCBConfig, button, keyboardTrigger, generatedButton);
   }
 }
 
 // show the dropdown list + background overlay
-async function atcb_open(host: ShadowRoot, data: ATCBConfig, button: HTMLElement | string | null = null, keyboardTrigger: boolean = false, generatedButton: boolean = false): Promise<void> {
+async function open(host: ShadowRoot, data: ATCBConfig, button: HTMLElement | string | null = null, keyboardTrigger: boolean = false, generatedButton: boolean = false): Promise<void> {
   // abort early if an add to calendar dropdown or modal already opened
   if (host.querySelector('.atcb-list') || host.querySelector('.atcb-modal')) return;
   // log event
-  atcb_log_event('openList', data.identifier!, data.identifier!);
+  log_event('openList', data.identifier!, data.identifier!);
   // generate list and prepare wrapper
   setActiveButton(data.identifier!);
-  const list = atcb_generate_dropdown_list(host, data);
+  const list = generate_dropdown_list(host, data);
   const listWrapper = document.createElement('div');
   listWrapper.classList.add('atcb-list-wrapper');
   listWrapper.setAttribute('part', 'atcb-list-wrapper');
@@ -58,21 +58,21 @@ async function atcb_open(host: ShadowRoot, data: ATCBConfig, button: HTMLElement
     list.classList.add('atcb-modal');
   }
   // render the items depending on the liststyle
-  const bgOverlay = atcb_generate_bg_overlay(host, data.trigger, data.listStyle === 'modal', !data.hideBackground);
+  const bgOverlay = generate_bg_overlay(host, data.trigger, data.listStyle === 'modal', !data.hideBackground);
   if (data.listStyle === 'modal') {
     // define background overlay in its own new modal shadowDOM
-    const modalHost: ShadowRoot = (await atcb_generate_modal_host(host, data))!;
+    const modalHost: ShadowRoot = (await generate_modal_host(host, data))!;
     // append background overlay and list to the modal shadowDOM; and init helper functions
     modalHost.querySelector('.atcb-modal-host-initialized')!.append(bgOverlay);
     bgOverlay.append(list);
     if (!data.hideBranding) {
-      atcb_create_atcbl(modalHost, false);
+      create_atcbl(modalHost, false);
     }
-    atcb_set_sizes(list, data.sizes!);
-    atcb_manage_body_scroll(modalHost);
+    set_sizes(list, data.sizes!);
+    manage_body_scroll(modalHost);
   } else {
     if (data.forceOverlay) {
-      host = (await atcb_generate_overlay_dom(host, data)) as unknown as ShadowRoot;
+      host = (await generate_overlay_dom(host, data)) as unknown as ShadowRoot;
       button = host.querySelector<HTMLElement>('button.atcb-button');
     }
     host.querySelector('.atcb-initialized')!.append(listWrapper);
@@ -81,23 +81,23 @@ async function atcb_open(host: ShadowRoot, data: ATCBConfig, button: HTMLElement
       listWrapper.classList.add('atcb-style-' + data.buttonStyle);
     }
     if (!data.hideBranding) {
-      atcb_create_atcbl(host);
+      create_atcbl(host);
     }
     // add background overlay to the main shadowDOM
     host.append(bgOverlay);
-    atcb_set_sizes(list, data.sizes!);
+    set_sizes(list, data.sizes!);
     // setting the position with a tiny timeout to prevent any edge case situations, where the order gets mixed up
     listWrapper.style.display = 'none';
     setTimeout(function () {
       listWrapper.style.display = 'block';
       if (data.listStyle === 'dropdown-static') {
         // in the dropdown-static case, we do not dynamically adjust whether we show the dropdown upwards
-        atcb_position_list(host, button as HTMLElement, listWrapper, true);
+        position_list(host, button as HTMLElement, listWrapper, true);
       } else if (data.listStyle === 'dropup-static') {
         // in the dropup-static case, we also do not dynamically adjust, but always show on top
-        atcb_position_list(host, button as HTMLElement, listWrapper, false, true);
+        position_list(host, button as HTMLElement, listWrapper, false, true);
       } else {
-        atcb_position_list(host, button as HTMLElement, listWrapper);
+        position_list(host, button as HTMLElement, listWrapper);
       }
     }, 5);
   }
@@ -123,7 +123,7 @@ async function atcb_open(host: ShadowRoot, data: ATCBConfig, button: HTMLElement
   }
 }
 
-function atcb_close(host: ShadowRoot, keyboardTrigger: boolean = false): void {
+function close(host: ShadowRoot, keyboardTrigger: boolean = false): void {
   // if we have a modal on a modal, close the latest first
   const existingModalHost = document.getElementById(host.host.getAttribute('atcb-button-id') + '-modal-host');
   const allModals: NodeListOf<Element> = (function () {
@@ -197,12 +197,12 @@ function atcb_close(host: ShadowRoot, keyboardTrigger: boolean = false): void {
       (hiddenButton.shadowRoot!.querySelector('.atcb-initialized') as HTMLElement).style.opacity = '1';
       hiddenButton.classList.remove('atcb-shadow-hide');
       // also remove the event listener
-      window.removeEventListener('scroll', atcb_position_shadow_button_listener);
-      window.removeEventListener('resize', atcb_position_shadow_button_listener);
+      window.removeEventListener('scroll', position_shadow_button_listener);
+      window.removeEventListener('resize', position_shadow_button_listener);
     }
     // reset active state
     setActiveButton('');
   }
 }
 
-export { atcb_toggle, atcb_open, atcb_close };
+export { toggle, open, close };

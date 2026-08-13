@@ -1,11 +1,11 @@
 import { tzlib_get_timezones } from 'timezones-ical-library';
-import { atcbOptions } from './globals';
-import { atcb_secure_url } from './text';
-import { atcb_validEmail, atcb_generate_uuid } from './util';
+import { options } from './globals';
+import { secure_url } from './text';
+import { validEmail, generate_uuid } from './util';
 import type { ATCBConfig, ATCBInputConfig, ATCBDateEntry } from '../types';
 
 // CHECK FOR REQUIRED FIELDS
-async function atcb_check_required(data: ATCBInputConfig): Promise<boolean> {
+async function check_required(data: ATCBInputConfig): Promise<boolean> {
   // in this first step, we only check for the bare minimum, so we can abort early on really broken setups. We will do further validation later.
   // check for min required data (without "options")
   // name is always required on root level (in the multi-date setup this would be the name of the event series)
@@ -54,20 +54,20 @@ async function atcb_check_required(data: ATCBInputConfig): Promise<boolean> {
 }
 
 // VALIDATE THE INPUT DATA
-async function atcb_validate(data: ATCBConfig): Promise<boolean> {
+async function validate(data: ATCBConfig): Promise<boolean> {
   const msgPrefix = 'Add to Calendar Button generation (' + data.identifier + ')';
   try {
-    await atcb_validate_icsFile(data, msgPrefix);
-    await atcb_validate_buttonStyle(data, msgPrefix);
-    await atcb_validate_subscribe(data, msgPrefix);
-    await atcb_validate_created(data, msgPrefix);
-    await atcb_validate_updated(data, msgPrefix);
-    await atcb_validate_options(data, msgPrefix);
-    await atcb_validate_date_blocks(data, msgPrefix);
-    await atcb_validate_rrule(data, msgPrefix);
-    await atcb_validate_ics_extras(data, msgPrefix);
+    await validate_icsFile(data, msgPrefix);
+    await validate_buttonStyle(data, msgPrefix);
+    await validate_subscribe(data, msgPrefix);
+    await validate_created(data, msgPrefix);
+    await validate_updated(data, msgPrefix);
+    await validate_options(data, msgPrefix);
+    await validate_date_blocks(data, msgPrefix);
+    await validate_rrule(data, msgPrefix);
+    await validate_ics_extras(data, msgPrefix);
     if (data.recurrence_simplified) {
-      await atcb_validate_rrule_simplified(data, msgPrefix);
+      await validate_rrule_simplified(data, msgPrefix);
     }
     // on passing the validation, return true
     return true;
@@ -77,7 +77,7 @@ async function atcb_validate(data: ATCBConfig): Promise<boolean> {
 }
 
 // validate explicit ics file
-async function atcb_validate_icsFile(data: ATCBConfig, msgPrefix: string, i: number | '' = '', msgSuffix: string = ''): Promise<boolean> {
+async function validate_icsFile(data: ATCBConfig, msgPrefix: string, i: number | '' = '', msgSuffix: string = ''): Promise<boolean> {
   const icsFileStr: string = (function () {
     if (i !== '' && data.dates![`${i}`]!.icsFile) {
       return data.dates![`${i}`]!.icsFile as string;
@@ -88,7 +88,7 @@ async function atcb_validate_icsFile(data: ATCBConfig, msgPrefix: string, i: num
     return '';
   })();
   if (icsFileStr !== '') {
-    if (!atcb_secure_url(icsFileStr, false) || (!data.icsFile!.startsWith('https://') && !data.icsFile!.startsWith('http://'))) {
+    if (!secure_url(icsFileStr, false) || (!data.icsFile!.startsWith('https://') && !data.icsFile!.startsWith('http://'))) {
       throw new Error(msgPrefix + ' failed: explicit ics file path not valid' + msgSuffix);
     }
   }
@@ -96,12 +96,12 @@ async function atcb_validate_icsFile(data: ATCBConfig, msgPrefix: string, i: num
 }
 
 // validate button style
-async function atcb_validate_buttonStyle(data: ATCBConfig, msgPrefix: string): Promise<boolean> {
+async function validate_buttonStyle(data: ATCBConfig, msgPrefix: string): Promise<boolean> {
   const availableStyles = ['default', 'simple', '3d', 'flat', 'round', 'neumorphism', 'text', 'date', 'custom', 'none'];
   if (!availableStyles.includes(data.buttonStyle!)) {
     throw new Error(msgPrefix + ' failed: provided buttonStyle invalid');
   }
-  if (data.customCss && data.customCss !== '' && (!atcb_secure_url(data.customCss, false) || !/\.css(?:$|\?)/.test(data.customCss))) {
+  if (data.customCss && data.customCss !== '' && (!secure_url(data.customCss, false) || !/\.css(?:$|\?)/.test(data.customCss))) {
     throw new Error(msgPrefix + ' failed: customCss provided, but no valid url');
   }
   if ((!data.customCss || data.customCss === '') && data.buttonStyle === 'custom') {
@@ -114,7 +114,7 @@ async function atcb_validate_buttonStyle(data: ATCBConfig, msgPrefix: string): P
 }
 
 // validate the subscription functionality (requires an explicit ics file)
-async function atcb_validate_subscribe(data: ATCBConfig, msgPrefix: string): Promise<boolean> {
+async function validate_subscribe(data: ATCBConfig, msgPrefix: string): Promise<boolean> {
   if (data.subscribe === true && (!data.icsFile || data.icsFile === '')) {
     throw new Error(msgPrefix + ' failed: a subscription calendar requires a valid explicit ics file as well');
   }
@@ -122,7 +122,7 @@ async function atcb_validate_subscribe(data: ATCBConfig, msgPrefix: string): Pro
 }
 
 // validate icsCreated input (per date entry)
-async function atcb_validate_created(data: ATCBConfig, msgPrefix: string): Promise<boolean> {
+async function validate_created(data: ATCBConfig, msgPrefix: string): Promise<boolean> {
   for (let i = 0; i < data.dates!.length; i++) {
     const suffix = data.dates!.length > 1 ? ' [dates array object #' + (i + 1) + '/' + data.dates!.length + ']' : '';
     if (!/^\d{8}T\d{6}Z$/.test(data.dates![`${i}`]!.icsCreated!)) {
@@ -133,7 +133,7 @@ async function atcb_validate_created(data: ATCBConfig, msgPrefix: string): Promi
 }
 
 // validate icsUpdated input (per date entry)
-async function atcb_validate_updated(data: ATCBConfig, msgPrefix: string): Promise<boolean> {
+async function validate_updated(data: ATCBConfig, msgPrefix: string): Promise<boolean> {
   for (let i = 0; i < data.dates!.length; i++) {
     const suffix = data.dates!.length > 1 ? ' [dates array object #' + (i + 1) + '/' + data.dates!.length + ']' : '';
     if (!/^\d{8}T\d{6}Z$/.test(data.dates![`${i}`]!.icsUpdated!)) {
@@ -144,10 +144,10 @@ async function atcb_validate_updated(data: ATCBConfig, msgPrefix: string): Promi
 }
 
 // validate options
-async function atcb_validate_options(data: ATCBConfig, msgPrefix: string): Promise<boolean> {
+async function validate_options(data: ATCBConfig, msgPrefix: string): Promise<boolean> {
   // we double-check whether options are valid
   const isValid = data.options!.every((option) => {
-    if (!atcbOptions.includes(option)) {
+    if (!options.includes(option)) {
       throw new Error(`${msgPrefix} failed: invalid option [${option}]`);
     }
     return true;
@@ -156,7 +156,7 @@ async function atcb_validate_options(data: ATCBConfig, msgPrefix: string): Promi
 }
 
 // next goes for all date blocks
-async function atcb_validate_date_blocks(data: ATCBConfig, msgPrefix: string): Promise<boolean> {
+async function validate_date_blocks(data: ATCBConfig, msgPrefix: string): Promise<boolean> {
   try {
     for (let i = 0; i < data.dates!.length; i++) {
       const msgSuffix = (function () {
@@ -166,15 +166,15 @@ async function atcb_validate_date_blocks(data: ATCBConfig, msgPrefix: string): P
           return ' [dates array object #' + (i + 1) + '/' + data.dates!.length + '] ';
         }
       })();
-      await atcb_validate_icsFile(data, msgPrefix, i, msgSuffix);
-      await atcb_validate_status(data, msgPrefix, i, msgSuffix);
-      await atcb_validate_availability(data, msgPrefix, i, msgSuffix);
-      await atcb_validate_organizer(data, msgPrefix, i, msgSuffix);
-      await atcb_validate_attendee(data, msgPrefix, i, msgSuffix);
-      await atcb_validate_uid(data, msgPrefix, i, msgSuffix);
-      await atcb_validate_sequence(data, msgPrefix, i, msgSuffix);
-      await atcb_validate_timezone(data, msgPrefix, i, msgSuffix);
-      await atcb_validate_datetime(data, msgPrefix, i, msgSuffix);
+      await validate_icsFile(data, msgPrefix, i, msgSuffix);
+      await validate_status(data, msgPrefix, i, msgSuffix);
+      await validate_availability(data, msgPrefix, i, msgSuffix);
+      await validate_organizer(data, msgPrefix, i, msgSuffix);
+      await validate_attendee(data, msgPrefix, i, msgSuffix);
+      await validate_uid(data, msgPrefix, i, msgSuffix);
+      await validate_sequence(data, msgPrefix, i, msgSuffix);
+      await validate_timezone(data, msgPrefix, i, msgSuffix);
+      await validate_datetime(data, msgPrefix, i, msgSuffix);
     }
     return true;
   } catch (e) {
@@ -183,7 +183,7 @@ async function atcb_validate_date_blocks(data: ATCBConfig, msgPrefix: string): P
 }
 
 // validate status
-async function atcb_validate_status(data: ATCBConfig, msgPrefix: string, i: number, msgSuffix: string): Promise<boolean> {
+async function validate_status(data: ATCBConfig, msgPrefix: string, i: number, msgSuffix: string): Promise<boolean> {
   const allowedStatuses = ['tentative', 'confirmed', 'cancelled'];
   if (!allowedStatuses.includes(data.dates![`${i}`]!.status!.toLowerCase())) {
     throw new Error(msgPrefix + ' failed: event status needs to be tentative, confirmed, or cancelled' + msgSuffix);
@@ -192,7 +192,7 @@ async function atcb_validate_status(data: ATCBConfig, msgPrefix: string, i: numb
 }
 
 // validate availability
-async function atcb_validate_availability(data: ATCBConfig, msgPrefix: string, i: number, msgSuffix: string): Promise<boolean> {
+async function validate_availability(data: ATCBConfig, msgPrefix: string, i: number, msgSuffix: string): Promise<boolean> {
   if (data.dates![`${i}`]!.availability && data.dates![`${i}`]!.availability !== '' && data.dates![`${i}`]!.availability !== 'free' && data.dates![`${i}`]!.availability !== 'busy') {
     throw new Error(msgPrefix + ' failed: event availability needs to be "free" or "busy"' + msgSuffix);
   }
@@ -200,10 +200,10 @@ async function atcb_validate_availability(data: ATCBConfig, msgPrefix: string, i
 }
 
 // validate organizer
-async function atcb_validate_organizer(data: ATCBConfig, msgPrefix: string, i: number, msgSuffix: string): Promise<boolean> {
+async function validate_organizer(data: ATCBConfig, msgPrefix: string, i: number, msgSuffix: string): Promise<boolean> {
   if (data.dates![`${i}`]!.organizer && data.dates![`${i}`]!.organizer !== '') {
     const organizerParts = data.dates![`${i}`]!.organizer!.split('|');
-    if (organizerParts.length !== 2 || organizerParts[0]!.length > 50 || organizerParts[1]!.length > 100 || !atcb_validEmail(organizerParts[1]!)) {
+    if (organizerParts.length !== 2 || organizerParts[0]!.length > 50 || organizerParts[1]!.length > 100 || !validEmail(organizerParts[1]!)) {
       throw new Error(msgPrefix + ' failed: organizer needs to match the schema "NAME|EMAIL" with a valid email address, where the name is <50 and email <100 characters' + msgSuffix);
     }
   }
@@ -211,7 +211,7 @@ async function atcb_validate_organizer(data: ATCBConfig, msgPrefix: string, i: n
 }
 
 // validate attendee
-async function atcb_validate_attendee(data: ATCBConfig, msgPrefix: string, i: number, msgSuffix: string): Promise<boolean> {
+async function validate_attendee(data: ATCBConfig, msgPrefix: string, i: number, msgSuffix: string): Promise<boolean> {
   if (data.dates![`${i}`]!.attendee && data.dates![`${i}`]!.attendee !== '') {
     // when setting the attendee, an organizer needs to be set as well
     if (!data.dates![`${i}`]!.organizer || data.dates![`${i}`]!.organizer === '') {
@@ -219,10 +219,10 @@ async function atcb_validate_attendee(data: ATCBConfig, msgPrefix: string, i: nu
     }
     // additionally, we check the same format as with the organizer or simple email (only 1 attendee possible)
     const attendeeParts = data.dates![`${i}`]!.attendee!.split('|');
-    if (attendeeParts.length === 1 && atcb_validEmail(attendeeParts[0]!)) {
+    if (attendeeParts.length === 1 && validEmail(attendeeParts[0]!)) {
       return true;
     }
-    if (attendeeParts.length !== 2 || attendeeParts[0]!.length > 50 || attendeeParts[1]!.length > 100 || !atcb_validEmail(attendeeParts[1]!)) {
+    if (attendeeParts.length !== 2 || attendeeParts[0]!.length > 50 || attendeeParts[1]!.length > 100 || !validEmail(attendeeParts[1]!)) {
       throw new Error(msgPrefix + ' failed: attendee needs to be a valid email address or match the schema "NAME|EMAIL" with EMAIL being a valid email address' + msgSuffix);
     }
   }
@@ -230,13 +230,13 @@ async function atcb_validate_attendee(data: ATCBConfig, msgPrefix: string, i: nu
 }
 
 // validate UID
-async function atcb_validate_uid(data: ATCBConfig, msgPrefix: string, i: number, msgSuffix: string): Promise<boolean> {
+async function validate_uid(data: ATCBConfig, msgPrefix: string, i: number, msgSuffix: string): Promise<boolean> {
   // must have less then 255 characters and only allowes for alpha characters, numbers, and dashes; see https://icalendar.org/New-Properties-for-iCalendar-RFC-7986/5-3-uid-property.html
   if (!/^(?:\w|-){1,254}$/.test(data.dates![`${i}`]!.uid!)) {
     if (data.debug) {
       console.warn(msgPrefix + ': UID not valid. May only contain alpha, digits, and dashes; and be less than 255 characters. Falling back to an automated value!' + msgSuffix);
     }
-    data.dates![`${i}`]!.uid = atcb_generate_uuid();
+    data.dates![`${i}`]!.uid = generate_uuid();
   }
   // validate UID for the recommended form, which is not forced, but show throw a warning
   if (!/^[0-9a-f]{8}-[0-9a-f]{4}-[0-5][0-9a-f]{3}-[089ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(data.dates![`${i}`]!.uid!) && data.debug) {
@@ -246,7 +246,7 @@ async function atcb_validate_uid(data: ATCBConfig, msgPrefix: string, i: number,
 }
 
 // validate sequence number if given and set it 0 if not
-async function atcb_validate_sequence(data: ATCBConfig, msgPrefix: string, i: number, msgSuffix: string): Promise<boolean> {
+async function validate_sequence(data: ATCBConfig, msgPrefix: string, i: number, msgSuffix: string): Promise<boolean> {
   if (data.dates![`${i}`]!.sequence && (Number(data.dates![`${i}`]!.sequence) < 0 || Number(data.dates![`${i}`]!.sequence) % 1 !== 0)) {
     if (data.debug) {
       console.log(msgPrefix + ': sequence needs to be a full number >= 0. Used the default 0 instead' + msgSuffix);
@@ -257,7 +257,7 @@ async function atcb_validate_sequence(data: ATCBConfig, msgPrefix: string, i: nu
 }
 
 // validate time zone
-async function atcb_validate_timezone(data: ATCBConfig, msgPrefix: string, i: number, msgSuffix: string): Promise<boolean> {
+async function validate_timezone(data: ATCBConfig, msgPrefix: string, i: number, msgSuffix: string): Promise<boolean> {
   const validTimeZones = tzlib_get_timezones();
   if (!validTimeZones.includes(data.dates![`${i}`]!.timeZone!)) {
     throw new Error(msgPrefix + ' failed: invalid time zone given' + msgSuffix);
@@ -266,7 +266,7 @@ async function atcb_validate_timezone(data: ATCBConfig, msgPrefix: string, i: nu
 }
 
 // validate date and time
-async function atcb_validate_datetime(data: ATCBConfig, msgPrefix: string, i: number, msgSuffix: string): Promise<boolean> {
+async function validate_datetime(data: ATCBConfig, msgPrefix: string, i: number, msgSuffix: string): Promise<boolean> {
   const selectedDate = data.dates![`${i}`]!;
   const dates = ['startDate', 'endDate'];
   // Initialize newDate as an object to store the parsed dates
@@ -316,7 +316,7 @@ async function atcb_validate_datetime(data: ATCBConfig, msgPrefix: string, i: nu
 // validate RRULE
 // validate the ics-only extra options (they only shape the generated ics file, but
 // invalid values still fail loudly so misconfigurations do not ship silently)
-async function atcb_validate_ics_extras(data: ATCBConfig, msgPrefix: string): Promise<boolean> {
+async function validate_ics_extras(data: ATCBConfig, msgPrefix: string): Promise<boolean> {
   const toList = (value: string[] | string | undefined): string[] => {
     if (!value) return [];
     // attribute parsing may deliver arrays whose items still carry commas - flatten those too
@@ -325,7 +325,7 @@ async function atcb_validate_ics_extras(data: ATCBConfig, msgPrefix: string): Pr
       .map((item) => item.trim())
       .filter((item) => item !== '');
   };
-  const isHttpUrl = (value: string): boolean => atcb_secure_url(value, false) && /^https?:\/\//i.test(value);
+  const isHttpUrl = (value: string): boolean => secure_url(value, false) && /^https?:\/\//i.test(value);
   for (let i = 0; i < data.dates!.length; i++) {
     const entry = data.dates![`${i}`]!;
     const suffix = data.dates!.length > 1 ? ' [dates array object #' + (i + 1) + '/' + data.dates!.length + ']' : '';
@@ -379,7 +379,7 @@ async function atcb_validate_ics_extras(data: ATCBConfig, msgPrefix: string): Pr
   return true;
 }
 
-async function atcb_validate_rrule(data: ATCBConfig, msgPrefix: string): Promise<boolean> {
+async function validate_rrule(data: ATCBConfig, msgPrefix: string): Promise<boolean> {
   // check for multi-date (which is not allowed)
   if (data.recurrence && data.recurrence !== '' && data.dates!.length > 1) {
     throw new Error(msgPrefix + ' failed: RRULE and multi-date set at the same time');
@@ -391,7 +391,7 @@ async function atcb_validate_rrule(data: ATCBConfig, msgPrefix: string): Promise
   return true;
 }
 // also validate the simplified recurrence settings (if provided), since any error there would be also hidden in the RRULE
-async function atcb_validate_rrule_simplified(data: ATCBConfig, msgPrefix: string): Promise<boolean> {
+async function validate_rrule_simplified(data: ATCBConfig, msgPrefix: string): Promise<boolean> {
   if (data.recurrence_interval && (Number(data.recurrence_interval) < 1 || Number(data.recurrence_interval) % 1 !== 0)) {
     throw new Error(msgPrefix + ' failed: recurrence data (interval) misspelled');
   }
@@ -416,4 +416,4 @@ async function atcb_validate_rrule_simplified(data: ATCBConfig, msgPrefix: strin
   return true;
 }
 
-export { atcb_check_required, atcb_validate };
+export { check_required, validate };

@@ -1,32 +1,32 @@
-import { atcbIsBrowser, atcbWcBooleanParams } from './globals';
-import { atcb_decorate_data_options } from './decorate-options';
-import { atcb_decorate_data_dates } from './decorate-dates';
-import { atcb_decorate_sizes } from './sizes';
+import { isBrowser, wcBooleanParams } from './globals';
+import { decorate_data_options } from './decorate-options';
+import { decorate_data_dates } from './decorate-dates';
+import { decorate_sizes } from './sizes';
 import { availableLanguages, rtlLanguages } from '../i18n/index';
-import { atcb_check_bookings } from '../ui/pro';
+import { check_bookings } from '../ui/pro';
 import type { ATCBConfig, ATCBInputConfig, ATCBDateEntry } from '../types';
 
-export { atcb_decorate_data_dates } from './decorate-dates';
+export { decorate_data_dates } from './decorate-dates';
 
 // CLEAN DATA BEFORE FURTHER VALIDATION (CONSIDERING SPECIAL RULES AND SCHEMES)
-async function atcb_decorate_data(data: ATCBConfig | ATCBInputConfig): Promise<ATCBConfig> {
+async function decorate_data(data: ATCBConfig | ATCBInputConfig): Promise<ATCBConfig> {
   let cfg = data as ATCBConfig;
-  cfg = atcb_decorate_data_boolean(cfg);
-  cfg = atcb_decorate_data_defaults(cfg);
-  cfg = atcb_decorate_data_options(cfg);
-  cfg = atcb_decorate_data_style(cfg);
-  cfg.sizes = atcb_decorate_sizes(cfg.size as string | undefined);
-  cfg.lightMode = atcb_decorate_light_mode(cfg.lightMode);
-  cfg = atcb_decorate_data_i18n(cfg);
-  cfg = atcb_decorate_data_dates(cfg);
-  cfg = await atcb_decorate_data_rsvp(cfg);
+  cfg = decorate_data_boolean(cfg);
+  cfg = decorate_data_defaults(cfg);
+  cfg = decorate_data_options(cfg);
+  cfg = decorate_data_style(cfg);
+  cfg.sizes = decorate_sizes(cfg.size as string | undefined);
+  cfg.lightMode = decorate_light_mode(cfg.lightMode);
+  cfg = decorate_data_i18n(cfg);
+  cfg = decorate_data_dates(cfg);
+  cfg = await decorate_data_rsvp(cfg);
   return cfg;
 }
 
 // setting boolean parameters right, since they can be provided or not
-function atcb_decorate_data_boolean(data: ATCBConfig): ATCBConfig {
-  for (let i = 0; i < atcbWcBooleanParams.length; i++) {
-    const attr = atcbWcBooleanParams[`${i}`]! as string;
+function decorate_data_boolean(data: ATCBConfig): ATCBConfig {
+  for (let i = 0; i < wcBooleanParams.length; i++) {
+    const attr = wcBooleanParams[`${i}`]! as string;
     if (data[`${attr}`]) {
       // only do something if not already a boolean
       if (typeof data[`${attr}`] !== 'boolean') {
@@ -40,7 +40,7 @@ function atcb_decorate_data_boolean(data: ATCBConfig): ATCBConfig {
   return data;
 }
 
-function atcb_set_date_defaults(dateEntry: ATCBDateEntry | ATCBConfig): void {
+function set_date_defaults(dateEntry: ATCBDateEntry | ATCBConfig): void {
   // set time zone
   if (!dateEntry.timeZone || dateEntry.timeZone === '') {
     dateEntry.timeZone = 'GMT';
@@ -60,13 +60,13 @@ function atcb_set_date_defaults(dateEntry: ATCBDateEntry | ATCBConfig): void {
   }
 }
 
-function atcb_decorate_data_defaults(data: ATCBConfig): ATCBConfig {
+function decorate_data_defaults(data: ATCBConfig): ATCBConfig {
   if (data.dates) {
     for (let i = 0; i < data.dates.length; i++) {
-      atcb_set_date_defaults(data.dates[`${i}`]!);
+      set_date_defaults(data.dates[`${i}`]!);
     }
   } else {
-    atcb_set_date_defaults(data);
+    set_date_defaults(data);
   }
   // set language if not set; full locales (en_US / en-GB) are validated via their base
   if (!data.language || data.language === '') {
@@ -77,7 +77,7 @@ function atcb_decorate_data_defaults(data: ATCBConfig): ATCBConfig {
   return data;
 }
 
-function atcb_decorate_data_style(data: ATCBConfig): ATCBConfig {
+function decorate_data_style(data: ATCBConfig): ATCBConfig {
   // set inline if inlineRSVP
   if (data.inlineRSVP) {
     data.inline = true;
@@ -111,8 +111,8 @@ function atcb_decorate_data_style(data: ATCBConfig): ATCBConfig {
 }
 
 // determine dark mode
-function atcb_decorate_light_mode(lightMode: string = ''): string {
-  if (lightMode == 'system' && atcbIsBrowser()) {
+function decorate_light_mode(lightMode: string = ''): string {
+  if (lightMode == 'system' && isBrowser()) {
     const prefersDarkScheme = window.matchMedia('(prefers-color-scheme: dark)');
     return prefersDarkScheme.matches ? 'dark' : 'light';
   }
@@ -122,7 +122,7 @@ function atcb_decorate_light_mode(lightMode: string = ''): string {
   return lightMode;
 }
 
-function atcb_decorate_data_i18n(data: ATCBConfig): ATCBConfig {
+function decorate_data_i18n(data: ATCBConfig): ATCBConfig {
   const raw = String(data.language || 'en');
   let region = '';
   // reduce language identifier, if long version is used - keeping the region part
@@ -155,8 +155,8 @@ function atcb_decorate_data_i18n(data: ATCBConfig): ATCBConfig {
   return data;
 }
 
-async function atcb_decorate_data_rsvp(data: ATCBConfig): Promise<ATCBConfig> {
-  if (typeof atcb_check_bookings !== 'function' || !data.rsvp || !data.proKey || Object.keys(data.rsvp).length === 0) return data;
+async function decorate_data_rsvp(data: ATCBConfig): Promise<ATCBConfig> {
+  if (typeof check_bookings !== 'function' || !data.rsvp || !data.proKey || Object.keys(data.rsvp).length === 0) return data;
   // determine whether RSVP is expired
   data.rsvp.expired = (function () {
     if (data.rsvp && data.rsvp.expires && new Date(data.rsvp.expires as string) < new Date()) {
@@ -166,7 +166,7 @@ async function atcb_decorate_data_rsvp(data: ATCBConfig): Promise<ATCBConfig> {
   })();
   // determine whether RSVP is booked out and set # seats left
   if (data.rsvp.max) {
-    const bookings = await atcb_check_bookings(data.proKey, data.dev);
+    const bookings = await check_bookings(data.proKey, data.dev);
     data.rsvp.seatsLeft = (data.rsvp.max as number) - bookings;
     if ((data.rsvp.seatsLeft as number) < 1) {
       data.rsvp.bookedOut = true;
@@ -181,4 +181,4 @@ async function atcb_decorate_data_rsvp(data: ATCBConfig): Promise<ATCBConfig> {
   return data;
 }
 
-export { atcb_decorate_data };
+export { decorate_data };

@@ -19,11 +19,11 @@
  * the element initializes client-only, exactly like the script-tag path.
  */
 import type { AddToCalendarButtonType } from '../types';
-import { atcbIcon } from '../core/globals';
+import { icons } from '../core/globals';
 import { rtlLanguages } from '../i18n/index';
-import { atcb_decorate_sizes } from '../core/sizes';
+import { decorate_sizes } from '../core/sizes';
 import { officialAttributeName } from '../compat/attributes';
-import { atcb_secure_url } from '../core/text';
+import { secure_url } from '../core/text';
 
 // filled at build time with the minified tokens+core css plus EVERY per-style delta
 // (the ssr bundle is server-only, so carrying all styles is size-uncritical)
@@ -122,7 +122,7 @@ function parseOptions(value: unknown): { key: string; labelOverride: string }[] 
     if (typeof entry !== 'string') continue;
     const [rawName, ...labelParts] = entry.split('|');
     const key = (rawName || '').toLowerCase().replace(/\s+/g, '').replace('microsoft', 'ms').replace(/\./, '');
-    if (key === '' || !atcbIcon[`${key}`]) continue;
+    if (key === '' || !icons[`${key}`]) continue;
     options.push({ key, labelOverride: labelParts.join('|').trim() });
   }
   return options;
@@ -133,7 +133,7 @@ function parseOptions(value: unknown): { key: string; labelOverride: string }[] 
  * declarative shadow DOM template carrying the shell. Drop the returned string into
  * server-rendered HTML; the client bundle takes over from there.
  */
-function atcb_generate_ssr_html(rawConfig: AddToCalendarButtonType & { [key: string]: unknown }): string {
+function generate_ssr_html(rawConfig: AddToCalendarButtonType & { [key: string]: unknown }): string {
   // accept camelCase, kebab-case, and legacy spellings alike (the tag does, too)
   const config = normalizeConfig(rawConfig);
   // --- the few config bits the shell honors ---
@@ -141,7 +141,7 @@ function atcb_generate_ssr_html(rawConfig: AddToCalendarButtonType & { [key: str
   const language = typeof config.language === 'string' && config.language ? config.language : 'en';
   const baseLanguage = language.split(/[-_]/)[0]!.toLowerCase();
   const rtl = rtlLanguages.includes(baseLanguage);
-  const sizes = atcb_decorate_sizes(typeof config.size === 'string' ? config.size : undefined);
+  const sizes = decorate_sizes(typeof config.size === 'string' ? config.size : undefined);
   const lightMode = config.lightMode === 'dark' ? 'dark' : config.lightMode === 'bodyScheme' ? 'bodyScheme' : 'light';
   const label = typeof config.label === 'string' && config.label !== '' ? config.label : atcbSsrLabels[`${baseLanguage}`] || atcbSsrLabels['en'] || 'Add to Calendar';
   const inline = truthyFlag(config.inline);
@@ -153,13 +153,15 @@ function atcb_generate_ssr_html(rawConfig: AddToCalendarButtonType & { [key: str
   const hideIconList = truthyFlag(config.hideIconList);
   const hideTextLabelButton = truthyFlag(config.hideTextLabelButton);
   // custom styles: an external css file (scheme-checked like the client) and/or the
-  // css variable overrides (html-stripped like the client does via atcb_secure_content)
-  const customCss = typeof config.customCss === 'string' && config.customCss !== '' && atcb_secure_url(config.customCss, false) ? config.customCss : '';
+  // css variable overrides (html-stripped like the client does via secure_content)
+  const customCss = typeof config.customCss === 'string' && config.customCss !== '' && secure_url(config.customCss, false) ? config.customCss : '';
   const styleLight = typeof config.styleLight === 'string' ? config.styleLight.replace(/(\\r\\n|\\n|\\r)/g, '').replace(/(<(?!br)([^>]+)>)/gi, '') : '';
   const styleDark = typeof config.styleDark === 'string' ? config.styleDark.replace(/(\\r\\n|\\n|\\r)/g, '').replace(/(<(?!br)([^>]+)>)/gi, '') : '';
   // buttonsList splits the button into one singleton per option (never for the date
   // style - the client rule)
-  const listOptions = buttonsList && buttonStyle !== 'date' ? parseOptions(config.options) : [];
+  const parsedOptions = parseOptions(config.options);
+  const listOptions = buttonsList && buttonStyle !== 'date' ? parsedOptions : [];
+  const oneOption = parsedOptions.length === 1;
 
   // --- host attributes: every config key, serialized under its official name ---
   const attributes: string[] = [];
@@ -191,7 +193,7 @@ function atcb_generate_ssr_html(rawConfig: AddToCalendarButtonType & { [key: str
       return listOptions
         .map((option) => {
           const singletonId = identifier !== '' ? ` id="atcb-btn-${escapeAttribute(identifier)}-${escapeAttribute(option.key)}"` : '';
-          const icon = hideIconList ? '' : `<div class="atcb-icon atcb-icon-${escapeAttribute(option.key)}" part="atcb-button-icon">${atcbIcon[`${option.key}`]}</div>`;
+          const icon = hideIconList ? '' : `<div class="atcb-icon atcb-icon-${escapeAttribute(option.key)}" part="atcb-button-icon">${icons[`${option.key}`]}</div>`;
           const text = hideTextLabelButton ? '' : option.labelOverride !== '' ? `<span class="atcb-text" part="atcb-list-text">${escapeText(option.labelOverride)}</span>` : `<span class="atcb-text" part="atcb-list-text">${skeletonSpan('8ch')}</span>`;
           return `<div class="atcb-button-wrapper${rtl ? ' atcb-rtl' : ''}" part="atcb-button-wrapper" style="${sizeStyle}"><button type="button" class="atcb-button atcb-single${hideTextLabelButton ? ' atcb-no-text' : ''}" part="atcb-button"${singletonId} aria-expanded="false" aria-label="${escapeAttribute(option.labelOverride !== '' ? option.labelOverride : option.key)}">${icon}${text}</button></div>`;
         })
@@ -202,10 +204,12 @@ function atcb_generate_ssr_html(rawConfig: AddToCalendarButtonType & { [key: str
         const headline = typeof config.label === 'string' && config.label !== '' ? escapeText(config.label) : typeof config.name === 'string' && config.name !== '' ? escapeText(config.name) : skeletonSpan('12ch');
         return `<div class="atcb-date-btn-left"><div class="atcb-date-btn-day">${skeletonSpan('2ch')}</div><div class="atcb-date-btn-month">${skeletonSpan('3ch')}</div></div><div class="atcb-date-btn-right"><div class="atcb-date-btn-details"><div class="atcb-date-btn-headline">${headline}</div><div class="atcb-date-btn-content">${skeletonSpan('16ch')}</div></div></div><div class="atcb-date-btn-plus"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" style="fill:none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M12 5.5v13M5.5 12h13"/></svg></div>`;
       }
-      const icon = hideIconButton ? '' : `<div class="atcb-icon atcb-icon-trigger" part="atcb-button-icon">${atcbIcon['trigger']}</div>`;
-      return `${icon}<span class="atcb-text" part="atcb-button-text">${escapeText(label)}</span><div class="atcb-dropdown-anchor"></div>`;
+      const icon = hideIconButton ? '' : `<div class="atcb-icon atcb-icon-trigger" part="atcb-button-icon">${icons['trigger']}</div>`;
+      const chevron = !oneOption && !hideTextLabelButton ? `<div class="atcb-chevron" part="atcb-button-chevron">${icons['chevron']}</div>` : '';
+      const anchor = oneOption ? '' : '<div class="atcb-dropdown-anchor"></div>';
+      return `${icon}<span class="atcb-text" part="atcb-button-text">${escapeText(label)}</span>${chevron}${anchor}`;
     })();
-    return `<div class="atcb-button-wrapper${rtl ? ' atcb-rtl' : ''}" part="atcb-button-wrapper" style="${sizeStyle}"><button type="button" class="atcb-button" part="atcb-button"${buttonId} aria-expanded="false" aria-label="${escapeAttribute(typeof label === 'string' ? label : 'Add to Calendar')}">${inner}</button></div>`;
+    return `<div class="atcb-button-wrapper${rtl ? ' atcb-rtl' : ''}" part="atcb-button-wrapper" style="${sizeStyle}"><button type="button" class="atcb-button${oneOption ? ' atcb-single' : ''}" part="atcb-button"${buttonId} aria-expanded="false" aria-label="${escapeAttribute(typeof label === 'string' ? label : 'Add to Calendar')}">${inner}</button></div>`;
   })();
 
   const rootClasses = `atcb-initialized${hidden ? ' atcb-hidden' : ''}${inline ? ' atcb-inline' : ''}${listOptions.length > 0 && !inline ? ' atcb-buttons-list' : ''}`;
@@ -216,4 +220,4 @@ function atcb_generate_ssr_html(rawConfig: AddToCalendarButtonType & { [key: str
   return `<add-to-calendar-button class="add-to-calendar atcb-${lightMode}" ${attributes.join(' ')}><template shadowrootmode="open">${shell}</template></add-to-calendar-button>`;
 }
 
-export { atcb_generate_ssr_html };
+export { generate_ssr_html as atcb_generate_ssr_html };

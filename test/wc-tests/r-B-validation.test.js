@@ -4,13 +4,13 @@
  */
 import { expect } from '@open-wc/testing';
 import { muteConsole } from '../helpers/capture.js';
-import { atcb_decorate_data } from '../../src/core/decorate.ts';
-import { atcb_check_required, atcb_validate } from '../../src/core/validate.ts';
+import { decorate_data } from '../../src/core/decorate.ts';
+import { check_required, validate } from '../../src/core/validate.ts';
 
 async function runPipeline(config) {
-  await atcb_check_required(config);
-  const data = await atcb_decorate_data(config);
-  await atcb_validate(data);
+  await check_required(config);
+  const data = await decorate_data(config);
+  await validate(data);
   return data;
 }
 

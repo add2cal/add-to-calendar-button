@@ -158,7 +158,7 @@
 }
 
 .atcb-list.atcb-modal {
-  min-width: 250px;
+  min-width: auto;
   overflow: hidden;
 }
 

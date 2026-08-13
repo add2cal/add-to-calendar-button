@@ -26,7 +26,7 @@ export function proEvtConfig(overrides = {}) {
     trigger: 'click',
     label: 'Save the PRO date',
     landingpage: {},
-    // the real config.json is pre-structured with a dates array - atcb_get_pro_data iterates it
+    // the real config.json is pre-structured with a dates array - get_pro_data iterates it
     dates: [
       {
         name: 'PRO Demo Event',

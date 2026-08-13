@@ -12,8 +12,8 @@ import { mountAtcb, baseEvent } from '../helpers/mount.js';
 import { interceptWindowOpen, interceptFileSave, muteConsole } from '../helpers/capture.js';
 import { clickSingleton, renderedOptions, openList } from '../helpers/dom.js';
 import { decodeIcsHref, parseIcs } from '../helpers/ics.js';
-import { atcb_decorate_data } from '../../src/core/decorate.ts';
-import { atcb_check_required, atcb_validate } from '../../src/core/validate.ts';
+import { decorate_data } from '../../src/core/decorate.ts';
+import { check_required, validate } from '../../src/core/validate.ts';
 
 const EXTRAS = {
   icsReminder: '30',
@@ -39,9 +39,9 @@ async function icsFor(config, id) {
 async function expectValidationFail(config, msgPart) {
   let error = null;
   try {
-    await atcb_check_required(config);
-    const data = await atcb_decorate_data(config);
-    await atcb_validate(data);
+    await check_required(config);
+    const data = await decorate_data(config);
+    await validate(data);
   } catch (e) {
     error = e;
   }

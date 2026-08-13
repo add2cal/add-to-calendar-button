@@ -1,11 +1,11 @@
-import { atcb_rewrite_html_elements, atcb_secure_content } from '../core/text';
-import { atcb_set_sizes } from './positioning';
-import { atcb_copy_to_clipboard, atcb_validEmail } from '../core/util';
-import { atcb_generate_modal_host, atcb_create_modal, atcb_generate_label, atcb_create_atcbl } from './generate';
+import { rewrite_html_elements, secure_content } from '../core/text';
+import { set_sizes } from './positioning';
+import { copy_to_clipboard, validEmail } from '../core/util';
+import { generate_modal_host, create_modal, generate_label, create_atcbl } from './generate';
 import { renderButton } from './templates';
-import { atcb_translate_hook } from '../i18n/index';
-import { atcb_log_event } from '../core/events';
-import { atcb_decorate_data } from '../core/decorate';
+import { translate_hook } from '../i18n/index';
+import { log_event } from '../core/events';
+import { decorate_data } from '../core/decorate';
 import type { ATCBConfig } from '../types';
 
 // local shape for one entry of a custom PRO form (ty or rsvp), as produced/consumed by the shared form helpers
@@ -58,14 +58,14 @@ interface ATCBPostErrorResult {
 }
 
 // FUNCTION TO GENERATE A THANK YOU NOTE
-async function atcb_generate_ty(hostEl: ShadowRoot | HTMLElement, dataObj: ATCBConfig): Promise<void> {
+async function generate_ty(hostEl: ShadowRoot | HTMLElement, dataObj: ATCBConfig): Promise<void> {
   let host = hostEl as ShadowRoot;
   let data = dataObj;
   // if host is no shadowRoot, try to get the child shadowRoot (case, if called directly)
   if (!(hostEl as ShadowRoot).host) {
     host = (hostEl as HTMLElement).shadowRoot as ShadowRoot;
     // in this case, we also decorate the data (again)
-    data = await atcb_decorate_data(data);
+    data = await decorate_data(data);
   }
   // inline svg icons
   const copyIcon =
@@ -82,7 +82,7 @@ async function atcb_generate_ty(hostEl: ShadowRoot | HTMLElement, dataObj: ATCBC
   if ((!data.proKey || data.proKey === '') && !window.location.hostname.match(/^(localhost|.*\.add-to-calendar-pro.com)$/)) {
     return;
   }
-  const tyHost = (await atcb_generate_modal_host(host, data))!;
+  const tyHost = (await generate_modal_host(host, data))!;
   // get data
   const tyData = data.ty as ATCBTyData;
   // set default, if type is missing required information
@@ -91,24 +91,24 @@ async function atcb_generate_ty(hostEl: ShadowRoot | HTMLElement, dataObj: ATCBC
   }
   // define default headline
   if (!tyData.headline || tyData.headline === '') {
-    tyData.headline = atcb_translate_hook('thankyou', data) + '!';
+    tyData.headline = translate_hook('thankyou', data) + '!';
   }
   // prepare content with...
-  let tyContent = '<div class="pro"><p id="ty-success-msg">' + atcb_translate_hook('form.success.title', data) + '</p><div id="ty-content">';
+  let tyContent = '<div class="pro"><p id="ty-success-msg">' + translate_hook('form.success.title', data) + '</p><div id="ty-content">';
   // intro text
   if (tyData.text && tyData.text !== '') {
-    tyContent += atcb_rewrite_html_elements(tyData.text);
+    tyContent += rewrite_html_elements(tyData.text);
   }
   // share buttons, if type = share
   if (tyData.type === 'share') {
     tyContent += `<p class="pro-pt pro-share-buttons">
-    <a href="mailto:?subject=${encodeURIComponent(atcb_translate_hook('label.share.email_subject', data))}&body=%0A&#10142;%20${encodeURIComponent(tyData.url!)}%0A%0A" target="_blank" rel="noopener" class="atcb-modal-btn atcb-modal-btn-primary atcb-modal-btn-border btn-flex">
+    <a href="mailto:?subject=${encodeURIComponent(translate_hook('label.share.email_subject', data))}&body=%0A&#10142;%20${encodeURIComponent(tyData.url!)}%0A%0A" target="_blank" rel="noopener" class="atcb-modal-btn atcb-modal-btn-primary atcb-modal-btn-border btn-flex">
       ${mailIcon}
-      ${atcb_translate_hook('label.share.email', data)}
+      ${translate_hook('label.share.email', data)}
     </a>
     <button id="atcb-ty-share-copy" class="atcb-modal-btn atcb-modal-btn-primary atcb-modal-btn-border btn-flex">
       ${copyIcon}
-      ${atcb_translate_hook('label.share.copy', data)}
+      ${translate_hook('label.share.copy', data)}
     </button>
     </p>`;
   }
@@ -120,7 +120,7 @@ async function atcb_generate_ty(hostEl: ShadowRoot | HTMLElement, dataObj: ATCBC
       if (tyData.button_label && tyData.button_label !== '') {
         return tyData.button_label;
       }
-      return atcb_translate_hook('submit', data);
+      return translate_hook('submit', data);
     })();
     tyContent += '<form id="' + data.identifier + '-ty-form" class="pro-form' + (noIntro ? ' no-intro' : '') + '">';
     if (tyData.fields && tyData.fields.length > 0) {
@@ -139,7 +139,7 @@ async function atcb_generate_ty(hostEl: ShadowRoot | HTMLElement, dataObj: ATCBC
           /* do nothing */
         }
       }
-      const customForm = atcb_build_form(tyData.fields, data.identifier + '-ty');
+      const customForm = build_form(tyData.fields, data.identifier + '-ty');
       tyData.fields = customForm.fields;
       tyContent += customForm.html;
     }
@@ -153,23 +153,23 @@ async function atcb_generate_ty(hostEl: ShadowRoot | HTMLElement, dataObj: ATCBC
       if (tyData.button_label && tyData.button_label !== '') {
         return tyData.button_label;
       }
-      return atcb_translate_hook('continue', data);
+      return translate_hook('continue', data);
     })();
     tyContent += '<p class="pro-pt"><a href="' + tyData.url + '" target="_blank" rel="noopener" class="atcb-modal-btn atcb-modal-btn-primary atcb-modal-btn-border">' + label + '</a></p>';
   }
   tyContent += '</div></div>';
   // create modal
-  await atcb_create_modal(tyHost, data, 'checkmark', tyData.headline, tyContent);
+  await create_modal(tyHost, data, 'checkmark', tyData.headline, tyContent);
   // set enhanced click functionality
   // copy to clipboard, if type = share
   if (tyData.type === 'share') {
     const copyBtn = tyHost.getElementById('atcb-ty-share-copy') as HTMLButtonElement;
     copyBtn.addEventListener('click', async function () {
       try {
-        await atcb_copy_to_clipboard(tyData.url);
-        copyBtn.innerHTML = copiedIcon + atcb_translate_hook('label.share.copied', data) + '!';
+        await copy_to_clipboard(tyData.url);
+        copyBtn.innerHTML = copiedIcon + translate_hook('label.share.copied', data) + '!';
         setTimeout(function () {
-          copyBtn.innerHTML = copyIcon + atcb_translate_hook('label.share.copy', data);
+          copyBtn.innerHTML = copyIcon + translate_hook('label.share.copy', data);
         }, 3000);
       } catch (error) {
         console.error('Error copying to clipboard:', error);
@@ -192,9 +192,9 @@ async function atcb_generate_ty(hostEl: ShadowRoot | HTMLElement, dataObj: ATCBC
       e.preventDefault();
       tyFormSubmitting.style.display = 'block';
       tyFormSubmit.style.display = 'none';
-      const valid = atcb_validate_form(tyHost, tyData.fields!);
+      const valid = validate_form(tyHost, tyData.fields!);
       if (!valid) {
-        errorMsg.textContent = atcb_translate_hook('form.error.required', data) + '.';
+        errorMsg.textContent = translate_hook('form.error.required', data) + '.';
       }
       // submit data
       if (valid) {
@@ -228,7 +228,7 @@ async function atcb_generate_ty(hostEl: ShadowRoot | HTMLElement, dataObj: ATCBC
           (tyHost.getElementById('ty-content') as HTMLElement).style.display = 'none';
           return;
         }
-        errorMsg.textContent = atcb_translate_hook('form.error.sending', data) + '.';
+        errorMsg.textContent = translate_hook('form.error.sending', data) + '.';
       }
       tyForm.classList.add('form-error');
       tyFormSubmitting.style.display = 'none';
@@ -244,7 +244,7 @@ async function atcb_generate_ty(hostEl: ShadowRoot | HTMLElement, dataObj: ATCBC
 }
 
 // FUNCTION TO GENERATE AN RSVP FORM
-async function atcb_generate_rsvp_form(host: ShadowRoot, data: ATCBConfig, hostEl: HTMLElement, keyboardTrigger: boolean = false): Promise<void> {
+async function generate_rsvp_form(host: ShadowRoot, data: ATCBConfig, hostEl: HTMLElement, keyboardTrigger: boolean = false): Promise<void> {
   /*!
    *  @preserve
    *  PER LICENSE AGREEMENT, YOU ARE NOT ALLOWED TO REMOVE OR CHANGE THIS FUNCTION!
@@ -260,38 +260,38 @@ async function atcb_generate_rsvp_form(host: ShadowRoot, data: ATCBConfig, hostE
   const sentStatus = localStorage.getItem(data.proKey + '-rsvp-sent') === 'true' || null;
   if (sentStatus) {
     rsvpContent += '<div id="rsvp-sent-content">';
-    rsvpContent += '<p>' + atcb_translate_hook('form.success.already', data) + '</p>';
+    rsvpContent += '<p>' + translate_hook('form.success.already', data) + '</p>';
     // button
     if (!data.hideButton) rsvpContent += '<div id="rsvp-atcb"></div>';
-    if (data.inlineRsvp) rsvpContent += '<button id="pro-form-restart" ' + (data.disabled && 'disabled') + ' class="atcb-modal-btn atcb-modal-btn btn-small atcb-modal-btn-border">' + atcb_translate_hook('label.rsvp.restart', data) + '</button>';
+    if (data.inlineRsvp) rsvpContent += '<button id="pro-form-restart" ' + (data.disabled && 'disabled') + ' class="atcb-modal-btn atcb-modal-btn btn-small atcb-modal-btn-border">' + translate_hook('label.rsvp.restart', data) + '</button>';
     rsvpContent += '</div>';
   }
-  rsvpContent += '<div id="rsvp-success-msg"><p>' + atcb_translate_hook('form.success.sent', data) + '</p><p id="rsvp-success-msg-email">' + atcb_translate_hook('form.success.email', data) + '</p><p id="rsvp-success-msg-doi">' + atcb_translate_hook('form.success.doi', data) + '</p></div>';
-  rsvpContent += '<div id="rsvp-success-msg-demo">' + atcb_translate_hook('form.success.demo', data) + '</div>';
+  rsvpContent += '<div id="rsvp-success-msg"><p>' + translate_hook('form.success.sent', data) + '</p><p id="rsvp-success-msg-email">' + translate_hook('form.success.email', data) + '</p><p id="rsvp-success-msg-doi">' + translate_hook('form.success.doi', data) + '</p></div>';
+  rsvpContent += '<div id="rsvp-success-msg-demo">' + translate_hook('form.success.demo', data) + '</div>';
   rsvpContent += '<div id="rsvp-content">';
   // intro text
   if (rsvpData.text && rsvpData.text !== '') {
-    rsvpContent += atcb_rewrite_html_elements(rsvpData.text);
+    rsvpContent += rewrite_html_elements(rsvpData.text);
   }
   rsvpContent += '<form id="' + data.identifier + '-rsvp-form" class="pro-form' + (noIntro ? ' no-intro' : '') + (noHeadline ? ' no-headline' : '') + '">';
   // add status, amount, and email fields based on situation
   const staticID = data.proKey || 'demo-rsvp';
   if (rsvpData.initial_confirmation === false) {
     rsvpContent += '<div id="rsvp-status-group">';
-    rsvpContent += '<p>' + atcb_translate_hook('form.status.title', data) + '</p>';
+    rsvpContent += '<p>' + translate_hook('form.status.title', data) + '</p>';
     rsvpContent +=
       '<div class="pro-field pro-field-type-radio"><div><input type="radio" name="' +
       staticID +
       '-status" id="' +
       data.identifier +
       '-rsvp-status-confirmed" aria-label="' +
-      atcb_translate_hook('form.status.confirmed', data) +
+      translate_hook('form.status.confirmed', data) +
       '" checked value="confirmed" ' +
       (data.disabled && 'disabled') +
       ' /><label for="' +
       data.identifier +
       '-rsvp-status-confirmed" class="status-confirmed"><span>' +
-      atcb_translate_hook('form.status.confirmed', data) +
+      translate_hook('form.status.confirmed', data) +
       '</span></label></div>';
     if (rsvpData.maybe_option === true) {
       rsvpContent +=
@@ -300,13 +300,13 @@ async function atcb_generate_rsvp_form(host: ShadowRoot, data: ATCBConfig, hostE
         '-status" id="' +
         data.identifier +
         '-rsvp-status-undecided" aria-label="' +
-        atcb_translate_hook('form.status.undecided', data) +
+        translate_hook('form.status.undecided', data) +
         '" value="undecided" ' +
         (data.disabled && 'disabled') +
         ' /><label for="' +
         data.identifier +
         '-rsvp-status-undecided" class="status-undecided"><span>' +
-        atcb_translate_hook('form.status.undecided', data) +
+        translate_hook('form.status.undecided', data) +
         '</span></label></div>';
     }
     rsvpContent +=
@@ -315,13 +315,13 @@ async function atcb_generate_rsvp_form(host: ShadowRoot, data: ATCBConfig, hostE
       '-status" id="' +
       data.identifier +
       '-rsvp-status-declined" aria-label="' +
-      atcb_translate_hook('form.status.declined', data) +
+      translate_hook('form.status.declined', data) +
       '" value="declined" ' +
       (data.disabled && 'disabled') +
       ' /><label for="' +
       data.identifier +
       '-rsvp-status-declined" class="status-declined"><span>' +
-      atcb_translate_hook('form.status.declined', data) +
+      translate_hook('form.status.declined', data) +
       '</span></label></div></div>';
     rsvpContent += '</div>';
   } else {
@@ -331,8 +331,8 @@ async function atcb_generate_rsvp_form(host: ShadowRoot, data: ATCBConfig, hostE
   if (maxAmount === 1) {
     hiddenContent += '<input type="hidden" name="' + staticID + '-amount" id="' + data.identifier + '-rsvp-amount" value="1" />';
   } else {
-    rsvpContent += '<div class="pro-field"><label for="' + data.identifier + '-rsvp-amount">' + atcb_translate_hook('form.amount', data) + ' (' + atcb_translate_hook('form.max', data) + ' ' + maxAmount + ')<span>*</span></label>';
-    rsvpContent += '<input type="number" name="' + staticID + '-amount" min="1" max="' + maxAmount + '" id="' + data.identifier + '-rsvp-amount" ' + (data.disabled && 'disabled') + ' aria-label="' + atcb_translate_hook('form.amount', data) + '" value="1" /></div>';
+    rsvpContent += '<div class="pro-field"><label for="' + data.identifier + '-rsvp-amount">' + translate_hook('form.amount', data) + ' (' + translate_hook('form.max', data) + ' ' + maxAmount + ')<span>*</span></label>';
+    rsvpContent += '<input type="number" name="' + staticID + '-amount" min="1" max="' + maxAmount + '" id="' + data.identifier + '-rsvp-amount" ' + (data.disabled && 'disabled') + ' aria-label="' + translate_hook('form.amount', data) + '" value="1" /></div>';
   }
   const attendee = (function () {
     if (data.dates![0]!.attendee && data.dates![0]!.attendee !== '') {
@@ -349,8 +349,8 @@ async function atcb_generate_rsvp_form(host: ShadowRoot, data: ATCBConfig, hostE
     if (attendee) {
       hiddenContent += '<input type="hidden" name="email" id="' + data.identifier + '-rsvp-email" value="' + attendee + '" />';
     } else {
-      rsvpContent += '<div class="pro-field"><label for="' + data.identifier + '-rsvp-email">' + atcb_translate_hook('form.email', data) + '<span>*</span></label>';
-      rsvpContent += '<input type="email" name="email" id="' + data.identifier + '-rsvp-email" ' + (data.disabled && 'disabled') + ' aria-label="' + atcb_translate_hook('form.email', data) + '" value="" /></div>';
+      rsvpContent += '<div class="pro-field"><label for="' + data.identifier + '-rsvp-email">' + translate_hook('form.email', data) + '<span>*</span></label>';
+      rsvpContent += '<input type="email" name="email" id="' + data.identifier + '-rsvp-email" ' + (data.disabled && 'disabled') + ' aria-label="' + translate_hook('form.email', data) + '" value="" /></div>';
     }
   } else {
     rsvpData.fields = rsvpData.fields!.map((field): ATCBProFormField => {
@@ -362,7 +362,7 @@ async function atcb_generate_rsvp_form(host: ShadowRoot, data: ATCBConfig, hostE
   }
   // add custom fields
   if (rsvpData.fields && rsvpData.fields.length > 0) {
-    const customForm = atcb_build_form(rsvpData.fields, data.identifier + '-rsvp', data.disabled);
+    const customForm = build_form(rsvpData.fields, data.identifier + '-rsvp', data.disabled);
     rsvpData.fields = customForm.fields;
     rsvpContent += customForm.html;
   }
@@ -372,10 +372,10 @@ async function atcb_generate_rsvp_form(host: ShadowRoot, data: ATCBConfig, hostE
     '<p class="pro-pt"><button type="submit" id="pro-form-submit" ' +
     (data.disabled && 'disabled') +
     ' class="atcb-modal-btn atcb-modal-btn-primary atcb-modal-btn-border">' +
-    atcb_translate_hook('submit', data) +
+    translate_hook('submit', data) +
     '</button><span id="pro-form-submitting" class="pro-waiting"><span>.</span><span>.</span><span>.</span></span></p>';
   if (rsvpData.seatsLeft && rsvpData.seatsLeft > 0) {
-    rsvpContent += '<p class="pro-form-fine">' + atcb_translate_hook('form.seatsleft', data) + ': <b>' + rsvpData.seatsLeft + '</b></p>';
+    rsvpContent += '<p class="pro-form-fine">' + translate_hook('form.seatsleft', data) + ': <b>' + rsvpData.seatsLeft + '</b></p>';
   }
   rsvpContent += '</form>';
   rsvpContent += '</div></div>';
@@ -383,8 +383,8 @@ async function atcb_generate_rsvp_form(host: ShadowRoot, data: ATCBConfig, hostE
   // the host for the form now is either the host or the modal host
   let rsvpHost = null as unknown as ShadowRoot;
   if (!data.inlineRsvp) {
-    rsvpHost = (await atcb_generate_modal_host(host, data)) as ShadowRoot;
-    await atcb_create_modal(rsvpHost, data, undefined, rsvpData.headline, rsvpContent, [{ type: 'none', label: atcb_translate_hook('label.rsvp.restart', data), small: true, primary: true, id: 'pro-form-restart' }] as never[], [], keyboardTrigger, {}, false);
+    rsvpHost = (await generate_modal_host(host, data)) as ShadowRoot;
+    await create_modal(rsvpHost, data, undefined, rsvpData.headline, rsvpContent, [{ type: 'none', label: translate_hook('label.rsvp.restart', data), small: true, primary: true, id: 'pro-form-restart' }] as never[], [], keyboardTrigger, {}, false);
   } else {
     rsvpHost = host;
     const rsvpInlineWrapper = document.createElement('div');
@@ -404,14 +404,14 @@ async function atcb_generate_rsvp_form(host: ShadowRoot, data: ATCBConfig, hostE
     rsvpInlineContent.classList.add('atcb-modal-content');
     rsvpInlineWrapper.append(rsvpInlineContent);
     if (!data.hideBranding) {
-      const atcbL = atcb_create_atcbl(rsvpHost, false, true);
-      rsvpInlineWrapper.append(atcbL as HTMLDivElement);
+      const list = create_atcbl(rsvpHost, false, true);
+      rsvpInlineWrapper.append(list as HTMLDivElement);
     }
     if (rsvpData.expired) {
-      rsvpInlineContent.innerHTML = '<div class="pro"><p>' + atcb_translate_hook('label.rsvp.expired', data) + '</p></div>';
+      rsvpInlineContent.innerHTML = '<div class="pro"><p>' + translate_hook('label.rsvp.expired', data) + '</p></div>';
       return;
     } else if (rsvpData.bookedOut) {
-      rsvpInlineContent.innerHTML = '<div class="pro"><p>' + atcb_translate_hook('label.rsvp.bookedout', data) + '</p></div>';
+      rsvpInlineContent.innerHTML = '<div class="pro"><p>' + translate_hook('label.rsvp.bookedout', data) + '</p></div>';
       return;
     } else {
       rsvpInlineContent.innerHTML = rsvpContent;
@@ -424,21 +424,21 @@ async function atcb_generate_rsvp_form(host: ShadowRoot, data: ATCBConfig, hostE
     restartBtn.style.display = 'none';
     if (restartBtn.parentElement) restartBtn.parentElement.style.display = 'none';
   };
-  atcb_log_event('openRSVP', data.identifier as string, data.identifier as string);
+  log_event('openRSVP', data.identifier as string, data.identifier as string);
   if (data.debug) {
     console.log('RSVP form for "' + data.identifier + '" created');
   }
   // if we are on the already-sent-screen, we render an atcb if not disabled
   if (sentStatus) {
-    const atcbHost = rsvpHost.getElementById('rsvp-atcb');
-    if (atcbHost && !data.hideButton) {
+    const buttonHost = rsvpHost.getElementById('rsvp-atcb');
+    if (buttonHost && !data.hideButton) {
       // make a copy of the data
-      const atcbData = JSON.parse(JSON.stringify(data));
+      const buttonData = JSON.parse(JSON.stringify(data));
       // force individual buttons without label
-      atcbData.hideTextLabelButton = true;
-      atcbData.hideIconButton = false;
-      atcbData.buttonsList = true;
-      renderButton(host, atcbHost as HTMLElement, atcbData);
+      buttonData.hideTextLabelButton = true;
+      buttonData.hideIconButton = false;
+      buttonData.buttonsList = true;
+      renderButton(host, buttonHost as HTMLElement, buttonData);
     }
   } else {
     hideRestartButton();
@@ -458,7 +458,7 @@ async function atcb_generate_rsvp_form(host: ShadowRoot, data: ATCBConfig, hostE
       const staticFields: ATCBProFormField[] = [{ type: 'number', name: data.proKey + '-amount', fieldId: data.identifier + '-rsvp-amount', required: true }];
       if (!customEmailField) staticFields.push({ type: 'email', name: 'email', fieldId: data.identifier + '-rsvp-email', required: true });
       const dynamicFields = Array.isArray(rsvpData.fields) ? rsvpData.fields : [];
-      let valid = atcb_validate_form(rsvpHost, [...staticFields, ...dynamicFields]);
+      let valid = validate_form(rsvpHost, [...staticFields, ...dynamicFields]);
       // if maxpp, make sure amount is not bigger
       const amountEl = rsvpHost.getElementById(data.identifier + '-rsvp-amount') as HTMLInputElement;
       const amount = parseInt(amountEl.value) || 1;
@@ -467,7 +467,7 @@ async function atcb_generate_rsvp_form(host: ShadowRoot, data: ATCBConfig, hostE
         valid = false;
       }
       if (!valid) {
-        errorMsg.textContent = atcb_translate_hook('form.error.required', data) + '.';
+        errorMsg.textContent = translate_hook('form.error.required', data) + '.';
       }
       // submit data
       if (valid) {
@@ -475,7 +475,7 @@ async function atcb_generate_rsvp_form(host: ShadowRoot, data: ATCBConfig, hostE
           // if no prokey, we just show a demo success message
           (rsvpHost.getElementById('rsvp-success-msg-demo') as HTMLElement).style.display = 'block';
           (rsvpHost.getElementById('rsvp-content') as HTMLElement).style.display = 'none';
-          atcb_log_event('successRSVP', data.identifier as string, data.identifier as string);
+          log_event('successRSVP', data.identifier as string, data.identifier as string);
           return;
         }
         let fieldsCopy: ATCBProFormField[] = rsvpData.fields ? JSON.parse(JSON.stringify(rsvpData.fields)) : [];
@@ -528,24 +528,24 @@ async function atcb_generate_rsvp_form(host: ShadowRoot, data: ATCBConfig, hostE
             (rsvpHost.getElementById('rsvp-success-msg-email') as HTMLElement).style.display = 'block';
           }
           (rsvpHost.getElementById('rsvp-content') as HTMLElement).style.display = 'none';
-          atcb_log_event('successRSVP', data.identifier as string, data.identifier as string);
+          log_event('successRSVP', data.identifier as string, data.identifier as string);
           // note: original passes a boolean here; Storage.setItem stringifies it at runtime to "true" (matching the getItem check above)
           localStorage.setItem(data.proKey + '-rsvp-sent', true as unknown as string);
           return;
         }
         const requestResult = request as ATCBPostErrorResult;
         if (requestResult.error && requestResult.error === 2) {
-          errorMsg.textContent = atcb_translate_hook('form.error.email', data) + '.';
+          errorMsg.textContent = translate_hook('form.error.email', data) + '.';
         } else if (requestResult.error && requestResult.error === 5) {
-          errorMsg.textContent = atcb_translate_hook('label.rsvp.expired', data) + '.';
+          errorMsg.textContent = translate_hook('label.rsvp.expired', data) + '.';
         } else if (requestResult.error && requestResult.error === 6) {
           if (amount > 1) {
-            errorMsg.textContent = atcb_translate_hook('form.error.bookedoutmany', data) + '.';
+            errorMsg.textContent = translate_hook('form.error.bookedoutmany', data) + '.';
           } else {
-            errorMsg.textContent = atcb_translate_hook('label.rsvp.bookedout', data) + '.';
+            errorMsg.textContent = translate_hook('label.rsvp.bookedout', data) + '.';
           }
         } else {
-          errorMsg.textContent = atcb_translate_hook('form.error.sending', data) + '.';
+          errorMsg.textContent = translate_hook('form.error.sending', data) + '.';
         }
       }
       rsvpForm.classList.add('form-error');
@@ -576,7 +576,7 @@ async function atcb_generate_rsvp_form(host: ShadowRoot, data: ATCBConfig, hostE
   }
 }
 
-async function atcb_generate_rsvp_button(host: ShadowRoot, data: ATCBConfig): Promise<boolean> {
+async function generate_rsvp_button(host: ShadowRoot, data: ATCBConfig): Promise<boolean> {
   const btnHostEl = host.querySelector('.atcb-initialized') as HTMLElement;
   // generate the wrapper div
   const buttonTriggerWrapper = document.createElement('div');
@@ -585,7 +585,7 @@ async function atcb_generate_rsvp_button(host: ShadowRoot, data: ATCBConfig): Pr
     buttonTriggerWrapper.classList.add('atcb-rtl');
   }
   btnHostEl.append(buttonTriggerWrapper);
-  atcb_set_sizes(buttonTriggerWrapper, data.sizes!);
+  set_sizes(buttonTriggerWrapper, data.sizes!);
   // generate the button trigger div
   const buttonTrigger = document.createElement('button');
   buttonTrigger.classList.add('atcb-button', 'atcb-click', 'atcb-single');
@@ -603,22 +603,22 @@ async function atcb_generate_rsvp_button(host: ShadowRoot, data: ATCBConfig): Pr
   const rsvpData = data.rsvp as ATCBRsvpData;
   const label = (function () {
     if (rsvpData.expired) {
-      return atcb_translate_hook('label.rsvp.expired', data);
+      return translate_hook('label.rsvp.expired', data);
     }
     if (rsvpData.bookedOut) {
-      return atcb_translate_hook('label.rsvp.bookedout', data);
+      return translate_hook('label.rsvp.bookedout', data);
     }
-    return atcb_translate_hook('label.rsvp.title', data);
+    return translate_hook('label.rsvp.title', data);
   })();
   // generate the label incl. eventListeners
-  atcb_generate_label(host, data, buttonTrigger, 'rsvp', !data.hideIconButton, label, true);
+  generate_label(host, data, buttonTrigger, 'rsvp', !data.hideIconButton, label, true);
   if (data.debug) {
     console.log('Add to Calendar RSVP Button "' + data.identifier + '" created');
   }
   return true;
 }
 
-async function atcb_check_bookings(proKey: string, dev: boolean = false): Promise<number> {
+async function check_bookings(proKey: string, dev: boolean = false): Promise<number> {
   try {
     const response = await fetch(`https://api${dev ? '-dev' : ''}.add-to-calendar-pro.com/dffb8bbd-ee5e-4a4f-a7ea-503af98ca468?prokey=${proKey}`, {
       method: 'GET',
@@ -635,7 +635,7 @@ async function atcb_check_bookings(proKey: string, dev: boolean = false): Promis
 }
 
 // SHARED FORM FUNCTIONS
-function atcb_build_form(fields: ATCBProFormField[], identifier: string = '', disabled: boolean = false): { html: string; fields: ATCBProFormField[] } {
+function build_form(fields: ATCBProFormField[], identifier: string = '', disabled: boolean = false): { html: string; fields: ATCBProFormField[] } {
   /*!
    *  @preserve
    *  PER LICENSE AGREEMENT, YOU ARE NOT ALLOWED TO REMOVE OR CHANGE THIS FUNCTION!
@@ -676,7 +676,7 @@ function atcb_build_form(fields: ATCBProFormField[], identifier: string = '', di
       if (field.type === 'hidden') {
         hiddenForm += '<input type="hidden" name="' + field.name + '" id="' + field.fieldId + '" value="' + fieldValue + '" />';
       } else {
-        fieldHtml += atcb_create_field_html(field.type as string, field.name as string, fieldLabel, field.fieldId as string, field.required, fieldValue, field.default as string | boolean, fieldPlaceholder, disabled);
+        fieldHtml += create_field_html(field.type as string, field.name as string, fieldLabel, field.fieldId as string, field.required, fieldValue, field.default as string | boolean, fieldPlaceholder, disabled);
       }
       if (field.type === 'radio') {
         fieldHtml += '</div>';
@@ -692,7 +692,7 @@ function atcb_build_form(fields: ATCBProFormField[], identifier: string = '', di
   return { html: form, fields: fields };
 }
 
-function atcb_create_field_html(type: string, name: string, fieldLabel: string, fieldId: string, required: boolean = false, fieldValue: string | boolean, defaultVal: string | boolean | null = null, fieldPlaceholder: string = '', disabled: boolean = false): string {
+function create_field_html(type: string, name: string, fieldLabel: string, fieldId: string, required: boolean = false, fieldValue: string | boolean, defaultVal: string | boolean | null = null, fieldPlaceholder: string = '', disabled: boolean = false): string {
   let fieldHtml = '';
   // add label
   if ((type === 'text' || type === 'email' || type === 'number') && fieldLabel !== '') {
@@ -725,7 +725,7 @@ function atcb_create_field_html(type: string, name: string, fieldLabel: string, 
   return fieldHtml;
 }
 
-function atcb_validate_form(host: ShadowRoot, fields: ATCBProFormField[]): boolean {
+function validate_form(host: ShadowRoot, fields: ATCBProFormField[]): boolean {
   /*!
    *  @preserve
    *  PER LICENSE AGREEMENT, YOU ARE NOT ALLOWED TO REMOVE OR CHANGE THIS FUNCTION!
@@ -735,11 +735,11 @@ function atcb_validate_form(host: ShadowRoot, fields: ATCBProFormField[]): boole
     if (field.type !== 'label' && field.type !== 'radio') {
       const input = host.getElementById(field.fieldId as string) as HTMLInputElement;
       if (field.type !== 'checkbox') {
-        input.value = atcb_secure_content(input.value.trim()) as string;
+        input.value = secure_content(input.value.trim()) as string;
         if (field.type === 'number') {
           input.value = input.value.replace(/\D/g, '');
         }
-        if (field.type === 'email' && input.value !== '' && !atcb_validEmail(input.value)) {
+        if (field.type === 'email' && input.value !== '' && !validEmail(input.value)) {
           input.classList.add('error');
           state = false;
           return;
@@ -825,4 +825,4 @@ async function sendPostRequest(url: string, fields: ATCBPostField[], header: { [
   }
 }
 
-export { atcb_generate_ty, atcb_generate_rsvp_form, atcb_generate_rsvp_button, atcb_check_bookings };
+export { generate_ty, generate_rsvp_form, generate_rsvp_button, check_bookings };

@@ -1,10 +1,10 @@
-import { atcbIsMobile, atcbIsiOS, atcbIsAndroid, atcbIsWebView } from '../core/globals';
-import { atcb_generate_time } from '../core/dates';
-import { atcb_open_cal_url } from './ical';
+import { isMobile, isIOS, isAndroid, isWebView } from '../core/globals';
+import { generate_time } from '../core/dates';
+import { open_cal_url } from './ical';
 import type { ATCBConfig, ATCBDateEntry } from '../types';
 
 // GOOGLE SUBSCRIPTION
-function atcb_subscribe_google(data: ATCBConfig, fileUrl: string): void {
+function subscribe_google(data: ATCBConfig, fileUrl: string): void {
   const baseUrl = 'https://calendar.google.com/calendar/u/0/r?cid=';
   const baseUrlApp = 'calendar.google.com/calendar?cid=';
   let isGoogleCalId = false;
@@ -15,32 +15,32 @@ function atcb_subscribe_google(data: ATCBConfig, fileUrl: string): void {
     }
     return encodeURIComponent(fileUrl);
   })();
-  if ((atcbIsAndroid() || data.fakeAndroid) && isGoogleCalId) {
-    if (!atcbIsWebView()) {
+  if ((isAndroid() || data.fakeAndroid) && isGoogleCalId) {
+    if (!isWebView()) {
       const httpsUrl = baseUrl + newFileUrl;
       const fallback = encodeURIComponent(httpsUrl);
       const intentUrl = 'intent://' + baseUrlApp + newFileUrl + '#Intent;scheme=https;package=com.google.android.calendar;S.browser_fallback_url=' + fallback + ';end';
-      atcb_open_cal_url(data, 'google', intentUrl, true);
+      open_cal_url(data, 'google', intentUrl, true);
     } else {
       // In WebViews, avoid intent scheme and open the regular https URL
-      atcb_open_cal_url(data, 'google', baseUrl + newFileUrl, true);
+      open_cal_url(data, 'google', baseUrl + newFileUrl, true);
     }
     return;
   }
-  atcb_open_cal_url(data, 'google', baseUrl + newFileUrl, true);
+  open_cal_url(data, 'google', baseUrl + newFileUrl, true);
 }
 
 // FUNCTION TO GENERATE THE GOOGLE URL
 // See specs at: https://github.com/InteractionDesignFoundation/add-event-to-calendar-docs/blob/main/services/google.md (unofficial)
-function atcb_generate_google(data: ATCBConfig, date: ATCBDateEntry, subEvent: 'all' | number | string = 'all'): void {
+function generate_google(data: ATCBConfig, date: ATCBDateEntry, subEvent: 'all' | number | string = 'all'): void {
   const urlParts: string[] = [];
-  if (atcbIsMobile() || data.fakeMobile) {
+  if (isMobile() || data.fakeMobile) {
     urlParts.push('https://calendar.google.com/calendar/render?action=TEMPLATE&');
   } else {
     urlParts.push('https://calendar.google.com/calendar/r/eventedit?');
   }
   // generate and add date
-  const formattedDate = atcb_generate_time(date, 'clean', 'google');
+  const formattedDate = generate_time(date, 'clean', 'google');
   urlParts.push('dates=' + encodeURIComponent(formattedDate.start) + '%2F' + encodeURIComponent(formattedDate.end));
   // setting time zone if given and not GMT +/- something, since this is not supported by Google Calendar
   // also do not set for all-day events, since this can lead to Google Calendar trying to adjust times
@@ -58,7 +58,7 @@ function atcb_generate_google(data: ATCBConfig, date: ATCBDateEntry, subEvent: '
   if (date.location && date.location !== '') {
     urlParts.push('location=' + encodeURIComponent(date.location));
     // TODO: Find a better solution for the next temporary workaround.
-    if (atcbIsiOS() || data.fakeIOS) {
+    if (isIOS() || data.fakeIOS) {
       // workaround to cover a bug, where, when using Google Calendar on an iPhone, the location is not recognized. So, for the moment, we simply add it to the description.
       if (tmpDataDescription.length > 0) {
         tmpDataDescription.push('<br><br>');
@@ -82,14 +82,14 @@ function atcb_generate_google(data: ATCBConfig, date: ATCBDateEntry, subEvent: '
     urlParts.push(availabilityPart);
   }
   let fullUrl = urlParts.join('&');
-  if (atcbIsAndroid() || data.fakeAndroid) {
+  if (isAndroid() || data.fakeAndroid) {
     // Avoid using intents inside WebViews; add a browser fallback for robustness
-    if (!atcbIsWebView()) {
+    if (!isWebView()) {
       const fallback = encodeURIComponent(fullUrl);
       fullUrl = 'intent://' + fullUrl.slice(8) + '#Intent;scheme=https;package=com.google.android.calendar;S.browser_fallback_url=' + fallback + ';end';
     }
   }
-  atcb_open_cal_url(data, 'google', fullUrl, false, subEvent);
+  open_cal_url(data, 'google', fullUrl, false, subEvent);
 }
 
-export { atcb_subscribe_google, atcb_generate_google };
+export { subscribe_google, generate_google };

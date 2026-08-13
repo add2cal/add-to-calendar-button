@@ -6,12 +6,12 @@
  * structurally valid rich-data output for hostile field content.
  */
 import { expect } from '@open-wc/testing';
-import { atcb_secure_url, atcb_rewrite_html_elements, atcb_secure_content } from '../../src/core/text.ts';
+import { secure_url, rewrite_html_elements, secure_content } from '../../src/core/text.ts';
 import { mountAtcb } from '../helpers/mount.js';
 import { btnId } from '../helpers/dom.js';
 
 describe('Group SEC - security hardening', () => {
-  it('SEC-01: atcb_secure_url allows the legitimate scheme set and relative urls', () => {
+  it('SEC-01: secure_url allows the legitimate scheme set and relative urls', () => {
     for (const url of [
       'https://example.com/x',
       'http://example.com',
@@ -24,32 +24,32 @@ describe('Group SEC - security hardening', () => {
       'styles/flat.css',
       '',
     ]) {
-      expect(atcb_secure_url(url, false), url).to.equal(true);
+      expect(secure_url(url, false), url).to.equal(true);
     }
   });
 
-  it('SEC-02: atcb_secure_url blocks script-capable and unexpected schemes', () => {
+  it('SEC-02: secure_url blocks script-capable and unexpected schemes', () => {
     for (const url of ['javascript:alert(1)', 'JaVaScRiPt:alert(1)', ' javascript:alert(1)', 'java\tscript:alert(1)', 'vbscript:x', 'data:text/html,<script>1</script>', 'file:///etc/passwd', 'blob:https://example.com/x']) {
-      expect(atcb_secure_url(url, false), JSON.stringify(url)).to.equal(false);
+      expect(secure_url(url, false), JSON.stringify(url)).to.equal(false);
     }
     // the path traversal check stays intact
-    expect(atcb_secure_url('https://example.com/../../x', false), 'traversal').to.equal(false);
+    expect(secure_url('https://example.com/../../x', false), 'traversal').to.equal(false);
   });
 
   it('SEC-03: description [url] linkifies only safe schemes and escapes attribute breakouts', () => {
-    const safe = atcb_rewrite_html_elements('[url]https://example.com/x|Details[/url]');
+    const safe = rewrite_html_elements('[url]https://example.com/x|Details[/url]');
     expect(safe).to.include('<a href="https://example.com/x"');
     expect(safe).to.include('>Details</a>');
-    const js = atcb_rewrite_html_elements('[url]javascript:alert(1)|Click[/url]');
+    const js = rewrite_html_elements('[url]javascript:alert(1)|Click[/url]');
     expect(js, 'no anchor for script urls').to.not.include('<a ');
     expect(js, 'label survives as plain text').to.include('Click');
-    const breakout = atcb_rewrite_html_elements('[url]https://example.com/x" onmouseover="evil()|Nice[/url]');
+    const breakout = rewrite_html_elements('[url]https://example.com/x" onmouseover="evil()|Nice[/url]');
     expect(breakout, 'quotes cannot terminate the attribute').to.not.include('" onmouseover="');
     expect(breakout).to.include('&quot;');
   });
 
   it('SEC-04: parsed json input cannot pollute the object prototype', async () => {
-    const hostile = atcb_secure_content(JSON.parse('{"name":"X","customLabels":{"__proto__":{"polluted":"yes"},"constructor":{"prototype":{"polluted2":"yes"}},"label.addtocalendar":"Fine"}}'));
+    const hostile = secure_content(JSON.parse('{"name":"X","customLabels":{"__proto__":{"polluted":"yes"},"constructor":{"prototype":{"polluted2":"yes"}},"label.addtocalendar":"Fine"}}'));
     expect({}.polluted, 'no pollution via __proto__').to.equal(undefined);
     expect({}.polluted2, 'no pollution via constructor.prototype').to.equal(undefined);
     expect(hostile.customLabels['label.addtocalendar'], 'legitimate keys survive').to.equal('Fine');

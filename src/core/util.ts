@@ -1,28 +1,28 @@
-import { atcbIsMobile, atcbIsiOS } from './globals';
-import { atcb_log_event } from './events';
-import { atcb_generate_ty } from '../ui/pro';
+import { isMobile, isIOS } from './globals';
+import { log_event } from './events';
+import { generate_ty } from '../ui/pro';
 import type { ATCBConfig } from '../types';
 
 // SHARED FUNCTION HOOK FOR WHEN EVENT GOT SAVED
-function atcb_saved_hook(host: ShadowRoot, data: ATCBConfig): void {
+function saved_hook(host: ShadowRoot, data: ATCBConfig): void {
   // log event
-  atcb_log_event('success', data.identifier as string, data.identifier as string);
+  log_event('success', data.identifier as string, data.identifier as string);
   // trigger ty modal, if given
-  if (data.ty && typeof atcb_generate_ty === 'function') {
+  if (data.ty && typeof generate_ty === 'function') {
     setTimeout(() => {
-      atcb_generate_ty(host, data);
+      generate_ty(host, data);
     }, 1000);
   }
 }
 
 // SHARED FUNCTION TO SAVE A FILE
-function atcb_save_file(file: string, filename: string): void {
+function save_file(file: string, filename: string): void {
   try {
     const save = document.createElementNS('http://www.w3.org/1999/xhtml', 'a') as HTMLAnchorElement;
     save.rel = 'noopener';
     save.href = file;
     // not using default target here, since this needs to happen _self on iOS (abstracted to mobile in general) and _blank at Firefox (abstracted to other setups) due to potential cross-origin restrictions
-    if (atcbIsMobile()) {
+    if (isMobile()) {
       save.target = '_self';
     } else {
       save.target = '_blank';
@@ -42,7 +42,7 @@ function atcb_save_file(file: string, filename: string): void {
 }
 
 // SHARED FUNCTION TO VALIDATE EMAIL ADDRESSES
-function atcb_validEmail(email: string): boolean {
+function validEmail(email: string): boolean {
   // rough format check first
   if (!/^.{0,70}@.{1,30}\.[a-z]{2,9}$/i.test(email)) {
     return false;
@@ -51,14 +51,14 @@ function atcb_validEmail(email: string): boolean {
 }
 
 // SHARED FUNCTION TO GENERATE UUIDs
-function atcb_generate_uuid(): string {
+function generate_uuid(): string {
   //const id = crypto.randomUUID(); // lacking support of Safari < 15.4 and Firefox < 95, which is too important for now
   const id = (([1e7] as unknown as string) + -1e3 + -4e3 + -8e3 + -1e11).replace(/[018]/g, (c) => ((c as unknown as number) ^ (crypto.getRandomValues(new Uint8Array(1))[0]! & (15 >> ((c as unknown as number) / 4)))).toString(16));
   return id;
 }
 
 // SHARED FUNCTION TO TRANSFORM A STRING
-function atcb_apply_transformation(value: unknown, transform?: string): unknown {
+function apply_transformation(value: unknown, transform?: string): unknown {
   if (!transform || !value) return value;
   switch (transform) {
     case 'upper':
@@ -71,7 +71,7 @@ function atcb_apply_transformation(value: unknown, transform?: string): unknown 
 }
 
 // SHARED FUNCTION TO COPY TO CLIPBOARD
-async function atcb_copy_to_clipboard(dataString: unknown): Promise<string> {
+async function copy_to_clipboard(dataString: unknown): Promise<string> {
   const v = ((dataString ?? '') as { toString(): string }).toString().trim();
   if (!v) throw new Error('No value to copy!');
   // Helper: legacy copy using a hidden textarea
@@ -94,7 +94,7 @@ async function atcb_copy_to_clipboard(dataString: unknown): Promise<string> {
     try {
       ta.focus();
       ta.select();
-      if (atcbIsiOS()) {
+      if (isIOS()) {
         ta.selectionStart = 0;
         ta.selectionEnd = v.length;
       }
@@ -149,7 +149,7 @@ async function atcb_copy_to_clipboard(dataString: unknown): Promise<string> {
 
 // SHARED DEBOUNCE FUNCTIONS
 // going for last call debounce
-function atcb_debounce<A extends unknown[]>(this: void, func: (...args: A) => unknown, timeout = 200): (...args: A) => void {
+function debounce<A extends unknown[]>(this: void, func: (...args: A) => unknown, timeout = 200): (...args: A) => void {
   let timer: ReturnType<typeof setTimeout> | undefined;
   return (...args: A) => {
     clearTimeout(timer);
@@ -159,7 +159,7 @@ function atcb_debounce<A extends unknown[]>(this: void, func: (...args: A) => un
   };
 }
 // dropping subsequent calls debounce
-function atcb_debounce_leading<A extends unknown[]>(this: void, func: (...args: A) => unknown, timeout = 300): (...args: A) => void {
+function debounce_leading<A extends unknown[]>(this: void, func: (...args: A) => unknown, timeout = 300): (...args: A) => void {
   let timer: ReturnType<typeof setTimeout> | undefined;
   return (...args: A) => {
     if (!timer) {
@@ -172,4 +172,4 @@ function atcb_debounce_leading<A extends unknown[]>(this: void, func: (...args: 
   };
 }
 
-export { atcb_saved_hook, atcb_save_file, atcb_validEmail, atcb_generate_uuid, atcb_apply_transformation, atcb_copy_to_clipboard, atcb_debounce, atcb_debounce_leading };
+export { saved_hook, save_file, validEmail, generate_uuid, apply_transformation, copy_to_clipboard, debounce, debounce_leading };

@@ -2,8 +2,8 @@
  * Output-capture helpers.
  *
  * The library delivers its results in two ways:
- *  1. Calendar URLs -> window.open(url, target)      [atcb_open_cal_url]
- *  2. ICS files     -> ad-hoc <a> created via document.createElementNS + synthetic click [atcb_save_file]
+ *  1. Calendar URLs -> window.open(url, target)      [open_cal_url]
+ *  2. ICS files     -> ad-hoc <a> created via document.createElementNS + synthetic click [save_file]
  *
  * These interceptors capture both without any navigation happening in the test browser.
  */
@@ -28,7 +28,7 @@ export function interceptWindowOpen() {
 }
 
 /**
- * Intercepts file-save anchors (atcb_save_file creates them via document.createElementNS
+ * Intercepts file-save anchors (save_file creates them via document.createElementNS
  * and dispatches a synthetic click without appending to the DOM).
  * Returns { saves, restore }.
  * saves: Array<{ href: string, download: string, target: string }>

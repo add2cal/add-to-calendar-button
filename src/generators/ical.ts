@@ -1,16 +1,16 @@
 import { tzlib_get_ical_block } from 'timezones-ical-library';
-import { atcbVersion, atcbIsiOS, atcbIsAndroid, atcbIsSafari, atcbIsWebView, atcbIsProblematicWebView, atcbDefaultTarget } from '../core/globals';
-import { atcb_generate_time, atcb_format_datetime } from '../core/dates';
-import { atcb_secure_url, atcb_rewrite_ical_text, atcb_format_ical_lines } from '../core/text';
-import { atcb_save_file, atcb_copy_to_clipboard } from '../core/util';
-import { atcb_result_channel } from '../core/globals';
-import { atcb_create_modal } from '../ui/generate';
-import { atcb_translate_hook } from '../i18n/index';
+import { atcbVersion, isIOS, isAndroid, isSafari, isWebView, isProblematicWebView, defaultTarget } from '../core/globals';
+import { generate_time, format_datetime } from '../core/dates';
+import { secure_url, rewrite_ical_text, format_ical_lines } from '../core/text';
+import { save_file, copy_to_clipboard } from '../core/util';
+import { resultChannel } from '../core/globals';
+import { create_modal } from '../ui/generate';
+import { translate_hook } from '../i18n/index';
 import type { ATCBConfig } from '../types';
 
 // FUNCTION TO OPEN THE URL
 // normalize a list-ish ics option value (array or comma-separated string)
-function atcb_ics_option_list(value: string[] | string | undefined): string[] {
+function ics_option_list(value: string[] | string | undefined): string[] {
   if (!value) return [];
   // attribute parsing may deliver arrays whose items still carry commas - flatten those too
   return (Array.isArray(value) ? value : [String(value)])
@@ -19,9 +19,9 @@ function atcb_ics_option_list(value: string[] | string | undefined): string[] {
     .filter((item) => item !== '');
 }
 
-function atcb_open_cal_url(data: ATCBConfig, type: string, url = '', subscribe = false, subEvent: 'all' | number | string | null = null, target = ''): void {
+function open_cal_url(data: ATCBConfig, type: string, url = '', subscribe = false, subEvent: 'all' | number | string | null = null, target = ''): void {
   if (target === '') {
-    target = atcbDefaultTarget;
+    target = defaultTarget;
   }
   if (data.proxy && data.proKey && data.proKey !== '') {
     const urlType = subscribe ? 's' : 'o';
@@ -43,13 +43,13 @@ function atcb_open_cal_url(data: ATCBConfig, type: string, url = '', subscribe =
     })();
     const host = data.domain ? data.domain : data.dev ? 'dev.caldn.net' : 'caldn.net';
     url = `https://${host}/${data.proKey}/${urlType}/${type}${query}`;
-    if (!atcb_secure_url(url)) {
+    if (!secure_url(url)) {
       return;
     }
   }
-  if (atcb_secure_url(url)) {
-    if (atcb_result_channel.active()) {
-      atcb_result_channel.push(url);
+  if (secure_url(url)) {
+    if (resultChannel.active()) {
+      resultChannel.push(url);
       return;
     }
     const newTab = window.open(url, target);
@@ -60,23 +60,23 @@ function atcb_open_cal_url(data: ATCBConfig, type: string, url = '', subscribe =
 }
 
 // ICAL SUBSCRIPTION
-function atcb_subscribe_ical(data: ATCBConfig, fileUrl: string, type: string, host: ShadowRoot | null = null, keyboardTrigger = false): void {
+function subscribe_ical(data: ATCBConfig, fileUrl: string, type: string, host: ShadowRoot | null = null, keyboardTrigger = false): void {
   // for Chrome on iOS, we can not directly open the file, but we can show a modal with instructions
-  if (atcbIsiOS() && !atcbIsSafari()) {
-    atcb_ical_copy_note(host as unknown as ShadowRoot, fileUrl, data, keyboardTrigger);
+  if (isIOS() && !isSafari()) {
+    ical_copy_note(host as unknown as ShadowRoot, fileUrl, data, keyboardTrigger);
     return;
   }
-  atcb_open_cal_url(data, type, fileUrl, true);
+  open_cal_url(data, type, fileUrl, true);
 }
 
 // FUNCTION TO GENERATE THE iCAL FILE (also for apple - see above)
 // See specs at: https://www.rfc-editor.org/rfc/rfc5545.html
-function atcb_generate_ical(host: ShadowRoot, data: ATCBConfig, type: string, subEvent: 'all' | number | string = 'all', keyboardTrigger = false): void {
+function generate_ical(host: ShadowRoot, data: ATCBConfig, type: string, subEvent: 'all' | number | string = 'all', keyboardTrigger = false): void {
   if (subEvent !== 'all') {
     subEvent = parseInt(subEvent as string);
   }
   // define the right filename
-  const filename = atcb_determine_ical_filename(data, subEvent);
+  const filename = determine_ical_filename(data, subEvent);
   // check for a given explicit file...
   const givenIcsFile = (function () {
     // ignore a given file, if there is an attendee or customVar provided at the host level, as this would need to be added to the file
@@ -96,16 +96,16 @@ function atcb_generate_ical(host: ShadowRoot, data: ATCBConfig, type: string, su
   })() as string;
   // if we are in proxy mode, we can directly redirect
   if (data.proxy) {
-    atcb_open_cal_url(data, type, '', false, subEvent);
+    open_cal_url(data, type, '', false, subEvent);
     return;
   }
   // else, we directly load it (not if iOS and WebView - will be catched further down - except it is explicitely bridged)
-  if (givenIcsFile !== '' && ((!atcbIsiOS() && !data.fakeIOS) || !atcbIsWebView() || data.bypassWebViewCheck)) {
-    if (atcb_result_channel.active()) {
-      atcb_result_channel.push(givenIcsFile);
+  if (givenIcsFile !== '' && ((!isIOS() && !data.fakeIOS) || !isWebView() || data.bypassWebViewCheck)) {
+    if (resultChannel.active()) {
+      resultChannel.push(givenIcsFile);
       return;
     }
-    atcb_save_file(givenIcsFile, filename);
+    save_file(givenIcsFile, filename);
     return;
   }
   // otherwise, generate one on the fly
@@ -148,7 +148,7 @@ function atcb_generate_ical(host: ShadowRoot, data: ATCBConfig, type: string, su
     return data.dates!.length - 1;
   })();
   for (let i = loopStart; i <= loopEnd; i++) {
-    const formattedDate = atcb_generate_time(data.dates![`${i}`]!, 'clean', 'ical');
+    const formattedDate = generate_time(data.dates![`${i}`]!, 'clean', 'ical');
     // get the timezone addon string for dates and include time zone information, if set and if not allday (not necessary in that case)
     const timeAddon = (function () {
       if (formattedDate.allday) {
@@ -172,27 +172,27 @@ function atcb_generate_ical(host: ShadowRoot, data: ATCBConfig, type: string, su
     if (data.dates![`${i}`]!.uid && data.dates![`${i}`]!.uid !== '') {
       ics_lines.push('UID:' + data.dates![`${i}`]!.uid);
     }
-    ics_lines.push('DTSTAMP:' + atcb_format_datetime(now, 'clean', true));
+    ics_lines.push('DTSTAMP:' + format_datetime(now, 'clean', true));
     ics_lines.push('DTSTART' + timeAddon + ':' + formattedDate.start);
     ics_lines.push('DTEND' + timeAddon + ':' + formattedDate.end);
-    ics_lines.push('SUMMARY:' + atcb_rewrite_ical_text(data.dates![`${i}`]!.name!));
+    ics_lines.push('SUMMARY:' + rewrite_ical_text(data.dates![`${i}`]!.name!));
     if (data.dates![`${i}`]!.descriptionHtmlFreeICal && data.dates![`${i}`]!.descriptionHtmlFreeICal !== '') {
-      ics_lines.push('DESCRIPTION:' + atcb_rewrite_ical_text(data.dates![`${i}`]!.descriptionHtmlFreeICal as string));
+      ics_lines.push('DESCRIPTION:' + rewrite_ical_text(data.dates![`${i}`]!.descriptionHtmlFreeICal as string));
     }
     if (data.dates![`${i}`]!.description && data.dates![`${i}`]!.description !== '') {
-      ics_lines.push('X-ALT-DESC;FMTTYPE=text/html:\r\n <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">\r\n <HTML><BODY>\r\n ' + atcb_rewrite_ical_text(data.dates![`${i}`]!.description!) + '\r\n </BODY></HTML>');
+      ics_lines.push('X-ALT-DESC;FMTTYPE=text/html:\r\n <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">\r\n <HTML><BODY>\r\n ' + rewrite_ical_text(data.dates![`${i}`]!.description!) + '\r\n </BODY></HTML>');
     }
     if (data.dates![`${i}`]!.location && data.dates![`${i}`]!.location !== '') {
-      ics_lines.push('LOCATION:' + atcb_rewrite_ical_text(data.dates![`${i}`]!.location!));
+      ics_lines.push('LOCATION:' + rewrite_ical_text(data.dates![`${i}`]!.location!));
     }
     if (data.dates![`${i}`]!.organizer && data.dates![`${i}`]!.organizer !== '') {
       const organizerParts = (data.dates![`${i}`]!.organizer as string).split('|');
-      ics_lines.push('ORGANIZER;CN=' + atcb_rewrite_ical_text(organizerParts[0]!, true) + ':MAILTO:' + organizerParts[1]);
+      ics_lines.push('ORGANIZER;CN=' + rewrite_ical_text(organizerParts[0]!, true) + ':MAILTO:' + organizerParts[1]);
     }
     if (data.dates![`${i}`]!.attendee && data.dates![`${i}`]!.attendee !== '') {
       const attendeeParts = (data.dates![`${i}`]!.attendee as string).split('|');
       if (attendeeParts.length === 2) {
-        ics_lines.push('ATTENDEE;CUTYPE=INDIVIDUAL;ROLE=REQ-PARTICIPANT;PARTSTAT=ACCEPTED;CN=' + atcb_rewrite_ical_text(attendeeParts[0]!, true) + ';X-NUM-GUESTS=0:mailto:' + attendeeParts[1]);
+        ics_lines.push('ATTENDEE;CUTYPE=INDIVIDUAL;ROLE=REQ-PARTICIPANT;PARTSTAT=ACCEPTED;CN=' + rewrite_ical_text(attendeeParts[0]!, true) + ';X-NUM-GUESTS=0:mailto:' + attendeeParts[1]);
       } else {
         ics_lines.push('ATTENDEE;CUTYPE=INDIVIDUAL;ROLE=REQ-PARTICIPANT;PARTSTAT=ACCEPTED;CN=' + attendeeParts[0] + ';X-NUM-GUESTS=0:mailto:' + attendeeParts[0]);
       }
@@ -220,9 +220,9 @@ function atcb_generate_ical(host: ShadowRoot, data: ATCBConfig, type: string, su
     if (entry.icsUrl && entry.icsUrl !== '') {
       ics_lines.push('URL:' + entry.icsUrl);
     }
-    const categories = atcb_ics_option_list(entry.icsCategories);
+    const categories = ics_option_list(entry.icsCategories);
     if (categories.length > 0) {
-      ics_lines.push('CATEGORIES:' + categories.map((category) => atcb_rewrite_ical_text(category)).join(','));
+      ics_lines.push('CATEGORIES:' + categories.map((category) => rewrite_ical_text(category)).join(','));
     }
     if (entry.icsClass && String(entry.icsClass) !== '') {
       ics_lines.push('CLASS:' + String(entry.icsClass).toUpperCase());
@@ -238,16 +238,16 @@ function atcb_generate_ical(host: ShadowRoot, data: ATCBConfig, type: string, su
       // Apple Calendar only renders its map preview when the structured location's
       // title matches the LOCATION property - so it is derived, not configurable
       if (entry.location && entry.location !== '') {
-        ics_lines.push('X-APPLE-STRUCTURED-LOCATION;VALUE=URI;X-APPLE-RADIUS=100;X-TITLE=' + atcb_rewrite_ical_text(entry.location, true) + ':geo:' + lat + ',' + lon);
+        ics_lines.push('X-APPLE-STRUCTURED-LOCATION;VALUE=URI;X-APPLE-RADIUS=100;X-TITLE=' + rewrite_ical_text(entry.location, true) + ':geo:' + lat + ',' + lon);
       }
     }
-    for (const attachUrl of atcb_ics_option_list(entry.icsAttach)) {
+    for (const attachUrl of ics_option_list(entry.icsAttach)) {
       ics_lines.push('ATTACH:' + attachUrl);
     }
     // exdate pairs with recurrence (single-date configs only) and mirrors the
     // DTSTART form: same value type, same time zone reference, same wall-clock time
     if (i === 0 && data.recurrence && data.recurrence !== '') {
-      const exdates = atcb_ics_option_list(data.icsExdate);
+      const exdates = ics_option_list(data.icsExdate);
       if (exdates.length > 0) {
         const exdateValues = exdates.map((exdate) => {
           const datePart = exdate.replace(/-/g, '');
@@ -263,7 +263,7 @@ function atcb_generate_ical(host: ShadowRoot, data: ATCBConfig, type: string, su
       const trigger = /^\d+$/.test(String(entry.icsReminder)) ? '-PT' + parseInt(String(entry.icsReminder), 10) + 'M' : String(entry.icsReminder).toUpperCase();
       ics_lines.push('BEGIN:VALARM');
       ics_lines.push('ACTION:DISPLAY');
-      ics_lines.push('DESCRIPTION:' + atcb_rewrite_ical_text(entry.name || 'Reminder'));
+      ics_lines.push('DESCRIPTION:' + rewrite_ical_text(entry.name || 'Reminder'));
       ics_lines.push('TRIGGER:' + trigger);
       ics_lines.push('END:VALARM');
     }
@@ -272,24 +272,24 @@ function atcb_generate_ical(host: ShadowRoot, data: ATCBConfig, type: string, su
   ics_lines.push('END:VCALENDAR');
   // if we got to this point with an explicitely given iCal file, we are on an iOS device
   // (but at some wrong environment). In this case, we use it as dataUrl to then show a modal
-  const icsContent = givenIcsFile !== '' ? '' : atcb_format_ical_lines(ics_lines.join('\r\n'));
+  const icsContent = givenIcsFile !== '' ? '' : format_ical_lines(ics_lines.join('\r\n'));
   const dataUrl = givenIcsFile !== '' ? givenIcsFile : 'data:text/calendar;charset=utf-8,' + encodeURIComponent(icsContent);
-  if (atcb_result_channel.active()) {
-    atcb_result_channel.push(givenIcsFile !== '' ? givenIcsFile : icsContent);
+  if (resultChannel.active()) {
+    resultChannel.push(givenIcsFile !== '' ? givenIcsFile : icsContent);
     return;
   }
   // in in-app browser cases (WebView), we offer a copy option, since the on-the-fly client side generation is usually not supported
   // for Android, we are more specific than with iOS and only go for specific apps at the moment
   // for Chrome on iOS we basically do the same
-  if ((atcbIsiOS() && !atcbIsSafari()) || (atcbIsWebView() && (atcbIsiOS() || (atcbIsAndroid() && atcbIsProblematicWebView())))) {
-    atcb_ical_copy_note(host, dataUrl, data, keyboardTrigger);
+  if ((isIOS() && !isSafari()) || (isWebView() && (isIOS() || (isAndroid() && isProblematicWebView())))) {
+    ical_copy_note(host, dataUrl, data, keyboardTrigger);
     return;
   }
   // save the file dialog in all other cases
-  atcb_save_file(dataUrl, filename);
+  save_file(dataUrl, filename);
 }
 
-function atcb_determine_ical_filename(data: ATCBConfig, subEvent: 'all' | number | string): string {
+function determine_ical_filename(data: ATCBConfig, subEvent: 'all' | number | string): string {
   const filenameSuffix = (function () {
     if (subEvent != 'all' && subEvent != 0) {
       return '-' + parseInt(subEvent as string) + 1;
@@ -310,22 +310,22 @@ function atcb_determine_ical_filename(data: ATCBConfig, subEvent: 'all' | number
 
 // Copy a link to the clipboard and return the matching modal content: the confirmation
 // text on success, or an honest failure text plus a readonly input carrying the link
-// for manual copying (select-on-focus is wired by atcb_wire_clipboard_input after the
+// for manual copying (select-on-focus is wired by wire_clipboard_input after the
 // modal rendered)
-async function atcb_clipboard_note_content(copyValue: string, data: ATCBConfig): Promise<string> {
+async function clipboard_note_content(copyValue: string, data: ATCBConfig): Promise<string> {
   try {
-    await atcb_copy_to_clipboard(copyValue);
-    return atcb_translate_hook('modal.clipboard.text', data);
+    await copy_to_clipboard(copyValue);
+    return translate_hook('modal.clipboard.text', data);
   } catch (e) {
     console.warn(e);
     const escaped = copyValue.replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;');
-    return atcb_translate_hook('modal.clipboard.failed', data) + '<br><input type="text" class="atcb-modal-clipboard-input" readonly value="' + escaped + '" aria-label="' + atcb_translate_hook('label.share.copy', data) + '" />';
+    return translate_hook('modal.clipboard.failed', data) + '<br><input type="text" class="atcb-modal-clipboard-input" readonly value="' + escaped + '" aria-label="' + translate_hook('label.share.copy', data) + '" />';
   }
 }
 
 // make a manual-copy input select its content on focus (nothing to do when the
 // clipboard write succeeded and no input was rendered)
-function atcb_wire_clipboard_input(data: ATCBConfig): void {
+function wire_clipboard_input(data: ATCBConfig): void {
   const modalHost = document.getElementById(data.identifier + '-modal-host');
   const input = modalHost && modalHost.shadowRoot ? (modalHost.shadowRoot.querySelector('.atcb-modal-clipboard-input') as HTMLInputElement | null) : null;
   if (input) {
@@ -333,35 +333,26 @@ function atcb_wire_clipboard_input(data: ATCBConfig): void {
   }
 }
 
-async function atcb_ical_copy_note(host: ShadowRoot, dataUrl: string, data: ATCBConfig, keyboardTrigger: boolean): Promise<void> {
+async function ical_copy_note(host: ShadowRoot, dataUrl: string, data: ATCBConfig, keyboardTrigger: boolean): Promise<void> {
   // putting the download url to the clipboard (with a manual-copy fallback in the note)
-  const clipboardNote = await atcb_clipboard_note_content(dataUrl, data);
+  const clipboardNote = await clipboard_note_content(dataUrl, data);
   // creating the modal
-  if (atcbIsiOS() && !atcbIsSafari()) {
-    await atcb_create_modal(
+  if (isIOS() && !isSafari()) {
+    await create_modal(
       host,
       data,
       'warning',
-      atcb_translate_hook('modal.opensafari.ical.h', data),
-      atcb_translate_hook('modal.opensafari.ical.text', data) + '<br>' + clipboardNote + '<br>' + atcb_translate_hook('modal.opensafari.ical.steps', data),
+      translate_hook('modal.opensafari.ical.h', data),
+      translate_hook('modal.opensafari.ical.text', data) + '<br>' + clipboardNote + '<br>' + translate_hook('modal.opensafari.ical.steps', data),
       [] as unknown as never[],
       [] as unknown as never[],
       keyboardTrigger,
     );
-    atcb_wire_clipboard_input(data);
+    wire_clipboard_input(data);
     return;
   }
-  await atcb_create_modal(
-    host,
-    data,
-    'warning',
-    atcb_translate_hook('modal.webview.ical.h', data),
-    atcb_translate_hook('modal.webview.ical.text', data) + '<br>' + clipboardNote + '<br>' + atcb_translate_hook('modal.webview.ical.steps', data),
-    [] as unknown as never[],
-    [] as unknown as never[],
-    keyboardTrigger,
-  );
-  atcb_wire_clipboard_input(data);
+  await create_modal(host, data, 'warning', translate_hook('modal.webview.ical.h', data), translate_hook('modal.webview.ical.text', data) + '<br>' + clipboardNote + '<br>' + translate_hook('modal.webview.ical.steps', data), [] as unknown as never[], [] as unknown as never[], keyboardTrigger);
+  wire_clipboard_input(data);
 }
 
-export { atcb_open_cal_url, atcb_subscribe_ical, atcb_generate_ical, atcb_determine_ical_filename, atcb_ical_copy_note, atcb_clipboard_note_content, atcb_wire_clipboard_input };
+export { open_cal_url, subscribe_ical, generate_ical, determine_ical_filename, ical_copy_note, clipboard_note_content, wire_clipboard_input };

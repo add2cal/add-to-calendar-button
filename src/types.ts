@@ -5,7 +5,7 @@
  * - ATCBInputConfig: what users provide (attributes arrive as strings, flags may be
  *   string-y booleans, options may be JSON strings). Aligned with the public
  *   AddToCalendarButtonType in index.d.ts (asserted by the type compatibility test).
- * - ATCBConfig: the decorated shape produced by atcb_decorate_data (flags coerced to
+ * - ATCBConfig: the decorated shape produced by decorate_data (flags coerced to
  *   real booleans, options normalized, dates array populated, internal fields added).
  *
  * Decorated fields stay optional on purpose: the decoration pipeline fills them at
@@ -182,7 +182,7 @@ export interface ATCBInputConfig {
 }
 
 /**
- * Decorated config as produced by atcb_decorate_data and consumed by
+ * Decorated config as produced by decorate_data and consumed by
  * validation, generation, links, and control code.
  */
 export interface ATCBConfig {

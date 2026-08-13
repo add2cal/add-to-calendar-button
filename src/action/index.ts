@@ -1,31 +1,31 @@
 /**
  * atcb_action - the imperative API for custom triggers (no web component markup needed).
  */
-import { atcbIsBrowser, atcb_result_channel } from '../core/globals';
+import { isBrowser, resultChannel } from '../core/globals';
 import { getActiveButton, getButtonInstance, deleteButtonInstance } from '../core/store';
-import { atcb_decorate_data } from '../core/decorate';
-import { atcb_check_required, atcb_validate } from '../core/validate';
-import { atcb_close, atcb_toggle } from '../ui/control';
-import { atcb_generate_links } from '../generators/index';
-import { atcb_secure_content } from '../core/text';
-import { atcb_log_event } from '../core/events';
-import { atcb_generate_rsvp_form } from '../ui/pro';
-import { atcb_ensure_locale } from '../i18n/index';
-import { atcb_get_pro_data, atcb_init_log, atcb_setup_state_management, atcb_set_global_event_listener, atcb_load_css, atcb_set_light_mode, atcbShadowTemplate } from '../element/index';
+import { decorate_data } from '../core/decorate';
+import { check_required, validate } from '../core/validate';
+import { close, toggle } from '../ui/control';
+import { generate_links } from '../generators/index';
+import { secure_content } from '../core/text';
+import { log_event } from '../core/events';
+import { generate_rsvp_form } from '../ui/pro';
+import { ensure_locale } from '../i18n/index';
+import { get_pro_data, init_log, setup_state_management, set_global_event_listener, load_css, set_light_mode, shadowTemplate } from '../element/index';
 import type { ATCBInputConfig, ATCBConfig } from '../types';
 
 // prepare data when not using the web component, but some custom trigger instead
 async function atcb_action(inputData: ATCBInputConfig, triggerElement?: HTMLElement, keyboardTrigger = false): Promise<string> {
   const sinkMode = (inputData as { [key: string]: unknown }).sink === true;
   // return if not within a browser environment
-  if (!atcbIsBrowser() && !sinkMode) {
+  if (!isBrowser() && !sinkMode) {
     return undefined as unknown as string;
   }
   // get data
   let data: ATCBConfig;
   try {
     data = await (async function () {
-      const cleanedInput = atcb_secure_content(inputData) as ATCBInputConfig & { proOverride?: boolean };
+      const cleanedInput = secure_content(inputData) as ATCBInputConfig & { proOverride?: boolean };
       const internalInput = cleanedInput as unknown as ATCBConfig;
       // pull data from PRO server, if key is given
       if (cleanedInput.prokey && cleanedInput.prokey !== '') {
@@ -33,7 +33,7 @@ async function atcb_action(inputData: ATCBInputConfig, triggerElement?: HTMLElem
       }
       if (internalInput.proKey && internalInput.proKey !== '') {
         try {
-          const proData = await atcb_get_pro_data(internalInput.proKey, undefined, internalInput);
+          const proData = await get_pro_data(internalInput.proKey, undefined, internalInput);
           return proData;
         } catch (e) {
           throw new Error((e as { message?: string }).message);
@@ -49,29 +49,29 @@ async function atcb_action(inputData: ATCBInputConfig, triggerElement?: HTMLElem
   // decorate & validate data
   data.debug = (data.debug as unknown as string) === 'true';
   try {
-    await atcb_check_required(data);
+    await check_required(data);
   } catch (e) {
     if (data.debug) {
       console.error(e);
     }
     throw new Error('Add to Calendar Button generation failed: no data provided or missing required fields - see console logs for details');
   }
-  data = await atcb_decorate_data(data);
+  data = await decorate_data(data);
   // translations are needed synchronously at render time - load the pack first
-  await atcb_ensure_locale(data);
+  await ensure_locale(data);
   if (sinkMode) {
-    await atcb_validate(data);
+    await validate(data);
     if (!data.options || data.options.length !== 1) {
       throw new Error('Add to Calendar Button generation failed: exactly one option required');
     }
-    atcb_result_channel.open();
+    resultChannel.open();
     try {
-      await atcb_generate_links(null as unknown as ShadowRoot, data.options[0]!, data, 'all', false, false, true);
+      await generate_links(null as unknown as ShadowRoot, data.options[0]!, data, 'all', false, false, true);
     } catch (e) {
-      atcb_result_channel.close();
+      resultChannel.close();
       throw e instanceof Error ? e : new Error(String(e));
     }
-    const value = atcb_result_channel.close();
+    const value = resultChannel.close();
     if (!value) {
       throw new Error('Add to Calendar Button generation failed: option does not resolve to a single value');
     }
@@ -104,7 +104,7 @@ async function atcb_action(inputData: ATCBInputConfig, triggerElement?: HTMLElem
     data.listStyle = 'modal';
   }
   try {
-    await atcb_validate(data);
+    await validate(data);
   } catch (e) {
     console.error(e);
     return false as unknown as string;
@@ -119,7 +119,7 @@ async function atcb_action(inputData: ATCBInputConfig, triggerElement?: HTMLElem
   // to clean-up the stage, we first close anything left open
   const potentialExistingHost = document.getElementById('atcb-customTrigger-' + data.identifier + '-host');
   if (potentialExistingHost) {
-    atcb_close(potentialExistingHost.shadowRoot!, false);
+    close(potentialExistingHost.shadowRoot!, false);
     // unset whatever possible for customTriggers
     if (getButtonInstance(getActiveButton())) {
       deleteButtonInstance(getActiveButton());
@@ -127,7 +127,7 @@ async function atcb_action(inputData: ATCBInputConfig, triggerElement?: HTMLElem
     potentialExistingHost.remove();
   }
   // log event
-  atcb_log_event('initialization', data.identifier!, data.identifier!);
+  log_event('initialization', data.identifier!, data.identifier!);
   // we would only render something, if interaction is not blocked and button not hidden
   if (!data.blockInteraction && !data.hidden) {
     // prepare shadow dom and load style
@@ -151,31 +151,31 @@ async function atcb_action(inputData: ATCBInputConfig, triggerElement?: HTMLElem
     host.setAttribute('atcb-button-id', data.identifier);
     host.attachShadow({ mode: 'open', delegatesFocus: true });
     const elem = document.createElement('template');
-    elem.innerHTML = atcbShadowTemplate;
+    elem.innerHTML = shadowTemplate;
     host.shadowRoot!.append(elem.content.cloneNode(true));
     const rootObj = host.shadowRoot!.querySelector('.atcb-initialized') as HTMLElement;
-    atcb_setup_state_management(data);
-    atcb_set_light_mode(host.shadowRoot!, data);
+    setup_state_management(data);
+    set_light_mode(host.shadowRoot!, data);
     (host.shadowRoot!.querySelector('.atcb-initialized') as HTMLElement).setAttribute('lang', data.language!);
-    atcb_load_css(host.shadowRoot!, rootObj, data);
+    load_css(host.shadowRoot!, rootObj, data);
     // set global event listeners
-    atcb_set_global_event_listener(host.shadowRoot!, data);
+    set_global_event_listener(host.shadowRoot!, data);
     // if all is fine, ...
     // ... trigger RSVP form, or ...
-    if (typeof atcb_generate_rsvp_form === 'function' && data.rsvp && Object.keys(data.rsvp).length > 0) {
-      atcb_generate_rsvp_form(host.shadowRoot!, data, triggerElement!, keyboardTrigger);
+    if (typeof generate_rsvp_form === 'function' && data.rsvp && Object.keys(data.rsvp).length > 0) {
+      generate_rsvp_form(host.shadowRoot!, data, triggerElement!, keyboardTrigger);
     } else {
       // ... trigger link at the oneOption case, or ...
       if (oneOption) {
-        await atcb_generate_links(host.shadowRoot!, data.options![0]!, data, 'all', keyboardTrigger);
-        atcb_log_event('openSingletonLink', data.identifier!, data.identifier!);
+        await generate_links(host.shadowRoot!, data.options![0]!, data, 'all', keyboardTrigger);
+        log_event('openSingletonLink', data.identifier!, data.identifier!);
       } else {
         // ... open the options list
-        atcb_toggle(host.shadowRoot!, 'open', data, triggerElement ?? null, keyboardTrigger);
+        toggle(host.shadowRoot!, 'open', data, triggerElement ?? null, keyboardTrigger);
       }
     }
   }
-  atcb_init_log(data.proKey, data.hideBranding, data.debug);
+  init_log(data.proKey, data.hideBranding, data.debug);
   if (data.debug) {
     console.log('Add to Calendar Button "' + data.identifier + '" triggered');
   }

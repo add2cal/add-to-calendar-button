@@ -1,13 +1,13 @@
-import { atcbDefaultTarget } from './globals';
+import { defaultTarget } from './globals';
 
 // SHARED FUNCTION TO SECURE DATA
-function atcb_secure_content(data: unknown, isJSON = true): unknown {
+function secure_content(data: unknown, isJSON = true): unknown {
   // strip HTML tags (especially since stupid Safari adds stuff) - except for <br>
   const toClean = isJSON ? JSON.stringify(data) : (data as { toString(): string }).toString();
   const cleanedUp = toClean.replace(/(<(?!br)([^>]+)>)/gi, '');
   if (isJSON) {
     const parsed = JSON.parse(cleanedUp) as unknown;
-    atcb_strip_unsafe_keys(parsed);
+    strip_unsafe_keys(parsed);
     return parsed;
   } else {
     return cleanedUp;
@@ -16,7 +16,7 @@ function atcb_secure_content(data: unknown, isJSON = true): unknown {
 
 // remove prototype-pollution vectors from parsed json input: keys that would write
 // into the prototype chain when copied around have no legitimate use in any config
-function atcb_strip_unsafe_keys(node: unknown): unknown {
+function strip_unsafe_keys(node: unknown): unknown {
   if (!node || typeof node !== 'object') {
     return node;
   }
@@ -26,13 +26,13 @@ function atcb_strip_unsafe_keys(node: unknown): unknown {
     }
   }
   for (const value of Object.values(node)) {
-    atcb_strip_unsafe_keys(value);
+    strip_unsafe_keys(value);
   }
   return node;
 }
 
 // SHARED FUNCTION TO SECURE URLS
-function atcb_secure_url(url: string, throwError = true): boolean {
+function secure_url(url: string, throwError = true): boolean {
   if (url && url.match(/((\.\.\/)|(\.\.\\)|(%2e%2e%2f)|(%252e%252e%252f)|(%2e%2e\/)|(%252e%252e\/)|(\.\.%2f)|(\.\.%252f)|(%2e%2e%5c)|(%252e%252e%255c)|(%2e%2e\\)|(%252e%252e\\)|(\.\.%5c)|(\.\.%255c)|(\.\.%c0%af)|(\.\.%25c0%25af)|(\.\.%c1%9c)|(\.\.%25c1%259c))/gi)) {
     if (throwError) {
       console.error('Seems like the generated URL includes at least one security issue and got blocked. Please check the calendar button parameters!');
@@ -58,7 +58,7 @@ function atcb_secure_url(url: string, throwError = true): boolean {
 }
 
 // SHARED FUNCTION TO REPLACE HTML PSEUDO ELEMENTS
-function atcb_rewrite_html_elements(content: string, clear = false, iCalBreaks = false): string {
+function rewrite_html_elements(content: string, clear = false, iCalBreaks = false): string {
   if (clear) {
     // for line breaks, we add a space instead (or \\n for iCal)
     if (iCalBreaks) {
@@ -81,10 +81,10 @@ function atcb_rewrite_html_elements(content: string, clear = false, iCalBreaks =
     // and build html for the rest
     // supporting: br, hr, p, strong, u, i, em, li, ul, ol, h (like h1, h2, h3, ...), url (= a)
     content = content.replace(/\[url\]((?:(?!\[\/url\]).)*)\[\/url\]/gi, function (match: string, p1: string) {
-      return atcb_parse_url_code(p1);
+      return parse_url_code(p1);
     });
     content = content.replace(/\{url\}((?:(?!\[\/url\]).)*)\{\/url\}/gi, function (match: string, p1: string) {
-      return atcb_parse_url_code(p1);
+      return parse_url_code(p1);
     });
     content = content.replace(/\[(\/)?(br|hr|[pbui]|strong|em|li|ul|ol|h\d)(\s?\/?)\]/gi, '<$1$2$3>');
     content = content.replace(/\{(\/)?(br|hr|[pbui]|strong|em|li|ul|ol|h\d)(\s?\/?)\}/gi, '<$1$2$3>');
@@ -92,7 +92,7 @@ function atcb_rewrite_html_elements(content: string, clear = false, iCalBreaks =
   return content;
 }
 
-function atcb_parse_url_code(input: string): string {
+function parse_url_code(input: string): string {
   const urlText = input.split('|');
   const url = (urlText[0] || '').trim();
   const text = (function () {
@@ -110,11 +110,11 @@ function atcb_parse_url_code(input: string): string {
   if (scheme && !['http', 'https', 'webcal', 'webcals', 'mailto'].includes(scheme[1]!.toLowerCase())) {
     return escapeHtml(text);
   }
-  return '<a href="' + escapeHtml(url).replace(/"/g, '&quot;') + '" target="' + atcbDefaultTarget + '" rel="noopener">' + escapeHtml(text) + '</a>';
+  return '<a href="' + escapeHtml(url).replace(/"/g, '&quot;') + '" target="' + defaultTarget + '" rel="noopener">' + escapeHtml(text) + '</a>';
 }
 
 // SHARED FUNCTIONS TO FORMAT iCAL TEXT
-function atcb_rewrite_ical_text(content: string, inQuotes = false): string {
+function rewrite_ical_text(content: string, inQuotes = false): string {
   if (inQuotes) {
     content = content.replace(/"/g, '');
   } else {
@@ -123,7 +123,7 @@ function atcb_rewrite_ical_text(content: string, inQuotes = false): string {
   return content;
 }
 
-function atcb_format_ical_lines(content: string): string {
+function format_ical_lines(content: string): string {
   const contentArr = content.split('\r\n');
   const result: string[] = [];
   for (const line of contentArr) {
@@ -164,4 +164,4 @@ function atcb_format_ical_lines(content: string): string {
   return result.join('\r\n');
 }
 
-export { atcb_secure_content, atcb_secure_url, atcb_strip_unsafe_keys, atcb_rewrite_html_elements, atcb_rewrite_ical_text, atcb_format_ical_lines };
+export { secure_content, secure_url, strip_unsafe_keys, rewrite_html_elements, rewrite_ical_text, format_ical_lines };

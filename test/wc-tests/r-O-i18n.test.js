@@ -1,17 +1,17 @@
 /**
  * Reduced Suite - Group O: Localization & i18n (case list: .ai/TEST-CASES.md)
- * Uses atcb_translate_hook as the source of truth to avoid hardcoding translations.
+ * Uses translate_hook as the source of truth to avoid hardcoding translations.
  */
 import { expect } from '@open-wc/testing';
 import { mountAtcb, baseEvent } from '../helpers/mount.js';
 import { openList, pressEsc, optionEl } from '../helpers/dom.js';
-import { atcb_translate_hook, rtlLanguages } from '../helpers/i18n.js';
+import { translate_hook, rtlLanguages } from '../helpers/i18n.js';
 import { interceptFileSave } from '../helpers/capture.js';
 import { clickSingleton } from '../helpers/dom.js';
 import { decodeIcsHref, parseIcs } from '../helpers/ics.js';
 
 function expectedLabel(language) {
-  return atcb_translate_hook('label.addtocalendar', { language });
+  return translate_hook('label.addtocalendar', { language });
 }
 
 describe('Group O - Localization & i18n', () => {
@@ -52,7 +52,7 @@ describe('Group O - Localization & i18n', () => {
     expect(shadow.querySelector('.atcb-text').textContent.trim()).to.equal('Termin sichern!');
     await openList(host);
     const googleItem = optionEl(host, 'google');
-    expect(googleItem.textContent).to.include(atcb_translate_hook('google', { language: 'de' }));
+    expect(googleItem.textContent).to.include(translate_hook('google', { language: 'de' }));
   });
 
   it('O-08: ICS SUMMARY stays the configured name regardless of UI language', async () => {

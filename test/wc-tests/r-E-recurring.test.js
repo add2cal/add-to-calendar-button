@@ -1,6 +1,6 @@
 /**
  * Reduced Suite - Group E: Recurring events (case list: .ai/TEST-CASES.md)
- * Recurrence deactivates options not in atcbValidRecurrOptions (['apple','google','ical']);
+ * Recurrence deactivates options not in validRecurrenceOptions (['apple','google','ical']);
  * Google is additionally removed on iOS.
  */
 import { expect } from '@open-wc/testing';
@@ -9,7 +9,7 @@ import { interceptWindowOpen, interceptFileSave } from '../helpers/capture.js';
 import { clickSingleton, renderedOptions, openList } from '../helpers/dom.js';
 import { decodeIcsHref, parseIcs } from '../helpers/ics.js';
 import { CFG } from '../fixtures/events.js';
-import { atcb_decorate_data } from '../../src/core/decorate.ts';
+import { decorate_data } from '../../src/core/decorate.ts';
 
 async function icsRrule(config, id) {
   const fs = interceptFileSave();
@@ -119,7 +119,7 @@ describe('Group E - Recurring events', () => {
   });
 
   it('E-11: past start with future occurrences left -> startDate advances (decorate level)', async () => {
-    const decorated = await atcb_decorate_data({
+    const decorated = await decorate_data({
       name: 'PastRecurring',
       startDate: '2020-01-06', // a Monday, long past
       startTime: '10:00',
@@ -134,7 +134,7 @@ describe('Group E - Recurring events', () => {
   });
 
   it('E-12: COUNT exhausted (all in past) -> startDate advances to the LAST occurrence, still renders', async () => {
-    const decorated = await atcb_decorate_data({
+    const decorated = await decorate_data({
       name: 'ExhaustedRecurring',
       startDate: '2020-01-06',
       startTime: '10:00',
@@ -143,7 +143,7 @@ describe('Group E - Recurring events', () => {
       recurrence_count: 5,
       options: ['google'],
     });
-    // NOTE: atcb_getNextOccurrence advances a fully-past series to its FINAL
+    // NOTE: getNextOccurrence advances a fully-past series to its FINAL
     // occurrence (2020-01-10 here), not the original start date.
     expect(decorated.dates[0].startDate).to.equal('2020-01-10');
     const { host } = await mountAtcb({ name: 'ExhaustedRecurring', startDate: '2020-01-06', startTime: '10:00', endTime: '11:00', recurrence: 'daily', recurrence_count: 5, options: "'google'", identifier: 'atcb-e12' });
@@ -178,12 +178,12 @@ describe('Group E - Recurring events', () => {
   });
 
   it('E-15: simplified recurrence flag uses the CORRECTED spelling in this codebase', async () => {
-    const decorated = await atcb_decorate_data({ ...CFG.recurDaily, options: ['google'] });
+    const decorated = await decorate_data({ ...CFG.recurDaily, options: ['google'] });
     // NOTE: pins the internal flag key spelling (`recurrence_simplified`); it is read
     // by both the decorator and the validator and must stay in sync between them.
     expect(decorated.recurrence_simplified).to.equal(true);
     expect(decorated.recurrence_simplyfied).to.equal(undefined);
-    const raw = await atcb_decorate_data({ ...CFG.recurRaw, options: ['google'] });
+    const raw = await decorate_data({ ...CFG.recurRaw, options: ['google'] });
     expect(raw.recurrence_simplified).to.equal(false);
   });
 });

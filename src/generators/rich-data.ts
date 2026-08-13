@@ -1,11 +1,11 @@
-import { atcb_generate_time } from '../core/dates';
-import { atcb_secure_url } from '../core/text';
+import { generate_time } from '../core/dates';
+import { secure_url } from '../core/text';
 import type { ATCBConfig } from '../types';
 
 // generate schema.org rich data
 // see https://developers.google.com/search/docs/advanced/structured-data/event for more details on how this affects Google search results
 // multi-date events are not 100% compliant with schema.org, since this is still a little broken and not supported by Google
-function atcb_generate_rich_data(data: ATCBConfig, parent: Element): void {
+function generate_rich_data(data: ATCBConfig, parent: Element): void {
   const schemaEl = document.createElement('script');
   schemaEl.id = 'atcb-schema-' + data.identifier;
   if (parent.hasAttribute('cspnonce')) {
@@ -43,7 +43,7 @@ function atcb_generate_rich_data(data: ATCBConfig, parent: Element): void {
     if (data.dates![`${i}`]!.descriptionHtmlFree) {
       schemaContent.push('"description":' + JSON.stringify(data.dates![`${i}`]!.descriptionHtmlFree));
     }
-    const formattedDate = atcb_generate_time(data.dates![`${i}`]!, 'delimiters', 'general', true);
+    const formattedDate = generate_time(data.dates![`${i}`]!, 'delimiters', 'general', true);
     schemaContent.push('"startDate":"' + formattedDate.start + '"');
     if ('duration' in formattedDate && formattedDate.duration) {
       schemaContent.push('"duration":"' + formattedDate.duration + '"');
@@ -52,7 +52,7 @@ function atcb_generate_rich_data(data: ATCBConfig, parent: Element): void {
       data.dates![`${i}`]!.onlineEvent ? '"eventAttendanceMode":"https://schema.org/OnlineEventAttendanceMode",\r\n"location": {\r\n"@type":"VirtualLocation",\r\n"url":' + JSON.stringify(data.dates![`${i}`]!.location) + '\r\n}' : '"location":' + JSON.stringify(data.dates![`${i}`]!.location),
     );
     if (data.recurrence && data.recurrence !== '') {
-      schemaContent.push(...atcb_generate_rich_data_recurrence(data, formattedDate));
+      schemaContent.push(...generate_rich_data_recurrence(data, formattedDate));
     } else {
       schemaContent.push('"endDate":"' + formattedDate.end + '"');
     }
@@ -64,7 +64,7 @@ function atcb_generate_rich_data(data: ATCBConfig, parent: Element): void {
     if (data.images) {
       if (Array.isArray(data.images)) {
         for (let i = 0; i < data.images.length; i++) {
-          if (atcb_secure_url(data.images[`${i}`]!, data.debug) && data.images[`${i}`]!.startsWith('http')) {
+          if (secure_url(data.images[`${i}`]!, data.debug) && data.images[`${i}`]!.startsWith('http')) {
             imageData.push(JSON.stringify(data.images[`${i}`]));
           }
         }
@@ -84,7 +84,7 @@ function atcb_generate_rich_data(data: ATCBConfig, parent: Element): void {
   document.body.insertBefore(schemaEl, document.body.firstChild);
 }
 
-function atcb_generate_rich_data_recurrence(data: ATCBConfig, formattedDate: ReturnType<typeof atcb_generate_time>): string[] {
+function generate_rich_data_recurrence(data: ATCBConfig, formattedDate: ReturnType<typeof generate_time>): string[] {
   const schemaRecurrenceContent: string[] = [];
   schemaRecurrenceContent.push('"eventSchedule": { "@type": "Schedule"');
   schemaRecurrenceContent.push('"scheduleTimezone":"' + data.dates![0]!.timeZone + '"');
@@ -139,4 +139,4 @@ function atcb_generate_rich_data_recurrence(data: ATCBConfig, formattedDate: Ret
   return schemaRecurrenceContent;
 }
 
-export { atcb_generate_rich_data };
+export { generate_rich_data };

@@ -1,35 +1,35 @@
 import { LitElement, html, nothing, type TemplateResult } from 'lit';
-import { atcbVersion, atcbIsBrowser, atcbWcParams, atcbWcProParams, atcbWcBooleanParams, atcbWcObjectParams, atcbWcObjectArrayParams, atcbWcArrayParams, atcbWcNumberParams } from '../core/globals';
+import { atcbVersion, isBrowser, wcParams, wcProParams, wcBooleanParams, wcObjectParams, wcObjectArrayParams, wcArrayParams, wcNumberParams } from '../core/globals';
 import { getActiveButton, createButtonInstance, deleteButtonInstance } from '../core/store';
-import { atcb_ensure_style, atcb_prefetch_all_styles } from '../styles/css-template';
-import { atcb_decorate_data } from '../core/decorate';
-import { atcb_check_required, atcb_validate } from '../core/validate';
-import { atcb_create_atcbl } from '../ui/generate';
+import { ensure_style, prefetch_all_styles } from '../styles/css-template';
+import { decorate_data } from '../core/decorate';
+import { check_required, validate } from '../core/validate';
+import { create_atcbl } from '../ui/generate';
 import { buttonTemplate } from '../ui/templates';
-import { atcb_generate_rich_data } from '../generators/rich-data';
-import { atcb_ensure_locale } from '../i18n/index';
-import { atcb_close, atcb_toggle } from '../ui/control';
-import { atcb_secure_content, atcb_secure_url, atcb_strip_unsafe_keys } from '../core/text';
-import { atcb_manage_body_scroll, atcb_set_sizes } from '../ui/positioning';
-import { atcb_log_event } from '../core/events';
-import { atcb_generate_rsvp_form, atcb_generate_rsvp_button } from '../ui/pro';
+import { generate_rich_data } from '../generators/rich-data';
+import { ensure_locale } from '../i18n/index';
+import { close, toggle } from '../ui/control';
+import { secure_content, secure_url, strip_unsafe_keys } from '../core/text';
+import { manage_body_scroll, set_sizes } from '../ui/positioning';
+import { log_event } from '../core/events';
+import { generate_rsvp_form, generate_rsvp_button } from '../ui/pro';
 import { resolveAttributeName, hasConfigAttribute, getConfigAttribute, observedConfigAttributes } from '../compat/attributes';
 import type { ATCBInputConfig, ATCBConfig } from '../types';
 
-let atcbInitialGlobalInit = false;
-let atcbBtnCount = 0;
+let initialGlobalInit = false;
+let buttonCount = 0;
 const lightModeMutationObserver: Map<string, MutationObserver> = new Map();
 
 const template = `<div class="atcb-initialized atcb-hidden"></div>`;
 
 // structural stand-in for the AddToCalendarButton custom element, since the class itself
-// is block-scoped inside the atcbIsBrowser() guard below and not usable as a type out here
+// is block-scoped inside the isBrowser() guard below and not usable as a type out here
 interface ATCBHostElement extends HTMLElement {
   proOverride?: boolean;
 }
 
 // we cannot load the custom element server-side - therefore, we check for a browser environment first
-if (atcbIsBrowser()) {
+if (isBrowser()) {
   class AddToCalendarButton extends LitElement {
     // internal reactive state driving the lit render (no public reactive properties on
     // purpose: config params like `hidden`/`disabled` would collide with native element
@@ -144,17 +144,17 @@ if (atcbIsBrowser()) {
       try {
         const proKeyVal = getConfigAttribute(this, 'proKey');
         if (proKeyVal && proKeyVal !== '') {
-          this.data = await atcb_get_pro_data(proKeyVal, this);
+          this.data = await get_pro_data(proKeyVal, this);
           if (this.data.proKey) this.prokey = this.data.proKey;
         } else {
           this.data.proKey = '';
           // if no data yet, we try reading attributes or the innerHTML of the host element
-          this.data = (await atcb_process_inline_data(this, this.debug)) as unknown as ATCBConfig;
+          this.data = (await process_inline_data(this, this.debug)) as unknown as ATCBConfig;
         }
       } catch (e) {
         if (this.debug) {
           console.error(e);
-          atcb_render_debug_msg(this.shadowRoot!, e);
+          render_debug_msg(this.shadowRoot!, e);
         }
         this.error = true;
         this.state.initializing = false;
@@ -176,13 +176,13 @@ if (atcbIsBrowser()) {
 
     override disconnectedCallback(): void {
       super.disconnectedCallback();
-      atcb_cleanup(this.shadowRoot!, this.identifier);
+      cleanup(this.shadowRoot!, this.identifier);
       if (this.debug) {
         console.log('Add to Calendar Button "' + (this.identifier || this.getAttribute('identifier') || 'not yet initialized') + '" destroyed');
       }
       // reset the count, if all buttons got destroyed
       if (document.querySelectorAll('add-to-calendar-button').length === 0) {
-        atcbBtnCount = 0;
+        buttonCount = 0;
       }
     }
 
@@ -190,7 +190,7 @@ if (atcbIsBrowser()) {
       // keep Lit's own observed attributes (also triggers its class finalization) and add
       // the official kebab-case names, the legacy spellings, and the control attributes
       const litObserved = (super.observedAttributes as string[] | undefined) ?? [];
-      return [...new Set([...litObserved, ...observedConfigAttributes(atcbWcParams)])];
+      return [...new Set([...litObserved, ...observedConfigAttributes(wcParams)])];
     }
 
     override attributeChangedCallback(name: string, oldValue: string | null, newValue: string | null): void {
@@ -231,27 +231,27 @@ if (atcbIsBrowser()) {
       try {
         const proKeyVal = getConfigAttribute(this, 'proKey');
         if (proKeyVal && proKeyVal !== '') {
-          this.data = await atcb_get_pro_data(proKeyVal, this);
+          this.data = await get_pro_data(proKeyVal, this);
           if (this.data.proKey) this.prokey = this.data.proKey;
         } else {
-          this.data = (await atcb_process_inline_data(this, this.debug)) as unknown as ATCBConfig;
+          this.data = (await process_inline_data(this, this.debug)) as unknown as ATCBConfig;
         }
       } catch (e) {
         if (this.debug) {
           console.error(e);
-          atcb_render_debug_msg(this.shadowRoot!, e);
+          render_debug_msg(this.shadowRoot!, e);
         }
         this.updatePending = false;
         return;
       }
-      atcb_cleanup(this.shadowRoot!, this.identifier);
+      cleanup(this.shadowRoot!, this.identifier);
       await this.initButton();
       this.updatePending = false;
     }
 
     async initButton(): Promise<boolean> {
       if (!this.state.initialized) {
-        atcbBtnCount = atcbBtnCount + 1;
+        buttonCount = buttonCount + 1;
       }
       // set identifier first, no matter further validation
       // we use a stored one if available (the case, if destroyed before)
@@ -274,7 +274,7 @@ if (atcbIsBrowser()) {
           }
         }
         if (this.data.identifier == null || this.data.identifier == '') {
-          this.data.identifier = 'atcb-btn-' + atcbBtnCount;
+          this.data.identifier = 'atcb-btn-' + buttonCount;
         }
         // we are copying the value to preserve it over re-building the data object
         this.identifier = this.data.identifier;
@@ -291,7 +291,7 @@ if (atcbIsBrowser()) {
       } catch (e) {
         if (this.debug) {
           console.error((e as { message?: string }).message ? (e as { message?: string }).message : e);
-          atcb_render_debug_msg(this.shadowRoot!, e);
+          render_debug_msg(this.shadowRoot!, e);
         }
         return false;
       }
@@ -303,11 +303,11 @@ if (atcbIsBrowser()) {
       try {
         (host.host as Element).classList.add('add-to-calendar');
         // Rewrite dynamic dates, standardize line breaks and transform urls in the description
-        const data = await atcb_decorate_data(this.data);
+        const data = await decorate_data(this.data);
         this.data = data;
         // translations are needed synchronously at render time - load the pack first
-        await atcb_ensure_locale(data);
-        await atcb_validate(data);
+        await ensure_locale(data);
+        await validate(data);
         // with a deferred lit render (adopted ssr shell, see shouldUpdate), the very
         // first lit commit must already carry the real button: ANY earlier commit
         // clears the adopted shadow root and would wipe the painted shell. Therefore
@@ -316,7 +316,7 @@ if (atcbIsBrowser()) {
         const deferred = this._deferLitRender;
         let rootObj = host.querySelector('.atcb-initialized:not([data-atcb-ssr])') as HTMLElement | null;
         // ... and on success, load css and generate the button
-        atcb_set_light_mode(host, data);
+        set_light_mode(host, data);
         if (rootObj) {
           rootObj.setAttribute('lang', data.language!);
         }
@@ -324,22 +324,22 @@ if (atcbIsBrowser()) {
         // must stay painted until the style node actually sits in the shadow root,
         // otherwise the freshly rendered button flashes unstyled between shell swap
         // and style arrival
-        await atcb_load_css(host, rootObj, data);
+        await load_css(host, rootObj, data);
         // eagerly prefetch all style deltas when runtime style switching is requested
         if (data.loadAllStyles) {
-          atcb_prefetch_all_styles(data);
+          prefetch_all_styles(data);
         }
-        atcb_setup_state_management(data);
+        setup_state_management(data);
         // set global event listeners
-        atcb_set_global_event_listener(host, data);
-        atcb_init_log(data.proKey, data.hideBranding, data.debug);
+        set_global_event_listener(host, data);
+        init_log(data.proKey, data.hideBranding, data.debug);
         // generate the actual button or RSVP form (if not hidden)
         if (!data.hidden) {
-          if (typeof atcb_generate_rsvp_form === 'function' && data.rsvp && Object.keys(data.rsvp).length > 0) {
+          if (typeof generate_rsvp_form === 'function' && data.rsvp && Object.keys(data.rsvp).length > 0) {
             if (!data.inlineRsvp) {
-              await atcb_generate_rsvp_button(host, data);
+              await generate_rsvp_button(host, data);
             } else {
-              await atcb_generate_rsvp_form(host, data, rootObj as HTMLElement);
+              await generate_rsvp_form(host, data, rootObj as HTMLElement);
             }
           } else {
             // render the button via the lit template - in the deferred case, this is
@@ -359,7 +359,7 @@ if (atcbIsBrowser()) {
               rootObj.classList.remove('atcb-hidden');
             }
             host.querySelectorAll('.atcb-button-wrapper').forEach((wrapper) => {
-              atcb_set_sizes(wrapper as HTMLElement, data.sizes!);
+              set_sizes(wrapper as HTMLElement, data.sizes!);
             });
             if (data.debug) {
               console.log('Add to Calendar Button "' + data.identifier + '" created');
@@ -367,7 +367,7 @@ if (atcbIsBrowser()) {
           }
           // create schema.org data (https://schema.org/Event), if possible; not in the subscription case; and add it to the regular DOM
           if (!data.hideRichData && !data.subscribe && data.name && data.dates![0]!.location && data.dates![0]!.startDate) {
-            atcb_generate_rich_data(data, host.host);
+            generate_rich_data(data, host.host);
           }
         } else if (this._deferLitRender) {
           // hidden buttons never render a template - still release the deferral, so
@@ -379,9 +379,9 @@ if (atcbIsBrowser()) {
         // the real render is complete - swap out a server-rendered shell, if any
         this.removeSsrShell();
         // log event
-        atcb_log_event('initialization', data.identifier!, data.identifier!);
+        log_event('initialization', data.identifier!, data.identifier!);
         if (!data.proKey && data.hideBranding && !document.getElementById('atcb-reference')) {
-          atcb_create_atcbl(document.body as unknown as ShadowRoot, false, false, true);
+          create_atcbl(document.body as unknown as ShadowRoot, false, false, true);
         }
         return true;
       } catch (e) {
@@ -397,12 +397,12 @@ if (atcbIsBrowser()) {
 }
 
 // process inline data
-async function atcb_process_inline_data(el: ATCBHostElement, debug = false): Promise<ATCBInputConfig> {
+async function process_inline_data(el: ATCBHostElement, debug = false): Promise<ATCBInputConfig> {
   let data: ATCBInputConfig;
   try {
     // Attempt to read attributes directly and validate
-    data = atcb_read_attributes(el);
-    await atcb_check_required(data);
+    data = read_attributes(el);
+    await check_required(data);
   } catch {
     // If the above fails, try to parse and validate JSON from innerHTML
     const slotInput = el.innerHTML.trim();
@@ -410,9 +410,9 @@ async function atcb_process_inline_data(el: ATCBHostElement, debug = false): Pro
       throw new Error('Add to Calendar Button generation failed: No data provided.');
     }
     try {
-      const atcbJsonInput = atcb_strip_unsafe_keys(JSON.parse(atcb_secure_content(slotInput.replace(/(\r\n|\n|\r)/g, ''), false) as string)) as ATCBInputConfig;
-      await atcb_check_required(atcbJsonInput);
-      data = atcbJsonInput;
+      const jsonInput = strip_unsafe_keys(JSON.parse(secure_content(slotInput.replace(/(\r\n|\n|\r)/g, ''), false) as string)) as ATCBInputConfig;
+      await check_required(jsonInput);
+      data = jsonInput;
     } catch (jsonError) {
       // Log detailed error for debugging
       if (debug) {
@@ -425,7 +425,7 @@ async function atcb_process_inline_data(el: ATCBHostElement, debug = false): Pro
 }
 
 // read data attributes (official kebab-case names win over legacy spellings)
-function atcb_read_attributes(el: ATCBHostElement, params: (keyof ATCBInputConfig)[] = atcbWcParams): ATCBInputConfig {
+function read_attributes(el: ATCBHostElement, params: (keyof ATCBInputConfig)[] = wcParams): ATCBInputConfig {
   const data: { [key: string]: unknown } = {};
   for (let i = 0; i < params.length; i++) {
     // reading data, but removing real code line breaks before parsing.
@@ -433,12 +433,12 @@ function atcb_read_attributes(el: ATCBHostElement, params: (keyof ATCBInputConfi
     const attr = params[`${i}`]!;
     const attributeName = resolveAttributeName(el, attr);
     if (attributeName !== null) {
-      const inputVal = atcb_secure_content(el.getAttribute(attributeName)!.replace(/(\\r\\n|\\n|\\r)/g, ''), false) as string;
+      const inputVal = secure_content(el.getAttribute(attributeName)!.replace(/(\\r\\n|\\n|\\r)/g, ''), false) as string;
       let val: unknown;
-      if ((atcbWcBooleanParams as (keyof ATCBInputConfig)[]).includes(attr)) {
+      if ((wcBooleanParams as (keyof ATCBInputConfig)[]).includes(attr)) {
         // if a boolean param has no value, it is handled as prop and set true
         val = !inputVal || inputVal === '' || inputVal.toLowerCase() === 'true' ? true : false;
-      } else if ((atcbWcObjectParams as (keyof ATCBInputConfig)[]).includes(attr)) {
+      } else if ((wcObjectParams as (keyof ATCBInputConfig)[]).includes(attr)) {
         const cleanedInput = (function () {
           if (!inputVal || inputVal === '') {
             return '{}';
@@ -448,8 +448,8 @@ function atcb_read_attributes(el: ATCBHostElement, params: (keyof ATCBInputConfi
           }
           return inputVal;
         })();
-        val = atcb_strip_unsafe_keys(JSON.parse(cleanedInput));
-      } else if ((atcbWcObjectArrayParams as (keyof ATCBInputConfig)[]).includes(attr)) {
+        val = strip_unsafe_keys(JSON.parse(cleanedInput));
+      } else if ((wcObjectArrayParams as (keyof ATCBInputConfig)[]).includes(attr)) {
         const cleanedInput = (function () {
           if (!inputVal || inputVal === '') {
             return '[]';
@@ -459,8 +459,8 @@ function atcb_read_attributes(el: ATCBHostElement, params: (keyof ATCBInputConfi
           }
           return inputVal;
         })();
-        val = atcb_strip_unsafe_keys(JSON.parse(cleanedInput));
-      } else if ((atcbWcArrayParams as (keyof ATCBInputConfig)[]).includes(attr)) {
+        val = strip_unsafe_keys(JSON.parse(cleanedInput));
+      } else if ((wcArrayParams as (keyof ATCBInputConfig)[]).includes(attr)) {
         let arrVal = inputVal;
         if (inputVal.includes('[')) {
           arrVal = arrVal.substring(1, arrVal.length - 1);
@@ -477,7 +477,7 @@ function atcb_read_attributes(el: ATCBHostElement, params: (keyof ATCBInputConfi
         } else {
           val = arrVal.split('","');
         }
-      } else if ((atcbWcNumberParams as (keyof ATCBInputConfig)[]).includes(attr)) {
+      } else if ((wcNumberParams as (keyof ATCBInputConfig)[]).includes(attr)) {
         val = parseInt(inputVal);
       } else {
         val = inputVal;
@@ -493,10 +493,10 @@ function atcb_read_attributes(el: ATCBHostElement, params: (keyof ATCBInputConfi
 }
 
 // destroy the button
-function atcb_cleanup(host: ShadowRoot, identifier?: string): void {
+function cleanup(host: ShadowRoot, identifier?: string): void {
   // cleaning up a little bit
-  atcb_close(host);
-  atcb_unset_global_event_listener(identifier);
+  close(host);
+  unset_global_event_listener(identifier);
   const schemaEl = document.getElementById('atcb-schema-' + identifier);
   if (schemaEl) {
     schemaEl.remove();
@@ -511,7 +511,7 @@ function atcb_cleanup(host: ShadowRoot, identifier?: string): void {
 }
 
 // set light mode
-function atcb_set_light_mode(shadowRoot: ShadowRoot, data: ATCBConfig): void {
+function set_light_mode(shadowRoot: ShadowRoot, data: ATCBConfig): void {
   // Safari + Firefox combat hack
   // could be removed (together with the global mutation observer on that) as soon as those browsers support the :host-context selector
   (shadowRoot.host as Element).classList.remove('atcb-dark', 'atcb-light', 'atcb-bodyScheme');
@@ -536,7 +536,7 @@ function atcb_set_light_mode(shadowRoot: ShadowRoot, data: ATCBConfig): void {
 }
 
 // get csp nonce
-function atcb_csp_nonce(host: ShadowRoot): string | null {
+function csp_nonce(host: ShadowRoot): string | null {
   const cspnonceRegex = /[`'"()[\]{}<>\s]/;
   if (!(host.host as Element).hasAttribute('cspnonce')) {
     return null;
@@ -548,8 +548,8 @@ function atcb_csp_nonce(host: ShadowRoot): string | null {
 }
 
 // load the right css
-async function atcb_load_css(host: ShadowRoot, rootObj: HTMLElement | null = null, data: ATCBConfig): Promise<void> {
-  const nonceVal = atcb_csp_nonce(host);
+async function load_css(host: ShadowRoot, rootObj: HTMLElement | null = null, data: ATCBConfig): Promise<void> {
+  const nonceVal = csp_nonce(host);
   // add global no-scroll style
   if (!document.getElementById('atcb-global-style')) {
     const cssGlobalContent = document.createElement('style');
@@ -572,15 +572,15 @@ async function atcb_load_css(host: ShadowRoot, rootObj: HTMLElement | null = nul
   // get custom override information
   const overrideDefaultCss = (function () {
     if (data.styleLight) {
-      return ':host{' + atcb_secure_content(data.styleLight.replace(/(\\r\\n|\\n|\\r)/g, ''), false) + '}';
+      return ':host{' + secure_content(data.styleLight.replace(/(\\r\\n|\\n|\\r)/g, ''), false) + '}';
     }
     return '';
   })();
   const overrideDarkCss = (function () {
     if (data.styleDark) {
       // the next line is commented out, since it is currently not possible to use the :host-context selector in Safari and Firefox - the workaround is the global mutation observer setting the style at the host. We keep this line as a reminder, though.
-      //const output = ':host(.atcb-dark), :host-context(html.atcb-dark):host(.atcb-bodyScheme), :host-context(body.atcb-dark):host(.atcb-bodyScheme) { ' + atcb_secure_content(data.styleDark.replace(/(\\r\\n|\\n|\\r)/g, ''), false) + ' }';
-      return ':host(.atcb-dark){' + atcb_secure_content(data.styleDark.replace(/(\\r\\n|\\n|\\r)/g, ''), false) + '}';
+      //const output = ':host(.atcb-dark), :host-context(html.atcb-dark):host(.atcb-bodyScheme), :host-context(body.atcb-dark):host(.atcb-bodyScheme) { ' + secure_content(data.styleDark.replace(/(\\r\\n|\\n|\\r)/g, ''), false) + ' }';
+      return ':host(.atcb-dark){' + secure_content(data.styleDark.replace(/(\\r\\n|\\n|\\r)/g, ''), false) + '}';
     }
     return '';
   })();
@@ -615,7 +615,7 @@ async function atcb_load_css(host: ShadowRoot, rootObj: HTMLElement | null = nul
     return;
   }
   // otherwise, we load it from the style registry (inline core+default, on-demand deltas)
-  const styleCss = await atcb_ensure_style(data);
+  const styleCss = await ensure_style(data);
   if (styleCss) {
     const cssContent = document.createElement('style');
     if (nonceVal) {
@@ -674,9 +674,9 @@ async function loadExternalCssAsynch(cssFile: HTMLLinkElement, host: ShadowRoot,
   }
 }
 
-function atcb_render_debug_msg(host: ShadowRoot, error: unknown): void {
+function render_debug_msg(host: ShadowRoot, error: unknown): void {
   if (host.querySelector('.atcb-debug-error-msg')) return;
-  const nonceVal = atcb_csp_nonce(host);
+  const nonceVal = csp_nonce(host);
   const errorBanner = document.createElement('div');
   errorBanner.classList.add('atcb-debug-error-msg');
   const cssContent = document.createElement('style');
@@ -690,7 +690,7 @@ function atcb_render_debug_msg(host: ShadowRoot, error: unknown): void {
 }
 
 // update global state management
-function atcb_setup_state_management(data: ATCBConfig): void {
+function setup_state_management(data: ATCBConfig): void {
   const singleDates: { [key: string]: number[] } = {};
   for (let i = 0; i < data.options!.length; i++) {
     singleDates[data.options![`${i}`]!] = [];
@@ -707,8 +707,8 @@ function atcb_setup_state_management(data: ATCBConfig): void {
 }
 
 // SHARED FUNCTION TO GENERATE THE INIT LOG MESSAGE
-function atcb_init_log(pro: string = '', hide: boolean = false, debug: boolean = false): void {
-  if (!atcbInitialGlobalInit) {
+function init_log(pro: string = '', hide: boolean = false, debug: boolean = false): void {
+  if (!initialGlobalInit) {
     const versionOutput = (function () {
       if (debug) {
         return ' (version ' + atcbVersion + ')';
@@ -721,12 +721,12 @@ function atcb_init_log(pro: string = '', hide: boolean = false, debug: boolean =
       console.log('%c\nAdd to Calendar Button script initialized' + versionOutput + '\n' + 'see https://add-to-calendar-button.com for details.\n', 'font-weight: bold;');
       console.log('✨ %cPRO version available at https://add-to-calendar-pro.com ← check it out!', 'font-weight: bold; line-height: 60px;');
     }
-    atcbInitialGlobalInit = true;
+    initialGlobalInit = true;
   }
 }
 
 // PULLING PRO DATA
-async function atcb_get_pro_data(licenseKey?: string, el?: ATCBHostElement, directData: ATCBInputConfig & { proOverride?: boolean } = {}): Promise<ATCBConfig> {
+async function get_pro_data(licenseKey?: string, el?: ATCBHostElement, directData: ATCBInputConfig & { proOverride?: boolean } = {}): Promise<ATCBConfig> {
   /*!
    *  @preserve
    *  PER LICENSE AGREEMENT, YOU ARE NOT ALLOWED TO REMOVE OR CHANGE THIS FUNCTION!
@@ -735,20 +735,20 @@ async function atcb_get_pro_data(licenseKey?: string, el?: ATCBHostElement, dire
     // Try to read data from server and log error if not possible
     try {
       const proOverride = el ? el.proOverride : directData.proOverride;
-      const dataOverrides: { [key: string]: unknown } = el ? (atcb_read_attributes(el, proOverride ? atcbWcParams : atcbWcProParams) as unknown as { [key: string]: unknown }) : (directData as unknown as { [key: string]: unknown });
+      const dataOverrides: { [key: string]: unknown } = el ? (read_attributes(el, proOverride ? wcParams : wcProParams) as unknown as { [key: string]: unknown }) : (directData as unknown as { [key: string]: unknown });
       const response = await fetch(`https://${dataOverrides.dev ? 'event-dev.caldn.net' : 'event.caldn.net'}/${licenseKey}/config.json`);
       if (response.ok) {
-        const data = atcb_strip_unsafe_keys(await response.json()) as ATCBConfig;
+        const data = strip_unsafe_keys(await response.json()) as ATCBConfig;
         if (proOverride) {
           const host = window.location.hostname || '';
           const domain = host.split('.').slice(-2).join('.');
-          atcbWcParams.forEach((key) => {
+          wcParams.forEach((key) => {
             if (Object.prototype.hasOwnProperty.call(dataOverrides, key) && (['hideBranding', 'ty', 'rsvp'].indexOf(key) === -1 || domain === 'caldn.net' || domain === 'add-to-calendar-pro.com')) {
               (data as { [key: string]: unknown })[`${key}`] = dataOverrides[`${key}`];
             }
           });
         } else {
-          atcbWcProParams.forEach((key) => {
+          wcProParams.forEach((key) => {
             if (Object.prototype.hasOwnProperty.call(dataOverrides, key)) {
               (data as { [key: string]: unknown })[`${key}`] = dataOverrides[`${key}`];
             }
@@ -760,7 +760,7 @@ async function atcb_get_pro_data(licenseKey?: string, el?: ATCBHostElement, dire
         if ((!data.name || data.name === '') && (!data.dates || data.dates[0]!.name === '')) {
           throw new Error('Not possible to read proKey config from server...');
         }
-        if (data.landingpage!.domain && (data.landingpage!.domain as string) !== '' && atcb_secure_url(data.landingpage!.domain as string)) {
+        if (data.landingpage!.domain && (data.landingpage!.domain as string) !== '' && secure_url(data.landingpage!.domain as string)) {
           data.domain = data.landingpage!.domain as string;
           delete data.landingpage;
         }
@@ -790,9 +790,9 @@ async function atcb_get_pro_data(licenseKey?: string, el?: ATCBHostElement, dire
 }
 
 // GLOBAL KEYBOARD AND DEVICE LISTENERS
-function atcb_set_global_event_listener(host: ShadowRoot, data: ATCBConfig): void {
+function set_global_event_listener(host: ShadowRoot, data: ATCBConfig): void {
   // return, if we are not in a browser
-  if (!atcbIsBrowser()) {
+  if (!isBrowser()) {
     return;
   }
   // temporary listener to any class change at the body or html for the light mode Safari/Firefox hack
@@ -805,7 +805,7 @@ function atcb_set_global_event_listener(host: ShadowRoot, data: ATCBConfig): voi
     const observer = new MutationObserver(function (mutationsList) {
       mutationsList.forEach((mutation) => {
         if (mutation.attributeName === 'class') {
-          atcb_set_light_mode(host, data);
+          set_light_mode(host, data);
         }
       });
     });
@@ -813,17 +813,17 @@ function atcb_set_global_event_listener(host: ShadowRoot, data: ATCBConfig): voi
     observer.observe(document.body, { attributes: true });
     lightModeMutationObserver.set(data.identifier!, observer);
   }
-  if (!atcbInitialGlobalInit) {
+  if (!initialGlobalInit) {
     // global listener for ESC key to close dropdown
-    document.addEventListener('keyup', atcb_global_listener_keyup);
+    document.addEventListener('keyup', global_listener_keyup);
     // global listener for arrow key optionlist navigation
-    document.addEventListener('keydown', atcb_global_listener_keydown);
+    document.addEventListener('keydown', global_listener_keydown);
     // global listener for any screen changes
-    window.addEventListener('resize', atcb_global_listener_resize);
+    window.addEventListener('resize', global_listener_resize);
   }
 }
 
-function atcb_global_listener_keyup(event: KeyboardEvent): void {
+function global_listener_keyup(event: KeyboardEvent): void {
   const host: ShadowRoot | null = (function () {
     const root = document.querySelector('[atcb-button-id="' + getActiveButton() + '"]');
     if (root) {
@@ -832,12 +832,12 @@ function atcb_global_listener_keyup(event: KeyboardEvent): void {
     return null;
   })();
   if (host && event.key === 'Escape') {
-    atcb_log_event('closeList', 'Ecs Hit', getActiveButton());
-    atcb_toggle(host, 'close', '', '', true);
+    log_event('closeList', 'Ecs Hit', getActiveButton());
+    toggle(host, 'close', '', '', true);
   }
 }
 
-function atcb_global_listener_keydown(event: KeyboardEvent): void {
+function global_listener_keydown(event: KeyboardEvent): void {
   const host: ShadowRoot | null = (function () {
     const root = document.querySelector('[atcb-button-id="' + getActiveButton() + '"]');
     const rootModal = document.getElementById(getActiveButton() + '-modal-host');
@@ -912,7 +912,7 @@ function atcb_global_listener_keydown(event: KeyboardEvent): void {
   }
 }
 
-function atcb_global_listener_resize(): void {
+function global_listener_resize(): void {
   const host: ShadowRoot | null = (function () {
     const root = document.querySelector('[atcb-button-id="' + getActiveButton() + '"]');
     const rootModal = document.getElementById(getActiveButton() + '-modal-host');
@@ -927,12 +927,12 @@ function atcb_global_listener_resize(): void {
   if (host) {
     const activeOverlay = host.querySelector('#atcb-bgoverlay');
     if (activeOverlay) {
-      atcb_manage_body_scroll(host);
+      manage_body_scroll(host);
     }
   }
 }
 
-function atcb_unset_global_event_listener(identifier?: string): void {
+function unset_global_event_listener(identifier?: string): void {
   const observer = lightModeMutationObserver.get(identifier!);
   if (observer) {
     observer.disconnect();
@@ -940,4 +940,4 @@ function atcb_unset_global_event_listener(identifier?: string): void {
   }
 }
 
-export { template as atcbShadowTemplate, atcb_unset_global_event_listener, atcb_load_css, atcb_set_light_mode, atcb_get_pro_data, atcb_init_log, atcb_setup_state_management, atcb_set_global_event_listener };
+export { template as shadowTemplate, unset_global_event_listener, load_css, set_light_mode, get_pro_data, init_log, setup_state_management, set_global_event_listener };

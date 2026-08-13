@@ -8,7 +8,7 @@
  * medium, small viewport), mapping to a base font size of 10+n px; unset or
  * out-of-range parts fall back to 16px (or the next larger given value).
  */
-function atcb_decorate_sizes(size?: string): { [key: string]: number | string } {
+function decorate_sizes(size?: string): { [key: string]: number | string } {
   const sizes: { [key: string]: number | string } = [] as unknown as { [key: string]: number | string };
   sizes['l'] = sizes['m'] = sizes['s'] = 16;
   if (size && size !== '') {
@@ -35,4 +35,4 @@ function atcb_decorate_sizes(size?: string): { [key: string]: number | string } 
   return sizes;
 }
 
-export { atcb_decorate_sizes };
+export { decorate_sizes };

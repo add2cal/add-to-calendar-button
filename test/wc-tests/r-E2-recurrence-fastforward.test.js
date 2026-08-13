@@ -10,7 +10,7 @@
  * property - the shifted twin is recent enough to never trigger a jump.
  */
 import { expect } from '@open-wc/testing';
-import { atcb_getNextOccurrence } from '../../src/core/dates.ts';
+import { getNextOccurrence } from '../../src/core/dates.ts';
 
 // build a UTC Date for a local wall-clock time in a tz-agnostic way (tests run in UTC)
 function utcDate(dateStr, timeStr = '10:00') {
@@ -25,7 +25,7 @@ describe('Group E2 - recurrence fast-forward', () => {
   it('E2-01: performance - daily recurrence starting 1980 resolves in under 50 ms', () => {
     const start = utcDate('1980-01-15');
     const began = performance.now();
-    const result = atcb_getNextOccurrence('RRULE:FREQ=DAILY;INTERVAL=1', start, 3600000, false, 'UTC');
+    const result = getNextOccurrence('RRULE:FREQ=DAILY;INTERVAL=1', start, 3600000, false, 'UTC');
     const elapsed = performance.now() - began;
     expect(elapsed, `took ${elapsed.toFixed(1)}ms`).to.be.lessThan(50);
     // and the result is actually current (the old iteration capped out in ~2007)
@@ -43,8 +43,8 @@ describe('Group E2 - recurrence fast-forward', () => {
       // shift the old start forward by whole periods until ~200 days ago (no jump there)
       const periodsToRecent = Math.floor((Date.now() - 200 * 86400000 - oldStart.getTime()) / 86400000 / periodDays);
       const recentStart = shiftDays(oldStart, periodsToRecent * periodDays);
-      const fromOld = atcb_getNextOccurrence(rrule, oldStart, 3600000, false, 'UTC');
-      const fromRecent = atcb_getNextOccurrence(rrule, recentStart, 3600000, false, 'UTC');
+      const fromOld = getNextOccurrence(rrule, oldStart, 3600000, false, 'UTC');
+      const fromRecent = getNextOccurrence(rrule, recentStart, 3600000, false, 'UTC');
       expect(fromOld.nextOccurrence.toISOString(), rrule).to.equal(fromRecent.nextOccurrence.toISOString());
     }
   });
@@ -52,12 +52,12 @@ describe('Group E2 - recurrence fast-forward', () => {
   it('E2-03: phase-shift property holds for monthly and yearly rules', () => {
     const now = new Date();
     // monthly, day 10 (jump-eligible: <= 28)
-    const monthlyOld = atcb_getNextOccurrence('RRULE:FREQ=MONTHLY;INTERVAL=1', utcDate('1988-04-10'), 3600000, false, 'UTC');
-    const monthlyRecent = atcb_getNextOccurrence('RRULE:FREQ=MONTHLY;INTERVAL=1', utcDate(`${now.getUTCFullYear() - 1}-04-10`), 3600000, false, 'UTC');
+    const monthlyOld = getNextOccurrence('RRULE:FREQ=MONTHLY;INTERVAL=1', utcDate('1988-04-10'), 3600000, false, 'UTC');
+    const monthlyRecent = getNextOccurrence('RRULE:FREQ=MONTHLY;INTERVAL=1', utcDate(`${now.getUTCFullYear() - 1}-04-10`), 3600000, false, 'UTC');
     expect(monthlyOld.nextOccurrence.toISOString(), 'monthly').to.equal(monthlyRecent.nextOccurrence.toISOString());
     // yearly
-    const yearlyOld = atcb_getNextOccurrence('RRULE:FREQ=YEARLY;INTERVAL=1', utcDate('1970-08-20'), 3600000, false, 'UTC');
-    const yearlyRecent = atcb_getNextOccurrence('RRULE:FREQ=YEARLY;INTERVAL=1', utcDate(`${now.getUTCFullYear() - 2}-08-20`), 3600000, false, 'UTC');
+    const yearlyOld = getNextOccurrence('RRULE:FREQ=YEARLY;INTERVAL=1', utcDate('1970-08-20'), 3600000, false, 'UTC');
+    const yearlyRecent = getNextOccurrence('RRULE:FREQ=YEARLY;INTERVAL=1', utcDate(`${now.getUTCFullYear() - 2}-08-20`), 3600000, false, 'UTC');
     expect(yearlyOld.nextOccurrence.toISOString(), 'yearly').to.equal(yearlyRecent.nextOccurrence.toISOString());
   });
 
@@ -68,8 +68,8 @@ describe('Group E2 - recurrence fast-forward', () => {
     const oldStart = shiftDays(new Date(Date.now() - (Date.now() % 86400000)), -periods * periodDays);
     const recentPeriods = 20;
     const recentStart = shiftDays(oldStart, (periods - recentPeriods) * periodDays);
-    const fromOld = atcb_getNextOccurrence(`RRULE:FREQ=DAILY;INTERVAL=${periodDays};COUNT=${periods + 50}`, oldStart, 0, false, 'UTC');
-    const fromRecent = atcb_getNextOccurrence(`RRULE:FREQ=DAILY;INTERVAL=${periodDays};COUNT=${recentPeriods + 50}`, recentStart, 0, false, 'UTC');
+    const fromOld = getNextOccurrence(`RRULE:FREQ=DAILY;INTERVAL=${periodDays};COUNT=${periods + 50}`, oldStart, 0, false, 'UTC');
+    const fromRecent = getNextOccurrence(`RRULE:FREQ=DAILY;INTERVAL=${periodDays};COUNT=${recentPeriods + 50}`, recentStart, 0, false, 'UTC');
     expect(fromOld.nextOccurrence.toISOString(), 'same next occurrence').to.equal(fromRecent.nextOccurrence.toISOString());
     expect(fromOld.adjustedCount, 'remaining count identical after consuming the same phase').to.equal(fromRecent.adjustedCount);
   });
@@ -77,7 +77,7 @@ describe('Group E2 - recurrence fast-forward', () => {
   it('E2-05: exhausted COUNT series lands on the final occurrence (fast-forwarded)', () => {
     // weekly from 1980 with COUNT=500: final occurrence = start + 499 weeks (year ~1989)
     const start = utcDate('1980-01-07');
-    const result = atcb_getNextOccurrence('RRULE:FREQ=WEEKLY;INTERVAL=1;COUNT=500', start, 0, false, 'UTC');
+    const result = getNextOccurrence('RRULE:FREQ=WEEKLY;INTERVAL=1;COUNT=500', start, 0, false, 'UTC');
     const expected = shiftDays(start, 499 * 7);
     expect(result.nextOccurrence.toISOString(), 'lands on the 500th occurrence').to.equal(expected.toISOString());
     expect(result.adjustedCount, 'series fully consumed').to.be.lessThan(2);
@@ -86,7 +86,7 @@ describe('Group E2 - recurrence fast-forward', () => {
   it('E2-06: exhausted UNTIL series lands on the final occurrence before UNTIL (fast-forwarded)', () => {
     const start = utcDate('1980-01-07');
     // until mid-1992: final weekly occurrence is the last monday-aligned date <= UNTIL
-    const result = atcb_getNextOccurrence('RRULE:FREQ=WEEKLY;INTERVAL=1;UNTIL=19920610T235959Z', start, 0, false, 'UTC');
+    const result = getNextOccurrence('RRULE:FREQ=WEEKLY;INTERVAL=1;UNTIL=19920610T235959Z', start, 0, false, 'UTC');
     expect(result.nextOccurrence.getUTCFullYear(), 'lands in the UNTIL year').to.equal(1992);
     expect(result.nextOccurrence.getTime(), 'not past UNTIL').to.be.lessThan(utcDate('1992-06-11', '00:00').getTime());
     // start was a monday - the final occurrence keeps the weekday
@@ -98,14 +98,14 @@ describe('Group E2 - recurrence fast-forward', () => {
     // weekly MO,WE with COUNT: matches per period vary - must NOT be fast-forwarded.
     // span kept small enough for the exact iteration to be authoritative
     const start = utcDate('2024-01-01'); // a monday
-    const result = atcb_getNextOccurrence('RRULE:FREQ=WEEKLY;INTERVAL=1;BYDAY=MO,WE;COUNT=20', start, 0, false, 'UTC');
+    const result = getNextOccurrence('RRULE:FREQ=WEEKLY;INTERVAL=1;BYDAY=MO,WE;COUNT=20', start, 0, false, 'UTC');
     // 20 occurrences = 10 weeks: final = wednesday of week 10 (2024-03-06)
     expect(result.nextOccurrence.toISOString().substring(0, 10), 'final BYDAY occurrence exact').to.equal('2024-03-06');
   });
 
   it('E2-08: unbounded rules with BY* filters do fast-forward and stay correct', () => {
     // monthly on the 31st (non-uniform matching - only counting is restricted, not the jump)
-    const result = atcb_getNextOccurrence('RRULE:FREQ=MONTHLY;INTERVAL=1;BYMONTHDAY=31', utcDate('1983-01-31'), 0, false, 'UTC');
+    const result = getNextOccurrence('RRULE:FREQ=MONTHLY;INTERVAL=1;BYMONTHDAY=31', utcDate('1983-01-31'), 0, false, 'UTC');
     expect(result.nextOccurrence.getUTCDate(), 'lands on a 31st').to.equal(31);
     expect(result.nextOccurrence.getTime(), 'current, not capped in the past').to.be.greaterThan(Date.now() - 35 * 86400000);
   });

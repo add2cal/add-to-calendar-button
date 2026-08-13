@@ -18,7 +18,7 @@ import type { ATCBInputConfig } from '../types';
 const atcbVersion: string = '';
 
 // CHECKING FOR SPECIFIC DEVICED AND SYSTEMS
-const atcbIsBrowser = (): boolean => {
+const isBrowser = (): boolean => {
   if (typeof window === 'undefined') {
     return false;
   } else {
@@ -26,7 +26,7 @@ const atcbIsBrowser = (): boolean => {
   }
 };
 // iOS
-const atcbIsiOS: () => boolean = atcbIsBrowser()
+const isIOS: () => boolean = isBrowser()
   ? () => {
       if (/iPad|iPhone|iPod/i.test(navigator.userAgent) && !/MSStream/i.test(navigator.userAgent)) {
         return true;
@@ -38,7 +38,7 @@ const atcbIsiOS: () => boolean = atcbIsBrowser()
       return false;
     };
 // Android
-const atcbIsAndroid: () => boolean = atcbIsBrowser()
+const isAndroid: () => boolean = isBrowser()
   ? () => {
       if (/android/i.test(navigator.userAgent) && !/MSStream/i.test(navigator.userAgent)) {
         return true;
@@ -50,7 +50,7 @@ const atcbIsAndroid: () => boolean = atcbIsBrowser()
       return false;
     };
 // Chrome
-/*const atcbIsChrome = atcbIsBrowser()
+/*const isChrome = isBrowser()
   ? () => {
       if (/chrome|chromium|crios|google inc/i.test(navigator.userAgent)) {
         return true;
@@ -62,7 +62,7 @@ const atcbIsAndroid: () => boolean = atcbIsBrowser()
       return false;
     };*/
 // Safari
-const atcbIsSafari: () => boolean = atcbIsBrowser()
+const isSafari: () => boolean = isBrowser()
   ? () => {
       if (/^(?:(?!chrome|android|crios|fxios).)*safari/i.test(navigator.userAgent)) {
         return true;
@@ -74,15 +74,15 @@ const atcbIsSafari: () => boolean = atcbIsBrowser()
       return false;
     };
 // Mobile
-const atcbIsMobile = (): boolean => {
-  if (atcbIsAndroid() || atcbIsiOS()) {
+const isMobile = (): boolean => {
+  if (isAndroid() || isIOS()) {
     return true;
   } else {
     return false;
   }
 };
 // WebView (iOS and Android)
-const atcbIsWebView: () => boolean = atcbIsBrowser()
+const isWebView: () => boolean = isBrowser()
   ? () => {
       if (/; ?wv|(?:iPhone|iPod|iPad).*AppleWebKit(?!.*Safari)/i.test(navigator.userAgent)) {
         return true;
@@ -94,7 +94,7 @@ const atcbIsWebView: () => boolean = atcbIsBrowser()
       return false;
     };
 // checking for problematic apps
-const atcbIsProblematicWebView: () => boolean = atcbIsBrowser()
+const isProblematicWebView: () => boolean = isBrowser()
   ? () => {
       if (/Instagram/i.test(navigator.userAgent)) {
         return true;
@@ -107,15 +107,15 @@ const atcbIsProblematicWebView: () => boolean = atcbIsBrowser()
     };
 
 // DEFINE GLOBAL VARIABLES
-const atcbDefaultTarget: string = atcbIsWebView() ? '_system' : '_blank';
-const atcbOptions: string[] = ['apple', 'google', 'ical', 'ms365', 'outlookcom', 'msteams', 'yahoo'];
-const atcbValidRecurrOptions: string[] = ['apple', 'google', 'ical'];
-const atcbInvalidSubscribeOptions: string[] = ['msteams'];
-const atcbIOSInvalidOptions: string[] = ['ical'];
-const atcbAndroidInvalidOptions: string[] = ['apple'];
+const defaultTarget: string = isWebView() ? '_system' : '_blank';
+const options: string[] = ['apple', 'google', 'ical', 'ms365', 'outlookcom', 'msteams', 'yahoo'];
+const validRecurrenceOptions: string[] = ['apple', 'google', 'ical'];
+const invalidSubscribeOptions: string[] = ['msteams'];
+const iosInvalidOptions: string[] = ['ical'];
+const androidInvalidOptions: string[] = ['apple'];
 
 // DEFINING THE WEB COMPONENT ATTRIBUTES
-const atcbWcParams: (keyof ATCBInputConfig)[] = [
+const wcParams: (keyof ATCBInputConfig)[] = [
   'debug',
   'proOverride',
   'cspnonce',
@@ -203,7 +203,7 @@ const atcbWcParams: (keyof ATCBInputConfig)[] = [
   'domain',
   'dev',
 ];
-const atcbWcProParams: (keyof ATCBInputConfig)[] = [
+const wcProParams: (keyof ATCBInputConfig)[] = [
   'debug',
   'proOverride',
   'cspnonce',
@@ -241,7 +241,7 @@ const atcbWcProParams: (keyof ATCBInputConfig)[] = [
   'domain',
   'dev',
 ];
-const atcbWcBooleanParams: (keyof ATCBInputConfig)[] = [
+const wcBooleanParams: (keyof ATCBInputConfig)[] = [
   'debug',
   'proOverride',
   'useUserTZ',
@@ -271,13 +271,13 @@ const atcbWcBooleanParams: (keyof ATCBInputConfig)[] = [
   'forceOverlay',
   'dev',
 ];
-const atcbWcObjectParams: (keyof ATCBInputConfig)[] = ['customLabels', 'ty', 'rsvp', 'customVar'];
-const atcbWcObjectArrayParams: (keyof ATCBInputConfig)[] = ['dates'];
-const atcbWcArrayParams: (keyof ATCBInputConfig)[] = ['recurrence_byDay', 'recurrence_byMonth', 'recurrence_byMonthDay', 'images', 'options', 'optionsMobile', 'optionsIOS', 'icsCategories', 'icsAttach', 'icsExdate'];
-const atcbWcNumberParams: (keyof ATCBInputConfig)[] = ['sequence', 'recurrence_interval', 'recurrence_count', 'icsPriority'];
+const wcObjectParams: (keyof ATCBInputConfig)[] = ['customLabels', 'ty', 'rsvp', 'customVar'];
+const wcObjectArrayParams: (keyof ATCBInputConfig)[] = ['dates'];
+const wcArrayParams: (keyof ATCBInputConfig)[] = ['recurrence_byDay', 'recurrence_byMonth', 'recurrence_byMonthDay', 'images', 'options', 'optionsMobile', 'optionsIOS', 'icsCategories', 'icsAttach', 'icsExdate'];
+const wcNumberParams: (keyof ATCBInputConfig)[] = ['sequence', 'recurrence_interval', 'recurrence_count', 'icsPriority'];
 
 // DEFINING GLOBAL ICONS
-const atcbIcon: { [key: string]: string } = {
+const icons: { [key: string]: string } = {
   trigger: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" style="fill:none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4.5" width="18" height="17" rx="3.5"/><path d="M8 2.5v4M16 2.5v4M3 10.5h18M12 13.5v5M9.5 16h5"/></svg>',
   plus: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" style="fill:none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M12 5.5v13M5.5 12h13"/></svg>',
   chevron: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" style="fill:none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9.5l6 6 6-6"/></svg>',
@@ -306,48 +306,48 @@ const atcbIcon: { [key: string]: string } = {
 
 // internal single-consumer result channel: while open, flows that would execute a
 // computed output (open a url, save a file) push it here instead and return
-let atcbResultStore: { value: string } | null = null;
-const atcb_result_channel = {
+let resultStore: { value: string } | null = null;
+const resultChannel = {
   open(): void {
-    atcbResultStore = { value: '' };
+    resultStore = { value: '' };
   },
   active(): boolean {
-    return atcbResultStore !== null;
+    return resultStore !== null;
   },
   push(value: string): void {
-    if (atcbResultStore) {
-      atcbResultStore.value = value;
+    if (resultStore) {
+      resultStore.value = value;
     }
   },
   close(): string {
-    const value = atcbResultStore ? atcbResultStore.value : '';
-    atcbResultStore = null;
+    const value = resultStore ? resultStore.value : '';
+    resultStore = null;
     return value;
   },
 };
 
 export {
   atcbVersion,
-  atcbIsBrowser,
-  atcbIsiOS,
-  atcbIsAndroid,
-  atcbIsSafari,
-  atcbIsMobile,
-  atcbIsWebView,
-  atcbIsProblematicWebView,
-  atcbDefaultTarget,
-  atcbOptions,
-  atcbValidRecurrOptions,
-  atcbInvalidSubscribeOptions,
-  atcbIOSInvalidOptions,
-  atcbAndroidInvalidOptions,
-  atcbWcParams,
-  atcbWcProParams,
-  atcbWcBooleanParams,
-  atcbWcObjectParams,
-  atcbWcObjectArrayParams,
-  atcbWcArrayParams,
-  atcbWcNumberParams,
-  atcbIcon,
-  atcb_result_channel,
+  isBrowser,
+  isIOS,
+  isAndroid,
+  isSafari,
+  isMobile,
+  isWebView,
+  isProblematicWebView,
+  defaultTarget,
+  options,
+  validRecurrenceOptions,
+  invalidSubscribeOptions,
+  iosInvalidOptions,
+  androidInvalidOptions,
+  wcParams,
+  wcProParams,
+  wcBooleanParams,
+  wcObjectParams,
+  wcObjectArrayParams,
+  wcArrayParams,
+  wcNumberParams,
+  icons,
+  resultChannel,
 };

@@ -1,7 +1,7 @@
 import { getActiveButton } from '../core/store';
 
 // SHARED FUNCTION TO CALCULATE THE POSITION OF THE DROPDOWN LIST
-function atcb_position_list(host: ShadowRoot, trigger: HTMLElement, list: HTMLElement, blockUpwards = false, blockDownwards = false): void {
+function position_list(host: ShadowRoot, trigger: HTMLElement, list: HTMLElement, blockUpwards = false, blockDownwards = false): void {
   // check for position anchor
   let anchorSet = false;
   const originalTrigger = trigger;
@@ -56,17 +56,17 @@ function atcb_position_list(host: ShadowRoot, trigger: HTMLElement, list: HTMLEl
   list.style.position = 'absolute';
   list.style.display = 'block';
   // adjust branding message, if set
-  const atcbL = host.querySelector('#atcb-reference');
-  if (atcbL) {
+  const brandingReference = host.querySelector('#atcb-reference');
+  if (brandingReference) {
     if (originalTrigger.classList.contains('atcb-dropup')) {
-      (originalTrigger.parentNode as Element).after(atcbL);
-      atcbL.classList.add('atcb-dropup');
+      (originalTrigger.parentNode as Element).after(brandingReference);
+      brandingReference.classList.add('atcb-dropup');
     }
   }
 }
 
 // SHARED FUNCTION TO CALCULATE THE POSITION OF THE SHADOW OVERLAY BUTTON
-function atcb_position_shadow_button(originalShadowHost: ShadowRoot, modalShadowHost: ShadowRoot): void {
+function position_shadow_button(originalShadowHost: ShadowRoot, modalShadowHost: ShadowRoot): void {
   const wrapperDim = originalShadowHost.querySelector('.atcb-initialized ')!.getBoundingClientRect();
   const newWrapper = modalShadowHost.querySelector('.atcb-initialized') as HTMLElement;
   let widthVal = wrapperDim.width;
@@ -79,17 +79,17 @@ function atcb_position_shadow_button(originalShadowHost: ShadowRoot, modalShadow
   newWrapper.style.left = wrapperDim.left + 'px';
 }
 
-function atcb_position_shadow_button_listener(): void {
+function position_shadow_button_listener(): void {
   const active = getActiveButton();
   if (active !== null && active !== '') {
     const originalEl = document.querySelector('add-to-calendar-button[atcb-button-id=' + active + ']')!.shadowRoot!;
     const shadowEl = document.querySelector('div[atcb-button-id=' + active + ']')!.shadowRoot!;
-    atcb_position_shadow_button(originalEl, shadowEl);
+    position_shadow_button(originalEl, shadowEl);
   }
 }
 
 // SHARED FUNCTION TO CALCULATE WHETHER WE BLOCK SCROLLING OR NOT
-function atcb_manage_body_scroll(host: ShadowRoot, modalObj: Element | null = null): void {
+function manage_body_scroll(host: ShadowRoot, modalObj: Element | null = null): void {
   const modal = (function (): Element | null | undefined {
     // if a specific modal is defined, we take it. Otherwise we go for the latest one
     if (modalObj != null) {
@@ -111,10 +111,10 @@ function atcb_manage_body_scroll(host: ShadowRoot, modalObj: Element | null = nu
 }
 
 // SHARED FUNCTION TO UPDATE GLOBAL SIZES
-function atcb_set_sizes(el: HTMLElement, sizes: { [key: string]: number | string }): void {
+function set_sizes(el: HTMLElement, sizes: { [key: string]: number | string }): void {
   el.style.setProperty('--base-font-size-l', sizes['l'] + 'px');
   el.style.setProperty('--base-font-size-m', sizes['m'] + 'px');
   el.style.setProperty('--base-font-size-s', sizes['s'] + 'px');
 }
 
-export { atcb_position_list, atcb_position_shadow_button, atcb_position_shadow_button_listener, atcb_manage_body_scroll, atcb_set_sizes };
+export { position_list, position_shadow_button, position_shadow_button_listener, manage_body_scroll, set_sizes };
