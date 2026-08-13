@@ -73,6 +73,11 @@ node16 and classic moduleResolution alike. Official attribute names are kebab-ca
 
 ### Deprecations and breaking changes
 
+- The public TypeScript config property for the PRO key is now lowercase `prokey`, matching the
+  official HTML attribute. Typed `atcb_action({ proKey: '...' })` calls and
+  `AddToCalendarButtonType` objects must change to `prokey`. The old `proKey` spelling still works
+  at runtime for plain JavaScript, and mixed-case HTML markup remains compatible because browsers
+  normalize attribute names to lowercase.
 - The ics timestamp options were renamed to match their ics-only scope: `created` is now
   `ics-created` (config key `icsCreated`) and `updated` is now `ics-updated` (config key
   `icsUpdated`). The old names are no longer read.

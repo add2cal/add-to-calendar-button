@@ -31,6 +31,9 @@ export type ATCBEventStatus = 'tentative' | 'confirmed' | 'cancelled';
  */
 export type ATCBEventStatusLegacy = Uppercase<ATCBEventStatus>;
 
+/**
+ * Button style options. List style options. Light mode options. Custom Labels. Normalized during decoration, but the input accepts any string (for forward compatibility with new styles).
+ */
 export type ATCBButtonStyle = 'default' | 'simple' | '3d' | 'flat' | 'round' | 'neumorphism' | 'text' | 'date' | 'custom' | 'none';
 
 export type ATCBListStyle = 'dropdown' | 'dropdown-static' | 'dropup-static' | 'overlay' | 'modal';
@@ -87,7 +90,7 @@ export interface ATCBDateEntry extends ATCBDateEntryInput {
  * Attribute values arrive as strings; boolean-ish fields accept both.
  */
 export interface ATCBInputConfig {
-  proKey?: string;
+  prokey?: string;
   name?: string;
   dates?: ATCBDateEntryInput[] | string;
   description?: string;
@@ -335,7 +338,7 @@ export interface EventDate {
 }
 
 export interface ATCBActionEventConfig {
-  proKey?: string;
+  prokey?: string;
   name?: string;
   dates?: EventDate[];
   description?: string;
@@ -413,7 +416,7 @@ export interface ATCBActionEventConfig {
 }
 
 export type AddToCalendarButtonType = {
-  proKey?: string;
+  prokey?: string;
   name?: string;
   dates?: EventDate[] | string;
   description?: string;

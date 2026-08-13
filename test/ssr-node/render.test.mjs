@@ -93,7 +93,7 @@ test('S-10: unknown languages fall back to the english label', () => {
 });
 
 test('S-11: kebab-case config keys are normalized like the tag attributes', () => {
-  const html = atcb_generate_ssr_html({ 'name': 'Launch', 'start-date': '2050-06-15', 'button-style': 'round', 'light-mode': 'dark', 'ical-file-name': 'invite', 'use-user-tz': true });
+  const html = atcb_generate_ssr_html({ name: 'Launch', 'start-date': '2050-06-15', 'button-style': 'round', 'light-mode': 'dark', 'ical-file-name': 'invite', 'use-user-tz': true });
   assert.ok(html.includes('button-style="round"'), 'kebab input re-serialized as official attribute');
   assert.ok(html.includes('ical-file-name="invite"'), 'special kebab name normalized');
   assert.ok(html.includes('use-user-tz="true"'), 'special kebab name normalized 2');
@@ -152,7 +152,7 @@ test('S-17: custom-css, style-light and style-dark reach the shell', () => {
     name: 'X',
     'button-style': 'custom',
     'custom-css': 'https://example.com/atcb.css',
-    'style-light': "--btn-background: #2f4377; --btn-text: #fff;",
+    'style-light': '--btn-background: #2f4377; --btn-text: #fff;',
     'style-dark': '--btn-background: #000;',
   });
   assert.ok(html.includes('<link rel="stylesheet" type="text/css" href="https://example.com/atcb.css">'), 'external css link in the shell');

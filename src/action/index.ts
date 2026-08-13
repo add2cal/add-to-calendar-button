@@ -25,20 +25,21 @@ async function atcb_action(inputData: ATCBInputConfig, triggerElement?: HTMLElem
   let data: ATCBConfig;
   try {
     data = await (async function () {
-      const cleanedInput = atcb_secure_content(inputData) as ATCBInputConfig & { prokey?: string; proOverride?: boolean };
+      const cleanedInput = atcb_secure_content(inputData) as ATCBInputConfig & { proOverride?: boolean };
+      const internalInput = cleanedInput as unknown as ATCBConfig;
       // pull data from PRO server, if key is given
       if (cleanedInput.prokey && cleanedInput.prokey !== '') {
-        cleanedInput.proKey = cleanedInput.prokey;
+        internalInput.proKey = cleanedInput.prokey;
       }
-      if (cleanedInput.proKey && cleanedInput.proKey !== '') {
+      if (internalInput.proKey && internalInput.proKey !== '') {
         try {
-          const proData = await atcb_get_pro_data(cleanedInput.proKey, undefined, cleanedInput);
+          const proData = await atcb_get_pro_data(internalInput.proKey, undefined, internalInput);
           return proData;
         } catch (e) {
           throw new Error((e as { message?: string }).message);
         }
       } else {
-        return cleanedInput as unknown as ATCBConfig;
+        return internalInput;
       }
     })();
   } catch (e) {

@@ -28,15 +28,17 @@ Edit only the root `package.json`. It is the single source of truth for the pack
 
 ## Gates before publishing
 
-1. `npm run test` - smoke tier (CI default; every run builds first via test-prep).
-2. `npm run test:extended` - reduced suite, pre-merge bar.
-3. `npm run test:full` - full cartesian suite, REQUIRED for releases, on BOTH browsers
-   (chrome-headless-shell and full Chrome via `CHROME_PATH`).
-4. `npm run test:package` - packs the tarball, installs it into a throwaway consumer, and
-   proves Node CJS/ESM consumption, both TypeScript resolution modes, and a real bundler
-   build with size bounds.
-5. `npm run test:ssr` - DOM-free shell rendering against the built dist.
-6. `npm run check` - eslint, prettier, typecheck.
+The complete release gate consists of two commands:
+
+1. `npm run test:release` - runs the full cartesian browser suite, package-consumption
+   probes, and DOM-free SSR tests. The browser suite is required on BOTH browsers
+   (chrome-headless-shell and full Chrome via `CHROME_PATH`). The package probes pack and
+   install the tarball, then verify Node CJS/ESM consumption, both TypeScript resolution
+   modes, and a real bundler build with size bounds.
+2. `npm run check` - eslint, prettier, typecheck.
+
+For day-to-day development, `npm run test` remains the smoke tier (and CI default), while
+`npm run test:extended` is the reduced pre-merge suite.
 
 ## Pre-release flow (major versions)
 

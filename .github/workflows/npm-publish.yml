@@ -52,8 +52,8 @@ jobs:
           registry-url: https://registry.npmjs.org/
           cache: 'npm'
       - run: npm ci
-      - run: npm run eslint
-      - run: npm run test
+      - run: npm run check
+      - run: npm run test:release
 
   build-and-publish:
     runs-on: ubuntu-latest

@@ -31,7 +31,20 @@ of deliberate breaking changes listed at the end.
 Types are now GENERATED from the source into a single flat `dist/index.d.ts` and resolve under
 every moduleResolution (bundler, node16, classic). The public type names are unchanged
 (`ATCBActionEventConfig`, `AddToCalendarButtonType`, `EventDate`, `CustomLabelsObjectType`);
-the language union gained `he` and `uk`.
+the language union gained `he` and `uk`. The typed PRO key property changed from `proKey` to
+the official lowercase `prokey` spelling:
+
+```ts
+// v2
+atcb_action({ proKey: '...' });
+
+// v3
+atcb_action({ prokey: '...' });
+```
+
+This is a compile-time breaking change. Legacy `proKey` continues to work at runtime for plain
+JavaScript objects, and `<add-to-calendar-button proKey="...">` continues to work because HTML
+normalizes attribute names to lowercase.
 
 ## Attributes
 
@@ -147,15 +160,18 @@ the configuration reference, both clearly marked as Apple/iCal-only.
 
 ## Deliberate breaking changes
 
-1. Translation key renames (relevant ONLY for `customLabels` overrides of exactly these keys):
+1. The TypeScript config property `proKey` is now `prokey`, matching the official HTML
+   attribute. Update typed `atcb_action` objects and `AddToCalendarButtonType` usage. The old
+   casing remains a runtime compatibility alias but is intentionally rejected by the v3 types.
+2. Translation key renames (relevant ONLY for `customLabels` overrides of exactly these keys):
    - `date.status.cancelled.cta` -> `date.status.cancelled_cta`
    - `label.share.email.subject` -> `label.share.email_subject`
    - `label.rsvp` -> `label.rsvp.title`, `form.status` -> `form.status.title`, `form.success` -> `form.success.title`
-2. The dedicated `no-pro` / `unstyle` / `no-pro-unstyle` BUILDS are gone (shims keep the entry
+3. The dedicated `no-pro` / `unstyle` / `no-pro-unstyle` BUILDS are gone (shims keep the entry
    points alive). Styles load lazily anyway; PRO code stays license-gated at runtime.
-3. Script-capable url schemes (for example `javascript:`) are rejected wherever urls are consumed.
-4. The dropdown's ARIA roles changed from `list`/`link` to the valid `menu`/`menuitem` pattern.
-5. Browser floor: full experience at Baseline 2023 (Safari 16.4+, evergreen); bundles target
+4. Script-capable url schemes (for example `javascript:`) are rejected wherever urls are consumed.
+5. The dropdown's ARIA roles changed from `list`/`link` to the valid `menu`/`menuitem` pattern.
+6. Browser floor: full experience at Baseline 2023 (Safari 16.4+, evergreen); bundles target
    ES2017; declarative shadow DOM is a progressive enhancement.
 
 ## Size report (v2.15.0 published artifacts vs v3, built with --min)

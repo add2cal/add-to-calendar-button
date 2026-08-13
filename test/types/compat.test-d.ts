@@ -59,11 +59,15 @@ export const literalCall: Promise<string> = atcb_action({
 
 // 6b. the v3 official lowercase values compile equally (options keys + status)
 export const officialNamesCall: Promise<string> = atcb_action({
+  prokey: '00000000-0000-0000-0000-000000000000',
   name: 'Official Names Check',
   startDate: '2050-06-15',
   status: 'confirmed',
   options: ['apple', 'google', 'ical', 'ms365', 'msteams', 'outlookcom', 'yahoo'],
 });
+
+// @ts-expect-error proKey was replaced by the official lowercase prokey spelling in v3
+atcb_action({ proKey: 'legacy-casing' });
 
 // 6c. legacy uppercase status and v2 option spellings stay accepted side by side
 export const mixedAliasCall: Promise<string> = atcb_action({

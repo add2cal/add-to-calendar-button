@@ -270,37 +270,6 @@ In doubt, simply ask and we find a way. :)
 
 ## 💜 Kudos go to
 
-...all amazing contributors:
-
-<a href="https://github.com/jekuer"><img src="https://avatars.githubusercontent.com/u/8572883?v=4" title="Jens Kuerschner" width="60" height="60"></a>
-<a href="https://github.com/add-to-calendar"><img src="https://avatars.githubusercontent.com/u/110406429?s=96&v=4" title="Add to Calendar Team" width="60" height="60"></a>
-<a href="https://github.com/chadoh"><img src="https://avatars.githubusercontent.com/u/221614?v=4" title="chadoh" width="60" height="60"></a>
-<a href="https://github.com/turcuciprian"><img src="https://avatars.githubusercontent.com/u/3309840?v=4" title="Ciprian Turcu" width="60" height="60"></a>
-<a href="https://github.com/lizakorab"><img src="https://avatars.githubusercontent.com/u/72821189?v=4" title="Liza Korab" width="60" height="60"></a>
-<a href="https://github.com/bryan-brancotte"><img src="https://avatars.githubusercontent.com/u/11556772?v=4" title="Bryan Brancotte" width="60" height="60"></a>
-<a href="https://github.com/nticaric"><img src="https://avatars.githubusercontent.com/u/824840?v=4" title="nticaric" width="60" height="60"></a>
-<a href="https://github.com/Ortovoxx"><img src="https://avatars.githubusercontent.com/u/56805259?v=4" title="Ortovoxx" width="60" height="60"></a>
-<a href="https://github.com/resentment-industries"><img src="https://avatars.githubusercontent.com/u/113481246?v=4" title="Logic" width="60" height="60"></a>
-<a href="https://github.com/purushu007"><img src="https://avatars.githubusercontent.com/u/70796763?v=4" title="Purushu" width="60" height="60"></a>
-<a href="https://github.com/cabello"><img src="https://avatars.githubusercontent.com/u/60936?v=4" title="Danilo Cabello" width="60" height="60"></a>
-<a href="https://github.com/Goudarz"><img src="https://avatars.githubusercontent.com/u/3191949?v=4" title="Goudarz" width="60" height="60"></a>
-<a href="https://github.com/ragnarkurm"><img src="https://avatars.githubusercontent.com/u/5205088?v=4" title="Ragnar Kurm" width="60" height="60"></a>
-<a href="https://github.com/emilebosch"><img src="https://avatars.githubusercontent.com/u/303135?v=4" title="Emile Bosch" width="60" height="60"></a>
-<a href="https://github.com/killerrin"><img src="https://avatars.githubusercontent.com/u/3269687?v=4" title="killerrin" width="60" height="60"></a>
-<a href="https://github.com/acm-will"><img src="https://avatars.githubusercontent.com/u/103984058?v=4" title="acm-will" width="60" height="60"></a>
-<a href="https://github.com/sukharenko"><img src="https://avatars.githubusercontent.com/u/2049036?v=4" title="Yevgen Sukharenko" width="60" height="60"></a>
-<a href="https://github.com/pbaumard"><img src="https://avatars.githubusercontent.com/u/6176006?v=4" title="Pierre Baumard" width="60" height="60"></a>
-<a href="https://github.com/hananamar"><img src="https://avatars.githubusercontent.com/u/1096604?v=4" title="Hanan Amar" width="60" height="60"></a>
-<a href="https://github.com/rocky-premise"><img src="https://avatars.githubusercontent.com/u/230592673?v=4" title="Rocky Assad" width="60" height="60"></a>
-<a href="https://github.com/brenjt"><img src="https://avatars.githubusercontent.com/u/1713885?v=4" title="Brennan" width="60" height="60"></a>
-<a href="https://github.com/chris-at-fabius-labs"><img src="https://avatars.githubusercontent.com/u/108754665?v=4" title="chris-at-fabius-labs" width="60" height="60"></a>
-<a href="https://github.com/ssaaiidd"><img src="https://avatars.githubusercontent.com/u/29234802?v=4" title="ssaaiidd" width="60" height="60"></a>
-<a href="https://github.com/c0rychu"><img src="https://avatars.githubusercontent.com/u/55235141?v=4" title="Cory Chu" width="60" height="60"></a>
-<a href="https://github.com/BenceHargitai"><img src="https://avatars.githubusercontent.com/u/78082719?v=4" title="Bence Hargitai" width="60" height="60"></a>
-<a href="https://github.com/jenniferbacon01"><img src="https://avatars.githubusercontent.com/u/28692326?v=4" title="Jenny Bacon" width="60" height="60"></a>
-<a href="https://github.com/Denperidge"><img src="https://avatars.githubusercontent.com/u/27348469?v=4" title="Cat" width="60" height="60"></a>
-<a href="https://github.com/julamb"><img src="https://avatars.githubusercontent.com/u/3592718?v=4" title="julamb" width="60" height="60"></a>
-<a href="https://github.com/ameliabradley"><img src="https://avatars.githubusercontent.com/u/597352?v=4" title="Amelia Bradley" width="60" height="60"></a>
-<a href="https://github.com/apps/dependabot"><img src="https://avatars.githubusercontent.com/in/29110?v=4" title="dependabot[bot]" width="60" height="60"></a>
+...all amazing contributors!
 
 <br />

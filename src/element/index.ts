@@ -48,7 +48,7 @@ if (atcbIsBrowser()) {
     error: boolean;
     debug?: boolean;
     proOverride?: boolean;
-    proKey?: string;
+    prokey?: string;
     identifier?: string;
     initializing?: boolean;
     updatePending?: boolean;
@@ -145,7 +145,7 @@ if (atcbIsBrowser()) {
         const proKeyVal = getConfigAttribute(this, 'proKey');
         if (proKeyVal && proKeyVal !== '') {
           this.data = await atcb_get_pro_data(proKeyVal, this);
-          if (this.data.proKey) this.proKey = this.data.proKey;
+          if (this.data.proKey) this.prokey = this.data.proKey;
         } else {
           this.data.proKey = '';
           // if no data yet, we try reading attributes or the innerHTML of the host element
@@ -232,7 +232,7 @@ if (atcbIsBrowser()) {
         const proKeyVal = getConfigAttribute(this, 'proKey');
         if (proKeyVal && proKeyVal !== '') {
           this.data = await atcb_get_pro_data(proKeyVal, this);
-          if (this.data.proKey) this.proKey = this.data.proKey;
+          if (this.data.proKey) this.prokey = this.data.proKey;
         } else {
           this.data = (await atcb_process_inline_data(this, this.debug)) as unknown as ATCBConfig;
         }
