@@ -294,6 +294,14 @@
       "import_npm": "Importiere das Modul in deine Komponente, in welcher du den Button nutzen möchtest.",
       "options_intro_1": "Wir beschreiben nachfolgend alle Optionen.",
       "options_intro_2": "Choose your fighter!",
+      "styles_lang_headline": "Stile & Sprachen",
+      "styles_lang_default": "Das Skript wird mit dem \"default\"-Button-Style und dem englischen Sprachpaket ausgeliefert - der Button sieht also von Haus aus gut aus und funktioniert ohne jegliche zusätzliche Konfiguration.",
+      "styles_lang_ondemand": "Jeder weitere Style und jede weitere Sprache lädt automatisch bei Bedarf (jeweils wenige KB), sobald du sie referenzierst - kein manuelles Wiring nötig.",
+      "styles_lang_npm_heading": "Bundling via npm (empfohlen für Frameworks)",
+      "styles_lang_npm_body": "Wenn du das Skript bundlest, importiere die gewünschten Style- und Sprachmodule, damit sie zur Build-Zeit ohne Netzwerk-Anfrage registriert werden. Füge einfach die entsprechenden Import-Anweisungen irgendwo in deiner Entry-Datei (oder der Komponente, die den Button nutzt) hinzu:",
+      "styles_lang_cdn_heading": "Laden via CDN (Vanilla JS)",
+      "styles_lang_cdn_body": "Mit dem CDN-Script-Tag werden On-Demand-Styles und -Sprachen von derselben Quelle wie das Skript selbst geladen - nichts weiter einzustellen. Falls du das Skript selbst hostest, setze das \"style-source\"-Attribut auf das Verzeichnis, das die styles/- und locales/-Ordner enthält.",
+      "styles_lang_more": "Siehe die Optionen \"button-style\", \"style-source\", \"load-all-styles\" und \"language\" auf der Konfigurations-Seite für alle Details.",
       "general": {
         "headline": "Wie man den Add to Calendar Button installiert"
       },

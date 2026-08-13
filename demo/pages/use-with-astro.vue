@@ -61,6 +61,17 @@ import Layout from '../layouts/Layout.astro';
 &lt;/Layout&gt;</pre>
         </LazyCodeBlock>
         <p class="font-semibold italic">{{ $t('content.guide.step_use_simple') }}</p>
+        <h2 class="mb-6 mt-20">{{ $t('content.guide.styles_lang_headline') }}</h2>
+        <p>{{ $t('content.guide.styles_lang_default') }}</p>
+        <p class="pt-5">{{ $t('content.guide.styles_lang_ondemand') }}</p>
+        <h3 class="mb-6 mt-12">{{ $t('content.guide.styles_lang_npm_heading') }}</h3>
+        <p>{{ $t('content.guide.styles_lang_npm_body') }}</p>
+        <LazyCodeBlock language="javascript">
+          <pre>
+import 'add-to-calendar-button/styles/3d';   // any style besides "default"
+import 'add-to-calendar-button/i18n/de';       // any language besides English</pre>
+        </LazyCodeBlock>
+        <p class="mt-10">{{ $t('content.guide.styles_lang_more') }}</p>
         <p class="mb-10">
           {{ $t('content.guide.ssr_note') }}
           <NuxtLink :to="{path: localePath('advanced-use'), hash: '#case-12'}">{{ $t('content.advanced.12_long') }} <ArrowRightIcon class="-mt-0.5 mr-0.5 inline-block h-3 w-3" aria-hidden="true" /></NuxtLink>

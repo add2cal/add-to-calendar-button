@@ -90,6 +90,17 @@ compilerOptions: {
   time-zone="{{ $t('demo_data.default_timezone') }}"{{ defaultLang }}
 &gt;&lt;/add-to-calendar-button&gt;</pre>
         </LazyCodeBlock>
+        <h2 class="mb-6 mt-20">{{ $t('content.guide.styles_lang_headline') }}</h2>
+        <p>{{ $t('content.guide.styles_lang_default') }}</p>
+        <p class="pt-5">{{ $t('content.guide.styles_lang_ondemand') }}</p>
+        <h3 class="mb-6 mt-12">{{ $t('content.guide.styles_lang_npm_heading') }}</h3>
+        <p>{{ $t('content.guide.styles_lang_npm_body') }}</p>
+        <LazyCodeBlock language="javascript">
+          <pre>
+import 'add-to-calendar-button/styles/3d';   // any style besides "default"
+import 'add-to-calendar-button/i18n/de';       // any language besides English</pre>
+        </LazyCodeBlock>
+        <p class="mt-10">{{ $t('content.guide.styles_lang_more') }}</p>
       </div>
     </div>
     <div class="hidden border-l border-zinc-300 pl-8 text-xs dark:border-zinc-700 lg:block xl:pl-12">
