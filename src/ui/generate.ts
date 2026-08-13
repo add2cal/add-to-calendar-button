@@ -203,6 +203,9 @@ function atcb_generate_dropdown_list(host: ShadowRoot, data: ATCBConfig): HTMLDi
   if (data.rtl) {
     optionsList.classList.add('atcb-rtl');
   }
+  if (data.hideTextLabelList) {
+    optionsList.classList.add('atcb-no-text');
+  }
   // in the modal case, the trigger label repeats as a headline on top
   if (data.listStyle === 'modal') {
     const listHeadline = document.createElement('div');
@@ -235,7 +238,7 @@ function atcb_generate_dropdown_list(host: ShadowRoot, data: ATCBConfig): HTMLDi
     listCount++;
     optionItem.dataset.optionNumber = `${listCount}`;
     optionsList.append(optionItem);
-    atcb_generate_label(host, data, optionItem, 'close', !data.hideIconList);
+    atcb_generate_label(host, data, optionItem, 'close', true);
   }
   return optionsList;
 }
@@ -402,12 +405,30 @@ async function atcb_create_modal(
   // create box
   const modal = document.createElement('div');
   modal.classList.add('atcb-modal-box');
+  if (icon !== '' && !data.hideIconModal) {
+    modal.classList.add('atcb-modal-box-with-icon');
+  }
   modal.setAttribute('part', 'atcb-modal-box');
   if (data.rtl) {
     modal.classList.add('atcb-rtl');
   }
   modalWrapper.append(modal);
   atcb_set_sizes(modal, data.sizes!);
+  // Communication modals use a consistent icon-only close control. Option-list
+  // modals are generated separately and retain their close list item.
+  const modalCloseButton = document.createElement('button');
+  modalCloseButton.type = 'button';
+  modalCloseButton.classList.add('atcb-modal-close');
+  modalCloseButton.setAttribute('aria-label', atcb_translate_hook('close', data));
+  modalCloseButton.innerHTML = atcbIcon['close']!;
+  modalCloseButton.addEventListener(
+    'click',
+    atcb_debounce(() => {
+      atcb_log_event('closeList', 'Modal Close Button', getActiveButton());
+      atcb_close(mainHost);
+    }),
+  );
+  modal.append(modalCloseButton);
   // add icon
   if (icon !== '' && !data.hideIconModal) {
     const modalIcon = document.createElement('div');
@@ -487,14 +508,18 @@ async function atcb_create_modal(
       }
     }
   }
-  // add buttons (array of objects; attributes: href, type, label, primary(boolean), small(boolean), id)
-  if (buttons.length === 0) {
-    buttons.push({ type: 'close', label: atcb_translate_hook('close', data), small: true });
+  // Close/cancel footer actions are superseded by the icon above. Keep a footer
+  // only when the modal has additional actions.
+  const actionButtons = buttons.filter((button) => button.type && button.type !== 'close');
+  if (actionButtons.length === 0) {
+    modal.classList.add('atcb-modal-box-no-buttons');
   }
-  const modalButtons = document.createElement('div');
-  modalButtons.classList.add('atcb-modal-buttons');
-  modal.append(modalButtons);
-  buttons.forEach((button, index) => {
+  const modalButtons = actionButtons.length > 0 ? document.createElement('div') : null;
+  if (modalButtons) {
+    modalButtons.classList.add('atcb-modal-buttons');
+    modal.append(modalButtons);
+  }
+  actionButtons.forEach((button, index) => {
     let modalButton: HTMLAnchorElement | HTMLButtonElement;
     if (button.href && button.href !== '') {
       modalButton = document.createElement('a');
@@ -519,26 +544,12 @@ async function atcb_create_modal(
       button.label = atcb_translate_hook('modal.button.default', data);
     }
     modalButton.textContent = button.label;
-    modalButtons.append(modalButton);
+    modalButtons!.append(modalButton);
     if (index === 0 && subEvents.length < 2 && keyboardTrigger) {
       modalButton.focus();
     }
     switch (button.type) {
       default:
-      case 'close':
-        modalButton.addEventListener(
-          'click',
-          atcb_debounce(() => {
-            atcb_log_event('closeList', 'Modal Close Button', getActiveButton());
-            atcb_close(mainHost);
-          }),
-        );
-        (modalButton as HTMLElement).addEventListener('keyup', function (event: KeyboardEvent) {
-          if (event.key === 'Enter' || event.code == 'Space') {
-            atcb_log_event('closeList', 'Modal Close Button', getActiveButton());
-            atcb_toggle(mainHost, 'close', '', '', true);
-          }
-        });
         break;
       case 'yahoo2nd': // for yahoo subscribe modal, where we guide the user through the process
         modalButton.addEventListener(
@@ -574,6 +585,9 @@ async function atcb_create_modal(
         break;
     }
   });
+  if (keyboardTrigger && subEvents.length < 2 && actionButtons.length === 0) {
+    modalCloseButton.focus();
+  }
   // hide prev modal
   if (modalCount > 1) {
     const prevModal = modalHost.querySelector('.atcb-modal[data-modal-nr="' + (modalCount - 1) + '"]');

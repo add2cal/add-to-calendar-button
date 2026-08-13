@@ -8,7 +8,7 @@ import tseslint from 'typescript-eslint';
 export default [
   // general ignores
   {
-    ignores: ['**/*.d.ts', '**/*.min.*', 'dist/*', 'demo/**', 'set-release.js', 'node_modules/', '.github/'],
+    ignores: ['**/*.d.ts', '**/*.min.*', 'dist/*', 'demo/**', 'node_modules/', '.github/'],
   },
   // general rules
   js.configs.recommended,

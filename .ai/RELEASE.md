@@ -17,13 +17,14 @@ in the package; whether to switch the CDN default to it is a maintainer decision
 
 ## Version bumps
 
-`node scripts/set-version.mjs [patch|minor|major|prerelease|x.y.z|x.y.z-tag.n]`
+Edit only the root `package.json`. It is the single source of truth for the package version.
 
-- Updates package.json, the `atcbVersion` constant, source and css banners, and the demo
-  footer in one go (walks all src subdirectories).
-- Prerelease-capable: explicit versions like `3.0.0-next.1` are accepted, `prerelease`
-  increments the trailing counter, and `patch` on a prerelease finalizes the base version
-  (npm semantics). Run a build afterwards so generated artifacts pick up the new version.
+- The library build injects that version into runtime/ICS output and all generated banners.
+- The demo's `prebuild` and `pregenerate` hooks sync its displayed version from the parent
+  package before Nuxt runs.
+- Prerelease versions such as `3.0.0-next.1` are supported. Release tags use the matching
+  `v3.0.0-next.1` form and the publish workflow selects npm's `next` tag from the package
+  version itself.
 
 ## Gates before publishing
 
@@ -35,16 +36,16 @@ in the package; whether to switch the CDN default to it is a maintainer decision
    proves Node CJS/ESM consumption, both TypeScript resolution modes, and a real bundler
    build with size bounds.
 5. `npm run test:ssr` - DOM-free shell rendering against the built dist.
-6. `npm run eslint` + `npm run prettier` + `npm run typecheck`.
+6. `npm run check` - eslint, prettier, typecheck.
 
 ## Pre-release flow (major versions)
 
 Major versions bake in the wild before going official:
 
-1. Set a prerelease version (`3.0.0-next.1`), build, run all gates.
+1. Set a prerelease version (`3.0.0-next.1`) in package.json, build, run all gates.
 2. Publish under the npm `next` dist-tag: `npm publish --tag next`.
-3. Iterate `prerelease` bumps as fixes land; the suite gates stay the safety net.
-4. When stable: `set-version.mjs patch` (finalizes the base version), full gates,
+3. Increment the version in package.json as fixes land; the suite gates stay the safety net.
+4. When stable: remove the prerelease suffix in package.json, run the full gates,
    `npm publish` (default `latest` tag), git tag, GitHub release (release notes draft
    lives with the release preparation material), demo/website deploy.
 

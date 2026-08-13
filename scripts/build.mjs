@@ -138,6 +138,15 @@ function buildCssTemplate() {
 
 const STYLE_RELPATH_HOOK = "const atcbStyleRelPath: string = 'styles/';";
 const LOCALE_RELPATH_HOOK = "const atcbLocaleRelPath: string = 'locales/';";
+const VERSION_HOOK = "const atcbVersion: string = '';";
+
+function injectVersion(code, id) {
+  if (!id.replaceAll('\\', '/').endsWith('src/core/globals.ts')) return null;
+  if (!code.includes(VERSION_HOOK)) {
+    throw new Error('core/globals.ts: version hook not found - build assumption broken');
+  }
+  return code.replace(VERSION_HOOK, `const atcbVersion: string = '${pkg.version}';`);
+}
 
 function injectLocaleRelPath(code, id, relPath) {
   if (!id.replaceAll('\\', '/').endsWith('src/i18n/index.ts')) return null;
@@ -189,6 +198,8 @@ async function buildLib() {
           name: 'atcb-inline-css',
           enforce: 'pre', // must run before vite transpiles the TS source
           transform(code, id) {
+            const versionResult = injectVersion(code, id);
+            if (versionResult !== null) return { code: versionResult, map: null };
             const cssResult = injectCssTemplate(code, id, '../styles/');
             if (cssResult !== null) return { code: cssResult, map: null };
             const localeResult = injectLocaleRelPath(code, id, '../locales/');
@@ -296,6 +307,11 @@ async function buildBrowser({ minify }) {
       {
         name: 'atcb-inline-css',
         setup(build) {
+          build.onLoad({ filter: /core[/\\]globals\.ts$/ }, (args) => {
+            const code = fs.readFileSync(args.path, 'utf8');
+            const result = injectVersion(code, args.path);
+            return result === null ? undefined : { contents: result, loader: 'ts' };
+          });
           build.onLoad({ filter: /css-template\.ts$/ }, (args) => {
             const code = fs.readFileSync(args.path, 'utf8');
             const result = injectCssTemplate(code, args.path, 'styles/');
@@ -435,6 +451,8 @@ function sanityCheck() {
     if (!fs.existsSync(r('dist/locales', `de.${ext}`))) problems.push(`dist/locales/de.${ext} missing`);
   }
   if (!styled.includes('@preserve')) problems.push('dist/atcb.js: @preserve license blocks missing');
+  if (!styled.includes(`atcbVersion = "${pkg.version}"`) && !styled.includes(`atcbVersion = '${pkg.version}'`)) problems.push(`dist/atcb.js: package version ${pkg.version} not injected`);
+  if (!fs.readFileSync(r('assets/css', 'atcb.css'), 'utf8').includes(`Version: ${pkg.version}`)) problems.push(`assets/css/atcb.css: package version ${pkg.version} not injected`);
   if (!moduleBuild.includes('@preserve')) problems.push('dist/module/index.js: @preserve license blocks missing');
   if (!moduleBuild.includes("from 'timezones-ical-library'") && !moduleBuild.includes('from "timezones-ical-library"')) {
     problems.push('dist/module/index.js: timezones-ical-library should stay external');

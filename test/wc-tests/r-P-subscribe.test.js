@@ -67,6 +67,13 @@ describe('Group P - Subscribe mode', () => {
       const modal = modalHost(host);
       expect(modal, 'manual instructions modal').to.exist;
       expect(modal.shadowRoot.querySelector('.atcb-modal-box')).to.exist;
+      const closeButton = modal.shadowRoot.querySelector('.atcb-modal-close');
+      expect(closeButton, 'icon close control').to.exist;
+      expect(closeButton.getAttribute('aria-label'), 'icon close control is named').to.equal('Close');
+      expect(closeButton.querySelector('svg'), 'close control renders the X icon').to.exist;
+      const footerButtons = modal.shadowRoot.querySelectorAll('.atcb-modal-buttons .atcb-modal-btn');
+      expect(footerButtons.length, 'footer keeps only the Yahoo action').to.equal(1);
+      expect(footerButtons[0].textContent, 'cancel action removed from the footer').to.not.equal('Cancel');
       expect(clip.texts.join(' '), 'ics url copied for manual yahoo subscribe').to.include('example.com/team-calendar.ics');
     } finally {
       mute.restore();

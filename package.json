@@ -99,24 +99,24 @@
   },
   "homepage": "https://add-to-calendar-button.com/",
   "scripts": {
-    "release": "node set-release.js",
     "eslint": "eslint .",
     "eslint:fix": "eslint --fix .",
     "prettier": "npx prettier . --check",
     "prettier:fix": "npm run prettier -- --write",
     "typecheck": "tsc --noEmit && tsc --noEmit -p test/types/tsconfig.json",
+    "check": "npm run eslint && npm run prettier && npm run typecheck",
     "format": "npm run eslint:fix && npm run prettier:fix && cd demo && npm run lint:fix && npm run prettier:fix",
     "test": "node test/test-prep.js && npx web-test-runner \"test/wc-tests/wc-load.test.js\" \"test/wc-tests/recurrence-tz.test.js\" \"test/wc-tests-smoke/*.test.js\"",
     "test:extended": "node test/test-prep.js && npx web-test-runner \"test/wc-tests/*.test.js\" \"test/wc-tests-smoke/*.test.js\"",
     "test:full": "node test/test-prep.js && npx web-test-runner \"test/wc-tests/*.test.js\" \"test/wc-tests-smoke/*.test.js\" \"test/wc-tests-full/*.test.js\"",
+    "test:package": "node scripts/test-package.mjs",
+    "test:ssr": "node scripts/build.mjs && node --test \"test/ssr-node/*.test.mjs\"",
     "dev": "cd demo && npm run dev",
     "build:all": "npm run build && npm run build:demo",
     "build:demo": "cd demo && npm run generate",
     "build:min": "node scripts/build.mjs --min",
     "build": "node scripts/build.mjs",
-    "prepack": "npm run build:min",
-    "test:package": "node scripts/test-package.mjs",
-    "test:ssr": "node scripts/build.mjs && node --test \"test/ssr-node/*.test.mjs\""
+    "prepack": "npm run build:min"
   },
   "dependencies": {
     "lit": "^3.3.3",

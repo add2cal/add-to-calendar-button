@@ -43,6 +43,11 @@
   margin-left: 0;
 }
 
+.atcb-rtl .atcb-no-text .atcb-icon {
+  margin-right: 0;
+  margin-left: 0;
+}
+
 .atcb-icon svg {
   fill: currentcolor;
   height: 100%;
@@ -82,13 +87,18 @@
   font-size: 1.05em;
   padding-block: .8em 1em;
   padding-inline: .9em 3.2em;
-  text-align: start;
+  text-align: left;
+}
+
+.atcb-list.atcb-rtl .atcb-list-modal-headline {
+  padding-inline: 3.2em .9em;
+  text-align: right;
 }
 
 .atcb-list.atcb-modal .atcb-list-item-close {
   position: absolute;
-  top: .7em;
-  inset-inline-end: .7em;
+  top: .6em;
+  inset-inline-end: .6em;
   height: 2em;
   width: 2em;
   padding: .5em;
@@ -130,6 +140,10 @@
   color: var(--list-close-text);
 }
 
+:host(.atcb-dark) .atcb-list-item.atcb-list-item-close:not(:focus-visible) {
+  color: var(--modal-text);
+}
+
 .atcb-list-item-close svg {
   fill: currentcolor;
 }
@@ -149,7 +163,7 @@
 }
 
 .atcb-modal-box.atcb-rtl {
-  text-align: var(--modal-text-align-rtl);
+  text-align: right;
   direction: rtl;
   padding: 1.25em 1em 1.25em 2em;
 }
@@ -640,13 +654,10 @@ a.atcb-modal-btn:disabled {
   --status-active-text: #fff;
   --form-error: #c5372c;
   --form-success: #338a36;
-  --modal-text-align: center;
-  --modal-text-align-rtl: center;
   --modal-background: #f5f5f5;
   --modal-btn-secondary-background: #e2e1e6;
   --modal-btn-font-weight: 600;
   --modal-btn-text: #2e2e2e;
-  --modal-headline-text-align: center;
   --date-btn-text: #1d1d1e;
   --date-btn-cal-day-text: #fff;
   --date-btn-cal-month-text: #c9ccd2;
@@ -764,19 +775,79 @@ a.atcb-modal-btn:disabled {
   margin: 0 auto;
 }
 
+.atcb-list.atcb-no-text .atcb-list-item:not(.atcb-list-item-close) .atcb-icon {
+  margin-left: 0;
+  margin-right: auto;
+}
+
+.atcb-list.atcb-rtl.atcb-no-text .atcb-list-item:not(.atcb-list-item-close) .atcb-icon {
+  margin-left: auto;
+  margin-right: 0;
+}
+
 .atcb-modal-box {
   color: var(--modal-text);
   cursor: default;
   box-sizing: border-box;
   font-family: var(--font);
   line-height: 1.5em;
-  text-align: var(--modal-text-align);
+  text-align: left;
   user-select: none;
   -webkit-user-select: none;
   touch-action: manipulation;
   width: 100%;
   margin-bottom: 20px;
   -webkit-tap-highlight-color: transparent;
+  position: relative;
+}
+
+.atcb-modal-close {
+  align-items: center;
+  background: transparent;
+  border: 0;
+  border-radius: 100%;
+  color: var(--modal-btn-text);
+  cursor: pointer;
+  display: flex;
+  height: 2.2em;
+  inset-inline-end: .7em;
+  justify-content: center;
+  padding: .65em;
+  position: absolute;
+  top: .7em;
+  width: 2.2em;
+  z-index: 1;
+}
+
+@media (width > 575px) {
+  .atcb-modal-box-with-icon .atcb-modal-close {
+    top: 4.1em;
+  }
+}
+
+.atcb-modal-close:focus-visible,
+.atcb-modal-close:hover {
+  background-color: var(--modal-btn-hover-background);
+  color: var(--modal-btn-hover-text);
+  outline: 0;
+}
+
+.atcb-modal-close:focus-visible {
+  outline: 2px solid var(--accent-color);
+}
+
+.atcb-modal-close svg {
+  fill: currentcolor;
+  height: 100%;
+  width: 100%;
+}
+
+:host(.atcb-dark) .atcb-modal-close {
+  color: var(--modal-text);
+}
+
+.atcb-modal-box-no-buttons > :last-child {
+  border-radius: 0 0 var(--modal-border-radius) var(--modal-border-radius);
 }
 
 @media (width > 575px) {
@@ -821,7 +892,11 @@ a.atcb-modal-btn:disabled {
   height: 2.5em;
   width: 2.5em;
   padding: 1.75em;
-  margin: auto;
+  margin: 0 auto 0 20px;
+}
+
+.atcb-modal-box.atcb-rtl .atcb-modal-icon {
+  margin: 0 20px 0 auto;
 }
 
 .atcb-modal-headline {
@@ -830,7 +905,11 @@ a.atcb-modal-btn:disabled {
   line-height: 1.5em;
   padding: 1.8em 1.5em 1.3em;
   text-transform: var(--modal-headline-text-transform);
-  text-align: var(--modal-headline-text-align);
+  text-align: left;
+}
+
+.atcb-modal-box.atcb-rtl .atcb-modal-headline {
+  text-align: right;
 }
 
 .atcb-modal-content {
@@ -845,14 +924,17 @@ a.atcb-modal-btn:disabled {
 }
 
 @media (width <= 575px) {
-  .atcb-modal-headline {
+  .atcb-modal-headline,
+  .atcb-modal-box.atcb-rtl .atcb-modal-headline {
     padding: 1.8em 1em 1em;
+    text-align: center;
   }
 }
 
 @media (width <= 575px) {
   .atcb-modal-content {
     padding: .3em 1.5em 1.5em;
+    text-align: center;
   }
 }
 

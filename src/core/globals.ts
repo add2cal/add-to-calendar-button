@@ -5,7 +5,6 @@
  *  Add to Calendar Button
  *  ++++++++++++++++++++++
  *
- *  Version: 2.15.0
  *  Creator: Jens Kuerschner (https://jekuer.com)
  *  Publisher: Calendarverse GmbH (https://add-to-calendar-pro.com)
  *  Project: https://github.com/add2cal/add-to-calendar-button
@@ -15,7 +14,8 @@
  */
 import type { ATCBInputConfig } from '../types';
 
-const atcbVersion: string = '2.15.0';
+// build hook: populated from the root package.json by scripts/build.mjs
+const atcbVersion: string = '';
 
 // CHECKING FOR SPECIFIC DEVICED AND SYSTEMS
 const atcbIsBrowser = (): boolean => {

@@ -30,8 +30,11 @@
   },
   "homepage": "https://add-to-calendar-button.com/",
   "scripts": {
+    "sync-version": "node scripts/sync-version.mjs",
+    "prebuild": "npm run sync-version",
     "build": "nuxt build",
     "dev": "nuxt dev --port 3233",
+    "pregenerate": "npm run sync-version",
     "generate": "nuxt generate",
     "generate-full": "cd .. && npm ci && npm run build && cd demo && npm ci && npm run generate",
     "preview": "nuxt preview",

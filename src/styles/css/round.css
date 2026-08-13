@@ -140,6 +140,7 @@
 .atcb-button:not([disabled]).atcb-no-text:hover,
 .atcb-button:not([disabled]).atcb-no-text.atcb-active {
   height: 3.26em;
+  margin: -.13em;
   width: 3.26em;
   padding: 0;
 }

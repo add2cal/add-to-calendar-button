@@ -229,6 +229,7 @@ describe('Group M - UI / interaction', () => {
     const modal = modalHost(host);
     const list = modal.shadowRoot.querySelector('.atcb-list.atcb-modal');
     expect(list, 'modal list rendered').to.exist;
+    expect(modal.shadowRoot.querySelector('.atcb-modal-close'), 'list modal keeps its own close treatment').to.not.exist;
     const listWidth = list.getBoundingClientRect().width;
     // content-sized: comfortably below the viewport, never near full width
     expect(listWidth, `list width ${Math.round(listWidth)} should be content-sized`).to.be.lessThan(Math.min(window.innerWidth * 0.9, 500));
@@ -263,5 +264,7 @@ describe('Group M - UI / interaction', () => {
     expect(overlayAfter, 'the SAME overlay node survives the transition (no blink)').to.equal(overlayBefore);
     expect(mhAfter.shadowRoot.querySelector('.atcb-modal-box'), 'the multi-date modal box is shown').to.exist;
     expect(mhAfter.shadowRoot.querySelector('.atcb-list.atcb-modal'), 'the outgoing options list was dropped').to.not.exist;
+    expect(mhAfter.shadowRoot.querySelector('.atcb-modal-close svg'), 'follow-up modal has a top-right X close control').to.exist;
+    expect(mhAfter.shadowRoot.querySelector('.atcb-modal-buttons'), 'close-only footer is omitted').to.not.exist;
   });
 });

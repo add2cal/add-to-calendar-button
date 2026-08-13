@@ -114,7 +114,7 @@ Strict TypeScript in `./src` (target ES2017 bundles; full experience at Baseline
 ## Build & release
 
 - `npm run build` — full dist via `scripts/build.mjs` (`--min` adds minified browser bundles; sanity checks throw on malformed artifacts).
-- `node scripts/set-version.mjs [patch|minor|major|prerelease|x.y.z|x.y.z-tag.n]` — prerelease-capable version bump across package.json, banners, constants, demo footer.
+- Edit only the root `package.json` to bump the version. Builds inject it into library/CSS artifacts; demo prebuild hooks sync the footer.
 - Releases: see `.ai/RELEASE.md` (gates, npm `next` pre-release flow, what ships where). CDN: `cdn.jsdelivr.net/npm/add-to-calendar-button`.
 
 ## What NOT to change

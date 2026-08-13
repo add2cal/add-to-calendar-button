@@ -384,22 +384,7 @@ async function atcb_generate_rsvp_form(host: ShadowRoot, data: ATCBConfig, hostE
   let rsvpHost = null as unknown as ShadowRoot;
   if (!data.inlineRsvp) {
     rsvpHost = (await atcb_generate_modal_host(host, data)) as ShadowRoot;
-    await atcb_create_modal(
-      rsvpHost,
-      data,
-      undefined,
-      rsvpData.headline,
-      rsvpContent,
-      [
-        { type: 'none', label: atcb_translate_hook('label.rsvp.restart', data), small: true, primary: true, id: 'pro-form-restart' },
-        { type: 'close', label: atcb_translate_hook('close', data), small: true, id: 'modal-btn-close' },
-        { type: 'close', label: atcb_translate_hook('cancel', data), small: true, id: 'modal-btn-cancel' },
-      ] as never[],
-      [],
-      keyboardTrigger,
-      {},
-      false,
-    );
+    await atcb_create_modal(rsvpHost, data, undefined, rsvpData.headline, rsvpContent, [{ type: 'none', label: atcb_translate_hook('label.rsvp.restart', data), small: true, primary: true, id: 'pro-form-restart' }] as never[], [], keyboardTrigger, {}, false);
   } else {
     rsvpHost = host;
     const rsvpInlineWrapper = document.createElement('div');
@@ -433,16 +418,18 @@ async function atcb_generate_rsvp_form(host: ShadowRoot, data: ATCBConfig, hostE
     }
   }
   if (sentStatus) (rsvpHost.getElementById('rsvp-content') as HTMLElement).style.display = 'none';
-  const closeBtn = rsvpHost.getElementById('modal-btn-close') as HTMLElement | null;
-  const cancelBtn = rsvpHost.getElementById('modal-btn-cancel') as HTMLElement | null;
   const restartBtn = rsvpHost.getElementById('pro-form-restart') as HTMLElement | null;
+  const hideRestartButton = (): void => {
+    if (!restartBtn) return;
+    restartBtn.style.display = 'none';
+    if (restartBtn.parentElement) restartBtn.parentElement.style.display = 'none';
+  };
   atcb_log_event('openRSVP', data.identifier as string, data.identifier as string);
   if (data.debug) {
     console.log('RSVP form for "' + data.identifier + '" created');
   }
   // if we are on the already-sent-screen, we render an atcb if not disabled
   if (sentStatus) {
-    if (cancelBtn) cancelBtn.style.display = 'none';
     const atcbHost = rsvpHost.getElementById('rsvp-atcb');
     if (atcbHost && !data.hideButton) {
       // make a copy of the data
@@ -454,8 +441,7 @@ async function atcb_generate_rsvp_form(host: ShadowRoot, data: ATCBConfig, hostE
       renderButton(host, atcbHost as HTMLElement, atcbData);
     }
   } else {
-    if (closeBtn) closeBtn.style.display = 'none';
-    if (restartBtn) restartBtn.style.display = 'none';
+    hideRestartButton();
   }
   // validation and processing of the form
   // validate and submit
@@ -490,8 +476,6 @@ async function atcb_generate_rsvp_form(host: ShadowRoot, data: ATCBConfig, hostE
           (rsvpHost.getElementById('rsvp-success-msg-demo') as HTMLElement).style.display = 'block';
           (rsvpHost.getElementById('rsvp-content') as HTMLElement).style.display = 'none';
           atcb_log_event('successRSVP', data.identifier as string, data.identifier as string);
-          if (cancelBtn) cancelBtn.style.display = 'none';
-          if (closeBtn) closeBtn.style.display = 'block';
           return;
         }
         let fieldsCopy: ATCBProFormField[] = rsvpData.fields ? JSON.parse(JSON.stringify(rsvpData.fields)) : [];
@@ -544,8 +528,6 @@ async function atcb_generate_rsvp_form(host: ShadowRoot, data: ATCBConfig, hostE
             (rsvpHost.getElementById('rsvp-success-msg-email') as HTMLElement).style.display = 'block';
           }
           (rsvpHost.getElementById('rsvp-content') as HTMLElement).style.display = 'none';
-          if (cancelBtn) cancelBtn.style.display = 'none';
-          if (closeBtn) closeBtn.style.display = 'block';
           atcb_log_event('successRSVP', data.identifier as string, data.identifier as string);
           // note: original passes a boolean here; Storage.setItem stringifies it at runtime to "true" (matching the getItem check above)
           localStorage.setItem(data.proKey + '-rsvp-sent', true as unknown as string);
@@ -583,9 +565,7 @@ async function atcb_generate_rsvp_form(host: ShadowRoot, data: ATCBConfig, hostE
       e.preventDefault();
       (rsvpHost.getElementById('rsvp-sent-content') as HTMLElement).style.display = 'none';
       (rsvpHost.getElementById('rsvp-content') as HTMLElement).style.display = 'block';
-      if (closeBtn) closeBtn.style.display = 'none';
-      if (restartBtn) restartBtn.style.display = 'none';
-      if (cancelBtn) cancelBtn.style.display = 'block';
+      hideRestartButton();
     });
     rsvpRestart.addEventListener('keyup', function (event) {
       if ((event as KeyboardEvent).key === 'Enter') {
