@@ -29,10 +29,10 @@ File: `test/wc-tests-smoke/s-smoke.test.js`
 
 ### SMOKE | PRO x Desktop
 
-- S-11: proKey fetches the server config and renders it (incl. powered-by note in ICS)
+- S-11: prokey fetches the server config and renders it (incl. powered-by note in ICS)
 - S-12: proOverride lets local attributes win over the server config
 - S-13: proxy=true routes clicks through the PRO proxy URL
-- S-14: invalid proKey (404) fails silently - no render, no crash
+- S-14: invalid prokey (404) fails silently - no render, no crash
 
 ### SMOKE | PRO x Mobile
 
@@ -274,9 +274,9 @@ Also part of the default run (long-standing quick tests):
 - Q-08: multi-date -> EventSeries with per-date subEvents
 - Q-10: subscribe mode never injects rich data
 
-### Group R - PRO proKey fetch & override (`r-R-pro.test.js`)
+### Group R - PRO prokey fetch & override (`r-R-pro.test.js`)
 
-- R-01: proKey fetches config.json and renders the server-driven button
+- R-01: prokey fetches config.json and renders the server-driven button
 - R-02: PRO fetch 404 -> button does not render
 - R-03: PRO fetch network error -> button does not render
 - R-04: dev=true fetches from event-dev.caldn.net
@@ -421,6 +421,15 @@ Plain Node WITHOUT DOM emulation (the ssr entry must be DOM-free); string assert
 - S-08: rtl languages mark the wrapper; hidden config keeps the shell hidden
 - S-09: attribute values and label text are escaped
 - S-10: unknown languages fall back to the english label
+- S-11: kebab-case config keys are normalized like the tag attributes
+- S-12: buttonsList renders one singleton button per option with per-option icons and skeleton labels
+- S-13: buttonsList honors option label overrides, kebab input, and the date-style exclusion
+- S-14: hide-icon-button and hide-icon-list drop the respective icons
+- S-15: bare boolean attributes (empty string, like frameworks serialize them) count as true
+- S-16: quoted comma-separated options strings parse like the client attribute parser
+- S-17: custom-css, style-light and style-dark reach the shell
+- S-18: non-splitted button with hideTextLabelButton drops the text span and adds the atcb-no-text class
+- S-19: buttonsList sorts options alphabetically to match the client decorate-options sort
 
 ## Group Z - SSR shell hydration (test/wc-tests/r-Z-ssr-hydration.test.js)
 

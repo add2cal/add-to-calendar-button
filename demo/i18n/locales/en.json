@@ -328,7 +328,7 @@
         "add_block": "Add the web component tag:",
         "add_script": "Followed by the script import:",
         "step_define": "Define the props",
-        "define": "Define the props of the component. This should at least be the ProKey.",
+        "define": "Define the props of the component. This should at least be the prokey.",
         "use": "On any other page (or component), import and use it. Set the path the way your project is set up."
       },
       "nextjs": {

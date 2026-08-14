@@ -19,6 +19,18 @@ defineOptions({
   inheritAttrs: false,
 });
 
+const props = defineProps({
+  // When true, the component skips importing the web component + styles on the
+  // client. The server-rendered shell stays painted (no upgrade, no swap).
+  // Used by the playground to defer script loading for bots.
+  skipClientLoad: {
+    type: Boolean,
+    default: false,
+  },
+});
+
+const emit = defineEmits(['hydrated']);
+
 // The ssr html is generated on the server and carried to the client via useState:
 // hydration then keeps the painted shell in place. The plain tag (and with it the
 // swap) only renders once the custom element signals a COMPLETE render via its
@@ -62,6 +74,9 @@ const shellHost = ref<HTMLElement | null>(null);
 
 if (import.meta.client) {
   onMounted(async () => {
+    // bots (or any caller that sets skipClientLoad) keep the shell forever -
+    // no script download, no upgrade, no swap
+    if (props.skipClientLoad) return;
     // register every style first (synchronous registry), then the web component:
     // the upgrade never needs a css fetch and the shell swaps straight into the
     // fully styled button
@@ -76,6 +91,7 @@ if (import.meta.client) {
     // The swapped-in tag upgrades instantly (same module, same attributes), so
     // there is no second blank window either
     hydrated.value = true;
+    emit('hydrated');
   });
 }
 </script>

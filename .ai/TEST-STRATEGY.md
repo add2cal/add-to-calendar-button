@@ -33,7 +33,7 @@ One question per matrix cell: is the button fundamentally working?
 - OSS x Mobile: Android apple-to-ical swap + `_self` download target; Android `intent://`
   Google wrapper; iOS ical-to-apple swap; modal UX + body scroll lock.
 - PRO x Desktop: config fetch + server-driven render; `proOverride` precedence; proxy
-  routing; silent failure on an invalid proKey.
+  routing; silent failure on an invalid prokey.
 - PRO x Mobile: PRO render under the mobile flavor with platform option rules; RSVP entry
   point replacing the calendar options.
 
@@ -85,12 +85,12 @@ web-test-runner.config.mjs
   branches that read the UA directly (e.g. the download target `_self`/`_blank`).
 - `muteConsole()` / `stubClipboard()`: keep intentional error-path tests silent and give
   headless environments a working Clipboard API.
-- `mockProFetch(map)`: serves mocked `event.caldn.net/{proKey}/config.json` responses and
+- `mockProFetch(map)`: serves mocked `event.caldn.net/{prokey}/config.json` responses and
   passes ALL other URLs through to the real fetch (the test runner itself uses fetch).
 
 ## PRO testing
 
-All PRO traffic is mocked; no live API calls. The two demo proKeys drive the flows:
+All PRO traffic is mocked; no live API calls. The two demo prokeys drive the flows:
 
 - `a37c97ad-f650-4d94-81e7-65c999939e11` (regular event)
 - `a3cdf9da-1d43-4dc8-a8a1-5e726666c635` (RSVP event)

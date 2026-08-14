@@ -6,6 +6,7 @@ import LayoutAttrs from "@/components/playground/attrs/layoutAttrs.vue";
 import { mapAttrsObject, attrsToHtmlString } from '@/utils/attrs';
 import { set, LSKey } from '@/utils/localStorage';
 import { getInitialAttrs, getInitialAttrsBlank } from '@/utils/attrs/default';
+import { getCookie, setCookie, CookieKey } from '@/utils/cookie';
 import { isbot } from "isbot";
 const LazyCodeBlock = defineAsyncComponent(() => import('@/components/codeBlock.vue'));
 const { t, locale } = useI18n();
@@ -18,33 +19,41 @@ if (import.meta.client) {
   isBot.value = isbot(navigator.userAgent);
 }
 
-const data = ref( getInitialAttrsBlank() );
+// On the server, read the playground settings from the cookie (mirrored from
+// localStorage on previous visits) so a future dynamic SSR runtime can pre-render
+// the button shell with the visitor's last configuration instead of a blank
+// skeleton. localStorage stays the primary store on the client; the cookie is only
+// the SSR signal. In the current static prerender setup the cookie is absent at
+// build time, so this gracefully falls back to blank attrs.
+const serverCookieHeader = import.meta.server ? useRequestHeaders(['cookie']).cookie : undefined;
+const serverCachedAttrs = import.meta.server ? getCookie(CookieKey.ATTRS, serverCookieHeader) : null;
 
-// SSR shell for the initial paint (and for bots): generated on the server and
-// carried over to the client via useState, so hydration stays consistent until
-// the real web component script is loaded (which is deferred for bots).
-const ssrHtml = useState<string>('atcb-playground-ssr', () => '');
-if (import.meta.server) {
-  const { atcb_generate_ssr_html } = await import('add-to-calendar-button/ssr');
-  ssrHtml.value = atcb_generate_ssr_html(mapAttrsObject(data.value) as never);
-}
-
-async function loadAtcbScript () {
-  // load the component and register every button style, so the playground can switch
-  // to any style without a runtime fetch (kept lazy to preserve the bot/perf deferral)
-  Promise.all([import('add-to-calendar-button'), import('@/utils/atcbStyles')]).then(() => {
-    loaded.value = true;
-    return;
-  });
-}
+// On the server, hydrate from the cookie (if present) so the SSR shell reflects the
+// visitor's last configuration. On the client, start blank and load from localStorage
+// in onMounted (LS is the primary store) to avoid a hydration mismatch - the client
+// swap happens after hydration, same as before.
+const data = ref( import.meta.server && serverCachedAttrs ? getInitialAttrs('', '', '', serverCachedAttrs) : getInitialAttrsBlank() );
 
 if (import.meta.client) {
   onMounted(() => {
     data.value = getInitialAttrs(t('defaults.name'), t('defaults.description'), t('defaults.location'));
   });
 
-  watch(data, () => {
-    set(LSKey.ATTRS, data.value);
+  // mirror the playground settings to a cookie (debounced) so the next page load's
+  // SSR can read them. localStorage remains the source of truth; the cookie is a
+  // read-only shadow for the server.
+  let cookieSyncTimer: ReturnType<typeof setTimeout> | undefined;
+  watch(data, (val) => {
+    set(LSKey.ATTRS, val);
+    if (cookieSyncTimer) clearTimeout(cookieSyncTimer);
+    cookieSyncTimer = setTimeout(() => {
+      try {
+        setCookie(CookieKey.ATTRS, JSON.stringify(val));
+      } catch {
+        // value too large for a cookie or serialization failed - skip silently;
+        // the SSR shell falls back to defaults, which is the current behavior
+      }
+    }, 500);
   }, { deep: true });
 
   // blocking page scrolling, if the mobile menu is open
@@ -55,11 +64,6 @@ if (import.meta.client) {
       document.documentElement.style.overflow = "auto";
     }
   });
-
-  // load atcb script
-  if (!isBot.value) {
-    loadAtcbScript();
-  }
 }
 </script>
 
@@ -82,9 +86,7 @@ if (import.meta.client) {
         class="grid-bg row-span-2 flex justify-center rounded-tl-none border-0 border-zinc-400 bg-zinc-100 px-3 py-8 dark:border-zinc-600 dark:bg-zinc-900 md:rounded-tr-md md:border-l-2 lg:row-span-1 lg:rounded-tr-none"
       >
         <div class="sticky top-[30vh] z-30 h-auto w-full py-10 xs:w-fit md:h-[500px] md:py-0">
-          <!-- eslint-disable-next-line vue/no-v-html -->
-          <span v-if="!loaded" class="contents" v-html="ssrHtml"></span>
-          <add-to-calendar-button v-else v-bind="mapAttrsObject(data)" debug hideRichData hideBranding />
+          <Atcb v-bind="mapAttrsObject(data)" debug hideRichData hideBranding :skip-client-load="isBot" @hydrated="loaded = true" />
         </div>
       </div>
       <div id="style-input" :class="[ !showCode ? 'rounded-bl-md lg:rounded-r-md lg:rounded-bl-none' : 'rounded-none lg:rounded-tr-md' ]" class="hidden border-l-0 border-t-2 border-zinc-400 bg-zinc-200 p-3 dark:border-zinc-600 dark:bg-zinc-800 md:block lg:border-l-2 lg:border-t-0">

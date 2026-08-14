@@ -30,7 +30,7 @@ definePageMeta({
 import type { AddToCalendarButtonType } from 'add-to-calendar-button';
 
 interface Props {
-  prokey: AddToCalendarButtonType['proKey'];
+  prokey: AddToCalendarButtonType['prokey'];
 }
 
 const { prokey } = Astro.props as Props;</pre>

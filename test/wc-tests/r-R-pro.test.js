@@ -1,6 +1,6 @@
 /**
- * Reduced Suite - Group R: PRO - proKey fetch & override (case list: .ai/TEST-CASES.md)
- * All PRO fetches are mocked (no live API). Demo proKeys drive the flows;
+ * Reduced Suite - Group R: PRO - prokey fetch & override (case list: .ai/TEST-CASES.md)
+ * All PRO fetches are mocked (no live API). Demo prokeys drive the flows;
  * config variations are layered via proOverride per the PRO docs.
  */
 import { expect, aTimeout } from '@open-wc/testing';
@@ -11,11 +11,11 @@ import { interceptFileSave } from '../helpers/capture.js';
 import { openList, clickOption, trigger, optionEl, initFailed } from '../helpers/dom.js';
 import { decodeIcsHref, parseIcs } from '../helpers/ics.js';
 
-describe('Group R - PRO proKey fetch & override', () => {
-  it('R-01: proKey fetches config.json and renders the server-driven button', async () => {
+describe('Group R - PRO prokey fetch & override', () => {
+  it('R-01: prokey fetches config.json and renders the server-driven button', async () => {
     const mock = mockProFetch({ [PRO_EVT_KEY]: proEvtConfig() });
     try {
-      const { host, shadow } = await mountAtcb({ proKey: PRO_EVT_KEY, identifier: 'atcb-r01' });
+      const { host, shadow } = await mountAtcb({ prokey: PRO_EVT_KEY, identifier: 'atcb-r01' });
       expect(mock.calls.some((c) => c.url === `https://event.caldn.net/${PRO_EVT_KEY}/config.json`)).to.equal(true);
       expect(shadow.querySelector('.atcb-initialized')).to.exist;
       expect(shadow.querySelector('.atcb-text').textContent).to.include('Save the PRO date');
@@ -29,11 +29,11 @@ describe('Group R - PRO proKey fetch & override', () => {
     const mock = mockProFetch({}); // unknown key -> 404
     const mute = muteConsole(); // the lib intentionally console-errors this failure
     try {
-      const { host } = await mountAtcb({ proKey: 'ffffffff-0000-0000-0000-000000000000', identifier: 'atcb-r02' });
+      const { host } = await mountAtcb({ prokey: 'ffffffff-0000-0000-0000-000000000000', identifier: 'atcb-r02' });
       await aTimeout(200);
       // failed-init shadow roots crash headless-shell on querySelector - use the attribute contract
       expect(initFailed(host)).to.equal(true);
-      expect(mute.messages.join(' ')).to.include('proKey');
+      expect(mute.messages.join(' ')).to.include('prokey');
     } finally {
       mute.restore();
       mock.restore();
@@ -44,7 +44,7 @@ describe('Group R - PRO proKey fetch & override', () => {
     const mock = mockProFetch({ [PRO_EVT_KEY]: proEvtConfig() }, { networkError: true });
     const mute = muteConsole(); // the lib intentionally console-errors this failure
     try {
-      const { host } = await mountAtcb({ proKey: PRO_EVT_KEY, identifier: 'atcb-r03' });
+      const { host } = await mountAtcb({ prokey: PRO_EVT_KEY, identifier: 'atcb-r03' });
       await aTimeout(200);
       expect(initFailed(host)).to.equal(true);
     } finally {
@@ -56,7 +56,7 @@ describe('Group R - PRO proKey fetch & override', () => {
   it('R-04: dev=true fetches from event-dev.caldn.net', async () => {
     const mock = mockProFetch({ [PRO_EVT_KEY]: proEvtConfig() });
     try {
-      await mountAtcb({ proKey: PRO_EVT_KEY, dev: 'true', identifier: 'atcb-r04' });
+      await mountAtcb({ prokey: PRO_EVT_KEY, dev: 'true', identifier: 'atcb-r04' });
       expect(mock.calls.some((c) => c.url === `https://event-dev.caldn.net/${PRO_EVT_KEY}/config.json`)).to.equal(true);
     } finally {
       mock.restore();
@@ -66,7 +66,7 @@ describe('Group R - PRO proKey fetch & override', () => {
   it('R-05: WITHOUT proOverride, whitelisted attrs (language) still apply', async () => {
     const mock = mockProFetch({ [PRO_EVT_KEY]: proEvtConfig() });
     try {
-      const { shadow } = await mountAtcb({ proKey: PRO_EVT_KEY, language: 'de', identifier: 'atcb-r05' });
+      const { shadow } = await mountAtcb({ prokey: PRO_EVT_KEY, language: 'de', identifier: 'atcb-r05' });
       // language is part of wcProParams -> local attribute wins even without proOverride
       const label = shadow.querySelector('.atcb-text').textContent;
       expect(label).to.include('Save the PRO date'); // server label still used (label not overridable here)
@@ -80,7 +80,7 @@ describe('Group R - PRO proKey fetch & override', () => {
     const mock = mockProFetch({ [PRO_EVT_KEY]: proEvtConfig() });
     const fs = interceptFileSave();
     try {
-      const { host } = await mountAtcb({ proKey: PRO_EVT_KEY, name: 'Local Title', trigger: 'click', identifier: 'atcb-r06' });
+      const { host } = await mountAtcb({ prokey: PRO_EVT_KEY, name: 'Local Title', trigger: 'click', identifier: 'atcb-r06' });
       await openList(host);
       await clickOption(host, 'ical');
       const ics = parseIcs(decodeIcsHref(fs.saves[0].href));
@@ -96,7 +96,7 @@ describe('Group R - PRO proKey fetch & override', () => {
     const mock = mockProFetch({ [PRO_EVT_KEY]: proEvtConfig() });
     const fs = interceptFileSave();
     try {
-      const { host } = await mountAtcb({ proKey: PRO_EVT_KEY, proOverride: 'true', name: 'Override Title', trigger: 'click', identifier: 'atcb-r07' });
+      const { host } = await mountAtcb({ prokey: PRO_EVT_KEY, proOverride: 'true', name: 'Override Title', trigger: 'click', identifier: 'atcb-r07' });
       await openList(host);
       await clickOption(host, 'ical');
       const ics = parseIcs(decodeIcsHref(fs.saves[0].href));
@@ -110,7 +110,7 @@ describe('Group R - PRO proKey fetch & override', () => {
   it('R-09: override inline=true applies (inline is a whitelisted pro param)', async () => {
     const mock = mockProFetch({ [PRO_EVT_KEY]: proEvtConfig() });
     try {
-      const { shadow } = await mountAtcb({ proKey: PRO_EVT_KEY, inline: 'true', identifier: 'atcb-r09' });
+      const { shadow } = await mountAtcb({ prokey: PRO_EVT_KEY, inline: 'true', identifier: 'atcb-r09' });
       expect(shadow.querySelector('.atcb-initialized')).to.exist;
     } finally {
       mock.restore();
@@ -120,7 +120,7 @@ describe('Group R - PRO proKey fetch & override', () => {
   it('R-11: proOverride options=[Google] switches to singleton mode', async () => {
     const mock = mockProFetch({ [PRO_EVT_KEY]: proEvtConfig() });
     try {
-      const { host } = await mountAtcb({ proKey: PRO_EVT_KEY, proOverride: 'true', options: "'google'", trigger: 'click', identifier: 'atcb-r11' });
+      const { host } = await mountAtcb({ prokey: PRO_EVT_KEY, proOverride: 'true', options: "'google'", trigger: 'click', identifier: 'atcb-r11' });
       expect(trigger(host).classList.contains('atcb-single')).to.equal(true);
     } finally {
       mock.restore();
@@ -132,7 +132,7 @@ describe('Group R - PRO proKey fetch & override', () => {
     const fs = interceptFileSave();
     try {
       const { host } = await mountAtcb({
-        proKey: PRO_EVT_KEY,
+        prokey: PRO_EVT_KEY,
         proOverride: 'true',
         recurrence: 'daily',
         recurrence_count: 5,
@@ -154,7 +154,7 @@ describe('Group R - PRO proKey fetch & override', () => {
     const mock = mockProFetch({ [PRO_EVT_KEY]: proEvtConfig() });
     const fs = interceptFileSave();
     try {
-      const { host } = await mountAtcb({ proKey: PRO_EVT_KEY, proOverride: 'true', timeZone: 'Asia/Tokyo', trigger: 'click', identifier: 'atcb-r14' });
+      const { host } = await mountAtcb({ prokey: PRO_EVT_KEY, proOverride: 'true', timeZone: 'Asia/Tokyo', trigger: 'click', identifier: 'atcb-r14' });
       await openList(host);
       await clickOption(host, 'ical');
       const ics = parseIcs(decodeIcsHref(fs.saves[0].href));
@@ -169,7 +169,7 @@ describe('Group R - PRO proKey fetch & override', () => {
     const mock = mockProFetch({ [PRO_EVT_KEY]: proEvtConfig({ proxy: true }) });
     const wo = (await import('../helpers/capture.js')).interceptWindowOpen();
     try {
-      const { host } = await mountAtcb({ proKey: PRO_EVT_KEY, trigger: 'click', identifier: 'atcb-r15' });
+      const { host } = await mountAtcb({ prokey: PRO_EVT_KEY, trigger: 'click', identifier: 'atcb-r15' });
       await openList(host);
       await clickOption(host, 'google');
       expect(wo.calls.length).to.equal(1);
@@ -183,7 +183,7 @@ describe('Group R - PRO proKey fetch & override', () => {
   it('R-16: hideBranding is NOT overridable client-side in PRO mode (license enforcement)', async () => {
     const mock = mockProFetch({ [PRO_EVT_KEY]: proEvtConfig() });
     try {
-      const { host } = await mountAtcb({ proKey: PRO_EVT_KEY, proOverride: 'true', hideBranding: 'true', trigger: 'click', identifier: 'atcb-r16' });
+      const { host } = await mountAtcb({ prokey: PRO_EVT_KEY, proOverride: 'true', hideBranding: 'true', trigger: 'click', identifier: 'atcb-r16' });
       await openList(host);
       // per src/atcb-init.js: hideBranding/ty/rsvp are excluded from the override merge
       // unless the page runs on caldn.net / add-to-calendar-pro.com -> branding stays visible
@@ -197,7 +197,7 @@ describe('Group R - PRO proKey fetch & override', () => {
     const mock = mockProFetch({ [PRO_EVT_KEY]: proEvtConfig() });
     const fs = interceptFileSave();
     try {
-      const { host } = await mountAtcb({ proKey: PRO_EVT_KEY, trigger: 'click', identifier: 'atcb-r16b' });
+      const { host } = await mountAtcb({ prokey: PRO_EVT_KEY, trigger: 'click', identifier: 'atcb-r16b' });
       await openList(host);
       await clickOption(host, 'ical');
       const ics = parseIcs(decodeIcsHref(fs.saves[0].href));

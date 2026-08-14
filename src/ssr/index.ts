@@ -158,9 +158,12 @@ function generate_ssr_html(rawConfig: AddToCalendarButtonType & { [key: string]:
   const styleLight = typeof config.styleLight === 'string' ? config.styleLight.replace(/(\\r\\n|\\n|\\r)/g, '').replace(/(<(?!br)([^>]+)>)/gi, '') : '';
   const styleDark = typeof config.styleDark === 'string' ? config.styleDark.replace(/(\\r\\n|\\n|\\r)/g, '').replace(/(<(?!br)([^>]+)>)/gi, '') : '';
   // buttonsList splits the button into one singleton per option (never for the date
-  // style - the client rule)
+  // style - the client rule). The client sorts options alphabetically in
+  // decorate-options; mirror that here so the shell paints in the same order and
+  // hydration doesn't visually reorder the buttons.
   const parsedOptions = parseOptions(config.options);
   const listOptions = buttonsList && buttonStyle !== 'date' ? parsedOptions : [];
+  listOptions.sort((a, b) => (a.key < b.key ? -1 : a.key > b.key ? 1 : 0));
   const oneOption = parsedOptions.length === 1;
 
   // --- host attributes: every config key, serialized under its official name ---
@@ -207,9 +210,10 @@ function generate_ssr_html(rawConfig: AddToCalendarButtonType & { [key: string]:
       const icon = hideIconButton ? '' : `<div class="atcb-icon atcb-icon-trigger" part="atcb-button-icon">${icons['trigger']}</div>`;
       const chevron = !oneOption && !hideTextLabelButton ? `<div class="atcb-chevron" part="atcb-button-chevron">${icons['chevron']}</div>` : '';
       const anchor = oneOption ? '' : '<div class="atcb-dropdown-anchor"></div>';
-      return `${icon}<span class="atcb-text" part="atcb-button-text">${escapeText(label)}</span>${chevron}${anchor}`;
+      const text = hideTextLabelButton ? '' : `<span class="atcb-text" part="atcb-button-text">${escapeText(label)}</span>`;
+      return `${icon}${text}${chevron}${anchor}`;
     })();
-    return `<div class="atcb-button-wrapper${rtl ? ' atcb-rtl' : ''}" part="atcb-button-wrapper" style="${sizeStyle}"><button type="button" class="atcb-button${oneOption ? ' atcb-single' : ''}" part="atcb-button"${buttonId} aria-expanded="false" aria-label="${escapeAttribute(typeof label === 'string' ? label : 'Add to Calendar')}">${inner}</button></div>`;
+    return `<div class="atcb-button-wrapper${rtl ? ' atcb-rtl' : ''}" part="atcb-button-wrapper" style="${sizeStyle}"><button type="button" class="atcb-button${oneOption ? ' atcb-single' : ''}${hideTextLabelButton ? ' atcb-no-text' : ''}" part="atcb-button"${buttonId} aria-expanded="false" aria-label="${escapeAttribute(typeof label === 'string' ? label : 'Add to Calendar')}">${inner}</button></div>`;
   })();
 
   const rootClasses = `atcb-initialized${hidden ? ' atcb-hidden' : ''}${inline ? ' atcb-inline' : ''}${listOptions.length > 0 && !inline ? ' atcb-buttons-list' : ''}`;

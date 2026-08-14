@@ -758,7 +758,7 @@ async function get_pro_data(licenseKey?: string, el?: ATCBHostElement, directDat
           delete data.rsvp;
         }
         if ((!data.name || data.name === '') && (!data.dates || data.dates[0]!.name === '')) {
-          throw new Error('Not possible to read proKey config from server...');
+          throw new Error('Not possible to read prokey config from server...');
         }
         if (data.landingpage!.domain && (data.landingpage!.domain as string) !== '' && secure_url(data.landingpage!.domain as string)) {
           data.domain = data.landingpage!.domain as string;
@@ -780,10 +780,10 @@ async function get_pro_data(licenseKey?: string, el?: ATCBHostElement, directDat
         data.identifier = licenseKey;
         return data;
       }
-      throw new Error('Not possible to read proKey config from server...');
+      throw new Error('Not possible to read prokey config from server...');
     } catch (originalError) {
       console.error(originalError);
-      throw new Error('proKey invalid or server not responding!');
+      throw new Error('prokey invalid or server not responding!');
     }
   }
   return {} as ATCBConfig;

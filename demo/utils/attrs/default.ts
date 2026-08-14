@@ -10,7 +10,6 @@ const today = new Date();
 const futureDay = new Date();
 futureDay.setDate(today.getDate() + 14);
 const defaultDate = futureDay.getFullYear() + '-' + ('0' + (futureDay.getMonth() + 1)).slice(-2) + '-' + ('0' + futureDay.getDate()).slice(-2);
-
 export const getDefaultDateRecurrenceAttrs = (): DateRecurrenceAttrs => ({
   [DateRecurrenceAttrsKey.IS_SIMPLE]: false,
   [DateRecurrenceAttrsKey.RRULE_VALUE]: '',
@@ -65,12 +64,19 @@ export const getDefaultAttrs = (defaultName: string, defaultDescription: string,
   layout: getDefaultLayoutAttrs(),
 });
 
-export const getInitialAttrs = (defaultName: string, defaultDescription: string, defaultLocation: string): Attrs => {
+export const getInitialAttrs = (defaultName: string, defaultDescription: string, defaultLocation: string, serverCachedAttrs?: string | null): Attrs => {
   const defaultData = getDefaultAttrs(defaultName, defaultDescription, defaultLocation);
-  const cachedData = import.meta.client ? get(LSKey.ATTRS) : null;
+  // localStorage is the primary store on the client; on the server we fall back to
+  // the cookie-mirrored attrs (passed in by the caller via the request header) so a
+  // future dynamic SSR runtime can pre-render the button shell with real data.
+  const cachedData = import.meta.client ? get(LSKey.ATTRS) : (serverCachedAttrs || null);
   const cachedDataParsed = (function () {
     if (cachedData) {
-      return JSON.parse(cachedData);
+      try {
+        return JSON.parse(cachedData);
+      } catch {
+        return null;
+      }
     }
   })();
 

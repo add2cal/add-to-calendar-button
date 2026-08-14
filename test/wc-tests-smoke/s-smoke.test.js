@@ -1,7 +1,7 @@
 /**
  * SMOKE SUITE - Tier 0 (CI default, `npm run test`)
  *
- * Deliberately minimal matrix: {Desktop, Mobile} x {OSS, PRO(proKey)} + one RSVP render check.
+ * Deliberately minimal matrix: {Desktop, Mobile} x {OSS, PRO(prokey)} + one RSVP render check.
  * Answers one question per cell: "is the button fundamentally working?" - init, option set,
  * link/ICS generation, tracking. Everything deeper lives in the on-demand tiers:
  *   npm run test:extended -> Reduced Suite (groups A-U, test/wc-tests/r-*)
@@ -184,11 +184,11 @@ describe('SMOKE | OSS x Mobile', () => {
 describe('SMOKE | PRO x Desktop', () => {
   beforeEach(() => resetDataLayer());
 
-  it('S-11: proKey fetches the server config and renders it (incl. powered-by note in ICS)', async () => {
+  it('S-11: prokey fetches the server config and renders it (incl. powered-by note in ICS)', async () => {
     const mock = mockProFetch({ [PRO_EVT_KEY]: proEvtConfig() });
     const fs = interceptFileSave();
     try {
-      const { host, shadow } = await mountAtcb({ proKey: PRO_EVT_KEY, trigger: 'click', identifier: 's11' });
+      const { host, shadow } = await mountAtcb({ prokey: PRO_EVT_KEY, trigger: 'click', identifier: 's11' });
       expect(mock.calls.some((c) => c.url === `https://event.caldn.net/${PRO_EVT_KEY}/config.json`)).to.equal(true);
       expect(shadow.querySelector('.atcb-text').textContent).to.include('Save the PRO date');
       await openList(host);
@@ -206,7 +206,7 @@ describe('SMOKE | PRO x Desktop', () => {
     const mock = mockProFetch({ [PRO_EVT_KEY]: proEvtConfig() });
     const fs = interceptFileSave();
     try {
-      const { host } = await mountAtcb({ proKey: PRO_EVT_KEY, proOverride: 'true', name: 'Smoke Override', trigger: 'click', identifier: 's12' });
+      const { host } = await mountAtcb({ prokey: PRO_EVT_KEY, proOverride: 'true', name: 'Smoke Override', trigger: 'click', identifier: 's12' });
       await openList(host);
       await clickOption(host, 'ical');
       const ics = parseIcs(decodeIcsHref(fs.saves[0].href));
@@ -221,7 +221,7 @@ describe('SMOKE | PRO x Desktop', () => {
     const mock = mockProFetch({ [PRO_EVT_KEY]: proEvtConfig({ proxy: true }) });
     const wo = interceptWindowOpen();
     try {
-      const { host } = await mountAtcb({ proKey: PRO_EVT_KEY, trigger: 'click', identifier: 's13' });
+      const { host } = await mountAtcb({ prokey: PRO_EVT_KEY, trigger: 'click', identifier: 's13' });
       await openList(host);
       await clickOption(host, 'google');
       expect(wo.calls[0].url).to.equal(`https://caldn.net/${PRO_EVT_KEY}/o/google`);
@@ -231,11 +231,11 @@ describe('SMOKE | PRO x Desktop', () => {
     }
   });
 
-  it('S-14: invalid proKey (404) fails silently - no render, no crash', async () => {
+  it('S-14: invalid prokey (404) fails silently - no render, no crash', async () => {
     const mock = mockProFetch({});
     const mute = muteConsole();
     try {
-      const { host } = await mountAtcb({ proKey: 'ffffffff-0000-0000-0000-000000000000', identifier: 's14' });
+      const { host } = await mountAtcb({ prokey: 'ffffffff-0000-0000-0000-000000000000', identifier: 's14' });
       await aTimeout(200);
       expect(initFailed(host)).to.equal(true);
     } finally {
@@ -251,7 +251,7 @@ describe('SMOKE | PRO x Mobile', () => {
   it('S-15: PRO config renders under the mobile flavor with platform option rules applied', async () => {
     const mock = mockProFetch({ [PRO_EVT_KEY]: proEvtConfig() });
     try {
-      const { host, shadow } = await mountAtcb({ proKey: PRO_EVT_KEY, fakeMobile: 'true', trigger: 'click', identifier: 's15' });
+      const { host, shadow } = await mountAtcb({ prokey: PRO_EVT_KEY, fakeMobile: 'true', trigger: 'click', identifier: 's15' });
       expect(shadow.querySelector('.atcb-initialized')).to.exist;
       await openList(host);
       const opts = renderedOptions(host);
@@ -266,7 +266,7 @@ describe('SMOKE | PRO x Mobile', () => {
   it('S-16: PRO RSVP config renders the RSVP entry point instead of calendar options', async () => {
     const mock = mockProFetch({ [PRO_RSVP_KEY]: proRsvpConfig() });
     try {
-      const { host, shadow } = await mountAtcb({ proKey: PRO_RSVP_KEY, fakeMobile: 'true', identifier: 's16' });
+      const { host, shadow } = await mountAtcb({ prokey: PRO_RSVP_KEY, fakeMobile: 'true', identifier: 's16' });
       expect(shadow.querySelector('.atcb-initialized')).to.exist;
       expect(shadow.querySelector('button'), 'RSVP entry point renders').to.exist;
       expect(optionEl(host, 'google')).to.not.exist;

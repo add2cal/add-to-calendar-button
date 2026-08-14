@@ -328,7 +328,7 @@
         "add_block": "Füge das Web-Component-Tag hinzu:",
         "add_script": "Gefolgt vom Skript-Import:",
         "step_define": "Definiere die Props",
-        "define": "Definiere die Props der Komponente. Dies sollte mindestens der ProKey sein.",
+        "define": "Definiere die Props der Komponente. Dies sollte mindestens der prokey sein.",
         "use": "Importiere und nutze sie auf jeder anderen Seite (oder Komponente). Passe den Pfad entsprechend deinem Projekt-Setup an."
       },
       "nextjs": {

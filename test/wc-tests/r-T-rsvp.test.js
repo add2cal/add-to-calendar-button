@@ -19,7 +19,7 @@ describe('Group T - PRO RSVP (render + client-side only)', () => {
   it('T-01: RSVP config renders the RSVP entry point INSTEAD of calendar-link options', async () => {
     const mock = mockProFetch({ [PRO_RSVP_KEY]: proRsvpConfig() });
     try {
-      const { host, shadow } = await mountAtcb({ proKey: PRO_RSVP_KEY, identifier: 'atcb-t01' });
+      const { host, shadow } = await mountAtcb({ prokey: PRO_RSVP_KEY, identifier: 'atcb-t01' });
       expect(shadow.querySelector('.atcb-initialized')).to.exist;
       expect(shadow.querySelector('button'), 'an interactive entry point renders').to.exist;
       // no calendar option list items pre-rendered in the RSVP flow
@@ -33,7 +33,7 @@ describe('Group T - PRO RSVP (render + client-side only)', () => {
   it('T-10: clicking the RSVP button opens the form and pushes openRSVP', async () => {
     const mock = mockProFetch({ [PRO_RSVP_KEY]: proRsvpConfig() });
     try {
-      const { host, shadow } = await mountAtcb({ proKey: PRO_RSVP_KEY, trigger: 'click', identifier: 'atcb-t10' });
+      const { host, shadow } = await mountAtcb({ prokey: PRO_RSVP_KEY, trigger: 'click', identifier: 'atcb-t10' });
       const btn = shadow.getElementById(btnId(host)) || shadow.querySelector('button');
       btn.dispatchEvent(new MouseEvent('mouseup', { bubbles: true, cancelable: true, view: window }));
       btn.dispatchEvent(new MouseEvent('click', { bubbles: true, cancelable: true, view: window }));
@@ -53,7 +53,7 @@ describe('Group T - PRO RSVP (render + client-side only)', () => {
   it('T-02: inlineRsvp renders the form immediately without a button click', async () => {
     const mock = mockProFetch({ [PRO_RSVP_KEY]: proRsvpConfig() });
     try {
-      const { host, shadow } = await mountAtcb({ proKey: PRO_RSVP_KEY, inlineRsvp: 'true', identifier: 'atcb-t02' });
+      const { host, shadow } = await mountAtcb({ prokey: PRO_RSVP_KEY, inlineRsvp: 'true', identifier: 'atcb-t02' });
       await aTimeout(200);
       const modal = modalHost(host);
       const formPresent = shadow.querySelector('form') || (modal && modal.shadowRoot.querySelector('form')) || host.shadowRoot.querySelector('.atcb-modal-box');
@@ -66,7 +66,7 @@ describe('Group T - PRO RSVP (render + client-side only)', () => {
   it('T-22: required fields exist and empty submit does not fire successRSVP (client-side gate)', async () => {
     const mock = mockProFetch({ [PRO_RSVP_KEY]: proRsvpConfig() });
     try {
-      const { host, shadow } = await mountAtcb({ proKey: PRO_RSVP_KEY, inlineRsvp: 'true', identifier: 'atcb-t22' });
+      const { host, shadow } = await mountAtcb({ prokey: PRO_RSVP_KEY, inlineRsvp: 'true', identifier: 'atcb-t22' });
       await aTimeout(200);
       const modal = modalHost(host);
       const root = (modal && modal.shadowRoot) || shadow;
@@ -89,7 +89,7 @@ describe('Group T - PRO RSVP (render + client-side only)', () => {
     expect(window.location.hostname).to.match(/^(localhost|127\.0\.0\.1)$/);
     const mock = mockProFetch({ [PRO_RSVP_KEY]: proRsvpConfig() });
     try {
-      const { shadow } = await mountAtcb({ proKey: PRO_RSVP_KEY, identifier: 'atcb-t19' });
+      const { shadow } = await mountAtcb({ prokey: PRO_RSVP_KEY, identifier: 'atcb-t19' });
       expect(shadow.querySelector('.atcb-initialized')).to.exist;
     } finally {
       mock.restore();

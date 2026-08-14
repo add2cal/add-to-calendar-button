@@ -66,7 +66,7 @@ test('S-06: date style renders skeleton spans instead of computed date parts', (
 });
 
 test('S-07: inline RSVP renders a full-width skeleton block', () => {
-  const html = atcb_generate_ssr_html({ name: 'X', proKey: 'abc', rsvp: { demo: true }, inlineRsvp: true });
+  const html = atcb_generate_ssr_html({ name: 'X', prokey: 'abc', rsvp: { demo: true }, inlineRsvp: true });
   assert.ok(html.includes('atcb-ssr-skeleton-block'), 'skeleton block');
   assert.ok(html.includes('width: 100%'), 'full-width wrapper for the inline form');
   assert.ok(html.includes('prokey="abc"'), 'official prokey attribute');
@@ -164,4 +164,31 @@ test('S-17: custom-css, style-light and style-dark reach the shell', () => {
   assert.ok(!evil.includes('<link'), 'scheme allowlist blocks hostile css urls');
   const stripped = atcb_generate_ssr_html({ name: 'X', styleLight: '--x: 1; }</style><script>alert(1)</script>' });
   assert.ok(!stripped.includes('<script'), 'style override content is html-stripped');
+});
+
+test('S-18: non-splitted button with hideTextLabelButton drops the text span and adds the atcb-no-text class', () => {
+  const html = atcb_generate_ssr_html({ name: 'X', options: ['apple', 'google'], hideTextLabelButton: true, identifier: 's18' });
+  // the button carries the atcb-no-text class (mirrors the client template)
+  assert.ok(html.includes('atcb-button atcb-no-text"'), 'atcb-no-text class on the button');
+  // no text span is rendered (the client omits it when hideTextLabelButton is set)
+  assert.ok(!html.includes('part="atcb-button-text"'), 'no text span with hideTextLabelButton');
+  // the chevron div is also dropped (client rule: chevron needs the text label).
+  // match the rendered div, not the css class definition (which always exists).
+  assert.ok(!html.includes('class="atcb-chevron"'), 'no chevron div with hideTextLabelButton');
+  // the trigger icon stays
+  assert.ok(html.includes('class="atcb-icon atcb-icon-trigger"'), 'trigger icon still rendered');
+});
+
+test('S-19: buttonsList sorts options alphabetically to match the client decorate-options sort', () => {
+  // provide options in a non-alphabetical order; the client sorts them in
+  // decorate-options, so the shell must paint in the same order to avoid a
+  // visual reorder on hydration
+  const html = atcb_generate_ssr_html({ name: 'X', options: ['yahoo', 'apple', 'google'], buttonsList: true, identifier: 's19' });
+  // the singleton ids follow the painted order; assert on those (the css also
+  // contains icon class definitions that would confuse a naive indexOf)
+  const idApple = html.indexOf('atcb-btn-s19-apple');
+  const idGoogle = html.indexOf('atcb-btn-s19-google');
+  const idYahoo = html.indexOf('atcb-btn-s19-yahoo');
+  assert.ok(idApple > -1 && idGoogle > -1 && idYahoo > -1, 'all three singleton ids present');
+  assert.ok(idApple < idGoogle && idGoogle < idYahoo, 'singleton ids in alphabetical order (apple, google, yahoo)');
 });

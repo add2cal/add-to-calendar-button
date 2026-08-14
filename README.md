@@ -162,7 +162,7 @@ You can then configure the button by simply adding the options as attributes to 
 ### Structure (PRO)
 
 ```html
-<add-to-calendar-button proKey="prokey-of-your-event" />
+<add-to-calendar-button prokey="prokey-of-your-event" />
 ```
 
 <br />
