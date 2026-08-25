@@ -2,6 +2,8 @@
 
 ## Version 3
 
+See [MIGRATION.md](./MIGRATION.md) for step-by-step instructions when upgrading from v2.
+
 - v3.0 : "lighter, faster, everywhere" full rewrite of the internals - same button, same attributes
   - a lot smaller: styles beyond the default and languages beyond English now load on demand as tiny assets (ESM bundle -44% raw / -19% gzip vs v2.15; a typical bundler setup saves even more)
   - new: server-side rendering via the `add-to-calendar-button/ssr` entry - style- and size-correct shells through declarative shadow DOM, hydrated without layout shift
@@ -26,7 +28,7 @@
   - fix: navigating from the options list (as modal) to a follow-up modal (e.g. the multi-date picker) no longer blinks the background - the shared overlay is kept alive and the new modal fades in while the previous view is dropped in place
   - fix: the modal box and the modal option list are correctly sized again (max width on larger screens, no drop-shadow on fullscreen mobile) - regressions from the v3 style split
   - fix: the second step of the Yahoo subscription flow no longer re-copies the link (and could no longer wrongly report a copy failure); its secondary button now reads "Close"
-  - see the [migration guide](https://add-to-calendar-button.com) for details - existing v2 integrations keep working
+  - see the [migration guide](./MIGRATION.md) for details - existing v2 integrations keep working
 
 ## Version 2
 

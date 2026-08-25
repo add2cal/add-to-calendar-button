@@ -7,6 +7,7 @@
     "examples": "Examples",
     "advanced-use": "Advanced Usage",
     "legal-notice": "Legal Notice",
+    "migration-v3": "Migration guide v2→v3",
     "privacy-policy": "Privacy Policy",
     "use": "Implementation Guide",
     "use-with-angular": "How to use with Angular",
@@ -150,6 +151,9 @@
     "location": "World Wide Web"
   },
   "meta": {
+    "migration-v3": {
+      "description": "Migrate Add to Calendar Button integrations from version 2 to version 3."
+    },
     "title": "{title} {'|'} Free Add to Calendar Button",
     "title_main": "Free Add to Calendar Button",
     "title_slug": "the only really free one",

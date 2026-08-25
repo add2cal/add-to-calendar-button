@@ -56,6 +56,8 @@ function topFunction() {
             <NuxtLink :to="localePath('legal-notice')">{{ $t('navigation.legal-notice') }}</NuxtLink>
             |
             <NuxtLink :to="localePath('privacy-policy')">{{ $t('navigation.privacy-policy') }}</NuxtLink>
+            |
+            <NuxtLink :to="localePath('migration-guide-v2-to-v3')">{{ $t('navigation.migration-v3') }}</NuxtLink>
             <span class="inline sm:hidden md:inline"> | </span>
             <span class="inline whitespace-nowrap pt-0 sm:block sm:pt-2 md:inline md:pt-0">
               <a href="https://github.com/add2cal/add-to-calendar-button/blob/main/LICENSE.txt" class="inline-block p-1 sm:p-0" target="_blank" rel="license">

@@ -7,6 +7,7 @@
     "examples": "Beispiele",
     "advanced-use": "Profi-Konfiguration",
     "legal-notice": "Impressum",
+    "migration-v3": "Migrationsleitfaden v2→v3",
     "privacy-policy": "Datenschutz",
     "use": "Anleitung",
     "use-with-angular": "Setup mit Angular",
@@ -150,6 +151,9 @@
     "location": "Das Internet"
   },
   "meta": {
+    "migration-v3": {
+      "description": "Leitfaden für die Migration von Add to Calendar Button Version 2 auf Version 3."
+    },
     "title": "{title} {'|'} Kostenfreier Add to Calendar Button",
     "title_main": "Kostenfreier Add to Calendar Button",
     "title_slug": "Termine teilen leicht gemacht",
