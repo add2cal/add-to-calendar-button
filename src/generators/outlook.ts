@@ -1,4 +1,3 @@
-import { isMobile } from '../core/globals';
 import { generate_time } from '../core/dates';
 import { open_cal_url } from './ical';
 import type { ATCBConfig, ATCBDateEntry } from '../types';
@@ -22,14 +21,7 @@ function subscribe_microsoft(data: ATCBConfig, fileUrl: string, calName: string,
 // See specs at: TODO: add some documentation here, if it exists
 function generate_microsoft(data: ATCBConfig, date: ATCBDateEntry, subEvent: 'all' | number | string = 'all', type = 'ms365'): void {
   const urlParts: string[] = [];
-  const basePath = (function () {
-    // tmp workaround to reflect the fact that Microsoft is routing mobile traffic differently
-    // TODO: remove this, when Microsoft has fixed this
-    if (isMobile() || data.fakeMobile) {
-      return '/calendar/0/deeplink/compose?path=%2Fcalendar%2Faction%2Fcompose&rru=addevent';
-    }
-    return '/calendar/0/action/compose?rru=addevent';
-  })();
+  const basePath = '/calendar/0/deeplink/compose?path=%2Fcalendar%2Faction%2Fcompose&rru=addevent';
   const baseUrl = (function () {
     if (type == 'outlookcom') {
       return 'https://outlook.live.com' + basePath;

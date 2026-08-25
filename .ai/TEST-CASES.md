@@ -178,9 +178,9 @@ Also part of the default run (long-standing quick tests):
 
 ### Group I - Outlook (MS365 + Outlook.com) (`r-I-outlook-yahoo-teams.test.js`)
 
-- I-01: MS365 desktop compose URL with startdt/enddt/subject/location/body
+- I-01: MS365 deeplink URL with path/startdt/enddt/subject/location/body
 - I-02: Outlook.com uses outlook.live.com with same params
-- I-01b: MS365 mobile flavor uses the deeplink base
+- I-01b: MS365 mobile flavor uses the same deeplink base
 - I-03: all-day event sets allday=true for both Outlook variants
 - I-04: recurring removes both Outlook options from the list
 - I-05: online event -> URL in location and kept in body

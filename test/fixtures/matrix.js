@@ -43,8 +43,8 @@ export function isValid(env, cfg, service) {
 
 export const URL_BASE = new Map([
   ['google', ['https://calendar.google.com/calendar/r/eventedit?', 'https://calendar.google.com/calendar/render?action=TEMPLATE', 'intent://calendar.google.com/']],
-  ['ms365', ['https://outlook.office.com/calendar/0/action/compose', 'https://outlook.office.com/calendar/0/deeplink/compose']],
-  ['outlookcom', ['https://outlook.live.com/calendar/0/action/compose', 'https://outlook.live.com/calendar/0/deeplink/compose']],
+  ['ms365', ['https://outlook.office.com/calendar/0/deeplink/compose']],
+  ['outlookcom', ['https://outlook.live.com/calendar/0/deeplink/compose']],
   ['msteams', ['https://teams.microsoft.com/l/meeting/new?']],
   ['yahoo', ['https://calendar.yahoo.com/?v=60']],
 ]);

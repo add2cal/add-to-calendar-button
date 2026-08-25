@@ -21,10 +21,12 @@ async function urlFor(config, optionAttr, id) {
 }
 
 describe('Group I - Outlook (MS365 + Outlook.com)', () => {
-  it('I-01: MS365 desktop compose URL with startdt/enddt/subject/location/body', async () => {
+  it('I-01: MS365 deeplink URL with path/startdt/enddt/subject/location/body', async () => {
     const raw = await urlFor(CFG.singleTimedNY, "'ms365'", 'atcb-i01');
-    expect(raw.startsWith('https://outlook.office.com/calendar/0/action/compose?rru=addevent')).to.equal(true);
+    expect(raw.startsWith('https://outlook.office.com/calendar/0/deeplink/compose?')).to.equal(true);
     const url = new URL(raw);
+    expect(url.searchParams.get('path')).to.equal('/calendar/action/compose');
+    expect(url.searchParams.get('rru')).to.equal('addevent');
     expect(url.searchParams.get('subject')).to.equal('NY Timed');
     expect(url.searchParams.get('location')).to.equal('NYC');
     expect(url.searchParams.get('body')).to.include('desc');
@@ -34,14 +36,17 @@ describe('Group I - Outlook (MS365 + Outlook.com)', () => {
 
   it('I-02: Outlook.com uses outlook.live.com with same params', async () => {
     const raw = await urlFor(CFG.singleTimedNY, "'outlookcom'", 'atcb-i02');
-    expect(raw.startsWith('https://outlook.live.com/calendar/0/action/compose?rru=addevent')).to.equal(true);
+    expect(raw.startsWith('https://outlook.live.com/calendar/0/deeplink/compose?')).to.equal(true);
     const url = new URL(raw);
+    expect(url.searchParams.get('path')).to.equal('/calendar/action/compose');
     expect(url.searchParams.get('subject')).to.equal('NY Timed');
   });
 
-  it('I-01b: MS365 mobile flavor uses the deeplink base', async () => {
+  it('I-01b: MS365 mobile flavor uses the same deeplink base', async () => {
     const raw = await urlFor({ ...CFG.singleTimedNY, fakeMobile: 'true' }, "'ms365'", 'atcb-i01b');
-    expect(raw).to.include('/calendar/0/deeplink/compose?path=');
+    const url = new URL(raw);
+    expect(url.origin + url.pathname).to.equal('https://outlook.office.com/calendar/0/deeplink/compose');
+    expect(url.searchParams.get('path')).to.equal('/calendar/action/compose');
   });
 
   it('I-03: all-day event sets allday=true for both Outlook variants', async () => {
