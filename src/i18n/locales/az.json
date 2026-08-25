@@ -1,0 +1,91 @@
+{
+  "label": {
+    "addtocalendar": "Təqvimə əlavə edin",
+    "share": {
+      "email": "E-poçt vasitəsilə paylaşın",
+      "copy": "Linki kopyalayın",
+      "copied": "Kopyalandı",
+      "email_subject": "Bu tədbiri yadda saxlayın"
+    },
+    "rsvp": {
+      "title": "RSVP",
+      "expired": "Müddəti bitib",
+      "bookedout": "Yerlər doludur",
+      "restart": "Yeni RSVP cavabı"
+    }
+  },
+  "ical": "iCal Faylı",
+  "modal": {
+    "button": {
+      "default": "Mənə klikləyin"
+    },
+    "webview": {
+      "ical": {
+        "h": "Brauzerinizi açın",
+        "text": "Təəssüf ki, tətbiqdaxili brauzerlərdə təqvim faylını yaratma üsulumuzla bağlı problemlər var.",
+        "steps": "<ol><li>Telefonunuzda <strong>başqa bir brauzer açın</strong> , ...</li><li> Panoya məzmunu <strong>yapışdırın</strong> və gedin.</li></ol>"
+      }
+    },
+    "clipboard": {
+      "text": "Sehrli URL-i avtomatik olaraq mübadilə buferinizə kopyaladıq.",
+      "failed": "Mübadilə buferinə köçürmək alınmadı. Aşağıdakı keçidi əl ilə köçürün:"
+    },
+    "opensafari": {
+      "ical": {
+        "h": "Safari-ni açın",
+        "text": "Təəssüf ki, iOS-da Safari xaricində təqvim faylını yaratmaq və açmaqla bağlı bəzi problemlər var.",
+        "steps": "<ol><li><strong>Safari açın</strong> ,...</li><li> Panoya məzmunu <strong>yapışdırın</strong> və gedin.</li></ol>"
+      }
+    },
+    "multidate": {
+      "h": "Bu bir hadisə seriyasıdır",
+      "text": "Fərdi hadisələri bir-bir əlavə edin:"
+    },
+    "subscribe": {
+      "yahoo": {
+        "h": "Yahoo-ya Təqvim əlavə edin",
+        "text": "<ol><li>İndi Yahoo Təqvimini açın.</li><li> \"Fəaliyyətlər\" sekmesini vurun.</li><li> \"Digər təqvimləri izləyin\" düyməsini basın.</li><li> Ad təyin edin və mübadilə buferinin məzmununu url sahəsinə yapışdırın.</li></ol>",
+        "button": "Yahoo Təqvimini açın"
+      }
+    }
+  },
+  "date": {
+    "status": {
+      "cancelled": "Bu tarix ləğv edildi.",
+      "cancelled_cta": "Zəhmət olmasa təqviminizi yeniləyin!"
+    }
+  },
+  "close": "Bağla",
+  "continue": "Davam et",
+  "cancel": "Ləğv et",
+  "expired": "İstifadə müddəti bitdi",
+  "recurring": "Təkrarlanan",
+  "thankyou": "Təşəkkür edirik",
+  "submit": "Göndər",
+  "form": {
+    "error": {
+      "required": "Bütün tələb olunan sahələri düzgün doldurmadınız",
+      "sending": "Cavabınızı göndərərkən problem oldu. Lütfən, sonra yenidən cəhd edin",
+      "email": "E-poçt ünvanınız etibarlı deyil",
+      "bookedoutmany": "Yerlər doludur — daha az iştirakçı ilə cəhd edin"
+    },
+    "success": {
+      "title": "Uğurla göndərildi!",
+      "sent": "Cavabınız göndərildi. Təşəkkür edirik!",
+      "email": "Təsdiq e-poçtu almalı idiniz.",
+      "doi": "Cavabın qeydə alınması üçün indicə göndərdiyimiz e-poçtdakı təsdiq keçidini açın (növbəti 30 dəqiqə ərzində).",
+      "demo": "Təşəkkür edirik. RSVP demosu burada bitir.",
+      "already": "Artıq cavab vermisiniz."
+    },
+    "status": {
+      "title": "İştirak edəcəksiniz?",
+      "confirmed": "Bəli",
+      "undecided": "Bəlkə",
+      "declined": "Xeyr"
+    },
+    "amount": "İştirakçıların sayı",
+    "max": "maks.",
+    "email": "E-poçt ünvanı",
+    "seatsleft": "Boş yerlər"
+  }
+}

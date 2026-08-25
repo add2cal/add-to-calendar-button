@@ -51,23 +51,11 @@ function generate_google(data: ATCBConfig, date: ATCBDateEntry, subEvent: 'all' 
   if (date.name && date.name !== '') {
     urlParts.push('text=' + encodeURIComponent(date.name));
   }
-  const tmpDataDescription: string[] = [];
-  if (date.description && date.description !== '') {
-    tmpDataDescription.push(date.description);
-  }
   if (date.location && date.location !== '') {
     urlParts.push('location=' + encodeURIComponent(date.location));
-    // TODO: Find a better solution for the next temporary workaround.
-    if (isIOS() || data.fakeIOS) {
-      // workaround to cover a bug, where, when using Google Calendar on an iPhone, the location is not recognized. So, for the moment, we simply add it to the description.
-      if (tmpDataDescription.length > 0) {
-        tmpDataDescription.push('<br><br>');
-      }
-      tmpDataDescription.push('&#128205;: ' + date.location);
-    }
   }
-  if (tmpDataDescription.length > 0) {
-    urlParts.push('details=' + encodeURIComponent(tmpDataDescription.join('')));
+  if (date.description && date.description !== '') {
+    urlParts.push('details=' + encodeURIComponent(date.description));
   }
   if (date.recurrence && date.recurrence !== '') {
     urlParts.push('recur=' + encodeURIComponent(date.recurrence as string));

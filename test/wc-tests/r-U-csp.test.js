@@ -68,7 +68,7 @@ describe('Group U - CSP environment 2x2', () => {
 
   it('U-22: strict CSP + matching nonce -> component initializes inside the CSP iframe without violations', async function () {
     this.timeout(10000);
-    const csp = `default-src 'self'; script-src 'self' 'nonce-${NONCE}'; style-src 'self' 'unsafe-inline'; connect-src 'self'`;
+    const csp = `default-src 'self'; script-src 'self' 'nonce-${NONCE}'; style-src 'self' 'nonce-${NONCE}'; connect-src 'self'`;
     const iframe = cspIframe(csp);
     try {
       const win = await waitFor(() => (iframe.contentWindow && iframe.contentWindow.__atcbLoaded ? iframe.contentWindow : null));
@@ -81,16 +81,33 @@ describe('Group U - CSP environment 2x2', () => {
       el.setAttribute('startDate', '2050-06-15');
       el.setAttribute('location', 'CSP City');
       el.setAttribute('options', "'google'");
+      el.setAttribute('buttonStyle', 'round');
       el.setAttribute('cspnonce', NONCE);
       el.setAttribute('identifier', 'atcb-u22');
       doc.body.appendChild(el);
       const initialized = await waitFor(() => el.shadowRoot && el.shadowRoot.querySelector('.atcb-initialized'));
       expect(initialized, 'component initialized under CSP').to.exist;
+      const dateEl = doc.createElement('add-to-calendar-button');
+      dateEl.setAttribute('name', 'CSP Date Event');
+      dateEl.setAttribute('startDate', '2050-06-15');
+      dateEl.setAttribute('startTime', '10:00');
+      dateEl.setAttribute('endTime', '11:00');
+      dateEl.setAttribute('location', 'CSP City');
+      dateEl.setAttribute('options', "'google'");
+      dateEl.setAttribute('buttonStyle', 'date');
+      dateEl.setAttribute('cspnonce', NONCE);
+      dateEl.setAttribute('identifier', 'atcb-u22-date');
+      doc.body.appendChild(dateEl);
+      const dateInitialized = await waitFor(() => dateEl.shadowRoot && dateEl.shadowRoot.querySelector('.atcb-initialized'));
+      expect(dateInitialized, 'date component initialized under CSP').to.exist;
+      const outlineIcons = [...el.shadowRoot.querySelectorAll('svg[fill="none"]'), ...dateEl.shadowRoot.querySelectorAll('svg[fill="none"]')];
+      expect(outlineIcons.length, 'outline icons rendered').to.be.greaterThan(0);
+      expect(outlineIcons.every((icon) => win.getComputedStyle(icon).fill === 'none'), 'all outline icons remain unfilled').to.equal(true);
       const schema = doc.getElementById('atcb-schema-' + el.getAttribute('atcb-button-id'));
       if (schema) {
         expect(schema.nonce === NONCE || schema.getAttribute('nonce') === NONCE).to.equal(true);
       }
-      expect(violations.filter((v) => v.includes('script'))).to.have.length(0);
+      expect(violations).to.have.length(0);
     } finally {
       iframe.remove();
     }

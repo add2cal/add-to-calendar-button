@@ -13,6 +13,7 @@ import { expect } from '@open-wc/testing';
 import { mountAtcb, baseEvent } from '../helpers/mount.js';
 import { openList, modalHost } from '../helpers/dom.js';
 import { aTimeout } from '@open-wc/testing';
+import { mockProFetch, proEvtConfig, proRsvpConfig, PRO_EVT_KEY, PRO_RSVP_KEY } from '../fixtures/pro.js';
 
 async function loadAxe() {
   if (window.axe) return window.axe;
@@ -62,5 +63,52 @@ describe('Group AX - automated a11y checks', () => {
     const dialog = modal.shadowRoot.getElementById('atcb-bgoverlay');
     expect(dialog.tagName, 'native dialog element').to.equal('DIALOG');
     await expectNoViolations(modal, 'modal dialog');
+  });
+
+  it('AX-05: inline RSVP form has no WCAG A/AA violations', async () => {
+    const mock = mockProFetch({ [PRO_RSVP_KEY]: proRsvpConfig() });
+    try {
+      const { host } = await mountAtcb({ prokey: PRO_RSVP_KEY, inlineRsvp: 'true', identifier: 'atcb-ax05' });
+      await aTimeout(250);
+      await expectNoViolations(host, 'inline RSVP form');
+    } finally {
+      mock.restore();
+    }
+  });
+
+  it('AX-06: CTA form modal has no WCAG A/AA violations', async () => {
+    const mock = mockProFetch({
+      [PRO_EVT_KEY]: proEvtConfig({
+        ty: {
+          type: 'form',
+          text: 'Tell us where to send your reminder.',
+          url: 'https://example.com/submit',
+          button_label: 'Send',
+          fields: [
+            { name: 'email', label: 'Email', type: 'email', required: true },
+            { name: 'terms', label: 'I agree', type: 'checkbox', required: true },
+          ],
+        },
+      }),
+    });
+    try {
+      const { host } = await mountAtcb({
+        prokey: PRO_EVT_KEY,
+        trigger: 'click',
+        identifier: 'atcb-ax06',
+      });
+      const btn = host.shadowRoot.getElementById(host.getAttribute('atcb-button-id'));
+      btn.dispatchEvent(new MouseEvent('mousedown', { bubbles: true, cancelable: true, view: window, button: 0 }));
+      btn.dispatchEvent(new MouseEvent('mouseup', { bubbles: true, cancelable: true, view: window, button: 0 }));
+      await aTimeout(60);
+      const option = host.shadowRoot.getElementById(host.getAttribute('atcb-button-id') + '-ical');
+      option.dispatchEvent(new MouseEvent('click', { bubbles: true, cancelable: true, view: window, button: 0 }));
+      await aTimeout(1200);
+      const modal = modalHost(host);
+      expect(modal, 'CTA modal host exists').to.exist;
+      await expectNoViolations(modal, 'CTA form modal');
+    } finally {
+      mock.restore();
+    }
   });
 });

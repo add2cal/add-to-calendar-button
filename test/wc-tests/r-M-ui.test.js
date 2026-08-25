@@ -228,6 +228,16 @@ describe('Group M - UI / interaction', () => {
     await aTimeout(100);
     const modal = modalHost(host);
     const list = modal.shadowRoot.querySelector('.atcb-list.atcb-modal');
+    const header = list.querySelector('.atcb-list-modal-header');
+    const closeItem = header.querySelector('.atcb-list-item-close');
+    expect(header.querySelector('.atcb-list-modal-headline')).to.exist;
+    expect(closeItem, 'list-modal close control belongs to the header row').to.exist;
+    expect(closeItem.classList.contains('atcb-list-item'), 'close control is not styled as a calendar option').to.be.false;
+    expect(closeItem.getAttribute('role'), 'close control remains part of keyboard menu navigation').to.equal('menuitem');
+    expect(getComputedStyle(header).display).to.equal('flex');
+    expect(getComputedStyle(header).justifyContent).to.equal('space-between');
+    expect(getComputedStyle(header).gap).to.equal('20px');
+    expect(getComputedStyle(closeItem).position).to.equal('static');
     expect(list, 'modal list rendered').to.exist;
     expect(modal.shadowRoot.querySelector('.atcb-modal-close'), 'list modal keeps its own close treatment').to.not.exist;
     const listWidth = list.getBoundingClientRect().width;

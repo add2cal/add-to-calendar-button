@@ -306,7 +306,51 @@ export type I18nStrings = {
 // type gate in test/types/).
 // ---------------------------------------------------------------------------
 
-export type ATCBLanguage = 'en' | 'de' | 'nl' | 'fa' | 'fr' | 'es' | 'et' | 'pt' | 'tr' | 'zh' | 'ar' | 'hi' | 'pl' | 'ro' | 'id' | 'no' | 'fi' | 'sv' | 'cs' | 'ja' | 'it' | 'ko' | 'vi' | 'hu' | 'he' | 'uk';
+export type ATCBLanguage =
+  | 'en'
+  | 'de'
+  | 'nl'
+  | 'fa'
+  | 'fr'
+  | 'es'
+  | 'et'
+  | 'pt'
+  | 'tr'
+  | 'zh'
+  | 'ar'
+  | 'hi'
+  | 'pl'
+  | 'ro'
+  | 'id'
+  | 'no'
+  | 'fi'
+  | 'sv'
+  | 'cs'
+  | 'ja'
+  | 'it'
+  | 'ko'
+  | 'vi'
+  | 'hu'
+  | 'he'
+  | 'uk'
+  | 'az'
+  | 'be'
+  | 'bg'
+  | 'bs'
+  | 'da'
+  | 'el'
+  | 'hr'
+  | 'hy'
+  | 'ka'
+  | 'lt'
+  | 'lv'
+  | 'mk'
+  | 'mt'
+  | 'ru'
+  | 'sk'
+  | 'sl'
+  | 'sq'
+  | 'sr';
 
 export type CustomLabelsObjectType = {
   [key: string]: string | null;

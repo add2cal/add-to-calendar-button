@@ -10,7 +10,7 @@
 import { expect, aTimeout } from '@open-wc/testing';
 import { mountAtcb } from '../helpers/mount.js';
 import { modalHost, optionEl, btnId } from '../helpers/dom.js';
-import { mockProFetch, proRsvpConfig, PRO_RSVP_KEY } from '../fixtures/pro.js';
+import { mockProFetch, proEvtConfig, proRsvpConfig, PRO_EVT_KEY, PRO_RSVP_KEY } from '../fixtures/pro.js';
 import { resetDataLayer, dlEvents } from '../helpers/datalayer.js';
 
 describe('Group T - PRO RSVP (render + client-side only)', () => {
@@ -58,6 +58,35 @@ describe('Group T - PRO RSVP (render + client-side only)', () => {
       const modal = modalHost(host);
       const formPresent = shadow.querySelector('form') || (modal && modal.shadowRoot.querySelector('form')) || host.shadowRoot.querySelector('.atcb-modal-box');
       expect(formPresent, 'inline RSVP form rendered without interaction').to.exist;
+    } finally {
+      mock.restore();
+    }
+  });
+
+  it('T-02b: CTA thank-you modal keeps intro text left-aligned and hides the checkmark icon', async () => {
+    const mock = mockProFetch({ [PRO_EVT_KEY]: proEvtConfig({ ty: { type: 'share', text: 'Welcome to the event.', url: 'https://example.com/share' } }) });
+    try {
+      const { host } = await mountAtcb({
+        prokey: PRO_EVT_KEY,
+        trigger: 'click',
+        identifier: 'atcb-t02b',
+      });
+      const btn = host.shadowRoot.getElementById(host.getAttribute('atcb-button-id'));
+      btn.dispatchEvent(new MouseEvent('mousedown', { bubbles: true, cancelable: true, view: window, button: 0 }));
+      btn.dispatchEvent(new MouseEvent('mouseup', { bubbles: true, cancelable: true, view: window, button: 0 }));
+      await aTimeout(60);
+      const option = host.shadowRoot.getElementById(host.getAttribute('atcb-button-id') + '-ical');
+      option.dispatchEvent(new MouseEvent('click', { bubbles: true, cancelable: true, view: window, button: 0 }));
+      await aTimeout(1200);
+      const modal = modalHost(host);
+      const root = modal ? modal.shadowRoot : host.shadowRoot;
+      const shareButtons = root.querySelector('.pro-share-buttons');
+      const intro = root.querySelector('.pro-intro');
+      const icon = root.querySelector('.atcb-modal-icon');
+      expect(shareButtons, 'share buttons render in the CTA modal').to.exist;
+      expect(intro, 'intro copy is wrapped for left/right alignment hooks').to.exist;
+      expect(intro.textContent).to.include('Welcome to the event.');
+      expect(icon, 'CTA modal should not show the default checkmark icon').to.not.exist;
     } finally {
       mock.restore();
     }

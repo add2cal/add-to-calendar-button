@@ -212,14 +212,14 @@ function dateButtonContentTemplate(data: ATCBConfig, subEventIn: string | number
   const hasLocationLine = (data.dates![`${subEvent}`]!.location && data.dates![`${subEvent}`]!.location !== '' && !data.dates![`${subEvent}`]!.onlineEvent) || cancelledInfo !== '';
   const hasDescriptionFallback = !hasLocationLine && data.dates![`${subEvent}`]!.description !== '' && fullTimeInfo.length === 0 && (!data.recurrence || data.recurrence === '');
   const centerHeadline = !hasLocationLine && !hasDescriptionFallback && fullTimeInfo.length == 0 && (data.recurrence == null || data.recurrence == '');
-  const headlineStyle = !hasLocationLine && !hasDescriptionFallback ? `line-clamp:2;${centerHeadline ? 'text-align:center;' : ''}` : '';
+  const headlineClasses = `${!hasLocationLine && !hasDescriptionFallback ? ' atcb-date-btn-headline-two-lines' : ''}${centerHeadline ? ' atcb-date-btn-headline-centered' : ''}`;
   return html`<div class="atcb-date-btn-left">
       <div class="atcb-date-btn-day">${startDate.toLocaleString(data.formatLocale || data.language, { day: 'numeric', timeZone: allDay ? 'UTC' : (timeZone as string) })}</div>
       <div class="atcb-date-btn-month">${startDate.toLocaleString(data.formatLocale || data.language, { month: 'short', timeZone: allDay ? 'UTC' : (timeZone as string) })}</div>
     </div>
-    <div class="atcb-date-btn-right" style=${centerHeadline ? 'align-self:center' : nothing}>
+    <div class="atcb-date-btn-right${centerHeadline ? ' atcb-date-btn-right-centered' : ''}">
       <div class="atcb-date-btn-details">
-        <div class="atcb-date-btn-headline" style=${headlineStyle !== '' ? headlineStyle : nothing}>${btnHeadlineText as string}</div>
+        <div class="atcb-date-btn-headline${headlineClasses}">${btnHeadlineText as string}</div>
         ${
           hasLocationLine
             ? cancelledInfo != ''
@@ -229,7 +229,7 @@ function dateButtonContentTemplate(data: ATCBConfig, subEventIn: string | number
                 <span class="atcb-date-btn-content-location">${data.dates![`${subEvent}`]!.location as string}</span>
               </div>`
             : hasDescriptionFallback
-              ? html`<div class="atcb-date-btn-content" style="overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;line-clamp:2">${data.dates![`${subEvent}`]!.descriptionHtmlFree as string}</div>`
+              ? html`<div class="atcb-date-btn-content atcb-date-btn-content-clamped">${data.dates![`${subEvent}`]!.descriptionHtmlFree as string}</div>`
               : nothing
         }
         ${

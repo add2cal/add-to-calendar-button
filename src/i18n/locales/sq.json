@@ -1,0 +1,91 @@
+{
+  "label": {
+    "addtocalendar": "Shto në Kalendar",
+    "share": {
+      "email": "Ndani me email",
+      "copy": "Kopjo lidhjen",
+      "copied": "E kopjuar",
+      "email_subject": "Ruaje këtë ngjarje"
+    },
+    "rsvp": {
+      "title": "RSVP",
+      "expired": "Skaduar",
+      "bookedout": "Plot",
+      "restart": "Përgjigje e re RSVP"
+    }
+  },
+  "ical": "Skedari iCal",
+  "modal": {
+    "button": {
+      "default": "Klikoni mua"
+    },
+    "webview": {
+      "ical": {
+        "h": "Hapni shfletuesin tuaj",
+        "text": "Fatkeqësisht, shfletuesit brenda aplikacionit kanë probleme me mënyrën se si gjenerojmë skedarin e kalendarit.",
+        "steps": "<ol><li><strong>Hapni një shfletues tjetër</strong> në telefonin tuaj, ...</li><li> <strong>Ngjitni</strong> përmbajtjen e kujtesës dhe shkoni.</li></ol>"
+      }
+    },
+    "clipboard": {
+      "text": "Ne kopjuam automatikisht një URL magjike në kujtesën tuaj.",
+      "failed": "Kopjimi në kujtesën e fragmenteve dështoi. Kopjoni manualisht lidhjen e mëposhtme:"
+    },
+    "opensafari": {
+      "ical": {
+        "h": "Hap Safari",
+        "text": "Fatkeqësisht, iOS ka disa probleme me gjenerimin dhe hapjen e skedarit të kalendarit jashtë Safari.",
+        "steps": "<ol><li><strong>Hap Safari</strong> ,...</li><li> <strong>Ngjitni</strong> përmbajtjen e kujtesës dhe shkoni.</li></ol>"
+      }
+    },
+    "multidate": {
+      "h": "Ky është një seri ngjarjesh",
+      "text": "Shtoni ngjarjet individuale një nga një:"
+    },
+    "subscribe": {
+      "yahoo": {
+        "h": "Shtoni kalendarin në Yahoo",
+        "text": "<ol><li>Hapni tani kalendarin Yahoo.</li><li> Klikoni në skedën \"Veprimet\".</li><li> Klikoni \"Ndiqni kalendarët e tjerë\".</li><li> Vendosni një emër dhe ngjisni përmbajtjen e kujtesës në fushën e URL-së.</li></ol>",
+        "button": "Hapni kalendarin Yahoo"
+      }
+    }
+  },
+  "date": {
+    "status": {
+      "cancelled": "Kjo datë u anulua.",
+      "cancelled_cta": "Ju lutemi përditësoni kalendarin tuaj!"
+    }
+  },
+  "close": "Mbylle",
+  "continue": "Vazhdoni",
+  "cancel": "Anulo",
+  "expired": "I skaduar",
+  "recurring": "Të përsëritura",
+  "thankyou": "Faleminderit",
+  "submit": "Dërgo",
+  "form": {
+    "error": {
+      "required": "Nuk i keni plotësuar siç duhet të gjitha fushat e kërkuara",
+      "sending": "Pati një problem me dërgimin e përgjigjes suaj. Ju lutemi provoni sërish më vonë",
+      "email": "Adresa juaj e emailit nuk është e vlefshme",
+      "bookedoutmany": "Plot – provoni me më pak pjesëmarrës"
+    },
+    "success": {
+      "title": "Dërguar me sukses!",
+      "sent": "Përgjigjja juaj u dërgua. Faleminderit!",
+      "email": "Duhet të keni marrë një email konfirmimi.",
+      "doi": "Që përgjigjja të merret parasysh, hapni lidhjen e konfirmimit në emailin që sapo ju dërguam (brenda 30 minutave të ardhshme).",
+      "demo": "Faleminderit. Demonstrimi RSVP përfundon këtu.",
+      "already": "Ju jeni përgjigjur tashmë."
+    },
+    "status": {
+      "title": "Do të merrni pjesë?",
+      "confirmed": "Po",
+      "undecided": "Ndoshta",
+      "declined": "Jo"
+    },
+    "amount": "Numri i pjesëmarrësve",
+    "max": "maks.",
+    "email": "Adresa e emailit",
+    "seatsleft": "Vende të lira"
+  }
+}

@@ -172,10 +172,6 @@
   width: 1.15em;
 }
 
-.atcb-rtl .atcb-icon {
-  margin-left: .55em;
-}
-
 .atcb-dropdown-anchor {
   bottom: -15px;
   height: 0;
@@ -266,10 +262,6 @@
 
 .atcb-list.atcb-modal {
   box-shadow: var(--list-modal-shadow);
-}
-
-.atcb-list-item.atcb-list-item-close:not(:focus-visible):hover {
-  color: var(--list-hover-text);
 }
 
 .atcb-modal-box {
@@ -428,7 +420,7 @@ a.atcb-modal-btn.atcb-modal-btn-border {
 .atcb-icon.atcb-icon-apple,
 .atcb-icon.atcb-icon-ical,
 .atcb-icon.atcb-icon-trigger {
-  padding-bottom: .15em;
+  padding-bottom: .05em;
 }
 
 .atcb-icon.atcb-icon-rsvp {

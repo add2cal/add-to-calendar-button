@@ -57,6 +57,32 @@ interface ATCBPostErrorResult {
   [key: string]: unknown;
 }
 
+interface ATCBFormValidationResult {
+  valid: boolean;
+  firstInvalid: HTMLInputElement | null;
+}
+
+function mark_invalid_input(input: HTMLInputElement, currentFirstInvalid: HTMLInputElement | null): HTMLInputElement {
+  input.classList.add('error');
+  input.setAttribute('aria-invalid', 'true');
+  return currentFirstInvalid || input;
+}
+
+function clear_invalid_input(input: HTMLInputElement): void {
+  input.classList.remove('error');
+  input.removeAttribute('aria-invalid');
+}
+
+function show_submit_error(form: HTMLFormElement, errorEl: HTMLElement, msg: string, firstInvalid: HTMLInputElement | null = null): void {
+  errorEl.textContent = msg;
+  form.classList.add('form-error');
+  if (firstInvalid) {
+    firstInvalid.focus();
+    return;
+  }
+  errorEl.focus();
+}
+
 // FUNCTION TO GENERATE A THANK YOU NOTE
 async function generate_ty(hostEl: ShadowRoot | HTMLElement, dataObj: ATCBConfig): Promise<void> {
   let host = hostEl as ShadowRoot;
@@ -97,7 +123,7 @@ async function generate_ty(hostEl: ShadowRoot | HTMLElement, dataObj: ATCBConfig
   let tyContent = '<div class="pro"><p id="ty-success-msg">' + translate_hook('form.success.title', data) + '</p><div id="ty-content">';
   // intro text
   if (tyData.text && tyData.text !== '') {
-    tyContent += rewrite_html_elements(tyData.text);
+    tyContent += '<div class="pro-intro">' + rewrite_html_elements(tyData.text) + '</div>';
   }
   // share buttons, if type = share
   if (tyData.type === 'share') {
@@ -143,8 +169,13 @@ async function generate_ty(hostEl: ShadowRoot | HTMLElement, dataObj: ATCBConfig
       tyData.fields = customForm.fields;
       tyContent += customForm.html;
     }
-    tyContent += '<p id="submit-error"></p>';
-    tyContent += '<p class="pro-pt"><button type="submit" id="pro-form-submit" class="atcb-modal-btn atcb-modal-btn-primary atcb-modal-btn-border">' + label + '</button><span id="pro-form-submitting" class="pro-waiting"><span>.</span><span>.</span><span>.</span></span></p>';
+    tyContent += '<p id="submit-error" role="alert" aria-live="assertive" aria-atomic="true" tabindex="-1"></p>';
+    tyContent +=
+      '<p class="pro-pt"><button type="submit" id="pro-form-submit" class="atcb-modal-btn atcb-modal-btn-primary atcb-modal-btn-border">' +
+      label +
+      '</button><span id="pro-form-submitting" class="pro-waiting" role="status" aria-live="polite" aria-hidden="true"><span>.</span><span>.</span><span>.</span><span class="atcb-sr-only">' +
+      translate_hook('submit', data) +
+      '</span></span></p>';
     tyContent += '</form>';
   }
   // button with url param, if provided and type = link
@@ -159,7 +190,7 @@ async function generate_ty(hostEl: ShadowRoot | HTMLElement, dataObj: ATCBConfig
   }
   tyContent += '</div></div>';
   // create modal
-  await create_modal(tyHost, data, 'checkmark', tyData.headline, tyContent);
+  await create_modal(tyHost, data, '', tyData.headline, tyContent);
   // set enhanced click functionality
   // copy to clipboard, if type = share
   if (tyData.type === 'share') {
@@ -188,13 +219,17 @@ async function generate_ty(hostEl: ShadowRoot | HTMLElement, dataObj: ATCBConfig
     const errorMsg = tyHost.getElementById('submit-error') as HTMLElement;
     const tyFormSubmit = tyHost.getElementById('pro-form-submit') as HTMLButtonElement;
     const tyFormSubmitting = tyHost.getElementById('pro-form-submitting') as HTMLElement;
-    tyFormSubmit.addEventListener('click', async function (e) {
+    tyForm.addEventListener('submit', async function (e) {
       e.preventDefault();
+      tyForm.classList.remove('form-error');
+      errorMsg.textContent = '';
+      tyFormSubmitting.setAttribute('aria-hidden', 'false');
       tyFormSubmitting.style.display = 'block';
       tyFormSubmit.style.display = 'none';
-      const valid = validate_form(tyHost, tyData.fields!);
+      const validation = validate_form(tyHost, tyData.fields!);
+      const valid = validation.valid;
       if (!valid) {
-        errorMsg.textContent = translate_hook('form.error.required', data) + '.';
+        show_submit_error(tyForm, errorMsg, translate_hook('form.error.required', data) + '.', validation.firstInvalid);
       }
       // submit data
       if (valid) {
@@ -228,17 +263,11 @@ async function generate_ty(hostEl: ShadowRoot | HTMLElement, dataObj: ATCBConfig
           (tyHost.getElementById('ty-content') as HTMLElement).style.display = 'none';
           return;
         }
-        errorMsg.textContent = translate_hook('form.error.sending', data) + '.';
+        show_submit_error(tyForm, errorMsg, translate_hook('form.error.sending', data) + '.');
       }
-      tyForm.classList.add('form-error');
+      tyFormSubmitting.setAttribute('aria-hidden', 'true');
       tyFormSubmitting.style.display = 'none';
       tyFormSubmit.style.display = 'block';
-    });
-    tyFormSubmit.addEventListener('keyup', function (event) {
-      if ((event as KeyboardEvent).key === 'Enter') {
-        event.preventDefault();
-        tyFormSubmit.click();
-      }
     });
   }
 }
@@ -271,14 +300,14 @@ async function generate_rsvp_form(host: ShadowRoot, data: ATCBConfig, hostEl: HT
   rsvpContent += '<div id="rsvp-content">';
   // intro text
   if (rsvpData.text && rsvpData.text !== '') {
-    rsvpContent += rewrite_html_elements(rsvpData.text);
+    rsvpContent += '<div class="pro-intro">' + rewrite_html_elements(rsvpData.text) + '</div>';
   }
   rsvpContent += '<form id="' + data.identifier + '-rsvp-form" class="pro-form' + (noIntro ? ' no-intro' : '') + (noHeadline ? ' no-headline' : '') + '">';
   // add status, amount, and email fields based on situation
   const staticID = data.proKey || 'demo-rsvp';
   if (rsvpData.initial_confirmation === false) {
-    rsvpContent += '<div id="rsvp-status-group">';
-    rsvpContent += '<p>' + translate_hook('form.status.title', data) + '</p>';
+    rsvpContent += '<div id="rsvp-status-group" role="radiogroup" aria-labelledby="' + data.identifier + '-rsvp-status-title">';
+    rsvpContent += '<p id="' + data.identifier + '-rsvp-status-title">' + translate_hook('form.status.title', data) + '</p>';
     rsvpContent +=
       '<div class="pro-field pro-field-type-radio"><div><input type="radio" name="' +
       staticID +
@@ -332,7 +361,7 @@ async function generate_rsvp_form(host: ShadowRoot, data: ATCBConfig, hostEl: HT
     hiddenContent += '<input type="hidden" name="' + staticID + '-amount" id="' + data.identifier + '-rsvp-amount" value="1" />';
   } else {
     rsvpContent += '<div class="pro-field"><label for="' + data.identifier + '-rsvp-amount">' + translate_hook('form.amount', data) + ' (' + translate_hook('form.max', data) + ' ' + maxAmount + ')<span>*</span></label>';
-    rsvpContent += '<input type="number" name="' + staticID + '-amount" min="1" max="' + maxAmount + '" id="' + data.identifier + '-rsvp-amount" ' + (data.disabled && 'disabled') + ' aria-label="' + translate_hook('form.amount', data) + '" value="1" /></div>';
+    rsvpContent += '<input type="number" name="' + staticID + '-amount" min="1" max="' + maxAmount + '" id="' + data.identifier + '-rsvp-amount" ' + (data.disabled && 'disabled') + ' required aria-required="true" aria-label="' + translate_hook('form.amount', data) + '" value="1" /></div>';
   }
   const attendee = (function () {
     if (data.dates![0]!.attendee && data.dates![0]!.attendee !== '') {
@@ -350,7 +379,7 @@ async function generate_rsvp_form(host: ShadowRoot, data: ATCBConfig, hostEl: HT
       hiddenContent += '<input type="hidden" name="email" id="' + data.identifier + '-rsvp-email" value="' + attendee + '" />';
     } else {
       rsvpContent += '<div class="pro-field"><label for="' + data.identifier + '-rsvp-email">' + translate_hook('form.email', data) + '<span>*</span></label>';
-      rsvpContent += '<input type="email" name="email" id="' + data.identifier + '-rsvp-email" ' + (data.disabled && 'disabled') + ' aria-label="' + translate_hook('form.email', data) + '" value="" /></div>';
+      rsvpContent += '<input type="email" name="email" id="' + data.identifier + '-rsvp-email" ' + (data.disabled && 'disabled') + ' required aria-required="true" autocomplete="email" aria-label="' + translate_hook('form.email', data) + '" value="" /></div>';
     }
   } else {
     rsvpData.fields = rsvpData.fields!.map((field): ATCBProFormField => {
@@ -367,13 +396,15 @@ async function generate_rsvp_form(host: ShadowRoot, data: ATCBConfig, hostEl: HT
     rsvpContent += customForm.html;
   }
   rsvpContent += hiddenContent;
-  rsvpContent += '<p id="submit-error"></p>';
+  rsvpContent += '<p id="submit-error" role="alert" aria-live="assertive" aria-atomic="true" tabindex="-1"></p>';
   rsvpContent +=
     '<p class="pro-pt"><button type="submit" id="pro-form-submit" ' +
     (data.disabled && 'disabled') +
     ' class="atcb-modal-btn atcb-modal-btn-primary atcb-modal-btn-border">' +
     translate_hook('submit', data) +
-    '</button><span id="pro-form-submitting" class="pro-waiting"><span>.</span><span>.</span><span>.</span></span></p>';
+    '</button><span id="pro-form-submitting" class="pro-waiting" role="status" aria-live="polite" aria-hidden="true"><span>.</span><span>.</span><span>.</span><span class="atcb-sr-only">' +
+    translate_hook('submit', data) +
+    '</span></span></p>';
   if (rsvpData.seatsLeft && rsvpData.seatsLeft > 0) {
     rsvpContent += '<p class="pro-form-fine">' + translate_hook('form.seatsleft', data) + ': <b>' + rsvpData.seatsLeft + '</b></p>';
   }
@@ -451,23 +482,28 @@ async function generate_rsvp_form(host: ShadowRoot, data: ATCBConfig, hostEl: HT
   const rsvpFormSubmitting = rsvpHost.getElementById('pro-form-submitting') as HTMLElement;
   const rsvpRestart = rsvpHost.getElementById('pro-form-restart') as HTMLElement | null;
   if (rsvpFormSubmit) {
-    rsvpFormSubmit.addEventListener('click', async function (e) {
+    rsvpForm.addEventListener('submit', async function (e) {
       e.preventDefault();
+      rsvpForm.classList.remove('form-error');
+      errorMsg.textContent = '';
+      rsvpFormSubmitting.setAttribute('aria-hidden', 'false');
       rsvpFormSubmitting.style.display = 'block';
       rsvpFormSubmit.style.display = 'none';
       const staticFields: ATCBProFormField[] = [{ type: 'number', name: data.proKey + '-amount', fieldId: data.identifier + '-rsvp-amount', required: true }];
       if (!customEmailField) staticFields.push({ type: 'email', name: 'email', fieldId: data.identifier + '-rsvp-email', required: true });
       const dynamicFields = Array.isArray(rsvpData.fields) ? rsvpData.fields : [];
-      let valid = validate_form(rsvpHost, [...staticFields, ...dynamicFields]);
+      const validation = validate_form(rsvpHost, [...staticFields, ...dynamicFields]);
+      let valid = validation.valid;
+      let firstInvalid = validation.firstInvalid;
       // if maxpp, make sure amount is not bigger
       const amountEl = rsvpHost.getElementById(data.identifier + '-rsvp-amount') as HTMLInputElement;
       const amount = parseInt(amountEl.value) || 1;
       if (rsvpData.maxpp && rsvpData.maxpp > 0 && amount > rsvpData.maxpp) {
-        amountEl.classList.add('error');
+        firstInvalid = mark_invalid_input(amountEl, firstInvalid);
         valid = false;
       }
       if (!valid) {
-        errorMsg.textContent = translate_hook('form.error.required', data) + '.';
+        show_submit_error(rsvpForm, errorMsg, translate_hook('form.error.required', data) + '.', firstInvalid);
       }
       // submit data
       if (valid) {
@@ -535,28 +571,22 @@ async function generate_rsvp_form(host: ShadowRoot, data: ATCBConfig, hostEl: HT
         }
         const requestResult = request as ATCBPostErrorResult;
         if (requestResult.error && requestResult.error === 2) {
-          errorMsg.textContent = translate_hook('form.error.email', data) + '.';
+          show_submit_error(rsvpForm, errorMsg, translate_hook('form.error.email', data) + '.');
         } else if (requestResult.error && requestResult.error === 5) {
-          errorMsg.textContent = translate_hook('label.rsvp.expired', data) + '.';
+          show_submit_error(rsvpForm, errorMsg, translate_hook('label.rsvp.expired', data) + '.');
         } else if (requestResult.error && requestResult.error === 6) {
           if (amount > 1) {
-            errorMsg.textContent = translate_hook('form.error.bookedoutmany', data) + '.';
+            show_submit_error(rsvpForm, errorMsg, translate_hook('form.error.bookedoutmany', data) + '.');
           } else {
-            errorMsg.textContent = translate_hook('label.rsvp.bookedout', data) + '.';
+            show_submit_error(rsvpForm, errorMsg, translate_hook('label.rsvp.bookedout', data) + '.');
           }
         } else {
-          errorMsg.textContent = translate_hook('form.error.sending', data) + '.';
+          show_submit_error(rsvpForm, errorMsg, translate_hook('form.error.sending', data) + '.');
         }
       }
-      rsvpForm.classList.add('form-error');
+      rsvpFormSubmitting.setAttribute('aria-hidden', 'true');
       rsvpFormSubmitting.style.display = 'none';
       rsvpFormSubmit.style.display = 'block';
-    });
-    rsvpFormSubmit.addEventListener('keyup', function (event) {
-      if ((event as KeyboardEvent).key === 'Enter') {
-        event.preventDefault();
-        rsvpFormSubmit.click();
-      }
     });
   }
   // reset
@@ -694,6 +724,7 @@ function build_form(fields: ATCBProFormField[], identifier: string = '', disable
 
 function create_field_html(type: string, name: string, fieldLabel: string, fieldId: string, required: boolean = false, fieldValue: string | boolean, defaultVal: string | boolean | null = null, fieldPlaceholder: string = '', disabled: boolean = false): string {
   let fieldHtml = '';
+  const accessibleLabel = fieldLabel !== '' ? fieldLabel : fieldPlaceholder !== '' ? fieldPlaceholder : name;
   // add label
   if ((type === 'text' || type === 'email' || type === 'number') && fieldLabel !== '') {
     fieldHtml += '<label for="' + fieldId + '">' + fieldLabel + (required ? '<span>*</span>' : '') + '</label>';
@@ -704,6 +735,8 @@ function create_field_html(type: string, name: string, fieldLabel: string, field
     type +
     '"' +
     (type === 'number' ? ' min="0"' : '') +
+    (required ? ' required aria-required="true"' : '') +
+    (type === 'email' ? ' autocomplete="email"' : '') +
     ((type === 'checkbox' || type === 'radio') && defaultVal && (defaultVal === 'true' || defaultVal === true) ? ' checked' : '') +
     ' name="' +
     name +
@@ -714,7 +747,7 @@ function create_field_html(type: string, name: string, fieldLabel: string, field
     '" ' +
     (disabled && 'disabled') +
     ' aria-label="' +
-    fieldLabel +
+    accessibleLabel +
     '" value="' +
     fieldValue +
     '" />';
@@ -725,12 +758,13 @@ function create_field_html(type: string, name: string, fieldLabel: string, field
   return fieldHtml;
 }
 
-function validate_form(host: ShadowRoot, fields: ATCBProFormField[]): boolean {
+function validate_form(host: ShadowRoot, fields: ATCBProFormField[]): ATCBFormValidationResult {
   /*!
    *  @preserve
    *  PER LICENSE AGREEMENT, YOU ARE NOT ALLOWED TO REMOVE OR CHANGE THIS FUNCTION!
    */
   let state = true;
+  let firstInvalid: HTMLInputElement | null = null;
   fields.forEach(function (field) {
     if (field.type !== 'label' && field.type !== 'radio') {
       const input = host.getElementById(field.fieldId as string) as HTMLInputElement;
@@ -740,24 +774,24 @@ function validate_form(host: ShadowRoot, fields: ATCBProFormField[]): boolean {
           input.value = input.value.replace(/\D/g, '');
         }
         if (field.type === 'email' && input.value !== '' && !validEmail(input.value)) {
-          input.classList.add('error');
+          firstInvalid = mark_invalid_input(input, firstInvalid);
           state = false;
           return;
         }
         if (field.required && input.value === '') {
-          input.classList.add('error');
+          firstInvalid = mark_invalid_input(input, firstInvalid);
           state = false;
           return;
         } else {
-          input.classList.remove('error');
+          clear_invalid_input(input);
         }
       } else {
         if (field.required && input.checked === false) {
-          input.classList.add('error');
+          firstInvalid = mark_invalid_input(input, firstInvalid);
           state = false;
           return;
         } else {
-          input.classList.remove('error');
+          clear_invalid_input(input);
         }
       }
     }
@@ -770,15 +804,15 @@ function validate_form(host: ShadowRoot, fields: ATCBProFormField[]): boolean {
         }
       });
       if (checked === false) {
-        (radioGroup[0] as HTMLInputElement).classList.add('error');
+        firstInvalid = mark_invalid_input(radioGroup[0] as HTMLInputElement, firstInvalid);
         state = false;
         return;
       } else {
-        (radioGroup[0] as HTMLInputElement).classList.remove('error');
+        clear_invalid_input(radioGroup[0] as HTMLInputElement);
       }
     }
   });
-  return state;
+  return { valid: state, firstInvalid };
 }
 
 // FUNCTION TO SEND A REQUEST TO THE SERVER

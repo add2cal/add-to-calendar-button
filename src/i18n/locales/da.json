@@ -1,0 +1,91 @@
+{
+  "label": {
+    "addtocalendar": "Føj til kalender",
+    "share": {
+      "email": "Del via e-mail",
+      "copy": "Kopiér link",
+      "copied": "Kopieret",
+      "email_subject": "Gem denne begivenhed"
+    },
+    "rsvp": {
+      "title": "RSVP",
+      "expired": "Udløbet",
+      "bookedout": "Udsolgt",
+      "restart": "Nyt RSVP-svar"
+    }
+  },
+  "ical": "iCal fil",
+  "modal": {
+    "button": {
+      "default": "Klik på mig"
+    },
+    "webview": {
+      "ical": {
+        "h": "Åbn din browser",
+        "text": "Desværre har browsere i appen problemer med den måde, vi genererer kalenderfilen på.",
+        "steps": "<ol><li><strong>Åbn en anden browser</strong> på din telefon, ...</li><li> <strong>Indsæt</strong> udklipsholderens indhold og gå.</li></ol>"
+      }
+    },
+    "clipboard": {
+      "text": "Vi kopierede automatisk en magisk URL ind i din udklipsholder.",
+      "failed": "Kopiering til udklipsholderen mislykkedes. Kopiér følgende link manuelt:"
+    },
+    "opensafari": {
+      "ical": {
+        "h": "Åbn Safari",
+        "text": "Desværre har iOS nogle problemer med at generere og åbne kalenderfilen uden for Safari.",
+        "steps": "<ol><li><strong>Åbn Safari</strong> , ...</li><li> <strong>Indsæt</strong> udklipsholderens indhold og gå.</li></ol>"
+      }
+    },
+    "multidate": {
+      "h": "Dette er en begivenhedsserie",
+      "text": "Tilføj de enkelte begivenheder én efter én:"
+    },
+    "subscribe": {
+      "yahoo": {
+        "h": "Tilføj kalender til Yahoo",
+        "text": "<ol><li>Åbn nu Yahoo-kalenderen.</li><li> Klik på fanen \"Handlinger\".</li><li> Tryk på \"Følg andre kalendere\".</li><li> Indstil et navn, og indsæt udklipsholderens indhold i url-feltet.</li></ol>",
+        "button": "Åbn Yahoo Kalender"
+      }
+    }
+  },
+  "date": {
+    "status": {
+      "cancelled": "Denne dato blev aflyst.",
+      "cancelled_cta": "Opdater venligst din kalender!"
+    }
+  },
+  "close": "Luk",
+  "continue": "Fortsæt",
+  "cancel": "Annuller",
+  "expired": "Udløbet",
+  "recurring": "Tilbagevendende",
+  "thankyou": "Tak",
+  "submit": "Indsend",
+  "form": {
+    "error": {
+      "required": "Du har ikke udfyldt alle obligatoriske felter korrekt",
+      "sending": "Der opstod et problem med at sende dit svar. Prøv venligst igen senere",
+      "email": "Din e-mailadresse er ikke gyldig",
+      "bookedoutmany": "Udsolgt – prøv med færre deltagere"
+    },
+    "success": {
+      "title": "Sendt med succes!",
+      "sent": "Dit svar er blevet sendt. Tak!",
+      "email": "Du bør have modtaget en bekræftelsesmail.",
+      "doi": "For at dit svar tæller, skal du åbne bekræftelseslinket i den e-mail, vi netop har sendt dig (inden for de næste 30 minutter).",
+      "demo": "Tak. RSVP-demoen slutter her.",
+      "already": "Du har allerede svaret."
+    },
+    "status": {
+      "title": "Deltager du?",
+      "confirmed": "Ja",
+      "undecided": "Måske",
+      "declined": "Nej"
+    },
+    "amount": "Antal deltagere",
+    "max": "maks.",
+    "email": "E-mailadresse",
+    "seatsleft": "Ledige pladser"
+  }
+}

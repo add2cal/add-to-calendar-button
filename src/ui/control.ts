@@ -103,7 +103,7 @@ async function open(host: ShadowRoot, data: ATCBConfig, button: HTMLElement | st
   }
   // give keyboard focus to first item in list, if possible
   const focusEl: HTMLElement | undefined = (function () {
-    const hostEl = host.querySelector('.atcb-list-item');
+    const hostEl = host.querySelector('[role="menuitem"]');
     if (hostEl) {
       return hostEl as HTMLElement;
     }
@@ -111,7 +111,7 @@ async function open(host: ShadowRoot, data: ATCBConfig, button: HTMLElement | st
     if (!modalHost) {
       return;
     }
-    return modalHost.shadowRoot!.querySelector('.atcb-list-item') as HTMLElement;
+    return modalHost.shadowRoot!.querySelector('[role="menuitem"]') as HTMLElement;
   })();
   if (focusEl) {
     if (keyboardTrigger) {

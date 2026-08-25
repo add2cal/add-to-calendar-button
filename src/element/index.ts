@@ -873,8 +873,8 @@ function global_listener_keydown(event: KeyboardEvent): void {
     event.preventDefault();
     let targetFocus = 0;
     const currFocusOption = (host as unknown as { activeElement: Element | null }).activeElement as HTMLElement | null;
-    const optionListCount = host.querySelectorAll('.atcb-list-item').length;
-    if (currFocusOption && currFocusOption.classList.contains('atcb-list-item')) {
+    const optionListCount = host.querySelectorAll('[role="menuitem"]').length;
+    if (currFocusOption?.role === 'menuitem') {
       if (event.key === 'ArrowDown' && (currFocusOption.dataset.optionNumber as unknown as number) < optionListCount) {
         targetFocus = parseInt(currFocusOption.dataset.optionNumber!) + 1;
       } else if (event.key === 'Tab') {
@@ -897,15 +897,15 @@ function global_listener_keydown(event: KeyboardEvent): void {
         targetFocus = parseInt(currFocusOption.dataset.optionNumber!) - 1;
       }
       if (targetFocus > 0) {
-        (host.querySelector('.atcb-list-item[data-option-number="' + targetFocus + '"]') as HTMLElement)!.focus();
+        (host.querySelector('[role="menuitem"][data-option-number="' + targetFocus + '"]') as HTMLElement)!.focus();
       }
     } else {
       switch (event.key) {
         default:
-          (host.querySelector('.atcb-list-item[data-option-number="1"]') as HTMLElement)!.focus();
+          (host.querySelector('[role="menuitem"][data-option-number="1"]') as HTMLElement)!.focus();
           break;
         case 'ArrowUp':
-          (host.querySelector('.atcb-list-item[data-option-number="' + optionListCount + '"]') as HTMLElement)!.focus();
+          (host.querySelector('[role="menuitem"][data-option-number="' + optionListCount + '"]') as HTMLElement)!.focus();
           break;
       }
     }

@@ -145,10 +145,6 @@
   width: 1.15em;
 }
 
-.atcb-rtl .atcb-icon {
-  margin-left: .55em;
-}
-
 .atcb-dropdown-anchor {
   bottom: 0;
   height: 0;
@@ -193,10 +189,6 @@
 .atcb-list-item .atcb-icon {
   height: 1.15em;
   width: 1.15em;
-}
-
-.atcb-list-item.atcb-list-item-close:hover {
-  color: var(--list-close-text-hover);
 }
 
 .atcb-modal-box {

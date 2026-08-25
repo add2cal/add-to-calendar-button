@@ -201,10 +201,6 @@
   width: 1.15em;
 }
 
-.atcb-rtl .atcb-icon {
-  margin-left: .55em;
-}
-
 .atcb-dropdown-anchor {
   bottom: 6px;
   height: 1px;
@@ -422,7 +418,7 @@ a.atcb-modal-btn:not([disabled]):hover {
 }
 
 .atcb-icon.atcb-icon-trigger {
-  padding-bottom: .15em;
+  padding-bottom: .05em;
 }
 
 .atcb-icon.atcb-icon-rsvp {

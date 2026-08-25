@@ -1,0 +1,91 @@
+{
+  "label": {
+    "addtocalendar": "Dodaj u Kalendar",
+    "share": {
+      "email": "Podijeli putem e-pošte",
+      "copy": "Kopiraj vezu",
+      "copied": "Kopirano",
+      "email_subject": "Spremi ovaj događaj"
+    },
+    "rsvp": {
+      "title": "RSVP",
+      "expired": "Isteklo",
+      "bookedout": "Popunjeno",
+      "restart": "Novi RSVP odgovor"
+    }
+  },
+  "ical": "iCal datoteka",
+  "modal": {
+    "button": {
+      "default": "Klikni me"
+    },
+    "webview": {
+      "ical": {
+        "h": "Otvorite preglednik",
+        "text": "Nažalost, preglednici unutar aplikacije imaju problema s načinom na koji generiramo datoteku kalendara.",
+        "steps": "<ol><li><strong>Otvorite drugi preglednik</strong> na telefonu, ...</li><li> <strong>Zalijepite</strong> sadržaj međuspremnika i krenite.</li></ol>"
+      }
+    },
+    "clipboard": {
+      "text": "Automatski smo kopirali čarobni URL u vaš međuspremnik.",
+      "failed": "Kopiranje u međuspremnik nije uspjelo. Ručno kopirajte sljedeću poveznicu:"
+    },
+    "opensafari": {
+      "ical": {
+        "h": "Otvori Safari",
+        "text": "Nažalost, iOS ima problema s generiranjem i otvaranjem datoteke kalendara izvan Safarija.",
+        "steps": "<ol><li><strong>Otvori Safari</strong> ,...</li><li> <strong>Zalijepite</strong> sadržaj međuspremnika i krenite.</li></ol>"
+      }
+    },
+    "multidate": {
+      "h": "Ovo je serija događaja",
+      "text": "Dodajte pojedinačne događaje jedan po jedan:"
+    },
+    "subscribe": {
+      "yahoo": {
+        "h": "Dodajte kalendar na Yahoo",
+        "text": "<ol><li>Sada otvorite Yahoo kalendar.</li><li> Pritisnite karticu \"Radnje\".</li><li> Pritisnite \"Prati druge kalendare\".</li><li> Postavite naziv i zalijepite sadržaj međuspremnika u url polje.</li></ol>",
+        "button": "Otvorite Yahoo kalendar"
+      }
+    }
+  },
+  "date": {
+    "status": {
+      "cancelled": "Ovaj datum je otkazan.",
+      "cancelled_cta": "Molimo ažurirajte svoj kalendar!"
+    }
+  },
+  "close": "Zatvoriti",
+  "continue": "Nastaviti",
+  "cancel": "Otkazati",
+  "expired": "Istekao",
+  "recurring": "Ponavljajuće",
+  "thankyou": "Hvala",
+  "submit": "Pošalji",
+  "form": {
+    "error": {
+      "required": "Niste pravilno ispunili sva potrebna polja",
+      "sending": "Došlo je do problema prilikom slanja vašeg odgovora. Pokušajte ponovno kasnije",
+      "email": "Vaša adresa e-pošte nije valjana",
+      "bookedoutmany": "Popunjeno – pokušajte s manje sudionika"
+    },
+    "success": {
+      "title": "Uspješno poslano!",
+      "sent": "Vaš je odgovor poslan. Hvala!",
+      "email": "Trebali ste primiti e-poruku s potvrdom.",
+      "doi": "Kako bi se odgovor uvažio, otvorite poveznicu za potvrdu u e-poruci koju smo vam upravo poslali (unutar sljedećih 30 minuta).",
+      "demo": "Hvala. RSVP demonstracija ovdje završava.",
+      "already": "Već ste odgovorili."
+    },
+    "status": {
+      "title": "Dolazite li?",
+      "confirmed": "Da",
+      "undecided": "Možda",
+      "declined": "Ne"
+    },
+    "amount": "Broj sudionika",
+    "max": "maks.",
+    "email": "Adresa e-pošte",
+    "seatsleft": "Slobodna mjesta"
+  }
+}

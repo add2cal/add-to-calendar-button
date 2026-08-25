@@ -206,13 +206,17 @@ function generate_dropdown_list(host: ShadowRoot, data: ATCBConfig): HTMLDivElem
   if (data.hideTextLabelList) {
     optionsList.classList.add('atcb-no-text');
   }
-  // in the modal case, the trigger label repeats as a headline on top
+  // in the modal case, the trigger label and close control share a header row
+  let listHeader: HTMLDivElement | null = null;
   if (data.listStyle === 'modal') {
+    listHeader = document.createElement('div');
+    listHeader.classList.add('atcb-list-modal-header');
     const listHeadline = document.createElement('div');
     listHeadline.classList.add('atcb-list-modal-headline');
     listHeadline.setAttribute('part', 'atcb-list-modal-headline');
     listHeadline.textContent = translate_hook('label.addtocalendar', data);
-    optionsList.append(listHeadline);
+    listHeader.append(listHeadline);
+    optionsList.append(listHeader);
   }
   // generate the list items
   let listCount = 0;
@@ -231,13 +235,13 @@ function generate_dropdown_list(host: ShadowRoot, data: ATCBConfig): HTMLDivElem
   // in the modal case, we also render a close option
   if (data.listStyle === 'modal') {
     const optionItem = document.createElement('div');
-    optionItem.classList.add('atcb-list-item', 'atcb-list-item-close');
+    optionItem.classList.add('atcb-list-item-close');
     optionItem.setAttribute('part', 'atcb-list-item-close');
     optionItem.role = 'menuitem';
     optionItem.tabIndex = 0;
     listCount++;
     optionItem.dataset.optionNumber = `${listCount}`;
-    optionsList.append(optionItem);
+    listHeader!.append(optionItem);
     generate_label(host, data, optionItem, 'close', true);
   }
   return optionsList;

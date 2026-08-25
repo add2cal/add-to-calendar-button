@@ -5,7 +5,52 @@ import type { ATCBConfig, I18nStrings } from '../types';
 const rtlLanguages: string[] = ['ar', 'fa', 'he'];
 
 // every language the package ships translations for (dist/locales/{lang}.json)
-const availableLanguages: string[] = ['en', 'de', 'es', 'pt', 'fr', 'nl', 'tr', 'zh', 'ar', 'hi', 'pl', 'id', 'no', 'fi', 'sv', 'cs', 'ja', 'it', 'ko', 'vi', 'ro', 'fa', 'et', 'uk', 'hu', 'he'];
+const availableLanguages: string[] = [
+  'en',
+  'de',
+  'es',
+  'pt',
+  'fr',
+  'nl',
+  'tr',
+  'zh',
+  'ar',
+  'hi',
+  'pl',
+  'id',
+  'no',
+  'fi',
+  'sv',
+  'cs',
+  'ja',
+  'it',
+  'ko',
+  'vi',
+  'ro',
+  'fa',
+  'et',
+  'uk',
+  'hu',
+  'he',
+  'az',
+  'be',
+  'bg',
+  'bs',
+  'da',
+  'el',
+  'hr',
+  'hy',
+  'ka',
+  'lt',
+  'lv',
+  'mk',
+  'mt',
+  'ru',
+  'sk',
+  'sl',
+  'sq',
+  'sr',
+];
 
 // calendar names (except for iCal file, same in every language, but included to be adjustable)
 const calendarNames: { [key: string]: string } = {
