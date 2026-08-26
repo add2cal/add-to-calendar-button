@@ -256,46 +256,6 @@
   filter: var(--modal-shadow);
 }
 
-.atcb-modal-icon {
-  border-radius: 100%;
-  background-color: var(--modal-background);
-}
-
-.atcb-modal-headline {
-  background-color: var(--modal-background);
-  border-radius: var(--modal-border-radius) var(--modal-border-radius) 0 0;
-}
-
-.atcb-modal-icon + .atcb-modal-headline {
-  margin-top: -2.6em;
-  padding-top: 2.6em;
-}
-
-.atcb-modal-content {  
-  background-color: var(--modal-background);
-}
-
-.atcb-modal-icon + .atcb-modal-content {
-  border-radius: var(--modal-border-radius) var(--modal-border-radius) 0 0;
-  margin-top: -2.6em;
-  padding-top: 2.6em;
-}
-
-@media (width <= 575px) {
-  .atcb-modal-icon + .atcb-modal-headline {
-        margin-top: 0;
-        padding-top: 0;
-      }
-  
-  .atcb-modal-icon + .atcb-modal-content {
-        padding-top: 0;
-      }
-}
-
-.atcb-modal-buttons {
-  border-radius: 0 0 var(--modal-border-radius) var(--modal-border-radius);
-}
-
 button.atcb-modal-btn,
 a.atcb-modal-btn {
   border: 0;
@@ -441,7 +401,6 @@ a.atcb-modal-btn:not([disabled]):hover {
 }
 
 .atcb-modal-content.no-headline {
-  border-radius: var(--modal-border-radius) var(--modal-border-radius) 0 0;
   padding-top: 1.8em;
 }
 

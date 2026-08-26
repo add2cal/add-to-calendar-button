@@ -400,7 +400,8 @@ function triggerAction() {
 
 &lt;style&gt;
   add-to-calendar-button#css-part-example::part(atcb-button),
-  #atcb-btn-css-part-example-modal-host::part(atcb-button) {
+  #atcb-btn-css-part-example-modal-host::part(atcb-button),
+  #atcb-btn-css-part-example-modal-host::part(atcb-list) {
     background-color: #264f3c;
     color: #fff;
   }
@@ -1160,7 +1161,8 @@ const html = atcb_generate_ssr_html({
 
 <style>
 add-to-calendar-button#css-part-example::part(atcb-button),
-#atcb-btn-css-part-example-modal-host::part(atcb-button) {
+#atcb-btn-css-part-example-modal-host::part(atcb-button),
+#atcb-btn-css-part-example-modal-host::part(atcb-list) {
   background-color: #264f3c;
   color: #fff;
 }

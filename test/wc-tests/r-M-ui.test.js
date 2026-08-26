@@ -4,7 +4,7 @@
 import { expect, aTimeout } from '@open-wc/testing';
 import { mountAtcb, baseEvent } from '../helpers/mount.js';
 import { interceptWindowOpen } from '../helpers/capture.js';
-import { trigger, openList, listEl, clickSingleton, pressEsc, optionEl, modalHost, btnId } from '../helpers/dom.js';
+import { trigger, openList, listEl, clickSingleton, pressEsc, optionEl, modalHost, subEventBtn, btnId } from '../helpers/dom.js';
 import { resetDataLayer, dlEvents } from '../helpers/datalayer.js';
 
 describe('Group M - UI / interaction', () => {
@@ -217,6 +217,40 @@ describe('Group M - UI / interaction', () => {
     });
     expect(host.shadowRoot.querySelector('.atcb-initialized')).to.exist;
     expect(shadow.querySelector('.atcb-button')).to.exist;
+  });
+
+  it('M-32b: cancelled date buttons do not render the plus badge', async () => {
+    const dates = [
+      { name: 'Cancelled Date', startDate: '2050-06-15', startTime: '10:00', endTime: '11:00', status: 'cancelled' },
+      { name: 'Active Date', startDate: '2050-06-16', startTime: '10:00', endTime: '11:00' },
+    ];
+    const { host, shadow } = await mountAtcb({
+      name: 'Mixed Series',
+      dates: JSON.stringify(dates),
+      timeZone: 'America/New_York',
+      options: "'google'",
+      buttonStyle: 'date',
+      trigger: 'click',
+      identifier: 'atcb-m32b',
+    });
+    expect(shadow.querySelector('.atcb-date-btn-plus'), 'mixed-series parent keeps the plus badge').to.exist;
+    await clickSingleton(host);
+    expect(subEventBtn(host, 'google', 1).querySelector('.atcb-date-btn-cancelled')).to.exist;
+    expect(subEventBtn(host, 'google', 1).querySelector('.atcb-date-btn-plus'), 'cancelled child hides the plus badge').to.not.exist;
+    expect(subEventBtn(host, 'google', 2).querySelector('.atcb-date-btn-plus'), 'active child keeps the plus badge').to.exist;
+    modalHost(host).remove();
+
+    const { shadow: allCancelledShadow } = await mountAtcb({
+      name: 'Cancelled Series',
+      dates: JSON.stringify(dates.map((date) => ({ ...date, status: 'cancelled' }))),
+      timeZone: 'America/New_York',
+      options: "'google'",
+      buttonStyle: 'date',
+      trigger: 'click',
+      identifier: 'atcb-m32b-all',
+    });
+    expect(allCancelledShadow.querySelector('.atcb-date-btn-cancelled')).to.exist;
+    expect(allCancelledShadow.querySelector('.atcb-date-btn-plus'), 'all-cancelled parent hides the plus badge').to.not.exist;
   });
 
   it('M-33: modal list stays content-sized, not stretched to the overlay width', async () => {

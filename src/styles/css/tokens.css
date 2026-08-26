@@ -29,3 +29,7 @@
   --date-btn-hover-background: #2b2f35;
   --icon-yahoo-color: #bebebe;
 }
+
+:host {
+  --modal-border-radius: 0px;
+}

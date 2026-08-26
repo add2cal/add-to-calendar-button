@@ -196,14 +196,6 @@
   background-color: var(--modal-background);
 }
 
-.atcb-modal-icon + .atcb-modal-headline {
-  padding-top: 0;
-}
-
-.atcb-modal-icon + .atcb-modal-content {
-  padding-top: 0;
-}
-
 button.atcb-modal-btn,
 a.atcb-modal-btn {
   border: 2px solid var(--btn-border);

@@ -232,6 +232,7 @@ Also part of the default run (long-standing quick tests):
 - M-30: OSS + hideBranding -> in-list branding hidden but page-level license reference is added
 - M-30b: OSS default (no hideBranding) -> attribution rendered inside the open list
 - M-32: buttonStyle=date renders the date-card variant
+- M-32b: cancelled child and all-cancelled parent date buttons hide the plus badge; mixed parent and active child keep it
 
 ### Group N - dataLayer / tracking (`r-N-datalayer.test.js`)
 
