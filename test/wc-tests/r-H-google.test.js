@@ -85,9 +85,7 @@ describe('Group H - Google output', () => {
         trigger: 'click',
         identifier: 'atcb-h08b',
       });
-      const btn2 = host2.shadowRoot.getElementById(host2.getAttribute('atcb-button-id'));
-      btn2.dispatchEvent(new MouseEvent('click', { bubbles: true, cancelable: true, view: window }));
-      await aTimeout(100);
+      await clickSingleton(host2);
       expect(fs.saves.length).to.equal(1);
       const ics = parseIcs(decodeIcsHref(fs.saves[0].href));
       expect(ics.events[0].prop('STATUS')).to.include('CANCELLED');

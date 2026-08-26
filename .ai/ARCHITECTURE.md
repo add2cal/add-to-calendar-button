@@ -72,7 +72,10 @@ Trigger click/keyup -> `ui/control.atcb_toggle` -> either the dropdown/modal lis
 `<div id="{identifier}-modal-host">` appended to `<body>`) or, for single options, straight
 to `generators/index.atcb_generate_links` -> per-service generator builds the url or ICS ->
 `atcb_open_cal_url` / file save -> success bookkeeping (checkmark, dataLayer event,
-`atcb-last-event` attribute).
+`atcb-last-event` attribute). Dynamically generated Apple/iCal downloads are the exception:
+their controls render first, then asynchronously become native anchors with a precomputed
+data URL so Apple browsers retain a real user-activation navigation. Static ICS files keep
+the legacy direct-save path; other calendar providers are unchanged.
 
 ## State
 

@@ -163,6 +163,8 @@ Also part of the default run (long-standing quick tests):
 - G-12: hosted icsFile is downloaded directly (no inline ICS built)
 - G-16: long description folds to RFC 5545 line lengths and unfolds losslessly
 - G-17: custom iCalFileName is used for the download
+- G-21: dynamically generated singleton ICS renders first, then becomes a native download anchor
+- G-22: static ICS files retain the established button-driven download path
 - G-20: desktop file save targets _blank (mobile would use _self)
 
 ### Group H - Google output (`r-H-google.test.js`)
@@ -195,6 +197,9 @@ Also part of the default run (long-standing quick tests):
 
 ### Group L - Environment-driven routing (`r-L-env.test.js`)
 
+- L-01a: atcb_action uses a compact Apple-device interstitial for dynamically generated singleton ICS
+- L-01b: atcb_action skips the interstitial and retains direct saving for a static singleton ICS
+- L-01c: atcb_action sink resolves dynamic ICS without rendering or navigation
 - L-04: Android -> apple option removed, ical stays
 - L-13a: iOS -> ical option removed, apple stays
 - L-10: optionsMobile filters the list on mobile
@@ -221,6 +226,7 @@ Also part of the default run (long-standing quick tests):
 - M-10/M-11: modal listStyle locks body scroll and unlocks on close
 - M-12: singleton config opens directly with openSingletonLink (no dropdown)
 - M-13: buttonsList renders one button per option
+- M-13b: round buttonsList keeps dynamic Apple/iCal anchors on the singleton button box model
 - M-14: saved checkmark + success event after all options were used
 - M-15: hideCheckmark suppresses the saved checkmark
 - M-16: hideBackground -> no background overlay for modal

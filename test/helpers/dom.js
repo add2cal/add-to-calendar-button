@@ -60,8 +60,12 @@ export function listEl(host) {
  * Clicks a calendar option (list must be open, or the config must be a singleton).
  */
 export async function clickOption(host, type) {
-  const el = optionEl(host, type);
+  let el = optionEl(host, type);
   if (!el) throw new Error('Option not rendered: ' + type);
+  for (let i = 0; i < 10 && el.dataset.atcbLinkPending === 'true'; i++) {
+    await aTimeout(10);
+    el = optionEl(host, type);
+  }
   el.dispatchEvent(new MouseEvent('click', { bubbles: true, cancelable: true, view: window, button: 0 }));
   await aTimeout(60);
 }
@@ -70,7 +74,11 @@ export async function clickOption(host, type) {
  * Convenience: mounts config is expected to be singleton (one option) - clicks the single button.
  */
 export async function clickSingleton(host) {
-  const btn = trigger(host);
+  let btn = trigger(host);
+  for (let i = 0; i < 10 && btn.dataset.atcbLinkPending === 'true'; i++) {
+    await aTimeout(10);
+    btn = trigger(host);
+  }
   btn.dispatchEvent(new MouseEvent('click', { bubbles: true, cancelable: true, view: window, button: 0 }));
   await aTimeout(60);
 }

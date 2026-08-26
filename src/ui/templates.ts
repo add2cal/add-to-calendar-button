@@ -20,6 +20,7 @@ import { debounce_leading } from '../core/util';
 import { translate_hook } from '../i18n/index';
 import { log_event } from '../core/events';
 import { generate_rsvp_form } from './pro';
+import { prepare_ics_link } from './ics-links';
 import type { ATCBConfig } from '../types';
 
 // ---------- label content helpers (trigger / singleton path) ----------
@@ -328,6 +329,16 @@ function renderButton(host: ShadowRoot, container: HTMLElement, data: ATCBConfig
   container.querySelectorAll('.atcb-button-wrapper').forEach((wrapper) => {
     set_sizes(wrapper as HTMLElement, data.sizes!);
   });
+  if (!data.subscribe) {
+    data.options!.forEach((option) => {
+      if (option !== 'apple' && option !== 'ical') return;
+      const id = data.buttonsList ? data.identifier + '-' + option : data.identifier;
+      const control = container.querySelector<HTMLElement>('#' + id);
+      if (control && (data.options!.length === 1 || data.buttonsList)) {
+        prepare_ics_link(host, data, control, option, data.dates!.length === 1 ? 0 : 'all', 'singleton');
+      }
+    });
+  }
   if (data.debug) {
     console.log('Add to Calendar Button "' + data.identifier + '" created');
   }

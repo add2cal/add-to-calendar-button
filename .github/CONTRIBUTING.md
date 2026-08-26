@@ -67,7 +67,7 @@ You can do so via the mentioned discussions board or email us at [contributing a
 
 New development happens on the dev branch first. It is the only branch which gets merged into main!
 
-Mind to run `npm install` and `npm run format` to auto-lint!
+Mind to run `npm install` and `npm run fix` to auto-lint!
 
 Adhering to the following process is the best way to get your work included in the project:
 

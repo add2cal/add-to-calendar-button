@@ -111,7 +111,6 @@
   margin: 0;
   max-width: 300px;
   padding: var(--btn-padding-y) var(--btn-padding-x);
-  text-align: center;
   touch-action: manipulation;
   transform: translate3d(0, 0, -12px);
   user-select: none;

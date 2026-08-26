@@ -26,10 +26,10 @@ jobs:
             echo "Version tag ${{ env.TAG }} invalid."
             exit 1
           fi
-      - name: Verify the tag is based off the main branch
+      - name: Verify the tag is based off the main or next branch
         run: |
-          if [[ "${{ github.event.release.target_commitish }}" != "main" ]]; then
-            echo "Release is not based on main branch but ${{ github.event.release.target_commitish }}"
+          if [[ "${{ github.event.release.target_commitish }}" != "main" && "${{ github.event.release.target_commitish }}" != "next" ]]; then
+            echo "Release is not based on main or next branch but ${{ github.event.release.target_commitish }}"
             exit 1
           fi
       - name: Make sure tag matches package.json version

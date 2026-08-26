@@ -9,6 +9,7 @@ import { load_css, set_light_mode } from '../element/index';
 import { log_event } from '../core/events';
 import { renderDateButtonContent } from './templates';
 import { generate_rsvp_form } from './pro';
+import { prepare_ics_link } from './ics-links';
 import type { ATCBConfig } from '../types';
 
 // after an option click in a list rendered as modal: if the action opened a follow-up modal,
@@ -231,6 +232,7 @@ function generate_dropdown_list(host: ShadowRoot, data: ATCBConfig): HTMLDivElem
     optionsList.append(optionItem);
     // generate the label incl. individual eventListener
     generate_label(host, data, optionItem, option, !data.hideIconList);
+    prepare_ics_link(host, data, optionItem, option, data.dates!.length === 1 ? 0 : 'all', 'list');
   });
   // in the modal case, we also render a close option
   if (data.listStyle === 'modal') {
@@ -463,6 +465,8 @@ async function create_modal(
         .trim()
         .substring(0, 100),
     );
+  } else if (dialogEl) {
+    dialogEl.setAttribute('aria-label', translate_hook('label.addtocalendar', data));
   }
   // add text content
   if (content !== '') {
@@ -477,6 +481,8 @@ async function create_modal(
   }
   // add subEvent buttons (array with type first and subEvent numbers following)
   if (subEvents.length > 1) {
+    const calendarType = String(subEvents.find((_entry, index) => index === 0));
+    const optionStates = Object.entries(getOptionStates(data.identifier!)).find(([option]) => option === calendarType)?.[1];
     const modalsubEventsContentWrapper = document.createElement('div');
     modalsubEventsContentWrapper.classList.add('atcb-modal-content');
     modal.append(modalsubEventsContentWrapper);
@@ -484,17 +490,20 @@ async function create_modal(
     modalsubEventsContent.classList.add('atcb-modal-content-subevents');
     modalsubEventsContentWrapper.append(modalsubEventsContent);
     for (let i = 1; i < subEvents.length; i++) {
+      const subEvent = subEvents.find((_entry, index) => index === i) as string | number;
+      const stateIndex = subEvent === 'all' ? 0 : parseInt(subEvent as string) - 1;
+      const dateEntry = data.dates!.find((_entry, index) => index === stateIndex)!;
       const modalSubEventButton = document.createElement('button');
       modalSubEventButton.type = 'button';
-      modalSubEventButton.id = data.identifier + '-' + subEvents[0] + '-' + i;
-      if (getOptionStates(data.identifier!)[`${subEvents[0]}`]![i - 1]! > 0) {
+      modalSubEventButton.id = data.identifier + '-' + calendarType + '-' + i;
+      if (subEvent !== 'all' && (optionStates?.find((_state, index) => index === stateIndex) || 0) > 0) {
         modalSubEventButton.classList.add('atcb-saved');
       }
       modalSubEventButton.classList.add('atcb-subevent-btn');
       modalsubEventsContent.append(modalSubEventButton);
-      renderDateButtonContent(data, modalSubEventButton, `${i}`, false, true);
+      renderDateButtonContent(data, modalSubEventButton, subEvent, false, true);
       // interaction only if not overdue and blocked
-      if (!data.dates![i - 1]!.overdue || data.pastDateHandling === 'none') {
+      if (!dateEntry.overdue || data.pastDateHandling === 'none') {
         if (i === 1 && keyboardTrigger) {
           modalSubEventButton.focus();
         }
@@ -503,9 +512,10 @@ async function create_modal(
           debounce(async () => {
             log_event('openSubEventLink', modalSubEventButton.id, data.identifier as string);
             modalSubEventButton.blur();
-            await generate_links(mainHost, subEvents[0] as string, data, subEvents[`${i}`] as string | number, keyboardTrigger, true);
+            await generate_links(mainHost, calendarType, data, subEvent, keyboardTrigger, true);
           }),
         );
+        prepare_ics_link(mainHost, data, modalSubEventButton, calendarType, subEvent === 'all' ? 'all' : stateIndex, 'subevent');
       } else {
         // if blocked, we also add styles
         modalSubEventButton.setAttribute('disabled', true as unknown as string);
@@ -665,7 +675,7 @@ async function generate_overlay_dom(host: ShadowRoot, data: ATCBConfig): Promise
     }
   });
   // remove the id from the <button> to prevent duplicate ids
-  newHost.querySelector('button.atcb-button')!.removeAttribute('id');
+  newHost.querySelector('.atcb-button')!.removeAttribute('id');
   // set the opacity of the original button to 0
   host.host.classList.add('atcb-shadow-hide');
   (host.querySelector('.atcb-initialized') as HTMLElement | null)!.style.opacity = '0';

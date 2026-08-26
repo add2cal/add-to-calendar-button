@@ -69,7 +69,7 @@ export const getInitialAttrs = (defaultName: string, defaultDescription: string,
   // localStorage is the primary store on the client; on the server we fall back to
   // the cookie-mirrored attrs (passed in by the caller via the request header) so a
   // future dynamic SSR runtime can pre-render the button shell with real data.
-  const cachedData = import.meta.client ? get(LSKey.ATTRS) : (serverCachedAttrs || null);
+  const cachedData = import.meta.client ? get(LSKey.ATTRS) : serverCachedAttrs || null;
   const cachedDataParsed = (function () {
     if (cachedData) {
       try {

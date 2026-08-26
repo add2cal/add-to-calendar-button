@@ -8,6 +8,14 @@ import { create_modal } from '../ui/generate';
 import { translate_hook } from '../i18n/index';
 import type { ATCBConfig } from '../types';
 
+type ATCBIcsAction = {
+  kind: 'dynamic' | 'static' | 'proxy' | 'assistance';
+  href: string;
+  filename: string;
+  target: string;
+  content?: string;
+};
+
 // FUNCTION TO OPEN THE URL
 // normalize a list-ish ics option value (array or comma-separated string)
 function ics_option_list(value: string[] | string | undefined): string[] {
@@ -59,6 +67,27 @@ function open_cal_url(data: ATCBConfig, type: string, url = '', subscribe = fals
   }
 }
 
+function proxy_url(data: ATCBConfig, type: string, subEvent: 'all' | number | string | null = null, subscribe = false): string {
+  const urlType = subscribe ? 's' : 'o';
+  const parts: string[] = [];
+  if (data.dates![0]!.attendee && data.dates![0]!.attendee !== '') parts.push('attendee=' + encodeURIComponent(data.dates![0]!.attendee));
+  if (data.customVar && typeof data.customVar === 'object' && Object.keys(data.customVar).length > 0) parts.push('customvar=' + encodeURIComponent(JSON.stringify(data.customVar)));
+  if (data.dates && data.dates.length > 1 && subEvent !== null && subEvent !== 'all') parts.push('sub-event=' + subEvent);
+  const query = parts.length > 0 ? '?' + parts.join('&') : '';
+  const host = data.domain ? data.domain : data.dev ? 'dev.caldn.net' : 'caldn.net';
+  const url = `https://${host}/${data.proKey}/${urlType}/${type}${query}`;
+  return secure_url(url) ? url : '';
+}
+
+function static_ics_file(host: ShadowRoot | null, data: ATCBConfig, subEvent: 'all' | number): string {
+  const potentialHostAttendee = (host && host.host && host.host.getAttribute('attendee')) || '';
+  const potentialHostCustomVar = (host && host.host && (host.host.getAttribute('customVar') || host.host.getAttribute('custom-var'))) || '';
+  if ((data.attendee && data.attendee !== '' && potentialHostAttendee !== '') || (data.customVar && (data.customVar as unknown) !== '' && potentialHostCustomVar !== '')) return '';
+  const selectedEntry = subEvent === 'all' ? undefined : data.dates!.find((_entry, index) => index === subEvent);
+  if (selectedEntry?.icsFile) return selectedEntry.icsFile as string;
+  return data.icsFile || '';
+}
+
 // ICAL SUBSCRIPTION
 function subscribe_ical(data: ATCBConfig, fileUrl: string, type: string, host: ShadowRoot | null = null, keyboardTrigger = false): void {
   // for Chrome on iOS, we can not directly open the file, but we can show a modal with instructions
@@ -71,36 +100,23 @@ function subscribe_ical(data: ATCBConfig, fileUrl: string, type: string, host: S
 
 // FUNCTION TO GENERATE THE iCAL FILE (also for apple - see above)
 // See specs at: https://www.rfc-editor.org/rfc/rfc5545.html
-function generate_ical(host: ShadowRoot, data: ATCBConfig, type: string, subEvent: 'all' | number | string = 'all', keyboardTrigger = false): void {
+function generate_ical(host: ShadowRoot | null, data: ATCBConfig, type: string, subEvent: 'all' | number | string = 'all', keyboardTrigger = false, resolveOnly = false): ATCBIcsAction | void {
   if (subEvent !== 'all') {
     subEvent = parseInt(subEvent as string);
   }
   // define the right filename
   const filename = determine_ical_filename(data, subEvent);
   // check for a given explicit file...
-  const givenIcsFile = (function () {
-    // ignore a given file, if there is an attendee or customVar provided at the host level, as this would need to be added to the file
-    const potentialHostAttendee = (host && host.host && host.host.getAttribute('attendee')) || '';
-    const potentialHostCustomVar = (host && host.host && host.host.getAttribute('customVar')) || '';
-    if ((data.attendee && data.attendee !== '' && potentialHostAttendee !== '') || (data.customVar && (data.customVar as unknown) !== '' && potentialHostCustomVar !== '')) {
-      return '';
-    }
-    // otherwise, we check for a given explicit file
-    if (subEvent !== 'all' && data.dates![`${subEvent}`]!.icsFile && data.dates![`${subEvent}`]!.icsFile !== '') {
-      return data.dates![`${subEvent}`]!.icsFile;
-    }
-    if (data.icsFile && data.icsFile !== '') {
-      return data.icsFile;
-    }
-    return '';
-  })() as string;
+  const givenIcsFile = static_ics_file(host, data, subEvent as 'all' | number);
   // if we are in proxy mode, we can directly redirect
   if (data.proxy) {
+    if (resolveOnly) return { kind: 'proxy', href: proxy_url(data, type, subEvent), filename, target: defaultTarget };
     open_cal_url(data, type, '', false, subEvent);
     return;
   }
   // else, we directly load it (not if iOS and WebView - will be catched further down - except it is explicitely bridged)
   if (givenIcsFile !== '' && ((!isIOS() && !data.fakeIOS) || !isWebView() || data.bypassWebViewCheck)) {
+    if (resolveOnly) return { kind: 'static', href: givenIcsFile, filename, target: isMobileTarget() };
     if (resultChannel.active()) {
       resultChannel.push(givenIcsFile);
       return;
@@ -274,6 +290,9 @@ function generate_ical(host: ShadowRoot, data: ATCBConfig, type: string, subEven
   // (but at some wrong environment). In this case, we use it as dataUrl to then show a modal
   const icsContent = givenIcsFile !== '' ? '' : format_ical_lines(ics_lines.join('\r\n'));
   const dataUrl = givenIcsFile !== '' ? givenIcsFile : 'data:text/calendar;charset=utf-8,' + encodeURIComponent(icsContent);
+  const action: ATCBIcsAction = { kind: givenIcsFile !== '' ? 'static' : 'dynamic', href: dataUrl, filename, target: isMobileTarget(), content: givenIcsFile !== '' ? undefined : icsContent };
+  const requiresAssistance = (isIOS() && !isSafari()) || (isWebView() && (isIOS() || (isAndroid() && isProblematicWebView())));
+  if (resolveOnly) return requiresAssistance ? { ...action, kind: 'assistance' } : action;
   if (resultChannel.active()) {
     resultChannel.push(givenIcsFile !== '' ? givenIcsFile : icsContent);
     return;
@@ -281,12 +300,16 @@ function generate_ical(host: ShadowRoot, data: ATCBConfig, type: string, subEven
   // in in-app browser cases (WebView), we offer a copy option, since the on-the-fly client side generation is usually not supported
   // for Android, we are more specific than with iOS and only go for specific apps at the moment
   // for Chrome on iOS we basically do the same
-  if ((isIOS() && !isSafari()) || (isWebView() && (isIOS() || (isAndroid() && isProblematicWebView())))) {
-    ical_copy_note(host, dataUrl, data, keyboardTrigger);
+  if (requiresAssistance) {
+    ical_copy_note(host as ShadowRoot, dataUrl, data, keyboardTrigger);
     return;
   }
   // save the file dialog in all other cases
   save_file(dataUrl, filename);
+}
+
+function isMobileTarget(): string {
+  return isIOS() || isAndroid() ? '_self' : '_blank';
 }
 
 function determine_ical_filename(data: ATCBConfig, subEvent: 'all' | number | string): string {
@@ -355,4 +378,5 @@ async function ical_copy_note(host: ShadowRoot, dataUrl: string, data: ATCBConfi
   wire_clipboard_input(data);
 }
 
-export { open_cal_url, subscribe_ical, generate_ical, determine_ical_filename, ical_copy_note, clipboard_note_content, wire_clipboard_input };
+export { open_cal_url, subscribe_ical, generate_ical, determine_ical_filename, static_ics_file, ical_copy_note, clipboard_note_content, wire_clipboard_input };
+export type { ATCBIcsAction };

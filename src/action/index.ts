@@ -1,15 +1,19 @@
 /**
  * atcb_action - the imperative API for custom triggers (no web component markup needed).
  */
-import { isBrowser, resultChannel } from '../core/globals';
+import { isBrowser, isIOS, isMacOS, resultChannel } from '../core/globals';
 import { getActiveButton, getButtonInstance, deleteButtonInstance } from '../core/store';
 import { decorate_data } from '../core/decorate';
 import { check_required, validate } from '../core/validate';
 import { close, toggle } from '../ui/control';
 import { generate_links } from '../generators/index';
+import { generate_ical, static_ics_file } from '../generators/ical';
 import { secure_content } from '../core/text';
 import { log_event } from '../core/events';
 import { generate_rsvp_form } from '../ui/pro';
+import { create_modal } from '../ui/generate';
+import { can_group_ics } from '../ui/ics-links';
+import type { ATCBIcsAction } from '../generators/ical';
 import { ensure_locale } from '../i18n/index';
 import { get_pro_data, init_log, setup_state_management, set_global_event_listener, load_css, set_light_mode, shadowTemplate } from '../element/index';
 import type { ATCBInputConfig, ATCBConfig } from '../types';
@@ -63,6 +67,15 @@ async function atcb_action(inputData: ATCBInputConfig, triggerElement?: HTMLElem
     await validate(data);
     if (!data.options || data.options.length !== 1) {
       throw new Error('Add to Calendar Button generation failed: exactly one option required');
+    }
+    if (data.options[0] === 'apple' || data.options[0] === 'ical') {
+      if (data.dates!.length > 1 && !can_group_ics(data)) {
+        throw new Error('Add to Calendar Button generation failed: option does not resolve to a single value');
+      }
+      const subEvent = data.dates!.length === 1 ? 0 : 'all';
+      const action = generate_ical(null, data, data.options[0], subEvent, false, true) as ATCBIcsAction | undefined;
+      if (!action) throw new Error('Add to Calendar Button generation failed: option does not resolve to a single value');
+      return action.content || action.href;
     }
     resultChannel.open();
     try {
@@ -167,8 +180,20 @@ async function atcb_action(inputData: ATCBInputConfig, triggerElement?: HTMLElem
     } else {
       // ... trigger link at the oneOption case, or ...
       if (oneOption) {
-        await generate_links(host.shadowRoot!, data.options![0]!, data, 'all', keyboardTrigger);
-        log_event('openSingletonLink', data.identifier!, data.identifier!);
+        const option = data.options![0]!;
+        const isDynamicIcs = (option === 'apple' || option === 'ical') && static_ics_file(host.shadowRoot!, data, data.dates!.length === 1 ? 0 : 'all') === '';
+        if (isDynamicIcs && (isIOS() || data.fakeIOS || isMacOS())) {
+          const subEvents: (string | number)[] = [option];
+          if (data.dates!.length === 1 || can_group_ics(data)) {
+            subEvents.push(data.dates!.length === 1 ? 1 : 'all');
+          } else {
+            for (let i = 0; i < data.dates!.length; i++) subEvents.push(i + 1);
+          }
+          await create_modal(host.shadowRoot!, data, option, '', '', [], subEvents, keyboardTrigger);
+        } else {
+          await generate_links(host.shadowRoot!, option, data, 'all', keyboardTrigger);
+          log_event('openSingletonLink', data.identifier!, data.identifier!);
+        }
       } else {
         // ... open the options list
         toggle(host.shadowRoot!, 'open', data, triggerElement ?? null, keyboardTrigger);

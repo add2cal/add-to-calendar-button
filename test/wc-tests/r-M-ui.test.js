@@ -99,8 +99,10 @@ describe('Group M - UI / interaction', () => {
     const wo = interceptWindowOpen();
     try {
       const { host, shadow } = await mountAtcb({ ...baseEvent({ identifier: 'atcb-m13' }), options: "['google','apple']", buttonsList: 'true', trigger: 'click' });
-      const buttons = shadow.querySelectorAll('button.atcb-button');
+      await aTimeout(30);
+      const buttons = shadow.querySelectorAll('.atcb-button');
       expect(buttons.length).to.equal(2);
+      expect(optionEl(host, 'apple').tagName, 'dynamic Apple entry is a native link').to.equal('A');
       const googleBtn = optionEl(host, 'google');
       expect(googleBtn).to.exist;
       googleBtn.dispatchEvent(new MouseEvent('click', { bubbles: true, cancelable: true, view: window }));
@@ -109,6 +111,26 @@ describe('Group M - UI / interaction', () => {
     } finally {
       wo.restore();
     }
+  });
+
+  it('M-13b: round buttonsList ICS anchors retain the singleton button box model', async () => {
+    const { host } = await mountAtcb({
+      ...baseEvent({ identifier: 'atcb-m13b' }),
+      options: "['google','apple','ical']",
+      buttonsList: 'true',
+      buttonStyle: 'round',
+      hideTextLabelButton: 'true',
+      trigger: 'click',
+    });
+    await aTimeout(40);
+    const controls = ['google', 'apple', 'ical'].map((option) => optionEl(host, option));
+    expect(controls.map((control) => control.tagName)).to.deep.equal(['BUTTON', 'A', 'A']);
+    const boxes = controls.map((control) => ({ style: getComputedStyle(control), rect: control.getBoundingClientRect() }));
+    expect(boxes.map((box) => box.style.boxSizing)).to.deep.equal(['border-box', 'border-box', 'border-box']);
+    expect(boxes[1].rect.width).to.be.closeTo(boxes[0].rect.width, 0.1);
+    expect(boxes[2].rect.width).to.be.closeTo(boxes[0].rect.width, 0.1);
+    expect(boxes[1].rect.height).to.be.closeTo(boxes[0].rect.height, 0.1);
+    expect(boxes[2].rect.height).to.be.closeTo(boxes[0].rect.height, 0.1);
   });
 
   it('M-14: saved checkmark + success event after all options were used', async () => {

@@ -69,9 +69,8 @@ web-test-runner.config.mjs
 - `mountAtcb(config)`: creates the element, serializes object/array configs to attributes,
   awaits `whenInitialized()`, returns `{ host, shadow }`.
 - `interceptWindowOpen()`: captures calendar URLs (the lib opens links via `window.open`).
-- `interceptFileSave()`: captures ICS downloads (the lib creates an ad-hoc anchor via
-  `document.createElementNS` and dispatches a synthetic click; the interceptor swallows
-  the click so nothing navigates).
+- `interceptFileSave()`: captures ICS downloads from both the legacy ad-hoc save anchor
+  and rendered native Apple/iCal anchors; navigation is suppressed in the test browser.
 - `parseIcs(...)`: decodes the `data:text/calendar` URI, unfolds RFC 5545 lines, exposes
   events/VTIMEZONEs/METHOD for assertions.
 - `btnId(host)`: canonical element id. The lib PREFIXES custom identifiers with

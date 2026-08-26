@@ -1,4 +1,4 @@
-import { isMobile, isIOS, isAndroid, isWebView } from '../core/globals';
+import { isMobile, isAndroid, isWebView } from '../core/globals';
 import { generate_time } from '../core/dates';
 import { open_cal_url } from './ical';
 import type { ATCBConfig, ATCBDateEntry } from '../types';

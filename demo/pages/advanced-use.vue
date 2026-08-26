@@ -963,6 +963,9 @@ function triggerAction() {
             Theoretically, you do not need to provide a button element. However, it is recommended to do so, since it will optimize the user experience a lot (like focusing the element on closing the modal, etc.).<br />
             If you do not provide a specific button, the list will automatically show as modal. If provided, you can opt for the overlay-dropdown list style via the listStyle option (mind that all other options are not supported in the atcb_action case). The modal style is strongly recommended.
           </p>
+          <p class="italic">
+            Note: When only the Apple or iCal option is configured on an Apple device, an interstitial window opens before saving the event. This ensures that the dynamically generated calendar file can be opened and saved reliably. This extra step is skipped when a static ICS file is provided.
+          </p>
           <h3 class="mb-3 mt-8">{{ $t('content.guide.step1') }}: Import</h3>
           <p>
             If you use the script via CDN, you can skip this step.<br />
@@ -978,6 +981,10 @@ function triggerAction() {
             Theoretisch muss dieses Element kein Button sein. Wir raten allerdings stark dazu, da es die User Experience wesentlich positiv beeinflusst (bspw. durch die Unterstützung von Tastatur-Navigation, etc.).<br />
             Wenn du kein Button-Element nutzt, öffnet sich die Kalendar-Liste als Modal. Gibt es ein Button-Element kannst du auch den Overlay-Dropdown-Stil über die Option listStyle wählen (beachte, dass die übrigen Optionen mit atcb_action nicht unterstützt werden). Der Modal-Stil ist der Standard
             und wird auch empfohlen.
+          </p>
+          <p class="italic">
+            Hinweis: Wenn auf einem Apple-Gerät ausschließlich die Apple- oder iCal-Option konfiguriert ist, öffnet sich vor dem Speichern ein Zwischenfenster. Dadurch kann die dynamisch erzeugte Kalenderdatei zuverlässig geöffnet und gespeichert werden. Wenn eine statische ICS-Datei hinterlegt ist,
+            entfällt dieser zusätzliche Schritt.
           </p>
           <h3 class="mb-3 mt-8">{{ $t('content.guide.step1') }}: Import</h3>
           <p>

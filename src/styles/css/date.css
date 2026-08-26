@@ -6,6 +6,8 @@
  */
 
 :host {
+  display: inline-block;
+  max-width: min(19em, 100%);
   --wrapper-padding: 0px;
   --buttonslist-gap: 5px;
   --btn-border-radius: 11px;
@@ -73,6 +75,11 @@
   --icon-filter: grayscale(.2);
 }
 
+.atcb-initialized {
+  display: inline-block;
+  max-width: min(19em, 100%);
+}
+
 .atcb-button,
 .atcb-subevent-btn {
   display: flex;
@@ -94,9 +101,10 @@
 }
 
 .atcb-button {
+  gap: 0;
   box-shadow: var(--btn-shadow);
   min-width: 16em;
-  max-width: 18em;
+  max-width: min(19em, 100%);
 }
 
 .atcb-button:focus,
@@ -135,13 +143,17 @@
 }
 
 @media (width <= 575px) {
+  .atcb-button-wrapper:has(.atcb-date-btn-plus) {
+    margin-inline-end: .75em;
+  }
+
   .atcb-button {
         min-width: 13em;
         width: 100%;
         margin: auto;
       }
   
-  .atcb-initialized {
+  :host .atcb-initialized {
         width: 100%;
       }
 }

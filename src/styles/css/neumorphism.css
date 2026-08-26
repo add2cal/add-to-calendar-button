@@ -104,7 +104,6 @@
   margin: 0;
   max-width: 350px;
   padding: var(--btn-padding-y) var(--btn-padding-x);
-  text-align: center;
   touch-action: manipulation;
   user-select: none;
   -webkit-user-select: none;

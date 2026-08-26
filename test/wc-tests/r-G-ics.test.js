@@ -1,7 +1,7 @@
 /**
  * Reduced Suite - Group G: ICS / Apple output (case list: .ai/TEST-CASES.md)
  */
-import { expect } from '@open-wc/testing';
+import { expect, aTimeout } from '@open-wc/testing';
 import { mountAtcb } from '../helpers/mount.js';
 import { interceptFileSave } from '../helpers/capture.js';
 import { clickSingleton } from '../helpers/dom.js';
@@ -172,5 +172,25 @@ describe('Group G - ICS / Apple output', () => {
     } finally {
       fs.restore();
     }
+  });
+
+  it('G-21: dynamically generated singleton ICS is deferred and enhanced to a native anchor', async () => {
+    const { host } = await mountAtcb({ ...CFG.singleTimedNY, options: "'ical'", trigger: 'click', identifier: 'atcb-g21' });
+    const initialControl = host.shadowRoot.getElementById(host.getAttribute('atcb-button-id'));
+    expect(initialControl.tagName, 'initial paint uses the existing button').to.equal('BUTTON');
+    expect(initialControl.dataset.atcbLinkPending).to.equal('true');
+    await aTimeout(30);
+    const anchor = host.shadowRoot.getElementById(host.getAttribute('atcb-button-id'));
+    expect(anchor.tagName).to.equal('A');
+    expect(anchor.getAttribute('href')).to.match(/^data:text\/calendar/);
+    expect(anchor.getAttribute('download')).to.equal('event.ics');
+    expect(getComputedStyle(anchor).textDecorationLine, 'native link underline is reset').to.equal('none');
+    expect(getComputedStyle(anchor).display, 'component button styling wins after the reset').to.equal('flex');
+  });
+
+  it('G-22: a static ICS file keeps the established button-driven save path', async () => {
+    const { host } = await mountAtcb({ ...CFG.singleTimedNY, icsFile: 'https://example.com/static.ics', options: "'ical'", trigger: 'click', identifier: 'atcb-g22' });
+    await aTimeout(30);
+    expect(host.shadowRoot.getElementById(host.getAttribute('atcb-button-id')).tagName).to.equal('BUTTON');
   });
 });

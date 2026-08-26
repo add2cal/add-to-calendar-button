@@ -13,6 +13,7 @@ import { secure_content, secure_url, strip_unsafe_keys } from '../core/text';
 import { manage_body_scroll, set_sizes } from '../ui/positioning';
 import { log_event } from '../core/events';
 import { generate_rsvp_form, generate_rsvp_button } from '../ui/pro';
+import { prepare_ics_link } from '../ui/ics-links';
 import { resolveAttributeName, hasConfigAttribute, getConfigAttribute, observedConfigAttributes } from '../compat/attributes';
 import type { ATCBInputConfig, ATCBConfig } from '../types';
 
@@ -361,6 +362,16 @@ if (isBrowser()) {
             host.querySelectorAll('.atcb-button-wrapper').forEach((wrapper) => {
               set_sizes(wrapper as HTMLElement, data.sizes!);
             });
+            if (!data.subscribe) {
+              data.options!.forEach((option) => {
+                if (option !== 'apple' && option !== 'ical') return;
+                const id = data.buttonsList ? data.identifier + '-' + option : data.identifier;
+                const control = host.getElementById(id as string);
+                if (control && (data.options!.length === 1 || data.buttonsList)) {
+                  prepare_ics_link(host, data, control, option, data.dates!.length === 1 ? 0 : 'all', 'singleton');
+                }
+              });
+            }
             if (data.debug) {
               console.log('Add to Calendar Button "' + data.identifier + '" created');
             }

@@ -28,32 +28,31 @@ export function interceptWindowOpen() {
 }
 
 /**
- * Intercepts file-save anchors (save_file creates them via document.createElementNS
- * and dispatches a synthetic click without appending to the DOM).
+ * Intercepts both the legacy ad-hoc save anchors and rendered native ICS anchors.
  * Returns { saves, restore }.
  * saves: Array<{ href: string, download: string, target: string }>
  */
 export function interceptFileSave() {
   const saves = [];
-  const original = document.createElementNS.bind(document);
-  document.createElementNS = (ns, tag) => {
-    const el = original(ns, tag);
-    if (String(tag).toLowerCase() === 'a') {
-      const originalDispatch = el.dispatchEvent.bind(el);
-      el.dispatchEvent = (evt) => {
-        if (evt && evt.type === 'click') {
-          saves.push({ href: el.href, download: el.download, target: el.target });
-          return true; // swallow the click - no navigation/download
-        }
-        return originalDispatch(evt);
-      };
+  const originalDispatch = HTMLAnchorElement.prototype.dispatchEvent;
+  HTMLAnchorElement.prototype.dispatchEvent = function (evt) {
+    if (evt && evt.type === 'click' && (this.download || this.href.startsWith('data:text/calendar'))) {
+      saves.push({ href: this.href, download: this.download, target: this.target });
+      const href = this.getAttribute('href');
+      const download = this.getAttribute('download');
+      this.removeAttribute('href');
+      this.removeAttribute('download');
+      const result = originalDispatch.call(this, evt);
+      if (href !== null) this.setAttribute('href', href);
+      if (download !== null) this.setAttribute('download', download);
+      return result;
     }
-    return el;
+    return originalDispatch.call(this, evt);
   };
   return {
     saves,
     restore() {
-      document.createElementNS = original;
+      HTMLAnchorElement.prototype.dispatchEvent = originalDispatch;
     },
   };
 }

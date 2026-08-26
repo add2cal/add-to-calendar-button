@@ -102,7 +102,10 @@ describe('Group U - CSP environment 2x2', () => {
       expect(dateInitialized, 'date component initialized under CSP').to.exist;
       const outlineIcons = [...el.shadowRoot.querySelectorAll('svg[fill="none"]'), ...dateEl.shadowRoot.querySelectorAll('svg[fill="none"]')];
       expect(outlineIcons.length, 'outline icons rendered').to.be.greaterThan(0);
-      expect(outlineIcons.every((icon) => win.getComputedStyle(icon).fill === 'none'), 'all outline icons remain unfilled').to.equal(true);
+      expect(
+        outlineIcons.every((icon) => win.getComputedStyle(icon).fill === 'none'),
+        'all outline icons remain unfilled',
+      ).to.equal(true);
       const schema = doc.getElementById('atcb-schema-' + el.getAttribute('atcb-button-id'));
       if (schema) {
         expect(schema.nonce === NONCE || schema.getAttribute('nonce') === NONCE).to.equal(true);

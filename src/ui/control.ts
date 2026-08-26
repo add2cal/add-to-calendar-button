@@ -73,7 +73,7 @@ async function open(host: ShadowRoot, data: ATCBConfig, button: HTMLElement | st
   } else {
     if (data.forceOverlay) {
       host = (await generate_overlay_dom(host, data)) as unknown as ShadowRoot;
-      button = host.querySelector<HTMLElement>('button.atcb-button');
+      button = host.querySelector<HTMLElement>('.atcb-button');
     }
     host.querySelector('.atcb-initialized')!.append(listWrapper);
     listWrapper.append(list);

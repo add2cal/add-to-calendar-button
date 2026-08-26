@@ -79,9 +79,7 @@ describe('SMOKE | OSS x Desktop', () => {
       await clickSingleton(host);
       expect(new URL(wo.calls[0].url).searchParams.get('dates')).to.equal('20501225/20501226');
       const { host: host2 } = await mountAtcb({ name: 'Smoke Allday', startDate: '2050-12-25', options: "'iCal'", trigger: 'click', identifier: 's04b' });
-      const btn2 = host2.shadowRoot.getElementById(host2.getAttribute('atcb-button-id'));
-      btn2.dispatchEvent(new MouseEvent('click', { bubbles: true, cancelable: true, view: window }));
-      await aTimeout(80);
+      await clickSingleton(host2);
       const ics = parseIcs(decodeIcsHref(fs.saves[0].href));
       expect(ics.events[0].prop('DTSTART')).to.include('VALUE=DATE');
     } finally {

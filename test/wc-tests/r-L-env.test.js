@@ -7,8 +7,49 @@ import { expect, aTimeout } from '@open-wc/testing';
 import { mountAtcb, baseEvent } from '../helpers/mount.js';
 import { interceptWindowOpen, interceptFileSave, setUA, UA, muteConsole, stubClipboard } from '../helpers/capture.js';
 import { clickSingleton, openList, renderedOptions, clickOption, modalHost } from '../helpers/dom.js';
+import { atcb_action } from '../../dist/module/index.js';
 
 describe('Group L - Environment-driven routing', () => {
+  it('L-01a: atcb_action uses an Apple-device interstitial for a dynamic singleton ICS', async () => {
+    const trigger = document.createElement('button');
+    trigger.id = 'atcb-l01a';
+    document.body.append(trigger);
+    await atcb_action({ ...baseEvent({ options: ['apple'], fakeIOS: true }), identifier: 'atcb-l01a' }, trigger);
+    await aTimeout(40);
+    const modal = document.getElementById('atcb-l01a-modal-host');
+    expect(modal).to.exist;
+    expect(modal.shadowRoot.querySelector('.atcb-modal-headline')).to.not.exist;
+    expect(modal.shadowRoot.querySelector('.atcb-modal-content:not(.atcb-modal-content-subevents)')).to.exist;
+    const dateLink = modal.shadowRoot.querySelector('a.atcb-subevent-btn');
+    expect(dateLink).to.exist;
+    expect(dateLink.getAttribute('href')).to.match(/^data:text\/calendar/);
+    document.getElementById('atcb-customTrigger-atcb-l01a-host')?.remove();
+    modal.remove();
+    trigger.remove();
+  });
+
+  it('L-01b: atcb_action skips the interstitial for a static singleton ICS', async () => {
+    const fs = interceptFileSave();
+    const trigger = document.createElement('button');
+    trigger.id = 'atcb-l01b';
+    document.body.append(trigger);
+    try {
+      await atcb_action({ ...baseEvent({ options: ['apple'], fakeIOS: true }), icsFile: 'https://example.com/static.ics', identifier: 'atcb-l01b' }, trigger);
+      expect(document.getElementById('atcb-l01b-modal-host')).to.not.exist;
+      expect(fs.saves[0].href).to.equal('https://example.com/static.ics');
+    } finally {
+      fs.restore();
+      document.getElementById('atcb-customTrigger-atcb-l01b-host')?.remove();
+      trigger.remove();
+    }
+  });
+
+  it('L-01c: atcb_action sink resolves dynamic ICS without rendering', async () => {
+    const before = document.querySelectorAll('[id$="-modal-host"]').length;
+    const result = await atcb_action({ ...baseEvent({ options: ['ical'] }), sink: true });
+    expect(result).to.include('BEGIN:VCALENDAR');
+    expect(document.querySelectorAll('[id$="-modal-host"]').length).to.equal(before);
+  });
   it('L-04: Android -> apple option removed, ical stays', async () => {
     const { host } = await mountAtcb(baseEvent({ fakeAndroid: 'true', trigger: 'click', identifier: 'atcb-l04' }));
     await openList(host);

@@ -5,6 +5,18 @@
  * License: Elastic License 2.0 (ELv2)
  */
 
+/* Native Apple/iCal links must start from the same neutral baseline as the
+ * controls they replace. :where keeps this reset at zero specificity so the
+ * regular component/style rules below remain authoritative. */
+:where(a.atcb-button, a.atcb-list-item, a.atcb-subevent-btn) {
+  all: unset;
+  /* Native buttons use border-box in the browser UI stylesheet. Keep that box
+   * model for replacement anchors so fixed-size/hover states (notably round
+   * singleton buttons) do not grow by their border dimensions. Individual
+   * component styles can still override this at normal class specificity. */
+  box-sizing: border-box;
+}
+
 .atcb-button-wrapper,
 .atcb-list,
 .atcb-modal-box {
@@ -53,6 +65,14 @@
 
 .atcb-text {
   overflow-wrap: anywhere;
+}
+
+[part='atcb-button-text'] {
+  text-align: left;
+}
+
+.atcb-rtl [part='atcb-button-text'] {
+  text-align: right;
 }
 
 /* optical correction: sans-serif caps sit high in the box at weight 600 */
@@ -105,19 +125,6 @@
   margin: 0;
 }
 
-/* fullscreen on small viewports: no shadow, no margin, no radius */
-@media (width <= 575px) {
-  .atcb-list.atcb-modal {
-    border: 0;
-    border-radius: 0;
-    box-shadow: none;
-    margin: 0;
-    min-height: 100dvh;
-    min-width: 100%;
-    width: 100%;
-  }
-}
-
 .atcb-modal {
   display: block;
   margin: auto;
@@ -130,6 +137,19 @@
 .atcb-list.atcb-modal {
   min-width: auto;
   overflow: hidden;
+}
+
+/* fullscreen on small viewports: no shadow, no margin, no radius */
+@media (width <= 575px) {
+  .atcb-list.atcb-modal {
+    border: 0;
+    border-radius: 0;
+    box-shadow: none;
+    margin: 0;
+    min-height: 100dvh;
+    min-width: 100%;
+    width: 100%;
+  }
 }
 
 .atcb-modal-box.atcb-rtl {
@@ -232,11 +252,14 @@ a.atcb-modal-btn:disabled {
   text-transform: uppercase;
 }
 
-@media (width <= 414px) {
-  .atcb-date-btn-left {
-    width: fit-content;
-  }
+.atcb-date-btn-right {
+  position: relative;
+  color: var(--date-btn-text);
+  min-width: 13.5em;
+  overflow-wrap: anywhere;
+}
 
+@media (width <= 414px) {
   .atcb-date-btn-day {
     font-size: 1.7em;
   }
@@ -248,13 +271,6 @@ a.atcb-modal-btn:disabled {
   .atcb-date-btn-right {
     min-width: 10em;
   }
-}
-
-.atcb-date-btn-right {
-  position: relative;
-  color: var(--date-btn-text);
-  min-width: 13.5em;
-  overflow-wrap: anywhere;
 }
 
 .atcb-date-btn-right-centered {
@@ -281,7 +297,7 @@ a.atcb-modal-btn:disabled {
   justify-content: center;
   font-weight: 600;
   font-size: 1em;
-  padding: .4em .7em;
+  padding: .4em 1.2em .4em .7em;
   box-sizing: border-box;
 }
 
@@ -305,6 +321,7 @@ a.atcb-modal-btn:disabled {
 }
 
 .atcb-date-btn-content-location {
+  min-width: 0;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -1057,6 +1074,12 @@ button.atcb-modal-btn:not([disabled]):hover, a.atcb-modal-btn:not([disabled]):ho
   flex-direction: column;
   flex-shrink: 0;
   box-sizing: border-box;
+}
+
+@media (width <= 414px) {
+  .atcb-date-btn-left {
+    width: fit-content;
+  }
 }
 
 @media (width <= 575px) {

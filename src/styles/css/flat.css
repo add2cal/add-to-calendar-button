@@ -87,7 +87,6 @@
   top: -.18em;
   left: -.18em;
   box-shadow: .18em .18em 0 0 var(--btn-shadow);
-  text-align: center;
   touch-action: manipulation;
   user-select: none;
   -webkit-user-select: none;
