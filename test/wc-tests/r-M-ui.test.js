@@ -292,7 +292,7 @@ describe('Group M - UI / interaction', () => {
     expect(closeItem.getAttribute('role'), 'close control remains part of keyboard menu navigation').to.equal('menuitem');
     expect(getComputedStyle(header).display).to.equal('flex');
     expect(getComputedStyle(header).justifyContent).to.equal('space-between');
-    expect(getComputedStyle(header).gap).to.equal('20px');
+    expect(getComputedStyle(header).gap).to.equal('40px');
     expect(getComputedStyle(closeItem).position).to.equal('static');
     expect(list, 'modal list rendered').to.exist;
     expect(modal.shadowRoot.querySelector('.atcb-modal-close'), 'list modal keeps its own close treatment').to.not.exist;
