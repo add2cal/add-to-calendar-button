@@ -15,8 +15,12 @@ Use this guide to check the few changes that may require action in your project.
 4. If you provide `customLabels`, update the renamed translation keys listed below.
 5. If you use a legacy `no-pro`, `unstyle`, or `no-pro-unstyle` entry, switch to the main entry.
    Compatibility shims still work, but the dedicated builds no longer exist.
-6. Check that any supplied URLs use an allowed, non-scriptable scheme.
-7. Test on your supported browsers. The full v3 experience targets Baseline 2023.
+6. If you use the npm package with a non-default style or a non-English language, import its style
+   or locale module explicitly.
+7. Update HTML data attributes to their official kebab-case spelling. Legacy spellings remain
+   compatible for now, but may be removed in a future major version.
+8. Check that any supplied URLs use an allowed, non-scriptable scheme.
+9. Test on your supported browsers. The full v3 experience targets Baseline 2023.
 
 If none of these cases applies, your v2 integration should continue to work unchanged.
 
@@ -96,6 +100,12 @@ Official HTML attribute names are now kebab-case, for example `start-date`, `but
 spellings remain supported as aliases. When both an official name and a legacy alias are present,
 the official name wins.
 
+We strongly recommend updating all HTML attributes to the official kebab-case spelling during
+the v3 migration. The aliases provide backwards compatibility today, but may be removed in a
+future major version. This recommendation applies only to HTML attributes. For JavaScript
+configuration objects, including those passed to `atcb_action`, camelCase remains the preferred
+spelling (for example, `startDate` and `buttonStyle`).
+
 Calendar option values are now lowercase:
 
 - `apple`
@@ -134,18 +144,22 @@ The dropdown now follows the WAI-ARIA menu pattern (`menu` and `menuitem` roles)
 native `<dialog>` elements. If your application tests or CSS target the old `list`/`link` roles or
 the old modal structure, update those selectors.
 
-## Optional: use on-demand styles and locales
+## Import non-default styles and non-English locales with npm
 
-The default style and English remain bundled. Other styles and languages load automatically as
-small assets when requested. No migration is required for normal browser-script usage.
+The default style and English remain bundled. For npm package users, other styles and languages
+are no longer included automatically: you must explicitly import every non-default style and
+non-English locale your application uses. This is a breaking change from v2.
 
-Bundled applications can register assets without a runtime fetch:
+For example:
 
 ```js
 import 'add-to-calendar-button';
 import 'add-to-calendar-button/styles/3d';
 import 'add-to-calendar-button/i18n/de';
 ```
+
+Normal browser-script/CDN integrations still load requested styles and languages on demand as
+small assets and do not require these imports.
 
 You can also use `style-source` to override the base URL for lazy assets, `load-all-styles` to
 prefetch all styles for runtime switching, `atcb_register_style(name, css)` to register a style,

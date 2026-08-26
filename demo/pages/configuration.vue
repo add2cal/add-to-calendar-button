@@ -110,33 +110,17 @@ watch(searchSelection, (newVal) => {
       <div v-if="locale=='en'">
         <p>The following list holds all potential attributes to set up and customize your next Add to Calendar Button.</p>
         <p class="mt-8 italic">Check the Demo to play with most of them and explore the examples pages for more extensive descriptions for specific cases.</p>
-        <p class="mt-8">
-          Since v3, every attribute also has an official kebab-case name (like <code>start-date</code> or <code>button-style</code>) - this list shows the classic spellings, which keep working as aliases.<br />
-          If both spellings are present, the kebab-case one wins.
-        </p>
         <p class="hidden lg:block">
           To specify a boolean value within the HTML custom element, you would only add the name as attribute.<br />
           Not setting it would automatically reflect to "false". As an alternative, you could also always write it as a string like <code>attributeName="true"</code>.
         </p>
-        <p class="mt-8 hidden lg:block">
-          In frameworks with native web component support (like React 19+), you do not necessarily need to stringify non-string values.<br />
-          You could simply write something like <code>options=['apple','google']</code> instead of <code>options="['apple','google']"</code>.
-        </p>
       </div>
       <div v-else>
-        <p>Die nachfolgende Liste beinhaltet alle möglichen Attribute, um deinen Add to Calendar Button nach deinen Wünschen zu configurieren.</p>
+        <p>Die nachfolgende Liste beinhaltet alle möglichen Attribute, um deinen Add to Calendar Button nach deinen Wünschen zu konfigurieren.</p>
         <p class="mt-8 italic">Wirf unbedingt auch einen Blick auf unsere Demo, bei welcher du mit den meisten Paramtern live herumspielen kannst - und durchstöbere die "Beispiele"-Seiten für weitere Erläuterungen und speziellere Funktionalitäten.</p>
-        <p class="mt-8">
-          Seit v3 hat jedes Attribut zusätzlich einen offiziellen kebab-case-Namen (etwa <code>start-date</code> oder <code>button-style</code>) - diese Liste zeigt die klassischen Schreibweisen, welche als Alias weiterhin funktionieren.<br />
-          Sind beide Schreibweisen gesetzt, gewinnt die kebab-case-Variante.
-        </p>
         <p class="hidden lg:block">
           Um einen boolschen Wert in dem HTML-Element zu definieren, kannst du einfach nur den Namen als Attribute setzen.<br />
           Wenn er nicht gesetzt ist, definiert das die Option automatisch als "false". Alternativ kannst du den Wert aber auch immer vollständig als String ergänzen: <code>attributeName="true"</code>.
-        </p>
-        <p class="mt-8 hidden lg:block">
-          In Frameworks mit nativem Web-Component-Support (wie React 19+) musst du Nicht-String-Werte nicht zwingend zu Strings transformieren.<br />
-          In diesem Fall kannst du bspw. auch einfach <code>options=['apple','google']</code> anstelle von <code>options="['apple','google']"</code> schreiben.
         </p>
       </div>
 
@@ -315,13 +299,11 @@ watch(searchSelection, (newVal) => {
               <td v-if="locale=='en'">
                 Can be used to manage changes of an event as it is specified within the iCalendar specifications
                 <a href="https://www.rfc-editor.org/rfc/rfc5545#section-3.8.1.11" target="_blank" rel="noopener" class="whitespace-nowrap">RFC5545 <ArrowTopRightOnSquareIcon class="-mt-0.5 mr-0.5 inline-block h-3 w-3" aria-hidden="true" /></a>.<br /><br />
-                Casing makes no difference - the uppercase v2 values keep working, and the generated ics file always carries the spec's uppercase form.<br /><br />
                 <NuxtLink :to="{path: localePath('advanced-use'), hash: '#case-5'}">{{ $t('labels.example') }} <ArrowRightIcon class="-mt-0.5 mr-0.5 inline-block h-3 w-3" aria-hidden="true" /></NuxtLink>
               </td>
               <td v-else>
                 Kann genutzt werden, um Änderungen an einem Event zu verwalten.<br />Gemäß der iCalendar-Spezifikation
                 <a href="https://www.rfc-editor.org/rfc/rfc5545#section-3.8.1.11" target="_blank" rel="noopener" class="whitespace-nowrap">RFC5545 <ArrowTopRightOnSquareIcon class="-mt-0.5 mr-0.5 inline-block h-3 w-3" aria-hidden="true" /></a>.<br /><br />
-                Die Groß- und Kleinschreibung spielt keine Rolle - die alten v2-Werte in Großbuchstaben funktionieren weiterhin und die generierte ics-Datei nutzt stets die Großschreibweise der Spezifikation.<br /><br />
                 <NuxtLink :to="{path: localePath('advanced-use'), hash: '#case-5'}">{{ $t('labels.example') }} <ArrowRightIcon class="-mt-0.5 mr-0.5 inline-block h-3 w-3" aria-hidden="true" /></NuxtLink>
               </td>
             </tr>
@@ -433,6 +415,7 @@ watch(searchSelection, (newVal) => {
                   <li>uid</li>
                   <li>organizer</li>
                   <li>attendee</li>
+                  <li>most ics options - see further down</li>
                 </ul>
                 <br /><br />
                 <NuxtLink :to="{path: localePath('examples'), hash: '#case-5'}">{{ $t('labels.example') }} <ArrowRightIcon class="-mt-0.5 mr-0.5 inline-block h-3 w-3" aria-hidden="true" /></NuxtLink>
@@ -458,6 +441,7 @@ watch(searchSelection, (newVal) => {
                   <li>uid</li>
                   <li>organizer</li>
                   <li>attendee</li>
+                  <li>die meisten ICS-Optionen - siehe weiter unten</li>
                 </ul>
                 <br /><br />
                 <NuxtLink :to="{path: localePath('examples'), hash: '#case-5'}">{{ $t('labels.example') }} <ArrowRightIcon class="-mt-0.5 mr-0.5 inline-block h-3 w-3" aria-hidden="true" /></NuxtLink>
@@ -771,7 +755,6 @@ watch(searchSelection, (newVal) => {
                 If you only specify 1 calendar type, the button would show the calendar's icon instead of the default one and redirect directly instead of opening a list (singleton case).<br /><br />
                 Some options might be dynamically excluded based on other settings!<br />
                 "ical" will be replaced by "apple" on iOS devices.<br /><br />
-                The v2 spellings (like "Apple", "Microsoft365", or "Outlook.com") keep working as aliases - casing makes no difference.<br /><br />
                 You can specify a different set of options for mobile devices via the options-mobile option. If you also set the options-ios option, this will account for iOS (not Mac!), while options-mobile accounts for Android and other mobile devices.
               </td>
               <td v-else>
@@ -779,7 +762,6 @@ watch(searchSelection, (newVal) => {
                 Sofern du nur 1 Option definierst wird der Button das Icon dieser Option anzeigen sowie direkt die jeweilige Kalender-Aktion auslösen und keine Auswahlliste öffnen (Singleton-Case).<br /><br />
                 Optionen können deaktiviert werden, wenn sie aufgrund anderere Einstellungen nicht unterstützt werden!<br />
                 Auf iOS-Geräten wird die ical-Option durch "apple" ersetzt.<br /><br />
-                Die v2-Schreibweisen (bspw. "Apple", "Microsoft365" oder "Outlook.com") funktionieren weiterhin als Alias - Groß- und Kleinschreibung spielt keine Rolle.<br /><br />
                 Du kannst eine andere Liste an Optionen für mobile Geräte definieren, indem du die optionsMobile-Option nutzt. Wenn du auch die optionsIOS-Option setzt, wird diese für iOS (nicht Mac!) berücksichtigt, während options-mobile für Android und andere mobile Geräte gilt.
               </td>
             </tr>
@@ -792,14 +774,14 @@ watch(searchSelection, (newVal) => {
                 There are multiple integrated button styles, which also affect a lot of other parameters.<br />
                 We recommend to play around with them in order to find out how they behave in detail.<br /><br />
                 "none" would simply load no css style at all, while "custom" requires an external css file specified with the "custom-css" option.<br /><br />
-                Since v3, only the default style is part of the script itself - every other style loads automatically on demand (a few KB), or fetch-free via <code>import 'add-to-calendar-button/styles/3d'</code> and the like when bundling. See the "style-source" and "load-all-styles" options for
-                more control.
+                Only the default style is part of the script itself - every other style loads automatically on demand (a few KB), or fetch-free via <code>import 'add-to-calendar-button/styles/3d'</code> and the like when bundling. See the "style-source" and "load-all-styles" options for more
+                control.
               </td>
               <td v-else>
                 Es gibt mehrere integrierte Button-Stile (Themes), die auch einige weitere Parameter beeinflussen.<br />
                 Wir empfehlen die Optionen der Reihe nach auszuprobieren, um herauszufinden, wie sie sich im Detail verhalten.<br /><br />
                 "none" würde gar kein CSS laden, während "custom" eine externes CSS-Datei über die "custom-css"-Option erfordert.<br /><br />
-                Seit v3 ist nur der Default-Style Teil des Skripts - jeder andere Style lädt automatisch bei Bedarf (wenige KB), oder ohne Netzwerk-Anfrage via <code>import 'add-to-calendar-button/styles/3d'</code> und Co. beim Bundling. Siehe auch die Optionen "style-source" und "load-all-styles".
+                Nur der Default-Style Teil des Skripts - jeder andere Style lädt automatisch bei Bedarf (wenige KB), oder ohne Netzwerk-Anfrage via <code>import 'add-to-calendar-button/styles/3d'</code> und Co. beim Bundling. Siehe auch die Optionen "style-source" und "load-all-styles".
               </td>
             </tr>
             <tr id="inline">
@@ -836,12 +818,12 @@ watch(searchSelection, (newVal) => {
               <th scope="row">style-source</th>
               <td><em>String</em><br /><br /><span class="format">URL</span></td>
               <td v-if="locale=='en'">
-                New with v3: Overrides the base url from which on-demand assets (button styles beyond the default, language packs beyond English) are loaded.<br /><br />
+                Overrides the base url from which on-demand assets (button styles beyond the default, language packs beyond English) are loaded.<br /><br />
                 By default, they load from wherever the script itself is hosted. Set this option if you self-host the script in an exotic setup or want to serve the assets from a dedicated location. The url should point at the directory that contains the <code>styles/</code> and
                 <code>locales/</code> folders.
               </td>
               <td v-else>
-                Neu mit v3: Überschreibt die Basis-URL, von welcher On-Demand-Assets (Button-Styles jenseits des Defaults, Sprachpakete jenseits von Englisch) geladen werden.<br /><br />
+                Überschreibt die Basis-URL, von welcher On-Demand-Assets (Button-Styles jenseits des Defaults, Sprachpakete jenseits von Englisch) geladen werden.<br /><br />
                 Standardmäßig laden diese von dort, wo auch das Skript selbst gehostet ist. Setze diese Option, wenn du das Skript in einem exotischen Setup selbst hostest oder die Assets von einem dedizierten Ort ausliefern möchtest. Die URL sollte auf das Verzeichnis zeigen, welches die
                 <code>styles/</code>- und <code>locales/</code>-Ordner enthält.
               </td>
@@ -852,11 +834,11 @@ watch(searchSelection, (newVal) => {
                 <em>Boolean</em><br /><br /><span class="label">{{ $t('content.config.default') }}:</span>False
               </td>
               <td v-if="locale=='en'">
-                New with v3: Prefetches every button style delta on initialization.<br /><br />
+                Prefetches every button style delta on initialization.<br /><br />
                 Only useful when you switch the "button-style" at runtime (for example in a live theme switcher) and want the change to apply without any network delay.
               </td>
               <td v-else>
-                Neu mit v3: Lädt alle Button-Style-Deltas bereits bei der Initialisierung.<br /><br />
+                Lädt alle Button-Style-Deltas bereits bei der Initialisierung.<br /><br />
                 Nur sinnvoll, wenn du die "button-style"-Option zur Laufzeit wechselst (etwa in einem Live-Theme-Switcher) und der Wechsel ohne Netzwerk-Verzögerung greifen soll.
               </td>
             </tr>
@@ -1050,7 +1032,7 @@ watch(searchSelection, (newVal) => {
                 If you want to have the text blocks in another language than English, you can use the included translations (i18n).<br /><br />
                 Simply set one of the supported languages as <a href="https://www.w3schools.com/tags/ref_language_codes.asp" target="_blank" rel="noopener" class="whitespace-nowrap">ISO 639-1 code <ArrowTopRightOnSquareIcon class="-mt-0.5 mr-0.5 inline-block h-3 w-3" aria-hidden="true" /></a>.<br />
                 Also supports Right-to-Left (RTL) with Arabic, Persian &amp; Hebrew.<br /><br />
-                Since v3, English is part of the script and every other language loads automatically on demand (~3 KB) - or fetch-free via <code>import 'add-to-calendar-button/i18n/de'</code> and the like when bundling.<br />
+                English is part of the script and every other language loads automatically on demand (~3 KB) - or fetch-free via <code>import 'add-to-calendar-button/i18n/de'</code> and the like when bundling.<br />
                 You can also provide a full locale like <code>en_GB</code>: translations then prefer a matching regional pack (falling back to the base language), and dates are formatted in the regional convention.
               </td>
               <td v-else>
@@ -1058,7 +1040,7 @@ watch(searchSelection, (newVal) => {
                 Spezifiere einfach eine der unterstützten Sprachen als
                 <a href="https://www.w3schools.com/tags/ref_language_codes.asp" target="_blank" rel="noopener" class="whitespace-nowrap">ISO 639-1 code <ArrowTopRightOnSquareIcon class="-mt-0.5 mr-0.5 inline-block h-3 w-3" aria-hidden="true" /></a>.<br />
                 Für Arabisch, Persisch und Hebräisch wird zudem Rechts-nach-Links (RTL) für alle Elemente unterstützt und automatisch angewendet.<br /><br />
-                Seit v3 ist Englisch Teil des Skripts und jede weitere Sprache lädt automatisch bei Bedarf (~3 KB) - oder ohne Netzwerk-Anfrage via <code>import 'add-to-calendar-button/i18n/de'</code> und Co. beim Bundling.<br />
+                Englisch ist Teil des Skripts und jede weitere Sprache lädt automatisch bei Bedarf (~3 KB) - oder ohne Netzwerk-Anfrage via <code>import 'add-to-calendar-button/i18n/de'</code> und Co. beim Bundling.<br />
                 Du kannst auch eine vollständige Locale wie <code>en_GB</code> angeben: Übersetzungen bevorzugen dann ein passendes regionales Sprachpaket (mit Fallback auf die Basissprache) und Daten werden in der regionalen Konvention formatiert.
               </td>
             </tr>
@@ -1070,7 +1052,7 @@ watch(searchSelection, (newVal) => {
                 There, you need to specify a JSON structure and define any text you want to override. Check the
                 <a href="https://github.com/add2cal/add-to-calendar-button/tree/main/src/i18n/locales" target="_blank" rel="noopener" class="whitespace-nowrap">locale files <ArrowTopRightOnSquareIcon class="-mt-0.5 mr-0.5 inline-block h-3 w-3" aria-hidden="true" /></a> for the available keys (use
                 the flattened dot notation, like <code>label.addtocalendar</code>). Any custom label will also override any translation.<br />For text blocks, you can use the same HTML pseudo tags as with the description option here.<br /><br />
-                Mind with v3: the keys <code>date.status.cancelled.cta</code>, <code>label.share.email.subject</code>, <code>label.rsvp</code>, <code>form.status</code>, and <code>form.success</code> were renamed to <code>date.status.cancelled_cta</code>, <code>label.share.email_subject</code>,
+                Mind: The keys <code>date.status.cancelled.cta</code>, <code>label.share.email.subject</code>, <code>label.rsvp</code>, <code>form.status</code>, and <code>form.success</code> were renamed to <code>date.status.cancelled_cta</code>, <code>label.share.email_subject</code>,
                 <code>label.rsvp.title</code>, <code>form.status.title</code>, and <code>form.success.title</code>.<br /><br />
                 <NuxtLink :to="{path: localePath('advanced-use'), hash: '#case-4'}">{{ $t('labels.example') }} <ArrowRightIcon class="-mt-0.5 mr-0.5 inline-block h-3 w-3" aria-hidden="true" /></NuxtLink>
               </td>
@@ -1080,7 +1062,7 @@ watch(searchSelection, (newVal) => {
                 <a href="https://github.com/add2cal/add-to-calendar-button/tree/main/src/i18n/locales" target="_blank" rel="noopener" class="whitespace-nowrap">Sprachdateien <ArrowTopRightOnSquareIcon class="-mt-0.5 mr-0.5 inline-block h-3 w-3" aria-hidden="true" /></a> für eine Liste der
                 verfügbaren Keys an (nutze die flache Punkt-Notation, etwa <code>label.addtocalendar</code>).<br />
                 Ein so manipulierter Text überschreibt auch jegliche Übersetzung.<br />Für Text-Blöcke kannst hierbei die gleichen HTML-Pseudo-Tags nutzen, wie sie auch in der "description"-Option möglich sind.<br /><br />
-                Beachte mit v3: die Keys <code>date.status.cancelled.cta</code>, <code>label.share.email.subject</code>, <code>label.rsvp</code>, <code>form.status</code> und <code>form.success</code> wurden zu <code>date.status.cancelled_cta</code>, <code>label.share.email_subject</code>,
+                Beachte: Die Keys <code>date.status.cancelled.cta</code>, <code>label.share.email.subject</code>, <code>label.rsvp</code>, <code>form.status</code> und <code>form.success</code> wurden zu <code>date.status.cancelled_cta</code>, <code>label.share.email_subject</code>,
                 <code>label.rsvp.title</code>, <code>form.status.title</code> und <code>form.success.title</code> umbenannt.<br /><br />
                 <NuxtLink :to="{path: localePath('advanced-use'), hash: '#case-4'}">{{ $t('labels.example') }} <ArrowRightIcon class="-mt-0.5 mr-0.5 inline-block h-3 w-3" aria-hidden="true" /></NuxtLink>
               </td>

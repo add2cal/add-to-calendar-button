@@ -139,7 +139,7 @@ function triggerAction() {
           <p>Die folgenden Beispiele illustrieren die grundsätzliche Vielfalt der inkludierten Stile und zeigen doch nur einen sehr kleinen Ausschnitt dessen.</p>
         </div>
         <div class="block w-full justify-between pt-4 md:flex">
-          <div class="flex w-full flex-none justify-center p-6 pt-8 md:w-[300px]">
+          <div class="flex w-full flex-none justify-center p-6 pt-8 md:w-[310px]">
             <Atcb
               :name="$t('demo_data.name')"
               :start-date="defaultDate"
@@ -173,7 +173,7 @@ function triggerAction() {
           </div>
         </div>
         <div class="block w-full justify-between pt-4 md:flex">
-          <div class="flex w-full flex-none justify-center p-6 pt-8 md:w-[300px]">
+          <div class="flex w-full flex-none justify-center p-6 pt-8 md:w-[310px]">
             <Atcb :name="$t('demo_data.name')" :start-date="defaultDate" options="'apple','google','ical'" button-style="flat" hide-icon-list buttons-list hide-background :label="$t('demo_data.name_custom_3')" light-mode="bodyScheme" :language="locale"></Atcb>
           </div>
           <div class="flex-1 overflow-x-auto">
@@ -195,7 +195,7 @@ function triggerAction() {
           </div>
         </div>
         <div class="block w-full justify-between pt-4 md:flex">
-          <div class="flex w-full flex-none justify-center p-6 pt-8 md:w-[300px]">
+          <div class="flex w-full flex-none justify-center p-6 pt-8 md:w-[310px]">
             <Atcb
               :name="$t('demo_data.name_custom_4')"
               :start-date="defaultDate"
@@ -261,7 +261,7 @@ function triggerAction() {
           <p class="italic">Beachte, dass dies nicht mit dem Button-Stil "none" oder dem atcb_action-Ansatz (<NuxtLink :to="'#case-10'">siehe #10</NuxtLink>) kompatibel ist.</p>
         </div>
         <div class="block w-full justify-between pt-4 md:flex">
-          <div class="flex w-full flex-none justify-center p-6 pt-8 md:w-[300px]">
+          <div class="flex w-full flex-none justify-center p-6 pt-8 md:w-[310px]">
             <Atcb
               style-light="--btn-background: #2f4377; --btn-text: #fff; --font: Georgia, 'Times New Roman', Times, serif;"
               style-dark="--btn-background: #000;"
@@ -320,7 +320,7 @@ function triggerAction() {
           <p>Im Beispiel halten wir das Ganze recht einfach und haben in dem externen Style lediglich die Farbe verändert.</p>
         </div>
         <div class="block w-full justify-between pt-4 md:flex">
-          <div class="flex w-full flex-none justify-center p-6 pt-8 md:w-[300px]">
+          <div class="flex w-full flex-none justify-center p-6 pt-8 md:w-[310px]">
             <Atcb :name="$t('demo_data.name')" :start-date="defaultDate" options="'apple','google','ical'" light-mode="bodyScheme" :language="locale" custom-css="https://add-to-calendar-button.com/atcb.css" button-style="custom" list-style="modal" hide-rich-data hide-branding> </Atcb>
           </div>
           <div class="flex-1 overflow-x-auto">
@@ -384,7 +384,7 @@ function triggerAction() {
           </ul>
         </div>
         <div class="block w-full justify-between pt-4 md:flex">
-          <div class="flex w-full flex-none justify-center p-6 pt-8 md:w-[300px]">
+          <div class="flex w-full flex-none justify-center p-6 pt-8 md:w-[310px]">
             <Atcb id="css-part-example" identifier="css-part-example" :name="$t('demo_data.name')" :start-date="defaultDate" options="'apple','google','ical'" light-mode="bodyScheme" :language="locale" hide-rich-data hide-branding> </Atcb>
           </div>
           <div class="flex-1 overflow-x-auto">
@@ -401,6 +401,7 @@ function triggerAction() {
 &lt;style&gt;
   add-to-calendar-button#css-part-example::part(atcb-button),
   #atcb-btn-css-part-example-modal-host::part(atcb-button),
+  #css-part-example::part(atcb-list),
   #atcb-btn-css-part-example-modal-host::part(atcb-list) {
     background-color: #264f3c;
     color: #fff;
@@ -473,7 +474,7 @@ function triggerAction() {
           </li>
         </ul>
         <div class="block w-full justify-between pt-4 md:flex">
-          <div class="flex w-full flex-none justify-center p-6 pt-8 md:w-[300px]">
+          <div class="flex w-full flex-none justify-center p-6 pt-8 md:w-[310px]">
             <Atcb
               :name="$t('demo_data.name')"
               :start-date="defaultDate"
@@ -531,7 +532,7 @@ function triggerAction() {
           </p>
         </div>
         <div class="block w-full justify-between pt-4 md:flex">
-          <div class="flex w-full flex-none justify-center p-6 pt-8 md:w-[300px]">
+          <div class="flex w-full flex-none justify-center p-6 pt-8 md:w-[310px]">
             <Atcb :name="$t('demo_data.name_subscription')" subscribe ics-file="https://add2cal.github.io/ics-demo/demo-calendar.ics" options="'apple','google','ical','outlookcom','ms365','msteams','yahoo'" light-mode="bodyScheme" :language="locale" hide-rich-data hide-branding></Atcb>
           </div>
           <div class="flex-1 overflow-x-auto">
@@ -576,7 +577,7 @@ function triggerAction() {
           <p class="text-sm italic">(Falls du Texte lediglich übersetzen möchtest, prüfe zunächst die "language"-Option!)</p>
         </div>
         <div class="block w-full justify-between pt-4 md:flex">
-          <div class="flex w-full flex-none justify-center p-6 pt-8 md:w-[300px]">
+          <div class="flex w-full flex-none justify-center p-6 pt-8 md:w-[310px]">
             <Atcb
               :name="$t('demo_data.name')"
               :start-date="defaultDate"
@@ -635,7 +636,7 @@ function triggerAction() {
           </p>
         </div>
         <div class="block w-full justify-between pt-4 md:flex">
-          <div class="flex w-full flex-none flex-col items-center justify-start p-6 pt-8 text-center md:w-[300px]">
+          <div class="flex w-full flex-none flex-col items-center justify-start p-6 pt-8 text-center md:w-[310px]">
             <div class="mb-5 text-sm font-semibold">A. {{ $t('content.advanced.add_event_example') }}</div>
             <Atcb
               :name="$t('demo_data.name')"
@@ -686,7 +687,7 @@ function triggerAction() {
           </div>
         </div>
         <div class="block w-full justify-between pt-4 md:flex">
-          <div class="flex w-full flex-none flex-col items-center justify-start p-6 pt-8 text-center md:w-[300px]">
+          <div class="flex w-full flex-none flex-col items-center justify-start p-6 pt-8 text-center md:w-[310px]">
             <div class="mb-5 text-sm font-semibold">B. {{ $t('content.advanced.remove_event_example') }}</div>
             <Atcb
               :name="$t('demo_data.name')"
@@ -765,7 +766,7 @@ function triggerAction() {
           <p>Bei Nutzung der <NuxtLink :to="'#case-10'">atcb_action Funktion</NuxtLink> verhält es sich minimal anders. Das Skript nutzt das genannte Schema nur, wenn das auslösende Element keine ID besitzt.</p>
         </div>
         <div class="block w-full justify-between pt-4 md:flex">
-          <div class="flex w-full flex-none justify-center p-6 pt-8 md:w-[300px]">
+          <div class="flex w-full flex-none justify-center p-6 pt-8 md:w-[310px]">
             <Atcb
               :name="$t('demo_data.name')"
               :start-date="defaultDate"
@@ -857,7 +858,7 @@ function triggerAction() {
           </p>
         </div>
         <div class="block w-full justify-between pt-4 md:flex">
-          <div class="flex w-full flex-none justify-center p-6 pt-8 md:w-[300px]">
+          <div class="flex w-full flex-none justify-center p-6 pt-8 md:w-[310px]">
             <Atcb
               :name="$t('demo_data.name')"
               :start-date="defaultDate"
@@ -931,7 +932,7 @@ function triggerAction() {
           <span class="text-sm italic">(Der nachfolgende Button sollte in einer in-App-WebView-Umgebung, wie der Instagram-App nicht funktionieren, wohl aber in deiner eigenen App.)</span>
         </div>
         <div class="block w-full justify-between pt-4 md:flex">
-          <div class="flex w-full flex-none justify-center p-6 pt-8 md:w-[300px]">
+          <div class="flex w-full flex-none justify-center p-6 pt-8 md:w-[310px]">
             <Atcb :name="$t('demo_data.name_dummy')" :start-date="defaultDate" start-time="10:15" end-time="23:30" options="ical" ics-file="https://add-to-calendar-button.com/demo-event.ics" bypass-web-view-check light-mode="bodyScheme" :language="locale" hide-rich-data hide-branding></Atcb>
           </div>
           <div class="flex-1 overflow-x-auto">
@@ -1012,7 +1013,7 @@ function triggerAction() {
           <p>Im Beispiel nutzen wir einen recht einfachen Button und Prozess zu Demonstrationszwecken.</p>
         </div>
         <div class="block w-full justify-between pt-4 md:flex">
-          <div class="flex w-full flex-none justify-center p-6 pt-8 md:w-[300px]">
+          <div class="flex w-full flex-none justify-center p-6 pt-8 md:w-[310px]">
             <button id="my-default-button" class="h-fit rounded-full border-2 border-secondary bg-secondary px-4 py-2 text-zinc-800 hover:bg-secondary-light hover:text-black hover:shadow-lg">{{ $t('labels.clickHere') }}</button>
           </div>
           <div class="flex-1 overflow-x-auto">
@@ -1046,7 +1047,7 @@ function triggerAction() {
           <p>
             First things first:<br />
             Wherever possible, we load the script asynchronously, so it will not block the rendering of your page.<br />
-            Since v3, the script is also radically split: the bundle only contains the core, the default button style, and English.<br />
+            The script is also radically split: the bundle only contains the core, the default button style, and English.<br />
             Every other button style (a few KB each) and language (~3 KB each) loads automatically on demand - from the same location the script itself is served from.
           </p>
           <p><strong>You usually do not need to do anything.</strong> But you can take control:</p>
@@ -1063,16 +1064,12 @@ import 'add-to-calendar-button/i18n/de'; // the languages you serve</pre>
             <li class="text-left">With the script tag, assets load from the script's own origin. Override the location via the <NuxtLink :to="{path: localePath('configuration'), hash: '#stylesource'}">styleSource</NuxtLink> option if you host them elsewhere.</li>
             <li class="text-left">If you switch the buttonStyle at runtime, set <NuxtLink :to="{path: localePath('configuration'), hash: '#loadallstyles'}">loadAllStyles</NuxtLink> to prefetch all deltas.</li>
           </ol>
-          <p>
-            The former <code>no-pro</code>, <code>unstyle</code>, and <code>no-pro-unstyle</code> package variants are deprecated: since styles and languages are lazy anyway, they lost their purpose.<br />
-            The old entry points and CDN file names keep working as tiny shims that load the main package - but please switch to the main entry when you touch the code anyway.
-          </p>
         </div>
         <div v-else>
           <p>
             First things first:<br />
             Woimmer möglich, laden wir das Skript asynchron, sodass es das Rendern deiner Seite nicht blockiert.<br />
-            Seit v3 ist das Skript zudem radikal aufgeteilt: das Bundle enthält nur den Kern, den Default-Button-Style und Englisch.<br />
+            Das Skript ist zudem radikal aufgeteilt: das Bundle enthält nur den Kern, den Default-Button-Style und Englisch.<br />
             Jeder weitere Button-Style (wenige KB) und jede weitere Sprache (~3 KB) lädt automatisch bei Bedarf - von dort, wo auch das Skript selbst ausgeliefert wird.
           </p>
           <p><strong>In der Regel musst du nichts weiter tun.</strong> Du kannst aber die Kontrolle übernehmen:</p>
@@ -1089,17 +1086,13 @@ import 'add-to-calendar-button/i18n/de'; // deine Sprachen</pre>
             <li class="text-left">Mit dem Script-Tag laden Assets vom Origin des Skripts. Über die <NuxtLink :to="{path: localePath('configuration'), hash: '#stylesource'}">styleSource</NuxtLink>-Option kannst du den Ort überschreiben.</li>
             <li class="text-left">Wenn du den buttonStyle zur Laufzeit wechselst, lädt <NuxtLink :to="{path: localePath('configuration'), hash: '#loadallstyles'}">loadAllStyles</NuxtLink> alle Deltas vor.</li>
           </ol>
-          <p>
-            Die früheren Paket-Varianten <code>no-pro</code>, <code>unstyle</code> und <code>no-pro-unstyle</code> sind deprecated: da Styles und Sprachen ohnehin lazy laden, haben sie ihren Zweck verloren.<br />
-            Die alten Einstiegspunkte und CDN-Dateinamen funktionieren weiterhin als kleine Shims, welche das Haupt-Paket laden - bitte stelle bei Gelegenheit dennoch auf den Haupt-Einstiegspunkt um.
-          </p>
         </div>
       </section>
       <section id="case-12">
         <h2 class="mb-4 mt-14 border-t border-zinc-300 pt-14 dark:border-zinc-700">12. {{ $t('content.advanced.12_long') }}</h2>
         <div v-if="locale=='en'">
           <p>
-            New with v3: the button can render a shell on the server.<br />
+            The button can render a shell on the server.<br />
             The <code>add-to-calendar-button/ssr</code> entry produces a style- and size-correct placeholder via declarative shadow DOM - it paints before any JavaScript runs, and the client script upgrades it in place without layout shift.
           </p>
           <LazyCodeBlock>
@@ -1123,7 +1116,7 @@ const html = atcb_generate_ssr_html({
         </div>
         <div v-else>
           <p>
-            Neu mit v3: der Button kann eine Hülle auf dem Server rendern.<br />
+            Der Button kann eine Hülle auf dem Server rendern.<br />
             Der <code>add-to-calendar-button/ssr</code>-Einstiegspunkt erzeugt einen Platzhalter mit korrektem Style und Größe via Declarative Shadow DOM - er wird gezeichnet, bevor JavaScript läuft, und das Client-Skript übernimmt ihn ohne Layout-Sprung.
           </p>
           <LazyCodeBlock>
@@ -1169,6 +1162,7 @@ const html = atcb_generate_ssr_html({
 <style>
 add-to-calendar-button#css-part-example::part(atcb-button),
 #atcb-btn-css-part-example-modal-host::part(atcb-button),
+#css-part-example::part(atcb-list),
 #atcb-btn-css-part-example-modal-host::part(atcb-list) {
   background-color: #264f3c;
   color: #fff;

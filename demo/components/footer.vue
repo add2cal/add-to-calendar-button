@@ -53,6 +53,8 @@ function topFunction() {
         <hr class="mb-4 mt-6 border-gray-300 dark:border-zinc-700" />
         <div class="flex flex-col-reverse text-xs sm:flex-row sm:justify-between">
           <div class="px-1 pb-2 pt-10 text-center text-sm sm:pt-1 sm:text-left sm:text-xs">
+            <NuxtLink :to="localePath('what-is-an-add-to-calendar-button')">{{ $t('labels.definition') }}</NuxtLink>
+            |
             <NuxtLink :to="localePath('legal-notice')">{{ $t('navigation.legal-notice') }}</NuxtLink>
             |
             <NuxtLink :to="localePath('privacy-policy')">{{ $t('navigation.privacy-policy') }}</NuxtLink>

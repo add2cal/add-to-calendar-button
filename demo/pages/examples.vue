@@ -98,7 +98,7 @@ watch(locale, value => {
         <p v-if="locale=='en'">This is a more or less standard setup with all available calendar types and a time zone set.</p>
         <p v-else>Dies ist das gewöhnliche Standard-Setup mit allen verfügbaren Kalender-Links und einer definierten Zeitzone</p>
         <div class="block w-full justify-between md:flex">
-          <div class="flex w-full flex-none justify-center p-6 pt-8 md:w-[300px]">
+          <div class="flex w-full flex-none justify-center p-6 pt-8 md:w-[310px]">
             <Atcb
               :name="$t('demo_data.name')"
               :start-date="defaultDate"
@@ -144,7 +144,7 @@ watch(locale, value => {
           <span class="text-sm italic">Für derartige Events ist die Zeitzone obsolet.</span>
         </p>
         <div class="block w-full justify-between md:flex">
-          <div class="flex w-full flex-none justify-center p-6 pt-8 md:w-[300px]">
+          <div class="flex w-full flex-none justify-center p-6 pt-8 md:w-[310px]">
             <Atcb
               :name="$t('demo_data.name')"
               :start-date="defaultDate"
@@ -187,7 +187,7 @@ watch(locale, value => {
           <p class="text-sm italic">Dieses Beispiel erzeugt im Übrigen ein Online-Event im Schema.org-Kontext, da die "location" eine URL ist.</p>
         </div>
         <div class="block w-full justify-between md:flex">
-          <div class="flex w-full flex-none justify-center p-6 pt-8 md:w-[300px]">
+          <div class="flex w-full flex-none justify-center p-6 pt-8 md:w-[310px]">
             <Atcb
               :name="$t('demo_data.name')"
               start-date="today+2"
@@ -234,7 +234,7 @@ watch(locale, value => {
           Beachte, dass die Regel technisch und logisch gültig sein muss und die Option nicht von allen Kalender-Typen unterstützt wird - im Beispiel tauchen die definierten Yahoo- und Outlook-Optionen (sowie Google unter iOS) aus diesem Grund nicht auf.
         </p>
         <div class="block w-full justify-between md:flex">
-          <div class="flex w-full flex-none justify-center p-6 pt-8 md:w-[300px]">
+          <div class="flex w-full flex-none justify-center p-6 pt-8 md:w-[310px]">
             <Atcb
               :name="$t('demo_data.name')"
               :start-date="defaultDate"
@@ -279,7 +279,7 @@ watch(locale, value => {
           Die <NuxtLink :to="{path: localePath('configuration'), hash: '#recurrence'}">"{{ $t('navigation.configuration') }}"</NuxtLink>-Seite hält mehr Details dazu bereit.
         </p>
         <div class="block w-full justify-between md:flex">
-          <div class="flex w-full flex-none justify-center p-6 pt-8 md:w-[300px]">
+          <div class="flex w-full flex-none justify-center p-6 pt-8 md:w-[310px]">
             <Atcb
               :name="$t('demo_data.name')"
               :start-date="defaultDate"
@@ -350,7 +350,7 @@ watch(locale, value => {
           </p>
         </div>
         <div class="block w-full justify-between md:flex">
-          <div class="flex w-full flex-none justify-center p-6 pt-8 md:w-[300px]">
+          <div class="flex w-full flex-none justify-center p-6 pt-8 md:w-[310px]">
             <Atcb :name="$t('demo_data.name_series')" :dates="defaultMultiDate" :time-zone="$t('demo_data.default_timezone')" :location="$t('demo_data.location')" options="'apple','google','ical','outlookcom','yahoo'" light-mode="bodyScheme" :language="locale" hide-rich-data hide-branding></Atcb>
           </div>
           <div class="flex-1 overflow-x-auto">
@@ -417,7 +417,7 @@ watch(locale, value => {
           </p>
         </div>
         <div class="block w-full justify-between md:flex">
-          <div class="flex w-full flex-none justify-center p-6 pt-8 md:w-[300px]">
+          <div class="flex w-full flex-none justify-center p-6 pt-8 md:w-[310px]">
             <Atcb
               :name="$t('demo_data.name')"
               :start-date="defaultDate"
@@ -531,7 +531,7 @@ watch(locale, value => {
           Stattdessen wird der Button selbst ein direkter Kalender-Link.
         </p>
         <div class="block w-full justify-between md:flex">
-          <div class="flex w-full flex-none justify-center p-6 pt-8 md:w-[300px]">
+          <div class="flex w-full flex-none justify-center p-6 pt-8 md:w-[310px]">
             <Atcb :name="$t('demo_data.name')" :start-date="defaultDate" start-time="10:15" end-time="23:30" :time-zone="$t('demo_data.default_timezone')" :description="$t('demo_data.description_alt1')" options="google" light-mode="bodyScheme" :language="locale" hide-rich-data hide-branding></Atcb>
           </div>
           <div class="flex-1 overflow-x-auto">

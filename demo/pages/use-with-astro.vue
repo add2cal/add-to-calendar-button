@@ -1,12 +1,31 @@
 <script setup lang="ts">
 import { ArrowRightIcon } from '@heroicons/vue/24/outline';
 import GuideSidebar from "@/components/integration/guideSidebar.vue";
+const { locale } = useI18n();
 const localePath = useLocalePath();
 const LazyCodeBlock = defineAsyncComponent(() => import('@/components/codeBlock.vue'));
 
 definePageMeta({
   title: 'navigation.use-with-astro',
   description: 'meta.use-with-astro.description',
+});
+
+const today = new Date();
+const nextDay = new Date();
+nextDay.setDate(today.getDate() + 3);
+const defaultDate = nextDay.getFullYear() + '-' + ('0' + (nextDay.getMonth() + 1)).slice(-2) + '-' + ('0' + nextDay.getDate()).slice(-2);
+let defaultLang = (function () {
+  if (locale.value != 'en') {
+    return '\n  language="' + locale.value + '"';
+  }
+  return '';
+})();
+watch(locale, value => {
+  if (value != 'en') {
+    defaultLang = '\n  language="' + locale.value + '"';
+  } else {
+    defaultLang = '';
+  }
 });
 </script>
 
@@ -30,15 +49,28 @@ definePageMeta({
 import type { AddToCalendarButtonType } from 'add-to-calendar-button';
 
 interface Props {
-  prokey: AddToCalendarButtonType['prokey'];
+  name: AddToCalendarButtonType['name'];
+  startDate: AddToCalendarButtonType['startDate'];
+  endDate: AddToCalendarButtonType['endDate'];
+  startTime: AddToCalendarButtonType['startTime'];
+  endTime: AddToCalendarButtonType['endTime'];
+  timeZone: AddToCalendarButtonType['timeZone'];
 }
 
-const { prokey } = Astro.props as Props;</pre>
+const { name, startDate, endDate, startTime, endTime, timeZone } = Astro.props as Props;</pre>
         </LazyCodeBlock>
         <h2 class="mb-6 mt-20">{{ $t('content.guide.astro.setup_2') }}</h2>
         <p>{{ $t('content.guide.astro.add_block') }}</p>
         <LazyCodeBlock language="html">
-          <pre>&lt;add-to-calendar-button prokey={prokey} /&gt;</pre>
+          <pre>
+&lt;add-to-calendar-button
+  name={name}
+  start-date={startDate}
+  end-date={endDate}
+  start-time={startTime}
+  end-time={endTime}
+  time-zone={timeZone}{{ defaultLang }}
+&gt;&lt;/add-to-calendar-button&gt;</pre>
         </LazyCodeBlock>
         <p>{{ $t('content.guide.astro.add_script') }}</p>
         <LazyCodeBlock language="html">
@@ -57,7 +89,14 @@ import AddToCalendarButton from '../components/add-to-calendar.astro';
 import Layout from '../layouts/Layout.astro';
 ---
 &lt;Layout&gt;
-  &lt;AddToCalendarButton prokey="prokey-of-your-event" /&gt;
+  &lt;AddToCalendarButton
+    name="{{ $t('demo_data.name_dummy') }}"
+    start-date="{{ defaultDate }}"
+    end-date="{{ defaultDate }}"
+    start-time="10:15"
+    end-time="23:30"
+    time-zone="{{ $t('demo_data.default_timezone') }}"{{ defaultLang }}
+  /&gt;
 &lt;/Layout&gt;</pre>
         </LazyCodeBlock>
         <p class="font-semibold italic">{{ $t('content.guide.step_use_simple') }}</p>
@@ -72,7 +111,8 @@ import 'add-to-calendar-button/styles/3d';   // any style besides "default"
 import 'add-to-calendar-button/i18n/de';       // any language besides English</pre>
         </LazyCodeBlock>
         <p class="mt-10">{{ $t('content.guide.styles_lang_more') }}</p>
-        <p class="mb-10">
+        <h2 class="mb-6 mt-20">Server Side Rendering (SSR)</h2>
+        <p>
           {{ $t('content.guide.ssr_note') }}
           <NuxtLink :to="{path: localePath('advanced-use'), hash: '#case-12'}">{{ $t('content.advanced.12_long') }} <ArrowRightIcon class="-mt-0.5 mr-0.5 inline-block h-3 w-3" aria-hidden="true" /></NuxtLink>
         </p>

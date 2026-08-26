@@ -25,6 +25,7 @@
     "help": "Hilfe"
   },
   "labels": {
+    "definition": "Definition",
     "toTop": "nach oben",
     "copy_code": "Code kopieren",
     "copied": "Kopiert",
@@ -265,7 +266,7 @@
         "2": "Dynamische Dropdown-Positionierung.",
         "3": "Absicherung diverser Sonderfälle, in denen bestimmte Szenarien nicht unterstützt werden (z.B. WebViews, die Downloads blockieren); durch die Integration und Illustration intuitiver Workarounds.",
         "4": "Volle Unterstützung für Maus-, Touch- und Tastatureingaben (W3C WAI compliant).",
-        "5": "20+ Sprachen, einschließlich RTL-Text für Arabisch & Persisch; aber auch anpassbare Beschriftungen und Textblöcke (i18n)."
+        "5": "44+ Sprachen, einschließlich RTL-Text für Arabisch & Persisch; aber auch anpassbare Beschriftungen und Textblöcke (i18n)."
       },
       "headline_5": "Und vieles mehr",
       "block_5": {
@@ -290,7 +291,7 @@
       "step_use_simple": "Ganz genau - es ist derart einfach.",
       "step_use_example": "Dein Code kann hierbei bspw. wie folgt aussehen.",
       "step_use_client": "Beachte, dass der Button nur client-seitig funktioniert! Nutze 'use client'; entsprechend.",
-      "ssr_note": "Neu mit v3: der Button kann zusätzlich eine Hülle auf dem Server vor-rendern - für ein sofortiges, layout-stabiles erstes Zeichnen. Siehe den \"Server-seitiges Rendern\"-Abschnitt auf der Profi-Funktionen-Seite.",
+      "ssr_note": "Der Button kann zusätzlich eine Hülle auf dem Server vor-rendern - für ein sofortiges, layout-stabiles erstes Zeichnen. Siehe den \"Server-seitiges Rendern\"-Abschnitt auf der Profi-Funktionen-Seite.",
       "ssr_example": "Ein komplettes Beispiel könnte so aussehen.",
       "step_npm": "npm Installation",
       "install_npm": "Installiere das Package über die npm Registry.",
@@ -315,6 +316,8 @@
         "config_1": "Damit Angular sauber mit Web Components arbeitet, musst du das ",
         "config_2": " importieren und den ",
         "config_3": "-Block entsprechend aktualisieren",
+        "option_standalone": "Standalone-Komponente (empfohlen)",
+        "option_ngmodule": "NgModule-basierte Anwendung",
         "binding_headline": "Bindings richtig nutzen",
         "binding_guide_1": "Um eine Variable an ein bestimmtes Attribut zu binden, musst du den Syntax [attr.PARAMETER]=\"your data\" nutzen.",
         "binding_guide_2": "Basierend auf deinem Setup werden Daten erst nach dem ersten Rendering des Buttons übermittelt. Dies ist kein Problem, führt aber zu Fehlermeldungen über fehlende Daten in der Console, sofern du dich im Debug-Modus befindest. Beachte, dass ein Binding für die \"identifier\"-Option aus diesem Grund nicht funktioniert."
@@ -332,7 +335,7 @@
         "add_block": "Füge das Web-Component-Tag hinzu:",
         "add_script": "Gefolgt vom Skript-Import:",
         "step_define": "Definiere die Props",
-        "define": "Definiere die Props der Komponente. Dies sollte mindestens der prokey sein.",
+        "define": "Definiere die Props der Komponente. Dies sollte mindestens das Start-Date und der Name sein.",
         "use": "Importiere und nutze sie auf jeder anderen Seite (oder Komponente). Passe den Pfad entsprechend deinem Projekt-Setup an."
       },
       "nextjs": {

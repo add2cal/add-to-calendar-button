@@ -42,11 +42,26 @@ watch(locale, value => {
         </LazyCodeBlock>
         <h2 class="mb-6 mt-20">{{ $t('content.guide.step3') }}: {{ $t('content.guide.angular.step_optimize') }}</h2>
         <p>{{ $t('content.guide.angular.config_1') }}<span class="font-semibold italic">CUSTOM_ELEMENTS_SCHEMA</span>{{ $t('content.guide.angular.config_2') }}<span class="font-semibold italic">@NgModule/@Component</span>{{ $t('content.guide.angular.config_3') }}.</p>
+        <h3 class="mb-4 mt-10">{{ $t('content.guide.optionA') }}: {{ $t('content.guide.angular.option_standalone') }}</h3>
+        <LazyCodeBlock language="javascript">
+          <pre>
+// app.component.ts
+
+import { Component, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+
+@Component({
+  //(...),
+  standalone: true,
+  schemas: [CUSTOM_ELEMENTS_SCHEMA],
+})
+export class AppComponent {}</pre>
+        </LazyCodeBlock>
+        <h3 class="mb-4 mt-10">{{ $t('content.guide.optionB') }}: {{ $t('content.guide.angular.option_ngmodule') }}</h3>
         <LazyCodeBlock language="javascript">
           <pre>
 // app.module.ts
 
-import { NgModule, CUSTOM_ELEMENTS_SCHEMA  } from '@angular/core';
+import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 //(...)
 
 @NgModule({

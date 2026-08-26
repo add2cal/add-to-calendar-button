@@ -102,7 +102,8 @@ import 'add-to-calendar-button/styles/3d';   // any style besides "default"
 import 'add-to-calendar-button/i18n/de';       // any language besides English</pre>
         </LazyCodeBlock>
         <p class="mt-10">{{ $t('content.guide.styles_lang_more') }}</p>
-        <p class="mb-10">
+        <h2 class="mb-6 mt-20">Server Side Rendering (SSR)</h2>
+        <p>
           {{ $t('content.guide.ssr_note') }}
           <NuxtLink :to="{path: localePath('advanced-use'), hash: '#case-12'}">{{ $t('content.advanced.12_long') }} <ArrowRightIcon class="-mt-0.5 mr-0.5 inline-block h-3 w-3" aria-hidden="true" /></NuxtLink>
         </p>

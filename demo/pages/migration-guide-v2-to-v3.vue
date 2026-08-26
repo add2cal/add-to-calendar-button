@@ -1,12 +1,17 @@
 <script setup lang="ts">
 import migrationGuide from '../../MIGRATION.md?raw';
 
+const LazyCodeBlock = defineAsyncComponent(() => import('@/components/codeBlock.vue'));
+
 definePageMeta({
   title: 'navigation.migration-v3',
   description: 'meta.migration-v3.description',
 });
 
 type Block = { type: string; lines: string[] };
+type GuideBlock =
+  | { type: 'html'; content: string }
+  | { type: 'code'; content: string; language: string };
 
 function inlineMarkdown(value: string) {
   const escaped = value
@@ -24,9 +29,6 @@ function renderBlock(block: Block) {
   if (block.type === 'paragraph') {
     return `<p>${inlineMarkdown(block.lines.join(' '))}</p>`;
   }
-  if (block.type === 'code') {
-    return `<pre><code>${inlineMarkdown(block.lines.join('\n'))}</code></pre>`;
-  }
   if (block.type === 'ul' || block.type === 'ol') {
     const items = block.lines.map((line) => `<li>${inlineMarkdown(line.replace(/^\s*(?:[-*]|\d+\.)\s+/, ''))}</li>`).join('');
     return `<${block.type}>${items}</${block.type}>`;
@@ -43,20 +45,40 @@ function renderBlock(block: Block) {
 
 function renderMarkdown(markdown: string) {
   const lines = markdown.split('\n');
+  const blocks: GuideBlock[] = [];
   const html: string[] = [];
   let block: Block | undefined;
   let inCode = false;
+  let codeLanguage = 'html';
 
   const flush = () => {
     if (block) html.push(renderBlock(block));
     block = undefined;
   };
 
+  const flushHtml = () => {
+    if (html.length) {
+      blocks.push({ type: 'html', content: html.join('') });
+      html.length = 0;
+    }
+  };
+
   for (const line of lines) {
     if (line.startsWith('```')) {
-      if (inCode) flush();
-      else {
+      if (inCode) {
+        if (block) {
+          blocks.push({
+            type: 'code',
+            content: block.lines.join('\n'),
+            language: codeLanguage,
+          });
+        }
+        block = undefined;
+      } else {
         flush();
+        flushHtml();
+        const fenceLanguage = line.slice(3).trim();
+        codeLanguage = fenceLanguage === 'js' || fenceLanguage === 'ts' ? 'javascript' : fenceLanguage || 'html';
         block = { type: 'code', lines: [] };
       }
       inCode = !inCode;
@@ -93,16 +115,22 @@ function renderMarkdown(markdown: string) {
     block.lines.push(line);
   }
   flush();
-  return html.join('');
+  flushHtml();
+  return blocks;
 }
 
 const renderedGuide = renderMarkdown(migrationGuide);
 </script>
 
 <template>
-  <!-- The source is a trusted, repository-local Markdown file. -->
-  <!-- eslint-disable-next-line vue/no-v-html -->
-  <article class="migration-guide" v-html="renderedGuide"></article>
+  <article class="migration-guide">
+    <template v-for="(block, index) in renderedGuide" :key="index">
+      <!-- The source is a trusted, repository-local Markdown file. -->
+      <!-- eslint-disable-next-line vue/no-v-html -->
+      <div v-if="block.type === 'html'" class="contents" v-html="block.content"></div>
+      <LazyCodeBlock v-else :language="block.language">{{ block.content }}</LazyCodeBlock>
+    </template>
+  </article>
 </template>
 
 <style scoped>
@@ -139,18 +167,6 @@ const renderedGuide = renderMarkdown(migrationGuide);
 
 .migration-guide :deep(li) {
   @apply my-2 pl-1;
-}
-
-.migration-guide :deep(code) {
-  @apply rounded bg-zinc-200 px-1 py-0.5 font-mono text-sm dark:bg-zinc-800;
-}
-
-.migration-guide :deep(pre) {
-  @apply my-6 overflow-x-auto rounded-lg bg-zinc-900 p-5 text-left text-zinc-100;
-}
-
-.migration-guide :deep(pre code) {
-  @apply bg-transparent p-0 text-inherit;
 }
 
 .migration-guide :deep(.table-wrap) {
