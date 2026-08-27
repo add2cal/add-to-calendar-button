@@ -869,7 +869,7 @@ a.atcb-modal-btn:disabled {
 .atcb-list-item-close:hover {
   background-color: var(--modal-btn-hover-background);
   color: var(--modal-btn-hover-text);
-  outline: 0;
+  outline: 1px solid var(--modal-btn-hover-text);
 }
 
 .atcb-modal-close:focus-visible,
