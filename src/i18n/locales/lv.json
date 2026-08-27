@@ -1,0 +1,91 @@
+{
+  "label": {
+    "addtocalendar": "Pievienot kalendāram",
+    "share": {
+      "email": "Kopīgojiet pa e-pastu",
+      "copy": "Kopēt saiti",
+      "copied": "Kopēts",
+      "email_subject": "Saglabāt šo notikumu"
+    },
+    "rsvp": {
+      "title": "RSVP",
+      "expired": "Beidzies",
+      "bookedout": "Vietu nav",
+      "restart": "Jauna RSVP atbilde"
+    }
+  },
+  "ical": "iCal fails",
+  "modal": {
+    "button": {
+      "default": "Noklikšķiniet uz manis"
+    },
+    "webview": {
+      "ical": {
+        "h": "Atveriet savu pārlūkprogrammu",
+        "text": "Diemžēl lietotņu pārlūkprogrammām ir problēmas ar veidu, kā mēs ģenerējam kalendāra failu.",
+        "steps": "<ol><li><strong>Atveriet citu pārlūkprogrammu</strong> savā tālrunī,...</li><li> <strong>Ielīmējiet</strong> starpliktuves saturu un aiziet.</li></ol>"
+      }
+    },
+    "clipboard": {
+      "text": "Mēs automātiski iekopējām maģisku URL jūsu starpliktuvē.",
+      "failed": "Kopēšana starpliktuvē neizdevās. Lūdzu, nokopējiet šo saiti manuāli:"
+    },
+    "opensafari": {
+      "ical": {
+        "h": "Atveriet Safari",
+        "text": "Diemžēl iOS ir dažas problēmas, ģenerējot un atverot kalendāra failu ārpus Safari.",
+        "steps": "<ol><li><strong>Atveriet Safari</strong> ,...</li><li> <strong>Ielīmējiet</strong> starpliktuves saturu un aiziet.</li></ol>"
+      }
+    },
+    "multidate": {
+      "h": "Šī ir pasākumu sērija",
+      "text": "Pievienojiet atsevišķus notikumus pa vienam:"
+    },
+    "subscribe": {
+      "yahoo": {
+        "h": "Pievienojiet kalendāru Yahoo",
+        "text": "<ol><li>Tagad atveriet Yahoo kalendāru.</li><li> Noklikšķiniet uz cilnes \"Darbības\".</li><li> Noklikšķiniet uz \"Sekot citiem kalendāriem\".</li><li> Iestatiet nosaukumu un ielīmējiet starpliktuves saturu URL laukā.</li></ol>",
+        "button": "Atveriet Yahoo kalendāru"
+      }
+    }
+  },
+  "date": {
+    "status": {
+      "cancelled": "Šis datums tika atcelts.",
+      "cancelled_cta": "Lūdzu, atjauniniet savu kalendāru!"
+    }
+  },
+  "close": "Aizvērt",
+  "continue": "Turpināt",
+  "cancel": "Atcelt",
+  "expired": "Beidzies derīguma termiņš",
+  "recurring": "Atkārtojas",
+  "thankyou": "Paldies",
+  "submit": "Iesniegt",
+  "form": {
+    "error": {
+      "required": "Jūs neesat pareizi aizpildījis visus obligātos laukus",
+      "sending": "Nosūtot jūsu atbildi, radās problēma. Lūdzu, vēlāk mēģiniet vēlreiz",
+      "email": "Jūsu e-pasta adrese nav derīga",
+      "bookedoutmany": "Vietu nav — mēģiniet norādīt mazāk dalībnieku"
+    },
+    "success": {
+      "title": "Veiksmīgi nosūtīts!",
+      "sent": "Jūsu atbilde ir nosūtīta. Paldies!",
+      "email": "Jums vajadzēja saņemt apstiprinājuma e-pasta ziņojumu.",
+      "doi": "Lai atbilde tiktu ieskaitīta, atveriet apstiprinājuma saiti tikko nosūtītajā e-pasta ziņojumā (nākamo 30 minūšu laikā).",
+      "demo": "Paldies. RSVP demonstrācija šeit beidzas.",
+      "already": "Jūs jau esat atbildējis."
+    },
+    "status": {
+      "title": "Vai piedalīsieties?",
+      "confirmed": "Jā",
+      "undecided": "Varbūt",
+      "declined": "Nē"
+    },
+    "amount": "Dalībnieku skaits",
+    "max": "maks.",
+    "email": "E-pasta adrese",
+    "seatsleft": "Brīvas vietas"
+  }
+}

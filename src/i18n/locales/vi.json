@@ -1,0 +1,91 @@
+{
+  "label": {
+    "addtocalendar": "Thêm vào Lịch",
+    "share": {
+      "email": "Chia sẻ qua Email",
+      "copy": "Sao chép liên kết",
+      "copied": "Đã sao chép",
+      "email_subject": "Ghi nhớ ngày này"
+    },
+    "rsvp": {
+      "title": "RSVP",
+      "expired": "Hết hạn",
+      "bookedout": "Đã đầy",
+      "restart": "Trả lời RSVP mới"
+    }
+  },
+  "ical": "Tệp iCal",
+  "modal": {
+    "button": {
+      "default": "Nhấp vào đây"
+    },
+    "webview": {
+      "ical": {
+        "h": "Mở trình duyệt của bạn",
+        "text": "Rất tiếc, các trình duyệt trong ứng dụng gặp sự cố với cách chúng tôi tạo tệp lịch.",
+        "steps": "<ol><li><strong> Mở trình duyệt khác </strong> trên điện thoại của bạn, ...</li><li><strong> Dán </strong> nội dung khay nhớ tạm và bắt đầu.</li></ol>"
+      }
+    },
+    "clipboard": {
+      "text": "Chúng tôi đã tự động sao chép một URL ma thuật vào khay nhớ tạm của bạn.",
+      "failed": "Sao chép vào bộ nhớ tạm không thành công. Vui lòng sao chép liên kết sau theo cách thủ công:"
+    },
+    "opensafari": {
+      "ical": {
+        "h": "Mở Safari",
+        "text": "Rất tiếc, iOS gặp một số sự cố khi tạo và mở tệp lịch bên ngoài Safari.",
+        "steps": "<ol><li><strong>Mở Safari</strong>, ...</li><li><strong> Dán </strong> nội dung khay nhớ tạm và bắt đầu.</li></ol>"
+      }
+    },
+    "multidate": {
+      "h": "Đây là một chuỗi sự kiện",
+      "text": "Thêm từng phần riêng lẻ một:"
+    },
+    "subscribe": {
+      "yahoo": {
+        "h": "Thêm lịch vào Yahoo",
+        "text": "<ol><li>Mở Lịch Yahoo.</li><li>Nhấp vào tab \"Hành động\".</li><li>Chọn \"Theo dõi các Lịch khác\".</li><li>Chọn tên và dán URL từ khay nhớ tạm của bạn vào trường URL.</li></ol>",
+        "button": "Mở lịch Yahoo"
+      }
+    }
+  },
+  "date": {
+    "status": {
+      "cancelled": "Ngày này đã bị hủy.",
+      "cancelled_cta": "Cập nhật lịch của bạn!"
+    }
+  },
+  "close": "Đóng",
+  "continue": "Tiếp tục",
+  "cancel": "Hủy bỏ",
+  "expired": "Hết hạn",
+  "recurring": "Định kỳ",
+  "thankyou": "Cảm ơn",
+  "submit": "Gửi",
+  "form": {
+    "error": {
+      "required": "Bạn chưa điền đúng tất cả các trường bắt buộc",
+      "sending": "Có sự cố khi gửi phản hồi của bạn. Vui lòng thử lại sau",
+      "email": "Địa chỉ email của bạn không hợp lệ",
+      "bookedoutmany": "Đã đầy - thử với số lượng người tham gia ít hơn"
+    },
+    "success": {
+      "title": "Gửi thành công!",
+      "sent": "Phản hồi của bạn đã được gửi. Cảm ơn!",
+      "email": "Bạn sẽ nhận được email xác nhận.",
+      "doi": "Để phản hồi của bạn có hiệu lực, bạn cần mở liên kết xác nhận trong email mà chúng tôi vừa gửi (trong 30 phút tới).",
+      "demo": "Cảm ơn. Bản demo RSVP kết thúc tại đây.",
+      "already": "Bạn đã gửi phản hồi."
+    },
+    "status": {
+      "title": "Bạn có tham gia không?",
+      "confirmed": "Có",
+      "undecided": "Có thể",
+      "declined": "Không"
+    },
+    "amount": "Số người tham gia",
+    "max": "tối đa.",
+    "email": "Địa chỉ Email",
+    "seatsleft": "Địa điểm có sẵn"
+  }
+}

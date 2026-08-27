@@ -1,0 +1,91 @@
+{
+  "label": {
+    "addtocalendar": "Lisää kalenteriin",
+    "share": {
+      "email": "Jaa sähköpostitse",
+      "copy": "Kopioi linkki",
+      "copied": "Kopioitu",
+      "email_subject": "Muista tämä päivämäärä"
+    },
+    "rsvp": {
+      "title": "RSVP",
+      "expired": "Vanhentunut",
+      "bookedout": "Varattu",
+      "restart": "Uusi RSVP-vastaus"
+    }
+  },
+  "ical": "iCal-tiedosto",
+  "modal": {
+    "button": {
+      "default": "Klikkaa minua"
+    },
+    "webview": {
+      "ical": {
+        "h": "Avaa selain",
+        "text": "Valitettavasti sovelluksen sisäisillä selaimilla on ongelmia kalenteritiedoston luomisessa.",
+        "steps": "<ol><li><strong>Avaa toinen selain</strong> puhelimessasi., ...</li><li><strong>liitä</strong> leikepöydän sisältö ja lähde.</li></ol>"
+      }
+    },
+    "clipboard": {
+      "text": "Olemme automaattisesti kopioineet maagisen URL-osoitteen leikepöydällesi.",
+      "failed": "Kopiointi leikepöydälle epäonnistui. Kopioi seuraava linkki manuaalisesti:"
+    },
+    "opensafari": {
+      "ical": {
+        "h": "Avaa Safari",
+        "text": "Valitettavasti iOS:llä on ongelmia kalenteritiedoston luomisessa ja avaamisessa Safarin ulkopuolella.",
+        "steps": "<ol><li><strong>Avaa Safari</strong>, ...</li><li><strong>liitä</strong> leikepöydän sisältö ja lähde.</li></ol>"
+      }
+    },
+    "multidate": {
+      "h": "Tämä on tapahtumasarja",
+      "text": "Lisää yksittäiset osat yksi kerrallaan:"
+    },
+    "subscribe": {
+      "yahoo": {
+        "h": "Lisää kalenteri Yahoo",
+        "text": "<ol><li>Avaa Yahoo-kalenteri.</li><li>Napsauta \"Toiminnot\"-välilehteä.</li><li>Valitse \"Seuraa muiden kalentereita\".</li><li>Valitse nimi ja liitä URL-osoite leikepöydältäsi URL-kenttään.</li></ol>",
+        "button": "Avaa Yahoo-kalenteri"
+      }
+    }
+  },
+  "date": {
+    "status": {
+      "cancelled": "Tämä päivämäärä peruttiin.",
+      "cancelled_cta": "Päivitä kalenterisi!"
+    }
+  },
+  "close": "Sulje",
+  "continue": "Jatkaa",
+  "cancel": "Peruuta",
+  "expired": "Vanhentunut",
+  "recurring": "Toistuva",
+  "thankyou": "Kiitos",
+  "submit": "Lähetä",
+  "form": {
+    "error": {
+      "required": "Et täyttänyt kaikkia vaadittuja kenttiä oikein",
+      "sending": "Vastauksen lähettämisessä ilmeni ongelma. Yritä myöhemmin uudelleen",
+      "email": "Sähköpostiosoitteesi ei kelpaa",
+      "bookedoutmany": "Varattu - yritä vähemmällä osallistujamäärällä"
+    },
+    "success": {
+      "title": "Lähetetty onnistuneesti!",
+      "sent": "Vastauksesi on lähetetty. Kiitos!",
+      "email": "Sinun pitäisi saada vahvistussähköposti.",
+      "doi": "Jotta vastauksesi on voimassa, avaa nyt vahvistuslinkki juuri lähettämässämme sähköpostissa (seuraavan 30 minuutin kuluessa).",
+      "demo": "Kiitos. RSVP-demo päättyy tähän.",
+      "already": "Olet jo lähettänyt vastauksen."
+    },
+    "status": {
+      "title": "Osallistutko?",
+      "confirmed": "Kyllä",
+      "undecided": "Ehkä",
+      "declined": "Ei"
+    },
+    "amount": "Osallistujien määrä",
+    "max": "maks.",
+    "email": "Sähköpostiosoite",
+    "seatsleft": "Vapaita paikkoja"
+  }
+}

@@ -1,0 +1,91 @@
+{
+  "label": {
+    "addtocalendar": "Takvime Ekle",
+    "share": {
+      "email": "E-posta ile Paylaş",
+      "copy": "Bağlantıyı Kopyala",
+      "copied": "Kopyalandı",
+      "email_subject": "Bu Tarihi Unutma"
+    },
+    "rsvp": {
+      "title": "RSVP",
+      "expired": "Süresi Dolmuş",
+      "bookedout": "Dolu",
+      "restart": "Yeni RSVP Yanıtı"
+    }
+  },
+  "ical": "iCal Dosyası",
+  "modal": {
+    "button": {
+      "default": "Beni tıklayın"
+    },
+    "webview": {
+      "ical": {
+        "h": "Tarayıcınızı açın",
+        "text": "Ne yazık ki, uygulama içi tarayıcılar takvim dosyalarını oluşturma şeklimizle ilgili sorunlar yaşıyor.",
+        "steps": "<ol><li><strong>Akıllı telefonunuzda başka bir tarayıcı açın</strong>, ...</li><li>Devam etmek için <strong>insert</strong> fonksiyonunu kullanın.</li></ol>"
+      }
+    },
+    "clipboard": {
+      "text": "Panonuza otomatik olarak sihirli bir URL kopyaladık.",
+      "failed": "Panoya kopyalama başarısız oldu. Lütfen aşağıdaki bağlantıyı manuel olarak kopyalayın:"
+    },
+    "opensafari": {
+      "ical": {
+        "h": "Açık Safari",
+        "text": "Ne yazık ki iOS, takvim dosyasını Safari dışında oluştururken ve açarken bazı sorunlar yaşıyor.",
+        "steps": "<ol><li><strong>Açık Safari</strong>, ...</li><li>Devam etmek için <strong>insert</strong> fonksiyonunu kullanın.</li></ol>"
+      }
+    },
+    "multidate": {
+      "h": "Bu bir etkinlik serisidir",
+      "text": "Parçaları teker teker ekleyin:"
+    },
+    "subscribe": {
+      "yahoo": {
+        "h": "Yahoo'ya takvim ekleme",
+        "text": "<ol><li>Yahoo takvimini açın.</li><li>\"Eylemler\" sekmesine tıklayın.</li><li>\"Diğer Takvimleri Takip Et\" öğesini seçin.</li><li>Bir ad seçin ve URL'yi panonuzdan URL alanına yapıştırın.</li></ol>",
+        "button": "Yahoo Takvimini aç"
+      }
+    }
+  },
+  "date": {
+    "status": {
+      "cancelled": "Bu tarih iptal edildi.",
+      "cancelled_cta": "Lütfen takviminizi güncelleyin!"
+    }
+  },
+  "close": "Kapat",
+  "continue": "Devam etmek",
+  "cancel": "İptal",
+  "expired": "Günü geçmiş",
+  "recurring": "Yinelenen",
+  "thankyou": "Teşekkürler",
+  "submit": "Gönder",
+  "form": {
+    "error": {
+      "required": "Gerekli tüm alanları doğru şekilde doldurmadınız",
+      "sending": "Yanıtınızı gönderirken bir sorun oluştu. Lütfen daha sonra tekrar deneyin",
+      "email": "E-posta adresiniz geçerli değil",
+      "bookedoutmany": "Dolu - daha az katılımcıyla deneyin"
+    },
+    "success": {
+      "title": "Başarıyla gönderildi!",
+      "sent": "Yanıtınız gönderildi. Teşekkürler!",
+      "email": "Bir onay e-postası almış olmalısınız.",
+      "doi": "Yanıtınızın geçerli olması için, az önce gönderdiğimiz e-postadaki onay bağlantısını açmanız gerekmektedir (sonraki 30 dakika içinde).",
+      "demo": "Teşekkürler. RSVP demosu burada sona eriyor.",
+      "already": "Zaten bir yanıt göndermişsiniz."
+    },
+    "status": {
+      "title": "Katılıyor musun?",
+      "confirmed": "Evet",
+      "undecided": "Belki",
+      "declined": "Hayır"
+    },
+    "amount": "Katılımcı Sayısı",
+    "max": "maks.",
+    "email": "E-posta Adresi",
+    "seatsleft": "Mevcut yerler"
+  }
+}

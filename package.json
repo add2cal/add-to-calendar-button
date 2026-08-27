@@ -1,6 +1,6 @@
 {
   "name": "add-to-calendar-button",
-  "version": "2.15.0",
+  "version": "3.0.0-next.1",
   "engines": {
     "node": ">=18.17.0",
     "npm": ">=9.6.7"
@@ -12,37 +12,48 @@
     "dist",
     "test",
     "assets/css/*.css",
-    "index.d.ts",
-    "unstyle/index.d.ts",
-    "no-pro/index.d.ts",
-    "no-pro-unstyle/index.d.ts",
-    ".eslintrc.json",
     "CHANGELOG.md",
     ".npmignore"
   ],
   "exports": {
     ".": {
-      "types": "./index.d.ts",
+      "types": "./dist/index.d.ts",
       "import": "./dist/module/index.js",
       "require": "./dist/commonjs/index.js"
     },
+    "./styles/*": {
+      "types": "./dist/styles/*.d.ts",
+      "import": "./dist/styles/*.js",
+      "require": "./dist/styles/*.cjs"
+    },
+    "./i18n/*": {
+      "types": "./dist/locales/*.d.ts",
+      "import": "./dist/locales/*.js",
+      "require": "./dist/locales/*.cjs"
+    },
+    "./ssr": {
+      "types": "./dist/ssr/index.d.ts",
+      "import": "./dist/ssr/index.js",
+      "require": "./dist/ssr/index.cjs"
+    },
     "./no-pro": {
-      "types": "./no-pro/index.d.ts",
+      "types": "./dist/index.d.ts",
       "import": "./dist/module/no-pro/index.js",
       "require": "./dist/commonjs/no-pro/index.js"
     },
     "./unstyle": {
-      "types": "./unstyle/index.d.ts",
+      "types": "./dist/index.d.ts",
       "import": "./dist/module/unstyle/index.js",
       "require": "./dist/commonjs/unstyle/index.js"
     },
     "./no-pro-unstyle": {
-      "types": "./no-pro-unstyle/index.d.ts",
+      "types": "./dist/index.d.ts",
       "import": "./dist/module/no-pro-unstyle/index.js",
       "require": "./dist/commonjs/no-pro-unstyle/index.js"
-    }
+    },
+    "./package.json": "./package.json"
   },
-  "types": "index.d.ts",
+  "types": "./dist/index.d.ts",
   "jsdelivr": "./dist/atcb.js",
   "repository": {
     "type": "git",
@@ -88,47 +99,51 @@
   },
   "homepage": "https://add-to-calendar-button.com/",
   "scripts": {
-    "release": "node set-release.js",
-    "stylelint": "npx stylelint assets/css/*.css",
-    "stylelint:fix": "npm run stylelint -- --fix",
     "eslint": "eslint .",
     "eslint:fix": "eslint --fix .",
     "prettier": "npx prettier . --check",
     "prettier:fix": "npm run prettier -- --write",
-    "format": "npm run eslint:fix && npm run prettier:fix && npm run stylelint:fix && cd demo && npm run lint:fix && npm run prettier:fix",
-    "test": "node test/test-prep.js && npx web-test-runner test/wc-tests/*.test.js --node-resolve",
+    "typecheck": "tsc --noEmit && tsc --noEmit -p test/types/tsconfig.json",
+    "check": "npm run eslint && npm run prettier && npm run typecheck",
+    "format": "npm run prettier:fix && cd demo && npm run prettier:fix",
+    "fix": "npm run eslint:fix && cd demo && npm run lint:fix && cd .. && npm run format",
+    "test": "node test/test-prep.js && npx web-test-runner \"test/wc-tests/wc-load.test.js\" \"test/wc-tests/recurrence-tz.test.js\" \"test/wc-tests-smoke/*.test.js\"",
+    "test:extended": "node test/test-prep.js && npx web-test-runner \"test/wc-tests/*.test.js\" \"test/wc-tests-smoke/*.test.js\"",
+    "test:full": "node test/test-prep.js && npx web-test-runner \"test/wc-tests/*.test.js\" \"test/wc-tests-smoke/*.test.js\" \"test/wc-tests-full/*.test.js\"",
+    "test:package": "node scripts/test-package.mjs",
+    "test:ssr": "node scripts/build.mjs && node --test \"test/ssr-node/*.test.mjs\"",
+    "test:release": "npm run test:full && npm run test:package && npm run test:ssr",
     "dev": "cd demo && npm run dev",
     "build:all": "npm run build && npm run build:demo",
     "build:demo": "cd demo && npm run generate",
-    "build:min": "npx grunt uglifyMain",
-    "build": "npx grunt"
+    "build:min": "node scripts/build.mjs --min",
+    "build": "node scripts/build.mjs",
+    "prepack": "npm run build:min"
   },
   "dependencies": {
-    "timezones-ical-library": "^2.2.1"
+    "lit": "^3.3.3",
+    "timezones-ical-library": "^2.3.1"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
-    "@open-wc/testing": "^4.0.0",
-    "@web/test-runner": "^0.20.2",
-    "@babel/core": "^7.29.0",
-    "@babel/preset-env": "^7.29.2",
-    "eslint": "^10.6.0",
+    "@open-wc/testing": "^5.0.0",
+    "@web/dev-server-esbuild": "^2.0.0",
+    "@web/test-runner": "^1.0.0",
+    "axe-core": "^4.13.0",
+    "clean-css": "^5.3.3",
+    "dts-bundle-generator": "^9.5.1",
+    "esbuild": "^0.28.2",
+    "eslint": "^10.9.1",
     "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-prettier": "^5.5.6",
-    "eslint-plugin-regexp": "^3.1.1",
+    "eslint-plugin-regexp": "^3.2.0",
     "eslint-plugin-security": "^4.0.1",
     "eslint-plugin-wc": "^3.1.0",
-    "grunt": ">=1.6.2",
-    "grunt-contrib-clean": "^2.0.1",
-    "grunt-contrib-concat": "^2.1.0",
-    "grunt-contrib-cssmin": "^5.0.0",
-    "grunt-contrib-uglify": "^5.2.2",
-    "grunt-babel": "^8.0.0",
-    "grunt-file-creator": "^0.1.3",
-    "grunt-version": "^3.0.2",
-    "prettier": "3.9.4",
-    "prettier-plugin-tailwindcss": "^0.8.0",
-    "stylelint": "^17.14.0",
-    "stylelint-config-standard": "^40.0.0"
+    "postcss": "^8.5.26",
+    "prettier": "3.9.6",
+    "prettier-plugin-tailwindcss": "^0.8.1",
+    "typescript": "^6.0.3",
+    "typescript-eslint": "^8.68.0",
+    "vite": "^8.2.2"
   }
 }

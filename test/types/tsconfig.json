@@ -1,0 +1,8 @@
+{
+  "extends": "../../tsconfig.json",
+  "compilerOptions": {
+    "noEmit": true,
+    "noUnusedLocals": false
+  },
+  "include": ["./compat.test-d.ts", "./v2-public-types.d.ts", "../../src"]
+}

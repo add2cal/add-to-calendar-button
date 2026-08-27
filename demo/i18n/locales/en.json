@@ -7,6 +7,7 @@
     "examples": "Examples",
     "advanced-use": "Advanced Usage",
     "legal-notice": "Legal Notice",
+    "migration-v3": "Migration guide v2→v3",
     "privacy-policy": "Privacy Policy",
     "use": "Implementation Guide",
     "use-with-angular": "How to use with Angular",
@@ -24,6 +25,7 @@
     "help": "Help"
   },
   "labels": {
+    "definition": "Definition",
     "toTop": "to top",
     "copy_code": "Copy code",
     "copied": "Copied",
@@ -150,6 +152,9 @@
     "location": "World Wide Web"
   },
   "meta": {
+    "migration-v3": {
+      "description": "Migrate Add to Calendar Button integrations from version 2 to version 3."
+    },
     "title": "{title} {'|'} Free Add to Calendar Button",
     "title_main": "Free Add to Calendar Button",
     "title_slug": "the only really free one",
@@ -189,7 +194,7 @@
       "description": "Learn how to install and implement the Add to Calendar Button in under 1 minutes with Svelte. Making use of the maybe most powerful and stable library."
     },
     "use-with-vue": {
-      "description": "Learn how to install and implement the Add to Calendar Button in under 1 minutes with Vue 3. Making use of the maybe most powerful and stable library."
+      "description": "Learn how to install and implement the Add to Calendar Button in under 1 minutes with Vue. Making use of the maybe most powerful and stable library."
     },
     "use-with-wordpress": {
       "description": "Learn how to install and implement the maybe most powerful and stable Add to Calendar Button with our WordPress Plugn in under 1 minutes."
@@ -261,7 +266,7 @@
         "2": "Dynamic dropdown positioning.",
         "3": "Taking care of all those edge cases, where some scenarios do not support specific setups (like WebView blocking downloads); utilizing beautiful user guidance workarounds.",
         "4": "Full support for mouse, touch, or keyboard input (W3C WAI compliant).",
-        "5": "Supporting 20+ languages, incl. RTL text for Arabic & Persian; but also custom labels and text blocks (i18n)."
+        "5": "Supporting 44+ languages, incl. RTL text for Arabic & Persian; but also custom labels and text blocks (i18n)."
       },
       "headline_5": "And much more",
       "block_5": {
@@ -286,12 +291,22 @@
       "step_use_simple": "Yes, it is that simple.",
       "step_use_example": "Your code block could look like the following.",
       "step_use_client": "Mind that the button only works on the client side! Add 'use client'; respectively.",
+      "ssr_note": "The button can also pre-render a shell on the server for an instant, layout-stable first paint. See the \"Server-side rendering\" section on the advanced-use page.",
+      "ssr_example": "A full example could look like this.",
       "step_npm": "npm installation",
       "install_npm": "Install the package from the npm registry.",
       "step_import": "Import it",
       "import_npm": "Import the module into the component, where you want to use the button.",
       "options_intro_1": "We will highlight all options below.",
       "options_intro_2": "Choose your fighter!",
+      "styles_lang_headline": "Styles & languages",
+      "styles_lang_default": "The script ships with the \"default\" button style and the English language pack built in - so the button looks great and works out of the box without any extra configuration.",
+      "styles_lang_ondemand": "Every other style and language loads automatically on demand (a few KB each) the moment you reference it - no manual wiring needed.",
+      "styles_lang_npm_heading": "Bundling via npm (recommended for frameworks)",
+      "styles_lang_npm_body": "When you bundle the script, import the style and language modules you need so they register fetch-free at build time. Simply add the corresponding import statements anywhere in your entry file (or the component that uses the button):",
+      "styles_lang_cdn_heading": "Loading via CDN (Vanilla JS)",
+      "styles_lang_cdn_body": "With the CDN script tag, on-demand styles and languages are fetched from the same origin as the script itself - nothing else to set up. If you self-host the script, point the \"style-source\" attribute at the directory that contains the styles/ and locales/ folders.",
+      "styles_lang_more": "See the \"button-style\", \"style-source\", \"load-all-styles\", and \"language\" options at the Configuration page for the full picture.",
       "general": {
         "headline": "How to install the Add to Calendar Button"
       },
@@ -301,6 +316,8 @@
         "config_1": "To make Angular work properly with the Web Component, you need to import the ",
         "config_2": " and update the ",
         "config_3": " block respectively",
+        "option_standalone": "Standalone component (recommended)",
+        "option_ngmodule": "NgModule-based application",
         "binding_headline": "Proper bindings",
         "binding_guide_1": "To bind data to a specific attribute, you need to use the syntax [attr.PARAMETER]=\"your data\".",
         "binding_guide_2": "Based on your setup, the data flow might happen after the first rendering of the button. This is no problem, but you might see errors in the console when in debug mode, claiming there is data missing. Mind that due to this reason, binding the \"identifier\" option would not work."
@@ -318,41 +335,32 @@
         "add_block": "Add the web component tag:",
         "add_script": "Followed by the script import:",
         "step_define": "Define the props",
-        "define": "Define the props of the component. This should at least be the ProKey.",
+        "define": "Define the props of the component. This should at least be the start date and name.",
         "use": "On any other page (or component), import and use it. Set the path the way your project is set up."
       },
       "nextjs": {
         "headline": "How to install the Add to Calendar Button with Next.js",
-        "intro_1": "Since Nextjs does not play that nicely with web components, we strongly recommend to use our ",
-        "intro_2": "official Add to Calendar Button React Wrapper",
-        "intro_3": " instead of the default one.",
-        "intro_4": "It already mitigates all the potential problems and issues.",
-        "start_wrapper": "Start using it by adding a {'<'}AddtoCalendarButton{'>'} tag to your source code."
+        "intro": "Since Next.js builds on React 19, it fully supports web components out of the box. Simply use the Add to Calendar Button web component directly."
       },
       "nuxt": {
-        "headline": "How to install the Add to Calendar Button with Nuxt"
+        "headline": "How to install the Add to Calendar Button with Nuxt",
+        "ssr_notes_headline": "Nuxt-specific SSR notes",
+        "ssr_note_vhtml": "Never render the generated shell with v-html: during hydration, Vue re-assigns innerHTML, which does not parse declarative shadow DOM - the pre-rendered shadow root gets destroyed (flash + console warnings). Use a directive that skips the assignment when the server markup is already in place (see the example above).",
+        "ssr_note_server_only": "Keep the add-to-calendar-button/ssr import strictly on the server side of your component (top-level in script setup is fine - it is DOM-free and tree-shaken from the client bundle).",
+        "ssr_note_client_import": "Load the main add-to-calendar-button module only on the client (e.g. via onMounted(() => import('add-to-calendar-button')) or a client-only plugin) - it registers the custom element, which upgrades the shell in place.",
+        "ssr_note_attrs": "Attributes work exactly like on the plain tag - including kebab-case names and bare boolean flags like buttons-list or hide-icon-button."
       },
       "react": {
         "headline": "How to install the Add to Calendar Button with React",
-        "step_pick": "Pick a solution",
-        "pick_intro": "As React projects can be very versatile, there are multiple potential ways to work with the Add to Calendar Button.",
-        "pick_option1": "In rather basic projects, you can use the Web Component out-of-the-box.",
-        "pick_option2_1": "Alternatively, you can use the ",
-        "pick_option2_2": "official Add to Calendar Button React Wrapper",
-        "pick_option2_3": " instead of the main script. This comes with a deeper TypeScript and React integration.",
-        "install_wrapper": "If you rather go with the more specialized React Wrapper, install the following package instead:",
-        "import_wrapper": "With the React Wrapper implementation, the import statement looks a little bit different.",
-        "start_wrapper_1": "If you went for the React Wrapper, you would specify a button by using the {'<'}AddtoCalendarButton{'>'} tag instead. Basically, you then use the imported React component instead of the custom element (Web Component).",
-        "start_wrapper_2": "Your code block would then look rather like this:",
-        "start_wrapper_3": "Mind that with the Wrapper approach, you can provide Array options as actual Arrays, while with the Web Component, they need to be transformed to Strings!",
-        "start_wrapper_4": "Keep this style and specialties in mind when you look at more examples around here.",
-        "start_wrapper_5": "On other pages, we rather focus on the Web Component approach, but this can always easily transferred to the React Wrapper style."
+        "intro": "Since React 19, web components are fully supported out of the box - no wrapper or workarounds needed. Simply use the Add to Calendar Button web component directly in your JSX.",
+        "types_note": "With React 19, custom element properties can be typed via TypeScript's custom elements support. Register the element type once (e.g. in a global.d.ts) to get full type checking:",
+        "types_config_note": "If compilerOptions.types is set in your tsconfig, include react and react-dom alongside any existing entries:"
       },
       "svelte": {
         "headline": "How to install the Add to Calendar Button with Svelte"
       },
       "vue": {
-        "headline": "How to install the Add to Calendar Button with Vue 3",
+        "headline": "How to install the Add to Calendar Button with Vue",
         "step_optimize": "Optimize the Vue config",
         "optimize_1": "Theoretically, this was already it.",
         "optimize_2": "Vue works extremely well with Web Components.",
@@ -412,6 +420,7 @@
       "event_params": "Event parameters",
       "layout_params": "Layout parameters",
       "additional_params": "Additional parameters",
+      "ics_params": "ics file options",
       "find_params": "Find parameters",
       "name": "Name",
       "value": "Value",
@@ -477,6 +486,8 @@
       "10_short": "Bring your Button",
       "11_long": "Loading strategies",
       "11_short": "Loading strategies",
+      "12_long": "Server-side rendering",
+      "12_short": "SSR",
       "supported_tags": "Suported tags",
       "url_link_text": "Define a URL text like this: [url]https://....{'|'}URL Text[/url]",
       "add_event_example": "The following button adds an event via \"REQUEST\".",

@@ -12,16 +12,16 @@ definePageMeta({
 });
 
 const configOptions = [
-  "proKey",
+  "prokey",
   "options",
   "name",
   "description",
-  "startDate",
-  "startTime",
-  "endDate",
-  "endTime",
-  "timeZone",
-  "useUserTZ",
+  "start-date",
+  "start-time",
+  "end-date",
+  "end-time",
+  "time-zone",
+  "use-user-tz",
   "location",
   "status",
   "sequence",
@@ -30,50 +30,60 @@ const configOptions = [
   "attendee",
   "dates",
   "recurrence",
-  "recurrence_interval",
-  "recurrence_until",
-  "recurrence_count",
-  "recurrence_byDay",
-  "recurrence_byMonthDay",
-  "recurrence_byMonth",
-  "recurrence_weekstart",
+  "recurrence-interval",
+  "recurrence-until",
+  "recurrence-count",
+  "recurrence-by-day",
+  "recurrence-by-month-day",
+  "recurrence-by-month",
+  "recurrence-weekstart",
   "availability",
   "subscribe",
-  "icsFile",
-  "iCalFileName",
+  "ics-file",
+  "ics-reminder",
+  "ics-url",
+  "ics-categories",
+  "ics-class",
+  "ics-priority",
+  "ics-geo",
+  "ics-attach",
+  "ics-exdate",
+  "ics-created",
+  "ics-updated",
+  "ical-file-name",
   "instance",
-  "created",
-  "updated",
-  "buttonStyle",
+  "button-style",
   "inline",
-  "customCss",
-  "buttonsList",
+  "custom-css",
+  "style-source",
+  "load-all-styles",
+  "buttons-list",
   "label",
   "trigger",
-  "listStyle",
-  "hideBackground",
-  "hideIconButton",
-  "hideIconList",
-  "hideIconModal",
-  "hideTextLabelButton",
-  "hideTextLabelList",
-  "hideCheckmark",
-  "pastDateHandling",
+  "list-style",
+  "hide-background",
+  "hide-icon-button",
+  "hide-icon-list",
+  "hide-icon-modal",
+  "hide-text-label-button",
+  "hide-text-label-list",
+  "hide-checkmark",
+  "past-date-handling",
   "size",
-  "lightMode",
+  "light-mode",
   "language",
-  "customLabels",
+  "custom-labels",
   "images",
-  "hideRichData",
+  "hide-rich-data",
   "identifier",
-  "bypassWebViewCheck",
-  "hideBranding",
+  "bypass-web-view-check",
+  "hide-branding",
   "debug",
-  "forceOverlay",
-  "proOverride",
+  "force-overlay",
+  "pro-override",
   "cspnonce",
-  "styleLight",
-  "styleDark",
+  "style-light",
+  "style-dark",
 ];
 
 const searchSelection = ref<string | null>(null);
@@ -104,23 +114,13 @@ watch(searchSelection, (newVal) => {
           To specify a boolean value within the HTML custom element, you would only add the name as attribute.<br />
           Not setting it would automatically reflect to "false". As an alternative, you could also always write it as a string like <code>attributeName="true"</code>.
         </p>
-        <p class="mt-8 hidden lg:block">
-          Mind that if you are using the <a href="https://github.com/add2cal/add-to-calendar-button-react" target="_blank" rel="noopener" class="whitespace-nowrap">React wrapper <ArrowTopRightOnSquareIcon class="-mt-0.5 mr-0.5 inline-block h-4 w-4" aria-hidden="true" /></a>, you do not necessarily
-          need to stringify any non-string value.<br />
-          You could simply write something like <code>options=['Apple','Google']</code> instead of <code>options="['Apple','Google']"</code>.
-        </p>
       </div>
       <div v-else>
-        <p>Die nachfolgende Liste beinhaltet alle möglichen Attribute, um deinen Add to Calendar Button nach deinen Wünschen zu configurieren.</p>
+        <p>Die nachfolgende Liste beinhaltet alle möglichen Attribute, um deinen Add to Calendar Button nach deinen Wünschen zu konfigurieren.</p>
         <p class="mt-8 italic">Wirf unbedingt auch einen Blick auf unsere Demo, bei welcher du mit den meisten Paramtern live herumspielen kannst - und durchstöbere die "Beispiele"-Seiten für weitere Erläuterungen und speziellere Funktionalitäten.</p>
         <p class="hidden lg:block">
           Um einen boolschen Wert in dem HTML-Element zu definieren, kannst du einfach nur den Namen als Attribute setzen.<br />
           Wenn er nicht gesetzt ist, definiert das die Option automatisch als "false". Alternativ kannst du den Wert aber auch immer vollständig als String ergänzen: <code>attributeName="true"</code>.
-        </p>
-        <p class="mt-8 hidden lg:block">
-          Falls du den <a href="https://github.com/add2cal/add-to-calendar-button-react" target="_blank" rel="noopener" class="whitespace-nowrap">React Wrapper <ArrowTopRightOnSquareIcon class="-mt-0.5 mr-0.5 inline-block h-4 w-4" aria-hidden="true" /></a> nutzt, musst du Nicht-String-Werte nicht
-          zwingend zu Strings transformieren.<br />
-          In diesem Fall kannst du bspw. auch einfach <code>options=['Apple','Google']</code> anstelle von <code>options="['Apple','Google']"</code> schreiben.
         </p>
       </div>
 
@@ -143,14 +143,14 @@ watch(searchSelection, (newVal) => {
           </thead>
           <tbody>
             <tr id="prokey">
-              <th scope="row" class="text-base text-primary-dark dark:text-primary-light">proKey</th>
+              <th scope="row" class="text-base text-primary-dark dark:text-primary-light">prokey</th>
               <td><em>String</em></td>
               <td v-if="locale=='en'">
-                If you are using the PRO service, you can use the "proKey" attribute to connect the button to a specific event of yours.<br />
+                If you are using the PRO service, you can use the "prokey" attribute to connect the button to a specific event of yours.<br />
                 <span class="mt-2 block font-semibold">In this case, no other parameters need to be defined in the code, since this is 100% managed at the Add to Calendar PRO admin panel.</span>
               </td>
               <td v-else>
-                Wenn du unseren PRO-Service nutzt, kannst du das "proKey"-Attribut nutzen, um den Button mit einem bestimmten Event zu verknüpfen.<br />
+                Wenn du unseren PRO-Service nutzt, kannst du das "prokey"-Attribut nutzen, um den Button mit einem bestimmten Event zu verknüpfen.<br />
                 <span class="mt-2 block font-semibold">In diesem Fall müssen ansonsten keine weiteren Parameter im Code definiert werden, da die weitere Verwaltung zu 100% im Add to Calendar PRO Admin-Bereich erfolgt.</span>
               </td>
             </tr>
@@ -190,8 +190,8 @@ watch(searchSelection, (newVal) => {
                 <NuxtLink :to="{path: localePath('advanced-use'), hash: '#case-2'}">{{ $t('labels.example') }} <ArrowRightIcon class="-mt-0.5 mr-0.5 inline-block h-3 w-3" aria-hidden="true" /></NuxtLink>
               </td>
             </tr>
-            <tr id="startdate">
-              <th scope="row">startDate</th>
+            <tr id="start-date">
+              <th scope="row">start-date</th>
               <td>
                 <em>String</em><br /><br /><span class="font-semibold">{{ $t('content.config.required_alt1') }}</span
                 ><br /><br /><span class="format">YYYY-MM-DD</span>
@@ -210,19 +210,19 @@ watch(searchSelection, (newVal) => {
                 <NuxtLink :to="{path: localePath('examples'), hash: '#case-3'}">{{ $t('labels.example') }} <ArrowRightIcon class="-mt-0.5 mr-0.5 inline-block h-3 w-3" aria-hidden="true" /></NuxtLink>
               </td>
             </tr>
-            <tr id="starttime">
-              <th scope="row">startTime</th>
+            <tr id="start-time">
+              <th scope="row">start-time</th>
               <td><em>String</em><br /><br /><span class="format">HH:MM</span></td>
               <td v-if="locale=='en'">If not set, the event will be defined as "all-day".</td>
               <td v-else>Sofern nicht spezifiziert, wird das Event als Ganztages-Event abgebildet.</td>
             </tr>
-            <tr id="enddate">
-              <th scope="row">endDate</th>
+            <tr id="end-date">
+              <th scope="row">end-date</th>
               <td><em>String</em><br /><br /><span class="format">YYYY-MM-DD</span></td>
               <td v-if="locale=='en'">
                 A date needs to be formatted as YYYY-MM-DD as specified with
                 <a href="https://en.wikipedia.org/wiki/ISO_8601" target="_blank" rel="noopener" class="whitespace-nowrap">ISO-8601 <ArrowTopRightOnSquareIcon class="-mt-0.5 mr-0.5 inline-block h-3 w-3" aria-hidden="true" /></a>.<br /><br />
-                If there is no endDate set, it is assumed that it is the same as startDate. You can use the magic word "today" to dynamically set the current day. Adding "+5" at the end would automatically add 5 days to the calculated date.<br /><br />
+                If there is no end-date set, it is assumed that it is the same as start-date. You can use the magic word "today" to dynamically set the current day. Adding "+5" at the end would automatically add 5 days to the calculated date.<br /><br />
                 Unofficially, something like "YYYY-MM-DDTHH:MMZ" would also work.
               </td>
               <td v-else>
@@ -231,14 +231,14 @@ watch(searchSelection, (newVal) => {
                 Inoffiziell werden Formate wie "YYYY-MM-DDTHH:MMZ" auch unterstützt.
               </td>
             </tr>
-            <tr id="endtime">
-              <th scope="row">endTime</th>
+            <tr id="end-time">
+              <th scope="row">end-time</th>
               <td><em>String</em><br /><br /><span class="format">HH:MM</span></td>
               <td v-if="locale=='en'">If not set, the event will be defined as "all-day".</td>
               <td v-else>Sofern nicht spezifiziert, wird das Event als Ganztages-Event abgebildet.</td>
             </tr>
-            <tr id="timezone">
-              <th scope="row">timeZone</th>
+            <tr id="time-zone">
+              <th scope="row">time-zone</th>
               <td>
                 <em>String</em><br /><br /><span class="label">{{ $t('content.config.default') }}:</span>GMT
               </td>
@@ -247,18 +247,18 @@ watch(searchSelection, (newVal) => {
                 Find a list of them at <a href="https://en.wikipedia.org/wiki/List_of_tz_database_time_zones" target="_blank" rel="noopener" class="whitespace-nowrap">Wikipedia <ArrowTopRightOnSquareIcon class="-mt-0.5 mr-0.5 inline-block h-3 w-3" aria-hidden="true" /></a>.<br /><br />
                 You can use "currentBrowser" as value to dynamically use the time of the user's browser. Use this with caution, since it would mean that the time for the event will differ per user, which should not be the usual case.
                 <br />
-                A time zone only comes into play, when startTime and endTime are defined.
+                A time zone only comes into play, when start-time and end-time are defined.
               </td>
               <td v-else>
                 Kein Pflichtfeld, aber wärmstens empfohlen.<br />
                 Eine Liste valider Zeitzonen findest du auf
                 <a href="https://en.wikipedia.org/wiki/List_of_tz_database_time_zones" target="_blank" rel="noopener" class="whitespace-nowrap">Wikipedia <ArrowTopRightOnSquareIcon class="-mt-0.5 mr-0.5 inline-block h-3 w-3" aria-hidden="true" /></a>.<br /><br />
                 Du kannst "currentBrowser" als Wert nutzen, um dynamisch die Zeitzone des jeweiligen Nutzers (Browser) zu wählen. Nutze diese Funktion mit Vorsicht, da dies bedeutet, dass die Zeitangabe für das Event je Nutzer unterschiedlich sein kann, was meist nicht gewollt ist.<br />
-                Eine Zeitzone ist nur relevant, wenn startTime und endTime spezifiziert sind.
+                Eine Zeitzone ist nur relevant, wenn start-time und end-time spezifiziert sind.
               </td>
             </tr>
-            <tr id="useusertz">
-              <th scope="row">useUserTZ</th>
+            <tr id="use-user-tz">
+              <th scope="row">use-user-tz</th>
               <td>
                 <em>Boolean</em><br /><br /><span class="label">{{ $t('content.config.default') }}:</span>False
               </td>
@@ -294,7 +294,7 @@ watch(searchSelection, (newVal) => {
             <tr id="status">
               <th scope="row">status</th>
               <td>
-                <em>String</em><br /><br /><span class="label block">{{ $t('content.config.options') }}:</span>TENTATIVE, CONFIRMED, CANCELLED<br /><br /><span class="label">{{ $t('content.config.default') }}:</span>CONFIRMED
+                <em>String</em><br /><br /><span class="label block">{{ $t('content.config.options') }}:</span>tentative, confirmed, cancelled<br /><br /><span class="label">{{ $t('content.config.default') }}:</span>confirmed
               </td>
               <td v-if="locale=='en'">
                 Can be used to manage changes of an event as it is specified within the iCalendar specifications
@@ -319,6 +319,20 @@ watch(searchSelection, (newVal) => {
               <td v-else>
                 Muss eine positive ganze Zahl sein.<br />Muss größer werden, wenn Veränderungen am Event vorgenommen werden.<br /><br />
                 <NuxtLink :to="{path: localePath('advanced-use'), hash: '#case-5'}">{{ $t('labels.example') }} <ArrowRightIcon class="-mt-0.5 mr-0.5 inline-block h-3 w-3" aria-hidden="true" /></NuxtLink>
+              </td>
+            </tr>
+            <tr id="availability">
+              <th scope="row">availability</th>
+              <td>
+                <em>String</em><br /><br /><span class="label block">{{ $t('content.config.options') }}:</span>busy, free<br /><br /><span class="label block">{{ $t('content.config.default') }}:</span>{{ $t('content.config.availability_default') }}
+              </td>
+              <td v-if="locale=='en'">
+                Per default, the event will be marked as busy/free/available based on the user's calendar settings.<br />
+                For Apple, iCal, and Google, you can force this by using the setting availability with options "busy" or "free".
+              </td>
+              <td v-else>
+                Standardmäßig wird ein Event gemäß der Standard-Einstellung im Kalender des jeweiligen Nutzers als beschäftigt/verfügbar gespeichert.<br />
+                Für Apple-, iCal- und Google-Kalender kann dieser Wert mittels dieser Option erzwungen werden.
               </td>
             </tr>
             <tr id="uid">
@@ -388,12 +402,12 @@ watch(searchSelection, (newVal) => {
                 <ul class="list-disc pl-5 pt-2">
                   <li>name</li>
                   <li>description</li>
-                  <li>startDate</li>
-                  <li>startTime</li>
-                  <li>endDate</li>
-                  <li>endTime</li>
-                  <li>timeZone</li>
-                  <li>useUserTZ</li>
+                  <li>start-date</li>
+                  <li>start-time</li>
+                  <li>end-date</li>
+                  <li>end-time</li>
+                  <li>time-zone</li>
+                  <li>use-user-tz</li>
                   <li>location</li>
                   <li>status</li>
                   <li>sequence</li>
@@ -401,6 +415,7 @@ watch(searchSelection, (newVal) => {
                   <li>uid</li>
                   <li>organizer</li>
                   <li>attendee</li>
+                  <li>most ics options - see further down</li>
                 </ul>
                 <br /><br />
                 <NuxtLink :to="{path: localePath('examples'), hash: '#case-5'}">{{ $t('labels.example') }} <ArrowRightIcon class="-mt-0.5 mr-0.5 inline-block h-3 w-3" aria-hidden="true" /></NuxtLink>
@@ -413,12 +428,12 @@ watch(searchSelection, (newVal) => {
                 <ul class="list-disc pl-5 pt-2">
                   <li>name</li>
                   <li>description</li>
-                  <li>startDate</li>
-                  <li>startTime</li>
-                  <li>endDate</li>
-                  <li>endTime</li>
-                  <li>timeZone</li>
-                  <li>useUserTZ</li>
+                  <li>start-date</li>
+                  <li>start-time</li>
+                  <li>end-date</li>
+                  <li>end-time</li>
+                  <li>time-zone</li>
+                  <li>use-user-tz</li>
                   <li>location</li>
                   <li>status</li>
                   <li>sequence</li>
@@ -426,6 +441,7 @@ watch(searchSelection, (newVal) => {
                   <li>uid</li>
                   <li>organizer</li>
                   <li>attendee</li>
+                  <li>die meisten ICS-Optionen - siehe weiter unten</li>
                 </ul>
                 <br /><br />
                 <NuxtLink :to="{path: localePath('examples'), hash: '#case-5'}">{{ $t('labels.example') }} <ArrowRightIcon class="-mt-0.5 mr-0.5 inline-block h-3 w-3" aria-hidden="true" /></NuxtLink>
@@ -458,8 +474,8 @@ watch(searchSelection, (newVal) => {
                 <NuxtLink :to="{path: localePath('examples'), hash: '#case-4'}">{{ $t('labels.example') }} <ArrowRightIcon class="-mt-0.5 mr-0.5 inline-block h-3 w-3" aria-hidden="true" /></NuxtLink>
               </td>
             </tr>
-            <tr id="recurrence_interval">
-              <th scope="row">recurrence_interval</th>
+            <tr id="recurrence-interval">
+              <th scope="row">recurrence-interval</th>
               <td>
                 <em>Number</em><br /><br /><span class="label">{{ $t('content.config.default') }}:</span>1
               </td>
@@ -472,8 +488,8 @@ watch(searchSelection, (newVal) => {
                 "3" würde "jedes dritte Vorkommnis" beschreiben.
               </td>
             </tr>
-            <tr id="recurrence_until">
-              <th scope="row">recurrence_until</th>
+            <tr id="recurrence-until">
+              <th scope="row">recurrence-until</th>
               <td><em>String</em><br /><br /><span class="format">YYYYMMDDTHHMMSSZ</span></td>
               <td v-if="locale=='en'">
                 Defines an end date.<br />
@@ -484,20 +500,20 @@ watch(searchSelection, (newVal) => {
                 Wir wandeln diesen Wert automatisch in einen korrekten COUNT-Wert um, da UNTIL nicht von allen Anwendungen unterstützt wird.
               </td>
             </tr>
-            <tr id="recurrence_count">
-              <th scope="row">recurrence_count</th>
+            <tr id="recurrence-count">
+              <th scope="row">recurrence-count</th>
               <td><em>Number</em></td>
               <td v-if="locale=='en'">
                 Defines an upper limit of repetitions.<br />
-                If recurrence_until and recurrence_count are given, whatever comes first overrides the other. If none are given, it would repeat indefinitely.
+                If recurrence-until and recurrence-count are given, whatever comes first overrides the other. If none are given, it would repeat indefinitely.
               </td>
               <td v-else>
                 Definiert die maximale Anzahl an Wiederholungen.<br />
-                Sofern recurrence_until und recurrence_count definiert sind, gilt, was zuerst eintritt. Sofern keiner der Werte gegeben ist, erfolgt die Wiederholung endlos.
+                Sofern recurrence-until und recurrence-count definiert sind, gilt, was zuerst eintritt. Sofern keiner der Werte gegeben ist, erfolgt die Wiederholung endlos.
               </td>
             </tr>
-            <tr id="recurrence_byday">
-              <th scope="row">recurrence_byDay</th>
+            <tr id="recurrence-by-day">
+              <th scope="row">recurrence-by-day</th>
               <td><em>String</em></td>
               <td v-if="locale=='en'">
                 Defines the weekdays (MO, TU, WE, TH, FR, SA, SU), where the even occurs (if, for example, it is bound to Tuesday instead of the 24th).<br />
@@ -512,8 +528,8 @@ watch(searchSelection, (newVal) => {
                 Mehrere Tage möglich; durch Komma getrennt.
               </td>
             </tr>
-            <tr id="recurrence_bymonthday">
-              <th scope="row">recurrence_byMonthDay</th>
+            <tr id="recurrence-by-month-day">
+              <th scope="row">recurrence-by-month-day</th>
               <td><em>String</em></td>
               <td v-if="locale=='en'">
                 Use this instead of the "byDay" option, if you want use a numbered day (1, 2, ... 31) instead of a weekday.<br />
@@ -526,8 +542,8 @@ watch(searchSelection, (newVal) => {
                 Mehrere Werte möglich; durch Komma getrennt.
               </td>
             </tr>
-            <tr id="recurrence_bymonth">
-              <th scope="row">recurrence_byMonth</th>
+            <tr id="recurrence-by-month">
+              <th scope="row">recurrence-by-month</th>
               <td>
                 <em>String</em><br /><br /><span class="label block">{{ $t('content.config.options') }}:</span>1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12
               </td>
@@ -542,27 +558,13 @@ watch(searchSelection, (newVal) => {
                 Mehrere Werte möglich; durch Komma getrennt.
               </td>
             </tr>
-            <tr id="recurrence_weekstart">
-              <th scope="row">recurrence_weekstart</th>
+            <tr id="recurrence-weekstart">
+              <th scope="row">recurrence-weekstart</th>
               <td>
                 <em>String</em><br /><br /><span class="label block">{{ $t('content.config.options') }}:</span>MO, TU, WE, TH, FR, SA, SU<br /><br /><span class="label">{{ $t('content.config.default') }}:</span>MO
               </td>
               <td v-if="locale=='en'">Specify a specific weekday as start of the week.</td>
               <td v-else>Definiert einen bestimmten Wochentag als Wochenstart.</td>
-            </tr>
-            <tr id="availability">
-              <th scope="row">availability</th>
-              <td>
-                <em>String</em><br /><br /><span class="label block">{{ $t('content.config.options') }}:</span>busy, free<br /><br /><span class="label block">{{ $t('content.config.default') }}:</span>{{ $t('content.config.availability_default') }}
-              </td>
-              <td v-if="locale=='en'">
-                Per default, the event will be marked as busy/free/available based on the user's calendar settings.<br />
-                For Apple, iCal, and Google, you can force this by using the setting availability with options "busy" or "free".
-              </td>
-              <td v-else>
-                Standardmäßig wird ein Event gemäß der Standard-Einstellung im Kalender des jeweiligen Nutzers als beschäftigt/verfügbar gespeichert.<br />
-                Für Apple-, iCal- und Google-Kalender kann dieser Wert mittels dieser Option erzwungen werden.
-              </td>
             </tr>
             <tr id="subscribe">
               <th scope="row">subscribe</th>
@@ -571,8 +573,8 @@ watch(searchSelection, (newVal) => {
               </td>
               <td v-if="locale=='en'">
                 As an alternative to providing a specific predefined event, you can also host a calendar and offer it for subscription (requires a hosted calendar).<br />
-                To offer the subscription via the button, you need to also specify the icsFile option.<br /><br />
-                "Name" and "startDate" would be still required for organizational purposes, but every other event parameter can be skipped in the subscription case.<br />
+                To offer the subscription via the button, you need to also specify the ics-file option.<br /><br />
+                "Name" and "start-date" would be still required for organizational purposes, but every other event parameter can be skipped in the subscription case.<br />
                 For Microsoft services, the "Name" will be used as name for the calendar.<br />
                 Microsoft Teams is not yet supported and will be automatically disabled. Same applies for other Microsoft services on mobile devices.<br /><br />
                 If the user's browser does not recognize any installed calendar app, this might lead to a blank screen. The PRO version mitigates this with some explenatory middleware screen.<br /><br />
@@ -581,15 +583,15 @@ watch(searchSelection, (newVal) => {
               <td v-else>
                 Alternativ zur Angabe eines bestimmten vordefinierten Events kannst du auch einen Kalender bereitstellen und ihn zum Abonnieren anbieten (erfordert einen gehosteten Kalender).<br />
                 Um das Abonnement über den Button anzubieten, musst du zusätzlich die icsFile-Option definieren.<br /><br />
-                "Name" und "startDate" wären für organisatorische Zwecke immer noch erforderlich, aber jeder andere Event-Parameter kann im Abonnementfall übersprungen werden.<br />
+                "Name" und "start-date" wären für organisatorische Zwecke immer noch erforderlich, aber jeder andere Event-Parameter kann im Abonnementfall übersprungen werden.<br />
                 Für Microsoft-Dienste wird der "Name" als Name für den Kalender verwendet.<br />
                 Microsoft Teams wird derzeit nicht unterstützt und automatisch deaktiviert. Gleiches gilt für andere Microsoft-Dienste auf mobilen Geräten.<br /><br />
                 Sollte der Browser des Nutzers keine installierte Kalender-App erkennen, kann dies zu einer leeren Seite führen. Die PRO-Version optimiert dies mit einem erklärenden Zwischenbildschirm.<br /><br />
                 <NuxtLink :to="{path: localePath('advanced-use'), hash: '#case-3'}">{{ $t('labels.example') }} <ArrowRightIcon class="-mt-0.5 mr-0.5 inline-block h-3 w-3" aria-hidden="true" /></NuxtLink>
               </td>
             </tr>
-            <tr id="icsfile">
-              <th scope="row">icsFile</th>
+            <tr id="ics-file">
+              <th scope="row">ics-file</th>
               <td><em>String</em><br /><br /><span class="format">URL</span></td>
               <td v-if="locale=='en'">
                 The iCal/ics file gets created dynamically.<br />
@@ -607,16 +609,93 @@ watch(searchSelection, (newVal) => {
                 2) benötigen (bspw. "event-2.ics").
               </td>
             </tr>
-            <tr id="icalfilename">
-              <th scope="row">iCalFileName</th>
+            <tr id="ical-file-name">
+              <th scope="row">ical-file-name</th>
               <td>
                 <em>String</em><br /><br /><span class="label block">{{ $t('content.config.default') }}:</span>event-to-save-in-my-calendar
               </td>
-              <td v-if="locale=='en'">If you want to define a specific name for any generated ics file (iCal), you can specify it via the iCalFileName option.</td>
-              <td v-else>Wenn du einen bestimmten Namen für die generierte ics-Datei (iCal) definieren möchten, kannst du diesen über die Option iCalFileName definieren.</td>
+              <td v-if="locale=='en'">If you want to define a specific name for any generated ics file (iCal), you can specify it via the ical-file-name option.</td>
+              <td v-else>Wenn du einen bestimmten Namen für die generierte ics-Datei (iCal) definieren möchten, kannst du diesen über die Option ical-file-name definieren.</td>
             </tr>
-            <tr id="created">
-              <th scope="row">created</th>
+          </tbody>
+        </table>
+      </div>
+
+      <h3 id="ics-parameters" class="mb-3 mt-12 pt-4">{{ $t('content.config.ics_params') }}</h3>
+      <p v-if="locale == 'en'" class="mb-3">
+        <strong>These options only shape the generated ics file - they apply to the "apple" and "ical" calendar types; every other type simply ignores them (no error, no dropped option).</strong><br /><br />
+        All of them except "ics-exdate" can also be set per date entry within the multi-date "dates" array (root-level values override entry values, like the other date fields).
+      </p>
+      <p v-else class="mb-3">
+        <strong>Diese Optionen beeinflussen ausschließlich die generierte ics-Datei - sie gelten für die Kalender-Typen "apple" und "ical"; alle anderen Typen ignorieren sie einfach (kein Fehler, keine entfernte Option).</strong><br /><br />
+        Alle außer "ics-exdate" können im Multi-Date-Fall auch pro Datums-Eintrag im "dates"-Array gesetzt werden (Root-Werte überschreiben Eintrags-Werte, wie bei den anderen Datums-Feldern).
+      </p>
+      <div class="my-8 overflow-x-auto rounded-lg shadow-sm">
+        <table>
+          <thead>
+            <tr>
+              <th scope="col" class="p-3 font-semibold sm:px-5">
+                {{ $t('content.config.name') }}<span class="block pt-1 normal-case md:hidden">({{ $t('content.config.value') }})</span>
+              </th>
+              <th scope="col" class="hidden p-3 font-semibold sm:px-5 md:table-cell">{{ $t('content.config.value') }}</th>
+              <th scope="col" class="p-3 font-semibold sm:px-5">{{ $t('content.config.details') }}</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr id="ics-reminder">
+              <th scope="row">ics-reminder</th>
+              <td><em>String</em> / <em>Number</em></td>
+              <td v-if="locale == 'en'">Adds a reminder alarm. Set the minutes before the event start (like <code>"30"</code>) or a raw ISO 8601 duration (like <code>"-PT1H"</code>).</td>
+              <td v-else>Fügt eine Erinnerung hinzu. Setze die Minuten vor Event-Beginn (etwa <code>"30"</code>) oder eine rohe ISO-8601-Dauer (etwa <code>"-PT1H"</code>).</td>
+            </tr>
+            <tr id="ics-url">
+              <th scope="row">ics-url</th>
+              <td><em>String</em></td>
+              <td v-if="locale == 'en'">Attaches a canonical link (the URL property) to the event. Needs to be a valid http(s) url.</td>
+              <td v-else>Hängt einen kanonischen Link (die URL-Property) an das Event. Muss eine valide http(s)-URL sein.</td>
+            </tr>
+            <tr id="ics-categories">
+              <th scope="row">ics-categories</th>
+              <td><em>String</em> / <em>Array</em></td>
+              <td v-if="locale == 'en'">Tags the event with a comma-separated list of categories.</td>
+              <td v-else>Verschlagwortet das Event mit einer kommaseparierten Liste von Kategorien.</td>
+            </tr>
+            <tr id="ics-class">
+              <th scope="row">ics-class</th>
+              <td>
+                <em>String</em><br /><br /><span class="label block">{{ $t('content.config.options') }}:</span>public, private, confidential
+              </td>
+              <td v-if="locale == 'en'">Sets the event classification.</td>
+              <td v-else>Setzt die Klassifizierung des Events.</td>
+            </tr>
+            <tr id="ics-priority">
+              <th scope="row">ics-priority</th>
+              <td>
+                <em>Number</em><br /><br /><span class="label block">{{ $t('content.config.options') }}:</span>0 - 9
+              </td>
+              <td v-if="locale == 'en'">Sets the priority from 0 (undefined) over 1 (highest) to 9 (lowest).</td>
+              <td v-else>Setzt die Priorität von 0 (undefiniert) über 1 (höchste) bis 9 (niedrigste).</td>
+            </tr>
+            <tr id="ics-geo">
+              <th scope="row">ics-geo</th>
+              <td><em>String</em><br /><br /><span class="format">latitude,longitude</span></td>
+              <td v-if="locale == 'en'">Adds geo coordinates. Combined with the regular "location" option, Apple Calendar renders its map preview.</td>
+              <td v-else>Ergänzt Geo-Koordinaten. Zusammen mit der regulären "location"-Option rendert Apple Calendar seine Karten-Vorschau.</td>
+            </tr>
+            <tr id="ics-attach">
+              <th scope="row">ics-attach</th>
+              <td><em>String</em> / <em>Array</em></td>
+              <td v-if="locale == 'en'">Attaches files by url (a comma-separated list of http(s) urls) - like an agenda PDF or a ticket.</td>
+              <td v-else>Hängt Dateien per URL an (eine kommaseparierte Liste von http(s)-URLs) - etwa ein Agenda-PDF oder ein Ticket.</td>
+            </tr>
+            <tr id="ics-exdate">
+              <th scope="row">ics-exdate</th>
+              <td><em>String</em> / <em>Array</em><br /><br /><span class="format">YYYY-MM-DD</span></td>
+              <td v-if="locale == 'en'">Excludes dates from a recurring event (a comma-separated list of dates). Requires the "recurrence" option and is the only one of these options that cannot be set per date entry.</td>
+              <td v-else>Schließt Termine aus einer Terminserie aus (eine kommaseparierte Liste von Terminen). Erfordert die "recurrence"-Option und ist die einzige dieser Optionen, die nicht pro Datums-Eintrag gesetzt werden kann.</td>
+            </tr>
+            <tr id="ics-created">
+              <th scope="row">ics-created</th>
               <td>
                 <em>String</em><br /><br /><span class="format">YYYYMMDDTHHMMSSZ</span><br /><br /><span class="label block">{{ $t('content.config.default') }}:</span>{{ $t('content.config.time_val') }}
               </td>
@@ -631,8 +710,8 @@ watch(searchSelection, (newVal) => {
                 Spezifiziere den Zeitpunkt als UTC Timestamp. Bspw. "20231201T103000Z".
               </td>
             </tr>
-            <tr id="updated">
-              <th scope="row">updated</th>
+            <tr id="ics-updated">
+              <th scope="row">ics-updated</th>
               <td>
                 <em>String</em><br /><br /><span class="format">YYYYMMDDTHHMMSSZ</span><br /><br /><span class="label block">{{ $t('content.config.default') }}:</span>{{ $t('content.config.time_val') }}
               </td>
@@ -669,37 +748,40 @@ watch(searchSelection, (newVal) => {
             <tr id="options">
               <th scope="row">options</th>
               <td>
-                <em>Array</em><br /><br /><span class="label block">{{ $t('content.config.options') }}:</span>Apple, Google, iCal, Microsoft365, MicrosoftTeams, Outlook.com, Yahoo
+                <em>Array</em><br /><br /><span class="label block">{{ $t('content.config.options') }}:</span>apple, google, ical, ms365, msteams, outlookcom, yahoo
               </td>
               <td v-if="locale=='en'">
                 Array of options to use in the list.<br /><br />
                 If you only specify 1 calendar type, the button would show the calendar's icon instead of the default one and redirect directly instead of opening a list (singleton case).<br /><br />
                 Some options might be dynamically excluded based on other settings!<br />
-                "iCal" will be replaced by "Apple" on iOS devices.<br /><br />
-                You can specify a different set of options for mobile devices via the optionsMobile option. If you also set the optionsIOS option, this will account for iOS (not Mac!), while optionsMobile accounts for Android and other mobile devices.
+                "ical" will be replaced by "apple" on iOS devices.<br /><br />
+                You can specify a different set of options for mobile devices via the options-mobile option. If you also set the options-ios option, this will account for iOS (not Mac!), while options-mobile accounts for Android and other mobile devices.
               </td>
               <td v-else>
                 Array an Kalender-Arten, die in der Liste erscheinen.<br /><br />
                 Sofern du nur 1 Option definierst wird der Button das Icon dieser Option anzeigen sowie direkt die jeweilige Kalender-Aktion auslösen und keine Auswahlliste öffnen (Singleton-Case).<br /><br />
                 Optionen können deaktiviert werden, wenn sie aufgrund anderere Einstellungen nicht unterstützt werden!<br />
-                Auf iOS-Geräten wird die iCal-Option durch "Apple" ersetzt.<br /><br />
-                Du kannst eine andere Liste an Optionen für mobile Geräte definieren, indem du die optionsMobile-Option nutzt. Wenn du auch die optionsIOS-Option setzt, wird diese für iOS (nicht Mac!) berücksichtigt, während optionsMobile für Android und andere mobile Geräte gilt.
+                Auf iOS-Geräten wird die ical-Option durch "apple" ersetzt.<br /><br />
+                Du kannst eine andere Liste an Optionen für mobile Geräte definieren, indem du die optionsMobile-Option nutzt. Wenn du auch die optionsIOS-Option setzt, wird diese für iOS (nicht Mac!) berücksichtigt, während options-mobile für Android und andere mobile Geräte gilt.
               </td>
             </tr>
-            <tr id="buttonstyle">
-              <th scope="row">buttonStyle</th>
+            <tr id="button-style">
+              <th scope="row">button-style</th>
               <td>
                 <em>String</em><br /><br /><span class="label block">{{ $t('content.config.options') }}:</span>default, simple, 3d, flat, round, neumorphism, text, date, custom, none<br /><br /><span class="label">{{ $t('content.config.default') }}:</span>default
               </td>
               <td v-if="locale=='en'">
                 There are multiple integrated button styles, which also affect a lot of other parameters.<br />
                 We recommend to play around with them in order to find out how they behave in detail.<br /><br />
-                "none" would simply load no css style at all, while "custom" requires an external css file specified with the "customCss" option.
+                "none" would simply load no css style at all, while "custom" requires an external css file specified with the "custom-css" option.<br /><br />
+                Only the default style is part of the script itself - every other style loads automatically on demand (a few KB), or fetch-free via <code>import 'add-to-calendar-button/styles/3d'</code> and the like when bundling. See the "style-source" and "load-all-styles" options for more
+                control.
               </td>
               <td v-else>
                 Es gibt mehrere integrierte Button-Stile (Themes), die auch einige weitere Parameter beeinflussen.<br />
                 Wir empfehlen die Optionen der Reihe nach auszuprobieren, um herauszufinden, wie sie sich im Detail verhalten.<br /><br />
-                "none" würde gar kein CSS laden, während "custom" eine externes CSS-Datei über die "customCss"-Option erfordert.
+                "none" würde gar kein CSS laden, während "custom" eine externes CSS-Datei über die "custom-css"-Option erfordert.<br /><br />
+                Nur der Default-Style Teil des Skripts - jeder andere Style lädt automatisch bei Bedarf (wenige KB), oder ohne Netzwerk-Anfrage via <code>import 'add-to-calendar-button/styles/3d'</code> und Co. beim Bundling. Siehe auch die Optionen "style-source" und "load-all-styles".
               </td>
             </tr>
             <tr id="inline">
@@ -716,22 +798,52 @@ watch(searchSelection, (newVal) => {
                 <NuxtLink :to="{path: localePath('examples'), hash: '#case-7'}">{{ $t('labels.example') }} <ArrowRightIcon class="-mt-0.5 mr-0.5 inline-block h-3 w-3" aria-hidden="true" /></NuxtLink>
               </td>
             </tr>
-            <tr id="customcss">
-              <th scope="row">customCss</th>
+            <tr id="custom-css">
+              <th scope="row">custom-css</th>
               <td><em>String</em><br /><br /><span class="format">URL</span></td>
               <td v-if="locale=='en'">
                 You can load an external css file instead of using and customizing the integrated one.<br />
-                Define the url of the file here and set the buttonStyle option to "custom".<br /><br />
+                Define the url of the file here and set the button-style option to "custom".<br />
+                Mind that custom css does not get loaded on SSR!<br /><br />
                 <NuxtLink :to="{path: localePath('advanced-use'), hash: '#case-1'}">{{ $t('labels.example') }} <ArrowRightIcon class="-mt-0.5 mr-0.5 inline-block h-3 w-3" aria-hidden="true" /></NuxtLink>
               </td>
               <td v-else>
                 Du kannst eine externe CSS-DAtei anstelle der integrierten Optionen laden.<br />
-                Spezifiziere die URL der Datei hier und nutze die buttonStyle-Option "custom".<br /><br />
+                Spezifiziere die URL der Datei hier und nutze die buttonStyle-Option "custom".<br />
+                Beachte, dass benutzerdefiniertes CSS im SSR nicht geladen wird!<br /><br />
                 <NuxtLink :to="{path: localePath('advanced-use'), hash: '#case-1'}">{{ $t('labels.example') }} <ArrowRightIcon class="-mt-0.5 mr-0.5 inline-block h-3 w-3" aria-hidden="true" /></NuxtLink>
               </td>
             </tr>
-            <tr id="buttonslist">
-              <th scope="row">buttonsList</th>
+            <tr id="style-source">
+              <th scope="row">style-source</th>
+              <td><em>String</em><br /><br /><span class="format">URL</span></td>
+              <td v-if="locale=='en'">
+                Overrides the base url from which on-demand assets (button styles beyond the default, language packs beyond English) are loaded.<br /><br />
+                By default, they load from wherever the script itself is hosted. Set this option if you self-host the script in an exotic setup or want to serve the assets from a dedicated location. The url should point at the directory that contains the <code>styles/</code> and
+                <code>locales/</code> folders.
+              </td>
+              <td v-else>
+                Überschreibt die Basis-URL, von welcher On-Demand-Assets (Button-Styles jenseits des Defaults, Sprachpakete jenseits von Englisch) geladen werden.<br /><br />
+                Standardmäßig laden diese von dort, wo auch das Skript selbst gehostet ist. Setze diese Option, wenn du das Skript in einem exotischen Setup selbst hostest oder die Assets von einem dedizierten Ort ausliefern möchtest. Die URL sollte auf das Verzeichnis zeigen, welches die
+                <code>styles/</code>- und <code>locales/</code>-Ordner enthält.
+              </td>
+            </tr>
+            <tr id="load-all-styles">
+              <th scope="row">load-all-styles</th>
+              <td>
+                <em>Boolean</em><br /><br /><span class="label">{{ $t('content.config.default') }}:</span>False
+              </td>
+              <td v-if="locale=='en'">
+                Prefetches every button style delta on initialization.<br /><br />
+                Only useful when you switch the "button-style" at runtime (for example in a live theme switcher) and want the change to apply without any network delay.
+              </td>
+              <td v-else>
+                Lädt alle Button-Style-Deltas bereits bei der Initialisierung.<br /><br />
+                Nur sinnvoll, wenn du die "button-style"-Option zur Laufzeit wechselst (etwa in einem Live-Theme-Switcher) und der Wechsel ohne Netzwerk-Verzögerung greifen soll.
+              </td>
+            </tr>
+            <tr id="buttons-list">
+              <th scope="row">buttons-list</th>
               <td>
                 <em>Boolean</em><br /><br /><span class="label">{{ $t('content.config.default') }}:</span>False
               </td>
@@ -766,8 +878,8 @@ watch(searchSelection, (newVal) => {
                 Wenn du stattdessen eine Klick-Interaktion erzwingen möchtest, kannst du dies über diese Option definieren.
               </td>
             </tr>
-            <tr id="liststyle">
-              <th scope="row">listStyle</th>
+            <tr id="list-style">
+              <th scope="row">list-style</th>
               <td>
                 <em>String</em><br /><br /><span class="label block">{{ $t('content.config.options') }}:</span>dropdown, dropdown-static, dropup-static, overlay, modal<br /><br /><span class="label">{{ $t('content.config.default') }}:</span>dropdown
               </td>
@@ -780,8 +892,8 @@ watch(searchSelection, (newVal) => {
                 Der Dropdown-Stil berücksichtigt auch die Position auf dem Bildschirm und zeigt die Liste je nach Situation über oder unter dem Button an. Nutze den Wert "dropdown-static", bzw. "dropup-static", um sie immer unterhalb oder oberhalb anzuzeigen.
               </td>
             </tr>
-            <tr id="forceoverlay">
-              <th scope="row">forceOverlay</th>
+            <tr id="force-overlay">
+              <th scope="row">force-overlay</th>
               <td>
                 <em>Boolean</em><br /><br /><span class="label">{{ $t('content.config.default') }}:</span>False
               </td>
@@ -796,62 +908,62 @@ watch(searchSelection, (newVal) => {
                 Aufgrund der zusätzlichen Berechnungen geht dies mit kleinen Performance-Einbußen einher.
               </td>
             </tr>
-            <tr id="hidebackground">
-              <th scope="row">hideBackground</th>
+            <tr id="hide-background">
+              <th scope="row">hide-background</th>
               <td>
                 <em>Boolean</em><br /><br /><span class="label">{{ $t('content.config.default') }}:</span>False
               </td>
               <td v-if="locale=='en'">With this option, you get a fully transparent background instead of the darker blurry one.</td>
               <td v-else>Mit dieser Option wird der Hintergrund vollständig transparent erzeugt.</td>
             </tr>
-            <tr id="hideiconbutton">
-              <th scope="row">hideIconButton</th>
+            <tr id="hide-icon-button">
+              <th scope="row">hide-icon-button</th>
               <td>
                 <em>Boolean</em><br /><br /><span class="label">{{ $t('content.config.default') }}:</span>False
               </td>
               <td v-if="locale=='en'">This option hides the icon at the button.</td>
               <td v-else>Diese Option verbirgt das Icon auf dem Button.</td>
             </tr>
-            <tr id="hideiconlist">
-              <th scope="row">hideIconList</th>
+            <tr id="hide-icon-list">
+              <th scope="row">hide-icon-list</th>
               <td>
                 <em>Boolean</em><br /><br /><span class="label">{{ $t('content.config.default') }}:</span>False
               </td>
               <td v-if="locale=='en'">This option hides the icons at the calendar link list.</td>
               <td v-else>Diese Option verbirgt die Icons in der Kalender-Link-Liste.</td>
             </tr>
-            <tr id="hideiconmodal">
-              <th scope="row">hideIconModal</th>
+            <tr id="hide-icon-modal">
+              <th scope="row">hide-icon-modal</th>
               <td>
                 <em>Boolean</em><br /><br /><span class="label">{{ $t('content.config.default') }}:</span>False
               </td>
               <td v-if="locale=='en'">This option hides the heading icon at any info modal.</td>
               <td v-else>Diese Option verbirgt das Icon in den Modal-Dialogen.</td>
             </tr>
-            <tr id="hidetextlabelbutton">
-              <th scope="row">hideTextLabelButton</th>
+            <tr id="hide-text-label-button">
+              <th scope="row">hide-text-label-button</th>
               <td>
                 <em>Boolean</em><br /><br /><span class="label">{{ $t('content.config.default') }}:</span>False
               </td>
               <td v-if="locale=='en'">This option hides the text label at the button.</td>
               <td v-else>Diese Option verbirgt den Text auf dem Button.</td>
             </tr>
-            <tr id="hidetextlabellist">
-              <th scope="row">hideTextLabelList</th>
+            <tr id="hide-text-label-list">
+              <th scope="row">hide-text-label-list</th>
               <td>
                 <em>Boolean</em><br /><br /><span class="label">{{ $t('content.config.default') }}:</span>False
               </td>
               <td v-if="locale=='en'">This option hides any text at the calendar link list.</td>
               <td v-else>Diese Option verbirgt die Texte in der Kalender-Link-Liste.</td>
             </tr>
-            <tr id="hidecheckmark">
-              <th scope="row">hideCheckmark</th>
+            <tr id="hide-checkmark">
+              <th scope="row">hide-checkmark</th>
               <td>
                 <em>Boolean</em><br /><br /><span class="label">{{ $t('content.config.default') }}:</span>False
               </td>
               <td v-if="locale=='en'">
                 Clicking a calendar link marks the event as "saved" by adding a checkmark icon.<br />
-                This is not the case, if the button's text labels are turned off, you use the buttonsList option, or when using atcb_action.<br />
+                This is not the case, if the button's text labels are turned off, you use the buttons-list option, or when using atcb_action.<br />
                 Set this option to disable it in all other cases too.
               </td>
               <td v-else>
@@ -860,8 +972,8 @@ watch(searchSelection, (newVal) => {
                 Nutze diese Option hier, um das Icon auch in allen anderen Fällen zu verbergen.
               </td>
             </tr>
-            <tr id="pastdatehandling">
-              <th scope="row">pastDateHandling</th>
+            <tr id="past-date-handling">
+              <th scope="row">past-date-handling</th>
               <td>
                 <em>String</em><br /><br /><span class="label block">{{ $t('content.config.options') }}:</span>none, disable, hide<br /><br /><span class="label">{{ $t('content.config.default') }}:</span>none
               </td>
@@ -892,78 +1004,89 @@ watch(searchSelection, (newVal) => {
                 Sofern 2 Werte angegeben werden, so gilt der zweite für mittlere und kleine Bildschirme.
               </td>
             </tr>
-            <tr id="lightmode">
-              <th scope="row">lightMode</th>
+            <tr id="light-mode">
+              <th scope="row">light-mode</th>
               <td>
                 <em>String</em><br /><br /><span class="label block">{{ $t('content.config.options') }}:</span>system, dark, light, bodyScheme<br /><br /><span class="label">{{ $t('content.config.default') }}:</span>light
               </td>
               <td v-if="locale=='en'">
                 Each button comes with a dark and light mode.<br /><br />
-                Set the option lightMode to "dark" or "light" explicitly, or use "system" to automatically adapt to the user's default setting.<br />
+                Set the option light-mode to "dark" or "light" explicitly, or use "system" to automatically adapt to the user's default setting.<br />
                 You can also use "bodyScheme" to look for the class "atcb-dark" (or "dark") at the html or body tag and connect the button dynamically to the style of your website.
               </td>
               <td v-else>
                 Jeder Button kommt mit einem Dark- und Light-Theme.<br /><br />
-                Mit der Optiomn "lightMode" kann dies explizit ausgewählt werden. Du kannst auch den Wert "system" nutzen, um automatisch den Wert des Betriebssystems des Nutzers zu übernehmen.<br />
+                Mit der Optiomn "light-mode" kann dies explizit ausgewählt werden. Du kannst auch den Wert "system" nutzen, um automatisch den Wert des Betriebssystems des Nutzers zu übernehmen.<br />
                 Mit dem Wert "bodyScheme" wird automatisch nach der class "atcb-dark" (oder "dark") im html oder body tag Ausschau gehalten - der Button lässt sich in diesem Fall dynamisch dem Stil der Webseite anpassen.
               </td>
             </tr>
             <tr id="language">
               <th scope="row">language</th>
               <td>
-                <em>String</em><br /><br /><span class="label block">{{ $t('content.config.options') }}:</span>ar, cs, de, en, es, et, fa, fi, fr, hi, hu, id, it, ja, ko, nl, no, ro, pl, pt, sv, tr, vi, zh<br /><br /><span class="label">{{ $t('content.config.default') }}:</span>en
+                <em>String</em><br /><br /><span class="label block">{{ $t('content.config.options') }}:</span>ar, az, be, bg, bs, cs, da, de, el, en, es, et, fa, fi, fr, he, hi, hr, hu, hy, id, it, ja, ka, ko, lt, lv, mk, mt, nl, no, pl, pt, ro, ru, sk, sl, sq, sr, sv, tr, uk, vi, zh<br /><br /><span
+                  class="label"
+                  >{{ $t('content.config.default') }}:</span
+                >en
               </td>
               <td v-if="locale=='en'">
                 If you want to have the text blocks in another language than English, you can use the included translations (i18n).<br /><br />
                 Simply set one of the supported languages as <a href="https://www.w3schools.com/tags/ref_language_codes.asp" target="_blank" rel="noopener" class="whitespace-nowrap">ISO 639-1 code <ArrowTopRightOnSquareIcon class="-mt-0.5 mr-0.5 inline-block h-3 w-3" aria-hidden="true" /></a>.<br />
-                Also supports Right-to-Left (RTL) with Arabic, Persian &amp; Hebrew.
+                Also supports Right-to-Left (RTL) with Arabic, Persian &amp; Hebrew.<br /><br />
+                English is part of the script and every other language loads automatically on demand (~3 KB) - or fetch-free via <code>import 'add-to-calendar-button/i18n/de'</code> and the like when bundling.<br />
+                You can also provide a full locale like <code>en_GB</code>: translations then prefer a matching regional pack (falling back to the base language), and dates are formatted in the regional convention.
               </td>
               <td v-else>
                 Sofern du die Text-Blöcke in einer anderen Sprache als Englisch anzeigen möchtest, kannst du die inkludierten Übersetzungen nutzen (i18n).<br /><br />
                 Spezifiere einfach eine der unterstützten Sprachen als
                 <a href="https://www.w3schools.com/tags/ref_language_codes.asp" target="_blank" rel="noopener" class="whitespace-nowrap">ISO 639-1 code <ArrowTopRightOnSquareIcon class="-mt-0.5 mr-0.5 inline-block h-3 w-3" aria-hidden="true" /></a>.<br />
-                Für Arabisch, Persisch und Hebräisch wird zudem Rechts-nach-Links (RTL) für alle Elemente unterstützt und automatisch angewendet.
+                Für Arabisch, Persisch und Hebräisch wird zudem Rechts-nach-Links (RTL) für alle Elemente unterstützt und automatisch angewendet.<br /><br />
+                Englisch ist Teil des Skripts und jede weitere Sprache lädt automatisch bei Bedarf (~3 KB) - oder ohne Netzwerk-Anfrage via <code>import 'add-to-calendar-button/i18n/de'</code> und Co. beim Bundling.<br />
+                Du kannst auch eine vollständige Locale wie <code>en_GB</code> angeben: Übersetzungen bevorzugen dann ein passendes regionales Sprachpaket (mit Fallback auf die Basissprache) und Daten werden in der regionalen Konvention formatiert.
               </td>
             </tr>
-            <tr id="customlabels">
-              <th scope="row">customLabels</th>
+            <tr id="custom-labels">
+              <th scope="row">custom-labels</th>
               <td><em>Object</em></td>
               <td v-if="locale=='en'">
-                You can alter all text blocks via the "customLabels" option.<br />
+                You can alter all text blocks via the "custom-labels" option.<br />
                 There, you need to specify a JSON structure and define any text you want to override. Check the
-                <a href="https://github.com/add2cal/add-to-calendar-button/blob/main/src/atcb-i18n.js" target="_blank" rel="noopener" class="whitespace-nowrap">atcb-i18n.js file <ArrowTopRightOnSquareIcon class="-mt-0.5 mr-0.5 inline-block h-3 w-3" aria-hidden="true" /></a> for the available keys.
-                Any custom label will also override any translation.<br />For text blocks, you can use the same HTML pseudo tags as with the description option here.<br /><br />
+                <a href="https://github.com/add2cal/add-to-calendar-button/tree/main/src/i18n/locales" target="_blank" rel="noopener" class="whitespace-nowrap">locale files <ArrowTopRightOnSquareIcon class="-mt-0.5 mr-0.5 inline-block h-3 w-3" aria-hidden="true" /></a> for the available keys (use
+                the flattened dot notation, like <code>label.addtocalendar</code>). Any custom label will also override any translation.<br />For text blocks, you can use the same HTML pseudo tags as with the description option here.<br /><br />
+                Mind: The keys <code>date.status.cancelled.cta</code>, <code>label.share.email.subject</code>, <code>label.rsvp</code>, <code>form.status</code>, and <code>form.success</code> were renamed to <code>date.status.cancelled_cta</code>, <code>label.share.email_subject</code>,
+                <code>label.rsvp.title</code>, <code>form.status.title</code>, and <code>form.success.title</code>.<br /><br />
                 <NuxtLink :to="{path: localePath('advanced-use'), hash: '#case-4'}">{{ $t('labels.example') }} <ArrowRightIcon class="-mt-0.5 mr-0.5 inline-block h-3 w-3" aria-hidden="true" /></NuxtLink>
               </td>
               <td v-else>
-                Text-Blöcke können über die Option "customLabels" verändert werden.<br />
+                Text-Blöcke können über die Option "custom-labels" verändert werden.<br />
                 Hierbei muss eine JSON-Struktur mit den zu überschreibenden Texten definiert werden. Sieh dir die
-                <a href="https://github.com/add2cal/add-to-calendar-button/blob/main/src/atcb-i18n.js" target="_blank" rel="noopener" class="whitespace-nowrap">atcb-i18n.js-Datei <ArrowTopRightOnSquareIcon class="-mt-0.5 mr-0.5 inline-block h-3 w-3" aria-hidden="true" /></a> für eine Liste der
-                verfügbaren Keys an.<br />
+                <a href="https://github.com/add2cal/add-to-calendar-button/tree/main/src/i18n/locales" target="_blank" rel="noopener" class="whitespace-nowrap">Sprachdateien <ArrowTopRightOnSquareIcon class="-mt-0.5 mr-0.5 inline-block h-3 w-3" aria-hidden="true" /></a> für eine Liste der
+                verfügbaren Keys an (nutze die flache Punkt-Notation, etwa <code>label.addtocalendar</code>).<br />
                 Ein so manipulierter Text überschreibt auch jegliche Übersetzung.<br />Für Text-Blöcke kannst hierbei die gleichen HTML-Pseudo-Tags nutzen, wie sie auch in der "description"-Option möglich sind.<br /><br />
+                Beachte: Die Keys <code>date.status.cancelled.cta</code>, <code>label.share.email.subject</code>, <code>label.rsvp</code>, <code>form.status</code> und <code>form.success</code> wurden zu <code>date.status.cancelled_cta</code>, <code>label.share.email_subject</code>,
+                <code>label.rsvp.title</code>, <code>form.status.title</code> und <code>form.success.title</code> umbenannt.<br /><br />
                 <NuxtLink :to="{path: localePath('advanced-use'), hash: '#case-4'}">{{ $t('labels.example') }} <ArrowRightIcon class="-mt-0.5 mr-0.5 inline-block h-3 w-3" aria-hidden="true" /></NuxtLink>
               </td>
             </tr>
-            <tr id="stylelight">
-              <th scope="row">styleLight</th>
+            <tr id="style-light">
+              <th scope="row">style-light</th>
               <td><em>String</em></td>
               <td v-if="locale=='en'">
                 You can override global css variables for the button.<br /><br />
                 Find out what you can change by having a look at the top section at a respective
                 <a href="https://github.com/add2cal/add-to-calendar-button/tree/main/assets/css" target="_blank" rel="noopener">css file in the repository <ArrowTopRightOnSquareIcon class="-mt-0.5 mr-0.5 inline-block h-4 w-4" aria-hidden="true" /></a>.<br /><br />
-                Example: <em>styleLight="--btn-background: #2f4377; --btn-text: #fff; --font: Georgia, 'Times New Roman', Times, serif;"</em><br /><br />
-                The styleLight option acts as default. To override dark mode variables, also define styleDark (see below).
+                Example: <em>style-light="--btn-background: #2f4377; --btn-text: #fff; --font: Georgia, 'Times New Roman', Times, serif;"</em><br /><br />
+                The style-light option acts as default. To override dark mode variables, also define style-dark (see below).
               </td>
               <td v-else>
                 Du kannst globale CSS Variabeln des Buttons überschreiben.<br /><br />
                 Alle möglichen Einträge findest du zu Beginn der jeweiligen
                 <a href="https://github.com/add2cal/add-to-calendar-button/tree/main/assets/css" target="_blank" rel="noopener">CSS-Datei im Repository <ArrowTopRightOnSquareIcon class="-mt-0.5 mr-0.5 inline-block h-4 w-4" aria-hidden="true" /></a>.<br /><br />
-                Beispiel: <em>styleLight="--btn-background: #2f4377; --btn-text: #fff; --font: Georgia, 'Times New Roman', Times, serif;"</em><br /><br />
+                Beispiel: <em>style-light="--btn-background: #2f4377; --btn-text: #fff; --font: Georgia, 'Times New Roman', Times, serif;"</em><br /><br />
                 Die styleLight-Option definiert den Standard. Um Dark-Mode-Variabeln zu überschreiben, musst du zusätzlich die styleDark-Option setzen.
               </td>
             </tr>
-            <tr id="styledark">
-              <th scope="row">styleDark</th>
+            <tr id="style-dark">
+              <th scope="row">style-dark</th>
               <td><em>String</em></td>
               <td v-if="locale=='en'">
                 You can override global css variables for the button.<br /><br />
@@ -1009,17 +1132,17 @@ watch(searchSelection, (newVal) => {
                 Idealerweise definierst du 3 Bilder mit einer Breite von je 1920px. Eines mit einem Seitenverhältnis von 1x1, eines mit 4x3 und eines mit 16x9. Wenn nichts angegeben ist, wird ein Standard-Bild verwendet.
               </td>
             </tr>
-            <tr id="hiderichdata">
-              <th scope="row">hideRichData</th>
+            <tr id="hide-rich-data">
+              <th scope="row">hide-rich-data</th>
               <td>
                 <em>Boolean</em><br /><br /><span class="label">{{ $t('content.config.default') }}:</span>False
               </td>
               <td v-if="locale=='en'">
-                If you set at least a name, startDate, and location, the script automatically generates schema.org rich data when rendering a button.<br />
+                If you set at least a name, start-date, and location, the script automatically generates schema.org rich data when rendering a button.<br />
                 Setting this option would disable the feature.
               </td>
               <td v-else>
-                Sofern du "name", "startDate" und "location" definierst, werden beim Erstellen des Buttons automatisch Schema.org-Daten generiert.<br />
+                Sofern du "name", "start-date" und "location" definierst, werden beim Erstellen des Buttons automatisch Schema.org-Daten generiert.<br />
                 Mit dieser Option kann dies verhindert werden.
               </td>
             </tr>
@@ -1039,25 +1162,25 @@ watch(searchSelection, (newVal) => {
                 Der IDENTIFIER ist im Standard eine aufsteigende Numer, kann mittels dieser Option aber überschrieben werden (keine Sonderzeichen erlaubt; muss einzigartig sein).
               </td>
             </tr>
-            <tr id="bypasswebviewcheck">
-              <th scope="row">bypassWebViewCheck</th>
+            <tr id="bypass-web-view-check">
+              <th scope="row">bypass-web-view-check</th>
               <td>
                 <em>Boolean</em><br /><br /><span class="label">{{ $t('content.config.default') }}:</span>False
               </td>
               <td v-if="locale=='en'">
                 For users loading the button on their iPhone within a WebView environment (e.g. the Instagram Browser), we are not able to directly offer the ics file for download.<br />
                 Therefore, we show a small instruction note on how to do it instead.<br />
-                If you are using the button in your own app, where you actively allow the download of ics files in the default browser and are also providing the file explicitely with the icsFile option, you can bypass this workaround with the option bypassWebViewCheck.
+                If you are using the button in your own app, where you actively allow the download of ics files in the default browser and are also providing the file explicitely with the ics-file option, you can bypass this workaround with the option bypass-web-view-check.
               </td>
               <td v-else>
                 Für Nutzer, die den Button auf ihrem iPhone in einer WebView-Umgebung (z.B. dem Instagram Browser) laden, können wir die ics-Datei nicht direkt zum Download anbieten.<br />
                 Deshalb zeigen wir in diesem Fall eine kleine Anleitung, wie man den Termin stattdessen speichern kann.<br />
-                Wenn du den Button in deiner eigenen Anwendung verwendest; in der du den Download von ics-Dateien im Standardbrowser aktiv zulassen kannst und gleichzeitig die Datei explizit mit der "icsFile"-Option bereitstellst, kannst du diesen Workaround mit der Option bypassWebViewCheck
+                Wenn du den Button in deiner eigenen Anwendung verwendest; in der du den Download von ics-Dateien im Standardbrowser aktiv zulassen kannst und gleichzeitig die Datei explizit mit der "ics-file"-Option bereitstellst, kannst du diesen Workaround mit der Option bypass-web-view-check
                 umgehen.
               </td>
             </tr>
-            <tr id="hidebranding">
-              <th scope="row">hideBranding</th>
+            <tr id="hide-branding">
+              <th scope="row">hide-branding</th>
               <td>
                 <em>Boolean</em><br /><br /><span class="label">{{ $t('content.config.default') }}:</span>False
               </td>
@@ -1088,8 +1211,8 @@ watch(searchSelection, (newVal) => {
               <td v-if="locale=='en'">Use this attribute to force a re-rendering of the button by counting its value 1 up.</td>
               <td v-else>Nutze dieses Attribut, um einen Button durch Hochzählen des Werts neu zu rendern.</td>
             </tr>
-            <tr id="prooverride">
-              <th scope="row">proOverride</th>
+            <tr id="pro-override">
+              <th scope="row">pro-override</th>
               <td>
                 <em>Boolean</em><br /><br /><span class="label">{{ $t('content.config.default') }}:</span>False
               </td>
@@ -1141,6 +1264,7 @@ watch(searchSelection, (newVal) => {
       <div class="sticky top-0 pt-4">
         <Autocomplete v-model="searchSelection" :options="configOptions" :label="$t('content.config.find_params')" :placeholder="$t('labels.inputs.search')" class="mb-10" styleClass="" hidelabel />
         <NuxtLink :to="'#event-parameters'" class="side-nav">{{ $t('content.config.event_params') }}</NuxtLink>
+        <NuxtLink :to="'#ics-parameters'" class="side-nav">{{ $t('content.config.ics_params') }}</NuxtLink>
         <NuxtLink :to="'#style-parameters'" class="side-nav">{{ $t('content.config.layout_params') }}</NuxtLink>
         <NuxtLink :to="'#additional-parameters'" class="side-nav">{{ $t('content.config.additional_params') }}</NuxtLink>
       </div>
