@@ -201,6 +201,7 @@ Also part of the default run (long-standing quick tests):
 - L-01a: atcb_action uses a compact Apple-device interstitial with a Blob link for dynamically generated singleton ICS
 - L-01b: atcb_action skips the interstitial and retains direct saving for a static singleton ICS
 - L-01c: atcb_action sink resolves dynamic ICS without rendering or navigation
+- L-01d: atcb_action on macOS saves a dynamic singleton ICS directly
 - L-04: Android -> apple option removed, ical stays
 - L-13a: iOS -> ical option removed, apple stays
 - L-10: optionsMobile filters the list on mobile

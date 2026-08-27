@@ -85,7 +85,7 @@ if (import.meta.client) {
         :class="{ 'rounded-bl-none md:rounded-br-md lg:rounded-br-none': !showCode }"
         class="grid-bg row-span-2 flex justify-center rounded-tl-none border-0 border-zinc-400 bg-zinc-100 px-3 py-8 dark:border-zinc-600 dark:bg-zinc-900 md:rounded-tr-md md:border-l-2 lg:row-span-1 lg:rounded-tr-none"
       >
-        <div class="sticky top-[30vh] z-30 h-auto w-full py-10 xs:w-fit md:h-[500px] md:py-0">
+        <div class="sticky top-[30vh] z-30 h-auto w-fit py-10 md:h-[500px] md:py-0">
           <Atcb v-bind="mapAttrsObject(data)" debug hideRichData hideBranding :skip-client-load="isBot" @hydrated="loaded = true" />
         </div>
       </div>

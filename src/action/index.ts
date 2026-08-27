@@ -1,7 +1,7 @@
 /**
  * atcb_action - the imperative API for custom triggers (no web component markup needed).
  */
-import { isBrowser, isIOS, isMacOS, resultChannel } from '../core/globals';
+import { isBrowser, isIOS, resultChannel } from '../core/globals';
 import { getActiveButton, getButtonInstance, deleteButtonInstance } from '../core/store';
 import { decorate_data } from '../core/decorate';
 import { check_required, validate } from '../core/validate';
@@ -183,7 +183,7 @@ async function atcb_action(inputData: ATCBInputConfig, triggerElement?: HTMLElem
       if (oneOption) {
         const option = data.options![0]!;
         const isDynamicIcs = (option === 'apple' || option === 'ical') && static_ics_file(host.shadowRoot!, data, data.dates!.length === 1 ? 0 : 'all') === '';
-        if (isDynamicIcs && (isIOS() || data.fakeIOS || isMacOS())) {
+        if (isDynamicIcs && (isIOS() || data.fakeIOS)) {
           const subEvents: (string | number)[] = [option];
           if (data.dates!.length === 1 || can_group_ics(data)) {
             subEvents.push(data.dates!.length === 1 ? 1 : 'all');

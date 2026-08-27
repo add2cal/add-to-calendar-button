@@ -50,6 +50,25 @@ describe('Group L - Environment-driven routing', () => {
     expect(result).to.include('BEGIN:VCALENDAR');
     expect(document.querySelectorAll('[id$="-modal-host"]').length).to.equal(before);
   });
+
+  it('L-01d: atcb_action on macOS saves a dynamic singleton ICS directly', async () => {
+    const restoreUA = setUA(UA.desktopMacSafari);
+    const fs = interceptFileSave();
+    try {
+      const trigger = document.createElement('button');
+      trigger.id = 'atcb-l01d';
+      document.body.append(trigger);
+      await atcb_action({ ...baseEvent({ options: ['apple'] }), identifier: 'atcb-l01d' }, trigger);
+      expect(document.getElementById('atcb-l01d-modal-host')).to.not.exist;
+      expect(fs.saves.length).to.equal(1);
+      expect(fs.saves[0].href).to.match(/^data:text\/calendar/);
+      document.getElementById('atcb-customTrigger-atcb-l01d-host')?.remove();
+      trigger.remove();
+    } finally {
+      fs.restore();
+      restoreUA();
+    }
+  });
   it('L-04: Android -> apple option removed, ical stays', async () => {
     const { host } = await mountAtcb(baseEvent({ fakeAndroid: 'true', trigger: 'click', identifier: 'atcb-l04' }));
     await openList(host);

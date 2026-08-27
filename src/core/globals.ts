@@ -49,13 +49,6 @@ const isAndroid: () => boolean = isBrowser()
   : () => {
       return false;
     };
-const isMacOS: () => boolean = isBrowser()
-  ? () => {
-      const nav = navigator as Navigator & { userAgentData?: { platform?: string } };
-      if (nav.userAgentData?.platform === 'macOS') return true;
-      return /Macintosh|Mac OS X/i.test(navigator.userAgent) && !(navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
-    }
-  : () => false;
 // Chrome
 /*const isChrome = isBrowser()
   ? () => {
@@ -338,7 +331,6 @@ export {
   isBrowser,
   isIOS,
   isAndroid,
-  isMacOS,
   isSafari,
   isMobile,
   isWebView,
