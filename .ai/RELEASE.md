@@ -24,7 +24,7 @@ Edit only the root `package.json`. It is the single source of truth for the pack
   package before Nuxt runs.
 - Prerelease versions such as `3.0.0-next.1` are supported. Release tags use the matching
   `v3.0.0-next.1` form and the publish workflow selects npm's `next` tag from the package
-  version itself.
+  version itself. For this case, you can also set a version/tag from a "next" branch.
 
 ## Gates before publishing
 
