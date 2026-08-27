@@ -22,7 +22,7 @@ describe('Group L - Environment-driven routing', () => {
     expect(modal.shadowRoot.querySelector('.atcb-modal-content:not(.atcb-modal-content-subevents)')).to.exist;
     const dateLink = modal.shadowRoot.querySelector('a.atcb-subevent-btn');
     expect(dateLink).to.exist;
-    expect(dateLink.getAttribute('href')).to.match(/^data:text\/calendar/);
+    expect(dateLink.getAttribute('href')).to.match(/^blob:/);
     document.getElementById('atcb-customTrigger-atcb-l01a-host')?.remove();
     modal.remove();
     trigger.remove();

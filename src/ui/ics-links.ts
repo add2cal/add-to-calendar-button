@@ -2,11 +2,32 @@ import { generate_ical, static_ics_file } from '../generators/ical';
 import { getOptionStates } from '../core/store';
 import { log_event } from '../core/events';
 import { saved_hook } from '../core/util';
+import { isIOS } from '../core/globals';
 import { toggle } from './control';
 import type { ATCBConfig } from '../types';
 import type { ATCBIcsAction } from '../generators/ical';
 
 type IcsLinkContext = 'singleton' | 'list' | 'subevent';
+
+const icsBlobUrls = new Map<string, Set<string>>();
+
+function create_ics_blob_url(data: ATCBConfig, action: ATCBIcsAction): string {
+  if (!(isIOS() || data.fakeIOS) || !action.content || typeof URL.createObjectURL !== 'function') return action.href;
+  const url = URL.createObjectURL(new Blob([action.content], { type: 'text/calendar;charset=utf-8' }));
+  const identifier = data.identifier!;
+  const urls = icsBlobUrls.get(identifier) || new Set<string>();
+  urls.add(url);
+  icsBlobUrls.set(identifier, urls);
+  return url;
+}
+
+function revoke_ics_blob_urls(identifier?: string): void {
+  if (!identifier) return;
+  const urls = icsBlobUrls.get(identifier);
+  if (!urls) return;
+  urls.forEach((url) => URL.revokeObjectURL(url));
+  icsBlobUrls.delete(identifier);
+}
 
 function is_ics_option(type: string): boolean {
   return type === 'apple' || type === 'ical';
@@ -40,10 +61,11 @@ function complete_ics_link(host: ShadowRoot, data: ATCBConfig, type: string, sub
 function replace_with_ics_anchor(host: ShadowRoot, data: ATCBConfig, control: HTMLElement, type: string, subEvent: 'all' | number, context: IcsLinkContext, action: ATCBIcsAction): HTMLAnchorElement {
   const anchor = document.createElement('a');
   for (const attribute of Array.from(control.attributes)) anchor.setAttribute(attribute.name, attribute.value);
-  anchor.href = action.href;
+  anchor.href = create_ics_blob_url(data, action);
   anchor.target = action.target;
   anchor.rel = 'noopener';
   if (action.kind === 'dynamic') anchor.download = action.filename + '.ics';
+  delete anchor.dataset.atcbLinkPending;
   anchor.removeAttribute('disabled');
   while (control.firstChild) anchor.append(control.firstChild);
   anchor.addEventListener('click', () => complete_ics_link(host, data, type, subEvent, context, anchor));
@@ -84,4 +106,4 @@ function prepare_ics_link(host: ShadowRoot, data: ATCBConfig, control: HTMLEleme
   }, 0);
 }
 
-export { can_group_ics, is_ics_option, prepare_ics_link };
+export { can_group_ics, is_ics_option, prepare_ics_link, revoke_ics_blob_urls };

@@ -165,6 +165,7 @@ Also part of the default run (long-standing quick tests):
 - G-17: custom iCalFileName is used for the download
 - G-21: dynamically generated singleton ICS renders first, then becomes a native download anchor
 - G-22: static ICS files retain the established button-driven download path
+- G-23: dynamic iOS ICS uses a precomputed blob URL and revokes it on teardown
 - G-20: desktop file save targets _blank (mobile would use _self)
 
 ### Group H - Google output (`r-H-google.test.js`)
@@ -197,7 +198,7 @@ Also part of the default run (long-standing quick tests):
 
 ### Group L - Environment-driven routing (`r-L-env.test.js`)
 
-- L-01a: atcb_action uses a compact Apple-device interstitial for dynamically generated singleton ICS
+- L-01a: atcb_action uses a compact Apple-device interstitial with a Blob link for dynamically generated singleton ICS
 - L-01b: atcb_action skips the interstitial and retains direct saving for a static singleton ICS
 - L-01c: atcb_action sink resolves dynamic ICS without rendering or navigation
 - L-04: Android -> apple option removed, ical stays

@@ -12,7 +12,7 @@ import { secure_content } from '../core/text';
 import { log_event } from '../core/events';
 import { generate_rsvp_form } from '../ui/pro';
 import { create_modal } from '../ui/generate';
-import { can_group_ics } from '../ui/ics-links';
+import { can_group_ics, revoke_ics_blob_urls } from '../ui/ics-links';
 import type { ATCBIcsAction } from '../generators/ical';
 import { ensure_locale } from '../i18n/index';
 import { get_pro_data, init_log, setup_state_management, set_global_event_listener, load_css, set_light_mode, shadowTemplate } from '../element/index';
@@ -132,6 +132,7 @@ async function atcb_action(inputData: ATCBInputConfig, triggerElement?: HTMLElem
   // to clean-up the stage, we first close anything left open
   const potentialExistingHost = document.getElementById('atcb-customTrigger-' + data.identifier + '-host');
   if (potentialExistingHost) {
+    revoke_ics_blob_urls(data.identifier);
     close(potentialExistingHost.shadowRoot!, false);
     // unset whatever possible for customTriggers
     if (getButtonInstance(getActiveButton())) {

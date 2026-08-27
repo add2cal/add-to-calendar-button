@@ -13,7 +13,7 @@ import { secure_content, secure_url, strip_unsafe_keys } from '../core/text';
 import { manage_body_scroll, set_sizes } from '../ui/positioning';
 import { log_event } from '../core/events';
 import { generate_rsvp_form, generate_rsvp_button } from '../ui/pro';
-import { prepare_ics_link } from '../ui/ics-links';
+import { prepare_ics_link, revoke_ics_blob_urls } from '../ui/ics-links';
 import { resolveAttributeName, hasConfigAttribute, getConfigAttribute, observedConfigAttributes } from '../compat/attributes';
 import type { ATCBInputConfig, ATCBConfig } from '../types';
 
@@ -506,6 +506,7 @@ function read_attributes(el: ATCBHostElement, params: (keyof ATCBInputConfig)[] 
 // destroy the button
 function cleanup(host: ShadowRoot, identifier?: string): void {
   // cleaning up a little bit
+  revoke_ics_blob_urls(identifier);
   close(host);
   unset_global_event_listener(identifier);
   const schemaEl = document.getElementById('atcb-schema-' + identifier);

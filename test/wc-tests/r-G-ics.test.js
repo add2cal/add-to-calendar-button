@@ -193,4 +193,32 @@ describe('Group G - ICS / Apple output', () => {
     await aTimeout(30);
     expect(host.shadowRoot.getElementById(host.getAttribute('atcb-button-id')).tagName).to.equal('BUTTON');
   });
+
+  it('G-23: dynamic iOS ICS uses a precomputed blob URL and revokes it on teardown', async () => {
+    const originalCreateObjectURL = URL.createObjectURL;
+    const originalRevokeObjectURL = URL.revokeObjectURL;
+    const blobs = [];
+    const revoked = [];
+    URL.createObjectURL = (blob) => {
+      blobs.push(blob);
+      return 'blob:https://example.com/atcb-ios-ics';
+    };
+    URL.revokeObjectURL = (url) => revoked.push(url);
+    try {
+      const { host } = await mountAtcb({ ...CFG.singleTimedNY, options: "'apple'", fakeIOS: 'true', trigger: 'click', identifier: 'atcb-g23' });
+      await aTimeout(30);
+      const anchor = host.shadowRoot.getElementById(host.getAttribute('atcb-button-id'));
+      expect(anchor.tagName).to.equal('A');
+      expect(anchor.getAttribute('href')).to.equal('blob:https://example.com/atcb-ios-ics');
+      expect(anchor.getAttribute('download')).to.equal('event.ics');
+      expect(anchor.hasAttribute('data-atcb-link-pending')).to.equal(false);
+      expect(blobs[0].type).to.equal('text/calendar;charset=utf-8');
+      expect(await blobs[0].text()).to.include('BEGIN:VCALENDAR');
+      host.remove();
+      expect(revoked).to.deep.equal(['blob:https://example.com/atcb-ios-ics']);
+    } finally {
+      URL.createObjectURL = originalCreateObjectURL;
+      URL.revokeObjectURL = originalRevokeObjectURL;
+    }
+  });
 });
