@@ -9,8 +9,7 @@ demo/dist
 /assets/css
 
 # tmp testing files.
-testing.html
-example.html
+/*.html
 
 # macOS-specific files
 .DS_Store
