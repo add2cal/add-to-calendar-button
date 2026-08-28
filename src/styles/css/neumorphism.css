@@ -310,10 +310,6 @@ a.atcb-modal-btn:not([disabled]):hover {
   filter: var(--checkmark-background);
 }
 
-#atcb-bgoverlay {
-  z-index: 14000000;
-}
-
 #atcb-bgoverlay:not(dialog) {
   animation: atcb-bgoverlay-animate 0.1s ease 0s 1 normal forwards;
   opacity: 0;
@@ -362,6 +358,10 @@ a.atcb-modal-btn:not([disabled]):hover {
   box-sizing: border-box;
   padding: 0;
   width: 100%;
+}
+
+.rsvp-inline-wrapper.atcb-modal-box {
+  padding-bottom: 1.5em;
 }
 
 .rsvp-inline-wrapper .atcb-modal-headline {

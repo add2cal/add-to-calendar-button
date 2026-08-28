@@ -288,7 +288,6 @@ a.atcb-modal-btn:not([disabled]):active {
 #atcb-bgoverlay {
   backdrop-filter: blur(2px);
   -webkit-backdrop-filter: blur(2px);
-  z-index: 14000000;
 }
 
 #atcb-bgoverlay:not(dialog) {
@@ -337,6 +336,10 @@ a.atcb-modal-btn:not([disabled]):active {
   box-sizing: border-box;
   padding: 0;
   width: 100%;
+}
+
+.rsvp-inline-wrapper.atcb-modal-box {
+  padding-bottom: 1.5em;
 }
 
 .rsvp-inline-wrapper .atcb-modal-headline {

@@ -80,8 +80,17 @@ if (import.meta.client) {
     // register every style first (synchronous registry), then the web component:
     // the upgrade never needs a css fetch and the shell swaps straight into the
     // fully styled button
-    await import('@/utils/atcbStyles');
-    await import('add-to-calendar-button');
+    await Promise.all([
+      import('add-to-calendar-button'),
+      import('add-to-calendar-button/i18n/de'),
+      import('add-to-calendar-button/styles/3d'),
+      import('add-to-calendar-button/styles/date'),
+      import('add-to-calendar-button/styles/flat'),
+      import('add-to-calendar-button/styles/neumorphism'),
+      import('add-to-calendar-button/styles/round'),
+      import('add-to-calendar-button/styles/simple'),
+      import('add-to-calendar-button/styles/text')
+    ]);
     // the shell element upgrades in place - wait for its complete render
     const el = shellHost.value?.querySelector('add-to-calendar-button') as (HTMLElement & { whenInitialized?: () => Promise<void> }) | null;
     if (el && typeof el.whenInitialized === 'function') {

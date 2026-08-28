@@ -229,10 +229,11 @@ async function buildLib() {
 
 const SSR_CSS_HOOK = 'const atcbSsrCssTemplate: { [key: string]: string } = {};';
 const SSR_LABELS_HOOK = 'const atcbSsrLabels: { [key: string]: string } = {};';
+const SSR_RSVP_LABELS_HOOK = 'const atcbSsrRsvpLabels: { [key: string]: { title: string; expired: string; bookedout: string } } = {};';
 
 function injectSsrData(code, id) {
   if (!id.replaceAll('\\', '/').endsWith('src/ssr/index.ts')) return null;
-  if (!code.includes(SSR_CSS_HOOK) || !code.includes(SSR_LABELS_HOOK)) {
+  if (!code.includes(SSR_CSS_HOOK) || !code.includes(SSR_LABELS_HOOK) || !code.includes(SSR_RSVP_LABELS_HOOK)) {
     throw new Error('ssr/index.ts: css/labels hooks not found - build assumption broken');
   }
   // the ssr bundle is server-only: carrying every style delta and every default
@@ -242,14 +243,21 @@ function injectSsrData(code, id) {
     cssMap[`${style}`] = cssArtifacts.deltas[`${style}`];
   }
   const labels = {};
+  const rsvpLabels = {};
   for (const file of fs.readdirSync(r('src/i18n/locales'))) {
     if (!file.endsWith('.json')) continue;
     const pack = JSON.parse(fs.readFileSync(r('src/i18n/locales', file), 'utf8'));
     if (pack.label && typeof pack.label.addtocalendar === 'string') {
       labels[file.replace(/\.json$/, '')] = pack.label.addtocalendar;
     }
+    if (pack.label?.rsvp && typeof pack.label.rsvp.title === 'string' && typeof pack.label.rsvp.expired === 'string' && typeof pack.label.rsvp.bookedout === 'string') {
+      rsvpLabels[file.replace(/\.json$/, '')] = pack.label.rsvp;
+    }
   }
-  return code.replace(SSR_CSS_HOOK, `const atcbSsrCssTemplate: { [key: string]: string } = ${JSON.stringify(cssMap)};`).replace(SSR_LABELS_HOOK, `const atcbSsrLabels: { [key: string]: string } = ${JSON.stringify(labels)};`);
+  return code
+    .replace(SSR_CSS_HOOK, `const atcbSsrCssTemplate: { [key: string]: string } = ${JSON.stringify(cssMap)};`)
+    .replace(SSR_LABELS_HOOK, `const atcbSsrLabels: { [key: string]: string } = ${JSON.stringify(labels)};`)
+    .replace(SSR_RSVP_LABELS_HOOK, `const atcbSsrRsvpLabels: { [key: string]: { title: string; expired: string; bookedout: string } } = ${JSON.stringify(rsvpLabels)};`);
 }
 
 async function buildSsr() {

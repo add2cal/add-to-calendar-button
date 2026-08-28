@@ -1200,6 +1200,7 @@ button.atcb-modal-btn:not([disabled]):hover, a.atcb-modal-btn:not([disabled]):ho
   padding: 20px;
   position: fixed;
   width: 100dvw;
+  z-index: 14000000;
 }
 
 .pro-form {

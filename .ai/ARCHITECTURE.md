@@ -126,7 +126,9 @@ disconnected on unmount), and the style/i18n registries (caches by design).
 plus a `<template shadowrootmode="open">` shell: general layout css, core css + the ONE
 requested style delta, and a static button (real localized label, skeletons for date-style
 parts and inline RSVP). All style deltas and all default labels are baked into the
-server-only bundle at build time; the module never touches the DOM and never fetches.
+server-only bundle at build time. The synchronous renderer never touches the DOM or
+fetches. Its async companion can resolve a supplied `proKey` from the PRO config endpoint
+before rendering, using the same closed override allowlists as the client.
 Its import graph must stay lit-free - `core/sizes.ts` exists precisely so the shell can
 share the size math without pulling ui modules (which import lit).
 

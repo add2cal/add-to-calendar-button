@@ -19,11 +19,11 @@
  * the element initializes client-only, exactly like the script-tag path.
  */
 import type { AddToCalendarButtonType } from '../types';
-import { icons } from '../core/globals';
+import { icons, wcParams, wcProParams } from '../core/globals';
 import { rtlLanguages } from '../i18n/index';
 import { decorate_sizes } from '../core/sizes';
 import { officialAttributeName } from '../compat/attributes';
-import { secure_url } from '../core/text';
+import { secure_url, strip_unsafe_keys } from '../core/text';
 
 // filled at build time with the minified tokens+core css plus EVERY per-style delta
 // (the ssr bundle is server-only, so carrying all styles is size-uncritical)
@@ -32,6 +32,9 @@ const atcbSsrCssTemplate: { [key: string]: string } = {};
 // the default button label per language, statically extracted from the locale packs
 // at build time (a static import is not a fetch - the no-fetch constraint holds)
 const atcbSsrLabels: { [key: string]: string } = {};
+
+// the RSVP button labels per language, injected alongside the default labels
+const atcbSsrRsvpLabels: { [key: string]: { title: string; expired: string; bookedout: string } } = {};
 
 const KNOWN_STYLES = ['default', 'simple', '3d', 'flat', 'round', 'neumorphism', 'text', 'date'];
 
@@ -144,8 +147,10 @@ function generate_ssr_html(rawConfig: AddToCalendarButtonType & { [key: string]:
   const sizes = decorate_sizes(typeof config.size === 'string' ? config.size : undefined);
   const lightMode = config.lightMode === 'dark' ? 'dark' : config.lightMode === 'bodyScheme' ? 'bodyScheme' : 'light';
   const label = typeof config.label === 'string' && config.label !== '' ? config.label : atcbSsrLabels[`${baseLanguage}`] || atcbSsrLabels['en'] || 'Add to Calendar';
+  const rsvpLabels = atcbSsrRsvpLabels[`${baseLanguage}`] || atcbSsrRsvpLabels['en'] || { title: 'RSVP', expired: 'Expired', bookedout: 'Booked out' };
   const inline = truthyFlag(config.inline);
-  const inlineRsvp = Boolean(config.rsvp) && truthyFlag(config.inlineRsvp);
+  const hasRsvp = Boolean(config.rsvp) && typeof config.rsvp === 'object';
+  const inlineRsvp = hasRsvp && truthyFlag(config.inlineRsvp);
   const hidden = truthyFlag(config.hidden);
   const identifier = typeof config.identifier === 'string' && /^[\w-]+$/.test(config.identifier) ? config.identifier : '';
   const buttonsList = truthyFlag(config.buttonsList);
@@ -189,6 +194,13 @@ function generate_ssr_html(rawConfig: AddToCalendarButtonType & { [key: string]:
     if (inlineRsvp) {
       return `<div class="atcb-ssr-skeleton atcb-ssr-skeleton-block" style="height: 220px;"></div>`;
     }
+    if (hasRsvp) {
+      const rsvp = config.rsvp as { expired?: unknown; bookedOut?: unknown };
+      const rsvpLabel = truthyFlag(rsvp.expired) ? rsvpLabels.expired : truthyFlag(rsvp.bookedOut) ? rsvpLabels.bookedout : rsvpLabels.title;
+      const icon = hideIconButton ? '' : `<div class="atcb-icon atcb-icon-rsvp" part="atcb-list-icon">${icons['rsvp']}</div>`;
+      const text = hideTextLabelButton ? '' : `<span class="atcb-text" part="atcb-list-text">${escapeText(rsvpLabel)}</span>`;
+      return `<div class="atcb-button-wrapper${rtl ? ' atcb-rtl' : ''}" part="atcb-button-wrapper" style="${sizeStyle}"><button type="button" class="atcb-button atcb-click atcb-single${hideTextLabelButton ? ' atcb-no-text' : ''}" part="atcb-button"${buttonId} aria-expanded="false" aria-label="${escapeAttribute(rsvpLabel)}">${icon}${text}</button></div>`;
+    }
     // buttonsList: one singleton button per option. Labels render as skeletons
     // (their text depends on decoration - translations, customLabels) - only an
     // explicit 'Option|Label' override paints real text
@@ -224,4 +236,36 @@ function generate_ssr_html(rawConfig: AddToCalendarButtonType & { [key: string]:
   return `<add-to-calendar-button class="add-to-calendar atcb-${lightMode}" ${attributes.join(' ')}><template shadowrootmode="open">${shell}</template></add-to-calendar-button>`;
 }
 
-export { generate_ssr_html as atcb_generate_ssr_html };
+/**
+ * Fetches a PRO configuration when a prokey is present, then renders its SSR shell.
+ * The synchronous renderer remains available for configurations that need no I/O.
+ */
+async function generate_ssr_html_async(rawConfig: AddToCalendarButtonType & { [key: string]: unknown }): Promise<string> {
+  const config = normalizeConfig(rawConfig);
+  const proKey = typeof config.proKey === 'string' ? config.proKey : '';
+  if (proKey === '') return generate_ssr_html(rawConfig);
+
+  try {
+    const endpoint = `https://${truthyFlag(config.dev) ? 'event-dev.caldn.net' : 'event.caldn.net'}/${encodeURIComponent(proKey)}/config.json`;
+    const response = await fetch(endpoint);
+    if (!response.ok) throw new Error('Not possible to read prokey config from server...');
+    const responseData = strip_unsafe_keys(await response.json());
+    if (!responseData || typeof responseData !== 'object' || Array.isArray(responseData)) throw new Error('Not possible to read prokey config from server...');
+
+    const merged = responseData as { [key: string]: unknown };
+    const overrideKeys = truthyFlag(config.proOverride) ? wcParams : wcProParams;
+    for (const key of overrideKeys) {
+      // PRO-only fields cannot be replaced from an arbitrary rendering server.
+      if (truthyFlag(config.proOverride) && ['hideBranding', 'ty', 'rsvp'].includes(key)) continue;
+      if (Object.prototype.hasOwnProperty.call(config, key)) merged[`${key}`] = config[`${key}`];
+    }
+    if (config.rsvp && typeof config.rsvp === 'object' && Object.prototype.hasOwnProperty.call(config.rsvp, 'none')) delete merged.rsvp;
+    merged.proKey = proKey;
+    merged.identifier = proKey;
+    return generate_ssr_html(merged as AddToCalendarButtonType & { [key: string]: unknown });
+  } catch {
+    throw new Error('prokey invalid or server not responding!');
+  }
+}
+
+export { generate_ssr_html as atcb_generate_ssr_html, generate_ssr_html_async as atcb_generate_ssr_html_async };

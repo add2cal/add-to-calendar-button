@@ -21,9 +21,12 @@ test('S-02: ESM and CJS entries expose the same generator', async () => {
   const cjs = require('../../dist/ssr/index.cjs');
   assert.strictEqual(typeof esm.atcb_generate_ssr_html, 'function');
   assert.strictEqual(typeof cjs.atcb_generate_ssr_html, 'function');
+  assert.strictEqual(typeof esm.atcb_generate_ssr_html_async, 'function');
+  assert.strictEqual(typeof cjs.atcb_generate_ssr_html_async, 'function');
 });
 
 const { atcb_generate_ssr_html } = await import('../../dist/ssr/index.js');
+const { atcb_generate_ssr_html_async } = await import('../../dist/ssr/index.js');
 
 test('S-03: default shell carries host attributes (official kebab names), DSD template, styles and the real label', () => {
   const html = atcb_generate_ssr_html({ name: 'Launch', startDate: '2050-06-15', language: 'de', identifier: 'ssr-s03', iCalFileName: 'invite', useUserTZ: true });
@@ -70,6 +73,23 @@ test('S-07: inline RSVP renders a full-width skeleton block', () => {
   assert.ok(html.includes('atcb-ssr-skeleton-block'), 'skeleton block');
   assert.ok(html.includes('width: 100%'), 'full-width wrapper for the inline form');
   assert.ok(html.includes('prokey="abc"'), 'official prokey attribute');
+});
+
+test('S-07b: non-inline RSVP renders the localized RSVP button', () => {
+  const html = atcb_generate_ssr_html({ name: 'X', rsvp: { demo: true }, language: 'de', identifier: 'rsvp-shell' });
+  assert.ok(html.includes('class="atcb-icon atcb-icon-rsvp"'), 'RSVP icon');
+  assert.ok(html.includes('>RSVP</span>'), 'localized RSVP label');
+  assert.ok(!html.includes('class="atcb-icon atcb-icon-trigger"'), 'no rendered calendar trigger icon');
+});
+
+test('S-07c: async renderer fetches PRO data and renders its RSVP button', async (t) => {
+  t.mock.method(globalThis, 'fetch', async (url) => {
+    assert.strictEqual(url, 'https://event.caldn.net/pro-rsvp/config.json');
+    return new Response(JSON.stringify({ name: 'Fetched event', rsvp: { demo: true }, language: 'en' }), { status: 200 });
+  });
+  const html = await atcb_generate_ssr_html_async({ prokey: 'pro-rsvp' });
+  assert.ok(html.includes('class="atcb-icon atcb-icon-rsvp"'), 'fetched RSVP config determines shell');
+  assert.ok(html.includes('prokey="pro-rsvp"'), 'PRO key remains on the host');
 });
 
 test('S-08: rtl languages mark the wrapper; hidden config keeps the shell hidden', () => {
