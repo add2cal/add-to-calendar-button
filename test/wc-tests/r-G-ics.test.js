@@ -27,6 +27,8 @@ describe('Group G - ICS / Apple output', () => {
     expect(ics.raw).to.include('END:VCALENDAR');
     expect(ics.prop('VERSION')).to.include('2.0');
     expect(ics.prodid).to.include('add-to-calendar');
+    expect(ics.prodid).to.match(/button v\d+\.\d+\.\d+ \/\/EN$/);
+    expect(ics.prodid).to.not.match(/-next/i);
     expect(ics.prop('CALSCALE')).to.include('GREGORIAN');
   });
 

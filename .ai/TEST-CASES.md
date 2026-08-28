@@ -148,7 +148,7 @@ Also part of the default run (long-standing quick tests):
 
 ### Group G - ICS / Apple output (`r-G-ics.test.js`)
 
-- G-01: VCALENDAR structure with version + prodid
+- G-01: VCALENDAR structure with version + prodid using the stable semver (without a `-next*` suffix)
 - G-02: no organizer -> METHOD:PUBLISH, no ORGANIZER line
 - G-03: organizer set -> METHOD:REQUEST + ORGANIZER CN/mailto
 - G-04: attendee line rendered with organizer present
