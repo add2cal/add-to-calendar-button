@@ -434,7 +434,7 @@ a.atcb-modal-btn:not([disabled]):hover {
 }
 
 .rsvp-inline-wrapper.atcb-modal-box {
-  padding-bottom: 1.5em;
+  padding: .2em .2em 1.5em;
 }
 
 .rsvp-inline-wrapper .atcb-modal-headline {

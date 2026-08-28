@@ -457,7 +457,7 @@ a.atcb-modal-btn.atcb-modal-btn-border {
 }
 
 .rsvp-inline-wrapper.atcb-modal-box {
-  padding-bottom: 1.5em;
+  padding: .2em .2em 1.5em;
 }
 
 .rsvp-inline-wrapper .atcb-modal-headline {
