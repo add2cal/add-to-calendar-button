@@ -1,6 +1,6 @@
 {
   "name": "add-to-calendar-button",
-  "version": "3.0.0-next.5",
+  "version": "3.0.0-next.6",
   "engines": {
     "node": ">=18.17.0",
     "npm": ">=9.6.7"
@@ -35,6 +35,11 @@
       "types": "./dist/ssr/index.d.ts",
       "import": "./dist/ssr/index.js",
       "require": "./dist/ssr/index.cjs"
+    },
+    "./utils": {
+      "types": "./dist/utils/index.d.ts",
+      "import": "./dist/utils/index.js",
+      "require": "./dist/utils/index.cjs"
     },
     "./no-pro": {
       "types": "./dist/index.d.ts",

@@ -1,7 +1,7 @@
 import { tzlib_get_offset, tzlib_get_timezones } from 'timezones-ical-library';
 import { translate_via_time_zone, format_datetime, map_special_time_zones } from './dates';
 import { rewrite_html_elements } from './text';
-import { generate_uuid, apply_transformation } from './util';
+import { generate_uuid, apply_transformation } from './pure-util';
 import { decorate_data_rrule, decorate_data_recurring_events } from './decorate-recurrence';
 import type { ATCBConfig, ATCBInputConfig, ATCBDateEntry } from '../types';
 

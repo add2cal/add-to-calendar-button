@@ -297,6 +297,35 @@ async function buildSsr() {
   fs.writeFileSync(r('dist/ssr/package.json'), '{ "type": "module" }');
 }
 
+// ---------- step 2c: DOM-free utilities entry (es + cjs) ----------
+
+async function buildUtils() {
+  for (const format of ['es', 'cjs']) {
+    await viteBuild({
+      configFile: false,
+      logLevel: 'warn',
+      resolve: {
+        alias: [{ find: './globals', replacement: r('src/utils/dom-free-globals.ts') }],
+      },
+      build: {
+        outDir: 'dist',
+        emptyOutDir: false,
+        minify: false,
+        target: 'es2020',
+        lib: {
+          entry: r('src/utils/index.ts'),
+          formats: [format],
+          fileName: () => (format === 'es' ? 'utils/index.js' : 'utils/index.cjs'),
+        },
+        rollupOptions: {
+          external: ['timezones-ical-library'],
+        },
+      },
+    });
+  }
+  fs.writeFileSync(r('dist/utils/package.json'), '{ "type": "module" }');
+}
+
 // ---------- step 3: esbuild browser build (iife) ----------
 
 async function buildBrowser({ minify }) {
@@ -338,7 +367,8 @@ function buildTypes() {
   // keeps the types working for every consumer moduleResolution (bundler, node16, classic)
   execSync('npx dts-bundle-generator -o dist/index.d.ts --inline-declare-global --no-check --no-banner src/index.ts', { cwd: root, stdio: ['ignore', 'ignore', 'inherit'] });
   execSync('npx dts-bundle-generator -o dist/ssr/index.d.ts --inline-declare-global --no-check --no-banner src/ssr/index.ts', { cwd: root, stdio: ['ignore', 'ignore', 'inherit'] });
-  for (const file of ['dist/index.d.ts', 'dist/ssr/index.d.ts']) {
+  execSync('npx dts-bundle-generator -o dist/utils/index.d.ts --inline-declare-global --no-check --no-banner src/utils/index.ts', { cwd: root, stdio: ['ignore', 'ignore', 'inherit'] });
+  for (const file of ['dist/index.d.ts', 'dist/ssr/index.d.ts', 'dist/utils/index.d.ts']) {
     fs.writeFileSync(r(file), licenseBanner('Public type declarations (generated from src - do not edit)') + '\n' + fs.readFileSync(r(file), 'utf8'));
   }
 }
@@ -491,6 +521,17 @@ function sanityCheck() {
     if (!ssrBuild.includes('Im Kalender speichern')) problems.push('dist/ssr/index.js: localized default labels not baked in');
     if (!ssrBuild.includes('atcb_generate_ssr_html')) problems.push('dist/ssr/index.js: atcb_generate_ssr_html export missing');
   }
+  // utils entry: standalone, DOM-free, and limited to the two public functions
+  for (const file of ['index.js', 'index.cjs', 'index.d.ts', 'package.json']) {
+    if (!fs.existsSync(r('dist/utils', file))) problems.push(`dist/utils/${file} missing`);
+  }
+  if (fs.existsSync(r('dist/utils/index.js'))) {
+    const utilsBuild = fs.readFileSync(r('dist/utils/index.js'), 'utf8');
+    for (const marker of ['LitElement', 'HTMLElement', 'document', 'window', 'navigator', 'atcbCssTemplate', 'customElements']) {
+      if (utilsBuild.includes(marker)) problems.push(`dist/utils/index.js: DOM/component marker ${marker} present`);
+    }
+    if (!utilsBuild.includes('atcb_generate_timestring') || !utilsBuild.includes('atcb_decorate_data_dates')) problems.push('dist/utils/index.js: utility exports missing');
+  }
   // deprecation shims: present, tiny, and re-exporting/loading the main artifact
   for (const variant of DEPRECATED_VARIANTS) {
     for (const [file, marker] of [
@@ -523,6 +564,7 @@ cleanOldBuildFiles();
 buildCssArtifacts();
 await buildLib();
 await buildSsr();
+await buildUtils();
 await buildBrowser({ minify: false });
 if (withMin) {
   await buildBrowser({ minify: true });

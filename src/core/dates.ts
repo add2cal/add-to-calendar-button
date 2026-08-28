@@ -1,6 +1,6 @@
 import { tzlib_get_offset } from 'timezones-ical-library';
 import { atcbTimeZonesToUtc, isMobile } from './globals';
-import { decorate_data_dates } from './decorate';
+import { decorate_data_dates } from './decorate-dates';
 import type { ATCBConfig, ATCBDateEntry, ATCBDateEntryInput } from '../types';
 
 // SHARED FUNCTION TO GENERATE A TIME STRING

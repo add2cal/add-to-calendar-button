@@ -421,6 +421,10 @@ and a vite build importing one extra style plus one extra locale with content an
 
 Plain Node WITHOUT DOM emulation (the ssr entry must be DOM-free); string assertions against dist/ssr.
 
+The same Node tier also covers the DOM-free utility entry in `test/ssr-node/utils.test.mjs`:
+
+- UTIL-01: ESM and CJS `/utils` imports work without DOM globals and both exported functions process dates
+
 - S-01: environment is DOM-free (no document, no window)
 - S-02: ESM and CJS entries expose the same generator
 - S-03: default shell carries host attributes (official kebab names), DSD template, styles and the real label

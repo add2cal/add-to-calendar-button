@@ -24,6 +24,7 @@ Three consumption paths, one code base:
    build through its `node` export condition (the browser build of lit touches
    `HTMLElement` at module scope and would crash a plain Node `require`).
 3. **Server entry** (`dist/ssr/`): DOM-free shell renderer (see SSR below).
+4. **Utility entry** (`dist/utils/`): DOM-free date decoration and time-string helpers.
 
 ## Module map (src/)
 
@@ -38,7 +39,7 @@ Three consumption paths, one code base:
 | i18n       | `i18n/index.ts`, `i18n/locales/*.json`                                                  | Locale registry and translation chain; one nested JSON per language                                                                                          |
 | styles     | `styles/css-template.ts`, `styles/css/*.css`                                            | Style registry; split css sources (tokens + core + per-style deltas)                                                                                         |
 | ssr        | `ssr/index.ts`                                                                          | DOM-free declarative-shadow-DOM shell renderer                                                                                                               |
-| entries    | `index.ts`, `entry-browser.ts`                                                          | Package entry (module builds), classic-script entry (IIFE)                                                                                                   |
+| entries    | `index.ts`, `entry-browser.ts`, `utils/index.ts`                                        | Package entry (module builds), classic-script entry (IIFE), DOM-free utility entry                                                                           |
 
 ## Data flow: initialization
 
@@ -150,6 +151,7 @@ an inert child; the element drops it and initializes client-only.
 | `dist/module/`, `dist/commonjs/`                     | npm `.` export (ESM / CJS); the variant subdirectories hold deprecation shim modules                 |
 | `dist/styles/`, `dist/locales/`                      | On-demand fetch targets AND the npm `./styles/*` / `./i18n/*` exports                                |
 | `dist/ssr/`                                          | npm `./ssr` export (ESM + CJS + types, module-type marker)                                           |
+| `dist/utils/`                                        | npm `./utils` export (DOM-free ESM + CJS + types, module-type marker)                                |
 | `dist/index.d.ts`, `dist/ssr/index.d.ts`             | Flat type bundles generated from source (dts-bundle-generator); resolve under every moduleResolution |
 | `assets/css/`                                        | GENERATED full stylesheets for CDN hotlinks / `customCss`                                            |
 
