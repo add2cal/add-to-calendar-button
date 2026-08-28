@@ -127,7 +127,9 @@ plus a `<template shadowrootmode="open">` shell: general layout css, core css + 
 requested style delta, and a static button (real localized label, skeletons for date-style
 parts and inline RSVP). All style deltas and all default labels are baked into the
 server-only bundle at build time. The synchronous renderer never touches the DOM or
-fetches. Its async companion can resolve a supplied `proKey` from the PRO config endpoint
+fetches. When `pastDateHandling="hide"` can be resolved from absolute, non-recurring dates
+and every entry is overdue, it emits only the configured host and no shell. Its async
+companion can resolve a supplied `proKey` from the PRO config endpoint
 before rendering, using the same closed override allowlists as the client.
 Its import graph must stay lit-free - `core/sizes.ts` exists precisely so the shell can
 share the size math without pulling ui modules (which import lit).

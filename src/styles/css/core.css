@@ -177,8 +177,13 @@
 }
 
 .atcb-modal-content-subevents {
-  margin: auto;
-  width: fit-content;
+  max-width: 320px;
+}
+@media (width <= 575px) {
+  .atcb-modal-content-subevents {
+    margin: auto;
+  max-width: 380px;
+  }
 }
 
 /* manual-copy fallback input (shown when the automatic clipboard write failed) */

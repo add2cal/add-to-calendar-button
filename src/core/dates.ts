@@ -311,6 +311,7 @@ function generate_timestring(dates: ATCBDateEntryInput[], language = 'en', subEv
 }
 
 function get_format_options(timeZoneInfo: string, dropYear = false, language = 'en'): { DateLong: Intl.DateTimeFormatOptions; DateTimeLong: Intl.DateTimeFormatOptions; Time: Intl.DateTimeFormatOptions } {
+  timeZoneInfo = map_time_zone_for_intl(timeZoneInfo);
   const hoursFormat = (function () {
     if (language === 'en') {
       return 'h12'; // 12am -> 1am -> .. -> 12pm -> 1pm -> ...
@@ -508,7 +509,7 @@ function toIsoOffset(off: string): string {
 
 const tzPartsFormatterCache = new Map<string, Intl.DateTimeFormat>();
 function getTzPartsFormatter(timeZone: string): Intl.DateTimeFormat {
-  const key = timeZone || 'UTC';
+  const key = map_time_zone_for_intl(timeZone || 'UTC');
   const cached = tzPartsFormatterCache.get(key);
   if (cached) return cached;
   const fmt = new Intl.DateTimeFormat('en-US', {
@@ -910,6 +911,10 @@ function getNextOccurrence(rruleStr: string, startDateTime: Date, diff: number, 
 function map_special_time_zones(timeZone: string): string {
   if (!timeZone) return 'GMT';
   const mapping: { [key: string]: string } = {
+    PT: 'PST8PDT',
+    MT: 'MST7MDT',
+    CT: 'CST6CDT',
+    ET: 'EST5EDT',
     PST: 'PST8PDT',
     PDT: 'PST8PDT',
     MST: 'MST7MDT',
@@ -938,4 +943,12 @@ function map_special_time_zones(timeZone: string): string {
   return mapping[`${timeZone.toUpperCase()}`] || 'GMT';
 }
 
-export { generate_time, format_datetime, translate_via_time_zone, generate_timestring, parseRRule, getNextOccurrence, map_special_time_zones };
+// timezones-ical-library supports the common US aliases, while Intl does not.
+function map_time_zone_for_intl(timeZone: string): string {
+  if (/^(PT|MT|CT|ET)$/i.test(timeZone)) {
+    return map_special_time_zones(timeZone);
+  }
+  return timeZone;
+}
+
+export { generate_time, format_datetime, translate_via_time_zone, generate_timestring, parseRRule, getNextOccurrence, map_special_time_zones, map_time_zone_for_intl };

@@ -90,6 +90,7 @@ Also part of the default run (long-standing quick tests):
 - C-02: Tokyo timed (no DST) -> +09:00 math in Google URL, TZID in ICS
 - C-03: explicit UTC -> no shift between wall clock and UTC output
 - C-04: no timeZone -> defaults to GMT (wall-clock + ctz=GMT)
+- C-05: timezones-ical US alias (PT) -> renders and keeps Pacific DST math
 - C-06: special tz alias (CET) -> mapped; Google gets no ctz param
 - C-07: single all-day -> date-only formats, DTEND +1 day
 - C-08: multi-day timed -> range spans days (wall-clock + ctz)
@@ -444,6 +445,7 @@ Plain Node WITHOUT DOM emulation (the ssr entry must be DOM-free); string assert
 - S-17: custom-css, style-light and style-dark reach the shell
 - S-18: non-splitted button with hideTextLabelButton drops the text span and adds the atcb-no-text class
 - S-19: buttonsList sorts options alphabetically to match the client decorate-options sort
+- S-20: pastDateHandling=hide omits the shell only when all non-recurring dates are past; mixed and disable cases retain it
 
 ## Group Z - SSR shell hydration (test/wc-tests/r-Z-ssr-hydration.test.js)
 

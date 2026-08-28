@@ -23,21 +23,21 @@ let defaultLang = (function () {
   return '';
 })();
 let defaultMultiDate = JSON.stringify([{
-    "name":t('demo_data.name_sub_1'),
+    "name":"fd",
     "description":t('demo_data.description_sub_1'),
     "startDate":"today+3",
     "startTime":"10:15",
     "endTime":"23:30"
   },
   {
-    "name":t('demo_data.name_sub_3'),
+    "name":"fd",
     "description":t('demo_data.description_sub_3'),
     "startDate":"today+8",
     "startTime":"09:00",
     "endTime":"19:00"
   },
   {
-    "name":t('demo_data.name_sub_2'),
+    "name":"fd",
     "description":t('demo_data.description_sub_2'),
     "startDate":"today+5",
     "startTime":"11:30",

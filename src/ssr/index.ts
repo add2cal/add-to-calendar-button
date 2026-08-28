@@ -7,7 +7,7 @@
  * layout shift.
  *
  * Deliberate constraints (the shell is a placeholder, not a server-rendered button):
- * - no config decoration, no validation, no timezone math, no network fetches
+ * - no full config decoration, validation, recurrence expansion, or network fetches
  * - only the visual essentials are honored: buttonStyle, size, lightMode, rtl (from
  *   the language), and the real label when it is derivable without decoration
  *   (label attribute, else the localized default from the bundled packs)
@@ -24,6 +24,7 @@ import { rtlLanguages } from '../i18n/index';
 import { decorate_sizes } from '../core/sizes';
 import { officialAttributeName, legacyAttributeName } from '../compat/attributes';
 import { secure_url, strip_unsafe_keys } from '../core/text';
+import { tzlib_get_offset } from 'timezones-ical-library';
 
 // filled at build time with the minified tokens+core css plus EVERY per-style delta
 // (the ssr bundle is server-only, so carrying all styles is size-uncritical)
@@ -104,6 +105,62 @@ function skeletonSpan(width: string): string {
  */
 function truthyFlag(value: unknown): boolean {
   return value === true || value === 'true' || value === '1' || value === '';
+}
+
+function parseDates(value: unknown): { [key: string]: unknown }[] | null {
+  if (Array.isArray(value)) return value.filter((entry) => entry && typeof entry === 'object' && !Array.isArray(entry)) as { [key: string]: unknown }[];
+  if (typeof value !== 'string') return null;
+  try {
+    const parsed = JSON.parse(value.replace(/'/g, '"'));
+    return Array.isArray(parsed) ? (parsed.filter((entry) => entry && typeof entry === 'object' && !Array.isArray(entry)) as { [key: string]: unknown }[]) : null;
+  } catch {
+    return null;
+  }
+}
+
+function resolveDynamicDate(value: unknown): string | null {
+  if (typeof value !== 'string') return null;
+  const match = value.match(/^(today|\d{4}-\d{2}-\d{2})(?:\+(\d{1,4}))?$/i);
+  if (!match) return null;
+  const base = match[1]!.toLowerCase() === 'today' ? new Date() : new Date(`${match[1]}T00:00:00Z`);
+  if (Number.isNaN(base.getTime())) return null;
+  base.setUTCDate(base.getUTCDate() + Number(match[2] || 0));
+  return base.toISOString().slice(0, 10);
+}
+
+function dateIsOverdue(entry: { [key: string]: unknown }): boolean | null {
+  const date = resolveDynamicDate(entry.endDate || entry.startDate);
+  if (!date) return null;
+  const time = typeof entry.endTime === 'string' && /^\d{2}:\d{2}/.test(entry.endTime) ? entry.endTime.slice(0, 5) : '';
+  let timestamp: number;
+  if (time !== '') {
+    try {
+      const timeZone = typeof entry.timeZone === 'string' && entry.timeZone !== 'currentBrowser' ? entry.timeZone : 'UTC';
+      const offset = tzlib_get_offset(timeZone, date, time);
+      timestamp = new Date(`${date} ${time}:00 GMT${offset}`).getTime();
+    } catch {
+      return null;
+    }
+  } else {
+    timestamp = new Date(`${date}T00:00:00Z`).getTime() + 86400000;
+  }
+  return Number.isNaN(timestamp) ? null : timestamp < Date.now();
+}
+
+/** Only suppress a shell when the client can be known to hide every date. */
+function hidesPastEvent(config: AddToCalendarButtonType & { [key: string]: unknown }): boolean {
+  if (config.pastDateHandling !== 'hide' || (typeof config.recurrence === 'string' && config.recurrence !== '')) return false;
+  const configuredDates = parseDates(config.dates);
+  const dates = configuredDates && configuredDates.length > 0 ? configuredDates : [{}];
+  const overdue = dates.map((date) =>
+    dateIsOverdue({
+      startDate: date.startDate || config.startDate,
+      endDate: date.endDate || config.endDate || date.startDate || config.startDate,
+      endTime: date.endTime || config.endTime,
+      timeZone: date.timeZone || config.timeZone,
+    }),
+  );
+  return overdue.length > 0 && overdue.every((entry) => entry === true);
 }
 
 /**
@@ -187,6 +244,10 @@ function generate_ssr_html(rawConfig: AddToCalendarButtonType & { [key: string]:
     if (serialized === null) continue;
     attributes.push(`${officialAttributeName(key)}="${escapeAttribute(serialized)}"`);
   }
+
+  // A shell would flash a button that the client immediately hides. Keep the host
+  // and its configuration for upgrade, but do not create a declarative placeholder.
+  if (hidesPastEvent(config)) return `<add-to-calendar-button class="add-to-calendar atcb-${lightMode}" ${attributes.join(' ')}></add-to-calendar-button>`;
 
   // --- styles: mirror what the client injects (general layout css + registry css) ---
   const initWidth = inlineRsvp ? '100%' : 'fit-content';

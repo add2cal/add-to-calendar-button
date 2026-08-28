@@ -245,3 +245,19 @@ test('S-19: buttonsList sorts options alphabetically to match the client decorat
   assert.ok(idApple > -1 && idGoogle > -1 && idYahoo > -1, 'all three singleton ids present');
   assert.ok(idApple < idGoogle && idGoogle < idYahoo, 'singleton ids in alphabetical order (apple, google, yahoo)');
 });
+
+test('S-20: pastDateHandling=hide omits the shell only when all dates are past', () => {
+  const past = atcb_generate_ssr_html({ name: 'Past', startDate: '2020-01-01', pastDateHandling: 'hide' });
+  assert.ok(!past.includes('<template shadowrootmode="open">'), 'an all-past event gets no SSR placeholder');
+  assert.ok(past.includes('past-date-handling="hide"'), 'host config remains for client initialization');
+
+  const mixed = atcb_generate_ssr_html({
+    name: 'Mixed',
+    dates: [{ startDate: '2020-01-01' }, { startDate: '2050-01-01' }],
+    pastDateHandling: 'hide',
+  });
+  assert.ok(mixed.includes('<template shadowrootmode="open">'), 'a mixed series keeps its placeholder');
+
+  const disabled = atcb_generate_ssr_html({ name: 'Past', startDate: '2020-01-01', pastDateHandling: 'disable' });
+  assert.ok(disabled.includes('<template shadowrootmode="open">'), 'disable remains a client-side concern');
+});

@@ -91,6 +91,15 @@ describe('Group C - Date / time / timezone (single event)', () => {
     expect(url.searchParams.get('ctz')).to.equal('GMT');
   });
 
+  it('C-05: timezones-ical US alias (PT) -> renders and keeps Pacific DST math', async () => {
+    const config = { ...CFG.singleTimedNoTz, name: 'PT Event', timeZone: 'PT' };
+    const url = await googleUrlFor(config, 'atcb-c05a');
+    expect(url.searchParams.get('dates')).to.equal('20500615T100000/20500615T110000');
+    expect(url.searchParams.get('ctz')).to.equal('PT');
+    const teams = await teamsTimes(config, 'atcb-c05b');
+    expect(teams.start).to.equal('2050-06-15T10:00:00-07:00');
+  });
+
   it('C-06: special tz alias (CET) -> mapped; Google gets no ctz param', async () => {
     const url = await googleUrlFor({ ...CFG.singleTimedNoTz, name: 'CET Event', timeZone: 'CET' }, 'atcb-c06');
     expect(url.searchParams.get('ctz')).to.equal(null);
