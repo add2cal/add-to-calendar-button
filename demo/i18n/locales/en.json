@@ -306,7 +306,7 @@
       "styles_lang_npm_body": "When you bundle the script, import the style and language modules you need so they register fetch-free at build time. Simply add the corresponding import statements anywhere in your entry file (or the component that uses the button):",
       "styles_lang_cdn_heading": "Loading via CDN (Vanilla JS)",
       "styles_lang_cdn_body": "With the CDN script tag, on-demand styles and languages are fetched from the same origin as the script itself - nothing else to set up. If you self-host the script, point the \"style-source\" attribute at the directory that contains the styles/ and locales/ folders.",
-      "styles_lang_more": "See the \"button-style\", \"style-source\", \"load-all-styles\", and \"language\" options at the Configuration page for the full picture.",
+      "styles_lang_more": "See the \"button-style\" and \"language\" options at the Configuration page for the full picture.",
       "general": {
         "headline": "How to install the Add to Calendar Button"
       },

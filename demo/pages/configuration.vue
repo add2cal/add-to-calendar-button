@@ -835,11 +835,13 @@ watch(searchSelection, (newVal) => {
               </td>
               <td v-if="locale=='en'">
                 Prefetches every button style delta on initialization.<br /><br />
-                Only useful when you switch the "button-style" at runtime (for example in a live theme switcher) and want the change to apply without any network delay.
+                Only useful when you switch the "button-style" at runtime (for example in a live theme switcher) and want the change to apply without any network delay.<br /><br />
+                This option only works when using the button via a script tag, not via the npm package. With npm, import the required style modules instead.
               </td>
               <td v-else>
                 Lädt alle Button-Style-Deltas bereits bei der Initialisierung.<br /><br />
-                Nur sinnvoll, wenn du die "button-style"-Option zur Laufzeit wechselst (etwa in einem Live-Theme-Switcher) und der Wechsel ohne Netzwerk-Verzögerung greifen soll.
+                Nur sinnvoll, wenn du die "button-style"-Option zur Laufzeit wechselst (etwa in einem Live-Theme-Switcher) und der Wechsel ohne Netzwerk-Verzögerung greifen soll.<br /><br />
+                Diese Option funktioniert nur bei Einbindung des Buttons über einen Script-Tag, nicht über das npm-Paket. Bei npm müssen die benötigten Style-Module stattdessen importiert werden.
               </td>
             </tr>
             <tr id="buttons-list">
