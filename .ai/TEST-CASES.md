@@ -424,6 +424,7 @@ Plain Node WITHOUT DOM emulation (the ssr entry must be DOM-free); string assert
 The same Node tier also covers the DOM-free utility entry in `test/ssr-node/utils.test.mjs`:
 
 - UTIL-01: ESM and CJS `/utils` imports work without DOM globals and both exported functions process dates
+- UTIL-02: `/utils` type declarations contain no DOM global augmentations
 
 - S-01: environment is DOM-free (no document, no window)
 - S-02: ESM and CJS entries expose the same generator

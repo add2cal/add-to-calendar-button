@@ -367,7 +367,9 @@ function buildTypes() {
   // keeps the types working for every consumer moduleResolution (bundler, node16, classic)
   execSync('npx dts-bundle-generator -o dist/index.d.ts --inline-declare-global --no-check --no-banner src/index.ts', { cwd: root, stdio: ['ignore', 'ignore', 'inherit'] });
   execSync('npx dts-bundle-generator -o dist/ssr/index.d.ts --inline-declare-global --no-check --no-banner src/ssr/index.ts', { cwd: root, stdio: ['ignore', 'ignore', 'inherit'] });
-  execSync('npx dts-bundle-generator -o dist/utils/index.d.ts --inline-declare-global --no-check --no-banner src/utils/index.ts', { cwd: root, stdio: ['ignore', 'ignore', 'inherit'] });
+  // Unlike the browser package, the DOM-free utility entry must not carry the
+  // global Window/HTMLElement/JSX augmentations declared in src/types.ts.
+  execSync('npx dts-bundle-generator -o dist/utils/index.d.ts --no-check --no-banner src/utils/index.ts', { cwd: root, stdio: ['ignore', 'ignore', 'inherit'] });
   for (const file of ['dist/index.d.ts', 'dist/ssr/index.d.ts', 'dist/utils/index.d.ts']) {
     fs.writeFileSync(r(file), licenseBanner('Public type declarations (generated from src - do not edit)') + '\n' + fs.readFileSync(r(file), 'utf8'));
   }
@@ -531,6 +533,12 @@ function sanityCheck() {
       if (utilsBuild.includes(marker)) problems.push(`dist/utils/index.js: DOM/component marker ${marker} present`);
     }
     if (!utilsBuild.includes('atcb_generate_timestring') || !utilsBuild.includes('atcb_decorate_data_dates')) problems.push('dist/utils/index.js: utility exports missing');
+  }
+  if (fs.existsSync(r('dist/utils/index.d.ts'))) {
+    const utilsTypes = fs.readFileSync(r('dist/utils/index.d.ts'), 'utf8');
+    for (const marker of ['declare global', 'HTMLElement', 'Window', 'Document', 'IntrinsicElements']) {
+      if (utilsTypes.includes(marker)) problems.push(`dist/utils/index.d.ts: DOM global marker ${marker} present`);
+    }
   }
   // deprecation shims: present, tiny, and re-exporting/loading the main artifact
   for (const variant of DEPRECATED_VARIANTS) {
