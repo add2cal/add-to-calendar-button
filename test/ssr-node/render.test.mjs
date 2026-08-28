@@ -134,6 +134,23 @@ test('S-11: kebab-case config keys are normalized like the tag attributes', () =
   assert.ok(!html.includes('NaNpx'), 'sizes still decorated');
 });
 
+test('S-11b: legacy lowercased attributes normalize across the SSR config surface', () => {
+  const inlineRsvp = atcb_generate_ssr_html({ name: 'X', rsvp: { demo: true }, inlinersvp: '' });
+  assert.ok(inlineRsvp.includes('atcb-ssr-skeleton-block'), 'legacy inlinersvp selects the inline RSVP shell');
+  assert.ok(inlineRsvp.includes('inline-rsvp=""'), 'legacy inlinersvp serializes under the official name');
+
+  const recurrence = atcb_generate_ssr_html({ name: 'X', recurrence_byday: 'MO,TU', prooverride: '' });
+  assert.ok(recurrence.includes('recurrence-by-day="MO,TU"'), 'legacy underscore/case spelling is normalized');
+  assert.ok(recurrence.includes('pro-override=""'), 'legacy compact spelling is normalized');
+});
+
+test('S-11c: SSR config spelling precedence is camelCase, then official, then legacy', () => {
+  const html = atcb_generate_ssr_html({ name: 'X', inlinersvp: 'legacy', 'inline-rsvp': 'official', inlineRsvp: 'camel' });
+  assert.ok(html.includes('inline-rsvp="camel"'), 'camelCase API key wins independent of insertion order');
+  assert.ok(!html.includes('inline-rsvp="official"'), 'official alias does not replace camelCase');
+  assert.ok(!html.includes('inline-rsvp="legacy"'), 'legacy alias does not replace camelCase');
+});
+
 test('S-12: buttonsList renders one singleton button per option with per-option icons and skeleton labels', () => {
   const html = atcb_generate_ssr_html({ name: 'X', options: ['apple', 'google', 'ical'], buttonsList: true, identifier: 'bl1' });
   assert.ok(html.includes('atcb-buttons-list'), 'flex list class on the root');

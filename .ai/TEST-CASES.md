@@ -434,6 +434,8 @@ Plain Node WITHOUT DOM emulation (the ssr entry must be DOM-free); string assert
 - S-09: attribute values and label text are escaped
 - S-10: unknown languages fall back to the english label
 - S-11: kebab-case config keys are normalized like the tag attributes
+- S-11b: legacy lowercased attributes normalize across the SSR config surface
+- S-11c: SSR spelling precedence is camelCase API key, then official attribute, then legacy alias
 - S-12: buttonsList renders one singleton button per option with per-option icons and skeleton labels
 - S-13: buttonsList honors option label overrides, kebab input, and the date-style exclusion
 - S-14: hide-icon-button and hide-icon-list drop the respective icons

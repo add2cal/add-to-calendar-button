@@ -22,7 +22,7 @@ import type { AddToCalendarButtonType } from '../types';
 import { icons, wcParams, wcProParams } from '../core/globals';
 import { rtlLanguages } from '../i18n/index';
 import { decorate_sizes } from '../core/sizes';
-import { officialAttributeName } from '../compat/attributes';
+import { officialAttributeName, legacyAttributeName } from '../compat/attributes';
 import { secure_url, strip_unsafe_keys } from '../core/text';
 
 // filled at build time with the minified tokens+core css plus EVERY per-style delta
@@ -47,20 +47,29 @@ const KNOWN_STYLES = ['default', 'simple', '3d', 'flat', 'round', 'neumorphism',
  */
 function normalizeConfig(config: AddToCalendarButtonType & { [key: string]: unknown }): AddToCalendarButtonType & { [key: string]: unknown } {
   const normalized: { [key: string]: unknown } = {};
+  const priorities: { [key: string]: number } = {};
+  const aliases = new Map<string, { key: string; priority: number }>();
+  // proKey is a control field handled separately from the regular WC param list.
+  for (const param of [...wcParams, 'proKey']) {
+    // Object/API camelCase wins over the official attribute spelling, which in turn
+    // wins over the legacy lowercased spelling, independent of input key order.
+    aliases.set(legacyAttributeName(param), { key: param, priority: 1 });
+    aliases.set(officialAttributeName(param), { key: param, priority: 2 });
+    aliases.set(param, { key: param, priority: 3 });
+  }
   for (const [key, value] of Object.entries(config)) {
-    // 'prokey' is both the official attribute name and valid as-is; the special
-    // names map mirrors the exceptions from compat/attributes (kept inline here,
-    // since a shared reverse lookup would pull the full param list into this entry)
-    const camelKey = key
-      .replace(/^prokey$/i, 'proKey')
-      .replace(/^ical-file-name$/i, 'iCalFileName')
-      .replace(/^use-user-tz$/i, 'useUserTZ')
-      .replace(/[-_]([a-z0-9])/g, (_, chr: string) => chr.toUpperCase());
-    // camelCase keys are applied first-pass style: a later kebab variant of the
-    // same key must not override an explicit camelCase value
-    if (!(camelKey in normalized) || key === camelKey) {
-      normalized[`${camelKey}`] = value;
+    const alias = aliases.get(key);
+    if (alias) {
+      if ((priorities[`${alias.key}`] || 0) <= alias.priority) {
+        normalized[`${alias.key}`] = value;
+        priorities[`${alias.key}`] = alias.priority;
+      }
+      continue;
     }
+    // Keep accepting punctuation-separated keys outside the declared component
+    // surface, as the previous SSR normalizer did.
+    const normalizedKey = key.replace(/[-_]([a-z0-9])/g, (_, chr: string) => chr.toUpperCase());
+    if (!(normalizedKey in normalized)) normalized[`${normalizedKey}`] = value;
   }
   return normalized as AddToCalendarButtonType & { [key: string]: unknown };
 }
