@@ -69,9 +69,14 @@ test('S-06: date style renders skeleton spans instead of computed date parts', (
   assert.ok(!html.includes('>15<'), 'no computed day number (no date math on the server)');
 });
 
-test('S-07: inline RSVP renders a full-width skeleton block', () => {
+test('S-07: inline RSVP renders a shimmering form-shaped skeleton', () => {
   const html = atcb_generate_ssr_html({ name: 'X', prokey: 'abc', rsvp: { demo: true }, inlineRsvp: true });
-  assert.ok(html.includes('atcb-ssr-skeleton-block'), 'skeleton block');
+  assert.ok(html.includes('atcb-ssr-rsvp-skeleton'), 'RSVP skeleton wrapper');
+  assert.strictEqual((html.match(/<div class="atcb-ssr-skeleton atcb-ssr-skeleton-field"><\/div>/g) || []).length, 2, 'two field placeholders');
+  assert.ok(html.includes('atcb-ssr-skeleton-headline'), 'headline placeholder');
+  assert.ok(html.includes('atcb-ssr-skeleton-submit'), 'submit placeholder');
+  assert.ok(html.includes('@keyframes atcb-ssr-shimmer'), 'shimmer animation');
+  assert.ok(html.includes('prefers-reduced-motion: reduce'), 'reduced-motion fallback');
   assert.ok(html.includes('width: 100%'), 'full-width wrapper for the inline form');
   assert.ok(html.includes('prokey="abc"'), 'official prokey attribute');
 });
@@ -136,7 +141,7 @@ test('S-11: kebab-case config keys are normalized like the tag attributes', () =
 
 test('S-11b: legacy lowercased attributes normalize across the SSR config surface', () => {
   const inlineRsvp = atcb_generate_ssr_html({ name: 'X', rsvp: { demo: true }, inlinersvp: '' });
-  assert.ok(inlineRsvp.includes('atcb-ssr-skeleton-block'), 'legacy inlinersvp selects the inline RSVP shell');
+  assert.ok(inlineRsvp.includes('atcb-ssr-rsvp-skeleton'), 'legacy inlinersvp selects the inline RSVP shell');
   assert.ok(inlineRsvp.includes('inline-rsvp=""'), 'legacy inlinersvp serializes under the official name');
 
   const recurrence = atcb_generate_ssr_html({ name: 'X', recurrence_byday: 'MO,TU', prooverride: '' });

@@ -426,7 +426,7 @@ Plain Node WITHOUT DOM emulation (the ssr entry must be DOM-free); string assert
 - S-04: buttonStyle selects exactly its delta; unknown styles fall back to default
 - S-05: size attribute maps to the font-size custom properties (same math as the client)
 - S-06: date style renders skeleton spans instead of computed date parts
-- S-07: inline RSVP renders a full-width skeleton block
+- S-07: inline RSVP renders a shimmering form-shaped skeleton
 - S-07b: non-inline RSVP renders the localized RSVP button
 - S-07c: async renderer fetches the regular-event PRO fixture and renders its button
 - S-07d: async renderer fetches the RSVP PRO fixture and renders its RSVP button

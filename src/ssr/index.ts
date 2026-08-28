@@ -12,7 +12,7 @@
  *   the language), and the real label when it is derivable without decoration
  *   (label attribute, else the localized default from the bundled packs)
  * - `buttonStyle="date"` renders skeleton spans for everything that needs date math
- * - inline RSVP (`rsvp` + `inline-rsvp`) renders a simple skeleton block
+ * - inline RSVP (`rsvp` + `inline-rsvp`) renders a form-shaped skeleton
  * - everything else (options, list behavior, hide flags, ...) is left to hydration
  *
  * Browsers without declarative shadow DOM support treat the template as inert and
@@ -190,7 +190,7 @@ function generate_ssr_html(rawConfig: AddToCalendarButtonType & { [key: string]:
 
   // --- styles: mirror what the client injects (general layout css + registry css) ---
   const initWidth = inlineRsvp ? '100%' : 'fit-content';
-  const generalCss = `.atcb-initialized { display: block; position: relative; width: ${initWidth}; }.atcb-initialized.atcb-inline { display: inline-block; }.atcb-initialized.atcb-buttons-list { display: flex; flex-wrap: wrap; justify-content: center; gap: var(--buttonslist-gap); }.atcb-hidden { display: none; }.atcb-ssr-skeleton { display: inline-block; background: currentColor; opacity: 0.15; border-radius: 0.3em; min-width: 2ch; }.atcb-ssr-skeleton-block { display: block; width: 100%; border-radius: 6px; }`;
+  const generalCss = `.atcb-initialized { display: block; position: relative; width: ${initWidth}; }.atcb-initialized.atcb-inline { display: inline-block; }.atcb-initialized.atcb-buttons-list { display: flex; flex-wrap: wrap; justify-content: center; gap: var(--buttonslist-gap); }.atcb-hidden { display: none; }.atcb-ssr-skeleton { display: inline-block; background: currentColor; opacity: 0.15; border-radius: 0.3em; min-width: 2ch; }.atcb-ssr-rsvp-skeleton { box-sizing: border-box; display: flex; flex-direction: column; align-items: center; width: 100%; max-width: 540px; margin: 0 auto; padding: 32px 24px; gap: 12px; }.atcb-ssr-rsvp-skeleton .atcb-ssr-skeleton { display: block; width: 78%; height: 10px; background-image: linear-gradient(90deg, transparent 25%, rgb(255 255 255 / 0.55) 50%, transparent 75%); background-size: 200% 100%; animation: atcb-ssr-shimmer 1.5s linear infinite; }.atcb-ssr-rsvp-skeleton .atcb-ssr-skeleton-headline { width: 42%; height: 14px; margin-bottom: 2px; opacity: 0.25; }.atcb-ssr-rsvp-skeleton .atcb-ssr-skeleton-field { width: 100%; height: 44px; margin-top: 8px; border-radius: 6px; }.atcb-ssr-rsvp-skeleton .atcb-ssr-skeleton-submit { width: 38%; height: 18px; margin-top: 10px; opacity: 0.25; }.atcb-ssr-rsvp-skeleton .atcb-ssr-skeleton-field + .atcb-ssr-skeleton-field { margin-top: 0; }@keyframes atcb-ssr-shimmer { from { background-position: 200% 0; } to { background-position: -200% 0; } }@media (prefers-reduced-motion: reduce) { .atcb-ssr-rsvp-skeleton .atcb-ssr-skeleton { animation: none; } }`;
   // with buttonStyle 'custom', the registry stays out and only the external file applies
   const styleCss = buttonStyle === 'custom' ? '' : (atcbSsrCssTemplate['core'] || '') + (atcbSsrCssTemplate[`${buttonStyle}`] || '');
   const overrideCss = (styleLight !== '' ? `:host{${styleLight}}` : '') + (styleDark !== '' ? `:host(.atcb-dark){${styleDark}}` : '');
@@ -201,7 +201,7 @@ function generate_ssr_html(rawConfig: AddToCalendarButtonType & { [key: string]:
   const buttonId = identifier !== '' ? ` id="atcb-btn-${escapeAttribute(identifier)}"` : '';
   const content = (function () {
     if (inlineRsvp) {
-      return `<div class="atcb-ssr-skeleton atcb-ssr-skeleton-block" style="height: 220px;"></div>`;
+      return `<div class="atcb-ssr-rsvp-skeleton" aria-hidden="true"><div class="atcb-ssr-skeleton atcb-ssr-skeleton-headline"></div><div class="atcb-ssr-skeleton"></div><div class="atcb-ssr-skeleton"></div><div class="atcb-ssr-skeleton atcb-ssr-skeleton-field"></div><div class="atcb-ssr-skeleton atcb-ssr-skeleton-field"></div><div class="atcb-ssr-skeleton atcb-ssr-skeleton-submit"></div></div>`;
     }
     if (hasRsvp) {
       const rsvp = config.rsvp as { expired?: unknown; bookedOut?: unknown };
