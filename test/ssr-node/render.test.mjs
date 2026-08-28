@@ -70,7 +70,7 @@ test('S-06: date style renders skeleton spans instead of computed date parts', (
   const html = atcb_generate_ssr_html({ name: 'Launch Party', startDate: '2050-06-15', buttonStyle: 'date' });
   assert.ok(html.includes('atcb-date-btn-day'), 'date button structure');
   assert.ok(html.includes('atcb-ssr-skeleton'), 'skeleton spans for date parts');
-  assert.ok(html.includes('[data-atcb-ssr] .atcb-date-btn-month { margin-top: 0.25em; }'), 'day and month placeholders are spaced apart');
+  assert.ok(html.includes('[data-atcb-ssr] .atcb-date-btn-month { margin-top: 0.5em; }'), 'day and month placeholders are spaced apart');
   assert.ok(html.includes('Launch Party'), 'real headline from the name (derivable without decoration)');
   assert.ok(!html.includes('>15<'), 'no computed day number (no date math on the server)');
 });
