@@ -7,7 +7,7 @@ import { expect } from '@open-wc/testing';
 import { mountAtcb } from '../helpers/mount.js';
 import { interceptWindowOpen, interceptFileSave } from '../helpers/capture.js';
 import { clickSingleton } from '../helpers/dom.js';
-import { decodeIcsHref, parseIcs } from '../helpers/ics.js';
+import { decodeIcsHrefAsync, parseIcs } from '../helpers/ics.js';
 import { CFG } from '../fixtures/events.js';
 import { ENVS, SERVICES, SERVICE_ATTR, isValid, URL_BASE } from '../fixtures/matrix.js';
 
@@ -54,7 +54,7 @@ describe(`F.T1 - output matrix (${cells.length} valid cells)`, () => {
         await clickSingleton(host);
         if (service === 'apple' || service === 'ical') {
           expect(fs.saves.length, 'ics file saved').to.equal(1);
-          const ics = parseIcs(decodeIcsHref(fs.saves[0].href));
+          const ics = parseIcs(await decodeIcsHrefAsync(fs.saves[0].href));
           expect(ics.raw).to.include('BEGIN:VCALENDAR');
           expect(ics.events.length).to.be.greaterThan(0);
           expect(ics.events[0].value('SUMMARY')).to.include(cfg.name);

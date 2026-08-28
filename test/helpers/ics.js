@@ -14,6 +14,15 @@ export function decodeIcsHref(href) {
 }
 
 /**
+ * Decodes either a calendar data URI or an iOS-compatible Blob URL.
+ */
+export async function decodeIcsHrefAsync(href) {
+  if (href?.startsWith('data:text/calendar')) return decodeIcsHref(href);
+  if (href?.startsWith('blob:')) return (await fetch(href)).text();
+  throw new Error('Not an ICS data URI or Blob URL: ' + String(href).slice(0, 80));
+}
+
+/**
  * Unfolds RFC 5545 folded lines (CRLF followed by single whitespace).
  */
 export function unfoldIcs(raw) {
