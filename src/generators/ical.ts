@@ -1,5 +1,5 @@
 import { tzlib_get_ical_block } from 'timezones-ical-library';
-import { atcbVersion, isIOS, isAndroid, isSafari, isWebView, isProblematicWebView, defaultTarget } from '../core/globals';
+import { atcbVersion, atcbTimeZonesToUtc, isIOS, isAndroid, isSafari, isWebView, isProblematicWebView, defaultTarget } from '../core/globals';
 import { generate_time, format_datetime } from '../core/dates';
 import { secure_url, rewrite_ical_text, format_ical_lines } from '../core/text';
 import { save_file, copy_to_clipboard } from '../core/util';
@@ -173,9 +173,7 @@ function generate_ical(host: ShadowRoot | null, data: ATCBConfig, type: string, 
       }
       if (data.dates![`${i}`]!.timeZone && data.dates![`${i}`]!.timeZone !== '') {
         // for certain time zones (mostly GMT +/- something and some US time zones), we use GMT and a converted datetime as this would not be supported by Google Calendar and one could use the ics there
-        const timeZone = /GMT[+|-]\d{1,2}|Etc\/U|Etc\/Zulu|CET|CST6CDT|EET|EST|MET|MST|PST8PDT|WET|PST|PDT|MDT|CST|CDT|EDT|EEST|CEST|HST|HDT|AKST|AKDT|AST|ADT|AEST|AEDT|NZST|NZDT|IST|IDT|WEST|ACST|ACDT|BST/i.test(data.dates![`${i}`]!.timeZone as string)
-          ? 'GMT'
-          : (data.dates![`${i}`]!.timeZone as string);
+        const timeZone = atcbTimeZonesToUtc.test(data.dates![`${i}`]!.timeZone as string) ? 'GMT' : (data.dates![`${i}`]!.timeZone as string);
         const timeZoneBlock = tzlib_get_ical_block(timeZone);
         if (!usedTimeZones.includes(timeZone)) {
           ics_lines.push(timeZoneBlock[0]!);

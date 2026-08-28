@@ -71,6 +71,7 @@ describe('Group B - Config validation & error paths', () => {
     const mute = muteConsole();
     try {
       await expectFail({ ...base, startTime: '10:00', endTime: '11:00', timeZone: 'Foo/Bar' });
+      await expectFail({ ...base, startTime: '10:00', endTime: '11:00', timeZone: 'EDT' });
     } finally {
       mute.restore();
     }

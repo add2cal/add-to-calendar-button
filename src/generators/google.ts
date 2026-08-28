@@ -1,4 +1,4 @@
-import { isMobile, isAndroid, isWebView } from '../core/globals';
+import { atcbTimeZonesToUtc, isMobile, isAndroid, isWebView } from '../core/globals';
 import { generate_time } from '../core/dates';
 import { open_cal_url } from './ical';
 import type { ATCBConfig, ATCBDateEntry } from '../types';
@@ -44,7 +44,7 @@ function generate_google(data: ATCBConfig, date: ATCBDateEntry, subEvent: 'all' 
   urlParts.push('dates=' + encodeURIComponent(formattedDate.start) + '%2F' + encodeURIComponent(formattedDate.end));
   // setting time zone if given and not GMT +/- something, since this is not supported by Google Calendar
   // also do not set for all-day events, since this can lead to Google Calendar trying to adjust times
-  if (date.timeZone && date.timeZone !== '' && !/GMT[+|-]\d{1,2}|Etc\/U|Etc\/Zulu|CET|CST6CDT|EET|EST|MET|MST|PST8PDT|WET|PST|PDT|MDT|CST|CDT|EDT|EEST|CEST|HST|HDT|AKST|AKDT|AST|ADT|AEST|AEDT|NZST|NZDT|IST|IDT|WEST|ACST|ACDT|BST/i.test(date.timeZone) && !formattedDate.allday) {
+  if (date.timeZone && date.timeZone !== '' && !atcbTimeZonesToUtc.test(date.timeZone) && !formattedDate.allday) {
     urlParts.push('ctz=' + date.timeZone);
   }
   // add details (if set)

@@ -14,7 +14,7 @@ import { unsafeHTML } from 'lit/directives/unsafe-html.js';
 import { icons } from '../core/globals';
 import { toggle } from './control';
 import { generate_links } from '../generators/index';
-import { generate_time, generate_timestring, map_time_zone_for_intl } from '../core/dates';
+import { generate_time, generate_timestring } from '../core/dates';
 import { set_sizes } from './positioning';
 import { debounce_leading } from '../core/util';
 import { translate_hook } from '../i18n/index';
@@ -208,7 +208,7 @@ function dateButtonContentTemplate(data: ATCBConfig, subEventIn: string | number
   const { subEvent, subEventAll, fullTimeInfo, hoverText, cancelledInfo, recurringString } = dateButtonMeta(data, subEventIn, forceFullDate);
   const startDate = new Date(generate_time(data.dates![`${subEvent}`]!).start);
   const allDay = generate_time(data.dates![`${subEvent}`]!).allday;
-  const timeZone = map_time_zone_for_intl(data.dates![`${subEvent}`]!.timeZone!);
+  const timeZone = data.dates![`${subEvent}`]!.timeZone;
   const btnHeadlineText = data.dates!.length > 1 && subEventAll ? data.name : data.dates![`${subEvent}`]!.name;
   const hasLocationLine = (data.dates![`${subEvent}`]!.location && data.dates![`${subEvent}`]!.location !== '' && !data.dates![`${subEvent}`]!.onlineEvent) || cancelledInfo !== '';
   const hasDescriptionFallback = !hasLocationLine && data.dates![`${subEvent}`]!.description !== '' && fullTimeInfo.length === 0 && (!data.recurrence || data.recurrence === '');

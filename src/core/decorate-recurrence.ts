@@ -1,5 +1,5 @@
 import { tzlib_get_offset } from 'timezones-ical-library';
-import { getNextOccurrence, map_time_zone_for_intl, parseRRule } from './dates';
+import { getNextOccurrence, parseRRule } from './dates';
 import type { ATCBConfig } from '../types';
 
 // format RRULE
@@ -103,7 +103,6 @@ function decorate_data_recurring_events(data: ATCBConfig): ATCBConfig {
 
   // format Date in specific tz; guard invalid dates for Safari
   function formatInTz(dateObj: Date, timeZone: string, includeTime: boolean): { date: string; time: string } {
-    timeZone = map_time_zone_for_intl(timeZone);
     if (!(dateObj instanceof Date) || !isFinite(dateObj.getTime())) {
       return { date: '', time: '' };
     }

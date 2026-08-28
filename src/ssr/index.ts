@@ -107,6 +107,15 @@ function truthyFlag(value: unknown): boolean {
   return value === true || value === 'true' || value === '1' || value === '';
 }
 
+function isAsciiDigits(value: string): boolean {
+  if (value.length === 0) return false;
+  for (let i = 0; i < value.length; i++) {
+    const code = value.charCodeAt(i);
+    if (code < 48 || code > 57) return false;
+  }
+  return true;
+}
+
 function parseDates(value: unknown): { [key: string]: unknown }[] | null {
   if (Array.isArray(value)) return value.filter((entry) => entry && typeof entry === 'object' && !Array.isArray(entry)) as { [key: string]: unknown }[];
   if (typeof value !== 'string') return null;
@@ -118,31 +127,67 @@ function parseDates(value: unknown): { [key: string]: unknown }[] | null {
   }
 }
 
-function resolveDynamicDate(value: unknown): string | null {
+function dateInTimeZone(timeZone: string): string | null {
+  const now = new Date();
+  try {
+    const parts = new Intl.DateTimeFormat('en-US', { timeZone, year: 'numeric', month: '2-digit', day: '2-digit' }).formatToParts(now);
+    const part = (type: Intl.DateTimeFormatPartTypes): string => parts.find((entry) => entry.type === type)?.value || '';
+    return `${part('year')}-${part('month')}-${part('day')}`;
+  } catch {
+    // The timezone library accepts project aliases such as PT and ET that Intl
+    // does not. Use its current offset to translate the instant as a fallback.
+    const utcDate = now.toISOString().slice(0, 10);
+    const utcTime = now.toISOString().slice(11, 16);
+    const offset = tzlib_get_offset(timeZone, utcDate, utcTime);
+    if (offset.length !== 5 || (offset[0] !== '+' && offset[0] !== '-') || !isAsciiDigits(offset.slice(1))) return null;
+    const direction = offset[0] === '+' ? 1 : -1;
+    const offsetMinutes = direction * (Number(offset.slice(1, 3)) * 60 + Number(offset.slice(3, 5)));
+    return new Date(now.getTime() + offsetMinutes * 60000).toISOString().slice(0, 10);
+  }
+}
+
+function resolveDynamicDate(value: unknown, timeZone: string): string | null {
   if (typeof value !== 'string') return null;
-  const match = value.match(/^(today|\d{4}-\d{2}-\d{2})(?:\+(\d{1,4}))?$/i);
-  if (!match) return null;
-  const base = match[1]!.toLowerCase() === 'today' ? new Date() : new Date(`${match[1]}T00:00:00Z`);
+  const separator = value.indexOf('+');
+  if (separator !== -1 && value.indexOf('+', separator + 1) !== -1) return null;
+  const date = separator === -1 ? value : value.slice(0, separator);
+  const offset = separator === -1 ? '' : value.slice(separator + 1);
+  if (separator !== -1 && (offset.length > 4 || !isAsciiDigits(offset))) return null;
+  const isToday = date.toLowerCase() === 'today';
+  const isIsoDate = date.length === 10 && date[4] === '-' && date[7] === '-' && isAsciiDigits(date.slice(0, 4) + date.slice(5, 7) + date.slice(8));
+  if (!isToday && !isIsoDate) return null;
+  const resolvedDate = isToday ? dateInTimeZone(timeZone) : date;
+  if (!resolvedDate) return null;
+  const base = new Date(`${resolvedDate}T00:00:00Z`);
   if (Number.isNaN(base.getTime())) return null;
-  base.setUTCDate(base.getUTCDate() + Number(match[2] || 0));
+  base.setUTCDate(base.getUTCDate() + Number(offset || 0));
   return base.toISOString().slice(0, 10);
 }
 
 function dateIsOverdue(entry: { [key: string]: unknown }): boolean | null {
-  const date = resolveDynamicDate(entry.endDate || entry.startDate);
+  if (entry.timeZone === 'currentBrowser' || entry.useUserTZ) return null;
+  const timeZone = typeof entry.timeZone === 'string' ? entry.timeZone : 'GMT';
+  const date = resolveDynamicDate(entry.endDate || entry.startDate, timeZone);
   if (!date) return null;
   const time = typeof entry.endTime === 'string' && /^\d{2}:\d{2}/.test(entry.endTime) ? entry.endTime.slice(0, 5) : '';
   let timestamp: number;
   if (time !== '') {
     try {
-      const timeZone = typeof entry.timeZone === 'string' && entry.timeZone !== 'currentBrowser' ? entry.timeZone : 'UTC';
       const offset = tzlib_get_offset(timeZone, date, time);
       timestamp = new Date(`${date} ${time}:00 GMT${offset}`).getTime();
     } catch {
       return null;
     }
   } else {
-    timestamp = new Date(`${date}T00:00:00Z`).getTime() + 86400000;
+    const nextDate = new Date(`${date}T00:00:00Z`);
+    nextDate.setUTCDate(nextDate.getUTCDate() + 1);
+    const nextDateString = nextDate.toISOString().slice(0, 10);
+    try {
+      const offset = tzlib_get_offset(timeZone, nextDateString, '00:00');
+      timestamp = new Date(`${nextDateString} 00:00:00 GMT${offset}`).getTime();
+    } catch {
+      return null;
+    }
   }
   return Number.isNaN(timestamp) ? null : timestamp < Date.now();
 }
@@ -158,6 +203,7 @@ function hidesPastEvent(config: AddToCalendarButtonType & { [key: string]: unkno
       endDate: date.endDate || config.endDate || date.startDate || config.startDate,
       endTime: date.endTime || config.endTime,
       timeZone: date.timeZone || config.timeZone,
+      useUserTZ: date.useUserTZ || config.useUserTZ,
     }),
   );
   return overdue.length > 0 && overdue.every((entry) => entry === true);

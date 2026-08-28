@@ -1,5 +1,5 @@
 import { tzlib_get_offset } from 'timezones-ical-library';
-import { isMobile } from './globals';
+import { atcbTimeZonesToUtc, isMobile } from './globals';
 import { decorate_data_dates } from './decorate';
 import type { ATCBConfig, ATCBDateEntry, ATCBDateEntryInput } from '../types';
 
@@ -21,7 +21,7 @@ function generate_time(data: ATCBConfig | ATCBDateEntry, style = 'delimiters', t
       return durationHours + ':' + ('0' + durationMinutes).slice(-2);
     })();
     // (see https://tz.add-to-calendar-technology.com/api/zones.json for available TZ names)
-    if ((targetCal == 'ical' || targetCal == 'google') && !/GMT[+|-]\d{1,2}|Etc\/U|Etc\/Zulu|CET|CST6CDT|EET|EST|MET|MST|PST8PDT|WET|PST|PDT|MDT|CST|CDT|EDT|EEST|CEST|HST|HDT|AKST|AKDT|AST|ADT|AEST|AEDT|NZST|NZDT|IST|IDT|WEST|ACST|ACDT|BST/i.test(data.timeZone!)) {
+    if ((targetCal == 'ical' || targetCal == 'google') && !atcbTimeZonesToUtc.test(data.timeZone!)) {
       // in the iCal or Google case, we simply return and cut off the Z. Google does not support GMT +/- time zones (and we also adjust ical as it can be used for Google calendar).
       // everything else will be done by injecting the VTIMEZONE block at the iCal function
       return {
@@ -162,6 +162,7 @@ function generate_timestring(dates: ATCBDateEntryInput[], language = 'en', subEv
     dates = decorate_data_dates({ dates: dates }).dates!;
   }
   let timeZoneInfoStart: string, timeZoneInfoEnd: string;
+  let timeZoneDisplayStart: string, timeZoneDisplayEnd: string;
   let formattedTimeStart: { start: string; end: string; duration: string; allday: false } | { start: string; end: string; allday: true };
   let formattedTimeEnd: { start: string; end: string; duration: string; allday: false } | { start: string; end: string; allday: true };
   const timeBlocks: string[] = [];
@@ -174,12 +175,16 @@ function generate_timestring(dates: ATCBDateEntryInput[], language = 'en', subEv
     formattedTimeEnd = generate_time(dates[dates.length - 1]! as ATCBDateEntry);
     timeZoneInfoStart = browserTimeOverride ? browserTimezone : dates[0]!.timeZone!;
     timeZoneInfoEnd = browserTimeOverride ? browserTimezone : dates[dates.length - 1]!.timeZone!;
+    timeZoneDisplayStart = browserTimeOverride ? browserTimezone : (dates[0] as ATCBDateEntry).timeZoneDisplay || timeZoneInfoStart;
+    timeZoneDisplayEnd = browserTimeOverride ? browserTimezone : (dates[dates.length - 1] as ATCBDateEntry).timeZoneDisplay || timeZoneInfoEnd;
   } else {
     // we are looking at 1 or many sub-events, but we consider only one specific
     formattedTimeStart = generate_time(dates[`${subEvent}`]! as ATCBDateEntry);
     formattedTimeEnd = formattedTimeStart;
     timeZoneInfoStart = browserTimeOverride ? browserTimezone : dates[`${subEvent}`]!.timeZone!;
     timeZoneInfoEnd = timeZoneInfoStart;
+    timeZoneDisplayStart = browserTimeOverride ? browserTimezone : (dates[`${subEvent}`] as ATCBDateEntry).timeZoneDisplay || timeZoneInfoStart;
+    timeZoneDisplayEnd = timeZoneDisplayStart;
   }
   const startDateInfo = new Date(formattedTimeStart.start);
   const endDateInfo = new Date(formattedTimeEnd.end);
@@ -218,10 +223,10 @@ function generate_timestring(dates: ATCBDateEntryInput[], language = 'en', subEv
   } else {
     // determine time zone strings
     if (!formattedTimeStart.allday && browserTimezone !== timeZoneInfoStart && timeZoneInfoStart !== timeZoneInfoEnd) {
-      timeZoneInfoStringStart = '(' + timeZoneInfoStart + ')';
+      timeZoneInfoStringStart = '(' + timeZoneDisplayStart + ')';
     }
     if ((!formattedTimeEnd.allday && browserTimezone !== timeZoneInfoEnd) || timeZoneInfoStart !== timeZoneInfoEnd) {
-      timeZoneInfoStringEnd = '(' + timeZoneInfoEnd + ')';
+      timeZoneInfoStringEnd = '(' + timeZoneDisplayEnd + ')';
     }
   }
   // drop the year, if it is the current one (and not enforced)
@@ -311,7 +316,7 @@ function generate_timestring(dates: ATCBDateEntryInput[], language = 'en', subEv
 }
 
 function get_format_options(timeZoneInfo: string, dropYear = false, language = 'en'): { DateLong: Intl.DateTimeFormatOptions; DateTimeLong: Intl.DateTimeFormatOptions; Time: Intl.DateTimeFormatOptions } {
-  timeZoneInfo = map_time_zone_for_intl(timeZoneInfo);
+  timeZoneInfo = map_special_time_zones(timeZoneInfo);
   const hoursFormat = (function () {
     if (language === 'en') {
       return 'h12'; // 12am -> 1am -> .. -> 12pm -> 1pm -> ...
@@ -509,7 +514,7 @@ function toIsoOffset(off: string): string {
 
 const tzPartsFormatterCache = new Map<string, Intl.DateTimeFormat>();
 function getTzPartsFormatter(timeZone: string): Intl.DateTimeFormat {
-  const key = map_time_zone_for_intl(timeZone || 'UTC');
+  const key = map_special_time_zones(timeZone || 'UTC');
   const cached = tzPartsFormatterCache.get(key);
   if (cached) return cached;
   const fmt = new Intl.DateTimeFormat('en-US', {
@@ -911,44 +916,23 @@ function getNextOccurrence(rruleStr: string, startDateTime: Date, diff: number, 
 function map_special_time_zones(timeZone: string): string {
   if (!timeZone) return 'GMT';
   const mapping: { [key: string]: string } = {
-    PT: 'PST8PDT',
-    MT: 'MST7MDT',
-    CT: 'CST6CDT',
-    ET: 'EST5EDT',
-    PST: 'PST8PDT',
-    PDT: 'PST8PDT',
-    MST: 'MST7MDT',
-    MDT: 'MST7MDT',
-    CST: 'CST6CDT',
-    CDT: 'CST6CDT',
-    EST: 'EST5EDT',
-    EDT: 'EST5EDT',
-    HDT: 'US/Hawaii',
-    HST: 'US/Hawaii',
-    AKST: 'US/Alaska',
-    AKDT: 'US/Alaska',
-    IST: 'Asia/Jerusalem',
-    IDT: 'Asia/Jerusalem',
-    AEST: 'Australia/Brisbane',
-    AEDT: 'Australia/ACT',
-    ACST: 'Australia/North',
-    ACDT: 'Australia/South',
-    NZST: 'NZ',
-    NZDT: 'NZ',
-    BST: 'Europe/London',
-    AST: 'America/Puerto_Rico',
-    ADT: 'Canada/Atlantic',
-    WEST: 'Europe/Lisbon',
+    PT: 'America/Los_Angeles',
+    MT: 'America/Denver',
+    CT: 'America/Chicago',
+    ET: 'America/New_York',
+    CET: 'Europe/Brussels',
+    CST6CDT: 'America/Chicago',
+    EET: 'Europe/Athens',
+    EST: 'America/Panama',
+    EST5EDT: 'America/New_York',
+    HST: 'Pacific/Honolulu',
+    MET: 'Europe/Brussels',
+    MST: 'America/Phoenix',
+    MST7MDT: 'America/Denver',
+    PST8PDT: 'America/Los_Angeles',
+    WET: 'Europe/Lisbon',
   };
-  return mapping[`${timeZone.toUpperCase()}`] || 'GMT';
+  return mapping[`${timeZone.toUpperCase()}`] || timeZone;
 }
 
-// timezones-ical-library supports the common US aliases, while Intl does not.
-function map_time_zone_for_intl(timeZone: string): string {
-  if (/^(PT|MT|CT|ET)$/i.test(timeZone)) {
-    return map_special_time_zones(timeZone);
-  }
-  return timeZone;
-}
-
-export { generate_time, format_datetime, translate_via_time_zone, generate_timestring, parseRRule, getNextOccurrence, map_special_time_zones, map_time_zone_for_intl };
+export { generate_time, format_datetime, translate_via_time_zone, generate_timestring, parseRRule, getNextOccurrence, map_special_time_zones };

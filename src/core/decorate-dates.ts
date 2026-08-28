@@ -110,7 +110,8 @@ function dates_cleanup(data: ATCBConfig, i: number): ATCBConfig {
   dateEntry.endDate = cleanedUpDates.endDate;
   dateEntry.startTime = cleanedUpDates.startTime;
   dateEntry.endTime = cleanedUpDates.endTime;
-  dateEntry.timeZone = cleanedUpDates.timeZone;
+  dateEntry.timeZoneDisplay = cleanedUpDates.timeZone;
+  dateEntry.timeZone = map_special_time_zones(cleanedUpDates.timeZone!);
   // calculating more special meta information
   dateEntry.timestamp = date_specials_calculation('timestamp', dateEntry.startDate, dateEntry.startTime, dateEntry.timeZone);
   dateEntry.overdue = date_specials_calculation('overdue', dateEntry.endDate, dateEntry.endTime, dateEntry.timeZone) as boolean;
@@ -221,7 +222,10 @@ function date_cleanup(dateTimeData: ATCBDateEntry): ATCBDateEntry {
       dateTimeData[`${point}Date`] = 'badly-formed';
     } else {
       // dynamic date replacement (if dateStr includes a + or is today format)
-      if (/\+/.test(dateStr) || isValidTodayFormat(dateStr)) dateTimeData[`${point}Date`] = date_calculation(dateStr);
+      if (/\+/.test(dateStr) || isValidTodayFormat(dateStr)) {
+        const timeZone = dateTimeData.timeZone === 'currentBrowser' || dateTimeData.useUserTZ ? Intl.DateTimeFormat().resolvedOptions().timeZone || 'GMT' : map_special_time_zones(dateTimeData.timeZone || 'GMT');
+        dateTimeData[`${point}Date`] = date_calculation(dateStr, timeZone);
+      }
       // second, if valid, clean up
       if (dateTimeData[`${point}Date`]) {
         // identify a possible time information within the date string
@@ -243,6 +247,7 @@ function date_cleanup(dateTimeData: ATCBDateEntry): ATCBDateEntry {
     const validTimeZones = tzlib_get_timezones() as string[];
     if (!validTimeZones.includes(browserTimezone)) {
       browserTimezone = map_special_time_zones(browserTimezone); // manual mapping of special cases
+      if (!validTimeZones.includes(browserTimezone)) browserTimezone = 'GMT';
     }
     // for the useUserTZ, we also recalculate the start and end date (and time) to the user's time zone based on the given time zone
     if (dateTimeData.useUserTZ && dateTimeData.startTime && dateTimeData.startTime !== '' && dateTimeData.endTime && dateTimeData.endTime !== '') {
@@ -284,11 +289,18 @@ function date_specials_calculation(type: string, dateString: string | undefined,
   }
 }
 
-function date_calculation(dateString: string): string | false {
-  // replace "today" with the current date first
-  const today = new Date();
-  const todayString = today.getUTCFullYear() + '-' + (today.getUTCMonth() + 1) + '-' + today.getUTCDate();
-  dateString = dateString.replace(/today/gi, todayString);
+function date_calculation(dateString: string, timeZone: string): string | false {
+  // Replace "today" with the current calendar date in the event's effective
+  // time zone. The same instant can belong to different dates across zones.
+  if (/today/i.test(dateString)) {
+    try {
+      const parts = new Intl.DateTimeFormat('en-US', { timeZone, year: 'numeric', month: '2-digit', day: '2-digit' }).formatToParts(new Date());
+      const part = (type: Intl.DateTimeFormatPartTypes): string => parts.find((entry) => entry.type === type)?.value || '';
+      dateString = dateString.replace(/today/gi, `${part('year')}-${part('month')}-${part('day')}`);
+    } catch {
+      return false;
+    }
+  }
   // check for any dynamic additions and adjust
   const dateStringParts = dateString.split('+');
   const dateParts = dateStringParts[0]!.split('-');

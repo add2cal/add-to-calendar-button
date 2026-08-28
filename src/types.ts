@@ -82,6 +82,7 @@ export interface ATCBDateEntryInput {
  */
 export interface ATCBDateEntry extends ATCBDateEntryInput {
   overdue?: boolean;
+  timeZoneDisplay?: string;
   [key: string]: unknown;
 }
 

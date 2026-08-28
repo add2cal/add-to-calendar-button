@@ -261,3 +261,13 @@ test('S-20: pastDateHandling=hide omits the shell only when all dates are past',
   const disabled = atcb_generate_ssr_html({ name: 'Past', startDate: '2020-01-01', pastDateHandling: 'disable' });
   assert.ok(disabled.includes('<template shadowrootmode="open">'), 'disable remains a client-side concern');
 });
+
+test('S-21: dynamic SSR dates accept only today or ISO dates with a bounded numeric offset', () => {
+  const valid = atcb_generate_ssr_html({ name: 'Past', startDate: '2020-01-01+0001', pastDateHandling: 'hide' });
+  assert.ok(!valid.includes('<template shadowrootmode="open">'), 'a valid offset date participates in past-date handling');
+
+  for (const startDate of ['2020-01-01+', '2020-01-01+12345', '2020-01-01+1x', '2020-01-01+1+2', '2020-1-01']) {
+    const invalid = atcb_generate_ssr_html({ name: 'Invalid', startDate, pastDateHandling: 'hide' });
+    assert.ok(invalid.includes('<template shadowrootmode="open">'), `invalid dynamic date ${startDate} is ignored by SSR date math`);
+  }
+});

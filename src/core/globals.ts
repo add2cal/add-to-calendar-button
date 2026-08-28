@@ -108,6 +108,8 @@ const isProblematicWebView: () => boolean = isBrowser()
 
 // DEFINE GLOBAL VARIABLES
 const defaultTarget: string = isWebView() ? '_system' : '_blank';
+// Zones without a Google-compatible location TZID are converted to UTC instead.
+const atcbTimeZonesToUtc = /^(?:GMT[+-]\d{1,2}|UTC|Zulu|Etc\/.*)$/i;
 const options: string[] = ['apple', 'google', 'ical', 'ms365', 'outlookcom', 'msteams', 'yahoo'];
 const validRecurrenceOptions: string[] = ['apple', 'google', 'ical'];
 const invalidSubscribeOptions: string[] = ['msteams'];
@@ -336,6 +338,7 @@ export {
   isWebView,
   isProblematicWebView,
   defaultTarget,
+  atcbTimeZonesToUtc,
   options,
   validRecurrenceOptions,
   invalidSubscribeOptions,

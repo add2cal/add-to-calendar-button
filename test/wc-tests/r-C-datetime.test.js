@@ -93,16 +93,18 @@ describe('Group C - Date / time / timezone (single event)', () => {
 
   it('C-05: timezones-ical US alias (PT) -> renders and keeps Pacific DST math', async () => {
     const config = { ...CFG.singleTimedNoTz, name: 'PT Event', timeZone: 'PT' };
+    const { shadow } = await mountAtcb({ ...config, buttonStyle: 'date', options: "'google'", identifier: 'atcb-c05-ui' });
+    expect(shadow.textContent).to.include('(PT)');
     const url = await googleUrlFor(config, 'atcb-c05a');
     expect(url.searchParams.get('dates')).to.equal('20500615T100000/20500615T110000');
-    expect(url.searchParams.get('ctz')).to.equal('PT');
+    expect(url.searchParams.get('ctz')).to.equal('America/Los_Angeles');
     const teams = await teamsTimes(config, 'atcb-c05b');
     expect(teams.start).to.equal('2050-06-15T10:00:00-07:00');
   });
 
-  it('C-06: special tz alias (CET) -> mapped; Google gets no ctz param', async () => {
+  it('C-06: special tz alias (CET) -> Google gets the canonical location zone', async () => {
     const url = await googleUrlFor({ ...CFG.singleTimedNoTz, name: 'CET Event', timeZone: 'CET' }, 'atcb-c06');
-    expect(url.searchParams.get('ctz')).to.equal(null);
+    expect(url.searchParams.get('ctz')).to.equal('Europe/Brussels');
   });
 
   it('C-07: single all-day -> date-only formats, DTEND +1 day', async () => {
@@ -131,11 +133,16 @@ describe('Group C - Date / time / timezone (single event)', () => {
   });
 
   it('C-10: dynamic date today+7 resolves to a concrete date', async () => {
-    const url = await googleUrlFor({ name: 'Dynamic', startDate: 'today+7' }, 'atcb-c10');
-    const expected = new Date(Date.now() + 7 * 86400000);
-    const p = (n) => String(n).padStart(2, '0');
-    const expectedStr = `${expected.getFullYear()}${p(expected.getMonth() + 1)}${p(expected.getDate())}`;
-    expect(url.searchParams.get('dates')).to.include(expectedStr);
+    const expectedDate = (timeZone) => {
+      const date = new Date(Date.now() + 7 * 86400000);
+      const parts = new Intl.DateTimeFormat('en-US', { timeZone, year: 'numeric', month: '2-digit', day: '2-digit' }).formatToParts(date);
+      const part = (type) => parts.find((entry) => entry.type === type).value;
+      return `${part('year')}${part('month')}${part('day')}`;
+    };
+    for (const timeZone of ['Pacific/Kiritimati', 'Pacific/Pago_Pago']) {
+      const url = await googleUrlFor({ name: 'Dynamic', startDate: 'today+7', timeZone }, `atcb-c10-${timeZone.split('/')[1]}`);
+      expect(url.searchParams.get('dates')).to.include(expectedDate(timeZone));
+    }
   });
 
   it('C-11: past date with default handling still renders normally', async () => {
