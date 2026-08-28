@@ -128,7 +128,7 @@ function generate_ical(host: ShadowRoot | null, data: ATCBConfig, type: string, 
   const now = new Date();
   const ics_lines = ['BEGIN:VCALENDAR', 'VERSION:2.0'];
   const icalVersion = atcbVersion.replace(/-next.*$/i, '');
-  ics_lines.push('PRODID:-// https://add-to-calendar-pro.com // button v' + icalVersion + ' //EN');
+  ics_lines.push('PRODID:-// calendarverse.net // v' + icalVersion + ' //EN');
   ics_lines.push('CALSCALE:GREGORIAN');
   // we set CANCEL, whenever the status says so
   // mind that in the multi-date case (where we create 1 ics file), CANCEL is no option
