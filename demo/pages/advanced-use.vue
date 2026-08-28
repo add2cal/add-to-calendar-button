@@ -1109,6 +1109,17 @@ const html = atcb_generate_ssr_html({
 // and load the regular script on the client as usual</pre>
           </LazyCodeBlock>
           <p>
+            For PRO events, use the asynchronous <code>atcb_generate_ssr_html_async</code> function. It fetches and merges the hosted configuration for the <code>proKey</code> before rendering the shell. Without a <code>proKey</code>, it behaves like the synchronous function.
+          </p>
+          <LazyCodeBlock>
+            <pre>
+import { atcb_generate_ssr_html_async } from 'add-to-calendar-button/ssr';
+
+const html = await atcb_generate_ssr_html_async({
+  proKey: 'YOUR_PRO_KEY',
+});</pre>
+          </LazyCodeBlock>
+          <p>
             The shell honors the button style, size, light mode, right-to-left languages, and the label (the localized default or your "label" value).<br />
             Date-style buttons and inline RSVP render subtle skeletons, since their content requires client-side logic. Everything else happens at hydration.
           </p>
@@ -1131,6 +1142,17 @@ const html = atcb_generate_ssr_html({
 });
 // füge den zurückgegebenen String in deine server-gerenderte Seite ein
 // und lade das reguläre Skript im Client wie gewohnt</pre>
+          </LazyCodeBlock>
+          <p>
+            Für PRO-Events verwendest du die asynchrone Funktion <code>atcb_generate_ssr_html_async</code>. Sie lädt und kombiniert die gehostete Konfiguration für den <code>proKey</code>, bevor sie die Hülle rendert. Ohne <code>proKey</code> verhält sie sich wie die synchrone Funktion.
+          </p>
+          <LazyCodeBlock>
+            <pre>
+import { atcb_generate_ssr_html_async } from 'add-to-calendar-button/ssr';
+
+const html = await atcb_generate_ssr_html_async({
+  proKey: 'YOUR_PRO_KEY',
+});</pre>
           </LazyCodeBlock>
           <p>
             Die Hülle berücksichtigt Button-Style, Größe, Light-Mode, Rechts-nach-Links-Sprachen und das Label (der lokalisierte Default oder dein "label"-Wert).<br />
