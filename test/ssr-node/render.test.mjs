@@ -8,6 +8,7 @@
 import { test } from 'node:test';
 import assert from 'node:assert';
 import { createRequire } from 'node:module';
+import { PRO_EVT_KEY, PRO_RSVP_KEY, proEvtConfig, proRsvpConfig } from '../fixtures/pro.js';
 
 const require = createRequire(import.meta.url);
 
@@ -82,14 +83,24 @@ test('S-07b: non-inline RSVP renders the localized RSVP button', () => {
   assert.ok(!html.includes('class="atcb-icon atcb-icon-trigger"'), 'no rendered calendar trigger icon');
 });
 
-test('S-07c: async renderer fetches PRO data and renders its RSVP button', async (t) => {
+test('S-07c: async renderer fetches the regular-event PRO fixture and renders its button', async (t) => {
   t.mock.method(globalThis, 'fetch', async (url) => {
-    assert.strictEqual(url, 'https://event.caldn.net/pro-rsvp/config.json');
-    return new Response(JSON.stringify({ name: 'Fetched event', rsvp: { demo: true }, language: 'en' }), { status: 200 });
+    assert.strictEqual(url, `https://event.caldn.net/${PRO_EVT_KEY}/config.json`);
+    return new Response(JSON.stringify(proEvtConfig()), { status: 200 });
   });
-  const html = await atcb_generate_ssr_html_async({ prokey: 'pro-rsvp' });
+  const html = await atcb_generate_ssr_html_async({ prokey: PRO_EVT_KEY });
+  assert.ok(html.includes('Save the PRO date'), 'fetched event config determines shell');
+  assert.ok(html.includes(`prokey="${PRO_EVT_KEY}"`), 'PRO key remains on the host');
+});
+
+test('S-07d: async renderer fetches the RSVP PRO fixture and renders its RSVP button', async (t) => {
+  t.mock.method(globalThis, 'fetch', async (url) => {
+    assert.strictEqual(url, `https://event.caldn.net/${PRO_RSVP_KEY}/config.json`);
+    return new Response(JSON.stringify(proRsvpConfig()), { status: 200 });
+  });
+  const html = await atcb_generate_ssr_html_async({ prokey: PRO_RSVP_KEY });
   assert.ok(html.includes('class="atcb-icon atcb-icon-rsvp"'), 'fetched RSVP config determines shell');
-  assert.ok(html.includes('prokey="pro-rsvp"'), 'PRO key remains on the host');
+  assert.ok(html.includes(`prokey="${PRO_RSVP_KEY}"`), 'PRO key remains on the host');
 });
 
 test('S-08: rtl languages mark the wrapper; hidden config keeps the shell hidden', () => {
