@@ -21,6 +21,8 @@ Use this guide to check the few changes that may require action in your project.
    compatible for now, but may be removed in a future major version.
 8. Check that any supplied URLs use an allowed, non-scriptable scheme.
 9. Test on your supported browsers. The full v3 experience targets Baseline 2023.
+10. If server or worker code imports date utilities from the package root or `/unstyle`, switch
+    those imports to the DOM-free `add-to-calendar-button/utils` entry.
 
 If none of these cases applies, your v2 integration should continue to work unchanged.
 
@@ -45,6 +47,10 @@ Update these integrations to the main entry when convenient:
 ```js
 import 'add-to-calendar-button';
 ```
+
+The `/unstyle` compatibility entry is not a server-only build: it re-exports the main package and
+therefore still loads Lit and the web component. Server runtimes such as Cloudflare Workers must
+use the dedicated `/utils` entry when they only need the date helpers described below.
 
 ## Update TypeScript PRO configurations
 
@@ -186,6 +192,35 @@ const html = atcb_generate_ssr_html({
 
 The shell reflects the button style, size, color mode, text direction, and label. The regular
 browser package adopts and hydrates it without replacing the already-painted shadow root.
+
+## Use date utilities in server and worker runtimes
+
+Version 3 provides a DOM-free utility entry for Cloudflare Workers, Node, and similar runtimes:
+
+```js
+import {
+  atcb_decorate_data_dates,
+  atcb_generate_timestring,
+} from 'add-to-calendar-button/utils';
+
+const event = atcb_decorate_data_dates({
+  dates: [
+    {
+      name: 'Launch Party',
+      startDate: '2050-06-15',
+      startTime: '10:00',
+      endTime: '11:00',
+      timeZone: 'Europe/Berlin',
+    },
+  ],
+});
+
+const label = atcb_generate_timestring(event.dates, 'en').join(' ');
+```
+
+The `/utils` export supports ESM, CommonJS, and TypeScript without importing Lit, the web
+component, styles, or browser globals. Importing these functions from the main package or the
+legacy `/unstyle` entry does not provide that guarantee.
 
 ## New ICS-only options
 

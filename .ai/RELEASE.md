@@ -10,7 +10,8 @@ table in `.ai/ARCHITECTURE.md`) plus regenerated `assets/css/` full stylesheets.
 checks inside the build fail hard when an artifact is missing or malformed - treat a green
 build as part of the release gate. The npm package ships `dist/`, `assets/css/*.css`,
 `test/`, `CHANGELOG.md` (see the `files` list in package.json); types resolve through the
-exports map (flat `dist/index.d.ts` and `dist/ssr/index.d.ts`, generated from source).
+exports map (flat `dist/index.d.ts`, `dist/ssr/index.d.ts`, and `dist/utils/index.d.ts`,
+generated from source).
 
 The `jsdelivr` field points at `dist/atcb.js`. The minified twin `dist/atcb.min.js` ships
 in the package; whether to switch the CDN default to it is a maintainer decision.
@@ -31,7 +32,7 @@ Edit only the root `package.json`. It is the single source of truth for the pack
 The complete release gate consists of two commands:
 
 1. `npm run test:release` - runs the full cartesian browser suite, package-consumption
-   probes, and DOM-free SSR tests. The browser suite is required on BOTH browsers
+   probes, DOM-free SSR tests, and DOM-free utility-entry tests. The browser suite is required on BOTH browsers
    (chrome-headless-shell and full Chrome via `CHROME_PATH`). The package probes pack and
    install the tarball, then verify Node CJS/ESM consumption, both TypeScript resolution
    modes, and a real bundler build with size bounds.

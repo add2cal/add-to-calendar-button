@@ -5,6 +5,7 @@
 - v3.0 : "lighter, faster, everywhere" full rewrite of the internals - same button, same attributes
   - a lot smaller: styles beyond the default and languages beyond English are now separate tiny assets, loaded on demand by browser-script/CDN integrations and explicitly imported by npm users (ESM bundle -41% raw / -14% gzip vs v2.15; a typical bundler setup saves even more)
   - new: server-side rendering via the `add-to-calendar-button/ssr` entry - style- and size-correct shells through declarative shadow DOM, hydrated without layout shift
+  - new: DOM-free `add-to-calendar-button/utils` entry exporting `atcb_generate_timestring` and `atcb_decorate_data_dates` for Cloudflare Workers, Node, and other runtimes without browser globals
   - new: per-style and per-locale npm modules (`add-to-calendar-button/styles/3d`, `add-to-calendar-button/i18n/de`) for fetch-free bundling
   - new: official kebab-case attribute names (`start-date`, `button-style`, ...) - every v2 spelling keeps working as an alias
   - new: `style-source` and `load-all-styles` options for asset loading control and runtime style switching

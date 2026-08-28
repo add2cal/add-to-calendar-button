@@ -20,6 +20,7 @@ Deep dives live in `.ai/`: **ARCHITECTURE.md** (module map, data flow, pipelines
 | `action/index.ts`                        | `atcb_action` imperative API                                                                                       |
 | `compat/attributes.ts`                   | Official kebab-case attribute names + legacy alias resolution (official wins)                                      |
 | `ssr/index.ts`                           | DOM-free declarative-shadow-DOM shell renderer (`add-to-calendar-button/ssr`)                                      |
+| `utils/index.ts`                         | DOM-free date utility entry (`add-to-calendar-button/utils`)                                                       |
 | `ui/templates.ts`                        | lit-html templates for the button path (incl. date-style content)                                                  |
 | `ui/generate.ts`                         | Imperative DOM construction (list, modal, overlay)                                                                 |
 | `ui/control.ts`                          | Open/close/toggle, body-scroll lock                                                                                |
@@ -80,7 +81,7 @@ Strict TypeScript in `./src` (target ES2017 bundles; full experience at Baseline
 
 16. **Never derive asset urls via `new URL(rel, import.meta.url)`.** Bundlers rewrite that pattern statically (vite once inlined a module's own SOURCE as an asset url). Script bases are derived via plain string operations on `import.meta.url` / `document.currentScript` — keep it that way.
 
-17. **lit must resolve through its `node` condition for anything Node runs.** The browser build of lit extends `HTMLElement` at module scope and crashes a plain `require`/server import. The CJS and SSR build passes set `resolve.conditions` accordingly; the ssr entry's import graph must additionally stay lit-free entirely (that is why `core/sizes.ts` exists).
+17. **lit must resolve through its `node` condition for anything Node runs.** The browser build of lit extends `HTMLElement` at module scope and crashes a plain `require`/server import. The CJS and SSR build passes set `resolve.conditions` accordingly; the ssr entry's import graph must additionally stay lit-free entirely (that is why `core/sizes.ts` exists). The `/utils` build is stricter still: its emitted graph must contain no Lit, component, style, or browser-global references.
 
 18. **The element constructor ADOPTS an existing shadow root.** With server-rendered declarative shadow DOM, `this.shadowRoot` already exists at upgrade — calling `attachShadow` would CLEAR it. The constructor branches, keeps the shell nodes painted, and `removeSsrShell()` swaps them out after the real render. Shell wrapper = `[data-atcb-ssr]`; client queries exclude it.
 
@@ -96,6 +97,7 @@ Strict TypeScript in `./src` (target ES2017 bundles; full experience at Baseline
 - **UI bug:** `ui/control.ts` / `ui/positioning.ts` (open/close/position) or `ui/generate.ts` / `ui/templates.ts` (DOM).
 - **Packaging / exports:** package.json exports map + `scripts/build.mjs` (shims, per-entry types, cjs twins) + `scripts/test-package.mjs`.
 - **SSR shell:** `src/ssr/index.ts` (server) + the adoption/swap logic in `element/index.ts` (client).
+- **DOM-free utilities:** `src/utils/index.ts` + its dedicated ESM/CJS/type builds in `scripts/build.mjs`.
 
 ## Testing
 
@@ -103,7 +105,7 @@ Strict TypeScript in `./src` (target ES2017 bundles; full experience at Baseline
 - `npm run test:extended` — + reduced suite (groups in `test/wc-tests/r-*.test.js`).
 - `npm run test:full` — + full cartesian suite (`test/wc-tests-full/f-*.test.js`). Release bar: BOTH browsers (chrome-headless-shell and full Chrome via `CHROME_PATH`).
 - `npm run test:package` — pack + install + consumption probes (Node CJS/ESM, types under bundler+node16, vite build with size bounds).
-- `npm run test:ssr` — DOM-free shell rendering (node:test against dist/ssr).
+- `npm run test:ssr` — DOM-free shell and utility entry tests (node:test against dist/ssr and dist/utils).
 - `.ai/TEST-STRATEGY.md` — tiers, helpers, conventions, load-bearing runner constraints (concurrency 1!). `.ai/TEST-CASES.md` — the case list. Read both before writing tests.
 - **Always compare the reported test COUNT against the expected one for the tier.** The runner counts a test file whose module import fails as a PASSING file with 0 tests — a rename/import typo can silently unregister a whole group. When you add cases, record the new expected totals.
 
@@ -115,6 +117,7 @@ Strict TypeScript in `./src` (target ES2017 bundles; full experience at Baseline
 
 - `npm run build` — full dist via `scripts/build.mjs` (`--min` adds minified browser bundles; sanity checks throw on malformed artifacts).
 - Edit only the root `package.json` to bump the version. Builds inject it into library/CSS artifacts; demo prebuild hooks sync the footer.
+- `demo/pages/migration-guide-v2-to-v3.vue` renders the root `MIGRATION.md` directly via a raw import. Update `MIGRATION.md` as the single source of truth; do not duplicate its content in the demo page.
 - Releases: see `.ai/RELEASE.md` (gates, npm `next` pre-release flow, what ships where). CDN: `cdn.jsdelivr.net/npm/add-to-calendar-button`.
 
 ## What NOT to change

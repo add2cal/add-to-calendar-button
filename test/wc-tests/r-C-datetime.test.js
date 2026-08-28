@@ -190,10 +190,14 @@ describe('Group C - Date / time / timezone (single event)', () => {
   it('C-16: timeZone="currentBrowser" resolves to the browser timezone', async () => {
     const browserTz = Intl.DateTimeFormat().resolvedOptions().timeZone;
     const ics = await icsFor({ name: 'BrowserTz', startDate: '2050-06-15', startTime: '10:00', endTime: '11:00', timeZone: 'currentBrowser' }, 'atcb-c16');
-    // Chromium reports UTC in CI; the library normalizes that alias through GMT,
-    // which timezones-ical-library serializes with the canonical Etc/UTC TZID.
-    const expectedTz = browserTz === 'UTC' ? 'Etc/UTC' : browserTz;
-    expect(ics.events[0].prop('DTSTART')).to.include('TZID=' + expectedTz);
+    const dtstart = ics.events[0].prop('DTSTART');
+    // Chromium reports UTC in CI. The generator routes UTC-like zones through GMT,
+    // whose canonical TZID can be Etc/GMT or Etc/UTC depending on the tzdata release.
+    if (browserTz === 'UTC') {
+      expect(dtstart).to.match(/TZID=Etc\/(?:GMT|UTC)/);
+    } else {
+      expect(dtstart).to.include('TZID=' + browserTz);
+    }
   });
 
   it('C-17: POSIX-inverted Etc/GMT+5 means UTC-5 in output math', async () => {

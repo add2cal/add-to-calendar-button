@@ -144,16 +144,16 @@ an inert child; the element drops it and initializes client-only.
 
 ## Build outputs and their consumers
 
-| Output                                               | Consumer                                                                                             |
-| ---------------------------------------------------- | ---------------------------------------------------------------------------------------------------- |
-| `dist/atcb.js`, `dist/atcb.min.js`                   | CDN script tags (jsdelivr default: `dist/atcb.js`)                                                   |
-| `dist/atcb-{no-pro,unstyle,no-pro-unstyle}(.min).js` | Deprecation shims at the old CDN file names (self-load `atcb(.min).js`)                              |
-| `dist/module/`, `dist/commonjs/`                     | npm `.` export (ESM / CJS); the variant subdirectories hold deprecation shim modules                 |
-| `dist/styles/`, `dist/locales/`                      | On-demand fetch targets AND the npm `./styles/*` / `./i18n/*` exports                                |
-| `dist/ssr/`                                          | npm `./ssr` export (ESM + CJS + types, module-type marker)                                           |
-| `dist/utils/`                                        | npm `./utils` export (DOM-free ESM + CJS + types, module-type marker)                                |
-| `dist/index.d.ts`, `dist/ssr/index.d.ts`             | Flat type bundles generated from source (dts-bundle-generator); resolve under every moduleResolution |
-| `assets/css/`                                        | GENERATED full stylesheets for CDN hotlinks / `customCss`                                            |
+| Output                                                            | Consumer                                                                                             |
+| ----------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------- |
+| `dist/atcb.js`, `dist/atcb.min.js`                                | CDN script tags (jsdelivr default: `dist/atcb.js`)                                                   |
+| `dist/atcb-{no-pro,unstyle,no-pro-unstyle}(.min).js`              | Deprecation shims at the old CDN file names (self-load `atcb(.min).js`)                              |
+| `dist/module/`, `dist/commonjs/`                                  | npm `.` export (ESM / CJS); the variant subdirectories hold deprecation shim modules                 |
+| `dist/styles/`, `dist/locales/`                                   | On-demand fetch targets AND the npm `./styles/*` / `./i18n/*` exports                                |
+| `dist/ssr/`                                                       | npm `./ssr` export (ESM + CJS + types, module-type marker)                                           |
+| `dist/utils/`                                                     | npm `./utils` export (DOM-free ESM + CJS + types, module-type marker)                                |
+| `dist/index.d.ts`, `dist/ssr/index.d.ts`, `dist/utils/index.d.ts` | Flat type bundles generated from source (dts-bundle-generator); resolve under every moduleResolution |
+| `assets/css/`                                                     | GENERATED full stylesheets for CDN hotlinks / `customCss`                                            |
 
 Build hooks worth knowing: `scripts/build.mjs` string-replaces exact marker declarations in
 the source (`atcbCssTemplate`, `atcbStyleRelPath`, `atcbLocaleRelPath` and the ssr data

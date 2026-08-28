@@ -57,6 +57,11 @@ test('S-05: size attribute maps to the font-size custom properties (same math as
   assert.ok(html.includes('--base-font-size-l:18px'), 'large size');
   assert.ok(html.includes('--base-font-size-m:16px'), 'medium size');
   assert.ok(html.includes('--base-font-size-s:14px'), 'small size');
+  const numeric = atcb_generate_ssr_html({ name: 'X', size: 10 });
+  assert.ok(numeric.includes('size="10"'), 'numeric size is serialized onto the host');
+  assert.ok(numeric.includes('--base-font-size-l:20px'), 'numeric size affects the SSR shell');
+  assert.ok(numeric.includes('--base-font-size-m:20px'), 'numeric size applies at medium viewport width');
+  assert.ok(numeric.includes('--base-font-size-s:20px'), 'numeric size applies at small viewport width');
   const defaults = atcb_generate_ssr_html({ name: 'X' });
   assert.ok(defaults.includes('--base-font-size-l:16px'), 'default size 16px');
 });
@@ -65,6 +70,7 @@ test('S-06: date style renders skeleton spans instead of computed date parts', (
   const html = atcb_generate_ssr_html({ name: 'Launch Party', startDate: '2050-06-15', buttonStyle: 'date' });
   assert.ok(html.includes('atcb-date-btn-day'), 'date button structure');
   assert.ok(html.includes('atcb-ssr-skeleton'), 'skeleton spans for date parts');
+  assert.ok(html.includes('[data-atcb-ssr] .atcb-date-btn-month { margin-top: 0.25em; }'), 'day and month placeholders are spaced apart');
   assert.ok(html.includes('Launch Party'), 'real headline from the name (derivable without decoration)');
   assert.ok(!html.includes('>15<'), 'no computed day number (no date math on the server)');
 });
