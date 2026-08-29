@@ -131,6 +131,19 @@ const shellHost = ref<HTMLElement | null>(null);
 if (import.meta.client) {
   let languageLoadId = 0;
 
+  // The statically generated playground starts with blank attrs; its real config
+  // arrives from localStorage after mount. If that config describes an all-past
+  // event with pastDateHandling="hide", discard the stale build-time shell before
+  // the component bundle loads. The SSR generator deliberately returns a host
+  // without a DSD template for that case.
+  watchEffect(() => {
+    if (hydrated.value || props.skipClientLoad) return;
+    const nextHtml = atcb_generate_ssr_html({ ...attrs } as AddToCalendarButtonType & { [key: string]: unknown });
+    if (nextHtml.includes('<template shadowrootmode="open">')) return;
+    html.value = nextHtml;
+    if (shellHost.value) shellHost.value.innerHTML = nextHtml;
+  });
+
   watch(() => attrs.language, async (language) => {
     if (props.skipClientLoad) return;
     const normalizedLanguage = normalizeLanguage(language);
