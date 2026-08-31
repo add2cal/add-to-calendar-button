@@ -27,6 +27,10 @@ function ics_option_list(value: string[] | string | undefined): string[] {
     .filter((item) => item !== '');
 }
 
+function is_ios_chrome(): boolean {
+  return isIOS() && /crios/i.test(navigator.userAgent);
+}
+
 function open_cal_url(data: ATCBConfig, type: string, url = '', subscribe = false, subEvent: 'all' | number | string | null = null, target = ''): void {
   if (target === '') {
     target = defaultTarget;
@@ -90,8 +94,8 @@ function static_ics_file(host: ShadowRoot | null, data: ATCBConfig, subEvent: 'a
 
 // ICAL SUBSCRIPTION
 function subscribe_ical(data: ATCBConfig, fileUrl: string, type: string, host: ShadowRoot | null = null, keyboardTrigger = false): void {
-  // for Chrome on iOS, we can not directly open the file, but we can show a modal with instructions
-  if (isIOS() && !isSafari()) {
+  // Temporarily allow Chrome on iOS to open the file directly.
+  if (isIOS() && !isSafari() && !is_ios_chrome()) {
     ical_copy_note(host as unknown as ShadowRoot, fileUrl, data, keyboardTrigger);
     return;
   }
@@ -290,7 +294,7 @@ function generate_ical(host: ShadowRoot | null, data: ATCBConfig, type: string, 
   const icsContent = givenIcsFile !== '' ? '' : format_ical_lines(ics_lines.join('\r\n'));
   const dataUrl = givenIcsFile !== '' ? givenIcsFile : 'data:text/calendar;charset=utf-8,' + encodeURIComponent(icsContent);
   const action: ATCBIcsAction = { kind: givenIcsFile !== '' ? 'static' : 'dynamic', href: dataUrl, filename, target: isMobileTarget(), content: givenIcsFile !== '' ? undefined : icsContent };
-  const requiresAssistance = (isIOS() && !isSafari()) || (isWebView() && (isIOS() || (isAndroid() && isProblematicWebView())));
+  const requiresAssistance = !is_ios_chrome() && ((isIOS() && !isSafari()) || (isWebView() && (isIOS() || (isAndroid() && isProblematicWebView()))));
   if (resolveOnly) return requiresAssistance ? { ...action, kind: 'assistance' } : action;
   if (resultChannel.active()) {
     resultChannel.push(givenIcsFile !== '' ? givenIcsFile : icsContent);

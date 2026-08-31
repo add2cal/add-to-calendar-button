@@ -212,7 +212,7 @@ Also part of the default run (long-standing quick tests):
 - L-18b: optionsIOS with lowercase "ical" behaves identically (case-insensitive)
 - L-16: iOS + recurring -> only the apple/ical family remains
 - L-17: desktop + recurring -> google stays active with recur param
-- L-02: iOS non-Safari browser (Chrome on iOS) -> subscribe ical shows copy-note modal instead of opening
+- L-02: Chrome on iOS -> subscribe ical opens directly without an assistance modal
 - L-01: iOS Safari -> subscribe ical opens webcal:// directly
 - L-15: mobile file save targets _self (desktop _blank covered in G-20)
 - L-08: desktop default -> all seven options render

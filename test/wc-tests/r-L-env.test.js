@@ -5,8 +5,8 @@
  */
 import { expect, aTimeout } from '@open-wc/testing';
 import { mountAtcb, baseEvent } from '../helpers/mount.js';
-import { interceptWindowOpen, interceptFileSave, setUA, UA, muteConsole, stubClipboard } from '../helpers/capture.js';
-import { clickSingleton, openList, renderedOptions, clickOption, modalHost } from '../helpers/dom.js';
+import { interceptWindowOpen, interceptFileSave, setUA, UA } from '../helpers/capture.js';
+import { clickSingleton, openList, renderedOptions, clickOption } from '../helpers/dom.js';
 import { atcb_action } from '../../dist/module/index.js';
 
 describe('Group L - Environment-driven routing', () => {
@@ -208,11 +208,9 @@ describe('Group L - Environment-driven routing', () => {
     }
   });
 
-  it('L-02: iOS non-Safari browser (Chrome on iOS) -> subscribe ical shows copy-note modal instead of opening', async () => {
+  it('L-02: Chrome on iOS -> subscribe ical opens directly without an assistance modal', async () => {
     const restoreUA = setUA(UA.iosChrome);
     const wo = interceptWindowOpen();
-    const clip = stubClipboard(); // headless envs lack the Clipboard API
-    const mute = muteConsole();
     try {
       const { host } = await mountAtcb({
         name: 'iOS Chrome Sub',
@@ -224,13 +222,10 @@ describe('Group L - Environment-driven routing', () => {
       });
       await clickSingleton(host);
       await aTimeout(120);
-      expect(wo.calls.length, 'no direct open on iOS non-Safari').to.equal(0);
-      const modal = modalHost(host);
-      expect(modal, 'copy-note modal').to.exist;
-      expect(clip.texts.join(' '), 'ics url copied to clipboard').to.include('example.com/cal.ics');
+      expect(wo.calls.length, 'direct open on Chrome for iOS').to.equal(1);
+      expect(wo.calls[0].url).to.equal('webcal://example.com/cal.ics');
+      expect(document.getElementById(host.getAttribute('atcb-button-id') + '-modal-host'), 'no assistance modal').to.not.exist;
     } finally {
-      mute.restore();
-      clip.restore();
       wo.restore();
       restoreUA();
     }
