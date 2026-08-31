@@ -55,6 +55,9 @@
       "cancelled_cta": "Zəhmət olmasa təqviminizi yeniləyin!"
     }
   },
+  "group_overview": {
+    "empty": "Bu il heç bir tədbir yoxdur."
+  },
   "close": "Bağla",
   "continue": "Davam et",
   "cancel": "Ləğv et",

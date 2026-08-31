@@ -55,6 +55,9 @@
       "cancelled_cta": "Molimo ažurirajte svoj kalendar!"
     }
   },
+  "group_overview": {
+    "empty": "Ove godine nema događaja."
+  },
   "close": "Zatvori",
   "continue": "Nastavi",
   "cancel": "Otkaži",

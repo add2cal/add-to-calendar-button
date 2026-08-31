@@ -55,6 +55,9 @@
       "cancelled_cta": "Aggiornare il calendario!"
     }
   },
+  "group_overview": {
+    "empty": "Nessun evento quest'anno."
+  },
   "close": "Chiudere",
   "continue": "Continuare",
   "cancel": "Annulla",

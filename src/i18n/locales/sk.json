@@ -55,6 +55,9 @@
       "cancelled_cta": "Aktualizujte si kalendár!"
     }
   },
+  "group_overview": {
+    "empty": "Tento rok sa nekonajú žiadne podujatia."
+  },
   "close": "Zavrieť",
   "continue": "Pokračovať",
   "cancel": "Zrušiť",

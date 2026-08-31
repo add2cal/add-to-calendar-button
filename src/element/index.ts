@@ -14,6 +14,8 @@ import { manage_body_scroll, set_sizes } from '../ui/positioning';
 import { log_event } from '../core/events';
 import { generate_rsvp_form, generate_rsvp_button } from '../ui/pro';
 import { prepare_ics_link, revoke_ics_blob_urls } from '../ui/ics-links';
+import { render_group_overview } from '../ui/group-overview';
+import { atcb_action } from '../action/index';
 import { resolveAttributeName, hasConfigAttribute, getConfigAttribute, observedConfigAttributes } from '../compat/attributes';
 import type { ATCBInputConfig, ATCBConfig } from '../types';
 
@@ -27,6 +29,11 @@ const template = `<div class="atcb-initialized atcb-hidden"></div>`;
 // is block-scoped inside the isBrowser() guard below and not usable as a type out here
 interface ATCBHostElement extends HTMLElement {
   proOverride?: boolean;
+}
+
+function is_group_overview(el: Element): boolean {
+  const value = getConfigAttribute(el, 'groupOverview');
+  return hasConfigAttribute(el, 'groupOverview') && (!value || value === '' || value === 'true' || value === '1');
 }
 
 // we cannot load the custom element server-side - therefore, we check for a browser environment first
@@ -53,6 +60,7 @@ if (isBrowser()) {
     identifier?: string;
     initializing?: boolean;
     updatePending?: boolean;
+    _groupOverviewAbort?: AbortController;
 
     constructor() {
       super();
@@ -144,6 +152,18 @@ if (isBrowser()) {
       // checking for PRO key and pull data if given
       try {
         const proKeyVal = getConfigAttribute(this, 'proKey');
+        if (is_group_overview(this)) {
+          if (!proKeyVal) throw new Error('group-overview requires a prokey.');
+          this.data = read_attributes(this) as unknown as ATCBConfig;
+          this.data.proKey = proKeyVal;
+          this.prokey = proKeyVal;
+          await this.initGroupOverview();
+          this.state.initializing = false;
+          this.state.initialized = true;
+          this.state.ready = true;
+          this._initializedResolver();
+          return;
+        }
         if (proKeyVal && proKeyVal !== '') {
           this.data = await get_pro_data(proKeyVal, this);
           if (this.data.proKey) this.prokey = this.data.proKey;
@@ -177,6 +197,7 @@ if (isBrowser()) {
 
     override disconnectedCallback(): void {
       super.disconnectedCallback();
+      this._groupOverviewAbort?.abort();
       cleanup(this.shadowRoot!, this.identifier);
       if (this.debug) {
         console.log('Add to Calendar Button "' + (this.identifier || this.getAttribute('identifier') || 'not yet initialized') + '" destroyed');
@@ -231,6 +252,16 @@ if (isBrowser()) {
       }
       try {
         const proKeyVal = getConfigAttribute(this, 'proKey');
+        if (is_group_overview(this)) {
+          if (!proKeyVal) throw new Error('group-overview requires a prokey.');
+          cleanup(this.shadowRoot!, this.identifier);
+          this.data = read_attributes(this) as unknown as ATCBConfig;
+          this.data.proKey = proKeyVal;
+          this.prokey = proKeyVal;
+          await this.initGroupOverview();
+          this.updatePending = false;
+          return;
+        }
         if (proKeyVal && proKeyVal !== '') {
           this.data = await get_pro_data(proKeyVal, this);
           if (this.data.proKey) this.prokey = this.data.proKey;
@@ -248,6 +279,28 @@ if (isBrowser()) {
       cleanup(this.shadowRoot!, this.identifier);
       await this.initButton();
       this.updatePending = false;
+    }
+
+    async initGroupOverview(): Promise<void> {
+      if (!this.identifier) this.identifier = 'atcb-btn-' + ++buttonCount;
+      this.data.identifier = this.identifier;
+      this.setAttribute('atcb-button-id', this.identifier);
+      this.style.visibility = 'visible';
+      this.style.opacity = '1';
+      this.style.position = 'relative';
+      this._deferLitRender = false;
+      this.requestUpdate();
+      await this.updateComplete;
+      this.removeSsrShell();
+      const root = this.shadowRoot!.querySelector('.atcb-initialized:not([data-atcb-ssr])') as HTMLElement;
+      root.classList.remove('atcb-hidden');
+      this._groupOverviewAbort?.abort();
+      this._groupOverviewAbort = new AbortController();
+      const input = read_attributes(this);
+      input.prokey = this.data.proKey;
+      await render_group_overview(this.shadowRoot!, input, this._groupOverviewAbort.signal, async (event, trigger) => {
+        await atcb_action({ ...input, ...event, prokey: event.prokey, groupOverview: false, inlineRsvp: 'false', dev: input.dev === true || input.dev === 'true', listStyle: 'modal' }, trigger);
+      });
     }
 
     async initButton(): Promise<boolean> {

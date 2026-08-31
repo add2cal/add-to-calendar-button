@@ -55,6 +55,9 @@
       "cancelled_cta": "Kérjük, frissítsd a naptáradat!"
     }
   },
+  "group_overview": {
+    "empty": "Idén nincsenek események."
+  },
   "close": "Bezárás",
   "continue": "Folytatás",
   "cancel": "Mégse",

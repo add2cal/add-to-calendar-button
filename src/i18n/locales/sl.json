@@ -55,6 +55,9 @@
       "cancelled_cta": "Posodobite svoj koledar!"
     }
   },
+  "group_overview": {
+    "empty": "Letos ni dogodkov."
+  },
   "close": "Zapri",
   "continue": "Nadaljuj",
   "cancel": "Prekliči",

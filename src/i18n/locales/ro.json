@@ -55,6 +55,9 @@
       "cancelled_cta": "Te rugam sa-ti updatezi calendarul!"
     }
   },
+  "group_overview": {
+    "empty": "Nu există evenimente anul acesta."
+  },
   "close": "Inchide",
   "continue": "Continua",
   "cancel": "Anuleaza",

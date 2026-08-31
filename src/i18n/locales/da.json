@@ -55,6 +55,9 @@
       "cancelled_cta": "Opdater venligst din kalender!"
     }
   },
+  "group_overview": {
+    "empty": "Ingen arrangementer i år."
+  },
   "close": "Luk",
   "continue": "Fortsæt",
   "cancel": "Annuller",

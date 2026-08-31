@@ -55,6 +55,9 @@
       "cancelled_cta": "Uw agenda bijwerken!"
     }
   },
+  "group_overview": {
+    "empty": "Geen evenementen dit jaar."
+  },
   "close": "Sluiten",
   "continue": "Doorgaan",
   "cancel": "Annuleren",

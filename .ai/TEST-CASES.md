@@ -521,3 +521,14 @@ recurrence, which implies a single date entry).
 
 - M-33: modal option list stays content-sized (regression: .atcb-modal min-width:auto must beat .atcb-list min-width:100% after the split-css assembly)
 - M-34: list-modal to follow-up modal reuses the same bg overlay node (no destroy/recreate); outgoing options list is dropped after the new modal builds
+
+## Group GO - PRO group overview (test/wc-tests/r-GO-group-overview.test.js)
+
+- GO-01: fetches the public dev-group range, uses dev landing links, and renders only populated month choices
+- GO-02: defaults to the current year, keeps its empty state, and duplicates cross-year events into January
+- GO-03: years-only renders month headings and compact custom-domain links
+- GO-04: no-details forces even inline-configured RSVP events into the atcb_action modal without an add badge
+- GO-05: linked RSVP events suppress their independent add badge
+- GO-06: compact no-details entries do not render an add badge
+- GO-07: compact RSVP entries use an aligned dot beside regular add badges
+- GO-08: grid cards place an enlarged datetime above the title and respond to their container with one, two, or three equal columns, balanced outer badge spacing, inter-card clearance, and a 1200px cap

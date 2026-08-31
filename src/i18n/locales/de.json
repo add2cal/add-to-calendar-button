@@ -55,6 +55,9 @@
       "cancelled_cta": "Bitte aktualisiere deinen Kalender!"
     }
   },
+  "group_overview": {
+    "empty": "Keine Veranstaltungen in diesem Jahr."
+  },
   "close": "Schließen",
   "continue": "Weiter",
   "cancel": "Abbrechen",

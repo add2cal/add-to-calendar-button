@@ -55,6 +55,9 @@
       "cancelled_cta": "Please update your calendar!"
     }
   },
+  "group_overview": {
+    "empty": "No events this year."
+  },
   "close": "Close",
   "continue": "Continue",
   "cancel": "Cancel",

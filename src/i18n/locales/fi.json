@@ -55,6 +55,9 @@
       "cancelled_cta": "Päivitä kalenterisi!"
     }
   },
+  "group_overview": {
+    "empty": "Ei tapahtumia tänä vuonna."
+  },
   "close": "Sulje",
   "continue": "Jatkaa",
   "cancel": "Peruuta",

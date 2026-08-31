@@ -3,12 +3,13 @@
 ## Version 3
 
 - v3.0 : "lighter, faster, everywhere" full rewrite of the internals - same button, same attributes
-  - a lot smaller: styles beyond the default and languages beyond English are now separate tiny assets, loaded on demand by browser-script/CDN integrations and explicitly imported by npm users (ESM bundle -41% raw / -14% gzip vs v2.15; a typical bundler setup saves even more)
+  - smaller: styles beyond the default and languages beyond English are now separate tiny assets, loaded on demand by browser-script/CDN integrations and explicitly imported by npm users. Smaller bundle size despite having added ons of new features.
   - new: server-side rendering via the `add-to-calendar-button/ssr` entry - style- and size-correct shells through declarative shadow DOM, hydrated without layout shift
   - new: DOM-free `add-to-calendar-button/utils` entry exporting `atcb_generate_timestring` and `atcb_decorate_data_dates` for Cloudflare Workers, Node, and other runtimes without browser globals
   - new: per-style and per-locale npm modules (`add-to-calendar-button/styles/3d`, `add-to-calendar-button/i18n/de`) for fetch-free bundling
   - new: official kebab-case attribute names (`start-date`, `button-style`, ...) - every v2 spelling keeps working as an alias
   - new: `style-source` and `load-all-styles` options for asset loading control and runtime style switching
+  - new: event list rendering option for PRO users
   - new: full-locale support - `language="en_GB"` picks regional translations where available and formats dates in the regional convention
   - new: 19 languages added: Albanian, Armenian, Azerbaijani, Belarusian, Bosnian, Bulgarian, Croatian, Danish, Georgian, Greek, Lithuanian, Latvian, Macedonian, Maltese, Russian, Serbian, Slovak, Slovenian, and Ukrainian; RSVP strings now part of the core language packs
   - new: extended ics options for the Apple/iCal cases (`icsReminder`, `icsUrl`, `icsCategories`, `icsClass`, `icsPriority`, `icsGeo` incl. Apple map preview, `icsAttach`, `icsExdate`) - second-level options that only shape the generated ics file; all other calendar types simply ignore them

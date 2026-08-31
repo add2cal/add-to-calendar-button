@@ -55,6 +55,9 @@
       "cancelled_cta": "יש לעדכן את היומן!"
     }
   },
+  "group_overview": {
+    "empty": "אין אירועים השנה."
+  },
   "close": "סגירה",
   "continue": "המשך",
   "cancel": "ביטול",

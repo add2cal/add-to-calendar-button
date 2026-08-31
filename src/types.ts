@@ -44,6 +44,16 @@ export type CustomLabelsObject = {
   [key: string]: string | null | undefined;
 };
 
+export interface ATCBGroupOverviewConfig {
+  'years-only'?: boolean;
+  type?: 'list' | 'cards' | 'compact';
+  from?: string;
+  to?: string;
+  'no-details'?: boolean;
+  'custom-domain'?: string;
+  'add-via-list'?: boolean;
+}
+
 /**
  * One event date entry (multi-date configs carry several).
  * Post-decoration, entries also carry computed internals (e.g. overdue).
@@ -92,6 +102,8 @@ export interface ATCBDateEntry extends ATCBDateEntryInput {
  */
 export interface ATCBInputConfig {
   prokey?: string;
+  groupOverview?: boolean | string;
+  groupOverviewConfig?: ATCBGroupOverviewConfig | string;
   name?: string;
   dates?: ATCBDateEntryInput[] | string;
   description?: string;
@@ -188,6 +200,8 @@ export interface ATCBInputConfig {
  */
 export interface ATCBConfig {
   proKey?: string;
+  groupOverview?: boolean;
+  groupOverviewConfig?: ATCBGroupOverviewConfig;
   name?: string;
   dates?: ATCBDateEntry[];
   description?: string;
@@ -357,6 +371,8 @@ export type CustomLabelsObjectType = {
   [key: string]: string | null;
 };
 
+export type GroupOverviewConfig = ATCBGroupOverviewConfig;
+
 export interface EventDate {
   name?: string;
   description?: string;
@@ -462,6 +478,8 @@ export interface ATCBActionEventConfig {
 
 export type AddToCalendarButtonType = {
   prokey?: string;
+  groupOverview?: boolean | string;
+  groupOverviewConfig?: GroupOverviewConfig | string;
   name?: string;
   dates?: EventDate[] | string;
   description?: string;

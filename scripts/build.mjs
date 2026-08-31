@@ -99,10 +99,11 @@ function buildCssArtifacts() {
   };
   const tokensRaw = fs.readFileSync(path.join(srcDir, 'tokens.css'), 'utf8');
   const coreRaw = fs.readFileSync(path.join(srcDir, 'core.css'), 'utf8');
+  const groupOverviewRaw = fs.readFileSync(path.join(srcDir, 'group-overview.css'), 'utf8');
   const deltasMin = {};
   for (const style of AVAILABLE_STYLES) {
     const deltaRaw = fs.readFileSync(path.join(srcDir, `${style}.css`), 'utf8');
-    const mergedRaw = mergeCssParts(tokensRaw, coreRaw, deltaRaw);
+    const mergedRaw = mergeCssParts(tokensRaw, coreRaw + groupOverviewRaw, deltaRaw);
     const mergedMinResult = cleaner.minify(mergedRaw);
     if (mergedMinResult.errors.length > 0) throw new Error(`clean-css failed for merged ${style} css: ${mergedMinResult.errors.join(', ')}`);
     const mergedMin = mergedMinResult.styles;
@@ -113,7 +114,7 @@ function buildCssArtifacts() {
     fs.writeFileSync(r('assets/css', `atcb${suffix}.css`), banner + mergedRaw);
     fs.writeFileSync(r('assets/css', `atcb${suffix}.min.css`), mergedMin);
   }
-  cssArtifacts = { coreFull: minify('tokens.css') + minify('core.css'), deltas: deltasMin };
+  cssArtifacts = { coreFull: minify('tokens.css') + minify('core.css') + minify('group-overview.css'), deltas: deltasMin };
 }
 
 // ---------- shared: inline style templates ----------

@@ -55,6 +55,9 @@
       "cancelled_cta": "Lūdzu, atjauniniet savu kalendāru!"
     }
   },
+  "group_overview": {
+    "empty": "Šogad pasākumu nav."
+  },
   "close": "Aizvērt",
   "continue": "Turpināt",
   "cancel": "Atcelt",

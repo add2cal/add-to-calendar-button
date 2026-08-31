@@ -9,4 +9,4 @@ export { atcbCssTemplate as cssStyles, register_style as atcb_register_style } f
 export { generate_ty as atcb_generate_ty } from './ui/pro';
 export { generate_timestring as atcb_generate_timestring } from './core/dates';
 export { decorate_data_dates as atcb_decorate_data_dates } from './core/decorate';
-export type { ATCBActionEventConfig, AddToCalendarButtonType, EventDate, CustomLabelsObjectType, ATCBLanguage } from './types';
+export type { ATCBActionEventConfig, AddToCalendarButtonType, EventDate, CustomLabelsObjectType, GroupOverviewConfig, ATCBLanguage } from './types';

@@ -55,6 +55,9 @@
       "cancelled_cta": "请更新您的日历!"
     }
   },
+  "group_overview": {
+    "empty": "今年没有活动。"
+  },
   "close": "关",
   "continue": "继续",
   "cancel": "中止",

@@ -55,6 +55,9 @@
       "cancelled_cta": "Lütfen takviminizi güncelleyin!"
     }
   },
+  "group_overview": {
+    "empty": "Bu yıl etkinlik yok."
+  },
   "close": "Kapat",
   "continue": "Devam etmek",
   "cancel": "İptal",

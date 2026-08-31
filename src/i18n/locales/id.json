@@ -55,6 +55,9 @@
       "cancelled_cta": "Perbarui kalender Anda!"
     }
   },
+  "group_overview": {
+    "empty": "Tidak ada acara tahun ini."
+  },
   "close": "Tutup",
   "continue": "Lanjutkan",
   "cancel": "Batal",

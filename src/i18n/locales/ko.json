@@ -55,6 +55,9 @@
       "cancelled_cta": "캘린더를 업데이트하세요!"
     }
   },
+  "group_overview": {
+    "empty": "올해는 이벤트가 없습니다."
+  },
   "close": "닫다",
   "continue": "계속하다",
   "cancel": "취소",

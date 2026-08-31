@@ -55,6 +55,9 @@
       "cancelled_cta": "Aktualizujte svůj kalendář!"
     }
   },
+  "group_overview": {
+    "empty": "Letos se nekonají žádné akce."
+  },
   "close": "Zavřít",
   "continue": "Pokračovat",
   "cancel": "Storno",

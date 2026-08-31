@@ -13,6 +13,8 @@ definePageMeta({
 
 const configOptions = [
   "prokey",
+  "group-overview",
+  "group-overview-config",
   "options",
   "name",
   "description",
@@ -129,7 +131,7 @@ watch(searchSelection, (newVal) => {
         <Autocomplete v-model="searchSelection" :options="configOptions" :label="$t('content.config.find_params')" hidelabel :placeholder="$t('labels.inputs.search')" styleClass="block sm:inline-block" />
       </div>
 
-      <h3 id="event-parameters" class="mt-12 pt-4">{{ $t('content.config.event_params') }}</h3>
+      <h3 id="pro-parameters" class="mt-12 pt-4">PRO parameters</h3>
       <div class="my-8 overflow-x-auto rounded-lg shadow-sm">
         <table>
           <thead>
@@ -144,7 +146,7 @@ watch(searchSelection, (newVal) => {
           <tbody>
             <tr id="prokey">
               <th scope="row" class="text-base text-primary-dark dark:text-primary-light">prokey</th>
-              <td><em>String</em></td>
+              <td><em>String</em><br /><br /><span class="font-semibold">PRO only</span></td>
               <td v-if="locale=='en'">
                 If you are using the PRO service, you can use the "prokey" attribute to connect the button to a specific event of yours.<br />
                 <span class="mt-2 block font-semibold">In this case, no other parameters need to be defined in the code, since this is 100% managed at the Add to Calendar PRO admin panel.</span>
@@ -154,6 +156,59 @@ watch(searchSelection, (newVal) => {
                 <span class="mt-2 block font-semibold">In diesem Fall müssen ansonsten keine weiteren Parameter im Code definiert werden, da die weitere Verwaltung zu 100% im Add to Calendar PRO Admin-Bereich erfolgt.</span>
               </td>
             </tr>
+            <tr id="group-overview">
+              <th scope="row">group-overview</th>
+              <td><em>Boolean</em><br /><br /><span class="font-semibold">PRO only</span></td>
+              <td v-if="locale=='en'">Renders a public event overview instead of a button. The <code>prokey</code> must belong to an Add to Calendar PRO group and “public event overview” must be enabled for that group.<br /><br />Recurring events are currently not fully supported.</td>
+              <td v-else>
+                Rendert eine öffentliche Event-Übersicht anstelle eines Buttons. Der <code>prokey</code> muss zu einer Add to Calendar PRO Gruppe gehören und „Public Event Overview“ muss für diese Gruppe aktiviert sein.<br /><br />Wiederkehrende Events werden aktuell nicht vollständig unterstützt.
+              </td>
+            </tr>
+            <tr id="group-overview-config">
+              <th scope="row">group-overview-config</th>
+              <td><em>Object</em><br /><br /><span class="font-semibold">PRO only</span></td>
+              <td v-if="locale=='en'">
+                Optional settings for <code>group-overview</code>:
+                <ul class="mt-3 list-disc space-y-2 pl-5">
+                  <li><code>years-only</code> (Boolean): Hides the month selector and shows all events for the selected year.</li>
+                  <li><code>type</code> (String): <code>list</code> (default), <code>cards</code>, or <code>compact</code>.</li>
+                  <li><code>from</code> (String): UTC ISO datetime limiting the lower end. It cannot be earlier than January 1 of the previous year.</li>
+                  <li><code>to</code> (String): UTC ISO datetime limiting the upper end. It cannot precede <code>from</code>.</li>
+                  <li><code>no-details</code> (Boolean): Opens the calendar options modal instead of linking to its landing page.</li>
+                  <li><code>custom-domain</code> (String; Hostname, like events.acme.com): Uses this domain, for landing page links. The domain must also be configured in Add to Calendar PRO.</li>
+                  <li><code>add-via-list</code> (Boolean): Adds a subtle calendar-add badge. With <code>no-details</code>, it is part of the event link and opens the calendar options together with the rest of the entry.</li>
+                </ul>
+              </td>
+              <td v-else>
+                Optionale Einstellungen für <code>group-overview</code>:
+                <ul class="mt-3 list-disc space-y-2 pl-5">
+                  <li><code>years-only</code> (Boolean): Blendet die Monatsauswahl aus und zeigt alle Events des gewählten Jahres unter Monatsüberschriften.</li>
+                  <li><code>type</code> (String): <code>list</code> (Standard), <code>cards</code> oder <code>compact</code>.</li>
+                  <li><code>from</code> (String): UTC-ISO-Zeitstempel für die untere Grenze. Der Wert darf nicht vor dem 1. Januar des Vorjahres liegen.</li>
+                  <li><code>to</code> (String): UTC-ISO-Zeitstempel für die obere Grenze. Der Wert darf nicht vor <code>from</code> liegen.</li>
+                  <li><code>no-details</code> (Boolean): Öffnet bei Auswahl eines Events das Modal mit den Kalenderoptionen, anstatt auf die Landingpage zu verlinken.</li>
+                  <li><code>custom-domain</code> (String; Hostname, bspw. events.acme.com): Nutzt diese Domain für Landingpage-Links. Die Domain muss auch in Add to Calendar PRO konfiguriert sein.</li>
+                  <li><code>add-via-list</code> (Boolean): Ergänzt eine dezente Kalender-Hinzufügen-Marke. Mit <code>no-details</code> ist sie Teil des Event-Links und öffnet zusammen mit dem restlichen Eintrag die Kalenderoptionen.</li>
+                </ul>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3 id="event-parameters" class="mt-12 pt-4">{{ $t('content.config.event_params') }}</h3>
+      <div class="my-8 overflow-x-auto rounded-lg shadow-sm">
+        <table>
+          <thead>
+            <tr>
+              <th scope="col" class="p-3 font-semibold sm:px-5">
+                {{ $t('content.config.name') }}<span class="block pt-1 normal-case md:hidden">({{ $t('content.config.value') }})</span>
+              </th>
+              <th scope="col" class="hidden p-3 font-semibold sm:px-5 md:table-cell">{{ $t('content.config.value') }}</th>
+              <th scope="col" class="p-3 font-semibold sm:px-5">{{ $t('content.config.details') }}</th>
+            </tr>
+          </thead>
+          <tbody>
             <tr id="name">
               <th scope="row">name</th>
               <td>
@@ -1265,6 +1320,7 @@ watch(searchSelection, (newVal) => {
     <div class="hidden border-l border-zinc-300 pl-8 text-sm dark:border-zinc-700 lg:block">
       <div class="sticky top-0 pt-4">
         <Autocomplete v-model="searchSelection" :options="configOptions" :label="$t('content.config.find_params')" :placeholder="$t('labels.inputs.search')" class="mb-10" styleClass="" hidelabel />
+        <NuxtLink :to="'#pro-parameters'" class="side-nav">PRO parameters</NuxtLink>
         <NuxtLink :to="'#event-parameters'" class="side-nav">{{ $t('content.config.event_params') }}</NuxtLink>
         <NuxtLink :to="'#ics-parameters'" class="side-nav">{{ $t('content.config.ics_params') }}</NuxtLink>
         <NuxtLink :to="'#style-parameters'" class="side-nav">{{ $t('content.config.layout_params') }}</NuxtLink>

@@ -55,6 +55,9 @@
       "cancelled_cta": "Palun uuenda oma kalendrit!"
     }
   },
+  "group_overview": {
+    "empty": "Sel aastal üritusi ei ole."
+  },
   "close": "Sulge",
   "continue": "Jätkama",
   "cancel": "Tühista",

@@ -55,6 +55,9 @@
       "cancelled_cta": "Prašome atnaujinti savo kalendorių!"
     }
   },
+  "group_overview": {
+    "empty": "Šiais metais renginių nėra."
+  },
   "close": "Uždaryti",
   "continue": "Tęsti",
   "cancel": "Atšaukti",

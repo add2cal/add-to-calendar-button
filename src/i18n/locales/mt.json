@@ -55,6 +55,9 @@
       "cancelled_cta": "Jekk jogħġbok aġġorna l-kalendarju tiegħek!"
     }
   },
+  "group_overview": {
+    "empty": "M’hemm l-ebda avveniment din is-sena."
+  },
   "close": "Agħlaq",
   "continue": "Kompli",
   "cancel": "Ikkanċella",

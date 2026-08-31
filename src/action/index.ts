@@ -171,7 +171,7 @@ async function atcb_action(inputData: ATCBInputConfig, triggerElement?: HTMLElem
     setup_state_management(data);
     set_light_mode(host.shadowRoot!, data);
     (host.shadowRoot!.querySelector('.atcb-initialized') as HTMLElement).setAttribute('lang', data.language!);
-    load_css(host.shadowRoot!, rootObj, data);
+    await load_css(host.shadowRoot!, rootObj, data);
     // set global event listeners
     set_global_event_listener(host.shadowRoot!, data);
     // if all is fine, ...

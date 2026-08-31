@@ -55,6 +55,9 @@
       "cancelled_cta": "Cập nhật lịch của bạn!"
     }
   },
+  "group_overview": {
+    "empty": "Không có sự kiện nào trong năm nay."
+  },
   "close": "Đóng",
   "continue": "Tiếp tục",
   "cancel": "Hủy bỏ",

@@ -55,6 +55,9 @@
       "cancelled_cta": "Actualisez votre agenda !"
     }
   },
+  "group_overview": {
+    "empty": "Aucun événement cette année."
+  },
   "close": "Fermer",
   "continue": "Continuer",
   "cancel": "Annuler",

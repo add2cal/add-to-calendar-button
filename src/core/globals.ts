@@ -119,6 +119,8 @@ const androidInvalidOptions: string[] = ['apple'];
 // DEFINING THE WEB COMPONENT ATTRIBUTES
 const wcParams: (keyof ATCBInputConfig)[] = [
   'debug',
+  'groupOverview',
+  'groupOverviewConfig',
   'proOverride',
   'cspnonce',
   'identifier',
@@ -245,6 +247,7 @@ const wcProParams: (keyof ATCBInputConfig)[] = [
 ];
 const wcBooleanParams: (keyof ATCBInputConfig)[] = [
   'debug',
+  'groupOverview',
   'proOverride',
   'useUserTZ',
   'hideIconButton',
@@ -273,7 +276,7 @@ const wcBooleanParams: (keyof ATCBInputConfig)[] = [
   'forceOverlay',
   'dev',
 ];
-const wcObjectParams: (keyof ATCBInputConfig)[] = ['customLabels', 'ty', 'rsvp', 'customVar'];
+const wcObjectParams: (keyof ATCBInputConfig)[] = ['customLabels', 'ty', 'rsvp', 'customVar', 'groupOverviewConfig'];
 const wcObjectArrayParams: (keyof ATCBInputConfig)[] = ['dates'];
 const wcArrayParams: (keyof ATCBInputConfig)[] = ['recurrence_byDay', 'recurrence_byMonth', 'recurrence_byMonthDay', 'images', 'options', 'optionsMobile', 'optionsIOS', 'icsCategories', 'icsAttach', 'icsExdate'];
 const wcNumberParams: (keyof ATCBInputConfig)[] = ['sequence', 'recurrence_interval', 'recurrence_count', 'icsPriority'];

@@ -55,6 +55,9 @@
       "cancelled_cta": "Ju lutemi përditësoni kalendarin tuaj!"
     }
   },
+  "group_overview": {
+    "empty": "Nuk ka ngjarje këtë vit."
+  },
   "close": "Mbylle",
   "continue": "Vazhdoni",
   "cancel": "Anulo",
