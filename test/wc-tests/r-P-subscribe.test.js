@@ -14,7 +14,7 @@ const SUB = {
 };
 
 describe('Group P - Subscribe mode', () => {
-  it('P-01: Apple subscribe converts to webcal:// (desktop)', async () => {
+  it('P-01: Apple subscribe converts to webcal:// on desktop', async () => {
     const wo = interceptWindowOpen();
     try {
       const { host } = await mountAtcb({ ...SUB, options: "'apple'", identifier: 'atcb-p01' });

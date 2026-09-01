@@ -88,8 +88,14 @@ async function validate_icsFile(data: ATCBConfig, msgPrefix: string, i: number |
     return '';
   })();
   if (icsFileStr !== '') {
-    if (!secure_url(icsFileStr, false) || (!data.icsFile!.startsWith('https://') && !data.icsFile!.startsWith('http://'))) {
+    if (!secure_url(icsFileStr, false) || !/^https:\/\//i.test(icsFileStr)) {
       throw new Error(msgPrefix + ' failed: explicit ics file path not valid' + msgSuffix);
+    }
+    const normalizedIcsFile = icsFileStr.replace(/^https:\/\//i, 'https://');
+    if (i === '') {
+      data.icsFile = normalizedIcsFile;
+    } else {
+      data.dates![`${i}`]!.icsFile = normalizedIcsFile;
     }
   }
   return true;

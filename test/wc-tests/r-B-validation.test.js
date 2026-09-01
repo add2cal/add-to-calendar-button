@@ -29,8 +29,11 @@ async function expectFail(config, msgPart = null) {
 const base = { name: 'V', startDate: '2050-06-15', options: ['google'] };
 
 describe('Group B - Config validation & error paths', () => {
-  it('B-01: invalid icsFile URL throws', async () => {
+  it('B-01: explicit icsFile requires HTTPS and normalizes the scheme casing', async () => {
     await expectFail({ ...base, icsFile: 'not a url' }, 'ics file');
+    await expectFail({ ...base, icsFile: 'http://example.com/cal.ics' }, 'ics file');
+    const data = await runPipeline({ ...base, icsFile: 'HTTPS://example.com/cal.ics' });
+    expect(data.icsFile).to.equal('https://example.com/cal.ics');
   });
 
   it('B-02: subscribe + multi-date dates array throws', async () => {

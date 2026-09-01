@@ -2,7 +2,7 @@ import { generate_ical, static_ics_file } from '../generators/ical';
 import { getOptionStates } from '../core/store';
 import { log_event } from '../core/events';
 import { saved_hook } from '../core/util';
-import { isIOS } from '../core/globals';
+import { isIOS, isSafari } from '../core/globals';
 import { toggle } from './control';
 import type { ATCBConfig } from '../types';
 import type { ATCBIcsAction } from '../generators/ical';
@@ -76,7 +76,19 @@ function replace_with_ics_anchor(host: ShadowRoot, data: ATCBConfig, control: HT
 }
 
 function prepare_ics_link(host: ShadowRoot, data: ATCBConfig, control: HTMLElement, type: string, subEvent: 'all' | number = 'all', context: IcsLinkContext = 'list'): void {
-  if (!is_ics_option(type) || data.subscribe || data.blockInteraction || data.disabled) return;
+  if (!is_ics_option(type) || data.blockInteraction || data.disabled) return;
+  if (data.subscribe) {
+    const useNativeSubscriptionLink = !data.proxy && (isIOS() || data.fakeIOS) && (data.fakeIOS || isSafari());
+    if (!useNativeSubscriptionLink) return;
+    const action: ATCBIcsAction = {
+      kind: 'subscription',
+      href: data.icsFile!.replace(/^https:\/\//, 'webcal://'),
+      filename: '',
+      target: '_self',
+    };
+    replace_with_ics_anchor(host, data, control, type, subEvent, context, action);
+    return;
+  }
   if (subEvent === 'all' && data.dates!.length > 1 && !can_group_ics(data)) return;
   if (!data.proxy && static_ics_file(host, data, subEvent) !== '') return;
   control.dataset.atcbLinkPending = 'true';

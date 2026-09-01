@@ -115,7 +115,7 @@ function generate_multidate_links(host: ShadowRoot, type: string, linkType: stri
 }
 
 async function generate_subscribe_links(host: ShadowRoot, type: string, linkType: string, data: ATCBConfig, keyboardTrigger: boolean): Promise<void> {
-  const adjustedFileUrl = data.icsFile!.replace('https://', 'webcal://');
+  const adjustedFileUrl = data.icsFile!.replace(/^https:\/\//, 'webcal://');
   let clipboardNote: string;
   switch (linkType) {
     case 'ical': // also for apple (see above)

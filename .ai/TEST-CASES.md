@@ -63,7 +63,7 @@ Also part of the default run (long-standing quick tests):
 
 ### Group B - Config validation & error paths (`r-B-validation.test.js`)
 
-- B-01: invalid icsFile URL throws
+- B-01: explicit icsFile requires HTTPS, rejects HTTP, and normalizes uppercase HTTPS schemes
 - B-02: subscribe + multi-date dates array throws
 - B-03: subscribe without icsFile throws
 - B-04: unknown calendar option throws
@@ -213,7 +213,7 @@ Also part of the default run (long-standing quick tests):
 - L-16: iOS + recurring -> only the apple/ical family remains
 - L-17: desktop + recurring -> google stays active with recur param
 - L-02: iOS non-Safari browser (Chrome on iOS) -> subscribe ical shows copy-note modal instead of opening
-- L-01: iOS Safari -> subscribe ical opens webcal:// directly
+- L-01: iOS Safari -> subscribe ical renders a native `_self` webcal anchor
 - L-15: mobile file save targets _self (desktop _blank covered in G-20)
 - L-08: desktop default -> all seven options render
 
@@ -265,7 +265,7 @@ Also part of the default run (long-standing quick tests):
 
 ### Group P - Subscribe mode (`r-P-subscribe.test.js`)
 
-- P-01: Apple subscribe converts to webcal:// (desktop)
+- P-01: Apple subscribe converts to webcal:// on desktop
 - P-02: Google subscribe uses the cid= subscription URL (not the render URL)
 - P-02b: MS365 subscribe uses addfromweb with url + name
 - P-03: Yahoo subscribe opens the manual-instructions modal instead of a URL
