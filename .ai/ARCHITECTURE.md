@@ -10,11 +10,11 @@ work-in-progress here.
 The package is a self-contained web component plus an imperative API. Everything a button
 needs beyond the core - button styles beyond the default, languages beyond English - is a
 small on-demand asset resolved relative to wherever the script itself is served from, or
-registered explicitly by the consumer. There is no server dependency in the OSS scope; the
-PRO service (proprietary, license-gated at runtime) plugs into the same pipeline via a
-`proKey` config fetch.
+registered explicitly by the consumer. There is no server dependency in the OSS scope.
+PRO features are proprietary and license-gated: a normal button can load its configuration
+by `proKey`, while group overview mode fetches a public event range for that group.
 
-Three consumption paths, one code base:
+Four consumption paths, one code base:
 
 1. **Script tag** (`dist/atcb.js` / `dist/atcb.min.js`): IIFE, everything bundled (lit,
    timezones-ical-library), exposes `window.atcb_action`, registers the element.
@@ -34,7 +34,7 @@ Three consumption paths, one code base:
 | action     | `action/index.ts`                                                                       | `atcb_action` - the same pipeline for custom triggers, without component markup                                                                              |
 | compat     | `compat/attributes.ts`                                                                  | Official kebab-case attribute names + legacy alias resolution (official wins)                                                                                |
 | core       | `globals`, `store`, `decorate*`, `validate`, `dates`, `sizes`, `text`, `util`, `events` | Env detection and constants, per-instance state, config normalization, validation, date/RRULE math, size parsing, sanitizers, misc helpers, analytics events |
-| ui         | `templates`, `generate`, `control`, `positioning`, `pro`                                | lit-html templates for the button path; imperative DOM for list/modal/overlay; open/close/toggle; positioning; PRO/RSVP surfaces                             |
+| ui         | `templates`, `generate`, `control`, `positioning`, `pro`, `group-overview`              | lit-html templates for the button; imperative DOM for list/modal/overlay and the PRO group overview; controls, positioning, and PRO/RSVP surfaces           |
 | generators | `index`, `google`, `outlook`, `msteams`, `yahoo`, `ical`, `rich-data`                   | Per-service link/ICS construction and dispatch; schema.org JSON-LD                                                                                           |
 | i18n       | `i18n/index.ts`, `i18n/locales/*.json`                                                  | Locale registry and translation chain; one nested JSON per language                                                                                          |
 | styles     | `styles/css-template.ts`, `styles/css/*.css`                                            | Style registry; split css sources (tokens + core + per-style deltas)                                                                                         |
@@ -65,6 +65,10 @@ Key properties of the pipeline:
   code needing the finished button must `await el.whenInitialized()`.
 - **Re-initialization on attribute change** destroys and rebuilds the button content
   in place (lit render root survives; foreign children are removed).
+- **Group overview is an early branch.** A truthy `group-overview` requires `prokey` and
+  bypasses PRO config decoration, validation, and normal button rendering. It reads the
+  component attributes, fetches the public group event range, and renders into the existing
+  Lit shell.
 
 ## Data flow: interaction
 
@@ -78,20 +82,30 @@ their controls render first, then asynchronously become native anchors with a pr
 data URL so Apple browsers retain a real user-activation navigation. Static ICS files keep
 the legacy direct-save path; other calendar providers are unchanged.
 
+Group overview controls filter the fetched range locally. Event links open the hosted
+event page unless `no-details` routes the whole event action to adding it. Optional add
+controls call `atcb_action` with the selected event, disable group overview for that call,
+and request the normal add flow with modal list style. Unless `no-details` is set, RSVP
+events keep their hosted-detail route instead of receiving a separate add control.
+
 ## State
 
 `core/store.ts` holds one entry per button instance (keyed by identifier): config snapshot,
 per-option success counters, the active-button pointer. Entries are deleted on
-`disconnectedCallback`. The only module-scope mutable state elsewhere: the global-listener
-init flag, the button counter, the `lightModeMutationObserver` map (bodyScheme observers,
-disconnected on unmount), and the style/i18n registries (caches by design).
+`disconnectedCallback`. Group overview fetches have a per-element `AbortController`; a
+rerender aborts the previous request and disconnection aborts the active one. The only
+module-scope mutable state elsewhere: the global-listener init flag, the button counter,
+the `lightModeMutationObserver` map (bodyScheme observers, disconnected on unmount), and
+the style/i18n registries (caches by design).
 
 ## Style pipeline
 
 - **Sources**: `src/styles/css/` - `tokens.css` (custom properties shared by all styles),
-  `core.css` (rules shared by all styles), one delta per style. Edit THESE.
+  `core.css` and `group-overview.css` (included with every style), and one delta per button
+  style. Edit THESE.
 - **Build**: `scripts/build.mjs` minifies them, inlines core+default into the bundles
-  (string-injected into the `atcbCssTemplate` hook in `styles/css-template.ts`), emits
+  (core includes the group overview rules; string-injected into the `atcbCssTemplate` hook
+  in `styles/css-template.ts`), emits
   `dist/styles/{name}.css` (fetchable delta) + `{name}.js`/`.cjs` (self-registering
   modules) + `.d.ts` stubs, and reconstructs the full per-style stylesheets in
   `assets/css/` for CDN hotlinks and `customCss` consumers (those files are GENERATED).
@@ -142,6 +156,9 @@ paint, no layout shift. The shell wrapper carries `data-atcb-ssr` so client quer
 exclude it while both exist. Browsers without declarative shadow DOM leave the template as
 an inert child; the element drops it and initializes client-only.
 
+The SSR entry does not render group overview data. On upgrade, group overview mode replaces
+the generic shell through its client-only branch after fetching the group range.
+
 ## Build outputs and their consumers
 
 | Output                                                            | Consumer                                                                                             |
@@ -166,6 +183,8 @@ needs an explicit decision, test updates, and release notes):
 
 - The attribute surface: every documented option, BOTH spellings (official kebab-case and
   legacy aliases), official-wins precedence, JSON-string values for objects/arrays.
+- Group overview configuration, hosted-event links, add-routing behavior, and its
+  documented classes and `::part` names.
 - The `atcb_*` public API: `atcb_action`, `atcb_register_style`, `atcb_register_locale`,
   `atcb_generate_ty`, `atcb_generate_timestring`, `atcb_decorate_data_dates`,
   `i18nStrings`, `cssStyles` - and the public types exported from the package root.
