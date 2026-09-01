@@ -47,10 +47,10 @@ const localePath = useLocalePath();
       <Head>
         <Title>{{ title }}</Title>
         <template v-for="link in head.link" :key="link.id">
-          <Link :id="link.id" :rel="link.rel" :href="link.href" :hreflang="link.hreflang" />
+          <Link v-bind="link" />
         </template>
         <template v-for="meta in head.meta" :key="meta.id">
-          <Meta :id="meta.id" :property="meta.property" :content="meta.content" />
+          <Meta v-bind="meta" :content="String(meta.content)" />
         </template>
         <Meta name="keywords" :content="$t('meta.keywords')" />
         <Meta property="og:site_name" :content="title" />
