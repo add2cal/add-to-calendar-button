@@ -80,9 +80,8 @@ to `generators/index.atcb_generate_links` -> per-service generator builds the ur
 `atcb-last-event` attribute). Dynamically generated Apple/iCal downloads are the exception:
 their controls render first, then asynchronously become native anchors with a precomputed
 data URL so Apple browsers retain a real user-activation navigation. Static ICS files keep
-the legacy direct-save path. Direct Apple/iCal subscriptions similarly use native `_self`
-`webcal:` anchors on iOS Safari to avoid disposable blank tabs; other platforms, proxy
-subscriptions, and calendar providers retain their established dispatch paths.
+the legacy direct-save path; subscription and other calendar-provider routes retain their
+established dispatch paths.
 
 Group overview controls filter the fetched range locally. Event links open the hosted
 event page unless `no-details` routes the whole event action to adding it. Optional add

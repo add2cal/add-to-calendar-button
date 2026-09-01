@@ -236,7 +236,7 @@ describe('Group L - Environment-driven routing', () => {
     }
   });
 
-  it('L-01: iOS Safari -> subscribe ical is a native webcal anchor', async () => {
+  it('L-01: iOS Safari -> subscribe ical opens webcal:// directly', async () => {
     const restoreUA = setUA(UA.iosSafari);
     const wo = interceptWindowOpen();
     try {
@@ -248,12 +248,9 @@ describe('Group L - Environment-driven routing', () => {
         trigger: 'click',
         identifier: 'atcb-l01',
       });
-      const control = host.shadowRoot.getElementById(host.getAttribute('atcb-button-id'));
-      expect(control.tagName).to.equal('A');
-      expect(control.getAttribute('href')).to.equal('webcal://example.com/cal.ics');
-      expect(control.getAttribute('target')).to.equal('_self');
       await clickSingleton(host);
-      expect(wo.calls.length).to.equal(0);
+      expect(wo.calls.length).to.equal(1);
+      expect(wo.calls[0].url).to.equal('webcal://example.com/cal.ics');
     } finally {
       wo.restore();
       restoreUA();

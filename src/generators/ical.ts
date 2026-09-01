@@ -9,7 +9,7 @@ import { translate_hook } from '../i18n/index';
 import type { ATCBConfig } from '../types';
 
 type ATCBIcsAction = {
-  kind: 'dynamic' | 'static' | 'proxy' | 'assistance' | 'subscription';
+  kind: 'dynamic' | 'static' | 'proxy' | 'assistance';
   href: string;
   filename: string;
   target: string;
