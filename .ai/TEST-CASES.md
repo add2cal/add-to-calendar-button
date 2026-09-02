@@ -268,7 +268,7 @@ Also part of the default run (long-standing quick tests):
 - P-01: Apple subscribe converts to webcal:// on desktop
 - P-02: Google subscribe uses the cid= subscription URL (not the render URL)
 - P-02b: MS365 subscribe uses addfromweb with url + name
-- P-03: Yahoo subscribe opens the manual-instructions modal instead of a URL
+- P-03: Yahoo subscribe opens the manual-instructions modal with a full-width action footer
 - P-04: Teams is filtered out in subscribe mode
 - P-04b: mobile subscribe additionally drops ms365 + outlookcom
 - P-05: subscribe + multi-date does not render (validation error)
@@ -524,7 +524,7 @@ recurrence, which implies a single date entry).
 
 ## Group GO - PRO group overview (test/wc-tests/r-GO-group-overview.test.js)
 
-- GO-01: fetches the public dev-group range, uses dev landing links, and renders only populated month choices
+- GO-01: fetches the public dev-group range, uses dev landing links, hides the year selector when only the current year is available, and renders only populated month choices
 - GO-02: defaults to the current year, keeps its empty state, and duplicates cross-year events into January
 - GO-03: years-only renders month headings and compact custom-domain links
 - GO-04: no-details forces even inline-configured RSVP events into the atcb_action modal without an add badge
@@ -532,3 +532,8 @@ recurrence, which implies a single date entry).
 - GO-06: compact no-details entries do not render an add badge
 - GO-07: compact RSVP entries use an aligned dot beside regular add badges
 - GO-08: grid cards place an enlarged datetime above the title and respond to their container with one, two, or three equal columns, balanced outer badge spacing, inter-card clearance, and a 1200px cap
+- GO-09: public non-subscription groups always render the list, regardless of group-overview
+- GO-10: public subscription groups default to the button and group-overview can select the list
+- GO-11: group-overview has no effect when public_event_overview is false or absent
+- GO-12: subscription overview links, add badges, and direct actions always use the group key
+- GO-13: no-add renders plain entries without landing links, direct actions, or add badges

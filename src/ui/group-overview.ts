@@ -41,6 +41,7 @@ interface NormalizedOverviewConfig {
   from: string;
   to?: string;
   noDetails: boolean;
+  noAdd: boolean;
   customDomain?: string;
   addViaList: boolean;
 }
@@ -70,6 +71,7 @@ function normalize_config(input: ATCBGroupOverviewConfig | undefined, now: Date)
     from,
     to,
     noDetails: config['no-details'] === true,
+    noAdd: config['no-add'] === true,
     customDomain: domain,
     addViaList: config['add-via-list'] === true,
   };
@@ -152,7 +154,8 @@ function blur_after_pointer_selection(select: HTMLSelectElement): void {
 function render_event(event: OverviewEvent, config: NormalizedOverviewConfig, locale: string, dev: boolean, onAdd: (event: OverviewEvent, trigger: HTMLElement) => void): HTMLLIElement {
   const item = document.createElement('li');
   item.className = 'atcb-group-overview-item';
-  if (config.noDetails) item.classList.add('atcb-group-overview-item-no-details');
+  if (config.noAdd) item.classList.add('atcb-group-overview-item-no-add');
+  else if (config.noDetails) item.classList.add('atcb-group-overview-item-no-details');
   item.setAttribute('part', 'atcb-group-overview-event');
   const start = new Date(`${event.startDate}T${event.startTime || '00:00'}:00`);
   const dateFormatter = new Intl.DateTimeFormat(locale, { day: 'numeric', month: 'short', ...(event.startTime ? { hour: '2-digit', minute: '2-digit' } : {}) });
@@ -166,22 +169,24 @@ function render_event(event: OverviewEvent, config: NormalizedOverviewConfig, lo
     const row = document.createElement('span');
     row.className = 'atcb-group-overview-compact-row';
     item.append(row);
-    const link = append_text(row, 'a', `${dateLabel} | ${event.title}`, 'atcb-group-overview-link') as HTMLAnchorElement;
-    link.href = href;
-    link.target = '_blank';
-    link.rel = 'noopener';
-    if (config.noDetails)
+    const link = append_text(row, config.noAdd ? 'span' : 'a', `${dateLabel} | ${event.title}`, 'atcb-group-overview-link') as HTMLAnchorElement;
+    if (!config.noAdd) {
+      link.href = href;
+      link.target = '_blank';
+      link.rel = 'noopener';
+    }
+    if (config.noDetails && !config.noAdd)
       link.addEventListener('click', (e) => {
         e.preventDefault();
         onAdd(event, link);
       });
-    if (config.addViaList && !config.noDetails && event.hasRsvp) {
+    if (config.addViaList && !config.noDetails && !config.noAdd && event.hasRsvp) {
       item.classList.add('atcb-group-overview-compact-with-marker');
       const marker = append_text(row, 'span', '•', 'atcb-group-overview-marker');
       marker.className = 'atcb-group-overview-compact-marker';
       marker.setAttribute('aria-hidden', 'true');
       row.prepend(marker);
-    } else if (config.addViaList && !config.noDetails) {
+    } else if (config.addViaList && !config.noDetails && !config.noAdd) {
       item.classList.add('atcb-group-overview-compact-with-add');
       const add = append_text(row, 'button', '+', 'atcb-group-overview-add');
       add.className = 'atcb-group-overview-add';
@@ -196,14 +201,16 @@ function render_event(event: OverviewEvent, config: NormalizedOverviewConfig, lo
     }
     return item;
   }
-  const link = document.createElement('a');
+  const link = document.createElement(config.noAdd ? 'div' : 'a');
   link.className = 'atcb-group-overview-event-link';
   link.setAttribute('part', 'atcb-group-overview-link');
-  link.href = href;
-  link.target = '_blank';
-  link.rel = 'noopener';
-  link.setAttribute('aria-label', event.title);
-  if (config.noDetails)
+  if (link instanceof HTMLAnchorElement) {
+    link.href = href;
+    link.target = '_blank';
+    link.rel = 'noopener';
+    link.setAttribute('aria-label', event.title);
+  }
+  if (config.noDetails && !config.noAdd)
     link.addEventListener('click', (e) => {
       e.preventDefault();
       onAdd(event, link);
@@ -236,7 +243,7 @@ function render_event(event: OverviewEvent, config: NormalizedOverviewConfig, lo
     const description = append_text(content, 'p', event.description, 'atcb-group-overview-description');
     description.className = 'atcb-group-overview-description';
   }
-  if (config.addViaList && !event.hasRsvp) {
+  if (config.addViaList && !config.noAdd && !event.hasRsvp) {
     item.classList.add('atcb-group-overview-item-with-add');
     const add = append_text(config.noDetails ? link : item, config.noDetails ? 'span' : 'button', '+', 'atcb-group-overview-add');
     add.className = 'atcb-group-overview-add';
@@ -265,6 +272,9 @@ async function render_group_overview(host: ShadowRoot, input: ATCBInputConfig, s
   const response = await fetch(`https://api${input.dev ? '-dev' : ''}.add-to-calendar-pro.com/v1/event/all?${query}`, { signal });
   if (!response.ok) throw new Error('Not possible to read the public group overview.');
   const events = flatten_events(await response.json(), now.getFullYear());
+  if (input.subscribe === true || input.subscribe === 'true' || input.subscribe === '1') {
+    for (const event of events) event.prokey = prokey;
+  }
   const locale = typeof input.language === 'string' ? input.language.replace('_', '-') : 'en';
   const translationData = { ...input, language: locale } as ATCBConfig;
   await ensure_locale(translationData);
@@ -288,7 +298,7 @@ async function render_group_overview(host: ShadowRoot, input: ATCBInputConfig, s
   yearSelect.setAttribute('part', 'atcb-group-overview-year-select');
   yearSelect.setAttribute('aria-label', 'Year');
   for (const year of years) yearSelect.add(new Option(String(year), String(year), year === currentYear, year === currentYear));
-  controls.append(yearSelect);
+  if (years.length > 1) controls.append(yearSelect);
   let monthSelect: HTMLSelectElement | undefined;
   if (!config.yearsOnly) {
     monthSelect = document.createElement('select');
@@ -297,7 +307,7 @@ async function render_group_overview(host: ShadowRoot, input: ATCBInputConfig, s
     monthSelect.setAttribute('aria-label', 'Month');
     controls.append(monthSelect);
   }
-  root.append(controls);
+  if (controls.childElementCount > 0) root.append(controls);
   const results = document.createElement('div');
   results.className = 'atcb-group-overview-results';
   results.setAttribute('part', 'atcb-group-overview-results');

@@ -159,10 +159,8 @@ watch(searchSelection, (newVal) => {
             <tr id="group-overview">
               <th scope="row">group-overview</th>
               <td><em>Boolean</em><br /><br /><span class="font-semibold">PRO only</span></td>
-              <td v-if="locale=='en'">Renders a public event overview instead of a button. The <code>prokey</code> must belong to an Add to Calendar PRO group and “public event overview” must be enabled for that group.<br /><br />Recurring events are currently not fully supported.</td>
-              <td v-else>
-                Rendert eine öffentliche Event-Übersicht anstelle eines Buttons. Der <code>prokey</code> muss zu einer Add to Calendar PRO Gruppe gehören und „Public Event Overview“ muss für diese Gruppe aktiviert sein.<br /><br />Wiederkehrende Events werden aktuell nicht vollständig unterstützt.
-              </td>
+              <td v-if="locale=='en'">If an event group is configured for both subscription and an event list, it defaults to the subscription button. Use this attribute to show the event list instead.</td>
+              <td v-else>Wenn eine Event-Gruppe sowohl für ein Abonnement als auch für eine Event-Liste konfiguriert ist, wird standardmäßig der Abonnement-Button angezeigt. Mit diesem Attribut wird stattdessen die Event-Liste angezeigt.</td>
             </tr>
             <tr id="group-overview-config">
               <th scope="row">group-overview-config</th>
@@ -175,6 +173,7 @@ watch(searchSelection, (newVal) => {
                   <li><code>from</code> (String): UTC ISO datetime limiting the lower end. It cannot be earlier than January 1 of the previous year.</li>
                   <li><code>to</code> (String): UTC ISO datetime limiting the upper end. It cannot precede <code>from</code>.</li>
                   <li><code>no-details</code> (Boolean): Opens the calendar options modal instead of linking to its landing page.</li>
+                  <li><code>no-add</code> (Boolean): Disables all event interactions. Entries have no landing page link, calendar action, or add badge, regardless of the other settings.</li>
                   <li><code>custom-domain</code> (String; Hostname, like events.acme.com): Uses this domain, for landing page links. The domain must also be configured in Add to Calendar PRO.</li>
                   <li><code>add-via-list</code> (Boolean): Adds a subtle calendar-add badge. With <code>no-details</code>, it is part of the event link and opens the calendar options together with the rest of the entry.</li>
                 </ul>
@@ -187,6 +186,7 @@ watch(searchSelection, (newVal) => {
                   <li><code>from</code> (String): UTC-ISO-Zeitstempel für die untere Grenze. Der Wert darf nicht vor dem 1. Januar des Vorjahres liegen.</li>
                   <li><code>to</code> (String): UTC-ISO-Zeitstempel für die obere Grenze. Der Wert darf nicht vor <code>from</code> liegen.</li>
                   <li><code>no-details</code> (Boolean): Öffnet bei Auswahl eines Events das Modal mit den Kalenderoptionen, anstatt auf die Landingpage zu verlinken.</li>
+                  <li><code>no-add</code> (Boolean): Deaktiviert alle Event-Interaktionen. Einträge haben weder Landingpage-Link noch Kalenderaktion oder Hinzufügen-Marke, unabhängig von den anderen Einstellungen.</li>
                   <li><code>custom-domain</code> (String; Hostname, bspw. events.acme.com): Nutzt diese Domain für Landingpage-Links. Die Domain muss auch in Add to Calendar PRO konfiguriert sein.</li>
                   <li><code>add-via-list</code> (Boolean): Ergänzt eine dezente Kalender-Hinzufügen-Marke. Mit <code>no-details</code> ist sie Teil des Event-Links und öffnet zusammen mit dem restlichen Eintrag die Kalenderoptionen.</li>
                 </ul>

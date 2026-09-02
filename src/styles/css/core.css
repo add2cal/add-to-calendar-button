@@ -843,6 +843,11 @@ a.atcb-modal-btn:disabled {
   grid-column: 1;
 }
 
+.atcb-modal-box-with-icon > .atcb-modal-buttons,
+.atcb-modal-box-with-icon.atcb-rtl > .atcb-modal-buttons {
+  grid-column: 1 / -1;
+}
+
 .atcb-modal-close,
 .atcb-list-item-close {
   align-items: center;

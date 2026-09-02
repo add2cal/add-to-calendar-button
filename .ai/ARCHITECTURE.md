@@ -65,10 +65,11 @@ Key properties of the pipeline:
   code needing the finished button must `await el.whenInitialized()`.
 - **Re-initialization on attribute change** destroys and rebuilds the button content
   in place (lit render root survives; foreign children are removed).
-- **Group overview is an early branch.** A truthy `group-overview` requires `prokey` and
-  bypasses PRO config decoration, validation, and normal button rendering. It reads the
-  component attributes, fetches the public group event range, and renders into the existing
-  Lit shell.
+- **Group overview branches after the PRO config fetch.** The server-side
+  `public_event_overview` flag enables the branch. Non-subscription groups always render
+  the list; subscription groups render the button by default and a truthy `group-overview`
+  selects the list. The list reads its display settings from the component attributes,
+  fetches the public group event range, and renders into the existing Lit shell.
 
 ## Data flow: interaction
 
@@ -86,8 +87,10 @@ established dispatch paths.
 Group overview controls filter the fetched range locally. Event links open the hosted
 event page unless `no-details` routes the whole event action to adding it. Optional add
 controls call `atcb_action` with the selected event, disable group overview for that call,
-and request the normal add flow with modal list style. Unless `no-details` is set, RSVP
-events keep their hosted-detail route instead of receiving a separate add control.
+and request the normal add flow with modal list style. Subscription overviews use the
+group key for every landing page and add action instead of each entry's event key. Unless
+`no-details` is set, RSVP events keep their hosted-detail route instead of receiving a
+separate add control. `no-add` suppresses all links, actions, and add controls.
 
 ## State
 

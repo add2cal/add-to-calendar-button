@@ -1,6 +1,6 @@
 import { expect, aTimeout } from '@open-wc/testing';
 import { mountAtcb } from '../helpers/mount.js';
-import { proRsvpConfig } from '../fixtures/pro.js';
+import { proEvtConfig, proRsvpConfig } from '../fixtures/pro.js';
 
 const GROUP_KEY = '11111111-2222-3333-4444-555555555555';
 
@@ -8,12 +8,15 @@ function date(year, month, day) {
   return `${year}-${String(month).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
 }
 
-function mockOverview(payload) {
+function mockOverview(payload, config = {}) {
   const original = window.fetch;
   const calls = [];
   window.fetch = async (url) => {
     const value = String(url);
     calls.push(value);
+    if (value === `https://event.caldn.net/${GROUP_KEY}/config.json` || value === `https://event-dev.caldn.net/${GROUP_KEY}/config.json`) {
+      return new Response(JSON.stringify(proEvtConfig({ public_event_overview: true, ...config })), { status: 200, headers: { 'Content-Type': 'application/json' } });
+    }
     if (/^https:\/\/api(?:-dev)?\.add-to-calendar-pro\.com\/v1\/event\/all\?/.test(value)) {
       return new Response(JSON.stringify(payload), { status: 200, headers: { 'Content-Type': 'application/json' } });
     }
@@ -23,7 +26,7 @@ function mockOverview(payload) {
 }
 
 describe('Group GO - PRO group overview', () => {
-  it('GO-01: fetches the public group range and renders only populated month choices', async () => {
+  it('GO-01: fetches the public group range, hides the sole current-year select, and renders only populated month choices', async () => {
     const year = new Date().getFullYear();
     const mock = mockOverview([
       { prokey: 'event-1', label: 'First event', dates: [{ startDate: date(year, 2, 4), location: 'Berlin' }] },
@@ -31,7 +34,7 @@ describe('Group GO - PRO group overview', () => {
     ]);
     try {
       const { shadow } = await mountAtcb({ prokey: GROUP_KEY, 'group-overview': true, dev: true });
-      const request = new URL(mock.calls[0]);
+      const request = new URL(mock.calls.find((url) => url.includes('/v1/event/all?')));
       expect(request.hostname).to.equal('api-dev.add-to-calendar-pro.com');
       expect(request.pathname).to.equal('/v1/event/all');
       expect(request.searchParams.get('group')).to.equal(GROUP_KEY);
@@ -42,14 +45,99 @@ describe('Group GO - PRO group overview', () => {
       expect(shadow.querySelector('[part="atcb-group-overview-datetime-icon"] svg')).to.exist;
       expect(shadow.querySelector('[part="atcb-group-overview-location-icon"] svg')).to.exist;
       expect(getComputedStyle(shadow.querySelector('[part="atcb-group-overview-meta"]')).flexDirection).to.equal('column');
-      const yearSelect = shadow.querySelector('[part="atcb-group-overview-year-select"]');
-      expect(getComputedStyle(yearSelect).fontWeight).to.equal('700');
-      expect(getComputedStyle(yearSelect).cursor).to.equal('pointer');
-      yearSelect.focus();
-      yearSelect.dispatchEvent(new PointerEvent('pointerdown'));
-      yearSelect.dispatchEvent(new Event('change'));
-      expect(shadow.activeElement).to.not.equal(yearSelect);
+      expect(shadow.querySelector('[part="atcb-group-overview-year-select"]')).to.not.exist;
       expect(shadow.querySelector('[part="atcb-button"]')).to.not.exist;
+    } finally {
+      mock.restore();
+    }
+  });
+
+  it('GO-09: a public non-subscription group always renders the list', async () => {
+    const mock = mockOverview([]);
+    try {
+      const { shadow } = await mountAtcb({ prokey: GROUP_KEY, 'group-overview': false });
+      expect(shadow.querySelector('[part="atcb-group-overview"]')).to.exist;
+      expect(shadow.querySelector('[part="atcb-button"]')).to.not.exist;
+    } finally {
+      mock.restore();
+    }
+  });
+
+  it('GO-10: a public subscription group defaults to its button and can opt into the list', async () => {
+    const subscribeConfig = { subscribe: true, icsFile: 'https://example.com/calendar.ics' };
+    let mock = mockOverview([], subscribeConfig);
+    try {
+      const { shadow } = await mountAtcb({ prokey: GROUP_KEY });
+      expect(shadow.querySelector('[part="atcb-button"]')).to.exist;
+      expect(shadow.querySelector('[part="atcb-group-overview"]')).to.not.exist;
+    } finally {
+      mock.restore();
+    }
+    mock = mockOverview([], subscribeConfig);
+    try {
+      const { shadow } = await mountAtcb({ prokey: GROUP_KEY, 'group-overview': true });
+      expect(shadow.querySelector('[part="atcb-group-overview"]')).to.exist;
+      expect(shadow.querySelector('[part="atcb-button"]')).to.not.exist;
+    } finally {
+      mock.restore();
+    }
+  });
+
+  it('GO-11: group-overview has no effect without public_event_overview', async () => {
+    for (const publicEventOverview of [false, undefined]) {
+      const mock = mockOverview([], { public_event_overview: publicEventOverview });
+      try {
+        const { shadow } = await mountAtcb({ prokey: GROUP_KEY, 'group-overview': true });
+        expect(shadow.querySelector('[part="atcb-button"]')).to.exist;
+        expect(shadow.querySelector('[part="atcb-group-overview"]')).to.not.exist;
+      } finally {
+        mock.restore();
+      }
+    }
+  });
+
+  it('GO-12: subscription overview links and calendar actions always use the group key', async () => {
+    const year = new Date().getFullYear();
+    const eventKey = 'individual-event-key';
+    const payload = [{ prokey: eventKey, label: 'Subscription event', dates: [{ name: 'Subscription event', startDate: date(year, 4, 10) }] }];
+    const subscribeConfig = { subscribe: true, icsFile: 'https://example.com/calendar.ics' };
+    for (const overviewConfig of [{ 'add-via-list': true }, { 'no-details': true }]) {
+      const mock = mockOverview(payload, subscribeConfig);
+      try {
+        const { shadow } = await mountAtcb({ prokey: GROUP_KEY, 'group-overview': true, 'group-overview-config': overviewConfig });
+        const entry = shadow.querySelector('[part="atcb-group-overview-link"]');
+        expect(entry.href).to.equal(`https://caldn.net/${GROUP_KEY}`);
+        const trigger = shadow.querySelector('[part="atcb-group-overview-add"]') || entry;
+        trigger.click();
+        await aTimeout(100);
+        expect(mock.calls.filter((url) => url.endsWith(`/${GROUP_KEY}/config.json`)).length).to.be.greaterThan(1);
+        expect(mock.calls.some((url) => url.endsWith(`/${eventKey}/config.json`))).to.equal(false);
+      } finally {
+        document.querySelectorAll('[id$="-modal-host"]').forEach((host) => host.remove());
+        mock.restore();
+      }
+    }
+  });
+
+  it('GO-13: no-add renders a plain list without links, actions, or add badges', async () => {
+    const year = new Date().getFullYear();
+    const mock = mockOverview([{ prokey: 'inactive-event', label: 'Plain event', dates: [{ name: 'Plain event', startDate: date(year, 4, 10) }] }]);
+    try {
+      for (const type of ['cards', 'compact']) {
+        const { shadow } = await mountAtcb({
+          prokey: GROUP_KEY,
+          'group-overview': true,
+          'group-overview-config': { type, 'add-via-list': true, 'no-details': true, 'no-add': true },
+        });
+        const entry = shadow.querySelector('[part="atcb-group-overview-link"]');
+        expect(entry.tagName).to.equal(type === 'compact' ? 'SPAN' : 'DIV');
+        expect(entry.hasAttribute('href')).to.equal(false);
+        expect(shadow.querySelector('[part="atcb-group-overview-add"]')).to.not.exist;
+        const configFetches = mock.calls.filter((url) => url.endsWith(`/${GROUP_KEY}/config.json`)).length;
+        entry.click();
+        await aTimeout(0);
+        expect(mock.calls.filter((url) => url.endsWith(`/${GROUP_KEY}/config.json`)).length).to.equal(configFetches);
+      }
     } finally {
       mock.restore();
     }
@@ -60,7 +148,14 @@ describe('Group GO - PRO group overview', () => {
     const mock = mockOverview([{ prokey: 'event-cross', label: 'New year event', dates: [{ startDate: date(year - 1, 12, 31), endDate: date(year, 1, 2) }] }]);
     try {
       const { shadow } = await mountAtcb({ prokey: GROUP_KEY, 'group-overview': true });
-      expect(shadow.querySelector('[part="atcb-group-overview-year-select"]').value).to.equal(String(year));
+      const yearSelect = shadow.querySelector('[part="atcb-group-overview-year-select"]');
+      expect(yearSelect.value).to.equal(String(year));
+      expect(getComputedStyle(yearSelect).fontWeight).to.equal('700');
+      expect(getComputedStyle(yearSelect).cursor).to.equal('pointer');
+      yearSelect.focus();
+      yearSelect.dispatchEvent(new PointerEvent('pointerdown'));
+      yearSelect.dispatchEvent(new Event('change'));
+      expect(shadow.activeElement).to.not.equal(yearSelect);
       expect(shadow.querySelector('[part="atcb-group-overview-month-select"] option').value).to.equal('1');
       expect(shadow.querySelector('[part="atcb-group-overview-title"]').textContent).to.equal('New year event');
     } finally {
@@ -97,6 +192,9 @@ describe('Group GO - PRO group overview', () => {
       const value = String(url);
       calls.push(value);
       if (value.includes('/v1/event/all?')) return new Response(JSON.stringify([{ prokey: eventKey, label: `Action event, ${date(year, 5, 10)}, RSVP`, dates: [{ name: 'Action event', startDate: date(year, 5, 10) }] }]), { status: 200 });
+      if (value === `https://event-dev.caldn.net/${GROUP_KEY}/config.json`) {
+        return new Response(JSON.stringify(proEvtConfig({ public_event_overview: true })), { status: 200 });
+      }
       if (value === `https://event-dev.caldn.net/${eventKey}/config.json`) {
         return new Response(JSON.stringify(proRsvpConfig({ name: 'Action event', inlineRsvp: true, dates: [{ name: 'Action event', startDate: date(year, 5, 10) }] })), { status: 200 });
       }

@@ -50,6 +50,7 @@ export interface ATCBGroupOverviewConfig {
   from?: string;
   to?: string;
   'no-details'?: boolean;
+  'no-add'?: boolean;
   'custom-domain'?: string;
   'add-via-list'?: boolean;
 }
@@ -200,6 +201,7 @@ export interface ATCBInputConfig {
  */
 export interface ATCBConfig {
   proKey?: string;
+  public_event_overview?: boolean;
   groupOverview?: boolean;
   groupOverviewConfig?: ATCBGroupOverviewConfig;
   name?: string;

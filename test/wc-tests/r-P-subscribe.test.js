@@ -54,7 +54,7 @@ describe('Group P - Subscribe mode', () => {
     }
   });
 
-  it('P-03: Yahoo subscribe opens the manual-instructions modal instead of a URL', async () => {
+  it('P-03: Yahoo subscribe opens the manual-instructions modal with a full-width action footer', async () => {
     const wo = interceptWindowOpen();
     const clip = stubClipboard(); // headless envs lack the Clipboard API
     const mute = muteConsole();
@@ -71,7 +71,13 @@ describe('Group P - Subscribe mode', () => {
       expect(closeButton, 'icon close control').to.exist;
       expect(closeButton.getAttribute('aria-label'), 'icon close control is named').to.equal('Close');
       expect(closeButton.querySelector('svg'), 'close control renders the X icon').to.exist;
-      const footerButtons = modal.shadowRoot.querySelectorAll('.atcb-modal-buttons .atcb-modal-btn');
+      const modalBox = modal.shadowRoot.querySelector('.atcb-modal-box-with-icon');
+      const modalFooter = modal.shadowRoot.querySelector('.atcb-modal-buttons');
+      const modalBoxRect = modalBox.getBoundingClientRect();
+      const modalFooterRect = modalFooter.getBoundingClientRect();
+      expect(modalFooterRect.left, 'footer starts at the modal edge').to.be.closeTo(modalBoxRect.left, 1);
+      expect(modalFooterRect.right, 'footer ends at the modal edge').to.be.closeTo(modalBoxRect.right, 1);
+      const footerButtons = modalFooter.querySelectorAll('.atcb-modal-btn');
       expect(footerButtons.length, 'footer keeps only the Yahoo action').to.equal(1);
       expect(footerButtons[0].textContent, 'cancel action removed from the footer').to.not.equal('Cancel');
       expect(clip.texts.join(' '), 'ics url copied for manual yahoo subscribe').to.include('example.com/team-calendar.ics');

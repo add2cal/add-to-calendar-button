@@ -36,6 +36,12 @@ function is_group_overview(el: Element): boolean {
   return hasConfigAttribute(el, 'groupOverview') && (!value || value === '' || value === 'true' || value === '1');
 }
 
+function should_render_group_overview(el: Element, data: ATCBConfig): boolean {
+  if (data.public_event_overview !== true) return false;
+  if (data.subscribe === true) return is_group_overview(el);
+  return true;
+}
+
 // we cannot load the custom element server-side - therefore, we check for a browser environment first
 if (isBrowser()) {
   class AddToCalendarButton extends LitElement {
@@ -152,21 +158,17 @@ if (isBrowser()) {
       // checking for PRO key and pull data if given
       try {
         const proKeyVal = getConfigAttribute(this, 'proKey');
-        if (is_group_overview(this)) {
-          if (!proKeyVal) throw new Error('group-overview requires a prokey.');
-          this.data = read_attributes(this) as unknown as ATCBConfig;
-          this.data.proKey = proKeyVal;
-          this.prokey = proKeyVal;
-          await this.initGroupOverview();
-          this.state.initializing = false;
-          this.state.initialized = true;
-          this.state.ready = true;
-          this._initializedResolver();
-          return;
-        }
         if (proKeyVal && proKeyVal !== '') {
           this.data = await get_pro_data(proKeyVal, this);
           if (this.data.proKey) this.prokey = this.data.proKey;
+          if (should_render_group_overview(this, this.data)) {
+            await this.initGroupOverview();
+            this.state.initializing = false;
+            this.state.initialized = true;
+            this.state.ready = true;
+            this._initializedResolver();
+            return;
+          }
         } else {
           this.data.proKey = '';
           // if no data yet, we try reading attributes or the innerHTML of the host element
@@ -252,19 +254,15 @@ if (isBrowser()) {
       }
       try {
         const proKeyVal = getConfigAttribute(this, 'proKey');
-        if (is_group_overview(this)) {
-          if (!proKeyVal) throw new Error('group-overview requires a prokey.');
-          cleanup(this.shadowRoot!, this.identifier);
-          this.data = read_attributes(this) as unknown as ATCBConfig;
-          this.data.proKey = proKeyVal;
-          this.prokey = proKeyVal;
-          await this.initGroupOverview();
-          this.updatePending = false;
-          return;
-        }
         if (proKeyVal && proKeyVal !== '') {
           this.data = await get_pro_data(proKeyVal, this);
           if (this.data.proKey) this.prokey = this.data.proKey;
+          if (should_render_group_overview(this, this.data)) {
+            cleanup(this.shadowRoot!, this.identifier);
+            await this.initGroupOverview();
+            this.updatePending = false;
+            return;
+          }
         } else {
           this.data = (await process_inline_data(this, this.debug)) as unknown as ATCBConfig;
         }
@@ -298,6 +296,7 @@ if (isBrowser()) {
       this._groupOverviewAbort = new AbortController();
       const input = read_attributes(this);
       input.prokey = this.data.proKey;
+      input.subscribe = this.data.subscribe;
       await render_group_overview(this.shadowRoot!, input, this._groupOverviewAbort.signal, async (event, trigger) => {
         await atcb_action({ ...input, ...event, prokey: event.prokey, groupOverview: false, inlineRsvp: 'false', dev: input.dev === true || input.dev === 'true', listStyle: 'modal' }, trigger);
       });

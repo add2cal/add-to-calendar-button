@@ -147,7 +147,7 @@
   outline-offset: 2px;
 }
 
-.atcb-group-overview-items:not(.atcb-group-overview-compact) > .atcb-group-overview-item:hover:not(:has(.atcb-group-overview-add:hover)),
+.atcb-group-overview-items:not(.atcb-group-overview-compact) > .atcb-group-overview-item:hover:not(.atcb-group-overview-item-no-add):not(:has(.atcb-group-overview-add:hover)),
 .atcb-group-overview-items:not(.atcb-group-overview-compact) > .atcb-group-overview-item-no-details:hover {
   border-color: #bfc5cd;
   box-shadow: rgb(16 24 40 / 15%) 0 0.4em 1em;
