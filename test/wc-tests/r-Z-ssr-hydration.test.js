@@ -10,6 +10,8 @@
 import { expect } from '@open-wc/testing';
 import '../../dist/module/index.js';
 import { atcb_generate_ssr_html } from '../../dist/ssr/index.js';
+import { proEvtConfig } from '../fixtures/pro.js';
+import { muteConsole } from '../helpers/capture.js';
 
 function mountContainer() {
   const container = document.createElement('div');
@@ -76,6 +78,85 @@ describe('Group Z - SSR shell hydration', () => {
       expect(host.shadowRoot.getElementById('atcb-btn-atcb-z03'), 'button rendered via the client-only path').to.not.equal(null);
       expect(host.shadowRoot.querySelector('[data-atcb-ssr]'), 'no shell remnants').to.equal(null);
     } finally {
+      container.remove();
+    }
+  });
+
+  it('Z-04: group overview skeleton stays painted until the fetched list is ready', async () => {
+    const container = mountContainer();
+    const groupKey = '11111111-2222-3333-4444-555555555555';
+    const year = new Date().getFullYear();
+    const originalFetch = window.fetch;
+    let markRangeRequested;
+    const rangeRequested = new Promise((resolve) => {
+      markRangeRequested = resolve;
+    });
+    let resolveRange;
+    const rangeResponse = new Promise((resolve) => {
+      resolveRange = () =>
+        resolve(
+          new Response(JSON.stringify([{ prokey: 'overview-event', label: 'Overview event', dates: [{ name: 'Overview event', startDate: `${year}-09-10` }] }]), {
+            status: 200,
+            headers: { 'Content-Type': 'application/json' },
+          }),
+        );
+    });
+    window.fetch = async (url) => {
+      const value = String(url);
+      if (value === `https://event.caldn.net/${groupKey}/config.json`) {
+        return new Response(JSON.stringify(proEvtConfig({ public_event_overview: true })), { status: 200, headers: { 'Content-Type': 'application/json' } });
+      }
+      if (value.startsWith('https://api.add-to-calendar-pro.com/v1/event/all?')) {
+        markRangeRequested();
+        return rangeResponse;
+      }
+      return originalFetch(url);
+    };
+    try {
+      container.setHTMLUnsafe(atcb_generate_ssr_html({ prokey: groupKey, groupOverview: true }));
+      const host = container.querySelector('add-to-calendar-button');
+      const skeleton = host.shadowRoot.querySelector('[data-atcb-ssr] .atcb-ssr-group-overview-skeleton');
+      expect(skeleton, 'overview skeleton is present before initialization').to.exist;
+      expect(skeleton.getBoundingClientRect().height, 'overview skeleton is painted').to.be.greaterThan(100);
+      const selectSkeleton = skeleton.querySelector('.atcb-ssr-group-overview-select').getBoundingClientRect();
+      const entrySkeletons = [...skeleton.querySelectorAll('.atcb-ssr-group-overview-entry')];
+      expect(entrySkeletons.length, 'two event placeholders').to.equal(2);
+      expect(selectSkeleton.width, 'select placeholder is narrower than an event').to.be.lessThan(entrySkeletons[0].getBoundingClientRect().width);
+      expect(selectSkeleton.height, 'select placeholder is shorter than an event').to.be.lessThan(entrySkeletons[0].getBoundingClientRect().height);
+      await rangeRequested;
+      expect(host.shadowRoot.querySelector('[data-atcb-ssr] .atcb-ssr-group-overview-skeleton'), 'SSR skeleton remains during the pending request').to.equal(skeleton);
+      resolveRange();
+      await host.whenInitialized();
+      expect(host.shadowRoot.querySelector('[data-atcb-ssr]'), 'SSR shell removed after the list is ready').to.equal(null);
+      expect(host.shadowRoot.querySelector('[part="atcb-group-overview"]'), 'real group overview mounted').to.exist;
+      expect(host.shadowRoot.querySelector('[part="atcb-button"]'), 'calendar button never replaces the skeleton').to.equal(null);
+    } finally {
+      resolveRange?.();
+      window.fetch = originalFetch;
+      container.remove();
+    }
+  });
+
+  it('Z-05: failed PRO initialization removes the group loading skeleton', async () => {
+    const container = mountContainer();
+    const groupKey = 'ffffffff-0000-0000-0000-000000000000';
+    const originalFetch = window.fetch;
+    const mute = muteConsole();
+    window.fetch = async (url) => {
+      if (String(url) === `https://event.caldn.net/${groupKey}/config.json`) return new Response('Not found', { status: 404 });
+      return originalFetch(url);
+    };
+    try {
+      container.setHTMLUnsafe(atcb_generate_ssr_html({ prokey: groupKey, groupOverview: true }));
+      const host = container.querySelector('add-to-calendar-button');
+      const skeleton = host.shadowRoot.querySelector('[data-atcb-ssr] .atcb-ssr-group-overview-skeleton');
+      expect(skeleton, 'loading skeleton starts painted').to.exist;
+      await host.whenInitialized();
+      // Do not query a failed-init shadow root; some Chrome builds crash on it.
+      expect(skeleton.isConnected, 'stale loading skeleton was detached').to.equal(false);
+    } finally {
+      mute.restore();
+      window.fetch = originalFetch;
       container.remove();
     }
   });

@@ -12,7 +12,7 @@
  *   the language), and the real label when it is derivable without decoration
  *   (label attribute, else the localized default from the bundled packs)
  * - `buttonStyle="date"` renders skeleton spans for everything that needs date math
- * - inline RSVP (`rsvp` + `inline-rsvp`) renders a form-shaped skeleton
+ * - group overview and inline RSVP render simple skeletons
  * - everything else (options, list behavior, hide flags, ...) is left to hydration
  *
  * Browsers without declarative shadow DOM support treat the template as inert and
@@ -243,12 +243,8 @@ function parseOptions(value: unknown): { key: string; labelOverride: string }[] 
   return options;
 }
 
-/**
- * Renders the complete element HTML: host tag with all config attributes plus the
- * declarative shadow DOM template carrying the shell. Drop the returned string into
- * server-rendered HTML; the client bundle takes over from there.
- */
-function generate_ssr_html(rawConfig: AddToCalendarButtonType & { [key: string]: unknown }): string {
+/** Internal renderer that distinguishes fetched PRO config from optimistic sync input. */
+function generate_ssr_html_with_context(rawConfig: AddToCalendarButtonType & { [key: string]: unknown }, proConfigResolved: boolean): string {
   // accept camelCase, kebab-case, and legacy spellings alike (the tag does, too)
   const config = normalizeConfig(rawConfig);
   // --- the few config bits the shell honors ---
@@ -269,6 +265,14 @@ function generate_ssr_html(rawConfig: AddToCalendarButtonType & { [key: string]:
   const hideIconButton = truthyFlag(config.hideIconButton);
   const hideIconList = truthyFlag(config.hideIconList);
   const hideTextLabelButton = truthyFlag(config.hideTextLabelButton);
+  const groupOverviewRequested = truthyFlag(config.groupOverview);
+  const groupOverviewCapabilityKnown = proConfigResolved || Object.prototype.hasOwnProperty.call(config, 'publicEventOverview');
+  const groupOverviewEnabled = config.publicEventOverview === true;
+  const hasProKey = typeof config.proKey === 'string' && config.proKey !== '';
+  // The async renderer knows the server-side capability exactly. Synchronous SSR
+  // can still paint the intended shape when group-overview is explicitly requested,
+  // but cannot infer automatic non-subscription overviews from a prokey alone.
+  const groupOverviewSkeleton = hasProKey && (groupOverviewCapabilityKnown ? groupOverviewEnabled && (!truthyFlag(config.subscribe) || groupOverviewRequested) : groupOverviewRequested);
   // custom styles: an external css file (scheme-checked like the client) and/or the
   // css variable overrides (html-stripped like the client does via secure_content)
   const customCss = typeof config.customCss === 'string' && config.customCss !== '' && secure_url(config.customCss, false) ? config.customCss : '';
@@ -293,11 +297,11 @@ function generate_ssr_html(rawConfig: AddToCalendarButtonType & { [key: string]:
 
   // A shell would flash a button that the client immediately hides. Keep the host
   // and its configuration for upgrade, but do not create a declarative placeholder.
-  if (hidesPastEvent(config)) return `<add-to-calendar-button class="add-to-calendar atcb-${lightMode}" ${attributes.join(' ')}></add-to-calendar-button>`;
+  if (!groupOverviewSkeleton && hidesPastEvent(config)) return `<add-to-calendar-button class="add-to-calendar atcb-${lightMode}" ${attributes.join(' ')}></add-to-calendar-button>`;
 
   // --- styles: mirror what the client injects (general layout css + registry css) ---
-  const initWidth = inlineRsvp ? '100%' : 'fit-content';
-  const generalCss = `.atcb-initialized { display: block; position: relative; width: ${initWidth}; }.atcb-initialized.atcb-inline { display: inline-block; }.atcb-initialized.atcb-buttons-list { display: flex; flex-wrap: wrap; justify-content: center; gap: var(--buttonslist-gap); }.atcb-hidden { display: none; }.atcb-ssr-skeleton { display: inline-block; background: currentColor; opacity: 0.15; border-radius: 0.3em; min-width: 2ch; }[data-atcb-ssr] .atcb-date-btn-month { margin-top: 0.5em; }.atcb-ssr-rsvp-skeleton { box-sizing: border-box; display: flex; flex-direction: column; align-items: center; width: 100%; max-width: 540px; margin: 0 auto; padding: 32px 24px; gap: 12px; }.atcb-ssr-rsvp-skeleton .atcb-ssr-skeleton { display: block; width: 78%; height: 10px; background-image: linear-gradient(90deg, transparent 25%, rgb(255 255 255 / 0.55) 50%, transparent 75%); background-size: 200% 100%; animation: atcb-ssr-shimmer 1.5s linear infinite; }.atcb-ssr-rsvp-skeleton .atcb-ssr-skeleton-headline { width: 42%; height: 44px; margin-bottom: 2px; opacity: 0.25; }.atcb-ssr-rsvp-skeleton .atcb-ssr-skeleton-field { width: 100%; height: 44px; margin-top: 8px; border-radius: 6px; }.atcb-ssr-rsvp-skeleton .atcb-ssr-skeleton-submit { width: 38%; height: 44px; margin-top: 10px; opacity: 0.25; }.atcb-ssr-rsvp-skeleton .atcb-ssr-skeleton-field + .atcb-ssr-skeleton-field { margin-top: 0; }@keyframes atcb-ssr-shimmer { from { background-position: 200% 0; } to { background-position: -200% 0; } }@media (prefers-reduced-motion: reduce) { .atcb-ssr-rsvp-skeleton .atcb-ssr-skeleton { animation: none; } }`;
+  const initWidth = inlineRsvp || groupOverviewSkeleton ? '100%' : 'fit-content';
+  const generalCss = `.atcb-initialized { display: block; position: relative; width: ${initWidth}; }.atcb-initialized.atcb-inline { display: inline-block; }.atcb-initialized.atcb-buttons-list { display: flex; flex-wrap: wrap; justify-content: center; gap: var(--buttonslist-gap); }.atcb-hidden { display: none; }.atcb-ssr-skeleton { display: inline-block; background: currentColor; opacity: 0.15; border-radius: 0.3em; min-width: 2ch; }[data-atcb-ssr] .atcb-date-btn-month { margin-top: 0.5em; }:host:has(.atcb-ssr-group-overview-skeleton) { box-sizing: border-box; display: block; max-width: 100% !important; width: min(600px, 100%) !important; }.atcb-ssr-group-overview-skeleton { box-sizing: border-box; color: #1b1f24; display: flex; flex-direction: column; gap: 0.7em; width: 100%; }.atcb-ssr-group-overview-skeleton .atcb-ssr-skeleton { display: block; }.atcb-ssr-group-overview-select { height: 2.6em; margin-bottom: 0.55em; width: 7em; }.atcb-ssr-group-overview-entry { height: 4.5em; width: 100%; }.atcb-ssr-rsvp-skeleton { box-sizing: border-box; display: flex; flex-direction: column; align-items: center; width: 100%; max-width: 540px; margin: 0 auto; padding: 32px 24px; gap: 12px; }.atcb-ssr-rsvp-skeleton .atcb-ssr-skeleton { display: block; width: 78%; height: 10px; background-image: linear-gradient(90deg, transparent 25%, rgb(255 255 255 / 0.55) 50%, transparent 75%); background-size: 200% 100%; animation: atcb-ssr-shimmer 1.5s linear infinite; }.atcb-ssr-rsvp-skeleton .atcb-ssr-skeleton-headline { width: 42%; height: 44px; margin-bottom: 2px; opacity: 0.25; }.atcb-ssr-rsvp-skeleton .atcb-ssr-skeleton-field { width: 100%; height: 44px; margin-top: 8px; border-radius: 6px; }.atcb-ssr-rsvp-skeleton .atcb-ssr-skeleton-submit { width: 38%; height: 44px; margin-top: 10px; opacity: 0.25; }.atcb-ssr-rsvp-skeleton .atcb-ssr-skeleton-field + .atcb-ssr-skeleton-field { margin-top: 0; }@keyframes atcb-ssr-shimmer { from { background-position: 200% 0; } to { background-position: -200% 0; } }@media (prefers-reduced-motion: reduce) { .atcb-ssr-rsvp-skeleton .atcb-ssr-skeleton { animation: none; } }`;
   // with buttonStyle 'custom', the registry stays out and only the external file applies
   const styleCss = buttonStyle === 'custom' ? '' : (atcbSsrCssTemplate['core'] || '') + (atcbSsrCssTemplate[`${buttonStyle}`] || '');
   const overrideCss = (styleLight !== '' ? `:host{${styleLight}}` : '') + (styleDark !== '' ? `:host(.atcb-dark){${styleDark}}` : '');
@@ -307,6 +311,9 @@ function generate_ssr_html(rawConfig: AddToCalendarButtonType & { [key: string]:
   const sizeStyle = `--base-font-size-l:${sizes['l']}px;--base-font-size-m:${sizes['m']}px;--base-font-size-s:${sizes['s']}px;`;
   const buttonId = identifier !== '' ? ` id="atcb-btn-${escapeAttribute(identifier)}"` : '';
   const content = (function () {
+    if (groupOverviewSkeleton) {
+      return '<div class="atcb-group-overview atcb-group-overview-list atcb-ssr-group-overview-skeleton" aria-hidden="true"><div class="atcb-ssr-skeleton atcb-ssr-group-overview-select"></div><div class="atcb-ssr-skeleton atcb-ssr-group-overview-entry"></div><div class="atcb-ssr-skeleton atcb-ssr-group-overview-entry"></div></div>';
+    }
     if (inlineRsvp) {
       return `<div class="atcb-ssr-rsvp-skeleton" aria-hidden="true"><div class="atcb-ssr-skeleton atcb-ssr-skeleton-headline"></div><div class="atcb-ssr-skeleton"></div><div class="atcb-ssr-skeleton"></div><div class="atcb-ssr-skeleton atcb-ssr-skeleton-field"></div><div class="atcb-ssr-skeleton atcb-ssr-skeleton-field"></div><div class="atcb-ssr-skeleton atcb-ssr-skeleton-submit"></div></div>`;
     }
@@ -344,12 +351,22 @@ function generate_ssr_html(rawConfig: AddToCalendarButtonType & { [key: string]:
     return `<div class="atcb-button-wrapper${rtl ? ' atcb-rtl' : ''}" part="atcb-button-wrapper" style="${sizeStyle}"><button type="button" class="atcb-button${oneOption ? ' atcb-single' : ''}${hideTextLabelButton ? ' atcb-no-text' : ''}" part="atcb-button"${buttonId} aria-expanded="false" aria-label="${escapeAttribute(typeof label === 'string' ? label : 'Add to Calendar')}">${inner}</button></div>`;
   })();
 
-  const rootClasses = `atcb-initialized${hidden ? ' atcb-hidden' : ''}${inline ? ' atcb-inline' : ''}${listOptions.length > 0 && !inline ? ' atcb-buttons-list' : ''}`;
+  const shellHidden = hidden;
+  const rootClasses = `atcb-initialized${shellHidden ? ' atcb-hidden' : ''}${inline && !groupOverviewSkeleton ? ' atcb-inline' : ''}${listOptions.length > 0 && !inline && !groupOverviewSkeleton ? ' atcb-buttons-list' : ''}`;
   // data-atcb-ssr distinguishes the shell wrapper from the client-rendered one while
   // both exist during hydration (client queries exclude it)
-  const shell = `<style>${generalCss}</style>${customCssLink}<style>${styleCss}${overrideCss}</style><div class="${rootClasses}" data-atcb-ssr lang="${escapeAttribute(baseLanguage)}">${hidden ? '' : content}</div>`;
+  const shell = `<style>${generalCss}</style>${customCssLink}<style>${styleCss}${overrideCss}</style><div class="${rootClasses}" data-atcb-ssr lang="${escapeAttribute(baseLanguage)}">${shellHidden ? '' : content}</div>`;
 
   return `<add-to-calendar-button class="add-to-calendar atcb-${lightMode}" ${attributes.join(' ')}><template shadowrootmode="open">${shell}</template></add-to-calendar-button>`;
+}
+
+/**
+ * Renders the complete element HTML: host tag with all config attributes plus the
+ * declarative shadow DOM template carrying the shell. Drop the returned string into
+ * server-rendered HTML; the client bundle takes over from there.
+ */
+function generate_ssr_html(rawConfig: AddToCalendarButtonType & { [key: string]: unknown }): string {
+  return generate_ssr_html_with_context(rawConfig, false);
 }
 
 /**
@@ -375,10 +392,15 @@ async function generate_ssr_html_async(rawConfig: AddToCalendarButtonType & { [k
       if (truthyFlag(config.proOverride) && ['hideBranding', 'ty', 'rsvp'].includes(key)) continue;
       if (Object.prototype.hasOwnProperty.call(config, key)) merged[`${key}`] = config[`${key}`];
     }
+    // These two host controls intentionally live outside the PRO override allowlist:
+    // the client reads them directly to select and configure the public overview.
+    for (const key of ['groupOverview', 'groupOverviewConfig'] as const) {
+      if (Object.prototype.hasOwnProperty.call(config, key)) merged[`${key}`] = config[`${key}`];
+    }
     if (config.rsvp && typeof config.rsvp === 'object' && Object.prototype.hasOwnProperty.call(config.rsvp, 'none')) delete merged.rsvp;
     merged.proKey = proKey;
     merged.identifier = proKey;
-    return generate_ssr_html(merged as AddToCalendarButtonType & { [key: string]: unknown });
+    return generate_ssr_html_with_context(merged as AddToCalendarButtonType & { [key: string]: unknown }, true);
   } catch {
     throw new Error('prokey invalid or server not responding!');
   }

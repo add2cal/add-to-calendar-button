@@ -1119,7 +1119,7 @@ const html = await atcb_generate_ssr_html_async({
           </LazyCodeBlock>
           <p>
             The shell honors the button style, size, light mode, right-to-left languages, and the label (the localized default or your "label" value).<br />
-            Date-style buttons and inline RSVP render subtle skeletons, since their content requires client-side logic. Everything else happens at hydration.
+            Date-style buttons, inline RSVP, and group overviews render subtle skeletons, since their content requires client-side logic. Everything else happens at hydration.
           </p>
           <p class="italic">Browsers without declarative shadow DOM support simply ignore the shell and initialize client-only - no extra handling needed.</p>
         </div>
@@ -1152,7 +1152,7 @@ const html = await atcb_generate_ssr_html_async({
           </LazyCodeBlock>
           <p>
             Die Hülle berücksichtigt Button-Style, Größe, Light-Mode, Rechts-nach-Links-Sprachen und das Label (der lokalisierte Default oder dein "label"-Wert).<br />
-            Date-Style-Buttons und Inline-RSVP rendern dezente Skeletons, da ihr Inhalt Client-Logik erfordert. Alles Weitere passiert bei der Hydration.
+            Date-Style-Buttons, Inline-RSVP und Gruppenübersichten rendern dezente Skeletons, da ihr Inhalt Client-Logik erfordert. Alles Weitere passiert bei der Hydration.
           </p>
           <p class="italic">Browser ohne Declarative-Shadow-DOM-Unterstützung ignorieren die Hülle einfach und initialisieren rein client-seitig - ohne weiteres Zutun.</p>
         </div>

@@ -35,6 +35,11 @@ interface OverviewEvent extends OverviewDate {
   hasRsvp: boolean;
 }
 
+interface RenderedGroupOverview {
+  root: HTMLDivElement;
+  style: HTMLStyleElement;
+}
+
 interface NormalizedOverviewConfig {
   yearsOnly: boolean;
   type: OverviewType;
@@ -262,7 +267,7 @@ function render_event(event: OverviewEvent, config: NormalizedOverviewConfig, lo
   return item;
 }
 
-async function render_group_overview(host: ShadowRoot, input: ATCBInputConfig, signal: AbortSignal, onAdd: (event: ATCBInputConfig, trigger: HTMLElement) => void): Promise<void> {
+async function render_group_overview(input: ATCBInputConfig, signal: AbortSignal, onAdd: (event: ATCBInputConfig, trigger: HTMLElement) => void): Promise<RenderedGroupOverview> {
   const prokey = typeof input.prokey === 'string' ? input.prokey : '';
   if (!prokey) throw new Error('group-overview requires a prokey.');
   const now = new Date();
@@ -285,7 +290,6 @@ async function render_group_overview(host: ShadowRoot, input: ATCBInputConfig, s
   const style = document.createElement('style');
   style.textContent = css || '';
   if (input.cspnonce) style.setAttribute('nonce', input.cspnonce);
-  host.prepend(style);
   const root = document.createElement('div');
   root.className = `atcb-group-overview atcb-group-overview-${config.type}`;
   root.setAttribute('part', 'atcb-group-overview');
@@ -358,7 +362,7 @@ async function render_group_overview(host: ShadowRoot, input: ATCBInputConfig, s
   blur_after_pointer_selection(yearSelect);
   if (monthSelect) blur_after_pointer_selection(monthSelect);
   render();
-  host.querySelector('.atcb-initialized:not([data-atcb-ssr])')?.append(root);
+  return { root, style };
 }
 
 export { render_group_overview };

@@ -77,12 +77,13 @@ describe('Group G - ICS / Apple output', () => {
     expect(summary).to.include('A\\, B\\; C');
   });
 
-  it('G-08: HTML in description is stripped for the plain DESCRIPTION', async () => {
-    const { ics } = await icsFor({ ...CFG.singleTimedNY, description: 'Hello [strong]World[/strong] [br] line2 [url]https://example.com[/url]' }, 'atcb-g08');
+  it('G-08: HTML formatting is stripped for the plain DESCRIPTION without collapsing non-breaking spaces', async () => {
+    const { ics } = await icsFor({ ...CFG.singleTimedNY, description: 'Hello&nbsp;World [strong]bold[/strong] [br] line2 [url]https://example.com[/url]' }, 'atcb-g08');
     const desc = ics.events[0].value('DESCRIPTION');
     expect(desc).to.exist;
     expect(desc).to.not.include('[strong]');
     expect(desc).to.not.include('<strong>');
+    expect(desc).to.include('Hello\u00a0World');
   });
 
   it('G-09/G-10: location preserved (URL and plain text)', async () => {

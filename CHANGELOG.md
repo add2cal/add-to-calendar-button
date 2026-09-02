@@ -29,6 +29,8 @@
   - fix: navigating from the options list (as modal) to a follow-up modal (e.g. the multi-date picker) no longer blinks the background - the shared overlay is kept alive and the new modal fades in while the previous view is dropped in place
   - fix: the modal box and the modal option list are correctly sized again (max width on larger screens, no drop-shadow on fullscreen mobile) - regressions from the v3 style split
   - fix: the second step of the Yahoo subscription flow no longer re-copies the link (and could no longer wrongly report a copy failure); its secondary button now reads "Close"
+  - fix: server-rendered PRO group overviews now show a simple list skeleton instead of a misleading calendar button and keep it painted until the event range is ready
+  - fix: non-breaking spaces in descriptions no longer disappear from plain-text calendar output
   - see the [migration guide](./MIGRATION.md) for details - existing v2 integrations keep working
 
 ## Version 2

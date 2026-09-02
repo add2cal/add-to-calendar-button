@@ -29,6 +29,10 @@ test('S-02: ESM and CJS entries expose the same generator', async () => {
 const { atcb_generate_ssr_html } = await import('../../dist/ssr/index.js');
 const { atcb_generate_ssr_html_async } = await import('../../dist/ssr/index.js');
 
+function hasGroupOverviewSkeleton(html) {
+  return /<div class="[^"]*\batcb-ssr-group-overview-skeleton\b[^"]*"[^>]*aria-hidden="true"/.test(html);
+}
+
 test('S-03: default shell carries host attributes (official kebab names), DSD template, styles and the real label', () => {
   const html = atcb_generate_ssr_html({ name: 'Launch', startDate: '2050-06-15', language: 'de', identifier: 'ssr-s03', iCalFileName: 'invite', useUserTZ: true });
   assert.ok(html.startsWith('<add-to-calendar-button class="add-to-calendar atcb-light"'), 'host tag with light mode class');
@@ -275,5 +279,53 @@ test('S-21: dynamic SSR dates accept only today or ISO dates with a bounded nume
   for (const startDate of ['2020-01-01+', '2020-01-01+12345', '2020-01-01+1x', '2020-01-01+1+2', '2020-1-01']) {
     const invalid = atcb_generate_ssr_html({ name: 'Invalid', startDate, pastDateHandling: 'hide' });
     assert.ok(invalid.includes('<template shadowrootmode="open">'), `invalid dynamic date ${startDate} is ignored by SSR date math`);
+  }
+});
+
+test('S-22: group overview renders one select and two event skeleton blocks', () => {
+  const html = atcb_generate_ssr_html({ prokey: 'group-key', groupOverview: true });
+  assert.ok(hasGroupOverviewSkeleton(html), 'inert overview skeleton wrapper');
+  assert.strictEqual((html.match(/<div class="[^"]*\batcb-ssr-group-overview-select\b[^"]*"><\/div>/g) || []).length, 1, 'one select placeholder');
+  assert.strictEqual((html.match(/<div class="[^"]*\batcb-ssr-group-overview-entry\b[^"]*"><\/div>/g) || []).length, 2, 'two event placeholders');
+  assert.ok(!/<(?:a|button|select)\b/.test(html), 'skeleton contains no interactive controls');
+
+  const past = atcb_generate_ssr_html({ prokey: 'group-key', groupOverview: true, startDate: '2020-01-01', pastDateHandling: 'hide' });
+  assert.ok(hasGroupOverviewSkeleton(past), 'event-level past-date hiding does not suppress the separate group-range skeleton');
+
+  const hidden = atcb_generate_ssr_html({ prokey: 'group-key', groupOverview: true, hidden: true });
+  assert.ok(hidden.includes('class="atcb-initialized atcb-hidden"'), 'hidden still suppresses the group shell content');
+  assert.ok(!hasGroupOverviewSkeleton(hidden), 'hidden group emits no visible skeleton');
+
+  const regular = atcb_generate_ssr_html({ name: 'Regular event', groupOverview: true });
+  assert.ok(!hasGroupOverviewSkeleton(regular), 'group-overview without a PRO key keeps the regular shell');
+  assert.ok(regular.includes('<button'), 'regular event still renders its button');
+});
+
+test('S-23: async SSR selects the group skeleton only for the client overview branch', async (t) => {
+  let serverConfig = proEvtConfig({ public_event_overview: true });
+  t.mock.method(globalThis, 'fetch', async () => new Response(JSON.stringify(serverConfig), { status: 200 }));
+
+  const automatic = await atcb_generate_ssr_html_async({ prokey: PRO_EVT_KEY });
+  assert.ok(hasGroupOverviewSkeleton(automatic), 'non-subscription public group renders its automatic overview skeleton');
+
+  serverConfig = proEvtConfig({ public_event_overview: true, subscribe: true, icsFile: 'https://example.com/calendar.ics' });
+  const subscription = await atcb_generate_ssr_html_async({ prokey: PRO_EVT_KEY });
+  assert.ok(!hasGroupOverviewSkeleton(subscription), 'subscription group defaults to its calendar button');
+  assert.ok(subscription.includes('<button'), 'subscription button is rendered');
+
+  const optedIn = await atcb_generate_ssr_html_async({
+    prokey: PRO_EVT_KEY,
+    groupOverview: true,
+    groupOverviewConfig: { type: 'cards' },
+  });
+  assert.ok(hasGroupOverviewSkeleton(optedIn), 'subscription opt-in renders the overview skeleton');
+  assert.ok(optedIn.includes('group-overview="true"'), 'group overview control survives the closed PRO merge');
+  assert.ok(optedIn.includes('group-overview-config="{&quot;type&quot;:&quot;cards&quot;}"'), 'overview config survives the closed PRO merge');
+
+  for (const publicEventOverview of [false, undefined]) {
+    serverConfig = proEvtConfig({ public_event_overview: publicEventOverview });
+    const unavailable = await atcb_generate_ssr_html_async({ prokey: PRO_EVT_KEY, groupOverview: true });
+    assert.ok(!hasGroupOverviewSkeleton(unavailable), `public_event_overview=${publicEventOverview} keeps the button`);
+    assert.ok(unavailable.includes('<button'), 'non-overview PRO config renders its calendar button');
   }
 });

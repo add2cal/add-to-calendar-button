@@ -75,7 +75,8 @@ function rewrite_html_elements(content: string, clear = false, iCalBreaks = fals
     });
     content = content.replace(/\[\/?(hr|[pbui]|strong|em|li|ul|ol|h\d)\]/gi, '');
     content = content.replace(/\{\/?(hr|[pbui]|strong|em|li|ul|ol|h\d)\}/gi, '');
-    // also remove any special characters
+    // preserve non-breaking spaces as plain text before removing other entities
+    content = content.replace(/&(?:nbsp|#160|#xa0);/gi, '\u00a0');
     content = content.replace(/&[#a-z0-9]{1,9};/gi, '');
   } else {
     // and build html for the rest

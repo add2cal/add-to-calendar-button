@@ -179,6 +179,8 @@ if (isBrowser()) {
           console.error(e);
           render_debug_msg(this.shadowRoot!, e);
         }
+        // Failed initialization must not leave a server loading shell painted forever.
+        this.removeSsrShell();
         this.error = true;
         this.state.initializing = false;
         this.state.ready = true;
@@ -280,26 +282,54 @@ if (isBrowser()) {
     }
 
     async initGroupOverview(): Promise<void> {
+      if (!this.isConnected) return;
       if (!this.identifier) this.identifier = 'atcb-btn-' + ++buttonCount;
       this.data.identifier = this.identifier;
       this.setAttribute('atcb-button-id', this.identifier);
       this.style.visibility = 'visible';
       this.style.opacity = '1';
       this.style.position = 'relative';
-      this._deferLitRender = false;
-      this.requestUpdate();
-      await this.updateComplete;
-      this.removeSsrShell();
-      const root = this.shadowRoot!.querySelector('.atcb-initialized:not([data-atcb-ssr])') as HTMLElement;
-      root.classList.remove('atcb-hidden');
+      const deferred = this._deferLitRender;
       this._groupOverviewAbort?.abort();
-      this._groupOverviewAbort = new AbortController();
+      const overviewAbort = new AbortController();
+      this._groupOverviewAbort = overviewAbort;
       const input = read_attributes(this);
       input.prokey = this.data.proKey;
       input.subscribe = this.data.subscribe;
-      await render_group_overview(this.shadowRoot!, input, this._groupOverviewAbort.signal, async (event, trigger) => {
-        await atcb_action({ ...input, ...event, prokey: event.prokey, groupOverview: false, inlineRsvp: 'false', dev: input.dev === true || input.dev === 'true', listStyle: 'modal' }, trigger);
-      });
+      let overview: Awaited<ReturnType<typeof render_group_overview>>;
+      try {
+        // Fetch and build off-DOM while an adopted SSR shell remains painted.
+        overview = await render_group_overview(input, overviewAbort.signal, async (event, trigger) => {
+          await atcb_action({ ...input, ...event, prokey: event.prokey, groupOverview: false, inlineRsvp: 'false', dev: input.dev === true || input.dev === 'true', listStyle: 'modal' }, trigger);
+        });
+      } catch (error) {
+        // A failed overview must not leave an inert loading skeleton behind.
+        if (!this.isConnected) {
+          this.removeSsrShell();
+          return;
+        }
+        if (deferred) {
+          this._deferLitRender = false;
+          this.requestUpdate();
+          await this.updateComplete;
+          this.removeSsrShell();
+        }
+        throw error;
+      }
+      if (!this.isConnected || overviewAbort.signal.aborted) {
+        this.removeSsrShell();
+        return;
+      }
+      if (deferred) {
+        this._deferLitRender = false;
+        this.requestUpdate();
+        await this.updateComplete;
+      }
+      const root = this.shadowRoot!.querySelector('.atcb-initialized:not([data-atcb-ssr])') as HTMLElement;
+      this.shadowRoot!.prepend(overview.style);
+      root.append(overview.root);
+      root.classList.remove('atcb-hidden');
+      this.removeSsrShell();
     }
 
     async initButton(): Promise<boolean> {

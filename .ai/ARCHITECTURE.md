@@ -143,13 +143,19 @@ the style/i18n registries (caches by design).
 
 `ssr/index.ts` renders the host element with all config attributes (official kebab names)
 plus a `<template shadowrootmode="open">` shell: general layout css, core css + the ONE
-requested style delta, and a static button (real localized label, skeletons for date-style
-parts and inline RSVP). All style deltas and all default labels are baked into the
-server-only bundle at build time. The synchronous renderer never touches the DOM or
-fetches. When `pastDateHandling="hide"` can be resolved from absolute, non-recurring dates
-and every entry is overdue, it emits only the configured host and no shell. Its async
-companion can resolve a supplied `proKey` from the PRO config endpoint
-before rendering, using the same closed override allowlists as the client.
+requested style delta, and content shaped for the eventual client render. Normal buttons
+use the real localized label; date-style parts and inline RSVP use specialized skeletons,
+while group overview uses a generic list skeleton with one select-sized block plus two
+event-sized blocks and no interactive controls. All style deltas and all default labels
+are baked into the server-only bundle at build time. The synchronous renderer never
+touches the DOM or fetches, so it treats an explicit group-overview request as an
+optimistic loading hint. The async renderer resolves the PRO config and identifies both
+automatic non-subscription overviews and subscription opt-ins exactly. When
+`pastDateHandling="hide"` can be resolved from absolute,
+non-recurring dates and every entry is overdue, it emits only the configured host and no
+shell, except when the shell represents a group overview whose separate range is not
+governed by that event-level setting. The async renderer uses the same closed override
+allowlists as the client and separately preserves the two group-overview host controls.
 Its import graph must stay lit-free - `core/sizes.ts` exists precisely so the shell can
 share the size math without pulling ui modules (which import lit).
 
@@ -160,8 +166,9 @@ paint, no layout shift. The shell wrapper carries `data-atcb-ssr` so client quer
 exclude it while both exist. Browsers without declarative shadow DOM leave the template as
 an inert child; the element drops it and initializes client-only.
 
-The SSR entry does not render group overview data. On upgrade, group overview mode replaces
-the generic shell through its client-only branch after fetching the group range.
+The SSR entry does not render group overview data. On upgrade, the client fetches and
+builds the group range off-DOM while leaving the skeleton painted, then swaps the complete
+overview into the existing shell atomically.
 
 ## Build outputs and their consumers
 

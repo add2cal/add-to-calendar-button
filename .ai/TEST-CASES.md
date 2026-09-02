@@ -157,7 +157,7 @@ Also part of the default run (long-standing quick tests):
 - G-06: supplied UID preserved verbatim (word chars + dashes only per RFC 7986)
 - G-06b: UID with forbidden characters falls back to a generated UUID
 - G-07: SUMMARY special characters are escaped per RFC 5545
-- G-08: HTML in description is stripped for the plain DESCRIPTION
+- G-08: HTML formatting is stripped for the plain DESCRIPTION without collapsing non-breaking spaces
 - G-09/G-10: location preserved (URL and plain text)
 - G-11: STATUS, SEQUENCE, CREATED, LAST-MODIFIED preserved when supplied
 - G-11b: icsCreated/icsUpdated work per date entry in the multi-date case
@@ -306,6 +306,7 @@ Also part of the default run (long-standing quick tests):
 - T-01: RSVP config renders the RSVP entry point INSTEAD of calendar-link options
 - T-10: clicking the RSVP button opens the form and pushes openRSVP
 - T-02: inlineRsvp renders the form immediately without a button click
+- T-02b: CTA thank-you modal keeps intro text left-aligned and hides the checkmark icon
 - T-22: required fields exist and empty submit does not fire successRSVP (client-side gate)
 - T-19: license guard allows rendering on localhost (test runner host)
 
@@ -452,12 +453,16 @@ The same Node tier also covers the DOM-free utility entry in `test/ssr-node/util
 - S-19: buttonsList sorts options alphabetically to match the client decorate-options sort
 - S-20: pastDateHandling=hide omits the shell only when all non-recurring dates are past; mixed and disable cases retain it
 - S-21: dynamic SSR dates accept only today or ISO dates with a bounded numeric offset
+- S-22: group overview renders one inert select skeleton and two event skeleton blocks instead of a button
+- S-23: async SSR follows the public-group/subscription branch rules and preserves the two overview host controls
 
 ## Group Z - SSR shell hydration (test/wc-tests/r-Z-ssr-hydration.test.js)
 
 - Z-01: the shell paints before init and is swapped for the real button without layout shift
 - Z-02: hydrated DOM matches a client-only render of the same config (normalized outerHTML equality)
 - Z-03: without declarative shadow DOM (innerHTML path) the element initializes client-only and drops the inert template
+- Z-04: the group overview skeleton stays painted through the pending range fetch and swaps only when the real list is ready
+- Z-05: failed PRO initialization removes the group loading skeleton instead of leaving it painted forever
 
 ## Group E2 - Recurrence fast-forward (test/wc-tests/r-E2-recurrence-fastforward.test.js)
 
@@ -481,6 +486,8 @@ axe-core, WCAG 2.1 A/AA tags; color-contrast excluded (theme- and user-configura
 - AX-02: open dropdown list has no violations (menu pattern: role menu + menuitem entries)
 - AX-03: date-style button has no violations
 - AX-04: modal dialog has no violations and uses a native dialog with aria-modal + accessible name
+- AX-05: inline RSVP form has no WCAG A/AA violations
+- AX-06: CTA form modal has no WCAG A/AA violations
 
 ## Clipboard fallback (in test/wc-tests/r-P-subscribe.test.js)
 
