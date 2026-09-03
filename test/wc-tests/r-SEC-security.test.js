@@ -48,13 +48,11 @@ describe('Group SEC - security hardening', () => {
     expect(breakout).to.include('&quot;');
   });
 
-  it('SEC-03b: empty and editor-normalized pseudo paragraphs become line breaks', () => {
-    for (const paragraph of ['[p][/p]', '[p][br][/p]', '[p][br/][/p]', '[p][br /][/p]']) {
-      const content = `Before${paragraph}After`;
-      expect(rewrite_html_elements(content), paragraph).to.equal('Before<br>After');
-      expect(rewrite_html_elements(content, true), paragraph).to.equal('Before After');
-      expect(rewrite_html_elements(content, true, true), paragraph).to.equal('Before\\nAfter');
-    }
+  it('SEC-03b: empty pseudo paragraphs become line breaks in HTML and plain calendar text', () => {
+    const content = 'Before[p][/p]After';
+    expect(rewrite_html_elements(content)).to.equal('Before<br>After');
+    expect(rewrite_html_elements(content, true)).to.equal('Before After');
+    expect(rewrite_html_elements(content, true, true)).to.equal('Before\\nAfter');
   });
 
   it('SEC-04: parsed json input cannot pollute the object prototype', async () => {

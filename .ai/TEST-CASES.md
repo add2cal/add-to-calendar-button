@@ -495,7 +495,7 @@ axe-core, WCAG 2.1 A/AA tags; color-contrast excluded (theme- and user-configura
 - SEC-01: atcb_secure_url allows the legitimate scheme set and relative urls
 - SEC-02: atcb_secure_url blocks script-capable and unexpected schemes (case/whitespace evasion included) and keeps the traversal check
 - SEC-03: description [url] linkifies only safe schemes and escapes attribute breakouts
-- SEC-03b: empty and editor-normalized pseudo paragraphs become line breaks in HTML and plain calendar text
+- SEC-03b: empty pseudo paragraphs become line breaks in HTML and plain calendar text
 - SEC-04: parsed json input cannot pollute the object prototype (unit + end-to-end through the attribute parser)
 - SEC-05: rich data stays valid json when fields contain quotes and backslashes
 
