@@ -1,0 +1,87 @@
+{
+  "label": {
+    "addtocalendar": "Añadir al Calendario",
+    "share": {
+      "email": "Compartir por E-mail",
+      "copy": "Copiar enlace",
+      "copied": "Copiado",
+      "email_subject": "Recuerda esta fecha"
+    },
+    "rsvp": {
+      "title": "RSVP",
+      "expired": "Expirado",
+      "bookedout": "Completo",
+      "restart": "Nueva respuesta RSVP"
+    }
+  },
+  "ical": "iCal Ficha",
+  "modal": {
+    "button": {
+      "default": "Haz clic mí"
+    },
+    "webview": {
+      "ical": {
+        "h": "Abra su browser",
+        "text": "Lamentablemente, los browsers in-app tienen problemas con la forma en que generamos el archivo del calendario.",
+        "steps": "<ol><li><strong>Abre otro browser</strong> en tu smartphone, ...</li><li>Utilice la función de <strong>pegar</strong> para continuar.</li></ol>"
+      }
+    },
+    "clipboard": {
+      "text": "Hemos copiado automáticamente una URL mágica en su portapapeles.",
+      "failed": "No se pudo copiar al portapapeles. Por favor, copia el siguiente enlace manualmente:"
+    },
+    "opensafari": {
+      "ical": {
+        "h": "Abrir Safari",
+        "text": "Desafortunadamente, iOS tiene algunos problemas para generar y abrir el archivo de calendario fuera de Safari.",
+        "steps": "<ol><li><strong>Abrir Safari</strong>, ...</li><li>Utilice la función de <strong>pegar</strong> para continuar.</li></ol>"
+      }
+    },
+    "multidate": {
+      "h": "Esta es una serie de fechas",
+      "text": "Añada las fechas individuales a su calendario en orden:"
+    }
+  },
+  "date": {
+    "status": {
+      "cancelled": "Esta fecha fue cancelada.",
+      "cancelled_cta": "Actualice su calendario!"
+    }
+  },
+  "group_overview": {
+    "empty": "No hay eventos este año."
+  },
+  "close": "Ciérralo",
+  "continue": "Continuar",
+  "cancel": "Cancelar",
+  "expired": "Caducada",
+  "recurring": "Periódica",
+  "thankyou": "Gracias",
+  "submit": "Enviar",
+  "form": {
+    "error": {
+      "required": "No has completado correctamente todos los campos requeridos",
+      "sending": "Hubo un problema al enviar tu respuesta. Por favor, inténtalo de nuevo más tarde",
+      "email": "Tu dirección de E-mail no es válida",
+      "bookedoutmany": "Completo - intenta con menos participantes"
+    },
+    "success": {
+      "title": "Enviado con éxito!",
+      "sent": "Tu respuesta ha sido enviada. ¡Gracias!",
+      "email": "Deberías haber recibido un E-mail de confirmación.",
+      "doi": "Para que tu respuesta sea válida, ahora debes abrir el enlace de confirmación en el E-mail que acabamos de enviarte (dentro de los próximos 30 minutos).",
+      "demo": "Gracias. La demostración de RSVP termina aquí.",
+      "already": "Ya has enviado una respuesta."
+    },
+    "status": {
+      "title": "¿Participarás?",
+      "confirmed": "Sí",
+      "undecided": "Tal vez",
+      "declined": "No"
+    },
+    "amount": "Número de participantes",
+    "max": "máx.",
+    "email": "Dirección de E-mail",
+    "seatsleft": "Asientos disponibles"
+  }
+}

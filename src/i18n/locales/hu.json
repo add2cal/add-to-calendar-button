@@ -1,0 +1,87 @@
+{
+  "label": {
+    "addtocalendar": "Hozzáadás a naptárhoz",
+    "share": {
+      "email": "Megosztás e-mailben",
+      "copy": "Link másolása",
+      "copied": "Másolva",
+      "email_subject": "Mentsd el ezt az eseményt"
+    },
+    "rsvp": {
+      "title": "RSVP",
+      "expired": "Lejárt",
+      "bookedout": "Teljesen lefoglalt",
+      "restart": "Új RSVP válasz"
+    }
+  },
+  "ical": "iCal fájl",
+  "modal": {
+    "button": {
+      "default": "Kattints ide"
+    },
+    "webview": {
+      "ical": {
+        "h": "Nyisd meg a böngészőt",
+        "text": "Sajnos az alkalmazáson belüli böngészőknek problémái vannak a naptárfájl generálásával.",
+        "steps": "<ol><li><strong>Nyiss meg egy másik böngészőt</strong> a telefonodon, ...</li><li><strong>Illeszd be</strong> a vágólap tartalmát és menj.</li></ol>"
+      }
+    },
+    "clipboard": {
+      "text": "Automatikusan átmásoltunk egy varázslatos URL-t a vágólapodra.",
+      "failed": "A vágólapra másolás nem sikerült. Kérjük, másold ki az alábbi linket manuálisan:"
+    },
+    "opensafari": {
+      "ical": {
+        "h": "Safari megnyitása",
+        "text": "Sajnos az iOS-nek problémái vannak a naptárfájl generálásával és megnyitásával a Safarin kívül.",
+        "steps": "<ol><li><strong>Nyisd meg a Safarit</strong>, ...</li><li><strong>Illeszd be</strong> a vágólap tartalmát és menj.</li></ol>"
+      }
+    },
+    "multidate": {
+      "h": "Ez egy eseménysorozat",
+      "text": "Add hozzá az egyes eseményeket egyenként:"
+    }
+  },
+  "date": {
+    "status": {
+      "cancelled": "Ez a dátum lemondásra került.",
+      "cancelled_cta": "Kérjük, frissítsd a naptáradat!"
+    }
+  },
+  "group_overview": {
+    "empty": "Idén nincsenek események."
+  },
+  "close": "Bezárás",
+  "continue": "Folytatás",
+  "cancel": "Mégse",
+  "expired": "Lejárt",
+  "recurring": "Ismétlődő",
+  "thankyou": "Köszönjük",
+  "submit": "Küldés",
+  "form": {
+    "error": {
+      "required": "Nem töltöttél ki megfelelően minden kötelező mezőt",
+      "sending": "Hiba történt a válasz küldése során. Kérjük, próbáld újra később",
+      "email": "Az e-mail címed érvénytelen",
+      "bookedoutmany": "Teljesen lefoglalt - próbálj meg kevesebb résztvevővel"
+    },
+    "success": {
+      "title": "Sikeresen elküldve!",
+      "sent": "A válaszod elküldve. Köszönjük!",
+      "email": "Meg kellett volna kapnod egy megerősítő e-mailt.",
+      "doi": "Ahhoz, hogy a válaszod érvényes legyen, most meg kell nyitnod a megerősítő linket az általunk nemrégiben elküldött e-mailben (a következő 30 percben).",
+      "demo": "Köszönjük. Az RSVP bemutató itt ér véget.",
+      "already": "Már elküldted a választ."
+    },
+    "status": {
+      "title": "Részt veszel?",
+      "confirmed": "Igen",
+      "undecided": "Talán",
+      "declined": "Nem"
+    },
+    "amount": "Résztvevők száma",
+    "max": "max.",
+    "email": "E-mail cím",
+    "seatsleft": "Szabad helyek"
+  }
+}

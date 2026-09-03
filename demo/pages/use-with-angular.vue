@@ -42,11 +42,26 @@ watch(locale, value => {
         </LazyCodeBlock>
         <h2 class="mb-6 mt-20">{{ $t('content.guide.step3') }}: {{ $t('content.guide.angular.step_optimize') }}</h2>
         <p>{{ $t('content.guide.angular.config_1') }}<span class="font-semibold italic">CUSTOM_ELEMENTS_SCHEMA</span>{{ $t('content.guide.angular.config_2') }}<span class="font-semibold italic">@NgModule/@Component</span>{{ $t('content.guide.angular.config_3') }}.</p>
+        <h3 class="mb-4 mt-10">{{ $t('content.guide.optionA') }}: {{ $t('content.guide.angular.option_standalone') }}</h3>
+        <LazyCodeBlock language="javascript">
+          <pre>
+// app.component.ts
+
+import { Component, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+
+@Component({
+  //(...),
+  standalone: true,
+  schemas: [CUSTOM_ELEMENTS_SCHEMA],
+})
+export class AppComponent {}</pre>
+        </LazyCodeBlock>
+        <h3 class="mb-4 mt-10">{{ $t('content.guide.optionB') }}: {{ $t('content.guide.angular.option_ngmodule') }}</h3>
         <LazyCodeBlock language="javascript">
           <pre>
 // app.module.ts
 
-import { NgModule, CUSTOM_ELEMENTS_SCHEMA  } from '@angular/core';
+import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 //(...)
 
 @NgModule({
@@ -65,13 +80,13 @@ import { NgModule, CUSTOM_ELEMENTS_SCHEMA  } from '@angular/core';
           <pre>
 &lt;add-to-calendar-button
   name="{{ $t('demo_data.name_dummy') }}"
-  options="'Apple','Google'"
+  options="'apple','google'"
   location="{{ $t('demo_data.location') }}"
-  startDate="{{ defaultDate }}"
-  endDate="{{ defaultDate }}"
-  startTime="10:15"
-  endTime="23:30"
-  timeZone="{{ $t('demo_data.default_timezone') }}"{{ defaultLang }}
+  start-date="{{ defaultDate }}"
+  end-date="{{ defaultDate }}"
+  start-time="10:15"
+  end-time="23:30"
+  time-zone="{{ $t('demo_data.default_timezone') }}"{{ defaultLang }}
 &gt;&lt;/add-to-calendar-button&gt;</pre>
         </LazyCodeBlock>
         <h2 class="mb-6 mt-20">{{ $t('content.guide.angular.binding_headline') }}</h2>
@@ -81,10 +96,21 @@ import { NgModule, CUSTOM_ELEMENTS_SCHEMA  } from '@angular/core';
           <pre>
 &lt;add-to-calendar-button
   [attr.name]="titleVar"
-  options="'Apple','Google'"
-  [attr.startDate]="dateVar"
+  options="'apple','google'"
+  [attr.start-date]="dateVar"
 &gt;&lt;/add-to-calendar-button&gt;</pre>
         </LazyCodeBlock>
+        <h2 class="mb-6 mt-20">{{ $t('content.guide.styles_lang_headline') }}</h2>
+        <p>{{ $t('content.guide.styles_lang_default') }}</p>
+        <p class="pt-5">{{ $t('content.guide.styles_lang_ondemand') }}</p>
+        <h3 class="mb-6 mt-12">{{ $t('content.guide.styles_lang_npm_heading') }}</h3>
+        <p>{{ $t('content.guide.styles_lang_npm_body') }}</p>
+        <LazyCodeBlock language="javascript">
+          <pre>
+import 'add-to-calendar-button/styles/3d';   // any style besides "default"
+import 'add-to-calendar-button/i18n/de';       // any language besides English</pre>
+        </LazyCodeBlock>
+        <p class="mt-10">{{ $t('content.guide.styles_lang_more') }}</p>
       </div>
     </div>
     <div class="hidden border-l border-zinc-300 pl-8 text-xs dark:border-zinc-700 lg:block xl:pl-12">

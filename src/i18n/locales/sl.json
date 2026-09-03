@@ -1,0 +1,87 @@
+{
+  "label": {
+    "addtocalendar": "Dodaj v koledar",
+    "share": {
+      "email": "Delite prek e-pošte",
+      "copy": "Kopiraj povezavo",
+      "copied": "Kopirano",
+      "email_subject": "Shrani ta dogodek"
+    },
+    "rsvp": {
+      "title": "odgovori",
+      "expired": "Poteklo",
+      "bookedout": "Zasedeno",
+      "restart": "Nov odgovor RSVP"
+    }
+  },
+  "ical": "iCal datoteka",
+  "modal": {
+    "button": {
+      "default": "Kliknite me"
+    },
+    "webview": {
+      "ical": {
+        "h": "Odprite brskalnik",
+        "text": "Na žalost imajo brskalniki v aplikaciji težave z načinom ustvarjanja datoteke koledarja.",
+        "steps": "<ol><li><strong>Odprite drug brskalnik</strong> v telefonu, ...</li><li> <strong>Prilepite</strong> vsebino odložišča in pojdite.</li></ol>"
+      }
+    },
+    "clipboard": {
+      "text": "Čarobni URL smo samodejno kopirali v vaše odložišče.",
+      "failed": "Kopiranje v odložišče ni uspelo. Naslednjo povezavo kopirajte ročno:"
+    },
+    "opensafari": {
+      "ical": {
+        "h": "Odpri Safari",
+        "text": "Na žalost ima iOS nekaj težav pri ustvarjanju in odpiranju datoteke koledarja zunaj brskalnika Safari.",
+        "steps": "<ol><li><strong>Odpri Safari</strong> , ...</li><li> <strong>Prilepite</strong> vsebino odložišča in pojdite.</li></ol>"
+      }
+    },
+    "multidate": {
+      "h": "To je serija dogodkov",
+      "text": "Dodajte posamezne dogodke enega za drugim:"
+    }
+  },
+  "date": {
+    "status": {
+      "cancelled": "Ta datum je bil preklican.",
+      "cancelled_cta": "Posodobite svoj koledar!"
+    }
+  },
+  "group_overview": {
+    "empty": "Letos ni dogodkov."
+  },
+  "close": "Zapri",
+  "continue": "Nadaljuj",
+  "cancel": "Prekliči",
+  "expired": "potekel",
+  "recurring": "Ponavljajoče se",
+  "thankyou": "Hvala",
+  "submit": "Pošlji",
+  "form": {
+    "error": {
+      "required": "Niste pravilno izpolnili vseh zahtevanih polj",
+      "sending": "Pri pošiljanju vašega odgovora je prišlo do težave. Poskusite znova pozneje",
+      "email": "Vaš e-poštni naslov ni veljaven",
+      "bookedoutmany": "Zasedeno – poskusite z manj udeleženci"
+    },
+    "success": {
+      "title": "Uspešno poslano!",
+      "sent": "Vaš odgovor je bil poslan. Hvala!",
+      "email": "Prejeti bi morali potrditveno e-pošto.",
+      "doi": "Da bo odgovor upoštevan, odprite potrditveno povezavo v e-pošti, ki smo vam jo pravkar poslali (v naslednjih 30 minutah).",
+      "demo": "Hvala. Predstavitev RSVP se tukaj konča.",
+      "already": "Odgovor ste že poslali."
+    },
+    "status": {
+      "title": "Se boste udeležili?",
+      "confirmed": "Da",
+      "undecided": "Morda",
+      "declined": "Ne"
+    },
+    "amount": "Število udeležencev",
+    "max": "najv.",
+    "email": "E-poštni naslov",
+    "seatsleft": "Prosta mesta"
+  }
+}

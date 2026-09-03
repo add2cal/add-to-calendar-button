@@ -1,0 +1,241 @@
+/**
+ * Reduced Suite - Group V: Official kebab-case attributes + legacy aliases (case list: .ai/TEST-CASES.md)
+ *
+ * v3 renames all attributes to kebab-case (prokey as the exception). Legacy spellings
+ * (lowercased camelCase) keep working; when both are present, the OFFICIAL name wins.
+ * The rest of the suite exercises the legacy spellings throughout, so this group
+ * focuses on the official names and the precedence rule.
+ */
+import { expect, fixture, aTimeout } from '@open-wc/testing';
+import '../../dist/module/index.js';
+import { interceptWindowOpen, interceptFileSave } from '../helpers/capture.js';
+import { clickSingleton, openList, renderedOptions } from '../helpers/dom.js';
+import { decodeIcsHref, parseIcs } from '../helpers/ics.js';
+import { mockProFetch, proEvtConfig, PRO_EVT_KEY } from '../fixtures/pro.js';
+
+async function mountRaw(attrs) {
+  const el = document.createElement('add-to-calendar-button');
+  for (const [key, value] of Object.entries(attrs)) {
+    el.setAttribute(key, value);
+  }
+  const wrapper = await fixture('<div></div>');
+  wrapper.appendChild(el);
+  await el.whenInitialized();
+  return el;
+}
+
+describe('Group V - official kebab-case attributes', () => {
+  it('V-01: full config via official kebab names renders and produces a correct Google link', async () => {
+    const wo = interceptWindowOpen();
+    try {
+      const el = await mountRaw({
+        name: 'Kebab Event',
+        'start-date': '2050-06-15',
+        'start-time': '10:00',
+        'end-time': '11:00',
+        'time-zone': 'America/New_York',
+        options: "'google'",
+        'button-style': 'flat',
+        trigger: 'click',
+        identifier: 'atcb-v01',
+      });
+      expect(el.shadowRoot.querySelector('.atcb-initialized')).to.exist;
+      await clickSingleton(el);
+      const url = new URL(wo.calls[0].url);
+      expect(url.searchParams.get('text')).to.equal('Kebab Event');
+      expect(url.searchParams.get('dates')).to.equal('20500615T100000/20500615T110000');
+      expect(url.searchParams.get('ctz')).to.equal('America/New_York');
+    } finally {
+      wo.restore();
+    }
+  });
+
+  it('V-02: official name wins over legacy spelling when both are present', async () => {
+    const wo = interceptWindowOpen();
+    try {
+      const el = await mountRaw({
+        name: 'Precedence',
+        'start-date': '2050-06-15',
+        startdate: '2050-07-20',
+        'start-time': '10:00',
+        starttime: '09:00',
+        'end-time': '11:00',
+        'time-zone': 'America/New_York',
+        options: "'google'",
+        trigger: 'click',
+        identifier: 'atcb-v02',
+      });
+      await clickSingleton(el);
+      const url = new URL(wo.calls[0].url);
+      expect(url.searchParams.get('dates'), 'official start-date and start-time win').to.equal('20500615T100000/20500615T110000');
+    } finally {
+      wo.restore();
+    }
+  });
+
+  it('V-03: prokey (official spelling exception) triggers the PRO flow', async () => {
+    const fetchMock = mockProFetch({ [PRO_EVT_KEY]: proEvtConfig() });
+    try {
+      const el = await mountRaw({ prokey: PRO_EVT_KEY, identifier: 'atcb-v03' });
+      expect(
+        fetchMock.calls.some((c) => c.url.includes(PRO_EVT_KEY)),
+        'config fetched for prokey',
+      ).to.equal(true);
+      expect(el.shadowRoot.querySelector('.atcb-button')).to.exist;
+    } finally {
+      fetchMock.restore();
+    }
+  });
+
+  it('V-04: special-case mappings work (ical-file-name, use-user-tz accepted)', async () => {
+    const fs = interceptFileSave();
+    try {
+      const el = await mountRaw({
+        name: 'Filename Check',
+        'start-date': '2050-06-15',
+        options: "'ical'",
+        'ical-file-name': 'kebab-cal-file',
+        trigger: 'click',
+        identifier: 'atcb-v04',
+      });
+      await clickSingleton(el);
+      expect(fs.saves.length).to.equal(1);
+      expect(fs.saves[0].filename || fs.saves[0].download, 'custom ics filename used').to.include('kebab-cal-file');
+    } finally {
+      fs.restore();
+    }
+  });
+
+  it('V-05: runtime change of an official attribute re-initializes the button', async () => {
+    const el = await mountRaw({
+      name: 'Before Change',
+      'start-date': '2050-06-15',
+      options: "'google'",
+      trigger: 'click',
+      identifier: 'atcb-v05',
+    });
+    expect(el.shadowRoot.querySelector('.atcb-button')).to.exist;
+    el.setAttribute('name', 'After Change');
+    // updateComponent is debounced via setTimeout; poll until the rebuild finished
+    let rebuilt = false;
+    for (let i = 0; i < 40; i++) {
+      await aTimeout(100);
+      const btn = el.shadowRoot.querySelector('.atcb-button');
+      if (btn && (btn.getAttribute('aria-label') || '').includes('After Change')) {
+        rebuilt = true;
+        break;
+      }
+    }
+    expect(rebuilt, 'button rebuilt with the new name').to.equal(true);
+  });
+
+  it('V-06: legacy option value spellings (incl. spaced forms) resolve to the official keys', async () => {
+    // v3 renames the option VALUES to lowercase keys; the v2 spellings (any casing,
+    // plus the spaced attribute forms) keep working as aliases
+    const el = await mountRaw({
+      name: 'Legacy Options',
+      'start-date': '2050-06-15',
+      options: "'Apple','Google','iCal','Microsoft 365','Microsoft Teams','Outlook.com','Yahoo'",
+      trigger: 'click',
+      identifier: 'atcb-v06',
+    });
+    await openList(el);
+    expect([...renderedOptions(el)].sort(), 'all seven legacy spellings resolve').to.deep.equal(['apple', 'google', 'ical', 'ms365', 'msteams', 'outlookcom', 'yahoo']);
+  });
+
+  it('V-07: uppercase status attribute value keeps working (case makes no functional difference)', async () => {
+    const fs = interceptFileSave();
+    try {
+      const el = await mountRaw({
+        name: 'Legacy Status',
+        'start-date': '2050-06-15',
+        status: 'CANCELLED',
+        options: "'ical'",
+        trigger: 'click',
+        identifier: 'atcb-v07',
+      });
+      await clickSingleton(el);
+      const ics = decodeIcsHref(fs.saves[0].href);
+      expect(ics, 'file still carries the RFC uppercase form').to.include('STATUS:CANCELLED');
+      expect(ics, 'cancelled status drives the CANCEL method').to.include('METHOD:CANCEL');
+    } finally {
+      fs.restore();
+    }
+  });
+
+  it('V-08: recurrence via official kebab attributes drives the RRULE', async () => {
+    const fs = interceptFileSave();
+    try {
+      const el = await mountRaw({
+        name: 'Kebab Recurrence',
+        'start-date': '2050-06-15',
+        recurrence: 'weekly',
+        'recurrence-interval': '2',
+        'recurrence-count': '5',
+        'recurrence-by-day': 'MO,WE',
+        options: "'ical'",
+        trigger: 'click',
+        identifier: 'atcb-v08',
+      });
+      await clickSingleton(el);
+      const rrule = parseIcs(decodeIcsHref(fs.saves[0].href)).events[0].prop('RRULE');
+      expect(rrule, 'interval from recurrence-interval').to.include('INTERVAL=2');
+      expect(rrule, 'count from recurrence-count').to.include('COUNT=5');
+      expect(rrule, 'byday from recurrence-by-day').to.include('BYDAY=MO,WE');
+    } finally {
+      fs.restore();
+    }
+  });
+
+  it('V-08b: legacy underscore recurrence attributes still resolve (backwards compat)', async () => {
+    const fs = interceptFileSave();
+    try {
+      const el = await mountRaw({
+        name: 'Underscore Recurrence',
+        'start-date': '2050-06-15',
+        recurrence: 'weekly',
+        // the DOM lowercases these to the legacy names (recurrence_interval, recurrence_byday)
+        recurrence_interval: '2',
+        recurrence_count: '5',
+        recurrence_byDay: 'MO,WE',
+        options: "'ical'",
+        trigger: 'click',
+        identifier: 'atcb-v08b',
+      });
+      await clickSingleton(el);
+      const rrule = parseIcs(decodeIcsHref(fs.saves[0].href)).events[0].prop('RRULE');
+      expect(rrule, 'underscore recurrence still drives the RRULE').to.include('INTERVAL=2');
+      expect(rrule).to.include('COUNT=5');
+      expect(rrule).to.include('BYDAY=MO,WE');
+    } finally {
+      fs.restore();
+    }
+  });
+
+  it('V-09: ics options via official kebab attributes shape the ics file', async () => {
+    const fs = interceptFileSave();
+    try {
+      const el = await mountRaw({
+        name: 'Kebab ICS',
+        'start-date': '2050-06-15',
+        'start-time': '10:00',
+        'end-time': '11:00',
+        'time-zone': 'America/New_York',
+        location: 'Hall 7',
+        'ics-reminder': '30',
+        'ics-url': 'https://example.com/event',
+        'ics-categories': 'Work,Conference',
+        options: "'ical'",
+        trigger: 'click',
+        identifier: 'atcb-v09',
+      });
+      await clickSingleton(el);
+      const ev = parseIcs(decodeIcsHref(fs.saves[0].href)).events[0];
+      expect(ev.value('URL'), 'ics-url').to.equal('https://example.com/event');
+      expect(ev.value('CATEGORIES'), 'ics-categories').to.equal('Work,Conference');
+      expect(ev.prop('TRIGGER'), 'ics-reminder alarm').to.equal('TRIGGER:-PT30M');
+    } finally {
+      fs.restore();
+    }
+  });
+});

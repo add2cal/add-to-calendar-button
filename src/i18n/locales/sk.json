@@ -1,0 +1,87 @@
+{
+  "label": {
+    "addtocalendar": "Pridať do kalendára",
+    "share": {
+      "email": "Zdieľať prostredníctvom e-mailu",
+      "copy": "Kopírovať odkaz",
+      "copied": "Skopírované",
+      "email_subject": "Uložiť túto udalosť"
+    },
+    "rsvp": {
+      "title": "RSVP",
+      "expired": "Platnosť vypršala",
+      "bookedout": "Obsadené",
+      "restart": "Nová odpoveď RSVP"
+    }
+  },
+  "ical": "iCal súbor",
+  "modal": {
+    "button": {
+      "default": "Kliknite na mňa"
+    },
+    "webview": {
+      "ical": {
+        "h": "Otvorte prehliadač",
+        "text": "Bohužiaľ, prehliadače v aplikácii majú problémy so spôsobom, akým generujeme súbor kalendára.",
+        "steps": "<ol><li><strong>Otvorte v telefóne iný prehliadač</strong> ,...</li><li> <strong>Prilepte</strong> obsah schránky a choďte.</li></ol>"
+      }
+    },
+    "clipboard": {
+      "text": "Automaticky sme skopírovali magickú adresu URL do vašej schránky.",
+      "failed": "Kopírovanie do schránky zlyhalo. Skopírujte nasledujúci odkaz ručne:"
+    },
+    "opensafari": {
+      "ical": {
+        "h": "Otvorte Safari",
+        "text": "Bohužiaľ, iOS má nejaké problémy s generovaním a otváraním súboru kalendára mimo Safari.",
+        "steps": "<ol><li><strong>Otvorte Safari</strong> , ...</li><li> <strong>Prilepte</strong> obsah schránky a choďte.</li></ol>"
+      }
+    },
+    "multidate": {
+      "h": "Toto je séria podujatí",
+      "text": "Pridajte jednotlivé udalosti jednu po druhej:"
+    }
+  },
+  "date": {
+    "status": {
+      "cancelled": "Tento dátum bol zrušený.",
+      "cancelled_cta": "Aktualizujte si kalendár!"
+    }
+  },
+  "group_overview": {
+    "empty": "Tento rok sa nekonajú žiadne podujatia."
+  },
+  "close": "Zavrieť",
+  "continue": "Pokračovať",
+  "cancel": "Zrušiť",
+  "expired": "Platnosť vypršala",
+  "recurring": "Opakujúce sa",
+  "thankyou": "Ďakujeme",
+  "submit": "Odoslať",
+  "form": {
+    "error": {
+      "required": "Nevyplnili ste správne všetky povinné polia",
+      "sending": "Pri odosielaní vašej odpovede sa vyskytol problém. Skúste to znova neskôr",
+      "email": "Vaša e-mailová adresa nie je platná",
+      "bookedoutmany": "Obsadené – skúste zadať menej účastníkov"
+    },
+    "success": {
+      "title": "Úspešne odoslané!",
+      "sent": "Vaša odpoveď bola odoslaná. Ďakujeme!",
+      "email": "Mali by ste dostať potvrdzovací e-mail.",
+      "doi": "Aby sa odpoveď započítala, otvorte potvrdzovací odkaz v e-maile, ktorý sme vám práve poslali (do 30 minút).",
+      "demo": "Ďakujeme. Ukážka RSVP sa tu končí.",
+      "already": "Už ste odpovedali."
+    },
+    "status": {
+      "title": "Zúčastníte sa?",
+      "confirmed": "Áno",
+      "undecided": "Možno",
+      "declined": "Nie"
+    },
+    "amount": "Počet účastníkov",
+    "max": "max.",
+    "email": "E-mailová adresa",
+    "seatsleft": "Voľné miesta"
+  }
+}

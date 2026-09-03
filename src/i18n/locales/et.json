@@ -1,0 +1,86 @@
+{
+  "label": {
+    "addtocalendar": "Lisa kalendrisse",
+    "share": {
+      "email": "Jaga e-posti teel",
+      "copy": "Kopeeri link",
+      "copied": "Kopeeritud",
+      "email_subject": "Pane see kuupäev kirja"
+    },
+    "rsvp": {
+      "title": "RSVP",
+      "expired": "Aegunud",
+      "bookedout": "Välja müüdud",
+      "restart": "Uus RSVP-vastus"
+    }
+  },
+  "ical": "iCal fail",
+  "modal": {
+    "button": {
+      "default": "Kliki siia"
+    },
+    "webview": {
+      "ical": {
+        "h": "Ava oma veebilehitseja",
+        "text": "Kahjuks on rakendusesisestel veebilehitsejatel probleeme kalendrifailide loomisega.",
+        "steps": "<ol><li><strong>Ava teine veebilehitseja</strong> oma telefonis, ...</li><li><strong>Kleebi</strong> lõikelaua sisu ning mine sellele lehele.</li></ol>"
+      }
+    },
+    "clipboard": {
+      "text": "Kalendri veebi aadress on automaatselt kopeeritud sinu lõikelauale.",
+      "failed": "Lõikelauale kopeerimine ebaõnnestus. Palun kopeeri järgnev link käsitsi:"
+    },
+    "opensafari": {
+      "ical": {
+        "h": "Ava Safari",
+        "text": "Kahjuks on iOS-il probleeme kalendrifaili genereerimise ja avamisega väljaspool Safarit.",
+        "steps": "<ol><li><strong>Ava Safari</strong>, ...</li><li><strong>Kleebi</strong> lõikelaua sisu ning mine sellele lehele.</li></ol>"
+      }
+    },
+    "multidate": {
+      "h": "See on sündmuste seeria",
+      "text": "Ava üksikud sündmused ükshaaval:"
+    }
+  },
+  "date": {
+    "status": {
+      "cancelled": "See kuupäev on tühistatud.",
+      "cancelled_cta": "Palun uuenda oma kalendrit!"
+    }
+  },
+  "group_overview": {
+    "empty": "Sel aastal üritusi ei ole."
+  },
+  "close": "Sulge",
+  "continue": "Jätkama",
+  "cancel": "Tühista",
+  "expired": "Aegunud",
+  "thankyou": "Aitäh",
+  "submit": "Saada",
+  "form": {
+    "error": {
+      "required": "Sa pole kõiki nõutavaid välju korrektselt täitnud",
+      "sending": "Sinu vastuse saatmisel tekkis probleem. Palun proovi hiljem uuesti",
+      "email": "Sinu e-posti aadress ei ole kehtiv",
+      "bookedoutmany": "Välja müüdud - proovi vähemate osalejatega"
+    },
+    "success": {
+      "title": "Edukalt saadetud!",
+      "sent": "Sinu vastus on saadetud. Aitäh!",
+      "email": "Sa peaksid olema saanud kinnituse e-kirja.",
+      "doi": "Sinu vastus kehtib, kui oled avanud meie poolt just saadetud e-kirja kinnituslingi (järgmise 30 minuti jooksul).",
+      "demo": "Aitäh. RSVP-demo lõpeb siin.",
+      "already": "Oled juba vastuse saatnud."
+    },
+    "status": {
+      "title": "Kas sa osaled?",
+      "confirmed": "Jah",
+      "undecided": "Võib-olla",
+      "declined": "Ei"
+    },
+    "amount": "Osalejate arv",
+    "max": "max.",
+    "email": "E-posti aadress",
+    "seatsleft": "Vabad kohad"
+  }
+}

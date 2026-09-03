@@ -1,0 +1,87 @@
+{
+  "label": {
+    "addtocalendar": "Pridėti prie kalendoriaus",
+    "share": {
+      "email": "Bendrinti el. paštu",
+      "copy": "Kopijuoti nuorodą",
+      "copied": "Nukopijuota",
+      "email_subject": "Išsaugoti šį įvykį"
+    },
+    "rsvp": {
+      "title": "RSVP",
+      "expired": "Baigėsi",
+      "bookedout": "Vietų nėra",
+      "restart": "Naujas RSVP atsakymas"
+    }
+  },
+  "ical": "iCal failas",
+  "modal": {
+    "button": {
+      "default": "Spustelėkite mane"
+    },
+    "webview": {
+      "ical": {
+        "h": "Atidarykite naršyklę",
+        "text": "Deja, programos naršyklėse kyla problemų dėl kalendoriaus failo generavimo.",
+        "steps": "<ol><li><strong>Atidarykite kitą naršyklę</strong> savo telefone,...</li><li> <strong>Įklijuokite</strong> iškarpinės turinį ir eikite.</li></ol>"
+      }
+    },
+    "clipboard": {
+      "text": "Mes automatiškai nukopijavome stebuklingą URL į jūsų mainų sritį.",
+      "failed": "Nepavyko nukopijuoti į iškarpinę. Nukopijuokite šią nuorodą rankiniu būdu:"
+    },
+    "opensafari": {
+      "ical": {
+        "h": "Atidarykite „Safari“.",
+        "text": "Deja, „iOS“ turi tam tikrų problemų generuojant ir atidarant kalendoriaus failą ne „Safari“.",
+        "steps": "<ol><li><strong>Atidarykite „Safari“</strong> ,...</li><li> <strong>Įklijuokite</strong> iškarpinės turinį ir eikite.</li></ol>"
+      }
+    },
+    "multidate": {
+      "h": "Tai renginių serija",
+      "text": "Pridėkite atskirus įvykius po vieną:"
+    }
+  },
+  "date": {
+    "status": {
+      "cancelled": "Ši data buvo atšaukta.",
+      "cancelled_cta": "Prašome atnaujinti savo kalendorių!"
+    }
+  },
+  "group_overview": {
+    "empty": "Šiais metais renginių nėra."
+  },
+  "close": "Uždaryti",
+  "continue": "Tęsti",
+  "cancel": "Atšaukti",
+  "expired": "Baigėsi galiojimo laikas",
+  "recurring": "Pasikartojantis",
+  "thankyou": "Ačiū",
+  "submit": "Pateikti",
+  "form": {
+    "error": {
+      "required": "Jūs netinkamai užpildėte visus privalomus laukus",
+      "sending": "Siunčiant atsakymą kilo problema. Bandykite dar kartą vėliau",
+      "email": "Jūsų el. pašto adresas neteisingas",
+      "bookedoutmany": "Vietų nėra – bandykite nurodyti mažiau dalyvių"
+    },
+    "success": {
+      "title": "Sėkmingai išsiųstas!",
+      "sent": "Jūsų atsakymas išsiųstas. Ačiū!",
+      "email": "Turėjote gauti patvirtinimo el. laišką.",
+      "doi": "Kad atsakymas būtų įskaitytas, atidarykite patvirtinimo nuorodą ką tik išsiųstame el. laiške (per artimiausias 30 minučių).",
+      "demo": "Ačiū. RSVP demonstracija čia baigiasi.",
+      "already": "Jūs jau atsakėte."
+    },
+    "status": {
+      "title": "Ar dalyvausite?",
+      "confirmed": "Taip",
+      "undecided": "Galbūt",
+      "declined": "Ne"
+    },
+    "amount": "Dalyvių skaičius",
+    "max": "maks.",
+    "email": "El. pašto adresas",
+    "seatsleft": "Laisvos vietos"
+  }
+}

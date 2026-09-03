@@ -1,5 +1,38 @@
 # ⚡ Changelog (without patches)
 
+## Version 3
+
+- v3.0 : "lighter, faster, everywhere" full rewrite of the internals - same button, same attributes
+  - smaller: styles beyond the default and languages beyond English are now separate tiny assets, loaded on demand by browser-script/CDN integrations and explicitly imported by npm users. Smaller bundle size despite having added ons of new features.
+  - new: server-side rendering via the `add-to-calendar-button/ssr` entry - style- and size-correct shells through declarative shadow DOM, hydrated without layout shift
+  - new: DOM-free `add-to-calendar-button/utils` entry exporting `atcb_generate_timestring` and `atcb_decorate_data_dates` for Cloudflare Workers, Node, and other runtimes without browser globals
+  - new: per-style and per-locale npm modules (`add-to-calendar-button/styles/3d`, `add-to-calendar-button/i18n/de`) for fetch-free bundling
+  - new: official kebab-case attribute names (`start-date`, `button-style`, ...) - every v2 spelling keeps working as an alias
+  - new: `style-source` and `load-all-styles` options for asset loading control and runtime style switching
+  - new: event list rendering option for PRO users
+  - new: full-locale support - `language="en_GB"` picks regional translations where available and formats dates in the regional convention
+  - new: 19 languages added: Albanian, Armenian, Azerbaijani, Belarusian, Bosnian, Bulgarian, Croatian, Danish, Georgian, Greek, Lithuanian, Latvian, Macedonian, Maltese, Russian, Serbian, Slovak, Slovenian, and Ukrainian; RSVP strings now part of the core language packs
+  - new: extended ics options for the Apple/iCal cases (`icsReminder`, `icsUrl`, `icsCategories`, `icsClass`, `icsPriority`, `icsGeo` incl. Apple map preview, `icsAttach`, `icsExdate`) - second-level options that only shape the generated ics file; all other calendar types simply ignore them
+  - modernized internals: Lit-based web component, strict TypeScript, per-instance state, generated flat type declarations that work with every moduleResolution
+  - accessibility: WAI-ARIA menu pattern for the dropdown, real dialog semantics with a focus trap for modals, working focus delegation, complete date-button labels for screen readers
+  - security: url scheme allowlisting, escaped description links, prototype-pollution-safe input parsing, valid schema.org JSON for any content
+  - recurring events with old start dates now resolve instantly and correctly (the old day-by-day iteration silently capped out about 27 years in)
+  - honest clipboard fallback: when automatic copying fails, a manual-copy field appears instead of a false success message
+  - ⚠️ Breaking: the ics timestamp options were renamed to their ics-only scope: `created` is now `ics-created` (`icsCreated`) and `updated` is now `ics-updated` (`icsUpdated`) - the old names are no longer read
+  - ⚠️ Breaking: npm package users must explicitly import every non-default style and non-English locale they use (for example, `add-to-calendar-button/styles/3d` and `add-to-calendar-button/i18n/de`); browser-script/CDN integrations continue to load them on demand
+  - ⚠️ Breaking: dedicated `no-pro` / `unstyle` / `no-pro-unstyle` builds are gone - the old entry points and CDN file names keep working as tiny shims that load the main package
+  - ⚠️ Breaking: for `customLabels` users overriding exactly these keys: `date.status.cancelled.cta` is now `date.status.cancelled_cta`, `label.share.email.subject` is now `label.share.email_subject`, and `label.rsvp` / `form.status` / `form.success` moved to `label.rsvp.title` / `form.status.title` / `form.success.title`
+  - ⚠️ Breaking: script-capable url schemes (like `javascript:`) are rejected wherever urls are consumed
+  - ⚠️ Breaking: browser floor is now Baseline 2023 for the full experience (bundles target ES2017; declarative shadow DOM is a progressive enhancement)
+  - all HTML attributes now have kebab-case official names, including the `ics-*` options (`ics-reminder`, `ics-url`, ...) and the former underscore options (`recurrence-interval`, `recurrence-by-day`, ...); migrating to the official spelling is strongly recommended because the camelCase/underscore aliases may be removed in a future major version; camelCase remains preferred for JavaScript configuration objects such as `atcb_action` input
+  - official lowercase config values: calendar types (`apple`, `google`, `ical`, `ms365`, `msteams`, `outlookcom`, `yahoo`) and status (`tentative`, `confirmed`, `cancelled`) - all v2 spellings keep working as aliases (typed via `ATCBOptionNameLegacy` / `ATCBEventStatusLegacy`)
+  - fix: navigating from the options list (as modal) to a follow-up modal (e.g. the multi-date picker) no longer blinks the background - the shared overlay is kept alive and the new modal fades in while the previous view is dropped in place
+  - fix: the modal box and the modal option list are correctly sized again (max width on larger screens, no drop-shadow on fullscreen mobile) - regressions from the v3 style split
+  - fix: the second step of the Yahoo subscription flow no longer re-copies the link (and could no longer wrongly report a copy failure); its secondary button now reads "Close"
+  - fix: server-rendered PRO group overviews now show a simple list skeleton instead of a misleading calendar button and keep it painted until the event range is ready
+  - fix: non-breaking spaces in descriptions no longer disappear from plain-text calendar output
+  - see the [migration guide](./MIGRATION.md) for details - existing v2 integrations keep working
+
 ## Version 2
 
 - v2.15 : Better responsive versions on very small screens for modals and date buttons

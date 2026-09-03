@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { atcb_action } from "add-to-calendar-button";
+import type { atcb_action as AtcbAction } from 'add-to-calendar-button';
 import { ArrowTopRightOnSquareIcon } from '@heroicons/vue/24/outline';
 import Interstitial from '@/components/interstitial.vue';
 const LazyCodeBlock = defineAsyncComponent(() => import('@/components/codeBlock.vue'));
@@ -37,7 +37,7 @@ let config:object = {
   startDate: defaultDate,
   startTime: "10:15",
   endTime: "23:30",
-  options: ["Google", "iCal"],
+  options: ["google", "ical"],
   timeZone: t('demo_data.default_timezone'),
   lightMode: "bodyScheme",
   language: locale.value
@@ -58,26 +58,40 @@ watch(locale, value => {
     startDate: defaultDate,
     startTime: "10:15",
     endTime: "23:30",
-    options: ["Google", "iCal"],
+    options: ["google", "ical"],
     timeZone: t('demo_data.default_timezone'),
     lightMode: "bodyScheme",
     language: locale.value
   };
 });
 
+let atcb_action: typeof AtcbAction | null = null;
+if (import.meta.client) {
+  import('add-to-calendar-button').then((mod) => {
+    atcb_action = mod.atcb_action;
+  });
+}
+
 onMounted(() => {
   const button = document.getElementById('my-default-button');
   if (button) {
-    button.addEventListener('click', () => atcb_action(config, button));
+    button.addEventListener('click', triggerAction);
   }
 });
 
 onUnmounted(() => {
   const button = document.getElementById('my-default-button');
   if (button) {
-    button.removeEventListener('click', () => atcb_action(config, button));
+    button.removeEventListener('click', triggerAction);
   }
 });
+
+function triggerAction() {
+  const button = document.getElementById('my-default-button');
+  if (button && atcb_action) {
+    atcb_action(config, button);
+  }
+}
 </script>
 
 <template>
@@ -125,93 +139,93 @@ onUnmounted(() => {
           <p>Die folgenden Beispiele illustrieren die grundsätzliche Vielfalt der inkludierten Stile und zeigen doch nur einen sehr kleinen Ausschnitt dessen.</p>
         </div>
         <div class="block w-full justify-between pt-4 md:flex">
-          <div class="flex w-full flex-none justify-center p-6 pt-8 md:w-[300px]">
-            <add-to-calendar-button
+          <div class="flex w-full flex-none justify-center p-6 pt-8 md:w-[310px]">
+            <Atcb
               :name="$t('demo_data.name')"
-              :startDate="defaultDate"
-              options="'Apple','Google','iCal'"
-              listStyle="overlay"
-              buttonStyle="round"
-              hideIconButton
-              hideBackground
+              :start-date="defaultDate"
+              options="'apple','google','ical'"
+              list-style="overlay"
+              button-style="round"
+              hide-icon-button
+              hide-background
               :label="$t('demo_data.options_label_single_dummy')"
-              lightMode="bodyScheme"
+              light-mode="bodyScheme"
               :language="locale"
-              hideRichData
-              hideBranding
-            ></add-to-calendar-button>
+              hide-rich-data
+              hide-branding
+            ></Atcb>
           </div>
           <div class="flex-1 overflow-x-auto">
             <LazyCodeBlock>
               <pre>
 &lt;add-to-calendar-button
   name="{{ $t('demo_data.name') }}"
-  startDate="{{ defaultDate }}"
-  options="'Apple','Google','iCal'"
-  buttonStyle="round"
-  hideIconButton
-  hideBackground
+  start-date="{{ defaultDate }}"
+  options="'apple','google','ical'"
+  button-style="round"
+  hide-icon-button
+  hide-background
   label="{{ $t('demo_data.options_label_single_dummy') }}"
-  lightMode="bodyScheme"{{ defaultLang }}
+  light-mode="bodyScheme"{{ defaultLang }}
 &gt;&lt;/add-to-calendar-button&gt;
 </pre>
             </LazyCodeBlock>
           </div>
         </div>
         <div class="block w-full justify-between pt-4 md:flex">
-          <div class="flex w-full flex-none justify-center p-6 pt-8 md:w-[300px]">
-            <add-to-calendar-button :name="$t('demo_data.name')" :startDate="defaultDate" options="'Apple','Google','iCal'" buttonStyle="flat" hideIconList buttonsList hideBackground :label="$t('demo_data.name_custom_3')" lightMode="bodyScheme" :language="locale"></add-to-calendar-button>
+          <div class="flex w-full flex-none justify-center p-6 pt-8 md:w-[310px]">
+            <Atcb :name="$t('demo_data.name')" :start-date="defaultDate" options="'apple','google','ical'" button-style="flat" hide-icon-list buttons-list hide-background :label="$t('demo_data.name_custom_3')" light-mode="bodyScheme" :language="locale"></Atcb>
           </div>
           <div class="flex-1 overflow-x-auto">
             <LazyCodeBlock>
               <pre>
 &lt;add-to-calendar-button
   name="{{ $t('demo_data.name') }}"
-  startDate="{{ defaultDate }}"
-  options="'Apple','Google','iCal'"
-  buttonStyle="flat"
-  hideIconList
-  buttonsList
-  hideBackground
+  start-date="{{ defaultDate }}"
+  options="'apple','google','ical'"
+  button-style="flat"
+  hide-icon-list
+  buttons-list
+  hide-background
   label="{{ $t('demo_data.name_custom_3') }}"
-  lightMode="bodyScheme"{{ defaultLang }}
+  light-mode="bodyScheme"{{ defaultLang }}
 &gt;&lt;/add-to-calendar-button&gt;
 </pre>
             </LazyCodeBlock>
           </div>
         </div>
         <div class="block w-full justify-between pt-4 md:flex">
-          <div class="flex w-full flex-none justify-center p-6 pt-8 md:w-[300px]">
-            <add-to-calendar-button
+          <div class="flex w-full flex-none justify-center p-6 pt-8 md:w-[310px]">
+            <Atcb
               :name="$t('demo_data.name_custom_4')"
-              :startDate="defaultDate"
-              options="'Apple','Google','iCal'"
-              startTime="10:10"
-              endTime="10:40"
-              :timeZone="$t('demo_data.default_timezone')"
+              :start-date="defaultDate"
+              options="'apple','google','ical'"
+              start-time="10:10"
+              end-time="10:40"
+              :time-zone="$t('demo_data.default_timezone')"
               location="Fantasy Marketplace"
-              buttonStyle="date"
+              button-style="date"
               size="5"
-              lightMode="bodyScheme"
+              light-mode="bodyScheme"
               :language="locale"
-              hideRichData
-              hideBranding
-            ></add-to-calendar-button>
+              hide-rich-data
+              hide-branding
+            ></Atcb>
           </div>
           <div class="flex-1 overflow-x-auto">
             <LazyCodeBlock>
               <pre>
 &lt;add-to-calendar-button
   name="{{ $t('demo_data.name_custom_4') }}"
-  startDate="{{ defaultDate }}"
-  options="'Apple','Google','iCal'"
-  startTime="10:10"
-  endTime="10:40"
-  timeZone="{{ $t('demo_data.default_timezone') }}"
+  start-date="{{ defaultDate }}"
+  options="'apple','google','ical'"
+  start-time="10:10"
+  end-time="10:40"
+  time-zone="{{ $t('demo_data.default_timezone') }}"
   location="Fantasy Marketplace"
-  buttonStyle="date"
+  button-style="date"
   size="5"
-  lightMode="bodyScheme"{{ defaultLang }}
+  light-mode="bodyScheme"{{ defaultLang }}
 &gt;&lt;/add-to-calendar-button&gt;
 </pre>
             </LazyCodeBlock>
@@ -247,31 +261,31 @@ onUnmounted(() => {
           <p class="italic">Beachte, dass dies nicht mit dem Button-Stil "none" oder dem atcb_action-Ansatz (<NuxtLink :to="'#case-10'">siehe #10</NuxtLink>) kompatibel ist.</p>
         </div>
         <div class="block w-full justify-between pt-4 md:flex">
-          <div class="flex w-full flex-none justify-center p-6 pt-8 md:w-[300px]">
-            <add-to-calendar-button
-              styleLight="--btn-background: #2f4377; --btn-text: #fff; --font: Georgia, 'Times New Roman', Times, serif;"
-              styleDark="--btn-background: #000;"
+          <div class="flex w-full flex-none justify-center p-6 pt-8 md:w-[310px]">
+            <Atcb
+              style-light="--btn-background: #2f4377; --btn-text: #fff; --font: Georgia, 'Times New Roman', Times, serif;"
+              style-dark="--btn-background: #000;"
               :name="$t('demo_data.name')"
-              :startDate="defaultDate"
-              options="'Apple','Google','iCal'"
-              hideIconButton
-              lightMode="bodyScheme"
+              :start-date="defaultDate"
+              options="'apple','google','ical'"
+              hide-icon-button
+              light-mode="bodyScheme"
               :language="locale"
-              hideRichData
-              hideBranding
-            ></add-to-calendar-button>
+              hide-rich-data
+              hide-branding
+            ></Atcb>
           </div>
           <div class="flex-1 overflow-x-auto">
             <LazyCodeBlock>
               <pre>
 &lt;add-to-calendar-button 
-  styleLight="--btn-background: #2f4377; --btn-text: #fff; --font: Georgia, 'Times New Roman', Times, serif;"
-  styleDark="--btn-background: #000;"
+  style-light="--btn-background: #2f4377; --btn-text: #fff; --font: Georgia, 'Times New Roman', Times, serif;"
+  style-dark="--btn-background: #000;"
   name="{{ $t('demo_data.name') }}"
-  startDate="{{ defaultDate }}"
-  options="'Apple','Google','iCal'"
-  hideIconButton
-  lightMode="bodyScheme"{{ defaultLang }}
+  start-date="{{ defaultDate }}"
+  options="'apple','google','ical'"
+  hide-icon-button
+  light-mode="bodyScheme"{{ defaultLang }}
 &gt;&lt;/add-to-calendar-button&gt;
 </pre>
             </LazyCodeBlock>
@@ -306,21 +320,20 @@ onUnmounted(() => {
           <p>Im Beispiel halten wir das Ganze recht einfach und haben in dem externen Style lediglich die Farbe verändert.</p>
         </div>
         <div class="block w-full justify-between pt-4 md:flex">
-          <div class="flex w-full flex-none justify-center p-6 pt-8 md:w-[300px]">
-            <add-to-calendar-button :name="$t('demo_data.name')" :startDate="defaultDate" options="'Apple','Google','iCal'" lightMode="bodyScheme" :language="locale" customCss="https://add-to-calendar-button.com/atcb.css" buttonStyle="custom" listStyle="modal" hideRichData hideBranding>
-            </add-to-calendar-button>
+          <div class="flex w-full flex-none justify-center p-6 pt-8 md:w-[310px]">
+            <Atcb :name="$t('demo_data.name')" :start-date="defaultDate" options="'apple','google','ical'" light-mode="bodyScheme" :language="locale" custom-css="https://add-to-calendar-button.com/atcb.css" button-style="custom" list-style="modal" hide-rich-data hide-branding> </Atcb>
           </div>
           <div class="flex-1 overflow-x-auto">
             <LazyCodeBlock>
               <pre>
 &lt;add-to-calendar-button
   name="{{ $t('demo_data.name') }}"
-  startDate="{{ defaultDate }}"
-  options="'Apple','Google','iCal'"
-  lightMode="bodyScheme"{{ defaultLang }}
-  customCss="https://add-to-calendar-button.com/atcb.css"
-  buttonStyle="custom"
-  listStyle="modal"
+  start-date="{{ defaultDate }}"
+  options="'apple','google','ical'"
+  light-mode="bodyScheme"{{ defaultLang }}
+  custom-css="https://add-to-calendar-button.com/atcb.css"
+  button-style="custom"
+  list-style="modal"
 &gt;&lt;/add-to-calendar-button&gt;
 </pre>
             </LazyCodeBlock>
@@ -371,8 +384,8 @@ onUnmounted(() => {
           </ul>
         </div>
         <div class="block w-full justify-between pt-4 md:flex">
-          <div class="flex w-full flex-none justify-center p-6 pt-8 md:w-[300px]">
-            <add-to-calendar-button id="css-part-example" identifier="css-part-example" :name="$t('demo_data.name')" :startDate="defaultDate" options="'Apple','Google','iCal'" lightMode="bodyScheme" :language="locale" hideRichData hideBranding> </add-to-calendar-button>
+          <div class="flex w-full flex-none justify-center p-6 pt-8 md:w-[310px]">
+            <Atcb id="css-part-example" identifier="css-part-example" :name="$t('demo_data.name')" :start-date="defaultDate" options="'apple','google','ical'" light-mode="bodyScheme" :language="locale" hide-rich-data hide-branding> </Atcb>
           </div>
           <div class="flex-1 overflow-x-auto">
             <LazyCodeBlock>
@@ -380,14 +393,16 @@ onUnmounted(() => {
 &lt;add-to-calendar-button
   id="css-part-example"
   name="{{ $t('demo_data.name') }}"
-  startDate="{{ defaultDate }}"
-  options="'Apple','Google','iCal'"
-  lightMode="bodyScheme"{{ defaultLang }}
+  start-date="{{ defaultDate }}"
+  options="'apple','google','ical'"
+  light-mode="bodyScheme"{{ defaultLang }}
 &gt;&lt;/add-to-calendar-button&gt;
 
 &lt;style&gt;
   add-to-calendar-button#css-part-example::part(atcb-button),
-  #atcb-btn-css-part-example-modal-host::part(atcb-button) {
+  #atcb-btn-css-part-example-modal-host::part(atcb-button),
+  #css-part-example::part(atcb-list),
+  #atcb-btn-css-part-example-modal-host::part(atcb-list) {
     background-color: #264f3c;
     color: #fff;
   }
@@ -459,32 +474,32 @@ onUnmounted(() => {
           </li>
         </ul>
         <div class="block w-full justify-between pt-4 md:flex">
-          <div class="flex w-full flex-none justify-center p-6 pt-8 md:w-[300px]">
-            <add-to-calendar-button
+          <div class="flex w-full flex-none justify-center p-6 pt-8 md:w-[310px]">
+            <Atcb
               :name="$t('demo_data.name')"
-              :startDate="defaultDate"
-              startTime="10:15"
-              endTime="23:30"
-              :timeZone="$t('demo_data.default_timezone')"
-              options="'Apple','Google','iCal','Outlook.com','Microsoft 365','Microsoft Teams','Yahoo'"
-              lightMode="bodyScheme"
+              :start-date="defaultDate"
+              start-time="10:15"
+              end-time="23:30"
+              :time-zone="$t('demo_data.default_timezone')"
+              options="'apple','google','ical','outlookcom','ms365','msteams','yahoo'"
+              light-mode="bodyScheme"
               :description="$t('demo_data.description_alt2')"
               :language="locale"
-              hideRichData
-              hideBranding
-            ></add-to-calendar-button>
+              hide-rich-data
+              hide-branding
+            ></Atcb>
           </div>
           <div class="flex-1 overflow-x-auto">
             <LazyCodeBlock>
               <pre>
 &lt;add-to-calendar-button
   name="{{ $t('demo_data.name') }}"
-  startDate="{{ defaultDate }}"
-  startTime="10:15"
-  endTime="23:30"
-  timeZone="{{ $t('demo_data.default_timezone') }}"
-  options="'Apple','Google','iCal','Outlook.com','Microsoft 365','Microsoft Teams','Yahoo'"
-  lightMode="bodyScheme"
+  start-date="{{ defaultDate }}"
+  start-time="10:15"
+  end-time="23:30"
+  time-zone="{{ $t('demo_data.default_timezone') }}"
+  options="'apple','google','ical','outlookcom','ms365','msteams','yahoo'"
+  light-mode="bodyScheme"
   description="{{ $t('demo_data.description_alt2') }}"{{ defaultLang }}
 &gt;&lt;/add-to-calendar-button&gt;
 </pre>
@@ -500,7 +515,7 @@ onUnmounted(() => {
           <p>
             "name" is still required, but every other event parameter can be skipped in this case.<br />
             For Microsoft services, the "name" will be used as name for the calendar.<br />
-            Mind that there won't be rich data for the subscribe option and Microsoft Teams is not yet supported and will be automatically disabled. Same applies for other Microsoft services on mobile devices.<br />
+            Mind that there won't be rich data for the subscribe option. Microsoft Teams is not yet supported, while Yahoo is no longer supported; both will be automatically disabled. The same applies to other Microsoft services on mobile devices.<br />
             The Google Calendar Android App only supports Google Calendar subscriptions. Other urls will be served by Chrome.<br />
             <span class="text-sm italic">(If the user's browser does not recognize any installed calendar app, this might lead to a blank screen. The PRO version mitigates this with some explenatory middleware screen.)</span>
           </p>
@@ -511,23 +526,14 @@ onUnmounted(() => {
           <p>
             "name" ist weiterhin eine verpflichtende Angabe. Alle weiteren Parameter sind in diesem Fall aber optional.<br />
             Bei Microsoft-Diensten wird der "name" als Name für den geteilten Kalender genutzt.<br />
-            Beachte, dass es für den Abonnement-Modus keine Rich-Data-Generierung gibt und Microsoft Teams noch nicht unterstützt und daher deaktiviert wird. Gleiches gilt für andere Microsoft-Dienste auf mobilen Geräten.<br />
+            Beachte, dass es für den Abonnement-Modus keine Rich-Data-Generierung gibt. Microsoft Teams wird noch nicht unterstützt, während Yahoo nicht mehr unterstützt wird; beide werden automatisch deaktiviert. Gleiches gilt für andere Microsoft-Dienste auf mobilen Geräten.<br />
             Die Google Calendar Android App unterstützt ausschließlich Google Calendar-Abonnements. Andere URLs werden von Chrome geöffnet.<br />
             <span class="text-sm italic">(Sollte der Browser des Nutzers keine installierte Kalender-App erkennen, kann dies zu einer leeren Seite führen. Die PRO-Version optimiert dies mit einem erklärenden Zwischenbildschirm.)</span>
           </p>
         </div>
         <div class="block w-full justify-between pt-4 md:flex">
-          <div class="flex w-full flex-none justify-center p-6 pt-8 md:w-[300px]">
-            <add-to-calendar-button
-              :name="$t('demo_data.name_subscription')"
-              subscribe
-              icsFile="https://add2cal.github.io/ics-demo/demo-calendar.ics"
-              options="'Apple','Google','iCal','Outlook.com','Microsoft 365','Microsoft Teams','Yahoo'"
-              lightMode="bodyScheme"
-              :language="locale"
-              hideRichData
-              hideBranding
-            ></add-to-calendar-button>
+          <div class="flex w-full flex-none justify-center p-6 pt-8 md:w-[310px]">
+            <Atcb :name="$t('demo_data.name_subscription')" subscribe ics-file="https://add2cal.github.io/ics-demo/demo-calendar.ics" options="'apple','google','ical','outlookcom','ms365','msteams','yahoo'" light-mode="bodyScheme" :language="locale" hide-rich-data hide-branding></Atcb>
           </div>
           <div class="flex-1 overflow-x-auto">
             <LazyCodeBlock>
@@ -535,9 +541,9 @@ onUnmounted(() => {
 &lt;add-to-calendar-button
   name="{{ $t('demo_data.name_subscription') }}"
   subscribe
-  icsFile="https://add2cal.github.io/ics-demo/demo-calendar.ics"
-  options="'Apple','Google','iCal','Outlook.com','Microsoft 365','Microsoft Teams','Yahoo'"
-  lightMode="bodyScheme"{{ defaultLang }}
+  ics-file="https://add2cal.github.io/ics-demo/demo-calendar.ics"
+  options="'apple','google','ical','outlookcom','ms365','msteams','yahoo'"
+  light-mode="bodyScheme"{{ defaultLang }}
 &gt;&lt;/add-to-calendar-button&gt;
 </pre>
             </LazyCodeBlock>
@@ -571,35 +577,35 @@ onUnmounted(() => {
           <p class="text-sm italic">(Falls du Texte lediglich übersetzen möchtest, prüfe zunächst die "language"-Option!)</p>
         </div>
         <div class="block w-full justify-between pt-4 md:flex">
-          <div class="flex w-full flex-none justify-center p-6 pt-8 md:w-[300px]">
-            <add-to-calendar-button
+          <div class="flex w-full flex-none justify-center p-6 pt-8 md:w-[310px]">
+            <Atcb
               :name="$t('demo_data.name')"
-              :startDate="defaultDate"
-              startTime="10:15"
-              endTime="23:30"
+              :start-date="defaultDate"
+              start-time="10:15"
+              end-time="23:30"
               :label="$t('demo_data.name_custom_1')"
-              options="'Apple','Google','iCal','Outlook.com','Yahoo'"
-              listStyle="modal"
+              options="'apple','google','ical','outlookcom','yahoo'"
+              list-style="modal"
               :customLabels="defaultCustLabels"
-              lightMode="bodyScheme"
+              light-mode="bodyScheme"
               :language="locale"
-              hideRichData
-              hideBranding
-            ></add-to-calendar-button>
+              hide-rich-data
+              hide-branding
+            ></Atcb>
           </div>
           <div class="flex-1 overflow-x-auto">
             <LazyCodeBlock>
               <pre>
 &lt;add-to-calendar-button
   name="{{ $t('demo_data.name') }}"
-  startDate="{{ defaultDate }}"
-  startTime="10:15"
-  endTime="23:30"
+  start-date="{{ defaultDate }}"
+  start-time="10:15"
+  end-time="23:30"
   label="{{ $t('demo_data.name_custom_1') }}"
-  options="'Apple','Google','iCal','Outlook.com','Yahoo'"
-  listStyle="modal"
+  options="'apple','google','ical','outlookcom','yahoo'"
+  list-style="modal"
   customLabels='{{ defaultCustLabels }}'
-  lightMode="bodyScheme"{{ defaultLang }}
+  light-mode="bodyScheme"{{ defaultLang }}
 &gt;&lt;/add-to-calendar-button&gt;
 </pre>
             </LazyCodeBlock>
@@ -610,120 +616,122 @@ onUnmounted(() => {
         <h2 class="mb-4 mt-14 border-t border-zinc-300 pt-14 dark:border-zinc-700">5. {{ $t('content.advanced.5_long') }}</h2>
         <div v-if="locale=='en'">
           <p>
-            If you feel confident enough to mess with the rather unusual iCal settings, you can use the options "uid", "sequence", "created", "updated", "attendee", and "status" (TENTATIVE, CONFIRMED, CANCELLED).<br />
+            If you feel confident enough to mess with the rather unusual iCal settings, you can use the options "uid", "sequence", "ics-created", "ics-updated", "attendee", and "status" (tentative, confirmed, cancelled).<br />
             They basically override the respective default values.
           </p>
           <p class="font-semibold">Mind that those options are only supported by the iCal and Apple calendar links!</p>
-          <p>To update an existing event (e.g. changing its status) by changing those properties, you would need to have a growing sequence number, newer "updated" date, same "created" date, the same "uid", and also the organizer field (name and email) set.</p>
+          <p>To update an existing event (e.g. changing its status) by changing those properties, you would need to have a growing sequence number, newer "ics-updated" date, same "ics-created" date, the same "uid", and also the organizer field (name and email) set.</p>
           <p>
-            Some calendars only work with the "attendee" to be specified as well. And if your "update" to the event is not a status change to "CANCELLED", it is mandatory in all cases!<br />
+            Some calendars only work with the "attendee" to be specified as well. And if your "update" to the event is not a status change to "cancelled", it is mandatory in all cases!<br />
             The attendee needs to be the person saving the event. If you know this, you can make use of this functionality. If not, we would not recommend it.
           </p>
         </div>
         <div v-else>
-          <p>Falls du im Umgang mit iCal-Einstellungen erfahren bist, kannst du die Optionen "uid", "sequence", "created", "updated", "attendee" und "status" (TENTATIVE, CONFIRMED, CANCELLED) manuell steuern.</p>
+          <p>Falls du im Umgang mit iCal-Einstellungen erfahren bist, kannst du die Optionen "uid", "sequence", "ics-created", "ics-updated", "attendee" und "status" (tentative, confirmed, cancelled) manuell steuern.</p>
           <p class="font-semibold">Beachte, dass diese Optionen nur von den iCal und Apple Kalendar-Links unterstützt werden (und auch dann nicht von allen Kalender immer sauber erkannt werden)!</p>
-          <p>Um ein bestehendes Event zu aktualisieren (bspw. den Status) muss die "sequence"-Nummer aufsteigen, ein jüngeres "updated"-Datum bei gleichem "created"-Datum gesetzt, die gleiche "uid" und die "organizer"-Option gegeben sein.</p>
+          <p>Um ein bestehendes Event zu aktualisieren (bspw. den Status) muss die "sequence"-Nummer aufsteigen, ein jüngeres "ics-updated"-Datum bei gleichem "ics-created"-Datum gesetzt, die gleiche "uid" und die "organizer"-Option gegeben sein.</p>
           <p>
-            Einige Kalender erfordern zudem einen "attendee". Sollte dein "Update" des Event kein Status-Wechsel auf "CANCELLED" sein, ist dieser in jedem Fall verpflichtend!<br />
+            Einige Kalender erfordern zudem einen "attendee". Sollte dein "Update" des Event kein Status-Wechsel auf "cancelled" sein, ist dieser in jedem Fall verpflichtend!<br />
             Der "attendee" muss die Person sein, die das Event bei sich speichert. Wenn du diese Information hast, kannst du die Update-Funktionalität nutzen. Ansonsten muss davon abgeraten werden.
           </p>
         </div>
         <div class="block w-full justify-between pt-4 md:flex">
-          <div class="flex w-full flex-none flex-col items-center justify-start p-6 pt-8 text-center md:w-[300px]">
+          <div class="flex w-full flex-none flex-col items-center justify-start p-6 pt-8 text-center md:w-[310px]">
             <div class="mb-5 text-sm font-semibold">A. {{ $t('content.advanced.add_event_example') }}</div>
-            <add-to-calendar-button
+            <Atcb
               :name="$t('demo_data.name')"
-              :startDate="defaultDate"
-              startTime="10:15"
-              endTime="23:30"
-              :timeZone="$t('demo_data.default_timezone')"
+              :start-date="defaultDate"
+              start-time="10:15"
+              end-time="23:30"
+              :time-zone="$t('demo_data.default_timezone')"
               :label="$t('demo_data.label_add')"
               :description="$t('demo_data.description_alt3')"
-              options="iCal"
+              options="ical"
               :organizer="$t('demo_data.default_organizer')"
               uid="7060df05-7b3d-4baa-b215-689b85769e5b"
               sequence="1"
-              created="20221201T103000Z"
-              updated="20221205T154500Z"
-              status="CONFIRMED"
-              :iCalFileName="$t('demo_data.iCal_confirmed')"
-              lightMode="bodyScheme"
+              ics-created="20221201T103000Z"
+              ics-updated="20221205T154500Z"
+              status="confirmed"
+              :ical-file-name="$t('demo_data.iCal_confirmed')"
+              light-mode="bodyScheme"
               :language="locale"
-              hideRichData
-              hideBranding
-            ></add-to-calendar-button>
+              hide-rich-data
+              hide-branding
+              debug
+            ></Atcb>
           </div>
           <div class="flex-1 overflow-x-auto">
             <LazyCodeBlock>
               <pre>
 &lt;add-to-calendar-button
   name="{{ $t('demo_data.name') }}"
-  startDate="{{ defaultDate }}"
-  startTime="10:15"
-  endTime="23:30"
-  timeZone="{{ $t('demo_data.default_timezone') }}"
+  start-date="{{ defaultDate }}"
+  start-time="10:15"
+  end-time="23:30"
+  time-zone="{{ $t('demo_data.default_timezone') }}"
   label="{{ $t('demo_data.label_add') }}"
   description="{{ $t('demo_data.description_alt3') }}"
-  options="iCal"
+  options="ical"
   organizer="{{ $t('demo_data.default_organizer') }}"
   uid="7060df05-7b3d-4baa-b215-689b85769e5b"
   sequence="1"
-  created="20221201T103000Z"
-  updated="20221205T154500Z"
-  status="CONFIRMED"
-  iCalFileName="{{ $t('demo_data.iCal_confirmed') }}"
-  lightMode="bodyScheme"{{ defaultLang }}
+  ics-created="20221201T103000Z"
+  ics-updated="20221205T154500Z"
+  status="confirmed"
+  ical-file-name="{{ $t('demo_data.iCal_confirmed') }}"
+  light-mode="bodyScheme"{{ defaultLang }}
 &gt;&lt;/add-to-calendar-button&gt;
 </pre>
             </LazyCodeBlock>
           </div>
         </div>
         <div class="block w-full justify-between pt-4 md:flex">
-          <div class="flex w-full flex-none flex-col items-center justify-start p-6 pt-8 text-center md:w-[300px]">
+          <div class="flex w-full flex-none flex-col items-center justify-start p-6 pt-8 text-center md:w-[310px]">
             <div class="mb-5 text-sm font-semibold">B. {{ $t('content.advanced.remove_event_example') }}</div>
-            <add-to-calendar-button
+            <Atcb
               :name="$t('demo_data.name')"
-              :startDate="defaultDate"
-              startTime="10:15"
-              endTime="23:30"
-              :timeZone="$t('demo_data.default_timezone')"
+              :start-date="defaultDate"
+              start-time="10:15"
+              end-time="23:30"
+              :time-zone="$t('demo_data.default_timezone')"
               :label="$t('demo_data.label_cancel')"
               :description="$t('demo_data.description_alt3')"
-              options="iCal"
+              options="ical"
               :organizer="$t('demo_data.default_organizer')"
               uid="7060df05-7b3d-4baa-b215-689b85769e5b"
               sequence="3"
-              created="20221201T103000Z"
-              updated="20221218T154500Z"
-              status="CANCELLED"
-              :iCalFileName="$t('demo_data.iCal_cancelled')"
-              lightMode="bodyScheme"
+              ics-created="20221201T103000Z"
+              ics-updated="20221218T154500Z"
+              status="cancelled"
+              :ical-file-name="$t('demo_data.iCal_cancelled')"
+              light-mode="bodyScheme"
               :language="locale"
-              hideRichData
-              hideBranding
-            ></add-to-calendar-button>
+              hide-rich-data
+              hide-branding
+              debug
+            ></Atcb>
           </div>
           <div class="flex-1 overflow-x-auto">
             <LazyCodeBlock>
               <pre>
 &lt;add-to-calendar-button
   name="{{ $t('demo_data.name') }}"
-  startDate="{{ defaultDate }}"
-  startTime="10:15"
-  endTime="23:30"
-  timeZone="{{ $t('demo_data.default_timezone') }}"
+  start-date="{{ defaultDate }}"
+  start-time="10:15"
+  end-time="23:30"
+  time-zone="{{ $t('demo_data.default_timezone') }}"
   label="{{ $t('demo_data.label_cancel') }}"
   description="{{ $t('demo_data.description_alt3') }}"
-  options="iCal"
+  options="ical"
   organizer="{{ $t('demo_data.default_organizer') }}"
   uid="7060df05-7b3d-4baa-b215-689b85769e5b"
   sequence="2"
-  created="20221201T103000Z"
-  updated="20221218T154500Z"
-  status="CANCELLED"
-  iCalFileName="{{ $t('demo_data.iCal_cancelled') }}"
-  lightMode="bodyScheme"{{ defaultLang }}
+  ics-created="20221201T103000Z"
+  ics-updated="20221218T154500Z"
+  status="cancelled"
+  ical-file-name="{{ $t('demo_data.iCal_cancelled') }}"
+  light-mode="bodyScheme"{{ defaultLang }}
 &gt;&lt;/add-to-calendar-button&gt;
 </pre>
             </LazyCodeBlock>
@@ -758,33 +766,33 @@ onUnmounted(() => {
           <p>Bei Nutzung der <NuxtLink :to="'#case-10'">atcb_action Funktion</NuxtLink> verhält es sich minimal anders. Das Skript nutzt das genannte Schema nur, wenn das auslösende Element keine ID besitzt.</p>
         </div>
         <div class="block w-full justify-between pt-4 md:flex">
-          <div class="flex w-full flex-none justify-center p-6 pt-8 md:w-[300px]">
-            <add-to-calendar-button
+          <div class="flex w-full flex-none justify-center p-6 pt-8 md:w-[310px]">
+            <Atcb
               :name="$t('demo_data.name')"
-              :startDate="defaultDate"
-              startTime="10:15"
-              endTime="23:30"
-              :timeZone="$t('demo_data.default_timezone')"
-              options="'Apple','Google','iCal','Outlook.com','Microsoft 365','Microsoft Teams','Yahoo'"
+              :start-date="defaultDate"
+              start-time="10:15"
+              end-time="23:30"
+              :time-zone="$t('demo_data.default_timezone')"
+              options="'apple','google','ical','outlookcom','ms365','msteams','yahoo'"
               identifier="my-custom-id"
-              lightMode="bodyScheme"
+              light-mode="bodyScheme"
               :language="locale"
-              hideRichData
-              hideBranding
-            ></add-to-calendar-button>
+              hide-rich-data
+              hide-branding
+            ></Atcb>
           </div>
           <div class="flex-1 overflow-x-auto">
             <LazyCodeBlock>
               <pre>
 &lt;add-to-calendar-button
   name="{{ $t('demo_data.name') }}"
-  startDate="{{ defaultDate }}"
-  startTime="10:15"
-  endTime="23:30"
-  timeZone="{{ $t('demo_data.default_timezone') }}"
-  options="'Apple','Google','iCal','Outlook.com','Microsoft 365','Microsoft Teams','Yahoo'"
+  start-date="{{ defaultDate }}"
+  start-time="10:15"
+  end-time="23:30"
+  time-zone="{{ $t('demo_data.default_timezone') }}"
+  options="'apple','google','ical','outlookcom','ms365','msteams','yahoo'"
   identifier="my-custom-id"
-  lightMode="bodyScheme"{{ defaultLang }}
+  light-mode="bodyScheme"{{ defaultLang }}
 &gt;&lt;/add-to-calendar-button&gt;
 </pre>
             </LazyCodeBlock>
@@ -850,35 +858,35 @@ onUnmounted(() => {
           </p>
         </div>
         <div class="block w-full justify-between pt-4 md:flex">
-          <div class="flex w-full flex-none justify-center p-6 pt-8 md:w-[300px]">
-            <add-to-calendar-button
+          <div class="flex w-full flex-none justify-center p-6 pt-8 md:w-[310px]">
+            <Atcb
               :name="$t('demo_data.name')"
-              :startDate="defaultDate"
-              startTime="10:00"
-              endTime="11:00"
-              timeZone="currentBrowser"
+              :start-date="defaultDate"
+              start-time="10:00"
+              end-time="11:00"
+              time-zone="currentBrowser"
               :location="$t('demo_data.location')"
               :description="$t('demo_data.description_alt1')"
-              options="'Apple','Google','iCal'"
-              lightMode="bodyScheme"
+              options="'apple','google','ical'"
+              light-mode="bodyScheme"
               :language="locale"
-              hideRichData
-              hideBranding
-            ></add-to-calendar-button>
+              hide-rich-data
+              hide-branding
+            ></Atcb>
           </div>
           <div class="flex-1 overflow-x-auto">
             <LazyCodeBlock>
               <pre>
 &lt;add-to-calendar-button
   name="{{ $t('demo_data.name') }}"
-  startDate="{{ defaultDate }}"
-  startTime="10:00"
-  endTime="11:00"
-  timeZone="currentBrowser"
+  start-date="{{ defaultDate }}"
+  start-time="10:00"
+  end-time="11:00"
+  time-zone="currentBrowser"
   location="{{ $t('demo_data.location') }}"
   description="{{ $t('demo_data.description_alt1') }}"
-  options="'Apple','Google','iCal'"
-  lightMode="bodyScheme"{{ defaultLang }}
+  options="'apple','google','ical'"
+  light-mode="bodyScheme"{{ defaultLang }}
 &gt;&lt;/add-to-calendar-button&gt;
 </pre>
             </LazyCodeBlock>
@@ -924,33 +932,21 @@ onUnmounted(() => {
           <span class="text-sm italic">(Der nachfolgende Button sollte in einer in-App-WebView-Umgebung, wie der Instagram-App nicht funktionieren, wohl aber in deiner eigenen App.)</span>
         </div>
         <div class="block w-full justify-between pt-4 md:flex">
-          <div class="flex w-full flex-none justify-center p-6 pt-8 md:w-[300px]">
-            <add-to-calendar-button
-              :name="$t('demo_data.name_dummy')"
-              :startDate="defaultDate"
-              startTime="10:15"
-              endTime="23:30"
-              options="iCal"
-              icsFile="https://add-to-calendar-button.com/demo-event.ics"
-              bypassWebViewCheck
-              lightMode="bodyScheme"
-              :language="locale"
-              hideRichData
-              hideBranding
-            ></add-to-calendar-button>
+          <div class="flex w-full flex-none justify-center p-6 pt-8 md:w-[310px]">
+            <Atcb :name="$t('demo_data.name_dummy')" :start-date="defaultDate" start-time="10:15" end-time="23:30" options="ical" ics-file="https://add-to-calendar-button.com/demo-event.ics" bypass-web-view-check light-mode="bodyScheme" :language="locale" hide-rich-data hide-branding></Atcb>
           </div>
           <div class="flex-1 overflow-x-auto">
             <LazyCodeBlock>
               <pre>
 &lt;add-to-calendar-button
   name="{{ $t('demo_data.name_dummy') }}"
-  startDate="{{ defaultDate }}"
-  startTime="10:15"
-  endTime="23:30"
-  options="iCal"
-  icsFile="https://add-to-calendar-button.com/demo-event.ics"
-  bypassWebViewCheck
-  lightMode="bodyScheme"{{ defaultLang }}
+  start-date="{{ defaultDate }}"
+  start-time="10:15"
+  end-time="23:30"
+  options="ical"
+  ics-file="https://add-to-calendar-button.com/demo-event.ics"
+  bypass-web-view-check
+  light-mode="bodyScheme"{{ defaultLang }}
 &gt;&lt;/add-to-calendar-button&gt;
 </pre>
             </LazyCodeBlock>
@@ -968,6 +964,9 @@ onUnmounted(() => {
             Theoretically, you do not need to provide a button element. However, it is recommended to do so, since it will optimize the user experience a lot (like focusing the element on closing the modal, etc.).<br />
             If you do not provide a specific button, the list will automatically show as modal. If provided, you can opt for the overlay-dropdown list style via the listStyle option (mind that all other options are not supported in the atcb_action case). The modal style is strongly recommended.
           </p>
+          <p class="italic">
+            Note: When only the Apple or iCal option is configured on an Apple device, an interstitial window opens before saving the event. This ensures that the dynamically generated calendar file can be opened and saved reliably. This extra step is skipped when a static ICS file is provided.
+          </p>
           <h3 class="mb-3 mt-8">{{ $t('content.guide.step1') }}: Import</h3>
           <p>
             If you use the script via CDN, you can skip this step.<br />
@@ -983,6 +982,10 @@ onUnmounted(() => {
             Theoretisch muss dieses Element kein Button sein. Wir raten allerdings stark dazu, da es die User Experience wesentlich positiv beeinflusst (bspw. durch die Unterstützung von Tastatur-Navigation, etc.).<br />
             Wenn du kein Button-Element nutzt, öffnet sich die Kalendar-Liste als Modal. Gibt es ein Button-Element kannst du auch den Overlay-Dropdown-Stil über die Option listStyle wählen (beachte, dass die übrigen Optionen mit atcb_action nicht unterstützt werden). Der Modal-Stil ist der Standard
             und wird auch empfohlen.
+          </p>
+          <p class="italic">
+            Hinweis: Wenn auf einem Apple-Gerät ausschließlich die Apple- oder iCal-Option konfiguriert ist, öffnet sich vor dem Speichern ein Zwischenfenster. Dadurch kann die dynamisch erzeugte Kalenderdatei zuverlässig geöffnet und gespeichert werden. Wenn eine statische ICS-Datei hinterlegt ist,
+            entfällt dieser zusätzliche Schritt.
           </p>
           <h3 class="mb-3 mt-8">{{ $t('content.guide.step1') }}: Import</h3>
           <p>
@@ -1010,7 +1013,7 @@ onUnmounted(() => {
           <p>Im Beispiel nutzen wir einen recht einfachen Button und Prozess zu Demonstrationszwecken.</p>
         </div>
         <div class="block w-full justify-between pt-4 md:flex">
-          <div class="flex w-full flex-none justify-center p-6 pt-8 md:w-[300px]">
+          <div class="flex w-full flex-none justify-center p-6 pt-8 md:w-[310px]">
             <button id="my-default-button" class="h-fit rounded-full border-2 border-secondary bg-secondary px-4 py-2 text-zinc-800 hover:bg-secondary-light hover:text-black hover:shadow-lg">{{ $t('labels.clickHere') }}</button>
           </div>
           <div class="flex-1 overflow-x-auto">
@@ -1025,7 +1028,7 @@ onUnmounted(() => {
     startDate: "{{ defaultDate }}",
     startTime: "10:15",
     endTime: "23:30",
-    options: ["Google", "iCal"],
+    options: ["google", "ical"],
     timeZone: "{{ $t('demo_data.default_timezone') }}"{{ defaultLangJS }}
   };
   const button = document.getElementById('my-default-button');
@@ -1044,49 +1047,114 @@ onUnmounted(() => {
           <p>
             First things first:<br />
             Wherever possible, we load the script asynchronously, so it will not block the rendering of your page.<br />
-            However, if you include it as a ES module, this behavior usually changes.<br />
-            Besides some JavaScript frameworks offering other tricks to load components asynchronously, you can try the following to optimize the loading behavior and bundle size.
+            The script is also radically split: the bundle only contains the core, the default button style, and English.<br />
+            Every other button style (a few KB each) and language (~3 KB each) loads automatically on demand - from the same location the script itself is served from.
           </p>
-          <p>Unfortunately, we cannot offer any easy tree-shaking solution, as this contradicts the way we are building the script - being a flexible web component, which can adapt on runtime.</p>
-          <p>
-            <strong>The ES package comes in 4 flavors:</strong>
-          </p>
+          <p><strong>You usually do not need to do anything.</strong> But you can take control:</p>
           <ol class="ml-6 list-decimal pb-4 pt-2">
-            <li class="text-left">Default: Includes everything and therefore reduces the risk of failure.</li>
-            <li class="text-left">no-pro: This is basically the default, if you are not using the <a target="_blank" rel="author" href="https://add-to-calendar-pro.com">PRO version</a> of the script.</li>
-            <li class="text-left">unstyle: This is the default, but without integrated css (style).</li>
-            <li class="text-left">no-pro-unstyle: No integrated css, no PRO functionalities.</li>
+            <li class="text-left">When bundling, import exactly what you use - no fetch will ever happen for it:</li>
           </ol>
-          <p>
-            To reduce the bundle size, you can use the unstyle version with <CodeBlock inline>import 'add-to-calendar-button/unstyle'</CodeBlock> and add the css manually to your project via the customCss option.<br />
-            For the css file, you can make use of the jsDelivr CDN - find possible files at <a target="_blank" rel="noopener" href="https://www.jsdelivr.com/package/npm/add-to-calendar-button?tab=files&path=assets%2Fcss">jsdelivr</a>.<br />
-            This, of course, makes changing the style more difficult and adds an additional request to the network, but would reduce the bundle size by ~ 30%.<br />
-            In the end, it depends on your project and strategy, which version is the best for you.
-          </p>
+          <LazyCodeBlock>
+            <pre>
+import 'add-to-calendar-button'; // core + default style + English
+import 'add-to-calendar-button/styles/3d'; // the styles you use
+import 'add-to-calendar-button/i18n/de'; // the languages you serve</pre>
+          </LazyCodeBlock>
+          <ol class="ml-6 list-decimal pb-4 pt-2" start="2">
+            <li class="text-left">With the script tag, assets load from the script's own origin. Override the location via the <NuxtLink :to="{path: localePath('configuration'), hash: '#stylesource'}">styleSource</NuxtLink> option if you host them elsewhere.</li>
+            <li class="text-left">If you switch the buttonStyle at runtime, set <NuxtLink :to="{path: localePath('configuration'), hash: '#loadallstyles'}">loadAllStyles</NuxtLink> to prefetch all deltas.</li>
+          </ol>
         </div>
         <div v-else>
           <p>
             First things first:<br />
             Woimmer möglich, laden wir das Skript asynchron, sodass es das Rendern deiner Seite nicht blockiert.<br />
-            Wenn du es allerdings als ES Modul einbindest, ändert sich dieses Verhalten in der Regel.<br />
-            Neben dem Umstand, dass einige JavaScript-Frameworks andere Kniffe anbieten, um Komponenten asynchron zu laden, kannst du folgendes versuchen, um das Ladeverhalten und die Bundle-Size zu optimieren.
+            Das Skript ist zudem radikal aufgeteilt: das Bundle enthält nur den Kern, den Default-Button-Style und Englisch.<br />
+            Jeder weitere Button-Style (wenige KB) und jede weitere Sprache (~3 KB) lädt automatisch bei Bedarf - von dort, wo auch das Skript selbst ausgeliefert wird.
           </p>
-          <p>Leider können wir keine einfache Tree-Shaking-Lösung anbieten, da dies dem Ansatz des Skripts widerspricht - ein flexibler Web-Component, welcher sich zur Laufzeit anpassen lässt.</p>
-          <p>
-            <strong>Das ES-Package kommt in 4 Varianten:</strong>
-          </p>
+          <p><strong>In der Regel musst du nichts weiter tun.</strong> Du kannst aber die Kontrolle übernehmen:</p>
           <ol class="ml-6 list-decimal pb-4 pt-2">
-            <li class="text-left">Default: Beinhaltet alles und reduziert das Risiko von Fehlfunktionen.</li>
-            <li class="text-left">no-pro: Entspricht dem Default, solange du nicht die <a target="_blank" rel="author" href="https://add-to-calendar-pro.com/de">PRO version</a> nutzt.</li>
-            <li class="text-left">unstyle: Entspricht dem Default, aber ohne CSS-Informationen (Style).</li>
-            <li class="text-left">no-pro-unstyle: Kein integriertes css, keine PRO-Funktionalitäten.</li>
+            <li class="text-left">Beim Bundling importierst du exakt das, was du nutzt - dafür findet dann nie eine Netzwerk-Anfrage statt:</li>
           </ol>
+          <LazyCodeBlock>
+            <pre>
+import 'add-to-calendar-button'; // Kern + Default-Style + Englisch
+import 'add-to-calendar-button/styles/3d'; // deine Styles
+import 'add-to-calendar-button/i18n/de'; // deine Sprachen</pre>
+          </LazyCodeBlock>
+          <ol class="ml-6 list-decimal pb-4 pt-2" start="2">
+            <li class="text-left">Mit dem Script-Tag laden Assets vom Origin des Skripts. Über die <NuxtLink :to="{path: localePath('configuration'), hash: '#stylesource'}">styleSource</NuxtLink>-Option kannst du den Ort überschreiben.</li>
+            <li class="text-left">Wenn du den buttonStyle zur Laufzeit wechselst, lädt <NuxtLink :to="{path: localePath('configuration'), hash: '#loadallstyles'}">loadAllStyles</NuxtLink> alle Deltas vor.</li>
+          </ol>
+        </div>
+      </section>
+      <section id="case-12">
+        <h2 class="mb-4 mt-14 border-t border-zinc-300 pt-14 dark:border-zinc-700">12. {{ $t('content.advanced.12_long') }}</h2>
+        <div v-if="locale=='en'">
           <p>
-            Um die Bundle-Size zu reduzieren, kannst du die unstyle Version mit <CodeBlock inline>import 'add-to-calendar-button/unstyle'</CodeBlock> nutzen und das CSS manuell über die customCss Option einbinden.<br />
-            Für die CSS-Datei, kannst du das jsDelivr CDN nutzen - mögliche Dateien findest du unter <a target="_blank" rel="noopener" href="https://www.jsdelivr.com/package/npm/add-to-calendar-button?tab=files&path=assets%2Fcss">https://www.jsdelivr.com/package/npm/add-to-calendar-button</a>.<br />
-            Dies macht es natürlich schwieriger das Design zur Laufzeit anzupassen und fügt eine weitere Anfrage zum Netzwerk hinzu, würde die Bundle-Size aber um ~ 30% reduzieren.<br />
-            Letztendlich hängt es von deinem Projekt und deiner Strategie ab, welche Version für dich die beste ist.
+            The button can render a shell on the server.<br />
+            The <code>add-to-calendar-button/ssr</code> entry produces a style- and size-correct placeholder via declarative shadow DOM - it paints before any JavaScript runs, and the client script upgrades it in place without layout shift.
           </p>
+          <LazyCodeBlock>
+            <pre>
+import { atcb_generate_ssr_html } from 'add-to-calendar-button/ssr';
+
+const html = atcb_generate_ssr_html({
+  name: 'Launch Party',
+  startDate: '2050-06-15',
+  buttonStyle: '3d',
+  language: 'de',
+});
+// drop the returned string into your server-rendered page
+// and load the regular script on the client as usual</pre>
+          </LazyCodeBlock>
+          <p>For PRO events, use the asynchronous <code>atcb_generate_ssr_html_async</code> function. It fetches and merges the hosted configuration for the <code>proKey</code> before rendering the shell. Without a <code>proKey</code>, it behaves like the synchronous function.</p>
+          <LazyCodeBlock>
+            <pre>
+import { atcb_generate_ssr_html_async } from 'add-to-calendar-button/ssr';
+
+const html = await atcb_generate_ssr_html_async({
+  proKey: 'YOUR_PRO_KEY',
+});</pre>
+          </LazyCodeBlock>
+          <p>
+            The shell honors the button style, size, light mode, right-to-left languages, and the label (the localized default or your "label" value).<br />
+            Date-style buttons, inline RSVP, and group overviews render subtle skeletons, since their content requires client-side logic. Everything else happens at hydration.
+          </p>
+          <p class="italic">Browsers without declarative shadow DOM support simply ignore the shell and initialize client-only - no extra handling needed.</p>
+        </div>
+        <div v-else>
+          <p>
+            Der Button kann eine Hülle auf dem Server rendern.<br />
+            Der <code>add-to-calendar-button/ssr</code>-Einstiegspunkt erzeugt einen Platzhalter mit korrektem Style und Größe via Declarative Shadow DOM - er wird gezeichnet, bevor JavaScript läuft, und das Client-Skript übernimmt ihn ohne Layout-Sprung.
+          </p>
+          <LazyCodeBlock>
+            <pre>
+import { atcb_generate_ssr_html } from 'add-to-calendar-button/ssr';
+
+const html = atcb_generate_ssr_html({
+  name: 'Launch Party',
+  startDate: '2050-06-15',
+  buttonStyle: '3d',
+  language: 'de',
+});
+// füge den zurückgegebenen String in deine server-gerenderte Seite ein
+// und lade das reguläre Skript im Client wie gewohnt</pre>
+          </LazyCodeBlock>
+          <p>Für PRO-Events verwendest du die asynchrone Funktion <code>atcb_generate_ssr_html_async</code>. Sie lädt und kombiniert die gehostete Konfiguration für den <code>proKey</code>, bevor sie die Hülle rendert. Ohne <code>proKey</code> verhält sie sich wie die synchrone Funktion.</p>
+          <LazyCodeBlock>
+            <pre>
+import { atcb_generate_ssr_html_async } from 'add-to-calendar-button/ssr';
+
+const html = await atcb_generate_ssr_html_async({
+  proKey: 'YOUR_PRO_KEY',
+});</pre>
+          </LazyCodeBlock>
+          <p>
+            Die Hülle berücksichtigt Button-Style, Größe, Light-Mode, Rechts-nach-Links-Sprachen und das Label (der lokalisierte Default oder dein "label"-Wert).<br />
+            Date-Style-Buttons, Inline-RSVP und Gruppenübersichten rendern dezente Skeletons, da ihr Inhalt Client-Logik erfordert. Alles Weitere passiert bei der Hydration.
+          </p>
+          <p class="italic">Browser ohne Declarative-Shadow-DOM-Unterstützung ignorieren die Hülle einfach und initialisieren rein client-seitig - ohne weiteres Zutun.</p>
         </div>
       </section>
     </div>
@@ -1103,6 +1171,7 @@ onUnmounted(() => {
         <NuxtLink :to="'#case-9'" class="my-4 block">#9: {{ $t('content.advanced.9_short') }}</NuxtLink>
         <NuxtLink :to="'#case-10'" class="my-4 block">#10: {{ $t('content.advanced.10_short') }}</NuxtLink>
         <NuxtLink :to="'#case-11'" class="my-4 block">#11: {{ $t('content.advanced.11_short') }}</NuxtLink>
+        <NuxtLink :to="'#case-12'" class="my-4 block">#12: {{ $t('content.advanced.12_short') }}</NuxtLink>
       </div>
     </div>
   </div>
@@ -1110,7 +1179,9 @@ onUnmounted(() => {
 
 <style>
 add-to-calendar-button#css-part-example::part(atcb-button),
-#atcb-btn-css-part-example-modal-host::part(atcb-button) {
+#atcb-btn-css-part-example-modal-host::part(atcb-button),
+#css-part-example::part(atcb-list),
+#atcb-btn-css-part-example-modal-host::part(atcb-list) {
   background-color: #264f3c;
   color: #fff;
 }

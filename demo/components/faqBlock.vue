@@ -18,7 +18,7 @@ const wpUrl = (function () {
   <Disclosure v-slot="{ open }" class="mx-auto w-full max-w-3xl">
     <div itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
       <DisclosureButton as="h3" itemprop="name" class="faq-button flex w-full cursor-pointer justify-between">
-        <span v-if="locale=='en'">What is a Add to Calendar Button?</span>
+        <span v-if="locale=='en'">What is an Add to Calendar Button?</span>
         <span v-else>Was ist ein Add to Calendar Button?</span>
         <ChevronUpIcon :class="open ? 'rotate-180 transform' : ''" class="h-5 w-5 text-inherit transition-transform" />
       </DisclosureButton>
@@ -92,7 +92,7 @@ const wpUrl = (function () {
       >
         <DisclosurePanel class="px-4 pb-6 pt-4 text-left" :unmount="false" itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
           <div v-if="locale=='en'" itemprop="text">
-            The Add to Calendar Button is a JavaScript library, that allows you to easily integrate a customizable button into your website.<br />
+            The Add to Calendar Button is a TypeScript/JavaScript library, that allows you to easily integrate a customizable button into your website.<br />
             When a user clicks on the button, a calendar event is generated and opened in the user's calendar app of choice.<br />
             The user can then save the event to his calendar and edit it as he likes.<br />
             The Add to Calendar Button supports all modern calendar schemes, including iCalendar, Google Calendar, Outlook, Yahoo Calendar and many more.<br />
@@ -101,7 +101,7 @@ const wpUrl = (function () {
             Check out the <NuxtLink :to="localePath('use')">examples page</NuxtLink> for more cases and live demos or try it out yourself in the <NuxtLink :to="localePath('index') + '#demo'">playground</NuxtLink>!
           </div>
           <div v-else itemprop="text">
-            Der Add to Calendar Button ist eine JavaScript-Bibliothek, die es dir ermöglicht, einen anpassbaren Button einfach in deine Website zu integrieren.<br />
+            Der Add to Calendar Button ist eine TypeScript/JavaScript-Bibliothek, die es dir ermöglicht, einen anpassbaren Button einfach in deine Website zu integrieren.<br />
             Wenn ein Benutzer auf den Button klickt, wird ein Kalender-Ereignis generiert und in der Kalender-App des Benutzers seiner Wahl geöffnet.<br />
             Der Benutzer kann das Ereignis dann in seinem Kalender speichern und nach Belieben bearbeiten.<br />
             Der Add to Calendar Button unterstützt alle modernen Kalender-Schemata, einschließlich iCalendar, Google Calendar, Outlook, Yahoo Calendar und viele mehr.<br />
@@ -131,6 +131,7 @@ const wpUrl = (function () {
         <DisclosurePanel class="px-4 pb-6 pt-4 text-left" :unmount="false" itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
           <div v-if="locale=='en'" itemprop="text">
             Most Add to Calendar scripts are highly outdated and therefore dysfunctional. Others are more or less up-to-date, but do only support very basic schemes, which break in many cases.<br />
+            Even AI is usually using the default url schemes, which break in 30% of all cases.<br />
             Besides that, there is at least one solution, which forces you to sign up for their services and pay for it, when you hit some limitations.<br />
             Our solution is open source, free to use and supports all modern calendar schemes. It is also highly customizable and can be used in almost every development environment.<br />
             On top of that, it considers many different use cases and setups. We solve the problem, that unfortunately, there is not this one scheme, which works for every user on every device in every browser.<br />
@@ -138,6 +139,7 @@ const wpUrl = (function () {
           </div>
           <div v-else itemprop="text">
             Die meisten Add to Calendar Skripte sind veraltet und daher nicht funktionsfähig. Andere sind mehr oder weniger aktuell, unterstützen aber nur sehr einfache Schemata, die in vielen Fällen nicht funktionieren.<br />
+            Selbst KI verwendet in der Regel die standardmäßigen URL-Schemata, die in 30 % aller Fälle fehlschlagen.<br />
             Darüber hinaus gibt es mindestens eine Lösung, die dich dazu nötigt, dich für ihre Dienste anzumelden und dafür zu bezahlen, wenn du auf Einschränkungen stößt.<br />
             Unsere Lösung ist Open Source, kostenfrei nutzbar und unterstützt alle modernen Kalender-Schemata. Sie ist zudem hochgradig anpassbar und kann in nahezu jeder Entwicklungsumgebung eingesetzt werden.<br />
             Darüber hinaus berücksichtigt sie viele verschiedene Anwendungsfälle und Setups. Wir lösen das Problem, dass es leider nicht dieses eine Schema gibt, das für jeden Benutzer auf jedem Gerät in jedem Browser funktioniert.<br />
@@ -321,8 +323,8 @@ const wpUrl = (function () {
         leave-to-class="transform scale-95 opacity-0"
       >
         <DisclosurePanel class="px-4 pb-6 pt-4 text-left" :unmount="false" itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
-          <div v-if="locale=='en'" itemprop="text">Yes. The Add to Calendar Button comes with over 20 languages, including RTL settings for Arabic and Persian. In case your language is not already included, you can also customize every single text block.</div>
-          <div v-else itemprop="text">Ja. Der Add to Calendar Button beinhaltet über 20 Sprachen, inkl. RTL-Ausrichtung für Arabisch und Persisch. Sofern deine Sprache nicht bereits enthalten ist, kannst du jeden Text-Block entsprechend anpassen.</div>
+          <div v-if="locale=='en'" itemprop="text">Yes. The Add to Calendar Button comes with over 40 languages, including RTL settings for Arabic or Persian. In case your language is not already included, you can also customize every single text block.</div>
+          <div v-else itemprop="text">Ja. Der Add to Calendar Button beinhaltet über 40 Sprachen, inkl. RTL-Ausrichtung für Arabisch oder Persisch. Sofern deine Sprache nicht bereits enthalten ist, kannst du jeden Text-Block entsprechend anpassen.</div>
         </DisclosurePanel>
       </transition>
     </div>

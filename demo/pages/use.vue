@@ -35,7 +35,7 @@ watch(locale, value => {
         <h2 class="mb-6">{{ $t('content.guide.step1') }}: {{ $t('content.guide.step_cdn') }}</h2>
         <p>{{ $t('content.guide.step_cdn_p1') }}<br />{{ $t('content.guide.step_cdn_p2') }}</p>
         <LazyCodeBlock>
-          <pre>&lt;script src="https://cdn.jsdelivr.net/npm/add-to-calendar-button@2" async defer&gt;&lt;/script&gt;</pre>
+          <pre>&lt;script src="https://cdn.jsdelivr.net/npm/add-to-calendar-button@3" async defer&gt;&lt;/script&gt;</pre>
         </LazyCodeBlock>
         <h2 class="mb-6 mt-20">{{ $t('content.guide.step2') }}: {{ $t('content.guide.step_use') }}</h2>
         <p>{{ $t('content.guide.step_use_start') }}</p>
@@ -45,15 +45,21 @@ watch(locale, value => {
           <pre>
 &lt;add-to-calendar-button
   name="{{ $t('demo_data.name_dummy') }}"
-  options="'Apple','Google'"
+  options="'apple','google'"
   location="{{ $t('demo_data.location') }}"
-  startDate="{{ defaultDate }}"
-  endDate="{{ defaultDate }}"
-  startTime="10:15"
-  endTime="23:30"
-  timeZone="{{ $t('demo_data.default_timezone') }}"{{ defaultLang }}
+  start-date="{{ defaultDate }}"
+  end-date="{{ defaultDate }}"
+  start-time="10:15"
+  end-time="23:30"
+  time-zone="{{ $t('demo_data.default_timezone') }}"{{ defaultLang }}
 &gt;&lt;/add-to-calendar-button&gt;</pre>
         </LazyCodeBlock>
+        <h2 class="mb-6 mt-20">{{ $t('content.guide.styles_lang_headline') }}</h2>
+        <p>{{ $t('content.guide.styles_lang_default') }}</p>
+        <p class="pt-5">{{ $t('content.guide.styles_lang_ondemand') }}</p>
+        <h3 class="mb-6 mt-12">{{ $t('content.guide.styles_lang_cdn_heading') }}</h3>
+        <p>{{ $t('content.guide.styles_lang_cdn_body') }}</p>
+        <p class="mt-10">{{ $t('content.guide.styles_lang_more') }}</p>
       </div>
     </div>
     <div class="hidden border-l border-zinc-300 pl-8 text-xs dark:border-zinc-700 lg:block xl:pl-12">
