@@ -40,13 +40,6 @@
     "multidate": {
       "h": "Toto je séria podujatí",
       "text": "Pridajte jednotlivé udalosti jednu po druhej:"
-    },
-    "subscribe": {
-      "yahoo": {
-        "h": "Pridajte kalendár do Yahoo",
-        "text": "<ol><li>Otvorte teraz kalendár Yahoo.</li><li> Kliknite na kartu Akcie.</li><li> Kliknite na „Sledovať ďalšie kalendáre“.</li><li> Nastavte názov a vložte obsah schránky do poľa url.</li></ol>",
-        "button": "Otvorte kalendár Yahoo"
-      }
     }
   },
   "date": {

@@ -40,13 +40,6 @@
     "multidate": {
       "h": "This is an event series",
       "text": "Add the individual events one by one:"
-    },
-    "subscribe": {
-      "yahoo": {
-        "h": "Add Calendar to Yahoo",
-        "text": "<ol><li>Open now the Yahoo Calendar.</li><li>Click the \"Actions\" tab.</li><li>Hit \"Follow Other Calendars\".</li><li>Set a name and paste the clipboard content into the url field.</li></ol>",
-        "button": "Open Yahoo Calendar"
-      }
     }
   },
   "date": {

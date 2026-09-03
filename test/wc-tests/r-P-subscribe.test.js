@@ -3,8 +3,8 @@
  */
 import { expect, aTimeout } from '@open-wc/testing';
 import { mountAtcb } from '../helpers/mount.js';
-import { interceptWindowOpen, muteConsole, stubClipboard, stubClipboardFailure } from '../helpers/capture.js';
-import { clickSingleton, openList, renderedOptions, clickOption, modalHost, initFailed } from '../helpers/dom.js';
+import { interceptWindowOpen } from '../helpers/capture.js';
+import { clickSingleton, openList, renderedOptions, modalHost, initFailed } from '../helpers/dom.js';
 
 const SUB = {
   name: 'Subscribe Cal',
@@ -54,63 +54,22 @@ describe('Group P - Subscribe mode', () => {
     }
   });
 
-  it('P-03: Yahoo subscribe opens the manual-instructions modal with a full-width action footer', async () => {
-    const wo = interceptWindowOpen();
-    const clip = stubClipboard(); // headless envs lack the Clipboard API
-    const mute = muteConsole();
-    try {
-      const { host } = await mountAtcb({ ...SUB, options: "['yahoo','google']", identifier: 'atcb-p03' });
-      await openList(host);
-      await clickOption(host, 'yahoo');
-      await aTimeout(150);
-      expect(wo.calls.length, 'no direct yahoo url').to.equal(0);
-      const modal = modalHost(host);
-      expect(modal, 'manual instructions modal').to.exist;
-      expect(modal.shadowRoot.querySelector('.atcb-modal-box')).to.exist;
-      const closeButton = modal.shadowRoot.querySelector('.atcb-modal-close');
-      expect(closeButton, 'icon close control').to.exist;
-      expect(closeButton.getAttribute('aria-label'), 'icon close control is named').to.equal('Close');
-      expect(closeButton.querySelector('svg'), 'close control renders the X icon').to.exist;
-      const modalBox = modal.shadowRoot.querySelector('.atcb-modal-box-with-icon');
-      const modalFooter = modal.shadowRoot.querySelector('.atcb-modal-buttons');
-      const modalBoxRect = modalBox.getBoundingClientRect();
-      const modalFooterRect = modalFooter.getBoundingClientRect();
-      expect(modalFooterRect.left, 'footer starts at the modal edge').to.be.closeTo(modalBoxRect.left, 1);
-      expect(modalFooterRect.right, 'footer ends at the modal edge').to.be.closeTo(modalBoxRect.right, 1);
-      const footerButtons = modalFooter.querySelectorAll('.atcb-modal-btn');
-      expect(footerButtons.length, 'footer keeps only the Yahoo action').to.equal(1);
-      expect(footerButtons[0].textContent, 'cancel action removed from the footer').to.not.equal('Cancel');
-      expect(clip.texts.join(' '), 'ics url copied for manual yahoo subscribe').to.include('example.com/team-calendar.ics');
-    } finally {
-      mute.restore();
-      clip.restore();
-      wo.restore();
-    }
+  it('P-03: Yahoo is filtered out in subscribe mode', async () => {
+    const { host } = await mountAtcb({ ...SUB, options: "['yahoo','google','apple']", identifier: 'atcb-p03' });
+    await openList(host);
+    const opts = renderedOptions(host);
+    expect(opts).to.not.include('yahoo');
+    expect(opts).to.have.members(['apple', 'google']);
   });
 
-  it('P-03b: Yahoo subscribe with a failing clipboard shows the honest fallback with a manual-copy input', async () => {
+  it('P-03b: Yahoo-only subscribe falls back to iCal without opening a workaround modal', async () => {
     const wo = interceptWindowOpen();
-    const clip = stubClipboardFailure();
-    const mute = muteConsole();
     try {
-      const { host } = await mountAtcb({ ...SUB, options: "['yahoo','google']", identifier: 'atcb-p03b' });
-      await openList(host);
-      await clickOption(host, 'yahoo');
-      await aTimeout(150);
-      const modal = modalHost(host);
-      expect(modal, 'manual instructions modal').to.exist;
-      const content = modal.shadowRoot.querySelector('.atcb-modal-content');
-      expect(content.textContent, 'no success claim').to.not.include('We automatically copied');
-      expect(content.textContent, 'honest failure text').to.include('copy the following link manually');
-      const input = modal.shadowRoot.querySelector('.atcb-modal-clipboard-input');
-      expect(input, 'manual-copy input rendered').to.exist;
-      expect(input.value, 'link in the input').to.include('example.com/team-calendar.ics');
-      expect(input.readOnly, 'input is readonly').to.equal(true);
-      input.focus();
-      expect(input.selectionEnd - input.selectionStart, 'select-on-focus').to.equal(input.value.length);
+      const { host } = await mountAtcb({ ...SUB, options: "['yahoo']", identifier: 'atcb-p03b' });
+      await clickSingleton(host);
+      expect(wo.calls).to.deep.equal([{ url: 'webcal://example.com/team-calendar.ics', target: '_blank' }]);
+      expect(modalHost(host), 'no Yahoo workaround modal').to.not.exist;
     } finally {
-      mute.restore();
-      clip.restore();
       wo.restore();
     }
   });

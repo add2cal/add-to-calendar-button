@@ -40,13 +40,6 @@
     "multidate": {
       "h": "Ovo je serija događaja",
       "text": "Dodajte pojedinačne događaje jedan po jedan:"
-    },
-    "subscribe": {
-      "yahoo": {
-        "h": "Dodajte kalendar na Yahoo",
-        "text": "<ol><li>Sada otvorite Yahoo kalendar.</li><li> Pritisnite karticu \"Radnje\".</li><li> Pritisnite \"Prati druge kalendare\".</li><li> Postavite naziv i zalijepite sadržaj međuspremnika u url polje.</li></ol>",
-        "button": "Otvorite Yahoo kalendar"
-      }
     }
   },
   "date": {

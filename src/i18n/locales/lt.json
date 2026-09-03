@@ -40,13 +40,6 @@
     "multidate": {
       "h": "Tai renginių serija",
       "text": "Pridėkite atskirus įvykius po vieną:"
-    },
-    "subscribe": {
-      "yahoo": {
-        "h": "Pridėkite kalendorių prie „Yahoo“.",
-        "text": "<ol><li>Dabar atidarykite „Yahoo“ kalendorių.</li><li> Spustelėkite skirtuką „Veiksmai“.</li><li> Spustelėkite „Stebėti kitus kalendorius“.</li><li> Nustatykite pavadinimą ir įklijuokite iškarpinės turinį į URL lauką.</li></ol>",
-        "button": "Atidarykite „Yahoo“ kalendorių"
-      }
     }
   },
   "date": {

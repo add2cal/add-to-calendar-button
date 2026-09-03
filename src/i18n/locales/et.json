@@ -40,13 +40,6 @@
     "multidate": {
       "h": "See on sündmuste seeria",
       "text": "Ava üksikud sündmused ükshaaval:"
-    },
-    "subscribe": {
-      "yahoo": {
-        "h": "Lisa kalender Yahoo-sse",
-        "text": "<ol><li>Ava oma Yahoo kalender.</li><li>Kliki \"Actions\" vahelehte.</li><li>Vajuta \"Follow Other Calendars\".</li><li>Määra nimi ning lisa lõikelaua sisu URL (veebi aadressi) väljale.</li></ol>",
-        "button": "Avage Yahoo kalender"
-      }
     }
   },
   "date": {

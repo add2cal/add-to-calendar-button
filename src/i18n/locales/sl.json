@@ -40,13 +40,6 @@
     "multidate": {
       "h": "To je serija dogodkov",
       "text": "Dodajte posamezne dogodke enega za drugim:"
-    },
-    "subscribe": {
-      "yahoo": {
-        "h": "Dodajte koledar v Yahoo",
-        "text": "<ol><li>Zdaj odprite Yahoo Calendar.</li><li> Kliknite zavihek »Dejanja«.</li><li> Kliknite »Sledi drugim koledarjem«.</li><li> Nastavite ime in prilepite vsebino odložišča v polje url.</li></ol>",
-        "button": "Odprite Yahoo Calendar"
-      }
     }
   },
   "date": {

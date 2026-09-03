@@ -40,13 +40,6 @@
     "multidate": {
       "h": "Esta es una serie de fechas",
       "text": "Añada las fechas individuales a su calendario en orden:"
-    },
-    "subscribe": {
-      "yahoo": {
-        "h": "Añadir calendario a Yahoo",
-        "text": "<ol><li>Abra el calendario de Yahoo.</li><li>Haga clic en la pestaña \"Acciones\".</li><li>Seleccione \"Seguir otros calendarios\".</li><li>Elige un nombre y pega la URL de tu portapapeles en el campo URL.</li></ol>",
-        "button": "Abrir calendario de Yahoo"
-      }
     }
   },
   "date": {

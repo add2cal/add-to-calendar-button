@@ -40,13 +40,6 @@
     "multidate": {
       "h": "Ini adalah rangkaian acara",
       "text": "Tambahkan masing-masing bagian satu per satu:"
-    },
-    "subscribe": {
-      "yahoo": {
-        "h": "Tambahkan kalender ke Yahoo",
-        "text": "<ol><li>Buka kalender Yahoo.</li><li>Klik pada tab \"Tindakan\".</li><li>Pilih \"Ikuti Kalender Lain\".</li><li>Pilih nama dan tempelkan URL dari clipboard Anda ke bidang URL.</li></ol>",
-        "button": "Buka kalender Yahoo"
-      }
     }
   },
   "date": {

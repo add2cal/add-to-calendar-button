@@ -40,13 +40,6 @@
     "multidate": {
       "h": "Aceasta este o serie de evenimente",
       "text": "Adauga evenimentele individuale una cate una:"
-    },
-    "subscribe": {
-      "yahoo": {
-        "h": "Adauga Calendar in Yahoo",
-        "text": "<ol><li>Deschide acum calendarul Yahoo.</li><li>Apasa pe tab-ul de \"Actiuni\".</li><li>Apasa \"Urmareste alte calendare\".</li><li>Seteaza un nume si lipeste continutul din clipboard in casuta cu url.</li></ol>",
-        "button": "Deschideți calendarul Yahoo"
-      }
     }
   },
   "date": {

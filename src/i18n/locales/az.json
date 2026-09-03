@@ -40,13 +40,6 @@
     "multidate": {
       "h": "Bu bir hadisə seriyasıdır",
       "text": "Fərdi hadisələri bir-bir əlavə edin:"
-    },
-    "subscribe": {
-      "yahoo": {
-        "h": "Yahoo-ya Təqvim əlavə edin",
-        "text": "<ol><li>İndi Yahoo Təqvimini açın.</li><li> \"Fəaliyyətlər\" sekmesini vurun.</li><li> \"Digər təqvimləri izləyin\" düyməsini basın.</li><li> Ad təyin edin və mübadilə buferinin məzmununu url sahəsinə yapışdırın.</li></ol>",
-        "button": "Yahoo Təqvimini açın"
-      }
     }
   },
   "date": {

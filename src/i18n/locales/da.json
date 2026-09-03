@@ -40,13 +40,6 @@
     "multidate": {
       "h": "Dette er en begivenhedsserie",
       "text": "Tilføj de enkelte begivenheder én efter én:"
-    },
-    "subscribe": {
-      "yahoo": {
-        "h": "Tilføj kalender til Yahoo",
-        "text": "<ol><li>Åbn nu Yahoo-kalenderen.</li><li> Klik på fanen \"Handlinger\".</li><li> Tryk på \"Følg andre kalendere\".</li><li> Indstil et navn, og indsæt udklipsholderens indhold i url-feltet.</li></ol>",
-        "button": "Åbn Yahoo Kalender"
-      }
     }
   },
   "date": {

@@ -112,7 +112,7 @@ const defaultTarget: string = isWebView() ? '_system' : '_blank';
 const atcbTimeZonesToUtc = /^(?:GMT[+-]\d{1,2}|UTC|Zulu|Etc\/.*)$/i;
 const options: string[] = ['apple', 'google', 'ical', 'ms365', 'outlookcom', 'msteams', 'yahoo'];
 const validRecurrenceOptions: string[] = ['apple', 'google', 'ical'];
-const invalidSubscribeOptions: string[] = ['msteams'];
+const invalidSubscribeOptions: string[] = ['msteams', 'yahoo'];
 const iosInvalidOptions: string[] = ['ical'];
 const androidInvalidOptions: string[] = ['apple'];
 

@@ -40,13 +40,6 @@
     "multidate": {
       "h": "Dies ist eine Termin-Reihe",
       "text": "Füge die einzelnen Termine der Reihe nach deinem Kalender hinzu:"
-    },
-    "subscribe": {
-      "yahoo": {
-        "h": "Kalender zu Yahoo hinzufügen",
-        "text": "<ol><li>Öffne den Yahoo-Kalender.</li><li>Klicke auf den \"Aktionen\"-Tab.</li><li>Wähle \"Weiteren Kalendern folgen\".</li><li>Wähle einen Namen und füge die URL aus deiner Zwischenablage in das URL-Feld ein.</li></ol>",
-        "button": "Yahoo-Kalender öffnen"
-      }
     }
   },
   "date": {

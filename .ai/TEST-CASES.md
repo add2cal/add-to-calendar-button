@@ -268,7 +268,8 @@ Also part of the default run (long-standing quick tests):
 - P-01: Apple subscribe converts to webcal:// on desktop
 - P-02: Google subscribe uses the cid= subscription URL (not the render URL)
 - P-02b: MS365 subscribe uses addfromweb with url + name
-- P-03: Yahoo subscribe opens the manual-instructions modal with a full-width action footer
+- P-03: Yahoo is filtered out in subscribe mode
+- P-03b: Yahoo-only subscribe falls back to iCal without opening a workaround modal
 - P-04: Teams is filtered out in subscribe mode
 - P-04b: mobile subscribe additionally drops ms365 + outlookcom
 - P-05: subscribe + multi-date does not render (validation error)
@@ -488,11 +489,6 @@ axe-core, WCAG 2.1 A/AA tags; color-contrast excluded (theme- and user-configura
 - AX-04: modal dialog has no violations and uses a native dialog with aria-modal + accessible name
 - AX-05: inline RSVP form has no WCAG A/AA violations
 - AX-06: CTA form modal has no WCAG A/AA violations
-
-## Clipboard fallback (in test/wc-tests/r-P-subscribe.test.js)
-
-- P-03b: Yahoo subscribe with a failing clipboard shows the honest failure text (new modal.clipboard.failed
-  key in all 26 packs) plus a readonly manual-copy input with select-on-focus
 
 ## Group SEC - Security hardening (test/wc-tests/r-SEC-security.test.js)
 

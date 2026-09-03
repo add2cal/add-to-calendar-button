@@ -40,13 +40,6 @@
     "multidate": {
       "h": "Ky është një seri ngjarjesh",
       "text": "Shtoni ngjarjet individuale një nga një:"
-    },
-    "subscribe": {
-      "yahoo": {
-        "h": "Shtoni kalendarin në Yahoo",
-        "text": "<ol><li>Hapni tani kalendarin Yahoo.</li><li> Klikoni në skedën \"Veprimet\".</li><li> Klikoni \"Ndiqni kalendarët e tjerë\".</li><li> Vendosni një emër dhe ngjisni përmbajtjen e kujtesës në fushën e URL-së.</li></ol>",
-        "button": "Hapni kalendarin Yahoo"
-      }
     }
   },
   "date": {

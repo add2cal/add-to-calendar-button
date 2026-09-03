@@ -1,7 +1,7 @@
 import { resultChannel, icons, defaultTarget } from '../core/globals';
 import { setActiveButton, getActiveButton, getOptionStates } from '../core/store';
 import { toggle, close } from './control';
-import { generate_links, set_fully_successful } from '../generators/index';
+import { generate_links } from '../generators/index';
 import { position_shadow_button, position_shadow_button_listener, manage_body_scroll, set_sizes } from './positioning';
 import { debounce, debounce_leading } from '../core/util';
 import { translate_hook } from '../i18n/index';
@@ -565,21 +565,6 @@ async function create_modal(
     switch (button.type) {
       default:
         break;
-      case 'yahoo2nd': // for yahoo subscribe modal, where we guide the user through the process
-        modalButton.addEventListener(
-          'click',
-          debounce(async () => {
-            close(mainHost);
-            await subscribe_yahoo_modal_switch(mainHost, data);
-          }),
-        );
-        (modalButton as HTMLElement).addEventListener('keyup', async function (event: KeyboardEvent) {
-          if (event.key === 'Enter' || event.code == 'Space') {
-            toggle(mainHost, 'close', '', '', true);
-            await subscribe_yahoo_modal_switch(mainHost, data, keyboardTrigger);
-          }
-        });
-        break;
       case '2timeslink': // for the note that the user shall click the button twice
         modalButton.addEventListener(
           'click',
@@ -615,12 +600,6 @@ async function create_modal(
   // set scroll behavior
   manage_body_scroll(modalHost, modalWrapper);
   return;
-}
-
-// FUNCTION TO SWICH THE YAHOO SUBSCRIBE MODAL
-async function subscribe_yahoo_modal_switch(host: ShadowRoot, data: ATCBConfig, keyboardTrigger?: boolean): Promise<void> {
-  set_fully_successful(host, data);
-  await generate_links(host, 'yahoo2nd', data, 'all', keyboardTrigger);
 }
 
 // FUNCTION TO GENERATE A MORE DETAILED DATE BUTTON

@@ -40,13 +40,6 @@
     "multidate": {
       "h": "Đây là một chuỗi sự kiện",
       "text": "Thêm từng phần riêng lẻ một:"
-    },
-    "subscribe": {
-      "yahoo": {
-        "h": "Thêm lịch vào Yahoo",
-        "text": "<ol><li>Mở Lịch Yahoo.</li><li>Nhấp vào tab \"Hành động\".</li><li>Chọn \"Theo dõi các Lịch khác\".</li><li>Chọn tên và dán URL từ khay nhớ tạm của bạn vào trường URL.</li></ol>",
-        "button": "Mở lịch Yahoo"
-      }
     }
   },
   "date": {

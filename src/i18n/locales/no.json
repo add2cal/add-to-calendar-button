@@ -40,13 +40,6 @@
     "multidate": {
       "h": "Dette er en avtaleserie",
       "text": "Legg til de enkelte datoene i kalenderen din i rekkefølge:"
-    },
-    "subscribe": {
-      "yahoo": {
-        "h": "Legg til kalender til Yahoo",
-        "text": "<ol><li>Åpne Yahoo-kalenderen.</li><li>Klikk på «Handlinger»-fanen.</li><li>Velg «Følg andre kalendere».</li><li>Velg et navn og lim inn URL-en fra utklippstavlen i URL-feltet.</li></ol>",
-        "button": "Åpne Yahoo-kalenderen"
-      }
     }
   },
   "date": {

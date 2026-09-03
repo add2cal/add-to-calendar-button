@@ -4,7 +4,7 @@ import { toggle } from '../ui/control';
 import { saved_hook } from '../core/util';
 import { create_modal } from '../ui/generate';
 import { translate_hook } from '../i18n/index';
-import { generate_ical, subscribe_ical, open_cal_url, clipboard_note_content, wire_clipboard_input } from './ical';
+import { generate_ical, subscribe_ical } from './ical';
 import { generate_google, subscribe_google } from './google';
 import { generate_msteams } from './msteams';
 import { generate_microsoft, subscribe_microsoft } from './outlook';
@@ -116,7 +116,6 @@ function generate_multidate_links(host: ShadowRoot, type: string, linkType: stri
 
 async function generate_subscribe_links(host: ShadowRoot, type: string, linkType: string, data: ATCBConfig, keyboardTrigger: boolean): Promise<void> {
   const adjustedFileUrl = data.icsFile!.replace(/^https:\/\//, 'webcal://');
-  let clipboardNote: string;
   switch (linkType) {
     case 'ical': // also for apple (see above)
       if (isAndroid() || data.fakeAndroid) {
@@ -135,57 +134,8 @@ async function generate_subscribe_links(host: ShadowRoot, type: string, linkType
     case 'outlookcom':
       subscribe_microsoft(data, adjustedFileUrl, data.name!, 'outlookcom');
       break;
-    case 'yahoo':
-      if (data.proxy) {
-        open_cal_url(data, 'yahoo', '', true);
-        return;
-      }
-      clipboardNote = await clipboard_note_content(data.icsFile as string, data);
-      await create_modal(
-        host,
-        data,
-        'yahoo',
-        translate_hook('modal.subscribe.yahoo.h', data),
-        clipboardNote + '<br>' + translate_hook('modal.subscribe.yahoo.text', data),
-        [
-          {
-            label: translate_hook('modal.subscribe.yahoo.button', data),
-            primary: true,
-            type: 'yahoo2nd',
-            href: 'https://www.yahoo.com/calendar',
-          },
-          { label: translate_hook('cancel', data) },
-        ] as unknown as never[],
-        [] as unknown as never[],
-        keyboardTrigger,
-      );
-      wire_clipboard_input(data);
-      return;
-    case 'yahoo2nd':
-      // step 2 of the yahoo subscribe flow: the link was already copied to the clipboard
-      // in step 1 (yahoo), so we do NOT copy again here - a second copy of the same value
-      // is pointless and its failure path would wrongly claim copying did not work. The
-      // secondary button just closes the modal (relabeled from cancel to close)
-      await create_modal(
-        host,
-        data,
-        'yahoo',
-        translate_hook('modal.subscribe.yahoo.h', data),
-        translate_hook('modal.subscribe.yahoo.text', data),
-        [
-          {
-            label: translate_hook('modal.subscribe.yahoo.button', data),
-            type: 'none',
-            href: 'https://www.yahoo.com/calendar',
-          },
-          { label: translate_hook('close', data) },
-        ] as unknown as never[],
-        [] as unknown as never[],
-        keyboardTrigger,
-      );
-      return;
   }
-  // mark as successful (except for the Yahoo case, with returned)
+  // mark as successful
   set_fully_successful(host, data);
 }
 

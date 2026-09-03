@@ -40,13 +40,6 @@
     "multidate": {
       "h": "Šī ir pasākumu sērija",
       "text": "Pievienojiet atsevišķus notikumus pa vienam:"
-    },
-    "subscribe": {
-      "yahoo": {
-        "h": "Pievienojiet kalendāru Yahoo",
-        "text": "<ol><li>Tagad atveriet Yahoo kalendāru.</li><li> Noklikšķiniet uz cilnes \"Darbības\".</li><li> Noklikšķiniet uz \"Sekot citiem kalendāriem\".</li><li> Iestatiet nosaukumu un ielīmējiet starpliktuves saturu URL laukā.</li></ol>",
-        "button": "Atveriet Yahoo kalendāru"
-      }
     }
   },
   "date": {

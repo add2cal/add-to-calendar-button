@@ -40,13 +40,6 @@
     "multidate": {
       "h": "Bu bir etkinlik serisidir",
       "text": "Parçaları teker teker ekleyin:"
-    },
-    "subscribe": {
-      "yahoo": {
-        "h": "Yahoo'ya takvim ekleme",
-        "text": "<ol><li>Yahoo takvimini açın.</li><li>\"Eylemler\" sekmesine tıklayın.</li><li>\"Diğer Takvimleri Takip Et\" öğesini seçin.</li><li>Bir ad seçin ve URL'yi panonuzdan URL alanına yapıştırın.</li></ol>",
-        "button": "Yahoo Takvimini aç"
-      }
     }
   },
   "date": {

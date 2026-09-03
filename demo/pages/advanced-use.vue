@@ -515,7 +515,7 @@ function triggerAction() {
           <p>
             "name" is still required, but every other event parameter can be skipped in this case.<br />
             For Microsoft services, the "name" will be used as name for the calendar.<br />
-            Mind that there won't be rich data for the subscribe option and Microsoft Teams is not yet supported and will be automatically disabled. Same applies for other Microsoft services on mobile devices.<br />
+            Mind that there won't be rich data for the subscribe option. Microsoft Teams is not yet supported, while Yahoo is no longer supported; both will be automatically disabled. The same applies to other Microsoft services on mobile devices.<br />
             The Google Calendar Android App only supports Google Calendar subscriptions. Other urls will be served by Chrome.<br />
             <span class="text-sm italic">(If the user's browser does not recognize any installed calendar app, this might lead to a blank screen. The PRO version mitigates this with some explenatory middleware screen.)</span>
           </p>
@@ -526,7 +526,7 @@ function triggerAction() {
           <p>
             "name" ist weiterhin eine verpflichtende Angabe. Alle weiteren Parameter sind in diesem Fall aber optional.<br />
             Bei Microsoft-Diensten wird der "name" als Name für den geteilten Kalender genutzt.<br />
-            Beachte, dass es für den Abonnement-Modus keine Rich-Data-Generierung gibt und Microsoft Teams noch nicht unterstützt und daher deaktiviert wird. Gleiches gilt für andere Microsoft-Dienste auf mobilen Geräten.<br />
+            Beachte, dass es für den Abonnement-Modus keine Rich-Data-Generierung gibt. Microsoft Teams wird noch nicht unterstützt, während Yahoo nicht mehr unterstützt wird; beide werden automatisch deaktiviert. Gleiches gilt für andere Microsoft-Dienste auf mobilen Geräten.<br />
             Die Google Calendar Android App unterstützt ausschließlich Google Calendar-Abonnements. Andere URLs werden von Chrome geöffnet.<br />
             <span class="text-sm italic">(Sollte der Browser des Nutzers keine installierte Kalender-App erkennen, kann dies zu einer leeren Seite führen. Die PRO-Version optimiert dies mit einem erklärenden Zwischenbildschirm.)</span>
           </p>

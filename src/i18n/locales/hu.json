@@ -40,13 +40,6 @@
     "multidate": {
       "h": "Ez egy eseménysorozat",
       "text": "Add hozzá az egyes eseményeket egyenként:"
-    },
-    "subscribe": {
-      "yahoo": {
-        "h": "Naptár hozzáadása a Yahoo-hoz",
-        "text": "<ol><li>Nyisd meg a Yahoo Naptárt most.</li><li>Kattints a \"Actions\" fülre.</li><li>Válaszd a \"Follow Other Calendars\" opciót.</li><li>Adj meg egy nevet és illeszd be a vágólap tartalmát az URL mezőbe.</li></ol>",
-        "button": "Yahoo Naptár megnyitása"
-      }
     }
   },
   "date": {

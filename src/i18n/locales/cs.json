@@ -40,13 +40,6 @@
     "multidate": {
       "h": "Jedná se o sérii událostí",
       "text": "Přidávejte jednotlivé díly jeden po druhém:"
-    },
-    "subscribe": {
-      "yahoo": {
-        "h": "Přidat kalendář do Yahoo",
-        "text": "<ol><li>Otevřete kalendář Yahoo.</li><li>Klikněte na kartu \"Akce\".</li><li>Vyberte možnost \"Sledovat další kalendáře\".</li><li>Vyberte název a vložte adresu URL ze schránky do pole URL.</li></ol>",
-        "button": "Otevřete kalendář Yahoo"
-      }
     }
   },
   "date": {

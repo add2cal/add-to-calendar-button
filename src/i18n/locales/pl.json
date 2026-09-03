@@ -40,13 +40,6 @@
     "multidate": {
       "h": "To jest cykl imprez",
       "text": "Dodawać po kolei poszczególne części:"
-    },
-    "subscribe": {
-      "yahoo": {
-        "h": "Dodaj kalendarz do Yahoo",
-        "text": "<ol><li>Otwórz kalendarz Yahoo.</li><li>Kliknij na zakładkę \"Czynności\".</li><li>Wybierz \"Obserwuj inne kalendarze\".</li><li>Wybierz nazwę i wklej adres URL ze schowka w polu URL.</li></ol>",
-        "button": "Otwórz kalendarz Yahoo"
-      }
     }
   },
   "date": {

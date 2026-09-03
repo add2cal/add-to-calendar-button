@@ -40,13 +40,6 @@
     "multidate": {
       "h": "Dit is een reeks data",
       "text": "Voeg de afzonderlijke delen één voor één toe:"
-    },
-    "subscribe": {
-      "yahoo": {
-        "h": "Toevoegen aan Yahoo",
-        "text": "<ol><li>Open de Yahoo calendar.</li><li>Klik op de \"Acties\" tab.</li><li>Selecteer \"Volg Andere Agenda's\".</li><li>Kies een naam en plak de URL van uw klembord in het URL-veld.</li></ol>",
-        "button": "Open Yahoo Agenda"
-      }
     }
   },
   "date": {

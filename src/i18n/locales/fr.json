@@ -40,13 +40,6 @@
     "multidate": {
       "h": "Ceci est une liste d’évènements",
       "text": "Ajouter les évènements un par un :"
-    },
-    "subscribe": {
-      "yahoo": {
-        "h": "Ajouter un agenda à Yahoo",
-        "text": "<ol><li>Ouvrez l’Agenda Yahoo ;</li><li>Cliquez sur l’onglet « Actions » ;</li><li>Sélectionnez « Suivre d’autres agendas » ;</li><li>Choisissez un nom et collez le contenu de votre presse-papier dans le champ URL.</li></ol>",
-        "button": "Ouvrir le calendrier Yahoo"
-      }
     }
   },
   "date": {

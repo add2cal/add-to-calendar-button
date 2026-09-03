@@ -40,13 +40,6 @@
     "multidate": {
       "h": "Din hija serje ta' avvenimenti",
       "text": "Żid l-avvenimenti individwali wieħed wieħed:"
-    },
-    "subscribe": {
-      "yahoo": {
-        "h": "Żid Kalendarju ma Yahoo",
-        "text": "<ol><li>Iftaħ issa l-Kalendarju Yahoo.</li><li> Ikklikkja fuq it-tab \"Azzjonijiet\".</li><li> Agħfas \"Segwi Kalendarji Oħrajn\".</li><li> Issettja isem u waħħal il-kontenut tal-clipboard fil-qasam tal-url.</li></ol>",
-        "button": "Iftaħ il-Kalendarju Yahoo"
-      }
     }
   },
   "date": {

@@ -40,13 +40,6 @@
     "multidate": {
       "h": "Tämä on tapahtumasarja",
       "text": "Lisää yksittäiset osat yksi kerrallaan:"
-    },
-    "subscribe": {
-      "yahoo": {
-        "h": "Lisää kalenteri Yahoo",
-        "text": "<ol><li>Avaa Yahoo-kalenteri.</li><li>Napsauta \"Toiminnot\"-välilehteä.</li><li>Valitse \"Seuraa muiden kalentereita\".</li><li>Valitse nimi ja liitä URL-osoite leikepöydältäsi URL-kenttään.</li></ol>",
-        "button": "Avaa Yahoo-kalenteri"
-      }
     }
   },
   "date": {

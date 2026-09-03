@@ -3,7 +3,7 @@
  * The isValid() function encodes the option-availability rules from src/atcb-decorate.js:
  *  - recurrence keeps only apple/google/ical; google additionally removed on iOS
  *  - ical removed on iOS, apple removed on Android (unless optionsIOS/optionsMobile override)
- *  - subscribe removes msteams everywhere and ms365/outlookcom on mobile
+ *  - subscribe removes msteams/yahoo everywhere and ms365/outlookcom on mobile
  */
 
 export const ENVS = [
@@ -33,7 +33,7 @@ export function isValid(env, cfg, service) {
     if (env.ios && service === 'google') return false;
   }
   if (subscribe) {
-    if (service === 'msteams') return false;
+    if (service === 'msteams' || service === 'yahoo') return false;
     if (env.mobile && (service === 'ms365' || service === 'outlookcom')) return false;
   }
   if (env.ios && service === 'ical') return false;

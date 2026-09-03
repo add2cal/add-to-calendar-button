@@ -40,13 +40,6 @@
     "multidate": {
       "h": "这是一个活动系列",
       "text": "逐个添加各个部分:"
-    },
-    "subscribe": {
-      "yahoo": {
-        "h": "将日历添加到 Yahoo",
-        "text": "<ol><li>打开 Yahoo 日历。</li><li>点击“操作”标签。</li><li>选择“关注其他日历”。</li><li>选择一个名称并将剪贴板中的 URL 粘贴到 URL 字段中。</li></ol>",
-        "button": "打开雅虎日历"
-      }
     }
   },
   "date": {
