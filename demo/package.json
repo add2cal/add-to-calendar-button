@@ -70,7 +70,7 @@
   "devDependencies": {
     "@nuxt/eslint": "^1.17.0",
     "@nuxt/eslint-config": "^1.17.0",
-    "@types/node": "^26.4.0",
+    "@types/node": "^26.4.1",
     "@typescript-eslint/parser": "^8.69.0",
     "@typescript/native": "npm:typescript@^7.0.2",
     "esbuild": "^0.28.2",
