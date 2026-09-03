@@ -59,6 +59,10 @@ function secure_url(url: string, throwError = true): boolean {
 
 // SHARED FUNCTION TO REPLACE HTML PSEUDO ELEMENTS
 function rewrite_html_elements(content: string, clear = false, iCalBreaks = false): string {
+  // An explicitly empty paragraph represents the user's intent to add a blank line.
+  // Normalize it first so every output format handles it like the supported break tag.
+  content = content.replace(/\[p\]\s*\[\/p\]/gi, '[br]');
+  content = content.replace(/\{p\}\s*\{\/p\}/gi, '{br}');
   if (clear) {
     // for line breaks, we add a space instead (or \\n for iCal)
     if (iCalBreaks) {

@@ -1,4 +1,4 @@
-import { secure_content, strip_unsafe_keys } from '../core/text';
+import { rewrite_html_elements, secure_content, strip_unsafe_keys } from '../core/text';
 import { icons } from '../core/globals';
 import { ensure_locale, translate_hook } from '../i18n';
 import { ensure_style } from '../styles/css-template';
@@ -86,6 +86,16 @@ function text(value: unknown): string {
   return typeof value === 'string' ? (secure_content(value, false) as string).replace(/\s+/g, ' ').trim() : '';
 }
 
+function description_text(value: unknown): string {
+  if (typeof value !== 'string') return '';
+  // The overview API can provide real HTML while regular event data uses pseudo HTML.
+  // Preserve paragraph and break boundaries before reducing either form to plain text.
+  const withHtmlBreakSpacing = value.replace(/<br\s*\/?>|<\/p\s*>/gi, ' ');
+  return rewrite_html_elements(secure_content(withHtmlBreakSpacing, false) as string, true)
+    .replace(/\s+/g, ' ')
+    .trim();
+}
+
 function flatten_events(input: unknown, currentYear: number): OverviewEvent[] {
   if (!Array.isArray(input)) throw new Error('The group overview response is invalid.');
   const output: OverviewEvent[] = [];
@@ -100,7 +110,7 @@ function flatten_events(input: unknown, currentYear: number): OverviewEvent[] {
       const event: OverviewEvent = {
         ...date,
         name: text(date.name),
-        description: text(date.description),
+        description: description_text(date.description),
         location: text(date.location),
         prokey: item.prokey,
         title: text(date.name) || text(item.label) || 'Event',

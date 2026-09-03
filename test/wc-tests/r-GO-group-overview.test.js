@@ -183,6 +183,22 @@ describe('Group GO - PRO group overview', () => {
     }
   });
 
+  it('GO-03b: descriptions preserve spaces between stripped HTML and pseudo-HTML paragraphs', async () => {
+    const year = new Date().getFullYear();
+    const mock = mockOverview([
+      { prokey: 'event-html', label: 'HTML event', dates: [{ startDate: date(year, 3, 12), description: '<p>First paragraph</p><p>Second paragraph</p>' }] },
+      { prokey: 'event-pseudo', label: 'Pseudo event', dates: [{ startDate: date(year, 3, 13), description: '[p]Third paragraph[/p][p]Fourth paragraph[/p]' }] },
+      { prokey: 'event-breaks', label: 'Break event', dates: [{ startDate: date(year, 3, 14), description: 'One<br>Two<br />Three<br/>Four' }] },
+    ]);
+    try {
+      const { shadow } = await mountAtcb({ prokey: GROUP_KEY, 'group-overview': true });
+      const descriptions = [...shadow.querySelectorAll('[part="atcb-group-overview-description"]')].map((element) => element.textContent);
+      expect(descriptions).to.deep.equal(['First paragraph Second paragraph', 'Third paragraph Fourth paragraph', 'One Two Three Four']);
+    } finally {
+      mock.restore();
+    }
+  });
+
   it('GO-04: no-details opens RSVP events via atcb_action without an add badge', async () => {
     const year = new Date().getFullYear();
     const eventKey = 'event-action';

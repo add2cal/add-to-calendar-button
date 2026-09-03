@@ -495,6 +495,7 @@ axe-core, WCAG 2.1 A/AA tags; color-contrast excluded (theme- and user-configura
 - SEC-01: atcb_secure_url allows the legitimate scheme set and relative urls
 - SEC-02: atcb_secure_url blocks script-capable and unexpected schemes (case/whitespace evasion included) and keeps the traversal check
 - SEC-03: description [url] linkifies only safe schemes and escapes attribute breakouts
+- SEC-03b: empty pseudo paragraphs become line breaks in HTML and plain calendar text
 - SEC-04: parsed json input cannot pollute the object prototype (unit + end-to-end through the attribute parser)
 - SEC-05: rich data stays valid json when fields contain quotes and backslashes
 
@@ -530,6 +531,7 @@ recurrence, which implies a single date entry).
 - GO-01: fetches the public dev-group range, uses dev landing links, hides the year selector when only the current year is available, and renders only populated month choices
 - GO-02: defaults to the current year, keeps its empty state, and duplicates cross-year events into January
 - GO-03: years-only renders month headings and compact custom-domain links
+- GO-03b: descriptions preserve spaces between stripped HTML and pseudo-HTML paragraphs and all common HTML break forms
 - GO-04: no-details forces even inline-configured RSVP events into the atcb_action modal without an add badge
 - GO-05: linked RSVP events suppress their independent add badge
 - GO-06: compact no-details entries do not render an add badge
