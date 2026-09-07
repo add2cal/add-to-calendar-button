@@ -499,6 +499,11 @@ axe-core, WCAG 2.1 A/AA tags; color-contrast excluded (theme- and user-configura
 - SEC-04: parsed json input cannot pollute the object prototype (unit + end-to-end through the attribute parser)
 - SEC-05: rich data stays valid json when fields contain quotes and backslashes
 
+- SEC-06: RSVP labels cannot break out of aria-label attributes
+- SEC-07: custom modal labels keep safe formatting without raw HTML attributes
+- SEC-08: manual clipboard fallback preserves hostile values without attribute injection
+- SEC-09: headline-free modal handles long malformed markup promptly
+
 ## Group MEM - Memory-leak regression (test/wc-tests/r-MEM-leaks.test.js)
 
 Runner launches Chrome with --js-flags=--expose-gc so the heap assertion can force collection.

@@ -214,7 +214,7 @@ describe('Group GO - PRO group overview', () => {
       if (value === `https://event-dev.caldn.net/${eventKey}/config.json`) {
         return new Response(JSON.stringify(proRsvpConfig({ name: 'Action event', inlineRsvp: true, dates: [{ name: 'Action event', startDate: date(year, 5, 10) }] })), { status: 200 });
       }
-      if (value.includes('api-dev.add-to-calendar-pro.com')) return new Response(JSON.stringify({ total: '0' }), { status: 200 });
+      if (new URL(value, window.location.href).origin === 'https://api-dev.add-to-calendar-pro.com') return new Response(JSON.stringify({ total: '0' }), { status: 200 });
       throw new Error(`Unexpected fetch: ${value}`);
     };
     try {

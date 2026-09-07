@@ -102,7 +102,7 @@ export function mockProFetch(map = {}, { status = 200, networkError = false } = 
       }
       return new Response(JSON.stringify(payload), { status: 200, headers: { 'Content-Type': 'application/json' } });
     }
-    if (u.includes('api.add-to-calendar-pro.com') || u.includes('api-dev.add-to-calendar-pro.com')) {
+    if (['https://api.add-to-calendar-pro.com', 'https://api-dev.add-to-calendar-pro.com'].includes(new URL(u, window.location.href).origin)) {
       // seat check endpoint returns { total } - RSVP API behavior itself is out of scope
       return new Response(JSON.stringify({ total: '0' }), { status: 200, headers: { 'Content-Type': 'application/json' } });
     }

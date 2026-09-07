@@ -1,5 +1,10 @@
 import { defaultTarget } from './globals';
 
+// Encode text before inserting it into an HTML attribute or text node.
+function escape_html(value: string): string {
+  return value.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+}
+
 // SHARED FUNCTION TO SECURE DATA
 function secure_content(data: unknown, isJSON = true): unknown {
   // strip HTML tags (especially since stupid Safari adds stuff) - except for <br>
@@ -169,4 +174,4 @@ function format_ical_lines(content: string): string {
   return result.join('\r\n');
 }
 
-export { secure_content, secure_url, strip_unsafe_keys, rewrite_html_elements, rewrite_ical_text, format_ical_lines };
+export { escape_html, secure_content, secure_url, strip_unsafe_keys, rewrite_html_elements, rewrite_ical_text, format_ical_lines };

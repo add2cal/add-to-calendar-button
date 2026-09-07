@@ -460,7 +460,7 @@ async function create_modal(
     dialogEl.setAttribute(
       'aria-label',
       content
-        .replace(/<[^>]+>/g, ' ')
+        .replace(/<[^<>]+>/g, ' ')
         .replace(/\s+/g, ' ')
         .trim()
         .substring(0, 100),

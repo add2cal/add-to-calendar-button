@@ -8,6 +8,11 @@
 import { expect } from '@open-wc/testing';
 import { secure_url, rewrite_html_elements, secure_content } from '../../src/core/text.ts';
 import { mountAtcb } from '../helpers/mount.js';
+import { translate_hook } from '../../src/i18n/index.ts';
+import { clipboard_note_content } from '../../src/generators/ical.ts';
+import { create_modal } from '../../src/ui/generate.ts';
+import { mockProFetch, proRsvpConfig, PRO_RSVP_KEY } from '../fixtures/pro.js';
+import { stubClipboardFailure, muteConsole } from '../helpers/capture.js';
 import { btnId } from '../helpers/dom.js';
 
 describe('Group SEC - security hardening', () => {
@@ -91,6 +96,65 @@ describe('Group SEC - security hardening', () => {
       expect(parsed.location).to.include('Hall "B"');
     } finally {
       schemaEl?.remove();
+    }
+  });
+
+  it('SEC-06: RSVP labels cannot break out of aria-label attributes', async () => {
+    const label = 'Choice " data-injected="yes';
+    const keys = ['form.status.confirmed', 'form.status.undecided', 'form.status.declined', 'form.amount', 'form.email'];
+    const mock = mockProFetch({ [PRO_RSVP_KEY]: proRsvpConfig({ rsvp: { initial_confirmation: false, maybe_option: true, maxpp: 2, fields: [] } }) });
+    try {
+      const { shadow } = await mountAtcb({ prokey: PRO_RSVP_KEY, inlineRsvp: true, customLabels: Object.fromEntries(keys.map((key) => [key, label])) });
+      const inputs = shadow.querySelectorAll('input[aria-label]');
+      expect(inputs.length).to.equal(5);
+      for (const input of inputs) expect(input.getAttribute('aria-label')).to.equal(label);
+      expect(shadow.querySelector('[data-injected]')).to.not.exist;
+    } finally {
+      mock.restore();
+    }
+  });
+
+  it('SEC-07: custom modal labels keep safe formatting without raw HTML attributes', () => {
+    for (const key of ['label.rsvp.expired', 'label.rsvp.bookedout', 'modal.webview.ical.text', 'modal.webview.ical.steps', 'modal.opensafari.ical.text', 'modal.opensafari.ical.steps', 'modal.clipboard.text', 'modal.clipboard.failed']) {
+      const container = document.createElement('div');
+      container.innerHTML = translate_hook(key, { customLabels: { [key]: '<br onclick="evil()">[b]Bold[/b]<br>Tom &amp; Sue [url]https://example.com|Details[/url]' } });
+      expect(container.querySelector('[onclick]')).to.not.exist;
+      expect(container.querySelector('b').textContent).to.equal('Bold');
+      expect(container.querySelectorAll('br').length).to.equal(1);
+      expect(container.querySelector('a').href).to.equal('https://example.com/');
+      expect(container.textContent).to.include('Tom & Sue');
+    }
+  });
+
+  it('SEC-08: manual clipboard fallback preserves hostile values without attribute injection', async () => {
+    const clipboard = stubClipboardFailure();
+    const quiet = muteConsole();
+    try {
+      const value = 'https://example.com/?x="<>&';
+      const label = 'Copy " data-injected="yes';
+      const container = document.createElement('div');
+      container.innerHTML = await clipboard_note_content(value, { customLabels: { 'label.share.copy': label } });
+      const input = container.querySelector('input');
+      expect(input.value).to.equal(value);
+      expect(input.getAttribute('aria-label')).to.equal(label);
+      expect(container.querySelector('[data-injected]')).to.not.exist;
+    } finally {
+      clipboard.restore();
+      quiet.restore();
+    }
+  });
+
+  it('SEC-09: headline-free modal handles long malformed markup promptly', async () => {
+    const { host, shadow } = await mountAtcb({ name: 'SEC09', startDate: '2050-06-15' });
+    const identifier = btnId(host);
+    const started = performance.now();
+    try {
+      await create_modal(shadow, { identifier, sizes: {}, hideBranding: true }, '', undefined, '<'.repeat(100000));
+      expect(performance.now() - started).to.be.lessThan(2000);
+      const dialog = document.getElementById(identifier + '-modal-host').shadowRoot.querySelector('[aria-modal="true"]');
+      expect(dialog.getAttribute('aria-label')).to.equal('<'.repeat(100));
+    } finally {
+      host.remove();
     }
   });
 });

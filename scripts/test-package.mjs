@@ -9,7 +9,7 @@
  *
  * Usage: node scripts/test-package.mjs [--keep] (keeps the consumer dir for inspection)
  */
-import { execSync } from 'node:child_process';
+import { execFileSync } from 'node:child_process';
 import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
@@ -18,7 +18,7 @@ import { fileURLToPath } from 'node:url';
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const keep = process.argv.includes('--keep');
 const consumerDir = path.join(os.tmpdir(), 'atcb-consumer-test');
-const run = (cmd, cwd = root, opts = {}) => execSync(cmd, { cwd, stdio: 'pipe', encoding: 'utf8', ...opts });
+const run = (cmd, args = [], cwd = root, opts = {}) => execFileSync(cmd, args, { cwd, stdio: 'pipe', encoding: 'utf8', ...opts });
 
 const steps = [];
 const step = (name, fn) => steps.push({ name, fn });
@@ -27,18 +27,16 @@ let tarball = '';
 // ---------- setup ----------
 
 step('build package artifacts (--min)', () => {
-  run('node scripts/build.mjs --min');
+  run(process.execPath, ['scripts/build.mjs', '--min']);
 });
 
 step('npm pack + install into a throwaway consumer', () => {
   fs.rmSync(consumerDir, { recursive: true, force: true });
   fs.mkdirSync(consumerDir, { recursive: true });
-  const packOutput = run(`npm pack --pack-destination ${JSON.stringify(consumerDir)}`)
-    .trim()
-    .split('\n');
+  const packOutput = run('npm', ['pack', '--pack-destination', consumerDir]).trim().split('\n');
   tarball = path.join(consumerDir, packOutput[packOutput.length - 1]);
   fs.writeFileSync(path.join(consumerDir, 'package.json'), JSON.stringify({ name: 'atcb-consumer', private: true, type: 'module' }, null, 2));
-  run(`npm install --no-audit --no-fund --loglevel=error ${JSON.stringify(tarball)}`, consumerDir);
+  run('npm', ['install', '--no-audit', '--no-fund', '--loglevel=error', tarball], consumerDir);
 });
 
 // ---------- node runtime consumption ----------
@@ -64,7 +62,7 @@ step('Node CJS require (root, style, locale, deprecated variant)', () => {
       "console.log('cjs consumption ok');",
     ].join('\n'),
   );
-  const out = run('node probe.cjs', consumerDir);
+  const out = run(process.execPath, ['probe.cjs'], consumerDir);
   if (!out.includes('cjs consumption ok')) throw new Error('cjs probe failed: ' + out);
 });
 
@@ -87,7 +85,7 @@ step('Node ESM import (root, style, locale, deprecated variant)', () => {
       "console.log('esm consumption ok');",
     ].join('\n'),
   );
-  const out = run('node probe.mjs', consumerDir);
+  const out = run(process.execPath, ['probe.mjs'], consumerDir);
   if (!out.includes('esm consumption ok')) throw new Error('esm probe failed: ' + out);
 });
 
@@ -108,8 +106,8 @@ step('types resolve under moduleResolution bundler and node16', () => {
   fs.writeFileSync(path.join(consumerDir, 'tsconfig-bundler.json'), JSON.stringify({ compilerOptions: { ...base, target: 'ES2020', module: 'ESNext', moduleResolution: 'bundler' }, files: ['probe-types.ts'] }, null, 2));
   fs.writeFileSync(path.join(consumerDir, 'tsconfig-node16.json'), JSON.stringify({ compilerOptions: { ...base, target: 'ES2020', module: 'Node16', moduleResolution: 'Node16' }, files: ['probe-types.ts'] }, null, 2));
   const tsc = path.join(root, 'node_modules', '.bin', 'tsc');
-  run(`${JSON.stringify(tsc)} -p tsconfig-bundler.json`, consumerDir);
-  run(`${JSON.stringify(tsc)} -p tsconfig-node16.json`, consumerDir);
+  run(process.execPath, [tsc, '-p', 'tsconfig-bundler.json'], consumerDir);
+  run(process.execPath, [tsc, '-p', 'tsconfig-node16.json'], consumerDir);
 });
 
 // ---------- bundler consumption ----------

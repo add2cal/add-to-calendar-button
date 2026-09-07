@@ -1,7 +1,7 @@
 import { tzlib_get_ical_block } from 'timezones-ical-library';
 import { atcbVersion, atcbTimeZonesToUtc, isIOS, isAndroid, isSafari, isWebView, isProblematicWebView, defaultTarget } from '../core/globals';
 import { generate_time, format_datetime } from '../core/dates';
-import { secure_url, rewrite_ical_text, format_ical_lines } from '../core/text';
+import { escape_html, secure_url, rewrite_ical_text, format_ical_lines } from '../core/text';
 import { save_file, copy_to_clipboard } from '../core/util';
 import { resultChannel } from '../core/globals';
 import { create_modal } from '../ui/generate';
@@ -341,7 +341,7 @@ async function clipboard_note_content(copyValue: string, data: ATCBConfig): Prom
   } catch (e) {
     console.warn(e);
     const escaped = copyValue.replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;');
-    return translate_hook('modal.clipboard.failed', data) + '<br><input type="text" class="atcb-modal-clipboard-input" readonly value="' + escaped + '" aria-label="' + translate_hook('label.share.copy', data) + '" />';
+    return translate_hook('modal.clipboard.failed', data) + '<br><input type="text" class="atcb-modal-clipboard-input" readonly value="' + escaped + '" aria-label="' + escape_html(translate_hook('label.share.copy', data)) + '" />';
   }
 }
 

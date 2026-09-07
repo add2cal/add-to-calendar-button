@@ -1,4 +1,4 @@
-import { rewrite_html_elements, secure_content } from '../core/text';
+import { escape_html, rewrite_html_elements, secure_content } from '../core/text';
 import { set_sizes } from './positioning';
 import { copy_to_clipboard, validEmail } from '../core/util';
 import { generate_modal_host, create_modal, generate_label, create_atcbl } from './generate';
@@ -314,7 +314,7 @@ async function generate_rsvp_form(host: ShadowRoot, data: ATCBConfig, hostEl: HT
       '-status" id="' +
       data.identifier +
       '-rsvp-status-confirmed" aria-label="' +
-      translate_hook('form.status.confirmed', data) +
+      escape_html(translate_hook('form.status.confirmed', data)) +
       '" checked value="confirmed" ' +
       (data.disabled && 'disabled') +
       ' /><label for="' +
@@ -329,7 +329,7 @@ async function generate_rsvp_form(host: ShadowRoot, data: ATCBConfig, hostEl: HT
         '-status" id="' +
         data.identifier +
         '-rsvp-status-undecided" aria-label="' +
-        translate_hook('form.status.undecided', data) +
+        escape_html(translate_hook('form.status.undecided', data)) +
         '" value="undecided" ' +
         (data.disabled && 'disabled') +
         ' /><label for="' +
@@ -344,7 +344,7 @@ async function generate_rsvp_form(host: ShadowRoot, data: ATCBConfig, hostEl: HT
       '-status" id="' +
       data.identifier +
       '-rsvp-status-declined" aria-label="' +
-      translate_hook('form.status.declined', data) +
+      escape_html(translate_hook('form.status.declined', data)) +
       '" value="declined" ' +
       (data.disabled && 'disabled') +
       ' /><label for="' +
@@ -361,7 +361,8 @@ async function generate_rsvp_form(host: ShadowRoot, data: ATCBConfig, hostEl: HT
     hiddenContent += '<input type="hidden" name="' + staticID + '-amount" id="' + data.identifier + '-rsvp-amount" value="1" />';
   } else {
     rsvpContent += '<div class="pro-field"><label for="' + data.identifier + '-rsvp-amount">' + translate_hook('form.amount', data) + ' (' + translate_hook('form.max', data) + ' ' + maxAmount + ')<span>*</span></label>';
-    rsvpContent += '<input type="number" name="' + staticID + '-amount" min="1" max="' + maxAmount + '" id="' + data.identifier + '-rsvp-amount" ' + (data.disabled && 'disabled') + ' required aria-required="true" aria-label="' + translate_hook('form.amount', data) + '" value="1" /></div>';
+    rsvpContent +=
+      '<input type="number" name="' + staticID + '-amount" min="1" max="' + maxAmount + '" id="' + data.identifier + '-rsvp-amount" ' + (data.disabled && 'disabled') + ' required aria-required="true" aria-label="' + escape_html(translate_hook('form.amount', data)) + '" value="1" /></div>';
   }
   const attendee = (function () {
     if (data.dates![0]!.attendee && data.dates![0]!.attendee !== '') {
@@ -379,7 +380,7 @@ async function generate_rsvp_form(host: ShadowRoot, data: ATCBConfig, hostEl: HT
       hiddenContent += '<input type="hidden" name="email" id="' + data.identifier + '-rsvp-email" value="' + attendee + '" />';
     } else {
       rsvpContent += '<div class="pro-field"><label for="' + data.identifier + '-rsvp-email">' + translate_hook('form.email', data) + '<span>*</span></label>';
-      rsvpContent += '<input type="email" name="email" id="' + data.identifier + '-rsvp-email" ' + (data.disabled && 'disabled') + ' required aria-required="true" autocomplete="email" aria-label="' + translate_hook('form.email', data) + '" value="" /></div>';
+      rsvpContent += '<input type="email" name="email" id="' + data.identifier + '-rsvp-email" ' + (data.disabled && 'disabled') + ' required aria-required="true" autocomplete="email" aria-label="' + escape_html(translate_hook('form.email', data)) + '" value="" /></div>';
     }
   } else {
     rsvpData.fields = rsvpData.fields!.map((field): ATCBProFormField => {
