@@ -340,8 +340,7 @@ async function clipboard_note_content(copyValue: string, data: ATCBConfig): Prom
     return translate_hook('modal.clipboard.text', data);
   } catch (e) {
     console.warn(e);
-    const escaped = copyValue.replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;');
-    return translate_hook('modal.clipboard.failed', data) + '<br><input type="text" class="atcb-modal-clipboard-input" readonly value="' + escaped + '" aria-label="' + escape_html(translate_hook('label.share.copy', data)) + '" />';
+    return translate_hook('modal.clipboard.failed', data) + '<br><input type="text" class="atcb-modal-clipboard-input" readonly value="' + escape_html(copyValue) + '" aria-label="' + escape_html(translate_hook('label.share.copy', data)) + '" />';
   }
 }
 

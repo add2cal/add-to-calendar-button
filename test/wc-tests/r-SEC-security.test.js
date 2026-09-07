@@ -5,15 +5,16 @@
  * linkification escaping, prototype-pollution-safe json boundaries, and
  * structurally valid rich-data output for hostile field content.
  */
-import { expect } from '@open-wc/testing';
+import { expect, aTimeout } from '@open-wc/testing';
 import { secure_url, rewrite_html_elements, secure_content } from '../../src/core/text.ts';
 import { mountAtcb } from '../helpers/mount.js';
 import { translate_hook } from '../../src/i18n/index.ts';
 import { clipboard_note_content } from '../../src/generators/ical.ts';
 import { create_modal } from '../../src/ui/generate.ts';
-import { mockProFetch, proRsvpConfig, PRO_RSVP_KEY } from '../fixtures/pro.js';
+import { mockProFetch, proRsvpConfig, PRO_RSVP_KEY, PRO_EVT_KEY } from '../fixtures/pro.js';
 import { stubClipboardFailure, muteConsole } from '../helpers/capture.js';
-import { btnId } from '../helpers/dom.js';
+import { atcb_generate_ty } from '../../dist/module/index.js';
+import { btnId, modalHost, openList } from '../helpers/dom.js';
 
 describe('Group SEC - security hardening', () => {
   it('SEC-01: secure_url allows the legitimate scheme set and relative urls', () => {
@@ -155,6 +156,113 @@ describe('Group SEC - security hardening', () => {
       expect(dialog.getAttribute('aria-label')).to.equal('<'.repeat(100));
     } finally {
       host.remove();
+    }
+  });
+
+  it('SEC-10: RSVP inline and modal forms contain hostile field data without injection', async () => {
+    const hostile = 'Value " data-injected="yes';
+    const markup = '<br data-injected="yes">[b]Safe[/b]<br>Tom &amp; Sue';
+    const fields = [
+      { type: 'text', name: hostile, label: markup, placeholder: hostile, default: hostile },
+      { type: 'hidden', name: 'hidden', default: hostile },
+      { type: 'checkbox', name: 'check', label: markup, default: true },
+      { type: 'radio', name: hostile + '-radio', label: markup, placeholder: hostile, default: true },
+      { type: 'label', label: markup },
+      { type: 'text" data-injected="yes', name: 'type', default: hostile },
+    ];
+    const mock = mockProFetch({ [PRO_RSVP_KEY]: proRsvpConfig({ rsvp: { headline: markup, text: markup, fields } }) });
+    try {
+      for (const inlineRsvp of [true, false]) {
+        const { host, shadow } = await mountAtcb({ prokey: PRO_RSVP_KEY, inlineRsvp });
+        try {
+          if (!inlineRsvp) {
+            await openList(host);
+            await aTimeout(200);
+          }
+          const root = inlineRsvp ? shadow : modalHost(host).shadowRoot;
+          expect(root.querySelector('form')).to.exist;
+          expect(root.querySelector('[data-injected]')).to.not.exist;
+          const text = root.querySelector('input[type="text"]');
+          expect(text.name).to.equal(hostile);
+          expect(text.value).to.equal(hostile);
+          expect(text.placeholder).to.equal(hostile);
+          expect(root.querySelector('input[name="hidden"]').value).to.equal(hostile);
+          expect(root.querySelector('input[type="checkbox"]').checked).to.equal(true);
+          expect(root.querySelector('input[type="radio"]').value).to.equal(hostile);
+          expect(root.querySelector('input[type="radio"]').checked).to.equal(true);
+          expect(root.querySelector('.pro-intro b').textContent).to.equal('Safe');
+          expect(root.querySelector('.pro-intro').textContent).to.include('Tom & Sue');
+          // Empty required email keeps this entirely in client validation; quoted
+          // radio names must still resolve without throwing a selector error.
+          root.querySelector('form').dispatchEvent(new Event('submit', { bubbles: true, cancelable: true }));
+          expect(root.querySelector('#submit-error').textContent).to.not.equal('');
+        } finally {
+          host.remove();
+        }
+      }
+    } finally {
+      mock.restore();
+    }
+  });
+
+  it('SEC-11: public thank-you API escapes link attributes and retains safe intro formatting', async () => {
+    const { host } = await mountAtcb({ name: 'SEC11', startDate: '2050-06-15', identifier: 'sec11' });
+    const url = 'https://example.com/?x=" data-injected="yes&y=2';
+    try {
+      await atcb_generate_ty(host, { proKey: PRO_EVT_KEY, name: 'SEC11', startDate: '2050-06-15', identifier: btnId(host), ty: { type: 'link', url, button_label: '<br data-injected="yes">Continue', text: '<br data-injected="yes">[b]Safe[/b]<br>' } });
+      const root = modalHost(host).shadowRoot;
+      expect(root.querySelector('[data-injected]')).to.not.exist;
+      expect(root.querySelector('.pro-pt a').getAttribute('href')).to.equal(url);
+      expect(root.querySelector('.pro-intro b').textContent).to.equal('Safe');
+      expect(root.querySelectorAll('.pro-intro br').length).to.equal(1);
+    } finally {
+      host.remove();
+    }
+  });
+
+  it('SEC-12: public thank-you form preserves quoted values and safe labels', async () => {
+    const { host } = await mountAtcb({ name: 'SEC12', startDate: '2050-06-15', identifier: 'sec12' });
+    const value = 'Value " data-injected="yes';
+    try {
+      await atcb_generate_ty(host, {
+        proKey: PRO_EVT_KEY,
+        name: 'SEC12',
+        startDate: '2050-06-15',
+        identifier: btnId(host),
+        ty: {
+          type: 'form',
+          url: 'https://example.com/submit',
+          button_label: '<br data-injected="yes">Send',
+          fields: [
+            { type: 'text', name: value, label: '<br data-injected="yes">Name', default: value, placeholder: value },
+            { type: 'hidden', name: 'hidden', default: value },
+          ],
+        },
+      });
+      const root = modalHost(host).shadowRoot;
+      expect(root.querySelector('form')).to.exist;
+      expect(root.querySelector('[data-injected]')).to.not.exist;
+      const input = root.querySelector('input[type="text"]');
+      expect(input.name).to.equal(value);
+      expect(input.value).to.equal(value);
+      expect(input.placeholder).to.equal(value);
+      expect(root.querySelector('input[type="hidden"]').value).to.equal(value);
+    } finally {
+      host.remove();
+    }
+  });
+
+  it('SEC-13: thank-you links reject non-HTTP schemes and traversal', async () => {
+    for (const url of ['javascript:alert(1)', 'httpjavascript:alert(1)', 'https://example.com/../private']) {
+      const { host } = await mountAtcb({ name: 'SEC13', startDate: '2050-06-15', identifier: 'sec13' });
+      try {
+        await atcb_generate_ty(host, { proKey: PRO_EVT_KEY, name: 'SEC13', startDate: '2050-06-15', identifier: btnId(host), ty: { type: 'link', url, text: 'Safe fallback' } });
+        const root = modalHost(host).shadowRoot;
+        expect(root.querySelector('#ty-content a')).to.not.exist;
+        expect(root.querySelector('.pro-intro').textContent).to.equal('Safe fallback');
+      } finally {
+        host.remove();
+      }
     }
   });
 });

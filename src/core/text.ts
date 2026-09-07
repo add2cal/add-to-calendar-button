@@ -1,11 +1,29 @@
 import { defaultTarget } from './globals';
 
-// Encode text before inserting it into an HTML attribute or text node.
-function escape_html(value: string): string {
-  return value.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+// Shared literal-text encoding for browser UI, calendar links, and SSR.
+// Existing entities are encoded too; this never allows markup.
+function escape_html_text(value: string): string {
+  return value.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
 }
 
-// SHARED FUNCTION TO SECURE DATA
+// Attribute encoding always escapes quotes. Keep this unconditional so callers
+// and static analysis cannot confuse it with text-node encoding.
+function escape_html(value: string): string {
+  return escape_html_text(value).replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+}
+
+// Render supported pseudo HTML and plain breaks without accepting raw HTML attributes.
+// Entities remain text after the browser's single HTML parsing pass.
+function safe_html(content: string): string {
+  const escaped = content
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/&lt;br\s*\/?&gt;/gi, '<br>');
+  return rewrite_html_elements(escaped);
+}
+
+// Configuration cleanup is separate from output encoding: it preserves raw values
+// for validation/calendar generation and strips unsafe object keys, not HTML attributes.
 function secure_content(data: unknown, isJSON = true): unknown {
   // strip HTML tags (especially since stupid Safari adds stuff) - except for <br>
   const toClean = isJSON ? JSON.stringify(data) : (data as { toString(): string }).toString();
@@ -62,7 +80,8 @@ function secure_url(url: string, throwError = true): boolean {
   return true;
 }
 
-// SHARED FUNCTION TO REPLACE HTML PSEUDO ELEMENTS
+// Format conversion, not an HTML sanitizer. Use safe_html for untrusted rich text;
+// the clear modes produce plain/calendar text and must not HTML-encode that output.
 function rewrite_html_elements(content: string, clear = false, iCalBreaks = false): string {
   // An explicitly empty paragraph represents the user's intent to add a blank line.
   // Normalize it first so every output format handles it like the supported break tag.
@@ -112,15 +131,14 @@ function parse_url_code(input: string): string {
       return url;
     }
   })();
-  const escapeHtml = (value: string) => value.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
   // descriptions often carry third-party content: only linkify explicit web/calendar/
   // mail schemes (or relative urls) and escape everything - anything else stays text
   // eslint-disable-next-line no-control-regex -- stripping control characters is the point: browsers ignore them when parsing schemes, so evasion like java\tscript: must be caught
   const scheme = url.replace(/[\u0000-\u0020\u007f-\u009f]/g, '').match(/^([a-z][a-z0-9+.-]*):/i);
   if (scheme && !['http', 'https', 'webcal', 'webcals', 'mailto'].includes(scheme[1]!.toLowerCase())) {
-    return escapeHtml(text);
+    return escape_html_text(text);
   }
-  return '<a href="' + escapeHtml(url).replace(/"/g, '&quot;') + '" target="' + defaultTarget + '" rel="noopener">' + escapeHtml(text) + '</a>';
+  return '<a href="' + escape_html(url) + '" target="' + defaultTarget + '" rel="noopener">' + escape_html_text(text) + '</a>';
 }
 
 // SHARED FUNCTIONS TO FORMAT iCAL TEXT
@@ -174,4 +192,4 @@ function format_ical_lines(content: string): string {
   return result.join('\r\n');
 }
 
-export { escape_html, secure_content, secure_url, strip_unsafe_keys, rewrite_html_elements, rewrite_ical_text, format_ical_lines };
+export { escape_html, escape_html_text, safe_html, secure_content, secure_url, strip_unsafe_keys, rewrite_html_elements, rewrite_ical_text, format_ical_lines };

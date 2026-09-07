@@ -1,4 +1,4 @@
-import { escape_html, rewrite_html_elements, secure_content } from '../core/text';
+import { escape_html, safe_html, secure_content, secure_url } from '../core/text';
 import { set_sizes } from './positioning';
 import { copy_to_clipboard, validEmail } from '../core/util';
 import { generate_modal_host, create_modal, generate_label, create_atcbl } from './generate';
@@ -112,7 +112,7 @@ async function generate_ty(hostEl: ShadowRoot | HTMLElement, dataObj: ATCBConfig
   // get data
   const tyData = data.ty as ATCBTyData;
   // set default, if type is missing required information
-  if ((tyData.type === 'link' || tyData.type === 'form') && (!tyData.url || tyData.url === '' || !tyData.url.startsWith('http'))) {
+  if ((tyData.type === 'link' || tyData.type === 'form') && (!tyData.url || tyData.url === '' || !/^https?:\/\//i.test(tyData.url) || !secure_url(tyData.url, false))) {
     tyData.type = 'text';
   }
   // define default headline
@@ -123,7 +123,7 @@ async function generate_ty(hostEl: ShadowRoot | HTMLElement, dataObj: ATCBConfig
   let tyContent = '<div class="pro"><p id="ty-success-msg">' + translate_hook('form.success.title', data) + '</p><div id="ty-content">';
   // intro text
   if (tyData.text && tyData.text !== '') {
-    tyContent += '<div class="pro-intro">' + rewrite_html_elements(tyData.text) + '</div>';
+    tyContent += '<div class="pro-intro">' + safe_html(tyData.text) + '</div>';
   }
   // share buttons, if type = share
   if (tyData.type === 'share') {
@@ -144,11 +144,11 @@ async function generate_ty(hostEl: ShadowRoot | HTMLElement, dataObj: ATCBConfig
     const noIntro = !tyData.text || tyData.text === '' || tyData.text === undefined;
     const label = (function () {
       if (tyData.button_label && tyData.button_label !== '') {
-        return tyData.button_label;
+        return safe_html(tyData.button_label);
       }
       return translate_hook('submit', data);
     })();
-    tyContent += '<form id="' + data.identifier + '-ty-form" class="pro-form' + (noIntro ? ' no-intro' : '') + '">';
+    tyContent += '<form id="' + escape_html(data.identifier!) + '-ty-form" class="pro-form' + (noIntro ? ' no-intro' : '') + '">';
     if (tyData.fields && tyData.fields.length > 0) {
       // if there is a field with name "header" of type "hidden" and a value with a valid JSON string, we set the header
       const headerField = tyData.fields.find((field) => field.name === 'header' && field.type === 'hidden');
@@ -182,11 +182,11 @@ async function generate_ty(hostEl: ShadowRoot | HTMLElement, dataObj: ATCBConfig
   if (tyData.type === 'link') {
     const label = (function () {
       if (tyData.button_label && tyData.button_label !== '') {
-        return tyData.button_label;
+        return safe_html(tyData.button_label);
       }
       return translate_hook('continue', data);
     })();
-    tyContent += '<p class="pro-pt"><a href="' + tyData.url + '" target="_blank" rel="noopener" class="atcb-modal-btn atcb-modal-btn-primary atcb-modal-btn-border">' + label + '</a></p>';
+    tyContent += '<p class="pro-pt"><a href="' + escape_html(tyData.url!) + '" target="_blank" rel="noopener" class="atcb-modal-btn atcb-modal-btn-primary atcb-modal-btn-border">' + label + '</a></p>';
   }
   tyContent += '</div></div>';
   // create modal
@@ -240,7 +240,7 @@ async function generate_ty(hostEl: ShadowRoot | HTMLElement, dataObj: ATCBConfig
           if (field.type !== 'label') {
             if (field.type === 'radio') {
               if (!skipRadio) {
-                const radioGroup = tyHost.querySelectorAll('[name="' + field.name + '"]');
+                const radioGroup = tyHost.querySelectorAll('[name="' + CSS.escape(field.name!) + '"]');
                 radioGroup.forEach(function (radio) {
                   if ((radio as HTMLInputElement).checked) {
                     bodyData.push({ name: field.name as string, value: (radio as HTMLInputElement).value });
@@ -300,69 +300,79 @@ async function generate_rsvp_form(host: ShadowRoot, data: ATCBConfig, hostEl: HT
   rsvpContent += '<div id="rsvp-content">';
   // intro text
   if (rsvpData.text && rsvpData.text !== '') {
-    rsvpContent += '<div class="pro-intro">' + rewrite_html_elements(rsvpData.text) + '</div>';
+    rsvpContent += '<div class="pro-intro">' + safe_html(rsvpData.text) + '</div>';
   }
-  rsvpContent += '<form id="' + data.identifier + '-rsvp-form" class="pro-form' + (noIntro ? ' no-intro' : '') + (noHeadline ? ' no-headline' : '') + '">';
+  rsvpContent += '<form id="' + escape_html(data.identifier!) + '-rsvp-form" class="pro-form' + (noIntro ? ' no-intro' : '') + (noHeadline ? ' no-headline' : '') + '">';
   // add status, amount, and email fields based on situation
   const staticID = data.proKey || 'demo-rsvp';
   if (rsvpData.initial_confirmation === false) {
-    rsvpContent += '<div id="rsvp-status-group" role="radiogroup" aria-labelledby="' + data.identifier + '-rsvp-status-title">';
-    rsvpContent += '<p id="' + data.identifier + '-rsvp-status-title">' + translate_hook('form.status.title', data) + '</p>';
+    rsvpContent += '<div id="rsvp-status-group" role="radiogroup" aria-labelledby="' + escape_html(data.identifier!) + '-rsvp-status-title">';
+    rsvpContent += '<p id="' + escape_html(data.identifier!) + '-rsvp-status-title">' + translate_hook('form.status.title', data) + '</p>';
     rsvpContent +=
       '<div class="pro-field pro-field-type-radio"><div><input type="radio" name="' +
-      staticID +
+      escape_html(staticID) +
       '-status" id="' +
-      data.identifier +
+      escape_html(data.identifier!) +
       '-rsvp-status-confirmed" aria-label="' +
       escape_html(translate_hook('form.status.confirmed', data)) +
       '" checked value="confirmed" ' +
       (data.disabled && 'disabled') +
       ' /><label for="' +
-      data.identifier +
+      escape_html(data.identifier!) +
       '-rsvp-status-confirmed" class="status-confirmed"><span>' +
       translate_hook('form.status.confirmed', data) +
       '</span></label></div>';
     if (rsvpData.maybe_option === true) {
       rsvpContent +=
         '<div><input type="radio" name="' +
-        staticID +
+        escape_html(staticID) +
         '-status" id="' +
-        data.identifier +
+        escape_html(data.identifier!) +
         '-rsvp-status-undecided" aria-label="' +
         escape_html(translate_hook('form.status.undecided', data)) +
         '" value="undecided" ' +
         (data.disabled && 'disabled') +
         ' /><label for="' +
-        data.identifier +
+        escape_html(data.identifier!) +
         '-rsvp-status-undecided" class="status-undecided"><span>' +
         translate_hook('form.status.undecided', data) +
         '</span></label></div>';
     }
     rsvpContent +=
       '<div><input type="radio" name="' +
-      staticID +
+      escape_html(staticID) +
       '-status" id="' +
-      data.identifier +
+      escape_html(data.identifier!) +
       '-rsvp-status-declined" aria-label="' +
       escape_html(translate_hook('form.status.declined', data)) +
       '" value="declined" ' +
       (data.disabled && 'disabled') +
       ' /><label for="' +
-      data.identifier +
+      escape_html(data.identifier!) +
       '-rsvp-status-declined" class="status-declined"><span>' +
       translate_hook('form.status.declined', data) +
       '</span></label></div></div>';
     rsvpContent += '</div>';
   } else {
-    hiddenContent += '<input type="hidden" name="' + staticID + '-status" id="' + data.identifier + '-rsvp-status-confirmed" value="confirmed" />';
+    hiddenContent += '<input type="hidden" name="' + escape_html(staticID) + '-status" id="' + escape_html(data.identifier!) + '-rsvp-status-confirmed" value="confirmed" />';
   }
   const maxAmount = rsvpData.maxpp || 1;
   if (maxAmount === 1) {
-    hiddenContent += '<input type="hidden" name="' + staticID + '-amount" id="' + data.identifier + '-rsvp-amount" value="1" />';
+    hiddenContent += '<input type="hidden" name="' + escape_html(staticID) + '-amount" id="' + escape_html(data.identifier!) + '-rsvp-amount" value="1" />';
   } else {
-    rsvpContent += '<div class="pro-field"><label for="' + data.identifier + '-rsvp-amount">' + translate_hook('form.amount', data) + ' (' + translate_hook('form.max', data) + ' ' + maxAmount + ')<span>*</span></label>';
+    rsvpContent += '<div class="pro-field"><label for="' + escape_html(data.identifier!) + '-rsvp-amount">' + translate_hook('form.amount', data) + ' (' + translate_hook('form.max', data) + ' ' + escape_html(String(maxAmount)) + ')<span>*</span></label>';
     rsvpContent +=
-      '<input type="number" name="' + staticID + '-amount" min="1" max="' + maxAmount + '" id="' + data.identifier + '-rsvp-amount" ' + (data.disabled && 'disabled') + ' required aria-required="true" aria-label="' + escape_html(translate_hook('form.amount', data)) + '" value="1" /></div>';
+      '<input type="number" name="' +
+      escape_html(staticID) +
+      '-amount" min="1" max="' +
+      escape_html(String(maxAmount)) +
+      '" id="' +
+      escape_html(data.identifier!) +
+      '-rsvp-amount" ' +
+      (data.disabled && 'disabled') +
+      ' required aria-required="true" aria-label="' +
+      escape_html(translate_hook('form.amount', data)) +
+      '" value="1" /></div>';
   }
   const attendee = (function () {
     if (data.dates![0]!.attendee && data.dates![0]!.attendee !== '') {
@@ -377,10 +387,10 @@ async function generate_rsvp_form(host: ShadowRoot, data: ATCBConfig, hostEl: HT
   const customEmailField = rsvpData.fields?.find((field) => field.name === 'email');
   if (!customEmailField) {
     if (attendee) {
-      hiddenContent += '<input type="hidden" name="email" id="' + data.identifier + '-rsvp-email" value="' + attendee + '" />';
+      hiddenContent += '<input type="hidden" name="email" id="' + escape_html(data.identifier!) + '-rsvp-email" value="' + escape_html(attendee) + '" />';
     } else {
-      rsvpContent += '<div class="pro-field"><label for="' + data.identifier + '-rsvp-email">' + translate_hook('form.email', data) + '<span>*</span></label>';
-      rsvpContent += '<input type="email" name="email" id="' + data.identifier + '-rsvp-email" ' + (data.disabled && 'disabled') + ' required aria-required="true" autocomplete="email" aria-label="' + escape_html(translate_hook('form.email', data)) + '" value="" /></div>';
+      rsvpContent += '<div class="pro-field"><label for="' + escape_html(data.identifier!) + '-rsvp-email">' + translate_hook('form.email', data) + '<span>*</span></label>';
+      rsvpContent += '<input type="email" name="email" id="' + escape_html(data.identifier!) + '-rsvp-email" ' + (data.disabled && 'disabled') + ' required aria-required="true" autocomplete="email" aria-label="' + escape_html(translate_hook('form.email', data)) + '" value="" /></div>';
     }
   } else {
     rsvpData.fields = rsvpData.fields!.map((field): ATCBProFormField => {
@@ -407,7 +417,7 @@ async function generate_rsvp_form(host: ShadowRoot, data: ATCBConfig, hostEl: HT
     translate_hook('submit', data) +
     '</span></span></p>';
   if (rsvpData.seatsLeft && rsvpData.seatsLeft > 0) {
-    rsvpContent += '<p class="pro-form-fine">' + translate_hook('form.seatsleft', data) + ': <b>' + rsvpData.seatsLeft + '</b></p>';
+    rsvpContent += '<p class="pro-form-fine">' + translate_hook('form.seatsleft', data) + ': <b>' + escape_html(String(rsvpData.seatsLeft)) + '</b></p>';
   }
   rsvpContent += '</form>';
   rsvpContent += '</div></div>';
@@ -430,7 +440,7 @@ async function generate_rsvp_form(host: ShadowRoot, data: ATCBConfig, hostEl: HT
       const rsvpInlineHeadline = document.createElement('div');
       rsvpInlineHeadline.classList.add('atcb-modal-headline');
       rsvpInlineWrapper.append(rsvpInlineHeadline);
-      rsvpInlineHeadline.innerHTML = rsvpData.headline;
+      rsvpInlineHeadline.innerHTML = safe_html(rsvpData.headline);
     }
     const rsvpInlineContent = document.createElement('div');
     rsvpInlineContent.classList.add('atcb-modal-content');
@@ -536,7 +546,7 @@ async function generate_rsvp_form(host: ShadowRoot, data: ATCBConfig, hostEl: HT
           if (field.type !== 'label') {
             if (field.type === 'radio') {
               if (!skipRadio) {
-                const radioGroup = rsvpHost.querySelectorAll('[name="' + field.name + '"]');
+                const radioGroup = rsvpHost.querySelectorAll('[name="' + CSS.escape(field.name!) + '"]');
                 radioGroup.forEach(function (radio) {
                   if ((radio as HTMLInputElement).checked) {
                     bodyData_payload[field.name as string] = (radio as HTMLInputElement).value;
@@ -696,16 +706,16 @@ function build_form(fields: ATCBProFormField[], identifier: string = '', disable
       fieldHtml += '</div>';
     }
     if (field.type !== 'hidden' && i === n) {
-      fieldHtml += '<div class="pro-field' + ' pro-field-type-' + field.type + '">';
+      fieldHtml += '<div class="pro-field' + ' pro-field-type-' + escape_html(String(field.type)) + '">';
     }
     if (field.type === 'label') {
-      fieldHtml += '<p>' + fieldLabel + '</p>';
+      fieldHtml += '<p>' + safe_html(fieldLabel) + '</p>';
     } else {
       if (field.type === 'radio') {
         fieldHtml += '<div>';
       }
       if (field.type === 'hidden') {
-        hiddenForm += '<input type="hidden" name="' + field.name + '" id="' + field.fieldId + '" value="' + fieldValue + '" />';
+        hiddenForm += '<input type="hidden" name="' + escape_html(field.name!) + '" id="' + escape_html(field.fieldId!) + '" value="' + escape_html(String(fieldValue)) + '" />';
       } else {
         fieldHtml += create_field_html(field.type as string, field.name as string, fieldLabel, field.fieldId as string, field.required, fieldValue, field.default as string | boolean, fieldPlaceholder, disabled);
       }
@@ -728,33 +738,33 @@ function create_field_html(type: string, name: string, fieldLabel: string, field
   const accessibleLabel = fieldLabel !== '' ? fieldLabel : fieldPlaceholder !== '' ? fieldPlaceholder : name;
   // add label
   if ((type === 'text' || type === 'email' || type === 'number') && fieldLabel !== '') {
-    fieldHtml += '<label for="' + fieldId + '">' + fieldLabel + (required ? '<span>*</span>' : '') + '</label>';
+    fieldHtml += '<label for="' + escape_html(fieldId) + '">' + safe_html(fieldLabel) + (required ? '<span>*</span>' : '') + '</label>';
   }
   // add input
   fieldHtml +=
     '<input type="' +
-    type +
+    escape_html(String(type)) +
     '"' +
     (type === 'number' ? ' min="0"' : '') +
     (required ? ' required aria-required="true"' : '') +
     (type === 'email' ? ' autocomplete="email"' : '') +
     ((type === 'checkbox' || type === 'radio') && defaultVal && (defaultVal === 'true' || defaultVal === true) ? ' checked' : '') +
     ' name="' +
-    name +
+    escape_html(name) +
     '" id="' +
-    fieldId +
+    escape_html(fieldId) +
     '" placeholder="' +
-    fieldPlaceholder +
+    escape_html(fieldPlaceholder) +
     '" ' +
     (disabled && 'disabled') +
     ' aria-label="' +
-    accessibleLabel +
+    escape_html(accessibleLabel) +
     '" value="' +
-    fieldValue +
+    escape_html(String(fieldValue)) +
     '" />';
   // add label for checkboxes and radio buttons
   if ((type === 'checkbox' || type === 'radio') && (fieldLabel !== '' || required)) {
-    fieldHtml += '<label for="' + fieldId + '">' + fieldLabel + (required ? '<span>*</span>' : '') + '</label>';
+    fieldHtml += '<label for="' + escape_html(fieldId) + '">' + safe_html(fieldLabel) + (required ? '<span>*</span>' : '') + '</label>';
   }
   return fieldHtml;
 }
@@ -797,7 +807,7 @@ function validate_form(host: ShadowRoot, fields: ATCBProFormField[]): ATCBFormVa
       }
     }
     if (field.type === 'radio') {
-      const radioGroup = host.querySelectorAll('[name="' + field.name + '"]');
+      const radioGroup = host.querySelectorAll('[name="' + CSS.escape(field.name!) + '"]');
       let checked = false;
       radioGroup.forEach(function (radio) {
         if ((radio as HTMLInputElement).checked) {

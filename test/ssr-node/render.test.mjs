@@ -131,6 +131,9 @@ test('S-09: attribute values and label text are escaped', () => {
   assert.ok(html.includes('name="a&quot;b&lt;c&gt;"'), 'attribute escaping');
   assert.ok(html.includes('x&lt;y &amp; z'), 'text escaping');
   assert.ok(!html.includes('<y & z'), 'no raw injection');
+  const quoted = atcb_generate_ssr_html({ label: `Tom's "label" &amp; <br>` });
+  assert.ok(quoted.includes('aria-label="Tom&#39;s &quot;label&quot; &amp;amp; &lt;br&gt;"'), 'attributes encode both quote styles and literal entities');
+  assert.ok(quoted.includes(`>Tom's "label" &amp;amp; &lt;br&gt;</span>`), 'text nodes retain quotes without interpreting markup or existing entities');
 });
 
 test('S-10: unknown languages fall back to the english label', () => {

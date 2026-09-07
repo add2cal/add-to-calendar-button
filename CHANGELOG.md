@@ -14,6 +14,7 @@
   - new: extended ics options for the Apple/iCal cases (`icsReminder`, `icsUrl`, `icsCategories`, `icsClass`, `icsPriority`, `icsGeo` incl. Apple map preview, `icsAttach`, `icsExdate`) - second-level options that only shape the generated ics file; all other calendar types simply ignore them
   - modernized internals: Lit-based web component, strict TypeScript, per-instance state, generated flat type declarations that work with every moduleResolution
   - accessibility: WAI-ARIA menu pattern for the dropdown, real dialog semantics with a focus trap for modals, working focus delegation, complete date-button labels for screen readers
+  - security: escape PRO thank-you and RSVP form values, restrict thank-you links to safe HTTP(S) URLs, and render raw HTML in PRO copy safely while retaining pseudo-HTML formatting
   - security: escape translated HTML attributes, block raw HTML attributes in custom labels while preserving pseudo-HTML and plain breaks, and avoid quadratic modal label parsing
   - security: url scheme allowlisting, escaped description links, prototype-pollution-safe input parsing, valid schema.org JSON for any content
   - recurring events with old start dates now resolve instantly and correctly (the old day-by-day iteration silently capped out about 27 years in)

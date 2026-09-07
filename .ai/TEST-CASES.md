@@ -504,6 +504,11 @@ axe-core, WCAG 2.1 A/AA tags; color-contrast excluded (theme- and user-configura
 - SEC-08: manual clipboard fallback preserves hostile values without attribute injection
 - SEC-09: headline-free modal handles long malformed markup promptly
 
+- SEC-10: RSVP inline and modal forms contain hostile field data without injection
+- SEC-11: public thank-you API escapes link attributes and retains safe intro formatting
+- SEC-12: public thank-you form preserves quoted values and safe labels
+- SEC-13: thank-you links reject non-HTTP schemes and traversal
+
 ## Group MEM - Memory-leak regression (test/wc-tests/r-MEM-leaks.test.js)
 
 Runner launches Chrome with --js-flags=--expose-gc so the heap assertion can force collection.
