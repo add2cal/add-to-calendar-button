@@ -1,4 +1,4 @@
-import { rewrite_html_elements } from '../core/text';
+import { safe_html } from '../core/text';
 import enStrings from './locales/en.json';
 import type { ATCBConfig, I18nStrings } from '../types';
 
@@ -209,12 +209,7 @@ function translate(identifier: string, language?: string): string {
 // hook, which can be used to override all potential "hard" strings by setting the key as option key and the intended string as value
 function translate_hook(identifier: string, data: ATCBConfig): string {
   if (data.customLabels && data.customLabels[`${identifier}`] && data.customLabels[`${identifier}`] !== '') {
-    // Custom labels support pseudo HTML and plain breaks, never raw HTML attributes.
-    // Preserve entities: the browser decodes them as text, not another markup pass.
-    const label = data.customLabels[`${identifier}`]!.replace(/</g, '&lt;')
-      .replace(/>/g, '&gt;')
-      .replace(/&lt;br\s*\/?&gt;/gi, '<br>');
-    return rewrite_html_elements(label);
+    return safe_html(data.customLabels[`${identifier}`]!);
   } else {
     return translate(identifier, (data.translationLocale as string) || data.language);
   }

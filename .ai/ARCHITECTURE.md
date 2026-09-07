@@ -71,6 +71,19 @@ Key properties of the pipeline:
   selects the list. The list reads its display settings from the component attributes,
   fetches the public group event range, and renders into the existing Lit shell.
 
+## HTML handling
+
+`core/text.ts` owns the shared HTML handling. `escape_html` encodes literal values
+for attributes (default) or text nodes, including existing entities; use it at string
+interpolation boundaries in browser UI and SSR. `safe_html` renders untrusted rich
+text with the supported pseudo tags and plain breaks, while preserving text entities.
+It wraps `rewrite_html_elements`, which is a format converter rather than a sanitizer;
+its clear modes produce plain text or ICS text without HTML encoding.
+
+`secure_content` remains configuration cleanup: it strips tags and unsafe object keys
+before validation and decoration, and does not replace output-context escaping.
+URL scheme checks and ICS escaping likewise have their own format-specific rules.
+
 ## Data flow: interaction
 
 Trigger click/keyup -> `ui/control.atcb_toggle` -> either the dropdown/modal list
