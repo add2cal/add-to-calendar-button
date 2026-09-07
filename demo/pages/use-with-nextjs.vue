@@ -80,18 +80,23 @@ import 'add-to-calendar-button/i18n/de';       // any language besides English</
           <NuxtLink :to="{path: localePath('advanced-use'), hash: '#case-12'}">{{ $t('content.advanced.12_long') }} <ArrowRightIcon class="-mt-0.5 mr-0.5 inline-block h-3 w-3" aria-hidden="true" /></NuxtLink>
         </p>
         <p>{{ $t('content.guide.ssr_example') }}</p>
-        <LazyCodeBlock language="javascript">
+        <LazyCodeBlock language="tsx">
           <pre>
-// app/components/atcb-client.jsx (client upgrade)
+// app/components/atcb-client.tsx (client upgrade)
 'use client';
 import 'add-to-calendar-button';
-export default function AtcbClient({ html }) {
+
+type AtcbClientProps = {
+  html: { __html: string };
+};
+
+export default function AtcbClient({ html }: AtcbClientProps) {
   return &lt;div dangerouslySetInnerHTML={html} /&gt;;
 }</pre>
         </LazyCodeBlock>
-        <LazyCodeBlock language="javascript">
+        <LazyCodeBlock language="tsx">
           <pre>
-// app/page.jsx (server component)
+// app/page.tsx (server component)
 import { atcb_generate_ssr_html } from 'add-to-calendar-button/ssr';
 import AtcbClient from './components/atcb-client';
 
