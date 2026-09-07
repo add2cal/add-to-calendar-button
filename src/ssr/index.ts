@@ -23,7 +23,7 @@ import { icons, wcParams, wcProParams } from '../core/globals';
 import { rtlLanguages } from '../i18n/index';
 import { decorate_sizes } from '../core/sizes';
 import { officialAttributeName, legacyAttributeName } from '../compat/attributes';
-import { escape_html, secure_url, strip_unsafe_keys } from '../core/text';
+import { escape_html, escape_html_text, secure_url, strip_unsafe_keys } from '../core/text';
 import { tzlib_get_offset } from 'timezones-ical-library';
 
 // filled at build time with the minified tokens+core css plus EVERY per-style delta
@@ -313,7 +313,7 @@ function generate_ssr_html_with_context(rawConfig: AddToCalendarButtonType & { [
       const rsvp = config.rsvp as { expired?: unknown; bookedOut?: unknown };
       const rsvpLabel = truthyFlag(rsvp.expired) ? rsvpLabels.expired : truthyFlag(rsvp.bookedOut) ? rsvpLabels.bookedout : rsvpLabels.title;
       const icon = hideIconButton ? '' : `<div class="atcb-icon atcb-icon-rsvp" part="atcb-list-icon">${icons['rsvp']}</div>`;
-      const text = hideTextLabelButton ? '' : `<span class="atcb-text" part="atcb-list-text">${escape_html(rsvpLabel, 'text')}</span>`;
+      const text = hideTextLabelButton ? '' : `<span class="atcb-text" part="atcb-list-text">${escape_html_text(rsvpLabel)}</span>`;
       return `<div class="atcb-button-wrapper${rtl ? ' atcb-rtl' : ''}" part="atcb-button-wrapper" style="${sizeStyle}"><button type="button" class="atcb-button atcb-click atcb-single${hideTextLabelButton ? ' atcb-no-text' : ''}" part="atcb-button"${buttonId} aria-expanded="false" aria-label="${escape_html(rsvpLabel)}">${icon}${text}</button></div>`;
     }
     // buttonsList: one singleton button per option. Labels render as skeletons
@@ -324,20 +324,20 @@ function generate_ssr_html_with_context(rawConfig: AddToCalendarButtonType & { [
         .map((option) => {
           const singletonId = identifier !== '' ? ` id="atcb-btn-${escape_html(identifier)}-${escape_html(option.key)}"` : '';
           const icon = hideIconList ? '' : `<div class="atcb-icon atcb-icon-${escape_html(option.key)}" part="atcb-button-icon">${icons[`${option.key}`]}</div>`;
-          const text = hideTextLabelButton ? '' : option.labelOverride !== '' ? `<span class="atcb-text" part="atcb-list-text">${escape_html(option.labelOverride, 'text')}</span>` : `<span class="atcb-text" part="atcb-list-text">${skeletonSpan('8ch')}</span>`;
+          const text = hideTextLabelButton ? '' : option.labelOverride !== '' ? `<span class="atcb-text" part="atcb-list-text">${escape_html_text(option.labelOverride)}</span>` : `<span class="atcb-text" part="atcb-list-text">${skeletonSpan('8ch')}</span>`;
           return `<div class="atcb-button-wrapper${rtl ? ' atcb-rtl' : ''}" part="atcb-button-wrapper" style="${sizeStyle}"><button type="button" class="atcb-button atcb-single${hideTextLabelButton ? ' atcb-no-text' : ''}" part="atcb-button"${singletonId} aria-expanded="false" aria-label="${escape_html(option.labelOverride !== '' ? option.labelOverride : option.key)}">${icon}${text}</button></div>`;
         })
         .join('');
     }
     const inner = (function () {
       if (buttonStyle === 'date') {
-        const headline = typeof config.label === 'string' && config.label !== '' ? escape_html(config.label, 'text') : typeof config.name === 'string' && config.name !== '' ? escape_html(config.name, 'text') : skeletonSpan('12ch');
+        const headline = typeof config.label === 'string' && config.label !== '' ? escape_html_text(config.label) : typeof config.name === 'string' && config.name !== '' ? escape_html_text(config.name) : skeletonSpan('12ch');
         return `<div class="atcb-date-btn-left"><div class="atcb-date-btn-day">${skeletonSpan('2ch')}</div><div class="atcb-date-btn-month">${skeletonSpan('3ch')}</div></div><div class="atcb-date-btn-right"><div class="atcb-date-btn-details"><div class="atcb-date-btn-headline">${headline}</div><div class="atcb-date-btn-content">${skeletonSpan('16ch')}</div></div></div><div class="atcb-date-btn-plus"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" style="fill:none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M12 5.5v13M5.5 12h13"/></svg></div>`;
       }
       const icon = hideIconButton ? '' : `<div class="atcb-icon atcb-icon-trigger" part="atcb-button-icon">${icons['trigger']}</div>`;
       const chevron = !oneOption && !hideTextLabelButton ? `<div class="atcb-chevron" part="atcb-button-chevron">${icons['chevron']}</div>` : '';
       const anchor = oneOption ? '' : '<div class="atcb-dropdown-anchor"></div>';
-      const text = hideTextLabelButton ? '' : `<span class="atcb-text" part="atcb-button-text">${escape_html(label, 'text')}</span>`;
+      const text = hideTextLabelButton ? '' : `<span class="atcb-text" part="atcb-button-text">${escape_html_text(label)}</span>`;
       return `${icon}${text}${chevron}${anchor}`;
     })();
     return `<div class="atcb-button-wrapper${rtl ? ' atcb-rtl' : ''}" part="atcb-button-wrapper" style="${sizeStyle}"><button type="button" class="atcb-button${oneOption ? ' atcb-single' : ''}${hideTextLabelButton ? ' atcb-no-text' : ''}" part="atcb-button"${buttonId} aria-expanded="false" aria-label="${escape_html(typeof label === 'string' ? label : 'Add to Calendar')}">${inner}</button></div>`;

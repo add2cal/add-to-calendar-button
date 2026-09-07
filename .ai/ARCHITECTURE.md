@@ -73,10 +73,14 @@ Key properties of the pipeline:
 
 ## HTML handling
 
-`core/text.ts` owns the shared HTML handling. `escape_html` encodes literal values
-for attributes (default) or text nodes, including existing entities; use it at string
-interpolation boundaries in browser UI and SSR. `safe_html` renders untrusted rich
-text with the supported pseudo tags and plain breaks, while preserving text entities.
+`core/text.ts` owns the shared HTML handling. `escape_html_text` encodes literal text
+nodes, including existing entities. `escape_html` shares that implementation and
+unconditionally escapes quotes for attributes; use it at attribute interpolation
+boundaries in browser UI and SSR. Separate entry points avoid an optional text mode
+being mistaken for attribute-safe output by callers or static analysis.
+
+`safe_html` renders untrusted rich text with the supported pseudo tags and plain breaks,
+while preserving text entities.
 It wraps `rewrite_html_elements`, which is a format converter rather than a sanitizer;
 its clear modes produce plain text or ICS text without HTML encoding.
 

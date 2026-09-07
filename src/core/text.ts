@@ -1,11 +1,15 @@
 import { defaultTarget } from './globals';
 
-// The shared HTML encoder for browser UI, calendar links, and SSR. Attribute mode
-// also escapes quotes; text mode preserves literal quotes in serialized text nodes.
-// This encodes literal values, including existing entities, and never allows markup.
-function escape_html(value: string, context: 'attribute' | 'text' = 'attribute'): string {
-  const escaped = value.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
-  return context === 'attribute' ? escaped.replace(/"/g, '&quot;').replace(/'/g, '&#39;') : escaped;
+// Shared literal-text encoding for browser UI, calendar links, and SSR.
+// Existing entities are encoded too; this never allows markup.
+function escape_html_text(value: string): string {
+  return value.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+}
+
+// Attribute encoding always escapes quotes. Keep this unconditional so callers
+// and static analysis cannot confuse it with text-node encoding.
+function escape_html(value: string): string {
+  return escape_html_text(value).replace(/"/g, '&quot;').replace(/'/g, '&#39;');
 }
 
 // Render supported pseudo HTML and plain breaks without accepting raw HTML attributes.
@@ -132,9 +136,9 @@ function parse_url_code(input: string): string {
   // eslint-disable-next-line no-control-regex -- stripping control characters is the point: browsers ignore them when parsing schemes, so evasion like java\tscript: must be caught
   const scheme = url.replace(/[\u0000-\u0020\u007f-\u009f]/g, '').match(/^([a-z][a-z0-9+.-]*):/i);
   if (scheme && !['http', 'https', 'webcal', 'webcals', 'mailto'].includes(scheme[1]!.toLowerCase())) {
-    return escape_html(text, 'text');
+    return escape_html_text(text);
   }
-  return '<a href="' + escape_html(url) + '" target="' + defaultTarget + '" rel="noopener">' + escape_html(text, 'text') + '</a>';
+  return '<a href="' + escape_html(url) + '" target="' + defaultTarget + '" rel="noopener">' + escape_html_text(text) + '</a>';
 }
 
 // SHARED FUNCTIONS TO FORMAT iCAL TEXT
@@ -188,4 +192,4 @@ function format_ical_lines(content: string): string {
   return result.join('\r\n');
 }
 
-export { escape_html, safe_html, secure_content, secure_url, strip_unsafe_keys, rewrite_html_elements, rewrite_ical_text, format_ical_lines };
+export { escape_html, escape_html_text, safe_html, secure_content, secure_url, strip_unsafe_keys, rewrite_html_elements, rewrite_ical_text, format_ical_lines };
