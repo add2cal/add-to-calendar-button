@@ -1,0 +1,380 @@
+:host:has(.atcb-group-overview) {
+  box-sizing: border-box;
+  display: block;
+  max-width: 100% !important;
+  width: min(600px, 100%) !important;
+}
+
+:host:has(.atcb-group-overview.atcb-group-overview-cards) {
+  width: min(1200px, 100%) !important;
+}
+
+.atcb-group-overview {
+  box-sizing: border-box;
+  color: #1b1f24;
+  display: block;
+  font-family: Arial, Helvetica, sans-serif;
+  max-width: 100%;
+  width: 100%;
+}
+
+.atcb-group-overview.atcb-group-overview-cards {
+  container-name: atcb-group-overview-cards;
+  container-type: inline-size;
+}
+
+.atcb-group-overview * {
+  box-sizing: border-box;
+}
+
+.atcb-group-overview-controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 0 0 1.25em;
+  width: 100%;
+}
+
+.atcb-group-overview-results {
+  display: block;
+  width: 100%;
+}
+
+.atcb-group-overview-select {
+  appearance: none;
+  background-color: #fff;
+  background-image: linear-gradient(45deg, transparent 50%, #1b1f24 50%), linear-gradient(135deg, #1b1f24 50%, transparent 50%);
+  background-position:
+    calc(100% - 0.8em) 50%,
+    calc(100% - 0.55em) 50%;
+  background-repeat: no-repeat;
+  background-size: 0.25em 0.25em;
+  border: 1px solid #111;
+  border-radius: 4px;
+  color: #1b1f24;
+  cursor: pointer;
+  font: inherit;
+  font-weight: 700;
+  padding: 0.55em 2.3em 0.55em 0.85em;
+}
+
+.atcb-group-overview-select:focus:not(:focus-visible) {
+  outline: none;
+}
+
+.atcb-group-overview-select:focus-visible {
+  outline: 2px solid #111;
+  outline-offset: 2px;
+}
+
+.atcb-group-overview-month {
+  font-size: 1.15em;
+  margin: 24px 0 10px;
+}
+
+.atcb-group-overview-items {
+  display: flex;
+  flex-direction: column;
+  gap: 0.7em;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.atcb-group-overview-items:has(> .atcb-group-overview-item-with-add) {
+  padding-right: 1.35em;
+}
+
+.atcb-group-overview-items.atcb-group-overview-list {
+  max-width: 600px;
+  width: 100%;
+}
+
+.atcb-group-overview-items.atcb-group-overview-list > .atcb-group-overview-item {
+  width: 100%;
+}
+
+.atcb-group-overview-items.atcb-group-overview-cards {
+  display: grid;
+  gap: 1.4em;
+  grid-template-columns: minmax(0, 1fr);
+  max-width: 1200px;
+  width: 100%;
+}
+
+.atcb-group-overview-items.atcb-group-overview-cards > .atcb-group-overview-item {
+  min-width: 0;
+}
+
+@container atcb-group-overview-cards (width >= 600px) {
+  .atcb-group-overview-items.atcb-group-overview-cards {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@container atcb-group-overview-cards (width >= 1000px) {
+  .atcb-group-overview-items.atcb-group-overview-cards {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+.atcb-group-overview-item {
+  background: #fff;
+  border: 1px solid #d7dbe0;
+  border-radius: 4px;
+  box-shadow: rgb(16 24 40 / 9%) 0 1px 3px;
+  min-height: 4.5em;
+  min-width: 0;
+  padding: 0;
+  position: relative;
+  transition:
+    border-color 0.15s ease,
+    box-shadow 0.15s ease;
+}
+
+.atcb-group-overview-event-link {
+  align-items: stretch;
+  color: inherit;
+  display: flex;
+  min-height: inherit;
+  text-decoration: none;
+  width: 100%;
+}
+
+.atcb-group-overview-event-link:focus-visible {
+  border-radius: 2px;
+  outline: 2px solid #111;
+  outline-offset: 2px;
+}
+
+.atcb-group-overview-items:not(.atcb-group-overview-compact) > .atcb-group-overview-item:hover:not(.atcb-group-overview-item-no-add):not(:has(.atcb-group-overview-add:hover)),
+.atcb-group-overview-items:not(.atcb-group-overview-compact) > .atcb-group-overview-item-no-details:hover {
+  border-color: #bfc5cd;
+  box-shadow: rgb(16 24 40 / 15%) 0 0.4em 1em;
+}
+
+.atcb-group-overview-day {
+  align-items: center;
+  background: #282a2e;
+  clip-path: inset(0 round 3px 0 0 3px);
+  color: #fff;
+  display: flex;
+  flex: 0 0 3.2em;
+  justify-content: center;
+  padding: 0.6em 0.8em;
+  text-align: center;
+  min-width: 56px;
+}
+
+.atcb-group-overview-day-value {
+  font-size: 1.7em;
+  font-weight: 600;
+  line-height: 1.15;
+}
+
+.atcb-group-overview-content {
+  min-width: 0;
+  padding: 0.7em 1.4em 0.7em 0.8em;
+  width: 100%;
+}
+
+.atcb-group-overview-title {
+  color: inherit;
+  display: -webkit-box;
+  font-size: 0.95em;
+  font-weight: 600;
+  overflow: hidden;
+  text-decoration: none;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+}
+
+.atcb-group-overview-meta {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  color: #667085;
+  font-size: 0.78em;
+  gap: 3px;
+  margin: 10px 0;
+}
+
+.atcb-group-overview-meta-item {
+  align-items: center;
+  display: inline-flex;
+  gap: 0.35em;
+}
+
+.atcb-group-overview-meta-icon {
+  display: inline-flex;
+  flex: 0 0 1em;
+  height: 1em;
+  width: 1em;
+}
+
+.atcb-group-overview-meta-icon svg {
+  height: 100%;
+  width: 100%;
+}
+
+.atcb-group-overview-description {
+  color: #667085;
+  display: -webkit-box;
+  font-size: 0.8em;
+  line-height: 1.35;
+  margin: 0.45em 0 0;
+  overflow: hidden;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+}
+
+.atcb-group-overview-cards .atcb-group-overview-description {
+  -webkit-line-clamp: 3;
+  line-clamp: 3;
+}
+
+.atcb-group-overview-add {
+  align-items: center;
+  background: #fff;
+  border: 1px solid #d7dbe0;
+  border-radius: 50%;
+  color: #111;
+  cursor: pointer;
+  display: inline-flex;
+  box-shadow: rgb(16 24 40 / 14%) 0 2px 5px;
+  flex: 0 0 1.8em;
+  font-size: 1em;
+  height: 1.8em;
+  justify-content: center;
+  line-height: 1;
+  padding: 0;
+  position: absolute;
+  right: -0.9em;
+  text-decoration: none;
+  top: calc(50% - 0.9em);
+  touch-action: manipulation;
+  width: 1.8em;
+  z-index: 2;
+  transition:
+    background-color 0.15s ease,
+    border-color 0.15s ease,
+    color 0.15s ease;
+}
+
+.atcb-group-overview-add:hover,
+.atcb-group-overview-add:focus-visible {
+  background: #111;
+  border-color: #111;
+  color: #fff;
+}
+
+.atcb-group-overview-item-no-details:hover .atcb-group-overview-add,
+.atcb-group-overview-item-no-details .atcb-group-overview-event-link:focus-visible .atcb-group-overview-add {
+  background: #111;
+  border-color: #111;
+  color: #fff;
+}
+
+.atcb-group-overview-add:focus-visible {
+  outline: 2px solid #111;
+  outline-offset: 2px;
+}
+
+.atcb-group-overview-cards .atcb-group-overview-content {
+  padding: 1em;
+}
+
+.atcb-group-overview-cards .atcb-group-overview-meta-datetime {
+  color: #111;
+  font-size: 1em;
+  font-weight: 600;
+  margin-bottom: 0.5em;
+}
+
+.atcb-group-overview-cards .atcb-group-overview-title {
+  border-bottom: 1px solid #d7dbe0;
+  border-top: 1px solid #d7dbe0;
+  padding: 0.65em 0;
+}
+
+.atcb-group-overview-compact.atcb-group-overview-items {
+  display: list-item;
+  list-style-type: disc;
+  gap: 10px;
+}
+
+.atcb-group-overview-compact > .atcb-group-overview-item {
+  background: transparent;
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
+  min-height: 0;
+  margin: 0 0 10px 20px;
+}
+
+.atcb-group-overview-compact-row {
+  align-items: center;
+  display: inline-flex;
+  max-width: 100%;
+  gap: 6px;
+}
+
+.atcb-group-overview-compact > :is(.atcb-group-overview-compact-with-add, .atcb-group-overview-compact-with-marker) {
+  list-style: none;
+}
+
+.atcb-group-overview-compact:has(:is(.atcb-group-overview-compact-with-add, .atcb-group-overview-compact-with-marker)) > .atcb-group-overview-item {
+  margin-left: 0;
+}
+
+.atcb-group-overview-compact .atcb-group-overview-add {
+  flex: 0 0 1.8em;
+  margin-right: 0.4em;
+  position: static;
+}
+
+.atcb-group-overview-compact-marker {
+  align-items: center;
+  display: inline-flex;
+  flex: 0 0 1.8em;
+  height: 1.8em;
+  justify-content: center;
+  line-height: 1;
+  margin-right: 0.4em;
+  width: 1.8em;
+}
+
+.atcb-group-overview-empty {
+  font-size: 0.9em;
+  margin: 12px 0;
+}
+
+@media (width <= 414px) {
+  .atcb-group-overview-day {
+    flex-basis: auto;
+    width: fit-content;
+    min-width: 43px;
+    padding: 0.6em 0.5em;
+  }
+
+  .atcb-group-overview-day-value {
+    font-size: 1.5em;
+  }
+}
+
+@media (width <= 575px) {
+  .atcb-group-overview-meta-location {
+    max-width: 100%;
+    width: 100%;
+  }
+
+  .atcb-group-overview-meta-location .atcb-group-overview-meta-text {
+    flex: 1 1 auto;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+}

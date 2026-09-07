@@ -16,8 +16,14 @@ const localePath = useLocalePath();
   <div class="container pb-5 pt-8">
     <div class="flex flex-col justify-between lg:flex-row">
       <div class="flex-1 pb-16 pr-0 lg:pb-0 lg:pr-20">
-        <h2 class="pb-16 text-zinc-600 dark:text-zinc-300">{{ $t('content.home.intro_slogan_1') }}.<br />{{ $t('content.home.intro_slogan_2') }}<span class="block py-3 sm:inline sm:px-2 sm:py-0">🔥🚀😏</span></h2>
-        <p>{{ $t('content.home.intro_block_1') }}<br />{{ $t('content.home.intro_block_2') }}</p>
+        <h2 class="pb-16 text-zinc-600 dark:text-zinc-300">
+          {{ $t('content.home.intro_slogan_1') }}.<br />
+          {{ $t('content.home.intro_slogan_2') }}<span class="block py-3 sm:inline sm:px-2 sm:py-0">🔥🚀😏</span>
+        </h2>
+        <p>
+          {{ $t('content.home.intro_block_1') }}<br />
+          {{ $t('content.home.intro_block_2') }}
+        </p>
         <p>{{ $t('content.home.intro_block_3') }}</p>
         <p class="font-semibold">{{ $t('content.home.intro_block_4') }}</p>
       </div>

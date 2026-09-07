@@ -1,0 +1,409 @@
+/**
+ * Server-side rendering entry (`add-to-calendar-button/ssr`).
+ *
+ * Renders a declarative shadow DOM SHELL for the button: a style- and size-correct
+ * placeholder that paints before any client JavaScript runs. The client bundle then
+ * upgrades the element and swaps the shell for the fully decorated button without
+ * layout shift.
+ *
+ * Deliberate constraints (the shell is a placeholder, not a server-rendered button):
+ * - no full config decoration, validation, recurrence expansion, or network fetches
+ * - only the visual essentials are honored: buttonStyle, size, lightMode, rtl (from
+ *   the language), and the real label when it is derivable without decoration
+ *   (label attribute, else the localized default from the bundled packs)
+ * - `buttonStyle="date"` renders skeleton spans for everything that needs date math
+ * - group overview and inline RSVP render simple skeletons
+ * - everything else (options, list behavior, hide flags, ...) is left to hydration
+ *
+ * Browsers without declarative shadow DOM support treat the template as inert and
+ * the element initializes client-only, exactly like the script-tag path.
+ */
+import type { AddToCalendarButtonType } from '../types';
+import { icons, wcParams, wcProParams } from '../core/globals';
+import { rtlLanguages } from '../i18n/index';
+import { decorate_sizes } from '../core/sizes';
+import { officialAttributeName, legacyAttributeName } from '../compat/attributes';
+import { secure_url, strip_unsafe_keys } from '../core/text';
+import { tzlib_get_offset } from 'timezones-ical-library';
+
+// filled at build time with the minified tokens+core css plus EVERY per-style delta
+// (the ssr bundle is server-only, so carrying all styles is size-uncritical)
+const atcbSsrCssTemplate: { [key: string]: string } = {};
+
+// the default button label per language, statically extracted from the locale packs
+// at build time (a static import is not a fetch - the no-fetch constraint holds)
+const atcbSsrLabels: { [key: string]: string } = {};
+
+// the RSVP button labels per language, injected alongside the default labels
+const atcbSsrRsvpLabels: { [key: string]: { title: string; expired: string; bookedout: string } } = {};
+
+const KNOWN_STYLES = ['default', 'simple', '3d', 'flat', 'round', 'neumorphism', 'text', 'date'];
+
+/**
+ * Normalizes config keys to the internal camelCase form. Accepts the official
+ * kebab-case attribute spellings ('start-date', 'button-style', ...) and legacy
+ * lowercased names ('startdate', ...) in addition to camelCase - mirroring what
+ * the element accepts on the tag. camelCase input wins when both are present,
+ * since the kebab form would overwrite it otherwise.
+ */
+function normalizeConfig(config: AddToCalendarButtonType & { [key: string]: unknown }): AddToCalendarButtonType & { [key: string]: unknown } {
+  const normalized: { [key: string]: unknown } = {};
+  const priorities: { [key: string]: number } = {};
+  const aliases = new Map<string, { key: string; priority: number }>();
+  // proKey is a control field handled separately from the regular WC param list.
+  for (const param of [...wcParams, 'proKey']) {
+    // Object/API camelCase wins over the official attribute spelling, which in turn
+    // wins over the legacy lowercased spelling, independent of input key order.
+    aliases.set(legacyAttributeName(param), { key: param, priority: 1 });
+    aliases.set(officialAttributeName(param), { key: param, priority: 2 });
+    aliases.set(param, { key: param, priority: 3 });
+  }
+  for (const [key, value] of Object.entries(config)) {
+    const alias = aliases.get(key);
+    if (alias) {
+      if ((priorities[`${alias.key}`] || 0) <= alias.priority) {
+        normalized[`${alias.key}`] = value;
+        priorities[`${alias.key}`] = alias.priority;
+      }
+      continue;
+    }
+    // Keep accepting punctuation-separated keys outside the declared component
+    // surface, as the previous SSR normalizer did.
+    const normalizedKey = key.replace(/[-_]([a-z0-9])/g, (_, chr: string) => chr.toUpperCase());
+    if (!(normalizedKey in normalized)) normalized[`${normalizedKey}`] = value;
+  }
+  return normalized as AddToCalendarButtonType & { [key: string]: unknown };
+}
+
+function escapeAttribute(value: string): string {
+  return value.replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+}
+
+function escapeText(value: string): string {
+  return value.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+}
+
+function serializeAttributeValue(value: unknown): string | null {
+  if (value === undefined || value === null) return null;
+  if (typeof value === 'string') return value;
+  if (typeof value === 'boolean' || typeof value === 'number') return String(value);
+  try {
+    return JSON.stringify(value);
+  } catch {
+    return null;
+  }
+}
+
+function skeletonSpan(width: string): string {
+  return `<span class="atcb-ssr-skeleton" style="width:${width}">&nbsp;</span>`;
+}
+
+/**
+ * Boolean flag coercion mirroring the element: true, 'true', '1', and the bare
+ * attribute presence ('' - e.g. frameworks serialize bare boolean attrs as empty
+ * strings) all count as true.
+ */
+function truthyFlag(value: unknown): boolean {
+  return value === true || value === 'true' || value === '1' || value === '';
+}
+
+function isAsciiDigits(value: string): boolean {
+  if (value.length === 0) return false;
+  for (let i = 0; i < value.length; i++) {
+    const code = value.charCodeAt(i);
+    if (code < 48 || code > 57) return false;
+  }
+  return true;
+}
+
+function parseDates(value: unknown): { [key: string]: unknown }[] | null {
+  if (Array.isArray(value)) return value.filter((entry) => entry && typeof entry === 'object' && !Array.isArray(entry)) as { [key: string]: unknown }[];
+  if (typeof value !== 'string') return null;
+  try {
+    const parsed = JSON.parse(value.replace(/'/g, '"'));
+    return Array.isArray(parsed) ? (parsed.filter((entry) => entry && typeof entry === 'object' && !Array.isArray(entry)) as { [key: string]: unknown }[]) : null;
+  } catch {
+    return null;
+  }
+}
+
+function dateInTimeZone(timeZone: string): string | null {
+  const now = new Date();
+  try {
+    const parts = new Intl.DateTimeFormat('en-US', { timeZone, year: 'numeric', month: '2-digit', day: '2-digit' }).formatToParts(now);
+    const part = (type: Intl.DateTimeFormatPartTypes): string => parts.find((entry) => entry.type === type)?.value || '';
+    return `${part('year')}-${part('month')}-${part('day')}`;
+  } catch {
+    // The timezone library accepts project aliases such as PT and ET that Intl
+    // does not. Use its current offset to translate the instant as a fallback.
+    const utcDate = now.toISOString().slice(0, 10);
+    const utcTime = now.toISOString().slice(11, 16);
+    const offset = tzlib_get_offset(timeZone, utcDate, utcTime);
+    if (offset.length !== 5 || (offset[0] !== '+' && offset[0] !== '-') || !isAsciiDigits(offset.slice(1))) return null;
+    const direction = offset[0] === '+' ? 1 : -1;
+    const offsetMinutes = direction * (Number(offset.slice(1, 3)) * 60 + Number(offset.slice(3, 5)));
+    return new Date(now.getTime() + offsetMinutes * 60000).toISOString().slice(0, 10);
+  }
+}
+
+function resolveDynamicDate(value: unknown, timeZone: string): string | null {
+  if (typeof value !== 'string') return null;
+  const separator = value.indexOf('+');
+  if (separator !== -1 && value.indexOf('+', separator + 1) !== -1) return null;
+  const date = separator === -1 ? value : value.slice(0, separator);
+  const offset = separator === -1 ? '' : value.slice(separator + 1);
+  if (separator !== -1 && (offset.length > 4 || !isAsciiDigits(offset))) return null;
+  const isToday = date.toLowerCase() === 'today';
+  const isIsoDate = date.length === 10 && date[4] === '-' && date[7] === '-' && isAsciiDigits(date.slice(0, 4) + date.slice(5, 7) + date.slice(8));
+  if (!isToday && !isIsoDate) return null;
+  const resolvedDate = isToday ? dateInTimeZone(timeZone) : date;
+  if (!resolvedDate) return null;
+  const base = new Date(`${resolvedDate}T00:00:00Z`);
+  if (Number.isNaN(base.getTime())) return null;
+  base.setUTCDate(base.getUTCDate() + Number(offset || 0));
+  return base.toISOString().slice(0, 10);
+}
+
+function dateIsOverdue(entry: { [key: string]: unknown }): boolean | null {
+  if (entry.timeZone === 'currentBrowser' || entry.useUserTZ) return null;
+  const timeZone = typeof entry.timeZone === 'string' ? entry.timeZone : 'GMT';
+  const date = resolveDynamicDate(entry.endDate || entry.startDate, timeZone);
+  if (!date) return null;
+  const time = typeof entry.endTime === 'string' && /^\d{2}:\d{2}/.test(entry.endTime) ? entry.endTime.slice(0, 5) : '';
+  let timestamp: number;
+  if (time !== '') {
+    try {
+      const offset = tzlib_get_offset(timeZone, date, time);
+      timestamp = new Date(`${date} ${time}:00 GMT${offset}`).getTime();
+    } catch {
+      return null;
+    }
+  } else {
+    const nextDate = new Date(`${date}T00:00:00Z`);
+    nextDate.setUTCDate(nextDate.getUTCDate() + 1);
+    const nextDateString = nextDate.toISOString().slice(0, 10);
+    try {
+      const offset = tzlib_get_offset(timeZone, nextDateString, '00:00');
+      timestamp = new Date(`${nextDateString} 00:00:00 GMT${offset}`).getTime();
+    } catch {
+      return null;
+    }
+  }
+  return Number.isNaN(timestamp) ? null : timestamp < Date.now();
+}
+
+/** Only suppress a shell when the client can be known to hide every date. */
+function hidesPastEvent(config: AddToCalendarButtonType & { [key: string]: unknown }): boolean {
+  if (config.pastDateHandling !== 'hide' || (typeof config.recurrence === 'string' && config.recurrence !== '')) return false;
+  const configuredDates = parseDates(config.dates);
+  const dates = configuredDates && configuredDates.length > 0 ? configuredDates : [{}];
+  const overdue = dates.map((date) =>
+    dateIsOverdue({
+      startDate: date.startDate || config.startDate,
+      endDate: date.endDate || config.endDate || date.startDate || config.startDate,
+      endTime: date.endTime || config.endTime,
+      timeZone: date.timeZone || config.timeZone,
+      useUserTZ: date.useUserTZ || config.useUserTZ,
+    }),
+  );
+  return overdue.length > 0 && overdue.every((entry) => entry === true);
+}
+
+/**
+ * Parses the options config into normalized option keys plus their optional label
+ * overrides (the 'Option|Label' syntax). Mirrors the client-side normalization
+ * (lowercase, 'microsoft' -> 'ms', dots stripped); unknown/empty entries drop out.
+ */
+function parseOptions(value: unknown): { key: string; labelOverride: string }[] {
+  let entries: unknown[];
+  if (Array.isArray(value)) {
+    entries = value;
+  } else if (typeof value === 'string') {
+    const trimmed = value.trim();
+    if (trimmed === '') return [];
+    try {
+      const parsed = JSON.parse(trimmed.replace(/'/g, '"'));
+      entries = Array.isArray(parsed) ? parsed : [parsed];
+    } catch {
+      // legacy comma-separated form: entries may carry single quotes
+      // ("'apple','google'") - strip them like the attribute parser does
+      entries = trimmed.split(',').map((entry) => entry.trim().replace(/^'+|'+$/g, ''));
+    }
+  } else {
+    return [];
+  }
+  const options: { key: string; labelOverride: string }[] = [];
+  for (const entry of entries) {
+    if (typeof entry !== 'string') continue;
+    const [rawName, ...labelParts] = entry.split('|');
+    const key = (rawName || '').toLowerCase().replace(/\s+/g, '').replace('microsoft', 'ms').replace(/\./, '');
+    if (key === '' || !icons[`${key}`]) continue;
+    options.push({ key, labelOverride: labelParts.join('|').trim() });
+  }
+  return options;
+}
+
+/** Internal renderer that distinguishes fetched PRO config from optimistic sync input. */
+function generate_ssr_html_with_context(rawConfig: AddToCalendarButtonType & { [key: string]: unknown }, proConfigResolved: boolean): string {
+  // accept camelCase, kebab-case, and legacy spellings alike (the tag does, too)
+  const config = normalizeConfig(rawConfig);
+  // --- the few config bits the shell honors ---
+  const buttonStyle = typeof config.buttonStyle === 'string' && KNOWN_STYLES.includes(config.buttonStyle) ? config.buttonStyle : 'default';
+  const language = typeof config.language === 'string' && config.language ? config.language : 'en';
+  const baseLanguage = language.split(/[-_]/)[0]!.toLowerCase();
+  const rtl = rtlLanguages.includes(baseLanguage);
+  const sizes = decorate_sizes(typeof config.size === 'string' || typeof config.size === 'number' ? String(config.size) : undefined);
+  const lightMode = config.lightMode === 'dark' ? 'dark' : config.lightMode === 'bodyScheme' ? 'bodyScheme' : 'light';
+  const label = typeof config.label === 'string' && config.label !== '' ? config.label : atcbSsrLabels[`${baseLanguage}`] || atcbSsrLabels['en'] || 'Add to Calendar';
+  const rsvpLabels = atcbSsrRsvpLabels[`${baseLanguage}`] || atcbSsrRsvpLabels['en'] || { title: 'RSVP', expired: 'Expired', bookedout: 'Booked out' };
+  const inline = truthyFlag(config.inline);
+  const hasRsvp = Boolean(config.rsvp) && typeof config.rsvp === 'object';
+  const inlineRsvp = hasRsvp && truthyFlag(config.inlineRsvp);
+  const hidden = truthyFlag(config.hidden);
+  const identifier = typeof config.identifier === 'string' && /^[\w-]+$/.test(config.identifier) ? config.identifier : '';
+  const buttonsList = truthyFlag(config.buttonsList);
+  const hideIconButton = truthyFlag(config.hideIconButton);
+  const hideIconList = truthyFlag(config.hideIconList);
+  const hideTextLabelButton = truthyFlag(config.hideTextLabelButton);
+  const groupOverviewRequested = truthyFlag(config.groupOverview);
+  const groupOverviewCapabilityKnown = proConfigResolved || Object.prototype.hasOwnProperty.call(config, 'publicEventOverview');
+  const groupOverviewEnabled = config.publicEventOverview === true;
+  const hasProKey = typeof config.proKey === 'string' && config.proKey !== '';
+  // The async renderer knows the server-side capability exactly. Synchronous SSR
+  // can still paint the intended shape when group-overview is explicitly requested,
+  // but cannot infer automatic non-subscription overviews from a prokey alone.
+  const groupOverviewSkeleton = hasProKey && (groupOverviewCapabilityKnown ? groupOverviewEnabled && (!truthyFlag(config.subscribe) || groupOverviewRequested) : groupOverviewRequested);
+  // custom styles: an external css file (scheme-checked like the client) and/or the
+  // css variable overrides (html-stripped like the client does via secure_content)
+  const customCss = typeof config.customCss === 'string' && config.customCss !== '' && secure_url(config.customCss, false) ? config.customCss : '';
+  const styleLight = typeof config.styleLight === 'string' ? config.styleLight.replace(/(\\r\\n|\\n|\\r)/g, '').replace(/(<(?!br)([^>]+)>)/gi, '') : '';
+  const styleDark = typeof config.styleDark === 'string' ? config.styleDark.replace(/(\\r\\n|\\n|\\r)/g, '').replace(/(<(?!br)([^>]+)>)/gi, '') : '';
+  // buttonsList splits the button into one singleton per option (never for the date
+  // style - the client rule). The client sorts options alphabetically in
+  // decorate-options; mirror that here so the shell paints in the same order and
+  // hydration doesn't visually reorder the buttons.
+  const parsedOptions = parseOptions(config.options);
+  const listOptions = buttonsList && buttonStyle !== 'date' ? parsedOptions : [];
+  listOptions.sort((a, b) => (a.key < b.key ? -1 : a.key > b.key ? 1 : 0));
+  const oneOption = parsedOptions.length === 1;
+
+  // --- host attributes: every config key, serialized under its official name ---
+  const attributes: string[] = [];
+  for (const [key, value] of Object.entries(config)) {
+    const serialized = serializeAttributeValue(value);
+    if (serialized === null) continue;
+    attributes.push(`${officialAttributeName(key)}="${escapeAttribute(serialized)}"`);
+  }
+
+  // A shell would flash a button that the client immediately hides. Keep the host
+  // and its configuration for upgrade, but do not create a declarative placeholder.
+  if (!groupOverviewSkeleton && hidesPastEvent(config)) return `<add-to-calendar-button class="add-to-calendar atcb-${lightMode}" ${attributes.join(' ')}></add-to-calendar-button>`;
+
+  // --- styles: mirror what the client injects (general layout css + registry css) ---
+  const initWidth = inlineRsvp || groupOverviewSkeleton ? '100%' : 'fit-content';
+  const generalCss = `.atcb-initialized { display: block; position: relative; width: ${initWidth}; }.atcb-initialized.atcb-inline { display: inline-block; }.atcb-initialized.atcb-buttons-list { display: flex; flex-wrap: wrap; justify-content: center; gap: var(--buttonslist-gap); }.atcb-hidden { display: none; }.atcb-ssr-skeleton { display: inline-block; background: currentColor; opacity: 0.15; border-radius: 0.3em; min-width: 2ch; }[data-atcb-ssr] .atcb-date-btn-month { margin-top: 0.5em; }:host:has(.atcb-ssr-group-overview-skeleton) { box-sizing: border-box; display: block; max-width: 100% !important; width: min(600px, 100%) !important; }.atcb-ssr-group-overview-skeleton { box-sizing: border-box; color: #1b1f24; display: flex; flex-direction: column; gap: 0.7em; width: 100%; }.atcb-ssr-group-overview-skeleton .atcb-ssr-skeleton { display: block; }.atcb-ssr-group-overview-select { height: 2.6em; margin-bottom: 0.55em; width: 7em; }.atcb-ssr-group-overview-entry { height: 4.5em; width: 100%; }.atcb-ssr-group-overview-entry + .atcb-ssr-group-overview-entry { margin-top: 10px; }.atcb-ssr-rsvp-skeleton { box-sizing: border-box; display: flex; flex-direction: column; align-items: center; width: 100%; max-width: 540px; margin: 0 auto; padding: 32px 24px; gap: 12px; }.atcb-ssr-rsvp-skeleton .atcb-ssr-skeleton { display: block; width: 78%; height: 10px; background-image: linear-gradient(90deg, transparent 25%, rgb(255 255 255 / 0.55) 50%, transparent 75%); background-size: 200% 100%; animation: atcb-ssr-shimmer 1.5s linear infinite; }.atcb-ssr-rsvp-skeleton .atcb-ssr-skeleton-headline { width: 42%; height: 44px; margin-bottom: 2px; opacity: 0.25; }.atcb-ssr-rsvp-skeleton .atcb-ssr-skeleton-field { width: 100%; height: 44px; margin-top: 8px; border-radius: 6px; }.atcb-ssr-rsvp-skeleton .atcb-ssr-skeleton-submit { width: 38%; height: 44px; margin-top: 10px; opacity: 0.25; }.atcb-ssr-rsvp-skeleton .atcb-ssr-skeleton-field + .atcb-ssr-skeleton-field { margin-top: 0; }@keyframes atcb-ssr-shimmer { from { background-position: 200% 0; } to { background-position: -200% 0; } }@media (prefers-reduced-motion: reduce) { .atcb-ssr-rsvp-skeleton .atcb-ssr-skeleton { animation: none; } }`;
+  // with buttonStyle 'custom', the registry stays out and only the external file applies
+  const styleCss = buttonStyle === 'custom' ? '' : (atcbSsrCssTemplate['core'] || '') + (atcbSsrCssTemplate[`${buttonStyle}`] || '');
+  const overrideCss = (styleLight !== '' ? `:host{${styleLight}}` : '') + (styleDark !== '' ? `:host(.atcb-dark){${styleDark}}` : '');
+  const customCssLink = customCss !== '' ? `<link rel="stylesheet" type="text/css" href="${escapeAttribute(customCss)}">` : '';
+
+  // --- shell content ---
+  const sizeStyle = `--base-font-size-l:${sizes['l']}px;--base-font-size-m:${sizes['m']}px;--base-font-size-s:${sizes['s']}px;`;
+  const buttonId = identifier !== '' ? ` id="atcb-btn-${escapeAttribute(identifier)}"` : '';
+  const content = (function () {
+    if (groupOverviewSkeleton) {
+      return '<div class="atcb-group-overview atcb-group-overview-list atcb-ssr-group-overview-skeleton" aria-hidden="true"><div class="atcb-ssr-skeleton atcb-ssr-group-overview-select"></div><div class="atcb-ssr-skeleton atcb-ssr-group-overview-entry"></div><div class="atcb-ssr-skeleton atcb-ssr-group-overview-entry"></div></div>';
+    }
+    if (inlineRsvp) {
+      return `<div class="atcb-ssr-rsvp-skeleton" aria-hidden="true"><div class="atcb-ssr-skeleton atcb-ssr-skeleton-headline"></div><div class="atcb-ssr-skeleton"></div><div class="atcb-ssr-skeleton"></div><div class="atcb-ssr-skeleton atcb-ssr-skeleton-field"></div><div class="atcb-ssr-skeleton atcb-ssr-skeleton-field"></div><div class="atcb-ssr-skeleton atcb-ssr-skeleton-submit"></div></div>`;
+    }
+    if (hasRsvp) {
+      const rsvp = config.rsvp as { expired?: unknown; bookedOut?: unknown };
+      const rsvpLabel = truthyFlag(rsvp.expired) ? rsvpLabels.expired : truthyFlag(rsvp.bookedOut) ? rsvpLabels.bookedout : rsvpLabels.title;
+      const icon = hideIconButton ? '' : `<div class="atcb-icon atcb-icon-rsvp" part="atcb-list-icon">${icons['rsvp']}</div>`;
+      const text = hideTextLabelButton ? '' : `<span class="atcb-text" part="atcb-list-text">${escapeText(rsvpLabel)}</span>`;
+      return `<div class="atcb-button-wrapper${rtl ? ' atcb-rtl' : ''}" part="atcb-button-wrapper" style="${sizeStyle}"><button type="button" class="atcb-button atcb-click atcb-single${hideTextLabelButton ? ' atcb-no-text' : ''}" part="atcb-button"${buttonId} aria-expanded="false" aria-label="${escapeAttribute(rsvpLabel)}">${icon}${text}</button></div>`;
+    }
+    // buttonsList: one singleton button per option. Labels render as skeletons
+    // (their text depends on decoration - translations, customLabels) - only an
+    // explicit 'Option|Label' override paints real text
+    if (listOptions.length > 0) {
+      return listOptions
+        .map((option) => {
+          const singletonId = identifier !== '' ? ` id="atcb-btn-${escapeAttribute(identifier)}-${escapeAttribute(option.key)}"` : '';
+          const icon = hideIconList ? '' : `<div class="atcb-icon atcb-icon-${escapeAttribute(option.key)}" part="atcb-button-icon">${icons[`${option.key}`]}</div>`;
+          const text = hideTextLabelButton ? '' : option.labelOverride !== '' ? `<span class="atcb-text" part="atcb-list-text">${escapeText(option.labelOverride)}</span>` : `<span class="atcb-text" part="atcb-list-text">${skeletonSpan('8ch')}</span>`;
+          return `<div class="atcb-button-wrapper${rtl ? ' atcb-rtl' : ''}" part="atcb-button-wrapper" style="${sizeStyle}"><button type="button" class="atcb-button atcb-single${hideTextLabelButton ? ' atcb-no-text' : ''}" part="atcb-button"${singletonId} aria-expanded="false" aria-label="${escapeAttribute(option.labelOverride !== '' ? option.labelOverride : option.key)}">${icon}${text}</button></div>`;
+        })
+        .join('');
+    }
+    const inner = (function () {
+      if (buttonStyle === 'date') {
+        const headline = typeof config.label === 'string' && config.label !== '' ? escapeText(config.label) : typeof config.name === 'string' && config.name !== '' ? escapeText(config.name) : skeletonSpan('12ch');
+        return `<div class="atcb-date-btn-left"><div class="atcb-date-btn-day">${skeletonSpan('2ch')}</div><div class="atcb-date-btn-month">${skeletonSpan('3ch')}</div></div><div class="atcb-date-btn-right"><div class="atcb-date-btn-details"><div class="atcb-date-btn-headline">${headline}</div><div class="atcb-date-btn-content">${skeletonSpan('16ch')}</div></div></div><div class="atcb-date-btn-plus"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" style="fill:none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M12 5.5v13M5.5 12h13"/></svg></div>`;
+      }
+      const icon = hideIconButton ? '' : `<div class="atcb-icon atcb-icon-trigger" part="atcb-button-icon">${icons['trigger']}</div>`;
+      const chevron = !oneOption && !hideTextLabelButton ? `<div class="atcb-chevron" part="atcb-button-chevron">${icons['chevron']}</div>` : '';
+      const anchor = oneOption ? '' : '<div class="atcb-dropdown-anchor"></div>';
+      const text = hideTextLabelButton ? '' : `<span class="atcb-text" part="atcb-button-text">${escapeText(label)}</span>`;
+      return `${icon}${text}${chevron}${anchor}`;
+    })();
+    return `<div class="atcb-button-wrapper${rtl ? ' atcb-rtl' : ''}" part="atcb-button-wrapper" style="${sizeStyle}"><button type="button" class="atcb-button${oneOption ? ' atcb-single' : ''}${hideTextLabelButton ? ' atcb-no-text' : ''}" part="atcb-button"${buttonId} aria-expanded="false" aria-label="${escapeAttribute(typeof label === 'string' ? label : 'Add to Calendar')}">${inner}</button></div>`;
+  })();
+
+  const shellHidden = hidden;
+  const rootClasses = `atcb-initialized${shellHidden ? ' atcb-hidden' : ''}${inline && !groupOverviewSkeleton ? ' atcb-inline' : ''}${listOptions.length > 0 && !inline && !groupOverviewSkeleton ? ' atcb-buttons-list' : ''}`;
+  // data-atcb-ssr distinguishes the shell wrapper from the client-rendered one while
+  // both exist during hydration (client queries exclude it)
+  const shell = `<style>${generalCss}</style>${customCssLink}<style>${styleCss}${overrideCss}</style><div class="${rootClasses}" data-atcb-ssr lang="${escapeAttribute(baseLanguage)}">${shellHidden ? '' : content}</div>`;
+
+  return `<add-to-calendar-button class="add-to-calendar atcb-${lightMode}" ${attributes.join(' ')}><template shadowrootmode="open">${shell}</template></add-to-calendar-button>`;
+}
+
+/**
+ * Renders the complete element HTML: host tag with all config attributes plus the
+ * declarative shadow DOM template carrying the shell. Drop the returned string into
+ * server-rendered HTML; the client bundle takes over from there.
+ */
+function generate_ssr_html(rawConfig: AddToCalendarButtonType & { [key: string]: unknown }): string {
+  return generate_ssr_html_with_context(rawConfig, false);
+}
+
+/**
+ * Fetches a PRO configuration when a prokey is present, then renders its SSR shell.
+ * The synchronous renderer remains available for configurations that need no I/O.
+ */
+async function generate_ssr_html_async(rawConfig: AddToCalendarButtonType & { [key: string]: unknown }): Promise<string> {
+  const config = normalizeConfig(rawConfig);
+  const proKey = typeof config.proKey === 'string' ? config.proKey : '';
+  if (proKey === '') return generate_ssr_html(rawConfig);
+
+  try {
+    const endpoint = `https://${truthyFlag(config.dev) ? 'event-dev.caldn.net' : 'event.caldn.net'}/${encodeURIComponent(proKey)}/config.json`;
+    const response = await fetch(endpoint);
+    if (!response.ok) throw new Error('Not possible to read prokey config from server...');
+    const responseData = strip_unsafe_keys(await response.json());
+    if (!responseData || typeof responseData !== 'object' || Array.isArray(responseData)) throw new Error('Not possible to read prokey config from server...');
+
+    const merged = responseData as { [key: string]: unknown };
+    const overrideKeys = truthyFlag(config.proOverride) ? wcParams : wcProParams;
+    for (const key of overrideKeys) {
+      // PRO-only fields cannot be replaced from an arbitrary rendering server.
+      if (truthyFlag(config.proOverride) && ['hideBranding', 'ty', 'rsvp'].includes(key)) continue;
+      if (Object.prototype.hasOwnProperty.call(config, key)) merged[`${key}`] = config[`${key}`];
+    }
+    // These two host controls intentionally live outside the PRO override allowlist:
+    // the client reads them directly to select and configure the public overview.
+    for (const key of ['groupOverview', 'groupOverviewConfig'] as const) {
+      if (Object.prototype.hasOwnProperty.call(config, key)) merged[`${key}`] = config[`${key}`];
+    }
+    if (config.rsvp && typeof config.rsvp === 'object' && Object.prototype.hasOwnProperty.call(config.rsvp, 'none')) delete merged.rsvp;
+    merged.proKey = proKey;
+    merged.identifier = proKey;
+    return generate_ssr_html_with_context(merged as AddToCalendarButtonType & { [key: string]: unknown }, true);
+  } catch {
+    throw new Error('prokey invalid or server not responding!');
+  }
+}
+
+export { generate_ssr_html as atcb_generate_ssr_html, generate_ssr_html_async as atcb_generate_ssr_html_async };

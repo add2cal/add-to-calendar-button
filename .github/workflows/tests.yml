@@ -9,12 +9,12 @@ jobs:
     strategy:
       matrix:
         platform: [ubuntu-latest]
-        node-version: ['24']
+        node-version: ['24', '26']
         toolchain: [stable]
     runs-on: ${{ matrix.platform }}
     steps:
-      - uses: actions/checkout@v6
-      - uses: actions/setup-node@v6
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
         with:
           node-version: ${{ matrix.node-version }}
       - name: Run tests

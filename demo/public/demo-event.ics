@@ -1,6 +1,6 @@
 BEGIN:VCALENDAR
 VERSION:2.0
-PRODID:-// https://add-to-calendar-pro.com // button v1.17.0 //EN
+PRODID:-// calendarverse.net // button v3.0.0 //EN
 CALSCALE:GREGORIAN
 METHOD:PUBLISH
 BEGIN:VEVENT

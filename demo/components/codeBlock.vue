@@ -11,6 +11,7 @@ const highlighter = await createHighlighter({
   langs: [
     import('shiki/langs/shellscript.mjs'),
     import('shiki/langs/javascript.mjs'),
+    import('shiki/langs/json.mjs'),
     import('shiki/langs/html.mjs'),
   ]
 })

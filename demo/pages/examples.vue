@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import "add-to-calendar-button";
 import { ArrowRightIcon, ArrowTopRightOnSquareIcon } from '@heroicons/vue/24/outline';
 import Interstitial from '@/components/interstitial.vue';
 const LazyCodeBlock = defineAsyncComponent(() => import('@/components/codeBlock.vue'));
@@ -24,21 +23,21 @@ let defaultLang = (function () {
   return '';
 })();
 let defaultMultiDate = JSON.stringify([{
-    "name":t('demo_data.name_sub_1'),
+    "name":"fd",
     "description":t('demo_data.description_sub_1'),
     "startDate":"today+3",
     "startTime":"10:15",
     "endTime":"23:30"
   },
   {
-    "name":t('demo_data.name_sub_3'),
+    "name":"fd",
     "description":t('demo_data.description_sub_3'),
     "startDate":"today+8",
     "startTime":"09:00",
     "endTime":"19:00"
   },
   {
-    "name":t('demo_data.name_sub_2'),
+    "name":"fd",
     "description":t('demo_data.description_sub_2'),
     "startDate":"today+5",
     "startTime":"11:30",
@@ -99,34 +98,34 @@ watch(locale, value => {
         <p v-if="locale=='en'">This is a more or less standard setup with all available calendar types and a time zone set.</p>
         <p v-else>Dies ist das gewöhnliche Standard-Setup mit allen verfügbaren Kalender-Links und einer definierten Zeitzone</p>
         <div class="block w-full justify-between md:flex">
-          <div class="flex w-full flex-none justify-center p-6 pt-8 md:w-[300px]">
-            <add-to-calendar-button
+          <div class="flex w-full flex-none justify-center p-6 pt-8 md:w-[310px]">
+            <Atcb
               :name="$t('demo_data.name')"
-              :startDate="defaultDate"
-              startTime="10:15"
-              endTime="23:30"
-              :timeZone="$t('demo_data.default_timezone')"
+              :start-date="defaultDate"
+              start-time="10:15"
+              end-time="23:30"
+              :time-zone="$t('demo_data.default_timezone')"
               :location="$t('demo_data.location')"
               :description="$t('demo_data.description_alt1')"
-              options="'Apple','Google','iCal','Outlook.com','Microsoft 365','Microsoft Teams','Yahoo'"
-              lightMode="bodyScheme"
+              options="'apple','google','ical','outlookcom','ms365','msteams','yahoo'"
+              light-mode="bodyScheme"
               :language="locale"
-              hideBranding
-            ></add-to-calendar-button>
+              hide-branding
+            ></Atcb>
           </div>
           <div class="flex-1 overflow-x-auto">
             <LazyCodeBlock>
               <pre>
 &lt;add-to-calendar-button
   name="{{ $t('demo_data.name') }}"
-  startDate="{{ defaultDate }}"
-  startTime="10:15"
-  endTime="23:30"
-  timeZone="{{ $t('demo_data.default_timezone') }}"
+  start-date="{{ defaultDate }}"
+  start-time="10:15"
+  end-time="23:30"
+  time-zone="{{ $t('demo_data.default_timezone') }}"
   location="{{ $t('demo_data.location') }}"
   description="{{ $t('demo_data.description_alt1') }}"
-  options="'Apple','Google','iCal','Outlook.com','Microsoft 365','Microsoft Teams','Yahoo'"
-  lightMode="bodyScheme"{{ defaultLang }}
+  options="'apple','google','ical','outlookcom','ms365','msteams','yahoo'"
+  light-mode="bodyScheme"{{ defaultLang }}
 &gt;&lt;/add-to-calendar-button&gt;
 </pre>
             </LazyCodeBlock>
@@ -145,29 +144,29 @@ watch(locale, value => {
           <span class="text-sm italic">Für derartige Events ist die Zeitzone obsolet.</span>
         </p>
         <div class="block w-full justify-between md:flex">
-          <div class="flex w-full flex-none justify-center p-6 pt-8 md:w-[300px]">
-            <add-to-calendar-button
+          <div class="flex w-full flex-none justify-center p-6 pt-8 md:w-[310px]">
+            <Atcb
               :name="$t('demo_data.name')"
-              :startDate="defaultDate"
+              :start-date="defaultDate"
               :location="$t('demo_data.location')"
               :description="$t('demo_data.description_alt1')"
-              options="'Apple','Google','iCal','Outlook.com','Microsoft 365','Microsoft Teams','Yahoo'"
-              lightMode="bodyScheme"
+              options="'apple','google','ical','outlookcom','ms365','msteams','yahoo'"
+              light-mode="bodyScheme"
               :language="locale"
-              hideRichData
-              hideBranding
-            ></add-to-calendar-button>
+              hide-rich-data
+              hide-branding
+            ></Atcb>
           </div>
           <div class="flex-1 overflow-x-auto">
             <LazyCodeBlock>
               <pre>
 &lt;add-to-calendar-button
   name="{{ $t('demo_data.name') }}"
-  startDate="{{ defaultDate }}"
+  start-date="{{ defaultDate }}"
   location="{{ $t('demo_data.location') }}"
   description="{{ $t('demo_data.description_alt1') }}"
-  options="'Apple','Google','iCal','Outlook.com','Microsoft 365','Microsoft Teams','Yahoo'"
-  lightMode="bodyScheme"{{ defaultLang }}
+  options="'apple','google','ical','outlookcom','ms365','msteams','yahoo'"
+  light-mode="bodyScheme"{{ defaultLang }}
 &gt;&lt;/add-to-calendar-button&gt;
 </pre>
             </LazyCodeBlock>
@@ -188,34 +187,34 @@ watch(locale, value => {
           <p class="text-sm italic">Dieses Beispiel erzeugt im Übrigen ein Online-Event im Schema.org-Kontext, da die "location" eine URL ist.</p>
         </div>
         <div class="block w-full justify-between md:flex">
-          <div class="flex w-full flex-none justify-center p-6 pt-8 md:w-[300px]">
-            <add-to-calendar-button
+          <div class="flex w-full flex-none justify-center p-6 pt-8 md:w-[310px]">
+            <Atcb
               :name="$t('demo_data.name')"
-              startDate="today+2"
-              startTime="10:15"
-              endTime="23:30"
-              :timeZone="$t('demo_data.default_timezone')"
+              start-date="today+2"
+              start-time="10:15"
+              end-time="23:30"
+              :time-zone="$t('demo_data.default_timezone')"
               :location="$t('demo_data.url')"
               :description="$t('demo_data.description_alt1')"
-              options="'Apple','Google','iCal','Outlook.com','Yahoo'"
-              lightMode="bodyScheme"
+              options="'apple','google','ical','outlookcom','yahoo'"
+              light-mode="bodyScheme"
               :language="locale"
-              hideBranding
-            ></add-to-calendar-button>
+              hide-branding
+            ></Atcb>
           </div>
           <div class="flex-1 overflow-x-auto">
             <LazyCodeBlock>
               <pre>
 &lt;add-to-calendar-button
   name="{{ $t('demo_data.name') }}"
-  startDate="today+2"
-  startTime="10:15"
-  endTime="23:30"
-  timeZone="{{ $t('demo_data.default_timezone') }}"
+  start-date="today+2"
+  start-time="10:15"
+  end-time="23:30"
+  time-zone="{{ $t('demo_data.default_timezone') }}"
   location="{{ $t('demo_data.url') }}"
   description="{{ $t('demo_data.description_alt1') }}"
-  options="'Apple','Google','iCal','Outlook.com','Yahoo'"
-  lightMode="bodyScheme"{{ defaultLang }}
+  options="'apple','google','ical','outlookcom','yahoo'"
+  light-mode="bodyScheme"{{ defaultLang }}
 &gt;&lt;/add-to-calendar-button&gt;
 </pre>
             </LazyCodeBlock>
@@ -235,37 +234,37 @@ watch(locale, value => {
           Beachte, dass die Regel technisch und logisch gültig sein muss und die Option nicht von allen Kalender-Typen unterstützt wird - im Beispiel tauchen die definierten Yahoo- und Outlook-Optionen (sowie Google unter iOS) aus diesem Grund nicht auf.
         </p>
         <div class="block w-full justify-between md:flex">
-          <div class="flex w-full flex-none justify-center p-6 pt-8 md:w-[300px]">
-            <add-to-calendar-button
+          <div class="flex w-full flex-none justify-center p-6 pt-8 md:w-[310px]">
+            <Atcb
               :name="$t('demo_data.name')"
-              :startDate="defaultDate"
-              startTime="10:15"
-              endTime="23:30"
-              :timeZone="$t('demo_data.default_timezone')"
+              :start-date="defaultDate"
+              start-time="10:15"
+              end-time="23:30"
+              :time-zone="$t('demo_data.default_timezone')"
               :location="$t('demo_data.location')"
               :description="$t('demo_data.description_alt1')"
-              options="'Apple','Google','iCal','Outlook.com','Yahoo'"
+              options="'apple','google','ical','outlookcom','yahoo'"
               recurrence="RRULE:FREQ=WEEKLY;INTERVAL=1;WKST=MO;BYDAY=WE,FR;COUNT=6"
-              lightMode="bodyScheme"
+              light-mode="bodyScheme"
               :language="locale"
-              hideRichData
-              hideBranding
-            ></add-to-calendar-button>
+              hide-rich-data
+              hide-branding
+            ></Atcb>
           </div>
           <div class="flex-1 overflow-x-auto">
             <LazyCodeBlock>
               <pre>
 &lt;add-to-calendar-button
   name="{{ $t('demo_data.name') }}"
-  startDate="{{ defaultDate }}"
-  startTime="10:15"
-  endTime="23:30"
-  timeZone="{{ $t('demo_data.default_timezone') }}"
+  start-date="{{ defaultDate }}"
+  start-time="10:15"
+  end-time="23:30"
+  time-zone="{{ $t('demo_data.default_timezone') }}"
   location="{{ $t('demo_data.location') }}"
   description="{{ $t('demo_data.description_alt1') }}"
-  options="'Apple','Google','iCal','Outlook.com','Yahoo'"
+  options="'apple','google','ical','outlookcom','yahoo'"
   recurrence="RRULE:FREQ=WEEKLY;INTERVAL=1;WKST=MO;BYDAY=WE,FR;COUNT=6"
-  lightMode="bodyScheme"{{ defaultLang }}
+  light-mode="bodyScheme"{{ defaultLang }}
 &gt;&lt;/add-to-calendar-button&gt;
 </pre>
             </LazyCodeBlock>
@@ -280,43 +279,43 @@ watch(locale, value => {
           Die <NuxtLink :to="{path: localePath('configuration'), hash: '#recurrence'}">"{{ $t('navigation.configuration') }}"</NuxtLink>-Seite hält mehr Details dazu bereit.
         </p>
         <div class="block w-full justify-between md:flex">
-          <div class="flex w-full flex-none justify-center p-6 pt-8 md:w-[300px]">
-            <add-to-calendar-button
+          <div class="flex w-full flex-none justify-center p-6 pt-8 md:w-[310px]">
+            <Atcb
               :name="$t('demo_data.name')"
-              :startDate="defaultDate"
-              startTime="10:15"
-              endTime="23:30"
-              :timeZone="$t('demo_data.default_timezone')"
+              :start-date="defaultDate"
+              start-time="10:15"
+              end-time="23:30"
+              :time-zone="$t('demo_data.default_timezone')"
               :location="$t('demo_data.location')"
               :description="$t('demo_data.description_alt1')"
-              options="'Apple','Google','iCal','Outlook.com','Yahoo'"
+              options="'apple','google','ical','outlookcom','yahoo'"
               recurrence="weekly"
-              recurrence_interval="1"
-              recurrence_count="6"
-              recurrence_byDay="WE,FR"
-              lightMode="bodyScheme"
+              recurrence-interval="1"
+              recurrence-count="6"
+              recurrence-by-day="WE,FR"
+              light-mode="bodyScheme"
               :language="locale"
-              hideRichData
-              hideBranding
-            ></add-to-calendar-button>
+              hide-rich-data
+              hide-branding
+            ></Atcb>
           </div>
           <div class="flex-1 overflow-x-auto">
             <LazyCodeBlock>
               <pre>
 &lt;add-to-calendar-button
   name="{{ $t('demo_data.name') }}"
-  startDate="{{ defaultDate }}"
-  startTime="10:15"
-  endTime="23:30"
-  timeZone="{{ $t('demo_data.default_timezone') }}"
+  start-date="{{ defaultDate }}"
+  start-time="10:15"
+  end-time="23:30"
+  time-zone="{{ $t('demo_data.default_timezone') }}"
   location="{{ $t('demo_data.location') }}"
   description="{{ $t('demo_data.description_alt1') }}"
-  options="'Apple','Google','iCal','Outlook.com','Yahoo'"
+  options="'apple','google','ical','outlookcom','yahoo'"
   recurrence="weekly"
-  recurrence_interval="1"
-  recurrence_count="6"
-  recurrence_byDay="WE,FR"
-  lightMode="bodyScheme"{{ defaultLang }}
+  recurrence-interval="1"
+  recurrence-count="6"
+  recurrence-by-day="WE,FR"
+  light-mode="bodyScheme"{{ defaultLang }}
 &gt;&lt;/add-to-calendar-button&gt;
 </pre>
             </LazyCodeBlock>
@@ -351,18 +350,8 @@ watch(locale, value => {
           </p>
         </div>
         <div class="block w-full justify-between md:flex">
-          <div class="flex w-full flex-none justify-center p-6 pt-8 md:w-[300px]">
-            <add-to-calendar-button
-              :name="$t('demo_data.name_series')"
-              :dates="defaultMultiDate"
-              :timeZone="$t('demo_data.default_timezone')"
-              :location="$t('demo_data.location')"
-              options="'Apple','Google','iCal','Outlook.com','Yahoo'"
-              lightMode="bodyScheme"
-              :language="locale"
-              hideRichData
-              hideBranding
-            ></add-to-calendar-button>
+          <div class="flex w-full flex-none justify-center p-6 pt-8 md:w-[310px]">
+            <Atcb :name="$t('demo_data.name_series')" :dates="defaultMultiDate" :time-zone="$t('demo_data.default_timezone')" :location="$t('demo_data.location')" options="'apple','google','ical','outlookcom','yahoo'" light-mode="bodyScheme" :language="locale" hide-rich-data hide-branding></Atcb>
           </div>
           <div class="flex-1 overflow-x-auto">
             <LazyCodeBlock>
@@ -392,10 +381,10 @@ watch(locale, value => {
       "endTime":"20:00"
     }
   ]'
-  timeZone="{{ $t('demo_data.default_timezone') }}"
+  time-zone="{{ $t('demo_data.default_timezone') }}"
   location="{{ $t('demo_data.location') }}"
-  options="'Apple','Google','iCal','Outlook.com','Yahoo'"
-  lightMode="bodyScheme"{{ defaultLang }}
+  options="'apple','google','ical','outlookcom','yahoo'"
+  light-mode="bodyScheme"{{ defaultLang }}
 &gt;&lt;/add-to-calendar-button&gt;
 </pre>
             </LazyCodeBlock>
@@ -428,43 +417,43 @@ watch(locale, value => {
           </p>
         </div>
         <div class="block w-full justify-between md:flex">
-          <div class="flex w-full flex-none justify-center p-6 pt-8 md:w-[300px]">
-            <add-to-calendar-button
+          <div class="flex w-full flex-none justify-center p-6 pt-8 md:w-[310px]">
+            <Atcb
               :name="$t('demo_data.name')"
-              :startDate="defaultDate"
-              startTime="10:15"
-              endTime="23:30"
-              :timeZone="$t('demo_data.default_timezone')"
+              :start-date="defaultDate"
+              start-time="10:15"
+              end-time="23:30"
+              :time-zone="$t('demo_data.default_timezone')"
               :location="$t('demo_data.location')"
               :label="$t('demo_data.name_custom_1')"
               :description="$t('demo_data.description_alt1')"
-              options="'Apple','Google','iCal','Outlook.com','Yahoo'"
-              iCalFileName="Reminder-Event"
-              listStyle="overlay"
+              options="'apple','google','ical','outlookcom','yahoo'"
+              ical-file-name="Reminder-Event"
+              list-style="overlay"
               size="5"
-              lightMode="bodyScheme"
+              light-mode="bodyScheme"
               :language="locale"
-              hideRichData
-              hideBranding
-            ></add-to-calendar-button>
+              hide-rich-data
+              hide-branding
+            ></Atcb>
           </div>
           <div class="flex-1 overflow-x-auto">
             <LazyCodeBlock>
               <pre>
 &lt;add-to-calendar-button
   name="{{ $t('demo_data.name') }}"
-  startDate="{{ defaultDate }}"
-  startTime="10:15"
-  endTime="23:30"
-  timeZone="{{ $t('demo_data.default_timezone') }}"
+  start-date="{{ defaultDate }}"
+  start-time="10:15"
+  end-time="23:30"
+  time-zone="{{ $t('demo_data.default_timezone') }}"
   location="{{ $t('demo_data.location') }}"
   description="{{ $t('demo_data.description_alt1') }}"
-  options="'Apple','Google','iCal','Outlook.com','Yahoo'"
+  options="'apple','google','ical','outlookcom','yahoo'"
   label="{{ $t('demo_data.name_custom_1') }}"
-  iCalFileName="Reminder-Event"
-  listStyle="overlay"
+  ical-file-name="Reminder-Event"
+  list-style="overlay"
   size="5"
-  lightMode="bodyScheme"{{ defaultLang }}
+  light-mode="bodyScheme"{{ defaultLang }}
 &gt;&lt;/add-to-calendar-button&gt;
 </pre>
             </LazyCodeBlock>
@@ -491,40 +480,40 @@ watch(locale, value => {
         <div>
           <div class="mx-auto p-6 pt-8 text-center">
             <span class="pr-6">{{ $t('demo_data.do_it') }}! →</span>
-            <add-to-calendar-button
+            <Atcb
               :name="$t('demo_data.name')"
-              :startDate="defaultDate"
-              startTime="10:15"
-              endTime="23:30"
-              :timeZone="$t('demo_data.default_timezone')"
+              :start-date="defaultDate"
+              start-time="10:15"
+              end-time="23:30"
+              :time-zone="$t('demo_data.default_timezone')"
               :location="$t('demo_data.location')"
               :label="$t('demo_data.name_custom_2')"
               :description="$t('demo_data.description_alt1')"
-              options="'Apple','Google','iCal','Outlook.com','Yahoo'"
-              listStyle="modal"
+              options="'apple','google','ical','outlookcom','yahoo'"
+              list-style="modal"
               inline
-              lightMode="bodyScheme"
+              light-mode="bodyScheme"
               :language="locale"
-              hideRichData
-              hideBranding
-            ></add-to-calendar-button>
+              hide-rich-data
+              hide-branding
+            ></Atcb>
           </div>
           <div class="overflow-x-auto">
             <LazyCodeBlock>
               <pre>
 &lt;add-to-calendar-button
   name="{{ $t('demo_data.name') }}"
-  startDate="{{ defaultDate }}"
-  startTime="10:15"
-  endTime="23:30"
-  timeZone="{{ $t('demo_data.default_timezone') }}"
+  start-date="{{ defaultDate }}"
+  start-time="10:15"
+  end-time="23:30"
+  time-zone="{{ $t('demo_data.default_timezone') }}"
   location="{{ $t('demo_data.location') }}"
   description="{{ $t('demo_data.description_alt1') }}"
-  options="'Apple','Google','iCal','Outlook.com','Yahoo'"
+  options="'apple','google','ical','outlookcom','yahoo'"
   label="{{ $t('demo_data.name_custom_2') }}"
   inline
-  listStyle="modal"
-  lightMode="bodyScheme"{{ defaultLang }}
+  list-style="modal"
+  light-mode="bodyScheme"{{ defaultLang }}
 &gt;&lt;/add-to-calendar-button&gt;
 </pre>
             </LazyCodeBlock>
@@ -542,33 +531,21 @@ watch(locale, value => {
           Stattdessen wird der Button selbst ein direkter Kalender-Link.
         </p>
         <div class="block w-full justify-between md:flex">
-          <div class="flex w-full flex-none justify-center p-6 pt-8 md:w-[300px]">
-            <add-to-calendar-button
-              :name="$t('demo_data.name')"
-              :startDate="defaultDate"
-              startTime="10:15"
-              endTime="23:30"
-              :timeZone="$t('demo_data.default_timezone')"
-              :description="$t('demo_data.description_alt1')"
-              options="Google"
-              lightMode="bodyScheme"
-              :language="locale"
-              hideRichData
-              hideBranding
-            ></add-to-calendar-button>
+          <div class="flex w-full flex-none justify-center p-6 pt-8 md:w-[310px]">
+            <Atcb :name="$t('demo_data.name')" :start-date="defaultDate" start-time="10:15" end-time="23:30" :time-zone="$t('demo_data.default_timezone')" :description="$t('demo_data.description_alt1')" options="google" light-mode="bodyScheme" :language="locale" hide-rich-data hide-branding></Atcb>
           </div>
           <div class="flex-1 overflow-x-auto">
             <LazyCodeBlock>
               <pre>
 &lt;add-to-calendar-button
   name="{{ $t('demo_data.name') }}"
-  startDate="{{ defaultDate }}"
-  startTime="10:15"
-  endTime="23:30"
-  timeZone="{{ $t('demo_data.default_timezone') }}"
+  start-date="{{ defaultDate }}"
+  start-time="10:15"
+  end-time="23:30"
+  time-zone="{{ $t('demo_data.default_timezone') }}"
   description="{{ $t('demo_data.description_alt1') }}"
-  options="Google"
-  lightMode="bodyScheme"{{ defaultLang }}
+  options="google"
+  light-mode="bodyScheme"{{ defaultLang }}
 &gt;&lt;/add-to-calendar-button&gt;
 </pre>
             </LazyCodeBlock>
@@ -587,38 +564,38 @@ watch(locale, value => {
         </div>
         <div>
           <div class="flex justify-center p-6 pt-8">
-            <add-to-calendar-button
+            <Atcb
               :name="$t('demo_data.name')"
-              :startDate="defaultDate"
-              startTime="10:15"
-              endTime="23:30"
-              :timeZone="$t('demo_data.default_timezone')"
+              :start-date="defaultDate"
+              start-time="10:15"
+              end-time="23:30"
+              :time-zone="$t('demo_data.default_timezone')"
               :description="$t('demo_data.description_alt1')"
-              options="'Apple','Google','iCal','Outlook.com','Yahoo'"
-              buttonsList
-              hideTextLabelButton
-              buttonStyle="round"
-              lightMode="bodyScheme"
+              options="'apple','google','ical','outlookcom','yahoo'"
+              buttons-list
+              hide-text-label-button
+              button-style="round"
+              light-mode="bodyScheme"
               :language="locale"
-              hideRichData
-              hideBranding
-            ></add-to-calendar-button>
+              hide-rich-data
+              hide-branding
+            ></Atcb>
           </div>
           <div class="overflow-x-auto">
             <LazyCodeBlock>
               <pre>
 &lt;add-to-calendar-button
   name="{{ $t('demo_data.name') }}"
-  startDate="{{ defaultDate }}"
-  startTime="10:15"
-  endTime="23:30"
-  timeZone="{{ $t('demo_data.default_timezone') }}"
+  start-date="{{ defaultDate }}"
+  start-time="10:15"
+  end-time="23:30"
+  time-zone="{{ $t('demo_data.default_timezone') }}"
   description="{{ $t('demo_data.description_alt1') }}"
-  options="'Apple','Google','iCal','Outlook.com','Yahoo'"
-  buttonsList
-  hideTextLabelButton
-  buttonStyle="round"
-  lightMode="bodyScheme"{{ defaultLang }}
+  options="'apple','google','ical','outlookcom','yahoo'"
+  buttons-list
+  hide-text-label-button
+  button-style="round"
+  light-mode="bodyScheme"{{ defaultLang }}
 &gt;&lt;/add-to-calendar-button&gt;
 </pre>
             </LazyCodeBlock>

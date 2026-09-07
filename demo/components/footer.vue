@@ -53,9 +53,13 @@ function topFunction() {
         <hr class="mb-4 mt-6 border-gray-300 dark:border-zinc-700" />
         <div class="flex flex-col-reverse text-xs sm:flex-row sm:justify-between">
           <div class="px-1 pb-2 pt-10 text-center text-sm sm:pt-1 sm:text-left sm:text-xs">
+            <NuxtLink :to="localePath('what-is-an-add-to-calendar-button')">{{ $t('labels.definition') }}</NuxtLink>
+            |
             <NuxtLink :to="localePath('legal-notice')">{{ $t('navigation.legal-notice') }}</NuxtLink>
             |
             <NuxtLink :to="localePath('privacy-policy')">{{ $t('navigation.privacy-policy') }}</NuxtLink>
+            |
+            <NuxtLink :to="localePath('migration-guide-v2-to-v3')">{{ $t('navigation.migration-v3') }}</NuxtLink>
             <span class="inline sm:hidden md:inline"> | </span>
             <span class="inline whitespace-nowrap pt-0 sm:block sm:pt-2 md:inline md:pt-0">
               <a href="https://github.com/add2cal/add-to-calendar-button/blob/main/LICENSE.txt" class="inline-block p-1 sm:p-0" target="_blank" rel="license">

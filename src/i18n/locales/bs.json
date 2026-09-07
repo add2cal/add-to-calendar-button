@@ -1,0 +1,87 @@
+{
+  "label": {
+    "addtocalendar": "Dodaj u kalendar",
+    "share": {
+      "email": "Podijelite putem e-pošte",
+      "copy": "Kopiraj vezu",
+      "copied": "Kopirano",
+      "email_subject": "Sačuvaj ovaj događaj"
+    },
+    "rsvp": {
+      "title": "RSVP",
+      "expired": "Isteklo",
+      "bookedout": "Popunjeno",
+      "restart": "Novi RSVP odgovor"
+    }
+  },
+  "ical": "iCal datoteka",
+  "modal": {
+    "button": {
+      "default": "Kliknite me"
+    },
+    "webview": {
+      "ical": {
+        "h": "Otvorite svoj pretraživač",
+        "text": "Nažalost, preglednici u aplikaciji imaju problema s načinom na koji generišemo datoteku kalendara.",
+        "steps": "<ol><li><strong>Otvorite drugi pretraživač</strong> na telefonu,...</li><li> <strong>Zalijepite</strong> sadržaj međuspremnika i idite.</li></ol>"
+      }
+    },
+    "clipboard": {
+      "text": "Automatski smo kopirali magični URL u vaš međuspremnik.",
+      "failed": "Kopiranje u međuspremnik nije uspjelo. Ručno kopirajte sljedeći link:"
+    },
+    "opensafari": {
+      "ical": {
+        "h": "Otvorite Safari",
+        "text": "Nažalost, iOS ima nekih problema s generiranjem i otvaranjem kalendarske datoteke izvan Safarija.",
+        "steps": "<ol><li><strong>Otvori Safari</strong> ,...</li><li> <strong>Zalijepite</strong> sadržaj međuspremnika i idite.</li></ol>"
+      }
+    },
+    "multidate": {
+      "h": "Ovo je serijal događaja",
+      "text": "Dodajte pojedinačne događaje jedan po jedan:"
+    }
+  },
+  "date": {
+    "status": {
+      "cancelled": "Ovaj datum je otkazan.",
+      "cancelled_cta": "Molimo ažurirajte svoj kalendar!"
+    }
+  },
+  "group_overview": {
+    "empty": "Ove godine nema događaja."
+  },
+  "close": "Zatvori",
+  "continue": "Nastavi",
+  "cancel": "Otkaži",
+  "expired": "Istekao",
+  "recurring": "Ponavlja se",
+  "thankyou": "Hvala",
+  "submit": "Pošalji",
+  "form": {
+    "error": {
+      "required": "Niste pravilno popunili sva obavezna polja",
+      "sending": "Došlo je do problema prilikom slanja vašeg odgovora. Molimo pokušajte ponovo kasnije",
+      "email": "Vaša adresa e-pošte nije ispravna",
+      "bookedoutmany": "Popunjeno – pokušajte s manje učesnika"
+    },
+    "success": {
+      "title": "Poslano uspješno!",
+      "sent": "Vaš odgovor je poslan. Hvala!",
+      "email": "Trebali ste primiti e-poruku za potvrdu.",
+      "doi": "Da bi odgovor bio prihvaćen, otvorite link za potvrdu u e-poruci koju smo vam upravo poslali (u narednih 30 minuta).",
+      "demo": "Hvala. RSVP demonstracija ovdje završava.",
+      "already": "Već ste odgovorili."
+    },
+    "status": {
+      "title": "Dolazite li?",
+      "confirmed": "Da",
+      "undecided": "Možda",
+      "declined": "Ne"
+    },
+    "amount": "Broj učesnika",
+    "max": "maks.",
+    "email": "Adresa e-pošte",
+    "seatsleft": "Slobodna mjesta"
+  }
+}

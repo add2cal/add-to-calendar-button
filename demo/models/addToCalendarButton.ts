@@ -16,15 +16,28 @@ export enum Frequency {
   YEARLY = 'yearly',
 }
 
+// official v3 option keys (the legacy v2 spellings like 'Apple' or 'Microsoft365'
+// keep working as aliases, but the demo should model the recommended values)
 export enum Option {
-  APPLE = 'Apple',
-  GOOGLE = 'Google',
-  ICAL = 'iCal',
-  MICROSOFT365 = 'Microsoft365',
-  MICROSOFT_TEAMS = 'MicrosoftTeams',
-  OUTLOOK = 'Outlook.com',
-  YAHOO = 'Yahoo',
+  APPLE = 'apple',
+  GOOGLE = 'google',
+  ICAL = 'ical',
+  MICROSOFT365 = 'ms365',
+  MICROSOFT_TEAMS = 'msteams',
+  OUTLOOK = 'outlookcom',
+  YAHOO = 'yahoo',
 }
+
+// human-readable labels for the playground UI (the config values stay the keys above)
+export const OptionLabels: { [key in Option]: string } = {
+  [Option.APPLE]: 'Apple',
+  [Option.GOOGLE]: 'Google',
+  [Option.ICAL]: 'iCal',
+  [Option.MICROSOFT365]: 'Microsoft 365',
+  [Option.MICROSOFT_TEAMS]: 'Microsoft Teams',
+  [Option.OUTLOOK]: 'Outlook.com',
+  [Option.YAHOO]: 'Yahoo',
+};
 
 export enum ListStyle {
   DROPDOWN = 'dropdown',

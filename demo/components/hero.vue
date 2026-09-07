@@ -37,8 +37,11 @@ const localePath = useLocalePath();
               </div>
             </div>
           </div>
-          <div class="hidden self-center p-14 lg:block xl:p-10">
-            <nuxt-img sizes="500px xl:600px" alt="Add to Calendar Button" width="1000" height="791" src="/assets/img/combo.webp" />
+          <div class="hidden h-96 self-center lg:block xl:hidden">
+            <nuxt-img sizes="500px xl:600px" alt="Add to Calendar Button" width="565" height="712" class="h-full w-full object-contain drop-shadow-lg" src="/assets/img/combo-slim.webp" />
+          </div>
+          <div class="hidden h-[450px] self-center p-5 xl:block">
+            <nuxt-img sizes="500px xl:600px" alt="Add to Calendar Button" width="978" height="774" class="h-full w-full object-contain drop-shadow-lg" src="/assets/img/combo.webp" />
           </div>
         </div>
       </div>

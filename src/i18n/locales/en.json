@@ -1,0 +1,87 @@
+{
+  "label": {
+    "addtocalendar": "Add to Calendar",
+    "share": {
+      "email": "Share via Email",
+      "copy": "Copy Link",
+      "copied": "Copied",
+      "email_subject": "Save this event"
+    },
+    "rsvp": {
+      "title": "RSVP",
+      "expired": "Expired",
+      "bookedout": "Booked out",
+      "restart": "New RSVP Reply"
+    }
+  },
+  "ical": "iCal File",
+  "modal": {
+    "button": {
+      "default": "Click me"
+    },
+    "webview": {
+      "ical": {
+        "h": "Open your browser",
+        "text": "Unfortunately, in-app browsers have problems with the way we generate the calendar file.",
+        "steps": "<ol><li><strong>Open another browser</strong> on your phone, ...</li><li><strong>Paste</strong> the clipboard content and go.</li></ol>"
+      }
+    },
+    "clipboard": {
+      "text": "We automatically copied a magical URL into your clipboard.",
+      "failed": "Copying to your clipboard failed. Please copy the following link manually:"
+    },
+    "opensafari": {
+      "ical": {
+        "h": "Open Safari",
+        "text": "Unfortunately, iOS has some problems generating and opening the calendar file outside of Safari.",
+        "steps": "<ol><li><strong>Open Safari</strong>, ...</li><li><strong>Paste</strong> the clipboard content and go.</li></ol>"
+      }
+    },
+    "multidate": {
+      "h": "This is an event series",
+      "text": "Add the individual events one by one:"
+    }
+  },
+  "date": {
+    "status": {
+      "cancelled": "This date got cancelled.",
+      "cancelled_cta": "Please update your calendar!"
+    }
+  },
+  "group_overview": {
+    "empty": "No events this year."
+  },
+  "close": "Close",
+  "continue": "Continue",
+  "cancel": "Cancel",
+  "expired": "Expired",
+  "recurring": "Recurring",
+  "thankyou": "Thank you",
+  "submit": "Submit",
+  "form": {
+    "error": {
+      "required": "You did not properly fill all required fields",
+      "sending": "There was a problem sending your response. Please try again later",
+      "email": "Your email address is not valid",
+      "bookedoutmany": "Booked out - try with less attendees"
+    },
+    "success": {
+      "title": "Sent successfully!",
+      "sent": "Your reply has been sent. Thank you!",
+      "email": "You should have received a confirmation email.",
+      "doi": "To make it count, you now need to open the confirmation link in the email we just sent you (within the next 30 minutes).",
+      "demo": "Thank you. The RSVP demo ends here.",
+      "already": "You already replied."
+    },
+    "status": {
+      "title": "Are you joining?",
+      "confirmed": "Yes",
+      "undecided": "Maybe",
+      "declined": "No"
+    },
+    "amount": "Number of attendees",
+    "max": "max.",
+    "email": "Email address",
+    "seatsleft": "Open slots"
+  }
+}

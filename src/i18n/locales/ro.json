@@ -1,0 +1,87 @@
+{
+  "label": {
+    "addtocalendar": "Adauga In Calendar",
+    "share": {
+      "email": "Distribuie prin e-mail",
+      "copy": "Copiază linkul",
+      "copied": "Copiat",
+      "email_subject": "Ține minte această dată"
+    },
+    "rsvp": {
+      "title": "RSVP",
+      "expired": "Expirat",
+      "bookedout": "Locuri epuizate",
+      "restart": "Nou răspuns RSVP"
+    }
+  },
+  "ical": "Fisier iCal",
+  "modal": {
+    "button": {
+      "default": "Apasa-ma"
+    },
+    "webview": {
+      "ical": {
+        "h": "Deschide browserul",
+        "text": "Din pacate, browserele din aplicatie au probleme cu generarea de fisiere pentru calendar.",
+        "steps": "<ol><li><strong>Deschide un alt browser</strong> pe telefonul tau, ...</li><li><strong>Lipeste</strong> continutul din clipboard si continua.</li></ol>"
+      }
+    },
+    "clipboard": {
+      "text": "Ti-am copiat automat un URL magic in clipboard",
+      "failed": "Copierea în clipboard a eșuat. Te rugăm să copiezi manual următorul link:"
+    },
+    "opensafari": {
+      "ical": {
+        "h": "Deschide Safari",
+        "text": "Din păcate, iOS are unele probleme la generarea și deschiderea fișierului calendar în afara Safari.",
+        "steps": "<ol><li><strong>Deschides Safari</strong>, ...</li><li><strong>Lipeste</strong> continutul din clipboard si continua.</li></ol>"
+      }
+    },
+    "multidate": {
+      "h": "Aceasta este o serie de evenimente",
+      "text": "Adauga evenimentele individuale una cate una:"
+    }
+  },
+  "date": {
+    "status": {
+      "cancelled": "Aceasta data a fost anulata.",
+      "cancelled_cta": "Te rugam sa-ti updatezi calendarul!"
+    }
+  },
+  "group_overview": {
+    "empty": "Nu există evenimente anul acesta."
+  },
+  "close": "Inchide",
+  "continue": "Continua",
+  "cancel": "Anuleaza",
+  "expired": "Expirat",
+  "recurring": "Recurente",
+  "thankyou": "Mulțumesc",
+  "submit": "Trimite",
+  "form": {
+    "error": {
+      "required": "Nu ai completat corect toate câmpurile necesare",
+      "sending": "A apărut o problemă la trimiterea răspunsului tău. Încearcă din nou mai târziu",
+      "email": "Adresa ta de e-mail nu este validă",
+      "bookedoutmany": "Locuri epuizate - încearcă cu mai puțini participanți"
+    },
+    "success": {
+      "title": "Trimis cu succes!",
+      "sent": "Răspunsul tău a fost trimis. Mulțumesc!",
+      "email": "Ar trebui să fi primit un e-mail de confirmare.",
+      "doi": "Pentru ca răspunsul tău să fie valid, trebuie să deschizi acum linkul de confirmare din e-mailul pe care tocmai l-am trimis (în următoarele 30 de minute).",
+      "demo": "Mulțumesc. Demonstrația RSVP se încheie aici.",
+      "already": "Ai trimis deja un răspuns."
+    },
+    "status": {
+      "title": "Vei participa?",
+      "confirmed": "Da",
+      "undecided": "Poate",
+      "declined": "Nu"
+    },
+    "amount": "Numărul de participanți",
+    "max": "max.",
+    "email": "Adresa de e-mail",
+    "seatsleft": "Locuri disponibile"
+  }
+}

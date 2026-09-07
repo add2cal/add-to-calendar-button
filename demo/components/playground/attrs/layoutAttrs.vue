@@ -3,7 +3,7 @@ import { ref, watch, computed } from "vue";
 import Input from "@/components/controls/input.vue";
 import Select from "@/components/controls/select.vue";
 import Switch from "@/components/controls/switch.vue";
-import { ListStyle, ButtonStyle, Trigger, LightMode, PastDateHandling, Size, Option } from "@/models/addToCalendarButton";
+import { ListStyle, ButtonStyle, Trigger, LightMode, PastDateHandling, Size, Option, OptionLabels } from "@/models/addToCalendarButton";
 import { LanguageCode, LanguageNames } from "@/models/language";
 import { LayoutAttrsKey, HideIconOption, HideTextOption } from "@/models/attrs";
 import { getDefaultLayoutAttrs } from "@/utils/attrs";
@@ -81,7 +81,7 @@ function onHideTextOptionsUpdate(options: string[]) {
   });
 }
 
-const optionsOptions = computed(() => Object.values(Option).map(item => ({ key: item, value: item })));
+const optionsOptions = computed(() => Object.values(Option).map(item => ({ key: OptionLabels[item], value: item })));
 const buttonStyleOptions = computed(() => Object.values(ButtonStyle).map(item => ({ key: item, value: item })));
 const listStyleOptions = computed(() => Object.values(ListStyle).map(item => ({ key: item, value: item })));
 const lightModeOptions = computed(() => Object.values(LightMode).map(item => ({ key: item, value: item })));

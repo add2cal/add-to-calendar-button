@@ -1,11 +1,11 @@
 import { expect } from '@open-wc/testing';
-import { atcb_decorate_data } from '../../src/atcb-decorate.js';
+import { decorate_data } from '../../src/core/decorate.ts';
 
 describe('recurrence timezone evaluation', () => {
   it('does not shift startDate for weekly BYDAY near midnight in Europe/Berlin', async function () {
-    const decorated = await atcb_decorate_data({
+    const decorated = await decorate_data({
       name: 'test',
-      options: ['Google'],
+      options: ['google'],
       startDate: '2066-01-12', // once this data is in the past, the test would fail as it auto-adjusts to the next occurrence
       startTime: '00:20',
       endTime: '00:50',

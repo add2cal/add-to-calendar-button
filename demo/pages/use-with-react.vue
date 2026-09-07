@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import GuideSidebar from "@/components/integration/guideSidebar.vue";
-import { ArrowTopRightOnSquareIcon } from '@heroicons/vue/24/outline';
 const LazyCodeBlock = defineAsyncComponent(() => import('@/components/codeBlock.vue'));
 const { locale } = useI18n();
 
@@ -33,78 +32,80 @@ watch(locale, value => {
     <div class="pr-0 lg:pr-8 xl:pr-12 2xl:pr-20">
       <h1 class="mb-16 underline decoration-primary-light decoration-4 dark:decoration-primary-dark">{{ $t('content.guide.react.headline') }}</h1>
       <div class="px-0 md:px-3 lg:px-5">
-        <h2 class="mb-6">{{ $t('content.guide.step0') }}: {{ $t('content.guide.react.step_pick') }}</h2>
-        <p>{{ $t('content.guide.react.pick_intro') }}</p>
-        <ul class="my-4 list-disc pl-6">
-          <li class="text-left">{{ $t('content.guide.react.pick_option1') }}</li>
-          <li class="mt-3 text-left">
-            {{ $t('content.guide.react.pick_option2_1') }}
-            <a href="https://github.com/add2cal/add-to-calendar-button-react" target="_blank">
-              {{ $t('content.guide.react.pick_option2_2') }}
-              <ArrowTopRightOnSquareIcon class="-mt-0.5 mr-0.5 inline-block h-4 w-4" aria-hidden="true" />
-            </a>
-            {{ $t('content.guide.react.pick_option2_3') }}
-          </li>
-        </ul>
+        <p>{{ $t('content.guide.react.intro') }}</p>
         <p class="pt-5">{{ $t('content.guide.options_intro_1') }}</p>
         <h2 class="mb-6 mt-20">{{ $t('content.guide.step1') }}: {{ $t('content.guide.step_npm') }}</h2>
-        <h3 class="mb-6">{{ $t('content.guide.optionA') }}: Web Component</h3>
         <p>{{ $t('content.guide.install_npm') }}</p>
         <LazyCodeBlock language="shell"><pre>npm install add-to-calendar-button</pre></LazyCodeBlock>
-        <h3 class="mb-6 mt-12">{{ $t('content.guide.optionB') }}: React Wrapper</h3>
-        <p>{{ $t('content.guide.react.install_wrapper') }}</p>
-        <LazyCodeBlock language="shell">
-          <pre>npm install add-to-calendar-button-react</pre>
-        </LazyCodeBlock>
         <h2 class="mb-6 mt-20">{{ $t('content.guide.step2') }}: {{ $t('content.guide.step_import') }}</h2>
-        <h3 class="mb-6">{{ $t('content.guide.optionA') }}: Web Component</h3>
         <p>{{ $t('content.guide.import_npm') }}</p>
         <LazyCodeBlock language="javascript">
           <pre>import 'add-to-calendar-button';</pre>
         </LazyCodeBlock>
-        <h3 class="mb-6 mt-12">{{ $t('content.guide.optionB') }}: React Wrapper</h3>
-        <p>{{ $t('content.guide.react.import_wrapper') }}</p>
-        <LazyCodeBlock language="javascript">
-          <pre>import { AddToCalendarButton } from 'add-to-calendar-button-react';</pre>
-        </LazyCodeBlock>
         <h2 class="mb-6 mt-20">{{ $t('content.guide.step3') }}: {{ $t('content.guide.step_use') }}</h2>
-        <h3 class="mb-6">{{ $t('content.guide.optionA') }}: Web Component</h3>
         <p>
           {{ $t('content.guide.step_use_start') }}
         </p>
+        <p>{{ $t('content.guide.react.types_note') }}</p>
+        <LazyCodeBlock language="javascript">
+          <pre>
+import type {
+  AddToCalendarButtonType,
+} from 'add-to-calendar-button';
+import type {
+  DetailedHTMLProps,
+  HTMLAttributes,
+} from 'react';
+
+declare module 'react' {
+  namespace JSX {
+    interface IntrinsicElements {
+      'add-to-calendar-button': DetailedHTMLProps&lt;
+        Omit&lt;HTMLAttributes&lt;HTMLElement&gt;, keyof AddToCalendarButtonType&gt;,
+        HTMLElement
+      &gt; &amp;
+        AddToCalendarButtonType;
+    }
+  }
+}
+
+export {};</pre>
+        </LazyCodeBlock>
+        <p>{{ $t('content.guide.react.types_config_note') }}</p>
+        <LazyCodeBlock language="json">
+          <pre>
+{
+  "compilerOptions": {
+    "types": ["vite/client", "react", "react-dom"]
+  }
+}</pre>
+        </LazyCodeBlock>
         <p>{{ $t('content.guide.step_use_example') }}</p>
         <LazyCodeBlock>
           <pre>
 &lt;add-to-calendar-button
   name="{{ $t('demo_data.name_dummy') }}"
-  options="'Apple','Google'"
+  options="'apple','google'"
   location="{{ $t('demo_data.location') }}"
-  startDate="{{ defaultDate }}"
-  endDate="{{ defaultDate }}"
-  startTime="10:15"
-  endTime="23:30"
-  timeZone="{{ $t('demo_data.default_timezone') }}"{{ defaultLang }}
+  start-date="{{ defaultDate }}"
+  end-date="{{ defaultDate }}"
+  start-time="10:15"
+  end-time="23:30"
+  time-zone="{{ $t('demo_data.default_timezone') }}"{{ defaultLang }}
 &gt;&lt;/add-to-calendar-button&gt;</pre>
         </LazyCodeBlock>
-        <h3 class="mb-6 mt-12">{{ $t('content.guide.optionB') }}: React Wrapper</h3>
-        <p>{{ $t('content.guide.react.start_wrapper_1') }}</p>
-        <p>{{ $t('content.guide.react.start_wrapper_2') }}</p>
+        <p class="my-10 font-semibold">{{ $t('content.guide.step_use_client') }}</p>
+        <h2 class="mb-6 mt-20">{{ $t('content.guide.styles_lang_headline') }}</h2>
+        <p>{{ $t('content.guide.styles_lang_default') }}</p>
+        <p class="pt-5">{{ $t('content.guide.styles_lang_ondemand') }}</p>
+        <h3 class="mb-6 mt-12">{{ $t('content.guide.styles_lang_npm_heading') }}</h3>
+        <p>{{ $t('content.guide.styles_lang_npm_body') }}</p>
         <LazyCodeBlock language="javascript">
           <pre>
-&lt;AddToCalendarButton
-  name="{{ $t('demo_data.name_dummy') }}"
-  options={['Apple','Google']}
-  location="{{ $t('demo_data.location') }}"
-  startDate="{{ defaultDate }}"
-  endDate="{{ defaultDate }}"
-  startTime="10:15"
-  endTime="23:30"
-  timeZone="{{ $t('demo_data.default_timezone') }}"{{ defaultLang }}
-&gt;&lt;/AddToCalendarButton&gt;</pre>
+import 'add-to-calendar-button/styles/3d';   // any style besides "default"
+import 'add-to-calendar-button/i18n/de';       // any language besides English</pre>
         </LazyCodeBlock>
-        <p class="font-semibold">{{ $t('content.guide.react.start_wrapper_3') }}</p>
-        <p>{{ $t('content.guide.react.start_wrapper_4') }}<br />{{ $t('content.guide.react.start_wrapper_5') }}</p>
-        <p class="my-10 font-semibold">{{ $t('content.guide.step_use_client') }}</p>
+        <p class="mt-10">{{ $t('content.guide.styles_lang_more') }}</p>
       </div>
     </div>
     <div class="hidden border-l border-zinc-300 pl-8 text-xs dark:border-zinc-700 lg:block xl:pl-12">

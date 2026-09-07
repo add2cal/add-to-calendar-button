@@ -45,7 +45,7 @@ const localePath = useLocalePath();
         </NuxtLink>
         <NuxtLink class="tech-stack-button group h-32 w-32 hover:border-vue hover:from-vue hover:to-vue hover:text-white dark:hover:border-vue dark:hover:from-vue dark:hover:to-vue dark:hover:text-white xs:h-36 xs:w-40" :to="localePath('use-with-vue')">
           <Vue class="self-center p-4" />
-          <div class="self-center p-4 pt-0">Vue 3</div>
+          <div class="self-center p-4 pt-0">Vue</div>
         </NuxtLink>
         <NuxtLink class="tech-stack-button h-32 w-32 hover:border-black hover:from-black hover:to-black hover:text-white dark:hover:border-black dark:hover:from-black dark:hover:to-black dark:hover:text-white xs:h-36 xs:w-40" :to="localePath('use-with-wix')">
           <Wix class="self-center px-4 py-8" />

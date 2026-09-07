@@ -1,6 +1,4 @@
-<script setup lang="ts">
-import "add-to-calendar-button";
-</script>
+<script setup lang="ts"></script>
 
 <template>
   <div>

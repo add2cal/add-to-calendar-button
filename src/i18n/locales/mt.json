@@ -1,0 +1,87 @@
+{
+  "label": {
+    "addtocalendar": "Żid mal-Kalendarju",
+    "share": {
+      "email": "Aqsam permezz tal-Email",
+      "copy": "Ikkopja Link",
+      "copied": "Ikkopjati",
+      "email_subject": "Salv dan l-avveniment"
+    },
+    "rsvp": {
+      "title": "RSVP",
+      "expired": "Skada",
+      "bookedout": "Mimli",
+      "restart": "Tweġiba RSVP ġdida"
+    }
+  },
+  "ical": "Fajl iCal",
+  "modal": {
+    "button": {
+      "default": "Ikklikkja lili"
+    },
+    "webview": {
+      "ical": {
+        "h": "Iftaħ il-browser tiegħek",
+        "text": "Sfortunatament, il-browsers fl-app għandhom problemi bil-mod kif niġġeneraw il-fajl tal-kalendarju.",
+        "steps": "<ol><li><strong>Iftaħ browser ieħor</strong> fuq it-telefon tiegħek,...</li><li> <strong>Paste</strong> l-kontenut tal-clipboard u mur.</li></ol>"
+      }
+    },
+    "clipboard": {
+      "text": "Aħna awtomatikament ikkuppjajna URL maġiku fil-clipboard tiegħek.",
+      "failed": "L-ikkupjar fil-clipboard falla. Jekk jogħġbok ikkopja din il-link manwalment:"
+    },
+    "opensafari": {
+      "ical": {
+        "h": "Iftaħ Safari",
+        "text": "Sfortunatament, iOS għandu xi problemi biex jiġġenera u jiftaħ il-fajl tal-kalendarju barra minn Safari.",
+        "steps": "<ol><li><strong>Iftaħ Safari</strong> ,...</li><li> <strong>Paste</strong> l-kontenut tal-clipboard u mur.</li></ol>"
+      }
+    },
+    "multidate": {
+      "h": "Din hija serje ta' avvenimenti",
+      "text": "Żid l-avvenimenti individwali wieħed wieħed:"
+    }
+  },
+  "date": {
+    "status": {
+      "cancelled": "Din id-data ġiet ikkanċellata.",
+      "cancelled_cta": "Jekk jogħġbok aġġorna l-kalendarju tiegħek!"
+    }
+  },
+  "group_overview": {
+    "empty": "M’hemm l-ebda avveniment din is-sena."
+  },
+  "close": "Agħlaq",
+  "continue": "Kompli",
+  "cancel": "Ikkanċella",
+  "expired": "Skaduta",
+  "recurring": "Rikorrenti",
+  "thankyou": "Grazzi",
+  "submit": "Issottometti",
+  "form": {
+    "error": {
+      "required": "Ma imlietx sew l-oqsma kollha meħtieġa",
+      "sending": "Kien hemm problema biex tibgħat ir-risposta tiegħek. Jekk jogħġbok erġa' pprova aktar tard",
+      "email": "L-indirizz tal-email tiegħek mhuwiex validu",
+      "bookedoutmany": "Mimli – ipprova b’inqas parteċipanti"
+    },
+    "success": {
+      "title": "Mibgħuta b'suċċess!",
+      "sent": "It-tweġiba tiegħek intbagħtet. Grazzi!",
+      "email": "Għandek tkun irċevejt email ta’ konferma.",
+      "doi": "Biex it-tweġiba tgħodd, iftaħ il-link ta’ konferma fl-email li għadna kemm bgħatnielek (fit-30 minuta li ġejjin).",
+      "demo": "Grazzi. Id-demo tal-RSVP tispiċċa hawn.",
+      "already": "Diġà weġibt."
+    },
+    "status": {
+      "title": "Se tattendi?",
+      "confirmed": "Iva",
+      "undecided": "Forsi",
+      "declined": "Le"
+    },
+    "amount": "Numru ta’ parteċipanti",
+    "max": "mass.",
+    "email": "Indirizz tal-email",
+    "seatsleft": "Postijiet disponibbli"
+  }
+}
