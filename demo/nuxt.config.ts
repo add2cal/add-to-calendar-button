@@ -23,7 +23,6 @@ export default defineNuxtConfig({
         '@heroicons/vue/24/solid',
         '@headlessui/vue',
         '@heroicons/vue/20/solid',
-        'isbot',
         'timezones-ical-library',
         'vue-marquee-text-component', // CJS
         'shiki',

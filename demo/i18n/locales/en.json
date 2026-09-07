@@ -33,6 +33,8 @@
     "clickHereLearnMore": "Click here to learn more",
     "showCode": "Show source code",
     "hideCode": "Hide source code",
+    "playgroundLoadError": "The Playground could not be loaded. Please try again.",
+    "retry": "Try again",
     "dateInput": "Date Details",
     "layoutInput": "Layout Settings",
     "demo": "Demo",

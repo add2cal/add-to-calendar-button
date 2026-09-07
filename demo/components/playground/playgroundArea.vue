@@ -6,25 +6,43 @@ import LayoutAttrs from "@/components/playground/attrs/layoutAttrs.vue";
 import { mapAttrsObject, attrsToHtmlString } from '@/utils/attrs';
 import { set, LSKey } from '@/utils/localStorage';
 import { getInitialAttrs, getInitialAttrsBlank } from '@/utils/attrs/default';
-import { isbot } from "isbot";
 const LazyCodeBlock = defineAsyncComponent(() => import('@/components/codeBlock.vue'));
 const { t, locale } = useI18n();
 
 const showCode = ref(false);
 const showMC = ref(false);
-const loaded = ref(false);
-const isBot = ref<boolean>(true);
-if (import.meta.client) {
-  isBot.value = isbot(navigator.userAgent);
-}
+const loadingState = ref<'loading' | 'ready' | 'error'>('loading');
+const loaded = computed(() => loadingState.value === 'ready');
+const LOAD_TIMEOUT = 5000;
+let loadAttempt = 0;
 
 const data = ref( getInitialAttrsBlank() );
 
 async function loadAtcbScript () {
-  import('add-to-calendar-button').then(() => {
-    loaded.value = true;
-    return;
-  });
+  const attempt = ++loadAttempt;
+  loadingState.value = 'loading';
+
+  try {
+    await new Promise<void>((resolve, reject) => {
+      const timeout = window.setTimeout(() => reject(new Error('Timed out loading Add to Calendar Button')), LOAD_TIMEOUT);
+
+      import('add-to-calendar-button').then(() => {
+        window.clearTimeout(timeout);
+        resolve();
+      }).catch((error) => {
+        window.clearTimeout(timeout);
+        reject(error);
+      });
+    });
+
+    if (attempt === loadAttempt) {
+      loadingState.value = 'ready';
+    }
+  } catch {
+    if (attempt === loadAttempt) {
+      loadingState.value = 'error';
+    }
+  }
 }
 
 if (import.meta.client) {
@@ -45,10 +63,9 @@ if (import.meta.client) {
     }
   });
 
-  // load atcb script
-  if (!isBot.value) {
+  onMounted(() => {
     loadAtcbScript();
-  }
+  });
 }
 </script>
 
@@ -72,6 +89,12 @@ if (import.meta.client) {
       >
         <div class="sticky top-[30vh] z-30 h-auto w-full py-10 xs:w-fit md:h-[500px] md:py-0">
           <add-to-calendar-button v-if="loaded" v-bind="mapAttrsObject(data)" debug hideRichData hideBranding />
+          <div v-else-if="loadingState === 'error'" class="mx-auto max-w-xs text-center text-sm text-zinc-600 dark:text-zinc-400" role="alert">
+            <p>{{ $t('labels.playgroundLoadError') }}</p>
+            <button class="mt-4 rounded bg-primary px-4 py-2 font-semibold text-white hover:bg-primary-light" type="button" @click="loadAtcbScript">
+              {{ $t('labels.retry') }}
+            </button>
+          </div>
           <svg v-else xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" class="mx-auto h-16 w-16 animate-spin text-primary">
             <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
             <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>

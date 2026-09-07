@@ -33,6 +33,8 @@
     "clickHereLearnMore": "Hier klicken und mehr erfahren",
     "showCode": "Quellcode anzeigen",
     "hideCode": "Quellcode ausblenden",
+    "playgroundLoadError": "Der Testbereich konnte nicht geladen werden. Bitte versuche es erneut.",
+    "retry": "Erneut versuchen",
     "dateInput": "Termin-Details",
     "layoutInput": "Layout-Einstellungen",
     "demo": "Demo",
