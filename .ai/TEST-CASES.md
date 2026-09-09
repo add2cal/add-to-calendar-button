@@ -410,6 +410,7 @@ Two separate test files by design: the shim case needs a page where nothing defi
 
 - Y-01: dist/atcb.js via classic script tag defines the element, exposes window.atcb_action and renders end-to-end
 - Y-02: a deprecated CDN file name (atcb-no-pro.js) logs a one-time deprecation info and loads the main bundle next to it
+- Y-03: jsDelivr package-entry URLs resolve lazy assets relative to the dist bundle
 
 ## Package consumption (scripts/test-package.mjs, `npm run test:package`)
 

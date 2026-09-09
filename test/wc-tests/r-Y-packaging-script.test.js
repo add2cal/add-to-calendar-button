@@ -5,6 +5,7 @@
  * must define the custom element and expose window.atcb_action as the only global.
  */
 import { expect } from '@open-wc/testing';
+import { resolve_script_base } from '../../src/core/script-base.ts';
 
 function loadScript(src) {
   return new Promise((resolve, reject) => {
@@ -32,5 +33,13 @@ describe('Group Y - packaging: script tag', () => {
     const btn = host.shadowRoot && host.shadowRoot.getElementById('atcb-btn-atcb-y01');
     expect(btn, 'button rendered from the script-tag bundle').to.not.equal(null);
     host.remove();
+  });
+
+  it('Y-03: jsDelivr package-entry URLs resolve lazy assets relative to the dist bundle', () => {
+    expect(resolve_script_base('https://cdn.jsdelivr.net/npm/add-to-calendar-button')).to.equal('https://cdn.jsdelivr.net/npm/add-to-calendar-button/dist/');
+    expect(resolve_script_base('https://cdn.jsdelivr.net/npm/add-to-calendar-button@3')).to.equal('https://cdn.jsdelivr.net/npm/add-to-calendar-button@3/dist/');
+    expect(resolve_script_base('https://cdn.jsdelivr.net/npm/add-to-calendar-button@3.0.1?cache=1')).to.equal('https://cdn.jsdelivr.net/npm/add-to-calendar-button@3.0.1/dist/');
+    expect(resolve_script_base('https://cdn.jsdelivr.net/npm/add-to-calendar-button@3/dist/atcb.js')).to.equal('https://cdn.jsdelivr.net/npm/add-to-calendar-button@3/dist/');
+    expect(resolve_script_base('https://cdn.jsdelivr.net/npm/another-package')).to.equal('https://cdn.jsdelivr.net/npm/');
   });
 });

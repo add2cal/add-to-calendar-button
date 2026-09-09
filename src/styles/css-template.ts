@@ -10,6 +10,7 @@
  *    register_style
  * The load-all-styles attribute prefetches every delta for runtime style switching.
  */
+import { resolve_script_base } from '../core/script-base';
 import type { ATCBConfig } from '../types';
 
 // build hook: the minified css of core + default gets inlined here (see scripts/build.mjs)
@@ -28,7 +29,7 @@ const scriptBase: string = (() => {
       // pattern gets statically rewritten by bundlers (asset inlining), which must not happen here
       const src = String(import.meta.url);
       if (src.indexOf('data:') !== 0 && src.lastIndexOf('/') > -1) {
-        return src.substring(0, src.lastIndexOf('/') + 1);
+        return resolve_script_base(src);
       }
     }
   } catch {
@@ -37,7 +38,7 @@ const scriptBase: string = (() => {
   try {
     if (typeof document !== 'undefined' && document.currentScript && (document.currentScript as HTMLScriptElement).src) {
       const src = (document.currentScript as HTMLScriptElement).src;
-      return src.substring(0, src.lastIndexOf('/') + 1);
+      return resolve_script_base(src);
     }
   } catch {
     // no DOM or opaque script origin - fall through
