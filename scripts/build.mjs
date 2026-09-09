@@ -33,7 +33,7 @@ const r = (...p) => path.join(root, ...p);
 const pkg = JSON.parse(fs.readFileSync(r('package.json'), 'utf8'));
 
 function licenseBanner(subject) {
-  return `/*!\n * @preserve\n * Add to Calendar Button\n * ${subject}\n * Version: ${pkg.version}\n * Creator: Jens Kuerschner (https://jekuer.com)\n * Project: https://github.com/add2cal/add-to-calendar-button\n * License: Elastic License 2.0 (ELv2) (https://github.com/add2cal/add-to-calendar-button/blob/main/LICENSE.txt)\n * Note:    DO NOT REMOVE THE COPYRIGHT NOTICE ABOVE!\n */\n`;
+  return `/*!\n * @preserve\n * Add to Calendar Button\n * ${subject}\n * Creator: Jens Kuerschner (https://jekuer.com)\n * Project: https://github.com/add2cal/add-to-calendar-button\n * License: Elastic License 2.0 (ELv2) (https://github.com/add2cal/add-to-calendar-button/blob/main/LICENSE.txt)\n * Version: ${pkg.version}\n * Note:    DO NOT REMOVE THE COPYRIGHT NOTICE ABOVE!\n */\n`;
 }
 
 // ---------- step 1: clean + css ----------
@@ -140,13 +140,14 @@ function buildCssTemplate() {
 const STYLE_RELPATH_HOOK = "const atcbStyleRelPath: string = 'styles/';";
 const LOCALE_RELPATH_HOOK = "const atcbLocaleRelPath: string = 'locales/';";
 const VERSION_HOOK = "const atcbVersion: string = '';";
+const BANNER_VERSION_HOOK = ' *  Version:';
 
 function injectVersion(code, id) {
   if (!id.replaceAll('\\', '/').endsWith('src/core/globals.ts')) return null;
-  if (!code.includes(VERSION_HOOK)) {
-    throw new Error('core/globals.ts: version hook not found - build assumption broken');
+  if (!code.includes(VERSION_HOOK) || !code.includes(BANNER_VERSION_HOOK)) {
+    throw new Error('core/globals.ts: version hooks not found - build assumption broken');
   }
-  return code.replace(VERSION_HOOK, `const atcbVersion: string = '${pkg.version}';`);
+  return code.replace(VERSION_HOOK, `const atcbVersion: string = '${pkg.version}';`).replace(BANNER_VERSION_HOOK, `${BANNER_VERSION_HOOK} ${pkg.version}`);
 }
 
 function injectLocaleRelPath(code, id, relPath) {
@@ -274,6 +275,8 @@ async function buildSsr() {
           name: 'atcb-ssr-data',
           enforce: 'pre',
           transform(code, id) {
+            const versionResult = injectVersion(code, id);
+            if (versionResult !== null) return { code: versionResult, map: null };
             const result = injectSsrData(code, id);
             return result === null ? null : { code: result, map: null };
           },
@@ -451,6 +454,26 @@ function sanityCheck() {
   const moduleBuild = fs.readFileSync(r('dist/module/index.js'), 'utf8');
   const cjsBuild = fs.readFileSync(r('dist/commonjs/index.js'), 'utf8');
   const problems = [];
+  const builtFiles = [];
+  const collectBuiltFiles = (dir) => {
+    for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
+      const file = path.join(dir, entry.name);
+      if (entry.isDirectory()) collectBuiltFiles(file);
+      else builtFiles.push(file);
+    }
+  };
+  collectBuiltFiles(r('dist'));
+  for (const file of builtFiles) {
+    const content = fs.readFileSync(file, 'utf8');
+    for (const match of content.matchAll(/\/\*![\s\S]*?\*\//g)) {
+      const lines = match[0].split(/\r?\n/).map((line) => line.replace(/^\s*\*\s?/, '').trim());
+      if (!lines.includes('@preserve') || !lines.includes('Add to Calendar Button')) continue;
+      const noteIndex = lines.findIndex((line) => line.startsWith('Note:'));
+      if (noteIndex < 1 || lines[noteIndex - 1] !== `Version: ${pkg.version}`) {
+        problems.push(`${path.relative(root, file)}: preserved Add to Calendar Button banner must put package version directly before Note`);
+      }
+    }
+  }
   // match the inlined style template keys in any printer format (quoted, unquoted, minified)
   const coreKey = /["']?core["']?:\s*["']/;
   const defaultKey = /["']?default["']?:\s*["']/;
