@@ -465,6 +465,7 @@ The same Node tier also covers the DOM-free utility entry in `test/ssr-node/util
 - Z-03: without declarative shadow DOM (innerHTML path) the element initializes client-only and drops the inert template
 - Z-04: the group overview skeleton stays painted through the pending range fetch and swaps only when the real list is ready
 - Z-05: failed PRO initialization removes the group loading skeleton instead of leaving it painted forever
+- Z-06: Headless Chromium initializes the Playground while crawlers retain the SSR shell
 
 ## Group E2 - Recurrence fast-forward (test/wc-tests/r-E2-recurrence-fastforward.test.js)
 
