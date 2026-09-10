@@ -112,7 +112,7 @@
     "check": "npm run eslint && npm run prettier && npm run typecheck",
     "format": "npm run prettier:fix && cd demo && npm run prettier:fix",
     "fix": "npm run eslint:fix && cd demo && npm run lint:fix && cd .. && npm run format",
-    "test": "node test/test-prep.js && cd demo && npm ci && cd .. && npm run build:demo && npx web-test-runner \"test/wc-tests/wc-load.test.js\" \"test/wc-tests/recurrence-tz.test.js\" \"test/wc-tests-smoke/*.test.js\"",
+    "test": "cd demo && npm ci && cd .. && npm ci && node test/test-prep.js && npm run build:demo && npx web-test-runner \"test/wc-tests/wc-load.test.js\" \"test/wc-tests/recurrence-tz.test.js\" \"test/wc-tests-smoke/*.test.js\"",
     "test:extended": "node test/test-prep.js && npx web-test-runner \"test/wc-tests/*.test.js\" \"test/wc-tests-smoke/*.test.js\"",
     "test:full": "node test/test-prep.js && npx web-test-runner \"test/wc-tests/*.test.js\" \"test/wc-tests-smoke/*.test.js\" \"test/wc-tests-full/*.test.js\"",
     "test:package": "node scripts/test-package.mjs",

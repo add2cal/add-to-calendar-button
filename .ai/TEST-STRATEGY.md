@@ -22,7 +22,9 @@ Three tiers share one helper/fixture layer. Only the smallest runs by default.
 | `npm run test:full`     | Full Cartesian | + ~210 parameterized matrix cases (`test/wc-tests-full/f-*.test.js`)                                                                                                  | on demand / releases        |
 
 Every script first runs `test/test-prep.js`, which builds `dist/` (the WC-level tests
-import the built module) and executes the Node import smoke test.
+import the built module) and executes the Node import smoke test. The default smoke tier
+also installs the demo before restoring root dependencies, then generates its static output
+for the browser regression; the order keeps Nuxt's `lit` resolution available.
 
 ### Smoke tier (S-01 .. S-19)
 
