@@ -64,14 +64,14 @@ describe('Smoke - generated v3 Playground', () => {
     frame.contentWindow.addEventListener('error', (event) => uncaught.push(event.error || event.message));
     frame.contentWindow.addEventListener('unhandledrejection', (event) => uncaught.push(event.reason));
     const loaded = waitForLoad(frame);
-    frame.src = '/';
+    frame.src = '/playground/';
     await loaded;
     let doc = await waitForHydration(frame);
     frame.contentWindow.localStorage.clear();
     assertInteractiveControls(doc);
 
     const reloaded = waitForLoad(frame);
-    frame.src = '/';
+    frame.src = '/playground/';
     await reloaded;
     doc = await waitForHydration(frame);
     assertInteractiveControls(doc);
@@ -86,7 +86,7 @@ describe('Smoke - generated v3 Playground', () => {
     frame.style.height = '900px';
     document.body.append(frame);
     const loaded = waitForLoad(frame);
-    frame.src = '/';
+    frame.src = '/playground/';
     await loaded;
     const doc = await waitForHydration(frame);
 
@@ -126,7 +126,7 @@ describe('Smoke - generated v3 Playground', () => {
     frame.style.height = '900px';
     document.body.append(frame);
     const loaded = waitForLoad(frame);
-    frame.src = '/';
+    frame.src = '/playground/';
     await loaded;
     const doc = await waitForHydration(frame);
 

@@ -22,9 +22,10 @@ import { chromeLauncher } from '@web/test-runner';
 const demoOutputDir = path.resolve('demo/.output/public');
 
 const serveGeneratedDemo = async (ctx, next) => {
-  const requestPath = ctx.path === '/' ? 'index.html' : ctx.path.slice(1);
+  const isPlaygroundPath = ctx.path === '/playground' || ctx.path.startsWith('/playground/');
+  const requestPath = isPlaygroundPath ? ctx.path.slice('/playground/'.length) || 'index.html' : ctx.path.slice(1);
   const filePath = path.resolve(demoOutputDir, requestPath);
-  if (!filePath.startsWith(demoOutputDir + path.sep) && filePath !== path.join(demoOutputDir, 'index.html')) {
+  if ((!isPlaygroundPath && (!fs.existsSync(filePath) || !fs.statSync(filePath).isFile())) || (!filePath.startsWith(demoOutputDir + path.sep) && filePath !== path.join(demoOutputDir, 'index.html'))) {
     await next();
     return;
   }
