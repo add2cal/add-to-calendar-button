@@ -9,7 +9,7 @@ update this list in the same commit. Quick consistency check:
 
 ## Tier 0 - Smoke Suite (`npm run test`)
 
-File: `test/wc-tests-smoke/s-smoke.test.js`
+Files: `test/wc-tests-smoke/s-smoke.test.js`, `test/wc-tests-smoke/s-playground.test.js`
 
 ### SMOKE | OSS x Desktop
 
@@ -38,6 +38,12 @@ File: `test/wc-tests-smoke/s-smoke.test.js`
 
 - S-15: PRO config renders under the mobile flavor with platform option rules applied
 - S-16: PRO RSVP config renders the RSVP entry point instead of calendar options
+
+### SMOKE | Generated Playground browser regression
+
+- S-17: HeadlessChrome initializes the real Playground on fresh load and reload without uncaught errors
+- S-18: Playground edits reach the live preview and configuration across the supported control categories
+- S-19: mobile controls remain available and keyboard-labelled after real initialization
 
 Also part of the default run (long-standing quick tests):
 

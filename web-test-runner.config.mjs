@@ -15,8 +15,28 @@
 // runs its tests in seconds anyway - the build dominates wall time, not the runner.
 // Override for experiments via WTR_CONCURRENCY.
 import fs from 'node:fs';
+import path from 'node:path';
 import { esbuildPlugin } from '@web/dev-server-esbuild';
 import { chromeLauncher } from '@web/test-runner';
+
+const demoOutputDir = path.resolve('demo/.output/public');
+
+const serveGeneratedDemo = async (ctx, next) => {
+  const requestPath = ctx.path === '/' ? 'index.html' : ctx.path.slice(1);
+  const filePath = path.resolve(demoOutputDir, requestPath);
+  if (!filePath.startsWith(demoOutputDir + path.sep) && filePath !== path.join(demoOutputDir, 'index.html')) {
+    await next();
+    return;
+  }
+  // eslint-disable-next-line security/detect-non-literal-fs-filename -- the resolved path is bounded to generated demo output above
+  if (!fs.existsSync(filePath) || !fs.statSync(filePath).isFile()) {
+    await next();
+    return;
+  }
+  ctx.type = path.extname(filePath);
+  // eslint-disable-next-line security/detect-non-literal-fs-filename -- the resolved path is bounded to generated demo output above
+  ctx.body = fs.readFileSync(filePath);
+};
 
 export default {
   // expose window.gc for the memory-leak regression checks (r-MEM): the flag lets the
@@ -36,6 +56,7 @@ export default {
   // files into JS modules (needed for import statements), which would corrupt the
   // runtime fetch() of dist/locales/*.json that the component performs
   middleware: [
+    serveGeneratedDemo,
     async (ctx, next) => {
       if (ctx.path.startsWith('/dist/locales/') && ctx.path.endsWith('.json')) {
         ctx.type = 'application/json';
