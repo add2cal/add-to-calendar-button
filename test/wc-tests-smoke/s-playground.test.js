@@ -3,7 +3,7 @@
  */
 import { expect } from '@open-wc/testing';
 
-const timeout = 20000;
+const timeout = 10000;
 
 const waitFor = async (predicate, message) => {
   const end = Date.now() + timeout;
