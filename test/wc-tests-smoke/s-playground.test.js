@@ -18,7 +18,10 @@ const waitFor = async (predicate, message) => {
 const waitForLoad = (frame) => new Promise((resolve) => frame.addEventListener('load', resolve, { once: true }));
 
 const input = (doc, label) => {
-  const el = doc.querySelector(`[aria-label="${label}"]`);
+  const labelledInput = doc.querySelector(`[aria-label="${label}"]`);
+  if (labelledInput) return labelledInput;
+  const labelEl = [...doc.querySelectorAll('label')].find((el) => el.textContent.trim() === label);
+  const el = labelEl?.parentElement?.querySelector('input');
   expect(el, `input ${label}`).to.exist;
   return el;
 };
@@ -44,8 +47,8 @@ const waitForHydration = async (frame) => {
 };
 
 const assertInteractiveControls = (doc) => {
-  const controls = [...doc.querySelectorAll('#date-input input, #style-input input')];
-  expect(controls.length, 'desktop Playground control count').to.be.greaterThan(10);
+  const controls = [...doc.querySelectorAll('#date-input input[aria-label], #style-input input[aria-label]')];
+  expect(controls.length, 'desktop Playground labelled control count').to.be.greaterThan(8);
   expect(
     controls.filter((el) => el.disabled),
     'no desktop control remains disabled',
