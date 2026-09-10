@@ -114,7 +114,9 @@ describe('Smoke - generated v3 Playground', () => {
     timeZone.focus();
     timeZone.value = 'Europe/Berlin';
     timeZone.dispatchEvent(new Event('input', { bubbles: true }));
-    const option = await waitFor(() => [...doc.querySelectorAll('li')].find((el) => el.textContent.trim() === 'Europe/Berlin'), 'Time zone option was not available');
+    const timeZoneOptionsId = timeZone.getAttribute('aria-controls');
+    expect(timeZoneOptionsId, 'Time Zone options listbox id').to.exist;
+    const option = await waitFor(() => [...(doc.getElementById(timeZoneOptionsId)?.querySelectorAll('li') ?? [])].find((el) => el.textContent.trim() === 'Europe/Berlin'), 'Time zone option was not available');
     option.click();
     await waitFor(() => liveButton(doc).getAttribute('time-zone') === 'Europe/Berlin', 'Time zone did not reach the preview');
 
