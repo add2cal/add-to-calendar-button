@@ -1,11 +1,11 @@
 {
   "name": "add-to-calendar-button",
-  "version": "3.0.2",
+  "version": "3.0.3",
   "engines": {
     "node": ">=18.17.0",
     "npm": ">=9.6.7"
   },
-  "description": "A convenient JavaScript snippet, which lets you create beautiful buttons, where people can add events to their calendars.",
+  "description": "The convenient TS/JS library, which lets you create beautiful add to calendar buttons, where people can save events to their calendars.",
   "main": "dist/commonjs/index.js",
   "module": "dist/module/index.js",
   "files": [
@@ -112,7 +112,7 @@
     "check": "npm run eslint && npm run prettier && npm run typecheck",
     "format": "npm run prettier:fix && cd demo && npm run prettier:fix",
     "fix": "npm run eslint:fix && cd demo && npm run lint:fix && cd .. && npm run format",
-    "test": "node test/test-prep.js && npx web-test-runner \"test/wc-tests/wc-load.test.js\" \"test/wc-tests/recurrence-tz.test.js\" \"test/wc-tests-smoke/*.test.js\"",
+    "test": "node test/test-prep.js && npx web-test-runner \"test/wc-tests/wc-load.test.js\" \"test/wc-tests/recurrence-tz.test.js\" \"test/wc-tests/r-Z-playground-bot.test.js\" \"test/wc-tests-smoke/*.test.js\"",
     "test:extended": "node test/test-prep.js && npx web-test-runner \"test/wc-tests/*.test.js\" \"test/wc-tests-smoke/*.test.js\"",
     "test:full": "node test/test-prep.js && npx web-test-runner \"test/wc-tests/*.test.js\" \"test/wc-tests-smoke/*.test.js\" \"test/wc-tests-full/*.test.js\"",
     "test:package": "node scripts/test-package.mjs",
@@ -150,6 +150,6 @@
     "prettier-plugin-tailwindcss": "^0.8.1",
     "typescript": "npm:@typescript/typescript6@^6.0.2",
     "typescript-eslint": "^8.70.0",
-    "vite": "^8.2.2"
+    "vite": "^8.3.0"
   }
 }
