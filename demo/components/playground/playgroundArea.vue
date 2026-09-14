@@ -7,7 +7,8 @@ import { mapAttrsObject, attrsToHtmlString } from '@/utils/attrs';
 import { set, LSKey } from '@/utils/localStorage';
 import { getInitialAttrs, getInitialAttrsBlank } from '@/utils/attrs/default';
 import { getCookie, setCookie, CookieKey } from '@/utils/cookie';
-import { isbot } from "isbot";
+import { isbot } from 'isbot';
+import { shouldSkipPlaygroundClientLoad } from '@/utils/playground-bot';
 const LazyCodeBlock = defineAsyncComponent(() => import('@/components/codeBlock.vue'));
 const { t, locale } = useI18n();
 
@@ -16,7 +17,7 @@ const showMC = ref(false);
 const loaded = ref(false);
 const isBot = ref<boolean>(true);
 if (import.meta.client) {
-  isBot.value = isbot(navigator.userAgent);
+  isBot.value = shouldSkipPlaygroundClientLoad(isbot(navigator.userAgent), navigator.userAgent);
 }
 
 // On the server, read the playground settings from the cookie (mirrored from
