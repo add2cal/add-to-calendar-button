@@ -6,7 +6,7 @@ const googlebot = 'Mozilla/5.0 (compatible; Googlebot/2.1; +http://www.google.co
 
 describe('Group Z - Demo Playground hydration', () => {
   it('Z-06: initializes in Headless Chromium and retains crawler SSR behavior', () => {
-    expect(shouldSkipPlaygroundClientLoad(headlessChrome)).to.equal(false);
-    expect(shouldSkipPlaygroundClientLoad(googlebot)).to.equal(true);
+    expect(shouldSkipPlaygroundClientLoad(true, headlessChrome)).to.equal(false);
+    expect(shouldSkipPlaygroundClientLoad(true, googlebot)).to.equal(true);
   });
 });

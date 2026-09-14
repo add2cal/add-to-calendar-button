@@ -1,7 +1,5 @@
-import { isbot } from 'isbot';
-
 const headlessChromium = /\bHeadlessChrome\//i;
 
-export const shouldSkipPlaygroundClientLoad = (userAgent: string): boolean => {
-  return isbot(userAgent) && !headlessChromium.test(userAgent);
+export const shouldSkipPlaygroundClientLoad = (isBot: boolean, userAgent: string): boolean => {
+  return isBot && !headlessChromium.test(userAgent);
 };
