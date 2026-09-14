@@ -5,7 +5,7 @@
     "node": ">=18.17.0",
     "npm": ">=9.6.7"
   },
-  "description": "A convenient JavaScript snippet, which lets you create beautiful buttons, where people can add events to their calendars.",
+  "description": "The convenient TS/JS library, which lets you create beautiful buttons, where people can add events to their calendars.",
   "main": "dist/commonjs/index.js",
   "module": "dist/module/index.js",
   "files": [
