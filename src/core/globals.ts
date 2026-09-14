@@ -29,7 +29,9 @@ const isBrowser = (): boolean => {
 // iOS
 const isIOS: () => boolean = isBrowser()
   ? () => {
-      if (/iPad|iPhone|iPod/i.test(navigator.userAgent) && !/MSStream/i.test(navigator.userAgent)) {
+      const userAgent = navigator.userAgent;
+      const isIPadOS = /Macintosh/i.test(userAgent) && navigator.maxTouchPoints > 1;
+      if ((/iPad|iPhone|iPod/i.test(userAgent) || isIPadOS) && !/MSStream/i.test(userAgent)) {
         return true;
       } else {
         return false;

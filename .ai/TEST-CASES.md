@@ -168,6 +168,7 @@ Also part of the default run (long-standing quick tests):
 - G-21: dynamically generated singleton ICS renders first, then becomes a native download anchor
 - G-22: static ICS files retain the established button-driven download path
 - G-23: dynamic iOS ICS uses a precomputed blob URL and revokes it on teardown
+- G-24: dynamic iPadOS ICS uses a precomputed blob URL with the desktop user agent
 - G-20: desktop file save targets _blank (mobile would use _self)
 
 ### Group H - Google output (`r-H-google.test.js`)

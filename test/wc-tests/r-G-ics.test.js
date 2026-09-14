@@ -3,7 +3,7 @@
  */
 import { expect, aTimeout } from '@open-wc/testing';
 import { mountAtcb } from '../helpers/mount.js';
-import { interceptFileSave } from '../helpers/capture.js';
+import { interceptFileSave, setUA, setMaxTouchPoints, UA } from '../helpers/capture.js';
 import { clickSingleton } from '../helpers/dom.js';
 import { decodeIcsHref, parseIcs, unfoldIcs } from '../helpers/ics.js';
 import { CFG } from '../fixtures/events.js';
@@ -221,6 +221,24 @@ describe('Group G - ICS / Apple output', () => {
     } finally {
       URL.createObjectURL = originalCreateObjectURL;
       URL.revokeObjectURL = originalRevokeObjectURL;
+    }
+  });
+
+  it('G-24: dynamic iPadOS ICS uses a precomputed blob URL with the desktop user agent', async () => {
+    const restoreUA = setUA(UA.ipadOSSafari);
+    const restoreMaxTouchPoints = setMaxTouchPoints(5);
+    const originalCreateObjectURL = URL.createObjectURL;
+    URL.createObjectURL = () => 'blob:https://example.com/atcb-ipados-ics';
+    try {
+      const { host } = await mountAtcb({ ...CFG.singleTimedNY, options: "'apple'", trigger: 'click', identifier: 'atcb-g24' });
+      await aTimeout(30);
+      const anchor = host.shadowRoot.getElementById(host.getAttribute('atcb-button-id'));
+      expect(anchor.tagName).to.equal('A');
+      expect(anchor.getAttribute('href')).to.equal('blob:https://example.com/atcb-ipados-ics');
+    } finally {
+      URL.createObjectURL = originalCreateObjectURL;
+      restoreMaxTouchPoints();
+      restoreUA();
     }
   });
 });
