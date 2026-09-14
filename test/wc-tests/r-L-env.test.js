@@ -5,7 +5,7 @@
  */
 import { expect, aTimeout } from '@open-wc/testing';
 import { mountAtcb, baseEvent } from '../helpers/mount.js';
-import { interceptWindowOpen, interceptFileSave, setUA, UA, muteConsole, stubClipboard } from '../helpers/capture.js';
+import { interceptWindowOpen, interceptFileSave, setUA, setMaxTouchPoints, UA, muteConsole, stubClipboard } from '../helpers/capture.js';
 import { clickSingleton, openList, renderedOptions, clickOption, modalHost } from '../helpers/dom.js';
 import { atcb_action } from '../../dist/module/index.js';
 
@@ -53,6 +53,7 @@ describe('Group L - Environment-driven routing', () => {
 
   it('L-01d: atcb_action on macOS saves a dynamic singleton ICS directly', async () => {
     const restoreUA = setUA(UA.desktopMacSafari);
+    const restoreMaxTouchPoints = setMaxTouchPoints(0);
     const fs = interceptFileSave();
     try {
       const trigger = document.createElement('button');
@@ -66,6 +67,7 @@ describe('Group L - Environment-driven routing', () => {
       trigger.remove();
     } finally {
       fs.restore();
+      restoreMaxTouchPoints();
       restoreUA();
     }
   });

@@ -71,10 +71,21 @@ export function setUA(ua) {
   };
 }
 
+/** Overrides navigator.maxTouchPoints for device-detection tests. Returns a restore function. */
+export function setMaxTouchPoints(value) {
+  const original = Object.getOwnPropertyDescriptor(navigator, 'maxTouchPoints');
+  Object.defineProperty(navigator, 'maxTouchPoints', { value, configurable: true });
+  return () => {
+    if (original) Object.defineProperty(navigator, 'maxTouchPoints', original);
+    else delete navigator.maxTouchPoints;
+  };
+}
+
 export const UA = {
   desktopWinChrome: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36',
   desktopMacSafari: 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.4 Safari/605.1.15',
   desktopMacChrome: 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36',
+  ipadOSSafari: 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/27.0 Safari/605.1.15',
   desktopWinFirefox: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:126.0) Gecko/20100101 Firefox/126.0',
   iosSafari: 'Mozilla/5.0 (iPhone; CPU iPhone OS 17_4 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.4 Mobile/15E148 Safari/604.1',
   iosChrome: 'Mozilla/5.0 (iPhone; CPU iPhone OS 17_4 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) CriOS/125.0.0.0 Mobile/15E148 Safari/604.1',
