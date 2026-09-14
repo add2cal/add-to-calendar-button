@@ -10,7 +10,7 @@
  *  Project: https://github.com/add2cal/add-to-calendar-button
  *  License: Elastic License 2.0 (ELv2) (https://github.com/add2cal/add-to-calendar-button/blob/main/LICENSE.txt)
  *  Version:
- *  Note:    DO NOT REMOVE THE COPYRIGHT NOTICE ABOVE!
+ *  Note: DO NOT REMOVE THE COPYRIGHT NOTICE ABOVE!
  *
  */
 import type { ATCBInputConfig } from '../types';
@@ -30,8 +30,7 @@ const isBrowser = (): boolean => {
 const isIOS: () => boolean = isBrowser()
   ? () => {
       const userAgent = navigator.userAgent;
-      const isIPadOS = /Macintosh/i.test(userAgent) && navigator.maxTouchPoints > 1;
-      if ((/iPad|iPhone|iPod/i.test(userAgent) || isIPadOS) && !/MSStream/i.test(userAgent)) {
+      if ((/iPad|iPhone|iPod/i.test(userAgent) || (/Macintosh/i.test(userAgent) && navigator.maxTouchPoints > 1)) && !/MSStream/i.test(userAgent)) {
         return true;
       } else {
         return false;
