@@ -38,7 +38,20 @@ The complete release gate consists of two commands:
    modes, and a real bundler build with size bounds.
 2. `npm run check` - eslint, prettier, typecheck.
 
-For day-to-day development, `npm run test` remains the smoke tier (and CI default), while
+The full tier also requires the nine Guidepup cases on both VoiceOver/WebKit (macOS)
+and NVDA/Chromium (Windows). `ATCB_TEST_FULL_PART=browser` selects the browser portion
+for Linux jobs; `ATCB_TEST_FULL_PART=screen-reader` selects the reader portion on each
+reader OS. Neither portion alone is a complete release gate. Without this variable,
+`test:full` runs both portions on the current supported OS and fails on Linux rather
+than silently omitting screen-reader coverage. Setup instructions live in
+`test/screen-reader/README.md`.
+
+`.github/workflows/tests.yml` runs smoke tests for PRs targeting `dev`, and the full
+release gate for PRs targeting `main`. The publish workflow reuses that workflow,
+requiring both Chrome binaries, both reader platforms, and all package/SSR/static
+checks before publishing.
+
+For day-to-day development, `npm run test` remains the smoke tier, while
 `npm run test:extended` is the reduced pre-merge suite.
 
 ## Pre-release flow (major versions)

@@ -46,18 +46,8 @@ jobs:
           fi
 
   test:
-    runs-on: ubuntu-latest
     needs: validate-release
-    steps:
-      - uses: actions/checkout@v7
-      - uses: actions/setup-node@v7
-        with:
-          node-version: 24
-          registry-url: https://registry.npmjs.org/
-          cache: 'npm'
-      - run: npm ci
-      - run: npm run check
-      - run: npm run test:release
+    uses: ./.github/workflows/tests.yml
 
   build-and-publish:
     runs-on: ubuntu-latest

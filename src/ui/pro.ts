@@ -653,6 +653,7 @@ async function generate_rsvp_button(host: ShadowRoot, data: ATCBConfig): Promise
   })();
   // generate the label incl. eventListeners
   generate_label(host, data, buttonTrigger, 'rsvp', !data.hideIconButton, label, true);
+  if (data.buttonStyle !== 'date') buttonTrigger.setAttribute('aria-label', label + ': ' + data.name);
   if (data.debug) {
     console.log('Add to Calendar RSVP Button "' + data.identifier + '" created');
   }

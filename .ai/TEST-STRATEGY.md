@@ -15,11 +15,19 @@ dataLayer pushes). Internal wiring is never asserted directly.
 
 Three tiers share one helper/fixture layer. Only the smallest runs by default.
 
-| Script                  | Tier           | Content                                                                                                                 | When                        |
-| ----------------------- | -------------- | ----------------------------------------------------------------------------------------------------------------------- | --------------------------- |
-| `npm run test`          | Smoke          | 16 cases: {Desktop, Mobile} x {OSS, PRO} + RSVP render (`test/wc-tests-smoke/`), plus the two long-standing quick tests | DEFAULT - every CI run / PR |
-| `npm run test:extended` | Reduced        | all reduced feature groups, 332 hand-written cases including smoke (`test/wc-tests/` + `test/wc-tests-smoke/`)          | on demand / pre-merge       |
-| `npm run test:full`     | Full Cartesian | + ~210 parameterized matrix cases (`test/wc-tests-full/f-*.test.js`)                                                    | on demand / releases        |
+The full tier additionally runs nine real screen-reader scenarios in
+`test/screen-reader/` using Guidepup + Playwright. See its README for machine setup,
+platform requirements, diagnostic commands, and the explicit CI portion selector.
+These are excluded from smoke and extended runs. A local full run needs macOS or
+Windows; unsupported platforms fail unless the browser portion is explicitly selected.
+PRs targeting `dev` run smoke; PRs targeting `main` run the complete release gate:
+both Chrome binaries, package/SSR checks, static checks, and VoiceOver + NVDA jobs.
+
+| Script                  | Tier                           | Content                                                                                                                 | When                   |
+| ----------------------- | ------------------------------ | ----------------------------------------------------------------------------------------------------------------------- | ---------------------- |
+| `npm run test`          | Smoke                          | 16 cases: {Desktop, Mobile} x {OSS, PRO} + RSVP render (`test/wc-tests-smoke/`), plus the two long-standing quick tests | DEFAULT / PRs to dev   |
+| `npm run test:extended` | Reduced                        | all reduced feature groups, 332 hand-written cases including smoke (`test/wc-tests/` + `test/wc-tests-smoke/`)          | on demand / pre-merge  |
+| `npm run test:full`     | Full Cartesian + screen reader | 543 browser cases including reduced + 9 Guidepup scenarios per reader OS                                                | PRs to main / releases |
 
 Every script first runs `test/test-prep.js`, which builds `dist/` (the WC-level tests
 import the built module) and executes the Node import smoke test.
@@ -61,7 +69,9 @@ test/
   wc-tests-smoke/     smoke tier (s-smoke.test.js)
   wc-tests/           reduced tier (r-*.test.js) + the two long-standing quick tests
   wc-tests-full/      full Cartesian tier (f-*.test.js)
+  screen-reader/     full-tier Guidepup tests: 9 per OS, 18 in release CI
 web-test-runner.config.mjs
+playwright.screen-reader.config.ts
 ```
 
 ## Core helpers

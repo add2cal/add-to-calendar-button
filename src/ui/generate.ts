@@ -396,13 +396,16 @@ async function create_modal(
   modalWrapper.dataset.modalNr = `${modalCount}`;
   // programmatic focus target (scroll anchor), not part of the tab order
   modalWrapper.tabIndex = -1;
-  modalWrapper.focus({ preventScroll: true });
-  modalWrapper.blur();
   const parentButton = (function () {
     const hostEl = mainHost.getElementById(data.identifier as string);
     if (hostEl) {
       return hostEl;
     }
+    // PRO forms may be created from an existing modal shadow root. Their trigger
+    // still belongs to the original component and must receive focus on Escape.
+    const originalHost = document.querySelector('[atcb-button-id="' + data.identifier + '"]');
+    const originalTrigger = originalHost?.shadowRoot?.getElementById(data.identifier as string);
+    if (originalTrigger) return originalTrigger;
     return document.getElementById(data.identifier as string);
   })();
   if (parentButton) {
@@ -456,6 +459,10 @@ async function create_modal(
     if (dialogEl) {
       dialogEl.setAttribute('aria-labelledby', modalHeadline.id);
     }
+  } else if (dialogEl && data.rsvp) {
+    // Hidden success copy is part of the RSVP content, but must not name an
+    // unsubmitted form. Use the translated action when no headline was supplied.
+    dialogEl.setAttribute('aria-label', translate_hook('label.rsvp.title', data));
   } else if (dialogEl && content !== '') {
     dialogEl.setAttribute(
       'aria-label',
@@ -476,6 +483,8 @@ async function create_modal(
     modalContent.innerHTML = content;
     modal.append(modalContent);
   }
+  // Expose the complete dialog name and introduction before moving focus into it.
+  modalWrapper.focus({ preventScroll: true });
   if (!data.hideBranding) {
     create_atcbl(modalHost, false);
   }
@@ -653,8 +662,12 @@ async function generate_overlay_dom(host: ShadowRoot, data: ATCBConfig): Promise
       newHost.querySelector('.atcb-modal-host-initialized')!.append(node.cloneNode(true));
     }
   });
-  // remove the id from the <button> to prevent duplicate ids
-  newHost.querySelector('.atcb-button')!.removeAttribute('id');
+  // This copy only preserves the trigger's appearance. Keep the original as the
+  // accessible trigger and focus-return target; never expose two identical buttons.
+  const triggerCopy = newHost.querySelector('.atcb-button')!;
+  triggerCopy.removeAttribute('id');
+  triggerCopy.setAttribute('aria-hidden', 'true');
+  triggerCopy.setAttribute('tabindex', '-1');
   // set the opacity of the original button to 0
   host.host.classList.add('atcb-shadow-hide');
   (host.querySelector('.atcb-initialized') as HTMLElement | null)!.style.opacity = '0';

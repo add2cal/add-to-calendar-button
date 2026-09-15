@@ -16,6 +16,9 @@
 /demo
 /assets
 /src
+/test/screen-reader
+/test-results
+/playwright-report
 *.png
 *.ico
 *.gif

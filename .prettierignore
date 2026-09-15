@@ -1,6 +1,8 @@
 # Ignore artifacts:
 build
 coverage
+test-results
+playwright-report
 
 # Ignore minified files
 *.min.*
