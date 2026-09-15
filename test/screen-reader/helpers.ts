@@ -88,14 +88,25 @@ export async function mount(page: Page, config: Record<string, unknown>, pro: 'c
   return { host, unexpectedRequests };
 }
 
-const speechOffsets = new WeakMap<ScreenReaderPlaywright, number>();
+type ReaderOffsets = { speech: number; items: number };
+const readerOffsets = new WeakMap<ScreenReaderPlaywright, ReaderOffsets>();
 
 export async function checkpointSpeech(reader: ScreenReaderPlaywright) {
-  speechOffsets.set(reader, (await reader.spokenPhraseLog()).length);
+  const speech = await reader.spokenPhraseLog();
+  const items = await reader.itemTextLog();
+  readerOffsets.set(reader, { speech: speech.length, items: items.length });
 }
 
-export async function expectSpeech(reader: ScreenReaderPlaywright, expected: RegExp) {
-  await expect.poll(async () => (await reader.spokenPhraseLog()).slice(speechOffsets.get(reader) || 0).join('\n'), { message: `Screen reader announces ${expected}` }).toMatch(expected);
+async function readerOutputSinceCheckpoint(reader: ScreenReaderPlaywright) {
+  const offsets = readerOffsets.get(reader) || { speech: 0, items: 0 };
+  const speech = await reader.spokenPhraseLog();
+  const items = await reader.itemTextLog();
+  return [...speech.slice(offsets.speech), ...items.slice(offsets.items)].join('\n');
+}
+
+export async function expectSpeech(reader: ScreenReaderPlaywright, expected: RegExp, forbidden?: RegExp) {
+  await expect.poll(() => readerOutputSinceCheckpoint(reader), { message: `Screen reader announces ${expected}` }).toMatch(expected);
+  if (forbidden) expect(await readerOutputSinceCheckpoint(reader)).not.toMatch(forbidden);
 }
 
 async function currentReaderOutput(reader: ScreenReaderPlaywright) {
@@ -121,23 +132,14 @@ export async function readTo(reader: ScreenReaderPlaywright, expected: RegExp, f
   const currentOutput = await currentReaderOutput(reader);
   if (forbidden) expect(currentOutput).not.toMatch(forbidden);
   if (expected.test(currentOutput)) return;
-  for (let step = 0; step < 40; step++) {
+  for (let step = 0; step < 20; step++) {
+    await checkpointSpeech(reader);
     await reader.next();
-    const output = await currentReaderOutput(reader);
+    const output = await readerOutputSinceCheckpoint(reader);
     if (forbidden) expect(output).not.toMatch(forbidden);
     if (expected.test(output)) return;
   }
-  throw new Error(`Could not read ${expected} within 40 screen-reader steps.`);
-}
-
-async function readBackTo(reader: ScreenReaderPlaywright, expected: RegExp, forbidden?: RegExp) {
-  for (let step = 0; step < 40; step++) {
-    await reader.previous();
-    const output = await currentReaderOutput(reader);
-    if (forbidden) expect(output).not.toMatch(forbidden);
-    if (expected.test(output)) return;
-  }
-  throw new Error(`Could not read back to ${expected} within 40 screen-reader steps.`);
+  throw new Error(`Could not read ${expected} within 20 screen-reader steps.`);
 }
 
 export async function openList(page: Page, reader: ScreenReaderPlaywright) {
@@ -151,14 +153,10 @@ export async function openList(page: Page, reader: ScreenReaderPlaywright) {
   // Programmatic focus enters the menu, but VoiceOver and NVDA can initially
   // announce only its container, and Chromium can leave focus on the trigger.
   // Follow the real keyboard route when focus was not moved automatically.
-  if (await google.evaluate((element) => element.matches(':focus'))) {
-    await readTo(reader, /Google/i);
-  } else {
+  const modal = await page.getByRole('dialog').isVisible();
+  if (modal) await expectSpeech(reader, /Add to Calendar.*dialog|dialog.*Add to Calendar/i, /Before calendar|After calendar/i);
+  if (!(await google.evaluate((element) => element.matches(':focus')))) {
     await tabTo(reader, google, /Google/i);
-  }
-  if (await page.getByRole('dialog').isVisible()) {
-    await readBackTo(reader, /Add to Calendar.*dialog|dialog.*Add to Calendar/i, /Before calendar|After calendar/i);
-    await readTo(reader, /Google/i, /Before calendar|After calendar/i);
   }
   return trigger;
 }
