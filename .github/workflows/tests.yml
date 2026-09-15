@@ -36,8 +36,6 @@ jobs:
         node: ['24', '26']
         browser: [chrome, chrome-headless-shell]
     env:
-      # The matching screen-reader jobs below complete the full tier.
-      ATCB_TEST_FULL_PART: browser
       WTR_CONCURRENCY: 1
       # Downloaded Chrome binaries cannot use Ubuntu's restricted user namespaces.
       WTR_NO_SANDBOX: 1
@@ -68,8 +66,6 @@ jobs:
           - os: windows-2025
             reader: nvda
             browser: chromium
-    env:
-      ATCB_TEST_FULL_PART: screen-reader
     steps:
       - uses: actions/checkout@v7
       - uses: actions/setup-node@v7
@@ -80,7 +76,7 @@ jobs:
       - run: npx playwright install ${{ matrix.browser }}
       - run: npx guidepup setup --ci
       - run: npx guidepup install
-      - run: npm run test:full
+      - run: npm run test:screen-reader
       - uses: actions/upload-artifact@v6
         if: always()
         with:

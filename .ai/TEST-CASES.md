@@ -1,11 +1,11 @@
 # Test Cases (add-to-calendar-button)
 
-## Full-tier real screen-reader scenarios
+## Separate real screen-reader scenarios
 
-File: `test/screen-reader/accessibility.spec.ts`. Guidepup runs these only in the
-full tier, separately from Web Test Runner: **9 per platform**, **18 in release CI**
+File: `test/screen-reader/accessibility.spec.ts`. `npm run test:screen-reader` runs
+these separately from Web Test Runner: **9 per platform**, **18 in release CI**
 (VoiceOver/WebKit on macOS and NVDA/Chromium on Windows). Missing or skipped cases
-fail the full-tier reporter. These counts are additional to the browser tier counts.
+fail the screen-reader reporter. These counts are additional to the browser tier counts.
 
 - SR-01: default button is discoverable, announced, and keyboard operable
 - SR-02: dropdown list with force-overlay=false supports reading, navigation, and dismissal

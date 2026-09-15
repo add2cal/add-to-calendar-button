@@ -257,9 +257,6 @@ function generate_bg_overlay(host: ShadowRoot, trigger: string = '', modal: bool
     }
     return document.createElement('div');
   })();
-  if (modal) {
-    bgOverlay.setAttribute('open', true as unknown as string);
-  }
   bgOverlay.id = 'atcb-bgoverlay';
   if (!darken) {
     bgOverlay.classList.add('atcb-no-bg');
@@ -378,6 +375,7 @@ async function create_modal(
     if (!el) {
       const newOverlay = generate_bg_overlay(mainHost, 'click', true, !data.hideBackground, closable);
       modalHost.querySelector('.atcb-modal-host-initialized')!.append(newOverlay);
+      (newOverlay as HTMLDialogElement).showModal();
       return newOverlay;
     }
     return el;

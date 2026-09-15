@@ -80,6 +80,7 @@ async function open(host: ShadowRoot, data: ATCBConfig, button: HTMLElement | st
     const modalHost: ShadowRoot = (await generate_modal_host(host, data))!;
     // append background overlay and list to the modal shadowDOM; and init helper functions
     modalHost.querySelector('.atcb-modal-host-initialized')!.append(bgOverlay);
+    (bgOverlay as HTMLDialogElement).showModal();
     bgOverlay.append(list);
     if (!data.hideBranding) {
       create_atcbl(modalHost, false);

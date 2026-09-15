@@ -8,8 +8,9 @@ are mocked; calendar navigation is captured. No live RSVP/CTA submissions are ma
 
 ## Running
 
-These tests belong only to `npm run test:full` (and therefore `test:release`). Smoke
-and extended runs do not start a screen reader. Full runs require a supported OS:
+These tests run through the separate `npm run test:screen-reader` command. The smoke,
+extended, full, and release commands do not start a screen reader. Reader runs require
+a supported OS:
 
 - macOS: VoiceOver and headed Playwright WebKit.
 - Windows: NVDA and headed Playwright Chromium.
@@ -20,7 +21,7 @@ After `npm ci`, prepare the machine once:
 npx guidepup setup
 npx guidepup install
 npx playwright install webkit chromium
-npm run test:full
+npm run test:screen-reader
 ```
 
 On a personal Mac, prefer the [manual VoiceOver setup](https://www.guidepup.dev/docs/guides/manual-voiceover-setup)
@@ -38,21 +39,12 @@ Run setup before tests on disposable CI machines, using `npx guidepup setup --ci
 Re-run `npx guidepup install` after upgrading Guidepup so its assets match the pinned
 package manifest. Keep the OS/screen-reader language in English.
 
-## Full-tier portions
+## CI
 
-`ATCB_TEST_FULL_PART` can select `browser` or `screen-reader`; its default is `all`.
-The selection is printed, and an unsupported reader OS fails instead of skipping.
-A portion alone is **not** a complete release gate.
-
-```sh
-# macOS/Linux shell; on PowerShell set $env:ATCB_TEST_FULL_PART first.
-ATCB_TEST_FULL_PART=screen-reader npm run test:full
-ATCB_TEST_FULL_PART=browser npm run test:full
-```
-
-The PR/publish workflow distributes the release gate across both Chrome binaries on
-Linux and both screen-reader platforms. PRs targeting `dev` run only smoke tests;
-PRs targeting `main` run all release jobs; publishing depends on all of them passing.
+The PR/publish workflow runs `test:release` across both Chrome binaries on Linux and
+adds `test:screen-reader` on both reader platforms. PRs targeting `dev` run only smoke
+tests; PRs targeting `main` run all release jobs; publishing depends on all of them
+passing.
 
 For development, after building, list all nine cases with:
 

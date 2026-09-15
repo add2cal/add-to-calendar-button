@@ -98,6 +98,10 @@ export async function expectSpeech(reader: ScreenReaderPlaywright, expected: Reg
   await expect.poll(async () => (await reader.spokenPhraseLog()).slice(speechOffsets.get(reader) || 0).join('\n'), { message: `Screen reader announces ${expected}` }).toMatch(expected);
 }
 
+async function currentReaderOutput(reader: ScreenReaderPlaywright) {
+  return `${await reader.lastSpokenPhrase()}\n${await reader.itemText()}`;
+}
+
 // Reach controls using real keyboard input, never locator.focus() or DOM clicks.
 export async function tabTo(reader: ScreenReaderPlaywright, target: Locator, speech: RegExp, backwards = false) {
   for (let step = 0; step < 20; step++) {
@@ -114,14 +118,14 @@ export async function tabTo(reader: ScreenReaderPlaywright, target: Locator, spe
 // Exercise the reading cursor separately from keyboard focus. Hidden background
 // text must not appear when traversing a modal's content.
 export async function readTo(reader: ScreenReaderPlaywright, expected: RegExp, forbidden?: RegExp) {
-  const currentPhrase = await reader.lastSpokenPhrase();
-  if (forbidden) expect(currentPhrase).not.toMatch(forbidden);
-  if (expected.test(currentPhrase)) return;
+  const currentOutput = await currentReaderOutput(reader);
+  if (forbidden) expect(currentOutput).not.toMatch(forbidden);
+  if (expected.test(currentOutput)) return;
   for (let step = 0; step < 40; step++) {
     await reader.next();
-    const phrase = await reader.lastSpokenPhrase();
-    if (forbidden) expect(phrase).not.toMatch(forbidden);
-    if (expected.test(phrase)) return;
+    const output = await currentReaderOutput(reader);
+    if (forbidden) expect(output).not.toMatch(forbidden);
+    if (expected.test(output)) return;
   }
   throw new Error(`Could not read ${expected} within 40 screen-reader steps.`);
 }
@@ -129,9 +133,9 @@ export async function readTo(reader: ScreenReaderPlaywright, expected: RegExp, f
 async function readBackTo(reader: ScreenReaderPlaywright, expected: RegExp, forbidden?: RegExp) {
   for (let step = 0; step < 40; step++) {
     await reader.previous();
-    const phrase = await reader.lastSpokenPhrase();
-    if (forbidden) expect(phrase).not.toMatch(forbidden);
-    if (expected.test(phrase)) return;
+    const output = await currentReaderOutput(reader);
+    if (forbidden) expect(output).not.toMatch(forbidden);
+    if (expected.test(output)) return;
   }
   throw new Error(`Could not read back to ${expected} within 40 screen-reader steps.`);
 }
