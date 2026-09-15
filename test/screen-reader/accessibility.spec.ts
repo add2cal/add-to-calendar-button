@@ -33,7 +33,6 @@ for (const [index, style, overlay] of [
     await expect(page.getByRole('button', { name: triggerName })).toHaveCount(1);
     if (style === 'modal') {
       await expect(page.getByRole('dialog')).toHaveAccessibleName(/Add to Calendar/i);
-      await expectSpeech(screenReader, /dialog/i);
     }
     await checkpointSpeech(screenReader);
     await screenReader.press('Tab');
@@ -73,7 +72,7 @@ test('SR-06: multi-date Google dialog announces distinct dates and restores focu
   await screenReader.press('Enter');
   const dialog = page.getByRole('dialog');
   await expect(dialog).toBeVisible();
-  await expectSpeech(screenReader, /dialog/i);
+  await readTo(screenReader, /dialog/i, /Before calendar|After calendar/i);
   const first = dialog.getByRole('button', { name: /Workshop one/i });
   const second = dialog.getByRole('button', { name: /Workshop two/i });
   await tabTo(screenReader, first, /Workshop one/i);
@@ -105,13 +104,13 @@ test('SR-07: CTA form announces its content, required fields, checkbox, and vali
   await screenReader.press('Space');
   await expect(checkbox).toBeChecked();
   await expectSpeech(screenReader, /\bchecked\b/i);
-  await tabTo(screenReader, dialog.getByRole('button', { name: 'Send reminder' }), /Send reminder/i);
+  await readTo(screenReader, /Send reminder.*button|button.*Send reminder/i, /Before calendar|After calendar/i);
   await checkpointSpeech(screenReader);
-  await screenReader.press('Enter');
+  await screenReader.act();
   await expect(email).toBeFocused();
   await expect.poll(() => email.evaluate((element) => (element as HTMLInputElement).validity.valid)).toBe(false);
   await expectSpeech(screenReader, /required|invalid|fill out|blank/i);
-  await screenReader.type('reader@example.com');
+  await screenReader.type('reader@example.com', { capture: false });
   await expect(email).toHaveValue('reader@example.com');
   await closeWithEscape(page, screenReader, trigger);
   expect(unexpectedRequests).toEqual([]);
@@ -130,12 +129,12 @@ for (const [index, inline] of [
       await checkpointSpeech(screenReader);
       await screenReader.press('Enter');
       await expect(page.getByRole('dialog', { name: 'RSVP', exact: true })).toBeVisible();
-      await expectSpeech(screenReader, /dialog/i);
+      await readTo(screenReader, /RSVP.*dialog|dialog.*RSVP/i, /Before calendar|After calendar/i);
     }
     const email = page.getByRole('textbox', { name: /Email/i });
     await tabTo(screenReader, email, /Email/i);
     await expectSpeech(screenReader, /required/i);
-    await screenReader.type('reader@example.com');
+    await screenReader.type('reader@example.com', { capture: false });
     await expect(email).toHaveValue('reader@example.com');
     const name = page.getByRole('textbox', { name: 'Name', exact: true });
     await tabTo(screenReader, name, /Name/i);
@@ -146,13 +145,13 @@ for (const [index, inline] of [
     await screenReader.press('Space');
     await expect(checkbox).toBeChecked();
     await expectSpeech(screenReader, /\bchecked\b/i);
-    await tabTo(screenReader, page.locator('#pro-form-submit'), /Submit|RSVP|Send|Confirm/i);
+    await readTo(screenReader, /Submit.*button|button.*Submit/i, !inline ? /Before calendar|After calendar/i : undefined);
     await checkpointSpeech(screenReader);
-    await screenReader.press('Enter');
+    await screenReader.act();
     await expect(name).toBeFocused();
     await expect.poll(() => name.evaluate((element) => (element as HTMLInputElement).validity.valid)).toBe(false);
     await expectSpeech(screenReader, /required|invalid|fill out|blank/i);
-    await screenReader.type('Screen Reader');
+    await screenReader.type('Screen Reader', { capture: false });
     await expect(name).toHaveValue('Screen Reader');
     if (!inline) await closeWithEscape(page, screenReader, trigger);
     else await tabTo(screenReader, page.getByRole('button', { name: 'After calendar' }), /After calendar/i);

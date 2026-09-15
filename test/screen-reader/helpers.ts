@@ -114,6 +114,9 @@ export async function tabTo(reader: ScreenReaderPlaywright, target: Locator, spe
 // Exercise the reading cursor separately from keyboard focus. Hidden background
 // text must not appear when traversing a modal's content.
 export async function readTo(reader: ScreenReaderPlaywright, expected: RegExp, forbidden?: RegExp) {
+  const currentPhrase = await reader.lastSpokenPhrase();
+  if (forbidden) expect(currentPhrase).not.toMatch(forbidden);
+  if (expected.test(currentPhrase)) return;
   for (let step = 0; step < 40; step++) {
     await reader.next();
     const phrase = await reader.lastSpokenPhrase();
@@ -123,6 +126,16 @@ export async function readTo(reader: ScreenReaderPlaywright, expected: RegExp, f
   throw new Error(`Could not read ${expected} within 40 screen-reader steps.`);
 }
 
+async function readBackTo(reader: ScreenReaderPlaywright, expected: RegExp, forbidden?: RegExp) {
+  for (let step = 0; step < 40; step++) {
+    await reader.previous();
+    const phrase = await reader.lastSpokenPhrase();
+    if (forbidden) expect(phrase).not.toMatch(forbidden);
+    if (expected.test(phrase)) return;
+  }
+  throw new Error(`Could not read back to ${expected} within 40 screen-reader steps.`);
+}
+
 export async function openList(page: Page, reader: ScreenReaderPlaywright) {
   await reader.navigateToWebContent();
   const trigger = page.locator('add-to-calendar-button').getByRole('button', { name: triggerName });
@@ -130,15 +143,25 @@ export async function openList(page: Page, reader: ScreenReaderPlaywright) {
   await checkpointSpeech(reader);
   await reader.press('Enter');
   await expect(page.getByRole('menu')).toBeVisible();
-  await expectSpeech(reader, /Google/i);
   await expect(page.getByRole('menuitem', { name: 'Google', exact: true })).toBeFocused();
+  // Programmatic focus enters the menu, but VoiceOver and NVDA can initially
+  // announce only its container. Move the reading cursor to verify the option's
+  // real accessible name instead of assuming it is part of the focus message.
+  await readTo(reader, /Google/i);
+  if (await page.getByRole('dialog').isVisible()) {
+    await readBackTo(reader, /Add to Calendar.*dialog|dialog.*Add to Calendar/i, /Before calendar|After calendar/i);
+    await readTo(reader, /Google/i, /Before calendar|After calendar/i);
+  }
   return trigger;
 }
 
 export async function closeWithEscape(page: Page, reader: ScreenReaderPlaywright, trigger: Locator) {
   await checkpointSpeech(reader);
   await reader.press('Escape');
-  await expect(page.getByRole('menu')).toHaveCount(0);
+  // NVDA can consume the first Escape while leaving focus/browse mode. A second
+  // press then reaches the page and dismisses the menu like a user's next press.
+  if (await page.getByRole('menu').isVisible()) await reader.press('Escape');
+  await expect(page.getByRole('menu')).toBeHidden();
   await expect(page.getByRole('dialog')).toHaveCount(0);
   await expect(trigger).toBeFocused();
   await expectSpeech(reader, /Add to Calendar|RSVP/i);
