@@ -57,19 +57,37 @@ async function open(host: ShadowRoot, data: ATCBConfig, button: HTMLElement | st
   } else {
     list.classList.add('atcb-modal');
   }
+  const focusFirstOption = () => {
+    const focusEl = list.querySelector<HTMLElement>('[role="menuitem"][data-option-number="1"]');
+    if (!focusEl) return;
+    if (keyboardTrigger) {
+      focusEl.focus();
+    } else {
+      focusEl.focus({ preventScroll: true });
+      focusEl.blur();
+    }
+  };
   // render the items depending on the liststyle
   const bgOverlay = generate_bg_overlay(host, data.trigger, data.listStyle === 'modal', !data.hideBackground);
   if (data.listStyle === 'modal') {
+    const headline = list.querySelector('.atcb-list-modal-headline');
+    if (headline) {
+      headline.id = data.identifier + '-list-headline';
+      bgOverlay.setAttribute('aria-labelledby', headline.id);
+    }
+    bgOverlay.setAttribute('aria-modal', 'true');
     // define background overlay in its own new modal shadowDOM
     const modalHost: ShadowRoot = (await generate_modal_host(host, data))!;
     // append background overlay and list to the modal shadowDOM; and init helper functions
     modalHost.querySelector('.atcb-modal-host-initialized')!.append(bgOverlay);
+    (bgOverlay as HTMLDialogElement).showModal();
     bgOverlay.append(list);
     if (!data.hideBranding) {
       create_atcbl(modalHost, false);
     }
     set_sizes(list, data.sizes!);
     manage_body_scroll(modalHost);
+    focusFirstOption();
   } else {
     if (data.forceOverlay) {
       host = (await generate_overlay_dom(host, data)) as unknown as ShadowRoot;
@@ -99,27 +117,10 @@ async function open(host: ShadowRoot, data: ATCBConfig, button: HTMLElement | st
       } else {
         position_list(host, button as HTMLElement, listWrapper);
       }
+      // Focusing while the wrapper is display:none is ignored by browsers.
+      // Preserve the positioning delay and move focus only once the list is visible.
+      focusFirstOption();
     }, 5);
-  }
-  // give keyboard focus to first item in list, if possible
-  const focusEl: HTMLElement | undefined = (function () {
-    const hostEl = host.querySelector('[role="menuitem"]');
-    if (hostEl) {
-      return hostEl as HTMLElement;
-    }
-    const modalHost = document.getElementById(data.identifier + '-modal-host');
-    if (!modalHost) {
-      return;
-    }
-    return modalHost.shadowRoot!.querySelector('[role="menuitem"]') as HTMLElement;
-  })();
-  if (focusEl) {
-    if (keyboardTrigger) {
-      focusEl.focus();
-    } else {
-      focusEl.focus({ preventScroll: true });
-      focusEl.blur();
-    }
   }
 }
 
@@ -156,12 +157,6 @@ function close(host: ShadowRoot, keyboardTrigger: boolean = false): void {
       // fallback to document (atcb_action case)
       return document.querySelector('.atcb-active, .atcb-active-modal');
     })();
-    if (newFocusEl) {
-      (newFocusEl as HTMLElement).focus({ preventScroll: true });
-      if (!keyboardTrigger) {
-        (newFocusEl as HTMLElement).blur();
-      }
-    }
     // inactivate all buttons at the host...
     Array.from(host.querySelectorAll('.atcb-active')).forEach((button: Element) => {
       button.classList.remove('atcb-active');
@@ -199,6 +194,14 @@ function close(host: ShadowRoot, keyboardTrigger: boolean = false): void {
       // also remove the event listener
       window.removeEventListener('scroll', position_shadow_button_listener);
       window.removeEventListener('resize', position_shadow_button_listener);
+    }
+    // A trigger behind a native modal dialog is inert and cannot receive focus.
+    // Restore focus only after the dialog host and overlays have been removed.
+    if (newFocusEl) {
+      (newFocusEl as HTMLElement).focus({ preventScroll: true });
+      if (!keyboardTrigger) {
+        (newFocusEl as HTMLElement).blur();
+      }
     }
     // reset active state
     setActiveButton('');

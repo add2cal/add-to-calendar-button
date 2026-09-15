@@ -1,11 +1,11 @@
 {
   "name": "add-to-calendar-button",
-  "version": "3.0.3",
+  "version": "3.1.0",
   "engines": {
     "node": ">=18.17.0",
     "npm": ">=9.6.7"
   },
-  "description": "The convenient TS/JS library, which lets you create beautiful add to calendar buttons, where people can save events to their calendars.",
+  "description": "The convenient TS/JS library, which lets you create beautiful add to calendar buttons. Make people save events to their calendars in a reliable way.",
   "main": "dist/commonjs/index.js",
   "module": "dist/module/index.js",
   "files": [
@@ -108,7 +108,7 @@
     "eslint:fix": "eslint --fix .",
     "prettier": "npx prettier . --check",
     "prettier:fix": "npm run prettier -- --write",
-    "typecheck": "tsc --noEmit && tsc --noEmit -p test/types/tsconfig.json",
+    "typecheck": "tsc --noEmit && tsc --noEmit -p test/types/tsconfig.json && tsc --noEmit -p test/screen-reader/tsconfig.json",
     "check": "npm run eslint && npm run prettier && npm run typecheck",
     "format": "npm run prettier:fix && cd demo && npm run prettier:fix",
     "fix": "npm run eslint:fix && cd demo && npm run lint:fix && cd .. && npm run format",
@@ -118,6 +118,7 @@
     "test:package": "node scripts/test-package.mjs",
     "test:ssr": "node scripts/build.mjs && node --test \"test/ssr-node/*.test.mjs\"",
     "test:release": "npm run test:full && npm run test:package && npm run test:ssr",
+    "test:screen-reader": "node test/test-prep.js && npx playwright test --config playwright.screen-reader.config.ts",
     "dev": "cd demo && npm run dev",
     "build:all": "npm run build && npm run build:demo",
     "build:demo": "cd demo && npm run generate",
@@ -131,7 +132,12 @@
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
+    "@guidepup/guidepup": "0.34.0",
+    "@guidepup/playwright": "0.19.1",
+    "@guidepup/setup": "0.25.3",
     "@open-wc/testing": "^5.0.0",
+    "@playwright/test": "1.63.0",
+    "@types/node": "^26.5.1",
     "@typescript/native": "npm:typescript@^7.0.2",
     "@web/dev-server-esbuild": "^2.0.0",
     "@web/test-runner": "^1.0.0",

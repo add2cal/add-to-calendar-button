@@ -15,11 +15,19 @@ dataLayer pushes). Internal wiring is never asserted directly.
 
 Three tiers share one helper/fixture layer. Only the smallest runs by default.
 
-| Script                  | Tier           | Content                                                                                                                 | When                        |
-| ----------------------- | -------------- | ----------------------------------------------------------------------------------------------------------------------- | --------------------------- |
-| `npm run test`          | Smoke          | 16 cases: {Desktop, Mobile} x {OSS, PRO} + RSVP render (`test/wc-tests-smoke/`), plus the two long-standing quick tests | DEFAULT - every CI run / PR |
-| `npm run test:extended` | Reduced        | all reduced feature groups, 332 hand-written cases including smoke (`test/wc-tests/` + `test/wc-tests-smoke/`)          | on demand / pre-merge       |
-| `npm run test:full`     | Full Cartesian | + ~210 parameterized matrix cases (`test/wc-tests-full/f-*.test.js`)                                                    | on demand / releases        |
+Nine real screen-reader scenarios live in `test/screen-reader/` and run separately via
+`npm run test:screen-reader` using Guidepup + Playwright. See its README for machine
+setup, platform requirements, and diagnostic commands. They are not part of any browser
+suite or `test:release`. PRs targeting `dev` run smoke; PRs targeting `main` run the
+complete release gate: both Chrome binaries, package/SSR checks, static checks, and the
+separate VoiceOver + NVDA jobs.
+
+| Script                       | Tier                | Content                                                                                                                 | When                   |
+| ---------------------------- | ------------------- | ----------------------------------------------------------------------------------------------------------------------- | ---------------------- |
+| `npm run test`               | Smoke               | 16 cases: {Desktop, Mobile} x {OSS, PRO} + RSVP render (`test/wc-tests-smoke/`), plus the two long-standing quick tests | DEFAULT / PRs to dev   |
+| `npm run test:extended`      | Reduced             | all reduced feature groups, 332 hand-written cases including smoke (`test/wc-tests/` + `test/wc-tests-smoke/`)          | on demand / pre-merge  |
+| `npm run test:full`          | Full Cartesian      | 543 browser cases including reduced                                                                                     | PRs to main / releases |
+| `npm run test:screen-reader` | Real screen readers | 9 Guidepup scenarios on the current reader OS                                                                           | CI accessibility jobs  |
 
 Every script first runs `test/test-prep.js`, which builds `dist/` (the WC-level tests
 import the built module) and executes the Node import smoke test.
@@ -61,7 +69,9 @@ test/
   wc-tests-smoke/     smoke tier (s-smoke.test.js)
   wc-tests/           reduced tier (r-*.test.js) + the two long-standing quick tests
   wc-tests-full/      full Cartesian tier (f-*.test.js)
+  screen-reader/     separate Guidepup tests: 9 per OS, 18 in release CI
 web-test-runner.config.mjs
+playwright.screen-reader.config.ts
 ```
 
 ## Core helpers
@@ -132,6 +142,10 @@ guards are tested.
 
 ## Runner constraints (load-bearing)
 
+- Linux release CI explicitly sets `WTR_NO_SANDBOX=1` for the downloaded Chrome
+  binaries, which Ubuntu's AppArmor policy blocks from using user namespaces.
+  This adds `--no-sandbox` only to those disposable test jobs; normal local runs
+  retain Chrome's sandbox.
 - `concurrency: 1` in `web-test-runner.config.mjs`: Chrome headless intensively throttles
   timers in backgrounded tabs, which stalls the component's deferred initialization for
   whichever test file's tab is not in the foreground. Serialized pages are deterministic

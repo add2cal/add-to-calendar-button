@@ -1,5 +1,22 @@
 # Test Cases (add-to-calendar-button)
 
+## Separate real screen-reader scenarios
+
+File: `test/screen-reader/accessibility.spec.ts`. `npm run test:screen-reader` runs
+these separately from Web Test Runner: **9 per platform**, **18 in release CI**
+(VoiceOver/WebKit on macOS and NVDA/Chromium on Windows). Missing or skipped cases
+fail the screen-reader reporter. These counts are additional to the browser tier counts.
+
+- SR-01: default button is discoverable, announced, and keyboard operable
+- SR-02: dropdown list with force-overlay=false supports reading, navigation, and dismissal
+- SR-03: dropdown list with force-overlay=true supports reading, navigation, and dismissal
+- SR-04: modal list with force-overlay=false supports reading, navigation, and dismissal
+- SR-05: modal list with force-overlay=true supports reading, navigation, and dismissal
+- SR-06: multi-date Google dialog announces distinct dates and restores focus
+- SR-07: CTA form announces its content, required fields, checkbox, and validation
+- SR-08: modal RSVP announces fields and client validation
+- SR-09: inline RSVP announces fields and client validation
+
 Complete list of all test cases across the three tiers. See `.ai/TEST-STRATEGY.md` for
 the strategy, helpers, and conventions behind them.
 

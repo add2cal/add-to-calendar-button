@@ -62,6 +62,7 @@ describe('Group AX - automated a11y checks', () => {
     expect(modal, 'modal host exists').to.exist;
     const dialog = modal.shadowRoot.getElementById('atcb-bgoverlay');
     expect(dialog.tagName, 'native dialog element').to.equal('DIALOG');
+    expect(dialog.matches(':modal'), 'dialog is open in the top layer and makes the background inert').to.equal(true);
     await expectNoViolations(modal, 'modal dialog');
   });
 
@@ -106,6 +107,7 @@ describe('Group AX - automated a11y checks', () => {
       await aTimeout(1200);
       const modal = modalHost(host);
       expect(modal, 'CTA modal host exists').to.exist;
+      expect(modal.shadowRoot.getElementById('atcb-bgoverlay').matches(':modal'), 'CTA dialog is open in the top layer').to.equal(true);
       await expectNoViolations(modal, 'CTA form modal');
     } finally {
       mock.restore();

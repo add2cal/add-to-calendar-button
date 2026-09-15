@@ -3,9 +3,14 @@ name: Tests
 on:
   pull_request:
     branches: [main, dev]
+  workflow_call:
+
+permissions:
+  contents: read
 
 jobs:
-  tests:
+  smoke:
+    if: github.event_name == 'pull_request' && github.base_ref == 'dev'
     strategy:
       matrix:
         platform: [ubuntu-latest]
@@ -19,3 +24,64 @@ jobs:
           node-version: ${{ matrix.node-version }}
       - name: Run tests
         run: npm ci && npm run test
+
+  release:
+    if: github.event_name != 'pull_request' || github.base_ref == 'main'
+    name: Release / Node ${{ matrix.node }} / ${{ matrix.browser }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      matrix:
+        node: ['24', '26']
+        browser: [chrome, chrome-headless-shell]
+    env:
+      WTR_CONCURRENCY: 1
+      # Downloaded Chrome binaries cannot use Ubuntu's restricted user namespaces.
+      WTR_NO_SANDBOX: 1
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: ${{ matrix.node }}
+          cache: npm
+      - run: npm ci
+      - run: npx playwright install --with-deps chromium
+      - run: node scripts/test-browser-path.mjs ${{ matrix.browser }}
+      - run: npm run check
+      - run: npm run test:release
+
+  screen-reader:
+    if: github.event_name != 'pull_request' || github.base_ref == 'main'
+    name: Screen reader / ${{ matrix.reader }}
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 35
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: macos-15
+            reader: voiceover
+            browser: webkit
+          - os: windows-2025
+            reader: nvda
+            browser: chromium
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: '26'
+          cache: npm
+      - run: npm ci
+      - run: npx playwright install ${{ matrix.browser }}
+      - run: npx guidepup setup --ci
+      - run: npx guidepup install
+      - run: npm run test:screen-reader
+      - uses: actions/upload-artifact@v6
+        if: always()
+        with:
+          name: screen-reader-${{ matrix.reader }}
+          path: |
+            test-results/screen-reader
+            playwright-report
+          if-no-files-found: warn
