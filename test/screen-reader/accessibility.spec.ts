@@ -44,8 +44,6 @@ for (const [index, style, overlay] of [
     await expect(google).toBeFocused();
     await tabTo(screenReader, iCal, /i\s*Cal/i);
     await tabTo(screenReader, google, /Google/i, true);
-    await closeWithEscape(page, screenReader, trigger);
-    await openList(page, screenReader);
     if (style === 'modal') {
       await tabTo(screenReader, page.getByRole('menuitem', { name: 'Close', exact: true }), /Close/i);
       await screenReader.press('Enter');

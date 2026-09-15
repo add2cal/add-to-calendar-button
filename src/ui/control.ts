@@ -157,12 +157,6 @@ function close(host: ShadowRoot, keyboardTrigger: boolean = false): void {
       // fallback to document (atcb_action case)
       return document.querySelector('.atcb-active, .atcb-active-modal');
     })();
-    if (newFocusEl) {
-      (newFocusEl as HTMLElement).focus({ preventScroll: true });
-      if (!keyboardTrigger) {
-        (newFocusEl as HTMLElement).blur();
-      }
-    }
     // inactivate all buttons at the host...
     Array.from(host.querySelectorAll('.atcb-active')).forEach((button: Element) => {
       button.classList.remove('atcb-active');
@@ -200,6 +194,14 @@ function close(host: ShadowRoot, keyboardTrigger: boolean = false): void {
       // also remove the event listener
       window.removeEventListener('scroll', position_shadow_button_listener);
       window.removeEventListener('resize', position_shadow_button_listener);
+    }
+    // A trigger behind a native modal dialog is inert and cannot receive focus.
+    // Restore focus only after the dialog host and overlays have been removed.
+    if (newFocusEl) {
+      (newFocusEl as HTMLElement).focus({ preventScroll: true });
+      if (!keyboardTrigger) {
+        (newFocusEl as HTMLElement).blur();
+      }
     }
     // reset active state
     setActiveButton('');

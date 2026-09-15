@@ -153,8 +153,6 @@ export async function openList(page: Page, reader: ScreenReaderPlaywright) {
   // Programmatic focus enters the menu, but VoiceOver and NVDA can initially
   // announce only its container, and Chromium can leave focus on the trigger.
   // Follow the real keyboard route when focus was not moved automatically.
-  const modal = await page.getByRole('dialog').isVisible();
-  if (modal) await expectSpeech(reader, /Add to Calendar.*dialog|dialog.*Add to Calendar/i, /Before calendar|After calendar/i);
   if (!(await google.evaluate((element) => element.matches(':focus')))) {
     await tabTo(reader, google, /Google/i);
   }

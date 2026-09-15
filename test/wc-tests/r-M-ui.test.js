@@ -300,6 +300,9 @@ describe('Group M - UI / interaction', () => {
     // content-sized: comfortably below the viewport, never near full width
     expect(listWidth, `list width ${Math.round(listWidth)} should be content-sized`).to.be.lessThan(Math.min(window.innerWidth * 0.9, 500));
     expect(getComputedStyle(list).minWidth, 'the .atcb-modal min-width:auto wins over .atcb-list min-width:100%').to.equal('auto');
+    closeItem.click();
+    await aTimeout(250);
+    expect(trigger(host).matches(':focus'), 'activating the modal close item restores trigger focus').to.be.true;
   });
 
   it('M-34: list-modal -> follow-up modal keeps the same bg overlay alive (no destroy/recreate blink)', async () => {

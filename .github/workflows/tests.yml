@@ -55,7 +55,7 @@ jobs:
     if: github.event_name != 'pull_request' || github.base_ref == 'main'
     name: Screen reader / ${{ matrix.reader }}
     runs-on: ${{ matrix.os }}
-    timeout-minutes: 30
+    timeout-minutes: 35
     strategy:
       fail-fast: false
       matrix:

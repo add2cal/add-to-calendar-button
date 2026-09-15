@@ -127,7 +127,9 @@ function generate_label(host: ShadowRoot, data: ATCBConfig, parent: HTMLElement,
         'click',
         debounce(() => {
           log_event('closeList', 'List Close Button', getActiveButton());
-          toggle(host, 'close');
+          // Closing a dialog returns focus to its trigger, including when a
+          // screen reader activates the close item through a synthetic click.
+          toggle(host, 'close', data, 'all', true);
         }),
       );
       parent.addEventListener('keyup', function (event: KeyboardEvent) {
