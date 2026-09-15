@@ -38,15 +38,14 @@ The complete release gate consists of two commands:
    modes, and a real bundler build with size bounds.
 2. `npm run check` - eslint, prettier, typecheck.
 
-The CI release gate additionally requires `npm run test:screen-reader` on both
+PRs targeting `main` additionally run `npm run test:screen-reader` on both
 VoiceOver/WebKit (macOS) and NVDA/Chromium (Windows). These jobs are separate from
-`test:release`, so calls to that command never start Guidepup or repeat the browser
-suite. Setup instructions live in `test/screen-reader/README.md`.
+`test:release`. Setup instructions live in `test/screen-reader/README.md`.
 
 `.github/workflows/tests.yml` runs smoke tests for PRs targeting `dev`, and the full
-release gate for PRs targeting `main`. The publish workflow reuses that workflow,
-requiring both Chrome binaries, both reader platforms, and all package/SSR/static
-checks before publishing.
+release gate plus screen readers for PRs targeting `main`. The publish workflow reuses
+that workflow, requiring both Chrome binaries and all package/SSR/static checks before
+publishing. It skips the screen readers already exercised on the main PR.
 
 For day-to-day development, `npm run test` remains the smoke tier, while
 `npm run test:extended` is the reduced pre-merge suite.

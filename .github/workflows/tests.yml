@@ -52,7 +52,7 @@ jobs:
       - run: npm run test:release
 
   screen-reader:
-    if: github.event_name != 'pull_request' || github.base_ref == 'main'
+    if: github.event_name == 'pull_request' && github.base_ref == 'main'
     name: Screen reader / ${{ matrix.reader }}
     runs-on: ${{ matrix.os }}
     timeout-minutes: 35
