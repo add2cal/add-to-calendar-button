@@ -22,7 +22,9 @@ export default {
   // expose window.gc for the memory-leak regression checks (r-MEM): the flag lets the
   // heap-stability assertion trigger garbage collection deterministically; the binary
   // is still resolved via CHROME_PATH like before
-  browsers: [chromeLauncher({ launchOptions: { args: ['--js-flags=--expose-gc'] } })],
+  // Ubuntu CI can block user namespaces for downloaded Chrome binaries. Only the
+  // disposable release jobs opt out of Chrome's sandbox; local runs keep it enabled.
+  browsers: [chromeLauncher({ launchOptions: { args: ['--js-flags=--expose-gc', ...(process.env.WTR_NO_SANDBOX === '1' ? ['--no-sandbox'] : [])] } })],
   // resolve bare module specifiers here (instead of the --node-resolve CLI flag) so we can
   // request the "production" export condition: lit (pulled in by @open-wc/testing's fixture)
   // then loads its production build and stops printing the "Lit is in dev mode" banner.

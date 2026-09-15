@@ -39,6 +39,8 @@ jobs:
       # The matching screen-reader jobs below complete the full tier.
       ATCB_TEST_FULL_PART: browser
       WTR_CONCURRENCY: 1
+      # Downloaded Chrome binaries cannot use Ubuntu's restricted user namespaces.
+      WTR_NO_SANDBOX: 1
     steps:
       - uses: actions/checkout@v7
       - uses: actions/setup-node@v7

@@ -5,7 +5,7 @@
     "node": ">=18.17.0",
     "npm": ">=9.6.7"
   },
-  "description": "The convenient TS/JS library, which lets you create beautiful add to calendar buttons, where people can save events to their calendars.",
+  "description": "The convenient TS/JS library, which lets you create beautiful add to calendar buttons. Make people save events to their calendars in a reliable way.",
   "main": "dist/commonjs/index.js",
   "module": "dist/module/index.js",
   "files": [

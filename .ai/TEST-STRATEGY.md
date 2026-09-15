@@ -142,6 +142,10 @@ guards are tested.
 
 ## Runner constraints (load-bearing)
 
+- Linux release CI explicitly sets `WTR_NO_SANDBOX=1` for the downloaded Chrome
+  binaries, which Ubuntu's AppArmor policy blocks from using user namespaces.
+  This adds `--no-sandbox` only to those disposable test jobs; normal local runs
+  retain Chrome's sandbox.
 - `concurrency: 1` in `web-test-runner.config.mjs`: Chrome headless intensively throttles
   timers in backgrounded tabs, which stalls the component's deferred initialization for
   whichever test file's tab is not in the foreground. Serialized pages are deterministic
