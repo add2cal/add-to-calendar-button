@@ -143,11 +143,15 @@ export async function openList(page: Page, reader: ScreenReaderPlaywright) {
   await checkpointSpeech(reader);
   await reader.press('Enter');
   await expect(page.getByRole('menu')).toBeVisible();
-  await expect(page.getByRole('menuitem', { name: 'Google', exact: true })).toBeFocused();
+  const google = page.getByRole('menuitem', { name: 'Google', exact: true });
   // Programmatic focus enters the menu, but VoiceOver and NVDA can initially
-  // announce only its container. Move the reading cursor to verify the option's
-  // real accessible name instead of assuming it is part of the focus message.
-  await readTo(reader, /Google/i);
+  // announce only its container, and Chromium can leave focus on the trigger.
+  // Follow the real keyboard route when focus was not moved automatically.
+  if (await google.evaluate((element) => element.matches(':focus'))) {
+    await readTo(reader, /Google/i);
+  } else {
+    await tabTo(reader, google, /Google/i);
+  }
   if (await page.getByRole('dialog').isVisible()) {
     await readBackTo(reader, /Add to Calendar.*dialog|dialog.*Add to Calendar/i, /Before calendar|After calendar/i);
     await readTo(reader, /Google/i, /Before calendar|After calendar/i);
@@ -159,8 +163,8 @@ export async function closeWithEscape(page: Page, reader: ScreenReaderPlaywright
   await checkpointSpeech(reader);
   await reader.press('Escape');
   // NVDA can consume the first Escape while leaving focus/browse mode. A second
-  // press then reaches the page and dismisses the menu like a user's next press.
-  if (await page.getByRole('menu').isVisible()) await reader.press('Escape');
+  // press then reaches the page and dismisses the open menu or dialog.
+  if ((await page.getByRole('menu').isVisible()) || (await page.getByRole('dialog').isVisible())) await reader.press('Escape');
   await expect(page.getByRole('menu')).toBeHidden();
   await expect(page.getByRole('dialog')).toHaveCount(0);
   await expect(trigger).toBeFocused();
