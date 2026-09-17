@@ -2,7 +2,10 @@ import { screenReaderTest as test } from '@guidepup/playwright';
 import { expect } from '@playwright/test';
 import { attachSpeech, checkpointSpeech, closeWithEscape, expectSpeech, mount, openList, readTo, tabTo, triggerName } from './helpers';
 
-test.use({ screenReaderStartOptions: { capture: 'initial' } });
+// VoiceOver's full capture waits for speech to stabilize after every command,
+// which makes the suite several times slower. NVDA needs full capture because
+// form-control labels can arrive after its initial "form landmark" utterance.
+test.use({ screenReaderStartOptions: { capture: process.platform === 'darwin' ? 'initial' : true } });
 test.afterEach(async ({ screenReader }, testInfo) => {
   await attachSpeech(screenReader, testInfo);
 });
