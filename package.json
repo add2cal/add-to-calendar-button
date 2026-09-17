@@ -1,6 +1,6 @@
 {
   "name": "add-to-calendar-button",
-  "version": "3.1.0",
+  "version": "3.1.1",
   "engines": {
     "node": ">=18.17.0",
     "npm": ">=9.6.7"
@@ -89,7 +89,7 @@
   "author": {
     "name": "Calendarverse GmbH",
     "email": "mail@caldn.com",
-    "url": "https://calendarverse.net/"
+    "url": "https://calendarverse.org/"
   },
   "maintainers": [
     {
@@ -137,7 +137,7 @@
     "@guidepup/setup": "0.25.3",
     "@open-wc/testing": "^5.0.0",
     "@playwright/test": "1.63.0",
-    "@types/node": "^26.5.1",
+    "@types/node": "^26.6.1",
     "@typescript/native": "npm:typescript@^7.0.2",
     "@web/dev-server-esbuild": "^2.0.0",
     "@web/test-runner": "^1.0.0",
@@ -152,7 +152,7 @@
     "eslint-plugin-security": "^4.0.1",
     "eslint-plugin-wc": "^3.1.0",
     "postcss": "^8.5.28",
-    "prettier": "3.9.6",
+    "prettier": "3.9.8",
     "prettier-plugin-tailwindcss": "^0.8.1",
     "typescript": "npm:@typescript/typescript6@^6.0.2",
     "typescript-eslint": "^8.70.0",

@@ -25,8 +25,8 @@ separate VoiceOver + NVDA jobs.
 | Script                       | Tier                | Content                                                                                                                 | When                   |
 | ---------------------------- | ------------------- | ----------------------------------------------------------------------------------------------------------------------- | ---------------------- |
 | `npm run test`               | Smoke               | 16 cases: {Desktop, Mobile} x {OSS, PRO} + RSVP render (`test/wc-tests-smoke/`), plus the two long-standing quick tests | DEFAULT / PRs to dev   |
-| `npm run test:extended`      | Reduced             | all reduced feature groups, 332 hand-written cases including smoke (`test/wc-tests/` + `test/wc-tests-smoke/`)          | on demand / pre-merge  |
-| `npm run test:full`          | Full Cartesian      | 543 browser cases including reduced                                                                                     | PRs to main / releases |
+| `npm run test:extended`      | Reduced             | all reduced feature groups, 333 hand-written cases including smoke (`test/wc-tests/` + `test/wc-tests-smoke/`)          | on demand / pre-merge  |
+| `npm run test:full`          | Full Cartesian      | 544 browser cases including reduced                                                                                     | PRs to main / releases |
 | `npm run test:screen-reader` | Real screen readers | 9 Guidepup scenarios on the current reader OS                                                                           | CI accessibility jobs  |
 
 Every script first runs `test/test-prep.js`, which builds `dist/` (the WC-level tests

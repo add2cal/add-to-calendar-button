@@ -1,5 +1,5 @@
 import { resultChannel } from '../core/globals';
-import { generate_dropdown_list, generate_bg_overlay, generate_overlay_dom, create_atcbl, generate_modal_host } from './generate';
+import { generate_dropdown_list, generate_bg_overlay, generate_overlay_dom, create_atcbl, place_modal_reference, generate_modal_host } from './generate';
 import { setActiveButton } from '../core/store';
 import { position_list, position_shadow_button_listener, manage_body_scroll, set_sizes } from './positioning';
 import { log_event } from '../core/events';
@@ -83,7 +83,7 @@ async function open(host: ShadowRoot, data: ATCBConfig, button: HTMLElement | st
     (bgOverlay as HTMLDialogElement).showModal();
     bgOverlay.append(list);
     if (!data.hideBranding) {
-      create_atcbl(modalHost, false);
+      place_modal_reference(modalHost, bgOverlay);
     }
     set_sizes(list, data.sizes!);
     manage_body_scroll(modalHost);

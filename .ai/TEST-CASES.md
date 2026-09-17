@@ -167,7 +167,7 @@ Also part of the default run (long-standing quick tests):
 
 ### Group G - ICS / Apple output (`r-G-ics.test.js`)
 
-- G-01: VCALENDAR structure with the calendarverse.net prodid using the stable semver (without a `-next*` suffix)
+- G-01: VCALENDAR structure with the calendarverse.org prodid using the stable semver (without a `-next*` suffix)
 - G-02: no organizer -> METHOD:PUBLISH, no ORGANIZER line
 - G-03: organizer set -> METHOD:REQUEST + ORGANIZER CN/mailto
 - G-04: attendee line rendered with organizer present
@@ -556,6 +556,7 @@ recurrence, which implies a single date entry).
 
 - M-33: modal option list stays content-sized (regression: .atcb-modal min-width:auto must beat .atcb-list min-width:100% after the split-css assembly)
 - M-34: list-modal to follow-up modal reuses the same bg overlay node (no destroy/recreate); outgoing options list is dropped after the new modal builds
+- M-35: date-style modal branding stays in the native dialog top layer and is fixed to the viewport's bottom-right corner
 
 ## Group GO - PRO group overview (test/wc-tests/r-GO-group-overview.test.js)
 

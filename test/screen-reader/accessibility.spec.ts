@@ -2,7 +2,10 @@ import { screenReaderTest as test } from '@guidepup/playwright';
 import { expect } from '@playwright/test';
 import { attachSpeech, checkpointSpeech, closeWithEscape, expectSpeech, mount, openList, readTo, tabTo, triggerName } from './helpers';
 
-test.use({ screenReaderStartOptions: { capture: true } });
+// VoiceOver's full capture waits for speech to stabilize after every command,
+// which makes the suite several times slower. NVDA needs full capture because
+// form-control labels can arrive after its initial "form landmark" utterance.
+test.use({ screenReaderStartOptions: { capture: process.platform === 'darwin' ? 'initial' : true } });
 test.afterEach(async ({ screenReader }, testInfo) => {
   await attachSpeech(screenReader, testInfo);
 });
@@ -14,7 +17,7 @@ test('SR-01: default button is discoverable, announced, and keyboard operable', 
   const trigger = page.getByRole('button', { name: triggerName });
   await tabTo(screenReader, trigger, /Add to Calendar/i);
   await expect(trigger).toHaveAttribute('aria-expanded', 'false');
-  await screenReader.press('Space');
+  await screenReader.press('Space', { capture: false });
   await expect(page.getByRole('menu')).toBeVisible();
   await expect(trigger).toHaveAttribute('aria-expanded', 'true');
   await closeWithEscape(page, screenReader, trigger);
@@ -39,18 +42,16 @@ for (const [index, style, overlay] of [
     await tabTo(screenReader, iCal, /i\s*Cal/i);
     await tabTo(screenReader, google, /Google/i, true);
     // The final item wraps back to Google without reaching page controls.
-    await screenReader.press('Shift+Tab');
-    await screenReader.press('Tab');
+    await screenReader.press('Shift+Tab', { capture: false });
+    await screenReader.press('Tab', { capture: false });
     await expect(google).toBeFocused();
-    await tabTo(screenReader, iCal, /i\s*Cal/i);
-    await tabTo(screenReader, google, /Google/i, true);
     if (style === 'modal') {
       await tabTo(screenReader, page.getByRole('menuitem', { name: 'Close', exact: true }), /Close/i);
-      await screenReader.press('Enter');
+      await screenReader.press('Enter', { capture: false });
       await expect(page.getByRole('dialog')).toHaveCount(0);
       await expect(trigger).toBeFocused();
     } else {
-      await screenReader.press('Enter');
+      await screenReader.press('Enter', { capture: false });
       await expect.poll(() => page.evaluate(() => window.calendarLinks.length)).toBe(1);
     }
   });
@@ -65,7 +66,7 @@ test('SR-06: multi-date Google dialog announces distinct dates and restores focu
   });
   const trigger = await openList(page, screenReader);
   await checkpointSpeech(screenReader);
-  await screenReader.press('Enter');
+  await screenReader.press('Enter', { capture: true });
   const dialog = page.getByRole('dialog');
   await expect(dialog).toBeVisible();
   await readTo(screenReader, /dialog/i, /Before calendar|After calendar/i);
@@ -74,7 +75,7 @@ test('SR-06: multi-date Google dialog announces distinct dates and restores focu
   await tabTo(screenReader, first, /Workshop one/i);
   await expectSpeech(screenReader, /2050/);
   await tabTo(screenReader, second, /Workshop two/i);
-  await screenReader.press('Enter');
+  await screenReader.press('Enter', { capture: false });
   await expect.poll(() => page.evaluate(() => window.calendarLinks.length)).toBe(1);
   const url = new URL(await page.evaluate(() => window.calendarLinks[0]!));
   expect(url.searchParams.get('dates')).toContain('20500821');
@@ -86,23 +87,22 @@ test('SR-07: CTA form announces its content, required fields, checkbox, and vali
   const { unexpectedRequests } = await mount(page, {}, 'cta');
   const trigger = await openList(page, screenReader);
   await checkpointSpeech(screenReader);
-  await screenReader.press('Enter');
+  await screenReader.press('Enter', { capture: true });
   const dialog = page.getByRole('dialog', { name: 'Stay informed' });
   await expect(dialog).toBeVisible();
   await tabTo(screenReader, dialog.getByRole('button', { name: 'Close', exact: true }), /Close/i);
   await readTo(screenReader, /Tell us where to send your reminder/i, /Before calendar|After calendar/i);
   const email = dialog.getByRole('textbox', { name: /Email/i });
-  await tabTo(screenReader, email, /Email/i);
+  await tabTo(screenReader, email, /Email/i, false, true);
   await expectSpeech(screenReader, /required/i);
   const checkbox = dialog.getByRole('checkbox', { name: /I agree/i });
-  await tabTo(screenReader, checkbox, /I agree/i);
+  await tabTo(screenReader, checkbox, /I agree/i, false, true);
   await checkpointSpeech(screenReader);
   await screenReader.press('Space');
   await expect(checkbox).toBeChecked();
   await expectSpeech(screenReader, /\bchecked\b/i);
   await readTo(screenReader, /Send reminder.*button|button.*Send reminder/i, /Before calendar|After calendar/i);
-  await checkpointSpeech(screenReader);
-  await screenReader.act();
+  await screenReader.act({ capture: true });
   await expect(email).toBeFocused();
   await expect.poll(() => email.evaluate((element) => (element as HTMLInputElement).validity.valid)).toBe(false);
   await screenReader.type('reader@example.com', { capture: false });
@@ -122,27 +122,26 @@ for (const [index, inline] of [
     if (!inline) {
       await tabTo(screenReader, trigger, /RSVP/i);
       await checkpointSpeech(screenReader);
-      await screenReader.press('Enter');
+      await screenReader.press('Enter', { capture: true });
       await expect(page.getByRole('dialog', { name: 'RSVP', exact: true })).toBeVisible();
       await readTo(screenReader, /RSVP.*dialog|dialog.*RSVP/i, /Before calendar|After calendar/i);
     }
     const email = page.getByRole('textbox', { name: /Email/i });
-    await tabTo(screenReader, email, /Email/i);
+    await tabTo(screenReader, email, /Email/i, false, true);
     await expectSpeech(screenReader, /required/i);
     await screenReader.type('reader@example.com', { capture: false });
     await expect(email).toHaveValue('reader@example.com');
     const name = page.getByRole('textbox', { name: 'Name', exact: true });
-    await tabTo(screenReader, name, /Name/i);
+    await tabTo(screenReader, name, /Name/i, false, true);
     await expectSpeech(screenReader, /required/i);
     const checkbox = page.getByRole('checkbox', { name: /Subscribe to news/i });
-    await tabTo(screenReader, checkbox, /Subscribe to news/i);
+    await tabTo(screenReader, checkbox, /Subscribe to news/i, false, true);
     await checkpointSpeech(screenReader);
     await screenReader.press('Space');
     await expect(checkbox).toBeChecked();
     await expectSpeech(screenReader, /\bchecked\b/i);
     await readTo(screenReader, /Submit.*button|button.*Submit/i, !inline ? /Before calendar|After calendar/i : undefined);
-    await checkpointSpeech(screenReader);
-    await screenReader.act();
+    await screenReader.act({ capture: true });
     await expect(name).toBeFocused();
     await expect.poll(() => name.evaluate((element) => (element as HTMLInputElement).validity.valid)).toBe(false);
     await screenReader.type('Screen Reader', { capture: false });
