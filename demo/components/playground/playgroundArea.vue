@@ -87,7 +87,7 @@ if (import.meta.client) {
         class="grid-bg row-span-2 flex justify-center rounded-tl-none border-0 border-zinc-400 bg-zinc-100 px-3 py-8 dark:border-zinc-600 dark:bg-zinc-900 md:rounded-tr-md md:border-l-2 lg:row-span-1 lg:rounded-tr-none"
       >
         <div class="sticky top-[30vh] z-30 h-auto w-fit py-10 md:h-[500px] md:py-0">
-          <Atcb v-bind="mapAttrsObject(data)" debug hideRichData  :skip-client-load="isBot" @hydrated="loaded = true" />
+          <Atcb v-bind="mapAttrsObject(data)" debug hideRichData hideBranding :skip-client-load="isBot" @hydrated="loaded = true" />
         </div>
       </div>
       <div id="style-input" :class="[ !showCode ? 'rounded-bl-md lg:rounded-r-md lg:rounded-bl-none' : 'rounded-none lg:rounded-tr-md' ]" class="hidden border-l-0 border-t-2 border-zinc-400 bg-zinc-200 p-3 dark:border-zinc-600 dark:bg-zinc-800 md:block lg:border-l-2 lg:border-t-0">
