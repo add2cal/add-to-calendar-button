@@ -114,10 +114,10 @@ async function currentReaderOutput(reader: ScreenReaderPlaywright) {
 }
 
 // Reach controls using real keyboard input, never locator.focus() or DOM clicks.
-export async function tabTo(reader: ScreenReaderPlaywright, target: Locator, speech: RegExp, backwards = false) {
+export async function tabTo(reader: ScreenReaderPlaywright, target: Locator, speech: RegExp, backwards = false, fullCapture = false) {
   for (let step = 0; step < 20; step++) {
     await checkpointSpeech(reader);
-    await reader.press(backwards ? 'Shift+Tab' : 'Tab');
+    await reader.press(backwards ? 'Shift+Tab' : 'Tab', fullCapture ? { capture: true } : undefined);
     if (await target.evaluate((element) => element === (element.getRootNode() as Document | ShadowRoot).activeElement)) {
       await expectSpeech(reader, speech);
       return;
