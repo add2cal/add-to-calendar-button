@@ -350,6 +350,18 @@ function create_atcbl(host: ShadowRoot, atList: boolean = true, returnEl: boolea
   if (returnEl) return null;
 }
 
+// Keep modal branding inside the native dialog's top layer. A sibling of a dialog
+// opened with showModal() cannot be raised above it with z-index alone.
+function place_modal_reference(host: ShadowRoot, overlay: HTMLElement): void {
+  let reference = host.getElementById('atcb-reference');
+  if (!reference) {
+    reference = create_atcbl(host, false, true) as HTMLDivElement | null;
+  }
+  if (!reference) return;
+  reference.classList.add('fixed-ref');
+  overlay.append(reference);
+}
+
 // FUNCTION TO CREATE MODALS
 // this is only about special communication modals - not the list style modal
 async function create_modal(
@@ -486,7 +498,7 @@ async function create_modal(
   // Expose the complete dialog name and introduction before moving focus into it.
   modalWrapper.focus({ preventScroll: true });
   if (!data.hideBranding) {
-    create_atcbl(modalHost, false);
+    place_modal_reference(modalHost, bgOverlay);
   }
   // add subEvent buttons (array with type first and subEvent numbers following)
   if (subEvents.length > 1) {
@@ -631,7 +643,6 @@ async function generate_modal_host(host: ShadowRoot, data: ATCBConfig, reset: bo
   }
   newModalHost.setAttribute('atcb-button-id', data.identifier as string);
   newModalHost.classList.add('add-to-calendar');
-  newModalHost.style.transform = 'translate3D(0, 0, 0)';
   newModalHost.style.visibility = 'visible';
   newModalHost.style.opacity = '1';
   newModalHost.style.position = 'fixed';
@@ -679,4 +690,4 @@ async function generate_overlay_dom(host: ShadowRoot, data: ATCBConfig): Promise
   return newHost.querySelector('.atcb-modal-host-initialized');
 }
 
-export { generate_label, generate_dropdown_list, create_modal, generate_bg_overlay, generate_overlay_dom, create_atcbl, generate_modal_host };
+export { generate_label, generate_dropdown_list, create_modal, generate_bg_overlay, generate_overlay_dom, create_atcbl, place_modal_reference, generate_modal_host };

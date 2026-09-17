@@ -336,4 +336,23 @@ describe('Group M - UI / interaction', () => {
     expect(mhAfter.shadowRoot.querySelector('.atcb-modal-close svg'), 'follow-up modal has a top-right X close control').to.exist;
     expect(mhAfter.shadowRoot.querySelector('.atcb-modal-buttons'), 'close-only footer is omitted').to.not.exist;
   });
+
+  it('M-35: date-style modal branding is fixed at the viewport bottom right inside the blurred dialog overlay', async () => {
+    const { host } = await mountAtcb(baseEvent({ options: "['google','apple']", buttonStyle: 'date', listStyle: 'modal', trigger: 'click', identifier: 'atcb-m35' }));
+    await openList(host);
+    const modalHostElement = modalHost(host);
+    const modalRoot = modalHostElement.shadowRoot.querySelector('.atcb-modal-host-initialized');
+    const overlay = modalHostElement.shadowRoot.querySelector('#atcb-bgoverlay');
+    const reference = overlay.querySelector('#atcb-reference');
+    expect(Math.round(modalRoot.getBoundingClientRect().width), 'modal wrapper keeps the compact date-style host width').to.equal(Math.round(modalHostElement.getBoundingClientRect().width));
+    expect(modalRoot.getBoundingClientRect().width, 'modal wrapper does not expand to the viewport width').to.be.lessThan(window.innerWidth);
+    expect(reference, 'branding is in the dialog top layer').to.exist;
+    expect(reference.parentElement, 'branding is directly above the blurred overlay').to.equal(overlay);
+    expect(getComputedStyle(reference).position).to.equal('fixed');
+    expect(getComputedStyle(reference).right).to.equal('40px');
+    expect(getComputedStyle(reference).bottom).to.equal('10px');
+    const referenceRect = reference.getBoundingClientRect();
+    expect(Math.round(window.innerWidth - referenceRect.right), 'right viewport offset').to.equal(40);
+    expect(Math.round(window.innerHeight - referenceRect.bottom), 'bottom viewport offset').to.equal(10);
+  });
 });
