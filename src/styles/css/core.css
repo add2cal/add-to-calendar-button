@@ -372,8 +372,8 @@ a.atcb-modal-btn:disabled {
 }
 
 .atcb-modal-host-initialized {
-  width: 100%;
-  height: 100%;
+  width: 100dvw;
+  height: 100dvh;
 }
 
 #atcb-bgoverlay.atcb-no-bg {
