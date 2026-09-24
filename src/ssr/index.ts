@@ -23,7 +23,7 @@ import { icons, wcParams, wcProParams } from '../core/globals';
 import { rtlLanguages } from '../i18n/index';
 import { decorate_sizes } from '../core/sizes';
 import { officialAttributeName, legacyAttributeName } from '../compat/attributes';
-import { escape_html, escape_html_text, secure_url, strip_unsafe_keys } from '../core/text';
+import { escape_html, escape_html_text, safe_html, secure_url, strip_unsafe_keys } from '../core/text';
 import { tzlib_get_offset } from 'timezones-ical-library';
 
 // filled at build time with the minified tokens+core css plus EVERY per-style delta
@@ -97,6 +97,23 @@ function skeletonSpan(width: string): string {
  */
 function truthyFlag(value: unknown): boolean {
   return value === true || value === 'true' || value === '1' || value === '';
+}
+
+/** Resolves the trigger override from either API-object or attribute-JSON input. */
+function customAddToCalendarLabel(value: unknown): string | null {
+  let labels = value;
+  if (typeof labels === 'string') {
+    const trimmed = labels.trim();
+    if (trimmed === '') return null;
+    try {
+      labels = strip_unsafe_keys(JSON.parse(trimmed.startsWith('{') ? trimmed : `{${trimmed}}`));
+    } catch {
+      return null;
+    }
+  }
+  if (!labels || typeof labels !== 'object' || Array.isArray(labels) || !Object.prototype.hasOwnProperty.call(labels, 'label.addtocalendar')) return null;
+  const label = (labels as { [key: string]: unknown })['label.addtocalendar'];
+  return typeof label === 'string' && label !== '' ? label : null;
 }
 
 function isAsciiDigits(value: string): boolean {
@@ -246,7 +263,11 @@ function generate_ssr_html_with_context(rawConfig: AddToCalendarButtonType & { [
   const rtl = rtlLanguages.includes(baseLanguage);
   const sizes = decorate_sizes(typeof config.size === 'string' || typeof config.size === 'number' ? String(config.size) : undefined);
   const lightMode = config.lightMode === 'dark' ? 'dark' : config.lightMode === 'bodyScheme' ? 'bodyScheme' : 'light';
-  const label = typeof config.label === 'string' && config.label !== '' ? config.label : atcbSsrLabels[`${baseLanguage}`] || atcbSsrLabels['en'] || 'Add to Calendar';
+  const customLabel = customAddToCalendarLabel(config.customLabels);
+  const explicitLabel = typeof config.label === 'string' && config.label !== '';
+  const label = explicitLabel ? config.label! : customLabel || atcbSsrLabels[`${baseLanguage}`] || atcbSsrLabels['en'] || 'Add to Calendar';
+  const labelHtml = !explicitLabel && customLabel !== null ? safe_html(label) : escape_html_text(label);
+  const labelAria = !explicitLabel && customLabel !== null ? labelHtml : label;
   const rsvpLabels = atcbSsrRsvpLabels[`${baseLanguage}`] || atcbSsrRsvpLabels['en'] || { title: 'RSVP', expired: 'Expired', bookedout: 'Booked out' };
   const inline = truthyFlag(config.inline);
   const hasRsvp = Boolean(config.rsvp) && typeof config.rsvp === 'object';
@@ -337,10 +358,10 @@ function generate_ssr_html_with_context(rawConfig: AddToCalendarButtonType & { [
       const icon = hideIconButton ? '' : `<div class="atcb-icon atcb-icon-trigger" part="atcb-button-icon">${icons['trigger']}</div>`;
       const chevron = !oneOption && !hideTextLabelButton ? `<div class="atcb-chevron" part="atcb-button-chevron">${icons['chevron']}</div>` : '';
       const anchor = oneOption ? '' : '<div class="atcb-dropdown-anchor"></div>';
-      const text = hideTextLabelButton ? '' : `<span class="atcb-text" part="atcb-button-text">${escape_html_text(label)}</span>`;
+      const text = hideTextLabelButton ? '' : `<span class="atcb-text" part="atcb-button-text">${labelHtml}</span>`;
       return `${icon}${text}${chevron}${anchor}`;
     })();
-    return `<div class="atcb-button-wrapper${rtl ? ' atcb-rtl' : ''}" part="atcb-button-wrapper" style="${sizeStyle}"><button type="button" class="atcb-button${oneOption ? ' atcb-single' : ''}${hideTextLabelButton ? ' atcb-no-text' : ''}" part="atcb-button"${buttonId} aria-expanded="false" aria-label="${escape_html(typeof label === 'string' ? label : 'Add to Calendar')}">${inner}</button></div>`;
+    return `<div class="atcb-button-wrapper${rtl ? ' atcb-rtl' : ''}" part="atcb-button-wrapper" style="${sizeStyle}"><button type="button" class="atcb-button${oneOption ? ' atcb-single' : ''}${hideTextLabelButton ? ' atcb-no-text' : ''}" part="atcb-button"${buttonId} aria-expanded="false" aria-label="${escape_html(labelAria)}">${inner}</button></div>`;
   })();
 
   const shellHidden = hidden;
