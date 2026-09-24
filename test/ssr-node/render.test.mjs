@@ -48,6 +48,20 @@ test('S-03: default shell carries host attributes (official kebab names), DSD te
   assert.ok(html.includes('aria-expanded="false"'), 'trigger aria state');
 });
 
+test('S-03b: customLabels overrides the SSR trigger label for object and JSON-string input', () => {
+  const objectInput = atcb_generate_ssr_html({ name: 'X', language: 'de', customLabels: { 'label.addtocalendar': 'Custom object label' } });
+  assert.ok(objectInput.includes('>Custom object label</span>'), 'object customLabels value paints in the shell');
+  assert.ok(objectInput.includes('aria-label="Custom object label"'), 'object customLabels value reaches the accessible label');
+  assert.ok(!objectInput.includes('Im Kalender speichern'), 'custom label wins over the locale pack');
+
+  const stringInput = atcb_generate_ssr_html({ name: 'X', customLabels: '{"label.addtocalendar":"Custom [b]string[/b]"}' });
+  assert.ok(stringInput.includes('>Custom <b>string</b></span>'), 'JSON-string customLabels uses the same safe formatting as the client');
+  assert.ok(stringInput.includes('aria-label="Custom &lt;b&gt;string&lt;/b&gt;"'), 'formatted custom label remains attribute-safe');
+
+  const explicit = atcb_generate_ssr_html({ name: 'X', label: 'Explicit label', customLabels: { 'label.addtocalendar': 'Custom label' } });
+  assert.ok(explicit.includes('>Explicit label</span>'), 'explicit label retains precedence over customLabels');
+});
+
 test('S-04: buttonStyle selects exactly its delta; unknown styles fall back to default', () => {
   const threeD = atcb_generate_ssr_html({ name: 'X', buttonStyle: '3d' });
   assert.ok(threeD.includes('--btn-active-shadow-up'), '3d delta css present');

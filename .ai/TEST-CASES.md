@@ -451,6 +451,7 @@ The same Node tier also covers the DOM-free utility entry in `test/ssr-node/util
 - S-01: environment is DOM-free (no document, no window)
 - S-02: ESM and CJS entries expose the same generator
 - S-03: default shell carries host attributes (official kebab names), DSD template, styles and the real label
+- S-03b: customLabels overrides the SSR trigger label for object and JSON-string input; explicit label retains precedence
 - S-04: buttonStyle selects exactly its delta; unknown styles fall back to default
 - S-05: size attribute maps to the font-size custom properties (same math as the client)
 - S-06: date style renders skeleton spans instead of computed date parts
