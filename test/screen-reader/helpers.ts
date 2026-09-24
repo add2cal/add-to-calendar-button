@@ -114,8 +114,8 @@ async function currentReaderOutput(reader: ScreenReaderPlaywright) {
 }
 
 // Reach controls using real keyboard input, never locator.focus() or DOM clicks.
-export async function tabTo(reader: ScreenReaderPlaywright, target: Locator, speech: RegExp, backwards = false, fullCapture = false) {
-  for (let step = 0; step < 20; step++) {
+export async function tabTo(reader: ScreenReaderPlaywright, target: Locator, speech: RegExp, backwards = false, fullCapture = false, maxSteps = 20) {
+  for (let step = 0; step < maxSteps; step++) {
     await checkpointSpeech(reader);
     await reader.press(backwards ? 'Shift+Tab' : 'Tab', fullCapture ? { capture: true } : undefined);
     if (await target.evaluate((element) => element === (element.getRootNode() as Document | ShadowRoot).activeElement)) {
@@ -123,7 +123,7 @@ export async function tabTo(reader: ScreenReaderPlaywright, target: Locator, spe
       return;
     }
   }
-  throw new Error(`Could not reach ${speech} within 20 Tab presses.`);
+  throw new Error(`Could not reach ${speech} within ${maxSteps} Tab presses.`);
 }
 
 // Exercise the reading cursor separately from keyboard focus. Hidden background
@@ -145,7 +145,16 @@ export async function readTo(reader: ScreenReaderPlaywright, expected: RegExp, f
 export async function openList(page: Page, reader: ScreenReaderPlaywright) {
   await reader.navigateToWebContent();
   const trigger = page.locator('add-to-calendar-button').getByRole('button', { name: triggerName });
-  await tabTo(reader, trigger, /Add to Calendar/i);
+  try {
+    // The fixture has only one focusable control before the trigger. Fail fast if
+    // VoiceOver stayed on its web-content container instead of entering Safari's
+    // keyboard focus order, then reset that reader interaction once.
+    await tabTo(reader, trigger, /Add to Calendar/i, false, false, 5);
+  } catch {
+    await reader.stopInteracting({ capture: false });
+    await reader.navigateToWebContent({ capture: false });
+    await tabTo(reader, trigger, /Add to Calendar/i, false, true);
+  }
   await checkpointSpeech(reader);
   await reader.press('Enter');
   await expect(page.getByRole('menu')).toBeVisible();
