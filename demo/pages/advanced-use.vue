@@ -1062,7 +1062,7 @@ import 'add-to-calendar-button/i18n/de'; // the languages you serve</pre>
           </LazyCodeBlock>
           <ol class="ml-6 list-decimal pb-4 pt-2" start="2">
             <li class="text-left">With the script tag, assets load from the script's own origin. Override the location via the <NuxtLink :to="{path: localePath('configuration'), hash: '#stylesource'}">styleSource</NuxtLink> option if you host them elsewhere.</li>
-            <li class="text-left">If you switch the buttonStyle at runtime, set <NuxtLink :to="{path: localePath('configuration'), hash: '#loadallstyles'}">loadAllStyles</NuxtLink> to prefetch all deltas.</li>
+            <li class="text-left">If you switch the buttonStyle at runtime, set <NuxtLink :to="{path: localePath('configuration'), hash: '#load-all-styles'}">loadAllStyles</NuxtLink> to prefetch all deltas.</li>
           </ol>
         </div>
         <div v-else>
@@ -1084,7 +1084,7 @@ import 'add-to-calendar-button/i18n/de'; // deine Sprachen</pre>
           </LazyCodeBlock>
           <ol class="ml-6 list-decimal pb-4 pt-2" start="2">
             <li class="text-left">Mit dem Script-Tag laden Assets vom Origin des Skripts. Über die <NuxtLink :to="{path: localePath('configuration'), hash: '#stylesource'}">styleSource</NuxtLink>-Option kannst du den Ort überschreiben.</li>
-            <li class="text-left">Wenn du den buttonStyle zur Laufzeit wechselst, lädt <NuxtLink :to="{path: localePath('configuration'), hash: '#loadallstyles'}">loadAllStyles</NuxtLink> alle Deltas vor.</li>
+            <li class="text-left">Wenn du den buttonStyle zur Laufzeit wechselst, lädt <NuxtLink :to="{path: localePath('configuration'), hash: '#load-all-styles'}">loadAllStyles</NuxtLink> alle Deltas vor.</li>
           </ol>
         </div>
       </section>
