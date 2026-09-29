@@ -304,6 +304,7 @@
       "styles_lang_ondemand": "Jeder weitere Style und jede weitere Sprache lädt automatisch bei Bedarf (jeweils wenige KB), sobald du sie referenzierst - kein manuelles Wiring nötig.",
       "styles_lang_npm_heading": "Bundling via npm (empfohlen für Frameworks)",
       "styles_lang_npm_body": "Wenn du das Skript bundlest, importiere die gewünschten Style- und Sprachmodule, damit sie zur Build-Zeit ohne Netzwerk-Anfrage registriert werden. Füge einfach die entsprechenden Import-Anweisungen irgendwo in deiner Entry-Datei (oder der Komponente, die den Button nutzt) hinzu:",
+      "styles_lang_all": "Um alle Styles oder alle Sprachen in einer Anweisung zu laden, nutze die Aggregat-Module: import 'add-to-calendar-button/styles/all' und import 'add-to-calendar-button/i18n/all'.",
       "styles_lang_cdn_heading": "Laden via CDN (Vanilla JS)",
       "styles_lang_cdn_body": "Mit dem CDN-Script-Tag werden On-Demand-Styles und -Sprachen von derselben Quelle wie das Skript selbst geladen - nichts weiter einzustellen. Falls du das Skript selbst hostest, setze das \"style-source\"-Attribut auf das Verzeichnis, das die styles/- und locales/-Ordner enthält.",
       "styles_lang_more": "Siehe die Optionen \"button-style\" und \"language\" auf der Konfigurations-Seite für alle Details.",

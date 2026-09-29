@@ -110,6 +110,7 @@ import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import 'add-to-calendar-button/styles/3d';   // any style besides "default"
 import 'add-to-calendar-button/i18n/de';       // any language besides English</pre>
         </LazyCodeBlock>
+        <p class="pt-5">{{ $t('content.guide.styles_lang_all') }}</p>
         <p class="mt-10">{{ $t('content.guide.styles_lang_more') }}</p>
       </div>
     </div>

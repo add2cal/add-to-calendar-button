@@ -2,6 +2,8 @@
 
 ## Version 3
 
+- v3.2 : Option to load all styles and/or languages with 1 call at the npm usage path
+- v3.1 : Stronger accessibility testing
 - v3.0 : "lighter, faster, everywhere" full rewrite of the internals - same button, same attributes
   - smaller: styles beyond the default and languages beyond English are now separate tiny assets, loaded on demand by browser-script/CDN integrations and explicitly imported by npm users. Smaller bundle size despite having added ons of new features.
   - new: server-side rendering via the `add-to-calendar-button/ssr` entry - style- and size-correct shells through declarative shadow DOM, hydrated without layout shift

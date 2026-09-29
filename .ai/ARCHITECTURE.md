@@ -130,6 +130,9 @@ the style/i18n registries (caches by design).
   `dist/styles/{name}.css` (fetchable delta) + `{name}.js`/`.cjs` (self-registering
   modules) + `.d.ts` stubs, and reconstructs the full per-style stylesheets in
   `assets/css/` for CDN hotlinks and `customCss` consumers (those files are GENERATED).
+  An aggregate `dist/styles/all.js`/`.cjs`/`.d.ts` re-exports every style module so
+  consumers can register all deltas in one import (`add-to-calendar-button/styles/all`);
+  each style stays a separate import so bundlers keep them code-split.
 - **Runtime**: `atcb_ensure_style` resolves a style from the registry, else fetches
   `{base}/styles/{name}.css` where base = the script's own origin (derived via string
   operations - never `new URL(rel, import.meta.url)`, which bundlers rewrite statically),
@@ -147,6 +150,10 @@ the style/i18n registries (caches by design).
   data); sibling keys use `_` suffixes instead (`cancelled_cta`).
 - **Build**: English is statically imported into every bundle; every language is emitted to
   `dist/locales/{lang}.json` (fetchable) + `{lang}.js`/`.cjs` (self-registering) + `.d.ts`.
+  An aggregate `dist/locales/all.js`/`.cjs`/`.d.ts` re-exports every non-English locale
+  module so consumers can register all languages in one import
+  (`add-to-calendar-button/i18n/all`); each locale stays a separate import so bundlers
+  keep them code-split.
 - **Runtime**: `atcb_ensure_locale` is awaited during init; it resolves from the registry,
   else fetches `{base}/locales/{lang}.json` (same base rules as styles). Full locales
   (`en_GB`) split into `language` (base, translations + rtl), `translationLocale` (regional
@@ -194,7 +201,7 @@ overview into the existing shell atomically.
 | `dist/atcb.js`, `dist/atcb.min.js`                                | CDN script tags (jsdelivr default: `dist/atcb.js`)                                                   |
 | `dist/atcb-{no-pro,unstyle,no-pro-unstyle}(.min).js`              | Deprecation shims at the old CDN file names (self-load `atcb(.min).js`)                              |
 | `dist/module/`, `dist/commonjs/`                                  | npm `.` export (ESM / CJS); the variant subdirectories hold deprecation shim modules                 |
-| `dist/styles/`, `dist/locales/`                                   | On-demand fetch targets AND the npm `./styles/*` / `./i18n/*` exports                                |
+| `dist/styles/`, `dist/locales/`                                   | On-demand fetch targets AND the npm `./styles/*` / `./i18n/*` exports (incl. `./styles/all`, `./i18n/all` aggregate modules) |
 | `dist/ssr/`                                                       | npm `./ssr` export (ESM + CJS + types, module-type marker)                                           |
 | `dist/utils/`                                                     | npm `./utils` export (DOM-free ESM + CJS + types, module-type marker)                                |
 | `dist/index.d.ts`, `dist/ssr/index.d.ts`, `dist/utils/index.d.ts` | Flat type bundles generated from source (dts-bundle-generator); resolve under every moduleResolution |
