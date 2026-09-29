@@ -1060,9 +1060,10 @@ import 'add-to-calendar-button'; // core + default style + English
 import 'add-to-calendar-button/styles/3d'; // the styles you use
 import 'add-to-calendar-button/i18n/de'; // the languages you serve</pre>
           </LazyCodeBlock>
+          <p class="text-left">To load all styles or all languages at once, use the aggregate modules: <code>import 'add-to-calendar-button/styles/all'</code> and <code>import 'add-to-calendar-button/i18n/all'</code>.</p>
           <ol class="ml-6 list-decimal pb-4 pt-2" start="2">
             <li class="text-left">With the script tag, assets load from the script's own origin. Override the location via the <NuxtLink :to="{path: localePath('configuration'), hash: '#stylesource'}">styleSource</NuxtLink> option if you host them elsewhere.</li>
-            <li class="text-left">If you switch the buttonStyle at runtime, set <NuxtLink :to="{path: localePath('configuration'), hash: '#loadallstyles'}">loadAllStyles</NuxtLink> to prefetch all deltas.</li>
+            <li class="text-left">If you switch the buttonStyle at runtime, set <NuxtLink :to="{path: localePath('configuration'), hash: '#load-all-styles'}">loadAllStyles</NuxtLink> to prefetch all deltas.</li>
           </ol>
         </div>
         <div v-else>
@@ -1082,9 +1083,10 @@ import 'add-to-calendar-button'; // Kern + Default-Style + Englisch
 import 'add-to-calendar-button/styles/3d'; // deine Styles
 import 'add-to-calendar-button/i18n/de'; // deine Sprachen</pre>
           </LazyCodeBlock>
+          <p class="text-left">Um alle Styles oder alle Sprachen auf einmal zu laden, nutze die Aggregat-Module: <code>import 'add-to-calendar-button/styles/all'</code> und <code>import 'add-to-calendar-button/i18n/all'</code>.</p>
           <ol class="ml-6 list-decimal pb-4 pt-2" start="2">
             <li class="text-left">Mit dem Script-Tag laden Assets vom Origin des Skripts. Über die <NuxtLink :to="{path: localePath('configuration'), hash: '#stylesource'}">styleSource</NuxtLink>-Option kannst du den Ort überschreiben.</li>
-            <li class="text-left">Wenn du den buttonStyle zur Laufzeit wechselst, lädt <NuxtLink :to="{path: localePath('configuration'), hash: '#loadallstyles'}">loadAllStyles</NuxtLink> alle Deltas vor.</li>
+            <li class="text-left">Wenn du den buttonStyle zur Laufzeit wechselst, lädt <NuxtLink :to="{path: localePath('configuration'), hash: '#load-all-styles'}">loadAllStyles</NuxtLink> alle Deltas vor.</li>
           </ol>
         </div>
       </section>

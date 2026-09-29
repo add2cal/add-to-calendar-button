@@ -71,6 +71,7 @@ watch(locale, value => {
 import 'add-to-calendar-button/styles/3d';   // any style besides "default"
 import 'add-to-calendar-button/i18n/de';       // any language besides English</pre>
         </LazyCodeBlock>
+        <p class="pt-5">{{ $t('content.guide.styles_lang_all') }}</p>
         <p class="mt-10">{{ $t('content.guide.styles_lang_more') }}</p>
         <h2 class="mb-6 mt-20">Server Side Rendering (SSR)</h2>
         <p>

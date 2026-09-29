@@ -27,62 +27,30 @@ const props = defineProps({
     type: Boolean,
     default: false,
   },
+  // When true, register every style delta and every locale up front (via the
+  // library's aggregate "styles/all" and "i18n/all" modules) instead of only
+  // the one style/locale this button needs. Used by the playground, where the
+  // visitor can switch styles and languages at runtime without a reload.
+  loadAll: {
+    type: Boolean,
+    default: false,
+  },
 });
 
 const emit = defineEmits(['hydrated']);
 
-const localeLoaders: Record<string, () => Promise<unknown>> = {
-  ar: () => import('add-to-calendar-button/i18n/ar'),
-  az: () => import('add-to-calendar-button/i18n/az'),
-  be: () => import('add-to-calendar-button/i18n/be'),
-  bg: () => import('add-to-calendar-button/i18n/bg'),
-  bs: () => import('add-to-calendar-button/i18n/bs'),
-  cs: () => import('add-to-calendar-button/i18n/cs'),
-  da: () => import('add-to-calendar-button/i18n/da'),
-  de: () => import('add-to-calendar-button/i18n/de'),
-  el: () => import('add-to-calendar-button/i18n/el'),
-  es: () => import('add-to-calendar-button/i18n/es'),
-  et: () => import('add-to-calendar-button/i18n/et'),
-  fa: () => import('add-to-calendar-button/i18n/fa'),
-  fi: () => import('add-to-calendar-button/i18n/fi'),
-  fr: () => import('add-to-calendar-button/i18n/fr'),
-  he: () => import('add-to-calendar-button/i18n/he'),
-  hi: () => import('add-to-calendar-button/i18n/hi'),
-  hr: () => import('add-to-calendar-button/i18n/hr'),
-  hu: () => import('add-to-calendar-button/i18n/hu'),
-  hy: () => import('add-to-calendar-button/i18n/hy'),
-  id: () => import('add-to-calendar-button/i18n/id'),
-  it: () => import('add-to-calendar-button/i18n/it'),
-  ja: () => import('add-to-calendar-button/i18n/ja'),
-  ka: () => import('add-to-calendar-button/i18n/ka'),
-  ko: () => import('add-to-calendar-button/i18n/ko'),
-  lt: () => import('add-to-calendar-button/i18n/lt'),
-  lv: () => import('add-to-calendar-button/i18n/lv'),
-  mk: () => import('add-to-calendar-button/i18n/mk'),
-  mt: () => import('add-to-calendar-button/i18n/mt'),
-  nl: () => import('add-to-calendar-button/i18n/nl'),
-  no: () => import('add-to-calendar-button/i18n/no'),
-  pl: () => import('add-to-calendar-button/i18n/pl'),
-  pt: () => import('add-to-calendar-button/i18n/pt'),
-  ro: () => import('add-to-calendar-button/i18n/ro'),
-  ru: () => import('add-to-calendar-button/i18n/ru'),
-  sk: () => import('add-to-calendar-button/i18n/sk'),
-  sl: () => import('add-to-calendar-button/i18n/sl'),
-  sq: () => import('add-to-calendar-button/i18n/sq'),
-  sr: () => import('add-to-calendar-button/i18n/sr'),
-  sv: () => import('add-to-calendar-button/i18n/sv'),
-  tr: () => import('add-to-calendar-button/i18n/tr'),
-  uk: () => import('add-to-calendar-button/i18n/uk'),
-  vi: () => import('add-to-calendar-button/i18n/vi'),
-  zh: () => import('add-to-calendar-button/i18n/zh'),
-};
-
 const normalizeLanguage = (language: unknown) => typeof language === 'string' ? language.split(/[-_]/)[0]?.toLowerCase() || 'en' : 'en';
 
+// Locales load on demand: the playground (loadAll) imports the aggregate
+// "i18n/all" module so every language is registered up front and runtime
+// switches are fetch-free. Everywhere else only the active language is
+// imported (English ships in the main bundle, so it is skipped). The library's
+// own ensure_locale fallback covers any miss.
 const loadLocale = async (language: string) => {
-  // English is included in the main bundle.
-  if (language !== 'en') {
-    await localeLoaders[language]?.();
+  if (props.loadAll) {
+    await import('add-to-calendar-button/i18n/all');
+  } else if (language !== 'en') {
+    await import(/* @vite-ignore */ `add-to-calendar-button/i18n/${language}`);
   }
 };
 
@@ -129,7 +97,6 @@ const vSsrHtml = {
 const shellHost = ref<HTMLElement | null>(null);
 
 if (import.meta.client) {
-  let languageLoadId = 0;
 
   // The statically generated playground starts with blank attrs; its real config
   // arrives from localStorage after mount. If that config describes an all-past
@@ -144,33 +111,30 @@ if (import.meta.client) {
     if (shellHost.value) shellHost.value.innerHTML = nextHtml;
   });
 
-  watch(() => attrs.language, async (language) => {
+  watch(() => attrs.language, (language) => {
     if (props.skipClientLoad) return;
-    const normalizedLanguage = normalizeLanguage(language);
-    const loadId = ++languageLoadId;
-    await loadLocale(normalizedLanguage);
-    if (loadId === languageLoadId) {
-      loadedLanguage.value = normalizedLanguage;
-    }
+    loadedLanguage.value = normalizeLanguage(language);
   });
 
   onMounted(async () => {
     // bots (or any caller that sets skipClientLoad) keep the shell forever -
     // no script download, no upgrade, no swap
     if (props.skipClientLoad) return;
-    // register every style first (synchronous registry), then the web component:
-    // the upgrade never needs a css fetch and the shell swaps straight into the
-    // fully styled button
+    // register styles before the web component so the upgrade never needs a css
+    // fetch and the shell swaps straight into the fully styled button. The
+    // playground (loadAll) imports the aggregate "styles/all" module so every
+    // style delta is registered up front; everywhere else only the active
+    // style is imported (the default style ships in the main bundle).
+    const buttonStyle = typeof attrs.buttonStyle === 'string' && attrs.buttonStyle !== '' ? attrs.buttonStyle : 'default';
+    const styleImport = props.loadAll
+      ? import('add-to-calendar-button/styles/all')
+      : buttonStyle === 'default'
+        ? Promise.resolve()
+        : import(/* @vite-ignore */ `add-to-calendar-button/styles/${buttonStyle}`);
     await Promise.all([
       import('add-to-calendar-button'),
       loadLocale(loadedLanguage.value),
-      import('add-to-calendar-button/styles/3d'),
-      import('add-to-calendar-button/styles/date'),
-      import('add-to-calendar-button/styles/flat'),
-      import('add-to-calendar-button/styles/neumorphism'),
-      import('add-to-calendar-button/styles/round'),
-      import('add-to-calendar-button/styles/simple'),
-      import('add-to-calendar-button/styles/text')
+      styleImport,
     ]);
     // the shell element upgrades in place - wait for its complete render
     const el = shellHost.value?.querySelector('add-to-calendar-button') as (HTMLElement & { whenInitialized?: () => Promise<void> }) | null;

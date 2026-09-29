@@ -437,6 +437,21 @@ function finalize() {
     fs.writeFileSync(r('dist/locales', `${lang}.cjs`), `'use strict';\nconst { atcb_register_locale } = require('../commonjs/index.js');\n\nconst strings = ${json};\natcb_register_locale('${lang}', strings);\n\nmodule.exports = { strings };\n`);
     fs.writeFileSync(r('dist/locales', `${lang}.d.ts`), `declare const strings: {\n\t[key: string]: string | { [key: string]: unknown };\n};\nexport { strings };\n`);
   }
+  // aggregate \"all\" locale module: imports every non-english locale so consumers can
+  // load every language in one statement without maintaining a hand-written map.
+  // Each import is a separate dynamic import() so bundlers keep locales code-split.
+  const nonEnglishLocales = fs
+    .readdirSync(r('src/i18n/locales'))
+    .map((file) => file.replace(/\.json$/, ''))
+    .filter((lang) => lang !== 'en')
+    .sort();
+  fs.writeFileSync(r('dist/locales', 'all.js'), nonEnglishLocales.map((lang) => `import './${lang}.js';`).join('\n') + '\n');
+  fs.writeFileSync(r('dist/locales', 'all.cjs'), `'use strict';\n` + nonEnglishLocales.map((lang) => `require('./${lang}.cjs');`).join('\n') + '\n');
+  fs.writeFileSync(
+    r('dist/locales', 'all.d.ts'),
+    `export {};
+`,
+  );
   // style deltas as fetchable assets + self-registering ESM/CJS module twins with type stubs
   fs.mkdirSync(r('dist/styles'), { recursive: true });
   for (const style of AVAILABLE_STYLES) {
@@ -446,6 +461,16 @@ function finalize() {
     fs.writeFileSync(r('dist/styles', `${style}.cjs`), `'use strict';\nconst { atcb_register_style } = require('../commonjs/index.js');\n\nconst css = ${css};\natcb_register_style('${style}', css);\n\nmodule.exports = { css };\n`);
     fs.writeFileSync(r('dist/styles', `${style}.d.ts`), `declare const css: string;\nexport { css };\n`);
   }
+  // aggregate \"all\" style module: imports every style delta so consumers can load
+  // all styles in one statement. Each import is a separate dynamic import() so bundlers
+  // keep styles code-split.
+  fs.writeFileSync(r('dist/styles', 'all.js'), AVAILABLE_STYLES.map((style) => `import './${style}.js';`).join('\n') + '\n');
+  fs.writeFileSync(r('dist/styles', 'all.cjs'), `'use strict';\n` + AVAILABLE_STYLES.map((style) => `require('./${style}.cjs');`).join('\n') + '\n');
+  fs.writeFileSync(
+    r('dist/styles', 'all.d.ts'),
+    `export {};
+`,
+  );
   writeVariantShims();
 }
 
@@ -513,6 +538,12 @@ function sanityCheck() {
   if (styled.includes('Im Kalender speichern') || moduleBuild.includes('Im Kalender speichern')) problems.push('bundles must not inline non-english locales');
   for (const ext of ['json', 'js', 'cjs', 'd.ts']) {
     if (!fs.existsSync(r('dist/locales', `de.${ext}`))) problems.push(`dist/locales/de.${ext} missing`);
+  }
+  for (const ext of ['js', 'cjs', 'd.ts']) {
+    if (!fs.existsSync(r('dist/locales', `all.${ext}`))) problems.push(`dist/locales/all.${ext} missing`);
+  }
+  for (const ext of ['js', 'cjs', 'd.ts']) {
+    if (!fs.existsSync(r('dist/styles', `all.${ext}`))) problems.push(`dist/styles/all.${ext} missing`);
   }
   if (!styled.includes('@preserve')) problems.push('dist/atcb.js: @preserve license blocks missing');
   if (!styled.includes(`atcbVersion = "${pkg.version}"`) && !styled.includes(`atcbVersion = '${pkg.version}'`)) problems.push(`dist/atcb.js: package version ${pkg.version} not injected`);

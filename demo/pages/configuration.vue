@@ -829,14 +829,15 @@ watch(searchSelection, (newVal) => {
                 There are multiple integrated button styles, which also affect a lot of other parameters.<br />
                 We recommend to play around with them in order to find out how they behave in detail.<br /><br />
                 "none" would simply load no css style at all, while "custom" requires an external css file specified with the "custom-css" option.<br /><br />
-                Only the default style is part of the script itself - every other style loads automatically on demand (a few KB), or fetch-free via <code>import 'add-to-calendar-button/styles/3d'</code> and the like when bundling. See the "style-source" and "load-all-styles" options for more
-                control.
+                Only the default style is part of the script itself - every other style loads automatically on demand (a few KB), or fetch-free via <code>import 'add-to-calendar-button/styles/3d'</code> and the like when bundling. To register all styles at once, use
+                <code>import 'add-to-calendar-button/styles/all'</code>. See the "style-source" and "load-all-styles" options for more control.
               </td>
               <td v-else>
                 Es gibt mehrere integrierte Button-Stile (Themes), die auch einige weitere Parameter beeinflussen.<br />
                 Wir empfehlen die Optionen der Reihe nach auszuprobieren, um herauszufinden, wie sie sich im Detail verhalten.<br /><br />
                 "none" würde gar kein CSS laden, während "custom" eine externes CSS-Datei über die "custom-css"-Option erfordert.<br /><br />
-                Nur der Default-Style Teil des Skripts - jeder andere Style lädt automatisch bei Bedarf (wenige KB), oder ohne Netzwerk-Anfrage via <code>import 'add-to-calendar-button/styles/3d'</code> und Co. beim Bundling. Siehe auch die Optionen "style-source" und "load-all-styles".
+                Nur der Default-Style Teil des Skripts - jeder andere Style lädt automatisch bei Bedarf (wenige KB), oder ohne Netzwerk-Anfrage via <code>import 'add-to-calendar-button/styles/3d'</code> und Co. beim Bundling. Um alle Styles auf einmal zu registrieren, nutze
+                <code>import 'add-to-calendar-button/styles/all'</code>. Siehe auch die Optionen "style-source" und "load-all-styles".
               </td>
             </tr>
             <tr id="inline">
@@ -891,12 +892,12 @@ watch(searchSelection, (newVal) => {
               <td v-if="locale=='en'">
                 Prefetches every button style delta on initialization.<br /><br />
                 Only useful when you switch the "button-style" at runtime (for example in a live theme switcher) and want the change to apply without any network delay.<br /><br />
-                This option only works when using the button via a script tag, not via the npm package. With npm, import the required style modules instead.
+                This option only works when using the button via a script tag, not via the npm package. With npm, import the required style modules instead - or <code>import 'add-to-calendar-button/styles/all'</code> to register every style at once.
               </td>
               <td v-else>
                 Lädt alle Button-Style-Deltas bereits bei der Initialisierung.<br /><br />
                 Nur sinnvoll, wenn du die "button-style"-Option zur Laufzeit wechselst (etwa in einem Live-Theme-Switcher) und der Wechsel ohne Netzwerk-Verzögerung greifen soll.<br /><br />
-                Diese Option funktioniert nur bei Einbindung des Buttons über einen Script-Tag, nicht über das npm-Paket. Bei npm müssen die benötigten Style-Module stattdessen importiert werden.
+                Diese Option funktioniert nur bei Einbindung des Buttons über einen Script-Tag, nicht über das npm-Paket. Bei npm müssen die benötigten Style-Module stattdessen importiert werden - oder <code>import 'add-to-calendar-button/styles/all'</code> registriert alle Styles auf einmal.
               </td>
             </tr>
             <tr id="buttons-list">
@@ -1089,7 +1090,8 @@ watch(searchSelection, (newVal) => {
                 If you want to have the text blocks in another language than English, you can use the included translations (i18n).<br /><br />
                 Simply set one of the supported languages as <a href="https://www.w3schools.com/tags/ref_language_codes.asp" target="_blank" rel="noopener" class="whitespace-nowrap">ISO 639-1 code <ArrowTopRightOnSquareIcon class="-mt-0.5 mr-0.5 inline-block h-3 w-3" aria-hidden="true" /></a>.<br />
                 Also supports Right-to-Left (RTL) with Arabic, Persian &amp; Hebrew.<br /><br />
-                English is part of the script and every other language loads automatically on demand (~3 KB) - or fetch-free via <code>import 'add-to-calendar-button/i18n/de'</code> and the like when bundling.<br />
+                English is part of the script and every other language loads automatically on demand (~3 KB) - or fetch-free via <code>import 'add-to-calendar-button/i18n/de'</code> and the like when bundling. To register all languages at once, use
+                <code>import 'add-to-calendar-button/i18n/all'</code>.<br />
                 You can also provide a full locale like <code>en_GB</code>: translations then prefer a matching regional pack (falling back to the base language), and dates are formatted in the regional convention.
               </td>
               <td v-else>
@@ -1097,7 +1099,8 @@ watch(searchSelection, (newVal) => {
                 Spezifiere einfach eine der unterstützten Sprachen als
                 <a href="https://www.w3schools.com/tags/ref_language_codes.asp" target="_blank" rel="noopener" class="whitespace-nowrap">ISO 639-1 code <ArrowTopRightOnSquareIcon class="-mt-0.5 mr-0.5 inline-block h-3 w-3" aria-hidden="true" /></a>.<br />
                 Für Arabisch, Persisch und Hebräisch wird zudem Rechts-nach-Links (RTL) für alle Elemente unterstützt und automatisch angewendet.<br /><br />
-                Englisch ist Teil des Skripts und jede weitere Sprache lädt automatisch bei Bedarf (~3 KB) - oder ohne Netzwerk-Anfrage via <code>import 'add-to-calendar-button/i18n/de'</code> und Co. beim Bundling.<br />
+                Englisch ist Teil des Skripts und jede weitere Sprache lädt automatisch bei Bedarf (~3 KB) - oder ohne Netzwerk-Anfrage via <code>import 'add-to-calendar-button/i18n/de'</code> und Co. beim Bundling. Um alle Sprachen auf einmal zu registrieren, nutze
+                <code>import 'add-to-calendar-button/i18n/all'</code>.<br />
                 Du kannst auch eine vollständige Locale wie <code>en_GB</code> angeben: Übersetzungen bevorzugen dann ein passendes regionales Sprachpaket (mit Fallback auf die Basissprache) und Daten werden in der regionalen Konvention formatiert.
               </td>
             </tr>

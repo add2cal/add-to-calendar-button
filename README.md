@@ -143,6 +143,13 @@ import 'add-to-calendar-button/styles/3d'; // any style besides "default"
 import 'add-to-calendar-button/i18n/de';   // any language besides English
 ```
 
+To load every style or every language in one statement, use the aggregate modules:
+
+```typescript
+import 'add-to-calendar-button/styles/all'; // all style deltas
+import 'add-to-calendar-button/i18n/all';   // all non-English locales
+```
+
 Find detailed installation guides for the most common ones, like React, Angular, Vue, Svelte, or Astro at [add-to-calendar-button.com/#installation](https://add-to-calendar-button.com/#installation).
 
 <br />
