@@ -16,6 +16,18 @@ import type { ATCBConfig } from '../types';
 // build hook: the minified css of core + default gets inlined here (see scripts/build.mjs)
 const atcbCssTemplate: { [key: string]: string } = {};
 
+// Generated style modules cannot import the main entry without registering the element.
+// Keep their deltas in a process-wide registry that this entry adopts on evaluation.
+const atcbStyleRegistryKey = Symbol.for('add-to-calendar-button.style-registry');
+const atcbStyleRegistryHost = globalThis as typeof globalThis & { [key: symbol]: unknown };
+// eslint-disable-next-line security/detect-object-injection -- Symbol key is package-owned and constant
+const registeredStyleRegistry = atcbStyleRegistryHost[atcbStyleRegistryKey];
+if (registeredStyleRegistry && typeof registeredStyleRegistry === 'object') {
+  Object.assign(atcbCssTemplate, registeredStyleRegistry);
+}
+// eslint-disable-next-line security/detect-object-injection -- Symbol key is package-owned and constant
+atcbStyleRegistryHost[atcbStyleRegistryKey] = atcbCssTemplate;
+
 // build hook: relative path from THIS bundle's location to the style assets
 const atcbStyleRelPath: string = 'styles/';
 

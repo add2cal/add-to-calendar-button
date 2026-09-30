@@ -132,8 +132,12 @@ export async function readTo(reader: ScreenReaderPlaywright, expected: RegExp, f
   const currentOutput = await currentReaderOutput(reader);
   if (forbidden) expect(currentOutput).not.toMatch(forbidden);
   if (expected.test(currentOutput)) return;
+  // Keep one checkpoint for the full traversal. NVDA can append an announcement
+  // just after a navigation command resolves; resetting the checkpoint before the
+  // next step would discard that valid output even though it appears in the final
+  // speech log.
+  await checkpointSpeech(reader);
   for (let step = 0; step < 20; step++) {
-    await checkpointSpeech(reader);
     await reader.next();
     const output = await readerOutputSinceCheckpoint(reader);
     if (forbidden) expect(output).not.toMatch(forbidden);

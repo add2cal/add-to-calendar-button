@@ -1,7 +1,7 @@
 import { LitElement, html, nothing, type TemplateResult } from 'lit';
 import { atcbVersion, isBrowser, wcParams, wcProParams, wcBooleanParams, wcObjectParams, wcObjectArrayParams, wcArrayParams, wcNumberParams } from '../core/globals';
 import { getActiveButton, createButtonInstance, deleteButtonInstance } from '../core/store';
-import { ensure_style, prefetch_all_styles } from '../styles/css-template';
+import { atcbCssTemplate, ensure_style, prefetch_all_styles } from '../styles/css-template';
 import { decorate_data } from '../core/decorate';
 import { check_required, validate } from '../core/validate';
 import { create_atcbl } from '../ui/generate';
@@ -99,11 +99,16 @@ if (isBrowser()) {
     // drop the server-rendered shell in the same synchronous block that makes the real
     // render visible: the browser never paints the in-between state, so the shell is
     // replaced without layout shift
-    removeSsrShell(): void {
+    removeSsrShell(preserveStyleAssets = false): void {
+      const preservedNodes: Element[] = [];
       for (const node of this._ssrShellNodes) {
+        if (preserveStyleAssets && node.matches('style, link[rel="stylesheet"]')) {
+          preservedNodes.push(node);
+          continue;
+        }
         node.remove();
       }
-      this._ssrShellNodes = [];
+      this._ssrShellNodes = preservedNodes;
     }
 
     override createRenderRoot(): ShadowRoot {
@@ -407,7 +412,8 @@ if (isBrowser()) {
         // must stay painted until the style node actually sits in the shadow root,
         // otherwise the freshly rendered button flashes unstyled between shell swap
         // and style arrival
-        await load_css(host, rootObj, data);
+        const reuseSsrStyles = deferred && this._ssrShellNodes.some((node) => node.matches('style, link[rel="stylesheet"]'));
+        const clientStylesReady = await load_css(host, rootObj, data, reuseSsrStyles);
         // eagerly prefetch all style deltas when runtime style switching is requested
         if (data.loadAllStyles) {
           prefetch_all_styles(data);
@@ -470,7 +476,12 @@ if (isBrowser()) {
           await this.updateComplete;
         }
         // the real render is complete - swap out a server-rendered shell, if any
-        this.removeSsrShell();
+        // A bundled consumer may register a split style shortly after the main
+        // module evaluates, while the main bundle cannot resolve a fetch base for
+        // that asset. In that case, keep the already-correct SSR style/link nodes
+        // and remove only the shell content. This avoids exposing an unstyled real
+        // button between the server shell and a later client-side render.
+        this.removeSsrShell(!clientStylesReady);
         // log event
         log_event('initialization', data.identifier!, data.identifier!);
         if (!data.proKey && data.hideBranding && !document.getElementById('atcb-reference')) {
@@ -642,7 +653,7 @@ function csp_nonce(host: ShadowRoot): string | null {
 }
 
 // load the right css
-async function load_css(host: ShadowRoot, rootObj: HTMLElement | null = null, data: ATCBConfig): Promise<void> {
+async function load_css(host: ShadowRoot, rootObj: HTMLElement | null = null, data: ATCBConfig, reuseSsrStyles = false): Promise<boolean> {
   const nonceVal = csp_nonce(host);
   // add global no-scroll style
   if (!document.getElementById('atcb-global-style')) {
@@ -654,6 +665,13 @@ async function load_css(host: ShadowRoot, rootObj: HTMLElement | null = null, da
       cssGlobalContent.setAttribute('nonce', nonceVal);
     }
     document.head.append(cssGlobalContent);
+  }
+  // The SSR renderer already emitted the exact general CSS, selected delta,
+  // overrides, and custom stylesheet link. Reuse those nodes for the first
+  // hydrated render instead of resolving the same assets a second time. The
+  // caller keeps them when this returns false.
+  if (reuseSsrStyles) {
+    return false;
   }
   // add hidden style
   const generalCssContent = document.createElement('style');
@@ -706,7 +724,7 @@ async function load_css(host: ShadowRoot, rootObj: HTMLElement | null = null, da
       // second, load the actual css (and remove the placeholder as soon as it is loaded)
       loadExternalCssAsynch(cssFile, host, rootObj, nonceVal, placeholder, data.inline, data.buttonsList, overrideDefaultCss + overrideDarkCss);
     }
-    return;
+    return true;
   }
   // otherwise, we load it from the style registry (inline core+default, on-demand deltas)
   const styleCss = await ensure_style(data);
@@ -730,6 +748,10 @@ async function load_css(host: ShadowRoot, rootObj: HTMLElement | null = null, da
     }
     rootObj.classList.remove('atcb-hidden');
   }
+  // `null` is intentional for style=none/custom and unstyle builds. For a normal
+  // known/unknown style with core CSS available it means loading failed, so an SSR
+  // host should retain its server-rendered style assets as a hydration fallback.
+  return styleCss !== null || data.buttonStyle === 'none' || data.buttonStyle === 'custom' || !atcbCssTemplate['core'];
 }
 
 async function loadExternalCssAsynch(cssFile: HTMLLinkElement, host: ShadowRoot, rootObj: HTMLElement | null = null, nonceVal: string | null = null, placeholder: HTMLElement | null = null, inline: boolean = false, buttonsList: boolean = false, overrideCss: string = ''): Promise<void> {

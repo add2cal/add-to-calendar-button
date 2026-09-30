@@ -186,9 +186,13 @@ share the size math without pulling ui modules (which import lit).
 Client side: the element constructor ADOPTS an existing declarative shadow root (calling
 `attachShadow` would clear it), keeps the shell painted while initializing, and removes the
 shell nodes in the same synchronous block that completes the real render - no intermediate
-paint, no layout shift. The shell wrapper carries `data-atcb-ssr` so client queries can
-exclude it while both exist. Browsers without declarative shadow DOM leave the template as
-an inert child; the element drops it and initializes client-only.
+paint, no layout shift. The first hydrated render reuses the SSR root's exact style and
+stylesheet-link nodes instead of requesting split assets again; it removes only the shell
+content wrapper. Later attribute-driven rebuilds return to the normal client style pipeline
+and replace those retained assets when a complete client stylesheet is available. The shell
+wrapper carries `data-atcb-ssr` so client queries can exclude it while both exist. Browsers
+without declarative shadow DOM leave the template as an inert child; the element drops it
+and initializes client-only.
 
 The SSR entry does not render group overview data. On upgrade, the client fetches and
 builds the group range off-DOM while leaving the skeleton painted, then swaps the complete

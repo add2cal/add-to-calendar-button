@@ -2,6 +2,7 @@
 
 ## Version 3
 
+- v3.3 : Optimized rendering flows (incl. SSR hydration)
 - v3.2 : Option to load all styles and/or languages with 1 call at the npm usage path
 - v3.1 : Stronger accessibility testing
 - v3.0 : "lighter, faster, everywhere" full rewrite of the internals - same button, same attributes

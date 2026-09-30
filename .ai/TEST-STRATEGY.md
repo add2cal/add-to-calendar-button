@@ -22,12 +22,12 @@ suite or `test:release`. PRs targeting `dev` run smoke; PRs targeting `main` run
 complete release gate: both Chrome binaries, package/SSR checks, static checks, and the
 separate VoiceOver + NVDA jobs.
 
-| Script                       | Tier                | Content                                                                                                                 | When                   |
-| ---------------------------- | ------------------- | ----------------------------------------------------------------------------------------------------------------------- | ---------------------- |
-| `npm run test`               | Smoke               | 16 cases: {Desktop, Mobile} x {OSS, PRO} + RSVP render (`test/wc-tests-smoke/`), plus the two long-standing quick tests | DEFAULT / PRs to dev   |
-| `npm run test:extended`      | Reduced             | all reduced feature groups, 333 hand-written cases including smoke (`test/wc-tests/` + `test/wc-tests-smoke/`)          | on demand / pre-merge  |
-| `npm run test:full`          | Full Cartesian      | 544 browser cases including reduced                                                                                     | PRs to main / releases |
-| `npm run test:screen-reader` | Real screen readers | 9 Guidepup scenarios on the current reader OS                                                                           | CI accessibility jobs  |
+| Script                       | Tier                | Content                                                                                                        | When                   |
+| ---------------------------- | ------------------- | -------------------------------------------------------------------------------------------------------------- | ---------------------- |
+| `npm run test`               | Smoke               | 19 cases: 16 smoke cases, the two long-standing quick tests, and the Playground bot-loading check              | DEFAULT / PRs to dev   |
+| `npm run test:extended`      | Reduced             | all reduced feature groups, 334 hand-written cases including smoke (`test/wc-tests/` + `test/wc-tests-smoke/`) | on demand / pre-merge  |
+| `npm run test:full`          | Full Cartesian      | 545 browser cases including reduced                                                                            | PRs to main / releases |
+| `npm run test:screen-reader` | Real screen readers | 9 Guidepup scenarios on the current reader OS                                                                  | CI accessibility jobs  |
 
 Every script first runs `test/test-prep.js`, which builds `dist/` (the WC-level tests
 import the built module) and executes the Node import smoke test.

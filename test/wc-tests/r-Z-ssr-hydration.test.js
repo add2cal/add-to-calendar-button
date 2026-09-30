@@ -160,4 +160,31 @@ describe('Group Z - SSR shell hydration', () => {
       container.remove();
     }
   });
+
+  it('Z-10: hydration reuses SSR style assets without requesting a split style', async () => {
+    const container = mountContainer();
+    const originalFetch = window.fetch;
+    const styleFetches = [];
+    window.fetch = async (url, init) => {
+      if (String(url).includes('/styles/round.css')) {
+        styleFetches.push(String(url));
+        return new Response('Not found', { status: 404 });
+      }
+      return originalFetch.call(window, url, init);
+    };
+    try {
+      container.setHTMLUnsafe(atcb_generate_ssr_html({ name: 'Z10 Event', startDate: '2050-06-15', buttonStyle: 'round', identifier: 'atcb-z10' }));
+      const host = container.querySelector('add-to-calendar-button');
+      const shellButton = host.shadowRoot.querySelector('[data-atcb-ssr] .atcb-button');
+      expect(getComputedStyle(shellButton).borderRadius, 'SSR shell starts with the round style').to.equal('500px');
+      await host.whenInitialized();
+      expect(host.shadowRoot.querySelector('[data-atcb-ssr]'), 'SSR content wrapper is removed').to.equal(null);
+      const realButton = host.shadowRoot.getElementById('atcb-btn-atcb-z10');
+      expect(getComputedStyle(realButton).borderRadius, 'hydrated button keeps the SSR round style').to.equal('500px');
+      expect(styleFetches, 'hydration does not reload the server-rendered split style').to.deep.equal([]);
+    } finally {
+      window.fetch = originalFetch;
+      container.remove();
+    }
+  });
 });
