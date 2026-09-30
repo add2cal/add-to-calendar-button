@@ -1107,8 +1107,14 @@ const html = atcb_generate_ssr_html({
   buttonStyle: '3d',
   language: 'de',
 });
-// drop the returned string into your server-rendered page
-// and load the regular script on the client as usual</pre>
+// drop the returned string into your server-rendered page</pre>
+          </LazyCodeBlock>
+          <p>In your client entry, register every non-default style and language before loading the main module:</p>
+          <LazyCodeBlock>
+            <pre>
+import 'add-to-calendar-button/styles/3d';
+import 'add-to-calendar-button/i18n/de';
+import 'add-to-calendar-button';</pre>
           </LazyCodeBlock>
           <p>For PRO events, use the asynchronous <code>atcb_generate_ssr_html_async</code> function. It fetches and merges the hosted configuration for the <code>proKey</code> before rendering the shell. Without a <code>proKey</code>, it behaves like the synchronous function.</p>
           <LazyCodeBlock>
@@ -1120,7 +1126,7 @@ const html = await atcb_generate_ssr_html_async({
 });</pre>
           </LazyCodeBlock>
           <p>
-            The shell honors the button style, size, light mode, right-to-left languages, and the label (the localized default or your "label" value).<br />
+            The shell honors the button style, size, light mode, right-to-left languages, and the label (the localized default or your "label" value). During the first client upgrade, its matching style nodes stay in place, avoiding an unstyled frame while hydration completes.<br />
             Date-style buttons, inline RSVP, and group overviews render subtle skeletons, since their content requires client-side logic. Everything else happens at hydration.
           </p>
           <p class="italic">Browsers without declarative shadow DOM support simply ignore the shell and initialize client-only - no extra handling needed.</p>
@@ -1128,7 +1134,7 @@ const html = await atcb_generate_ssr_html_async({
         <div v-else>
           <p>
             Der Button kann eine Hülle auf dem Server rendern.<br />
-            Der <code>add-to-calendar-button/ssr</code>-Einstiegspunkt erzeugt einen Platzhalter mit korrektem Style und Größe via Declarative Shadow DOM - er wird gezeichnet, bevor JavaScript läuft, und das Client-Skript übernimmt ihn ohne Layout-Sprung.
+            Der <code>add-to-calendar-button/ssr</code>-Einstiegspunkt erzeugt einen Platzhalter mit korrektem Style und Größe via Declarative Shadow DOM - er wird gerendered, bevor JavaScript läuft, und das Client-Skript übernimmt ihn ohne Layout-Sprung.
           </p>
           <LazyCodeBlock>
             <pre>
@@ -1140,8 +1146,14 @@ const html = atcb_generate_ssr_html({
   buttonStyle: '3d',
   language: 'de',
 });
-// füge den zurückgegebenen String in deine server-gerenderte Seite ein
-// und lade das reguläre Skript im Client wie gewohnt</pre>
+// füge den zurückgegebenen String in deine server-gerenderte Seite ein</pre>
+          </LazyCodeBlock>
+          <p>Registriere in deinem Client-Einstiegspunkt alle nicht-standardmäßigen Styles und Sprachen, bevor du das Hauptmodul lädst:</p>
+          <LazyCodeBlock>
+            <pre>
+import 'add-to-calendar-button/styles/3d';
+import 'add-to-calendar-button/i18n/de';
+import 'add-to-calendar-button';</pre>
           </LazyCodeBlock>
           <p>Für PRO-Events verwendest du die asynchrone Funktion <code>atcb_generate_ssr_html_async</code>. Sie lädt und kombiniert die gehostete Konfiguration für den <code>proKey</code>, bevor sie die Hülle rendert. Ohne <code>proKey</code> verhält sie sich wie die synchrone Funktion.</p>
           <LazyCodeBlock>
@@ -1153,7 +1165,7 @@ const html = await atcb_generate_ssr_html_async({
 });</pre>
           </LazyCodeBlock>
           <p>
-            Die Hülle berücksichtigt Button-Style, Größe, Light-Mode, Rechts-nach-Links-Sprachen und das Label (der lokalisierte Default oder dein "label"-Wert).<br />
+            Die Hülle berücksichtigt Button-Style, Größe, Light-Mode, Rechts-nach-Links-Sprachen und das Label (der lokalisierte Default oder dein "label"-Wert). Beim ersten Client-Upgrade bleiben die passenden Style-Nodes bestehen, sodass während der Hydration kein ungestylter Frame entsteht.<br />
             Date-Style-Buttons, Inline-RSVP und Gruppenübersichten rendern dezente Skeletons, da ihr Inhalt Client-Logik erfordert. Alles Weitere passiert bei der Hydration.
           </p>
           <p class="italic">Browser ohne Declarative-Shadow-DOM-Unterstützung ignorieren die Hülle einfach und initialisieren rein client-seitig - ohne weiteres Zutun.</p>

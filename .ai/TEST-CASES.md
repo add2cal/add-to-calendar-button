@@ -489,6 +489,7 @@ The same Node tier also covers the DOM-free utility entry in `test/ssr-node/util
 - Z-07: static main-first import order hydrates an SSR host with registered style and locale assets and no fallback requests
 - Z-08: static assets-first import order hydrates an SSR host with registered style and locale assets and no fallback requests
 - Z-09: generated style and locale modules register assets without defining the custom element
+- Z-10: hydration reuses server-rendered style assets without requesting the split style again
 
 ## Group E2 - Recurrence fast-forward (test/wc-tests/r-E2-recurrence-fastforward.test.js)
 

@@ -69,7 +69,8 @@ watch(locale, value => {
         <LazyCodeBlock language="javascript">
           <pre>
 import 'add-to-calendar-button/styles/3d';   // any style besides "default"
-import 'add-to-calendar-button/i18n/de';       // any language besides English</pre>
+import 'add-to-calendar-button/i18n/de';       // any language besides English
+import 'add-to-calendar-button';             // load the component last</pre>
         </LazyCodeBlock>
         <p class="pt-5">{{ $t('content.guide.styles_lang_all') }}</p>
         <p class="mt-10">{{ $t('content.guide.styles_lang_more') }}</p>
@@ -95,10 +96,16 @@ import 'add-to-calendar-button/i18n/de';       // any language besides English</
     startTime: '10:15',
     endTime: '23:30',
     timeZone: 'Europe/Berlin',
+    buttonStyle: '3d',
+    language: 'de',
   });
 
   onMount(async () => {
-    await import('add-to-calendar-button'); // client-side upgrade
+    await Promise.all([
+      import('add-to-calendar-button/styles/3d'),
+      import('add-to-calendar-button/i18n/de'),
+    ]);
+    await import('add-to-calendar-button'); // client-side upgrade; load last
   });
 &lt;/script&gt;
 
