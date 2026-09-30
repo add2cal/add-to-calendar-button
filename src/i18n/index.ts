@@ -70,9 +70,21 @@ const calendarNames: { [key: string]: string } = {
  * do exactly that). Regional packs (like en_GB) are looked up first when registered,
  * falling back to their base language, then to English.
  */
-const i18nStrings: I18nStrings = {
-  en: { ...calendarNames, ...flatten_translations(enStrings as NestedTranslations) },
-};
+const atcbLocaleRegistryKey = Symbol.for('add-to-calendar-button.locale-registry');
+const atcbLocaleRegistryHost = globalThis as typeof globalThis & { [key: symbol]: unknown };
+const i18nStrings: I18nStrings = (() => {
+  const registry: I18nStrings = {
+    en: { ...calendarNames, ...flatten_translations(enStrings as NestedTranslations) },
+  };
+  // eslint-disable-next-line security/detect-object-injection -- Symbol key is package-owned and constant
+  const registeredLocaleRegistry = atcbLocaleRegistryHost[atcbLocaleRegistryKey];
+  if (registeredLocaleRegistry && typeof registeredLocaleRegistry === 'object') {
+    Object.assign(registry, registeredLocaleRegistry);
+  }
+  // eslint-disable-next-line security/detect-object-injection -- Symbol key is package-owned and constant
+  atcbLocaleRegistryHost[atcbLocaleRegistryKey] = registry;
+  return registry;
+})();
 
 // build hook: relative path from THIS bundle's location to the locale assets
 const atcbLocaleRelPath: string = 'locales/';
