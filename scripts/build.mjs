@@ -433,8 +433,9 @@ function finalize() {
     const lang = file.replace(/\.json$/, '');
     const json = JSON.stringify(JSON.parse(fs.readFileSync(r('src/i18n/locales', file), 'utf8')));
     fs.writeFileSync(r('dist/locales', file), json);
-    fs.writeFileSync(r('dist/locales', `${lang}.js`), `import { atcb_register_locale } from '../module/index.js';\n\nconst strings = ${json};\natcb_register_locale('${lang}', strings);\n\nexport { strings };\n`);
-    fs.writeFileSync(r('dist/locales', `${lang}.cjs`), `'use strict';\nconst { atcb_register_locale } = require('../commonjs/index.js');\n\nconst strings = ${json};\natcb_register_locale('${lang}', strings);\n\nmodule.exports = { strings };\n`);
+    const localeRegistration = `const calendarNames={apple:'Apple',google:'Google',ms365:'Microsoft 365',msteams:'Microsoft Teams',outlookcom:'Outlook.com',yahoo:'Yahoo'};\nconst flatten=(input,prefix='')=>Object.entries(input).reduce((flat,[key,value])=>Object.assign(flat,typeof value==='string'?{[prefix+key]:value}:flatten(value,prefix+key+'.')),{});\nconst registryKey=Symbol.for('add-to-calendar-button.locale-registry');\nconst registryHost=globalThis;\nconst registry=registryHost[registryKey]||(registryHost[registryKey]={});\nregistry['${lang}']={...calendarNames,...flatten(strings)};\n`;
+    fs.writeFileSync(r('dist/locales', `${lang}.js`), `const strings = ${json};\n${localeRegistration}\nexport { strings };\n`);
+    fs.writeFileSync(r('dist/locales', `${lang}.cjs`), `'use strict';\nconst strings = ${json};\n${localeRegistration}\nmodule.exports = { strings };\n`);
     fs.writeFileSync(r('dist/locales', `${lang}.d.ts`), `declare const strings: {\n\t[key: string]: string | { [key: string]: unknown };\n};\nexport { strings };\n`);
   }
   // aggregate \"all\" locale module: imports every non-english locale so consumers can
@@ -457,8 +458,9 @@ function finalize() {
   for (const style of AVAILABLE_STYLES) {
     const css = JSON.stringify(cssArtifacts.deltas[`${style}`]);
     fs.writeFileSync(r('dist/styles', `${style}.css`), cssArtifacts.deltas[`${style}`]);
-    fs.writeFileSync(r('dist/styles', `${style}.js`), `import { atcb_register_style } from '../module/index.js';\n\nconst css = ${css};\natcb_register_style('${style}', css);\n\nexport { css };\n`);
-    fs.writeFileSync(r('dist/styles', `${style}.cjs`), `'use strict';\nconst { atcb_register_style } = require('../commonjs/index.js');\n\nconst css = ${css};\natcb_register_style('${style}', css);\n\nmodule.exports = { css };\n`);
+    const styleRegistration = `const registryKey=Symbol.for('add-to-calendar-button.style-registry');\nconst registryHost=globalThis;\nconst registry=registryHost[registryKey]||(registryHost[registryKey]={});\nregistry['${style}']=css;\n`;
+    fs.writeFileSync(r('dist/styles', `${style}.js`), `const css = ${css};\n${styleRegistration}\nexport { css };\n`);
+    fs.writeFileSync(r('dist/styles', `${style}.cjs`), `'use strict';\nconst css = ${css};\n${styleRegistration}\nmodule.exports = { css };\n`);
     fs.writeFileSync(r('dist/styles', `${style}.d.ts`), `declare const css: string;\nexport { css };\n`);
   }
   // aggregate \"all\" style module: imports every style delta so consumers can load

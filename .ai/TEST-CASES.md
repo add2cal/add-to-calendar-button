@@ -486,6 +486,9 @@ The same Node tier also covers the DOM-free utility entry in `test/ssr-node/util
 - Z-04: the group overview skeleton stays painted through the pending range fetch and swaps only when the real list is ready
 - Z-05: failed PRO initialization removes the group loading skeleton instead of leaving it painted forever
 - Z-06: Headless Chromium initializes the Playground while genuine crawlers retain the SSR shell
+- Z-07: static main-first import order hydrates an SSR host with registered style and locale assets and no fallback requests
+- Z-08: static assets-first import order hydrates an SSR host with registered style and locale assets and no fallback requests
+- Z-09: generated style and locale modules register assets without defining the custom element
 
 ## Group E2 - Recurrence fast-forward (test/wc-tests/r-E2-recurrence-fastforward.test.js)
 
