@@ -71,20 +71,25 @@ const localeLoaders: Record<string, () => Promise<unknown>> = {
   mk: () => import('add-to-calendar-button/i18n/mk'),
   mt: () => import('add-to-calendar-button/i18n/mt'),
   nl: () => import('add-to-calendar-button/i18n/nl'),
+  nb: () => import('add-to-calendar-button/i18n/nb'),
+  nn: () => import('add-to-calendar-button/i18n/nn'),
   no: () => import('add-to-calendar-button/i18n/no'),
   pl: () => import('add-to-calendar-button/i18n/pl'),
   pt: () => import('add-to-calendar-button/i18n/pt'),
+  pt_BR: () => import('add-to-calendar-button/i18n/pt_BR'),
   ro: () => import('add-to-calendar-button/i18n/ro'),
   ru: () => import('add-to-calendar-button/i18n/ru'),
   sk: () => import('add-to-calendar-button/i18n/sk'),
   sl: () => import('add-to-calendar-button/i18n/sl'),
   sq: () => import('add-to-calendar-button/i18n/sq'),
   sr: () => import('add-to-calendar-button/i18n/sr'),
+  sr_latin: () => import('add-to-calendar-button/i18n/sr_latin'),
   sv: () => import('add-to-calendar-button/i18n/sv'),
   tr: () => import('add-to-calendar-button/i18n/tr'),
   uk: () => import('add-to-calendar-button/i18n/uk'),
   vi: () => import('add-to-calendar-button/i18n/vi'),
   zh: () => import('add-to-calendar-button/i18n/zh'),
+  zh_hant: () => import('add-to-calendar-button/i18n/zh_hant'),
 };
 
 const styleLoaders: Record<string, () => Promise<unknown>> = {
@@ -97,7 +102,12 @@ const styleLoaders: Record<string, () => Promise<unknown>> = {
   text: () => import('add-to-calendar-button/styles/text'),
 };
 
-const normalizeLanguage = (language: unknown) => typeof language === 'string' ? language.split(/[-_]/)[0]?.toLowerCase() || 'en' : 'en';
+const normalizeLanguage = (language: unknown) => {
+  if (typeof language !== 'string') return 'en';
+  const normalized = language.replace('-', '_');
+  const shippedLocale = Object.keys(localeLoaders).find((locale) => locale.toLowerCase() === normalized.toLowerCase());
+  return shippedLocale || normalized.split('_')[0]?.toLowerCase() || 'en';
+};
 
 // Locales load on demand: the playground (loadAll) imports the aggregate
 // "i18n/all" module so every language is registered up front and runtime

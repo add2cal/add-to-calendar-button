@@ -111,4 +111,23 @@ describe('Group X - locale loading', () => {
       window.fetch = originalFetch;
     }
   });
+
+  it('X-07: shipped regional, script, and Norwegian locale packs load on demand', async () => {
+    const locales = ['pt_BR', 'zh_hant', 'sr_latin', 'nb', 'nn'];
+    const fetchCalls = [];
+    const originalFetch = window.fetch;
+    window.fetch = async (url, init) => {
+      fetchCalls.push(String(url));
+      return originalFetch.call(window, url, init);
+    };
+    try {
+      for (const [index, language] of locales.entries()) {
+        const { host } = await mountAtcb(baseEvent({ language, identifier: `atcb-x07-${index}` }));
+        expect(triggerAria(host), `${language} label rendered`).to.include(translate_hook('label.addtocalendar', { language }));
+        expect(fetchCalls.filter((url) => url.includes(`/locales/${language}.json`)).length, `${language} pack fetched once`).to.equal(1);
+      }
+    } finally {
+      window.fetch = originalFetch;
+    }
+  });
 });

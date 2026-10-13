@@ -2,6 +2,7 @@
 
 ## Version 3
 
+- v3.4 : Brazilian Portuguese, Traditional Chinese, Serbian Latin, Norwegian Bokmål, and Norwegian Nynorsk translations
 - v3.3 : Optimized rendering flows (incl. SSR hydration)
 - v3.2 : Option to load all styles and/or languages with 1 call at the npm usage path
 - v3.1 : Stronger accessibility testing

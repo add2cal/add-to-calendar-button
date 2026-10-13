@@ -71,8 +71,16 @@ function decorate_data_defaults(data: ATCBConfig): ATCBConfig {
   // set language if not set; full locales (en_US / en-GB) are validated via their base
   if (!data.language || data.language === '') {
     data.language = 'en';
-  } else if (!availableLanguages.includes(String(data.language).length > 2 ? String(data.language).substring(0, 2) : String(data.language))) {
-    data.language = 'en';
+  } else {
+    const rawLanguage = String(data.language);
+    const normalizedLanguage = rawLanguage.replace('-', '_');
+    const shippedLocale = availableLanguages.find((locale) => locale.toLowerCase() === normalizedLanguage.toLowerCase());
+    const baseLanguage = rawLanguage.split(/[-_]/)[0]!.toLowerCase();
+    if (shippedLocale) {
+      data.language = shippedLocale;
+    } else if (!availableLanguages.includes(baseLanguage)) {
+      data.language = 'en';
+    }
   }
   return data;
 }
@@ -124,16 +132,20 @@ function decorate_light_mode(lightMode: string = ''): string {
 
 function decorate_data_i18n(data: ATCBConfig): ATCBConfig {
   const raw = String(data.language || 'en');
+  const localeParts = raw.split(/[-_]/);
+  const baseLanguage = localeParts[0]!.toLowerCase();
+  const variant = localeParts.slice(1).join('_');
   let region = '';
-  // reduce language identifier, if long version is used - keeping the region part
-  // for date formatting and for regional translation packs (like en_GB)
-  if (raw.length > 2) {
-    const match = raw.match(/^([a-z]{2})[-_]([a-z]{2})$/i);
-    if (match) {
-      region = match[2]!.toUpperCase();
-    }
-    data.language = raw.substring(0, 2);
+  let formatVariant = '';
+  if (/^[a-z]{2}$/i.test(variant)) {
+    region = variant.toUpperCase();
+    formatVariant = region;
+  } else if (/^[a-z]{4}$/i.test(variant)) {
+    formatVariant = variant.charAt(0).toUpperCase() + variant.substring(1).toLowerCase();
+  } else if (variant.toLowerCase() === 'latin') {
+    formatVariant = 'Latn';
   }
+  data.language = baseLanguage;
   // the formatting locale drives Intl date/time output: an explicit region on the
   // language attribute wins; otherwise the browser region refines the base language
   const browserRegion = (function () {
@@ -142,10 +154,13 @@ function decorate_data_i18n(data: ATCBConfig): ATCBConfig {
     const last = parts[parts.length - 1] || '';
     return parts.length > 1 && /^[a-z]{2}$/i.test(last) ? last.toUpperCase() : '';
   })();
-  const effectiveRegion = region || browserRegion;
-  data.formatLocale = effectiveRegion ? data.language + '-' + effectiveRegion : data.language;
-  // regional translation packs are looked up first when registered (en_GB before en)
-  data.translationLocale = region ? data.language + '_' + region : data.language;
+  const effectiveVariant = formatVariant || browserRegion;
+  data.formatLocale = effectiveVariant ? data.language + '-' + effectiveVariant : data.language;
+  // Shipped variants keep their canonical pack key; arbitrary regional locales retain
+  // the established uppercase-region lookup (en_GB before en).
+  const normalizedRaw = raw.replace('-', '_');
+  const shippedLocale = availableLanguages.find((locale) => locale.toLowerCase() === normalizedRaw.toLowerCase());
+  data.translationLocale = shippedLocale || (region ? data.language + '_' + region : variant ? data.language + '_' + variant.toLowerCase() : data.language);
   // set right-to-left for relevant languages
   if (rtlLanguages.includes(data.language!)) {
     data.rtl = true;

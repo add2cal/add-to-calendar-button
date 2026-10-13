@@ -1,0 +1,87 @@
+{
+  "label": {
+    "addtocalendar": "Adicionar ao calendário",
+    "share": {
+      "email": "Compartilhar por e-mail",
+      "copy": "Copiar link",
+      "copied": "Copiado",
+      "email_subject": "Salvar este evento"
+    },
+    "rsvp": {
+      "title": "RSVP",
+      "expired": "Expirado",
+      "bookedout": "Esgotado",
+      "restart": "Nova resposta RSVP"
+    }
+  },
+  "ical": "Arquivo iCal",
+  "modal": {
+    "button": {
+      "default": "Clique aqui"
+    },
+    "webview": {
+      "ical": {
+        "h": "Abra seu navegador",
+        "text": "Infelizmente, os navegadores integrados a aplicativos têm problemas com a forma como geramos o arquivo de calendário.",
+        "steps": "<ol><li><strong>Abra outro navegador</strong> no seu celular, ...</li><li><strong>Cole</strong> o conteúdo da área de transferência e acesse.</li></ol>"
+      }
+    },
+    "clipboard": {
+      "text": "Copiamos automaticamente uma URL especial para sua área de transferência.",
+      "failed": "Não foi possível copiar para sua área de transferência. Copie o link a seguir manualmente:"
+    },
+    "opensafari": {
+      "ical": {
+        "h": "Abra o Safari",
+        "text": "Infelizmente, o iOS tem alguns problemas para gerar e abrir o arquivo de calendário fora do Safari.",
+        "steps": "<ol><li><strong>Abra o Safari</strong>, ...</li><li><strong>Cole</strong> o conteúdo da área de transferência e acesse.</li></ol>"
+      }
+    },
+    "multidate": {
+      "h": "Esta é uma série de eventos",
+      "text": "Adicione os eventos individualmente:"
+    }
+  },
+  "date": {
+    "status": {
+      "cancelled": "Esta data foi cancelada.",
+      "cancelled_cta": "Atualize seu calendário!"
+    }
+  },
+  "group_overview": {
+    "empty": "Nenhum evento este ano."
+  },
+  "close": "Fechar",
+  "continue": "Continuar",
+  "cancel": "Cancelar",
+  "expired": "Expirado",
+  "recurring": "Recorrente",
+  "thankyou": "Obrigado",
+  "submit": "Enviar",
+  "form": {
+    "error": {
+      "required": "Você não preencheu corretamente todos os campos obrigatórios",
+      "sending": "Houve um problema ao enviar sua resposta. Tente novamente mais tarde",
+      "email": "Seu endereço de e-mail não é válido",
+      "bookedoutmany": "Esgotado — tente com menos participantes"
+    },
+    "success": {
+      "title": "Enviado com sucesso!",
+      "sent": "Sua resposta foi enviada. Obrigado!",
+      "email": "Você deve ter recebido um e-mail de confirmação.",
+      "doi": "Para validar sua resposta, abra o link de confirmação no e-mail que acabamos de enviar (nos próximos 30 minutos).",
+      "demo": "Obrigado. A demonstração de RSVP termina aqui.",
+      "already": "Você já respondeu."
+    },
+    "status": {
+      "title": "Você vai participar?",
+      "confirmed": "Sim",
+      "undecided": "Talvez",
+      "declined": "Não"
+    },
+    "amount": "Número de participantes",
+    "max": "máx.",
+    "email": "Endereço de e-mail",
+    "seatsleft": "Vagas disponíveis"
+  }
+}

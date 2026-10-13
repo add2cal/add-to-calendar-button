@@ -1081,14 +1081,13 @@ watch(searchSelection, (newVal) => {
             <tr id="language">
               <th scope="row">language</th>
               <td>
-                <em>String</em><br /><br /><span class="label block">{{ $t('content.config.options') }}:</span>ar, az, be, bg, bs, cs, da, de, el, en, es, et, fa, fi, fr, he, hi, hr, hu, hy, id, it, ja, ka, ko, lt, lv, mk, mt, nl, no, pl, pt, ro, ru, sk, sl, sq, sr, sv, tr, uk, vi, zh<br /><br /><span
-                  class="label"
-                  >{{ $t('content.config.default') }}:</span
-                >en
+                <em>String</em><br /><br /><span class="label block">{{ $t('content.config.options') }}:</span>ar, az, be, bg, bs, cs, da, de, el, en, es, et, fa, fi, fr, he, hi, hr, hu, hy, id, it, ja, ka, ko, lt, lv, mk, mt, nb, nl, nn, no, pl, pt, pt_BR, ro, ru, sk, sl, sq, sr, sr_latin, sv, tr,
+                uk, vi, zh, zh_hant<br /><br /><span class="label">{{ $t('content.config.default') }}:</span>en
               </td>
               <td v-if="locale=='en'">
                 If you want to have the text blocks in another language than English, you can use the included translations (i18n).<br /><br />
-                Simply set one of the supported languages as <a href="https://www.w3schools.com/tags/ref_language_codes.asp" target="_blank" rel="noopener" class="whitespace-nowrap">ISO 639-1 code <ArrowTopRightOnSquareIcon class="-mt-0.5 mr-0.5 inline-block h-3 w-3" aria-hidden="true" /></a>.<br />
+                Simply set one of the supported language or locale codes. Base languages use an
+                <a href="https://www.w3schools.com/tags/ref_language_codes.asp" target="_blank" rel="noopener" class="whitespace-nowrap">ISO 639-1 code <ArrowTopRightOnSquareIcon class="-mt-0.5 mr-0.5 inline-block h-3 w-3" aria-hidden="true" /></a>.<br />
                 Also supports Right-to-Left (RTL) with Arabic, Persian &amp; Hebrew.<br /><br />
                 English is part of the script and every other language loads automatically on demand (~3 KB) - or fetch-free via <code>import 'add-to-calendar-button/i18n/de'</code> and the like when bundling. To register all languages at once, use
                 <code>import 'add-to-calendar-button/i18n/all'</code>.<br />
@@ -1096,8 +1095,8 @@ watch(searchSelection, (newVal) => {
               </td>
               <td v-else>
                 Sofern du die Text-Blöcke in einer anderen Sprache als Englisch anzeigen möchtest, kannst du die inkludierten Übersetzungen nutzen (i18n).<br /><br />
-                Spezifiere einfach eine der unterstützten Sprachen als
-                <a href="https://www.w3schools.com/tags/ref_language_codes.asp" target="_blank" rel="noopener" class="whitespace-nowrap">ISO 639-1 code <ArrowTopRightOnSquareIcon class="-mt-0.5 mr-0.5 inline-block h-3 w-3" aria-hidden="true" /></a>.<br />
+                Spezifiere einfach einen der unterstützten Sprach- oder Locale-Codes. Basissprachen verwenden einen
+                <a href="https://www.w3schools.com/tags/ref_language_codes.asp" target="_blank" rel="noopener" class="whitespace-nowrap">ISO-639-1-Code <ArrowTopRightOnSquareIcon class="-mt-0.5 mr-0.5 inline-block h-3 w-3" aria-hidden="true" /></a>.<br />
                 Für Arabisch, Persisch und Hebräisch wird zudem Rechts-nach-Links (RTL) für alle Elemente unterstützt und automatisch angewendet.<br /><br />
                 Englisch ist Teil des Skripts und jede weitere Sprache lädt automatisch bei Bedarf (~3 KB) - oder ohne Netzwerk-Anfrage via <code>import 'add-to-calendar-button/i18n/de'</code> und Co. beim Bundling. Um alle Sprachen auf einmal zu registrieren, nutze
                 <code>import 'add-to-calendar-button/i18n/all'</code>.<br />

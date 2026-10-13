@@ -323,8 +323,8 @@ const wpUrl = (function () {
         leave-to-class="transform scale-95 opacity-0"
       >
         <DisclosurePanel class="px-4 pb-6 pt-4 text-left" :unmount="false" itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
-          <div v-if="locale=='en'" itemprop="text">Yes. The Add to Calendar Button comes with over 40 languages, including RTL settings for Arabic or Persian. In case your language is not already included, you can also customize every single text block.</div>
-          <div v-else itemprop="text">Ja. Der Add to Calendar Button beinhaltet über 40 Sprachen, inkl. RTL-Ausrichtung für Arabisch oder Persisch. Sofern deine Sprache nicht bereits enthalten ist, kannst du jeden Text-Block entsprechend anpassen.</div>
+          <div v-if="locale=='en'" itemprop="text">Yes. The Add to Calendar Button comes with 49+ languages and locale variants, including RTL settings for Arabic or Persian. In case your language is not already included, you can also customize every single text block.</div>
+          <div v-else itemprop="text">Ja. Der Add to Calendar Button beinhaltet 49+ Sprachen und Locale-Varianten, inkl. RTL-Ausrichtung für Arabisch oder Persisch. Sofern deine Sprache nicht bereits enthalten ist, kannst du jeden Text-Block entsprechend anpassen.</div>
         </DisclosurePanel>
       </transition>
     </div>

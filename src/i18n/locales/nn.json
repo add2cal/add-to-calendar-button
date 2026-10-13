@@ -1,0 +1,87 @@
+{
+  "label": {
+    "addtocalendar": "Legg til i kalenderen",
+    "share": {
+      "email": "Del via e-post",
+      "copy": "Kopier lenkje",
+      "copied": "Kopiert",
+      "email_subject": "Lagre dette arrangementet"
+    },
+    "rsvp": {
+      "title": "RSVP",
+      "expired": "Utgått",
+      "bookedout": "Fullbooka",
+      "restart": "Nytt RSVP-svar"
+    }
+  },
+  "ical": "iCal-fil",
+  "modal": {
+    "button": {
+      "default": "Klikk på meg"
+    },
+    "webview": {
+      "ical": {
+        "h": "Opne nettlesaren din",
+        "text": "Nettlesarar i appar har diverre problem med måten vi lagar kalenderfila på.",
+        "steps": "<ol><li><strong>Opne ein annan nettlesar</strong> på telefonen, ...</li><li><strong>Lim inn</strong> innhaldet frå utklippstavla og hald fram.</li></ol>"
+      }
+    },
+    "clipboard": {
+      "text": "Vi har automatisk kopiert ei spesiell nettadresse til utklippstavla di.",
+      "failed": "Kopiering til utklippstavla mislukkast. Kopier denne lenkja manuelt:"
+    },
+    "opensafari": {
+      "ical": {
+        "h": "Opne Safari",
+        "text": "iOS har diverre problem med å lage og opne kalenderfila utanfor Safari.",
+        "steps": "<ol><li><strong>Opne Safari</strong>, ...</li><li><strong>Lim inn</strong> innhaldet frå utklippstavla og hald fram.</li></ol>"
+      }
+    },
+    "multidate": {
+      "h": "Dette er ein arrangementsserie",
+      "text": "Legg til arrangementa eitt om gongen:"
+    }
+  },
+  "date": {
+    "status": {
+      "cancelled": "Denne datoen vart avlyst.",
+      "cancelled_cta": "Oppdater kalenderen din!"
+    }
+  },
+  "group_overview": {
+    "empty": "Ingen arrangement i år."
+  },
+  "close": "Lukk",
+  "continue": "Hald fram",
+  "cancel": "Avbryt",
+  "expired": "Utgått",
+  "recurring": "Gjentakande",
+  "thankyou": "Takk",
+  "submit": "Send inn",
+  "form": {
+    "error": {
+      "required": "Du har ikkje fylt ut alle obligatoriske felt rett",
+      "sending": "Det oppstod eit problem med å sende svaret ditt. Prøv igjen seinare",
+      "email": "E-postadressa di er ikkje gyldig",
+      "bookedoutmany": "Fullbooka – prøv med færre deltakarar"
+    },
+    "success": {
+      "title": "Sendt!",
+      "sent": "Svaret ditt er sendt. Takk!",
+      "email": "Du skal ha fått ei stadfesting på e-post.",
+      "doi": "For at svaret skal vere gyldig, må du opne stadfestingslenkja i e-posten vi nettopp sende deg (innan 30 minutt).",
+      "demo": "Takk. RSVP-demoen sluttar her.",
+      "already": "Du har allereie svart."
+    },
+    "status": {
+      "title": "Kjem du?",
+      "confirmed": "Ja",
+      "undecided": "Kanskje",
+      "declined": "Nei"
+    },
+    "amount": "Talet på deltakarar",
+    "max": "maks.",
+    "email": "E-postadresse",
+    "seatsleft": "Ledige plassar"
+  }
+}

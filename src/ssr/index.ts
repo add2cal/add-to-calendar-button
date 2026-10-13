@@ -260,15 +260,16 @@ function generate_ssr_html_with_context(rawConfig: AddToCalendarButtonType & { [
   const buttonStyle = typeof config.buttonStyle === 'string' && KNOWN_STYLES.includes(config.buttonStyle) ? config.buttonStyle : 'default';
   const language = typeof config.language === 'string' && config.language ? config.language : 'en';
   const baseLanguage = language.split(/[-_]/)[0]!.toLowerCase();
+  const localeKey = Object.keys(atcbSsrLabels).find((locale) => locale.toLowerCase() === language.replace('-', '_').toLowerCase());
   const rtl = rtlLanguages.includes(baseLanguage);
   const sizes = decorate_sizes(typeof config.size === 'string' || typeof config.size === 'number' ? String(config.size) : undefined);
   const lightMode = config.lightMode === 'dark' ? 'dark' : config.lightMode === 'bodyScheme' ? 'bodyScheme' : 'light';
   const customLabel = customAddToCalendarLabel(config.customLabels);
   const explicitLabel = typeof config.label === 'string' && config.label !== '';
-  const label = explicitLabel ? config.label! : customLabel || atcbSsrLabels[`${baseLanguage}`] || atcbSsrLabels['en'] || 'Add to Calendar';
+  const label = explicitLabel ? config.label! : customLabel || (localeKey ? atcbSsrLabels[`${localeKey}`] : undefined) || atcbSsrLabels[`${baseLanguage}`] || atcbSsrLabels['en'] || 'Add to Calendar';
   const labelHtml = !explicitLabel && customLabel !== null ? safe_html(label) : escape_html_text(label);
   const labelAria = !explicitLabel && customLabel !== null ? labelHtml : label;
-  const rsvpLabels = atcbSsrRsvpLabels[`${baseLanguage}`] || atcbSsrRsvpLabels['en'] || { title: 'RSVP', expired: 'Expired', bookedout: 'Booked out' };
+  const rsvpLabels = (localeKey ? atcbSsrRsvpLabels[`${localeKey}`] : undefined) || atcbSsrRsvpLabels[`${baseLanguage}`] || atcbSsrRsvpLabels['en'] || { title: 'RSVP', expired: 'Expired', bookedout: 'Booked out' };
   const inline = truthyFlag(config.inline);
   const hasRsvp = Boolean(config.rsvp) && typeof config.rsvp === 'object';
   const inlineRsvp = hasRsvp && truthyFlag(config.inlineRsvp);
