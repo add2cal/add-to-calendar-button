@@ -1,0 +1,19 @@
+---
+import { Icon } from 'astro-icon/components';
+import type { DocsLocale } from '../docs-data';
+import { guideCopy } from './copy';
+import { useTranslations } from '@utils/i18n';
+interface Props { locale: DocsLocale; href: string }
+const { locale, href } = Astro.props;
+const c = guideCopy[locale];
+const t = useTranslations(locale);
+---
+
+<h2>{t('docs.integration.ssr-heading')}</h2>
+<p>
+  {c.ssrNote}{' '}
+  <a {href}>
+    {c.advancedSsr} <Icon name="heroicons:arrow-right" class="inline-block size-3" aria-hidden="true" />
+  </a>
+</p>
+<p>{c.ssrExample}</p>

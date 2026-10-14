@@ -43,40 +43,20 @@ function getProp(obj: unknown, key: string | number): unknown {
 }
 
 // Dynamically assign to the translations object
-const translations = Object.fromEntries(themeConfig.i18n.locales.map((lang) => [lang, getProp(themeConfig.i18n.languageModules, lang)])) as {
-  [key: string]: {
-    [key: string]: string | { [key: string]: string | { [key: string]: string } };
-  };
-};
+const translations = Object.fromEntries(themeConfig.i18n.locales.map((lang) => [lang, getProp(themeConfig.i18n.languageModules, lang)])) as Record<string, unknown>;
+
+function getTranslation(source: unknown, keyParts: string[]): string | undefined {
+  let value = source;
+  for (const part of keyParts) value = getProp(value, part.toLowerCase().replace(/\s/g, '-'));
+  return typeof value === 'string' ? value : undefined;
+}
 
 // function to be able to use t() in astro components
 export function useTranslations(lang?: keyof typeof translations) {
   if (!lang || lang === '') lang = defaultLocale;
-  return function t(key: keyof (typeof translations)[typeof defaultLocale]): string {
-    const keyParts = key.toString().split('.');
-    if (keyParts.length > 1) {
-      const cleanedSecond = keyParts[1].toLowerCase().replace(/\s/g, '-');
-      const cleanedThird = keyParts.length > 2 ? keyParts[2].toLowerCase().replace(/\s/g, '-') : '';
-      for (const source of [lang, defaultLocale]) {
-        const firstLevel = getProp(getProp(translations, source), keyParts[0]);
-        if (firstLevel && typeof firstLevel === 'object') {
-          if (cleanedThird) {
-            const secondLevel = getProp(firstLevel, cleanedSecond);
-            if (secondLevel && typeof secondLevel === 'object') {
-              const thirdLevel = getProp(secondLevel, cleanedThird);
-              if (thirdLevel != null) return String(thirdLevel);
-            }
-          } else {
-            const value = getProp(firstLevel, cleanedSecond);
-            if (typeof value === 'string') return value;
-          }
-        }
-      }
-      return keyParts[keyParts.length - 1].toString();
-    }
-    const cleanedKey = keyParts[0].toLowerCase().replace(/\s/g, '-');
-    const value = (getProp(getProp(translations, lang), cleanedKey) ?? getProp(getProp(translations, defaultLocale), cleanedKey)) as string | undefined;
-    return (value ?? keyParts[0]).toString();
+  return function t(key: string): string {
+    const keyParts = key.split('.');
+    return getTranslation(getProp(translations, lang), keyParts) ?? getTranslation(getProp(translations, defaultLocale), keyParts) ?? keyParts.at(-1) ?? key;
   };
 }
 
@@ -113,8 +93,13 @@ export async function getLocaleUrlWithContent(entryId: string, collection: Colle
 }
 
 // get path with locale
-export function getLocaleUrl(slug: string, targetLang?: keyof typeof translations, absolute?: boolean) {
+export function getLocaleUrl(slug: string, targetLang?: keyof typeof translations, absolute?: boolean): string {
   if (!targetLang) targetLang = defaultLocale;
+  const hashIndex = slug.indexOf('#');
+  if (hashIndex >= 0) {
+    const path = slug.slice(0, hashIndex) || '/';
+    return `${getLocaleUrl(path, targetLang, absolute)}${slug.slice(hashIndex)}`;
+  }
   if (slug === '/' && targetLang === defaultLocale) return absolute ? themeConfig.site + '/' : '/';
   const path = absolute ? getAbsoluteLocaleUrl(targetLang.toString(), slug) : getRelativeLocaleUrl(targetLang.toString(), slug);
   return path.replace(/\/$/, '');

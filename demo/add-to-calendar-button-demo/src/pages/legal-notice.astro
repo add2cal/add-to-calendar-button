@@ -1,7 +1,6 @@
 ---
 import Layout from "@layouts/default.astro";
 import "@styles/long-text-content.css";
-import Headline from "@components/headline.astro";
 import { useTranslations } from "@utils/i18n";
 import { themeConfig } from '~/theme.config';
 
@@ -10,12 +9,12 @@ const t = useTranslations(locale);
 ---
 
 <Layout title={t('pages.legal-notice.title')} robots="noindex, follow" header={{ showTopBanner: false }} showFooterBanner={false}>
-  <Headline text={t('pages.legal-notice.title')} class="pb-10" />
+  <h1 class="decoration-primary dark:decoration-primary-light pb-10 text-balance underline decoration-4 underline-offset-8">{t('pages.legal-notice.title')}</h1>
 
   <div class="long-text-content">
     <p class="text-stone-500 italic dark:text-stone-300">{t('pages.legal-notice.intro')}:</p>
     <p>
-      <strong>Peltmonger Ventures GmbH</strong>
+      <strong>Calendarverse GmbH</strong>
       <br />
       Beta-Str. 10a
       <br />
@@ -23,14 +22,14 @@ const t = useTranslations(locale);
       <br />
       Germany
     </p>
-    <p class="select-none">&#109;&#097;&#105;&#108;&#064;&#112;&#101;&#108;&#116;&#109;&#111;&#110;&#103;&#101;&#114;&#046;&#099;&#111;&#109;</p>
+    <p class="select-none">&#109;&#097;&#105;&#108;&#064;&#097;&#100;&#100;&#045;&#116;&#111;&#045;&#099;&#097;&#108;&#101;&#110;&#100;&#097;&#114;&#045;&#112;&#114;&#111;&#046;&#099;&#111;&#109;</p>
     <p>
       Registered Office: Unterf&ouml;hring
       <br />
-      Commercial Register: HRB 311075, Amtsgericht M&uuml;nchen
+      Commercial Register: HRB 312016, Amtsgericht M&uuml;nchen
       <br />
       Managing Director: Jens K&uuml;rschner
     </p>
-    <p>VAT ID: DE461635516</p>
+    <p>VAT ID: DE462121269</p>
   </div>
 </Layout>

@@ -1,6 +1,5 @@
 ---
 import Layout from '@layouts/default.astro';
-import Headline from '@components/headline.astro';
 import { useTranslations } from '@utils/i18n';
 
 interface Props {
@@ -13,7 +12,7 @@ const t = useTranslations(locale);
 ---
 
 <Layout title={t('pages.404.title')} isError {locale} header={{ closeIcon: true, showTopBanner: false }} showFooterBanner={false}>
-  <Headline text={t('pages.404.title')} class="mt-20" />
+  <h1 class="decoration-primary dark:decoration-primary-light mt-20 text-balance underline decoration-4 underline-offset-8">{t('pages.404.title')}</h1>
 
   <div class="container mb-20 min-h-48 pt-8 font-semibold whitespace-pre-wrap" data-localized-404-paths={localized404Paths ? JSON.stringify(localized404Paths) : undefined}>
     {t('pages.404.message')}

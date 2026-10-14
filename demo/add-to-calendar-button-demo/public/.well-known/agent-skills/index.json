@@ -1,0 +1,10 @@
+{
+  "skills": [
+    {
+      "name": "add-to-calendar-button",
+      "type": "skill-md",
+      "url": "/.well-known/agent-skills/add-to-calendar-button/SKILL.md",
+      "digest": "sha256:4c7437c9ac1b00cfb894fb6c9b6348cfd1f4370f80c2c7387aa22657809add5d"
+    }
+  ]
+}

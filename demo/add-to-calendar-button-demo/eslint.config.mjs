@@ -9,7 +9,7 @@ import astroPlugin from 'eslint-plugin-astro';
 export default [
   // general ignores
   {
-    ignores: ['**/*.d.ts', '**/*.min.*', 'dist/', 'demo/', 'scripts/', 'node_modules/', '.github/', '.ai/', '.astro/'],
+    ignores: ['**/*.d.ts', '**/*.min.*', 'dist/', 'scripts/', 'node_modules/', '.github/', '.ai/', '.astro/'],
   },
   // general rules
   js.configs.recommended,

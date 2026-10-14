@@ -16,7 +16,7 @@ import WebsiteStructuredData from "@components/structured/website.astro";
 import WebPageStructuredData from "@components/structured/webpage.astro";
 import LanguageSelect from "@components/layout/language-select.astro";
 import WebMCPTools from "@components/webmcp-tools.astro";
-import { useTranslations, getLocaleUrl } from "@utils/i18n";
+import { useTranslations } from "@utils/i18n";
 import { themeConfig } from '~/theme.config';
 import type { CollectionKey } from "astro:content";
 
@@ -48,7 +48,7 @@ interface Props {
   locale?: string;
   noi18n?: boolean;
   isHome?: boolean;
-  noTitleSlug?: boolean; // if true, the title slug (e.g. " | Stardrive") will not be added to the title
+  noTitleSlug?: boolean; // if true, the product title slug will not be added to the title
   schemaType?: 'WebPage' | 'FAQPage';
   collection?: CollectionKey; // we need this (for things like events or integration_options) to identify whether pages are translated or not
   contentId?: string; // we need this (for things like events or integration_options) to identify whether pages are translated or not
@@ -65,7 +65,7 @@ const { isError, noi18n, noTitleSlug, robots, isHome, schemaType, header, showFo
 const ogTitle = themeConfig.ogTitle ?? t('meta.og-site-name');
 const metaTitle = noTitleSlug ? title : title + ' | ' + t('meta.slug');
 
-const structuredDataImage = '["https://add-to-calendar-button.com/assets/img/website1x1.png","https://add-to-calendar-button.com/assets/img/website4x3.png","https://add-to-calendar-button.com/assets/img/website16x9.png"]'; // inside the public dir; 16:9, min 1920x1080px recommended
+const structuredDataImage = '["https://add-to-calendar-button.com/images/website1x1.png","https://add-to-calendar-button.com/images/website4x3.png","https://add-to-calendar-button.com/images/website16x9.png"]';
 const type = schemaType || 'WebPage';
 const i18nStructured = themeConfig.i18n.translatedStructuredData ? themeConfig.i18n.translatedStructuredData[locale.toString()] : null;
 const author = {
@@ -100,7 +100,19 @@ const showTopBanner = (themeConfig.promotions?.topBanner && header?.showTopBanne
     {showTopBanner ? <TopBanner {locale} /> : null}
     <div class="relative w-full">
       {header?.hidden !== true && (
-        <Header {locale} button={header?.button ?? undefined} github="https://github.com/peltmonger/stardrive" ctaButton={{ text: t('labels.signup'), href: getLocaleUrl('signup', locale) }} {isHome} fixed={header?.fixed} overlay={header?.overlay} overlayTheme="dark" scrollDownThreshold={header?.scrollDownThreshold} closeIcon={header?.closeIcon} hasTopBanner={showTopBanner} />
+        <Header
+          {locale}
+          button={header?.button ?? undefined}
+          github="https://github.com/add2cal/add-to-calendar-button"
+          ctaButton={{ text: t('labels.go-pro'), href: `https://add-to-calendar-pro.com${locale !== 'en' ? `/${locale}` : ''}` }}
+          {isHome}
+          fixed={header?.fixed}
+          overlay={header?.overlay}
+          overlayTheme="dark"
+          scrollDownThreshold={header?.scrollDownThreshold}
+          closeIcon={header?.closeIcon}
+          hasTopBanner={showTopBanner}
+        />
       )}
       <main role="main" class="relative z-40">
         {isHome && <Hero {locale} />}

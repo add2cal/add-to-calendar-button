@@ -1,7 +1,7 @@
 ---
-import { Icon } from "astro-icon/components";
-import { Image } from "astro:assets";
-import { useTranslations, getLocaleUrl } from "@utils/i18n";
+import { Image } from 'astro:assets';
+import { useTranslations } from '@utils/i18n';
+import bomb from '@images/bomb.webp';
 
 interface Props {
   locale: string;
@@ -11,101 +11,21 @@ const { locale } = Astro.props as Props;
 const t = useTranslations(locale);
 ---
 
-<div id="footer-banner" class="warp xs:px-10 relative w-full overflow-hidden bg-stone-950 px-6 py-20 sm:px-20">
-  <div class="warp-bulbs" aria-hidden="true"></div>
-  <div class="warp-stars warp-stars--still" aria-hidden="true"></div>
-  <div class="warp-stars warp-stars--drift" aria-hidden="true"></div>
-  <div class="warp-vignette" aria-hidden="true"></div>
-
-  <div class="relative z-10 flex items-center justify-center gap-20 text-center xl:gap-32">
-    <div class="-mt-10 hidden max-w-xs lg:block xl:max-w-sm">
+<aside id="footer-banner" aria-labelledby="pro-heading" class="relative z-50 w-full bg-linear-to-tr from-brand-blue-dark to-brand-blue text-white shadow-2xl">
+  <div class="container grid grid-cols-1 sm:grid-cols-2">
+    <div class="relative z-10 mx-auto -mt-8 w-32 sm:mx-0 sm:-mt-10 sm:w-48 md:w-64 lg:mx-auto lg:-mt-14 lg:w-80">
+      <Image src={bomb} alt={t('global-promo.footer-image-alt')} widths={[128, 192, 256, 320]} sizes="(min-width: 976px) 320px, (min-width: 768px) 256px, (min-width: 576px) 192px, 128px" class="drop-shadow-xl" />
     </div>
-    <div class="card-glow-light xs:px-10 flex flex-col items-center justify-center gap-4 rounded-3xl border-4 border-white/20 bg-white/3 px-5 py-8 backdrop-blur lg:px-16 lg:py-14">
-      <h2 class="text-4xl font-bold text-white drop-shadow-lg">{t('global-promo.footer-heading')}</h2>
-      <p class="max-w-xl text-lg text-stone-400">{t('global-promo.footer-text')}</p>
-      <a href={getLocaleUrl('signup', locale)} role="button" class="btn-primary group mt-6">
+    <div class="flex flex-col items-center gap-8 pt-10 pb-14 text-center md:pt-16 md:pb-24 lg:pt-20 lg:pb-24">
+      <div>
+        <h2 id="pro-heading" class="text-3xl text-white drop-shadow-lg md:text-4xl lg:text-5xl">
+          {t('global-promo.footer-heading')}
+        </h2>
+        <p class="mt-3 opacity-80 lg:mt-6">{t('global-promo.footer-text')}</p>
+      </div>
+      <a target="_blank" rel="author noopener" href={`https://add-to-calendar-pro.com${locale !== 'en' ? `/${locale}` : ''}`} class="btn-primary">
         {t('global-promo.footer-cta')}
-        <Icon name="heroicons:arrow-right" class="mr-1 ml-0 h-4 w-4 transition-all duration-200 group-hover:mr-0 group-hover:ml-1" aria-hidden="true" />
       </a>
     </div>
   </div>
-</div>
-
-<style>
-  .warp-stars,
-  .warp-bulbs,
-  .warp-vignette {
-    position: absolute;
-    inset: 0;
-    pointer-events: none;
-  }
-
-  /* Faint, distant nebulae - barely-there color washes */
-  .warp-bulbs {
-    background-image: radial-gradient(ellipse at 18% 35%, rgba(120, 90, 200, 0.18), transparent 55%), radial-gradient(ellipse at 78% 70%, rgba(80, 140, 200, 0.14), transparent 60%), radial-gradient(ellipse at 55% 15%, rgba(200, 120, 90, 0.1), transparent 65%);
-    filter: blur(40px);
-    opacity: 0.9;
-    animation: warp-bulbs-pulse 18s ease-in-out infinite alternate;
-  }
-
-  @keyframes warp-bulbs-pulse {
-    0% {
-      opacity: 0.6;
-    }
-    100% {
-      opacity: 1;
-    }
-  }
-
-  /* Tiny static-feeling stars */
-  .warp-stars--still {
-    background-image:
-      radial-gradient(1.2px 1.2px at 6% 14%, rgba(255, 255, 255, 0.95), transparent 60%), radial-gradient(1px 1px at 12% 42%, rgba(255, 255, 255, 0.85), transparent 60%), radial-gradient(1.4px 1.4px at 19% 77%, rgba(255, 255, 255, 0.95), transparent 60%), radial-gradient(1px 1px at 25% 9%, rgba(255, 255, 255, 0.8), transparent 60%),
-      radial-gradient(1.2px 1.2px at 31% 54%, rgba(255, 255, 255, 0.9), transparent 60%), radial-gradient(1px 1px at 37% 88%, rgba(255, 255, 255, 0.75), transparent 60%), radial-gradient(1.5px 1.5px at 44% 26%, rgba(255, 255, 255, 1), transparent 60%), radial-gradient(1px 1px at 50% 62%, rgba(255, 255, 255, 0.85), transparent 60%),
-      radial-gradient(1.2px 1.2px at 56% 18%, rgba(255, 255, 255, 0.9), transparent 60%), radial-gradient(1px 1px at 62% 81%, rgba(255, 255, 255, 0.8), transparent 60%), radial-gradient(1.4px 1.4px at 68% 47%, rgba(255, 255, 255, 0.95), transparent 60%), radial-gradient(1px 1px at 74% 11%, rgba(255, 255, 255, 0.75), transparent 60%),
-      radial-gradient(1.2px 1.2px at 80% 71%, rgba(255, 255, 255, 0.9), transparent 60%), radial-gradient(1px 1px at 86% 33%, rgba(255, 255, 255, 0.8), transparent 60%), radial-gradient(1.5px 1.5px at 92% 58%, rgba(255, 255, 255, 1), transparent 60%), radial-gradient(1px 1px at 97% 89%, rgba(255, 255, 255, 0.85), transparent 60%);
-    opacity: 0.95;
-    animation: warp-twinkle 6s ease-in-out infinite alternate;
-  }
-
-  @keyframes warp-twinkle {
-    0% {
-      opacity: 0.75;
-    }
-    100% {
-      opacity: 1;
-    }
-  }
-
-  /* A second, very slow drifting layer for a hint of parallax */
-  .warp-stars--drift {
-    background-image:
-      radial-gradient(1px 1px at 3% 67%, rgba(255, 255, 255, 0.85), transparent 60%), radial-gradient(1px 1px at 9% 23%, rgba(255, 255, 255, 0.7), transparent 60%), radial-gradient(1.2px 1.2px at 16% 91%, rgba(255, 255, 255, 0.9), transparent 60%), radial-gradient(1px 1px at 22% 38%, rgba(255, 255, 255, 0.75), transparent 60%),
-      radial-gradient(1px 1px at 28% 6%, rgba(255, 255, 255, 0.7), transparent 60%), radial-gradient(1.3px 1.3px at 34% 73%, rgba(255, 255, 255, 0.9), transparent 60%), radial-gradient(1px 1px at 41% 49%, rgba(255, 255, 255, 0.75), transparent 60%), radial-gradient(1px 1px at 47% 14%, rgba(255, 255, 255, 0.8), transparent 60%),
-      radial-gradient(1.2px 1.2px at 53% 84%, rgba(255, 255, 255, 0.85), transparent 60%), radial-gradient(1px 1px at 60% 31%, rgba(255, 255, 255, 0.7), transparent 60%), radial-gradient(1px 1px at 66% 58%, rgba(255, 255, 255, 0.8), transparent 60%), radial-gradient(1.3px 1.3px at 72% 4%, rgba(255, 255, 255, 0.9), transparent 60%),
-      radial-gradient(1px 1px at 78% 44%, rgba(255, 255, 255, 0.75), transparent 60%), radial-gradient(1px 1px at 84% 76%, rgba(255, 255, 255, 0.8), transparent 60%), radial-gradient(1.2px 1.2px at 90% 21%, rgba(255, 255, 255, 0.9), transparent 60%), radial-gradient(1px 1px at 95% 52%, rgba(255, 255, 255, 0.75), transparent 60%);
-    opacity: 0.7;
-    animation: warp-drift 60s linear infinite;
-  }
-
-  @keyframes warp-drift {
-    from {
-      transform: translateX(0);
-    }
-    to {
-      transform: translateX(-3%);
-    }
-  }
-
-  /* Subtle vignette to deepen the edges */
-  .warp-vignette {
-    background: radial-gradient(ellipse at center, transparent 55%, rgba(0, 0, 0, 0.55) 100%);
-  }
-
-  @media (prefers-reduced-motion: reduce) {
-    .warp-stars,
-    .warp-bulbs {
-      animation: none;
-    }
-  }
-</style>
+</aside>

@@ -6,52 +6,51 @@ interface Props {
   isHome?: boolean;
 }
 
-const { locale, isHome } = Astro.props as Props;
+const { locale } = Astro.props as Props;
 const t = useTranslations(locale);
 ---
 
-<nav role="navigation" class="xs:grid-cols-2 text-text-dark xs:justify-items-start grid w-full grid-cols-1 justify-items-center gap-14 text-left text-sm sm:grid-cols-3 md:w-auto md:grid-cols-2 lg:grid-cols-3 xl:gap-20">
+<nav role="navigation" aria-label={t('footer.navigation-label')} class="xs:grid-cols-2 xs:justify-items-start grid w-full grid-cols-1 justify-items-center gap-14 text-left text-sm sm:grid-cols-3 md:w-auto md:grid-cols-2 lg:grid-cols-3 xl:gap-20">
   <div class="group xs:items-start flex flex-col items-center">
-    <h3>{t('labels.offering')}</h3>
-    {!isHome ? (
-      <a class="unstyle-link group-hover:text-text-dark/60 hover:text-text-dark text-text-dark/80 w-fit pt-1.5" href={getLocaleUrl('/', locale)}>
-        {t('nav.home')}
-      </a>
-    ) : (
-      ''
-    )}
-    <a class="unstyle-link group-hover:text-text-dark/60 hover:text-text-dark text-text-dark/80 w-fit pt-1.5" href={getLocaleUrl('features', locale)}>
-      {t('nav.features')}
+    <h3>{t('labels.product')}</h3>
+    <a class="unstyle-link w-fit pt-1.5 opacity-80 group-hover:opacity-60 hover:opacity-100" href={getLocaleUrl('/#demo', locale)}>
+      {t('nav.demo')}
     </a>
-    <a class="unstyle-link group-hover:text-text-dark/60 hover:text-text-dark text-text-dark/80 w-fit pt-1.5" href={getLocaleUrl('examples', locale)}>
-      {t('nav.examples')}
+    <a class="unstyle-link w-fit pt-1.5 opacity-80 group-hover:opacity-60 hover:opacity-100" href={getLocaleUrl('what-is-an-add-to-calendar-button', locale)}>
+      {t('footer.definition')}
     </a>
-    <a class="unstyle-link group-hover:text-text-dark/60 hover:text-text-dark text-text-dark/80 w-fit pt-1.5" href={getLocaleUrl('pricing', locale)}>
-      {t('nav.pricing')}
+    <a class="unstyle-link w-fit pt-1.5 opacity-80 group-hover:opacity-60 hover:opacity-100" href={getLocaleUrl('examples', locale)}>
+      {t('footer.basic-examples')}
+    </a>
+    <a class="unstyle-link w-fit pt-1.5 opacity-80 group-hover:opacity-60 hover:opacity-100" href={getLocaleUrl('advanced-use', locale)}>
+      {t('footer.advanced-examples')}
     </a>
   </div>
   <div class="group xs:items-start flex flex-col items-center">
-    <h3>{t('labels.company')}</h3>
-    <a class="unstyle-link group-hover:text-text-dark/60 hover:text-text-dark text-text-dark/80 w-fit pt-1.5" href={getLocaleUrl('about', locale)}>
-      {t('nav.about')}
+    <h3>{t('labels.guides')}</h3>
+    <a class="unstyle-link w-fit pt-1.5 opacity-80 group-hover:opacity-60 hover:opacity-100" href={getLocaleUrl('configuration', locale)}>
+      {t('nav.docs-configuration')}
     </a>
-    <a class="unstyle-link group-hover:text-text-dark/60 hover:text-text-dark text-text-dark/80 w-fit pt-1.5" href={getLocaleUrl('contact', locale)}>
-      {t('nav.contact')}
+    <a class="unstyle-link w-fit pt-1.5 opacity-80 group-hover:opacity-60 hover:opacity-100" href={getLocaleUrl('/#installation', locale)}>
+      {t('nav.docs-installation')}
+    </a>
+    <a class="unstyle-link w-fit pt-1.5 opacity-80 group-hover:opacity-60 hover:opacity-100" href={getLocaleUrl('migration-guide-v2-to-v3', locale)}>
+      {t('footer.migration-guide')}
     </a>
   </div>
   <div class="group xs:items-start flex flex-col items-center">
     <h3>{t('labels.resources')}</h3>
-    <a class="unstyle-link group-hover:text-text-dark/60 hover:text-text-dark text-text-dark/80 w-fit pt-1.5" href={getLocaleUrl('docs', locale)}>
-      {t('nav.docs')}
+    <a class="unstyle-link external-link w-fit pt-1.5 opacity-80 group-hover:opacity-60 hover:opacity-100" href="https://www.npmjs.com/package/add-to-calendar-button" target="_blank" rel="noopener">
+      npm
     </a>
-    <a class="unstyle-link group-hover:text-text-dark/60 hover:text-text-dark text-text-dark/80 w-fit pt-1.5" href={getLocaleUrl('faq', locale)}>
+    <a class="unstyle-link w-fit pt-1.5 opacity-80 group-hover:opacity-60 hover:opacity-100" href={getLocaleUrl('faq', locale)}>
       {t('nav.faq')}
     </a>
-    <a class="unstyle-link group-hover:text-text-dark/60 hover:text-text-dark text-text-dark/80 w-fit pt-1.5" href={getLocaleUrl('get-listed', locale)}>
-      {t('nav.get-listed')}
+    <a class="unstyle-link external-link w-fit pt-1.5 opacity-80 group-hover:opacity-60 hover:opacity-100" href="https://github.com/add2cal/add-to-calendar-button/discussions" target="_blank" rel="help noopener">
+      {t('nav.help')}
     </a>
-    <a class="unstyle-link external-link group-hover:text-text-dark/60 hover:text-text-dark text-text-dark/80 w-fit pt-1.5" href="https://github.com/peltmonger/stardrive" target="_blank" rel="noopener">
-      {t('nav.status')}
+    <a class="unstyle-link external-link w-fit pt-1.5 opacity-80 group-hover:opacity-60 hover:opacity-100" href="https://github.com/add2cal/add-to-calendar-button" target="_blank" rel="noopener">
+      GitHub
     </a>
   </div>
 </nav>

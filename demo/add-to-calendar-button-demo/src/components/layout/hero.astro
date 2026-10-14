@@ -1,189 +1,51 @@
 ---
-import { Icon } from "astro-icon/components";
-import { Image } from "astro:assets";
-import HeroChip from "@components/promo/hero-chip.astro";
+import { Image } from 'astro:assets';
+import { Icon } from 'astro-icon/components';
+import combo from '@images/combo.webp';
+import Stats from '@components/home/stats.astro';
+import HeroChip from '@components/promo/hero-chip.astro';
 import { themeConfig } from '~/theme.config';
-import { useTranslations, getLocaleUrl } from "@utils/i18n";
+import { useTranslations } from '@utils/i18n';
 
-interface Props {
-  locale: string;
-}
-
-const { locale } = Astro.props as Props;
+interface Props { locale: string }
+const { locale: requestedLocale = 'en' } = Astro.props;
+const locale = ['en', 'de', 'fr', 'es'].includes(requestedLocale) ? requestedLocale as 'en' | 'de' | 'fr' | 'es' : 'en';
 const t = useTranslations(locale);
-
-function generateStars(count: number, spread = 3000): string {
-  return Array.from({ length: count }, () => {
-    const x = Math.floor(Math.random() * spread);
-    const y = Math.floor(Math.random() * spread);
-    const opacity = (0.4 + Math.random() * 0.6).toFixed(2);
-    return `${x}px ${y}px rgba(255,255,255,${opacity})`;
-  }).join(",");
-}
-
-const stars1 = generateStars(160); // 1 px - many
-const stars2 = generateStars(60);  // 2 px - medium
-const stars3 = generateStars(22);  // 3 px - few bright
 ---
 
-<div role="banner" class="hero relative flex min-h-svh w-full flex-col items-center justify-center overflow-hidden px-6 pt-48 pb-24" style={`--stars1:${stars1};--stars2:${stars2};--stars3:${stars3};`}>
-  <!-- Animated galaxy background -->
-  <div class="galaxy-bg pointer-events-none">
-    <div class="nebula"></div>
-    <div class="s1 absolute inset-0"></div>
-    <div class="s2 absolute inset-0"></div>
-    <div class="s3 absolute inset-0"></div>
-  </div>
-
-  <!-- Hero content -->
-  <div class="relative z-10 flex w-full max-w-4xl flex-col items-center gap-6 text-center">
-    {themeConfig.promotions?.heroChip && <HeroChip {locale} />}
-
-    <h1 class="hero-title">{t('pages.home.hero-title')}</h1>
-    <p class="hero-subline">{t('pages.home.hero-sub-slogan')}</p>
-
-    <div class="flex flex-col gap-10">
-      <div class="mt-1 flex flex-wrap justify-center gap-4">
-        <a href={getLocaleUrl('docs', locale)} class="btn-primary">
-          {t('labels.get-started')}
+<section class="hero relative overflow-hidden bg-linear-to-tr from-primary-darkest via-primary-dark to-primary pt-36 pb-24 text-white shadow-2xl md:pt-44 md:pb-28">
+  <div class="pointer-events-none absolute inset-0 opacity-20" aria-hidden="true"></div>
+  <div class="container relative mx-auto grid items-center gap-12 lg:grid-cols-2">
+    <div class="max-w-xl">
+      {themeConfig.promotions?.heroChip && (
+        <div class="mb-5 w-fit">
+          <HeroChip {locale} />
+        </div>
+      )}
+      <p class="mb-3 text-sm font-bold tracking-[.2em] uppercase text-primary-light">{t('pages.home.hero.prefix')}</p>
+      <h1 class="text-5xl leading-[1.05] text-white drop-shadow-lg md:text-7xl">Add to Calendar Button</h1>
+      <p class="mt-6 text-2xl font-semibold italic text-white/75 md:text-3xl">{t('pages.home.hero.slogan')}</p>
+      <div class="mt-10 flex flex-wrap gap-4">
+        <a href="#installation" class="btn-outline border-white text-white">
+          {t('pages.home.hero.start')}
         </a>
-        <a href={getLocaleUrl('features', locale)} class="group inline-flex cursor-pointer items-center gap-2 rounded border-2 border-white/30 bg-white/5 px-4 py-2 pr-3 text-base font-semibold whitespace-nowrap text-white/80 no-underline transition-all select-none hover:border-white hover:text-white">
-          <span>{t('labels.explore-features')}</span>
-          <Icon name="heroicons:arrow-right" class="mr-1 ml-0 h-4 w-4 transition-all duration-200 group-hover:mr-0 group-hover:ml-1" />
+        <a href="#demo" class="btn-primary">
+          {t('pages.home.hero.demo')}
+          <Icon name="heroicons:arrow-down" class="size-4" />
         </a>
       </div>
     </div>
-
-    <div class="promo-video card-glow-light relative mt-16 aspect-video w-full max-w-4xl overflow-hidden rounded-3xl border-4 border-white/20 bg-white/3 backdrop-blur" aria-label={t('labels.get-started') + ': npm create stardrive@latest'}>
-      <button type="button" class="promo-video__trigger group absolute inset-0 flex h-full w-full cursor-pointer items-center justify-center" data-video-id="JtV9U4FaNPk" aria-label="Play promo video">
-        <span class="promo-video__play relative z-10 flex size-20 items-center justify-center rounded-full border-2 border-white/80 bg-black/60 text-white backdrop-blur transition-all duration-200 hover:scale-110 hover:bg-black/80">
-          <Icon name="heroicons:play-solid" class="ml-1 size-8" />
-        </span>
-      </button>
-      <div class="promo-video__frame absolute inset-0 hidden h-full w-full" data-video-host="https://www.youtube-nocookie.com"></div>
-    </div>
+    <Image src={combo} alt={t('pages.home.hero.image-alt')} widths={[500, 978]} sizes="(min-width: 976px) 48vw, 90vw" class="mx-auto w-full max-w-2xl drop-shadow-2xl" loading="eager" />
   </div>
-</div>
+</section>
+
+<Stats {locale} />
 
 <style>
-  @reference "../../styles/tailwind.config.css";
-
-  /* ── Wrapper - only the gradient survives here ── */
-  .hero {
-    background: radial-gradient(ellipse at 50% 40%, #16003e 0%, #040010 55%, #000 100%);
-  }
-
-  /* ── Rotating galaxy container ── */
-  .galaxy-bg {
-    @apply absolute top-1/2 left-1/2 h-[3000px] w-[3000px] origin-center;
-    animation: galaxyRotate 150s linear infinite;
-  }
-
-  @keyframes galaxyRotate {
-    from {
-      transform: translate(-50%, -50%) rotate(0deg);
-    }
-    to {
-      transform: translate(-50%, -50%) rotate(360deg);
-    }
-  }
-
-  /* ── Nebula blobs ── */
-  .nebula {
-    @apply absolute inset-0;
-    background: radial-gradient(ellipse 55% 38% at 28% 38%, rgba(80, 22, 138, 0.65) 0%, transparent 65%), radial-gradient(ellipse 38% 28% at 72% 62%, rgba(242, 100, 48, 0.28) 0%, transparent 65%), radial-gradient(ellipse 48% 52% at 62% 22%, rgba(80, 22, 138, 0.4) 0%, transparent 60%), radial-gradient(ellipse 65% 42% at 42% 82%, rgba(20, 0, 50, 0.85) 0%, transparent 70%);
-    animation: nebulaPulse 24s ease-in-out infinite alternate;
-  }
-
-  @keyframes nebulaPulse {
-    0% {
-      opacity: 0.72;
-    }
-    100% {
-      opacity: 1;
-    }
-  }
-
-  /* ── Star layers ── */
-  .s1::before {
-    content: '';
-    @apply absolute top-0 left-0 size-px rounded-full bg-transparent;
-    box-shadow: var(--stars1);
-    animation: twinkle 10s ease-in-out infinite alternate;
-  }
-
-  .s2::before {
-    content: '';
-    @apply absolute top-0 left-0 size-[2px] rounded-full bg-transparent;
-    box-shadow: var(--stars2);
-    animation: twinkle 14s ease-in-out infinite alternate;
-  }
-
-  .s3::before {
-    content: '';
-    @apply absolute top-0 left-0 size-[3px] rounded-full bg-transparent;
-    box-shadow: var(--stars3);
-    animation: twinkle 18s ease-in-out infinite alternate;
-  }
-
-  @keyframes twinkle {
-    0% {
-      opacity: 0.6;
-    }
-    100% {
-      opacity: 1;
-    }
-  }
-
-  /* Title */
-  .hero-title {
-    @apply m-0 leading-[1.08] font-bold tracking-[-0.025em] text-white;
-    font-size: clamp(2.4rem, 6vw, 4.8rem);
-    text-shadow: 0 0 80px rgba(242, 100, 48, 0.25);
-  }
-
-  /* Subline */
-  .hero-subline {
-    @apply m-0 max-w-[38rem] leading-[1.65] text-white/55;
-    font-size: clamp(1rem, 1.8vw, 1.2rem);
-  }
-
-  /* ── Reduced motion ── */
-  @media (prefers-reduced-motion: reduce) {
-    .galaxy-bg,
-    .nebula,
-    .s1::before,
-    .s2::before,
-    .s3::before {
-      animation: none;
-    }
+  .hero > div:first-child {
+    background-image: radial-gradient(circle at 20% 20%, rgba(255, 255, 255, 0.7) 0 1px, transparent 2px), radial-gradient(circle at 70% 60%, rgba(255, 255, 255, 0.5) 0 1px, transparent 2px);
+    background-size:
+      70px 70px,
+      110px 110px;
   }
 </style>
-
-<script>
-  import { get } from '@utils/localStorage';
-
-  function setupPromoVideo() {
-    const triggers = document.querySelectorAll<HTMLElement>('.promo-video__trigger');
-    triggers.forEach((trigger) => {
-      // Avoid double-binding when astro:page-load fires on the same DOM
-      if (trigger.dataset.promoVideoBound === '1') return;
-      trigger.dataset.promoVideoBound = '1';
-      trigger.addEventListener('click', () => {
-        const videoId = trigger.dataset.videoId;
-        const host = trigger.dataset.videoHost || 'https://www.youtube-nocookie.com';
-        if (!videoId) return;
-        const frame = trigger.parentElement?.querySelector<HTMLElement>('.promo-video__frame');
-        if (!frame) return;
-        const ccLang = get('locale') || 'en';
-        const src = `${host}/embed/${videoId}?autoplay=1&controls=0&rel=0&iv_load_policy=3&cc_load_policy=3&cc_lang_pref=${encodeURIComponent(ccLang)}&playsinline=1&enablejsapi=1`;
-        frame.innerHTML = `<iframe class="w-full h-full" src="${src}" title="Discover the Astro Stardrive boilerplate, build today, and ship faster" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>`;
-        frame.classList.remove('hidden');
-        trigger.classList.add('hidden');
-      });
-    });
-  }
-
-  setupPromoVideo();
-  document.addEventListener('astro:page-load', setupPromoVideo);
-</script>

@@ -1,0 +1,70 @@
+---
+import type { DocsLocale } from './docs-data';
+import { useTranslations } from '@utils/i18n';
+interface Props { title: string; locale: DocsLocale; intro?: string; sections?: Array<{ id: string; label: string }> }
+const { title, locale, intro, sections = [] } = Astro.props;
+const t = useTranslations(locale);
+---
+
+<div class="grid grid-cols-1 gap-10 lg:grid-cols-[minmax(0,1fr)_13rem]">
+  <article class="docs-content min-w-0">
+    <h1 class="mb-10 text-center text-4xl underline decoration-orange-400 decoration-4 underline-offset-8 md:text-5xl">{title}</h1>
+    {intro && <p class="mx-auto mb-12 max-w-3xl text-center text-lg text-zinc-600 dark:text-zinc-300">{intro}</p>}
+    <slot />
+  </article>
+  {sections.length > 0 && (
+    <aside class="hidden border-l border-zinc-300 pl-6 dark:border-zinc-700 lg:block">
+      <nav class="sticky top-8" aria-label={t('docs.common.on-this-page')}>
+        {sections.map((section) => (
+          <a class="my-3 block text-sm" href={`#${section.id}`}>
+            {section.label}
+          </a>
+        ))}
+      </nav>
+    </aside>
+  )}
+</div>
+<style>
+  .docs-content :global(p) {
+    margin-block: 1rem;
+    line-height: 1.7;
+  }
+  .docs-content :global(h2) {
+    margin-top: 4rem;
+    margin-bottom: 1.25rem;
+    border-top: 1px solid rgb(212 212 216);
+    padding-top: 3rem;
+    font-size: 1.75rem;
+    font-weight: 700;
+  }
+  .docs-content :global(h3) {
+    margin-top: 2rem;
+    margin-bottom: 0.75rem;
+    font-size: 1.25rem;
+    font-weight: 700;
+  }
+  .docs-content :global(ul),
+  .docs-content :global(ol) {
+    margin: 1rem 0 1rem 1.5rem;
+  }
+  .docs-content :global(ul) {
+    list-style: disc;
+  }
+  .docs-content :global(ol) {
+    list-style: decimal;
+  }
+  .docs-content :global(li) {
+    margin-block: 0.4rem;
+  }
+  .docs-content :global(code:not(pre code)) {
+    border-radius: 0.25rem;
+    background: rgb(228 228 231);
+    padding: 0.1rem 0.35rem;
+    font-size: 0.9em;
+    color: rgb(63 63 70);
+  }
+  :global(.dark) .docs-content :global(code:not(pre code)) {
+    background: rgb(63 63 70);
+    color: rgb(244 244 245);
+  }
+</style>

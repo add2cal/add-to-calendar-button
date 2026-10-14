@@ -1,0 +1,93 @@
+---
+import Detail from './configuration/detail.astro';
+import { groups, intro, type ConfigurationLocale } from './configuration/content';
+import ConfigurationSearch from './configuration/search.vue';
+import GiftInterstitial from './examples/gift-interstitial.astro';
+import { useTranslations } from '@utils/i18n';
+
+interface Props { locale: ConfigurationLocale }
+const { locale } = Astro.props;
+const t = useTranslations(locale);
+const parameters = groups.flatMap((group) => group.rows.map((row) => row.name));
+const qualifier = {
+  pro: t('docs.common.pro-only'),
+  required: t('docs.configuration.required'),
+  requiredDates: t('docs.configuration.required-dates'),
+  requiredRichData: t('docs.configuration.required-rich-data'),
+};
+---
+
+<div class="grid grid-cols-1 lg:grid-cols-[minmax(0,1fr)_12rem]">
+  <article class="min-w-0 pr-0 lg:pr-8 xl:pr-12">
+    <h1 class="mb-16 text-left text-4xl font-bold underline decoration-orange-400 decoration-4 underline-offset-8 sm:text-5xl lg:text-6xl">{t('docs.configuration.title')}</h1>
+    <div class="configuration-intro">
+      <Detail content={intro[locale]} />
+    </div>
+
+    <div class="mx-auto my-12 max-w-md border-y border-zinc-300 px-5 py-6 dark:border-zinc-700">
+      <ConfigurationSearch client:load options={parameters} label={t('docs.configuration.find')} placeholder={t('docs.configuration.search')} {locale} />
+    </div>
+
+    {groups.map((group, groupIndex) => (
+      <>
+        <section aria-labelledby={group.id}>
+          <h2 id={group.id} class="mb-5 mt-12 scroll-mt-6 pt-4 text-2xl font-bold">
+            {t(`docs.configuration.groups.${group.id}`)}
+          </h2>
+          {group.intro && (
+            <div class="mb-3">
+              <Detail content={group.intro[locale]} />
+            </div>
+          )}
+          <div class="my-8 overflow-x-auto rounded-lg shadow-sm">
+            <table class="w-full table-fixed text-left text-sm text-zinc-800 dark:text-zinc-200 md:table-auto">
+              <thead class="hidden bg-zinc-300 uppercase text-zinc-500 dark:bg-zinc-900 dark:text-zinc-400 sm:table-header-group">
+                <tr>
+                  <th class="p-3 font-semibold sm:px-5">
+                    {t('docs.configuration.name')}
+                    <span class="block pt-1 normal-case md:hidden">({t('docs.configuration.value')})</span>
+                  </th>
+                  <th class="hidden p-3 font-semibold sm:px-5 md:table-cell">{t('docs.configuration.value')}</th>
+                  <th class="p-3 font-semibold sm:px-5">{t('docs.configuration.details')}</th>
+                </tr>
+              </thead>
+              <tbody>
+                {group.rows.map((row) => (
+                  <tr id={row.name} class="scroll-mt-6 border-b border-zinc-300 bg-zinc-50 align-top hover:bg-white dark:border-zinc-600 dark:bg-zinc-800 dark:hover:bg-zinc-700">
+                    <th scope="row" class="block p-3 pb-5 text-base font-semibold underline underline-offset-2 sm:p-5 md:table-cell md:text-sm md:no-underline">
+                      {row.name}
+                    </th>
+                    <td class="block p-3 pt-0 sm:p-5 sm:pt-0 md:table-cell md:pt-5">
+                      <em>{row.typeTranslationKey ? t(`docs.configuration.descriptors.${row.typeTranslationKey}`) : row.type}</em>
+                      {row.qualifier && <strong class:list={['mt-5 block', { 'text-red-700 dark:text-red-400': row.qualifier !== 'pro' }]}>{qualifier[row.qualifier]}</strong>}
+                      {row.values?.map((value) => (
+                        <span class="mt-5 block text-zinc-500 dark:text-zinc-400">
+                          {value.label && <>{t(`docs.configuration.${value.label}`)}: </>}
+                          {value.translationKey ? t(`docs.configuration.descriptors.${value.translationKey}`) : value.text}
+                        </span>
+                      ))}
+                    </td>
+                    <td class="block p-3 pt-6 sm:p-5 md:table-cell md:pt-5">
+                      <Detail content={row.detail[locale]} />
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </section>
+        {(groupIndex === 1 || groupIndex === 3) && <GiftInterstitial locale={locale} prompt={t('docs.examples.pro.prompt')} action={t('docs.examples.pro.action')} imageAlt={t('docs.examples.pro.image-alt')} />}
+      </>
+    ))}
+  </article>
+
+  <aside class="hidden border-l border-zinc-300 pl-8 text-sm dark:border-zinc-700 lg:block">
+    <nav class="sticky top-4" aria-label={t('docs.configuration.find')}>
+      {groups.map((group) => (
+        <a href={`#${group.id}`} class="my-4 block no-underline hover:text-orange-500 hover:underline hover:decoration-orange-500">
+          {t(`docs.configuration.groups.${group.id}`)}
+        </a>
+      ))}
+    </nav>
+  </aside>
+</div>

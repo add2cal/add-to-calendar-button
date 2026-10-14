@@ -1,244 +1,179 @@
 ---
-import { Icon } from "astro-icon/components";
-import { useTranslations, getLocaleUrl } from "@utils/i18n";
-import { themeConfig } from "~/theme.config";
+import { Image } from 'astro:assets';
+import { Icon } from 'astro-icon/components';
+import Playground from '@components/playground/PlaygroundArea.vue';
+import { getLocaleUrl, useTranslations } from '@utils/i18n';
+import accessibility from '@images/accessibility.webp';
+import caltypes from '@images/caltypes.webp';
+import more from '@images/more.webp';
+import style from '@images/style.webp';
+import variety from '@images/variety.webp';
+import ProductHuntDark from '@images/ph-badge-dark.svg';
+import ProductHuntLight from '@images/ph-badge-light.svg';
 
-interface Props {
-  locale?: string;
-}
-
-const { locale = themeConfig.i18n.defaultLocale } = Astro.props;
+interface Props { locale?: 'en' | 'de' | 'fr' | 'es' }
+const { locale = 'en' } = Astro.props;
 const t = useTranslations(locale);
-
-interface FeatureCard {
-  slug: string;
-  icon: string;
-  accent: "primary" | "secondary";
-}
-
-const features: FeatureCard[] = [
-  { slug: "feature-ai", icon: "heroicons:sparkles", accent: "primary" },
-  { slug: "feature-speed", icon: "heroicons:bolt", accent: "primary" },
-  { slug: "feature-theme", icon: "heroicons:swatch", accent: "secondary" },
-  { slug: "feature-i18n", icon: "heroicons:language", accent: "secondary" },
-  { slug: "feature-content", icon: "heroicons:rectangle-stack", accent: "primary" },
-  { slug: "feature-dx", icon: "heroicons:command-line", accent: "secondary" },
-];
-
-interface Voice {
-  slug: string;
-  initials: string;
-  tint: string;
-}
-
-const voices: Voice[] = [
-  { slug: "voice-1", initials: "MV", tint: "from-purple-500 to-indigo-500" },
-  { slug: "voice-2", initials: "DP", tint: "from-orange-500 to-rose-500" },
-  { slug: "voice-3", initials: "LR", tint: "from-emerald-500 to-teal-500" },
-  { slug: "voice-4", initials: "TA", tint: "from-sky-500 to-blue-600" },
-];
-
-interface UseCase {
-  slug: string;
-  icon: string;
-}
-
-const useCases: UseCase[] = [
-  { slug: "usecase-portfolio", icon: "heroicons:user-circle" },
-  { slug: "usecase-company", icon: "heroicons:building-office-2" },
-  { slug: "usecase-saas", icon: "heroicons:rocket-launch" },
-  { slug: "usecase-listing", icon: "heroicons:rectangle-group" },
-];
-
-const docsUrl = getLocaleUrl("docs", locale);
-const featuresUrl = getLocaleUrl("features", locale);
+const stacks = [
+  ['Angular', 'logos:angular-icon', 'use-with-angular', 'angular'],
+  ['Astro', 'logos:astro-icon', 'use-with-astro', 'astro'],
+  ['Next.js', 'logos:nextjs-icon', 'use-with-nextjs', 'nextjs'],
+  ['Nuxt', 'logos:nuxt-icon', 'use-with-nuxt', 'nuxt'],
+  ['React', 'logos:react', 'use-with-react', 'react'],
+  ['Svelte', 'logos:svelte-icon', 'use-with-svelte', 'svelte'],
+  ['Vue', 'logos:vue', 'use-with-vue', 'vue'],
+  ['Wix', 'logos:wix', 'use-with-wix', 'wix'],
+  ['WordPress', 'logos:wordpress-icon', 'use-with-wordpress', 'wordpress'],
+] as const;
+const featureImages = [caltypes, variety, style, accessibility, more];
+const featureGroups = [
+  ['calendars', 5],
+  ['events', 5],
+  ['look', 3],
+  ['accessibility', 5],
+  ['more', 3],
+] as const;
 ---
 
-<section class="home-content flex flex-col overflow-x-clip">
-  <!-- ── Feature cards ── -->
-  <div class="graph-paper-bg-outer">
-    <div class="container mx-auto py-20">
-      <section aria-labelledby="home-features-heading">
-        <div class="mb-12 flex flex-col items-center gap-3 text-center">
-          <span class="text-primary dark:text-primary-light text-sm font-semibold tracking-[0.2em] uppercase">{t('home-content.features-eyebrow')}</span>
-          <h2 id="home-features-heading" class="text-3xl font-bold sm:text-4xl">
-            {t('home-content.features-heading')}
-          </h2>
-          <p class="max-w-2xl text-stone-600 dark:text-stone-300">{t('home-content.features-sub')}</p>
-        </div>
-
-        <ul class="m-0 grid list-none grid-cols-1 gap-5 p-0 sm:grid-cols-2 lg:grid-cols-3">
-          {features.map((feature) => (
-            <li class="m-0">
-              <article class="feature-card group relative h-full overflow-hidden rounded-xl border border-stone-300 bg-white p-6 transition-all hover:-translate-y-1 hover:shadow-xl dark:border-stone-700 dark:bg-stone-900">
-                <div class={`absolute inset-x-0 top-0 h-1 ${feature.accent === 'primary' ? 'bg-primary' : 'bg-secondary'}`} />
-                <span class={`mb-4 flex h-11 w-11 items-center justify-center rounded-lg ${feature.accent === 'primary' ? 'bg-primary-light/15 text-primary dark:bg-primary-darker dark:text-primary-light' : 'bg-secondary-light/15 text-secondary dark:bg-secondary-dark dark:text-white/60'}`}>
-                  <Icon name={feature.icon} class="h-6 w-6" aria-hidden="true" />
-                </span>
-                <h3 class="mb-2 text-lg font-bold">{t(`home-content.${feature.slug}-title`)}</h3>
-                <p class="text-sm leading-relaxed text-stone-600 dark:text-stone-300">{t(`home-content.${feature.slug}-text`)}</p>
-              </article>
-            </li>
-          ))}
-        </ul>
-      </section>
+<div class="overflow-x-clip">
+  <section class="container mx-auto grid gap-10 py-16 lg:grid-cols-[1fr_auto] lg:py-24">
+    <div class="max-w-3xl">
+      <h2 class="mb-8 text-3xl leading-tight text-stone-600 md:text-4xl dark:text-stone-300">{t('pages.home.intro.slogan')}</h2>
+      {[1, 2, 3].map((item, index) => (
+        <p class:list={['max-w-3xl leading-7', { 'font-semibold': index === 2 }]}>{t(`pages.home.intro.paragraph-${item}`)}</p>
+      ))}
     </div>
-  </div>
+    <a class="self-center lg:self-start" href="https://www.producthunt.com/posts/add-to-calendar-button-generator" target="_blank" rel="noopener">
+      <ProductHuntLight class="block w-[250px] drop-shadow dark:hidden" aria-label={t('pages.home.intro.product-hunt-label')} />
+      <ProductHuntDark class="hidden w-[250px] drop-shadow dark:block" aria-label={t('pages.home.intro.product-hunt-label')} />
+    </a>
+  </section>
 
-  <!-- ── Customer voices ── -->
-  <div class="container mx-auto py-20">
-    <section aria-labelledby="home-voices-heading">
-      <div class="mb-12 flex flex-col items-center gap-3 text-center">
-        <span class="text-primary dark:text-primary-light text-sm font-semibold tracking-[0.2em] uppercase">{t('home-content.voices-eyebrow')}</span>
-        <h2 id="home-voices-heading" class="text-3xl font-bold sm:text-4xl">
-          {t('home-content.voices-heading')}
-        </h2>
-        <p class="max-w-2xl text-stone-600 dark:text-stone-300">{t('home-content.voices-sub')}</p>
-      </div>
+  <section id="demo" class="scroll-mt-20 bg-linear-to-tr from-stone-300 to-stone-100 py-16 shadow-inner dark:from-stone-900 dark:to-stone-800" aria-labelledby="demo-heading">
+    <div class="container mx-auto mb-8">
+      <h2 id="demo-heading" class="section-heading">
+        <Icon name="heroicons:beaker" />
+        {t('pages.home.playground.heading')}
+      </h2>
+    </div>
+    <Playground client:only="vue" {locale} themeSwitchLabel={t('labels.change-light-mode')}>
+      <p slot="fallback" class="container mx-auto py-24 text-center">
+        {t('pages.home.playground.loading')}
+      </p>
+    </Playground>
+    <p class="container mx-auto mt-6 text-center text-sm italic text-stone-500">
+      {t('pages.home.playground.disclaimer')} <a href={getLocaleUrl('configuration', locale)}>{t('pages.home.playground.configuration')}</a>
+    </p>
+  </section>
 
-      <div class="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
-        {voices.map((voice) => (
-          <div>
-            <figure class="voice-card flex h-full flex-col gap-4 rounded-xl border border-stone-300 bg-white p-6 dark:border-stone-700 dark:bg-stone-900">
-              <Icon name="heroicons:chat-bubble-left-right" class="h-6 w-6 text-stone-300 dark:text-stone-600" aria-hidden="true" />
-              <blockquote class="grow text-sm leading-relaxed text-stone-700 dark:text-stone-200">"{t(`home-content.${voice.slug}-quote`)}"</blockquote>
-              <figcaption class="flex items-center gap-3">
-                <span class={`flex h-10 w-10 items-center justify-center rounded-full bg-linear-to-br ${voice.tint} text-sm font-bold text-white`}>{voice.initials}</span>
-                <span class="flex flex-col">
-                  <span class="text-sm font-semibold">{t(`home-content.${voice.slug}-name`)}</span>
-                  <span class="text-xs text-stone-500 dark:text-stone-400">{t(`home-content.${voice.slug}-role`)}</span>
-                </span>
-              </figcaption>
-            </figure>
+  <section id="installation" class="container mx-auto scroll-mt-20 py-24" aria-labelledby="installation-heading">
+    <h2 id="installation-heading" class="section-heading">
+      <Icon name="heroicons:wrench-screwdriver" />
+      {t('pages.home.installation.heading')}
+    </h2>
+    <p class="mt-7 max-w-3xl leading-7">{t('pages.home.installation.intro')}</p>
+    <p class="font-semibold">{t('pages.home.installation.prompt')}</p>
+    <div class="mt-12 grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-5">
+      {stacks.map(([name, icon, route, brand]) => (
+        <a href={getLocaleUrl(route, locale)} class:list={['stack-card group', `stack-card--${brand}`]}>
+          <Icon name={icon} class="size-10 transition-transform group-hover:scale-110" aria-hidden="true" />
+          <span>{name}</span>
+        </a>
+      ))}
+      <a href={getLocaleUrl('use', locale)} class="stack-card stack-card--javascript col-span-2 border-secondary sm:col-span-3 lg:col-span-1">
+        <Icon name="heroicons:code-bracket" class="size-10" aria-hidden="true" />
+        <span>JavaScript</span>
+      </a>
+    </div>
+    <p class="mt-8 text-center text-stone-600 dark:text-stone-300">{t('pages.home.installation.other')}</p>
+  </section>
+
+  <section id="features" class="container mx-auto scroll-mt-20 pb-24" aria-labelledby="features-heading">
+    <h2 id="features-heading" class="section-heading">
+      <Icon name="heroicons:sparkles" />
+      {t('pages.home.features.heading')}
+    </h2>
+    <p class="mt-7">{t('pages.home.features.intro')}</p>
+    <div class="mx-auto mt-16 grid max-w-4xl gap-x-12 gap-y-16 md:grid-cols-[180px_1fr]">
+      {featureGroups.map(([group, itemCount], index) => (
+        <>
+          <Image src={featureImages[index]} alt="" widths={[150, 300]} sizes="150px" class="mx-auto self-center" />
+          <div class="self-center">
+            <h3 class="mb-4 text-center text-2xl md:text-left">{t(`pages.home.features.${group}.heading`)}</h3>
+            <ul class="list-disc space-y-2 pl-6">
+              {Array.from({ length: itemCount }, (_, item) => (
+                <li>{t(`pages.home.features.${group}.item-${item + 1}`)}</li>
+              ))}
+            </ul>
           </div>
-        ))}
-      </div>
-    </section>
-  </div>
-
-  <!-- ── Use cases ── -->
-  <div class="graph-paper-bg-inner">
-    <div class="container mx-auto py-20">
-      <section aria-labelledby="home-usecases-heading">
-        <div class="mb-12 flex flex-col items-center gap-3 text-center">
-          <span class="text-primary dark:text-primary-light text-sm font-semibold tracking-[0.2em] uppercase">{t('home-content.usecases-eyebrow')}</span>
-          <h2 id="home-usecases-heading" class="text-3xl font-bold sm:text-4xl">
-            {t('home-content.usecases-heading')}
-          </h2>
-          <p class="max-w-2xl text-stone-600 dark:text-stone-300">{t('home-content.usecases-sub')}</p>
-        </div>
-
-        <div class="grid grid-cols-1 gap-5 sm:grid-cols-2">
-          {useCases.map((uc) => (
-            <div>
-              <article class="usecase-card group hover:border-primary dark:hover:border-primary-light flex h-full items-start gap-5 rounded-xl border border-stone-300 bg-white p-6 transition-all hover:shadow-lg dark:border-stone-700 dark:bg-stone-900">
-                <span class="bg-primary-light/15 text-primary dark:bg-primary-darker dark:text-primary-light flex h-12 w-12 shrink-0 items-center justify-center rounded-lg">
-                  <Icon name={uc.icon} class="h-6 w-6" aria-hidden="true" />
-                </span>
-                <div class="flex flex-col gap-2">
-                  <h3 class="text-lg font-bold">{t(`home-content.${uc.slug}-title`)}</h3>
-                  <p class="text-sm leading-relaxed text-stone-600 dark:text-stone-300">{t(`home-content.${uc.slug}-text`)}</p>
-                </div>
-              </article>
-            </div>
-          ))}
-        </div>
-      </section>
+        </>
+      ))}
     </div>
-  </div>
+  </section>
 
-  <!-- ── CTA ── -->
-  <div class="container mx-auto py-20">
-    <div class="cta-band border-primary/20 from-primary-light/10 to-secondary-light/10 dark:from-primary-darker/30 dark:to-secondary-dark/20 relative overflow-hidden rounded-2xl border-4 bg-linear-to-br via-white px-6 py-12 text-center sm:px-12 dark:via-stone-900">
-      <div class="cta-glow pointer-events-none absolute inset-0" aria-hidden="true"></div>
-      <div class="relative z-10 mx-auto flex max-w-2xl flex-col items-center gap-4">
-        <h2 class="text-3xl font-bold sm:text-4xl">{t('home-content.cta-heading')}</h2>
-        <p class="max-w-xl text-stone-600 dark:text-stone-300">{t('home-content.cta-sub')}</p>
-        <div class="mt-2 flex flex-wrap items-center justify-center gap-4">
-          <a href={docsUrl} class="btn-primary group">
-            {t('home-content.cta-primary')}
-            <Icon name="heroicons:arrow-right" class="mr-1 ml-0 h-4 w-4 transition-all duration-200 group-hover:mr-0 group-hover:ml-1" aria-hidden="true" />
-          </a>
-          <a href={featuresUrl} class="btn-subtle group rounded px-4 py-[0.43rem]">
-            <span>{t('home-content.cta-secondary')}</span>
-            <Icon name="heroicons:arrow-right" class="mr-1 ml-0 h-4 w-4 transition-all duration-200 group-hover:mr-0 group-hover:ml-1" aria-hidden="true" />
-          </a>
-        </div>
+  <section class="border-y border-stone-300 bg-linear-to-tr from-stone-300 to-stone-100 py-16 text-center shadow dark:border-stone-700 dark:from-stone-900 dark:to-stone-800">
+    <div class="container mx-auto">
+      <h2 class="mb-8 text-3xl">{t('pages.home.next.heading')}</h2>
+      <div class="flex flex-wrap justify-center gap-5">
+        <a class="btn-primary" href={getLocaleUrl('examples', locale)}>
+          {t('pages.home.next.examples')}
+          <Icon name="heroicons:arrow-right" />
+        </a>
+        <a class="btn-primary" href={getLocaleUrl('configuration', locale)}>
+          {t('pages.home.next.configure')}
+          <Icon name="heroicons:arrow-right" />
+        </a>
       </div>
     </div>
-  </div>
-</section>
+  </section>
+</div>
 
 <style>
-  @reference "../../styles/tailwind.config.css";
-
-  /* ── CTA glow ── */
-  .cta-glow {
-    background: radial-gradient(ellipse at 50% 0%, rgba(80, 22, 138, 0.18) 0%, transparent 60%);
+  @reference '../../styles/tailwind.config.css';
+  .section-heading {
+    @apply decoration-primary-light dark:decoration-primary-dark flex items-center gap-3 text-3xl underline decoration-2 underline-offset-8 md:text-4xl;
   }
-  :global(.dark) .cta-glow {
-    background: radial-gradient(ellipse at 50% 0%, rgba(242, 100, 48, 0.16) 0%, transparent 60%);
+  .section-heading :global(svg) {
+    @apply size-7 shrink-0;
   }
-
-  /* ── Reduced motion ── */
-  @media (prefers-reduced-motion: reduce) {
-    .cta-glow {
-      animation: none;
-    }
+  .stack-card {
+    @apply flex min-h-32 flex-col items-center justify-center gap-4 rounded-xl border-2 border-stone-300 bg-white p-4 text-center no-underline shadow-sm transition hover:-translate-y-1 hover:shadow-lg dark:border-stone-700 dark:bg-stone-800;
   }
-
-  .graph-paper-bg-outer,
-  .graph-paper-bg-inner {
-    position: relative;
+  .stack-card--angular {
+    @apply hover:border-angular hover:bg-angular hover:text-white;
   }
-
-  .graph-paper-bg-outer::before,
-  .graph-paper-bg-inner::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    z-index: 0;
-    pointer-events: none;
-    background-image: linear-gradient(rgba(212, 212, 212, 0.69) 2px, transparent 2px), linear-gradient(90deg, rgba(212, 212, 212, 0.69) 2px, transparent 2px), linear-gradient(rgba(212, 212, 212, 0.69) 1px, transparent 1px), linear-gradient(90deg, rgba(212, 212, 212, 0.69) 1px, rgba(247, 247, 252, 0) 1px);
-    background-size:
-      100px 100px,
-      100px 100px,
-      20px 20px,
-      20px 20px;
-    background-position:
-      -2px -2px,
-      -2px -2px,
-      -1px -1px,
-      -1px -1px;
+  .stack-card--astro {
+    @apply hover:border-astro hover:bg-astro hover:text-white;
   }
-
-  /* In dark mode the light grid lines would be too bright, so dim them. */
-  :global(.dark) .graph-paper-bg-outer::before,
-  :global(.dark) .graph-paper-bg-inner::before {
-    background-image: linear-gradient(rgba(80, 80, 80, 0.3) 2px, transparent 2px), linear-gradient(90deg, rgba(80, 80, 80, 0.3) 2px, transparent 2px), linear-gradient(rgba(80, 80, 80, 0.22) 1px, transparent 1px), linear-gradient(90deg, rgba(80, 80, 80, 0.22) 1px, rgba(247, 247, 252, 0) 1px);
+  .stack-card--nextjs,
+  .stack-card--wix {
+    @apply hover:border-black hover:bg-black hover:text-white;
   }
-
-  .graph-paper-bg-outer::before {
-    mask-image: radial-gradient(ellipse at center, rgba(0, 0, 0, 0) 40%, rgba(0, 0, 0, 0.6) 100%);
-    -webkit-mask-image: radial-gradient(ellipse at center, rgba(0, 0, 0, 0) 40%, rgba(0, 0, 0, 0.6) 100%);
-    mask-size: 100% 100%;
-    -webkit-mask-size: 100% 100%;
-    mask-repeat: no-repeat;
-    -webkit-mask-repeat: no-repeat;
+  .stack-card--nuxt {
+    @apply hover:border-nuxt hover:bg-nuxt hover:text-white;
   }
-
-  .graph-paper-bg-inner::before {
-    mask-image: radial-gradient(ellipse at center, rgba(0, 0, 0, 0.7) 0%, rgba(0, 0, 0, 0) 75%);
-    -webkit-mask-image: radial-gradient(ellipse at center, rgba(0, 0, 0, 0.7) 0%, rgba(0, 0, 0, 0) 75%);
-    mask-size: 100% 100%;
-    -webkit-mask-size: 100% 100%;
-    mask-repeat: no-repeat;
-    -webkit-mask-repeat: no-repeat;
+  .stack-card--react {
+    @apply hover:border-react hover:bg-react hover:text-white;
   }
-
-  .graph-paper-bg-outer > *,
-  .graph-paper-bg-inner > * {
-    position: relative;
-    z-index: 1;
+  .stack-card--svelte {
+    @apply hover:border-svelte hover:bg-svelte hover:text-white;
+  }
+  .stack-card--vue {
+    @apply hover:border-vue hover:bg-vue hover:text-white;
+  }
+  .stack-card--wordpress {
+    @apply hover:border-wordpress hover:bg-wordpress hover:text-white;
+  }
+  .stack-card--javascript {
+    @apply hover:border-javascript hover:bg-javascript hover:text-black;
+  }
+  :global(.stack-card:hover svg) {
+    color: white !important;
+  }
+  :global(.stack-card:hover svg [fill]:not([fill='none'])) {
+    fill: white !important;
+  }
+  :global(.stack-card:hover svg [stroke]:not([stroke='none'])) {
+    stroke: white !important;
   }
 </style>

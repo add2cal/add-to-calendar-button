@@ -1,5 +1,6 @@
 ---
 import { useTranslations, getLocaleUrl } from "@utils/i18n";
+import { repositoryVersion } from '../version';
 
 interface Props {
   locale: string;
@@ -10,16 +11,30 @@ const t = useTranslations(locale);
 const currentYear = new Date().getFullYear();
 ---
 
-<nav role="navigation" class="mt-5 flex flex-col flex-wrap gap-x-2 gap-y-4 text-center text-xs text-stone-300 select-none sm:mt-0 sm:flex-col-reverse sm:gap-y-2 sm:text-left lg:flex-row-reverse">
-  <div class="mx-auto flex flex-wrap justify-center gap-x-6 gap-y-3 sm:gap-2 md:mx-0 md:justify-start">
-    <a class="unstyle-link hover:text-text-dark" href={getLocaleUrl('legal-notice', locale)}>
-      {t('nav.legal-notice')}
+<div class="mt-5 text-center text-xs text-zinc-500 select-none sm:mt-0 sm:text-left dark:text-zinc-400">
+  <nav role="navigation" class="flex flex-col flex-wrap gap-x-2 gap-y-4 sm:flex-col-reverse sm:gap-y-2 lg:flex-row-reverse">
+    <div class="mx-auto flex flex-wrap justify-center gap-x-6 gap-y-3 sm:gap-2 md:mx-0 md:justify-start">
+      <a class="unstyle-link hover:text-primary" href={getLocaleUrl('legal-notice', locale)}>
+        {t('nav.legal-notice')}
+      </a>
+      <div class="hidden opacity-50 sm:block">|</div>
+      <a class="unstyle-link hover:text-primary" href={getLocaleUrl('privacy-policy', locale)}>
+        {t('nav.privacy-policy')}
+      </a>
+      <div class="hidden opacity-50 sm:block">|</div>
+      <a class="unstyle-link external-link hover:text-primary" href="https://github.com/add2cal/add-to-calendar-button/blob/main/LICENSE.txt" target="_blank" rel="license noopener">
+        {t('footer.license')}
+      </a>
+    </div>
+    <div class="hidden opacity-50 lg:block">|</div>
+    <div>
+      &copy; {currentYear} Calendarverse GmbH, {t('footer.current-version')}: {repositoryVersion}
+    </div>
+  </nav>
+  <p class="mt-3 text-[0.7rem] opacity-75">
+    {t('footer.powered-by')}{' '}
+    <a class="external-link hover:text-primary" href="https://astro-stardrive.com" target="_blank" rel="noopener">
+      Astro StarDrive
     </a>
-    <div class="hidden opacity-50 sm:block">|</div>
-    <a class="unstyle-link hover:text-text-dark" href={getLocaleUrl('privacy-policy', locale)}>
-      {t('nav.privacy-policy')}
-    </a>
-  </div>
-  <div class="hidden opacity-50 lg:block">|</div>
-  <div>&copy; {currentYear}</div>
-</nav>
+  </p>
+</div>

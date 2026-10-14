@@ -1,7 +1,6 @@
 ---
 import Layout from "@layouts/default.astro";
 import "@styles/long-text-content.css";
-import Headline from "@components/headline.astro";
 import { useTranslations } from "@utils/i18n";
 
 const locale = 'de';
@@ -9,7 +8,7 @@ const t = useTranslations(locale);
 ---
 
 <Layout title={t('pages.privacy-policy.title')} robots="noindex, follow" {locale} header={{ showTopBanner: false }}>
-  <Headline text={t('pages.privacy-policy.title')} class="pb-10" />
+  <h1 class="decoration-primary dark:decoration-primary-light pb-10 text-balance underline decoration-4 underline-offset-8">{t('pages.privacy-policy.title')}</h1>
 
   <div class="long-text-content text-left wrap-break-word">
     <p>Die Nutzung unserer Webseite ist in der Regel ohne Angabe personenbezogener Daten möglich. Soweit auf unseren Seiten personenbezogene Daten (beispielsweise Name, Anschrift oder eMail-Adressen) erhoben werden, erfolgt dies, soweit möglich, stets auf freiwilliger Basis. Diese Daten werden ohne deine ausdrückliche Zustimmung nicht an Dritte weitergegeben.</p>

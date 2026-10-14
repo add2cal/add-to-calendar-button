@@ -1,0 +1,1945 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Add to Calendar Button — Make Every Event Worth Saving</title>
+  
+  <!-- Fonts: Paytone One for display, Inter for body, JetBrains Mono for code -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Paytone+One&family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  
+  <!-- Official Add to Calendar Button Web Component -->
+  <script src="https://cdn.jsdelivr.net/npm/add-to-calendar-button" async defer></script>
+
+  <style>
+    /* -------------------------------------------------------------------------- */
+    /* DESIGN TOKENS - MATCHING LIVE BUTTON SITE                                  */
+    /* -------------------------------------------------------------------------- */
+    :root {
+      /* Live Button Site Colors */
+      --hero-violet-dark: #7B3FE4;
+      --hero-violet-main: #9149F4;
+      --hero-violet-light: #B48CF5;
+      --hero-violet-subtle: #EBE0FF;
+      
+      --cta-orange: #FFA24C;
+      --cta-orange-hover: #F08E35;
+      
+      --bg-paper: #F9F7FE;
+      --bg-surface: #FFFFFF;
+      --bg-surface-elevated: #FFFFFF;
+      --bg-ink: #17132B;
+      --bg-ink-subtle: #252042;
+      --bg-ink-card: #1D1838;
+      
+      --text-main: #17132B;
+      --text-muted: #565075;
+      --text-subtle: #8982A8;
+      --text-on-ink: #FBFAFF;
+      --text-on-ink-muted: #A6A0C7;
+      
+      --accent-violet: #8841F2;
+      --accent-violet-dark: #6D2BD6;
+      --accent-violet-light: #F0E8FF;
+      --accent-violet-soft: #FAF6FF;
+      --accent-violet-border: rgba(136, 65, 242, 0.2);
+      
+      --accent-yellow: #FFC857;
+      --accent-mint: #2DBE8C;
+      
+      --border-subtle: rgba(23, 19, 43, 0.08);
+      --border-medium: rgba(23, 19, 43, 0.14);
+      --border-ink-subtle: rgba(251, 250, 255, 0.12);
+      
+      --font-display: 'Paytone One', sans-serif;
+      --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      --font-mono: 'JetBrains Mono', Consolas, monospace;
+      
+      --radius-sm: 8px;
+      --radius-md: 14px;
+      --radius-lg: 20px;
+      --radius-full: 9999px;
+      
+      --shadow-sm: 0 2px 8px rgba(145, 73, 244, 0.06);
+      --shadow-md: 0 8px 24px rgba(23, 19, 43, 0.08);
+      --shadow-lg: 0 16px 40px rgba(145, 73, 244, 0.15);
+      
+      --hero-pattern: radial-gradient(rgba(255, 255, 255, 0.22) 1.5px, transparent 1.5px);
+    }
+
+    /* Dark Mode Tokens */
+    body.dark-mode {
+      --bg-paper: #110E21;
+      --bg-surface: #1A1630;
+      --bg-surface-elevated: #221C3D;
+      --bg-ink: #0A0817;
+      --bg-ink-card: #141029;
+      
+      --text-main: #FBFAFF;
+      --text-muted: #B3ADC9;
+      --text-subtle: #7F799E;
+      
+      --border-subtle: rgba(251, 250, 255, 0.08);
+      --border-medium: rgba(251, 250, 255, 0.16);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      scroll-behavior: smooth;
+      font-size: 16px;
+    }
+
+    body {
+      background-color: var(--bg-paper);
+      color: var(--text-main);
+      font-family: var(--font-sans);
+      line-height: 1.5;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      overflow-x: hidden;
+      transition: background-color 0.3s ease, color 0.3s ease;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+
+    /* -------------------------------------------------------------------------- */
+    /* HERO HEADER & NAVIGATION (LIVE SITE STYLE)                                 */
+    /* -------------------------------------------------------------------------- */
+    .hero-wrapper {
+      background: linear-gradient(135deg, var(--hero-violet-dark) 0%, var(--hero-violet-main) 50%, var(--hero-violet-light) 100%);
+      background-image: url('assets/hero-plus-pattern.svg'), linear-gradient(135deg, var(--hero-violet-dark) 0%, var(--hero-violet-main) 50%, var(--hero-violet-light) 100%);
+      background-size: min(750px, 58vw) auto, 100% 100%;
+      background-position: right center, center;
+      background-repeat: no-repeat;
+      color: #FFFFFF;
+      position: relative;
+    }
+
+    .header-nav {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(123, 63, 228, 0.92);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+      transition: all 0.2s ease;
+    }
+
+    .nav-content {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 72px;
+    }
+
+    /* Single complete approved SVG logo lockup */
+    .brand-logo {
+      display: flex;
+      align-items: center;
+      text-decoration: none;
+    }
+
+    .brand-logo-img {
+      height: 42px;
+      width: auto;
+      max-width: 260px;
+      object-fit: contain;
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 28px;
+      list-style: none;
+    }
+
+    .nav-link {
+      text-decoration: none;
+      color: rgba(255, 255, 255, 0.9);
+      font-size: 0.9375rem;
+      font-weight: 600;
+      transition: color 0.15s ease;
+    }
+
+    .nav-link:hover {
+      color: var(--cta-orange);
+    }
+
+    .nav-actions {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .star-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 7px 16px;
+      background: rgba(255, 255, 255, 0.15);
+      border: 1px solid rgba(255, 255, 255, 0.25);
+      border-radius: var(--radius-full);
+      font-size: 0.875rem;
+      font-weight: 600;
+      color: #FFFFFF;
+      text-decoration: none;
+      transition: all 0.15s ease;
+    }
+
+    .star-pill:hover {
+      background: rgba(255, 255, 255, 0.28);
+      border-color: #FFFFFF;
+    }
+
+    .star-icon {
+      color: #FFD166;
+      fill: #FFD166;
+    }
+
+    .btn-pro-nav {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 18px;
+      background: var(--cta-orange);
+      color: var(--text-main);
+      border: 1px solid var(--cta-orange);
+      border-radius: var(--radius-md);
+      font-size: 0.875rem;
+      font-weight: 700;
+      text-decoration: none;
+      transition: all 0.15s ease;
+      box-shadow: 0 4px 14px rgba(255, 162, 76, 0.35);
+    }
+
+    .btn-pro-nav:hover {
+      background: var(--cta-orange-hover);
+      transform: translateY(-1px);
+    }
+
+    /* -------------------------------------------------------------------------- */
+    /* HERO CONTENT                                                               */
+    /* -------------------------------------------------------------------------- */
+    .hero-section {
+      padding: 64px 0 60px 0;
+    }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1.1fr 0.9fr;
+      gap: 48px;
+      align-items: center;
+      margin-bottom: 56px;
+    }
+
+    .hero-eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 16px;
+      background: rgba(255, 255, 255, 0.18);
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      border-radius: var(--radius-full);
+      font-size: 0.8125rem;
+      font-weight: 600;
+      color: #FFFFFF;
+      margin-bottom: 24px;
+      backdrop-filter: blur(8px);
+    }
+
+    .hero-eyebrow-dot {
+      width: 8px;
+      height: 8px;
+      background: var(--accent-mint);
+      border-radius: 50%;
+      box-shadow: 0 0 0 3px rgba(45, 190, 140, 0.3);
+    }
+
+    .hero-title {
+      font-family: var(--font-display);
+      font-size: 3.75rem;
+      line-height: 1.08;
+      font-weight: 400;
+      letter-spacing: 0;
+      color: #FFFFFF;
+      margin-bottom: 20px;
+    }
+
+    .hero-subhead {
+      font-size: 1.25rem;
+      line-height: 1.5;
+      color: rgba(255, 255, 255, 0.9);
+      margin-bottom: 36px;
+      max-width: 560px;
+    }
+
+    .hero-ctas {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 36px;
+    }
+
+    .btn-hero-orange {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      padding: 16px 32px;
+      background: var(--cta-orange);
+      color: var(--text-main);
+      font-size: 1.0625rem;
+      font-weight: 800;
+      border-radius: var(--radius-md);
+      text-decoration: none;
+      border: none;
+      transition: all 0.2s ease;
+      box-shadow: 0 6px 20px rgba(255, 162, 76, 0.4);
+      cursor: pointer;
+    }
+
+    .btn-hero-orange:hover {
+      background: var(--cta-orange-hover);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 26px rgba(255, 162, 76, 0.5);
+    }
+
+    .btn-hero-trans {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 16px 28px;
+      background: rgba(255, 255, 255, 0.15);
+      color: #FFFFFF;
+      font-size: 1rem;
+      font-weight: 600;
+      border-radius: var(--radius-md);
+      text-decoration: none;
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      transition: all 0.2s ease;
+      cursor: pointer;
+    }
+
+    .btn-hero-trans:hover {
+      background: rgba(255, 255, 255, 0.28);
+      border-color: #FFFFFF;
+      transform: translateY(-1px);
+    }
+
+    /* White Product Card Surface in Hero */
+    .event-card {
+      background: var(--bg-surface);
+      border: 1px solid rgba(255, 255, 255, 0.4);
+      border-radius: var(--radius-lg);
+      padding: 32px;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.2);
+      color: var(--text-main);
+    }
+
+    .event-card-header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      margin-bottom: 20px;
+    }
+
+    .event-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 12px;
+      background: var(--accent-mint-light);
+      color: var(--accent-mint);
+      border-radius: var(--radius-sm);
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+
+    .event-date-box {
+      text-align: center;
+      background: var(--accent-violet-light);
+      border: 1px solid var(--accent-violet-border);
+      border-radius: var(--radius-sm);
+      padding: 8px 14px;
+      min-width: 64px;
+    }
+
+    .event-date-month {
+      font-size: 0.6875rem;
+      font-weight: 800;
+      color: var(--accent-violet);
+      text-transform: uppercase;
+    }
+
+    .event-date-day {
+      font-size: 1.375rem;
+      font-weight: 800;
+      color: var(--text-main);
+      line-height: 1;
+    }
+
+    .event-title {
+      font-size: 1.5rem;
+      font-weight: 800;
+      color: var(--text-main);
+      margin-bottom: 10px;
+      letter-spacing: -0.01em;
+    }
+
+    .event-meta {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin-bottom: 24px;
+      font-size: 0.9375rem;
+      color: var(--text-muted);
+    }
+
+    .event-meta-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    /* Container for Real Component in Hero */
+    .hero-component-slot {
+      margin-bottom: 20px;
+      min-height: 48px;
+      display: flex;
+      align-items: center;
+      width: 100%;
+    }
+
+    /* Real Add to Calendar Button custom styling */
+    add-to-calendar-button {
+      display: inline-block;
+      min-height: 44px;
+      min-width: 180px;
+      --btn-background: #8841F2;
+      --btn-text: #FFFFFF;
+      --btn-shadow: 0 4px 14px rgba(136, 65, 242, 0.35);
+      --font: 'Inter', sans-serif;
+    }
+
+    /* TRUST & PROOF BAND */
+    .trust-proof-band {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-medium);
+      border-radius: var(--radius-lg);
+      padding: 28px 36px;
+      box-shadow: var(--shadow-md);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 32px;
+      flex-wrap: wrap;
+      color: var(--text-main);
+    }
+
+    .stats-group {
+      display: flex;
+      align-items: center;
+      gap: 36px;
+    }
+
+    .stat-item {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .stat-val {
+      font-size: 1.375rem;
+      font-weight: 800;
+      color: var(--accent-violet);
+      letter-spacing: -0.02em;
+    }
+
+    .stat-lbl {
+      font-size: 0.8125rem;
+      color: var(--text-muted);
+      font-weight: 500;
+    }
+
+    .badges-group {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+
+    .product-hunt-badge {
+      display: block;
+      height: 54px;
+      transition: transform 0.2s ease;
+    }
+
+    .product-hunt-badge:hover {
+      transform: translateY(-2px);
+    }
+
+    .product-hunt-badge img {
+      height: 54px;
+      width: auto;
+    }
+
+    .future-award-slot {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: flex-start;
+      padding: 8px 16px;
+      background: var(--accent-violet-soft);
+      border: 1px dashed var(--accent-violet-border);
+      border-radius: var(--radius-md);
+      min-height: 54px;
+    }
+
+    .future-award-title {
+      font-size: 0.8125rem;
+      font-weight: 700;
+      color: var(--text-main);
+    }
+
+    .future-award-tag {
+      font-size: 0.6875rem;
+      font-weight: 600;
+      color: var(--accent-violet);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    /* -------------------------------------------------------------------------- */
+    /* DEVELOPER ROUTER SECTION                                                   */
+    /* -------------------------------------------------------------------------- */
+    .router-section {
+      padding: 80px 0;
+      background: var(--bg-surface);
+      border-top: 1px solid var(--border-subtle);
+      border-bottom: 1px solid var(--border-subtle);
+    }
+
+    .section-header {
+      text-align: center;
+      max-width: 680px;
+      margin: 0 auto 56px auto;
+    }
+
+    .section-eyebrow {
+      font-size: 0.8125rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--accent-violet);
+      margin-bottom: 12px;
+    }
+
+    .section-title {
+      font-family: var(--font-display);
+      font-size: 2.5rem;
+      font-weight: 400;
+      color: var(--text-main);
+      margin-bottom: 16px;
+    }
+
+    .section-desc {
+      font-size: 1.0625rem;
+      color: var(--text-muted);
+      line-height: 1.5;
+    }
+
+    .router-grid {
+      display: grid;
+      grid-template-columns: 1.15fr 0.85fr;
+      gap: 32px;
+    }
+
+    .dev-router-card {
+      background: var(--bg-ink);
+      border: 1px solid var(--border-ink-subtle);
+      border-radius: var(--radius-lg);
+      padding: 36px;
+      color: var(--text-on-ink);
+      box-shadow: var(--shadow-md);
+    }
+
+    .dev-tabs {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 20px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      padding-bottom: 12px;
+    }
+
+    .dev-tab-btn {
+      background: transparent;
+      border: none;
+      color: var(--text-on-ink-muted);
+      font-family: var(--font-mono);
+      font-size: 0.875rem;
+      font-weight: 600;
+      padding: 8px 16px;
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+
+    .dev-tab-btn.active {
+      background: var(--accent-violet);
+      color: #FFFFFF;
+    }
+
+    .dev-code-box {
+      background: #110E21;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: var(--radius-md);
+      padding: 20px;
+      font-family: var(--font-mono);
+      font-size: 0.875rem;
+      line-height: 1.6;
+      color: #E2E8F0;
+      margin-bottom: 24px;
+    }
+
+    /* Copy & Prominent Configuration Button row in Developer Card */
+    .dev-action-row {
+      display: flex;
+      gap: 16px;
+      margin-bottom: 28px;
+    }
+
+    .btn-dev-secondary {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 12px 20px;
+      background: rgba(255, 255, 255, 0.1);
+      color: #FFFFFF;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: var(--radius-md);
+      font-size: 0.875rem;
+      font-weight: 600;
+      text-decoration: none;
+      transition: all 0.15s ease;
+    }
+
+    .btn-dev-secondary:hover {
+      background: rgba(255, 255, 255, 0.2);
+      border-color: #FFFFFF;
+    }
+
+    .stacks-guide-title {
+      font-size: 0.875rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--accent-yellow);
+      margin-bottom: 16px;
+    }
+
+    .stacks-guide-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 10px;
+    }
+
+    .stack-guide-link {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 14px;
+      background: var(--bg-ink-card);
+      border: 1px solid var(--border-ink-subtle);
+      border-radius: var(--radius-sm);
+      color: var(--text-on-ink);
+      font-size: 0.84375rem;
+      font-weight: 500;
+      text-decoration: none;
+      transition: all 0.15s ease;
+    }
+
+    .stack-guide-link:hover {
+      border-color: var(--accent-violet);
+      background: rgba(136, 65, 242, 0.18);
+      color: #FFFFFF;
+    }
+
+    .stack-guide-name {
+      display: inline-flex;
+      align-items: center;
+      gap: 9px;
+      min-width: 0;
+    }
+
+    .stack-guide-icon {
+      width: 20px;
+      height: 20px;
+      flex: 0 0 20px;
+      object-fit: contain;
+      padding: 2px;
+      background: #FFFFFF;
+      border-radius: 4px;
+    }
+
+    /* PRO Card */
+    .pro-router-card {
+      background: linear-gradient(135deg, var(--bg-surface) 0%, var(--accent-violet-soft) 100%);
+      border: 1.5px solid var(--accent-violet-border);
+      border-radius: var(--radius-lg);
+      padding: 36px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      box-shadow: var(--shadow-md);
+    }
+
+    /* -------------------------------------------------------------------------- */
+    /* PLAYGROUND / LIVE CONFIGURATOR (TRUE 3-COLUMN DESKTOP LAYOUT)              */
+    /* -------------------------------------------------------------------------- */
+    .playground-section {
+      padding: 80px 0;
+      background: var(--bg-paper);
+    }
+
+    .playground-card {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-medium);
+      border-radius: var(--radius-lg);
+      padding: 40px;
+      box-shadow: var(--shadow-lg);
+    }
+
+    /* True 3-Column Grid on Desktop */
+    .playground-grid-3 {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 32px;
+      align-items: start;
+    }
+
+    @media (max-width: 1024px) {
+      .playground-grid-3 {
+        grid-template-columns: 1fr;
+      }
+      .pg-preview-column {
+        order: 3; /* Stack Column 3 deliberately after controls on mobile */
+      }
+    }
+
+    .pg-col-title {
+      font-size: 1.125rem;
+      font-weight: 700;
+      color: var(--accent-violet);
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .form-group {
+      margin-bottom: 18px;
+    }
+
+    .form-label {
+      display: block;
+      font-size: 0.84375rem;
+      font-weight: 600;
+      color: var(--text-main);
+      margin-bottom: 6px;
+    }
+
+    .form-input, .form-select {
+      width: 100%;
+      padding: 10px 14px;
+      background: var(--bg-paper);
+      border: 1px solid var(--border-medium);
+      border-radius: var(--radius-sm);
+      font-family: var(--font-sans);
+      font-size: 0.875rem;
+      color: var(--text-main);
+      transition: all 0.15s ease;
+    }
+
+    .form-input:focus, .form-select:focus {
+      outline: none;
+      border-color: var(--accent-violet);
+      box-shadow: 0 0 0 3px rgba(136, 65, 242, 0.15);
+    }
+
+    .form-row-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    .options-checkboxes {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 8px;
+      background: var(--bg-paper);
+      padding: 10px;
+      border: 1px solid var(--border-medium);
+      border-radius: var(--radius-sm);
+    }
+
+    .checkbox-label {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.8125rem;
+      font-weight: 500;
+      cursor: pointer;
+    }
+
+    /* Sticky Column 3 Live Preview Card */
+    .pg-preview-sticky {
+      position: sticky;
+      top: 96px;
+      background: var(--accent-violet-soft);
+      border: 1.5px dashed var(--accent-violet-border);
+      border-radius: var(--radius-md);
+      padding: 28px 20px;
+      text-align: center;
+    }
+
+    .pg-code-output {
+      background: var(--bg-ink);
+      border: 1px solid var(--border-ink-subtle);
+      border-radius: var(--radius-md);
+      padding: 16px;
+      font-family: var(--font-mono);
+      font-size: 0.8125rem;
+      color: #73DACA;
+      overflow-x: auto;
+      margin-bottom: 16px;
+      text-align: left;
+    }
+
+    .pg-docs-notice {
+      font-size: 0.8125rem;
+      color: var(--text-muted);
+      line-height: 1.4;
+    }
+
+    .pg-docs-notice a {
+      color: var(--accent-violet);
+      font-weight: 600;
+      text-decoration: none;
+    }
+
+    .pg-docs-notice a:hover {
+      text-decoration: underline;
+    }
+
+    /* -------------------------------------------------------------------------- */
+    /* 6 REFINED CAPABILITY CARDS                                                 */
+    /* -------------------------------------------------------------------------- */
+    .capabilities-section {
+      padding: 80px 0;
+      background: var(--bg-surface);
+      border-top: 1px solid var(--border-subtle);
+    }
+
+    .capability-grid-6 {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+      margin-bottom: 48px;
+    }
+
+    .capability-card {
+      background: var(--bg-paper);
+      border: 1px solid var(--border-medium);
+      border-radius: var(--radius-md);
+      padding: 28px;
+      transition: all 0.2s ease;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .capability-card:hover {
+      border-color: var(--accent-violet-border);
+      box-shadow: var(--shadow-md);
+      transform: translateY(-2px);
+    }
+
+    .cap-icon {
+      width: 44px;
+      height: 44px;
+      background: var(--accent-violet-light);
+      border-radius: var(--radius-md);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--accent-violet);
+      margin-bottom: 20px;
+    }
+
+    .cap-title {
+      font-size: 1.1875rem;
+      font-weight: 700;
+      margin-bottom: 10px;
+      color: var(--text-main);
+    }
+
+    .cap-desc {
+      font-size: 0.9375rem;
+      color: var(--text-muted);
+      line-height: 1.5;
+      margin-bottom: 16px;
+    }
+
+    .cap-link {
+      font-size: 0.84375rem;
+      font-weight: 600;
+      color: var(--accent-violet);
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .cap-link:hover {
+      text-decoration: underline;
+    }
+
+    /* -------------------------------------------------------------------------- */
+    /* GRADUATED CHOICE BLOCK (FREE VS PRO)                                      */
+    /* -------------------------------------------------------------------------- */
+    .graduated-section {
+      padding: 96px 0;
+      background: var(--bg-paper);
+      border-top: 1px solid var(--border-subtle);
+    }
+
+    .comparison-table-wrapper {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-medium);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-lg);
+      overflow: hidden;
+      margin-bottom: 48px;
+    }
+
+    .comparison-grid {
+      display: grid;
+      grid-template-columns: 1.8fr 1.35fr 1.35fr;
+    }
+
+    .comp-header {
+      padding: 28px 32px;
+      background: var(--bg-paper);
+      border-bottom: 1px solid var(--border-medium);
+      font-weight: 700;
+    }
+
+    .comp-header-free {
+      border-right: 1px solid var(--border-subtle);
+    }
+
+    .comp-header-pro {
+      background: var(--accent-violet-light);
+      color: var(--accent-violet);
+    }
+
+    .comp-row {
+      display: grid;
+      grid-template-columns: 1.8fr 1.35fr 1.35fr;
+      border-bottom: 1px solid var(--border-subtle);
+      align-items: center;
+    }
+
+    .comp-row:last-child {
+      border-bottom: none;
+    }
+
+    .comp-cell {
+      padding: 20px 32px;
+      font-size: 0.9375rem;
+    }
+
+    .comp-feature {
+      font-weight: 600;
+      color: var(--text-main);
+    }
+
+    .comp-feature-sub {
+      font-size: 0.8125rem;
+      color: var(--text-muted);
+      font-weight: 400;
+      margin-top: 2px;
+    }
+
+    .comp-value-free {
+      color: var(--text-muted);
+      border-right: 1px solid var(--border-subtle);
+    }
+
+    .comp-value-pro {
+      color: var(--text-main);
+      font-weight: 600;
+      background: rgba(136, 65, 242, 0.02);
+    }
+
+    .final-cta-box {
+      text-align: center;
+      background: var(--bg-ink);
+      border-radius: var(--radius-lg);
+      padding: 56px 32px;
+      color: var(--text-on-ink);
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* -------------------------------------------------------------------------- */
+    /* FOOTER (REVERSED ORDER: BRAND/CONTROLS ON LEFT, NAV COLUMNS ON RIGHT)    */
+    /* -------------------------------------------------------------------------- */
+    .site-footer {
+      background: var(--bg-ink);
+      color: var(--text-on-ink-muted);
+      padding: 64px 0 40px 0;
+      border-top: 1px solid var(--border-ink-subtle);
+      font-size: 0.875rem;
+    }
+
+    .footer-grid {
+      display: grid;
+      grid-template-columns: 1.4fr repeat(3, 1fr);
+      gap: 48px;
+      margin-bottom: 48px;
+    }
+
+    .footer-title {
+      font-size: 0.875rem;
+      font-weight: 700;
+      color: var(--text-on-ink);
+      margin-bottom: 16px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .footer-links {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .footer-link {
+      color: var(--text-on-ink-muted);
+      text-decoration: none;
+      transition: color 0.15s ease;
+    }
+
+    .footer-link:hover {
+      color: #FFFFFF;
+    }
+
+    .footer-controls {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      margin-top: 16px;
+    }
+
+    .footer-select {
+      background: var(--bg-ink-card);
+      border: 1px solid var(--border-ink-subtle);
+      color: var(--text-on-ink);
+      padding: 8px 12px;
+      border-radius: var(--radius-sm);
+      font-size: 0.8125rem;
+      cursor: pointer;
+    }
+
+    .footer-toggle-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--bg-ink-card);
+      border: 1px solid var(--border-ink-subtle);
+      color: var(--text-on-ink);
+      padding: 8px 14px;
+      border-radius: var(--radius-sm);
+      font-size: 0.8125rem;
+      cursor: pointer;
+    }
+
+    .footer-bottom {
+      padding-top: 32px;
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+
+    .footer-legal-links {
+      display: flex;
+      gap: 20px;
+    }
+
+    a:focus-visible, button:focus-visible, select:focus-visible {
+      outline: 2px solid var(--cta-orange);
+      outline-offset: 2px;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- HERO WRAPPER WITH VIOLET GRADIENT & DOTTED PATTERN -->
+  <div class="hero-wrapper">
+    
+    <!-- NAVIGATION BAR -->
+    <header class="header-nav" data-od-id="header-nav">
+      <div class="container nav-content">
+        <!-- Approved SVG Logo Lockup -->
+        <a href="#" class="brand-logo" data-od-id="brand-logo">
+          <img src="https://drive.google.com/uc?export=view&id=1MHSzkriHtEJ1nicRIgm13QuIJV10MwVv" onerror="this.onerror=null; this.src='assets/add-to-calendar-button-logo.svg';" alt="Add to Calendar Button Logo" class="brand-logo-img">
+        </a>
+
+        <!-- First-class Main Navigation -->
+        <nav data-od-id="nav-links-menu">
+          <ul class="nav-links">
+            <li><a href="#playground" class="nav-link" data-od-id="nav-link-playground">Playground</a></li>
+            <li><a href="#install" class="nav-link" data-od-id="nav-link-install">Installation</a></li>
+            <li><a href="https://add-to-calendar-button.com/docs/configuration" target="_blank" class="nav-link" data-od-id="nav-link-config">Configuration</a></li>
+            <li><a href="https://add-to-calendar-button.com/examples" target="_blank" class="nav-link" data-od-id="nav-link-examples">Examples</a></li>
+          </ul>
+        </nav>
+
+        <!-- Right Actions -->
+        <div class="nav-actions" data-od-id="nav-actions">
+          <a href="https://github.com/add2cal/add-to-calendar-button" target="_blank" class="star-pill" data-od-id="github-star-pill">
+            <svg class="star-icon" width="16" height="16" viewBox="0 0 24 24">
+              <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+            </svg>
+            <span>Star 1.5k</span>
+          </a>
+
+          <a href="https://add-to-calendar-pro.com" target="_blank" class="btn-pro-nav" data-od-id="nav-cta-pro">
+            <span>Use PRO</span>
+          </a>
+        </div>
+      </div>
+    </header>
+
+    <!-- HERO SECTION -->
+    <section class="hero-section" id="hero" data-od-id="hero-section">
+      <div class="container">
+        <div class="hero-grid">
+          
+          <!-- Left Hero Column -->
+          <div class="hero-left-col" data-od-id="hero-content">
+            <div class="hero-eyebrow" data-od-id="hero-eyebrow">
+              <span class="hero-eyebrow-dot"></span>
+              <span>Free, framework-agnostic Web Component</span>
+            </div>
+
+            <h1 class="hero-title" data-od-id="hero-headline">
+              Make every event worth saving.
+            </h1>
+
+            <p class="hero-subhead" data-od-id="hero-subhead">
+              A zero-dependency, framework-agnostic Web Component that lets visitors save events to Google, Apple, Outlook, Yahoo, and iCal with zero friction.
+            </p>
+
+            <div class="hero-ctas" data-od-id="hero-ctas">
+              <a href="#install" class="btn-hero-orange" data-od-id="cta-install-primary">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="8 17 12 21 16 17"/><line x1="12" y1="12" x2="12" y2="21"/><path d="M20.88 18.09A5 5 0 0 0 18 9h-1.26A8 8 0 1 0 3 16.29"/></svg>
+                <span>Install for free</span>
+              </a>
+
+              <a href="#playground" class="btn-hero-trans" data-od-id="cta-try-demo-hero">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polygon points="10 8 16 12 10 16 10 8"/></svg>
+                <span>Try live demo</span>
+              </a>
+            </div>
+          </div>
+
+          <!-- Right Hero Column: Current product artwork -->
+          <div class="hero-right-col" data-od-id="hero-interactive-col">
+            <img src="combo.webp" alt="Add to Calendar Button showing Apple, Google, iCal, Microsoft 365, Outlook.com, and Yahoo calendar options" width="1000" height="768" decoding="async" data-od-id="hero-event-card" style="display:block;width:100%;height:auto;object-fit:contain;">
+          </div>
+
+        </div>
+
+        <!-- TRUST & PROOF BAND WITH REAL STATS & PH BADGE -->
+        <div class="trust-proof-band" data-od-id="trust-proof-band">
+          <div class="stats-group">
+            <div class="stat-item">
+              <span class="stat-val">3,418,291</span>
+              <span class="stat-lbl">npm installations</span>
+            </div>
+            <div class="stat-item">
+              <span class="stat-val">184,674</span>
+              <span class="stat-lbl">monthly npm downloads</span>
+            </div>
+            <div class="stat-item">
+              <span class="stat-val">49,152,122</span>
+              <span class="stat-lbl">monthly CDN hits</span>
+            </div>
+            <div class="stat-item">
+              <span class="stat-val">1.5k</span>
+              <span class="stat-lbl">GitHub stars</span>
+            </div>
+          </div>
+
+          <div class="badges-group">
+            <a href="https://www.producthunt.com/posts/add-to-calendar-button" target="_blank" class="product-hunt-badge" data-od-id="product-hunt-badge">
+              <img src="https://api.producthunt.com/widgets/embed-image/v1/top-post-badge.svg?post_id=319458&theme=dark&period=daily" alt="Add to Calendar Button - Product Hunt Product of the Day">
+            </a>
+
+            <div class="future-award-slot" data-od-id="future-award-slot">
+              <span class="future-award-title">Future Community Award</span>
+              <span class="future-award-tag">Slot Reserved</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+  </div>
+
+
+  <!-- ------------------------------------------------------------------------ -->
+  <!-- DEVELOPER ROUTER SECTION                                                 -->
+  <!-- ------------------------------------------------------------------------ -->
+  <section class="router-section" id="install" data-od-id="developer-router-section">
+    <div class="container">
+      <div class="section-header">
+        <div class="section-eyebrow">Targeted Workflow</div>
+        <h2 class="section-title">How are you building this?</h2>
+        <p class="section-desc">Whether you want clean code in your frontend stack or a complete no-code event page, we've got you covered.</p>
+      </div>
+
+      <div class="router-grid">
+        
+        <!-- CARD A: Developer Route (ONLY npm or CDN + Prominent Config Docs Button + v3.0.1) -->
+        <div class="dev-router-card" data-od-id="dev-router-card">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
+            <span style="font-size:0.75rem; font-weight:700; color:var(--accent-yellow); text-transform:uppercase;">⚡ Developer Installation</span>
+            <span style="font-size:0.8125rem; font-family:var(--font-mono); color:var(--text-on-ink-muted);">v3.0.1 • Elastic License 2.0</span>
+          </div>
+
+          <h3 style="font-size:1.75rem; font-weight:800; margin-bottom:10px;">I write code</h3>
+          <p style="color:var(--text-on-ink-muted); font-size:0.9375rem; margin-bottom:24px;">Drop a single Web Component into any web application or static site.</p>
+
+          <!-- ONLY npm & CDN tabs -->
+          <div class="dev-tabs">
+            <button class="dev-tab-btn active" onclick="switchDevTab('npm')" id="btn-tab-npm">npm</button>
+            <button class="dev-tab-btn" onclick="switchDevTab('cdn')" id="btn-tab-cdn">CDN Script</button>
+          </div>
+
+          <div class="dev-code-box" id="devCodeBox">
+            <span style="color:#6A9955;"># Install via npm</span><br>
+            <span style="color:#C586C0;">npm install</span> add-to-calendar-button
+          </div>
+
+          <!-- Copy & Prominent Configuration Button row -->
+          <div class="dev-action-row">
+            <button class="btn-dev-secondary" onclick="copyCurrentInstall()" id="btnCopyInstall" style="background:var(--accent-violet); border-color:var(--accent-violet);">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+              <span>Copy install code</span>
+            </button>
+
+            <a href="https://add-to-calendar-button.com/docs/configuration" target="_blank" class="btn-dev-secondary">
+              <span>Configuration Docs ↗</span>
+            </a>
+          </div>
+
+          <!-- "What are you building with?" Guide Grid -->
+          <div class="stacks-guide-title">What are you building with?</div>
+          <div class="stacks-guide-grid" data-od-id="stacks-guide-grid">
+            <a href="https://add-to-calendar-button.com/docs/angular" target="_blank" class="stack-guide-link"><span class="stack-guide-name"><img src="assets/frameworks/angular.svg" alt="" class="stack-guide-icon"><span>Angular</span></span><span>→</span></a>
+            <a href="https://add-to-calendar-button.com/docs/astro" target="_blank" class="stack-guide-link"><span class="stack-guide-name"><img src="assets/frameworks/astro.svg" alt="" class="stack-guide-icon"><span>Astro</span></span><span>→</span></a>
+            <a href="https://add-to-calendar-button.com/docs/nextjs" target="_blank" class="stack-guide-link"><span class="stack-guide-name"><img src="assets/frameworks/nextjs.svg" alt="" class="stack-guide-icon"><span>Next.js</span></span><span>→</span></a>
+            <a href="https://add-to-calendar-button.com/docs/nuxt" target="_blank" class="stack-guide-link"><span class="stack-guide-name"><img src="assets/frameworks/nuxt.svg" alt="" class="stack-guide-icon"><span>Nuxt</span></span><span>→</span></a>
+            <a href="https://add-to-calendar-button.com/docs/react" target="_blank" class="stack-guide-link"><span class="stack-guide-name"><img src="assets/frameworks/react.svg" alt="" class="stack-guide-icon"><span>React</span></span><span>→</span></a>
+            <a href="https://add-to-calendar-button.com/docs/svelte" target="_blank" class="stack-guide-link"><span class="stack-guide-name"><img src="assets/frameworks/svelte.svg" alt="" class="stack-guide-icon"><span>Svelte</span></span><span>→</span></a>
+            <a href="https://add-to-calendar-button.com/docs/vue" target="_blank" class="stack-guide-link"><span class="stack-guide-name"><img src="assets/frameworks/vue.svg" alt="" class="stack-guide-icon"><span>Vue</span></span><span>→</span></a>
+            <a href="https://add-to-calendar-button.com/docs/wix" target="_blank" class="stack-guide-link"><span class="stack-guide-name"><img src="assets/frameworks/wix.svg" alt="" class="stack-guide-icon"><span>Wix</span></span><span>→</span></a>
+            <a href="https://add-to-calendar-button.com/docs/wordpress" target="_blank" class="stack-guide-link"><span class="stack-guide-name"><img src="assets/frameworks/wordpress.svg" alt="" class="stack-guide-icon"><span>WordPress</span></span><span>→</span></a>
+            <a href="https://add-to-calendar-button.com/docs/javascript" target="_blank" class="stack-guide-link"><span class="stack-guide-name"><img src="assets/frameworks/javascript.svg" alt="" class="stack-guide-icon"><span>Default JavaScript</span></span><span>→</span></a>
+          </div>
+        </div>
+
+        <!-- CARD B: No-Code PRO Route -->
+        <div class="pro-router-card" data-od-id="pro-router-card">
+          <div>
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
+              <span class="event-badge" style="background:var(--accent-violet); color:#FFF;">Add to Calendar PRO</span>
+              <span style="font-size:0.8125rem; font-weight:700; color:var(--accent-violet);">No-Code Engine</span>
+            </div>
+
+            <h3 style="font-size:1.75rem; font-weight:800; color:var(--text-main); margin-bottom:10px;">I manage events</h3>
+            <p style="color:var(--text-muted); font-size:0.9375rem; margin-bottom:24px;">Need visual button management, RSVP forms, hosted .ics files, or event landing pages without writing code?</p>
+
+            <ul style="list-style:none; display:flex; flex-direction:column; gap:16px; margin-bottom:32px;">
+              <li style="display:flex; gap:12px; font-size:0.9375rem;">
+                <span style="color:var(--accent-violet); font-weight:700;">✓</span>
+                <div><strong>Visual Management:</strong> Configure buttons and event microsites visually.</div>
+              </li>
+              <li style="display:flex; gap:12px; font-size:0.9375rem;">
+                <span style="color:var(--accent-violet); font-weight:700;">✓</span>
+                <div><strong>RSVP & Managed ICS:</strong> Host dynamic .ics files and collect guest confirmations.</div>
+              </li>
+              <li style="display:flex; gap:12px; font-size:0.9375rem;">
+                <span style="color:var(--accent-violet); font-weight:700;">✓</span>
+                <div><strong>Automated Workflows:</strong> Post-save CTAs, API, webhooks, Zapier & Pipedream.</div>
+              </li>
+            </ul>
+          </div>
+
+          <a href="https://add-to-calendar-pro.com" target="_blank" class="btn-hero-orange" style="width:100%; text-align:center;">
+            <span>Create without code →</span>
+          </a>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ------------------------------------------------------------------------ -->
+  <!-- PLAYGROUND / LIVE CONFIGURATOR (TRUE 3-COLUMN DESKTOP LAYOUT)            -->
+  <!-- ------------------------------------------------------------------------ -->
+  <section class="playground-section" id="playground" data-od-id="playground-section">
+    <div class="container">
+      <div class="section-header">
+        <div class="section-eyebrow">Interactive Configurator</div>
+        <h2 class="section-title">Live Button Playground</h2>
+        <p class="section-desc">Customize event parameters and layout settings in real time, then copy the live generated Web Component snippet.</p>
+      </div>
+
+      <div class="playground-card" data-od-id="playground-card">
+        
+        <!-- TRUE 3-COLUMN DESKTOP LAYOUT -->
+        <div class="playground-grid-3">
+          
+          <!-- Column 1: Date Details + Recurrence -->
+          <div data-od-id="pg-col-1">
+            <div class="pg-col-title">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+              <span>1. Date & Recurrence</span>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Event Subject (name)</label>
+              <input type="text" class="form-input" id="pgName" value="Global Developer Summit 2026" oninput="updatePlayground()">
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Description</label>
+              <input type="text" class="form-input" id="pgDesc" value="Join us live for the annual keynote presentation." oninput="updatePlayground()">
+            </div>
+
+            <div class="form-row-2 form-group">
+              <div>
+                <label class="form-label">Start Date</label>
+                <input type="date" class="form-input" id="pgStartDate" value="2026-10-15" onchange="updatePlayground()">
+              </div>
+              <div>
+                <label class="form-label">Start Time</label>
+                <input type="time" class="form-input" id="pgStartTime" value="10:00" onchange="updatePlayground()">
+              </div>
+            </div>
+
+            <div class="form-row-2 form-group">
+              <div>
+                <label class="form-label">End Date</label>
+                <input type="date" class="form-input" id="pgEndDate" value="2026-10-15" onchange="updatePlayground()">
+              </div>
+              <div>
+                <label class="form-label">End Time</label>
+                <input type="time" class="form-input" id="pgEndTime" value="11:30" onchange="updatePlayground()">
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Time Zone</label>
+              <select class="form-select" id="pgTimeZone" onchange="updatePlayground()">
+                <option value="America/New_York" selected>America/New_York (EDT)</option>
+                <option value="Europe/London">Europe/London (GMT/BST)</option>
+                <option value="Europe/Berlin">Europe/Berlin (CET)</option>
+                <option value="Asia/Tokyo">Asia/Tokyo (JST)</option>
+                <option value="UTC">UTC Universal Time</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Location</label>
+              <input type="text" class="form-input" id="pgLocation" value="Online Stream (YouTube Live)" oninput="updatePlayground()">
+            </div>
+
+            <div class="form-row-2 form-group">
+              <div>
+                <label class="form-label">Recurrence (RRULE)</label>
+                <select class="form-select" id="pgRecurrence" onchange="updatePlayground()">
+                  <option value="none" selected>None (Single Event)</option>
+                  <option value="WEEKLY">Weekly</option>
+                  <option value="MONTHLY">Monthly</option>
+                  <option value="YEARLY">Yearly</option>
+                </select>
+              </div>
+              <div>
+                <label class="form-label">Max Occurrences</label>
+                <input type="number" class="form-input" id="pgRecurrenceCount" value="5" min="1" max="52" oninput="updatePlayground()">
+              </div>
+            </div>
+          </div>
+
+          <!-- Column 2: Layout Settings, Setup Guidance, Output Code -->
+          <div data-od-id="pg-col-2">
+            <div class="pg-col-title">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+              <span>2. Layout & Setup</span>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Calendar Services (options)</label>
+              <div class="options-checkboxes">
+                <label class="checkbox-label"><input type="checkbox" id="optGoogle" checked onchange="updatePlayground()"> Google</label>
+                <label class="checkbox-label"><input type="checkbox" id="optApple" checked onchange="updatePlayground()"> Apple</label>
+                <label class="checkbox-label"><input type="checkbox" id="optOutlook" checked onchange="updatePlayground()"> Microsoft 365</label>
+                <label class="checkbox-label"><input type="checkbox" id="optYahoo" checked onchange="updatePlayground()"> Yahoo</label>
+                <label class="checkbox-label"><input type="checkbox" id="optICal" checked onchange="updatePlayground()"> iCal</label>
+              </div>
+            </div>
+
+            <div class="form-row-2 form-group">
+              <div>
+                <label class="form-label">Button Style</label>
+                <select class="form-select" id="pgButtonStyle" onchange="updatePlayground()">
+                  <option value="default" selected>Default</option>
+                  <option value="round">Round</option>
+                  <option value="text">Text Only</option>
+                </select>
+              </div>
+              <div>
+                <label class="form-label">Theme</label>
+                <select class="form-select" id="pgTheme" onchange="updatePlayground()">
+                  <option value="light" selected>Light</option>
+                  <option value="dark">Dark</option>
+                  <option value="system">System Auto</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="form-row-2 form-group">
+              <div>
+                <label class="form-label">Custom Label</label>
+                <input type="text" class="form-input" id="pgLabel" value="Add to Calendar" oninput="updatePlayground()">
+              </div>
+              <div>
+                <label class="form-label">Language</label>
+                <select class="form-select" id="pgLanguage" onchange="updatePlayground()">
+                  <option value="en" selected>English (en)</option>
+                  <option value="de">German (de)</option>
+                  <option value="fr">French (fr)</option>
+                  <option value="es">Spanish (es)</option>
+                </select>
+              </div>
+            </div>
+
+            <!-- Dynamic Code Output Snippet -->
+            <label class="form-label">Generated Snippet</label>
+            <div class="pg-code-output" id="pgCodeSnippet" data-od-id="pg-code-snippet">
+              &lt;add-to-calendar-button name="Global Developer Summit 2026" startDate="2026-10-15" startTime="10:00" options="'Google','Apple','Microsoft365','Yahoo','iCal'"&gt;&lt;/add-to-calendar-button&gt;
+            </div>
+
+            <p class="pg-docs-notice">
+              This playground covers a subset of available attributes. For complete schema details, see the <a href="https://add-to-calendar-button.com/docs/configuration" target="_blank">Configuration Docs ↗</a>.
+            </p>
+          </div>
+
+          <!-- Column 3: STICKY LIVE PREVIEW -->
+          <div class="pg-preview-column" data-od-id="pg-col-3">
+            <div class="pg-preview-sticky">
+              <div style="font-size:0.8125rem; font-weight:700; color:var(--accent-violet); text-transform:uppercase; margin-bottom:16px;">
+                3. Sticky Live Preview
+              </div>
+              <div id="pgComponentWrapper">
+                <add-to-calendar-button
+                  id="playgroundBtn"
+                  name="Global Developer Summit 2026"
+                  description="Join us live for the annual keynote presentation."
+                  startDate="2026-10-15"
+                  startTime="10:00"
+                  endDate="2026-10-15"
+                  endTime="11:30"
+                  timeZone="America/New_York"
+                  location="Online Stream (YouTube Live)"
+                  options="'Google','Apple','Microsoft365','Yahoo','iCal'"
+                  buttonStyle="default"
+                  theme="light"
+                  label="Add to Calendar"
+                  language="en">
+                </add-to-calendar-button>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ------------------------------------------------------------------------ -->
+  <!-- 6 REFINED CAPABILITY CARDS                                               -->
+  <!-- ------------------------------------------------------------------------ -->
+  <section class="capabilities-section" id="capabilities" data-od-id="capabilities-section">
+    <div class="container">
+      <div class="section-header">
+        <div class="section-eyebrow">Core Engine Capabilities</div>
+        <h2 class="section-title">Built for edge cases & real-world events</h2>
+        <p class="section-desc">Calendar APIs and .ics specifications require careful platform handling. We solved every browser, protocol, and timezone anomaly so you don't have to.</p>
+      </div>
+
+      <!-- 6 Refined Cards -->
+      <div class="capability-grid-6" data-od-id="capability-grid-6">
+        
+        <!-- Card 1: All Major Calendars -->
+        <div class="capability-card" data-od-id="cap-1-calendars">
+          <div>
+            <div class="cap-icon">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+            </div>
+            <h3 class="cap-title">1. All Major Calendars</h3>
+            <p class="cap-desc">Direct deep-links for web calendars (Google, Outlook, Office 365, Yahoo) alongside validated RFC 5545 .ics files for Apple and native desktop clients.</p>
+          </div>
+          <a href="https://add-to-calendar-button.com/examples" target="_blank" class="cap-link">View Calendar Examples →</a>
+        </div>
+
+        <!-- Card 2: Flexible Event Types -->
+        <div class="capability-card" data-od-id="cap-2-event-types">
+          <div>
+            <div class="cap-icon">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            </div>
+            <h3 class="cap-title">2. Flexible Event Types</h3>
+            <p class="cap-desc">Supports all-day events, multi-date schedules, recurring RRULE intervals, subscriptions, and dynamic date parameters updated via JavaScript.</p>
+          </div>
+          <a href="https://add-to-calendar-button.com/docs/configuration" target="_blank" class="cap-link">See Configuration Docs →</a>
+        </div>
+
+        <!-- Card 3: Time Zones & DST -->
+        <div class="capability-card" data-od-id="cap-3-timezones">
+          <div>
+            <div class="cap-icon">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+            </div>
+            <h3 class="cap-title">3. Time Zones & DST</h3>
+            <p class="cap-desc">Detects the visitor's local browser timezone automatically and converts UTC offsets seamlessly, including Daylight Saving Time transitions.</p>
+          </div>
+          <a href="https://add-to-calendar-button.com/docs/configuration#timezone" target="_blank" class="cap-link">Timezone Details →</a>
+        </div>
+
+        <!-- Card 4: Browser & Webview Handling (CTA -> #playground) -->
+        <div class="capability-card" data-od-id="cap-4-browser-compat">
+          <div>
+            <div class="cap-icon">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+            </div>
+            <h3 class="cap-title">4. Browser & Webview Handling</h3>
+            <p class="cap-desc">Rigorously tested across iOS Safari popup blockers, Android Chrome, in-app mobile webviews (Instagram, LinkedIn), and Outlook webmail protocols.</p>
+          </div>
+          <a href="#playground" class="cap-link">Try it in the playground →</a>
+        </div>
+
+        <!-- Card 5: Styling & 44 Languages -->
+        <div class="capability-card" data-od-id="cap-5-styling-i18n">
+          <div>
+            <div class="cap-icon">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 8v8"/><path d="M8 12h8"/></svg>
+            </div>
+            <h3 class="cap-title">5. Styling & 44 Languages</h3>
+            <p class="cap-desc">Custom themes, CSS custom variables, custom button labels, and automatic i18n localization in 44 languages based on browser locale.</p>
+          </div>
+          <a href="https://add-to-calendar-button.com/docs/configuration#i18n" target="_blank" class="cap-link">Language List →</a>
+        </div>
+
+        <!-- Card 6: Accessibility & Privacy -->
+        <div class="capability-card" data-od-id="cap-6-a11y-privacy">
+          <div>
+            <div class="cap-icon">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+            </div>
+            <h3 class="cap-title">6. Accessibility & Privacy</h3>
+            <p class="cap-desc">WCAG AA compliant with keyboard and screen-reader support. 100% client-side execution, strict GDPR environments, and CSP nonce support.</p>
+          </div>
+          <a href="https://add-to-calendar-button.com/docs/configuration#security" target="_blank" class="cap-link">Security Docs →</a>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ------------------------------------------------------------------------ -->
+  <!-- GRADUATED CHOICE BLOCK (FREE VS PRO)                                     -->
+  <!-- ------------------------------------------------------------------------ -->
+  <section class="graduated-section" id="comparison" data-od-id="comparison-section">
+    <div class="container">
+      <div class="section-header">
+        <div class="section-eyebrow">Clear Choice</div>
+        <h2 class="section-title">A button is enough — until it isn't.</h2>
+        <p class="section-desc">Choose the free Web Component for custom codebases, or upgrade to PRO when you need visual management, RSVP tracking, and landing pages.</p>
+      </div>
+
+      <!-- Feature Comparison Table -->
+      <div class="comparison-table-wrapper" data-od-id="comparison-table">
+        <div class="comparison-grid comp-header">
+          <div class="comp-cell">Capabilities</div>
+          <div class="comp-cell comp-header-free">Free Web Component</div>
+          <div class="comp-cell comp-header-pro">Add to Calendar PRO</div>
+        </div>
+
+        <div class="comp-row">
+          <div class="comp-cell comp-feature">
+            Deployment & Setup
+            <div class="comp-feature-sub">How you integrate into your workflow</div>
+          </div>
+          <div class="comp-cell comp-value-free">Embed via npm / CDN / HTML</div>
+          <div class="comp-cell comp-value-pro">Hosted Page & Embed Code</div>
+        </div>
+
+        <div class="comp-row">
+          <div class="comp-cell comp-feature">
+            Configuration
+            <div class="comp-feature-sub">Button and event setup model</div>
+          </div>
+          <div class="comp-cell comp-value-free">Configure in code</div>
+          <div class="comp-cell comp-value-pro">
+            <span style="color:var(--accent-violet); font-weight:700;">✓ Visual Management UI</span>
+          </div>
+        </div>
+
+        <div class="comp-row">
+          <div class="comp-cell comp-feature">
+            Calendar Save Links & Files
+            <div class="comp-feature-sub">Google, Apple, Outlook, Yahoo, iCal</div>
+          </div>
+          <div class="comp-cell comp-value-free">Generate calendar save options</div>
+          <div class="comp-cell comp-value-pro">
+            <span style="color:var(--accent-mint); font-weight:700;">✓ Generate options + Managed .ics hosting</span>
+          </div>
+        </div>
+
+        <div class="comp-row">
+          <div class="comp-cell comp-feature">
+            Event Landing Pages
+            <div class="comp-feature-sub">Dedicated event microsites</div>
+          </div>
+          <div class="comp-cell comp-value-free">Manual integration in your site</div>
+          <div class="comp-cell comp-value-pro">
+            <span style="color:var(--accent-violet); font-weight:700;">✓ Event Landing Pages</span>
+          </div>
+        </div>
+
+        <div class="comp-row">
+          <div class="comp-cell comp-feature">
+            RSVP & Attendee Tracking
+            <div class="comp-feature-sub">Confirmation forms and guest lists</div>
+          </div>
+          <div class="comp-cell comp-value-free">—</div>
+          <div class="comp-cell comp-value-pro">
+            <span style="color:var(--accent-violet); font-weight:700;">✓ RSVP Forms</span>
+          </div>
+        </div>
+
+        <div class="comp-row">
+          <div class="comp-cell comp-feature">
+            Post-Save CTAs & Integrations
+            <div class="comp-feature-sub">Follow-up actions and automation</div>
+          </div>
+          <div class="comp-cell comp-value-free">—</div>
+          <div class="comp-cell comp-value-pro">
+            <span style="color:var(--accent-violet); font-weight:700;">✓ Post-save CTA, API, Webhooks, Zapier & Pipedream</span>
+          </div>
+        </div>
+
+        <div class="comp-row">
+          <div class="comp-cell comp-feature">
+            Licensing / Access
+            <div class="comp-feature-sub">Licensing model</div>
+          </div>
+          <div class="comp-cell comp-value-free">
+            <strong>Free</strong> (Elastic License 2.0)
+          </div>
+          <div class="comp-cell comp-value-pro">
+            <strong>Free & paid plans available</strong>
+          </div>
+        </div>
+      </div>
+
+      <!-- Final Call to Action Box -->
+      <div class="final-cta-box" data-od-id="final-cta-box">
+        <h3 style="font-family:var(--font-display); font-size:2.25rem; font-weight:400; margin-bottom:12px; color:#FFFFFF;">
+          Ready to make event saving effortless?
+        </h3>
+        <p style="font-size:1.125rem; color:var(--text-on-ink-muted); max-width:600px; margin:0 auto 32px auto;">
+          Use the free Web Component in your code or start with Add to Calendar PRO today.
+        </p>
+
+        <div style="display:flex; justify-content:center; gap:20px; flex-wrap:wrap;" data-od-id="final-cta-buttons">
+          <a href="https://add-to-calendar-pro.com" target="_blank" class="btn-hero-orange" style="padding:16px 32px; font-size:1.0625rem;">
+            <span>Explore Add to Calendar PRO</span>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+          </a>
+
+          <a href="https://github.com/add2cal/add-to-calendar-button" target="_blank" class="btn-hero-trans" style="border-color:rgba(255,255,255,0.25);">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+            <span>View on GitHub • Elastic License 2.0</span>
+          </a>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+
+  <!-- ------------------------------------------------------------------------ -->
+  <!-- FOOTER (REVERSED ORDER: BRAND/CONTROLS ON LEFT, NAV COLUMNS ON RIGHT)    -->
+  <!-- ------------------------------------------------------------------------ -->
+  <footer class="site-footer" data-od-id="site-footer">
+    <div class="container">
+      <div class="footer-grid">
+        
+        <!-- LEFT COLUMN (COLUMN 1): BRAND LOCKUP, DESCRIPTOR & CONTROLS -->
+        <div>
+          <div class="footer-brand" style="margin-bottom:12px;">
+            <img src="https://drive.google.com/uc?export=view&id=1MHSzkriHtEJ1nicRIgm13QuIJV10MwVv" onerror="this.onerror=null; this.src='assets/add-to-calendar-button-logo.svg';" alt="Add to Calendar Button Logo" style="height:38px; width:auto;">
+          </div>
+          <p style="margin-bottom:16px; font-size:0.875rem; color:var(--text-on-ink-muted); line-height:1.5;">
+            A reliable Add to Calendar Button for the modern web.
+          </p>
+
+          <div class="footer-controls">
+            <!-- Compact GitHub & npm Icon links -->
+            <div style="display:flex; gap:16px; align-items:center;">
+              <a href="https://github.com/add2cal/add-to-calendar-button" target="_blank" style="color:var(--text-on-ink-muted);" title="GitHub Repository">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+              </a>
+              <a href="https://www.npmjs.com/package/add-to-calendar-button" target="_blank" style="color:var(--text-on-ink-muted);" title="npm Package">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M0 0v24h24V0H0zm19.2 19.2H4.8V4.8h14.4v14.4zM7.2 7.2v9.6h4.8V9.6h2.4v7.2h2.4V7.2H7.2z"/></svg>
+              </a>
+            </div>
+
+            <!-- Dark / Light Mode Toggle Button -->
+            <button class="footer-toggle-btn" onclick="toggleTheme()" id="themeToggleBtn" data-od-id="theme-toggle-btn">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+              <span id="themeToggleText">Toggle Theme</span>
+            </button>
+
+            <!-- Language Selector showing EN and DE, with disabled ES/FR in menu -->
+            <select class="footer-select" id="footerLangSelect" onchange="switchLanguage(this.value)" data-od-id="language-selector">
+              <option value="en" selected>🌐 English (EN)</option>
+              <option value="de">🌐 Deutsch (DE)</option>
+              <option value="es" disabled>🌐 Español (ES) — Soon</option>
+              <option value="fr" disabled>🌐 Français (FR) — Soon</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- RIGHT COLUMN 2: PRODUCT -->
+        <div>
+          <div class="footer-title">Product</div>
+          <ul class="footer-links">
+            <li><a href="#playground" class="footer-link">Demo / Playground</a></li>
+            <li><a href="#install" class="footer-link">Installation</a></li>
+            <li><a href="https://add-to-calendar-button.com/docs/configuration" target="_blank" class="footer-link">Configuration</a></li>
+            <li><a href="https://add-to-calendar-button.com/examples" target="_blank" class="footer-link">Examples</a></li>
+            <li><a href="#capabilities" class="footer-link">Feature Overview</a></li>
+          </ul>
+        </div>
+
+        <!-- RIGHT COLUMN 3: RESOURCES -->
+        <div>
+          <div class="footer-title">Resources</div>
+          <ul class="footer-links">
+            <li><a href="https://github.com/add2cal/add-to-calendar-button/discussions" target="_blank" class="footer-link">Help & Discussions</a></li>
+            <li><a href="https://github.com/add2cal/add-to-calendar-button/blob/main/LICENSE" target="_blank" class="footer-link">Elastic License 2.0</a></li>
+            <li><a href="https://add-to-calendar-button.com/docs/migration" target="_blank" class="footer-link">Migration Guide (v2 to v3)</a></li>
+            <li><a href="https://add-to-calendar-button.com/docs/definition" target="_blank" class="footer-link">Definition & Specification</a></li>
+          </ul>
+        </div>
+
+        <!-- RIGHT COLUMN 4: ADD TO CALENDAR PRO -->
+        <div>
+          <div class="footer-title">Add to Calendar PRO</div>
+          <ul class="footer-links">
+            <li><a href="https://add-to-calendar-pro.com" target="_blank" class="footer-link">Managed ICS Hosting</a></li>
+            <li><a href="https://add-to-calendar-pro.com" target="_blank" class="footer-link">RSVP Forms</a></li>
+            <li><a href="https://add-to-calendar-pro.com" target="_blank" class="footer-link">Event Landing Pages</a></li>
+            <li><a href="https://add-to-calendar-pro.com" target="_blank" class="footer-link">API & Webhooks</a></li>
+          </ul>
+        </div>
+
+      </div>
+
+      <div class="footer-bottom">
+        <div>© 2026 add-to-calendar-button. Released under Elastic License 2.0.</div>
+        
+        <div class="footer-legal-links">
+          <a href="https://add-to-calendar-button.com/legal" target="_blank" class="footer-link">Legal Notice</a>
+          <a href="https://add-to-calendar-button.com/privacy" target="_blank" class="footer-link">Privacy Policy</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+
+  <!-- ------------------------------------------------------------------------ -->
+  <!-- DYNAMIC INTERACTIVITY SCRIPT                                             -->
+  <!-- ------------------------------------------------------------------------ -->
+  <script>
+    // Developer Router Tab Switcher (ONLY npm / cdn)
+    const devCodeSnippets = {
+      npm: '<span style="color:#6A9955;"># Install via npm</span><br><span style="color:#C586C0;">npm install</span> add-to-calendar-button',
+      cdn: '<span style="color:#6A9955;">&lt;!-- CDN Script Tag in &lt;head&gt; --&gt;</span><br>&lt;<span style="color:#569CD6;">script</span> <span style="color:#9CDCFE;">src</span>=<span style="color:#CE9178;">"https://cdn.jsdelivr.net/npm/add-to-calendar-button"</span> <span style="color:#9CDCFE;">async</span> <span style="color:#9CDCFE;">defer</span>&gt;&lt;/<span style="color:#569CD6;">script</span>&gt;'
+    };
+
+    function switchDevTab(tab) {
+      document.getElementById('btn-tab-npm').classList.remove('active');
+      document.getElementById('btn-tab-cdn').classList.remove('active');
+      document.getElementById('btn-tab-' + tab).classList.add('active');
+      document.getElementById('devCodeBox').innerHTML = devCodeSnippets[tab];
+    }
+
+    function copyCurrentInstall() {
+      const codeText = currentTabRaw[currentDevTab || 'npm'] || 'npm install add-to-calendar-button';
+      navigator.clipboard.writeText(codeText);
+    }
+
+    let currentDevTab = 'npm';
+    const currentTabRaw = {
+      npm: 'npm install add-to-calendar-button',
+      cdn: '<script src="https://cdn.jsdelivr.net/npm/add-to-calendar-button" async defer><\/script>'
+    };
+
+    // Dynamic Playground Real-Time Updater
+    function updatePlayground() {
+      const name = document.getElementById('pgName').value || 'My Event';
+      const desc = document.getElementById('pgDesc').value || '';
+      const startDate = document.getElementById('pgStartDate').value || '2026-10-15';
+      const startTime = document.getElementById('pgStartTime').value || '10:00';
+      const endDate = document.getElementById('pgEndDate').value || startDate;
+      const endTime = document.getElementById('pgEndTime').value || '11:30';
+      const timeZone = document.getElementById('pgTimeZone').value || 'America/New_York';
+      const location = document.getElementById('pgLocation').value || '';
+      const recurrence = document.getElementById('pgRecurrence').value;
+      const recurrenceCount = document.getElementById('pgRecurrenceCount').value;
+      
+      const optGoogle = document.getElementById('optGoogle').checked;
+      const optApple = document.getElementById('optApple').checked;
+      const optOutlook = document.getElementById('optOutlook').checked;
+      const optYahoo = document.getElementById('optYahoo').checked;
+      const optICal = document.getElementById('optICal').checked;
+      
+      const buttonStyle = document.getElementById('pgButtonStyle').value;
+      const theme = document.getElementById('pgTheme').value;
+      const label = document.getElementById('pgLabel').value || 'Add to Calendar';
+      const language = document.getElementById('pgLanguage').value;
+
+      // Build options array string with V3.0.1 Microsoft365
+      let selectedOpts = [];
+      if (optGoogle) selectedOpts.push("'Google'");
+      if (optApple) selectedOpts.push("'Apple'");
+      if (optOutlook) selectedOpts.push("'Microsoft365'");
+      if (optYahoo) selectedOpts.push("'Yahoo'");
+      if (optICal) selectedOpts.push("'iCal'");
+      const optionsAttr = selectedOpts.join(',');
+
+      // Create new component element to refresh web component state safely
+      const wrapper = document.getElementById('pgComponentWrapper');
+      wrapper.innerHTML = '';
+
+      const btn = document.createElement('add-to-calendar-button');
+      btn.setAttribute('id', 'playgroundBtn');
+      btn.setAttribute('name', name);
+      if (desc) btn.setAttribute('description', desc);
+      btn.setAttribute('startDate', startDate);
+      btn.setAttribute('startTime', startTime);
+      btn.setAttribute('endDate', endDate);
+      btn.setAttribute('endTime', endTime);
+      btn.setAttribute('timeZone', timeZone);
+      if (location) btn.setAttribute('location', location);
+      if (recurrence && recurrence !== 'none') {
+        btn.setAttribute('recurrence', recurrence);
+        btn.setAttribute('recurrence_count', recurrenceCount);
+      }
+      btn.setAttribute('options', optionsAttr);
+      btn.setAttribute('buttonStyle', buttonStyle);
+      btn.setAttribute('theme', theme);
+      btn.setAttribute('label', label);
+      btn.setAttribute('language', language);
+
+      wrapper.appendChild(btn);
+
+      // Build Code Output string
+      let code = `&lt;add-to-calendar-button<br>`;
+      code += `&nbsp;&nbsp;name="${escapeHtml(name)}"<br>`;
+      if (desc) code += `&nbsp;&nbsp;description="${escapeHtml(desc)}"<br>`;
+      code += `&nbsp;&nbsp;startDate="${startDate}"<br>`;
+      code += `&nbsp;&nbsp;startTime="${startTime}"<br>`;
+      code += `&nbsp;&nbsp;endDate="${endDate}"<br>`;
+      code += `&nbsp;&nbsp;endTime="${endTime}"<br>`;
+      code += `&nbsp;&nbsp;timeZone="${timeZone}"<br>`;
+      if (location) code += `&nbsp;&nbsp;location="${escapeHtml(location)}"<br>`;
+      if (recurrence && recurrence !== 'none') {
+        code += `&nbsp;&nbsp;recurrence="${recurrence}"<br>`;
+        code += `&nbsp;&nbsp;recurrence_count="${recurrenceCount}"<br>`;
+      }
+      code += `&nbsp;&nbsp;options="${optionsAttr}"<br>`;
+      code += `&nbsp;&nbsp;buttonStyle="${buttonStyle}"<br>`;
+      code += `&nbsp;&nbsp;theme="${theme}"<br>`;
+      code += `&nbsp;&nbsp;label="${escapeHtml(label)}"<br>`;
+      code += `&nbsp;&nbsp;language="${language}"&gt;<br>`;
+      code += `&lt;/add-to-calendar-button&gt;`;
+
+      document.getElementById('pgCodeSnippet').innerHTML = code;
+    }
+
+    function escapeHtml(str) {
+      return str.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+    }
+
+    // Dark/Light Mode Toggle
+    function toggleTheme() {
+      document.body.classList.toggle('dark-mode');
+      const isDark = document.body.classList.contains('dark-mode');
+      document.getElementById('themeToggleText').innerText = isDark ? 'Switch to Light' : 'Switch to Dark';
+    }
+
+    // Language Selector Event
+    function switchLanguage(lang) {
+      const pgLang = document.getElementById('pgLanguage');
+      if (pgLang) {
+        pgLang.value = lang;
+        updatePlayground();
+      }
+    }
+  </script>
+</body>
+</html>

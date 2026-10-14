@@ -2,7 +2,6 @@
 import { getCollection, render } from "astro:content";
 import type { CollectionEntry } from "astro:content";
 import Layout from "@layouts/default.astro";
-import Headline from "@components/headline.astro";
 import FaqList from "@components/faq/faq-list.astro";
 import { useTranslations } from "@utils/i18n";
 import { themeConfig } from '~/theme.config';
@@ -28,8 +27,8 @@ const categories = Array.from(
 ).sort((a, b) => a.localeCompare(b, locale));
 ---
 
-<Layout title={t('pages.faq.title')} description={t('pages.faq.description')} schemaType="FAQPage">
-  <Headline text={t('pages.faq.title')} class="pb-10" />
+<Layout {locale} title={t('pages.faq.title')} description={t('pages.faq.description')} schemaType="FAQPage" collection="faq_answers">
+  <h1 class="decoration-primary dark:decoration-primary-light pb-10 text-balance underline decoration-4 underline-offset-8">{t('pages.faq.title')}</h1>
 
   <FaqList {locale} {items} {categories} />
 </Layout>

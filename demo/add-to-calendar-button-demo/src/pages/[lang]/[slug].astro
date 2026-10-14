@@ -1,0 +1,11 @@
+---
+import DocRoute from '@components/docs/doc-route.astro';
+import { docSlugs, locales, type DocsLocale, type DocSlug } from '@components/docs/docs-data';
+export function getStaticPaths() {
+  return locales.filter(locale => locale !== 'en').flatMap(locale => docSlugs.map(slug => ({ params: { lang: locale, slug }, props: { locale, slug } })));
+}
+interface Props { locale: DocsLocale; slug: DocSlug }
+const { locale, slug } = Astro.props;
+---
+
+<DocRoute {locale} {slug} />

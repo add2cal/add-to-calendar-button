@@ -213,7 +213,11 @@ const isOverlayScroll = !fixed && !!overlay && !isClose;
     }
 
     const header = document.getElementById('header') as HTMLElement | null;
-    if (!header || !header.hasAttribute('data-overlay-scroll')) return;
+    if (!header) return;
+    if (!header.hasAttribute('data-overlay-scroll')) {
+      header.style.cssText = '';
+      return;
+    }
 
     const overlayTheme = header.dataset.overlayTheme; // 'light' | 'dark' | undefined
     const overlayTextClasses: string[] = overlayTheme === 'dark' ? ['text-text-dark'] : overlayTheme === 'light' ? ['text-text'] : ['text-text', 'dark:text-text-dark'];

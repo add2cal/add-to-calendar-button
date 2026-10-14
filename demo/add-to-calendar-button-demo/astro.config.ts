@@ -3,6 +3,7 @@ import type { Config } from 'svgo';
 
 import tailwindcss from '@tailwindcss/vite';
 import sitemap from '@astrojs/sitemap';
+import vue from '@astrojs/vue';
 import icon from 'astro-icon';
 import { unified, rehypeHeadingIds } from '@astrojs/markdown-remark';
 import rehypeAutolinkHeadings from 'rehype-autolink-headings';
@@ -153,6 +154,13 @@ export default defineConfig({
   },
 
   integrations: [
+    vue({
+      template: {
+        compilerOptions: {
+          isCustomElement: (tag) => tag === 'add-to-calendar-button',
+        },
+      },
+    }),
     sitemap({
       xslURL: '/sitemap.xsl',
       i18n: sitemap_i18n,

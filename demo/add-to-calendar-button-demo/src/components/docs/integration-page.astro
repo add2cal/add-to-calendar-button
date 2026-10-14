@@ -1,0 +1,337 @@
+---
+import { Code } from 'astro-expressive-code/components';
+import { Icon } from 'astro-icon/components';
+import BasicUse from './integration/basic-use.astro';
+import { guideCopy } from './integration/copy';
+import EventCode from './integration/event-code.astro';
+import GuideSidebar from './integration/guide-sidebar.astro';
+import ImportStep from './integration/import-step.astro';
+import InstallAndImport from './integration/install-and-import.astro';
+import SsrIntro from './integration/ssr-intro.astro';
+import StylesSection from './integration/styles-section.astro';
+import VueConfig from './integration/vue-config.astro';
+import { pathFor, type DocsLocale, type FrameworkName } from './docs-data';
+import { useTranslations } from '@utils/i18n';
+
+interface Props { locale: DocsLocale; framework?: FrameworkName }
+const { locale, framework } = Astro.props;
+const c = guideCopy[locale];
+const t = useTranslations(locale);
+const nextDay = new Date();
+nextDay.setDate(nextDay.getDate() + 3);
+const date = `${nextDay.getFullYear()}-${String(nextDay.getMonth() + 1).padStart(2, '0')}-${String(nextDay.getDate()).padStart(2, '0')}`;
+const languageAttribute = locale === 'en' ? '' : `\n  language="${locale}"`;
+const headline = framework ? c[framework].headline : c.general.headline;
+const wpUrl = locale === 'de' ? 'https://de.wordpress.org/plugins/add-to-calendar-button' : 'https://wordpress.org/plugins/add-to-calendar-button';
+const eventName = 'Reminder to check the add-to-calendar-button demo';
+const ssrLink = `${pathFor('advanced-use', locale)}#case-12`;
+const stylesCode = `import 'add-to-calendar-button/styles/3d';\nimport 'add-to-calendar-button/i18n/de';\nimport 'add-to-calendar-button'; // client-side upgrade; load last`;
+---
+
+<div class="grid grid-cols-1 lg:grid-cols-[minmax(0,1fr)_192px]">
+  <article class="integration-guide min-w-0 pr-0 lg:pr-8 xl:pr-12 2xl:pr-20">
+    <h1 class="mb-16 text-left text-4xl leading-tight font-bold underline decoration-orange-400 decoration-4 underline-offset-8 sm:text-5xl lg:text-6xl">{headline}</h1>
+    <div class="px-0 md:px-3 lg:px-5">
+      {!framework && (
+        <>
+          <h2>
+            {c.step} 1: {c.general.cdn}
+          </h2>
+          <p>
+            {c.general.cdn1}
+            <br />
+            {c.general.cdn2}
+          </p>
+          <Code lang="html" code={'<script src="https://cdn.jsdelivr.net/npm/add-to-calendar-button@3" async defer></script>'} />
+          <BasicUse {locale} step={2} {date} />
+          <StylesSection {locale} cdn />
+        </>
+      )}
+
+      {framework === 'angular' && (
+        <>
+          <InstallAndImport {locale} />
+          <h2>
+            {c.step} 3: {c.angular.optimize}
+          </h2>
+          <p>
+            {c.angular.config1}
+            <strong>
+              <em>CUSTOM_ELEMENTS_SCHEMA</em>
+            </strong>
+            {c.angular.config2}
+            <strong>
+              <em>@NgModule/@Component</em>
+            </strong>
+            {c.angular.config3}
+          </p>
+          <h3>
+            {c.option} A: {c.angular.standalone}
+          </h3>
+          <Code lang="typescript" code={`// app.component.ts\n\nimport { Component, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';\n\n@Component({\n  //(...),\n  standalone: true,\n  schemas: [CUSTOM_ELEMENTS_SCHEMA],\n})\nexport class AppComponent {}`} />
+          <h3>
+            {c.option} B: {c.angular.ngmodule}
+          </h3>
+          <Code lang="typescript" code={`// app.module.ts\n\nimport { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';\n//(...)\n\n@NgModule({\n  //(...),\n  schemas: [CUSTOM_ELEMENTS_SCHEMA],\n})\n//(...)`} />
+          <BasicUse {locale} step={4} {date} />
+          <h2>{c.angular.bindings}</h2>
+          <p>{c.angular.binding1}</p>
+          <p>{c.angular.binding2}</p>
+          <Code lang="html" code={`<add-to-calendar-button\n  [attr.name]="titleVar"\n  options="'apple','google'"\n  [attr.start-date]="dateVar"\n></add-to-calendar-button>`} />
+          <StylesSection {locale} />
+        </>
+      )}
+
+      {framework === 'astro' && (
+        <>
+          <h2>
+            {c.step} 0: {c.astro.architecture}
+          </h2>
+          <p>{c.astro.intro1}</p>
+          <p>{c.astro.intro2}</p>
+          <h2>
+            {c.step} 1: {c.astro.install}
+          </h2>
+          <p>{c.astro.installText}</p>
+          <Code lang="bash" code="npm install add-to-calendar-button" />
+          <h2>
+            {c.step} 2: {c.astro.create}
+          </h2>
+          <p>{c.astro.newComponent}</p>
+          <h2>
+            {c.step} 3: {c.astro.defineProps}
+          </h2>
+          <p>{c.astro.define}</p>
+          <Code
+            lang="typescript"
+            code={`import type { AddToCalendarButtonType } from 'add-to-calendar-button';\n\ninterface Props {\n  name: AddToCalendarButtonType['name'];\n  startDate: AddToCalendarButtonType['startDate'];\n  endDate: AddToCalendarButtonType['endDate'];\n  startTime: AddToCalendarButtonType['startTime'];\n  endTime: AddToCalendarButtonType['endTime'];\n  timeZone: AddToCalendarButtonType['timeZone'];\n}\n\nconst { name, startDate, endDate, startTime, endTime, timeZone } = Astro.props as Props;`}
+          />
+          <h2>{c.astro.addScript}</h2>
+          <p>{c.astro.addBlock}</p>
+          <Code lang="astro" code={`<add-to-calendar-button\n  name={name}\n  start-date={startDate}\n  end-date={endDate}\n  start-time={startTime}\n  end-time={endTime}\n  time-zone={timeZone}${languageAttribute}\n></add-to-calendar-button>`} />
+          <p>{c.astro.addImport}</p>
+          <Code lang="astro" code={`<script>\n  import 'add-to-calendar-button';\n</script>`} />
+          <h2>
+            {c.step} 4: {c.use}
+          </h2>
+          <p>{c.astro.use}</p>
+          <p>{c.example}</p>
+          <Code lang="astro" code={`---\nimport AddToCalendarButton from '../components/add-to-calendar.astro';\nimport Layout from '../layouts/Layout.astro';\n---\n<Layout>\n  <AddToCalendarButton\n    name="${c.title}"\n    start-date="${date}"\n    end-date="${date}"\n    start-time="10:15"\n    end-time="23:30"\n    time-zone="${c.timeZone}"${languageAttribute}\n  />\n</Layout>`} />
+          <p class="font-semibold italic">{c.simple}</p>
+          <StylesSection {locale} />
+          <SsrIntro {locale} href={ssrLink} />
+          <Code
+            lang="astro"
+            code={`---\n// add-to-calendar.astro\nimport { atcb_generate_ssr_html } from 'add-to-calendar-button/ssr';\n\nconst html = atcb_generate_ssr_html({\n  name: '${eventName}',\n  options: ['Apple', 'Google'],\n  location: 'World Wide Web',\n  startDate: '2050-06-15',\n  startTime: '10:15',\n  endTime: '23:30',\n  timeZone: 'Europe/Berlin',\n  buttonStyle: '3d',\n  language: 'de',\n});\n---\n<Fragment set:html={html} />\n<script>\n  ${stylesCode}\n</script>`}
+          />
+        </>
+      )}
+
+      {framework === 'nextjs' && (
+        <>
+          <h2>
+            {c.step} 1: {c.installNpm}
+          </h2>
+          <p>{c.nextjs.intro}</p>
+          <p>{c.installNpmText}</p>
+          <Code lang="bash" code="npm install add-to-calendar-button" />
+          <ImportStep {locale} />
+          <BasicUse {locale} step={3} {date} client />
+          <StylesSection {locale} />
+          <SsrIntro {locale} href={ssrLink} />
+          <Code
+            lang="tsx"
+            code={`// app/components/atcb-client.tsx (client upgrade)\n'use client';\nimport 'add-to-calendar-button/styles/3d';\nimport 'add-to-calendar-button/i18n/de';\nimport 'add-to-calendar-button'; // load last\n\ntype AtcbClientProps = {\n  html: { __html: string };\n};\n\nexport default function AtcbClient({ html }: AtcbClientProps) {\n  return <div dangerouslySetInnerHTML={html} />;\n}`}
+          />
+          <Code
+            lang="tsx"
+            code={`// app/page.tsx (server component)\nimport { atcb_generate_ssr_html } from 'add-to-calendar-button/ssr';\nimport AtcbClient from './components/atcb-client';\n\nexport default function Page() {\n  const html = {\n    __html: atcb_generate_ssr_html({\n      name: '${eventName}',\n      options: ['Apple', 'Google'],\n      location: 'World Wide Web',\n      startDate: '${date}',\n      endDate: '${date}',\n      startTime: '10:15',\n      endTime: '23:30',\n      timeZone: 'Europe/Berlin',\n      buttonStyle: '3d',\n      language: 'de',\n    }),\n  };\n  return <AtcbClient html={html} />;\n}`}
+          />
+        </>
+      )}
+
+      {framework === 'nuxt' && (
+        <>
+          <InstallAndImport {locale} />
+          <VueConfig {locale} step={3} />
+          <BasicUse {locale} step={4} {date} />
+          <StylesSection {locale} />
+          <SsrIntro {locale} href={ssrLink} />
+          <Code
+            lang="vue"
+            code={`<!-- any .vue file in your Nuxt app -->\n<script setup>\nimport { atcb_generate_ssr_html } from 'add-to-calendar-button/ssr';\n\n// hydrate the shell without re-parsing it: v-html would re-assign innerHTML\n// during hydration, which does not parse declarative shadow DOM and would\n// destroy the pre-rendered shadow root (visible flash + console warnings)\nconst vSsrHtml = {\n  mounted(el, binding) {\n    if (el.querySelector('add-to-calendar-button')) return; // already server-rendered\n    el.innerHTML = binding.value;\n  },\n  getSSRProps: (binding) => ({ innerHTML: binding.value }),\n};\n\nconst ssrHtml = atcb_generate_ssr_html({\n  name: '${eventName}',\n  options: ['Apple', 'Google'],\n  location: 'World Wide Web',\n  startDate: '${date}',\n  endDate: '${date}',\n  startTime: '10:15',\n  endTime: '23:30',\n  timeZone: 'Europe/Berlin',\n  buttonStyle: '3d',\n  language: 'de',\n});\n\n// register split assets first, then upgrade the shell into the full button\n onMounted(async () => {\n  await Promise.all([\n    import('add-to-calendar-button/styles/3d'),\n    import('add-to-calendar-button/i18n/de'),\n  ]);\n  await import('add-to-calendar-button');\n});\n</script>\n\n<template>\n  <div v-ssr-html="ssrHtml"></div>\n</template>`}
+          />
+          <h2>{c.nuxt.notes}</h2>
+          <ul>
+            <li>{c.nuxt.vhtml}</li>
+            <li>{c.nuxt.server}</li>
+            <li>{c.nuxt.client}</li>
+            <li>{c.nuxt.attrs}</li>
+          </ul>
+        </>
+      )}
+
+      {framework === 'react' && (
+        <>
+          <p>{c.react.intro}</p>
+          <p class="pt-5">{c.react.options}</p>
+          <InstallAndImport {locale} />
+          <h2>
+            {c.step} 3: {c.use}
+          </h2>
+          <p>{c.useStart}</p>
+          <p>{c.react.types}</p>
+          <Code
+            lang="typescript"
+            code={`import type {\n  AddToCalendarButtonType,\n} from 'add-to-calendar-button';\nimport type {\n  DetailedHTMLProps,\n  HTMLAttributes,\n} from 'react';\n\ndeclare module 'react' {\n  namespace JSX {\n    interface IntrinsicElements {\n      'add-to-calendar-button': DetailedHTMLProps<\n        Omit<HTMLAttributes<HTMLElement>, keyof AddToCalendarButtonType>,\n        HTMLElement\n      > &\n        AddToCalendarButtonType;\n    }\n  }\n}\n\nexport {};`}
+          />
+          <p>{c.react.typesConfig}</p>
+          <Code lang="json" code={`{\n  "compilerOptions": {\n    "types": ["vite/client", "react", "react-dom"]\n  }\n}`} />
+          <p>{c.example}</p>
+          <EventCode {locale} {date} />
+          <p class="my-10 font-semibold">{c.client}</p>
+          <StylesSection {locale} />
+        </>
+      )}
+
+      {framework === 'svelte' && (
+        <>
+          <InstallAndImport {locale} />
+          <BasicUse {locale} step={3} {date} />
+          <StylesSection {locale} />
+          <SsrIntro {locale} href={ssrLink} />
+          <Code
+            lang="svelte"
+            code={`<!-- +page.svelte (SvelteKit, SSR enabled) -->\n<script>\n  import { atcb_generate_ssr_html } from 'add-to-calendar-button/ssr';\n  import { onMount } from 'svelte';\n\n  const ssrHtml = atcb_generate_ssr_html({\n    name: '${eventName}',\n    options: ['Apple', 'Google'],\n    location: 'World Wide Web',\n    startDate: '${date}',\n    endDate: '${date}',\n    startTime: '10:15',\n    endTime: '23:30',\n    timeZone: 'Europe/Berlin',\n    buttonStyle: '3d',\n    language: 'de',\n  });\n\n  onMount(async () => {\n    await Promise.all([\n      import('add-to-calendar-button/styles/3d'),\n      import('add-to-calendar-button/i18n/de'),\n    ]);\n    await import('add-to-calendar-button'); // client-side upgrade; load last\n  });\n</script>\n\n{@html ssrHtml}`}
+          />
+        </>
+      )}
+
+      {framework === 'vue' && (
+        <>
+          <InstallAndImport {locale} />
+          <VueConfig {locale} step={3} />
+          <BasicUse {locale} step={4} {date} />
+          <StylesSection {locale} />
+        </>
+      )}
+
+      {framework === 'wix' && (
+        <>
+          <p>{c.wix.intro1}</p>
+          <p class="font-semibold">{c.wix.intro2}</p>
+          <p>{c.wix.intro3}</p>
+          <p>{c.wix.intro4}</p>
+          <a class="mx-auto mt-10 mb-16 flex w-fit items-center rounded-full bg-orange-400 px-6 py-3 font-semibold text-zinc-950 md:mx-0" href="https://www.wix.com/app-market/add-to-calendar-button" target="_blank" rel="noopener">
+            {c.wix.link}
+            <Icon name="heroicons:arrow-up-right" class="ml-2 size-4" aria-hidden="true" />
+          </a>
+        </>
+      )}
+
+      {framework === 'wordpress' && (
+        <>
+          <h2>
+            {c.step} 1: {c.wordpress.install}
+          </h2>
+          <p>
+            {c.wordpress.install1}
+            <a href={wpUrl} target="_blank" rel="noopener">
+              {c.wordpress.install2} <Icon name="heroicons:arrow-up-right" class="inline-block size-4" aria-hidden="true" />
+            </a>
+          </p>
+          <ul>
+            <li>
+              {c.wordpress.way1}
+              <br />
+              {c.wordpress.search}: <code>add2cal</code>
+            </li>
+            <li>
+              {c.wordpress.way2a}
+              <a href={wpUrl} target="_blank" rel="noopener">
+                {c.wordpress.way2b} <Icon name="heroicons:arrow-up-right" class="inline-block size-4" aria-hidden="true" />
+              </a>
+              {c.wordpress.way2c}{' '}
+              <strong>
+                <em>wp-content/plugins/</em>
+              </strong>{' '}
+              {c.wordpress.way2d}
+            </li>
+          </ul>
+          <h2>
+            {c.step} 2: {c.wordpress.activateHeading}
+          </h2>
+          <p>{c.wordpress.activate}</p>
+          <h2>
+            {c.step} 3: {c.use}
+          </h2>
+          <h3>A: {t('docs.integration.wordpress.block')}</h3>
+          <p>{c.wordpress.block}</p>
+          <ol>
+            <li>{c.wordpress.block1}</li>
+            <li>{c.wordpress.block2}</li>
+            <li>{c.wordpress.block3}</li>
+          </ol>
+          <p>{c.wordpress.blockPro}</p>
+          <h3>B: {t('docs.integration.wordpress.shortcode')}</h3>
+          <p>{c.wordpress.shortcode1}</p>
+          <Code lang="html" code={`[add-to-calendar-button name="${c.title}" options="'apple','google'" start-date="${date}" description="${c.shortcodeDescription}"]`} />
+          <p>{c.wordpress.shortcodePro}</p>
+          <p class="text-sm italic">{c.wordpress.shortcode2}</p>
+          <a class="mt-6 inline-flex w-fit items-center rounded-full bg-orange-400 px-6 py-3 font-semibold text-zinc-950" rel="author" target="_blank" href={`https://docs.add-to-calendar-pro.com${locale === 'en' ? '' : `/${locale}`}/integration/wordpress.html`}>
+            {c.wordpress.proDocs}
+            <Icon name="heroicons:arrow-right" class="ml-2 size-4" aria-hidden="true" />
+          </a>
+          <p class="pt-10 font-semibold italic">{c.simple}</p>
+        </>
+      )}
+    </div>
+  </article>
+  <GuideSidebar {locale} {framework} />
+</div>
+
+<style>
+  .integration-guide :global(p) {
+    margin-block: 1rem;
+    line-height: 1.7;
+  }
+  .integration-guide :global(h2) {
+    margin-top: 5rem;
+    margin-bottom: 1.5rem;
+    font-size: 1.75rem;
+    font-weight: 700;
+  }
+  .integration-guide :global(h2:first-child) {
+    margin-top: 0;
+  }
+  .integration-guide :global(h3) {
+    margin-top: 3rem;
+    margin-bottom: 1.5rem;
+    font-size: 1.25rem;
+    font-weight: 700;
+  }
+  .integration-guide :global(ul),
+  .integration-guide :global(ol) {
+    margin: 1rem 0 1rem 1.5rem;
+  }
+  .integration-guide :global(ul) {
+    list-style: disc;
+  }
+  .integration-guide :global(ol) {
+    list-style: decimal;
+  }
+  .integration-guide :global(li) {
+    margin-block: 0.75rem;
+    text-align: left;
+  }
+  .integration-guide :global(code:not(pre code)) {
+    border-radius: 0.25rem;
+    background: rgb(228 228 231);
+    padding: 0.1rem 0.35rem;
+    font-size: 0.9em;
+  }
+  :global(.dark) .integration-guide :global(code:not(pre code)) {
+    background: rgb(63 63 70);
+    color: rgb(244 244 245);
+  }
+</style>

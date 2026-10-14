@@ -86,7 +86,26 @@
   }
 
   .btn-primary {
-    @apply bg-primary hover:bg-primary-light text-primary-contrast ring-primary-light hover:text-primary-light-contrast flex cursor-pointer items-center gap-2 rounded fill-current px-4 py-2 font-semibold whitespace-nowrap no-underline shadow ring-offset-white select-none visited:text-start hover:shadow-lg focus:outline-0 focus-visible:ring-2 focus-visible:ring-offset-2 dark:ring-offset-black;
+    @apply ring-secondary flex cursor-pointer items-center gap-2 rounded-[6px] px-5 py-3 leading-none font-semibold whitespace-nowrap text-black no-underline shadow-md ring-offset-white select-none visited:text-black hover:text-zinc-800 hover:no-underline hover:shadow-xl focus:outline-0 focus-visible:ring-2 focus-visible:ring-offset-2 dark:ring-offset-black;
+    background: linear-gradient(45deg, #fc8f29, #ffa255, #ffd0aa, #ffa255);
+    background-size: 300% 300%;
+    animation: button-shine 5s ease infinite;
+  }
+
+  .btn-primary:hover {
+    background: linear-gradient(to top right, var(--color-secondary), var(--color-secondary-light));
+    background-size: cover;
+    animation: none;
+  }
+
+  .btn-outline {
+    @apply ring-secondary border-secondary hover:border-t-secondary-light hover:border-r-secondary-light flex cursor-pointer items-center gap-2 rounded-[6px] border-2 bg-transparent px-5 py-[10px] leading-none font-semibold whitespace-nowrap no-underline shadow-md ring-offset-white select-none hover:text-zinc-800 hover:no-underline hover:shadow-xl focus:outline-0 focus-visible:ring-2 focus-visible:ring-offset-2 dark:ring-offset-black;
+  }
+
+  .btn-outline:hover {
+    background: linear-gradient(45deg, #fc8f29, #ffa255, #ffd0aa, #ffa255);
+    background-size: 300% 300%;
+    animation: button-shine 5s ease infinite;
   }
 
   .btn-primary-small {
@@ -128,6 +147,23 @@
       0 0 0 1px rgba(255, 255, 255, 0.07),
       0 0 60px rgba(80, 22, 138, 0.18),
       inset 0 0 40px rgba(80, 22, 138, 0.06);
+  }
+
+  @keyframes button-shine {
+    0%,
+    100% {
+      background-position: 0% 50%;
+    }
+    50% {
+      background-position: 100% 50%;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .btn-primary,
+    .btn-outline:hover {
+      animation: none;
+    }
   }
 }
 

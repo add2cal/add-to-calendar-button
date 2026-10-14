@@ -1,7 +1,6 @@
 ---
 import { Icon } from "astro-icon/components";
 import { useTranslations, getLocaleUrl } from "@utils/i18n";
-import { themeConfig } from '~/theme.config';
 import type { NavItem } from "~/types/nav";
 
 interface Props {
@@ -13,23 +12,22 @@ const { locale, tabIndex = 0 } = Astro.props as Props;
 const t = useTranslations(locale);
 
 const navLinks: NavItem[] = [
-  { href: getLocaleUrl('features', locale), label: t('nav.features') },
-  { href: getLocaleUrl('pricing', locale), label: t('nav.pricing') },
+  { href: getLocaleUrl('/#demo', locale), label: t('nav.demo') },
+  { href: getLocaleUrl('/#installation', locale), label: t('nav.docs-installation') },
+  { href: getLocaleUrl('configuration', locale), label: t('nav.docs-configuration') },
   {
     isParent: true,
-    label: t('nav.docs'),
+    label: t('nav.examples'),
     children: [
-      { href: getLocaleUrl('docs', locale), label: t('nav.docs-installation'), icon: 'heroicons:sparkles' },
-      { href: getLocaleUrl('docs/configuration', locale), label: t('nav.docs-configuration'), icon: 'heroicons:wrench-screwdriver' },
-      { href: getLocaleUrl('docs/guide', locale), label: t('nav.docs-guide'), subline: t('nav.docs-guide-explainer'), icon: 'heroicons:book-open' },
+      { href: getLocaleUrl('examples', locale), label: t('nav.examples-basic'), icon: 'heroicons:squares-2x2' },
+      { href: getLocaleUrl('advanced-use', locale), label: t('nav.examples-advanced'), icon: 'heroicons:sparkles' },
     ],
   },
-  { href: getLocaleUrl('examples', locale), label: t('nav.examples') },
 ];
 ---
 
 <!-- Desktop nav -->
-<nav role="navigation" aria-label="Main" class="hidden items-center gap-6 text-sm lg:flex">
+<nav role="navigation" aria-label={t('nav.main-label')} class="hidden items-center gap-5 text-sm lg:flex">
   {navLinks.map((item, i) =>
     item.isParent ? (
       <div class="relative" data-dropdown>
@@ -38,7 +36,7 @@ const navLinks: NavItem[] = [
           <Icon name="heroicons:chevron-down" class="h-4 w-4 transition-transform duration-200" />
         </button>
 
-        <div id={`nav-dropdown-${i}`} role="menu" aria-label={`${item.label} submenu`} hidden class="absolute top-full left-1/2 z-50 mt-4 flex origin-top -translate-x-1/2 scale-75 overflow-hidden rounded-lg border border-stone-200 bg-white opacity-0 shadow-lg transition duration-150 ease-out motion-reduce:transition-none dark:border-stone-700 dark:bg-stone-800" data-dropdown-panel>
+        <div id={`nav-dropdown-${i}`} role="menu" aria-label={`${item.label} ${t('nav.submenu')}`} hidden class="absolute top-full left-1/2 z-50 mt-4 flex origin-top -translate-x-1/2 scale-75 overflow-hidden rounded-lg border border-stone-200 bg-white opacity-0 shadow-lg transition duration-150 ease-out motion-reduce:transition-none dark:border-stone-700 dark:bg-stone-800" data-dropdown-panel>
           <ul role="none" class="min-w-72 p-3 text-left">
             {item.children.map((child) => (
               <li role="none" class="mx-0 my-1">
@@ -68,7 +66,7 @@ const navLinks: NavItem[] = [
 </button>
 
 <!-- Mobile overlay -->
-<div id="mobile-nav-overlay" data-mobile-nav-overlay class="top-0 left-0 z-50 hidden h-full w-full bg-linear-to-tr from-stone-200 to-stone-50 dark:from-stone-950 dark:to-stone-700">
+<div id="mobile-nav-overlay" data-mobile-nav-overlay class="top-0 left-0 z-50 hidden h-full w-full bg-linear-to-br from-violet-100 via-white to-blue-100 dark:from-stone-950 dark:via-violet-950 dark:to-blue-950">
   <button data-mobile-nav-close aria-label={t('labels.close-menu')} class="btn-subtle absolute top-5 right-5 rounded-full">
     <Icon name="heroicons:x-mark" class="h-5 w-5 md:h-8 md:w-8" />
   </button>

@@ -31,13 +31,15 @@ const languageUrls = await Promise.all(
 );
 ---
 
-<div id="language-switcher" class="text-text dark:text-text-dark top-0 left-0 z-50 hidden h-full w-full bg-linear-to-tr from-stone-200 to-stone-50 dark:from-stone-950 dark:to-stone-700">
+<div id="language-switcher" role="dialog" aria-modal="true" aria-labelledby="language-menu-title" class="text-text dark:text-text-dark top-0 left-0 z-50 hidden h-full w-full bg-linear-to-br from-violet-100 via-white to-blue-100 dark:from-stone-950 dark:via-violet-950 dark:to-blue-950">
   <button id="close-language-menu" aria-label={t('labels.close-menu')} class="btn-subtle absolute top-5 right-5 rounded-full">
     <Icon name="heroicons:x-mark" class="h-5 w-5 md:h-8 md:w-8" />
   </button>
   <div class="h-full w-full overflow-y-auto select-none">
     <div class="container mx-auto flex min-h-full w-full max-w-xs flex-col items-center justify-center py-8">
-      <h3 class="xs:block decoration-secondary dark:decoration-secondary-light hidden w-fit text-2xl font-semibold whitespace-nowrap underline decoration-4 underline-offset-8">{t('i18n.select-language')}:</h3>
+      <h2 id="language-menu-title" class="decoration-primary dark:decoration-primary-light w-fit text-2xl font-semibold whitespace-nowrap underline decoration-4 underline-offset-8">
+        {t('i18n.select-language')}
+      </h2>
       <ul class="pt-6 text-left">
         {Object.entries(themeConfig.i18n.languages).map(([languageCode, label]) => (
           <li class="m-0 border-stone-300 px-4 py-5 not-first:border-t dark:border-stone-700">
@@ -103,6 +105,7 @@ const languageUrls = await Promise.all(
     languageSwitcher.classList.add('fixed');
     languageSwitcher.classList.remove('hidden');
     document.body.classList.add('overflow-y-hidden');
+    document.getElementById('close-language-menu')?.focus();
   };
 
   const handleKeyup = (event: KeyboardEvent) => {

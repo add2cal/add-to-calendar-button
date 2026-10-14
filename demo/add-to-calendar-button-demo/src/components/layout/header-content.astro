@@ -42,7 +42,7 @@ const { locale, button, tabIndex = 0, shrink = true, isHome, ctaButton, github, 
   ) : isHome ? (
     <span aria-hidden="true">
       <Logo class:list={['header-logo-dark h-10 w-fit touch-none select-none', logoTheme === 'dark' ? 'hidden' : logoTheme === 'light' ? 'block' : 'block dark:hidden']} />
-      <LogoWhite class:list={['touch-none^ header-logo-white h-10 w-fit select-none', logoTheme === 'dark' ? 'hidden' : logoTheme === 'light' ? 'block' : 'hidden dark:block']} />
+      <LogoWhite class:list={['header-logo-white h-10 w-fit touch-none select-none', logoTheme === 'dark' ? 'block' : logoTheme === 'light' ? 'hidden' : 'hidden dark:block']} />
     </span>
   ) : (
     <a href={getLocaleUrl('/', locale)} class="block w-fit select-none" tabindex={tabIndex}>
@@ -57,7 +57,7 @@ const { locale, button, tabIndex = 0, shrink = true, isHome, ctaButton, github, 
     <MainNav {locale} {tabIndex} />
     <div class="flex items-center gap-5">
       {ctaButton && (
-        <a href={ctaButton.href} class="btn-primary hidden text-sm sm:block" tabindex={tabIndex}>
+        <a href={ctaButton.href} class="btn-outline hidden text-sm sm:block" tabindex={tabIndex}>
           {ctaButton.text}
         </a>
       )}

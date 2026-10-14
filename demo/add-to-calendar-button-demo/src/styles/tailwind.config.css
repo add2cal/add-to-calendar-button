@@ -45,14 +45,14 @@
   --color-text-dark: #e6e2ed;
   /* Colors: Brands */
   --color-npm: #cb3837;
-  --color-angular: #C3002F;
-  --color-astro: #0F172A;
+  --color-angular: #c3002f;
+  --color-astro: #0f172a;
   --color-react: #00d8ff;
-  --color-svelte: #FF3E19;
+  --color-svelte: #ff3e19;
   --color-vue: #42b883;
-  --color-nuxt: #08C678;
+  --color-nuxt: #08c678;
   --color-wordpress: #21759b;
-  --color-javascript: #f7df1e,
+  --color-javascript: #f7df1e;
 
   /* Custom Animations */
   --animate-bounce-slow: bounce-small 2s infinite;

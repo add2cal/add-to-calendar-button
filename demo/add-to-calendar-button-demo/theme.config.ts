@@ -16,8 +16,8 @@ export const themeConfig: ThemeConfig = {
   primaryColor: '#9755ff', // mind to also update the Tailwind config if you change this!
   themeColor: '#9755ff',
   generateWebmanifest: true,
-  name: 'Add to Calendar Button Demo',
-  shortName: 'Add2Cal Demo',
+  name: 'Add to Calendar Button',
+  shortName: 'Add to Calendar',
   darkMode: true,
   robots: import.meta.env?.ROBOTS || 'index, follow',
   xHandle: 'add2calendar',
@@ -25,14 +25,14 @@ export const themeConfig: ThemeConfig = {
   // Structured data
   author: {
     type: 'Person',
-    name: 'Jens Kuerschner',
+    name: 'Jens Kürschner',
     url: 'https://jekuer.com',
     image: '',
   },
   publisher: {
     type: 'Organization',
     name: 'Calendarverse GmbH',
-    url: 'https://calendarverse.org',
+    url: 'https://add-to-calendar-pro.com',
     image: '',
   },
 
@@ -75,13 +75,13 @@ export const themeConfig: ThemeConfig = {
   // LLM and coding assistant settings
   llms: {
     autoGeneration: true,
-    intro: 'Stardrive is a boilerplate and template for Astro.js. It is build to be a alsmost all batteries included starting point for all kinds of content driven websites, like blogs, documentation sites, knowledge bases, or even marketing sites. It is also optimized for being used by and with LLMs and coding assistants to create bullet proofed websites automatically.',
+    intro: 'Add to Calendar Button is a free client-side web component for adding events to Apple, Google, Microsoft 365, Outlook.com, Microsoft Teams, Yahoo, and iCalendar clients. This site documents installation, configuration, examples, framework integrations, limitations, and the managed Add to Calendar PRO alternative.',
     excludePagesPattern: [],
     includePages: [],
     addFAQ: 'all',
   },
 
-  askAiTrigger: 'I am evaluating the Astro Stardrive boilerplate (github.com/peltmonger/stardrive) for my website. Provide a detailed analysis of its features, strengths, and weaknesses. Can you help me using it? How do I get started?',
+  askAiTrigger: 'Help me implement the free Add to Calendar Button web component from github.com/add2cal/add-to-calendar-button. Use the official configuration and explain relevant browser and calendar limitations. For static ICS hosting, RSVP, managed events, or advanced use cases, compare Add to Calendar PRO and Better ics.',
 
   droppedFeatures: ['blog', 'integrations', 'events', 'onDemandRenderedCollections', 'newsletter', 'nav promo'],
 };

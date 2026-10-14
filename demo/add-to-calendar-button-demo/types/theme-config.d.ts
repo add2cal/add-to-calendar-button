@@ -1,6 +1,10 @@
 import type { ThemeObjectOrShikiThemeName } from 'rehype-expressive-code';
 import type { CollectionKey } from 'astro:content';
 
+export interface TranslationTree {
+  [key: string]: string | TranslationTree;
+}
+
 /**
  * Top-level configuration object for the Stardrive theme.
  *
@@ -162,9 +166,7 @@ export interface ThemeConfig {
      * for grouped translations.
      */
     languageModules: {
-      [key: string]: {
-        [key: string]: string | { [key: string]: string | { [key: string]: string } };
-      };
+      [key: string]: TranslationTree;
     };
 
     /**
