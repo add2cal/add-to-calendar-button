@@ -1,0 +1,189 @@
+---
+import Layout from "@layouts/default.astro";
+import "@styles/long-text-content.css";
+import Headline from "@components/headline.astro";
+import { useTranslations } from "@utils/i18n";
+
+const locale = 'es';
+const t = useTranslations(locale);
+---
+
+<Layout title={t('pages.privacy-policy.title')} robots="noindex, follow" {locale} header={{ showTopBanner: false }}>
+  <Headline text={t('pages.privacy-policy.title')} class="pb-10" />
+
+  <div class="long-text-content text-left wrap-break-word">
+    <p>El uso de nuestro sitio web es por regla general posible sin facilitar datos de carácter personal. En la medida en que en nuestras páginas se recaben datos personales (por ejemplo, nombre, dirección o direcciones de correo electrónico), esto se realiza, siempre que sea posible, de manera voluntaria. Estos datos no se transmitirán a terceros sin su consentimiento expreso.</p>
+    <p>Le advertimos que la transmisión de datos en Internet (por ejemplo, en la comunicación por correo electrónico) puede presentar brechas de seguridad. No es posible una protección completa de los datos frente al acceso de terceros.</p>
+    <p>
+      Nos oponemos expresamente al uso por parte de terceros de los datos de contacto publicados en el marco del deber de aviso legal para el envío de publicidad y materiales informativos no solicitados expresamente. Los operadores de las páginas se reservan expresamente acciones legales en caso de envío no solicitado de información publicitaria, por ejemplo, a través de correo no deseado (spam).
+    </p>
+
+    <p>&nbsp;</p>
+
+    <h2>1. Protección de datos de un vistazo</h2>
+    <h3>Indicaciones generales</h3>
+    <p>Las siguientes indicaciones ofrecen una visión general sencilla de lo que ocurre con sus datos personales cuando visita este sitio web. Los datos personales son todos aquellos datos con los que es posible identificarle personalmente. Encontrará información detallada sobre la protección de datos en nuestra declaración de protección de datos que figura debajo de este texto.</p>
+    <h3>Recogida de datos en este sitio web</h3>
+    <h4>¿Quién es responsable de la recogida de datos en este sitio web?</h4>
+    <p>El tratamiento de datos en este sitio web lo realiza el operador del sitio web. Puede consultar sus datos de contacto en el apartado «Información sobre el responsable» de esta declaración de protección de datos.</p>
+    <h4>¿Cómo recogemos sus datos?</h4>
+    <p>Sus datos se recogen, por un lado, porque usted nos los facilita. Pueden ser, por ejemplo, datos que introduce en un formulario de contacto.</p>
+    <p>Otros datos se registran de forma automática o con su consentimiento al visitar el sitio web por parte de nuestros sistemas informáticos. Se trata sobre todo de datos técnicos (por ejemplo, navegador de Internet, sistema operativo u hora de la consulta de la página). El registro de estos datos se realiza automáticamente en cuanto accede a este sitio web.</p>
+    <h4>¿Para qué utilizamos sus datos?</h4>
+    <p>Una parte de los datos se recoge para garantizar la prestación del sitio web sin errores. Otros datos pueden utilizarse para analizar su comportamiento como usuario.</p>
+    <h4>¿Qué derechos tiene en relación con sus datos?</h4>
+    <p>
+      Tiene en todo momento el derecho a obtener gratuitamente información sobre el origen, los destinatarios y la finalidad de sus datos personales almacenados. Además, tiene derecho a solicitar la rectificación o la supresión de estos datos. Si ha otorgado su consentimiento al tratamiento de datos, puede revocar este consentimiento en cualquier momento con efecto para el futuro. Asimismo, tiene
+      derecho, en determinadas circunstancias, a solicitar la limitación del tratamiento de sus datos personales. Además, le asiste un derecho de reclamación ante la autoridad de control competente.
+    </p>
+    <p>Para ello, así como para cualquier otra cuestión sobre protección de datos, puede dirigirse a nosotros en cualquier momento.</p>
+
+    <h2>2. Alojamiento y redes de distribución de contenidos (CDN)</h2>
+    <h3>Alojamiento externo</h3>
+    <p>
+      Este sitio web está alojado en un proveedor de servicios externo (proveedor de alojamiento). Los datos personales recogidos en este sitio web se almacenan en los servidores del proveedor de alojamiento. Puede tratarse principalmente de direcciones IP, solicitudes de contacto, metadatos y datos de comunicación, datos contractuales, datos de contacto, nombres, accesos al sitio web y otros
+      datos generados a través de un sitio web.
+    </p>
+    <p>
+      La contratación del hoster se realiza con el fin del cumplimiento del contrato frente a nuestros clientes potenciales y existentes (art. 6 ap. 1 lit. b RGPD) y en interés de una prestación segura, rápida y eficiente de nuestra oferta en línea por parte de un proveedor profesional (art. 6 ap. 1 lit. f RGPD). Si se ha solicitado el correspondiente consentimiento, el tratamiento se realiza
+      exclusivamente sobre la base del art. 6 ap. 1 lit. a RGPD y del § 25 ap. 1 TTDSG, en la medida en que el consentimiento incluya el almacenamiento de cookies o el acceso a información en el terminal del usuario (por ejemplo, device fingerprinting) en el sentido del TTDSG. El consentimiento es revocable en cualquier momento.
+    </p>
+    <p>Nuestro hoster tratará sus datos únicamente en la medida necesaria para cumplir con sus obligaciones de prestación y seguirá nuestras instrucciones respecto de estos datos.</p>
+    <p>Empleamos el siguiente hoster:</p>
+    <p>Cloudflare Inc., 101 Townsend St., San Francisco, CA 94107, EE. UU. (en adelante, «Cloudflare»)</p>
+    <h4>Encargado del tratamiento</h4>
+    <p>Hemos celebrado un contrato de encargo del tratamiento (CET) con el proveedor mencionado anteriormente. Se trata de un contrato exigido por la normativa de protección de datos que garantiza que este trate los datos personales de nuestros visitantes del sitio web únicamente según nuestras instrucciones y cumpliendo con el RGPD.</p>
+    <h3>CDN</h3>
+    <p>
+      Cloudflare ofrece una red de distribución de contenidos (CDN) distribuida globalmente con DNS. Técnicamente, la transferencia de información entre su navegador y nuestro sitio web se canaliza a través de la red de Cloudflare. Esto permite a Cloudflare analizar el tráfico de datos entre su navegador y nuestro sitio web y actuar como filtro entre nuestros servidores y el tráfico de datos
+      potencialmente malicioso procedente de Internet. En este contexto, Cloudflare puede emplear también cookies u otras tecnologías de reconocimiento de usuarios de Internet, que no obstante se utilizan únicamente para el fin aquí descrito.
+    </p>
+    <p>El uso de Cloudflare se basa en nuestro interés legítimo en una prestación de nuestra oferta web de la forma más segura y libre de errores posible (art. 6 ap. 1 lit. f RGPD).</p>
+    <p>
+      La transferencia de datos a los EE. UU. se basa en las cláusulas contractuales tipo de la Comisión Europea. Encontrará los detalles aquí:{' '}
+      <a href="https://www.cloudflare.com/privacypolicy/" target="_blank" rel="noopener noreferrer">
+        https://www.cloudflare.com/privacypolicy/
+      </a>
+      .
+    </p>
+    <p>
+      Encontrará más información sobre seguridad y protección de datos en Cloudflare aquí:{' '}
+      <a href="https://www.cloudflare.com/privacypolicy/" target="_blank" rel="noopener noreferrer">
+        https://www.cloudflare.com/privacypolicy/
+      </a>
+      .
+    </p>
+
+    <h2>3. Indicaciones generales e información obligatoria</h2>
+    <h3>Protección de datos</h3>
+    <p>Los operadores de estas páginas se toman muy en serio la protección de sus datos personales. Tratamos sus datos personales de forma confidencial y conforme a la normativa legal de protección de datos así como a la presente declaración de protección de datos.</p>
+    <p>Cuando utiliza este sitio web se recogen diversos datos personales. Los datos personales son aquellos datos con los que es posible identificarle personalmente. La presente declaración de protección de datos explica qué datos recogemos y para qué los utilizamos. También explica cómo y con qué finalidad se realiza esto.</p>
+    <p>Le advertimos que la transmisión de datos en Internet (por ejemplo, en la comunicación por correo electrónico) puede presentar brechas de seguridad. No es posible una protección completa de los datos frente al acceso de terceros.</p>
+    <h3>Información sobre el responsable</h3>
+    <p>El responsable del tratamiento de datos en este sitio web es el indicado en el aviso legal.</p>
+    <p>Responsable es la persona física o jurídica que, sola o conjuntamente con otras, determina los fines y los medios del tratamiento de datos personales (por ejemplo, nombres, direcciones de correo electrónico o similares).</p>
+    <h3>Plazo de conservación</h3>
+    <p>
+      Siempre que en la presente declaración de protección de datos no se haya mencionado un plazo de conservación más específico, sus datos personales permanecerán con nosotros hasta que desaparezca la finalidad del tratamiento de datos. Si ejerce una solicitud legítima de supresión o revoca un consentimiento al tratamiento de datos, sus datos serán suprimidos, salvo que tengamos otros motivos
+      legalmente admisibles para conservar sus datos personales (por ejemplo, plazos de conservación previstos por la normativa fiscal o mercantil); en este último caso, la supresión se realiza una vez desaparecidos tales motivos.
+    </p>
+    <h3>Indicaciones generales sobre las bases jurídicas del tratamiento de datos en este sitio web</h3>
+    <p>
+      Si ha consentido el tratamiento de datos, tratamos sus datos personales sobre la base del art. 6 ap. 1 lit. a RGPD o del art. 9 ap. 2 lit. a RGPD, en la medida en que se traten categorías especiales de datos conforme al art. 9 ap. 1 RGPD. Si ha consentido el almacenamiento de cookies o el acceso a información en su terminal (por ejemplo, mediante device fingerprinting), el tratamiento de
+      datos se realiza adicionalmente sobre la base del § 25 ap. 1 TTDSG. El consentimiento es revocable en cualquier momento. Si sus datos son necesarios para el cumplimiento de un contrato o para la ejecución de medidas precontractuales, tratamos sus datos sobre la base del art. 6 ap. 1 lit. b RGPD. Además, tratamos sus datos en la medida en que sean necesarios para el cumplimiento de una
+      obligación legal, sobre la base del art. 6 ap. 1 lit. c RGPD. El tratamiento de datos también puede realizarse sobre la base de nuestro interés legítimo conforme al art. 6 ap. 1 lit. f RGPD. Las bases jurídicas aplicables en cada caso concreto se informan en los siguientes párrafos de la presente declaración de protección de datos.
+    </p>
+    <h3>Información sobre la transferencia de datos a los EE. UU. y otros terceros países</h3>
+    <p>
+      Utilizamos, entre otros, herramientas de empresas con sede en los EE. UU. u otros terceros países no seguros desde el punto de vista de la protección de datos. Cuando estas herramientas están activas, sus datos personales pueden ser transferidos a estos terceros países y tratados allí. Le advertimos que en estos países no puede garantizarse un nivel de protección de datos comparable al de la
+      UE. Por ejemplo, las empresas estadounidenses están obligadas a entregar datos personales a las autoridades de seguridad, sin que usted, como afectado, pueda emprender acciones judiciales contra ello. Por tanto, no puede descartarse que autoridades estadounidenses (por ejemplo, servicios de inteligencia) traten, evalúen y almacenen de forma permanente con fines de vigilancia sus datos
+      ubicados en servidores estadounidenses. No tenemos ninguna influencia sobre estas actividades de tratamiento.
+    </p>
+    <h3>Revocación de su consentimiento al tratamiento de datos</h3>
+    <p>Muchos procesos de tratamiento de datos solo son posibles con su consentimiento expreso. Puede revocar en cualquier momento un consentimiento ya otorgado. La licitud del tratamiento de datos realizado hasta la revocación no se ve afectada por esta.</p>
+    <h3>Derecho de oposición a la recogida de datos en casos especiales así como a la publicidad directa (art. 21 RGPD)</h3>
+    <p>
+      SI EL TRATAMIENTO DE DATOS SE REALIZA SOBRE LA BASE DEL ART. 6 AP. 1 LIT. E O F RGPD, USTED TIENE EN TODO MOMENTO EL DERECHO, POR MOTIVOS QUE SE DERIVEN DE SU SITUACIÓN PARTICULAR, A OPONERSE AL TRATAMIENTO DE SUS DATOS PERSONALES; ESTO RIGE TAMBIÉN PARA UNA ELABORACIÓN DE PERFILES BASADA EN ESTAS DISPOSICIONES. LA BASE JURÍDICA EN LA QUE SE FUNDAMENTA UN TRATAMIENTO SE INDICA EN ESTA
+      DECLARACIÓN DE PROTECCIÓN DE DATOS. SI USTED SE OPONE, YA NO TRATAREMOS SUS DATOS PERSONALES AFECTADOS, A NO SER QUE PODAMOS ACREDITAR MOTIVOS LEGÍTIMOS IMPERIOSOS PARA EL TRATAMIENTO QUE PREVALEZCAN SOBRE SUS INTERESES, DERECHOS Y LIBERTADES, O QUE EL TRATAMIENTO SIRVA A LA FORMULACIÓN, AL EJERCICIO O A LA DEFENSA DE RECLAMACIONES (OPOSICIÓN CONFORME AL ART. 21 AP. 1 RGPD).
+    </p>
+    <p>
+      SI SUS DATOS PERSONALES SON TRATADOS PARA REALIZAR PUBLICIDAD DIRECTA, TIENE EL DERECHO DE OPONERSE EN CUALQUIER MOMENTO AL TRATAMIENTO DE LOS DATOS PERSONALES QUE LE AFECTEN CON FINES DE TAL PUBLICIDAD; ESTO RIGE TAMBIÉN PARA LA ELABORACIÓN DE PERFILES, EN LA MEDIDA EN QUE ESTÉ RELACIONADA CON DICHA PUBLICIDAD DIRECTA. SI SE OPONE, SUS DATOS PERSONALES YA NO SERÁN UTILIZADOS CON FINES DE
+      PUBLICIDAD DIRECTA (OPOSICIÓN CONFORME AL ART. 21 AP. 2 RGPD).
+    </p>
+    <h3>Derecho de reclamación ante la autoridad de control competente</h3>
+    <p>En caso de infracción del RGPD, los afectados disponen de un derecho de reclamación ante una autoridad de control, en particular en el Estado miembro de su residencia habitual, de su lugar de trabajo o del lugar de la presunta infracción. El derecho de reclamación existe sin perjuicio de otros recursos administrativos o judiciales.</p>
+    <h3>Derecho a la portabilidad de los datos</h3>
+    <p>Tiene derecho a que los datos que tratamos automáticamente sobre la base de su consentimiento o en cumplimiento de un contrato le sean entregados a usted o a un tercero en un formato común y legible por máquina. Si solicita la transmisión directa de los datos a otro responsable, esto solo se realizará en la medida en que sea técnicamente posible.</p>
+    <h3>Cifrado SSL o TLS</h3>
+    <p>Por motivos de seguridad y para proteger la transmisión de contenidos confidenciales, como por ejemplo pedidos o consultas que nos envía como operador del sitio, esta página utiliza un cifrado SSL o TLS. Reconocerá una conexión cifrada porque la línea de dirección del navegador cambia de «http://» a «https://» y por el símbolo del candado en la barra de su navegador.</p>
+    <p>Cuando el cifrado SSL o TLS está activado, los datos que nos transmite no pueden ser leídos por terceros.</p>
+    <h3>Información, supresión y rectificación</h3>
+    <p>
+      En el marco de las disposiciones legales vigentes, tiene en todo momento el derecho a obtener gratuitamente información sobre sus datos personales almacenados, su origen y destinatarios y la finalidad del tratamiento de datos y, en su caso, un derecho a la rectificación o supresión de estos datos. Para ello, así como para cualquier otra cuestión sobre datos personales, puede dirigirse a
+      nosotros en cualquier momento.
+    </p>
+    <h3>Derecho a la limitación del tratamiento</h3>
+    <p>Tiene derecho a solicitar la limitación del tratamiento de sus datos personales. Para ello, puede dirigirse a nosotros en cualquier momento. El derecho a la limitación del tratamiento existe en los siguientes casos:</p>
+    <ul>
+      <li>Si impugna la exactitud de sus datos personales almacenados por nosotros, normalmente necesitamos tiempo para comprobarlo. Durante el plazo de la comprobación, tiene derecho a solicitar la limitación del tratamiento de sus datos personales.</li>
+      <li>Si el tratamiento de sus datos personales se produjo o se produce de manera ilícita, puede solicitar la limitación del tratamiento de datos en lugar de la supresión.</li>
+      <li>Si ya no necesitamos sus datos personales, pero usted los necesita para el ejercicio, la defensa o la formulación de reclamaciones, tiene derecho a solicitar la limitación del tratamiento de sus datos personales en lugar de la supresión.</li>
+      <li>Si ha formulado oposición conforme al art. 21 ap. 1 RGPD, debe realizarse una ponderación entre sus intereses y los nuestros. Mientras no esté establecido qué intereses prevalecen, tiene derecho a solicitar la limitación del tratamiento de sus datos personales.</li>
+    </ul>
+    <p>Si ha limitado el tratamiento de sus datos personales, estos datos solo podrán ser tratados - además de su conservación - con su consentimiento o para la formulación, el ejercicio o la defensa de reclamaciones o para la protección de los derechos de otra persona física o jurídica o por motivos de interés público importante de la Unión Europea o de un Estado miembro.</p>
+    <h3>Oposición a correos electrónicos publicitarios</h3>
+    <p>Por la presente nos oponemos al uso de los datos de contacto publicados en el marco del deber de aviso legal para el envío de publicidad y materiales informativos no solicitados expresamente. Los operadores de las páginas se reservan expresamente acciones legales en caso de envío no solicitado de información publicitaria, por ejemplo, a través de correo no deseado (spam).</p>
+
+    <h2>4. Recogida de datos en este sitio web</h2>
+    <h3>Archivos de registro del servidor</h3>
+    <p>El proveedor de las páginas recoge y almacena automáticamente información en los denominados archivos de registro del servidor, que su navegador nos transmite automáticamente. Se trata de:</p>
+    <ul>
+      <li>tipo y versión del navegador</li>
+      <li>sistema operativo utilizado</li>
+      <li>URL de referencia</li>
+      <li>nombre de host del ordenador que accede</li>
+      <li>hora de la consulta al servidor</li>
+      <li>dirección IP</li>
+    </ul>
+    <p>No se realiza una agrupación de estos datos con otras fuentes de datos.</p>
+    <p>La recogida de estos datos se realiza sobre la base del art. 6 ap. 1 lit. f RGPD. El operador del sitio web tiene un interés legítimo en la presentación técnicamente sin errores y en la optimización de su sitio web; para ello deben recogerse los archivos de registro del servidor.</p>
+    <h3>Formulario de contacto</h3>
+    <p>Cuando nos envía consultas a través del formulario de contacto o por correo electrónico, sus indicaciones del formulario de consulta o del correo electrónico, incluidos los datos de contacto que allí indica, se almacenan en nuestro sistema para el tratamiento de la consulta y para el caso de preguntas posteriores. No transmitimos estos datos sin su consentimiento.</p>
+    <p>
+      El tratamiento de estos datos se realiza sobre la base del art. 6 ap. 1 lit. b RGPD, en la medida en que su consulta esté relacionada con el cumplimiento de un contrato o sea necesaria para la ejecución de medidas precontractuales. En todos los demás casos, el tratamiento se basa en nuestro interés legítimo en el tratamiento eficaz de las consultas que se nos dirigen (art. 6 ap. 1 lit. f
+      RGPD) o en su consentimiento (art. 6 ap. 1 lit. a RGPD) siempre que este haya sido solicitado; el consentimiento es revocable en cualquier momento.
+    </p>
+    <p>Los datos que introduce en el formulario de contacto permanecen con nosotros hasta que nos solicite su supresión, revoque su consentimiento al almacenamiento o desaparezca la finalidad del almacenamiento de datos (por ejemplo, tras la finalización del tratamiento de su consulta). Las disposiciones legales imperativas, en particular los plazos de conservación, permanecen inalteradas.</p>
+
+    <h2>5. Cookies y almacenamiento local</h2>
+    <p>Utilizamos cookies así como el almacenamiento local del navegador con fines técnicos dentro de la aplicación. Esto incluye cuestiones como el almacenamiento de su tipo de inicio de sesión preferido, del token de autenticación para su sesión del navegador o del idioma seleccionado.</p>
+    <p>Estos datos no se comparten con terceros. Tras el registro y el inicio de sesión, también integramos servicios de terceros. En este contexto pueden colocarse las denominadas cookies de «marketing» o «tracking». Usted consiente esta medida con el registro.</p>
+    <p>Estos servicios externos pueden además colocar sus propias cookies. Encontrará más información al respecto en esta página, en el punto que describe dichos servicios.</p>
+    <p>Si llega a nuestra página a través de uno de nuestros anuncios, almacenamos eventualmente esta información en una cookie, que sin embargo solo se le asigna tras el registro.</p>
+
+    <h2>6. Plugins y herramientas</h2>
+    <h3>YouTube con protección de datos ampliada</h3>
+    <p>Este sitio web integra eventualmente vídeos de YouTube. El operador de las páginas es Google Ireland Limited («Google»), Gordon House, Barrow Street, Dublín 4, Irlanda.</p>
+    <p>
+      Utilizamos YouTube en el modo de protección de datos ampliada. Este modo, según YouTube, hace que YouTube no almacene información sobre los visitantes de este sitio web antes de que estos vean el vídeo. La transmisión de datos a los socios de YouTube, en cambio, no queda necesariamente excluida por el modo de protección de datos ampliada. Así, YouTube establece - con independencia de si
+      usted ve un vídeo - una conexión con la red Google DoubleClick.
+    </p>
+    <p>En cuanto inicia un vídeo de YouTube en este sitio web, se establece una conexión con los servidores de YouTube. Con ello se comunica al servidor de YouTube qué páginas nuestras ha visitado. Si está conectado a su cuenta de YouTube, permite a YouTube asociar su comportamiento de navegación directamente a su perfil personal. Puede impedirlo cerrando sesión en su cuenta de YouTube.</p>
+    <p>
+      Además, tras iniciar un vídeo, YouTube puede almacenar diversas cookies en su terminal o emplear tecnologías de reconocimiento comparables (por ejemplo, device fingerprinting). De este modo, YouTube puede obtener información sobre los visitantes de este sitio web. Esta información se utiliza, entre otras cosas, para recopilar estadísticas de vídeos, mejorar la usabilidad y prevenir intentos
+      de fraude.
+    </p>
+    <p>En su caso, tras el inicio de un vídeo de YouTube pueden desencadenarse otros procesos de tratamiento de datos sobre los que no tenemos ninguna influencia.</p>
+    <p>
+      El uso de YouTube tiene lugar en interés de una presentación atractiva de nuestras ofertas en línea. Esto constituye un interés legítimo en el sentido del art. 6 ap. 1 lit. f RGPD. Si se ha solicitado el correspondiente consentimiento, el tratamiento se realiza exclusivamente sobre la base del art. 6 ap. 1 lit. a RGPD y del § 25 ap. 1 TTDSG, en la medida en que el consentimiento incluya el
+      almacenamiento de cookies o el acceso a información en el terminal del usuario (por ejemplo, device fingerprinting) en el sentido del TTDSG. El consentimiento es revocable en cualquier momento.
+    </p>
+    <p>
+      Encontrará más información sobre protección de datos en YouTube en su declaración de protección de datos en:{' '}
+      <a href="https://policies.google.com/privacy?hl=es" target="_blank" rel="noopener noreferrer">
+        https://policies.google.com/privacy?hl=es
+      </a>
+      .
+    </p>
+  </div>
+</Layout>

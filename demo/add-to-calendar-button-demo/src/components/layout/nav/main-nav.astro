@@ -1,0 +1,277 @@
+---
+import { Icon } from "astro-icon/components";
+import { useTranslations, getLocaleUrl } from "@utils/i18n";
+import { themeConfig } from '~/theme.config';
+import type { NavItem } from "~/types/nav";
+
+interface Props {
+  locale: string;
+  tabIndex?: number;
+}
+
+const { locale, tabIndex = 0 } = Astro.props as Props;
+const t = useTranslations(locale);
+
+const navLinks: NavItem[] = [
+  { href: getLocaleUrl('features', locale), label: t('nav.features') },
+  { href: getLocaleUrl('pricing', locale), label: t('nav.pricing') },
+  {
+    isParent: true,
+    label: t('nav.docs'),
+    children: [
+      { href: getLocaleUrl('docs', locale), label: t('nav.docs-installation'), icon: 'heroicons:sparkles' },
+      { href: getLocaleUrl('docs/configuration', locale), label: t('nav.docs-configuration'), icon: 'heroicons:wrench-screwdriver' },
+      { href: getLocaleUrl('docs/guide', locale), label: t('nav.docs-guide'), subline: t('nav.docs-guide-explainer'), icon: 'heroicons:book-open' },
+    ],
+  },
+  { href: getLocaleUrl('examples', locale), label: t('nav.examples') },
+];
+---
+
+<!-- Desktop nav -->
+<nav role="navigation" aria-label="Main" class="hidden items-center gap-6 text-sm lg:flex">
+  {navLinks.map((item, i) =>
+    item.isParent ? (
+      <div class="relative" data-dropdown>
+        <button class="hover:text-primary focus-visible:text-primary outline-primary flex cursor-pointer items-center gap-1 rounded-lg font-semibold outline-offset-8 focus-visible:outline-2" aria-haspopup="true" aria-expanded="false" aria-controls={`nav-dropdown-${i}`} tabindex={tabIndex} data-dropdown-trigger>
+          {item.label}
+          <Icon name="heroicons:chevron-down" class="h-4 w-4 transition-transform duration-200" />
+        </button>
+
+        <div id={`nav-dropdown-${i}`} role="menu" aria-label={`${item.label} submenu`} hidden class="absolute top-full left-1/2 z-50 mt-4 flex origin-top -translate-x-1/2 scale-75 overflow-hidden rounded-lg border border-stone-200 bg-white opacity-0 shadow-lg transition duration-150 ease-out motion-reduce:transition-none dark:border-stone-700 dark:bg-stone-800" data-dropdown-panel>
+          <ul role="none" class="min-w-72 p-3 text-left">
+            {item.children.map((child) => (
+              <li role="none" class="mx-0 my-1">
+                <a href={child.href} role="menuitem" tabindex="-1" class="text-text dark:text-text-dark hover:text-primary dark:hover:text-primary-light flex gap-3 rounded px-4 py-3 whitespace-nowrap no-underline hover:bg-stone-100 dark:hover:bg-stone-700">
+                  {child.icon && <Icon name={child.icon} class="h-6 w-6 shrink-0" />}
+                  <span class="flex flex-col">
+                    <span class="text-base">{child.label}</span>
+                    {child.subline && <span class="whitespace-break-spaces text-stone-500 dark:text-stone-400">{child.subline}</span>}
+                  </span>
+                </a>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </div>
+    ) : (
+      <a href={item.href} class="hover:text-primary no-underline" tabindex={tabIndex}>
+        {item.label}
+      </a>
+    ),
+  )}
+</nav>
+
+<!-- Mobile trigger -->
+<button id="mobile-nav-trigger" data-mobile-nav-trigger class="hover:text-primary outline-primary cursor-pointer rounded-lg outline-offset-8 focus-visible:outline-2 lg:hidden" aria-label={t('labels.open-menu')} tabindex={tabIndex}>
+  <Icon name="heroicons:bars-3" class="h-10 w-10" />
+</button>
+
+<!-- Mobile overlay -->
+<div id="mobile-nav-overlay" data-mobile-nav-overlay class="top-0 left-0 z-50 hidden h-full w-full bg-linear-to-tr from-stone-200 to-stone-50 dark:from-stone-950 dark:to-stone-700">
+  <button data-mobile-nav-close aria-label={t('labels.close-menu')} class="btn-subtle absolute top-5 right-5 rounded-full">
+    <Icon name="heroicons:x-mark" class="h-5 w-5 md:h-8 md:w-8" />
+  </button>
+  <div class="h-full w-full overflow-y-auto">
+    <div class="container mx-auto flex min-h-full w-full max-w-xs flex-col items-center justify-center py-8">
+      <ul class="text-text dark:text-text-dark text-left text-2xl font-semibold">
+        {navLinks.map((item) =>
+          item.isParent ? (
+            <Fragment>
+              <li class="m-0 border-stone-300 p-4 not-first:border-t dark:border-stone-700">
+                <span class="font-semibold opacity-50">{item.label}</span>
+              </li>
+              {item.children.map((child) => (
+                <li class="m-0 ml-7 border-t border-stone-300 p-3 dark:border-stone-700">
+                  <a href={child.href} class="text-xl no-underline">
+                    {child.label}
+                  </a>
+                </li>
+              ))}
+            </Fragment>
+          ) : (
+            <li class="m-0 border-stone-300 p-4 not-first:border-t dark:border-stone-700">
+              <a href={item.href} class="no-underline">
+                {item.label}
+              </a>
+            </li>
+          ),
+        )}
+      </ul>
+    </div>
+  </div>
+</div>
+
+<script>
+  // Desktop dropdowns
+
+  let dropdownController = new AbortController();
+
+  function setupDropdowns() {
+    dropdownController.abort();
+    dropdownController = new AbortController();
+    const { signal } = dropdownController;
+
+    let activePanel: HTMLElement | null = null;
+    let activeTrigger: HTMLElement | null = null;
+
+    const getMenuItems = (panel: HTMLElement) => Array.from(panel.querySelectorAll<HTMLElement>('[role="menuitem"]'));
+
+    const closeDropdown = () => {
+      if (!activePanel || !activeTrigger) return;
+      activePanel.classList.remove('opacity-100', 'scale-100');
+      activePanel.hidden = true;
+      activeTrigger.setAttribute('aria-expanded', 'false');
+      activeTrigger.querySelector('svg')?.classList.remove('rotate-180');
+      activeTrigger.focus();
+      activePanel = null;
+      activeTrigger = null;
+    };
+
+    const openDropdown = (panel: HTMLElement, trigger: HTMLElement, focusFirst = false) => {
+      if (activePanel) closeDropdown();
+      activePanel = panel;
+      activeTrigger = trigger;
+      panel.hidden = false;
+      // Trigger the fade + pop on the next frame so the transition runs
+      requestAnimationFrame(() => panel.classList.add('opacity-100', 'scale-100'));
+      trigger.setAttribute('aria-expanded', 'true');
+      trigger.querySelector('svg')?.classList.add('rotate-180');
+      if (focusFirst) getMenuItems(panel)[0]?.focus();
+    };
+
+    document.querySelectorAll<HTMLElement>('[data-dropdown]').forEach((dropdown) => {
+      const trigger = dropdown.querySelector<HTMLElement>('[data-dropdown-trigger]');
+      const panel = dropdown.querySelector<HTMLElement>('[data-dropdown-panel]');
+      if (!trigger || !panel) return;
+
+      trigger.addEventListener(
+        'click',
+        (e) => {
+          // e.detail === 0 means keyboard activation (Enter/Space); focus first item only then
+          if (panel.hidden) {
+            openDropdown(panel, trigger, e.detail === 0);
+          } else {
+            closeDropdown();
+          }
+        },
+        { signal },
+      );
+    });
+
+    // Keyboard navigation - focus trap while a dropdown is open
+    document.addEventListener(
+      'keydown',
+      (e) => {
+        if (!activePanel) return;
+        const items = getMenuItems(activePanel);
+        const idx = items.indexOf(document.activeElement as HTMLElement);
+
+        if (e.key === 'Escape') {
+          closeDropdown();
+          e.preventDefault();
+        } else if (e.key === 'ArrowDown' || (e.key === 'Tab' && !e.shiftKey)) {
+          e.preventDefault();
+          items[(idx + 1) % items.length]?.focus();
+        } else if (e.key === 'ArrowUp' || (e.key === 'Tab' && e.shiftKey)) {
+          e.preventDefault();
+          items.at(idx <= 0 ? -1 : idx - 1)?.focus();
+        }
+      },
+      { signal },
+    );
+
+    // Close when clicking outside
+    document.addEventListener(
+      'click',
+      (e) => {
+        if (activePanel && !(e.target as Element | null)?.closest('[data-dropdown]')) {
+          closeDropdown();
+        }
+      },
+      { signal },
+    );
+  }
+
+  setupDropdowns();
+  document.addEventListener('astro:after-swap', setupDropdowns);
+
+  // Mobile nav
+
+  let mobileController = new AbortController();
+
+  function setupMobileNav() {
+    mobileController.abort();
+    mobileController = new AbortController();
+    const { signal } = mobileController;
+
+    // Clean up any state left over from a previous navigation
+    document.body.classList.remove('overflow-y-hidden');
+
+    const trigger = document.getElementById('mobile-nav-trigger') as HTMLElement | null;
+    const overlay = document.getElementById('mobile-nav-overlay') as HTMLElement | null;
+    if (!trigger || !overlay) return;
+
+    let activeOverlay: HTMLElement | null = null;
+    let overlayOriginalParent: HTMLElement | null = null;
+    let overlayOriginalNextSibling: Node | null = null;
+
+    const open = () => {
+      // Move overlay to <body> to escape any transform-based stacking context
+      overlayOriginalParent = overlay.parentElement;
+      overlayOriginalNextSibling = overlay.nextSibling;
+      document.body.appendChild(overlay);
+      activeOverlay = overlay;
+      overlay.classList.remove('hidden');
+      overlay.classList.add('fixed');
+      document.body.classList.add('overflow-y-hidden');
+      overlay.querySelector<HTMLElement>('[data-mobile-nav-close]')?.focus();
+    };
+
+    const close = () => {
+      if (!activeOverlay) return;
+      activeOverlay = null;
+      overlay.classList.add('hidden');
+      overlay.classList.remove('fixed');
+      document.body.classList.remove('overflow-y-hidden');
+      // Restore overlay to its original DOM position
+      if (overlayOriginalParent) {
+        overlayOriginalParent.insertBefore(overlay, overlayOriginalNextSibling);
+        overlayOriginalParent = null;
+        overlayOriginalNextSibling = null;
+      }
+      trigger.focus();
+    };
+
+    trigger.addEventListener('click', open, { signal });
+    overlay.querySelector('[data-mobile-nav-close]')?.addEventListener('click', close, { signal });
+
+    document.addEventListener(
+      'keyup',
+      (e) => {
+        if (e.key === 'Escape' && activeOverlay) close();
+      },
+      { signal },
+    );
+
+    document.addEventListener(
+      'keydown',
+      (e) => {
+        if (!activeOverlay || e.key !== 'Tab') return;
+        const focusable = Array.from(activeOverlay.querySelectorAll<HTMLElement>('a[href], button:not([disabled]), [tabindex]:not([tabindex="-1"])'));
+        if (!focusable.length) return;
+        e.preventDefault();
+        const idx = focusable.indexOf(document.activeElement as HTMLElement);
+        if (e.shiftKey) {
+          focusable.at(idx <= 0 ? focusable.length - 1 : idx - 1)?.focus();
+        } else {
+          focusable.at(idx === -1 || idx === focusable.length - 1 ? 0 : idx + 1)?.focus();
+        }
+      },
+      { signal },
+    );
+  }
+
+  setupMobileNav();
+  document.addEventListener('astro:after-swap', setupMobileNav);
+</script>

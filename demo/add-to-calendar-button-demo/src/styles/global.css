@@ -1,0 +1,155 @@
+@import './tailwind.config.css';
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+  }
+
+  body {
+    /* adjust background to whatever color your footer has at the bottom. The body background is usually only visible there for pages to short for the screen. */
+    @apply bg-secondary-dark m-0 h-full w-full p-0;
+  }
+
+  /*
+   * Patch to prevent the add to calendar button fullscreen modal to put some holes in the page
+   */
+  body.atcb-modal-no-scroll main,
+  body.atcb-modal-no-scroll footer,
+  body.atcb-modal-no-scroll #top-banner,
+  body.atcb-modal-no-scroll #footer-banner,
+  body.atcb-modal-no-scroll #newsletter-banner {
+    @apply w-dvw!;
+  }
+
+  main {
+    @apply bg-background dark:bg-background-dark text-text dark:text-text-dark w-full text-left font-sans text-base;
+  }
+
+  ::selection {
+    @apply bg-secondary text-text-dark;
+  }
+  ::-moz-selection {
+    @apply bg-secondary text-text-dark;
+  }
+
+  a,
+  a:active,
+  a:focus {
+    @apply touch-manipulation font-sans font-semibold underline;
+  }
+
+  a:focus {
+    @apply text-primary no-underline;
+  }
+
+  a:focus-visible {
+    @apply outline-primary rounded-sm outline-2 outline-offset-8;
+  }
+
+  a:hover {
+    @apply text-primary no-underline;
+  }
+
+  li + li,
+  li + ul li,
+  ul + li {
+    @apply mt-2.5;
+  }
+
+  code {
+    @apply break-all;
+  }
+
+  .expressive-code pre > code {
+    @apply break-normal;
+  }
+
+  h1,
+  h2,
+  h3 {
+    @apply font-headline font-semibold text-balance;
+  }
+
+  footer h3 {
+    @apply mt-0 mb-1 text-lg font-semibold;
+  }
+}
+
+@layer components {
+  .btn-subtle {
+    @apply hover:border-primary hover:bg-primary ring-primary flex cursor-pointer items-center gap-2 border border-stone-300 bg-stone-200 fill-current p-1.5 font-semibold whitespace-nowrap text-stone-950 no-underline shadow ring-offset-white select-none visited:text-start hover:text-white hover:shadow-lg focus:outline-0 focus-visible:ring-2 focus-visible:ring-offset-2 dark:border-stone-100 dark:bg-stone-300 dark:ring-offset-black;
+  }
+
+  .btn-primary {
+    @apply bg-primary hover:bg-primary-light text-primary-contrast ring-primary-light hover:text-primary-light-contrast flex cursor-pointer items-center gap-2 rounded fill-current px-4 py-2 font-semibold whitespace-nowrap no-underline shadow ring-offset-white select-none visited:text-start hover:shadow-lg focus:outline-0 focus-visible:ring-2 focus-visible:ring-offset-2 dark:ring-offset-black;
+  }
+
+  .btn-primary-small {
+    @apply px-3 py-1.5 text-sm;
+  }
+
+  .input-primary {
+    @apply ring-primary w-full max-w-xl min-w-50 rounded border border-stone-400 bg-white px-3 py-2 text-stone-900 placeholder-stone-400 hover:shadow focus:shadow-lg focus:outline-0 focus-visible:ring-2 dark:bg-stone-200 dark:placeholder-stone-500;
+  }
+
+  .input-primary-small {
+    @apply px-2 py-1.5 text-sm;
+  }
+
+  .input-primary-inverse {
+    @apply bg-stone-200 text-stone-900 placeholder-stone-500 dark:bg-white dark:placeholder-stone-400;
+  }
+
+  .input-primary-contact {
+    @apply border-stone-400 bg-white text-stone-900 placeholder-stone-400 dark:border-stone-500 dark:bg-stone-900 dark:text-stone-100 dark:placeholder-stone-500;
+  }
+
+  .select-primary {
+    @apply ring-primary w-full max-w-xl min-w-50 cursor-pointer appearance-none rounded rounded-tr-xl border border-stone-400 bg-white bg-no-repeat px-3 py-2 pr-9 text-stone-900 placeholder-stone-400 select-none hover:shadow focus:shadow-lg focus:outline-0 focus-visible:ring-2 dark:bg-stone-200 dark:placeholder-stone-500;
+    background-position: right 10px center;
+    background-size: 12px;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12'%3E%3Cpath fill='%2378716c' d='M6 8.825a.5.5 0 01-.354-.146l-4-4a.5.5 0 11.708-.708L6 7.618l3.646-3.647a.5.5 0 01.708.708l-4 4A.5.5 0 016 8.825z'/%3E%3C/svg%3E");
+  }
+
+  input[type='search']::-webkit-search-cancel-button {
+    /* Custom styling for the search input's clear button (the "X" that appears when text is entered). */
+    @apply h-4 w-4 cursor-pointer appearance-none bg-no-repeat;
+    background-size: contain;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='%2378716c'%3E%3Cpath d='M6.28 5.22a.75.75 0 00-1.06 1.06L8.94 10l-3.72 3.72a.75.75 0 101.06 1.06L10 11.06l3.72 3.72a.75.75 0 101.06-1.06L11.06 10l3.72-3.72a.75.75 0 00-1.06-1.06L10 8.94 6.28 5.22z'/%3E%3C/svg%3E");
+  }
+
+  .card-glow-light {
+    box-shadow:
+      0 0 0 1px rgba(255, 255, 255, 0.07),
+      0 0 60px rgba(80, 22, 138, 0.18),
+      inset 0 0 40px rgba(80, 22, 138, 0.06);
+  }
+}
+
+@layer utilities {
+  a.unstyle-link,
+  a.unstyle-link:active,
+  a.unstyle-link:focus {
+    @apply font-normal no-underline;
+  }
+
+  a.unstyle-link:focus {
+    @apply text-primary-light no-underline outline-none;
+  }
+
+  a.unstyle-link:hover {
+    @apply underline underline-offset-3;
+  }
+
+  a.external-link:not(:has(> img:first-child))::after {
+    @apply mx-1 mb-1 inline-block h-4 w-4 align-middle;
+    content: '';
+    background-color: currentColor;
+    mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='none' stroke='black' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M13.5 6H5.25A2.25 2.25 0 0 0 3 8.25v10.5A2.25 2.25 0 0 0 5.25 21h10.5A2.25 2.25 0 0 0 18 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25'/%3E%3C/svg%3E") center / contain no-repeat;
+  }
+}

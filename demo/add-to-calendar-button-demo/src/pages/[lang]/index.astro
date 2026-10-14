@@ -1,0 +1,22 @@
+---
+import Layout from "@layouts/default.astro";
+import HomeContent from "@components/home/home-content.astro";
+import { useTranslations } from "@utils/i18n";
+import { themeConfig } from "~/theme.config";
+
+export function getStaticPaths() {
+  return themeConfig.i18n.locales
+    .filter(lang => lang !== themeConfig.i18n.defaultLocale)
+    .map(lang => ({
+      params: { lang: lang }
+    }));
+}
+
+const locale = Astro.params.lang;
+const t = useTranslations(locale);
+
+---
+
+<Layout isHome {locale} header={{ overlay: true, scrollDownThreshold: 1000 }} title={t('pages.home.title')} description={t('pages.home.description')} noTitleSlug noContainer>
+  <HomeContent {locale} />
+</Layout>

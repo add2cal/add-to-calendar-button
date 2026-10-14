@@ -1,0 +1,408 @@
+---
+import { Icon } from "astro-icon/components";
+import { useTranslations, getLocaleUrl } from "@utils/i18n";
+import HeaderContent from "@components/layout/header-content.astro";
+
+interface Props {
+  locale: string;
+  /** Makes the header stick to the top of the page */
+  fixed?: boolean;
+  /** Puts the header above the content (overlay) */
+  overlay?: boolean;
+  /** Pixels scrolled before showing scroll header (default: header out of viewport). Should be bigger than the header height for proper behavior. */
+  scrollDownThreshold?: number;
+  /** Show a close icon instead of the site name or button */
+  closeIcon?: boolean;
+  /** Show a button instead of the site name. (For example, "Back to articles" when used in an article page header.) */
+  button?: {
+    text: string;
+    href: string;
+  };
+  /** Marks the home page to not link the logo */
+  isHome?: boolean;
+  /** Show a call-to-action button on the right side of the header */
+  ctaButton?: {
+    text: string;
+    href: string;
+  };
+  /** Show a Github icon and link */
+  github?: string;
+  /** Force light or dark - only for overlay headers - would default to the global theme */
+  overlayTheme?: "light" | "dark";
+  /** A TopBanner is rendered above the header; offset the header to sit below it */
+  hasTopBanner?: boolean;
+}
+
+const { fixed, button, locale, closeIcon, overlay, scrollDownThreshold, isHome, ctaButton, github, overlayTheme, hasTopBanner } = Astro.props as Props;
+
+const t = useTranslations(locale);
+
+const isClose = !!closeIcon;
+const isFixedBanner = !!fixed && !isClose;
+const isCssFixed = !fixed && !overlay && !isClose;
+const isOverlayScroll = !fixed && !!overlay && !isClose;
+---
+
+{/* Close Icon: Always leads back to the home page */}
+
+{isClose && (
+  <a href={getLocaleUrl('/', locale)} id="header-close" aria-label={t('labels.back')} class:list={['btn-subtle right-5 z-50 rounded-full', fixed ? 'absolute' : 'fixed', !fixed && hasTopBanner ? 'top-5 sm:top-14' : 'top-5']} data-top-banner-offset={hasTopBanner && !fixed ? 36 : undefined} data-top-banner-base={hasTopBanner && !fixed ? 20 : undefined}>
+    <Icon name="heroicons:x-mark" class="h-5 w-5 md:h-8 md:w-8" />
+  </a>
+)}
+
+{/* Fixed banner: full-width bar at the very top, not moving */}
+
+{isFixedBanner && (
+  <header id="header" role="banner" class="text-text dark:text-text-dark relative z-50 w-full bg-white shadow dark:bg-stone-900">
+    <HeaderContent {locale} {button} shrink={false} {isHome} {ctaButton} {github} />
+  </header>
+)}
+
+{/* CSS-fixed header: stays at top while scrolling */}
+{/* Placeholder preserves layout space */}
+
+{isCssFixed && (
+  <>
+    <div id="header-placeholder" class="bg-background dark:bg-background-dark h-20" />
+    <header id="header" role="banner" class:list={['header-base-style fixed left-0 z-50', hasTopBanner ? 'top-0 sm:top-9' : 'top-0']} data-top-banner-offset={hasTopBanner ? 36 : undefined}>
+      <HeaderContent {locale} {button} {isHome} {ctaButton} {github} />
+    </header>
+  </>
+)}
+
+<script>
+  // Hide the CSS-fixed header once the footer covers more than 30% of the viewport.
+  // Only applies to the CSS-fixed variant (has `header-base-style` + `fixed`, no `data-overlay-scroll`).
+  let _footerHideHandler: (() => void) | null = null;
+  let _footerHideState = false; // whether the header is currently hidden
+
+  function teardownFooterHide() {
+    if (_footerHideHandler) {
+      window.removeEventListener('scroll', _footerHideHandler, { passive: true } as EventListenerOptions);
+      window.removeEventListener('resize', _footerHideHandler);
+      _footerHideHandler = null;
+    }
+    _footerHideState = false;
+  }
+
+  function setupFooterHide() {
+    teardownFooterHide();
+    const header = document.getElementById('header');
+    if (!header) return;
+    // Only the CSS-fixed variant: carries `header-base-style` + `fixed` and is not an overlay-scroll header.
+    if (!header.classList.contains('header-base-style') || !header.classList.contains('fixed')) return;
+    if (header.hasAttribute('data-overlay-scroll')) return;
+
+    const footer = document.querySelector('footer');
+    if (!footer) return;
+
+    const threshold = 0.3; // fraction of the viewport the footer must cover
+
+    const update = () => {
+      const vh = window.innerHeight;
+      const r = (footer as HTMLElement).getBoundingClientRect();
+      // How much of the viewport height is covered by the footer.
+      const covered = Math.max(0, Math.min(r.bottom, vh) - Math.max(r.top, 0));
+      const ratio = vh > 0 ? covered / vh : 0;
+      const shouldHide = ratio > threshold;
+
+      if (shouldHide === _footerHideState) return;
+      _footerHideState = shouldHide;
+
+      if (shouldHide) {
+        header.style.transition = 'transform 300ms ease, opacity 300ms ease';
+        header.style.transform = 'translateY(-100%)';
+        header.style.opacity = '0';
+      } else {
+        header.style.transition = 'transform 300ms ease, opacity 300ms ease';
+        header.style.transform = 'translateY(0)';
+        header.style.opacity = '1';
+      }
+    };
+
+    _footerHideHandler = update;
+    window.addEventListener('scroll', _footerHideHandler, { passive: true });
+    window.addEventListener('resize', _footerHideHandler);
+    update();
+  }
+
+  setupFooterHide();
+  document.addEventListener('astro:page-load', setupFooterHide);
+</script>
+
+<script>
+  let _bannerOffsetHandler: (() => void) | null = null;
+  let _bannerTargets: Array<{ el: HTMLElement; offset: number; base: number }> = [];
+  const _bannerMql: MediaQueryList | null = typeof window !== 'undefined' && typeof window.matchMedia === 'function' ? window.matchMedia('(min-width: 576px)') : null;
+
+  function teardownTopBannerOffset() {
+    if (_bannerOffsetHandler) {
+      window.removeEventListener('scroll', _bannerOffsetHandler);
+      _bannerOffsetHandler = null;
+    }
+    // Reset inline top so elements fall back to their CSS-defined position
+    for (const t of _bannerTargets) t.el.style.top = '';
+    _bannerTargets = [];
+  }
+
+  function setupTopBannerOffset() {
+    teardownTopBannerOffset();
+    // TopBanner is hidden below the sm breakpoint (576px); skip the script there
+    if (_bannerMql && !_bannerMql.matches) return;
+
+    const els = document.querySelectorAll<HTMLElement>('[data-top-banner-offset]');
+    if (!els.length) return;
+    _bannerTargets = Array.from(els)
+      .map((el) => ({
+        el,
+        offset: parseInt(el.dataset.topBannerOffset || '0', 10) || 0,
+        base: parseInt(el.dataset.topBannerBase || '0', 10) || 0,
+      }))
+      .filter((t) => t.offset > 0);
+    if (!_bannerTargets.length) return;
+    _bannerOffsetHandler = () => {
+      const y = window.scrollY;
+      for (const t of _bannerTargets) {
+        const remaining = Math.max(0, t.offset - y);
+        t.el.style.top = t.base + remaining + 'px';
+      }
+    };
+    window.addEventListener('scroll', _bannerOffsetHandler, { passive: true });
+    _bannerOffsetHandler();
+  }
+
+  setupTopBannerOffset();
+  document.addEventListener('astro:page-load', setupTopBannerOffset);
+  if (_bannerMql) {
+    const onMqlChange = () => setupTopBannerOffset();
+    if (typeof _bannerMql.addEventListener === 'function') {
+      _bannerMql.addEventListener('change', onMqlChange);
+    }
+  }
+</script>
+
+{/* Overlay + !fixed: single header starts as overlay (absolute), */}
+{/* then transitions to a fixed scroll header when threshold is crossed */}
+
+{isOverlayScroll && (
+  <header id="header" role="banner" class:list={['absolute top-0 left-0 z-50 w-full', !overlayTheme ? 'text-text dark:text-text-dark' : overlayTheme === 'light' ? 'text-text' : 'text-text-dark']} data-overlay-scroll data-overlay-theme={overlayTheme} data-scroll-threshold={scrollDownThreshold}>
+    <HeaderContent {locale} {button} {isHome} {ctaButton} {github} />
+  </header>
+)}
+
+<script>
+  let _scrollHandler: (() => void) | null = null;
+  let _overlayResizeHandler: (() => void) | null = null;
+  let _pendingHideEnd: ((e: TransitionEvent) => void) | null = null;
+  let _pendingHideTarget: HTMLElement | null = null;
+
+  function setupScrollHeader() {
+    if (_scrollHandler) {
+      window.removeEventListener('scroll', _scrollHandler);
+      _scrollHandler = null;
+    }
+    if (_overlayResizeHandler) {
+      window.removeEventListener('resize', _overlayResizeHandler);
+      _overlayResizeHandler = null;
+    }
+    if (_pendingHideEnd && _pendingHideTarget) {
+      _pendingHideTarget.removeEventListener('transitionend', _pendingHideEnd);
+      _pendingHideEnd = null;
+      _pendingHideTarget = null;
+    }
+
+    const header = document.getElementById('header') as HTMLElement | null;
+    if (!header || !header.hasAttribute('data-overlay-scroll')) return;
+
+    const overlayTheme = header.dataset.overlayTheme; // 'light' | 'dark' | undefined
+    const overlayTextClasses: string[] = overlayTheme === 'dark' ? ['text-text-dark'] : overlayTheme === 'light' ? ['text-text'] : ['text-text', 'dark:text-text-dark'];
+    const overlayPositionClasses = ['absolute', 'z-50'];
+    const scrollClasses = ['fixed', 'z-50', 'header-base-style'];
+
+    // Reset to overlay state on every (re)setup
+    scrollClasses.forEach((c) => header.classList.remove(c));
+    overlayPositionClasses.forEach((c) => header.classList.add(c));
+    overlayTextClasses.forEach((c) => header.classList.add(c));
+    if (overlayTheme) header.dataset.overlayTheme = overlayTheme;
+    header.style.cssText = '';
+    let isFixed = false;
+
+    const show = () => {
+      if (isFixed) return;
+      isFixed = true;
+      if (_pendingHideEnd && _pendingHideTarget) {
+        _pendingHideTarget.removeEventListener('transitionend', _pendingHideEnd);
+        _pendingHideEnd = null;
+        _pendingHideTarget = null;
+      }
+      overlayPositionClasses.forEach((c) => header.classList.remove(c));
+      overlayTextClasses.forEach((c) => header.classList.remove(c));
+      delete header.dataset.overlayTheme;
+      scrollClasses.forEach((c) => header.classList.add(c));
+      // Snap above viewport, then slide in
+      header.style.transition = 'none';
+      header.style.transform = 'translateY(-100%)';
+      header.style.opacity = '1';
+      header.getBoundingClientRect(); // force reflow
+      header.style.transition = 'transform 300ms ease';
+      header.style.transform = 'translateY(0)';
+    };
+
+    const hide = () => {
+      if (!isFixed) return;
+      isFixed = false;
+      if (_pendingHideEnd && _pendingHideTarget) {
+        _pendingHideTarget.removeEventListener('transitionend', _pendingHideEnd);
+        _pendingHideEnd = null;
+        _pendingHideTarget = null;
+      }
+      // Snap to fully visible, then fade out
+      header.style.transition = 'none';
+      header.style.transform = 'translateY(0)';
+      header.getBoundingClientRect();
+      header.style.transition = 'opacity 300ms ease';
+      header.style.opacity = '0';
+      const onEnd = () => {
+        _pendingHideEnd = null;
+        _pendingHideTarget = null;
+        if (isFixed) return; // show() was called during the fade - leave in scroll state
+        scrollClasses.forEach((c) => header.classList.remove(c));
+        overlayPositionClasses.forEach((c) => header.classList.add(c));
+        if (overlayTheme) header.dataset.overlayTheme = overlayTheme;
+        overlayTextClasses.forEach((c) => header.classList.add(c));
+        header.style.cssText = '';
+      };
+      _pendingHideEnd = onEnd;
+      _pendingHideTarget = header;
+      header.addEventListener('transitionend', onEnd, { once: true });
+    };
+
+    const rawThreshold = header.dataset.scrollThreshold;
+    const threshold = rawThreshold !== undefined ? parseInt(rawThreshold, 10) : NaN;
+    const effectiveThreshold = isNaN(threshold) ? header.offsetHeight : threshold;
+
+    // Hide the header not only below the scroll threshold, but also once the
+    // footer covers more than 30% of the viewport (so it doesn't overlap the footer).
+    const footerThreshold = 0.3;
+    const footerCoverageRatio = () => {
+      const footer = document.querySelector('footer');
+      if (!footer) return 0;
+      const vh = window.innerHeight;
+      const r = (footer as HTMLElement).getBoundingClientRect();
+      const covered = Math.max(0, Math.min(r.bottom, vh) - Math.max(r.top, 0));
+      return vh > 0 ? covered / vh : 0;
+    };
+
+    _scrollHandler = () => {
+      const footerCovered = footerCoverageRatio() > footerThreshold;
+      if (window.scrollY >= effectiveThreshold && !footerCovered) show();
+      else hide();
+    };
+    window.addEventListener('scroll', _scrollHandler, { passive: true });
+    // Footer coverage can change on resize without a scroll event.
+    _overlayResizeHandler = () => _scrollHandler!();
+    window.addEventListener('resize', _overlayResizeHandler);
+    _scrollHandler(); // check immediately on setup / page load
+  }
+
+  setupScrollHeader();
+  document.addEventListener('astro:page-load', setupScrollHeader);
+</script>
+
+<script>
+  // Keep `scroll-padding-top` in sync with the floating header height so that anchor (hash) navigation lands below it instead of being covered.
+  let _hashOffsetRaf = 0;
+  let _hashOffsetResizeObserver: ResizeObserver | null = null;
+  let _hashOffsetMutationObserver: MutationObserver | null = null;
+  let _hashOffsetScrollHandler: (() => void) | null = null;
+  let _hashOffsetResizeHandler: (() => void) | null = null;
+
+  function updateHashScrollOffset() {
+    const root = document.documentElement;
+    const header = document.getElementById('header');
+    if (!header) {
+      root.style.scrollPaddingTop = '';
+      return;
+    }
+    const cs = window.getComputedStyle(header);
+    const isFloating = cs.position === 'fixed';
+    root.style.scrollPaddingTop = isFloating ? header.offsetHeight + 'px' : '';
+  }
+
+  function scheduleHashScrollOffset() {
+    if (_hashOffsetRaf) return;
+    _hashOffsetRaf = window.requestAnimationFrame(() => {
+      _hashOffsetRaf = 0;
+      updateHashScrollOffset();
+    });
+  }
+
+  function teardownHashScrollOffset() {
+    if (_hashOffsetRaf) {
+      window.cancelAnimationFrame(_hashOffsetRaf);
+      _hashOffsetRaf = 0;
+    }
+    if (_hashOffsetScrollHandler) {
+      window.removeEventListener('scroll', _hashOffsetScrollHandler);
+      _hashOffsetScrollHandler = null;
+    }
+    if (_hashOffsetResizeHandler) {
+      window.removeEventListener('resize', _hashOffsetResizeHandler);
+      _hashOffsetResizeHandler = null;
+    }
+    if (_hashOffsetResizeObserver) {
+      _hashOffsetResizeObserver.disconnect();
+      _hashOffsetResizeObserver = null;
+    }
+    if (_hashOffsetMutationObserver) {
+      _hashOffsetMutationObserver.disconnect();
+      _hashOffsetMutationObserver = null;
+    }
+    document.documentElement.style.scrollPaddingTop = '';
+  }
+
+  function setupHashScrollOffset() {
+    teardownHashScrollOffset();
+    const header = document.getElementById('header');
+    if (!header) return;
+
+    updateHashScrollOffset();
+
+    _hashOffsetScrollHandler = () => scheduleHashScrollOffset();
+    window.addEventListener('scroll', _hashOffsetScrollHandler, { passive: true });
+
+    _hashOffsetResizeHandler = () => scheduleHashScrollOffset();
+    window.addEventListener('resize', _hashOffsetResizeHandler);
+
+    if (typeof ResizeObserver !== 'undefined') {
+      _hashOffsetResizeObserver = new ResizeObserver(() => scheduleHashScrollOffset());
+      _hashOffsetResizeObserver.observe(header);
+    }
+
+    // The overlay-scroll header toggles `position: fixed` via class changes;
+    // observe those so the padding tracks the floating/non-floating state.
+    _hashOffsetMutationObserver = new MutationObserver(() => scheduleHashScrollOffset());
+    _hashOffsetMutationObserver.observe(header, { attributes: true, attributeFilter: ['class', 'style'] });
+  }
+
+  setupHashScrollOffset();
+  document.addEventListener('astro:page-load', setupHashScrollOffset);
+  document.addEventListener('astro:after-swap', setupHashScrollOffset);
+</script>
+
+<style>
+  @reference "../../styles/tailwind.config.css";
+
+  .header-base-style {
+    @apply text-text dark:text-text-dark w-full bg-white/70 shadow backdrop-blur-xl dark:bg-stone-900/40;
+  }
+
+  /* Override logo visibility when header is in overlay-dark mode */
+  header[data-overlay-theme='dark'] :global(.header-logo-dark) {
+    display: none !important;
+  }
+  header[data-overlay-theme='dark'] :global(.header-logo-white) {
+    display: block !important;
+  }
+</style>

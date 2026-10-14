@@ -1,0 +1,57 @@
+---
+import { useTranslations, getLocaleUrl } from "@utils/i18n";
+
+interface Props {
+  locale: string;
+  isHome?: boolean;
+}
+
+const { locale, isHome } = Astro.props as Props;
+const t = useTranslations(locale);
+---
+
+<nav role="navigation" class="xs:grid-cols-2 text-text-dark xs:justify-items-start grid w-full grid-cols-1 justify-items-center gap-14 text-left text-sm sm:grid-cols-3 md:w-auto md:grid-cols-2 lg:grid-cols-3 xl:gap-20">
+  <div class="group xs:items-start flex flex-col items-center">
+    <h3>{t('labels.offering')}</h3>
+    {!isHome ? (
+      <a class="unstyle-link group-hover:text-text-dark/60 hover:text-text-dark text-text-dark/80 w-fit pt-1.5" href={getLocaleUrl('/', locale)}>
+        {t('nav.home')}
+      </a>
+    ) : (
+      ''
+    )}
+    <a class="unstyle-link group-hover:text-text-dark/60 hover:text-text-dark text-text-dark/80 w-fit pt-1.5" href={getLocaleUrl('features', locale)}>
+      {t('nav.features')}
+    </a>
+    <a class="unstyle-link group-hover:text-text-dark/60 hover:text-text-dark text-text-dark/80 w-fit pt-1.5" href={getLocaleUrl('examples', locale)}>
+      {t('nav.examples')}
+    </a>
+    <a class="unstyle-link group-hover:text-text-dark/60 hover:text-text-dark text-text-dark/80 w-fit pt-1.5" href={getLocaleUrl('pricing', locale)}>
+      {t('nav.pricing')}
+    </a>
+  </div>
+  <div class="group xs:items-start flex flex-col items-center">
+    <h3>{t('labels.company')}</h3>
+    <a class="unstyle-link group-hover:text-text-dark/60 hover:text-text-dark text-text-dark/80 w-fit pt-1.5" href={getLocaleUrl('about', locale)}>
+      {t('nav.about')}
+    </a>
+    <a class="unstyle-link group-hover:text-text-dark/60 hover:text-text-dark text-text-dark/80 w-fit pt-1.5" href={getLocaleUrl('contact', locale)}>
+      {t('nav.contact')}
+    </a>
+  </div>
+  <div class="group xs:items-start flex flex-col items-center">
+    <h3>{t('labels.resources')}</h3>
+    <a class="unstyle-link group-hover:text-text-dark/60 hover:text-text-dark text-text-dark/80 w-fit pt-1.5" href={getLocaleUrl('docs', locale)}>
+      {t('nav.docs')}
+    </a>
+    <a class="unstyle-link group-hover:text-text-dark/60 hover:text-text-dark text-text-dark/80 w-fit pt-1.5" href={getLocaleUrl('faq', locale)}>
+      {t('nav.faq')}
+    </a>
+    <a class="unstyle-link group-hover:text-text-dark/60 hover:text-text-dark text-text-dark/80 w-fit pt-1.5" href={getLocaleUrl('get-listed', locale)}>
+      {t('nav.get-listed')}
+    </a>
+    <a class="unstyle-link external-link group-hover:text-text-dark/60 hover:text-text-dark text-text-dark/80 w-fit pt-1.5" href="https://github.com/peltmonger/stardrive" target="_blank" rel="noopener">
+      {t('nav.status')}
+    </a>
+  </div>
+</nav>

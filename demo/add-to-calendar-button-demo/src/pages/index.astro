@@ -1,0 +1,13 @@
+---
+import Layout from "@layouts/default.astro";
+import HomeContent from "@components/home/home-content.astro";
+import { useTranslations } from "@utils/i18n";
+import { themeConfig } from '~/theme.config';
+
+const locale = themeConfig.i18n.defaultLocale;
+const t = useTranslations(locale);
+---
+
+<Layout isHome header={{ overlay: true, scrollDownThreshold: 1000 }} title={t('pages.home.title')} description={t('pages.home.description')} noTitleSlug noContainer>
+  <HomeContent {locale} />
+</Layout>

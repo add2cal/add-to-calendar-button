@@ -1,0 +1,17 @@
+# Deep Directories
+**/dist
+**/smoke
+**/node_modules
+**/fixtures
+**/fixture
+**/vendor
+**/.vercel
+**/.vscode-test
+
+# Directories
+.github
+.changeset
+
+# Files
+pnpm-lock.yaml
+worker-configuration.d.ts

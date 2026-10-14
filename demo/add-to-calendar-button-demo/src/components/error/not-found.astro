@@ -1,0 +1,29 @@
+---
+import Layout from '@layouts/default.astro';
+import Headline from '@components/headline.astro';
+import { useTranslations } from '@utils/i18n';
+
+interface Props {
+  locale: string;
+  localized404Paths?: Record<string, string>;
+}
+
+const { locale, localized404Paths } = Astro.props as Props;
+const t = useTranslations(locale);
+---
+
+<Layout title={t('pages.404.title')} isError {locale} header={{ closeIcon: true, showTopBanner: false }} showFooterBanner={false}>
+  <Headline text={t('pages.404.title')} class="mt-20" />
+
+  <div class="container mb-20 min-h-48 pt-8 font-semibold whitespace-pre-wrap" data-localized-404-paths={localized404Paths ? JSON.stringify(localized404Paths) : undefined}>
+    {t('pages.404.message')}
+  </div>
+
+  {localized404Paths && <script is:inline>
+    const pathLocale = window.location.pathname.split('/').filter(Boolean)[0];
+    const serializedPaths = document.querySelector('[data-localized-404-paths]')?.getAttribute('data-localized-404-paths');
+    const localized404Path = serializedPaths ? Object.entries(JSON.parse(serializedPaths)).find(([locale]) => locale === pathLocale)?.[1] : undefined;
+
+    if (localized404Path) window.location.replace(localized404Path);
+  </script>}
+</Layout>

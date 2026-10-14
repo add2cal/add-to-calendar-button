@@ -1,0 +1,19 @@
+---
+import { Icon } from "astro-icon/components";
+import { useTranslations } from "@utils/i18n";
+
+interface Props {
+  locale: string;
+}
+
+const { locale } = Astro.props as Props;
+const version = '1.5.15';
+const t = useTranslations(locale);
+---
+
+<a href="https://github.com/peltmonger/stardrive" target="_blank" rel="noopener" class="group xs:text-[0.8rem] flex items-center gap-1.5 rounded-full border border-rose-500/50 bg-rose-800/70 px-4 py-1.5 text-[0.7rem] font-semibold text-white/80 no-underline hover:text-white">
+  <span>
+    {t('pages.home.hero-chip')}: v{version}
+  </span>
+  <Icon name="heroicons:arrow-right" class="h-3 w-3 transition-all duration-300 group-hover:ml-1" />
+</a>

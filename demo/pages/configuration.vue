@@ -1183,12 +1183,12 @@ watch(searchSelection, (newVal) => {
               <td v-if="locale=='en'">
                 Images are used to enrich the rich data and therefore how an event might appear, for example, at the Google search results.<br />
                 It is recommended to define at least 1 image via an absolute url with at least 720px width.<br />
-                Ideally, you specify 3 images with a width of 1920px each. One with an aspect ration 1x1, one with 4x3, and one with 16x9. If not set, a default fallback image will be used.
+                Ideally, you specify 3 images with a width of 1920px each. One with an aspect ration 1x1, one with 4x3, and one with 16x9.
               </td>
               <td v-else>
                 Bilder werden verwendet, um die Rich-Data-Angaben anzureichern und somit bspw. Rich-Snippets in den Google-Suchergebnissen zu steuern.<br />
                 Es wird empfohlen, mindestens ein Bild über eine absolute URL mit einer Breite von mindestens 720px zu definieren.<br />
-                Idealerweise definierst du 3 Bilder mit einer Breite von je 1920px. Eines mit einem Seitenverhältnis von 1x1, eines mit 4x3 und eines mit 16x9. Wenn nichts angegeben ist, wird ein Standard-Bild verwendet.
+                Idealerweise definierst du 3 Bilder mit einer Breite von je 1920px. Eines mit einem Seitenverhältnis von 1x1, eines mit 4x3 und eines mit 16x9.
               </td>
             </tr>
             <tr id="hide-rich-data">

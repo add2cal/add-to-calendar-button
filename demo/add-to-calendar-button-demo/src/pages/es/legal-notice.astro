@@ -1,0 +1,35 @@
+---
+import Layout from "@layouts/default.astro";
+import "@styles/long-text-content.css";
+import Headline from "@components/headline.astro";
+import { useTranslations } from "@utils/i18n";
+
+const locale = 'es';
+const t = useTranslations(locale);
+---
+
+<Layout title={t('pages.legal-notice.title')} robots="noindex, follow" {locale} header={{ showTopBanner: false }} showFooterBanner={false}>
+  <Headline text={t('pages.legal-notice.title')} class="pb-10" />
+
+  <div class="long-text-content">
+    <p class="text-stone-500 italic dark:text-stone-300">{t('pages.legal-notice.intro')}:</p>
+    <p class="select-none">
+      <strong>Peltmonger Ventures GmbH</strong>
+      <br />
+      Beta-Str. 10a
+      <br />
+      85774 Unterf&ouml;hring
+      <br />
+      Alemania
+    </p>
+    <p class="select-none">&#109;&#097;&#105;&#108;&#064;&#112;&#101;&#108;&#116;&#109;&#111;&#110;&#103;&#101;&#114;&#046;&#099;&#111;&#109;</p>
+    <p>
+      Domicilio social: Unterf&ouml;hring
+      <br />
+      Registro Mercantil: HRB 311075, Tribunal de Distrito de M&uacute;nich
+      <br />
+      Administrador: Jens K&uuml;rschner
+    </p>
+    <p>N&uacute;mero de identificaci&oacute;n a efectos del IVA: DE461635516</p>
+  </div>
+</Layout>

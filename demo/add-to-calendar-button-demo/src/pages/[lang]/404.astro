@@ -1,0 +1,12 @@
+---
+import NotFound from '@components/error/not-found.astro';
+import { themeConfig } from '~/theme.config';
+
+export function getStaticPaths() {
+  return themeConfig.i18n.locales.filter((locale) => locale !== themeConfig.i18n.defaultLocale).map((locale) => ({ params: { lang: locale } }));
+}
+
+const locale = Astro.params.lang ?? themeConfig.i18n.defaultLocale;
+---
+
+<NotFound {locale} />

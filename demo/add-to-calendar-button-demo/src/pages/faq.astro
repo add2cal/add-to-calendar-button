@@ -1,0 +1,35 @@
+---
+import { getCollection, render } from "astro:content";
+import type { CollectionEntry } from "astro:content";
+import Layout from "@layouts/default.astro";
+import Headline from "@components/headline.astro";
+import FaqList from "@components/faq/faq-list.astro";
+import { useTranslations } from "@utils/i18n";
+import { themeConfig } from '~/theme.config';
+
+const locale = themeConfig.i18n.defaultLocale;
+const t = useTranslations(locale);
+
+const entries = (await getCollection('faq_answers', ({ id, data }) => {
+  return !data.draft && id.startsWith(locale + '/');
+}) as CollectionEntry<'faq_answers'>[]).sort((a, b) =>
+  a.data.question.localeCompare(b.data.question, locale)
+);
+
+const items = await Promise.all(
+  entries.map(async (entry) => {
+    const { Content } = await render(entry);
+    return { entry, Content };
+  })
+);
+
+const categories = Array.from(
+  new Set(entries.map((e) => e.data.category).filter(Boolean) as string[])
+).sort((a, b) => a.localeCompare(b, locale));
+---
+
+<Layout title={t('pages.faq.title')} description={t('pages.faq.description')} schemaType="FAQPage">
+  <Headline text={t('pages.faq.title')} class="pb-10" />
+
+  <FaqList {locale} {items} {categories} />
+</Layout>

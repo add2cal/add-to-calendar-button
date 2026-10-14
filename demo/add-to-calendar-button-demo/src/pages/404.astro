@@ -1,0 +1,9 @@
+---
+import NotFound from '@components/error/not-found.astro';
+import { themeConfig } from '~/theme.config';
+
+const defaultLocale = themeConfig.i18n.defaultLocale;
+const localized404Paths = Object.fromEntries(themeConfig.i18n.locales.filter((locale) => locale !== defaultLocale).map((locale) => [locale, `/${locale}/404`]));
+---
+
+<NotFound locale={defaultLocale} {localized404Paths} />

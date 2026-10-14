@@ -1,0 +1,108 @@
+@reference "./tailwind.config.css";
+
+@layer utilities {
+  .markdown-content h1 {
+    @apply mb-8 text-3xl font-bold italic sm:text-5xl;
+  }
+
+  .markdown-content h2 {
+    @apply mb-6 text-2xl font-bold sm:text-4xl;
+  }
+
+  .markdown-content p + h2,
+  .markdown-content ul + h2,
+  .markdown-content ol + h2,
+  .markdown-content img + h2,
+  .markdown-content .expressive-code + h2,
+  .markdown-content .video-container + h2 {
+    @apply mt-20;
+  }
+
+  .markdown-content h3 {
+    @apply mt-8 mb-5 text-xl font-bold sm:text-2xl;
+  }
+
+  .markdown-content p + h3,
+  .markdown-content ul + h3,
+  .markdown-content ol + h3,
+  .markdown-content img + h3,
+  .markdown-content .expressive-code + h3,
+  .markdown-content .video-container + h3 {
+    @apply mt-14;
+  }
+
+  .markdown-content h4 {
+    @apply mt-6 mb-4 text-xl font-bold;
+  }
+
+  .markdown-content p + h4,
+  .markdown-content .expressive-code + h4 {
+    @apply mt-10;
+  }
+
+  .markdown-content h5 {
+    @apply mt-6 mb-3 text-lg font-bold;
+  }
+
+  .markdown-content h6 {
+    @apply mt-6 mb-3 text-base font-bold;
+  }
+
+  .markdown-content p {
+    @apply mb-4 text-base;
+  }
+
+  .markdown-content img {
+    @apply my-6 rounded-lg;
+  }
+
+  .markdown-content blockquote {
+    @apply mt-8 mb-10 border-l-4 border-stone-400 p-4 opacity-70;
+  }
+
+  .markdown-content blockquote p {
+    @apply mb-0 text-xl italic;
+  }
+
+  .markdown-content ul {
+    @apply mb-4 ml-6 list-disc;
+  }
+
+  .markdown-content ol {
+    @apply mb-4 ml-6 list-decimal;
+  }
+
+  .markdown-content li ul,
+  .markdown-content li ol {
+    @apply mt-4;
+  }
+
+  .markdown-content a:not(h1 a, h2 a, h3 a, h4 a, h5 a, h6 a) {
+    @apply line-clamp-1 inline;
+  }
+
+  .markdown-content :is(h1, h2, h3, h4, h5, h6) > a {
+    @apply font-bold no-underline hover:text-inherit;
+  }
+
+  .markdown-content :is(h1, h2, h3, h4, h5, h6) > a:hover::before {
+    @apply absolute -ml-6 hidden font-semibold opacity-50 md:block;
+    content: '#';
+  }
+
+  .markdown-content code {
+    @apply mx-0.5 rounded-sm bg-stone-400/50 px-2 py-0.5 font-mono text-sm dark:bg-stone-600/50;
+  }
+
+  .markdown-content .expressive-code {
+    @apply mb-6 pt-2 md:pt-3;
+  }
+
+  .markdown-content .video-container {
+    @apply my-8 aspect-video;
+  }
+
+  .markdown-content .video-embed {
+    @apply h-full w-full rounded-lg;
+  }
+}
