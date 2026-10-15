@@ -1,0 +1,105 @@
+---
+import Detail from './configuration/detail.astro';
+import { groups, intro, type ConfigurationLocale } from './configuration/content';
+import ConfigurationSearch from './configuration/search.vue';
+import GiftInterstitial from './examples/gift-interstitial.astro';
+import { useTranslations } from '@utils/i18n';
+
+interface Props { locale: ConfigurationLocale }
+const { locale } = Astro.props;
+const t = useTranslations(locale);
+const localize = <T,>(values: Record<ConfigurationLocale, T>): T => {
+  switch (locale) {
+    case 'de': return values.de;
+    case 'fr': return values.fr;
+    case 'es': return values.es;
+    default: return values.en;
+  }
+};
+const eyebrow = localize({ en: 'Adjust to your needs', de: 'Passe es an deine Bedürfnisse an', fr: 'Adaptez-le à vos besoins', es: 'Adáptalo a tus necesidades' });
+const parameters = groups.flatMap((group) => group.rows.map((row) => row.name));
+const qualifier = {
+  pro: t('docs.common.pro-only'),
+  required: t('docs.configuration.required'),
+  requiredDates: t('docs.configuration.required-dates'),
+  requiredRichData: t('docs.configuration.required-rich-data'),
+};
+---
+
+<div class="docs-layout">
+  <article class="prose-content min-w-0">
+    <header class="page-header">
+      <p class="page-eyebrow">{eyebrow}</p>
+      <h1 class="page-title">{t('docs.configuration.title')}</h1>
+    </header>
+    <div class="configuration-intro">
+      <Detail content={localize(intro)} />
+    </div>
+
+    <div class="my-12 py-6">
+      <ConfigurationSearch client:load options={parameters} label={t('docs.configuration.find')} placeholder={t('docs.configuration.search')} {locale} />
+    </div>
+
+    {groups.map((group, groupIndex) => (
+      <>
+        <section aria-labelledby={group.id}>
+          <h2 id={group.id} class:list={['mb-5 mt-12 scroll-mt-6 pt-4 text-2xl font-bold', groupIndex === 0 && '!border-t-0 !pt-0']}>
+            {t(`docs.configuration.groups.${group.id}`)}
+          </h2>
+          {group.intro && (
+            <div class="mb-3">
+              <Detail content={localize(group.intro)} />
+            </div>
+          )}
+          <div class="surface-card my-8 overflow-x-auto">
+            <table class="w-full table-fixed text-left text-sm text-zinc-800 dark:text-zinc-200 md:table-auto">
+              <thead class="hidden bg-zinc-300 uppercase text-zinc-500 dark:bg-zinc-900 dark:text-zinc-400 sm:table-header-group">
+                <tr>
+                  <th class="p-3 font-semibold sm:px-5">
+                    {t('docs.configuration.name')}
+                    <span class="block pt-1 normal-case md:hidden">({t('docs.configuration.value')})</span>
+                  </th>
+                  <th class="hidden p-3 font-semibold sm:px-5 md:table-cell">{t('docs.configuration.value')}</th>
+                  <th class="p-3 font-semibold sm:px-5">{t('docs.configuration.details')}</th>
+                </tr>
+              </thead>
+              <tbody>
+                {group.rows.map((row) => (
+                  <tr id={row.name} class="scroll-mt-6 border-b border-zinc-300 bg-zinc-50 align-top hover:bg-white dark:border-zinc-600 dark:bg-zinc-800 dark:hover:bg-zinc-700">
+                    <th scope="row" class="block p-3 pb-5 text-base font-semibold underline underline-offset-2 sm:p-5 md:table-cell md:text-sm md:no-underline">
+                      {row.name}
+                    </th>
+                    <td class="block p-3 pt-0 sm:p-5 sm:pt-0 md:table-cell md:pt-5">
+                      <em>{row.typeTranslationKey ? t(`docs.configuration.descriptors.${row.typeTranslationKey}`) : row.type}</em>
+                      {row.qualifier && <strong class:list={['mt-5 block', { 'text-red-700 dark:text-red-400': row.qualifier !== 'pro' }]}>{new Map(Object.entries(qualifier)).get(row.qualifier)}</strong>}
+                      {row.values?.map((value) => (
+                        <span class="mt-5 block text-zinc-500 dark:text-zinc-400">
+                          {value.label && <>{t(`docs.configuration.${value.label}`)}: </>}
+                          {value.translationKey ? t(`docs.configuration.descriptors.${value.translationKey}`) : value.text}
+                        </span>
+                      ))}
+                    </td>
+                    <td class="block p-3 pt-6 sm:p-5 md:table-cell md:pt-5">
+                      <Detail content={localize(row.detail)} />
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </section>
+        {(groupIndex === 1 || groupIndex === 3) && <GiftInterstitial locale={locale} prompt={t('docs.examples.pro.prompt')} action={t('docs.examples.pro.action')} imageAlt={t('docs.examples.pro.image-alt')} />}
+      </>
+    ))}
+  </article>
+
+  <aside class="docs-sidebar">
+    <nav aria-label={t('docs.configuration.find')}>
+      {groups.map((group) => (
+        <a href={`#${group.id}`} class="my-4 block no-underline hover:text-orange-500 hover:underline hover:decoration-orange-500">
+          {t(`docs.configuration.groups.${group.id}`)}
+        </a>
+      ))}
+    </nav>
+  </aside>
+</div>

@@ -63,7 +63,7 @@
       "required": "Você não preencheu corretamente todos os campos obrigatórios",
       "sending": "Houve um problema ao enviar sua resposta. Tente novamente mais tarde",
       "email": "Seu endereço de e-mail não é válido",
-      "bookedoutmany": "Esgotado — tente com menos participantes"
+      "bookedoutmany": "Esgotado - tente com menos participantes"
     },
     "success": {
       "title": "Enviado com sucesso!",

@@ -1,0 +1,29 @@
+---
+import type { DocsLocale } from './docs-data';
+import { useTranslations } from '@utils/i18n';
+interface Props { title: string; locale: DocsLocale; intro?: string; sections?: Array<{ id: string; label: string }> }
+const { title, locale, intro, sections = [] } = Astro.props;
+const t = useTranslations(locale);
+---
+
+<div class="docs-layout">
+  <article class="prose-content min-w-0">
+    <header class="page-header">
+      <p class="page-eyebrow">{t('labels.guides')}</p>
+      <h1 class="page-title">{title}</h1>
+      {intro && <p class="page-description">{intro}</p>}
+    </header>
+    <slot />
+  </article>
+  {sections.length > 0 && (
+    <aside class="docs-sidebar">
+      <nav aria-label={t('docs.common.on-this-page')}>
+        {sections.map((section) => (
+          <a class="my-3 block text-sm" href={`#${section.id}`}>
+            {section.label}
+          </a>
+        ))}
+      </nav>
+    </aside>
+  )}
+</div>

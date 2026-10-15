@@ -220,7 +220,7 @@
   padding: .3em;
 }
 
-/* floating card with air to the button — like default, no slide animation */
+/* floating card with air to the button - like default, no slide animation */
 .atcb-list-wrapper.atcb-dropdown:not(.atcb-dropup, .atcb-dropoverlay) .atcb-list {
   margin-top: 1.1em;
 }

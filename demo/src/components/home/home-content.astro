@@ -1,0 +1,268 @@
+---
+import { Code } from 'astro-expressive-code/components';
+import { Icon } from 'astro-icon/components';
+import Playground from '@components/playground/PlaygroundArea.vue';
+import { repositoryVersion } from '@components/layout/version';
+import { getLocaleUrl, useTranslations } from '@utils/i18n';
+
+interface Props { locale?: 'en' | 'de' | 'fr' | 'es' }
+const { locale = 'en' } = Astro.props;
+const t = useTranslations(locale);
+const proUrl = `https://add-to-calendar-pro.com${locale === 'en' ? '' : `/${locale}`}`;
+const stacks = [
+  ['Angular', 'logos:angular-icon', 'use-with-angular'],
+  ['Astro', 'logos:astro-icon', 'use-with-astro'],
+  ['Next.js', 'logos:nextjs-icon', 'use-with-nextjs'],
+  ['Nuxt', 'logos:nuxt-icon', 'use-with-nuxt'],
+  ['React', 'logos:react', 'use-with-react'],
+  ['Svelte', 'logos:svelte-icon', 'use-with-svelte'],
+  ['Vue', 'logos:vue', 'use-with-vue'],
+  ['Wix', 'logos:wix', 'use-with-wix'],
+  ['WordPress', 'logos:wordpress-icon', 'use-with-wordpress'],
+  ['JavaScript', 'logos:javascript', 'use'],
+] as const;
+const capabilities = [
+  ['calendars', 'heroicons:calendar-days', 'bg-primary-light/30 text-primary-dark dark:bg-primary-darkest dark:text-primary-light', getLocaleUrl('examples', locale)],
+  ['events', 'heroicons:star', 'bg-orange-100 text-orange-700 dark:bg-orange-950 dark:text-orange-300', getLocaleUrl('configuration', locale)],
+  ['timezones', 'heroicons:clock', 'bg-emerald-100 text-emerald-700 dark:bg-emerald-950 dark:text-emerald-300', `${getLocaleUrl('configuration', locale)}#time-zone`],
+  ['browsers', 'heroicons:computer-desktop', 'bg-blue-100 text-blue-700 dark:bg-blue-950 dark:text-blue-300', '#demo'],
+  ['styling', 'heroicons:paint-brush', 'bg-rose-100 text-rose-700 dark:bg-rose-950 dark:text-rose-300', `${getLocaleUrl('configuration', locale)}#language`],
+  ['accessibility', 'heroicons:shield-check', 'bg-amber-100 text-amber-700 dark:bg-amber-950 dark:text-amber-300', `${getLocaleUrl('configuration', locale)}#csp-nonce`],
+] as const;
+const comparisonRows = [
+  ['setup', false, ''],
+  ['configuration', true, 'text-primary-dark dark:text-primary-light'],
+  ['calendars', true, 'text-green-600 dark:text-green-400'],
+  ['landing', true, 'text-primary-dark dark:text-primary-light'],
+  ['rsvp', true, 'text-primary-dark dark:text-primary-light'],
+  ['automation', true, 'text-primary-dark dark:text-primary-light'],
+  ['licensing', false, ''],
+] as const;
+const npmCode = '# Install via npm\nnpm install add-to-calendar-button';
+const cdnCode = '<!-- CDN Script Tag in <head> -->\n<script src="https://cdn.jsdelivr.net/npm/add-to-calendar-button" async defer></script>';
+---
+
+<div class="overflow-x-clip">
+  <section id="installation" class="site-section scroll-mt-20 border-b border-stone-200 bg-white dark:border-stone-800 dark:bg-stone-950" aria-labelledby="installation-heading">
+    <div class="container mx-auto">
+      <div class="section-intro mx-auto mb-14 text-center">
+        <p class="section-eyebrow">{t('pages.home.router.eyebrow')}</p>
+        <h2 id="installation-heading" class="section-title">
+          {t('pages.home.router.heading')}
+        </h2>
+        <p class="section-description">{t('pages.home.router.description')}</p>
+      </div>
+
+      <div class="grid gap-8 lg:grid-cols-[minmax(0,1.15fr)_minmax(0,.85fr)]">
+        <article class="min-w-0 rounded-2xl border border-white/10 bg-stone-950 p-6 text-white shadow-lg md:p-9">
+          <div class="mb-4 flex flex-wrap items-center justify-between gap-3">
+            <span class="flex items-center gap-1.5 text-xs font-bold tracking-wider text-amber-300 uppercase">
+              <Icon name="heroicons:bolt-solid" class="size-4" aria-hidden="true" />
+              {t('pages.home.router.developer.eyebrow')}
+            </span>
+            <span class="font-mono text-xs text-stone-400">v{repositoryVersion} · Elastic License 2.0</span>
+          </div>
+          <h3 class="text-3xl font-extrabold text-white">{t('pages.home.router.developer.heading')}</h3>
+          <p class="mt-3 text-[0.9375rem] text-stone-300">{t('pages.home.router.developer.description')}</p>
+
+          <div class="mt-7 min-w-0" data-install-tabs>
+            <div class="flex select-none gap-3 border-b border-white/10 pb-3" role="tablist" aria-label={t('pages.home.router.developer.install-method')}>
+              <button id="install-tab-npm" class="btn-control min-h-11 rounded-lg bg-primary px-4 font-mono text-sm font-semibold text-white" type="button" role="tab" aria-selected="true" aria-controls="install-panel-npm" data-install-tab="npm">
+                npm
+              </button>
+              <button id="install-tab-cdn" class="btn-control min-h-11 rounded-lg px-4 font-mono text-sm font-semibold text-stone-400 hover:bg-white/10 hover:text-white" type="button" role="tab" aria-selected="false" aria-controls="install-panel-cdn" tabindex="-1" data-install-tab="cdn">
+                CDN Script
+              </button>
+            </div>
+            <div id="install-panel-npm" role="tabpanel" aria-labelledby="install-tab-npm" class="mt-5 min-w-0 overflow-x-auto" data-install-panel="npm">
+              <Code code={npmCode} lang="bash" />
+            </div>
+            <div id="install-panel-cdn" role="tabpanel" aria-labelledby="install-tab-cdn" class="mt-5 min-w-0 overflow-x-auto" data-install-panel="cdn" hidden>
+              <Code code={cdnCode} lang="html" />
+            </div>
+          </div>
+
+          <a href={getLocaleUrl('configuration', locale)} class="btn-inverse mt-6">
+            {t('pages.home.router.developer.configuration')} <Icon name="heroicons:arrow-right" class="size-4" />
+          </a>
+
+          <p class="mt-8 text-sm font-bold tracking-wider text-amber-300 uppercase">{t('pages.home.router.developer.stack-prompt')}</p>
+          <div class="mt-4 grid select-none grid-cols-1 gap-2 sm:grid-cols-2">
+            {stacks.map(([name, icon, route]) => (
+              <a href={getLocaleUrl(route, locale)} class="flex min-h-11 items-center justify-between gap-3 rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-sm text-white no-underline hover:border-primary hover:bg-primary/15 hover:text-white">
+                <span class="flex min-w-0 items-center gap-2">
+                  <span class="flex size-6 shrink-0 items-center justify-center rounded bg-white p-1">
+                    <Icon name={icon} class="size-4" aria-hidden="true" />
+                  </span>
+                  <span>{name}</span>
+                </span>
+                <Icon name="heroicons:arrow-right" class="size-4 shrink-0" aria-hidden="true" />
+              </a>
+            ))}
+          </div>
+        </article>
+
+        <article class="surface-card flex min-w-0 flex-col border-primary/25 bg-linear-to-br from-white to-primary/5 p-6 shadow-lg md:p-9 dark:from-stone-900 dark:to-primary/10">
+          <div class="mb-5 flex flex-wrap items-center justify-between gap-3">
+            <span class="rounded-lg bg-primary px-3 py-1 text-xs font-bold tracking-wide text-white uppercase">Add to Calendar PRO</span>
+            <span class="text-sm font-bold text-primary">{t('pages.home.router.organizer.engine')}</span>
+          </div>
+          <h3 class="text-3xl font-extrabold">{t('pages.home.router.organizer.heading')}</h3>
+          <p class="mt-3 text-[0.9375rem] text-stone-600 dark:text-stone-300">{t('pages.home.router.organizer.description')}</p>
+          <ul class="mt-7 mb-8 space-y-4" role="list">
+            {[1, 2, 3].map((item) => (
+              <li class="flex gap-3 text-[0.9375rem]">
+                <Icon name="heroicons:check" class="mt-0.5 size-5 shrink-0 text-primary" aria-hidden="true" />
+                <span>
+                  <strong>{t(`pages.home.router.organizer.item-${item}-title`)}</strong> {t(`pages.home.router.organizer.item-${item}-text`)}
+                </span>
+              </li>
+            ))}
+          </ul>
+          <a href={proUrl} target="_blank" rel="noopener" class="btn-accent mt-5 w-full justify-center">
+            {t('pages.home.router.organizer.cta')} <Icon name="heroicons:arrow-right" class="size-4" />
+          </a>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section id="demo" class="site-section scroll-mt-20" aria-labelledby="demo-heading">
+    <div class="container mx-auto">
+      <div class="section-intro mx-auto mb-10 text-center">
+        <p class="section-eyebrow">{t('pages.home.playground.eyebrow')}</p>
+        <h2 id="demo-heading" class="section-title">
+          {t('pages.home.playground.heading')}
+        </h2>
+        <p class="section-description">{t('pages.home.playground.description')}</p>
+      </div>
+    </div>
+    <Playground client:only="vue" {locale} themeSwitchLabel={t('labels.change-light-mode')}>
+      <p slot="fallback" class="container mx-auto py-24 text-center">
+        {t('pages.home.playground.loading')}
+      </p>
+    </Playground>
+    <div class="container mx-auto">
+      <p class="mx-auto mt-6 max-w-3xl text-center text-sm text-stone-500 dark:text-stone-400">
+        {t('pages.home.playground.disclaimer')}{' '}
+        <a href={getLocaleUrl('configuration', locale)} class="inline-flex items-center gap-1">
+          {t('pages.home.playground.configuration')}
+          <Icon name="heroicons:arrow-right" class="size-4" aria-hidden="true" />
+        </a>
+      </p>
+    </div>
+  </section>
+
+  <section id="features" class="site-section scroll-mt-20 border-y border-stone-200 bg-white dark:border-stone-800 dark:bg-stone-950" aria-labelledby="features-heading">
+    <div class="container mx-auto">
+      <div class="section-intro mx-auto mb-14 text-center">
+        <p class="section-eyebrow">{t('pages.home.capabilities.eyebrow')}</p>
+        <h2 id="features-heading" class="section-title">
+          {t('pages.home.capabilities.heading')}
+        </h2>
+        <p class="section-description">{t('pages.home.capabilities.description')}</p>
+      </div>
+      <div class="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+        {capabilities.map(([key, icon, color, href], index) => (
+          <article class="surface-card flex flex-col bg-background p-7 transition-[border-color,box-shadow,transform] hover:-translate-y-0.5 hover:border-primary/30 hover:shadow-md dark:bg-stone-900">
+            <div class:list={['flex size-11 items-center justify-center rounded-xl', color]}>
+              <Icon name={icon} class="size-6" aria-hidden="true" />
+            </div>
+            <h3 class="mt-5 text-xl font-bold">
+              {index + 1}. {t(`pages.home.capabilities.cards.${key}.title`)}
+            </h3>
+            <p class="mt-3 mb-5 text-[0.9375rem] leading-6 text-stone-600 dark:text-stone-300">{t(`pages.home.capabilities.cards.${key}.description`)}</p>
+            <a href={href} class="mt-auto text-sm font-semibold items-center text-primary flex gap-1 no-underline hover:no-underline">
+              {t(`pages.home.capabilities.cards.${key}.cta`)}
+              <Icon name="heroicons:arrow-right" class="size-4" aria-hidden="true" />
+            </a>
+          </article>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="site-section border-t border-stone-200 dark:border-stone-800" aria-labelledby="comparison-heading">
+    <div class="container mx-auto">
+      <div class="section-intro mx-auto mb-14 text-center">
+        <p class="section-eyebrow">{t('pages.home.comparison.eyebrow')}</p>
+        <h2 id="comparison-heading" class="section-title">
+          {t('pages.home.comparison.heading')}
+        </h2>
+        <p class="section-description">{t('pages.home.comparison.description')}</p>
+      </div>
+      <div class="surface-card overflow-x-auto shadow-lg">
+        <table class="w-full min-w-[760px] border-collapse text-left text-[0.9375rem]">
+          <caption class="sr-only">{t('pages.home.comparison.caption')}</caption>
+          <thead>
+            <tr class="border-b border-stone-200 bg-background dark:border-stone-700 dark:bg-stone-800">
+              <th scope="col" class="w-[40%] px-8 py-7">
+                {t('pages.home.comparison.capability')}
+              </th>
+              <th scope="col" class="w-[30%] border-r border-stone-200 px-8 py-7 dark:border-stone-700">
+                {t('pages.home.comparison.free')}
+              </th>
+              <th scope="col" class="w-[30%] bg-primary/10 px-8 py-7 text-primary-dark dark:text-primary-light">
+                Add to Calendar PRO
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            {comparisonRows.map(([row, checked, color]) => (
+              <tr class="border-b border-stone-200 last:border-0 dark:border-stone-700">
+                <th scope="row" class="px-8 py-5 font-semibold">
+                  {t(`pages.home.comparison.rows.${row}.label`)}
+                  <span class="mt-1 block text-[0.8125rem] font-normal text-stone-500 dark:text-stone-400">{t(`pages.home.comparison.rows.${row}.subline`)}</span>
+                </th>
+                <td class="border-r border-stone-200 px-8 py-5 text-stone-600 dark:border-stone-700 dark:text-stone-300">{t(`pages.home.comparison.rows.${row}.free`)}</td>
+                <td class:list={['bg-primary/10 px-8 py-5 font-semibold', color]}>
+                  <span class="flex gap-1.5">
+                    {checked && <Icon name="heroicons:check" class="size-5 shrink-0" aria-hidden="true" />}
+                    {t(`pages.home.comparison.rows.${row}.pro`)}
+                  </span>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+</div>
+
+<script>
+  function setupInstallTabs() {
+    document.querySelectorAll<HTMLElement>('[data-install-tabs]:not([data-tabs-ready])').forEach((root) => {
+      root.dataset.tabsReady = 'true';
+      const tabs = Array.from(root.querySelectorAll<HTMLButtonElement>('[data-install-tab]'));
+      const activate = (tab: HTMLButtonElement) => {
+        const selected = tab.dataset.installTab;
+        tabs.forEach((item) => {
+          const active = item === tab;
+          item.setAttribute('aria-selected', String(active));
+          item.tabIndex = active ? 0 : -1;
+          item.classList.toggle('bg-primary', active);
+          item.classList.toggle('text-white', active);
+          item.classList.toggle('text-stone-400', !active);
+        });
+        root.querySelectorAll<HTMLElement>('[data-install-panel]').forEach((panel) => {
+          panel.hidden = panel.dataset.installPanel !== selected;
+        });
+      };
+      tabs.forEach((tab, index) => {
+        tab.addEventListener('click', () => activate(tab));
+        tab.addEventListener('keydown', (event) => {
+          if (event.key !== 'ArrowLeft' && event.key !== 'ArrowRight') return;
+          event.preventDefault();
+          const direction = event.key === 'ArrowRight' ? 1 : -1;
+          const next = tabs[(index + direction + tabs.length) % tabs.length];
+          activate(next);
+          next.focus();
+        });
+      });
+    });
+  }
+
+  setupInstallTabs();
+  document.addEventListener('astro:page-load', setupInstallTabs);
+</script>

@@ -1,0 +1,43 @@
+---
+import { Icon } from 'astro-icon/components';
+import combo from '@images/combo.webp';
+import Stats from '@components/home/stats.astro';
+import HeroPluses from '@components/home/hero-pluses.astro';
+import HeroChip from '@components/promo/hero-chip.astro';
+import { themeConfig } from '~/theme.config';
+import { useTranslations } from '@utils/i18n';
+
+interface Props { locale: string }
+const { locale: requestedLocale = 'en' } = Astro.props;
+const locale = ['en', 'de', 'fr', 'es'].includes(requestedLocale) ? requestedLocale as 'en' | 'de' | 'fr' | 'es' : 'en';
+const t = useTranslations(locale);
+---
+
+<section class="hero relative flex min-h-dvh overflow-hidden bg-linear-to-br from-primary-dark via-primary to-primary-light pt-32 pb-10 text-white">
+  <HeroPluses />
+  <div class="relative mx-6 lg:container lg:mx-auto flex flex-1 flex-col justify-center">
+    <div class="grid items-center gap-10 lg:grid-cols-[1.1fr_.9fr] lg:gap-12">
+      <div class="max-w-2xl">
+        {themeConfig.promotions?.heroChip && (
+          <div class="mb-6 w-fit">
+            <HeroChip {locale} />
+          </div>
+        )}
+        <h1 class="max-w-2xl text-4xl leading-[1.06] text-white drop-shadow-lg sm:text-5xl md:text-6xl">{t('pages.home.hero.title')}</h1>
+        <p class="mt-5 max-w-xl text-lg leading-8 text-white/90 md:text-xl">{t('pages.home.hero.subhead')}</p>
+        <div class="mt-9 flex flex-col gap-4 sm:flex-row">
+          <a href="#installation" class="btn-accent justify-center">
+            {t('pages.home.hero.start')}
+            <Icon name="heroicons:cloud-arrow-down" class="size-5" />
+          </a>
+          <a href="#demo" class="btn-inverse justify-center">
+            {t('pages.home.hero.demo')}
+            <Icon name="heroicons:play-circle" class="size-5" />
+          </a>
+        </div>
+      </div>
+      <img src={combo.src} alt={t('pages.home.hero.image-alt')} width={combo.width} height={combo.height} class="mx-auto w-full select-none max-w-2xl drop-shadow-2xl" loading="eager" fetchpriority="high" />
+    </div>
+    <Stats {locale} />
+  </div>
+</section>

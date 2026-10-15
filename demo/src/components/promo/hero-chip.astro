@@ -1,0 +1,18 @@
+---
+import { useTranslations } from "@utils/i18n";
+
+interface Props {
+  locale: string;
+}
+
+const { locale } = Astro.props as Props;
+const t = useTranslations(locale);
+---
+
+<div class="flex items-center select-none gap-2 rounded-full border border-white/30 bg-white/15 px-4 py-1.5 text-[0.8125rem] font-semibold text-white backdrop-blur-sm">
+  <span class="relative flex size-2" aria-hidden="true">
+    <span class="absolute inline-flex size-full animate-ping rounded-full bg-emerald-300 opacity-75 motion-reduce:animate-none"></span>
+    <span class="relative inline-flex size-2 rounded-full bg-emerald-400"></span>
+  </span>
+  <span>{t('pages.home.hero.eyebrow')}</span>
+</div>

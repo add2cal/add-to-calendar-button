@@ -1,0 +1,28 @@
+@import './content-pages.css';
+@reference "./tailwind.config.css";
+
+@layer utilities {
+  .long-text-content h2 {
+    @apply mt-12 mb-4 border-t border-zinc-200 pt-10 text-2xl font-normal dark:border-zinc-700;
+  }
+
+  .long-text-content h3 {
+    @apply mt-8 mb-4 text-xl font-normal;
+  }
+
+  .long-text-content h4 {
+    @apply mt-3 mb-1 font-semibold;
+  }
+
+  .long-text-content ul {
+    @apply ml-6 list-disc;
+  }
+
+  .long-text-content a {
+    @apply line-clamp-1 inline;
+  }
+
+  .long-text-content p {
+    @apply mb-4 leading-7;
+  }
+}

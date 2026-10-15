@@ -1,0 +1,40 @@
+---
+import MigrationGuide from '../../../../MIGRATION.md';
+import MigrationGuideDe from '../../content/migration-docs/migration.de.md';
+import MigrationGuideEs from '../../content/migration-docs/migration.es.md';
+import MigrationGuideFr from '../../content/migration-docs/migration.fr.md';
+import DocsShell from './docs-shell.astro';
+import type { DocsLocale } from './docs-data';
+import { useTranslations } from '@utils/i18n';
+interface Props { locale: DocsLocale }
+const { locale } = Astro.props;
+const t = useTranslations(locale);
+const LocalizedMigrationGuide = locale === 'de' ? MigrationGuideDe : locale === 'fr' ? MigrationGuideFr : locale === 'es' ? MigrationGuideEs : MigrationGuide;
+---
+
+<DocsShell title={t('docs.common.migration')} intro={t('docs.common.migration-note')} {locale}>
+  <div class="migration-content">
+    <LocalizedMigrationGuide />
+  </div>
+</DocsShell>
+<style>
+  .migration-content :global(h1) {
+    display: none;
+  }
+  .migration-content :global(table) {
+    width: 100%;
+    min-width: 42rem;
+    border-collapse: collapse;
+    text-align: left;
+    font-size: 0.875rem;
+  }
+  .migration-content :global(table) {
+    margin-block: 1.5rem;
+  }
+  .migration-content :global(th),
+  .migration-content :global(td) {
+    border: 1px solid rgb(161 161 170);
+    padding: 0.65rem;
+    vertical-align: top;
+  }
+</style>

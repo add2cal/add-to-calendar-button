@@ -1,0 +1,81 @@
+---
+import { type DocsLocale } from './docs-data';
+import { useTranslations } from '@utils/i18n';
+
+interface Props { locale: DocsLocale }
+const { locale } = Astro.props;
+const t = useTranslations(locale);
+
+type LocaleContent = {
+  page: {
+    intro: string;
+    methods: string[];
+    conclusion: string;
+  };
+};
+
+const content: Record<DocsLocale, LocaleContent> = {
+  de: {
+    page: {
+      intro: 'Das Hinzufügen von Ereignissen zu einem Kalender kann dabei helfen, sich zu organisieren und über anstehende Aufgaben, Verpflichtungen und Ereignisse auf dem Laufenden zu bleiben. Das manuelle Eintragen von Ereignissen in Kalender kann jedoch oft mühsam und zeitaufwändig sein.<br />Glücklicherweise gibt es mehrere Möglichkeiten, Ereignisse schnell und einfach in Kalender zu speichern.',
+      methods: [
+        'Eine der beliebtesten Methoden zum Speichern von Ereignissen in einem Kalender ist die Verwendung eines <strong>Add to Calendar Button</strong>.<br />Diese Buttons ermöglichen den Import mit nur einem Klick direkt von einer Website oder Veranstaltungs-Registrierungsformular, so dass Benutzer schnell und einfach ein Ereignis zu ihrer bevorzugten Kalenderanwendung hinzufügen können.<br />Durch den Wegfall von manuellen Eingaben und Integrationen können Add to Calendar Buttons dazu beitragen, Zeit und Kosten im Zusammenhang mit kalenderbezogenen Prozessen zu sparen.',
+        'Eine weitere bequeme Möglichkeit zum Speichern von Terminen in einem Kalender ist die <strong>Integration</strong> einer Kalenderanwendung eines Drittanbieters in das jeweilige Tool oder die Website.<br />Beliebte Kalenderanwendungen wie Apple Calendar, Google Calendar und Outlook Calendar können integriert werden, um Ereignisse automatisch zu speichern.<br />Dies ist zwar äußerst stabil, erfordert aber weit mehr Implementierungs-Aufwand als ein Add to Calendar Button. Außerdem kann es sich äußerst negativ auf die Benutzerfreundlichkeit (UX) auswirken, wenn der Nutzer einem anderen Tool Zugriff auf so sensible Informationen wie den persönlichen Kalender gewähren muss.<br />Solange deine Anwendung nicht bereits aus anderen Gründen mit solchen oder ähnlichen Informationen verbunden ist, ist es in der Regel nicht empfehlenswert, eine Funktionalität hinzuzufügen, die den Benutzer auffordert, die Verbindung zu seinen persönlichen Informationen zu bestätigen.<br />Abgesehen vom UX-Problem möchtest du dies als Eigentümer der Anwendung, der Website oder des Tools vielleicht auch deshalb nicht, da ein solcher Prozess eine Menge Datenschutzprobleme mit sich bringen würde (GDPR, CCPA und LGPD lassen grüßen).',
+        'Eine dritte Möglichkeit für Nutzer, Kalendereinträge zu speichern, ist das <strong>manuelle Kopieren und Einfügen</strong> der Ereignisdetails in das gewählte Kalenderprogramm.<br />Dies ist natürlich nicht sehr bequem, da es zeitaufwendig ist und zu uneinheitlichen Ergebnissen führt.<br />Aus technischer Sicht kann man diesen Prozess unterstützen, indem man das Kopieren von Informationen über eine "Kopierschaltfläche" erleichtert. Aber auch dies zerstört den User-Flow in vielerlei Hinsicht, da man nicht sicher sein kann, welches Format der Benutzer am Ende tatsächlich benötigt.',
+      ],
+      conclusion: 'Add to Calendar Buttons, Integrationen und manuelles Kopieren/Einfügen bieten jeweils für sich eine praktikable Möglichkeit, um sicherzustellen, dass wichtige Besprechungen, Aufgaben und Ereignisse nie vergessen werden.<br />Die Benutzerfreundlichkeit von Add to Calendar Buttons macht diese zu einer beliebten Wahl für Unternehmen, die ihre Kunden auf dem Laufenden halten wollen und sicherstellen müssen, dass Veranstaltungen wie geplant stattfinden. Für Unternehmen, Marketingkampagnen und Veranstaltungen, die auf gute Kundenbeziehungen angewiesen sind, sind Add to Calendar Buttons daher von unschätzbarem Wert.',
+    },
+  },
+  en: {
+    page: {
+      intro: 'Adding events to your calendar can help keep you organized and up-to-date on upcoming tasks, commitments, and events. However, manually entering events into your calendar can often be tedious and time-consuming.<br />Thankfully, there are several ways to save events to your calendar quickly and easily.',
+      methods: [
+        'One of the most popular methods to save events to a calendar is by utilizing an <strong>add to calendar button</strong>.<br />These buttons enable one-click importing directly from your website or event registration form, allowing users to quickly and easily add an event to their preferred calendar application.<br />By eliminating the need for manual entry and integrations, add to calendar buttons can help to save time and costs associated with calendar-related processes.',
+        'Another convenient way to save events to a calendar is by <strong>integrating</strong> a third-party calendar application to the respective tool or website.<br />Popular calendar applications such as Apple Calendar, Google Calendar, and Outlook Calendar can be integrated to automatically save events.<br />While this is extremely stable, it requires way more setup than a simple add to calendar button. In addition, it can have highly negative effects on the user experience (UX), when the user is required to allow another tool access to such sensitive information like the personal calendar.<br />As long as your application is not already connected to such or similar information out of other reasons, it is usually not recommendable to add any functionality promting the user to confirm the connection to his personal information.<br />Besides the UX issue, you might even not want this as the owner of the application, website, or tool, since such a process would come with a lot of privacy issues (GDPR, CCPA, and LGPD calling).',
+        'A third option for calendar users to save events is by <strong>manually copying</strong> and pasting the event details into their chosen calendar program.<br />This obviously is not very convenient, as it is time-consuming and yields inconsistent results.<br />From a technical perspective, you could still support this process by making it easy to copy information via a "copy button". However, even this breaks the process in many ways, since you cannot be sure which format the user requires.',
+      ],
+      conclusion: 'Add to calendar buttons, integrations, and manual copy/paste each provide a viable way for to ensure that important meetings, tasks, and events are never forgotten.<br />The convenience and ease of use associated with add to calendar buttons makes them a popular choice for businesses that need to keep customers updated and make sure events take place as planned. For companies, marketing campaigns, and events that rely on customer success, add to calendar buttons are an invaluable tool that can help to keep customers organized and up-to-date.',
+    },
+  },
+  fr: {
+    page: {
+      intro: 'Ajouter des événements à votre calendrier peut vous aider à rester organisé et informé des tâches, engagements et événements à venir. Toutefois, saisir manuellement des événements dans votre calendrier peut s’avérer fastidieux et chronophage.<br />Heureusement, il existe plusieurs moyens d’enregistrer rapidement et facilement des événements dans votre calendrier.',
+      methods: [
+        'L’une des méthodes les plus courantes pour enregistrer des événements dans un calendrier consiste à utiliser un <strong>bouton Add to Calendar</strong>.<br />Ces boutons permettent une importation en un clic directement depuis votre site web ou votre formulaire d’inscription à un événement, afin que les utilisateurs puissent ajouter rapidement et facilement un événement à leur application de calendrier préférée.<br />En évitant la saisie manuelle et les intégrations, les boutons Add to Calendar permettent de gagner du temps et de réduire les coûts liés aux processus de gestion des calendriers.',
+        'Une autre méthode pratique pour enregistrer des événements dans un calendrier consiste à <strong>intégrer</strong> une application de calendrier tierce à l’outil ou au site web concerné.<br />Des applications populaires telles qu’Apple Calendar, Google Calendar et Outlook Calendar peuvent être intégrées afin d’enregistrer automatiquement les événements.<br />Bien que cette solution soit extrêmement stable, sa mise en place demande beaucoup plus de travail qu’un simple bouton Add to Calendar. Elle peut également nuire considérablement à l’expérience utilisateur (UX) lorsque l’utilisateur doit autoriser un autre outil à accéder à des informations aussi sensibles que son calendrier personnel.<br />À moins que votre application ne soit déjà connectée à ces informations, ou à des informations similaires, pour d’autres raisons, il est généralement déconseillé d’ajouter une fonctionnalité demandant à l’utilisateur de confirmer l’accès à ses données personnelles.<br />Au-delà du problème d’UX, le propriétaire de l’application, du site web ou de l’outil peut lui aussi vouloir éviter cette solution, car elle entraîne de nombreuses contraintes de confidentialité (notamment le RGPD, le CCPA et la LGPD).',
+        'Une troisième possibilité consiste à <strong>copier manuellement</strong> les informations de l’événement et à les coller dans l’application de calendrier choisie.<br />Cette méthode est évidemment peu pratique, car elle prend du temps et produit des résultats incohérents.<br />D’un point de vue technique, vous pouvez faciliter ce processus en permettant de copier les informations à l’aide d’un « bouton de copie ». Toutefois, même cette solution perturbe le parcours de l’utilisateur, car vous ne pouvez pas savoir avec certitude de quel format il a besoin.',
+      ],
+      conclusion: 'Les boutons Add to Calendar, les intégrations et le copier-coller manuel constituent chacun une solution viable pour éviter que des réunions, tâches et événements importants ne soient oubliés.<br />La simplicité et la facilité d’utilisation des boutons Add to Calendar en font un choix courant pour les entreprises qui souhaitent tenir leurs clients informés et veiller à ce que les événements se déroulent comme prévu. Pour les entreprises, les campagnes marketing et les événements qui reposent sur la réussite de leurs clients, les boutons Add to Calendar sont un outil précieux qui aide les clients à rester organisés et informés.',
+    },
+  },
+  es: {
+    page: {
+      intro: 'Añadir eventos a tu calendario puede ayudarte a mantenerte organizado y al día con las próximas tareas, compromisos y eventos. Sin embargo, introducir eventos manualmente en el calendario suele ser tedioso y requiere mucho tiempo.<br />Por suerte, hay varias formas de guardar eventos en tu calendario de manera rápida y sencilla.',
+      methods: [
+        'Uno de los métodos más populares para guardar eventos en un calendario consiste en utilizar un <strong>botón Add to Calendar</strong>.<br />Estos botones permiten importar un evento con un solo clic directamente desde un sitio web o un formulario de inscripción, para que los usuarios puedan añadirlo rápida y fácilmente a su aplicación de calendario preferida.<br />Al eliminar la necesidad de introducir datos manualmente y realizar integraciones, los botones Add to Calendar ayudan a ahorrar tiempo y reducir los costes asociados a los procesos relacionados con calendarios.',
+        'Otra forma práctica de guardar eventos en un calendario consiste en <strong>integrar</strong> una aplicación de calendario de terceros en la herramienta o el sitio web correspondiente.<br />Aplicaciones populares como Apple Calendar, Google Calendar y Outlook Calendar pueden integrarse para guardar eventos automáticamente.<br />Aunque esta opción es muy estable, requiere mucha más configuración que un simple botón Add to Calendar. Además, puede perjudicar considerablemente la experiencia de usuario (UX) cuando se pide al usuario que permita a otra herramienta acceder a información tan sensible como su calendario personal.<br />Si tu aplicación no está ya conectada a esa información, o a datos similares, por otros motivos, por lo general no es recomendable añadir una función que solicite al usuario confirmar el acceso a sus datos personales.<br />Además del problema de UX, como propietario de la aplicación, el sitio web o la herramienta, quizá tampoco quieras hacerlo, ya que este proceso conlleva numerosos problemas de privacidad (como los relacionados con el RGPD, la CCPA y la LGPD).',
+        'Una tercera opción consiste en <strong>copiar manualmente</strong> los datos del evento y pegarlos en la aplicación de calendario elegida.<br />Evidentemente, no resulta muy práctico, ya que requiere tiempo y produce resultados inconsistentes.<br />Desde un punto de vista técnico, puedes facilitar este proceso permitiendo copiar la información mediante un «botón de copia». Sin embargo, incluso esto interrumpe el proceso de varias formas, pues no puedes saber con seguridad qué formato necesita el usuario.',
+      ],
+      conclusion: 'Los botones Add to Calendar, las integraciones y el proceso manual de copiar y pegar ofrecen alternativas viables para garantizar que nunca se olviden reuniones, tareas y eventos importantes.<br />La comodidad y facilidad de uso de los botones Add to Calendar hacen que sean una opción popular entre las empresas que necesitan mantener informados a sus clientes y garantizar que los eventos se desarrollen según lo previsto. Para empresas, campañas de marketing y eventos que dependen del éxito de sus clientes, los botones Add to Calendar son una herramienta muy valiosa para ayudarles a mantenerse organizados y al día.',
+    },
+  },
+};
+
+const { page } = locale === 'de' ? content.de : locale === 'fr' ? content.fr : locale === 'es' ? content.es : content.en;
+---
+
+<article class="prose-content mx-auto max-w-4xl">
+  <header class="page-header">
+    <p class="page-eyebrow">{t('labels.guides')}</p>
+    <h1 class="page-title">{t('docs.what-is.title')}</h1>
+  </header>
+  <h2>{t('docs.what-is.options')}</h2>
+  <p set:html={page.intro} />
+  {page.methods.map((body, index) => (
+    <section>
+      <h3>{t(`docs.what-is.methods.${index}`)}</h3>
+      <p set:html={body} />
+    </section>
+  ))}
+  <p set:html={page.conclusion} />
+</article>

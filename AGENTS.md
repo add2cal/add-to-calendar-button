@@ -70,12 +70,12 @@ and release notes.
 
 Use the narrowest relevant checks, then broaden for cross-cutting changes:
 
-- `npm run test` — default smoke suite.
-- `npm run test:extended` — reduced compatibility suite.
-- `npm run test:full` — full matrix; release runs require both supported Chrome binaries.
-- `npm run test:ssr` — SSR and DOM-free utility entries.
-- `npm run test:package` — package exports, module formats, types, and consumer builds.
-- `npm run build` — generated artifacts and build sanity checks.
+- `npm run test` - default smoke suite.
+- `npm run test:extended` - reduced compatibility suite.
+- `npm run test:full` - full matrix; release runs require both supported Chrome binaries.
+- `npm run test:ssr` - SSR and DOM-free utility entries.
+- `npm run test:package` - package exports, module formats, types, and consumer builds.
+- `npm run build` - generated artifacts and build sanity checks.
 
 Web Test Runner concurrency must remain `1`. Always compare the reported test count with
 the expected tier count: a test module import failure can otherwise appear as a passing

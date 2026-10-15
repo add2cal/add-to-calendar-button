@@ -1,0 +1,20 @@
+---
+import { Code } from 'astro-expressive-code/components';
+import type { DocsLocale } from '../docs-data';
+import { getGuideCopy } from './copy';
+
+interface Props { locale: DocsLocale }
+const { locale } = Astro.props;
+const c = getGuideCopy(locale);
+---
+
+<h2>
+  {c.step} 1: {c.installNpm}
+</h2>
+<p>{c.installNpmText}</p>
+<Code lang="bash" code="npm install add-to-calendar-button" />
+<h2>
+  {c.step} 2: {c.import}
+</h2>
+<p>{c.importText}</p>
+<Code lang="javascript" code={`import 'add-to-calendar-button';`} />

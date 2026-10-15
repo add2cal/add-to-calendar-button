@@ -1,0 +1,28 @@
+---
+import { Image } from 'astro:assets';
+import gift from '@images/gift.webp';
+
+interface Props {
+  locale: 'en' | 'de' | 'fr' | 'es';
+  prompt: string;
+  action: string;
+  imageAlt: string;
+}
+
+const { locale, prompt, action, imageAlt } = Astro.props;
+const proUrl = `https://add-to-calendar-pro.com${locale === 'en' ? '' : `/${locale}`}`;
+---
+
+<aside class="from-brand-blue-dark to-brand-blue my-16 w-full rounded-xl bg-linear-to-tr text-white shadow-xl transition-shadow hover:shadow-2xl">
+  <div class="flex flex-col sm:flex-row">
+    <div class="mx-auto -mt-10 w-28 shrink-0 sm:mt-6 sm:ml-2 sm:w-1/3 md:-mt-10 md:w-1/2 md:max-w-52 lg:-mt-12 lg:ml-6 lg:max-w-64 xl:ml-10">
+      <Image src={gift} alt={imageAlt} widths={[112, 208, 256]} sizes="(min-width: 1024px) 256px, (min-width: 768px) 208px, 112px" class="drop-shadow-xl" loading="lazy" />
+    </div>
+    <div class="flex flex-1 flex-col items-center gap-8 px-6 pt-8 pb-12 sm:pb-8 md:pt-10 md:pb-12 lg:pt-14 lg:pb-16">
+      <h2 class="text-center text-2xl text-white drop-shadow-lg">{prompt}</h2>
+      <a target="_blank" rel="author" href={proUrl} class="btn-accent justify-center text-center">
+        {action}
+      </a>
+    </div>
+  </div>
+</aside>

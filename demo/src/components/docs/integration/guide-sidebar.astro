@@ -1,0 +1,37 @@
+---
+import { Icon } from 'astro-icon/components';
+import { pathFor, type DocsLocale, type FrameworkName } from '../docs-data';
+import { getGuideCopy } from './copy';
+
+interface Props { locale: DocsLocale; framework?: FrameworkName }
+const { locale, framework } = Astro.props;
+const c = getGuideCopy(locale);
+const logos = new Map<FrameworkName, string>([
+  ['angular', 'logos:angular-icon'],
+  ['astro', 'logos:astro-icon'],
+  ['nextjs', 'logos:nextjs-icon'],
+  ['nuxt', 'logos:nuxt-icon'],
+  ['react', 'logos:react'],
+  ['svelte', 'logos:svelte-icon'],
+  ['vue', 'logos:vue'],
+  ['wix', 'logos:wix'],
+  ['wordpress', 'logos:wordpress-icon'],
+]);
+---
+
+<aside class="docs-sidebar text-xs">
+  <div class:list={['pb-28 pl-2', framework && 'pt-3']}>{framework ? <Icon name={logos.get(framework) ?? 'heroicons:code-bracket'} class="w-24" aria-label={framework} /> : <Icon name="heroicons:code-bracket" class="w-24" aria-hidden="true" />}</div>
+  <p>{framework ? c.sidebar.stack : c.sidebar.framework}</p>
+  <p class="font-semibold">
+    <a href={`${pathFor('', locale)}#installation`}>{c.sidebar.cta}</a>
+  </p>
+  <p>{c.sidebar.explainer}</p>
+  <div class="mt-7 border-t border-zinc-300 pt-7 dark:border-zinc-700"></div>
+  <p>
+    {c.sidebar.stackblitz}:{' '}
+    <a class="whitespace-nowrap" href="https://stackblitz.com/@add-to-calendar/collections/add-to-calendar-button-integration-examples" target="_blank" rel="noopener">
+      {c.clickHere} <Icon name="heroicons:arrow-top-right-on-square" class="inline-block size-2.5" aria-hidden="true" />
+    </a>
+    .
+  </p>
+</aside>

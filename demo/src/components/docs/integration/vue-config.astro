@@ -1,0 +1,37 @@
+---
+import { Code } from 'astro-expressive-code/components';
+import { Icon } from 'astro-icon/components';
+import type { DocsLocale } from '../docs-data';
+import { getGuideCopy } from './copy';
+interface Props { locale: DocsLocale; step: number }
+const { locale, step } = Astro.props;
+const c = getGuideCopy(locale);
+---
+
+<h2>
+  {c.step} {step}: {c.vue.optimize}
+</h2>
+<p>
+  {c.vue.optimize1}
+  <br />
+  {c.vue.optimize2}
+</p>
+<p>
+  {c.vue.config1}
+  <br />
+  {c.vue.config2}
+</p>
+<p>
+  {c.vue.config3}:{' '}
+  <a class="whitespace-nowrap" href="https://vuejs.org/guide/extras/web-components.html#using-custom-elements-in-vue" target="_blank" rel="noopener">
+    {c.clickHere} <Icon name="heroicons:arrow-top-right-on-square" class="inline-block size-4" aria-hidden="true" />
+  </a>
+  .
+</p>
+<Code lang="typescript" code={`// vite.config.js or vite.config.ts\n\ncompilerOptions: {\n  isCustomElement: (tag) => tag.includes('-')\n}`} />
+<p>
+  {c.vue.config4}
+  <br />
+  {c.vue.config5}
+</p>
+<Code lang="typescript" code={`// vite.config.js or vite.config.ts\n\ncompilerOptions: {\n  isCustomElement: (tag) => tag.startsWith('add-')\n}`} />
