@@ -71,7 +71,7 @@ Also part of the default run (long-standing quick tests):
 - A-03: missing name + debug -> visible error block
 - A-04: hidden=true skips button generation entirely
 - A-05: disabled=true renders but click no-ops
-- A-06: blockInteraction=true blocks all interaction
+- A-06: blockInteraction=true blocks all interaction and removes the control from navigation and AT
 - A-07: two instances keep independent state
 - A-08: imperative atcb_action opens directly; atcb-last-event only set after first event
 - A-09: removing element cleans up open UI and schema
@@ -453,6 +453,7 @@ The same Node tier also covers the DOM-free utility entry in `test/ssr-node/util
 - S-03: default shell carries host attributes (official kebab names), DSD template, styles and the real label
 - S-03b: customLabels overrides the SSR trigger label for object and JSON-string input; explicit label retains precedence
 - S-03c: SSR resolves exact regional and script-variant packs before base-language fallback
+- S-03d: blockInteraction makes the SSR shell inert, unfocusable, and free of actionable ARIA
 - S-04: buttonStyle selects exactly its delta; unknown styles fall back to default
 - S-05: size attribute maps to the font-size custom properties (same math as the client)
 - S-06: date style renders skeleton spans instead of computed date parts

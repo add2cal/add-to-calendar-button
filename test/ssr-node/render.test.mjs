@@ -76,6 +76,14 @@ test('S-03c: SSR uses exact regional and script-variant locale labels before bas
   }
 });
 
+test('S-03d: blockInteraction makes the SSR shell inert, unfocusable, and free of actionable ARIA', () => {
+  const html = atcb_generate_ssr_html({ name: 'X', options: ['google', 'apple'], blockInteraction: true });
+  const button = html.match(/<button[^>]*>/)?.[0] || '';
+  assert.ok(button.includes(' inert'), 'blocked shell button is inert');
+  assert.ok(button.includes('tabindex="-1"'), 'blocked shell button is excluded from sequential focus navigation');
+  assert.ok(!button.includes('aria-'), 'blocked shell button does not advertise interactive ARIA');
+});
+
 test('S-04: buttonStyle selects exactly its delta; unknown styles fall back to default', () => {
   const threeD = atcb_generate_ssr_html({ name: 'X', buttonStyle: '3d' });
   assert.ok(threeD.includes('--btn-active-shadow-up'), '3d delta css present');

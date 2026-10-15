@@ -290,9 +290,11 @@ function buttonTemplate(host: ShadowRoot, data: ATCBConfig): TemplateResult {
         part="atcb-button"
         id=${buttonId}
         disabled=${data.disabled ? 'true' : nothing}
-        aria-haspopup=${!oneOption ? 'true' : nothing}
-        aria-expanded="false"
-        aria-label=${isDate ? nothing : ariaLabel}
+        ?inert=${!interactive}
+        tabindex=${!interactive ? '-1' : nothing}
+        aria-haspopup=${interactive && !oneOption ? 'true' : nothing}
+        aria-expanded=${interactive ? 'false' : nothing}
+        aria-label=${interactive && !isDate ? ariaLabel : nothing}
         @keyup=${interactive ? handlers.keyup : nothing}
         @touchend=${interactive && 'touchend' in handlers ? handlers.touchend : nothing}
         @mouseup=${interactive && 'mouseup' in handlers && handlers.mouseup ? handlers.mouseup : nothing}

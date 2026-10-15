@@ -93,7 +93,7 @@ const formatStat = (key: string, value: number) => {
 const statSuffix = (key: string) => (key === 'npm-total' || key === 'jsdelivr' ? 'M' : 'k');
 ---
 
-<section class="relative z-20 mt-10 text-text" data-stats data-locale={locale}>
+<section class="relative z-20 mt-10 xl:mt-28 text-text" data-stats data-locale={locale}>
   <h2 class="sr-only">{t('stats.title')}</h2>
   <div class="grid select-none gap-6 rounded-2xl border border-white/50 bg-white px-3 py-4 shadow-xl lg:grid-cols-[minmax(0,1fr)_auto] lg:items-center lg:px-6 dark:border-stone-700 dark:bg-stone-900">
     <div class="flex flex-wrap items-stretch gap-x-5 gap-y-2 max-w-xl">
