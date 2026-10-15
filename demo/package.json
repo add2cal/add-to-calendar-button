@@ -46,9 +46,6 @@
     "url": "https://github.com/add2cal/add-to-calendar-button/issues"
   },
   "homepage": "https://add-to-calendar-button.com/",
-  "workspaces": [
-    "../"
-  ],
   "dependencies": {
     "@astrojs/cloudflare": "^14.3.4",
     "@astrojs/sitemap": "^3.7.4",
@@ -60,6 +57,7 @@
     "@heroicons/vue": "^2.2.0",
     "@plausible-analytics/tracker": "^0.4.6",
     "@tailwindcss/vite": "^4.3.3",
+    "add-to-calendar-button": "file:..",
     "astro": "^7.3.8",
     "astro-expressive-code": "^0.44.2",
     "astro-icon": "^1.2.0",
