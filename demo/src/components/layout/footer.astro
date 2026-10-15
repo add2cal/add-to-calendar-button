@@ -25,8 +25,8 @@ const npmUrl = 'https://www.npmjs.com/package/add-to-calendar-button';
 
 <footer role="contentinfo" class="bg-linear-to-t from-zinc-100 to-gray-300 pt-14 text-zinc-700 dark:from-zinc-800 dark:to-zinc-900 dark:text-zinc-300">
   <div class="container flex flex-col items-stretch justify-between gap-x-20 gap-y-10 px-7 md:flex-row">
-    <div class="flex w-full flex-col items-center gap-5 border-b border-zinc-400/50 pb-10 text-center md:max-w-[350px] md:items-start md:border-0 md:text-left">
-      <div class="w-auto max-w-[200px]">
+    <div class="flex w-full flex-col items-center gap-5 border-b border-zinc-400/50 pb-10 text-center md:max-w-87.5 md:items-start md:border-0 md:text-left">
+      <div class="w-auto max-w-50">
         <a href={getLocaleUrl('/', locale)} class="block w-full select-none">
           <p class="sr-only hidden" id="footerSiteNameLogo">
             {themeConfig.name}
@@ -42,16 +42,16 @@ const npmUrl = 'https://www.npmjs.com/package/add-to-calendar-button';
       <div class="flex items-center justify-center space-x-6 lg:justify-start lg:space-x-3">
         {githubUrl && (
           <a class="btn-icon-link" aria-label={t('footer.social.github-label')} title={t('footer.social.github-label')} target="_blank" rel="noopener" href={githubUrl}>
-            <Icon name="fa7-brands:github" class="size-8" />
+            <Icon name="thesvg:github" class="size-7 m-1" />
           </a>
         )}
         {themeConfig.xHandle && (
           <a class="btn-icon-link" aria-label={t('footer.social.x-label')} title={t('footer.social.x-title')} target="_blank" rel="noopener" href={'https://x.com/' + themeConfig.xHandle}>
-            <Icon name="fa7-brands:x-twitter" class="size-7" />
+            <Icon name="thesvg:x" class="size-7 m-3" />
           </a>
         )}
         <a class="btn-icon-link" aria-label={t('footer.social.npm-label')} title={t('footer.social.npm-title')} target="_blank" rel="noopener" href={npmUrl}>
-          <Icon name="fa7-brands:npm" class="size-8" />
+          <Icon name="thesvg:npm" class="size-8 m-3" />
         </a>
       </div>
       {themeConfig.askAiTrigger && (
@@ -59,13 +59,13 @@ const npmUrl = 'https://www.npmjs.com/package/add-to-calendar-button';
           <div class="mb-3 text-xs">{t('labels.ask-ai')}:</div>
           <div class="flex items-center justify-center space-x-6 lg:justify-start lg:space-x-3">
             <a class="btn-subtle size-11 justify-center rounded-full p-1.5" title="ChatGPT" target="_blank" rel="noopener" href={`https://chatgpt.com/?prompt=${encodeURIComponent(themeConfig.askAiTrigger + promptLocaleAdd)}`}>
-              <Icon name="simple-icons:openai" class="h-5 w-5" />
+              <Icon name="thesvg:openai-chatgpt" class="h-5 w-5" />
             </a>
             <a class="btn-subtle size-11 justify-center rounded-full p-1.5" title="Claude" target="_blank" rel="noopener" href={`https://claude.ai/new?q=${encodeURIComponent(themeConfig.askAiTrigger + promptLocaleAdd)}`}>
-              <Icon name="simple-icons:claude" class="h-5 w-5" />
+              <Icon name="thesvg:claude" class="h-5 w-5" />
             </a>
             <a class="btn-subtle size-11 justify-center rounded-full p-1.5" title="Perplexity" target="_blank" rel="noopener" href={`https://www.perplexity.ai/search?q=${encodeURIComponent(themeConfig.askAiTrigger + promptLocaleAdd)}`}>
-              <Icon name="simple-icons:perplexity" class="h-5 w-5" />
+              <Icon name="thesvg:perplexity" class="h-5 w-5" />
             </a>
             <a class="btn-subtle size-11 justify-center rounded-full p-1.5" title="Grok" aria-label="Grok" target="_blank" rel="noopener" href={`https://grok.com/?q=${encodeURIComponent(themeConfig.askAiTrigger + promptLocaleAdd)}`}>
               <Icon name="thesvg:grok-xai" class="h-5 w-5" />

@@ -14,7 +14,6 @@
     "examples-advanced": "Avancé"
   },
   "labels": {
-    "go-pro": "go PRO",
     "use-pro": "Utiliser PRO",
     "star": "Ajouter une étoile",
     "ask-ai": "Demander à l'IA à propos de nous",
@@ -81,10 +80,7 @@
     "home": {
       "title": "Bouton Add to Calendar gratuit",
       "description": "Créez et configurez un bouton Add to Calendar gratuit et accessible pour tous les principaux calendriers.",
-      "hero-chip": "Web Component gratuit",
       "hero": {
-        "prefix": "La nouvelle génération",
-        "slogan": "Faites enregistrer vos événements !",
         "eyebrow": "Web Component gratuit et indépendant des frameworks",
         "title": "Faites enregistrer vos événements",
         "subhead": "Un Web Component indépendant de tout framework, qui permet aux visiteurs d’enregistrer vos événements dans Google, Apple, Outlook, Yahoo et iCal sans la moindre friction.",
@@ -93,10 +89,6 @@
         "image-alt": "Add to Calendar Button avec les principaux services de calendrier"
       },
       "intro": {
-        "slogan": "Permettez à vos utilisateurs d’ajouter vos événements à leur calendrier. Simple, rapide et sans effort 🔥🚀😏",
-        "paragraph-1": "Bienvenue dans la façon la plus pratique de créer des boutons Add to Calendar, pensée pour éliminer les maux de tête des développeurs.",
-        "paragraph-2": "Compatible avec les principaux calendriers, navigateurs et systèmes, même dans les navigateurs intégrés restrictifs.",
-        "paragraph-3": "Conçu comme Web Component pour une intégration facile presque partout. Profitez-en !",
         "product-hunt-label": "Produit du jour sur Product Hunt"
       },
       "playground": {
@@ -107,12 +99,6 @@
         "disclaimer": "Ce playground couvre une partie des attributs disponibles. Pour consulter le schéma complet, voir la",
         "configuration": "documentation de configuration"
       },
-      "installation": {
-        "heading": "Intégration à votre projet web",
-        "intro": "Le script est un Web Component : il fonctionne comme tout élément HTML et avec toutes les piles frontend modernes.",
-        "prompt": "Choisissez votre environnement pour accéder au guide détaillé.",
-        "other": "Une autre pile ? Utilisez la configuration JavaScript standard."
-      },
       "router": {
         "eyebrow": "Parcours ciblé",
         "heading": "Comment développez-vous votre projet ?",
@@ -122,10 +108,6 @@
           "heading": "J’écris du code",
           "description": "Ajoutez un seul Web Component à toute application web ou site statique.",
           "install-method": "Méthode d’installation",
-          "copy": "Copier",
-          "copying": "Copie…",
-          "copied": "Copié",
-          "copy-failed": "Échec de la copie",
           "configuration": "Documentation de configuration",
           "stack-prompt": "Avec quelle technologie développez-vous ?"
         },
@@ -139,9 +121,6 @@
           "item-2-text": "Hébergez des fichiers .ics dynamiques et recueillez les confirmations des invités.",
           "item-3-title": "Workflows automatisés :",
           "item-3-text": "CTA post-enregistrement, API, webhooks, Zapier et Pipedream.",
-          "item-1": "Configurer visuellement les boutons et pages événementielles",
-          "item-2": "Collecter les RSVP et héberger les fichiers ICS",
-          "item-3": "Connecter les CTA post-enregistrement, API et automatisations",
           "cta": "Créer sans code"
         }
       },
@@ -180,47 +159,6 @@
             "description": "Conforme aux WCAG AA avec prise en charge du clavier et des lecteurs d’écran. Exécution 100 % côté client, environnements RGPD stricts et prise en charge des nonces CSP.",
             "cta": "Documentation sur la sécurité"
           }
-        }
-      },
-      "features": {
-        "heading": "Fonctionnalités",
-        "eyebrow": "Fonctions essentielles",
-        "intro": "Un ou plusieurs boutons, configurables directement dans votre HTML.",
-        "calendars": {
-          "heading": "Calendriers pris en charge",
-          "item-1": "Google Calendar",
-          "item-2": "Apple Calendar",
-          "item-3": "Microsoft 365, Outlook et Teams",
-          "item-4": "Yahoo Calendar",
-          "item-5": "Fichiers iCal générés automatiquement"
-        },
-        "events": {
-          "heading": "Types d’événement",
-          "item-1": "Événements horaires et journées entières",
-          "item-2": "Ponctuels, multiples et récurrents",
-          "item-3": "Abonnements calendrier",
-          "item-4": "Gestion robuste des fuseaux horaires",
-          "item-5": "Dates dynamiques"
-        },
-        "look": {
-          "heading": "Apparence",
-          "item-1": "Interface personnalisable",
-          "item-2": "Modes clair et sombre",
-          "item-3": "Plusieurs thèmes"
-        },
-        "accessibility": {
-          "heading": "Accessibilité",
-          "item-1": "Optimisé pour mobile et ordinateur",
-          "item-2": "Positionnement dynamique",
-          "item-3": "Solutions pour les WebViews restrictives",
-          "item-4": "Souris, tactile et clavier",
-          "item-5": "Plus de 49 langues et RTL"
-        },
-        "more": {
-          "heading": "Et bien plus",
-          "item-1": "Données structurées Schema.org",
-          "item-2": "Conforme RGPD, CCPA et LGPD",
-          "item-3": "Sécurité dès la conception"
         }
       },
       "comparison": {
@@ -274,17 +212,6 @@
             "pro": "Offres gratuites et payantes disponibles"
           }
         }
-      },
-      "final": {
-        "heading": "Prêt à simplifier l’enregistrement de vos événements ?",
-        "description": "Utilisez le Web Component gratuit dans votre code ou créez une expérience gérée avec PRO.",
-        "free": "Installer le composant gratuit",
-        "pro": "Découvrir Add to Calendar PRO"
-      },
-      "next": {
-        "heading": "Et maintenant ?",
-        "examples": "Explorer les exemples",
-        "configure": "Apprendre à configurer"
       }
     },
     "faq": {
@@ -337,7 +264,7 @@
         "pro-parameters": "Paramètres PRO",
         "event-parameters": "Paramètres de l’événement",
         "ics-parameters": "Options du fichier ics",
-        "layout-parameters": "Paramètres de mise en page",
+        "style-parameters": "Paramètres de mise en page",
         "additional-parameters": "Paramètres supplémentaires"
       },
       "descriptors": {
@@ -544,22 +471,6 @@
         "0": "A. Bouton Add to Calendar",
         "1": "B. Intégration poussée",
         "2": "C. Manuellement"
-      },
-      "effort": "Effort nécessaire pour mettre en place un bouton Add to Calendar",
-      "worried": "Le coût et l’effort vous préoccupent ?",
-      "features-prompt": "Pas encore convaincu ?",
-      "features": "Voici quelques-unes des principales fonctionnalités",
-      "example": "et voici à quoi cela peut ressembler !",
-      "learn-more": "Cliquez ici pour en savoir plus",
-      "demo": "Démo",
-      "installation": "Installation",
-      "examples": "Exemples",
-      "feature-groups": {
-        "0": "Calendriers pris en charge",
-        "1": "Types d’événements",
-        "2": "Apparence",
-        "3": "Accessibilité",
-        "4": "Et bien plus encore"
       }
     }
   },

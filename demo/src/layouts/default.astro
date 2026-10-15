@@ -162,8 +162,6 @@ const showTopBanner = (themeConfig.promotions?.topBanner && header?.showTopBanne
           const repository = url.pathname.split('/').filter(Boolean).slice(0, 2).join('/');
           trackAnalyticsEvent('github_link_clicked', { repository });
         } else if (provider) trackAnalyticsEvent('ask_ai_clicked', { provider });
-
-        //TODO: track if any interaction with the playground happened
       });
 
       initializeAnalytics();

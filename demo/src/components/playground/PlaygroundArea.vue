@@ -4,6 +4,7 @@ import { computed, nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import 'add-to-calendar-button/styles/all';
 import 'add-to-calendar-button/i18n/all';
 import 'add-to-calendar-button';
+import { trackAnalyticsEvent } from '../../utils/analytics';
 import { type Attrs } from '../../models/attrs';
 import { attrsToHtmlString, mapAttrsObject } from '../../utils/playground/attrs';
 import { getDefaultAttrs, getInitialAttrs, saveAttrs } from '../../utils/playground/default';
@@ -21,6 +22,7 @@ const showCode = ref(false);
 const showMobileConfig = ref(false);
 const settingsDialog = ref<HTMLDialogElement>();
 const copied = ref(false);
+const trackedDemoActions = new Set<string>();
 const buttonAttrs = computed(() => mapAttrsObject(data.value));
 const markup = computed(() => attrsToHtmlString(data.value));
 const buttonTop = computed(() => {
@@ -41,6 +43,7 @@ watch(
   data,
   (value) => {
     if (renderButton.value) saveAttrs(value);
+    if (loaded.value) trackDemoUse('configure');
   },
   { deep: true },
 );
@@ -57,10 +60,22 @@ onBeforeUnmount(() => {
 
 async function copyCode() {
   await navigator.clipboard.writeText(markup.value);
+  trackDemoUse('copy_code');
   copied.value = true;
   window.setTimeout(() => {
     copied.value = false;
   }, 1600);
+}
+
+function trackDemoUse(action: 'configure' | 'preview' | 'show_code' | 'copy_code') {
+  if (trackedDemoActions.has(action)) return;
+  trackedDemoActions.add(action);
+  trackAnalyticsEvent('demo_used', { surface: 'playground', action });
+}
+
+function toggleCode() {
+  showCode.value = !showCode.value;
+  if (showCode.value) trackDemoUse('show_code');
 }
 </script>
 
@@ -75,7 +90,7 @@ async function copyCode() {
         <div class="mb-4 text-sm font-semibold text-zinc-800 uppercase dark:text-zinc-200">{{ t('labels.dateInput') }}</div>
         <DateAttrs v-model="data.date" :disabled="!loaded" />
       </div>
-      <div id="rendering" :class="{ 'rounded-bl-none md:rounded-br-md lg:rounded-br-none': !showCode }" class="grid-bg row-span-2 flex justify-center rounded-tl-none border-0 border-zinc-400 bg-zinc-100 px-3 py-8 md:rounded-tr-md md:border-l-2 lg:row-span-1 lg:rounded-tr-none dark:border-zinc-600 dark:bg-zinc-900">
+      <div id="rendering" :class="{ 'rounded-bl-none md:rounded-br-md lg:rounded-br-none': !showCode }" class="grid-bg row-span-2 flex justify-center rounded-tl-none border-0 border-zinc-400 bg-zinc-100 px-3 py-8 md:rounded-tr-md md:border-l-2 lg:row-span-1 lg:rounded-tr-none dark:border-zinc-600 dark:bg-zinc-900" @click.capture="trackDemoUse('preview')">
         <div class="sticky z-30 h-fit min-h-[200px] w-fit p-8 transition-all" :style="{ top: buttonTop }">
           <component :is="'add-to-calendar-button'" v-if="renderButton" v-bind="buttonAttrs" debug hide-rich-data hide-branding />
         </div>
@@ -93,7 +108,7 @@ async function copyCode() {
       </div>
     </div>
     <div id="code-output" :class="!showCode ? 'mx-8 bg-zinc-300 dark:bg-zinc-800' : 'mx-2 bg-zinc-200 pb-0 md:mx-0 dark:bg-zinc-800'" class="rounded-b-md border-2 border-t-0 border-zinc-400 p-2 shadow-lg transition-all dark:border-zinc-600">
-      <button type="button" class="btn-control dark:hover:text-secondary block w-full text-center text-sm font-semibold text-zinc-600 hover:text-black dark:text-zinc-400" @click="showCode = !showCode">
+      <button type="button" class="btn-control dark:hover:text-secondary block w-full text-center text-sm font-semibold text-zinc-600 hover:text-black dark:text-zinc-400" @click="toggleCode">
         <span v-if="!showCode"><EyeIcon class="-mt-1 mr-2 inline-block h-5 w-5" aria-hidden="true" />{{ t('labels.showCode') }}</span>
         <span v-else><EyeSlashIcon class="-mt-1 mr-2 inline-block h-5 w-5" aria-hidden="true" />{{ t('labels.hideCode') }}</span>
       </button>

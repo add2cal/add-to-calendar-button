@@ -20,7 +20,9 @@ const logos = new Map<FrameworkName, string>([
 ---
 
 <aside class="docs-sidebar text-xs">
-  <div class:list={['pb-28 pl-2', framework && 'pt-3']}>{framework ? <Icon name={logos.get(framework) ?? 'heroicons:code-bracket'} class="w-24" aria-label={framework} /> : <Icon name="heroicons:code-bracket" class="w-24" aria-hidden="true" />}</div>
+  <div class:list={['pb-20 pl-2', framework && 'pt-3']}>
+    {framework ? <Icon name={logos.get(framework) ?? 'heroicons:code-bracket'} class="w-24 h-auto" aria-label={framework} /> : <Icon name="heroicons:code-bracket" class="w-24 h-auto" aria-hidden="true" />}
+  </div>
   <p>{framework ? c.sidebar.stack : c.sidebar.framework}</p>
   <p class="font-semibold">
     <a href={`${pathFor('', locale)}#installation`}>{c.sidebar.cta}</a>
@@ -29,8 +31,8 @@ const logos = new Map<FrameworkName, string>([
   <div class="mt-7 border-t border-zinc-300 pt-7 dark:border-zinc-700"></div>
   <p>
     {c.sidebar.stackblitz}:{' '}
-    <a class="whitespace-nowrap" href="https://stackblitz.com/@add-to-calendar/collections/add-to-calendar-button-integration-examples" target="_blank" rel="noopener">
-      {c.clickHere} <Icon name="heroicons:arrow-top-right-on-square" class="inline-block size-2.5" aria-hidden="true" />
+    <a class="whitespace-nowrap external-link" href="https://stackblitz.com/@add-to-calendar/collections/add-to-calendar-button-integration-examples" target="_blank" rel="noopener">
+      {c.clickHere}
     </a>
     .
   </p>

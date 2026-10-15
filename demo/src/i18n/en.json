@@ -14,7 +14,6 @@
     "examples-advanced": "Advanced"
   },
   "labels": {
-    "go-pro": "go PRO",
     "use-pro": "Use PRO",
     "star": "Star",
     "ask-ai": "Ask AI about us",
@@ -81,10 +80,7 @@
     "home": {
       "title": "Free Add to Calendar Button | the only really free one",
       "description": "Experience the interactive demo and tutorials on how to create a button, which adds events to your users' calendars. Free, quick, and convenient.",
-      "hero-chip": "Free web component",
       "hero": {
-        "prefix": "The next-level",
-        "slogan": "Make your events get saved!",
         "eyebrow": "Free, framework-agnostic Web Component",
         "title": "Make your events get saved",
         "subhead": "A framework-agnostic Web Component that lets visitors save events to Google, Apple, Outlook, Yahoo, and iCal with zero friction.",
@@ -93,10 +89,6 @@
         "image-alt": "Add to Calendar Button showing options for major calendar services"
       },
       "intro": {
-        "slogan": "Let your users add events to their calendar. Simple, fast, and hassle-free 🔥🚀😏",
-        "paragraph-1": "Welcome to the maybe most convenient way of working with Add to Calendar Buttons. Designed to reduce developer headaches down to zero.",
-        "paragraph-2": "Supporting all major calendars in modern browsers, on Windows, Mac, Android, iOS, and even restricted in-app browsers.",
-        "paragraph-3": "Built as a Web Component that you can easily integrate basically everywhere. Enjoy!",
         "product-hunt-label": "Product of the Day on Product Hunt"
       },
       "playground": {
@@ -107,12 +99,6 @@
         "disclaimer": "This playground covers a subset of available attributes. For complete schema details, see the",
         "configuration": "Configuration Docs"
       },
-      "installation": {
-        "heading": "Bringing it to your web project",
-        "intro": "The script is built as a Web Component, so it works like any other HTML element and fits every modern frontend stack.",
-        "prompt": "Choose your environment for a step-by-step guide.",
-        "other": "Another stack? Use the default JavaScript setup."
-      },
       "router": {
         "eyebrow": "Targeted Workflow",
         "heading": "How are you building this?",
@@ -122,10 +108,6 @@
           "heading": "I write code",
           "description": "Drop a single Web Component into any web application or static site.",
           "install-method": "Installation method",
-          "copy": "Copy",
-          "copying": "Copying…",
-          "copied": "Copied",
-          "copy-failed": "Copy failed",
           "configuration": "Configuration Docs",
           "stack-prompt": "What are you building with?"
         },
@@ -139,9 +121,6 @@
           "item-2-text": "Host dynamic .ics files and collect guest confirmations.",
           "item-3-title": "Automated Workflows:",
           "item-3-text": "Post-save CTAs, API, webhooks, Zapier & Pipedream.",
-          "item-1": "Configure buttons and event pages visually",
-          "item-2": "Collect RSVPs and host managed ICS files",
-          "item-3": "Connect post-save CTAs, APIs, and automations",
           "cta": "Create without code"
         }
       },
@@ -180,47 +159,6 @@
             "description": "WCAG AA compliant with keyboard and screen-reader support. 100% client-side execution, strict GDPR environments, and CSP nonce support.",
             "cta": "Security Docs"
           }
-        }
-      },
-      "features": {
-        "heading": "Functionality",
-        "eyebrow": "Core capabilities",
-        "intro": "One or many Add to Calendar Buttons, configured directly in your HTML.",
-        "calendars": {
-          "heading": "Supported calendars",
-          "item-1": "Google Calendar",
-          "item-2": "Apple Calendar",
-          "item-3": "Microsoft 365, Outlook, and Teams",
-          "item-4": "Yahoo Calendar",
-          "item-5": "Automatically generated iCal files"
-        },
-        "events": {
-          "heading": "Event types",
-          "item-1": "Timed and all-day events",
-          "item-2": "One-time, multi-date, and recurring events",
-          "item-3": "Calendar subscriptions",
-          "item-4": "Robust time zone and daylight-saving handling",
-          "item-5": "Dynamic dates"
-        },
-        "look": {
-          "heading": "Look",
-          "item-1": "Adjustable interface",
-          "item-2": "Light and dark mode",
-          "item-3": "Multiple themes"
-        },
-        "accessibility": {
-          "heading": "Accessibility",
-          "item-1": "Optimized desktop and mobile UX",
-          "item-2": "Dynamic dropdown positioning",
-          "item-3": "Guidance for restricted WebViews",
-          "item-4": "Mouse, touch, and keyboard support",
-          "item-5": "49+ languages including RTL"
-        },
-        "more": {
-          "heading": "And much more",
-          "item-1": "Schema.org structured data",
-          "item-2": "GDPR, CCPA, and LGPD compliant",
-          "item-3": "Security by design"
         }
       },
       "comparison": {
@@ -274,17 +212,6 @@
             "pro": "Free & paid plans available"
           }
         }
-      },
-      "final": {
-        "heading": "Ready to make event saving effortless?",
-        "description": "Use the free Web Component in your code or build a managed event experience with PRO.",
-        "free": "Install the free component",
-        "pro": "Explore Add to Calendar PRO"
-      },
-      "next": {
-        "heading": "What's next?",
-        "examples": "Explore examples",
-        "configure": "Learn how to configure"
       }
     },
     "faq": {
@@ -337,7 +264,7 @@
         "pro-parameters": "PRO parameters",
         "event-parameters": "Event parameters",
         "ics-parameters": "ics file options",
-        "layout-parameters": "Layout parameters",
+        "style-parameters": "Layout parameters",
         "additional-parameters": "Additional parameters"
       },
       "descriptors": {
@@ -544,22 +471,6 @@
         "0": "A. Add to Calendar Button",
         "1": "B. Deep Integration",
         "2": "C. Manually"
-      },
-      "effort": "Effort of implementing an Add to Calendar Button",
-      "worried": "Worried about cost and effort?",
-      "features-prompt": "Not convinced?",
-      "features": "Those are some of the main features",
-      "example": "and here you can see how it looks like!",
-      "learn-more": "Click here to learn more",
-      "demo": "Demo",
-      "installation": "Installation",
-      "examples": "Examples",
-      "feature-groups": {
-        "0": "Supported Calendars",
-        "1": "Event Types",
-        "2": "Look",
-        "3": "Accessibility",
-        "4": "And much more"
       }
     }
   },
