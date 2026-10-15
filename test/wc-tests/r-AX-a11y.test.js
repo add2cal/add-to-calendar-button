@@ -50,7 +50,11 @@ describe('Group AX - automated a11y checks', () => {
   });
 
   it('AX-03: date-style button has no WCAG A/AA violations', async () => {
-    const { host } = await mountAtcb(baseEvent({ identifier: 'atcb-ax03', buttonStyle: 'date', location: 'Test Hall 7' }));
+    const { host } = await mountAtcb(baseEvent({ identifier: 'atcb-ax03', buttonStyle: 'date', location: 'Test Hall 7', options: "['google']", recurrence: 'RRULE:FREQ=WEEKLY;COUNT=3' }));
+    const button = host.shadowRoot.getElementById(host.getAttribute('atcb-button-id'));
+    const description = button.querySelector('.atcb-sr-only');
+    expect(button.getAttribute('aria-label'), 'visible date-card content provides the accessible name').to.equal(null);
+    expect(description.textContent, 'nonvisual details remain available to assistive tech').to.include('Google').and.include('2050').and.include('Recurring');
     await expectNoViolations(host, 'date button');
   });
 
