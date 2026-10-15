@@ -2,7 +2,7 @@
 
 The Astro-based demo and documentation site for the free [Add to Calendar Button](https://github.com/add2cal/add-to-calendar-button) web component.
 
-The site is being migrated from the legacy Nuxt demo. It keeps the public demo, playground, configuration, examples, integration guides, localized FAQ, agent-facing documentation, and links to the managed [Add to Calendar PRO](https://add-to-calendar-pro.com/) offering.
+It provides the public demo, playground, configuration reference, examples, integration guides, localized FAQ, agent-facing documentation, and links to the managed [Add to Calendar PRO](https://add-to-calendar-pro.com/) offering.
 
 ## Requirements
 
@@ -11,7 +11,7 @@ The site is being migrated from the legacy Nuxt demo. It keeps the public demo, 
 
 ## Development
 
-Run commands from `demo/add-to-calendar-button-demo`:
+Run commands from `demo`:
 
 ```sh
 npm install
@@ -19,7 +19,7 @@ npm run dev
 ```
 
 The development server prints its local URL. Source files live in `src/`; public assets and the published agent skill live in `public/`.
-The `predev` and `prebuild` hooks sync the repository package version from `../../package.json` into the footer source.
+The `predev` and `prebuild` hooks sync the repository package version from `../package.json` into the footer source.
 
 ## Checks
 
@@ -37,14 +37,13 @@ To format and autofix owned source files:
 npm run fix
 ```
 
-## Migration Notes
+## Project Structure
 
-- The previous Nuxt demo remains one directory above this project as the migration reference.
-- Keep route compatibility for legacy destinations and homepage anchors where practical.
-- Edit Astro source only; generated build output belongs in `dist/`.
+- Routes live in `src/pages/`; shared page implementations live in `src/components/`.
 - UI strings are in `src/i18n/{en,de,fr,es}.json`.
 - FAQ answers are Markdown files in `src/content/faq-answers/<locale>/`.
 - Product and LLM settings are in `theme.config.ts`.
+- Edit source only; generated build output belongs in `dist/`.
 
 ## Product Boundary
 

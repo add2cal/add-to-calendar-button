@@ -121,7 +121,7 @@
     "test:screen-reader": "node test/test-prep.js && npx playwright test --config playwright.screen-reader.config.ts",
     "dev": "cd demo && npm run dev",
     "build:all": "npm run build && npm run build:demo",
-    "build:demo": "cd demo && npm run generate",
+    "build:demo": "cd demo && npm run build",
     "build:min": "node scripts/build.mjs --min",
     "build": "node scripts/build.mjs",
     "prepack": "npm run build:min"
