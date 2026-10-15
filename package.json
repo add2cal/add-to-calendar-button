@@ -132,9 +132,9 @@
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
-    "@guidepup/guidepup": "0.35.0",
-    "@guidepup/playwright": "0.19.1",
-    "@guidepup/setup": "0.29.2",
+    "@guidepup/guidepup": "0.36.2",
+    "@guidepup/playwright": "0.20.0",
+    "@guidepup/setup": "0.29.3",
     "@open-wc/testing": "^5.0.0",
     "@playwright/test": "1.64.1",
     "@types/node": "^26.6.5",
