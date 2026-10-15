@@ -274,6 +274,7 @@ function generate_ssr_html_with_context(rawConfig: AddToCalendarButtonType & { [
   const hasRsvp = Boolean(config.rsvp) && typeof config.rsvp === 'object';
   const inlineRsvp = hasRsvp && truthyFlag(config.inlineRsvp);
   const hidden = truthyFlag(config.hidden);
+  const blockInteraction = truthyFlag(config.blockInteraction);
   const identifier = typeof config.identifier === 'string' && /^[\w-]+$/.test(config.identifier) ? config.identifier : '';
   const buttonsList = truthyFlag(config.buttonsList);
   const hideIconButton = truthyFlag(config.hideIconButton);
@@ -324,6 +325,7 @@ function generate_ssr_html_with_context(rawConfig: AddToCalendarButtonType & { [
   // --- shell content ---
   const sizeStyle = `--base-font-size-l:${sizes['l']}px;--base-font-size-m:${sizes['m']}px;--base-font-size-s:${sizes['s']}px;`;
   const buttonId = identifier !== '' ? ` id="atcb-btn-${escape_html(identifier)}"` : '';
+  const blockedButtonAttributes = blockInteraction ? ' inert tabindex="-1"' : '';
   const content = (function () {
     if (groupOverviewSkeleton) {
       return '<div class="atcb-group-overview atcb-group-overview-list atcb-ssr-group-overview-skeleton" aria-hidden="true"><div class="atcb-ssr-skeleton atcb-ssr-group-overview-select"></div><div class="atcb-ssr-skeleton atcb-ssr-group-overview-entry"></div><div class="atcb-ssr-skeleton atcb-ssr-group-overview-entry"></div></div>';
@@ -336,7 +338,8 @@ function generate_ssr_html_with_context(rawConfig: AddToCalendarButtonType & { [
       const rsvpLabel = truthyFlag(rsvp.expired) ? rsvpLabels.expired : truthyFlag(rsvp.bookedOut) ? rsvpLabels.bookedout : rsvpLabels.title;
       const icon = hideIconButton ? '' : `<div class="atcb-icon atcb-icon-rsvp" part="atcb-list-icon">${icons['rsvp']}</div>`;
       const text = hideTextLabelButton ? '' : `<span class="atcb-text" part="atcb-list-text">${escape_html_text(rsvpLabel)}</span>`;
-      return `<div class="atcb-button-wrapper${rtl ? ' atcb-rtl' : ''}" part="atcb-button-wrapper" style="${sizeStyle}"><button type="button" class="atcb-button atcb-click atcb-single${hideTextLabelButton ? ' atcb-no-text' : ''}" part="atcb-button"${buttonId} aria-expanded="false" aria-label="${escape_html(rsvpLabel)}">${icon}${text}</button></div>`;
+      const ariaAttributes = blockInteraction ? '' : ` aria-expanded="false" aria-label="${escape_html(rsvpLabel)}"`;
+      return `<div class="atcb-button-wrapper${rtl ? ' atcb-rtl' : ''}" part="atcb-button-wrapper" style="${sizeStyle}"><button type="button" class="atcb-button atcb-click atcb-single${hideTextLabelButton ? ' atcb-no-text' : ''}" part="atcb-button"${buttonId}${blockedButtonAttributes}${ariaAttributes}>${icon}${text}</button></div>`;
     }
     // buttonsList: one singleton button per option. Labels render as skeletons
     // (their text depends on decoration - translations, customLabels) - only an
@@ -347,7 +350,8 @@ function generate_ssr_html_with_context(rawConfig: AddToCalendarButtonType & { [
           const singletonId = identifier !== '' ? ` id="atcb-btn-${escape_html(identifier)}-${escape_html(option.key)}"` : '';
           const icon = hideIconList ? '' : `<div class="atcb-icon atcb-icon-${escape_html(option.key)}" part="atcb-button-icon">${icons[`${option.key}`]}</div>`;
           const text = hideTextLabelButton ? '' : option.labelOverride !== '' ? `<span class="atcb-text" part="atcb-list-text">${escape_html_text(option.labelOverride)}</span>` : `<span class="atcb-text" part="atcb-list-text">${skeletonSpan('8ch')}</span>`;
-          return `<div class="atcb-button-wrapper${rtl ? ' atcb-rtl' : ''}" part="atcb-button-wrapper" style="${sizeStyle}"><button type="button" class="atcb-button atcb-single${hideTextLabelButton ? ' atcb-no-text' : ''}" part="atcb-button"${singletonId} aria-expanded="false" aria-label="${escape_html(option.labelOverride !== '' ? option.labelOverride : option.key)}">${icon}${text}</button></div>`;
+          const ariaAttributes = blockInteraction ? '' : ` aria-expanded="false" aria-label="${escape_html(option.labelOverride !== '' ? option.labelOverride : option.key)}"`;
+          return `<div class="atcb-button-wrapper${rtl ? ' atcb-rtl' : ''}" part="atcb-button-wrapper" style="${sizeStyle}"><button type="button" class="atcb-button atcb-single${hideTextLabelButton ? ' atcb-no-text' : ''}" part="atcb-button"${singletonId}${blockedButtonAttributes}${ariaAttributes}>${icon}${text}</button></div>`;
         })
         .join('');
     }
@@ -362,7 +366,8 @@ function generate_ssr_html_with_context(rawConfig: AddToCalendarButtonType & { [
       const text = hideTextLabelButton ? '' : `<span class="atcb-text" part="atcb-button-text">${labelHtml}</span>`;
       return `${icon}${text}${chevron}${anchor}`;
     })();
-    return `<div class="atcb-button-wrapper${rtl ? ' atcb-rtl' : ''}" part="atcb-button-wrapper" style="${sizeStyle}"><button type="button" class="atcb-button${oneOption ? ' atcb-single' : ''}${hideTextLabelButton ? ' atcb-no-text' : ''}" part="atcb-button"${buttonId} aria-expanded="false" aria-label="${escape_html(labelAria)}">${inner}</button></div>`;
+    const ariaAttributes = blockInteraction ? '' : ` aria-expanded="false" aria-label="${escape_html(labelAria)}"`;
+    return `<div class="atcb-button-wrapper${rtl ? ' atcb-rtl' : ''}" part="atcb-button-wrapper" style="${sizeStyle}"><button type="button" class="atcb-button${oneOption ? ' atcb-single' : ''}${hideTextLabelButton ? ' atcb-no-text' : ''}" part="atcb-button"${buttonId}${blockedButtonAttributes}${ariaAttributes}>${inner}</button></div>`;
   })();
 
   const shellHidden = hidden;

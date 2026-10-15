@@ -177,8 +177,10 @@ function generate_label_content(data: ATCBConfig, parent: HTMLElement, type: str
   if (data.buttonStyle === 'date' && (type === 'trigger' || oneOption)) {
     return;
   }
-  // add text as aria-label to the parent element
-  parent.setAttribute('aria-label', oneOption ? translate_hook('label.addtocalendar', data) + ' (' + translate_hook(type, data) + '): ' + data.name : type === 'trigger' ? text + ': ' + data.name : text);
+  // Blocked controls are purely visual and must not advertise an action to AT.
+  if (!data.blockInteraction) {
+    parent.setAttribute('aria-label', oneOption ? translate_hook('label.addtocalendar', data) + ' (' + translate_hook(type, data) + '): ' + data.name : type === 'trigger' ? text + ': ' + data.name : text);
+  }
   // add icon and text label
   if (icon) {
     const iconEl = document.createElement('div');

@@ -77,9 +77,16 @@ describe('Group A - Lifecycle & registration', () => {
     expect(dlEvents('openList').length).to.equal(0);
   });
 
-  it('A-06: blockInteraction=true blocks all interaction', async () => {
+  it('A-06: blockInteraction=true blocks all interaction and removes the control from navigation and AT', async () => {
     const { host } = await mountAtcb(baseEvent({ blockInteraction: 'true', trigger: 'click', identifier: 'atcb-a06' }));
     const btn = trigger(host);
+    expect(btn.inert, 'blocked button is excluded from the accessibility tree').to.equal(true);
+    expect(btn.tabIndex, 'blocked button is excluded from sequential focus navigation').to.equal(-1);
+    expect(btn.hasAttribute('aria-label'), 'blocked button has no actionable accessible label').to.equal(false);
+    expect(btn.hasAttribute('aria-expanded'), 'blocked button has no expandable state').to.equal(false);
+    expect(btn.hasAttribute('aria-haspopup'), 'blocked button does not advertise a popup').to.equal(false);
+    btn.focus();
+    expect(host.shadowRoot.activeElement, 'blocked button cannot receive programmatic focus').to.not.equal(btn);
     btn.dispatchEvent(new MouseEvent('mouseup', { bubbles: true, cancelable: true, view: window }));
     btn.dispatchEvent(new MouseEvent('mouseenter', { bubbles: true, cancelable: true, view: window }));
     await aTimeout(80);

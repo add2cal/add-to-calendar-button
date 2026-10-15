@@ -638,7 +638,12 @@ async function generate_rsvp_button(host: ShadowRoot, data: ATCBConfig): Promise
     buttonTrigger.classList.add('atcb-no-text');
   }
   buttonTrigger.type = 'button';
-  buttonTrigger.setAttribute('aria-expanded', false as unknown as string); // aria-expanded default value on button generate
+  if (data.blockInteraction) {
+    buttonTrigger.inert = true;
+    buttonTrigger.tabIndex = -1;
+  } else {
+    buttonTrigger.setAttribute('aria-expanded', false as unknown as string); // aria-expanded default value on button generate
+  }
   buttonTriggerWrapper.append(buttonTrigger);
   // determine label
   const rsvpData = data.rsvp as ATCBRsvpData;
@@ -653,7 +658,7 @@ async function generate_rsvp_button(host: ShadowRoot, data: ATCBConfig): Promise
   })();
   // generate the label incl. eventListeners
   generate_label(host, data, buttonTrigger, 'rsvp', !data.hideIconButton, label, true);
-  if (data.buttonStyle !== 'date') buttonTrigger.setAttribute('aria-label', label + ': ' + data.name);
+  if (!data.blockInteraction && data.buttonStyle !== 'date') buttonTrigger.setAttribute('aria-label', label + ': ' + data.name);
   if (data.debug) {
     console.log('Add to Calendar RSVP Button "' + data.identifier + '" created');
   }
