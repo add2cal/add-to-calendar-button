@@ -21,8 +21,8 @@ in the package; whether to switch the CDN default to it is a maintainer decision
 Edit only the root `package.json`. It is the single source of truth for the package version.
 
 - The library build injects that version into runtime/ICS output and all generated banners.
-- The demo's `prebuild` and `pregenerate` hooks sync its displayed version from the parent
-  package before Nuxt runs.
+- The demo's `predev` and `prebuild` hooks sync its displayed version from the parent
+  package before Astro runs.
 - Prerelease versions such as `3.0.0-next.1` are supported. Release tags use the matching
   `v3.0.0-next.1` form and the publish workflow selects npm's `next` tag from the package
   version itself. For this case, you can also set a version/tag from a "next" branch.
@@ -65,4 +65,4 @@ Major versions bake in the wild before going official:
 
 The `demo/` folder is the source of add-to-calendar-button.com and versions independently
 (own package.json). Content updates accompany feature releases; its build
-(`npm run generate` inside demo/) must stay green but is not part of the library gates.
+(`npm run build` inside demo/) must stay green but is not part of the library gates.

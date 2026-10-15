@@ -7,7 +7,6 @@ bun.lockb
 # Tmp framework files
 .astro
 .wrangler
-STARDRIVE_AGENT_MODE.md
 
 # Logs
 logs
