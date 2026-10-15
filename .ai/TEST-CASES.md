@@ -60,7 +60,6 @@ Also part of the default run (long-standing quick tests):
 
 - `test/wc-tests/wc-load.test.js`: has a generated button id and shadowDom element
 - `test/wc-tests/recurrence-tz.test.js`: does not shift startDate for weekly BYDAY near midnight in Europe/Berlin
-- `test/wc-tests/r-Z-playground-bot.test.js`: Headless Chromium hydrates the Playground while genuine crawlers retain SSR behavior
 - `test/server-side-init.test.js`: CommonJS bundle imports in Node without executing browser-only code
 
 ## Tier 1 - Reduced Suite (`npm run test:extended`)
@@ -487,7 +486,6 @@ The same Node tier also covers the DOM-free utility entry in `test/ssr-node/util
 - Z-03: without declarative shadow DOM (innerHTML path) the element initializes client-only and drops the inert template
 - Z-04: the group overview skeleton stays painted through the pending range fetch and swaps only when the real list is ready
 - Z-05: failed PRO initialization removes the group loading skeleton instead of leaving it painted forever
-- Z-06: Headless Chromium initializes the Playground while genuine crawlers retain the SSR shell
 - Z-07: static main-first import order hydrates an SSR host with registered style and locale assets and no fallback requests
 - Z-08: static assets-first import order hydrates an SSR host with registered style and locale assets and no fallback requests
 - Z-09: generated style and locale modules register assets without defining the custom element
