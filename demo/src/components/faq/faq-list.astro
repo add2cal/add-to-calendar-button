@@ -1,0 +1,84 @@
+---
+import { Icon } from "astro-icon/components";
+import type { CollectionEntry } from "astro:content";
+import type { AstroComponentFactory } from "astro/runtime/server/index.js";
+import { useTranslations } from "@utils/i18n";
+import "@styles/markdown.css";
+
+interface Props {
+  locale?: string;
+  items: { entry: CollectionEntry<'faq_answers'>; Content: AstroComponentFactory }[];
+  categories: string[];
+}
+
+const { locale, items } = Astro.props;
+const t = useTranslations(locale);
+---
+
+<div class="mb-8" role="search">
+  <label class="relative block max-w-xl">
+    <span class="sr-only">{t('pages.faq.search-placeholder')}</span>
+    <Icon name="heroicons:magnifying-glass" class="pointer-events-none absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 text-stone-500" />
+    <input type="search" id="faq-search" class="caret-secondary focus-visible:ring-primary block min-h-11 w-full rounded-lg border border-stone-300 bg-white py-2 pr-3 pl-9 text-base leading-5 shadow-sm hover:shadow-md focus:outline-none focus-visible:ring-2 dark:border-stone-600 dark:bg-zinc-800" placeholder={t('pages.faq.search-placeholder')} autocomplete="off" />
+  </label>
+</div>
+
+<ul id="faq-list" class="m-0 flex list-none flex-col gap-3 p-0" aria-label={t('pages.faq.title')}>
+  {items.map(({ entry, Content }) => (
+    <li class="faq-item surface-card hover:shadow-md" data-question={entry.data.question.toLowerCase()} data-answer={(entry.body ?? '').toLowerCase()}>
+      <details class="group">
+        <summary class="flex cursor-pointer list-none items-center justify-between gap-4 px-4 py-4 font-semibold select-none md:px-5">
+          <span>{entry.data.question}</span>
+          <Icon name="heroicons:chevron-down" class="group-hover:text-primary dark:group-hover:text-primary-light h-5 w-5 shrink-0 transition-transform group-open:rotate-180" aria-hidden="true" />
+        </summary>
+        <div class="markdown-content border-t border-stone-200 px-4 pt-3 md:px-5 md:pt-4 md:pb-2 dark:border-stone-800">
+          <Content />
+        </div>
+      </details>
+    </li>
+  ))}
+</ul>
+
+<p id="faq-no-results" class="mt-8 hidden text-center text-stone-500 dark:text-stone-400" role="status" aria-live="polite">
+  {t('pages.faq.no-results')}
+</p>
+
+<style>
+  #faq-list summary::-webkit-details-marker {
+    display: none;
+  }
+</style>
+
+<script>
+  let faqController: AbortController | undefined;
+
+  function setupFaqFilter() {
+    faqController?.abort();
+    faqController = undefined;
+    const search = document.getElementById('faq-search') as HTMLInputElement | null;
+    const list = document.getElementById('faq-list');
+    const noResults = document.getElementById('faq-no-results');
+    if (!search || !list || !noResults) return;
+
+    faqController = new AbortController();
+    const items = Array.from(list.querySelectorAll<HTMLLIElement>('.faq-item'));
+
+    const applyFilters = () => {
+      const query = search.value.trim().toLowerCase();
+      let visible = 0;
+      for (const item of items) {
+        const content = `${item.getAttribute('data-question') ?? ''} ${item.getAttribute('data-answer') ?? ''}`;
+        const matchesQuery = query === '' || content.includes(query);
+        item.classList.toggle('hidden', !matchesQuery);
+        if (matchesQuery) visible++;
+      }
+      noResults.classList.toggle('hidden', visible !== 0);
+    };
+
+    search.addEventListener('input', applyFilters, { signal: faqController.signal });
+  }
+
+  setupFaqFilter();
+  document.addEventListener('astro:page-load', setupFaqFilter);
+  document.addEventListener('astro:before-swap', () => faqController?.abort());
+</script>

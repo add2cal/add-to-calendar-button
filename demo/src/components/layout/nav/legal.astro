@@ -1,0 +1,34 @@
+---
+import { useTranslations, getLocaleUrl } from "@utils/i18n";
+import { repositoryVersion } from '../version';
+
+interface Props {
+  locale: string;
+}
+
+const { locale } = Astro.props as Props;
+const t = useTranslations(locale);
+const currentYear = new Date().getFullYear();
+---
+
+<div class="mt-5 text-center text-xs text-zinc-500 select-none sm:mt-0 sm:text-left dark:text-zinc-400">
+  <nav role="navigation" class="flex flex-col flex-wrap gap-x-2 gap-y-4 sm:flex-col-reverse sm:gap-y-2 xl:flex-row-reverse">
+    <div class="mx-auto flex flex-wrap justify-center gap-x-6 gap-y-3 sm:gap-2 md:mx-0 md:justify-start">
+      <a class="unstyle-link hover:text-primary" href={getLocaleUrl('legal-notice', locale)}>
+        {t('nav.legal-notice')}
+      </a>
+      <div class="hidden opacity-50 sm:block">|</div>
+      <a class="unstyle-link hover:text-primary" href={getLocaleUrl('privacy-policy', locale)}>
+        {t('nav.privacy-policy')}
+      </a>
+      <div class="hidden opacity-50 sm:block">|</div>
+      <a class="unstyle-link external-link hover:text-primary" href="https://github.com/add2cal/add-to-calendar-button/blob/main/LICENSE.txt" target="_blank" rel="license noopener">
+        {t('footer.license')}
+      </a>
+    </div>
+    <div class="hidden opacity-50 xl:block">|</div>
+    <div>
+      &copy; {currentYear} Calendarverse GmbH, {t('footer.current-version')}: {repositoryVersion}
+    </div>
+  </nav>
+</div>

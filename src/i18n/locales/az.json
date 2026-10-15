@@ -63,7 +63,7 @@
       "required": "Bütün tələb olunan sahələri düzgün doldurmadınız",
       "sending": "Cavabınızı göndərərkən problem oldu. Lütfən, sonra yenidən cəhd edin",
       "email": "E-poçt ünvanınız etibarlı deyil",
-      "bookedoutmany": "Yerlər doludur — daha az iştirakçı ilə cəhd edin"
+      "bookedoutmany": "Yerlər doludur - daha az iştirakçı ilə cəhd edin"
     },
     "success": {
       "title": "Uğurla göndərildi!",

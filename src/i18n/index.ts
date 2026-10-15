@@ -11,15 +11,19 @@ const availableLanguages: string[] = [
   'de',
   'es',
   'pt',
+  'pt_BR',
   'fr',
   'nl',
   'tr',
   'zh',
+  'zh_hant',
   'ar',
   'hi',
   'pl',
   'id',
   'no',
+  'nb',
+  'nn',
   'fi',
   'sv',
   'cs',
@@ -51,6 +55,7 @@ const availableLanguages: string[] = [
   'sl',
   'sq',
   'sr',
+  'sr_latin',
 ];
 
 // calendar names (except for iCal file, same in every language, but included to be adjustable)
@@ -166,7 +171,8 @@ function locale_base_url(data: ATCBConfig): string {
  * and failed loads gracefully keep the English fallback behavior.
  */
 async function ensure_locale(data: ATCBConfig): Promise<void> {
-  const language = (data.language as string) || 'en';
+  const requestedLocale = (data.translationLocale as string) || (data.language as string) || 'en';
+  const language = availableLanguages.find((locale) => locale.toLowerCase() === requestedLocale.replace('-', '_').toLowerCase()) || (data.language as string) || 'en';
   if (i18nStrings[`${language}`] || !availableLanguages.includes(language)) {
     return;
   }

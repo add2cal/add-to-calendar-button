@@ -1,0 +1,76 @@
+---
+interface Props { content: string }
+const { content } = Astro.props;
+
+type Token = { kind: 'text' | 'code' | 'strong' | 'em' | 'link'; text: string; href?: string };
+
+const inline = (value: string): Token[] => {
+  const tokens: Token[] = [];
+  const pattern = /(\*\*([^*]+)\*\*|\*([^*]+)\*|`([^`]+)`|\[([^\]]+)\]\(([^)]+)\))/g;
+  let cursor = 0;
+  for (const match of value.matchAll(pattern)) {
+    if (match.index > cursor) tokens.push({ kind: 'text', text: value.slice(cursor, match.index) });
+    if (match[2]) tokens.push({ kind: 'strong', text: match[2] });
+    else if (match[3]) tokens.push({ kind: 'em', text: match[3] });
+    else if (match[4]) tokens.push({ kind: 'code', text: match[4] });
+    else tokens.push({ kind: 'link', text: match[5], href: match[6] });
+    cursor = (match.index ?? 0) + match[0].length;
+  }
+  if (cursor < value.length) tokens.push({ kind: 'text', text: value.slice(cursor) });
+  return tokens;
+};
+
+const blocks = content.split('\n\n').map(block => ({
+  list: block.startsWith('- '),
+  lines: block.split('\n').map(line => inline(line.replace(/^- /, ''))),
+}));
+---
+
+{blocks.map((block) =>
+  block.list ? (
+    <ul class="my-3 list-disc space-y-2 pl-5">
+      {block.lines.map((line) => (
+        <li>
+          {line.map((token) =>
+            token.kind === 'code' ? (
+              <code>{token.text}</code>
+            ) : token.kind === 'strong' ? (
+              <strong>{token.text}</strong>
+            ) : token.kind === 'em' ? (
+              <em>{token.text}</em>
+            ) : token.kind === 'link' ? (
+              <a href={token.href} target={token.href?.startsWith('http') ? '_blank' : undefined} rel={token.href?.startsWith('http') ? 'noopener' : undefined}>
+                {token.text}
+              </a>
+            ) : (
+              token.text
+            ),
+          )}
+        </li>
+      ))}
+    </ul>
+  ) : (
+    <p class="my-0 leading-6">
+      {block.lines.map((line, index) => (
+        <>
+          {index > 0 && <br />}
+          {line.map((token) =>
+            token.kind === 'code' ? (
+              <code>{token.text}</code>
+            ) : token.kind === 'strong' ? (
+              <strong>{token.text}</strong>
+            ) : token.kind === 'em' ? (
+              <em>{token.text}</em>
+            ) : token.kind === 'link' ? (
+              <a href={token.href} target={token.href?.startsWith('http') ? '_blank' : undefined} rel={token.href?.startsWith('http') ? 'noopener' : undefined}>
+                {token.text}
+              </a>
+            ) : (
+              token.text
+            ),
+          )}
+        </>
+      ))}
+    </p>
+  ),
+)}

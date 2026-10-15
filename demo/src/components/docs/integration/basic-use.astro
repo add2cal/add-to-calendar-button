@@ -1,0 +1,29 @@
+---
+import { Code } from 'astro-expressive-code/components';
+import type { DocsLocale } from '../docs-data';
+import { getGuideCopy } from './copy';
+
+interface Props { locale: DocsLocale; step: number; date: string; client?: boolean }
+const { locale, step, date, client = false } = Astro.props;
+const c = getGuideCopy(locale);
+const language = locale === 'en' ? '' : `\n  language="${locale}"`;
+const code = `<add-to-calendar-button
+  name="${c.title}"
+  options="'apple','google'"
+  location="${c.location}"
+  start-date="${date}"
+  end-date="${date}"
+  start-time="10:15"
+  end-time="23:30"
+  time-zone="${c.timeZone}"${language}
+></add-to-calendar-button>`;
+---
+
+<h2>
+  {c.step} {step}: {c.use}
+</h2>
+<p>{c.useStart}</p>
+<p class="font-semibold italic">{c.simple}</p>
+<p>{c.example}</p>
+<Code {code} lang="html" />
+{client && <p class="my-10 font-semibold">{c.client}</p>}

@@ -1,0 +1,623 @@
+{
+  "nav": {
+    "demo": "Playground",
+    "docs-installation": "Instalación",
+    "docs-configuration": "Configuración",
+    "examples": "Ejemplos",
+    "faq": "FAQ",
+    "legal-notice": "Aviso legal",
+    "privacy-policy": "Política de privacidad",
+    "help": "Ayuda",
+    "main-label": "Navegación principal",
+    "submenu": "submenú",
+    "examples-basic": "Básico",
+    "examples-advanced": "Avanzado"
+  },
+  "labels": {
+    "use-pro": "Usar PRO",
+    "star": "Dar una estrella",
+    "ask-ai": "Pregúntale a la IA sobre nosotros",
+    "back": "Atrás",
+    "open-menu": "Abrir menú",
+    "close-menu": "Cerrar menú",
+    "change-light-mode": "Cambiar modo claro/oscuro",
+    "product": "Producto",
+    "guides": "Guías",
+    "resources": "Recursos"
+  },
+  "meta": {
+    "title": "Demo de Add to Calendar Button",
+    "description": "Crea un botón Add to Calendar fiable y accesible para cualquier sitio y aplicación de calendario.",
+    "og-site-name": "Add to Calendar Button",
+    "slug": "Add to Calendar Button",
+    "slogan": "El botón Add to Calendar gratuito",
+    "sub-slogan": "Comparte eventos fácilmente en cualquier sitio, dispositivo y calendario."
+  },
+  "i18n": {
+    "select-language": "Selecciona tu idioma",
+    "current-language": "idioma actual",
+    "noi18n": "No traducido"
+  },
+  "global-promo": {
+    "top-text-1": "¿Necesitas eventos alojados, RSVP y analítica?",
+    "top-text-2": "Add to Calendar PRO se encarga de las necesidades avanzadas.",
+    "top-cta": "Explorar PRO",
+    "footer-heading": "¿Necesitas más que un botón?",
+    "footer-text": "Add to Calendar PRO añade eventos gestionados, feeds ICS estáticos, RSVP, actualizaciones y analítica.",
+    "footer-cta": "Descubrir Add to Calendar PRO",
+    "footer-image-alt": "Déjate sorprender por la oferta PRO"
+  },
+  "stats": {
+    "title": "Estadísticas verificables",
+    "github-stars": "estrellas en GitHub",
+    "npm-total": "instalaciones de npm",
+    "npm-monthly": "descargas mensuales de npm",
+    "cdn-monthly": "solicitudes mensuales al CDN",
+    "external": "Ver estadísticas de origen (se abre en una pestaña nueva)"
+  },
+  "footer": {
+    "navigation-label": "Pie de página",
+    "definition": "Definición",
+    "basic-examples": "Ejemplos básicos",
+    "advanced-examples": "Ejemplos avanzados",
+    "migration-guide": "Guía de migración de v2 a v3",
+    "license": "Licencia",
+    "current-version": "Versión actual",
+    "powered-by": "Página de demostración creada con",
+    "social": {
+      "github-label": "Add to Calendar Button en GitHub",
+      "x-label": "Add to Calendar Button en X",
+      "x-title": "Síguenos en X",
+      "npm-label": "Add to Calendar Button en npm",
+      "npm-title": "Ver paquete en npm"
+    }
+  },
+  "pages": {
+    "404": {
+      "title": "404 - No encontrado",
+      "message": "Ups. De alguna manera encontraste una página que no existe.\nQuizás nunca existió o fue eliminada.\n\nPor favor, comprueba la URL o vuelve a la página principal."
+    },
+    "home": {
+      "title": "Botón Add to Calendar gratuito",
+      "description": "Crea y configura un botón Add to Calendar gratuito y accesible para los principales calendarios.",
+      "hero": {
+        "eyebrow": "Web Component gratuito e independiente del framework",
+        "title": "Haz que tus eventos se guarden",
+        "subhead": "Un Web Component independiente del framework que permite a los visitantes guardar eventos en Google, Apple, Outlook, Yahoo e iCal sin complicaciones.",
+        "start": "Instalar gratis",
+        "demo": "Probar la demo en vivo",
+        "image-alt": "Add to Calendar Button con opciones para los principales servicios de calendario"
+      },
+      "intro": {
+        "product-hunt-label": "Producto del día en Product Hunt"
+      },
+      "playground": {
+        "heading": "Playground interactivo del botón",
+        "eyebrow": "Configurador interactivo",
+        "description": "Personaliza los parámetros del evento y los ajustes de diseño en tiempo real y después copia el código del Web Component generado al instante.",
+        "loading": "Cargando la zona de pruebas…",
+        "disclaimer": "Este playground incluye un subconjunto de los atributos disponibles. Para consultar todos los detalles del esquema, consulta la",
+        "configuration": "Documentación de configuración"
+      },
+      "router": {
+        "eyebrow": "Flujo de trabajo específico",
+        "heading": "¿Cómo estás creando esto?",
+        "description": "Tanto si quieres código limpio en tu stack frontend como una página de eventos completa sin código, tenemos lo que necesitas.",
+        "developer": {
+          "eyebrow": "Instalación para desarrollo",
+          "heading": "Escribo código",
+          "description": "Añade un solo Web Component a cualquier aplicación web o sitio estático.",
+          "install-method": "Método de instalación",
+          "configuration": "Documentación de configuración",
+          "stack-prompt": "¿Con qué estás desarrollando?"
+        },
+        "organizer": {
+          "engine": "Motor sin código",
+          "heading": "Gestiono eventos",
+          "description": "¿Necesitas gestionar visualmente los botones, formularios RSVP, archivos .ics alojados o páginas de eventos sin escribir código?",
+          "item-1-title": "Gestión visual:",
+          "item-1-text": "Configura visualmente botones y micrositios de eventos.",
+          "item-2-title": "RSVP e ICS gestionados:",
+          "item-2-text": "Aloja archivos .ics dinámicos y recopila confirmaciones de los invitados.",
+          "item-3-title": "Flujos de trabajo automatizados:",
+          "item-3-text": "CTA posteriores al guardado, API, webhooks, Zapier y Pipedream.",
+          "cta": "Crear sin código"
+        }
+      },
+      "capabilities": {
+        "eyebrow": "Capacidades principales del motor",
+        "heading": "Preparado para casos límite y eventos reales",
+        "description": "Las API de calendario y las especificaciones .ics exigen un tratamiento cuidadoso en cada plataforma. Hemos resuelto todas las anomalías de navegadores, protocolos y zonas horarias para que tú no tengas que hacerlo.",
+        "cards": {
+          "calendars": {
+            "title": "Todos los calendarios principales",
+            "description": "Enlaces profundos directos para calendarios web (Google, Outlook, Office 365 y Yahoo), además de archivos .ics validados según RFC 5545 para Apple y clientes de escritorio nativos.",
+            "cta": "Ver ejemplos de calendarios"
+          },
+          "events": {
+            "title": "Tipos de evento flexibles",
+            "description": "Admite eventos de día completo, programas con varias fechas, intervalos RRULE recurrentes, suscripciones y parámetros de fecha dinámicos actualizados mediante JavaScript.",
+            "cta": "Ver la documentación de configuración"
+          },
+          "timezones": {
+            "title": "Zonas horarias y horario de verano",
+            "description": "Detecta automáticamente la zona horaria local del navegador del visitante y convierte las diferencias respecto a UTC sin complicaciones, incluidos los cambios de horario de verano.",
+            "cta": "Detalles de las zonas horarias"
+          },
+          "browsers": {
+            "title": "Compatibilidad con navegadores y WebViews",
+            "description": "Probado rigurosamente con los bloqueadores de ventanas emergentes de Safari en iOS, Chrome en Android, WebViews móviles integradas (Instagram y LinkedIn) y protocolos de correo web de Outlook.",
+            "cta": "Pruébalo en el playground"
+          },
+          "styling": {
+            "title": "Estilos y 49+ idiomas",
+            "description": "Temas personalizados, propiedades CSS personalizadas, etiquetas de botón propias y localización i18n automática en 49+ idiomas según la configuración regional del navegador.",
+            "cta": "Lista de idiomas"
+          },
+          "accessibility": {
+            "title": "Accesibilidad y privacidad",
+            "description": "Cumple las normas WCAG AA y admite teclado y lectores de pantalla. Ejecución 100 % en el cliente, entornos con requisitos estrictos del RGPD y compatibilidad con nonce de CSP.",
+            "cta": "Documentación de seguridad"
+          }
+        }
+      },
+      "comparison": {
+        "eyebrow": "Una elección clara",
+        "heading": "Un botón basta - hasta que deja de bastar.",
+        "description": "Elige el Web Component gratuito para bases de código personalizadas o pásate a PRO cuando necesites gestión visual, seguimiento de confirmaciones y páginas de eventos.",
+        "caption": "Comparación del Web Component gratuito y Add to Calendar PRO",
+        "capability": "Funciones",
+        "free": "Web Component gratuito",
+        "rows": {
+          "setup": {
+            "label": "Despliegue e instalación",
+            "subline": "Cómo integrarlo en tu flujo de trabajo",
+            "free": "Insertar mediante npm / CDN / HTML",
+            "pro": "Página alojada y código para insertar"
+          },
+          "configuration": {
+            "label": "Configuración",
+            "subline": "Modelo de configuración del botón y el evento",
+            "free": "Configurar en el código",
+            "pro": "Interfaz de gestión visual"
+          },
+          "calendars": {
+            "label": "Enlaces y archivos de calendario",
+            "subline": "Google, Apple, Outlook, Yahoo e iCal",
+            "free": "Generar opciones para guardar en el calendario",
+            "pro": "Generar opciones + alojamiento de .ics gestionado"
+          },
+          "landing": {
+            "label": "Páginas de destino de eventos",
+            "subline": "Micrositios dedicados a eventos",
+            "free": "Integración manual en tu sitio",
+            "pro": "Páginas de destino de eventos"
+          },
+          "rsvp": {
+            "label": "RSVP y seguimiento de asistentes",
+            "subline": "Formularios de confirmación y listas de invitados",
+            "free": "-",
+            "pro": "Formularios RSVP"
+          },
+          "automation": {
+            "label": "CTA posteriores al guardado e integraciones",
+            "subline": "Acciones de seguimiento y automatización",
+            "free": "-",
+            "pro": "CTA posterior al guardado, API, webhooks, Zapier y Pipedream"
+          },
+          "licensing": {
+            "label": "Licencia / acceso",
+            "subline": "Modelo de licencia",
+            "free": "Gratis (Elastic License 2.0)",
+            "pro": "Planes gratuitos y de pago disponibles"
+          }
+        }
+      }
+    },
+    "faq": {
+      "title": "Preguntas frecuentes",
+      "description": "Respuestas a preguntas frecuentes sobre instalar, configurar y usar Add to Calendar Button.",
+      "search-placeholder": "Buscar preguntas...",
+      "no-results": "Ninguna pregunta coincide con tu búsqueda."
+    },
+    "legal-notice": {
+      "title": "Aviso legal",
+      "intro": "Información de acuerdo con el artículo 5 TMG y el artículo 55 párr. 2 RStV"
+    },
+    "privacy-policy": {
+      "title": "Política de privacidad"
+    }
+  },
+  "docs": {
+    "common": {
+      "on-this-page": "En esta página",
+      "step": "Paso",
+      "option": "Opción",
+      "example": "Ejemplo",
+      "examples": "Ejemplos",
+      "configuration": "Configuración",
+      "installation": "Instalación",
+      "advanced-use": "Uso avanzado",
+      "migration": "Guía de migración: v2 a v3",
+      "definition": "¿Qué es un botón Add to Calendar?",
+      "pro-only": "Solo PRO",
+      "migration-note": "La referencia de migración se mantiene en el repositorio y se muestra aquí directamente."
+    },
+    "meta": {
+      "configuration-description": "Todos los atributos disponibles para configurar y personalizar un botón Add to Calendar. Un atributo HTML booleano puede aparecer sin valor; si se omite equivale a false.",
+      "examples-description": "Estos ejemplos muestran las configuraciones más útiles. Cada botón interactivo aparece junto al marcado que lo crea.",
+      "advanced-description": "Casos avanzados de presentación, datos de calendario, seguimiento, uso imperativo, recursos y renderizado en servidor."
+    },
+    "configuration": {
+      "title": "Configuración del botón Add to Calendar",
+      "find": "Buscar parámetros",
+      "search": "Buscar...",
+      "name": "Nombre",
+      "value": "Valor",
+      "details": "Detalles",
+      "default": "Predeterminado",
+      "options": "Opciones",
+      "required": "Obligatorio",
+      "required-dates": "Obligatorio si no se usan las opciones «dates» o «subscribe»",
+      "required-rich-data": "Obligatorio para obtener datos enriquecidos de Schema.org",
+      "groups": {
+        "pro-parameters": "Parámetros PRO",
+        "event-parameters": "Parámetros del evento",
+        "ics-parameters": "Opciones del archivo ics",
+        "style-parameters": "Parámetros de diseño",
+        "additional-parameters": "Parámetros adicionales"
+      },
+      "descriptors": {
+        "default-calendar": "Configuración predeterminada del calendario del usuario",
+        "randomly-generated": "Generado aleatoriamente",
+        "download-time": "Hora de descarga del archivo",
+        "ascending-number": "Número ascendente",
+        "array-of-objects": "Array de objetos"
+      }
+    },
+    "examples": {
+      "title": "Ejemplos",
+      "on-this-page": "En esta página",
+      "items": {
+        "1": {
+          "title": "El habitual",
+          "short": "Estándar"
+        },
+        "2": {
+          "title": "Evento de día completo",
+          "short": "Día completo"
+        },
+        "3": {
+          "title": "Fechas dinámicas",
+          "short": "Fechas dinámicas"
+        },
+        "4": {
+          "title": "Evento recurrente",
+          "short": "Recurrencia"
+        },
+        "5": {
+          "title": "Evento con varias fechas",
+          "short": "Varias fechas"
+        },
+        "6": {
+          "title": "Etiqueta personalizada",
+          "short": "Etiqueta"
+        },
+        "7": {
+          "title": "Botón en línea",
+          "short": "En línea"
+        },
+        "8": {
+          "title": "Un solo tipo de calendario",
+          "short": "Único"
+        },
+        "9": {
+          "title": "Dividir un botón",
+          "short": "División"
+        }
+      },
+      "pro": {
+        "prompt": "¿Quieres más funciones y muchas menos complicaciones?",
+        "action": "Descubre la oferta PRO",
+        "image-alt": "Déjate sorprender por la oferta PRO"
+      },
+      "cta": {
+        "playground-prompt": "¡Probemos directamente la mayoría de las opciones en nuestra zona de pruebas!",
+        "play": "Empezar a probar",
+        "advanced-prompt": "Si buscas personalizaciones atrevidas, visita la «zona de peligro».",
+        "advanced": "Uso avanzado"
+      }
+    },
+    "advanced": {
+      "title": "Uso avanzado",
+      "sections": {
+        "1": {
+          "title": "Usar tu propio estilo CSS",
+          "short": "CSS propio"
+        },
+        "2": {
+          "title": "Enriquecer la descripción del evento",
+          "short": "Descripción enriquecida"
+        },
+        "3": {
+          "title": "Ofrecer una suscripción a un calendario",
+          "short": "Suscripción"
+        },
+        "4": {
+          "title": "Texto personalizado",
+          "short": "Texto personalizado"
+        },
+        "5": {
+          "title": "Usar propiedades iCal avanzadas",
+          "short": "iCal+"
+        },
+        "6": {
+          "title": "Definir un ID personalizado",
+          "short": "ID personalizados"
+        },
+        "7": {
+          "title": "Seguimiento",
+          "short": "Seguimiento"
+        },
+        "8": {
+          "title": "Usar la zona horaria del navegador",
+          "short": "Hora del navegador"
+        },
+        "9": {
+          "title": "WebView",
+          "short": "WebView"
+        },
+        "10": {
+          "title": "Usar tu propio botón",
+          "short": "Tu botón"
+        },
+        "11": {
+          "title": "Estrategias de carga",
+          "short": "Carga"
+        },
+        "12": {
+          "title": "Renderizado en servidor",
+          "short": "SSR"
+        }
+      },
+      "headings": {
+        "built-in": "Opciones integradas",
+        "override": "Sobrescribir estilos",
+        "external-css": "Cargar un archivo CSS externo",
+        "part": "Seleccionar elementos con ::part",
+        "custom-object": "Usar un objeto personalizado como botón",
+        "import": "Paso 1: importación",
+        "trigger": "Paso 2: configuración y activador"
+      },
+      "supported-tags": "Etiquetas compatibles",
+      "available-events": "Eventos disponibles",
+      "click": "Haz clic aquí",
+      "pro-question": "¿Quieres más funciones y muchas menos complicaciones?",
+      "pro-action": "Descubre la oferta PRO",
+      "pro-image-alt": "Déjate sorprender por la oferta PRO"
+    },
+    "integration": {
+      "install-npm": "Instalación con npm",
+      "import": "Importarlo",
+      "use": "Usarlo",
+      "simple": "Sí, así de sencillo.",
+      "styles": "Estilos e idiomas",
+      "styles-npm": "Empaquetado con npm (recomendado para frameworks)",
+      "styles-cdn": "Carga mediante CDN (JavaScript nativo)",
+      "ssr": "Renderizado del lado del servidor",
+      "ssr-heading": "Server Side Rendering (SSR)",
+      "click-here": "haz clic aquí",
+      "title": "Título",
+      "sidebar": {
+        "framework": "¿Usas Angular, React, Vue u otro framework?",
+        "stack": "¿No es tu stack tecnológico?",
+        "cta": "Consulta la sección «Instalación».",
+        "stackblitz": "Encuentra ejemplos de proyectos completos para cada stack en StackBlitz"
+      },
+      "general": {
+        "headline": "Cómo instalar Add to Calendar Button",
+        "cdn": "Integración mediante CDN"
+      },
+      "angular": {
+        "headline": "Cómo instalar Add to Calendar Button con Angular",
+        "optimize": "Optimizar la configuración de Angular",
+        "standalone": "Componente independiente (recomendado)",
+        "ngmodule": "Aplicación basada en NgModule",
+        "bindings": "Enlaces correctos"
+      },
+      "astro": {
+        "headline": "Cómo instalar Add to Calendar Button con Astro",
+        "architecture": "Elegir la arquitectura adecuada",
+        "install": "Instalar el paquete",
+        "create": "Crear el componente",
+        "define-props": "Definir las props",
+        "add-script": "Añadir el script"
+      },
+      "nextjs": {
+        "headline": "Cómo instalar Add to Calendar Button con Next.js"
+      },
+      "nuxt": {
+        "headline": "Cómo instalar Add to Calendar Button con Nuxt",
+        "notes": "Notas de SSR específicas de Nuxt"
+      },
+      "react": {
+        "headline": "Cómo instalar Add to Calendar Button con React"
+      },
+      "svelte": {
+        "headline": "Cómo instalar Add to Calendar Button con Svelte"
+      },
+      "vue": {
+        "headline": "Cómo instalar Add to Calendar Button con Vue",
+        "optimize": "Optimizar la configuración de Vue"
+      },
+      "wix": {
+        "headline": "Cómo instalar Add to Calendar Button en Wix",
+        "link": "Encuentra el plugin aquí"
+      },
+      "wordpress": {
+        "headline": "Cómo instalar Add to Calendar Button con WordPress",
+        "install": "Instalar el plugin",
+        "search": "Busca",
+        "activate": "Activarlo",
+        "block": "Block",
+        "shortcode": "Shortcode",
+        "pro-docs": "Ir a la documentación PRO"
+      }
+    },
+    "what-is": {
+      "title": "¿Qué es un botón Add to Calendar?",
+      "options": "Opciones para guardar eventos",
+      "methods": {
+        "0": "A. Botón Add to Calendar",
+        "1": "B. Integración profunda",
+        "2": "C. Manualmente"
+      }
+    }
+  },
+  "playground": {
+    "labels": {
+      "showCode": "Mostrar código fuente",
+      "hideCode": "Ocultar código fuente",
+      "copyCode": "Copiar código",
+      "copied": "Copiado",
+      "dateInput": "Detalles del evento",
+      "layoutInput": "Ajustes de diseño",
+      "proConfig": "¿Quieres configurar todos los detalles así de fácil?",
+      "discoverPro": "Descubre la oferta PRO",
+      "apply": "Aplicar",
+      "inputs": {
+        "name": "Título",
+        "description": "Descripción",
+        "start_date": "Fecha de inicio",
+        "start_time": "Hora de inicio",
+        "end_date": "Fecha de fin",
+        "end_time": "Hora de fin",
+        "timezone": "Zona horaria",
+        "location": "Lugar",
+        "organizer_name": "Organizador: nombre",
+        "organizer_email": "Organizador: correo",
+        "isc_file": "Archivo *.ics existente",
+        "availability": "Disponibilidad",
+        "is_subscribed": "Suscripción",
+        "options": "Tipos de calendario",
+        "ical_file_name": "Nombre del archivo iCal",
+        "list_style": "Estilo de lista",
+        "button_style": "Estilo del botón",
+        "trigger": "Activador",
+        "hide_icon_options": "Ocultar iconos",
+        "hide_text_options": "Ocultar texto",
+        "is_buttons_list": "como lista",
+        "hide_background": "Ocultar fondo",
+        "hide_checkmark": "Ocultar marca",
+        "size": "Tamaño",
+        "label": "Etiqueta personalizada",
+        "light_mode": "Modo oscuro/claro",
+        "past_date_handling": "Gestión de fechas pasadas",
+        "language": "Idioma",
+        "nothing_found": "No se encontraron resultados.",
+        "select_option": "Selecciona una opción...",
+        "search_time_zone": "Buscar una zona horaria...",
+        "clear": "Borrar",
+        "manual_input": "Usar una fecha personalizada",
+        "calendar_input": "Usar el selector de fecha",
+        "recurrence": {
+          "headline": "Recurrencia",
+          "rrule_value": "RRULE",
+          "is_simple": "Simplificada",
+          "repeat_every": "Repetir cada",
+          "interval": "Intervalo",
+          "frequency": "Frecuencia",
+          "count": "Máx. repeticiones",
+          "by_day": "Por día",
+          "by_month": "Por mes",
+          "by_month_day": "Por día del mes",
+          "placeholder": {
+            "by_day": "«MO,SA» o «-2MO», ...",
+            "by_month_day": "p. ej. «4,5»"
+          }
+        }
+      }
+    },
+    "options": {
+      "availability": {
+        "busy": "Ocupado",
+        "free": "Libre"
+      },
+      "frequency": {
+        "daily": "Día(s)",
+        "weekly": "Semana(s)",
+        "monthly": "Mes(es)",
+        "yearly": "Año(s)"
+      },
+      "hide_icon": {
+        "button": "Button",
+        "list": "Lista",
+        "modal": "Modal"
+      },
+      "hide_text": {
+        "button": "Button",
+        "list": "Lista"
+      },
+      "trigger": {
+        "hover": "Al pasar el cursor",
+        "click": "Clic"
+      }
+    },
+    "defaults": {
+      "name": "Evento de ejemplo",
+      "description": "¡Prueba conmigo!",
+      "location": "Internet"
+    },
+    "languages": {
+      "ar": "árabe",
+      "az": "azerbaiyano",
+      "be": "bielorruso",
+      "bg": "búlgaro",
+      "bs": "bosnio",
+      "cs": "checo",
+      "da": "danés",
+      "de": "alemán",
+      "el": "griego",
+      "en": "inglés",
+      "es": "español",
+      "et": "estonio",
+      "fa": "persa",
+      "fi": "finés",
+      "fr": "francés",
+      "he": "hebreo",
+      "hi": "hindi",
+      "hr": "croata",
+      "hu": "húngaro",
+      "hy": "armenio",
+      "id": "indonesio",
+      "it": "italiano",
+      "ja": "japonés",
+      "ka": "georgiano",
+      "ko": "coreano",
+      "lt": "lituano",
+      "lv": "letón",
+      "mk": "macedonio",
+      "mt": "maltés",
+      "nl": "neerlandés",
+      "nb": "noruego bokmal",
+      "nn": "noruego nynorsk",
+      "no": "noruego",
+      "ro": "rumano",
+      "pl": "polaco",
+      "pt": "portugués",
+      "pt_BR": "portugués de Brasil",
+      "ru": "ruso",
+      "sk": "eslovaco",
+      "sl": "esloveno",
+      "sq": "albanés",
+      "sr": "serbio",
+      "sr_latin": "serbio (latino)",
+      "sv": "sueco",
+      "tr": "turco",
+      "uk": "ucraniano",
+      "vi": "vietnamita",
+      "zh": "chino",
+      "zh_hant": "chino tradicional"
+    }
+  }
+}

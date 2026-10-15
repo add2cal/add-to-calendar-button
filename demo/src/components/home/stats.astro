@@ -1,0 +1,247 @@
+---
+import { Icon } from "astro-icon/components";
+import { useTranslations } from '@utils/i18n';
+import ProductHuntDark from '@images/ph-badge-dark.svg';
+import ProductHuntLight from '@images/ph-badge-light.svg';
+import SFDark from '@images/sf-badge-dark.svg';
+import SFLight from '@images/sf-badge-light.svg';
+
+interface Props {
+  locale: string;
+}
+
+interface Stats {
+  npm: { totalInstallations: number; monthlyInstallations: number };
+  jsdelivr: { montlyHits: number };
+  github: { stars: number };
+}
+
+const { locale: requestedLocale = 'en' } = Astro.props;
+const locale = ['en', 'de', 'fr', 'es'].includes(requestedLocale) ? (requestedLocale as 'en' | 'de' | 'fr' | 'es') : 'en';
+const t = useTranslations(locale);
+
+const fallback: Stats = {
+  npm: { totalInstallations: 600000, monthlyInstallations: 1 },
+  jsdelivr: { montlyHits: 1 },
+  github: { stars: 1500 },
+};
+const npmPointUrl = 'https://api.npmjs.org/downloads/point/{start}:{end}/add-to-calendar-button';
+
+const getJson = async (url: string): Promise<unknown | null> => {
+  try {
+    const response = await fetch(url, { signal: typeof AbortSignal.timeout === 'function' ? AbortSignal.timeout(8000) : undefined });
+    return response.ok ? await response.json() : null;
+  } catch {
+    return null;
+  }
+};
+
+const getNpmPoint = async (start: Date, end: Date): Promise<number | null> => {
+  const data = await getJson(npmPointUrl.replace('{start}', start.toISOString().slice(0, 10)).replace('{end}', end.toISOString().slice(0, 10)));
+  return data && typeof data === 'object' && 'downloads' in data && typeof data.downloads === 'number' ? data.downloads : null;
+};
+
+const getNpmTotal = async (end: Date): Promise<number | null> => {
+  const ranges: [Date, Date][] = [];
+  let start = new Date('2021-10-13T00:00:00Z');
+  while (start <= end) {
+    const rangeEnd = new Date(start);
+    rangeEnd.setUTCFullYear(rangeEnd.getUTCFullYear() + 1);
+    rangeEnd.setUTCDate(rangeEnd.getUTCDate() - 1);
+    ranges.push([new Date(start), rangeEnd < end ? rangeEnd : end]);
+    start = new Date(rangeEnd);
+    start.setUTCDate(start.getUTCDate() + 1);
+  }
+  const totals = await Promise.all(ranges.map(([rangeStart, rangeEnd]) => getNpmPoint(rangeStart, rangeEnd)));
+  return totals.some((value) => value === null) ? null : totals.reduce<number>((sum, value) => sum + (value ?? 0), 0);
+};
+
+const buildGlobal = globalThis as typeof globalThis & { atcbStatsBuildPromise?: Promise<Stats> };
+const stats = await (buildGlobal.atcbStatsBuildPromise ??= (async () => {
+  const now = new Date();
+  const thirtyDaysAgo = new Date(now);
+  thirtyDaysAgo.setUTCDate(thirtyDaysAgo.getUTCDate() - 30);
+
+  const [npmTotal, npmMonthly, jsdelivrData, githubData] = await Promise.all([
+    getNpmTotal(now),
+    getNpmPoint(thirtyDaysAgo, now),
+    getJson('https://data.jsdelivr.com/v1/stats/packages/npm/add-to-calendar-button?period=month'),
+    getJson('https://api.github.com/repos/add2cal/add-to-calendar-button'),
+  ]);
+
+  const loadedStats: Stats = structuredClone(fallback);
+  if (npmTotal !== null) loadedStats.npm.totalInstallations = npmTotal;
+  if (npmMonthly !== null) loadedStats.npm.monthlyInstallations = npmMonthly;
+  if (jsdelivrData && typeof jsdelivrData === 'object' && 'hits' in jsdelivrData && jsdelivrData.hits && typeof jsdelivrData.hits === 'object' && 'total' in jsdelivrData.hits && typeof jsdelivrData.hits.total === 'number') loadedStats.jsdelivr.montlyHits = jsdelivrData.hits.total;
+  if (githubData && typeof githubData === 'object' && 'stargazers_count' in githubData && typeof githubData.stargazers_count === 'number') loadedStats.github.stars = githubData.stargazers_count;
+  return loadedStats;
+})());
+
+const items = [
+  { key: 'npm-total', value: stats.npm.totalInstallations, label: t('stats.npm-total'), href: 'https://www.npmjs.com/package/add-to-calendar-button' },
+  { key: 'npm-monthly', value: stats.npm.monthlyInstallations, label: t('stats.npm-monthly'), href: 'https://www.npmjs.com/package/add-to-calendar-button' },
+  { key: 'jsdelivr', value: stats.jsdelivr.montlyHits, label: t('stats.cdn-monthly'), href: 'https://www.jsdelivr.com/package/npm/add-to-calendar-button?tab=stats' },
+  { key: 'github', value: stats.github.stars, label: t('stats.github-stars'), href: 'https://github.com/add2cal/add-to-calendar-button', hideLg: true },
+];
+const formatter = new Intl.NumberFormat(locale);
+const formatStat = (key: string, value: number) => {
+  if (key === 'github') return new Intl.NumberFormat(locale, { minimumFractionDigits: 1, maximumFractionDigits: 1 }).format(value / 1000);
+  if (key === 'npm-monthly') return formatter.format(Math.round(value / 1000));
+  if (key === 'npm-total' || key === 'jsdelivr') return formatter.format(Math.round(value / 1000000));
+  return formatter.format(value);
+};
+const statSuffix = (key: string) => (key === 'npm-total' || key === 'jsdelivr' ? 'M' : 'k');
+---
+
+<section class="relative z-20 mt-10 text-text" data-stats data-locale={locale}>
+  <h2 class="sr-only">{t('stats.title')}</h2>
+  <div class="grid select-none gap-6 rounded-2xl border border-white/50 bg-white px-3 py-4 shadow-xl lg:grid-cols-[minmax(0,1fr)_auto] lg:items-center lg:px-6 dark:border-stone-700 dark:bg-stone-900">
+    <div class="flex flex-wrap items-stretch gap-x-5 gap-y-2 max-w-xl">
+      {items.map((item) => (
+        <div class={`flex-1 ${item.hideLg ? 'lg:hidden xl:block' : ''}`}>
+          <a href={item.href} target="_blank" rel="noopener" aria-label={`${item.label}. ${t('stats.external')}`} class="group relative block min-w-0 h-full rounded-lg p-2 no-underline transition-colors hover:bg-primary/10 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary">
+            <Icon name="heroicons:arrow-top-right-on-square" class="absolute right-2 top-2 size-4 hidden group-hover:block group-focus-visible:block shrink-0 text-primary" aria-hidden="true" />
+            <span class="block min-w-0 leading-tight text-stone-600 dark:text-stone-300">
+              <strong class="mb-1 block text-xl leading-none font-extrabold text-primary dark:text-primary-light" data-stat={item.key} data-value={item.value}>
+                <span data-stat-number>{formatStat(item.key, item.value)}</span>
+                <span data-stat-suffix class="ml-0.5 text-[0.65em]">
+                  {statSuffix(item.key)}
+                </span>
+              </strong>
+              <span class="block text-[.7em] leading-[1.3]">{item.label}</span>
+            </span>
+          </a>
+        </div>
+      ))}
+    </div>
+    <div class="flex flex-wrap items-center justify-center gap-5 lg:flex-nowrap lg:justify-end">
+      <ProductHuntDark class="block h-12.5 w-auto dark:hidden" aria-label={t('pages.home.intro.product-hunt-label')} />
+      <ProductHuntLight class="hidden h-12.5 w-auto dark:block" aria-label={t('pages.home.intro.product-hunt-label')} />
+      <SFDark class="block h-16 w-auto dark:hidden" aria-label="Popular on Sourceforge" />
+      <SFLight class="hidden h-16 w-auto dark:block" aria-label="Popular on Sourceforge" />
+    </div>
+  </div>
+</section>
+
+<script>
+  interface Stats {
+    npm: { totalInstallations: number; monthlyInstallations: number };
+    jsdelivr: { montlyHits: number };
+    github: { stars: number };
+  }
+
+  const CACHE_KEY = 'STATS';
+  const CACHE_LIFETIME = 2 * 24 * 60 * 60 * 1000;
+  const NPM_POINT_URL = 'https://api.npmjs.org/downloads/point/{start}:{end}/add-to-calendar-button';
+  let refreshPromise: Promise<Stats> | undefined;
+
+  const getJson = async (url: string): Promise<unknown | null> => {
+    try {
+      const response = await fetch(url, { signal: typeof AbortSignal.timeout === 'function' ? AbortSignal.timeout(8000) : undefined });
+      return response.ok ? await response.json() : null;
+    } catch {
+      return null;
+    }
+  };
+
+  const getNpmPoint = async (start: Date, end: Date): Promise<number | null> => {
+    const data = await getJson(NPM_POINT_URL.replace('{start}', start.toISOString().slice(0, 10)).replace('{end}', end.toISOString().slice(0, 10)));
+    return data && typeof data === 'object' && 'downloads' in data && typeof data.downloads === 'number' ? data.downloads : null;
+  };
+
+  const getNpmTotal = async (end: Date): Promise<number | null> => {
+    const ranges: [Date, Date][] = [];
+    let start = new Date('2021-10-13T00:00:00Z');
+    while (start <= end) {
+      const rangeEnd = new Date(start);
+      rangeEnd.setUTCFullYear(rangeEnd.getUTCFullYear() + 1);
+      rangeEnd.setUTCDate(rangeEnd.getUTCDate() - 1);
+      ranges.push([new Date(start), rangeEnd < end ? rangeEnd : end]);
+      start = new Date(rangeEnd);
+      start.setUTCDate(start.getUTCDate() + 1);
+    }
+    const totals = await Promise.all(ranges.map(([rangeStart, rangeEnd]) => getNpmPoint(rangeStart, rangeEnd)));
+    return totals.some((value) => value === null) ? null : totals.reduce<number>((sum, value) => sum + (value ?? 0), 0);
+  };
+
+  const statsFromDom = (): Stats => {
+    const value = (key: string) => Number(document.querySelector<HTMLElement>(`[data-stats] [data-stat="${key}"]`)?.dataset.value) || 0;
+    return {
+      npm: { totalInstallations: value('npm-total'), monthlyInstallations: value('npm-monthly') },
+      jsdelivr: { montlyHits: value('jsdelivr') },
+      github: { stars: value('github') },
+    };
+  };
+
+  const updateDom = (stats: Stats) => {
+    document.querySelectorAll<HTMLElement>('[data-stats]').forEach((root) => {
+      const formatter = new Intl.NumberFormat(root.dataset.locale || 'en');
+      const formatStat = (key: string, value: number) => {
+        if (key === 'github') return new Intl.NumberFormat(root.dataset.locale || 'en', { minimumFractionDigits: 1, maximumFractionDigits: 1 }).format(value / 1000);
+        if (key === 'npm-monthly') return formatter.format(Math.round(value / 1000));
+        if (key === 'npm-total' || key === 'jsdelivr') return formatter.format(Math.round(value / 1000000));
+        return formatter.format(value);
+      };
+      const values: Record<string, number> = {
+        'npm-total': stats.npm.totalInstallations,
+        'npm-monthly': stats.npm.monthlyInstallations,
+        jsdelivr: stats.jsdelivr.montlyHits,
+        github: stats.github.stars,
+      };
+      Object.entries(values).forEach(([key, value]) => {
+        const element = root.querySelector<HTMLElement>(`[data-stat="${key}"]`);
+        if (element) {
+          element.dataset.value = String(value);
+          const number = element.querySelector<HTMLElement>('[data-stat-number]');
+          if (number) number.textContent = formatStat(key, value);
+        }
+      });
+    });
+  };
+
+  const loadStats = async (): Promise<Stats> => {
+    const stats = statsFromDom();
+    const now = new Date();
+    const thirtyDaysAgo = new Date(now);
+    thirtyDaysAgo.setUTCDate(thirtyDaysAgo.getUTCDate() - 30);
+
+    const [npmTotal, npmMonthly, jsdelivrData, githubData] = await Promise.all([getNpmTotal(now), getNpmPoint(thirtyDaysAgo, now), getJson('https://data.jsdelivr.com/v1/stats/packages/npm/add-to-calendar-button?period=month'), getJson('https://api.github.com/repos/add2cal/add-to-calendar-button')]);
+
+    if (npmTotal !== null) stats.npm.totalInstallations = npmTotal;
+    if (npmMonthly !== null) stats.npm.monthlyInstallations = npmMonthly;
+    if (jsdelivrData && typeof jsdelivrData === 'object' && 'hits' in jsdelivrData && jsdelivrData.hits && typeof jsdelivrData.hits === 'object' && 'total' in jsdelivrData.hits && typeof jsdelivrData.hits.total === 'number') stats.jsdelivr.montlyHits = jsdelivrData.hits.total;
+    if (githubData && typeof githubData === 'object' && 'stargazers_count' in githubData && typeof githubData.stargazers_count === 'number') stats.github.stars = githubData.stargazers_count;
+    return stats;
+  };
+
+  const setupStats = () => {
+    if (!document.querySelector('[data-stats]')) return;
+
+    try {
+      const cached = JSON.parse(localStorage.getItem(CACHE_KEY) || 'null') as { data?: Stats; expireAt?: string } | null;
+      if (cached?.data && cached.expireAt && new Date(cached.expireAt).getTime() > Date.now()) {
+        updateDom(cached.data);
+      }
+    } catch {
+      // Ignore unavailable storage and malformed legacy cache entries.
+    }
+
+    if (refreshPromise) return;
+    refreshPromise = loadStats();
+    void refreshPromise
+      .then((stats) => {
+        updateDom(stats);
+        try {
+          localStorage.setItem(CACHE_KEY, JSON.stringify({ data: stats, expireAt: new Date(Date.now() + CACHE_LIFETIME) }));
+        } catch {
+          // Statistics still work when storage is unavailable.
+        }
+      })
+      .finally(() => {
+        refreshPromise = undefined;
+      });
+  };
+
+  setupStats();
+  document.addEventListener('astro:page-load', setupStats);
+</script>

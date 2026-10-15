@@ -332,14 +332,18 @@ export type ATCBLanguage =
   | 'es'
   | 'et'
   | 'pt'
+  | 'pt_BR'
   | 'tr'
   | 'zh'
+  | 'zh_hant'
   | 'ar'
   | 'hi'
   | 'pl'
   | 'ro'
   | 'id'
   | 'no'
+  | 'nb'
+  | 'nn'
   | 'fi'
   | 'sv'
   | 'cs'
@@ -367,7 +371,8 @@ export type ATCBLanguage =
   | 'sk'
   | 'sl'
   | 'sq'
-  | 'sr';
+  | 'sr'
+  | 'sr_latin';
 
 export type CustomLabelsObjectType = {
   [key: string]: string | null;

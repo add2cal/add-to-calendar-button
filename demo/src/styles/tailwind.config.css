@@ -1,0 +1,119 @@
+@import 'tailwindcss';
+
+/* Tailwind CSS configuration file for custom styles and themes */
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme {
+  /* Fonts */
+  --font-*: initial;
+  /* Adjust the following font families to your needs */
+  /* Mind to import Google Fonts at the layouts via fontsource (e.g. "import "@fontsource/geist/400.css";") - requires them to be also installed via npm and imported at the layout level */
+  --font-sans: 'Inter Variable', Helvetica, Arial, sans-serif, Apple Color Emoji, Segoe UI Emoji, Segoe UI Symbol;
+  --font-serif: Georgia, Times New Roman, Times, Garamond, serif;
+  --font-mono: 'Fira Mono', Consolas, Courier, monospace, ui-monospace, SFMono-Regular;
+  --font-headline: 'Paytone One', var(--font-sans);
+
+  /* Colors: Base */
+  --color-transparent: transparent;
+  --color-current: currentColor;
+  --color-white: #fff;
+  --color-black: #000;
+  /* Colors: Branding */
+  --color-primary: #9755ff;
+  --color-primary-light: #cbaaff;
+  --color-primary-dark: #7644c6;
+  --color-primary-darker: #4e3872;
+  --color-primary-darkest: #28182d;
+  --color-primary-contrast: #000;
+  --color-primary-light-contrast: #000;
+  --color-primary-dark-contrast: #fff;
+  --color-secondary: #ffa255;
+  --color-secondary-light: #ffd0aa;
+  --color-secondary-dark: #fc8f29;
+  --color-secondary-contrast: #000;
+  --color-secondary-light-contrast: #000;
+  --color-secondary-dark-contrast: #fff;
+  --color-brand: var(--color-primary);
+  --color-brand-blue: #539eff;
+  --color-brand-blue-light: #a9ceff;
+  --color-brand-blue-dark: #336db9;
+  /* Colors: Utility */
+  --color-background: #f1eff8;
+  --color-background-dark: #1b1d21;
+  --color-text: #333;
+  --color-text-dark: #e6e2ed;
+  /* Colors: Brands */
+  --color-npm: #cb3837;
+  --color-angular: #c3002f;
+  --color-astro: #0f172a;
+  --color-react: #00d8ff;
+  --color-svelte: #ff3e19;
+  --color-vue: #42b883;
+  --color-nuxt: #08c678;
+  --color-wordpress: #21759b;
+  --color-javascript: #f7df1e;
+
+  /* Custom Animations */
+  --animate-bounce-slow: bounce-small 2s infinite;
+  --animate-bounce-right: bounce-right 1.5s infinite;
+  --animate-ping-slow: ping 2.5s cubic-bezier(0, 0, 0.2, 1) infinite;
+
+  @keyframes bounce-small {
+    0%,
+    100% {
+      transform: translateY(-6%);
+      animation-timing-function: cubic-bezier(0.8, 0, 1, 1);
+    }
+    50% {
+      transform: translateY(0);
+      animation-timing-function: cubic-bezier(0, 0, 0.2, 1);
+    }
+  }
+
+  @keyframes bounce-right {
+    0%,
+    100% {
+      transform: translateX(-30%);
+      animation-timing-function: cubic-bezier(0.8, 0, 1, 1);
+    }
+    50% {
+      transform: translateX(0);
+      animation-timing-function: cubic-bezier(0, 0, 0.2, 1);
+    }
+  }
+
+  /* Breakpoints */
+  --breakpoint-*: initial;
+  --breakpoint-xs: 414px;
+  --breakpoint-sm: 576px;
+  --breakpoint-md: 768px;
+  --breakpoint-lg: 976px;
+  --breakpoint-xl: 1440px;
+  --breakpoint-2xl: 1600px;
+}
+
+/* Opinionated container configuration */
+@utility container {
+  margin-inline: auto;
+  padding-inline: 1rem;
+  @media (width >= --theme(--breakpoint-xs)) {
+    max-width: none;
+    padding-inline: 1.2rem;
+  }
+  @media (width >= --theme(--breakpoint-sm)) {
+    max-width: 576px;
+    padding-inline: 1.5rem;
+  }
+  @media (width >= --theme(--breakpoint-md)) {
+    max-width: 768px;
+    padding-inline: 1.8rem;
+  }
+  @media (width >= --theme(--breakpoint-lg)) {
+    max-width: 976px;
+    padding-inline: 2rem;
+  }
+  @media (width >= --theme(--breakpoint-xl)) {
+    max-width: 1200px;
+  }
+}

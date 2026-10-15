@@ -1,0 +1,15 @@
+{
+  "compatibility_date": "2026-05-27",
+  "compatibility_flags": ["global_fetch_strictly_public", "nodejs_compat", "assets_navigation_has_no_effect"],
+  "name": "add-to-calendar-button",
+  "main": "@astrojs/cloudflare/entrypoints/server",
+  "assets": {
+    "directory": "./dist",
+    "not_found_handling": "404-page",
+  },
+  "workers_dev": false,
+  "preview_urls": true,
+  "observability": {
+    "enabled": false, // Depending on your case, this can drive costs up. Activate with care on production!
+  },
+}

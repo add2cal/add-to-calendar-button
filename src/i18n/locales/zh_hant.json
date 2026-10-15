@@ -1,0 +1,87 @@
+{
+  "label": {
+    "addtocalendar": "加入行事曆",
+    "share": {
+      "email": "透過電子郵件分享",
+      "copy": "複製連結",
+      "copied": "已複製",
+      "email_subject": "儲存此活動"
+    },
+    "rsvp": {
+      "title": "回覆邀請",
+      "expired": "已過期",
+      "bookedout": "已額滿",
+      "restart": "重新回覆邀請"
+    }
+  },
+  "ical": "iCal 檔案",
+  "modal": {
+    "button": {
+      "default": "點擊這裡"
+    },
+    "webview": {
+      "ical": {
+        "h": "開啟瀏覽器",
+        "text": "很抱歉，應用程式內建瀏覽器無法正常處理我們產生的行事曆檔案。",
+        "steps": "<ol><li>在手機上<strong>開啟其他瀏覽器</strong>，...</li><li><strong>貼上</strong>剪貼簿內容並前往該網址。</li></ol>"
+      }
+    },
+    "clipboard": {
+      "text": "我們已自動將專用網址複製到您的剪貼簿。",
+      "failed": "無法複製到剪貼簿。請手動複製以下連結："
+    },
+    "opensafari": {
+      "ical": {
+        "h": "開啟 Safari",
+        "text": "很抱歉，iOS 在 Safari 以外的瀏覽器中產生及開啟行事曆檔案時可能會發生問題。",
+        "steps": "<ol><li><strong>開啟 Safari</strong>，...</li><li><strong>貼上</strong>剪貼簿內容並前往該網址。</li></ol>"
+      }
+    },
+    "multidate": {
+      "h": "這是一系列活動",
+      "text": "請逐一加入各個活動："
+    }
+  },
+  "date": {
+    "status": {
+      "cancelled": "此日期已取消。",
+      "cancelled_cta": "請更新您的行事曆！"
+    }
+  },
+  "group_overview": {
+    "empty": "今年沒有活動。"
+  },
+  "close": "關閉",
+  "continue": "繼續",
+  "cancel": "取消",
+  "expired": "已過期",
+  "recurring": "重複活動",
+  "thankyou": "謝謝",
+  "submit": "送出",
+  "form": {
+    "error": {
+      "required": "您尚未正確填寫所有必填欄位",
+      "sending": "傳送回覆時發生問題。請稍後再試",
+      "email": "您的電子郵件地址無效",
+      "bookedoutmany": "名額已滿，請減少參加人數"
+    },
+    "success": {
+      "title": "傳送成功！",
+      "sent": "您的回覆已傳送。謝謝！",
+      "email": "您應該已收到確認電子郵件。",
+      "doi": "若要讓回覆生效，請在接下來的 30 分鐘內開啟我們剛寄給您的電子郵件中的確認連結。",
+      "demo": "謝謝。回覆邀請示範到此結束。",
+      "already": "您已經回覆過了。"
+    },
+    "status": {
+      "title": "您會參加嗎？",
+      "confirmed": "會",
+      "undecided": "可能會",
+      "declined": "不會"
+    },
+    "amount": "參加人數",
+    "max": "最多",
+    "email": "電子郵件地址",
+    "seatsleft": "剩餘名額"
+  }
+}

@@ -1,0 +1,69 @@
+@reference './tailwind.config.css';
+
+@layer components {
+  .page-header {
+    @apply mb-10 max-w-3xl pt-6 md:mb-14 md:pt-10;
+  }
+
+  .page-eyebrow {
+    @apply text-primary-dark dark:text-primary-light mb-3 text-xs font-bold tracking-[0.12em] uppercase;
+  }
+
+  .page-title {
+    @apply font-headline text-4xl leading-[1.08] font-normal text-balance sm:text-5xl lg:text-6xl;
+  }
+
+  .page-description {
+    @apply mt-5 max-w-2xl text-lg leading-8 text-zinc-600 dark:text-zinc-300;
+  }
+
+  .docs-layout {
+    @apply grid grid-cols-1 gap-10 lg:grid-cols-[minmax(0,1fr)_12rem] lg:gap-12;
+  }
+
+  .docs-sidebar {
+    @apply hidden border-l border-zinc-300 pl-7 text-sm lg:block dark:border-zinc-700;
+  }
+
+  .docs-sidebar nav {
+    @apply sticky top-24;
+  }
+}
+
+@layer utilities {
+  .prose-content {
+    @apply leading-7;
+  }
+
+  .prose-content :is(p) {
+    @apply my-4;
+  }
+
+  .prose-content :is(h2) {
+    @apply mt-14 mb-5 border-t border-zinc-300 pt-10 text-3xl font-normal dark:border-zinc-700;
+  }
+
+  .prose-content :is(h3) {
+    @apply mt-8 mb-3 text-xl font-normal;
+  }
+
+  .prose-content :is(ul, ol) {
+    @apply my-4 ml-6;
+  }
+
+  .prose-content ul {
+    @apply list-disc;
+  }
+
+  .prose-content ol {
+    @apply list-decimal;
+  }
+
+  .prose-content li {
+    @apply my-1.5;
+  }
+
+  .prose-content code:not(pre code) {
+    @apply rounded bg-zinc-200 px-1.5 py-0.5 text-[0.9em] text-zinc-700 dark:bg-zinc-700 dark:text-zinc-100;
+  }
+}

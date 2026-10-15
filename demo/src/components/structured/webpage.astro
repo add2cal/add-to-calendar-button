@@ -1,0 +1,57 @@
+---
+import { getCleanLocaleUrl } from "@utils/i18n";
+import { toSafeJsonScript } from "@utils/security";
+import { themeConfig } from '~/theme.config';
+
+interface Props {
+  type: "WebPage" | "FAQPage";
+  title: string;
+  description?: string;
+  image?: string;
+  locale?: string;
+  author?: {
+    "@type": "Person" | "Organization";
+    name: string;
+    url?: string;
+    image?: string;
+  }
+  publisher?: {
+    "@type": "Person" | "Organization";
+    name: string;
+    url?: string;
+    image?: string;
+  }
+}
+
+const { title, description, type, image, locale } = Astro.props as Props;
+
+const pageUrl = getCleanLocaleUrl(Astro.url, locale);
+
+const author = Astro.props.author ? { "@context": "https://schema.org", ...(Astro.props.author) } : null;
+const creator = author;
+const publisher = Astro.props.publisher ? { "@context": "https://schema.org", ...(Astro.props.publisher) } : null;
+
+const structuredData = {
+  "@context": "https://schema.org",
+  "@id": `${themeConfig.site}/#${type.toLowerCase()}`,
+  "@type": type,
+  name: title,
+  ...(description && { about: description }),
+  url: pageUrl,
+  ...(image && { image }),
+  author,
+  creator,
+  publisher,
+  isPartOf: {
+    "@id":`${themeConfig.site}/#website`
+  },
+  "potentialAction": [
+    {
+      "@type": "ReadAction",
+      "target": [`${pageUrl}`]
+    }
+  ]
+}
+---
+
+<script is:inline type="application/ld+json" set:html={toSafeJsonScript(structuredData)}></script>

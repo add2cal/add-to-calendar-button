@@ -1,7 +1,9 @@
 import { defineConfig } from '@playwright/test';
 import { screenReaderConfig } from '@guidepup/playwright';
 
-if (!['darwin', 'win32'].includes(process.platform)) {
+const platform = (globalThis as typeof globalThis & { process: { platform: string } }).process.platform;
+
+if (!['darwin', 'win32'].includes(platform)) {
   throw new Error('Screen-reader tests require macOS (VoiceOver) or Windows (NVDA).');
 }
 
@@ -13,8 +15,8 @@ export default defineConfig({
   fullyParallel: false,
   forbidOnly: true,
   retries: 0,
-  timeout: process.platform === 'darwin' ? 4 * 60_000 : 120_000,
-  globalTimeout: process.platform === 'darwin' ? 28 * 60_000 : 20 * 60_000,
+  timeout: platform === 'darwin' ? 4 * 60_000 : 120_000,
+  globalTimeout: platform === 'darwin' ? 28 * 60_000 : 20 * 60_000,
   expect: { timeout: 10_000 },
   outputDir: 'test-results/screen-reader',
   reporter: [['list'], ['./test/screen-reader/count-reporter.ts'], ['html', { outputFolder: 'playwright-report', open: 'never' }]],
@@ -27,7 +29,7 @@ export default defineConfig({
     trace: 'retain-on-failure',
     screenshot: 'only-on-failure',
   },
-  projects: [{ name: process.platform === 'darwin' ? 'voiceover-webkit' : 'nvda-chromium', use: { browserName: process.platform === 'darwin' ? 'webkit' : 'chromium' } }],
+  projects: [{ name: platform === 'darwin' ? 'voiceover-webkit' : 'nvda-chromium', use: { browserName: platform === 'darwin' ? 'webkit' : 'chromium' } }],
   webServer: {
     command: 'node test/screen-reader/server.mjs',
     url: 'http://127.0.0.1:4174/test/screen-reader/fixture.html',

@@ -1,0 +1,40 @@
+---
+import { getCleanLocaleUrl } from "@utils/i18n";
+import { themeConfig } from '~/theme.config';
+
+interface Props {
+  locale: string;
+  title: string;
+  ogTitle: string;
+  description: string;
+  ogImage?: string;
+  xImage?: string;
+}
+
+const { locale, title, description, ogTitle, ogImage, xImage } = Astro.props as Props;
+
+const ogImg = ogImage ?? Astro.site + "images/og.png";
+const xImg = xImage ?? Astro.site + "images/x.png";
+
+const url = getCleanLocaleUrl(Astro.url, locale);
+---
+
+<!-- open graph -->
+<meta property="og:title" content={title} />
+<meta property="og:description" content={description} />
+<meta property="og:image" content={ogImg} />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
+<meta property="og:url" content={url} />
+<meta property="og:type" content="website" />
+<meta property="og:site_name" content={ogTitle} />
+<meta property="og:locale" content={locale} />
+<!-- x/twitter -->
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:site" content={url} />
+{themeConfig.xHandle && themeConfig.xHandle !== '' ? <meta name="twitter:creator" content={themeConfig.xHandle} /> : ''}
+<meta name="twitter:title" content={title} />
+<meta name="twitter:description" content={description} />
+<meta name="twitter:image" content={xImg} />
+<meta name="twitter:image:width" content="1600" />
+<meta name="twitter:image:height" content="900" />

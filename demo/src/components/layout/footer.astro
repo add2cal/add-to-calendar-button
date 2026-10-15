@@ -1,0 +1,100 @@
+---
+import { Icon } from "astro-icon/components";
+import { useTranslations, getLocaleUrl } from "@utils/i18n";
+import { themeConfig } from '~/theme.config';
+import FooterNav from "@components/layout/nav/footer-nav.astro";
+import LegalNav from "@components/layout/nav/legal.astro";
+import LightModeSwitch from "@components/layout/light-mode-switch.astro";
+import FooterLogo from '@images/logo-footer.svg';
+import FooterLogoWhite from '@images/logo-footer-white.svg';
+
+interface Props {
+  locale: string;
+  isError?: boolean;
+  isHome?: boolean;
+}
+
+const { locale, isError, isHome } = Astro.props as Props;
+const t = useTranslations(locale);
+
+const promptLocaleAdd = locale !== 'en' ? ` - Translate your answer into "${locale}" language` : '';
+
+const githubUrl: string|undefined = 'https://github.com/add2cal/add-to-calendar-button';
+const npmUrl = 'https://www.npmjs.com/package/add-to-calendar-button';
+---
+
+<footer role="contentinfo" class="bg-linear-to-t from-zinc-100 to-gray-300 pt-14 text-zinc-700 dark:from-zinc-800 dark:to-zinc-900 dark:text-zinc-300">
+  <div class="container flex flex-col items-stretch justify-between gap-x-20 gap-y-10 px-7 md:flex-row">
+    <div class="flex w-full flex-col items-center gap-5 border-b border-zinc-400/50 pb-10 text-center md:max-w-87.5 md:items-start md:border-0 md:text-left">
+      <div class="w-auto max-w-50">
+        <a href={getLocaleUrl('/', locale)} class="block w-full select-none">
+          <p class="sr-only hidden" id="footerSiteNameLogo">
+            {themeConfig.name}
+          </p>
+          <FooterLogo aria-labelledby="footerSiteNameLogo" class="block dark:hidden drop-shadow h-auto w-full" />
+          <FooterLogoWhite aria-labelledby="footerSiteNameLogo" class="hidden dark:block h-auto w-full" />
+        </a>
+      </div>
+      <div class="flex flex-col gap-1 text-balance">
+        <div class="text-sm font-semibold">{t('meta.slogan')}</div>
+        <div class="text-xs">{t('meta.sub-slogan')}</div>
+      </div>
+      <div class="flex items-center justify-center space-x-6 lg:justify-start lg:space-x-3">
+        {githubUrl && (
+          <a class="btn-icon-link" aria-label={t('footer.social.github-label')} title={t('footer.social.github-label')} target="_blank" rel="noopener" href={githubUrl}>
+            <Icon name="thesvg:github" class="size-7 m-1" />
+          </a>
+        )}
+        {themeConfig.xHandle && (
+          <a class="btn-icon-link" aria-label={t('footer.social.x-label')} title={t('footer.social.x-title')} target="_blank" rel="noopener" href={'https://x.com/' + themeConfig.xHandle}>
+            <Icon name="thesvg:x" class="size-7 m-3" />
+          </a>
+        )}
+        <a class="btn-icon-link" aria-label={t('footer.social.npm-label')} title={t('footer.social.npm-title')} target="_blank" rel="noopener" href={npmUrl}>
+          <Icon name="thesvg:npm" class="size-8 m-3" />
+        </a>
+      </div>
+      {themeConfig.askAiTrigger && (
+        <div class="mt-14 md:mt-5">
+          <div class="mb-3 text-xs">{t('labels.ask-ai')}:</div>
+          <div class="flex items-center justify-center space-x-6 lg:justify-start lg:space-x-3">
+            <a class="btn-subtle size-11 justify-center rounded-full p-1.5" title="ChatGPT" target="_blank" rel="noopener" href={`https://chatgpt.com/?prompt=${encodeURIComponent(themeConfig.askAiTrigger + promptLocaleAdd)}`}>
+              <Icon name="thesvg:openai-chatgpt" class="h-5 w-5" />
+            </a>
+            <a class="btn-subtle size-11 justify-center rounded-full p-1.5" title="Claude" target="_blank" rel="noopener" href={`https://claude.ai/new?q=${encodeURIComponent(themeConfig.askAiTrigger + promptLocaleAdd)}`}>
+              <Icon name="thesvg:claude" class="h-5 w-5" />
+            </a>
+            <a class="btn-subtle size-11 justify-center rounded-full p-1.5" title="Perplexity" target="_blank" rel="noopener" href={`https://www.perplexity.ai/search?q=${encodeURIComponent(themeConfig.askAiTrigger + promptLocaleAdd)}`}>
+              <Icon name="thesvg:perplexity" class="h-5 w-5" />
+            </a>
+            <a class="btn-subtle size-11 justify-center rounded-full p-1.5" title="Grok" aria-label="Grok" target="_blank" rel="noopener" href={`https://grok.com/?q=${encodeURIComponent(themeConfig.askAiTrigger + promptLocaleAdd)}`}>
+              <Icon name="thesvg:grok-xai" class="h-5 w-5" />
+            </a>
+          </div>
+        </div>
+      )}
+    </div>
+    <div class="flex w-full flex-col items-center md:items-end md:w-fit">
+      <FooterNav {locale} {isHome} />
+      <div class="flex items-center gap-6 lg:gap-4 px-2 pt-20 pb-10 mt-auto">
+        {!isError ? (
+          <button id="open-language-menu" aria-label={t('i18n.select-language')} class="btn-subtle size-11 justify-center rounded-full p-1.5">
+            <Icon name="heroicons:language" class="size-5" />
+          </button>
+        ) : (
+          ''
+        )}
+        {themeConfig.darkMode && <LightModeSwitch label={t('labels.change-light-mode')} />}
+      </div>
+    </div>
+  </div>
+  <div class="container mt-10 flex flex-col justify-center flex-wrap items-center md:justify-between gap-x-14 gap-y-6 border-t border-zinc-400/50 py-6 pt-7 sm:flex-row-reverse">
+    <p class="text-[0.7rem] opacity-75">
+      {t('footer.powered-by')}{' '}
+      <a class="external-link hover:text-primary" href="https://astro-stardrive.com" target="_blank" rel="noopener">
+        Astro StarDrive
+      </a>
+    </p>
+    <LegalNav {locale} />
+  </div>
+</footer>

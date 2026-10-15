@@ -1,0 +1,156 @@
+---
+import type { AddToCalendarButtonType } from 'add-to-calendar-button';
+import { Icon } from 'astro-icon/components';
+import DemoCard from './demo-card.astro';
+import { pathFor, type DocsLocale } from './docs-data';
+import GiftInterstitial from './examples/gift-interstitial.astro';
+import { getExamplesCopy } from './examples/content';
+import { useTranslations } from '@utils/i18n';
+
+interface Props { locale: DocsLocale }
+const { locale } = Astro.props;
+const copy = getExamplesCopy(locale);
+const t = useTranslations(locale);
+const language = locale === 'en' ? [] : [`language="${locale}"`];
+const options = ['Apple', 'Google', 'iCal', 'Outlook.com', 'Microsoft365', 'MicrosoftTeams', 'Yahoo'] as AddToCalendarButtonType['options'];
+const reducedOptions = ['Apple', 'Google', 'iCal', 'Outlook.com', 'Yahoo'] as AddToCalendarButtonType['options'];
+const nextDay = new Date();
+nextDay.setDate(nextDay.getDate() + 3);
+const defaultDate = `${nextDay.getFullYear()}-${String(nextDay.getMonth() + 1).padStart(2, '0')}-${String(nextDay.getDate()).padStart(2, '0')}`;
+const d = copy.demo;
+const common = {
+  name: d.name,
+  startDate: defaultDate,
+  startTime: '10:15',
+  endTime: '23:30',
+  timeZone: d.timeZone,
+  location: d.location,
+  description: d.description,
+  options,
+  language: locale,
+} satisfies AddToCalendarButtonType;
+const requiredAt = <T,>(values: T[], index: number): T => {
+  const value = values.at(index);
+  if (value === undefined) throw new Error(`Missing example data at index ${index}`);
+  return value;
+};
+const dates = [
+  { name: requiredAt(d.subNames, 0), description: requiredAt(d.subDescriptions, 0), startDate: 'today+3', startTime: '10:15', endTime: '23:30' },
+  { name: requiredAt(d.subNames, 2), description: requiredAt(d.subDescriptions, 2), startDate: 'today+8', startTime: '09:00', endTime: '19:00' },
+  { name: requiredAt(d.subNames, 1), description: requiredAt(d.subDescriptions, 1), startDate: 'today+5', startTime: '11:30', endTime: '20:00' },
+];
+const attrs = (values: string[]) => `<add-to-calendar-button\n${values.map((value) => `  ${value}`).join('\n')}\n></add-to-calendar-button>`;
+const baseAttrs = [
+  `name="${d.name}"`, `start-date="${defaultDate}"`, 'start-time="10:15"', 'end-time="23:30"',
+  `time-zone="${d.timeZone}"`, `location="${d.location}"`, `description="${d.description}"`,
+];
+const optionAttrs = `options="'apple','google','ical','outlookcom','ms365','msteams','yahoo'"`;
+const reducedOptionAttrs = `options="'apple','google','ical','outlookcom','yahoo'"`;
+const finish = (values: string[]) => attrs([...values, 'light-mode="bodyScheme"', ...language]);
+const multiDateJson = JSON.stringify(dates, null, 2).replace(/^/gm, '  ');
+const configs: AddToCalendarButtonType[] = [
+  common,
+  { ...common, startTime: undefined, endTime: undefined, timeZone: undefined, hideRichData: true },
+  { ...common, startDate: 'today+2', location: d.url, options: reducedOptions },
+  { ...common, options: reducedOptions, recurrence: 'RRULE:FREQ=WEEKLY;INTERVAL=1;WKST=MO;BYDAY=WE,FR;COUNT=6', hideRichData: true },
+  { ...common, name: d.nameSeries, startDate: undefined, startTime: undefined, endTime: undefined, description: undefined, dates, options: reducedOptions, hideRichData: true },
+  { ...common, options: reducedOptions, label: d.customLabel, iCalFileName: 'Reminder-Event', listStyle: 'overlay', size: '5', hideRichData: true },
+  { ...common, options: reducedOptions, label: d.inlineLabel, inline: true, listStyle: 'modal', hideRichData: true },
+  { ...common, location: undefined, options: ['Google'], hideRichData: true },
+  { ...common, location: undefined, options: reducedOptions, buttonsList: true, hideTextLabelButton: true, buttonStyle: 'round', hideRichData: true },
+];
+const recurrenceSimple = { ...common, options: reducedOptions, recurrence: 'weekly', recurrence_interval: 1, recurrence_count: 6, recurrence_byDay: 'WE,FR', hideRichData: true } satisfies AddToCalendarButtonType;
+const codes = [
+  finish([...baseAttrs, optionAttrs]),
+  finish([`name="${d.name}"`, `start-date="${defaultDate}"`, `location="${d.location}"`, `description="${d.description}"`, optionAttrs]),
+  finish([`name="${d.name}"`, 'start-date="today+2"', 'start-time="10:15"', 'end-time="23:30"', `time-zone="${d.timeZone}"`, `location="${d.url}"`, `description="${d.description}"`, reducedOptionAttrs]),
+  finish([...baseAttrs, reducedOptionAttrs, 'recurrence="RRULE:FREQ=WEEKLY;INTERVAL=1;WKST=MO;BYDAY=WE,FR;COUNT=6"']),
+  finish([`name="${d.nameSeries}"`, `dates='${multiDateJson}'`, `time-zone="${d.timeZone}"`, `location="${d.location}"`, reducedOptionAttrs]),
+  finish([...baseAttrs, reducedOptionAttrs, `label="${d.customLabel}"`, 'ical-file-name="Reminder-Event"', 'list-style="overlay"', 'size="5"']),
+  finish([...baseAttrs, reducedOptionAttrs, `label="${d.inlineLabel}"`, 'inline', 'list-style="modal"']),
+  finish([`name="${d.name}"`, `start-date="${defaultDate}"`, 'start-time="10:15"', 'end-time="23:30"', `time-zone="${d.timeZone}"`, `description="${d.description}"`, 'options="google"']),
+  finish([`name="${d.name}"`, `start-date="${defaultDate}"`, 'start-time="10:15"', 'end-time="23:30"', `time-zone="${d.timeZone}"`, `description="${d.description}"`, reducedOptionAttrs, 'buttons-list', 'hide-text-label-button', 'button-style="round"']),
+];
+const recurrenceSimpleCode = finish([...baseAttrs, reducedOptionAttrs, 'recurrence="weekly"', 'recurrence-interval="1"', 'recurrence-count="6"', 'recurrence-by-day="WE,FR"']);
+---
+
+<div class="docs-layout">
+  <article class="prose-content min-w-0">
+    <header class="page-header">
+      <p class="page-eyebrow">{t('labels.guides')}</p>
+      <h1 class="page-title">{t('docs.examples.title')}</h1>
+    </header>
+    <div class="leading-7">
+      {copy.intro.map((paragraph) => (
+        <p class:list={[paragraph.muted && 'text-sm italic text-zinc-600 dark:text-zinc-300']} set:html={paragraph.html} />
+      ))}
+    </div>
+    <div class="mt-14 space-y-10">
+      {copy.examples.map((example, index) => (
+        <>
+          <DemoCard
+            id={`case-${index + 1}`}
+            title={`${t('docs.common.example')} ${index + 1}: ${t(`docs.examples.items.${index + 1}.title`)}`}
+            headingLevel="h2"
+            config={requiredAt(configs, index)}
+            code={requiredAt(codes, index)}
+            demoPrefix={index === 6 ? d.doIt : undefined}
+            stacked={index === 6 || index === 8}
+            secondaryConfig={index === 3 ? recurrenceSimple : undefined}
+            secondaryCode={index === 3 ? recurrenceSimpleCode : undefined}
+          >
+            {example.paragraphs.map((paragraph) => (
+              <p class:list={[paragraph.muted && 'text-sm italic text-zinc-600 dark:text-zinc-300']} set:html={paragraph.html} />
+            ))}
+            {example.between && (
+              <Fragment slot="between">
+                {example.between.map((paragraph) => (
+                  <p class:list={[paragraph.muted && 'text-sm italic text-zinc-600 dark:text-zinc-300']} set:html={paragraph.html} />
+                ))}
+              </Fragment>
+            )}
+          </DemoCard>
+          {index === 4 && <GiftInterstitial locale={locale} prompt={t('docs.examples.pro.prompt')} action={t('docs.examples.pro.action')} imageAlt={t('docs.examples.pro.image-alt')} />}
+        </>
+      ))}
+    </div>
+    <div class="mt-14 flex flex-col gap-8 border-t border-zinc-300 pt-14 dark:border-zinc-700">
+      <div class="flex flex-col items-center gap-5 sm:flex-row sm:justify-between">
+        <p class="self-center text-center sm:text-left">{t('docs.examples.cta.playground-prompt')}</p>
+        <a href={`${pathFor('', locale)}#demo`} class="btn-primary w-56 shrink-0 justify-center self-center">
+          {t('docs.examples.cta.play')}
+          <Icon name="heroicons:arrow-right" class="size-4" />
+        </a>
+      </div>
+      <div class="flex flex-col items-center gap-5 sm:flex-row sm:justify-between">
+        <p class="self-center text-center sm:text-left">{t('docs.examples.cta.advanced-prompt')}</p>
+        <a href={pathFor('advanced-use', locale)} class="btn-secondary w-56 shrink-0 justify-center">
+          {t('docs.examples.cta.advanced')}
+          <Icon name="heroicons:arrow-right" class="size-4" />
+        </a>
+      </div>
+    </div>
+  </article>
+  <aside class="docs-sidebar">
+    <nav aria-label={t('docs.examples.on-this-page')}>
+      {copy.examples.map((_, index) => (
+        <a class="sidebar-link my-4 block" href={`#case-${index + 1}`}>
+          #{index + 1}: {t(`docs.examples.items.${index + 1}.short`)}
+        </a>
+      ))}
+    </nav>
+  </aside>
+</div>
+
+<style>
+  .sidebar-link {
+    text-decoration: none;
+  }
+  .sidebar-link:hover {
+    color: inherit;
+    text-decoration-line: underline;
+    text-decoration-color: var(--color-secondary);
+    text-decoration-thickness: 2px;
+    text-underline-offset: 3px;
+  }
+</style>

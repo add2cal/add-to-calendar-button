@@ -63,7 +63,7 @@
       "required": "Jūs neesat pareizi aizpildījis visus obligātos laukus",
       "sending": "Nosūtot jūsu atbildi, radās problēma. Lūdzu, vēlāk mēģiniet vēlreiz",
       "email": "Jūsu e-pasta adrese nav derīga",
-      "bookedoutmany": "Vietu nav — mēģiniet norādīt mazāk dalībnieku"
+      "bookedoutmany": "Vietu nav - mēģiniet norādīt mazāk dalībnieku"
     },
     "success": {
       "title": "Veiksmīgi nosūtīts!",

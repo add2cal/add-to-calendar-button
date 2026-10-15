@@ -129,11 +129,13 @@ function singletonListeners(host: ShadowRoot, data: ATCBConfig, type: string) {
 
 // ---------- date-style button content ----------
 
-function dateButtonAriaLabel(data: ATCBConfig, subEvent: number, subEventAll: boolean, hoverText: string, fullTimeInfo: string[], oneOption: boolean): string {
-  const btnHeadlineText = data.dates!.length > 1 && subEventAll ? data.name : data.dates![`${subEvent}`]!.name;
-  // the visual button abbreviates the date - the label must stand on its own for
-  // assistive tech: always include the year, announce recurrence, and never emit
-  // dangling separators for missing parts
+function dateButtonDescription(data: ATCBConfig, subEvent: number, fullTimeInfo: string[], oneOption: boolean): string {
+  // Keep details that are abbreviated or absent visually available to assistive
+  // tech without replacing the visible content that forms the control's name.
+  const parts: string[] = [];
+  if (oneOption) {
+    parts.push(translate_hook(data.options![0] as string, data));
+  }
   const detailedTimeInfo = (function () {
     const withYear = generate_timestring(data.dates!, data.formatLocale || data.language, subEvent, false, false, true);
     if (withYear.length > 0) {
@@ -141,12 +143,11 @@ function dateButtonAriaLabel(data: ATCBConfig, subEvent: number, subEventAll: bo
     }
     return fullTimeInfo.join(' ');
   })();
-  const parts: string[] = [hoverText.replace(/<br>/g, ' ').replace(/\+\s/g, '') + (oneOption ? ' (' + translate_hook(data.options![0] as string, data) + ')' : '') + ': ' + btnHeadlineText];
-  if (data.dates![`${subEvent}`]!.location && data.dates![`${subEvent}`]!.location !== '') {
-    parts.push(data.dates![`${subEvent}`]!.location as string);
-  }
   if (detailedTimeInfo !== '') {
     parts.push(detailedTimeInfo);
+  }
+  if (data.dates![`${subEvent}`]!.onlineEvent && data.dates![`${subEvent}`]!.location && data.dates![`${subEvent}`]!.location !== '') {
+    parts.push(data.dates![`${subEvent}`]!.location as string);
   }
   if (data.recurrence && data.recurrence !== '') {
     parts.push(translate_hook('recurring', data));
@@ -280,8 +281,8 @@ function buttonTemplate(host: ShadowRoot, data: ATCBConfig): TemplateResult {
     const handlers = oneOption ? singletonListeners(host, data, option) : triggerListeners(host, data, 'trigger');
     const interactive = !data.blockInteraction;
     const meta = isDate ? dateButtonMeta(data, 'all', false) : null;
-    const ariaLabel = isDate ? dateButtonAriaLabel(data, meta!.subEvent, meta!.subEventAll, meta!.hoverText, meta!.fullTimeInfo, oneOption) : labelAriaLabel(data, contentType, text, oneOption);
-    const showLabelAria = !(isDate && (contentType === 'trigger' || oneOption));
+    const ariaLabel = labelAriaLabel(data, contentType, text, oneOption);
+    const dateDescription = isDate ? dateButtonDescription(data, meta!.subEvent, meta!.fullTimeInfo, oneOption) : '';
     return html`<div class="atcb-button-wrapper${data.rtl ? ' atcb-rtl' : ''}" part="atcb-button-wrapper">
       <button
         type="button"
@@ -291,7 +292,7 @@ function buttonTemplate(host: ShadowRoot, data: ATCBConfig): TemplateResult {
         disabled=${data.disabled ? 'true' : nothing}
         aria-haspopup=${!oneOption ? 'true' : nothing}
         aria-expanded="false"
-        aria-label=${isDate ? ariaLabel : showLabelAria ? ariaLabel : nothing}
+        aria-label=${isDate ? nothing : ariaLabel}
         @keyup=${interactive ? handlers.keyup : nothing}
         @touchend=${interactive && 'touchend' in handlers ? handlers.touchend : nothing}
         @mouseup=${interactive && 'mouseup' in handlers && handlers.mouseup ? handlers.mouseup : nothing}
@@ -303,20 +304,27 @@ function buttonTemplate(host: ShadowRoot, data: ATCBConfig): TemplateResult {
         ${!isDate && contentType === 'trigger' && !oneOption && !data.buttonsList && !data.hideTextLabelButton ? html`<div class="atcb-chevron" part="atcb-button-chevron">${unsafeHTML(icons['chevron']!)}</div>` : nothing}
         ${!oneOption ? html`<div class="atcb-dropdown-anchor"></div>` : nothing}
         ${!data.hideCheckmark && !data.hideTextLabelButton && !data.buttonsList && !data.disabled && !data.allCancelled ? html`<div class="atcb-checkmark">${unsafeHTML(icons['checkmark']!)}</div>` : nothing}
+        ${isDate && dateDescription !== '' ? html`<span class="atcb-sr-only">${dateDescription}</span>` : nothing}
       </button>
     </div>`;
   })}`;
 }
 
 /**
- * Renders the date-style button CONTENT into an imperatively created parent
- * (used by the modal sub-event buttons) and sets the aria-label on the parent,
- * and sets the aria-label on that parent.
+ * Renders date-style button content into an imperatively created parent used by
+ * modal sub-event buttons. Visible content starts the accessible name; details
+ * that are abbreviated visually follow as screen-reader-only text.
  */
 function renderDateButtonContent(data: ATCBConfig, parent: HTMLElement, subEventIn: string | number = 'all', oneOption: boolean = false, forceFullDate: boolean = false): void {
   const meta = dateButtonMeta(data, subEventIn, forceFullDate);
   render(dateButtonContentTemplate(data, subEventIn, forceFullDate), parent);
-  parent.setAttribute('aria-label', dateButtonAriaLabel(data, meta.subEvent, meta.subEventAll, meta.hoverText, meta.fullTimeInfo, oneOption));
+  const description = dateButtonDescription(data, meta.subEvent, meta.fullTimeInfo, oneOption);
+  if (description !== '') {
+    const descriptionEl = document.createElement('span');
+    descriptionEl.classList.add('atcb-sr-only');
+    descriptionEl.textContent = description;
+    parent.append(descriptionEl);
+  }
 }
 
 /**

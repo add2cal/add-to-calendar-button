@@ -60,7 +60,6 @@ Also part of the default run (long-standing quick tests):
 
 - `test/wc-tests/wc-load.test.js`: has a generated button id and shadowDom element
 - `test/wc-tests/recurrence-tz.test.js`: does not shift startDate for weekly BYDAY near midnight in Europe/Berlin
-- `test/wc-tests/r-Z-playground-bot.test.js`: Headless Chromium hydrates the Playground while genuine crawlers retain SSR behavior
 - `test/server-side-init.test.js`: CommonJS bundle imports in Node without executing browser-only code
 
 ## Tier 1 - Reduced Suite (`npm run test:extended`)
@@ -422,6 +421,7 @@ the pattern `<template> | <dimension values>`.
 - X-04: date formatting respects the full locale (en-US vs en-GB ordering differs)
 - X-05: unknown language falls back to english without any locale fetch
 - X-06: customLabels wins over every locale resolution layer, incl. identifiers unknown to the core
+- X-07: shipped regional, script, and Norwegian locale packs load on demand and render their localized labels
 
 ## Group Y - Packaging (test/wc-tests/r-Y-packaging-script.test.js, r-Y-packaging-shim.test.js)
 
@@ -452,6 +452,7 @@ The same Node tier also covers the DOM-free utility entry in `test/ssr-node/util
 - S-02: ESM and CJS entries expose the same generator
 - S-03: default shell carries host attributes (official kebab names), DSD template, styles and the real label
 - S-03b: customLabels overrides the SSR trigger label for object and JSON-string input; explicit label retains precedence
+- S-03c: SSR resolves exact regional and script-variant packs before base-language fallback
 - S-04: buttonStyle selects exactly its delta; unknown styles fall back to default
 - S-05: size attribute maps to the font-size custom properties (same math as the client)
 - S-06: date style renders skeleton spans instead of computed date parts
@@ -485,7 +486,6 @@ The same Node tier also covers the DOM-free utility entry in `test/ssr-node/util
 - Z-03: without declarative shadow DOM (innerHTML path) the element initializes client-only and drops the inert template
 - Z-04: the group overview skeleton stays painted through the pending range fetch and swaps only when the real list is ready
 - Z-05: failed PRO initialization removes the group loading skeleton instead of leaving it painted forever
-- Z-06: Headless Chromium initializes the Playground while genuine crawlers retain the SSR shell
 - Z-07: static main-first import order hydrates an SSR host with registered style and locale assets and no fallback requests
 - Z-08: static assets-first import order hydrates an SSR host with registered style and locale assets and no fallback requests
 - Z-09: generated style and locale modules register assets without defining the custom element

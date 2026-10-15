@@ -1,0 +1,37 @@
+---
+import Layout from "@layouts/default.astro";
+import "@styles/long-text-content.css";
+import { useTranslations } from "@utils/i18n";
+
+const locale = 'de';
+const t = useTranslations(locale);
+---
+
+<Layout title={t('pages.legal-notice.title')} robots="noindex, follow" {locale} header={{ showTopBanner: false }} showFooterBanner={false}>
+  <header class="page-header mx-auto max-w-4xl">
+    <p class="page-eyebrow">{t('labels.resources')}</p>
+    <h1 class="page-title">{t('pages.legal-notice.title')}</h1>
+  </header>
+
+  <div class="long-text-content surface-card mx-auto max-w-4xl p-6 md:p-10">
+    <p class="text-stone-500 italic dark:text-stone-300">{t('pages.legal-notice.intro')}:</p>
+    <p class="select-none">
+      <strong>Calendarverse GmbH</strong>
+      <br />
+      Beta-Str. 10a
+      <br />
+      85774 Unterf&ouml;hring
+      <br />
+      Germany
+    </p>
+    <p class="select-none">&#109;&#097;&#105;&#108;&#064;&#097;&#100;&#100;&#045;&#116;&#111;&#045;&#099;&#097;&#108;&#101;&#110;&#100;&#097;&#114;&#045;&#112;&#114;&#111;&#046;&#099;&#111;&#109;</p>
+    <p>
+      Sitz der Gesellschaft: Unterf&ouml;hring
+      <br />
+      Handelsregister: HRB 312016, Amtsgericht M&uuml;nchen
+      <br />
+      Gesch&auml;ftsf&uuml;hrer: Jens K&uuml;rschner
+    </p>
+    <p>Umsatzsteuer-ID: DE462121269</p>
+  </div>
+</Layout>

@@ -1,0 +1,38 @@
+---
+import { getUrlWithoutLocale, checkTranslatedPath, getCleanLocaleUrl, getLocaleUrlWithContent } from "@utils/i18n";
+import { themeConfig } from "~/theme.config";
+import type { CollectionKey } from "astro:content";
+
+interface Props {
+  locale: string;
+  noi18n?: boolean;
+  collection?: CollectionKey;
+  contentId?: string;
+}
+
+type HrefLang = typeof themeConfig.i18n.locales[number] | 'x-default';
+
+const { noi18n, locale, collection, contentId } = Astro.props as Props;
+
+const isTranslated = await checkTranslatedPath(locale, noi18n, collection, contentId);
+
+const cleanPath = getUrlWithoutLocale(Astro.url, locale);
+const basePath = cleanPath.split('/').slice(0, -1).join('/');
+
+const translated: Record<string, boolean> = isTranslated as Record<string, boolean>;
+const i18nUrls = await Promise.all(themeConfig.i18n.locales.filter(code => translated[code] /* eslint-disable-line security/detect-object-injection -- code is a static locale key */).map(async (code) => ({
+  url: (collection && contentId) ? await getLocaleUrlWithContent(contentId, collection, code, true, basePath) : getCleanLocaleUrl(Astro.url, locale, code),
+  lang: code as HrefLang
+})));
+
+// add x-default to the object
+const xDefaultUrl = (collection && contentId) ? await getLocaleUrlWithContent(contentId, collection, themeConfig.i18n.defaultLocale, true, basePath) : getCleanLocaleUrl(Astro.url, locale, themeConfig.i18n.defaultLocale);
+i18nUrls.push({
+  url: xDefaultUrl,
+  lang: 'x-default' as HrefLang
+});
+---
+
+{i18nUrls.map((item) => (
+  <link rel="alternate" href={item.url} hreflang={item.lang} />
+))}

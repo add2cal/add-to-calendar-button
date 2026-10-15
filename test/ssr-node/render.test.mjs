@@ -62,6 +62,20 @@ test('S-03b: customLabels overrides the SSR trigger label for object and JSON-st
   assert.ok(explicit.includes('>Explicit label</span>'), 'explicit label retains precedence over customLabels');
 });
 
+test('S-03c: SSR uses exact regional and script-variant locale labels before base-language fallback', () => {
+  const labels = {
+    pt_BR: 'Adicionar ao calendário',
+    zh_hant: '加入行事曆',
+    sr_latin: 'Dodaj u kalendar',
+    nb: 'Legg til i kalenderen',
+    nn: 'Legg til i kalenderen',
+  };
+  for (const [language, label] of Object.entries(labels)) {
+    const html = atcb_generate_ssr_html({ name: 'X', language });
+    assert.ok(html.includes(`>${label}</span>`), `${language} label paints in the shell`);
+  }
+});
+
 test('S-04: buttonStyle selects exactly its delta; unknown styles fall back to default', () => {
   const threeD = atcb_generate_ssr_html({ name: 'X', buttonStyle: '3d' });
   assert.ok(threeD.includes('--btn-active-shadow-up'), '3d delta css present');

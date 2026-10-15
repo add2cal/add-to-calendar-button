@@ -1,0 +1,16 @@
+# 🛑 CRITICAL: REPOSITORY BOOTSTRAP DIRECTIVE 🛑
+As an AI agent operating in this repository, you MUST execute the following state check before analyzing, coding, or responding to any user prompt:
+
+1. **CHECK STATE:** Silently verify if the file [`STARDRIVE_AGENT_MODE.md`](./STARDRIVE_AGENT_MODE.md) exists in the root directory.
+2. **IF MISSING (UNINITIALIZED):**
+   - Intercept the prompt: Acknowledge to the user that you are running the initial repository setup first.
+   - Never (!) proceed without this file being present!
+   - Read the file [`SETUP.md`](./.ai/SETUP.md) in the`./.ai/` directory..
+   - Execute ALL setup, scaffolding, and configuration instructions defined in `SETUP.md` and related files. Ask the user about clarification where necessary.
+   - Create the `STARDRIVE_AGENT_MODE.md` file in the root directory to mark initialization as complete, setting its content to "project" or "boilerplate" - depending on what the user's case is about.
+   - Proceed to fulfill the user's original request.
+3. **IF PRESENT (INITIALIZED):**
+   - Directly proceed to fulfilling the user's prompt.
+   - Mind the content of the `STARDRIVE_AGENT_MODE.md` as it defines your general scope as described in the [`AGENTS.md`](./AGENTS.md).
+
+Additionally, always mind the guidelines in [`AGENTS.md`](./AGENTS.md)!

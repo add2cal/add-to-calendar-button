@@ -1,22 +1,17 @@
-# Ignore artifacts:
-build
-coverage
+# Deep Directories
+**/dist
+**/smoke
+**/node_modules
+**/fixtures
+**/fixture
+**/vendor
+**/.vercel
+**/.vscode-test
 
-# Ignore minified files
-*.min.*
+# Directories
+.github
+.changeset
 
-# Ignore some folders
-.nuxt
-.nitro
-.cache
-.output
-.env
-dist
-dist-dev
-public
-
-# Ignore html files
-*.html
-
-# Ignore css files
-*.css
+# Files
+pnpm-lock.yaml
+worker-configuration.d.ts
