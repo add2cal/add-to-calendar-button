@@ -226,7 +226,7 @@ const navLinks: NavItem[] = [
       overlay.querySelector<HTMLElement>('[data-mobile-nav-close]')?.focus();
     };
 
-    const close = () => {
+    const close = (restoreFocus = true) => {
       if (!activeOverlay) return;
       activeOverlay = null;
       overlay.classList.add('hidden');
@@ -238,11 +238,23 @@ const navLinks: NavItem[] = [
         overlayOriginalParent = null;
         overlayOriginalNextSibling = null;
       }
-      trigger.focus();
+      if (restoreFocus) trigger.focus();
     };
 
     trigger.addEventListener('click', open, { signal });
-    overlay.querySelector('[data-mobile-nav-close]')?.addEventListener('click', close, { signal });
+    overlay.querySelector('[data-mobile-nav-close]')?.addEventListener('click', () => close(), { signal });
+    overlay.querySelectorAll<HTMLAnchorElement>('a[href]').forEach((link) => {
+      link.addEventListener(
+        'click',
+        () => {
+          const targetUrl = new URL(link.href, window.location.href);
+          const currentUrl = new URL(window.location.href);
+          const targetsCurrentDocument = targetUrl.origin === currentUrl.origin && targetUrl.pathname === currentUrl.pathname && targetUrl.search === currentUrl.search;
+          if (targetsCurrentDocument && targetUrl.hash) close(false);
+        },
+        { signal },
+      );
+    });
 
     document.addEventListener(
       'keyup',

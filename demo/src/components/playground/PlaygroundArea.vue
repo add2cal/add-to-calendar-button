@@ -119,7 +119,7 @@ function toggleCode() {
       </figure>
     </div>
   </div>
-  <dialog ref="settingsDialog" class="m-0 h-dvh max-h-none w-dvw max-w-none overflow-x-hidden overflow-y-auto border-0 bg-zinc-200 p-0 backdrop:bg-black/40 lg:hidden dark:bg-zinc-800" :aria-label="t('labels.layoutInput')" @close="showMobileConfig = false">
+  <dialog ref="settingsDialog" class="mobile-settings-dialog m-0 h-dvh max-h-none w-dvw max-w-none overflow-x-hidden overflow-y-auto border-0 bg-zinc-200 p-0 backdrop:bg-black/40 lg:hidden dark:bg-zinc-800" :aria-label="t('labels.layoutInput')" @close="showMobileConfig = false">
     <div class="grid grid-cols-1 gap-10 pb-24">
       <div class="bg-zinc-500 p-4 font-semibold text-zinc-100 uppercase dark:bg-zinc-700 dark:text-zinc-400">{{ t('labels.dateInput') }}</div>
       <div class="px-8 text-left"><DateAttrs v-model="data.date" mobile /></div>
@@ -136,5 +136,13 @@ function toggleCode() {
 .grid-bg {
   background-image: linear-gradient(rgb(113 113 122 / 13%) 1px, transparent 1px), linear-gradient(90deg, rgb(113 113 122 / 13%) 1px, transparent 1px);
   background-size: 20px 20px;
+}
+
+@media (max-width: 47.999rem) {
+  .mobile-settings-dialog :deep(input),
+  .mobile-settings-dialog :deep(select),
+  .mobile-settings-dialog :deep(textarea) {
+    font-size: 1rem;
+  }
 }
 </style>

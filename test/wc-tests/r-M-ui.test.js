@@ -333,7 +333,8 @@ describe('Group M - UI / interaction', () => {
     expect(overlayAfter, 'the SAME overlay node survives the transition (no blink)').to.equal(overlayBefore);
     expect(mhAfter.shadowRoot.querySelector('.atcb-modal-box'), 'the multi-date modal box is shown').to.exist;
     expect(mhAfter.shadowRoot.querySelector('.atcb-list.atcb-modal'), 'the outgoing options list was dropped').to.not.exist;
-    expect(mhAfter.shadowRoot.querySelector('.atcb-modal-close svg'), 'follow-up modal has a top-right X close control').to.exist;
+    const followUpClose = mhAfter.shadowRoot.querySelector('.atcb-modal-close');
+    expect(followUpClose?.querySelector('.atcb-icon.atcb-icon-close svg'), 'follow-up modal reuses the list-modal close icon treatment').to.exist;
     expect(mhAfter.shadowRoot.querySelector('.atcb-modal-buttons'), 'close-only footer is omitted').to.not.exist;
   });
 
