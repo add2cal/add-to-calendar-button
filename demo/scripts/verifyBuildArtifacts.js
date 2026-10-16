@@ -5,6 +5,11 @@ import { resolve } from 'node:path';
 const clientDir = resolve('dist/client');
 const readArtifact = (path) => readFileSync(resolve(clientDir, path), 'utf8');
 
+const homepage = readArtifact('index.html');
+const homepageHead = homepage.match(/<head>([\s\S]*?)<\/head>/i)?.[1];
+assert.ok(homepageHead, 'homepage must contain a head');
+assert.doesNotMatch(homepageHead, /<link\b[^>]*\brel="stylesheet"/i, 'homepage head styles must be inlined to avoid render-blocking requests');
+
 const llms = readArtifact('llms.txt');
 assert.match(llms, /^# .+/m, 'llms.txt must contain a title');
 assert.match(llms, /^## Pages$/m, 'llms.txt must contain a pages section');
