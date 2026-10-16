@@ -443,7 +443,12 @@ async function create_modal(
   modalCloseButton.type = 'button';
   modalCloseButton.classList.add('atcb-modal-close');
   modalCloseButton.setAttribute('aria-label', translate_hook('close', data));
-  modalCloseButton.innerHTML = icons['close']!;
+  // Match the close treatment used by list-style modals. Keeping the SVG in the
+  // standard icon wrapper also avoids native-button SVG sizing differences in WebKit.
+  const modalCloseIcon = document.createElement('div');
+  modalCloseIcon.classList.add('atcb-icon', 'atcb-icon-close');
+  modalCloseIcon.innerHTML = icons['close']!;
+  modalCloseButton.append(modalCloseIcon);
   modalCloseButton.addEventListener(
     'click',
     debounce(() => {
