@@ -31,16 +31,16 @@ const navLinks: NavItem[] = [
   {navLinks.map((item, i) =>
     item.isParent ? (
       <div class="relative" data-dropdown>
-        <button class="btn-control hover:text-secondary focus-visible:text-secondary flex items-center gap-1 rounded-lg font-sans text-sm font-semibold" aria-haspopup="true" aria-expanded="false" aria-controls={`nav-dropdown-${i}`} tabindex={tabIndex} data-dropdown-trigger>
+        <button class="btn-control hover:text-secondary-dark focus-visible:text-secondary-dark dark:hover:text-secondary dark:focus-visible:text-secondary flex items-center gap-1 rounded-lg font-sans text-sm font-semibold" aria-haspopup="true" aria-expanded="false" aria-controls={`nav-dropdown-${i}`} tabindex={tabIndex} data-dropdown-trigger>
           {item.label}
           <Icon name="heroicons:chevron-down" class="h-4 w-4 transition-transform duration-200" />
         </button>
 
         <div id={`nav-dropdown-${i}`} role="menu" aria-label={`${item.label} ${t('nav.submenu')}`} hidden class="absolute top-full left-1/2 z-50 mt-4 flex origin-top -translate-x-1/2 scale-75 overflow-hidden rounded-lg border border-stone-200 bg-white opacity-0 shadow-lg transition duration-150 ease-out motion-reduce:transition-none dark:border-stone-700 dark:bg-stone-800" data-dropdown-panel>
-          <ul role="none" class="min-w-72 p-3 text-left">
+          <ul role="none" class="min-w-72 p-1 text-left">
             {item.children.map((child) => (
               <li role="none" class="mx-0 my-1">
-                <a href={child.href} role="menuitem" tabindex="-1" class="text-text dark:text-text-dark hover:text-secondary dark:hover:text-secondary flex gap-3 rounded px-4 py-3 text-sm whitespace-nowrap no-underline hover:bg-stone-100 dark:hover:bg-stone-700">
+                <a href={child.href} role="menuitem" tabindex="-1" class="text-text dark:text-text-dark hover:text-secondary-dark dark:hover:text-secondary flex gap-3 rounded px-4 py-3 text-sm whitespace-nowrap no-underline hover:bg-stone-100 dark:hover:bg-stone-700">
                   {child.icon && <Icon name={child.icon} class="h-6 w-6 shrink-0" />}
                   <span class="flex flex-col">
                     <span class="text-sm">{child.label}</span>

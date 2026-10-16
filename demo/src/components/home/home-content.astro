@@ -33,7 +33,7 @@ const capabilities = [
 const comparisonRows = [
   ['setup', false, ''],
   ['configuration', true, 'text-primary-dark dark:text-primary-light'],
-  ['calendars', true, 'text-green-600 dark:text-green-400'],
+  ['calendars', true, 'text-green-800 dark:text-green-400'],
   ['landing', true, 'text-primary-dark dark:text-primary-light'],
   ['rsvp', true, 'text-primary-dark dark:text-primary-light'],
   ['automation', true, 'text-primary-dark dark:text-primary-light'],
@@ -68,10 +68,10 @@ const cdnCode = '<!-- CDN Script Tag in <head> -->\n<script src="https://cdn.jsd
 
           <div class="mt-7 min-w-0" data-install-tabs>
             <div class="flex select-none gap-3 border-b border-white/10 pb-3" role="tablist" aria-label={t('pages.home.router.developer.install-method')}>
-              <button id="install-tab-npm" class="btn-control min-h-11 rounded-lg bg-primary px-4 font-mono text-sm font-semibold text-white" type="button" role="tab" aria-selected="true" aria-controls="install-panel-npm" data-install-tab="npm">
+              <button id="install-tab-npm" class="btn-control min-h-11 rounded-lg bg-primary-dark px-4 font-mono text-sm font-semibold text-white" type="button" role="tab" aria-selected="true" aria-controls="install-panel-npm" data-install-tab="npm">
                 npm
               </button>
-              <button id="install-tab-cdn" class="btn-control min-h-11 rounded-lg px-4 font-mono text-sm font-semibold text-stone-400 hover:bg-white/10 hover:text-white" type="button" role="tab" aria-selected="false" aria-controls="install-panel-cdn" tabindex="-1" data-install-tab="cdn">
+              <button id="install-tab-cdn" class="btn-control min-h-11 rounded-lg px-4 font-mono text-sm font-semibold text-stone-300 hover:bg-white/10 hover:text-white" type="button" role="tab" aria-selected="false" aria-controls="install-panel-cdn" tabindex="-1" data-install-tab="cdn">
                 CDN Script
               </button>
             </div>
@@ -105,7 +105,7 @@ const cdnCode = '<!-- CDN Script Tag in <head> -->\n<script src="https://cdn.jsd
 
         <article class="surface-card flex min-w-0 flex-col border-primary/25 bg-linear-to-br from-white to-primary/5 p-6 shadow-lg md:p-9 dark:from-stone-900 dark:to-primary/10">
           <div class="mb-5 flex flex-wrap items-center justify-between gap-3">
-            <span class="rounded-lg bg-primary px-3 py-1 text-xs font-bold tracking-wide text-white uppercase">Add to Calendar PRO</span>
+            <span class="rounded-lg bg-primary-dark px-3 py-1 text-xs font-bold tracking-wide text-white uppercase">Add to Calendar PRO</span>
             <span class="text-sm font-bold text-primary">{t('pages.home.router.organizer.engine')}</span>
           </div>
           <h3 class="text-3xl font-extrabold">{t('pages.home.router.organizer.heading')}</h3>
@@ -144,7 +144,7 @@ const cdnCode = '<!-- CDN Script Tag in <head> -->\n<script src="https://cdn.jsd
       </p>
     </Playground>
     <div class="container mx-auto">
-      <p class="mx-auto mt-6 max-w-3xl text-center text-sm text-stone-500 dark:text-stone-400">
+      <p class="mx-auto mt-6 max-w-3xl text-center text-sm text-stone-600 dark:text-stone-400">
         {t('pages.home.playground.disclaimer')}{' '}
         <a href={getLocaleUrl('configuration', locale)} class="inline-flex items-center gap-1">
           {t('pages.home.playground.configuration')}
@@ -171,7 +171,7 @@ const cdnCode = '<!-- CDN Script Tag in <head> -->\n<script src="https://cdn.jsd
               {index + 1}. {t(`pages.home.capabilities.cards.${key}.title`)}
             </h3>
             <p class="mt-3 mb-5 text-[0.9375rem] leading-6 text-stone-600 dark:text-stone-300">{t(`pages.home.capabilities.cards.${key}.description`)}</p>
-            <a href={href} class="mt-auto text-sm font-semibold items-center text-primary flex gap-1 no-underline hover:no-underline">
+            <a href={href} class="mt-auto text-sm font-semibold items-center text-primary-dark dark:text-primary-light hover:text-black dark:hover:text-white flex gap-1 no-underline hover:no-underline">
               {t(`pages.home.capabilities.cards.${key}.cta`)}
               <Icon name="heroicons:arrow-right" class="size-4" aria-hidden="true" />
             </a>
@@ -191,7 +191,7 @@ const cdnCode = '<!-- CDN Script Tag in <head> -->\n<script src="https://cdn.jsd
         <p class="section-description">{t('pages.home.comparison.description')}</p>
       </div>
       <div class="surface-card overflow-x-auto shadow-lg">
-        <table class="w-full min-w-[760px] border-collapse text-left text-[0.9375rem]">
+        <table class="w-full min-w-190 border-collapse text-left text-[0.9375rem]">
           <caption class="sr-only">{t('pages.home.comparison.caption')}</caption>
           <thead>
             <tr class="border-b border-stone-200 bg-background dark:border-stone-700 dark:bg-stone-800">
@@ -201,7 +201,7 @@ const cdnCode = '<!-- CDN Script Tag in <head> -->\n<script src="https://cdn.jsd
               <th scope="col" class="w-[30%] border-r border-stone-200 px-8 py-7 dark:border-stone-700">
                 {t('pages.home.comparison.free')}
               </th>
-              <th scope="col" class="w-[30%] bg-primary/10 px-8 py-7 text-primary-dark dark:text-primary-light">
+              <th scope="col" class="w-[30%] bg-primary/10 px-8 py-7 text-primary-darker dark:text-primary-light">
                 Add to Calendar PRO
               </th>
             </tr>
@@ -240,9 +240,9 @@ const cdnCode = '<!-- CDN Script Tag in <head> -->\n<script src="https://cdn.jsd
           const active = item === tab;
           item.setAttribute('aria-selected', String(active));
           item.tabIndex = active ? 0 : -1;
-          item.classList.toggle('bg-primary', active);
+          item.classList.toggle('bg-primary-dark', active);
           item.classList.toggle('text-white', active);
-          item.classList.toggle('text-stone-400', !active);
+          item.classList.toggle('text-stone-300', !active);
         });
         root.querySelectorAll<HTMLElement>('[data-install-panel]').forEach((panel) => {
           panel.hidden = panel.dataset.installPanel !== selected;

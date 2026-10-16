@@ -91,7 +91,7 @@ function toggleCode() {
         <DateAttrs v-model="data.date" :disabled="!loaded" />
       </div>
       <div id="rendering" :class="{ 'rounded-bl-none md:rounded-br-md lg:rounded-br-none': !showCode }" class="grid-bg row-span-2 flex justify-center rounded-tl-none border-0 border-zinc-400 bg-zinc-100 px-3 py-8 md:rounded-tr-md md:border-l-2 lg:row-span-1 lg:rounded-tr-none dark:border-zinc-600 dark:bg-zinc-900" @click.capture="trackDemoUse('preview')">
-        <div class="sticky z-30 h-fit min-h-[200px] w-fit p-8 transition-all" :style="{ top: buttonTop }">
+        <div class="sticky z-30 h-fit min-h-50 w-fit p-8 transition-all" :style="{ top: buttonTop }">
           <component :is="'add-to-calendar-button'" v-if="renderButton" v-bind="buttonAttrs" debug hide-rich-data hide-branding />
         </div>
       </div>
