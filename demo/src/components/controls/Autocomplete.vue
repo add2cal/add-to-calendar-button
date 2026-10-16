@@ -62,7 +62,7 @@ const open = (event: MouseEvent) => {
             <MagnifyingGlassIcon :class="['h-4 w-4 shrink-0', !modelValue && 'text-zinc-400']" aria-hidden="true" />
             <div class="relative flex w-full items-center gap-2">
               <ComboboxInput class="caret-secondary min-h-11 w-full truncate bg-transparent text-left text-base focus:outline-none" :display-value="displayValue" :placeholder="placeholder || t('labels.inputs.select_option')" @change="query = ($event.target as HTMLInputElement).value" @input="query = ($event.target as HTMLInputElement).value" @blur="blur" @focus="focused = true" />
-              <ComboboxButton ref="listButton" class="btn-control flex size-11 shrink-0 items-center justify-center">
+              <ComboboxButton ref="listButton" :aria-label="`${t('labels.inputs.show_options')}: ${label || placeholder || t('labels.inputs.select_option')}`" class="btn-control flex size-11 shrink-0 items-center justify-center">
                 <span v-if="modelValue && clearable" role="button" tabindex="0" @click.stop.prevent="clear" @keydown.space.stop.prevent="clear" @keydown.enter.stop.prevent="clear"><XMarkIcon class="hover:text-secondary h-5 w-5 text-zinc-400" /></span>
                 <ChevronDownIcon class="ui-open:rotate-180 h-5 w-5 text-zinc-400 transition-transform" aria-hidden="true" />
               </ComboboxButton>

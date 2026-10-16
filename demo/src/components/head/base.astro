@@ -22,14 +22,10 @@ const canonical = externalCanonical || getCleanLocaleUrl(Astro.url, locale);
 <!-- prettier-ignore -->
 <script is:inline set:html={THEME_INIT_SCRIPT}></script>
 <script>
-  // Persist the current locale to localStorage on every page load to have it available at client side scripts
+  // Persist the current locale to localStorage to have it available to client-side scripts.
   import { set } from '@utils/localStorage';
-  document.addEventListener('astro:page-load', () => {
-    const locale = document.documentElement.lang;
-    if (locale) {
-      void set('locale', locale);
-    }
-  });
+  const locale = document.documentElement.lang;
+  if (locale) void set('locale', locale);
 </script>
 <!-- technical -->
 <meta charset="UTF-8" />

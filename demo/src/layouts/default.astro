@@ -3,7 +3,8 @@ import '@fontsource/paytone-one';
 import '@fontsource/fira-mono';
 import '@fontsource-variable/inter';
 import "@styles/global.css";
-import { ClientRouter } from 'astro:transitions';
+// Full-page navigation is intentional: the demo defines no view transitions, and
+// ClientRouter's startup history bookkeeping forces a synchronous layout.
 import Footer from "@components/layout/footer.astro";
 import TopBanner from "@components/promo/top-banner.astro";
 import FooterBanner from "@components/promo/footer-banner.astro";
@@ -94,8 +95,6 @@ const showTopBanner = (themeConfig.promotions?.topBanner && header?.showTopBanne
     <!-- Structured Data -->
     {isHome ? <WebsiteStructuredData {title} image={structuredDataImage} {author} {publisher} {locale} /> : null}
     <WebPageStructuredData {type} {title} {description} image={structuredDataImage} {author} {publisher} {locale} />
-    <!-- Transitions -->
-    <ClientRouter />
   </head>
   <body>
     {showTopBanner ? <TopBanner {locale} /> : null}
@@ -131,8 +130,6 @@ const showTopBanner = (themeConfig.promotions?.topBanner && header?.showTopBanne
     <LanguageSelect {noi18n} {collection} {contentId} {locale} />
     <WebMCPTools {locale} />
     <script>
-      import { initializeAnalytics, trackAnalyticsEvent } from '@utils/analytics';
-
       const productDomains = new Map([
         ['add-to-calendar-links.com', 'links'],
         ['add-to-calendar-pro.com', 'pro'],
@@ -146,6 +143,9 @@ const showTopBanner = (themeConfig.promotions?.topBanner && header?.showTopBanne
         ['perplexity.ai', 'perplexity'],
       ]);
       const valueForDomain = (hostname: string, domains: Map<string, string>) => [...domains].find(([domain]) => hostname === domain || hostname.endsWith(`.${domain}`))?.[1];
+      let analyticsPromise: Promise<typeof import('@utils/analytics')> | undefined;
+      const loadAnalytics = () => (analyticsPromise ??= import('@utils/analytics'));
+      const trackAnalyticsEvent = (eventName: import('@utils/analytics').AnalyticsEventName, props?: Record<string, string>) => void loadAnalytics().then((analytics) => analytics.trackAnalyticsEvent(eventName, props));
 
       document.addEventListener('click', (event) => {
         if (!(event.target instanceof Element)) return;
@@ -164,7 +164,14 @@ const showTopBanner = (themeConfig.promotions?.topBanner && header?.showTopBanne
         } else if (provider) trackAnalyticsEvent('ask_ai_clicked', { provider });
       });
 
-      initializeAnalytics();
+      const initializeAnalytics = () => void loadAnalytics().then((analytics) => analytics.initializeAnalytics());
+      const scheduleAnalytics = () => {
+        const requestIdleCallback = window.requestIdleCallback?.bind(window);
+        if (requestIdleCallback) requestIdleCallback(initializeAnalytics, { timeout: 2000 });
+        else window.setTimeout(initializeAnalytics, 0);
+      };
+      if (document.readyState === 'complete') scheduleAnalytics();
+      else window.addEventListener('load', scheduleAnalytics, { once: true });
     </script>
   </body>
 </html>

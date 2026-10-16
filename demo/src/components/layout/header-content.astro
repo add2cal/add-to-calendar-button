@@ -84,7 +84,8 @@ const t = useTranslations(locale);
   function setupHeaderShrink() {
     window.removeEventListener('scroll', updateHeaderShrink);
     window.addEventListener('scroll', updateHeaderShrink, { passive: true });
-    updateHeaderShrink();
+    if (document.readyState === 'complete') updateHeaderShrink();
+    else window.addEventListener('load', updateHeaderShrink, { once: true });
   }
 
   const isShrink = document.querySelector<HTMLElement>('.header-content-inner')?.dataset.shrink === 'true';
