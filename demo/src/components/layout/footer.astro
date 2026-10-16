@@ -88,13 +88,13 @@ const npmUrl = 'https://www.npmjs.com/package/add-to-calendar-button';
       </div>
     </div>
   </div>
-  <div class="container mt-10 flex flex-col justify-center flex-wrap items-center md:justify-between gap-x-14 gap-y-6 border-t border-zinc-400/50 py-6 pt-7 sm:flex-row-reverse">
+  <div class="container mt-10 flex flex-col justify-start flex-wrap items-center md:items-start md:justify-between gap-x-14 gap-y-6 border-t border-zinc-400/50 py-6 pt-7 sm:flex-row">
+    <LegalNav {locale} />
     <p class="text-[0.7rem] opacity-75">
       {t('footer.powered-by')}{' '}
       <a class="external-link hover:text-primary" href="https://astro-stardrive.com" target="_blank" rel="noopener">
         Astro StarDrive
       </a>
     </p>
-    <LegalNav {locale} />
   </div>
 </footer>
