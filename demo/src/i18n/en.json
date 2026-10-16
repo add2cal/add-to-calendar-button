@@ -516,6 +516,7 @@
         "language": "Language",
         "nothing_found": "Nothing found.",
         "select_option": "Select an option...",
+        "show_options": "Show options",
         "search_time_zone": "Search for a time zone...",
         "clear": "Clear",
         "manual_input": "Use a custom date value",

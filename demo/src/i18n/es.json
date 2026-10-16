@@ -516,6 +516,7 @@
         "language": "Idioma",
         "nothing_found": "No se encontraron resultados.",
         "select_option": "Selecciona una opción...",
+        "show_options": "Mostrar opciones",
         "search_time_zone": "Buscar una zona horaria...",
         "clear": "Borrar",
         "manual_input": "Usar una fecha personalizada",
