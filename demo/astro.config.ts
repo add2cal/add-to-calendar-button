@@ -78,6 +78,9 @@ export default defineConfig({
 
   build: {
     format: 'file',
+    // Keep first-paint styles on the static document's critical path without
+    // making their delivery wait for separate stylesheet requests.
+    inlineStylesheets: 'always',
   },
 
   image: {
