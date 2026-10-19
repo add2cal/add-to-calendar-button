@@ -205,4 +205,19 @@ describe('Group C - Date / time / timezone (single event)', () => {
     // Etc/GMT+5 == UTC-05:00 (POSIX sign inversion) -> 10:00 wall = 15:00 UTC
     expect(url.searchParams.get('dates')).to.equal(`${utcClean('2050-06-15', '10:00', '-05:00')}/${utcClean('2050-06-15', '11:00', '-05:00')}`);
   });
+
+  it('C-18: missing end time defaults to one hour after start on the same day', async () => {
+    const url = await googleUrlFor({ name: 'Default duration', startDate: '2050-06-15', startTime: '10:15' }, 'atcb-c18');
+    expect(url.searchParams.get('dates')).to.equal('20500615T101500/20500615T111500');
+  });
+
+  it('C-19: same-day missing end time rolls the end date into the next day', async () => {
+    const url = await googleUrlFor({ name: 'Midnight rollover', startDate: '2050-06-15', startTime: '23:30', endDate: '2050-06-15' }, 'atcb-c19');
+    expect(url.searchParams.get('dates')).to.equal('20500615T233000/20500616T003000');
+  });
+
+  it('C-20: multi-day missing end time inherits the start time', async () => {
+    const url = await googleUrlFor({ name: 'Default multi-day time', startDate: '2050-06-15', startTime: '10:15', endDate: '2050-06-17' }, 'atcb-c20');
+    expect(url.searchParams.get('dates')).to.equal('20500615T101500/20500617T101500');
+  });
 });
