@@ -178,6 +178,7 @@ describe('Group GO - PRO group overview', () => {
       expect(shadow.querySelector('[part="atcb-group-overview-add"]').textContent).to.equal('+');
       expect(shadow.querySelector('.atcb-group-overview-compact-row').firstElementChild.getAttribute('part')).to.equal('atcb-group-overview-add');
       expect(shadow.querySelector('.atcb-group-overview-compact-with-add')).to.exist;
+      expect(getComputedStyle(shadow.querySelector('[part="atcb-group-overview-list"]')).display).to.equal('block');
     } finally {
       mock.restore();
     }
