@@ -120,6 +120,9 @@ Also part of the default run (long-standing quick tests):
 - C-15: status CANCELLED -> ICS STATUS:CANCELLED (iCal path still works)
 - C-16: timeZone="currentBrowser" resolves to the browser timezone
 - C-17: POSIX-inverted Etc/GMT+5 means UTC-5 in output math
+- C-18: missing end time defaults to one hour after start on the same day
+- C-19: same-day missing end time rolls the end date into the next day
+- C-20: multi-day missing end time inherits the start time
 
 ### Group D - DST & timezone corners (`r-D-dst.test.js`)
 

@@ -209,8 +209,10 @@ function date_cleanup(dateTimeData: ATCBDateEntry): ATCBDateEntry {
   function isValidTodayFormat(dateStr: unknown): boolean {
     return /^today(?:\+(?:\d|\d\d|\d\d\d|\d\d\d\d))?$/i.test(dateStr as string);
   }
+  const endDateWasProvided = !!dateTimeData.endDate;
+  const endTimeWasProvided = !!dateTimeData.endTime || (endDateWasProvided && /T\d\d:\d\d/.test(dateTimeData.endDate!));
   // set endDate = startDate, if not provided
-  if (!dateTimeData.endDate || dateTimeData.endDate === '') {
+  if (!endDateWasProvided) {
     dateTimeData.endDate = dateTimeData.startDate;
   }
   // parse date+time format (unofficial alternatives to the main implementation); also calculate any dynamic dates
@@ -241,6 +243,21 @@ function date_cleanup(dateTimeData: ATCBDateEntry): ATCBDateEntry {
       }
     }
   });
+  // A timed event without an explicit end time defaults to one hour on the same
+  // day. For a multi-day event, keep the configured date span and use the same
+  // wall-clock time on the end date.
+  if (dateTimeData.startTime && !endTimeWasProvided && /^\d\d:\d\d$/.test(dateTimeData.startTime)) {
+    if (dateTimeData.endDate !== dateTimeData.startDate) {
+      dateTimeData.endTime = dateTimeData.startTime;
+    } else {
+      const [startHour, startMinute] = dateTimeData.startTime.split(':').map(Number);
+      const endMinutes = startHour! * 60 + startMinute! + 60;
+      dateTimeData.endTime = `${String(Math.floor((endMinutes % 1440) / 60)).padStart(2, '0')}:${String(endMinutes % 60).padStart(2, '0')}`;
+      if (endMinutes >= 1440) {
+        dateTimeData.endDate = date_calculation(`${dateTimeData.startDate}+1`, 'GMT') || dateTimeData.endDate;
+      }
+    }
+  }
   // update time zone, if special case set to go for the user's browser
   if (dateTimeData.timeZone === 'currentBrowser' || dateTimeData.useUserTZ) {
     let browserTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone || 'GMT';
