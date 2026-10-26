@@ -166,7 +166,7 @@ function blur_after_pointer_selection(select: HTMLSelectElement): void {
   });
 }
 
-function render_event(event: OverviewEvent, config: NormalizedOverviewConfig, locale: string, dev: boolean, onAdd: (event: OverviewEvent, trigger: HTMLElement) => void): HTMLLIElement {
+function render_event(event: OverviewEvent, config: NormalizedOverviewConfig, locale: string, dev: boolean, addLabel: string, onAdd: (event: OverviewEvent, trigger: HTMLElement) => void): HTMLLIElement {
   const item = document.createElement('li');
   item.className = 'atcb-group-overview-item';
   if (config.noAdd) item.classList.add('atcb-group-overview-item-no-add');
@@ -260,13 +260,20 @@ function render_event(event: OverviewEvent, config: NormalizedOverviewConfig, lo
   }
   if (config.addViaList && !config.noAdd && !event.hasRsvp) {
     item.classList.add('atcb-group-overview-item-with-add');
-    const add = append_text(config.noDetails ? link : item, config.noDetails ? 'span' : 'button', '+', 'atcb-group-overview-add');
+    const add = append_text(config.noDetails ? link : item, config.noDetails ? 'span' : 'button', config.type === 'list' ? '' : '+', 'atcb-group-overview-add');
     add.className = 'atcb-group-overview-add';
+    if (config.type === 'list') {
+      const label = append_text(add, 'span', addLabel);
+      label.className = 'atcb-group-overview-add-label';
+      const symbol = append_text(add, 'span', '+');
+      symbol.className = 'atcb-group-overview-add-symbol';
+      symbol.setAttribute('aria-hidden', 'true');
+    }
     if (config.noDetails) {
       add.setAttribute('aria-hidden', 'true');
     } else {
       (add as HTMLButtonElement).type = 'button';
-      add.setAttribute('aria-label', `Add ${event.title} to calendar`);
+      add.setAttribute('aria-label', config.type === 'list' ? `${addLabel}: ${event.title}` : `Add ${event.title} to calendar`);
       add.addEventListener('click', (e) => {
         e.preventDefault();
         e.stopPropagation();
@@ -294,6 +301,7 @@ async function render_group_overview(input: ATCBInputConfig, signal: AbortSignal
   const translationData = { ...input, language: locale } as ATCBConfig;
   await ensure_locale(translationData);
   const emptyLabel = translate_hook('group_overview.empty', translationData);
+  const addLabel = translate_hook('label.addtocalendar', translationData);
   const currentYear = now.getFullYear();
   const years = [...new Set(events.map((event) => event.year).concat(currentYear))].sort((a, b) => a - b);
   const css = await ensure_style(input as unknown as ATCBConfig);
@@ -347,7 +355,7 @@ async function render_group_overview(input: ATCBInputConfig, signal: AbortSignal
       const list = document.createElement('ul');
       list.className = `atcb-group-overview-items atcb-group-overview-${config.type}`;
       list.setAttribute('part', 'atcb-group-overview-list');
-      for (const event of yearEvents.filter((candidate) => candidate.month === month)) list.append(render_event(event, config, locale, input.dev === true || input.dev === 'true', onAdd));
+      for (const event of yearEvents.filter((candidate) => candidate.month === month)) list.append(render_event(event, config, locale, input.dev === true || input.dev === 'true', addLabel, onAdd));
       results.append(list);
     };
     if (config.yearsOnly) {
@@ -366,7 +374,7 @@ async function render_group_overview(input: ATCBInputConfig, signal: AbortSignal
     const list = document.createElement('ul');
     list.className = `atcb-group-overview-items atcb-group-overview-${config.type}`;
     list.setAttribute('part', 'atcb-group-overview-list');
-    for (const event of yearEvents) list.append(render_event(event, config, locale, input.dev === true || input.dev === 'true', onAdd));
+    for (const event of yearEvents) list.append(render_event(event, config, locale, input.dev === true || input.dev === 'true', addLabel, onAdd));
     results.append(list);
   });
   blur_after_pointer_selection(yearSelect);
