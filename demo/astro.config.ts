@@ -21,7 +21,7 @@ export const sitemap_i18n = {
 
 const sitemapExcludedPaths = new Set(['/404', '/404_dynamic', ...themeConfig.i18n.locales.map((locale) => `/${locale}/404`)]);
 
-// Shared SVGO config used by the experimental svgOptimizer, astro-icon, and astro-compress.
+// Shared SVGO config used by the experimental svgOptimizer and astro-icon.
 const svgoConfig: Config = {
   multipass: true,
   floatPrecision: 5,
@@ -175,17 +175,6 @@ export default defineConfig({
     // Expressive Code options live in `ec.config.mjs` in the project root, so both the
     // Markdown integration and the `<Code>` component share the same config.
     astroExpressiveCode(),
-    (await import('astro-compress')).default({
-      CSS: false, // disabled: astro-compress's CSS minifier (csso) strips Tailwind v4's modern `@media (width >= ...)` range syntax, which removes all responsive breakpoints and makes the site render mobile-only. Vite already minifies CSS safely.
-      HTML: {
-        'html-minifier-terser': {
-          removeAttributeQuotes: false,
-        },
-      },
-      SVG: {
-        svgo: svgoConfig,
-      },
-    }),
   ],
 
   adapter: cloudflare({
