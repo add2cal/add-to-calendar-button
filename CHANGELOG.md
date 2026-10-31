@@ -1,5 +1,9 @@
 # ⚡ Changelog (without patches)
 
+## Unreleased
+
+- PRO group overviews expand recurring events from the beginning of the current month through the end of the month 18 calendar months ahead. Calendar actions and detail links retain the original recurring event. Non-recurring event behavior is unchanged.
+
 ## Version 3
 
 - v3.5 : Auto-set end-time if missing

@@ -64,6 +64,16 @@ Also part of the default run (long-standing quick tests):
 
 ## Tier 1 - Reduced Suite (`npm run test:extended`)
 
+### Group GOR - Overview recurrence (`r-GOR-overview-recurrence.test.js`)
+
+- renders occurrence links but sends the original date and identity to add actions in every layout
+- does not duplicate cross-year recurring occurrences and retains all-day duration
+- includes both range edges and counts occurrences before the range
+- respects interval, weekdays, ordinal monthly and leap-year rules
+- preserves local dates across DST and UTC date boundaries, with inclusive UNTIL
+- expands the entire month window, sorts rows and preserves identity without mutation
+- handles simplified recurrence, expired series and dates after the upper bound
+
 ### Group A - Lifecycle & registration (`r-A-lifecycle.test.js`)
 
 - A-01: registers and initializes with minimal config
