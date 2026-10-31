@@ -167,6 +167,10 @@ import 'add-to-calendar-button/i18n/de';
 Normale Browser-Skript-/CDN-Integrationen laden angeforderte Stile und Sprachen weiterhin bei Bedarf als
 kleine Assets und benötigen diese Importe nicht.
 
+Mit `style-source="jsdelivr"` werden fehlende Styles und Sprachen automatisch passend zur laufenden
+Paketversion von jsDelivr geladen. Eigene Trigger verwenden `styleSource: 'jsdelivr'` in `atcb_action`.
+Für eigenes Hosting verweist `style-source` auf das `styles/`-Verzeichnis; `locales/` liegt daneben.
+
 Du kannst außerdem `style-source` verwenden, um die Basis-URL für verzögert geladene Assets zu überschreiben, `load-all-styles`, um
 alle Stile für einen Wechsel zur Laufzeit vorab zu laden, `atcb_register_style(name, css)`, um einen Stil zu registrieren,
 oder `atcb_register_locale(lang, strings)`, um ein Gebietsschema zu registrieren.
