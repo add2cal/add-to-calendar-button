@@ -912,6 +912,45 @@ function getNextOccurrence(rruleStr: string, startDateTime: Date, diff: number, 
   };
 }
 
+// Enumerate presentation dates without advancing DTSTART or changing the export rule.
+// Range bounds are local calendar dates, inclusive, not viewer-zone instants.
+function getOccurrencesInRange(rruleStr: string, startDate: string, startTime: string, tzid: string, from: string, to: string): string[] {
+  const rule = parseRRule(rruleStr);
+  if (!['DAILY', 'WEEKLY', 'MONTHLY', 'YEARLY'].includes(rule.FREQ as string)) return [];
+  if (rule.COUNT !== null && Number(rule.COUNT) < 1) return [];
+  const time = startTime || '00:00';
+  const zone = map_special_time_zones(tzid || 'UTC');
+  const instant = (date: string): Date => new Date(`${date}T${time}:00${toIsoOffset(tzlib_get_offset(zone, date, time))}`);
+  const start = instant(startDate);
+  if (!isFinite(start.getTime())) return [];
+  const startParts = getPartsForTimeZone(start, zone);
+  const result: string[] = [];
+  // Without COUNT, predicates remain anchored to DTSTART even when we skip history.
+  let current = instant(!rule.COUNT && startDate < from ? from : startDate);
+  let count = 0;
+  while (isFinite(current.getTime())) {
+    const parts = getPartsForTimeZone(current, zone);
+    const date = `${parts.year}-${pad2(parts.month)}-${pad2(parts.day)}`;
+    if (date > to) break;
+    if (rule.UNTIL instanceof Date) {
+      if (!startTime) {
+        if (date.replace(/-/g, '') > rule.UNTIL.toISOString().slice(0, 10).replace(/-/g, '')) break;
+      } else if (current > rule.UNTIL) break;
+    }
+    if (matchesFreq(current, rule, start, zone, parts, startParts) && matchesRRule(current, rule, start, zone, parts, startParts)) {
+      count++;
+      if (date >= from) result.push(date);
+      if (rule.COUNT && count >= (rule.COUNT as number)) break;
+    }
+    const next = addLocalDays(current, 1, zone, time, parts);
+    if (next <= current) break;
+    current = next;
+  }
+  return result;
+}
+
+export { getOccurrencesInRange };
+
 // SHARED FUNCTION TO MAP SPECIFIC TIME ZONES
 function map_special_time_zones(timeZone: string): string {
   if (!timeZone) return 'GMT';
