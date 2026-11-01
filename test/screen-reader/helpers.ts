@@ -189,10 +189,13 @@ export async function openList(page: Page, reader: ScreenReaderPlaywright) {
 
 export async function closeWithEscape(page: Page, reader: ScreenReaderPlaywright, trigger: Locator) {
   await checkpointSpeech(reader);
-  await reader.press('Escape');
+  // Capture all speech from the Escape so the trigger announcement that follows
+  // menu/dialog dismissal is retained even under VoiceOver's "initial" capture
+  // mode, which only keeps the first phrase per command.
+  await reader.press('Escape', { capture: true });
   // NVDA can consume the first Escape while leaving focus/browse mode. A second
   // press then reaches the page and dismisses the open menu or dialog.
-  if ((await page.getByRole('menu').isVisible()) || (await page.getByRole('dialog').isVisible())) await reader.press('Escape');
+  if ((await page.getByRole('menu').isVisible()) || (await page.getByRole('dialog').isVisible())) await reader.press('Escape', { capture: true });
   await expect(page.getByRole('menu')).toBeHidden();
   await expect(page.getByRole('dialog')).toHaveCount(0);
   await expect(trigger).toBeFocused();
