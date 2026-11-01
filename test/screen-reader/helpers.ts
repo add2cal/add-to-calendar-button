@@ -129,14 +129,14 @@ export async function tabTo(reader: ScreenReaderPlaywright, target: Locator, spe
 // Exercise the reading cursor separately from keyboard focus. Hidden background
 // text must not appear when traversing a modal's content.
 export async function readTo(reader: ScreenReaderPlaywright, expected: RegExp, forbidden?: RegExp) {
-  const currentOutput = await currentReaderOutput(reader);
+  // Snapshot before reading the current item: NVDA may append the target while
+  // those reads are in flight. A later checkpoint would silently discard it.
+  await checkpointSpeech(reader);
+  const currentOutput = `${await currentReaderOutput(reader)}\n${await readerOutputSinceCheckpoint(reader)}`;
   if (forbidden) expect(currentOutput).not.toMatch(forbidden);
   if (expected.test(currentOutput)) return;
-  // Keep one checkpoint for the full traversal. NVDA can append an announcement
-  // just after a navigation command resolves; resetting the checkpoint before the
-  // next step would discard that valid output even though it appears in the final
-  // speech log.
-  await checkpointSpeech(reader);
+  // Keep that checkpoint for the entire traversal so delayed announcements are
+  // retained rather than discarded between navigation commands.
   for (let step = 0; step < 20; step++) {
     await reader.next();
     const output = await readerOutputSinceCheckpoint(reader);
