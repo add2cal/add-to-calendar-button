@@ -50,7 +50,15 @@ test('readTo still rejects a missing target after bounded navigation', async () 
       log.push('Other content');
     },
   };
-  await assert.rejects(readTo(reader, /Submit.*button/i), /within 20 screen-reader steps/);
+  await assert.rejects(readTo(reader, /Submit.*button/i), (error) => {
+    assert.match(error.message, /within 20 screen-reader steps/);
+    const diagnostics = JSON.parse(error.message.split('\nreadTo diagnostics: ')[1]);
+    assert.deepEqual(diagnostics.checkpoint, { speech: 0, items: 0 });
+    assert.equal(diagnostics.steps.length, 20);
+    assert.equal(diagnostics.speechLength, 20);
+    assert.match(diagnostics.steps[0].output, /Other content/);
+    return true;
+  });
   assert.equal(nextCalls, 20);
 });
 
