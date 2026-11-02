@@ -11,6 +11,8 @@
  * The load-all-styles attribute prefetches every delta for runtime style switching.
  */
 import { resolve_script_base } from '../core/script-base';
+import { resolve_style_source } from '../core/style-source';
+import { atcbVersion } from '../core/globals';
 import type { ATCBConfig } from '../types';
 
 // build hook: the minified css of core + default gets inlined here (see scripts/build.mjs)
@@ -70,8 +72,7 @@ function register_style(name: string, css: string): void {
 
 function style_base(data: ATCBConfig): string {
   if (data.styleSource && data.styleSource !== '') {
-    const src = String(data.styleSource);
-    return src.endsWith('/') ? src : src + '/';
+    return resolve_style_source(String(data.styleSource), atcbVersion);
   }
   if (scriptBase === '') {
     return '';
