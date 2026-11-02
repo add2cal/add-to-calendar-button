@@ -118,7 +118,7 @@ const en: LocaleContent = {
     webviewTwo: "You are opening the device's default browser instead of using any in-app WebView.",
     webviewThree: 'You have a distinctive .ics file on some server and can refer to it via the "icsFile" option.',
     loadingOne: 'When bundling, import exactly what you use - no fetch will ever happen for it:',
-    loadingTwo: 'With the script tag, assets load from the script\'s own origin. Override the location via the <a href="{configuration}#stylesource">styleSource</a> option if you host them elsewhere.',
+    loadingTwo: 'With a script tag, assets load automatically. For on-demand loading from jsDelivr with npm or self-hosted scripts, set style-source="jsdelivr", or styleSource: "jsdelivr" in atcb_action. Assets match the running package version. See <a href="{configuration}#stylesource">styleSource</a> for custom hosting.',
     loadingThree: 'If you switch the buttonStyle at runtime, set <a href="{configuration}#load-all-styles">loadAllStyles</a> to prefetch all deltas.',
   },
   demo: {
@@ -239,7 +239,7 @@ const de: LocaleContent = {
     webviewTwo: 'Du öffnest in der App den Standard-Browser des Geräts und nutzt nicht den WebView.',
     webviewThree: 'Du hast eine dedizierte .ics-Datei zur Verfügung und verweist auf diese über die "icsFile"-Option.',
     loadingOne: 'Beim Bundling importierst du exakt das, was du nutzt - dafür findet dann nie eine Netzwerk-Anfrage statt:',
-    loadingTwo: 'Mit dem Script-Tag laden Assets vom Origin des Skripts. Über die <a href="{configuration}#stylesource">styleSource</a>-Option kannst du den Ort überschreiben.',
+    loadingTwo: 'Mit einem Script-Tag laden Dateien automatisch. Für dynamisches Laden von jsDelivr bei npm oder selbst gehosteten Skripten setze style-source="jsdelivr" oder styleSource: "jsdelivr" in atcb_action. Die Dateien passen zur laufenden Paketversion. Siehe <a href="{configuration}#stylesource">styleSource</a> für eigenes Hosting.',
     loadingThree: 'Wenn du den buttonStyle zur Laufzeit wechselst, lädt <a href="{configuration}#load-all-styles">loadAllStyles</a> alle Deltas vor.',
   },
   demo: {
@@ -357,7 +357,7 @@ const fr: LocaleContent = {
     webviewTwo: 'Vous ouvrez le navigateur par défaut de l’appareil au lieu d’utiliser une WebView intégrée.',
     webviewThree: 'Vous disposez d’un fichier .ics distinct sur un serveur et pouvez le référencer avec l’option « icsFile ».',
     loadingOne: 'Lors du bundling, importez exactement ce que vous utilisez : aucune requête ne sera effectuée pour ces ressources :',
-    loadingTwo: 'Avec la balise script, les ressources sont chargées depuis l’origine du script. Remplacez cet emplacement avec l’option <a href="{configuration}#stylesource">styleSource</a> si vous les hébergez ailleurs.',
+    loadingTwo: 'Avec une balise script, les ressources se chargent automatiquement. Avec npm ou un script auto-hébergé, utilisez style-source="jsdelivr" ou styleSource: "jsdelivr" dans atcb_action pour charger les ressources à la demande avec la même version que le paquet. Voir <a href="{configuration}#stylesource">styleSource</a> pour votre propre hébergement.',
     loadingThree: 'Si vous changez buttonStyle à l’exécution, activez <a href="{configuration}#load-all-styles">loadAllStyles</a> pour précharger toutes les différences.',
   },
   demo: {
@@ -471,7 +471,7 @@ const es: LocaleContent = {
     webviewTwo: 'Abres el navegador predeterminado del dispositivo en lugar de una WebView integrada.',
     webviewThree: 'Tienes un archivo .ics específico en un servidor y puedes referenciarlo mediante «icsFile».',
     loadingOne: 'Al empaquetar, importa exactamente lo que utilizas; nunca habrá una solicitud para ello:',
-    loadingTwo: 'Con la etiqueta script, los recursos se cargan desde el origen del script. Cambia la ubicación mediante <a href="{configuration}#stylesource">styleSource</a> si los alojas en otro sitio.',
+    loadingTwo: 'Con una etiqueta script, los recursos se cargan automáticamente. Con npm o un script propio, usa style-source="jsdelivr" o styleSource: "jsdelivr" en atcb_action para cargarlos bajo demanda con la misma versión del paquete. Consulta <a href="{configuration}#stylesource">styleSource</a> para tu propio servidor.',
     loadingThree: 'Si cambias buttonStyle en tiempo de ejecución, activa <a href="{configuration}#load-all-styles">loadAllStyles</a> para precargar todas las diferencias.',
   },
   demo: {
