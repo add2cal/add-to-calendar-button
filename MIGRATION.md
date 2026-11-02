@@ -171,6 +171,15 @@ You can also use `style-source` to override the base URL for lazy assets, `load-
 prefetch all styles for runtime switching, `atcb_register_style(name, css)` to register a style,
 or `atcb_register_locale(lang, strings)` to register a locale.
 
+For jsDelivr, use `style-source="jsdelivr"` to load styles and languages from the
+same exact version as the running package. Custom triggers accept the same shortcut
+as `styleSource: 'jsdelivr'` in `atcb_action`. You can also supply a jsDelivr package
+URL, such as `https://cdn.jsdelivr.net/npm/add-to-calendar-button@3`; package-root,
+`/dist`, browser-script, and full `/dist/styles/` URLs are normalized automatically.
+Explicit versions and tags are preserved; an unversioned URL follows jsDelivr's
+latest release. Other custom hosts still require the styles directory URL, with
+locales in its sibling `locales/` directory.
+
 Full locales are supported. For example, `language="en_GB"` or `language="en-GB"` uses regional
 translations when present and preserves the region for date formatting. Ukrainian (`uk`) is now
 part of the public language type.

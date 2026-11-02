@@ -137,13 +137,28 @@ export async function readTo(reader: ScreenReaderPlaywright, expected: RegExp, f
   if (expected.test(currentOutput)) return;
   // Keep that checkpoint for the entire traversal so delayed announcements are
   // retained rather than discarded between navigation commands.
+  const steps: { step: number; output: string }[] = [];
   for (let step = 0; step < 20; step++) {
     await reader.next();
     const output = await readerOutputSinceCheckpoint(reader);
+    steps.push({ step: step + 1, output: output.slice(-1000) });
     if (forbidden) expect(output).not.toMatch(forbidden);
     if (expected.test(output)) return;
   }
-  throw new Error(`Could not read ${expected} within 20 screen-reader steps.`);
+  // Synthetic fixture output only. Expose exactly what the predicate consumed,
+  // not just the later attachment, so capture/checkpoint mismatches are visible.
+  const speech = [...(await reader.spokenPhraseLog())];
+  const items = [...(await reader.itemTextLog())];
+  const diagnostics = {
+    checkpoint: readerOffsets.get(reader),
+    initialOutput: currentOutput,
+    steps,
+    speechLength: speech.length,
+    itemLength: items.length,
+    speech: speech.join('\n').slice(-4000),
+    items: items.join('\n').slice(-4000),
+  };
+  throw new Error(`Could not read ${expected} within 20 screen-reader steps.\nreadTo diagnostics: ${JSON.stringify(diagnostics)}`);
 }
 
 export async function openList(page: Page, reader: ScreenReaderPlaywright) {
