@@ -60,6 +60,7 @@ Also part of the default run (long-standing quick tests):
 
 - `test/wc-tests/wc-load.test.js`: has a generated button id and shadowDom element
 - `test/wc-tests/recurrence-tz.test.js`: does not shift startDate for weekly BYDAY near midnight in Europe/Berlin
+- `test/wc-tests/recurrence-tz.test.js`: keeps bounded recurrence dates consistent between next and range wrappers; next/range wrappers agree on exhausted COUNT, inclusive timed/all-day UNTIL and DST dates
 - `test/server-side-init.test.js`: CommonJS bundle imports in Node without executing browser-only code
 
 ## Tier 1 - Reduced Suite (`npm run test:extended`)

@@ -783,6 +783,22 @@ function matchesImplicitRules(date: Date, rrule: ATCBRRuleParts, startDate: Date
   return true;
 }
 
+// Walk matching local dates once; callers retain their own window and selection policy.
+function* iterateOccurrences(rule: ATCBRRuleParts, start: Date, tzid: string, time: string, { current = start, count = 0, through, maxIterations = Infinity }: { current?: Date; count?: number; through?: Date; maxIterations?: number } = {}) {
+  const startParts = getPartsForTimeZone(start, tzid);
+  while (isFinite(current.getTime()) && maxIterations-- > 0) {
+    if ((through && current > through) || (rule.UNTIL instanceof Date && current > rule.UNTIL)) return;
+    const parts = getPartsForTimeZone(current, tzid);
+    if (matchesFreq(current, rule, start, tzid, parts, startParts) && matchesRRule(current, rule, start, tzid, parts, startParts)) {
+      yield { date: current, parts, count: ++count };
+      if (rule.COUNT && count >= (rule.COUNT as number)) return;
+    }
+    const next = addLocalDays(current, 1, tzid, time, parts);
+    if (next <= current) return;
+    current = next;
+  }
+}
+
 // Get next occurrence and last if no next
 function getNextOccurrence(rruleStr: string, startDateTime: Date, diff: number, allday: boolean, tzid = 'UTC'): { nextOccurrence: Date; adjustedCount: number } {
   const rrule = parseRRule(rruleStr);
@@ -802,7 +818,6 @@ function getNextOccurrence(rruleStr: string, startDateTime: Date, diff: number, 
   let currentDate = startDateTime;
   const occurrences: Date[] = [];
   let count = 0;
-  let maxIterations = 10000;
   // ---------- fast-forward for old start dates ----------
   // Stepping day by day through decades is slow and silently capped by maxIterations.
   // Jump arithmetically to a period boundary aligned with the start, at least two
@@ -864,25 +879,11 @@ function getNextOccurrence(rruleStr: string, startDateTime: Date, diff: number, 
       }
     }
   }
-  // Collect all valid occurrences up to COUNT or UNTIL, or until first future match is found
-  while (true) {
-    // Stop before pushing when we've passed UNTIL
-    if (rrule.UNTIL && currentDate > (rrule.UNTIL as Date)) break;
-    const currentParts = getPartsForTimeZone(currentDate, tzid);
-    const isMatch = matchesFreq(currentDate, rrule, startDateTime, tzid, currentParts, startParts) && matchesRRule(currentDate, rrule, startDateTime, tzid, currentParts, startParts);
-    if (isMatch) {
-      occurrences.push(currentDate);
-      count++;
-      // If there's a COUNT limit, stop when reached
-      if (rrule.COUNT && count >= (rrule.COUNT as number)) break;
-      // If no end (COUNT/UNTIL), stop as soon as we've captured the first occurrence not before upperEnd
-      if (!rrule.COUNT && !rrule.UNTIL && (allday ? currentDate >= upperEnd : currentDate > upperEnd)) break;
-    }
-    if (--maxIterations <= 0) {
-      // Reached safety cap while generating occurrences
-      break;
-    }
-    currentDate = addLocalDays(currentDate, 1, tzid, baseHhmm, currentParts);
+  // Collect all valid occurrences up to COUNT or UNTIL, or until first future match is found.
+  for (const occurrence of iterateOccurrences(rrule, startDateTime, tzid, baseHhmm, { current: currentDate, count: skippedOccurrences, maxIterations: 10000 })) {
+    occurrences.push(occurrence.date);
+    count = occurrence.count;
+    if (!rrule.COUNT && !rrule.UNTIL && (allday ? occurrence.date >= upperEnd : occurrence.date > upperEnd)) break;
   }
   // Find next occurrence (first not before upperEnd)
   let nextDate: Date | null = null;
@@ -923,28 +924,15 @@ function getOccurrencesInRange(rruleStr: string, startDate: string, startTime: s
   const instant = (date: string): Date => new Date(`${date}T${time}:00${toIsoOffset(tzlib_get_offset(zone, date, time))}`);
   const start = instant(startDate);
   if (!isFinite(start.getTime())) return [];
-  const startParts = getPartsForTimeZone(start, zone);
+  // Date-only UNTIL is inclusive in the event's local calendar, not at UTC midnight.
+  if (!startTime && rule.UNTIL instanceof Date) rule.UNTIL = instant(rule.UNTIL.toISOString().slice(0, 10));
   const result: string[] = [];
   // Without COUNT, predicates remain anchored to DTSTART even when we skip history.
-  let current = instant(!rule.COUNT && startDate < from ? from : startDate);
-  let count = 0;
-  while (isFinite(current.getTime())) {
-    const parts = getPartsForTimeZone(current, zone);
+  const current = instant(!rule.COUNT && startDate < from ? from : startDate);
+  for (const occurrence of iterateOccurrences(rule, start, zone, time, { current, through: instant(to) })) {
+    const { parts } = occurrence;
     const date = `${parts.year}-${pad2(parts.month)}-${pad2(parts.day)}`;
-    if (date > to) break;
-    if (rule.UNTIL instanceof Date) {
-      if (!startTime) {
-        if (date.replace(/-/g, '') > rule.UNTIL.toISOString().slice(0, 10).replace(/-/g, '')) break;
-      } else if (current > rule.UNTIL) break;
-    }
-    if (matchesFreq(current, rule, start, zone, parts, startParts) && matchesRRule(current, rule, start, zone, parts, startParts)) {
-      count++;
-      if (date >= from) result.push(date);
-      if (rule.COUNT && count >= (rule.COUNT as number)) break;
-    }
-    const next = addLocalDays(current, 1, zone, time, parts);
-    if (next <= current) break;
-    current = next;
+    if (date >= from) result.push(date);
   }
   return result;
 }
