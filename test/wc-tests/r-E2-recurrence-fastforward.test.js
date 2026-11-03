@@ -10,7 +10,7 @@
  * property - the shifted twin is recent enough to never trigger a jump.
  */
 import { expect } from '@open-wc/testing';
-import { getNextOccurrence } from '../../src/core/dates.ts';
+import { getNextOccurrence, getOccurrencesInRange } from '../../src/core/dates.ts';
 
 // build a UTC Date for a local wall-clock time in a tz-agnostic way (tests run in UTC)
 function utcDate(dateStr, timeStr = '10:00') {
@@ -81,6 +81,9 @@ describe('Group E2 - recurrence fast-forward', () => {
     const expected = shiftDays(start, 499 * 7);
     expect(result.nextOccurrence.toISOString(), 'lands on the 500th occurrence').to.equal(expected.toISOString());
     expect(result.adjustedCount, 'series fully consumed').to.be.lessThan(2);
+    const dates = getOccurrencesInRange('RRULE:FREQ=WEEKLY;INTERVAL=1;COUNT=500', '1980-01-07', '10:00', 'UTC', '1989-01-01', '1990-01-01');
+    expect(dates.at(-1), 'range and next wrappers agree on exhausted COUNT').to.equal(expected.toISOString().slice(0, 10));
+    expect(getOccurrencesInRange('RRULE:FREQ=WEEKLY;INTERVAL=1;COUNT=500', '1980-01-07', '10:00', 'UTC', '1990-01-01', '1990-02-01')).to.deep.equal([]);
   });
 
   it('E2-06: exhausted UNTIL series lands on the final occurrence before UNTIL (fast-forwarded)', () => {
@@ -92,6 +95,11 @@ describe('Group E2 - recurrence fast-forward', () => {
     // start was a monday - the final occurrence keeps the weekday
     expect(result.nextOccurrence.getUTCDay(), 'weekday preserved').to.equal(start.getUTCDay());
     expect(result.adjustedCount, 'series fully consumed').to.be.lessThan(2);
+    const dates = getOccurrencesInRange('RRULE:FREQ=WEEKLY;INTERVAL=1;UNTIL=19920610T235959Z', '1980-01-07', '10:00', 'UTC', '1992-06-01', '1992-07-01');
+    expect(dates.at(-1), 'range and next wrappers agree on exhausted UNTIL').to.equal(result.nextOccurrence.toISOString().slice(0, 10));
+    expect(getOccurrencesInRange('RRULE:FREQ=DAILY;UNTIL=20010102', '2001-01-01', '', 'America/New_York', '2001-01-01', '2001-01-03')).to.deep.equal(['2001-01-01', '2001-01-02']);
+    const allDay = getNextOccurrence('RRULE:FREQ=DAILY;UNTIL=20010102', utcDate('2001-01-01', '12:00'), 0, true, 'UTC');
+    expect(allDay.nextOccurrence.toISOString()).to.equal('2001-01-02T12:00:00.000Z');
   });
 
   it('E2-07: bounded rules with BY* filters keep the exact iteration (no jump, correct within the historic window)', () => {

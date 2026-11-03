@@ -60,9 +60,20 @@ Also part of the default run (long-standing quick tests):
 
 - `test/wc-tests/wc-load.test.js`: has a generated button id and shadowDom element
 - `test/wc-tests/recurrence-tz.test.js`: does not shift startDate for weekly BYDAY near midnight in Europe/Berlin
+- `test/wc-tests/recurrence-tz.test.js`: keeps bounded recurrence dates consistent between next and range wrappers; next/range wrappers agree on exhausted COUNT, inclusive timed/all-day UNTIL and DST dates
 - `test/server-side-init.test.js`: CommonJS bundle imports in Node without executing browser-only code
 
 ## Tier 1 - Reduced Suite (`npm run test:extended`)
+
+### Group GOR - Overview recurrence (`r-GOR-overview-recurrence.test.js`)
+
+- renders occurrence links but sends the original date and identity to add actions in every layout
+- does not duplicate cross-year recurring occurrences and retains all-day duration
+- includes both range edges and counts occurrences before the range
+- respects interval, weekdays, ordinal monthly and leap-year rules
+- preserves local dates across DST and UTC date boundaries, with inclusive UNTIL
+- expands the entire month window, sorts rows and preserves identity without mutation
+- handles simplified recurrence, expired series and dates after the upper bound
 
 ### Group A - Lifecycle & registration (`r-A-lifecycle.test.js`)
 

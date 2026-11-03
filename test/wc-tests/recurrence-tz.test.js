@@ -1,5 +1,6 @@
 import { expect } from '@open-wc/testing';
 import { decorate_data } from '../../src/core/decorate.ts';
+import { getNextOccurrence, getOccurrencesInRange } from '../../src/core/dates.ts';
 
 describe('recurrence timezone evaluation', () => {
   it('does not shift startDate for weekly BYDAY near midnight in Europe/Berlin', async function () {
@@ -15,5 +16,22 @@ describe('recurrence timezone evaluation', () => {
     });
     expect(decorated.dates[0].startDate).to.equal('2066-01-12');
     expect(decorated.dates[0].startTime).to.equal('00:20');
+  });
+
+  it('keeps bounded recurrence dates consistent between next and range wrappers', () => {
+    const countRule = 'RRULE:FREQ=WEEKLY;COUNT=500';
+    const counted = getNextOccurrence(countRule, new Date('1980-01-07T10:00:00Z'), 0, false, 'UTC');
+    const countedDates = getOccurrencesInRange(countRule, '1980-01-07', '10:00', 'UTC', '1989-01-01', '1990-01-01');
+    expect(countedDates.at(-1)).to.equal(counted.nextOccurrence.toISOString().slice(0, 10));
+    expect(counted.adjustedCount).to.equal(1);
+    expect(getOccurrencesInRange(countRule, '1980-01-07', '10:00', 'UTC', '1990-01-01', '1990-02-01')).to.deep.equal([]);
+
+    const untilRule = 'RRULE:FREQ=DAILY;UNTIL=20011105T050000Z';
+    const until = getNextOccurrence(untilRule, new Date('2001-10-27T04:00:00Z'), 0, false, 'America/New_York');
+    expect(until.nextOccurrence.toISOString()).to.equal('2001-11-05T05:00:00.000Z');
+    expect(getOccurrencesInRange(untilRule, '2001-10-27', '00:00', 'America/New_York', '2001-11-04', '2001-11-06')).to.deep.equal(['2001-11-04', '2001-11-05']);
+    expect(getOccurrencesInRange('RRULE:FREQ=DAILY;UNTIL=20010102', '2001-01-01', '', 'America/New_York', '2001-01-01', '2001-01-03')).to.deep.equal(['2001-01-01', '2001-01-02']);
+    const allDay = getNextOccurrence('RRULE:FREQ=DAILY;UNTIL=20010102', new Date('2001-01-01T12:00:00Z'), 0, true, 'UTC');
+    expect(allDay.nextOccurrence.toISOString()).to.equal('2001-01-02T12:00:00.000Z');
   });
 });
