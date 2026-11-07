@@ -3,7 +3,7 @@ import '../../dist/module/index.js';
 import { atcb_generate_ssr_html } from '../../dist/ssr/index.js';
 import { interceptWindowOpen } from '../helpers/capture.js';
 
-const literal = '<hjhj> literal\\n &lt;hjhj&gt; &#60;hjhj&#62; &amp;';
+const literal = '<hjhj> literal\\n &lt;hjhj&gt; &#60;hjhj&#62; &amp; &rarr; &#8594; &amp;rarr; &#91;b&#93; &lt;br&gt;';
 
 describe('Literal descriptions', () => {
   for (const mode of ['attributes', 'json', 'ssr']) {
@@ -29,7 +29,7 @@ describe('Literal descriptions', () => {
         const rendered = document.createElement('div');
         rendered.innerHTML = details;
         expect(rendered.querySelector('hjhj')).to.equal(null);
-        expect(rendered.textContent).to.equal(literal + 'bold');
+        expect(rendered.textContent).to.equal('<hjhj> literal\\n <hjhj> <hjhj> & → → &rarr; [b] <br>bold');
         expect(rendered.querySelector('b').textContent).to.equal('bold');
         expect(rendered.querySelectorAll('br')).to.have.length(1);
       } finally {

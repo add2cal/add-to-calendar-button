@@ -1,5 +1,6 @@
 import { tzlib_get_offset, tzlib_get_timezones } from 'timezones-ical-library';
 import { translate_via_time_zone, format_datetime, map_special_time_zones } from './dates';
+import { decodeHTMLStrict } from 'entities/decode';
 import { description_html, rewrite_html_elements, secure_content } from './text';
 import { generate_uuid, apply_transformation } from './pure-util';
 import { decorate_data_rrule, decorate_data_recurring_events } from './decorate-recurrence';
@@ -154,9 +155,9 @@ function decorate_data_description(data: ATCBConfig, i: number): ATCBConfig {
     // Legacy raw breaks remain supported; other raw tags stay literal text.
     description = description.replace(/<br\s*\/?>/gi, '[br]');
     // store a clean description copy without the URL magic for Yahoo, MS Teams, ...
-    const descriptionHtmlFree = rewrite_html_elements(description, true, false, true);
+    const descriptionHtmlFree = decodeHTMLStrict(rewrite_html_elements(description, true, false, true));
     // ... and iCal
-    const descriptionHtmlFreeICal = rewrite_html_elements(description, true, true, true);
+    const descriptionHtmlFreeICal = decodeHTMLStrict(rewrite_html_elements(description, true, true, true));
     // ...and transform pseudo elements for the regular one
     description = description_html(description);
     data.dates![`${i}`] = { ...data.dates![`${i}`], description, descriptionHtmlFree, descriptionHtmlFreeICal };

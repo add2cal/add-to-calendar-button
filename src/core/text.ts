@@ -1,3 +1,4 @@
+import { decodeHTMLStrict } from 'entities/decode';
 import { defaultTarget } from './globals';
 
 // Shared literal-text encoding for browser UI, calendar links, and SSR.
@@ -27,7 +28,7 @@ function safe_html(content: string): string {
 function assert_no_script(data: unknown): void {
   if (typeof data === 'string') {
     // Detection only: never decode the value that is rendered or serialized.
-    const decoded = data.replace(/\\u([a-f0-9]{4})/gi, (_match, code: string) => String.fromCharCode(parseInt(code, 16))).replace(/&(?:amp;)*(?:lt|#0*60|#x0*3c);/gi, '<');
+    const decoded = decodeHTMLStrict(data.replace(/\\u([a-f0-9]{4})/gi, (_match, code: string) => String.fromCharCode(parseInt(code, 16))).replace(/&(?:amp;)*(?:lt|#0*60|#x0*3c);/gi, '<'));
     if (/<\/?script\b/i.test(decoded)) {
       throw new Error('Add to Calendar Button: script tags are not allowed in fields');
     }
@@ -132,9 +133,10 @@ function rewrite_html_elements(content: string, clear = false, iCalBreaks = fals
     });
     content = content.replace(/\[\/?(hr|[pbui]|strong|em|li|ul|ol|h\d)\]/gi, '');
     content = content.replace(/\{\/?(hr|[pbui]|strong|em|li|ul|ol|h\d)\}/gi, '');
-    // preserve non-breaking spaces as plain text before removing other entities
-    content = content.replace(/&(?:nbsp|#160|#xa0);/gi, '\u00a0');
-    if (!preserveEntities) content = content.replace(/&[#a-z0-9]{1,9};/gi, '');
+    if (!preserveEntities) {
+      // Legacy clear-mode callers retain their existing entity handling.
+      content = content.replace(/&(?:nbsp|#160|#xa0);/gi, '\u00a0').replace(/&[#a-z0-9]{1,9};/gi, '');
+    }
   } else {
     // and build html for the rest
     // supporting: br, hr, p, strong, u, i, em, li, ul, ol, h (like h1, h2, h3, ...), url (= a)
@@ -158,24 +160,26 @@ function description_html(content: string): string {
   return normalized
     .split(tokens)
     .map((part, index) => {
-      if (index % 2 === 0) return escape_html_text(part);
+      if (index % 2 === 0) return escape_html_text(decodeHTMLStrict(part));
       if (/^[\r\n]/.test(part)) return '<br>';
       const link = part.match(/^(?:\[url\]([\s\S]*)\[\/url\]|\{url\}([\s\S]*)\{\/url\})$/i);
-      return link ? parse_url_code(link[1] ?? link[2]!) : rewrite_html_elements(part);
+      return link ? parse_url_code(link[1] ?? link[2]!, true) : rewrite_html_elements(part);
     })
     .join('');
 }
 
-function parse_url_code(input: string): string {
+function parse_url_code(input: string, decodeLabel = false): string {
   const urlText = input.split('|');
   const url = (urlText[0] || '').trim();
-  const text = (function () {
+  const label = (function () {
     if (urlText.length > 1 && urlText[1] != '') {
       return urlText[1]!;
     } else {
       return url;
     }
   })();
+  // Decode labels only, after token parsing. Navigation attributes stay raw.
+  const text = decodeLabel ? decodeHTMLStrict(label) : label;
   // descriptions often carry third-party content: only linkify explicit web/calendar/
   // mail schemes (or relative urls) and escape everything - anything else stays text
   // eslint-disable-next-line no-control-regex -- stripping control characters is the point: browsers ignore them when parsing schemes, so evasion like java\tscript: must be caught

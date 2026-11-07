@@ -88,9 +88,13 @@ its clear modes produce plain text or ICS text without HTML encoding.
 legacy tag stripping is retained outside descriptions and custom-variable input.
 Descriptions remain literal through ingestion. Variables are substituted before all
 description copies are derived; other variable destinations retain legacy cleanup.
-`description_html` encodes literal spans (including entity spellings) exactly once
-and renders only supported pseudo tokens and breaks. Plain description copies retain
-literal markup and entity spellings rather than stripping them.
+`description_html` recognizes formatting on the original input, then decodes named/numeric
+character references once in literal spans and link labels using `entities/decode` before
+HTML text encoding. Plain description copies decode once after pseudo formatting is removed.
+Decoded angle brackets and pseudo tokens remain text, never markup or formatting; navigation
+attributes are not entity-decoded. Unknown references remain literal, and double-encoded
+references are not recursively decoded. The strict decoder requires semicolons and stays
+DOM-free; its entity table is bundled to preserve full named-reference compatibility.
 Script tags in field values are rejected rather than silently stripped, including
 entity-encoded opening brackets and nested configuration values. Validation repeats
 this check after decoration/custom-variable substitution; SSR applies the same policy.
@@ -101,6 +105,8 @@ before serialization; literal backslash+n is escaped as a literal backslash foll
 by n, never interpreted as a break. Raw `<br>` remains a supported legacy break.
 Structured attributes and inline JSON text are parsed before field-aware cleanup;
 SSR attribute encoding is decoded once by HTML parsing before client ingestion.
+Attribute parsing/security errors are not swallowed by inline JSON fallback. Missing
+attribute-field errors are retained when no inline JSON is provided.
 
 ## Data flow: interaction
 

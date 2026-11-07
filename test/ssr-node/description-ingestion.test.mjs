@@ -24,6 +24,19 @@ const { decorate_data, validate, generate_google, resultChannel } = await import
 const host = (attrs = {}, textContent = '') => ({ hasAttribute: (key) => Object.hasOwn(attrs, key), getAttribute: (key) => attrs[key] ?? null, textContent, innerHTML: textContent.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;') });
 const literal = '<hjhj> literal\\n &lt;hjhj&gt; &#60;hjhj&#62; &amp;';
 
+test('DESC-IN-05: attribute script rejection is not hidden by the inline JSON fallback', async () => {
+  for (const description of ['\\n<fhsdjf><script>', '\\n&lt;script&gt;']) {
+    await assert.rejects(() => process_inline_data(host({ name: 'Description regression', 'start-date': '2050-06-15', description })), /script tags are not allowed/i);
+  }
+  await assert.rejects(() => process_inline_data(host({ name: 'Description regression' })), /required setting missing/i);
+});
+
+test('DESC-IN-06: inline JSON still works with presentation attributes and empty input stays diagnostic', async () => {
+  const input = { name: 'Description regression', startDate: '2050-06-15', description: '&rarr; literal\\n' };
+  assert.deepEqual(await process_inline_data(host({ debug: '' }, JSON.stringify(input))), input);
+  await assert.rejects(() => process_inline_data(host()), /No data provided/);
+});
+
 test('DESC-IN-01: description and structured attributes preserve literal text and JSON escapes', () => {
   const input = read_attributes(host({ description: literal, dates: JSON.stringify([{ description: literal + '\r\nEND:VEVENT' }]), 'custom-var': JSON.stringify({ value: literal }), name: '<b>Title</b>' }));
   assert.equal(input.description, literal);
@@ -57,10 +70,10 @@ test('DESC-IN-04: playground description attribute reaches Google details as lit
     try {
       generate_google(data, data.dates[0]);
       const details = new URL(resultChannel.close()).searchParams.get('details');
-      assert.equal(details, description === '\\n<fhsdjf>' ? '\\n&lt;fhsdjf&gt;' : '\\n&amp;lt;fhsdjf&amp;gt;');
+      assert.equal(details, '\\n&lt;fhsdjf&gt;');
       assert.equal(
         details.replace(/&(amp|lt|gt);/g, (_, entity) => ({ amp: '&', lt: '<', gt: '>' })[entity]),
-        description,
+        '\\n<fhsdjf>',
       );
     } finally {
       resultChannel.close();

@@ -127,6 +127,7 @@
     "prepack": "npm run build:min"
   },
   "dependencies": {
+    "entities": "^6.0.1",
     "lit": "^3.3.3",
     "timezones-ical-library": "^2.4.0"
   },

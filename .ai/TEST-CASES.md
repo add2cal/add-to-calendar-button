@@ -94,10 +94,14 @@ Description preservation cases also run in the default suite:
 - DESC-03: description links encode literal labels and attributes exactly once
 - DESC-04: every provider transports descriptions in its own text or HTML format
 - DESC-05: custom variable replacement keeps dollar syntax literal and script rejection intact
+- DESC-06: character references decode once as text across rich, plain and ICS outputs
+- DESC-07: decoded text never becomes formatting, a link attribute or a line break
 - DESC-IN-01: description and structured attributes preserve literal text and JSON escapes
 - DESC-IN-02: inline JSON is parsed before field cleanup without deleting literal escapes
 - DESC-IN-03: SSR attributes round-trip literal descriptions through client ingestion
 - DESC-IN-04: playground description attribute reaches Google details as literal HTML text
+- DESC-IN-05: attribute script rejection is not hidden by the inline JSON fallback
+- DESC-IN-06: inline JSON still works with presentation attributes and empty input stays diagnostic
 - DESC-UI-attributes: literal descriptions survive ingestion and provider HTML without becoming markup
 - DESC-UI-json: literal descriptions survive ingestion and provider HTML without becoming markup
 - DESC-UI-ssr: literal descriptions survive ingestion and provider HTML without becoming markup

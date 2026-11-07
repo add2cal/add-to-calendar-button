@@ -502,17 +502,17 @@ if (isBrowser()) {
 
 // process inline data
 async function process_inline_data(el: ATCBHostElement, debug = false): Promise<ATCBInputConfig> {
-  let data: ATCBInputConfig;
+  // Attribute parsing/security failures must not be mistaken for JSON mode.
+  let data: ATCBInputConfig = read_attributes(el);
   try {
-    // Attempt to read attributes directly and validate
-    data = read_attributes(el);
     await check_required(data);
-  } catch {
+  } catch (attributeError) {
     // Detect script markup before textContent discards element wrappers.
     assert_no_script(el.innerHTML);
     // If the above fails, parse the inline JSON text before field cleanup.
     const slotInput = el.textContent?.trim();
     if (!slotInput) {
+      if (Object.keys(data).length > 0) throw attributeError;
       throw new Error('Add to Calendar Button generation failed: No data provided.');
     }
     try {
