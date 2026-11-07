@@ -10,7 +10,7 @@ test('FIELD-01: iCalendar TEXT escapes every real newline', () => {
   for (const newline of ['\r\n', '\r', '\n']) {
     assert.equal(rewrite_ical_text('Before' + newline + 'After'), 'Before\\nAfter');
   }
-  assert.equal(rewrite_ical_text('Before\\nAfter'), 'Before\\nAfter');
+  assert.equal(rewrite_ical_text('Before\\nAfter'), 'Before\\\\nAfter');
   assert.equal(rewrite_ical_text('a;b,c\\d'), 'a\\;b\\,c\\\\d');
 });
 
@@ -32,4 +32,12 @@ test('FIELD-04: URI fields cannot carry literal newlines', () => {
     assert.equal(secure_url('https://example.com/' + newline + 'X-FIELD:Injected', false), false);
   }
   assert.equal(secure_url('https://example.com/?q=%0A', false), true);
+});
+
+test('FIELD-05: cleanup preserves literal descriptions and variables without changing other fields', () => {
+  const description = '<hjhj> literal\\n &lt;hjhj&gt; &#60;hjhj&#62; &amp;';
+  const data = { name: '<b>Title</b>', description, dates: [{ description }], customVar: { text: description } };
+  assert.deepEqual(secure_content(data), { ...data, name: 'Title' });
+  assert.equal(data.name, '<b>Title</b>');
+  assert.equal(Object.hasOwn(secure_content(JSON.parse('{"description":"<hjhj>","__proto__":{"polluted":true}}')), '__proto__'), false);
 });

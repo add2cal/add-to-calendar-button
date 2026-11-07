@@ -24,7 +24,7 @@ separate VoiceOver + NVDA jobs.
 
 | Script                       | Tier                | Content                                                                                                        | When                   |
 | ---------------------------- | ------------------- | -------------------------------------------------------------------------------------------------------------- | ---------------------- |
-| `npm run test`               | Smoke               | 24 browser cases plus 9 Node field-security cases                                                              | DEFAULT / PRs to dev   |
+| `npm run test`               | Smoke               | 27 browser cases plus 19 Node field/description-security cases                                                 | DEFAULT / PRs to dev   |
 | `npm run test:extended`      | Reduced             | all reduced feature groups, 347 hand-written cases including smoke (`test/wc-tests/` + `test/wc-tests-smoke/`) | on demand / pre-merge  |
 | `npm run test:full`          | Full Cartesian      | 557 browser cases including reduced                                                                            | PRs to main / releases |
 | `npm run test:screen-reader` | Real screen readers | 9 Guidepup scenarios on the current reader OS                                                                  | CI accessibility jobs  |

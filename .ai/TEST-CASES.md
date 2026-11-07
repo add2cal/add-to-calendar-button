@@ -72,11 +72,27 @@ Node security cases in `test/ssr-node/field-text.test.mjs` and
 - FIELD-02: iCalendar parameters use quoted RFC 6868 encoding
 - FIELD-03: script tags are rejected in nested field values
 - FIELD-04: URI fields cannot carry literal newlines
+- FIELD-05: cleanup preserves literal descriptions and variables without changing other fields
 - ICAL-SEC-01: event text cannot inject a second VEVENT or property
 - ICAL-SEC-02: validation rejects newline-bearing URLs and attachment URLs
 - ICAL-SEC-03: custom variables cannot assemble script tags after cleanup
 - ICAL-SEC-04: organizer, attendee and Apple location parameters are quoted
 - ICAL-SEC-05: calendar email fields reject trailing and embedded newlines
+
+Description preservation cases also run in the default suite:
+
+- DESC-01: nested descriptions preserve literal text in plain, HTML and ICS output
+- DESC-02: description variables are substituted before all output copies are encoded
+- DESC-03: description links encode literal labels and attributes exactly once
+- DESC-04: every provider transports descriptions in its own text or HTML format
+- DESC-05: custom variable replacement keeps dollar syntax literal and script rejection intact
+- DESC-IN-01: description and structured attributes preserve literal text and JSON escapes
+- DESC-IN-02: inline JSON is parsed before field cleanup without deleting literal escapes
+- DESC-IN-03: SSR attributes round-trip literal descriptions through client ingestion
+- DESC-IN-04: playground description attribute reaches Google details as literal HTML text
+- DESC-UI-attributes: literal descriptions survive ingestion and provider HTML without becoming markup
+- DESC-UI-json: literal descriptions survive ingestion and provider HTML without becoming markup
+- DESC-UI-ssr: literal descriptions survive ingestion and provider HTML without becoming markup
 
 Also part of the default run (long-standing quick tests):
 

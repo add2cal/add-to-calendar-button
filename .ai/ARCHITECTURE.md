@@ -46,7 +46,7 @@ Four consumption paths, one code base:
 ```
 attributes / JSON / atcb_action argument
   -> compat/attributes (official name wins, legacy aliases resolve)
-  -> atcb_secure_content (tag stripping + prototype-pollution key strip)
+  -> atcb_secure_content (field-aware cleanup + prototype-pollution key strip)
   -> atcb_check_required
   -> atcb_decorate_data (normalize: booleans, options, dates, recurrence,
      sizes, light mode, i18n locale fields; per-instance store entry)
@@ -84,15 +84,23 @@ while preserving text entities.
 It wraps `rewrite_html_elements`, which is a format converter rather than a sanitizer;
 its clear modes produce plain text or ICS text without HTML encoding.
 
-`secure_content` remains configuration cleanup: it strips tags and unsafe object keys
-before validation and decoration, and does not replace output-context escaping.
+`secure_content` remains configuration cleanup: unsafe object keys are removed and
+legacy tag stripping is retained outside descriptions and custom-variable input.
+Descriptions remain literal through ingestion. Variables are substituted before all
+description copies are derived; other variable destinations retain legacy cleanup.
+`description_html` encodes literal spans (including entity spellings) exactly once
+and renders only supported pseudo tokens and breaks. Plain description copies retain
+literal markup and entity spellings rather than stripping them.
 Script tags in field values are rejected rather than silently stripped, including
 entity-encoded opening brackets and nested configuration values. Validation repeats
 this check after decoration/custom-variable substitution; SSR applies the same policy.
 URLs cannot contain literal CR/LF. ICS TEXT values escape real CRLF, CR, and LF as
 `\\n`; parameter values are quoted and use RFC 6868 caret encoding so punctuation
-and newlines cannot alter the property's structure. Existing pseudo-formatting and
-literal `\\n` description breaks remain supported.
+and newlines cannot alter the property's structure. Pseudo breaks become actual LF
+before serialization; literal backslash+n is escaped as a literal backslash followed
+by n, never interpreted as a break. Raw `<br>` remains a supported legacy break.
+Structured attributes and inline JSON text are parsed before field-aware cleanup;
+SSR attribute encoding is decoded once by HTML parsing before client ingestion.
 
 ## Data flow: interaction
 

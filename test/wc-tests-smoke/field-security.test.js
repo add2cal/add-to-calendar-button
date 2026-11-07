@@ -15,7 +15,7 @@ describe('Field security regressions', () => {
       expect(rewrite_ical_text('Before' + newline + 'After')).to.equal('Before\\nAfter');
     }
     expect(rewrite_ical_text('a;b,c\\d')).to.equal('a\\;b\\,c\\\\d');
-    expect(rewrite_ical_text('Before\\nAfter')).to.equal('Before\\nAfter');
+    expect(rewrite_ical_text('Before\\nAfter')).to.equal('Before\\\\nAfter');
   });
 
   it('FS-02: hostile event fields cannot create extra properties or events', async () => {
