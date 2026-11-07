@@ -209,7 +209,7 @@ function generate_ical(host: ShadowRoot | null, data: ATCBConfig, type: string, 
       if (attendeeParts.length === 2) {
         ics_lines.push('ATTENDEE;CUTYPE=INDIVIDUAL;ROLE=REQ-PARTICIPANT;PARTSTAT=ACCEPTED;CN=' + rewrite_ical_text(attendeeParts[0]!, true) + ';X-NUM-GUESTS=0:mailto:' + attendeeParts[1]);
       } else {
-        ics_lines.push('ATTENDEE;CUTYPE=INDIVIDUAL;ROLE=REQ-PARTICIPANT;PARTSTAT=ACCEPTED;CN=' + attendeeParts[0] + ';X-NUM-GUESTS=0:mailto:' + attendeeParts[0]);
+        ics_lines.push('ATTENDEE;CUTYPE=INDIVIDUAL;ROLE=REQ-PARTICIPANT;PARTSTAT=ACCEPTED;CN=' + rewrite_ical_text(attendeeParts[0]!, true) + ';X-NUM-GUESTS=0:mailto:' + attendeeParts[0]);
       }
     }
     if (data.recurrence && data.recurrence !== '') {

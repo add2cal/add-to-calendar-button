@@ -86,7 +86,13 @@ its clear modes produce plain text or ICS text without HTML encoding.
 
 `secure_content` remains configuration cleanup: it strips tags and unsafe object keys
 before validation and decoration, and does not replace output-context escaping.
-URL scheme checks and ICS escaping likewise have their own format-specific rules.
+Script tags in field values are rejected rather than silently stripped, including
+entity-encoded opening brackets and nested configuration values. Validation repeats
+this check after decoration/custom-variable substitution; SSR applies the same policy.
+URLs cannot contain literal CR/LF. ICS TEXT values escape real CRLF, CR, and LF as
+`\\n`; parameter values are quoted and use RFC 6868 caret encoding so punctuation
+and newlines cannot alter the property's structure. Existing pseudo-formatting and
+literal `\\n` description breaks remain supported.
 
 ## Data flow: interaction
 

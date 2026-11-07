@@ -24,12 +24,29 @@ function safe_html(content: string): string {
 
 // Configuration cleanup is separate from output encoding: it preserves raw values
 // for validation/calendar generation and strips unsafe object keys, not HTML attributes.
+function assert_no_script(data: unknown): void {
+  if (typeof data === 'string') {
+    // Detection only: never decode the value that is rendered or serialized.
+    const decoded = data.replace(/&(?:amp;)*(?:lt|#0*60|#x0*3c);/gi, '<');
+    if (/<\/?script\b/i.test(decoded)) {
+      throw new Error('Add to Calendar Button: script tags are not allowed in fields');
+    }
+  } else if (data && typeof data === 'object') {
+    for (const value of Object.values(data)) {
+      assert_no_script(value);
+    }
+  }
+}
+
 function secure_content(data: unknown, isJSON = true): unknown {
+  assert_no_script(data);
   // strip HTML tags (especially since stupid Safari adds stuff) - except for <br>
   const toClean = isJSON ? JSON.stringify(data) : (data as { toString(): string }).toString();
   const cleanedUp = toClean.replace(/(<(?!br)([^>]+)>)/gi, '');
+
   if (isJSON) {
     const parsed = JSON.parse(cleanedUp) as unknown;
+
     strip_unsafe_keys(parsed);
     return parsed;
   } else {
@@ -56,6 +73,12 @@ function strip_unsafe_keys(node: unknown): unknown {
 
 // SHARED FUNCTION TO SECURE URLS
 function secure_url(url: string, throwError = true): boolean {
+  if (/[\r\n]/.test(url)) {
+    if (throwError) {
+      console.error('Add to Calendar Button: line breaks are not allowed in URLs');
+    }
+    return false;
+  }
   if (url && url.match(/((\.\.\/)|(\.\.\\)|(%2e%2e%2f)|(%252e%252e%252f)|(%2e%2e\/)|(%252e%252e\/)|(\.\.%2f)|(\.\.%252f)|(%2e%2e%5c)|(%252e%252e%255c)|(%2e%2e\\)|(%252e%252e\\)|(\.\.%5c)|(\.\.%255c)|(\.\.%c0%af)|(\.\.%25c0%25af)|(\.\.%c1%9c)|(\.\.%25c1%259c))/gi)) {
     if (throwError) {
       console.error('Seems like the generated URL includes at least one security issue and got blocked. Please check the calendar button parameters!');
@@ -144,9 +167,20 @@ function parse_url_code(input: string): string {
 // SHARED FUNCTIONS TO FORMAT iCAL TEXT
 function rewrite_ical_text(content: string, inQuotes = false): string {
   if (inQuotes) {
-    content = content.replace(/"/g, '');
+    // RFC 6868 parameter encoding is distinct from RFC 5545 TEXT escaping.
+    content =
+      '"' +
+      content
+        .replace(/\^/g, '^^')
+        .replace(/\r\n|\r|\n/g, '^n')
+        .replace(/"/g, "^'") +
+      '"';
   } else {
-    content = content.replace(/\\/g, '\\\\').replace(/(,|;)/g, '\\$1').replace(/\\\\n/g, '\\n');
+    content = content
+      .replace(/\\/g, '\\\\')
+      .replace(/(,|;)/g, '\\$1')
+      .replace(/\\\\n/g, '\\n')
+      .replace(/\r\n|\r|\n/g, '\\n');
   }
   return content;
 }
@@ -192,4 +226,4 @@ function format_ical_lines(content: string): string {
   return result.join('\r\n');
 }
 
-export { escape_html, escape_html_text, safe_html, secure_content, secure_url, strip_unsafe_keys, rewrite_html_elements, rewrite_ical_text, format_ical_lines };
+export { escape_html, escape_html_text, safe_html, assert_no_script, secure_content, secure_url, strip_unsafe_keys, rewrite_html_elements, rewrite_ical_text, format_ical_lines };

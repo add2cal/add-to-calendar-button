@@ -54,7 +54,7 @@ describe('Field security regressions', () => {
   });
 
   it('FS-06: validation catches script tags assembled by custom variables', async () => {
-    const data = await config({ name: '<scr%%suffix%%', customVar: { suffix: 'ipt>dummy</script>' } });
+    const data = await config({ name: '<scr%%suffix%%', customVar: { suffix: 'ipt>dummy' } });
     let rejected = false;
     try {
       await validate(data);

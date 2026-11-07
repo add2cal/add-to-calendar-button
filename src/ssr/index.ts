@@ -23,7 +23,7 @@ import { icons, wcParams, wcProParams } from '../core/globals';
 import { rtlLanguages } from '../i18n/index';
 import { decorate_sizes } from '../core/sizes';
 import { officialAttributeName, legacyAttributeName } from '../compat/attributes';
-import { escape_html, escape_html_text, safe_html, secure_url, strip_unsafe_keys } from '../core/text';
+import { assert_no_script, escape_html, escape_html_text, safe_html, secure_url, strip_unsafe_keys } from '../core/text';
 import { tzlib_get_offset } from 'timezones-ical-library';
 
 // filled at build time with the minified tokens+core css plus EVERY per-style delta
@@ -254,6 +254,7 @@ function parseOptions(value: unknown): { key: string; labelOverride: string }[] 
 
 /** Internal renderer that distinguishes fetched PRO config from optimistic sync input. */
 function generate_ssr_html_with_context(rawConfig: AddToCalendarButtonType & { [key: string]: unknown }, proConfigResolved: boolean): string {
+  assert_no_script(rawConfig);
   // accept camelCase, kebab-case, and legacy spellings alike (the tag does, too)
   const config = normalizeConfig(rawConfig);
   // --- the few config bits the shell honors ---

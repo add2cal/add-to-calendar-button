@@ -1,5 +1,10 @@
 # ⚡ Changelog (without patches)
 
+## Unreleased security changes
+
+- Encode actual line breaks in iCalendar text and quote parameter values using RFC 6868; reject line breaks in URL and email fields.
+- Reject script tags in configuration fields, including nested and custom-variable values, instead of silently stripping them. Supported pseudo formatting remains available.
+
 ## Version 3
 
 - v3.5 : Auto-set end-time if missing

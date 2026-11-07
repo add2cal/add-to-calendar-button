@@ -81,7 +81,7 @@ describe('Group ICSX - extended ics options', () => {
     const withLocation = await icsFor(baseEvent({ icsGeo: '52.52,13.405', location: 'Test Hall 7' }), 'atcb-icsx03a');
     const appleLine = withLocation.events[0].prop('X-APPLE-STRUCTURED-LOCATION');
     expect(appleLine, 'structured location present').to.exist;
-    expect(appleLine, 'title matches LOCATION (required for the Apple map preview)').to.include('X-TITLE=Test Hall 7:geo:52.52,13.405');
+    expect(appleLine, 'title matches LOCATION (required for the Apple map preview)').to.include('X-TITLE="Test Hall 7":geo:52.52,13.405');
     const withoutLocation = await icsFor(baseEvent({ icsGeo: '52.52,13.405', location: '' }), 'atcb-icsx03b');
     expect(withoutLocation.events[0].value('GEO'), 'GEO still present').to.equal('52.52;13.405');
     expect(withoutLocation.events[0].prop('X-APPLE-STRUCTURED-LOCATION'), 'no structured location without a location').to.equal(null);
