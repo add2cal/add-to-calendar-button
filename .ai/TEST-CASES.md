@@ -84,6 +84,8 @@ Node security cases in `test/ssr-node/field-text.test.mjs` and
 - ICAL-SEC-09: host overrides still bypass static files for dynamic generation
 - ICAL-SEC-10: dynamic iOS content and proxy URLs retain their distinct output contracts
 - ICAL-SEC-11: configured HTTPS URLs percent encode literal delimiters without escaping query syntax
+- ICAL-SEC-12: proxy paths encode components and share navigation and resolved output
+- ICAL-SEC-13: proxy authority rejects URL syntax rather than changing the destination
 
 Description preservation cases also run in the default suite:
 

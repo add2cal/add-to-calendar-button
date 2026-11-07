@@ -4,13 +4,16 @@ import { build } from 'esbuild';
 import { parseIcs } from '../helpers/ics.js';
 
 const bundled = await build({
-  stdin: { contents: "export { decorate_data } from './src/core/decorate.ts'; export { validate } from './src/core/validate.ts'; export { generate_ical, static_ics_file } from './src/generators/ical.ts'; export { resultChannel } from './src/core/globals.ts';", resolveDir: process.cwd() },
+  stdin: {
+    contents: "export { decorate_data } from './src/core/decorate.ts'; export { validate } from './src/core/validate.ts'; export { generate_ical, static_ics_file, open_cal_url } from './src/generators/ical.ts'; export { resultChannel } from './src/core/globals.ts';",
+    resolveDir: process.cwd(),
+  },
   bundle: true,
   platform: 'node',
   format: 'esm',
   write: false,
 });
-const { decorate_data, validate, generate_ical, static_ics_file, resultChannel } = await import('data:text/javascript,' + encodeURIComponent(bundled.outputFiles[0].text));
+const { decorate_data, validate, generate_ical, static_ics_file, open_cal_url, resultChannel } = await import('data:text/javascript,' + encodeURIComponent(bundled.outputFiles[0].text));
 const config = (extra) => decorate_data({ name: 'Security regression', startDate: '2050-06-15', options: ['ical'], ...extra });
 
 test('ICAL-SEC-01: event text cannot inject a second VEVENT or property', async () => {
@@ -148,5 +151,57 @@ test('ICAL-SEC-11: configured HTTPS URLs percent encode literal delimiters witho
     assert.equal(new URL(expected).href, new URL(file).href);
     assert.equal(new URL(expected).searchParams.get('literal'), '<tag>');
     assert.equal(new URL(expected).searchParams.get('encoded'), '<tag>');
+  }
+});
+
+test('ICAL-SEC-12: proxy paths encode components and share navigation and resolved output', async () => {
+  const proKey = 'key/<tag>"?a=1#fragment%2F';
+  const type = 'ical/<tag>"?injected=1#fragment';
+  const data = await config({ proxy: true, proKey, domain: 'events.example.com', attendee: 'guest@example.com', customVar: { text: '<hjhj> literal\\n & value' }, dates: [{ startDate: '2050-06-15' }, { startDate: '2050-06-16' }] });
+  const action = generate_ical(null, data, type, 1, false, true);
+  const url = new URL(action.href);
+  assert.equal(url.origin, 'https://events.example.com');
+  assert.equal(url.pathname, '/' + encodeURIComponent(proKey) + '/o/' + encodeURIComponent(type));
+  assert.equal(url.hash, '');
+  assert.deepEqual([...url.searchParams.keys()], ['attendee', 'customvar', 'sub-event']);
+  assert.equal(url.searchParams.get('attendee'), 'guest@example.com');
+  assert.deepEqual(JSON.parse(url.searchParams.get('customvar')), data.customVar);
+  assert.equal(url.searchParams.get('sub-event'), '1');
+  assert.doesNotMatch(action.href, /[<>"]/);
+  resultChannel.open();
+  try {
+    open_cal_url(data, type, '', false, 1);
+    assert.equal(resultChannel.close(), action.href);
+  } finally {
+    resultChannel.close();
+  }
+  resultChannel.open();
+  try {
+    open_cal_url(data, type, '', true, '0&injected=1');
+    const subscription = new URL(resultChannel.close());
+    assert.equal(subscription.pathname, '/' + encodeURIComponent(proKey) + '/s/' + encodeURIComponent(type));
+    assert.equal(subscription.searchParams.get('sub-event'), '0&injected=1');
+    assert.equal(subscription.searchParams.has('injected'), false);
+  } finally {
+    resultChannel.close();
+  }
+});
+
+test('ICAL-SEC-13: proxy authority rejects URL syntax rather than changing the destination', async () => {
+  for (const domain of ['trusted.example@other.example', 'events.example/path', 'events.example?x=1', 'events.example#x', 'events.example:443', 'events.example\\other', 'events.example\n', '<tag>.example', 'events..example']) {
+    const data = await config({ proxy: true, proKey: 'example-key', domain });
+    assert.equal(generate_ical(null, data, 'ical', 'all', false, true).href, '');
+    resultChannel.open();
+    try {
+      open_cal_url(data, 'ical');
+      assert.equal(resultChannel.close(), '');
+    } finally {
+      resultChannel.close();
+    }
+  }
+  for (const extra of [{}, { dev: true }, { domain: 'events.example.com' }, { domain: 'xn--bcher-kva.example' }]) {
+    const data = await config({ proxy: true, proKey: 'example-key', ...extra });
+    const expectedHost = extra.domain || (extra.dev ? 'dev.caldn.net' : 'caldn.net');
+    assert.equal(generate_ical(null, data, 'ical', 'all', false, true).href, `https://${expectedHost}/example-key/o/ical`);
   }
 });

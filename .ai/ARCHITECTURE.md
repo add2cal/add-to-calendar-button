@@ -124,6 +124,12 @@ HTML entity escaping, changing query separators or double encoding percent escap
 Generated percent-encoded calendar data and browser-created iOS Blob URLs remain
 separate from configured file URLs.
 
+Proxy navigation and resolved native-anchor actions share `proxy_url`. Custom domains
+are DNS hostnames, not URLs: userinfo, ports, paths, query and fragment syntax are
+rejected. Keys and calendar types are encoded as individual path components; attendee,
+custom variables and sub-event values are encoded as individual query values. This
+preserves proxy routing without interpreting configuration text as URL structure.
+
 Group overview controls filter the fetched range locally. Event links open the hosted
 event page unless `no-details` routes the whole event action to adding it. Optional add
 controls call `atcb_action` with the selected event, disable group overview for that call,
