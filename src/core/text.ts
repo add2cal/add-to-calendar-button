@@ -27,7 +27,7 @@ function safe_html(content: string): string {
 function assert_no_script(data: unknown): void {
   if (typeof data === 'string') {
     // Detection only: never decode the value that is rendered or serialized.
-    const decoded = data.replace(/&(?:amp;)*(?:lt|#0*60|#x0*3c);/gi, '<');
+    const decoded = data.replace(/\\u([a-f0-9]{4})/gi, (_match, code: string) => String.fromCharCode(parseInt(code, 16))).replace(/&(?:amp;)*(?:lt|#0*60|#x0*3c);/gi, '<');
     if (/<\/?script\b/i.test(decoded)) {
       throw new Error('Add to Calendar Button: script tags are not allowed in fields');
     }

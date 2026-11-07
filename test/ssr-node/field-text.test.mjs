@@ -19,7 +19,7 @@ test('FIELD-02: iCalendar parameters use quoted RFC 6868 encoding', () => {
 });
 
 test('FIELD-03: script tags are rejected in nested field values', () => {
-  for (const value of ['<script>dummy</script>', '<ScRiPt src="https://example.com/dummy.js">', '&lt;script&gt;dummy', '&#60;script&#62;dummy', '&#x3c;script&#x3e;dummy', '&amp;lt;script&amp;gt;dummy']) {
+  for (const value of ['<script>dummy</script>', '<ScRiPt src="https://example.com/dummy.js">', '&lt;script&gt;dummy', '&#60;script&#62;dummy', '&#x3c;script&#x3e;dummy', '&amp;lt;script&amp;gt;dummy', '{"label.addtocalendar":"\\u003cscr\\u0069pt>dummy"}']) {
     assert.throws(() => secure_content({ dates: [{ description: value }] }), /script/i);
     assert.throws(() => secure_content(value, false), /script/i);
   }
