@@ -21,7 +21,7 @@ const providers = await build({
   write: false,
 });
 const { decorate_data, validate, generate_google, resultChannel } = await import('data:text/javascript,' + encodeURIComponent(providers.outputFiles[0].text));
-const host = (attrs = {}, textContent = '') => ({ hasAttribute: (key) => Object.hasOwn(attrs, key), getAttribute: (key) => attrs[key] ?? null, textContent });
+const host = (attrs = {}, textContent = '') => ({ hasAttribute: (key) => Object.hasOwn(attrs, key), getAttribute: (key) => attrs[key] ?? null, textContent, innerHTML: textContent.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;') });
 const literal = '<hjhj> literal\\n &lt;hjhj&gt; &#60;hjhj&#62; &amp;';
 
 test('DESC-IN-01: description and structured attributes preserve literal text and JSON escapes', () => {
