@@ -519,7 +519,6 @@ function getTzPartsFormatter(timeZone: string): Intl.DateTimeFormat {
   if (cached) return cached;
   const fmt = new Intl.DateTimeFormat('en-US', {
     timeZone: key,
-    hour12: false,
     hourCycle: 'h23',
     weekday: 'short',
     year: 'numeric',
