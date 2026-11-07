@@ -119,6 +119,8 @@ Configured root and per-date `icsFile` values are rechecked by `static_ics_file`
 being returned to any download, native-anchor, WebView or result-channel consumer.
 The existing HTTPS-only configured-file contract is enforced there as well as during
 validation; unsafe selected values throw rather than falling back to another file.
+Literal angle brackets and double quotes are percent encoded as URL data, without
+HTML entity escaping, changing query separators or double encoding percent escapes.
 Generated percent-encoded calendar data and browser-created iOS Blob URLs remain
 separate from configured file URLs.
 

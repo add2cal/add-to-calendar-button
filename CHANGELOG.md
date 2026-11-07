@@ -4,7 +4,7 @@
 
 - Encode actual line breaks in iCalendar text and quote parameter values using RFC 6868; reject line breaks in URL and email fields.
 - Reject script tags in configuration fields, including nested and custom-variable values, instead of silently stripping them. Supported pseudo formatting remains available.
-- Enforce the existing HTTPS-only contract for configured root and per-date ICS files again at the shared output boundary, before download, WebView, or result-channel use. Generated calendar data and iOS Blob URLs are unchanged.
+- Enforce the existing HTTPS-only contract for configured root and per-date ICS files again at the shared output boundary, before download, WebView, or result-channel use. Literal angle brackets and double quotes in these URLs are percent encoded while query syntax and existing escapes are preserved. Generated calendar data and iOS Blob URLs are unchanged.
 - Preserve literal description tags, entity spellings, and backslash+n through attributes, JSON, SSR, provider links, and ICS. Raw tags are encoded as text in HTML descriptions; use pseudo-formatting or actual newlines for formatting and breaks. Literal backslash+n no longer becomes an ICS line break.
 
 ## Version 3

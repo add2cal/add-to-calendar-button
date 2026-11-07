@@ -83,6 +83,7 @@ Node security cases in `test/ssr-node/field-text.test.mjs` and
 - ICAL-SEC-08: HTTPS files preserve query text, selection precedence and result output
 - ICAL-SEC-09: host overrides still bypass static files for dynamic generation
 - ICAL-SEC-10: dynamic iOS content and proxy URLs retain their distinct output contracts
+- ICAL-SEC-11: configured HTTPS URLs percent encode literal delimiters without escaping query syntax
 
 Description preservation cases also run in the default suite:
 

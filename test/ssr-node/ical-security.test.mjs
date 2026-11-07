@@ -136,3 +136,17 @@ test('ICAL-SEC-10: dynamic iOS content and proxy URLs retain their distinct outp
   assert.equal(action.kind, 'proxy');
   assert.equal(action.href, 'https://caldn.net/example-key/o/ical');
 });
+
+test('ICAL-SEC-11: configured HTTPS URLs percent encode literal delimiters without escaping query syntax', async () => {
+  const file = 'https://example.com/a<file>".ics?literal=<tag>&encoded=%3Ctag%3E';
+  const expected = 'https://example.com/a%3Cfile%3E%22.ics?literal=%3Ctag%3E&encoded=%3Ctag%3E';
+  for (const extra of [{ icsFile: file }, { dates: [{ startDate: '2050-06-15', icsFile: file }] }]) {
+    const data = await config(extra);
+    assert.equal(static_ics_file(null, data, 0), expected);
+    assert.equal(generate_ical(null, data, 'ical', 0, false, true).href, expected);
+    // The browser's URL parser agrees; no &amp; or doubled percent escapes.
+    assert.equal(new URL(expected).href, new URL(file).href);
+    assert.equal(new URL(expected).searchParams.get('literal'), '<tag>');
+    assert.equal(new URL(expected).searchParams.get('encoded'), '<tag>');
+  }
+});

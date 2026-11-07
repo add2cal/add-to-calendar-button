@@ -91,7 +91,9 @@ function static_ics_file(host: ShadowRoot | null, data: ATCBConfig, subEvent: 'a
   if (typeof file !== 'string' || (file !== '' && (!/^https:\/\//i.test(file) || !secure_url(file, false)))) {
     throw new Error('Add to Calendar Button failed: explicit ics file path not valid');
   }
-  return file;
+  // Serialize URL delimiters as percent escapes, not HTML entities. Leave query
+  // separators and existing percent escapes intact so signed URLs still work.
+  return file.replace(/[<>"]/g, (character) => encodeURIComponent(character));
 }
 
 // ICAL SUBSCRIPTION
