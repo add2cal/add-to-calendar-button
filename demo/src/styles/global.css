@@ -40,10 +40,10 @@
   }
 
   ::selection {
-    @apply bg-secondary text-text-dark;
+    @apply bg-secondary text-black;
   }
   ::-moz-selection {
-    @apply bg-secondary text-text-dark;
+    @apply bg-secondary text-black;
   }
 
   a,

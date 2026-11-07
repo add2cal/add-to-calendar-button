@@ -115,7 +115,7 @@ function toggleCode() {
       <figure v-if="showCode && loaded" class="playground-code relative m-2 mt-3 overflow-hidden rounded-md border border-zinc-700 bg-zinc-950 shadow-lg">
         <figcaption class="border-b border-zinc-800 px-4 py-2 font-mono text-xs tracking-widest text-zinc-400 uppercase">HTML</figcaption>
         <button type="button" class="btn-control hover:bg-primary absolute top-1.5 right-2 z-10 flex items-center rounded px-2 py-1 text-xs text-white" @click="copyCode"><ClipboardDocumentIcon class="mr-1 inline h-4 w-4" aria-hidden="true" />{{ copied ? t('labels.copied') : t('labels.copyCode') }}</button>
-        <pre class="overflow-x-auto p-5 text-sm leading-6 text-zinc-100"><code>{{ markup }}</code></pre>
+        <pre class="overflow-x-auto p-5 text-sm leading-6 text-zinc-100 select-all"><code>{{ markup }}</code></pre>
       </figure>
     </div>
   </div>
