@@ -115,6 +115,13 @@ data URL so Apple browsers retain a real user-activation navigation. Static ICS 
 the legacy direct-save path; subscription and other calendar-provider routes retain their
 established dispatch paths.
 
+Configured root and per-date `icsFile` values are rechecked by `static_ics_file` before
+being returned to any download, native-anchor, WebView or result-channel consumer.
+The existing HTTPS-only configured-file contract is enforced there as well as during
+validation; unsafe selected values throw rather than falling back to another file.
+Generated percent-encoded calendar data and browser-created iOS Blob URLs remain
+separate from configured file URLs.
+
 Group overview controls filter the fetched range locally. Event links open the hosted
 event page unless `no-details` routes the whole event action to adding it. Optional add
 controls call `atcb_action` with the selected event, disable group overview for that call,

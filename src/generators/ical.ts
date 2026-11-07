@@ -84,8 +84,14 @@ function static_ics_file(host: ShadowRoot | null, data: ATCBConfig, subEvent: 'a
   const potentialHostCustomVar = (host && host.host && (host.host.getAttribute('customVar') || host.host.getAttribute('custom-var'))) || '';
   if ((data.attendee && data.attendee !== '' && potentialHostAttendee !== '') || (data.customVar && (data.customVar as unknown) !== '' && potentialHostCustomVar !== '')) return '';
   const selectedEntry = subEvent === 'all' ? undefined : data.dates!.find((_entry, index) => index === subEvent);
-  if (selectedEntry?.icsFile) return selectedEntry.icsFile as string;
-  return data.icsFile || '';
+  const file = selectedEntry?.icsFile || data.icsFile || '';
+  // Recheck the configured-file contract at the shared output boundary, including
+  // direct generation and the WebView/result-channel paths. Generated calendar
+  // data and browser-created blob URLs do not come through this boundary.
+  if (typeof file !== 'string' || (file !== '' && (!/^https:\/\//i.test(file) || !secure_url(file, false)))) {
+    throw new Error('Add to Calendar Button failed: explicit ics file path not valid');
+  }
+  return file;
 }
 
 // ICAL SUBSCRIPTION

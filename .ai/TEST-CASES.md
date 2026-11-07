@@ -78,6 +78,11 @@ Node security cases in `test/ssr-node/field-text.test.mjs` and
 - ICAL-SEC-03: custom variables cannot assemble script tags after cleanup
 - ICAL-SEC-04: organizer, attendee and Apple location parameters are quoted
 - ICAL-SEC-05: calendar email fields reject trailing and embedded newlines
+- ICAL-SEC-06: static file selection rejects unsafe root URIs before either output path
+- ICAL-SEC-07: unsafe per-date files cannot bypass a safe root file
+- ICAL-SEC-08: HTTPS files preserve query text, selection precedence and result output
+- ICAL-SEC-09: host overrides still bypass static files for dynamic generation
+- ICAL-SEC-10: dynamic iOS content and proxy URLs retain their distinct output contracts
 
 Description preservation cases also run in the default suite:
 
