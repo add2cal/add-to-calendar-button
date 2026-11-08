@@ -68,8 +68,8 @@ describe('Group GO - PRO group overview', () => {
     };
     try {
       const { host } = await mountAtcb({ prokey: GROUP_KEY, 'group-overview': true, dev: true, debug: true });
-      expect(host.shadowRoot.querySelector('.atcb-debug-error-msg').textContent).to.include('Fetch failed for "https://api-dev.add-to-calendar-pro.com/"');
-      expect(mute.messages.join(' ')).to.include('Fetch failed for "https://api-dev.add-to-calendar-pro.com/"');
+      expect(host.shadowRoot.querySelector('.atcb-debug-error-msg').textContent).to.include('Fetch failed for "https://api-dev.add-to-calendar-pro.com/..."');
+      expect(mute.messages.join(' ')).to.include('Fetch failed for "https://api-dev.add-to-calendar-pro.com/..."');
       expect(mute.messages.join(' ')).to.not.include('/v1/event/all');
       expect(mute.messages.join(' ')).to.not.include('TypeError');
     } finally {
