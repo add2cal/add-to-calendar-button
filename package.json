@@ -128,7 +128,7 @@
   },
   "dependencies": {
     "lit": "^3.3.3",
-    "timezones-ical-library": "^2.4.0"
+    "timezones-ical-library": "^3.0.0"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",

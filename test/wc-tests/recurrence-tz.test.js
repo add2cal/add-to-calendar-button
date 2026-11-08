@@ -26,7 +26,12 @@ describe('recurrence timezone evaluation', () => {
     expect(counted.adjustedCount).to.equal(1);
     expect(getOccurrencesInRange(countRule, '1980-01-07', '10:00', 'UTC', '1990-01-01', '1990-02-01')).to.deep.equal([]);
 
-    // tzlib extrapolates current DST rules, so use a completed post-2007 US transition.
+    const historicalUntilRule = 'RRULE:FREQ=DAILY;UNTIL=20011105T050000Z';
+    const historicalUntil = getNextOccurrence(historicalUntilRule, new Date('2001-10-27T04:00:00Z'), 0, false, 'America/New_York');
+    expect(historicalUntil.nextOccurrence.toISOString()).to.equal('2001-11-05T05:00:00.000Z');
+    expect(getOccurrencesInRange(historicalUntilRule, '2001-10-27', '00:00', 'America/New_York', '2001-10-27', '2001-10-29')).to.deep.equal(['2001-10-27', '2001-10-28', '2001-10-29']);
+    expect(getOccurrencesInRange(historicalUntilRule, '2001-10-27', '00:00', 'America/New_York', '2001-11-04', '2001-11-06')).to.deep.equal(['2001-11-04', '2001-11-05']);
+
     const untilRule = 'RRULE:FREQ=DAILY;UNTIL=20211115T050000Z';
     const until = getNextOccurrence(untilRule, new Date('2021-11-06T04:00:00Z'), 0, false, 'America/New_York');
     expect(until.nextOccurrence.toISOString()).to.equal('2021-11-15T05:00:00.000Z');
