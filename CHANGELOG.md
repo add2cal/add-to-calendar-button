@@ -1,5 +1,13 @@
 # ⚡ Changelog (without patches)
 
+## Unreleased security changes
+
+- Encode actual line breaks in iCalendar text and quote parameter values using RFC 6868; reject line breaks in URL and email fields.
+- Reject script tags in configuration fields, including nested and custom-variable values, instead of silently stripping them. Supported pseudo formatting remains available.
+- Enforce the existing HTTPS-only contract for configured root and per-date ICS files again at the shared output boundary, before download, WebView, or result-channel use. Literal angle brackets and double quotes in these URLs are percent encoded while query syntax and existing escapes are preserved. Generated calendar data and iOS Blob URLs are unchanged.
+- Preserve literal description tags and backslash+n through attributes, JSON, SSR, provider links, and ICS. Named/numeric character references decode once as text, including `&rarr;`; decoded brackets never become markup or pseudo-formatting. Unknown references and double-encoded reference text are preserved. Raw tags are encoded as text in HTML descriptions; use pseudo-formatting or actual newlines for formatting and breaks. Literal backslash+n no longer becomes an ICS line break.
+- Preserve attribute validation/security errors instead of replacing them with a misleading empty-inline-JSON error.
+
 ## Version 3
 
 - v3.6 : PRO group overviews expand recurring events, while subscription overviews show a global Add to Calendar Button instead of options per event; stronger sanitization for text input

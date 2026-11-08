@@ -1,3 +1,4 @@
+import { decodeHTMLStrict } from 'entities/decode';
 import { defaultTarget } from './globals';
 
 // Shared literal-text encoding for browser UI, calendar links, and SSR.
@@ -24,16 +25,39 @@ function safe_html(content: string): string {
 
 // Configuration cleanup is separate from output encoding: it preserves raw values
 // for validation/calendar generation and strips unsafe object keys, not HTML attributes.
+function assert_no_script(data: unknown): void {
+  if (typeof data === 'string') {
+    // Detection only: never decode the value that is rendered or serialized.
+    const decoded = decodeHTMLStrict(data.replace(/\\u([a-f0-9]{4})/gi, (_match, code: string) => String.fromCharCode(parseInt(code, 16))).replace(/&(?:amp;)*(?:lt|#0*60|#x0*3c);/gi, '<'));
+    if (/<\/?script\b/i.test(decoded)) {
+      throw new Error('Add to Calendar Button: script tags are not allowed in fields');
+    }
+  } else if (data && typeof data === 'object') {
+    for (const value of Object.values(data)) {
+      assert_no_script(value);
+    }
+  }
+}
+
 function secure_content(data: unknown, isJSON = true): unknown {
-  // strip HTML tags (especially since stupid Safari adds stuff) - except for <br>
-  const toClean = isJSON ? JSON.stringify(data) : (data as { toString(): string }).toString();
-  const cleanedUp = toClean.replace(/(<(?!br)([^>]+)>)/gi, '');
+  assert_no_script(data);
+  const stripTags = (value: string) => value.replace(/(<(?!br)([^>]+)>)/gi, '');
   if (isJSON) {
-    const parsed = JSON.parse(cleanedUp) as unknown;
+    const parsed = JSON.parse(JSON.stringify(data)) as unknown;
     strip_unsafe_keys(parsed);
-    return parsed;
+    // Descriptions and variables stay raw until destination-specific encoding.
+    const clean = (value: unknown, preserve = false): unknown => {
+      if (typeof value === 'string') return preserve ? value : stripTags(value);
+      if (value && typeof value === 'object') {
+        for (const [key, child] of Object.entries(value)) {
+          (value as Record<string, unknown>)[key] = clean(child, preserve || key === 'description' || key === 'customVar');
+        }
+      }
+      return value;
+    };
+    return clean(parsed);
   } else {
-    return cleanedUp;
+    return stripTags((data as { toString(): string }).toString());
   }
 }
 
@@ -56,6 +80,12 @@ function strip_unsafe_keys(node: unknown): unknown {
 
 // SHARED FUNCTION TO SECURE URLS
 function secure_url(url: string, throwError = true): boolean {
+  if (/[\r\n]/.test(url)) {
+    if (throwError) {
+      console.error('Add to Calendar Button: line breaks are not allowed in URLs');
+    }
+    return false;
+  }
   if (url && url.match(/((\.\.\/)|(\.\.\\)|(%2e%2e%2f)|(%252e%252e%252f)|(%2e%2e\/)|(%252e%252e\/)|(\.\.%2f)|(\.\.%252f)|(%2e%2e%5c)|(%252e%252e%255c)|(%2e%2e\\)|(%252e%252e\\)|(\.\.%5c)|(\.\.%255c)|(\.\.%c0%af)|(\.\.%25c0%25af)|(\.\.%c1%9c)|(\.\.%25c1%259c))/gi)) {
     if (throwError) {
       console.error('Seems like the generated URL includes at least one security issue and got blocked. Please check the calendar button parameters!');
@@ -82,15 +112,15 @@ function secure_url(url: string, throwError = true): boolean {
 
 // Format conversion, not an HTML sanitizer. Use safe_html for untrusted rich text;
 // the clear modes produce plain/calendar text and must not HTML-encode that output.
-function rewrite_html_elements(content: string, clear = false, iCalBreaks = false): string {
+function rewrite_html_elements(content: string, clear = false, iCalBreaks = false, preserveEntities = false): string {
   // An explicitly empty paragraph represents the user's intent to add a blank line.
   // Normalize it first so every output format handles it like the supported break tag.
   content = content.replace(/\[p\]\s*\[\/p\]/gi, '[br]');
   content = content.replace(/\{p\}\s*\{\/p\}/gi, '{br}');
   if (clear) {
-    // for line breaks, we add a space instead (or \\n for iCal)
+    // Keep real breaks distinct from literal backslash+n until ICS encoding.
     if (iCalBreaks) {
-      content = content.replace(/(\[br\s?\/?\]|\{br\s?\/?\}|(\[\/p\](?=.))|(\{\/p\}(?=.)))/gi, '\\n');
+      content = content.replace(/(\[br\s?\/?\]|\{br\s?\/?\}|(\[\/p\](?=.))|(\{\/p\}(?=.)))/gi, '\n');
     } else {
       content = content.replace(/(\[br\s?\/?\]|\{br\s?\/?\}|(\[\/p\](?=.))|(\{\/p\}(?=.)))/gi, ' ');
     }
@@ -103,9 +133,10 @@ function rewrite_html_elements(content: string, clear = false, iCalBreaks = fals
     });
     content = content.replace(/\[\/?(hr|[pbui]|strong|em|li|ul|ol|h\d)\]/gi, '');
     content = content.replace(/\{\/?(hr|[pbui]|strong|em|li|ul|ol|h\d)\}/gi, '');
-    // preserve non-breaking spaces as plain text before removing other entities
-    content = content.replace(/&(?:nbsp|#160|#xa0);/gi, '\u00a0');
-    content = content.replace(/&[#a-z0-9]{1,9};/gi, '');
+    if (!preserveEntities) {
+      // Legacy clear-mode callers retain their existing entity handling.
+      content = content.replace(/&(?:nbsp|#160|#xa0);/gi, '\u00a0').replace(/&[#a-z0-9]{1,9};/gi, '');
+    }
   } else {
     // and build html for the rest
     // supporting: br, hr, p, strong, u, i, em, li, ul, ol, h (like h1, h2, h3, ...), url (= a)
@@ -121,16 +152,34 @@ function rewrite_html_elements(content: string, clear = false, iCalBreaks = fals
   return content;
 }
 
-function parse_url_code(input: string): string {
+// Encode literal description spans once; only complete supported tokens become
+// HTML. Generated link attributes and labels are never parsed as more tokens.
+function description_html(content: string): string {
+  const normalized = content.replace(/\[p\]\s*\[\/p\]/gi, '[br]').replace(/\{p\}\s*\{\/p\}/gi, '{br}');
+  const tokens = /(\[url\][\s\S]*?\[\/url\]|\{url\}[\s\S]*?\{\/url\}|\[\/?(?:br|hr|[pbui]|strong|em|li|ul|ol|h\d)\s?\/?\]|\{\/?(?:br|hr|[pbui]|strong|em|li|ul|ol|h\d)\s?\/?\}|\r\n|\r|\n)/gi;
+  return normalized
+    .split(tokens)
+    .map((part, index) => {
+      if (index % 2 === 0) return escape_html_text(decodeHTMLStrict(part));
+      if (/^[\r\n]/.test(part)) return '<br>';
+      const link = part.match(/^(?:\[url\]([\s\S]*)\[\/url\]|\{url\}([\s\S]*)\{\/url\})$/i);
+      return link ? parse_url_code(link[1] ?? link[2]!, true) : rewrite_html_elements(part);
+    })
+    .join('');
+}
+
+function parse_url_code(input: string, decodeLabel = false): string {
   const urlText = input.split('|');
   const url = (urlText[0] || '').trim();
-  const text = (function () {
+  const label = (function () {
     if (urlText.length > 1 && urlText[1] != '') {
       return urlText[1]!;
     } else {
       return url;
     }
   })();
+  // Decode labels only, after token parsing. Navigation attributes stay raw.
+  const text = decodeLabel ? decodeHTMLStrict(label) : label;
   // descriptions often carry third-party content: only linkify explicit web/calendar/
   // mail schemes (or relative urls) and escape everything - anything else stays text
   // eslint-disable-next-line no-control-regex -- stripping control characters is the point: browsers ignore them when parsing schemes, so evasion like java\tscript: must be caught
@@ -144,9 +193,19 @@ function parse_url_code(input: string): string {
 // SHARED FUNCTIONS TO FORMAT iCAL TEXT
 function rewrite_ical_text(content: string, inQuotes = false): string {
   if (inQuotes) {
-    content = content.replace(/"/g, '');
+    // RFC 6868 parameter encoding is distinct from RFC 5545 TEXT escaping.
+    content =
+      '"' +
+      content
+        .replace(/\^/g, '^^')
+        .replace(/\r\n|\r|\n/g, '^n')
+        .replace(/"/g, "^'") +
+      '"';
   } else {
-    content = content.replace(/\\/g, '\\\\').replace(/(,|;)/g, '\\$1').replace(/\\\\n/g, '\\n');
+    content = content
+      .replace(/\\/g, '\\\\')
+      .replace(/(,|;)/g, '\\$1')
+      .replace(/\r\n|\r|\n/g, '\\n');
   }
   return content;
 }
@@ -192,4 +251,4 @@ function format_ical_lines(content: string): string {
   return result.join('\r\n');
 }
 
-export { escape_html, escape_html_text, safe_html, secure_content, secure_url, strip_unsafe_keys, rewrite_html_elements, rewrite_ical_text, format_ical_lines };
+export { escape_html, escape_html_text, safe_html, description_html, assert_no_script, secure_content, secure_url, strip_unsafe_keys, rewrite_html_elements, rewrite_ical_text, format_ical_lines };

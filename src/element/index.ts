@@ -9,7 +9,7 @@ import { buttonTemplate, renderButton } from '../ui/templates';
 import { generate_rich_data } from '../generators/rich-data';
 import { ensure_locale } from '../i18n/index';
 import { close, toggle } from '../ui/control';
-import { secure_content, secure_url, strip_unsafe_keys } from '../core/text';
+import { assert_no_script, secure_content, secure_url, strip_unsafe_keys } from '../core/text';
 import { manage_body_scroll, set_sizes } from '../ui/positioning';
 import { log_event } from '../core/events';
 import { generate_rsvp_form, generate_rsvp_button } from '../ui/pro';
@@ -596,19 +596,21 @@ if (isBrowser()) {
 
 // process inline data
 async function process_inline_data(el: ATCBHostElement, debug = false): Promise<ATCBInputConfig> {
-  let data: ATCBInputConfig;
+  // Attribute parsing/security failures must not be mistaken for JSON mode.
+  let data: ATCBInputConfig = read_attributes(el);
   try {
-    // Attempt to read attributes directly and validate
-    data = read_attributes(el);
     await check_required(data);
-  } catch {
-    // If the above fails, try to parse and validate JSON from innerHTML
-    const slotInput = el.innerHTML.trim();
+  } catch (attributeError) {
+    // Detect script markup before textContent discards element wrappers.
+    assert_no_script(el.innerHTML);
+    // If the above fails, parse the inline JSON text before field cleanup.
+    const slotInput = el.textContent?.trim();
     if (!slotInput) {
+      if (Object.keys(data).length > 0) throw attributeError;
       throw new Error('Add to Calendar Button generation failed: No data provided.');
     }
     try {
-      const jsonInput = strip_unsafe_keys(JSON.parse(secure_content(slotInput.replace(/(\r\n|\n|\r)/g, ''), false) as string)) as ATCBInputConfig;
+      const jsonInput = secure_content(JSON.parse(slotInput)) as ATCBInputConfig;
       await check_required(jsonInput);
       data = jsonInput;
     } catch (jsonError) {
@@ -626,12 +628,13 @@ async function process_inline_data(el: ATCBHostElement, debug = false): Promise<
 function read_attributes(el: ATCBHostElement, params: (keyof ATCBInputConfig)[] = wcParams): ATCBInputConfig {
   const data: { [key: string]: unknown } = {};
   for (let i = 0; i < params.length; i++) {
-    // reading data, but removing real code line breaks before parsing.
-    // use [br] in the description to create a line break.
+    // Parse structured attributes before cleanup, preserving JSON escapes.
     const attr = params[`${i}`]!;
     const attributeName = resolveAttributeName(el, attr);
     if (attributeName !== null) {
-      const inputVal = secure_content(el.getAttribute(attributeName)!.replace(/(\\r\\n|\\n|\\r)/g, ''), false) as string;
+      const raw = el.getAttribute(attributeName)!;
+      const structured = [...wcObjectParams, ...wcObjectArrayParams].includes(attr);
+      const inputVal = attr === 'description' || structured ? raw : (secure_content(raw.replace(/(\\r\\n|\\n|\\r)/g, ''), false) as string);
       let val: unknown;
       if ((wcBooleanParams as (keyof ATCBInputConfig)[]).includes(attr)) {
         // if a boolean param has no value, it is handled as prop and set true
@@ -687,7 +690,7 @@ function read_attributes(el: ATCBHostElement, params: (keyof ATCBInputConfig)[] 
       data[`${attr}`] = val;
     }
   }
-  return data as ATCBInputConfig;
+  return secure_content(data) as ATCBInputConfig;
 }
 
 // destroy the button

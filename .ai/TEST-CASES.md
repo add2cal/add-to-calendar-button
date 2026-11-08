@@ -56,6 +56,56 @@ File: `test/wc-tests-smoke/s-smoke.test.js`
 - S-15: PRO config renders under the mobile flavor with platform option rules applied
 - S-16: PRO RSVP config renders the RSVP entry point instead of calendar options
 
+### Field security (`field-security.test.js`)
+
+- FS-01: real CRLF, CR, and LF stay inside iCalendar TEXT values
+- FS-02: hostile event fields cannot create extra properties or events
+- FS-03: parameter values cannot terminate the property or add parameters
+- FS-04: URI fields reject real line breaks before ICS generation
+- FS-05: script tags are rejected recursively before tag stripping
+- FS-06: validation catches script tags assembled by custom variables
+
+Node security cases in `test/ssr-node/field-text.test.mjs` and
+`test/ssr-node/ical-security.test.mjs` also run in the default suite:
+
+- FIELD-01: iCalendar TEXT escapes every real newline
+- FIELD-02: iCalendar parameters use quoted RFC 6868 encoding
+- FIELD-03: script tags are rejected in nested field values
+- FIELD-04: URI fields cannot carry literal newlines
+- FIELD-05: cleanup preserves literal descriptions and variables without changing other fields
+- ICAL-SEC-01: event text cannot inject a second VEVENT or property
+- ICAL-SEC-02: validation rejects newline-bearing URLs and attachment URLs
+- ICAL-SEC-03: custom variables cannot assemble script tags after cleanup
+- ICAL-SEC-04: organizer, attendee and Apple location parameters are quoted
+- ICAL-SEC-05: calendar email fields reject trailing and embedded newlines
+- ICAL-SEC-06: static file selection rejects unsafe root URIs before either output path
+- ICAL-SEC-07: unsafe per-date files cannot bypass a safe root file
+- ICAL-SEC-08: HTTPS files preserve query text, selection precedence and result output
+- ICAL-SEC-09: host overrides still bypass static files for dynamic generation
+- ICAL-SEC-10: dynamic iOS content and proxy URLs retain their distinct output contracts
+- ICAL-SEC-11: configured HTTPS URLs percent encode literal delimiters without escaping query syntax
+- ICAL-SEC-12: proxy paths encode components and share navigation and resolved output
+- ICAL-SEC-13: proxy authority rejects URL syntax rather than changing the destination
+
+Description preservation cases also run in the default suite:
+
+- DESC-01: nested descriptions preserve literal text in plain, HTML and ICS output
+- DESC-02: description variables are substituted before all output copies are encoded
+- DESC-03: description links encode literal labels and attributes exactly once
+- DESC-04: every provider transports descriptions in its own text or HTML format
+- DESC-05: custom variable replacement keeps dollar syntax literal and script rejection intact
+- DESC-06: character references decode once as text across rich, plain and ICS outputs
+- DESC-07: decoded text never becomes formatting, a link attribute or a line break
+- DESC-IN-01: description and structured attributes preserve literal text and JSON escapes
+- DESC-IN-02: inline JSON is parsed before field cleanup without deleting literal escapes
+- DESC-IN-03: SSR attributes round-trip literal descriptions through client ingestion
+- DESC-IN-04: playground description attribute reaches Google details as literal HTML text
+- DESC-IN-05: attribute script rejection is not hidden by the inline JSON fallback
+- DESC-IN-06: inline JSON still works with presentation attributes and empty input stays diagnostic
+- DESC-UI-attributes: literal descriptions survive ingestion and provider HTML without becoming markup
+- DESC-UI-json: literal descriptions survive ingestion and provider HTML without becoming markup
+- DESC-UI-ssr: literal descriptions survive ingestion and provider HTML without becoming markup
+
 Also part of the default run (long-standing quick tests):
 
 - `test/wc-tests/wc-load.test.js`: has a generated button id and shadowDom element
