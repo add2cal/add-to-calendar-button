@@ -1,5 +1,7 @@
 import { rewrite_html_elements, secure_content, strip_unsafe_keys } from '../core/text';
 import { icons } from '../core/globals';
+import { getOccurrencesInRange } from '../core/dates';
+import { decorate_data_rrule } from '../core/decorate-recurrence';
 import { ensure_locale, translate_hook } from '../i18n';
 import { ensure_style } from '../styles/css-template';
 import type { ATCBConfig, ATCBGroupOverviewConfig, ATCBInputConfig } from '../types';
@@ -28,6 +30,7 @@ interface OverviewResponseItem {
 }
 
 interface OverviewEvent extends OverviewDate {
+  source?: ATCBInputConfig;
   prokey: string;
   title: string;
   year: number;
@@ -96,32 +99,56 @@ function description_text(value: unknown): string {
     .trim();
 }
 
-function flatten_events(input: unknown, currentYear: number): OverviewEvent[] {
+function overview_dates(item: OverviewResponseItem, date: OverviewDate, from: string, to: string): OverviewDate[] {
+  const recurrence = typeof item.recurrence === 'string' && item.recurrence ? item.recurrence : item.recurrence_simple_type;
+  if (typeof recurrence !== 'string' || !recurrence || recurrence.toLowerCase() === 'none') return [date];
+  try {
+    const rule = decorate_data_rrule({ ...item, recurrence } as unknown as ATCBConfig).recurrence!;
+    const duration = date.endDate ? Date.parse(date.endDate) - Date.parse(date.startDate!) : 0;
+    return getOccurrencesInRange(rule, date.startDate!, date.startTime || '', date.timeZone || 'UTC', from, to).map((startDate) => ({
+      ...date,
+      startDate,
+      ...(date.endDate ? { endDate: new Date(Date.parse(startDate) + duration).toISOString().slice(0, 10) } : {}),
+    }));
+  } catch {
+    // An invalid series must not prevent unrelated events from rendering.
+    return [];
+  }
+}
+
+function flatten_events(input: unknown, now: Date): OverviewEvent[] {
+  const currentYear = now.getFullYear();
+  const from = isoDate(currentYear, now.getMonth() + 1).slice(0, 10);
+  const to = new Date(Date.UTC(currentYear, now.getMonth() + 19, 0)).toISOString().slice(0, 10);
   if (!Array.isArray(input)) throw new Error('The group overview response is invalid.');
   const output: OverviewEvent[] = [];
   for (const raw of input as OverviewResponseItem[]) {
     const item = strip_unsafe_keys(raw) as OverviewResponseItem;
     if (!item || typeof item !== 'object' || typeof item.prokey !== 'string' || !Array.isArray(item.dates)) continue;
-    for (const date of item.dates) {
-      if (!date || typeof date.startDate !== 'string' || !/^\d{4}-\d{2}-\d{2}$/.test(date.startDate)) continue;
-      const startYear = Number(date.startDate.slice(0, 4));
-      const startMonth = Number(date.startDate.slice(5, 7));
-      if (startYear < currentYear - 1 || startMonth < 1 || startMonth > 12) continue;
-      const event: OverviewEvent = {
-        ...date,
-        name: text(date.name),
-        description: description_text(date.description),
-        location: text(date.location),
-        prokey: item.prokey,
-        title: text(date.name) || text(item.label) || 'Event',
-        year: startYear,
-        month: startMonth,
-        hasRsvp: item.rsvp === true || (item.rsvp_block !== null && item.rsvp_block !== undefined && item.rsvp_block !== '') || /,\s*RSVP\s*$/i.test(text(item.label)),
-      };
-      output.push(event);
-      if (date.endDate && /^\d{4}-\d{2}-\d{2}$/.test(date.endDate)) {
-        const endYear = Number(date.endDate.slice(0, 4));
-        if (endYear > startYear && endYear >= currentYear - 1) output.push({ ...event, year: endYear, month: 1 });
+    for (const originalDate of item.dates) {
+      if (!originalDate || typeof originalDate.startDate !== 'string' || !/^\d{4}-\d{2}-\d{2}$/.test(originalDate.startDate)) continue;
+      for (const date of overview_dates(item, originalDate, from, to)) {
+        if (!date || typeof date.startDate !== 'string' || !/^\d{4}-\d{2}-\d{2}$/.test(date.startDate)) continue;
+        const startYear = Number(date.startDate.slice(0, 4));
+        const startMonth = Number(date.startDate.slice(5, 7));
+        if (startYear < currentYear - 1 || startMonth < 1 || startMonth > 12) continue;
+        const event: OverviewEvent = {
+          ...date,
+          ...(date !== originalDate ? { source: { ...originalDate, prokey: item.prokey } } : {}),
+          name: text(date.name),
+          description: description_text(date.description),
+          location: text(date.location),
+          prokey: item.prokey,
+          title: text(date.name) || text(item.label) || 'Event',
+          year: startYear,
+          month: startMonth,
+          hasRsvp: item.rsvp === true || (item.rsvp_block !== null && item.rsvp_block !== undefined && item.rsvp_block !== '') || /,\s*RSVP\s*$/i.test(text(item.label)),
+        };
+        output.push(event);
+        if (date === originalDate && date.endDate && /^\d{4}-\d{2}-\d{2}$/.test(date.endDate)) {
+          const endYear = Number(date.endDate.slice(0, 4));
+          if (endYear > startYear && endYear >= currentYear - 1) output.push({ ...event, year: endYear, month: 1 });
+        }
       }
     }
   }
@@ -293,7 +320,8 @@ async function render_group_overview(input: ATCBInputConfig, signal: AbortSignal
   if (config.to) query.set('to', config.to);
   const response = await fetch(`https://api${input.dev ? '-dev' : ''}.add-to-calendar-pro.com/v1/event/all?${query}`, { signal });
   if (!response.ok) throw new Error('Not possible to read the public group overview.');
-  const events = flatten_events(await response.json(), now.getFullYear());
+  const events = flatten_events(await response.json(), now);
+  const addEvent = (event: OverviewEvent, trigger: HTMLElement): void => onAdd(event.source ? { ...event.source, prokey: event.prokey } : event, trigger);
   if (input.subscribe === true || input.subscribe === 'true' || input.subscribe === '1') {
     for (const event of events) event.prokey = prokey;
   }
@@ -355,7 +383,7 @@ async function render_group_overview(input: ATCBInputConfig, signal: AbortSignal
       const list = document.createElement('ul');
       list.className = `atcb-group-overview-items atcb-group-overview-${config.type}`;
       list.setAttribute('part', 'atcb-group-overview-list');
-      for (const event of yearEvents.filter((candidate) => candidate.month === month)) list.append(render_event(event, config, locale, input.dev === true || input.dev === 'true', addLabel, onAdd));
+      for (const event of yearEvents.filter((candidate) => candidate.month === month)) list.append(render_event(event, config, locale, input.dev === true || input.dev === 'true', addLabel, addEvent));
       results.append(list);
     };
     if (config.yearsOnly) {
@@ -374,7 +402,7 @@ async function render_group_overview(input: ATCBInputConfig, signal: AbortSignal
     const list = document.createElement('ul');
     list.className = `atcb-group-overview-items atcb-group-overview-${config.type}`;
     list.setAttribute('part', 'atcb-group-overview-list');
-    for (const event of yearEvents) list.append(render_event(event, config, locale, input.dev === true || input.dev === 'true', addLabel, onAdd));
+    for (const event of yearEvents) list.append(render_event(event, config, locale, input.dev === true || input.dev === 'true', addLabel, addEvent));
     results.append(list);
   });
   blur_after_pointer_selection(yearSelect);
@@ -383,4 +411,4 @@ async function render_group_overview(input: ATCBInputConfig, signal: AbortSignal
   return { root, style };
 }
 
-export { render_group_overview };
+export { render_group_overview, flatten_events };

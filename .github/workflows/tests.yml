@@ -24,6 +24,15 @@ jobs:
           node-version: ${{ matrix.node-version }}
       - name: Run tests
         run: npm ci && npm run test
+      - name: Run overview recurrence regressions (7 cases)
+        shell: bash
+        run: npx web-test-runner "test/wc-tests/r-GOR-overview-recurrence.test.js" | tee overview-recurrence.txt
+      - uses: actions/upload-artifact@v6
+        if: always()
+        with:
+          name: overview-recurrence-node-${{ matrix.node-version }}
+          path: overview-recurrence.txt
+          if-no-files-found: error
 
   release:
     if: github.event_name != 'pull_request' || github.base_ref == 'main'
