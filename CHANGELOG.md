@@ -1,12 +1,8 @@
 # ⚡ Changelog (without patches)
 
-## Unreleased
-
-- PRO group overviews expand recurring events from the beginning of the current month through the end of the month 18 calendar months ahead. Calendar actions and detail links retain the original recurring event. Non-recurring event behavior is unchanged.
-- Upgrade timezones-ical-library to 3.x for historical local-time offsets. Outside bundled certified coverage, historical accuracy depends on runtime Intl tzdata; exported VTIMEZONE blocks retain their existing historical limitations.
-
 ## Version 3
 
+- v3.6 : PRO group overviews expand recurring events, while subscription overviews show a global Add to Calendar Button instead of options per event; stronger sanitization for text input
 - v3.5 : Auto-set end-time if missing
 - v3.4 : Brazilian Portuguese, Traditional Chinese, Serbian Latin, Norwegian Bokmål, and Norwegian Nynorsk translations
 - v3.3 : Optimized rendering flows (incl. SSR hydration)

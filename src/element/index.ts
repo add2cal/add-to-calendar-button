@@ -5,7 +5,7 @@ import { atcbCssTemplate, ensure_style, prefetch_all_styles } from '../styles/cs
 import { decorate_data } from '../core/decorate';
 import { check_required, validate } from '../core/validate';
 import { create_atcbl } from '../ui/generate';
-import { buttonTemplate } from '../ui/templates';
+import { buttonTemplate, renderButton } from '../ui/templates';
 import { generate_rich_data } from '../generators/rich-data';
 import { ensure_locale } from '../i18n/index';
 import { close, toggle } from '../ui/control';
@@ -17,6 +17,7 @@ import { prepare_ics_link, revoke_ics_blob_urls } from '../ui/ics-links';
 import { render_group_overview } from '../ui/group-overview';
 import { atcb_action } from '../action/index';
 import { resolveAttributeName, hasConfigAttribute, getConfigAttribute, observedConfigAttributes } from '../compat/attributes';
+import { fetch_with_context } from '../core/fetch';
 import type { ATCBInputConfig, ATCBConfig } from '../types';
 
 let initialGlobalInit = false;
@@ -298,9 +299,24 @@ if (isBrowser()) {
       this._groupOverviewAbort?.abort();
       const overviewAbort = new AbortController();
       this._groupOverviewAbort = overviewAbort;
-      const input = read_attributes(this);
-      input.prokey = this.data.proKey;
-      input.subscribe = this.data.subscribe;
+      const attributes = read_attributes(this);
+      const isSubscription = this.data.subscribe === true;
+      const hideSubscriptionButton = (attributes.groupOverviewConfig as { 'no-subscribe-button'?: boolean } | undefined)?.['no-subscribe-button'] === true;
+      const useSubscriptionOverview = isSubscription && !hideSubscriptionButton;
+      if (useSubscriptionOverview) {
+        this.data = await decorate_data(this.data);
+        await ensure_locale(this.data);
+        await validate(this.data);
+      }
+      // The fetched PRO config describes the subscription button and its style.
+      // The overview controls themselves remain host attributes by design.
+      const input = {
+        ...this.data,
+        groupOverview: attributes.groupOverview,
+        groupOverviewConfig: attributes.groupOverviewConfig,
+        prokey: this.data.proKey,
+        subscribe: useSubscriptionOverview,
+      } as ATCBInputConfig;
       let overview: Awaited<ReturnType<typeof render_group_overview>>;
       try {
         // Fetch and build off-DOM while an adopted SSR shell remains painted.
@@ -330,11 +346,30 @@ if (isBrowser()) {
         this.requestUpdate();
         await this.updateComplete;
       }
+      if (useSubscriptionOverview && !this.data.hidden) {
+        set_light_mode(this.shadowRoot!, this.data);
+        setup_state_management(this.data);
+        set_global_event_listener(this.shadowRoot!, this.data);
+        init_log(this.data.proKey, this.data.hideBranding, this.data.debug);
+        let controls = overview.root.querySelector<HTMLElement>('.atcb-group-overview-controls');
+        if (!controls) {
+          controls = document.createElement('div');
+          controls.className = 'atcb-group-overview-controls';
+          controls.setAttribute('part', 'atcb-group-overview-controls');
+          overview.root.prepend(controls);
+        }
+        const subscriptionButton = document.createElement('div');
+        subscriptionButton.className = 'atcb-group-overview-subscribe';
+        subscriptionButton.setAttribute('part', 'atcb-group-overview-subscribe');
+        controls.append(subscriptionButton);
+        renderButton(this.shadowRoot!, subscriptionButton, this.data);
+      }
       const root = this.shadowRoot!.querySelector('.atcb-initialized:not([data-atcb-ssr])') as HTMLElement;
       this.shadowRoot!.prepend(overview.style);
       root.append(overview.root);
       root.classList.remove('atcb-hidden');
       this.removeSsrShell();
+      if (useSubscriptionOverview) log_event('initialization', this.data.identifier!, this.data.identifier!);
     }
 
     async initButton(): Promise<boolean> {
@@ -852,7 +887,8 @@ async function get_pro_data(licenseKey?: string, el?: ATCBHostElement, directDat
     try {
       const proOverride = el ? el.proOverride : directData.proOverride;
       const dataOverrides: { [key: string]: unknown } = el ? (read_attributes(el, proOverride ? wcParams : wcProParams) as unknown as { [key: string]: unknown }) : (directData as unknown as { [key: string]: unknown });
-      const response = await fetch(`https://${dataOverrides.dev ? 'event-dev.caldn.net' : 'event.caldn.net'}/${licenseKey}/config.json`);
+      const endpoint = `https://${dataOverrides.dev ? 'event-dev.caldn.net' : 'event.caldn.net'}/${licenseKey}/config.json`;
+      const response = await fetch_with_context(endpoint);
       if (response.ok) {
         const data = strip_unsafe_keys(await response.json()) as ATCBConfig;
         if (proOverride) {
@@ -899,7 +935,8 @@ async function get_pro_data(licenseKey?: string, el?: ATCBHostElement, directDat
       throw new Error('Not possible to read prokey config from server...');
     } catch (originalError) {
       console.error(originalError);
-      throw new Error('prokey invalid or server not responding!');
+      const detail = originalError instanceof Error ? ` ${originalError.message}` : '';
+      throw new Error(`prokey invalid or server not responding!${detail}`);
     }
   }
   return {} as ATCBConfig;

@@ -24,6 +24,7 @@ import { rtlLanguages } from '../i18n/index';
 import { decorate_sizes } from '../core/sizes';
 import { officialAttributeName, legacyAttributeName } from '../compat/attributes';
 import { escape_html, escape_html_text, safe_html, secure_url, strip_unsafe_keys } from '../core/text';
+import { fetch_with_context } from '../core/fetch';
 import { tzlib_get_offset } from 'timezones-ical-library';
 
 // filled at build time with the minified tokens+core css plus EVERY per-style delta
@@ -399,7 +400,7 @@ async function generate_ssr_html_async(rawConfig: AddToCalendarButtonType & { [k
 
   try {
     const endpoint = `https://${truthyFlag(config.dev) ? 'event-dev.caldn.net' : 'event.caldn.net'}/${encodeURIComponent(proKey)}/config.json`;
-    const response = await fetch(endpoint);
+    const response = await fetch_with_context(endpoint);
     if (!response.ok) throw new Error('Not possible to read prokey config from server...');
     const responseData = strip_unsafe_keys(await response.json());
     if (!responseData || typeof responseData !== 'object' || Array.isArray(responseData)) throw new Error('Not possible to read prokey config from server...');
@@ -420,8 +421,9 @@ async function generate_ssr_html_async(rawConfig: AddToCalendarButtonType & { [k
     merged.proKey = proKey;
     merged.identifier = proKey;
     return generate_ssr_html_with_context(merged as AddToCalendarButtonType & { [key: string]: unknown }, true);
-  } catch {
-    throw new Error('prokey invalid or server not responding!');
+  } catch (error) {
+    const detail = error instanceof Error ? ` ${error.message}` : '';
+    throw new Error(`prokey invalid or server not responding!${detail}`);
   }
 }
 

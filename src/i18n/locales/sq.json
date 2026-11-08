@@ -63,7 +63,7 @@
       "required": "Nuk i keni plotësuar siç duhet të gjitha fushat e kërkuara",
       "sending": "Pati një problem me dërgimin e përgjigjes suaj. Ju lutemi provoni sërish më vonë",
       "email": "Adresa juaj e emailit nuk është e vlefshme",
-      "bookedoutmany": "Plot – provoni me më pak pjesëmarrës"
+      "bookedoutmany": "Plot - provoni me më pak pjesëmarrës"
     },
     "success": {
       "title": "Dërguar me sukses!",

@@ -67,13 +67,13 @@ Also part of the default run (long-standing quick tests):
 
 ### Group GOR - Overview recurrence (`r-GOR-overview-recurrence.test.js`)
 
-- renders occurrence links but sends the original date and identity to add actions in every layout
+- preserves original recurrence identity for event actions and makes subscription rows inert in every layout
 - does not duplicate cross-year recurring occurrences and retains all-day duration
 - includes both range edges and counts occurrences before the range
 - respects interval, weekdays, ordinal monthly and leap-year rules
 - preserves local dates across DST and UTC date boundaries, with inclusive UNTIL
 - expands the entire month window, sorts rows and preserves identity without mutation
-- handles simplified recurrence, expired series and dates after the upper bound
+- handles an occurrence on the upper bound, expired series and dates after it
 
 ### Group A - Lifecycle & registration (`r-A-lifecycle.test.js`)
 
@@ -321,7 +321,7 @@ Also part of the default run (long-standing quick tests):
 
 - R-01: prokey fetches config.json and renders the server-driven button
 - R-02: PRO fetch 404 -> button does not render
-- R-03: PRO fetch network error -> button does not render
+- R-03: PRO fetch network error identifies only the failed config origin and does not render
 - R-04: dev=true fetches from event-dev.caldn.net
 - R-05: WITHOUT proOverride, whitelisted attrs (language) still apply
 - R-06: WITHOUT proOverride, non-whitelisted attrs (name) are IGNORED - server wins
@@ -590,7 +590,10 @@ recurrence, which implies a single date entry).
 - GO-07: compact RSVP entries use an aligned dot beside regular add badges
 - GO-08: grid cards place an enlarged datetime above the title and respond to their container with one, two, or three equal columns, balanced outer badge spacing, inter-card clearance, and a 1200px cap
 - GO-09: public non-subscription groups always render the list, regardless of group-overview
-- GO-10: public subscription groups default to the button and group-overview can select the list
+- GO-10: public subscription groups default to the button; their overview adds the configured group button and renders inert entries
 - GO-11: group-overview has no effect when public_event_overview is false or absent
-- GO-12: subscription overview links, add badges, and direct actions always use the group key
+- GO-12: subscription overview entries never navigate or start calendar actions
 - GO-13: no-add renders plain entries without landing links, direct actions, or add badges
+- GO-14: public group fetch network error identifies only the failed dev API origin
+- GO-15: no-subscribe-button disables subscription-specific overview limitations
+- GO-16: a lone overview subscription button aligns right on larger screens

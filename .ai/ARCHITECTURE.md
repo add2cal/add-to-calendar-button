@@ -68,8 +68,9 @@ Key properties of the pipeline:
 - **Group overview branches after the PRO config fetch.** The server-side
   `public_event_overview` flag enables the branch. Non-subscription groups always render
   the list; subscription groups render the button by default and a truthy `group-overview`
-  selects the list. The list reads its display settings from the component attributes,
-  fetches the public group event range, and renders into the existing Lit shell.
+  selects the list together with the configured group-level subscription button. The list
+  reads its display settings from the component attributes, fetches the public group event
+  range, and renders into the existing Lit shell.
 
 ## HTML handling
 
@@ -104,10 +105,14 @@ established dispatch paths.
 Group overview controls filter the fetched range locally. Event links open the hosted
 event page unless `no-details` routes the whole event action to adding it. Optional add
 controls call `atcb_action` with the selected event, disable group overview for that call,
-and request the normal add flow with modal list style. Subscription overviews use the
-group key for every landing page and add action instead of each entry's event key. Unless
-`no-details` is set, RSVP events keep their hosted-detail route instead of receiving a
-separate add control. `no-add` suppresses all links, actions, and add controls.
+and request the normal add flow with modal list style. Subscription overviews always treat
+their entries like `no-add`: no entry link, direct action, or add control is rendered.
+Instead, the group subscription button described by the fetched PRO config is placed at
+the top right of the filter row. The `no-subscribe-button` overview option disables this entire
+subscription-specific overview treatment: it hides the group button and restores regular
+per-event detail links and add actions. Unless `no-details` is set, RSVP events keep their
+hosted-detail route instead of receiving a separate add control. `no-add` suppresses all
+links, actions, and add controls.
 
 ## State
 

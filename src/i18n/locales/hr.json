@@ -63,7 +63,7 @@
       "required": "Niste pravilno ispunili sva potrebna polja",
       "sending": "Došlo je do problema prilikom slanja vašeg odgovora. Pokušajte ponovno kasnije",
       "email": "Vaša adresa e-pošte nije valjana",
-      "bookedoutmany": "Popunjeno – pokušajte s manje sudionika"
+      "bookedoutmany": "Popunjeno - pokušajte s manje sudionika"
     },
     "success": {
       "title": "Uspješno poslano!",

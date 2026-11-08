@@ -6,7 +6,7 @@ const now = new Date('2026-10-31T12:00:00Z');
 const expand = (rule, start, from, to, time = '09:00', zone = 'UTC') => getOccurrencesInRange(rule, start, time, zone, from, to);
 
 describe('Group GOR - overview recurrence', () => {
-  it('renders occurrence links but sends the original date and identity to add actions in every layout', async () => {
+  it('preserves original recurrence identity for event actions and makes subscription rows inert in every layout', async () => {
     const today = new Date();
     const startDate = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-01`;
     const original = window.fetch;
@@ -14,15 +14,22 @@ describe('Group GOR - overview recurrence', () => {
     window.fetch = async () => new Response(JSON.stringify(payload), { status: 200 });
     try {
       for (const type of ['list', 'cards', 'compact']) {
-        for (const subscribe of [false, true]) {
-          const actions = [];
-          const { root } = await render_group_overview({ prokey: 'group-key', subscribe, buttonStyle: 'none', groupOverviewConfig: { type, 'add-via-list': true } }, new AbortController().signal, (event) => actions.push(event));
-          const links = [...root.querySelectorAll('[part="atcb-group-overview-link"]')];
-          expect(links).to.have.length(2);
-          expect(links.map((link) => link.href)).to.deep.equal(Array(2).fill(`https://caldn.net/${subscribe ? 'group-key' : 'original-series'}`));
-          root.querySelectorAll('[part="atcb-group-overview-add"]')[1].click();
-          expect(actions[0]).to.include({ startDate, prokey: subscribe ? 'group-key' : 'original-series' });
-        }
+        const actions = [];
+        const { root } = await render_group_overview({ prokey: 'group-key', buttonStyle: 'none', groupOverviewConfig: { type, 'add-via-list': true } }, new AbortController().signal, (event) => actions.push(event));
+        const links = [...root.querySelectorAll('[part="atcb-group-overview-link"]')];
+        expect(links).to.have.length(2);
+        expect(links.map((link) => link.href)).to.deep.equal(Array(2).fill('https://caldn.net/original-series'));
+        root.querySelectorAll('[part="atcb-group-overview-add"]')[1].click();
+        expect(actions[0]).to.include({ startDate, prokey: 'original-series' });
+
+        const subscriptionActions = [];
+        const { root: subscriptionRoot } = await render_group_overview({ prokey: 'group-key', subscribe: true, buttonStyle: 'none', groupOverviewConfig: { type, 'add-via-list': true, 'no-details': true } }, new AbortController().signal, (event) => subscriptionActions.push(event));
+        const subscriptionRows = [...subscriptionRoot.querySelectorAll('[part="atcb-group-overview-link"]')];
+        expect(subscriptionRows).to.have.length(2);
+        expect(subscriptionRows.every((row) => !row.hasAttribute('href'))).to.equal(true);
+        expect(subscriptionRoot.querySelector('[part="atcb-group-overview-add"]')).to.not.exist;
+        subscriptionRows[0].click();
+        expect(subscriptionActions).to.deep.equal([]);
       }
     } finally {
       window.fetch = original;
@@ -70,15 +77,15 @@ describe('Group GOR - overview recurrence', () => {
     expect(JSON.stringify(input)).to.equal(before);
   });
 
-  it('handles simplified recurrence, expired series and dates after the upper bound', () => {
+  it('handles an occurrence on the upper bound, expired series and dates after it', () => {
     const rows = flatten_events(
       [
-        { prokey: 'simple', recurrence_simple_type: 'weekly', dates: [{ startDate: '2028-04-30' }] },
+        { prokey: 'boundary', recurrence: 'RRULE:FREQ=WEEKLY', dates: [{ startDate: '2028-04-30' }] },
         { prokey: 'expired', recurrence: 'RRULE:FREQ=DAILY;COUNT=2', dates: [{ startDate: '2026-09-01' }] },
         { prokey: 'future', recurrence: 'RRULE:FREQ=DAILY', dates: [{ startDate: '2028-05-01' }] },
       ],
       now,
     );
-    expect(rows.map((row) => [row.prokey, row.startDate])).to.deep.equal([['simple', '2028-04-30']]);
+    expect(rows.map((row) => [row.prokey, row.startDate])).to.deep.equal([['boundary', '2028-04-30']]);
   });
 });

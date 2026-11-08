@@ -40,13 +40,16 @@ describe('Group R - PRO prokey fetch & override', () => {
     }
   });
 
-  it('R-03: PRO fetch network error -> button does not render', async () => {
+  it('R-03: PRO fetch network error identifies only the failed config origin and does not render', async () => {
     const mock = mockProFetch({ [PRO_EVT_KEY]: proEvtConfig() }, { networkError: true });
     const mute = muteConsole(); // the lib intentionally console-errors this failure
     try {
-      const { host } = await mountAtcb({ prokey: PRO_EVT_KEY, identifier: 'atcb-r03' });
+      const { host } = await mountAtcb({ prokey: PRO_EVT_KEY, identifier: 'atcb-r03', debug: true });
       await aTimeout(200);
       expect(initFailed(host)).to.equal(true);
+      expect(mute.messages.join(' ')).to.include('Fetch failed for "https://event.caldn.net/"');
+      expect(mute.messages.join(' ')).to.not.include(PRO_EVT_KEY);
+      expect(mute.messages.join(' ')).to.not.include('TypeError');
     } finally {
       mute.restore();
       mock.restore();

@@ -1,9 +1,9 @@
 import { rewrite_html_elements, secure_content, strip_unsafe_keys } from '../core/text';
 import { icons } from '../core/globals';
 import { getOccurrencesInRange } from '../core/dates';
-import { decorate_data_rrule } from '../core/decorate-recurrence';
 import { ensure_locale, translate_hook } from '../i18n';
 import { ensure_style } from '../styles/css-template';
+import { fetch_with_context } from '../core/fetch';
 import type { ATCBConfig, ATCBGroupOverviewConfig, ATCBInputConfig } from '../types';
 
 type OverviewType = 'list' | 'cards' | 'compact';
@@ -25,8 +25,7 @@ interface OverviewResponseItem {
   dates?: OverviewDate[];
   rsvp?: boolean;
   rsvp_block?: string | number | null;
-  recurrence?: unknown;
-  recurrence_simple_type?: unknown;
+  recurrence?: string;
 }
 
 interface OverviewEvent extends OverviewDate {
@@ -100,12 +99,10 @@ function description_text(value: unknown): string {
 }
 
 function overview_dates(item: OverviewResponseItem, date: OverviewDate, from: string, to: string): OverviewDate[] {
-  const recurrence = typeof item.recurrence === 'string' && item.recurrence ? item.recurrence : item.recurrence_simple_type;
-  if (typeof recurrence !== 'string' || !recurrence || recurrence.toLowerCase() === 'none') return [date];
+  if (!item.recurrence) return [date];
   try {
-    const rule = decorate_data_rrule({ ...item, recurrence } as unknown as ATCBConfig).recurrence!;
     const duration = date.endDate ? Date.parse(date.endDate) - Date.parse(date.startDate!) : 0;
-    return getOccurrencesInRange(rule, date.startDate!, date.startTime || '', date.timeZone || 'UTC', from, to).map((startDate) => ({
+    return getOccurrencesInRange(item.recurrence, date.startDate!, date.startTime || '', date.timeZone || 'UTC', from, to).map((startDate) => ({
       ...date,
       startDate,
       ...(date.endDate ? { endDate: new Date(Date.parse(startDate) + duration).toISOString().slice(0, 10) } : {}),
@@ -204,7 +201,7 @@ function render_event(event: OverviewEvent, config: NormalizedOverviewConfig, lo
   let dateLabel = dateFormatter.format(start);
   if (event.endDate || event.endTime) {
     const end = new Date(`${event.endDate || event.startDate}T${event.endTime || event.startTime || '00:00'}:00`);
-    dateLabel += ` – ${dateFormatter.format(end)}`;
+    dateLabel += ` - ${dateFormatter.format(end)}`;
   }
   const href = `https://${config.customDomain || (dev ? 'dev.caldn.net' : 'caldn.net')}/${encodeURIComponent(event.prokey)}`;
   if (config.type === 'compact') {
@@ -315,14 +312,20 @@ async function render_group_overview(input: ATCBInputConfig, signal: AbortSignal
   const prokey = typeof input.prokey === 'string' ? input.prokey : '';
   if (!prokey) throw new Error('group-overview requires a prokey.');
   const now = new Date();
-  const config = normalize_config(input.groupOverviewConfig as ATCBGroupOverviewConfig | undefined, now);
+  const overviewConfig = input.groupOverviewConfig as ATCBGroupOverviewConfig | undefined;
+  const config = normalize_config(overviewConfig, now);
+  const isSubscription = input.subscribe === true || input.subscribe === 'true' || input.subscribe === '1';
+  // Subscription overviews are display-only lists. The single group-level
+  // subscription action is rendered in the controls by the host component.
+  if (isSubscription) config.noAdd = true;
   const query = new URLSearchParams({ group: prokey, dates: 'true', from: config.from });
   if (config.to) query.set('to', config.to);
-  const response = await fetch(`https://api${input.dev ? '-dev' : ''}.add-to-calendar-pro.com/v1/event/all?${query}`, { signal });
+  const endpoint = `https://api${input.dev ? '-dev' : ''}.add-to-calendar-pro.com/v1/event/all?${query}`;
+  const response = await fetch_with_context(endpoint, { signal });
   if (!response.ok) throw new Error('Not possible to read the public group overview.');
   const events = flatten_events(await response.json(), now);
   const addEvent = (event: OverviewEvent, trigger: HTMLElement): void => onAdd(event.source ? { ...event.source, prokey: event.prokey } : event, trigger);
-  if (input.subscribe === true || input.subscribe === 'true' || input.subscribe === '1') {
+  if (isSubscription) {
     for (const event of events) event.prokey = prokey;
   }
   const locale = typeof input.language === 'string' ? input.language.replace('_', '-') : 'en';
@@ -343,20 +346,24 @@ async function render_group_overview(input: ATCBInputConfig, signal: AbortSignal
   const controls = document.createElement('div');
   controls.className = 'atcb-group-overview-controls';
   controls.setAttribute('part', 'atcb-group-overview-controls');
+  const filters = document.createElement('div');
+  filters.className = 'atcb-group-overview-filters';
+  filters.setAttribute('part', 'atcb-group-overview-filters');
   const yearSelect = document.createElement('select');
   yearSelect.className = 'atcb-group-overview-select';
   yearSelect.setAttribute('part', 'atcb-group-overview-year-select');
   yearSelect.setAttribute('aria-label', 'Year');
   for (const year of years) yearSelect.add(new Option(String(year), String(year), year === currentYear, year === currentYear));
-  if (years.length > 1) controls.append(yearSelect);
+  if (years.length > 1) filters.append(yearSelect);
   let monthSelect: HTMLSelectElement | undefined;
   if (!config.yearsOnly) {
     monthSelect = document.createElement('select');
     monthSelect.className = 'atcb-group-overview-select';
     monthSelect.setAttribute('part', 'atcb-group-overview-month-select');
     monthSelect.setAttribute('aria-label', 'Month');
-    controls.append(monthSelect);
+    filters.append(monthSelect);
   }
+  if (filters.childElementCount > 0) controls.append(filters);
   if (controls.childElementCount > 0) root.append(controls);
   const results = document.createElement('div');
   results.className = 'atcb-group-overview-results';

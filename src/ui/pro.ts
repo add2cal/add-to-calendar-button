@@ -6,6 +6,7 @@ import { renderButton } from './templates';
 import { translate_hook } from '../i18n/index';
 import { log_event } from '../core/events';
 import { decorate_data } from '../core/decorate';
+import { fetch_with_context } from '../core/fetch';
 import type { ATCBConfig } from '../types';
 
 // local shape for one entry of a custom PRO form (ty or rsvp), as produced/consumed by the shared form helpers
@@ -667,7 +668,8 @@ async function generate_rsvp_button(host: ShadowRoot, data: ATCBConfig): Promise
 
 async function check_bookings(proKey: string, dev: boolean = false): Promise<number> {
   try {
-    const response = await fetch(`https://api${dev ? '-dev' : ''}.add-to-calendar-pro.com/dffb8bbd-ee5e-4a4f-a7ea-503af98ca468?prokey=${proKey}`, {
+    const endpoint = `https://api${dev ? '-dev' : ''}.add-to-calendar-pro.com/dffb8bbd-ee5e-4a4f-a7ea-503af98ca468?prokey=${proKey}`;
+    const response = await fetch_with_context(endpoint, {
       method: 'GET',
     });
     if (!response.ok) {
@@ -859,7 +861,7 @@ async function sendPostRequest(url: string, fields: ATCBPostField[], header: { [
   }
   // Send the FormData object using fetch
   try {
-    const response = await fetch(url, requestData);
+    const response = await fetch_with_context(url, requestData);
     const responseJson = (await response.json()) as ATCBPostErrorResult;
     if (!response.ok) {
       console.error('Network response was not ok');
