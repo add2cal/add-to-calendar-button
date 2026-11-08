@@ -1,6 +1,7 @@
 import { expect, aTimeout } from '@open-wc/testing';
 import { mountAtcb } from '../helpers/mount.js';
 import { proEvtConfig, proRsvpConfig } from '../fixtures/pro.js';
+import { muteConsole } from '../helpers/capture.js';
 
 const GROUP_KEY = '11111111-2222-3333-4444-555555555555';
 
@@ -52,6 +53,31 @@ describe('Group GO - PRO group overview', () => {
     }
   });
 
+  it('GO-14: public group fetch network error identifies only the failed dev API origin', async () => {
+    const original = window.fetch;
+    const mute = muteConsole();
+    window.fetch = async (url) => {
+      const value = String(url);
+      if (value === `https://event-dev.caldn.net/${GROUP_KEY}/config.json`) {
+        return new Response(JSON.stringify(proEvtConfig({ public_event_overview: true })), { status: 200, headers: { 'Content-Type': 'application/json' } });
+      }
+      if (value.startsWith('https://api-dev.add-to-calendar-pro.com/v1/event/all?')) {
+        throw new TypeError('Failed to fetch (mocked CSP error)');
+      }
+      return original(url);
+    };
+    try {
+      const { host } = await mountAtcb({ prokey: GROUP_KEY, 'group-overview': true, dev: true, debug: true });
+      expect(host.shadowRoot.querySelector('.atcb-debug-error-msg').textContent).to.include('Fetch failed for "https://api-dev.add-to-calendar-pro.com/"');
+      expect(mute.messages.join(' ')).to.include('Fetch failed for "https://api-dev.add-to-calendar-pro.com/"');
+      expect(mute.messages.join(' ')).to.not.include('/v1/event/all');
+      expect(mute.messages.join(' ')).to.not.include('TypeError');
+    } finally {
+      mute.restore();
+      window.fetch = original;
+    }
+  });
+
   it('GO-09: a public non-subscription group always renders the list', async () => {
     const mock = mockOverview([]);
     try {
@@ -63,8 +89,9 @@ describe('Group GO - PRO group overview', () => {
     }
   });
 
-  it('GO-10: a public subscription group defaults to its button and can opt into the list', async () => {
-    const subscribeConfig = { subscribe: true, icsFile: 'https://example.com/calendar.ics' };
+  it('GO-10: a public subscription group defaults to its button and adds that configured button to an inert overview', async () => {
+    const year = new Date().getFullYear();
+    const subscribeConfig = { subscribe: true, icsFile: 'https://example.com/calendar.ics', label: 'Subscribe to all events', options: ['Google', 'iCal'], buttonStyle: 'round' };
     let mock = mockOverview([], subscribeConfig);
     try {
       const { shadow } = await mountAtcb({ prokey: GROUP_KEY });
@@ -73,11 +100,29 @@ describe('Group GO - PRO group overview', () => {
     } finally {
       mock.restore();
     }
-    mock = mockOverview([], subscribeConfig);
+    mock = mockOverview([{ prokey: 'individual-event', label: 'Subscription event', dates: [{ name: 'Subscription event', startDate: date(year, 4, 10) }] }], subscribeConfig);
     try {
-      const { shadow } = await mountAtcb({ prokey: GROUP_KEY, 'group-overview': true });
+      const { shadow } = await mountAtcb({ prokey: GROUP_KEY, 'group-overview': true, 'group-overview-config': { 'add-via-list': true, 'no-details': true } });
       expect(shadow.querySelector('[part="atcb-group-overview"]')).to.exist;
-      expect(shadow.querySelector('[part="atcb-button"]')).to.not.exist;
+      const controls = shadow.querySelector('[part="atcb-group-overview-controls"]');
+      const filters = controls.querySelector('[part="atcb-group-overview-filters"]');
+      const subscriptionButton = controls.querySelector('[part="atcb-group-overview-subscribe"]');
+      expect(filters).to.equal(controls.firstElementChild);
+      expect(subscriptionButton).to.equal(controls.lastElementChild);
+      expect(subscriptionButton.querySelector('[part="atcb-button-text"]').textContent).to.equal('Subscribe to all events');
+      expect(getComputedStyle(controls).alignItems).to.equal('center');
+      expect(getComputedStyle(controls).columnGap).to.equal('25px');
+      expect(getComputedStyle(controls).flexWrap).to.equal('nowrap');
+      const entry = shadow.querySelector('[part="atcb-group-overview-link"]');
+      expect(entry.tagName).to.equal('DIV');
+      expect(entry.hasAttribute('href')).to.equal(false);
+      expect(shadow.querySelector('[part="atcb-group-overview-add"]')).to.not.exist;
+      subscriptionButton.querySelector('[part="atcb-button"]').dispatchEvent(new MouseEvent('mouseup', { bubbles: true, cancelable: true, view: window }));
+      await aTimeout(20);
+      expect([...shadow.querySelectorAll('[part="atcb-list-item"]')].map((option) => option.id.split('-').at(-1))).to.deep.equal(['google', 'ical']);
+      const buttonRect = subscriptionButton.querySelector('[part="atcb-button"]').getBoundingClientRect();
+      const listRect = shadow.querySelector('[part="atcb-list-wrapper"]').getBoundingClientRect();
+      expect(Math.abs(buttonRect.left + buttonRect.width / 2 - (listRect.left + listRect.width / 2))).to.be.lessThan(2);
     } finally {
       mock.restore();
     }
@@ -96,7 +141,7 @@ describe('Group GO - PRO group overview', () => {
     }
   });
 
-  it('GO-12: subscription overview links and calendar actions always use the group key', async () => {
+  it('GO-12: subscription overview entries never navigate or start calendar actions', async () => {
     const year = new Date().getFullYear();
     const eventKey = 'individual-event-key';
     const payload = [{ prokey: eventKey, label: 'Subscription event', dates: [{ name: 'Subscription event', startDate: date(year, 4, 10) }] }];
@@ -106,16 +151,46 @@ describe('Group GO - PRO group overview', () => {
       try {
         const { shadow } = await mountAtcb({ prokey: GROUP_KEY, 'group-overview': true, 'group-overview-config': overviewConfig });
         const entry = shadow.querySelector('[part="atcb-group-overview-link"]');
-        expect(entry.href).to.equal(`https://caldn.net/${GROUP_KEY}`);
-        const trigger = shadow.querySelector('[part="atcb-group-overview-add"]') || entry;
-        trigger.click();
+        expect(entry.hasAttribute('href')).to.equal(false);
+        expect(shadow.querySelector('[part="atcb-group-overview-add"]')).to.not.exist;
+        const configFetches = mock.calls.filter((url) => url.endsWith(`/${GROUP_KEY}/config.json`)).length;
+        entry.click();
         await aTimeout(100);
-        expect(mock.calls.filter((url) => url.endsWith(`/${GROUP_KEY}/config.json`)).length).to.be.greaterThan(1);
+        expect(mock.calls.filter((url) => url.endsWith(`/${GROUP_KEY}/config.json`)).length).to.equal(configFetches);
         expect(mock.calls.some((url) => url.endsWith(`/${eventKey}/config.json`))).to.equal(false);
       } finally {
         document.querySelectorAll('[id$="-modal-host"]').forEach((host) => host.remove());
         mock.restore();
       }
+    }
+  });
+
+  it('GO-15: no-subscribe-button disables subscription-specific overview limitations', async () => {
+    const year = new Date().getFullYear();
+    const eventKey = 'individual-event-key';
+    const payload = [{ prokey: eventKey, label: 'Individual event', dates: [{ name: 'Individual event', startDate: date(year, 4, 10) }] }];
+    const mock = mockOverview(payload, { subscribe: true, icsFile: 'https://example.com/calendar.ics' });
+    try {
+      const { shadow } = await mountAtcb({ prokey: GROUP_KEY, 'group-overview': true, 'group-overview-config': { 'no-subscribe-button': true, 'add-via-list': true } });
+      expect(shadow.querySelector('[part="atcb-group-overview-subscribe"]')).to.not.exist;
+      const entry = shadow.querySelector('[part="atcb-group-overview-link"]');
+      expect(entry.href).to.equal(`https://caldn.net/${eventKey}`);
+      expect(shadow.querySelector('[part="atcb-group-overview-add"]')).to.exist;
+    } finally {
+      mock.restore();
+    }
+  });
+
+  it('GO-16: a lone overview subscription button aligns right on larger screens', async () => {
+    const mock = mockOverview([], { subscribe: true, icsFile: 'https://example.com/calendar.ics' });
+    try {
+      const { shadow } = await mountAtcb({ prokey: GROUP_KEY, 'group-overview': true, 'group-overview-config': { 'years-only': true } });
+      const controls = shadow.querySelector('[part="atcb-group-overview-controls"]');
+      const subscriptionButton = controls.querySelector('[part="atcb-group-overview-subscribe"]');
+      expect(controls.children).to.have.length(1);
+      expect(Math.abs(controls.getBoundingClientRect().right - subscriptionButton.getBoundingClientRect().right)).to.be.lessThan(2);
+    } finally {
+      mock.restore();
     }
   });
 

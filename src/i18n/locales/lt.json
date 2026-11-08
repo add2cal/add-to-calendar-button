@@ -63,7 +63,7 @@
       "required": "Jūs netinkamai užpildėte visus privalomus laukus",
       "sending": "Siunčiant atsakymą kilo problema. Bandykite dar kartą vėliau",
       "email": "Jūsų el. pašto adresas neteisingas",
-      "bookedoutmany": "Vietų nėra – bandykite nurodyti mažiau dalyvių"
+      "bookedoutmany": "Vietų nėra - bandykite nurodyti mažiau dalyvių"
     },
     "success": {
       "title": "Sėkmingai išsiųstas!",

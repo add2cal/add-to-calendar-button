@@ -15,7 +15,10 @@ function position_list(host: ShadowRoot, trigger: HTMLElement, list: HTMLElement
   // calculate position
   let triggerDim = trigger.getBoundingClientRect();
   const btnDim = originalTrigger.getBoundingClientRect();
-  const btnParentDim = (originalTrigger.parentNode as Element).getBoundingClientRect();
+  // The dropdown is appended to .atcb-initialized, not necessarily to the
+  // trigger wrapper. In wider flex/grid containers those two coordinate spaces
+  // differ, so always position against the list's actual containing element.
+  const listParentDim = list.parentElement!.getBoundingClientRect();
   const viewportHeight = document.documentElement.clientHeight;
   if (anchorSet === true && !list.classList.contains('atcb-dropoverlay')) {
     let listDim = list.getBoundingClientRect();
@@ -25,9 +28,9 @@ function position_list(host: ShadowRoot, trigger: HTMLElement, list: HTMLElement
     if (list.classList.contains('atcb-dropup') || (!blockUpwards && triggerDim.top + listDim.height > viewportHeight - 20 && 2 * btnDim.top + btnDim.height - triggerDim.top - listDim.height > 20) || blockDownwards) {
       originalTrigger.classList.add('atcb-dropup');
       list.classList.add('atcb-dropup');
-      list.style.bottom = btnParentDim.bottom - btnDim.bottom + (triggerDim.top - btnDim.top) + 'px';
+      list.style.bottom = listParentDim.bottom - btnDim.bottom + (triggerDim.top - btnDim.top) + 'px';
     } else {
-      list.style.top = btnDim.top - btnParentDim.top + (triggerDim.top - btnDim.top) + 'px';
+      list.style.top = btnDim.top - listParentDim.top + (triggerDim.top - btnDim.top) + 'px';
       if (originalTrigger.classList.contains('atcb-dropup')) {
         originalTrigger.classList.remove('atcb-dropup');
       }
@@ -42,7 +45,7 @@ function position_list(host: ShadowRoot, trigger: HTMLElement, list: HTMLElement
     }
     // read list dimensions again, since we altered the width in the step before
     listDim = list.getBoundingClientRect();
-    list.style.left = Math.round(triggerDim.left - btnParentDim.left - (listDim.width - triggerDim.width) / 2) + 'px';
+    list.style.left = Math.round(triggerDim.left - listParentDim.left - (listDim.width - triggerDim.width) / 2) + 'px';
   } else {
     // when there is no anchor set (only the case with custom implementations) or the listStyle is set respectively (overlay), we render the modal centered above the trigger
     list.style.minWidth = btnDim.width + 20 + 'px';

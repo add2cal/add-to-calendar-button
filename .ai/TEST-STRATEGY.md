@@ -18,13 +18,16 @@ Three tiers share one helper/fixture layer. Only the smallest runs by default.
 Nine real screen-reader scenarios live in `test/screen-reader/` and run separately via
 `npm run test:screen-reader` using Guidepup + Playwright. See its README for machine
 setup, platform requirements, and diagnostic commands. They are not part of any browser
-suite or `test:release`. PRs targeting `dev` run smoke; PRs targeting `main` run the
+suite or `test:release`. PRs targeting `dev` run smoke plus a focused seven-case
+`r-GOR-overview-recurrence.test.js` run on each supported Node version. Its complete
+runner output is retained in the `overview-recurrence-node-*` CI artifacts so the
+executed count can be checked independently of job status. PRs targeting `main` run the
 complete release gate: both Chrome binaries, package/SSR checks, static checks, and the
 separate VoiceOver + NVDA jobs.
 
 | Script                       | Tier                | Content                                                                                                        | When                   |
 | ---------------------------- | ------------------- | -------------------------------------------------------------------------------------------------------------- | ---------------------- |
-| `npm run test`               | Smoke               | 27 browser cases plus 31 Node field/description-security cases                                                 | DEFAULT / PRs to dev   |
+| `npm run test`               | Smoke               | Browser smoke, load and recurrence cases plus focused Node field/description-security cases                    | DEFAULT / PRs to dev   |
 | `npm run test:extended`      | Reduced             | all reduced feature groups, 350 hand-written cases including smoke (`test/wc-tests/` + `test/wc-tests-smoke/`) | on demand / pre-merge  |
 | `npm run test:full`          | Full Cartesian      | 560 browser cases including reduced                                                                            | PRs to main / releases |
 | `npm run test:screen-reader` | Real screen readers | 9 Guidepup scenarios on the current reader OS                                                                  | CI accessibility jobs  |

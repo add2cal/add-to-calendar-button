@@ -5,7 +5,7 @@ import { atcbCssTemplate, ensure_style, prefetch_all_styles } from '../styles/cs
 import { decorate_data } from '../core/decorate';
 import { check_required, validate } from '../core/validate';
 import { create_atcbl } from '../ui/generate';
-import { buttonTemplate } from '../ui/templates';
+import { buttonTemplate, renderButton } from '../ui/templates';
 import { generate_rich_data } from '../generators/rich-data';
 import { ensure_locale } from '../i18n/index';
 import { close, toggle } from '../ui/control';
@@ -17,6 +17,8 @@ import { prepare_ics_link, revoke_ics_blob_urls } from '../ui/ics-links';
 import { render_group_overview } from '../ui/group-overview';
 import { atcb_action } from '../action/index';
 import { resolveAttributeName, hasConfigAttribute, getConfigAttribute, observedConfigAttributes } from '../compat/attributes';
+import { fetch_with_context } from '../core/fetch';
+import { groupOverviewSkeletonCss } from '../core/group-overview-skeleton';
 import type { ATCBInputConfig, ATCBConfig } from '../types';
 
 let initialGlobalInit = false;
@@ -29,6 +31,43 @@ const template = `<div class="atcb-initialized atcb-hidden"></div>`;
 // is block-scoped inside the isBrowser() guard below and not usable as a type out here
 interface ATCBHostElement extends HTMLElement {
   proOverride?: boolean;
+}
+
+interface ClientGroupOverviewSkeleton {
+  wrapper: HTMLElement;
+  skeleton: HTMLElement;
+  style: HTMLStyleElement;
+}
+
+function create_client_group_overview_skeleton(host: ShadowRoot): ClientGroupOverviewSkeleton | null {
+  const wrapper = host.querySelector('.atcb-initialized:not([data-atcb-ssr])') as HTMLElement | null;
+  if (!wrapper) return null;
+  const style = document.createElement('style');
+  style.textContent = groupOverviewSkeletonCss;
+  const nonce = csp_nonce(host);
+  if (nonce) style.setAttribute('nonce', nonce);
+  const skeleton = document.createElement('div');
+  skeleton.className = 'atcb-group-overview atcb-group-overview-list atcb-ssr-group-overview-skeleton';
+  skeleton.setAttribute('aria-hidden', 'true');
+  for (const className of ['atcb-ssr-group-overview-select', 'atcb-ssr-group-overview-entry', 'atcb-ssr-group-overview-entry']) {
+    const block = document.createElement('div');
+    block.className = `atcb-ssr-skeleton ${className}`;
+    skeleton.append(block);
+  }
+  wrapper.classList.remove('atcb-hidden');
+  wrapper.classList.add('atcb-client-group-overview-loading');
+  wrapper.setAttribute('aria-busy', 'true');
+  wrapper.append(skeleton);
+  host.prepend(style);
+  return { wrapper, skeleton, style };
+}
+
+function remove_client_group_overview_skeleton(loading: ClientGroupOverviewSkeleton | null): void {
+  if (!loading) return;
+  loading.skeleton.remove();
+  loading.style.remove();
+  loading.wrapper.classList.remove('atcb-client-group-overview-loading');
+  loading.wrapper.removeAttribute('aria-busy');
 }
 
 function is_group_overview(el: Element): boolean {
@@ -67,6 +106,7 @@ if (isBrowser()) {
     initializing?: boolean;
     updatePending?: boolean;
     _groupOverviewAbort?: AbortController;
+    _clientGroupOverviewSkeleton?: ClientGroupOverviewSkeleton;
 
     constructor() {
       super();
@@ -164,6 +204,7 @@ if (isBrowser()) {
       try {
         const proKeyVal = getConfigAttribute(this, 'proKey');
         if (proKeyVal && proKeyVal !== '') {
+          if (is_group_overview(this) && !this._deferLitRender) this._clientGroupOverviewSkeleton = create_client_group_overview_skeleton(this.shadowRoot!) || undefined;
           this.data = await get_pro_data(proKeyVal, this);
           if (this.data.proKey) this.prokey = this.data.proKey;
           if (should_render_group_overview(this, this.data)) {
@@ -174,12 +215,16 @@ if (isBrowser()) {
             this._initializedResolver();
             return;
           }
+          remove_client_group_overview_skeleton(this._clientGroupOverviewSkeleton || null);
+          this._clientGroupOverviewSkeleton = undefined;
         } else {
           this.data.proKey = '';
           // if no data yet, we try reading attributes or the innerHTML of the host element
           this.data = (await process_inline_data(this, this.debug)) as unknown as ATCBConfig;
         }
       } catch (e) {
+        remove_client_group_overview_skeleton(this._clientGroupOverviewSkeleton || null);
+        this._clientGroupOverviewSkeleton = undefined;
         if (this.debug) {
           console.error(e);
           render_debug_msg(this.shadowRoot!, e);
@@ -207,6 +252,8 @@ if (isBrowser()) {
     override disconnectedCallback(): void {
       super.disconnectedCallback();
       this._groupOverviewAbort?.abort();
+      remove_client_group_overview_skeleton(this._clientGroupOverviewSkeleton || null);
+      this._clientGroupOverviewSkeleton = undefined;
       cleanup(this.shadowRoot!, this.identifier);
       if (this.debug) {
         console.log('Add to Calendar Button "' + (this.identifier || this.getAttribute('identifier') || 'not yet initialized') + '" destroyed');
@@ -262,6 +309,7 @@ if (isBrowser()) {
       try {
         const proKeyVal = getConfigAttribute(this, 'proKey');
         if (proKeyVal && proKeyVal !== '') {
+          if (is_group_overview(this) && !this._deferLitRender) this._clientGroupOverviewSkeleton = create_client_group_overview_skeleton(this.shadowRoot!) || undefined;
           this.data = await get_pro_data(proKeyVal, this);
           if (this.data.proKey) this.prokey = this.data.proKey;
           if (should_render_group_overview(this, this.data)) {
@@ -270,10 +318,14 @@ if (isBrowser()) {
             this.updatePending = false;
             return;
           }
+          remove_client_group_overview_skeleton(this._clientGroupOverviewSkeleton || null);
+          this._clientGroupOverviewSkeleton = undefined;
         } else {
           this.data = (await process_inline_data(this, this.debug)) as unknown as ATCBConfig;
         }
       } catch (e) {
+        remove_client_group_overview_skeleton(this._clientGroupOverviewSkeleton || null);
+        this._clientGroupOverviewSkeleton = undefined;
         if (this.debug) {
           console.error(e);
           render_debug_msg(this.shadowRoot!, e);
@@ -295,12 +347,29 @@ if (isBrowser()) {
       this.style.opacity = '1';
       this.style.position = 'relative';
       const deferred = this._deferLitRender;
+      const clientLoading = deferred ? null : this._clientGroupOverviewSkeleton || create_client_group_overview_skeleton(this.shadowRoot!);
+      this._clientGroupOverviewSkeleton = clientLoading || undefined;
       this._groupOverviewAbort?.abort();
       const overviewAbort = new AbortController();
       this._groupOverviewAbort = overviewAbort;
-      const input = read_attributes(this);
-      input.prokey = this.data.proKey;
-      input.subscribe = this.data.subscribe;
+      const attributes = read_attributes(this);
+      const isSubscription = this.data.subscribe === true;
+      const hideSubscriptionButton = (attributes.groupOverviewConfig as { 'no-subscribe-button'?: boolean } | undefined)?.['no-subscribe-button'] === true;
+      const useSubscriptionOverview = isSubscription && !hideSubscriptionButton;
+      if (useSubscriptionOverview) {
+        this.data = await decorate_data(this.data);
+        await ensure_locale(this.data);
+        await validate(this.data);
+      }
+      // The fetched PRO config describes the subscription button and its style.
+      // The overview controls themselves remain host attributes by design.
+      const input = {
+        ...this.data,
+        groupOverview: attributes.groupOverview,
+        groupOverviewConfig: attributes.groupOverviewConfig,
+        prokey: this.data.proKey,
+        subscribe: useSubscriptionOverview,
+      } as ATCBInputConfig;
       let overview: Awaited<ReturnType<typeof render_group_overview>>;
       try {
         // Fetch and build off-DOM while an adopted SSR shell remains painted.
@@ -309,6 +378,8 @@ if (isBrowser()) {
         });
       } catch (error) {
         // A failed overview must not leave an inert loading skeleton behind.
+        remove_client_group_overview_skeleton(clientLoading);
+        this._clientGroupOverviewSkeleton = undefined;
         if (!this.isConnected) {
           this.removeSsrShell();
           return;
@@ -322,6 +393,8 @@ if (isBrowser()) {
         throw error;
       }
       if (!this.isConnected || overviewAbort.signal.aborted) {
+        remove_client_group_overview_skeleton(clientLoading);
+        this._clientGroupOverviewSkeleton = undefined;
         this.removeSsrShell();
         return;
       }
@@ -330,11 +403,32 @@ if (isBrowser()) {
         this.requestUpdate();
         await this.updateComplete;
       }
+      if (useSubscriptionOverview && !this.data.hidden) {
+        set_light_mode(this.shadowRoot!, this.data);
+        setup_state_management(this.data);
+        set_global_event_listener(this.shadowRoot!, this.data);
+        init_log(this.data.proKey, this.data.hideBranding, this.data.debug);
+        let controls = overview.root.querySelector<HTMLElement>('.atcb-group-overview-controls');
+        if (!controls) {
+          controls = document.createElement('div');
+          controls.className = 'atcb-group-overview-controls';
+          controls.setAttribute('part', 'atcb-group-overview-controls');
+          overview.root.prepend(controls);
+        }
+        const subscriptionButton = document.createElement('div');
+        subscriptionButton.className = 'atcb-group-overview-subscribe';
+        subscriptionButton.setAttribute('part', 'atcb-group-overview-subscribe');
+        controls.append(subscriptionButton);
+        renderButton(this.shadowRoot!, subscriptionButton, this.data);
+      }
       const root = this.shadowRoot!.querySelector('.atcb-initialized:not([data-atcb-ssr])') as HTMLElement;
       this.shadowRoot!.prepend(overview.style);
       root.append(overview.root);
+      remove_client_group_overview_skeleton(clientLoading);
+      this._clientGroupOverviewSkeleton = undefined;
       root.classList.remove('atcb-hidden');
       this.removeSsrShell();
+      if (useSubscriptionOverview) log_event('initialization', this.data.identifier!, this.data.identifier!);
     }
 
     async initButton(): Promise<boolean> {
@@ -855,7 +949,8 @@ async function get_pro_data(licenseKey?: string, el?: ATCBHostElement, directDat
     try {
       const proOverride = el ? el.proOverride : directData.proOverride;
       const dataOverrides: { [key: string]: unknown } = el ? (read_attributes(el, proOverride ? wcParams : wcProParams) as unknown as { [key: string]: unknown }) : (directData as unknown as { [key: string]: unknown });
-      const response = await fetch(`https://${dataOverrides.dev ? 'event-dev.caldn.net' : 'event.caldn.net'}/${licenseKey}/config.json`);
+      const endpoint = `https://${dataOverrides.dev ? 'event-dev.caldn.net' : 'event.caldn.net'}/${licenseKey}/config.json`;
+      const response = await fetch_with_context(endpoint);
       if (response.ok) {
         const data = strip_unsafe_keys(await response.json()) as ATCBConfig;
         if (proOverride) {
@@ -902,7 +997,8 @@ async function get_pro_data(licenseKey?: string, el?: ATCBHostElement, directDat
       throw new Error('Not possible to read prokey config from server...');
     } catch (originalError) {
       console.error(originalError);
-      throw new Error('prokey invalid or server not responding!');
+      const detail = originalError instanceof Error ? ` ${originalError.message}` : '';
+      throw new Error(`prokey invalid or server not responding!${detail}`);
     }
   }
   return {} as ATCBConfig;

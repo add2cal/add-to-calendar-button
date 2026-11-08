@@ -68,8 +68,18 @@ Key properties of the pipeline:
 - **Group overview branches after the PRO config fetch.** The server-side
   `public_event_overview` flag enables the branch. Non-subscription groups always render
   the list; subscription groups render the button by default and a truthy `group-overview`
-  selects the list. The list reads its display settings from the component attributes,
-  fetches the public group event range, and renders into the existing Lit shell.
+  selects the list together with the configured group-level subscription button. The list
+  reads its display settings from the component attributes, fetches the public group event
+  range, and renders into the existing Lit shell.
+
+## Date dependencies
+
+`core/dates.ts` provides date, timezone, and recurrence primitives without importing
+configuration decoration. `core/decorate-dates.ts` and `core/decorate-recurrence.ts`
+consume those primitives. `core/date-display.ts` owns localized time-string formatting
+and its optional decoration step, depending on both `dates` and `decorate-dates`.
+The root and DOM-free utility entries export `atcb_generate_timestring` directly from
+`date-display`; do not re-export it from `dates`, which would recreate the import cycle.
 
 ## HTML handling
 
@@ -139,10 +149,14 @@ preserves proxy routing without interpreting configuration text as URL structure
 Group overview controls filter the fetched range locally. Event links open the hosted
 event page unless `no-details` routes the whole event action to adding it. Optional add
 controls call `atcb_action` with the selected event, disable group overview for that call,
-and request the normal add flow with modal list style. Subscription overviews use the
-group key for every landing page and add action instead of each entry's event key. Unless
-`no-details` is set, RSVP events keep their hosted-detail route instead of receiving a
-separate add control. `no-add` suppresses all links, actions, and add controls.
+and request the normal add flow with modal list style. Subscription overviews always treat
+their entries like `no-add`: no entry link, direct action, or add control is rendered.
+Instead, the group subscription button described by the fetched PRO config is placed at
+the top right of the filter row. The `no-subscribe-button` overview option disables this entire
+subscription-specific overview treatment: it hides the group button and restores regular
+per-event detail links and add actions. Unless `no-details` is set, RSVP events keep their
+hosted-detail route instead of receiving a separate add control. `no-add` suppresses all
+links, actions, and add controls.
 
 ## State
 
@@ -231,7 +245,10 @@ and initializes client-only.
 
 The SSR entry does not render group overview data. On upgrade, the client fetches and
 builds the group range off-DOM while leaving the skeleton painted, then swaps the complete
-overview into the existing shell atomically.
+overview into the existing shell atomically. Client-only overviews use the same skeleton
+during explicit PRO-config loading and subsequent range loading. Recurrence expansion uses
+the shared range iterator's abortable cooperative path, yielding between bounded work
+slices so large groups do not monopolize the main thread.
 
 ## Build outputs and their consumers
 

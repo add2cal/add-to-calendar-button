@@ -51,6 +51,7 @@ export interface ATCBGroupOverviewConfig {
   to?: string;
   'no-details'?: boolean;
   'no-add'?: boolean;
+  'no-subscribe-button'?: boolean;
   'custom-domain'?: string;
   'add-via-list'?: boolean;
 }

@@ -1,6 +1,6 @@
 {
   "name": "add-to-calendar-button",
-  "version": "3.5.1",
+  "version": "3.6.0",
   "engines": {
     "node": ">=18.17.0",
     "npm": ">=9.6.7"
@@ -129,16 +129,16 @@
   "dependencies": {
     "entities": "^6.0.1",
     "lit": "^3.3.3",
-    "timezones-ical-library": "^2.4.0"
+    "timezones-ical-library": "^3.0.0"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
-    "@guidepup/guidepup": "0.38.0",
+    "@guidepup/guidepup": "0.40.0",
     "@guidepup/playwright": "0.21.0",
     "@guidepup/setup": "0.29.3",
     "@open-wc/testing": "^5.0.0",
-    "@playwright/test": "1.64.1",
-    "@types/node": "^26.6.5",
+    "@playwright/test": "1.65.0",
+    "@types/node": "^26.6.6",
     "@typescript/native": "npm:typescript@^7.0.2",
     "@web/dev-server-esbuild": "^2.0.0",
     "@web/test-runner": "^1.0.0",
@@ -146,17 +146,17 @@
     "clean-css": "^5.3.3",
     "dts-bundle-generator": "^9.5.1",
     "esbuild": "^0.28.2",
-    "eslint": "^10.13.0",
+    "eslint": "^10.14.0",
     "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-prettier": "^5.5.7",
-    "eslint-plugin-regexp": "^3.3.1",
-    "eslint-plugin-security": "^4.2.0",
+    "eslint-plugin-regexp": "^3.3.3",
+    "eslint-plugin-security": "^4.2.1",
     "eslint-plugin-wc": "^3.1.0",
     "postcss": "^8.5.32",
     "prettier": "3.9.10",
     "prettier-plugin-tailwindcss": "^0.8.1",
     "typescript": "npm:@typescript/typescript6@^6.0.2",
     "typescript-eslint": "^8.72.1",
-    "vite": "^8.3.5"
+    "vite": "^8.3.6"
   }
 }
