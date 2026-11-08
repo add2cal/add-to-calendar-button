@@ -18,6 +18,7 @@ import { render_group_overview } from '../ui/group-overview';
 import { atcb_action } from '../action/index';
 import { resolveAttributeName, hasConfigAttribute, getConfigAttribute, observedConfigAttributes } from '../compat/attributes';
 import { fetch_with_context } from '../core/fetch';
+import { groupOverviewSkeletonCss } from '../core/group-overview-skeleton';
 import type { ATCBInputConfig, ATCBConfig } from '../types';
 
 let initialGlobalInit = false;
@@ -30,6 +31,43 @@ const template = `<div class="atcb-initialized atcb-hidden"></div>`;
 // is block-scoped inside the isBrowser() guard below and not usable as a type out here
 interface ATCBHostElement extends HTMLElement {
   proOverride?: boolean;
+}
+
+interface ClientGroupOverviewSkeleton {
+  wrapper: HTMLElement;
+  skeleton: HTMLElement;
+  style: HTMLStyleElement;
+}
+
+function create_client_group_overview_skeleton(host: ShadowRoot): ClientGroupOverviewSkeleton | null {
+  const wrapper = host.querySelector('.atcb-initialized:not([data-atcb-ssr])') as HTMLElement | null;
+  if (!wrapper) return null;
+  const style = document.createElement('style');
+  style.textContent = groupOverviewSkeletonCss;
+  const nonce = csp_nonce(host);
+  if (nonce) style.setAttribute('nonce', nonce);
+  const skeleton = document.createElement('div');
+  skeleton.className = 'atcb-group-overview atcb-group-overview-list atcb-ssr-group-overview-skeleton';
+  skeleton.setAttribute('aria-hidden', 'true');
+  for (const className of ['atcb-ssr-group-overview-select', 'atcb-ssr-group-overview-entry', 'atcb-ssr-group-overview-entry']) {
+    const block = document.createElement('div');
+    block.className = `atcb-ssr-skeleton ${className}`;
+    skeleton.append(block);
+  }
+  wrapper.classList.remove('atcb-hidden');
+  wrapper.classList.add('atcb-client-group-overview-loading');
+  wrapper.setAttribute('aria-busy', 'true');
+  wrapper.append(skeleton);
+  host.prepend(style);
+  return { wrapper, skeleton, style };
+}
+
+function remove_client_group_overview_skeleton(loading: ClientGroupOverviewSkeleton | null): void {
+  if (!loading) return;
+  loading.skeleton.remove();
+  loading.style.remove();
+  loading.wrapper.classList.remove('atcb-client-group-overview-loading');
+  loading.wrapper.removeAttribute('aria-busy');
 }
 
 function is_group_overview(el: Element): boolean {
@@ -68,6 +106,7 @@ if (isBrowser()) {
     initializing?: boolean;
     updatePending?: boolean;
     _groupOverviewAbort?: AbortController;
+    _clientGroupOverviewSkeleton?: ClientGroupOverviewSkeleton;
 
     constructor() {
       super();
@@ -165,6 +204,7 @@ if (isBrowser()) {
       try {
         const proKeyVal = getConfigAttribute(this, 'proKey');
         if (proKeyVal && proKeyVal !== '') {
+          if (is_group_overview(this) && !this._deferLitRender) this._clientGroupOverviewSkeleton = create_client_group_overview_skeleton(this.shadowRoot!) || undefined;
           this.data = await get_pro_data(proKeyVal, this);
           if (this.data.proKey) this.prokey = this.data.proKey;
           if (should_render_group_overview(this, this.data)) {
@@ -175,12 +215,16 @@ if (isBrowser()) {
             this._initializedResolver();
             return;
           }
+          remove_client_group_overview_skeleton(this._clientGroupOverviewSkeleton || null);
+          this._clientGroupOverviewSkeleton = undefined;
         } else {
           this.data.proKey = '';
           // if no data yet, we try reading attributes or the innerHTML of the host element
           this.data = (await process_inline_data(this, this.debug)) as unknown as ATCBConfig;
         }
       } catch (e) {
+        remove_client_group_overview_skeleton(this._clientGroupOverviewSkeleton || null);
+        this._clientGroupOverviewSkeleton = undefined;
         if (this.debug) {
           console.error(e);
           render_debug_msg(this.shadowRoot!, e);
@@ -208,6 +252,8 @@ if (isBrowser()) {
     override disconnectedCallback(): void {
       super.disconnectedCallback();
       this._groupOverviewAbort?.abort();
+      remove_client_group_overview_skeleton(this._clientGroupOverviewSkeleton || null);
+      this._clientGroupOverviewSkeleton = undefined;
       cleanup(this.shadowRoot!, this.identifier);
       if (this.debug) {
         console.log('Add to Calendar Button "' + (this.identifier || this.getAttribute('identifier') || 'not yet initialized') + '" destroyed');
@@ -263,6 +309,7 @@ if (isBrowser()) {
       try {
         const proKeyVal = getConfigAttribute(this, 'proKey');
         if (proKeyVal && proKeyVal !== '') {
+          if (is_group_overview(this) && !this._deferLitRender) this._clientGroupOverviewSkeleton = create_client_group_overview_skeleton(this.shadowRoot!) || undefined;
           this.data = await get_pro_data(proKeyVal, this);
           if (this.data.proKey) this.prokey = this.data.proKey;
           if (should_render_group_overview(this, this.data)) {
@@ -271,10 +318,14 @@ if (isBrowser()) {
             this.updatePending = false;
             return;
           }
+          remove_client_group_overview_skeleton(this._clientGroupOverviewSkeleton || null);
+          this._clientGroupOverviewSkeleton = undefined;
         } else {
           this.data = (await process_inline_data(this, this.debug)) as unknown as ATCBConfig;
         }
       } catch (e) {
+        remove_client_group_overview_skeleton(this._clientGroupOverviewSkeleton || null);
+        this._clientGroupOverviewSkeleton = undefined;
         if (this.debug) {
           console.error(e);
           render_debug_msg(this.shadowRoot!, e);
@@ -296,6 +347,8 @@ if (isBrowser()) {
       this.style.opacity = '1';
       this.style.position = 'relative';
       const deferred = this._deferLitRender;
+      const clientLoading = deferred ? null : this._clientGroupOverviewSkeleton || create_client_group_overview_skeleton(this.shadowRoot!);
+      this._clientGroupOverviewSkeleton = clientLoading || undefined;
       this._groupOverviewAbort?.abort();
       const overviewAbort = new AbortController();
       this._groupOverviewAbort = overviewAbort;
@@ -325,6 +378,8 @@ if (isBrowser()) {
         });
       } catch (error) {
         // A failed overview must not leave an inert loading skeleton behind.
+        remove_client_group_overview_skeleton(clientLoading);
+        this._clientGroupOverviewSkeleton = undefined;
         if (!this.isConnected) {
           this.removeSsrShell();
           return;
@@ -338,6 +393,8 @@ if (isBrowser()) {
         throw error;
       }
       if (!this.isConnected || overviewAbort.signal.aborted) {
+        remove_client_group_overview_skeleton(clientLoading);
+        this._clientGroupOverviewSkeleton = undefined;
         this.removeSsrShell();
         return;
       }
@@ -367,6 +424,8 @@ if (isBrowser()) {
       const root = this.shadowRoot!.querySelector('.atcb-initialized:not([data-atcb-ssr])') as HTMLElement;
       this.shadowRoot!.prepend(overview.style);
       root.append(overview.root);
+      remove_client_group_overview_skeleton(clientLoading);
+      this._clientGroupOverviewSkeleton = undefined;
       root.classList.remove('atcb-hidden');
       this.removeSsrShell();
       if (useSubscriptionOverview) log_event('initialization', this.data.identifier!, this.data.identifier!);

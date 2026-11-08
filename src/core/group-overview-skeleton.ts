@@ -1,0 +1,5 @@
+// Shared by the DOM-free SSR renderer and the client loading state. Keep this
+// independent from Lit and browser globals so the SSR import graph stays DOM-free.
+const groupOverviewSkeletonCss = `:host:has(.atcb-ssr-group-overview-skeleton) { box-sizing: border-box; display: block; max-width: 100% !important; width: min(600px, 100%) !important; }.atcb-client-group-overview-loading { display: block; position: relative; width: 100%; }.atcb-ssr-group-overview-skeleton { box-sizing: border-box; color: #1b1f24; display: flex; flex-direction: column; gap: 0.7em; width: 100%; }.atcb-ssr-group-overview-skeleton .atcb-ssr-skeleton { background: currentColor; border-radius: 0.3em; display: block; min-width: 2ch; opacity: 0.15; }.atcb-ssr-group-overview-select { height: 2.6em; margin-bottom: 0.55em; width: 7em; }.atcb-ssr-group-overview-entry { height: 4.5em; width: 100%; }.atcb-ssr-group-overview-entry + .atcb-ssr-group-overview-entry { margin-top: 10px; }`;
+
+export { groupOverviewSkeletonCss };

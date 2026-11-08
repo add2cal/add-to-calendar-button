@@ -1,6 +1,6 @@
 import { rewrite_html_elements, secure_content, strip_unsafe_keys } from '../core/text';
 import { icons } from '../core/globals';
-import { getOccurrencesInRange } from '../core/dates';
+import { getOccurrencesInRange, getOccurrencesInRangeAsync } from '../core/dates';
 import { ensure_locale, translate_hook } from '../i18n';
 import { ensure_style } from '../styles/css-template';
 import { fetch_with_context } from '../core/fetch';
@@ -51,6 +51,13 @@ interface NormalizedOverviewConfig {
   noAdd: boolean;
   customDomain?: string;
   addViaList: boolean;
+}
+
+function aborted(signal: AbortSignal): never {
+  if (signal.reason !== undefined) throw signal.reason;
+  const error = new Error('The group overview request was aborted.');
+  error.name = 'AbortError';
+  throw error;
 }
 
 function isoDate(year: number, month = 1, day = 1): string {
@@ -113,6 +120,54 @@ function overview_dates(item: OverviewResponseItem, date: OverviewDate, from: st
   }
 }
 
+async function overview_dates_async(item: OverviewResponseItem, date: OverviewDate, from: string, to: string, signal: AbortSignal): Promise<OverviewDate[]> {
+  if (!item.recurrence) return [date];
+  try {
+    const duration = date.endDate ? Date.parse(date.endDate) - Date.parse(date.startDate!) : 0;
+    const occurrences = await getOccurrencesInRangeAsync(item.recurrence, date.startDate!, date.startTime || '', date.timeZone || 'UTC', from, to, { signal });
+    return occurrences.map((startDate) => ({
+      ...date,
+      startDate,
+      ...(date.endDate ? { endDate: new Date(Date.parse(startDate) + duration).toISOString().slice(0, 10) } : {}),
+    }));
+  } catch {
+    if (signal.aborted) aborted(signal);
+    // An invalid series must not prevent unrelated events from rendering.
+    return [];
+  }
+}
+
+function append_overview_dates(output: OverviewEvent[], item: OverviewResponseItem, originalDate: OverviewDate, dates: OverviewDate[], currentYear: number): void {
+  for (const date of dates) {
+    if (!date || typeof date.startDate !== 'string' || !/^\d{4}-\d{2}-\d{2}$/.test(date.startDate)) continue;
+    const startYear = Number(date.startDate.slice(0, 4));
+    const startMonth = Number(date.startDate.slice(5, 7));
+    if (startYear < currentYear - 1 || startMonth < 1 || startMonth > 12) continue;
+    const event: OverviewEvent = {
+      ...date,
+      ...(date !== originalDate ? { source: { ...originalDate, prokey: item.prokey } } : {}),
+      name: text(date.name),
+      description: description_text(date.description),
+      location: text(date.location),
+      prokey: item.prokey!,
+      title: text(date.name) || text(item.label) || 'Event',
+      year: startYear,
+      month: startMonth,
+      hasRsvp: item.rsvp === true || (item.rsvp_block !== null && item.rsvp_block !== undefined && item.rsvp_block !== '') || /,\s*RSVP\s*$/i.test(text(item.label)),
+    };
+    output.push(event);
+    if (date === originalDate && date.endDate && /^\d{4}-\d{2}-\d{2}$/.test(date.endDate)) {
+      const endYear = Number(date.endDate.slice(0, 4));
+      if (endYear > startYear && endYear >= currentYear - 1) output.push({ ...event, year: endYear, month: 1 });
+    }
+  }
+}
+
+function sort_overview_events(events: OverviewEvent[]): OverviewEvent[] {
+  events.sort((a, b) => `${a.startDate || ''}T${a.startTime || ''}`.localeCompare(`${b.startDate || ''}T${b.startTime || ''}`));
+  return events;
+}
+
 function flatten_events(input: unknown, now: Date): OverviewEvent[] {
   const currentYear = now.getFullYear();
   const from = isoDate(currentYear, now.getMonth() + 1).slice(0, 10);
@@ -124,33 +179,34 @@ function flatten_events(input: unknown, now: Date): OverviewEvent[] {
     if (!item || typeof item !== 'object' || typeof item.prokey !== 'string' || !Array.isArray(item.dates)) continue;
     for (const originalDate of item.dates) {
       if (!originalDate || typeof originalDate.startDate !== 'string' || !/^\d{4}-\d{2}-\d{2}$/.test(originalDate.startDate)) continue;
-      for (const date of overview_dates(item, originalDate, from, to)) {
-        if (!date || typeof date.startDate !== 'string' || !/^\d{4}-\d{2}-\d{2}$/.test(date.startDate)) continue;
-        const startYear = Number(date.startDate.slice(0, 4));
-        const startMonth = Number(date.startDate.slice(5, 7));
-        if (startYear < currentYear - 1 || startMonth < 1 || startMonth > 12) continue;
-        const event: OverviewEvent = {
-          ...date,
-          ...(date !== originalDate ? { source: { ...originalDate, prokey: item.prokey } } : {}),
-          name: text(date.name),
-          description: description_text(date.description),
-          location: text(date.location),
-          prokey: item.prokey,
-          title: text(date.name) || text(item.label) || 'Event',
-          year: startYear,
-          month: startMonth,
-          hasRsvp: item.rsvp === true || (item.rsvp_block !== null && item.rsvp_block !== undefined && item.rsvp_block !== '') || /,\s*RSVP\s*$/i.test(text(item.label)),
-        };
-        output.push(event);
-        if (date === originalDate && date.endDate && /^\d{4}-\d{2}-\d{2}$/.test(date.endDate)) {
-          const endYear = Number(date.endDate.slice(0, 4));
-          if (endYear > startYear && endYear >= currentYear - 1) output.push({ ...event, year: endYear, month: 1 });
-        }
+      append_overview_dates(output, item, originalDate, overview_dates(item, originalDate, from, to), currentYear);
+    }
+  }
+  return sort_overview_events(output);
+}
+
+async function flatten_events_async(input: unknown, now: Date, signal: AbortSignal): Promise<OverviewEvent[]> {
+  const currentYear = now.getFullYear();
+  const from = isoDate(currentYear, now.getMonth() + 1).slice(0, 10);
+  const to = new Date(Date.UTC(currentYear, now.getMonth() + 19, 0)).toISOString().slice(0, 10);
+  if (!Array.isArray(input)) throw new Error('The group overview response is invalid.');
+  const output: OverviewEvent[] = [];
+  let lastYield = performance.now();
+  for (const raw of input as OverviewResponseItem[]) {
+    if (signal.aborted) aborted(signal);
+    const item = strip_unsafe_keys(raw) as OverviewResponseItem;
+    if (!item || typeof item !== 'object' || typeof item.prokey !== 'string' || !Array.isArray(item.dates)) continue;
+    for (const originalDate of item.dates) {
+      if (!originalDate || typeof originalDate.startDate !== 'string' || !/^\d{4}-\d{2}-\d{2}$/.test(originalDate.startDate)) continue;
+      append_overview_dates(output, item, originalDate, await overview_dates_async(item, originalDate, from, to, signal), currentYear);
+      if (performance.now() - lastYield >= 8) {
+        await new Promise<void>((resolve) => setTimeout(resolve, 0));
+        if (signal.aborted) aborted(signal);
+        lastYield = performance.now();
       }
     }
   }
-  output.sort((a, b) => `${a.startDate || ''}T${a.startTime || ''}`.localeCompare(`${b.startDate || ''}T${b.startTime || ''}`));
-  return output;
+  return sort_overview_events(output);
 }
 
 function append_text(parent: Element, tag: string, value: string, part?: string): HTMLElement {
@@ -199,9 +255,11 @@ function render_event(event: OverviewEvent, config: NormalizedOverviewConfig, lo
   const start = new Date(`${event.startDate}T${event.startTime || '00:00'}:00`);
   const dateFormatter = new Intl.DateTimeFormat(locale, { day: 'numeric', month: 'short', ...(event.startTime ? { hour: '2-digit', minute: '2-digit' } : {}) });
   let dateLabel = dateFormatter.format(start);
-  if (event.endDate || event.endTime) {
+  const sameDay = !event.endDate || event.endDate === event.startDate;
+  if ((event.endDate || event.endTime) && (!sameDay || event.startTime)) {
     const end = new Date(`${event.endDate || event.startDate}T${event.endTime || event.startTime || '00:00'}:00`);
-    dateLabel += ` - ${dateFormatter.format(end)}`;
+    const endFormatter = sameDay ? new Intl.DateTimeFormat(locale, { hour: '2-digit', minute: '2-digit' }) : dateFormatter;
+    dateLabel += ` - ${endFormatter.format(end)}`;
   }
   const href = `https://${config.customDomain || (dev ? 'dev.caldn.net' : 'caldn.net')}/${encodeURIComponent(event.prokey)}`;
   if (config.type === 'compact') {
@@ -323,7 +381,7 @@ async function render_group_overview(input: ATCBInputConfig, signal: AbortSignal
   const endpoint = `https://api${input.dev ? '-dev' : ''}.add-to-calendar-pro.com/v1/event/all?${query}`;
   const response = await fetch_with_context(endpoint, { signal });
   if (!response.ok) throw new Error('Not possible to read the public group overview.');
-  const events = flatten_events(await response.json(), now);
+  const events = await flatten_events_async(await response.json(), now, signal);
   const addEvent = (event: OverviewEvent, trigger: HTMLElement): void => onAdd(event.source ? { ...event.source, prokey: event.prokey } : event, trigger);
   if (isSubscription) {
     for (const event of events) event.prokey = prokey;
@@ -418,4 +476,4 @@ async function render_group_overview(input: ATCBInputConfig, signal: AbortSignal
   return { root, style };
 }
 
-export { render_group_overview, flatten_events };
+export { render_group_overview, flatten_events, flatten_events_async };

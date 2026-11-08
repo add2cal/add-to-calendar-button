@@ -72,6 +72,15 @@ Key properties of the pipeline:
   reads its display settings from the component attributes, fetches the public group event
   range, and renders into the existing Lit shell.
 
+## Date dependencies
+
+`core/dates.ts` provides date, timezone, and recurrence primitives without importing
+configuration decoration. `core/decorate-dates.ts` and `core/decorate-recurrence.ts`
+consume those primitives. `core/date-display.ts` owns localized time-string formatting
+and its optional decoration step, depending on both `dates` and `decorate-dates`.
+The root and DOM-free utility entries export `atcb_generate_timestring` directly from
+`date-display`; do not re-export it from `dates`, which would recreate the import cycle.
+
 ## HTML handling
 
 `core/text.ts` owns the shared HTML handling. `escape_html_text` encodes literal text
@@ -201,7 +210,10 @@ and initializes client-only.
 
 The SSR entry does not render group overview data. On upgrade, the client fetches and
 builds the group range off-DOM while leaving the skeleton painted, then swaps the complete
-overview into the existing shell atomically.
+overview into the existing shell atomically. Client-only overviews use the same skeleton
+during explicit PRO-config loading and subsequent range loading. Recurrence expansion uses
+the shared range iterator's abortable cooperative path, yielding between bounded work
+slices so large groups do not monopolize the main thread.
 
 ## Build outputs and their consumers
 

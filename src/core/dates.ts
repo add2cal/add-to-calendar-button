@@ -1,7 +1,6 @@
 import { tzlib_get_offset } from 'timezones-ical-library';
 import { atcbTimeZonesToUtc, isMobile } from './globals';
-import { decorate_data_dates } from './decorate-dates';
-import type { ATCBConfig, ATCBDateEntry, ATCBDateEntryInput } from '../types';
+import type { ATCBConfig, ATCBDateEntry } from '../types';
 
 // SHARED FUNCTION TO GENERATE A TIME STRING
 function generate_time(data: ATCBConfig | ATCBDateEntry, style = 'delimiters', targetCal = 'general', addTimeZoneOffset = false): { start: string; end: string; duration: string; allday: false } | { start: string; end: string; allday: true } {
@@ -47,10 +46,8 @@ function generate_time(data: ATCBConfig | ATCBDateEntry, style = 'delimiters', t
     }
     // in other cases, we substract the offset from the dates
     // (substraction to reflect the fact that the user assumed his timezone and to convert to UTC; since calendars assume UTC and add offsets again)
-    const calcOffsetStart = parseInt(offsetStart[0]! + 1) * -1 * ((parseInt(offsetStart.substring(1, 3)) * 60 + parseInt(offsetStart.substring(3, 5))) * 60 * 1000);
-    const calcOffsetEnd = parseInt(offsetEnd[0]! + 1) * -1 * ((parseInt(offsetEnd.substring(1, 3)) * 60 + parseInt(offsetEnd.substring(3, 5))) * 60 * 1000);
-    newStartDate.setTime(newStartDate.getTime() + calcOffsetStart);
-    newEndDate.setTime(newEndDate.getTime() + calcOffsetEnd);
+    newStartDate.setTime(newStartDate.getTime() - offsetToMilliseconds(offsetStart));
+    newEndDate.setTime(newEndDate.getTime() - offsetToMilliseconds(offsetEnd));
     // return formatted data
     return {
       start: format_datetime(newStartDate, style),
@@ -156,252 +153,23 @@ function translate_via_time_zone(date: string, time: string, baseTimeZone: strin
   return dateInTargetTimeZone.split(', '); // returns [date, time]
 }
 
-function generate_timestring(dates: ATCBDateEntryInput[], language = 'en', subEvent: 'all' | number = 'all', decorate = false, browserTimeOverride = false, enforceYear = false, hideTimeZone = false): string[] {
-  if (decorate) {
-    // if this function gets called directly, we might want to decorate raw data first
-    dates = decorate_data_dates({ dates: dates }).dates!;
-  }
-  let timeZoneInfoStart: string, timeZoneInfoEnd: string;
-  let timeZoneDisplayStart: string, timeZoneDisplayEnd: string;
-  let formattedTimeStart: { start: string; end: string; duration: string; allday: false } | { start: string; end: string; allday: true };
-  let formattedTimeEnd: { start: string; end: string; duration: string; allday: false } | { start: string; end: string; allday: true };
-  const timeBlocks: string[] = [];
-  let timeZoneInfoStringStart = '';
-  let timeZoneInfoStringEnd = '';
-  const browserTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
-  if (subEvent === 'all') {
-    // we are looking at multiple sub-events, which should be considered all together
-    formattedTimeStart = generate_time(dates[0]! as ATCBDateEntry);
-    formattedTimeEnd = generate_time(dates[dates.length - 1]! as ATCBDateEntry);
-    timeZoneInfoStart = browserTimeOverride ? browserTimezone : dates[0]!.timeZone!;
-    timeZoneInfoEnd = browserTimeOverride ? browserTimezone : dates[dates.length - 1]!.timeZone!;
-    timeZoneDisplayStart = browserTimeOverride ? browserTimezone : (dates[0] as ATCBDateEntry).timeZoneDisplay || timeZoneInfoStart;
-    timeZoneDisplayEnd = browserTimeOverride ? browserTimezone : (dates[dates.length - 1] as ATCBDateEntry).timeZoneDisplay || timeZoneInfoEnd;
-  } else {
-    // we are looking at 1 or many sub-events, but we consider only one specific
-    formattedTimeStart = generate_time(dates[`${subEvent}`]! as ATCBDateEntry);
-    formattedTimeEnd = formattedTimeStart;
-    timeZoneInfoStart = browserTimeOverride ? browserTimezone : dates[`${subEvent}`]!.timeZone!;
-    timeZoneInfoEnd = timeZoneInfoStart;
-    timeZoneDisplayStart = browserTimeOverride ? browserTimezone : (dates[`${subEvent}`] as ATCBDateEntry).timeZoneDisplay || timeZoneInfoStart;
-    timeZoneDisplayEnd = timeZoneDisplayStart;
-  }
-  const startDateInfo = new Date(formattedTimeStart.start);
-  const endDateInfo = new Date(formattedTimeEnd.end);
-  // set GMT for allday events to prevent any time zone mismatches
-  if (formattedTimeStart.allday) {
-    timeZoneInfoStart = 'GMT';
-  }
-  if (formattedTimeEnd.allday) {
-    timeZoneInfoEnd = 'GMT';
-  }
-  // in the case of an online event (or magic location), convert the time zone
-  const magicLocationPhrases = ['global', 'world-wide', 'worldwide', 'online'];
-  const convertable = (function () {
-    let i = 0;
-    let j = dates.length - 1;
-    if (subEvent != 'all') {
-      i = j = subEvent;
-    }
-    for (i; i <= j; i++) {
-      const magicLocation = (function () {
-        if (dates[`${i}`]!.location && dates[`${i}`]!.location !== '') {
-          if (magicLocationPhrases.includes(dates[`${i}`]!.location!.toLowerCase().trim())) {
-            return true;
-          }
-        }
-        return false;
-      })();
-      if (!magicLocation && !(dates[`${i}`] as ATCBDateEntry).onlineEvent) {
-        return false;
-      }
-    }
-    return true;
-  })();
-  if (convertable) {
-    timeZoneInfoStart = timeZoneInfoEnd = browserTimezone;
-  } else {
-    // determine time zone strings
-    if (!formattedTimeStart.allday && browserTimezone !== timeZoneInfoStart && timeZoneInfoStart !== timeZoneInfoEnd) {
-      timeZoneInfoStringStart = '(' + timeZoneDisplayStart + ')';
-    }
-    if ((!formattedTimeEnd.allday && browserTimezone !== timeZoneInfoEnd) || timeZoneInfoStart !== timeZoneInfoEnd) {
-      timeZoneInfoStringEnd = '(' + timeZoneDisplayEnd + ')';
-    }
-  }
-  // drop the year, if it is the current one (and not enforced)
-  const now = new Date();
-  const dropYearStart = (function () {
-    if (!enforceYear && startDateInfo.getFullYear() === now.getFullYear()) {
-      return true;
-    }
-    return false;
-  })();
-  const dropYearEnd = (function () {
-    if (!enforceYear && endDateInfo.getFullYear() === now.getFullYear()) {
-      return true;
-    }
-    return false;
-  })();
-  // get the options to format the date
-  const formatOptionsStart = get_format_options(timeZoneInfoStart, dropYearStart, language);
-  const formatOptionsEnd = get_format_options(timeZoneInfoEnd, dropYearEnd, language);
-  // start = end
-  if (startDateInfo.toLocaleDateString(language, formatOptionsEnd.DateLong) === endDateInfo.toLocaleDateString(language, formatOptionsEnd.DateLong)) {
-    // allday vs. timed
-    if (formattedTimeStart.allday) {
-      if (!dropYearStart) {
-        timeBlocks.push(startDateInfo.toLocaleDateString(language, formatOptionsStart.DateLong));
-      }
-    } else {
-      let timeString;
-      if (dropYearStart) {
-        timeString = startDateInfo.toLocaleString(language, formatOptionsStart.Time);
-      } else {
-        timeString = startDateInfo.toLocaleString(language, formatOptionsStart.DateTimeLong);
-      }
-      if (language === 'en') {
-        timeString = timeString.replace(/:00/, '');
-      }
-      timeBlocks.push(timeString);
-      if (timeZoneInfoStringStart !== '' && !hideTimeZone) {
-        timeBlocks.push(timeZoneInfoStringStart);
-      }
-      timeBlocks.push('-');
-      timeString = endDateInfo.toLocaleTimeString(language, formatOptionsEnd.Time);
-      if (language === 'en') {
-        timeString = timeString.replace(/:00/, '');
-      }
-      timeBlocks.push(timeString);
-      if (timeZoneInfoStringEnd !== '' && !hideTimeZone) {
-        timeBlocks.push(timeZoneInfoStringEnd);
-      }
-    }
-  } else {
-    // start != end
-    // allday vs. timed (start)
-    if (formattedTimeStart.allday) {
-      timeBlocks.push(startDateInfo.toLocaleDateString(language, formatOptionsStart.DateLong));
-    } else {
-      let timeString;
-      if (dropYearStart) {
-        timeString = startDateInfo.toLocaleString(language, formatOptionsStart.Time);
-      } else {
-        timeString = startDateInfo.toLocaleString(language, formatOptionsStart.DateTimeLong);
-      }
-      if (language === 'en') {
-        timeString = timeString.replace(/:00/, '');
-      }
-      timeBlocks.push(timeString);
-    }
-    if (timeZoneInfoStringStart !== '' && !hideTimeZone) {
-      timeBlocks.push(timeZoneInfoStringStart);
-    }
-    timeBlocks.push('-');
-    // allday vs. timed (end)
-    if (formattedTimeEnd.allday) {
-      timeBlocks.push(endDateInfo.toLocaleDateString(language, formatOptionsEnd.DateLong));
-    } else {
-      let timeString = endDateInfo.toLocaleString(language, formatOptionsEnd.DateTimeLong);
-      if (language === 'en') {
-        timeString = timeString.replace(/:00/, '');
-      }
-      timeBlocks.push(timeString);
-    }
-    if (timeZoneInfoStringEnd !== '' && !hideTimeZone) {
-      timeBlocks.push(timeZoneInfoStringEnd);
-    }
-  }
-  return timeBlocks;
-}
+const weekdayCodes = ['SU', 'MO', 'TU', 'WE', 'TH', 'FR', 'SA'];
 
-function get_format_options(timeZoneInfo: string, dropYear = false, language = 'en'): { DateLong: Intl.DateTimeFormatOptions; DateTimeLong: Intl.DateTimeFormatOptions; Time: Intl.DateTimeFormatOptions } {
-  timeZoneInfo = map_special_time_zones(timeZoneInfo);
-  const hoursFormat = (function () {
-    if (language === 'en') {
-      return 'h12'; // 12am -> 1am -> .. -> 12pm -> 1pm -> ...
-    }
-    return 'h23'; // 00:00 -> 01:00 -> 12:00 -> 13:00 -> ...
-  })();
-  if (dropYear) {
-    return {
-      DateLong: {
-        timeZone: timeZoneInfo,
-        month: 'short',
-        day: 'numeric',
-      },
-      DateTimeLong: {
-        timeZone: timeZoneInfo,
-        month: 'short',
-        day: 'numeric',
-        hour: 'numeric',
-        minute: '2-digit',
-        hourCycle: hoursFormat,
-      },
-      Time: {
-        timeZone: timeZoneInfo,
-        hour: 'numeric',
-        minute: '2-digit',
-        hourCycle: hoursFormat,
-      },
-    };
-  }
-  return {
-    DateLong: {
-      timeZone: timeZoneInfo,
-      year: 'numeric',
-      month: 'numeric',
-      day: 'numeric',
-    },
-    DateTimeLong: {
-      timeZone: timeZoneInfo,
-      year: 'numeric',
-      month: 'numeric',
-      day: 'numeric',
-      hour: 'numeric',
-      minute: '2-digit',
-      hourCycle: hoursFormat,
-    },
-    Time: {
-      timeZone: timeZoneInfo,
-      hour: 'numeric',
-      minute: '2-digit',
-      hourCycle: hoursFormat,
-    },
-  };
+function parseRRuleNumberList(value: string): number[] {
+  return value.split(',').map((number) => parseInt(number, 10));
 }
 
 // HELPER: Parse BYDAY/BYWEEKDAY tokens into plain weekdays and ordinal structures
 function parseByWeekdayTokens(rawByDay: string | undefined): { plainWeekdays: number[]; ordinals: { n: number; day: number }[] } {
   const tokens = rawByDay ? rawByDay.toString().split(',') : [];
-  const mapWeekdayCode = (wd: string): number | undefined => {
-    switch (wd) {
-      case 'SU':
-        return 0;
-      case 'MO':
-        return 1;
-      case 'TU':
-        return 2;
-      case 'WE':
-        return 3;
-      case 'TH':
-        return 4;
-      case 'FR':
-        return 5;
-      case 'SA':
-        return 6;
-      default:
-        return undefined;
-    }
-  };
   const plainWeekdays: number[] = [];
   const ordinals: { n: number; day: number }[] = [];
   for (const tok of tokens) {
     const t = tok.trim().toUpperCase();
     if (t.length < 2) continue;
     const wd = t.slice(-2);
-    const day = mapWeekdayCode(wd);
-    if (day === undefined) continue;
+    const day = weekdayCodes.indexOf(wd);
+    if (day < 0) continue;
     const prefix = t.slice(0, t.length - 2);
     if (prefix) {
       // parse optional signed ordinal without regex
@@ -465,30 +233,10 @@ function parseRRule(rruleStr: string, deep = true): ATCBRRuleParts {
       parts.BYWEEKDAY = parts.BYWEEKDAY || parts.BYDAY;
     }
   }
-  parts.BYMONTH =
-    deep && parts.BYMONTH
-      ? parts.BYMONTH.toString()
-          .split(',')
-          .map((n) => parseInt(n, 10))
-      : parts.BYMONTH;
-  parts.BYYEARDAY =
-    deep && parts.BYYEARDAY
-      ? parts.BYYEARDAY.toString()
-          .split(',')
-          .map((n) => parseInt(n, 10))
-      : parts.BYYEARDAY;
-  parts.BYMONTHDAY =
-    deep && parts.BYMONTHDAY
-      ? parts.BYMONTHDAY.toString()
-          .split(',')
-          .map((n) => parseInt(n, 10))
-      : parts.BYMONTHDAY;
-  parts.BYWEEKNO =
-    deep && parts.BYWEEKNO
-      ? parts.BYWEEKNO.toString()
-          .split(',')
-          .map((n) => parseInt(n, 10))
-      : parts.BYWEEKNO;
+  parts.BYMONTH = deep && parts.BYMONTH ? parseRRuleNumberList(parts.BYMONTH.toString()) : parts.BYMONTH;
+  parts.BYYEARDAY = deep && parts.BYYEARDAY ? parseRRuleNumberList(parts.BYYEARDAY.toString()) : parts.BYYEARDAY;
+  parts.BYMONTHDAY = deep && parts.BYMONTHDAY ? parseRRuleNumberList(parts.BYMONTHDAY.toString()) : parts.BYMONTHDAY;
+  parts.BYWEEKNO = deep && parts.BYWEEKNO ? parseRRuleNumberList(parts.BYWEEKNO.toString()) : parts.BYWEEKNO;
 
   // We do not support BYHOUR (or other sub-daily expansion rules) in this project.
   // If provided, ignore it to keep wall-clock recurrences stable and predictable.
@@ -502,6 +250,10 @@ function pad2(n: number): string {
   return String(n).padStart(2, '0');
 }
 
+function formatYmd(year: number, month: number, day: number): string {
+  return `${year}-${pad2(month)}-${pad2(day)}`;
+}
+
 function toIsoOffset(off: string): string {
   if (!off || off === 'Z' || off === '+0000' || off === '-0000' || off === '+00:00' || off === '-00:00') return 'Z';
   const raw = String(off).replace(/^GMT/i, '');
@@ -510,6 +262,10 @@ function toIsoOffset(off: string): string {
   const sign = raw.startsWith('-') ? '-' : '+';
   const digits = raw.replace(/\D/g, '').padStart(4, '0').slice(0, 4);
   return `${sign}${digits.slice(0, 2)}:${digits.slice(2)}`;
+}
+
+function zonedDateTime(date: string, time: string, timeZone: string): Date {
+  return new Date(`${date}T${time}:00${toIsoOffset(tzlib_get_offset(timeZone, date, time))}`);
 }
 
 const tzPartsFormatterCache = new Map<string, Intl.DateTimeFormat>();
@@ -646,21 +402,26 @@ function addLocalDays(dateObj: Date, days: number, timeZone: string, hhmm: strin
   const month0 = Number.isFinite(p.month0) ? p.month0 : Number.isFinite(p.month) ? p.month - 1 : 0;
   const baseUtc = Date.UTC(p.year, month0, p.day) + days * 86400000;
   const d = new Date(baseUtc);
-  const dateStr = `${d.getUTCFullYear()}-${pad2(d.getUTCMonth() + 1)}-${pad2(d.getUTCDate())}`;
+  const dateStr = formatYmd(d.getUTCFullYear(), d.getUTCMonth() + 1, d.getUTCDate());
   const safeTimeZone = timeZone || 'UTC';
   try {
-    const off = tzlib_get_offset(safeTimeZone, dateStr, hhmm);
-    return new Date(`${dateStr}T${hhmm}:00${toIsoOffset(off)}`);
+    return zonedDateTime(dateStr, hhmm, safeTimeZone);
   } catch {
     return new Date(dateObj.getTime() + days * 86400000);
   }
 }
 
+function ruleInterval(rule: ATCBRRuleParts): number {
+  return parseInt((rule.INTERVAL as number | string | undefined)?.toString() || '1', 10) || 1;
+}
+
+function hasWeekdayRules(rule: ATCBRRuleParts): boolean {
+  return !!(rule.BYWEEKDAY && (rule.BYWEEKDAY as number[]).length) || !!(rule.BYDAY_ORDINALS && (rule.BYDAY_ORDINALS as { n: number; day: number }[]).length);
+}
+
 // Check if date matches the FREQ and INTERVAL from start
-function matchesFreq(date: Date, rrule: ATCBRRuleParts, startDate: Date, timeZone: string, dateParts: ATCBEnrichedDateParts | null, startParts: ATCBEnrichedDateParts | null): boolean {
-  const interval = parseInt((rrule.INTERVAL as number).toString(), 10) || 1;
-  const dp = dateParts || getPartsForTimeZone(date, timeZone);
-  const sp = startParts || getPartsForTimeZone(startDate, timeZone);
+function matchesFreq(rrule: ATCBRRuleParts, dp: ATCBEnrichedDateParts, sp: ATCBEnrichedDateParts): boolean {
+  const interval = ruleInterval(rrule);
   switch (rrule.FREQ) {
     case 'YEARLY':
       return (dp.year - sp.year) % interval === 0;
@@ -683,16 +444,15 @@ function matchesFreq(date: Date, rrule: ATCBRRuleParts, startDate: Date, timeZon
 }
 
 // Check if date matches all BY* rules, with implicit filters
-function matchesRRule(date: Date, rrule: ATCBRRuleParts, startDate: Date, timeZone: string, dateParts: ATCBEnrichedDateParts | null, startParts: ATCBEnrichedDateParts | null): boolean {
+function matchesRRule(rrule: ATCBRRuleParts, dateParts: ATCBEnrichedDateParts, startParts: ATCBEnrichedDateParts): boolean {
   // Explicit BY rules
-  if (!matchesBYRules(date, rrule, timeZone, dateParts)) return false;
+  if (!matchesBYRules(rrule, dateParts)) return false;
   // Implicit filters
-  if (!matchesImplicitRules(date, rrule, startDate, timeZone, dateParts, startParts)) return false;
+  if (!matchesImplicitRules(rrule, dateParts, startParts)) return false;
   return true;
 }
 
-function matchesBYRules(date: Date, rrule: ATCBRRuleParts, timeZone: string, dateParts: ATCBEnrichedDateParts | null): boolean {
-  const dp = dateParts || getPartsForTimeZone(date, timeZone);
+function matchesBYRules(rrule: ATCBRRuleParts, dp: ATCBEnrichedDateParts): boolean {
   if (rrule.BYMONTH && !(rrule.BYMONTH as number[]).includes(dp.month)) return false;
   if (rrule.BYYEARDAY && !(rrule.BYYEARDAY as number[]).includes(dp.dayOfYear)) return false;
   if (rrule.BYMONTHDAY && !(rrule.BYMONTHDAY as number[]).includes(dp.day)) return false;
@@ -769,12 +529,10 @@ function matchesBYRules(date: Date, rrule: ATCBRRuleParts, timeZone: string, dat
   return true;
 }
 
-function matchesImplicitRules(date: Date, rrule: ATCBRRuleParts, startDate: Date, timeZone: string, dateParts: ATCBEnrichedDateParts | null, startParts: ATCBEnrichedDateParts | null): boolean {
-  const dp = dateParts || getPartsForTimeZone(date, timeZone);
-  const sp = startParts || getPartsForTimeZone(startDate, timeZone);
+function matchesImplicitRules(rrule: ATCBRRuleParts, dp: ATCBEnrichedDateParts, sp: ATCBEnrichedDateParts): boolean {
   // Without BYHOUR support, hour always comes from DTSTART.
   if (dp.hour !== sp.hour) return false;
-  const hasByWeekdayAny = !!(rrule.BYWEEKDAY && (rrule.BYWEEKDAY as number[]).length) || !!(rrule.BYDAY_ORDINALS && (rrule.BYDAY_ORDINALS as { n: number; day: number }[]).length);
+  const hasByWeekdayAny = hasWeekdayRules(rrule);
   if (rrule.FREQ === 'WEEKLY' && !hasByWeekdayAny && dp.weekday !== sp.weekday) return false;
   if (rrule.FREQ === 'MONTHLY' && !rrule.BYMONTHDAY && !hasByWeekdayAny && dp.day !== sp.day) return false;
   if (rrule.FREQ === 'YEARLY' && !rrule.BYMONTH && dp.month0 !== sp.month0) return false;
@@ -782,19 +540,73 @@ function matchesImplicitRules(date: Date, rrule: ATCBRRuleParts, startDate: Date
   return true;
 }
 
-// Walk matching local dates once; callers retain their own window and selection policy.
-function* iterateOccurrences(rule: ATCBRRuleParts, start: Date, tzid: string, time: string, { current = start, count = 0, through, maxIterations = Infinity }: { current?: Date; count?: number; through?: Date; maxIterations?: number } = {}) {
+type OccurrenceIterationResult = { date: Date; parts: ATCBEnrichedDateParts; count: number };
+
+function candidateStepDays(rule: ATCBRRuleParts, frequencyMatches: boolean, parts: ATCBEnrichedDateParts, startParts: ATCBEnrichedDateParts): number {
+  if (!frequencyMatches) return 1;
+  const interval = ruleInterval(rule);
+  if (rule.FREQ === 'DAILY') return interval;
+  // A plain weekly rule has exactly one candidate weekday, inherited from DTSTART.
+  // Once that phase is found, checking the six days between candidates is redundant.
+  if (rule.FREQ === 'WEEKLY' && !hasWeekdayRules(rule) && parts.weekday === startParts.weekday) return interval * 7;
+  return 1;
+}
+
+function hasCandidateShapingRules(rule: ATCBRRuleParts): boolean {
+  return Boolean(rule.BYDAY || rule.BYMONTH || rule.BYMONTHDAY || rule.BYYEARDAY || rule.BYWEEKNO || rule.BYSETPOS);
+}
+
+function addLocalMonths(months: number, timeZone: string, hhmm: string, dateParts: ATCBEnrichedDateParts): Date | null {
+  const monthIndex = dateParts.year * 12 + dateParts.month0 + months;
+  const year = Math.floor(monthIndex / 12);
+  const month0 = ((monthIndex % 12) + 12) % 12;
+  const daysInMonth = new Date(Date.UTC(year, month0 + 1, 0)).getUTCDate();
+  if (dateParts.day > daysInMonth) return null;
+  const dateStr = formatYmd(year, month0 + 1, dateParts.day);
+  try {
+    return zonedDateTime(dateStr, hhmm, timeZone);
+  } catch {
+    return null;
+  }
+}
+
+function nextOccurrenceCandidate(rule: ATCBRRuleParts, current: Date, timeZone: string, hhmm: string, frequencyMatches: boolean, parts: ATCBEnrichedDateParts, startParts: ATCBEnrichedDateParts): Date {
+  const interval = ruleInterval(rule);
+  const plainRule = !hasCandidateShapingRules(rule);
+  if (frequencyMatches && plainRule && rule.FREQ === 'MONTHLY' && startParts.day <= 28 && parts.day === startParts.day) {
+    const next = addLocalMonths(interval, timeZone, hhmm, parts);
+    if (next) return next;
+  }
+  const leapDayAnchor = startParts.month0 === 1 && startParts.day === 29;
+  if (frequencyMatches && plainRule && rule.FREQ === 'YEARLY' && !leapDayAnchor && parts.month0 === startParts.month0 && parts.day === startParts.day) {
+    const next = addLocalMonths(interval * 12, timeZone, hhmm, parts);
+    if (next) return next;
+  }
+  return addLocalDays(current, candidateStepDays(rule, frequencyMatches, parts, startParts), timeZone, hhmm, parts);
+}
+
+// Expose every evaluated recurrence candidate internally so async consumers can
+// cooperatively yield even while a sparse rule is scanning between occurrences.
+function* iterateOccurrenceSteps(rule: ATCBRRuleParts, start: Date, tzid: string, time: string, { current = start, count = 0, through, maxIterations = Infinity }: { current?: Date; count?: number; through?: Date; maxIterations?: number } = {}): Generator<OccurrenceIterationResult | null> {
   const startParts = getPartsForTimeZone(start, tzid);
   while (isFinite(current.getTime()) && maxIterations-- > 0) {
     if ((through && current > through) || (rule.UNTIL instanceof Date && current > rule.UNTIL)) return;
     const parts = getPartsForTimeZone(current, tzid);
-    if (matchesFreq(current, rule, start, tzid, parts, startParts) && matchesRRule(current, rule, start, tzid, parts, startParts)) {
-      yield { date: current, parts, count: ++count };
-      if (rule.COUNT && count >= (rule.COUNT as number)) return;
-    }
-    const next = addLocalDays(current, 1, tzid, time, parts);
+    const frequencyMatches = matchesFreq(rule, parts, startParts);
+    const matches = frequencyMatches && matchesRRule(rule, parts, startParts);
+    const occurrence = matches ? { date: current, parts, count: ++count } : null;
+    yield occurrence;
+    if (occurrence && rule.COUNT && count >= (rule.COUNT as number)) return;
+    const next = nextOccurrenceCandidate(rule, current, tzid, time, frequencyMatches, parts, startParts);
     if (next <= current) return;
     current = next;
+  }
+}
+
+// Walk matching local dates once; callers retain their own window and selection policy.
+function* iterateOccurrences(rule: ATCBRRuleParts, start: Date, tzid: string, time: string, options: { current?: Date; count?: number; through?: Date; maxIterations?: number } = {}): Generator<OccurrenceIterationResult> {
+  for (const occurrence of iterateOccurrenceSteps(rule, start, tzid, time, options)) {
+    if (occurrence) yield occurrence;
   }
 }
 
@@ -829,11 +641,10 @@ function getNextOccurrence(rruleStr: string, startDateTime: Date, diff: number, 
   // shorter months, no Feb 29 anchor), so everything else keeps the full iteration.
   let skippedOccurrences = 0;
   {
-    const ffInterval = parseInt((rrule.INTERVAL as number | string | undefined)?.toString() || '1', 10) || 1;
+    const ffInterval = ruleInterval(rrule);
     const freq = rrule.FREQ as string | undefined;
     const bounded = Boolean(rrule.COUNT) || Boolean(rrule.UNTIL);
-    const hasByRules = Boolean(rrule.BYDAY || rrule.BYMONTH || rrule.BYMONTHDAY || rrule.BYYEARDAY || rrule.BYWEEKNO || rrule.BYSETPOS);
-    const plainCountable = !hasByRules && (freq === 'DAILY' || freq === 'WEEKLY' || (freq === 'MONTHLY' && startParts.day <= 28) || (freq === 'YEARLY' && !(startParts.month0 === 1 && startParts.day === 29)));
+    const plainCountable = !hasCandidateShapingRules(rrule) && (freq === 'DAILY' || freq === 'WEEKLY' || (freq === 'MONTHLY' && startParts.day <= 28) || (freq === 'YEARLY' && !(startParts.month0 === 1 && startParts.day === 29)));
     if ((freq === 'DAILY' || freq === 'WEEKLY' || freq === 'MONTHLY' || freq === 'YEARLY') && (!bounded || plainCountable)) {
       // never jump past UNTIL: an exhausted series must still land on its final occurrence
       const target = rrule.UNTIL instanceof Date && rrule.UNTIL < upperEnd ? rrule.UNTIL : upperEnd;
@@ -862,9 +673,9 @@ function getNextOccurrence(rruleStr: string, startDateTime: Date, diff: number, 
           const monthsTotal = startParts.month0 + (freq === 'MONTHLY' ? cappedPeriods * ffInterval : 0);
           const targetYear = startParts.year + (freq === 'YEARLY' ? cappedPeriods * ffInterval : 0) + Math.floor(monthsTotal / 12);
           const targetMonth0 = ((monthsTotal % 12) + 12) % 12;
-          const dateStr = `${targetYear}-${pad2(targetMonth0 + 1)}-${pad2(startParts.day)}`;
+          const dateStr = formatYmd(targetYear, targetMonth0 + 1, startParts.day);
           try {
-            return new Date(`${dateStr}T${baseHhmm}:00${toIsoOffset(tzlib_get_offset(tzid, dateStr, baseHhmm))}`);
+            return zonedDateTime(dateStr, baseHhmm, tzid);
           } catch {
             return null;
           }
@@ -912,53 +723,132 @@ function getNextOccurrence(rruleStr: string, startDateTime: Date, diff: number, 
   };
 }
 
+interface PreparedOccurrenceRange {
+  rule: ATCBRRuleParts;
+  start: Date;
+  current: Date;
+  through: Date;
+  time: string;
+  zone: string;
+}
+
+interface OccurrenceRangeAsyncOptions {
+  signal?: AbortSignal;
+  yieldInterval?: number;
+}
+
+function prepareOccurrenceRange(rruleStr: string, startDate: string, startTime: string, tzid: string, from: string, to: string): PreparedOccurrenceRange | null {
+  const rule = parseRRule(rruleStr);
+  if (!['DAILY', 'WEEKLY', 'MONTHLY', 'YEARLY'].includes(rule.FREQ as string)) return null;
+  if (rule.COUNT !== null && Number(rule.COUNT) < 1) return null;
+  const time = startTime || '00:00';
+  const zone = map_special_time_zones(tzid || 'UTC');
+  const instant = (date: string): Date => zonedDateTime(date, time, zone);
+  const start = instant(startDate);
+  if (!isFinite(start.getTime())) return null;
+  // Date-only UNTIL is inclusive in the event's local calendar, not at UTC midnight.
+  if (!startTime && rule.UNTIL instanceof Date) rule.UNTIL = instant(rule.UNTIL.toISOString().slice(0, 10));
+  return {
+    rule,
+    start,
+    // Without COUNT, predicates remain anchored to DTSTART even when we skip history.
+    current: instant(!rule.COUNT && startDate < from ? from : startDate),
+    through: instant(to),
+    time,
+    zone,
+  };
+}
+
+function occurrenceDate(parts: ATCBEnrichedDateParts): string {
+  return formatYmd(parts.year, parts.month, parts.day);
+}
+
+function abortError(signal: AbortSignal): unknown {
+  if (signal.reason !== undefined) return signal.reason;
+  const error = new Error('The recurrence expansion was aborted.');
+  error.name = 'AbortError';
+  return error;
+}
+
+async function yieldToMainThread(signal?: AbortSignal): Promise<void> {
+  if (signal?.aborted) throw abortError(signal);
+  await new Promise<void>((resolve, reject) => {
+    const finish = (): void => {
+      signal?.removeEventListener('abort', abort);
+      resolve();
+    };
+    const abort = (): void => {
+      clearTimeout(timer);
+      signal?.removeEventListener('abort', abort);
+      reject(abortError(signal!));
+    };
+    const timer = setTimeout(finish, 0);
+    signal?.addEventListener('abort', abort, { once: true });
+  });
+}
+
 // Enumerate presentation dates without advancing DTSTART or changing the export rule.
 // Range bounds are local calendar dates, inclusive, not viewer-zone instants.
 function getOccurrencesInRange(rruleStr: string, startDate: string, startTime: string, tzid: string, from: string, to: string): string[] {
-  const rule = parseRRule(rruleStr);
-  if (!['DAILY', 'WEEKLY', 'MONTHLY', 'YEARLY'].includes(rule.FREQ as string)) return [];
-  if (rule.COUNT !== null && Number(rule.COUNT) < 1) return [];
-  const time = startTime || '00:00';
-  const zone = map_special_time_zones(tzid || 'UTC');
-  const instant = (date: string): Date => new Date(`${date}T${time}:00${toIsoOffset(tzlib_get_offset(zone, date, time))}`);
-  const start = instant(startDate);
-  if (!isFinite(start.getTime())) return [];
-  // Date-only UNTIL is inclusive in the event's local calendar, not at UTC midnight.
-  if (!startTime && rule.UNTIL instanceof Date) rule.UNTIL = instant(rule.UNTIL.toISOString().slice(0, 10));
+  const prepared = prepareOccurrenceRange(rruleStr, startDate, startTime, tzid, from, to);
+  if (!prepared) return [];
   const result: string[] = [];
-  // Without COUNT, predicates remain anchored to DTSTART even when we skip history.
-  const current = instant(!rule.COUNT && startDate < from ? from : startDate);
-  for (const occurrence of iterateOccurrences(rule, start, zone, time, { current, through: instant(to) })) {
-    const { parts } = occurrence;
-    const date = `${parts.year}-${pad2(parts.month)}-${pad2(parts.day)}`;
+  for (const occurrence of iterateOccurrences(prepared.rule, prepared.start, prepared.zone, prepared.time, { current: prepared.current, through: prepared.through })) {
+    const date = occurrenceDate(occurrence.parts);
     if (date >= from) result.push(date);
   }
   return result;
 }
 
-export { getOccurrencesInRange };
+// The shared synchronous API remains suitable for generators and small ranges. UI
+// flows processing many independent rules can use this cooperative variant to keep
+// rendering and input responsive without moving recurrence semantics into the UI.
+async function getOccurrencesInRangeAsync(rruleStr: string, startDate: string, startTime: string, tzid: string, from: string, to: string, options: OccurrenceRangeAsyncOptions = {}): Promise<string[]> {
+  const prepared = prepareOccurrenceRange(rruleStr, startDate, startTime, tzid, from, to);
+  if (!prepared) return [];
+  const { signal } = options;
+  const yieldInterval = Math.max(0, options.yieldInterval ?? 8);
+  const result: string[] = [];
+  let lastYield = performance.now();
+  if (signal?.aborted) throw abortError(signal);
+  for (const occurrence of iterateOccurrenceSteps(prepared.rule, prepared.start, prepared.zone, prepared.time, { current: prepared.current, through: prepared.through })) {
+    if (occurrence) {
+      const date = occurrenceDate(occurrence.parts);
+      if (date >= from) result.push(date);
+    }
+    if (performance.now() - lastYield >= yieldInterval) {
+      await yieldToMainThread(signal);
+      lastYield = performance.now();
+    }
+  }
+  if (signal?.aborted) throw abortError(signal);
+  return result;
+}
+
+export { getOccurrencesInRange, getOccurrencesInRangeAsync };
+
+const specialTimeZoneMapping: { [key: string]: string } = {
+  PT: 'America/Los_Angeles',
+  MT: 'America/Denver',
+  CT: 'America/Chicago',
+  ET: 'America/New_York',
+  CET: 'Europe/Brussels',
+  CST6CDT: 'America/Chicago',
+  EET: 'Europe/Athens',
+  EST: 'America/Panama',
+  EST5EDT: 'America/New_York',
+  HST: 'Pacific/Honolulu',
+  MET: 'Europe/Brussels',
+  MST: 'America/Phoenix',
+  MST7MDT: 'America/Denver',
+  PST8PDT: 'America/Los_Angeles',
+  WET: 'Europe/Lisbon',
+};
 
 // SHARED FUNCTION TO MAP SPECIFIC TIME ZONES
 function map_special_time_zones(timeZone: string): string {
   if (!timeZone) return 'GMT';
-  const mapping: { [key: string]: string } = {
-    PT: 'America/Los_Angeles',
-    MT: 'America/Denver',
-    CT: 'America/Chicago',
-    ET: 'America/New_York',
-    CET: 'Europe/Brussels',
-    CST6CDT: 'America/Chicago',
-    EET: 'Europe/Athens',
-    EST: 'America/Panama',
-    EST5EDT: 'America/New_York',
-    HST: 'Pacific/Honolulu',
-    MET: 'Europe/Brussels',
-    MST: 'America/Phoenix',
-    MST7MDT: 'America/Denver',
-    PST8PDT: 'America/Los_Angeles',
-    WET: 'Europe/Lisbon',
-  };
-  return mapping[`${timeZone.toUpperCase()}`] || timeZone;
+  return specialTimeZoneMapping[`${timeZone.toUpperCase()}`] || timeZone;
 }
 
-export { generate_time, format_datetime, translate_via_time_zone, generate_timestring, parseRRule, getNextOccurrence, map_special_time_zones };
+export { generate_time, format_datetime, translate_via_time_zone, parseRRule, getNextOccurrence, map_special_time_zones };
