@@ -58,7 +58,7 @@ describe('Group SEC - security hardening', () => {
     const content = 'Before[p][/p]After';
     expect(rewrite_html_elements(content)).to.equal('Before<br>After');
     expect(rewrite_html_elements(content, true)).to.equal('Before After');
-    expect(rewrite_html_elements(content, true, true)).to.equal('Before\\nAfter');
+    expect(rewrite_html_elements(content, true, true)).to.equal('Before\nAfter');
   });
 
   it('SEC-04: parsed json input cannot pollute the object prototype', async () => {

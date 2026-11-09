@@ -140,7 +140,9 @@ for (const [index, inline] of [
     await screenReader.press('Space');
     await expect(checkbox).toBeChecked();
     await expectSpeech(screenReader, /\bchecked\b/i);
-    await readTo(screenReader, /Submit.*button|button.*Submit/i, !inline ? /Before calendar|After calendar/i : undefined);
+    const submit = page.getByRole('button', { name: 'Submit', exact: true });
+    if (inline) await tabTo(screenReader, submit, /Submit/i, false, true);
+    else await readTo(screenReader, /Submit.*button|button.*Submit/i, /Before calendar|After calendar/i);
     await screenReader.act({ capture: true });
     await expect(name).toBeFocused();
     await expect.poll(() => name.evaluate((element) => (element as HTMLInputElement).validity.valid)).toBe(false);

@@ -129,21 +129,36 @@ export async function tabTo(reader: ScreenReaderPlaywright, target: Locator, spe
 // Exercise the reading cursor separately from keyboard focus. Hidden background
 // text must not appear when traversing a modal's content.
 export async function readTo(reader: ScreenReaderPlaywright, expected: RegExp, forbidden?: RegExp) {
-  const currentOutput = await currentReaderOutput(reader);
+  // Snapshot before reading the current item: NVDA may append the target while
+  // those reads are in flight. A later checkpoint would silently discard it.
+  await checkpointSpeech(reader);
+  const currentOutput = `${await currentReaderOutput(reader)}\n${await readerOutputSinceCheckpoint(reader)}`;
   if (forbidden) expect(currentOutput).not.toMatch(forbidden);
   if (expected.test(currentOutput)) return;
-  // Keep one checkpoint for the full traversal. NVDA can append an announcement
-  // just after a navigation command resolves; resetting the checkpoint before the
-  // next step would discard that valid output even though it appears in the final
-  // speech log.
-  await checkpointSpeech(reader);
+  // Keep that checkpoint for the entire traversal so delayed announcements are
+  // retained rather than discarded between navigation commands.
+  const steps: { step: number; output: string }[] = [];
   for (let step = 0; step < 20; step++) {
     await reader.next();
     const output = await readerOutputSinceCheckpoint(reader);
+    steps.push({ step: step + 1, output: output.slice(-1000) });
     if (forbidden) expect(output).not.toMatch(forbidden);
     if (expected.test(output)) return;
   }
-  throw new Error(`Could not read ${expected} within 20 screen-reader steps.`);
+  // Synthetic fixture output only. Expose exactly what the predicate consumed,
+  // not just the later attachment, so capture/checkpoint mismatches are visible.
+  const speech = [...(await reader.spokenPhraseLog())];
+  const items = [...(await reader.itemTextLog())];
+  const diagnostics = {
+    checkpoint: readerOffsets.get(reader),
+    initialOutput: currentOutput,
+    steps,
+    speechLength: speech.length,
+    itemLength: items.length,
+    speech: speech.join('\n').slice(-4000),
+    items: items.join('\n').slice(-4000),
+  };
+  throw new Error(`Could not read ${expected} within 20 screen-reader steps.\nreadTo diagnostics: ${JSON.stringify(diagnostics)}`);
 }
 
 export async function openList(page: Page, reader: ScreenReaderPlaywright) {
@@ -174,10 +189,13 @@ export async function openList(page: Page, reader: ScreenReaderPlaywright) {
 
 export async function closeWithEscape(page: Page, reader: ScreenReaderPlaywright, trigger: Locator) {
   await checkpointSpeech(reader);
-  await reader.press('Escape');
+  // Capture all speech from the Escape so the trigger announcement that follows
+  // menu/dialog dismissal is retained even under VoiceOver's "initial" capture
+  // mode, which only keeps the first phrase per command.
+  await reader.press('Escape', { capture: true });
   // NVDA can consume the first Escape while leaving focus/browse mode. A second
   // press then reaches the page and dismisses the open menu or dialog.
-  if ((await page.getByRole('menu').isVisible()) || (await page.getByRole('dialog').isVisible())) await reader.press('Escape');
+  if ((await page.getByRole('menu').isVisible()) || (await page.getByRole('dialog').isVisible())) await reader.press('Escape', { capture: true });
   await expect(page.getByRole('menu')).toBeHidden();
   await expect(page.getByRole('dialog')).toHaveCount(0);
   await expect(trigger).toBeFocused();

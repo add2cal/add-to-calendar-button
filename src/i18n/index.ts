@@ -1,5 +1,7 @@
 import { safe_html } from '../core/text';
 import { resolve_script_base } from '../core/script-base';
+import { resolve_style_source } from '../core/style-source';
+import { atcbVersion } from '../core/globals';
 import enStrings from './locales/en.json';
 import type { ATCBConfig, I18nStrings } from '../types';
 
@@ -155,8 +157,7 @@ function locale_base_url(data: ATCBConfig): string {
   if (data.styleSource && data.styleSource !== '') {
     // the style-source attribute points at the assets root of a self-hosted setup;
     // locales live next to styles, so derive the sibling directory from it
-    const src = String(data.styleSource);
-    const normalized = src.endsWith('/') ? src : src + '/';
+    const normalized = resolve_style_source(String(data.styleSource), atcbVersion);
     return normalized.replace(/styles\/$/, 'locales/');
   }
   if (localeScriptBase === '') {

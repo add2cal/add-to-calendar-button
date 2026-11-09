@@ -2,6 +2,7 @@
 
 ## Version 3
 
+- v3.6 : PRO group overviews expand recurring events, while subscription overviews show a global Add to Calendar Button instead of options per event; stronger sanitization for text input
 - v3.5 : Auto-set end-time if missing
 - v3.4 : Brazilian Portuguese, Traditional Chinese, Serbian Latin, Norwegian Bokmål, and Norwegian Nynorsk translations
 - v3.3 : Optimized rendering flows (incl. SSR hydration)

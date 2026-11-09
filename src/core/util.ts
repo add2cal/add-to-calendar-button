@@ -45,7 +45,7 @@ function save_file(file: string, filename: string): void {
 // SHARED FUNCTION TO VALIDATE EMAIL ADDRESSES
 function validEmail(email: string): boolean {
   // rough format check first
-  if (!/^.{0,70}@.{1,30}\.[a-z]{2,9}$/i.test(email)) {
+  if (/[\r\n]/.test(email) || !/^.{0,70}@.{1,30}\.[a-z]{2,9}$/i.test(email)) {
     return false;
   }
   return true;

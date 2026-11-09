@@ -23,7 +23,9 @@ import { icons, wcParams, wcProParams } from '../core/globals';
 import { rtlLanguages } from '../i18n/index';
 import { decorate_sizes } from '../core/sizes';
 import { officialAttributeName, legacyAttributeName } from '../compat/attributes';
-import { escape_html, escape_html_text, safe_html, secure_url, strip_unsafe_keys } from '../core/text';
+import { assert_no_script, escape_html, escape_html_text, safe_html, secure_url, strip_unsafe_keys } from '../core/text';
+import { fetch_with_context } from '../core/fetch';
+import { groupOverviewSkeletonCss } from '../core/group-overview-skeleton';
 import { tzlib_get_offset } from 'timezones-ical-library';
 
 // filled at build time with the minified tokens+core css plus EVERY per-style delta
@@ -254,6 +256,7 @@ function parseOptions(value: unknown): { key: string; labelOverride: string }[] 
 
 /** Internal renderer that distinguishes fetched PRO config from optimistic sync input. */
 function generate_ssr_html_with_context(rawConfig: AddToCalendarButtonType & { [key: string]: unknown }, proConfigResolved: boolean): string {
+  assert_no_script(rawConfig);
   // accept camelCase, kebab-case, and legacy spellings alike (the tag does, too)
   const config = normalizeConfig(rawConfig);
   // --- the few config bits the shell honors ---
@@ -316,7 +319,7 @@ function generate_ssr_html_with_context(rawConfig: AddToCalendarButtonType & { [
 
   // --- styles: mirror what the client injects (general layout css + registry css) ---
   const initWidth = inlineRsvp || groupOverviewSkeleton ? '100%' : 'fit-content';
-  const generalCss = `.atcb-initialized { display: block; position: relative; width: ${initWidth}; }.atcb-initialized.atcb-inline { display: inline-block; }.atcb-initialized.atcb-buttons-list { display: flex; flex-wrap: wrap; justify-content: center; gap: var(--buttonslist-gap); }.atcb-hidden { display: none; }.atcb-ssr-skeleton { display: inline-block; background: currentColor; opacity: 0.15; border-radius: 0.3em; min-width: 2ch; }[data-atcb-ssr] .atcb-date-btn-month { margin-top: 0.5em; }:host:has(.atcb-ssr-group-overview-skeleton) { box-sizing: border-box; display: block; max-width: 100% !important; width: min(600px, 100%) !important; }.atcb-ssr-group-overview-skeleton { box-sizing: border-box; color: #1b1f24; display: flex; flex-direction: column; gap: 0.7em; width: 100%; }.atcb-ssr-group-overview-skeleton .atcb-ssr-skeleton { display: block; }.atcb-ssr-group-overview-select { height: 2.6em; margin-bottom: 0.55em; width: 7em; }.atcb-ssr-group-overview-entry { height: 4.5em; width: 100%; }.atcb-ssr-group-overview-entry + .atcb-ssr-group-overview-entry { margin-top: 10px; }.atcb-ssr-rsvp-skeleton { box-sizing: border-box; display: flex; flex-direction: column; align-items: center; width: 100%; max-width: 540px; margin: 0 auto; padding: 32px 24px; gap: 12px; }.atcb-ssr-rsvp-skeleton .atcb-ssr-skeleton { display: block; width: 78%; height: 10px; background-image: linear-gradient(90deg, transparent 25%, rgb(255 255 255 / 0.55) 50%, transparent 75%); background-size: 200% 100%; animation: atcb-ssr-shimmer 1.5s linear infinite; }.atcb-ssr-rsvp-skeleton .atcb-ssr-skeleton-headline { width: 42%; height: 44px; margin-bottom: 2px; opacity: 0.25; }.atcb-ssr-rsvp-skeleton .atcb-ssr-skeleton-field { width: 100%; height: 44px; margin-top: 8px; border-radius: 6px; }.atcb-ssr-rsvp-skeleton .atcb-ssr-skeleton-submit { width: 38%; height: 44px; margin-top: 10px; opacity: 0.25; }.atcb-ssr-rsvp-skeleton .atcb-ssr-skeleton-field + .atcb-ssr-skeleton-field { margin-top: 0; }@keyframes atcb-ssr-shimmer { from { background-position: 200% 0; } to { background-position: -200% 0; } }@media (prefers-reduced-motion: reduce) { .atcb-ssr-rsvp-skeleton .atcb-ssr-skeleton { animation: none; } }`;
+  const generalCss = `.atcb-initialized { display: block; position: relative; width: ${initWidth}; }.atcb-initialized.atcb-inline { display: inline-block; }.atcb-initialized.atcb-buttons-list { display: flex; flex-wrap: wrap; justify-content: center; gap: var(--buttonslist-gap); }.atcb-hidden { display: none; }.atcb-ssr-skeleton { display: inline-block; background: currentColor; opacity: 0.15; border-radius: 0.3em; min-width: 2ch; }[data-atcb-ssr] .atcb-date-btn-month { margin-top: 0.5em; }${groupOverviewSkeletonCss}.atcb-ssr-rsvp-skeleton { box-sizing: border-box; display: flex; flex-direction: column; align-items: center; width: 100%; max-width: 540px; margin: 0 auto; padding: 32px 24px; gap: 12px; }.atcb-ssr-rsvp-skeleton .atcb-ssr-skeleton { display: block; width: 78%; height: 10px; background-image: linear-gradient(90deg, transparent 25%, rgb(255 255 255 / 0.55) 50%, transparent 75%); background-size: 200% 100%; animation: atcb-ssr-shimmer 1.5s linear infinite; }.atcb-ssr-rsvp-skeleton .atcb-ssr-skeleton-headline { width: 42%; height: 44px; margin-bottom: 2px; opacity: 0.25; }.atcb-ssr-rsvp-skeleton .atcb-ssr-skeleton-field { width: 100%; height: 44px; margin-top: 8px; border-radius: 6px; }.atcb-ssr-rsvp-skeleton .atcb-ssr-skeleton-submit { width: 38%; height: 44px; margin-top: 10px; opacity: 0.25; }.atcb-ssr-rsvp-skeleton .atcb-ssr-skeleton-field + .atcb-ssr-skeleton-field { margin-top: 0; }@keyframes atcb-ssr-shimmer { from { background-position: 200% 0; } to { background-position: -200% 0; } }@media (prefers-reduced-motion: reduce) { .atcb-ssr-rsvp-skeleton .atcb-ssr-skeleton { animation: none; } }`;
   // with buttonStyle 'custom', the registry stays out and only the external file applies
   const styleCss = buttonStyle === 'custom' ? '' : (atcbSsrCssTemplate['core'] || '') + (atcbSsrCssTemplate[`${buttonStyle}`] || '');
   const overrideCss = (styleLight !== '' ? `:host{${styleLight}}` : '') + (styleDark !== '' ? `:host(.atcb-dark){${styleDark}}` : '');
@@ -399,7 +402,7 @@ async function generate_ssr_html_async(rawConfig: AddToCalendarButtonType & { [k
 
   try {
     const endpoint = `https://${truthyFlag(config.dev) ? 'event-dev.caldn.net' : 'event.caldn.net'}/${encodeURIComponent(proKey)}/config.json`;
-    const response = await fetch(endpoint);
+    const response = await fetch_with_context(endpoint);
     if (!response.ok) throw new Error('Not possible to read prokey config from server...');
     const responseData = strip_unsafe_keys(await response.json());
     if (!responseData || typeof responseData !== 'object' || Array.isArray(responseData)) throw new Error('Not possible to read prokey config from server...');
@@ -420,8 +423,9 @@ async function generate_ssr_html_async(rawConfig: AddToCalendarButtonType & { [k
     merged.proKey = proKey;
     merged.identifier = proKey;
     return generate_ssr_html_with_context(merged as AddToCalendarButtonType & { [key: string]: unknown }, true);
-  } catch {
-    throw new Error('prokey invalid or server not responding!');
+  } catch (error) {
+    const detail = error instanceof Error ? ` ${error.message}` : '';
+    throw new Error(`prokey invalid or server not responding!${detail}`);
   }
 }
 

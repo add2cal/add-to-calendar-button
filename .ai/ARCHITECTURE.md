@@ -46,7 +46,7 @@ Four consumption paths, one code base:
 ```
 attributes / JSON / atcb_action argument
   -> compat/attributes (official name wins, legacy aliases resolve)
-  -> atcb_secure_content (tag stripping + prototype-pollution key strip)
+  -> atcb_secure_content (field-aware cleanup + prototype-pollution key strip)
   -> atcb_check_required
   -> atcb_decorate_data (normalize: booleans, options, dates, recurrence,
      sizes, light mode, i18n locale fields; per-instance store entry)
@@ -68,8 +68,18 @@ Key properties of the pipeline:
 - **Group overview branches after the PRO config fetch.** The server-side
   `public_event_overview` flag enables the branch. Non-subscription groups always render
   the list; subscription groups render the button by default and a truthy `group-overview`
-  selects the list. The list reads its display settings from the component attributes,
-  fetches the public group event range, and renders into the existing Lit shell.
+  selects the list together with the configured group-level subscription button. The list
+  reads its display settings from the component attributes, fetches the public group event
+  range, and renders into the existing Lit shell.
+
+## Date dependencies
+
+`core/dates.ts` provides date, timezone, and recurrence primitives without importing
+configuration decoration. `core/decorate-dates.ts` and `core/decorate-recurrence.ts`
+consume those primitives. `core/date-display.ts` owns localized time-string formatting
+and its optional decoration step, depending on both `dates` and `decorate-dates`.
+The root and DOM-free utility entries export `atcb_generate_timestring` directly from
+`date-display`; do not re-export it from `dates`, which would recreate the import cycle.
 
 ## HTML handling
 
@@ -84,9 +94,29 @@ while preserving text entities.
 It wraps `rewrite_html_elements`, which is a format converter rather than a sanitizer;
 its clear modes produce plain text or ICS text without HTML encoding.
 
-`secure_content` remains configuration cleanup: it strips tags and unsafe object keys
-before validation and decoration, and does not replace output-context escaping.
-URL scheme checks and ICS escaping likewise have their own format-specific rules.
+`secure_content` remains configuration cleanup: unsafe object keys are removed and
+legacy tag stripping is retained outside descriptions and custom-variable input.
+Descriptions remain literal through ingestion. Variables are substituted before all
+description copies are derived; other variable destinations retain legacy cleanup.
+`description_html` recognizes formatting on the original input, then decodes named/numeric
+character references once in literal spans and link labels using `entities/decode` before
+HTML text encoding. Plain description copies decode once after pseudo formatting is removed.
+Decoded angle brackets and pseudo tokens remain text, never markup or formatting; navigation
+attributes are not entity-decoded. Unknown references remain literal, and double-encoded
+references are not recursively decoded. The strict decoder requires semicolons and stays
+DOM-free; its entity table is bundled to preserve full named-reference compatibility.
+Script tags in field values are rejected rather than silently stripped, including
+entity-encoded opening brackets and nested configuration values. Validation repeats
+this check after decoration/custom-variable substitution; SSR applies the same policy.
+URLs cannot contain literal CR/LF. ICS TEXT values escape real CRLF, CR, and LF as
+`\\n`; parameter values are quoted and use RFC 6868 caret encoding so punctuation
+and newlines cannot alter the property's structure. Pseudo breaks become actual LF
+before serialization; literal backslash+n is escaped as a literal backslash followed
+by n, never interpreted as a break. Raw `<br>` remains a supported legacy break.
+Structured attributes and inline JSON text are parsed before field-aware cleanup;
+SSR attribute encoding is decoded once by HTML parsing before client ingestion.
+Attribute parsing/security errors are not swallowed by inline JSON fallback. Missing
+attribute-field errors are retained when no inline JSON is provided.
 
 ## Data flow: interaction
 
@@ -101,13 +131,32 @@ data URL so Apple browsers retain a real user-activation navigation. Static ICS 
 the legacy direct-save path; subscription and other calendar-provider routes retain their
 established dispatch paths.
 
+Configured root and per-date `icsFile` values are rechecked by `static_ics_file` before
+being returned to any download, native-anchor, WebView or result-channel consumer.
+The existing HTTPS-only configured-file contract is enforced there as well as during
+validation; unsafe selected values throw rather than falling back to another file.
+Literal angle brackets and double quotes are percent encoded as URL data, without
+HTML entity escaping, changing query separators or double encoding percent escapes.
+Generated percent-encoded calendar data and browser-created iOS Blob URLs remain
+separate from configured file URLs.
+
+Proxy navigation and resolved native-anchor actions share `proxy_url`. Custom domains
+are DNS hostnames, not URLs: userinfo, ports, paths, query and fragment syntax are
+rejected. Keys and calendar types are encoded as individual path components; attendee,
+custom variables and sub-event values are encoded as individual query values. This
+preserves proxy routing without interpreting configuration text as URL structure.
+
 Group overview controls filter the fetched range locally. Event links open the hosted
 event page unless `no-details` routes the whole event action to adding it. Optional add
 controls call `atcb_action` with the selected event, disable group overview for that call,
-and request the normal add flow with modal list style. Subscription overviews use the
-group key for every landing page and add action instead of each entry's event key. Unless
-`no-details` is set, RSVP events keep their hosted-detail route instead of receiving a
-separate add control. `no-add` suppresses all links, actions, and add controls.
+and request the normal add flow with modal list style. Subscription overviews always treat
+their entries like `no-add`: no entry link, direct action, or add control is rendered.
+Instead, the group subscription button described by the fetched PRO config is placed at
+the top right of the filter row. The `no-subscribe-button` overview option disables this entire
+subscription-specific overview treatment: it hides the group button and restores regular
+per-event detail links and add actions. Unless `no-details` is set, RSVP events keep their
+hosted-detail route instead of receiving a separate add control. `no-add` suppresses all
+links, actions, and add controls.
 
 ## State
 
@@ -196,7 +245,10 @@ and initializes client-only.
 
 The SSR entry does not render group overview data. On upgrade, the client fetches and
 builds the group range off-DOM while leaving the skeleton painted, then swaps the complete
-overview into the existing shell atomically.
+overview into the existing shell atomically. Client-only overviews use the same skeleton
+during explicit PRO-config loading and subsequent range loading. Recurrence expansion uses
+the shared range iterator's abortable cooperative path, yielding between bounded work
+slices so large groups do not monopolize the main thread.
 
 ## Build outputs and their consumers
 

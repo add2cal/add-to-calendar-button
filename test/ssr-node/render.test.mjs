@@ -264,8 +264,8 @@ test('S-17: custom-css, style-light and style-dark reach the shell', () => {
   // flash unstyled before the external file arrives - the client shows a placeholder)
   const evil = atcb_generate_ssr_html({ name: 'X', 'custom-css': 'javascript:alert(1)' });
   assert.ok(!evil.includes('<link'), 'scheme allowlist blocks hostile css urls');
-  const stripped = atcb_generate_ssr_html({ name: 'X', styleLight: '--x: 1; }</style><script>alert(1)</script>' });
-  assert.ok(!stripped.includes('<script'), 'style override content is html-stripped');
+  assert.throws(() => atcb_generate_ssr_html({ name: 'X', styleLight: '--x: 1; }</style><script>dummy</script>' }), /script/i, 'script tags are rejected in every field');
+  assert.throws(() => atcb_generate_ssr_html({ name: 'X', customLabels: '{"label.addtocalendar":"\\u003cscr\\u0069pt>dummy"}' }), /script/i, 'JSON escapes cannot bypass the field policy');
 });
 
 test('S-18: non-splitted button with hideTextLabelButton drops the text span and adds the atcb-no-text class', () => {

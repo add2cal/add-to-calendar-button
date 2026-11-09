@@ -1,6 +1,6 @@
 import { tzlib_get_timezones } from 'timezones-ical-library';
 import { options } from './globals';
-import { secure_url } from './text';
+import { assert_no_script, secure_url } from './text';
 import { validEmail, generate_uuid } from './util';
 import type { ATCBConfig, ATCBInputConfig, ATCBDateEntry } from '../types';
 
@@ -57,6 +57,8 @@ async function check_required(data: ATCBInputConfig): Promise<boolean> {
 async function validate(data: ATCBConfig): Promise<boolean> {
   const msgPrefix = 'Add to Calendar Button generation (' + data.identifier + ')';
   try {
+    // Decoration and custom variables can assemble markup after input cleanup.
+    assert_no_script(data);
     await validate_icsFile(data, msgPrefix);
     await validate_buttonStyle(data, msgPrefix);
     await validate_subscribe(data, msgPrefix);

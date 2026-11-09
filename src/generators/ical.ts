@@ -32,28 +32,7 @@ function open_cal_url(data: ATCBConfig, type: string, url = '', subscribe = fals
     target = defaultTarget;
   }
   if (data.proxy && data.proKey && data.proKey !== '') {
-    const urlType = subscribe ? 's' : 'o';
-    const query = (function () {
-      const parts: string[] = [];
-      if (data.dates![0]!.attendee && data.dates![0]!.attendee !== '') {
-        parts.push('attendee=' + encodeURIComponent(data.dates![0]!.attendee));
-      }
-      if (data.customVar && typeof data.customVar === 'object' && Object.keys(data.customVar).length > 0) {
-        parts.push('customvar=' + encodeURIComponent(JSON.stringify(data.customVar)));
-      }
-      if (data.dates && data.dates.length > 1 && subEvent !== null && subEvent !== 'all') {
-        parts.push('sub-event=' + subEvent);
-      }
-      if (parts.length > 0) {
-        return '?' + parts.join('&');
-      }
-      return '';
-    })();
-    const host = data.domain ? data.domain : data.dev ? 'dev.caldn.net' : 'caldn.net';
-    url = `https://${host}/${data.proKey}/${urlType}/${type}${query}`;
-    if (!secure_url(url)) {
-      return;
-    }
+    url = proxy_url(data, type, subEvent, subscribe);
   }
   if (secure_url(url)) {
     if (resultChannel.active()) {
@@ -72,10 +51,16 @@ function proxy_url(data: ATCBConfig, type: string, subEvent: 'all' | number | st
   const parts: string[] = [];
   if (data.dates![0]!.attendee && data.dates![0]!.attendee !== '') parts.push('attendee=' + encodeURIComponent(data.dates![0]!.attendee));
   if (data.customVar && typeof data.customVar === 'object' && Object.keys(data.customVar).length > 0) parts.push('customvar=' + encodeURIComponent(JSON.stringify(data.customVar)));
-  if (data.dates && data.dates.length > 1 && subEvent !== null && subEvent !== 'all') parts.push('sub-event=' + subEvent);
+  if (data.dates && data.dates.length > 1 && subEvent !== null && subEvent !== 'all') parts.push('sub-event=' + encodeURIComponent(String(subEvent)));
   const query = parts.length > 0 ? '?' + parts.join('&') : '';
   const host = data.domain ? data.domain : data.dev ? 'dev.caldn.net' : 'caldn.net';
-  const url = `https://${host}/${data.proKey}/${urlType}/${type}${query}`;
+  // A custom domain is a DNS authority, not a URL or a path. Reject URL syntax
+  // rather than letting userinfo, ports or delimiters change the destination.
+  const labels = host.split('.');
+  if (host.length > 253 || labels.length < 2 || !labels.every((label) => label.length > 0 && label.length <= 63 && /^[a-z0-9-]+$/i.test(label) && !label.startsWith('-') && !label.endsWith('-'))) return '';
+  // Encode data in its own component; never encode the assembled URL or use
+  // HTML entities, which would change the proxy's path and query semantics.
+  const url = `https://${host}/${encodeURIComponent(data.proKey as string)}/${urlType}/${encodeURIComponent(type)}${query}`;
   return secure_url(url) ? url : '';
 }
 
@@ -84,8 +69,16 @@ function static_ics_file(host: ShadowRoot | null, data: ATCBConfig, subEvent: 'a
   const potentialHostCustomVar = (host && host.host && (host.host.getAttribute('customVar') || host.host.getAttribute('custom-var'))) || '';
   if ((data.attendee && data.attendee !== '' && potentialHostAttendee !== '') || (data.customVar && (data.customVar as unknown) !== '' && potentialHostCustomVar !== '')) return '';
   const selectedEntry = subEvent === 'all' ? undefined : data.dates!.find((_entry, index) => index === subEvent);
-  if (selectedEntry?.icsFile) return selectedEntry.icsFile as string;
-  return data.icsFile || '';
+  const file = selectedEntry?.icsFile || data.icsFile || '';
+  // Recheck the configured-file contract at the shared output boundary, including
+  // direct generation and the WebView/result-channel paths. Generated calendar
+  // data and browser-created blob URLs do not come through this boundary.
+  if (typeof file !== 'string' || (file !== '' && (!/^https:\/\//i.test(file) || !secure_url(file, false)))) {
+    throw new Error('Add to Calendar Button failed: explicit ics file path not valid');
+  }
+  // Serialize URL delimiters as percent escapes, not HTML entities. Leave query
+  // separators and existing percent escapes intact so signed URLs still work.
+  return file.replace(/[<>"]/g, (character) => encodeURIComponent(character));
 }
 
 // ICAL SUBSCRIPTION
@@ -209,7 +202,7 @@ function generate_ical(host: ShadowRoot | null, data: ATCBConfig, type: string, 
       if (attendeeParts.length === 2) {
         ics_lines.push('ATTENDEE;CUTYPE=INDIVIDUAL;ROLE=REQ-PARTICIPANT;PARTSTAT=ACCEPTED;CN=' + rewrite_ical_text(attendeeParts[0]!, true) + ';X-NUM-GUESTS=0:mailto:' + attendeeParts[1]);
       } else {
-        ics_lines.push('ATTENDEE;CUTYPE=INDIVIDUAL;ROLE=REQ-PARTICIPANT;PARTSTAT=ACCEPTED;CN=' + attendeeParts[0] + ';X-NUM-GUESTS=0:mailto:' + attendeeParts[0]);
+        ics_lines.push('ATTENDEE;CUTYPE=INDIVIDUAL;ROLE=REQ-PARTICIPANT;PARTSTAT=ACCEPTED;CN=' + rewrite_ical_text(attendeeParts[0]!, true) + ';X-NUM-GUESTS=0:mailto:' + attendeeParts[0]);
       }
     }
     if (data.recurrence && data.recurrence !== '') {

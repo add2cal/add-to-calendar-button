@@ -63,7 +63,7 @@
       "required": "Du har ikke udfyldt alle obligatoriske felter korrekt",
       "sending": "Der opstod et problem med at sende dit svar. Prøv venligst igen senere",
       "email": "Din e-mailadresse er ikke gyldig",
-      "bookedoutmany": "Udsolgt – prøv med færre deltagere"
+      "bookedoutmany": "Udsolgt - prøv med færre deltagere"
     },
     "success": {
       "title": "Sendt med succes!",

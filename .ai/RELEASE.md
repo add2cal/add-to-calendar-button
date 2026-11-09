@@ -66,3 +66,10 @@ Major versions bake in the wild before going official:
 The `demo/` folder is the source of add-to-calendar-button.com and versions independently
 (own package.json). Content updates accompany feature releases; its build
 (`npm run build` inside demo/) must stay green but is not part of the library gates.
+
+For a clean Cloudflare build, use the repository root and `npm ci && npm run build:all`.
+The root build produces the library artifacts used by the demo's local package dependency;
+`build:demo` then installs the demo's separate lockfile with development dependencies before
+running Astro. Installing only the root package does not install Astro from `demo/package.json`.
+Node 24 satisfies the demo's declared engine range; `astro: not found` is a missing dependency
+installation, not an Astro compilation failure. Keep preview publication separate from production deployment.

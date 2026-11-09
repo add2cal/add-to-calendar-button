@@ -41,7 +41,7 @@ describe('Group G - ICS / Apple output', () => {
     const { ics } = await icsFor({ ...CFG.singleTimedNY, organizer: 'Jane Doe|jane@example.com' }, 'atcb-g03');
     expect(ics.method).to.equal('REQUEST');
     const org = ics.events[0].prop('ORGANIZER');
-    expect(org).to.include('CN=Jane Doe');
+    expect(org).to.include('CN="Jane Doe"');
     expect(org.toLowerCase()).to.include('mailto:jane@example.com');
   });
 

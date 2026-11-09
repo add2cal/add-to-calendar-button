@@ -56,13 +56,74 @@ File: `test/wc-tests-smoke/s-smoke.test.js`
 - S-15: PRO config renders under the mobile flavor with platform option rules applied
 - S-16: PRO RSVP config renders the RSVP entry point instead of calendar options
 
+### Field security (`field-security.test.js`)
+
+- FS-01: real CRLF, CR, and LF stay inside iCalendar TEXT values
+- FS-02: hostile event fields cannot create extra properties or events
+- FS-03: parameter values cannot terminate the property or add parameters
+- FS-04: URI fields reject real line breaks before ICS generation
+- FS-05: script tags are rejected recursively before tag stripping
+- FS-06: validation catches script tags assembled by custom variables
+
+Node security cases in `test/ssr-node/field-text.test.mjs` and
+`test/ssr-node/ical-security.test.mjs` also run in the default suite:
+
+- FIELD-01: iCalendar TEXT escapes every real newline
+- FIELD-02: iCalendar parameters use quoted RFC 6868 encoding
+- FIELD-03: script tags are rejected in nested field values
+- FIELD-04: URI fields cannot carry literal newlines
+- FIELD-05: cleanup preserves literal descriptions and variables without changing other fields
+- ICAL-SEC-01: event text cannot inject a second VEVENT or property
+- ICAL-SEC-02: validation rejects newline-bearing URLs and attachment URLs
+- ICAL-SEC-03: custom variables cannot assemble script tags after cleanup
+- ICAL-SEC-04: organizer, attendee and Apple location parameters are quoted
+- ICAL-SEC-05: calendar email fields reject trailing and embedded newlines
+- ICAL-SEC-06: static file selection rejects unsafe root URIs before either output path
+- ICAL-SEC-07: unsafe per-date files cannot bypass a safe root file
+- ICAL-SEC-08: HTTPS files preserve query text, selection precedence and result output
+- ICAL-SEC-09: host overrides still bypass static files for dynamic generation
+- ICAL-SEC-10: dynamic iOS content and proxy URLs retain their distinct output contracts
+- ICAL-SEC-11: configured HTTPS URLs percent encode literal delimiters without escaping query syntax
+- ICAL-SEC-12: proxy paths encode components and share navigation and resolved output
+- ICAL-SEC-13: proxy authority rejects URL syntax rather than changing the destination
+
+Description preservation cases also run in the default suite:
+
+- DESC-01: nested descriptions preserve literal text in plain, HTML and ICS output
+- DESC-02: description variables are substituted before all output copies are encoded
+- DESC-03: description links encode literal labels and attributes exactly once
+- DESC-04: every provider transports descriptions in its own text or HTML format
+- DESC-05: custom variable replacement keeps dollar syntax literal and script rejection intact
+- DESC-06: character references decode once as text across rich, plain and ICS outputs
+- DESC-07: decoded text never becomes formatting, a link attribute or a line break
+- DESC-IN-01: description and structured attributes preserve literal text and JSON escapes
+- DESC-IN-02: inline JSON is parsed before field cleanup without deleting literal escapes
+- DESC-IN-03: SSR attributes round-trip literal descriptions through client ingestion
+- DESC-IN-04: playground description attribute reaches Google details as literal HTML text
+- DESC-IN-05: attribute script rejection is not hidden by the inline JSON fallback
+- DESC-IN-06: inline JSON still works with presentation attributes and empty input stays diagnostic
+- DESC-UI-attributes: literal descriptions survive ingestion and provider HTML without becoming markup
+- DESC-UI-json: literal descriptions survive ingestion and provider HTML without becoming markup
+- DESC-UI-ssr: literal descriptions survive ingestion and provider HTML without becoming markup
+
 Also part of the default run (long-standing quick tests):
 
 - `test/wc-tests/wc-load.test.js`: has a generated button id and shadowDom element
 - `test/wc-tests/recurrence-tz.test.js`: does not shift startDate for weekly BYDAY near midnight in Europe/Berlin
+- `test/wc-tests/recurrence-tz.test.js`: keeps bounded recurrence dates consistent between next and range wrappers; next/range wrappers agree on exhausted COUNT, inclusive timed/all-day UNTIL and midnight DST dates across historical (2001) and modern (2021) US rules
 - `test/server-side-init.test.js`: CommonJS bundle imports in Node without executing browser-only code
 
 ## Tier 1 - Reduced Suite (`npm run test:extended`)
+
+### Group GOR - Overview recurrence (`r-GOR-overview-recurrence.test.js`)
+
+- preserves original recurrence identity for event actions and makes subscription rows inert in every layout
+- does not duplicate cross-year recurring occurrences and retains all-day duration
+- includes both range edges and counts occurrences before the range
+- respects interval, weekdays, ordinal monthly and leap-year rules
+- preserves local dates across DST and UTC date boundaries, with inclusive UNTIL
+- expands the entire month window, sorts rows and preserves identity without mutation
+- handles an occurrence on the upper bound, expired series and dates after it
 
 ### Group A - Lifecycle & registration (`r-A-lifecycle.test.js`)
 
@@ -310,7 +371,7 @@ Also part of the default run (long-standing quick tests):
 
 - R-01: prokey fetches config.json and renders the server-driven button
 - R-02: PRO fetch 404 -> button does not render
-- R-03: PRO fetch network error -> button does not render
+- R-03: PRO fetch network error identifies only the failed config origin and does not render
 - R-04: dev=true fetches from event-dev.caldn.net
 - R-05: WITHOUT proOverride, whitelisted attrs (language) still apply
 - R-06: WITHOUT proOverride, non-whitelisted attrs (name) are IGNORED - server wins
@@ -579,7 +640,10 @@ recurrence, which implies a single date entry).
 - GO-07: compact RSVP entries use an aligned dot beside regular add badges
 - GO-08: grid cards place an enlarged datetime above the title and respond to their container with one, two, or three equal columns, balanced outer badge spacing, inter-card clearance, and a 1200px cap
 - GO-09: public non-subscription groups always render the list, regardless of group-overview
-- GO-10: public subscription groups default to the button and group-overview can select the list
+- GO-10: public subscription groups default to the button; their overview adds the configured group button and renders inert entries
 - GO-11: group-overview has no effect when public_event_overview is false or absent
-- GO-12: subscription overview links, add badges, and direct actions always use the group key
+- GO-12: subscription overview entries never navigate or start calendar actions
 - GO-13: no-add renders plain entries without landing links, direct actions, or add badges
+- GO-14: public group fetch network error identifies only the failed dev API origin
+- GO-15: no-subscribe-button disables subscription-specific overview limitations
+- GO-16: a lone overview subscription button aligns right on larger screens

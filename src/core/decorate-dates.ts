@@ -1,6 +1,7 @@
 import { tzlib_get_offset, tzlib_get_timezones } from 'timezones-ical-library';
 import { translate_via_time_zone, format_datetime, map_special_time_zones } from './dates';
-import { rewrite_html_elements } from './text';
+import { decodeHTMLStrict } from 'entities/decode';
+import { description_html, rewrite_html_elements, secure_content } from './text';
 import { generate_uuid, apply_transformation } from './pure-util';
 import { decorate_data_rrule, decorate_data_recurring_events } from './decorate-recurrence';
 import type { ATCBConfig, ATCBInputConfig, ATCBDateEntry } from '../types';
@@ -29,8 +30,8 @@ function decorate_data_dates(data: ATCBConfig | ATCBInputConfig): ATCBConfig {
     cfg = dates_cleanup(cfg, i);
     cfg = generate_unique_uid(cfg, i);
     cfg = transform_strings(cfg, i);
-    cfg = decorate_data_description(cfg, i);
     cfg = replace_custom_variables(cfg, i);
+    cfg = decorate_data_description(cfg, i);
     cfg = set_online_event_flag(cfg, i);
   }
   // the root date values have been moved into the dates entries at this point (except
@@ -149,17 +150,16 @@ function transform_strings(data: ATCBConfig, i: number): ATCBConfig {
 
 // clean up the description and create copies for different formats
 function decorate_data_description(data: ATCBConfig, i: number): ATCBConfig {
-  const cleanDescription = (desc: string) => desc.replace(/(\\r\\n|\\n|\\r|<br(\s*\/?)>)/g, '');
   let description = data.dates![`${i}`]!.description;
   if (description) {
-    // remove any "wrong" line breaks
-    description = cleanDescription(description);
+    // Legacy raw breaks remain supported; other raw tags stay literal text.
+    description = description.replace(/<br\s*\/?>/gi, '[br]');
     // store a clean description copy without the URL magic for Yahoo, MS Teams, ...
-    const descriptionHtmlFree = rewrite_html_elements(description, true);
+    const descriptionHtmlFree = decodeHTMLStrict(rewrite_html_elements(description, true, false, true));
     // ... and iCal
-    const descriptionHtmlFreeICal = rewrite_html_elements(description, true, true);
+    const descriptionHtmlFreeICal = decodeHTMLStrict(rewrite_html_elements(description, true, true, true));
     // ...and transform pseudo elements for the regular one
-    description = rewrite_html_elements(description);
+    description = description_html(description);
     data.dates![`${i}`] = { ...data.dates![`${i}`], description, descriptionHtmlFree, descriptionHtmlFreeICal };
   } else {
     data.dates![`${i}`]!.descriptionHtmlFree = data.dates![`${i}`]!.descriptionHtmlFreeICal = data.dates![`${i}`]!.description = '';
@@ -184,8 +184,9 @@ function replace_custom_variables(data: ATCBConfig, i: number): ATCBConfig {
   const dateEntry = data.dates![`${i}`]!;
   for (const key in data.customVar) {
     const value = data.customVar[`${key}`];
-    dateEntry.name = replace_placeholder(dateEntry.name as string | undefined, key, value);
-    dateEntry.location = replace_placeholder(dateEntry.location as string | undefined, key, value);
+    for (const field of ['name', 'location'] as const) {
+      dateEntry[field] = replace_placeholder(dateEntry[field], key, secure_content(String(value), false));
+    }
     dateEntry.description = replace_placeholder(dateEntry.description as string | undefined, key, value);
   }
   return data;
@@ -196,7 +197,7 @@ function replace_placeholder(text: string | undefined, key: string, value: unkno
   const placeholder = '%%' + key.replace(/[^\w\-.]/g, '') + '%%';
   if (!text) return text;
   // eslint-disable-next-line security/detect-non-literal-regexp
-  return text.replace(new RegExp(placeholder, 'gi'), value as string);
+  return text.replace(new RegExp(placeholder, 'gi'), () => String(value));
 }
 
 // CALCULATE AND CLEAN UP THE ACTUAL DATES
