@@ -191,10 +191,10 @@ describe('Group C - Date / time / timezone (single event)', () => {
     const browserTz = Intl.DateTimeFormat().resolvedOptions().timeZone;
     const ics = await icsFor({ name: 'BrowserTz', startDate: '2050-06-15', startTime: '10:00', endTime: '11:00', timeZone: 'currentBrowser' }, 'atcb-c16');
     const dtstart = ics.events[0].prop('DTSTART');
-    // Chromium reports UTC in CI. The generator routes UTC-like zones through GMT,
-    // whose canonical TZID can be Etc/GMT or Etc/UTC depending on the tzdata release.
+    // Chromium reports UTC in CI. RFC 5545 UTC values use a trailing Z and must
+    // not carry a TZID; named browser zones retain their TZID.
     if (browserTz === 'UTC') {
-      expect(dtstart).to.match(/TZID=Etc\/(?:GMT|UTC)/);
+      expect(dtstart).to.equal('DTSTART:20500615T100000Z');
     } else {
       expect(dtstart).to.include('TZID=' + browserTz);
     }

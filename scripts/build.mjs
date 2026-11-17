@@ -586,8 +586,10 @@ function sanityCheck() {
   }
   if (fs.existsSync(r('dist/utils/index.js'))) {
     const utilsBuild = fs.readFileSync(r('dist/utils/index.js'), 'utf8');
+    // Dependency comments can contain DOM-related words without introducing DOM code.
+    const utilsCode = esbuild.transformSync(utilsBuild, { loader: 'js', minifyWhitespace: true, legalComments: 'none' }).code;
     for (const marker of ['LitElement', 'HTMLElement', 'document', 'window', 'navigator', 'atcbCssTemplate', 'customElements']) {
-      if (utilsBuild.includes(marker)) problems.push(`dist/utils/index.js: DOM/component marker ${marker} present`);
+      if (utilsCode.includes(marker)) problems.push(`dist/utils/index.js: DOM/component marker ${marker} present`);
     }
     if (!utilsBuild.includes('atcb_generate_timestring') || !utilsBuild.includes('atcb_decorate_data_dates')) problems.push('dist/utils/index.js: utility exports missing');
   }
