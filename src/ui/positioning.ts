@@ -9,16 +9,16 @@ function position_list(host: ShadowRoot, trigger: HTMLElement, list: HTMLElement
     trigger = trigger.querySelector('.atcb-dropdown-anchor')!;
     anchorSet = true;
   }
+  // Capture the containing element before the list temporarily participates in
+  // layout below. Otherwise its own height increases the parent's bottom edge
+  // and makes a drop-up sit one list height too high.
+  const listParentDim = list.parentElement!.getBoundingClientRect();
   // changing the lists css position and display type temporarily to get the ideal width of the content
   list.style.position = 'relative';
   list.style.display = 'inline-block';
   // calculate position
   let triggerDim = trigger.getBoundingClientRect();
   const btnDim = originalTrigger.getBoundingClientRect();
-  // The dropdown is appended to .atcb-initialized, not necessarily to the
-  // trigger wrapper. In wider flex/grid containers those two coordinate spaces
-  // differ, so always position against the list's actual containing element.
-  const listParentDim = list.parentElement!.getBoundingClientRect();
   const viewportHeight = document.documentElement.clientHeight;
   if (anchorSet === true && !list.classList.contains('atcb-dropoverlay')) {
     let listDim = list.getBoundingClientRect();

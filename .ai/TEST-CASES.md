@@ -315,7 +315,7 @@ Also part of the default run (long-standing quick tests):
 - M-14: saved checkmark + success event after all options were used
 - M-15: hideCheckmark suppresses the saved checkmark
 - M-16: hideBackground -> no background overlay for modal
-- M-18/M-19: static list styles render without dynamic repositioning
+- M-18/M-19: static list styles render without dynamic repositioning; drop-up keeps its button-relative offset
 - M-20: overlay listStyle renders the dropoverlay variant
 - M-22/M-23: explicit light/dark mode set the scheme class on the HOST element
 - M-27: styleLight custom CSS variables land on the host style
