@@ -176,6 +176,13 @@ describe('Group M - UI / interaction', () => {
     const { host: host2 } = await mountAtcb(baseEvent({ trigger: 'click', listStyle: 'dropup-static', identifier: 'atcb-m19' }));
     await openList(host2);
     expect(listEl(host2)).to.exist;
+    const button = trigger(host2);
+    const anchorRect = button.querySelector('.atcb-dropdown-anchor').getBoundingClientRect();
+    const buttonRect = button.getBoundingClientRect();
+    const wrapper = host2.shadowRoot.querySelector('.atcb-list-wrapper');
+    const parentRect = wrapper.parentElement.getBoundingClientRect();
+    const expectedBottom = parentRect.bottom - buttonRect.bottom + (anchorRect.top - buttonRect.top);
+    expect(parseFloat(wrapper.style.bottom), 'drop-up offset excludes its own temporary layout height').to.be.closeTo(expectedBottom, 0.1);
   });
 
   it('M-20: overlay listStyle renders the dropoverlay variant', async () => {
