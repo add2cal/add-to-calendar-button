@@ -1,5 +1,5 @@
 import { tzlib_get_ical_block } from 'timezones-ical-library';
-import { atcbVersion, atcbTimeZonesToUtc, isIOS, isAndroid, isSafari, isWebView, isProblematicWebView, defaultTarget } from '../core/globals';
+import { atcbVersion, isIOS, isAndroid, isSafari, isWebView, isProblematicWebView, defaultTarget } from '../core/globals';
 import { generate_time, format_datetime } from '../core/dates';
 import { escape_html, secure_url, rewrite_ical_text, format_ical_lines } from '../core/text';
 import { save_file, copy_to_clipboard } from '../core/util';
@@ -164,9 +164,10 @@ function generate_ical(host: ShadowRoot | null, data: ATCBConfig, type: string, 
       if (formattedDate.allday) {
         return ';VALUE=DATE';
       }
+      // UTC values must not carry TZID (RFC 5545 section 3.3.5).
+      if (formattedDate.start.endsWith('Z')) return '';
       if (data.dates![`${i}`]!.timeZone && data.dates![`${i}`]!.timeZone !== '') {
-        // for certain time zones (mostly GMT +/- something and some US time zones), we use GMT and a converted datetime as this would not be supported by Google Calendar and one could use the ics there
-        const timeZone = atcbTimeZonesToUtc.test(data.dates![`${i}`]!.timeZone as string) ? 'GMT' : (data.dates![`${i}`]!.timeZone as string);
+        const timeZone = data.dates![`${i}`]!.timeZone as string;
         const timeZoneBlock = tzlib_get_ical_block(timeZone);
         if (!usedTimeZones.includes(timeZone)) {
           ics_lines.push(timeZoneBlock[0]!);
@@ -174,7 +175,7 @@ function generate_ical(host: ShadowRoot | null, data: ATCBConfig, type: string, 
         usedTimeZones.push(timeZone);
         return ';' + timeZoneBlock[1];
       }
-      return undefined;
+      return '';
     })();
     ics_lines.push('BEGIN:VEVENT');
     if (data.dates![`${i}`]!.uid && data.dates![`${i}`]!.uid !== '') {
@@ -262,7 +263,7 @@ function generate_ical(host: ShadowRoot | null, data: ATCBConfig, type: string, 
           if (formattedDate.allday) {
             return datePart;
           }
-          return datePart + 'T' + (entry.startTime ? entry.startTime.replace(':', '') : '0000') + '00';
+          return generate_time({ ...entry, startDate: exdate, endDate: exdate }, 'clean', 'ical').start;
         });
         ics_lines.push('EXDATE' + (timeAddon || '') + ':' + exdateValues.join(','));
       }
@@ -307,7 +308,7 @@ function isMobileTarget(): string {
 function determine_ical_filename(data: ATCBConfig, subEvent: 'all' | number | string): string {
   const filenameSuffix = (function () {
     if (subEvent != 'all' && subEvent != 0) {
-      return '-' + parseInt(subEvent as string) + 1;
+      return '-' + (parseInt(subEvent as string) + 1);
     }
     return '';
   })();
