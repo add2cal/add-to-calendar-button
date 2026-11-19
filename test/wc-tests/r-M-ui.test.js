@@ -169,20 +169,48 @@ describe('Group M - UI / interaction', () => {
     }
   });
 
-  it('M-18/M-19: static list styles render without dynamic repositioning', async () => {
+  it('M-18/M-19: static list styles stay anchored in centered layouts, including forceOverlay', async () => {
     const { host } = await mountAtcb(baseEvent({ trigger: 'click', listStyle: 'dropdown-static', identifier: 'atcb-m18' }));
+    Object.assign(host.parentElement.style, { alignItems: 'center', display: 'flex', minHeight: '400px' });
     await openList(host);
     expect(listEl(host)).to.exist;
+    const wrapper = host.shadowRoot.querySelector('.atcb-list-wrapper');
+    const parentRect = wrapper.parentElement.getBoundingClientRect();
+    const anchorRect = trigger(host).querySelector('.atcb-dropdown-anchor').getBoundingClientRect();
+    expect(parseFloat(wrapper.style.top), 'drop-down offset uses the final, stable layout').to.be.closeTo(anchorRect.top - parentRect.top, 0.1);
+
     const { host: host2 } = await mountAtcb(baseEvent({ trigger: 'click', listStyle: 'dropup-static', identifier: 'atcb-m19' }));
+    Object.assign(host2.parentElement.style, { alignItems: 'center', display: 'flex', minHeight: '400px' });
     await openList(host2);
     expect(listEl(host2)).to.exist;
     const button = trigger(host2);
-    const anchorRect = button.querySelector('.atcb-dropdown-anchor').getBoundingClientRect();
+    const anchorRect2 = button.querySelector('.atcb-dropdown-anchor').getBoundingClientRect();
     const buttonRect = button.getBoundingClientRect();
-    const wrapper = host2.shadowRoot.querySelector('.atcb-list-wrapper');
-    const parentRect = wrapper.parentElement.getBoundingClientRect();
-    const expectedBottom = parentRect.bottom - buttonRect.bottom + (anchorRect.top - buttonRect.top);
-    expect(parseFloat(wrapper.style.bottom), 'drop-up offset excludes its own temporary layout height').to.be.closeTo(expectedBottom, 0.1);
+    const wrapper2 = host2.shadowRoot.querySelector('.atcb-list-wrapper');
+    const parentRect2 = wrapper2.parentElement.getBoundingClientRect();
+    const expectedBottom = parentRect2.bottom - buttonRect.bottom + (anchorRect2.top - buttonRect.top);
+    expect(parseFloat(wrapper2.style.bottom), 'drop-up offset uses the final, stable layout').to.be.closeTo(expectedBottom, 0.1);
+
+    const { host: host3 } = await mountAtcb(baseEvent({ trigger: 'click', listStyle: 'dropdown-static', forceOverlay: 'true', identifier: 'atcb-m18-overlay' }));
+    Object.assign(host3.parentElement.style, { alignItems: 'center', display: 'flex', minHeight: '400px' });
+    await openList(host3);
+    const overlayRoot = modalHost(host3).shadowRoot;
+    const overlayWrapper = overlayRoot.querySelector('.atcb-list-wrapper');
+    const overlayParentRect = overlayWrapper.parentElement.getBoundingClientRect();
+    const overlayAnchorRect = overlayRoot.querySelector('.atcb-dropdown-anchor').getBoundingClientRect();
+    expect(parseFloat(overlayWrapper.style.top), 'forceOverlay drop-down uses the copied host coordinates').to.be.closeTo(overlayAnchorRect.top - overlayParentRect.top, 0.1);
+
+    const { host: host4 } = await mountAtcb(baseEvent({ trigger: 'click', listStyle: 'dropup-static', forceOverlay: 'true', identifier: 'atcb-m19-overlay' }));
+    Object.assign(host4.parentElement.style, { alignItems: 'center', display: 'flex', minHeight: '400px' });
+    await openList(host4);
+    const overlayRoot2 = modalHost(host4).shadowRoot;
+    const overlayButton = overlayRoot2.querySelector('.atcb-button');
+    const overlayAnchorRect2 = overlayButton.querySelector('.atcb-dropdown-anchor').getBoundingClientRect();
+    const overlayButtonRect = overlayButton.getBoundingClientRect();
+    const overlayWrapper2 = overlayRoot2.querySelector('.atcb-list-wrapper');
+    const overlayParentRect2 = overlayWrapper2.parentElement.getBoundingClientRect();
+    const expectedOverlayBottom = overlayParentRect2.bottom - overlayButtonRect.bottom + (overlayAnchorRect2.top - overlayButtonRect.top);
+    expect(parseFloat(overlayWrapper2.style.bottom), 'forceOverlay drop-up uses the copied host coordinates').to.be.closeTo(expectedOverlayBottom, 0.1);
   });
 
   it('M-20: overlay listStyle renders the dropoverlay variant', async () => {

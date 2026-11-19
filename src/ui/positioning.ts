@@ -9,14 +9,13 @@ function position_list(host: ShadowRoot, trigger: HTMLElement, list: HTMLElement
     trigger = trigger.querySelector('.atcb-dropdown-anchor')!;
     anchorSet = true;
   }
-  // Capture the containing element before the list temporarily participates in
-  // layout below. Otherwise its own height increases the parent's bottom edge
-  // and makes a drop-up sit one list height too high.
-  const listParentDim = list.parentElement!.getBoundingClientRect();
-  // changing the lists css position and display type temporarily to get the ideal width of the content
-  list.style.position = 'relative';
-  list.style.display = 'inline-block';
+  // Keep the list out of flow while measuring it. Letting it participate in
+  // layout can temporarily move a centered host, which would mix coordinates
+  // from before and after that movement and leave the final list offset.
+  list.style.position = 'absolute';
+  list.style.display = 'block';
   // calculate position
+  const listParentDim = list.parentElement!.getBoundingClientRect();
   let triggerDim = trigger.getBoundingClientRect();
   const btnDim = originalTrigger.getBoundingClientRect();
   const viewportHeight = document.documentElement.clientHeight;
@@ -55,9 +54,6 @@ function position_list(host: ShadowRoot, trigger: HTMLElement, list: HTMLElement
     const sideMargin = Math.round((btnDim.width - listDim.width) / 2);
     list.style.margin = -Math.round((listDim.height + btnDim.height) / 2) + 'px ' + sideMargin + 'px 0 ' + sideMargin + 'px';
   }
-  // changing the list's position back to absolute and display to block
-  list.style.position = 'absolute';
-  list.style.display = 'block';
   // adjust branding message, if set
   const brandingReference = host.querySelector('#atcb-reference');
   if (brandingReference) {
