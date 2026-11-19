@@ -1,1 +1,1 @@
-export const repositoryVersion = '3.6.1';
+export const repositoryVersion = '3.6.2';
