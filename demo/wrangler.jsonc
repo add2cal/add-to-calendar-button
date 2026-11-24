@@ -9,6 +9,7 @@
   },
   "workers_dev": false,
   "preview_urls": true,
+  "logpush": true,
   "observability": {
     "enabled": false, // Depending on your case, this can drive costs up. Activate with care on production!
   },
